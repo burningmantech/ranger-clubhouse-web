@@ -1,0 +1,9 @@
+{{#ch-form "positions" positionForm modalBox=true modalTitle="Edit Positions" onSubmit=(action "save") as |f|}}
+  <div class="form-row">
+    {{f.input "positionIds" type="checkboxGroup" wrapClass="form-row" options=positionOptions}}
+  </div>
+  <div class="form-group mt-4">
+    {{f.submit}}
+    <button type="submit" class="btn btn-secondary" {{action "cancel" f.model}}>Cancel</button>
+  </div>
+{{/ch-form}}

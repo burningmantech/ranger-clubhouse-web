@@ -1,0 +1,87 @@
+{{year-select "Timesheets" year=year years=person.years onChange=(action "changeYear")}}
+{{#if timesheets}}
+  <table class="table schedule-table table-striped table-rc table-sm">
+    <thead class="thead-light">
+      <tr>
+        <th>From</th>
+        <th>To</th>
+        <th class="text-right">Time</th>
+        <th class="text-right">Credits</th>
+        <th>Position</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each timesheets as |ts|}}
+        <tr>
+          <td data-title="From">{{ts.on_duty}}</td>
+          <td data-title="To">{{ts.off_duty}}</td>
+          <td class="td-number" data-title="Time">
+              {{#if ts.off_duty}}
+                {{hour-minute-format ts.duration}}
+              {{else}}
+                <i>On Duty</i>
+              {{/if}}
+            </td>
+          <td class="td-number" data-title="Credits">
+            {{#if ts.off_duty}}
+                {{credits-format ts.credits}}
+            {{else}}
+                &nbsp;
+            {{/if}}
+          </td>
+          <td data-title="Position">{{ts.position_title}}</td>
+        </tr>
+      {{/each}}
+      <tr class="tr-no-responsive">
+        <td>
+          {{pluralize timesheets.length "entry"}}
+        </td>
+        <td class="td-number table-rc-hide">
+          Totals
+        </td>
+        <td class="td-number" data-title="Time">
+          {{hour-minute-format (sum-column timesheets "duration")}}
+        </td>
+        <td class="td-number" data-title="Credits">
+          {{credits-format (sum-column timesheets "credits")}}
+        </td>
+        {{#if showActions}}
+        <td colspan="2" class="table-rc-hide">&nbsp;</td>
+        {{else}}
+        <td class="table-rc-hide">&nbsp;</td>
+        {{/if}}
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Position Breakdown</h3>
+
+  <table class="table table-striped schedule-table table-rc table-sm">
+    <thead class="thead-light">
+      <tr>
+        <th>Position</th>
+        <th class="text-right">Time</th>
+        <th class="text-right">Credits</th>
+        <th class="text-right">Count</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each positions as |position|}}
+      <tr>
+        <td data-title="Position">{{position.title}}</td>
+        <td class="td-number" data-title="Time">{{hour-minute-format position.duration}}</td>
+        <td class="td-number" data-title="Credits">{{credits-format position.credits}}</td>
+        <td class="td-number" data-title="Count">{{position.total}}</td>
+      </tr>
+      {{/each}}
+      <tr>
+        <td colspan="4">{{pluralize positions.length "position"}} worked</td>
+      </tr>
+    </tbody>
+  </table>
+{{else}}
+<p class="lead mt-3 text-danger">
+  No timesheets were found for {{year}}.
+</p>
+{{/if}}

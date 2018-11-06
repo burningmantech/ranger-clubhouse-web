@@ -1,0 +1,57 @@
+{{#if ranger}}
+  {{contact-form callsign=ranger.callsign recipientId=ranger.id contactType="ranger" onDone=(action "doneAction")}}
+{{/if}}
+
+<h1>Contact An Active Ranger</h1>
+
+<p>
+    Use this page to send a contact message, via email, to a Ranger. Messages may only be
+    sent to currently active or inactive Rangers. (An inactive Ranger is a person
+    who has not rangered the last three years.) Individuals who are prospectives,
+    alphas, bonked, retired, etc. may not be sent a message through this service.
+</p>
+<p>
+    Neither your email address nor the email address of the receiving Ranger will
+    be revealed by the Clubhouse.
+</p>
+<p>
+Start typing the callsign of the Ranger you wish to communicate with. Callsign
+containing numbers or spelled out numbers must be entered as-is. (e.g., callsign 'Disco9' needs
+to be entered as 'Disco9', not 'Disco nine'.  Callsign 'Eight Dogs' needs to
+entered as 'Eight Dogs', not '8 dogs'.)
+</p>
+
+{{#ch-form "search" searchForm changeSet=false onFormChange=(action "searchOnChange") as |f|}}
+  <div class="form-row">
+    {{f.input "callsign" label="Start typing the callsign of Ranger you wish to contact:" type="text" size=30 autofocus="true"}}
+    {{#if isSubmitting}}
+      <div class="loading-spinner"></div>
+    {{/if}}
+  </div>
+  <div class="mt-2 mb-4">
+    <strong>A Ranger callsign may not appear in the search results if the person is no longer active.</strong>
+  </div>
+{{/ch-form}}
+
+{{#if foundCallsigns}}
+  <div class="row">
+    <div class="col-sm-12 col-md-10 col-lg-8">
+      <table class="table table-striped table-bordered">
+        <caption>Click on the callsign below to send a message:</caption>
+        <tbody>
+          {{#each foundCallsigns as |ranger|}}
+          <tr>
+            <td>
+            {{#if ranger.allow_contact}}
+              <a href="#" {{action "contactRanger" ranger}}>{{ranger.callsign}}</a>
+            {{else}}
+              <span class="text-danger">{{ranger.callsign}} does not want to be contacted through the Clubhouse.</span>
+            {{/if}}
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{{/if}}

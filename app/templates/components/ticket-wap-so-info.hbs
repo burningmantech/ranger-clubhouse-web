@@ -1,0 +1,53 @@
+{{#ch-box "Significant Other Work Access Passes"}}
+
+{{#if (or (eq ticketingStatus "none") (eq ticketingStatus "view"))}}
+  <p>
+    Information about Significant Other Work Access Passes is not yet available
+    in the Clubhouse, please check back soon.
+  </p>
+{{else if (eq ticketingStatus "frozen")}}
+  {{ticket-frozen item="Significant Other Work Access Pass" ticketingInfo=ticketingInfo}}
+  {{#if wapSOList.length}}
+    <p>
+      The following Significant Other Work Access Passes will be submitted
+      to the Burning Man Ticket Request System.
+     </p>
+  {{/if}}
+{{else}}
+    {{#if isAccepting}}
+    <p>
+      Using the form below you may request Work Access Passes for up to {{maxSOWAP}} people who are a critical part of your camp.
+    </p>
+    {{/if}}
+    <table class="table table-border table-hover">
+      <thead class="thead-light">
+        <tr><th>SO Legal Name</th> <th>Arrival Date</th></tr>
+      </thead>
+      <tbody>
+        {{#each wapSOList as |row|}}
+          <tr>
+            <td>
+              {{#if isAccepting}}
+                {{input type="text" value=row.name size=50}}
+              {{else}}
+                {{row.name}}
+              {{/if}}
+            </td>
+            <td>{{row.access_date}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{#if isAccepting}}
+      <button type="submit" class="btn btn-primary" {{action saveSONames}}>Save My WAP SOs Choices</button>
+      <p>
+        If you need more than {{ticketingInfo.wap_so_max}} passes or
+          you need these folks to arrive before {{defaultDate}},
+          you will need to email {{mail-to ticketingInfo.ranger_ticketing_email}} and plead your case.
+
+      </p>
+    {{/if}}
+{{/if}}
+
+{{ticket-faq "wap" ticketingInfo}}
+{{/ch-box}}

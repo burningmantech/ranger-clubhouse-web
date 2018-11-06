@@ -1,0 +1,26 @@
+<h2>Alert Preferences</h2>
+
+To change your email visit {{#link-to "me.personal-info"}}Personal Info{{/link-to}}.
+
+<div class="table-responsive">
+<table class="table table-striped">
+  <thead>
+    <tr class="d-flex">
+      <th class="col-6">Alert Type</th>
+      <th class="col-3">Text To SMS #<br>
+        <a href="#" {{action "setAll" "sms" true}} class="btn btn-sm btn-secondary mt-1">Check All</a>
+        <a href="#" {{action "setAll" "sms" false}} class="btn btn-sm btn-secondary mt-1">Unheck All</a>
+      </th>
+      <th class="col-3">Send To Email<br>
+        <small><a href="#" {{action "setAll" "email" true}} class="btn btn-sm btn-secondary mt-1">Check All</a>
+        <a href="#" {{action "setAll" "email" false}} class="btn btn-sm btn-secondary mt-1">Unheck All</a></small>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {{alert-group person=person group=offPlayaAlerts heading="Pre-Event Alerts" description="These alerts may be sent to you before or after the event."}}
+    {{alert-group person=person group=onPlayaAlerts heading="On Playa Alerts" description="These alerts may be sent to you while the event is happening."}}
+  </tbody>
+</table>
+</div>
+<button type="button" class="btn btn-primary" {{action "updatePreferences"}}>Update Preferences</button>

@@ -1,0 +1,35 @@
+{{#ch-form "slot" slot modalBox=true modalTitle=formTitle validator=slotValidations onSubmit=(action "save") as |f|}}
+  <div class="form-row">
+    {{f.input "position_id" label="Position" type="select" options=positionOptions grid="col-md-auto"}}
+    {{f.input "trainer_slot_id"
+      label="Trainer's Slot"
+      type="select"
+      options=trainerSlotsOptions
+      grid="col-md-auto"}}
+  </div>
+
+  <div class="form-row">
+    {{f.input "description" label="Description" size=25 maxlength=25 grid="col-md-auto"}}
+    {{f.input "begins" label="Begining Time" maxlength=25 grid="col-md-auto col-sm-12"}}
+    {{f.input "ends" label="Ending Time" maxlength=20 grid="col-md-auto col-sm-12"}}
+    {{f.input "max" label="Max" size=3 maxlength=3 grid="col-md-auto col-sm-12"}}
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      {{f.input "active" label="Active" type="checkbox" wrapClass="form-check col-md-auto"}}
+    </div>
+  </div>
+
+  <div class="form-row">
+    {{f.input "url" label="Information" type="textarea" rows=3 cols=80 maxlength=255 wrapClass="col-12"
+        hint="Additional information may be given about the shift in the above area.
+    e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.khaki/meetup or email women@khaki.rangers"}}
+  </div>
+
+  <div class="form-group mt-2">
+    {{f.submit}}
+    <button type="submit" class="btn btn-secondary" {{action "cancel" f.model}}>Cancel</button>
+  </div>
+
+{{/ch-form}}

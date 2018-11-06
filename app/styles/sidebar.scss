@@ -1,0 +1,103 @@
+/* Sidebar CSS */
+
+#body-row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+#sidebar-container {
+  position: relative;
+  min-height: 100vh;
+  background-color: #333;
+  padding: 0;
+  /*  position:fixed;
+  z-index: 1;*/
+  font-size: 0.95rem;
+}
+
+#sidebar-container a.list-group-item {
+  padding: 0.70rem;
+}
+
+/* Sidebar sizes when expanded and expanded */
+
+.sidebar-expanded {
+  width: 210px;
+}
+
+.sidebar-offset-expanded {
+  padding-left: 210px;
+}
+
+.sidebar-offset-collapsed {
+  padding-left: 60px;
+}
+
+.sidebar-collapsed {
+  width: 45px;
+}
+
+/* Menu item*/
+
+#sidebar-container .list-group a {
+  height: 50px;
+  color: white;
+}
+
+/* Submenu item*/
+
+#sidebar-container .list-group .sidebar-submenu a {
+  height: 45px;
+  padding-left: 30px;
+}
+
+.sidebar-submenu {
+  //font-size: 0.9rem;
+}
+
+/* Separators */
+
+.sidebar-separator-title {
+  background-color: #333;
+  height: 35px;
+}
+
+.sidebar-separator {
+  background-color: #333;
+  height: 25px;
+}
+
+.logo-separator {
+  background-color: #333;
+  height: 60px;
+}
+
+/* Closed submenu icon */
+
+#sidebar-container .list-group .list-group-item[aria-expanded="false"] .submenu-icon::after {
+  content: " \f0d7";
+  font-family: FontAwesome;
+  display: inline;
+  text-align: right;
+  padding-left: 10px;
+}
+
+/* Opened submenu icon */
+
+#sidebar-container .list-group .list-group-item[aria-expanded="true"] .submenu-icon::after {
+  content: " \f0da";
+  font-family: FontAwesome;
+  display: inline;
+  text-align: right;
+  padding-left: 10px;
+}
+
+.sidebar-callsign {
+  color: white;
+}
+
+/* end of sidebar */
+
+.sidebar-active {
+  background-color: #747c84 !important;
+}

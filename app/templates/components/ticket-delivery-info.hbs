@@ -1,0 +1,103 @@
+{{#ch-box "Delivery Method"}}
+
+{{#unless claimed}}
+<p>
+  Once you've claimed a ticket or Vehicle Pass we can talk about how we might be able to get it to you.
+</p>
+{{else if pickupAtWillCall}}
+<p>
+  Your <span class="text-alert">{{ticketComboTitle}} will be held for you at Will-Call</span>
+  under the name "{{person.first_name}} {{person.last_name}}".
+  (Staff Credentials cannot be mailed, so you've got no choice in this, sorry.)
+</p>
+<p>
+  Work Access Passes for you (and your significant others, if requested) will be
+  emailed to you.
+</p>
+{{else}}
+<p>
+  We can either mail your {{goodies}} to you, or hold {{goodiesPronoun}} for you
+  at Will-Call.  It's your choice.
+</p>
+
+  {{#if (eq deliveryMethod "will_call")}}
+    <p>
+      Your current selection is to have your {{goodies}} <strong>held for you at Will-Call.</strong>
+    </p>
+  {{else}}
+    <p>
+      Your current selection is to have your $goodies <strong>mailed to you at the address below.</strong>
+    </p>
+  {{/if}}
+
+  <p>If you are considering having {{goodiesPronoun}} mailed, know this:</p>
+  <ul>
+    <li>We can only mail to destinations in the United States and Canada.</li>
+    <li>Mailing is via the United States Postal Service in the U.S. and via UPS in Canada.</li>
+    <li>
+        We cannot guarantee delivery times of mailed items. So if you are
+        planning to leave home for a three-week road trip on August 2 and then
+        show up at Burning Man, it is probably best to have your items held for
+        you at Will-Call.
+     </li>
+    <li>
+      Mailed items cannot be tracked.  If you are worried that your items might
+      get lost or stolen in the mail, it is safest to have them held at
+      Will-Call.
+    </li>
+    {{#if ticket.isReducedPriceTicket}}
+    <li>
+      <b>You must pay for your Reduced-Price Ticket by July 28, 2017.</b>
+      If you don't pay for it by then, your {{goodies}} will be held for you at
+      Will-Call.
+    </li>
+    {{/if}}
+  </ul>
+
+    {{#ch-alert "warning"}}
+      <p class="font-weight-bold">If you're considering Will-Call, know this:</p>
+      The fine folks at Will-Call will check that the name on your
+      government-issued photo ID (driver's license, passport, whatever)
+      approximately matches the name on your order, which is
+      "{{person.first_name}} {{person.last_name}}".
+    {{/ch-alert}}
+
+     {{#ch-form "delivery" ticketDelivery validator=ticketDeliveryValidations onSubmit=(action saveDelivery) as |f|}}
+       <fieldset>
+         <legend>Your delivery choice:</legend>
+         <div class="form-group">
+           <label>
+             {{f.input "method" type="radio" value="will_call" wrapper=false}}
+              Please hold my {{goodies}} for me at Will-Call.
+            </label>
+         </div>
+         <div class="form-group">
+           <label>
+             {{f.input "method" type="radio" value="mail" wrapper=false}}
+             Please mail my {{goodies}} to me at the address below:
+           </label>
+         </div>
+      </fieldset>
+      <fieldset>
+        <legend>Mailing Address:</legend>
+        {{#if (eq f.model.method "mail")}}
+        <div class="form-row">
+          {{f.input "street" label="Street" grid="col-md-8 col-sm-6"}}
+        </div>
+        <div class="form-row">
+          {{f.input "city" label="City" grid="col-sm-5 col-md-4"}}
+          {{f.input "state" label="State / Province"  maxlength=2 size=2 grid="col-sm-5 col-md-4"}}
+          {{f.input "postal_code" label="Zip / Postal Code" grid="col-sm-5 col-md-4"}}
+        </div>
+        <div class="form-row">
+          {{f.input "country" type="select" options=countryOptions label="Country" grid="col-sm-5 col-md-4"}}
+        </div>
+        {{else}}
+        <p>Will call has been selected. There's no need to enter a mailing address</p>
+        {{/if}}
+        {{f.submit label="Save My Delivery Info"}}
+      </fieldset>
+    {{/ch-form}}
+{{/unless}}
+
+{{/ch-box}}

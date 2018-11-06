@@ -1,0 +1,38 @@
+{{login-sidebar}}
+<main class="col">
+  <div class="row">
+    <div class="col-md-6 col-sm-12">
+      <h1>Howdy Ranger!</h1>
+        {{#ch-form "auth" auth validator=loginValidations onSubmit=(action "submit") as |f|}}
+          {{f.input "identification" label="Email" }}
+          {{f.input "password" label="Password" type="password"}}
+
+          <div class="row">
+            <div class="col-md-6 col-sm-12 mb-4">
+              {{f.submit label=(unless isSubmitting "Login" "Loggin In") disabled=isSubmitting submitClass="btn-lg login-submit"}}
+            </div>
+            <div class="col-md-6 col-sm-12">
+              {{#link-to "reset-password" class="d-block"}}Forget the password?{{/link-to}}
+            </div>
+          </div>
+        {{/ch-form}}
+    </div>
+
+    <div class="col-md-6 col-sm-12 mt-4">
+      {{#ch-box "Interest in volunteering with The Rangers?"}}
+        Please fill out a <a href="https://profiles.burningman.com/participate/">Burning Man Volunteer Questionnaire</a>;
+         once your Volunteer Questionnaire is approved, a Secret Clubhouse
+         account will automatically be created for you.
+      {{/ch-box}}
+    </div>
+
+    <div class="col-md-6 col-sm-12 mt-4">
+      {{#ch-box "Interested in training but not volunteering?"}}
+        If you do NOT intend to volunteer with the Rangers on playa but are
+        interested in taking Ranger training anyway, please
+        <a href="{{config "SignupUrl"}}">go here</a> to manually
+        create a Secret Clubhouse account.
+      {{/ch-box}}
+    </div>
+  </div>
+</main>

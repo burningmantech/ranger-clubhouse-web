@@ -1,0 +1,28 @@
+import Controller from '@ember/controller';
+import { action } from '@ember-decorators/object';
+import PasswordValidations from 'clubhouse/validations/password';
+
+export default class MePasswordController extends Controller {
+  passwordValidations = PasswordValidations;
+
+  @action
+  submit(model, isValid) { // eslint-disable-line no-unused-vars
+    if (!isValid) {
+      return;
+    }
+
+    const person = this.person;
+
+    let passwords = model.getProperties('password_old', 'password', 'password_confirmation');
+
+    return person.changePassword(passwords).then(() => {
+      this.toast.success('Password has been changed.');
+      this.transitionToRoute('me.overview');
+    }).catch((response) => { this.house.handleErrorResponse(response) })
+  }
+
+  @action
+  back() {
+    this.transitionToRoute('me.overview');
+  }
+}

@@ -1,0 +1,40 @@
+{{year-select (concat "Multiple Enrollments Report for " training.title) year=year onChange=(action "changeYearAction")}}
+
+{{#if enrollments}}
+<p>
+<a href="#email-copy-link" class="btn btn-primary">Jump to email list</a>
+</p>
+<table class="table table-sm table-striped">
+  <caption>{{pluralize enrollments.length "student"}} have multiple enrollments</caption>
+  <thead>
+    <tr>
+      <th>Callsign</th>
+      <th>Email</th>
+      <th>Training Date</th>
+      <th>Training Location</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  {{#each enrollments as |person|}}
+    <tr>
+      <td>{{#link-to "person.index" person.person_id}}{{person.callsign}}{{/link-to}}</td>
+      <td>{{mail-to person.email}}</td>
+      <td>
+        {{#each person.enrollments as |slot|}}
+          {{shift-format slot.date}}<br>
+        {{/each}}
+      </td>
+      <td>
+        {{#each person.enrollments as |slot|}}
+          {{slot.location}}<br>
+        {{/each}}
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
+{{email-list people=enrollments}}
+{{else}}
+<p class="text-success">Congratulations! Nobody was found to have enrolled for multiple trainings.</p>
+{{/if}}

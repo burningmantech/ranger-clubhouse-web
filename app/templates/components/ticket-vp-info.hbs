@@ -1,0 +1,72 @@
+{{#ch-box "Vehicle Pass"}}
+{{#if (eq ticketingStatus "none")}}
+  <p>
+    Information about Vehicle Passes is not yet available in the Clubhouse,
+    please check back soon.
+  </p>
+{{else if ticket}}
+  <p><b>Congratulations - {{congratSentence}}!</b></p>
+  {{#if (eq ticketingStatus "view")}}
+    <p>
+      For now, there's nothing more you need to do.  Information about how to
+      claim your Vehicle Pass will be available in June or early July.
+    </p>
+  {{else}}
+    {{#if ticket.isSubmitted}}
+      <p>
+        Your Vechile Pass has been submitted to the Burning Man Ticket Request System,
+        and you should have received an email from Ticketfly ({{mail-to "memberservices@ticketfly.com"}}
+         informing you about it. If you don't see it, please check your spam folder.
+         You cannot request changes via the Secret Clubhouse at this time.
+         If you urgently need to make a change, please email {{mail-to (config "TAS_Email")}}
+         and they may be able to help.
+      </p>
+    {{else if (eq ticketingStatus "frozen")}}
+      <p>
+        The window for making or changing Vehicle Pass requests in the Secret Clubhouse
+         has closed. If you have questions, please email {{mail-to (config "TAS_Email")}}
+          and they may be able to help.
+        </p>
+    {{else}}
+      {{#if ticket.isClaimed}}
+        <p>
+          You have indicated you plan to use your Vehicle Pass this year. If your
+          plans have changed, you can check the bubble below and click
+          "Save My Choice"
+        </p>
+        <div class="form-check">
+          {{radio-button value="qualified" groupValue=vpAction radioId="vp-ticket-unclaim" classNames="form-check-label" radioClass="form-check-input"}}
+          <label for="vp-ticket-unclaim" class="form-check-label">
+            My plans have changed.  Either I'm not coming to Burning Man this year, or I otherwise don't need a Vehicle Pass.
+          </label>
+        </div>
+      {{else if ticket.isQualified}}
+        <p>
+          You have not yet claimed your Vehicle Pass.
+           <b>If you want us to issue you your Vehicle Pass, you must check the bubble below and click "Save My Vehicle Pass Choice".</b>
+         </p>
+         <div class="form-check">
+           {{radio-button value="claimed" groupValue=vpAction radioId="vp-ticket-claim" radioClass="form-check-input"}}
+           <label for="vp-ticket-claim" class="form-check-label">
+             Yes! I'm planning to Ranger at Burning Man this year and will be bringing
+             a vehicle, please issue me my Vehicle Pass!
+           </label>
+         </div>
+      {{/if}}
+
+      {{#if (or ticket.isQualified ticket.isClaimed)}}
+        <div class="form-group mt-3 mb-3">
+          <button type="button" class="btn btn-primary" {{action saveChoice ticket vpAction}}>Save My Vehicle Pass Choice</button>
+        </div>
+      {{/if}}
+    {{/if}}
+  {{/if}}
+{{else}}
+  <p>
+    <strong>Sorry, but it doesn't look like you qualified for a free Vehicle Pass.</strong>
+    Free Vehicle Passes are provided to Rangers who qualified for a Staff Credential or Reduced-Price Ticket.
+  </p>
+
+{{/if}}
+{{ticket-faq "vp" ticketingInfo}}
+{{/ch-box}}

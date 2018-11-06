@@ -1,0 +1,16 @@
+{{#each checkboxColumns as |column|}}
+  <div class="col-4">
+    {{#each column as |cb|}}
+      <div class="form-check">
+        <input
+          type="checkbox"
+          id={{cb.domId}}
+          class="form-check-input"
+          checked={{cb.isChecked}}
+          onclick={{action "onClick" cb}}
+        >
+        <label for="{{cb.domId}}" class="form-check-label">{{cb.label}}</label>
+       </div>
+    {{/each}}
+  </div>
+{{/each}}

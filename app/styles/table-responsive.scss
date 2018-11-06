@@ -1,0 +1,83 @@
+/* this will be overridden if the screen is small
+ * enough to have the responsive table query kick in.
+ */
+
+.td-number {
+  text-align: right;
+}
+
+.table-sm {
+  font-size: 0.9em;
+}
+
+.table .actions {
+  white-space:nowrap;
+}
+
+
+/*
+ * CSS responsive tables
+ */
+
+@media only screen and (max-width: 800px) {
+  .table-rc {
+    font-size: 1rem !important;
+
+    /* Force table to not be like tables anymore */
+    table,
+    tbody,
+    td,
+    th,
+    thead,
+    tr {
+      display: block;
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    tr {
+      border: 1px solid #ccc;
+      margin-bottom: 5px;
+    }
+
+    td {
+      /* Behave  like a "row" */
+      border: none;
+      border-bottom: 1px solid #eee;
+      position: relative;
+      padding-left: 50%;
+      white-space: normal;
+      text-align: left;
+      width: 100%;
+    }
+
+    /*
+  	Label the data
+  	*/
+    td:before {
+      /* Now like a table header */
+      position: absolute;
+      /* Top/left values mimic padding */
+      top: 5px;
+      left: 8px;
+      width: 50%;
+      white-space: nowrap;
+      text-align: left;
+      font-weight: bold;
+      content: attr(data-title);
+    }
+
+    .td-number {
+      text-align: normal !important;
+    }
+  }
+
+  .table-rc-hide {
+    display: none !important;
+  }
+}

@@ -1,0 +1,68 @@
+{{#ch-form "search" searchForm changeSet=false onSubmit=(action "submit") onFormChange=(action "searchOnChange") as |f|}}
+  <fieldset>
+    <legend>Person Search</legend>
+      <div class="form-row">
+        {{f.input "query" type="text" size=50 maxlength=50 autofocus="true" grid="col-auto"
+          placeholder="Enter a name to search for"
+          hint="To lookup a person id type '+id' (e.g., +1234567)"
+        }}
+        <div class="form-group col-auto">
+          <button type="button" class="btn btn-primary" {{action "clearQuery"}}>Clear</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="col-auto">Search By:</label>
+        <div class="col-auto">
+          {{f.input "callsign" type="checkbox" label="Callsign" inline=true}}
+          {{f.input "name" type="checkbox" label="Name" inline=true}}
+          {{f.input "email" type="checkbox" label="Email" inline=true}}
+          {{f.input "formerly_known_as" type="checkbox" label="Formerly Known As" inline=true}}
+        </div>
+        <label class="col-auto">Include:</label>
+        <div class="col-auto">
+          {{f.input "auditor" type="checkbox" label="Auditor" inline=true}}
+          {{f.input "past_prospective" type="checkbox" label="Past Prospective" inline=true}}
+        </div>
+      </div>
+  </fieldset>
+{{/ch-form}}
+
+<table class="table table-hover mt-2">
+  <caption>
+    {{#if isSubmitting}}
+      Searching . . .
+    {{else}}
+      Search Results - Showing {{searchCount}} of {{searchTotal}}
+    {{/if}}
+  </caption>
+  <thead>
+    <tr>
+      <th>Callsign</th>
+      {{#if showFKA}}
+        <th>FKA</th>
+      {{/if}}
+      <th>Name</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each searchResults as |person|}}
+      <tr>
+        <td>{{#link-to "person.index" person.id}}{{person.callsign}}{{/link-to}}</td>
+        {{#if showFKA}}
+          <td>{{person.formerly_known_as}}</td>
+        {{/if}}
+        <td>{{person.first_name}} {{person.last_name}}</td>
+        <td>{{person.status}} {{unless person.user_authorized " (suspend)"}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+{{#unless searchFound}}
+<div class="ml-2">
+<strong class="text-danger">"{{searchFailed}}" was not found with the search criteria.</strong>
+</div>
+{{/unless}}
+
+<div class="mt-4 ml-3">Hint: Press F1 to navigate directly to this page without having to click on the menu item.</div>

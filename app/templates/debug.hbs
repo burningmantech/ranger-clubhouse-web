@@ -1,0 +1,24 @@
+<main class="col">
+<dl>
+  <dt>EmberJS:</dt>
+  <dd>{{emberVersion}}</dd>
+
+  <dt>Ember Data:</dt>
+  <dd>{{emberDataVersion}}</dd>
+
+  <dt>Browser:</dt>
+  <dd>{{browserVendor}}: {{browser}}</dd>
+
+  <dt>API End Point:</dt>
+  <dd>{{get env "api-server"}}</dd>
+
+  <dt>Dual Clubhouse:</dt>
+  <dd>{{if env.dualClubhouse "yes" "no"}}</dd>
+
+  <dt>Clubhouse Classic URL:</dt>
+  <dd>{{env.clubhouseClassicUrl}}</dd>
+
+  <dt>Viewport Size:</dt>
+  <dd>{{viewport.width}} x {{viewport.height}}</dd>
+</dl>
+</main>

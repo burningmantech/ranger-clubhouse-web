@@ -1,0 +1,276 @@
+//
+// Bootstrap customizations
+//
+
+$kakhi: #d2b48c;
+
+$theme-colors: (
+  "primary": #d2b48c,
+  "khaki": $kakhi
+);
+
+// bootstrap set the link-color to the primary color
+$link-color: #007bff;
+
+// Do not enable rounded corners
+$btn-border-radius: 0;
+$btn-border-radius-lg: 0;
+$btn-border-radius-sm: 0;
+
+// Adjust h tags
+$font-size-base:              0.9rem;
+
+$h1-font-size:                $font-size-base * 2;
+$h2-font-size:                $font-size-base * 1.75;
+$h3-font-size:                $font-size-base * 1.5;
+$h4-font-size:                $font-size-base * 1.25;
+$h5-font-size:                $font-size-base * 1.1;
+$h6-font-size:                $font-size-base;
+
+$modal-header-padding: 0.75rem !important;
+
+@import "bootstrap-custom";
+
+@import "sidebar";
+@import "schedule";
+@import "table-responsive";
+@import "ember-power-select";
+@import "ember-power-select-typeahead";
+
+
+/* roboto-mono-regular - latin */
+
+@font-face {
+  font-family: 'Roboto Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto Mono'), local('RobotoMono-Regular'), url("webfonts/RobotoMono-Regular.ttf") format('truetype');
+}
+
+/* roboto-mono-700 - latin */
+
+@font-face {
+  font-family: 'Roboto Mono';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Roboto Mono Bold'), local('RobotoMono-Bold'), url("webfonts/RobotoMono-Bold.ttf") format('truetype');
+}
+
+@media not print {
+  body {
+    background-color: #fcfcfc;
+  }
+}
+
+main {
+  margin: 10px 0px;
+}
+
+.dropdown-large {
+  position: static;
+}
+
+.dropdown-menu-large {
+  width:90%;
+   left:0;
+   right:0;
+ /*  height of nav-item  */
+   top:45px;
+}
+
+.dropdown-menu .navbar-text {
+  margin-left: 24px;
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #222;
+}
+
+.footer {
+  width: 100%;
+  padding: 15px 0;
+  color: #000;
+  background-color: #d2b48c;
+}
+
+.footer {
+  a, a:visited {
+    color: #000;
+    font-weight: bold;
+  }
+
+  > .container {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+}
+
+/**
+ * Progress bars with centered text
+ */
+
+.progress span {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-header {
+  font-weight: bold;
+}
+
+.form-text-invalid {
+  font-size: 0.9em;
+  color: #dc3545;
+}
+
+legend {
+  padding-left: 10px;
+  border-bottom: 1px solid #ececec;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.form-group,
+.form-row {
+  padding-left: 10px;
+}
+
+.form-check-label:hover {
+  background-color: #f0f0f0;
+}
+
+/*
+ * Remove border on a row
+ */
+
+ .no-border td {
+   border: none !important;
+ }
+
+/* Messages */
+
+.person-message-box {
+  margin-bottom: 10px;
+}
+
+.person-message-header {
+  padding: 10px 0;
+  margin-bottom: 10px;
+  background-color: #f0f0f0;
+}
+
+.year-select {
+  font-size: 1.4em;
+}
+
+.error-pane {
+  margin: 25px auto;
+}
+
+.error-message {
+  color: red;
+}
+
+.loading-pane {
+  margin: 25px auto;
+}
+
+.loading-message {
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.loading-spinner {
+  height: 64px;
+  width: 64px;
+  margin: 0 auto;
+  -webkit-mask: url("/assets/spinner.svg") no-repeat 50% 50%;
+  mask: url("/assets/spinner.svg") no-repeat 50% 50%;
+  -webkit-mask-size: cover;
+  mask-size: cover;
+  background-color: black;
+}
+
+.ranger-logo {
+  text-align: center;
+  margin: 20px auto 0;
+  height: 200px;
+  width: 200px;
+
+  // needed for IE edge
+  background-size: 20px 20px;
+
+  mask: url("/assets/ranger-logo.svg") no-repeat 50% 50%;
+  -webkit-mask: url("/assets/ranger-logo.svg") no-repeat 50% 50%;
+
+  mask-size: cover;
+  -webkit-mask-size: cover;
+
+  background-color: #ececec;
+}
+
+.mugshot {
+  background: #fcfcfc;
+  padding: 10px;
+  border: 1px solid #999;
+  text-align: center;
+}
+
+.mugshot img {
+  display: block;
+  height: 200px;
+}
+
+.mugshot-icon {
+  width: 180px;
+}
+
+/*
+ * position the flash messages on top
+*/
+
+.flash-message {
+  position: fixed;
+  top: 2rem;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 80%;
+  max-width: 600px;
+  z-index: 2000;  // Needs to be higher than the modal and tooltips z-indexs
+}
+
+.modal-header {
+  background-color: #f0f0f0;
+}
+
+caption {
+  caption-side: top;
+  color: #000;
+  background-color: #ececec;
+  font-size: 0.9rem;
+  padding: 5px 10px;
+}
+
+.tr-no-border td {
+  border: 0px !important;
+}
+
+.col-form-label-fixed {
+  width: 100px !important;
+  max-width: 100px;
+  min-width: 100px;
+}
+
+.sidebar-icon { width: 20px; height: 20px; }
+
+/*
+ * ember power select fix when using within a modal
+ */
+
+ .ember-power-select-dropdown {
+   z-index: 3500;
+ }

@@ -1,0 +1,111 @@
+{{#if emitTopLabel}}
+  {{#if label}}
+      <label class="{{labelClass}}" for="{{name}}">
+        {{label}}{{#if required}} {{requiredLabel}}{{/if}}
+      </label>
+  {{/if}}
+{{/if}}
+
+{{#if (eq type "search")}}
+  {{#power-select-typeahead
+                  search=onSearch
+                  selected=(get model name)
+                  onchange=(action "update")
+                  disabled=disabled
+                  renderInPlace=true
+                  noMatchesMessage="No results found"
+                  as |item| }}
+{{item}}
+{{/power-select-typeahead}}
+{{else if (eq type "select")}}
+  <select
+      id={{_domId}}
+      name={{name}}
+      onchange={{action "update" value="target.value"}}
+      disabled={{disabled}}
+      class="{{controlClass}}"
+    >
+    {{ch-form/options-builder options _val}}
+  </select>
+{{else if (eq type "radioGroup")}}
+  {{#each options as |option idx|}}
+    <div class="{{wrapClass}}">
+      <input
+        type     = "radio"
+        class    = {{controlClass}}
+        id       = {{concat _domId idx}}
+        onclick  = {{action "update" option.key}}
+        checked  = {{eq (get model name) option.key}}
+        disabled = {{disabled}}
+      >
+      <label class="{{labelClass}}" for="{{concat _domId idx}}">{{option.label}}</label>
+    </div>
+  {{/each}}
+{{else if (eq type "radio")}}
+    <input
+      type     = "radio"
+      class    = {{controlClass}}
+      id       = {{_domId}}
+      onclick  = {{action "update" value}}
+      checked  = {{eq (get model name) value}}
+      disabled = {{disabled}}
+    >
+{{else if (eq type "checkbox")}}
+   <input
+      type       = "checkbox"
+      class      = {{controlClass}}
+      id         = {{_domId}}
+      name       = {{name}}
+      checked    = {{get model name}}
+      onclick    = {{action "update" value="target.checked"}}
+    >
+    <label class="form-check-label" for="{{_domId}}">{{label}}</label>
+{{else if (eq type "checkboxGroup")}}
+  {{ch-form/checkbox-group
+      name=name
+      value=_val
+      options=options
+      onUpdate=(action "update")
+  }}
+{{else if (eq type "textarea")}}
+  {{textarea
+    name        = name
+    id          = _domId
+    value       = (mut (get model name))
+    class       = (concat controlClass " " (unless isValid elementErrorClass))
+    placeholder = placeholder
+    disabled    = disabled
+    autofocus   = autofocus
+    rows        = rows
+    cols        = cols
+    maxLength   = maxlength
+  }}
+{{else}}
+  <input
+    type        = {{type}}
+    value       = {{get model name}}
+    name        = {{name}}
+    id          = {{_domId}}
+    class       = "{{controlClass}} {{unless isValid elementErrorClass}}"
+    placeholder = {{placeholder}}
+    disabled    = {{disabled}}
+    autofocus   = {{autofocus}}
+    oninput     = {{action "update" value = "target.value"}}
+    maxlength   = {{maxlength}}
+    size        = {{size}}
+    autocomplete = {{autocomplete}}
+    >
+{{/if}}
+
+{{#if hint}}
+  <small id="{{_domId}}Help" class="{{hintClass}}">{{hint}}</small>
+{{/if}}
+
+{{#unless isValid}}
+  {{#each errors as |msg|}}
+    <div class="{{textErrorClass}}">&bullet; {{msg}}</div>
+  {{/each}}
+  {{#each error.validation as |msg|}}
+    <div class="{{textErrorClass}}">&bullet; {{msg}}</div>
+  {{/each}}
+{{/unless}}

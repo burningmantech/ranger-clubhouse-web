@@ -1,0 +1,58 @@
+<h1>Asset Search</h1>
+
+<form class="form-inline" {{action "search" on="submit"}} >
+      {{input type="text" size=30 value=barcode placeholder="Enter the asset barcode" class="form-control"}}
+      <button type="submit" class="btn btn-primary ml-1">Search</button>
+</form>
+
+
+{{#if notFound}}
+<div class="text-danger mt-2"><strong>Barcode "{{notFoundBarcode}}" was not found.</strong></div>
+{{else if asset}}
+<table class="table table-borderless mt-4">
+  <caption>Asset {{asset.barcode}}</caption>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Assigned</th>
+      <th>Temp ID</th>
+      <th>Category</th>
+      <th>Model</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{asset.description}}</td>
+      <td>{{if asset.perm_assign "permanent" "temporary"}}</td>
+      <td>{{present-or-not asset.temp_id "no temp id"}}</td>
+      <td>{{asset.category}}</td>
+      <td>{{asset.subtype}} {{asset.model}} {{asset.color}} {{asset.style}}</td>
+    </tr>
+    <tr>
+      <td colspan="5">Notes: {{present-or-not asset.notes}}</td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="table table-hover">
+  <caption>Checkout History</caption>
+  <thead>
+    <tr>
+      <th>Person</th>
+      <th>Out</th>
+      <th>In</th>
+      <th>Attachment</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each asset.asset_person as |row|}}
+      <tr>
+        <td>{{#link-to "person.index" row.person.id}}{{row.person.callsign}}{{/link-to}}</td>
+        <td>{{row.checked_out}}</td>
+        <td>{{present-or-not row.checked_in "out"}}</td>
+        <td>{{present-or-not row.attachment "-"}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+{{/if}}

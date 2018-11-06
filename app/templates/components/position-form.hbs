@@ -1,0 +1,36 @@
+{{#ch-form "position" position modalBox=true modalTitle=formTitle validator=positionValidations onSubmit=(action "save") as |f|}}
+  <fieldset>
+    <legend>Description</legend>
+    <div class="form-row">
+      {{f.input "title" label="Title" maxlength=25 grid="col-auto"}}
+      {{f.input "short_title" label="Short Title" maxlength="6" grid="col-auto"}}
+      {{f.input "type" type="select" label="Type" options=positionTypes grid="col-auto"}}
+      {{f.input "training_position_id" label="Training Position" type="select" options=trainingOptions grid="col-auto"}}
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Suggested Ranger Counts Per Slot</legend>
+    <div class="form-row">
+      {{f.input "min" label="Min" size=3 maxlength=3 grid="col-auto"}}
+      {{f.input "max" label="Max" size=3 maxlength=3 grid="col-auto"}}
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Flags</legend>
+    <div class="form-row">
+      {{f.input "all_rangers" type="checkbox" label="All rangers" inline=true}}
+      {{f.input "new_user_eligible" type="checkbox" label="New user eligible" inline=true}}
+      {{f.input "count_hours" type="checkbox" label="Count hours" inline=true}}
+      {{f.input "auto_signout" type="checkbox" label="Can be auto-signed out" inline=true}}
+      {{f.input "ol_sl_report" type="checkbox" label="On SL report" inline=true}}
+    </div>
+  </fieldset>
+
+  <div class="mt-4">
+    {{f.submit}}
+    <button type="submit" class="btn btn-secondary" {{action "cancel" f.model}}>Cancel</button>
+  </div>
+
+{{/ch-form}}

@@ -1,0 +1,94 @@
+<main class="col">
+  <h1>Handle Checker</h1>
+
+  <div class="form-row align-items-left">
+    <div class="col-auto">
+      <label>Proposed handle
+        {{input value=currentName enter=(action "checkCurrentName")}}
+      </label>
+    </div>
+    <div class="col-auto">
+      <button type="button" class="btn btn-primary" {{action "checkCurrentName"}}>Check handle</button>
+    </div>
+    <div class="col-auto">
+      <button type="button" class="btn btn-secondary" {{action "clearCheckedHandles"}}>Clear history</button>
+    </div>
+  </div>
+  <div class="form-group row">
+    <legend>Handle rules</legend>
+    {{#each-in handleRules as |id rule|}}
+      <div class="form-check form-check-inline">
+        {{!-- TODO use #let in Ember 3.1 instead of repeating concat --}}
+        {{input type="checkbox" checked=rule.enabled class="form-check-input" id=(concat "handle-rule-checkbox-" id)}}
+        <label class="form-check-label" for={{concat "handle-rule-checkbox-" id}}>{{rule.name}}</label>
+      </div>
+    {{/each-in}}
+  </div>
+  <div class="row">
+    {{#each checkedHandles as |checked|}}
+      <div class="check-result-card" id="check-result-{{checked.id}}">
+        <div class="card">
+          <div class="card-header">{{checked.name}}</div>
+        </div>
+        {{#each checked.conflicts as |conflict index|}}
+          {{#if (get (get handleRules conflict.ruleId) "enabled")}}
+            <div class="card">
+              <div class="card-header conflict-priority-{{conflict.priority}} conflict-rule-{{conflict.ruleId}}">
+                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#conflict-detail-{{checked.id}}-{{index}}">
+                  {{conflict.description}}
+                </button>
+              </div>
+              <div id="conflict-detail-{{checked.id}}-{{index}}" class="collapse">
+                <div class="card-body">
+                  {{get (get handleRules conflict.ruleId) "name"}}, {{conflict.priority}} priority
+                  {{#if conflict.conflictingHandle}}
+                    {{#with conflict.conflictingHandle as |handle|}}
+                      {{#if handle.personId}}
+                        <a href="{{cgo "person" "select" (concat "personId=" handle.personId)}}" target="_blank" rel="noopener">
+                          {{handle.entityType}} {{handle.name}}
+                        </a>
+                      {{else}}
+                        {{handle.entityType}} {{handle.name}}
+                      {{/if}}
+                    {{/with}}
+                  {{/if}}
+                </div>
+              </div>
+            </div>
+          {{/if}}
+        {{/each}}
+      </div>
+    {{/each}}
+  </div>
+
+  <h3>All {{model.length}} Handles</h3>
+
+  <div class="row">
+    <table class="table table-striped">
+      <thead class="thead-light">
+        <tr>
+          <th>Handle</th>
+          <th>Entity type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each model as |handle|}}
+          <tr>
+            <td>
+              {{#if handle.personId}}
+                <a href="{{cgo "person" "select" (concat "personId=" handle.personId)}}" target="_blank" rel="noopener">
+                  {{handle.name}}
+                </a>
+              {{else}}
+                {{handle.name}}
+              {{/if}}
+            </td>
+            <td>
+              {{handle.entityType}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</main>

@@ -1,0 +1,62 @@
+
+<h1>Clubhouse Positions</h1>
+
+{{#if position}}
+  {{position-form position=position trainingPositions=trainingPositions onSave=(action "save") onCancel=(action "cancel")}}
+{{/if}}
+
+<div class="row mb-2">
+  <div class="col-sm-3">
+  {{#power-select
+        options=typeOptions
+        selected=typeFilter
+        searchEnabled=false
+        onchange=(action (mut typeFilter)) as |item| }}
+      {{item}}
+  {{/power-select}}
+  </div>
+  <div class="col-sm-9 text-right">
+    <button type="button" class="btn btn-primary" {{action "new"}}>New Position</button>
+  </div>
+</div>
+
+<p class="text-muted">Showing {{viewPositions.length}} of {{positions.length}}</p>
+<table class="table table-hover table-sm">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Short Title</th>
+      <th>Type</th>
+      <th>Min / Max</th>
+      <th>New User Eligible</th>
+      <th>All Rangers</th>
+      <th>Count Hours</th>
+      <th>Auto Signout</th>
+      <th>On SL report</th>
+      <th>Training</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each viewPositions as |position|}}
+    <tr class="position-line">
+      <td>{{position.title}}</td>
+      <td>{{position.short_title}}</td>
+      <td>{{position.type}}</td>
+      <td class="td-number">{{position.min}} / {{position.max}}</td>
+      <td>{{yesno position.new_user_eligible}}</td>
+      <td>{{yesno position.all_rangers}}</td>
+      <td>{{yesno position.count_hours}}</td>
+      <td>{{yesno position.auto_signout}}</td>
+      <td>{{yesno position.on_sl_report}}</td>
+      <td>
+        {{#if position.training_position_id}}
+          {{pluck position.training_position_id positions "title" "-"}}
+        {{/if}}
+      </td>
+      <td class="actions"><button class="btn btn-primary" {{action "edit" position}}>{{fa-icon "edit"}}</button> <button class="btn btn-danger" {{action "delete" position}}>{{fa-icon "trash-alt"}}</button></td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

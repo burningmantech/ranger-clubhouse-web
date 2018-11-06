@@ -1,0 +1,68 @@
+{{#if contactMentee}}
+  {{contact-form callsign=contactMentee.callsign recipientId=contactMentee.person_id contactType="mentor" onDone=(action "doneAction")}}
+{{/if}}
+
+<h1>{{person.callsign}}'s Mentees</h1>
+
+<p>
+    A message may be sent to your mentees by clicking on 'Contact'. You are only
+     allowed to send a contact message to active Rangers. If you wish to contact
+     a non-active Ranger, please email the Mentor Cadre.
+</p>
+
+<p>
+    <i>No Contact</i> indicates that individual wishes not to be contacted by
+    their Mentors.
+</p>
+
+<p>
+    From {{firstYear}} to {{lastYear}}, you have mentored {{totalMentees}} alphas
+    of whom {{totalPassed}} have passed, and {{totalBonked}} were bonked.
+</p>
+
+{{#each menteeList as |year| }}
+<h2>{{year.year}} Mentees <small>({{year.mentees.length}} alphas, {{year.passed}} passed, {{year.bonked}} bonked)</small></h2>
+<table class="table table-hover">
+  <thead class="thead-light">
+    <tr>
+      <th>Callsign</th>
+      <th>Status</th>
+      <th>Mentors</th>
+      <th>Passed</th>
+      <th>Last Contact</th>
+      <th>Contact</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each year.mentees as |mentee|}}
+    <tr>
+      <td>
+        {{#link-to "person.index" mentee.person_id}}{{mentee.callsign}}{{/link-to}}
+        {{#if mentee.formerly_known_as}}
+        <div>(FKA: {{mentee.formerly_known_as}})</div>
+        {{/if}}
+      </td>
+      <td>{{mentee.status}}</td>
+      <td>
+        {{#each mentee.mentors as |mentor|}}
+          {{mentor.callsign}}<br>
+        {{/each}}
+      </td>
+      <td>{{mentee.mentor_status}}</td>
+      <td>
+        {{present-or-not mentee.last_contact "-"}}
+      </td>
+      <td>
+        {{#if (eq mentee.contact_status "allow")}}
+          <button type="button" class="btn btn-primary btn-sm" {{action "contactAction" mentee}}>Contact</button>
+        {{else if (eq mentee.contact_status "block")}}
+          <span class="text-muted">No Contact</span>
+        {{else}}
+          -
+        {{/if}}
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+{{/each}}

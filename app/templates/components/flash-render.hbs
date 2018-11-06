@@ -1,0 +1,8 @@
+{{#each toast.queue as |flash|}}
+  {{#flash-message flash=flash as |component flash close|}}
+    {{{flash.message}}}
+    <button type="button" class="close" {{action close}}>
+      <span>&times;</span>
+    </button>
+  {{/flash-message}}
+{{/each}}

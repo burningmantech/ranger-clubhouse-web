@@ -1,0 +1,9 @@
+{{#if value}}
+  {{#if hasBlock}}
+    {{yield}}
+  {{else}}
+    {{value}}
+  {{/if}}
+{{else}}
+<i>{{empty}}</i>
+{{/if}}

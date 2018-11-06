@@ -1,0 +1,56 @@
+<h1>Edit Personal Information</h1>
+{{#ch-form "person" person validator=personInfoValidations onSubmit=(action "onSubmit") onCancel=(action "onCancel") as |f|}}
+  <fieldset>
+    <legend>General Information</legend>
+    <div class="form-row">
+      {{f.input "first_name" label="First Name" maxlength=25 grid="col-sm-4" }}
+      {{f.input "mi" label="M.I." maxlength=10 grid="col-sm-1" }}
+      {{f.input "last_name" label="Last Name" maxlength=25 grid="col-sm-4"}}
+    </div>
+    <div class="form-row">
+      {{f.input "email" label="Email" maxlength=50 grid="col-sm-6" }}
+      <div class="form-group ">
+        <strong>Note:</strong> Updating the email address here WILL NOT update the email address used for various ranger mailing lists. Please contact {{general-support-email}} for help.
+      </div>
+    </div>
+    <div class="form-row">
+      {{f.input "gender" label="Gender" hint="female, male, non-binary, gender fluid, etc." }}
+    </div>
+    <div class="form-row">
+    {{f.input "languages" label="Languages Spoken"
+          hint="List the English names of languages you are comfortable speaking separated by a comma. Ex: english, french, japanese"}}
+    </div>
+    <div class="form-row col-auto">
+      {{f.input "camp_location" type="textarea" label="Camp Location" cols=50 rows=4 maxlength=200}}
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Ranger Clothing</legend>
+    <div class="form-row">
+      {{f.input "teeshirt_size_style" type="select" label="T-Shirt Size" options=shortSleeveOptions grid="col-md-5 col-sm-8"}}
+      {{f.input "longsleeveshirt_size_style" type="select" label="Long Sleeve Shirt Size" options=longSleeveOptions grid="col-md-5 col-sm-8"}}
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Home Address</legend>
+    <div class="form-row">
+      {{f.input "street1" label="Street" grid="col-md-8 col-sm-6"}}
+      {{f.input "apt" label="Apt" grid="col-md-1 col-sm-4"}}
+      {{f.input "street2" label="Street Line 2" grid="col-sm-8"}}
+    </div>
+    <div class="form-row">
+      {{f.input "city" label="City" grid="col-sm-5 col-md-4"}}
+      {{f.input "state" label="State / Province" grid="col-sm-5 col-md-4"}}
+      {{f.input "zip" label="Zip / Postal Code" grid="col-sm-5 col-md-4"}}
+      {{f.input "country" label="Country" grid="col-sm-5 col-md-4"}}
+    </div>
+    <div class="form-row">
+      {{f.input "home_phone" label="Home Phone" grid="col-sm-4"}}
+      {{f.input "alt_phone" label="Alternative Phone" grid="col-sm-4"}}
+    </div>
+
+  </fieldset>
+
+  {{f.submit label="Update" disabled=isSubmitting}}
+  {{f.cancel}}
+{{/ch-form}}

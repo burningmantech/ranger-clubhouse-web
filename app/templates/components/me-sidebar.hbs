@@ -1,0 +1,43 @@
+{{#ch-sidebar}}
+  {{#ch-sidebar-group "RANGERING"}}
+    {{ch-sidebar-link "me.schedule" title="Schedule / Signups" icon="clipboard"}}
+    {{#if person.isRanger}}
+      {{ch-sidebar-link "me.timesheet" title="Timesheets" icon="clock"}}
+    {{/if}}
+    {{ch-sidebar-link "me.ranger-info" title="Ranger Info" icon="user"}}
+  {{/ch-sidebar-group}}
+
+  {{#if (or person.isRanger person.isAlpha person.isProspective)}}
+  {{#ch-sidebar-group "PRE-EVENT"}}
+      {{ch-sidebar-link "me.tickets" title="Tickets & Stuff" icon="ticket-alt" iconType="s"}}
+      {{ch-sidebar-link "me.motorpool-policy" title="Motorpool Policy" icon="car" iconType="s"}}
+  {{/ch-sidebar-group}}
+  {{/if}}
+
+  {{#ch-sidebar-group "COMMUNICATION"}}
+    {{#if person.isRanger}}
+    {{ch-sidebar-link "me.messages" title="Messages" icon="envelope" badgeText=person.unread_message_count}}
+    {{/if}}
+    {{ch-sidebar-link "me.alerts" title="Alert Preferences" icon="bell"}}
+    {{#if person.teacher.have_mentored}}
+    {{ch-sidebar-link "me.mentees" title="My Mentees" icon="users" iconType="s"}}
+    {{/if}}
+    {{#if person.isRanger}}
+    {{ch-sidebar-link "me.contact" title="Contact Ranger" icon="comments" iconType="s"}}
+    {{/if}}
+  {{/ch-sidebar-group}}
+
+  {{#ch-sidebar-group "MY ACCOUNT"}}
+    {{ch-sidebar-link "me.personal-info" title="Personal Info" icon="home" iconType="s"}}
+    {{ch-sidebar-link "me.emergency-contact" title="Emergency Contact" icon="exclamation" iconType="s"}}
+    {{ch-sidebar-link "me.password" title="Change Password" icon="key" iconType="s"}}
+  {{/ch-sidebar-group}}
+
+  {{#ch-sidebar-group}}
+    {{ch-sidebar-link "me.help" title="Help" icon="question" iconType="s"}}
+    {{ch-sidebar-collapse}}
+  {{/ch-sidebar-group}}
+
+  <div class="ranger-logo menu-collapsed"></div>
+
+{{/ch-sidebar}}

@@ -1,0 +1,27 @@
+{{#ch-box "Your Photo Is Needed" type="warning" }}
+  <p>
+    {{fa-icon "exclamation-triangle" size="2x"}} You need to upload a photo for
+    your Burning Man ID badge.
+  </p>
+  {{#if photo.upload_url}}
+    <p>
+      <a href="{{photo.upload_url}}" class="btn btn-primary btn-sm">Click here</a>
+      to upload your photo.
+    </p>
+    <p class="text-danger font-weight-bold">
+      When finished, close the upload window and then click refresh in this window.
+    </p>
+    <p>
+      For photo requirements, please see
+      <a target="_blank" rel="noopener" href="http://www.lambase.com/help/RangerHelpSheet.pdf">this helpful document.</a>
+    </p>
+  {{else}}
+    Photo uploading is currently disabled. Please check back later.
+  {{/if}}
+  <p>
+    Note that you will <span class="text-danger">not be able to sign up for
+    shifts or training</span> until you have an approved ID photo and have
+    completed the Ranger Manual Review. Photos may take 2-3 days to be approved
+    once you have uploaded an acceptable photo.
+   </p>
+{{/ch-box}}

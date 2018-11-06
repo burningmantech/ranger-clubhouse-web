@@ -1,0 +1,17 @@
+{{me-sidebar person=person}}
+<main class="col">
+  {{#unless person.callsign_approved}}
+    {{#ch-box "Callsign Not Approved" type="danger" icon="exclamation-circle"}}
+    <p>
+      You will not be able to sign up for trainings or shifts until your
+      callsign is approved.
+    </p>
+    <p>
+      If you intend to become a Black Rock Ranger on playa this year,
+      or audit a training, please email {{general-support-email}}
+    </p>
+    {{/ch-box}}
+  {{/unless}}
+
+  {{outlet}}
+</main>

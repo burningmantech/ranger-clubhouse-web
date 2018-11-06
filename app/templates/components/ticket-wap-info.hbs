@@ -1,0 +1,110 @@
+{{#ch-box "Work Access Pass"}}
+{{#if (eq ticketingStatus "none")}}
+  <p>
+    Information about Work Access Passes is not yet available in the Clubhouse, please check back soon.
+  </p>
+{{else if isNotBankedStaffCredential}}
+  {{#if ticket.access_any_time}}
+      <b>Congratulations - you don't need a separate Work Access Pass because
+      your Staff Credential serves as your Work Access Pass!</b>
+      Your Staff Credential allows you in to the event <b>at any date and
+      time</b> you dang well choose.  (Seriously, your Staff Credential is one
+      of the rare ones marked for "any time" early arrival)!
+  {{else}}
+      <b>Congratulations - you don't need a separate Work Access Pass because your Staff Credential serves as your Work Access Pass!</b>
+      Your Staff Credential allows you in to the event  at 0001 hours (i.e., one
+      minute after mindnight) on <b>{{ticket.accessDateFormatted}}</b>
+   {{/if}}
+{{else if isBankedStaffCredential}}
+  <p>
+    Well, you <b>had</b> a built-in Work Access Pass via your Staff
+    Credential... but you've banked your Staff Credential!  So at the moment,
+    you don't have a Work Access Pass.  If you need a separate Work Access Pass
+    for some reason please email {{mail-to ticketingInfo.ranger_ticketing_email}} and talk to them about it.
+  </p>
+{{else unless wapTicket}}
+  {{#if person.isNotRanger}}
+    <p>
+      Huh.  It doesn't look like you've qualified for a Work Access Pass. This
+      is probably a mistake, because all Alphas qualify for a Work Access Pass for
+      arrival on Friday at 0001. <b>Please email {{mail-to ticketingEmail.ranger_ticketing_email}}
+      and let us know something is messed up and we'll get it fixed!</b>
+    </p>
+  {{else}}
+    <p>
+      Huh.  It doesn't look like you've qualified for a Work Access Pass. This
+      is probably a mistake, because all returning Rangers qualify for a Work
+      Access Pass for arrival on Thursday at 0001. <b>Please email
+      {{mail-to ticketingEmail.ranger_ticketing_email}}
+      and let us know something is messed up and we'll get it fixed!</b>
+   </p>
+   {{/if}}
+{{else}}
+  <p>
+    <b>Congratulations - {{congratSentence}}!</b>
+  </p>
+  {{#if wapTicket.access_any_time}}
+    <p>
+      Your Work Access Pass will allow you into the event <b>at any date and
+      time</b> you dang well choose.  (Seriously, your Work Access Pass is one
+      of the rare ones marked for "any time" early arrival!)
+    </p>
+  {{else}}
+    <p>
+      Your Work Access Pass will allow you into the event at 0001 hours (i.e.,
+      one minute after midnight) on <b>{{wapTicket.accessDateFormatted}}</b>
+    </p>
+  {{/if}}
+
+  {{#if (eq ticketingStatus "frozen")}}
+    {{ticket-frozen item="Work Access Pass"}}
+  {{else}}
+    {{#if (eq ticketingStatus "view")}}
+      <p>
+        For now, there's nothing more you need to do.  Information about how to claim your Work Access
+        Pass will be available in June or early July.
+      </p>
+    {{else}}
+      {{#if wapTicket.isClaimed}}
+        <p>
+          You have indicated you plan to use your Work Access Pass this year. If
+          your plans have changed, you can check the bubble below and click "Save
+          My WAP Choice".
+        </p>
+        <div class="form-check">
+          {{radio-button value="qualified" groupValue=wapAction
+              radioId="wap-ticket-unclaim' classNames='form-check-label"
+              radioClass="form-check-input" }}
+          <label for="wap-ticket-unclaim" class="form-check-label">
+            My plans have changed.  Either I'm not coming to Burning Man this year, or I'm
+            getting there after the gates open, so I don't need a Work Access Pass.
+           </label>
+        </div>
+      {{else if wapTicket.isQualified}}
+        <p>
+          You have not yet claimed your Work Access Pass.  <b>If you want us to
+          issue you your Work Access Pass so you can get in early, you must check
+          the bubble below and click "Save My WAP Choice".</b>
+        </p>
+
+        <div class="form-check">
+          {{radio-button value="claimed" groupValue=wapAction
+                        radioId="wap-ticket-claim" radioClass="form-check-input"}}
+         <label for="wap-ticket-claim" class="form-check-label">
+           Yes! I'm planning to Ranger at Burning Man this year, please issue me my Work Access Pass!
+         </label>
+        </div>
+      {{/if}}
+
+      {{#if (or wapTicket.isQualified wapTicket.isClaimed)}}
+        <div class="form-group mt-3 mb-3">
+          <button type="button" class="btn btn-primary" {{action saveChoice wapTicket wapAction}}>Save My WAP Choice</button>
+        </div>
+      {{/if}}
+    {{/if}}
+  {{/if}}
+{{/if}}
+
+{{ticket-faq "wap" ticketingInfo}}
+
+{{/ch-box}}

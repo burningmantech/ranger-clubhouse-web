@@ -1,0 +1,85 @@
+{{#if modalBox}}
+<div id="form-dialog" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{modalTitle}}</h5>
+      </div>
+      <div class="modal-body">
+        <form id="{{formId}}" method="post" autocomplete={{autocomplete}} {{action "submitForm" on="submit"}}>
+        {{yield (hash
+          model=model
+          input=(component "ch-form/field"
+            model=model
+            formId=formId
+            placeholder=placeholder
+            size=size
+            maxlength=maxlength
+            disabled=disabled
+            onChange=onChange
+            fieldChangeAction=(action "fieldChangeAction")
+            autofocus=autofocus
+            autocomplete=autocomplete
+          )
+          submit=(component "ch-form/submit"
+            label=label
+            submitClass=submitClass
+            submitAction=(action "submitForm")
+            disabled=disabled
+          )
+          reset=(component "ch-form/reset-button"
+            label=label
+            class=resetClass
+            resetAction=(action "resetForm")
+            disabled=disabled
+          )
+          cancel=(component "ch-form/cancel"
+            label=label
+            class=cancelClass
+            cancelAction=(action "cancelForm")
+            disabled=disabled
+          )
+        ) }}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{else}}
+<form id="{{formId}}" method="post" autocomplete={{autocomplete}} {{action "submitForm" on="submit"}} class={{formClass}}>
+{{yield (hash
+  model=model
+  input=(component "ch-form/field"
+    model=model
+    formId=formId
+    placeholder=placeholder
+    size=size
+    maxlength=maxlength
+    disabled=disabled
+    onChange=onChange
+    fieldChangeAction=(action "fieldChangeAction")
+    autofocus=autofocus
+    autocomplete=autocomplete
+  )
+  submit=(component "ch-form/submit"
+    label=label
+    submitClass=submitClass
+    submitAction=(action "submitForm")
+    disabled=disabled
+  )
+  reset=(component "ch-form/reset-button"
+    label=label
+    class=resetClass
+    resetAction=(action "resetForm")
+    disabled=disabled
+  )
+
+  cancel=(component "ch-form/cancel"
+    label=label
+    class=cancelClass
+    cancelAction=(action "cancelForm")
+    disabled=disabled
+  )
+) }}
+</form>
+{{/if}}

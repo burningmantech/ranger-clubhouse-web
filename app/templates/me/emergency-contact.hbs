@@ -1,0 +1,21 @@
+<h1>Edit Emergency Contact Information</h1>
+{{#ch-form "person" person validator=emergencyContactValidations onSubmit=(action "submit") onCancel=(action "cancel") as |f|}}
+  <div class="form-row">
+    {{f.input "em_first_name" label="First Name"}}
+    {{f.input "em_mi"  label="M.I."}}
+    {{f.input "em_last_name" label="Last Name"}}
+  </div>
+  <div class="form-row">
+    {{f.input "em_handle" label="Playa Name / Handle"}}
+  </div>
+  <div class="form-row">
+    {{f.input "em_email" label="Email"}}
+    {{f.input "em_home_phone" label="Phone"}}
+    {{f.input "em_alt_phone" label="Alternate Phone"}}
+  </div>
+  <div class="form-row">
+    {{f.input "em_camp_location" type="textarea" label="Emergency Contact's Camp Location" rows=2 cols=50}}
+  </div>
+  {{f.submit label="Update"}}
+  {{f.cancel}}
+{{/ch-form}}

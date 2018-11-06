@@ -1,0 +1,11 @@
+{{#ch-sidebar}}
+  {{#ch-sidebar-group "TRAINING"}}
+    {{ch-sidebar-link (cgo "training" "selectAll") title="Trainer's Report" icon="list-alt" iconType="r"}}
+    {{ch-sidebar-link "training.capacity" training.id title="Training Capacity" icon="battery-half" iconType="s"}}
+    {{ch-sidebar-link "training.multiple-enrollments" training.id title="Multiple Enrollments" icon="copy" iconType="s"}}
+    {{ch-sidebar-collapse}}
+  {{/ch-sidebar-group}}
+
+  <div class="ranger-logo menu-collapsed"></div>
+
+{{/ch-sidebar}}

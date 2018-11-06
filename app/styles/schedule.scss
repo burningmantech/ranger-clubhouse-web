@@ -1,0 +1,46 @@
+@media print {
+  .schedule-table {
+    font-size: 1em;
+
+    th {
+      background-color: #e9ecef;
+    }
+  }
+}
+
+.schedule-table {
+  font-family: 'Roboto Mono';
+  font-size: 1em;
+
+  td {
+    vertical-align: center;
+  }
+}
+
+.schedule-time {
+  width: 16%;
+}
+
+.schedule-duration {
+  width: 4%;
+}
+
+.schedule-credits {
+  width: 4%;
+}
+
+.schedule-description {
+  width: 20%;
+}
+
+.schedule-actions {
+  width: 10%;
+}
+
+.schedule-full {
+  width: 5%;
+}
+
+.schedule-overlapping {
+  background-color: #fbd3d3;
+}
