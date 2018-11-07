@@ -5,7 +5,7 @@ import { assert } from '@ember/debug';
 import DS from 'ember-data';
 
 export default class HouseService extends Service {
-  @service('flashMessages') notify;
+  @service('flashMessages') toast;
   @service session;
 
 

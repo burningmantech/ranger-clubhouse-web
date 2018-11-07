@@ -44,7 +44,9 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
 
   setCurrentUser() {
     return this.session.loadUser().then(() => {
-      return this.session.user.loadRangerInfo();
+      if (this.session.isAuthenticated) {
+        return this.session.user.loadRangerInfo();
+      }
     }).catch((response) => {
       this.transitionTo('/login');
       this.house.handleErrorResponse(response);
