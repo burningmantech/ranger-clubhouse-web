@@ -9,20 +9,24 @@
   </td>
   <td class="col-3">
     {{#if alert.no_opt_out}}
-      <span class="text-danger">Cannot be opted out of</span>
+      <span class="text-muted">Cannot be opted out of</span>
     {{else if alert.email_only}}
       <span class="text-muted">only email used</span>
     {{else}}
-      <label>{{input type="checkbox" checked=(mut (get alert "use_sms"))}} {{alert-phone alert person}}</label>
+      {{#if (has-alert-phone alert numbers)}}
+        <label>{{input type="checkbox" checked=(mut (get alert "use_sms"))}} {{if alert.on_playa numbers.on_playa.phone numbers.off_playa.phone}}</label>
+      {{else}}
+        no # number
+      {{/if}}
     {{/if}}
   </td>
   <td class="col-3">
     {{#if alert.no_opt_out}}
-      <span class="text-danger">Cannot be opted out of</span>
+      <span class="text-muted">Cannot be opted out of</span>
     {{else if alert.sms_only}}
       <span class="text-muted">only SMS used</span>
     {{else}}
-      <label>{{input type="checkbox" checked=(mut (get alert "use_email"))}} {{person.email}}</label>
+      <label>{{input type="checkbox" checked=(mut (get alert "use_email"))}} {{email}}</label>
     {{/if}}
   </td>
 </tr>

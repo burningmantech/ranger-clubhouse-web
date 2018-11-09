@@ -1,14 +1,73 @@
 import Controller from '@ember/controller';
-import { action } from '@ember-decorators/object';
+import EmberObject from '@ember/object';
+import { action, computed } from '@ember-decorators/object';
 import { set } from '@ember/object';
 import { filterBy } from '@ember-decorators/object/computed';
+import { validateFormat } from 'ember-changeset-validations/validators';
+
+const PHONE_REGEXP = /^(?=(?:\D*\d){10,15}\D*$)\+?[0-9]{1,3}[\s-]?(?:\(0?[0-9]{1,5}\)|[0-9]{1,5})[-\s]?[0-9][\d\s-]{5,7}\s?(?:x[\d-]{0,4})?$/;
 
 export default class MeAlertsController extends Controller {
   alerts = [];
+  numbers = {};
 
+  // Phone numbers to use
+  phoneForm = EmberObject.create({
+    on_playa:   '',
+    off_playa:  ''
+  });
+
+  // Verification form - user enters verification codes here.
+  verifyForm = EmberObject.create({
+    on_playa:   '',
+    off_playa:  '',
+    is_same: false,
+  });
+
+  numberValidations = {
+    on_playa: validateFormat({ regex: PHONE_REGEXP, allowBlank: true }),
+    off_playa: validateFormat({ regex: PHONE_REGEXP, allowBlank: true}),
+  }
+
+  // Sort alert prefs into on playa and off playa groups for display.
   @filterBy('alerts', 'on_playa', true) onPlayaAlerts;
   @filterBy('alerts', 'on_playa', false) offPlayaAlerts;
 
+  // Are one or both numbers stopped?
+  @computed('numbers.{off_playa,on_playa}.is_stopped')
+  get isStopped() {
+    const sms = this.numbers;
+
+    return (sms.off_playa.is_stopped || sms.on_playa.is_stopped);
+  }
+
+  // One or both numbers not verified?
+  @computed('numbers.{off_playa,on_playa}.is_verified')
+  get notVerified() {
+    const sms = this.numbers;
+
+    return ((sms.off_playa.phone != '' && !sms.off_playa.is_verified)
+            || (sms.on_playa.phone != '' && !sms.on_playa.is_verified));
+  }
+
+  // List which numbers are not verified.
+  @computed('numbers.{off_playa,on_playa}.is_verified')
+  get unverifiedPhones() {
+      const phones = [];
+      const numbers = this.numbers;
+
+      if (numbers.on_playa.phone != '' && !numbers.on_playa.is_verified) {
+        phones.push(numbers.on_playa.phone);
+      }
+
+      if (numbers.off_playa.phone != '' && !numbers.off_playa.is_verified && !numbers.is_same) {
+        phones.push(numbers.off_playa.phone);
+      }
+
+      return phones.join(' and ');
+  }
+
+  // Set alert preferences on or off
   @action
   setAll(column, value) {
     const field = column == 'email' ? 'use_email' : 'use_sms';
@@ -17,8 +76,9 @@ export default class MeAlertsController extends Controller {
     })
   }
 
+  // Update the user preferences
   @action
-  updatePreferences() {
+  updatePrefsAction() {
     const alerts = this.alerts.map((alert) => { return {
       id: alert.id,
       use_sms: alert.use_sms ? 1 : 0,
@@ -30,5 +90,125 @@ export default class MeAlertsController extends Controller {
           data: { alerts }
     }).then(() => { this.toast.success('Alert Preferences have been successfully update.') })
     .catch((response) => { this.house.handleErrorResponse(response) });
+  }
+
+  // Confirm a phone number as verified.
+  @action
+  confirmCodeAction(model) {
+    const personId = this.person.id;
+    let code, type, phone;
+
+    if (model.get('off_playa') != '') {
+      code = model.get('off_playa');
+      type = 'off-playa';
+      phone = this.numbers.off_playa.phone;
+    } else {
+      code = model.get('on_playa');
+      type = 'on-playa';
+      phone = this.numbers.on_playa.phone;
+    }
+
+    this.toast.clearMessages();
+
+    this.ajax.request('sms/confirm-code', {
+      method: 'POST',
+      data: {
+        type,
+        code,
+        person_id: personId
+      }
+    }).then((result) => {
+      switch (result.status) {
+      case 'confirmed':
+        this.toast.success(`The phone number has been been confirmed. Thank you.`);
+        this.set('numbers', result.numbers);
+        break;
+
+      case 'already-verified':
+        this.toast.warning(`The phone ${phone} has already been verified. There is nothing else to do.`);
+        break;
+
+      case 'no-match':
+        this.toast.danger(`The verification code enter for ${phone} does not match.`);
+        break;
+
+      default:
+        this.toast.danger(`The response status [${result.status}] from the server was not understood.`);
+        break;
+      }
+    }).catch((response) => {
+      this.house.handleErrorResponse(response);
+    })
+  }
+
+  // Save the phone numbers entered.
+  @action
+  saveNumbersAction(model, isValid) {
+    if (!isValid) {
+      return;
+    }
+
+    this.toast.clearMessages();
+
+    const off_playa = model.get('off_playa');
+    let on_playa = model.get('on_playa');
+
+    if (model.get('is_same')) {
+      on_playa = off_playa;
+    }
+
+    this.set('isUpdatingNumbers', true);
+    this.ajax.request(`sms`, {
+      method: 'POST',
+      data: {
+        person_id: this.person.id,
+        on_playa,
+        off_playa
+      }
+    }).then((result) => {
+      const numbers = result.numbers;
+
+      // Update the form with the current values
+      model.set('off_playa', numbers.off_playa.phone);
+      model.set('on_playa', numbers.on_playa.phone);
+      model.set('is_same', numbers.is_same);
+      this.set('numbers', numbers);
+
+      if (numbers.on_playa.code_status == 'sent-fail' || numbers.off_playa.code_status == 'sent-fail') {
+        this.toast.danger(`The number(s) were updated except a verification code could not be sent at this time.`);
+      } else {
+        this.toast.success('The number(s) have been successfully updated.');
+      }
+    }).catch((response) => {
+      this.house.handleErrorResponse(response);
+    }).finally(() => {
+      this.set('isUpdatingNumbers', false);
+    });
+  }
+
+  // Send new verification codes
+  @action
+  sendNewCodeAction(type) {
+    const personId = this.person.id;
+    this.toast.clearMessages();
+
+    this.set('isSendingCode', true);
+    this.ajax.request('sms/send-code', { method: 'POST', data: { person_id: personId, type }})
+    .then((result) => {
+      switch (result.status) {
+      case 'sent':
+        this.toast.success('A NEW verification code has been sent.');
+        break;
+
+      case 'already-verified':
+        this.toast.warning('The phone number is already verified.');
+        break;
+
+      default:
+        this.toast.danger(`The response status [${result.status}] from the server was not understood.`);
+        break;
+      }
+    })
+    .catch((response) => this.house.handleErrorResponse(response));
   }
 }

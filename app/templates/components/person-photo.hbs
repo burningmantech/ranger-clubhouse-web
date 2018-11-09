@@ -1,8 +1,5 @@
 <div class="mugshot float-sm-right">
   {{#if photo}}
-    {{#if photo.message}}
-      ERROR: {{photo.message}}
-    {{/if}}
     {{#if photo.photo_url}}
       <img src="{{photo.photo_url}}" class="mx-auto d-block" alt="profile photo">
       Status:
@@ -16,11 +13,16 @@
       <i class="far fa-user fa-8x"></i><br>
       Wanna supply a photo?<br>
     {{/if}}
-      {{#if photo.upload_url}}
-          <a href="{{photo.upload_url}}" class="btn btn-primary btn-sm">Upload a new photo</a>
-      {{else}}
-        <strong>Photo uploading is disabled at this time.</strong>
-      {{/if}}
+    {{#if photo.message}}
+      <span class="text-danger">ERROR: {{photo.message}}</span>
+    {{/if}}
+    {{#if photo.upload_url}}
+      <div class="mt-1">
+        <a href="{{photo.upload_url}}" class="btn btn-primary btn-sm">Upload a new photo</a>
+      </div>
+    {{else}}
+      <strong>Photo uploading is disabled at this time.</strong>
+    {{/if}}
   {{else}}
     <div class="loading-spinner"></div>
     . . Loading photo . .
