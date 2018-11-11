@@ -27,6 +27,7 @@ Router.map(function() {
     this.route('timesheet', function() {
       this.route('review', { path: '/' });
       this.route('missing');
+      this.route('confirm');
     });
     this.route('schedule');
     this.route('tickets');

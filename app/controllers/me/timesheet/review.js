@@ -43,6 +43,7 @@ export default class MeTimesheetsReviewController extends Controller {
   @action
   markCorrectAction(timesheet) {
     timesheet.set('verified', 1);
+    this.toast.clearMessages();
     timesheet.save().then(() => {
       this.toast.success('The timesheet has been marked as correct.');
     }).catch((response) => this.house.handleErrorResponse(response));
@@ -59,9 +60,11 @@ export default class MeTimesheetsReviewController extends Controller {
       return;
     }
 
+    this.toast.clearMessages();
     model.set('verified', 0);
     model.save().then(() => {
       this.set('incorrectTimesheet', null);
+      this.set('timesheetInfo.timesheet_confirmed', 0);
       this.toast.success('Your correction note has been submitted.');
     }).catch((response) => this.house.handleErrorResponse(response));
   }

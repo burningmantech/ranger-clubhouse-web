@@ -65,15 +65,15 @@
      {{#ch-form "delivery" ticketDelivery validator=ticketDeliveryValidations onSubmit=(action saveDelivery) as |f|}}
        <fieldset>
          <legend>Your delivery choice:</legend>
-         <div class="form-group">
+         <div class="form-row">
            <label>
-             {{f.input "method" type="radio" value="will_call" wrapper=false}}
+             {{f.input "method" type="radio" value="will_call" wrapper=false controlClass=""}}
               Please hold my {{goodies}} for me at Will-Call.
             </label>
          </div>
-         <div class="form-group">
+         <div class="form-row">
            <label>
-             {{f.input "method" type="radio" value="mail" wrapper=false}}
+             {{f.input "method" type="radio" value="mail" wrapper=false  controlClass=""}}
              Please mail my {{goodies}} to me at the address below:
            </label>
          </div>

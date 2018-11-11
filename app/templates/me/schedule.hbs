@@ -19,7 +19,7 @@
       <p>
         We are sorry if this is an inconvenience for you.
       </p>
-    {{else if (neq permission.photo_status "not-required")}}
+    {{else if (not-eq permission.photo_status "not-required")}}
       <p>You cannot sign up for shifts (including trainings) because {{deniedReason}}.</p>
       {{#if (and (not person.isPassProspective) (not-eq permission.photo_status "approved"))}}
       <p>

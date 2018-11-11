@@ -50,6 +50,9 @@
       checked  = {{eq (get model name) value}}
       disabled = {{disabled}}
     >
+    {{#if label}}
+      <label class="form-check-label" for="{{_domId}}">{{label}}</label>
+    {{/if}}
 {{else if (eq type "checkbox")}}
    <input
       type       = "checkbox"
@@ -59,7 +62,9 @@
       checked    = {{get model name}}
       onclick    = {{action "update" value="target.checked"}}
     >
-    <label class="form-check-label" for="{{_domId}}">{{label}}</label>
+    {{#if label}}
+      <label class="form-check-label" for="{{_domId}}">{{label}}</label>
+    {{/if}}
 {{else if (eq type "checkboxGroup")}}
   {{ch-form/checkbox-group
       name=name
@@ -80,6 +85,16 @@
     cols        = cols
     maxLength   = maxlength
   }}
+{{else if (eq type "datetime")}}
+  {{datetime-picker
+    autofocus=autofocus
+    classNames=controlClass
+    size=size
+    maxlength=maxlength
+    onChange=(action "update")
+    placeholder=placeholder
+    value=(get model name)
+   }}
 {{else}}
   <input
     type        = {{type}}

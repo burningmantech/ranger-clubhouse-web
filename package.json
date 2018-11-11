@@ -59,7 +59,6 @@
     "ember-simple-auth": "^1.7.0",
     "ember-simple-auth-token": "^4.0.4",
     "ember-source": "~3.5.0",
-    "ember-welcome-page": "^3.2.0",
     "eslint-plugin-ember": "^5.2.0",
     "jsonwebtoken": "^8.3.0",
     "loader.js": "^4.7.0",
@@ -72,6 +71,7 @@
   "dependencies": {
     "ember-module-migrator": "^0.8.0",
     "global": "^4.3.2",
+    "jquery-datetimepicker": "^2.5.20",
     "jscodeshift": "^0.5.1"
   }
 }

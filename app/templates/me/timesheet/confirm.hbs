@@ -1,0 +1,23 @@
+<h2>Final Timesheet Confirmation &amp; Agreement</h2>
+<div class="ml-3">
+{{#if timesheetInfo.correction_enabled}}
+  {{#ch-form "confirm" confirmForm onSubmit=(action "confirmAction") as |f|}}
+      By checking the box below, you are agreeing to:
+      <ul class="mt-2">
+        <li>You have reviewed all your timesheet entries.</li>
+        <li>The entries are correct.</li>
+        <li>There no outstanding corrections waiting for HQ review.</li>
+        <li>You do not plan to submit additional corrections.</li>
+      </ul>
+      <label>
+        {{f.input "confirm" type="checkbox" wrapper=false controlClass=""}}
+        I have reviewed and verified that my timesheet for {{timesheetInfo.correction_year}} is accurate and does not require any changes.
+      </label>
+    <div class="form-row">
+      {{f.submit label="Submit Confirmation"}}
+    </div>
+  {{/ch-form}}
+{{else}}
+  Timesheet corrections are not enabled.
+{{/if}}
+</div>

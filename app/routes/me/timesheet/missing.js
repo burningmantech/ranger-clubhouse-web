@@ -2,7 +2,7 @@ import Route from '@ember/routing/route';
 import RSVP from 'rsvp';
 
 export default class MeTimesheetMissingRoute extends Route {
-  model(params) {
+  model() {
     const parent = this.modelFor('me.timesheet');
     const person_id = this.session.user.id;
     const queryParams = {
@@ -11,8 +11,8 @@ export default class MeTimesheetMissingRoute extends Route {
     };
 
     return RSVP.hash({
-      timesheetsMissing: this.store.query('timesheet-missing', queryParams),
-      positions: this.ajax.request(`person/${person_id}/positions`).then((results) => results.positions)
+      timesheetsMissing: this.store.query('timesheet-missing', queryParams).then((result) => result.toArray()),
+      positions: this.ajax.request(`person/${person_id}/positions`).then((result) => result.positions)
     });
   }
 

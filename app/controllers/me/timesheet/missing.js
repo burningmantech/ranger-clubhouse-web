@@ -1,7 +1,6 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember-decorators/object';
 import { validatePresence } from 'ember-changeset-validations/validators';
-
 import validateDateTime from 'clubhouse/validators/datetime';
 
 export default class MeTimesheetMissingController extends Controller {
@@ -20,6 +19,7 @@ export default class MeTimesheetMissingController extends Controller {
       return this.positions.map((p) => [ p.title, p.id ]);
   }
 
+  // Start a new timesheet missing request
   @action
   newRequestAction() {
     this.set('editTimesheetMissing', this.store.createRecord('timesheet-missing', {
@@ -28,31 +28,39 @@ export default class MeTimesheetMissingController extends Controller {
      }));
   }
 
+  // Edit an existing timesheet
   @action
   editAction(timesheetMissing) {
     this.set('editTimesheetMissing', timesheetMissing);
   }
 
+  // Cancel the form
   @action
   cancelAction() {
     this.set('editTimesheetMissing', null);
   }
 
+  // Save a timesheet missing request
   @action
   saveAction(model, isValid) {
     if (!isValid) {
       return;
     }
+
+    this.toast.clearMessages();
+
     const isNew = model.get('isNew');
     this.set('isSubmitting', true);
+
     model.save().then(() => {
       this.toast.success(`Your request has been succesfully ${isNew ? 'submitted' : 'updated'}.`);
+      this.timesheetsMissing.pushObject(this.editTimesheetMissing);
       this.set('editTimesheetMissing', null);
-      this.timesheetsMissing.update();  // Refresh the results.
     }).catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => { this.set('isSubmitting', false) });
+    .finally(() => this.set('isSubmitting', false));
   }
 
+  // Delete a request - confirm first before proceeding.
   @action
   deleteAction(timesheetMissing) {
     this.modal.confirm(
@@ -61,7 +69,7 @@ export default class MeTimesheetMissingController extends Controller {
       () => {
         timesheetMissing.destroyRecord().then(() => {
           this.toast.success('The request has been deleted.');
-          this.timesheetsMissing.update();
+          this.timesheetsMissing.removeObject(timesheetMissing);
         });
       }
     );

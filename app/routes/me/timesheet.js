@@ -17,12 +17,7 @@ export default class MeTimesheetRoute extends Route.extend(MeRouteMixin) {
     };
 
     return RSVP.hash({
-      timesheets: this.store.query('timesheet', queryParams).catch((response) => {
-        if (response instanceof DS.NotFoundError) {
-          return [];
-        }
-        throw response;
-      }),
+      timesheets: this.store.query('timesheet', queryParams),
       timesheetInfo: this.ajax.request('timesheet/info', {
         method: 'GET',
         data: { person_id }

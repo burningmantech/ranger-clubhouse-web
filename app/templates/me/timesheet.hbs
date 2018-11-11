@@ -1,6 +1,11 @@
 {{year-select "Timesheets" year=year years=person.years onChange=(action "changeYearAction")}}
 
 {{#if (and canCorrectThisYear timesheetInfo.correction_enabled)}}
+{{#if timesheetInfo.timesheet_confirmed}}
+  {{#ch-alert "success"}}
+    {{fa-icon "thumbs-up" type="far"}} Congratulations! You have  indicated your timesheet is accurate and does not require any changes. There is nothing else you need to do at this time.
+  {{/ch-alert}}
+{{/if}}
     To ensure you will receive proper credit for your {{timesheetInfo.correction_year}} Ranger efforts, please
     follow all steps on this page. You need to confirm your whole timesheet at
     the end.
@@ -17,32 +22,25 @@
         </li>
         <li>
           {{#if unverifiedCount}}
-            <strong>You have {{pluralize unverifiedCount "timesheet entry"}} that
-              has not been reviewed.</strong> Once all your timesheets
-            have been marked as correct, AND there are no outstanding correction requests,
-            click on the tab 'Step 3 - Final Confirmation' to let us know everything
-            is correct.
-          {{else}}
-            Congratulations! You have marked all your timesheets as correct.
-            <strong class="text-danger">
-              There's one last step you need to do:
-              Click on the tab 'Step 3 - Final Confirmation' to let us know your
-              whole timesheet is correct and you are not planning on submitting
-              additional corrections.
-            </strong>
+            <strong>You have {{pluralize unverifiedCount "timesheet entry"}} which still
+            need to be reviewed by you.</strong>
           {{/if}}
+          After your very last shift for the event, AND all your timesheets
+          have been marked as correct, AND there are no outstanding correction requests,
+          click on the tab 'Step 3 - Final Confirmation' to let us know everything
+          is accurate.
         </li>
     </ol>
 
     <ul class="nav nav-tabs nav-pills mb-2">
       <li class="nav-item">
-        {{#link-to 'me.timesheet.review' class="nav-link"}}Step 1 - Timesheet Review{{/link-to}}
+        {{#link-to "me.timesheet.review" class="nav-link"}}Step 1 - Timesheet Review{{/link-to}}
       </li>
       <li class="nav-item">
-        {{#link-to 'me.timesheet.missing' class="nav-link"}}Step 2 - Missing Entries Requests{{/link-to}}
+        {{#link-to "me.timesheet.missing" class="nav-link"}}Step 2 - Missing Entries Requests{{/link-to}}
       </li>
       <li class="nav-item">
-        {{#link-to 'me.timesheet.review' class="nav-link"}}Step 3 - Final Confirmation{{/link-to}}
+        {{#link-to "me.timesheet.confirm" class="nav-link"}}Step 3 - Final Confirmation{{/link-to}}
       </li>
     </ul>
 {{/if}}

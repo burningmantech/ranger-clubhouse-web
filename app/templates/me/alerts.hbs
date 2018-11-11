@@ -1,7 +1,7 @@
 <h1>Alert Preferences</h1>
 {{#if isStopped}}
   {{#ch-alert "danger"}}
-  {{fa-icon 'exclamation-triangle'}} WARNING: Someone, most likely you, texted the STOP command from one of the following numbers. That phone number
+  {{fa-icon "exclamation-triangle"}} WARNING: Someone, most likely you, texted the STOP command from one of the following numbers. That phone number
   will not be able to receive alerts until the START command is texted from the same number.
   <ul>
     {{#if numbers.on_playa.is_stopped}}
@@ -18,7 +18,7 @@
 {{#if notVerified}}
 {{#ch-alert "warning"}}
   <div class="row">
-    <div class="col-1 mt-2">{{fa-icon 'exclamation-triangle' size='2x'}}</div>
+    <div class="col-1 mt-2">{{fa-icon "exclamation-triangle" size="2x"}}</div>
     <div class="col-10">
       Please verify your SMS number(s). You will not be able receive messages
       until you do so. (Data rates may apply.)

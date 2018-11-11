@@ -23,17 +23,11 @@ export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
     this.store.unloadAll('schedule');
 
     return RSVP.hash({
-      slots: this.store.query('schedule', scheduleParams).catch((response) => {
-        if (response instanceof DS.NotFoundError) {
-          return [];
-        }
-      }),
-      permission: this.ajax.request(`person/${person_id}/schedule/permission`, {data: {
-          year
-        }}).then((results) => {
-        return results.permission;
-      }),
-      creditsEarned: this.ajax.request(`person/${person_id}/credits`, { data: { year }}).then((result) => result.credits),
+      slots: this.store.query('schedule', scheduleParams),
+      permission: this.ajax.request(`person/${person_id}/schedule/permission`, {data: { year }})
+                  .then((results) => results.permission ),
+      creditsEarned: this.ajax.request(`person/${person_id}/credits`, { data: { year }})
+                  .then((result) => result.credits),
       year,
     });
   }

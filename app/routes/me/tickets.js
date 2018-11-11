@@ -19,28 +19,19 @@ export default class MeTicketsRoute extends Route.extend(MeRouteMixin) {
 
     return RSVP.hash({
       ticketingInfo: this.ajax.request('access-document/ticketing-info')
-                .then((results) => results.ticketing_info )
-                .catch((response) => this.house.handleErrorResponse(response)),
-
-      accessDocuments: this.store.query('access-document', { person_id })
-                      .catch((response) => { this.house.handleErrorResponse(response) }),
-
+                .then((results) => results.ticketing_info ),
+      accessDocuments: this.store.query('access-document', { person_id }),
       wapSONames: this.ajax.request('access-document/sowap', { data: deliveryParams })
-                  .then((result) => result.names)
-                  .catch((response) => this.house.handleErrorResponse(response) ),
-
-      ticketDelivery: this.store.query('access-document-delivery', deliveryParams).then((rows) => {
-        return rows.firstObject;
-      }).catch((response) => {
-          // No record found, create the record
-          if (response instanceof DS.NotFoundError) {
-            return this.store.createRecord('access-document-delivery', {
-              person_id: this.session.user.id,
-              year,
-            });
-          } else {
-            this.house.handleErrorResponse(response);
+                  .then((result) => result.names),
+      ticketDelivery: this.store.queryRecord('access-document-delivery', deliveryParams).then((row) => {
+          if (row) {
+            return row;
           }
+          // No delivery record yet, create one.
+          return this.store.createRecord('access-document-delivery', {
+            person_id: this.session.user.id,
+            year,
+          });
       })
     });
   }

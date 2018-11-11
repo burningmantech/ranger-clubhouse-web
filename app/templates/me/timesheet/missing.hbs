@@ -7,17 +7,14 @@
       {{f.input "position_id" label="Which position was the shift for?" type="select" options=positionOptions grid="col-auto"}}
     </div>
     <div class="form-row">
-      {{f.input "on_duty" label="What was the START date & time of the shift?" type="text" size="15" grid="col-auto"}}
-      {{f.input "off_duty" label="What was the END date & time of the shift?" type="text" size="15" grid="col-auto"}}
+      {{f.input "on_duty" label="What was the START date & time of the shift?" type="datetime" size="15" grid="col-auto"}}
+      {{f.input "off_duty" label="What was the END date & time of the shift?" type="datetime" size="15" grid="col-auto"}}
     </div>
     <div class="form-row">
       {{f.input "partner" label="Who was your partner (if any) for the shift?" type="text" size="20"}}
     </div>
     <div class="form-row">
       Give any and all supporting details for why this entry should be created.
-      <div class="text-danger">
-        Your request may be denied if not enough supporting details are provided.
-      </div>
     </div>
     <ul>
       <li>If you radioed the check in, who was the Ranger on the other end?</li>
@@ -25,13 +22,16 @@
       <li>Was another person responsible for checking you in, and why did they fail to do that?</li>
     </ul>
     {{f.input "notes" label="Why is this new entry needed?" type="textarea" cols=80 rows=4}}
+    <div class="text-danger mb-2">
+      Your request may be denied if not enough supporting details are provided.
+    </div>
     {{f.submit label=(if f.model.isNew "Submit Request" "Update Request") disabled=isSubmitting}}
     {{f.cancel}}
   {{/ch-form}}
 {{/if}}
 {{#if timesheetsMissing}}
+<h2>Missing Timesheet Entry Requests</h2>
 <table class="table table-striped">
-  <caption>My Missing Timesheet Entry Requests</caption>
   <thead>
     <tr>
       <th>Position</th>
