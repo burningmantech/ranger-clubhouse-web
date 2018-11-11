@@ -1,87 +1,50 @@
-{{year-select "Timesheets" year=year years=person.years onChange=(action "changeYear")}}
-{{#if timesheets}}
-  <table class="table schedule-table table-striped table-rc table-sm">
-    <thead class="thead-light">
-      <tr>
-        <th>From</th>
-        <th>To</th>
-        <th class="text-right">Time</th>
-        <th class="text-right">Credits</th>
-        <th>Position</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each timesheets as |ts|}}
-        <tr>
-          <td data-title="From">{{ts.on_duty}}</td>
-          <td data-title="To">{{ts.off_duty}}</td>
-          <td class="td-number" data-title="Time">
-              {{#if ts.off_duty}}
-                {{hour-minute-format ts.duration}}
-              {{else}}
-                <i>On Duty</i>
-              {{/if}}
-            </td>
-          <td class="td-number" data-title="Credits">
-            {{#if ts.off_duty}}
-                {{credits-format ts.credits}}
-            {{else}}
-                &nbsp;
-            {{/if}}
-          </td>
-          <td data-title="Position">{{ts.position_title}}</td>
-        </tr>
-      {{/each}}
-      <tr class="tr-no-responsive">
-        <td>
-          {{pluralize timesheets.length "entry"}}
-        </td>
-        <td class="td-number table-rc-hide">
-          Totals
-        </td>
-        <td class="td-number" data-title="Time">
-          {{hour-minute-format (sum-column timesheets "duration")}}
-        </td>
-        <td class="td-number" data-title="Credits">
-          {{credits-format (sum-column timesheets "credits")}}
-        </td>
-        {{#if showActions}}
-        <td colspan="2" class="table-rc-hide">&nbsp;</td>
-        {{else}}
-        <td class="table-rc-hide">&nbsp;</td>
-        {{/if}}
-      </tr>
-    </tbody>
-  </table>
+{{year-select "Timesheets" year=year years=person.years onChange=(action "changeYearAction")}}
 
-  <h3>Position Breakdown</h3>
+{{#if (and canCorrectThisYear timesheetInfo.correction_enabled)}}
+    To ensure you will receive proper credit for your {{timesheetInfo.correction_year}} Ranger efforts, please
+    follow all steps on this page. You need to confirm your whole timesheet at
+    the end.
+    <ol class="mt-2">
+        <li>
+          Review your timesheet entries below and mark the entries as correct
+          or incorrect. If the entry is incorrect,  provide an explanation on
+          why the entry is wrong.
+        </li>
+        <li>
+          For any missing shifts, click on the 'Step 2 - Missing Timesheets' tab,
+          and fill out the Missing Timesheet Entry Request form. You may submit more
+          than one request.
+        </li>
+        <li>
+          {{#if unverifiedCount}}
+            <strong>You have {{pluralize unverifiedCount "timesheet entry"}} that
+              has not been reviewed.</strong> Once all your timesheets
+            have been marked as correct, AND there are no outstanding correction requests,
+            click on the tab 'Step 3 - Final Confirmation' to let us know everything
+            is correct.
+          {{else}}
+            Congratulations! You have marked all your timesheets as correct.
+            <strong class="text-danger">
+              There's one last step you need to do:
+              Click on the tab 'Step 3 - Final Confirmation' to let us know your
+              whole timesheet is correct and you are not planning on submitting
+              additional corrections.
+            </strong>
+          {{/if}}
+        </li>
+    </ol>
 
-  <table class="table table-striped schedule-table table-rc table-sm">
-    <thead class="thead-light">
-      <tr>
-        <th>Position</th>
-        <th class="text-right">Time</th>
-        <th class="text-right">Credits</th>
-        <th class="text-right">Count</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {{#each positions as |position|}}
-      <tr>
-        <td data-title="Position">{{position.title}}</td>
-        <td class="td-number" data-title="Time">{{hour-minute-format position.duration}}</td>
-        <td class="td-number" data-title="Credits">{{credits-format position.credits}}</td>
-        <td class="td-number" data-title="Count">{{position.total}}</td>
-      </tr>
-      {{/each}}
-      <tr>
-        <td colspan="4">{{pluralize positions.length "position"}} worked</td>
-      </tr>
-    </tbody>
-  </table>
-{{else}}
-<p class="lead mt-3 text-danger">
-  No timesheets were found for {{year}}.
-</p>
+    <ul class="nav nav-tabs nav-pills mb-2">
+      <li class="nav-item">
+        {{#link-to 'me.timesheet.review' class="nav-link"}}Step 1 - Timesheet Review{{/link-to}}
+      </li>
+      <li class="nav-item">
+        {{#link-to 'me.timesheet.missing' class="nav-link"}}Step 2 - Missing Entries Requests{{/link-to}}
+      </li>
+      <li class="nav-item">
+        {{#link-to 'me.timesheet.review' class="nav-link"}}Step 3 - Final Confirmation{{/link-to}}
+      </li>
+    </ul>
 {{/if}}
+
+{{outlet}}

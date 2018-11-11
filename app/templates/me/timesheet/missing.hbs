@@ -1,0 +1,83 @@
+{{#if editTimesheetMissing}}
+  {{#ch-form "tm" editTimesheetMissing
+      modalBox=true modalTitle="Missing Timesheet Request"
+      validator=timesheetValidations
+      onSubmit=(action "saveAction") onCancel=(action "cancelAction") as |f|}}
+    <div class="form-row">
+      {{f.input "position_id" label="Which position was the shift for?" type="select" options=positionOptions grid="col-auto"}}
+    </div>
+    <div class="form-row">
+      {{f.input "on_duty" label="What was the START date & time of the shift?" type="text" size="15" grid="col-auto"}}
+      {{f.input "off_duty" label="What was the END date & time of the shift?" type="text" size="15" grid="col-auto"}}
+    </div>
+    <div class="form-row">
+      {{f.input "partner" label="Who was your partner (if any) for the shift?" type="text" size="20"}}
+    </div>
+    <div class="form-row">
+      Give any and all supporting details for why this entry should be created.
+      <div class="text-danger">
+        Your request may be denied if not enough supporting details are provided.
+      </div>
+    </div>
+    <ul>
+      <li>If you radioed the check in, who was the Ranger on the other end?</li>
+      <li>If you had no partner for the shift, is there anyone who can verify your hours?</li>
+      <li>Was another person responsible for checking you in, and why did they fail to do that?</li>
+    </ul>
+    {{f.input "notes" label="Why is this new entry needed?" type="textarea" cols=80 rows=4}}
+    {{f.submit label=(if f.model.isNew "Submit Request" "Update Request") disabled=isSubmitting}}
+    {{f.cancel}}
+  {{/ch-form}}
+{{/if}}
+{{#if timesheetsMissing}}
+<table class="table table-striped">
+  <caption>My Missing Timesheet Entry Requests</caption>
+  <thead>
+    <tr>
+      <th>Position</th>
+      <th>On Duty</th>
+      <th>Off Duty</th>
+      <th class="text-right">Duration</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each timesheetsMissing as |tsm|}}
+    <tr>
+      <td>{{tsm.position.title}}</td>
+      <td>{{shift-format tsm.on_duty}}</td>
+      <td>{{shift-format tsm.off_duty}}</td>
+      <td class="text-right">{{hour-minute-format tsm.duration}}</td>
+      <td>
+        {{#if (eq tsm.review_status "pending")}}
+          <button type="button" class="btn btn-primary btn-sm" {{action "editAction" tsm}}>Edit</button>
+          <button type="button" class="btn btn-danger btn-sm" {{action "deleteAction" tsm}}>Delete</button>
+        {{else}}
+          &nbsp;
+        {{/if}}
+      </td>
+    </tr>
+    <tr>
+      <td colspan="6">
+        {{#if tsm.isPending}}
+          <i>The request is pending review.</i>
+        {{else}}
+          {{#if tsm.isApproved}}
+            The request has been APPROVED. Your timesheet has been updated with the missing shift.
+          {{else}}
+            The request has been rejected.
+          {{/if}}
+          <p>
+            <strong>Response from the reviewer:</strong><br>
+            {{tsm.reviewer_note}}
+          </p>
+        {{/if}}
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+{{else}}
+<p class="mt-2 ml-2">You have not submitted a missing timesheet entry request. (Yay!)</p>
+{{/if}}
+<button type="button" class="btn btn-primary" {{action "newRequestAction"}}>New Missing Timesheet Request</button>

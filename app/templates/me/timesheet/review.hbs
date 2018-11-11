@@ -1,0 +1,158 @@
+{{#if incorrectTimesheet}}
+  {{#ch-form 'correction' incorrectTimesheet modalBox=true modalTitle="Timesheet Correction" validator=corectionValidations onSubmit=(action "saveCorrectionAction") onCancel=(action "cancelCorrectionAction") as |f|}}
+    <dl class="form-row">
+      <dt class="col-sm-2">Position:</dt>
+      <dd class="col-sm-10">{{incorrectTimesheet.position.title}}</dd>
+
+      <dt class="col-sm-2">Time:</dt>
+      <dd class="col-sm-10">{{shift-format incorrectTimesheet.on_duty}} to {{shift-format incorrectTimesheet.off_duty}}</dd>
+
+      <dt class="col-sm-2">Duration:</dt>
+      <dd class="col-sm-10">{{hour-minute-format incorrectTimesheet.duration}}</dd>
+
+      <dt class="col-sm-2">Credits:</dt>
+      <dd class="col-sm-10">{{credits-format incorrectTimesheet.credits}}</dd>
+    </dl>
+
+    <div class="form-row">
+      Use the following area to explain why this entry is incorrect. Include the following information:
+      <ul>
+        <li>State the correct times if the starting and/or ending time is wrong.</li>
+        <li>If the position is wrong, tell us what is the correct position.</li>
+        <li>Provide an explanation on why you think the entry is wrong.</li>
+      </ul>
+    </div>
+    {{f.input 'notes' label="Your correction note:" type="textarea" cols=80 rows=3 autofocus=true}}
+    {{f.submit label="Save Correction" disabled=isSubmitting}}
+    {{f.cancel}}
+  {{/ch-form}}
+{{/if}}
+{{#unless timesheetInfo.correction_enabled}}
+Timesheet corrections
+{{/unless}}
+{{#if timesheets}}
+  <table class="table schedule-table table-striped table-rc">
+    <thead class="thead-light">
+      <tr>
+        <th>From</th>
+        <th>To</th>
+        <th class="text-right">Time</th>
+        <th class="text-right">Credits</th>
+        <th>Position</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each timesheets as |ts|}}
+        <tr>
+          <td data-title="From">{{shift-format ts.on_duty}}</td>
+          <td data-title="To">{{shift-format ts.off_duty}}</td>
+          <td class="td-number" data-title="Time">
+              {{#if ts.off_duty}}
+                {{hour-minute-format ts.duration}}
+              {{else}}
+                <i>On Duty</i>
+              {{/if}}
+            </td>
+          <td class="td-number" data-title="Credits">
+            {{#if ts.off_duty}}
+                {{credits-format ts.credits}}
+            {{else}}
+                &nbsp;
+            {{/if}}
+          </td>
+          <td data-title="Position">{{ts.position.title}}</td>
+        </tr>
+        {{#if (and canCorrectThisYear timesheetInfo.correction_enabled)}}
+        <tr>
+          <td colspan="5">
+            {{#if ts.isApproved}}
+              The correction request has been APPROVED.
+              The timesheet has been updated with the new times.
+            {{else if ts.isRejected}}
+              The correction request has been denied. Contact
+              {{general-support-email}} if you wish to appeal this decision.
+            {{else if ts.isPendingReview }}
+                The correction request is pending review.
+            {{else if ts.isUnverified}}
+              <strong>This entry has not been verified.</strong>
+            {{else if ts.verified}}
+              {{fa-icon 'check'}} Entry was marked correct on {{shift-format ts.verified_at}}
+            {{else}}
+              what's up?
+            {{/if}}
+
+            {{#if ts.haveReviewerResponse}}
+             <p class="text-bold">Response from the timesheet review team:</p>
+             <p>{{ts.reviewer_notes}}</p>
+            {{/if}}
+
+            <p class="mt-2">
+            Is this entry correct?
+            {{#unless ts.verified}}
+            <button type="button" class="btn btn-primary btn-sm" {{action "markCorrectAction" ts}} disabled={{isSubmitting}}>Yes</button>
+            {{/unless}}
+            <button type="button" class="btn btn-secondary btn-sm" {{action "markIncorrectAction" ts}}  disabled={{isSubmitting}}>
+              {{#if ts.isPendingReview}}
+                Edit Correction Note
+              {{else}}
+                No
+              {{/if}}
+            </button>
+            </p>
+          </td>
+        </tr>
+        {{/if}}
+      {{/each}}
+      <tr class="tr-no-responsive">
+        <td>
+          {{pluralize timesheets.length "entry"}}
+        </td>
+        <td class="td-number table-rc-hide">
+          Totals
+        </td>
+        <td class="td-number" data-title="Time">
+          {{hour-minute-format (sum-column timesheets "duration")}}
+        </td>
+        <td class="td-number" data-title="Credits">
+          {{credits-format (sum-column timesheets "credits")}}
+        </td>
+        {{#if showActions}}
+        <td colspan="3" class="table-rc-hide">&nbsp;</td>
+        {{else}}
+        <td class="table-rc-hide">&nbsp;</td>
+        {{/if}}
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Position Breakdown</h3>
+
+  <table class="table table-striped schedule-table table-rc table-sm">
+    <thead class="thead-light">
+      <tr>
+        <th>Position</th>
+        <th class="text-right">Time</th>
+        <th class="text-right">Credits</th>
+        <th class="text-right">Count</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each positions as |position|}}
+      <tr>
+        <td data-title="Position">{{position.title}}</td>
+        <td class="td-number" data-title="Time">{{hour-minute-format position.duration}}</td>
+        <td class="td-number" data-title="Credits">{{credits-format position.credits}}</td>
+        <td class="td-number" data-title="Count">{{position.total}}</td>
+      </tr>
+      {{/each}}
+      <tr class="bg-white">
+        <td colspan="4">{{pluralize positions.length "position"}} worked</td>
+      </tr>
+    </tbody>
+  </table>
+{{else}}
+<p class="lead mt-3 text-danger">
+  No timesheets were found for {{year}}.
+</p>
+{{/if}}

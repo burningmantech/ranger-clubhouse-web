@@ -107,6 +107,26 @@ main {
   }
 }
 
+ul.nav-pills li > a.is_active {
+  background-color: #747c84;
+}
+
+ul.nav-pills a.is_active {
+  color: #fff;
+}
+
+ul.nav-pills li > a:not(.is_active) {
+  background-color: #ececec;
+}
+
+ul.nav-pills li {
+  margin-right: 5px;
+}
+
+.nav-pills .nav-link:hover {
+  border: solid 1px #ccc;
+}
+
 /**
  * Progress bars with centered text
  */

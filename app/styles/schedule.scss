@@ -9,11 +9,15 @@
 }
 
 .schedule-table {
-  font-family: 'Roboto Mono';
-  font-size: 1em;
+//  font-family: 'Roboto Mono';
+  font-size: 0.95em;
 
   td {
     vertical-align: center;
+  }
+
+  td, th {
+    padding: 0.6em 0.7em;
   }
 }
 

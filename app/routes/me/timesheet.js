@@ -10,8 +10,9 @@ export default class MeTimesheetRoute extends Route.extend(MeRouteMixin) {
 
   model(params) {
     const year = (params.year || (new Date).getFullYear());
+    const person_id = this.session.user.id;
     const queryParams = {
-      person_id: this.session.user.id,
+      person_id,
       year,
     };
 
@@ -20,15 +21,19 @@ export default class MeTimesheetRoute extends Route.extend(MeRouteMixin) {
         if (response instanceof DS.NotFoundError) {
           return [];
         }
-        alert("Failed to retrieve timesheets: "+response);
+        throw response;
       }),
+      timesheetInfo: this.ajax.request('timesheet/info', {
+        method: 'GET',
+        data: { person_id }
+      }).then((result) => result.info),
       year: year,
     });
   }
 
   setupController(controller, model) {
     super.setupController(...arguments);
-    controller.set('timesheets', model.timesheets);
-    controller.set('year', model.year);
+    controller.setProperties(model);
+    controller.set('canCorrectThisYear', (model.timesheetInfo.correction_year == model.year));
   }
 }

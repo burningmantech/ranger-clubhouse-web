@@ -5,8 +5,8 @@ import { attr } from '@ember-decorators/data';
 import moment from 'moment';
 
 export default class SlotModel extends DS.Model {
-  @attr('string') begins;
-  @attr('string') ends;
+  @attr('shiftdate') begins;
+  @attr('shiftdate') ends;
   @attr('number') position_id;
   @attr('string') description;
   @attr('number') max;

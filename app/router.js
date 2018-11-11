@@ -24,7 +24,10 @@ Router.map(function() {
     this.route('emergency-contact');
     this.route('password');
     this.route('messages');
-    this.route('timesheet');
+    this.route('timesheet', function() {
+      this.route('review', { path: '/' });
+      this.route('missing');
+    });
     this.route('schedule');
     this.route('tickets');
     this.route('help');
