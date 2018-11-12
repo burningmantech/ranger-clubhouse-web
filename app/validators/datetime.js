@@ -4,6 +4,10 @@ import moment from 'moment';
 function getDateProperty(changes, content, name) {
   const value = changes.hasOwnProperty(name) ? changes[name] : content.get(name);
 
+  if (!value) {
+    return null;
+  }
+
   try {
     return moment(value);
   } catch (error) {
