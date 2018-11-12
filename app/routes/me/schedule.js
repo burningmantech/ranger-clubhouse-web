@@ -1,6 +1,5 @@
 import Route from '@ember/routing/route';
 import MeRouteMixin from 'clubhouse/mixins/route/me';
-import DS from 'ember-data';
 import RSVP from 'rsvp';
 
 export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {

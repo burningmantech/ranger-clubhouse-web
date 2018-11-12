@@ -1,7 +1,6 @@
 import Route from '@ember/routing/route';
 import RSVP from 'rsvp';
 import MeRouteMixin from 'clubhouse/mixins/route/me';
-import DS from 'ember-data';
 
 export default class MeTicketsRoute extends Route.extend(MeRouteMixin) {
   beforeModel() {
