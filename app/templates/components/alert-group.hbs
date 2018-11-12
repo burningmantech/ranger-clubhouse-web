@@ -1,13 +1,15 @@
-<caption class="d-flex bg-dark text-light col-12">
-  {{heading}}<br> {{description}}
-</caption>
+<tr class="bg-dark text-light no-collapse">
+  <td colspan="3">
+    {{heading}}<br> {{description}}
+  </td>
+</tr>
 {{#each group as |alert|}}
-<tr class="d-flex">
-  <td class="col-6">
-    <b>{{alert.title}}</b><br>
+<tr>
+  <td class="alert-pref-desc no-collapse">
+    <div class="font-weight-bold">{{alert.title}}</div>
     {{alert.description}}
   </td>
-  <td class="col-3">
+  <td class="alert-pref-address" data-title="SMS">
     {{#if alert.no_opt_out}}
       <span class="text-muted">Cannot be opted out of</span>
     {{else if alert.email_only}}
@@ -20,7 +22,7 @@
       {{/if}}
     {{/if}}
   </td>
-  <td class="col-3">
+  <td class="alert-pref-address" data-title="Email">
     {{#if alert.no_opt_out}}
       <span class="text-muted">Cannot be opted out of</span>
     {{else if alert.sms_only}}

@@ -1,6 +1,8 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
+import { tagName } from '@ember-decorators/component';
 
+@tagName('')
 export default class AlertGroupComponent extends Component {
   // Preference list
   @argument group;
@@ -14,6 +16,6 @@ export default class AlertGroupComponent extends Component {
   // group description
   @argument description;
 
-  // person's email address 
+  // person's email address
   @argument email;
 }

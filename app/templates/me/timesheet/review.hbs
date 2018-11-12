@@ -61,7 +61,7 @@
           <td data-title="Position">{{ts.position.title}}</td>
         </tr>
         {{#if (and canCorrectThisYear timesheetInfo.correction_enabled)}}
-        <tr>
+        <tr class="no-collapse">
           <td colspan="5">
             {{#if ts.isApproved}}
               The correction request has been APPROVED.

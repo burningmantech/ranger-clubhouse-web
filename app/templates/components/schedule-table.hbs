@@ -45,7 +45,7 @@
           </tr>
         {{/each}}
 {{else}}
-      <tr>
+      <tr class="no-collapse">
         <td colspan="6">
           {{#if slots}}
             <p class="text-danger">No upcoming shifts were found.</p>
@@ -55,7 +55,7 @@
         </td>
       </tr>
 {{/if}}
-        <tr>
+        <tr class="no-collapse">
           <td colspan="5">
             <b>Total Time:</b> {{hour-minute-format (sum-column slots "slot_duration")}}
             <b>Scheduled Credits:</b> {{credits-format creditsTotal}}

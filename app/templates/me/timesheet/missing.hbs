@@ -31,7 +31,7 @@
 {{/if}}
 {{#if timesheetsMissing}}
 <h2>Missing Timesheet Entry Requests</h2>
-<table class="table table-striped">
+<table class="table table-rc table-striped">
   <thead>
     <tr>
       <th>Position</th>
@@ -44,11 +44,11 @@
   <tbody>
     {{#each timesheetsMissing as |tsm|}}
     <tr>
-      <td>{{tsm.position.title}}</td>
-      <td>{{shift-format tsm.on_duty}}</td>
-      <td>{{shift-format tsm.off_duty}}</td>
-      <td class="text-right">{{hour-minute-format tsm.duration}}</td>
-      <td>
+      <td data-title="Position">{{tsm.position.title}}</td>
+      <td data-title="On Duty">{{shift-format tsm.on_duty}}</td>
+      <td data-title="Off Duty">{{shift-format tsm.off_duty}}</td>
+      <td class="td-number" data-title="Duration">{{hour-minute-format tsm.duration}}</td>
+      <td class="no-collapse">
         {{#if (eq tsm.review_status "pending")}}
           <button type="button" class="btn btn-primary btn-sm" {{action "editAction" tsm}}>Edit</button>
           <button type="button" class="btn btn-danger btn-sm" {{action "deleteAction" tsm}}>Delete</button>
@@ -57,7 +57,7 @@
         {{/if}}
       </td>
     </tr>
-    <tr>
+    <tr class="no-collapse">
       <td colspan="6">
         {{#if tsm.isPending}}
           <i>The request is pending review.</i>

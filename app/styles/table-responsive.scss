@@ -14,6 +14,9 @@
   white-space:nowrap;
 }
 
+.table-rc {
+  width: 100%;
+}
 
 /*
  * CSS responsive tables
@@ -41,35 +44,42 @@
     }
 
     tr {
-      border: 1px solid #ccc;
-      margin-bottom: 5px;
+      border-bottom: 1px solid #ccc;
     }
 
     td {
-      /* Behave  like a "row" */
-      border: none;
-      border-bottom: 1px solid #eee;
-      position: relative;
-      padding-left: 50%;
-      white-space: normal;
-      text-align: left;
-      width: 100%;
+      padding-top: 0;
+      padding-bottm: 0;
     }
 
-    /*
-  	Label the data
-  	*/
-    td:before {
-      /* Now like a table header */
-      position: absolute;
-      /* Top/left values mimic padding */
-      top: 5px;
-      left: 8px;
-      width: 50%;
-      white-space: nowrap;
-      text-align: left;
-      font-weight: bold;
-      content: attr(data-title);
+    tr:not(.no-collapse) {
+      td:not(.no-collapse) {
+        /* Behave  like a "row" */
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+        white-space: normal;
+        text-align: left;
+        width: 100%;
+      }
+
+      td:not(.no-collapse):before {
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        top: 5px;
+        left: 8px;
+        width: 50%;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        content: attr(data-title);
+      }
+    }
+
+    td.no-collapse {
+      width: 100%;
     }
 
     .td-number {

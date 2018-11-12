@@ -76,18 +76,20 @@ Australia: +61, Canada: +1, France: +33, Mexico: +52, New Zealand: +64, UK: +44.
 {{/ch-box}}
 
 <h2>Alert Preference Options</h2>
-To change your email visit {{#link-to "me.personal-info"}}Personal Info{{/link-to}}.
+<p class="ml-2">
+  To change your email visit {{#link-to "me.personal-info"}}Personal Info{{/link-to}}.
+</p>
 
-<div class="table-responsive">
-<table class="table table-striped">
+<table class="table table-rc">
   <thead>
-    <tr class="d-flex">
-      <th class="col-6">Alert Type</th>
-      <th class="col-3">Text To SMS #<br>
+    <tr>
+      <th class="alert-pref-desc">Alert Type</th>
+      <th class="alert-pref-address">
+        Text To SMS #<br>
         <a href="#" {{action "setAll" "sms" true}} class="btn btn-sm btn-secondary mt-1">Check All</a>
         <a href="#" {{action "setAll" "sms" false}} class="btn btn-sm btn-secondary mt-1">Unheck All</a>
       </th>
-      <th class="col-3">Send To Email<br>
+      <th class="alert-pref-address">Send To Email<br>
         <small><a href="#" {{action "setAll" "email" true}} class="btn btn-sm btn-secondary mt-1">Check All</a>
         <a href="#" {{action "setAll" "email" false}} class="btn btn-sm btn-secondary mt-1">Unheck All</a></small>
       </th>
@@ -98,5 +100,4 @@ To change your email visit {{#link-to "me.personal-info"}}Personal Info{{/link-t
     {{alert-group numbers=numbers email=person.email group=onPlayaAlerts heading="On Playa Alerts" description="These alerts may be sent to you while the event is happening."}}
   </tbody>
 </table>
-</div>
 <button type="button" class="btn btn-primary" {{action "updatePrefsAction"}}>Update Preferences</button>
