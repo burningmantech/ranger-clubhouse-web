@@ -1,10 +1,27 @@
 {{person-sidebar person=person}}
 <main class="col">
-  <h1>{{person.callsign}} - {{person.status}} {{if person.vintage " (vintage) "}}({{person.first_name}} {{person.last_name}})</h1>
   {{#if (not person.user_authorized)}}
     {{#ch-alert "danger"}}
-      {{fa-icon "exclamation-triangle" size="2x"}}This account is suspended. Please contact the HQ Long.
+      {{fa-icon "exclamation-triangle" size="2x"}}This account is suspended. Please contact the HQ Lead.
     {{/ch-alert}}
   {{/if}}
+
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>{{person.callsign}} - {{person.status}}{{if person.vintage "/vintage"}} ({{person.first_name}} {{person.mi}} {{person.last_name}})</h1>
+    </div>
+    <div class="col-sm-12 d-md-none">
+      <div class="btn-group">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Section
+        </button>
+        <div class="dropdown-menu">
+          {{#link-to "person.index" person.id class="dropdown-item"}}Account Info{{/link-to}}
+          {{#link-to "person.event-info" person.id class="dropdown-item"}}Event Info{{/link-to}}
+          {{#link-to "person.password" person.id class="dropdown-item"}}Change Password{{/link-to}}
+       </div>
+     </div>
+   </div>
+  </div>
   {{outlet}}
 </main>

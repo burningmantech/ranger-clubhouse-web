@@ -1,5 +1,6 @@
 import Controller from '@ember/controller';
-import { action } from '@ember-decorators/object';
+import { action, computed } from '@ember-decorators/object';
+import { Role } from 'clubhouse/constants/roles';
 import PersonInfoValidations from 'clubhouse/validations/person-info';
 
 import {
@@ -7,10 +8,18 @@ import {
   LongSleeve as LongSleeveOptions
 } from 'clubhouse/constants/shirts';
 
-export default class MePersonalInfoEditController extends Controller {
+
+export default class PersonPersonalInfoController extends Controller {
   personInfoValidations = PersonInfoValidations;
   shortSleeveOptions = ShortSleeveOptions;
   longSleeveOptions = LongSleeveOptions;
+
+  @computed('session.user')
+  get canEditPersonalInfo() {
+    const user = this.session.user;
+
+    return user.hasRole(Role.ADMIN);
+  }
 
   @action
   onSubmit(model, isValid) {
@@ -22,7 +31,7 @@ export default class MePersonalInfoEditController extends Controller {
 
   @action
   onCancel() {
-    this.toast.warning('Editing your personal information was cancelled. No changes were saved.');
-    this.transitionToRoute('me.overview');
+    this.toast.warning('Personal information editing was cancelled. No changes were saved.');
+    this.transitionToRoute('person.index', this.person.id);
   }
 }

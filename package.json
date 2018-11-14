@@ -58,7 +58,7 @@
     "ember-resolver": "^5.0.1",
     "ember-simple-auth": "^1.7.0",
     "ember-simple-auth-token": "^4.0.4",
-    "ember-source": "~3.5.0",
+    "ember-source": "~3.5.1",
     "eslint-plugin-ember": "^5.2.0",
     "jsonwebtoken": "^8.3.0",
     "loader.js": "^4.7.0",

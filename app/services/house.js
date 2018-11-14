@@ -7,6 +7,7 @@ import DS from 'ember-data';
 export default class HouseService extends Service {
   @service('flashMessages') toast;
   @service session;
+  @service router;
 
 
   handleErrorResponse(response) {
@@ -103,15 +104,13 @@ export default class HouseService extends Service {
     });
   }
 
-  roleCheck(roles, route) {
-    assert('roleCheck: The route object given as an argument.', route);
-
+  roleCheck(roles) {
     if (this.session.user.hasRole(roles)) {
       return true;
     }
 
-    this.toast.danger('You are not authorized for that action', { sticky: true});
-    route.transitionTo('me.overview');
+    this.toast.danger('You are not authorized for that action');
+    this.router.transitionTo('me.overview');
     return false;
   }
 }

@@ -1,0 +1,93 @@
+{{year-select "Event Information" year=year years=person.years subheader=true onChange=(action "changeYearAction")}}
+<dl class="row">
+  <dt class="col-md-2">Years Active</dt>
+  <dd class="col-md-9">
+    {{#if person.years}}
+      {{#each person.years as |y|}}
+      {{y}}
+      {{/each}} ({{person.years.length}})
+    {{else}}
+      None yet.
+    {{/if}}
+  </dd>
+  <dt class="col-md-2">Training</dt>
+  <dd class="col-md-9">
+    <table class="table table-sm">
+      <thead class="thead-light">
+      <tr>
+        <th>Position</th>
+        <th>Pass</th>
+        <th>Date</th>
+        <th>Location</th>
+      </tr>
+    </thead>
+      <tbody>
+    {{#each yearInfo.trainings as |training|}}
+        <tr>
+          <td>{{training.position_title}}</td>
+          <td>
+            {{#if (eq training.status "pass")}}
+              <span class="text-success">YES</span>
+            {{else if (eq training.status "pending")}}
+              pending
+            {{else if (eq training.status "no-shift")}}
+              <span class="text-danger">no training signup found</span>
+            {{else}}
+              <span class="text-danger">NO</span>
+            {{/if}}
+          </td>
+          <td>{{training.date}}</td>
+          <td>{{training.location}}</td>
+        </tr>
+    {{/each}}
+      </tbody>
+    </table>
+  </dd>
+
+  <dt class="col-md-2">Meals</dt>
+  <dd class="col-md-9">{{meal-info yearInfo.meals}}</dd>
+
+  <dt class="col-md-2">Showers</dt>
+  <dd class="col-md-9">
+    {{#if yearInfo.showers}}
+      {{badge "secondary" "Wet Spot"}} BMID allows access to the Wet Spot.
+    {{else}}
+      {{badge "secondary" "Shower Pogs"}} Wet Spot shower pog granted for every 40 hours worked.
+    {{/if}}
+  </dd>
+
+  <dt class="col-md-2">Radios</dt>
+  <dd class="col-md-9">
+    {{#if yearInfo.radio_eligible}}
+      Up to {{pluralize yearInfo.radio_max "Event Radio"}} may be checked out.
+    {{else}}
+      Shift Radio only
+    {{/if}}
+  </dd>
+
+  <dt class="col-md-2">Motorpool</dt>
+  {{#if person.vehicle_blacklisted}}
+    <dd class="col-md-9">
+      {{badge "danger" "Blacklisted"}} Vehicle is blacklisted. May not drive gators, cars, or trucks on playa for Ranger business.
+    </dd>
+  {{else}}
+    <dd class="col-md-9">
+      {{#if person.vehicle_paperwork}}
+        {{badge "success" "Authorized"}}
+      {{else}}
+        {{badge "warning" "Not Authorized"}}
+      {{/if}}
+      to drive golf carts &amp; gators (UTVs) on playa for Ranger business
+    </dd>
+
+    <dt class="col-md-2">Org Vehicle Insurance</dt>
+    <dd class="col-md-9">
+      {{#if person.vehicle_insurance_paperwork}}
+        {{badge "success" "Authorized" }}
+      {{else}}
+        {{badge "warning" "Not Authorized" }}
+      {{/if}}
+      to drive cars and trucks (including own personal vehicle) on playa for Ranger business.
+    </dd>
+  {{/if}}
+</dl>

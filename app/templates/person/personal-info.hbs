@@ -1,0 +1,118 @@
+<h2>Personal Information</h2>
+{{#if canEditPersonalInfo}}
+  {{#ch-form "person" person validator=personInfoValidations onSubmit=(action "onSubmit") onCancel=(action "onCancel") as |f|}}
+    <fieldset>
+      <legend>General Information</legend>
+      <div class="form-row">
+        {{f.input "first_name" label="First Name" maxlength=25 grid="col-sm-4" }}
+        {{f.input "mi" label="M.I." maxlength=10 grid="col-sm-1" }}
+        {{f.input "last_name" label="Last Name" maxlength=25 grid="col-sm-4"}}
+      </div>
+      <div class="form-row">
+        {{f.input "email" label="Email" maxlength=50 grid="col-sm-6" }}
+      </div>
+      <div class="form-row">
+        {{f.input "home_phone" label="Home Phone" grid="col-sm-4"}}
+        {{f.input "alt_phone" label="Alternative Phone" grid="col-sm-4"}}
+      </div>
+
+      <div class="form-row">
+        {{f.input "gender" label="Gender" hint="female, male, non-binary, gender fluid, etc." }}
+      </div>
+      <div class="form-row">
+      {{f.input "languages" label="Languages Spoken"
+            hint="List the English names of languages you are comfortable speaking separated by a comma. Ex: english, french, japanese"}}
+      </div>
+      <div class="form-row col-auto">
+        {{f.input "camp_location" type="textarea" label="Camp Location" cols=50 rows=4 maxlength=200}}
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Home Address</legend>
+      <div class="form-row">
+        {{f.input "street1" label="Street" grid="col-md-8 col-sm-6"}}
+        {{f.input "apt" label="Apt" grid="col-md-1 col-sm-4"}}
+        {{f.input "street2" label="Street Line 2" grid="col-sm-8"}}
+      </div>
+      <div class="form-row">
+        {{f.input "city" label="City" grid="col-sm-5 col-md-4"}}
+        {{f.input "state" label="State / Province" grid="col-sm-5 col-md-4"}}
+        {{f.input "zip" label="Zip / Postal Code" grid="col-sm-5 col-md-4"}}
+        {{f.input "country" label="Country" grid="col-sm-5 col-md-4"}}
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Ranger Clothing</legend>
+      <div class="form-row">
+        {{f.input "teeshirt_size_style" type="select" label="T-Shirt Size" options=shortSleeveOptions grid="col-md-5 col-sm-8"}}
+        {{f.input "longsleeveshirt_size_style" type="select" label="Long Sleeve Shirt Size" options=longSleeveOptions grid="col-md-5 col-sm-8"}}
+      </div>
+    </fieldset>
+
+    {{f.submit label="Update" disabled=isSubmitting}}
+    {{f.cancel}}
+  {{/ch-form}}
+{{else}}
+  <dl class="row">
+    <dt class="col-md-2">Name</dt>
+    <dd class="col-md-10">
+        {{person.first_name}} {{person.mi}} {{person.last_name}}
+    </dd>
+
+    <dt class="col-md-2">Email</dt>
+    <dd class="col-md-10">
+      {{mail-to person.email}}
+    </dd>
+
+    <dt class="col-md-2">Gender</dt>
+    <dd class="col-md-10">
+      {{present-or-not person.gender}}
+    </dd>
+
+    <dt class="col-md-2">Languages</dt>
+    <dd class="col-md-10">
+      {{present-or-not person.languages}}
+    </dd>
+
+    <dt class="col-md-2">Camp Location</dt>
+    <dd class="col-md-10">
+      {{present-or-not person.camp_location}}
+    </dd>
+
+    <dt class="col-md-2">Short Sleeve</dt>
+    <dd class="col-md-10">
+      {{person.teeshirt_size_style}}
+    </dd>
+
+    <dt class="col-md-2">Long Sleeve</dt>
+    <dd class="col-md-10">
+      {{person.longsleeveshirt_size_style}}
+    </dd>
+
+    <dt class="col-md-2">Home Address</dt>
+    <dd class="col-md-10">
+      {{person.street1}} {{person.apt}}<br>
+      {{#if person.street2}}
+        {{person.street2}}<br>
+      {{/if}}
+      {{person.city}}, {{person.state}} {{person.zip}}<br>
+      {{person.country}}
+    </dd>
+
+    <dt class="col-md-2">Home Phone</dt>
+    <dd class="col-md-10">
+        {{phone-link person.home_phone}}
+    </dd>
+
+    <dt class="col-md-2">Alt. Phone</dt>
+    <dd class="col-md-10">
+      {{#if person.alt_phone}}
+        {{phone-link person.home_phone}}
+      {{else}}
+        <i class="text-muted">none given</i>
+      {{/if}}
+    </dd>
+  </dl>
+{{/if}}

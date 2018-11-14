@@ -68,8 +68,8 @@ module.exports = function(environment) {
       'media-src': "'self' *"
     }
 
-    ENV.dualClubhouse = false;
-    //ENV.clubhouseClassicUrl = 'http://localhost:9000';
+    ENV.dualClubhouse = true;
+    ENV.clubhouseClassicUrl = 'http://localhost:9000';
 
     ENV['ember-simple-auth-token'].serverTokenEndpoint = 'http://localhost:8000/auth/login'
     ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = 'http://localhost:8000/auth/refresh'
@@ -111,11 +111,11 @@ module.exports = function(environment) {
     // here you can enable a production-specific feature
     ENV.rootURL = '/client';
     ENV.dualClubhouse = true;
-    ENV.clubhouseClassicUrl = 'https://clubhouse2.burg.me/classic';
+    ENV.clubhouseClassicUrl = '/classic';
 
-    ENV['ember-simple-auth-token'].serverTokenEndpoint = 'https://clubhouse2.burg.me/api/auth/login'
-    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = 'https://clubhouse2.burg.me/api/auth/refresh'
-    ENV['api-server'] = 'https://clubhouse2.burg.me/api'
+    ENV['ember-simple-auth-token'].serverTokenEndpoint = '/api/auth/login';
+    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = '/api/auth/refresh';
+    ENV['api-server'] = '/api';
   }
 
   return ENV;

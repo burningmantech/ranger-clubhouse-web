@@ -3,7 +3,7 @@ import { computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
 import { tagName } from '@ember-decorators/component';
 
-@tagName('')
+@tagName('h1')
 export default class YearSelectComponent extends Component {
   static positionalParams = [ 'title' ];
 
@@ -18,6 +18,17 @@ export default class YearSelectComponent extends Component {
 
   // Starting year
   @argument year = 0;
+
+  // Is this a subheader?
+  @argument subheader = false;
+
+  constructor() {
+    super(...arguments);
+
+    if (this.subheader) {
+      this.tagName = 'h2';
+    }
+  }
 
   @computed("years")
   get yearOptions() {

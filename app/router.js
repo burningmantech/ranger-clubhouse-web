@@ -53,6 +53,9 @@ Router.map(function() {
     this.route('index', { path: '/' });
     this.route('assets');
     this.route('password');
+    this.route('event-info');
+    this.route('personal-info');
+    this.route('emergency-contact');
   });
   this.route('logout');
   this.route('training', { path: '/training/:position_id' }, function() {

@@ -83,12 +83,7 @@ export default class SearchController extends Controller {
     // And fire away!
     this.set('isSubmitting', true);
     this.ajax.request('person', { data: params }).then((results) => {
-      this.set('searchResults', results.person);
-      this.set('searchFound', true);
-      this.set('searchTotal', results.meta.total);
-      this.set('searchCount', results.person.length);
-    }).catch((response) => {
-      if (response.status == 404) {
+      if (results.person.length == 0) {
         // Nothing was found.
         this.set('searchResults', [ ]);
         this.set('searchFailed', query);
@@ -96,11 +91,13 @@ export default class SearchController extends Controller {
         this.set('searchTotal', 0);
         this.set('searchCount', 0);
       } else {
-        this.house.handleErrorResponse(response);
+        this.set('searchResults', results.person);
+        this.set('searchFound', true);
+        this.set('searchTotal', results.meta.total);
+        this.set('searchCount', results.person.length);
       }
-    }).finally(() => {
-      this.set('isSubmitting', false);
-    });
+    }).catch((response) => this.house.handleErrorResponse(response))
+    .finally(() => this.set('isSubmitting', false) );
   }
 
   // When the user hits enter, see if one and only one result

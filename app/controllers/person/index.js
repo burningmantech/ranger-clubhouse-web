@@ -17,6 +17,7 @@ const StatusOptions = [
   'dismissed',
   'inactive extension',
   'inactive',
+  'non ranger',
   'past prospective',
   'prospective',
   'prospective waitlist',
@@ -55,6 +56,16 @@ export default class PersonIndexController extends Controller {
   }
 
   @computed
+  get canEditBMIT() {
+    return this.session.user.hasRole(Role.EDIT_BMIDS);
+  }
+
+  @computed
+  get canEditAccessDocs() {
+    return this.session.user.hasRole(Role.EDIT_ACCESS_DOCS);
+  }
+
+  @computed
   get isAdminTrainerMentorOrVC() {
     return this.session.user.hasRole([ Role.ADMIN, Role.TRAINER, Role.MENTOR, Role.VC ]);
   }
@@ -62,6 +73,12 @@ export default class PersonIndexController extends Controller {
   @computed
   get isAdminMentorOrVC() {
     return this.session.user.hasRole([ Role.ADMIN, Role.TRAINER, Role.VC ]);
+  }
+
+  @computed
+  get isManageAndGrandPosition() {
+    const user = this.session.user;
+    return user.hasRole(Role.MANAGE) && user.hasRole(Role.GRANT_POSITION);
   }
 
   @computed('person.{callsign_approved,status}')

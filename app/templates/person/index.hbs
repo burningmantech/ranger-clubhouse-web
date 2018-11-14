@@ -1,16 +1,22 @@
+{{#if editPositions}}
+  {{person/position-form positions=positions positionIds=positionIds onSave=(action "savePositions") onCancel=(action "cancelPositions")}}
+{{/if}}
+
+{{#if editRoles}}
+  {{person/role-form roles=roles roleIds=roleIds onSave=(action "saveRoles") onCancel=(action "cancelRoles")}}
+{{/if}}
+
+{{person-photo photo=photo}}
 
 {{#ch-form "person" person  onSubmit=(action "savePerson") as |f|}}
-  {{person-photo photo=photo}}
-  <fieldset>
-    <legend>Acount Information</legend>
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-2">Callsign</label>
-      {{f.input "callsign" type="text" size=50 maxlength=100 wrapClass="col-auto" disabled=(not isAdminMentorOrVC)}}
+      {{f.input "callsign" type="text" size=35 maxlength=100 wrapClass="col-auto" disabled=(not isAdminMentorOrVC)}}
     </div>
 
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-2">FKA</label>
-      {{f.input "formerly_known_as" type="text" size=50 maxlength=200 wrapClass="col-auto" disabled=(not isAdminMentorOrVC)}}
+      {{f.input "formerly_known_as" type="text" size=35 maxlength=200 wrapClass="col-auto" disabled=(not isAdminMentorOrVC)}}
     </div>
 
     <div class="form-group row">
@@ -23,37 +29,41 @@
       {{f.input "status" type="select" options=statusOptions wrapClass="col-auto" disabled=(not isAdminMentorOrVC)}}
     </div>
 
-    {{#if isAdmin}}
-      <div class="form-group row">
-          <label class="col-form-label col-form-label-fixed col-sm-2">Personnel</label>
+    <div class="form-group row">
+        <label class="col-form-label col-form-label-fixed col-sm-2">Personnel</label>
+        {{#if isAdmin}}
           {{f.input "user_authorized" type="select" wrapClass="col-auto" options=userAuthorizedOptions}}
           {{f.input "has_note_on_file" label="Note on file" type="checkbox" wrapClass="col-auto mt-2" value=1}}
-      </div>
-    {{/if}}
-  </fieldset>
-
-  <fieldset>
-    <div class="form-group row">
-      <label for="person_first_name" class="col-form-label col-form-label-fixed col-sm-2">Name</label>
-      {{f.input "first_name" type="text" size=25 maxlength=25 wrapClass="col-auto"}}
-      {{f.input "mi" type="text" size=2 maxlength=2 wrapClass="col-auto"}}
-      {{f.input "last_name" type="text" size=25 maxlength=25 wrapClass="col-auto"}}
+        {{else}}
+          {{#if person.user_authorized}}
+            Authorized
+          {{else}}
+            <span class="text-danger">NOT AUTHORIZED</span>
+          {{/if}}
+          {{#if person.has_note_on_file}}
+            (note on file)
+          {{/if}}
+        {{/if}}
     </div>
 
-    <div class="form-group row">
-      <label class="col-form-label col-form-label-fixed col-sm-2">Email</label>
-      {{f.input "email" type="text" size=50 maxlength=100 wrapClass="col-auto" disabled=(not isAdminMentorOrVC)}}
+    <div class="form-group form-row">
+      <label class="col-form-label col-form-label-fixed col-sm-2">Name</label>
+        {{#if isAdminMentorOrVC}}
+          {{f.input "first_name" type="text" size=20 maxlength=25 wrapClass="col-auto"}}
+          {{f.input "mi" type="text" size=2 maxlength=10 wrapClass="col-auto"}}
+          {{f.input "last_name" type="text" size=20 maxlength=25 wrapClass="col-auto"}}
+        {{else}}
+          <div class="col-sm-10">
+            {{person.first_name}} {{person.mi}} {{person.last_name}}
+        </div>
+        {{/if}}
     </div>
 
-    <div class="form-group row">
-      <label for="person_camp_location" class="col-form-label col-form-label-fixed col-sm-2">Camp</label>
-      {{f.input "camp_location" type="textarea" cols=50 rows=3 wrapClass="col-sm-10"}}
-    </div>
-    <div class="form-group row">
-      <label for="person_on_site" class="col-form-label col-form-label-fixed col-sm-2">On Site</label>
-      <div class="col-sm-10 mt-2">
-        {{f.input "on_site" type="radioGroup" inline=true options=onSiteOptions}}
-      </div>
+    <div class="form-group form-row">
+        <label class="col-form-label col-form-label-fixed col-sm-2">On Site</label>
+        <div class="col-sm-10">
+          {{f.input "on_site" type="radioGroup" options=onSiteOptions inline=true}}
+        </div>
     </div>
 
     <div class="form-group row">
@@ -61,7 +71,9 @@
       <div class="col-sm-10">
         <div class="row col-12 mt-1 mb-2">
           <button type="button" {{action "togglePositions"}} class="btn btn-primary btn-sm mr-2">{{if showPositions "Hide" "Show"}} Positions</button>
-          <button type="button" {{action "editPositions"}} class="btn btn-primary btn-sm">Edit Positions</button>
+          {{#if (or isAdmin isManageAndGrandPosition)}}
+            <button type="button" {{action "editPositions"}} class="btn btn-primary btn-sm">Edit Positions</button>
+          {{/if}}
         </div>
         {{#if showPositions}}
           <div class="row">
@@ -110,9 +122,9 @@
     <div class="form-group row">
       <label class="col-form-label-fixed col-sm-2">Vehicles</label>
       <div class="col-sm-10">
-        {{f.input "vehicle_paperwork" label="Motorpool Policy" type="checkbox" value=1 inline=true}}
+        {{f.input "vehicle_paperwork" label="Motorpool Policy" type="checkbox" inline=true}}
         {{f.input "vehicle_insurance_paperwork" label="Vehicle Insurance Paperwork" type="checkbox" inline=true}}
-        {{f.input "vehicle_blacklisted" label="Vehicle Blacklisted" type="checkbox" value=1 inline=true}}
+        {{f.input "vehicle_blacklisted" label="Vehicle Blacklisted" type="checkbox" inline=true}}
       </div>
 
     </div>
@@ -120,21 +132,36 @@
     <div class="form-group row">
       <label class="col-form-label-fixed col-sm-2">Assets</label>
       <div class="col-sm-10">
-        {{#if person.asset_authorized}}
-          <span class="text-success">Assets Authorized</span>
-        {{else}}
-          <span class="text-danger">Asset Unauthorized</span>
-        {{/if}}
+        {{f.input "asset_authorized" label="Assets Authorized" type="checkbox" inline=true }}
       </div>
     </div>
 
     <div class="form-group row">
-      <label class="col-form-label-fixed col-sm-2">Alert Prefs</label>
+      <label class="col-sm-2 col-form-label-fixed">BMID/Tickets</label>
       <div class="col-sm-10">
-        TODO
+          {{#if (or canEditBMIT canEditAccessDocs)}}
+            {{#if canEditBMIT}}
+              <a href="{{cgo "bmidc" "edit" personId=person.id}}" class="btn btn-primary btn-sm mr-2">Edit BMID</a>
+            {{/if}}
+            {{#if canEditAccessDocs}}
+              <a href="#" class="btn btn-primary btn-sm mr-2">Edit Tickets &amp; Stuff (TODO)</a>
+              <a href="{{cgo "accessdoc" "editUserAccessDocs" personId=person.id}}" class="btn btn-primary btn-sm mr-2">Edit Access Docs</a>
+            {{/if}}
+          {{else}}
+            <div class="text-muted">No permission to edit BMID and/or access documents.</div>
+          {{/if}}
       </div>
     </div>
 
+    {{#if isAdmin}}
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label-fixed">Logs (TODO)</label>
+      <div class="col-sm-10">
+          <a href="#" class="btn btn-primary btn-sm">Contact</a>
+          <a href="#" class="btn btn-primary btn-sm">Broadcast</a>
+      </div>
+    </div>
+    {{/if}}
 
     <div class="form-group row">
       <label class="col-form-label-fixed col-sm-2">Created</label>
@@ -159,87 +186,4 @@
         <button type="button" class="btn btn-secondary btn-sm" {{action "removePerson"}}>Remove</button>
       </div>
     </div>
-  </fieldset>
-
-  <fieldset>
-    <legend>Event Information</legend>
-    <div class="form-group row">
-      <label class="col-sm-2 col-form-label-fixed">Training</label>
-      <div class="col-auto">
-        <table class="table table-sm">
-          <thead class="thead-light">
-          <tr>
-            <th>Position</th>
-            <th>Pass</th>
-            <th>Date</th>
-            <th>Location</th>
-          </tr>
-        </thead>
-          <tbody>
-        {{#each yearInfo.trainings as |training|}}
-            <tr>
-              <td>{{training.position_title}}</td>
-              <td>
-                {{#if (eq training.status "pass")}}
-                  <span class="text-success">YES</span>
-                {{else if (eq training.status "pending")}}
-                  pending
-                {{else if (eq training.status "no-shift")}}
-                  <span class="text-danger">no training signup found</span>
-                {{else}}
-                  <span class="text-danger">NO</span>
-                {{/if}}
-              </td>
-              <td>{{training.date}}</td>
-              <td>{{training.location}}</td>
-            </tr>
-        {{/each}}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <label class="col-sm-2 col-form-label-fixed">Radio</label>
-      <div class="col-sm-10">
-        {{#if yearInfo.radio_eligible}}
-          <span class="text-success">Event Radio Eligible (max {{yearInfo.radio_max}})</span>
-        {{else}}
-          <span class="text-danger">Not Event Radio Eligible</span>
-        {{/if}}
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <label class="col-sm-2 col-form-label-fixed">Meals</label>
-      <div class="col-sm-10">
-          {{meal-info yearInfo.meals}}
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <label class="col-sm-2 col-form-label-fixed">Actions (TODO)</label>
-      <div class="col-sm-10">
-          {{#if (has-role "edit-bmids" "edit-access-docs")}}
-            {{#if (has-role "edit-bmids")}}
-              <a href="#" class="btn btn-primary btn-sm mr-2">Edit BMID</a>
-            {{/if}}
-            {{#if (has-role "edit-access-docs")}}
-            <a href="#" class="btn btn-primary btn-sm mr-2">Edit Tickets &amp; Stuff</a>
-            <a href="#" class="btn btn-primary btn-sm mr-2">Edit Access Docs</a>
-            {{/if}}
-          {{else}}
-            <div class="text-muted">No permission to edit BMID and/or access documents.</div>
-          {{/if}}
-      </div>
-    </div>
-  </fieldset>
 {{/ch-form}}
-
-{{#if editPositions}}
-  {{person/position-form positions=positions positionIds=positionIds onSave=(action "savePositions") onCancel=(action "cancelPositions")}}
-{{/if}}
-
-{{#if editRoles}}
-  {{person/role-form roles=roles roleIds=roleIds onSave=(action "saveRoles") onCancel=(action "cancelRoles")}}
-{{/if}}

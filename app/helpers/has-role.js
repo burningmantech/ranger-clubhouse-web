@@ -17,16 +17,47 @@ export default Helper.extend({
       return false;
     }
 
-    params.forEach(function(name) {
-      const roleValue = StringToRole[name];
+    const size = params.length;
+    for (let i = 0; i < size; i++) {
+      name = params[i];
 
-      if (roleValue) {
-        roles.push(roleValue);
+      if (name.indexOf('+') >= 0) {
+        // Role combination has to occur together
+        comboRoles = name.split('+');
+        let hasAll = true;
+
+        const comboSize = comboRoles.length;
+        for (let r = 0; r < combSize; r++) {
+          const comboName = roles[r];
+          const roleValue = StringToRole[comboName];
+
+          if (roleValue) {
+            if (!user.hasRole(roleValue)) {
+              hasAll = false;
+              break;
+            }
+          } else {
+            assert(`Unknown role name [${comboName}]`);
+          }
+        }
+
+        if (hasAll) {
+          return true;
+        }
       } else {
-        assert(`Unknown role name [${name}]`);
+        const roleValue = StringToRole[name];
+
+        if (roleValue) {
+          if (user.hasRole(roleValue)) {
+            return true;
+          }
+        } else {
+          assert(`Unknown role name [${name}]`);
+        }
       }
-    });
-    return user.hasRole(roles);
+    }
+
+    return false;
   },
 
   rolesChanged: observer('session.user.roles', function() {

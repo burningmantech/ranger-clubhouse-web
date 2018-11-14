@@ -4,7 +4,7 @@ import { Role } from 'clubhouse/constants/roles';
 export default class AdminPositionRoute extends Route {
   beforeModel() {
     super.beforeModel(...arguments);
-    this.house.roleCheck(Role.ADMIN, this);
+    this.house.roleCheck(Role.ADMIN);
   }
 
   model() {

@@ -14,6 +14,11 @@
       </div>
     </div>
     <div class="form-row">
+      {{f.input "home_phone" label="Home Phone" grid="col-sm-4"}}
+      {{f.input "alt_phone" label="Alternative Phone" grid="col-sm-4"}}
+    </div>
+
+    <div class="form-row">
       {{f.input "gender" label="Gender" hint="female, male, non-binary, gender fluid, etc." }}
     </div>
     <div class="form-row">
@@ -22,13 +27,6 @@
     </div>
     <div class="form-row col-auto">
       {{f.input "camp_location" type="textarea" label="Camp Location" cols=50 rows=4 maxlength=200}}
-    </div>
-  </fieldset>
-  <fieldset>
-    <legend>Ranger Clothing</legend>
-    <div class="form-row">
-      {{f.input "teeshirt_size_style" type="select" label="T-Shirt Size" options=shortSleeveOptions grid="col-md-5 col-sm-8"}}
-      {{f.input "longsleeveshirt_size_style" type="select" label="Long Sleeve Shirt Size" options=longSleeveOptions grid="col-md-5 col-sm-8"}}
     </div>
   </fieldset>
   <fieldset>
@@ -44,11 +42,14 @@
       {{f.input "zip" label="Zip / Postal Code" grid="col-sm-5 col-md-4"}}
       {{f.input "country" label="Country" grid="col-sm-5 col-md-4"}}
     </div>
-    <div class="form-row">
-      {{f.input "home_phone" label="Home Phone" grid="col-sm-4"}}
-      {{f.input "alt_phone" label="Alternative Phone" grid="col-sm-4"}}
-    </div>
+  </fieldset>
 
+  <fieldset>
+    <legend>Ranger Clothing</legend>
+    <div class="form-row">
+      {{f.input "teeshirt_size_style" type="select" label="T-Shirt Size" options=shortSleeveOptions grid="col-md-5 col-sm-8"}}
+      {{f.input "longsleeveshirt_size_style" type="select" label="Long Sleeve Shirt Size" options=longSleeveOptions grid="col-md-5 col-sm-8"}}
+    </div>
   </fieldset>
 
   {{f.submit label="Update" disabled=isSubmitting}}

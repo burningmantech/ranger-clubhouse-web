@@ -15,12 +15,13 @@ export default class ApplicationController extends Controller {
      */
 
     $('body').bind('keyup', (event) => {
-      let bubbleUp = true;
 
-      if (event.keyCode >= F1 && event.keyCode <= F3) {
-        event.preventDefault();
-        bubbleUp = false;
+      if (event.keyCode < F1 || event.keyCode > F3) {
+        return true;
       }
+
+      event.preventDefault();
+
       switch (event.keyCode) {
       case F1:
         this.transitionToRoute('/search/person');
