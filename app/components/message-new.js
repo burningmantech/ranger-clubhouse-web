@@ -20,7 +20,6 @@ export default class MessageNewComponent extends Component {
             if (result.callsigns.length > 0) {
               return resolve(result.callsigns.map(row => row.callsign));
             }
-            console.log("Rejecting");
             return reject();
           }, reject);
   }

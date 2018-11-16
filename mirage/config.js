@@ -36,7 +36,6 @@ export default function() {
         errors.push({ status: 422, title: 'Password cannot be blank'});
       }
 
-      console.log("/api/configs Returning errors ");
       return new Response(422, {'Content-Type': 'application/json'}, { errors });
     }
 

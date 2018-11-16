@@ -1,8 +1,12 @@
 
 import moment from 'moment';
 
+function getProperty(changes, content, name) {
+  return changes.hasOwnProperty(name) ? changes[name] : content.get(name);
+}
+
 function getDateProperty(changes, content, name) {
-  const value = changes.hasOwnProperty(name) ? changes[name] : content.get(name);
+  const value = getProperty(changes, content, name);
 
   if (!value) {
     return null;
@@ -17,8 +21,13 @@ function getDateProperty(changes, content, name) {
 
 export default function validateDateTime(opts = {}) {
   return (key, newValue, oldValue, changes, content) => {
-    const { before, after } = opts;
+    const { before, after, if_set } = opts;
     let date;
+
+    if (if_set && !getProperty(changes, content, if_set)) {
+      return true;
+    }
+
     if (newValue == '' || newValue == undefined) {
       return true;
     }

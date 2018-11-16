@@ -1,6 +1,7 @@
 import { helper } from '@ember/component/helper';
 import { typeOf } from '@ember/utils';
 import { htmlSafe } from '@ember/string';
+import { assert } from '@ember/debug';
 import Ember from 'ember';
 
 const escapeExpression = Ember.Handlebars.Utils.escapeExpression;
@@ -8,7 +9,9 @@ const escapeExpression = Ember.Handlebars.Utils.escapeExpression;
 function buildOptions(options, currentValue) {
   let html = '', label, value;
 
-  options.forEach((opt) => {
+  assert('Options list is null. Did you forget to supply the right options?', options);
+
+  options.forEach((opt, idx) => {
     const type = typeOf(opt);
     if (type == 'object' && opt.groupName) {
         html += `<optgroup label="${escapeExpression(opt.groupName)}">${buildOptions(opt.options, currentValue)}</optgroup>`;
@@ -25,7 +28,8 @@ function buildOptions(options, currentValue) {
         // Or just [  value ]
         label = value = opt;
       }
-      const isSelected = (currentValue == value) ? 'selected' : '';
+
+      const isSelected = ((currentValue == null && idx == 0) || currentValue == value) ? 'selected' : '';
       html += `<option value="${value}" ${isSelected}>${escapeExpression(label)}</option>`
     }
   })

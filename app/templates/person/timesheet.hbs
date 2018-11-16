@@ -7,10 +7,9 @@
 </p>
 {{/if}}
 
-<h2>Missing Timesheet Requests</h2>
 
 {{#if timesheetMissing}}
-  {{person/timesheet-missing timesheetMissing=timesheetMissing person=person year=year positions=positions}}
+  {{person/timesheet-missing timesheetMissing=timesheetMissing timesheets=timesheets person=person year=year positions=positions}}
 {{else}}
 <p class="lead mt-3 text-danger">
   There are no missing timesheet requests for {{year}}.

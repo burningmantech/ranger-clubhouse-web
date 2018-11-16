@@ -81,6 +81,7 @@ export default class HouseService extends Service {
 
     const isCallback = typeof(routeOrCallback) == 'function';
 
+    /*
     if (!model.get('isDirty') && !model.get('isNew')) {
       this.toast.success(successMessage);
       if (isCallback) {
@@ -89,12 +90,12 @@ export default class HouseService extends Service {
         this.transitionToRoute(routeOrCallback);
       }
       return;
-    }
+    }*/
 
-    return model.save().then(() => {
+    return model.save().then((result) => {
       this.toast.success(successMessage);
       if (isCallback) {
-        routeOrCallback(model);
+        routeOrCallback(model, result);
       } else if (routeOrCallback) {
         this.transitionToRoute(routeOrCallback);
       }

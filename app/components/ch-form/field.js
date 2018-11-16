@@ -178,6 +178,10 @@ export default class ChFormFieldComponent extends Component {
   update(value) {
     this.model.set(this.name, value);
 
+    if (this.onChange) {
+      this.onChange(this.name, value);
+    }
+
     if (this.fieldChangeAction) {
       this.fieldChangeAction(this);
     }

@@ -32,7 +32,6 @@ export default class DatetimePickerComponent extends Component {
       step: 5,
       allowBlank: true,
       onChangeDateTime: (datetime,field) => {
-        console.log('Datetime change');
         this.onChange(field.val())
       },
       validateOnBlur: true  // BUG with datepicker. The package will not allow a blank field is validateOnBlur is false.

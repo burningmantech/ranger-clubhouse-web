@@ -21,6 +21,11 @@ export default class TimesheetMissingModel extends Model {
 
   @attr('', { readOnly: true }) partner_info;
 
+  @attr('boolean') create_entry;
+  @attr('shiftdate') new_on_duty;
+  @attr('shiftdate') new_off_duty;
+  @attr('number') new_position_id;
+
   @computed('review_status')
   get isPending() {
     return this.review_status == 'pending';

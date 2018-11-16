@@ -1,3 +1,8 @@
+<h2>Missing Timesheet Requests</h2>
+<div class="form-row">
+  <div class="col-6">{{pluralize timesheetMissing.length 'missing entry request'}}</div>
+  <div class="col-6 text-right"><button class="btn btn-secondary btn-sm ml-auto" {{action "newEntryAction"}}>New Request</button></div>
+</div>
 <table class="table table-striped table-sm">
   <thead>
     <tr>
@@ -28,8 +33,26 @@
   </tbody>
 </table>
 
+{{#if newEntry}}
+{{#ch-form "entry" newEntry modalBox=true modalTitle="Create New Missing Timesheet Request" validator=newEntryValidations onSubmit=(action "createEntryAction") onCancel=(action "cancelNewEntryAction") as |f|}}
+  <div class="form-row">
+    {{f.input 'on_duty' type="datetime" label="On Duty"}}
+    {{f.input 'off_duty' type="datetime" label="Off Duty"}}
+    {{f.input 'position_id' type="select" options=positions label="Position"}}
+  </div>
+  <div class="form-row">
+    {{f.input 'partner' type="text" label="Partner(s) for shift." size=40 maxlength=60 }}
+  </div>
+  <div class="form-row">
+    {{f.input 'notes' type="textarea" cols=80 rows=4 options=positions label="Correction Notes"}}
+  </div>
+  {{f.submit}}
+  {{f.cancel}}
+{{/ch-form}}
+{{/if}}
+
 {{#if editTimesheet}}
-{{#ch-form "timesheet" editTimesheet modalBox=true modalTitle=(concat "Manage Missing Timesheet Request ID #" editTimesheet.id) validator=timesheetValidations onSubmit=(action "saveTimesheetAction") onCancel=(action "cancelTimesheetAction") as |f|}}
+{{#ch-form "entry" editTimesheet modalBox=true modalTitle=(concat "Manage Missing Timesheet Request ID #" editTimesheet.id) validator=timesheetValidations onSubmit=(action "saveTimesheetAction") onCancel=(action "cancelTimesheetAction") as |f|}}
   <dl class="form-row">
     <dt class="col-2">Position:</dt>
     <dd class="col-10">{{editTimesheet.position.title}}</dd>
@@ -100,16 +123,31 @@
     <div class="form-row">
       {{f.input "reviewer_notes"
         label="Enter your response to the person below. Be clear and concise."
-        type="textarea" cols=80 rows=2
+        type="textarea" cols=80 rows=4
       }}
     </div>
     <div class="form-group row">
         <div class="col-auto">Correction Status:</div>
         <div class="col-auto">
-          {{f.input "review_status" label="Review Status" type="radioGroup" options=reviewOptions inline=true}}
+          {{f.input "review_status" label="Review Status" type="radioGroup" options=reviewOptions inline=true onChange=(action "statusChangeAction")}}
         </div>
     </div>
 </fieldset>
+  {{#if (eq f.model.review_status "approved")}}
+  <fieldset>
+    <legend>New Timesheet Entry</legend>
+    <div class="form-row">
+      <div class="form-group">
+        {{f.input 'create_entry' type="checkbox" label="Create new entry" }}
+      </div>
+    </div>
+    <div class="form-row">
+      {{f.input 'new_on_duty' type="datetime" label="On Duty"}}
+      {{f.input 'new_off_duty' type="datetime" label="Off Duty"}}
+      {{f.input 'new_position_id' type="select" options=positions label="Position"}}
+    </div>
+  </fieldset>
+  {{/if}}
   {{f.submit}}
   {{f.cancel}}
   {{#if partnerTimesheet}}

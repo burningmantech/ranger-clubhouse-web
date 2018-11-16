@@ -3,6 +3,11 @@
       modalBox=true modalTitle="Missing Timesheet Request"
       validator=timesheetValidations
       onSubmit=(action "saveAction") onCancel=(action "cancelAction") as |f|}}
+    <div class="form-group mb-4">
+      Use this form for <b>MISSING TIMESHEET ENTRIES ONLY</b> If you have
+      an existing entry needs that needs correction, go back to the
+      Timesheet Review section and submit a correction by clicking on 'No - Needs Correction'.
+    </div>
     <div class="form-row">
       {{f.input "position_id" label="Which position was the shift for?" type="select" options=positionOptions grid="col-auto"}}
     </div>
