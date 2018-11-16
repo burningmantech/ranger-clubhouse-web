@@ -8,7 +8,7 @@ export default class AdminPositionRoute extends Route {
   }
 
   model() {
-    return this.store.query('position', {}).then((result) => { return result.toArray() });
+    return this.store.query('position', {});
   }
 
   setupController(controller, model) {

@@ -1,16 +1,15 @@
 import Route from '@ember/routing/route';
-import MeRouteMixin from 'clubhouse/mixins/route/me';
 import RSVP from 'rsvp';
 import requestYear from 'clubhouse/utils/request-year';
 
-export default class MeTimesheetRoute extends Route.extend(MeRouteMixin) {
+export default class PersonTimesheetRoute extends Route {
   queryParams = {
     year: { refreshModel: true }
   };
 
   model(params) {
     const year = requestYear(params);
-    const person_id = this.session.user.id;
+    const person_id = this.modelFor('person').person.id;
     const queryParams = {
       person_id,
       year,
@@ -22,13 +21,17 @@ export default class MeTimesheetRoute extends Route.extend(MeRouteMixin) {
         method: 'GET',
         data: { person_id }
       }).then((result) => result.info),
+      timesheetMissing: this.store.query('timesheet-missing', queryParams),
       year: year,
+      positions: this.ajax.request(`person/${person_id}/positions`)
+                  .then((results) => results.positions)
     });
   }
 
   setupController(controller, model) {
     super.setupController(...arguments);
     controller.setProperties(model);
+    controller.setProperties(this.modelFor('person'));
     controller.set('canCorrectThisYear', (model.timesheetInfo.correction_year == model.year));
   }
 }

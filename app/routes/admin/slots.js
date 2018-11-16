@@ -19,10 +19,6 @@ export default class AdminSlotsRoute extends Route {
 
   setupController(controller, model) {
     controller.set('slot', null);
-    controller.set('slots', model.slots);
-    controller.set('positions', model.positions);
-    controller.set('year', model.year);
-    controller.set('yearList', model.yearList);
+    controller.setProperties(model)
   }
-
 }

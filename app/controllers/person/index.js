@@ -32,8 +32,8 @@ const UserAuthorizedOptions = [
 ];
 
 const OnSiteOptions = [
-  { label: 'On Site', key: true },
-  { label: 'Off Site', key: false},
+  [ 'On Site', true ],
+  [ 'Off Site', false ],
 ];
 
 export default class PersonIndexController extends Controller {

@@ -18,33 +18,28 @@ export default class TimesheetModel extends DS.Model {
   @attr('boolean') verified;
   @attr('string') verified_at;
 
-  @attr('', { readOnly: true}) verify_person;
+  @attr('', { readOnly: true}) verified_person;
   @attr('', { readOnly: true}) reviewer_person;
   @attr('', { readOnly: true}) position;
 
-  @computed('verified', 'status')
-  get needsVerification() {
-    return (!this.verified && this.status == 'pending');
+  @computed('verified', 'notes', 'review_status')
+  get isPendingReview() {
+    return (!this.verified && this.notes && this.review_status == 'pending');
   }
 
-  @computed('status')
+  @computed('review_status')
   get isApproved() {
     return this.review_status == 'approved';
   }
 
-  @computed('status')
+  @computed('review_status')
   get isRejected() {
     return this.review_status == 'rejected';
   }
 
-  @computed('status')
+  @computed('review_status')
   get isPending() {
     return this.review_status == 'pending';
-  }
-
-  @computed('verified', 'notes')
-  get isPendingReview() {
-    return !this.verified && this.notes;
   }
 
   @computed('verified', 'notes', 'status')
@@ -54,7 +49,7 @@ export default class TimesheetModel extends DS.Model {
 
   @computed('status', 'reviewer_notes')
   get haveReviewerResponse() {
-    return this.review_status == 'pending' && this.reviewer_notes;
+    return this.review_status != 'pending' && this.reviewer_notes;
   }
 
   @computed('off_duty')

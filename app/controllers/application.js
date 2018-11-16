@@ -20,7 +20,7 @@ export default class ApplicationController extends Controller {
         return true;
       }
 
-      event.preventDefault();
+      event.preventDefault(); // eslint-disable-line ember/jquery-ember-run
 
       switch (event.keyCode) {
       case F1:
@@ -36,7 +36,7 @@ export default class ApplicationController extends Controller {
         break;
       }
 
-      return bubbleUp;
+      return false;
     });
   }
 }

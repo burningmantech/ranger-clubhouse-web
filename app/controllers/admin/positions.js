@@ -54,7 +54,6 @@ export default class PositionController extends Controller {
       () => {
           position.destroyRecord().then(() => {
             this.toast.success('The position has been deleted.');
-            this.positions.removeObject(position);
           })
       }
     )
@@ -70,9 +69,7 @@ export default class PositionController extends Controller {
 
     this.house.saveModel(model, `The position has been ${isNew ? 'created' : 'updated'}.`, () => {
       this.set('position', null);
-      if (isNew) {
-        this.positions.pushObject(model);
-      }
+      this.positions.update(); // refresh the list.
     })
   }
 

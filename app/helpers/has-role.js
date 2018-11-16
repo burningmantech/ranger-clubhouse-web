@@ -9,7 +9,6 @@ export default Helper.extend({
 
   compute(params) {
     const user = this.session.user;
-    let roles = [];
 
     assert('has-role was not passed a role(s). Perhaps you forgot the ()\'s around the helper?', params.length > 0);
 
@@ -19,16 +18,16 @@ export default Helper.extend({
 
     const size = params.length;
     for (let i = 0; i < size; i++) {
-      name = params[i];
+      const name = params[i];
 
       if (name.indexOf('+') >= 0) {
         // Role combination has to occur together
-        comboRoles = name.split('+');
+        const comboRoles = name.split('+');
         let hasAll = true;
 
         const comboSize = comboRoles.length;
-        for (let r = 0; r < combSize; r++) {
-          const comboName = roles[r];
+        for (let r = 0; r < comboSize; r++) {
+          const comboName = comboRoles[r];
           const roleValue = StringToRole[comboName];
 
           if (roleValue) {

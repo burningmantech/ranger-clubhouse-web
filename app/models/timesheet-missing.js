@@ -17,6 +17,9 @@ export default class TimesheetMissingModel extends Model {
   @attr('number', { readOnly: true }) duration;
   @attr('', { readOnly: true}) position;
   @attr('', { readOnly: true}) reviewer_person;
+  @attr('number', { readOnly: true }) credits;
+
+  @attr('', { readOnly: true }) partner_info;
 
   @computed('review_status')
   get isPending() {

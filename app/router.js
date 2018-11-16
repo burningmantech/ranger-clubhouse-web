@@ -56,6 +56,7 @@ Router.map(function() {
     this.route('event-info');
     this.route('personal-info');
     this.route('emergency-contact');
+    this.route('timesheet');
   });
   this.route('logout');
   this.route('training', { path: '/training/:position_id' }, function() {

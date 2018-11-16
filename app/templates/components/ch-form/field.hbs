@@ -28,14 +28,14 @@
     {{ch-form/options-builder options _val}}
   </select>
 {{else if (eq type "radioGroup")}}
-  {{#each options as |option idx|}}
+  {{#each radioOptions as |option idx|}}
     <div class="{{wrapClass}}">
       <input
         type     = "radio"
         class    = {{controlClass}}
         id       = {{concat _domId idx}}
-        onclick  = {{action "update" option.key}}
-        checked  = {{eq (get model name) option.key}}
+        onclick  = {{action "update" option.value}}
+        checked  = {{eq (get model name) option.value}}
         disabled = {{disabled}}
       >
       <label class="{{labelClass}}" for="{{concat _domId idx}}">{{option.label}}</label>

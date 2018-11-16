@@ -2,6 +2,8 @@ import Component from '@ember/component';
 import { action, computed } from '@ember-decorators/object';
 import { tagName } from '@ember-decorators/component';
 import { argument } from '@ember-decorators/argument';
+import { typeOf } from '@ember/utils';
+
 import $ from 'jquery';
 
 @tagName('')
@@ -136,6 +138,21 @@ export default class ChFormFieldComponent extends Component {
     } else {
       return `${this.formId}-${this.name}`
     }
+  }
+
+  @computed('options')
+  get radioOptions() {
+    const options = [];
+
+    this.options.forEach((opt) => {
+      if (typeOf(opt) == 'array') {
+        options.push({ label: opt[0], value: opt[1]});
+      } else {
+        options.push({ label: opt, value: opt});
+      }
+    });
+
+    return options;
   }
 
   // ember-changeset-validate uses model.error (singular)

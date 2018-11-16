@@ -26,7 +26,8 @@ export default class YearSelectComponent extends Component {
     super(...arguments);
 
     if (this.subheader) {
-      this.tagName = 'h2';
+      this.tagName = 'div';
+      this.classNames = [ 'h2' ];
     }
   }
 

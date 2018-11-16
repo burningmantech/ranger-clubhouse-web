@@ -25,7 +25,7 @@ function buildOptions(options, currentValue) {
         // Or just [  value ]
         label = value = opt;
       }
-      const isSelected = (currentValue == value) ? 'selected="selected"' : '';
+      const isSelected = (currentValue == value) ? 'selected' : '';
       html += `<option value="${value}" ${isSelected}>${escapeExpression(label)}</option>`
     }
   })

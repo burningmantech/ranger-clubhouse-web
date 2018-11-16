@@ -1,7 +1,6 @@
 import Service from '@ember/service';
 import ENV from 'clubhouse/config/environment';
 import { service } from '@ember-decorators/service';
-import { assert } from '@ember/debug';
 import DS from 'ember-data';
 
 export default class HouseService extends Service {

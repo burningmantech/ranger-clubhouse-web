@@ -1,0 +1,18 @@
+{{year-select "Timesheet" year=year years=person.years onChange=(action "changeYearAction") subheader=true}}
+{{#if timesheets}}
+  {{person/timesheet-manage timesheets=timesheets person=person year=year positions=positions}}
+{{else}}
+<p class="lead mt-3 text-danger">
+  No timesheets were found for {{year}}.
+</p>
+{{/if}}
+
+<h2>Missing Timesheet Requests</h2>
+
+{{#if timesheetMissing}}
+  {{person/timesheet-missing timesheetMissing=timesheetMissing person=person year=year positions=positions}}
+{{else}}
+<p class="lead mt-3 text-danger">
+  There are no missing timesheet requests for {{year}}.
+</p>
+{{/if}}
