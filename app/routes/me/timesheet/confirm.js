@@ -7,6 +7,6 @@ export default class MeTimesheetConfirmRoute extends Route {
     controller.setProperties(this.modelFor('me.timesheet'));
 
     // Setup the confirmation form.
-    controller.set('confirmForm', EmberObject.create({ confirm: parent.timesheetInfo.timesheet_confirmed}));
+    controller.set('confirmForm', EmberObject.create({ confirm: controller.timesheetInfo.timesheet_confirmed}));
   }
 }
