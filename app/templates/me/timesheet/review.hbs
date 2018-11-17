@@ -98,17 +98,21 @@
             {{/if}}
 
           <p class="mt-2">
-            Is this entry correct?
-            {{#unless ts.verified}}
-              <button type="button" class="btn btn-primary btn-sm" {{action "markCorrectAction" ts}} disabled={{isSubmitting}}>Yes</button>
-            {{/unless}}
-            <button type="button" class="btn btn-secondary btn-sm" {{action "markIncorrectAction" ts}}  disabled={{isSubmitting}}>
-              {{#if ts.isPendingReview}}
-                Edit Correction Note
-              {{else}}
-                No - Submit Correction
-              {{/if}}
-            </button>
+            {{#if ts.off_duty}}
+              Is this entry correct?
+              {{#unless ts.verified}}
+                <button type="button" class="btn btn-primary btn-sm" {{action "markCorrectAction" ts}} disabled={{isSubmitting}}>Yes</button>
+              {{/unless}}
+              <button type="button" class="btn btn-secondary btn-sm" {{action "markIncorrectAction" ts}}  disabled={{isSubmitting}}>
+                {{#if ts.isPendingReview}}
+                  Edit Correction Note
+                {{else}}
+                  No - Submit Correction
+                {{/if}}
+              </button>
+            {{else}}
+              <strong>You are still on duty. You may submit a correction after the shift has ended.</strong>
+            {{/if}}
             </p>
           </td>
         </tr>

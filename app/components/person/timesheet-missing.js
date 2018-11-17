@@ -32,25 +32,46 @@ export default class PersonTimesheetMissingComponent extends Component {
     notes:  [ validatePresence({ presence: true }) ],
   };
 
-  @action
-  editTimesheetAction(timesheet) {
+  _setupEdit(timesheet) {
+    let idx = this.timesheetMissing.indexOf(timesheet);
+    let nextEntry;
+
+    // Find the next entry that may need managing.
+    if (idx >= 0) {
+      idx++;
+      while (idx < this.timesheetMissing.length) {
+        const entry = this.timesheetMissing.objectAt(idx);
+        if (entry.isPending) {
+            nextEntry = entry;
+            break;
+        }
+
+        idx++;
+      }
+    }
+
     timesheet.set('new_on_duty', timesheet.on_duty);
     timesheet.set('new_off_duty', timesheet.off_duty);
     timesheet.set('new_position_id', timesheet.position_id);
     timesheet.set('create_entry', 0);
 
-    this.set('editTimesheet', timesheet);
+    this.set('nextEntry', nextEntry);
+    this.set('editEntry', timesheet);
     this.set('partnerInfo', timesheet.partner_info);
     this.set('partnerTimesheet', null);
   }
 
   @action
-  cancelTimesheetAction() {
-    this.set('editTimesheet', null);
+  editEntryAction(timesheet) {
+    this._setupEdit(timesheet);
   }
 
   @action
-  saveTimesheetAction(model, isValid) {
+  cancelTimesheetAction() {
+    this.set('editEntry', null);
+  }
+
+  _saveEntry(model, isValid, nextEntry) {
     if (!isValid) {
       return;
     }
@@ -58,15 +79,30 @@ export default class PersonTimesheetMissingComponent extends Component {
     const createEntry = model.get('create_entry');
     this.toast.clearMessages();
     this.house.saveModel(model, 'Missing timesheet entry has been successfully updated.', () => {
-      this.set('editTimesheet', null);
+      this.set('editEntry', null);
+      this.set('nextEntry', null);
       if (createEntry && this.timesheets) {
         this.timesheets.update();
+      }
+
+      if (nextEntry) {
+        this._setupEdit(nextEntry);
       }
     });
   }
 
   @action
-  removeTimesheetAction(timesheet) {
+  saveEntryAction(model, isValid) {
+    this._saveEntry(model, isValid);
+  }
+
+  @action
+  saveAndManageNextEntryAction(model, isValid) {
+    this._saveEntry(model, isValid, this.get('nextEntry'));
+  }
+
+  @action
+  removeEntryAction(timesheet) {
     this.modal.confirm('Remove Missing Timesheet', `Position: ${timesheet.position.title}<br>Time: ${timesheet.on_duty} to ${timesheet.off_duty}<br> Are you sure you wish to remove this timesheet?`, () => {
       timesheet.destroyRecord().then(() => {
         this.toast.success('The entry has been deleted.');
@@ -85,7 +121,7 @@ export default class PersonTimesheetMissingComponent extends Component {
   @action
   statusChangeAction(field, value) {
     if (value == 'approved') {
-      this.editTimesheet.set('create_entry', 1);
+      this.editEntry.set('create_entry', 1);
     }
   }
 

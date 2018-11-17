@@ -71,7 +71,7 @@ export default class PersonTimesheetManageComponent extends Component {
   @action
   signoffAction(timesheet) {
     this.ajax.request(`timesheet/${timesheet.id}/signoff`, { method: 'POST' }).then((result) => {
-      this.store.pushPayload(result);
+      this.timesheets.update();
       this.toast.success(`${this.person.callsign} has been successfully signed off. Enjoy your rest.`);
     })
   }

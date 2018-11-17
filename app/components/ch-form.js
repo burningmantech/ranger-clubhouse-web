@@ -90,11 +90,11 @@ export default class ChFormComponent extends Component {
   }
 
   @action
-  submitForm() {
+  submitForm(action) {
     const model = this.model;
     const original = this.originalModel;
 
-    const submitAction = this.onSubmit;
+    const submitAction = (action || this.onSubmit);
 
     if (model.validate) {
       model.validate().then(() => {

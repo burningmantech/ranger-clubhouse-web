@@ -168,6 +168,18 @@ export default class PersonModel extends  DS.Model {
     return (!this.isNotARanger && this.status != PersonStatus.PAST_PROSPECTIVE);
   }
 
+  @computed('status')
+  get canStartShift() {
+    return !(
+      this.status == "auditor"
+      || this.status == "deceased"
+      || this.status == "dismissed"
+      || this.status == "past prospective"
+      || this.status == "prospective"
+      || this.status == "uberbonked"
+    );
+  }
+
   hasRole(roles) {
     let  personRoles = this.roles;
 

@@ -24,7 +24,8 @@
           submit=(component "ch-form/submit"
             label=label
             submitClass=submitClass
-            submitAction=(action "submitForm")
+            formSubmitAction=(action "submitForm")
+            onSubmit=onSubmit
             disabled=disabled
           )
           reset=(component "ch-form/reset-button"
@@ -64,7 +65,8 @@
   submit=(component "ch-form/submit"
     label=label
     submitClass=submitClass
-    submitAction=(action "submitForm")
+    formSubmitAction=(action "submitForm")
+    onSubmit=onSubmit
     disabled=disabled
   )
   reset=(component "ch-form/reset-button"

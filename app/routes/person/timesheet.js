@@ -23,8 +23,9 @@ export default class PersonTimesheetRoute extends Route {
       }).then((result) => result.info),
       timesheetMissing: this.store.query('timesheet-missing', queryParams),
       year: year,
-      positions: this.ajax.request(`person/${person_id}/positions`)
-                  .then((results) => results.positions)
+      positions: this.ajax.request(`person/${person_id}/positions`,{
+        data: { include_training: 1, year }
+      }).then((results) => results.positions)
     });
   }
 

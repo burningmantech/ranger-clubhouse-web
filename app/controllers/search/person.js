@@ -45,7 +45,7 @@ export default class SearchController extends Controller {
     const query = model.get('query').trim();
 
     // bail out if query is empty, or if doing search by record id
-    if (query == '' || query.startsWith('+')) {
+    if (query == '' || query.startsWith('+') || query.length < 2) {
       return;
     }
 

@@ -81,6 +81,8 @@ The arguments to the component are:
 
 * label: The button text. The default text is 'Save'
 * disabled: if true, the button will be disabled.
+* onSubmit: action to call when button is clicked. The onSubmit action given on
+  the ch-form statement will called if action is not given here.
 
 ## cancel: a Cancel button
 

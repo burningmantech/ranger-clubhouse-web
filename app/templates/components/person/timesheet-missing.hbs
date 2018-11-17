@@ -17,16 +17,26 @@
   </thead>
   <tbody>
     {{#each timesheetMissing as |tm|}}
-    <tr>
-      <td>&nbsp;</td>
+    <tr class="{{if tm.isPending "bg-warning"}}">
+      <td>
+        {{#if tm.isPending}}
+          {{fa-icon "exclamation-triangle"}}
+        {{else if tm.isRejected}}
+          {{fa-icon "thumbs-down" type="far"}}
+        {{else if tm.isApproved}}
+          {{fa-icon "thumbs-up" type="far"}}
+        {{else}}
+          &nbsp;
+        {{/if}}
+      </td>
       <td>{{shift-format tm.on_duty}}</td>
       <td>{{shift-format tm.off_duty}}</td>
       <td class="text-right">{{hour-minute-format tm.duration}}</td>
       <td class="text-right">{{credits-format tm.credits}}</td>
       <td>{{tm.position.title}}</td>
       <td>
-        <button class="btn btn-primary btn-sm" {{action "editTimesheetAction" tm}}>Manage</button>
-        <button class="btn btn-secondary btn-sm" {{action "removeTimesheetAction" tm}}>{{fa-icon "trash"}}</button>
+        <button class="btn btn-primary btn-sm" {{action "editEntryAction" tm}}>Manage</button>
+        <button class="btn btn-secondary btn-sm" {{action "removeEntryAction" tm}}>{{fa-icon "trash"}}</button>
       </td>
     </tr>
     {{/each}}
@@ -51,27 +61,27 @@
 {{/ch-form}}
 {{/if}}
 
-{{#if editTimesheet}}
-{{#ch-form "entry" editTimesheet modalBox=true modalTitle=(concat "Manage Missing Timesheet Request ID #" editTimesheet.id) validator=timesheetValidations onSubmit=(action "saveTimesheetAction") onCancel=(action "cancelTimesheetAction") as |f|}}
+{{#if editEntry}}
+{{#ch-form "entry" editEntry modalBox=true modalTitle=(concat "Manage Missing Timesheet Request ID #" editEntry.id) validator=timesheetValidations onSubmit=(action "saveEntryAction") onCancel=(action "cancelTimesheetAction") as |f|}}
   <dl class="form-row">
     <dt class="col-2">Position:</dt>
-    <dd class="col-10">{{editTimesheet.position.title}}</dd>
+    <dd class="col-10">{{editEntry.position.title}}</dd>
 
     <dt class="col-2">Time:</dt>
-    <dd class="col-10">{{shift-format editTimesheet.on_duty}} - {{shift-format editTimesheet.off_duty}}</dd>
+    <dd class="col-10">{{shift-format editEntry.on_duty}} - {{shift-format editEntry.off_duty}}</dd>
 
     <dt class="col-2">Duration:</dt>
-    <dd class="col-10">{{hour-minute-format editTimesheet.duration}}</dd>
+    <dd class="col-10">{{hour-minute-format editEntry.duration}}</dd>
 
     <dt class="col-2">Credits:</dt>
-    <dd class="col-10">{{credits-format editTimesheet.credits}}</dd>
+    <dd class="col-10">{{credits-format editEntry.credits}}</dd>
 
     <dt class="col-2">Note:</dt>
-    <dd class="col-10">{{editTimesheet.notes}}</dd>
+    <dd class="col-10">{{editEntry.notes}}</dd>
 
     <dt class="col-2">Partner(s):</dt>
     <dd class="col-10">
-      {{#if (and editTimesheet.partner editTimesheet.partner_info)}}
+      {{#if (and editEntry.partner editEntry.partner_info)}}
         <table class="table table-sm table-striped">
           <thead>
             <tr>
@@ -92,7 +102,7 @@
               <td>{{shift-format pi.off_duty}}</td>
               <td>{{pi.position_title}}</td>
             {{else if pi.person_id}}
-              <td colspan="3" class="text-danger">no shift within 30 mins of {{shift-format editTimesheet.on_duty}}</td>
+              <td colspan="3" class="text-danger">no shift within 30 mins of {{shift-format editEntry.on_duty}}</td>
             {{else}}
               <td colspan="4" class="text-danger">callsign not found</td>
             {{/if}}
@@ -115,9 +125,9 @@
 
   <fieldset>
     <legend>Submission Review</legend>
-    {{#if editTimesheet.reviewed_at}}
+    {{#if editEntry.reviewed_at}}
     <div class="form-row">
-      Last review on {{shift-format editTimesheet.reviewed_at}} by {{editTimesheet.reviewer_person.callsign}}
+      Last review on {{shift-format editEntry.reviewed_at}} by {{editEntry.reviewer_person.callsign}}
     </div>
     {{/if}}
     <div class="form-row">
@@ -147,6 +157,9 @@
       {{f.input 'new_position_id' type="select" options=positions label="Position"}}
     </div>
   </fieldset>
+  {{/if}}
+  {{#if nextEntry}}
+    {{f.submit label="Save & Manage Next Pending" onSubmit=(action "saveAndManageNextEntryAction")}}
   {{/if}}
   {{f.submit}}
   {{f.cancel}}
