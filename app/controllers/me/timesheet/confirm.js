@@ -6,7 +6,7 @@ import { action } from '@ember-decorators/object';
  */
 
 export default class MeTimesheetConfirmController extends Controller {
-  confirmForm = null; // setup in controller
+  confirmForm = null; // setup in the route
 
   @action
   confirmAction(model) {

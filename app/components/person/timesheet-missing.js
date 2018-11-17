@@ -7,11 +7,11 @@ import { validatePresence } from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 
 export default class PersonTimesheetMissingComponent extends Component {
-  @argument timesheetMissing;
-  @argument timesheets;
-  @argument person;
-  @argument positions;
-  @argument year;
+  @argument timesheetMissing; // Missing Timesheet Requests
+  @argument timesheets;       // The timesheets
+  @argument person;           // The person we're dealing with
+  @argument positions;        // The possible positions a person can be in.
+  @argument year;             // The year being viewed
 
   @service store;
 
@@ -32,6 +32,7 @@ export default class PersonTimesheetMissingComponent extends Component {
     notes:  [ validatePresence({ presence: true }) ],
   };
 
+  // Setup to edit a requets
   _setupEdit(timesheet) {
     let idx = this.timesheetMissing.indexOf(timesheet);
     let nextEntry;
@@ -67,7 +68,7 @@ export default class PersonTimesheetMissingComponent extends Component {
   }
 
   @action
-  cancelTimesheetAction() {
+  cancelEntryAction() {
     this.set('editEntry', null);
   }
 
@@ -81,6 +82,8 @@ export default class PersonTimesheetMissingComponent extends Component {
     this.house.saveModel(model, 'Missing timesheet entry has been successfully updated.', () => {
       this.set('editEntry', null);
       this.set('nextEntry', null);
+
+      // Refresh the timesheet entries if a new one was created
       if (createEntry && this.timesheets) {
         this.timesheets.update();
       }
@@ -110,6 +113,7 @@ export default class PersonTimesheetMissingComponent extends Component {
     });
   }
 
+  // View the partner's timesheet entries for a given year.
   @action
   viewPartnerTimesheetAction(partner) {
     this.ajax.request('timesheet', { data: { year: this.year, person_id: partner.person_id }}).then((result) => {
@@ -118,6 +122,8 @@ export default class PersonTimesheetMissingComponent extends Component {
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
+  // If the review status changed to approved, go ahead
+  // and mark the create a new entry flag
   @action
   statusChangeAction(field, value) {
     if (value == 'approved') {
@@ -125,6 +131,7 @@ export default class PersonTimesheetMissingComponent extends Component {
     }
   }
 
+  // Create a new missing timesheet request
   @action
   newEntryAction() {
     this.set('newEntry', this.store.createRecord('timesheet-missing', {
@@ -133,11 +140,13 @@ export default class PersonTimesheetMissingComponent extends Component {
     }));
   }
 
+  // Cancel out creating a new entry
   @action
   cancelNewEntryAction() {
     this.set('newEntry', null);
   }
 
+  // Save/create a new entry 
   @action
   createEntryAction(model, isValid) {
     if (!isValid) {

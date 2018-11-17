@@ -4,8 +4,7 @@ import { validatePresence } from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 
 export default class MeTimesheetMissingController extends Controller {
-  timesheetsMissing = [];
-  editTimesheetMissing = null;
+  entry = null;
 
   timesheetValidations = {
     on_duty:  [ validateDateTime({ before: 'off_duty'}), validatePresence({ presence: true })],
@@ -22,22 +21,22 @@ export default class MeTimesheetMissingController extends Controller {
   // Start a new timesheet missing request
   @action
   newRequestAction() {
-    this.set('editTimesheetMissing', this.store.createRecord('timesheet-missing', {
+    this.set('entry', this.store.createRecord('timesheet-missing', {
       person_id: this.session.user.id,
       position_id: this.positions.firstObject.id,
      }));
   }
 
-  // Edit an existing timesheet
+  // Edit an existing request
   @action
   editAction(timesheetMissing) {
-    this.set('editTimesheetMissing', timesheetMissing);
+    this.set('entry', timesheetMissing);
   }
 
   // Cancel the form
   @action
   cancelAction() {
-    this.set('editTimesheetMissing', null);
+    this.set('entry', null);
   }
 
   // Save a timesheet missing request
@@ -54,8 +53,8 @@ export default class MeTimesheetMissingController extends Controller {
 
     model.save().then(() => {
       this.toast.success(`Your request has been succesfully ${isNew ? 'submitted' : 'updated'}.`);
-      this.timesheetsMissing.pushObject(this.editTimesheetMissing);
-      this.set('editTimesheetMissing', null);
+      this.timesheetsMissing.pushObject(this.entry);
+      this.set('entry', null);
     }).catch((response) => this.house.handleErrorResponse(response))
     .finally(() => this.set('isSubmitting', false));
   }

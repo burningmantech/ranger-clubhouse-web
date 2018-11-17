@@ -1,13 +1,13 @@
-{{#if onShiftEntry}}
+{{#if onDutyEntry}}
 <div class="card">
   <div class="card-header">{{person.callsign}} is on shift</div>
   <div class="card-body">
     <dl class="row">
       <dt class="col-auto">Position:</dt>
-      <dd class="col-auto">{{onShiftEntry.position.title}}</dd>
+      <dd class="col-auto">{{onDutyEntry.position.title}}</dd>
 
       <dt class="col-auto">Started:</dt>
-      <dd class="col-auto">{{shift-format onShiftEntry.on_duty}}</dd>
+      <dd class="col-auto">{{shift-format onDutyEntry.on_duty}}</dd>
     </dl>
 
     <button class="btn btn-danger" {{action "endShiftAction"}}>End Shift</button>

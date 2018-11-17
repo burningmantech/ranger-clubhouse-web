@@ -4,12 +4,15 @@ import { argument } from '@ember-decorators/argument';
 import { service } from '@ember-decorators/service';
 
 export default class PersonShiftManageComponent extends Component {
-  @argument person;
-  @argument timesheets;
-  @argument positions;
+  @argument person;     // Person we're dealing with
+  @argument timesheets; // The timesheets
+  @argument positions;  // And possible positions person can sign into.
+
   @service  store;
 
 
+  // Build a position list with the postfix ' (untrained)' added
+  // if the person has not been trained for that.
   @computed('positions')
   get signinPositions() {
     const signins = this.positions.map((pos) => {
@@ -33,6 +36,8 @@ export default class PersonShiftManageComponent extends Component {
     return signins;
   }
 
+  // Has the person gone through dirt training?
+
   @computed
   get isPersonDirtTrained() {
     const dirt = this.positions.find((p) => p.id == 2);
@@ -45,17 +50,20 @@ export default class PersonShiftManageComponent extends Component {
     return dirt.is_trained;
   }
 
+  // Find the on duty shift
   @computed('timesheets.@each.off_duty')
-  get onShiftEntry() {
+  get onDutyEntry() {
     return this.timesheets.findBy('off_duty', null);
   }
 
+  // Attempt to sign in the person to the selected position
   @action
   signinShiftAction() {
     const position_id = this.signinPositionId;
     const position = this.positions.find((p) => p.id == position_id);
 
     if (!position) {
+      // wrut'oh! not good...
       this.toast.danger("BUG? Cannot find the position?");
       return;
     }
@@ -70,13 +78,14 @@ export default class PersonShiftManageComponent extends Component {
       } else {
         this.toast.success(`${callsign} is on shift. Happy Rangering!`);
       }
-      this.timesheets.update();
+      this.timesheets.update(); // Refresh the timesheets
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
+  // End a person's shift.
   @action
   endShiftAction() {
-    const shift = this.onShiftEntry;
+    const shift = this.onDutyEntry;
 
     this.ajax.request(`timesheet/${shift.id}/signoff`, { method: 'POST' })
       .then((result) => {

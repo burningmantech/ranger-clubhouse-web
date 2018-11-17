@@ -1,5 +1,8 @@
-{{#if editTimesheetMissing}}
-  {{#ch-form "tm" editTimesheetMissing
+{{#if canCorrectThisYear}}
+<h2>Missing Timesheet Requests</h2>
+{{/if}}
+{{#if entry}}
+  {{#ch-form "tm" entry
       modalBox=true modalTitle="Missing Timesheet Request"
       validator=timesheetValidations
       onSubmit=(action "saveAction") onCancel=(action "cancelAction") as |f|}}
@@ -35,24 +38,23 @@
   {{/ch-form}}
 {{/if}}
 {{#if timesheetsMissing}}
-<h2>Missing Timesheet Entry Requests</h2>
 <table class="table table-rc table-striped">
   <thead>
     <tr>
-      <th>Position</th>
       <th>On Duty</th>
       <th>Off Duty</th>
       <th class="text-right">Duration</th>
+      <th>Position</th>
       <th>Action</th>
     </tr>
   </thead>
   <tbody>
     {{#each timesheetsMissing as |tsm|}}
     <tr>
-      <td data-title="Position">{{tsm.position.title}}</td>
       <td data-title="On Duty">{{shift-format tsm.on_duty}}</td>
       <td data-title="Off Duty">{{shift-format tsm.off_duty}}</td>
       <td class="td-number" data-title="Duration">{{hour-minute-format tsm.duration}}</td>
+      <td data-title="Position">{{tsm.position.title}}</td>
       <td class="no-collapse">
         {{#if (eq tsm.review_status "pending")}}
           <button type="button" class="btn btn-primary btn-sm" {{action "editAction" tsm}}>Edit</button>
@@ -86,3 +88,9 @@
 <p class="mt-2 ml-2">You have not submitted a missing timesheet entry request. (Yay!)</p>
 {{/if}}
 <button type="button" class="btn btn-primary" {{action "newRequestAction"}}>New Missing Timesheet Request</button>
+
+{{#if canCorrectThisYear}}
+<div class="mt-4">
+  {{#link-to "me.timesheet.confirm" class="btn btn-primary"}}Go to Step 3 - Final Confirmation{{/link-to}}
+</div>
+{{/if}}

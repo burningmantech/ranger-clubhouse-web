@@ -62,7 +62,7 @@
           {{else }}
             <button type="button" class="btn btn-primary btn-sm" {{action "editEntryAction" ts}}>Edit</button>
             {{#if canManageTimesheets}}
-              <button type="button" class="btn btn-secondary btn-sm" {{action "removeTimesheetAction" ts}}>{{fa-icon "trash"}}</button>
+              <button type="button" class="btn btn-secondary btn-sm" {{action "removeEntryAction" ts}}>{{fa-icon "trash"}}</button>
             {{/if}}
           {{/if}}
         </td>

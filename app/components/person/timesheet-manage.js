@@ -6,10 +6,10 @@ import { validatePresence } from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 
 export default class PersonTimesheetManageComponent extends Component {
-  @argument timesheets;
-  @argument person;
-  @argument positions;
-  @argument year;
+  @argument timesheets; // Person's timesheet
+  @argument person;     // The person we're dealing with
+  @argument positions;  // Possible positions a person can sign into.
+  @argument year;       // The year being viewed
 
   editEntry = null;
 
@@ -34,33 +34,39 @@ export default class PersonTimesheetManageComponent extends Component {
     return this.timesheets.reduce((total, ts) => total+(ts.isUnverified ? 1 : 0), 0);
   }
 
+  // Build a position list the person can be in.
   @computed('positions')
   get positionOptions() {
     return this.positions.map((p) => [ p.title, p.id ]);
   }
 
+  // Is the user allowed to manage timesheets (edit, delete, review)
   @computed
   get canManageTimesheets() {
     const user = this.session.user;
     return user.hasRole(Role.TIMESHEET_MANAGER) || (user.hasRole(Role.ADMIN) && user.hasRole(Role.MANAGE));
   }
 
+  // Can the user verify the person's timesheet?
   @computed
   get canVerifyTimesheets() {
     return this.session.user.hasRole(Role.MANAGE);
   }
 
+  // Edit a timesheet - i.e. display the form
   @action
   editEntryAction(timesheet) {
     this.set('editVerification', false);
     this.set('editEntry', timesheet);
   }
 
+  // Cancel editing - i.e. hide the form
   @action
   cancelEntryAction() {
     this.set('editEntry', null);
   }
 
+  // Save the timesheet entry being edited
   @action
   saveEntryAction(model, isValid) {
     if (!isValid) {
@@ -73,6 +79,7 @@ export default class PersonTimesheetManageComponent extends Component {
     });
   }
 
+  // Signoff the person from a shift.
   @action
   signoffAction(timesheet) {
     this.ajax.request(`timesheet/${timesheet.id}/signoff`, { method: 'POST' }).then(() => {
@@ -81,8 +88,9 @@ export default class PersonTimesheetManageComponent extends Component {
     })
   }
 
+  // Delete the entry.
   @action
-  removeTimesheetAction(timesheet) {
+  removeEntryAction(timesheet) {
     this.modal.confirm('Remove Timesheet', `Position: ${timesheet.position.title}<br>Time: ${timesheet.on_duty} to ${timesheet.off_duty}<br> Are you sure you wish to remove this timesheet?`, () => {
       timesheet.destroyRecord().then(() => {
         this.toast.success('The entry has been deleted.');
@@ -90,6 +98,7 @@ export default class PersonTimesheetManageComponent extends Component {
     });
   }
 
+  // Display the verification fields.
   @action
   editVerificationAction() {
     this.set('editVerification', true);

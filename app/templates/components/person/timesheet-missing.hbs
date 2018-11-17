@@ -62,7 +62,7 @@
 {{/if}}
 
 {{#if editEntry}}
-{{#ch-form "entry" editEntry modalBox=true modalTitle=(concat "Manage Missing Timesheet Request ID #" editEntry.id) validator=timesheetValidations onSubmit=(action "saveEntryAction") onCancel=(action "cancelTimesheetAction") as |f|}}
+{{#ch-form "entry" editEntry modalBox=true modalTitle=(concat "Manage Missing Timesheet Request ID #" editEntry.id) validator=timesheetValidations onSubmit=(action "saveEntryAction") onCancel=(action "cancelEntryAction") as |f|}}
   <dl class="form-row">
     <dt class="col-2">Position:</dt>
     <dd class="col-10">{{editEntry.position.title}}</dd>

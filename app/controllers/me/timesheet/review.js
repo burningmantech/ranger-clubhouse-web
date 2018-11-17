@@ -3,14 +3,13 @@ import { action } from '@ember-decorators/object';
 import { validatePresence } from 'ember-changeset-validations/validators';
 
 export default class MeTimesheetsReviewController extends Controller {
-  incorrectTimesheet = null;
+  entry = null; // Incorrect entry
 
   corectionValidations = {
     notes: validatePresence({ presence: true})
   };
 
-  timesheetInfo = {};
-
+  // Mark an entry as correct
   @action
   markCorrectAction(timesheet) {
     timesheet.set('verified', 1);
@@ -20,11 +19,13 @@ export default class MeTimesheetsReviewController extends Controller {
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
+  // Setup to mark an entry as incorrect - i.e. display the form
   @action
   markIncorrectAction(timesheet) {
-    this.set('incorrectTimesheet', timesheet);
+    this.set('entry', timesheet);
   }
 
+  // Save correction notes
   @action
   saveCorrectionAction(model, isValid) {
     if (!isValid) {
@@ -34,14 +35,15 @@ export default class MeTimesheetsReviewController extends Controller {
     this.toast.clearMessages();
     model.set('verified', 0);
     model.save().then(() => {
-      this.set('incorrectTimesheet', null);
+      this.set('entry', null);
       this.set('timesheetInfo.timesheet_confirmed', 0);
       this.toast.success('Your correction note has been submitted.');
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
+  // Cancel out the correction request - i.e. hide the form
   @action
   cancelCorrectionAction() {
-    this.set('incorrectTimesheet', null);
+    this.set('entry', null);
   }
 }

@@ -20,8 +20,7 @@ export default class MeTimesheetMissingRoute extends Route {
     const parent = this.modelFor('me.timesheet');
     super.setupController(...arguments);
     controller.setProperties(parent);
+    controller.setProperties(model);
     controller.set('canCorrectThisYear', (parent.timesheetInfo.correction_year == parent.year));
-    controller.set('timesheetsMissing', model.timesheetsMissing);
-    controller.set('positions', model.positions)
   }
 }
