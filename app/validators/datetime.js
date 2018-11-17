@@ -49,7 +49,7 @@ export default function validateDateTime(opts = {}) {
         return true;
       }
 
-      if (!date.isBefore(beforeDate)) {
+      if (!date.isBefore(beforeDate) && !date.isSame(beforeDate)) {
         return `Date must be before ${before}`;
       }
     }
@@ -61,7 +61,7 @@ export default function validateDateTime(opts = {}) {
         return true;
       }
 
-      if (!date.isAfter(afterDate)) {
+      if (!date.isAfter(afterDate) && !date.isSame(afterDate)) {
         return `Date must be after ${after}`;
       }
     }

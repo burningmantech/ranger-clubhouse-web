@@ -1,56 +1,6 @@
 {{year-select "Timesheet" year=year years=person.years onChange=(action "changeYearAction") subheader=true}}
 
-{{#if onShiftEntry}}
-<div class="card">
-  <div class="card-header">{{person.callsign}} is on shift</div>
-  <div class="card-body">
-    <dl class="row">
-      <dt class="col-auto">Position:</dt>
-      <dd class="col-auto">{{onShiftEntry.position.title}}</dd>
-
-      <dt class="col-auto">Started:</dt>
-      <dd class="col-auto">{{shift-format onShiftEntry.on_duty}}</dd>
-    </dl>
-
-    <button class="btn btn-danger" {{action "endShiftAction"}}>End Shift</button>
-  </div>
-</div>
-
-{{else}}
-<div class="card">
-  <div class="card-body">
-    {{#if (not person.user_authorized)}}
-      <strong class="text-danger">{{person.callsign}} cannot start a shift until they are cleared to do so by the Personnel Manager.</strong>
-    {{else if (not person.canStartShift)}}
-      <strong class="text-danger">{{person.callsign}} cannot start a shift because their status does not allow them to work shifts</strong>
-    {{else}}
-      <div class="form-row">
-        <div class="col-auto">
-          <select class="form-control" onchange={{action "updateShiftPosition" value="target.value" on="change"}}>
-            {{ch-form/options-builder signinPositions signinPositionId}}
-          </select>
-        </div>
-        {{#if isPersonDirtTrained}}
-        <div class="col">
-          <button class="btn btn-primary" {{action "signinShiftAction"}}>Start Shift</button>
-        </div>
-        {{else}}
-          <div class="col">
-          {{#if isUserAdmin}}
-            <button class="btn btn-primary" {{action "signinShiftAction"}}>Force Shift Start</button>
-          {{/if}}
-          </div>
-          <div class="col-12 text-danger">
-              This person cannot start a shift because they have not been trained.
-              If this is in error, check with the lead trainer or get help from a Clubhouse Admin.
-          </div>
-        {{/if}}
-      </div>
-    {{/if}}
-  </div>
-</div>
-{{/if}}
-
+{{person/shift-manage positions=positions timesheets=timesheets person=person}}
 {{#if timesheets}}
   {{person/timesheet-manage timesheets=timesheets person=person year=year positions=positions}}
 {{else}}

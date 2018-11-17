@@ -22,8 +22,8 @@
         </li>
         <li>
           {{#if unverifiedCount}}
-            <strong>You have {{pluralize unverifiedCount "timesheet entry"}} which still
-            need to be reviewed by you.</strong>
+            <strong class="text-danger">You have {{pluralize unverifiedCount "timesheet entry"}} which
+            needs to be reviewed by you.</strong>
           {{/if}}
           After your very last shift for the event, AND all your timesheets
           have been marked as correct, AND there are no outstanding correction requests,

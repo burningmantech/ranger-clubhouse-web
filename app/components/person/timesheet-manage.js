@@ -11,7 +11,7 @@ export default class PersonTimesheetManageComponent extends Component {
   @argument positions;
   @argument year;
 
-  editTimesheet = null;
+  editEntry = null;
 
   reviewOptions = [
     'approved',
@@ -42,35 +42,40 @@ export default class PersonTimesheetManageComponent extends Component {
   @computed
   get canManageTimesheets() {
     const user = this.session.user;
-    return user.hasRole(Role.TIMESHEET_MANAGER) || (user.hasRole(Role.ADMIN) + user.hasRole(Role.MANAGE));
+    return user.hasRole(Role.TIMESHEET_MANAGER) || (user.hasRole(Role.ADMIN) && user.hasRole(Role.MANAGE));
+  }
+
+  @computed
+  get canVerifyTimesheets() {
+    return this.session.user.hasRole(Role.MANAGE);
   }
 
   @action
-  editTimesheetAction(timesheet) {
+  editEntryAction(timesheet) {
     this.set('editVerification', false);
-    this.set('editTimesheet', timesheet);
+    this.set('editEntry', timesheet);
   }
 
   @action
-  cancelTimesheetAction() {
-    this.set('editTimesheet', null);
+  cancelEntryAction() {
+    this.set('editEntry', null);
   }
 
   @action
-  saveTimesheetAction(model, isValid) {
+  saveEntryAction(model, isValid) {
     if (!isValid) {
       return;
     }
 
     this.toast.clearMessages();
     this.house.saveModel(model, 'The timesheet entry has been successfully updated.', () => {
-      this.set('editTimesheet', null);
+      this.set('editEntry', null);
     });
   }
 
   @action
   signoffAction(timesheet) {
-    this.ajax.request(`timesheet/${timesheet.id}/signoff`, { method: 'POST' }).then((result) => {
+    this.ajax.request(`timesheet/${timesheet.id}/signoff`, { method: 'POST' }).then(() => {
       this.timesheets.update();
       this.toast.success(`${this.person.callsign} has been successfully signed off. Enjoy your rest.`);
     })

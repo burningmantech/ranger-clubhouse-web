@@ -59,9 +59,11 @@
         <td>
           {{#if (is-empty ts.off_duty)}}
             <button type="button" class="btn btn-danger btn-sm" {{action "signoffAction" ts}}>End Shift</button>
-          {{else if canManageTimesheets}}
-            <button type="button" class="btn btn-primary btn-sm" {{action "editTimesheetAction" ts}}>Edit</button>
-            <button type="button" class="btn btn-secondary btn-sm" {{action "removeTimesheetAction" ts}}>{{fa-icon "trash"}}</button>
+          {{else }}
+            <button type="button" class="btn btn-primary btn-sm" {{action "editEntryAction" ts}}>Edit</button>
+            {{#if canManageTimesheets}}
+              <button type="button" class="btn btn-secondary btn-sm" {{action "removeTimesheetAction" ts}}>{{fa-icon "trash"}}</button>
+            {{/if}}
           {{/if}}
         </td>
       </tr>
@@ -89,28 +91,44 @@
   </tbody>
 </table>
 
-{{#if editTimesheet}}
-{{#ch-form "timesheet" editTimesheet modalBox=true modalTitle="Edit Timesheet" validator=timesheetValidations onSubmit=(action "saveTimesheetAction") onCancel=(action "cancelTimesheetAction") as |f|}}
+{{#if editEntry}}
+{{#ch-form "entry" editEntry modalBox=true modalTitle="Edit Timesheet" validator=timesheetValidations onSubmit=(action "saveEntryAction") onCancel=(action "cancelEntryAction") as |f|}}
   <fieldset>
     <legend>
       Time/Position
     </legend>
-    <div class="form-row">
-      {{f.input "on_duty" label="On Duty" type="datetime" size=20 grid="col-auto"}}
-      {{f.input "off_duty" label="Off Duty" type="datetime" size=20 grid="col-auto"}}
-      {{f.input "position_id" label="Position" type="select" options=positionOptions grid="col-auto"}}
-    </div>
+      {{#if canManageTimesheets}}
+      <div class="form-row">
+        {{f.input "on_duty" label="On Duty" type="datetime" size=20 grid="col-auto"}}
+        {{f.input "off_duty" label="Off Duty" type="datetime" size=20 grid="col-auto"}}
+        {{f.input "position_id" label="Position" type="select" options=positionOptions grid="col-auto"}}
+      </div>
+      {{else}}
+        <dl class="form-row">
+          <dt class="col-sm-2">Position:</dt>
+          <dd class="col-sm-10">{{editEntry.position.title}}</dd>
+
+          <dt class="col-sm-2">Time:</dt>
+          <dd class="col-sm-10">{{shift-format editEntry.on_duty}} to {{shift-format editEntry.off_duty}}</dd>
+
+          <dt class="col-sm-2">Duration:</dt>
+          <dd class="col-sm-10">{{hour-minute-format editEntry.duration}}</dd>
+
+          <dt class="col-sm-2">Credits:</dt>
+          <dd class="col-sm-10">{{credits-format editEntry.credits}}</dd>
+        </dl>
+      {{/if}}
   </fieldset>
   <fieldset>
     <legend>Entry Verification</legend>
     <div class="form-group row">
       <div class="col-auto">
-        {{#if editTimesheet.isPendingReview}}
+        {{#if editEntry.isPendingReview}}
           <span class="text-danger font-weight-bold">This entry needs to be reviewed.</span>
-        {{else if editTimesheet.isUnverified}}
+        {{else if editEntry.isUnverified}}
           This entry has not been verified yet by the person. No review action is needed at this time.
-        {{else if editTimesheet.verified}}
-          <span class="text-success font-weight-bold">Entry was verified on {{shift-format editTimesheet.verified_at}} by {{editTimesheet.verified_person.callsign}}. Review is not needed at this time.</span>
+        {{else if editEntry.verified}}
+          <span class="text-success font-weight-bold">Entry was verified on {{shift-format editEntry.verified_at}} by {{editEntry.verified_person.callsign}}. Review is not needed at this time.</span>
         {{/if}}
       </div>
     </div>
@@ -130,24 +148,42 @@
       <div class="col-6 text-right">
         <button class="btn btn-secondary btn-sm" {{action "editVerificationAction"}}>Edit Verification Flag &amp; Note</button>
       </div>
-      <div class="mb-3 col-12">{{present-or-not editTimesheet.notes}}</div>
+      <div class="mb-3 col-12">{{present-or-not editEntry.notes}}</div>
     </div>
     {{/if}}
 
   </fieldset>
   <fieldset>
     <legend>Entry Review</legend>
+    {{#if canManageTimesheets}}
     <div class="form-row">
-      {{f.input "reviewer_notes" label="Timesheet reviewer response:" type="textarea" cols=80 rows=2
-        hint="The user will see any notes entered in above."
-      }}
+        {{f.input "reviewer_notes" label="Timesheet reviewer response:" type="textarea" cols=80 rows=2
+          hint="The user will see any notes entered in above."
+        }}
     </div>
     <div class="form-group row">
-        <div class="col-auto">Correction Status:</div>
+        <div class="col-auto">Review Status:</div>
         <div class="col-auto">
-          {{f.input "review_status" label="Review Status" type="radioGroup" options=reviewOptions inline=true}}
+         {{f.input "review_status" label="Review Status" type="radioGroup" options=reviewOptions inline=true}}
         </div>
     </div>
+    {{else}}
+      <dl class="form-row">
+        <dt class="col-2">
+          Reviewer Note:
+        </dt>
+        <dd class="col-10">
+          {{present-or-not editEntry.reviewer_notes}}
+        </dd>
+
+        <dt class="col-2">
+          Review Status:
+        </dt>
+        <dd class="col-10">
+          {{editEntry.review_status}}
+        </dd>
+      </dl>
+    {{/if}}
 </fieldset>
   {{f.submit}}
   {{f.cancel}}
