@@ -163,4 +163,8 @@ In the model test - tests/model/user.js, the following should be done:
 ### FORMS
 
 - The ch-form help uses ember-changeset which duplicates the model for editing.
-  The object which the form use is a 'proxy'.,
+  The object which the form use is a 'proxy'.
+
+- When using <select> be sure to set the select to a default value. Forms do not
+  operate differently in a SPA environment. When 'submit' is clicked, the field
+  values stored in variables/object is used NOT what is currently set on the form itself.
