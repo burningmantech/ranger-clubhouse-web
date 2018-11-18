@@ -6,10 +6,19 @@
   {{person/role-form roles=roles roleIds=roleIds onSave=(action "saveRoles") onCancel=(action "cancelRoles")}}
 {{/if}}
 
+{{#if person.unread_message_count}}
+  {{#ch-alert "warning" }}
+    <div class="h2">
+      {{fa-icon "envelope" type="far"}} {{pluralize person.unread_message_count "unread Clubhouse message"}}
+      {{#link-to "person.messages" class="btn btn-success"}}Read Now{{/link-to}}
+    </div>
+  {{/ch-alert}}
+{{/if}}
+
 {{person-photo photo=photo}}
 
 {{#ch-form "person" person  onSubmit=(action "savePerson") as |f|}}
-    <div class="form-row">
+    <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign</label>
       {{#if isAdminMentorOrVC}}
         {{f.input "callsign" type="text" size=35 maxlength=100 wrapClass="col-auto"}}
@@ -20,7 +29,7 @@
       {{/if}}
     </div>
 
-    <div class="form-row">
+    <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-md-2 col-sm-2">FKA</label>
       {{#if isAdminMentorOrVC}}
         {{f.input "formerly_known_as" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
@@ -31,7 +40,7 @@
       {{/if}}
     </div>
 
-    <div class="form-row">
+    <div class="form-group row">
       <label class="ol-form-label col-form-label-fixed col-md-2 col-sm-12">Callsign Approved</label>
       {{#if canChangeApproval}}
         {{f.input "callsign_approved" type="select" wrapClass="col-auto" options=callsignApprovedOptions}}
@@ -46,7 +55,7 @@
       {{/if}}
     </div>
 
-    <div class="form-row">
+    <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-2">Status</label>
       {{#if isAdminMentorOrVC}}
         {{f.input "status" type="select" options=statusOptions wrapClass="col-auto"}}
@@ -57,7 +66,7 @@
       {{/if}}
     </div>
 
-    <div class="form-row">
+    <div class="form-group row">
         <label class="col-form-label col-form-label-fixed col-sm-2">Personnel</label>
         {{#if session.user.isAdmin}}
           {{f.input "user_authorized" type="select" wrapClass="col-auto" options=userAuthorizedOptions}}
@@ -76,7 +85,7 @@
         {{/if}}
     </div>
 
-    <div class="form-row">
+    <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-md-2 col-sm-12">Name</label>
         {{#if isAdminMentorOrVC}}
           {{f.input "first_name" type="text" size=20 maxlength=25 wrapClass="col-auto"}}
@@ -89,14 +98,14 @@
         {{/if}}
     </div>
 
-    <div class="form-row">
+    <div class="form-group row">
         <label class="col-form-label-fixed col-md-2 col-sm-12">On Site</label>
         <div class="col-md-9 col-sm-12">
           {{f.input "on_site" type="radioGroup" options=onSiteOptions inline=true}}
         </div>
     </div>
 
-    <div class="form-row">
+    <div class="form-group row">
       <label for="person_position" class="col-form-label col-form-label-fixed col-md-2 col-sm-12">Positions</label>
       <div class="col-md-9 col-sm-12">
         <div class="row col-12 mt-1 mb-2">
@@ -117,7 +126,7 @@
       </div>
     </div>
 
-    <div class="form-row">
+    <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-md-2 col-sm-12">Roles</label>
       <div class="col-md-9 col-sm-12">
         <div class="row col-12 mt-1 mb-2">
@@ -140,14 +149,14 @@
       </div>
     </div>
 
-    <div class="form-row">
+    <div class="form-group row">
       <label class="col-form-label-fixed col-md-2 col-sm-12">Years</label>
       <div class="col-md-9 col-sm-12">
         {{#each person.years as |year|}}{{year}} {{/each}} ({{person.years.length}})
       </div>
     </div>
 
-    <div class="form-row">
+    <div class="form-group row">
       <label class="col-form-label-fixed col-md-2 col-sm-12">Vehicles</label>
       <div class="col-md-9 col-sm-12">
         {{f.input "vehicle_paperwork" label="Motorpool Policy" type="checkbox" inline=true}}
@@ -156,14 +165,14 @@
       </div>
     </div>
 
-    <div class="form-row">
+    <div class="form-group row">
       <label class="col-form-label-fixed col-sm-2">Assets</label>
       <div class="col-sm-10">
         {{f.input "asset_authorized" label="Assets Authorized" type="checkbox" inline=true }}
       </div>
     </div>
 
-    <div class="form-row">
+    <div class="form-group row">
       <label class="col-form-label-fixed col-sm-12 col-md-2">BMID/Tickets</label>
       <div class="col-md-9 col-sm-12">
           {{#if (or canEditBMIT canEditAccessDocs)}}
@@ -181,7 +190,7 @@
     </div>
 
     {{#if isAdmin}}
-    <div class="form-row">
+    <div class="form-group row">
       <label class="col-md-2 col-sm-12 col-form-label-fixed">Logs (TODO)</label>
       <div class="col-md-9 col-sm-12">
           <a href="#" class="btn btn-primary btn-sm">Contact</a>
@@ -190,7 +199,7 @@
     </div>
     {{/if}}
 
-    <div class="form-row">
+    <div class="form-group row">
       <label class="col-form-label-fixed col-md-2 col-sm-12">Created</label>
       <div class="col-md-9 col-sm-12">
         {{#if person.create_date}}
@@ -201,14 +210,14 @@
       </div>
     </div>
 
-    <div class="form-row">
+    <div class="form-group row">
       <label class="col-form-label-fixed col-md-2 col-sm-12">Modified</label>
       <div class="col-sm-12 col-md-9">
         {{person.date_verified}}
       </div>
     </div>
 
-    <div class="form-row">
+    <div class="form-group row">
       <label class="col-form-label-fixed col-md-2 col-sm-12">&nbsp;</label>
       <div class="col-md-6 col-sm-12">
         {{f.submit label="Save Information" disabled=(not f.model.isDirty)}}

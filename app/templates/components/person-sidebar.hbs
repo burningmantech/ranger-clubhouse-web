@@ -3,6 +3,7 @@
     {{ch-sidebar-link "person.index" title="Account Info" icon="info" iconType="s"}}
     {{ch-sidebar-link "person.event-info" title="Event/Training Info" icon="user" iconType="s"}}
     {{ch-sidebar-link "person.timesheet" title="Timesheets" class="dropdown-item" icon="clock"}}
+    {{ch-sidebar-link "person.messages" title="Messages" icon="envelope" badgeText=person.unread_message_count}}
     {{#if (has-role "admin" "manage+view-pii")}}
       {{ch-sidebar-link "person.personal-info" title="Personal Info" icon="home" iconType="s"}}
     {{/if}}

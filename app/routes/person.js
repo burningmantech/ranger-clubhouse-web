@@ -15,12 +15,13 @@ export default class PersonRoute extends Route {
       person: this.store.find('person', personId).then((person) => {
         return person.loadRangerInfo().then(() => { return person });
       }),
+      messages: this.store.query('person-message', {person_id: personId})
     });
   }
 
   setupController(controller, model) {
     super.setupController(...arguments);
 
-    controller.set('person', model.person);
+    controller.setProperties(model);
   }
 }
