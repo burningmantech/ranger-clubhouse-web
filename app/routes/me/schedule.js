@@ -33,9 +33,6 @@ export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
 
   setupController(controller, model) {
     super.setupController(...arguments);
-    controller.set('slots', model.slots);
-    controller.set('permission', model.permission);
-    controller.set('year', model.year);
-    controller.set('creditsEarned', model.creditsEarned);
+    controller.setProperties(model);
   }
 }

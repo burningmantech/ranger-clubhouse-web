@@ -8,6 +8,7 @@ import { Role } from 'clubhouse/constants/roles';
 export default class ClubhouseMessagesComponent extends Component {
   @argument person;
   @argument messages;
+  @argument currentUnread;
 
   @service store;
 
@@ -53,7 +54,7 @@ export default class ClubhouseMessagesComponent extends Component {
 
     return message.markRead().then(() => {
       message.set('delivered', true);
-      person.set('unread_message_count', this.messages.reduce((total, msg) => total + (msg.delivered ? 0 : 1), 0));
+      this.set('currentUnread', this.messages.reduce((total, msg) => total + (msg.delivered ? 0 : 1), 0));
     })
   }
 

@@ -37,9 +37,6 @@ export default class MeTicketsRoute extends Route.extend(MeRouteMixin) {
 
   setupController(controller, model) {
     super.setupController(...arguments);
-    controller.set('accessDocuments', model.accessDocuments);
-    controller.set('wapSONames', model.wapSONames);
-    controller.set('ticketDelivery', model.ticketDelivery);
-    controller.set('ticketingInfo', model.ticketingInfo);
+    controller.setProperties(model);
   }
 }

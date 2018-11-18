@@ -125,6 +125,10 @@ export default class PersonIndexController extends Controller {
 
     model.save().then(() => {
       this.toast.success('The information was successfully updated.');
+      // Reload the current user.
+      if (model.get('id') == this.session.user_id) {
+        this.session.loadUser();
+      }
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 

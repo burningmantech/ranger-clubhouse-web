@@ -1,18 +1,13 @@
 import DS from 'ember-data';
 import { memberAction } from 'ember-api-actions';
-import { typeOf } from '@ember/utils';
-import { computed } from '@ember-decorators/object';
 import { attr } from '@ember-decorators/data';
 import { service } from '@ember-decorators/service';
-
-import * as PersonStatus from 'clubhouse/constants/person_status';
-import { Role, roleName } from 'clubhouse/constants/roles';
-
 import { assert } from '@ember/debug';
+import PersonMixin from 'clubhouse/mixins/models/person';
 
 import RSVP from 'rsvp';
 
-export default class PersonModel extends  DS.Model {
+export default class PersonModel extends DS.Model.extend(PersonMixin) {
   @service ajax;
 
   @attr('string') first_name;
@@ -106,158 +101,6 @@ export default class PersonModel extends  DS.Model {
     ])
   }
 
-  // Computed methods
-  @computed('status', 'callsign_approved')
-	get isPastProspectiveDisabled() {
-      return (this.status == PersonStatus.PAST_PROSPECTIVE && !this.callsign_approved);
-  }
-
-  @computed('status')
-	get isActive() {
-    return (this.status == PersonStatus.ACTIVE);
-  }
-
-  @computed('status')
-	get isAlpha() {
-    return (this.status == PersonStatus.ALPHA)
-  }
-
-  @computed('status')
-	get isAuditor() {
-    return this.status == PersonStatus.AUDITOR;
-  }
-
-  @computed('status')
-  get isNonRanger() {
-    return this.status == PersonStatus.NON_RANGER;
-  }
-
-  @computed('status')
-  get isPassProspective() {
-    return (this.status == PersonStatus.PAST_PROSPECTIVE);
-  }
-
-  @computed('status')
-  get isProspectiveWaitlist() {
-    return (this.status == PersonStatus.PROSPECTIVE_WAITLIST);
-  }
-
-  @computed('status')
-  get isAuditorOrPastProspective() {
-    return (status == PersonStatus.AUDITOR || status == PersonStatus.PAST_PROSPECTIVE);
-  }
-
-  @computed('status')
-  get isNotRanger() {
-    const status = this.status;
-
-    return (status == PersonStatus.AUDITOR
-        || status == PersonStatus.ALPHA
-        || status == PersonStatus.PROSPECTIVE
-        || status == PersonStatus.PAST_PROSPECTIVE
-        || status == PersonStatus.PROSPECTIVE_WAITLIST);
-  }
-
-  @computed('status')
-  get isRanger() {
-    return (!this.isNotRanger && this.status != 'non ranger');
-  }
-
-  @computed('status')
-  get canSignupForShifts() {
-    return (!this.isNotARanger && this.status != PersonStatus.PAST_PROSPECTIVE);
-  }
-
-  @computed('status')
-  get canStartShift() {
-    return !(
-      this.status == "auditor"
-      || this.status == "deceased"
-      || this.status == "dismissed"
-      || this.status == "past prospective"
-      || this.status == "prospective"
-      || this.status == "uberbonked"
-    );
-  }
-
-  hasRole(roles) {
-    let  personRoles = this.roles;
-
-    if (!personRoles) {
-      return false;
-    }
-
-    if (typeOf(roles) != 'array') {
-      roles = [ roles ];
-    }
-
-
-    let haveIt = false;
-
-    roles.forEach((role) => {
-      const type = typeOf(role);
-      if (type == 'array' || type == 'object') {
-        let haveAll = true;
-
-        // Sub array means ALL the roles have to be present.
-        role.forEach((r) => {
-          if (!personRoles.includes(r)) {
-            haveAll = false;
-          }
-        });
-
-        if (haveAll) {
-          haveIt = true;
-        }
-      } else {
-        if (personRoles.includes(role)) {
-          haveIt = true;
-        }
-      }
-    })
-
-    return haveIt;
-  }
-
-  hasAllRoles(roles) {
-    let personRoles = this.roles;
-
-    if (!personRoles) {
-      return false;
-    }
-
-    if (typeOf(roles) != 'array') {
-      roles = [ roles ];
-    }
-
-    const found = roles.filter((r) => personRoles.includes(r));
-
-    return (found.length == roles.length);
-  }
-
-  @computed('roles')
-	get roleNames() {
-    let personRoles = this.roles;
-
-    if (!personRoles) {
-      return 'none';
-    }
-
-    let names = [];
-
-    personRoles.forEach((role) => {
-      names.push(roleName(role))
-    });
-
-    return names.join(',');
-  }
-
-  // Roles
-
-  @computed('roles')
-  get isAdmin() {
-    return this.hasRole(Role.ADMIN);
-  }
   //
   // AJAX methods
   //

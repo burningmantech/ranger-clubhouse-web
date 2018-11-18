@@ -7,8 +7,9 @@ export default class MeMenteesRoute extends Route.extend(MeRouteMixin) {
   }
 
   setupController(controller, model) {
-    const menteeList = model;
     super.setupController(...arguments);
+
+    const menteeList = model;
     controller.set('menteeList', menteeList);
 
     // Technically this should be done in the controller, except

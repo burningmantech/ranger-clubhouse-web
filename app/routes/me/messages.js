@@ -10,6 +10,5 @@ export default class MeMessagesRoute extends Route.extend(MeRouteMixin) {
     super.setupController(...arguments);
 
     controller.set('messages', model);
-    controller.set('person', this.session.user);
   }
 }

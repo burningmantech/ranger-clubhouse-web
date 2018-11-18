@@ -7,11 +7,9 @@
 {{/if}}
 
 {{#if person.unread_message_count}}
-  {{#ch-alert "warning" }}
-    <div class="h2">
-      {{fa-icon "envelope" type="far"}} {{pluralize person.unread_message_count "unread Clubhouse message"}}
-      {{#link-to "person.messages" class="btn btn-success"}}Read Now{{/link-to}}
-    </div>
+  {{#ch-alert "warning" bold=true}}
+    {{fa-icon "envelope"}} {{pluralize person.unread_message_count "unread Clubhouse message"}}
+    {{#link-to "person.messages" class="btn btn-success"}}Read Now{{/link-to}}
   {{/ch-alert}}
 {{/if}}
 
