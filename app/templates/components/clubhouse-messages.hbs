@@ -2,36 +2,36 @@
   {{message-new message=newMessage onSubmit=(action "submitAction") onCancel=(action "cancelAction")}}
 {{/if}}
 
-{{#if messages}}
-  <div class="row">
-    <div class="col-md-9">
-      <div class="form-check form-check-inline">
-        {{radio-button value="all" groupValue=filterMessages
-                      radioId="filter-all" radioClass="form-check-input"}}
-       <label for="filter-all" class="form-check-label">All</label>
-      </div>
-      <div class="form-check form-check-inline">
-        {{radio-button value="unread" groupValue=filterMessages
-            radioId="filter-unread" classNames="form-check-label"
-            radioClass="form-check-input" }}
-        <label for="filter-unread" class="form-check-label">Unread ({{unreadCount}})</label>
-      </div>
-
-      <div class="form-check form-check-inline">
-        {{radio-button value="read" groupValue=filterMessages
-            radioId="filter-read" classNames="form-check-label"
-            radioClass="form-check-input" }}
-        <label for="filter-read" class="form-check-label">Read ({{readCount}})</label>
-      </div>
+<div class="row">
+  <div class="col-md-9">
+    <div class="form-check form-check-inline">
+      {{radio-button value="all" groupValue=filterMessages
+                    radioId="filter-all" radioClass="form-check-input"}}
+     <label for="filter-all" class="form-check-label">All</label>
     </div>
-    {{#if canSendMessages}}
-      <div class="col-md-2 text-right">
-          <a href="#" class="btn btn-primary" {{action "newMessageAction"}}>New Message</a>
-      </div>
-    {{/if}}
+    <div class="form-check form-check-inline">
+      {{radio-button value="unread" groupValue=filterMessages
+          radioId="filter-unread" classNames="form-check-label"
+          radioClass="form-check-input" }}
+      <label for="filter-unread" class="form-check-label">Unread ({{unreadCount}})</label>
+    </div>
+
+    <div class="form-check form-check-inline">
+      {{radio-button value="read" groupValue=filterMessages
+          radioId="filter-read" classNames="form-check-label"
+          radioClass="form-check-input" }}
+      <label for="filter-read" class="form-check-label">Read ({{readCount}})</label>
+    </div>
   </div>
+  {{#if canSendMessages}}
+    <div class="col-md-2 text-right">
+        <a href="#" class="btn btn-primary" {{action "newMessageAction"}}>New Message</a>
+    </div>
+  {{/if}}
+</div>
 
   <p class="text-muted">Showing {{pluralize viewMessages.length "message"}}</p>
+{{#if messages}}
   <ul class="list-group">
   {{#each viewMessages as |message|}}
       <li class="list-group-item">

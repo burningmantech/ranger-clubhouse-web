@@ -56,43 +56,43 @@
   {{/ch-form}}
 {{else}}
   <dl class="row">
-    <dt class="col-md-2">Name</dt>
-    <dd class="col-md-10">
+    <dt class="col-md-3">Name</dt>
+    <dd class="col-md-8">
         {{person.first_name}} {{person.mi}} {{person.last_name}}
     </dd>
 
-    <dt class="col-md-2">Email</dt>
-    <dd class="col-md-10">
+    <dt class="col-md-3">Email</dt>
+    <dd class="col-md-8">
       {{mail-to person.email}}
     </dd>
 
-    <dt class="col-md-2">Gender</dt>
-    <dd class="col-md-10">
+    <dt class="col-md-3">Gender</dt>
+    <dd class="col-md-8">
       {{present-or-not person.gender}}
     </dd>
 
-    <dt class="col-md-2">Languages</dt>
-    <dd class="col-md-10">
+    <dt class="col-md-3">Languages</dt>
+    <dd class="col-md-8">
       {{present-or-not person.languages}}
     </dd>
 
-    <dt class="col-md-2">Camp Location</dt>
-    <dd class="col-md-10">
+    <dt class="col-md-3">Camp Location</dt>
+    <dd class="col-md-8">
       {{present-or-not person.camp_location}}
     </dd>
 
-    <dt class="col-md-2">Short Sleeve</dt>
-    <dd class="col-md-10">
+    <dt class="col-md-3">Short Sleeve</dt>
+    <dd class="col-md-8">
       {{person.teeshirt_size_style}}
     </dd>
 
-    <dt class="col-md-2">Long Sleeve</dt>
-    <dd class="col-md-10">
+    <dt class="col-md-3">Long Sleeve</dt>
+    <dd class="col-md-8">
       {{person.longsleeveshirt_size_style}}
     </dd>
 
-    <dt class="col-md-2">Home Address</dt>
-    <dd class="col-md-10">
+    <dt class="col-md-3">Home Address</dt>
+    <dd class="col-md-8">
       {{person.street1}} {{person.apt}}<br>
       {{#if person.street2}}
         {{person.street2}}<br>
@@ -101,18 +101,18 @@
       {{person.country}}
     </dd>
 
-    <dt class="col-md-2">Home Phone</dt>
-    <dd class="col-md-10">
+    <dt class="col-md-3">Home Phone</dt>
+    <dd class="col-md-8">
+      {{#present-or-not person.home_phone}}
         {{phone-link person.home_phone}}
+      {{/present-or-not}}
     </dd>
 
-    <dt class="col-md-2">Alt. Phone</dt>
-    <dd class="col-md-10">
-      {{#if person.alt_phone}}
-        {{phone-link person.home_phone}}
-      {{else}}
-        <i class="text-muted">none given</i>
-      {{/if}}
+    <dt class="col-md-3">Alt. Phone</dt>
+    <dd class="col-md-8">
+      {{#present-or-not person.alt_phone}}
+        {{phone-link person.alt_phone}}
+      {{/present-or-not}}
     </dd>
   </dl>
 {{/if}}

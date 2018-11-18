@@ -19,6 +19,10 @@
           {{#link-to "person.index" person.id class="dropdown-item"}}Account Info{{/link-to}}
           {{#link-to "person.event-info" person.id class="dropdown-item"}}Event Info{{/link-to}}
           {{#link-to "person.timesheet" person.id class="dropdown-item"}}Timesheet{{/link-to}}
+          {{#if (has-role "admin" "manage+view-pii")}}
+            {{#link-to "person.personal-info" person.id class="dropdown-item"}}Personal Info{{/link-to}}
+          {{/if}}
+          {{#link-to "person.emergency-contact" person.id class="dropdown-item"}}Emergency Contact{{/link-to}}
           {{#link-to "person.messages" person.id class="dropdown-item"}}Messages{{/link-to}}
           {{#link-to "person.password" person.id class="dropdown-item"}}Change Password{{/link-to}}
        </div>

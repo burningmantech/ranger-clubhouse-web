@@ -11,9 +11,9 @@ export default class ApplicationSerializer extends DS.RESTSerializer {
     }
 
     // Only serialize objects that have changed or are new.
-    //if (snapshot.record.get('isNew') || snapshot.changedAttributes()[key]) {
+    if (snapshot.record.get('isNew') || snapshot.changedAttributes()[key]) {
       super.serializeAttribute(snapshot, json, key, attributes);
-    //}
+    }
   }
 
   /*

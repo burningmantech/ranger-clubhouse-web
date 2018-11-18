@@ -191,9 +191,32 @@ export default class PersonModel extends  DS.Model {
       roles = [ roles ];
     }
 
-    assert('Undefined role. Verify the spelling is correct.', !roles.includes(undefined));
 
-    return roles.some(r => personRoles.includes(r));
+    let haveIt = false;
+
+    roles.forEach((role) => {
+      const type = typeOf(role);
+      if (type == 'array' || type == 'object') {
+        let haveAll = true;
+
+        // Sub array means ALL the roles have to be present.
+        role.forEach((r) => {
+          if (!personRoles.includes(r)) {
+            haveAll = false;
+          }
+        });
+
+        if (haveAll) {
+          haveIt = true;
+        }
+      } else {
+        if (personRoles.includes(role)) {
+          haveIt = true;
+        }
+      }
+    })
+
+    return haveIt;
   }
 
   hasAllRoles(roles) {

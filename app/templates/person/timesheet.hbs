@@ -1,19 +1,5 @@
 {{year-select "Timesheet" year=year years=person.years onChange=(action "changeYearAction") subheader=true}}
 
 {{person/shift-manage positions=positions timesheets=timesheets person=person}}
-{{#if timesheets}}
-  {{person/timesheet-manage timesheets=timesheets person=person year=year positions=positions}}
-{{else}}
-<p class="lead mt-3 text-danger">
-  No timesheets were found for {{year}}.
-</p>
-{{/if}}
-
-
-{{#if timesheetMissing}}
-  {{person/timesheet-missing timesheetMissing=timesheetMissing timesheets=timesheets person=person year=year positions=positions}}
-{{else}}
-<p class="lead mt-3 text-danger">
-  There are no missing timesheet requests for {{year}}.
-</p>
-{{/if}}
+{{person/timesheet-manage timesheets=timesheets person=person year=year positions=positions}}
+{{person/timesheet-missing timesheetMissing=timesheetMissing timesheets=timesheets person=person year=year positions=positions}}

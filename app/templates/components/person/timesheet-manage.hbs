@@ -5,6 +5,7 @@
 <span class="d-inline-block">{{fa-icon "thumbs-up" type="far"}} = correction approved, awaiting verify.</span>
 <span class="d-inline-block">{{fa-icon "question-circle" type="far"}} = correction needs more info.</span>
 
+{{#if timesheets}}
 <table class="table table-striped table-sm">
   <thead class="thead-light">
     <tr>
@@ -90,6 +91,9 @@
     </tr>
   </tbody>
 </table>
+{{else}}
+<p class="mt-2 text-danger">No timesheet entries found for {{year}}</p>
+{{/if}}
 
 {{#if editEntry}}
 {{#ch-form "entry" editEntry modalBox=true modalTitle="Edit Timesheet" validator=timesheetValidations onSubmit=(action "saveEntryAction") onCancel=(action "cancelEntryAction") as |f|}}
