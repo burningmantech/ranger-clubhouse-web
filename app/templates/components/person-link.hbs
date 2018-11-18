@@ -1,0 +1,5 @@
+{{#if person}}
+  {{#link-to "person.index" person.id}}{{person.callsign}}{{/link-to}}
+{{else}}
+  {{#link-to "person.index" id}}{{callsign}}{{/link-to}}
+{{/if}}

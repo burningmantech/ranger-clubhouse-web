@@ -1,0 +1,22 @@
+{{#if mentors}}
+<table class="table table-striped mt-4">
+  <thead>
+    <tr>
+      <th>Mentor</th>
+      <th>Year</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each mentors as |mentor|}}
+    <tr>
+      <td>{{person-link id=mentor.person_id callsign=mentor.callsign}}</td>
+      <td>{{mentor.year}}</td>
+      <td>{{mentor.status}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+{{else}}
+<strong class="text-danger">No mentor records located</strong>
+{{/if}}

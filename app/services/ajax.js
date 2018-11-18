@@ -7,6 +7,9 @@ import AjaxService from 'ember-ajax/services/ajax';
 export default AjaxService.extend({
   host: ENV['api-server'],
   session: service(),
+
+  contentType: 'application/json; charset=utf-8',
+  
   headers: computed('session.isAuthenticated', {
     get() {
       let headers = {};
