@@ -1,6 +1,7 @@
 {{#ch-sidebar}}
   {{#ch-sidebar-group "PROFILE"}}
     {{ch-sidebar-link "person.index" title="Account Info" icon="info" iconType="s"}}
+    {{ch-sidebar-link "person.schedule" title="Schedule / Signups" icon="clipboard"}}
     {{ch-sidebar-link "person.event-info" title="Event/Training Info" icon="user" iconType="s"}}
     {{ch-sidebar-link "person.timesheet" title="Timesheets" class="dropdown-item" icon="clock"}}
     {{ch-sidebar-link "person.messages" title="Messages" icon="envelope" badgeText=person.unread_message_count}}
@@ -14,6 +15,10 @@
     {{#if (has-role "admin")}}
       {{ch-sidebar-link "person.password" title="Change Password" icon="key" iconType="s"}}
     {{/if}}
+  {{/ch-sidebar-group}}
+
+  {{#ch-sidebar-group}}
+    {{ch-sidebar-collapse}}
   {{/ch-sidebar-group}}
 
   <div class="ranger-logo menu-collapsed"></div>

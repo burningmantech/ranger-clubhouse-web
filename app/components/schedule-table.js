@@ -12,6 +12,15 @@ export default class ScheduleTableComponent extends Component {
 
   viewSchedule = 'upcoming';
 
+  didReceiveAttrs() {
+    this.set('viewSchedule', this.isCurrentYear ? 'upcoming' : 'all');
+  }
+
+  @computed('year')
+  get isCurrentYear() {
+    return this.year == (new Date()).getFullYear();
+  }
+
   @computed('slots')
   get creditsTotal() {
     let creditsTotal = 0.0;

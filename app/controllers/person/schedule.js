@@ -1,11 +1,11 @@
 import Controller from '@ember/controller';
 import { action } from '@ember-decorators/object';
 
-export default class MeScheduleController extends Controller {
+export default class PersonScheduleController extends Controller {
   queryParams = [ 'year' ];
 
   @action
-  changeYear(year) {
+  changeYearAction(year) {
     this.set('year', year);
   }
 }
