@@ -50,8 +50,6 @@ export default class ClubhouseMessagesComponent extends Component {
 
   @action
   markReadAction(message) {
-    const person = this.person;
-
     return message.markRead().then(() => {
       message.set('delivered', true);
       this.set('currentUnread', this.messages.reduce((total, msg) => total + (msg.delivered ? 0 : 1), 0));
