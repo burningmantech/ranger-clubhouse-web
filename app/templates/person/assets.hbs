@@ -1,1 +1,76 @@
-{{outlet}}
+{{year-select "Asset History" year=year years=person.years subheader=true onChange=(action "changeYearAction")}}
+
+{{#if person.asset_authorized}}
+  {{#ch-form 'checkout' checkoutForm validator=assetValdiations onSubmit=(action "submitAction") as |f|}}
+    <div class="form-row">
+      <label class="col-form-label">
+        Barcode
+      </label>
+      {{f.input 'barcode' type="text" size=10 grid="col-auto" autofocus=true}}
+      {{f.input 'attachment_id' type="select" options=attachmentOptions}}
+      <div class="col-md-4">
+        {{f.submit label="Checkout"}}
+      </div>
+    </div>
+    {{#if barcodeNotFound}}
+      <div class="form-row text-danger">
+        Barcode {{barcodeNotFound}} was not found.
+      </div>
+    {{else if barcodeCheckedOut}}
+      {{#ch-alert "danger"}}
+        Barcode {{barcodeCheckedOut.barcode}} is already checked out by {{#link-to "person.assets" barcodeCheckedOut.person_id}}{{barcodeCheckedOut.callsign}}{{/link-to}}
+      {{/ch-alert}}
+    {{/if}}
+  {{/ch-form}}
+{{else}}
+  {{#ch-alert 'warning'}}
+    {{person.callsign}} is not asset authorized and may not check out equipment at this time. Have the person sign the appropriate paperwork.
+  {{/ch-alert}}
+{{/if}}
+{{pluralize assets.length 'asset'}} found
+<table class="table table-striped table-sm">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Barcode</th>
+      <th>Attachment</th>
+      <th>Assigned</th>
+      <th>Temp ID</th>
+      <th>Checked Out</th>
+      <th>Checked In</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each assets as |ap|}}
+    <tr>
+      <td>{{ap.asset.description}}</td>
+      <td>{{present-or-not ap.asset.barcode "-"}}</td>
+      <td>{{ap.attachment.description}}</td>
+      <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
+      <td>{{present-or-not ap.asset.temp_id "-"}}</td>
+      <td>{{shift-format ap.checked_out}}</td>
+      <td>
+        {{#if ap.checked_in}}
+          {{shift-format ap.checked_in}}
+        {{else}}
+          <i>Checked-Out</i>
+        {{/if}}
+      </td>
+      <td>
+        {{#unless ap.checked_in}}
+          <button class="btn btn-primary btn-sm" {{action "checkInAction" ap}}>Check In</button>
+        {{else}}
+          -
+        {{/unless}}
+      </td>
+    </tr>
+    {{else}}
+    <tr>
+      <td colspan="8">
+        <strong class="text-danger">No assets were found for {{year}}</strong>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

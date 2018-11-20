@@ -10,6 +10,10 @@
     <div class="col-sm-12">
       <h1>{{person.callsign}} - {{person.status}}{{if person.vintage "/vintage"}} ({{person.first_name}} {{person.mi}} {{person.last_name}})</h1>
     </div>
+    {{!
+      The drop down menu only appear on mobile/small screen devices
+      When adding new areas, be sure to add the link to person-sidebar.hbs
+    }}
     <div class="col-sm-12 d-md-none">
       <div class="btn-group">
         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

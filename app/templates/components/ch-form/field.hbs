@@ -25,7 +25,7 @@
       disabled={{disabled}}
       class="{{controlClass}}"
     >
-    {{ch-form/options-builder options _val}}
+    {{ch-form/options-builder options (get model name)}}
   </select>
 {{else if (eq type "radioGroup")}}
   {{#each radioOptions as |option idx|}}

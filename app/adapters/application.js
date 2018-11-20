@@ -11,6 +11,8 @@ import ENV from 'clubhouse/config/environment';
 const SINGULAR_MODELS = [
   'access-document-delivery',
   'access-document',
+  'asset-person',
+  'asset-attachment',
   'person',
   'position',
   'slot',

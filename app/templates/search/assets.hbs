@@ -1,16 +1,45 @@
 <h1>Asset Search</h1>
 
-<form class="form-inline" {{action "search" on="submit"}} >
+<form class="form-inline" {{action "search" on="submit"}} autocomplete="off">
       {{input type="text" size=30 value=barcode placeholder="Enter the asset barcode" class="form-control"}}
-      <button type="submit" class="btn btn-primary ml-1">Search</button>
+      <button type="submit" class="btn btn-primary ml-1" disabled={{isLoading}}>{{if isLoading "Searching" "Search"}}</button>
 </form>
 
 
-{{#if notFound}}
-<div class="text-danger mt-2"><strong>Barcode "{{notFoundBarcode}}" was not found.</strong></div>
+{{#if barcodeNotFound}}
+  <div class="text-danger mt-2">
+    <strong>Barcode "{{barcodeNotFound}}" was not found.</strong>
+  </div>
 {{else if asset}}
-<table class="table table-borderless mt-4">
-  <caption>Asset {{asset.barcode}}</caption>
+<table class="table table-striped table-sm mt-4">
+  <caption>Checkout History</caption>
+  <thead>
+    <tr>
+      <th>Person</th>
+      <th>Out</th>
+      <th>In</th>
+      <th>Attachment</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each asset.asset_person as |row|}}
+      <tr>
+        <td>{{#link-to "person.assets" row.person.id}}{{row.person.callsign}}{{/link-to}}</td>
+        <td>{{shift-format row.checked_out}}</td>
+        <td>{{#if row.checked_in}}
+              {{shift-format row.checked_in}}
+            {{else}}
+              <i>Checked Out</i>
+            {{/if}}
+        </td>
+        <td>{{present-or-not row.attachment.description "-"}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<table class="table table-sm mt-4">
+  <caption>Asset {{asset.barcode}} Information</caption>
   <thead>
     <tr>
       <th>Type</th>
@@ -31,28 +60,10 @@
     <tr>
       <td colspan="5">Notes: {{present-or-not asset.notes}}</td>
     </tr>
+    <tr>
+      <td colspan="5">Created on {{asset.create_date}}</td>
+    </tr>
   </tbody>
 </table>
 
-<table class="table table-hover">
-  <caption>Checkout History</caption>
-  <thead>
-    <tr>
-      <th>Person</th>
-      <th>Out</th>
-      <th>In</th>
-      <th>Attachment</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each asset.asset_person as |row|}}
-      <tr>
-        <td>{{#link-to "person.index" row.person.id}}{{row.person.callsign}}{{/link-to}}</td>
-        <td>{{row.checked_out}}</td>
-        <td>{{present-or-not row.checked_in "out"}}</td>
-        <td>{{present-or-not row.attachment "-"}}</td>
-      </tr>
-    {{/each}}
-  </tbody>
-</table>
 {{/if}}

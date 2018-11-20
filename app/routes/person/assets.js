@@ -4,14 +4,27 @@ import requestYear from 'clubhouse/utils/request-year';
 
 
 export default class PersonAssetsRoute extends Route {
+  queryParams = {
+    year: { refreshModel: true }
+  };
+
   model(params) {
-    const model = this.modelFor('person');
+    const personId = this.modelFor('person').person.id;
     const year = requestYear(params);
 
     return RSVP.hash({
-      person: model.person,
-      assets: this.ajax.request(`assets/`),
+      assets: this.store.query('asset-person', { person_id: personId, year }),
+      attachments: this.store.findAll('asset-attachment'),
       year,
     });
+  }
+
+  setupController(controller, model) {
+    super.setupController(...arguments);
+
+    controller.setProperties(this.modelFor('person'));
+    controller.setProperties(model);
+    controller.clearErrors();
+    controller.set('checkoutForm.barcode', '');
   }
 }
