@@ -155,14 +155,10 @@ export default class ScheduleManageComponent extends Component {
     return reasons[reasonIndex];
   }
 
-  handleJoinResponse(response, slot) {
+  handleErrorJoinResponse(status, slot) {
     const modal = this.modal;
-    if (!response.payload) {
-      this.house.handleErrorResponse(response);
-      return;
-    }
 
-    switch (response.payload.status) {
+    switch (status) {
       case 'full':
         modal.info('The shift is full.', 'The shift is at capacity with '+slot.slot_signed_up+' indivduals signed up.');
         break;
@@ -184,7 +180,7 @@ export default class ScheduleManageComponent extends Component {
         break;
 
       default:
-        this.house.handleErrorResponse(response);
+        modal.danger('Unknown status response', `Sorry, I did not understand the status response of [${status}] from the server`);
         break;
     }
   }
@@ -197,15 +193,19 @@ export default class ScheduleManageComponent extends Component {
       method: 'POST',
       data: { slot_id: slotId }
     }).then((result) => {
-        slot.set('person_assigned', true);
-        slot.set('slot_signed_up', result.signed_up);
-        if (result.forced) {
-          this.toast.success('Successfully signed up, and the shift is overcapacity. Hope you know what you are doing!');
+        if (result.status == 'success') {
+          slot.set('person_assigned', true);
+          slot.set('slot_signed_up', result.signed_up);
+          if (result.forced) {
+            this.toast.success('Successfully signed up, and the shift is overcapacity. Hope you know what you are doing!');
+          } else {
+            this.toast.success('Successfully signed up.');
+          }
         } else {
-          this.toast.success('Successfully signed up.');
+          this.handleErrorJoinResponse(result.status, slot);
         }
     }).catch((response) => {
-      this.handleJoinResponse(response, slot);
+      this.house.handleErrorResponse(response);
     });
   }
 
