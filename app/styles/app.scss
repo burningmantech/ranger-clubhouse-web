@@ -34,11 +34,15 @@ $modal-header-padding: 0.75rem !important;
 
 @import "bootstrap-custom";
 
-@import "sidebar";
-@import "schedule";
-@import "table-responsive";
+// Addons
 @import "ember-power-select";
 @import "ember-power-select-typeahead";
+
+// Clubhouse styling
+@import "table-responsive";
+@import "schedule";
+@import "sidebar";
+@import "timesheet-log";
 
 
 /* roboto-mono-regular - latin */
@@ -168,14 +172,6 @@ legend {
   background-color: #f0f0f0;
 }
 
-/*
- * Remove border on a row
- */
-
- .no-border td {
-   border: none !important;
- }
-
 /* Messages */
 
 .person-message-box {
@@ -274,12 +270,42 @@ legend {
   background-color: #f0f0f0;
 }
 
+/*
+ * Add a box around a table
+ */
+
+table.table-box {
+  border: 1px solid #bebebe;
+
+  caption {
+    border: 1px solid #bebebe;
+    border-bottom: none;
+  }
+}
+
+.table-sm  {
+  padding: 5px;
+}
+
+/*
+ * Remove border on a row
+ */
+
+ .no-border td {
+   border: none !important;
+ }
+
+
 caption {
   caption-side: top;
   color: #000;
-  background-color: #ececec;
+  background-color: #e3e3e3;
   font-size: 0.9rem;
   padding: 5px 10px;
+}
+
+.table-sm caption {
+  padding: 5px;
 }
 
 .tr-no-border td {

@@ -1,4 +1,10 @@
-{{year-select "Timesheet" year=year years=person.years onChange=(action "changeYearAction") subheader=true}}
+<div class="row">
+  {{year-select "Timesheet" year=year years=person.years onChange=(action "changeYearAction") subheader=true gridClass="col-sm-12 col-md-8"}}
+  <div class="col-sm-12 col-md-2">
+    {{#link-to "person.timesheet-log" class="btn btn-secondary"}}Timesheet Log{{/link-to}}
+  </div>
+</div>
+
 
 {{person/shift-manage positions=positions timesheets=timesheets person=person}}
 {{person/timesheet-manage timesheets=timesheets person=person year=year positions=positions}}

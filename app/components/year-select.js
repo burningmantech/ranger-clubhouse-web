@@ -22,12 +22,19 @@ export default class YearSelectComponent extends Component {
   // Is this a subheader?
   @argument subheader = false;
 
+  // Additional classnames to add
+  @argument gridClass = null;
+
   constructor() {
     super(...arguments);
 
     if (this.subheader) {
       this.tagName = 'div';
       this.classNames = [ 'h2' ];
+    }
+
+    if (this.gridClass) {
+        this.classNames = this.gridClass.split(' ').concat(this.classNames)
     }
   }
 
