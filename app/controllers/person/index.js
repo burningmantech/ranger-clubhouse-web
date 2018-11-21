@@ -123,11 +123,25 @@ export default class PersonIndexController extends Controller {
     if (!isValid)
       return;
 
+    const statusChanged = model._changes['status'];
+
     model.save().then(() => {
       this.toast.success('The information was successfully updated.');
       // Reload the current user.
       if (model.get('id') == this.session.user_id) {
         this.session.loadUser();
+      }
+
+      // When the status changes, the positions & roles are likely changed.
+      // Reload the roles & positions
+      if (statusChanged) {
+        this.ajax.request(`person/${this.person.id}/positions`)
+          .then((results) => this.set('personPositions', results.positions))
+          .catch((response) => this.house.handleErrorResponse(response));
+
+        this.ajax.request(`person/${this.person.id}/roles`)
+          .then((results) => this.set('personRoles', results.roles))
+          .catch((response) => this.house.handleErrorResponse(response));
       }
     }).catch((response) => this.house.handleErrorResponse(response));
   }
