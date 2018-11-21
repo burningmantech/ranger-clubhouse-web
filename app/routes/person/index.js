@@ -18,8 +18,8 @@ export default class PersonIndexRoute extends Route {
   setupController(controller, model) {
     const parent = this.modelFor('person');
     super.setupController(...arguments);
-    controller.setProperties(this.modelFor('person'));
     controller.setProperties(parent);
+    controller.setProperties(model);
 
     // Retrieving the photo may cause a delay, hence its here and not in model()
     controller.set('photo', null);
