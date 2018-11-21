@@ -24,7 +24,7 @@
     "@ember/optional-features": "^0.6.3",
     "babel-eslint": "^8.2.6",
     "broccoli-asset-rev": "^2.7.0",
-    "ember-ajax": "^3.1.0",
+    "ember-ajax": "^4.0.0",
     "ember-api-actions": "^0.1.9",
     "ember-auto-import": "^1.2.13",
     "ember-changeset": "^1.5.0",
