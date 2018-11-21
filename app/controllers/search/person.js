@@ -49,7 +49,7 @@ export default class SearchController extends Controller {
       return;
     }
 
-    const params = { query };
+    const params = { basic: 1, query };
 
     // Find out which fields to search
     const search_fields = [];
