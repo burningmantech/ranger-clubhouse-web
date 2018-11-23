@@ -61,6 +61,8 @@ Router.map(function() {
     this.route('mentors');
     this.route('schedule');
     this.route('timesheet-log');
+    this.route('contact-log');
+    this.route('broadcast-log');
   });
   this.route('logout');
   this.route('training', { path: '/training/:position_id' }, function() {

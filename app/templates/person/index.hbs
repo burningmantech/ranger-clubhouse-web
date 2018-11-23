@@ -189,10 +189,10 @@
 
     {{#if isAdmin}}
     <div class="form-group row">
-      <label class="col-md-2 col-sm-12 col-form-label-fixed">Logs (TODO)</label>
+      <label class="col-md-2 col-sm-12 col-form-label-fixed">Logs</label>
       <div class="col-md-9 col-sm-12">
-          <a href="#" class="btn btn-primary btn-sm">Contact</a>
-          <a href="#" class="btn btn-primary btn-sm">Broadcast</a>
+        {{#link-to "person.contact-log" class="btn btn-primary btn-sm"}}Contact Log{{/link-to}}
+        {{#link-to "person.broadcast-log" class="btn btn-primary btn-sm"}}Broadcast Log{{/link-to}}
       </div>
     </div>
     {{/if}}

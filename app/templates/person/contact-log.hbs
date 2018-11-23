@@ -1,0 +1,90 @@
+<div class="row">
+  {{year-select "Contact Log" year=year years=person.years subheader=true onChange=(action "changeYearAction") gridClass="col-sm-12 col-md-8"}}
+  <div class="col-md-4 col-sm-12">
+    {{#link-to "person.index" class="btn btn-primary btn-sm"}}Back to {{person.callsign}}{{/link-to}}
+  </div>
+</div>
+
+<table class="table table-striped">
+  <caption>Sent Contact Messages</caption>
+  <thead>
+    <tr>
+        <th>Recipient</th>
+        <th>Delivery Email</th>
+        <th>Timestamp</th>
+        <th>Action</th>
+        <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each sent_logs as |log|}}
+      <tr class="separated">
+          <td>{{person-link person=log.recipient_person}}</td>
+          <td>{{log.recipient_address}}</td>
+          <td>{{shift-format log.sent_at}}</td>
+          <td>{{log.action}}</td>
+          <td>
+            <button class="btn btn-sm btn-secondary" {{action "showMessageAction" log}}  title="show message">
+              {{fa-icon (if log.showMessage "envelope-open" "envelope") type="fas"}}
+            </button>
+          </td>
+      </tr>
+      {{#if log.showMessage}}
+        <tr>
+            <td colspan="5">
+                Subject: {{log.subject}}
+                  <div>
+                    {{nl2br log.message}}
+                  </div>
+            </td>
+        </tr>
+      {{/if}}
+    {{else}}
+    <tr>
+      <td colspan="5 text-danger">No sent contact messages were found for {{year}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<table class="table table-striped">
+  <caption>Received Contact Messages</caption>
+  <thead>
+    <tr>
+        <th>Sender</th>
+        <th>Delivery Email</th>
+        <th>Timestamp</th>
+        <th>Action</th>
+        <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each received_logs as |log|}}
+      <tr class="separated">
+          <td>{{person-link person=log.sender_person}}</td>
+          <td>{{log.recipient_address}}</td>
+          <td>{{shift-format log.sent_at}}</td>
+          <td>{{log.action}}</td>
+          <td>
+            <button class="btn btn-sm btn-secondary" {{action "showMessageAction" log}} title="show message">
+              {{fa-icon (if log.showMessage "envelope-open" "envelope") type="fas"}}
+            </button>
+          </td>
+      </tr>
+      {{#if log.showMessage}}
+        <tr>
+            <td colspan="5">
+                Subject: {{log.subject}}
+                  <div>
+                    {{nl2br log.message}}
+                  </div>
+            </td>
+        </tr>
+      {{/if}}
+    {{else}}
+    <tr>
+      <td colspan="5 text-danger">No sent contact messages were found for {{year}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

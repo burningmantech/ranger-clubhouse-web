@@ -1,0 +1,38 @@
+<div class="row">
+  {{year-select "Broadcast Messages" year=year years=person.years subheader=true onChange=(action "changeYearAction") gridClass="col-sm-12 col-md-8"}}
+  <div class="col-md-4 col-sm-12">
+    {{#link-to "person.index" class="btn btn-primary btn-sm"}}Back to {{person.callsign}}{{/link-to}}
+  </div>
+</div>
+
+<table class="table table-sm table-hover">
+  <thead>
+      <tr>
+          <th>Timestamp</th>
+          <th>Broadcast ID</th>
+          <th>Address</th>
+          <th>Status / Command</th>
+          <th>Direction</th>
+      </tr>
+  </thead>
+  <tbody>
+  {{#each messages as |msg|}}
+      <tr>
+          <td>{{msg.created_at}}</td>
+          <td>{{present-or-not msg.broadcast_id "-"}}</td>
+          <td>{{msg.address}}</td>
+          <td>{{msg.status}}</td>
+          <td>{{msg.direction}}</td>
+      </tr>
+      {{#if msg.message}}
+      <tr class="no-border">
+          <td colspan="5">{{nl2br msg.message}}</td>
+      </tr>
+      {{/if}}
+  {{else}}
+    <tr>
+      <td colspan="5" class="text-danger">No broadcast messages found for {{year}}</td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
