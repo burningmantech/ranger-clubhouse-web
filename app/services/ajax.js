@@ -9,7 +9,7 @@ export default AjaxService.extend({
   session: service(),
 
   contentType: 'application/json; charset=utf-8',
-  
+
   headers: computed('session.isAuthenticated', {
     get() {
       let headers = {};

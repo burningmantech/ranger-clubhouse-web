@@ -38,22 +38,23 @@ export default class LoginController extends Controller {
     this.toast.clearMessages();
     let credentials = model.getProperties('identification', 'password');
 
-    // Simple try for neoclubhouse authorization if not running
-    // a dual clubhouse
     if (!ENV['dualClubhouse']) {
+      // Not running in Dual Clubhouse mode ..
       return this.apiLogin(credentials);
     }
 
     //
-    // Attempt to authorizae with clubhouse classic before trying for
-    // neoclubhouse
+    // Attempt to authorize with Classic Clubhouse before trying for
+    // Clubhouse 2.0
     //
 
-    this.set('isSubmitting', true);
     return this.ajax.post(ENV['clubhouseClassicUrl']+'/?DMSc=security&DMSm=login&json=1',
       {
-        type: 'POST',
-        data: { DMSe: credentials.identification, DMSp: credentials.password },
+        headers: {
+          // Avoid CORS pre-flight
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        },
+        data: { email: credentials.identification, password: credentials.password },
       }
     ).then((response) => {
       // So far, so good. set the clubhouse classic PHP session cookie,
