@@ -46,6 +46,7 @@ Router.map(function() {
   this.route('admin', function() {
     this.route('positions');
     this.route('slots');
+    this.route('credits');
   });
   this.route('handle-checker');
 

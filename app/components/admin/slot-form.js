@@ -49,9 +49,7 @@ export default class SlotFormComponent extends Component {
       group.options.push([ `${slot.description} ${slot.begins_format}`, slot.id ]);
     });
 
-    groupOptions = groupOptions.sortBy('groupName');
-    groupOptions.unshift('');
-    return groupOptions;
+    return groupOptions.sortBy('groupName');
   }
 
   @action

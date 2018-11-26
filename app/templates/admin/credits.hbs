@@ -1,0 +1,107 @@
+{{year-select "Positions Credits" year=year onChange=(action "changeYear")}}
+
+{{#if credit}}
+  {{#ch-form "credit" credit modalBox=true modalTitle=(if credit.isNew "New Position Credit"  "Edit Position Credit")
+      validator=creditValidations onSubmit=(action "saveCredit") onCancel=(action "cancelCredit") as |f|}}
+    <div class="form-row">
+      {{#if credit.isNew}}
+        {{f.input "position_id" label="Position" type="select" options=positionOptions multiple=true size=15 grid="col-4" hint="Select multiple positions to create in bulk"}}
+      {{else}}
+        {{f.input "position_id" label="Position" type="select" options=positionOptions grid="col-4"}}
+      {{/if}}
+
+      <div class="col-7">
+        <div class="form-row">
+          {{f.input "start_time" label="Begining Time" type="datetime" maxlength=25 grid="col-auto"}}
+          {{f.input "end_time" label="Ending Time" type="datetime"  maxlength=20 grid="col-auto"}}
+          {{f.input "credits_per_hour" label="Credits Per Hour" type="text"  maxlength=20 grid="col-auto"}}
+          {{f.input "description" label="Description" size=25 maxlength=25 grid="col-md-auto"}}
+        </div>
+      </div>
+    </div>
+
+
+    <div class="form-group mt-2">
+      {{f.submit}}
+      {{f.cancel}}
+    </div>
+
+  {{/ch-form}}
+{{/if}}
+
+
+<div class="row mb-1">
+  <div class="col-md-4 mb-2">
+    {{#power-select
+          options=filterPositionOptions
+          selected=positionFilter
+          searchEnabled=false
+          searchField="title"
+          onchange=(action (mut positionFilter))
+                    as |item| }}
+        {{item.title}}
+    {{/power-select}}
+  </div>
+  <div class="col-md-3 mb-2">
+    {{#power-select
+          selected=dayFilter
+          options=dayOptions
+          searchEnabled=false
+          searchField="title"
+          onchange=(action (mut dayFilter))
+                    as |item| }}
+        {{item.title}}
+    {{/power-select}}
+  </div>
+
+  <div class="col-md-2 mb-2">
+    <a href {{action "newCredit"}} class="btn btn-primary">New Position Credit</a>
+  </div>
+</div>
+
+{{#if credits.length}}
+<div class="text-muted">Showing {{viewCredits.length}} of {{credits.length}}</div>
+{{#unless viewCredits}}
+  <p class="text-danger">
+    No credits matched the filter criteria.
+  </p>
+{{/unless}}
+{{else}}
+No position credits were found for {{year}}?
+{{/if}}
+
+
+{{#each creditGroups as |group|}}
+<table class="table table-sm table-box table-hover">
+  <caption>
+    {{group.title}}
+  </caption>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>From</th>
+      <th>To</th>
+      <th class="td-number">Credits</th>
+      <th>Description</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each group.credits as |credit|}}
+    <tr id="credit-{{credit.id}}" >
+      <td>{{credit.id}}</td>
+      <td>{{shift-format credit.start_time}}</td>
+      <td>{{shift-format credit.end_time}}</td>
+      <td class="td-number">{{credits-format credit.credits_per_hour}}</td>
+      <td>
+        {{credit.description}}
+      </td>
+      <td>
+        <button {{action "editCredit" credit}} class="btn btn-primary btn-sm">{{fa-icon "edit"}}</button>
+        <button {{action "deleteCredit" credit}} class="btn btn-danger btn-sm">{{fa-icon "trash-alt" type="fas"}}</button>
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
+{{/each}}

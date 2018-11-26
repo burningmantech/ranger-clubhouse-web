@@ -15,6 +15,7 @@ const SINGULAR_MODELS = [
   'asset-attachment',
   'person',
   'position',
+  'position-credit',
   'slot',
   'timesheet',
   'timesheet-missing'

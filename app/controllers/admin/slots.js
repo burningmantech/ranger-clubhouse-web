@@ -88,7 +88,7 @@ export default class SlotsController extends Controller {
 
   @computed('slots.{[],@each.position_id}')
   get trainerSlots() {
-    return this.slots.filter((slot) => slot.position_title.match(/trainer/i));
+    return this.slots.filter((slot) => slot.position_title.match(/(trainer|mentor)/i));
   }
 
   _updateGroupActive(group, isActive) {

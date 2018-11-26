@@ -29,6 +29,9 @@ export default function validateDateTime(opts = {}) {
     }
 
     if (newValue == '' || newValue == undefined) {
+      if (opts.presence) {
+        return 'Must not be blank';
+      }
       return true;
     }
 

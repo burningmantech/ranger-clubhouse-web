@@ -2,7 +2,7 @@ import Route from '@ember/routing/route';
 import requestYear from 'clubhouse/utils/request-year';
 import RSVP from 'rsvp';
 
-export default class AdminSlotsRoute extends Route {
+export default class AdminCreditsRoute extends Route {
   queryParams = {
     year: { refreshModel: true }
   };
@@ -11,15 +11,14 @@ export default class AdminSlotsRoute extends Route {
     const year = requestYear(params);
 
     return RSVP.hash({
-      slots: this.store.query('slot', { year }).then((result) => { return result.toArray() }),
+      credits: this.store.query('position-credit', { year }).then((results) => { return results.toArray() }),
       positions: this.store.query('position', {}),
       year,
-      yearList: this.ajax.request('slot/years').then((result) => result.years)
     });
   }
 
   setupController(controller, model) {
-    controller.set('slot', null);
+    controller.set('entry', null);
     controller.setProperties(model)
   }
 }

@@ -6,10 +6,16 @@ import Ember from 'ember';
 
 const escapeExpression = Ember.Handlebars.Utils.escapeExpression;
 
-function buildOptions(options, currentValue) {
+function buildOptions(options, currentValue, includeBlank) {
   let html = '', label, value;
 
   assert('Options list is null. Did you forget to supply the right options?', options);
+
+  if (includeBlank) {
+    html += '<option value="">-</option>';
+  }
+
+  const isArray = (typeOf(currentValue) == 'array');
 
   options.forEach((opt, idx) => {
     const type = typeOf(opt);
@@ -29,8 +35,19 @@ function buildOptions(options, currentValue) {
         label = value = opt;
       }
 
-      const isSelected = ((currentValue == null && idx == 0) || currentValue == value) ? 'selected' : '';
-      html += `<option value="${value}" ${isSelected}>${escapeExpression(label)}</option>`
+      let isSelected;
+
+      if (isArray) {
+        isSelected = currentValue.includes(value);
+      } else if (currentValue == null && idx == 0) {
+        isSelected = true
+      } else if (currentValue == value) {
+        isSelected = true;
+      } else {
+        isSelected = false;
+      }
+
+      html += `<option value="${value}" ${isSelected ? 'selected' : ''}>${escapeExpression(label)}</option>`
     }
   })
 

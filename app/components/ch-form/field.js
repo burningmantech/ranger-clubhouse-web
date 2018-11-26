@@ -1,4 +1,5 @@
 import Component from '@ember/component';
+import EmberObject from '@ember/object';
 import { action, computed } from '@ember-decorators/object';
 import { tagName } from '@ember-decorators/component';
 import { argument } from '@ember-decorators/argument';
@@ -15,7 +16,11 @@ export default class ChFormFieldComponent extends Component {
   @argument fieldId = null;
   @argument model = null;
 
+  // select, checkbox or radio options
   @argument options = null;
+  // Include a blank option for select options
+  @argument includeBlank = false;
+  @argument multiple = false; // Multiple selection
 
   // For checkbox & radio types, include form-check-inline on wrap class
   @argument inline = false;

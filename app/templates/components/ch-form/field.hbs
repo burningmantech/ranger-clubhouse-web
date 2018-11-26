@@ -18,15 +18,17 @@
 {{item}}
 {{/power-select-typeahead}}
 {{else if (eq type "select")}}
-  <select
-      id={{_domId}}
-      name={{name}}
-      onchange={{action "update" value="target.value"}}
-      disabled={{disabled}}
-      class="{{controlClass}}"
-    >
-    {{ch-form/options-builder options (get model name)}}
-  </select>
+  {{ch-form/select
+    name=name
+    model=model
+    controlClass=controlClass
+    disabled=disabled
+    includeBlank=includeBlank
+    multiple=multiple
+    onChange=(action "update")
+    options=options
+    size=size
+  }}
 {{else if (eq type "radioGroup")}}
   {{#each radioOptions as |option idx|}}
     <div class="{{wrapClass}}">
