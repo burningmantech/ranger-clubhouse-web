@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import EmberObject from '@ember/object';
 import { typeOf } from '@ember/utils';
-import { action, computed } from '@ember-decorators/object';
+import { computed } from '@ember-decorators/object';
 import { tagName, className } from '@ember-decorators/component';
 import { argument } from '@ember-decorators/argument';
 

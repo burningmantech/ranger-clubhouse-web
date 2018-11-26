@@ -37,7 +37,7 @@ export default class PersonAssetsController extends Controller {
     }
 
     const barcode = model.get('barcode');
-    this.toast.clearMessages();
+    this.toast.clear();
     this.clearErrors();
 
     this.ajax.request('asset-person/checkout', {

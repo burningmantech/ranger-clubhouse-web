@@ -34,7 +34,6 @@
     "ember-cli-babel": "^6.16.0",
     "ember-cli-dependency-checker": "^3.0.0",
     "ember-cli-eslint": "^4.2.3",
-    "ember-cli-flash": "^1.6.6",
     "ember-cli-htmlbars": "^3.0.0",
     "ember-cli-htmlbars-inline-precompile": "^1.0.3",
     "ember-cli-inject-live-reload": "^1.8.2",
@@ -59,11 +58,13 @@
     "ember-simple-auth": "^1.7.0",
     "ember-simple-auth-token": "^4.0.4",
     "ember-source": "~3.5.1",
+    "ember-toastr": "^1.7.2",
     "eslint-plugin-ember": "^5.2.0",
     "jsonwebtoken": "^8.3.0",
     "loader.js": "^4.7.0",
     "qunit-dom": "^0.8.0",
-    "sass": "^1.14.3"
+    "sass": "^1.14.3",
+    "toastr": "^2.1.4"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"

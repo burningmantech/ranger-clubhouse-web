@@ -12,7 +12,7 @@ export default class EmailListComponent extends Component {
     const element = $("#email-list").get(0);
 
     if (!element) {
-      this.toast.danger("Cannot locate element");
+      this.toast.error("Cannot locate element");
       return;
     }
 
@@ -31,7 +31,7 @@ export default class EmailListComponent extends Component {
       // Copy the selection to the clipboard
       document.execCommand("copy");
     } catch (err) {
-      this.toast.danger(
+      this.toast.error(
         "Sorry, unable to copy the text to the clipboard. Error: " + err
       );
       return;

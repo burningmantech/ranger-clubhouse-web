@@ -4,7 +4,7 @@ import { service } from '@ember-decorators/service';
 import DS from 'ember-data';
 
 export default class HouseService extends Service {
-  @service('flashMessages') toast;
+  @service toast;
   @service session;
   @service router;
 
@@ -72,12 +72,12 @@ export default class HouseService extends Service {
       message = `A server error was encountered:<ul><li>${response}</li></ul>`;
     }
 
-    this.toast.danger(message, {sticky: true})
+    this.toast.error(message, {sticky: true})
   }
 
   saveModel(model, successMessage, routeOrCallback) {
 
-    this.toast.clearMessages();
+    this.toast.clear();
 
     const isCallback = typeof(routeOrCallback) == 'function';
 
@@ -109,7 +109,7 @@ export default class HouseService extends Service {
       return true;
     }
 
-    this.toast.danger('You are not authorized for that action');
+    this.toast.error('You are not authorized for that action');
     this.router.transitionTo('me.overview');
     return false;
   }

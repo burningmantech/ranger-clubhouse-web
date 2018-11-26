@@ -13,7 +13,7 @@ export default class MeTimesheetsReviewController extends Controller {
   @action
   markCorrectAction(timesheet) {
     timesheet.set('verified', 1);
-    this.toast.clearMessages();
+    this.toast.clear();
     timesheet.save().then(() => {
       this.toast.success('The timesheet has been marked as correct.');
     }).catch((response) => this.house.handleErrorResponse(response));
@@ -32,7 +32,7 @@ export default class MeTimesheetsReviewController extends Controller {
       return;
     }
 
-    this.toast.clearMessages();
+    this.toast.clear();
     model.set('verified', 0);
     model.save().then(() => {
       this.set('entry', null);

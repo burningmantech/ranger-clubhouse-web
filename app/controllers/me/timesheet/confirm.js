@@ -13,7 +13,7 @@ export default class MeTimesheetConfirmController extends Controller {
     const confirmed = model.get('confirm') ? 1 : 0;
     const person_id = this.session.user.id;
 
-    this.toast.clearMessages();
+    this.toast.clear();
 
     this.ajax.request(`timesheet/confirm`, {
       method: 'POST',

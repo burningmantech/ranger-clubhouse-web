@@ -46,7 +46,7 @@ export default class MeTimesheetMissingController extends Controller {
       return;
     }
 
-    this.toast.clearMessages();
+    this.toast.clear();
 
     const isNew = model.get('isNew');
     this.set('isSubmitting', true);

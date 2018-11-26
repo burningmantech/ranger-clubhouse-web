@@ -108,7 +108,7 @@ export default class MeAlertsController extends Controller {
       phone = this.numbers.on_playa.phone;
     }
 
-    this.toast.clearMessages();
+    this.toast.clear();
 
     this.ajax.request('sms/confirm-code', {
       method: 'POST',
@@ -129,11 +129,11 @@ export default class MeAlertsController extends Controller {
         break;
 
       case 'no-match':
-        this.toast.danger(`The verification code enter for ${phone} does not match.`);
+        this.toast.error(`The verification code enter for ${phone} does not match.`);
         break;
 
       default:
-        this.toast.danger(`The response status [${result.status}] from the server was not understood.`);
+        this.toast.error(`The response status [${result.status}] from the server was not understood.`);
         break;
       }
     }).catch((response) => {
@@ -148,7 +148,7 @@ export default class MeAlertsController extends Controller {
       return;
     }
 
-    this.toast.clearMessages();
+    this.toast.clear();
 
     const off_playa = model.get('off_playa');
     let on_playa = model.get('on_playa');
@@ -175,7 +175,7 @@ export default class MeAlertsController extends Controller {
       this.set('numbers', numbers);
 
       if (numbers.on_playa.code_status == 'sent-fail' || numbers.off_playa.code_status == 'sent-fail') {
-        this.toast.danger(`The number(s) were updated except a verification code could not be sent at this time.`);
+        this.toast.error(`The number(s) were updated except a verification code could not be sent at this time.`);
       } else {
         this.toast.success('The number(s) have been successfully updated.');
       }
@@ -190,7 +190,7 @@ export default class MeAlertsController extends Controller {
   @action
   sendNewCodeAction(type) {
     const personId = this.person.id;
-    this.toast.clearMessages();
+    this.toast.clear();
 
     this.set('isSendingCode', true);
     this.ajax.request('sms/send-code', { method: 'POST', data: { person_id: personId, type }})
@@ -205,7 +205,7 @@ export default class MeAlertsController extends Controller {
         break;
 
       default:
-        this.toast.danger(`The response status [${result.status}] from the server was not understood.`);
+        this.toast.error(`The response status [${result.status}] from the server was not understood.`);
         break;
       }
     })

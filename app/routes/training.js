@@ -3,7 +3,7 @@ import Route from '@ember/routing/route';
 export default class TrainingRoute extends Route {
   beforeModel() {
     if (!this.session.user.teacher.is_trainer) {
-      this.toast.danger("Sorry, you do not have the privileges to access this");
+      this.toast.error("Sorry, you do not have the privileges to access this");
       this.transitionTo('me.overview');
     }
   }

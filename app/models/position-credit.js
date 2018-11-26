@@ -1,6 +1,7 @@
 import DS from 'ember-data';
 import { attr } from '@ember-decorators/data';
 import { computed } from '@ember-decorators/object';
+import moment from 'moment';
 
 export default class PositionCreditModel extends DS.Model {
   @attr('shiftdate') start_time;

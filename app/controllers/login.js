@@ -13,7 +13,7 @@ export default class LoginController extends Controller {
           .catch((response) => {
             if (response.status == 401) {
               const data = response.json ? response.json : response.payload;
-              this.toast.danger(data.error);
+              this.toast.error(data.error);
             } else {
               this.house.handleErrorResponse(response)
             }
@@ -35,7 +35,7 @@ export default class LoginController extends Controller {
     if (!isValid)
       return;
 
-    this.toast.clearMessages();
+    this.toast.clear();
     let credentials = model.getProperties('identification', 'password');
 
     if (!ENV['dualClubhouse']) {

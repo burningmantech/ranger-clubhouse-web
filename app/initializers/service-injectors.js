@@ -11,7 +11,7 @@ const servicesToInject = {
   ajax:    'ajax',
   modal:   'modal',
   session: 'session',
-  toast:  'flashMessages',
+  toast:  'toast',
   house:   'house',
 };
 

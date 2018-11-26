@@ -45,8 +45,18 @@ module.exports = function(environment) {
 
     showAjaxErrors: true,
 
-    flashMessageDefaults: {
-      timeout: 5000,
+    'ember-toastr': {
+      toastrOptions: {
+        progressBar: false,
+        showMethod: 'show',
+        showDuration: 0,
+
+        closeMethod: 'hide',
+        closeDuration: 0,
+        hideDuration: 0,
+
+        positionClass: 'toast-top-center'
+      }
     }
 
   };

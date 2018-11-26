@@ -64,7 +64,7 @@ export default class PersonShiftManageComponent extends Component {
 
     if (!position) {
       // wrut'oh! not good...
-      this.toast.danger("BUG? Cannot find the position?");
+      this.toast.error("BUG? Cannot find the position?");
       return;
     }
 
@@ -74,7 +74,7 @@ export default class PersonShiftManageComponent extends Component {
     }).then((result) => {
       const callsign = this.person.callsign;
       if (result.meta.forced) {
-        this.toast.danger(`WARNING: The person was has not completed '${position.training_title}'. Because you are an admin, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
+        this.toast.error(`WARNING: The person was has not completed '${position.training_title}'. Because you are an admin, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
       } else {
         this.toast.success(`${callsign} is on shift. Happy Rangering!`);
       }

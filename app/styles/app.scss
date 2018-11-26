@@ -356,3 +356,20 @@ h2 {
 .alert-pref-address {
   width: 25%;
 }
+
+
+/*
+ * Toastr message overrides
+ */
+
+ @media only screen and (max-width: 799px) {
+   #toast-container > div {
+     width: 96% !important;
+   }
+ }
+
+ @media only screen and (min-width: 800px) {
+   #toast-container > div {
+     width:  500px !important;
+   }
+ }

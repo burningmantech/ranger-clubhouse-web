@@ -1,6 +1,5 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember-decorators/object';
-import { pluralize } from 'ember-inflector';
 import { validatePresence } from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 import moment from 'moment';
@@ -105,14 +104,14 @@ export default class AdminCreditsController extends Controller {
   }
 
   @action
-  async saveCredit(model, isValid, originalModel) {
+  async saveCredit(model, isValid) {
     if (!isValid) {
       return;
     }
 
     const isNew = model.get('isNew');
 
-    this.toast.clearMessages();
+    this.toast.clear();
 
     if (isNew) {
       const positionIds = model.get('position_id');

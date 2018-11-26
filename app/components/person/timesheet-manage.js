@@ -73,7 +73,7 @@ export default class PersonTimesheetManageComponent extends Component {
       return;
     }
 
-    this.toast.clearMessages();
+    this.toast.clear();
     this.house.saveModel(model, 'The timesheet entry has been successfully updated.', () => {
       this.set('editEntry', null);
     });
