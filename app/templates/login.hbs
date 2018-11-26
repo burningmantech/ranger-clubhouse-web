@@ -4,7 +4,7 @@
     <div class="col-md-6 col-sm-12">
       <h1>Howdy Ranger!</h1>
         {{#ch-form "auth" auth validator=loginValidations onSubmit=(action "submit") as |f|}}
-          {{f.input "identification" label="Email" }}
+          {{f.input "identification" label="Email" autofocus=true}}
           {{f.input "password" label="Password" type="password"}}
 
           <div class="row">

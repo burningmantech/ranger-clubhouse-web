@@ -48,12 +48,13 @@ export default class LoginController extends Controller {
     // Clubhouse 2.0
     //
 
-    return this.ajax.post(ENV['clubhouseClassicUrl']+'/?DMSc=security&DMSm=login&json=1',
+    return this.ajax.post('/?DMSc=security&DMSm=login&json=1',
       {
         headers: {
           // Avoid CORS pre-flight
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         },
+        host: ENV['clubhouseClassicUrl'],
         data: { email: credentials.identification, password: credentials.password },
       }
     ).then((response) => {
