@@ -24,9 +24,7 @@
     {{else}}
       <div class="form-row">
         <div class="col-auto">
-          <select class="form-control" onchange={{action "updateShiftPosition" value="target.value" on="change"}}>
-            {{ch-form/options-builder signinPositions signinPositionId}}
-          </select>
+          {{ch-form/select name="signin_position_id" controlClass="form-control" value=signinPositionId options=signinPositions onChange=(action "updateShiftPosition")}}
         </div>
         {{#if isPersonDirtTrained}}
         <div class="col">

@@ -18,7 +18,7 @@ export default class ChFormSelectComponent extends Component {
 
   @argument includeBlank;
 
-  @argument model;
+  @argument value;
   @argument name;
 
   attributeBindings = [ 'size', 'multiple', 'disabled', 'name' ];

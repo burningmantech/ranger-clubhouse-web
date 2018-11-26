@@ -5,12 +5,12 @@
   {{#each selectGroupOptions as |group|}}
     <optgroup label={{group.groupName}}>
       {{#each group.options as |opt|}}
-        <option value={{opt.value}} selected={{ch-form/contains (get model name) opt.value}}>{{opt.label}}</option>
+        <option value={{opt.value}} selected={{ch-form/contains value opt.value}}>{{opt.label}}</option>
       {{/each}}
     </optgroup>
   {{/each}}
 {{else}}
   {{#each selectOptions as |opt|}}
-    <option value={{opt.value}} selected={{ch-form/contains (get model name) opt.value}}>{{opt.label}}</option>
+    <option value={{opt.value}} selected={{ch-form/contains value opt.value}}>{{opt.label}}</option>
   {{/each}}
 {{/if}}

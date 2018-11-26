@@ -1,4 +1,2 @@
-  <select onchange={{action onChange value="target.value"}}>
-    {{ch-form/options-builder yearOptions year}}
-  </select>
+  {{ch-form/select name="year" value=year options=yearOptions onChange=onChange}}
   {{title}}

@@ -10,6 +10,11 @@ export default class PersonShiftManageComponent extends Component {
 
   @service  store;
 
+  signinPositionId = null;
+
+  didReceiveAttrs() {
+    this.set('signinPositionId', this.signinPositions.firstObject.id);
+  }
 
   // Build a position list with the postfix ' (untrained)' added
   // if the person has not been trained for that.
@@ -32,7 +37,6 @@ export default class PersonShiftManageComponent extends Component {
       signins.unshift(dirt);
     }
 
-    this.set('signinPositionId', signins.firstObject.id);
     return signins;
   }
 
@@ -63,9 +67,8 @@ export default class PersonShiftManageComponent extends Component {
     const position = this.positions.find((p) => p.id == position_id);
 
     if (!position) {
-      // wrut'oh! not good...
-      this.toast.error("BUG? Cannot find the position?");
-      return;
+      // default to first shif
+
     }
 
     this.ajax.request('timesheet/signin', {

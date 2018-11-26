@@ -20,7 +20,6 @@
 {{else if (eq type "select")}}
   {{ch-form/select
     name=name
-    model=model
     controlClass=controlClass
     disabled=disabled
     includeBlank=includeBlank
@@ -28,6 +27,7 @@
     onChange=(action "update")
     options=options
     size=size
+    value=(get model name)
   }}
 {{else if (eq type "radioGroup")}}
   {{#each radioOptions as |option idx|}}
