@@ -11,11 +11,10 @@ export default class ModalDialogComponent extends Component {
 
   didInsertElement() {
     super.didInsertElement(...arguments);
-
     const dialog = $('#dialog-box');
 
     // Setup modal, and attach to show & hide events
-    dialog.modal();
+    dialog.modal({backdrop: 'static'});
     dialog.modal().on('show.bs.modal', () => {
       return this.onShow ? this.onShow() : null;
     });
