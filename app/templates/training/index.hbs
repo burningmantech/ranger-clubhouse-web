@@ -1,0 +1,33 @@
+{{year-select (concat  "Trainer's Report - " training.title) year=year onChange=(action "changeYearAction") subheader=true}}
+
+{{#each trainingSessions as |group|}}
+  {{#ch-box (concat (shift-format group.slot.begins) " " group.slot.description)}}
+    {{#unless group.slot.active}}
+      {{#ch-alert "warning"}}
+        Slot has not been activated yet. No one will be able to sign up for this session until the slot has been activated.
+      {{/ch-alert}}
+    {{/unless}}
+    <b>Signups:</b> {{group.slot.signed_up}} of {{group.slot.max}}
+    {{#if (gte group.slot.signed_up group.slot.max)}}
+      <span class="text-danger"> (FULL)</span>
+    {{/if}}
+    <br>
+    {{#if group.trainers}}
+        {{#each group.trainers as |trainerGroup|}}
+          <b>{{trainerGroup.position_title}} ({{trainerGroup.trainers.length}}):</b>
+          {{#each trainerGroup.trainers as |trainer index|}}
+            {{if index ", "}}{{person-link person=trainer}}
+          {{else}}
+            <i>none found</i>
+          {{/each}}<br>
+        {{/each}}
+    {{else}}
+      {{#ch-alert "danger"}}
+        No trainer slots were found. Verify the trainer slot's description matches exactly this slot's description.
+      {{/ch-alert}}
+    {{/if}}
+    <div class="mt-2">
+      {{#link-to "training.slot" training.id group.slot.id class="btn btn-primary"}}Manage{{/link-to}}
+    </div>
+  {{/ch-box}}
+{{/each}}

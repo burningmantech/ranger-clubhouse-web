@@ -16,9 +16,7 @@ export default class PersonPositionFormComponent extends Component {
   positionForm = null;
 
   didReceiveAttrs() {
-    //super.didReceiveAttrs(...arguments);
-    const positionIds = this.positionIds;
-    this.set('positionForm', EmberObject.create({ positionIds }))
+    this.set('positionForm', EmberObject.create({ positionIds: this.positionIds }))
   }
 
   // Create a list of positions options to check
@@ -29,7 +27,7 @@ export default class PersonPositionFormComponent extends Component {
       }
 
       return this.positions.map((position) => {
-        return { label: position.title, value: position.id }
+        return [ position.title, position.id ];
       });
   }
 

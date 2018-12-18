@@ -57,7 +57,7 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Training</a>
             <div class="dropdown-menu">
-              <a href="{{cgo "training" "selectAll"}}" class="dropdown-item">Trainers Report</a>
+              {{#link-to "training.index" "dirt" class="dropdown-item"}}Trainer's Report{{/link-to}}
               {{#link-to "training.capacity" "dirt" class="dropdown-item"}}Training Capacity{{/link-to}}
               {{#link-to "training.multiple-enrollments" "dirt" class="dropdown-item"}}Multiple Enrollments Report{{/link-to}}
             </div>
@@ -69,7 +69,7 @@
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">ART Training</a>
             <div class="dropdown-menu">
               {{#each session.user.teacher.arts as |art|}}
-                <a href="{{cgo "training" "selectAll" position=art.id}}" class="dropdown-item">{{art.title}}</a>
+                {{#link-to "training.index" art.id class="dropdown-item"}}{{art.title}}{{/link-to}}
               {{/each}}
             </div>
           </li>

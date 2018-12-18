@@ -12,9 +12,9 @@ module.exports = function(defaults) {
       theme: 'bootstrap'
     },
 
-/*    'ember-cli-babel': {
+    'ember-cli-babel': {
       includePolyfill: true
-    },*/
+    },
 
     sassOptions: {
       onlyIncluded: true,

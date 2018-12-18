@@ -4,12 +4,31 @@ import {action} from "@ember-decorators/object";
 import $ from 'jquery';
 
 export default class EmailListComponent extends Component {
+  /*
+   * people list to show
+   * The object format is:
+   *  id, callsign, first_name, last_name, email
+   */
   @argument people;
+
+  // if true, scroll to the email list when list is rendered
+  @argument scrollOnRender = false;
+
+  @argument listId = 'email-list';
+
+  didRender() {
+    if (!this.scrollOnRender) {
+      return;
+    }
+
+    // Scroll the list into view
+    $('#'+this.listId+'-link').get(0).scrollIntoView();
+  }
 
   @action
   copyToClipboardAction() {
     // Find out the element to copy to the clipboard
-    const element = $("#email-list").get(0);
+    const element = $('#'+this.listId).get(0);
 
     if (!element) {
       this.toast.error("Cannot locate element");
@@ -36,8 +55,8 @@ export default class EmailListComponent extends Component {
       );
       return;
     }
-    selection.removeAllRanges();
 
+    selection.removeAllRanges();
     this.toast.success("Emails have been copied to the clipboard");
   }
 }

@@ -11,6 +11,12 @@
 * Array and object constants are Capitalized.
 * Class names are Capitalized.
 
+## CSS / Stylesheets
+
+* Try to use the Bootstrap CSS components before introducing new CSS code. There's a really good chance Bootstrap will have a solution.
+* By default Bootstrap supplies width utilities at 25%, 50%, 75%, and 100% widths (w-25, w-50, etc.) For Clubhouse 2.0, additional widths have been added starting at 5% and incrementing by 5% up to 100%. (w-5, w-10, w-15, etc.)
+* Style a table with the "table table-striped table-hover" classes.
+
 ## Use ES2015 classes
 
 Clubhouse 2.0 is using ember-decorators which automatically provide ES2015 blueprints for creating new routes, controllers, and components.
@@ -46,7 +52,7 @@ get computedValue() {
 }
 ```
 
-In routes, controllers, and components actions are in the actions:{} black. Use @action instead.
+Ember actions in routes, controllers, and components are in the "actions:{}" block. For Clubhouse 2.0, use the @action decorator instead.
 
 Replace this:
 
@@ -82,7 +88,7 @@ export default class MyComponent extends Component {
 }
 ```
 
-For component arguments use `@argument`:
+For component arguments use the `@argument` decorator. The decorator has the advantage of catching misspelled argument names and attempted use of arguments that were not declared.
 
 Replace this:
 
@@ -126,7 +132,7 @@ let berlinOutpost = EmberObject.create({ title: 'Berlin' });
 berlinOutpost.set('title', 'New Berlin');
 ```
 
-Do not bother using the set() method if the POJO will not be used within a template. Use the good old assignment operator:
+Do not bother using the set() method if the POJO will not be used within a template, or observed. Use the good old assignment operator:
 
 ```javascript
 berlinOutpost.title = 'New Berlin';
@@ -134,7 +140,7 @@ berlinOutpost.title = 'New Berlin';
 
 ### GOTCHAS
 
-* EmberJS will erroneously complain about a link-to statement does not have enough parameters supplied appropriate for the route when the backing router or controller has a syntax error or uses a non-existent variable.
+* EmberJS will erroneously complain about a link-to statement does not have enough parameters supplied for the route when the backing router or controller source code has a syntax error or uses a non-existent variable.
 
 * The testing framework will wait until ALL active timers have expired before allowing
 the test to finish and move on to the next one. e.g., an outstanding setTimeout() may cause grief.
@@ -159,6 +165,9 @@ In the model test - tests/model/user.js, the following should be done:
   assert.equal(model.isActive, true);
 ```
 
+### PRINTING
+
+* Use print-this component to print a block. The div should have 'd-none d-print-block' set to hide the content on the screen yet have it appear on the printed page.
 
 ### FORMS
 
@@ -167,4 +176,4 @@ In the model test - tests/model/user.js, the following should be done:
 
 - When using <select> be sure to set the select to a default value. Forms do not
   operate differently in a SPA environment. When 'submit' is clicked, the field
-  values stored in variables/object is used NOT what is currently set on the form itself.
+  values stored in variables/object is used, NOT what is currently set on the form itself.

@@ -3,6 +3,14 @@
     Uncaught exception happened when trying to load a resource.
     <p>{{error.message}}</p>
     <dl>
+      {{#if error.payload.errors}}
+      <dt>Error from server:</dt>
+      <dd>
+        {{#each error.payload.errors as |message|}}
+          {{message.title}}<br>
+        {{/each}}
+      </dd>
+      {{/if}}
       <dt>Message:</dt>
       <dd>{{error.message}}</dd>
 

@@ -2,7 +2,7 @@
 
 {{#if enrollments}}
 <p>
-<a href="#email-copy-link" class="btn btn-primary">Jump to email list</a>
+<a href="#email-list-link" class="btn btn-primary">Jump to email list</a>
 </p>
 <table class="table table-sm table-striped">
   <caption>{{pluralize enrollments.length "student"}} have multiple enrollments</caption>
@@ -18,7 +18,7 @@
   <tbody>
   {{#each enrollments as |person|}}
     <tr>
-      <td>{{#link-to "person.index" person.person_id}}{{person.callsign}}{{/link-to}}</td>
+      <td>{{person-link personId=person.person_id callsign=person.callsign}}</td>
       <td>{{mail-to person.email}}</td>
       <td>
         {{#each person.enrollments as |slot|}}

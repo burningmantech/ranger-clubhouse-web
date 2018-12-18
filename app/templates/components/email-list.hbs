@@ -1,6 +1,8 @@
-<a href="#" id="email-copy-link" class="btn btn-primary" {{action "copyToClipboardAction"}}>Copy emails to clipboard</a>
-<div id="email-list" class="mt-2">
-  {{#each people as |person|}}
-  "{{person.callsign}}" &lt;{{person.email}}&gt;,<br>
+<div class="mt-2">
+<a href="#" id="{{listId}}-link" class="btn btn-primary" {{action "copyToClipboardAction"}}>Copy emails to clipboard</a>
+</div>
+<div id={{listId}} class="mt-2">
+  {{#each people as |person idx|}}
+  {{#if idx}},<br>{{/if}}"{{person.callsign}}" &lt;{{person.email}}&gt;
   {{/each}}
 </div>

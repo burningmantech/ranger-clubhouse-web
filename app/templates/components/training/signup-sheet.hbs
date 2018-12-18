@@ -1,0 +1,67 @@
+{{#each studentPages as |studentPage idx|}}
+  <h1>{{year-format slot.begins}} {{training.title}} - {{slot.description}} - {{shift-format slot.begins}} <div class="float-right small">Page {{add idx 1}} of {{add studentPages.length 1}}</div></h1>
+
+  <table class="signup-table">
+    <tbody>
+    {{#each studentPage as |student|}}
+      <tr>
+        <td class="w-25">
+           <div class="signup-label">Handle</div>
+          {{student.callsign}}
+        </td>
+        <td class="w-25">
+          <div class="signup-label">Real Name</div>
+          {{student.first_name}} {{student.last_name}}
+        </td>
+
+        <td class="w-25">
+          <div class="signup-label">Sign Here</div>
+          &nbsp;
+        </td>
+
+        <td class="w-25">
+          <div class="signup-label">Notes</div>
+        </td>
+      </tr>
+      <tr class="signup-separator">
+        <td colspan="4">&nbsp;</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+{{/each}}
+
+<h1>{{year-format slot.begins}} {{training.title}} - {{slot.description}} - {{shift-format slot.begins}} Walk-Ins <div class="float-right small">Page {{add studentPages.length 1}} of {{add studentPages.length 1}}</div></h1>
+<table class="signup-table">
+  <tbody>
+    {{#number-of-times times=9}}
+    <tr>
+      <td class="w-25">
+        <div class="signup-label">Handle (if known)</div>
+      </td>
+      <td class="w-25">
+        <div class="signup-label">Real Name</div>
+      </td>
+
+      <td class="w-25">
+        <div class="signup-label">Sign Here</div>
+      </td>
+
+      <td class="w-25">
+        <div class="signup-label">Notes</div>
+      </td>
+    </tr>
+    <tr>
+      <td class="w-50" colspan="2">
+        <div class="signup-label">Email Address</div>
+      </td>
+      <td class="w-50" colspan="2">
+        <div class="signup-label">Phone Number</div>
+      </td>
+    </tr>
+    <tr class="signup-separator">
+      <td colspan="4">&nbsp;</td>
+    </tr>
+    {{/number-of-times}}
+  </tbody>
+</table>

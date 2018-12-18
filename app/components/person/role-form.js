@@ -13,9 +13,7 @@ export default class PersonRoleFormComponent extends Component {
   @argument onCancel = null;
 
   didReceiveAttrs() {
-    //super.didReceiveAttrs(...arguments);
-    const roleIds = this.roleIds;
-    this.set('roleForm', EmberObject.create({ roleIds }))
+    this.set('roleForm', EmberObject.create({ roleIds: this.roleIds }))
   }
 
   // Create a list of roles options to check
@@ -26,7 +24,7 @@ export default class PersonRoleFormComponent extends Component {
       }
 
       return this.roles.map((role) => {
-        return { label: role.title, value: role.id }
+        return [ role.title, role.id ];
       });
   }
 

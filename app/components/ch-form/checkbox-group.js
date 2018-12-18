@@ -20,8 +20,6 @@ export default class ChFormCheckboxGroupComponent extends Component {
   @argument value = '';
 
   @argument options = null;
-  @argument labelProperty =  'label';
-  @argument valueProperty = 'value';
   @argument cols =  3;
 
   // Callback for when the group updates (i.e., the user clicks on stuff)
@@ -30,8 +28,6 @@ export default class ChFormCheckboxGroupComponent extends Component {
   @computed('options')
   get checkboxColumns() {
     const options = this.options || [];
-    const labelProperty = this.labelProperty;
-    const valueProperty = this.valueProperty;
     let values = this.value;
 
     if (typeOf(values) != 'array') {
@@ -46,19 +42,20 @@ export default class ChFormCheckboxGroupComponent extends Component {
 
     return columns.map((column) => {
       return column.map((opt) => {
+        const type = typeOf(opt);
         let label, value;
-        const optType = typeOf(opt);
 
-        if (optType == 'object') {
-          label = opt[labelProperty];
-          value = opt[valueProperty];
-        } else if (optType == 'array') {
+        if (type == 'object' && opt.id) {
+          label = opt.title
+          value = opt.id
+        // Simple [ 'label', value ]
+        } else if (type == 'array') {
           label = opt[0];
           value = opt[1];
         } else {
+          // Or just [  value ]
           label = value = opt;
         }
-
         const field =  MultiCheckboxField.create({
           label,
           value,

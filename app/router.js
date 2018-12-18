@@ -67,8 +67,12 @@ Router.map(function() {
   });
   this.route('logout');
   this.route('training', { path: '/training/:position_id' }, function() {
+    this.route('index', { path: '/'});
+    this.route('slot', { path: '/slot/:slot_id'} );
     this.route('capacity');
     this.route('multiple-enrollments');
+    this.route('people-training-completed');
+    this.route('untrained-people');
   });
   this.route('debug');
 });

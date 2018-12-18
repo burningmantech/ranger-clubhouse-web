@@ -1,0 +1,98 @@
+<div class="trainers-sheet d-none d-print-block">
+<h1>{{year-format slot.begins}} Trainer's Report &mdash; {{training.title}}: {{slot.description}} {{shift-format slot.begins}}</h1>
+
+{{#if trainers}}
+<dl class="mb-2">
+  {{#each trainers as |group|}}
+  <dt>{{group.position_title}} ({{group.trainers.length}}):</dt>
+  <dd>
+    {{#each group.trainers as |trainer idx|}}
+      {{if idx ", "}}{{trainer.callsign}} ({{trainer.first_name}} {{trainer.last_name}})
+    {{else}}
+      <i>No trainers were found.</i>
+    {{/each}}
+  </dd>
+  {{/each}}
+</dl>
+{{else}}
+  <strong>No trainer slots were found. Verify the trainer slot's description matches exactly this slot's description.</strong>
+{{/if}}
+
+<table class="trainers-report">
+  <caption>Trainees</caption>
+  <thead>
+    <tr>
+      <th>Callsign</th>
+      <th>Status</th>
+      <th>Passed?</th>
+      <th>Years</th>
+      <th>Teams</th>
+      <th>Name</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each studentGroups as |group groupIdx|}}
+      {{#if groupIdx}}
+        <tr class="student-group-separator">
+          <td colspan="7">
+            {{group.groupName}}
+          </td>
+        </tr>
+      {{/if}}
+      {{#each group.students as |student|}}
+        <tr>
+          <td>{{student.callsign}}</td>
+          <td class="text-center">
+            {{student.status}}
+            {{#if student.is_art_alpha}}
+            <br><small>ART Alpha</small>
+            {{/if}}
+          </td>
+          <td class="text-center">
+            {{#if student.scored}}
+              {{if student.passed "Y" "N"}}
+            {{else}}
+              -
+            {{/if}}
+          </td>
+          <td class="text-right">
+            {{student.years}}
+          </td>
+          <td>
+            {{student.teamTitles}}
+          </td>
+          <td>
+            {{student.first_name}} {{student.last_name}}
+          </td>
+          <td>
+            {{student.email}}
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="7" class="text-center">
+            <i>There are no {{group.groupName}} students?</i>
+          </td>
+        </tr>
+      {{/each}}
+    {{/each}}
+  </tbody>
+</table>
+
+<p>
+  Teams: Ech = Echelon, Env = RSC Envoy, Int = Intercept, Log = Logistics,
+  Mnt = Mentor, Op = Operator, SL = Shift Lead, Snd = Sandman, Tech = Tech Team,
+  Trg = Training
+</p>
+<p>
+  A '-' in the passed column usually indicates the training session has not
+  happened yet and/or no pass information has been recorded.
+</p>
+<p>
+  Trainers: please remember that inactive and retired Rangers need to take the
+  full day training; please email your inactive and retired trainees in advance
+  so they aren't surprised by this.  Thanks!
+</p>
+
+</div>

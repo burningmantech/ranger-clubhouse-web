@@ -78,13 +78,14 @@ module.exports = function(environment) {
       'media-src': "'self' *"
     }
 
-    ENV.dualClubhouse = true;
-    ENV.clubhouseClassicUrl = 'http://localhost:9000';
+    //ENV.dualClubhouse = true;
+    //ENV.clubhouseClassicUrl = 'http://localhost:9000';
 
-    ENV['ember-simple-auth-token'].serverTokenEndpoint = 'http://localhost:8000/auth/login'
-    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = 'http://localhost:8000/auth/refresh'
+    ENV['api-server'] = 'http://localhost:8000';
 
-    ENV['api-server'] = 'http://localhost:8000'
+    ENV['ember-simple-auth-token'].serverTokenEndpoint = ENV['api-server']+'/auth/login';
+    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = ENV['api-server']+'/auth/refresh';
+
 
     ENV['ember-cli-mirage'] = {
       enabled: false
@@ -123,9 +124,9 @@ module.exports = function(environment) {
     ENV.dualClubhouse = true;
     ENV.clubhouseClassicUrl = '/classic';
 
-    ENV['ember-simple-auth-token'].serverTokenEndpoint = '/api/auth/login';
-    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = '/api/auth/refresh';
     ENV['api-server'] = '/api';
+    ENV['ember-simple-auth-token'].serverTokenEndpoint = ENV['api-server']+'/auth/login';
+    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = ENV['api-server']+'/auth/refresh';
   }
 
   return ENV;

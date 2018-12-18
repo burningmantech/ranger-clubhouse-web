@@ -5,8 +5,10 @@
 $kakhi: #d2b48c;
 
 $theme-colors: (
-  "primary": #d2b48c,
-  "khaki": $kakhi
+  "primary": $kakhi,
+  "khaki": $kakhi,
+  "gray": #dcdcdc,
+  "light-red": #ff6666,
 );
 
 // bootstrap set the link-color to the primary color
@@ -32,6 +34,31 @@ $h6-font-size:                $font-size-base;
 
 $modal-header-padding: 0.75rem !important;
 
+// Add additional w-XX width sizes beyond what bootstrap provides.
+$sizes: (
+     5: 5%,
+    10: 10%,
+    15: 15%,
+    20: 20%,
+    25: 25%,
+    30: 30%,
+    35: 35%,
+    40: 40%,
+    45: 45%,
+    50: 50%,
+    55: 55%,
+    60: 60%,
+    65: 65%,
+    70: 70%,
+    75: 75%,
+    80: 80%,
+    85: 85%,
+    90: 90%,
+    95: 95%,
+    100: 100%,
+    auto: auto
+  );
+
 @import "bootstrap-custom";
 
 // Addons
@@ -43,7 +70,7 @@ $modal-header-padding: 0.75rem !important;
 @import "schedule";
 @import "sidebar";
 @import "timesheet-log";
-
+@import "training-print";
 
 /* roboto-mono-regular - latin */
 
@@ -61,6 +88,18 @@ $modal-header-padding: 0.75rem !important;
   font-style: normal;
   font-weight: 700;
   src: local('Roboto Mono Bold'), local('RobotoMono-Bold'), url("webfonts/RobotoMono-Bold.ttf") format('truetype');
+}
+
+@media print {
+  h1 { page-break-before: always; font-size: 1.2rem; }
+
+  body {
+    margin: 1.6cm;
+    font: 13pt Verdana, "Times New Roman", Times, serif;
+    line-height: 1.3;
+    background: #fff !important;
+    color: #000;
+  }
 }
 
 @media not print {

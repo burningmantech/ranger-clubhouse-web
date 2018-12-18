@@ -67,8 +67,14 @@ Additional arguments are:
 * label: a string to display above the input field.
 * hint: text which placed below the input field used to inform the user.
 * options: an array used for building select, radioGroup, and checkboxGroup fields.
-  The format each array index may be a single element used for both the option text
+  Each element may be:
+    - a single value used for both the option text
+    - two elements array: text and value
+    - a object with id for the value, and title for the text (this matches ember-powerselect)
+    - for selects: group may be defined by a object with the key groupName as the title, and
+      options. (e.g., `{ groupName: "Fruits", options: [ 'banana', 'orange'] }`)
   and value, or a two element sub-array with a text, and value.
+* multiple: for select elements, the field may allow multiple option selections.
 * HTML properties: size, maxlength, rows, cols, disabled, autocomplete, placeholder
 * autofocus: if set true the cursor will be placed on this field when the form is rendered.
 * inline: if set true the field will be rendered on the same row as the other fields. By default, a field will be on its own row.

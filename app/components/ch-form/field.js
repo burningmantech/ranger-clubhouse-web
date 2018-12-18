@@ -1,4 +1,5 @@
 import Component from '@ember/component';
+import EmberObject from '@ember/object';
 import { action, computed } from '@ember-decorators/object';
 import { tagName } from '@ember-decorators/component';
 import { argument } from '@ember-decorators/argument';
@@ -146,17 +147,24 @@ export default class ChFormFieldComponent extends Component {
 
   @computed('options')
   get radioOptions() {
-    const options = [];
+    return this.options.map((opt) => {
+      const type = typeOf(opt);
+      let label, value;
 
-    this.options.forEach((opt) => {
-      if (typeOf(opt) == 'array') {
-        options.push({ label: opt[0], value: opt[1]});
+      if (type == 'object' && opt.id) {
+        label = opt.title
+        value = opt.id
+      // Simple [ 'label', value ]
+      } else if (type == 'array') {
+        label = opt[0];
+        value = opt[1];
       } else {
-        options.push({ label: opt, value: opt});
+        // Or just [  value ]
+        label = value = opt;
       }
-    });
 
-    return options;
+      return EmberObject.create({ label, value });
+    });
   }
 
   // ember-changeset-validate uses model.error (singular)

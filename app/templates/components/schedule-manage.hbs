@@ -109,7 +109,12 @@
         <tbody>
           {{#each group.slots as |slot|}}
             <tr class="{{if slot.person_assigned "table-warning"}}">
-              <td class="schedule-time" data-title="From">{{shift-format slot.slot_begins}}</td>
+              <td class="schedule-time" data-title="From">
+                {{#if slot.person_assigned}}
+                  {{fa-icon "check"}}
+                {{/if}}
+                {{shift-format slot.slot_begins}}
+              </td>
               <td class="schedule-time" data-title="To">{{shift-format slot.slot_ends}}</td>
               <td class="schedule-credits td-number" data-title="Credits">{{credits-format slot.credits}}</td>
               <td class="schedule-description" data-title="Description">{{slot-info-link slot.slot_description slot.slot_url}}</td>

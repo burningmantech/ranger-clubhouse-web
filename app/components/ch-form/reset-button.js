@@ -5,12 +5,6 @@ import { argument } from '@ember-decorators/argument';
 @tagName('')
 export default class ChFormResetButtonComponent extends Component {
   @argument resetAction;
-  @argument label;
+  @argument label = 'Reset';
   @argument disabled;
-
-  constructor() {
-    super(...arguments);
-
-    this.label = this.label || 'Reset';
-  }
 }

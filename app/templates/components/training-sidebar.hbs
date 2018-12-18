@@ -1,8 +1,12 @@
 {{#ch-sidebar}}
-  {{#ch-sidebar-group "TRAINING"}}
-    {{ch-sidebar-link (cgo "training" "selectAll") title="Trainer's Report" icon="list-alt" iconType="r"}}
+  {{#ch-sidebar-group training.title}}
+    {{ch-sidebar-link "training.index" title="Trainer's Report" icon="list-alt" iconType="r"}}
     {{ch-sidebar-link "training.capacity" training.id title="Training Capacity" icon="battery-half" iconType="s"}}
     {{ch-sidebar-link "training.multiple-enrollments" training.id title="Multiple Enrollments" icon="copy" iconType="s"}}
+    {{ch-sidebar-link "training.people-training-completed" training.id title="Training Completed" icon="check-square" iconType="s"}}
+    {{#if training.is_art}}
+      {{ch-sidebar-link "training.untrained-people" training.id title="Untrained People" icon="exclamation-circle" iconType="s"}}
+    {{/if}}
     {{ch-sidebar-collapse}}
   {{/ch-sidebar-group}}
 

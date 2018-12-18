@@ -1,9 +1,16 @@
 import Route from '@ember/routing/route';
+import { Role } from 'clubhouse/constants/roles';
+
+/*
+ * Top level training route "/training"
+ *
+ * Admins, Trainers, VC, and Mentors are allowed.
+ */
 
 export default class TrainingRoute extends Route {
   beforeModel() {
-    if (!this.session.user.teacher.is_trainer) {
-      this.toast.error("Sorry, you do not have the privileges to access this");
+    if (!this.session.user.hasRole([ Role.ADMIN, Role.TRAINER, Role.VC, Role.MENTOR])) {
+      this.toast.error("Sorry, you need to be a trainer, mentor, VC or Admin to access this.");
       this.transitionTo('me.overview');
     }
   }
