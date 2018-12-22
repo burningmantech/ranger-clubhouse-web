@@ -73,6 +73,7 @@
     "node": "6.* || 8.* || >= 10.*"
   },
   "dependencies": {
+    "double-metaphone": "^1.0.3",
     "ember-module-migrator": "^0.8.0",
     "global": "^4.3.2",
     "jquery-datetimepicker": "^2.5.20",

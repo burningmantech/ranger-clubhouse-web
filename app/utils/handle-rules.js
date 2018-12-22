@@ -1,4 +1,4 @@
-import doubleMetaphone from 'npm:double-metaphone';
+import doubleMetaphone from 'double-metaphone';
 
 /** Data object encapsulating a potential problem identified by a handle rule. */
 export class HandleConflict {

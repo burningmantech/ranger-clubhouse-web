@@ -44,9 +44,9 @@
                   {{#if conflict.conflictingHandle}}
                     {{#with conflict.conflictingHandle as |handle|}}
                       {{#if handle.personId}}
-                        <a href="{{cgo "person" "select" (concat "personId=" handle.personId)}}" target="_blank" rel="noopener">
+                        {{#link-to "person.index" handle.personId target="_blank" rel="noopener"}}
                           {{handle.entityType}} {{handle.name}}
-                        </a>
+                        {{/link-to}}
                       {{else}}
                         {{handle.entityType}} {{handle.name}}
                       {{/if}}
@@ -76,9 +76,9 @@
           <tr>
             <td>
               {{#if handle.personId}}
-                <a href="{{cgo "person" "select" (concat "personId=" handle.personId)}}" target="_blank" rel="noopener">
+                {{#link-to "person.index" handle.personId target="_blank" rel="noopener"}}
                   {{handle.name}}
-                </a>
+                {{/link-to}}
               {{else}}
                 {{handle.name}}
               {{/if}}
