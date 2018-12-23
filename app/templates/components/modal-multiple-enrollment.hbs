@@ -13,7 +13,7 @@
     {{if dialog.message.isMe "you have" "the person has"}} been added to the training session. Hope you know what you are doing!
   {{else}}
     Multiple enrollments for training sessions are not allowed.
-    Contact {{mail-to (config 'VCEmail')}} for help.
+    Contact {{mail-to (config "VCEmail")}} for help.
   {{/if}}
 </p>
 {{/modal-dialog}}
