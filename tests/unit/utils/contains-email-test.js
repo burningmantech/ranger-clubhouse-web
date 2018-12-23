@@ -5,7 +5,7 @@ module('Unit | Utility | contains-email', function(/*hooks*/) {
 
   // Replace this with your real tests.
   test('it works', function(assert) {
-    let result = containsEmail();
+    let result = containsEmail('test@example.com');
     assert.ok(result);
   });
 });

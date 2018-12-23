@@ -17,9 +17,11 @@ module('Unit | Model | person', function(hooks) {
 
     let model = run(() => store.createRecord('person', { status: 'bonked' }));
     assert.equal(model.isRanger, false);
+    assert.equal(model.isNotRanger, true);
 
     run(() => model.set('status', 'active'));
     assert.equal(model.isRanger, true);
+    assert.equal(model.isNotRanger, false);
   });
 
   test('hasRole works', function(assert) {

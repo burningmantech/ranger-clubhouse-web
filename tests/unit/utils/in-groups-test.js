@@ -3,9 +3,23 @@ import { module, test } from 'qunit';
 
 module('Unit | Utility | in-groups', function(/*hooks*/) {
 
-  // Replace this with your real tests.
-  test('it works', function(assert) {
-    let result = inGroups();
-    assert.ok(result);
+  test('empty', function(assert) {
+    assert.deepEqual(inGroups([], 5), []);
+  });
+
+  test('justOne', function(assert) {
+    assert.deepEqual(inGroups([1, 2, 3], 1), [[1, 2, 3]]);
+  });
+
+  test('twoOdd', function(assert) {
+    assert.deepEqual(inGroups([1, 2, 3], 2), [[1, 2], [3]]);
+  });
+
+  test('twoEven', function(assert) {
+    assert.deepEqual(inGroups([1, 2, 3, 4], 2), [[1, 2], [3, 4]]);
+  });
+
+  test('notEnough', function(assert) {
+    assert.deepEqual(inGroups([1, 2, 3], 5), [[1], [2], [3]]);
   });
 });
