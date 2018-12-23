@@ -155,8 +155,9 @@ export default class ScheduleManageComponent extends Component {
     return reasons[reasonIndex];
   }
 
-  handleErrorJoinResponse(status, slot) {
+  handleErrorJoinResponse(result, slot) {
     const modal = this.modal;
+    const status = result.status;
 
     switch (status) {
       case 'full':
@@ -179,8 +180,15 @@ export default class ScheduleManageComponent extends Component {
         modal.info('Inactive Shift', 'The shift has not been activated and no signups are not allowed yet. Please check back later and try again.');
         break;
 
+      case 'multiple-enrollment':
+        modal.open(
+          'modal-multiple-enrollment', 'Multiple Enrollments Not Allowed',
+          { slots: result.slots, is_me: (this.person.id == this.session.user.id ) }
+        );
+        break;
+
       default:
-        modal.danger('Unknown status response', `Sorry, I did not understand the status response of [${status}] from the server`);
+        modal.info('Unknown status response', `Sorry, I did not understand the status response of [${status}] from the server`);
         break;
     }
   }
@@ -188,6 +196,7 @@ export default class ScheduleManageComponent extends Component {
   joinSlotRequest(slot) {
     const personId = this.person.id;
     const slotId = slot.id;
+    const isMe = (personId == this.session.user.id);
 
     this.ajax.request(`person/${personId}/schedule`, {
       method: 'POST',
@@ -196,13 +205,22 @@ export default class ScheduleManageComponent extends Component {
         if (result.status == 'success') {
           slot.set('person_assigned', true);
           slot.set('slot_signed_up', result.signed_up);
-          if (result.forced) {
-            this.toast.success('Successfully signed up, and the shift is overcapacity. Hope you know what you are doing!');
+          if (result.full_forced) {
+              this.toast.success('Successfully signed up, and the shift is overcapacity. Hope you know what you are doing!');
+          } else if (result.trainer_forced) {
+            this.toast.success('Successfully signed up, and the trainer is now signed up for multiple training sessions.');
+          } else if (result.multiple_forced) {
+            this.modal.open('modal-multiple-enrollment', 'Sign Up Forced - Other Enrollments Found',
+              {
+                slots: result.slots,
+                isMe,
+                forced: true,
+              });
           } else {
             this.toast.success('Successfully signed up.');
           }
         } else {
-          this.handleErrorJoinResponse(result.status, slot);
+          this.handleErrorJoinResponse(result, slot);
         }
     }).catch((response) => {
       this.house.handleErrorResponse(response);
@@ -243,7 +261,7 @@ export default class ScheduleManageComponent extends Component {
         }).then((result) => {
           slot.set('person_assigned', false);
           slot.set('slot_signed_up', result.signed_up);
-          this.toast.success('The shift sign up has been removed.');
+          this.toast.success('The shift as been removed from the schedule.');
         }).catch((response) => { this.house.handleErrorResponse(response); });
       }
     );
