@@ -42,8 +42,10 @@ export default Mixin.create({
   isNotRanger: computed('status', function() {
     const status = this.status;
 
+    // TODO shouldn't resigned/retired/uberbonked/etc. be in this list?
     return (status == PersonStatus.AUDITOR
         || status == PersonStatus.ALPHA
+        || status == PersonStatus.BONKED
         || status == PersonStatus.PROSPECTIVE
         || status == PersonStatus.PAST_PROSPECTIVE
         || status == PersonStatus.PROSPECTIVE_WAITLIST);

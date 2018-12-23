@@ -45,13 +45,13 @@ export default class SlotModel extends DS.Model {
   @computed('position_id', 'position')
   get position_title() {
     const position = this.position;
-    return position ? position.title : `Position #${position.title}`;
+    return position ? position.title : `Position #${this.position_id}`;
   }
 
   @computed('trainer_slot.position.title')
   get trainer_slot_title() {
     const trainer = this.trainer_slot;
-    return (trainer && trainer.position) ? trainer.position.title : `Position #{trainer.position_id}`;
+    return (trainer && trainer.position) ? trainer.position.title : `Position #${this.trainer_slot_id}`;
 
   }
 }

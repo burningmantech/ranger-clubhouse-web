@@ -1,3 +1,7 @@
+/**
+ * Returns an array containing the elements in the original
+ * array split into at most groupCount smaller arrays.
+ */
 export default function inGroups(array, groupCount) {
   const arrayLength = array.length;
 
