@@ -9,9 +9,34 @@ module('Integration | Helper | ch-form/contains', function(hooks) {
   // Replace this with your real tests.
   test('it renders', async function(assert) {
     this.set('inputValue', '1234');
+    this.set('expectedValue', '1234');
 
-    await render(hbs`{{ch-form/contains inputValue}}`);
+    await render(hbs`{{ch-form/contains expectedValue inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), '1234');
+    assert.dom(this.element).hasText('true');
+  });
+
+  test('it returns false', async function(assert) {
+    this.set('inputValue', 'foo');
+    this.set('expectedValue', 'bar');
+
+    await render(hbs`{{ch-form/contains expectedValue inputValue}}`);
+
+    assert.dom(this.element).hasText('false');
+  });
+
+  test('it accepts arrays', async function(assert) {
+    this.set('inputValue', 'foo');
+    this.set('expectedValue', ['bar', 'baz', 'foo']);
+
+    await render(hbs`{{ch-form/contains expectedValue inputValue}}`);
+
+    assert.dom(this.element).hasText('true');
+
+    this.set('inputValue', 'qux');
+
+    await render(hbs`{{ch-form/contains expectedValue inputValue}}`);
+
+    assert.dom(this.element).hasText('false');
   });
 });
