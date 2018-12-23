@@ -35,43 +35,43 @@ Alphas: {{alphaCount}}<br>
 {{#if training.is_art}}
 A '*' by a person's status indicate an ART Alpha.
 {{/if}}
-<table class="table table-sm table-hover">
-  <caption>{{pluralize students.length "student"}} {{passedCount}} passed</caption>
-  <thead>
-    <tr>
-      <th class="w-20">Callsign</th>
-      <th class="w-10">Status</th>
-      <th class="w-5">Passed?</th>
-      <th class="w-5">Rank</th>
-      <th class="w-45">Comment</th>
-      <th class="w-15">Actions</th>
+  <table class="table table-sm table-hover">
+    <caption>{{pluralize students.length "student"}} {{passedCount}} passed</caption>
+    <thead>
+      <tr>
+        <th class="w-20">Callsign</th>
+        <th class="w-10">Status</th>
+        <th class="w-5">Passed?</th>
+        <th class="w-5">Rank</th>
+        <th class="w-45">Comment</th>
+        <th class="w-15">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{#each students as |student|}}
+    <tr class="{{if (or student.is_retired student.is_inactive) "bg-warning"}}">
+      <td class="w-20">{{#if (or student.is_retired student.is_inactive)}}{{fa-icon "exclamation-triangle"}}{{/if}}{{person-link person=student}}</td>
+      <td class="w-10">{{student.status}}{{#if student.is_art_alpha}}*{{/if}}</td>
+      <td class="w-5">{{input type="checkbox" checked=student.passed}}</td>
+      <td class="text-center w-5">
+        {{#if student.need_ranking}}
+          {{ch-form/select name=(concat "student" student.id) value=student.rank onChange=(action "changeRankAction" student) includeBlank=true options=rankOptions}}
+        {{else}}
+          &nbsp;
+        {{/if}}
+      </td>
+      <td class="w-45">
+        {{input type="text" value=student.notes size=40}}
+      </td>
+      <td class="w-15">
+        <button class="btn btn-secondary btn-sm" title="View Student" {{action "viewStudentAction" student}}>{{fa-icon "user" type="far"}}</button>
+        <button class="btn btn-danger btn-sm" title="Delete Student" {{action "removeStudentAction" student}}>{{fa-icon "trash-alt" type="far"}}</button>
+      </td>
     </tr>
-  </thead>
-  <tbody>
-  {{#each students as |student|}}
-  <tr class="{{if (or student.is_retired student.is_inactive) "bg-warning"}}">
-    <td class="w-20">{{#if (or student.is_retired student.is_inactive)}}{{fa-icon "exclamation-triangle"}}{{/if}}{{person-link person=student}}</td>
-    <td class="w-10">{{student.status}}{{#if student.is_art_alpha}}*{{/if}}</td>
-    <td class="w-5">{{input type="checkbox" checked=student.passed}}</td>
-    <td class="text-center w-5">
-      {{#if student.need_ranking}}
-        {{ch-form/select name=(concat "student" student.id) value=student.rank onChange=(action "changeRankAction" student) includeBlank=true options=rankOptions}}
-      {{else}}
-        &nbsp;
-      {{/if}}
-    </td>
-    <td class="w-45">
-      {{input type="text" value=student.notes size=40}}
-    </td>
-    <td class="w-15">
-      <button class="btn btn-secondary btn-sm" title="View Student" {{action "viewStudentAction" student}}>{{fa-icon "user" type="far"}}</button>
-      <button class="btn btn-danger btn-sm" title="Delete Student" {{action "removeStudentAction" student}}>{{fa-icon "trash-alt" type="far"}}</button>
-    </td>
-  </tr>
-  {{/each}}
-  </tbody>
+    {{/each}}
+    </tbody>
 
-</table>
+  </table>
 <button class="btn btn-primary" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}>{{if isSubmitting "Saving" "Save All"}}</button>
 <button class="btn btn-secondary" {{action "printTrainersReportAction"}}>Trainers Report</button>
 <button class="btn btn-secondary" {{action "printSignupSheetAction"}}>Signup Sheet</button>

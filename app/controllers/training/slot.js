@@ -172,8 +172,12 @@ export default class TrainingSlotController extends Controller {
         modal.info('Inactive Shift', 'The shift has not been activated and no signups are not allowed yet. Please check back later and try again.');
         break;
 
+      case 'multiple-enrollment':
+        modal.open('modal-multiple-enrollment', 'Multiple Enrollments Not Allowed', { slots: result.slots, is_me: (person.id == this.session.user.id) });
+        break;
+
       default:
-        modal.danger('Unknown status response', `Sorry, I did not understand the status response of [${result.status}] from the server`);
+        modal.info('Unknown status response', `Sorry, I did not understand the status response of [${result.status}] from the server`);
         break;
     }
   }
@@ -195,7 +199,20 @@ export default class TrainingSlotController extends Controller {
       }
 
       this.set('searchForm', null);
-      this.toast.success(`${person.callsign} has been added to the session.`);
+      if (result.full_forced) {
+          this.toast.success('Successfully signed up, and the shift is overcapacity. Hope you know what you are doing!');
+      } else if (result.trainer_forced) {
+        this.toast.success('Successfully signed up, and the trainer is now signed up for multiple training sessions.');
+      } else if (result.multiple_forced) {
+        this.modal.open('modal-multiple-enrollment', 'Sign Up Forced - Other Enrollments Found',
+          {
+            slots: result.slots,
+            isMe: (person.id == this.session.user.id),
+            forced: true,
+          });
+      } else {
+        this.toast.success('Successfully signed up.');
+      }
 
       // Refresh the list
       return this.ajax.request(`training-session/${this.slot.id}`).then((results) => {
