@@ -33,6 +33,7 @@
     "ember-cli-app-version": "^3.2.0",
     "ember-cli-babel": "^6.16.0",
     "ember-cli-bundle-analyzer": "^0.0.4",
+    "ember-cli-custom-assertions": "^0.1.1",
     "ember-cli-dependency-checker": "^3.0.0",
     "ember-cli-eslint": "^4.2.3",
     "ember-cli-flash": "^1.7.0",
@@ -79,6 +80,7 @@
     "ember-module-migrator": "^0.8.0",
     "global": "^4.3.2",
     "jquery-datetimepicker": "^2.5.20",
-    "jscodeshift": "^0.5.1"
+    "jscodeshift": "^0.5.1",
+    "lodash": "^4.17.11"
   }
 }

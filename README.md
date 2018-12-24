@@ -65,8 +65,17 @@ Make use of the many generators for code, try `ember help generate` for more det
 
 ### Running Tests
 
-* `ember test`
-* `ember test --server`
+*   `ember test` runs all tests once, launching and quitting a browser
+*   `ember test --filter=unit` runs all tests whose module declaration includes “unit”
+*   `ember test --server` runs tests when changes are made
+*   Visiting http://localhost:4200/tests in a browser will run tests (optionally filtered) when
+    changes are made to any code or test
+
+Ember uses [QUnit](https://api.qunitjs.com/) for tests.  QUnit’s builtin assertions aren’t
+particularly expressive.  You can add custom assertions to the assert object in the
+[tests/assertions] directory, e.g. `assert.greaterThan(result, 5)`.  See
+[ember-cli-custom-assertions](https://github.com/dockyard/ember-cli-custom-assertions) for
+details.
 
 ### Linting
 
