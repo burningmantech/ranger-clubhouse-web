@@ -2,8 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import Object from '@ember/object';
-import $ from 'jquery';
+import EmberObject from '@ember/object';
 
 module('Integration | Component | ch form', function(hooks) {
   setupRenderingTest(hooks);
@@ -11,21 +10,19 @@ module('Integration | Component | ch form', function(hooks) {
   test('it renders a basic form', async function(assert) {
     // Template block usage:
 
-    const model = Object.create({ field1: 'something' });
+    const formModel = EmberObject.create({ field1: 'some value' });
 
-    this.set('model', model);
+    this.set('formModel', formModel);
     await render(hbs`
-      {{#ch-form "someform" model as |f|}}
+      {{#ch-form "someform" formModel as |f|}}
         Some form text
-        {{f.input 'field1' type="text"}}
+        {{f.input "field1" type="text"}}
       {{/ch-form}}
     `);
 
-    const form = $('form');
-    assert.equal(form.text().trim(), 'Some form text');
-
-    const input = $('input[type="text"]');
-    assert.equal(input.attr('name'), 'field1');
-    assert.equal(input.attr('value'), 'something');
+    assert.dom('form').hasText('Some form text');
+    const input = assert.dom('input[type="text"]');
+    input.hasAttribute('name', 'field1');
+    input.hasValue('some value');
   });
 });

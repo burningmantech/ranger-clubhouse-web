@@ -1,0 +1,3 @@
+[2,"onerror",20,"app/app.js","});\n\nEmber.onerror = buildErrorHandler('Ember.onerror', (error) => {\n  if (Ember.testing) {\n    throw error;"]
+[2,"testing",21,"app/app.js","\nEmber.onerror = buildErrorHandler('Ember.onerror', (error) => {\n  if (Ember.testing) {\n    throw error;\n  }"]
+[2,"Handlebars",5,"app/helpers/nl2br.js","import Ember from 'ember';\n\nconst escapeExpression = Ember.Handlebars.Utils.escapeExpression;\n\nexport function nl2br([ text ]/*, hash*/) {"]

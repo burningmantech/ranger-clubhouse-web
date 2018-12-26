@@ -29,6 +29,7 @@ module.exports = {
     {
       parser: 'babel-eslint',
       files: [
+        '.eslintrc.js',
         '.template-lintrc.js',
         'ember-cli-build.js',
         'testem.js',

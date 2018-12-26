@@ -12,6 +12,6 @@ module('Integration | Helper | year-format', function(hooks) {
 
     await render(hbs`{{year-format inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), '1234');
+    assert.dom(this.element).hasText('1234');
   });
 });

@@ -12,6 +12,6 @@ module('Integration | Helper | general-support-email', function(hooks) {
 
     await render(hbs`{{general-support-email inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), '1234');
+    assert.dom(this.element).hasText('1234');
   });
 });

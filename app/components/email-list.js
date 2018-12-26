@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import {argument} from "@ember-decorators/argument";
-import {action} from "@ember-decorators/object";
+import { argument } from "@ember-decorators/argument";
+import { action } from "@ember-decorators/object";
 import $ from 'jquery';
 
 export default class EmailListComponent extends Component {

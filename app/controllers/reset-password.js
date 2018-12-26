@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import {action} from '@ember-decorators/object';
+import { action } from '@ember-decorators/object';
 import ResetPasswordValidations from '../validations/reset-password';
 
 export default class ResetPasswordController extends Controller {

@@ -1,4 +1,4 @@
-import {inject as service} from "@ember/service";
+import { inject as service } from "@ember/service";
 import SessionService from "ember-simple-auth/services/session";
 import User from "clubhouse/models/user";
 

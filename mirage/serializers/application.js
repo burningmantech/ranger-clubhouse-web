@@ -1,4 +1,4 @@
-import { JSONAPISerializer } from 'ember-cli-mirage';
+// mirage/serializers/application.js
+import { RestSerializer } from 'ember-cli-mirage';
 
-export default JSONAPISerializer.extend({
-});
+export default RestSerializer;

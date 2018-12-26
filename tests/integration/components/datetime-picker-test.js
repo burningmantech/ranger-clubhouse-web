@@ -12,7 +12,7 @@ module('Integration | Component | datetime-picker', function(hooks) {
 
     await render(hbs`{{datetime-picker}}`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.dom(this.element).hasText('');
 
     // Template block usage:
     await render(hbs`
@@ -21,6 +21,6 @@ module('Integration | Component | datetime-picker', function(hooks) {
       {{/datetime-picker}}
     `);
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.dom(this.element).hasText('template block text');
   });
 });

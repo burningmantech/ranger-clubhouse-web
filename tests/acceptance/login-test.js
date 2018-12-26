@@ -1,6 +1,10 @@
 import { module, test } from 'qunit';
 import { visit, currentURL, fillIn, click } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
+import {
+  authenticateSession,
+  currentSession
+} from 'ember-simple-auth/test-support';
 
 module('Acceptance | login', function(hooks) {
   setupApplicationTest(hooks);
@@ -29,7 +33,13 @@ module('Acceptance | login', function(hooks) {
     // Should stay on the login page
     assert.equal(currentURL(), '/login', 'stay on the login page');
     // And there should be a flash modal with login error
-    assert.equal(this.element.querySelector('div.flash-message').textContent.includes('is incorrect'), true)
+    assert.dom('#toast-container', document).includesText('The email and/or password is incorrect');
+  });
+
+  test('successful logout', async function(assert) {
+    await authenticateSession({ person_id: 2 });
+    await visit('/logout');
+    assert.equal(currentSession().isAuthenticated, false);
   });
 
 });
