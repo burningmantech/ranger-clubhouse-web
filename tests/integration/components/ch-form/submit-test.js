@@ -10,11 +10,20 @@ module('Integration | Component | ch form/submit', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 
-    await render(hbs`{{ch-form/submit submitAction='action' label="Submit It"}}`);
-    const button = this.$('button');
-
-    assert.equal(button.length, 1);
-    assert.equal(button.attr('type'), 'submit');
-    assert.equal(button.text(), 'Submit It')
+    await render(hbs`{{ch-form/submit}}`);
+    assert.dom('button').exists();
+    assert.dom('button').hasAttribute('type', 'submit');
+    assert.dom('button').hasText('Save');
   });
+
+  test('it renders with label', async function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    await render(hbs`{{ch-form/submit label="I'm a pickle"}}`);
+    assert.dom('button').exists();
+    assert.dom('button').hasAttribute('type', 'submit');
+    assert.dom('button').hasText("I'm a pickle");
+  });
+
 });
