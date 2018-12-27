@@ -16,11 +16,10 @@ module('Integration | Component | ch-form/select', function(hooks) {
 
     assert.dom('select').hasClass('myselect');
     assert.dom('select').hasAttribute('name', 'fruit');
-    assert.equal(this.element.querySelectorAll('select option').length, 4);
-    assert.dom('select option[value="Apple"]').doesNotHaveAttribute('selected');
+    assert.dom('option').exists({ count: 4 }, 'should render 4 options');
+    assert.equal(this.element.querySelector('select option[value="Apple"]').selected, false);
     assert.dom('select option[value="Apple"]').hasText('Apple');
-    // TODO why isn't value option selected?
-    //assert.dom('select option[value="Banana"]').hasAttribute('selected');
+    assert.equal(this.element.querySelector('select option[value="Banana"]').selected, true);
     assert.dom('select option[value="Banana"]').hasText('Banana');
   });
 
@@ -34,27 +33,26 @@ module('Integration | Component | ch-form/select', function(hooks) {
 
     assert.dom('select').hasClass('myselect');
     assert.dom('select').hasAttribute('name', 'fruit');
-    assert.equal(this.element.querySelectorAll('select option').length, 3);
+    assert.dom('option').exists({ count: 3 }, 'should render 3 options');
     assert.dom('select option[value="b"]').hasText('Berlin');
-    assert.dom('select option[value="b"]').doesNotHaveAttribute('selected');
+    assert.equal(this.element.querySelector('select option[value="b"]').selected, false);
     assert.dom('select option[value="m"]').hasText('Moscow');
-    // TODO why isn't value option selected?
-    //assert.dom('select option[value="m"]').hasAttribute('selected');
+    assert.equal(this.element.querySelector('select option[value="m"]').selected, true);
     assert.dom('select option[value="t"]').hasText('Tokyo');
     assert.dom('select option[value="t"]').doesNotHaveAttribute('selected');
   });
 
   test('it includes blank', async function(assert) {
-    this.set('value', ''); // doesn't cause blank item to be selected
+    this.set('value', '');
     this.set('options', ['Apple', 'Banana', 'Cherry', 'Durian']);
 
     await render(hbs`{{ch-form/select value=value options=options includeBlank=true}}`);
 
-    assert.equal(this.element.querySelectorAll('select option').length, 5);
-    assert.dom('select option').doesNotHaveAttribute('selected', 'true');
-    assert.dom('select option').hasText('-');
-    assert.dom('select option[value="Banana"]').doesNotHaveAttribute('selected');
-    assert.dom('select option[value="Banana"]').hasText('Banana');
+    assert.dom('select option').exists({ count: 5 }, 'should render 5 options');
+    assert.equal(this.element.querySelector('option[value=""]').selected, true);
+    assert.dom('option').hasText('-');
+    assert.equal(this.element.querySelector('option[value="Banana"]').selected, false);
+    assert.dom('option[value="Banana"]').hasText('Banana');
   });
 
   test('it supports multiple selection', async function(assert) {
@@ -63,20 +61,18 @@ module('Integration | Component | ch-form/select', function(hooks) {
     this.set('value', ['Apple', 'Durian']);
     this.set('options', ['Apple', 'Banana', 'Cherry', 'Durian']);
 
-    await render(hbs`{{ch-form/select value="Banana" options=options multiple=true}}`);
+    await render(hbs`{{ch-form/select value=value options=options multiple=true}}`);
 
     assert.dom('select').hasAttribute('multiple');
-    assert.equal(this.element.querySelectorAll('select option').length, 4);
-    // TODO why isn't value option selected?
+    assert.dom('select option').exists({ count: 4 }, 'should render 4 options');
     assert.dom('select option[value="Apple"]').hasText('Apple');
-    //assert.dom('select option[value="Apple"]').hasAttribute('selected');
+    assert.equal(this.element.querySelector('select option[value="Apple"]').selected, true, 'Apple should be selected');
     assert.dom('select option[value="Banana"]').hasText('Banana');
-    assert.dom('select option[value="Banana"]').doesNotHaveAttribute('selected');
+    assert.equal(this.element.querySelector('select option[value="Banana"]').selected, false, 'Banana should not be selected');
     assert.dom('select option[value="Cherry"]').hasText('Cherry');
-    assert.dom('select option[value="Cherry"]').doesNotHaveAttribute('selected');
-    // TODO why isn't value option selected?
+    assert.equal(this.element.querySelector('select option[value="Cherry"]').selected, false, 'Cherry should not be selected');
     assert.dom('select option[value="Durian"]').hasText('Durian');
-    //assert.dom('select option[value="Durian"]').hasAttribute('selected');
+    assert.equal(this.element.querySelector('select option[value="Durian"]').selected, true, 'Durian should be selected');
   });
 
 });

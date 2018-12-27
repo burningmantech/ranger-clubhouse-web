@@ -1,5 +1,5 @@
 {{#if includeBlank}}
-<option value="">-</option>
+  <option value="" selected={{is-empty value}}>-</option>
 {{/if}}
 {{#if isGrouped}}
   {{#each selectGroupOptions as |group|}}
