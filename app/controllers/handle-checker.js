@@ -1,12 +1,12 @@
 import Controller from '@ember/controller';
 import { computed } from '@ember/object';
+import {HandleConflict } from '../utils/handle-conflict';
 import {
   AmericanSoundexRule,
   DoubleMetaphoneRule,
   EditDistanceRule,
   EyeRhymeRule,
   FccRule,
-  HandleConflict,
   MinLengthRule,
   PhoneticAlphabetRule,
   SubstringRule

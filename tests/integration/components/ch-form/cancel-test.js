@@ -12,15 +12,13 @@ module('Integration | Component | ch-form/cancel', function(hooks) {
 
     await render(hbs`{{ch-form/cancel}}`);
 
-    assert.dom(this.element).hasText('');
+    assert.dom(this.element).hasText('Cancel');
+  });
 
-    // Template block usage:
-    await render(hbs`
-      {{#ch-form/cancel}}
-        template block text
-      {{/ch-form/cancel}}
-    `);
+  test('it accepts a label', async function(assert) {
+    this.set('label', 'Give up!');
+    await render(hbs`{{ch-form/cancel label=label}}`);
 
-    assert.dom(this.element).hasText('template block text');
+    assert.dom(this.element).hasText('Give up!');
   });
 });
