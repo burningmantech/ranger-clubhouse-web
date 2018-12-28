@@ -81,7 +81,7 @@
           <td colspan="3">
             <dl>
               <dt>Training:</dt>
-              <dd>{{#link-to "training.slot" training.id person.training_slot_id}}{{shift-format person.training_begins}} {{person.training_description}}{{/link-to}}</dd>
+              <dd>{{#link-to "training.session" training.id person.training_slot_id}}{{shift-format person.training_begins}} {{person.training_description}}{{/link-to}}</dd>
               <dt>{{pluralize person.slots.length "shift signup"}}:</dt>
               <dd>
                 {{#each person.slots as |slot|}}
