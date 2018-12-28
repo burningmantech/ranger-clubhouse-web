@@ -1,17 +1,9 @@
-import Component from '@ember/component';
+import Controller from '@ember/controller';
 import { computed } from '@ember-decorators/object';
-import { argument } from '@ember-decorators/argument';
-import { classNames } from '@ember-decorators/component';
 
 // How many students shown per printed page
 const STUDENTS_PER_PAGE = 18;
-
-@classNames('signup-page', 'd-print-block', 'd-none')
-export default class TrainingSignupSheetComponent extends Component {
-  @argument students;
-  @argument training;
-  @argument slot;
-
+export default class TrainingSessionSignupSheetController extends Controller {
   @computed('students')
   get studentPages() {
     // Split the students into

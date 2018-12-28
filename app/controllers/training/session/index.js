@@ -256,16 +256,4 @@ export default class TrainingSlotController extends Controller {
   toggleEmailListAction() {
     this.set('showEmails', !this.showEmails);
   }
-
-  // Print the signup sheet
-  @action
-  printSignupSheetAction() {
-    this.printThis.print('.signup-page');
-  }
-
-  // Print the Trainer's Report
-  @action
-  printTrainersReportAction() {
-    this.printThis.print('.trainers-sheet');
-  }
 }

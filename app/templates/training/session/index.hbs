@@ -27,8 +27,8 @@ Alphas: {{alphaCount}}<br>
 {{/if}}
 <div class="mt-2 mb-2">
   <button class="btn btn-primary" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}>{{if isSubmitting "Saving" "Save All"}}</button>
-  <button class="btn btn-secondary" {{action "printTrainersReportAction"}}>Trainers Report</button>
-  <button class="btn btn-secondary" {{action "printSignupSheetAction"}}>Signup Sheet</button>
+  {{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary"}}Trainer's Report{{/link-to}}
+  {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary"}}Signup Sheet{{/link-to}}
   <button class="btn btn-secondary" {{action "toggleEmailListAction"}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
   <button class="btn btn-secondary" {{action "showAddPersonAction"}}>Add Person</button>
 </div>
@@ -72,18 +72,16 @@ A '*' by a person's status indicate an ART Alpha.
     </tbody>
 
   </table>
-<button class="btn btn-primary" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}>{{if isSubmitting "Saving" "Save All"}}</button>
-<button class="btn btn-secondary" {{action "printTrainersReportAction"}}>Trainers Report</button>
-<button class="btn btn-secondary" {{action "printSignupSheetAction"}}>Signup Sheet</button>
-<button class="btn btn-secondary" {{action "toggleEmailListAction"}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
-<button class="btn btn-secondary" {{action "showAddPersonAction"}}>Add Person</button>
+
+  <button class="btn btn-primary" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}>{{if isSubmitting "Saving" "Save All"}}</button>
+  {{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary"}}Trainer's Report{{/link-to}}
+  {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary"}}Signup Sheet{{/link-to}}
+  <button class="btn btn-secondary" {{action "toggleEmailListAction"}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
+  <button class="btn btn-secondary" {{action "showAddPersonAction"}}>Add Person</button>
 
 {{#if showEmails}}
 {{email-list people=students scrollOnRender=true}}
 {{/if}}
-
-{{training/signup-sheet students=students training=training slot=slot}}
-{{training/trainers-report students=students trainers=trainers training=training slot=slot}}
 
 {{#if searchForm}}
 {{#ch-form "search" searchForm modalBox=true modalTitle="Add Person To Session" changeSet=false onFormChange=(action "searchPeopleAction") onCancel=(action "cancelSearchAction") as |f|}}

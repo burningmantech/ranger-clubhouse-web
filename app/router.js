@@ -68,8 +68,10 @@ Router.map(function() {
   this.route('logout');
   this.route('training', { path: '/training/:position_id' }, function() {
     this.route('index', { path: '/'});
-    this.route('session', { path: '/session/:id'}, function() {
+    this.route('session', { path: '/session/:slot_id'}, function() {
       this.route('index', { path: '/' });
+      this.route('signup-sheet');
+      this.route('trainers-report');
     });
     this.route('capacity');
     this.route('multiple-enrollments');
