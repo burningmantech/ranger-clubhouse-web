@@ -30,6 +30,8 @@
   <div class="row">
     {{#each checkedHandles as |checked|}}
       <div class="check-result-card card" id="check-result-{{checked.id}}">
+        {{! template-lint-disable "no-nested-interactive" }}
+        {{! Disabled because https://github.com/ember-template-lint/ember-template-lint/issues/587 }}
         <details open="true">
           <summary class="card-header">
             {{checked.name}} ({{checked.conflicts.length}})
