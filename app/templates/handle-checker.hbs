@@ -17,14 +17,26 @@
 
   <div class="form-group row">
     <legend>Handle rules</legend>
-    {{#each-in handleRules as |id rule|}}
+    {{#each handleRules as |rule|}}
       <div class="form-check form-check-inline">
-        {{#let (concat "handle-rule-checkbox-" id) as |checkid|}}
+        {{#let (concat "handle-rule-checkbox-" rule.id) as |checkid|}}
           {{input type="checkbox" checked=rule.enabled class="form-check-input" id=checkid}}
           <label class="form-check-label" for="{{checkid}}">{{rule.name}}</label>
         {{/let}}
       </div>
-    {{/each-in}}
+    {{/each}}
+  </div>
+
+  <div class="form-group row">
+    <legend>Entity types</legend>
+    {{#each entityTypes as |type|}}
+      <div class="form-check form-check-inline">
+        {{#let (concat "entity-type-checkbox-" type.id) as |checkid|}}
+          {{input type="checkbox" checked=type.enabled class="form-check-input" id=checkid}}
+          <label class="form-check-label" for="{{checkid}}">{{type.name}}</label>
+        {{/let}}
+      </div>
+    {{/each}}
   </div>
 
   <div class="row">
@@ -37,31 +49,30 @@
             {{checked.name}} ({{checked.conflicts.length}})
           </summary>
           {{#each checked.conflicts as |conflict index|}}
-            {{#if (get (get handleRules conflict.ruleId) "enabled")}}
-              <div class="card">
-                <div class="card-header conflict-priority-{{conflict.priority}} conflict-rule-{{conflict.ruleId}}">
-                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#conflict-detail-{{checked.id}}-{{index}}">
-                    {{conflict.description}}
-                  </button>
-                </div>
-                <div id="conflict-detail-{{checked.id}}-{{index}}" class="collapse">
-                  <div class="card-body">
-                    {{get (get handleRules conflict.ruleId) "name"}}, {{conflict.priority}} priority
-                    {{#if conflict.conflictingHandle}}
-                      {{#with conflict.conflictingHandle as |handle|}}
-                        {{#if handle.personId}}
-                          {{#link-to "person.index" handle.personId target="_blank" rel="noopener"}}
-                            {{handle.entityType}} {{handle.name}}
-                          {{/link-to}}
-                        {{else}}
-                          {{handle.entityType}} {{handle.name}}
-                        {{/if}}
-                      {{/with}}
-                    {{/if}}
-                  </div>
-                  </div>
+            <div class="card">
+              <div class="card-header conflict-priority-{{conflict.priority}} conflict-rule-{{conflict.ruleId}}">
+                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#conflict-detail-{{checked.id}}-{{index}}">
+                  {{conflict.description}}
+                </button>
               </div>
-            {{/if}}
+              <div id="conflict-detail-{{checked.id}}-{{index}}" class="collapse">
+                <div class="card-body">
+                  {{get ruleNames conflict.ruleId}}, {{conflict.priority}} priority
+                  {{#if conflict.conflictingHandle}}
+                    {{#with conflict.conflictingHandle as |handle|}}
+                      {{#if handle.personId}}
+                        {{#link-to "person.index" handle.personId target="_blank" rel="noopener"}}
+                          {{handle.entityType}} {{handle.name}}
+                        {{/link-to}}
+                      {{else}}
+                        {{handle.entityType}} {{handle.name}}
+                      {{/if}}
+                      {{#if handle.personVintage}}(vintage){{/if}}
+                    {{/with}}
+                  {{/if}}
+                </div>
+              </div>
+            </div>
           {{/each}}
         </details>
       </div>
@@ -70,9 +81,10 @@
 
 
   <div class="container">
+    <hr>
     <div class="row justify-content-md-center">
       <div class="col col-md-auto">
-        <h3>All {{model.length}} Handles</h3>
+        <h3>All {{allEnabledHandles.length}} Handles</h3>
         <table class="table table-sm table-striped table-hover">
           <thead>
             <tr>
@@ -82,7 +94,7 @@
             </tr>
           </thead>
           <tbody>
-            {{#each allHandles as |handle|}}
+            {{#each allEnabledHandles as |handle|}}
               <tr>
                 <td>
                   {{#if handle.personId}}

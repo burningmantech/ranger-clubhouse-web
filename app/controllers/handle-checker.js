@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
-import { computed, observer } from '@ember/object';
-import {HandleConflict } from '../utils/handle-conflict';
+import EmberObject, { computed, observer } from '@ember/object';
+import { HandleConflict } from '../utils/handle-conflict';
 import {
   AmericanSoundexRule,
   DoubleMetaphoneRule,
@@ -14,22 +14,38 @@ import {
 
 let nextCheckId = 1;
 
+const CheckedHandle = EmberObject.extend({
+  conflicts: computed('allConflicts', 'controller.{handleRules,entityTypes}.@each.enabled', function() {
+    const enabledRules = new Set(this.get('controller.handleRules').filterBy('enabled').mapBy('id'));
+    const enabledEntities = new Set(this.get('controller.entityTypes').filterBy('enabled').mapBy('name'));
+    return this.get('allConflicts').filter((c) => {
+      if (c.conflictingHandle && !enabledEntities.has(c.conflictingHandle.entityType)) {
+        return false;
+      }
+      return enabledRules.has(c.ruleId);
+    });
+  }),
+});
+
 export default Controller.extend({
   currentName: '',
-  checkedHandles: null, // Array of {id string, name string, conflicts HandleConflict[]}
-  allHandles: null, // Same objects as model
 
   init() {
     this._super(...arguments);
-    this.checkedHandles = []; // default properties can't be objects or arrays for some reason
-    this.allHandles = [];
+    this.set('checkedHandles', []); // Array of {id string, name string, conflicts HandleConflict[]}
+    this.set('allHandles', []); // Same Handle objects as model
   },
 
   /** Maps rule ID to {name string, rule object, enabled boolean} */
   handleRules: computed('model', function() {
     const handles = this.model.toArray();
-    const rules = {};
-    const addRule = (rule, name) => rules[rule.id] = {name: name, rule: rule, enabled: true};
+    const rules = [];
+    const addRule = (rule, name) => rules.pushObject(EmberObject.create({
+      id: rule.id,
+      name: name,
+      rule: rule,
+      enabled: true,
+    }));
     addRule(new MinLengthRule(), 'Minimum Length');
     addRule(new FccRule(), 'FCC naughty words');
     addRule(new PhoneticAlphabetRule(handles), 'Phonetic alphabet');
@@ -41,8 +57,28 @@ export default Controller.extend({
     return rules;
   }),
 
+  ruleNames: computed('handleRules', function() {
+    return this.get('handleRules').reduce((names, rule) => {
+      names[rule.id] = rule.name;
+      return names;
+    }, {});
+  }),
+
+  entityTypes: computed('model', function() {
+    return this.get('model').mapBy('entityType').uniq().sort().map((type) => EmberObject.create({
+      id: type.dasherize(),
+      name: type,
+      enabled: true,
+    }));
+  }),
+
+  allEnabledHandles: computed('allHandles', 'entityTypes.@each.enabled', function() {
+    const enabled = new Set(this.get('entityTypes').filterBy('enabled').mapBy('name'));
+    return this.get('allHandles').filter((handle) => enabled.has(handle.entityType));
+  }),
+
   incrementallyBuildAllHandles: observer('model', function() {
-    // Rendering 2500 handles takes a long time, so don't prevent interactivity
+    // Rendering 2500 handles takes a long time, so don't prevent interactivity.
     // Copy 100 handles at a time into allHandles and let the template
     // incrementally render them.  TODO there's probably a cleaner approach.
     let nextSize = 100;
@@ -57,9 +93,6 @@ export default Controller.extend({
     setTimeout(incrementallyAdd, 0);
   }),
 
-  // TODO support filtering by handle entity types; might need a helper since hbs doesn't
-  // natively have "if x or y" for "conflict doesn't have an entity type or entity type in enabled"
-
   actions: {
     /** Checks the currently-entered name against each rule and updates checkedHandles with the results. */
     checkCurrentName() {
@@ -69,7 +102,12 @@ export default Controller.extend({
       const id = nextCheckId++;
       rules.map((rule) => conflicts.push(...rule.check(name)));
       conflicts.sort(HandleConflict.comparator);
-      this.checkedHandles.unshiftObject({id: id, name: name, conflicts: conflicts});
+      this.get('checkedHandles').unshiftObject(CheckedHandle.create({
+        controller: this,
+        id: id,
+        name: name,
+        allConflicts: conflicts,
+      }));
       this.set('currentName', '');
     },
 
