@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember/object';
+import { computed, observer } from '@ember/object';
 import {HandleConflict } from '../utils/handle-conflict';
 import {
   AmericanSoundexRule,
@@ -17,10 +17,12 @@ let nextCheckId = 1;
 export default Controller.extend({
   currentName: '',
   checkedHandles: null, // Array of {id string, name string, conflicts HandleConflict[]}
+  allHandles: null, // Same objects as model
 
   init() {
     this._super(...arguments);
     this.checkedHandles = []; // default properties can't be objects or arrays for some reason
+    this.allHandles = [];
   },
 
   /** Maps rule ID to {name string, rule object, enabled boolean} */
@@ -37,6 +39,22 @@ export default Controller.extend({
     addRule(new DoubleMetaphoneRule(handles), 'Double Metaphone');
     addRule(new EyeRhymeRule(handles), 'Eye rhymes');
     return rules;
+  }),
+
+  incrementallyBuildAllHandles: observer('model', function() {
+    // Rendering 2500 handles takes a long time, so don't prevent interactivity
+    // Copy 100 handles at a time into allHandles and let the template
+    // incrementally render them.  TODO there's probably a cleaner approach.
+    let nextSize = 100;
+    let incrementallyAdd = () => {
+      let model = this.get('model');
+      this.set('allHandles', model.slice(0, nextSize));
+      if (this.get('allHandles').length < model.length) {
+        nextSize += 100;
+        setTimeout(incrementallyAdd, 0);
+      }
+    };
+    setTimeout(incrementallyAdd, 0);
   }),
 
   // TODO support filtering by handle entity types; might need a helper since hbs doesn't
