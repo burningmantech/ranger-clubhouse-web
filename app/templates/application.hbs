@@ -99,7 +99,7 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Vol Coord</a>
             <div class="dropdown-menu">
-              <a href="#" class="dropdown-item">Check Callsigns</a>
+              {{#link-to "handle-checker" class="dropdown-item"}}Check Callsigns{{/link-to}}
               {{#if (has-role "edit-access-docs")}}
               <a href="{{cgo "accessdoc" "listAllAccessDocs"}}" class="dropdown-item">Manage Access Docs</a>
               {{/if}}
