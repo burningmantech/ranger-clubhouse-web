@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import { action, computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
 import { A } from '@ember/array';
+import markSlotsOverlap from 'clubhouse/utils/mark-slots-overlap';
 import moment from 'moment';
 
 const allDays = { id: 'all', title: 'All Days'};
@@ -125,20 +126,8 @@ export default class ScheduleManageComponent extends Component {
 
   @computed('slots.@each.person_assigned')
   get signedUpSlots() {
-    const slots =  this.slots.filterBy('person_assigned', true);
-    let prevEndTime = 0, prevSlot = null;
-
-    slots.forEach(function(slot) {
-      if (slot.slot_begins_time < prevEndTime) {
-        slot.set('is_overlapping', true);
-        prevSlot.set('is_overlapping', true);
-      } else {
-        slot.set('is_overlapping', false);
-      }
-      prevEndTime = slot.slot_ends_time;
-      prevSlot = slot;
-    });
-
+    const slots = this.slots.filterBy('person_assigned', true);
+    markSlotsOverlap(slots);
     return slots;
   }
 

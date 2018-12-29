@@ -3,13 +3,10 @@ import EmberObject from '@ember/object';
 import { debounce } from '@ember/runloop';
 import { set } from '@ember/object';
 import { action, computed } from '@ember-decorators/object';
-import { service } from '@ember-decorators/service';
 
 const SEARCH_RATE_MS = 300;
 
 export default class TrainingSlotController extends Controller {
-  @service printThis;
-
   rankOptions = [
     1, 2, 3,
     [ "FLAG", 4 ]

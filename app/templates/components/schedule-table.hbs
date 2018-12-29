@@ -9,9 +9,7 @@
   {{radio-button value="all" groupValue=viewSchedule radioId="view-all" classNames="form-check-label" radioClass="form-check-input" }} <label for="view-all" class="form-check-label">All Shifts ({{slots.length}})</label>
   </div>
 </div>
-{{#print-this printSelector=".schedule-print" as |doPrint|}}
-  <div class="schedule-print">
-    <div class="d-none d-print-block"><h2>{{person.callsign}} Schedule {{year}}</h2></div>
+    <h2>{{person.callsign}} Schedule {{year}}</h2>
     <table class="table table-hover schedule-table table-sm table-rc">
       <thead>
         <tr>
@@ -60,7 +58,7 @@
             <b>Scheduled Credits:</b> {{credits-format creditsTotal}}
             <b>Earned Credits:</b> {{credits-format creditsEarned}}
           </td>
-          <td class="d-print-none"><a href="#" class="btn btn-sm btn-primary" {{action doPrint}}>Print</a></td>
+          <td>{{#link-to "me.schedule.print" class="btn btn-secondary"}}Print Schedule{{/link-to}}</td>
         </tr>
       </tbody>
     </table>
@@ -71,8 +69,6 @@
   didn"t mean to be in two places at once.  It might be just fine and you plan to work two shifts back-to-back.
   You only get credit for the time you work, and won"t receive double credit for the overlapping time.</p>
   {{/if}}
-{{/print-this}}
-</div>
 
 {{#if person.isRanger}}
 {{ticket-threshold credits=creditsTotal creditsEarned=creditsEarned}}

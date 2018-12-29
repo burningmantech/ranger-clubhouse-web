@@ -167,7 +167,13 @@ In the model test - tests/model/user.js, the following should be done:
 
 ### PRINTING
 
-* Use print-this component to print a block. The div should have 'd-none d-print-block' set to hide the content on the screen yet have it appear on the printed page.
+* Use the CSS class 'd-print-none' to hit a block from being printed.
+
+* The <header>, <footer> and sidebar all have d-print-none set so the areas will not appear on the printed page.
+
+* Javascript initiated printing using a selected DOM element does not work properly with Safari (as of Version 12.0.2, December 2018). The problem is the browser has issues with multiple Javascript initiated print actions - the second and later print actions will cause a browser dialog to be shown which states the web page is trying to print multiple times. A confirmation button is shown, yet the button does nothing.
+
+The ember-print-this addon, more importantly the jQuery print-this addon, cannot be used until Apple fixes this.
 
 ### FORMS
 

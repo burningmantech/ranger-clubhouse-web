@@ -4956,18 +4956,6 @@ ember-power-select@^2.0.0-beta.5, ember-power-select@^2.0.9:
     ember-text-measurer "^0.4.0"
     ember-truth-helpers "^2.0.0"
 
-ember-print-this@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/ember-print-this/-/ember-print-this-1.0.0.tgz#7268fae01acd75af2842235017e365e4157f6319"
-  integrity sha512-npfdk45Lg3mwsBysnMF3cNBjsem07j/0F7FJ3O+gkZOA4SEtPkG4oDLdXYHgy16nYvtjQZsuzHhsa4u+FGimTQ==
-  dependencies:
-    broccoli-funnel "^2.0.1"
-    broccoli-merge-trees "^2.0.0"
-    broccoli-stew "^1.5.0"
-    ember-cli-babel "^6.6.0"
-    ember-cli-htmlbars "^2.0.1"
-    print-this "^1.12.0"
-
 ember-qunit@^3.4.1:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/ember-qunit/-/ember-qunit-3.5.3.tgz#bfd0bff8298c78c77e870cca43fe0826e78a0d09"
@@ -7410,7 +7398,7 @@ jquery-deferred@^0.3.0:
   resolved "https://registry.yarnpkg.com/jquery-mousewheel/-/jquery-mousewheel-3.1.13.tgz#06f0335f16e353a695e7206bf50503cb523a6ee5"
   integrity sha1-BvAzXxbjU6aV5yBr9QUDy1I6buU=
 
-"jquery@>= 1.7.2", jquery@>=1.11, jquery@>=1.12.0, jquery@^3.3.1:
+"jquery@>= 1.7.2", jquery@>=1.12.0, jquery@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
   integrity sha512-Ubldcmxp5np52/ENotGxlLe6aGMvmF4R8S6tZjsP6Knsaxd/xp3Zrh50cG93lR6nPXyUFwzN3ZSOQI0wRJNdGg==
@@ -10139,13 +10127,6 @@ pretty-ms@^3.1.0:
   integrity sha512-ZypexbfVUGTFxb0v+m1bUyy92DHe5SyYlnyY0msyms5zd3RwyvNgyxZZsXXgoyzlxjx5MiqtXUdhUfvQbe0A2Q==
   dependencies:
     parse-ms "^1.0.0"
-
-print-this@^1.12.0:
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/print-this/-/print-this-1.14.0.tgz#80c43cf708ec45ace7aede3c82f27239685c6ba9"
-  integrity sha512-4mG/aHdsWiDGZ/5GAPl0PToVApniW/TwJjVgL7gQEIbdhRXVzre2HQlD0nxXtaCmke4GAK1q/KEqGn8VojYjOA==
-  dependencies:
-    jquery ">=1.11"
 
 printf@^0.5.1:
   version "0.5.1"

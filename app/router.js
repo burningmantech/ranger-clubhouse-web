@@ -29,7 +29,10 @@ Router.map(function() {
       this.route('missing');
       this.route('confirm');
     });
-    this.route('schedule');
+    this.route('schedule', function() {
+      this.route('index',  { path: '/' });
+      this.route('print');
+    });
     this.route('tickets');
     this.route('help');
     this.route('motorpool-policy');
