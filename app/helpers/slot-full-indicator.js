@@ -12,8 +12,8 @@ export function slotFullIndicator([ signedUp, max ]/*, hash*/) {
     width = 100;
     text = 'FULL '+text;
   } else {
-    color = width >= 85 ? 'warning' : 'success';
     width = Math.floor((signedUp*100)/max);
+    color = width >= 85 ? 'warning' : 'success';
   }
 
   return htmlSafe(

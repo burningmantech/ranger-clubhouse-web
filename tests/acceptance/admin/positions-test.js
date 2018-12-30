@@ -14,6 +14,8 @@ module('Acceptance | admin/positions', function(hooks) {
   test('visiting /admin/positions', async function(assert) {
     await authenticateSession({ person_id: 1 });
     await visit('/admin/positions');
-    assert.dom('.position-line').exists({ count: 4 }, 'should render 4 lines');
+    const numPositions = this.server.schema.positions.all().length;
+    assert.dom('.position-line')
+      .exists({ count: numPositions }, `should render ${numPositions} lines`);
   });
 });
