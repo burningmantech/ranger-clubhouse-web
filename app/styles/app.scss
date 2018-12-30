@@ -253,8 +253,8 @@ legend {
   height: 64px;
   width: 64px;
   margin: 0 auto;
-  -webkit-mask: url("/assets/spinner.svg") no-repeat 50% 50%;
-  mask: url("/assets/spinner.svg") no-repeat 50% 50%;
+  -webkit-mask: url("spinner.svg") no-repeat 50% 50%;
+  mask: url("spinner.svg") no-repeat 50% 50%;
   -webkit-mask-size: cover;
   mask-size: cover;
   background-color: black;
@@ -269,8 +269,8 @@ legend {
   // needed for IE edge
   background-size: 20px 20px;
 
-  mask: url("/assets/ranger-logo.svg") no-repeat 50% 50%;
-  -webkit-mask: url("/assets/ranger-logo.svg") no-repeat 50% 50%;
+  mask: url("ranger-logo.svg") no-repeat 50% 50%;
+  -webkit-mask: url("ranger-logo.svg") no-repeat 50% 50%;
 
   mask-size: cover;
   -webkit-mask-size: cover;
