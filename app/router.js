@@ -50,6 +50,7 @@ Router.map(function() {
     this.route('positions');
     this.route('slots');
     this.route('credits');
+    this.route('roles');
   });
   this.route('handle-checker');
 
