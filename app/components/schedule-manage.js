@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import { action, computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
 import { A } from '@ember/array';
+import { set } from '@ember/object';
 import markSlotsOverlap from 'clubhouse/utils/mark-slots-overlap';
 import moment from 'moment';
 
@@ -267,5 +268,10 @@ export default class ScheduleManageComponent extends Component {
       }
       this.modal.info('Scheduled (Callsigns) for '+slot.slot_description, callsigns);
     }).catch((response) => this.house.handleErrorResponse(response));
+  }
+
+  @action
+  toggleGroup(group) {
+    set(group, 'show', !group.show);
   }
 }

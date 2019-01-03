@@ -4,6 +4,10 @@ import requestYear from 'clubhouse/utils/request-year';
 import RSVP from 'rsvp';
 
 export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
+  queryParams = {
+    year: { refreshModel: true }
+  };
+
   model(params) {
     const person_id = this.session.user.id;
     const year = requestYear(params);

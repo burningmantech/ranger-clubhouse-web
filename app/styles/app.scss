@@ -108,6 +108,11 @@ $sizes: (
   }
 }
 
+// Indicate action on elements which are clickable
+[data-ember-action]:not(:disabled) {
+  cursor: pointer;
+}
+
 main {
   margin: 10px 0px;
 }

@@ -1,75 +1,72 @@
-<div id="current-schedule" class="mb-4">
 <div class="mb-2">
   <div class="form-check form-check-inline">
-    {{radio-button value="upcoming" groupValue=viewSchedule
-                  radioId="view-upcoming" radioClass="form-check-input"}}
-   <label for="view-upcoming" class="form-check-label">Upcoming Shifts ({{upcomingCount}})</label>
+    {{radio-button value="upcoming" groupValue=viewSchedule radioId="view-upcoming" radioClass="form-check-input"}}
+    <label for="view-upcoming" class="form-check-label">Upcoming Shifts ({{upcomingCount}})</label>
   </div>
   <div class="form-check form-check-inline">
-  {{radio-button value="all" groupValue=viewSchedule radioId="view-all" classNames="form-check-label" radioClass="form-check-input" }} <label for="view-all" class="form-check-label">All Shifts ({{slots.length}})</label>
+    {{radio-button value="all" groupValue=viewSchedule radioId="view-all" classNames="form-check-label" radioClass="form-check-input" }} <label for="view-all" class="form-check-label">All Shifts ({{slots.length}})</label>
   </div>
 </div>
-    <h2>{{person.callsign}} Schedule {{year}}</h2>
-    <table class="table table-hover schedule-table table-sm table-rc">
-      <thead>
-        <tr>
-          <th class="schedule-time">From</th>
-          <th class="schedule-time">To</th>
-          <th class="schedule-duration text-right">Time</th>
-          <th class="schedule-credits text-right">Credits</th>
-          <th class="schedule-description">Position / Description</th>
-          <th class="schedule-actions d-print-none">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-{{#if viewSlots}}
-        {{#each viewSlots as |slot| }}
-          <tr class="{{if slot.is_overlapping "schedule-overlapping"}}">
-            <td class="schedule-time" data-title="From">
-              {{#if slot.is_overlapping}}{{fa-icon "exclamation-triangle"}}{{/if}}
-              {{shift-format slot.slot_begins}}
-            </td>
-            <td class="schedule-time" data-title="To">{{shift-format slot.slot_ends}}</td>
-            <td class="schedule-duration td-number" data-title="Time">{{hour-minute-format slot.slot_duration}}</td>
-            <td class="schedule-credits td-number" data-title="Credits">{{credits-format slot.credits}}</td>
-            <td class="schedule-description" data-title="Description">{{slot.position_title}} {{slot-info-link slot.slot_description slot.slot_url}}</td>
-            <td class="schedule-actions d-print-none" data-title="Actions">
-              <a href="#" {{action "showPeople" slot}} class="btn btn-primary btn-sm">{{fa-icon "users" type="fas"}}</a>
-              {{#if (not slot.has_started)}}
-              <a href="#" {{action "leaveSlot" slot}} class="btn btn-danger btn-sm">{{fa-icon "trash-alt" type="fas"}}</a>
-              {{/if}}
-            </td>
-          </tr>
-        {{/each}}
-{{else}}
-      <tr class="no-collapse">
-        <td colspan="6">
-          {{#if slots}}
-            <p class="text-danger">No upcoming shifts were found.</p>
-          {{else}}
-            <p><strong>You have nothing schedule for {{year}}.</strong></p>
-          {{/if}}
-        </td>
-      </tr>
-{{/if}}
-        <tr class="no-collapse">
-          <td colspan="5">
-            <b>Total Time:</b> {{hour-minute-format (sum-column slots "slot_duration")}}
-            <b>Scheduled Credits:</b> {{credits-format creditsTotal}}
-            <b>Earned Credits:</b> {{credits-format creditsEarned}}
-          </td>
-          <td>{{#link-to "me.schedule.print" class="btn btn-secondary"}}Print Schedule{{/link-to}}</td>
-        </tr>
-      </tbody>
-    </table>
+
+<div class="schedule-table">
+  <div class="schedule-row schedule-header">
+    <div class="schedule-time">From</div>
+    <div class="schedule-time">To</div>
+    <div class="schedule-duration">Time</div>
+    <div class="schedule-credits">Credits</div>
+    <div class="schedule-long-description">Position / Description</div>
+    <div class="schedule-actions d-print-none">Actions</div>
   </div>
-  {{#if overlapping}}
-  <p><span class="text-danger">You are signed up for overlapping shifts</span>, marked with a {{fa-icon "exclamation-triangle"}}.
-  This might be an error, and you
-  didn"t mean to be in two places at once.  It might be just fine and you plan to work two shifts back-to-back.
-  You only get credit for the time you work, and won"t receive double credit for the overlapping time.</p>
+
+  {{#if viewSlots}}
+    {{#each viewSlots as |slot| }}
+      <div class="schedule-row {{if slot.is_overlapping "schedule-overlapping"}}">
+        <div class="schedule-time">
+          {{#if slot.is_overlapping}}{{fa-icon "exclamation-triangle"}}{{/if}}
+          {{shift-format slot.slot_begins}}
+        </div>
+        <div class="schedule-time">{{shift-format slot.slot_ends}}</div>
+        <div class="schedule-duration"><span class="schedule-sm-label">Duration:</span>{{hour-minute-format slot.slot_duration}}</div>
+        <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}</div>
+        <div class="schedule-long-description">{{slot.position_title}} {{slot-info-link slot.slot_description slot.slot_url}}</div>
+        <div class="schedule-actions d-print-none">
+          <button {{action "showPeople" slot}} class="btn btn-primary btn-sm">{{fa-icon "users" type="fas"}}</button>
+          {{#if (not slot.has_started)}}
+            <button {{action "leaveSlot" slot}} class="btn btn-danger btn-sm">{{fa-icon "trash-alt" type="fas"}}</button>
+          {{/if}}
+        </div>
+      </div>
+    {{/each}}
+  {{else}}
+    <div class="schedule-row">
+      <div>
+        {{#if slots}}
+          <p class="text-danger">No upcoming shifts were found.</p>
+        {{else}}
+          <p><strong>You have nothing schedule for {{year}}.</strong></p>
+        {{/if}}
+      </div>
+    </div>
   {{/if}}
+  <div class="schedule-row">
+    <div>
+      <b>Total Time:</b> {{hour-minute-format (sum-column slots "slot_duration")}}
+      <b>Scheduled Credits:</b> {{credits-format creditsTotal}}
+      <b>Earned Credits:</b> {{credits-format creditsEarned}}
+    </div>
+    <div>
+      {{#link-to "me.schedule.print" class="btn btn-secondary"}}Print Schedule{{/link-to}}
+    </div>
+  </div>
+</div>
+
+{{#if overlapping}}
+  <p><span class="text-danger">You are signed up for overlapping shifts</span>, marked with a {{fa-icon "exclamation-triangle"}}.
+    This might be an error, and you
+    didn't mean to be in two places at once. It might be just fine and you plan to work two shifts back-to-back.
+    You only get credit for the time you work, and won"t receive double credit for the overlapping time.</p>
+{{/if}}
 
 {{#if person.isRanger}}
-{{ticket-threshold credits=creditsTotal creditsEarned=creditsEarned}}
+  {{ticket-threshold credits=creditsTotal creditsEarned=creditsEarned}}
 {{/if}}

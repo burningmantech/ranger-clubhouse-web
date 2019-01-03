@@ -1,50 +1,126 @@
-@media print {
-  .schedule-table {
-    font-size: 1em;
-
-    th {
-      background-color: #e9ecef;
-    }
-  }
-}
-
 .schedule-table {
-//  font-family: 'Roboto Mono';
+  border: (2 * $table-border-width) solid $table-border-color;
+  margin-bottom: 10px;
   font-size: 0.95em;
-
-  td {
-    vertical-align: center;
-  }
-
-  td, th {
-    padding: 0.6em 0.7em;
-  }
 }
 
-.schedule-time {
-  width: 16%;
+.schedule-title {
+  font-size: 1.2em;
+  font-weight: $display1-weight;
+  color: $headings-color;
+  font-weight: $headings-font-weight;
+  padding: 10px;
+  background-color: #ececec;
 }
 
-.schedule-duration {
-  width: 4%;
-}
-
-.schedule-credits {
-  width: 4%;
-}
-
-.schedule-description {
-  width: 20%;
-}
-
-.schedule-actions {
-  width: 10%;
-}
-
-.schedule-full {
-  width: 5%;
+.schedule-header {
+  color: $table-head-color;
+  background-color: $table-head-bg;
+  border-color: $table-border-color;
+  font-weight: bold;
 }
 
 .schedule-overlapping {
   background-color: #fbd3d3;
+}
+
+.schedule-row {
+  font-size: 0.95em;
+  padding: 5px;
+  border-top: 1px solid #ddd;
+  width: 100%;
+  > div {
+    display: inline-block;
+    padding: 5px;
+  }
+}
+
+.schedule-row:hover {
+  background-color: $table-hover-bg;
+}
+
+@media print {
+  .schedule-table {
+    font-size: 1em;
+  }
+}
+
+
+@media print, (min-width: 801px) {
+  .schedule-time {
+    width: 17%;
+  }
+
+  .schedule-duration {
+    width: 5%;
+    text-align: right;
+  }
+
+  .schedule-credits {
+    width: 7%;
+    text-align: right;
+  }
+
+  .schedule-description {
+    width: 26%;
+  }
+
+  .schedule-long-description {
+    width: 36%;
+  }
+
+  .schedule-signups {
+    width: 15%;
+  }
+
+  .schedule-actions {
+    width: 15%;
+  }
+  .schedule-sm-label {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .schedule-header {
+    display: none !important;
+  }
+
+  .schedule-time {
+    width: 49%;
+  }
+
+  .schedule-duration {
+    width: 49%;
+  }
+
+  .schedule-credits {
+    width: 100%;
+  }
+
+  .schedule-description {
+    width: 100%;
+  }
+
+  .schedule-long-description {
+    width: 100%;
+  }
+
+  .schedule-signups {
+    width: 100%;
+  }
+
+  .schedule-actions {
+    width: 100%;
+  }
+
+  .schedule-row button {
+    display: inline-block;
+    width: 49%;
+  }
+
+  .schedule-sm-label {
+    display: inline-block;
+    margin-right: 5px;
+  }
 }

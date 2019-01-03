@@ -1,75 +1,64 @@
 {{#if (and isCurrentYear (not permission.signup_allowed))}}
-{{#ch-alert "danger"}}
-  {{#if permission.manual_review_window_missed}}
-    We are sorry to report that you were not among the first
-    {{permission.manual_review_cap}} prospective volunteers to have passed the Manual Review.
-    Sadly this means that you have missed the window for volunteering with us as
-    a Ranger this year. If you have questions or believe you have received this
-    message in error, please contact {{general-support-email}}.
-  {{else}}
-    {{#if (eq permission.photo_status "error")}}
-      <h3>Oops! There was a problem communicating with our photo server.</h3>
-      <p>
-         We cannot determine if you have uploaded a photo, or if it has been approved. Please
-        check back in a few minutes to see if the problem has resolved. If this
-        problems persists, please contact {{admin-email}} for help.
-      </p>
-      <p>
-        We are sorry if this is an inconvenience for you.
-      </p>
-    {{else if (not-eq permission.photo_status "not-required")}}
-      <p>You cannot sign up for shifts (including trainings) because {{deniedReason}}.</p>
-      {{#if (and (not person.isPassProspective) (not-eq permission.photo_status "approved"))}}
-      <p>
-        {{#if (eq permission.photo_status "missing")}}
-          Please upload a BMID (lam) photo. Note that photos can take 2-3 days to be
-          approved. A new photo may be uploaded on the {{#link-to "me.personal-info"}}Personal Info{{/link-to}} page.
-        {{else if (eq permission.photo_status "rejected")}}
-          The photo was rejected. Please upload a new photo that conforms to the guidelines.
-        {{else}}
-          Your photo has been submitted and may take up to 2 to 3 days to review. Please check back then.
-        {{/if}}
-      </p>
-      {{/if}}
-    {{/if}}
-
-    {{#if permission.manual_review_allowed}}
-      {{#if permission.manual_review_url}}
+  {{#ch-alert "danger"}}
+    {{#if permission.manual_review_window_missed}}
+      We are sorry to report that you were not among the first
+      {{permission.manual_review_cap}} prospective volunteers to have passed the Manual Review.
+      Sadly this means that you have missed the window for volunteering with us as
+      a Ranger this year. If you have questions or believe you have received this
+      message in error, please contact {{general-support-email}}.
+    {{else}}
+      {{#if (eq permission.photo_status "error")}}
+        <h3>Oops! There was a problem communicating with our photo server.</h3>
         <p>
-          Please <a href="{{permission.manual_review_url}}">click here</a> to take the Manual Review.
+          We cannot determine if you have uploaded a photo, or if it has been approved. Please
+          check back in a few minutes to see if the problem has resolved. If this
+          problems persists, please contact {{admin-email}} for help.
         </p>
-      {{else}}
-        <h3>The Manual Review is not quite ready.</h3>
-        Unfortunately, the Manual Review is still being worked on. You may not
-        sign up for shifts, including trainings, until the review is ready and
-        you have passed it. Please check back later.
+        <p>
+          We are sorry if this is an inconvenience for you.
+        </p>
+      {{else if (not-eq permission.photo_status "not-required")}}
+        <p>You cannot sign up for shifts (including trainings) because {{deniedReason}}.</p>
+        {{#if (and (not person.isPassProspective) (not-eq permission.photo_status "approved"))}}
+          <p>
+            {{#if (eq permission.photo_status "missing")}}
+              Please upload a BMID (lam) photo. Note that photos can take 2-3 days to be
+              approved. A new photo may be uploaded on the {{#link-to "me.personal-info"}}Personal Info{{/link-to}} page.
+            {{else if (eq permission.photo_status "rejected")}}
+              The photo was rejected. Please upload a new photo that conforms to the guidelines.
+            {{else}}
+              Your photo has been submitted and may take up to 2 to 3 days to review. Please check back then.
+            {{/if}}
+          </p>
+        {{/if}}
+      {{/if}}
+
+      {{#if permission.manual_review_allowed}}
+        {{#if permission.manual_review_url}}
+          <p>
+            Please <a href="{{permission.manual_review_url}}">click here</a> to take the Manual Review.
+          </p>
+        {{else}}
+          <h3>The Manual Review is not quite ready.</h3>
+          Unfortunately, the Manual Review is still being worked on. You may not
+          sign up for shifts, including trainings, until the review is ready and
+          you have passed it. Please check back later.
+        {{/if}}
       {{/if}}
     {{/if}}
-  {{/if}}
 
-  {{#if (or person.isPassProspective (not permission.callsign_approved))}}
-    Please email {{general-support-email}} if you are interested in
-    volunteering with us or if you think you have received this message in error.
-  {{/if}}
+    {{#if (or person.isPassProspective (not permission.callsign_approved))}}
+      Please email {{general-support-email}} if you are interested in
+      volunteering with us or if you think you have received this message in error.
+    {{/if}}
   {{/ch-alert}}
 {{else}}
-{{schedule-table slots=signedUpSlots person=person year=year creditsEarned=creditsEarned}}
-<h3>{{if isCurrentYear "Available Shifts" "Past Shifts"}}</h3>
-{{#if slots}}
-  <div class="row mb-1">
-    <div class="col-md-4 mb-2">
-      {{#power-select
-            options=positionOptions
-            selected=filterPosition
-            searchEnabled=false
-            searchField="title"
-            onchange=(action (mut filterPosition))
-                      as |item| }}
-          {{item.title}}
-      {{/power-select}}
-    </div>
-    <div class="col-md-3 mb-2">
-      {{#power-select
+  {{schedule-table slots=signedUpSlots person=person year=year creditsEarned=creditsEarned}}
+  <h3>{{if isCurrentYear "Available Shifts" "Past Shifts"}}</h3>
+  {{#if slots}}
+    <div class="row mb-1">
+      <div class="col-md-3 mb-2">
+        {{#power-select
             selected=filterDay
             options=dayOptions
             searchEnabled=false
@@ -77,70 +66,66 @@
             onchange=(action (mut filterDay))
                       as |item| }}
           {{item.title}}
-      {{/power-select}}
-    </div>
-    <div class="col-md-5 mb-2">
-      {{#power-select
+        {{/power-select}}
+      </div>
+      <div class="col-md-5 mb-2">
+        {{#power-select
             selected=filterActive
             options=activeOptions
             searchEnabled=false
             onchange=(action (mut filterActive)) as |item| }}
-            {{item.title}}
+          {{item.title}}
         {{/power-select}}
+      </div>
     </div>
-  </div>
 
-  <p class="text-muted">Showing {{viewSlots.length}} of {{slots.length}}</p>
+    <p class="text-muted">Showing {{viewSlots.length}} of {{slots.length}}</p>
 
-  {{#if slotGroups}}
-    {{#each slotGroups as |group|}}
-      <table class="table table-box table-hover schedule-table table-sm table-rc">
-        <caption>{{group.title}}</caption>
-        <thead>
-          <tr>
-            <th class="schedule-time">From</th>
-            <th class="schedule-time">To</th>
-            <th class="schedule-credits td-number">Credits</th>
-            <th class="schedule-description">Description</th>
-            <th class="schedule-full">Signups</th>
-            <th class="schedule-actions">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
+    {{#if slotGroups}}
+      {{#each slotGroups as |group|}}
+        <div class="schedule-table">
+          <div class="schedule-title">{{if group.show (fa-icon "caret-down") (fa-icon "caret-right")}} <a href="#" {{action "toggleGroup" group}}>{{group.title}} ({{group.slots.length}})</a></div>
+          {{#if group.show}}
+          <div class="schedule-row schedule-header d-sm-none d-md-block">
+            <div class="schedule-time">From</div>
+            <div class="schedule-time">To</div>
+            <div class="schedule-credits">Credits</div>
+            <div class="schedule-description">Description</div>
+            <div class="schedule-signups">Signups</div>
+            <div class="schedule-actions">Actions</div>
+          </div>
           {{#each group.slots as |slot|}}
-            <tr class="{{if slot.person_assigned "table-warning"}}">
-              <td class="schedule-time" data-title="From">
+            <div class="schedule-row {{if slot.person_assigned "table-warning"}}">
+              <div class="schedule-time">
                 {{#if slot.person_assigned}}
                   {{fa-icon "check"}}
                 {{/if}}
                 {{shift-format slot.slot_begins}}
-              </td>
-              <td class="schedule-time" data-title="To">{{shift-format slot.slot_ends}}</td>
-              <td class="schedule-credits td-number" data-title="Credits">{{credits-format slot.credits}}</td>
-              <td class="schedule-description" data-title="Description">{{slot-info-link slot.slot_description slot.slot_url}}</td>
-              <td class="schedule-full" data-title="Signups">{{slot-full-indicator slot.slot_signed_up slot.slot_max}}</td>
-              <td class="schedule-actions" data-title="Actions">
+              </div>
+              <div class="schedule-time">{{shift-format slot.slot_ends}}</div>
+              <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span> {{credits-format slot.credits}}</div>
+              <div class="schedule-description">{{slot-info-link slot.slot_description slot.slot_url}}</div>
+              <div class="schedule-signups">{{slot-full-indicator slot.slot_signed_up slot.slot_max}}</div>
+              <div class="schedule-actions">
                 <button {{action "showPeople" slot}} class="btn btn-secondary btn-sm">{{fa-icon "users" type="fas"}}</button>
-                {{#if isCurrentYear}}
-                  {{#if slot.person_assigned}}
-                    {{#if (not slot.has_started)}}
-                      {{! Only allow admins to remove a sign up that has started}}
-                      <button {{action "leaveSlot" slot}} class="btn btn-danger btn-sm">{{fa-icon "trash-alt" type="fas"}}</button>
-                    {{/if}}
-                  {{else}}
-                    {{#if slot.slot_active}}
-                      {{#if  (or (not slot.isFull) (not slot.has_started) (has-role "admin"))}}
-                        <button {{action "joinSlot" slot}} class="btn btn-primary btn-sm">{{fa-icon "user-plus" type="fas"}}</button>
-                      {{/if}}
+                {{#if slot.person_assigned}}
+                  {{#if (or (has-role "admin") (not slot.has_started))}}
+                    {{! Only allow admins to remove a sign up that has started}}
+                    <button {{action "leaveSlot" slot}} class="btn btn-danger btn-sm">{{fa-icon "trash-alt" type="fas"}}</button>
+                  {{/if}}
+                {{else}}
+                  {{#if slot.slot_active}}
+                    {{#if (or (not slot.isFull) (not slot.has_started) (has-role "admin"))}}
+                      <button {{action "joinSlot" slot}} class="btn btn-primary btn-sm">{{fa-icon "user-plus" type="fas"}}</button>
                     {{/if}}
                   {{/if}}
                 {{/if}}
-              </td>
-            </tr>
-            {{/each}}
-        </tbody>
-      </table>
-    {{/each}}
+              </div>
+            </div>
+          {{/each}}
+          {{/if}}
+        </div>
+      {{/each}}
     {{else}}
       <div class="text-danger">There are no shifts which match.</div>
     {{/if}}
@@ -148,11 +133,10 @@
       <ul>
         <li>A shift may not be added to or removed from your schedule if the shift has already started.</li>
         <li>Any shift with <small class="text-danger">N/A</small> in the Actions
-           column indicates the shift has not been activated yet and sign ups are not allowed. Check back at a later time to see if the shift has been activated.</li>
+          column indicates the shift has not been activated yet and sign ups are not allowed. Check back at a later time to see if the shift has been activated.</li>
       </ul>
     </div>
-{{else}}
-<div class="text-danger">There are no shifts available.</div>
-{{/if}}
-
+  {{else}}
+    <div class="text-danger">There are no shifts available.</div>
+  {{/if}}
 {{/if}}
