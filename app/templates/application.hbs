@@ -122,7 +122,7 @@
                         {{#link-to "admin.slots" class="dropdown-item"}}Edit Schedule Slots{{/link-to}}
                       {{/if}}
               {{#if (has-role "admin")}}
-                      <a href="{{cgo "slot" "selectCredits"}}" class="dropdown-item">Edit Schedule Credits</a>
+                      {{#link-to "admin.credits" class="dropdown-item"}}Edit Schedule Credits{{/link-to}}
                       {{#link-to "admin.positions" class="dropdown-item"}}Edit Positions{{/link-to}}
                       <a href="{{cgo "role" "selectAll"}}" class="dropdown-item">Edit (System) Roles</a>
                       <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
@@ -135,7 +135,7 @@
                       <a href="{{cgo "conversion" "convert"}}" class="dropdown-item">Database Conversions</a>
                       <a href="{{cgo "reminders" "index"}}" class="dropdown-item">Reminder Emails</a>
                       <a href="{{cgo "maintenance" "bulkUpload"}}" class="dropdown-item">Bulk Upload</a>
-                      <a href="{{cgo "timesheet" "bulkSignInOut"}}" class="dropdown-item">Bulk Upload</a>
+                      <a href="{{cgo "timesheet" "bulkSignInOut"}}" class="dropdown-item">Bulk Sign In/Out</a>
                       <a href="{{cgo "lam" "syncLamPhotos"}}" class="dropdown-item">Synchronize Lam Photos</a>
                       <a href="{{cgo "lam" "exportLamPhotos"}}" class="dropdown-item">Export Lam Photos</a>
                       <a href="{{cgo "timesheet" "signoutOnDuty"}}" class="dropdown-item">Bulk Signout</a>
