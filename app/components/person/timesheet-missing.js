@@ -59,7 +59,7 @@ export default class PersonTimesheetMissingComponent extends Component {
     this.set('nextEntry', nextEntry);
     this.set('editEntry', timesheet);
     this.set('partnerInfo', timesheet.partner_info);
-    this.set('partnerTimesheet', null);
+    this.set('havePartnerTimesheet', false);
   }
 
   @action
@@ -82,6 +82,7 @@ export default class PersonTimesheetMissingComponent extends Component {
     this.house.saveModel(model, 'Missing timesheet entry has been successfully updated.', () => {
       this.set('editEntry', null);
       this.set('nextEntry', null);
+      this.set('havePartnerTimesheet', null);
 
       // Refresh the timesheet entries if a new one was created
       if (createEntry && this.timesheets) {
@@ -117,6 +118,7 @@ export default class PersonTimesheetMissingComponent extends Component {
   @action
   viewPartnerTimesheetAction(partner) {
     this.ajax.request('timesheet', { data: { year: this.year, person_id: partner.person_id }}).then((result) => {
+      this.set('havePartnerTimesheet', true);
       this.set('partnerTimesheet', result.timesheet);
       this.set('partnerCallsign', partner.callsign);
     }).catch((response) => this.house.handleErrorResponse(response));
@@ -146,7 +148,7 @@ export default class PersonTimesheetMissingComponent extends Component {
     this.set('newEntry', null);
   }
 
-  // Save/create a new entry 
+  // Save/create a new entry
   @action
   createEntryAction(model, isValid) {
     if (!isValid) {
@@ -154,7 +156,7 @@ export default class PersonTimesheetMissingComponent extends Component {
     }
 
     this.house.saveModel(model, 'A new missing timesheet request has been succesfully created.', () => {
-      this.set('newEntry', 0);
+      this.set('newEntry', null);
       this.timesheetMissing.update();
     });
 

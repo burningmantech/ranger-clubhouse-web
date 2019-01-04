@@ -44,25 +44,26 @@
   </tbody>
 </table>
 
-{{#if newEntry}}
-{{#ch-form "entry" newEntry modalBox=true modalTitle="Create New Missing Timesheet Request" validator=newEntryValidations onSubmit=(action "createEntryAction") onCancel=(action "cancelNewEntryAction") as |f|}}
-  <div class="form-row">
-    {{f.input "on_duty" type="datetime" label="On Duty"}}
-    {{f.input "off_duty" type="datetime" label="Off Duty"}}
-    {{f.input "position_id" type="select" options=positions label="Position"}}
-  </div>
-  <div class="form-row">
-    {{f.input "partner" type="text" label="Partner(s) for shift." size=40 maxlength=60 }}
-  </div>
-  <div class="form-row">
-    {{f.input "notes" type="textarea" cols=80 rows=4 options=positions label="Correction Notes"}}
-  </div>
-  {{f.submit}}
-  {{f.cancel}}
-{{/ch-form}}
-{{/if}}
 {{else}}
 <p class="mt-2 text-danger">No missing timesheet entry requests found for {{year}}</p>
+{{/if}}
+
+{{#if newEntry}}
+  {{#ch-form "entry" newEntry modalBox=true modalTitle="Create New Missing Timesheet Request" validator=newEntryValidations onSubmit=(action "createEntryAction") onCancel=(action "cancelNewEntryAction") as |f|}}
+    <div class="form-row">
+      {{f.input "on_duty" type="datetime" label="On Duty"}}
+      {{f.input "off_duty" type="datetime" label="Off Duty"}}
+      {{f.input "position_id" type="select" options=positions label="Position"}}
+    </div>
+    <div class="form-row">
+      {{f.input "partner" type="text" label="Partner(s) for shift." size=40 maxlength=60 }}
+    </div>
+    <div class="form-row">
+      {{f.input "notes" type="textarea" cols=80 rows=4 options=positions label="Correction Notes"}}
+    </div>
+    {{f.submit}}
+    {{f.cancel}}
+  {{/ch-form}}
 {{/if}}
 
 {{#if editEntry}}
@@ -167,7 +168,7 @@
   {{/if}}
   {{f.submit}}
   {{f.cancel}}
-  {{#if partnerTimesheet}}
+  {{#if havePartnerTimesheet}}
   <hr>
   <table class="table table-sm">
     <caption>{{partnerCallsign}} {{year}} Timesheet</caption>
@@ -195,6 +196,10 @@
         <td colspan="2">On Duty</td>
       {{/if}}
       <td>{{pt.position.title}}</td>
+    </tr>
+    {{else}}
+    <tr>
+      <td colspan="4">No timesheets found for {{year}}</td>
     </tr>
     {{/each}}
     </tbody>
