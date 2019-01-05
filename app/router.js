@@ -85,6 +85,7 @@ Router.map(function() {
   this.route('debug');
   this.route('reports', function() {
     this.route('timesheet-correction-requests');
+    this.route('timesheet-unconfirmed');
   });
 });
 

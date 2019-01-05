@@ -1,0 +1,47 @@
+{{year-select "Timesheet Unconfirmed Report" year=year onChange=(action "changeYear")}}
+<p>
+  The report will show people who have not confirmed their timesheets as correct (i.e. have not checked the "I have reviewed and verified" checkbox on "My Timesheet Corrections")
+</p>
+
+{{#if unconfirmed_people}}
+<div class="row">
+  <div class="col-sm-6">
+    <button class="btn btn-primary" {{action "downloadCsv"}}>Download as CSV</button>
+  </div>
+  <div class="col-sm-6 text-right">
+    <a href="#email-list" class="btn btn-secondary">Jump to the email list</a>
+  </div>
+</div>
+
+  <p>
+    count = How many timesheet entries are not verified
+  </p>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Callsign</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Home Phone</th>
+        <th>Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each unconfirmed_people as |person|}}
+        <tr>
+          <td>{{person-link person=person}}</td>
+          <td>{{person.first_name}} {{person.last_name}}</td>
+          <td>{{mail-to person.email}}</td>
+          <td><a href="tel:{{person.home_phone}}">{{person.home_phone}}</a></td>
+          <td>{{person.unverified_count}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  {{email-list people=unconfirmed_people}}
+
+{{else}}
+  <p class="text-danger">Congratulations (or WTF?), everyone has marked their timesheets as confirmed.</p>
+
+{{/if}}
