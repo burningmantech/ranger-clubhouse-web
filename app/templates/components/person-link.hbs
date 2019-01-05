@@ -1,5 +1,5 @@
 {{#if person}}
-  {{#link-to "person.index" person.id}}{{person.callsign}}{{/link-to}}
+  {{#link-to routePath person.id}}{{person.callsign}}{{/link-to}}
 {{else}}
-  {{#link-to "person.index" personId}}{{callsign}}{{/link-to}}
+  {{#link-to routePath personId}}{{callsign}}{{/link-to}}
 {{/if}}

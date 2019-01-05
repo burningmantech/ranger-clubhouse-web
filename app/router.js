@@ -83,6 +83,9 @@ Router.map(function() {
     this.route('untrained-people');
   });
   this.route('debug');
+  this.route('reports', function() {
+    this.route('timesheet-correction-requests');
+  });
 });
 
 export default Router;

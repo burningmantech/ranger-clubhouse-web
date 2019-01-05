@@ -91,6 +91,10 @@ export default Mixin.create({
 
         // Sub array means ALL the roles have to be present.
         role.forEach((r) => {
+          if (!role) {
+            throw new Error('hasRole: Unknown role - is the name spelled correctly?');
+          }
+
           if (!personRoles.includes(r)) {
             haveAll = false;
           }
@@ -100,6 +104,9 @@ export default Mixin.create({
           haveIt = true;
         }
       } else {
+        if (!role) {
+          throw new Error('hasRole: Unknown role - is the name spelled correctly?');
+        }
         if (personRoles.includes(role)) {
           haveIt = true;
         }
