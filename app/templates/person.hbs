@@ -2,7 +2,7 @@
 <main class="col">
   {{#if (not person.user_authorized)}}
     {{#ch-alert "danger"}}
-      {{fa-icon "exclamation-triangle" size="2x"}}This account is not accessible. Contact the Personnel Manager.
+      {{fa-icon "exclamation-triangle" size="2x"}}This account is not accessible. Contact the Personnel Manager, {{mail-to (config "PersonnelEmail")}}.
     {{/ch-alert}}
   {{/if}}
 

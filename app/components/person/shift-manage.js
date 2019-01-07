@@ -13,7 +13,7 @@ export default class PersonShiftManageComponent extends Component {
   signinPositionId = null;
 
   didReceiveAttrs() {
-    this.set('signinPositionId', this.signinPositions.firstObject.id);
+    this.set('signinPositionId', this.get('signinPositions.firstObject.id'));
   }
 
   // Build a position list with the postfix ' (untrained)' added
