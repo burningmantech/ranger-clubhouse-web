@@ -30,4 +30,6 @@
       {{#link-to "training.session.index" training.id group.slot.id class="btn btn-primary"}}Manage{{/link-to}}
     </div>
   {{/ch-box}}
+{{else}}
+<div class="text-danger">Odd, no training sessions were found for {{year}}</div>
 {{/each}}
