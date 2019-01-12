@@ -23,9 +23,10 @@ export default class DatetimePickerComponent extends Component {
   @argument maxlength;
   @argument value;
   @argument autocomplete = "off";
+  @argument dateOnly; // set true if only want to deal with dates, no time.
 
   didInsertElement() {
-    $('#'+this.elementId).datetimepicker({
+    const options = {
       format: 'Y-m-d H:i',
       inline: false,
       lang: 'en',
@@ -35,7 +36,14 @@ export default class DatetimePickerComponent extends Component {
         this.onChange(field.val())
       },
       validateOnBlur: true  // BUG with datepicker. The package will not allow a blank field is validateOnBlur is false.
-    });
+    };
+
+    if (this.dateOnly) {
+      options.format = 'Y-m-d';
+      options.timepicker = false;
+    }
+
+    $('#'+this.elementId).datetimepicker(options);
   }
 
   willDestroyElement() {

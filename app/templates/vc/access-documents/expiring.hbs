@@ -1,0 +1,40 @@
+<h1>Unclaimed Expiring Tickets</h1>
+
+<p>Below are unclaimed tickets that will expire at the end of the coming event.</p>
+
+Showing {{pluralize expiring.length 'person'}}
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Callsign</th>
+      <th>Email</th>
+      <th>RAD</th>
+      <th>Ticket Type</th>
+      <th>Ticket Status</th>
+      <th>Good Through</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each expiring as |person|}}
+      <tr>
+        <td>{{person-link person=person.person page="access-documents"}}</td>
+        <td>{{mail-to person.person.email}}</td>
+        {{#with person.tickets.firstObject as |ticket|}}
+          <td>RAD-{{ticket.id}}</td>
+          <td>{{ticket.type}}</td>
+          <td>{{ticket.status}}</td>
+          <td>{{mdy-format ticket.expiry_date}}</td>
+        {{/with}}
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="6" class="text-danger">
+          Huh, I could not find any expiring tickets for this year.
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+{{email-list people=emailList}}

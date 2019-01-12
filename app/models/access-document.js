@@ -22,10 +22,12 @@ export default class AccessDocumentModel extends DS.Model {
   @attr('string') access_date;
   @attr('boolean') access_any_time;
   @attr('string') name;
-  @attr('string') comments;
+  @attr('string', { readOnly: true }) comments;
+  // write-only, backend will appeand to comments
+  @attr('string') additional_comments;
   @attr('string') expiry_date;
-  @attr('string') create_date;
-  @attr('string') modified_date;
+  @attr('string', { readOnly: true }) create_date;
+  @attr('string', { readOnly: true }) modified_date;
 
   // Update the status
   updateStatus = memberAction({ path: 'status', type: 'patch'});
@@ -101,4 +103,35 @@ export default class AccessDocumentModel extends DS.Model {
   get accessDateFormatted() {
     return moment(this.access_date).format('dddd MMMM Do, YYYY');
   }
+
+  get admission_date() {
+    if (this.access_any_time) {
+      return 'any';
+    } else {
+      if (this.access_date) {
+        return moment(this.access_date).format('YYYY-MM-DD');
+      } else {
+        return null;
+      }
+    }
+  }
+
+  set admission_date(value) {
+    if (value == 'any') {
+      this.set('access_any_time', true);
+      this.set('access_date', null);
+    } else {
+      this.set('access_any_time', false);
+      this.set('access_date', value);
+    }
+  }
+
+  get expiry_year() {
+    return moment(this.expiry_date).format('YYYY');
+  }
+
+  set expiry_year(year) {
+    this.set('expiry_date', `${year}-09-15`);
+  }
+
 }

@@ -19,7 +19,6 @@ module('Integration | Component | admin/slot-form', function(hooks) {
       active: true
     }));
     const positions = run(() => store.query('position', {}));
-    console.log(slot);
     this.set('slot', slot);
     this.set('positions', positions);
     this.set('trainerSlots', []);

@@ -1,0 +1,33 @@
+<h1>All Access Documents</h1>
+<p>Below is everybody who has a qualified, claimed, or banked
+  Access Document in the system. Claimed items are shown in green,
+  banked in yellowish-orange. "SOs" is a count of how many significant-other
+  Work Access Passes that person has. "Weird Stuff" should be anything that looks
+  odd about this person's collection of Access Documents.</p>
+
+Showing {{pluralize documents.people.length 'person'}}
+<table class="table table-hover table-sm">
+  <thead>
+    <tr>
+      <th>Person</th>
+      <th>Status</th>
+      <th>Ticket</th>
+      <th>Arrival</th>
+      <th>VP</th>
+      <th>SOs</th>
+      <th>Weird Stuff</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each documents.people as |person|}}
+      {{access-documents-for-person person=person.person documents=person.documents}}
+    {{else}}
+      <tr>
+        <td colspan="7" class="text-danger">
+          Odd, I cannot find any current access documents.
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

@@ -1,8 +1,10 @@
 import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import RSVP from 'rsvp';
 
-export default class PersonRoute extends Route {
+import { Role } from 'clubhouse/constants/roles';
+
+export default class PersonRoute extends Route.extend(AuthenticatedRouteMixin) {
   beforeModel() {
     super.beforeModel(...arguments);
     this.house.roleCheck([Role.ADMIN, Role.MANAGE, Role.VC, Role.MENTOR, Role.TRAINER]);

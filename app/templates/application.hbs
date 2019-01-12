@@ -101,7 +101,7 @@
             <div class="dropdown-menu">
               {{#link-to "handle-checker" class="dropdown-item"}}Check Callsigns{{/link-to}}
               {{#if (has-role "edit-access-docs")}}
-              <a href="{{cgo "accessdoc" "listAllAccessDocs"}}" class="dropdown-item">Manage Access Docs</a>
+              {{#link-to "vc.access-documents" class="dropdown-item"}}Manage Access Docs{{/link-to}}
               {{/if}}
               {{#if (has-role "edit-bmids")}}
               <a href="{{cgo "bmidc" "listAllBMIDs"}}" class="dropdown-item">Manage BMIDs</a>

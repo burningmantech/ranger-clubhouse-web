@@ -27,7 +27,7 @@ const sidebarCollapse = function(event) {
   return false;
 };
 
-@classNames('sidebar-expanded', 'col', 'd-none', 'd-md-block', 'd-print-none')
+@classNames('sidebar-expanded', 'd-none', 'd-md-block', 'd-print-none')
 export default class ChSidebarComponent extends Component {
   elementId = 'sidebar-container';
 

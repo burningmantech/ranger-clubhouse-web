@@ -121,8 +121,6 @@ export default class HouseService extends Service {
    */
 
   downloadCsv(filename, columns, data) {
-    let { document, URL } = window;
-    let anchor = document.createElement('a');
     let contents = columns.join(',')+"\n";
 
      data.forEach((line) => {
@@ -133,9 +131,20 @@ export default class HouseService extends Service {
        contents += fields.join(',')+"\n";
      });
 
+     this.downloadFile(filename, contents, 'text/csv');
+  }
+
+  /*
+   * Download a file
+   */
+
+  downloadFile(filename, contents, type) {
+    let { document, URL } = window;
+    let anchor = document.createElement('a');
+
     anchor.download = filename;
     anchor.href = URL.createObjectURL(new Blob([contents], {
-      type: 'text/csv'
+      type
     }));
 
     document.body.appendChild(anchor);

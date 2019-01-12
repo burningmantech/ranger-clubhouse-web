@@ -1,0 +1,100 @@
+Showing {{pluralize documents.length "current access document"}}
+<table class="table table-sm table-hover">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Type</th>
+      <th>Status</th>
+      <th>Access Date</th>
+      <th>Source Year</th>
+      <th>Good Through</th>
+      <th>Other Details</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each documents as |document|}}
+      <tr>
+        <td><a href {{action "editAccessDocument" document}}>RAD-{{document.id}}</a></td>
+        <td>{{document.typeHuman}}</td>
+        <td>{{document.status}}</td>
+        <td>
+          {{#if document.access_any_time}}
+            Any
+          {{else if document.access_date}}
+            {{moment-format document.access_date "ddd MM/DD/YY"}}
+          {{else}}
+            -
+          {{/if}}
+        </td>
+        <td>
+          {{document.source_year}}
+        </td>
+        <td>
+          {{document.expiryYear}}
+        </td>
+        <td>
+          {{#if document.name}}
+            {{document.name}}
+          {{else}}
+            -
+          {{/if}}
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="7" class="text-danger">No current/non-expired access documents were found.</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<button class="btn btn-primary" {{action "newAccessDocument"}}>New Access Document For {{person.callsign}}</button>
+
+{{#if entry}}
+  {{#ch-form "entry" entry modalBox=true modalTitle=(if entry.isNew "Create A New Access Document" "Edit Access Document")
+    onSubmit=(action "saveAccessDocument")
+    onCancel=(action "cancelAccessDocument") as |f|
+  }}
+    <div class="form-row">
+      {{f.input "type" type="select" options=typeOptions label="Type" grid="col-auto"}}
+      {{f.input "status" type="select" options=statusOptions label="Status" grid="col-auto"}}
+      {{f.input "source_year" type="select" options=yearOptions label="Source Year"}}
+      {{f.input "expiry_year" type="select" options=yearOptions label="Good Through"}}
+
+      {{#if (not (or entry.isReducedPriceTicket entry.isGiftTicket))}}
+        {{f.input "admission_date" label="Access Date" type="select" options=admissionDateOptions grid="col-auto"}}
+      {{/if}}
+    </div>
+
+    {{f.input "name" label="Name" type="text" size="40" grid="col-auto"}}
+    {{#unless entry.isNew}}
+      <div class="form-row">
+        <label class="col-form-label">Last Modified:</label>
+        <div class="mt-2 col-auto">
+          {{entry.modified_date}}
+        </div>
+        <label class="col-form-label">Created:</label>
+        <div class="mt-2 col-auto">
+          {{entry.create_date}}
+        </div>
+      </div>
+
+      <div class="form-row mb-4">
+        <label class="col-form-label">Comments:</label>
+        <div class="mt-2 col-auto">
+          {{nl2br entry.comments}}
+        </div>
+      </div>
+    {{/unless}}
+
+    {{f.input 'additional_comments' label="Additional Comments" type="textarea" rows=4 cols=60
+      hint="(Your callsign and date will be automatically added to any additional comments you provide.)"}}
+    {{f.submit}}
+    {{f.cancel}}
+    {{#unless entry.isNew}}
+      <button class="btn btn-danger float-right" {{action "deleteAccessDocument" entry}}>Delete (Cancel) Document</button>
+    {{/unless}}
+  {{/ch-form}}
+
+{{/if}}

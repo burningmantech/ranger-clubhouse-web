@@ -68,6 +68,7 @@ Router.map(function() {
     this.route('timesheet-log');
     this.route('contact-log');
     this.route('broadcast-log');
+    this.route('access-documents');
   });
   this.route('logout');
   this.route('training', { path: '/training/:position_id' }, function() {
@@ -86,6 +87,13 @@ Router.map(function() {
   this.route('reports', function() {
     this.route('timesheet-correction-requests');
     this.route('timesheet-unconfirmed');
+  });
+  this.route('vc', function() {
+    this.route('access-documents', function() {
+      this.route('index', { path: '/'} );
+      this.route('expiring');
+      this.route('trs');
+    });
   });
 });
 

@@ -87,7 +87,7 @@
     cols        = cols
     maxLength   = maxlength
   }}
-{{else if (eq type "datetime")}}
+{{else if (or (eq type "datetime") (eq type "date"))}}
   {{datetime-picker
     autofocus=autofocus
     classNames=controlClass
@@ -96,6 +96,7 @@
     onChange=(action "update")
     placeholder=placeholder
     value=(get model name)
+    dateOnly=(eq type "date")
    }}
 {{else}}
   <input

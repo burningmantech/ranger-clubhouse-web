@@ -1,0 +1,93 @@
+<h1>Export Access Documents</h1>
+
+<p>Below are Access Documents in "claimed" status that are suitable
+  for exporting into TRS.</p>
+
+<p>1. Select the type of Access Documents you're interested in and
+  click "Filter by Type."</p>
+
+<p>2. Click the "Download CSV for Upload to Ticket Request System"
+  link at the bottom of the page to download a CSV to upload into TRS.</p>
+
+<p>3. If the upload succeeds, you can type "CONFIRM" into the little
+  text box at the bottom of the page and then click the button that
+  marks these puppies as submitted.
+  (If some failed, you can uncheck the little check boxes on the left
+  for each record. Do this before you click on the button to mark them
+  as submitted.)</p>
+
+<p>Note that there is a recommended TRS batch size of not more than
+  700 items. (An item is any goodie of any sort.) If you have more
+  than 700 items, the system will stop at around 700, and you can then
+  upload that batch, mark it as submitted, and get on with the next batch.</p>
+
+
+{{#if badRecords}}
+<table class="table table-sm table-hover table-box">
+  <caption class="text-danger">{{pluralize badRecords.length "record"}} with errors</caption>
+  <thead>
+  <tr>
+    <td>Callsign</td>
+    <td>ID</td>
+    <td>Type</td>
+    <td>Access Date</td>
+    <td>Error</td>
+  </tr>
+</thead>
+<tbody>
+  {{#each badRecords as |rec|}}
+    <tr>
+      <td>{{person-link person=rec.person page="access-documents"}}</td>
+      <td>RAD-{{rec.document.id}}</td>
+      <td>{{rec.document.type}}</td>
+      <td>{{rec.document.access_date}}</td>
+      <td>{{rec.document.error}}</td>
+    </tr>
+  {{/each}}
+</tbody>
+</table>
+{{/if}}
+
+{{#ch-box title="Filter Records"}}
+  {{ch-form/select
+    name="selectTypes"
+    value=selectedTypes
+    options=filterOptions
+    onChange=(action "updateSelectTypes")
+  }}
+{{/ch-box}}
+{{#if (gt selectedRecords.length MAX_BATCH_SIZE)}}
+{{#ch-alert "danger" }}
+The records shown currently exceed the maximum TRS upload batch size of {{MAX_BATCH_SIZE}}. The rows which exceed the limit have been highlighted in yellow.
+{{/ch-alert}}
+{{/if}}
+Showing {{pluralize selectedRecords.length "record"}} of type "{{selectedTypes}}". Selected {{pluralize selectedCount "record"}}.
+<table class="table table-sm table-hover">
+  <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th>Callsign</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th>Delivery</th>
+      <th>Internal Notes</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each selectedRecords as |rec idx|}}
+        <tr class="{{if (gte idx MAX_BATCH_SIZE) "bg-warning"}}">
+          <td>{{input type="checkbox" checked=rec.selected}}</td>
+          <td>{{person-link person=rec.person page="access-documents"}}</td>
+          <td>{{rec.person.first_name}}</td>
+          <td>{{rec.person.last_name}}</td>
+          <td>{{mail-to rec.person.email}}</td>
+          <td>{{rec.document.delivery_type}}</td>
+          <td>{{rec.internalNote}}</td>
+        </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<button class="btn btn-primary" {{action "exportSelectedAction"}} disabled={{eq selectedCount 0}}>Export {{pluralize selectedCount "Selected Document"}}</button>

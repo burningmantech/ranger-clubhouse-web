@@ -107,9 +107,9 @@
       <label for="person_position" class="col-form-label col-form-label-fixed col-md-2 col-sm-12">Positions</label>
       <div class="col-md-9 col-sm-12">
         <div class="row col-12 mt-1 mb-2">
-          <button type="button" {{action "togglePositions"}} class="btn btn-primary btn-sm mr-2">{{if showPositions "Hide" "Show"}} Positions</button>
+          <button type="button" {{action "togglePositions"}} class="btn btn-secondary btn-sm mr-2">{{if showPositions "Hide" "Show"}} Positions</button>
           {{#if (or isAdmin isManageAndGrandPosition)}}
-            <button type="button" {{action "editPositions"}} class="btn btn-primary btn-sm">Edit Positions</button>
+            <button type="button" {{action "editPositions"}} class="btn btn-secondary btn-sm">Edit Positions</button>
           {{/if}}
         </div>
         {{#if showPositions}}
@@ -128,9 +128,9 @@
       <label class="col-form-label col-form-label-fixed col-md-2 col-sm-12">Roles</label>
       <div class="col-md-9 col-sm-12">
         <div class="row col-12 mt-1 mb-2">
-          <button type="button" {{action "toggleRoles"}} class="btn btn-primary btn-sm mr-2">{{if showRoles "Hide" "Show"}} Roles</button>
+          <button type="button" {{action "toggleRoles"}} class="btn btn-secondary btn-sm mr-2">{{if showRoles "Hide" "Show"}} Roles</button>
           {{#if (has-role "admin")}}
-            <button type="button" {{action "editRoles"}} class="btn btn-primary btn-sm">Edit Roles</button>
+            <button type="button" {{action "editRoles"}} class="btn btn-secondary btn-sm">Edit Roles</button>
           {{/if}}
         </div>
         {{#if showRoles}}
@@ -175,11 +175,11 @@
       <div class="col-md-9 col-sm-12">
           {{#if (or canEditBMIT canEditAccessDocs)}}
             {{#if canEditBMIT}}
-              <a href="{{cgo "bmidc" "edit" personId=person.id}}" class="btn btn-primary btn-sm mr-2">Edit BMID</a>
+              <a href="{{cgo "bmidc" "edit" personId=person.id}}" class="btn btn-secondary btn-sm mr-2">Edit BMID</a>
             {{/if}}
             {{#if canEditAccessDocs}}
-              <a href="#" class="btn btn-primary btn-sm mr-2">Edit Tickets &amp; Stuff (TODO)</a>
-              <a href="{{cgo "accessdoc" "editUserAccessDocs" personId=person.id}}" class="btn btn-primary btn-sm mr-2">Edit Access Docs</a>
+              <a href="#" class="btn btn-secondary btn-sm mr-2">Edit Tickets &amp; Stuff (TODO)</a>
+              {{#link-to "person.access-documents" class="btn btn-secondary btn-sm"}}Edit Access Docs{{/link-to}}
             {{/if}}
           {{else}}
             <div class="text-muted">No permission to edit BMID and/or access documents.</div>
@@ -191,8 +191,8 @@
     <div class="form-group row">
       <label class="col-md-2 col-sm-12 col-form-label-fixed">Logs</label>
       <div class="col-md-9 col-sm-12">
-        {{#link-to "person.contact-log" class="btn btn-primary btn-sm"}}Contact Log{{/link-to}}
-        {{#link-to "person.broadcast-log" class="btn btn-primary btn-sm"}}Broadcast Log{{/link-to}}
+        {{#link-to "person.contact-log" class="btn btn-secondary btn-sm"}}Contact Log{{/link-to}}
+        {{#link-to "person.broadcast-log" class="btn btn-secondary btn-sm"}}Broadcast Log{{/link-to}}
       </div>
     </div>
     {{/if}}
@@ -221,7 +221,7 @@
         {{f.submit label="Save Information" disabled=(not f.model.isDirty)}}
       </div>
       <div class="col-md-2 col-sm-12 ml-auto">
-        <button type="button" class="btn btn-secondary btn-sm" {{action "removePerson"}}>Remove</button>
+        <button type="button" class="btn btn-danger btn-sm" {{action "removePerson"}}>Remove</button>
       </div>
     </div>
 {{/ch-form}}
