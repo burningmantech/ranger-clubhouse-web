@@ -16,212 +16,212 @@
 {{person-photo photo=photo}}
 
 {{#ch-form "person" person  onSubmit=(action "savePerson") as |f|}}
-    <div class="form-group row">
-      <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign</label>
-      {{#if isAdminMentorOrVC}}
-        {{f.input "callsign" type="text" size=35 maxlength=100 wrapClass="col-auto"}}
-      {{else}}
-        <div class="mt-2 col-auto">
-          {{person.callsign}}
-        </div>
-      {{/if}}
-    </div>
+  <div class="form-group row">
+    <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign</label>
+    {{#if isAdminMentorOrVC}}
+      {{f.input "callsign" type="text" size=35 maxlength=100 wrapClass="col-auto"}}
+    {{else}}
+      <div class="mt-2 col-auto">
+        {{person.callsign}}
+      </div>
+    {{/if}}
+  </div>
 
-    <div class="form-group row">
-      <label class="col-form-label col-form-label-fixed col-md-2 col-sm-2">FKA</label>
-      {{#if isAdminMentorOrVC}}
-        {{f.input "formerly_known_as" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
-      {{else}}
-        <div class="mt-2 col-auto">
-          {{present-or-not person.formerly_known_as "no previous callsigns"}}
-        </div>
-      {{/if}}
-    </div>
+  <div class="form-group row">
+    <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">FKA</label>
+    {{#if isAdminMentorOrVC}}
+      {{f.input "formerly_known_as" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
+    {{else}}
+      <div class="mt-2 col-auto">
+        {{present-or-not person.formerly_known_as "no previous callsigns"}}
+      </div>
+    {{/if}}
+  </div>
 
-    <div class="form-group row">
-      <label class="ol-form-label col-form-label-fixed col-md-2 col-sm-12">Callsign Approved</label>
-      {{#if canChangeApproval}}
-        {{f.input "callsign_approved" type="select" wrapClass="col-auto" options=callsignApprovedOptions}}
-      {{else}}
-        <div class="mt-2 col-auto">
-          {{#if person.callsign_approved}}
-            Approved
-          {{else}}
-            Not Approved
-          {{/if}}
-        </div>
-      {{/if}}
-    </div>
-
-    <div class="form-group row">
-      <label class="col-form-label col-form-label-fixed col-sm-2">Status</label>
-      {{#if isAdminMentorOrVC}}
-        {{f.input "status" type="select" options=statusOptions wrapClass="col-auto"}}
-      {{else}}
-        <div class="mt-2 col-auto">
-          {{person.status}}
-        </div>
-      {{/if}}
-    </div>
-
-    <div class="form-group row">
-        <label class="col-form-label col-form-label-fixed col-sm-2">Personnel</label>
-        {{#if session.user.isAdmin}}
-          {{f.input "user_authorized" type="select" wrapClass="col-auto" options=userAuthorizedOptions}}
-          {{f.input "has_note_on_file" label="Note on file" type="checkbox" wrapClass="col-auto mt-2" value=1}}
+  <div class="form-group row">
+    <label class="ol-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign Approved</label>
+    {{#if canChangeApproval}}
+      {{f.input "callsign_approved" type="select" wrapClass="col-auto" options=callsignApprovedOptions}}
+    {{else}}
+      <div class="mt-2 col-auto">
+        {{#if person.callsign_approved}}
+          Approved
         {{else}}
-          <div class="mt-2 col-md-9">
-            {{#if person.user_authorized}}
-              Authorized
-            {{else}}
-              <span class="text-danger">NOT AUTHORIZED</span>
-            {{/if}}
-            {{#if person.has_note_on_file}}
-              (note on file)
-            {{/if}}
-          </div>
+          Not Approved
         {{/if}}
-    </div>
+      </div>
+    {{/if}}
+  </div>
 
-    <div class="form-group row">
-      <label class="col-form-label col-form-label-fixed col-md-2 col-sm-12">Name</label>
-        {{#if isAdminMentorOrVC}}
-          {{f.input "first_name" type="text" size=20 maxlength=25 wrapClass="col-auto"}}
-          {{f.input "mi" type="text" size=2 maxlength=10 wrapClass="col-auto"}}
-          {{f.input "last_name" type="text" size=20 maxlength=25 wrapClass="col-auto"}}
+  <div class="form-group row">
+    <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Status</label>
+    {{#if isAdminMentorOrVC}}
+      {{f.input "status" type="select" options=statusOptions wrapClass="col-auto"}}
+    {{else}}
+      <div class="mt-2 col-auto">
+        {{person.status}}
+      </div>
+    {{/if}}
+  </div>
+
+  <div class="form-group row">
+    <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Personnel</label>
+    {{#if session.user.isAdmin}}
+      {{f.input "user_authorized" type="select" wrapClass="col-auto" options=userAuthorizedOptions}}
+      {{f.input "has_note_on_file" label="Note on file" type="checkbox" wrapClass="col-auto mt-2" value=1}}
+    {{else}}
+      <div class="mt-2 col-md-9">
+        {{#if person.user_authorized}}
+          Authorized
         {{else}}
-          <div class="mt-2 col-md-9 col-sm-12">
-            {{person.first_name}} {{person.mi}} {{person.last_name}}
-        </div>
+          <span class="text-danger">NOT AUTHORIZED</span>
         {{/if}}
-    </div>
-
-    <div class="form-group row">
-        <label class="col-form-label-fixed col-md-2 col-sm-12">On Site</label>
-        <div class="col-md-9 col-sm-12">
-          {{f.input "on_site" type="radioGroup" options=onSiteOptions inline=true}}
-        </div>
-    </div>
-
-    <div class="form-group row">
-      <label for="person_position" class="col-form-label col-form-label-fixed col-md-2 col-sm-12">Positions</label>
-      <div class="col-md-9 col-sm-12">
-        <div class="row col-12 mt-1 mb-2">
-          <button type="button" {{action "togglePositions"}} class="btn btn-secondary btn-sm mr-2">{{if showPositions "Hide" "Show"}} Positions</button>
-          {{#if (or isAdmin isManageAndGrandPosition)}}
-            <button type="button" {{action "editPositions"}} class="btn btn-secondary btn-sm">Edit Positions</button>
-          {{/if}}
-        </div>
-        {{#if showPositions}}
-          <div class="row">
-            {{#each personPositions as |position| }}
-              <div class="col-6">
-                  {{position.title}}
-              </div>
-            {{/each}}
-          </div>
+        {{#if person.has_note_on_file}}
+          (note on file)
         {{/if}}
       </div>
-    </div>
+    {{/if}}
+  </div>
 
-    <div class="form-group row">
-      <label class="col-form-label col-form-label-fixed col-md-2 col-sm-12">Roles</label>
-      <div class="col-md-9 col-sm-12">
-        <div class="row col-12 mt-1 mb-2">
-          <button type="button" {{action "toggleRoles"}} class="btn btn-secondary btn-sm mr-2">{{if showRoles "Hide" "Show"}} Roles</button>
-          {{#if (has-role "admin")}}
-            <button type="button" {{action "editRoles"}} class="btn btn-secondary btn-sm">Edit Roles</button>
-          {{/if}}
-        </div>
-        {{#if showRoles}}
-          <div class="row">
-            {{#each roleColumns as |roleColumn| }}
-              <div class="col-6">
-                {{#each roleColumn as |role|}}
-                  {{role.title}}<br>
-                {{/each}}
-              </div>
-            {{/each}}
-          </div>
+  <div class="form-group row">
+    <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Name</label>
+    {{#if isAdminMentorOrVC}}
+      {{f.input "first_name" type="text" size=20 maxlength=25 wrapClass="col-auto"}}
+      {{f.input "mi" type="text" size=2 maxlength=10 wrapClass="col-auto"}}
+      {{f.input "last_name" type="text" size=20 maxlength=25 wrapClass="col-auto"}}
+    {{else}}
+      <div class="mt-2 col-md-9 col-sm-12">
+        {{person.first_name}} {{person.mi}} {{person.last_name}}
+      </div>
+    {{/if}}
+  </div>
+
+  <div class="form-group row">
+    <label class="col-form-label-fixed col-sm-12 col-md-2">On Site</label>
+    <div class="col-md-9 col-sm-12">
+      {{f.input "on_site" type="radioGroup" options=onSiteOptions inline=true}}
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label for="person_position" class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Positions</label>
+    <div class="col-md-9 col-sm-12">
+      <div class="row col-12 mt-1 mb-2">
+        <button type="button" {{action "togglePositions"}} class="btn btn-secondary btn-sm mr-2">{{if showPositions "Hide" "Show"}} Positions</button>
+        {{#if (or isAdmin isManageAndGrandPosition)}}
+          <button type="button" {{action "editPositions"}} class="btn btn-secondary btn-sm">Edit Positions</button>
         {{/if}}
       </div>
+      {{#if showPositions}}
+        <div class="row">
+          {{#each personPositions as |position| }}
+            <div class="col-6">
+              {{position.title}}
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
     </div>
+  </div>
 
-    <div class="form-group row">
-      <label class="col-form-label-fixed col-md-2 col-sm-12">Years</label>
-      <div class="col-md-9 col-sm-12">
-        {{#each person.years as |year|}}{{year}} {{/each}} ({{person.years.length}})
+  <div class="form-group row">
+    <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Roles</label>
+    <div class="col-md-9 col-sm-12">
+      <div class="row col-12 mt-1 mb-2">
+        <button type="button" {{action "toggleRoles"}} class="btn btn-secondary btn-sm mr-2">{{if showRoles "Hide" "Show"}} Roles</button>
+        {{#if (has-role "admin")}}
+          <button type="button" {{action "editRoles"}} class="btn btn-secondary btn-sm">Edit Roles</button>
+        {{/if}}
       </div>
+      {{#if showRoles}}
+        <div class="row">
+          {{#each roleColumns as |roleColumn| }}
+            <div class="col-6">
+              {{#each roleColumn as |role|}}
+                {{role.title}}<br>
+              {{/each}}
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
     </div>
+  </div>
 
-    <div class="form-group row">
-      <label class="col-form-label-fixed col-md-2 col-sm-12">Vehicles</label>
-      <div class="col-md-9 col-sm-12">
-        {{f.input "vehicle_paperwork" label="Motorpool Policy" type="checkbox" inline=true}}
-        {{f.input "vehicle_insurance_paperwork" label="Vehicle Insurance Paperwork" type="checkbox" inline=true}}
-        {{f.input "vehicle_blacklisted" label="Vehicle Blacklisted" type="checkbox" inline=true}}
-      </div>
+  <div class="form-group row">
+    <label class="col-form-label-fixed col-sm-12 col-md-2">Years</label>
+    <div class="col-md-9 col-sm-12">
+      {{#each person.years as |year|}}{{year}} {{/each}} ({{person.years.length}})
     </div>
+  </div>
 
-    <div class="form-group row">
-      <label class="col-form-label-fixed col-sm-2">Assets</label>
-      <div class="col-sm-10">
-        {{f.input "asset_authorized" label="Assets Authorized" type="checkbox" inline=true }}
-      </div>
+  <div class="form-group row">
+    <label class="col-form-label-fixed col-sm-12 col-md-2">Vehicles</label>
+    <div class="col-md-9 col-sm-12">
+      {{f.input "vehicle_paperwork" label="Motorpool Policy" type="checkbox" inline=true}}
+      {{f.input "vehicle_insurance_paperwork" label="Vehicle Insurance Paperwork" type="checkbox" inline=true}}
+      {{f.input "vehicle_blacklisted" label="Vehicle Blacklisted" type="checkbox" inline=true}}
     </div>
+  </div>
 
-    <div class="form-group row">
-      <label class="col-form-label-fixed col-sm-12 col-md-2">BMID/Tickets</label>
-      <div class="col-md-9 col-sm-12">
-          {{#if (or canEditBMIT canEditAccessDocs)}}
-            {{#if canEditBMIT}}
-              <a href="{{cgo "bmidc" "edit" personId=person.id}}" class="btn btn-secondary btn-sm mr-2">Edit BMID</a>
-            {{/if}}
-            {{#if canEditAccessDocs}}
-              <a href="#" class="btn btn-secondary btn-sm mr-2">Edit Tickets &amp; Stuff (TODO)</a>
-              {{#link-to "person.access-documents" class="btn btn-secondary btn-sm"}}Edit Access Docs{{/link-to}}
-            {{/if}}
-          {{else}}
-            <div class="text-muted">No permission to edit BMID and/or access documents.</div>
-          {{/if}}
-      </div>
+  <div class="form-group row">
+    <label class="col-form-label-fixed col-sm-12 col-md-2">Assets</label>
+    <div class="col-sm-12 col-md-9">
+      {{f.input "asset_authorized" label="Assets Authorized" type="checkbox" inline=true }}
     </div>
+  </div>
 
-    {{#if isAdmin}}
+  <div class="form-group row">
+    <label class="col-form-label-fixed col-sm-12 col-md-2">BMID/Tickets</label>
+    <div class="col-sm-12 col-md-9">
+      {{#if (or canEditBMIT canEditAccessDocs)}}
+        {{#if canEditBMIT}}
+          <a href="{{cgo "bmidc" "edit" personId=person.id}}" class="btn btn-secondary btn-sm mr-2">Edit BMID</a>
+        {{/if}}
+        {{#if canEditAccessDocs}}
+          <a href="#" class="btn btn-secondary btn-sm mr-2">Edit Tickets &amp; Stuff (TODO)</a>
+          {{#link-to "person.access-documents" class="btn btn-secondary btn-sm"}}Edit Access Docs{{/link-to}}
+        {{/if}}
+      {{else}}
+        <div class="text-muted">No permission to edit BMID and/or access documents.</div>
+      {{/if}}
+    </div>
+  </div>
+
+  {{#if isAdmin}}
     <div class="form-group row">
-      <label class="col-md-2 col-sm-12 col-form-label-fixed">Logs</label>
-      <div class="col-md-9 col-sm-12">
+      <label class="col-form-label-fixed col-sm-12 col-md-2">Logs</label>
+      <div class="col-sm-12 col-md-9 ">
         {{#link-to "person.contact-log" class="btn btn-secondary btn-sm"}}Contact Log{{/link-to}}
         {{#link-to "person.broadcast-log" class="btn btn-secondary btn-sm"}}Broadcast Log{{/link-to}}
       </div>
     </div>
-    {{/if}}
+  {{/if}}
 
-    <div class="form-group row">
-      <label class="col-form-label-fixed col-md-2 col-sm-12">Created</label>
-      <div class="col-md-9 col-sm-12">
-        {{#if person.create_date}}
-          {{person.create_date}}
-        {{else}}
-          <i>created prior to 2010</i>
-        {{/if}}
-      </div>
+  <div class="form-group row">
+    <label class="col-form-label-fixed col-sm-12 col-md-2">Created</label>
+    <div class="col-sm-12 col-md-9">
+      {{#if person.create_date}}
+        {{person.create_date}}
+      {{else}}
+        <i>created prior to 2010</i>
+      {{/if}}
     </div>
+  </div>
 
-    <div class="form-group row">
-      <label class="col-form-label-fixed col-md-2 col-sm-12">Modified</label>
-      <div class="col-sm-12 col-md-9">
-        {{person.date_verified}}
-      </div>
+  <div class="form-group row">
+    <label class="col-form-label-fixed col-sm-12 col-md-2">Modified</label>
+    <div class="col-sm-12 col-md-9">
+      {{person.date_verified}}
     </div>
+  </div>
 
-    <div class="form-group row">
-      <label class="col-form-label-fixed col-md-2 col-sm-12">&nbsp;</label>
-      <div class="col-md-6 col-sm-12">
-        {{f.submit label="Save Information" disabled=(not f.model.isDirty)}}
-      </div>
-      <div class="col-md-2 col-sm-12 ml-auto">
-        <button type="button" class="btn btn-danger btn-sm" {{action "removePerson"}}>Remove</button>
-      </div>
+  <div class="form-group row">
+    <label class="col-form-label-fixed col-sm-12 col-md-2">&nbsp;</label>
+    <div class="col-sm-12 col-md-6">
+      {{f.submit label="Save Information" disabled=(not f.model.isDirty)}}
     </div>
+    <div class="col-sm-12 col-md-2 ml-auto">
+      <button type="button" class="btn btn-danger btn-sm" {{action "removePerson"}}>Remove</button>
+    </div>
+  </div>
 {{/ch-form}}
