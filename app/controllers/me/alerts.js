@@ -67,15 +67,6 @@ export default class MeAlertsController extends Controller {
       return phones.join(' and ');
   }
 
-  // Set alert preferences on or off
-  @action
-  setAll(column, value) {
-    const field = column == 'email' ? 'use_email' : 'use_sms';
-    this.alerts.forEach((alert) =>  {
-      set(alert, field, value);
-    })
-  }
-
   // Update the user preferences
   @action
   updatePrefsAction() {
