@@ -1,27 +1,27 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember-decorators/object';
-import { validatePresence } from 'ember-changeset-validations/validators';
+import moment from 'moment';
 
 export default class PersonAccessDocumentsController extends Controller {
   entry = null;
 
   typeOptions = [
-    [ "Staff Credential", "staff_credential" ],
-    [ "Reduced-Price Ticket", "reduced_price_ticket" ],
-    [ "Gift Ticket", "gift_ticket" ],
-    [ "Work Access Pass", "work_access_pass" ],
-    [ "Work Access Pass (SO)", "work_access_pass_so" ],
-    [ "Vehicle Pass", "vehicle_pass" ],
+    ["Staff Credential", "staff_credential"],
+    ["Reduced-Price Ticket", "reduced_price_ticket"],
+    ["Gift Ticket", "gift_ticket"],
+    ["Work Access Pass", "work_access_pass"],
+    ["Work Access Pass (SO)", "work_access_pass_so"],
+    ["Vehicle Pass", "vehicle_pass"],
   ];
 
   statusOptions = [
-    [ "Qualified", "qualified" ],
-    [ "Claimed", "claimed" ],
-    [ "Banked", "banked" ],
-    [ "Submitted", "submitted" ],
-    [ "Used", "used" ],
-    [ "Cancelled", "cancelled" ],
-    [ "Expired", "expired" ]
+    ["Qualified", "qualified"],
+    ["Claimed", "claimed"],
+    ["Banked", "banked"],
+    ["Submitted", "submitted"],
+    ["Used", "used"],
+    ["Cancelled", "cancelled"],
+    ["Expired", "expired"]
   ];
 
   @computed
@@ -38,34 +38,29 @@ export default class PersonAccessDocumentsController extends Controller {
   @computed
   get admissionDateOptions() {
     const ticketingInfo = this.ticketingInfo;
-    const access_date = this.entry ? this.entry.access_date : null;
-    const mdy = moment((access_date || ticketingInfo.TAS_DefaultWAPDate)).format('dd/mm/YYYY');
     const year = (new Date()).getFullYear();
     const options = [
-      [ 'Unspecificed', '' ]
+      ['Unspecificed', '']
     ];
 
-
-  	let low = 5, high = 26;
-  	const range = ticketingInfo.TAS_WAPDateRange;
-  	if (range != null) {
-  		[ $low, $high ] = range.split('-');
-  	}
+    let low = 5, high = 26;
+    const range = ticketingInfo.TAS_WAPDateRange;
+    if (range != null) {
+      [low, high] = range.split('-');
+    }
 
     for (let day = high; day >= low; day--) {
       const date = `${year}-08-${day < 10 ? '0'+day : day}`;
-      options.push([ moment(date).format('ddd, MM/DD/YY'), date ]);
+      options.push([moment(date).format('ddd, MM/DD/YY'), date]);
     }
 
-    options.push([ 'Any', 'any' ]);
+    options.push(['Any', 'any']);
     return options;
   }
 
   @action
   newAccessDocument() {
     const currentYear = (new Date()).getFullYear();
-    const firstYear = this.yearOptions.firstObject;
-    const admit = this.admissionDateOptions.firstObject[1];
 
     this.set('entry', this.store.createRecord('access-document', {
       person_id: this.person.id,
@@ -83,7 +78,7 @@ export default class PersonAccessDocumentsController extends Controller {
   }
 
   @action
-  cancelAccessDocument(document) {
+  cancelAccessDocument() {
     this.set('entry', null)
   }
 
@@ -96,15 +91,15 @@ export default class PersonAccessDocumentsController extends Controller {
     const isNew = model.get('isNew');
 
     model.save().then(() => {
-      this.set('entry', null);
-      this.toast.success(`The access document was successfully ${isNew ? 'created' : 'updated'}.`);
-      if (isNew) {
-        this.documents.update();
-      }
-    })
-    .catch((response) => {
-      this.house.handleErrorResponse(response);
-    })
+        this.set('entry', null);
+        this.toast.success(`The access document was successfully ${isNew ? 'created' : 'updated'}.`);
+        if (isNew) {
+          this.documents.update();
+        }
+      })
+      .catch((response) => {
+        this.house.handleErrorResponse(response);
+      })
   }
 
   @action

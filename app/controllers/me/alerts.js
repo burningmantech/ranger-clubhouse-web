@@ -1,7 +1,6 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import { action, computed } from '@ember-decorators/object';
-import { set } from '@ember/object';
 import { filterBy } from '@ember-decorators/object/computed';
 import { validateFormat } from 'ember-changeset-validations/validators';
 
