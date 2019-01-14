@@ -260,29 +260,21 @@ legend {
   height: 64px;
   width: 64px;
   margin: 0 auto;
-  -webkit-mask: url("spinner.svg") no-repeat 50% 50%;
-  mask: url("spinner.svg") no-repeat 50% 50%;
-  -webkit-mask-size: cover;
-  mask-size: cover;
-  background-color: black;
+  background-image: url("images/spinner.gif");
+  background-size: cover;
 }
 
 .ranger-logo {
   text-align: center;
-  margin: 20px auto 0;
+  margin: 40px auto 0 auto;
+
   height: 200px;
   width: 200px;
 
-  // needed for IE edge
-  background-size: 20px 20px;
-
-  mask: url("ranger-logo.svg") no-repeat 50% 50%;
-  -webkit-mask: url("ranger-logo.svg") no-repeat 50% 50%;
-
-  mask-size: cover;
-  -webkit-mask-size: cover;
-
-  background-color: #ececec;
+  img {
+    height: 180px;
+    width: 180px;
+  }
 }
 
 .mugshot {
@@ -290,6 +282,8 @@ legend {
   padding: 5px;
   border: 1px solid #999;
   text-align: center;
+
+  margin-bottom: 10px;
 }
 
 .mugshot img {

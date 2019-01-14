@@ -13,82 +13,92 @@
   {{/ch-alert}}
 {{/if}}
 
-{{person-photo photo=photo}}
 
 {{#ch-form "person" person  onSubmit=(action "savePerson") as |f|}}
-  <div class="form-group row">
-    <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign</label>
-    {{#if isAdminMentorOrVC}}
-      {{f.input "callsign" type="text" size=35 maxlength=100 wrapClass="col-auto"}}
-    {{else}}
-      <div class="mt-2 col-auto">
-        {{person.callsign}}
-      </div>
-    {{/if}}
+
+  {{person-photo photo=photo}}
+
+  {{! The following block is floated left on md or larger screen.}}
+  <div class="float-md-left">
+    <div class="form-group row">
+      <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign</label>
+      {{#if isAdminMentorOrVC}}
+        {{f.input "callsign" type="text" size=35 maxlength=100 wrapClass="col-auto"}}
+      {{else}}
+        <div class="mt-2 col-auto">
+          {{person.callsign}}
+        </div>
+      {{/if}}
+    </div>
+
+    <div class="form-group row">
+      <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">FKA</label>
+      {{#if isAdminMentorOrVC}}
+        {{f.input "formerly_known_as" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
+      {{else}}
+        <div class="mt-2 col-auto">
+          {{present-or-not person.formerly_known_as "no previous callsigns"}}
+        </div>
+      {{/if}}
+    </div>
+
+    <div class="form-group row">
+      <label class="ol-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign Approved</label>
+      {{#if canChangeApproval}}
+        {{f.input "callsign_approved" type="select" wrapClass="col-auto" options=callsignApprovedOptions}}
+      {{else}}
+        <div class="mt-2 col-auto">
+          {{#if person.callsign_approved}}
+            Approved
+          {{else}}
+            Not Approved
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
+
+    <div class="form-group row">
+      <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Status</label>
+      {{#if isAdminMentorOrVC}}
+        {{f.input "status" type="select" options=statusOptions wrapClass="col-auto"}}
+      {{else}}
+        <div class="mt-2 col-auto">
+          {{person.status}}
+        </div>
+      {{/if}}
+    </div>
+
+    <div class="form-group row">
+      <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Personnel</label>
+      {{#if session.user.isAdmin}}
+        {{f.input "user_authorized" type="select" wrapClass="col-auto" options=userAuthorizedOptions}}
+        {{f.input "has_note_on_file" label="Note on file" type="checkbox" wrapClass="col-auto mt-2" value=1}}
+      {{else}}
+        <div class="mt-2 col-md-9">
+          {{#if person.user_authorized}}
+            Authorized
+          {{else}}
+            <span class="text-danger">NOT AUTHORIZED</span>
+          {{/if}}
+          {{#if person.has_note_on_file}}
+            (note on file)
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
   </div>
 
-  <div class="form-group row">
-    <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">FKA</label>
-    {{#if isAdminMentorOrVC}}
-      {{f.input "formerly_known_as" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
-    {{else}}
-      <div class="mt-2 col-auto">
-        {{present-or-not person.formerly_known_as "no previous callsigns"}}
-      </div>
-    {{/if}}
-  </div>
-
-  <div class="form-group row">
-    <label class="ol-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign Approved</label>
-    {{#if canChangeApproval}}
-      {{f.input "callsign_approved" type="select" wrapClass="col-auto" options=callsignApprovedOptions}}
-    {{else}}
-      <div class="mt-2 col-auto">
-        {{#if person.callsign_approved}}
-          Approved
-        {{else}}
-          Not Approved
-        {{/if}}
-      </div>
-    {{/if}}
-  </div>
-
-  <div class="form-group row">
-    <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Status</label>
-    {{#if isAdminMentorOrVC}}
-      {{f.input "status" type="select" options=statusOptions wrapClass="col-auto"}}
-    {{else}}
-      <div class="mt-2 col-auto">
-        {{person.status}}
-      </div>
-    {{/if}}
-  </div>
-
-  <div class="form-group row">
-    <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Personnel</label>
-    {{#if session.user.isAdmin}}
-      {{f.input "user_authorized" type="select" wrapClass="col-auto" options=userAuthorizedOptions}}
-      {{f.input "has_note_on_file" label="Note on file" type="checkbox" wrapClass="col-auto mt-2" value=1}}
-    {{else}}
-      <div class="mt-2 col-md-9">
-        {{#if person.user_authorized}}
-          Authorized
-        {{else}}
-          <span class="text-danger">NOT AUTHORIZED</span>
-        {{/if}}
-        {{#if person.has_note_on_file}}
-          (note on file)
-        {{/if}}
-      </div>
-    {{/if}}
-  </div>
+  {{!
+   Ensure the following is not floated next to photo
+  }}
+  <div class="clearfix"></div>
 
   <div class="form-group row">
     <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Name</label>
     {{#if isAdminMentorOrVC}}
-      {{f.input "first_name" type="text" size=20 maxlength=25 wrapClass="col-auto"}}
-      {{f.input "mi" type="text" size=2 maxlength=10 wrapClass="col-auto"}}
-      {{f.input "last_name" type="text" size=20 maxlength=25 wrapClass="col-auto"}}
+      {{f.input "first_name" type="text" size=20 maxlength=25 wrapClass="col-sm-12 col-md-4 col-lg-3"}}
+      {{f.input "mi" type="text" size=2 maxlength=10 wrapClass="col-sm-12 col-md-2 col-lg-1"}}
+      {{f.input "last_name" type="text" size=20 maxlength=25 wrapClass="col-md-4 col-lg-3"}}
     {{else}}
       <div class="mt-2 col-md-9 col-sm-12">
         {{person.first_name}} {{person.mi}} {{person.last_name}}
