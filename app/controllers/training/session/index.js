@@ -1,15 +1,22 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
-import { debounce } from '@ember/runloop';
-import { set } from '@ember/object';
-import { action, computed } from '@ember-decorators/object';
+import {
+  debounce
+} from '@ember/runloop';
+import {
+  set
+} from '@ember/object';
+import {
+  action,
+  computed
+} from '@ember-decorators/object';
 
 const SEARCH_RATE_MS = 300;
 
 export default class TrainingSlotController extends Controller {
   rankOptions = [
     1, 2, 3,
-    [ "FLAG", 4 ]
+    ["FLAG", 4]
   ];
 
   showEmails = false;
@@ -59,7 +66,7 @@ export default class TrainingSlotController extends Controller {
           alphas++;
         }
       } else if (student.years == 0) {
-          alphas++;
+        alphas++;
       }
     });
 
@@ -72,11 +79,24 @@ export default class TrainingSlotController extends Controller {
 
     this.students.forEach((student) => {
       if (student.years == 1) {
-          firstYear++;
-        }
+        firstYear++;
+      }
     });
 
     return firstYear;
+  }
+
+  @computed('students.[]')
+  get removeStudentOptions() {
+    const options = [
+      [ '-', null ]
+    ];
+
+    this.students.forEach((student) => {
+      options.push([ `${student.callsign} (${student.first_name} ${student.last_name})`, student.id]);
+    });
+
+    return options;
   }
 
   // Set the ranking for a person
@@ -89,22 +109,24 @@ export default class TrainingSlotController extends Controller {
   @action
   saveAllStudentsAction() {
     const scores = this.students.map((student) => ({
-        id: student.id,
-        notes: student.notes,
-        rank: student.rank,
-        passed: student.passed
+      id: student.id,
+      notes: student.notes,
+      rank: student.rank,
+      passed: student.passed
     }));
 
     this.toast.clear();
     this.set('isSubmitting', true);
     this.ajax.post(`training-session/${this.slot.id}/score`, {
-      data: { students: scores }
-    }).then((results) => {
-      this.set('students', results.students);
-      this.toast.success('The entire training session was successfully updated.');
-    })
-    .catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('isSubmitting', false));
+        data: {
+          students: scores
+        }
+      }).then((results) => {
+        this.set('students', results.students);
+        this.toast.success('The entire training session was successfully updated.');
+      })
+      .catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.set('isSubmitting', false));
   }
 
   // Show the dialog to add a person
@@ -112,7 +134,9 @@ export default class TrainingSlotController extends Controller {
   showAddPersonAction() {
     this.set('foundPeople', null);
     this.set('noSearchMatch', null);
-    this.set('searchForm', EmberObject.create( { name: '' }));
+    this.set('addPersonForm', EmberObject.create({
+      name: ''
+    }));
   }
 
   @action
@@ -128,13 +152,14 @@ export default class TrainingSlotController extends Controller {
     }
 
     this.ajax.request('person', {
-        data: {
-          query,
-          basic: 1,
-          search_fields: 'name,callsign,email',
-          exclude_statuses: 'deceased,dismissed,bonked,retired,uberbonked',
-          limit: 10
-    }}).then((results) => {
+      data: {
+        query,
+        basic: 1,
+        search_fields: 'name,callsign,email',
+        exclude_statuses: 'deceased,dismissed,bonked,retired,uberbonked',
+        limit: 10
+      }
+    }).then((results) => {
       this.set('foundPeople', results.person);
       if (results.person.length == 0) {
         this.set('noSearchMatch', query);
@@ -149,103 +174,110 @@ export default class TrainingSlotController extends Controller {
     const modal = this.modal;
     const slot = this.slot;
     switch (result.status) {
-      case 'full':
-        modal.info('The shift is full.', `The shift is at capacity with ${slot.slot_signed_up} indivduals signed up.`);
-        break;
+    case 'full':
+      modal.info('The shift is full.', `The shift is at capacity with ${slot.slot_signed_up} indivduals signed up.`);
+      break;
 
-      case 'no-slot':
-        modal.info('The slot could not be found?', `The slot ${slot.id} was not found in the database. This looks like a bug!`);
-        break;
+    case 'no-slot':
+      modal.info('The slot could not be found?', `The slot ${slot.id} was not found in the database. This looks like a bug!`);
+      break;
 
-      case 'no-position':
-        modal.info('Position not held', `You do not hold the position ${slot.position_title} in order to sign up for this shift.`);
-        break;
+    case 'no-position':
+      modal.info('Position not held', `You do not hold the position ${slot.position_title} in order to sign up for this shift.`);
+      break;
 
-      case 'exists':
-        modal.info('Already signed up', `Huh, looks like ${person.callsign} is already signed up for the session.`);
-        break;
+    case 'exists':
+      modal.info('Already signed up', `Huh, looks like ${person.callsign} is already signed up for the session.`);
+      break;
 
-      case 'not-active':
-        modal.info('Inactive Shift', 'The shift has not been activated and no signups are not allowed yet. Please check back later and try again.');
-        break;
+    case 'not-active':
+      modal.info('Inactive Shift', 'The shift has not been activated and no signups are not allowed yet. Please check back later and try again.');
+      break;
 
-      case 'multiple-enrollment':
-        modal.open('modal-multiple-enrollment', 'Multiple Enrollments Not Allowed', { slots: result.slots, is_me: (person.id == this.session.user.id) });
-        break;
+    case 'multiple-enrollment':
+      modal.open('modal-multiple-enrollment', 'Multiple Enrollments Not Allowed', {
+        slots: result.slots,
+        is_me: (person.id == this.session.user.id)
+      });
+      break;
 
-      default:
-        modal.info('Unknown status response', `Sorry, I did not understand the status response of [${result.status}] from the server`);
-        break;
+    default:
+      modal.info('Unknown status response', `Sorry, I did not understand the status response of [${result.status}] from the server`);
+      break;
     }
   }
 
   @action
   cancelSearchAction() {
-    this.set('searchForm', null);
+    this.set('addPersonForm', null);
   }
 
   @action
   addPersonAction(person) {
     this.ajax.post(`person/${person.id}/schedule`, {
-      data: { slot_id: this.slot.id }
-    })
-    .then((result) => {
-      if (result.status != 'success') {
-        this._handleJoinSessionError(result, person);
-        return;
-      }
+        data: {
+          slot_id: this.slot.id
+        }
+      })
+      .then((result) => {
+        if (result.status != 'success') {
+          this._handleJoinSessionError(result, person);
+          return;
+        }
 
-      this.set('searchForm', null);
-      if (result.full_forced) {
+        this.set('addPersonForm', null);
+
+        if (result.full_forced) {
           this.toast.success('Successfully signed up, and the shift is overcapacity. Hope you know what you are doing!');
-      } else if (result.trainer_forced) {
-        this.toast.success('Successfully signed up, and the trainer is now signed up for multiple training sessions.');
-      } else if (result.multiple_forced) {
-        this.modal.open('modal-multiple-enrollment', 'Sign Up Forced - Other Enrollments Found',
-          {
+        } else if (result.trainer_forced) {
+          this.toast.success('Successfully signed up, and the trainer is now signed up for multiple training sessions.');
+        } else if (result.multiple_forced) {
+          this.modal.open('modal-multiple-enrollment', 'Sign Up Forced - Other Enrollments Found', {
             slots: result.slots,
             isMe: (person.id == this.session.user.id),
             forced: true,
           });
-      } else {
-        this.toast.success('Successfully signed up.');
-      }
+        } else {
+          this.toast.success('Successfully signed up.');
+        }
 
-      // Refresh the list
-      return this.ajax.request(`training-session/${this.slot.id}`).then((results) => {
-        this.set('students', results.students);
-      });
-    })
-    .catch((response) => this.house.handleErrorResponse(response));
+        // Refresh the list
+        return this.ajax.request(`training-session/${this.slot.id}`).then((results) => {
+          this.set('students', results.students);
+        });
+      })
+      .catch((response) => this.house.handleErrorResponse(response));
   }
 
   // Remove a student from the session
   @action
-  removeStudentAction(person) {
-    this.modal.confirm('Remove student from session', `Are you sure you wish to remove "${person.callsign} (${person.first_name} ${person.last_name})" from this session?`, () => {
-      this.ajax.delete(`person/${person.id}/schedule/${this.slot.id}`)
+  removePersonAction(model) {
+    const personId = model.get('person_id');
+    const person = this.students.find((student) => student.id == personId );
+
+    this.ajax.delete(`person/${personId}/schedule/${this.slot.id}`)
       .then((results) => {
         if (results.status == 'success') {
           this.students.removeObject(person);
           this.toast.success(`${person.callsign} was successfully removed from this training session.`);
         } else {
-          this.modal.info('Unknown status', `The server responded with an unknown status code [${results.status}]`);
+          this.toast.error(`The server responded with an unknown status code [${results.status}]`);
         }
-       })
-       .catch((response) => this.house.handleErrorResponse(response));
-    });
+        this.set('removePersonForm', null);
+      })
+      .catch((response) => this.house.handleErrorResponse(response));
   }
 
-  // Show the student detail dialog
+  // Show the remove student dialog
   @action
-  viewStudentAction(student) {
-    this.set('viewStudent', student);
+  showRemovePersonAction(student) {
+    this.set('removePersonForm', EmberObject.create({ person_id: null }));
   }
 
-  // Close the student detail dialog
+  // Cancel/close the student detail dialog
   @action
-  closeStudentAction() {
-    this.set('viewStudent', null);
+  cancelRemovePersonAction() {
+    this.set('removePersonForm', null);
   }
 
   // Toggle the email list
