@@ -1,0 +1,89 @@
+{{login-sidebar}}
+<main class="col">
+  <h1>Create A Secret Clubhouse Account For Auditing</h1>
+
+  <p>
+    <strong>Already Have A Secret Clubhouse Account?</strong> Don't fill out this form.
+    Rather, just go {{#link-to "login"}}here{{/link-to}} and log in.
+  </p>
+
+  <p class="border border-danger text-danger p-2">
+    This form is only for people who are interested in auditing a Ranger training,
+    usually because they are a regional Ranger taking the Black Rock Ranger
+    training to satisfy a regional training requirement.
+  </p>
+
+  <p>
+    <strong>If you're interested in actually volunteering with the Black Rock Rangers,</strong>
+    you're in the wrong place! Please don't use this form. Instead, make sure that
+    you have a Burner Profile and have submitted a
+    <a href="https://profiles.burningman.com/participate/">Volunteer Questionnaire</a>.
+  </p>
+
+  <p>
+    <strong>Never been to Burning Man? Looking For A Camp? What Heck Is This Event?</strong><br>
+    Auditing Black Rock Ranger Training is not a good forum to
+    figure out what Burning Man is. Nor is it a good place to ask questions about
+    how the weather is out there, or should I camp in a theme camp, or are the porta
+    potties gross. This is a full day of learning intended for people who have been
+    to the Burning Man event <i>twice already.</i> Generally, auditing the Training is
+    intended for people who are Regional Rangers who are not going to Burning Man OR
+    people who have attended Burning Man many times who are, um, Ranger Curious.
+  </p>
+
+  <p>
+    <strong>Do you have questions?</strong> If you have any questions contact one of our fearless Volunteer
+    Coordinators at {{mail-to "ranger-vc-list@burningman.com"}}.
+  </p>
+
+  <p>
+    <strong>Lets get started . . .</strong>
+  </p>
+  {{#ch-form "register" registerForm validator=registerValidations onSubmit=(action "createAccount") as |f|}}
+    <div class="form-row">
+      {{f.input "human" size=4 maxlength=10 grid="col-auto" label="First, prove you are human - What is 33 + 2?" hint="We're sorry about this, but our web site gets a lot of robots
+spamming us and creating bogus accounts." }}
+    </div>
+    <div class="form-row">
+      <label class="col-form-label">Tell us about why you want to create a Secret Clubhouse account:</label>
+      <div class="form-group">
+        {{f.input "intent" type="radioGroup" options=intentOptions}}
+      </div>
+    </div>
+    <div class="form-row">
+      {{f.input "email" label="What's your email address?" size=30}}
+    </div>
+
+    <div class="form-row">
+      {{f.input "password" type="password" label="Password" size=20 maxlength=30 grid="col-auto"}}
+      {{f.input "password_confirmation" type="password" label="Confirm Password" size=20 maxlength=30 grid="col-auto"}}
+    </div>
+
+    <div class="form-row">
+      {{f.input "first_name" label="First Name" maxlength=25 grid="col-sm-4" }}
+      {{f.input "mi" label="M.I." maxlength=10 grid="col-sm-1" }}
+      {{f.input "last_name" label="Last Name" maxlength=25 grid="col-sm-4"}}
+    </div>
+
+    <div class="form-row">
+      {{f.input "street1" label="Street" grid="col-md-8 col-sm-6"}}
+      {{f.input "apt" label="Apt" grid="col-md-1 col-sm-4"}}
+      {{f.input "street2" label="Street Line 2" grid="col-sm-8"}}
+    </div>
+
+    <div class="form-row">
+      {{f.input "city" label="City" grid="col-sm-5 col-md-4"}}
+      {{f.input "state" label="State / Province" grid="col-sm-5 col-md-4"}}
+      {{f.input "zip" label="Zip / Postal Code" grid="col-sm-5 col-md-4"}}
+      {{f.input "country" label="Country" grid="col-sm-5 col-md-4"}}
+    </div>
+
+    <div class="form-row">
+      {{f.input "home_phone" label="Primary Phone" grid="col-sm-4"}}
+      {{f.input "alt_phone" label="Alternative Phone" grid="col-sm-4"}}
+    </div>
+
+    {{f.submit label="Create My Auditor Account"}}
+  {{/ch-form}}
+
+</main>

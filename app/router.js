@@ -95,6 +95,7 @@ Router.map(function() {
       this.route('trs');
     });
   });
+  this.route('register');
 });
 
 export default Router;

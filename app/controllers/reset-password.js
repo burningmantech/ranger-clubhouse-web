@@ -22,7 +22,19 @@ export default class ResetPasswordController extends Controller {
         `Instructions to reset your password will be sent to you shortly. Please check your email '${identification}'.`);
       this.transitionToRoute('login');
     }).catch((response) => {
-      this.house.handleErrorResponse(response)
+      switch (response.status) {
+      case 400:
+        this.toast.error('Sorry, the email address could not be found.');
+        break;
+
+      case 403:
+        this.toast.error('Sorry, this account has been temporarily disabled. Please contact the Ranger Personnel Manager.');
+        break;
+
+      default:
+        this.house.handleErrorResponse(response)
+        break;
+      }
     });
   }
 }
