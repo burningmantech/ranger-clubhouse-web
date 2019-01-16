@@ -1,9 +1,12 @@
 import Controller from '@ember/controller';
 import $ from 'jquery';
 
+/*
 const F1 = 112;
 const F2 = 113;
 const F3 = 114;
+*/
+
 const ESC = 27;
 
 export default class ApplicationController extends Controller {
@@ -21,9 +24,10 @@ export default class ApplicationController extends Controller {
         return true;
       }
 
+
       event.preventDefault(); // eslint-disable-line ember/jquery-ember-run
 
-      this.transitionToRoute('/search/person');
+      this.transitionToRoute('/search/person'); // eslint-disable-line ember/jquery-ember-run
       return false;
     });
   }

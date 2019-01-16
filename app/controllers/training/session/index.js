@@ -1,15 +1,8 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
-import {
-  debounce
-} from '@ember/runloop';
-import {
-  set
-} from '@ember/object';
-import {
-  action,
-  computed
-} from '@ember-decorators/object';
+import { debounce } from '@ember/runloop';
+import { set } from '@ember/object';
+import { action, computed } from '@ember-decorators/object';
 
 const SEARCH_RATE_MS = 300;
 
@@ -270,7 +263,7 @@ export default class TrainingSlotController extends Controller {
 
   // Show the remove student dialog
   @action
-  showRemovePersonAction(student) {
+  showRemovePersonAction() {
     this.set('removePersonForm', EmberObject.create({ person_id: null }));
   }
 

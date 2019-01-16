@@ -1,10 +1,9 @@
 import Route from '@ember/routing/route';
 import MeRouteMixin from 'clubhouse/mixins/route/me';
 import RSVP from 'rsvp';
-import requestYear from 'clubhouse/utils/request-year';
 
 export default class MeTimesheetCorrectionsRoute extends Route.extend(MeRouteMixin) {
-  async model(params) {
+  async model() {
     const person_id = this.session.user.id;
 
     // Figure out if timesheet corrections are enabled, and for what year.
