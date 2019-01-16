@@ -81,7 +81,7 @@ No position credits were found for {{year}}?
       <th>ID</th>
       <th>From</th>
       <th>To</th>
-      <th class="td-number">Credits</th>
+      <th class="text-right">Credits</th>
       <th>Description</th>
       <th>Actions</th>
     </tr>
@@ -92,7 +92,7 @@ No position credits were found for {{year}}?
       <td>{{credit.id}}</td>
       <td>{{shift-format credit.start_time}}</td>
       <td>{{shift-format credit.end_time}}</td>
-      <td class="td-number">{{credits-format credit.credits_per_hour}}</td>
+      <td class="text-right">{{credits-format credit.credits_per_hour}}</td>
       <td>
         {{credit.description}}
       </td>

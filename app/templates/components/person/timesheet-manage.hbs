@@ -46,10 +46,10 @@
             <i>On Duty</i>
           {{/if}}
         </td>
-        <td class="td-number">
+        <td class="text-right">
               {{hour-minute-format ts.duration}}
         </td>
-        <td class="td-number">
+        <td class="text-right">
           {{#if ts.off_duty}}
               {{credits-format ts.credits}}
           {{else}}

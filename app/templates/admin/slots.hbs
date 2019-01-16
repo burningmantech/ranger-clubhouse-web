@@ -74,8 +74,8 @@ No slots were found for {{year}}?
       <th>ID</th>
       <th>From</th>
       <th>To</th>
-      <th class="td-number">Max / Signups</th>
-      <th class="td-number">Credits</th>
+      <th class="text-right">Max / Signups</th>
+      <th class="text-right">Credits</th>
       <th>Description</th>
       <th>Active</th>
       <th>Actions</th>
@@ -87,8 +87,8 @@ No slots were found for {{year}}?
       <td>{{slot.id}}</td>
       <td>{{shift-format slot.begins}}</td>
       <td>{{shift-format slot.ends}}</td>
-      <td class="td-number">{{slot.max}} / {{slot.signed_up}}</td>
-      <td class="td-number">{{credits-format slot.credits}}</td>
+      <td class="text-right">{{slot.max}} / {{slot.signed_up}}</td>
+      <td class="text-right">{{credits-format slot.credits}}</td>
       <td>
         {{slot-info-link slot.description slot.url}}
       </td>
