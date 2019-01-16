@@ -14,7 +14,7 @@ export default class ModalDialogComponent extends Component {
     const dialog = $('#dialog-box');
 
     // Setup modal, and attach to show & hide events
-    dialog.modal({backdrop: 'static'});
+    dialog.modal({backdrop: 'static', keyboard: false});
     dialog.modal().on('show.bs.modal', () => {
       return this.onShow ? this.onShow() : null;
     });

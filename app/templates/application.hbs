@@ -214,9 +214,14 @@
           </li>
 
           {{/if}}
-          {{#if (has-role "manage")}}
-          <li class="nav-item">
-            {{#link-to "search.person" class="nav-link"}}Search<{{/link-to}}
+          {{#if (has-role "admin" "manage")}}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Search</a>
+            <div class="dropdown-menu">
+              {{#link-to "search.person" class="dropdown-item"}}Person{{/link-to}}
+              {{#link-to "search.assets" class="dropdown-item"}}Assets{{/link-to}}
+              {{#link-to "search.languages" class="dropdown-item"}}Languages{{/link-to}}
+            </div>
           </li>
           {{/if}}
       {{else}}
