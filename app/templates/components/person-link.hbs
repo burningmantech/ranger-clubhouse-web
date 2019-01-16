@@ -1,5 +1,5 @@
 {{#if person}}
-  {{#link-to routePath person.id}}{{person.callsign}}{{/link-to}}
+  {{#link-to routePath person.id (query-params year=year)}}{{person.callsign}}{{/link-to}}
 {{else}}
-  {{#link-to routePath personId}}{{callsign}}{{/link-to}}
+  {{#link-to routePath personId (query-params year=year)}}{{callsign}}{{/link-to}}
 {{/if}}

@@ -16,6 +16,9 @@ export default class PersonLinkComponent extends Component {
   // should a specific
   @argument page;
 
+  // Year argument?
+  @argument year;
+
   @computed('page')
   get routePath() {
     const page = this.page || 'index';

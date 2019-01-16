@@ -18,7 +18,7 @@
         <tr class="{{if idx "no-border"}}">
           <td>
             {{#unless idx}}
-              {{person-link person=correction.person page="timesheet"}}
+              {{person-link person=correction.person page="timesheet" year=year}}
             {{else}}
               &nbsp;
             {{/unless}}
@@ -61,7 +61,7 @@
     {{#each missing_requests as |missing|}}
       <tr>
         <td>
-          {{person-link person=missing.person page="timesheet"}}
+          {{person-link person=missing.person page="timesheet" year=year}}
         </td>
         <td>{{missing.position.title}}</td>
         <td>{{shift-format missing.on_duty}}</td>
