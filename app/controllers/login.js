@@ -38,6 +38,12 @@ export default class LoginController extends Controller {
     this.toast.clear();
     let credentials = model.getProperties('identification', 'password');
 
+    // For analytics
+    credentials.screen_size = {
+      width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+      height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+    };
+
     if (!ENV['dualClubhouse']) {
       // Not running in Dual Clubhouse mode ..
       return this.apiLogin(credentials);
