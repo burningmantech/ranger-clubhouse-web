@@ -7,15 +7,28 @@ export default class MeTimesheetCorrectionsMissingController extends Controller 
   entry = null;
 
   timesheetValidations = {
-    on_duty:  [ validateDateTime({ before: 'off_duty'}), validatePresence({ presence: true })],
-    off_duty:  [ validateDateTime({ after: 'on_duty'}),validatePresence({ presence: true })],
-    notes: validatePresence({ presence: true })
+    on_duty:  [ validateDateTime({ before: 'off_duty' }), validatePresence(true) ],
+    off_duty:  [ validateDateTime({ after: 'on_duty' }),validatePresence(true) ],
+    notes: validatePresence(true)
   };
 
   // Create a list of positions options to check
   @computed('positions')
   get positionOptions() {
       return this.positions.map((p) => [ p.title, p.id ]);
+  }
+
+  // Suggest a starting date for the datetime picker when creating
+  // a new request.
+  @computed('entry')
+  get startDateForEntry() {
+    const entry = this.entry;
+
+    if (entry.isNew) {
+      return `${this.timesheetInfo.correction_year}-08-15`;
+    }
+
+    return null;
   }
 
   // Start a new timesheet missing request

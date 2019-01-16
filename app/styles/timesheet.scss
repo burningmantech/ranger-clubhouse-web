@@ -1,3 +1,9 @@
+/*
+ * Responsive timesheet table layout using divs.
+ *
+ * Shared between timesheet corrections and missing timesheet requests
+ */
+
 .timesheet-table {
   border: (2 * $table-border-width) solid $table-border-color;
   margin-bottom: 10px;
@@ -44,7 +50,7 @@
 
 @media print, (min-width: 801px) {
   .timesheet-time {
-    width: 20%;
+    width: 22%;
   }
 
   .timesheet-duration {
@@ -58,7 +64,7 @@
   }
 
   .timesheet-position {
-    width: 30%;
+    width: 25%;
   }
 
   .timesheet-sm-label {
@@ -74,6 +80,7 @@
   }
 
   .timesheet-actions {
+    width: 100%;
     padding: 5px;
   }
 
@@ -102,10 +109,6 @@
   }
 
   .timesheet-signups {
-    width: 100%;
-  }
-
-  .timesheet-actions {
     width: 100%;
   }
 

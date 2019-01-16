@@ -24,6 +24,7 @@ export default class DatetimePickerComponent extends Component {
   @argument value;
   @argument autocomplete = "off";
   @argument dateOnly; // set true if only want to deal with dates, no time.
+  @argument startDate;
 
   didInsertElement() {
     const options = {
@@ -41,6 +42,10 @@ export default class DatetimePickerComponent extends Component {
     if (this.dateOnly) {
       options.format = 'Y-m-d';
       options.timepicker = false;
+    }
+
+    if (this.startDate) {
+      options.startDate = this.startDate;
     }
 
     $('#'+this.elementId).datetimepicker(options);

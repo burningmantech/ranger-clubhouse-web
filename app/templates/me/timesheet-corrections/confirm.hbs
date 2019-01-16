@@ -1,21 +1,41 @@
 <h2>Final Timesheet Confirmation &amp; Agreement</h2>
-<div class="ml-3">
-  {{#ch-form "confirm" confirmForm onSubmit=(action "confirmAction") as |f|}}
-    By checking the box below, you are agreeing to:
+
+<div class="ml-3 mt-4">
+  {{#if (or unverifiedCount correctionPendingReviewCount missingPendingReviewCount)}}
+  <div class="text-danger">
+    {{fa-icon "exclamation-triangle"}} Hold up! The following item(s) are outstanding:
     <ul class="mt-2">
-      <li>All your timesheet entries have been reviewed.</li>
-      <li>The entries are correct.</li>
-      <li>There no outstanding corrections or missing entry requests waiting for HQ review.</li>
-      <li>You do not plan to submit any additional corrections and/or missing entry requests for your {{timesheetInfo.correction_year}} timesheet.</li>
+      {{#if unverifiedCount}}
+        <li>You need to still review {{pluralize unverifiedCount "timesheet entry"}}. {{#link-to "me.timesheet-corrections.review"}}Click here{{/link-to}} to do that.</li>
+      {{/if}}
+      {{#if correctionPendingReviewCount}}
+        <li>{{pluralize correctionPendingReviewCount "timesheet entry"}} {{if (eq correctionPendingReviewCount 1) "is" "are"}} pending review.</li>
+      {{/if}}
+
+      {{#if missingPendingReviewCount}}
+        <li>{{pluralize missingPendingReviewCount "missing timesheet entry request"}} {{if (eq missingPendingReviewCount 1) "is" "are"}} pending review.</li>
+      {{/if}}
     </ul>
-    <label>
-      {{f.input "confirm" type="checkbox" wrapper=false controlClass=""}}
-      I have reviewed and verified that my timesheet for {{timesheetInfo.correction_year}} is accurate and does not require any changes.
-    </label>
-    <div class="form-row">
-      {{f.submit label="Submit Confirmation"}}
-    </div>
-  {{/ch-form}}
+    Until these items are completed, you cannot confirm your entire timesheet as accurate.
+  </div>
+  {{else}}
+    {{#ch-form "confirm" confirmForm onSubmit=(action "confirmAction") as |f|}}
+      By checking the box below, you are agreeing to:
+      <ul class="mt-2">
+        <li>All your timesheet entries have been reviewed.</li>
+        <li>The entries are correct.</li>
+        <li>There no outstanding corrections or missing entry requests waiting for HQ review.</li>
+        <li>You do not plan to submit any additional corrections and/or missing entry requests for your {{timesheetInfo.correction_year}} timesheet.</li>
+      </ul>
+      <label>
+        {{f.input "confirm" type="checkbox" wrapper=false controlClass=""}}
+        I have reviewed and verified that my timesheet for {{timesheetInfo.correction_year}} is accurate and does not require any changes.
+      </label>
+      <div class="form-row">
+        {{f.submit label="Submit Confirmation"}}
+      </div>
+    {{/ch-form}}
+  {{/if}}
 
   <div class="row mt-4">
     <div class="col-sm-12">

@@ -3,7 +3,7 @@
     <legend>Person Search</legend>
       <div class="form-row">
         {{f.input "query" type="text" size=50 maxlength=50 autofocus="true" grid="col-auto"
-          placeholder="Enter a name to search for"
+          placeholder="Start typing a name to search for"
           hint="To lookup a person id type '+id' (e.g., +1234567)"
         }}
         <div class="form-group col-auto">
@@ -18,6 +18,8 @@
           {{f.input "email" type="checkbox" label="Email" inline=true}}
           {{f.input "formerly_known_as" type="checkbox" label="Formerly Known As" inline=true}}
         </div>
+      </div>
+      <div class="form-row">
         <label class="col-auto">Include:</label>
         <div class="col-auto">
           {{f.input "auditor" type="checkbox" label="Auditor" inline=true}}
@@ -65,4 +67,9 @@
 </div>
 {{/unless}}
 
-<div class="mt-4 ml-3">Hint: Press F1 to navigate directly to this page without having to click on the menu item.</div>
+<div class="mt-4 ml-3">Hints:
+  <ul>
+    <li>Press &lt;ESC&gt; to navigate directly to this page without having to click on the menu item.</li>
+    <li>Hit &lt;ENTER&gt; or &lt;RETURN&gt; when only one search result appears to show that person.</li>
+  </ul>
+</div>

@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action } from '@ember-decorators/object';
+import { action, computed } from '@ember-decorators/object';
 
 /*
  * Confirm a person's entire timesheet correct/incorrect.
@@ -7,6 +7,21 @@ import { action } from '@ember-decorators/object';
 
 export default class MeTimesheetCorrectionsConfirmController extends Controller {
   confirmForm = null; // setup in the route
+
+  @computed('timesheets.@each.isUnverified')
+  get unverifiedCount() {
+    return this.timesheets.reduce((total, ts) => total+(ts.isUnverified ? 1 : 0), 0);
+  }
+
+  @computed('timesheets.@each.isPendingReview')
+  get correctionPendingReviewCount() {
+    return this.timesheets.reduce((total, ts) => total+(ts.isPendingReview ? 1 : 0), 0);
+  }
+
+  @computed('timesheetsMissing.@each.isPending')
+  get missingPendingReviewCount() {
+    return this.timesheetsMissing.reduce((total, ts) => total+(ts.isPending ? 1 : 0), 0);
+  }
 
   @action
   confirmAction(model) {

@@ -1,36 +1,39 @@
-<h2>Missing Timesheet Entry/Shift Requests</h2>
+<div class="lead font-weight-bold">Missing Timesheet Entry/Shift Requests</div>
+
+<p class="mt-2">
+  <b>Did you work a shift, and is there no timesheet entry for it?</b> Use
+  the "New Missing Timesheet Request" button at the bottom to submit a request.
+  You may submit more than one request.
+</p>
+<p>
+  <b>Is a timesheet entry wrong?</b> Do not use the Missing Timesheet Request form,
+  instead go back to the {{#link-to "me.timesheet-corrections.review"}}Timesheet Review{{/link-to}} page
+  and mark the entry as incorrect.
+</p>
 
 {{#if timesheetsMissing}}
-  <table class="table table-rc table-striped">
-    <thead>
-      <tr>
-        <th>On Duty</th>
-        <th>Off Duty</th>
-        <th class="text-right">Duration</th>
-        <th>Position</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each timesheetsMissing as |tsm|}}
-        <tr>
-          <td data-title="On Duty">{{shift-format tsm.on_duty}}</td>
-          <td data-title="Off Duty">{{shift-format tsm.off_duty}}</td>
-          <td class="td-number" data-title="Duration">{{hour-minute-format tsm.duration}}</td>
-          <td data-title="Position">{{tsm.position.title}}</td>
-          <td class="no-collapse">
-            {{#if (eq tsm.review_status "pending")}}
-              <button type="button" class="btn btn-primary btn-sm" {{action "editAction" tsm}}>Edit</button>
-              <button type="button" class="btn btn-danger btn-sm" {{action "deleteAction" tsm}}>Delete</button>
-            {{else}}
-              &nbsp;
-            {{/if}}
-          </td>
-        </tr>
-        <tr class="no-collapse">
-          <td colspan="6">
+  <div class="timesheet-table">
+    <div class="timesheet-row timesheet-header">
+      <div class="timesheet-time">From</div>
+      <div class="timesheet-time">To</div>
+      <div class="timesheet-duration">Time</div>
+      <div class="timesheet-position">Position</div>
+    </div>
+    {{#each timesheetsMissing as |tsm|}}
+      <div class="timesheet-entry">
+        <div class="timesheet-row">
+          <div class="timesheet-time">{{shift-format tsm.on_duty}}</div>
+          <div class="timesheet-time">{{shift-format tsm.off_duty}}</div>
+          <div class="timesheet-duration">
+            <span class="timesheet-sm-label">Time:</span>
+            {{hour-minute-format tsm.duration}}
+          </div>
+          <div class="timesheet-position">{{tsm.position.title}}</div>
+        </div>
+        <div class="timesheet-row">
+          <div>
             {{#if tsm.isPending}}
-              <i>The request is pending review.</i>
+              <span class="text-info font-weight-bold">The request is pending review.</span>
             {{else}}
               {{#if tsm.isApproved}}
                 The request has been APPROVED. Your timesheet has been updated with the missing shift.
@@ -42,14 +45,20 @@
                 {{tsm.reviewer_note}}
               </p>
             {{/if}}
-          </td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
+          </div>
+        </div>
+        {{#if tsm.isPending}}
+        <div class="timesheet-row timesheet-actions">
+            <button type="button" class="btn btn-primary btn-sm" {{action "editAction" tsm}}>Edit</button>
+            <button type="button" class="btn btn-danger btn-sm" {{action "deleteAction" tsm}}>Delete</button>
+        </div>
+        {{/if}}
+      </div>
+    {{/each}}
+  </div>
 {{else}}
   <p class="mt-2 ml-2">
-    No missing timesheet entries have been submitted.
+    No missing timesheet entries have been submitted yet.
   </p>
 {{/if}}
 
@@ -73,16 +82,16 @@
         validator=timesheetValidations
         onSubmit=(action "saveAction") onCancel=(action "cancelAction") as |f|}}
     <div class="form-group mb-4">
-      Use this form for <b>MISSING SHIFT / TIMESHEET ENTRIES ONLY</b> If you have
+      Use this form for <b>MISSING TIMESHEET ENTRIES ONLY</b>. If you have
       an existing entry that needs correction, go back to the
-      Timesheet Review section and submit a correction by clicking on 'No - Needs Correction'.
+      Timesheet Review page and submit a correction by clicking on 'Mark Entry Incorrect'.
     </div>
     <div class="form-row">
       {{f.input "position_id" label="Which position was the shift for?" type="select" options=positionOptions grid="col-auto"}}
     </div>
     <div class="form-row">
-      {{f.input "on_duty" label="What was the START date & time of the shift?" type="datetime" size="15" grid="col-auto"}}
-      {{f.input "off_duty" label="What was the END date & time of the shift?" type="datetime" size="15" grid="col-auto"}}
+      {{f.input "on_duty" label="What was the START date & time of the shift?" type="datetime" size="15" grid="col-auto" startDate=startDateForEntry}}
+      {{f.input "off_duty" label="What was the END date & time of the shift?" type="datetime" size="15" grid="col-auto" startDate=startDateForEntry}}
     </div>
     <div class="form-row">
       {{f.input "partner" label="Who was your partner (if any) for the shift?" type="text" size="20"}}

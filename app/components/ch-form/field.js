@@ -44,6 +44,8 @@ export default class ChFormFieldComponent extends Component {
   @argument labelClass =  null;
   @argument controlClass = null;
 
+  // For date or datetime
+  @argument startDate;
 
   // callback to client when field changes
   @argument onChange;

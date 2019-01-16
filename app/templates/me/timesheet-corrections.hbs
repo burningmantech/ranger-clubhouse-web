@@ -1,18 +1,18 @@
 <h1>Timesheet Corrections for {{person.callsign}}</h1>
 
-{{#if (or unverifiedCount correctionPendingCount missingPendingReviewCount)}}
-  {{#ch-alert "danger"}}
+{{#if (or unverifiedCount correctionPendingReviewCount missingPendingReviewCount)}}
+  <div class="text-danger">
     {{#if unverifiedCount}}
       You need to review {{pluralize unverifiedCount "timesheet entry"}}.<br>
     {{/if}}
     {{#if correctionPendingReviewCount}}
-      {{pluralize correctionPendingReviewCount "timesheet entry"}} is pending review.<br>
+      {{pluralize correctionPendingReviewCount "timesheet entry"}} {{if (eq correctionPendingReviewCount 1) "is" "are"}} pending review.<br>
     {{/if}}
 
     {{#if missingPendingReviewCount}}
       {{pluralize missingPendingReviewCount "missing timesheet entry request"}} {{if (eq missingPendingReviewCount 1) "is" "are"}} pending review.<br>
     {{/if}}
-  {{/ch-alert}}
+  </div>
 {{else if timesheetInfo.timesheet_confirmed}}
   {{#ch-alert "success"}}
     {{fa-icon "thumbs-up" type="far"}} Congratulations! All your timesheet
