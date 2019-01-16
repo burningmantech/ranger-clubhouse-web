@@ -14,39 +14,42 @@
             <div class="dropdown-menu dropdown-menu-large">
               <div class="container">
                 <div class="row">
-                  <div class="col-sm-12 col-md-3 col-lg-2">
+                  <div class="col-sm-12 col-md-4 col-lg-3">
                     <div class="navbar-text">Rangering</div>
                     {{#link-to "me.schedule" class="dropdown-item"}}Schedule &amp; Signup{{/link-to}}
                     {{#if session.user.isRanger}}
+                      {{#link-to "me.timesheet-corrections.index" class="dropdown-item"}}Timesheet Corrections{{/link-to}}
                       {{#link-to "me.timesheet-corrections.review" class="dropdown-item"}}Timesheets{{/link-to}}
                     {{/if}}
                     {{#link-to "me.ranger-info" class="dropdown-item"}}Ranger Info{{/link-to}}
                   </div>
                   {{#if (or session.user.isRanger session.user.isAlpha session.user.isProspective)}}
-                  <div class="col-sm-12 col-md-3 col-lg-2">
-                    <div class="navbar-text">Pre-Event</div>
-                    {{#link-to "me.tickets" class="dropdown-item"}}Tickets &amp; Stuff{{/link-to}}
-                    {{#link-to "me.motorpool-policy" class="dropdown-item"}}Motorpool Policy{{/link-to}}
-                  </div>
+                    <div class="col-sm-12 col-md-4 col-lg-3">
+                      <div class="navbar-text">Pre-Event</div>
+                      {{#link-to "me.tickets" class="dropdown-item"}}Tickets &amp; Stuff{{/link-to}}
+                      {{#link-to "me.motorpool-policy" class="dropdown-item"}}Motorpool Policy{{/link-to}}
+                    </div>
                   {{/if}}
-                  <div class="col-sm-12 col-md-3 col-lg-2">
+                  <div class="col-sm-12 col-md-4 col-lg-3">
                     <div class="navbar-text">Communication</div>
                     {{#if session.user.isRanger}}
-                    {{#link-to "me.messages" class="dropdown-item"}}Messages{{/link-to}}
+                      {{#link-to "me.messages" class="dropdown-item"}}Messages{{/link-to}}
                     {{/if}}
                     {{#link-to "me.alerts" class="dropdown-item"}}Alert Preferences{{/link-to}}
                     {{#if user.isRanger}}
-                    {{#link-to "me.contact" class="dropdown-item"}}Contact Ranger{{/link-to}}
+                      {{#link-to "me.contact" class="dropdown-item"}}Contact Ranger{{/link-to}}
                     {{/if}}
                     {{#if session.user.teacher.have_mentored}}
-                    {{#link-to "me.mentees" class="dropdown-item"}}My Mentees{{/link-to}}
+                      {{#link-to "me.mentees" class="dropdown-item"}}My Mentees{{/link-to}}
                     {{/if}}
                   </div>
 
-                  <div class="col-sm-12 col-md-3 col-lg-2">
+                  <div class="col-sm-12 col-md-4 col-lg-3">
                     <div class="navbar-text">My Account</div>
                     {{#link-to "me.personal-info" class="dropdown-item"}}Personal Info{{/link-to}}
-                    {{#link-to "me.emergency-contact" class="dropdown-item"}}Emergency Contact{{/link-to}}
+                    {{#if session.user.isRanger}}
+                      {{#link-to "me.emergency-contact" class="dropdown-item"}}Emergency Contact{{/link-to}}
+                    {{/if}}
                     {{#link-to "me.password" class="dropdown-item"}}Change Password{{/link-to}}
                   </div>
                 </div>
@@ -54,121 +57,121 @@
             </div>
           </li>
           {{#if session.user.teacher.is_trainer}}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Training</a>
-            <div class="dropdown-menu">
-              {{#link-to "training.index" "dirt" class="dropdown-item"}}Trainer's Report{{/link-to}}
-              {{#link-to "training.capacity" "dirt" class="dropdown-item"}}Training Capacity{{/link-to}}
-              {{#link-to "training.multiple-enrollments" "dirt" class="dropdown-item"}}Multiple Enrollments Report{{/link-to}}
-            </div>
-          </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Training</a>
+              <div class="dropdown-menu">
+                {{#link-to "training.index" "dirt" class="dropdown-item"}}Trainer's Report{{/link-to}}
+                {{#link-to "training.capacity" "dirt" class="dropdown-item"}}Training Capacity{{/link-to}}
+                {{#link-to "training.multiple-enrollments" "dirt" class="dropdown-item"}}Multiple Enrollments Report{{/link-to}}
+              </div>
+            </li>
           {{/if}}
 
           {{#if session.user.teacher.is_art_trainer}}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">ART Training</a>
-            <div class="dropdown-menu">
-              {{#each session.user.teacher.arts as |art|}}
-                {{#link-to "training.index" art.id class="dropdown-item"}}{{art.title}}{{/link-to}}
-              {{/each}}
-            </div>
-          </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">ART Training</a>
+              <div class="dropdown-menu">
+                {{#each session.user.teacher.arts as |art|}}
+                  {{#link-to "training.index" art.id class="dropdown-item"}}{{art.title}}{{/link-to}}
+                {{/each}}
+              </div>
+            </li>
           {{/if}}
 
           {{#if (has-role "mentor")}}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Mentoring</a>
-            <div class="dropdown-menu">
-              <div class="navbar-text">Pre-Playa</div>
-              <a href="{{cgo "alpha" "selectPotential"}}" class="dropdown-item">Potential Alphas</a>
-              <a href="{{cgo "person" "selectByAlphaStatus"}}" class="dropdown-item">Alpha Status</a>
-              <a href="{{cgo "alpha" "selectFlagged"}}" class="dropdown-item">Flagged Alphas</a>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Mentoring</a>
+              <div class="dropdown-menu">
+                <div class="navbar-text">Pre-Playa</div>
+                <a href="{{cgo "alpha" "selectPotential"}}" class="dropdown-item">Potential Alphas</a>
+                <a href="{{cgo "person" "selectByAlphaStatus"}}" class="dropdown-item">Alpha Status</a>
+                <a href="{{cgo "alpha" "selectFlagged"}}" class="dropdown-item">Flagged Alphas</a>
 
-              <div class="navbar-text">On Playa</div>
-              <a href="{{cgo "alpha" "selectScheduledShifts"}}" class="dropdown-item">Alpha Scheduled Shifts</a>
-              <a href="{{cgo "alpha" "index"}}" class="dropdown-item">Alpha Acceptance Sheets</a>
-              <a href="{{cgo "mentor" "selectAlphas"}}" class="dropdown-item">Alpha Mentors Assignment</a>
+                <div class="navbar-text">On Playa</div>
+                <a href="{{cgo "alpha" "selectScheduledShifts"}}" class="dropdown-item">Alpha Scheduled Shifts</a>
+                <a href="{{cgo "alpha" "index"}}" class="dropdown-item">Alpha Acceptance Sheets</a>
+                <a href="{{cgo "mentor" "selectAlphas"}}" class="dropdown-item">Alpha Mentors Assignment</a>
 
-              <div class="navbar-text">Post Playa</div>
-              <a href="{{cgo "mentor" "menteesForYear"}}" class="dropdown-item">Mentees For Year</a>
-            </div>
-          </li>
+                <div class="navbar-text">Post Playa</div>
+                <a href="{{cgo "mentor" "menteesForYear"}}" class="dropdown-item">Mentees For Year</a>
+              </div>
+            </li>
           {{/if}}
 
           {{#if (has-role "vc")}}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Vol Coord</a>
-            <div class="dropdown-menu">
-              {{#link-to "handle-checker" class="dropdown-item"}}Check Callsigns{{/link-to}}
-              {{#if (has-role "edit-access-docs")}}
-              {{#link-to "vc.access-documents" class="dropdown-item"}}Manage Access Docs{{/link-to}}
-              {{/if}}
-              {{#if (has-role "edit-bmids")}}
-              <a href="{{cgo "bmidc" "listAllBMIDs"}}" class="dropdown-item">Manage BMIDs</a>
-              {{/if}}
-              <a href="{{cgo "timesheet" "noobTracker"}}" class="dropdown-item">N00b Tracker!</a>
-            </div>
-          </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Vol Coord</a>
+              <div class="dropdown-menu">
+                {{#link-to "handle-checker" class="dropdown-item"}}Check Callsigns{{/link-to}}
+                {{#if (has-role "edit-access-docs")}}
+                  {{#link-to "vc.access-documents" class="dropdown-item"}}Manage Access Docs{{/link-to}}
+                {{/if}}
+                {{#if (has-role "edit-bmids")}}
+                  <a href="{{cgo "bmidc" "listAllBMIDs"}}" class="dropdown-item">Manage BMIDs</a>
+                {{/if}}
+                <a href="{{cgo "timesheet" "noobTracker"}}" class="dropdown-item">N00b Tracker!</a>
+              </div>
+            </li>
           {{/if}}
 
           {{#if (has-role "admin" "edit-slots" "megaphone")}}
-          <li class="nav-item dropdown dropdown-large">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Admin</a>
-            <div class="dropdown-menu dropdown-menu-large">
-              <div class="container">
-                <div class="row">
-                  <div class="col-sm-12 col-md-3">
+            <li class="nav-item dropdown dropdown-large">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Admin</a>
+              <div class="dropdown-menu dropdown-menu-large">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-3">
                       {{#if (has-role "admin" "edit-slots")}}
                         {{#link-to "admin.slots" class="dropdown-item"}}Edit Schedule Slots{{/link-to}}
                       {{/if}}
-              {{#if (has-role "admin")}}
-                      {{#link-to "admin.credits" class="dropdown-item"}}Edit Schedule Credits{{/link-to}}
-                      {{#link-to "admin.positions" class="dropdown-item"}}Edit Positions{{/link-to}}
-                      <a href="{{cgo "role" "selectAll"}}" class="dropdown-item">Edit (System) Roles</a>
-                      <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
-                      <a href="{{cgo "logview" "show"}}" class="dropdown-item">Log View</a>
-              {{/if}}
-                  </div>
-              {{#if (has-role "admin")}}
-                <div class="col-sm-12 col-md-3">
-                      <a href="{{cgo "salesforce" "import"}}" class="dropdown-item">Salesforce Import</a>
-                      <a href="{{cgo "conversion" "convert"}}" class="dropdown-item">Database Conversions</a>
-                      <a href="{{cgo "reminders" "index"}}" class="dropdown-item">Reminder Emails</a>
-                      <a href="{{cgo "maintenance" "bulkUpload"}}" class="dropdown-item">Bulk Upload</a>
-                      <a href="{{cgo "timesheet" "bulkSignInOut"}}" class="dropdown-item">Bulk Sign In/Out</a>
-                      <a href="{{cgo "lam" "syncLamPhotos"}}" class="dropdown-item">Synchronize Lam Photos</a>
-                      <a href="{{cgo "lam" "exportLamPhotos"}}" class="dropdown-item">Export Lam Photos</a>
-                      <a href="{{cgo "timesheet" "signoutOnDuty"}}" class="dropdown-item">Bulk Signout</a>
-                  </div>
-              {{/if}}
-              {{#if (has-role "admin" "megaphone")}}
-                <div class="col-sm-12 col-md-3">
                       {{#if (has-role "admin")}}
-                      <a href="{{cgo "timesheet" "thankYouCards"}}" class="dropdown-item">Thank-You Cards</a>
-                      <a href="{{cgo "timesheet" "sanityCheckTimeSheets"}}" class="dropdown-item">Timesheet Sanity Check</a>
-                      <a href="{{cgo "manualreview" "selectAll"}}" class="dropdown-item">Manual Review</a>
-                      <a href="{{cgo "timesheet" "hoursAndCredits"}}" class="dropdown-item">Hours/Credits</a>
-                      <a href="{{cgo "person" "selectByStatusChange"}}" class="dropdown-item">People by Status Change</a>
-                      <a href="{{cgo "timesheet" "radioEligibilityReport"}}" class="dropdown-item">Radio Eligibility</a>
+                        {{#link-to "admin.credits" class="dropdown-item"}}Edit Schedule Credits{{/link-to}}
+                        {{#link-to "admin.positions" class="dropdown-item"}}Edit Positions{{/link-to}}
+                        <a href="{{cgo "role" "selectAll"}}" class="dropdown-item">Edit (System) Roles</a>
+                        <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
+                        <a href="{{cgo "logview" "show"}}" class="dropdown-item">Log View</a>
                       {{/if}}
-                      {{#if (has-role "megaphone")}}
-                      <a href="{{cgo "broadcast" "index"}}" class="dropdown-item">Ranger Broadcast</a>
-                      {{/if}}
+                    </div>
+                    {{#if (has-role "admin")}}
+                      <div class="col-sm-12 col-md-3">
+                        <a href="{{cgo "salesforce" "import"}}" class="dropdown-item">Salesforce Import</a>
+                        <a href="{{cgo "conversion" "convert"}}" class="dropdown-item">Database Conversions</a>
+                        <a href="{{cgo "reminders" "index"}}" class="dropdown-item">Reminder Emails</a>
+                        <a href="{{cgo "maintenance" "bulkUpload"}}" class="dropdown-item">Bulk Upload</a>
+                        <a href="{{cgo "timesheet" "bulkSignInOut"}}" class="dropdown-item">Bulk Sign In/Out</a>
+                        <a href="{{cgo "lam" "syncLamPhotos"}}" class="dropdown-item">Synchronize Lam Photos</a>
+                        <a href="{{cgo "lam" "exportLamPhotos"}}" class="dropdown-item">Export Lam Photos</a>
+                        <a href="{{cgo "timesheet" "signoutOnDuty"}}" class="dropdown-item">Bulk Signout</a>
+                      </div>
+                    {{/if}}
+                    {{#if (has-role "admin" "megaphone")}}
+                      <div class="col-sm-12 col-md-3">
+                        {{#if (has-role "admin")}}
+                          <a href="{{cgo "timesheet" "thankYouCards"}}" class="dropdown-item">Thank-You Cards</a>
+                          <a href="{{cgo "timesheet" "sanityCheckTimeSheets"}}" class="dropdown-item">Timesheet Sanity Check</a>
+                          <a href="{{cgo "manualreview" "selectAll"}}" class="dropdown-item">Manual Review</a>
+                          <a href="{{cgo "timesheet" "hoursAndCredits"}}" class="dropdown-item">Hours/Credits</a>
+                          <a href="{{cgo "person" "selectByStatusChange"}}" class="dropdown-item">People by Status Change</a>
+                          <a href="{{cgo "timesheet" "radioEligibilityReport"}}" class="dropdown-item">Radio Eligibility</a>
+                        {{/if}}
+                        {{#if (has-role "megaphone")}}
+                          <a href="{{cgo "broadcast" "index"}}" class="dropdown-item">Ranger Broadcast</a>
+                        {{/if}}
+                      </div>
+                    {{/if}}
+                  </div>
                 </div>
-              {{/if}}
               </div>
-            </div>
-          </div>
-        </li>
-        {{/if}}
+            </li>
+          {{/if}}
 
           {{#if (has-role "admin" "manage")}}
-          <li class="nav-item dropdown dropdown-large">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Reports</a>
-            <div class="dropdown-menu dropdown-menu-large">
-              <div class="container">
-                <div class="row">
-                  <div class="col-sm-12 col-md-4 col-lg-3">
+            <li class="nav-item dropdown dropdown-large">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Reports</a>
+              <div class="dropdown-menu dropdown-menu-large">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Schedule</div>
                       <a href="{{cgo "slot" "selectNewShiftLead"}}" class="dropdown-item">Shift Lead Report</a>
                       <a href="{{cgo "slot" "selectAllScheduled" "order=1"}}" class="dropdown-item">Schedule by Callsign</a>
@@ -176,16 +179,16 @@
                       <a href="{{cgo "slot_coverage" "coverageReport"}}" class="dropdown-item">Coverage Report</a>
                       <a href="{{cgo "slot" "shiftSignupsReport"}}" class="dropdown-item">Shift Signups</a>
                       <a href="{{cgo "slot" "checkInOutForecastReport"}}" class="dropdown-item">HQ Checkin/Out Forecast</a>
-                  </div>
-                  <div class="col-sm-12 col-md-4 col-lg-3">
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">People</div>
                       <a href="{{cgo "timesheet" "selectByPosition"}}" class="dropdown-item">People by Position</a>
                       <a href="{{cgo "person" "selectByRole"}}" class="dropdown-item">People by Role</a>
                       <a href="{{cgo "person" "selectByStatus"}}" class="dropdown-item">People by Status</a>
                       <a href="{{cgo "person" "selectByLocation"}}" class="dropdown-item">People by Location</a>
                       <a href="{{cgo "timesheet" "selectBySpecialTeam"}}" class="dropdown-item">People By Special Team</a>
-                  </div>
-                  <div class="col-sm-12 col-md-4 col-lg-3">
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Timesheets</div>
                       <a href="{{cgo "timesheet" "selectOnDuty"}}" class="dropdown-item">People On Duty</a>
                       <a href="{{cgo "timesheet" "selectOnDuty" "overHours=6"}}" class="dropdown-item">...Over 6 Hours</a>
@@ -194,47 +197,47 @@
                       <a href="{{cgo "timesheet" "selectByCallsign"}}" class="dropdown-item">Timesheet By Callsign</a>
                       {{#link-to "reports.timesheet-correction-requests" class="dropdown-item"}}Corrections Requests{{/link-to}}
                       {{#link-to "reports.timesheet-unconfirmed" class="dropdown-item"}}Timesheet Unconfirmed{{/link-to}}
-                  </div>
-                  <div class="col-sm-12 col-md-4 col-lg-3">
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Assets</div>
                       <a href="{{cgo "asset" "selectHistory"}}" class="dropdown-item">Asset History</a>
                       <a href="{{cgo "asset" "selectOutstanding"}}" class="dropdown-item">Assets Outstanding</a>
                       <a href="{{cgo "asset" "radioAssetsReport"}}" class="dropdown-item">Radio Assets</a>
                       <a href="{{cgo "asset" "radioCheckoutReport"}}" class="dropdown-item">Radio Checkout Report</a>
-                  </div>
-                  <div class="col-sm-12 col-md-4 col-lg-3">
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Other</div>
                       <a href="{{cgo "position" "selectSanityChecks"}}" class="dropdown-item">Position Sanity Check</a>
                       <a href="{{cgo "languages" "reportByLanguage"}}" class="dropdown-item">Languages</a>
                       <a href="{{cgo "person" "SelectByYears"}}" class="dropdown-item">Freaking Years</a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </li>
+            </li>
 
           {{/if}}
           {{#if (has-role "admin" "manage")}}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Search</a>
+              <div class="dropdown-menu">
+                {{#link-to "search.person" class="dropdown-item"}}Person{{/link-to}}
+                {{#link-to "search.assets" class="dropdown-item"}}Assets{{/link-to}}
+                {{#link-to "search.languages" class="dropdown-item"}}Languages{{/link-to}}
+              </div>
+            </li>
+          {{/if}}
+        {{else}}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Search</a>
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Actions</a>
             <div class="dropdown-menu">
-              {{#link-to "search.person" class="dropdown-item"}}Person{{/link-to}}
-              {{#link-to "search.assets" class="dropdown-item"}}Assets{{/link-to}}
-              {{#link-to "search.languages" class="dropdown-item"}}Languages{{/link-to}}
+              {{#link-to "login" class="dropdown-item"}}Login{{/link-to}}
+              {{#link-to "reset-password" class="dropdown-item"}}Password Reset{{/link-to}}
+              <a href="#" class="dropdown-item">Register</a>
+              <a href="https://profiles.burningman.com/participate" class="dropdown-item">Volunteer Profile</a>
             </div>
           </li>
-          {{/if}}
-      {{else}}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Actions</a>
-          <div class="dropdown-menu">
-            {{#link-to "login" class="dropdown-item"}}Login{{/link-to}}
-            {{#link-to "reset-password" class="dropdown-item"}}Password Reset{{/link-to}}
-            <a href="#" class="dropdown-item">Register</a>
-            <a href="https://profiles.burningman.com/participate" class="dropdown-item">Volunteer Profile</a>
-          </div>
-        </li>
-      {{/if}}
+        {{/if}}
         {{!
           -- This menu is hidden in bigger devices with d-sm-none.
            The sidebar isn't proper for smaller screens imo, so this dropdown
@@ -252,7 +255,7 @@
             <div class="dropdown-menu">
               <a href="#" class="dropdown-item" {{action "logout"}}>Logout</a>
             </div>
-         </li>
+          </li>
         </ul>
       {{/if}}
     </div>
@@ -261,7 +264,7 @@
 
 
 <div class="row" id="body-row">
-   {{outlet}}
+  {{outlet}}
 </div>
 
 <footer class="footer d-print-none">
