@@ -5,7 +5,7 @@ import { action } from '@ember-decorators/object';
  * Confirm a person's entire timesheet correct/incorrect.
  */
 
-export default class MeTimesheetConfirmController extends Controller {
+export default class MeTimesheetCorrectionsConfirmController extends Controller {
   confirmForm = null; // setup in the route
 
   @action

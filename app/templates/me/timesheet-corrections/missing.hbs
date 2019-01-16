@@ -1,0 +1,105 @@
+<h2>Missing Timesheet Entry/Shift Requests</h2>
+
+{{#if timesheetsMissing}}
+  <table class="table table-rc table-striped">
+    <thead>
+      <tr>
+        <th>On Duty</th>
+        <th>Off Duty</th>
+        <th class="text-right">Duration</th>
+        <th>Position</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each timesheetsMissing as |tsm|}}
+        <tr>
+          <td data-title="On Duty">{{shift-format tsm.on_duty}}</td>
+          <td data-title="Off Duty">{{shift-format tsm.off_duty}}</td>
+          <td class="td-number" data-title="Duration">{{hour-minute-format tsm.duration}}</td>
+          <td data-title="Position">{{tsm.position.title}}</td>
+          <td class="no-collapse">
+            {{#if (eq tsm.review_status "pending")}}
+              <button type="button" class="btn btn-primary btn-sm" {{action "editAction" tsm}}>Edit</button>
+              <button type="button" class="btn btn-danger btn-sm" {{action "deleteAction" tsm}}>Delete</button>
+            {{else}}
+              &nbsp;
+            {{/if}}
+          </td>
+        </tr>
+        <tr class="no-collapse">
+          <td colspan="6">
+            {{#if tsm.isPending}}
+              <i>The request is pending review.</i>
+            {{else}}
+              {{#if tsm.isApproved}}
+                The request has been APPROVED. Your timesheet has been updated with the missing shift.
+              {{else}}
+                The request has been rejected.
+              {{/if}}
+              <p>
+                <strong>Response from the reviewer:</strong><br>
+                {{tsm.reviewer_note}}
+              </p>
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p class="mt-2 ml-2">
+    No missing timesheet entries have been submitted.
+  </p>
+{{/if}}
+
+<button type="button" class="btn btn-primary" {{action "newRequestAction"}}>New Missing Timesheet Request</button>
+
+<div class="mt-4">
+  <div class="row">
+    <div class="col-sm-12 col-md-6 mb-2">
+      {{#link-to "me.timesheet-corrections.review" class="btn btn-secondary"}}Back to Step 1 - Timesheet Review{{/link-to}}
+    </div>
+    <div class="col-sm-12 col-md-6 text-md-right">
+      {{#link-to "me.timesheet-corrections.confirm" class="btn btn-secondary"}}Go to Step 3 - Final Confirmation{{/link-to}}
+    </div>
+  </div>
+</div>
+
+
+{{#if entry}}
+  {{#ch-form "tm" entry
+        modalBox=true modalTitle="Missing Timesheet Request"
+        validator=timesheetValidations
+        onSubmit=(action "saveAction") onCancel=(action "cancelAction") as |f|}}
+    <div class="form-group mb-4">
+      Use this form for <b>MISSING SHIFT / TIMESHEET ENTRIES ONLY</b> If you have
+      an existing entry that needs correction, go back to the
+      Timesheet Review section and submit a correction by clicking on 'No - Needs Correction'.
+    </div>
+    <div class="form-row">
+      {{f.input "position_id" label="Which position was the shift for?" type="select" options=positionOptions grid="col-auto"}}
+    </div>
+    <div class="form-row">
+      {{f.input "on_duty" label="What was the START date & time of the shift?" type="datetime" size="15" grid="col-auto"}}
+      {{f.input "off_duty" label="What was the END date & time of the shift?" type="datetime" size="15" grid="col-auto"}}
+    </div>
+    <div class="form-row">
+      {{f.input "partner" label="Who was your partner (if any) for the shift?" type="text" size="20"}}
+    </div>
+    <div class="form-row">
+      <p>
+        <span class="font-weight-bold">Give as much supporting details on why a shift should be added to your timesheet.</span><br>
+        <span class="text-danger">Your request may be denied if not enough supporting details are provided.</span>
+      </p>
+    </div>
+    <ul>
+      <li>If you had no partner for the shift, is there anyone who can verify your hours?</li>
+      <li>Was another person responsible for checking you in, and why did they fail to do that?</li>
+      <li>If you called Ranger HQ on the radio to check you in for the shift, who was the Ranger on the other end?</li>
+    </ul>
+    {{f.input "notes" label="Why is this new entry needed?" type="textarea" cols=80 rows=4}}
+    {{f.submit label=(if f.model.isNew "Submit Request" "Update Request") disabled=isSubmitting}}
+    {{f.cancel}}
+  {{/ch-form}}
+{{/if}}

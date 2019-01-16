@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import { action } from '@ember-decorators/object';
 import { validatePresence } from 'ember-changeset-validations/validators';
 
-export default class MeTimesheetsReviewController extends Controller {
+export default class MeTimesheetCorrectionsReviewController extends Controller {
   entry = null; // Incorrect entry
 
   corectionValidations = {
@@ -15,7 +15,7 @@ export default class MeTimesheetsReviewController extends Controller {
     timesheet.set('verified', 1);
     this.toast.clear();
     timesheet.save().then(() => {
-      this.toast.success('The timesheet has been marked as correct.');
+      this.toast.success('The entry has been marked as correct.');
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 

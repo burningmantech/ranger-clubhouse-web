@@ -3,7 +3,7 @@ import { action, computed } from '@ember-decorators/object';
 import { validatePresence } from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 
-export default class MeTimesheetMissingController extends Controller {
+export default class MeTimesheetCorrectionsMissingController extends Controller {
   entry = null;
 
   timesheetValidations = {

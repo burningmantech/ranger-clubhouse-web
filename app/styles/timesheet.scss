@@ -1,0 +1,116 @@
+.timesheet-table {
+  border: (2 * $table-border-width) solid $table-border-color;
+  margin-bottom: 10px;
+  width: auto;
+}
+
+.timesheet-header {
+  color: $table-head-color;
+  background-color: $table-head-bg;
+  border-color: $table-border-color;
+  font-weight: bold;
+}
+
+.timesheet-overlapping {
+  background-color: #fbd3d3;
+}
+
+.timesheet-entry {
+  font-size: 0.95em;
+  border-top: 1px solid #ddd;
+  width: 100%;
+}
+
+.timesheet-entry:hover {
+    background-color: $table-hover-bg;
+}
+
+.timesheet-row > div {
+    display: inline-block;
+    padding: 5px 7px;
+}
+
+.timesheet-actions {
+  width: 100%;
+  padding: 5px 7px;
+}
+
+@media print {
+  .timesheet-table {
+    font-size: 1em;
+  }
+}
+
+
+@media print, (min-width: 801px) {
+  .timesheet-time {
+    width: 20%;
+  }
+
+  .timesheet-duration {
+    width: 10%;
+    text-align: right;
+  }
+
+  .timesheet-credits {
+    width: 10%;
+    text-align: right;
+  }
+
+  .timesheet-position {
+    width: 30%;
+  }
+
+  .timesheet-sm-label {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .timesheet-row button {
+    font-size: 0.9em;
+    display: inline-block;
+    width: 49% !important;
+  }
+
+  .timesheet-actions {
+    padding: 5px;
+  }
+
+  .timesheet-header {
+    display: none !important;
+  }
+
+  .timesheet-time {
+    width: 49%;
+  }
+
+  .timesheet-duration {
+    width: 49%;
+  }
+
+  .timesheet-credits {
+    width: 49%;
+  }
+
+  .timesheet-description {
+    width: 49%;
+  }
+
+  .timesheet-long-description {
+    width: 100%;
+  }
+
+  .timesheet-signups {
+    width: 100%;
+  }
+
+  .timesheet-actions {
+    width: 100%;
+  }
+
+  .timesheet-sm-label {
+    display: inline-block;
+    margin-right: 5px;
+  }
+}

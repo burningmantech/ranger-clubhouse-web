@@ -24,11 +24,7 @@ Router.map(function() {
     this.route('emergency-contact');
     this.route('password');
     this.route('messages');
-    this.route('timesheet', function() {
-      this.route('review', { path: '/' });
-      this.route('missing');
-      this.route('confirm');
-    });
+    this.route('timesheet');
     this.route('schedule', function() {
       this.route('index',  { path: '/' });
       this.route('print');
@@ -39,6 +35,11 @@ Router.map(function() {
     this.route('alerts');
     this.route('mentees');
     this.route('contact');
+    this.route('timesheet-corrections', function() {
+      this.route('review');
+      this.route('missing');
+      this.route('confirm');
+    });
   });
 
   this.route('search', function() {

@@ -29,6 +29,5 @@ export default class MeTimesheetRoute extends Route.extend(MeRouteMixin) {
   setupController(controller, model) {
     super.setupController(...arguments);
     controller.setProperties(model);
-    controller.set('canCorrectThisYear', (model.timesheetInfo.correction_year == model.year));
   }
 }

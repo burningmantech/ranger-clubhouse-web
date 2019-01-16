@@ -2,34 +2,37 @@
   {{#ch-sidebar-group "RANGERING"}}
     {{ch-sidebar-link "me.schedule" title="Schedule / Signups" icon="clipboard"}}
     {{#if user.isRanger}}
-      {{ch-sidebar-link "me.timesheet.review" title="Timesheets" icon="clock"}}
+      {{ch-sidebar-link "me.timesheet-corrections.index" title="Timesheet Corrections" icon="list-ol" iconType="s"}}
+      {{ch-sidebar-link "me.timesheet" title="Timesheets" icon="clock"}}
+      {{ch-sidebar-link "me.ranger-info" title="Event / Training Info" icon="user"}}
     {{/if}}
-    {{ch-sidebar-link "me.ranger-info" title="Ranger Info" icon="user"}}
   {{/ch-sidebar-group}}
 
   {{#if (or user.isRanger user.isAlpha user.isProspective)}}
-  {{#ch-sidebar-group "PRE-EVENT"}}
+    {{#ch-sidebar-group "PRE-EVENT"}}
       {{ch-sidebar-link "me.tickets" title="Tickets & Stuff" icon="ticket-alt" iconType="s"}}
       {{ch-sidebar-link "me.motorpool-policy" title="Motorpool Policy" icon="car" iconType="s"}}
-  {{/ch-sidebar-group}}
+    {{/ch-sidebar-group}}
   {{/if}}
 
   {{#ch-sidebar-group "COMMUNICATION"}}
     {{#if user.isRanger}}
-    {{ch-sidebar-link "me.messages" title="Messages" icon="envelope" badgeText=user.unread_message_count}}
+      {{ch-sidebar-link "me.messages" title="Messages" icon="envelope" badgeText=user.unread_message_count}}
     {{/if}}
     {{ch-sidebar-link "me.alerts" title="Alert Preferences" icon="bell"}}
     {{#if user.teacher.have_mentored}}
-    {{ch-sidebar-link "me.mentees" title="My Mentees" icon="users" iconType="s"}}
+      {{ch-sidebar-link "me.mentees" title="My Mentees" icon="users" iconType="s"}}
     {{/if}}
     {{#if user.isRanger}}
-    {{ch-sidebar-link "me.contact" title="Contact Ranger" icon="comments" iconType="s"}}
+      {{ch-sidebar-link "me.contact" title="Contact Ranger" icon="comments" iconType="s"}}
     {{/if}}
   {{/ch-sidebar-group}}
 
   {{#ch-sidebar-group "MY ACCOUNT"}}
     {{ch-sidebar-link "me.personal-info" title="Personal Info" icon="home" iconType="s"}}
-    {{ch-sidebar-link "me.emergency-contact" title="Emergency Contact" icon="exclamation" iconType="s"}}
+    {{#if user.isRanger}}
+      {{ch-sidebar-link "me.emergency-contact" title="Emergency Contact" icon="exclamation" iconType="s"}}
+    {{/if}}
     {{ch-sidebar-link "me.password" title="Change Password" icon="key" iconType="s"}}
   {{/ch-sidebar-group}}
 

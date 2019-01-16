@@ -1,0 +1,34 @@
+<h1>Timesheet Corrections for {{person.callsign}}</h1>
+
+{{#if (or unverifiedCount correctionPendingCount missingPendingReviewCount)}}
+  {{#ch-alert "danger"}}
+    {{#if unverifiedCount}}
+      You need to review {{pluralize unverifiedCount "timesheet entry"}}.<br>
+    {{/if}}
+    {{#if correctionPendingReviewCount}}
+      {{pluralize correctionPendingReviewCount "timesheet entry"}} is pending review.<br>
+    {{/if}}
+
+    {{#if missingPendingReviewCount}}
+      {{pluralize missingPendingReviewCount "missing timesheet entry request"}} {{if (eq missingPendingReviewCount 1) "is" "are"}} pending review.<br>
+    {{/if}}
+  {{/ch-alert}}
+{{else if timesheetInfo.timesheet_confirmed}}
+  {{#ch-alert "success"}}
+    {{fa-icon "thumbs-up" type="far"}} Congratulations! All your timesheet
+    entries have been reviewed, there are no outstanding correction requests,
+    and you have stated you have no further correction requests
+    Nothing needs to be done at this point. Thank you for your efforts!
+  {{/ch-alert}}
+{{else}}
+  {{#ch-alert "info"}}
+    It appears all of your timesheet entries have been reviewed and there are no outstanding
+    correction requests. Let us know you are finished submitting corrections.<br>
+    <br>
+    Go to {{#link-to 'me.timesheet-corrections.confirm'}}Final Confirmation{{/link-to}}
+    to do this.
+  {{/ch-alert}}
+{{/if}}
+
+
+{{outlet}}

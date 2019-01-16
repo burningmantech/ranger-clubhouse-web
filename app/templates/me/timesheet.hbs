@@ -1,48 +1,57 @@
-{{year-select "Timesheets" year=year years=person.years onChange=(action "changeYearAction")}}
+{{year-select (concat "Timesheet For " session.user.callsign) year=year years=person.years onChange=(action "changeYearAction")}}
 
-{{#if (and canCorrectThisYear timesheetInfo.correction_enabled)}}
-{{#if timesheetInfo.timesheet_confirmed}}
-  {{#ch-alert "success"}}
-    {{fa-icon "thumbs-up" type="far"}} Congratulations! You have  indicated your timesheet is accurate and does not require any changes. There is nothing else you need to do at this time.
-  {{/ch-alert}}
+{{#if timesheets}}
+
+  <div class="timesheet-table">
+    <div class="timesheet-row timesheet-header">
+      <div class="timesheet-time">From</div>
+      <div class="timesheet-time">To</div>
+      <div class="timesheet-duration">Time</div>
+      <div class="timesheet-credits">Credits</div>
+      <div class="timesheet-position">Position</div>
+    </div>
+    {{#each timesheets as |ts|}}
+      <div class="timesheet-entry">
+        <div class="timesheet-row">
+          <div class="timesheet-time">{{shift-format ts.on_duty}}</div>
+          <div class="timesheet-time">{{shift-format ts.off_duty}}</div>
+          <div class="timesheet-duration">
+            <span class="timesheet-sm-label">Time:</span>
+            {{#if ts.off_duty}}
+              {{hour-minute-format ts.duration}}
+            {{else}}
+              <i>On Duty</i>
+            {{/if}}
+          </div>
+          <div class="timesheet-credits">
+            <span class="timesheet-sm-label">Credits:</span>
+            {{#if ts.off_duty}}
+              {{credits-format ts.credits}}
+            {{else}}
+              -
+            {{/if}}
+          </div>
+          <div class="timesheet-position">{{ts.position.title}}</div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+
+  <div class="row mt-2 mb-2">
+    <div class="col-auto"><strong>Total Time:</strong> {{hour-minute-format (sum-column timesheets "duration")}}</div>
+    <div class="col-auto"><strong>Total Credits:</strong> {{credits-format (sum-column timesheets "credits")}}</div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col"><strong>Position Summary:</strong> {{timesheet-position-summary timesheets=timesheets}}</div>
+  </div>
+
+  <div class="mt-4">
+    Is an entry incorrect, or is there a missing shift that was not recorded?
+    {{#link-to 'me.timesheet-corrections.index'}}Submit a correction request.{{/link-to}}
+  </div>
+{{else}}
+  <p class="mt-3 text-danger">
+    No timesheet entries were found for {{year}}.
+  </p>
 {{/if}}
-    To ensure you will receive proper credit for your {{timesheetInfo.correction_year}} Ranger efforts, please
-    follow all steps on this page. You need to confirm your whole timesheet at
-    the end.
-    <ol class="mt-2">
-        <li>
-          Review your timesheet entries below and mark the entries as correct
-          or incorrect. If the entry is incorrect,  provide an explanation on
-          why the entry is wrong.
-        </li>
-        <li>
-          For any missing shifts, click on the 'Step 2 - Missing Timesheets' tab,
-          and fill out the Missing Timesheet Entry Request form. You may submit more
-          than one request.
-        </li>
-        <li>
-          {{#if unverifiedCount}}
-            <strong class="text-danger">You have {{pluralize unverifiedCount "timesheet entry"}} which
-            needs to be reviewed by you.</strong>
-          {{/if}}
-          After your very last shift for the event, AND all your timesheets
-          have been marked as correct, AND there are no outstanding correction requests,
-          click on the tab 'Step 3 - Final Confirmation' to let us know everything
-          is accurate.
-        </li>
-    </ol>
-
-    <ul class="nav nav-tabs nav-pills mb-2">
-      <li class="nav-item">
-        {{#link-to "me.timesheet.review" class="nav-link"}}Step 1 - Timesheet Review{{/link-to}}
-      </li>
-      <li class="nav-item">
-        {{#link-to "me.timesheet.missing" class="nav-link"}}Step 2 - Missing Entries Requests{{/link-to}}
-      </li>
-      <li class="nav-item">
-        {{#link-to "me.timesheet.confirm" class="nav-link"}}Step 3 - Final Confirmation{{/link-to}}
-      </li>
-    </ul>
-{{/if}}
-
-{{outlet}}
