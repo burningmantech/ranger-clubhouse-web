@@ -1,17 +1,26 @@
+{{! Besure to keep application.hbs in sync with the links}}
 {{#ch-sidebar}}
   {{#ch-sidebar-group "RANGERING"}}
     {{ch-sidebar-link "me.schedule" title="Schedule / Signups" icon="clipboard"}}
-    {{#if user.isRanger}}
+    {{#if (or user.isAlpha user.isRanger)}}
       {{ch-sidebar-link "me.timesheet-corrections.index" title="Timesheet Corrections" icon="list-ol" iconType="s"}}
       {{ch-sidebar-link "me.timesheet" title="Timesheets" icon="clock"}}
-      {{ch-sidebar-link "me.ranger-info" title="Event / Training Info" icon="user"}}
     {{/if}}
+    {{#unless user.isAuditor}}
+      {{ch-sidebar-link "me.ranger-info" title="Event / Training Info" icon="user"}}
+    {{/unless}}
   {{/ch-sidebar-group}}
 
   {{#if (or user.isRanger user.isAlpha user.isProspective)}}
     {{#ch-sidebar-group "PRE-EVENT"}}
-      {{ch-sidebar-link "me.tickets" title="Tickets & Stuff" icon="ticket-alt" iconType="s"}}
-      {{ch-sidebar-link "me.motorpool-policy" title="Motorpool Policy" icon="car" iconType="s"}}
+      {{#if (or user.isAlpha user.isProspective)}}
+        {{ch-sidebar-link "me.tickets" title="Work Access Pass" icon="ticket-alt" iconType="s"}}
+      {{else}}
+        {{ch-sidebar-link "me.tickets" title="Tickets & Stuff" icon="ticket-alt" iconType="s"}}
+      {{/if}}
+      {{#if (or user.isRanger user.isAlpha)}}
+        {{ch-sidebar-link "me.motorpool-policy" title="Motorpool Policy" icon="car" iconType="s"}}
+      {{/if}}
     {{/ch-sidebar-group}}
   {{/if}}
 
@@ -30,7 +39,7 @@
 
   {{#ch-sidebar-group "MY ACCOUNT"}}
     {{ch-sidebar-link "me.personal-info" title="Personal Info" icon="home" iconType="s"}}
-    {{#if user.isRanger}}
+    {{#if (or user.isRanger user.isAlpha user.isProspective)}}
       {{ch-sidebar-link "me.emergency-contact" title="Emergency Contact" icon="exclamation" iconType="s"}}
     {{/if}}
     {{ch-sidebar-link "me.password" title="Change Password" icon="key" iconType="s"}}

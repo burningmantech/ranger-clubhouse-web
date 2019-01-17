@@ -3,6 +3,7 @@ import EmberObject from '@ember/object';
 import { action, computed } from '@ember-decorators/object';
 import { filterBy } from '@ember-decorators/object/computed';
 import { validateFormat } from 'ember-changeset-validations/validators';
+import { isEmpty } from '@ember/utils';
 
 const PHONE_REGEXP = /^(?=(?:\D*\d){10,15}\D*$)\+?[0-9]{1,3}[\s-]?(?:\(0?[0-9]{1,5}\)|[0-9]{1,5})[-\s]?[0-9][\d\s-]{5,7}\s?(?:x[\d-]{0,4})?$/;
 
@@ -43,10 +44,10 @@ export default class MeAlertsController extends Controller {
   // One or both numbers not verified?
   @computed('numbers.{off_playa,on_playa}.is_verified')
   get notVerified() {
-    const sms = this.numbers;
+    const numbers = this.numbers;
 
-    return ((sms.off_playa.phone != '' && !sms.off_playa.is_verified)
-            || (sms.on_playa.phone != '' && !sms.on_playa.is_verified));
+    return ((!isEmpty(numbers.off_playa.phone) && !numbers.off_playa.is_verified)
+            || (!isEmpty(numbers.on_playa.phone) && !numbers.on_playa.is_verified));
   }
 
   // List which numbers are not verified.
@@ -55,11 +56,11 @@ export default class MeAlertsController extends Controller {
       const phones = [];
       const numbers = this.numbers;
 
-      if (numbers.on_playa.phone != '' && !numbers.on_playa.is_verified) {
+      if (!isEmpty(numbers.on_playa.phone) && !numbers.on_playa.is_verified) {
         phones.push(numbers.on_playa.phone);
       }
 
-      if (numbers.off_playa.phone != '' && !numbers.off_playa.is_verified && !numbers.is_same) {
+      if (!isEmpty(numbers.off_playa.phone) && !numbers.off_playa.is_verified && !numbers.is_same) {
         phones.push(numbers.off_playa.phone);
       }
 
@@ -88,7 +89,7 @@ export default class MeAlertsController extends Controller {
     const personId = this.person.id;
     let code, type, phone;
 
-    if (model.get('off_playa') != '') {
+    if (!isEmpty(model.get('off_playa'))) {
       code = model.get('off_playa');
       type = 'off-playa';
       phone = this.numbers.off_playa.phone;

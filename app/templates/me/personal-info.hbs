@@ -21,14 +21,18 @@
     <div class="form-row">
       {{f.input "gender" label="Gender" hint="female, male, non-binary, gender fluid, etc." }}
     </div>
-    <div class="form-row">
-    {{f.input "languages" label="Languages Spoken"
+
+    {{#unless person.isAuditor}}
+      <div class="form-row">
+        {{f.input "languages" label="Languages Spoken"
           hint="List the English names of languages you are comfortable speaking separated by a comma. Ex: english, french, japanese"}}
-    </div>
-    <div class="form-row col-auto">
-      {{f.input "camp_location" type="textarea" label="Camp Location" cols=50 rows=4 maxlength=200}}
-    </div>
+      </div>
+      <div class="form-row col-auto">
+        {{f.input "camp_location" type="textarea" label="Camp Location" cols=50 rows=4 maxlength=200}}
+      </div>
+    {{/unless}}
   </fieldset>
+
   <fieldset>
     <legend>Home Address</legend>
     <div class="form-row">
@@ -44,13 +48,15 @@
     </div>
   </fieldset>
 
-  <fieldset>
-    <legend>Ranger Clothing</legend>
-    <div class="form-row">
-      {{f.input "teeshirt_size_style" type="select" label="T-Shirt Size" options=shortSleeveOptions grid="col-md-5 col-sm-8"}}
-      {{f.input "longsleeveshirt_size_style" type="select" label="Long Sleeve Shirt Size" options=longSleeveOptions grid="col-md-5 col-sm-8"}}
-    </div>
-  </fieldset>
+  {{#unless person.isAuditor}}
+    <fieldset>
+      <legend>Ranger Clothing</legend>
+      <div class="form-row">
+        {{f.input "teeshirt_size_style" type="select" label="T-Shirt Size" options=shortSleeveOptions grid="col-md-5 col-sm-8"}}
+        {{f.input "longsleeveshirt_size_style" type="select" label="Long Sleeve Shirt Size" options=longSleeveOptions grid="col-md-5 col-sm-8"}}
+      </div>
+    </fieldset>
+  {{/unless}}
 
   {{f.submit label="Update" disabled=isSubmitting}}
   {{f.cancel}}

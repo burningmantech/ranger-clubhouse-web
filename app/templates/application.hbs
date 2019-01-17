@@ -17,18 +17,29 @@
                   <div class="col-sm-12 col-md-4 col-lg-3">
                     <div class="navbar-text">Rangering</div>
                     {{#link-to "me.schedule" class="dropdown-item"}}Schedule &amp; Signup{{/link-to}}
-                    {{#if session.user.isRanger}}
+                    {{#if (or session.user.isAlpha session.user.isRanger)}}
                       {{#link-to "me.timesheet-corrections.index" class="dropdown-item"}}Timesheet Corrections{{/link-to}}
                       {{#link-to "me.timesheet-corrections.review" class="dropdown-item"}}Timesheets{{/link-to}}
                     {{/if}}
-                    {{#link-to "me.ranger-info" class="dropdown-item"}}Ranger Info{{/link-to}}
+                    {{#unless session.user.isAuditor}}
+                      {{#link-to "me.ranger-info" class="dropdown-item"}}Event &amp; Training Info{{/link-to}}
+                    {{/unless}}
                   </div>
+
                   {{#if (or session.user.isRanger session.user.isAlpha session.user.isProspective)}}
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Pre-Event</div>
-                      {{#link-to "me.tickets" class="dropdown-item"}}Tickets &amp; Stuff{{/link-to}}
-                      {{#link-to "me.motorpool-policy" class="dropdown-item"}}Motorpool Policy{{/link-to}}
+                      {{#if (or session.user.isAlpha session.user.isProspective)}}
+                        {{#link-to "me.tickets" class="dropdown-item"}}Work Access Pass{{/link-to}}
+                      {{else}}
+                        {{#link-to "me.tickets" class="dropdown-item"}}Tickets &amp; Stuff{{/link-to}}
+                      {{/if}}
+
+                      {{#if (or session.user.isRanger session.user.isAlpha)}}
+                        {{#link-to "me.motorpool-policy" class="dropdown-item"}}Motorpool Policy{{/link-to}}
+                      {{/if}}
                     </div>
+
                   {{/if}}
                   <div class="col-sm-12 col-md-4 col-lg-3">
                     <div class="navbar-text">Communication</div>

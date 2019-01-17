@@ -1,86 +1,95 @@
 import Mixin from '@ember/object/mixin';
-import { computed } from '@ember/object';
+import {
+  computed
+} from '@ember/object';
 import * as PersonStatus from 'clubhouse/constants/person_status';
-import { Role, roleName } from 'clubhouse/constants/roles';
-import { typeOf } from '@ember/utils';
-
+import {
+  Role,
+  roleName
+} from 'clubhouse/constants/roles';
+import {
+  typeOf
+} from '@ember/utils';
 
 export default Mixin.create({
   // Computed methods
-  isPastProspectiveDisabled: computed('status', 'callsign_approved', function() {
-      return (this.status == PersonStatus.PAST_PROSPECTIVE && !this.callsign_approved);
+  isPastProspectiveDisabled: computed('status', 'callsign_approved', function () {
+    return (this.status == PersonStatus.PAST_PROSPECTIVE && !this.callsign_approved);
   }),
 
-  isActive: computed('status', function() {
-        return (this.status == PersonStatus.ACTIVE);
+  isActive: computed('status', function () {
+    return (this.status == PersonStatus.ACTIVE);
   }),
 
-  isAlpha: computed('status', function() {
-        return (this.status == PersonStatus.ALPHA)
+  isAlpha: computed('status', function () {
+    return (this.status == PersonStatus.ALPHA)
   }),
 
-  isAuditor: computed('status', function() {
-        return this.status == PersonStatus.AUDITOR;
+  isAuditor: computed('status', function () {
+    return this.status == PersonStatus.AUDITOR;
   }),
 
-  isNonRanger: computed('status', function() {
-        return this.status == PersonStatus.NON_RANGER;
+  isNonRanger: computed('status', function () {
+    return this.status == PersonStatus.NON_RANGER;
   }),
 
-  isPassProspective: computed('status', function() {
-        return (this.status == PersonStatus.PAST_PROSPECTIVE);
+  isProspective: computed('status', function () {
+    return this.status == PersonStatus.PROSPECTIVE;
   }),
 
-  isProspectiveWaitlist: computed('status', function() {
-        return (this.status == PersonStatus.PROSPECTIVE_WAITLIST);
+  isPassProspective: computed('status', function () {
+    return (this.status == PersonStatus.PAST_PROSPECTIVE);
   }),
 
-  isAuditorOrPastProspective: computed('status', function() {
-        return (status == PersonStatus.AUDITOR || status == PersonStatus.PAST_PROSPECTIVE);
+  isProspectiveWaitlist: computed('status', function () {
+    return (this.status == PersonStatus.PROSPECTIVE_WAITLIST);
   }),
 
-  isNotRanger: computed('status', function() {
+  isAuditorOrPastProspective: computed('status', function () {
+    return (status == PersonStatus.AUDITOR || status == PersonStatus.PAST_PROSPECTIVE);
+  }),
+
+  isNotRanger: computed('status', function () {
     const status = this.status;
 
     // TODO shouldn't resigned/retired/uberbonked/etc. be in this list?
-    return (status == PersonStatus.AUDITOR
-        || status == PersonStatus.ALPHA
-        || status == PersonStatus.BONKED
-        || status == PersonStatus.PROSPECTIVE
-        || status == PersonStatus.PAST_PROSPECTIVE
-        || status == PersonStatus.PROSPECTIVE_WAITLIST);
+    return (status == PersonStatus.AUDITOR ||
+      status == PersonStatus.ALPHA ||
+      status == PersonStatus.BONKED ||
+      status == PersonStatus.PROSPECTIVE ||
+      status == PersonStatus.PAST_PROSPECTIVE ||
+      status == PersonStatus.PROSPECTIVE_WAITLIST);
   }),
 
-  isRanger: computed('status', function() {
-        return (!this.isNotRanger && this.status != 'non ranger');
+  isRanger: computed('status', function () {
+    return (!this.isNotRanger && this.status != 'non ranger');
   }),
 
-  canSignupForShifts: computed('status', function() {
-        return (!this.isNotARanger && this.status != PersonStatus.PAST_PROSPECTIVE);
+  canSignupForShifts: computed('status', function () {
+    return (!this.isNotARanger && this.status != PersonStatus.PAST_PROSPECTIVE);
   }),
 
   canStartShift: computed('status', function () {
     return !(
-      this.status == "auditor"
-      || this.status == "deceased"
-      || this.status == "dismissed"
-      || this.status == "past prospective"
-      || this.status == "prospective"
-      || this.status == "uberbonked"
+      this.status == "auditor" ||
+      this.status == "deceased" ||
+      this.status == "dismissed" ||
+      this.status == "past prospective" ||
+      this.status == "prospective" ||
+      this.status == "uberbonked"
     );
   }),
 
   hasRole(roles) {
-    let  personRoles = this.roles;
+    let personRoles = this.roles;
 
     if (!personRoles) {
       return false;
     }
 
     if (typeOf(roles) != 'array') {
-      roles = [ roles ];
+      roles = [roles];
     }
-
 
     let haveIt = false;
 
@@ -124,7 +133,7 @@ export default Mixin.create({
     }
 
     if (typeOf(roles) != 'array') {
-      roles = [ roles ];
+      roles = [roles];
     }
 
     const found = roles.filter((r) => personRoles.includes(r));
@@ -149,8 +158,8 @@ export default Mixin.create({
   }),
 
   // Roles
-  isAdmin: computed('roles', function() {
-        return this.hasRole(Role.ADMIN);
+  isAdmin: computed('roles', function () {
+    return this.hasRole(Role.ADMIN);
   }),
 
 });

@@ -3,7 +3,7 @@
 {{#if person.isPastProspectiveDisabled}}
   {{me/past-prospective-disabled person=person}}
 {{else if person.isProspectiveWaitlist}}
-{{#ch-alert "warning"}}
+  {{#ch-alert "warning"}}
     <h2>You are current on our waitlist</h2>
     <p>
       Due to a limited number of spaces for new Rangers, we are only able to
@@ -22,14 +22,15 @@
       You will see this message whenever you log into the Clubhouse
       as long as you remain on the waitlist.
     </p>
-{{/ch-alert}}
+  {{/ch-alert}}
 {{else}}
   {{#if person.unread_message_count}}
-  {{#ch-alert "warning" bold=true}}
-    {{fa-icon "envelope"}} You have {{pluralize person.unread_message_count "unread Clubhouse message"}}.
-    {{#link-to "me.messages" class="btn btn-success"}}Read Now{{/link-to}}
-  {{/ch-alert}}
+    {{#ch-alert "warning" bold=true}}
+      {{fa-icon "envelope"}} You have {{pluralize person.unread_message_count "unread Clubhouse message"}}.
+      {{#link-to "me.messages" class="btn btn-success"}}Read Now{{/link-to}}
+    {{/ch-alert}}
   {{/if}}
+
   {{#unless (or person.isAuditor person.isNonRanger)}}
     {{#if photo}}
       {{#if (eq photo.photo_status "missing")}}
@@ -45,7 +46,7 @@
             <li>A hat was worn</li>
             <li>Your face was not centered, or facing the camera.</li>
           </ul>
-          For a full list of photo requirements, please see <a  target="_blank" rel="noopener" href="http://www.lambase.com/help/RangerHelpSheet.pdf">this helpful document.</a>.
+          For a full list of photo requirements, please see <a target="_blank" rel="noopener" href="http://www.lambase.com/help/RangerHelpSheet.pdf">this helpful document.</a>.
         {{/ch-alert}}
       {{/if}}
     {{/if}}
@@ -57,77 +58,86 @@
   <dl>
     <dt>Verify Your Personal Info</dt>
     <dd>
-      Look in the sidebar menu for {{#link-to "me.personal-info"}}Personal Info{{/link-to}}
+      Look in the Me menu in the top navigation bar or sidebar menu for {{#link-to "me.personal-info"}}Personal Info{{/link-to}}
       to edit your address, email address, phone numbers, etc.
       {{#unless person.isAuditor}}
         <p class="mt-2">
-          We'd really appreciate it if you'd make sure your phone numbers, emergency contacts, languages, and shirt size info are all up to date!
+          We'd really appreciate it if you'd make sure your phone numbers,
+          emergency contacts, languages, and shirt size info are all up to date!
         </p>
       {{/unless}}
     </dd>
+
     {{#unless person.isPassProspective}}
-    <dt>Shift Signups &amp; Current Schedule</dt>
-    <dd>
-      {{#if person.isRanger}}
-        Sign up for training and shifts:
-      {{else}}
-        Sign up for training:
-      {{/if}}
-      {{#link-to "me.schedule"}}Schedule &amp; Signups{{/link-to}}
-      {{#if (or person.isAuditor person.isProspective)}}
-        <p class="mt-2">
-          Alpha shifts are posted on July 1. Alphas must pass training before they can sign up for an Alpha shift.
-        </p>
-      {{else if person.canSignupForShifts}}
-        <p class="mt-2">
-          Ranger shifts start getting posted in June. You <strong>do not</strong> have to be
-          trained to sign up for shifts, but you <strong>must</strong> be trained before
-          actually working shifts on playa.
-        </p>
-      {{/if}}
-    </dd>
-  {{/unless}}
-  {{#if person.isRanger}}
-    <dt>Tickets, Staff Credientals, Vehicle &amp; Work Passes</dt>
-    <dd>
-      {{#link-to "me.tickets"}}Tickets &amp; Stuff{{/link-to}} is the place
-       to claim staff credentials, reduced-price tickets, vehicle passes,
-       and work access passes.
-    </dd>
+      <dt>Shift Signups &amp; Current Schedule</dt>
+      <dd>
+        {{#if person.isRanger}}
+          Sign up for training and shifts:
+        {{else}}
+          Sign up for training:
+        {{/if}}
 
-    <dt>Timesheets</dt>
-    <dd>
-      Check that your timesheet is accurate: your timesheet is located in
-      {{#link-to "me.timesheet"}}Timesheets{{/link-to}}
-    </dd>
+        {{#link-to "me.schedule"}}Schedule &amp; Signups{{/link-to}}
 
-    <dt>Radio Checkout Form</dt>
-    <dd>
-       Rangers must complete the Rangers Radio Checkout Form
-       before being issued a radio. Radio forms are available at Ranger HQ or
-       the form can be printed and filled out in advance. The form is located here:
-       <a href="{{config "RadioCheckoutFormUrl"}}" target="_blank" rel="noopener">Rangers Radio Checkout Form</a>
-    </dd>
+        <ul class="mt-2">
+          <li>Training shifts start getting posted in April.</li>
 
-    <dt>Motorpool Agreement</dt>
-    <dd>
-      Complete your Ranger Motorpool Policy acknowledgement. Any Ranger operating
-      any type of vehicle for Ranger business at Burning Man must agree to the
-      Ranger Motorpool Policy by reading and filling out the acknowledgment form
-      located here:
-      {{#link-to "me.motorpool-policy"}}Motorpool Policy{{/link-to}}
-    </dd>
+          {{#if (or person.isAlpha person.isProspective)}}
+            <li>
+              Alpha shifts are posted on July 1. Alphas must pass training before they can sign up for an Alpha shift.
+            </li>
+          {{else if (and (not person.isAuditor) person.canSignupForShifts)}}
+            <li>
+              Ranger shifts start getting posted in June. You <strong>do not</strong> have to be
+              trained to sign up for shifts, but you <strong>must</strong> be trained before
+              actually working shifts on playa.
+            </li>
+          {{/if}}
+        </ul>
+      </dd>
+    {{/unless}}
 
-    <dt>Ranger Policies</dt>
-    <dd>Peruse our
-       <a href="{{config "RangerPoliciesUrl"}}" target="_blank" rel="noopener">Ranger policies</a> (opens in a new window)
-    </dd>
+    {{#if person.isRanger}}
+      <dt>Tickets, Staff Credientals, Vehicle &amp; Work Passes</dt>
+      <dd>
+        {{#link-to "me.tickets"}}Tickets &amp; Stuff{{/link-to}} is the place
+        to claim staff credentials, reduced-price tickets, vehicle passes,
+        and work access passes.
+      </dd>
 
-    <dt>Get Involved More With Special Groups</dt>
-    <dd>
-      Learn how to <a href="{{config "JoiningRangerSpecialTeamsUrl"}}"  target="_blank" rel="noopener">join Ranger special teams</a> (opens in a new window)
-    </dd>
-  {{/if}}
+      <dt>Timesheets</dt>
+      <dd>
+        Check that your timesheet is accurate: your timesheet is located in
+        {{#link-to "me.timesheet"}}Timesheets{{/link-to}}
+      </dd>
+
+      <dt>Radio Checkout Form</dt>
+      <dd>
+        Rangers must complete the Rangers Radio Checkout Form
+        before being issued a radio. Radio forms are available at Ranger HQ or
+        the form can be printed and filled out in advance. The form is located here:
+        <a href="{{config "RadioCheckoutFormUrl"}}" target="_blank" rel="noopener">Rangers Radio Checkout Form</a>
+      </dd>
+
+      <dt>Motorpool Agreement</dt>
+      <dd>
+        Complete your Ranger Motorpool Policy acknowledgement. Any Ranger operating
+        any type of vehicle for Ranger business at Burning Man must agree to the
+        Ranger Motorpool Policy by reading and filling out the acknowledgment form
+        located here:
+        {{#link-to "me.motorpool-policy"}}Motorpool Policy{{/link-to}}
+      </dd>
+
+      <dt>Ranger Policies</dt>
+      <dd>Peruse our
+        <a href="{{config "RangerPoliciesUrl"}}" target="_blank" rel="noopener">Ranger policies</a> (opens in a new window)
+      </dd>
+
+      <dt>Get Involved More With Special Groups</dt>
+      <dd>
+        Learn how to <a href="{{config "JoiningRangerSpecialTeamsUrl"}}" target="_blank" rel="noopener">join Ranger special teams</a> (opens in a new window)
+      </dd>
+    {{/if}}
   </dl>
 {{/if}}
 

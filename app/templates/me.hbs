@@ -1,6 +1,6 @@
 {{me-sidebar user=user}}
 <main class="col">
-  {{#unless user.callsign_approved}}
+  {{#if (and (not user.callsign_approved) (not user.isAuditor) (not user.isProspective))}}
     {{#ch-box "Callsign Not Approved" type="danger" icon="exclamation-circle"}}
     <p>
       You will not be able to sign up for trainings or shifts until your
@@ -11,7 +11,7 @@
       or audit a training, please email {{general-support-email}}
     </p>
     {{/ch-box}}
-  {{/unless}}
+  {{/if}}
 
   {{outlet}}
 </main>
