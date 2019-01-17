@@ -73,24 +73,6 @@ $sizes: (
 @import "timesheet-log";
 @import "training-print";
 
-/* roboto-mono-regular - latin */
-
-@font-face {
-  font-family: 'Roboto Mono';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Roboto Mono'), local('RobotoMono-Regular'), url("webfonts/RobotoMono-Regular.ttf") format('truetype');
-}
-
-/* roboto-mono-700 - latin */
-
-@font-face {
-  font-family: 'Roboto Mono';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Roboto Mono Bold'), local('RobotoMono-Bold'), url("webfonts/RobotoMono-Bold.ttf") format('truetype');
-}
-
 @media print {
   h1 { page-break-before: always; font-size: 1.2rem; }
 
