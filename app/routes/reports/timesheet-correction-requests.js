@@ -8,7 +8,7 @@ export default class ReportsTimesheetCorrectionRequestsRoute extends Route {
   };
 
   beforeModel() {
-    this.house.roleCheck(Role.TIMESHEET_MANAGER);
+    this.house.roleCheck([ Role.ADMIN, Role.TIMESHEET_MANAGER ]);
   }
 
   model(params) {
