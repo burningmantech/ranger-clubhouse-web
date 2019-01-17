@@ -1,4 +1,23 @@
 {{training-sidebar training=training}}
 <main class="col min-width-500">
+  <div class="row">
+    <div class="col-sm-12 d-md-none">
+      <div class="btn-group">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Training Section
+        </button>
+        <div class="dropdown-menu">
+          {{#link-to "training.index" training.id class="dropdown-item"}}Trainer's Report{{/link-to}}
+          {{#link-to "training.capacity" training.id class="dropdown-item"}}Training Capacity{{/link-to}}
+          {{#link-to "training.multiple-enrollments" training.id class="dropdown-item"}}Multiple Enrollments{{/link-to}}
+          {{#link-to "training.people-training-completed" training.id class="dropdown-item"}}Training Completed{{/link-to}}
+          {{#if training.is_art}}
+            {{#link-to "training.untrained-people" training.id class="dropdown-item"}}Untrained People{{/link-to}}
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+
   {{outlet}}
 </main>
