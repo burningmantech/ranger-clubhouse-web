@@ -21,9 +21,10 @@
         </button>
         <div class="dropdown-menu">
           {{#link-to "person.index" person.id class="dropdown-item"}}Account Info{{/link-to}}
-          {{#link-to "person.schedule" person.id class="dropdown-item"}}Account Info{{/link-to}}
+          {{#link-to "person.schedule" person.id class="dropdown-item"}}Schedule{{/link-to}}
           {{#link-to "person.event-info" person.id class="dropdown-item"}}Event Info{{/link-to}}
           {{#link-to "person.timesheet" person.id class="dropdown-item"}}Timesheet{{/link-to}}
+          {{#link-to "person.assets" person.id class="dropdown-item"}}Assets{{/link-to}}
           {{#link-to "person.messages" person.id class="dropdown-item"}}Messages{{/link-to}}
           {{#if (has-role "admin" "manage+view-pii")}}
             {{#link-to "person.personal-info" person.id class="dropdown-item"}}Personal Info{{/link-to}}
@@ -32,7 +33,9 @@
           {{#if (has-role "admin" "vc" "mentor")}}
             {{#link-to "person.mentors" person.id class="dropdown-item"}}Mentors{{/link-to}}
           {{/if}}
-          {{#link-to "person.password" person.id class="dropdown-item"}}Change Password{{/link-to}}
+          {{#if (has-role "admin")}}
+            {{#link-to "person.password" person.id class="dropdown-item"}}Change Password{{/link-to}}
+          {{/if}}
        </div>
      </div>
    </div>

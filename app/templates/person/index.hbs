@@ -18,7 +18,9 @@
 
   {{person-photo photo=photo}}
 
-  {{! The following block is floated left on md or larger screen.}}
+  {{! The following block is floated left on md or larger screen to ensure
+    the photo is on the right and the form flows around it.
+  }}
   <div class="float-md-left">
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign</label>
@@ -45,9 +47,9 @@
     <div class="form-group row">
       <label class="ol-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign Approved</label>
       {{#if canChangeApproval}}
-        {{f.input "callsign_approved" type="select" wrapClass="col-auto" options=callsignApprovedOptions}}
+        {{f.input "callsign_approved" type="select" wrapClass="col-sm-12 col-md-auto" options=callsignApprovedOptions}}
       {{else}}
-        <div class="mt-2 col-auto">
+        <div class="mt-2 col-sm-12 col-md-auto">
           {{#if person.callsign_approved}}
             Approved
           {{else}}
@@ -60,9 +62,9 @@
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Status</label>
       {{#if isAdminMentorOrVC}}
-        {{f.input "status" type="select" options=statusOptions wrapClass="col-auto"}}
+        {{f.input "status" type="select" options=statusOptions wrapClass="col-sm-12 col-md-auto"}}
       {{else}}
-        <div class="mt-2 col-auto">
+        <div class="mt-2 col-sm-12 col-md-auto">
           {{person.status}}
         </div>
       {{/if}}
@@ -71,8 +73,8 @@
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Personnel</label>
       {{#if session.user.isAdmin}}
-        {{f.input "user_authorized" type="select" wrapClass="col-auto" options=userAuthorizedOptions}}
-        {{f.input "has_note_on_file" label="Note on file" type="checkbox" wrapClass="col-auto mt-2" value=1}}
+        {{f.input "user_authorized" type="select" wrapClass="col-sm-12 col-md-auto" options=userAuthorizedOptions}}
+        {{f.input "has_note_on_file" label="Note on file" type="checkbox" wrapClass="col-sm-12 col-md-auto mt-2" value=1}}
       {{else}}
         <div class="mt-2 col-md-9">
           {{#if person.user_authorized}}
