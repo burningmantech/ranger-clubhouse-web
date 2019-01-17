@@ -19,7 +19,7 @@
                     {{#link-to "me.schedule" class="dropdown-item"}}Schedule &amp; Signup{{/link-to}}
                     {{#if (or session.user.isAlpha session.user.isRanger)}}
                       {{#link-to "me.timesheet-corrections.index" class="dropdown-item"}}Timesheet Corrections{{/link-to}}
-                      {{#link-to "me.timesheet-corrections.review" class="dropdown-item"}}Timesheets{{/link-to}}
+                      {{#link-to "me.timesheet" class="dropdown-item"}}Timesheets{{/link-to}}
                     {{/if}}
                     {{#unless session.user.isAuditor}}
                       {{#link-to "me.ranger-info" class="dropdown-item"}}Event &amp; Training Info{{/link-to}}
