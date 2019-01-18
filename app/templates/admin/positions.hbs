@@ -7,13 +7,7 @@
 
 <div class="row mb-2">
   <div class="col-sm-3">
-  {{#power-select
-        options=typeOptions
-        selected=typeFilter
-        searchEnabled=false
-        onchange=(action (mut typeFilter)) as |item| }}
-      {{item}}
-  {{/power-select}}
+    {{ch-form/select name="typeFilter" value=typeFilter options=typeOptions onChange=(action (mut typeFilter)) controlClass="form-control"}}
   </div>
   <div class="col-sm-9 text-right">
     <button type="button" class="btn btn-primary" {{action "new"}}>New Position</button>

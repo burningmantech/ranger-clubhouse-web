@@ -24,13 +24,12 @@ const reasons = [
 
 
 export default class ScheduleManageComponent extends Component {
-  @argument person;
-  @argument year;
-  @argument slots;
-  @argument creditsEarned;
-  @argument permission;
+  @argument('object') person;
+  @argument('number') year;
+  @argument('object') slots;
+  @argument('number') creditsEarned = 0.0;
+  @argument('object') permission;
 
-  creditsEarned = 0.0;
   filterDay = upcomingShifts;
   filterPosition = allPositions;
   filterActive = activeShifts;
@@ -273,5 +272,11 @@ export default class ScheduleManageComponent extends Component {
   @action
   toggleGroup(group) {
     set(group, 'show', !group.show);
+  }
+
+  @action
+  setFilterDay(value) {
+    console.log(`value ${value}`);
+    this.set('filterDay', value);
   }
 }

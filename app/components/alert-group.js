@@ -5,17 +5,17 @@ import { tagName } from '@ember-decorators/component';
 @tagName('')
 export default class AlertGroupComponent extends Component {
   // Preference list
-  @argument group;
+  @argument('object') group;
 
   // Phone numbers and verification status
-  @argument numbers;
+  @argument('object') numbers;
 
   // Heading text for group
-  @argument heading;
+  @argument('string') heading;
 
   // group description
-  @argument description;
+  @argument('string') description;
 
   // person's email address
-  @argument email;
+  @argument('string') email;
 }

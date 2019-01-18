@@ -1,8 +1,6 @@
 import Service from '@ember/service';
 import ENV from 'clubhouse/config/environment';
-import {
-  service
-} from '@ember-decorators/service';
+import { inject as service } from '@ember-decorators/service';
 import DS from 'ember-data';
 
 export default class HouseService extends Service {

@@ -4,11 +4,10 @@ import { argument } from '@ember-decorators/argument';
 
 export default class ScheduleTableComponent extends Component {
   // Available slots signed up for
-  @argument slots;
-  @argument person;
-  @argument title;
-  @argument year;
-  @argument creditsEarned;
+  @argument('object') slots;
+  @argument('object') person;
+  @argument('number') year;
+  @argument('number') creditsEarned;
 
   viewSchedule = 'upcoming';
 
@@ -30,7 +29,7 @@ export default class ScheduleTableComponent extends Component {
       creditsTotal = slots.reduce((sum, slot) => sum + slot.credits, 0.0);
     }
 
-    return creditsTotal.toFixed(2);
+    return creditsTotal;
   }
 
   @computed('slots')

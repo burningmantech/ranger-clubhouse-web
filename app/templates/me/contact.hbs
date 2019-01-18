@@ -1,5 +1,5 @@
 {{#if ranger}}
-  {{contact-form callsign=ranger.callsign recipientId=ranger.id contactType="ranger" onDone=(action "doneAction")}}
+  {{contact-form callsign=ranger.callsign recipientId=ranger.id isInactive=ranger.is_inactive contactType="ranger" onDone=(action "doneAction")}}
 {{/if}}
 
 <h1>Contact An Active Ranger</h1>
@@ -23,7 +23,7 @@ entered as 'Eight Dogs', not '8 dogs'.)
 
 {{#ch-form "search" searchForm changeSet=false onFormChange=(action "searchOnChange") as |f|}}
   <div class="form-row">
-    {{f.input "callsign" label="Start typing the callsign of Ranger you wish to contact:" type="text" size=30 autofocus="true"}}
+    {{f.input "callsign" label="Start typing the callsign of Ranger you wish to contact:" type="text" size=30 autofocus=true}}
     {{#if isSubmitting}}
       <div class="loading-spinner"></div>
     {{/if}}

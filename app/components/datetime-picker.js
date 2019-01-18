@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
+import { optional } from '@ember-decorators/argument/types';
 import { tagName } from '@ember-decorators/component';
 import $ from 'jquery';
 
@@ -14,17 +15,18 @@ export default class DatetimePickerComponent extends Component {
   attributeBindings = [ 'type', 'size', 'placeholder', 'autofocus', 'maxlength', 'value', 'autocomplete' ];
   classNameBindings = [ 'classNames' ];
 
-  @argument classNames;
-  @argument size;
-  @argument format;
-  @argument onChange;
-  @argument placeholder;
-  @argument autofocus;
-  @argument maxlength;
-  @argument value;
-  @argument autocomplete = "off";
-  @argument dateOnly; // set true if only want to deal with dates, no time.
-  @argument startDate;
+  @argument(optional('any')) classNames;
+
+  @argument(optional('number')) size;
+  @argument(optional('string')) format;
+  @argument(optional('object')) onChange;
+  @argument(optional('string')) placeholder;
+  @argument(optional('boolean')) autofocus;
+  @argument(optional('number')) maxlength;
+  @argument(optional('any')) value;
+  @argument(optional('string')) autocomplete = "off";
+  @argument(optional('boolean')) dateOnly; // set true if only want to deal with dates, no time.
+  @argument(optional('string')) startDate;
 
   didInsertElement() {
     const options = {

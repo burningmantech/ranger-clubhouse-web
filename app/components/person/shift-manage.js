@@ -1,12 +1,12 @@
 import Component from '@ember/component';
 import { action, computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
-import { service } from '@ember-decorators/service';
+import { inject as service } from '@ember-decorators/service';
 
 export default class PersonShiftManageComponent extends Component {
-  @argument person;     // Person we're dealing with
-  @argument timesheets; // The timesheets
-  @argument positions;  // And possible positions person can sign into.
+  @argument('object') person;     // Person we're dealing with
+  @argument('object') timesheets; // The timesheets
+  @argument('object') positions;  // And possible positions person can sign into.
 
   @service  store;
 

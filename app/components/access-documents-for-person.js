@@ -8,10 +8,10 @@ import moment from 'moment';
  * Build a row showing the person's current documents.
  */
 
-@tagName('')
+@tagName('tr')
 export default class AccessDocumentsForPersonComponent extends Component {
-  @argument person;
-  @argument documents;
+  @argument('object') person;
+  @argument('object') documents;
 
   ticketInfoTypes = {
     staff_credential: 'CRED',

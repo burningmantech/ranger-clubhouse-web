@@ -8,7 +8,7 @@
     the event is happening.  Please consider using email during the rest of the
     year.
    </p>
-  {{f.input "message_from" label="From" type="text" size=30 maxlength=120 autofocus="true"}}
+  {{f.input "message_from" label="From" type="text" size=30 maxlength=120 autofocus=true}}
   {{f.input "recipient_callsign" label="To" type="search" onSearch=(action "searchCallsignAction") }}
   {{f.input "subject" label="Subject" maxlength=80}}
   {{f.input "body" label="Message" type="textarea" rows=4 cols=8}}

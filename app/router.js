@@ -1,15 +1,22 @@
 import EmberRouter from '@ember/routing/router';
 import config from './config/environment';
+import { run } from '@ember/runloop';
 
 const Router = EmberRouter.extend({
   location: config.locationType,
   rootURL: config.rootURL,
 
-  didTransition() {
+  init() {
     this._super(...arguments);
-    if (!this.get('fastboot.isFastBoot')) {
-      window.scrollTo(0,0);
-    }
+
+    this.on('routeDidChange', () => {
+      // Move the window back to the top when heading to a new route
+      if (!this.get('fastboot.isFastBoot')) {
+        run.schedule('afterRender', () => {
+          window.scrollTo(0,0);
+        });
+      }
+    });
   }
 });
 

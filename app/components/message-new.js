@@ -7,9 +7,9 @@ import RSVP from 'rsvp';
 import PersonMessageValidations from 'clubhouse/validations/person-message';
 
 export default class MessageNewComponent extends Component {
-  @argument message;
-  @argument onSubmit;
-  @argument onCancel;
+  @argument('object') message;
+  @argument('object') onSubmit;
+  @argument('object') onCancel;
 
   personMessageValidations = PersonMessageValidations;
 

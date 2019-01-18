@@ -2,15 +2,16 @@ import Component from '@ember/component';
 import EmberObject from '@ember/object';
 import { action, computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
+import { optional } from '@ember-decorators/argument/types';
 import { Role } from 'clubhouse/constants/roles';
 
 export default class PersonRoleFormComponent extends Component {
   // role id array
-  @argument roleIds = null;
+  @argument(optional('object')) roleIds = null;
   // available roles to select from
-  @argument roles = null;
-  @argument onSave = null;
-  @argument onCancel = null;
+  @argument('object') roles = null;
+  @argument('object') onSave = null;
+  @argument('object') onCancel = null;
 
   didReceiveAttrs() {
     this.set('roleForm', EmberObject.create({ roleIds: this.roleIds }))

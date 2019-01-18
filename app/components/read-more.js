@@ -1,16 +1,17 @@
 import Component from '@ember/component';
 import { action, computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
+import { optional } from '@ember-decorators/argument/types';
 import { tagName } from '@ember-decorators/component';
 
 /*
  * Component helper to truncate text with a 'read more' link.
  */
- 
+
 @tagName('')
 export default class ReadMoreComponent extends Component {
-  @argument text;
-  @argument limit = 20;
+  @argument('string') text;
+  @argument(optional('number')) limit = 20;
 
   hideFullText = true;
 

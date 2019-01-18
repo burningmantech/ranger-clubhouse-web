@@ -6,6 +6,8 @@ import Component from '@ember/component';
 import { action, computed } from '@ember-decorators/object';
 import { tagName } from '@ember-decorators/component';
 import { argument } from '@ember-decorators/argument';
+import { optional } from '@ember-decorators/argument/types';
+
 import { typeOf } from '@ember/utils';
 import inGroups from 'clubhouse/utils/in-groups';
 
@@ -15,15 +17,15 @@ class MultiCheckboxField extends EmberObject {
 @tagName('')
 export default class ChFormCheckboxGroupComponent extends Component {
   // field name
-  @argument name =  null;
+  @argument(optional('string')) name;
   // initial value
-  @argument value = '';
+  @argument(optional('any')) value = '';
 
-  @argument options = null;
-  @argument cols =  3;
+  @argument(optional('any')) options = null;
+  @argument(optional('number')) cols =  3;
 
   // Callback for when the group updates (i.e., the user clicks on stuff)
-  @argument onUpdate;
+  @argument(optional('object')) onUpdate;
 
   @computed('options')
   get checkboxColumns() {

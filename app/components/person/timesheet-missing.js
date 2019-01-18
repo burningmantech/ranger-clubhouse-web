@@ -1,17 +1,17 @@
 import Component from '@ember/component';
 import { action } from '@ember-decorators/object';
-import { service } from '@ember-decorators/service';
+import { inject as service } from '@ember-decorators/service';
 
 import { argument } from '@ember-decorators/argument';
 import { validatePresence } from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 
 export default class PersonTimesheetMissingComponent extends Component {
-  @argument timesheetMissing; // Missing Timesheet Requests
-  @argument timesheets;       // The timesheets
-  @argument person;           // The person we're dealing with
-  @argument positions;        // The possible positions a person can be in.
-  @argument year;             // The year being viewed
+  @argument('object') timesheetMissing; // Missing Timesheet Requests
+  @argument('object') timesheets;       // The timesheets
+  @argument('object') person;           // The person we're dealing with
+  @argument('object') positions;        // The possible positions a person can be in.
+  @argument('number') year;             // The year being viewed
 
   @service store;
 

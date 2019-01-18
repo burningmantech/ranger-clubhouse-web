@@ -1,18 +1,16 @@
-<tr>
-  <td>{{person-link person=person page="access-documents"}}</td>
-  <td>{{person.status}}</td>
-  <td class={{record.tickets.style}}>{{record.tickets.text}}</td>
-  <td class={{record.arrivalDate.style}}>{{record.arrivalDate.text}}</td>
-  <td class={{record.vpTickets.style}}>{{record.vpTickets.text}}</td>
-  <td class={{record.significantOtherCount.style}}>{{record.significantOtherCount.text}}</td>
-  <td>
-    {{record.notes}}
-    {{#if documentsErrors}}
-      <p class="text-danger">
-        {{#each documentsErrors as |error|}}
-          {{error}}<br>
-        {{/each}}
-      </p>
-    {{/if}}
-  </td>
-</tr>
+<td>{{person-link person=person page="access-documents"}}</td>
+<td>{{person.status}}</td>
+<td class={{record.tickets.style}}>{{record.tickets.text}}</td>
+<td class={{record.arrivalDate.style}}>{{record.arrivalDate.text}}</td>
+<td class={{record.vpTickets.style}}>{{record.vpTickets.text}}</td>
+<td class={{record.significantOtherCount.style}}>{{record.significantOtherCount.text}}</td>
+<td>
+  {{record.notes}}
+  {{#if documentsErrors}}
+    <p class="text-danger">
+      {{#each documentsErrors as |error|}}
+        {{error}}<br>
+      {{/each}}
+    </p>
+  {{/if}}
+</td>

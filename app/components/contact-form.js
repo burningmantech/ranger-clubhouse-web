@@ -2,15 +2,18 @@ import Component from '@ember/component';
 import EmberObject from '@ember/object';
 import { action, computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
+import { optional, unionOf } from '@ember-decorators/argument/types';
+
 import containsEmail from 'clubhouse/utils/contains-email';
 import { validatePresence } from 'ember-changeset-validations/validators';
 
 export default class ContactFormComponent extends Component {
-  @argument callsign;
-  @argument recipientId;
-  @argument contactType;
-  @argument onDone;
-  @argument personStatus;
+  @argument('string') callsign;
+  @argument('number') recipientId;
+  @argument('string') contactType;
+  @argument('object') onDone;
+  @argument(optional('string')) personStatus;
+  @argument(unionOf('boolean', 'number')) isInactive;
 
   isSending = false;
 

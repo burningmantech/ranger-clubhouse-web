@@ -3,6 +3,7 @@ import EmberObject from '@ember/object';
 import { action, computed } from '@ember-decorators/object';
 import { tagName } from '@ember-decorators/component';
 import { argument } from '@ember-decorators/argument';
+import { optional } from '@ember-decorators/argument/types';
 import { typeOf } from '@ember/utils';
 
 import $ from 'jquery';
@@ -11,51 +12,52 @@ import $ from 'jquery';
 export default class ChFormFieldComponent extends Component {
   static positionalParams =  [ 'name' ];
 
-  @argument wrapClass = null;
-  @argument formId = null;
-  @argument fieldId = null;
-  @argument model = null;
+  @argument(optional('string')) wrapClass = null;
+  @argument(optional('string')) formId = null;
+  @argument(optional('string')) fieldId = null;
+
+  @argument('object') model;
 
   // select, checkbox or radio options
-  @argument options = null;
+  @argument(optional('any')) options = null;
   // Include a blank option for select options
-  @argument includeBlank = false;
-  @argument multiple = false; // Multiple selection
+  @argument(optional('boolean')) includeBlank = false;
+  @argument(optional('boolean')) multiple = false; // Multiple selection
 
   // For checkbox & radio types, include form-check-inline on wrap class
-  @argument inline = false;
+  @argument(optional('boolean')) inline = false;
 
   // Common HTML properties
-  @argument type = 'text';
-  @argument name = '';
-  @argument value;
-  @argument size;
-  @argument maxlength;
-  @argument rows;
-  @argument cols;
-  @argument disabled = false;
-  @argument autofocus = false;
-  @argument autocomplete;
-  @argument placeholder;
-  @argument hint;
+  @argument(optional('string')) type = 'text';
+  @argument(optional('string')) name = '';
+  @argument(optional('any')) value;
+  @argument(optional('number')) size;
+  @argument(optional('number')) maxlength;
+  @argument(optional('number')) rows;
+  @argument(optional('number')) cols;
+  @argument(optional('boolean')) disabled = false;
+  @argument(optional('boolean')) autofocus = false;
+  @argument(optional('string')) autocomplete;
+  @argument(optional('string')) placeholder;
+  @argument(optional('string')) hint;
 
-  @argument grid = null;
-  @argument label = '';
-  @argument labelClass =  null;
-  @argument controlClass = null;
+  @argument(optional('string')) grid = null;
+  @argument(optional('string')) label = '';
+  @argument(optional('string')) labelClass =  null;
+  @argument(optional('string')) controlClass = null;
 
   // For date or datetime
-  @argument startDate;
+  @argument(optional('string')) startDate;
 
   // callback to client when field changes
-  @argument onChange;
+  @argument(optional('object')) onChange;
   // callback when doing a search
-  @argument onSearch;
+  @argument(optional('object')) onSearch;
 
   // internal callback when field changes, used by ch-form.js
-  @argument fieldChangeAction = null;
+  @argument(optional('object')) fieldChangeAction = null;
 
-  @argument wrapper = null;
+  @argument(optional('boolean')) wrapper = null;
 
   elementErrorClass = 'is-invalid';
   textErrorClass  ='text-danger';

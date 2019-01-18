@@ -6,10 +6,10 @@ import { validatePresence } from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 
 export default class PersonTimesheetManageComponent extends Component {
-  @argument timesheets; // Person's timesheet
-  @argument person;     // The person we're dealing with
-  @argument positions;  // Possible positions a person can sign into.
-  @argument year;       // The year being viewed
+  @argument('object') timesheets; // Person's timesheet
+  @argument('object') person;     // The person we're dealing with
+  @argument('object') positions;  // Possible positions a person can sign into.
+  @argument('number') year;       // The year being viewed
 
   editEntry = null;
 

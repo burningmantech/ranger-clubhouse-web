@@ -59,7 +59,7 @@ export default Helper.extend({
     return false;
   },
 
-  rolesChanged: observer('session.user.roles', function() {
+  rolesChanged: observer('session.user.roles', function() { // eslint-disable-line ember/no-observers
     this.recompute();
   })
 });

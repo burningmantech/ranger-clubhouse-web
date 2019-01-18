@@ -35,18 +35,10 @@ export default class SearchLanguagesController extends Controller {
   notFound = '';
   searchLanguage = '';
 
-  onduty = null;
-  offDuty = null;
-  hasRadio = null;
+  onduty = [ ];
+  offDuty = [ ];
+  hasRadio = [ ];
   searchForm = LanguageForm.create({});
-
-  constructor() {
-    super(...arguments);
-
-    this.set('onDuty', []);
-    this.set('offDuty', []);
-    this.set('hasRadio', []);
-  }
 
   @computed('onDuty')
   get onDutyGroup() {

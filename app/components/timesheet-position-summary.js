@@ -5,7 +5,7 @@ import { tagName } from '@ember-decorators/component';
 
 @tagName('')
 export default class TimesheetPositionSummaryComponent extends Component {
-  @argument timesheets;
+  @argument('object') timesheets;
 
   @computed('timesheets')
   get workedPositions() {

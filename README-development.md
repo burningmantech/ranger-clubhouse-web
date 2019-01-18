@@ -88,14 +88,16 @@ export default class MyComponent extends Component {
 }
 ```
 
-For component arguments use the `@argument` decorator. The decorator has the advantage of catching misspelled argument names and attempted use of arguments that were not declared.
+For component arguments use the `@argument(TYPE)` decorator. The decorator has
+the advantage of catching misspelled argument names and attempted use of
+arguments that were not declared.
 
 Replace this:
 
 ```javascript
 export default Component.extend({
   title: 'default value',
-  sortBy: 'default sort',
+  sortDesc: true,
 })
 ```
 
@@ -106,8 +108,8 @@ with this:
 import { argument } from '@ember-decorators/argument';
 
 export default class MyComponent extends Component {
-  @argument title = 'default value';
-  @argument sortBy = 'default sort';
+  @argument('string') title = 'default value';
+  @argument('boolean') sortBy = true;
 }
 ```
 

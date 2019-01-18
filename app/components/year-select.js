@@ -1,6 +1,7 @@
 import Component from '@ember/component';
 import { computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
+import { optional } from '@ember-decorators/argument/types';
 import { tagName } from '@ember-decorators/component';
 
 @tagName('h1')
@@ -8,25 +9,25 @@ export default class YearSelectComponent extends Component {
   static positionalParams = [ 'title' ];
 
   // Heading
-  @argument title;
+  @argument('string') title;
 
   // action to call when year is changed
-  @argument onChange;
+  @argument('object') onChange;
 
   // Year list
-  @argument years;
+  @argument(optional('object')) years;
 
   // Starting year
-  @argument year = 0;
+  @argument(optional('number')) year = 0;
 
   // Is this a subheader?
-  @argument subheader = false;
+  @argument(optional('boolean')) subheader = false;
 
   // Additional classnames to add
-  @argument gridClass = null;
+  @argument(optional('string')) gridClass = null;
 
-  constructor() {
-    super(...arguments);
+  init() {
+    super.init(...arguments);
 
     if (this.subheader) {
       this.tagName = 'div';

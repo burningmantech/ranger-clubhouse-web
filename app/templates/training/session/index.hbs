@@ -96,7 +96,7 @@ Signups: {{students.length}} of {{slot.max}}
 {{#if addPersonForm}}
   {{#ch-form "search" addPersonForm modalBox=true modalTitle="Add Person To Session" changeSet=false onFormChange=(action "searchPeopleAction") onCancel=(action "cancelSearchAction") as |f|}}
     <div class="form-row">
-      {{f.input "name" label="Enter the callsign, real name, or email of the person to add:" type="text" size=30 autofocus="true"}}
+      {{f.input "name" label="Enter the callsign, real name, or email of the person to add:" type="text" size=30 autofocus=true}}
     </div>
     <div class="form-row">
       {{f.cancel}}

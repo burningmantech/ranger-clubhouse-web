@@ -1,14 +1,15 @@
 import Component from '@ember/component';
 import { computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
+import { optional } from '@ember-decorators/argument/types';
 
 import moment from 'moment';
 
 export default class TicketWapSoInfoComponent extends Component {
-  @argument wapSOList;
-  @argument ticketingStatus;
-  @argument saveSONames;
-  @argument ticketingInfo;
+  @argument(optional('object')) wapSOList;
+  @argument(optional('string')) ticketingStatus;
+  @argument('object') saveSONames;
+  @argument('object') ticketingInfo;
 
   @computed('ticketingStatus')
   get maxSOWAP() {

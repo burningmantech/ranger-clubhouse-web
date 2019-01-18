@@ -7,18 +7,18 @@ export default class SlotFormComponent extends Component {
   slotValidations = SlotValidations;
 
   // Slot to edit or create
-  @argument slot;
+  @argument('object') slot;
 
   // Positions to select from for assignment
-  @argument positions;
+  @argument('object') positions;
 
   // Training slots to select form
-  @argument trainerSlots;
+  @argument('object') trainerSlots;
 
   // save action
-  @argument onSave;
+  @argument('object') onSave;
   // cancel action
-  @argument onCancel;
+  @argument('object') onCancel;
 
   @computed('positions')
   get positionOptions() {

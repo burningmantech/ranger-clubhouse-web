@@ -3,11 +3,11 @@ import { computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
 
 export default class TicketWapInfoComponent extends Component {
-  @argument ticket;
-  @argument wapTicket;
-  @argument ticketingStatus;
-  @argument saveChoice;
-  @argument ticketingInfo;
+  @argument('object') ticket;
+  @argument('object') wapTicket;
+  @argument('string') ticketingStatus;
+  @argument('object') saveChoice;
+  @argument('object') ticketingInfo;
 
   wapAction = '';
 

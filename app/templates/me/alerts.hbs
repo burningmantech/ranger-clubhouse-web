@@ -60,13 +60,13 @@
 
   {{#ch-form "numbers" phoneForm validator=numberValidations onSubmit=(action "saveNumbersAction") as |f|}}
     <div class="form-row">
-      {{f.input "off_playa" label="Pre-Event/Off Playa Number:" type="text" size="30" grid="col-auto"}}
+      {{f.input "off_playa" label="Pre-Event/Off Playa Number:" type="text" size=30 grid="col-auto"}}
     </div>
     <div class="form-row">
       {{f.input "is_same" label="On playa number is the same as the pre-event number" type="checkbox"}}
     </div>
     <div class="form-row mt-2 {{if f.model.is_same "d-none"}}">
-      {{f.input "on_playa" label="On Playa Number:" type="text" size="30" grid="col-auto"}}
+      {{f.input "on_playa" label="On Playa Number:" type="text" size=30 grid="col-auto"}}
     </div>
 
     <div class="mt-2">

@@ -1,16 +1,17 @@
 import Component from '@ember/component';
 import { computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
+import { optional } from '@ember-decorators/argument/types';
 
 export default class TicketInfoComponent extends Component {
   // User choice placed into ticketAction
   ticketAction = '';
 
-  @argument ticketList;
-  @argument ticket;
-  @argument ticketingStatus;
-  @argument saveChoice;
-  @argument ticketingInfo;
+  @argument('object') ticketList;
+  @argument('object') ticket;
+  @argument(optional('string')) ticketingStatus;
+  @argument('object') saveChoice;
+  @argument('object') ticketingInfo;
 
   @computed('ticket.status')
   get congratSentence() {

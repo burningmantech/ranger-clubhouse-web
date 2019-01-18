@@ -29,7 +29,9 @@
           {{#if (has-role "admin" "manage+view-pii")}}
             {{#link-to "person.personal-info" person.id class="dropdown-item"}}Personal Info{{/link-to}}
           {{/if}}
-          {{#link-to "person.emergency-contact" person.id class="dropdown-item"}}Emergency Contact{{/link-to}}
+          {{#if (has-role "admin" "manage")}}
+            {{#link-to "person.emergency-contact" person.id class="dropdown-item"}}Emergency Contact{{/link-to}}
+          {{/if}}
           {{#if (has-role "admin" "vc" "mentor")}}
             {{#link-to "person.mentors" person.id class="dropdown-item"}}Mentors{{/link-to}}
           {{/if}}

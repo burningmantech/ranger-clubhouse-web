@@ -1,15 +1,16 @@
 import Component from '@ember/component';
 import { computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
+import { optional } from '@ember-decorators/argument/types';
 
 import TicketDeliveryValidations from 'clubhouse/validations/ticket-delivery';
 
 export default class TicketDeliverInfoComponent extends Component {
-  @argument ticket;
-  @argument person;
-  @argument ticketDelivery;
-  @argument saveDelivery;
-  @argument ticketingInfo;
+  @argument('object') ticket;
+  @argument('object') person;
+  @argument(optional('object')) ticketDelivery;
+  @argument('object') saveDelivery;
+  @argument('object') ticketingInfo;
 
   countryOptions = [ 'United States', 'Canada', 'Australia', 'United Kingdom' ];
   ticketDeliveryValidations = TicketDeliveryValidations;

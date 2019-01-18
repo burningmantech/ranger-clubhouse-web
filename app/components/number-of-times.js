@@ -9,7 +9,7 @@ import { tagName } from '@ember-decorators/component';
  
 @tagName('')
 export default class NumberOfTimesComponent extends Component {
-  @argument times;
+  @argument('number') times;
 
   @computed('times')
   get loops() {

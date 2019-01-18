@@ -77,7 +77,7 @@ export default Controller.extend({
     return this.get('allHandles').filter((handle) => enabled.has(handle.entityType));
   }),
 
-  incrementallyBuildAllHandles: observer('model', function() {
+  incrementallyBuildAllHandles: observer('model', function() { // eslint-disable-line ember/no-observers
     // Rendering 2500 handles takes a long time, so don't prevent interactivity.
     // Copy 100 handles at a time into allHandles and let the template
     // incrementally render them.  TODO there's probably a cleaner approach.

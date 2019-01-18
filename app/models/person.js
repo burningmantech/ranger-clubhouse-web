@@ -1,7 +1,7 @@
 import DS from 'ember-data';
 import { memberAction } from 'ember-api-actions';
 import { attr } from '@ember-decorators/data';
-import { service } from '@ember-decorators/service';
+import { inject as service } from '@ember-decorators/service';
 import PersonMixin from 'clubhouse/mixins/models/person';
 
 import RSVP from 'rsvp';

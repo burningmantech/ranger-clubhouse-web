@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
+import { optional } from '@ember-decorators/argument/types';
 import { action } from '@ember-decorators/object';
 import { tagName } from '@ember-decorators/component';
 
@@ -13,24 +14,24 @@ import $ from 'jquery';
 export default class ChFormComponent extends Component {
   static positionalParams = [ 'formId', 'originalModel' ];
 
-  @argument formId;
-  @argument validator;
+  @argument(optional('string')) formId;
+  @argument(optional('object')) validator;
 
   // The original model being edited.
-  @argument originalModel;
+  @argument('object') originalModel;
 
-  @argument onSubmit;
-  @argument onReset;
-  @argument onCancel;
-  @argument onFormChange;
+  @argument(optional('object')) onSubmit;
+  @argument(optional('object')) onReset;
+  @argument(optional('object')) onCancel;
+  @argument(optional('object')) onFormChange;
 
-  @argument modalBox = false; // Open form as a modal dialog
-  @argument modalTitle = ''; // title
+  @argument(optional('boolean')) modalBox = false; // Open form as a modal dialog
+  @argument(optional('string')) modalTitle = ''; // title
 
   // By default a changset object will be created for the model and used.
-  @argument changeSet = true;
+  @argument(optional('boolean')) changeSet = true;
 
-  @argument autocomplete = "off";
+  @argument(optional('string')) autocomplete = "off";
 
   didReceiveAttrs() {
     let model;

@@ -4,5 +4,5 @@ import { tagName } from '@ember-decorators/component';
 
 @tagName('')
 export default class TrainingSidebarComponent extends Component {
-  @argument training;
+  @argument('object') training;
 }

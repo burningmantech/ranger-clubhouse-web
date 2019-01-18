@@ -9,7 +9,9 @@
     {{#if (has-role "admin" "manage+view-pii")}}
       {{ch-sidebar-link "person.personal-info" title="Personal Info" icon="home" iconType="s"}}
     {{/if}}
-    {{ch-sidebar-link "person.emergency-contact" title="Emergency Contact" icon="exclamation" iconType="s"}}
+    {{#if (has-role "admin" "manage")}}
+      {{ch-sidebar-link "person.emergency-contact" title="Emergency Contact" icon="exclamation" iconType="s"}}
+    {{/if}}
     {{#if (has-role "admin" "vc" "mentor")}}
       {{ch-sidebar-link "person.mentors" title="Mentors" icon="users" iconType="s"}}
     {{/if}}

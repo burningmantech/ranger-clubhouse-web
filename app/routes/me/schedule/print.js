@@ -1,6 +1,5 @@
 import Route from '@ember/routing/route';
 import markSlotsOverlap from 'clubhouse/utils/mark-slots-overlap';
-import { run } from '@ember/runloop';
 
 export default class MeSchedulePrintRoute extends Route {
   setupController(controller) {
@@ -14,13 +13,5 @@ export default class MeSchedulePrintRoute extends Route {
     controller.set('overlapping',
       slots.reduce((total, slot) => ((slot.is_overlapping ? 1 : 0)+total), 0)
     );
-  }
-
-  actions = {
-    didTransition() {
-      run.schedule('afterRender', () => {
-        window.print();
-      })
-    }
   }
 }

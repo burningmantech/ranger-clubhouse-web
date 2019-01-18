@@ -1,5 +1,5 @@
 {{#if contactMentee}}
-  {{contact-form callsign=contactMentee.callsign recipientId=contactMentee.person_id contactType="mentor" onDone=(action "doneAction")}}
+  {{contact-form callsign=contactMentee.callsign isInactive=(eq contactMentee.status "not active") recipientId=contactMentee.person_id contactType="mentor" onDone=(action "doneAction")}}
 {{/if}}
 
 <h1>{{person.callsign}}'s Mentees</h1>

@@ -1,30 +1,29 @@
 {{#ch-form "contact" contactForm modalBox=true modalTitle=title validator=contactValidation onSubmit=(action "sendAction") onCancel=(action "cancelAction") as |f|}}
-  {{#if (eq personStatus "inactive")}}
-  {{#ch-alert "warning"}}
+  {{#if isInactive}}
+    {{#ch-alert "warning"}}
       WARNING: This Ranger's status is inactive. While they are still a Ranger,
       they have not worked as a Ranger for three years or more. Their email address
       registered with the Clubhouse might be out of date.
-  {{/ch-alert}}
-  {{/if}}
+    {{/ch-alert}} {{/if}}
 
   Please note the following:
   <ol>
-      <li>Be civil, courteous, and polite.</li>
-      <li>The message will be emailed and the return address set to "do-not-reply@burningman.org".</li>
-      <li>All messages sent through this page are recorded.</li>
-      <li>Message delivery is NOT guaranteed. The Ranger may have
-          an outdated email address registered with the Clubhouse, or the message
-          may end up in their spam folder.</li>
-      <li>The Ranger you wish to contact may choose to not respond. Please
-          respect their choice.</li>
-      <li><strong>INCLUDE YOUR CONTACT EMAIL ADDRESS IN THE MESSAGE.</strong> The Clubhouse
-          will not include your email address automatically.</li>
-
+    <li>Be civil, courteous, and polite.</li>
+    <li>The message will be emailed and the return address set to "do-not-reply@burningman.org".</li>
+    <li>All messages sent through this page are recorded.</li>
+    <li>Message delivery is NOT guaranteed. The Ranger may have
+      an outdated email address registered with the Clubhouse, or the message
+      may end up in their spam folder.</li>
+    <li>The Ranger you wish to contact may choose to not respond. Please
+      respect their choice.</li>
+    <li><strong>INCLUDE YOUR CONTACT EMAIL ADDRESS IN THE MESSAGE.</strong> The Clubhouse
+      will not include your email address automatically.</li>
   </ol>
 
   <div class="form-row">
     {{f.input "message" label=(concat "Enter your contact message to " callsign ":") type="textarea" rows=10 cols=80 wrapClass="col-12"}}
   </div>
+
   <div class="mt-4">
     {{f.submit label=(if isSending "Sending" "Send Message") disabled=isSending}}
     {{f.cancel}}
