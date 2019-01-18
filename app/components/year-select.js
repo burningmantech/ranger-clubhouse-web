@@ -18,7 +18,7 @@ export default class YearSelectComponent extends Component {
   @argument(optional('object')) years;
 
   // Starting year
-  @argument(optional('number')) year = 0;
+  @argument('any') year = 0;
 
   // Is this a subheader?
   @argument(optional('boolean')) subheader = false;
