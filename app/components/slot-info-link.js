@@ -1,7 +1,9 @@
 import Component from '@ember/component';
 import { action } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
+import { tagName } from '@ember-decorators/component';
 
+@tagName('')
 export default class SlotInfoLink extends Component {
   static  positionalParams =  [ 'description', 'info' ];
 

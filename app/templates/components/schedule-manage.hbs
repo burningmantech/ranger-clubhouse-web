@@ -104,7 +104,9 @@
               </div>
               <div class="schedule-time">{{shift-format slot.slot_ends}}</div>
               <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span> {{credits-format slot.credits}}</div>
-              <div class="schedule-description">{{slot-info-link slot.slot_description slot.slot_url}}</div>
+              <div class="schedule-description">
+                <span class="schedule-sm-label">{{group.title}} - </span>{{slot-info-link slot.slot_description slot.slot_url}}
+              </div>
               <div class="schedule-signups">{{slot-full-indicator slot.slot_signed_up slot.slot_max}}</div>
               <div class="schedule-actions">
                 <button {{action "showPeople" slot}} class="btn btn-secondary btn-sm">{{fa-icon "users" type="fas"}}</button>
