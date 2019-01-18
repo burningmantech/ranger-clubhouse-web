@@ -11,6 +11,8 @@ export default class PersonMessageModel extends DS.Model {
 
   @attr('string') message_from;
 
+  @attr('number', { readOnly: true }) sender_person_id;
+
   @attr('number', { readOnly: true }) creator_person_id;
   @attr('string', { readOnly: true }) creator_callsign;
 

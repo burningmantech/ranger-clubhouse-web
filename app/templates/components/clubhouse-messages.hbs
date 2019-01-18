@@ -3,11 +3,11 @@
 {{/if}}
 
 <div class="row">
-  <div class="col-md-9">
+  <div class="col-sm-12 col-md-6 mb-2">
     <div class="form-check form-check-inline">
       {{radio-button value="all" groupValue=filterMessages
                     radioId="filter-all" radioClass="form-check-input"}}
-     <label for="filter-all" class="form-check-label">All</label>
+      <label for="filter-all" class="form-check-label">All</label>
     </div>
     <div class="form-check form-check-inline">
       {{radio-button value="unread" groupValue=filterMessages
@@ -24,42 +24,44 @@
     </div>
   </div>
   {{#if canSendMessages}}
-    <div class="col-md-2 text-right">
-        <a href="#" class="btn btn-primary" {{action "newMessageAction"}}>New Message</a>
+    <div class="col-sm-12 col-md-6">
+      <a href="#" class="btn btn-primary" {{action "newMessageAction"}}>New Message</a>
     </div>
   {{/if}}
 </div>
 
-  <p class="text-muted">Showing {{pluralize viewMessages.length "message"}}</p>
+<p class="text-muted">Showing {{pluralize viewMessages.length "message"}}</p>
 {{#if messages}}
-  <ul class="list-group">
   {{#each viewMessages as |message|}}
-      <li class="list-group-item">
+    <div class="card mb-2">
+      <div class="card-body">
         <div class="row">
           <div class="col-sm-12 col-md-6">
             From: <strong>{{message.message_from}}</strong>
-            <h5>{{#unless message.delivered}}<span class="text-danger">&bullet;</span> {{/unless}}Subject: {{message.subject}}</h5>
-             {{#if message.isDictacted}}
-              <span class="text-muted">
-                <small>(written by {{message.creator_callsign}})</small>
-              </span>
+            {{#if message.isDictacted}}
+              <small class="text-muted">(written by {{message.creator_callsign}})</small>
             {{/if}}
+            <div class="font-weight-bold">
+              {{#unless message.delivered}}<span class="text-danger">&bullet;</span> {{/unless}}Subject: {{message.subject}}
+            </div>
           </div>
           <div class="col-sm-12 col-md-4">
             {{shift-format message.sent_at}}
             <div class="text-muted small">({{moment-from-now message.sent_at}})</div>
           </div>
         </div>
-        <hr>
-        {{message.body}}
-        <p class="mt-3">
+        <div class="mt-2">
+          {{message.body}}
+        </div>
+        <div class="mt-3">
           {{#unless message.delivered}}
-          <button {{action "markReadAction" message}} type="button" class="btn btn-secondary btn-sm">Mark Read</button>
+            <button {{action "markReadAction" message}} type="button" class="btn btn-secondary">Mark Read</button>
           {{/unless}}
-        </p>
-    </li>
-{{/each}}
-</ul>
+        </div>
+      </div>
+    </div>
+  {{/each}}
+
 {{else}}
   <b>Congratulations!</b> There are no messages.
 {{/if}}
