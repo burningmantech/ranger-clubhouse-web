@@ -30,12 +30,35 @@ Signups: {{students.length}} of {{slot.max}}
 {{/if}}
 
 <div class="mt-2 mb-2">
-  <button class="btn btn-primary" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}>{{if isSubmitting "Saving" "Save All"}}</button>
-  {{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary"}}Trainer's Report{{/link-to}}
-  {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary"}}Signup Sheet{{/link-to}}
-  <button class="btn btn-secondary" {{action "toggleEmailListAction"}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
-  <button class="btn btn-secondary" {{action "showAddPersonAction"}}>Add Person</button>
-  <button class="btn btn-secondary" {{action "showRemovePersonAction"}}>Remove Person</button>
+  {{! Desktop Display }}
+  <div class="d-sm-block d-none">
+    <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}>{{if isSubmitting "Saving" "Save All"}}</button>
+    {{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary btn-sm"}}Trainer's Report{{/link-to}}
+    {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary btn-sm"}}Signup Sheet{{/link-to}}
+    <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
+    <button class="btn btn-secondary btn-sm" {{action "showAddPersonAction"}}>Add Person</button>
+    <button class="btn btn-secondary btn-sm" {{action "showRemovePersonAction"}}>Remove Person</button>
+  </div>
+
+  {{! Cellphone/Tablet display }}
+  <div class="d-block d-sm-none">
+    <button class="btn btn-primary" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}>{{if isSubmitting "Saving" "Save All"}}</button>
+    <div class="btn-group">
+      <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Additional Actions
+      </button>
+      <div class="dropdown-menu">
+        {{#link-to "training.session.trainers-report" training.id slot.id class="dropdown-item"}}Trainer's Report{{/link-to}}
+        {{#link-to "training.session.signup-sheet" training.id slot.id class="dropdown-item"}}Signup Sheet{{/link-to}}
+        <div class="dropdown-divider"></div>
+        <a href class="dropdown-item" {{action "toggleEmailListAction"}}>{{if showEmails "Hide Emails" "List Emails"}}</a>
+        <div class="dropdown-divider"></div>
+        <a href class="dropdown-item" {{action "showAddPersonAction"}}>Add Person</a>
+        <a href class="dropdown-item" {{action "showRemovePersonAction"}}>Remove Person</a>
+     </div>
+   </div>
+ </div>
+
 </div>
 
 {{#if training.is_art}}
@@ -81,12 +104,14 @@ Signups: {{students.length}} of {{slot.max}}
 
 </table>
 
-<button class="btn btn-primary" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}>{{if isSubmitting "Saving" "Save All"}}</button>
-{{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary"}}Trainer's Report{{/link-to}}
-{{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary"}}Signup Sheet{{/link-to}}
-<button class="btn btn-secondary" {{action "toggleEmailListAction"}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
-<button class="btn btn-secondary" {{action "showAddPersonAction"}}>Add Person</button>
-<button class="btn btn-secondary" {{action "showRemovePersonAction"}}>Remove Person</button>
+<div class="mt-2 mb-2 d-sm-block d-none">
+  <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}>{{if isSubmitting "Saving" "Save All"}}</button>
+  {{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary btn-sm"}}Trainer's Report{{/link-to}}
+  {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary btn-sm"}}Signup Sheet{{/link-to}}
+  <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
+  <button class="btn btn-secondary btn-sm" {{action "showAddPersonAction"}}>Add Person</button>
+  <button class="btn btn-secondary btn-sm" {{action "showRemovePersonAction"}}>Remove Person</button>
+</div>
 
 {{#if showEmails}}
   {{email-list people=students scrollOnRender=true}}
