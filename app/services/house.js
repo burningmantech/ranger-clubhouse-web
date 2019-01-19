@@ -1,6 +1,8 @@
 import Service from '@ember/service';
 import ENV from 'clubhouse/config/environment';
 import { inject as service } from '@ember-decorators/service';
+import { isAbortError, isTimeoutError } from 'ember-ajax/errors';
+import { isArray } from '@ember/array';
 import DS from 'ember-data';
 
 export default class HouseService extends Service {
@@ -8,28 +10,45 @@ export default class HouseService extends Service {
   @service session;
   @service router;
 
+  /*
+   * Handle an error response from either an ajax request or an Ember Data request.
+   */
+
   handleErrorResponse(response) {
     let message, errorType;
     let responseErrors = null;
 
     if (ENV.showAjaxErrors) {
-      console.error("Error Response: ", JSON.stringify(response));
+      console.error(response);
     }
 
-    if (response) {
+    // Ember Data request error
+    if (response instanceof DS.InvalidError) {
+      responseErrors = response.errors.map((error) => error.title);
+      errorType = 'validation';
+    } else if (response instanceof DS.ServerError) {
+      responseErrors = 'The record operation was unsuccessful due to a fatal server error';
+      errorType = 'server';
+    } else if (response instanceof DS.TimeoutError
+      || response instanceof DS.AbortError
+      || isAbortError(response)
+      || isTimeoutError(response)) {
+      // Ajax Error
+      responseErrors = 'The request to the Clubhouse server could not be completed. The server might be offline or the Internet connection is spotty.';
+      errorType = 'server';
+    } else if (response instanceof DS.NotFoundError) {
+      responseErrors = 'The record was not found.';
+    } else if (response) {
       let status;
-      if (response instanceof DS.InvalidError) {
-        responseErrors = response.errors.map((error) => error.title);
-        status = 422;
-      } else {
-        const data = response.json ? response.json : response.payload;
-        status = response.status;
-        if (data) {
-          if (data.errors) {
-            responseErrors = data.errors.map((error) => error.title);
-          } else if (data.error) {
-            responseErrors = [data.error];
-          }
+
+      const data = response.json ? response.json : response.payload;
+      status = response.status;
+
+      if (data) {
+        if (data.errors) {
+          responseErrors = data.errors.map((error) => error.title);
+        } else if (data.error) {
+          responseErrors = data.error;
         }
       }
 
@@ -37,9 +56,11 @@ export default class HouseService extends Service {
       case 400:
         errorType = 'record not found';
         break;
+
       case 401:
         errorType = 'authorization'
         break;
+
       case 403:
         errorType = 'not permitted';
         break;
@@ -50,7 +71,7 @@ export default class HouseService extends Service {
 
       default:
         if (!status || status >= 500) {
-          errorType = 'server';
+          errorType = `server error ${status}`;
         } else {
           errorType = `unknown (status ${status})`;
         }
@@ -61,18 +82,25 @@ export default class HouseService extends Service {
     }
 
     if (responseErrors) {
+      if (!isArray(responseErrors)) {
+        responseErrors = [responseErrors];
+      }
+
       const plural = responseErrors.length == 1 ?
         ' was' :
         's were';
-      const errorList = responseErrors.map((error) => `<li>${error}</li>`);
-      message = `The following ${errorType} error${plural} encountered:<ul>${errorList.join('')}</ul>`;
+      message = `The following ${errorType} error${plural} encountered:`;
+      if (responseErrors.length == 1) {
+        message += `<p>${responseErrors[0]}</p>`;
+      } else {
+        const errorList = responseErrors.map((error) => `<li>${error}</li>`);
+        message += `<ul>${errorList.join('')}</ul>`;
+      }
     } else {
       message = `A server error was encountered:<ul><li>${response}</li></ul>`;
     }
 
-    this.toast.error(message, {
-      sticky: true
-    })
+    this.toast.error(message);
   }
 
   saveModel(model, successMessage, routeOrCallback) {
@@ -119,17 +147,17 @@ export default class HouseService extends Service {
    */
 
   downloadCsv(filename, columns, data) {
-    let contents = columns.join(',')+"\n";
+    let contents = columns.join(',') + "\n";
 
-     data.forEach((line) => {
-       let fields = [];
-       columns.forEach((column) => {
-           fields.push(line[column]);
-       });
-       contents += fields.join(',')+"\n";
-     });
+    data.forEach((line) => {
+      let fields = [];
+      columns.forEach((column) => {
+        fields.push(line[column]);
+      });
+      contents += fields.join(',') + "\n";
+    });
 
-     this.downloadFile(filename, contents, 'text/csv');
+    this.downloadFile(filename, contents, 'text/csv');
   }
 
   /*
