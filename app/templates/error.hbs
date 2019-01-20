@@ -1,22 +1,29 @@
-<div class="error-pane">
-  <div class="error-message">
-    Uncaught exception happened when trying to load a resource.
-    <p>{{error.message}}</p>
-    <dl>
-      {{#if error.payload.errors}}
-      <dt>Error from server:</dt>
+<main class="col">
+  <h1>Khaki, Khaki, Clubhouse - I need a Tech Ninja for a crash.</h1>
+  <p>Sorry! The clubhouse experienced an unrecoverable error while trying to process your request.</p>
+  <p>
+    Email the following information to {{admin-email}} to help figure out what went wrong:
+  </p>
+
+  <dl>
+    <dt>Error Message:</dt>
+    <dd>{{error.message}}</dd>
+    {{#if error.payload.errors}}
+      <dt>Response from server:</dt>
       <dd>
         {{#each error.payload.errors as |message|}}
           {{message.title}}<br>
         {{/each}}
       </dd>
-      {{/if}}
-      <dt>Message:</dt>
-      <dd>{{error.message}}</dd>
+    {{/if}}
+    <dt>Stack:</dt>
+    <dd>
+      <pre>{{error.stack}}</pre>
+    </dd>
+  </dl>
 
-      <dt>Stack:</dt>
-      <dd><pre>{{error.stack}}</pre></dd>
-    </dl>
-
-  </div>
-</div>
+  <p>
+    Its recommended at this time that you do not attempt the request again until you hear from the tech ninjas.
+  </p>
+  {{#link-to "me.overview"}}Back To The Home Page{{/link-to}}
+</main>

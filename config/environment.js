@@ -86,7 +86,6 @@ module.exports = function(environment) {
     ENV['ember-simple-auth-token'].serverTokenEndpoint = ENV['api-server']+'/auth/login';
     ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = ENV['api-server']+'/auth/refresh';
 
-
     ENV['ember-cli-mirage'] = {
       enabled: false
     };
@@ -122,6 +121,7 @@ module.exports = function(environment) {
       enabled: true,
       autostart: true
     };
+
     ENV.showAjaxErrors = false;
   }
 
@@ -130,6 +130,9 @@ module.exports = function(environment) {
     ENV.rootURL = '/client';
     ENV.dualClubhouse = true;
     ENV.clubhouseClassicUrl = '/classic';
+
+    // Try to report any non-recoverable errors.
+    ENV.logEmberErrors = true;
 
     ENV['api-server'] = '/api';
     ENV['ember-simple-auth-token'].serverTokenEndpoint = ENV['api-server']+'/auth/login';

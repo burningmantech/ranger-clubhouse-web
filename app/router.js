@@ -25,7 +25,7 @@ Router.map(function() {
   this.route('offline');
   this.route('reset-password');
   this.route('me', function() {
-    this.route('overview');
+    this.route('overview', { path: '/' });
     this.route('ranger-info');
     this.route('personal-info');
     this.route('emergency-contact');
@@ -104,6 +104,9 @@ Router.map(function() {
     });
   });
   this.route('register');
+
+  // Catch all for unrecognized urls
+  this.route('not-found', { path: '/*path'} );
 });
 
 export default Router;
