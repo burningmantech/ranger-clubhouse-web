@@ -31,11 +31,9 @@ if (!Ember.testing) { // eslint-disable-line ember/no-ember-testing-in-module-sc
     if (config.logEmberErrors && navigator.sendBeacon) {
       const data = new FormData;
 
-      data.append('data', JSON.stringify( {
-        type: 'ember-onerror',
-        error,
-        url: window.location.href
-      } ));
+      data.append('url', window.location.href);
+      data.append('error_type', 'ember-onerror');
+      data.append('data', JSON.stringify(error));
 
       try {
         // Grab the logged in user id if possible.

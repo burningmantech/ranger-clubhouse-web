@@ -8,8 +8,9 @@
         <tr>
           <th>Timestamp</th>
           <th>Person</th>
-          <th>Component</th>
+          <th>Type</th>
           <th>IP</th>
+          <th>URL</th>
           <th>Data</th>
         </tr>
       </thead>
@@ -26,10 +27,13 @@
               {{/if}}
             </td>
             <td>
-              {{log.component}}
+              {{log.error_type}}
             </td>
             <td>
               {{log.ip}}
+            </td>
+            <td>
+              {{log.url}}
             </td>
             <td>
               {{log.data}}
