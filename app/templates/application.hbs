@@ -141,6 +141,7 @@
                         <a href="{{cgo "role" "selectAll"}}" class="dropdown-item">Edit (System) Roles</a>
                         <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
                         <a href="{{cgo "logview" "show"}}" class="dropdown-item">Log View</a>
+                        {{#link-to "admin.error-log" class="dropdown-item"}}Error Log{{/link-to}}
                       {{/if}}
                     </div>
                     {{#if (has-role "admin")}}

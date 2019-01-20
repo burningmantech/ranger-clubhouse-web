@@ -59,6 +59,7 @@ Router.map(function() {
     this.route('slots');
     this.route('credits');
     this.route('roles');
+    this.route('error-log');
   });
   this.route('handle-checker');
 

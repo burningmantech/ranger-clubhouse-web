@@ -1,0 +1,60 @@
+<main class="col">
+  <h1>Error Log</h1>
+
+  {{#if logs}}
+    Showing {{page}} of {{total_pages}} pages. Total {{pluralize total "found row"}}
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Person</th>
+          <th>Component</th>
+          <th>IP</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each logs as |log|}}
+          <tr>
+            <td>{{log.created_at}}</td>
+            <td>
+              {{#if log.person}}
+                {{person-link person=log.person}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            <td>
+              {{log.component}}
+            </td>
+            <td>
+              {{log.ip}}
+            </td>
+            <td>
+              {{log.data}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        {{#if (not-eq page 1)}}
+          {{#link-to "admin.error-log" (query-params page=previousPage) class="btn btn-primary"}}Prev Page{{/link-to}}
+        {{else}}
+          &nbsp;
+        {{/if}}
+      </div>
+      <div class="col-sm-12 col-md-6">
+        {{#if (not-eq page total_pages)}}
+          {{#link-to "admin.error-log" (query-params page=nextPage) class="btn btn-primary"}}Next Page{{/link-to}}
+        {{else}}
+          &nbsp;
+        {{/if}}
+      </div>
+    </div>
+  {{else}}
+    <strong class="text-danger">No log entries were found</strong>
+  {{/if}}
+</main>
