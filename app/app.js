@@ -33,7 +33,13 @@ if (!Ember.testing) { // eslint-disable-line ember/no-ember-testing-in-module-sc
 
       data.append('url', window.location.href);
       data.append('error_type', 'ember-onerror');
-      data.append('data', JSON.stringify(error));
+      data.append('data', JSON.stringify({
+        exception: {
+          name: error.name,
+          message: error.message,
+          stack: error.stack
+        }
+      }));
 
       try {
         // Grab the logged in user id if possible.
