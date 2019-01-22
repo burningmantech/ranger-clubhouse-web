@@ -138,7 +138,7 @@
                       {{#if (has-role "admin")}}
                         {{#link-to "admin.credits" class="dropdown-item"}}Edit Schedule Credits{{/link-to}}
                         {{#link-to "admin.positions" class="dropdown-item"}}Edit Positions{{/link-to}}
-                        <a href="{{cgo "role" "selectAll"}}" class="dropdown-item">Edit (System) Roles</a>
+                        {{#link-to "admin.roles" class="dropdown-item"}}Edit (System) Roles{{/link-to}}
                         <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
                         <a href="{{cgo "logview" "show"}}" class="dropdown-item">Log View</a>
                         {{#link-to "admin.error-log" class="dropdown-item"}}Error Log{{/link-to}}
