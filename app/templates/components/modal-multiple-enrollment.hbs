@@ -1,19 +1,25 @@
 {{#modal-dialog title=dialog.title onClose=onClose}}
-<p>
-  {{if dialog.message.isMe "You are" "The person is"}} already enrolled in {{pluralize dialog.message.slots.length "training session"}}:
-</p>
-<p>
-  {{#each dialog.message.slots as |slot|}}
-  <b>{{slot.position.title}} - {{slot.description}} {{shift-format slot.begins}}</b><br>
-  {{/each}}
-</p>
-<p>
-  {{#if dialog.message.forced}}
-    Because you either have the Admin, Trainer, VC or Mentor role,
-    {{if dialog.message.isMe "you have" "the person has"}} been added to the training session. Hope you know what you are doing!
-  {{else}}
-    Multiple enrollments for training sessions are not allowed.
-    Contact {{mail-to (config "VCEmail")}} for help.
-  {{/if}}
-</p>
+  <p>
+    {{log dialog.message}}
+    {{#if dialog.message.isMe}}You are{{else}}The person is{{/if}} already
+    enrolled in {{pluralize dialog.message.slots.length (if dialog.message.isAlpha "Alpha shift" "training session") }}:
+  </p>
+  <p>
+    {{#each dialog.message.slots as |slot|}}
+      <b>{{slot.position.title}} - {{slot.description}} {{shift-format slot.begins}}</b><br>
+    {{/each}}
+  </p>
+  <p>
+    {{#if dialog.message.forced}}
+      Because you either have the Admin, Trainer, VC or Mentor role,
+      {{if dialog.message.isMe "you have" "the person has"}}
+        been added to the
+        {{#if dialog.message.isAlpha}}Alpha shift{{else}}training sessions{{/if}}.
+        Hope you know what you are doing!
+    {{else}}
+      You may only sign up for one {{#if dialog.message.isAlpha}}Alpha shift{{else}}training session{{/if}}.
+      Multiple enrollments are not allowed.
+      Contact {{mail-to (config "VCEmail")}} for help.
+    {{/if}}
+  </p>
 {{/modal-dialog}}

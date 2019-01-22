@@ -190,7 +190,8 @@ export default class TrainingSlotController extends Controller {
     case 'multiple-enrollment':
       modal.open('modal-multiple-enrollment', 'Multiple Enrollments Not Allowed', {
         slots: result.slots,
-        is_me: (person.id == this.session.user.id)
+        isMe: (person.id == this.session.user.id),
+        isAlpha: (result.slots[0].position.title == 'Alpha')
       });
       break;
 

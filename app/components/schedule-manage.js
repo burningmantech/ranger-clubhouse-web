@@ -172,8 +172,11 @@ export default class ScheduleManageComponent extends Component {
       case 'multiple-enrollment':
         modal.open(
           'modal-multiple-enrollment', 'Multiple Enrollments Not Allowed',
-          { slots: result.slots, is_me: (this.person.id == this.session.user.id ) }
-        );
+          {
+            slots: result.slots,
+            isMe: (this.person.id == this.session.user.id ),
+            isAlpha: (result.slots[0].position.title == 'Alpha')
+          } );
         break;
 
       default:
