@@ -25,6 +25,9 @@
 }
 
 .schedule-row {
+  display: flex;
+  flex-wrap: wrap;
+
   font-size: 0.95em;
   padding: 5px;
   border-top: 1px solid #ddd;

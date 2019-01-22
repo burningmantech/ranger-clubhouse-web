@@ -28,7 +28,7 @@
         <div class="schedule-time">{{shift-format slot.slot_ends}}</div>
         <div class="schedule-duration"><span class="schedule-sm-label">Duration:</span>{{hour-minute-format slot.slot_duration}}</div>
         <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}</div>
-        <div class="schedule-long-description">{{slot.position_title}} {{slot-info-link slot.slot_description slot.slot_url}}</div>
+        <div class="schedule-long-description">{{slot.position_title}}<br>{{slot-info-link slot.slot_description slot.slot_url}}</div>
         <div class="schedule-actions d-print-none">
           <button {{action "showPeople" slot}} class="btn btn-primary btn-sm">{{fa-icon "users" type="fas"}}</button>
           {{#if (not slot.has_started)}}
