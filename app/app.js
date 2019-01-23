@@ -16,7 +16,6 @@ RSVP.on('error', function(error) {
   }
 });
 
-if (!Ember.testing) { // eslint-disable-line ember/no-ember-testing-in-module-scope
 
   /*
    * Attempt to trap any non-recoverable errors and log them to the server.
@@ -26,6 +25,9 @@ if (!Ember.testing) { // eslint-disable-line ember/no-ember-testing-in-module-sc
    */
 
   Ember.onerror = buildErrorHandler('Ember.onerror', (error) => {
+    if (Ember.testing) { // eslint-disable-line ember/no-ember-testing-in-module-scope
+      throw error;
+    }
     console.error(error);
 
     if (config.logEmberErrors && navigator.sendBeacon) {
@@ -54,7 +56,6 @@ if (!Ember.testing) { // eslint-disable-line ember/no-ember-testing-in-module-sc
 
     alert("Exception "+error.stack);
   });
-}
 
 LinkComponent.reopen({
   activeClass: 'is_active'

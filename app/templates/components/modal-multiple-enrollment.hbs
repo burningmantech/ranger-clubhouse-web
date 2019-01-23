@@ -1,6 +1,5 @@
 {{#modal-dialog title=dialog.title onClose=onClose}}
   <p>
-    {{log dialog.message}}
     {{#if dialog.message.isMe}}You are{{else}}The person is{{/if}} already
     enrolled in {{pluralize dialog.message.slots.length (if dialog.message.isAlpha "Alpha shift" "training session") }}:
   </p>
@@ -13,9 +12,9 @@
     {{#if dialog.message.forced}}
       Because you either have the Admin, Trainer, VC or Mentor role,
       {{if dialog.message.isMe "you have" "the person has"}}
-        been added to the
-        {{#if dialog.message.isAlpha}}Alpha shift{{else}}training sessions{{/if}}.
-        Hope you know what you are doing!
+      been added to the
+      {{#if dialog.message.isAlpha}}Alpha shift{{else}}training sessions{{/if}}.
+      Hope you know what you are doing!
     {{else}}
       You may only sign up for one {{#if dialog.message.isAlpha}}Alpha shift{{else}}training session{{/if}}.
       Multiple enrollments are not allowed.
