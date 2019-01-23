@@ -67,6 +67,13 @@ export default function() {
       );
     }
 
+    if (!person.user_authorized) {
+      return new Response(401, 
+        { 'Content-Type': 'application/json' },
+        { error: 'The account has been disabled.' }
+      )
+    }
+
     let token = JWT.sign({person_id: person.id}, 'secret', { expiresIn: 1000 });
     let data =  {
       token,

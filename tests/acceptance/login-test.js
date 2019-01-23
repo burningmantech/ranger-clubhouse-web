@@ -21,7 +21,7 @@ module('Acceptance | login', function(hooks) {
     await fillIn('input[name="identification"]', 'active@example.com');
     await fillIn('input[name="password"]', 'ineedashower!');
     await click('button.login-submit');
-    assert.equal(currentURL(), '/me/overview');
+    assert.equal(currentURL(), '/me');
   });
 
   test('invalid login', async function(assert) {
@@ -42,4 +42,15 @@ module('Acceptance | login', function(hooks) {
     assert.equal(currentSession().isAuthenticated, false);
   });
 
+  test('person not authorized', async function(assert) {
+    await visit('/login');
+    await fillIn('input[name="identification"]', 'disable@gmail.com');
+    await fillIn('input[name="password"]', 'ineedashower!');
+    await click('button.login-submit');
+
+    // Should stay on the login page
+    assert.equal(currentURL(), '/login', 'stay on the login page');
+    // And there should be a flash modal with login error
+    assert.dom('#toast-container', document).includesText('The account has been disabled');
+  });
 });
