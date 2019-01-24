@@ -6,12 +6,17 @@ import hbs from 'htmlbars-inline-precompile';
 module('Integration | Helper | yesno', function(hooks) {
   setupRenderingTest(hooks);
 
-  // Replace this with your real tests.
   test('it renders', async function(assert) {
-    this.set('inputValue', '1234');
+    this.set('value', true);
 
-    await render(hbs`{{yesno inputValue}}`);
+    await render(hbs`{{yesno value}}`);
 
-    assert.dom(this.element).hasText('1234');
+    assert.dom(this.element).hasText('Y');
+
+    this.set('value', false);
+
+    await render(hbs`{{yesno value}}`);
+
+    assert.dom(this.element).hasText('N');
   });
 });

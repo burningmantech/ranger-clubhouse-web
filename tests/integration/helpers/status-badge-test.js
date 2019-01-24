@@ -1,7 +1,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('helper:status-badge', function(hooks) {
@@ -12,7 +12,7 @@ module('helper:status-badge', function(hooks) {
 
     await render(hbs`{{status-badge status}}`);
 
-    assert.equal(find('*').innerHTML.trim(), '<span class="badge badge-success">active</span>');
+    assert.dom('.badge.badge-secondary').hasText('active');
   });
 
   test('it renders bonked status', async function(assert) {
@@ -20,6 +20,6 @@ module('helper:status-badge', function(hooks) {
 
     await render(hbs`{{status-badge status}}`);
 
-    assert.equal(find('*').innerHTML.trim(), '<span class="badge badge-danger">bonked</span>');
+    assert.dom('.badge.badge-danger').hasText('bonked');
   });
 });

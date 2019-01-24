@@ -9,7 +9,7 @@ export default class ChFormCancelComponent extends Component {
   @argument(optional('string')) label;
   @argument(optional('string')) cancelClass;
   @argument(optional('boolean')) disabled;
-  @argument(optional('object')) cancelAction;
+  @argument('object') cancelAction;
 
   init() {
     super.init(...arguments);

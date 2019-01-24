@@ -2,16 +2,17 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import ENV from 'clubhouse/config/environment';
 
 module('Integration | Helper | general-support-email', function(hooks) {
   setupRenderingTest(hooks);
 
   // Replace this with your real tests.
   test('it renders', async function(assert) {
-    this.set('inputValue', '1234');
+    ENV['clientConfig'] = { GeneralSupportEmail: 'support@rangers.dev'};
 
-    await render(hbs`{{general-support-email inputValue}}`);
+    await render(hbs`{{general-support-email}}`);
 
-    assert.dom(this.element).hasText('1234');
+    assert.dom('a').hasText('support@rangers.dev');
   });
 });

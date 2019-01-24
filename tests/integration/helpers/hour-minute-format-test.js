@@ -8,10 +8,10 @@ module('helper:hour-minute-format', function(hooks) {
 
   // Replace this with your real tests.
   test('it renders', async function(assert) {
-    this.set('inputValue', '1234');
+    this.set('duration', 7300);
 
-    await render(hbs`{{hour-minute-format inputValue}}`);
+    await render(hbs`{{hour-minute-format duration}}`);
 
-    assert.dom('*').hasText('1234');
+    assert.dom('*').hasText('2:01');
   });
 });

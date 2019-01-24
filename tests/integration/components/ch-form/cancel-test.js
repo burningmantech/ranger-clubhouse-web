@@ -7,17 +7,16 @@ module('Integration | Component | ch-form/cancel', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
-
-    await render(hbs`{{ch-form/cancel}}`);
+    this.set('cancelAction', () => { });
+    await render(hbs`{{ch-form/cancel cancelAction=cancelAction}}`);
 
     assert.dom(this.element).hasText('Cancel');
   });
 
   test('it accepts a label', async function(assert) {
     this.set('label', 'Give up!');
-    await render(hbs`{{ch-form/cancel label=label}}`);
+    this.set('cancelAction', () => { });
+    await render(hbs`{{ch-form/cancel label=label cancelAction=cancelAction}}`);
 
     assert.dom(this.element).hasText('Give up!');
   });

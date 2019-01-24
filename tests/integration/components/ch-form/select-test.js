@@ -12,7 +12,7 @@ module('Integration | Component | ch-form/select', function(hooks) {
     this.set('value', 'Banana');
     this.set('options', ['Apple', 'Banana', 'Cherry', 'Durian']);
 
-    await render(hbs`{{ch-form/select value="Banana" options=options name="fruit" controlClass="myselect"}}`);
+    await render(hbs`{{ch-form/select name="test" value="Banana" options=options name="fruit" controlClass="myselect"}}`);
 
     assert.dom('select').hasClass('myselect');
     assert.dom('select').hasAttribute('name', 'fruit');
@@ -29,7 +29,7 @@ module('Integration | Component | ch-form/select', function(hooks) {
     this.set('value', 'm');
     this.set('options', [{id: 'b', title: 'Berlin'}, {id: 'm', title: 'Moscow'}, {id: 't', title: 'Tokyo'}]);
 
-    await render(hbs`{{ch-form/select value=value options=options name="fruit" controlClass="myselect"}}`);
+    await render(hbs`{{ch-form/select name="test" value=value options=options name="fruit" controlClass="myselect"}}`);
 
     assert.dom('select').hasClass('myselect');
     assert.dom('select').hasAttribute('name', 'fruit');
@@ -46,7 +46,7 @@ module('Integration | Component | ch-form/select', function(hooks) {
     this.set('value', '');
     this.set('options', ['Apple', 'Banana', 'Cherry', 'Durian']);
 
-    await render(hbs`{{ch-form/select value=value options=options includeBlank=true}}`);
+    await render(hbs`{{ch-form/select name="test" value=value options=options includeBlank=true}}`);
 
     assert.dom('select option').exists({ count: 5 }, 'should render 5 options');
     assert.equal(this.element.querySelector('option[value=""]').selected, true);
@@ -61,7 +61,7 @@ module('Integration | Component | ch-form/select', function(hooks) {
     this.set('value', ['Apple', 'Durian']);
     this.set('options', ['Apple', 'Banana', 'Cherry', 'Durian']);
 
-    await render(hbs`{{ch-form/select value=value options=options multiple=true}}`);
+    await render(hbs`{{ch-form/select name="test" value=value options=options multiple=true}}`);
 
     assert.dom('select').hasAttribute('multiple');
     assert.dom('select option').exists({ count: 4 }, 'should render 4 options');

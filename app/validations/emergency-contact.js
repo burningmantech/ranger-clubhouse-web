@@ -20,7 +20,7 @@ export default {
   ],
 */
   em_email: [
-    validateFormat({ type: 'email', message: 'Enter an email address' })
+    validateFormat({ allowBlank: true,  type: 'email', message: 'Enter an email address' })
   ],
 
 /*

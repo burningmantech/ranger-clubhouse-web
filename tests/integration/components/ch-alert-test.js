@@ -6,21 +6,27 @@ import hbs from 'htmlbars-inline-precompile';
 module('Integration | Component | ch-alert', function(hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
-
-    await render(hbs`{{ch-alert}}`);
-
-    assert.dom(this.element).hasText('');
-
+  test('it renders type warning', async function(assert) {
     // Template block usage:
     await render(hbs`
-      {{#ch-alert}}
+      {{#ch-alert "warning"}}
         template block text
       {{/ch-alert}}
     `);
 
-    assert.dom(this.element).hasText('template block text');
+    assert.dom(this.element).includesText('template block text');
+    assert.dom('div.alert.alert-warning').exists();
   });
+
+  test('it renders type danger', async function(assert) {
+    // Template block usage:
+    await render(hbs`
+      {{#ch-alert "danger"}}
+        template block text
+      {{/ch-alert}}
+    `);
+
+    assert.dom('div.alert.alert-danger').exists();
+  });
+
 });
