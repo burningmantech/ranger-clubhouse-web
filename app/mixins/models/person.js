@@ -13,10 +13,6 @@ import {
 
 export default Mixin.create({
   // Computed methods
-  isPastProspectiveDisabled: computed('status', 'callsign_approved', function () {
-    return (this.status == PersonStatus.PAST_PROSPECTIVE && !this.callsign_approved);
-  }),
-
   isActive: computed('status', function () {
     return (this.status == PersonStatus.ACTIVE);
   }),

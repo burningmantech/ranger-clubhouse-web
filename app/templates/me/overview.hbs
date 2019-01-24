@@ -1,6 +1,6 @@
 <h1>Welcome To The Secret Clubhouse</h1>
 
-{{#if person.isPastProspectiveDisabled}}
+{{#if (or person.isPassProspective (not person.callsign_approved))}}
   {{me/past-prospective-disabled person=person}}
 {{else if person.isProspectiveWaitlist}}
   {{#ch-alert "warning"}}
