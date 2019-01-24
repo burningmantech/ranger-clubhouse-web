@@ -5,13 +5,6 @@ import { run } from '@ember/runloop';
 module('Unit | Model | person', function(hooks) {
   setupTest(hooks);
 
-  test('isPastProspectiveDisabled works', function(assert) {
-    let store = this.owner.lookup('service:store');
-    let model = run(() => store.createRecord('person', { status: 'past prospective', callsign_approved: false }));
-
-    assert.equal(model.isPastProspectiveDisabled, true);
-  });
-
   test('isRanger works', function(assert) {
     let store = this.owner.lookup('service:store');
 
