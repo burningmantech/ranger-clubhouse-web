@@ -1,7 +1,7 @@
 export default [{
   "id": 1,
   "first_name": "Anne",
-  "mi": "",
+  "mi": "MI",
   "last_name": "Active",
   "callsign": "Activus",
   "barcode": null,

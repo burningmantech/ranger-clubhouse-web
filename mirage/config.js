@@ -68,7 +68,7 @@ export default function() {
     }
 
     if (!person.user_authorized) {
-      return new Response(401, 
+      return new Response(401,
         { 'Content-Type': 'application/json' },
         { error: 'The account has been disabled.' }
       )
@@ -96,6 +96,21 @@ export default function() {
 
     return person;
     //return this.serializerOrRegistry.serialize(person, 'person');
+  });
+
+  this.put('/api/person/:id', ({people}, request) => {
+    const body = JSON.parse(request.requestBody);
+    const person = people.find(request.params.id)
+
+    if (!person) {
+      return new Response(404, { 'Content-Type': 'application/json' }, {
+        errors: [ { status: 404, title: 'Record does not exist.'}]
+      } );
+    }
+
+    person.update(body.person);
+
+    return person;
   });
 
   this.get('/api/person/:id/years', ({people}, request) => { // eslint-disable-line no-unused-vars
