@@ -272,8 +272,58 @@
       {{/if}}
     </div>
   </nav>
-</header>
+  {{#if (has-role "manage")}}
+    <div class="bg-khaki row ">
+      {{#ch-form "person-search" searchForm formClass="col-sm-12 col-md-8 ml-auto mb-2 mr-2" changeSet=false onSubmit=(action "submit") as |f|}}
+        {{#power-select-typeahead
+                        search=(action "searchAction")
+                        onchange=(action "searchChangeAction")
+                        renderInPlace=true
+                        noMatchesMessage="No results found"
+                        placeholder=searchPlaceholder
+                        onfocus=(action searchFocusAction)
+                        triggerId="person-search-query"
+                        as |person| }}
+          <strong>{{person.callsign}}</strong> &lt;{{person.first_name}} {{person.last_name}}, {{person.status}}&gt;
+        {{/power-select-typeahead}}
+        {{#if showSearchBox}}
+          <fieldset class="bg-white">
+            <div class="form-row">
+              <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Search By:</label>
+              <div class="col-sm-12 col-md-9 mt-2">
+                {{f.input "callsign" type="checkbox" label="Callsign" inline=true}}
+                {{f.input "name" type="checkbox" label="Name" inline=true}}
+                {{f.input "email" type="checkbox" label="Email" inline=true}}
+                {{f.input "formerly_known_as" type="checkbox" label="Formerly Known As" inline=true}}
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Include:</label>
+              <div class="col-sm-12 col-md-9 mt-2">
+                {{f.input "auditor" type="checkbox" label="Auditor" inline=true}}
+                {{f.input "past_prospective" type="checkbox" label="Past Prospective" inline=true}}
+              </div>
+            </div>
+            <div class="form-row mb-2">
+              <div class="col-sm-12 col-md-8 small">
+                Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.
+              </div>
+              <div class="col-sm-12 col-md-3 ml-auto">
+                <button class="btn btn-sm btn-secondary" {{action "hideSearchBoxAction"}}>Hide Options</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="text-muted mt-2 col-sm-12">(Future feature - waiting for HQ interface)</div>
+              <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Mode:</label>
+              {{f.input "display_mode" type="radioGroup" options=displayModeOptions label="Display Mode" inline=true}}
+            </div>
+          </fieldset>
+        {{/if}}
+      {{/ch-form}}
+    </div>
+  {{/if}}
 
+</header>
 
 <div class="row" id="body-row">
   {{outlet}}

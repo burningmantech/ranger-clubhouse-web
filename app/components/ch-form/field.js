@@ -57,7 +57,11 @@ export default class ChFormFieldComponent extends Component {
   // internal callback when field changes, used by ch-form.js
   @argument(optional('object')) fieldChangeAction = null;
 
+  // callback when field receives focus
+  @argument(optional('object')) onFocus;
+
   @argument(optional('boolean')) wrapper = null;
+
 
   elementErrorClass = 'is-invalid';
   textErrorClass  ='text-danger';

@@ -33,6 +33,8 @@ export default class ChFormComponent extends Component {
 
   @argument(optional('string')) autocomplete = "off";
 
+  @argument(optional('string')) formClass;
+
   didReceiveAttrs() {
     let model;
     const original = this.originalModel;

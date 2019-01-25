@@ -14,8 +14,10 @@
                   disabled=disabled
                   renderInPlace=true
                   noMatchesMessage="No results found"
+                  onfocus=onFocus
+                  placeholder=placeholder
                   as |item| }}
-{{item}}
+      {{item}}
 {{/power-select-typeahead}}
 {{else if (eq type "select")}}
   {{ch-form/select
@@ -113,6 +115,7 @@
     maxlength   = {{maxlength}}
     size        = {{size}}
     autocomplete = {{autocomplete}}
+    onfocus     = {{onFocus}}
     >
 {{/if}}
 
