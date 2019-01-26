@@ -274,7 +274,12 @@
   </nav>
   {{#if (has-role "manage")}}
     <div class="bg-khaki row ">
-      {{#ch-form "person-search" searchForm formClass="col-sm-12 col-md-8 ml-auto mb-2 mr-2" changeSet=false onSubmit=(action "submit") as |f|}}
+      {{! line up the search bar with main content}}
+      <div class="d-none d-md-block sidebar-expanded">
+        &nbsp;
+      </div>
+
+      {{#ch-form "person-search" searchForm formClass="col mb-2 ml-2 mr-2" changeSet=false onSubmit=(action "submit") as |f|}}
         {{#power-select-typeahead
                         search=(action "searchAction")
                         onchange=(action "searchChangeAction")
