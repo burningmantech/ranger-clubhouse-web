@@ -22,6 +22,21 @@
     the photo is on the right and the form flows around it.
   }}
   <div class="float-md-left">
+
+    {{! show contact information }}
+    {{#if (has-role "admin" "vc" "view-pii")}}
+      <div class="form-group row">
+        <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Contact</label>
+        <div class="mt-2 col-auto">
+          {{mail-to person.email}}
+          <div class="d-inline-block">primary phone {{phone-link person.home_phone}}</div>
+          {{#if person.alt_phone}}
+            <div class="d-inline-block">alt phone {{phone-link person.alt_phone}}</div>
+          {{/if}}
+        </div>
+      </div>
+    {{/if}}
+
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign</label>
       {{#if isAdminMentorOrVC}}
