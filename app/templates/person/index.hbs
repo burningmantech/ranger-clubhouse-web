@@ -29,9 +29,9 @@
         <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Contact</label>
         <div class="mt-2 col-auto">
           {{mail-to person.email}}
-          <div class="d-inline-block">primary phone {{phone-link person.home_phone}}</div>
+          <div>primary phone {{phone-link person.home_phone}}</div>
           {{#if person.alt_phone}}
-            <div class="d-inline-block">alt phone {{phone-link person.alt_phone}}</div>
+            <div>alt phone {{phone-link person.alt_phone}}</div>
           {{/if}}
         </div>
       </div>
