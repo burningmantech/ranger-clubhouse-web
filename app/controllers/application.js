@@ -31,7 +31,7 @@ export default class ApplicationController extends Controller {
      */
 
     $('body').bind('keyup', (event) => { // eslint-disable-line ember/jquery-ember-run
-      if (!event.shiftKey && event.keyCode != F1) {
+      if (!(event.shiftKey && event.keyCode == F1)) {
         return true;
       }
 
@@ -40,7 +40,7 @@ export default class ApplicationController extends Controller {
       run( () => {
         $('#person-search-query input').focus();
       });
-  
+
       return false;
     });
   }

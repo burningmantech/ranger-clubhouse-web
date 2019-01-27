@@ -9,9 +9,9 @@ export function chFormContains([haystack, value]) {
     // Handle comparing a selected value which is a boolean string and the
     // option value is an actual Boolean type.
     if (typeOf(value) == "boolean" && typeOf(haystack) == "string") {
-        haystack = haystack.match(/^true$/i) != null;
+        haystack = /^(true|t|1)$/i.test(haystack);
     }
-    return haystack === value;
+    return haystack == value;
   }
 }
 
