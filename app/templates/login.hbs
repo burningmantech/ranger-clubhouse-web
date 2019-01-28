@@ -3,6 +3,20 @@
   <div class="row">
     <h1 class="col-sm-12">Welcome To The Ranger Secret Clubhouse!</h1>
     <div class="col-md-6 col-sm-12">
+      {{#if loginError}}
+        {{#ch-alert "danger"}}
+          {{fa-icon "exclamation-triangle"}}
+          {{#if (eq loginError "invalid-credentials")}}
+            The email and/or password is incorrect.
+          {{else if (eq loginError "account-disabled")}}
+            The account has been disabled. Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.
+          {{else if (eq loginError "login-disabled")}}
+            Your access has been temporarily disabled. Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.
+          {{else}}
+            An unknown server response was received. status=[{{loginError}}]
+          {{/if}}
+        {{/ch-alert}}
+      {{/if}}
       {{#ch-form "auth" auth validator=loginValidations onSubmit=(action "submit") as |f|}}
         {{f.input "identification" label="Email" autofocus=true}}
         {{f.input "password" label="Password" type="password"}}
@@ -12,7 +26,7 @@
             {{f.submit label=(unless isSubmitting "Login" "Loggin In") disabled=isSubmitting submitClass="btn-lg login-submit"}}
           </div>
           <div class="col-md-6 col-sm-12 mt-2">
-            {{#link-to "reset-password" class="d-block"}}Forget the password?{{/link-to}}
+            {{#link-to "reset-password" class="d-block"}}Forgot the password?{{/link-to}}
           </div>
         </div>
       {{/ch-form}}
@@ -20,8 +34,8 @@
 
     <div class="col-md-6 col-sm-12 mt-4">
       {{#ch-box "Interest in volunteering with The Rangers?"}}
-        Please visit <a href="http://rangers.burningman.org/ranger-application-process/">http://rangers.burningman.org/ranger-application-process/</a>
-        and read about our intake process for this event cycle. If you have
+        <a href="http://rangers.burningman.org/ranger-application-process/">Click here</a>
+        to read about our intake process for this event cycle. If you have
         applied previously, our process may have changed since you last applied.
         All prospective Rangers must reapply each year from the start of the process.
         A link to apply can be found at the top of that page.
@@ -30,8 +44,7 @@
       {{#ch-box "Interested in training but not volunteering?"}}
         If you do NOT intend to volunteer with the Rangers on playa but are
         interested in taking Ranger training anyway, please
-        {{#link-to "register"}}go here{{/link-to}} to manually
-        create a Secret Clubhouse account.
+        {{#link-to "register"}}Click Here{{/link-to}} to create a Secret Clubhouse account.
       {{/ch-box}}
     </div>
   </div>
