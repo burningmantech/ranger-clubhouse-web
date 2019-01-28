@@ -1,12 +1,13 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
-import { action } from '@ember-decorators/object';
+import { action, computed } from '@ember-decorators/object';
 import { tagName } from '@ember-decorators/component';
 
 import { typeOf } from '@ember/utils';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
+import DS from 'ember-data';
 
 import $ from 'jquery';
 
@@ -35,7 +36,11 @@ export default class ChFormComponent extends Component {
 
   @argument(optional('string')) formClass;
 
-  didReceiveAttrs() {
+  // Was the original backing model updated?
+  modelUpdated = false;
+
+  @computed('originalModel', 'wasUpdated')
+  get model() {
     let model;
     const original = this.originalModel;
     const validator = this.validator;
@@ -46,12 +51,34 @@ export default class ChFormComponent extends Component {
       } else {
         model = new Changeset(original);
       }
+
+      /*
+       * Magic going on here. When the backing model updates from the server,
+       * the ember-changeset object will be updated as well BUT NO observers
+       * will fire for properties that were not changed directly in the changeset
+       *
+       * Example: the user changes the person status to "uberbonked", the server will set,
+       *  user_authorized to false. Any observers for status will fire since it
+       *  was changed via the changeset object. Since user_authorized was not
+       *  originally touched in the changeset, no observers will fire.
+       *
+       * The solution is to watch for the record to be updated or created, and then
+       * build a new changeset object which has the most recent data.
+       */
+
+      if (original instanceof DS.Model) {
+        // Watch for the original model being updated.
+        original.on((original.isNew ? 'didCreate' : 'didUpdate'), () => {
+          this.set('modelUpdated', true);
+        });
+      }
     } else {
       model = original;
       model.set('isValid', true);
     }
 
-    this.set('model', model);
+    this.set('modelUpdated', false);
+    return model;
   }
 
   didInsertElement() {
