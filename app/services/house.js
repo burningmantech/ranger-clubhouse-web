@@ -3,6 +3,7 @@ import ENV from 'clubhouse/config/environment';
 import { inject as service } from '@ember-decorators/service';
 import { isAbortError, isTimeoutError } from 'ember-ajax/errors';
 import { isArray } from '@ember/array';
+import { run } from '@ember/runloop';
 import DS from 'ember-data';
 
 export default class HouseService extends Service {
@@ -177,4 +178,14 @@ export default class HouseService extends Service {
     anchor.click();
     anchor.remove();
   }
+
+  /*
+   * Scroll to top
+   */
+
+   scrollToTop() {
+     run.schedule('afterRender', () => {
+       window.scrollTo(0,0);
+     });
+   }
 }

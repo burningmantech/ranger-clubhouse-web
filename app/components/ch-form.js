@@ -39,7 +39,7 @@ export default class ChFormComponent extends Component {
   // Was the original backing model updated?
   modelUpdated = false;
 
-  @computed('originalModel', 'wasUpdated')
+  @computed('originalModel', 'modelUpdated')
   get model() {
     let model;
     const original = this.originalModel;

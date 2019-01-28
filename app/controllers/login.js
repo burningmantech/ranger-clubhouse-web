@@ -11,7 +11,7 @@ export default class LoginController extends Controller {
   apiLogin(credentials) {
     this.set('isSubmitting', true);
     return this.session.authenticate('authenticator:jwt', credentials)
-      .then((result) => {
+      .then(() => {
         if (ENV['dualClubhouse']) {
           this.classicLogin(credentials);
         }
@@ -49,6 +49,7 @@ export default class LoginController extends Controller {
         this.setCookie(session.name, session.id);
       })
       .catch((response) => {
+        this.house.handleErrorResponse(response);
         this.toast.error('There was a problem logging into the Classic Clubhouse. Some features may not be available.');
       });
   }

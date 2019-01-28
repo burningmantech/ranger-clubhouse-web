@@ -126,7 +126,10 @@ export default class PersonIndexController extends Controller {
     const statusChanged = model._changes['status'];
 
     model.save().then(() => {
+      this.house.scrollToTop();
+
       this.toast.success('The information was successfully updated.');
+
       // Reload the current user.
       if (model.get('id') == this.session.user_id) {
         this.session.loadUser();
