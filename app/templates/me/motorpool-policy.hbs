@@ -1,5 +1,6 @@
 <h1>2018 Ranger Vehicle Motorpool Policy</h1>
 
+{{#if (config 'MotorpoolPolicyEnable')}}
 {{#if person.vehicle_paperwork}}
   {{#ch-alert "success"}}
     You have agreed to the motorpool policy. Thank you. Please drive safely.
@@ -236,4 +237,9 @@
   </p>
 
   <button type="submit" {{action "agreeAction"}} class="btn btn-primary">Yes, I agree to the motorpool policy.</button>
+{{/if}}
+{{else}}
+<p>
+    The Motorpool Policy for this year is not yet available. Please check back later.
+</p>
 {{/if}}

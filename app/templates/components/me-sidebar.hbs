@@ -18,7 +18,7 @@
       {{else}}
         {{ch-sidebar-link "me.tickets" title="Tickets & Stuff" icon="ticket-alt" iconType="s"}}
       {{/if}}
-      {{#if (or user.isRanger user.isAlpha)}}
+      {{#if (and (config "MotorpoolPolicyEnable") (or session.user.isRanger session.user.isAlpha))}}
         {{ch-sidebar-link "me.motorpool-policy" title="Motorpool Policy" icon="car" iconType="s"}}
       {{/if}}
     {{/ch-sidebar-group}}

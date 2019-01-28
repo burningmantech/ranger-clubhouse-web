@@ -119,6 +119,7 @@
         <a href="{{config "RadioCheckoutFormUrl"}}" target="_blank" rel="noopener">Rangers Radio Checkout Form</a>
       </dd>
 
+{{#if (config 'MotorpoolPolicyEnable')}}
       <dt>Motorpool Agreement</dt>
       <dd>
         Complete your Ranger Motorpool Policy acknowledgement. Any Ranger operating
@@ -127,6 +128,7 @@
         located here:
         {{#link-to "me.motorpool-policy"}}Motorpool Policy{{/link-to}}
       </dd>
+{{/if}}
 
       <dt>Ranger Policies</dt>
       <dd>Peruse our

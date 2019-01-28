@@ -35,7 +35,7 @@
                         {{#link-to "me.tickets" class="dropdown-item"}}Tickets &amp; Stuff{{/link-to}}
                       {{/if}}
 
-                      {{#if (or session.user.isRanger session.user.isAlpha)}}
+                      {{#if (and (config "MotorpoolPolicyEnable") (or session.user.isRanger session.user.isAlpha))}}
                         {{#link-to "me.motorpool-policy" class="dropdown-item"}}Motorpool Policy{{/link-to}}
                       {{/if}}
                     </div>
