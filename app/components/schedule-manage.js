@@ -133,10 +133,6 @@ export default class ScheduleManageComponent extends Component {
 
   @computed('permission')
   get deniedReason() {
-    if (this.person.isPassProspective) {
-      return "it looks like you were interested in volunteering with us some time ago but your account isn't in our volunteer intake pipeline for this year";
-    }
-
     const permission = this.permission;
     const reasonIndex = (!permission.manual_review_passed ? 4 : 0)
                       + (!permission.callsign_approved ? 2 : 0)

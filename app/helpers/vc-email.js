@@ -1,0 +1,10 @@
+import { helper } from '@ember/component/helper';
+import { config } from 'clubhouse/utils/config';
+import { htmlSafe } from '@ember/string';
+
+export function vcEmail() {
+  const email = config('VCEmail');
+  return htmlSafe(`<a href="mailto:${email}">${email}</a>`);
+}
+
+export default helper(vcEmail);

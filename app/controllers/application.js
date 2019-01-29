@@ -3,6 +3,7 @@ import { action, computed } from '@ember-decorators/object';
 import EmberObject from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import { debounce, run } from '@ember/runloop';
+import ENV from 'clubhouse/config/environment';
 import RSVP from 'rsvp';
 
 import $ from 'jquery';
@@ -227,6 +228,11 @@ export default class ApplicationController extends Controller {
     const arrayToSentence = (a, conjunction) => [a.slice(0, -1).join(', '), a.pop()].filter(w => w !== '').join(` ${conjunction} `);
 
     return `Enter a ${arrayToSentence(fields, 'or')} to search`;
+  }
+
+  @computed('ENV')
+  get applicationVersion() {
+    return ENV.APP.version;
   }
 
 }

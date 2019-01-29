@@ -26,7 +26,6 @@ Router.map(function() {
   this.route('reset-password');
   this.route('me', function() {
     this.route('overview', { path: '/' });
-    this.route('ranger-info');
     this.route('personal-info');
     this.route('emergency-contact');
     this.route('password');
@@ -47,6 +46,7 @@ Router.map(function() {
       this.route('missing');
       this.route('confirm');
     });
+    this.route('event-info');
   });
 
   this.route('search', function() {

@@ -36,7 +36,13 @@
               <span class="text-danger">NO</span>
             {{/if}}
           </td>
-          <td>{{training.date}}</td>
+          <td>
+            {{#if training.date}}
+              {{mdy-format training.date}}
+            {{else}}
+              -
+            {{/if}}
+          </td>
           <td>{{training.location}}</td>
         </tr>
     {{/each}}

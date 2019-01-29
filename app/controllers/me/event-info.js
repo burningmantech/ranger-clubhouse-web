@@ -14,6 +14,11 @@ export default class MeRangerInfoShowController extends Controller {
     return this.yearInfo.trainings.filter((training) => training.position_id != 2);
   }
 
+  @computed('year')
+  get isCurrentYear() {
+    return (new Date()).getFullYear() == this.year;
+  }
+
   @action
   changeYear(year) {
     this.set('year', year);

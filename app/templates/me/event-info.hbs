@@ -1,0 +1,133 @@
+<h1>{{year}} Event Info</h1>
+
+
+{{#if (or person.isActive person.isAlpha)}}
+  This page contains information about your training and various bits (meals, showers, radios, vehicles, etc.)
+  related to rangering on the playa.
+{{else}}
+  This page contains information about your training. If you were to become a
+  Black Rock Ranger, this page would contain additional information related to
+  rangering on the playa.
+{{/if}}
+
+<p class="h3 mt-4">{{fa-icon "graduation-cap"}} Training</p>
+
+{{#if (and dirtTraining (not-eq dirtTraining.status "no-shift"))}}
+  {{#if (eq dirtTraining.status "pending")}}
+    Signed up for training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}.
+  {{else if (eq dirtTraining.status "pass")}}
+    Passed training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}
+    {{#if person.isAlpha}}
+      <br>
+      You still need to pass your Alpha shift on playa in order to become a Ranger.
+    {{/if}}
+  {{else if (eq dirtTraining.status "fail")}}
+    Did not pass training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}
+  {{else if (eq dirtTraining.status "no-shift")}}
+  {{else}}
+    Uh oh, I did not understand the status [{{dirtTraining.status}}]
+  {{/if}}
+{{else}}
+  No training signups were found for {{year}}.
+  {{#if isCurrentYear}}
+    {{#if person.isActive}}
+      You will need to sign up for and pass training before being allowed to sign in for your shifts.
+    {{else if person.isProspective}}
+      You will need to sign up for and pass a training session before becoming an Alpha.
+    {{/if}}
+  {{/if}}
+{{/if}}
+
+{{#if artTrainings}}
+  <p class="h3 mt-4">{{fa-icon "university"}} Advanced Ranger Training (ART)</p>
+  {{pluralize artTrainings.length "position"}} requires ART Training. While
+  you may sign up for an ART shift at anytime, you will not be allowed to work
+  an ART shift unless you have passed ART training.
+  <div class="table-responsive mt-2">
+    <table class="table table-sm table-striped">
+      <thead class="">
+        <tr>
+          <th>Position</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Location</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each artTrainings as |training|}}
+          <tr>
+            <td>{{training.position_title}}</td>
+            <td>
+              {{#if (eq training.status "pass")}}
+                <span class="text-success">PASSED</span>
+              {{else if (eq training.status "pending")}}
+                Session has not started
+              {{else if (eq training.status "no-shift")}}
+                <span class="text-danger">Not signed up for ART training</span>
+              {{else}}
+                <span class="text-danger">Not Passed</span>
+              {{/if}}
+            </td>
+            <td>
+              {{#if training.date}}
+                {{mdy-format training.date}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            <td>{{training.location}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+{{/if}}
+
+{{#if (or person.isActive person.isAlpha)}}
+  <p class="h3 mt-4">{{fa-icon "utensils"}} Meals</p>
+
+  {{meal-info yearInfo.meals}}
+
+  <p class="h3 mt-4">{{fa-icon "shower"}} Showers</p>
+  {{#if yearInfo.showers}}
+    {{badge "secondary" "Wet Spot"}} Your BMID will allow you to take showers at the Wet Spot.
+  {{else}}
+    {{badge "secondary" "Shower Pogs"}} For every 40 hours you work on playa, you can get a shower pog from HQ, good for one shower at the Wet Spot.
+  {{/if}}
+
+
+  <p class="h3 mt-4">{{fa-icon "broadcast-tower"}} Radios</p>
+  {{#if yearInfo.radio_eligible}}
+    {{badge "success" "Event Radio"}}
+    {{#if (eq yearInfo.radio_max 1)}}
+      You may check out an Event radio for the duraiton of the event.
+    {{else}}
+      You may check out up to {{yearInfo.radio_max}} Event radios for the duraiton of the event.
+    {{/if}}
+  {{else}}
+    {{badge "success" "Shift Radio"}} You will need to check out a radio each time you show up to Ranger HQ for shift (and check it in at the end of your shift!).
+  {{/if}}
+
+  <p class="h3 mt-4">{{fa-icon "car"}} Motorpool</p>
+  {{#if person.vehicle_blacklisted}}
+    {{badge "danger" "Blacklisted"}} We're sorry, but you cannot drive gators, cars, or trucks on playa for Ranger business.
+  {{else}}
+    {{#if person.vehicle_paperwork}}
+      {{badge "success" "Authorized"}} You are authorized to drive golf carts &amp; gators (UTVs) on playa for Ranger business
+    {{else}}
+      {{badge "warning" "Not Authorized"}} You are NOT authorized to drive golf carts &amp; gators (UTVs) on the playa for Ranger business. You can fix this by agreeing to the
+      {{#link-to "me.motorpool-policy"}}Motorpool Policy{{/link-to}}.
+    {{/if}}
+
+    <p class="h3 mt-4">{{fa-icon "car-crash"}} Organization Vehicle Insurance</p>
+    {{#if person.vehicle_insurance_paperwork}}
+      {{badge "success" "Authorized" }} You are authorized to drive cars and
+      trucks (including your own personal vehicle) on playa for Ranger business.
+    {{else}}
+      {{badge "warning" "Not Authorized" }} You are NOT authorized to drive cars
+      and trucks (including your own personal vehicle) on playa for Ranger
+      business. If you think you need this to do your job on playa, please
+      contact your manager or team lead.
+    {{/if}}
+  {{/if}}
+{{/if}}

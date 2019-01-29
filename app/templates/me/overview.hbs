@@ -31,7 +31,7 @@
     {{/ch-alert}}
   {{/if}}
 
-  {{#unless (or person.isAuditor person.isNonRanger)}}
+  {{#unless person.isAuditor}}
     {{#if photo}}
       {{#if (eq photo.photo_status "missing")}}
         {{me/needs-photo person=person photo=photo}}
@@ -53,7 +53,17 @@
     {{person-photo photo=photo}}
   {{/unless}}
 
-  <p>Thank for stopping by. There are a few things to do here:</p>
+  {{#if person.isRanger}}
+    <div class="mt-1 mb-1">
+      {{#if (lte person.years.length 1)}}
+        Hello Shiny Penny! Congratulations on becoming a Ranger.
+      {{else}}
+        Hello {{#if person.vintage}}Vintage{{/if}} Ranger! You have been active for {{person.years.length}} years.
+      {{/if}}
+    </div>
+  {{/if}}
+
+  <div class="mt-1 mb-2">Thank for stopping by. There are a few things to do here:</div>
 
   <dl>
     <dt>Verify Your Personal Info</dt>
@@ -119,16 +129,16 @@
         <a href="{{config "RadioCheckoutFormUrl"}}" target="_blank" rel="noopener">Rangers Radio Checkout Form</a>
       </dd>
 
-{{#if (config 'MotorpoolPolicyEnable')}}
-      <dt>Motorpool Agreement</dt>
-      <dd>
-        Complete your Ranger Motorpool Policy acknowledgement. Any Ranger operating
-        any type of vehicle for Ranger business at Burning Man must agree to the
-        Ranger Motorpool Policy by reading and filling out the acknowledgment form
-        located here:
-        {{#link-to "me.motorpool-policy"}}Motorpool Policy{{/link-to}}
-      </dd>
-{{/if}}
+      {{#if (config 'MotorpoolPolicyEnable')}}
+        <dt>Motorpool Agreement</dt>
+        <dd>
+          Complete your Ranger Motorpool Policy acknowledgement. Any Ranger operating
+          any type of vehicle for Ranger business at Burning Man must agree to the
+          Ranger Motorpool Policy by reading and filling out the acknowledgment form
+          located here:
+          {{#link-to "me.motorpool-policy"}}Motorpool Policy{{/link-to}}
+        </dd>
+      {{/if}}
 
       <dt>Ranger Policies</dt>
       <dd>Peruse our

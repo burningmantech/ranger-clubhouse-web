@@ -1,5 +1,18 @@
 <h1>Edit Personal Information</h1>
+
 {{#ch-form "person" person validator=personInfoValidations onSubmit=(action "onSubmit") onCancel=(action "onCancel") as |f|}}
+  <div class="form-row mb-2">
+    <div class="col-12">
+      Your account status is {{person.status}}.
+      {{#if (and person.isActive person.years)}}
+        You have rangered for {{pluralize person.years.length "year"}}:
+        {{#each person.years as |year idx|}}
+          {{year}}
+        {{/each}}
+      {{/if}}
+    </div>
+  </div>
+
   <fieldset>
     <legend>General Information</legend>
     <div class="form-row">
