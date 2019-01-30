@@ -63,14 +63,14 @@ export default function() {
     if (!person) {
       return new Response(401,
         { 'Content-Type': 'application/json' },
-        { error: 'The email and/or password is incorrect.' }
+        { status: 'invalid-credentials' }
       );
     }
 
     if (!person.user_authorized) {
       return new Response(401,
         { 'Content-Type': 'application/json' },
-        { error: 'The account has been disabled.' }
+        { status: 'account-disabled' }
       )
     }
 
