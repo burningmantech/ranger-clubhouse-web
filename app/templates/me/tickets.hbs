@@ -1,10 +1,9 @@
 <h1>My Tickets &amp; Stuff</h1>
 {{#if (not ticketingInfo.is_enabled)}}
-  {{#ch-alert "danger"}}
-    <h2>My Tickets And Stuff page is currently disabled</h2>
-
-    Sorry, the page is disabled for the moment. Please check again later.
-  {{/ch-alert}}
+  {{#ch-box "Ticketing page is temporarily disabled." type="warning"}}
+    Sorry, this page is disabled for the moment. Please check again later.
+    Don't worry we haven't lost your ticketing information.
+  {{/ch-box}}
 {{else if (and person.isNotRanger (not ticketingInfo.is_enabled_for_pnv)) }}
     Sorry, access to any Work Access Passes is currently disabled. Please check again later.
 {{else}}

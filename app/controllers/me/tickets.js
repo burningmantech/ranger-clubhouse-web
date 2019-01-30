@@ -84,7 +84,7 @@ export default class MeTicketsController extends Controller {
 
   @computed('ticketingInfo')
   get ticketingStatus() {
-    return this.ticketing_status;
+    return this.ticketingInfo.ticketing_status;
   }
 
   // Save the choice for a ticket type
