@@ -4104,16 +4104,6 @@ ember-cli-htmlbars@^1.1.1:
     json-stable-stringify "^1.0.0"
     strip-bom "^2.0.0"
 
-ember-cli-htmlbars@^2.0.1:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/ember-cli-htmlbars/-/ember-cli-htmlbars-2.0.5.tgz#b5a105429a6bce4f7c9c97b667e3b8926e31397f"
-  integrity sha512-3f3PAxdnQ/fhQa8XP/3z4RLRgLHxV8j4Ln75aHbRdemOCjBa048KxL9l+acRLhCulbGQCMnLiIUIC89PAzLrcA==
-  dependencies:
-    broccoli-persistent-filter "^1.4.3"
-    hash-for-dep "^1.2.3"
-    json-stable-stringify "^1.0.0"
-    strip-bom "^3.0.0"
-
 ember-cli-htmlbars@^3.0.0, ember-cli-htmlbars@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/ember-cli-htmlbars/-/ember-cli-htmlbars-3.0.1.tgz#01e21f0fd05e0a6489154f26614b1041769e3e58"
@@ -4637,16 +4627,7 @@ ember-moment@^7.8.0:
     ember-getowner-polyfill "^2.0.1"
     ember-macro-helpers "^1.0.0"
 
-ember-power-select-typeahead@^0.7.2:
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/ember-power-select-typeahead/-/ember-power-select-typeahead-0.7.2.tgz#e1937819d214a30e0832f2db77a06a2eb4e2db3c"
-  integrity sha512-PUk5F+0ZDuJId95x4uoALtl30n1niA/fWMC/x3oB68USlSLWpzfwc4SLbevGMnklq1eJ223f8W6obMi1f47gyg==
-  dependencies:
-    ember-cli-babel "^6.12.0"
-    ember-cli-htmlbars "^2.0.1"
-    ember-power-select "^2.0.0-beta.5"
-
-ember-power-select@^2.0.0-beta.5, ember-power-select@^2.2.1:
+ember-power-select@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ember-power-select/-/ember-power-select-2.2.1.tgz#8adea6c5c5e9dea0cd64519171b7bf19857b1db6"
   integrity sha512-v8aQZOlXYzBPpB0gpcpJS3VhQOUznmO8se3VrCp/rqOzGo56jfi5UX6GkE0VhFk224Wtzqq4S+YCmmqEb8A/KQ==

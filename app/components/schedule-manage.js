@@ -275,7 +275,6 @@ export default class ScheduleManageComponent extends Component {
 
   @action
   setFilterDay(value) {
-    console.log(`value ${value}`);
     this.set('filterDay', value);
   }
 }

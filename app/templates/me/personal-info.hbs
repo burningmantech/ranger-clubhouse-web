@@ -6,7 +6,7 @@
       Your account status is {{person.status}}.
       {{#if (and person.isActive person.years)}}
         You have rangered for {{pluralize person.years.length "year"}}:
-        {{#each person.years as |year idx|}}
+        {{#each person.years as |year|}}
           {{year}}
         {{/each}}
       {{/if}}

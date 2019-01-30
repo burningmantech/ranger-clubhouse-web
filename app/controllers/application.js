@@ -1,8 +1,16 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember-decorators/object';
+import {
+  action,
+  computed
+} from '@ember-decorators/object';
 import EmberObject from '@ember/object';
-import { Role } from 'clubhouse/constants/roles';
-import { debounce, run } from '@ember/runloop';
+import {
+  Role
+} from 'clubhouse/constants/roles';
+import {
+  debounce,
+  run
+} from '@ember/runloop';
 import ENV from 'clubhouse/config/environment';
 import RSVP from 'rsvp';
 
@@ -38,7 +46,7 @@ export default class ApplicationController extends Controller {
 
       event.preventDefault(); // eslint-disable-line ember/jquery-ember-run
 
-      run( () => {
+      run(() => {
         $('#person-search-query input').focus();
       });
 
@@ -93,6 +101,35 @@ export default class ApplicationController extends Controller {
     return this.session.user.hasRole([Role.ADMIN, Role.VIEW_PII, Role.VIEW_EMAIL]);
   }
 
+  /*
+   * Transition to the selected person. Clear the query and results, blur
+   * the input field
+   */
+
+  _showPerson(person) {
+    this.set('showSearchOptions', false);
+    this.set('query', '');
+    this.transitionToRoute('person.index', person.id);
+    $('#person-search-query input').blur();
+  }
+
+  /*
+   * Show the person when the user clicks on an option.
+   */
+
+  @action
+  searchChangeAction(person) {
+    if (person) {
+      this._showPerson(person);
+    }
+  }
+
+  /*
+   * As the user types, searchAction will be called. Queue up
+   * the search once every SEARCH_RATE_MS milliseconds.
+   *
+   */
+
   @action
   searchAction(query) {
     return new RSVP.Promise((resolve, reject) => {
@@ -100,25 +137,31 @@ export default class ApplicationController extends Controller {
     });
   }
 
-  _showPerson(person) {
-    if (!person) {
-      return;
-    }
+  /*
+   * Search for the person
+   */
 
-    this.set('showSearchBox', false);
-    this.set('query', '');
-    this.transitionToRoute('person.index', person.id);
-    $('#person-search-query input').blur();
-  }
-
-  // Build up a request and fire off a search
   _performSearch(callsign, resolve, reject) {
     const query = callsign.trim();
     const form = this.searchForm;
 
-    // bail out if query is empty, or if doing search by record id
-    if (query == '' || query.startsWith('+') || query.length < 2) {
+    // query has to be two characters or more..
+    if (query.length < 2) {
       return reject();
+    }
+
+    // Person id lookup
+    if (query.startsWith('+')) {
+      const id = query.substring(1, query.length);
+      const results = [ {
+        callsign: `Person #${id}`,
+        id,
+        email: '-',
+        first_name: '-',
+        last_name: '-'
+      }];
+      this.set('searchResults', results);
+      return resolve(results);
     }
 
     const params = {
@@ -156,51 +199,52 @@ export default class ApplicationController extends Controller {
     }
 
     // And fire away!
-    this.set('isSubmitting', true);
-    this.ajax.request('person', {
-        data: params
-      }).then((results) => {
-        return resolve(results.person);
-      }).catch((response) => {
-        this.house.handleErrorResponse(response)
-        return reject();
-      })
-      .finally(() => this.set('isSubmitting', false));
+    return this.ajax.request('person', {
+      data: params
+    }).then((results) => {
+      this.set('searchResults', results.person);
+      return resolve(results.person);
+    }).catch((response) => {
+      this.house.handleErrorResponse(response)
+      return reject();
+    });
   }
 
-  // When the user hits enter, see if one and only one result
-  // was found, and route over to that person
+  /*
+   * When the user hits enter, see if one and only one result
+   * was found, and route over to that person
+   */
+
   @action
   submit() {
-    const query = this.searchForm.get('query');
-
-    if (query.startsWith('+')) {
-      this.set('showSearchBox', false);
-      this.transitionToRoute('person.index', query.slice(1));
-      return;
-    }
-
-    const results = this.searchResults;
+/*    const results = this.searchResults;
     if (!results || results.length != 1) {
       return;
     }
 
-    this._showPerson(results.firstObject);
+    this._showPerson(results.firstObject);*/
+  }
+
+  @action
+  searchKeydownAction(powerSelect, event) {
+    if (event.keyCode === 13 && this.searchResults && this.searchResults.length == 1) {
+      event.preventDefault();
+      powerSelect.actions.choose(this.searchResults.firstObject);
+      return false;
+    }
+
+    return true;
   }
 
   @action
   searchFocusAction() {
-    this.set('showSearchBox', true);
+    this.set('searchResults', null);
+    this.set('showSearchOptions', true);
   }
 
   @action
   hideSearchBoxAction() {
-    this.set('showSearchBox', false);
-  }
-
-  @action
-  searchChangeAction(person) {
-    this._showPerson(person);
+    this.set('showSearchOptions', false);
   }
 
   @computed('searchForm.{name,callsign,email,formerly_known_as}')
@@ -235,4 +279,9 @@ export default class ApplicationController extends Controller {
     return ENV.APP.version;
   }
 
+  @action
+  defaultHighlightedAction() {
+    // prevent the first object from automatically being selected.
+    return undefined;
+  }
 }

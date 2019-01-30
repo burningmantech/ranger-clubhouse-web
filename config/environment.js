@@ -19,6 +19,7 @@ module.exports = function(environment) {
     },
 
     APP: {
+      buildTimestamp: (new Date()).toString(),
     },
 
     'ember-simple-auth': {

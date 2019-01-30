@@ -281,17 +281,20 @@
 
       {{#ch-form "person-search" searchForm formClass="col mb-2 ml-2 mr-2" changeSet=false onSubmit=(action "submit") as |f|}}
         {{#power-select-typeahead
-                        search=(action "searchAction")
-                        onchange=(action "searchChangeAction")
-                        renderInPlace=true
-                        noMatchesMessage="No results found"
-                        placeholder=searchPlaceholder
+                        search=(action searchAction)
+                        onchange=(action searchChangeAction)
                         onfocus=(action searchFocusAction)
+                        onkeydown=(action searchKeydownAction)
+                        renderInPlace=true
+                        placeholder=searchPlaceholder
                         triggerId="person-search-query"
+                        defaultHighlighted=(action defaultHighlightedAction)
+                        loadingMessage="Searching . . ."
+                        noMatchesMessage="No results found"
                         as |person| }}
           <strong>{{person.callsign}}</strong> &lt;{{person.first_name}} {{person.last_name}}, {{person.status}}&gt;
         {{/power-select-typeahead}}
-        {{#if showSearchBox}}
+        {{#if showSearchOptions}}
           <fieldset class="bg-white">
             <div class="form-row">
               <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Search By:</label>
@@ -314,7 +317,7 @@
                 Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.
               </div>
               <div class="col-sm-12 col-md-3 ml-auto">
-                <button class="btn btn-sm btn-secondary" {{action "hideSearchBoxAction"}}>Hide Options</button>
+                <button type="button" class="btn btn-sm btn-secondary" {{action "hideSearchBoxAction"}}>Hide Options</button>
               </div>
             </div>
             <div class="form-row">
