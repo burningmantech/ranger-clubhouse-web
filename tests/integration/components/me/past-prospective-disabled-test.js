@@ -10,6 +10,6 @@ module('Integration | Component | me/past prospective disabled', function(hooks)
     this.set('person', { callsign: 'prospectivus'});
 
     await render(hbs`{{me/past-prospective-disabled person=person}}`);
-    assert.dom('div.card').hasText(/Account Is Inactive/);
+    assert.dom('div.card').hasText(/Account Is Disabled/);
   });
 });

@@ -33,7 +33,7 @@ module('Acceptance | login', function(hooks) {
     // Should stay on the login page
     assert.equal(currentURL(), '/login', 'stay on the login page');
     // And there should be a flash modal with login error
-    assert.dom('#toast-container', document).includesText('The email and/or password is incorrect');
+    assert.dom('.alert-danger', document).includesText('The email and/or password is incorrect');
   });
 
   test('successful logout', async function(assert) {
@@ -51,6 +51,6 @@ module('Acceptance | login', function(hooks) {
     // Should stay on the login page
     assert.equal(currentURL(), '/login', 'stay on the login page');
     // And there should be a flash modal with login error
-    assert.dom('#toast-container', document).includesText('The account has been disabled');
+    assert.dom('.alert-danger', document).includesText('The account has been disabled');
   });
 });

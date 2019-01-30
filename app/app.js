@@ -40,7 +40,9 @@ RSVP.on('error', function(error) {
           name: error.name,
           message: error.message,
           stack: error.stack
-        }
+        },
+        build_timestamp: config.APP.buildTimestamp,
+        version: config.APP.version,
       }));
 
       try {
