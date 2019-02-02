@@ -14,7 +14,7 @@ export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
     const scheduleParams = {
       person_id,
       year,
-      signups: 1, // *sigh* laravel only take 1 or 0 for booleans as of 5.6
+      shifts_available: 1,
     };
 
     return RSVP.hash({

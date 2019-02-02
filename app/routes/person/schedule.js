@@ -15,7 +15,7 @@ export default class PersonScheduleRoute extends Route {
     const scheduleParams = {
       person_id,
       year,
-      signups: 1, // *sigh* laravel only take 1 or 0 for booleans as of 5.6
+      shifts_available: 1,
     };
 
     const records = {
