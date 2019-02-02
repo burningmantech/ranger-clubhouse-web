@@ -166,6 +166,9 @@ export default class TrainingSlotController extends Controller {
   _handleJoinSessionError(result, person) {
     const modal = this.modal;
     const slot = this.slot;
+
+    slot.set('slot_signed_up', result.signed_up);
+
     switch (result.status) {
     case 'full':
       modal.info('The shift is full.', `The shift is at capacity with ${slot.slot_signed_up} indivduals signed up.`);

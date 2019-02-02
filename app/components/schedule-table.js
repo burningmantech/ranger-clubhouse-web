@@ -94,8 +94,9 @@ export default class ScheduleTableComponent extends Component {
 
         this.ajax.request(`person/${personId}/schedule/${slotId}`, {
           method: 'DELETE',
-        }).then(() => {
+        }).then((result) => {
           slot.set('person_assigned', false);
+          slot.set('slot_signed_up', result.signed_up);
         }).catch((response) => {
           this.house.handleErrorResponse(response);
         })
