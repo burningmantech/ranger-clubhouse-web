@@ -279,6 +279,11 @@ export default class ApplicationController extends Controller {
     return ENV.APP.version;
   }
 
+  @computed('ENV')
+  get buildTimestamp() {
+    return ENV.APP.buildTimestamp;
+  }
+
   @action
   defaultHighlightedAction() {
     // prevent the first object from automatically being selected.

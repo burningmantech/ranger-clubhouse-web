@@ -1,6 +1,11 @@
 /* eslint-env node */
 'use strict';
 
+function formatBuildTimestamp() {
+  const date = new Date();
+  return ""+date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes();
+}
+
 module.exports = function(environment) {
   let ENV = {
     modulePrefix: 'clubhouse',
@@ -19,7 +24,7 @@ module.exports = function(environment) {
     },
 
     APP: {
-      buildTimestamp: (new Date()).toString(),
+      buildTimestamp: formatBuildTimestamp(),
     },
 
     'ember-simple-auth': {

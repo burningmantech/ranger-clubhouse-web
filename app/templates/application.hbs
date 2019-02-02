@@ -266,6 +266,13 @@
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">{{session.user.callsign}}</a>
             <div class="dropdown-menu">
               <a href="#" class="dropdown-item" {{action "logout"}}>Logout</a>
+              <div class="dropdown-divider"></div>
+              <p class="p-4">
+                Build:<br>
+                {{buildTimestamp}}<br>
+                Tag:
+                <br>{{applicationVersion}}
+              </p>
             </div>
           </li>
         </ul>
@@ -327,6 +334,7 @@
             </div>
           </fieldset>
         {{/if}}
+        <small>Build: {{buildTimestamp}} Tag {{applicationVersion}}</small>
       {{/ch-form}}
     </div>
   {{/if}}
