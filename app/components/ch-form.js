@@ -116,7 +116,7 @@ export default class ChFormComponent extends Component {
 
     // Remove the event handler for the record update
     if (this.watchingModelEvent) {
-      this.model.off(this.watchingModelEvent, this._setModelUpdated);
+      this.originalModel.off(this.watchingModelEvent, this._setModelUpdated);
     }
 
     if (!this.modalBox) {
