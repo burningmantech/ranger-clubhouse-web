@@ -38,6 +38,7 @@ export default class ChFormComponent extends Component {
 
   // Was the original backing model updated?
   modelUpdated = false;
+  watchingModel = false;
 
   @computed('originalModel', 'modelUpdated')
   get model() {
@@ -68,9 +69,9 @@ export default class ChFormComponent extends Component {
 
       if (original instanceof DS.Model) {
         // Watch for the original model being updated.
-        original.on((original.isNew ? 'didCreate' : 'didUpdate'), () => {
-          this.set('modelUpdated', true);
-        });
+
+        this.set('watchingModelEvent', (original.isNew ? 'didCreate' : 'didUpdate'));
+        original.on(this.watchingModelEvent, this._setModelUpdated);
       }
     } else {
       model = original;
@@ -79,6 +80,10 @@ export default class ChFormComponent extends Component {
 
     this.set('modelUpdated', false);
     return model;
+  }
+
+  _setModelUpdated() {
+      this.set('modelUpdated', true);
   }
 
   didInsertElement() {
@@ -108,6 +113,11 @@ export default class ChFormComponent extends Component {
 
   willDestroyElement() {
     super.willDestroyElement(...arguments);
+
+    // Remove the event handler for the record update
+    if (this.watchingModelEvent) {
+      this.model.off(this.watchingModelEvent, this._setModelUpdated);
+    }
 
     if (!this.modalBox) {
       return;
