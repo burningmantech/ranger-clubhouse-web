@@ -3,7 +3,6 @@ import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
 import { action, computed } from '@ember-decorators/object';
 import { tagName } from '@ember-decorators/component';
-
 import { typeOf } from '@ember/utils';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
@@ -13,7 +12,7 @@ import $ from 'jquery';
 
 @tagName('')
 export default class ChFormComponent extends Component {
-  static positionalParams = [ 'formId', 'originalModel' ];
+  static positionalParams = ['formId', 'originalModel'];
 
   @argument(optional('string')) formId;
   @argument(optional('object')) validator;
@@ -37,10 +36,9 @@ export default class ChFormComponent extends Component {
   @argument(optional('string')) formClass;
 
   // Was the original backing model updated?
-  modelUpdated = false;
   watchingModel = false;
 
-  @computed('originalModel', 'modelUpdated')
+  @computed('originalModel')
   get model() {
     let model;
     const original = this.originalModel;
@@ -71,19 +69,18 @@ export default class ChFormComponent extends Component {
         // Watch for the original model being updated.
 
         this.set('watchingModelEvent', (original.isNew ? 'didCreate' : 'didUpdate'));
-        original.on(this.watchingModelEvent, this._setModelUpdated);
+        original.on(this.watchingModelEvent, this, this._modelUpdated);
       }
     } else {
       model = original;
       model.set('isValid', true);
     }
 
-    this.set('modelUpdated', false);
     return model;
   }
 
-  _setModelUpdated() {
-      this.set('modelUpdated', true);
+  _modelUpdated() {
+    this.notifyPropertyChange('model'); // Recompute model
   }
 
   didInsertElement() {
@@ -97,15 +94,15 @@ export default class ChFormComponent extends Component {
 
     dialog.modal({ keyboard: false });
     dialog.modal().on('show.bs.modal', () => {
-      return this.onShow
-        ? this.onShow()
-        : null;
+      return this.onShow ?
+        this.onShow() :
+        null;
     });
 
     dialog.modal().on('hide.bs.modal', () => {
-      return this.onClose
-        ? this.onClose()
-        : null;
+      return this.onClose ?
+        this.onClose() :
+        null;
     });
 
     $('[autofocus]').focus();
@@ -116,7 +113,7 @@ export default class ChFormComponent extends Component {
 
     // Remove the event handler for the record update
     if (this.watchingModelEvent) {
-      this.originalModel.off(this.watchingModelEvent, this._setModelUpdated);
+      this.originalModel.off(this.watchingModelEvent, this, this._modelUpdated);
     }
 
     if (!this.modalBox) {
@@ -143,7 +140,7 @@ export default class ChFormComponent extends Component {
         }
       });
     } else if (submitAction) {
-        return submitAction(model, undefined, original);
+      return submitAction(model, undefined, original);
     }
   }
 
@@ -154,24 +151,24 @@ export default class ChFormComponent extends Component {
     const fieldChange = field.onChange;
     const formChange = this.onFormChange;
 
-/*    if (model.validate) {
-      model.validate().then(() => {
-          if (fieldChange) {
-            fieldChange(field, model, this.model.isValid, original);
-          }
+    /*    if (model.validate) {
+          model.validate().then(() => {
+              if (fieldChange) {
+                fieldChange(field, model, this.model.isValid, original);
+              }
 
-          if (formChange) {
-            formChange(field, model, this.model.isValid, original);
-          }
-      });
-    } else {*/
-      if (fieldChange) {
-        fieldChange(field, model, this.model.isValid, original);
-      }
+              if (formChange) {
+                formChange(field, model, this.model.isValid, original);
+              }
+          });
+        } else {*/
+    if (fieldChange) {
+      fieldChange(field, model, this.model.isValid, original);
+    }
 
-      if (formChange) {
-        formChange(field, model, this.model.isValid, original);
-      }
+    if (formChange) {
+      formChange(field, model, this.model.isValid, original);
+    }
     /*}*/
   }
 
