@@ -72,7 +72,12 @@ export default class PersonIndexController extends Controller {
 
   @computed
   get isAdminMentorOrVC() {
-    return this.session.user.hasRole([ Role.ADMIN, Role.TRAINER, Role.VC ]);
+    return this.session.user.hasRole([ Role.ADMIN, Role.MENTOR, Role.VC ]);
+  }
+
+  @computed
+  get isAdminOrVC() {
+    return this.session.user.hasRole([ Role.ADMIN, Role.VC ]);
   }
 
   @computed

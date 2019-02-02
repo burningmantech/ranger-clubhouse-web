@@ -29,7 +29,7 @@
         <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Contact</label>
         <div class="mt-2 col-auto">
           {{mail-to person.email}}
-          <div>primary phone {{phone-link person.home_phone}}</div>
+          <div>primary phone {{#if person.home_phone}}{{phone-link person.home_phone}}{{else}}n/a{{/if}}</div>
           {{#if person.alt_phone}}
             <div>alt phone {{phone-link person.alt_phone}}</div>
           {{/if}}
@@ -41,9 +41,15 @@
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign</label>
       {{#if isAdminMentorOrVC}}
         {{f.input "callsign" type="text" size=35 maxlength=100 wrapClass="col-auto"}}
+        {{#if isAdminOrVC}}
+          {{f.input "vintage" label="Vintage" type="checkbox" value=1 wrapClass="mt-1 col-sm-12 col-md-auto"}}
+        {{else}}
+          {{#if person.vintage}}<div class="mt-2 col-auto">(vintage)</div>{{/if}}
+        {{/if}}
       {{else}}
         <div class="mt-2 col-auto">
           {{person.callsign}}
+          {{#if person.vintage}} (vintage) {{/if}}
         </div>
       {{/if}}
     </div>
