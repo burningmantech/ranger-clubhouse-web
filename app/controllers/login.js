@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import LoginValidations from 'clubhouse/validations/login';
 import ENV from 'clubhouse/config/environment';
 import { action } from '@ember-decorators/object';
+import setCookie from 'clubhouse/utils/set-cookie';
 
 export default class LoginController extends Controller {
   loginValidations = LoginValidations;
@@ -27,11 +28,13 @@ export default class LoginController extends Controller {
   }
 
   async classicLogin(credentials) {
-    //
-    // Attempt to authorize with Classic Clubhouse before trying for
-    // Clubhouse 2.0
-    //
+    /*
+     * Attempt to authorize with Classic Clubhouse before trying for
+     * Clubhouse 2.0
+     */
 
+    // Invalidate the existing Classic clubhouse cookie
+    setCookie('PHPSESSID', 'nothing', 0);
     await this.ajax.post('/?DMSc=security&DMSm=login&json=1', {
         headers: {
           // Avoid CORS pre-flight
@@ -42,26 +45,17 @@ export default class LoginController extends Controller {
           email: credentials.identification,
           password: credentials.password
         },
-      }).then((response) => {
+      }).then((result) => {
         // So far, so good. set the clubhouse classic PHP session cookie,
         // and then try for Clubhouse 2.0 authentication.
-        const session = response.session;
-        this.setCookie(session.name, session.id);
+        const session = result.session;
+        setCookie(session.name, session.id);
+        this.session.set('classicSession', session);
       })
       .catch((response) => {
         this.house.handleErrorResponse(response);
         this.toast.error('There was a problem logging into the Classic Clubhouse. Some features may not be available.');
       });
-  }
-
-  setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-      var date = new Date();
-      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-      expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/";
   }
 
   @action
