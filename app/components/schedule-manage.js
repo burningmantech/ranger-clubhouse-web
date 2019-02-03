@@ -136,7 +136,7 @@ export default class ScheduleManageComponent extends Component {
     const permission = this.permission;
     const reasonIndex = (!permission.manual_review_passed ? 4 : 0)
                       + (!permission.callsign_approved ? 2 : 0)
-                      + ((permission.photo_approved != 'approved') ? 1 : 0);
+                      + ((permission.photo_status != 'approved') ? 1 : 0);
     return reasons[reasonIndex];
   }
 
@@ -145,7 +145,7 @@ export default class ScheduleManageComponent extends Component {
     const status = result.status;
 
     slot.set('slot_signed_up', result.signed_up);
-  
+
     switch (status) {
       case 'full':
         modal.info('The shift is full.', 'The shift has become full with '+slot.slot_signed_up+' indivduals signed up.');

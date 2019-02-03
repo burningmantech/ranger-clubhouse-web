@@ -1,7 +1,7 @@
 import setCookie from 'clubhouse/utils/set-cookie';
 import { module, test } from 'qunit';
 
-module('Unit | Utility | setCookie', function(hooks) {
+module('Unit | Utility | setCookie', function(/*hooks*/) {
 
   function makeCookieValue() {
     let text = "";
