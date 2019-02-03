@@ -86,23 +86,6 @@ export default class PersonIndexController extends Controller {
     return user.hasRole(Role.MANAGE) && user.hasRole(Role.GRANT_POSITION);
   }
 
-  @computed('person.{callsign_approved,status}')
-  get canChangeApproval() {
-    const person = this.person;
-    const status = person.status;
-
-    /*
-     * Admins, Mentors, and Volunteer Coordinators can approve and edit
-     * callsigns and FKA.  They can also *un*approve callsigns for people
-     * who are alphas or prospectives.  But once you become a Ranger
-     * it takes someone doing a SQL update :-) to unapprove your call.
-     */
-    return (this.isAdminMentorOrVC
-          && (!person.callsign_approved
-             || (status == 'prospective' || status == 'past prospective' || status == 'alpha'))
-           );
-  }
-
   @computed('personPositions')
   get positionIds() {
     return this.personPositions.map((position) => position.id);
@@ -123,11 +106,7 @@ export default class PersonIndexController extends Controller {
     return inGroups(this.personRoles, 2);
   }
 
-  @action
-  savePerson(model, isValid) {
-    if (!isValid)
-      return;
-
+  _savePersonModel(model) {
     const statusChanged = model._changes['status'];
 
     model.save().then(() => {
@@ -152,6 +131,27 @@ export default class PersonIndexController extends Controller {
           .catch((response) => this.house.handleErrorResponse(response));
       }
     }).catch((response) => this.house.handleErrorResponse(response));
+  }
+
+  @action
+  savePersonAction(model, isValid) {
+    if (!isValid)
+      return;
+
+    // check to see if callsign has been disapproved..
+    // (note: callsign_approved might be a string or boolean)
+    if (model._changes['callsign_approved'] && `${model.get('callsign_approved')}` == "false") {
+      // Person is disapproving callsign, confirm that action.
+
+      this.modal.confirm(
+        'Confirm Action',
+        'You are about to disapprove a previously approved callsign. Are you sure you want to do that?',
+        () => { this._savePersonModel(model); },
+        () => { this.toast.warning('The record has not been saved.'); }
+      );
+    } else {
+      this._savePersonModel(model);
+    }
   }
 
   @action

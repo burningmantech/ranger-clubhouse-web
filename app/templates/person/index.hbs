@@ -14,7 +14,7 @@
 {{/if}}
 
 
-{{#ch-form "person" person  onSubmit=(action "savePerson") as |f|}}
+{{#ch-form "person" person  onSubmit=(action "savePersonAction") as |f|}}
 
   {{person-photo photo=photo}}
 
@@ -41,15 +41,9 @@
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign</label>
       {{#if isAdminMentorOrVC}}
         {{f.input "callsign" type="text" size=35 maxlength=100 wrapClass="col-auto"}}
-        {{#if isAdminOrVC}}
-          {{f.input "vintage" label="Vintage" type="checkbox" value=1 wrapClass="mt-1 col-sm-12 col-md-auto"}}
-        {{else}}
-          {{#if person.vintage}}<div class="mt-2 col-auto">(vintage)</div>{{/if}}
-        {{/if}}
       {{else}}
         <div class="mt-2 col-auto">
           {{person.callsign}}
-          {{#if person.vintage}} (vintage) {{/if}}
         </div>
       {{/if}}
     </div>
@@ -67,7 +61,7 @@
 
     <div class="form-group row">
       <label class="ol-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign Approved</label>
-      {{#if canChangeApproval}}
+      {{#if isAdminMentorOrVC}}
         {{f.input "callsign_approved" type="select" wrapClass="col-sm-12 col-md-auto" options=callsignApprovedOptions}}
       {{else}}
         <div class="mt-2 col-sm-12 col-md-auto">
