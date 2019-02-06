@@ -28,13 +28,13 @@ export default class AdminBulkUploadController extends Controller {
       groupName: 'Ticket Actions',
       options: [
         { id: 'tickets', title: 'Create Access Documents' },
-        { id: 'wap', title: 'Set WAP arrival dates' },
+        { id: 'wap', title: 'Update WAP dates' },
       ]
     },
     {
       groupName: 'Other',
       options: [
-        { id: 'eventradio', title: 'Set radio count' }
+        { id: 'eventradio', title: 'Event radio eligibility' }
       ]
     }
   ];

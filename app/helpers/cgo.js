@@ -13,8 +13,14 @@ export function cgo([ controller, method], params) {
   if (params) {
     Object.keys(params).forEach((key) => {
       url += `&${key}=${params[key]}`;
+
     });
   }
+
+  // Tell the Classic Clubhouse it should reload the logged in user, and if requested,
+  // load the target user.
+
+  url += '&fromC2=1';
 
   return url;
 }
