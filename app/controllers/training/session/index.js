@@ -167,7 +167,7 @@ export default class TrainingSlotController extends Controller {
     const modal = this.modal;
     const slot = this.slot;
 
-    slot.set('slot_signed_up', result.signed_up);
+    set(slot, 'slot_signed_up', result.signed_up);
 
     switch (result.status) {
     case 'full':

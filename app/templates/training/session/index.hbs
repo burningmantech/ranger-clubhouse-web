@@ -1,4 +1,10 @@
 <h1>{{year-format slot.begins}} {{training.title}} - {{shift-format slot.begins}} - {{slot.description}}</h1>
+
+{{#unless slot.active}}
+<div class="alert alert-warning">
+  This session has not been activated yet. Sign ups are not permitted at this time.
+</div>
+{{/unless}}
 Signups: {{students.length}} of {{slot.max}}
 
 {{#if (gte students.length slot.max)}}
