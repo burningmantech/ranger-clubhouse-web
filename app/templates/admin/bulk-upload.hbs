@@ -1,0 +1,105 @@
+<h1>Bulk Upload</h1>
+
+{{#if actionResults}}
+
+  <h2>Action Results -
+    {{#if resultsCommitted}}
+      <span class="text-success">SUBMITTED</span>
+    {{else}}
+      Verfication Only
+    {{/if}}
+  </h2>
+
+  <strong>{{pluralize resultSuccesses.length "success" }}</strong>
+  <div class="row">
+    {{#each resultSuccesses as |result|}}
+      <div class="col-sm-6 col-md-3 col-lg-2 m-2">{{person-link person=result}}</div>
+    {{/each}}
+  </div>
+
+  {{#if resultFailures}}
+    <table class="table table-border mt-4">
+      <caption class="table-danger">{{pluralize resultFailures.length "failure"}}</caption>
+      <thead>
+        <tr>
+          <th>Callsign</th>
+          <th>Failure</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each resultFailures as |result|}}
+          <tr>
+            <td class="w-25">
+              {{#if (eq result.status "callsign-not-found")}}
+                {{result.callsign}}
+              {{else}}
+                {{person-link person=result}}
+              {{/if}}
+            </td>
+            <td class="w-70">
+              {{#if (eq result.status "callsign-not-found")}}
+                Callsign not found
+              {{else}}
+                {{result.status}}
+                {{#if result.details}}
+                  : {{result.details}}
+                {{/if}}
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{/if}}
+  <hr>
+{{/if}}
+
+<p>This page allows you to bulk upload a list of Rangers who should have
+  their Ranger vehicle paperwork checked, or their Org vehicle insurance
+  checked, or who should be marked as eligible for an event radio, etc.</p>
+
+<p>Please select which action you want to take, and then enter Ranger
+  callsigns in the big text input area below. Some actions require you to have
+  comma-separated parameters after each Ranger's callsign.</p>
+
+<p>If you don't check the "Really, do the thing" box before clicking
+  "Submit" at the very bottom, the database won't be updated.
+  This is useful as a "dry run" feature to make sure that you don't
+  have typos in your list of callsigns.
+</p>
+<hr>
+<div class="form-group row">
+  <div class="col-auto">
+    <label>Select bulk action:</label>
+    {{ch-form/select
+  name="uploadAction"
+  value=uploadAction
+  options=uploadOptions
+  includeBlank=true
+  onChange=(action (mut uploadAction))
+  controlClass="form-control"
+}}
+  </div>
+</div>
+
+<div class="form-group row">
+  <div class="col-auto">
+    <div class="form-check">
+      {{input type="checkbox" class="form-check-input" id="commit" name="commit" checked=commit}}
+      <label class="form-check-label" for="commit">
+        Really, do the thing
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="form-group row">
+  <div class="col-auto">
+    <label>Enter callsigns (one per line) below:</label>
+    {{textarea class="form-control" value=this.records rows=10 cols=80}}
+  </div>
+</div>
+
+<div class="form-group row">
+  <button type="button" class="btn btn-primary" disabled={{or isSubmitting disableSubmit}} {{action submitAction}}>{{#if isSubmitting}}Submitting{{else}}{{if commit "Submit" "Verify Actions"}}{{/if}}</button>
+</div>

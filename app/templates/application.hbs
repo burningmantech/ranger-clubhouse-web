@@ -149,7 +149,7 @@
                         <a href="{{cgo "salesforce" "import"}}" class="dropdown-item">Salesforce Import</a>
                         <a href="{{cgo "conversion" "convert"}}" class="dropdown-item">Database Conversions</a>
                         <a href="{{cgo "reminders" "index"}}" class="dropdown-item">Reminder Emails</a>
-                        <a href="{{cgo "maintenance" "bulkUpload"}}" class="dropdown-item">Bulk Upload</a>
+                        {{#link-to "admin.bulk-upload" class="dropdown-item"}}Bulk Upload{{/link-to}}
                         <a href="{{cgo "timesheet" "bulkSignInOut"}}" class="dropdown-item">Bulk Sign In/Out</a>
                         <a href="{{cgo "lam" "syncLamPhotos"}}" class="dropdown-item">Synchronize Lam Photos</a>
                         <a href="{{cgo "lam" "exportLamPhotos"}}" class="dropdown-item">Export Lam Photos</a>

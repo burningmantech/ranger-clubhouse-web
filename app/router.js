@@ -60,6 +60,7 @@ Router.map(function() {
     this.route('credits');
     this.route('roles');
     this.route('error-log');
+    this.route('bulk-upload');
   });
   this.route('handle-checker');
 
