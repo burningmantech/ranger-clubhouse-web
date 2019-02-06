@@ -1,9 +1,10 @@
 import Component from '@ember/component';
 import { computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
+import { optional } from '@ember-decorators/argument/types';
 
 export default class TicketVpInfoComponent extends Component {
-  @argument('object') ticket;
+  @argument(optional('object')) ticket;
   @argument('string') ticketingStatus;
   @argument('object') saveChoice;
   @argument('object') ticketingInfo;

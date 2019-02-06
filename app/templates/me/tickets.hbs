@@ -28,7 +28,7 @@
 
 
   {{#if person.isRanger}}
-    {{ticket-info ticketList=ticketList ticket=ticket ticketingStatus=ticketingInfo.ticket_status ticketingInfo=ticketingInfo saveChoice=(action "saveChoiceAction")}}
+    {{ticket-info ticketList=ticketList ticket=ticket ticketingStatus=ticketingInfo.ticketing_status ticketingInfo=ticketingInfo saveChoice=(action "saveChoiceAction")}}
     {{ticket-vp-info ticket=vehiclePassTicket ticketingStatus=ticketingInfo.vp_status ticketingInfo=ticketingInfo saveChoice=(action "saveChoiceAction")}}
   {{/if}}
 

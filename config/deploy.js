@@ -1,7 +1,7 @@
 /* eslint-env node */
 'use strict';
 
-module.exports = function(deployTarget) {
+module.exports = function (deployTarget) {
   let ENV = {
     build: {}
     // include other plugin configuration that applies to all deploy targets here
@@ -20,6 +20,14 @@ module.exports = function(deployTarget) {
   if (deployTarget === 'production') {
     ENV.build.environment = 'production';
     // configure other plugins for production deploy target here
+
+    ENV.s3 = {
+      filePattern: '**/*.{js,css,png,gif,ico,jpg,map,xml,txt,svg,swf,eot,ttf,woff,woff2,html}',
+      accessKeyId: '<aws access key>',
+      secretAccessKey: '<aws secret key>',
+      bucket: '<bucket name>',
+      region: 's3-website-us-west-2'
+    }
   }
 
   // Note: if you need to build some configuration asynchronously, you can return
