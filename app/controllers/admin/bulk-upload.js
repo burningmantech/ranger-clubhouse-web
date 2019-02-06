@@ -78,8 +78,15 @@ export default class AdminBulkUploadController extends Controller {
       this.set('commit', false);
       // Clear out the textarea if commited and was successful
       // otherwise leave it in place so editing can be done.
-      if (results.commit && this.resultFailures.length == 0) {
-        this.set('records', '');
+      if (results.commit) {
+        if (this.resultFailures.length == 0) {
+          this.toast.success('Congratulations! The upload was successfully submitted.');
+          this.set('records', '');
+        } else {
+          this.toast.error('1 or more uploads were not successful.');
+        }
+      } else  {
+        this.toast.warning('The upload has been verified but NOT submitted.');
       }
     }).catch((response) => this.house.handleErrorResponse(response))
     .finally(() => this.set('isSubmitting', false));
