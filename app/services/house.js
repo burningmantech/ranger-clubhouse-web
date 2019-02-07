@@ -28,7 +28,11 @@ export default class HouseService extends Service {
       responseErrors = response.errors.map((error) => error.title);
       errorType = 'validation';
     } else if (response instanceof DS.ServerError) {
-      responseErrors = 'The record operation was unsuccessful due to a fatal server error';
+      if (response.errors) {
+        responseErrors = response.errors.map((error) => error.title);
+      } else {
+        responseErrors = 'The record operation was unsuccessful due to a fatal server error';
+      }
       errorType = 'server';
     } else if (response instanceof DS.TimeoutError
       || response instanceof DS.AbortError
