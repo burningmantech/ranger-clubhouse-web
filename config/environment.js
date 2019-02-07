@@ -115,6 +115,7 @@ module.exports = function(environment) {
 
     ENV['ember-simple-auth-token'].tokenExpirationInvalidateSession = false;
 
+    // Mirage will intercept the request and handle it.
     ENV['api-server'] = 'http://localhost:8000/api'
 
     // keep test console output quieter
@@ -133,14 +134,14 @@ module.exports = function(environment) {
 
   if (environment === 'production') {
     // here you can enable a production-specific feature
-    ENV.rootURL = '/client';
+    ENV.rootURL = (process.env.RANGER_CLUBHOUSE_CLIENT_PREFIX || '/client');
     ENV.dualClubhouse = true;
-    ENV.clubhouseClassicUrl = '/classic';
+    ENV.clubhouseClassicUrl = (process.env.RANGER_CLUBHOUSE_CLASSIC_URL || '/classic');
 
     // Try to report any non-recoverable errors.
     ENV.logEmberErrors = true;
 
-    ENV['api-server'] = '/api';
+    ENV['api-server'] = (process.env.RANGER_CLUBHOUSE_API_URL || '/api');
     ENV['ember-simple-auth-token'].serverTokenEndpoint = ENV['api-server']+'/auth/login';
     ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = ENV['api-server']+'/auth/refresh';
   }
