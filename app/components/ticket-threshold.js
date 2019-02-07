@@ -6,6 +6,7 @@ import { config } from 'clubhouse/utils/config';
 export default class TicketThresholdComponent extends Component {
   @argument('number') credits;
   @argument('number') creditsEarned;
+  @argument('number') year;
 
   // Reduce price ticket threshold
   rpThreshold = parseFloat(config('RpTicketThreshold'));
@@ -16,16 +17,7 @@ export default class TicketThresholdComponent extends Component {
 
   @computed()
   get showForThisYear() {
-    const date = new Date();
-    let year = date.getFullYear();
-    const month = date.getMonth(); // month is 0 to 11
-
-    // Hack for next year.
-    if (month >= 9) {
-      year++;
-    }
-
-    return year == this.yearThreshold;
+    return this.year == this.yearThreshold;
   }
 
   @computed('credits')
