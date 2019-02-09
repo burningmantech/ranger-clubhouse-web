@@ -1,7 +1,7 @@
 ---
 language: node_js
 node_js:
-  - "6"
+  - "10"
 
 sudo: false
 dist: trusty
@@ -10,18 +10,27 @@ addons:
   chrome: stable
 
 cache:
-  directories:
-    - $HOME/.npm
+  yarn: true
 
 env:
   global:
     # See https://git.io/vdao3 for details.
     - JOBS=1
+    - TZ=America/Los_Angeles
 
 before_install:
-  - npm config set spin false
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH=$HOME/.yarn/bin:$PATH
 
-script:
-  - npm run lint:hbs
-  - npm run lint:js
-  - npm test
+install:
+  - yarn install --non-interactive --pure-lockfile
+
+jobs:
+  include:
+    - stage: test
+      name: "Linting and tests"
+      script: yarn lint:js
+      script: yarn test
+    - stage: production
+      name: "Deploy to production"
+      script: node_modules/.bin/ember deploy production --activate=true
