@@ -24,7 +24,10 @@ export default class LoginController extends Controller {
         } else {
           this.house.handleErrorResponse(response)
         }
-      }).finally(() => this.set('isSubmitting', false));
+      }).finally(() => {
+        this.set('isSubmitting', false);
+        this.house.scrollToTop();
+      });
   }
 
   async classicLogin(credentials) {
