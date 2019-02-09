@@ -2,21 +2,28 @@
 <main class="col">
   <div class="row">
     <h1 class="col-sm-12">Welcome To The Ranger Secret Clubhouse!</h1>
-    <div class="col-md-6 col-sm-12">
+    <div class="col-12">
       {{#if loginError}}
         {{#ch-alert "danger"}}
           {{fa-icon "exclamation-triangle"}}
           {{#if (eq loginError "invalid-credentials")}}
             The email and/or password is incorrect.
           {{else if (eq loginError "account-disabled")}}
-            The account has been disabled. Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.
+            The account has been permanently disabled.
+            <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
           {{else if (eq loginError "login-disabled")}}
-            Your access has been temporarily disabled. Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.
+            Login has been disabled for this account.
+            <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
+          {{else if (eq loginError "account-suspended")}}
+            The account has been suspended.
+            <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
           {{else}}
             An unknown server response was received. status=[{{loginError}}]
           {{/if}}
         {{/ch-alert}}
       {{/if}}
+    </div>
+    <div class="col-md-6 col-sm-12">
       {{#ch-form "auth" auth validator=loginValidations onSubmit=(action "submit") as |f|}}
         {{f.input "identification" label="Email" autofocus=true}}
         {{f.input "password" label="Password" type="password"}}

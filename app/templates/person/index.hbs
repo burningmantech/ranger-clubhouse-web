@@ -139,6 +139,13 @@
           <button type="button" {{action "editPositions"}} class="btn btn-secondary btn-sm">Edit Positions</button>
         {{/if}}
       </div>
+      {{#unless personPositions}}
+      <div class="row">
+        <div class="col-12">
+          <strong class="text-danger">Person does not hold any positions</strong>
+        </div>
+      </div>
+      {{/unless}}
       {{#if showPositions}}
         <div class="row">
           {{#each personPositions as |position| }}
@@ -160,6 +167,9 @@
           <button type="button" {{action "editRoles"}} class="btn btn-secondary btn-sm">Edit Roles</button>
         {{/if}}
       </div>
+      {{#unless personRoles}}
+        <strong class="text-danger">Person has no roles granted.</strong>
+      {{/unless}}
       {{#if showRoles}}
         <div class="row">
           {{#each roleColumns as |roleColumn| }}

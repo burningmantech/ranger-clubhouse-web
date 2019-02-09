@@ -1,17 +1,4 @@
 {{me-sidebar user=user}}
 <main class="col">
-  {{#if (and (not user.callsign_approved) (not user.isAuditor) (not user.isProspective))}}
-    {{#ch-box "Callsign Not Approved" type="danger" icon="exclamation-circle"}}
-    <p>
-      You will not be able to sign up for trainings or shifts until your
-      callsign is approved.
-    </p>
-    <p>
-      If you intend to become a Black Rock Ranger on playa this year,
-      or audit a training, please email {{vc-email}}
-    </p>
-    {{/ch-box}}
-  {{/if}}
-
   {{outlet}}
 </main>

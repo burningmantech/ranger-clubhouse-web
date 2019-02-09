@@ -25,6 +25,10 @@ export default Mixin.create({
     return this.status == PersonStatus.AUDITOR;
   }),
 
+  isSuspended: computed('status', function() {
+    return this.status == PersonStatus.SUSPENDED;
+  }),
+
   isNonRanger: computed('status', function () {
     return this.status == PersonStatus.NON_RANGER;
   }),

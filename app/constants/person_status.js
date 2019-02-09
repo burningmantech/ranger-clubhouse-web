@@ -12,4 +12,5 @@ export const PROSPECTIVE = 'prospective';
 export const PROSPECTIVE_WAITLIST = 'prospective waitlist';
 export const RESIGNED = 'resigned';
 export const RETIRED = 'retired';
+export const SUSPENDED = 'suspended';
 export const UBERBONKED = 'uberbonked';

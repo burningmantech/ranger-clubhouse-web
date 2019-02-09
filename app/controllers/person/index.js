@@ -23,6 +23,7 @@ const StatusOptions = [
   'prospective waitlist',
   'resigned',
   'retired',
+  'suspended',
   'uberbonked',
 ];
 
@@ -138,6 +139,7 @@ export default class PersonIndexController extends Controller {
     if (!isValid)
       return;
 
+    this.toast.clear();
     // check to see if callsign has been disapproved..
     // (note: callsign_approved might be a string or boolean)
     if (model._changes['callsign_approved'] && `${model.get('callsign_approved')}` == "false") {
@@ -185,6 +187,7 @@ export default class PersonIndexController extends Controller {
   savePositions(model) {
     const positionIds = model.get('positionIds');
 
+    this.toast.clear();
     this.ajax.request(`person/${this.person.id}/positions`, {
       type: 'POST',
       data: { position_ids: positionIds }
@@ -214,6 +217,7 @@ export default class PersonIndexController extends Controller {
   saveRoles(model) {
     const roleIds = model.get('roleIds');
 
+    this.toast.clear();
     this.ajax.request(`person/${this.person.id}/roles`, {
       type: 'POST',
       data: { role_ids: roleIds }
