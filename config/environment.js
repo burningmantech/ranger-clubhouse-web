@@ -105,15 +105,16 @@ module.exports = function(environment) {
     ENV.dualClubhouse = false;
     ENV.clubhouseClassicUrl = null;
 
-    ENV['ember-simple-auth-token'].serverTokenEndpoint = 'http://localhost:8000/api/auth/login'
-    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = 'http://localhost:8000/api/auth/refresh'
-
     /*
      * The ember-simple-auth-token addon will fire up a timer when the JWT has an expiration property.
      * Tests will not 'settle' because of the outstanding timer. Prevent the timer from being created.
      */
-
-    ENV['ember-simple-auth-token'].tokenExpirationInvalidateSession = false;
+     ENV['ember-simple-auth-token'] = {
+       refreshAccessTokens: false,
+       tokenExpirationInvalidateSession: false,
+       serverTokenEndpoint: 'http://localhost:8000/api/auth/login',
+       serverTokenRefreshEndpoint: 'http://localhost:8000/api/auth/refresh'
+     };
 
     // Mirage will intercept the request and handle it.
     ENV['api-server'] = 'http://localhost:8000/api'
