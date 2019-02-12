@@ -26,6 +26,7 @@ module.exports = function(defaults) {
 
   app.import('node_modules/jquery-datetimepicker/jquery.datetimepicker.css');
   app.import('node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js');
+  app.import('vendor/bootstrap/bootstrap-4.3.bundle.js');
 
   // If you need to use different assets in different
   // environments, specify an object as the first parameter. That
