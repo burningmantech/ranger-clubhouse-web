@@ -6,14 +6,10 @@ import { authenticateSession } from 'ember-simple-auth/test-support';
 module('Acceptance | me/personal info', function(hooks) {
   setupApplicationTest(hooks);
 
-  hooks.beforeEach(async function () {
-    await authenticateSession({ person_id: 1 });
-  });
-
   test('rendered /me/personal-info', async function(assert) {
+    const person = server.create('person');
+    await authenticateSession({ person_id: person.id });
     await visit('/me/personal-info');
-
-    const person = this.server.schema.people.find(1);
 
     const fields = [
       'first_name', 'mi', 'last_name',
@@ -30,16 +26,16 @@ module('Acceptance | me/personal info', function(hooks) {
   });
 
   test('update /me/personal-info', async function(assert) {
+    const person = server.create('person');
+    await authenticateSession({ person_id: person.id });
+
     const newEmail = 'another@example.com';
     await visit('/me/personal-info');
-
-
     await fillIn('[name="email"]', newEmail);
     await click('button.btn-submit');
-    const person = this.server.schema.people.find(1);
 
+    person.reload();
     assert.equal(person.email, newEmail);
-
     assert.dom('#toast-container', document).includesText('Your personal information was successfully updated');
   });
 });

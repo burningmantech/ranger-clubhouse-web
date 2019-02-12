@@ -7,10 +7,10 @@ module('Integration | Component | admin/slot-form', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
+    server.loadFixtures();
+
     const store = this.owner.lookup('service:store');
-    const slot = await store.createRecord('slot', {
+    const slot = server.create('slot', {
       begins: '2018-09-01 11:45:00',
       ends: '2018-09-01 18:15:00',
       position_id: 2,

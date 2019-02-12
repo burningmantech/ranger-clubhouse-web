@@ -17,9 +17,11 @@ module('Acceptance | login', function(hooks) {
   });
 
   test('successful login', async function(assert) {
+    const person = server.create('person');
+
     await visit('/login');
-    await fillIn('input[name="identification"]', 'active@example.com');
-    await fillIn('input[name="password"]', 'ineedashower!');
+    await fillIn('input[name="identification"]', person.email);
+    await fillIn('input[name="password"]', person.password);
     await click('button.login-submit');
     assert.equal(currentURL(), '/me');
   });
@@ -37,15 +39,17 @@ module('Acceptance | login', function(hooks) {
   });
 
   test('successful logout', async function(assert) {
-    await authenticateSession({ person_id: 2 });
+    const person = server.create('person');
+    await authenticateSession({ person_id: person.id });
     await visit('/logout');
     assert.equal(currentSession().isAuthenticated, false);
   });
 
   test('person not authorized', async function(assert) {
+    const person = server.create('person', { user_authorized: false});
     await visit('/login');
-    await fillIn('input[name="identification"]', 'disable@gmail.com');
-    await fillIn('input[name="password"]', 'ineedashower!');
+    await fillIn('input[name="identification"]', person.email);
+    await fillIn('input[name="password"]', person.password);
     await click('button.login-submit');
 
     // Should stay on the login page
