@@ -31,6 +31,6 @@ jobs:
       name: "Linting and tests"
       script: yarn lint:js
       script: yarn test
-    - stage: production
-      name: "Deploy to production"
-      script: node_modules/.bin/ember deploy production --activate=true
+#    - stage: production
+#      name: "Deploy to production"
+#      script: node_modules/.bin/ember deploy production --activate=true
