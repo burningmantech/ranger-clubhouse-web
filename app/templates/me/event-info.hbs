@@ -97,15 +97,19 @@
 
 
   <p class="h3 mt-4">{{fa-icon "broadcast-tower"}} Radios</p>
-  {{#if yearInfo.radio_eligible}}
-    {{badge "success" "Event Radio"}}
-    {{#if (eq yearInfo.radio_max 1)}}
-      You may check out an Event radio for the duraiton of the event.
+  {{#if yearInfo.radio_info_available}}
+    {{#if yearInfo.radio_eligible}}
+      {{badge "success" "Event Radio"}}
+      {{#if (eq yearInfo.radio_max 1)}}
+        You may check out an Event radio for the duraiton of the event.
+      {{else}}
+        You may check out up to {{yearInfo.radio_max}} Event radios for the duraiton of the event.
+      {{/if}}
     {{else}}
-      You may check out up to {{yearInfo.radio_max}} Event radios for the duraiton of the event.
+      {{badge "success" "Shift Radio"}} You will need to check out a radio each time you show up to Ranger HQ for shift (and check it in at the end of your shift!).
     {{/if}}
   {{else}}
-    {{badge "success" "Shift Radio"}} You will need to check out a radio each time you show up to Ranger HQ for shift (and check it in at the end of your shift!).
+    Radio eligibility for this year is not yet available.
   {{/if}}
 
   <p class="h3 mt-4">{{fa-icon "car"}} Motorpool</p>
