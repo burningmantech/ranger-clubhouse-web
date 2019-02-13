@@ -1,5 +1,6 @@
 import Response from 'ember-cli-mirage/response';
 import JWT from 'jsonwebtoken';
+import moment from 'moment';
 
 export default function() {
   this.urlPrefix = 'http://localhost:8000';
@@ -140,6 +141,63 @@ export default function() {
     };
   });
 
+  this.get('/api/person/:id/schedule', (schema, request) => {
+    const person = schema.people.find(request.params.id);
+    return schema.schedules.all();
+  });
+
+  this.get('/api/person/:id/yearinfo', ({ people }, request) => {
+    const person = people.find(request.params.id);
+
+    return {
+      year_info: {
+        year: (new Date()).getFullYear(),
+        trainings: [
+          {
+            position_title: 'Training',
+            position_id: 13,
+            location: 'Trainlandia',
+            date: moment().format('YYYY-MM-DD hh:mm:ss'),
+            status: 'pass'
+          }
+        ],
+        radio_eligible: 1,
+        radio_max: 1,
+        meals: '',
+        showers: '',
+        radio_info_available: false,
+      }
+    };
+  });
+
+  this.get('/api/person/:id/schedule/permission', ({people}, request) => {
+    const person = people.find(request.params.id);
+
+    return {
+      permission: {
+        signup_allowed: true,
+        callsign_approved: true,
+        photo_status: true,
+        // is the manual review link allowed to be shown (if link is enabled)
+        manual_review_allowed: true,
+        // was manual review taken/passed?
+        manual_review_passed: true,
+        // did the prospective/alpha late in taking the review?
+        manual_review_window_missed: false,
+        // cap on how many prospective/alpha can take the manual review
+        manual_review_cap: 0,
+        // Manual Review page link - if enabled
+        manual_review_url: 'http://clubhouse.ranger/review',
+      }
+    };
+
+  });
+
+  this.get('/api/person/:id/credits', ({people}, request) => {
+    const person = people.find(request.params.id);
+
+    return { credits: person.credits || 0 };
+  });
 
   this.get('/api/position', ({positions}) => {
     return positions.all();

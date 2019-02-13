@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { action, computed } from '@ember-decorators/object';
+import { tagName } from '@ember-decorators/component';
 import { argument } from '@ember-decorators/argument';
 import { A } from '@ember/array';
 import { set } from '@ember/object';
@@ -23,6 +24,7 @@ const reasons = [
 ];
 
 
+@tagName('')
 export default class ScheduleManageComponent extends Component {
   @argument('object') person;
   @argument('number') year;

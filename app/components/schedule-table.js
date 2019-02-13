@@ -1,7 +1,9 @@
 import Component from '@ember/component';
 import { action, computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
+import { tagName } from '@ember-decorators/component';
 
+@tagName('')
 export default class ScheduleTableComponent extends Component {
   // Available slots signed up for
   @argument('object') slots;
