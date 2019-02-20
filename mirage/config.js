@@ -141,13 +141,13 @@ export default function() {
     };
   });
 
-  this.get('/api/person/:id/schedule', (schema, request) => {
-    const person = schema.people.find(request.params.id);
+  this.get('/api/person/:id/schedule', (schema, request) => { // eslint-disable-line no-unused-vars
+    const person = schema.people.find(request.params.id); // eslint-disable-line no-unused-vars
     return schema.schedules.all();
   });
 
   this.get('/api/person/:id/yearinfo', ({ people }, request) => {
-    const person = people.find(request.params.id);
+    const person = people.find(request.params.id); // eslint-disable-line no-unused-vars
 
     return {
       year_info: {
@@ -171,7 +171,7 @@ export default function() {
   });
 
   this.get('/api/person/:id/schedule/permission', ({people}, request) => {
-    const person = people.find(request.params.id);
+    const person = people.find(request.params.id); // eslint-disable-line no-unused-vars
 
     return {
       permission: {
