@@ -63,7 +63,7 @@ export default class ApplicationController extends Controller {
     name: true,
     callsign: true,
     email: true,
-    formerly_known_as: false,
+    formerly_known_as: true,
 
     auditor: false,
     past_prospective: false,
