@@ -4,7 +4,7 @@
   <div class="form-row align-items-left">
     <div class="col-auto">
       <label>Proposed handle
-        {{input value=currentName enter=(action "checkCurrentName")}}
+        {{input value=currentName autofocus=true enter=(action "checkCurrentName")}}
       </label>
     </div>
     <div class="col-auto">
@@ -29,6 +29,10 @@
 
   <div class="form-group row">
     <legend>Entity types</legend>
+    <div class="form-check form-check-inline">
+      {{input type="checkbox" checked=includeVintage class="form-check-input" id="include-vintage"}}
+      <label class="form-check-label" for="include-vintage">Include all vintage handles</label>
+    </div>
     {{#each entityTypes as |type|}}
       <div class="form-check form-check-inline">
         {{#let (concat "entity-type-checkbox-" type.id) as |checkid|}}

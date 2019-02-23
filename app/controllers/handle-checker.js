@@ -15,20 +15,32 @@ import {
 let nextCheckId = 1;
 
 const CheckedHandle = EmberObject.extend({
-  conflicts: computed('allConflicts', 'controller.{handleRules,entityTypes}.@each.enabled', function() {
+  // Lint suggests invalid change https://github.com/ember-cli/eslint-plugin-ember/issues/105
+  // eslint-disable-next-line ember/use-brace-expansion
+  conflicts: computed('allConflicts', 'controller.includeVintage', 'controller.{handleRules,entityTypes}.@each.enabled', function() {
     const enabledRules = new Set(this.get('controller.handleRules').filterBy('enabled').mapBy('id'));
     const enabledEntities = new Set(this.get('controller.entityTypes').filterBy('enabled').mapBy('name'));
+    const vintage = this.get('controller.includeVintage');
     return this.get('allConflicts').filter((c) => {
-      if (c.conflictingHandle && !enabledEntities.has(c.conflictingHandle.entityType)) {
-        return false;
+      if (!enabledRules.has(c.ruleId)) {
+        return false; // rule is disabled
       }
-      return enabledRules.has(c.ruleId);
+      if (c.conflictingHandle) {
+        if (vintage && c.conflictingHandle.personVintage) {
+          return true; // requested to show all vintage
+        }
+        if (!enabledEntities.has(c.conflictingHandle.entityType)) {
+          return false; // entity type is disabled
+        }
+      }
+      return true; // default case
     });
   }),
 });
 
 export default Controller.extend({
   currentName: '',
+  includeVintage: true, // Check vintage even if status isn't checked
 
   init() {
     this._super(...arguments);
@@ -46,10 +58,12 @@ export default Controller.extend({
       rule: rule,
       enabled: true,
     }));
+    // Rule ordering: Substring is first per 2019 request from Threepio.
+    // No input yet on ideal ordering for all checks.
+    addRule(new SubstringRule(handles), 'Substring');
     addRule(new MinLengthRule(), 'Minimum Length');
     addRule(new FccRule(), 'FCC naughty words');
     addRule(new PhoneticAlphabetRule(handles), 'Phonetic alphabet');
-    addRule(new SubstringRule(handles), 'Substring');
     addRule(new EditDistanceRule(handles), 'Edit distance');
     addRule(new AmericanSoundexRule(handles), 'American Soundex');
     addRule(new DoubleMetaphoneRule(handles), 'Double Metaphone');
@@ -65,16 +79,27 @@ export default Controller.extend({
   }),
 
   entityTypes: computed('model', function() {
-    return this.get('model').mapBy('entityType').uniq().sort().map((type) => EmberObject.create({
+    const comparator = (entity1, entity2) => {
+      // group all "$status ranger" statuses together
+      const isRanger1 = entity1.indexOf('ranger') >= 0;
+      const isRanger2 = entity2.indexOf('ranger') >= 0;
+      if (isRanger1 !== isRanger2) {
+        return isRanger2 - isRanger1;
+      }
+      return entity1.localeCompare(entity2);
+    }
+    return this.get('model').mapBy('entityType').uniq().sort(comparator).map((type) => EmberObject.create({
       id: type.dasherize(),
       name: type,
       enabled: true,
     }));
   }),
 
-  allEnabledHandles: computed('allHandles', 'entityTypes.@each.enabled', function() {
+  allEnabledHandles: computed('allHandles', 'entityTypes.@each.enabled', 'includeVintage', function() {
     const enabled = new Set(this.get('entityTypes').filterBy('enabled').mapBy('name'));
-    return this.get('allHandles').filter((handle) => enabled.has(handle.entityType));
+    const vintage = this.get('includeVintage');
+    return this.get('allHandles')
+      .filter((handle) => (vintage && handle.personVintage) || enabled.has(handle.entityType));
   }),
 
   incrementallyBuildAllHandles: observer('model', function() { // eslint-disable-line ember/no-observers
