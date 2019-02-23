@@ -192,4 +192,20 @@ export default class HouseService extends Service {
        window.scrollTo(0,0);
      });
    }
+
+   /*
+    * Scroll to element
+    */
+
+  scrollToElement(selector) {
+    run.schedule('afterRender', () => {
+      // Get the y axis, and leave a little space for the header.
+      const y = document.querySelector(selector).getBoundingClientRect().top + window.scrollY - 10;
+      window.scroll({
+        top: y,
+        left: 0,
+        behavior: 'smooth'
+      });
+    })
+  }
 }

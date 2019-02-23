@@ -11,27 +11,12 @@ export default class MeTicketsRoute extends Route.extend(MeRouteMixin) {
     }
   }
 
-  model(params) {
-    const year = (params.year || (new Date).getFullYear());
-    const person_id = this.session.user.id;
-    const deliveryParams = { person_id, year };
-
+  model() {
     return RSVP.hash({
-      ticketingInfo: this.ajax.request('access-document/ticketing-info')
+      ticketingInfo: this.ajax.request('ticketing/info')
                 .then((results) => results.ticketing_info ),
-      accessDocuments: this.store.query('access-document', { person_id }),
-      wapSONames: this.ajax.request('access-document/sowap', { data: deliveryParams })
-                  .then((result) => result.names),
-      ticketDelivery: this.store.queryRecord('access-document-delivery', deliveryParams).then((row) => {
-          if (row) {
-            return row;
-          }
-          // No delivery record yet, create one.
-          return this.store.createRecord('access-document-delivery', {
-            person_id: this.session.user.id,
-            year,
-          });
-      })
+      ticketPackage: this.ajax.request(`ticketing/${this.session.user.id}/package`)
+                .then((results) => results.package)
     });
   }
 

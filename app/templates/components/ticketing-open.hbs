@@ -1,0 +1,45 @@
+{{#if person.needsBpguid}}
+  {{#ch-box "Missing Burner Profile ID" type="warning"}}
+    <p>
+      Uh oh, your Clubhouse account does not have your Burner Profile ID (aka BPGUID). Usually the ID
+      is automatically filled in when a Clubhouse is created, yet in this case we seem to have missed it.
+    </p>
+    <p class="font-weight-bold text-danger">
+      You will not be able to claim your ticket, WAPs, Vehicle Pass, etc. until your Burner Profile ID is entered.
+    </p>
+    <p>
+      Contact the Volunteer Coordinations at {{vc-email}} to get this fixed.
+    </p>
+  {{/ch-box}}
+{{else}}
+  <p>
+    You may request, claim, or bank any items you've qualified
+    for, such as a Staff Credential, Reduced-Price Ticket, Vehicle Pass,
+    Work Access Pass, or Work Access Passes for your significant
+    others/critical campmates.
+  </p>
+  <p>
+    You have <strong> until {{moment-format ticketingInfo.submit_date "dddd MMMM Do"}} at
+      {{moment-format ticketingInfo.submit_date "hh:mm A"}} Pacific Time
+      to make your selection(s)</strong> below. After that, we'll start
+    uploading everyone's requests into the Burning Man Ticket Request System.
+  </p>
+  {{#if hasFullPackage}}
+    <p>
+      <button type="button" class="btn btn-success" {{action nextSection "ticket"}}>Begin Ticketing</button>
+    </p>
+  {{/if}}
+  <div class="accordion">
+    {{#if hasFullPackage}}
+      {{ticket-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket setTicketStatus=setTicketStatus showing=showing toggleCard=toggleCard nextSection=(action nextSection "vp")}}
+      {{ticket-vp-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo vehiclePass=vehiclePass setTicketStatus=setTicketStatus  showing=showing toggleCard=toggleCard nextSection=(action nextSection "wap")}}
+    {{/if}}
+
+    {{ticket-wap-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket wap=wap setTicketStatus=setTicketStatus  showing=showing toggleCard=toggleCard nextSection=(if hasFullPackage (action nextSection "wapso") false)}}
+
+    {{#if hasFullPackage}}
+      {{ticket-wap-so-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket  showing=showing toggleCard=toggleCard nextSection=(action nextSection "delivery")}}
+      {{ticket-delivery-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket vehiclePass=vehiclePass  showing=showing toggleCard=toggleCard}}
+    {{/if}}
+  </div>
+{{/if}}

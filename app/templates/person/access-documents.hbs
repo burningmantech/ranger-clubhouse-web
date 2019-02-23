@@ -62,7 +62,7 @@ Showing {{pluralize documents.length "current access document"}}
       {{f.input "source_year" type="select" options=yearOptions label="Source Year"}}
       {{f.input "expiry_year" type="select" options=yearOptions label="Good Through"}}
 
-      {{#if (not (or entry.isReducedPriceTicket entry.isGiftTicket))}}
+      {{#if (and (not-eq f.model.type "reduced_price_ticket") (not-eq f.model.type "gift_ticket") (not-eq f.model.type "vehicle_pass"))}}
         {{f.input "admission_date" label="Access Date" type="select" options=admissionDateOptions grid="col-auto"}}
       {{/if}}
     </div>

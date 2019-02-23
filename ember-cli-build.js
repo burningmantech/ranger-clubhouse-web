@@ -18,6 +18,12 @@ module.exports = function(defaults) {
 
     sassOptions: {
       onlyIncluded: true,
+    },
+
+    // Create a /VERSION.txt to check new versions with
+    newVersion: {
+      enabled: true,
+      useAppVersion: true,
     }
   });
 

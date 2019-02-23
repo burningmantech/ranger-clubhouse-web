@@ -1,0 +1,19 @@
+{{#if (or person.isAlpha person.isProspective)}}
+  The Work Access Passes page is currently disabled. Please check back later.
+{{else}}
+  <p class="lead">
+    Hold up! We're in the off season. Ticket announcements will be available in January.
+  </p>
+  {{#if ticketPackage.tickets}}
+    You have {{pluralize ticketPackage.tickets.length "ticket"}} banked:
+    <div class="row mt-2 mb-2">
+      {{#each ticketPackage.tickets as |ticket|}}
+        {{ticket-card ticket=ticket}}
+      {{/each}}
+    </div>
+  {{else}}
+    <p>
+      You have no banked tickets on record.
+    </p>
+  {{/if}}
+{{/if}}

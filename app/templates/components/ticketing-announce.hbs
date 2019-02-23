@@ -1,0 +1,44 @@
+{{#if (or person.isAlpha person.isProspective)}}
+  Information about Work Access Passes will be made avaible in June or July. Please check back at that time.
+{{else}}
+  <p>
+    Good news, tickets have been announced for the upcoming event.
+  </p>
+  {{#if ticketPackage.tickets}}
+  <h4>
+     Way to go! You have
+    {{#if (eq ticketPackage.tickets.length 1)}}
+      a ticket
+    {{else}}
+      {{ticketPackage.tickets.length}} tickets
+    {{/if}}
+    available:
+  </h4>
+    <div class="row mt-2 mb-2">
+      {{#each ticketPackage.tickets as |ticket|}}
+        {{ticket-card ticket=ticket}}
+      {{/each}}
+    </div>
+    <strong>What happens next?</strong>
+    <p>
+      There is nothing you need to do at this time.
+      Information about how to claim your Reduced Price Ticket (RPT) or Staff Credential (SC) will be
+      available in the Clubhouse in June or early July. If you are not planning on atttending
+      the Burn this year, you may bank the ticket(s).
+    </p>
+  {{else}}
+    <strong>Sorry, it doesn't look like you qualified for a Reduced-Price Ticket or Staff Credential.</strong>
+    <p>
+      You earned {{credits-format ticketPackage.credits_earned}} last event. The minimum credits needed to earn
+      a Reduced-Price Ticket was {{credits-format ticketingInfo.rpt_credits}}, and a Staff Credential was
+      {{credits-format ticketingInfo.sc_credits}}.
+    </p>
+  {{/if}}
+
+  <strong>Where are the Vehicle and Work Access Passes?</strong>
+  <p>
+    Don't worry, vehicle passes &amp; WAPs will be made available in the coming months.
+    An announcement will be made in June or July on when you will be able to claim
+    the passes.
+  </p>
+{{/if}}

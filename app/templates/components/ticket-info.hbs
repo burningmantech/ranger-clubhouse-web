@@ -1,106 +1,97 @@
-{{#ch-box "Staff Credential or Ticket"}}
-
-{{#if (eq ticketingStatus "none")}}
-  <p>
-    Information about Staff Credentials and Reduced price tickets is not yet
-    available in the Clubhouse, please check back soon.
-  </p>
-{{else unless ticket}}
-  <p>
-    <strong>Sorry, but it doesn't look like you qualified for a Staff Credential or Reduced-Price Ticket.</strong>
-    The thresholds for qualifying for a Staff Credential or Reduced-Price Ticket in {{config "YrTicketThreshold"}} based on your volunteer
-    credits in {{workedYear}} were: 19.00 credits for a Reduced-Price Ticket and 38.00 credits for a Staff Credential.
-  </p>
-{{else}}
-  {{#if (gt ticketList.length 1)}}
-    <p>
-      <span class="text-danger">You're a rare one: you qualify for more than one ticket or credential!</span>
-      Usually this happens because you banked a ticket/credential and then ended up attending the event using
-      a gift or purchased ticket and worked some Ranger shifts and qualified for a second ticket/credential.
-      For reference, the tickets/credentials we have for you are:
-      <ul>
-        {{#each ticketList as |ticket|}}
-          <li>A {{ticket.typeHuman}} from {{ticket.source_year}}</li>
-        {{/each}}
-      </ul>
-    </p>
-    <p>
-      We've automatically chosen the oldest of these for you to use below. If you
-      want to use one of your other banked tickets, please email
-      {{mail-to ticketingInfo.ticket_email}} and let us know and we can make that happen!
-    </p>
-  {{/if}}
-
-  <p>
-    <b>Congratulations! {{congratSentence}}.</b>
-      We're pleased to inform you that you've qualified for a {{ticket.typeHuman}}
-      based on your volunteering in {{ticket.source_year}}.
-  </p>
-
-  {{#if (eq ticketingStatus "view")}}
-    <p>
-      For now, there's nothing more you need to do. Information about how to
-      claim your ticket (or bank it, if you're not planning to go to the Burn
-      this year) will be available in June or early July.
-    </p>
-  {{else if ticket.isSubmitted}}
-    <p>
-      Your {{ticket.typeHuman}} has been submitted to the Burning Man
-      Ticket Request System, and you should have received an email from
-      Ticketfly informing you about it.  You cannot request changes to it
-      via the Secret Clubhouse at this time.  If you urgently need to make
-      a change, please email {{mail-to (config "TAS_Email")}} and they may
-      be able to help.
-    </p>
-  {{else if (eq ticketingStatus "frozen")}}
-    {{ticket-frozen item="ticket"}}
-  {{else}}
-    {{#if ticket.isClaimed}}
-      <p>
-        You have indicated you plan to use your {{ticket.typeHuman}} to Ranger
-        at Burning Man this year. If your plans have changed, you can check the
-        bubble below and click "Save My Choice".
-      </p>
-    {{else if ticket.isBanked}}
-      <p>
-        Your {{ticket.typeHuman}} is banked. <strong>If you want us to issue
-        you your banked {{ticket.typeHuman}} so you can Ranger at Burning Man
-        this year, you must check the bubble below and click "Save My Choice".</strong>
-      </p>
-    {{else if ticket.isQualified}}
+<div class="card" id="ticket-ticket">
+  <div class="card-header p-0">
+    <button class="btn btn-link m-0" type="button" {{action toggleCard "ticket"}}>
+      {{fa-icon (if showing.ticket "caret-down" "caret-right")}}
+      {{#if ticket}}
+        {{ticketTypeHuman}}
+      {{else}}
+        Event Ticket
+      {{/if}}
+      {{#if ticket}}
+        - {{ticket-status ticket.status}}
+      {{/if}}
+    </button>
+  </div>
+  <div class="card-body collapse {{if showing.ticket "show"}}">
+    {{#if ticket}}
+      {{#if (gt ticketPackage.tickets.length 1)}}
         <p>
-          You have not yet claimed your {{ticket.typeHuman}}. <strong>If you intend to
-          use your {{ticket.typeHuman}} to Ranger at Burning Man this year, you must claim
-           it below.</strong>  If you don't, we will bank it.  Tickets are good for
-          three years, and yours expires after the {{ticket.expiryYear}} event.
+          You're a rare one: you have more than one ticket available.
+          We've automatically chosen the oldest of these for you to use below.
+          If you want to use one of your other banked tickets,
+          please email {{mail-to ticketingInfo.ranger_ticketing_email}}
+          and let us know and we can make that happen!
         </p>
-     {{/if}}
-
-     {{#if (or ticket.isQualified ticket.isBanked)}}
-        <div class="form-check">
-          {{radio-button value="claimed" groupValue=ticketAction radioId="ticket-claim" radioClass="form-check-input"}}
-         <label for="ticket-claim" class="form-check-label">
-           Yes! I'm planning to Ranger at Burning Man this year, please issue
-           me my {{ticket.typeHuman}}!
-         </label>
-        </div>
+        <p>
+          For reference the following tickets are on file:
+          <ul>
+            {{#each ticketPackage.tickets as |onfile|}}
+              <li>
+                A {{ticket-type-human onfile.type}} qualified in {{onfile.source_year}} and will expire on {{mdy-format onfile.expiry_date}}
+                {{#if onfile.selected}}
+                  <span class="text-danger">(SELECTED)</span>
+                {{/if}}
+              </li>
+            {{/each}}
+          </ul>
+        </p>
       {{/if}}
-      {{#if (or ticket.isQualified ticket.isClaimed)}}
-        <div class="form-check">
-          {{radio-button value="banked" groupValue=ticketAction radioId="ticket-bank" classNames="form-check-label" radioClass="form-check-input" }}
-          <label for="ticket-bank" class="form-check-label">
-            No. I'm not planning to attend Burning Man this year, or I am
-            receiving a ticket from another source; please bank my {{ticket.typeHuman}}
-            for a future year.
-          </label>
-        </div>
+
+      {{#if (eq ticket.status "submitted")}}
+        Your {{ticketTypeHuman}} has been submitted to the Burning Man Ticket Request System.
+        You should have received an email from {{ticketingInfo.ticket_vendor_name}} informing you about it.
+        You cannot request changes to it via the Secret Clubhouse at this time.
+        If you urgently need to make a change, please email {{mail-to ticketingInfo.ranger_ticketing_email}}
+        and they may be able to help.
+      {{else if (eq ticketingInfo.ticket_status "accept")}}
+        {{#if (eq ticket.status "claimed")}}
+          <p>
+            <span class="text-success">You will be using the {{ticketTypeHuman}} for this year's event.</span> If your plans have changed,
+            you may bank the ticket. Note, the ticket will expire on {{mdy-format ticket.expiry_date}}.
+          </p>
+          <button type="button" class="btn btn-primary" {{action setTicketStatus ticket "banked"}}>Bank Ticket</button>
+        {{else if (eq ticket.status "banked")}}
+          <p>
+            <strong>You will not be using the {{ticketTypeHuman}} this year.</strong>
+            If your plans have changed, and wish to use the ticket, go ahead claim it.
+            Note: the ticket will expire on {{mdy-format ticket.expiry_date}}.
+          </p>
+          <button type="button" class="btn btn-primary" {{action setTicketStatus ticket "claimed"}}>Claim Ticket</button>
+        {{else if (eq ticket.status "qualified")}}
+          <p class="font-weight-bold">
+            You qualified for a {{ticketTypeHuman}}!
+          </p>
+          <p>
+            Choose "Claim Ticket" to use the ticket for this year's event,
+            or to bank the ticket, use "Bank Ticket". Note: the ticket will expire on {{mdy-format ticket.expiry_date}}.
+          </p>
+          <div class="mt-2 mb-2">What do you want to do with your {{ticketTypeHuman}}?</div>
+          <button type="button" class="btn btn-primary" {{action setTicketStatus ticket "claimed"}}>Claim Ticket</button>
+          <span class="ml-4 mr-4">OR</span>
+          <button type="button" class="btn btn-primary" {{action setTicketStatus ticket "banked"}}>Bank Ticket</button>
+        {{/if}}
+      {{else if (eq ticketingInfo.ticket_status "frozen")}}
+        {{#if (eq ticket.status "qualified")}}
+          <strong>You did not claim nor bank your {{ticketTypeHuman}}. The item will be automatically banked and will expire on {{mdy-format ticket.expiry_date}}.</strong>
+        {{else if (eq ticket.status "banked")}}
+          <strong>Your {{ticketTypeHuman}} has been banked, and will expire on {{mdy-format ticket.expiry_date}}.</strong>
+        {{else if (Eq ticket.status "claimed")}}
+          <strong>Your {{ticketTypeHuman}} will be used for the event.</strong>
+        {{/if}}
+        {{ticket-frozen item="ticket" ticketingInfo=ticketingInfo}}
+      {{else}}
+        You qualified for a {{ticketTypeHuman}}! Ticketing is not yet open. Please check back later.
       {{/if}}
-      <div class="form-group mt-3 mb-3">
-        <button type="button" class="btn btn-primary" {{action saveChoice ticket ticketAction}}>Save My Ticket Choice</button>
-      </div>
-  {{/if}}
-{{/if}}
-
-{{ticket-faq "ticket" ticketingInfo}}
-
-{{/ch-box}}
+    {{else}}
+      <strong>Sorry, it doesn't look like you qualified for a Reduced-Price Ticket or Staff Credential.</strong>
+      <p>
+        You earned {{credits-format ticketPackage.credits_earned}} last event. The minimum credits needed to earn
+        a Reduced-Price Ticket was {{credits-format ticketingInfo.rpt_credits}}, and a Staff Credential was
+        {{credits-format ticketingInfo.sc_credits}}.
+      </p>
+    {{/if}}
+    <div class="float-right">
+      <button type="button" class="btn btn-success" {{action nextSection}}>Next {{fa-icon "arrow-right"}}</button>
+    </div>
+  </div>
+</div>

@@ -11,7 +11,7 @@ export default class PersonAccessDocumentsRoute extends Route {
     const person = this.modelFor('person').person;
     return RSVP.hash({
       documents: this.store.query('access-document', { person_id: person.id }),
-      ticketingInfo: this.ajax.request(`access-document/ticketing-info`).then((results) => results.ticketing_info)
+      ticketingInfo: this.ajax.request(`ticketing/info`).then((results) => results.ticketing_info)
     });
   }
 

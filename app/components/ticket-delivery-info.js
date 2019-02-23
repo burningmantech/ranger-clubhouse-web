@@ -1,82 +1,108 @@
 import Component from '@ember/component';
-import { computed } from '@ember-decorators/object';
+import { set } from '@ember/object';
+import { isEmpty } from '@ember/utils';
+import { action, computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
-
+import { tagName } from '@ember-decorators/component';
 import TicketDeliveryValidations from 'clubhouse/validations/ticket-delivery';
 
+@tagName('')
 export default class TicketDeliverInfoComponent extends Component {
-  @argument('object') ticket;
-  @argument('object') person;
-  @argument(optional('object')) ticketDelivery;
-  @argument('object') saveDelivery;
   @argument('object') ticketingInfo;
+  @argument('object') ticketPackage;
+  @argument('object') person;
+  @argument(optional('object')) ticket;
+  @argument(optional('object')) vehiclePass;
+  @argument(optional('object')) delivery;
+  @argument('object') showing;
+  @argument('object') toggleCard;
 
-  countryOptions = [ 'United States', 'Canada', 'Australia', 'United Kingdom' ];
+  deliveryMethod = 'none';
+
+  countryOptions = [ 'United States', 'Canada' ];
   ticketDeliveryValidations = TicketDeliveryValidations;
 
-  @computed('ticket.status', 'vpTicket.status')
-  get claimed() {
-    return (this.ticket && this.ticket.isClaimed) || (this.vpTicket && this.vpTicket.isClaimed);
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+    this.set('deliveryMethod', this.ticketPackage.delivery.method);
   }
 
-  @computed('ticket.status')
-  get pickupAtWillCall() {
+  @computed('ticket.status', 'vehiclePass.status')
+  get mailables() {
     const ticket = this.ticket;
+    const vp = this.vehiclePass;
+    const items = [];
+    const ticketClaimed = (ticket && (ticket.status == 'claimed' || ticket.status == 'submitted'))
 
-    return ticket && ticket.isStaffCredential;
-  }
-
-  @computed('ticket.status', 'vpTicket.status')
-  get ticketComboTitle() {
-    const ticket = this.ticket;
-    const vpTicket = this.vpTicket;
-
-    let title;
-    if ((vpTicket && vpTicket.isClaimed) && (ticket && ticket.isClaimed)) {
-      title = 'Staff Credential and Vehicle Pass';
-    } else if (vpTicket && vpTicket.isClaimed) {
-      title = 'Vehicle Pass';
-    } else {
-      title = 'Staff Credential';
+    if (ticketClaimed && ticket.type == 'reduced_price_ticket') {
+      items.push(ticket);
     }
 
-    return title;
+    if ((vp && (vp.status == 'claimed' || vp.status == 'submitted'))
+    && (ticketClaimed && ticket.type != 'staff_credential')) {
+      items.push(vp);
+    }
+
+    return items;
   }
 
-  @computed('ticket', 'vpTicket')
-  get goodies() {
+  @computed('ticketPackage.delivery')
+  get delivery() {
+    return this.ticketPackage.delivery;
+  }
+
+  @computed('ticket.{status,type}')
+  get usingStaffCredential() {
     const ticket = this.ticket;
-    const vpTicket = this.vpTicket;
+    return (ticket && ticket.type == 'staff_credential' && (ticket.status == 'claimed' || ticket.status == 'submitted'));
+  }
 
-    let ticketName = '';
+  @action
+  setDeliveryMethod(method) {
+    this.set('deliveryMethod', method);
+    this.toast.clear();
 
-    if (ticket) {
-      if (ticket.isReducedPriceTicket) {
-        ticketName = 'Reduced-Price Ticket';
-      } else if (ticket.isGiftTicket) {
-        ticketName = 'Gift Ticket';
+    if (method == 'will_call') {
+      this.ajax.request(`ticketing/${this.person.id}/delivery`, {
+        method: 'POST',
+        data: { method }
+      }).then(() => {
+        this.set('deliveryMethod', method);
+        this.toast.success('Your choice has been recorded. The item(s) will be picked up at Will Call.');
+      })
+      .catch((response) => this.house.handleErrorResponse(response));
+    } else {
+      if (isEmpty(this.delivery.country)) {
+        set(this.delivery, 'country', 'United States');
       }
     }
-
-    if (ticket && vpTicket) {
-      return `${ticket} and Vehicle Pass`;
-    } else if (ticket) {
-      return ticketName;
-    } else {
-      return 'Vehicle Pass';
-    }
   }
 
-  @computed('ticket', 'vpTicket')
-  get goodiesPronoun() {
-    return (this.ticket && this.vpTicket) ? 'them' : 'it';
-  }
+  @action
+  saveDelivery(model, isValid) {
+    if (!isValid)
+      return;
 
-  @computed('ticketDelivery.method')
-  get deliveryMethod() {
-    const delivery = this.tickeyDelivery;
+    const delivery = this.delivery;
 
-    return (delivery && delivery.method) ? delivery.method : 'will_call';
+    this.toast.clear();
+    this.ajax.request(`ticketing/${this.person.id}/delivery`, {
+      method: 'POST',
+      data: {
+        method: 'mail',
+        street: model.get('street'),
+        city: model.get('city'),
+        state: model.get('state'),
+        postal_code: model.get('postal_code'),
+        country: model.get('country'),
+      }
+    })
+    .then(() => {
+      model.execute();  // push changes back to the original object.
+      this.toast.success('The mailing address was successfully saved.');
+      set(delivery, 'method', 'mail');
+      this.set('deliveryMethod', 'mail');
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 }

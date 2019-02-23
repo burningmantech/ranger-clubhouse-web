@@ -11,10 +11,14 @@ module('helper:fa-icon', function(hooks) {
   test('it render icons', async function(assert) {
     await render(hbs`{{fa-icon 'clock'}}`);
 
-    assert.equal(find('*').innerHTML, '<i class="fas fa-clock "></i>');
+    const simple = find('i');
+    assert.ok(simple);
+    assert.equal(simple.className.trim(),'fas fa-clock');
 
     await render(hbs`{{fa-icon 'clock' size='lg'}}`);
-    assert.equal(find('*').innerHTML, '<i class="fas fa-clock fa-lg"></i>');
+    const withSize = find('i');
+    assert.ok(withSize);
+    assert.equal(withSize.className.trim(),'fas fa-clock fa-lg');
 
   });
 });

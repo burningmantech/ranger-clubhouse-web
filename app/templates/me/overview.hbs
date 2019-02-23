@@ -6,7 +6,7 @@ If the person is a past prospective
 OR if the callsign is not approved and they are not an Auditor or Non Ranger.
 then let them know what's up.
 }}
-{{#if (or person.isPassProspective (and (not person.callsign_approved) (not person.isAuditor) (not person.isNonRanger)))}}
+{{#if (or person.isPastProspective (and (not person.callsign_approved) (not person.isAuditor) (not person.isNonRanger)))}}
   {{me/past-prospective-disabled person=person}}
 {{else if person.isProspectiveWaitlist}}
   {{#ch-alert "warning"}}
@@ -30,6 +30,21 @@ then let them know what's up.
     </p>
   {{/ch-alert}}
 {{else}}
+  {{! Person needs to have BPGUID aka Burner Profile ID}}
+  {{#if person.needsBpguid}}
+    {{#ch-box "Missing Burner Profile ID" type="warning"}}
+      <p>
+        Uh oh, your Clubhouse account does not have your Burner Profile ID (aka BPGUID). Usually the ID
+        is automatically filled in when a Clubhouse is created, yet in this case we seem to have missed it.
+      </p>
+      <p class="font-weight-bold text-danger">
+        You will not be allowed to sign up for shifts, and/or claim tickets/WAPs/etc until your Burner Profile ID is entered.
+      </p>
+      <p>
+        Contact the Volunteer Coordinations at {{vc-email}} to get this fixed.
+      </p>
+    {{/ch-box}}
+  {{/if}}
   {{#if person.unread_message_count}}
     {{#ch-alert "warning" bold=true}}
       {{fa-icon "envelope"}} You have {{pluralize person.unread_message_count "unread Clubhouse message"}}.
@@ -37,7 +52,7 @@ then let them know what's up.
     {{/ch-alert}}
   {{/if}}
 
-  {{#unless person.isAuditor}}
+  {{#unless (or person.isAuditor person.isPastProspective)}}
     {{#if photo}}
       {{#if (eq photo.photo_status "missing")}}
         {{me/needs-photo person=person photo=photo}}
@@ -84,7 +99,7 @@ then let them know what's up.
       {{/unless}}
     </dd>
 
-    {{#unless person.isPassProspective}}
+    {{#unless person.isPastProspective}}
       <dt>Shift Signups &amp; Current Schedule</dt>
       <dd>
         {{#if person.isRanger}}

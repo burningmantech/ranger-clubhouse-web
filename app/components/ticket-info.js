@@ -2,45 +2,22 @@ import Component from '@ember/component';
 import { computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
-import { config } from 'clubhouse/utils/config';
+import { tagName } from '@ember-decorators/component';
+import { ticketTypeHuman as ticketTypeFormat} from 'clubhouse/helpers/ticket-type-human';
 
+@tagName('')
 export default class TicketInfoComponent extends Component {
-  // User choice placed into ticketAction
-  ticketAction = '';
-
-  @argument('object') ticketList;
-  @argument(optional('object')) ticket;
-  @argument(optional('string')) ticketingStatus;
-  @argument('object') saveChoice;
   @argument('object') ticketingInfo;
+  @argument('object') ticketPackage;
+  @argument('object') person;
+  @argument(optional('object')) ticket;
+  @argument('object') setTicketStatus;
+  @argument('object') showing;
+  @argument('object') toggleCard;
+  @argument('object') nextSection;
 
-  @computed()
-  get workedYear() {
-    return parseInt(config('YrTicketThreshold')) - 1;
-  }
-
-  @computed('ticket.status')
-  get congratSentence() {
-    const ticket = this.ticket;
-    let verb = "";
-    let trailing = "";
-
-    switch (ticket.status) {
-      case 'claimed':
-        verb = "You've claimed your";
-        break;
-      case 'banked':
-        verb = 'You have a banked';
-        break;
-      case 'submitted':
-        verb = "We have submitted your";
-        trailing = " to the Burning Man Ticket Request System";
-        break;
-      default:
-        verb = "You've qualified for a";
-        break;
-    }
-
-    return `${verb} ${ticket.typeHuman}${trailing}`;
+  @computed('ticket.type')
+  get ticketTypeHuman() {
+    return ticketTypeFormat([ this.ticket.type ]);
   }
 }

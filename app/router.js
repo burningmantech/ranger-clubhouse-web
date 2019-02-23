@@ -79,6 +79,7 @@ Router.map(function() {
     this.route('contact-log');
     this.route('broadcast-log');
     this.route('access-documents');
+    this.route('tickets');
   });
   this.route('logout');
   this.route('training', { path: '/training/:position_id' }, function() {

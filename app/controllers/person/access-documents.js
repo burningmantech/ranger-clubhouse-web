@@ -37,14 +37,13 @@ export default class PersonAccessDocumentsController extends Controller {
 
   @computed
   get admissionDateOptions() {
-    const ticketingInfo = this.ticketingInfo;
     const year = (new Date()).getFullYear();
     const options = [
       ['Unspecificed', '']
     ];
 
     let low = 5, high = 26;
-    const range = ticketingInfo.TAS_WAPDateRange;
+    const range = this.ticketingInfo.wap_date_range;
     if (range != null) {
       [low, high] = range.split('-');
     }
@@ -67,7 +66,7 @@ export default class PersonAccessDocumentsController extends Controller {
       type: 'staff_credential',
       status: 'qualified',
       source_year: currentYear,
-      expiry_date: currentYear + 1,
+      expiry_year: currentYear + 3,
       admission_date: null,
     }));
   }

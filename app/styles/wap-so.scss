@@ -1,0 +1,64 @@
+.wap-so-table {
+  border: (2 * $table-border-width) solid $table-border-color;
+  margin-bottom: 10px;
+  font-size: 0.95em;
+}
+
+.wap-so-title {
+  font-size: 1.2em;
+  font-weight: $display1-weight;
+  color: $headings-color;
+  font-weight: $headings-font-weight;
+  padding: 10px;
+  background-color: #ececec;
+}
+
+.wap-so-header {
+  color: $table-head-color;
+  background-color: $table-head-bg;
+  border-color: $table-border-color;
+  font-weight: bold;
+}
+
+.wap-so-row {
+  display: flex;
+  flex-wrap: wrap;
+
+  font-size: 0.95em;
+  padding: 5px;
+  border-top: 1px solid #ddd;
+  width: 100%;
+  > div {
+    display: inline-block;
+    padding: 5px;
+  }
+}
+
+@media (min-width: 801px) {
+  .wap-so-name {
+    width: 80%;
+  }
+
+  .wap-so-access {
+    width: 19%;
+  }
+
+  .wap-so-sm-label {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .wap-so-header {
+    display: none !important;
+  }
+
+  .wap-so-name, .wap-so-access {
+    width: 99%;
+  }
+
+  .wap-so-sm-label {
+    display: inline-block;
+    margin-right: 5px;
+  }
+}

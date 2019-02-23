@@ -1,6 +1,6 @@
 import { validatePresence } from 'ember-changeset-validations/validators';
 
-const ifMail = function(message) {
+/*const ifMail = function(message) {
   const validator = validatePresence({ presence: true, message: message});
 
   return function(key, newValue, oldValue, changes, content) {
@@ -11,10 +11,10 @@ const ifMail = function(message) {
     }
     return true;
   }
-};
+};*/
 
 export default {
-  street: [
+/*  street: [
     ifMail('Enter a street address.')
   ],
 
@@ -29,9 +29,9 @@ export default {
   postal_code: [
     ifMail('Enter a zip or postal code.')
   ]
-};
+*/
 
-/*
+
 street: [
   validatePresence({ presence: true,  message: "Enter a street address." }),
 ],
@@ -45,6 +45,7 @@ state: [
 ],
 
 postal_code: [
-  validateFormat({ type: 'email', message: 'Enter a zip or postal code.' })
+  validatePresence({ presence: true, message: 'Enter a zip or postal code.' })
 ]
-*/
+
+};

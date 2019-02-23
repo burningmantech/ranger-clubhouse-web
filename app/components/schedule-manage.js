@@ -6,23 +6,12 @@ import { A } from '@ember/array';
 import { set } from '@ember/object';
 import markSlotsOverlap from 'clubhouse/utils/mark-slots-overlap';
 import moment from 'moment';
+import conjunctionFormat from 'clubhouse/utils/conjunction-format';
 
 const allDays = { id: 'all', title: 'All Days'};
 const allPositions = {id: 'all', title: 'All Positions'};
 const upcomingShifts = {id: 'upcoming', title: 'Upcoming Shifts'};
 const activeShifts = { id: 'active', title: 'Active' };
-
-const reasons = [
-    "an internal error has occurred (this shouldn't happen)",
-    "you need an approved BMID (lam) photo",
-    "you need an approved callsign",
-    "you need an approved callsign and an approved BMID (lam) photo",
-    "you need to pass the Manual Review",
-    "you need an approved BMID (lam) photo and to pass the Manual Review, in that order",
-    "you need an approved callsign and to pass the Manual Review",
-    "you need an approved callsign, an approved BMID (lam) photo, and to pass the Manual Review",
-];
-
 
 @tagName('')
 export default class ScheduleManageComponent extends Component {
@@ -136,10 +125,29 @@ export default class ScheduleManageComponent extends Component {
   @computed('permission')
   get deniedReason() {
     const permission = this.permission;
-    const reasonIndex = (!permission.manual_review_passed ? 4 : 0)
-                      + (!permission.callsign_approved ? 2 : 0)
-                      + ((permission.photo_status != 'approved') ? 1 : 0);
-    return reasons[reasonIndex];
+    const denied = [];
+
+    if (!permission.callsign_approved) {
+      denied.push('an approved callsign');
+    }
+
+    if (!permission.manual_review_passed) {
+      denied.push('to pass the Manual Review');
+    }
+
+    if (permission.photo_status != 'approved') {
+      denied.push('an approved BMID (lam) photo');
+    }
+
+    if (permission.missing_bpguid) {
+      denied.push('a Burner Profile ID');
+    }
+
+    if (denied.length == 0) {
+      return 'An internal error occured';
+    }
+
+    return 'you need '+conjunctionFormat(denied, 'and');
   }
 
   handleErrorJoinResponse(result, slot) {
