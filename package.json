@@ -85,7 +85,6 @@
     "global": "^4.3.2",
     "jquery-datetimepicker": "^2.5.20",
     "jscodeshift": "^0.6.3",
-    "lodash": "^4.17.11",
-    "npm-upgrade": "^1.4.1"
+    "lodash": "^4.17.11"
   }
 }
