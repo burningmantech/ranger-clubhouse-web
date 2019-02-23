@@ -33,6 +33,9 @@ $h5-font-size:                $font-size-base * 1.1;
 $h6-font-size:                $font-size-base;
 
 $modal-header-padding: 0.75rem !important;
+$modal-sm: 95%;
+$modal-md: 80%;
+
 
 // Add additional w-XX width sizes beyond what bootstrap provides.
 $sizes: (
@@ -73,6 +76,7 @@ $sizes: (
 @import "timesheet";
 @import "timesheet-log";
 @import "training-print";
+@import "wap-so";
 
 @media print {
   h1 { page-break-before: always; font-size: 1.2rem; }
@@ -181,6 +185,9 @@ ul.nav-pills li {
 
 .card-header {
   font-weight: bold;
+  button {
+    text-align: left !important;
+  }
 }
 
 .form-text-invalid {

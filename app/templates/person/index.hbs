@@ -13,6 +13,11 @@
   {{/ch-alert}}
 {{/if}}
 
+{{#if person.needsBpguid}}
+  {{#ch-alert "warning"}}
+    The account does not have a BPGUID (aka Burner Profile ID) on file. Signups and ticketing are disabled.
+  {{/ch-alert}}
+{{/if}}
 
 {{#ch-form "person" person  onSubmit=(action "savePersonAction") as |f|}}
 
@@ -135,16 +140,16 @@
     <div class="col-md-9 col-sm-12">
       <div class="row col-12 mt-1 mb-2">
         <button type="button" {{action "togglePositions"}} class="btn btn-secondary btn-sm mr-2">{{if showPositions "Hide" "Show"}} Positions</button>
-        {{#if (or isAdmin isManageAndGrandPosition)}}
+        {{#if (or isAdmin isManageAndGrantPosition)}}
           <button type="button" {{action "editPositions"}} class="btn btn-secondary btn-sm">Edit Positions</button>
         {{/if}}
       </div>
       {{#unless personPositions}}
-      <div class="row">
-        <div class="col-12">
-          <strong class="text-danger">Person does not hold any positions</strong>
+        <div class="row">
+          <div class="col-12">
+            <strong class="text-danger">Person does not hold any positions</strong>
+          </div>
         </div>
-      </div>
       {{/unless}}
       {{#if showPositions}}
         <div class="row">
@@ -208,6 +213,17 @@
   </div>
 
   <div class="form-group row">
+    <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">BPGUID</label>
+    {{#if isAdminOrVC}}
+      {{f.input "bpguid" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
+    {{else}}
+      <div class="mt-2 col-auto">
+        {{present-or-not person.bpguid "No Burner Profile ID"}}
+      </div>
+    {{/if}}
+  </div>
+
+  <div class="form-group row">
     <label class="col-form-label-fixed col-sm-12 col-md-2">BMID/Tickets</label>
     <div class="col-sm-12 col-md-9">
       {{#if (or canEditBMIT canEditAccessDocs)}}
@@ -215,7 +231,7 @@
           <a href="{{cgo "bmidc" "edit" personId=person.id}}" class="btn btn-secondary btn-sm mr-2">Edit BMID</a>
         {{/if}}
         {{#if canEditAccessDocs}}
-          <a href="#" class="btn btn-secondary btn-sm mr-2">Edit Tickets &amp; Stuff (TODO)</a>
+          {{#link-to "person.tickets" class="btn btn-secondary btn-sm"}}Edit Tickets &amp; Stuff{{/link-to}}
           {{#link-to "person.access-documents" class="btn btn-secondary btn-sm"}}Edit Access Docs{{/link-to}}
         {{/if}}
       {{else}}

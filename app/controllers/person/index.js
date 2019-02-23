@@ -82,7 +82,7 @@ export default class PersonIndexController extends Controller {
   }
 
   @computed
-  get isManageAndGrandPosition() {
+  get isManageAndGrantPosition() {
     const user = this.session.user;
     return user.hasRole(Role.MANAGE) && user.hasRole(Role.GRANT_POSITION);
   }

@@ -1,43 +1,33 @@
 import Component from '@ember/component';
 import { computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
+import { unionOf } from '@ember-decorators/argument/types';
 import { optional } from '@ember-decorators/argument/types';
+import { tagName } from '@ember-decorators/component';
 
+@tagName('')
 export default class TicketWapInfoComponent extends Component {
-  @argument(optional('object')) ticket;
-  @argument(optional('object')) wapTicket;
-  @argument('string') ticketingStatus;
-  @argument('object') saveChoice;
   @argument('object') ticketingInfo;
+  @argument('object') ticketPackage;
+  @argument('object') person;
+  @argument(optional('object')) ticket;
+  @argument(optional('object')) wap;
+  @argument('object') setTicketStatus;
+  @argument('object') toggleCard;
+  @argument(unionOf('boolean', 'object')) nextSection;
+  @argument('object') showing;
 
-  wapAction = '';
+  @computed('ticket.{type,status}')
+  get isStaffCredentialBanked() {
+    const ticket = this.ticket;
 
-  @computed('ticket.{status,type}')
-  get isNotBankedStaffCredential() {
-      const ticket = this.ticket;
-      return (ticket && ticket.isStaffCredential && !ticket.isBanked);
+    return (ticket && ticket.type == 'staff_credential' && ticket.status == 'banked');
   }
 
-  @computed('ticket.{status,type}')
-  get isBankedStaffCredential() {
-      const ticket = this.ticket;
-      return (ticket && ticket.isStaffCredential && ticket.isBanked);
-  }
+  @computed('ticket.{type,status}')
+  get usingStaffCredential() {
+    const ticket = this.ticket;
 
-  @computed('wapTicket.status')
-  get congratSentence() {
-    const ticket = this.wapTicket;
-    let verb, trailing = '';
-
-    if (ticket.isClaimed) {
-      verb = "you've claimed your";
-    } else if (ticket.isSubmitted) {
-      verb = "we have submitted your";
-      trailing = " to the Burning Man Ticket Request System";
-    } else {
-      verb = "you've qualified for a";
-    }
-
-    return `${verb} ${ticket.typeHuman}${trailing}`;
+    return (ticket && ticket.type == 'staff_credential' && (ticket.status == 'claimed' || ticket.status == 'submitted'));
   }
 }

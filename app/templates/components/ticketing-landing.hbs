@@ -1,0 +1,26 @@
+{{#if (eq ticketingInfo.period "announce")}}
+  {{ticketing-announce ticketingInfo=ticketingInfo ticketPackage=ticketPackage person=person}}
+{{else if (eq ticketingInfo.period "open")}}
+  {{ticketing-open ticketingInfo=ticketingInfo ticketPackage=ticketPackage person=person}}
+{{else if (eq ticketingInfo.period "closed")}}
+  {{ticketing-closed ticketingInfo=ticketingInfo ticketPackage=ticketPackage person=person}}
+{{else if (eq ticketingInfo.period "offseason")}}
+  {{ticketing-offseason ticketingInfo=ticketingInfo ticketPackage=ticketPackage person=person}}
+{{else}}
+  Uh oh, I do not understand the ticketing period status [{{ticketingInfo.period}}]
+{{/if}}
+
+<hr>
+
+<p class="h3">Have a ticketing question? Is something not right?</p>
+<p>
+  The ticketing FAQ can answer most of your questions. The FAQ is located
+  {{#if (or person.isAlpha person.isProspective)}}
+    <a href="{{ticketingInfo.faqs.alpha}}" target="_blank" rel="noopener">here</a>.
+  {{else}}
+    <a href="{{ticketingInfo.faqs.ticketing}}" target="_blank" rel="noopener">here</a>.
+  {{/if}}
+</p>
+<p>
+  If you still have questions about ticketing stuff, you can send an email to {{mail-to ticketingInfo.ranger_ticketing_email}}. Be sure to include your real world name, and Ranger callsign.
+</p>

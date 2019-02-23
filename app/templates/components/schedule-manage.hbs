@@ -1,6 +1,6 @@
 {{#if (and isCurrentYear (not permission.signup_allowed))}}
   {{#ch-box "Signups for training and/or shifts is not allowed" type="warning" icon="exclamation-circle"}}
-    {{#if person.isPassProspective}}
+    {{#if person.isPastProspective}}
       <p>
         You cannot sign up for shifts (including trainings) because it looks like
         you were interested in volunteering with us some time ago but your account
@@ -63,7 +63,15 @@
       {{/if}}
     {{/if}}
 
-    {{#if (or person.isPassProspective (and (not person.callsign_approved) (not person.isAuditor) (not person.isNonRanger)))}}
+    {{#if permission.missing_bpguid}}
+      <p>
+        Your Clubhouse account is missing your Burner Profile ID (aka BPGUID). Normally, the ID
+        is automatically filled in when your Clubhouse account is created however sometimes the
+        ID is filled. Contact the Ranger Voluneer Coordinatiors at {{vc-email}} to get this fixed.
+      </p>
+    {{/if}}
+
+    {{#if (or person.isPastProspective (and (not person.callsign_approved) (not person.isAuditor) (not person.isNonRanger)))}}
       Please email {{vc-email}} if you are interested in
       volunteering with us or if you think you have received this message in error.
     {{/if}}

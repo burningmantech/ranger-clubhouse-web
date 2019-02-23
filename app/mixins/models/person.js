@@ -8,7 +8,7 @@ import {
   roleName
 } from 'clubhouse/constants/roles';
 import {
-  typeOf
+  typeOf, isEmpty
 } from '@ember/utils';
 
 export default Mixin.create({
@@ -37,7 +37,7 @@ export default Mixin.create({
     return this.status == PersonStatus.PROSPECTIVE;
   }),
 
-  isPassProspective: computed('status', function () {
+  isPastProspective: computed('status', function () {
     return (this.status == PersonStatus.PAST_PROSPECTIVE);
   }),
 
@@ -78,6 +78,10 @@ export default Mixin.create({
       this.status == "prospective" ||
       this.status == "uberbonked"
     );
+  }),
+
+  needsBpguid: computed('bpguid', function() {
+    return (!this.isAuditor && !this.isNonRanger && isEmpty(this.bpguid));
   }),
 
   hasRole(roles) {
