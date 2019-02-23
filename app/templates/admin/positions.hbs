@@ -49,7 +49,10 @@
           {{pluck position.training_position_id positions "title" "-"}}
         {{/if}}
       </td>
-      <td class="actions"><button class="btn btn-primary" {{action "edit" position}}>{{fa-icon "edit"}}</button> <button class="btn btn-danger" {{action "delete" position}}>{{fa-icon "trash-alt"}}</button></td>
+      <td class="actions">
+        <button class="btn btn-primary" {{action "edit" position}} title="Edit position">{{fa-icon "edit"}}</button>
+        <button class="btn btn-danger" {{action "delete" position}} title="Delete position">{{fa-icon "trash-alt"}}</button>
+      </td>
     </tr>
     {{/each}}
   </tbody>

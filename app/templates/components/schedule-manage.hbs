@@ -133,16 +133,16 @@
                 </div>
                 <div class="schedule-signups">{{slot-full-indicator slot.slot_signed_up slot.slot_max}}</div>
                 <div class="schedule-actions">
-                  <button {{action "showPeople" slot}} class="btn btn-secondary btn-sm">{{fa-icon "users" type="fas"}}</button>
+                  <button {{action "showPeople" slot}} class="btn btn-secondary btn-sm" title="View people signed up">{{fa-icon "users" type="fas"}}</button>
                   {{#if slot.person_assigned}}
                     {{#if (or (has-role "admin") (not slot.has_started))}}
                       {{! Only allow admins to remove a sign up that has started}}
-                      <button {{action "leaveSlot" slot}} class="btn btn-danger btn-sm">{{fa-icon "trash-alt" type="fas"}}</button>
+                      <button {{action "leaveSlot" slot}} class="btn btn-danger btn-sm" title="Remove from schedule">{{fa-icon "trash-alt" type="fas"}}</button>
                     {{/if}}
                   {{else}}
                     {{#if slot.slot_active}}
                       {{#if (or (not slot.isFull) (not slot.has_started) (has-role "admin"))}}
-                        <button {{action "joinSlot" slot}} class="btn btn-primary btn-sm">{{fa-icon "user-plus" type="fas"}}</button>
+                        <button {{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Sign up">{{fa-icon "user-plus" type="fas"}}</button>
                       {{/if}}
                     {{/if}}
                   {{/if}}

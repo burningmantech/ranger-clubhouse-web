@@ -30,9 +30,9 @@
         <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}</div>
         <div class="schedule-long-description">{{slot.position_title}}<br>{{slot-info-link slot.slot_description slot.slot_url}}</div>
         <div class="schedule-actions d-print-none">
-          <button {{action "showPeople" slot}} class="btn btn-primary btn-sm">{{fa-icon "users" type="fas"}}</button>
+          <button {{action "showPeople" slot}} class="btn btn-primary btn-sm" title="View people signed up">{{fa-icon "users" type="fas"}}</button>
           {{#if (not slot.has_started)}}
-            <button {{action "leaveSlot" slot}} class="btn btn-danger btn-sm">{{fa-icon "trash-alt" type="fas"}}</button>
+            <button {{action "leaveSlot" slot}} class="btn btn-danger btn-sm" title="Remove from schedule">{{fa-icon "trash-alt" type="fas"}}</button>
           {{/if}}
         </div>
       </div>

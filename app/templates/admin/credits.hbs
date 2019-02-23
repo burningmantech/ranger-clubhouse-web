@@ -97,8 +97,8 @@ No position credits were found for {{year}}?
         {{credit.description}}
       </td>
       <td>
-        <button {{action "editCredit" credit}} class="btn btn-primary btn-sm">{{fa-icon "edit"}}</button>
-        <button {{action "deleteCredit" credit}} class="btn btn-danger btn-sm">{{fa-icon "trash-alt" type="fas"}}</button>
+        <button {{action "editCredit" credit}} class="btn btn-primary btn-sm" title="Edit credit">{{fa-icon "edit"}}</button>
+        <button {{action "deleteCredit" credit}} class="btn btn-danger btn-sm" title="Delete credit">{{fa-icon "trash-alt" type="fas"}}</button>
       </td>
     </tr>
   {{/each}}

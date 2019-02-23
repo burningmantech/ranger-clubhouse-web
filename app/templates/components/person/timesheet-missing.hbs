@@ -37,7 +37,7 @@
       <td>{{tm.position.title}}</td>
       <td>
         <button class="btn btn-primary btn-sm" {{action "editEntryAction" tm}}>Manage</button>
-        <button class="btn btn-secondary btn-sm" {{action "removeEntryAction" tm}}>{{fa-icon "trash"}}</button>
+        <button class="btn btn-secondary btn-sm" {{action "removeEntryAction" tm}} title="Delete">{{fa-icon "trash"}}</button>
       </td>
     </tr>
     {{/each}}

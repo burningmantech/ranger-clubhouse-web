@@ -94,8 +94,8 @@ No slots were found for {{year}}?
       </td>
       <td>{{#if slot.active}}{{fa-icon "check"}} {{else}} {{fa-icon "times"}}{{/if}}</td>
       <td>
-        <button {{action "editSlot" slot}} class="btn btn-primary btn-sm">{{fa-icon "edit"}}</button>
-        <button {{action "deleteSlot" slot}} class="btn btn-danger btn-sm">{{fa-icon "trash-alt" type="fas"}}</button>
+        <button {{action "editSlot" slot}} class="btn btn-primary btn-sm" title="Edit slot">{{fa-icon "edit"}}</button>
+        <button {{action "deleteSlot" slot}} class="btn btn-danger btn-sm" title="Delete slot">{{fa-icon "trash-alt" type="fas"}}</button>
       </td>
     </tr>
     {{#if slot.trainer_slot}}

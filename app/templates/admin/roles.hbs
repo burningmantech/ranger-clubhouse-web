@@ -64,8 +64,8 @@ created and edited to restrict access to extended information.
         {{/if}}
       </td>
       <td>
-        <button {{action "editRole" role}} class="btn btn-primary btn-sm">{{fa-icon "edit"}}</button>
-        <button {{action "removeRole" role}} class="btn btn-danger btn-sm">{{fa-icon "trash-alt" type="fas"}}</button>
+        <button {{action "editRole" role}} class="btn btn-primary btn-sm" title="Edit role">{{fa-icon "edit"}}</button>
+        <button {{action "removeRole" role}} class="btn btn-danger btn-sm" title="Delete role">{{fa-icon "trash-alt" type="fas"}}</button>
       </td>
     </tr>
   {{/each}}
