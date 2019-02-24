@@ -1,9 +1,13 @@
 /* eslint-env node */
 'use strict';
 
+function pad(t) {
+  return (t < 10 ) ? ('0' + t) : t;
+}
+
 function formatBuildTimestamp() {
   const date = new Date();
-  return ""+date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes();
+  return ''+date.getFullYear()+'-'+pad(date.getMonth()+1)+'-'+pad(date.getDate())+' '+pad(date.getHours())+':'+pad(date.getMinutes());
 }
 
 module.exports = function(environment) {
