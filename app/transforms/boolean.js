@@ -12,6 +12,6 @@ export default BooleanTransform.extend({
       return /^(true|t|1)$/i.test(value);
     }
 
-    return this._super(value);
+    return this._super(...arguments);
   }
 });
