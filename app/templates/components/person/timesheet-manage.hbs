@@ -97,6 +97,20 @@
 
 {{#if editEntry}}
 {{#ch-form "entry" editEntry modalBox=true modalTitle="Edit Timesheet" validator=timesheetValidations onSubmit=(action "saveEntryAction") onCancel=(action "cancelEntryAction") as |f|}}
+    {{#if editEntry.isPendingReview}}
+      {{#ch-alert "danger"}}
+        Entry has a correction request and needs to be reviewed.
+      {{/ch-alert}}
+    {{else if editEntry.isUnverified}}
+      {{#ch-alert "warning"}}
+        Entry needs to be verified by the person. No review action is needed at this time.
+      {{/ch-alert}}
+    {{else if editEntry.verified}}
+      {{#ch-alert "success"}}
+        <span class="text-success font-weight-bold">Entry was verified on {{shift-format editEntry.verified_at}} by {{editEntry.verified_person.callsign}}. Review is not needed at this time.</span>
+      {{/ch-alert}}
+    {{/if}}
+
   <fieldset>
     <legend>
       Time/Position
@@ -125,17 +139,6 @@
   </fieldset>
   <fieldset>
     <legend>Entry Verification</legend>
-    <div class="form-group row">
-      <div class="col-auto">
-        {{#if editEntry.isPendingReview}}
-          <span class="text-danger font-weight-bold">This entry needs to be reviewed.</span>
-        {{else if editEntry.isUnverified}}
-          This entry has not been verified yet by the person. No review action is needed at this time.
-        {{else if editEntry.verified}}
-          <span class="text-success font-weight-bold">Entry was verified on {{shift-format editEntry.verified_at}} by {{editEntry.verified_person.callsign}}. Review is not needed at this time.</span>
-        {{/if}}
-      </div>
-    </div>
     {{#if editVerification}}
       <div class="form-group row">
             <div class="col-auto">Entry marked for verification:</div>
