@@ -79,9 +79,16 @@
 {{else}}
   {{schedule-table slots=signedUpSlots person=person year=year creditsEarned=creditsEarned}}
   <h3>{{if isCurrentYear "Available Shifts" "Past Shifts"}}</h3>
-  {{#if slots}}
+  {{#if availableSlots}}
+    {{#if inactiveSlots}}
+      {{#ch-alert "warning"}}
+        Because you have the Trainer, VC, and/or Admin role, the shift listing may contain inactive shifts, marked with a {{fa-icon "exclamation-triangle"}}, which may not be signed up - yet.
+        These shifts are included for verification purposes.
+      {{/ch-alert}}
+    {{/if}}
+
     <div class="row mb-1">
-      <div class="col-md-3 mb-2">
+      <div class="col-sm-5 col-md-4 col-lg-3 mb-2">
         {{#power-select
             selected=filterDay
             options=dayOptions
@@ -92,18 +99,20 @@
           {{item.title}}
         {{/power-select}}
       </div>
-      <div class="col-md-5 mb-2">
-        {{#power-select
+      {{#if inactiveSlots}}
+        <div class="col-sm-5 col-md-4 col-lg-3 mb-2">
+          {{#power-select
             selected=filterActive
             options=activeOptions
             searchEnabled=false
             onchange=(action (mut filterActive)) as |item| }}
-          {{item.title}}
-        {{/power-select}}
-      </div>
+            {{item.title}}
+          {{/power-select}}
+        </div>
+      {{/if}}
     </div>
 
-    <p class="text-muted">Showing {{viewSlots.length}} of {{slots.length}}</p>
+    <p class="text-muted">Showing {{viewSlots.length}} of {{availableSlots.length}}</p>
 
     {{#if slotGroups}}
       {{#each slotGroups as |group|}}
@@ -119,10 +128,12 @@
               <div class="schedule-actions">Actions</div>
             </div>
             {{#each group.slots as |slot|}}
-              <div class="schedule-row {{if slot.person_assigned "table-warning"}}">
+              <div class="schedule-row {{if slot.person_assigned "table-success"}}">
                 <div class="schedule-time">
                   {{#if slot.person_assigned}}
-                    {{fa-icon "check"}}
+                    {{fa-icon "check" title="You are signed up for this shift."}}
+                  {{else if (not slot.slot_active)}}
+                    {{fa-icon "exclamation-triangle" title="Shift is inactive and may not be signed up for"}}
                   {{/if}}
                   {{shift-format slot.slot_begins}}
                 </div>
@@ -144,6 +155,8 @@
                       {{#if (or (not slot.isFull) (not slot.has_started) (has-role "admin"))}}
                         <button {{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Sign up">{{fa-icon "user-plus" type="fas"}}</button>
                       {{/if}}
+                    {{else}}
+                      <small class="text-danger">Inactive</small>
                     {{/if}}
                   {{/if}}
                 </div>
@@ -158,8 +171,6 @@
     <div class="mt-2"><strong>Note:</strong>
       <ul>
         <li>A shift may not be added to or removed from your schedule if the shift has already started.</li>
-        <li>Any shift with <small class="text-danger">N/A</small> in the Actions
-          column indicates the shift has not been activated yet and sign ups are not allowed. Check back at a later time to see if the shift has been activated.</li>
       </ul>
     </div>
   {{else}}

@@ -4,6 +4,7 @@ import { tagName } from '@ember-decorators/component';
 import { argument } from '@ember-decorators/argument';
 import { A } from '@ember/array';
 import { set } from '@ember/object';
+import { Role } from 'clubhouse/constants/roles';
 import markSlotsOverlap from 'clubhouse/utils/mark-slots-overlap';
 import moment from 'moment';
 import conjunctionFormat from 'clubhouse/utils/conjunction-format';
@@ -39,9 +40,28 @@ export default class ScheduleManageComponent extends Component {
     return (this.year == (new Date()).getFullYear())
   }
 
-  @computed('slots', 'filterDay', 'filterPosition', 'filterActive')
+  /*
+   * Filter out what the person can actual see based on their roles.
+   */
+  @computed('slots')
+  get availableSlots() {
+    // Filter based on roles.
+
+    if (this.person.hasRole([ Role.ADMIN, Role.VC, Role.TRAINER, Role.ART_TRAINER ])) {
+      return this.slots;
+    }
+
+    return this.slots.filter((slot) => slot.slot_active);
+  }
+
+  @computed('availableSlots')
+  get inactiveSlots() {
+    return this.availableSlots.filter((slot) => !slot.slot_active);
+  }
+
+  @computed('availableSlots', 'filterDay', 'filterPosition', 'filterActive')
   get viewSlots() {
-    let slots = this.slots;
+    let slots = this.availableSlots;
     const filterDay = this.filterDay;
     const filterPosition = this.filterPosition;
 
@@ -84,7 +104,7 @@ export default class ScheduleManageComponent extends Component {
 
   @computed('slots.[]')
   get positionOptions() {
-    const unique = this.slots.uniqBy('position_title');
+    const unique = this.availableSlots.uniqBy('position_title');
 
     let options = A();
 
@@ -99,7 +119,7 @@ export default class ScheduleManageComponent extends Component {
 
   @computed('slots.[]', 'filterPosition')
   get dayOptions() {
-    const unique = this.slots.uniqBy('slotDay').mapBy('slotDay');
+    const unique = this.availableSlots.uniqBy('slotDay').mapBy('slotDay');
     const days = A();
 
     if (this.isCurrentYear) {
@@ -117,6 +137,11 @@ export default class ScheduleManageComponent extends Component {
 
   @computed('slots.@each.person_assigned')
   get signedUpSlots() {
+    /*
+     * Note: don't used availableSlots in case a person is signed up
+     * for an inactive slot, and they cannot see inactive slots. in the schedule.
+     */
+
     const slots = this.slots.filterBy('person_assigned', true);
     markSlotsOverlap(slots);
     return slots;
