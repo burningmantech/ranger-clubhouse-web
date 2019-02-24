@@ -323,14 +323,14 @@
               <div class="col-sm-12 col-md-8 small">
                 Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.
               </div>
-              <div class="col-sm-12 col-md-3 ml-auto">
-                <button type="button" class="btn btn-sm btn-secondary" {{action "hideSearchBoxAction"}}>Hide Options</button>
-              </div>
             </div>
-            <div class="form-row">
+            <div class="float-right mr-2">
+              <button type="button" class="btn btn-sm btn-secondary" {{action "hideSearchBoxAction"}}>Hide Options</button>
+            </div>
+            <div class="form-row ">
               <div class="text-muted mt-2 col-sm-12">(Future feature - waiting for HQ interface)</div>
               <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Mode:</label>
-              {{f.input "display_mode" type="radioGroup" options=displayModeOptions label="Display Mode" inline=true}}
+              {{f.input "display_mode" type="radioGroup" options=displayModeOptions label="Display Mode" inline=true }}
             </div>
           </fieldset>
         {{/if}}

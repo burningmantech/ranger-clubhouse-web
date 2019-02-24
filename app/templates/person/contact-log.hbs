@@ -1,9 +1,4 @@
-<div class="row">
-  {{year-select "Contact Log" year=year years=person.years subheader=true onChange=(action "changeYearAction") gridClass="col-sm-12 col-md-8"}}
-  <div class="col-md-4 col-sm-12">
-    {{#link-to "person.index" class="btn btn-primary btn-sm"}}Back to {{person.callsign}}{{/link-to}}
-  </div>
-</div>
+{{year-select "Contact Log" year=year years=person.years subheader=true onChange=(action "changeYearAction")}}
 
 <table class="table table-striped">
   <caption>Sent Contact Messages</caption>

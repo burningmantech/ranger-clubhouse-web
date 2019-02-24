@@ -22,7 +22,7 @@
   </div>
 {{/ch-form}}
 
-<h2 class="mt-4">On Duty Rangers ({{onDuty.length}})</h2>
+<h3 class="mt-4">On Duty Rangers ({{onDuty.length}})</h3>
 {{#if onDutyGroup}}
 <dl>
   {{#each onDutyGroup as |group|}}
@@ -38,7 +38,7 @@
 No on duty rangers found who speaks "{{searchLanguage}}".
 {{/if}}
 
-<h2 class="mt-4">Rangers With Radios ({{hasRadio.length}})</h2>
+<h3 class="mt-4">Rangers With Radios ({{hasRadio.length}})</h3>
 {{#if hasRadioGroup}}
 <dl>
   {{#each hasRadioGroup as |group|}}
@@ -54,7 +54,7 @@ No on duty rangers found who speaks "{{searchLanguage}}".
 No off duty rangers found who speaks "{{searchLanguage}}".
 {{/if}}
 
-<h2 class="mt-4">Off Duty Rangers ({{offDuty.length}})</h2>
+<h3 class="mt-4">Off Duty Rangers ({{offDuty.length}})</h3>
 {{#if offDutyGroup}}
 <dl>
   {{#each offDutyGroup as |group|}}

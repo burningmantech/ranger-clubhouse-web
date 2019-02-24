@@ -16,6 +16,7 @@ import RSVP from 'rsvp';
 
 import $ from 'jquery';
 
+const ENTER = 13;
 const F1 = 112;
 /*const F2 = 113;
 const F3 = 114;
@@ -46,7 +47,7 @@ export default class ApplicationController extends Controller {
 
       event.preventDefault(); // eslint-disable-line ember/jquery-ember-run
 
-      run(() => {
+      run.schedule('afterRender', () => {
         $('#person-search-query input').focus();
       });
 
@@ -107,10 +108,17 @@ export default class ApplicationController extends Controller {
    */
 
   _showPerson(person) {
-    this.set('showSearchOptions', false);
-    this.set('query', '');
-    this.transitionToRoute('person.index', person.id);
-    $('#person-search-query input').blur();
+      this.set('showSearchOptions', false);
+      this.set('query', '');
+      this.set('enterPressed', false);
+      this.transitionToRoute('person.index', person.id);
+      $('#person-search-query input').blur();
+  }
+
+  @action
+  defaultHighlightedAction() {
+    // prevent the first object from automatically being selected.
+    return undefined;
   }
 
   /*
@@ -131,9 +139,9 @@ export default class ApplicationController extends Controller {
    */
 
   @action
-  searchAction(query) {
+  searchAction(query, powerSelect) {
     return new RSVP.Promise((resolve, reject) => {
-      debounce(this, this._performSearch, query, resolve, reject, SEARCH_RATE_MS);
+      debounce(this, this._performSearch, [ query, powerSelect ], resolve, reject, SEARCH_RATE_MS);
     });
   }
 
@@ -141,7 +149,7 @@ export default class ApplicationController extends Controller {
    * Search for the person
    */
 
-  _performSearch(callsign, resolve, reject) {
+  _performSearch([ callsign, powerSelect ], resolve, reject) {
     const query = callsign.trim();
     const form = this.searchForm;
 
@@ -202,8 +210,22 @@ export default class ApplicationController extends Controller {
     return this.ajax.request('person', {
       data: params
     }).then((results) => {
-      this.set('searchResults', results.person);
-      return resolve(results.person);
+      const people = results.person;
+
+      if (this.enterPressed && people && people.length == 1) {
+        /*
+         * Allow EPS to render the list, and then choose the item.
+         * EPS will tend 'blur' correctly by removing the results box.
+         */
+        setTimeout(() => {
+          run.schedule('afterRender', () => {
+            powerSelect.actions.choose(people.firstObject);
+          });
+        }, 50);
+      }
+
+      this.set('searchResults', people);
+      return resolve(people);
     }).catch((response) => {
       this.house.handleErrorResponse(response)
       return reject();
@@ -227,10 +249,16 @@ export default class ApplicationController extends Controller {
 
   @action
   searchKeydownAction(powerSelect, event) {
-    if (event.keyCode === 13 && this.searchResults && this.searchResults.length == 1) {
+    if (event.keyCode === ENTER) {
       event.preventDefault();
-      powerSelect.actions.choose(this.searchResults.firstObject);
-      return false;
+
+      if (this.searchResults && this.searchResults.length == 1) {
+        powerSelect.actions.choose(this.searchResults.firstObject);
+        return false;
+      }
+      this.set('enterPressed', true);
+    } else {
+      this.set('enterPressed', false);
     }
 
     return true;
@@ -240,6 +268,7 @@ export default class ApplicationController extends Controller {
   searchFocusAction() {
     this.set('searchResults', null);
     this.set('showSearchOptions', true);
+    this.set('enterPressed', false);
   }
 
   @action
@@ -284,9 +313,4 @@ export default class ApplicationController extends Controller {
     return ENV.APP.buildTimestamp;
   }
 
-  @action
-  defaultHighlightedAction() {
-    // prevent the first object from automatically being selected.
-    return undefined;
-  }
 }

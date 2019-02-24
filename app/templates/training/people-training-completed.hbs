@@ -1,7 +1,7 @@
 {{year-select (concat "Completed " training.title) year=year onChange=(action "changeYear")}}
 
 {{#each slots as |slot idx|}}
-<h2 class="mt-2">{{slot.slot_description}} {{shift-format slot.slot_begins}}</h2>
+<h3 class="mt-2">{{slot.slot_description}} {{shift-format slot.slot_begins}}</h3>
 {{email-list people=slot.people listId=(concat "slot-emails" idx)}}
 {{else}}
 Odd, no people were found for {{year}} who completed training.

@@ -1,3 +1,4 @@
+<h3>General Account Info</h3>
 {{#if editPositions}}
   {{person/position-form positions=positions positionIds=positionIds onSave=(action "savePositions") onCancel=(action "cancelPositions")}}
 {{/if}}
@@ -10,12 +11,6 @@
   {{#ch-alert "warning" bold=true}}
     {{fa-icon "envelope"}} {{pluralize person.unread_message_count "unread Clubhouse message"}}
     {{#link-to "person.messages" class="btn btn-success"}}Read Now{{/link-to}}
-  {{/ch-alert}}
-{{/if}}
-
-{{#if person.needsBpguid}}
-  {{#ch-alert "warning"}}
-    The account does not have a BPGUID (aka Burner Profile ID) on file. Signups and ticketing are disabled.
   {{/ch-alert}}
 {{/if}}
 

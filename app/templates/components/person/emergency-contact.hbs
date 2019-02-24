@@ -1,19 +1,14 @@
 {{#ch-form "person" person validator=emergencyContactValidations onSubmit=(action "saveAction") onCancel=(action onCancel) as |f|}}
-  <div class="form-row">
-    {{f.input "em_first_name" label="First Name"}}
-    {{f.input "em_mi"  label="M.I."}}
-    {{f.input "em_last_name" label="Last Name"}}
-  </div>
-  <div class="form-row">
-    {{f.input "em_handle" label="Playa Name / Handle"}}
-  </div>
-  <div class="form-row">
-    {{f.input "em_email" label="Email"}}
-    {{f.input "em_home_phone" label="Phone"}}
-    {{f.input "em_alt_phone" label="Alternate Phone"}}
-  </div>
-  <div class="form-row">
-    {{f.input "em_camp_location" type="textarea" label="Emergency Contact's Camp Location" rows=2 cols=50}}
+  <p class="m-2">
+    Supply your emergency contact information for both on-playa and off-playa contacts.<br>
+      <strong>Off-Playa:</strong>
+      Their name, relationship to you (partner, friend, sibling, parent, etc.), a phone number, and email.<br>
+
+      <strong>On-Playa:</strong>
+      Their playa name, real-world name, relationship, camp location and camp description.<br>
+  </p>
+  <div class="form-row mt-2">
+    {{f.input "emergency_contact" type="textarea" label="Emergency Contact Information:" rows=8 cols=80}}
   </div>
   {{f.submit label="Save"}}
   {{f.cancel}}

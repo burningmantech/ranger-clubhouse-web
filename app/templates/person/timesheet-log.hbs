@@ -1,74 +1,72 @@
-<div class="row">
-  {{year-select "Timesheet Logs" year=year years=person.years onChange=(action "changeYearAction") subheader=true gridClass="col-sm-12 col-md-8"}}
-  <div class="col-sm-12 col-md-2">
-    {{#link-to "person.timesheet" class="btn btn-secondary"}}Back To Timesheet Entries{{/link-to}}
-  </div>
+<div class="float-right">
+  {{#link-to "person.timesheet" class="btn btn-secondary"}}Back To Timesheet Entries{{/link-to}}
 </div>
+{{year-select "Timesheet Logs" year=year years=person.years onChange=(action "changeYearAction") subheader=true}}
 
 {{#each logs as |entry|}}
-<table class="table table-sm table-striped table-box mt-2">
-  <caption>
-    Timesheet #{{entry.timesheet_id}}
-    {{#if entry.timesheet}}
-      {{entry.timesheet.position_title}}:
-      {{shift-format entry.timesheet.on_duty }} -
-      {{#if entry.timesheet.off_duty}}
-        {{shift-format entry.timesheet.off_duty}}
+  <table class="table table-sm table-striped table-box mt-2">
+    <caption>
+      Timesheet #{{entry.timesheet_id}}
+      {{#if entry.timesheet}}
+        {{entry.timesheet.position_title}}:
+        {{shift-format entry.timesheet.on_duty }} -
+        {{#if entry.timesheet.off_duty}}
+          {{shift-format entry.timesheet.off_duty}}
+        {{else}}
+          <i>Still On Duty</i>
+        {{/if}}
       {{else}}
-        <i>Still On Duty</i>
+        DELETED
       {{/if}}
-    {{else}}
-      DELETED
-    {{/if}}
-  </caption>
+    </caption>
 
-  <thead>
-    <tr>
-      <th class="timesheetlog-time">Time</th>
-      <th class="timesheetlog-action">Action</th>
-      <th class="timesheetlog-user">User</th>
-      <th class="timesheetlog-message">Message</th>
-    </tr>
-  </thead>
+    <thead>
+      <tr>
+        <th class="timesheetlog-time">Time</th>
+        <th class="timesheetlog-action">Action</th>
+        <th class="timesheetlog-user">User</th>
+        <th class="timesheetlog-message">Message</th>
+      </tr>
+    </thead>
 
-  <tbody>
-    {{#each entry.logs as |log|}}
-    <tr>
-      <td class="timesheetlog-time">{{shift-format log.created_at}}</td>
-      <td class="timesheetlog-action">{{log.action}}</td>
-      <td cclass="timesheetlog-user">{{person-link personId=log.creator_person_id callsign=log.creator_callsign }}</td>
-      <td class="timesheetlog-message">{{log.message}}</td>
-    </tr>
-    {{/each}}
-  </tbody>
-</table>
+    <tbody>
+      {{#each entry.logs as |log|}}
+        <tr>
+          <td class="timesheetlog-time">{{shift-format log.created_at}}</td>
+          <td class="timesheetlog-action">{{log.action}}</td>
+          <td cclass="timesheetlog-user">{{person-link personId=log.creator_person_id callsign=log.creator_callsign }}</td>
+          <td class="timesheetlog-message">{{log.message}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
 {{else}}
-<p class="text-danger">No timesheet logs found for {{year}}. Entries are not available prior to 2018.</p>
+  <p class="text-danger">No timesheet logs found for {{year}}. Entries are not available prior to 2018.</p>
 {{/each}}
 
 {{#if otherLogs}}
-<table class="table table-sm table-box table-striped mb-4">
-  <caption>Other Timesheet Actions</caption>
-  <thead>
-    <tr>
-      <th class="timesheetlog-time">Time</th>
-      <th class="timesheetlog-action">Action</th>
-      <th class="timesheetlog-user">User</th>
-      <th class="timesheetlog-message">Message</th>
-    </tr>
-  </thead>
+  <table class="table table-sm table-box table-striped mb-4">
+    <caption>Other Timesheet Actions</caption>
+    <thead>
+      <tr>
+        <th class="timesheetlog-time">Time</th>
+        <th class="timesheetlog-action">Action</th>
+        <th class="timesheetlog-user">User</th>
+        <th class="timesheetlog-message">Message</th>
+      </tr>
+    </thead>
 
-  <tbody>
-    {{#each otherLogs as |log|}}
-    <tr>
-      <td class="timesheetlog-time">{{shift-format log.created_at}}</td>
-      <td class="timesheetlog-action">{{log.action}}</td>
-      <td cclass="timesheetlog-user">{{person-link personId=log.creator_person_id callsign=log.creator_callsign}}</td>
-      <td class="timesheetlog-message">{{log.message}}</td>
-    </tr>
-    {{/each}}
-  </tbody>
-</table>
+    <tbody>
+      {{#each otherLogs as |log|}}
+        <tr>
+          <td class="timesheetlog-time">{{shift-format log.created_at}}</td>
+          <td class="timesheetlog-action">{{log.action}}</td>
+          <td cclass="timesheetlog-user">{{person-link personId=log.creator_person_id callsign=log.creator_callsign}}</td>
+          <td class="timesheetlog-message">{{log.message}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
 {{else}}
-<span class="text-danger">No other logs found for {{year}}</span>
+  <span class="text-danger">No other logs found for {{year}}</span>
 {{/if}}

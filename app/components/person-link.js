@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+import { optional, unionOf } from '@ember-decorators/argument/types';
 import { computed } from '@ember-decorators/object';
 import { tagName } from '@ember-decorators/component';
 
@@ -18,7 +18,7 @@ export default class PersonLinkComponent extends Component {
   @argument(optional('string')) page;
 
   // Year argument?
-  @argument(optional('number')) year;
+  @argument(optional(unionOf('string', 'number'))) year;
 
   @computed('page')
   get routePath() {

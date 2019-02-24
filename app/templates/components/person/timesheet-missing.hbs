@@ -1,7 +1,7 @@
-<h2>Missing Timesheet Requests</h2>
+<h3>Missing Timesheet Requests</h3>
 <div class="form-row">
   <div class="col-6">{{pluralize timesheetMissing.length "missing entry request"}}</div>
-  <div class="col-6 text-right"><button class="btn btn-secondary btn-sm ml-auto" {{action "newEntryAction"}}>New Request</button></div>
+  <div class="col-6 text-right"><button class="btn btn-secondary ml-auto" {{action "newEntryAction"}}>New Request</button></div>
 </div>
 {{#if timesheetMissing}}
 <table class="table table-striped table-sm">
