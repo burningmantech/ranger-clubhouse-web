@@ -1,2 +1,10 @@
-<h3>Ticketing View</h3>
+<p>
+  Period: {{ticketingInfo.period}}
+  {{#if (eq ticketingInfo.period "open")}}
+    Tickets: {{ticketingInfo.ticket_status}} TAS_VP: {{ticketingInfo.vp_status}}
+    WAP: {{ticketingInfo.wap_status}}, TAS_WAPSO: {{ticketingInfo.wap_so_status}}
+    Delivery: {{ticketingInfo.delivery_status}}
+  {{/if}}
+</p>
+<hr>
 {{ticketing-landing person=person ticketingInfo=ticketingInfo ticketPackage=ticketPackage}}

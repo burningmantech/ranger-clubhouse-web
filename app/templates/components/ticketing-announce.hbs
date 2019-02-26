@@ -1,12 +1,9 @@
 {{#if (or person.isAlpha person.isProspective)}}
   Information about Work Access Passes will be made avaible in June or July. Please check back at that time.
 {{else}}
-  <h3>
-    Ticket qualifications are available for viewing.
-  </h3>
   {{#if ticketPackage.tickets}}
-  <h4>
-     Way to go! You have
+  <h4 class="text-success">
+     Hooray! You have
     {{#if (eq ticketPackage.tickets.length 1)}}
       a ticket
     {{else}}
@@ -14,11 +11,11 @@
     {{/if}}
     available:
   </h4>
-    <div class="row mt-2 mb-2">
+    <ul>
       {{#each ticketPackage.tickets as |ticket|}}
-        {{ticket-card ticket=ticket}}
+        <li>A {{ticket-type-human ticket.type}} earned in {{ticket.source_year}} and will expire after {{mdy-format ticket.expiry_date}}</li>
       {{/each}}
-    </div>
+    </ul>
     <strong>What happens next?</strong>
     <p>
       There is nothing you need to do at this time.
@@ -27,7 +24,7 @@
       the Burn this year, you may bank the ticket(s).
     </p>
   {{else}}
-    <strong>Sorry, it doesn't look like you qualified for a Reduced-Price Ticket or Staff Credential.</strong>
+    <strong>Sorry, it doesn't appear you qualified for a Reduced-Price Ticket or Staff Credential.</strong>
     <p>
       You earned {{credits-format ticketPackage.credits_earned}} last event. The minimum credits needed to earn
       a Reduced-Price Ticket was {{credits-format ticketingInfo.rpt_credits}}, and a Staff Credential was
