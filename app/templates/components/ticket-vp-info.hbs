@@ -1,11 +1,11 @@
-<div class="card" id="ticket-vp">
+<div class="card card-ticket" id="ticket-vp">
   <div class="card-header p-0">
     <button class="btn btn-link m-0" type="button" {{action toggleCard "vp"}}>
       {{fa-icon (if showing.vp "caret-down" "caret-right")}} Vehicle Pass
       {{#if (eq ticketingInfo.vp_status "none")}}
-        - To Be Announced
+        <span class="text-black-50">- To Be Announced</span>
       {{else if (eq ticketingInfo.vp_status "frozen")}}
-        - Frozen
+        <span class="text-danger">- Frozen</span>
       {{else if vehiclePass}}
         - {{ticket-status vehiclePass.status}}
       {{/if}}
@@ -53,5 +53,7 @@
     <div class="float-right">
       <button type="button" class="btn btn-success" {{action nextSection}}>Next {{fa-icon "arrow-right"}}</button>
     </div>
+
+    {{ticket-faq topic="vp" ticketingInfo=ticketingInfo}}
   </div>
 </div>

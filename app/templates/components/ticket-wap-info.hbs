@@ -1,17 +1,17 @@
-<div class="card" id="ticket-wap">
+<div class="card card-ticket" id="ticket-wap">
   <div class="card-header p-0">
     <button class="btn btn-link m-0" type="button" {{action toggleCard "wap"}}>
       {{fa-icon (if showing.wap "caret-down" "caret-right")}} Work Access Pass For Myself
       {{#if (eq ticketingInfo.wap_status "none")}}
-        - To Be Announced
+        <span class="text-black-50">- To Be Announced</span>
       {{else if (and (eq ticketingInfo.wap_status "frozen") (not-eq wap.status "submitted"))}}
-        - Frozen
+        <span class="text-danger">- Frozen</span>
       {{else if usingStaffCredential}}
-          - Part of Staff Credential
+        <span class="text-success">- Part of Staff Credential</span>
       {{else if wap}}
         - {{ticket-status wap.status}}
       {{else if isStaffCredentialBanked}}
-        - None (Staff Credential Banked)
+        <span class="text-black-50">- None (Staff Credential Banked)</span>
       {{/if}}
     </button>
   </div>
@@ -22,32 +22,34 @@
       <strong class="text-danger">You do not have a Work Access Pass because you have banked your Staff Credential.</strong>
       If you need a separate Work Access Pass, please contact {{mail-to ticketingInfo.ranger_ticketing_email}}
     {{else if (eq ticket.type "staff_credential")}}
-        <strong class="text-success">Your Staff Credential acts as your Work Access Pass.</strong>
-        No separate pass is needed.
-        {{#if ticket.access_any_time}}
-          <strong>You may enter the event at any time!</strong>
-        {{else}}
-          <strong>You may enter the event on or after {{mdy-format ticket.access_date}} 00:01.</strong>
-          If you have an operational need to be on playa earlier than this date,
-          please contact your Cadre or Manager.
-        {{/if}}
+      <p class="text-success font-weight-bold">Your Staff Credential acts as your Work Access Pass.</p>
+      {{#if ticket.access_any_time}}
+        <strong>You may enter the event at any time!</strong>
+      {{else}}
+        <strong>You may enter the event on or after {{mdy-format ticket.access_date}} 00:01.</strong>
+        If you have an operational need to be on playa earlier than this date,
+        please contact your Cadre or Manager.
+      {{/if}}
     {{else if wap}}
       <p>
         {{#if (and (eq ticketingInfo.wap_status "frozen") (eq wap.status "qualified"))}}
           You did qualify for a Work Access Pass however it was not claimed.
         {{else}}
           <strong>You qualify for a Work Access Pass which allows you to enter the event
-          {{#if wap.access_any_time}}
-            at any time!
-          {{else}}
-            on or after {{mdy-format wap.access_date}} 00:01.
-          {{/if}}
-        </strong>
+            {{#if wap.access_any_time}}
+              at any time!
+            {{else}}
+              on or after {{mdy-format wap.access_date}} 00:01.
+            {{/if}}
+          </strong>
         {{/if}}
+      </p>
+      <p>
+        All Work Access Passes are sent by email.
       </p>
 
       {{#if (eq wap.status "submitted")}}
-          <p>The Work Access Pass has been submitted to the Burning Man Ticket Request System.</p>
+        <p>The Work Access Pass has been submitted to the Burning Man Ticket Request System.</p>
       {{else if (eq ticketingInfo.wap_status "view")}}
         Information about how to claim your Work Access Pass will be available in June or early July.
       {{else if (eq ticketingInfo.wap_status "accept")}}
@@ -81,5 +83,6 @@
         <button type="button" class="btn btn-success" {{action nextSection}}>Next {{fa-icon "arrow-right"}}</button>
       </div>
     {{/if}}
+    {{ticket-faq topic=(if (or person.isAlpha person.isProspective) "alpha" "wap") ticketingInfo=ticketingInfo}}
   </div>
 </div>

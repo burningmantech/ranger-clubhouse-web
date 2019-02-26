@@ -79,7 +79,7 @@ export default class TicketWapSoInfoComponent extends Component {
     }).then((result) => {
       // Update the list
       this.set('ticketPackage.wapso', result.names);
-      this.toast.success('Your Significant Other Work Access Passes has been sucessfully updated.');
+      this.toast.success('Your Significant Other Work Access Passes have been sucessfully updated.');
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 

@@ -1,25 +1,20 @@
-<div class="card" id="ticket-wapso">
+<div class="card card-ticket" id="ticket-wapso">
   <div class="card-header p-0">
     <button class="btn btn-link m-0" type="button" {{action toggleCard "wapso"}}>
       {{fa-icon (if showing.wapso "caret-down" "caret-right")}}
       Work Access Passes For SOs
       {{#if (or (eq ticketingInfo.wap_so_status "none") (eq ticketingInfo.wap_so_status "view"))}}
-        - To Be Announced
+        <span class="text-black-50">- To Be Announced</span>
       {{else if (eq ticketingInfo.wap_so_status "frozen")}}
-        - Frozen
+        <span class="text-danger">- Frozen</span>
       {{else if wapSOCount}}
-        - {{pluralize wapSOCount "person"}}
+        <span class="text-success">- {{pluralize wapSOCount "person"}}</span>
       {{else}}
-        - Available
+        <span class="text-black">- Available</span>
       {{/if}}
     </button>
   </div>
   <div class="card-body collapse {{if showing.wapso "show"}}">
-    <p>
-      A Significant Other is a person camping with you (and likely traveling with you)
-      and whose absence would cause you significant burden. All Work Access Passes are sent by email.
-    </p>
-
     {{#if (eq ticketingInfo.wap_so_status "frozen")}}
       {{#if wapSOCount}}
         You have requested Significant Other Passes for the following:
@@ -38,6 +33,15 @@
         available in the Clubhouse, please check back soon.
       </p>
     {{else if (eq ticketingInfo.wap_so_status "accept")}}
+      <p>
+        You may request up to {{pluralize ticketingInfo.wap_so_max "Significant Other Work Access Passs"}} below.
+        You may add, remove, or change names until the ticketing deadline. All Work Access passes
+        are sent by email.
+      </p>
+      <p class="text-danger">
+        Changes will not be saved until you click on 'Save Names'
+      </p>
+
       {{#if wapSOCount}}
         <p class="text-success font-weight-bold">You are requesting {{pluralize wapSOCount "pass"}}.</p>
       {{else}}
@@ -53,7 +57,7 @@
           <div class="wap-so-row">
             <div class="wap-so-name">
               <span class="wap-so-sm-label">SO Legal Name</span>
-              {{input type="text" value=row.name size=25 maxlength=100}}
+              {{input type="text" value=row.name size=30 maxlength=100}}
             </div>
             <div class="wap-so-access">
               <span class="wap-so-sm-label">Arrival Date</span>
@@ -75,5 +79,6 @@
     <div class="float-right">
       <button type="button" class="btn btn-success" {{action nextSection}}>Next {{fa-icon "arrow-right"}}</button>
     </div>
+    {{ticket-faq topic=(if (or person.isAlpha person.isProspective) "alpha" "wap") ticketingInfo=ticketingInfo}}
   </div>
 </div>

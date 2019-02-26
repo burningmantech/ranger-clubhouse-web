@@ -1,18 +1,10 @@
 import DS from 'ember-data';
 import { computed } from '@ember-decorators/object';
 import { attr } from '@ember-decorators/data';
+import { ticketTypeLabel } from 'clubhouse/constants/ticket-types';
 
 import moment from 'moment';
 import { memberAction } from 'ember-api-actions';
-
-const typeHuman = {
-  staff_credential:     'Staff Credential',
-  reduced_price_ticket: 'Reduced-Price Ticket',
-  gift_ticket:          'Gift Ticket',
-  work_access_pass:     'Work Access Pass',
-  work_access_pass_so:  'Work Access Pass (SO)',
-  vehicle_pass:         'Vehicle Pass',
-};
 
 export default class AccessDocumentModel extends DS.Model {
   @attr('number') person_id;
@@ -91,7 +83,7 @@ export default class AccessDocumentModel extends DS.Model {
 
   @computed('type')
   get typeHuman() {
-    return typeHuman[this.type];
+    return ticketTypeLabel[this.type];
   }
 
   @computed('expiry_date')

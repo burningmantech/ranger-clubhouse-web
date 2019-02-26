@@ -1,3 +1,14 @@
+.card-ticket {
+  .card-header button {
+    font-size: 16pt;
+    text-decoration: none !important;
+  }
+
+}
+/*
+ * WAP SO responsive table
+ */
+
 .wap-so-table {
   border: (2 * $table-border-width) solid $table-border-color;
   margin-bottom: 10px;

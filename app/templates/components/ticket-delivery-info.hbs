@@ -1,22 +1,22 @@
-<div class="card" id="ticket-delivery">
+<div class="card card-ticket" id="ticket-delivery">
   <div class="card-header p-0">
     <button class="btn btn-link m-0" type="button" {{action toggleCard "delivery"}}>
       {{fa-icon (if showing.delivery "caret-down" "caret-right")}} Ticket Delivery
       {{#if (eq ticketingInfo.delivery_status "none")}}
-        - To Be Announced
+        <span class="text-black-50">- To Be Announced</span>
       {{else}}
         {{#if usingStaffCredential}}
-          - Pick up at Will Call
+          <span class="text-success">- Pick up at Will Call</span>
         {{else if mailables}}
           {{#if (eq deliveryMethod "mail")}}
-            - Sent By Mail
+            <span class="text-success">- Sent By Mail</span>
           {{else if (eq deliveryMethod "will_call")}}
-            - Pickup at Will Call
+            <span class="text-success">- Pickup at Will Call</span>
           {{else}}
-            - Need Answer
+            <span class="text-danger">- Need Answer</span>
           {{/if}}
         {{else if (eq ticketingInfo.wap_status "frozen")}}
-          - Frozen
+          <span class="text-danger">- Frozen</span>
         {{/if}}
       {{/if}}
     </button>
@@ -56,9 +56,9 @@
       {{#if (eq deliveryMethod "none")}}
         can be mailed to you or held at Will Call for you to pick up:
       {{else if (eq deliveryMethod "mail")}}
-        <span class="text-danger">will be mailed to you</span>:
+        <span class="text-success">will be mailed to you</span>:
       {{else}}
-        <span class="text-danger">will be at Will Call for you to pickup</span>:
+        <span class="text-success">will be at Will Call for you to pickup</span>:
       {{/if}}
 
       <ul>
@@ -84,9 +84,6 @@
         {{/if}}
 
         {{#if (eq deliveryMethod "mail")}}
-          {{#if (not-eq delivery.method deliveryMethod)}}
-            <p class="text-danger mt-2 mb-2">Your delivery choice will not be saved until you click on 'Save Address'.</p>
-          {{/if}}
           <div class="font-weight-bold mt-4">Please note:</div>
           <ul>
             <li><span class="text-danger">We can only mail to destinations in the United States and Canada.</span></li>
@@ -106,6 +103,7 @@
             <legend>
               Enter your mailing address:
             </legend>
+            <p class="text-danger mt-2 mb-2 ml-2">Your delivery choice will not be saved until you click on 'Save Address'.</p>
             <div class="form-row">
               {{f.input "street" label="Street" grid="col-md-8 col-sm-6"}}
             </div>

@@ -1,9 +1,9 @@
-<div class="card" id="ticket-ticket">
+<div class="card card-ticket" id="ticket-ticket">
   <div class="card-header p-0">
     <button class="btn btn-link m-0" type="button" {{action toggleCard "ticket"}}>
       {{fa-icon (if showing.ticket "caret-down" "caret-right")}}
       {{#if ticket}}
-        {{ticketTypeHuman}}
+        {{ticketType}}
       {{else}}
         Event Ticket
       {{/if}}
@@ -38,7 +38,7 @@
       {{/if}}
 
       {{#if (eq ticket.status "submitted")}}
-        Your {{ticketTypeHuman}} has been submitted to the Burning Man Ticket Request System.
+        Your {{ticketType}} has been submitted to the Burning Man Ticket Request System.
         You should have received an email from {{ticketingInfo.ticket_vendor_name}} informing you about it.
         You cannot request changes to it via the Secret Clubhouse at this time.
         If you urgently need to make a change, please email {{mail-to ticketingInfo.ranger_ticketing_email}}
@@ -46,41 +46,40 @@
       {{else if (eq ticketingInfo.ticket_status "accept")}}
         {{#if (eq ticket.status "claimed")}}
           <p>
-            <span class="text-success">You will be using the {{ticketTypeHuman}} for this year's event.</span> If your plans have changed,
-            you may bank the ticket. Note, the ticket will expire on {{mdy-format ticket.expiry_date}}.
+            <strong class="text-success">You have claimed your {{ticketType}} this year.</strong> If your plans have changed,
+            you may bank the ticket. Note: the ticket will expire on {{mdy-format ticket.expiry_date}}.
           </p>
           <button type="button" class="btn btn-primary" {{action setTicketStatus ticket "banked"}}>Bank Ticket</button>
         {{else if (eq ticket.status "banked")}}
           <p>
-            <strong>You will not be using the {{ticketTypeHuman}} this year.</strong>
-            If your plans have changed, and wish to use the ticket, go ahead claim it.
+            <strong>You have banked your {{ticketType}} this year.</strong>
+            If your plans have changed, you may claim the ticket.
             Note: the ticket will expire on {{mdy-format ticket.expiry_date}}.
           </p>
           <button type="button" class="btn btn-primary" {{action setTicketStatus ticket "claimed"}}>Claim Ticket</button>
         {{else if (eq ticket.status "qualified")}}
-          <p class="font-weight-bold">
-            You qualified for a {{ticketTypeHuman}}!
-          </p>
+          <h4>You qualified for a {{ticketType}} in {{ticket.source_year}}!</h4>
+
           <p>
-            Choose "Claim Ticket" to use the ticket for this year's event,
-            or to bank the ticket, use "Bank Ticket". Note: the ticket will expire on {{mdy-format ticket.expiry_date}}.
+            You may <strong>Claim</strong> your ticket for this year's event, or <strong>Bank</strong> it for a future event.
+             Note: your {{ticketType}} will expire on {{mdy-format ticket.expiry_date}}.
           </p>
-          <div class="mt-2 mb-2">What do you want to do with your {{ticketTypeHuman}}?</div>
+          <div class="mt-2 mb-2">What do you want to do with your {{ticketType}}?</div>
           <button type="button" class="btn btn-primary" {{action setTicketStatus ticket "claimed"}}>Claim Ticket</button>
           <span class="ml-4 mr-4">OR</span>
           <button type="button" class="btn btn-primary" {{action setTicketStatus ticket "banked"}}>Bank Ticket</button>
         {{/if}}
       {{else if (eq ticketingInfo.ticket_status "frozen")}}
         {{#if (eq ticket.status "qualified")}}
-          <strong>You did not claim nor bank your {{ticketTypeHuman}}. The item will be automatically banked and will expire on {{mdy-format ticket.expiry_date}}.</strong>
+          <strong>You did not claim nor bank your {{ticketType}}. The item will be automatically banked and will expire on {{mdy-format ticket.expiry_date}}.</strong>
         {{else if (eq ticket.status "banked")}}
-          <strong>Your {{ticketTypeHuman}} has been banked, and will expire on {{mdy-format ticket.expiry_date}}.</strong>
+          <strong>Your {{ticketType}} has been banked, and will expire on {{mdy-format ticket.expiry_date}}.</strong>
         {{else if (Eq ticket.status "claimed")}}
-          <strong>Your {{ticketTypeHuman}} will be used for the event.</strong>
+          <strong>Your {{ticketType}} will be used for the event.</strong>
         {{/if}}
         {{ticket-frozen item="ticket" ticketingInfo=ticketingInfo}}
       {{else}}
-        You qualified for a {{ticketTypeHuman}}! Ticketing is not yet open. Please check back later.
+        You qualified for a {{ticketType}}! Ticketing is not yet open. Please check back later.
       {{/if}}
     {{else}}
       <strong>Sorry, it doesn't look like you qualified for a Reduced-Price Ticket or Staff Credential.</strong>
@@ -93,5 +92,6 @@
     <div class="float-right">
       <button type="button" class="btn btn-success" {{action nextSection}}>Next {{fa-icon "arrow-right"}}</button>
     </div>
+    {{ticket-faq topic="ticketing" ticketingInfo=ticketingInfo}}
   </div>
 </div>

@@ -2,7 +2,7 @@
   {{#ch-box "Missing Burner Profile ID" type="warning"}}
     <p>
       Uh oh, your Clubhouse account does not have your Burner Profile ID (aka BPGUID). Usually the ID
-      is automatically filled in when a Clubhouse is created, yet in this case we seem to have missed it.
+      is automatically filled in when a Clubhouse account is created, yet in this case we seem to have missed it.
     </p>
     <p class="font-weight-bold text-danger">
       You will not be able to claim your ticket, WAPs, Vehicle Pass, etc. until your Burner Profile ID is entered.
@@ -12,6 +12,7 @@
     </p>
   {{/ch-box}}
 {{else}}
+  <h2>Ticketing Is Open!</h2>
   <p>
     You may request, claim, or bank any items you've qualified
     for, such as a Staff Credential, Reduced-Price Ticket, Vehicle Pass,
@@ -20,8 +21,8 @@
   </p>
   <p>
     You have <strong> until {{moment-format ticketingInfo.submit_date "dddd MMMM Do"}} at
-      {{moment-format ticketingInfo.submit_date "hh:mm A"}} Pacific Time
-      to make your selection(s)</strong> below. After that, we'll start
+    {{moment-format ticketingInfo.submit_date "hh:mm A"}} Pacific Time
+    to make your selection(s)</strong> below. After that, we'll start
     uploading everyone's requests into the Burning Man Ticket Request System.
   </p>
   {{#if hasFullPackage}}

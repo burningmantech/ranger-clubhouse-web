@@ -76,7 +76,7 @@ $sizes: (
 @import "timesheet";
 @import "timesheet-log";
 @import "training-print";
-@import "wap-so";
+@import "ticketing";
 
 @media print {
   h1 { page-break-before: always; font-size: 1.2rem; }
@@ -94,6 +94,10 @@ $sizes: (
   body {
     background-color: #fcfcfc;
   }
+}
+
+.text-black {
+  color: #000;
 }
 
 // Indicate action on elements which are clickable
