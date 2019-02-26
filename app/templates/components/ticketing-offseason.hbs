@@ -6,11 +6,11 @@
   </p>
   {{#if ticketPackage.tickets}}
     You have {{pluralize ticketPackage.tickets.length "ticket"}} banked:
-    <div class="row mt-2 mb-2">
+    <ul>
       {{#each ticketPackage.tickets as |ticket|}}
-        {{ticket-card ticket=ticket}}
+        <li>A {{ticket-type-human ticket.type}} earned in {{ticket.source_year}} and will expire after {{mdy-format ticket.expiry_date}}</li>
       {{/each}}
-    </div>
+    </ul>
   {{else}}
     <p>
       You have no banked tickets on record.
