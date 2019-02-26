@@ -2,10 +2,9 @@
   <h1>Handle Checker</h1>
 
   <div class="form-row align-items-left">
+    <label class="col-form-label">Proposed handle</label>
     <div class="col-auto">
-      <label>Proposed handle
-        {{input value=currentName autofocus=true enter=(action "checkCurrentName")}}
-      </label>
+      {{input type="text" value=currentName id="currentName" enter=(action "checkCurrentName") class="form-control" size=20}}
     </div>
     <div class="col-auto">
       <button type="button" class="btn btn-primary" {{action "checkCurrentName"}}>Check handle</button>
@@ -15,32 +14,36 @@
     </div>
   </div>
 
+  <legend>Handle rules</legend>
   <div class="form-group row">
-    <legend>Handle rules</legend>
-    {{#each handleRules as |rule|}}
-      <div class="form-check form-check-inline">
-        {{#let (concat "handle-rule-checkbox-" rule.id) as |checkid|}}
-          {{input type="checkbox" checked=rule.enabled class="form-check-input" id=checkid}}
-          <label class="form-check-label" for="{{checkid}}">{{rule.name}}</label>
-        {{/let}}
-      </div>
-    {{/each}}
+    <div class="col">
+      {{#each handleRules as |rule|}}
+        <div class="form-check form-check-inline">
+          {{#let (concat "handle-rule-checkbox-" rule.id) as |checkid|}}
+            {{input type="checkbox" checked=rule.enabled class="form-check-input" id=checkid}}
+            <label class="form-check-label" for="{{checkid}}">{{rule.name}}</label>
+          {{/let}}
+        </div>
+      {{/each}}
+    </div>
   </div>
 
+  <legend>Entity types</legend>
   <div class="form-group row">
-    <legend>Entity types</legend>
-    <div class="form-check form-check-inline">
-      {{input type="checkbox" checked=includeVintage class="form-check-input" id="include-vintage"}}
-      <label class="form-check-label" for="include-vintage">Include all vintage handles</label>
-    </div>
-    {{#each entityTypes as |type|}}
+    <div class="col">
       <div class="form-check form-check-inline">
-        {{#let (concat "entity-type-checkbox-" type.id) as |checkid|}}
-          {{input type="checkbox" checked=type.enabled class="form-check-input" id=checkid}}
-          <label class="form-check-label" for="{{checkid}}">{{type.name}}</label>
-        {{/let}}
+        {{input type="checkbox" checked=includeVintage class="form-check-input" id="include-vintage"}}
+        <label class="form-check-label" for="include-vintage">Include all vintage handles</label>
       </div>
-    {{/each}}
+      {{#each entityTypes as |type|}}
+        <div class="form-check form-check-inline">
+          {{#let (concat "entity-type-checkbox-" type.id) as |checkid|}}
+            {{input type="checkbox" checked=type.enabled class="form-check-input" id=checkid}}
+            <label class="form-check-label" for="{{checkid}}">{{type.name}}</label>
+          {{/let}}
+        </div>
+      {{/each}}
+    </div>
   </div>
 
   <div class="row">
@@ -86,8 +89,8 @@
 
   <div class="container">
     <hr>
-    <div class="row justify-content-md-center">
-      <div class="col col-md-auto">
+    <div class="row align-items-center">
+      <div class="col">
         <h3>All {{allEnabledHandles.length}} Handles</h3>
         <table class="table table-sm table-striped table-hover">
           <thead>
