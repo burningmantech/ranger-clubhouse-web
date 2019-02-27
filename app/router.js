@@ -62,6 +62,13 @@ Router.map(function() {
     this.route('error-log');
     this.route('bulk-upload');
   });
+
+  this.route('debug');
+
+  this.route('mentor', function() {
+    this.route('mentees');
+  });
+
   this.route('handle-checker');
 
   this.route('person', { path: '/person/:person_id' } ,function() {
@@ -81,7 +88,9 @@ Router.map(function() {
     this.route('access-documents');
     this.route('tickets');
   });
+
   this.route('logout');
+
   this.route('training', { path: '/training/:position_id' }, function() {
     this.route('index', { path: '/'});
     this.route('session', { path: '/session/:slot_id'}, function() {
@@ -94,11 +103,13 @@ Router.map(function() {
     this.route('people-training-completed');
     this.route('untrained-people');
   });
-  this.route('debug');
+
+
   this.route('reports', function() {
     this.route('timesheet-correction-requests');
     this.route('timesheet-unconfirmed');
   });
+
   this.route('vc', function() {
     this.route('access-documents', function() {
       this.route('index', { path: '/'} );
