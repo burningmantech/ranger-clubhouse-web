@@ -409,14 +409,14 @@ test_root_resource() {
 }
 
 
-test_config() {
-    echo "Testing config resource...";
+test_app_root() {
+    echo "Testing web application root resource...";
 
     local response="$(mktemp)";
     local     body="$(mktemp)";
     local    error="$(mktemp)";
 
-    if ! http_get "${host_web_port}" /api/config > "${response}" 2> "${error}";
+    if ! http_get "${host_web_port}" /client/ > "${response}" 2> "${error}";
     then
         fail "Error HTTP status from server.";
         echo "Error from curl:"; cat "${error}";
@@ -426,8 +426,8 @@ test_config() {
 
     local content_type="$(http_header Content-Type < "${response}")";
 
-    if [ "${content_type}" != "application/json" ]; then
-        fail "Expected application/json content type.";
+    if [ "${content_type}" != "text/html" ]; then
+        fail "Expected text/html content type.";
         echo "Content-Type: ${content_type}";
         echo "Response:"; cat "${response}";
         return 1;
@@ -435,9 +435,8 @@ test_config() {
 
     http_body < "${response}" > "${body}";
 
-    # Received JSON payload should have a "VCSRevision" key.
-    if ! grep '"VCSRevision":' "${body}" > /dev/null; then
-        fail "Configuration payload lacks VCSRevision.";
+    if ! grep "<title>Ranger Clubhouse</title>" "${body}" > /dev/null; then
+        fail "Unexpected body for web application root resource.";
         echo "Content-Type: ${content_type}";
         echo "Response:"; cat "${response}";
         return 1;
@@ -457,6 +456,6 @@ wait_for_api        || exit 21;
 start_web_container || exit 30;
 wait_for_web        || exit 31;
 test_root_resource  || exit 100;
-#test_config         || exit 101;
+test_app_root       || exit 101;
 
-echo "Tests passed."
+echo "Tests passed.";
