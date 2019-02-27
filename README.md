@@ -9,11 +9,10 @@ You will need the following things properly installed on your computer.
 * [Git](https://git-scm.com/)
 * [Yarn](https://yarnpkg.org/)
 * [Ember CLI](https://ember-cli.com/)
-* Google Chrome or Firefox is recommended since the Ember Inspector extension
-  is support for both browsers. Safari and Windows IE Edge are support.
+* Google Chrome or Firefox is recommended since the Ember Inspector extension is supported for both browsers.
+  Safari and Windows IE Edge are supported.
   Windows IE11 and lesser versions *are not* supported.
-* |Ember Inspector|(https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi?hl=en)
-  Useful for inspecting Ember Data objects, routes, URL names, etc.
+* [Ember Inspector](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi?hl=en): useful for inspecting Ember Data objects, routes, URL names, etc.
 
 ## Installation
 
@@ -65,16 +64,16 @@ Make use of the many generators for code, try `ember help generate` for more det
 
 ### Running Tests
 
-*   `ember test` runs all tests once, launching and quitting a browser
-*   `ember test --filter=unit` runs all tests whose module declaration includes “unit”
-*   `ember test --server` runs tests when changes are made
-*   Visiting http://localhost:4200/tests in a browser will run tests (optionally filtered) when
-    changes are made to any code or test
+* `ember test` runs all tests once, launching and quitting a browser
+* `ember test --filter=unit` runs all tests whose module declaration includes “unit”
+* `ember test --server` runs tests when changes are made
+* Visiting http://localhost:4200/tests in a browser will run tests (optionally filtered) when changes are made to any code or test
 
-Ember uses [QUnit](https://api.qunitjs.com/) for tests. [qunit-dom](http://qunit-dom.com/) is  included in the testing framework to provide higher level assertions for QUnit.
+Ember uses [QUnit](https://api.qunitjs.com/) for tests.
+[qunit-dom](http://qunit-dom.com/) is included in the testing framework to provide higher level assertions for QUnit.
 
-ember-cli-custom-assertions](https://github.com/dockyard/ember-cli-custom-assertions) has been included by the Ranger Tech Team so custom assertions can be used. Look at the
-[tests/assertions] directory to see what custom assertions are available.
+ember-cli-custom-assertions](https://github.com/dockyard/ember-cli-custom-assertions) has been included by the Ranger Tech Team so custom assertions can be used.
+Look at the [tests/assertions] directory to see what custom assertions are available.
 
 ### Linting
 

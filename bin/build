@@ -1,0 +1,15 @@
+#!/bin/sh
+
+#
+# Build the Docker image
+#
+
+. "$(dirname "$0")/.common.sh";
+
+label="$(cd "${wd}" && git describe --all --long)";
+
+exec docker build          \
+    --tag="${image_name}"  \
+    --label="${label}"     \
+    "${wd}"                \
+    ;
