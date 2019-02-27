@@ -375,7 +375,7 @@ test_root_resource() {
 
     local e;
 
-    http_get "${host_api_port}" / > "${response}" 2> "${error}" && e=0 || e=$?;
+    http_get "${host_web_port}" / > "${response}" 2> "${error}" && e=0 || e=$?;
 
     if [ ${e} -eq 22 ]; then
         fail "Root resource not found.  Expected redirect.";
@@ -399,7 +399,7 @@ test_root_resource() {
 
     local body="$(http_body < "${response}")";
 
-    if [ "${body}" != "Ranger Clubhouse API Server" ]; then
+    if [ "${body}" != "Ranger Clubhouse Web Application" ]; then
         fail "Unexpected body for root resource.";
         echo "Response:"; cat "${response}";
         return 1;
@@ -416,7 +416,7 @@ test_config() {
     local     body="$(mktemp)";
     local    error="$(mktemp)";
 
-    if ! http_get "${host_api_port}" /api/config > "${response}" 2> "${error}";
+    if ! http_get "${host_web_port}" /api/config > "${response}" 2> "${error}";
     then
         fail "Error HTTP status from server.";
         echo "Error from curl:"; cat "${error}";
@@ -455,8 +455,8 @@ db_init             || exit 12;
 start_api_container || exit 20;
 wait_for_api        || exit 21;
 start_web_container || exit 30;
-#wait_for_web        || exit 31;
-#test_root_resource  || exit 100;
+wait_for_web        || exit 31;
+test_root_resource  || exit 100;
 #test_config         || exit 101;
 
 echo "Tests passed."
