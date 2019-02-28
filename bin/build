@@ -8,8 +8,16 @@
 
 label="$(cd "${wd}" && git describe --all --long)";
 
+# Build the "build" stage first and tag it for use by other scripts
+docker build                     \
+    --target build               \
+    --tag "${build_image_name}"  \
+    --label="${label}"           \
+    "${wd}";
+
+# Build the application image
 exec docker build          \
+    --cache-from="${build_image_name}"  \
     --tag="${image_name}"  \
     --label="${label}"     \
-    "${wd}"                \
-    ;
+    "${wd}";
