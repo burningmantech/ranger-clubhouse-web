@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# Run checkphpsyntax from the PHP Docker image.
+#
+
+set -eu
+
+. "$(dirname "$0")/.common.sh";
+
+src="/var/src";
+
+docker run                    \
+    --volume="${PWD}:${src}"  \
+    --workdir="${src}"        \
+    "${build_image_name}"     \
+    yarn lint:js "$@";
