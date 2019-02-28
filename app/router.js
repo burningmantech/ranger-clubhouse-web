@@ -108,6 +108,10 @@ Router.map(function() {
   this.route('reports', function() {
     this.route('timesheet-correction-requests');
     this.route('timesheet-unconfirmed');
+    this.route('asset-history');
+    this.route('assets-outstanding');
+    this.route('radio-assets');
+    this.route('radio-checkout');
   });
 
   this.route('vc', function() {
