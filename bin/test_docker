@@ -264,10 +264,11 @@ start_web_container() {
 
     echo "Starting web application container: ${web_container_name}...";
 
+#        --link="${api_container_name}"                    \
+
     docker run                                            \
         --rm --detach                                     \
         --name="${web_container_name}"                    \
-        --link="${api_container_name}"                    \
         --publish="${host_web_port}:80"                   \
         "${web_image_name}"                               \
         > /dev/null;
