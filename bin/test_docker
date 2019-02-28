@@ -448,11 +448,11 @@ test_app_root() {
 
 echo "Testing service...";
 
-start_db_container  || exit 10;
-wait_for_db         || exit 11;
-db_init             || exit 12;
-start_api_container || exit 20;
-wait_for_api        || exit 21;
+#start_db_container  || exit 10;
+#wait_for_db         || exit 11;
+#db_init             || exit 12;
+#start_api_container || exit 20;
+#wait_for_api        || exit 21;
 start_web_container || exit 30;
 wait_for_web        || exit 31;
 test_root_resource  || exit 100;
