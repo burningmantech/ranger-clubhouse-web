@@ -16,11 +16,11 @@ env;
 case "${travis_action}" in
 
     "test")
-        # Lint doesn't require a build and is a relatively quick check
-        "${wd}/bin/test_lint" .;
-
         # Build
         "${wd}/bin/build";
+
+        # Run linter
+        "${wd}/bin/test_lint" .;
 
         # Run tests in Docker container
         echo "Testing Docker image...";
