@@ -6,11 +6,20 @@
 #
 FROM node:10.15-alpine as build
 
+# Install Yarn
 RUN apk add --no-cache yarn;
-# Next step is a workaround for a bug.
+
+# Install Ember CLI
+# "unsafe-perm" step is a workaround for a bug.
 # See: https://github.com/npm/uid-number/issues/7
 RUN npm config set unsafe-perm true;
 RUN npm install -g ember-cli;
+
+# Install ESLint, used by test_lint
+RUN npm install -g eslint;
+RUN npm install -g eslint-plugin-ember;
+RUN npm install -g babel-eslint;
+
 RUN yarn --version; ember --version;
 
 WORKDIR /build
@@ -18,6 +27,8 @@ COPY ./ ./
 
 # Install dependencies
 RUN yarn install;
+
+# Build the application
 RUN ember build --environment production;
 
 
@@ -26,7 +37,7 @@ RUN ember build --environment production;
 #
 FROM nginx:1.15-alpine
 
-# Copy the application with dependencies from the composer container
+# Copy the application with dependencies from the build container
 COPY --from=build /build/dist /var/www/application/client
 
 # Replace Nginx default site config
