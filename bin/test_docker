@@ -296,7 +296,7 @@ wait_for_web() {
     while true; do
         printf "Waiting on web application to start... ";
 
-        http_get "${host_api_port}" / > "${response}" 2> "${error}" \
+        http_get "${host_web_port}" / > "${response}" 2> "${error}" \
             && e=0 || e=$?;
 
         count=$((${count} + 1));
