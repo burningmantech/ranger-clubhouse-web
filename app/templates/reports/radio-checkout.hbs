@@ -1,0 +1,51 @@
+{{year-select "Radio Checkout Report" year=year onChange=(action (mut year))}}
+<div class="form-row">
+  <div class="col-auto">
+    <label><input type="checkbox" checked={{include_qualified}} onclick={{action toggleIncludeQualified}}> Include Event Radio Eligible</label>
+  </div>
+  <div class="col-auto">
+    <label><input type="checkbox" checked={{event_summary}} onclick={{action toggleEventSummary}}>Report as Event Summary</label>
+  </div>
+</div>
+
+{{#if radios}}
+  <table class="table table-striped table-sm">
+    <thead>
+      <th>Call Sign</th>
+      <th>Barcode</th>
+      <th>Checkout </th>
+      {{#if (or event_summary include_eligible)}}
+        <th>Checkin </th>
+        <th>Is Event Radio?</th>
+        <th>Radio Qualified?</th>
+      {{/if}}
+      <th class="text-right">Time Checked Out</th>
+    </thead>
+
+    <tbody>
+      {{#each radios as |radio|}}
+        <tr>
+          <td>{{person-link personId=radio.person_id callsign=radio.callsign}}</td>
+          <td>{{radio.barcode}}</td>
+          <td>{{shift-format radio.checked_out}}</td>
+          {{#if (or event_summary include_eligible)}}
+            <td>
+              {{#if radio.checked_in}}
+                {{shift-format radio.checked_in}}
+              {{else}}
+                <i>still out</i>
+              {{/if}}
+            </td>
+            <td>{{yesno radio.perm_assign}}</td>
+            <td>{{yesno radio.eligible}}</td>
+          {{/if}}
+          <td class="text-right">{{hour-minute-format radio.duration}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p class="font-weight-bold text-danger">
+    No records were found for {{year}}.
+  </p>
+{{/if}}

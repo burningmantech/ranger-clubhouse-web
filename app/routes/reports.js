@@ -7,6 +7,6 @@ import { Role } from 'clubhouse/constants/roles';
 
 export default class ReportsRoute extends Route.extend(AuthenticatedRouteMixin) {
   beforeModel() {
-    this.house.roleCheck(Role.MANAGE);
+    this.house.roleCheck([ Role.ADMIN, Role.MANAGE ]);
   }
 }
