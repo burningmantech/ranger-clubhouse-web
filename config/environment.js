@@ -141,7 +141,7 @@ module.exports = function(environment) {
     // here you can enable a production-specific feature
     ENV.rootURL = (process.env.RANGER_CLUBHOUSE_CLIENT_PREFIX || '/client');
     ENV.dualClubhouse = true;
-    ENV.clubhouseClassicUrl = (process.env.RANGER_CLUBHOUSE_CLASSIC_URL || '/classic');
+    ENV.clubhouseClassicUrl = (process.env.RANGER_CLUBHOUSE_CLASSIC_URL || '/clubhouse');
 
     // Try to report any non-recoverable errors.
     ENV.logEmberErrors = true;

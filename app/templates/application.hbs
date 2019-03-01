@@ -139,7 +139,8 @@
                         {{#link-to "admin.credits" class="dropdown-item"}}Edit Schedule Credits{{/link-to}}
                         {{#link-to "admin.positions" class="dropdown-item"}}Edit Positions{{/link-to}}
                         {{#link-to "admin.roles" class="dropdown-item"}}Edit (System) Roles{{/link-to}}
-                        <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
+                        {{#link-to "admin.settings" class="dropdown-item"}}Edit Settings{{/link-to}}
+                      <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
                         <a href="{{cgo "logview" "show"}}" class="dropdown-item">Log View</a>
                         {{#link-to "admin.error-log" class="dropdown-item"}}Error Log{{/link-to}}
                       {{/if}}

@@ -17,6 +17,7 @@ const SINGULAR_MODELS = [
   'position',
   'position-credit',
   'role',
+  'setting',
   'slot',
   'timesheet',
   'timesheet-missing'
