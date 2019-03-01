@@ -1,0 +1,52 @@
+#!/bin/sh
+#
+# Dispatcher for Travis CI
+#
+
+. "$(dirname "$0")/.common.sh";
+
+travis_action="$1"; shift;
+
+echo "Docker configuration:";
+docker info;
+
+echo "Environment:";
+env;
+
+case "${travis_action}" in
+
+    "test")
+        # Build
+        "${wd}/bin/build";
+
+        # Run linter
+        "${wd}/bin/test_lint" .;
+
+        # Run tests in Docker container
+        echo "Testing Docker image...";
+        "${wd}/bin/test_docker";
+        ;;
+
+    "deploy")
+        if [ "${TRAVIS_PULL_REQUEST:-}" != "false" ]; then
+            echo "No deploy from a pull request branch.";
+            exit 0;
+        fi;
+        if [ "${TRAVIS_BRANCH}" != "master" ]; then
+            echo "No deploy from non-master branch branch. Aborting.";
+            exit 1;
+        fi;
+
+        # Build
+        "${wd}/bin/build";
+
+        # Deploy
+        "${wd}/bin/deploy";
+        ;;
+
+    *)
+        echo "Unknown Travis action: ${travis_action}";
+        exit 1;
+        ;;
+
+esac;
