@@ -1,20 +1,20 @@
 <h1>Language Search</h1>
 
 {{#ch-form "search" searchForm changeSet=false onFormChange=(action "searchOnChange") as |f|}}
-  <div class="form-group form-row">
-    <label class="col-auto col-form-label">Quick Search:</label>
+  <div class="form-group row">
     <div class="col-auto">
-      <button type="button" class="btn btn-primary btn-sm mr-2" {{action "setLanguage" "chinese"}}>Chinese</button>
-      <button type="button" class="btn btn-primary btn-sm mr-2" {{action "setLanguage" "dutch"}}>Dutch</button>
-      <button type="button" class="btn btn-primary btn-sm mr-2" {{action "setLanguage" "french"}}>French</button>
-      <button type="button" class="btn btn-primary btn-sm mr-2" {{action "setLanguage" "german"}}>German</button>
-      <button type="button" class="btn btn-primary btn-sm mr-2" {{action "setLanguage" "hebrew"}}>Hebrew</button>
-      <button type="button" class="btn btn-primary btn-sm mr-2" {{action "setLanguage" "italian"}}>Italian</button>
-      <button type="button" class="btn btn-primary btn-sm mr-2" {{action "setLanguage" "russian"}}>Russian</button>
-      <button type="button" class="btn btn-primary btn-sm mr-2" {{action "setLanguage" "spanish"}}>Spanish</button>
+      <label class="">Quick Search:</label>
+      <a href="#" class="mr-2" {{action "setLanguage" "spanish"}}>Spanish</a>
+      <a href="#" class="mr-2" {{action "setLanguage" "chinese"}}>Chinese</a>
+      <a href="#" class="mr-2" {{action "setLanguage" "dutch"}}>Dutch</a>
+      <a href="#" class="mr-2" {{action "setLanguage" "french"}}>French</a>
+      <a href="#" class="mr-2" {{action "setLanguage" "german"}}>German</a>
+      <a href="#" class="mr-2" {{action "setLanguage" "hebrew"}}>Hebrew</a>
+      <a href="#" class="mr-2" {{action "setLanguage" "italian"}}>Italian</a>
+      <a href="#" class="mr-2" {{action "setLanguage" "russian"}}>Russian</a>
     </div>
   </div>
-  <div class="form-row">
+  <div class="form-group row">
     {{f.input "language" type="text" size=50 maxlength=50 placeholder="Enter a language to search for" autofocus=true wrapClass="col-auto"}}
     <div class="col-auto my-1">
       {{f.input "offSite" type="checkbox" value=1 label="Include off site" wrapClass="form-check" controlClass="form-check-input"}}
@@ -22,50 +22,51 @@
   </div>
 {{/ch-form}}
 
+<hr>
 <h3 class="mt-4">On Duty Rangers ({{onDuty.length}})</h3>
 {{#if onDutyGroup}}
-<dl>
-  {{#each onDutyGroup as |group|}}
-    <dt>{{group.language_name}}</dt>
-    <dd>
-      {{#each group.items as |person|}}
-        {{#link-to "person.index" person.person_id}}{{person.callsign}}{{/link-to}},
-      {{/each}}
-    </dd>
-  {{/each}}
-</dl>
+  <dl>
+    {{#each onDutyGroup as |group|}}
+      <dt>{{group.language_name}}</dt>
+      <dd>
+        {{#each group.items as |person|}}
+          {{#link-to "person.index" person.person_id}}{{person.callsign}}{{/link-to}},
+        {{/each}}
+      </dd>
+    {{/each}}
+  </dl>
 {{else if searchLanguage}}
-No on duty rangers found who speaks "{{searchLanguage}}".
+  No on duty rangers found who speaks "{{searchLanguage}}".
 {{/if}}
 
 <h3 class="mt-4">Rangers With Radios ({{hasRadio.length}})</h3>
 {{#if hasRadioGroup}}
-<dl>
-  {{#each hasRadioGroup as |group|}}
-    <dt>{{group.language_name}}</dt>
-    <dd>
-      {{#each group.items as |person|}}
-        {{#link-to "person.index" person.person_id}}{{person.callsign}}{{/link-to}},
-      {{/each}}
-    </dd>
-  {{/each}}
-</dl>
+  <dl>
+    {{#each hasRadioGroup as |group|}}
+      <dt>{{group.language_name}}</dt>
+      <dd>
+        {{#each group.items as |person|}}
+          {{#link-to "person.index" person.person_id}}{{person.callsign}}{{/link-to}},
+        {{/each}}
+      </dd>
+    {{/each}}
+  </dl>
 {{else if searchLanguage}}
-No off duty rangers found who speaks "{{searchLanguage}}".
+  No off duty rangers found who speaks "{{searchLanguage}}".
 {{/if}}
 
 <h3 class="mt-4">Off Duty Rangers ({{offDuty.length}})</h3>
 {{#if offDutyGroup}}
-<dl>
-  {{#each offDutyGroup as |group|}}
-    <dt>{{group.language_name}}</dt>
-    <dd>
-      {{#each group.items as |person|}}
-        {{#link-to "person.index" person.person_id}}{{person.callsign}}{{/link-to}},
-      {{/each}}
-    </dd>
-  {{/each}}
-</dl>
+  <dl>
+    {{#each offDutyGroup as |group|}}
+      <dt>{{group.language_name}}</dt>
+      <dd>
+        {{#each group.items as |person|}}
+          {{#link-to "person.index" person.person_id}}{{person.callsign}}{{/link-to}},
+        {{/each}}
+      </dd>
+    {{/each}}
+  </dl>
 {{else if searchLanguage}}
-No rangers with radios found who speaks "{{searchLanguage}}".
+  No rangers with radios found who speaks "{{searchLanguage}}".
 {{/if}}

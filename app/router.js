@@ -50,7 +50,6 @@ Router.map(function() {
   });
 
   this.route('search', function() {
-    this.route('person');
     this.route('assets');
     this.route('languages');
   });
