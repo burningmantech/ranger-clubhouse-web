@@ -35,7 +35,7 @@ export default class SearchLanguagesController extends Controller {
   notFound = '';
   searchLanguage = '';
 
-  onduty = [ ];
+  onDuty = [ ];
   offDuty = [ ];
   hasRadio = [ ];
   searchForm = LanguageForm.create({});

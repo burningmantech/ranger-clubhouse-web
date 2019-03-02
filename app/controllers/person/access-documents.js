@@ -74,6 +74,7 @@ export default class PersonAccessDocumentsController extends Controller {
   @action
   editAccessDocument(document) {
     this.set('entry', document);
+    document.set('additional_comments', '');
   }
 
   @action
