@@ -61,6 +61,7 @@ Router.map(function() {
     this.route('roles');
     this.route('error-log');
     this.route('bulk-upload');
+    this.route('settings');
   });
 
   this.route('debug');
