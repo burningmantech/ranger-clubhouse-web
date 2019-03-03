@@ -9,13 +9,22 @@ export default class LoginController extends Controller {
   isSubmitting = false;
   loginError = null;
 
+  /*
+   * Obtain an authorization token from the API server (aka login)
+   */
+
   apiLogin(credentials) {
     this.set('isSubmitting', true);
     return this.session.authenticate('authenticator:jwt', credentials)
       .then(() => {
+      /*
+         Uncomment if using session cookies to bounce between sites.
+
         if (ENV['dualClubhouse']) {
           this.classicLogin(credentials);
         }
+        */
+        setCookie('C2AUTHTOKEN', this.session.data.authenticated.token);
       })
       .catch((response) => {
         if (response.status == 401) {
@@ -30,12 +39,11 @@ export default class LoginController extends Controller {
       });
   }
 
-  async classicLogin(credentials) {
-    /*
-     * Attempt to authorize with Classic Clubhouse before trying for
-     * Clubhouse 2.0
-     */
+  /*
+   * Login to Classic Clubhouse and obtain a session cookie
+   */
 
+  async classicLogin(credentials) {
     // Invalidate the existing Classic clubhouse cookie
     setCookie('PHPSESSID', 'nothing', 0);
     await this.ajax.post('/?DMSc=security&DMSm=login&json=1', {
