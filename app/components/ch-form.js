@@ -105,7 +105,7 @@ export default class ChFormComponent extends Component {
         null;
     });
 
-    $('[autofocus]').focus();
+    $(`#${this.formId} [autofocus]`).focus();
   }
 
   willDestroyElement() {

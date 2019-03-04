@@ -1,4 +1,4 @@
-{{#ch-form "slot" slot modalBox=true modalTitle=formTitle validator=slotValidations onSubmit=(action "save") as |f|}}
+{{#ch-form "slot" slot modalBox=true modalTitle=formTitle validator=slotValidations onSubmit=(action "save") onCancel=(action "cancel") as |f|}}
   <div class="form-row">
     {{f.input "position_id" label="Position" type="select" options=positionOptions grid="col-md-auto"}}
     {{f.input "trainer_slot_id"
@@ -30,7 +30,7 @@
 
   <div class="form-group mt-2">
     {{f.submit}}
-    <button type="submit" class="btn btn-secondary" {{action "cancel" f.model}}>Cancel</button>
+    {{f.cancel}}
   </div>
 
 {{/ch-form}}

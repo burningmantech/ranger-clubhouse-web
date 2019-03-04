@@ -5,7 +5,7 @@ import { validatePresence } from 'ember-changeset-validations/validators';
 export default class MeTimesheetCorrectionsReviewController extends Controller {
   entry = null; // Incorrect entry
 
-  corectionValidations = {
+  correctionValidations = {
     notes: validatePresence({ presence: true})
   };
 

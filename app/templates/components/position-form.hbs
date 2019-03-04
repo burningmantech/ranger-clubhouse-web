@@ -1,4 +1,4 @@
-{{#ch-form "position" position modalBox=true modalTitle=formTitle validator=positionValidations onSubmit=(action "save") as |f|}}
+{{#ch-form "position" position modalBox=true modalTitle=formTitle validator=positionValidations onSubmit=(action "save") onCancel=(action "cancel") as |f|}}
   <fieldset>
     <legend>Description</legend>
     <div class="form-row">
@@ -30,7 +30,7 @@
 
   <div class="mt-4">
     {{f.submit}}
-    <button type="submit" class="btn btn-secondary" {{action "cancel" f.model}}>Cancel</button>
+    {{f.cancel}}
   </div>
 
 {{/ch-form}}

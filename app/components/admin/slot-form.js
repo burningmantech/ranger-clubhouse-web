@@ -59,6 +59,6 @@ export default class SlotFormComponent extends Component {
 
   @action
   cancel(model) {
-        this.onCancel(model);
+    this.onCancel(model);
   }
 }

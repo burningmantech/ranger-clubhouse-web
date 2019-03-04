@@ -134,7 +134,7 @@
 
 {{! Timesheet entry correction form dialog }}
 {{#if entry}}
-  {{#ch-form "correction" entry modalBox=true modalTitle="Timesheet Correction" validator=corectionValidations onSubmit=(action "saveCorrectionAction") onCancel=(action "cancelCorrectionAction") as |f|}}
+  {{#ch-form "correction" entry modalBox=true modalTitle="Timesheet Correction" validator=correctionValidations onSubmit=(action saveCorrectionAction) onCancel=(action cancelCorrectionAction) as |f|}}
     <dl class="form-row">
       <dt class="col-sm-2">Position:</dt>
       <dd class="col-sm-10">{{entry.position.title}}</dd>
@@ -166,7 +166,7 @@
         <li>Provide an explanation on why you think the entry is wrong.</li>
       </ul>
     </div>
-    {{f.input "notes" label="Your correction note:" type="textarea" cols=80 rows=3 autofocus=true}}
+    {{f.input "notes" label="Your correction note:" type="textarea" cols=80 rows=3}}
     {{f.submit label="Submit Correction" disabled=isSubmitting}}
     {{f.cancel}}
   {{/ch-form}}
