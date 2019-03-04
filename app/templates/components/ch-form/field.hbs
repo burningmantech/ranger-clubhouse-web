@@ -77,18 +77,19 @@
       onUpdate=(action "update")
   }}
 {{else if (eq type "textarea")}}
-  {{textarea
-    name        = name
-    id          = _domId
-    value       = (mut (get model name))
-    class       = (concat controlClass " " (unless isValid elementErrorClass))
-    placeholder = placeholder
-    disabled    = disabled
-    autofocus   = autofocus
-    rows        = rows
-    cols        = cols
-    maxLength   = maxlength
-  }}
+  <textarea
+    name        = {{name}}
+    id          = {{_domId}}
+    class       = {{concat controlClass " " (unless isValid elementErrorClass)}}
+    placeholder = {{placeholder}}
+    disabled    = {{disabled}}
+    autofocus   = {{autofocus}}
+    rows        = {{rows}}
+    cols        = {{cols}}
+    maxLength   = {{maxlength}}
+    oninput     = {{action "update" value = "target.value"}}
+    onfocus     = {{onFocus}}
+  >{{get model name}}</textarea>
 {{else if (or (eq type "datetime") (eq type "date"))}}
   {{datetime-picker
     autofocus=autofocus
