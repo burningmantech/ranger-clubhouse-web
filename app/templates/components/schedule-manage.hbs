@@ -56,7 +56,7 @@
           </p>
         {{else}}
           <strong class="text-danger">Unfortunately, the Manual Review is still
-          being worked on.</strong> You may not sign up for shifts, including
+            being worked on.</strong> You may not sign up for shifts, including
           trainings, until the review is ready and you have passed it. Please
           check back later.
         {{/if}}
@@ -64,16 +64,14 @@
     {{/if}}
 
     {{#if permission.missing_bpguid}}
-      <p>
-        Your Clubhouse account is missing your Burner Profile ID (aka BPGUID). Normally, the ID
-        is automatically filled in when your Clubhouse account is created however sometimes the
-        ID is filled. Contact the Ranger Voluneer Coordinatiors at {{vc-email}} to get this fixed.
-      </p>
+      {{person-missing-bpguid}}
     {{/if}}
 
     {{#if (or person.isPastProspective (and (not person.callsign_approved) (not person.isAuditor) (not person.isNonRanger)))}}
-      Please email {{vc-email}} if you are interested in
-      volunteering with us or if you think you have received this message in error.
+      <p>
+        Please email {{vc-email}} if you are interested in
+        volunteering with us or if you think you have received this message in error.
+      </p>
     {{/if}}
   {{/ch-box}}
 {{else}}
