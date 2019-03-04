@@ -39,7 +39,7 @@
           <p>
             {{#if (eq permission.photo_status "missing")}}
               Please upload a BMID (lam) photo. Note that photos can take 2-3 days to be
-              approved. A new photo may be uploaded on the {{#link-to "me.personal-info"}}Personal Info{{/link-to}} page.
+              approved. A new photo may be uploaded on the {{#link-to "me.overview"}}Home Page{{/link-to}}.
             {{else if (eq permission.photo_status "rejected")}}
               The photo was rejected. Please upload a new photo that conforms to the guidelines.
             {{else}}
