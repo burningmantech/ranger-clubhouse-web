@@ -31,11 +31,11 @@
         <p>
           We are sorry if this is an inconvenience for you.
         </p>
-      {{else if (not-eq permission.photo_status "not-required")}}
+      {{else}}
         <p>
           You cannot sign up for training and/or shifts because {{deniedReason}}.
         </p>
-        {{#if (not-eq permission.photo_status "approved")}}
+        {{#if (not hasApprovedPhoto)}}
           <p>
             {{#if (eq permission.photo_status "missing")}}
               Please upload a BMID (lam) photo. Note that photos can take 2-3 days to be
@@ -49,8 +49,9 @@
         {{/if}}
       {{/if}}
 
-      {{#if (not permission.manual_review_passed)}}
-        {{#if (and permission.manual_review_allowed permission.manual_review_url)}}
+      {{! Required photo approval before allowing Manual Review}}
+      {{#if (and permission.manual_review_allowed hasApprovedPhoto)}}
+        {{#if permission.manual_review_url}}
           <p>
             Please <a href="{{permission.manual_review_url}}">click here</a> to take the Manual Review.
           </p>

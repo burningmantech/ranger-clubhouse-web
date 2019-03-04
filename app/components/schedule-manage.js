@@ -175,6 +175,13 @@ export default class ScheduleManageComponent extends Component {
     return 'you need '+conjunctionFormat(denied, 'and');
   }
 
+  @computed('permission.photo_status')
+  get hasApprovedPhoto() {
+    const status = this.permission.photo_status;
+
+    return (status == 'approved' || status == 'not-required');
+  }
+
   handleErrorJoinResponse(result, slot) {
     const modal = this.modal;
     const status = result.status;
