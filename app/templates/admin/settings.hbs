@@ -57,7 +57,9 @@
     {{/if}}
     <div class="form-group row">
       {{#if (eq updateValue.type "bool")}}
-        {{f.input "value" type="checkboxGroup" options=booleanOptions}}
+        <div class="col-auto">
+          {{f.input "value" type="radioGroup" options=booleanOptions inline=true}}
+        </div>
       {{else if (eq updateValue.type "integer")}}
         <div class="col-auto">
           {{f.input "value" label="Settings Integer Value" type="text" size="10"}}

@@ -2,7 +2,7 @@
   {{#ch-box "Signups for training and/or shifts is not allowed" type="warning" icon="exclamation-circle"}}
     {{#if person.isPastProspective}}
       <p>
-        You cannot sign up for shifts (including trainings) because it looks like
+        You cannot sign up for trainings and/or shifts because it looks like
         you were interested in volunteering with us some time ago but your account
         isn't in our volunteer intake pipeline for this year.
       </p>
@@ -33,7 +33,7 @@
         </p>
       {{else if (not-eq permission.photo_status "not-required")}}
         <p>
-          You cannot sign up for shifts (including trainings) because {{deniedReason}}.
+          You cannot sign up for training and/or shifts because {{deniedReason}}.
         </p>
         {{#if (not-eq permission.photo_status "approved")}}
           <p>
@@ -49,16 +49,16 @@
         {{/if}}
       {{/if}}
 
-      {{#if permission.manual_review_allowed}}
-        {{#if permission.manual_review_url}}
+      {{#if (not permission.manual_review_passed)}}
+        {{#if (and permission.manual_review_allowed permission.manual_review_url)}}
           <p>
             Please <a href="{{permission.manual_review_url}}">click here</a> to take the Manual Review.
           </p>
         {{else}}
-          <h3>The Manual Review is not quite ready.</h3>
-          Unfortunately, the Manual Review is still being worked on. You may not
-          sign up for shifts, including trainings, until the review is ready and
-          you have passed it. Please check back later.
+          <strong class="text-danger">Unfortunately, the Manual Review is still
+          being worked on.</strong> You may not sign up for shifts, including
+          trainings, until the review is ready and you have passed it. Please
+          check back later.
         {{/if}}
       {{/if}}
     {{/if}}
