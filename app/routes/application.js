@@ -67,7 +67,7 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
     // the navigation bar is not expanded - i.e. when showning
     // on a cellphone.
     $('header a.dropdown-item').on('click', function(){
-        $('header .navbar-collapse').collapse('hide');
+        $('.navbar-collapse').collapse('hide');
      });
   }
 }
