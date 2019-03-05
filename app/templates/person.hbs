@@ -1,4 +1,30 @@
-{{person-sidebar person=person}}
+{{#ch-sidebar}}
+  {{#ch-sidebar-group "PROFILE"}}
+    {{ch-sidebar-link "person.index" title="Account Info" icon="info" iconType="s"}}
+    {{ch-sidebar-link "person.schedule" title="Schedule / Sign Up" icon="clipboard"}}
+    {{ch-sidebar-link "person.event-info" title="Event/Training Info" icon="user" iconType="s"}}
+    {{ch-sidebar-link "person.timesheet" title="Timesheets" class="dropdown-item" icon="clock"}}
+    {{ch-sidebar-link "person.assets" title="Assets" class="dropdown-item" icon="broadcast-tower" iconType="s"}}
+    {{ch-sidebar-link "person.messages" title="Messages" icon="envelope" badgeText=person.unread_message_count}}
+    {{#if (has-role "admin" "manage+view-pii")}}
+      {{ch-sidebar-link "person.personal-info" title="Personal Info" icon="home" iconType="s"}}
+    {{/if}}
+    {{#if (has-role "admin" "manage")}}
+      {{ch-sidebar-link "person.emergency-contact" title="Emergency Contact" icon="exclamation" iconType="s"}}
+    {{/if}}
+    {{#if (has-role "admin" "vc" "mentor")}}
+      {{ch-sidebar-link "person.mentors" title="Mentors" icon="users" iconType="s"}}
+    {{/if}}
+    {{#if (has-role "admin")}}
+      {{ch-sidebar-link "person.password" title="Change Password" icon="key" iconType="s"}}
+    {{/if}}
+  {{/ch-sidebar-group}}
+
+  {{#ch-sidebar-group}}
+    {{ch-sidebar-collapse}}
+  {{/ch-sidebar-group}}
+{{/ch-sidebar}}
+
 <main class="col">
   {{#if (not person.user_authorized)}}
     {{#ch-alert "danger"}}

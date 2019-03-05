@@ -6,7 +6,18 @@
     {{#link-to "me.overview" class="navbar-brand"}}
       Clubhouse
     {{/link-to}}
+
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      {{#if session.isAuthenticated}}
+        {{! Show callsign and logout button on small screens with collapsed navbar}}
+        <div class="navbar-text d-md-none float-right">
+          {{#link-to "logout" class="btn btn-sm btn-secondary text-white"}}Logout{{/link-to}}
+        </div>
+        <div class="navbar-text d-md-none h4 text-black">
+          {{session.user.callsign}}
+        </div>
+      {{/if}}
+
       <ul class="navbar-nav mr-auto">
         {{#if session.isAuthenticated}}
           <li class="nav-item dropdown  dropdown-large">
@@ -140,7 +151,7 @@
                         {{#link-to "admin.positions" class="dropdown-item"}}Edit Positions{{/link-to}}
                         {{#link-to "admin.roles" class="dropdown-item"}}Edit (System) Roles{{/link-to}}
                         {{#link-to "admin.settings" class="dropdown-item"}}Edit Settings{{/link-to}}
-                      <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
+                        <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
                         <a href="{{cgo "logview" "show"}}" class="dropdown-item">Log View</a>
                         {{#link-to "admin.error-log" class="dropdown-item"}}Error Log{{/link-to}}
                       {{/if}}
@@ -240,6 +251,7 @@
             </li>
           {{/if}}
         {{else}}
+          {{! User not logged in}}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Actions</a>
             <div class="dropdown-menu">
@@ -261,7 +273,7 @@
 
       </ul>
       {{#if session.isAuthenticated}}
-        <ul class="navbar-nav">
+        <ul class="navbar-nav d-none d-md-inline">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">{{session.user.callsign}}</a>
             <div class="dropdown-menu">
@@ -273,13 +285,13 @@
     </div>
   </nav>
   {{#if (has-role "manage")}}
-    <div class="bg-khaki row ">
+    <div class="bg-khaki row no-gutters">
       {{! line up the search bar with main content}}
       <div class="d-none d-md-block sidebar-expanded">
         &nbsp;
       </div>
 
-      {{#ch-form "person-search" searchForm formClass="col mb-2 ml-2 mr-2" changeSet=false onSubmit=(action "submit") as |f|}}
+      {{#ch-form "person-search" searchForm formClass="col mb-2 ml-3 mr-3" changeSet=false onSubmit=(action "submit") as |f|}}
         {{#power-select-typeahead
                         search=(action searchAction)
                         onchange=(action searchChangeAction)
@@ -320,7 +332,7 @@
             <div class="float-right mr-2">
               <button type="button" class="btn btn-sm btn-secondary" {{action "hideSearchBoxAction"}}>Hide Options</button>
             </div>
-            <div class="form-row ">
+            <div class="form-row">
               <div class="text-muted mt-2 col-sm-12">(Future feature - waiting for HQ interface)</div>
               <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Mode:</label>
               {{f.input "display_mode" type="radioGroup" options=displayModeOptions label="Display Mode" inline=true }}

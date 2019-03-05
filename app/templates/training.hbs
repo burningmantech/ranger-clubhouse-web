@@ -1,7 +1,18 @@
-{{training-sidebar training=training}}
+{{#ch-sidebar}}
+  {{#ch-sidebar-group training.title}}
+    {{ch-sidebar-link "training.index" title="Trainer's Report" icon="list-alt" iconType="r"}}
+    {{ch-sidebar-link "training.capacity" training.id title="Training Capacity" icon="battery-half" iconType="s"}}
+    {{ch-sidebar-link "training.multiple-enrollments" training.id title="Multiple Enrollments" icon="copy" iconType="s"}}
+    {{ch-sidebar-link "training.people-training-completed" training.id title="Training Completed" icon="check-square" iconType="s"}}
+    {{#if training.is_art}}
+      {{ch-sidebar-link "training.untrained-people" training.id title="Untrained People" icon="exclamation-circle" iconType="s"}}
+    {{/if}}
+    {{ch-sidebar-collapse}}
+  {{/ch-sidebar-group}}
+{{/ch-sidebar}}
+
 <main class="col min-width-500">
-  <div class="row  d-md-none">
-    <div class="col-sm-12">
+  <div class="d-md-none mb-2">
       <div class="btn-group">
         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Training Section
@@ -17,7 +28,6 @@
         </div>
       </div>
     </div>
-  </div>
 
   {{outlet}}
 </main>
