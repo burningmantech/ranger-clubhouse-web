@@ -7,7 +7,7 @@
         Slot has not been activated yet. No one will be able to sign up for this session until the slot has been activated.
       {{/ch-alert}}
     {{/unless}}
-    <b>Signups:</b> {{group.slot.signed_up}} of {{group.slot.max}}
+    <b>Sign ups:</b> {{group.slot.signed_up}} of {{group.slot.max}}
     {{#if (gte group.slot.signed_up group.slot.max)}}
       <span class="text-danger"> (FULL)</span>
     {{/if}}

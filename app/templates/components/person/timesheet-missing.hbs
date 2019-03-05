@@ -59,7 +59,7 @@
     <div class="form-row">
       {{f.input "notes" type="textarea" cols=80 rows=4 options=positions label="Correction Notes"}}
     </div>
-    {{f.submit}}
+    {{f.submit label="Create"}}
     {{f.cancel}}
   {{/ch-form}}
 {{/if}}
@@ -171,9 +171,9 @@
       </fieldset>
     {{/if}}
     {{#if nextEntry}}
-      {{f.submit label="Save & Manage Next Pending" onSubmit=(action "saveAndManageNextEntryAction")}}
+      {{f.submit label="Update & Manage Next Pending" onSubmit=(action "saveAndManageNextEntryAction")}}
     {{/if}}
-    {{f.submit}}
+    {{f.submit label="Update"}}
     {{f.cancel}}
     {{#if havePartnerTimesheet}}
       <hr>
