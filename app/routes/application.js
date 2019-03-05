@@ -4,6 +4,8 @@ import { action } from '@ember-decorators/object';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import ENV from 'clubhouse/config/environment';
 
+import $ from 'jquery';
+
 export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin) {
   beforeModel(transition) {
     // If heading to the offline target, simply return
@@ -57,5 +59,15 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
   @action
   logout() {
     this.session.invalidate();
+  }
+
+  @action
+  didTransition() {
+    // Close up the navbar when clicking on a menu item and
+    // the navigation bar is not expanded - i.e. when showning
+    // on a cellphone.
+    $('header a.dropdown-item').on('click', function(){
+        $('header .navbar-collapse').collapse('hide');
+     });
   }
 }
