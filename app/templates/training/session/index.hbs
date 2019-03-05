@@ -1,9 +1,9 @@
 <h1>{{year-format slot.begins}} {{training.title}} - {{shift-format slot.begins}} - {{slot.description}}</h1>
 
 {{#unless slot.active}}
-<div class="alert alert-warning">
-  This session has not been activated yet. Sign ups are not permitted at this time.
-</div>
+  <p class="text-danger font-weight-bold">
+    Training session has not been activated. Sign ups are disabled until the session (aka slot) has been activated.
+  </p>
 {{/unless}}
 Signups: {{students.length}} of {{slot.max}}
 
@@ -61,9 +61,9 @@ Signups: {{students.length}} of {{slot.max}}
         <div class="dropdown-divider"></div>
         <a href class="dropdown-item" {{action "showAddPersonAction"}}>Add Person</a>
         <a href class="dropdown-item" {{action "showRemovePersonAction"}}>Remove Person</a>
-     </div>
-   </div>
- </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 

@@ -3,9 +3,9 @@
 {{#each trainingSessions as |group|}}
   {{#ch-box (concat (shift-format group.slot.begins) " " group.slot.description)}}
     {{#unless group.slot.active}}
-      {{#ch-alert "warning"}}
-        Slot has not been activated yet. No one will be able to sign up for this session until the slot has been activated.
-      {{/ch-alert}}
+    <p class="text-danger font-weight-bold">
+        Training session has not been activated. Sign ups are disabled until the session (aka slot) has been activated.
+      </p>
     {{/unless}}
     <b>Sign ups:</b> {{group.slot.signed_up}} of {{group.slot.max}}
     {{#if (gte group.slot.signed_up group.slot.max)}}

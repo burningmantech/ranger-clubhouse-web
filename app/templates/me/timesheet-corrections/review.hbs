@@ -1,15 +1,6 @@
-<div class="lead font-weight-bold">Timesheet Entry Review</div>
+<h3>Timesheet Entry Review</h3>
 
 {{#if timesheets}}
-  <div class="row">
-    <div class="col-sm-12 col-md-6 mb-2">
-      {{#link-to "me.timesheet-corrections.index" class="btn btn-secondary"}}Back to Correction Instructions{{/link-to}}
-    </div>
-    <div class="col-sm-12 col-md-6 text-md-right mb-2">
-      {{#link-to "me.timesheet-corrections.missing" class="btn btn-secondary"}}Go to Step 2 - Missing Entries Requests{{/link-to}}
-    </div>
-  </div>
-
   <p>
     Review your {{timesheetInfo.correction_year}} timesheet entries below and mark each
     as correct or incorrect. When you mark an entry as incorrect, a dialog box will appear
@@ -122,11 +113,11 @@
 
 <div class="mt-4">
   <div class="row">
-    <div class="col-sm-12 col-md-6 mb-2">
-      {{#link-to "me.timesheet-corrections.index" class="btn btn-secondary"}}Back to Correction Instructions{{/link-to}}
+    <div class="col-6 mb-2">
+      {{#link-to "me.timesheet-corrections.index" class="btn btn-success"}}{{fa-icon "arrow-left"}} Correction Instructions{{/link-to}}
     </div>
-    <div class="col-sm-12 col-md-6 text-md-right">
-      {{#link-to "me.timesheet-corrections.missing" class="btn btn-secondary"}}Go to Step 2 - Missing Entries Requests{{/link-to}}
+    <div class="col-6 text-md-right">
+      {{#link-to "me.timesheet-corrections.missing" class="btn btn-success"}}Missing Entries Requests {{fa-icon "arrow-right"}}{{/link-to}}
     </div>
   </div>
 </div>

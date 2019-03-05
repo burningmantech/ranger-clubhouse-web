@@ -2,6 +2,8 @@
 // Bootstrap customizations
 //
 
+$enable-responsive-font-sizes: true;
+
 $kakhi: #d2b48c;
 
 $theme-colors: (
@@ -35,6 +37,7 @@ $h6-font-size:                $font-size-base;
 $modal-header-padding: 0.75rem !important;
 $modal-sm: 95%;
 $modal-md: 80%;
+
 
 
 // Add additional w-XX width sizes beyond what bootstrap provides.
@@ -97,7 +100,7 @@ $sizes: (
 }
 
 .text-black {
-  color: #000;
+  color: #000 !important;
 }
 
 // Indicate action on elements which are clickable

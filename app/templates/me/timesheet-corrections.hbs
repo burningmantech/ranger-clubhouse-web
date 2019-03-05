@@ -15,16 +15,15 @@
   </div>
 {{else if timesheetInfo.timesheet_confirmed}}
   {{#ch-alert "success"}}
-    {{fa-icon "thumbs-up" type="far"}} Congratulations! All your timesheet
+    {{fa-icon "thumbs-up" type="far"}} <strong>Congratulations!</strong> All your timesheet
     entries have been reviewed, there are no outstanding correction requests,
     and you have stated you have no further correction requests
     Nothing needs to be done at this point. Thank you for your efforts!
   {{/ch-alert}}
 {{else}}
-  {{#ch-alert "info"}}
+  {{#ch-alert "warning"}}
     It appears all of your timesheet entries have been reviewed and there are no outstanding
-    correction requests. Let us know you are finished submitting corrections.<br>
-    <br>
+    correction requests. Let us know you are finished submitting corrections.
     Go to {{#link-to "me.timesheet-corrections.confirm"}}Final Confirmation{{/link-to}}
     to do this.
   {{/ch-alert}}

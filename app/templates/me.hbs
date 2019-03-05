@@ -1,4 +1,55 @@
-{{me-sidebar user=user}}
+{{! Besure to keep application.hbs in sync with the links}}
+{{#ch-sidebar}}
+  {{#ch-sidebar-group "RANGERING"}}
+    {{ch-sidebar-link "me.schedule" title="Schedule / Sign Up" icon="clipboard"}}
+    {{#if (or user.isAlpha user.isRanger)}}
+      {{ch-sidebar-link "me.timesheet-corrections.index" title="Timesheet Corrections" icon="list-ol" iconType="s"}}
+      {{ch-sidebar-link "me.timesheet" title="Timesheets" icon="clock"}}
+    {{/if}}
+    {{#unless user.isAuditor}}
+      {{ch-sidebar-link "me.event-info" title="Event Info" icon="user"}}
+    {{/unless}}
+  {{/ch-sidebar-group}}
+
+  {{#if (or user.isRanger user.isAlpha user.isProspective)}}
+    {{#ch-sidebar-group "PRE-EVENT"}}
+      {{#if (or user.isAlpha user.isProspective)}}
+        {{ch-sidebar-link "me.tickets" title="Work Access Pass" icon="ticket-alt" iconType="s"}}
+      {{else}}
+        {{ch-sidebar-link "me.tickets" title="Tickets & Stuff" icon="ticket-alt" iconType="s"}}
+      {{/if}}
+      {{#if (and (config "MotorpoolPolicyEnable") (or session.user.isRanger session.user.isAlpha))}}
+        {{ch-sidebar-link "me.motorpool-policy" title="Motorpool Policy" icon="car" iconType="s"}}
+      {{/if}}
+    {{/ch-sidebar-group}}
+  {{/if}}
+
+  {{#ch-sidebar-group "COMMUNICATION"}}
+    {{#if user.isRanger}}
+      {{ch-sidebar-link "me.messages" title="Messages" icon="envelope" badgeText=user.unread_message_count}}
+    {{/if}}
+    {{ch-sidebar-link "me.alerts" title="Alert Preferences" icon="bell"}}
+    {{#if user.teacher.have_mentored}}
+      {{ch-sidebar-link "me.mentees" title="My Mentees" icon="users" iconType="s"}}
+    {{/if}}
+    {{#if user.isRanger}}
+      {{ch-sidebar-link "me.contact" title="Contact Ranger" icon="comments" iconType="s"}}
+    {{/if}}
+  {{/ch-sidebar-group}}
+
+  {{#ch-sidebar-group "MY ACCOUNT"}}
+    {{ch-sidebar-link "me.personal-info" title="Personal Info" icon="home" iconType="s"}}
+    {{#if (or user.isRanger user.isAlpha user.isProspective)}}
+      {{ch-sidebar-link "me.emergency-contact" title="Emergency Contact" icon="exclamation" iconType="s"}}
+    {{/if}}
+    {{ch-sidebar-link "me.password" title="Change Password" icon="key" iconType="s"}}
+  {{/ch-sidebar-group}}
+
+  {{#ch-sidebar-group}}
+    {{ch-sidebar-link "me.help" title="Help" icon="question" iconType="s"}}
+    {{ch-sidebar-collapse}}
+  {{/ch-sidebar-group}}
+{{/ch-sidebar}}
 <main class="col">
   {{outlet}}
 </main>
