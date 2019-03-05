@@ -266,7 +266,7 @@
   <div class="form-group row">
     <label class="col-form-label-fixed col-sm-12 col-md-2">&nbsp;</label>
     <div class="col-sm-12 col-md-6">
-      {{f.submit label="Save Information" disabled=(not f.model.isDirty)}}
+      {{f.submit label="Update" disabled=(not f.model.isDirty)}}
     </div>
     <div class="col-sm-12 col-md-2 ml-auto">
       <button type="button" class="btn btn-danger btn-sm" {{action "removePerson"}}>Remove</button>

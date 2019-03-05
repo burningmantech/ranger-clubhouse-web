@@ -91,15 +91,15 @@ then let them know what's up.
     </dd>
 
     {{#unless person.isPastProspective}}
-      <dt>Shift Signups &amp; Current Schedule</dt>
+      <dt>Current Schedule &amp; Shift Signups</dt>
       <dd>
         {{#if person.isRanger}}
-          Sign up for training and shifts:
+          Signup for training and shifts:
         {{else}}
-          Sign up for training:
+          Signup for training:
         {{/if}}
 
-        {{#link-to "me.schedule"}}Schedule &amp; Signups{{/link-to}}
+        {{#link-to "me.schedule"}}Schedule / Sign Up{{/link-to}}
 
         <ul class="mt-2">
           <li>Training shifts start getting posted in April.</li>

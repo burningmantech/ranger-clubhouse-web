@@ -1,8 +1,8 @@
 {{#if (and isCurrentYear (not permission.signup_allowed))}}
-  {{#ch-box "Signups for training and/or shifts is not allowed" type="warning" icon="exclamation-circle"}}
+  {{#ch-box "Sign ups for training and/or shifts is not allowed" type="warning" icon="exclamation-circle"}}
     {{#if person.isPastProspective}}
       <p>
-        You cannot sign up for trainings and/or shifts because it looks like
+        You cannot signup for trainings and/or shifts because it looks like
         you were interested in volunteering with us some time ago but your account
         isn't in our volunteer intake pipeline for this year.
       </p>
@@ -33,7 +33,7 @@
         </p>
       {{else}}
         <p>
-          You cannot sign up for training and/or shifts because {{deniedReason}}.
+          You cannot signup for training and/or shifts because {{deniedReason}}.
         </p>
         {{#if (not hasApprovedPhoto)}}
           <p>
@@ -57,7 +57,7 @@
           </p>
         {{else}}
           <strong class="text-danger">Unfortunately, the Manual Review is still
-            being worked on.</strong> You may not sign up for shifts, including
+            being worked on.</strong> You may not signup for shifts, including
           trainings, until the review is ready and you have passed it. Please
           check back later.
         {{/if}}
@@ -123,7 +123,7 @@
               <div class="schedule-time">To</div>
               <div class="schedule-credits">Credits</div>
               <div class="schedule-description">Description</div>
-              <div class="schedule-signups">Signups</div>
+              <div class="schedule-signups">Sign Ups</div>
               <div class="schedule-actions">Actions</div>
             </div>
             {{#each group.slots as |slot|}}
@@ -152,7 +152,7 @@
                   {{else}}
                     {{#if slot.slot_active}}
                       {{#if (or (not slot.isFull) (not slot.has_started) (has-role "admin"))}}
-                        <button {{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Sign up">{{fa-icon "user-plus" type="fas"}}</button>
+                        <button {{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Show people who are signed up">{{fa-icon "user-plus" type="fas"}}</button>
                       {{/if}}
                     {{else}}
                       <small class="text-danger">Inactive</small>

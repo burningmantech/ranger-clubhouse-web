@@ -22,7 +22,7 @@
 
 
     <div class="form-group mt-2">
-      {{f.submit}}
+      {{f.submit label=(if credit.isNew "Create" "Update")}}
       {{f.cancel}}
     </div>
 

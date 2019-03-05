@@ -40,7 +40,7 @@ Signups: {{students.length}} of {{slot.max}}
   <div class="d-sm-block d-none">
     <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}>{{if isSubmitting "Saving" "Save All"}}</button>
     {{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary btn-sm"}}Trainer's Report{{/link-to}}
-    {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary btn-sm"}}Signup Sheet{{/link-to}}
+    {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary btn-sm"}}Sign up Sheet{{/link-to}}
     <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
     <button class="btn btn-secondary btn-sm" {{action "showAddPersonAction"}}>Add Person</button>
     <button class="btn btn-secondary btn-sm" {{action "showRemovePersonAction"}}>Remove Person</button>
@@ -55,7 +55,7 @@ Signups: {{students.length}} of {{slot.max}}
       </button>
       <div class="dropdown-menu">
         {{#link-to "training.session.trainers-report" training.id slot.id class="dropdown-item"}}Trainer's Report{{/link-to}}
-        {{#link-to "training.session.signup-sheet" training.id slot.id class="dropdown-item"}}Signup Sheet{{/link-to}}
+        {{#link-to "training.session.signup-sheet" training.id slot.id class="dropdown-item"}}Sign up Sheet{{/link-to}}
         <div class="dropdown-divider"></div>
         <a href class="dropdown-item" {{action "toggleEmailListAction"}}>{{if showEmails "Hide Emails" "List Emails"}}</a>
         <div class="dropdown-divider"></div>

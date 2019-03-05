@@ -82,7 +82,7 @@
             <dl>
               <dt>Training:</dt>
               <dd>{{#link-to "training.session" training.id person.training_slot_id}}{{shift-format person.training_begins}} {{person.training_description}}{{/link-to}}</dd>
-              <dt>{{pluralize person.slots.length "shift signup"}}:</dt>
+              <dt>{{pluralize person.slots.length "shift sign up"}}:</dt>
               <dd>
                 {{#each person.slots as |slot|}}
                   {{shift-format slot.begins}} {{slot.description}} ({{slot.position_title}})<br>
