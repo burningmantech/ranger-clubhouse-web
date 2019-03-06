@@ -25,4 +25,10 @@ export default class PersonContactLogRoute extends Route {
     controller.set('received_logs', model.logs.received_logs);
     controller.set('sent_logs', model.logs.sent_logs);
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

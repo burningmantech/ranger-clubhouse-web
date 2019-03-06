@@ -22,4 +22,10 @@ export default class ReportsTimesheetUnconfirmedRoute extends Route {
     // unconfirmed_people
     controller.setProperties(model);
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

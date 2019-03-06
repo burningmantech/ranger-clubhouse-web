@@ -49,4 +49,10 @@ export default class ReportsRadioCheckoutRoute extends Route {
   _isSet(value) {
     return (parseInt(value) || value == 'true');
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

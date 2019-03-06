@@ -23,4 +23,10 @@ export default class MeRangerInfoRoute extends Route.extend(MeRouteMixin) {
     controller.set('yearInfo', model.yearInfo);
     controller.set('year', model.year);
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

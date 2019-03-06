@@ -29,4 +29,10 @@ export default class PersonAccessDocumentsRoute extends Route {
     controller.setProperties(this.modelFor('person'));
     controller.setProperties(model);
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

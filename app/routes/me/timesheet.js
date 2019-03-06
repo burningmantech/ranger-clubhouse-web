@@ -30,4 +30,10 @@ export default class MeTimesheetRoute extends Route.extend(MeRouteMixin) {
     super.setupController(...arguments);
     controller.setProperties(model);
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

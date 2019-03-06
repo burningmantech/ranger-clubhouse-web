@@ -22,4 +22,10 @@ export default class ReportsTimesheetCorrectionRequestsRoute extends Route {
     // corrections, missing_requests
     controller.setProperties(model);
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

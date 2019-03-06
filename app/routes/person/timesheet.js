@@ -35,4 +35,10 @@ export default class PersonTimesheetRoute extends Route {
     controller.setProperties(this.modelFor('person'));
     controller.set('canCorrectThisYear', (model.timesheetInfo.correction_year == model.year));
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }
