@@ -52,7 +52,7 @@
   {{/ch-box}}
 {{/if}}
 
-{{#ch-box "Pre-Event And On Playa SMS Numbers"}}
+<h3>Pre-Event &amp; On Playa SMS Numbers</h3>
   <p>
     <b>For International Phone Numbers:</b> Include your country code when entering a phone number.<br>
     Australia: +61, Canada: +1, France: +33, Mexico: +52, New Zealand: +64, UK: +44.
@@ -60,20 +60,20 @@
 
   {{#ch-form "numbers" phoneForm validator=numberValidations onSubmit=(action "saveNumbersAction") as |f|}}
     <div class="form-row">
-      {{f.input "off_playa" label="Pre-Event/Off Playa Number:" type="text" size=30 grid="col-auto"}}
+      {{f.input "off_playa" label=(if f.model.is_same "Pre-Event & On Playa phone number:" "Pre-Event phone number:") type="text" size=30 grid="col-auto"}}
     </div>
     <div class="form-row">
       {{f.input "is_same" label="On playa number is the same as the pre-event number" type="checkbox"}}
     </div>
     <div class="form-row mt-2 {{if f.model.is_same "d-none"}}">
-      {{f.input "on_playa" label="On Playa Number:" type="text" size=30 grid="col-auto"}}
+      {{f.input "on_playa" label="On Playa phone number:" type="text" size=30 grid="col-auto"}}
     </div>
 
     <div class="mt-2">
       {{f.submit label="Update SMS Numbers" disabled=isUpdatingNumbers}}
     </div>
   {{/ch-form}}
-{{/ch-box}}
+<hr>
 
 <h3>Alert Preference Options</h3>
 <p class="ml-2">
