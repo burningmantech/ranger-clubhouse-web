@@ -6,4 +6,10 @@ export default class MeScheduleIndexRoute extends Route {
     controller.set('person', this.modelFor('me'));
     controller.setProperties(this.modelFor('me/schedule'));
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

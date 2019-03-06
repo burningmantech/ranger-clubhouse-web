@@ -26,4 +26,10 @@ export default class TrainingRoute extends Route {
     super.setupController(...arguments);
     controller.set('training', model);
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

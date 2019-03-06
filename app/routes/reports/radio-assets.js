@@ -99,4 +99,10 @@ export default class ReportsRadioAssetsRoute extends Route {
       perm_assign
     });
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

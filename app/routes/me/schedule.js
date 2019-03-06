@@ -26,4 +26,10 @@ export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
       year,
     });
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

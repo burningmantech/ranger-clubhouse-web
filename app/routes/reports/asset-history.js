@@ -22,4 +22,10 @@ export default class ReportsAssetHistoryRoute extends Route {
     super.setupController(...arguments);
     controller.setProperties(model);
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

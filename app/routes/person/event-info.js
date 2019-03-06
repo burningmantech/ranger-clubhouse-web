@@ -18,4 +18,10 @@ export default class PersonEventInfoRoute extends Route {
     controller.setProperties(this.modelFor('person'));
     controller.set('yearInfo', model);
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

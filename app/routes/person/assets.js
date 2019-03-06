@@ -27,4 +27,10 @@ export default class PersonAssetsRoute extends Route {
     controller.clearErrors();
     controller.set('checkoutForm.barcode', '');
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }
