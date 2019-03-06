@@ -156,12 +156,12 @@ export default class ScheduleManageComponent extends Component {
       denied.push('an approved callsign');
     }
 
-    if (!permission.manual_review_passed) {
-      denied.push('to pass the Manual Review');
+    if (permission.photo_status != 'approved' && permission.photo_status != 'not-required') {
+      denied.push('an approved BMID (lam) photo');
     }
 
-    if (permission.photo_status != 'approved') {
-      denied.push('an approved BMID (lam) photo');
+    if (!permission.manual_review_passed) {
+      denied.push('to pass the Manual Review');
     }
 
     if (permission.missing_bpguid) {

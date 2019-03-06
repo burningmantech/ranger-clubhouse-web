@@ -151,12 +151,15 @@
                       <button {{action "leaveSlot" slot}} class="btn btn-danger btn-sm" title="Remove from schedule">{{fa-icon "trash-alt" type="fas"}}</button>
                     {{/if}}
                   {{else}}
-                    {{#if slot.slot_active}}
-                      {{#if (or (not slot.isFull) (not slot.has_started) (has-role "admin"))}}
-                        <button {{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Show people who are signed up">{{fa-icon "user-plus" type="fas"}}</button>
+                    {{! Only show action buttons for the current year}}
+                    {{#if isCurrentYear}}
+                      {{#if slot.slot_active}}
+                        {{#if (or (not slot.isFull) (not slot.has_started) (has-role "admin"))}}
+                          <button {{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Show people who are signed up">{{fa-icon "user-plus" type="fas"}}</button>
+                        {{/if}}
+                      {{else}}
+                        <small class="text-danger">Inactive</small>
                       {{/if}}
-                    {{else}}
-                      <small class="text-danger">Inactive</small>
                     {{/if}}
                   {{/if}}
                 </div>
