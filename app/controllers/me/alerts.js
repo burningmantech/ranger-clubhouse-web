@@ -79,7 +79,7 @@ export default class MeAlertsController extends Controller {
     this.ajax.request(`person/${this.person.id}/alerts`, {
           method: 'PATCH',
           data: { alerts }
-    }).then(() => { this.toast.success('Alert Preferences have been successfully update.') })
+    }).then(() => { this.toast.success('Your preferences have been successfully updated.') })
     .catch((response) => { this.house.handleErrorResponse(response) });
   }
 
@@ -111,16 +111,16 @@ export default class MeAlertsController extends Controller {
     }).then((result) => {
       switch (result.status) {
       case 'confirmed':
-        this.toast.success(`The phone number has been been confirmed. Thank you.`);
+        this.toast.success(`Phone number has been been confirmed. Thank you.`);
         this.set('numbers', result.numbers);
         break;
 
       case 'already-verified':
-        this.toast.warning(`The phone ${phone} has already been verified. There is nothing else to do.`);
+        this.toast.warning(`${phone} has already been verified. There is nothing else to do.`);
         break;
 
       case 'no-match':
-        this.toast.error(`The verification code enter for ${phone} does not match.`);
+        this.toast.error(`The verification code entered for ${phone} does not match.`);
         break;
 
       default:
@@ -166,9 +166,9 @@ export default class MeAlertsController extends Controller {
       this.set('numbers', numbers);
 
       if (numbers.on_playa.code_status == 'sent-fail' || numbers.off_playa.code_status == 'sent-fail') {
-        this.toast.error(`The number(s) were updated except a verification code could not be sent at this time.`);
+        this.toast.error(`The phone number(s) were updated except a verification code could not be sent at this time.`);
       } else {
-        this.toast.success('The number(s) have been successfully updated.');
+        this.toast.success('The phone number(s) have been successfully updated.');
       }
     }).catch((response) => {
       this.house.handleErrorResponse(response);
@@ -192,7 +192,7 @@ export default class MeAlertsController extends Controller {
         break;
 
       case 'already-verified':
-        this.toast.warning('The phone number is already verified.');
+        this.toast.warning('Phone number is already verified.');
         break;
 
       default:
