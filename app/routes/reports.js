@@ -9,4 +9,11 @@ export default class ReportsRoute extends Route.extend(AuthenticatedRouteMixin) 
   beforeModel() {
     this.house.roleCheck([ Role.ADMIN, Role.MANAGE ]);
   }
+
+  // Don't allow the year parameter to bleed over to other routes.
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }
