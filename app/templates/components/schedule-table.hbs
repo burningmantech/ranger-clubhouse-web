@@ -30,9 +30,9 @@
         <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}</div>
         <div class="schedule-long-description">{{slot.position_title}}<br>{{slot-info-link slot.slot_description slot.slot_url}}</div>
         <div class="schedule-actions d-print-none">
-          <button {{action "showPeople" slot}} class="btn btn-primary btn-sm" title="View people signed up">{{fa-icon "users" type="fas"}}</button>
+          <button {{action "showPeople" slot}} class="btn btn-secondary btn-sm" title="View people signed up">{{fa-icon "users" type="fas"}}</button>
           {{#if (not slot.has_started)}}
-            <button {{action "leaveSlot" slot}} class="btn btn-danger btn-sm" title="Remove from schedule">{{fa-icon "trash-alt" type="fas"}}</button>
+            <button {{action "leaveSlot" slot}} class="btn btn-danger btn-sm" title="Remove shoft from schedule">{{fa-icon "trash-alt" type="fas"}}</button>
           {{/if}}
         </div>
       </div>
@@ -41,21 +41,21 @@
     <div class="schedule-row">
       <div>
         {{#if slots}}
-          <p class="text-danger">No upcoming shifts were found.</p>
+          <span class="text-danger">No upcoming shifts were found.</span>
         {{else}}
-          <p><strong>You have nothing schedule for {{year}}.</strong></p>
+          <strong>You have nothing schedule for {{year}}.</strong>
         {{/if}}
       </div>
     </div>
   {{/if}}
   <div class="schedule-row">
-    <div>
+    <div class="schedule-total mt-1">
       <b>Total Time:</b> {{hour-minute-format (sum-column slots "slot_duration")}}
       <b>Scheduled Credits:</b> {{credits-format creditsTotal}}
       <b>Earned Credits:</b> {{credits-format creditsEarned}}
     </div>
-    <div>
-      {{#link-to "me.schedule.print" class="btn btn-secondary"}}Print Schedule{{/link-to}}
+    <div class="schedule-actions d-print-none">
+      {{#link-to "me.schedule.print" class="btn btn-sm btn-secondary"}}Print{{/link-to}}
     </div>
   </div>
 </div>

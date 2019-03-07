@@ -55,7 +55,7 @@
   }
 
   .schedule-duration {
-    width: 5%;
+    width: 6%;
     text-align: right;
   }
 
@@ -74,10 +74,15 @@
 
   .schedule-signups {
     width: 15%;
+    text-align: center;
   }
 
   .schedule-actions {
     width: 15%;
+  }
+
+  .schedule-total {
+    width: 83%;
   }
   .schedule-sm-label {
     display: none;
@@ -110,6 +115,10 @@
   }
 
   .schedule-signups {
+    width: 100%;
+  }
+
+  .schedule-total {
     width: 100%;
   }
 
