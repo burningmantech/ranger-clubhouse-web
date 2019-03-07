@@ -3,7 +3,7 @@ import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
 import { action, computed } from '@ember-decorators/object';
 import { tagName } from '@ember-decorators/component';
-import { typeOf } from '@ember/utils';
+import { typeOf, isEmpty } from '@ember/utils';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
 import DS from 'ember-data';
@@ -126,6 +126,27 @@ export default class ChFormComponent extends Component {
     dialog.modal('dispose');
   }
 
+  /*
+   * Scroll to the first error
+   */
+
+  _scrollToError(model) {
+     const error = model.get('error');
+     if (isEmpty(error)) {
+       return;
+     }
+
+     const field = Object.keys(error)[0];
+     const label = `#${this.formId} label[for="${field}"]`;
+
+     // Scroll the label into view if it exists, otherwise the element
+     if (document.querySelector(label)) {
+       this.house.scrollToElement(label);
+     } else {
+       this.house.scrollToElement(`#${this.formId} [name="${field}"]`);
+     }
+  }
+
   @action
   submitForm(action) {
     const model = this.model;
@@ -135,6 +156,9 @@ export default class ChFormComponent extends Component {
 
     if (model.validate) {
       model.validate().then(() => {
+        if (!this.model.isValid) {
+          this._scrollToError(model);
+        }
         if (submitAction) {
           return submitAction(model, this.model.isValid, original);
         }

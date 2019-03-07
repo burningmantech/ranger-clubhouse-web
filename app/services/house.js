@@ -1,9 +1,18 @@
 import Service from '@ember/service';
 import ENV from 'clubhouse/config/environment';
-import { inject as service } from '@ember-decorators/service';
-import { isAbortError, isTimeoutError } from 'ember-ajax/errors';
-import { isArray } from '@ember/array';
-import { run } from '@ember/runloop';
+import {
+  inject as service
+} from '@ember-decorators/service';
+import {
+  isAbortError,
+  isTimeoutError
+} from 'ember-ajax/errors';
+import {
+  isArray
+} from '@ember/array';
+import {
+  run
+} from '@ember/runloop';
 import DS from 'ember-data';
 
 export default class HouseService extends Service {
@@ -34,10 +43,10 @@ export default class HouseService extends Service {
         responseErrors = 'The record operation was unsuccessful due to a fatal server error';
       }
       errorType = 'server';
-    } else if (response instanceof DS.TimeoutError
-      || response instanceof DS.AbortError
-      || isAbortError(response)
-      || isTimeoutError(response)) {
+    } else if (response instanceof DS.TimeoutError ||
+      response instanceof DS.AbortError ||
+      isAbortError(response) ||
+      isTimeoutError(response)) {
       // Ajax Error
       responseErrors = 'The request to the Clubhouse server could not be completed. The server might be offline or the Internet connection is spotty.';
       errorType = 'server';
@@ -170,7 +179,10 @@ export default class HouseService extends Service {
    */
 
   downloadFile(filename, contents, type) {
-    let { document, URL } = window;
+    let {
+      document,
+      URL
+    } = window;
     let anchor = document.createElement('a');
 
     anchor.download = filename;
@@ -187,25 +199,39 @@ export default class HouseService extends Service {
    * Scroll to top
    */
 
-   scrollToTop() {
-     run.schedule('afterRender', () => {
-       window.scrollTo(0,0);
-     });
-   }
+  scrollToTop() {
+    run.schedule('afterRender', () => {
+      window.scrollTo(0, 0);
+    });
+  }
 
-   /*
-    * Scroll to element
-    */
+  /*
+   * Scroll to element
+   */
 
   scrollToElement(selector) {
     run.schedule('afterRender', () => {
-      // Get the y axis, and leave a little space for the header.
-      const y = document.querySelector(selector).getBoundingClientRect().top + window.scrollY - 10;
-      window.scroll({
-        top: y,
-        left: 0,
-        behavior: 'smooth'
-      });
-    })
+      const element = document.querySelector(selector);
+      if (!element) {
+        return;
+      }
+
+      // Only scroll if the element is not in view
+      const rect = element.getBoundingClientRect();
+      if (!(
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+      )) {
+        // Get the y axis, and leave a little space for the header.
+        const y = rect.top + window.scrollY - 20;
+        window.scroll({
+          top: y,
+          left: 0,
+          behavior: 'smooth'
+        });
+      }
+    });
   }
 }
