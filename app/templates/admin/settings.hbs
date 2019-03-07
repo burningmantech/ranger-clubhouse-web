@@ -12,7 +12,7 @@
 <div class="form-row mb-2">
   <label class="col-form-label">Filter name:</label>
   <div class="col-auto">
-    {{input type="text" value=filterByName size="20" class="form-control"}}
+    {{input type="text" value=filterByName size=20 class="form-control"}}
   </div>
   <div class="col-auto">
     <button class="btn btn-primary" {{action clearFilter}}>Clear</button>
@@ -62,12 +62,12 @@
         </div>
       {{else if (eq updateValue.type "integer")}}
         <div class="col-auto">
-          {{f.input "value" label="Settings Integer Value" type="text" size="10"}}
+          {{f.input "value" label="Setting integer value" type="text" size=10}}
         </div>
       {{else if updateValue.options}}
-        {{f.input "value" label="Setting Value" type="select" options=valueOptions}}
+        {{f.input "value" label="Setting option value" type="select" options=valueOptions}}
       {{else}}
-        {{f.input "value" label="Settings String Value" type="textarea" rows=10 cols=80}}
+        {{f.input "value" label="Setting string value" type="textarea" rows=10 cols=80}}
       {{/if}}
     </div>
     {{f.submit label="Update Value"}}
@@ -77,12 +77,22 @@
 
 {{#if setting}}
   {{#ch-form "setting" setting modalBox=true modalTitle=(if setting.isNew "Create A Setting" "Edit Setting") validator=settingValidations onSubmit=(action "save") onCancel=(action "cancel")as |f|}}
+    <p class="ml-1">
+      <strong class="text-danger">Use "Update Value" to change a setting</strong>
+    </p>
     <div class="form-group row">
       {{f.input "name" label="Configuration Variable Name" type="text" size=40}}
       {{f.input "type" label="Type" type="select" options=typeOptions}}
-      {{f.input "value" label="Configuration Value" type="textarea" rows=4 cols=80}}
-      {{f.input "description" label="Description" type="textarea" rows=4 cols=80}}
-      {{f.input "options" label="Options for string types, one line per option" type="textarea" rows=4 cols=80}}
+    </div>
+    <div class="form-group row">
+      <div class="col">
+        {{f.input "is_encrypted" label="Setting is encrypted (TODO)" type="checkbox"}}
+      </div>
+    </div>
+    <div class="form-group row">
+    {{f.input "value" label="Configuration Value" type="textarea" rows=4 cols=80}}
+    {{f.input "description" label="Description" type="textarea" rows=4 cols=80}}
+    {{f.input "options" label="Options for string types, one option per line" type="textarea" rows=4 cols=80}}
     </div>
     {{f.submit label=(if setting.isNew "Create" "Update")}}
     {{f.cancel}}
