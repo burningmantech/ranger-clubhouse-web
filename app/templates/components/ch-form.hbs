@@ -6,7 +6,7 @@
         <h5 class="modal-title">{{modalTitle}}</h5>
       </div>
       <div class="modal-body">
-        <form id="{{formId}}" method="post" autocomplete={{autocomplete}} {{action "submitForm" on="submit"}}>
+        <form id="{{formId}}" class="{{formClass}}" method="post" autocomplete={{autocomplete}} {{action "submitForm" on="submit"}}>
         {{yield (hash
           model=model
           input=(component "ch-form/field"

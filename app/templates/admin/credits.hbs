@@ -30,6 +30,70 @@
 {{/if}}
 
 
+{{#if copyParams}}
+  {{#ch-form "copyCredits" copyParams modalBox=true modalTitle="Copy Credits" changeSet=false
+        validator=copyValidations onSubmit=(action "performCopy") onCancel=(action "cancelCopy") as |f|}}
+    <fieldset>
+      <legend>Add/Subtract Time to New Credits</legend>
+      <div class="form-row">
+        {{f.input "deltaDays" label="Days" type="number" maxlength=5 grid="col-sm"}}
+        {{f.input "deltaHours" label="Hours" type="number" maxlength=5 grid="col-sm"}}
+        {{f.input "deltaMinutes" label="Minutes" type="number" maxlength=5 grid="col-sm"}}
+      </div>
+      Labor Day of {{year}} is {{selectedYearLaborDay}}.
+      Labor Day of {{presentYear}} is {{presentYearLaborDay}}, {{laborDayDiff}} days later.
+    </fieldset>
+    {{f.submit label=(concat "Copy " copySelectedCreditCount " selected credits")}}
+    {{f.cancel}}
+    {{#each copySourcePositions as |position|}}
+      <table class="table table-sm table-box table-hover">
+        <caption>
+          {{position.selectedCredits.length}} <strong>{{position.title}}</strong> credits to copy
+          <button {{action "copyToggleExpanded" position}}>
+            {{#if position.expanded}}collapse{{else}}expand{{/if}}
+          </button>
+          <button {{action "copyPositionSelectAll" position}}>
+            {{#if position.allSelected}}deselect{{else}}select{{/if}} all
+          </button>
+        </caption>
+        <thead><tr>
+          <th>Copy</th>
+          <th>Start time</th>
+          <th>End time</th>
+          <th>Credits</th>
+          <th>Description</th>
+        </tr></thead>
+        <tbody>
+        {{#if position.expanded}}
+          {{#each position.credits as |credit|}}
+            <tr>
+              {{#let (concat "copy-credit-" credit.source.id) as |checkid|}}
+                <td>{{input type="checkbox" checked=credit.selected id=checkid}}</td>
+                <td>
+                  <label for={{checkid}}>
+                    {{shift-format credit.source.start_time}} →
+                    <br>{{credit.start_time}}
+                  </label>
+                </td>
+                <td>
+                  <label for={{checkid}}>
+                    {{shift-format credit.source.end_time}} →
+                    <br>{{credit.end_time}}
+                  </label>
+                </td>
+                <td class="text-right"><label for={{checkid}}>{{credits-format credit.source.credits_per_hour}}</label></td>
+                <td><label for={{checkid}}>{{credit.source.description}}</label></td>
+              {{/let}}
+            </tr>
+          {{/each}}
+        {{/if}}
+        </tbody>
+      </table>
+    {{/each}}
+  {{/ch-form}}
+{{/if}}
+
+
 <div class="row mb-1">
   <div class="col-md-4 mb-2">
     {{#power-select
@@ -57,6 +121,12 @@
   <div class="col-md-2 mb-2">
     <a href {{action "newCredit"}} class="btn btn-primary">New Position Credit</a>
   </div>
+
+  {{#if credits.length}}
+    <div class="col-md-2 mb-2">
+      <a href {{action "startCopy"}} class="btn btn-secondary">Copy Credits</a>
+    </div>
+  {{/if}}
 </div>
 
 {{#if credits.length}}
@@ -68,6 +138,8 @@
 {{/unless}}
 {{else}}
 No position credits were found for {{year}}?
+<br>
+To copy credits from a previous year, select that year from the list above.
 {{/if}}
 
 
