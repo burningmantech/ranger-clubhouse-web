@@ -9,6 +9,7 @@ export default class SettingModel extends Model {
   @attr('string') type;
   @attr('string') options;
   @attr('string') value;
+  @attr('boolean') is_encrypted;
   @attr('string', { readOnly: true }) config_value;
 
   @computed('description')
