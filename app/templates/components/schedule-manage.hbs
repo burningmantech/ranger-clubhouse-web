@@ -119,7 +119,7 @@
         <div class="schedule-table schedule-signup-sheet">
           <div class="schedule-title">{{if group.show (fa-icon "caret-down") (fa-icon "caret-right")}} <a href="#" {{action "toggleGroup" group}}>{{group.title}} ({{group.slots.length}})</a></div>
           {{#if group.show}}
-            <div class="schedule-row schedule-header d-sm-none d-md-block">
+            <div class="schedule-row schedule-header">
               <div class="schedule-time">From</div>
               <div class="schedule-time">To</div>
               <div class="schedule-credits">Credits</div>

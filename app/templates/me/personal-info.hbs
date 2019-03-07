@@ -1,4 +1,4 @@
-<h1>Personal Information For {{person.callsign}}</h1>
+<h1>Personal Information For <span class="d-inline-block">{{person.callsign}}</span></h1>
 
 {{#ch-form "person" person validator=personInfoValidations onSubmit=(action "onSubmit") onCancel=(action "onCancel") as |f|}}
   <div class="form-row mb-2">

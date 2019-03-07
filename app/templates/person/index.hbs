@@ -91,7 +91,7 @@
         {{f.input "user_authorized" type="select" wrapClass="col-sm-12 col-md-auto" options=userAuthorizedOptions}}
         {{f.input "has_note_on_file" label="Note on file" type="checkbox" wrapClass="col-sm-12 col-md-auto mt-2" value=1}}
       {{else}}
-        <div class="mt-2 col-md-9">
+        <div class="mt-2 col-sm-12 col-md-auto">
           {{#if person.user_authorized}}
             Authorized
           {{else}}
