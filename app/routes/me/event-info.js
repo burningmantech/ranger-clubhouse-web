@@ -12,15 +12,15 @@ export default class MeRangerInfoRoute extends Route.extend(MeRouteMixin) {
     const year = (params.year || (new Date).getFullYear());
 
     return RSVP.hash({
-      yearInfo: this.ajax.request('person/'+person_id+'/yearinfo', { data: { year } })
-                .then((result) => { return result.year_info; }),
+      eventInfo: this.ajax.request('person/'+person_id+'/event-info', { data: { year } })
+                .then((result) => { return result.event_info; }),
       year,
     });
   }
 
   setupController(controller, model) {
     super.setupController(...arguments);
-    controller.set('yearInfo', model.yearInfo);
+    controller.set('eventInfo', model.eventInfo);
     controller.set('year', model.year);
   }
 

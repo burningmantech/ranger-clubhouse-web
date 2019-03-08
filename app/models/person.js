@@ -4,8 +4,6 @@ import { attr } from '@ember-decorators/data';
 import { inject as service } from '@ember-decorators/service';
 import PersonMixin from 'clubhouse/mixins/models/person';
 
-import RSVP from 'rsvp';
-
 export default class PersonModel extends DS.Model.extend(PersonMixin) {
   @service ajax;
 
@@ -87,17 +85,14 @@ export default class PersonModel extends DS.Model.extend(PersonMixin) {
   @attr('boolean') sms_off_playa_stopped;
 
   /*
-   * retrieve years rangered, unread message count, and teacher info
+   * retrieve years rangered, unread message count, and teacher info, everything
+   * needed to show the user home page.
    */
 
-  loadRangerInfo() {
-    const personUrl = `person/${this.id}/`;
-
-    return RSVP.all([
-      this.ajax.request(personUrl+'years').then((result) => { this.set('years',result.years); }),
-      this.ajax.request(personUrl+'unread-message-count').then((result) => { this.set('unread_message_count',result.unread_message_count)}),
-      this.ajax.request(personUrl+'teacher').then((result) => { this.set('teacher', result.teacher);})
-    ])
+  loadUserInfo() {
+    return this.ajax.request(`person/${this.id}/user-info`).then((result) => {
+      this.setProperties(result.user_info);
+    });
   }
 
   //

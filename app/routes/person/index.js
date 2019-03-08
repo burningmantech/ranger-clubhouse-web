@@ -3,11 +3,11 @@ import RSVP from 'rsvp';
 
 export default class PersonIndexRoute extends Route {
   model() {
-    const model = this.modelFor('person');
-    const personId = model.person.id;
+    const person = this.modelFor('person');
+    const personId = person.id;
 
     return RSVP.hash({
-      yearInfo: model.yearInfo,
+      eventInfo: person.eventInfo,
       personPositions: this.ajax.request(`person/${personId}/positions`).then((results) => results.positions),
       positions: this.ajax.request('position').then((results) => results.position),
       personRoles: this.ajax.request(`person/${personId}/roles`).then((results) => results.roles),
@@ -16,14 +16,14 @@ export default class PersonIndexRoute extends Route {
   }
 
   setupController(controller, model) {
-    const parent = this.modelFor('person');
+    const person = this.modelFor('person');
     super.setupController(...arguments);
-    controller.setProperties(parent);
+    controller.set('person', person);
     controller.setProperties(model);
 
     // Retrieving the photo may cause a delay, hence its here and not in model()
     controller.set('photo', null);
-    this.ajax.request(`person/${parent.person.id}/photo`)
+    this.ajax.request(`person/${person.id}/photo`)
           .then((result) => controller.set('photo', result.photo))
           .catch(() => {
             controller.set('photo', { status: 'error', message: 'There was a server error.'});

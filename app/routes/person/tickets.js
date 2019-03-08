@@ -15,6 +15,6 @@ export default class PersonTicketsRoute extends Route {
   setupController(controller, model) {
     super.setupController(...arguments);
     controller.setProperties(model);
-    controller.setProperties(this.modelFor('person'));
+    controller.set('person', this.modelFor('person'));
   }
 }

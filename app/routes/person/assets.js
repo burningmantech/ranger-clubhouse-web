@@ -9,7 +9,7 @@ export default class PersonAssetsRoute extends Route {
   };
 
   model(params) {
-    const personId = this.modelFor('person').person.id;
+    const personId = this.modelFor('person').id;
     const year = requestYear(params);
 
     return RSVP.hash({
@@ -22,7 +22,7 @@ export default class PersonAssetsRoute extends Route {
   setupController(controller, model) {
     super.setupController(...arguments);
 
-    controller.setProperties(this.modelFor('person'));
+    controller.set('person', this.modelFor('person'));
     controller.setProperties(model);
     controller.clearErrors();
     controller.set('checkoutForm.barcode', '');

@@ -114,6 +114,19 @@ export default function() {
     return person;
   });
 
+  this.get('/api/person/:id/user-info', ({people}, request) => { // eslint-disable-line no-unused-vars
+    return {
+       unread_message_count: 2,
+       years: [ 2017, 2018 ],
+       teacher: {
+         is_trainer: false,
+         is_art_trainer: false,
+         is_mentor: false,
+         have_mentored: false
+       }
+     };
+  });
+
   this.get('/api/person/:id/years', ({people}, request) => { // eslint-disable-line no-unused-vars
     return { years: [ 2017, 2018 ]};
   });
@@ -146,11 +159,11 @@ export default function() {
     return schema.schedules.all();
   });
 
-  this.get('/api/person/:id/yearinfo', ({ people }, request) => {
+  this.get('/api/person/:id/event-info', ({ people }, request) => {
     const person = people.find(request.params.id); // eslint-disable-line no-unused-vars
 
     return {
-      year_info: {
+      event_info: {
         year: (new Date()).getFullYear(),
         trainings: [
           {

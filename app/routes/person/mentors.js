@@ -14,7 +14,7 @@ export default class PersonMentorsRoute extends Route {
   }
 
   setupController(controller, model) {
-    controller.setProperties(this.modelFor('person'));
+    controller.set('person', this.modelFor('person'));
     controller.set('mentors', model);
   }
 }

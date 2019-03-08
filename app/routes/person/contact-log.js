@@ -8,7 +8,7 @@ export default class PersonContactLogRoute extends Route {
   };
 
   model(params) {
-    const person_id = this.modelFor('person').person.id;
+    const person_id = this.modelFor('person').id;
     const year = requestYear(params);
 
     return RSVP.hash({
@@ -20,7 +20,7 @@ export default class PersonContactLogRoute extends Route {
   setupController(controller, model) {
     super.setupController(...arguments);
 
-    controller.setProperties(this.modelFor('person'));
+    controller.set('person', this.modelFor('person'));
     controller.set('year', model.year);
     controller.set('received_logs', model.logs.received_logs);
     controller.set('sent_logs', model.logs.sent_logs);

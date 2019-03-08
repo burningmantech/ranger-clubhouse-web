@@ -22,7 +22,7 @@
         </tr>
       </thead>
       <tbody>
-        {{#each yearInfo.trainings as |training|}}
+        {{#each eventInfo.trainings as |training|}}
           <tr>
             <td>{{training.position_title}}</td>
             <td>
@@ -51,11 +51,11 @@
   </dd>
 
   <dt class="col-md-2">Meals</dt>
-  <dd class="col-md-9">{{meal-info yearInfo.meals}}</dd>
+  <dd class="col-md-9">{{meal-info eventInfo.meals}}</dd>
 
   <dt class="col-md-2">Showers</dt>
   <dd class="col-md-9">
-    {{#if yearInfo.showers}}
+    {{#if eventInfo.showers}}
       {{badge "secondary" "Wet Spot"}} BMID allows access to the Wet Spot.
     {{else}}
       {{badge "secondary" "Shower Pogs"}} Wet Spot shower pog granted for every 40 hours worked.
@@ -64,9 +64,9 @@
 
   <dt class="col-md-2">Radios</dt>
   <dd class="col-md-9">
-    {{#if yearInfo.radio_info_available}}
-      {{#if yearInfo.radio_eligible}}
-        Up to {{pluralize yearInfo.radio_max "Event Radio"}} may be checked out.
+    {{#if eventInfo.radio_info_available}}
+      {{#if eventInfo.radio_eligible}}
+        Up to {{pluralize eventInfo.radio_max "Event Radio"}} may be checked out.
       {{else}}
         Shift Radio only
       {{/if}}
