@@ -9,7 +9,7 @@ export default class PersonTimesheetRoute extends Route {
 
   model(params) {
     const year = requestYear(params);
-    const person_id = this.modelFor('person').person.id;
+    const person_id = this.modelFor('person').id;
     const queryParams = {
       person_id,
       year,
@@ -32,7 +32,7 @@ export default class PersonTimesheetRoute extends Route {
   setupController(controller, model) {
     super.setupController(...arguments);
     controller.setProperties(model);
-    controller.setProperties(this.modelFor('person'));
+    controller.set('person', this.modelFor('person'));
     controller.set('canCorrectThisYear', (model.timesheetInfo.correction_year == model.year));
   }
 

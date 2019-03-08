@@ -4,14 +4,14 @@ import { action, computed } from '@ember-decorators/object';
 export default class MeRangerInfoShowController extends Controller {
   queryParams = [ 'year' ];
 
-  @computed('yearInfo.trainings')
+  @computed('eventInfo.trainings')
   get dirtTraining() {
-    return this.yearInfo.trainings.find((training) => training.position_id == 2);
+    return this.eventInfo.trainings.find((training) => training.position_id == 2);
   }
 
-  @computed('yearInfo.trainings')
+  @computed('eventInfo.trainings')
   get artTrainings() {
-    return this.yearInfo.trainings.filter((training) => training.position_id != 2);
+    return this.eventInfo.trainings.filter((training) => training.position_id != 2);
   }
 
   @computed('year')

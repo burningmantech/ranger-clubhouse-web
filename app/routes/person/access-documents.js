@@ -9,7 +9,7 @@ export default class PersonAccessDocumentsRoute extends Route {
   }
 
   model() {
-    const person = this.modelFor('person').person;
+    const person = this.modelFor('person');
     const year  = (new Date()).getFullYear();
 
     return RSVP.hash({
@@ -26,7 +26,7 @@ export default class PersonAccessDocumentsRoute extends Route {
   }
 
   setupController(controller, model) {
-    controller.setProperties(this.modelFor('person'));
+    controller.set('person', this.modelFor('person'));
     controller.setProperties(model);
   }
 

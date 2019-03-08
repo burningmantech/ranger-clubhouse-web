@@ -13,7 +13,7 @@ export default SessionService.extend({
     }
     const person_id = this.get('session.authenticated.person_id');
     const person = await this.store.find("person", person_id);
-    await person.loadRangerInfo();
+    await person.loadUserInfo();
 
     /*
      * A separate record is used to handle the login user to avoid

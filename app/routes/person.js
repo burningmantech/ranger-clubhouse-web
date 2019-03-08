@@ -1,6 +1,5 @@
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-import RSVP from 'rsvp';
 
 import { Role } from 'clubhouse/constants/roles';
 
@@ -11,18 +10,14 @@ export default class PersonRoute extends Route.extend(AuthenticatedRouteMixin) {
   }
 
   model(params) {
-    const personId = params.person_id;
-
-    return RSVP.hash({
-      person: this.store.find('person', personId).then((person) => {
-        return person.loadRangerInfo().then(() => { return person });
-      }),
-    });
+    return this.store.find('person', params.person_id).then((person) => {
+        return person.loadUserInfo().then(() => { return person });
+      });
   }
 
   setupController(controller, model) {
     super.setupController(...arguments);
 
-    controller.setProperties(model);
+    controller.set('person', model);
   }
 }

@@ -8,15 +8,15 @@ export default class PersonEventInfoRoute extends Route {
 
   model(params) {
     const year = requestYear(params);
-    const personId = this.modelFor('person').person.id;
+    const personId = this.modelFor('person').id;
 
-    return this.ajax.request(`person/${personId}/yearinfo`, { data: { year } })
+    return this.ajax.request(`person/${personId}/event-info`, { data: { year } })
            .then((result) => result.year_info);
 
   }
   setupController(controller, model) {
-    controller.setProperties(this.modelFor('person'));
-    controller.set('yearInfo', model);
+    controller.set('person', this.modelFor('person'));
+    controller.set('eventInfo', model);
   }
 
   resetController(controller, isExiting) {

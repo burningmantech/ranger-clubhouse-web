@@ -8,6 +8,6 @@ export default class PersonPersonalInfoRoute extends Route {
     ]);
   }
   setupController(controller) {
-    controller.setProperties(this.modelFor('person'));
+    controller.set('person', this.modelFor('person'));
   }
 }

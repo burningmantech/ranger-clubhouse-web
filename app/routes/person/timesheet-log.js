@@ -7,7 +7,7 @@ export default class PersonTimesheetLogRoute extends Route {
   };
 
   model(params) {
-    const person_id = this.modelFor('person').person.id;
+    const person_id = this.modelFor('person').id;
     const year = requestYear(params);
 
     return this.ajax.request(`timesheet/log`, {
@@ -20,6 +20,6 @@ export default class PersonTimesheetLogRoute extends Route {
 
     controller.set('logs', model.logs);
     controller.set('otherLogs', model.other_logs);
-    controller.setProperties(this.modelFor('person'));
+    controller.set('person', this.modelFor('person'));
   }
 }

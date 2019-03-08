@@ -86,10 +86,10 @@
 {{#if (or person.isActive person.isAlpha)}}
   <p class="h3 mt-4">{{fa-icon "utensils"}} Meals</p>
 
-  {{meal-info yearInfo.meals}}
+  {{meal-info eventInfo.meals}}
 
   <p class="h3 mt-4">{{fa-icon "shower"}} Showers</p>
-  {{#if yearInfo.showers}}
+  {{#if eventInfo.showers}}
     {{badge "secondary" "Wet Spot"}} Your BMID will allow you to take showers at the Wet Spot.
   {{else}}
     {{badge "secondary" "Shower Pogs"}} For every 40 hours you work on playa, you can get a shower pog from HQ, good for one shower at the Wet Spot.
@@ -97,13 +97,13 @@
 
 
   <p class="h3 mt-4">{{fa-icon "broadcast-tower"}} Radios</p>
-  {{#if yearInfo.radio_info_available}}
-    {{#if yearInfo.radio_eligible}}
+  {{#if eventInfo.radio_info_available}}
+    {{#if eventInfo.radio_eligible}}
       {{badge "success" "Event Radio"}}
-      {{#if (eq yearInfo.radio_max 1)}}
+      {{#if (eq eventInfo.radio_max 1)}}
         You may check out an Event radio for the duraiton of the event.
       {{else}}
-        You may check out up to {{yearInfo.radio_max}} Event radios for the duraiton of the event.
+        You may check out up to {{eventInfo.radio_max}} Event radios for the duraiton of the event.
       {{/if}}
     {{else}}
       {{badge "success" "Shift Radio"}} You will need to check out a radio each time you show up to Ranger HQ for shift (and check it in at the end of your shift!).
