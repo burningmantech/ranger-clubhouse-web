@@ -3,7 +3,7 @@
 
   {{#if logs}}
     Showing {{page}} of {{total_pages}} pages. Total {{pluralize total "found row"}}
-    <table class="table table-hover">
+    <table class="table table-hover table-sm">
       <thead>
         <tr>
           <th>Timestamp</th>
@@ -11,7 +11,7 @@
           <th>Type</th>
           <th>IP</th>
           <th>URL</th>
-          <th>Data</th>
+          <th>Action</th>
         </tr>
       </thead>
 
@@ -36,9 +36,17 @@
               {{log.url}}
             </td>
             <td>
-              {{log.data}}
+              <button class="btn btn-secondary btn-sm" {{action toggleLog log}}>{{if log.showing "Hide" "Show"}}</button>
             </td>
           </tr>
+
+          {{#if log.showing}}
+          <tr>
+            <td colspan="6">
+                <pre>{{json-stringify log.data}}</pre>
+            </td>
+          </tr>
+          {{/if}}
         {{/each}}
       </tbody>
     </table>

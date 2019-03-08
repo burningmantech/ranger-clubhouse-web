@@ -36,7 +36,11 @@
         </td>
         <td class="w-10">{{setting.type}}</td>
         <td class="w-45">
-          {{read-more text=(if setting.value setting.value "null") limit=50}}
+          {{#if setting.value}}
+            <code class="text-black">{{read-more text=setting.value limit=50}}</code>
+          {{else}}
+            <strong class="text-danger">NULL</strong>
+          {{/if}}
         </td>
         <td class="w-20">
           <button class="btn btn-sm btn-primary" {{action "updateValueAction" setting}}>Update Value</button>
