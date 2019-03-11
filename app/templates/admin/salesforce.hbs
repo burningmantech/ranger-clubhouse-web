@@ -1,0 +1,79 @@
+<h1>Salesforce Import</h1>
+
+{{#if sfConfig.SFEnableWritebacks}}
+  <p class="text-danger font-weight-bold">Salesforce writebacks are enabled.</p>
+{{else}}
+  <p>
+    Salesforce writebacks are DISABLED. Edit the SFEnableWritebacks setting (Admin > Edit Settings) if you want them turned on for testing.
+  </p>
+{{/if}}
+
+{{#if (eq importStatus "error")}}
+<p class="text-danger">
+  ERROR: {{importMessage}}
+</p>
+{{/if}}
+
+<p>
+  <button class="btn btn-primary" {{action import}} disabled={{isSubmitting}}>{{#if isSubmitting}}Please Wait{{else}}Import{{/if}}</button>
+</p>
+
+{{#if accounts}}
+  Showing {{accounts.length}} <button class="btn btn-secondary btn-sm" {{action expandAll}}>Expand All</button>
+  <table class="table table-sm table-striped">
+    <thead>
+      <tr>
+        <th>Callsign</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>BPGUID</th>
+        <th>Type</th>
+        <th>VC Status</th>
+        <th>Import Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each accounts as |account|}}
+        <tr class="{{if (and (not-eq account.status "imported") (not-eq account.status "ready")) "table-danger"}}">
+          <td>{{account.callsign}}</td>
+          <td>{{account.first_name}} {{account.last_name}}</td>
+          <td>{{mail-to account.email}}</td>
+          <td>{{account.bpguid}}</td>
+          <td>{{account.applicant_type}}</td>
+          <td>{{account.status}}</td>
+          <td>{{account.status}}</td>
+          <td>
+            <button class="btn btn-secondary btn-sm" {{action toggleAccount account}}>{{if account.showing "Hide" "Show"}}</button>
+          </td>
+        </tr>
+        {{#if (and (not-eq account.status "imported") (not-eq account.status "ready"))}}
+          <tr class="table-danger tr-no-border">
+            <td colspan="8">{{account.message}}</td>
+          </tr>
+        {{/if}}
+        {{#if account.showing}}
+          <tr>
+            <td colspan="8">
+              {{#if account.existing_person}}
+              <b>Existing Person:</b> {{person-link person=account.existing_person}} ({{account.existing_person.status}})<br>
+              {{/if}}
+              <b>Ranger Obj. Name:</b> {{account.salesforce_ranger_object_name}}<br>
+              <b>Street:</b> {{account.street1}}<br>
+              <b>State:</b> {{account.state}}<br>
+              <b>Zip:</b> {{account.zip}}<br>
+              <b>Country:</b> {{account.country}}<br>
+              <b>Phone:</b> {{account.phone}}<br>
+              <b>Emergency Contact:</b> {{account.emergency_contact}}<br>
+              <b>Known Ranger Names:</b> {{account.known_ranger_names}}<br>
+              <b>Known PNV Names:</b> {{account.known_pnv_names}}<br>
+              <b>T-Shirt Info:</b> {{account.teeshirt_size_style}}<br>
+              <b>LS Shirt Info:</b> {{account.longsleeveshirt_size_style}}<br>
+            </td>
+          </tr>
+        {{/if}}
+      {{/each}}
+    </tbody>
+  </table>
+{{/if}}

@@ -1,6 +1,7 @@
 import {
   validatePresence,  validateFormat
 } from 'ember-changeset-validations/validators';
+import validateState from 'clubhouse/validators/state';
 
 export default {
   first_name: [
@@ -19,19 +20,22 @@ export default {
     validatePresence(true),
   ],
 
+  country: [
+    validatePresence(true),
+  ],
 
   city: [
     validatePresence(true),
   ],
+
   state: [
-    validatePresence(true),
+    validateState(),
   ],
+
   zip: [
     validatePresence(true),
   ],
-  country: [
-    validatePresence(true),
-  ],
+
   home_phone: [
     validatePresence(true),
     validateFormat({ min: 9 })
