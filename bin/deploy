@@ -5,41 +5,79 @@
 
 . "$(dirname "$0")/.common.sh";
 
-# Provided by the CI environment in custom variables:
+# Provided by the CI environment:
 # * AWS_DEFAULT_REGION
 # * AWS_ACCESS_KEY_ID
 # * AWS_SECRET_ACCESS_KEY
 # * AWS_ECR_IMAGE_REPOSITORY
-# * AWS_ECS_CLUSTER
-# * AWS_ECS_SERVICE
 
-if [ "${TRAVIS_PULL_REQUEST:-}" != "false" ]; then
-    echo "No deployments allowed from a pull request.";
-    exit 1;
-fi;
-if [ "${TRAVIS_BRANCH:-}" != "master" ]; then
-    echo "No deployments allowed from non-master branches.";
-    exit 1;
+if [ $# -lt 1 ]; then
+    echo "No target specified.";
+    exit 64;  # EX_USAGE
 fi;
 
-export AWS_ECR_IMAGE_TAG="$(git rev-parse --short "${TRAVIS_COMMIT}")";
-export AWS_ECR_IMAGE_NAME="${AWS_ECR_IMAGE_REPOSITORY}:${AWS_ECR_IMAGE_TAG}";
+target="$1"; shift;
 
-echo "Docker version:";
+if ! type python3 > /dev/null 2>&1; then
+    echo "Python 3 is required.";
+    exit 72;  # EX_OSFILE
+fi;
+if ! type docker > /dev/null 2>&1; then
+    echo "Docker is required.";
+    exit 72;  # EX_OSFILE
+fi;
+if [ "${TRAVIS:-}" = "true" ]; then
+    pip_user_flag="";
+else
+    pip_user_flag="--user";
+fi;
+if ! type aws > /dev/null 2>&1; then
+    echo "No aws command. Installing...";
+    python3 -m pip install ${pip_user_flag} awscli;
+fi;
+if ! python3 -c 'import boto3' 2> /dev/null; then
+    echo "No boto3 module. Installing...";
+    python3 -m pip install ${pip_user_flag} boto3;
+fi;
+
+if [ "${target}" = "staging" ]; then
+    if [ "${TRAVIS:-}" != "true" ]; then
+        echo "No deployments to staging outside of Travis CI.";
+        exit 78;  # EX_CONFIG
+    fi;
+    if [ "${TRAVIS_PULL_REQUEST:-}" != "false" ]; then
+        echo "No deployments allowed from a pull request.";
+        exit 78;  # EX_CONFIG
+    fi;
+    if [ "${TRAVIS_BRANCH:-}" != "master" ]; then
+        echo "No deployments allowed from non-master branches.";
+        exit 78;  # EX_CONFIG
+    fi;
+fi;
+
+export    AWS_ECS_CLUSTER_STAGING="rangers";
+export    AWS_ECS_SERVICE_STAGING="ranger-clubhouse-api-staging-fg";
+export AWS_ECS_CLUSTER_PRODUCTION="rangers";
+export AWS_ECS_SERVICE_PRODUCTION="ranger-clubhouse-api-production-fg";
+
 docker --version;
-
-echo "Installing AWS tools...";
-pip install awscli;
-pip install boto3;
 
 echo "Logging into AWS...";
 $(aws ecr get-login --no-include-email);
 
-echo "Tagging image for AWS ECR...";
-docker tag "${image_name}" "${AWS_ECR_IMAGE_NAME}";
+if [ "${target}" = "staging" ]; then
+    tag="$(git rev-parse --short "${TRAVIS_COMMIT}")";
+    export AWS_ECR_IMAGE_NAME="${AWS_ECR_IMAGE_REPOSITORY}:${tag}";
 
-echo "Pushing image to AWS ECR...";
-docker push "${AWS_ECR_IMAGE_NAME}";
+    echo "Tagging image for AWS ECR...";
+    docker tag "${image_name}" "${AWS_ECR_IMAGE_NAME}";
 
-echo "Deploying to AWS...";
-"$(dirname "$0")/aws_update" deploy;
+    echo "Pushing image to AWS ECR...";
+    docker push "${AWS_ECR_IMAGE_NAME}";
+fi;
+
+"$(dirname "$0")/deploy_aws" "${target}";
+
+if [ "${target}" = "staging" ]; then
+    "$(dirname "$0")/deploy_notify" "${target}";
+fi;

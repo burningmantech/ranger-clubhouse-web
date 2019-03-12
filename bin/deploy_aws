@@ -84,10 +84,6 @@ class ECSServiceClient(object):
 
     def currentTaskARN(self) -> str:
         if "arn" not in self._currentTask:
-            print(
-                "Fetching current task ARN for service "
-                f"{self.cluster}:{self.service}..."
-            )
             serviceDescription = self._client.describe_services(
                 cluster=self.cluster, services=[self.service]
             )
@@ -101,8 +97,6 @@ class ECSServiceClient(object):
     def currentTaskDefinition(self) -> TaskDefinition:
         if "definition" not in self._currentTask:
             currentTaskARN = self.currentTaskARN()
-
-            print(f"Fetching task definition {currentTaskARN}...")
             currentTaskDescription = self._client.describe_task_definition(
                 taskDefinition=currentTaskARN
             )
@@ -113,15 +107,17 @@ class ECSServiceClient(object):
         return self._currentTask["definition"]
 
 
+    def currentImageName(self) -> TaskDefinition:
+        currentTaskDefinition = self.currentTaskDefinition()
+        return currentTaskDefinition["containerDefinitions"][0]["image"]
+
+
     def updateTaskDefinition(
         self,
         imageName: Optional[str] = None,
         environment: Optional[TaskEnvironment] = None,
     ) -> TaskDefinition:
         currentTaskDefinition = self.currentTaskDefinition()
-
-        # print("Current task definition:")
-        # print(jsonTextFromObject(currentTaskDefinition, pretty=True))
 
         # We don't handle tasks with multiple containers for now.
         assert len(currentTaskDefinition["containerDefinitions"]) == 1
@@ -180,8 +176,6 @@ class ECSServiceClient(object):
     def registerTaskDefinition(self, taskDefinition: TaskDefinition) -> str:
         print("Registering new task definition...")
         response = self._client.register_task_definition(**taskDefinition)
-        # print("Response:")
-        # print(jsonTextFromObject(response, pretty=True))
         newTaskARN = (response["taskDefinition"]["taskDefinitionArn"])
         print("Registered", newTaskARN)
 
@@ -273,8 +267,6 @@ class ECSServiceClient(object):
         currentTaskDefinition = self.currentTaskDefinition()
 
         family = currentTaskDefinition["family"]
-
-        print(f"Fetching task definitions for family {family}...")
         response = self._client.list_task_definitions(familyPrefix=family)
 
         # Deploy second-to-last ARN
@@ -310,18 +302,68 @@ if __name__ == "__main__":
             print("Too many arguments:", argv, file=stderr)
             exit(64)  # EX_USAGE
 
-    client = ECSServiceClient(
-        cluster=env("AWS_ECS_CLUSTER"),
-        service=env("AWS_ECS_SERVICE"),
+    stagingClient = ECSServiceClient(
+        cluster=env("AWS_ECS_CLUSTER_STAGING"),
+        service=env("AWS_ECS_SERVICE_STAGING"),
     )
 
-    if action == "deploy":
+    productionClient = ECSServiceClient(
+        cluster=env("AWS_ECS_CLUSTER_PRODUCTION"),
+        service=env("AWS_ECS_SERVICE_PRODUCTION"),
+    )
+
+    if action == "staging":
         maxArguments(0)
-        client.deployNewImage(env("AWS_ECR_IMAGE_NAME"))
+        stagingClient.deployNewImage(env("AWS_ECR_IMAGE_NAME"))
+
+    elif action == "production":
+        stagingImageName = stagingClient.currentImageName()
+        productionClient.deployNewImage(stagingImageName)
+
+    elif action == "compare":
+        for name, client in (
+            ("Staging", stagingClient),
+            ("Producton", productionClient),
+        ):
+            print(f"{name} task ARN: {client.currentTaskARN()}")
+            print(f"{name} container image: {client.currentImageName()}")
+
+        stagingEnvironment = stagingClient.currentTaskEnvironment()
+        productionEnvironment = productionClient.currentTaskEnvironment()
+
+        keys = frozenset(
+            tuple(stagingEnvironment.keys()) +
+            tuple(productionEnvironment.keys())
+        )
+
+        same = set()
+        different = set()
+
+        for key in keys:
+            stagingValue = stagingEnvironment.get(key, None)
+            productionValue = productionEnvironment.get(key, None)
+
+            if stagingValue == productionValue:
+                same.add(key)
+            else:
+                different.add(key)
+
+        if same:
+            print("Matching environment variables:")
+            for key in same:
+                print(f"    {key} = {stagingEnvironment[key]!r}")
+        if different:
+            print("Mismatching environment variables:")
+            for key in different:
+                print(
+                    f"    {key} = "
+                    f"{stagingEnvironment.get(key)!r} / "
+                    f"{productionEnvironment.get(key)!r}"
+                )
 
     elif action == "rollback":
         maxArguments(0)
-        client.rollback()
+        stagingClient.rollback()
 
     elif action == "env" or action == "environment":
         if arguments:
@@ -333,10 +375,10 @@ if __name__ == "__main__":
                 else:
                     updates[argument] = None
 
-            client.deployTaskEnvironment(updates)
+            stagingClient.deployTaskEnvironment(updates)
         else:
-            for key, value in client.currentTaskEnvironment().items():
-                print(f"{key}={value}")
+            for key, value in stagingClient.currentTaskEnvironment().items():
+                print(f"    {key} = {value!r}")
 
     else:
         print("Unknown action:", action, file=stderr)
