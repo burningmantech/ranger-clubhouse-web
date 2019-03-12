@@ -19,9 +19,13 @@ stages:
 jobs:
   include:
     - stage: Test
-      script: ./bin/travis test
+      script:
+        - ./bin/travis test
+      if: type = pull_request
     - stage: Deploy
-      script: ./bin/travis deploy
+      script:
+        - ./bin/travis test
+        - ./bin/travis deploy staging
       if: branch = master
       if: type = push
 
@@ -32,3 +36,9 @@ install:
 
 script:
   - true
+
+
+notifications:
+  email:
+    recipients:
+      - ranger-tech-list@burningman.org

@@ -41,7 +41,7 @@ case "${travis_action}" in
         "${wd}/bin/build";
 
         # Deploy
-        "${wd}/bin/deploy";
+        "${wd}/bin/deploy" staging;
         ;;
 
     *)
