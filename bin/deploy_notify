@@ -1,0 +1,132 @@
+#!/usr/bin/env python3
+
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from html import escape
+from textwrap import dedent
+from os import environ
+from smtplib import SMTP_SSL as SMTP
+from ssl import create_default_context as SSLContext
+
+
+
+class Notifier(object):
+    def __init__(
+        self,
+        emailHost: str, emailPort: int, emailUser: str, emailPassword: str,
+        emailSender: str, emailDestination: str,
+    ) -> None:
+        self.emailHost        = emailHost
+        self.emailPort        = emailPort
+        self.emailUser        = emailUser
+        self.emailPassword    = emailPassword
+        self.emailSender      = emailSender
+        self.emailDestination = emailDestination
+
+
+    def notifyStaging(
+        self,
+        project: str, buildNumber:str, buildURL: str,
+        pullRequestID: str, pullRequestURL: str, commitMessage: str,
+    ):
+        title = f"{project} Deployed to Staging"
+
+        message = MIMEMultipart("alternative")
+        message["Subject"] = title
+        message["From"] = self.emailSender
+        message["To"] = self.emailDestination
+
+        text = dedent(
+            f"""
+            {title}
+
+            Travis build #{buildNumber} for pull request {pullRequestID}
+            has been deployed to the staging environment.
+
+            {commitMessage}
+            """
+        )[1:-1]
+        html = dedent(
+f"""
+<html>
+  <head>{escape(title)}</head>
+<body>
+
+  <h1>{escape(title)}</h1>
+
+  <p>
+    <a href="{buildURL}">Travis build #{escape(buildNumber)}</a>
+    for <a href="{pullRequestURL}">pull request {escape(pullRequestID)}</a>
+    has been deployed to the staging environment.
+  </p>
+
+  <blockquote>{commitMessage}</blockquote>
+
+</body>
+</html>
+"""
+        )[1:-1]
+
+        message.attach(MIMEText(text, "plain"))
+        message.attach(MIMEText(html, "html"))
+
+        context = SSLContext()
+        with SMTP(self.emailHost, self.emailPort, context=context) as relay:
+            relay.login(self.emailUser, self.emailPassword)
+            relay.sendmail(
+                self.emailSender, self.emailDestination, message.as_string()
+            )
+
+
+if __name__ == "__main__":
+    from sys import argv, exit, stderr
+
+    argv = argv[1:]
+
+    if len(argv) < 1:
+        print("No environment specified", file=stderr)
+        exit(64)  # EX_USAGE
+
+    environment = argv.pop(0)
+
+    if argv:
+        print("Too many arguments", file=stderr)
+        exit(64)  # EX_USAGE
+
+    repo = environ.get("TRAVIS_REPO_SLUG")
+    if repo:
+        project = repo.split("/")[-1]
+    else:
+        project = "<project>"
+
+    pullRequestID = environ.get("TRAVIS_PULL_REQUEST")
+    if pullRequestID and pullRequestID != "false":
+        if repo:
+            pullRequestURL = f"https://github.com/{repo}/pull/{pullRequestID}"
+        else:
+            pullRequestURL = "#pr"
+    else:
+        pullRequestID = "<pull request ID>"
+        pullRequestURL = "#pr"
+
+    notifier = Notifier(
+        emailHost=environ.get("NOTIFY_SMTP_HOST", "localhost"),
+        emailPort=int(environ.get("NOTIFY_SMTP_PORT", "465")),
+        emailUser=environ.get("NOTIFY_SMTP_USER", "*"),
+        emailPassword=environ.get("NOTIFY_SMTP_PASSWORD", "*"),
+        emailSender=environ.get("NOTIFY_EMAIL_SENDER", "sender@example.com"),
+        emailDestination=environ.get(
+            "NOTIFY_EMAIL_RECIPIENT", "recipient@example.com"
+        ),
+    )
+
+    notifier.notifyStaging(
+        project=project,
+        buildNumber=environ.get("TRAVIS_BUILD_NUMBER", "<build ID>"),
+        buildURL=environ.get("TRAVIS_BUILD_WEB_URL", "#build"),
+        pullRequestID=pullRequestID,
+        pullRequestURL=pullRequestURL,
+        # commitID=environ.get("TRAVIS_COMMIT", "<commit ID>"),
+        # commits=environ.get("TRAVIS_COMMIT_RANGE", "<commits>"),
+        commitMessage=environ.get("TRAVIS_COMMIT_MESSAGE", "<commit message>"),
+    )
