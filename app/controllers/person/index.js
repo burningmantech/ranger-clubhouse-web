@@ -167,7 +167,7 @@ export default class PersonIndexController extends Controller {
     () => {
       this.person.destroyRecord().then(() => {
         this.toast.success('The person was successfully removed from the Clubhouse.');
-        this.transitionToRoute('search.person');
+        this.transitionToRoute('me.overview');
       }).catch((response) => this.house.handleErrorResponse(response));
     }
   )

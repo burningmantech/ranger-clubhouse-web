@@ -9,7 +9,7 @@ export default class SearchRoute extends Route {
       }
 
     if (transition.targetName == 'search.index') {
-      this.transitionTo('search.person');
+      this.transitionTo('search.assets');
     }
   }
 }

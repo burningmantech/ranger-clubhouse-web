@@ -68,6 +68,7 @@ export default class HouseService extends Service {
 
       switch (status) {
       case 400:
+      case 404:
         errorType = 'record not found';
         break;
 
