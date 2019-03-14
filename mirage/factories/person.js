@@ -14,7 +14,7 @@ export default Factory.extend({
   apt: '',
   city() { return faker.address.city(); },
   state() { return faker.address.stateAbbr(); },
-  country: 'USA',
+  country: 'US',
   zip() { return faker.address.zipCode(); },
   home_phone() { return faker.phone.phoneNumberFormat(); },
   alt_phone() { return faker.phone.phoneNumberFormat(); },

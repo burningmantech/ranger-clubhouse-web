@@ -65,18 +65,7 @@ spamming us and creating bogus accounts." }}
       {{f.input "last_name" label="Last Name" maxlength=25 grid="col-sm-4"}}
     </div>
 
-    <div class="form-row">
-      {{f.input "street1" label="Street" grid="col-md-8 col-sm-6"}}
-      {{f.input "apt" label="Apt" grid="col-md-1 col-sm-4"}}
-      {{f.input "street2" label="Street Line 2" grid="col-sm-8"}}
-    </div>
-
-    <div class="form-row">
-      {{f.input "city" label="City" grid="col-sm-5 col-md-4"}}
-      {{f.input "state" label="State / Province" grid="col-sm-5 col-md-4"}}
-      {{f.input "zip" label="Zip / Postal Code" grid="col-sm-5 col-md-4"}}
-      {{f.input "country" label="Country" grid="col-sm-5 col-md-4"}}
-    </div>
+    {{person-address-edit f=f}}
 
     <div class="form-row">
       {{f.input "home_phone" label="Primary Phone" grid="col-sm-4"}}

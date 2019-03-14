@@ -22,7 +22,10 @@ export default class ErrorRoute extends Route {
       data.append('data', JSON.stringify({
         build_timestamp: ENV.APP.buildTimestamp,
         version: ENV.APP.version,
-        route_error: error
+        route_error: {
+          message: error.message,
+          stack: error.stack
+        }
       }));
 
       const personId = this.session.get('user.id');

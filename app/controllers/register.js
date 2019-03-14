@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import { validatePresence, validateFormat, validateLength, validateConfirmation } from 'ember-changeset-validations/validators';
+import validateState from 'clubhouse/validators/state';
 import { action } from '@ember-decorators/object';
 
 const HUMAN_ANSWER = 35;
@@ -21,7 +22,7 @@ export default class RegisterController extends Controller {
     email: [ validatePresence(true), validateFormat({ type: 'email' }) ],
     street1: [ validatePresence(true) ],
     city: [ validatePresence(true) ],
-    state: [ validatePresence(true) ],
+    state: [ validateState() ],
     zip: [ validatePresence(true) ],
     country: [ validatePresence(true) ],
     home_phone: [ validatePresence(true), validateFormat({ min: 9 }) ],
