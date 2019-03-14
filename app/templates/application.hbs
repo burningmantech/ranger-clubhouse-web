@@ -158,7 +158,7 @@
                     </div>
                     {{#if (has-role "admin")}}
                       <div class="col-sm-12 col-md-3">
-                        <a href="{{cgo "salesforce" "import"}}" class="dropdown-item">Salesforce Import</a>
+                        {{#link-to "admin.salesforce" class="dropdown-item"}}Salesforce Import{{/link-to}}
                         <a href="{{cgo "conversion" "convert"}}" class="dropdown-item">Database Conversions</a>
                         <a href="{{cgo "reminders" "index"}}" class="dropdown-item">Reminder Emails</a>
                         {{#link-to "admin.bulk-upload" class="dropdown-item"}}Bulk Upload{{/link-to}}

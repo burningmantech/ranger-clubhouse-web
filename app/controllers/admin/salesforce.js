@@ -30,8 +30,8 @@ export default class AdminSalesforceController extends Controller {
       options.reset_test_accounts = 1;
     }
 
-    if (this.commit) {
-      options.commit = 1;
+    if (this.createAccounts) {
+      options.create_accounts = 1;
     }
 
     this.ajax.request('salesforce/import', { data: options }).then((result) => {
@@ -42,7 +42,7 @@ export default class AdminSalesforceController extends Controller {
     .catch((response) => this.house.handleErrorResponse(response))
     .finally(() => {
       this.set('isSubmitting', false);
-      this.set('commit', false);
+      this.set('createAccounts', false);
       this.set('updateSalesforce', false);
       this.set('nonTestAccounts', false);
       this.set('showAll', false);

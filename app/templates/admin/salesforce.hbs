@@ -1,13 +1,21 @@
 <h1>Salesforce Import</h1>
 
-{{#if sfConfig.SFEnableWritebacks}}
-  <p class="text-danger font-weight-bold">Salesforce writebacks are enabled.</p>
-{{else}}
-  <p>
-    <strong class="text-danger">Salesforce writebacks are DISABLED.</strong> Edit the SFEnableWritebacks setting (Admin > Edit Settings) if you want them turned on for testing.
-  </p>
-{{/if}}
-
+<p>
+  Salesforce writebacks are
+  {{#if sfConfig.SFEnableWritebacks}}
+    <strong class="text-danger">ENABLED</strong>
+  {{else}}
+    <strong class="text-danger">DISABLED.</strong> Edit the SFEnableWritebacks setting (Admin > Edit Settings) if you want them turned on for testing.
+  {{/if}}
+</p>
+<p>
+  Welcome emails will be
+  {{#if sfConfig.SendWelcomeEmail}}
+    <strong class="text-success">SENT</strong>
+  {{else}}
+    <strong class="text-danger">NOT SENT</strong>
+  {{/if}}
+</p>
 <button class="btn btn-success btn-sm" {{action toggleHelp}}>{{if showHelp "Hide" "Show"}} Help</button>
 
 <p><b>This code uses the Salesforce production system!</b>
@@ -70,17 +78,17 @@
 
 <div class="row">
   <div class="col-auto">
-    <h3>Import options</h3>
+    <strong>Import options</strong>
     <p>
-      <label>{{input type="checkbox" checked=commit}} Create accounts</label><br>
+      <label>{{input type="checkbox" checked=createAccounts}} Create accounts</label><br>
       <label>{{input type="checkbox" checked=updateSalesforce}} Update Salesforce (cauton!)</label><br>
       <label>{{input type="checkbox" checked=nonTestAccounts}} Use non-test accounts (caution!)</label><br>
     </p>
   </div>
   <div class="col-auto">
-    <h3>Debugging options</h3>
+    <strong>Debugging options</strong>
     <p>
-      <label>{{input type="checkbox" checked=showAll}} Show all records</label><br>
+      <label>{{input type="checkbox" checked=showAll}} Show all records (first 1,000 records, create & reset account disabled)</label><br>
       <label>{{input type="checkbox" checked=resetTestAccounts}} Reset test accounts in Salesforce</label><br>
     </p>
   </div>
@@ -97,9 +105,10 @@
     <button class="btn btn-secondary btn-sm" {{action expandAll}}>Expand All</button>
   </div>
   Showing {{accounts.length}}
-  <table class="table table-sm table-striped">
+  <table class="table table-sm table-hover triped-border">
     <thead>
       <tr>
+        <th>&nbsp;</th>
         <th>Callsign</th>
         <th>Name</th>
         <th>Email</th>
@@ -114,10 +123,20 @@
       {{#each accounts as |account|}}
         <tr>
           <td>
-            {{#if (and (not-eq account.status "imported") (not-eq account.status "ready"))}}
-              {{fa-icon 'exclamation-triangle'}}
+            {{#if (eq account.status "notready")}}
+              {{fa-icon "hand-paper" type="far"}}
+            {{else if (and (not-eq account.status "imported") (not-eq account.status "ready"))}}
+              {{fa-icon "exclamation-triangle"}}
+            {{else}}
+              &nbsp;
             {{/if}}
-            {{account.callsign}}
+          </td>
+          <td>
+            {{#if account.chid}}
+              {{person-link personId=account.chid callsign=account.callsign}}
+            {{else}}
+              {{account.callsign}}
+            {{/if}}
           </td>
           <td>{{account.first_name}} {{account.last_name}}</td>
           <td>{{mail-to account.email}}</td>
@@ -128,19 +147,24 @@
             <button class="btn btn-secondary btn-sm" {{action toggleAccount account}}>{{if account.showing "Hide" "Show"}}</button>
           </td>
         </tr>
-        {{#if (and (not-eq account.status "imported") (not-eq account.status "ready"))}}
+        {{#if account.message}}
           <tr class="tr-no-border">
-            <td colspan="8" class="text-danger">{{account.message}}</td>
+            <td colspan="8">
+              <span class="text-danger font-weight-bold">{{account.message}}</span>
+              {{#if account.existing_person}}
+                {{person-link person=account.existing_person}} - {{account.existing_person.status}} - {{account.existing_person.first_name}} {{account.existing_person.last_name}}
+              {{/if}}
+            </td>
           </tr>
         {{/if}}
         {{#if account.showing}}
-          <tr>
+          <tr class="tr-no-border">
             <td colspan="8">
               {{#if account.existing_person}}
                 <b>Existing Person:</b> {{person-link person=account.existing_person}} ({{account.existing_person.status}})<br>
               {{/if}}
               <b>Ranger Obj. Name:</b> {{account.salesforce_ranger_object_name}}<br>
-              <b>BPGUID:</b>{{account.salesforce.bpguid}}<br>
+              <b>BPGUID:</b>{{account.bpguid}}<br>
               <b>Street:</b> {{account.street1}}<br>
               <b>State:</b> {{account.state}}<br>
               <b>Zip:</b> {{account.zip}}<br>

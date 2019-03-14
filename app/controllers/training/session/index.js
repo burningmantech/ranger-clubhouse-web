@@ -187,7 +187,7 @@ export default class TrainingSlotController extends Controller {
       break;
 
     case 'not-active':
-      modal.info('Inactive Shift', 'Sign ups are not allowed because the hift has not been activated. Please check back later and try again.');
+      modal.info('Inactive Shift', 'Sign ups are not allowed because the shift has not been activated. Please check back later and try again.');
       break;
 
     case 'multiple-enrollment':
