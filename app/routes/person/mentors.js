@@ -7,7 +7,7 @@ export default class PersonMentorsRoute extends Route {
   }
 
   model() {
-    const person = this.modelFor('person').person;
+    const person = this.modelFor('person');
 
     return this.ajax.request(`person/${person.id}/mentors`)
           .then((result) => result.mentors);
