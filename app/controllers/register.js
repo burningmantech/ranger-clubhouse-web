@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import { validatePresence, validateFormat, validateLength, validateConfirmation } from 'ember-changeset-validations/validators';
 import validateState from 'clubhouse/validators/state';
-import { action, computed } from '@ember-decorators/object';
+import { action } from '@ember-decorators/object';
 
 const HUMAN_ANSWER = 35;
 

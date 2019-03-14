@@ -7,20 +7,24 @@ module('Integration | Component | person-address-edit', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
+    const person = server.create('person');
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{person-address-edit}}`);
-
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
+    this.set('person', person);
+    this.set('submitAction', () => { });
     await render(hbs`
-      {{#person-address-edit}}
-        template block text
-      {{/person-address-edit}}
+      {{#ch-form "person" person onSubmit=(action submitAction) as |f|}}
+        {{person-address-edit f=f}}
+      {{/ch-form}}
     `);
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    const fields = [
+      'street1', 'street2', 'apt', 'city', 'state', 'country',
+    ];
+
+    fields.forEach((field) => {
+      assert.dom(`[name="${field}"]`).hasValue(person[field]);
+    });
   });
 });
