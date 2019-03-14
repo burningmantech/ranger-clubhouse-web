@@ -4,29 +4,105 @@
   <p class="text-danger font-weight-bold">Salesforce writebacks are enabled.</p>
 {{else}}
   <p>
-    Salesforce writebacks are DISABLED. Edit the SFEnableWritebacks setting (Admin > Edit Settings) if you want them turned on for testing.
+    <strong class="text-danger">Salesforce writebacks are DISABLED.</strong> Edit the SFEnableWritebacks setting (Admin > Edit Settings) if you want them turned on for testing.
   </p>
 {{/if}}
 
-{{#if (eq importStatus "error")}}
-<p class="text-danger">
-  ERROR: {{importMessage}}
+<button class="btn btn-success btn-sm" {{action toggleHelp}}>{{if showHelp "Hide" "Show"}} Help</button>
+
+<p><b>This code uses the Salesforce production system!</b>
+  Please use caution when testing.
 </p>
+
+
+{{#if showHelp}}
+  {{#ch-box "TL;DR Guide For Safe Testing"}}
+    <p>
+      When the Submit button is clicked the first time without setting any options,
+      you should see three test records
+      below that are in Salesforce and ready for import.
+      If you check "Create accounts" and
+      click "Do it", it will create these accounts on the Clubhouse. If it shows
+      zero accounts ready for import it's likely because the accounts are marked
+      in Salesforce as already imported. To fix this, check "Reset test accounts"
+      below and click "Do it". That will reset the accounts so you can run a test.
+      This is all safe and won't hurt anything, because, by default, this code
+      only runs on test accounts (accounts whose VC approved callsign starts
+      with "Testingcallsign").
+    </p>
+
+    <p>If "Create accounts" is checked, it will actually create accounts.
+      This is fine to do on a Clubhouse staging server.
+      Please don't do this on the production Clubhouse system unless you know
+      what you're doing.
+    </p>
+
+    <p>If "Update Salesforce" is checked, it will write back data to
+      Salesforce.
+      Please don't do this if you have "Use non-test accounts" checked unless
+      you know what you're doing.
+    </p>
+
+    <p>
+      If "Use non-test accounts" is checked, it will use all accounts
+      that are ready for import. This is safe to do on
+      a Clubhouse staging server so long as "Update Salesforce" isn't checked.
+    </p>
+
+    <p>If "Show all records" is checked, it will display all the records in
+      Salesforce, whether or not they are ready for import. (This automatically
+      disables account creation, regardless of whether you have it checked.)
+    </p>
+
+    <p>If "Reset Salesforce test accounts" is checked, it will
+      reset the Salesforce test accounts to mark them as being ready for
+      import again. This is useful for testing. (Note that it does not remove
+      these accounts from the Clubhouse, you'll have to do that manually.)
+    </p>
+  {{/ch-box}}
 {{/if}}
 
+{{#if (eq importStatus "error")}}
+  <p class="text-danger">
+    ERROR: {{importMessage}}
+  </p>
+{{/if}}
+
+<div class="row">
+  <div class="col-auto">
+    <h3>Import options</h3>
+    <p>
+      <label>{{input type="checkbox" checked=commit}} Create accounts</label><br>
+      <label>{{input type="checkbox" checked=updateSalesforce}} Update Salesforce (cauton!)</label><br>
+      <label>{{input type="checkbox" checked=nonTestAccounts}} Use non-test accounts (caution!)</label><br>
+    </p>
+  </div>
+  <div class="col-auto">
+    <h3>Debugging options</h3>
+    <p>
+      <label>{{input type="checkbox" checked=showAll}} Show all records</label><br>
+      <label>{{input type="checkbox" checked=resetTestAccounts}} Reset test accounts in Salesforce</label><br>
+    </p>
+  </div>
+</div>
+
 <p>
-  <button class="btn btn-primary" {{action import}} disabled={{isSubmitting}}>{{#if isSubmitting}}Please Wait{{else}}Import{{/if}}</button>
+  <button class="btn btn-primary" {{action import}} disabled={{isSubmitting}}>{{#if isSubmitting}}Please Wait{{else}}Submit{{/if}}</button><br>
 </p>
 
-{{#if accounts}}
-  Showing {{accounts.length}} <button class="btn btn-secondary btn-sm" {{action expandAll}}>Expand All</button>
+{{#if isSubmitting}}
+  {{loading-message "Salesforce Accounts"}}
+{{else if accounts}}
+  <div class="float-right">
+    <button class="btn btn-secondary btn-sm" {{action expandAll}}>Expand All</button>
+  </div>
+  Showing {{accounts.length}}
   <table class="table table-sm table-striped">
     <thead>
       <tr>
         <th>Callsign</th>
         <th>Name</th>
         <th>Email</th>
-        <th>BPGUID</th>
         <th>Type</th>
         <th>VC Status</th>
         <th>Import Status</th>
@@ -36,30 +112,35 @@
 
     <tbody>
       {{#each accounts as |account|}}
-        <tr class="{{if (and (not-eq account.status "imported") (not-eq account.status "ready")) "table-danger"}}">
-          <td>{{account.callsign}}</td>
+        <tr>
+          <td>
+            {{#if (and (not-eq account.status "imported") (not-eq account.status "ready"))}}
+              {{fa-icon 'exclamation-triangle'}}
+            {{/if}}
+            {{account.callsign}}
+          </td>
           <td>{{account.first_name}} {{account.last_name}}</td>
           <td>{{mail-to account.email}}</td>
-          <td>{{account.bpguid}}</td>
           <td>{{account.applicant_type}}</td>
-          <td>{{account.status}}</td>
+          <td>{{account.vc_status}}</td>
           <td>{{account.status}}</td>
           <td>
             <button class="btn btn-secondary btn-sm" {{action toggleAccount account}}>{{if account.showing "Hide" "Show"}}</button>
           </td>
         </tr>
         {{#if (and (not-eq account.status "imported") (not-eq account.status "ready"))}}
-          <tr class="table-danger tr-no-border">
-            <td colspan="8">{{account.message}}</td>
+          <tr class="tr-no-border">
+            <td colspan="8" class="text-danger">{{account.message}}</td>
           </tr>
         {{/if}}
         {{#if account.showing}}
           <tr>
             <td colspan="8">
               {{#if account.existing_person}}
-              <b>Existing Person:</b> {{person-link person=account.existing_person}} ({{account.existing_person.status}})<br>
+                <b>Existing Person:</b> {{person-link person=account.existing_person}} ({{account.existing_person.status}})<br>
               {{/if}}
               <b>Ranger Obj. Name:</b> {{account.salesforce_ranger_object_name}}<br>
+              <b>BPGUID:</b>{{account.salesforce.bpguid}}<br>
               <b>Street:</b> {{account.street1}}<br>
               <b>State:</b> {{account.state}}<br>
               <b>Zip:</b> {{account.zip}}<br>

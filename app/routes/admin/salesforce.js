@@ -15,5 +15,11 @@ export default class AdminSalesforceRoute extends Route {
     controller.set('importStatus', '');
     controller.set('importMessage', '');
     controller.set('accounts', []);
+
+    controller.set('commit', false);
+    controller.set('updateSalesforce', false);
+    controller.set('nonTestAccounts', false);
+    controller.set('showAll', false);
+    controller.set('resetTestAccounts', false);
   }
 }
