@@ -18,4 +18,13 @@ export default class AdminErrorLogController extends Controller {
   toggleLog(log) {
     set(log, 'showing', !log.showing);
   }
+
+  @action
+  purgeLog() {
+    this.modal.confirm('Delete All Error Logs', 'Are you sure you wish to delete the entire error log?', () => {
+      this.ajax.request('error-log/purge', { method: 'DELETE' })
+      .then(() => this.send('refreshRoute'))
+      .catch((response) => this.house.handleErrorResponse(response));
+    })
+  }
 }

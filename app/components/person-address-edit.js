@@ -17,6 +17,6 @@ export default class PersonAddressEditComponent extends Component {
 
   @computed('f.model.country')
   get stateLabel() {
-    return StateLabels[this.f.model.get('country')] || 'State/Territory/Region';
+    return StateLabels[this.f.model.get('country')] || 'State/Territory (not required)';
   }
 }

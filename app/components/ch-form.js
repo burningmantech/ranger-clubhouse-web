@@ -69,6 +69,7 @@ export default class ChFormComponent extends Component {
         // Watch for the original model being updated.
 
         this.set('watchingModelEvent', (original.isNew ? 'didCreate' : 'didUpdate'));
+        this.set('watchingModel', this.originalModel);
         original.on(this.watchingModelEvent, this, this._modelUpdated);
       }
     } else {
@@ -81,6 +82,17 @@ export default class ChFormComponent extends Component {
 
   _modelUpdated() {
     this.notifyPropertyChange('model'); // Recompute model
+  }
+
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+
+    // Remove the event handler for the record update
+    if (this.watchingModelEvent && this.watchingModel != this.originalModel) {
+      this.originalModel.off(this.watchingModelEvent, this, this._modelUpdated);
+      this.set('watchingModelEvent', null);
+      this.set('watchingModel', null);
+    }
   }
 
   didInsertElement() {
