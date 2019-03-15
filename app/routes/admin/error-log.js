@@ -1,4 +1,5 @@
 import Route from '@ember/routing/route';
+import { action } from '@ember-decorators/object';
 
 export default class AdminErrorLogRoute extends Route {
   queryParams = {
@@ -18,6 +19,12 @@ export default class AdminErrorLogRoute extends Route {
   }
 
   setupController(controller, model) {
+    super.setupController(...arguments);
     controller.setProperties(model);
+  }
+
+  @action
+  refreshRoute() {
+    this.refresh();
   }
 }

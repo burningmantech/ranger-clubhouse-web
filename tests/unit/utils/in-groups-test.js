@@ -19,7 +19,10 @@ module('Unit | Utility | in-groups', function(/*hooks*/) {
     assert.deepEqual(inGroups([1, 2, 3, 4], 2), [[1, 2], [3, 4]]);
   });
 
-  test('notEnough', function(assert) {
-    assert.deepEqual(inGroups([1, 2, 3], 5), [[1], [2], [3]]);
+  test('notEnough - balanced', function(assert) {
+    assert.deepEqual(inGroups([1, 2, 3], 5, true), [[1], [2], [3]],);
+  });
+  test('notEnough - unbalanced', function(assert) {
+    assert.deepEqual(inGroups([1, 2, 3], 5), [[1,2,3]],);
   });
 });

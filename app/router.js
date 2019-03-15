@@ -62,6 +62,7 @@ Router.map(function() {
     this.route('bulk-upload');
     this.route('settings');
     this.route('salesforce');
+    this.route('action-log');
   });
 
   this.route('debug');

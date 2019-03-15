@@ -22,12 +22,26 @@ export default class ChFormCheckboxGroupComponent extends Component {
   @argument(optional('any')) value = '';
 
   @argument(optional('any')) options = null;
-  @argument(optional('number')) cols =  3;
+  @argument(optional('number')) cols;
+  @argument(optional('string')) _domId;
 
   // Callback for when the group updates (i.e., the user clicks on stuff)
   @argument(optional('object')) onUpdate;
 
-  @computed('options')
+  // Used purely to be notified when the model completely changes
+  @argument('object') model;
+
+  gridColumn = 'col-auto';
+
+  init() {
+    super.init(...arguments);
+
+    if (!this.cols) {
+      this.set('cols', 3);
+    }
+  }
+
+  @computed('options', 'model')
   get checkboxColumns() {
     const options = this.options || [];
     let values = this.value;
@@ -36,7 +50,11 @@ export default class ChFormCheckboxGroupComponent extends Component {
       values = [ values ];
     }
 
-    const columns = inGroups(options, this.cols);
+    if (options.length == 0) {
+      return [];
+    }
+
+    const columns = inGroups(options, this.cols, true);
 
     let index = 0;
     const checkboxes = [];
@@ -61,7 +79,7 @@ export default class ChFormCheckboxGroupComponent extends Component {
         const field =  MultiCheckboxField.create({
           label,
           value,
-          domId: (this.formId + '-' + this.name + index),
+          _domId: `${this._domId}${index}`,
           isChecked: values.includes(value),
         });
 
