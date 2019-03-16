@@ -1,4 +1,5 @@
-// Cripped from the Burner Profile page.
+// Cribbed from the Burner Profile page with transitional and deleted codes removed based on
+// https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 export const CountryOptions = [
   [ "Choose Country", "" ],
   [ "United States", "US" ],
@@ -40,7 +41,6 @@ export const CountryOptions = [
   [ "Brunei Darussalam", "BN" ],
   [ "Bulgaria", "BG" ],
   [ "Burkina Faso", "BF" ],
-  [ "Burma", "BU" ],
   [ "Burundi", "BI" ],
   [ "Cabo Verde", "CV" ],
   [ "Cambodia", "KH" ],
@@ -64,12 +64,10 @@ export const CountryOptions = [
   [ "Cyprus", "CY" ],
   [ "Czech Republic", "CZ" ],
   [ "C\u00f4te d'Ivoire", "CI" ],
-  [ "Dahomey", "DY" ],
   [ "Denmark", "DK" ],
   [ "Djibouti", "DJ" ],
   [ "Dominica", "DM" ],
   [ "Dominican Republic", "DO" ],
-  [ "East Timor", "TP" ],
   [ "Ecuador", "EC" ],
   [ "Egypt", "EG" ],
   [ "El Salvador", "SV" ],
@@ -162,9 +160,7 @@ export const CountryOptions = [
   [ "Namibia", "NA" ],
   [ "Nauru", "NR" ],
   [ "Nepal", "NP" ],
-  [ "Netherlands Antilles", "AN" ],
   [ "Netherlands", "NL" ],
-  [ "Neutral Zone", "NT" ],
   [ "New Caledonia", "NC" ],
   [ "New Zealand", "NZ" ],
   [ "Nicaragua", "NI" ],
@@ -246,7 +242,7 @@ export const CountryOptions = [
   [ "Uruguay", "UY" ],
   [ "Uzbekistan", "UZ" ],
   [ "Vanuatu", "VU" ],
-  [ "Venezuela, Bolivarian Republic of\u00a0", "VE" ],
+  [ "Venezuela, Bolivarian Republic of", "VE" ],
   [ "Viet Nam", "VN" ],
   [ "Virgin Islands (British)", "VG" ],
   [ "Virgin Islands (U.S.)", "VI" ],
