@@ -38,7 +38,7 @@ Signups: {{students.length}} of {{slot.max}}
 <div class="mt-2 mb-2">
   {{! Desktop Display }}
   <div class="d-sm-block d-none">
-    <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}  disabled={{is-empty students}}>{{if isSubmitting "Saving" "Save All"}}</button>
+    <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}}  disabled={{or isSubmitting (is-empty students)}}>{{if isSubmitting "Saving" "Save All"}}</button>
     {{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary btn-sm"}}Trainer's Report{{/link-to}}
     {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary btn-sm"}}Sign up Sheet{{/link-to}}
     <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}}  disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
@@ -117,7 +117,7 @@ Signups: {{students.length}} of {{slot.max}}
 {{/if}}
 
 <div class="mt-2 mb-2 d-sm-block d-none">
-  <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}} disabled={{is-empty students}}>{{if isSubmitting "Saving" "Save All"}}</button>
+  <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{or isSubmitting (is-empty students)}}>{{if isSubmitting "Saving" "Save All"}}</button>
   {{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary btn-sm"}}Trainer's Report{{/link-to}}
   {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary btn-sm"}}Signup Sheet{{/link-to}}
   <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}}  disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
