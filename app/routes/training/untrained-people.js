@@ -21,4 +21,11 @@ export default class TrainingUntrainedPeopleRoute extends Route {
     controller.setProperties(model);
     controller.set('training', this.modelFor('training'));
   }
+
+  // Don't allow the year parameter to bleed over to other routes.
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }
