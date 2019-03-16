@@ -85,11 +85,11 @@ export default class MeAlertsController extends Controller {
 
   // Confirm a phone number as verified.
   @action
-  confirmCodeAction(model) {
+  confirmCodeAction(model, which) {
     const personId = this.person.id;
     let code, type, phone;
 
-    if (!isEmpty(model.get('off_playa'))) {
+    if (which == 'off-playa') {
       code = model.get('off_playa');
       type = 'off-playa';
       phone = this.numbers.off_playa.phone;

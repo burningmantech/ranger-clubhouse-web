@@ -16,27 +16,25 @@
 {{/if}}
 
 {{#if notVerified}}
-  {{#ch-alert "warning"}}
-    <div class="row">
-      <div class="col-1 mt-2">{{fa-icon "exclamation-triangle" size="2x"}}</div>
-      <div class="col-10">
-        Please verify your SMS number(s). You will not be able receive messages
-        until you do so. (Data rates may apply.)
-      </div>
+  {{#ch-alert "danger"}}
+    <div class="float-left mt-2 mr-3">
+        {{fa-icon "exclamation-triangle" size="2x"}}
     </div>
+    Please verify your SMS number(s). You will not be able receive Clubhouse alert messages
+    until you do so. (Data rates may apply.)
   {{/ch-alert}}
   {{#ch-box "Verify Your Phone Number(s)"}}
     <p>
       <strong>A verification code has been sent to {{unverifiedPhones}}</strong>
     </p>
-    {{#ch-form "verify" verifyForm onSubmit=(action "confirmCodeAction") as |f|}}
+    {{#ch-form "verify" verifyForm as |f|}}
       {{#if (or numbers.is_same (and numbers.off_playa.phone (not numbers.off_playa.is_verified)))}}
         <div class="form-row">
           {{f.input "off_playa" label=(concat "Enter verification code for " numbers.off_playa.phone) type="text" size=5 maxlength=5 grid="col-auto"}}
         </div>
         <div class="form-row">
-          {{f.submit label="Verify" disabled=isVerifying}}
-          <button type="submit" class="btn btn-secondary ml-2" {{action "sendNewCodeAction" "off-playa"}} disabled={{isVerifying}}>Resend verification code</button>
+          <button class="btn btn-primary" disabled={{isVerifying}} {{action confirmCodeAction f.model "off-playa"}}>Verify</button>
+          <button type="submit" class="btn btn-secondary ml-2" {{action sendNewCodeAction "off-playa"}} disabled={{isVerifying}}>Resend verification code</button>
         </div>
       {{/if}}
       {{#if (and (not numbers.is_same) numbers.on_playa.phone (not numbers.on_playa.is_verified))}}
@@ -44,8 +42,8 @@
           {{f.input "on_playa" label=(concat "Enter verification code for " numbers.on_playa.phone) type="text" size=5 maxlength=5 grid="col-auto"}}
         </div>
         <div class="form-row">
-          {{f.submit label="Verify" disabled=isVerifying}}
-          <button type="submit" class="btn btn-secondary ml-2" {{action "sendNewCodeAction" "on-playa"}} disabled={{isVerifying}}>Resend verification code</button>
+          <button class="btn btn-primary" disabled={{isVerifying}} {{action confirmCodeAction f.model "on-playa"}}>Verify</button>
+          <button type="submit" class="btn btn-secondary ml-2" {{action sendNewCodeAction "on-playa"}} disabled={{isVerifying}}>Resend verification code</button>
         </div>
       {{/if}}
     {{/ch-form}}
