@@ -24,4 +24,11 @@ export default class TrainingIndexRoute extends Route {
     controller.set('training', this.modelFor('training'));
     controller.setProperties(model);
   }
+
+  // Don't allow the year parameter to bleed over to other routes.
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

@@ -38,12 +38,12 @@ Signups: {{students.length}} of {{slot.max}}
 <div class="mt-2 mb-2">
   {{! Desktop Display }}
   <div class="d-sm-block d-none">
-    <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}>{{if isSubmitting "Saving" "Save All"}}</button>
+    <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}  disabled={{is-empty students}}>{{if isSubmitting "Saving" "Save All"}}</button>
     {{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary btn-sm"}}Trainer's Report{{/link-to}}
     {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary btn-sm"}}Sign up Sheet{{/link-to}}
-    <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
+    <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}}  disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
     <button class="btn btn-secondary btn-sm" {{action "showAddPersonAction"}}>Add Person</button>
-    <button class="btn btn-secondary btn-sm" {{action "showRemovePersonAction"}}>Remove Person</button>
+    <button class="btn btn-secondary btn-sm" {{action "showRemovePersonAction"}} disabled={{is-empty students}}>Remove Person</button>
   </div>
 
   {{! Cellphone/Tablet display }}
@@ -57,10 +57,10 @@ Signups: {{students.length}} of {{slot.max}}
         {{#link-to "training.session.trainers-report" training.id slot.id class="dropdown-item"}}Trainer's Report{{/link-to}}
         {{#link-to "training.session.signup-sheet" training.id slot.id class="dropdown-item"}}Sign up Sheet{{/link-to}}
         <div class="dropdown-divider"></div>
-        <a href class="dropdown-item" {{action "toggleEmailListAction"}}>{{if showEmails "Hide Emails" "List Emails"}}</a>
+        <a href class="dropdown-item" {{action "toggleEmailListAction"}} disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</a>
         <div class="dropdown-divider"></div>
         <a href class="dropdown-item" {{action "showAddPersonAction"}}>Add Person</a>
-        <a href class="dropdown-item" {{action "showRemovePersonAction"}}>Remove Person</a>
+        <a href class="dropdown-item" {{action "showRemovePersonAction"}} disabled={{is-empty students}}>Remove Person</a>
       </div>
     </div>
   </div>
@@ -71,6 +71,7 @@ Signups: {{students.length}} of {{slot.max}}
   A '*' by a person's status indicate an ART Alpha.
 {{/if}}
 
+{{#if students}}
 <table class="table table-sm table-hover">
   <caption>{{pluralize students.length "student"}} {{passedCount}} passed</caption>
   <thead>
@@ -109,14 +110,19 @@ Signups: {{students.length}} of {{slot.max}}
   </tbody>
 
 </table>
+{{else}}
+<p class="mt-4 mb-4 text-danger font-weight-bold">
+  No students have signed up.
+</p>
+{{/if}}
 
 <div class="mt-2 mb-2 d-sm-block d-none">
-  <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}>{{if isSubmitting "Saving" "Save All"}}</button>
+  <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}} disabled={{is-empty students}}>{{if isSubmitting "Saving" "Save All"}}</button>
   {{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary btn-sm"}}Trainer's Report{{/link-to}}
   {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary btn-sm"}}Signup Sheet{{/link-to}}
-  <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
+  <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}}  disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
   <button class="btn btn-secondary btn-sm" {{action "showAddPersonAction"}}>Add Person</button>
-  <button class="btn btn-secondary btn-sm" {{action "showRemovePersonAction"}}>Remove Person</button>
+  <button class="btn btn-secondary btn-sm" {{action "showRemovePersonAction"}} disabled={{is-empty students}}>Remove Person</button>
 </div>
 
 {{#if showEmails}}

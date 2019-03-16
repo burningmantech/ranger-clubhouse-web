@@ -12,11 +12,21 @@ export default class TrainingPeopleTrainingCompletedRoute extends Route {
 
     return this.ajax.request(`training/${training.id}/people-training-completed`, {
       data: { year }
+    }).then((results) => {
+      results.year = year;
+      return results;
     });
   }
 
   setupController(controller, model) {
-    controller.set('slots', model.slots);
+    controller.setProperties(model);
     controller.set('training', this.modelFor('training'));
+  }
+
+  // Don't allow the year parameter to bleed over to other routes.
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
   }
 }
