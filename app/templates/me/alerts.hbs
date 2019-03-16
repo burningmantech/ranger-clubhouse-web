@@ -16,14 +16,12 @@
 {{/if}}
 
 {{#if notVerified}}
-  {{#ch-alert "warning"}}
-    <div class="row">
-      <div class="col-1 mt-2">{{fa-icon "exclamation-triangle" size="2x"}}</div>
-      <div class="col-10">
-        Please verify your SMS number(s). You will not be able receive messages
-        until you do so. (Data rates may apply.)
-      </div>
+  {{#ch-alert "danger"}}
+    <div class="float-left mt-2 mr-3">
+        {{fa-icon "exclamation-triangle" size="2x"}}
     </div>
+    Please verify your SMS number(s). You will not be able receive Clubhouse alert messages
+    until you do so. (Data rates may apply.)
   {{/ch-alert}}
   {{#ch-box "Verify Your Phone Number(s)"}}
     <p>
