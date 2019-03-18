@@ -38,6 +38,11 @@ script:
   - true
 
 
+cache:
+  directories:
+    - ~/docker_images
+
+
 notifications:
   email:
     recipients:

@@ -3,7 +3,6 @@
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from html import escape
-from textwrap import dedent
 from os import environ
 from smtplib import SMTP_SSL as SMTP
 from ssl import create_default_context as SSLContext
@@ -26,8 +25,9 @@ class Notifier(object):
 
     def notifyStaging(
         self,
-        project: str, buildNumber:str, buildURL: str,
-        pullRequestID: str, pullRequestURL: str, commitMessage: str,
+        project: str, repository: str, buildNumber:str, buildURL: str,
+        pullRequestID: str, pullRequestURL: str,
+        commitID: str, commitMessage: str,
     ):
         title = f"{project} Deployed to Staging"
 
@@ -36,17 +36,26 @@ class Notifier(object):
         message["From"] = self.emailSender
         message["To"] = self.emailDestination
 
-        text = dedent(
-            f"""
-            {title}
+        commitURL = f"https://github.com/{repository}/commit/{commitID}"
 
-            Travis build #{buildNumber} for pull request {pullRequestID}
-            has been deployed to the staging environment.
+        text = (
+            f"Travis build #{buildNumber} for commit {commitID} "
+            f"has completed successfully and the resulting image has been "
+            f"deployed to the staging environment."
+        )
+        text = (
+f"""
+{title}
 
-            {commitMessage}
-            """
+{text}
+
+{commitMessage}
+
+Diff: {commitURL}
+Build log: {buildURL}
+"""
         )[1:-1]
-        html = dedent(
+        html = (
 f"""
 <html>
   <head>{escape(title)}</head>
@@ -56,12 +65,12 @@ f"""
 
   <p>
     <a href="{buildURL}">Travis build #{escape(buildNumber)}</a>
-    for <a href="{pullRequestURL}">pull request {escape(pullRequestID)}</a>
-    has been deployed to the staging environment.
+    for <a href="{commitURL}">commit {commitID}</a>
+    has completed successfully and the resulting image has been has been
+    deployed to the staging environment.
   </p>
 
-  <blockquote>{commitMessage}</blockquote>
-
+  <blockquote>{escape(commitMessage)}</blockquote>
 </body>
 </html>
 """
@@ -93,21 +102,23 @@ if __name__ == "__main__":
         print("Too many arguments", file=stderr)
         exit(64)  # EX_USAGE
 
-    repo = environ.get("TRAVIS_REPO_SLUG")
-    if repo:
-        project = repo.split("/")[-1]
+    repository = environ.get("TRAVIS_REPO_SLUG", "<org>/<repo>")
+    if repository:
+        project = repository.split("/")[-1]
     else:
         project = "<project>"
 
-    pullRequestID = environ.get("TRAVIS_PULL_REQUEST")
+    pullRequestID = environ.get("TRAVIS_PULL_REQUEST", "0")
     if pullRequestID and pullRequestID != "false":
-        if repo:
-            pullRequestURL = f"https://github.com/{repo}/pull/{pullRequestID}"
+        if repository:
+            pullRequestURL = (
+                f"https://github.com/{repository}/pull/{pullRequestID}"
+            )
         else:
             pullRequestURL = "#pr"
     else:
         pullRequestID = "<pull request ID>"
-        pullRequestURL = "#pr"
+        pullRequestURL = "#PR"
 
     notifier = Notifier(
         emailHost=environ.get("NOTIFY_SMTP_HOST", "localhost"),
@@ -120,13 +131,14 @@ if __name__ == "__main__":
         ),
     )
 
-    notifier.notifyStaging(
-        project=project,
-        buildNumber=environ.get("TRAVIS_BUILD_NUMBER", "<build ID>"),
-        buildURL=environ.get("TRAVIS_BUILD_WEB_URL", "#build"),
-        pullRequestID=pullRequestID,
-        pullRequestURL=pullRequestURL,
-        # commitID=environ.get("TRAVIS_COMMIT", "<commit ID>"),
-        # commits=environ.get("TRAVIS_COMMIT_RANGE", "<commits>"),
-        commitMessage=environ.get("TRAVIS_COMMIT_MESSAGE", "<commit message>"),
-    )
+    if environment == "staging":
+        notifier.notifyStaging(
+            project=project,
+            repository=repository,
+            buildNumber=environ.get("TRAVIS_BUILD_NUMBER", "<build ID>"),
+            buildURL=environ.get("TRAVIS_BUILD_WEB_URL", "#build"),
+            pullRequestID=pullRequestID,
+            pullRequestURL=pullRequestURL,
+            commitID=environ.get("TRAVIS_COMMIT", "<commit ID>"),
+            commitMessage=environ.get("TRAVIS_COMMIT_MESSAGE", "<message>"),
+        )

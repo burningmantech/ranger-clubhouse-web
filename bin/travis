@@ -5,13 +5,47 @@
 
 . "$(dirname "$0")/.common.sh";
 
-travis_action="$1"; shift;
+travis_action="${1}"; shift;
 
 echo "Docker configuration:";
 docker info;
 
 echo "Environment:";
 env;
+
+docker_cache_dir="${HOME}/docker_images";
+docker_cache_file="${docker_cache_dir}/images.tgz";
+
+
+cache_images() {
+    mkdir -p "${docker_cache_dir}";
+
+    find_images() {
+        for name in "${@}"; do
+            docker history -q "${name}" | grep -v "<missing>";
+        done;
+    }
+
+    local images="$(find_images "${@}" | uniq)";
+
+    echo "Caching Docker images: ${images}";
+    docker save ${images} | gzip -9 > "${docker_cache_file}";
+    docker image ls -a;
+}
+
+
+load_images() {
+    if [ -f "${docker_cache_file}" ]; then
+        echo "Loading Docker images from cache...";
+        if ! docker load --input "${docker_cache_file}"; then
+            echo "Cache load failed.";
+        fi;
+        docker image ls -a;
+    else
+        echo "No cached Docker image available.";
+    fi;
+}
+
 
 case "${travis_action}" in
 
@@ -37,7 +71,9 @@ case "${travis_action}" in
             exit 1;
         fi;
 
-        # Build
+        # Load cached docker images
+        load_images;
+
         "${wd}/bin/build";
 
         # Deploy

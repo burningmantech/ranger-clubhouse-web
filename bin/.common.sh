@@ -7,5 +7,6 @@ image_repo="ranger-clubhouse-web";
 image_name="${image_repo}:${image_tag}";
 
 build_image_name="${image_repo}_build";
+  app_image_name="${image_name}";
 
 container_name="ranger-clubhouse-web";
