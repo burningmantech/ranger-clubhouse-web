@@ -7,6 +7,7 @@ import {
   AmericanSoundexRule,
   DoubleMetaphoneRule,
   EditDistanceRule,
+  ExperimentalEyeRhymeRule,
   EyeRhymeRule,
   FccRule,
   MinLengthRule,
@@ -52,11 +53,11 @@ export default class HandlerCheckerController extends Controller {
   get handleRules() {
     const handles = this.model.toArray();
     const rules = [];
-    const addRule = (rule, name) => rules.pushObject(EmberObject.create({
+    const addRule = (rule, name, enabled=true) => rules.pushObject(EmberObject.create({
       id: rule.id,
       name: name,
       rule: rule,
-      enabled: true,
+      enabled: enabled,
     }));
     // Rule ordering: Substring is first per 2019 request from Threepio.
     // No input yet on ideal ordering for all checks.
@@ -68,6 +69,7 @@ export default class HandlerCheckerController extends Controller {
     addRule(new AmericanSoundexRule(handles), 'American Soundex');
     addRule(new DoubleMetaphoneRule(handles), 'Double Metaphone');
     addRule(new EyeRhymeRule(handles), 'Eye rhymes');
+    addRule(new ExperimentalEyeRhymeRule(handles), 'Experimental eye rhymes', false);
     return rules;
   }
 
