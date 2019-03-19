@@ -122,6 +122,12 @@ export default class ScheduleManageComponent extends Component {
     const unique = this.availableSlots.uniqBy('slotDay').mapBy('slotDay');
     const days = A();
 
+    unique.sort((a,b) => {
+      if (a < b) return -1;
+      if ( a > b) return 1;
+      return 0;
+    });
+
     if (this.isCurrentYear) {
       days.pushObject(upcomingShifts);
     }

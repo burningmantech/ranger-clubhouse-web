@@ -47,6 +47,12 @@ export default class SlotsController extends Controller {
     const unique = this.slots.uniqBy('slotDay').mapBy('slotDay');
     const days = [ allDays ];
 
+    unique.sort((a,b) => {
+      if (a < b) return -1;
+      if (a > b) return 1;
+      return 0;
+    });
+
     unique.forEach((day) => days.pushObject({id: day, title: moment(day).format('ddd MMM DD')}));
 
     return days;
