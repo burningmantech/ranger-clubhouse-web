@@ -101,84 +101,77 @@
 {{#if isSubmitting}}
   {{loading-message "Salesforce Accounts"}}
 {{else if accounts}}
-  <div class="float-right">
-    <button class="btn btn-secondary btn-sm" {{action toggleAll}}>{{#if expandedAll}}Hide All{{else}}Expand All{{/if}}</button>
-  </div>
-  Showing {{accounts.length}}
-  <table class="table table-sm table-hover triped-border">
-    <thead>
-      <tr>
-        <th>&nbsp;</th>
-        <th>Callsign</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Type</th>
-        <th>VC Status</th>
-        <th>Import Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {{#each accounts as |account|}}
+  <p>
+    Showing {{pluralize accounts.length "record"}}
+  </p>
+  {{#each accountGroups as |group|}}
+    <div class="float-right">
+      <button class="btn btn-secondary btn-sm" {{action toggleAll group}}>{{#if group.expandedAll}}Hide All{{else}}Expand All{{/if}}</button>
+    </div>
+    <h3>{{group.statusLabel}} ({{pluralize group.items.length "record"}})</h3>
+    <table class="table table-sm table-hover triped-border">
+      <thead>
         <tr>
-          <td>
-            {{#if (eq account.status "notready")}}
-              {{fa-icon "hand-paper" type="far"}}
-            {{else if (and (not-eq account.status "imported") (not-eq account.status "ready"))}}
-              {{fa-icon "exclamation-triangle"}}
-            {{else}}
-              &nbsp;
-            {{/if}}
-          </td>
-          <td>
-            {{#if account.chid}}
-              {{person-link personId=account.chid callsign=account.callsign}}
-            {{else}}
-              {{account.callsign}}
-            {{/if}}
-          </td>
-          <td>{{account.first_name}} {{account.last_name}}</td>
-          <td>{{mail-to account.email}}</td>
-          <td>{{account.applicant_type}}</td>
-          <td>{{account.vc_status}}</td>
-          <td>{{account.status}}</td>
-          <td>
-            <button class="btn btn-secondary btn-sm" {{action toggleAccount account}}>{{if account.showing "Hide" "Show"}}</button>
-          </td>
+          <th>Callsign</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Type</th>
+          <th>VC Status</th>
+          <th>Actions</th>
         </tr>
-        {{#if account.message}}
-          <tr class="tr-no-border">
-            <td colspan="8">
-              <span class="text-danger font-weight-bold">{{account.message}}</span>
-              {{#if account.existing_person}}
-                {{person-link person=account.existing_person}} - {{account.existing_person.status}} - {{account.existing_person.first_name}} {{account.existing_person.last_name}}
+      </thead>
+
+      <tbody>
+        {{#each group.items as |account|}}
+          <tr>
+            <td>
+              {{#if account.chuid}}
+                {{person-link personId=account.chuid callsign=account.callsign}}
+              {{else}}
+                {{account.callsign}}
               {{/if}}
             </td>
-          </tr>
-        {{/if}}
-        {{#if account.showing}}
-          <tr class="tr-no-border">
-            <td colspan="8">
-              {{#if account.existing_person}}
-                <b>Existing Person:</b> {{person-link person=account.existing_person}} ({{account.existing_person.status}})<br>
-              {{/if}}
-              <b>Ranger Obj. Name:</b> {{account.salesforce_ranger_object_name}}<br>
-              <b>BPGUID:</b>{{account.bpguid}}<br>
-              <b>Street:</b> {{account.street1}}<br>
-              <b>State:</b> {{account.state}}<br>
-              <b>Zip:</b> {{account.zip}}<br>
-              <b>Country:</b> {{account.country}}<br>
-              <b>Phone:</b> {{account.phone}}<br>
-              <b>Emergency Contact:</b> {{account.emergency_contact}}<br>
-              <b>Known Ranger Names:</b> {{account.known_ranger_names}}<br>
-              <b>Known PNV Names:</b> {{account.known_pnv_names}}<br>
-              <b>T-Shirt Info:</b> {{account.teeshirt_size_style}}<br>
-              <b>LS Shirt Info:</b> {{account.longsleeveshirt_size_style}}<br>
+            <td>{{account.first_name}} {{account.last_name}}</td>
+            <td>{{mail-to account.email}}</td>
+            <td>{{account.applicant_type}}</td>
+            <td>{{account.vc_status}}</td>
+            <td>
+              <button class="btn btn-secondary btn-sm" {{action toggleAccount account}}>{{if account.showing "Hide" "Show"}}</button>
             </td>
           </tr>
-        {{/if}}
-      {{/each}}
-    </tbody>
-  </table>
+          {{#if account.message}}
+            <tr class="tr-no-border">
+              <td colspan="8">
+                <span class="text-danger font-weight-bold">{{account.message}}</span>
+                {{#if account.existing_person}}
+                  {{person-link person=account.existing_person}} - {{account.existing_person.status}} - {{account.existing_person.first_name}} {{account.existing_person.last_name}}
+                {{/if}}
+              </td>
+            </tr>
+          {{/if}}
+          {{#if account.showing}}
+            <tr class="tr-no-border">
+              <td colspan="8">
+                {{#if account.existing_person}}
+                  <b>Existing Person:</b> {{person-link person=account.existing_person}} ({{account.existing_person.status}})<br>
+                {{/if}}
+                <b>Ranger Obj. Name:</b> {{account.salesforce_ranger_object_name}}<br>
+                <b>BPGUID:</b>{{account.bpguid}}<br>
+                <b>Street:</b> {{account.street1}}<br>
+                <b>State:</b> {{account.state}}<br>
+                <b>Zip:</b> {{account.zip}}<br>
+                <b>Country:</b> {{account.country}}<br>
+                <b>Phone:</b> {{account.phone}}<br>
+                <b>Emergency Contact:</b> {{account.emergency_contact}}<br>
+                <b>Known Ranger Names:</b> {{account.known_ranger_names}}<br>
+                <b>Known PNV Names:</b> {{account.known_pnv_names}}<br>
+                <b>T-Shirt Info:</b> {{account.teeshirt_size_style}}<br>
+                <b>LS Shirt Info:</b> {{account.longsleeveshirt_size_style}}<br>
+              </td>
+            </tr>
+          {{/if}}
+        {{/each}}
+      </tbody>
+    </table>
+  {{/each}}
 {{/if}}
