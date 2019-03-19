@@ -11,7 +11,7 @@ export default class PersonLinkComponent extends Component {
   @argument(optional('object')) person;
 
   // Otherwise personId and callsign component arguments are used
-  @argument(optional('number')) personId;
+  @argument(optional(unionOf('number', 'string'))) personId;
   @argument(optional('string')) callsign;
 
   // should a specific
