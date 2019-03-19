@@ -81,7 +81,7 @@
     <strong>Import options</strong>
     <p>
       <label>{{input type="checkbox" checked=createAccounts}} Create accounts</label><br>
-      <label>{{input type="checkbox" checked=updateSalesforce}} Update Salesforce (cauton!)</label><br>
+      <label>{{input type="checkbox" checked=updateSalesforce disabled=(not createAccounts)}}<span class="{{if (not createAccounts) "text-muted"}}"> Update Salesforce (create account only, cauton!)</span></label><br>
       <label>{{input type="checkbox" checked=nonTestAccounts}} Use non-test accounts (caution!)</label><br>
     </p>
   </div>
@@ -102,7 +102,7 @@
   {{loading-message "Salesforce Accounts"}}
 {{else if accounts}}
   <div class="float-right">
-    <button class="btn btn-secondary btn-sm" {{action expandAll}}>Expand All</button>
+    <button class="btn btn-secondary btn-sm" {{action toggleAll}}>{{#if expandedAll}}Hide All{{else}}Expand All{{/if}}</button>
   </div>
   Showing {{accounts.length}}
   <table class="table table-sm table-hover triped-border">

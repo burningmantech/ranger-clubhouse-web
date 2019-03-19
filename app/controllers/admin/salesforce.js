@@ -9,6 +9,15 @@ export default class AdminSalesforceController extends Controller {
   showAll = false;
   resetTestAccounts = false;
 
+  resetFlags() {
+    this.set('expandedAll', false);
+    this.set('createAccounts', false);
+    this.set('updateSalesforce', false);
+    this.set('nonTestAccounts', false);
+    this.set('showAll', false);
+    this.set('resetTestAccounts', false);
+  }
+
   @action
   import() {
     this.toast.clear();
@@ -34,25 +43,24 @@ export default class AdminSalesforceController extends Controller {
       options.create_accounts = 1;
     }
 
-    this.ajax.request('salesforce/import', { data: options }).then((result) => {
-      this.set('importStatus', result.status);
-      this.set('importMessage', result.message);
-      this.set('accounts', result.accounts);
-    })
-    .catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => {
-      this.set('isSubmitting', false);
-      this.set('createAccounts', false);
-      this.set('updateSalesforce', false);
-      this.set('nonTestAccounts', false);
-      this.set('showAll', false);
-      this.set('resetTestAccounts', false);
-    });
+    this.ajax.request('salesforce/import', { data: options })
+       .then((result) => {
+        this.set('importStatus', result.status);
+        this.set('importMessage', result.message);
+        this.set('accounts', result.accounts);
+        this.resetFlags();
+      })
+      .catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => {
+        this.set('isSubmitting', false);
+      });
   }
 
   @action
-  expandAll() {
-    this.accounts.forEach((account) => set(account, 'showing', true) );
+  toggleAll() {
+    this.set('expandedAll', !this.expandedAll);
+    const show = this.expandedAll;
+    this.accounts.forEach((account) => set(account, 'showing', show));
   }
 
   @action
