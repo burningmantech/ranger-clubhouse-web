@@ -268,8 +268,10 @@
     <div class="col-sm-12 col-md-6">
       {{f.submit label="Update" disabled=(not f.model.isDirty)}}
     </div>
-    <div class="col-sm-12 col-md-2 ml-auto">
-      <button type="button" class="btn btn-danger btn-sm" {{action "removePerson"}}>Remove</button>
-    </div>
+    {{#if (has-role "admin")}}
+      <div class="col-sm-12 col-md-2 ml-auto">
+        <button type="button" class="btn btn-danger btn-sm" {{action "removePerson"}}>Remove</button>
+      </div>
+    {{/if}}
   </div>
 {{/ch-form}}
