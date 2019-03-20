@@ -1,4 +1,4 @@
-{{year-select (concat "Timesheet For " session.user.callsign) year=year years=person.years onChange=(action "changeYearAction")}}
+{{year-select (concat "Timesheet For " session.user.callsign) year=year years=person.all_years onChange=(action "changeYearAction")}}
 
 {{#if timesheets}}
 

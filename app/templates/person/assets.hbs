@@ -1,4 +1,4 @@
-{{year-select "Asset History" year=year years=person.years subheader=true onChange=(action "changeYearAction")}}
+{{year-select "Asset History" year=year years=person.all_years subheader=true onChange=(action "changeYearAction")}}
 
 {{#if person.asset_authorized}}
   {{#ch-form "checkout" checkoutForm validator=assetValdiations onSubmit=(action "submitAction") as |f|}}
