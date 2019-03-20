@@ -1,7 +1,7 @@
 <div class="float-right">
   {{#link-to "person.timesheet" class="btn btn-secondary"}}Back To Timesheet Entries{{/link-to}}
 </div>
-{{year-select "Timesheet Logs" year=year years=person.years onChange=(action "changeYearAction") subheader=true}}
+{{year-select "Timesheet Logs" year=year years=person.all_years onChange=(action "changeYearAction") subheader=true}}
 
 {{#each logs as |entry|}}
   <table class="table table-sm table-striped table-box mt-2">

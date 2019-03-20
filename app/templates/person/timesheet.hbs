@@ -1,7 +1,7 @@
-  <div class="float-right">
-    {{#link-to "person.timesheet-log" (query-params year=year) class="btn btn-secondary"}}Timesheet Log{{/link-to}}
-  </div>
-    {{year-select "Timesheet" year=year years=person.years onChange=(action "changeYearAction") subheader=true}}
+<div class="float-right">
+  {{#link-to "person.timesheet-log" (query-params year=year) class="btn btn-secondary"}}Timesheet Log{{/link-to}}
+</div>
+{{year-select "Timesheet" year=year years=person.all_years onChange=(action "changeYearAction") subheader=true}}
 
 
 {{person/shift-manage positions=positions timesheets=timesheets person=person}}
