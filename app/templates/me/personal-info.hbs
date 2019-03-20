@@ -32,16 +32,16 @@
     </div>
 
     <div class="form-row">
-      {{f.input "gender" label="Gender" hint="female, male, non-binary, gender fluid, etc." }}
+      {{f.input "gender" label="Gender" hint="Examples: female, male, non-binary, gender fluid, etc." }}
     </div>
 
     {{#unless person.isAuditor}}
       <div class="form-row">
         {{f.input "languages" label="Languages Spoken"
-          hint="List the English names of languages you are comfortable speaking separated by a comma. Ex: english, french, japanese"}}
+          hint="List the English names of languages you are comfortable speaking separated by a comma. Examples: english, french, japanese"}}
       </div>
       <div class="form-row col-auto">
-        {{f.input "camp_location" type="textarea" label="Camp Location" cols=50 rows=4 maxlength=200}}
+        {{f.input "camp_location" type="textarea" label="Camp Name & Location" cols=50 rows=4 maxlength=200}}
       </div>
     {{/unless}}
   </fieldset>
