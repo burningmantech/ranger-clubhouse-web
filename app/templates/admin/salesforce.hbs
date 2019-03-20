@@ -125,7 +125,7 @@
         {{#each group.items as |account|}}
           <tr>
             <td>
-              {{#if account.chuid}}
+              {{#if (and (eq account.status "succeeded") account.chuid)}}
                 {{person-link personId=account.chuid callsign=account.callsign}}
               {{else}}
                 {{account.callsign}}
