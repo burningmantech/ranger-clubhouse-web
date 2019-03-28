@@ -1,17 +1,19 @@
 import Component from '@ember/component';
 import { set } from '@ember/object';
 import { action, computed } from '@ember-decorators/object';
-import { argument } from '@ember-decorators/argument';
+import { argument
+} from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
 import { inject as service } from '@ember-decorators/service';
 import * as Position from 'clubhouse/constants/positions';
 
-export default class PersonShiftManageComponent extends Component {
+export default class ShiftCheckInOutComponent extends Component {
   @argument('object') person; // Person we're dealing with
   @argument('object') timesheets; // The timesheets
   @argument('object') positions; // And possible positions person can sign into.
   @argument(optional('object')) imminentSlots; // (optional) slots that might be starting
   @argument(optional('any')) hasUnverifiedTimesheetEntries; // (optional) true if entries are unverified
+  @argument(optional('object')) endShiftNotify; // (optional) callback when a shift was successfully ended.
 
   @service store;
 
@@ -43,15 +45,9 @@ export default class PersonShiftManageComponent extends Component {
   get signinPositions() {
     const signins = this.positions.map((pos) => {
       if (pos.training_required && !pos.is_trained) {
-        return {
-          id: pos.id,
-          title: `${pos.title} (UNTRAINED)`
-        };
+        return { id: pos.id, title: `${pos.title} (UNTRAINED)` };
       } else {
-        return {
-          id: pos.id,
-          title: pos.title
-        }
+        return { id: pos.id, title: pos.title };
       }
     });
 
@@ -145,11 +141,12 @@ export default class PersonShiftManageComponent extends Component {
   endShiftAction() {
     const shift = this.onDutyEntry;
 
-    this.ajax.request(`timesheet/${shift.id}/signoff`, {
-        method: 'POST'
-      })
+    this.ajax.request(`timesheet/${shift.id}/signoff`, { method: 'POST' })
       .then((result) => {
         this.store.pushPayload(result);
+        if (this.endShiftNotify) {
+          this.endShiftNotify();
+        }
         this.toast.success(`${this.person.callsign} has been successfully signed out.`);
       }).catch((response) => this.house.handleErrorResponse(response));
   }

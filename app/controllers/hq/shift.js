@@ -118,4 +118,10 @@ export default class HqShiftController extends Controller {
   markOnSite() {
     this._updateOnSite(true);
   }
+
+  @action
+  endShiftNotify() {
+    // Kick the top hq route to update the credits in the sidebar
+    this.send('refreshCredits');
+  }
 }
