@@ -1,0 +1,47 @@
+{{pluralize assets.length "asset"}} found
+<table class="table table-striped table-sm">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Barcode</th>
+      <th>Attachment</th>
+      <th>Assigned</th>
+      <th>Temp ID</th>
+      <th>Checked Out</th>
+      <th>Checked In</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each assets as |ap|}}
+      <tr>
+        <td>{{ap.asset.description}}</td>
+        <td>{{present-or-not ap.asset.barcode "-"}}</td>
+        <td>{{ap.attachment.description}}</td>
+        <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
+        <td>{{present-or-not ap.asset.temp_id "-"}}</td>
+        <td>{{shift-format ap.checked_out}}</td>
+        <td>
+          {{#if ap.checked_in}}
+            {{shift-format ap.checked_in}}
+          {{else}}
+            <i>Checked-Out</i>
+          {{/if}}
+        </td>
+        <td>
+          {{#unless ap.checked_in}}
+            <button class="btn btn-primary btn-sm" {{action onCheckIn ap}}>Check In</button>
+          {{else}}
+            -
+          {{/unless}}
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="8">
+          <strong class="text-danger">No assets were found for {{year}}</strong>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

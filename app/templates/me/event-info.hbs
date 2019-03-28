@@ -29,7 +29,7 @@
   {{/if}}
 {{else}}
   <strong class="text-danger">No training sign ups were found for {{year}}.</strong>
-  {{#if isCurrentYear}}
+  {{#if (is-current-year year)}}
     {{#if person.isActive}}
       You will need to sign up for and pass training before being allowed to sign in for your shifts.
     {{else if person.isProspective}}
@@ -43,44 +43,8 @@
   {{pluralize artTrainings.length "position"}} requires ART Training. While
   you may sign up for an ART shift at anytime, you will not be allowed to work
   an ART shift unless you have passed ART training.
-  <div class="table-responsive mt-2">
-    <table class="table table-sm table-striped">
-      <thead class="">
-        <tr>
-          <th>Position</th>
-          <th>Status</th>
-          <th>Date</th>
-          <th>Location</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each artTrainings as |training|}}
-          <tr>
-            <td>{{training.position_title}}</td>
-            <td>
-              {{#if (eq training.status "pass")}}
-                <span class="text-success">PASSED</span>
-              {{else if (eq training.status "pending")}}
-                Session has not started
-              {{else if (eq training.status "no-shift")}}
-                <span class="text-danger">Not signed up for ART training</span>
-              {{else}}
-                <span class="text-danger">Not Passed</span>
-              {{/if}}
-            </td>
-            <td>
-              {{#if training.date}}
-                {{mdy-format training.date}}
-              {{else}}
-                -
-              {{/if}}
-            </td>
-            <td>{{training.location}}</td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  </div>
+
+  {{training-info trainings=artTrainings}}
 {{/if}}
 
 {{#if (or person.isActive person.isAlpha)}}

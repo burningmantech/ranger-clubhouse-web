@@ -11,7 +11,7 @@ export default class AdminCreditsRoute extends Route {
     const year = requestYear(params);
 
     return RSVP.hash({
-      credits: this.store.query('position-credit', { year }),
+      credits: this.store.query('position-credit', { year }).then((result) => result.toArray()),
       positions: this.store.query('position', {}),
       year,
     });

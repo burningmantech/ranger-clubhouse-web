@@ -10,6 +10,10 @@ export default class ModalDialogComponent extends Component {
   @argument(optional('object')) onClose;
   @argument(optional('object')) onShow;
 
+  @argument(optional('string')) confirmLabel = 'Confirm';
+  @argument(optional('string')) cancelLabel = 'Cancel';
+  @argument(optional('string')) closeLabel = 'Close';
+
   didInsertElement() {
     super.didInsertElement(...arguments);
     const dialog = $('#dialog-box');

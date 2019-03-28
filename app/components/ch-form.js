@@ -46,7 +46,7 @@ export default class ChFormComponent extends Component {
 
     if (this.changeSet) {
       if (validator) {
-        model = new Changeset(original, lookupValidator(validator), validator);
+        model = new Changeset(original, lookupValidator(validator), validator, { skipValidate: true });
       } else {
         model = new Changeset(original);
       }

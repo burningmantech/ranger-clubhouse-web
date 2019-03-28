@@ -65,6 +65,17 @@ Router.map(function() {
     this.route('action-log');
   });
 
+  this.route('hq', { path: '/hq/:person_id' }, function() {
+    this.route('index', { path: '/' });
+    this.route('site-checkin');
+    this.route('shift');
+    this.route('schedule');
+    this.route('timesheet');
+    this.route('assets');
+    this.route('messages');
+    this.route('training-info');
+  });
+
   this.route('debug');
 
   this.route('mentor', function() {

@@ -1,5 +1,5 @@
 {{#if newMessage}}
-  {{message-new message=newMessage onSubmit=(action "submitAction") onCancel=(action "cancelAction")}}
+  {{message-new message=newMessage onSubmit=(action submitAction) onCancel=(action cancelAction)}}
 {{/if}}
 
 <div class="row">
@@ -24,7 +24,7 @@
     </div>
   </div>
   {{#if canSendMessages}}
-    <div class="col-sm-12 col-md-6">
+    <div class="col-sm-12 col-md-6 text-right">
       <a href="#" class="btn btn-primary" {{action "newMessageAction"}}>New Message</a>
     </div>
   {{/if}}

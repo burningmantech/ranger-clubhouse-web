@@ -65,11 +65,7 @@
         {{f.input "callsign_approved" type="select" wrapClass="col-sm-12 col-md-auto" options=callsignApprovedOptions}}
       {{else}}
         <div class="mt-2 col-sm-12 col-md-auto">
-          {{#if person.callsign_approved}}
-            Approved
-          {{else}}
-            Not Approved
-          {{/if}}
+          {{if person.callsign_approved "Approved" "Not Approved"}}
         </div>
       {{/if}}
     </div>
@@ -168,7 +164,7 @@
         {{/if}}
       </div>
       {{#unless personRoles}}
-        <strong class="text-danger">Person has no roles granted.</strong>
+        <strong class="text-danger">Person hold any roles</strong>
       {{/unless}}
       {{#if showRoles}}
         <div class="row">
@@ -207,16 +203,18 @@
     </div>
   </div>
 
-  <div class="form-group row">
-    <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">BPGUID</label>
-    {{#if isAdminOrVC}}
-      {{f.input "bpguid" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
-    {{else}}
-      <div class="mt-2 col-auto">
-        {{present-or-not person.bpguid "No Burner Profile ID"}}
-      </div>
-    {{/if}}
-  </div>
+  {{#if (has-role "admin")}}
+    <div class="form-group row">
+      <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">BPGUID</label>
+      {{#if isAdminOrVC}}
+        {{f.input "bpguid" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
+      {{else}}
+        <div class="mt-2 col-auto">
+          {{present-or-not person.bpguid "No Burner Profile ID"}}
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
 
   <div class="form-group row">
     <label class="col-form-label-fixed col-sm-12 col-md-2">BMID/Tickets</label>

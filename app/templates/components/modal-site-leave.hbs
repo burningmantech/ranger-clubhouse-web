@@ -1,0 +1,23 @@
+{{#modal-dialog title="Outstanding Item(s)" onClose=onClose onConfirm=onConfirm confirmLabel="Mark Person As Off Site" cancelLabel="Deal With Items" }}
+  <strong class="text-danger">{{pluralize pendingItems "item"}} still needs to be dealt with before marking this person off site:</strong>
+  <ul class="mt-2 mb-2">
+    {{#if isOnDuty}}
+      <li>
+        Person is still listed as being on duty.
+      </li>
+    {{/if}}
+    {{#if assetsCheckedOut}}
+      <li>
+        {{pluralize assetsCheckedOut.length "asset"}} has not been collected.
+      </li>
+    {{/if}}
+    {{#if unverifiedTimesheetCount}}
+      <li>
+        {{if (eq unverifiedTimesheetCount 1) "A timesheet entry has" (concat  unverifiedTimesheetCount " timesheet entries have")}} not been verified.
+      </li>
+    {{/if}}
+  </ul>
+  <p>
+    You may choose to ignore this warning and proceed to mark this person off site. However, you really should take care of the items listed above.
+  </p>
+{{/modal-dialog}}

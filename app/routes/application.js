@@ -32,6 +32,7 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
 
   // Logout button or ember-simple-auth trigger
   invalidateSession() {
+    this.house.clearStorage();
     this.session.invalidate();
   }
 
