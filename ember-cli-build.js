@@ -12,6 +12,12 @@ module.exports = function(defaults) {
       theme: 'bootstrap'
     },*/
 
+    'ember-cli-uglify': {
+      uglify: {
+        mangle: false
+      }
+    },
+
     'ember-cli-babel': {
       includePolyfill: true
     },
