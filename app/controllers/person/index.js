@@ -5,7 +5,7 @@ import inGroups from 'clubhouse/utils/in-groups';
 
 const CallsignApprovedOptions = [
   [ 'Approved', true ],
-  [ 'Rejected', false ]
+  [ 'Not Approved', false ]
 ];
 
 const StatusOptions = [

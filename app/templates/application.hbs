@@ -285,7 +285,7 @@
       {{/if}}
     </div>
   </nav>
-  {{#if (has-role "manage")}}
+  {{#if canAccountManage}}
     <div class="bg-khaki row no-gutters">
       {{! line up the search bar with main content}}
       <div class="d-none d-md-block sidebar-expanded">
@@ -325,18 +325,17 @@
                 {{f.input "past_prospective" type="checkbox" label="Past Prospective" inline=true}}
               </div>
             </div>
-            <div class="form-row mb-2">
-              <div class="col-sm-12 col-md-8 small">
-                Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.
-              </div>
-            </div>
-            <div class="float-right mr-2">
-              <button type="button" class="btn btn-sm btn-secondary" {{action "hideSearchBoxAction"}}>Hide Options</button>
-            </div>
             <div class="form-row">
-              <div class="text-muted mt-2 col-sm-12">(Future feature - waiting for HQ interface)</div>
               <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Mode:</label>
-              {{f.input "display_mode" type="radioGroup" options=displayModeOptions label="Display Mode" inline=true }}
+              {{f.input "mode" type="radioGroup" options=modeOptions label="Interface Mode" inline=true }}
+            </div>
+            <div class="form-row mb-2">
+              <div class="col-auto">
+                <small>Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.</small>
+              </div>
+              <div class="col-auto ml-auto mr-2">
+                <button type="button" class="btn btn-sm btn-secondary" {{action "hideSearchBoxAction"}}>Hide Options</button>
+              </div>
             </div>
           </fieldset>
         {{/if}}

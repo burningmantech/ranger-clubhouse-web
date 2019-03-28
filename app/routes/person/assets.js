@@ -9,12 +9,14 @@ export default class PersonAssetsRoute extends Route {
   };
 
   model(params) {
-    const personId = this.modelFor('person').id;
+    const person_id = this.modelFor('person').id;
     const year = requestYear(params);
 
     return RSVP.hash({
-      assets: this.store.query('asset-person', { person_id: personId, year }),
+      assets: this.store.query('asset-person', { person_id, year }),
       attachments: this.store.findAll('asset-attachment'),
+      eventInfo: this.ajax.request(`person/${person_id}/event-info`, { data: { year } })
+                  .then((result) => result.event_info),
       year,
     });
   }
@@ -24,8 +26,6 @@ export default class PersonAssetsRoute extends Route {
 
     controller.set('person', this.modelFor('person'));
     controller.setProperties(model);
-    controller.clearErrors();
-    controller.set('checkoutForm.barcode', '');
   }
 
   resetController(controller, isExiting) {

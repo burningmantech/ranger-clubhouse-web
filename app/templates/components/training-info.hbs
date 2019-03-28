@@ -1,0 +1,38 @@
+<div class="table-responsive mt-2">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th>Position</th>
+        <th>Pass</th>
+        <th>Date</th>
+        <th>Location</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each trainings as |training|}}
+        <tr>
+          <td>{{training.position_title}}</td>
+          <td>
+            {{#if (eq training.status "pass")}}
+              <span class="text-success">YES</span>
+            {{else if (eq training.status "pending")}}
+              Pending
+            {{else if (eq training.status "no-shift")}}
+              <span class="text-danger">No training sign up found</span>
+            {{else}}
+              <span class="text-danger">NO</span>
+            {{/if}}
+          </td>
+          <td>
+            {{#if training.date}}
+              {{mdy-format training.date}}
+            {{else}}
+              -
+            {{/if}}
+          </td>
+          <td>{{training.location}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

@@ -1,22 +1,22 @@
-{{#modal-dialog title=dialog.title onClose=onClose}}
+{{#modal-dialog title=data.title onClose=onClose}}
   <p>
-    {{#if dialog.message.isMe}}You are{{else}}The person is{{/if}} already
-    enrolled in {{pluralize dialog.message.slots.length (if dialog.message.isAlpha "Alpha shift" "training session") }}:
+    {{#if data.isMe}}You are{{else}}The person is{{/if}} already
+    enrolled in {{pluralize data.slots.length (if data.isAlpha "Alpha shift" "training session") }}:
   </p>
   <p>
-    {{#each dialog.message.slots as |slot|}}
+    {{#each data.slots as |slot|}}
       <b>{{slot.position.title}} - {{slot.description}} {{shift-format slot.begins}}</b><br>
     {{/each}}
   </p>
   <p>
-    {{#if dialog.message.forced}}
+    {{#if data.forced}}
       Because you either have the Admin, Trainer, VC or Mentor role,
-      {{if dialog.message.isMe "you have" "the person has"}}
+      {{if data.isMe "you have" "the person has"}}
       been added to the
-      {{#if dialog.message.isAlpha}}Alpha shift{{else}}training sessions{{/if}}.
+      {{#if data.isAlpha}}Alpha shift{{else}}training sessions{{/if}}.
       Hope you know what you are doing!
     {{else}}
-      You may only sign up for one {{#if dialog.message.isAlpha}}Alpha shift{{else}}training session{{/if}}.
+      You may only sign up for one {{#if data.isAlpha}}Alpha shift{{else}}training session{{/if}}.
       Multiple enrollments are not allowed.
       Contact {{mail-to (config "VCEmail")}} for help.
     {{/if}}

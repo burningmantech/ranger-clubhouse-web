@@ -1,198 +1,201 @@
-<span class="d-inline-block">{{fa-icon "question"}} = unverified.</span>
-<span class="d-inline-block">{{fa-icon "check"}} = verified.</span>
-<span class="d-inline-block">{{fa-icon "exclamation-triangle"}}= needs review.</span>
-<span class="d-inline-block">{{fa-icon "thumbs-down" type="far"}} = requested correction rejected.</span>
-<span class="d-inline-block">{{fa-icon "thumbs-up" type="far"}} = correction approved, awaiting verify.</span>
-<span class="d-inline-block">{{fa-icon "question-circle" type="far"}} = correction needs more info.</span>
+<div class="border rounded p-2 mt-2 mb-2">
+  <h3>Timesheet Entries</h3>
+  <span class="d-inline-block">{{fa-icon "question"}} = unverified.</span>
+  <span class="d-inline-block">{{fa-icon "check"}} = verified.</span>
+  <span class="d-inline-block">{{fa-icon "exclamation-triangle"}}= needs review.</span>
+  <span class="d-inline-block">{{fa-icon "thumbs-down" type="far"}} = requested correction rejected.</span>
+  <span class="d-inline-block">{{fa-icon "thumbs-up" type="far"}} = correction approved, awaiting verify.</span>
+  <span class="d-inline-block">{{fa-icon "question-circle" type="far"}} = correction needs more info.</span>
 
-{{#if timesheets}}
-<table class="table table-striped table-sm">
-  <thead>
-    <tr>
-      <th>&nbsp;</th>
-      <th>From</th>
-      <th>To</th>
-      <th class="text-right">Time</th>
-      <th class="text-right">Credits</th>
-      <th>Position</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each timesheets as |ts|}}
-      <tr class="{{if ts.isPendingReview "bg-warning"}}">
-        <td>
-          {{#if (is-empty ts.off_duty)}}
-            -
-          {{else if ts.verified}}
-            {{fa-icon "check"}}
-          {{else if ts.isPendingReview}}
-            {{fa-icon "exclamation-triangle"}}
-          {{else if ts.isRejected}}
-            {{fa-icon "thumbs-down" type="far"}}
-          {{else if ts.isUnverified}}
-            {{fa-icon "question"}}
-          {{else if ts.isApproved}}
-            {{fa-icon "thumbs-up" type="far"}}
-          {{else}}
-            &nbsp;
-          {{/if}}
-        </td>
-        <td>{{shift-format ts.on_duty}}</td>
-        <td>
-          {{#if ts.off_duty}}
-            {{shift-format ts.off_duty}}
-          {{else}}
-            <i>On Duty</i>
-          {{/if}}
-        </td>
-        <td class="text-right">
+  {{#if timesheets}}
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th>From</th>
+          <th>To</th>
+          <th class="text-right">Time</th>
+          <th class="text-right">Credits</th>
+          <th>Position</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each timesheets as |ts|}}
+          <tr class="{{if ts.isPendingReview "bg-warning"}}">
+            <td>
+              {{#if (is-empty ts.off_duty)}}
+                -
+              {{else if ts.verified}}
+                {{fa-icon "check"}}
+              {{else if ts.isPendingReview}}
+                {{fa-icon "exclamation-triangle"}}
+              {{else if ts.isRejected}}
+                {{fa-icon "thumbs-down" type="far"}}
+              {{else if ts.isUnverified}}
+                {{fa-icon "question"}}
+              {{else if ts.isApproved}}
+                {{fa-icon "thumbs-up" type="far"}}
+              {{else}}
+                &nbsp;
+              {{/if}}
+            </td>
+            <td>{{shift-format ts.on_duty}}</td>
+            <td>
+              {{#if ts.off_duty}}
+                {{shift-format ts.off_duty}}
+              {{else}}
+                <i>On Duty</i>
+              {{/if}}
+            </td>
+            <td class="text-right">
               {{hour-minute-format ts.duration}}
-        </td>
-        <td class="text-right">
-          {{#if ts.off_duty}}
-              {{credits-format ts.credits}}
-          {{else}}
-              &nbsp;
-          {{/if}}
-        </td>
-        <td data-title="Position">{{ts.position.title}}</td>
-        <td>
-          {{#if (is-empty ts.off_duty)}}
-            <button type="button" class="btn btn-danger btn-sm" {{action "signoffAction" ts}}>End Shift</button>
-          {{else }}
-            <button type="button" class="btn btn-primary btn-sm" {{action "editEntryAction" ts}}>Edit</button>
-            {{#if canManageTimesheets}}
-              <button type="button" class="btn btn-secondary btn-sm" {{action "removeEntryAction" ts}} title="Delete timesheet entry">{{fa-icon "trash"}}</button>
-            {{/if}}
-          {{/if}}
-        </td>
-      </tr>
-    {{/each}}
-    <tr>
-      <td colspan="2">&nbsp;</td>
-      <td class="text-right">
-        Totals
-      </td>
-      <td class="text-right">
-        {{hour-minute-format (sum-column timesheets "duration")}}
-      </td>
-      <td class="text-right">
-        {{credits-format (sum-column timesheets "credits")}}
-      </td>
-      <td colspan="2">
-        &nbsp;
-      </td>
-    </tr>
-    <tr>
-      <td colspan="7">
-      {{timesheet-position-summary timesheets=timesheets}}
-      </td>
-    </tr>
-  </tbody>
-</table>
-{{else}}
-<p class="mt-2 text-danger">No timesheet entries found for {{year}}</p>
-{{/if}}
+            </td>
+            <td class="text-right">
+              {{#if ts.off_duty}}
+                {{credits-format ts.credits}}
+              {{else}}
+                &nbsp;
+              {{/if}}
+            </td>
+            <td data-title="Position">{{ts.position.title}}</td>
+            <td>
+              {{#if (is-empty ts.off_duty)}}
+                <button type="button" class="btn btn-danger btn-sm" {{action "signoffAction" ts}}>End Shift</button>
+              {{else }}
+                <button type="button" class="btn btn-primary btn-sm" {{action "editEntryAction" ts}}>Edit</button>
+                {{#if canManageTimesheets}}
+                  <button type="button" class="btn btn-secondary btn-sm" {{action "removeEntryAction" ts}} title="Delete timesheet entry">{{fa-icon "trash"}}</button>
+                {{/if}}
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+        <tr>
+          <td colspan="2">&nbsp;</td>
+          <td class="text-right">
+            Totals
+          </td>
+          <td class="text-right">
+            {{hour-minute-format (sum-column timesheets "duration")}}
+          </td>
+          <td class="text-right">
+            {{credits-format (sum-column timesheets "credits")}}
+          </td>
+          <td colspan="2">
+            &nbsp;
+          </td>
+        </tr>
+        <tr>
+          <td colspan="7">
+            {{timesheet-position-summary timesheets=timesheets}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  {{else}}
+    <p class="mt-2 text-danger">No timesheet entries found for {{year}}</p>
+  {{/if}}
 
-{{#if editEntry}}
-{{#ch-form "entry" editEntry modalBox=true modalTitle="Edit Timesheet" validator=timesheetValidations onSubmit=(action "saveEntryAction") onCancel=(action "cancelEntryAction") as |f|}}
-    {{#if editEntry.isPendingReview}}
-      {{#ch-alert "danger"}}
-        Entry has a correction request and needs to be reviewed.
-      {{/ch-alert}}
-    {{else if editEntry.isUnverified}}
-      {{#ch-alert "warning"}}
-        Entry needs to be verified by the person. No review action is needed at this time.
-      {{/ch-alert}}
-    {{else if editEntry.verified}}
-      {{#ch-alert "success"}}
-        <span class="text-success font-weight-bold">Entry was verified on {{shift-format editEntry.verified_at}} by {{editEntry.verified_person.callsign}}. Review is not needed at this time.</span>
-      {{/ch-alert}}
-    {{/if}}
-
-  <fieldset>
-    <legend>
-      Time/Position
-    </legend>
-      {{#if canManageTimesheets}}
-      <div class="form-row">
-        {{f.input "on_duty" label="On Duty" type="datetime" size=20 grid="col-auto"}}
-        {{f.input "off_duty" label="Off Duty" type="datetime" size=20 grid="col-auto"}}
-        {{f.input "position_id" label="Position" type="select" options=positionOptions grid="col-auto"}}
-      </div>
-      {{else}}
-        <dl class="form-row">
-          <dt class="col-sm-2">Position:</dt>
-          <dd class="col-sm-10">{{editEntry.position.title}}</dd>
-
-          <dt class="col-sm-2">Time:</dt>
-          <dd class="col-sm-10">{{shift-format editEntry.on_duty}} to {{shift-format editEntry.off_duty}}</dd>
-
-          <dt class="col-sm-2">Duration:</dt>
-          <dd class="col-sm-10">{{hour-minute-format editEntry.duration}}</dd>
-
-          <dt class="col-sm-2">Credits:</dt>
-          <dd class="col-sm-10">{{credits-format editEntry.credits}}</dd>
-        </dl>
+  {{#if editEntry}}
+    {{#ch-form "entry" editEntry modalBox=true modalTitle="Edit Timesheet" validator=timesheetValidations onSubmit=(action "saveEntryAction") onCancel=(action "cancelEntryAction") as |f|}}
+      {{#if editEntry.isPendingReview}}
+        {{#ch-alert "danger"}}
+          Entry has a correction request and needs to be reviewed.
+        {{/ch-alert}}
+      {{else if editEntry.isUnverified}}
+        {{#ch-alert "warning"}}
+          Entry needs to be verified by the person. No review action is needed at this time.
+        {{/ch-alert}}
+      {{else if editEntry.verified}}
+        {{#ch-alert "success"}}
+          <span class="text-success font-weight-bold">Entry was verified on {{shift-format editEntry.verified_at}} by {{editEntry.verified_person.callsign}}. Review is not needed at this time.</span>
+        {{/ch-alert}}
       {{/if}}
-  </fieldset>
-  <fieldset>
-    <legend>Entry Verification</legend>
-    {{#if editVerification}}
-      <div class="form-group row">
+
+      <fieldset>
+        <legend>
+          Time/Position
+        </legend>
+        {{#if canManageTimesheets}}
+          <div class="form-row">
+            {{f.input "on_duty" label="On Duty" type="datetime" size=20 grid="col-auto"}}
+            {{f.input "off_duty" label="Off Duty" type="datetime" size=20 grid="col-auto"}}
+            {{f.input "position_id" label="Position" type="select" options=positionOptions grid="col-auto"}}
+          </div>
+        {{else}}
+          <dl class="form-row">
+            <dt class="col-sm-2">Position:</dt>
+            <dd class="col-sm-10">{{editEntry.position.title}}</dd>
+
+            <dt class="col-sm-2">Time:</dt>
+            <dd class="col-sm-10">{{shift-format editEntry.on_duty}} to {{shift-format editEntry.off_duty}}</dd>
+
+            <dt class="col-sm-2">Duration:</dt>
+            <dd class="col-sm-10">{{hour-minute-format editEntry.duration}}</dd>
+
+            <dt class="col-sm-2">Credits:</dt>
+            <dd class="col-sm-10">{{credits-format editEntry.credits}}</dd>
+          </dl>
+        {{/if}}
+      </fieldset>
+      <fieldset>
+        <legend>Entry Verification</legend>
+        {{#if editVerification}}
+          <div class="form-group row">
             <div class="col-auto">Entry marked for verification:</div>
             <div class="col-auto">
               {{f.input "verified" type="radioGroup" options=verifyOptions inline=true}}
+            </div>
           </div>
-      </div>
-      <div class="form-row">
+          <div class="form-row">
             {{f.input "notes" label="Correciton request notes:" type="textarea" cols=80 rows=3}}
-      </div>
-    {{else}}
-    <div class="form-row">
-      <div class="col-6">Correction Note:</div>
-      <div class="col-6 text-right">
-        <button class="btn btn-secondary btn-sm" {{action "editVerificationAction"}}>Edit Verification Flag &amp; Note</button>
-      </div>
-      <div class="mb-3 col-12">{{present-or-not editEntry.notes}}</div>
-    </div>
-    {{/if}}
+          </div>
+        {{else}}
+          <div class="form-row">
+            <div class="col-6">Correction Note:</div>
+            <div class="col-6 text-right">
+              <button class="btn btn-secondary btn-sm" {{action "editVerificationAction"}}>Edit Verification Flag &amp; Note</button>
+            </div>
+            <div class="mb-3 col-12">{{present-or-not editEntry.notes}}</div>
+          </div>
+        {{/if}}
 
-  </fieldset>
-  <fieldset>
-    <legend>Entry Review</legend>
-    {{#if canManageTimesheets}}
-    <div class="form-row">
-        {{f.input "reviewer_notes" label="Timesheet reviewer response:" type="textarea" cols=80 rows=2
+      </fieldset>
+      <fieldset>
+        <legend>Entry Review</legend>
+        {{#if canManageTimesheets}}
+          <div class="form-row">
+            {{f.input "reviewer_notes" label="Timesheet reviewer response:" type="textarea" cols=80 rows=2
           hint="The user will see any notes entered in above."
         }}
-    </div>
-    <div class="form-group row">
-        <div class="col-auto">Review Status:</div>
-        <div class="col-auto">
-         {{f.input "review_status" label="Review Status" type="radioGroup" options=reviewOptions inline=true}}
-        </div>
-    </div>
-    {{else}}
-      <dl class="form-row">
-        <dt class="col-2">
-          Reviewer Note:
-        </dt>
-        <dd class="col-10">
-          {{present-or-not editEntry.reviewer_notes}}
-        </dd>
+          </div>
+          <div class="form-group row">
+            <div class="col-auto">Review Status:</div>
+            <div class="col-auto">
+              {{f.input "review_status" label="Review Status" type="radioGroup" options=reviewOptions inline=true}}
+            </div>
+          </div>
+        {{else}}
+          <dl class="form-row">
+            <dt class="col-2">
+              Reviewer Note:
+            </dt>
+            <dd class="col-10">
+              {{present-or-not editEntry.reviewer_notes}}
+            </dd>
 
-        <dt class="col-2">
-          Review Status:
-        </dt>
-        <dd class="col-10">
-          {{editEntry.review_status}}
-        </dd>
-      </dl>
-    {{/if}}
-</fieldset>
-  {{f.submit label="Update"}}
-  {{f.cancel}}
-{{/ch-form}}
-{{/if}}
+            <dt class="col-2">
+              Review Status:
+            </dt>
+            <dd class="col-10">
+              {{editEntry.review_status}}
+            </dd>
+          </dl>
+        {{/if}}
+      </fieldset>
+      {{f.submit label="Update"}}
+      {{f.cancel}}
+    {{/ch-form}}
+  {{/if}}
+</div>

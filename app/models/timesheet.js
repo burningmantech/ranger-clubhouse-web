@@ -1,4 +1,5 @@
 import DS from 'ember-data';
+import { isEmpty } from '@ember/utils';
 import { attr } from '@ember-decorators/data';
 import { computed } from '@ember-decorators/object';
 
@@ -24,7 +25,7 @@ export default class TimesheetModel extends DS.Model {
 
   @computed('verified', 'notes', 'review_status')
   get isPendingReview() {
-    return (!this.verified && this.notes && this.review_status == 'pending');
+    return (!this.verified && !isEmpty(this.notes) && this.review_status == 'pending');
   }
 
   @computed('review_status')
@@ -42,14 +43,14 @@ export default class TimesheetModel extends DS.Model {
     return this.review_status == 'pending';
   }
 
-  @computed('verified', 'notes', 'status')
+  @computed('verified', 'notes', 'review_status', 'off_duty')
   get isUnverified() {
-    return !this.verified && !this.notes && this.review_status == 'pending';
+    return !this.verified && isEmpty(this.notes) && this.review_status == 'pending' && this.off_duty;
   }
 
   @computed('status', 'reviewer_notes')
   get haveReviewerResponse() {
-    return this.review_status != 'pending' && this.reviewer_notes;
+    return this.review_status != 'pending' && !isEmpty(this.reviewer_notes);
   }
 
   @computed('off_duty')

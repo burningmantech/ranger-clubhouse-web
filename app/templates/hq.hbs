@@ -1,0 +1,127 @@
+{{#ch-sidebar}}
+  {{#ch-sidebar-group "HQ WINDOW"}}
+    {{ch-sidebar-link "hq.shift" title="Shift Manage" icon="walking" iconType="s"}}
+    {{ch-sidebar-link "hq.schedule" title="Schedule / Sign Up" icon="clipboard"}}
+    {{ch-sidebar-link "hq.messages" title="Messages" icon="envelope" badgeText=person.unread_message_count}}
+    {{ch-sidebar-link "hq.timesheet" title="Timesheets" class="dropdown-item" icon="clock"}}
+    {{ch-sidebar-link "hq.assets" title="Asset History" class="dropdown-item" icon="broadcast-tower" iconType="s"}}
+    {{ch-sidebar-link "hq.training-info" title="Training Info" icon="graduation-cap" iconType="s"}}
+    {{ch-sidebar-link "hq.site-checkin" title="Site Check In" icon="list-ol" iconType="s"}}
+  {{/ch-sidebar-group}}
+{{/ch-sidebar}}
+
+<main class="col">
+  <div class="float-right text-right">
+    {{#link-to "person.index" person.id class="btn btn-secondary btn-sm"}}Account Manage{{/link-to}}
+  </div>
+  <h2>
+    {{person.callsign}} &lt;{{person.status}}{{if person.vintage "/vintage"}}{{if isShinyPenny ", Shiny Penny"}}&gt;
+  </h2>
+
+  <hr class="mr-n2 ml-n2">
+
+  <div class="row">
+    <div class="col-md-9">
+      {{#if (not person.user_authorized)}}
+        {{#ch-alert "danger"}}
+          <div class="float-left mr-2">
+            {{fa-icon "exclamation-triangle" size="3x"}}
+          </div>
+          Account is DISABLED. Contact the HQ Lead or the Personnel Manager {{mail-to (config "PersonnelEmail")}}.
+        {{/ch-alert}}
+      {{else if person.isSuspended}}
+        {{#ch-alert "danger"}}
+          <div class="float-left mr-2">
+            {{fa-icon "exclamation-triangle" size="3x"}}
+          </div>
+          Account is SUSPENDED. Contact the HQ Lead or the Personnel Manager {{mail-to (config "PersonnelEmail")}}.
+        {{/ch-alert}}
+      {{else if (not allowedCheckIn)}}
+        {{#ch-alert "danger"}}
+          <div class="float-left mr-2">
+            {{fa-icon "exclamation-triangle" size="3x"}}
+          </div>
+          This account cannot use the HQ Window Interface because the status is {{person.status}}
+        {{/ch-alert}}
+      {{else}}
+        {{#if person.needsBpguid}}
+          {{#ch-alert "warning"}}
+            Account does not have Burner Profile ID on file. Shift sign ups are disabled.
+          {{/ch-alert}}
+        {{/if}}
+        {{outlet}}
+      {{/if}}
+    </div>
+
+    <div class="col-md-3">
+      <div class="mugshot">
+        {{#if photo}}
+          {{#if photo.photo_url}}
+            <img src="{{photo.photo_url}}" class="mx-auto d-block" alt="profile photo">
+            Status:
+            {{#if (eq photo.photo_status "approved")}}
+              <span class="text-success">Approved</span>
+            {{else}}
+              <span class="text-danger">{{photo.photo_status}}</span>
+            {{/if}}
+            <br>
+          {{else}}
+            <i class="far fa-user fa-8x"></i><br>
+            No Photo Uploaded<br>
+          {{/if}}
+          {{#if photo.message}}
+            <div class="text-danger">ERROR: {{photo.message}}</div>
+          {{/if}}
+        {{else}}
+          <div class="loading-spinner"></div>
+          . . Loading photo . .
+        {{/if}}
+      </div>
+
+      <div class="border rounded p-2">
+        <p>
+          <strong>{{currentYear}} Credits</strong><br>
+          {{credits-format credits}}
+        </p>
+
+        <p>
+          <strong>Meals</strong><br>
+          {{meal-info eventInfo.meals}}
+        </p>
+
+        <p>
+          <strong>Showers</strong><br>
+          {{#if eventInfo.showers}}
+            {{badge "secondary" "Wet Spot"}} BMID allows access to the Wet Spot.
+          {{else}}
+            {{badge "secondary" "Shower Pogs"}} for every 40 hours worked.
+          {{/if}}
+        </p>
+
+        <p>
+          <strong>Motorpool</strong><br>
+          {{#if person.vehicle_blacklisted}}
+            {{badge "danger" "Blacklisted"}} Vehicle is blacklisted. May not drive gators, cars, or trucks on playa for Ranger business.
+          {{else}}
+            {{#if person.vehicle_paperwork}}
+              {{badge "success" "Authorized"}}
+            {{else}}
+              {{badge "warning" "Not Authorized"}}
+            {{/if}}
+            to drive golf carts &amp; UTVs on playa for Ranger business
+          {{/if}}
+        </p>
+
+        <p>
+          <strong>Org Vehicle Insurance</strong><br>
+          {{#if person.vehicle_insurance_paperwork}}
+            {{badge "success" "Authorized" }}
+          {{else}}
+            {{badge "warning" "Not Authorized" }}
+          {{/if}}
+          to drive cars and trucks (incl. personal vehicle) on playa for Ranger business.
+        </p>
+      </div>
+    </div>
+  </div>
+</main>

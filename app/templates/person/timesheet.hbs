@@ -1,9 +1,15 @@
-<div class="float-right">
-  {{#link-to "person.timesheet-log" (query-params year=year) class="btn btn-secondary"}}Timesheet Log{{/link-to}}
+<div class="float-right mt-1">
+  {{#link-to "person.timesheet-log" (query-params year=year) class="btn btn-secondary btn-sm"}}Timesheet Log{{/link-to}}
 </div>
 {{year-select "Timesheet" year=year years=person.all_years onChange=(action "changeYearAction") subheader=true}}
 
-
-{{person/shift-manage positions=positions timesheets=timesheets person=person}}
+<div class="border rounded p-2 mt-2 mb-2">
+  <strong>Shift Manage</strong>
+  {{#if (is-current-year year)}}
+    {{person/shift-manage positions=positions timesheets=timesheets person=person}}
+  {{else}}
+    Select the current year to start or end a shift
+  {{/if}}
+</div>
 {{person/timesheet-manage timesheets=timesheets person=person year=year positions=positions}}
 {{person/timesheet-missing timesheetMissing=timesheetMissing timesheets=timesheets person=person year=year positions=positions}}

@@ -1,48 +1,81 @@
 {{#if onDutyEntry}}
-<div class="card">
-  <div class="card-header">{{person.callsign}} is on shift</div>
-  <div class="card-body">
-    <dl class="row">
-      <dt class="col-auto">Position:</dt>
-      <dd class="col-auto">{{onDutyEntry.position.title}}</dd>
-
-      <dt class="col-auto">Started:</dt>
-      <dd class="col-auto">{{shift-format onDutyEntry.on_duty}}</dd>
-    </dl>
-
-    <button class="btn btn-danger" {{action "endShiftAction"}}>End Shift</button>
-  </div>
-</div>
-
+  <div class="text-success font-weight-bold mb-2">{{person.callsign}} is on duty.</div>
+  <table class="table table-sm m-0">
+    <thead>
+      <tr>
+        <th>Position</th>
+        <th>On Duty</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{onDutyEntry.position.title}}</td>
+        <td>{{shift-format onDutyEntry.on_duty}}</td>
+        <td> <button class="btn btn-danger btn-sm" {{action "endShiftAction"}}>End Shift</button></td>
+      </tr>
+    </tbody>
+  </table>
 {{else}}
-<div class="card">
-  <div class="card-body">
-    {{#if (not person.user_authorized)}}
-      <strong class="text-danger">{{person.callsign}} cannot start a shift until they are cleared to do so by the Personnel Manager.</strong>
-    {{else if (not person.canStartShift)}}
-      <strong class="text-danger">{{person.callsign}} cannot start a shift because their status does not allow them to work shifts</strong>
-    {{else}}
-      <div class="form-row">
-        <div class="col-auto">
-          {{ch-form/select name="signin_position_id" controlClass="form-control" value=signinPositionId options=signinPositions onChange=(action "updateShiftPosition")}}
-        </div>
-        {{#if isPersonDirtTrained}}
-        <div class="col">
-          <button class="btn btn-primary" {{action "signinShiftAction"}}>Start Shift</button>
-        </div>
-        {{else}}
-          <div class="col">
-          {{#if session.user.isAdmin}}
-            <button class="btn btn-primary" {{action "signinShiftAction"}}>Force Shift Start</button>
-          {{/if}}
-          </div>
-          <div class="col-12 text-danger">
-              This person cannot start a shift because they have not been trained.
-              If this is in error, check with the lead trainer or get help from a Clubhouse Admin.
-          </div>
-        {{/if}}
+  {{#if (not person.user_authorized)}}
+    <strong class="text-danger">{{person.callsign}} cannot start a shift until they are cleared to do so by the Personnel Manager.</strong>
+  {{else if (not person.canStartShift)}}
+    <strong class="text-danger">{{person.callsign}} cannot start a shift because their status does not allow them to work shifts</strong>
+  {{else}}
+    {{#unless isPersonDirtTrained}}
+      <div class="text-danger font-weight-bold mb-2">
+        <div class="float-left mr-2">{{fa-icon "exclamation-circle" size="3x"}}</div>
+        This person cannot start a shift because they have not been trained.
+        If this is an error, check with the HQ Lead or lead trainer.
       </div>
+      <hr>
+    {{/unless}}
+
+    {{#if imminentSlots}}
+      {{pluralize imminentSlots.length "upcoming shift"}} found<br>
+      {{#each imminentSlots as |slot|}}
+        <div class="mt-2">
+          {{slot.position_title}} - {{slot.slot_description}} {{shift-format slot.slot_begins}} to {{shift-format slot.slot_ends}}<br>
+          {{#unless hasUnverifiedTimesheetEntries}}
+            {{#if (and isPersonDirtTrained slot.is_trained)}}
+              <button class="btn btn-primary" {{action "signinPositionAction" slot.position_id}}>Start {{slot.position_title}} Shift</button>
+            {{else}}
+              <div class="text-danger">NOT {{if (not isPersonDirtTrained) "DIRT" "POSITION"}} TRAINED</div>
+              {{#if (has-role "admin")}}
+                <button class="btn btn-warning" {{action "signinPositionAction" slot.position_id}}>Force Start {{slot.position_title}} Shift</button>
+              {{/if}}
+            {{/if}}
+          {{/unless}}
+        </div>
+      {{/each}}
+      <hr>
     {{/if}}
-  </div>
-</div>
+
+    <div class="form-row">
+      <div class="col-auto">
+        {{ch-form/select name="signin_position_id" controlClass="form-control" value=signinPositionId options=signinPositions onChange=(action "updateShiftPosition")}}
+      </div>
+      {{#if isPersonDirtTrained}}
+        <div class="col">
+          {{#if hasUnverifiedTimesheetEntries}}
+            <div class="text-danger">Cannot start shift until timesheet entry is verified</div>
+          {{else}}
+            <button class="btn btn-primary" {{action "signinShiftAction"}}>Start Shift</button>
+          {{/if}}
+        </div>
+      {{else}}
+        <div class="col">
+          {{#if (has-role "admin")}}
+            {{#if hasUnverifiedTimesheetEntries}}
+              <div class="text-danger">Cannot start shift until timesheet entry is verified</div>
+            {{else}}
+              <button class="btn btn-warning" {{action "signinShiftAction"}} disabled={{unverifiedTimesheetEntries}}>Force Shift Start</button>
+            {{/if}}
+          {{else}}
+            <strong class="text-danger">NOT DIRT TRAINED - SHIFT START IS NOT ALLOWED</strong>
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
 {{/if}}

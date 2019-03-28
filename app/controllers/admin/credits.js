@@ -177,8 +177,8 @@ export default class AdminCreditsController extends Controller {
         });
 
         try {
-          await newCredit.save();
-          this.credits.pushObject(newCredit);
+          const record = await newCredit.save();
+          this.credits.pushObject(record);
           this.toast.success(`${newCredit.positionTitle} position credit created.`);
         } catch (response) {
           this.house.handleErrorResponse(response);

@@ -235,4 +235,45 @@ export default class HouseService extends Service {
       }
     });
   }
+
+  /*
+   * Obtain the current year
+   */
+
+   currentYear() {
+     return (new Date()).getFullYear();
+   }
+
+   _getStorage() {
+     let storage = window.localStorage.getItem('clubhouse');
+
+     if (storage) {
+       storage = JSON.parse(storage);
+     }
+
+     return storage || { };
+   }
+
+   /*
+    * local storage management
+    */
+   setKey(key, data) {
+     const storage = this._getStorage();
+
+     if (data == null) {
+       delete storage[key];
+     } else {
+       storage[key] = data;
+     }
+
+     window.localStorage.setItem('clubhouse', JSON.stringify(storage));
+   }
+
+   getKey(key) {
+     return this._getStorage()[key];
+   }
+
+   clearStorage() {
+     window.localStorage.removeItem('clubhouse');
+   }
 }

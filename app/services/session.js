@@ -27,6 +27,7 @@ export default SessionService.extend({
       roles: person.roles,
       status: person.status,
       teacher: person.teacher,
+      has_hq_window: person.has_hq_window,
       unread_message_count: person.unread_message_count,
       bpguid: person.bpguid,    // PNV or Actives must have a BPGUID to sign up.
     });

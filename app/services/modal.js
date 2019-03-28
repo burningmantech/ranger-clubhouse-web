@@ -5,16 +5,20 @@ export default Service.extend({
   dialogs: A(),
 
   info(title, message, closeCallback=null) {
-    this.open('modal-info', title, message, null, closeCallback);
+    this.dialogs.pushObject({
+      component: 'modal-info', title, message, closeCallback
+    });
   },
 
   confirm(title, message, confirmCallback, closeCallback) {
-    this.open('modal-confirm', title, message, confirmCallback, closeCallback)
+    this.dialogs.pushObject({
+      component: 'modal-confirm', title, message, confirmCallback, closeCallback
+    });
   },
 
-  open(component, title, message, confirmCallback, closeCallback) {
+  open(component, data, confirmCallback, closeCallback) {
     this.dialogs.pushObject({
-      component, title, message, confirmCallback, closeCallback
+      component, data, confirmCallback, closeCallback
     });
   },
 

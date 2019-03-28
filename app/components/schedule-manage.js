@@ -217,8 +217,9 @@ export default class ScheduleManageComponent extends Component {
 
       case 'multiple-enrollment':
         modal.open(
-          'modal-multiple-enrollment', 'Multiple Enrollments Not Allowed',
+          'modal-multiple-enrollment',
           {
+            title: 'Multiple Enrollments Not Allowed',
             slots: result.slots,
             isMe: (this.person.id == this.session.user.id ),
             isAlpha: (result.slots[0].position.title == 'Alpha')
@@ -248,8 +249,9 @@ export default class ScheduleManageComponent extends Component {
           } else if (result.trainer_forced) {
             this.toast.success('Successfully signed up, and the trainer is now signed up for multiple training sessions.');
           } else if (result.multiple_forced) {
-            this.modal.open('modal-multiple-enrollment', 'Sign Up Forced - Other Enrollments Found',
+            this.modal.open('modal-multiple-enrollment',
               {
+                title: 'Sign Up Forced - Other Enrollments Found',
                 slots: result.slots,
                 isMe,
                 forced: true,

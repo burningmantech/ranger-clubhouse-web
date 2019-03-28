@@ -7,6 +7,8 @@ export default class LogoutRoute extends Route {
     setCookie('PHPSESSID', 'nothing', 0);
     setCookie('C2AUTHTOKEN', 'nothing', 0);
 
+    this.house.clearStorage();
+
     // Bu-bye!
     this.session.invalidate();
     this.transitionTo('login');
