@@ -66,4 +66,11 @@ export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
       return true;
     }
   }
+
+  @action
+  refreshCredits() {
+    this.ajax.request(`person/${this.controller.person.id}/credits`, {
+              data: { year: this.house.currentYear() }
+        }).then((result) => this.controller.set('credits', result.credits));
+  }
 }

@@ -45,7 +45,7 @@
 
 <div class="border rounded p-2 mt-2">
   <h3>Shift Management</h3>
-  {{person/shift-manage positions=positions timesheets=timesheets person=person imminentSlots=imminentSlots hasUnverifiedTimesheetEntries=(and unverifiedTimesheets.length (not ignoreTimesheetVerification))}}
+  {{shift-check-in-out positions=positions timesheets=timesheets person=person imminentSlots=imminentSlots hasUnverifiedTimesheetEntries=(and unverifiedTimesheets.length (not ignoreTimesheetVerification)) endShiftNotify=(action endShiftNotify)}}
 </div>
 
 
