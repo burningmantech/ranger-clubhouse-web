@@ -245,11 +245,19 @@ export default class HouseService extends Service {
    }
 
    _getStorage() {
-     let storage = window.localStorage.getItem('clubhouse');
+     let storage;
 
-     if (storage) {
-       storage = JSON.parse(storage);
+     try {
+       storage = window.sessionStorage.getItem('clubhouse');
+
+       if (storage) {
+         storage = JSON.parse(storage);
+       }
+     } catch (e) {
+       // browser blocking sessionStorage or not available.
+       return {};
      }
+
 
      return storage || { };
    }
@@ -266,7 +274,11 @@ export default class HouseService extends Service {
        storage[key] = data;
      }
 
-     window.localStorage.setItem('clubhouse', JSON.stringify(storage));
+     try {
+       window.sessionStorage.setItem('clubhouse', JSON.stringify(storage));
+     } catch (e) {
+       // browser blocking sessionStorage or not available.
+     }
    }
 
    getKey(key) {
@@ -274,6 +286,10 @@ export default class HouseService extends Service {
    }
 
    clearStorage() {
-     window.localStorage.removeItem('clubhouse');
+     try {
+       window.sessionStorage.removeItem('clubhouse');
+     } catch (e) {
+       // browser blocking sessionStorage or not available.
+     }
    }
 }

@@ -7,6 +7,17 @@ export default class JsonFormatComponent extends Component {
 
   didInsertElement() {
     super.didInsertElement(...arguments);
+    let obj;
+
+    try {
+      if (typeof obj == "string") {
+        obj = JSON.parse(this.json);
+      } else {
+        obj = this.json;
+      }
+    } catch (e) {
+      obj = this.json;
+    }
 
     const formatter = new JSONFormatter(JSON.parse(this.json), 1, {
       animateOpen: false,
