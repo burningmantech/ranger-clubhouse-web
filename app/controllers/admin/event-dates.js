@@ -47,7 +47,7 @@ export default class AdminEventDatesController extends Controller {
         }
 
         this.set('entry', null);
-        this.toast.succes(`Event Date succesfully ${isNew ? 'created' : 'updated'}.`);
+        this.toast.success(`Event Date succesfully ${isNew ? 'created' : 'updated'}.`);
     });
   }
 
