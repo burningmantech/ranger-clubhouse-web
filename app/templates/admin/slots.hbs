@@ -1,111 +1,111 @@
 {{year-select "Clubhouse Slots" year=year years=yearList onChange=(action "changeYear")}}
 
 {{#if slot}}
-  {{admin/slot-form slot=slot positions=positions trainerSlots=trainerSlots onSave=(action "saveSlot") onCancel=(action "cancel")}}
+  {{admin/slot-form slot=slot positions=positions trainerSlots=trainerSlots onSave=(action saveSlot) onCancel=(action cancel) onClone=(action cloneSlot)}}
 {{/if}}
 
+<div class="float-right">
+  <button {{action "newSlot"}} class="btn btn-primary">New Slot</button>
+</div>
 
-<div class="row mb-1">
-  <div class="col-md-4 mb-2">
-    {{#power-select
-          options=positionOptions
-          selected=positionFilter
-          searchEnabled=false
-          searchField="title"
-          onchange=(action (mut positionFilter))
-                    as |item| }}
-        {{item.title}}
-    {{/power-select}}
+<div class="form-row mb-1">
+  <div class="col-auto">
+    <label class="col-form-label">Day Filter</label>
   </div>
   <div class="col-md-3 mb-2">
-    {{#power-select
-          selected=dayFilter
-          options=dayOptions
-          searchEnabled=false
-          searchField="title"
-          onchange=(action (mut dayFilter))
-                    as |item| }}
-        {{item.title}}
-    {{/power-select}}
+    {{ch-form/select name="dayFilter" value=dayFilter options=dayOptions onChange=(action (mut dayFilter)) controlClass="form-control"}}
   </div>
 
+  <div class="col-auto">
+    <label class="col-form-label">Active Filter</label>
+  </div>
   <div class="col-md-3 mb-2">
-    <div class="btn-group btn-group-toggle">
-      {{#radio-button value=0 groupValue=activeFilter classNames="btn btn-info" checkedClass="active"}}
-        All
-      {{/radio-button}}
-      {{#radio-button value=1 groupValue=activeFilter classNames="btn btn-info" checkedClass="active"}}
-        Active
-      {{/radio-button}}
-      {{#radio-button value=2 groupValue=activeFilter classNames="btn btn-info" checkedClass="active"}}
-        Inactive
-      {{/radio-button}}
-    </div>
-  </div>
-
-  <div class="col-md-2 mb-2">
-    <a href {{action "newSlot"}} class="btn btn-primary">New Slot</a>
+    {{ch-form/select name="activeFilter" value=activeFilter options=activeOptions onChange=(action (mut activeFilter)) controlClass="form-control"}}
   </div>
 </div>
 
-{{#if slots.length}}
-<div class="text-muted">Showing {{viewSlots.length}} of {{slots.length}}</div>
-{{#unless viewSlots}}
-  <p class="text-danger">
-    No slots matched the filter criteria.
-  </p>
-{{/unless}}
+{{#if (and eventDate.pre_event_slot_start eventDate.pre_event_slot_end)}}
+  <p>{{year}} Pre-event is {{shift-format eventDate.pre_event_slot_start}} to {{shift-format eventDate.pre_event_slot_end}}.</p>
 {{else}}
-No slots were found for {{year}}?
+  {{#ch-alert "danger"}}
+    WARNING: {{year}} pre-event slot dates are not set. Pre-Event slots may not be properly vetted. Visit {{#link-to "admin.event-dates"}}Admin &gt; Edit Event Dates{{/link-to}} to set the dates.
+  {{/ch-alert}}
+{{/if}}
+
+{{#if slots.length}}
+  <div class="text-muted">Showing {{viewSlots.length}} of {{slots.length}}</div>
+  {{#unless viewSlots}}
+    <p class="text-danger">
+      No slots matched the filter criteria.
+    </p>
+  {{/unless}}
+{{else}}
+  No slots were found for {{year}}?
 {{/if}}
 
 
 {{#each slotGroups as |group|}}
-<table class="table table-sm schedule-table table-hover">
-  <caption>
-    {{group.title}}
-    <div class="float-right mr-4">
-      <a href class="btn btn-primary btn-sm" {{action "activate" group}}>Activate All</a>
-      <a href class="btn btn-primary btn-sm" {{action "deactivate" group}}>Deactivate All</a>
-    </div>
-  </caption>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>From</th>
-      <th>To</th>
-      <th class="text-right">Max / Sign ups</th>
-      <th class="text-right">Credits</th>
-      <th>Description</th>
-      <th>Active</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each group.slots as |slot|}}
-    <tr id="slot-{{slot.id}}" >
-      <td>{{slot.id}}</td>
-      <td>{{shift-format slot.begins}}</td>
-      <td>{{shift-format slot.ends}}</td>
-      <td class="text-right">{{slot.max}} / {{slot.signed_up}}</td>
-      <td class="text-right">{{credits-format slot.credits}}</td>
-      <td>
-        {{slot-info-link slot.description slot.url}}
-      </td>
-      <td>{{#if slot.active}}{{fa-icon "check"}} {{else}} {{fa-icon "times"}}{{/if}}</td>
-      <td>
-        <button {{action "editSlot" slot}} class="btn btn-primary btn-sm" title="Edit slot">{{fa-icon "edit"}}</button>
-        <button {{action "deleteSlot" slot}} class="btn btn-danger btn-sm" title="Delete slot">{{fa-icon "trash-alt" type="fas"}}</button>
-      </td>
-    </tr>
-    {{#if slot.trainer_slot}}
-    <tr class="{{if slot.trainer_slot "tr-no-border"}}">
-      <td colspan="7">
-        Trainer slot: <a href="#slot-{{slot.trainer_slot.id}}">#{{slot.trainer_slot.id}} {{slot.trainer_slot_title}} {{slot.trainer_slot.description}} {{shift-format slot.trainer_slot.begins}}</a>
-      </td>
-    </tr>
+{{! template-lint-disable table-groups}}
+  <table class="table table-sm table-box table-hover">
+    <caption>
+      <a href {{action toggleShowing group}}>
+        {{fa-icon (if (get showingGroups group.position_id) "caret-down" "caret-right")}} {{group.title}}
+        ({{group.slots.length}}{{#if group.inactive}} / <span class="text-danger">{{group.inactive}} inactive</span>{{/if}})
+      </a>
+      {{#if (get showingGroups group.position_id)}}
+        <div class="float-right mr-4">
+          <button class="btn btn-primary btn-sm" {{action activate group}}>Activate All</button>
+          <button class="btn btn-primary btn-sm" {{action deactivate group}}>Deactivate All</button>
+        </div>
+      {{/if}}
+    </caption>
+    {{#if (get showingGroups group.position_id)}}
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>From</th>
+          <th>To</th>
+          <th class="text-right">Max / Sign ups</th>
+          <th class="text-right">Credits</th>
+          <th>Description</th>
+          <th>Active</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each group.slots as |slot|}}
+          <tr id="slot-{{slot.id}}">
+            <td>{{slot.id}}</td>
+            <td>{{shift-format slot.begins}}</td>
+            <td>{{shift-format slot.ends}}</td>
+            <td class="text-right">{{slot.max}} / {{slot.signed_up}}</td>
+            <td class="text-right">{{credits-format slot.credits}}</td>
+            <td>
+              {{slot-info-link slot.description slot.url}}
+            </td>
+            <td clas="text-center">
+              {{#if slot.active}}
+                {{fa-icon "check"}}
+              {{else}}
+                <span class="text-danger">{{fa-icon "times"}}</span>
+              {{/if}}
+            </td>
+            <td>
+              <button {{action repeatSlot slot}} class="btn btn-secondary btn-sm" title="Repeat Slot">Repeat</button>
+              <button {{action repeatSlotAdd24Hours slot}} class="btn btn-secondary btn-sm" title="Repeat Slot With 24 hours addition">Repeat+24</button>
+              <button {{action deleteSlot slot}} class="btn btn-danger btn-sm" title="Delete slot">{{fa-icon "trash-alt" type="fas"}}</button>
+              <button {{action editSlot slot}} class="btn btn-primary btn-sm" title="Edit slot">{{fa-icon "edit"}}</button>
+            </td>
+          </tr>
+          {{#if slot.trainer_slot}}
+            <tr class="{{if slot.trainer_slot "tr-no-border"}}">
+              <td colspan="8">
+                Trainer slot: <a href="#slot-{{slot.trainer_slot.id}}">#{{slot.trainer_slot.id}} {{slot.trainer_slot_title}} {{slot.trainer_slot.description}} {{shift-format slot.trainer_slot.begins}}</a>
+              </td>
+            </tr>
+          {{/if}}
+        {{/each}}
+      </tbody>
     {{/if}}
-  {{/each}}
-  </tbody>
-</table>
+  </table>
 {{/each}}

@@ -20,6 +20,8 @@ export default class SlotFormComponent extends Component {
   // cancel action
   @argument('object') onCancel;
 
+  @argument('object') onClone;
+
   @computed('positions')
   get positionOptions() {
     return this.positions.map((p) => [ p.title, p.id ]);
@@ -56,6 +58,12 @@ export default class SlotFormComponent extends Component {
   save(model, isValid, originalModel) {
     this.onSave(model, isValid, originalModel);
   }
+
+  @action
+  cloneRecord(model, isValid, originalModel) {
+    this.onClone(model, isValid, originalModel);
+  }
+
 
   @action
   cancel(model) {

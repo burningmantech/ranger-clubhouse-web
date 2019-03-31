@@ -24,8 +24,9 @@ module('Integration | Component | admin/slot-form', function(hooks) {
     this.set('trainerSlots', []);
     this.set('onCancel', () => { });
     this.set('onSave', () => { });
+    this.set('onClone', () => { });
 
-    await render(hbs`{{admin/slot-form slot=slot positions=positions trainerSlots=trainerSlots onCancel=onCancel onSave=onSave}}`);
+    await render(hbs`{{admin/slot-form slot=slot positions=positions trainerSlots=trainerSlots onCancel=onCancel onSave=onSave onClone=onClone}}`);
 
     //assert.dom(this.element).hasText('');
     assert.dom('input#slot-description').hasValue('Afternoon');

@@ -54,15 +54,16 @@ Router.map(function() {
     this.route('languages');
   });
   this.route('admin', function() {
-    this.route('positions');
-    this.route('slots');
-    this.route('credits');
-    this.route('roles');
-    this.route('error-log');
-    this.route('bulk-upload');
-    this.route('settings');
-    this.route('salesforce');
     this.route('action-log');
+    this.route('bulk-upload');
+    this.route('credits');
+    this.route('error-log');
+    this.route('event-dates');
+    this.route('positions');
+    this.route('roles');
+    this.route('salesforce');
+    this.route('settings');
+    this.route('slots');
   });
 
   this.route('hq', { path: '/hq/:person_id' }, function() {

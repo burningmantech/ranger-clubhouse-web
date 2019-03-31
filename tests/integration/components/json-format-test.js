@@ -7,20 +7,8 @@ module('Integration | Component | json-format', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
-
-    await render(hbs`{{json-format}}`);
-
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      {{#json-format}}
-        template block text
-      {{/json-format}}
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    this.set('json', '{ "abc": "def" }');
+    await render(hbs`{{json-format json=json}}`);
+    assert.ok(this.element.querySelector('.json-formatter-row'));
   });
 });
