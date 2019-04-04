@@ -23,9 +23,10 @@
   </div>
 
   <div class="form-row">
-    {{f.input "url" label="Information" type="textarea" rows=3 cols=80 maxlength=255 wrapClass="col-12"
-        hint="Additional information may be given about the shift in the above area.
-    e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.khaki/meetup or email women@khaki.rangers"}}
+    {{f.input "url" label="Information" type="textarea" rows=3 cols=80 maxlength=512 wrapClass="col-12"
+        hint=(concat (if f.model.url f.model.url.length "0") " of 512 characters.
+Additional information may be given about the shift in the above area.
+e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.khaki/meetup or email women@khaki.rangers")}}
   </div>
 
   <div class="form-group mt-2">

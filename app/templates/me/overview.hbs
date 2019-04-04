@@ -70,7 +70,7 @@ then let them know what's up.
       {{#if (lte person.years.length 1)}}
         Hello Shiny Penny! Congratulations on becoming a Ranger.
       {{else}}
-        Hello {{#if person.vintage}}Vintage{{/if}} Ranger! You have been active for {{person.years.length}} years.
+        Hello {{#if person.vintage}}Vintage{{/if}} Ranger! You have Rangered at {{pluralize person.years.length "burn"}}.
       {{/if}}
     </div>
   {{/if}}
