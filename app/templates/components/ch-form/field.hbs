@@ -90,7 +90,7 @@
     autofocus   = autofocus
     rows        = rows
     cols        = cols
-    maxLength   = maxlength
+    maxlength   = maxlength
   }}
 {{else if (or (eq type "datetime") (eq type "date"))}}
   {{datetime-picker
@@ -123,7 +123,7 @@
 {{/if}}
 
 {{#if hint}}
-  <small id="{{_domId}}Help" class="{{hintClass}}">{{hint}}</small>
+  <small id="{{_domId}}Help" class="{{hintClass}}">{{nl2br hint}}</small>
 {{/if}}
 
 {{#unless isValid}}
