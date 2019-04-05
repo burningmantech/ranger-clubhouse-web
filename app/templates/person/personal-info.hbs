@@ -9,22 +9,22 @@
         {{f.input "last_name" label="Last Name" maxlength=25 grid="col-sm-4"}}
       </div>
       <div class="form-row">
-        {{f.input "email" label="Email" maxlength=50 grid="col-sm-6" }}
+        {{f.input "email" label="Email" maxlength=50 grid="col-sm-6"}}
       </div>
       <div class="form-row">
-        {{f.input "home_phone" label="Primary Phone" grid="col-sm-4"}}
-        {{f.input "alt_phone" label="Alternative Phone" grid="col-sm-4"}}
+        {{f.input "home_phone" label="Primary Phone" grid="col-sm-4" maxlength=255}}
+        {{f.input "alt_phone" label="Alternative Phone" grid="col-sm-4" maxlength=255}}
       </div>
 
       <div class="form-row">
-        {{f.input "gender" label="Gender" hint="female, male, non-binary, gender fluid, etc." }}
+        {{f.input "gender" label="Gender" hint="female, male, non-binary, gender fluid, etc." maxlength=32}}
       </div>
       <div class="form-row">
       {{f.input "languages" label="Languages Spoken"
             hint="List the English names of languages you are comfortable speaking separated by a comma. Ex: english, french, japanese"}}
       </div>
       <div class="form-row col-auto">
-        {{f.input "camp_location" type="textarea" label="Camp Name & Location" cols=50 rows=4 maxlength=200}}
+        {{f.input "camp_location" type="textarea" label="Camp Name & Location" cols=50 rows=4 maxlength=200 hint=(concat (if f.model.camp_location f.model.camp_location.length "0") " of 200 characters")}}
       </div>
     </fieldset>
 

@@ -8,7 +8,7 @@
       Their playa name, real-world name, relationship, camp location and camp description.<br>
   </p>
   <div class="form-row mt-2">
-    {{f.input "emergency_contact" type="textarea" label="Emergency Contact Information:" rows=8 cols=80}}
+    {{f.input "emergency_contact" type="textarea" label="Emergency Contact Information:" rows=8 cols=80 maxlength=200 hint=(concat (if f.model.emergency_contact f.model.emergency_contact.length "0") " of 200 characters")}}
   </div>
   {{f.submit label="Update"}}
   {{f.cancel}}
