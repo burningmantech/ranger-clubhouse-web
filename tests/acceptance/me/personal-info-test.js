@@ -38,4 +38,14 @@ module('Acceptance | me/personal info', function(hooks) {
     assert.equal(person.email, newEmail);
     assert.dom('#toast-container', document).includesText('Your personal information was successfully updated');
   });
+
+  test('prevent space from being enter in email', async function(assert) {
+    const person = server.create('person');
+    await authenticateSession({ person_id: person.id });
+
+    const newEmail = 'another@example.com';
+    await visit('/me/personal-info');
+    await fillIn('[name="email"]', newEmail+' ');
+    assert.dom('[name="email"]').hasValue(newEmail);
+  });
 });

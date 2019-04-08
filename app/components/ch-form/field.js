@@ -4,7 +4,7 @@ import { action, computed } from '@ember-decorators/object';
 import { tagName } from '@ember-decorators/component';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
-import { typeOf } from '@ember/utils';
+import { typeOf, isEmpty } from '@ember/utils';
 
 import $ from 'jquery';
 
@@ -40,6 +40,9 @@ export default class ChFormFieldComponent extends Component {
   @argument(optional('string')) autocomplete;
   @argument(optional('string')) placeholder;
   @argument(optional('string')) hint;
+
+  // ignore spaces entered.
+  @argument(optional('boolean')) noSpaces = false;
 
   @argument(optional('string')) grid = null;
   @argument(optional('string')) label = '';
@@ -196,6 +199,10 @@ export default class ChFormFieldComponent extends Component {
 
   @action
   update(value) {
+    if (this.noSpaces && !isEmpty(value)) {
+      value = value.replace(/ /g, '');
+    }
+
     this.model.set(this.name, value);
 
     if (this.onChange) {
