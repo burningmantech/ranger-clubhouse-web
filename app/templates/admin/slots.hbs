@@ -45,21 +45,21 @@
 
 
 {{#each slotGroups as |group|}}
+<div class="schedule-title mt-2">
+  {{#if (get showingGroups group.position_id)}}
+    <div class="float-right mr-4">
+      <button class="btn btn-primary btn-sm" {{action activate group}}>Activate All</button>
+      <button class="btn btn-primary btn-sm" {{action deactivate group}}>Deactivate All</button>
+    </div>
+  {{/if}}
+  <a href {{action toggleShowing group}}>
+    {{fa-icon (if (get showingGroups group.position_id) "caret-down" "caret-right")}} {{group.title}}
+    ({{group.slots.length}}{{#if group.inactive}} / <span class="text-danger">{{group.inactive}} inactive</span>{{/if}})
+  </a>
+</div>
 {{! template-lint-disable table-groups}}
-  <table class="table table-sm table-box table-hover">
-    <caption>
-      <a href {{action toggleShowing group}}>
-        {{fa-icon (if (get showingGroups group.position_id) "caret-down" "caret-right")}} {{group.title}}
-        ({{group.slots.length}}{{#if group.inactive}} / <span class="text-danger">{{group.inactive}} inactive</span>{{/if}})
-      </a>
-      {{#if (get showingGroups group.position_id)}}
-        <div class="float-right mr-4">
-          <button class="btn btn-primary btn-sm" {{action activate group}}>Activate All</button>
-          <button class="btn btn-primary btn-sm" {{action deactivate group}}>Deactivate All</button>
-        </div>
-      {{/if}}
-    </caption>
-    {{#if (get showingGroups group.position_id)}}
+{{#if (get showingGroups group.position_id)}}
+  <table class="table table-sm table-hover">
       <thead>
         <tr>
           <th>ID</th>
@@ -106,6 +106,6 @@
           {{/if}}
         {{/each}}
       </tbody>
-    {{/if}}
   </table>
+  {{/if}}
 {{/each}}
