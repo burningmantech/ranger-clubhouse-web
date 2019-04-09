@@ -10,7 +10,9 @@
   </div>
 
   <div class="form-row">
-    {{f.input "description" label="Description" type="text" size=25 maxlength=25 grid="col-md-auto"}}
+    {{f.input "description" label="Description" type="text" size=40 maxlength=40 grid="col-md-auto"
+      hint=(concat (if f.model.description f.model.description.length "0") " of 40 characters.")
+    }}
     {{f.input "begins" label="Begining Time" type="datetime" maxlength=25 grid="col-md-auto col-sm-12"}}
     {{f.input "ends" label="Ending Time" type="datetime"  maxlength=20 grid="col-md-auto col-sm-12"}}
     {{f.input "max" label="Max" type="text" size=3 maxlength=3 grid="col-md-auto col-sm-12"}}
