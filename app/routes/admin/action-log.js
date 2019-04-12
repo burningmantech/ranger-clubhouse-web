@@ -1,6 +1,5 @@
 import Route from '@ember/routing/route';
 import EmberObject from '@ember/object';
-import { action } from '@ember-decorators/object';
 
 export default class AdminActionLogRoute extends Route {
   queryParams = {
