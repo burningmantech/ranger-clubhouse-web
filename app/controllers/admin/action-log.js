@@ -12,8 +12,8 @@ const EventOptions = [
     [ 'Person Creation', 'person-create' ],
     [ 'Person Creation Fails', 'person-create-fail' ],
     [ 'Schedule Updates', 'person-slot-%' ],
-    [ 'Role Updates', 'person-role-%' ],
-    [ 'Position Updates', 'person-position-%' ],
+    [ 'Role Changes', 'person-role-%' ],
+    [ 'Position Changes', 'person-position-%' ],
 ];
 
 const SortOptions = [
@@ -22,7 +22,7 @@ const SortOptions = [
 ];
 
 export default class AdminActionLogController extends Controller {
-  query = EmberObject.create({ sort: 'desc' });
+  queryParams = [ 'person', 'target', 'start_time', 'end_time', 'events', 'sort', 'page' ];
 
   eventOptions = EventOptions;
   sortOptions = SortOptions;
@@ -34,14 +34,12 @@ export default class AdminActionLogController extends Controller {
 
   @action
   goNextPage() {
-    this.set('page', this.page + 1);
-    this._searchLogs();
+    this.set('page', +this.currentPage + 1);
   }
 
   @action
   goPrevPage() {
-    this.set('page', this.page - 1);
-    this._searchLogs();
+    this.set('page', +this.currentPage - 1);
   }
 
   _performSearch(query, resolve, reject) {
@@ -69,29 +67,26 @@ export default class AdminActionLogController extends Controller {
   }
 
   @action
-  searchAction() {
-    this._searchLogs();
-  }
-
-  @action
   resetFilters() {
     this.set('query', EmberObject.create({ sort: 'desc' }));
   }
 
-  _searchLogs() {
-    const params = {
-      ...this.query,
-      page: this.page,
-    };
+  @action
+  searchAction() {
+    const params = {};
 
+    this.queryParams.forEach((param) => {
+      if (this.query[param]) {
+        if (params == 'events') {
+          params[param] = this.query.events.join(',');
+        } else {
+          params[param] = this.query[param];
+        }
+      } else {
+        params[param] = null;
+      }
+    });
+    this.setProperties(params);
     this.toast.clear();
-    this.set('isSubmitting', true);
-    this.ajax.request('action-log', { data: params })
-      .then((results) => {
-        this.setProperties(results);
-        this.set('noResults', !results.logs.length);
-      })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isSubmitting', false));
   }
 }
