@@ -4,7 +4,11 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     {{#link-to "me.overview" class="navbar-brand"}}
-      Clubhouse
+      {{#if (eq (config "DeploymentEnvironment") "Staging")}}
+        <span class="text-danger">Staging Server</span>
+      {{else}}
+        Clubhouse
+      {{/if}}
     {{/link-to}}
 
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -129,7 +133,7 @@
                   {{#link-to "vc.access-documents" class="dropdown-item"}}Manage Access Docs{{/link-to}}
                 {{/if}}
                 {{#if (has-role "edit-bmids")}}
-                  <a href="{{cgo "bmidc" "manageBMIDs"}}" class="dropdown-item">Manage BMIDs</a>
+                  {{#link-to "vc.bmid" class="dropdown-item"}}Manage BMIDs{{/link-to}}
                 {{/if}}
                 <a href="{{cgo "timesheet" "noobTracker"}}" class="dropdown-item">N00b Tracker!</a>
               </div>
@@ -343,7 +347,6 @@
       {{/ch-form}}
     </div>
   {{/if}}
-
 </header>
 
 {{#if session.isAuthenticated}}

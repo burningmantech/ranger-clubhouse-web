@@ -86,7 +86,7 @@ Signups: {{students.length}} of {{slot.max}}
 
   <tbody>
     {{#each students as |student|}}
-      <tr class="{{if (or student.is_retired student.is_inactive) "bg-warning"}}">
+      <tr class="{{if (or student.is_retired student.is_inactive) "bg-highlight"}}">
         <td class="w-20">
           {{#if (or student.is_retired student.is_inactive)}}
             {{fa-icon "exclamation-triangle"}}

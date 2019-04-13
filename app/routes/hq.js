@@ -8,6 +8,7 @@ import DS from 'ember-data';
 
 export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
   beforeModel() {
+    super.beforeModel(...arguments);
     this.house.roleCheck([ Role.ADMIN, Role.MANAGE ]);
   }
 

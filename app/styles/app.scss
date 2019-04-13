@@ -11,6 +11,7 @@ $theme-colors: (
   "khaki": $kakhi,
   "gray": #dcdcdc,
   "light-red": #ff6666,
+  "highlight": #ffff99,
 );
 
 // bootstrap set the link-color to the primary color
@@ -262,6 +263,14 @@ legend {
   height: 64px;
   width: 64px;
   margin: 0 auto;
+  background-image: url("images/spinner.gif");
+  background-size: cover;
+}
+
+.loading-spinner-inline {
+  display: inline-block;
+  height: 14px;
+  width: 14px;
   background-image: url("images/spinner.gif");
   background-size: cover;
 }

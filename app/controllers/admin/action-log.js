@@ -14,6 +14,7 @@ const EventOptions = [
     [ 'Schedule Updates', 'person-slot-%' ],
     [ 'Role Changes', 'person-role-%' ],
     [ 'Position Changes', 'person-position-%' ],
+    [ 'Status Changes', 'person-status-change' ]
 ];
 
 const SortOptions = [
@@ -86,6 +87,7 @@ export default class AdminActionLogController extends Controller {
         params[param] = null;
       }
     });
+    params.page = null;
     this.setProperties(params);
     this.toast.clear();
   }
