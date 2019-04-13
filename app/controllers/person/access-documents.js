@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember-decorators/object';
-import moment from 'moment';
+import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 
 export default class PersonAccessDocumentsController extends Controller {
   entry = null;
@@ -37,24 +37,7 @@ export default class PersonAccessDocumentsController extends Controller {
 
   @computed
   get admissionDateOptions() {
-    const year = (new Date()).getFullYear();
-    const options = [
-      ['Unspecificed', '']
-    ];
-
-    let low = 5, high = 26;
-    const range = this.ticketingInfo.wap_date_range;
-    if (range != null) {
-      [low, high] = range.split('-');
-    }
-
-    for (let day = high; day >= low; day--) {
-      const date = `${year}-08-${day < 10 ? '0'+day : day}`;
-      options.push([moment(date).format('ddd, MM/DD/YY'), date]);
-    }
-
-    options.push(['Any', 'any']);
-    return options;
+    return admissionDateOptions(this.house.currentYear(), this.ticketingInfo.wap_date_range);
   }
 
   @action

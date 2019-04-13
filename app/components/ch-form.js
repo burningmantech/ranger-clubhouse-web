@@ -35,6 +35,8 @@ export default class ChFormComponent extends Component {
 
   @argument(optional('string')) formClass;
 
+  @argument(optional('boolean')) formless = false;
+
   // Was the original backing model updated?
   watchingModel = false;
 
@@ -149,13 +151,13 @@ export default class ChFormComponent extends Component {
      }
 
      const field = Object.keys(error)[0];
-     const label = `#${this.formId} label[for="${field}"]`;
+     const label = `label[for="${this.formId}-${field}"]`;
 
      // Scroll the label into view if it exists, otherwise the element
      if (document.querySelector(label)) {
        this.house.scrollToElement(label);
      } else {
-       this.house.scrollToElement(`#${this.formId} [name="${field}"]`);
+       this.house.scrollToElement(`[name="${this.formId}-${field}"]`);
      }
   }
 

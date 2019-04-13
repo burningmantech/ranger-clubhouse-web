@@ -1,0 +1,6 @@
+<div class="float-right">
+  {{#link-to "person.access-documents" person.id class="btn btn-secondary"}}Access Documents{{/link-to}}
+  {{#link-to "vc.bmid" class="btn btn-secondary"}}Manage BMIDs{{/link-to}}
+</div>
+<h3>{{year}} BMID</h3>
+{{bmid-edit entry=bmid modalBox=false year=year admissionDateOptions=admissionDateOptions onSave=(action save) }}

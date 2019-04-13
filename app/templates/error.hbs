@@ -19,6 +19,21 @@
         {{/each}}
       </dd>
     {{/if}}
+
+    {{#if error.isAdapterError}}
+      <dt>Description:</dt>
+      <dd>{{error.description}}</dd>
+
+      <dt>Filename / Line:</dt>
+      <dd>{{error.fileName}}:{{error.lineNumber}}</dd>
+
+      <dt>Name:</dt>
+      <dd>{{error.name}}</dd>
+
+      <dt>Number / Code:</dt>
+      <dd>{{error.number}} / {{error.code}}</dd>
+    {{/if}}
+
     <dt>Stack:</dt>
     <dd>
       <pre>{{error.stack}}</pre>

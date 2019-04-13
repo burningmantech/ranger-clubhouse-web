@@ -1,0 +1,122 @@
+<main class="col">
+  {{year-select "Submit BMIDs To Lambase" year=year onChange=(action (mut year))}}
+
+  <div class="form-group row">
+    <div class="col-auto">
+      <label>Filter:</label>
+      {{ch-form/select
+        name="filter"
+        value=this.filter
+        options=this.filterOptions
+        onChange=(action (mut this.filter))
+        controlClass="form-control-sm"
+        disabled=this.isRendering
+      }}
+    </div>
+    <div class="col-auto ml-4">
+      {{#link-to "vc.bmid" class="btn btn-secondary btn-sm"}}Manage BMIDs{{/link-to}}
+    </div>
+</div>
+
+  <p>
+    <span class="d-inline">
+      Total BMIDs: {{totalBmids}}
+    </span>
+    <span class="d-inline {{if doNotPrint "text-danger"}}">
+      Do Not Print: {{doNotPrint.length}}
+    </span>
+    <span class="d-inline {{if issues "text-danger"}}">
+      Issues: {{issues.length}}
+    </span>
+    <span class="d-inline {{if unusualStatus "text-danger"}}">
+      Unusual Person Status: {{unusualStatus.length}}
+    </span>
+    <span class="d-inline">
+      Printed: {{printed.length}}
+    </span>
+    <span class="d-inline">
+      Submitted: {{submitted.length}}
+    </span>
+  </p>
+
+  {{#if doNotPrint}}
+    <div class="border p-2">
+      Do Not Print:
+      {{#each doNotPrint as |bmid idx|~}}
+        {{~if idx ","}}{{person-link person=bmid.person~}}
+      {{/each}}
+    </div>
+  {{/if}}
+
+  {{#if issues}}
+  <div class="border p-2">
+      Issues:
+      {{#each issues as |bmid idx|~}}
+        {{~if idx ","}}{{person-link person=bmid.person~}}
+      {{/each}}
+</div>
+  {{/if}}
+
+  {{#if unusualStatus}}
+  <div class="border p-2">
+      Unusual Status:
+      {{#each unusualStatus as |bmid idx|~}}
+        {{~if idx ","}}<span class="d-inline-block">{{person-link person=bmid.person~}} ({{bmid.person.status}})</span>
+      {{/each}}
+    </div>
+  {{/if}}
+
+  Showing {{pluralize bmids.length "BMID"}} / {{bmidsSelectedCount}} selected.
+  <table class="table table-sm table-striped">
+    <thead>
+      <tr>
+        <th>{{fa-icon "check"}}</th>
+        <th>Status</th>
+        <th>Callsign</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Title 1</th>
+        <th>Title 2</th>
+        <th>Title 3</th>
+        <th>MVR</th>
+        <th>Showers</th>
+        <th>Meals</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each bmids as |bmid|}}
+        <tr class="{{if (eq bmid.status "failed") "bg-danger"}}">
+          <td>{{input type="checkbox" checked=bmid.selected}}</td>
+          <td>{{bmid.statusHuman}}</td>
+          <td>{{bmid.person.callsign}}</td>
+          <td>{{bmid.person.first_name}}</td>
+          <td>{{bmid.person.last_name}}</td>
+          <td>{{present-or-not bmid.title1 "-"}}</td>
+          <td>{{present-or-not bmid.title2 "-"}}</td>
+          <td>{{present-or-not bmid.title3 "-"}}</td>
+          <td>{{yesno bmid.org_vehicle_insurance}}</td>
+          <td>{{yesno bmid.showers}}</td>
+          <td>{{bmid.mealsHuman}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <h3>Submit Selected BMIDs To Lambase</h3>
+
+  {{#ch-form "batch" batchForm onSubmit=(action sendToLambase) as |f|}}
+    <div class="form-row">
+      {{f.input "batchInfo" label="Batch Information" size=32 maxlength=32 grid="col-auto"
+        hint="Example batch info might be 'Batch #1, specials' or 'Batch #2, special stragglers', or 'Batch #3, alphas', etc. The Clubhouse will automatically add
+your name and the date and time you submitted to Lambase."
+      }}
+    </div>
+    <div class="form-group row">
+      <div class="col-auto">
+        You will be asked to confirm the operation after clicking below.
+      </div>
+    </div>
+    {{f.submit label="Send To Lambase" disabled=(or isSubmitting (not bmidsSelectedCount))}}
+  {{/ch-form}}
+</main>

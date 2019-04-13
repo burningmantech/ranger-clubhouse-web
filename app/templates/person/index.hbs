@@ -223,7 +223,7 @@
     <div class="col-sm-12 col-md-9">
       {{#if (or canEditBMIT canEditAccessDocs)}}
         {{#if canEditBMIT}}
-          <a href="{{cgo "bmidc" "edit" personId=person.id}}" class="btn btn-secondary btn-sm mr-2">Edit BMID</a>
+          {{#link-to "person.bmid" class="btn btn-secondary btn-sm"}}Edit BMID{{/link-to}}
         {{/if}}
         {{#if canEditAccessDocs}}
           {{#link-to "person.tickets" class="btn btn-secondary btn-sm"}}Edit Tickets &amp; Stuff{{/link-to}}
@@ -270,7 +270,7 @@
     </div>
     {{#if (has-role "admin")}}
       <div class="col-sm-12 col-md-2 ml-auto">
-        <button type="button" class="btn btn-danger btn-sm" {{action "removePerson"}}>Remove</button>
+        <button type="button" class="btn btn-secondary btn-sm" {{action "removePerson"}}>Remove</button>
       </div>
     {{/if}}
   </div>

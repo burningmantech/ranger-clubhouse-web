@@ -25,16 +25,6 @@ export default class ErrorRoute extends Route {
         stack: error.stack
       };
 
-      if (error.isAdapterError) {
-        // Looks like an ember-data exception
-        route_error.description = error.description;
-        route_error.filename = error.fileName;
-        route_error.line_number = error.lineNumber;
-        route_error.name = error.name;
-        route_error.number = error.number;
-        route_error.code = error.code;
-      }
-
       data.append('data', JSON.stringify({
         build_timestamp: ENV.APP.buildTimestamp,
         version: ENV.APP.version,

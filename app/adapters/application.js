@@ -13,6 +13,7 @@ const SINGULAR_MODELS = [
   'access-document',
   'asset-person',
   'asset-attachment',
+  'bmid',
   'person',
   'position',
   'position-credit',
@@ -38,5 +39,4 @@ export default class ApplicationAdapter extends DS.RESTAdapter.extend(DataAdapte
   pathForType(modelName) {
     return SINGULAR_MODELS.includes(modelName) ?  modelName : Inflector.inflector.pluralize(modelName);
   }
-
 }

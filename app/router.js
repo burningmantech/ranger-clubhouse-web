@@ -101,6 +101,7 @@ Router.map(function() {
     this.route('broadcast-log');
     this.route('access-documents');
     this.route('tickets');
+    this.route('bmid');
   });
 
   this.route('logout');
@@ -134,6 +135,9 @@ Router.map(function() {
       this.route('expiring');
       this.route('trs');
     });
+    this.route('bmid');
+    this.route('bmid-sanity-check');
+    this.route('bmid-print');
   });
   this.route('register');
 

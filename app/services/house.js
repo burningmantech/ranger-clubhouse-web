@@ -13,12 +13,15 @@ import {
 import {
   run
 } from '@ember/runloop';
+import { isEmpty } from '@ember/utils';
+
 import DS from 'ember-data';
 
 export default class HouseService extends Service {
   @service toast;
   @service session;
   @service router;
+  @service store;
 
   /*
    * Handle an error response from either an ajax request or an Ember Data request.
@@ -167,7 +170,13 @@ export default class HouseService extends Service {
     data.forEach((line) => {
       let fields = [];
       columns.forEach((column) => {
-        fields.push(line[column]);
+        let value = isEmpty(line[column]) ? '' : line[column].toString();
+
+        value = value.replace(/"/g, '""');
+        if (value.search(/("|,|\n)/g) >= 0) {
+          value = `"${value}"`;
+        }
+        fields.push(value);
       });
       contents += fields.join(',') + "\n";
     });
@@ -292,4 +301,14 @@ export default class HouseService extends Service {
        // browser blocking sessionStorage or not available.
      }
    }
+
+  /*
+   * Avoids common pitfalls and the weird undocumented special-sauce format that must be used with the built in pushPayload
+   *
+   * From https://gist.github.com/runspired/96618af26fb1c687a74eb30bf15e58b6/
+   */
+
+  pushPayload(modelName, rawPayload) {
+    return this.store.push(this.store.normalize(modelName, rawPayload));
+  }
 }
