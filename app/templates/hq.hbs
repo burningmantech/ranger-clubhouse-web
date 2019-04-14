@@ -18,6 +18,13 @@
     {{person.callsign}} &lt;{{person.status}}{{if person.vintage "/vintage"}}{{if isShinyPenny ", Shiny Penny"}}&gt;
   </h2>
 
+  {{#if person.message}}
+    {{#ch-box "Important Account Message" type="warning"}}
+      {{nl2br person.message}}
+      <div class="mt-2 text-muted">Message added {{shift-format person.message_updated_at}}</div>
+    {{/ch-box}}
+  {{/if}}
+
   <hr class="mr-n2 ml-n2">
 
   <div class="row">
@@ -49,6 +56,7 @@
             Account does not have Burner Profile ID on file. Shift sign ups are disabled.
           {{/ch-alert}}
         {{/if}}
+
         {{outlet}}
       {{/if}}
     </div>

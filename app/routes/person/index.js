@@ -29,4 +29,8 @@ export default class PersonIndexRoute extends Route {
             controller.set('photo', { status: 'error', message: 'There was a server error.'});
           });
   }
+
+  resetController(controller) {
+    controller.set('showEditMessage', false);
+  }
 }

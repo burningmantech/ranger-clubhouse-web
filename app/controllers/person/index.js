@@ -111,6 +111,7 @@ export default class PersonIndexController extends Controller {
     const statusChanged = model._changes['status'];
 
     model.save().then(() => {
+      this.set('showEditMessage', false);
       this.house.scrollToTop();
 
       this.toast.success('The information was successfully updated.');
@@ -132,6 +133,22 @@ export default class PersonIndexController extends Controller {
           .catch((response) => this.house.handleErrorResponse(response));
       }
     }).catch((response) => this.house.handleErrorResponse(response));
+  }
+
+  @action
+  editMessage() {
+    this.set('showEditMessage', true);
+  }
+
+  @action
+  hideMessage() {
+    this.set('showEditMessage', false);
+  }
+
+  @action
+  saveMessage(model) {
+    this.toast.clear();
+    this._savePersonModel(model);
   }
 
   @action

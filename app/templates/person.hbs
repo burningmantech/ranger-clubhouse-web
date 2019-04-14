@@ -36,6 +36,7 @@
     {{/ch-alert}}
   {{/if}}
 
+
   {{#if session.user.has_hq_window}}
     <div class="float-sm-none float-md-right">
       {{#link-to "hq.index" person.id class="btn btn-secondary btn-sm"}}HQ Window{{/link-to}}
@@ -44,6 +45,13 @@
   <h2>
     {{person-link person=person}} &lt;{{person.status}}{{if person.vintage "/vintage"}}, {{person.first_name}} {{person.last_name}}&gt;
   </h2>
+
+  {{#if person.message}}
+    {{#ch-box "Important Account Message" type="warning"}}
+      {{nl2br person.message}}
+      <div class="mt-2 text-muted">Message added {{shift-format person.message_updated_at}}</div>
+    {{/ch-box}}
+  {{/if}}
 
   <hr class="mr-n2 ml-n2">
 

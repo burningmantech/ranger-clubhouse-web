@@ -43,6 +43,8 @@ export default class PersonModel extends DS.Model.extend(PersonMixin) {
   @attr('string') longsleeveshirt_size_style;
   @attr('string') teeshirt_size_style;
 
+  @attr('string') message;
+  @attr('string') message_updated_at;
 
   // Emergency contact
 
