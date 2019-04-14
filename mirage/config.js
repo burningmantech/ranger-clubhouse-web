@@ -216,6 +216,10 @@ export default function() {
     return positions.all();
   });
 
+  this.get('/api/motd', () => {
+    return { motd: [] };
+  });
+
   /*
     Shorthand cheatsheet:
 

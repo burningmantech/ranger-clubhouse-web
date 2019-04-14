@@ -64,6 +64,7 @@ Router.map(function() {
     this.route('salesforce');
     this.route('settings');
     this.route('slots');
+    this.route('motd');
   });
 
   this.route('hq', { path: '/hq/:person_id' }, function() {

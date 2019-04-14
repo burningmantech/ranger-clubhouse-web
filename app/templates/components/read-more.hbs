@@ -1,5 +1,5 @@
 {{#if (and shouldTruncate hideFullText)}}
-  {{truncatedText}} <a href="#" {{action "readMoreAction"}}> &hellip; {{fa-icon "plus-square"}}</a>
+  {{truncatedText}} <a href {{action readMoreAction}}> &hellip; read more</a>
 {{else}}
   {{text}}
 {{/if}}

@@ -1,5 +1,24 @@
 <h1>Welcome To The Secret Clubhouse</h1>
 
+{{#if motds}}
+  {{#ch-box (if (eq motds.length 1) "Clubhouse Announcement" "Clubhouse Announcements")}}
+    {{#each motds as |motd idx|}}
+      {{#if idx}}
+        <hr>{{/if}}
+      <p class="mt-1">
+        {{nl2br motd.message}}
+      </p>
+      <div class="mt-1 small">
+        {{#if motd.isModified}}
+          Updated {{moment-format motd.updated_at "dddd MMMM Do [@] HH:mm"}}
+        {{else}}
+          Posted {{moment-format motd.created_at "dddd MMMM Do [@] HH:mm"}}
+        {{/if}}
+        (Pacific Time)
+      </div>
+    {{/each}}
+  {{/ch-box}}
+{{/if}}
 {{!
 
 If the person is a past prospective

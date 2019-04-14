@@ -14,6 +14,7 @@ const SINGULAR_MODELS = [
   'asset-person',
   'asset-attachment',
   'bmid',
+  'motd',
   'person',
   'position',
   'position-credit',

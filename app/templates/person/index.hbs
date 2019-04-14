@@ -1,3 +1,4 @@
+
 <h3>General Account Info</h3>
 {{#if editPositions}}
   {{person/position-form positions=positions positionIds=positionIds onSave=(action "savePositions") onCancel=(action "cancelPositions")}}
@@ -96,7 +97,7 @@
             <span class="text-danger">NOT AUTHORIZED</span>
           {{/if}}
           {{#if person.has_note_on_file}}
-            (note on file)
+            <strong class="text-danger">(note on file)</strong>
           {{/if}}
         </div>
       {{/if}}
@@ -205,6 +206,21 @@
     </div>
   </div>
 
+  <div class="form-group row">
+    <label class="col-form-label-fixed col-sm-12 col-md-2">Certifications</label>
+    <div class="col-sm-12 col-md-9">
+      {{#if isAdminOrVC}}
+        {{f.input "osha10" label="OSHA-10" type="checkbox" inline=true }}
+        {{f.input "osha30" label="OSHA-30" type="checkbox" inline=true }}
+      {{else if (or person.osha10 person.osha30)}}
+        {{#if person.osha10}}OSHA-10{{/if}}
+        {{#if person.osha30}}OSHA-30{{/if}}
+      {{else}}
+        No OSHA certifications
+      {{/if}}
+    </div>
+  </div>
+
   {{#if (has-role "admin")}}
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">BPGUID</label>
@@ -241,6 +257,30 @@
       <div class="col-sm-12 col-md-9 ">
         {{#link-to "person.contact-log" class="btn btn-secondary btn-sm"}}Contact Log{{/link-to}}
         {{#link-to "person.broadcast-log" class="btn btn-secondary btn-sm"}}Broadcast Log{{/link-to}}
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-form-label-fixed col-sm-12 col-md-2">Message</label>
+      <div class="col-sm-12 col-md-9">
+        {{#if showEditMessage}}
+          {{#modal-dialog title=(if person.messsage "Add Account Message" "Edit Account Message") onConfirm=(action saveMessage f.model) onClose=(action hideMessage) confirmLabel="Save Message"}}
+            <p class="mx-2">
+              The message will be shown to all Volunteer Coordinators, HQ Window Workers, and other Login Management role
+              holders when this account is viewed.
+            </p>
+            <p class="mx-2">
+              Examples: "Person is ok to sign-in for pre-event shifts.", "Do not let this person work a shift until this person talks with Hubcap"
+            </p>
+            <p class="mx-2">
+              The message will automatically timestamped when saved or updated.
+            </p>
+
+            {{f.input "message" type="textarea" label="Enter your message to be shown:" cols=80 rows=6}}
+          {{/modal-dialog}}
+        {{else}}
+          <button class="btn btn-secondary btn-sm" {{action editMessage}}>{{if person.message "Update Message" "Add Message"}}</button>
+        {{/if}}
       </div>
     </div>
   {{/if}}
