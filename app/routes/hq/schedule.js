@@ -6,6 +6,8 @@ export default class HqScheduleRoute extends Route {
     const person_id = this.modelFor('hq').person.id;
     const year = this.house.currentYear();
 
+    this.store.unloadAll('schedule');
+
     return RSVP.hash({
       slots: this.store.query('schedule',  { person_id, year, shifts_available: 1 }),
       permission: this.ajax.request(`person/${person_id}/schedule/permission`, {data: { year }})

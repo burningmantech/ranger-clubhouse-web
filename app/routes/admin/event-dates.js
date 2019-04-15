@@ -7,6 +7,7 @@ export default class AdminEventDatesRoute extends Route {
   }
 
   model() {
+    this.store.unloadAll('event-date');
     return this.store.findAll('event-date').then((results) => results.toArray());
   }
 

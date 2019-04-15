@@ -17,6 +17,8 @@ export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
       shifts_available: 1,
     };
 
+    this.store.unloadAll('schedule');
+
     return RSVP.hash({
       slots: this.store.query('schedule', scheduleParams),
       permission: this.ajax.request(`person/${person_id}/schedule/permission`, {data: { year }})

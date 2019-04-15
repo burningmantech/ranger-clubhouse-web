@@ -12,6 +12,9 @@ export default class PersonAssetsRoute extends Route {
     const person_id = this.modelFor('person').id;
     const year = requestYear(params);
 
+    this.store.unloadAll('asset-person');
+    this.store.unloadAll('asset-attachment');
+
     return RSVP.hash({
       assets: this.store.query('asset-person', { person_id, year }),
       attachments: this.store.findAll('asset-attachment'),
