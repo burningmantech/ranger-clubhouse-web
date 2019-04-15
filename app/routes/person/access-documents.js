@@ -12,6 +12,9 @@ export default class PersonAccessDocumentsRoute extends Route {
     const person = this.modelFor('person');
     const year  = (new Date()).getFullYear();
 
+    this.store.unloadAll('access-document');
+    this.store.unloadAll('access-document-delivery');
+
     return RSVP.hash({
       documents: this.store.query('access-document', { person_id: person.id }),
       delivery: this.store.findRecord('access-document-delivery', `${person.id}:${year}`)

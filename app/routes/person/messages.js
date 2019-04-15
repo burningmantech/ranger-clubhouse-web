@@ -4,6 +4,7 @@ export default class PersonMessagesRoute extends Route {
   model() {
     const person_id = this.modelFor('person').id;
 
+    this.store.unloadAll('person-message');
     return this.store.query('person-message', { person_id })
 
   }

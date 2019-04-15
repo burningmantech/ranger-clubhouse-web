@@ -15,6 +15,11 @@ export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
   model({ person_id }) {
     const year = this.house.currentYear();
 
+    this.store.unloadAll('person');
+    this.store.unloadAll('timesheet');
+    this.store.unloadAll('asset-person');
+    this.store.unloadAll('asset-attachment');
+
     return RSVP.hash({
       person: this.store.find('person', person_id),
 

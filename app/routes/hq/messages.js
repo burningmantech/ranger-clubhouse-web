@@ -4,6 +4,7 @@ export default class HqMessagesRoute extends Route {
   model() {
     const person_id = this.modelFor('hq').person.id;
 
+    this.store.unloadAll('person-message');
     return this.store.query('person-message', { person_id })
 
   }

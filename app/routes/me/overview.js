@@ -3,6 +3,7 @@ import MeRouteMixin from 'clubhouse/mixins/route/me';
 
 export default class MeOverviewRoute extends Route.extend(MeRouteMixin) {
   model() {
+    this.store.unloadAll('motd');
     return this.store.query('motd', {});
   }
 

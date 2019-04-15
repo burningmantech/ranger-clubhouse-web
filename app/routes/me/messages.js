@@ -3,6 +3,8 @@ import MeRouteMixin from 'clubhouse/mixins/route/me';
 
 export default class MeMessagesRoute extends Route.extend(MeRouteMixin) {
   model() {
+    this.store.unloadAll('person-message');
+
     return this.store.query('person-message', {person_id: this.session.user.id});
   }
 

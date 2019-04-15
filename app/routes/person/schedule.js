@@ -18,6 +18,8 @@ export default class PersonScheduleRoute extends Route {
       shifts_available: 1,
     };
 
+    this.store.unloadAll('schedule');
+
     const records = {
       slots: this.store.query('schedule', scheduleParams),
       creditsEarned: this.ajax.request(`person/${person_id}/credits`, {data: { year }})
@@ -44,6 +46,7 @@ export default class PersonScheduleRoute extends Route {
 
   resetController(controller, isExiting) {
     if (isExiting) {
+      this.store.unloadAll('schedule');
       controller.set('year', null);
     }
   }

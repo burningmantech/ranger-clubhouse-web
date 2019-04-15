@@ -15,6 +15,9 @@ export default class PersonTimesheetRoute extends Route {
       year,
     };
 
+    this.store.unloadAll('timesheet');
+    this.store.unloadAll('timesheet-missing');
+
     return RSVP.hash({
       timesheets: this.store.query('timesheet', queryParams),
       timesheetInfo: this.ajax.request('timesheet/info', {

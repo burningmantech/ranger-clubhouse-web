@@ -23,6 +23,9 @@ export default class MeTimesheetCorrectionsRoute extends Route.extend(MeRouteMix
     if (timesheetInfo.correction_enabled) {
       const queryParams = { person_id, year: timesheetInfo.correction_year };
 
+      this.store.unloadAll('timesheet');
+      this.store.unloadAll('timesheet-missing');
+
       data.timesheets = this.store.query('timesheet', queryParams);
       data.timesheetsMissing = this.store.query('timesheet-missing', queryParams).then((result) => result.toArray());
       data.positions =  this.ajax.request(`person/${person_id}/positions`).then((result) => result.positions);

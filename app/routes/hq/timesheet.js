@@ -6,6 +6,8 @@ export default class HqTimesheetRoute extends Route {
     const person_id = this.modelFor('hq').person.id;
     const year = this.house.currentYear();
 
+    this.store.unloadAll('timesheet-missing');
+
     return RSVP.hash({
       timesheetInfo: this.ajax.request('timesheet/info', {
         method: 'GET',

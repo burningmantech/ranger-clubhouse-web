@@ -10,6 +10,9 @@ export default class AdminSlotsRoute extends Route {
   model(params) {
     const year = requestYear(params);
 
+    this.store.unloadAll('slot');
+    this.store.unloadAll('position');
+
     return RSVP.hash({
       slots: this.store.query('slot', { year }).then((result) => { return result.toArray() }),
       positions: this.store.query('position', {}),
