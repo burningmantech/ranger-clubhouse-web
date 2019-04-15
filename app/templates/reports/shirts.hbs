@@ -1,0 +1,81 @@
+<div class="d-print-none">
+  {{year-select "Earned Shirt Report" year=year onChange=(action (mut year))}}
+  <p>
+    The report shows people who earned a short and long sleeve shirts for a given event year. Only active accounts meeting the tee shirt threshold will be shown.
+  </p>
+  <p>
+    <a href="#shirt-totals" class="btn btn-secondary">Jump to shirt totals</a>
+    <button class="btn btn-secondary" {{action exportPeople}}>
+      Export as CSV
+    </button>
+  </p>
+</div>
+
+<div class="d-none d-print-block">
+  <h1>Quartermaster Earned Shirts Earned In {{year}}</h1>
+</div>
+
+{{#if people}}
+  {{pluralize people.length "person"}} found
+  <table class="table table-hover table-striped table-sm">
+    <thead>
+      <tr>
+        <th>Callsign</th>
+        <th>Name</th>
+        <th class="text-right">Hours</th>
+        <th>Tee Shirt ({{threshold_ss}} hrs)</th>
+        <th>Long Sleeve ({{threshold_ls}} hrs)</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each people as |person|}}
+        <tr>
+          <td>{{person-link person=person}}</td>
+          <td>{{person.first_name}} {{person.last_name}}</td>
+          <td class="text-right">{{person.hours}}</td>
+          <td>
+            {{#unless person.earned_ss}}
+              not earned -
+            {{/unless}}
+            {{person.teeshirt_size_style}}
+          </td>
+          <td>
+            {{#unless person.earned_ls}}
+              not earned -
+            {{/unless}}
+            {{person.longsleeveshirt_size_style}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <h3 id="shirt-totals">Shirt Totals</h3>
+  <div class="row">
+    {{#each shirtGroups as |shirts|}}
+      <div class="col-3">
+        <table class="table table-sm table-box">
+          <caption>{{shirts.name}} Totals <span class="d-inline-block float-right"><button class="btn btn-secondary btn-sm" {{action exportCounts shirts}}>Export</button></span></caption>
+          <thead>
+            <tr>
+              <th>Shirt Type</th>
+              <th class="text-right">Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each shirts.types as |shirt|}}
+              <tr>
+                <td>{{shirt.type}}</td>
+                <td class="text-right">{{shirt.count}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    {{/each}}
+  </div>
+
+{{else}}
+  <strong class="text-danger">Nobody qualified for a shirt in {{year}}?</strong>
+{{/if}}

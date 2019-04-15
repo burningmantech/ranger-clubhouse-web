@@ -165,12 +165,27 @@ export default class HouseService extends Service {
    */
 
   downloadCsv(filename, columns, data) {
-    let contents = columns.join(',') + "\n";
+    const headers = columns.map((column) => {
+      if (typeof column == 'string') {
+        return column;
+      } else {
+        return column.title;
+      }
+    });
+
+    let contents = headers.join(',')+"\n";
 
     data.forEach((line) => {
       let fields = [];
       columns.forEach((column) => {
-        let value = isEmpty(line[column]) ? '' : line[column].toString();
+        let value;
+        if (typeof column == 'string') {
+          value = line[column];
+        } else {
+          value = line[column.key];
+        }
+
+        value = isEmpty(value) ? '' : value.toString();
 
         value = value.replace(/"/g, '""');
         if (value.search(/("|,|\n)/g) >= 0) {
