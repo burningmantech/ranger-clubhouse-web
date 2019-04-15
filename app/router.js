@@ -128,6 +128,8 @@ Router.map(function() {
     this.route('assets-outstanding');
     this.route('radio-assets');
     this.route('radio-checkout');
+    this.route('shirts');
+    this.route('freaking-years');
   });
 
   this.route('vc', function() {
