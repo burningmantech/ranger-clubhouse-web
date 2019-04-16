@@ -70,6 +70,11 @@ export default class ScheduleTableComponent extends Component {
     return this.slots.reduce(function(total, slot) { return (slot.is_overlapping ? 1 : 0)+total;}, 0);
   }
 
+  @computed('slots')
+  get trainingOverlap() {
+    return this.slots.reduce(function(total, slot) { return (slot.is_training_overlap ? 1 : 0)+total;}, 0);
+  }
+
   @action
   changeView(value) {
     this.set('viewSchedule', value);

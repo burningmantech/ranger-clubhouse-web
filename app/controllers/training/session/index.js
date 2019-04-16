@@ -193,8 +193,7 @@ export default class TrainingSlotController extends Controller {
     case 'multiple-enrollment':
       modal.open('modal-multiple-enrollment', 'Multiple Enrollments Not Allowed', {
         slots: result.slots,
-        isMe: (person.id == this.session.user.id),
-        isAlpha: (result.slots[0].position.title == 'Alpha')
+        person,
       });
       break;
 
@@ -231,7 +230,6 @@ export default class TrainingSlotController extends Controller {
         } else if (result.multiple_forced) {
           this.modal.open('modal-multiple-enrollment', 'Sign Up Forced - Other Enrollments Found', {
             slots: result.slots,
-            isMe: (person.id == this.session.user.id),
             forced: true,
           });
         } else {

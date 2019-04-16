@@ -1,7 +1,7 @@
 {{#modal-dialog title=data.title onClose=onClose}}
   <p>
-    {{#if data.isMe}}You are{{else}}The person is{{/if}} already
-    enrolled in {{pluralize data.slots.length (if data.isAlpha "Alpha shift" "training session") }}:
+    {{#if isMe}}You are{{else}}The person is{{/if}} already
+    enrolled in {{pluralize data.slots.length (if data.isAlpha "Alpha shift" (concat trainingType " session")) }}:
   </p>
   <p>
     {{#each data.slots as |slot|}}
@@ -11,14 +11,21 @@
   <p>
     {{#if data.forced}}
       Because you either have the Admin, Trainer, VC or Mentor role,
-      {{if data.isMe "you have" "the person has"}}
+      {{if isMe "you have" "the person has"}}
       been added to the
-      {{#if data.isAlpha}}Alpha shift{{else}}training sessions{{/if}}.
+      {{#if data.isAlpha}}Alpha shift{{else}}{{trainingType}} session{{/if}}.
       Hope you know what you are doing!
     {{else}}
-      You may only sign up for one {{#if data.isAlpha}}Alpha shift{{else}}training session{{/if}}.
+      {{if isMe "You" "The person"}} may only sign up for one {{#if data.isAlpha}}Alpha shift{{else}}{{trainingType}} session{{/if}}.
       Multiple enrollments are not allowed.
       Contact {{mail-to (config "VCEmail")}} for help.
     {{/if}}
   </p>
+
+  {{#if (and data.person.isRanger (not data.forced))}}
+    <p>
+      {{if isMe "You are" "This person is"}} allowed to sign up for a Training session and different ART Training sessions.
+      For example, you may sign up for one Training session, one ART Green Dot session (if qualified), and one ART Sandman session (if qualified).
+    </p>
+  {{/if}}
 {{/modal-dialog}}
