@@ -81,4 +81,9 @@ export default class ScheduleModel extends DS.Model {
 
     return false;
   }
+
+  @computed('position_type')
+  get isTraining() {
+    return (this.position_type == 'Training');
+  }
 }

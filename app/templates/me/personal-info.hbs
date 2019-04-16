@@ -40,9 +40,17 @@
     </div>
 
     {{#unless person.isAuditor}}
+      <div class="form-group">
+        List the English names of the  languages you are comfortable speaking with the level of fluency in parenthesis, each separated by a comma.<br>
+        <div class="mt-2 mb-2">
+          Example: "japanese (basic), spanish (fluent)"
+        </div>
+        Keep the list simple:<br>
+        GOOD: "french (fluent), italian (written only), spanish (basic)"<br>
+        BAD: "French - I taught in Paris and can only write in Italian. Took 1 year of high school spanish"<br>
+      </div>
       <div class="form-row">
-        {{f.input "languages" label="Languages Spoken"
-          hint="List the English names of languages you are comfortable speaking separated by a comma. Examples: english, french, japanese"}}
+        {{f.input "languages" label="Languages Spoken" type="text" size=80}}
       </div>
       <div class="form-row col-auto">
         {{f.input "camp_location" type="textarea" label="Camp Name & Location" cols=50 rows=4 maxlength=200 hint=(concat (if f.model.camp_location f.model.camp_location.length "0") " of 200 characters")}}

@@ -2,7 +2,9 @@ import Component from '@ember/component';
 import { computed } from '@ember-decorators/object';
 import { argument } from '@ember-decorators/argument';
 import { config } from 'clubhouse/utils/config';
+import { tagName } from '@ember-decorators/component';
 
+@tagName('')
 export default class TicketThresholdComponent extends Component {
   @argument('number') credits;
   @argument('number') creditsEarned;

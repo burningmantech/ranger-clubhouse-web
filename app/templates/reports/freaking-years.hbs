@@ -12,20 +12,17 @@
   </label>
 </p>
 <p>
-Report on people's service based on years rangered. The "Signed Up" column
-indicates if ANY shift sign up (training, dirt shift, etc) was found for the
-current year which may indicate the person will be working the event.
+  Report on people's service based on years rangered. The "Signed Up" column
+  indicates if ANY shift sign up (training, dirt shift, etc) was found for the
+  current year which may indicate the person will be working the event.
+</p>
+
+<p>
+<button class="btn btn-secondary btn-sm" {{action exportToCsv}}>Export To CSV</button>
 </p>
 
 {{#each freaking as |freaks|}}
-  <div class="row">
-    <div class="col-auto">
-      <strong>{{pluralize freaks.years "year"}} - {{pluralize freaks.people.length "person"}}</strong>
-    </div>
-    <div class="col-auto ml-auto">
-      <button class="btn btn-secondary btn-sm" {{action exportToCsv freaks}}>Export To CSV</button>
-    </div>
-  </div>
+  <strong>{{pluralize freaks.years "year"}} - {{pluralize freaks.people.length "person"}}</strong>
 
   <table class="table table-striped table-sm">
     <thead>

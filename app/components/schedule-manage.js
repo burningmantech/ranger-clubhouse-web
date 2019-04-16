@@ -221,8 +221,7 @@ export default class ScheduleManageComponent extends Component {
           {
             title: 'Multiple Enrollments Not Allowed',
             slots: result.slots,
-            isMe: (this.person.id == this.session.user.id ),
-            isAlpha: (result.slots[0].position.title == 'Alpha')
+            person: this.person,
           } );
         break;
 
@@ -233,13 +232,9 @@ export default class ScheduleManageComponent extends Component {
   }
 
   joinSlotRequest(slot) {
-    const personId = this.person.id;
-    const slotId = slot.id;
-    const isMe = (personId == this.session.user.id);
-
-    this.ajax.request(`person/${personId}/schedule`, {
+    this.ajax.request(`person/${this.person.id}/schedule`, {
       method: 'POST',
-      data: { slot_id: slotId }
+      data: { slot_id: slot.id }
     }).then((result) => {
         if (result.status == 'success') {
           slot.set('person_assigned', true);
@@ -253,7 +248,7 @@ export default class ScheduleManageComponent extends Component {
               {
                 title: 'Sign Up Forced - Other Enrollments Found',
                 slots: result.slots,
-                isMe,
+                person: this.person,
                 forced: true,
               });
           } else {
@@ -293,10 +288,7 @@ export default class ScheduleManageComponent extends Component {
     this.modal.confirm('Confirm Leaving Shift',
       `Are you sure you want to leave the shift "${slot.slot_description}"?`,
       () => {
-        const personId = this.person.id;
-        const slotId = slot.id;
-
-        this.ajax.request(`person/${personId}/schedule/${slotId}`, {
+        this.ajax.request(`person/${this.person.id}/schedule/${slot.id}`, {
           method: 'DELETE',
         }).then((result) => {
           slot.set('person_assigned', false);

@@ -42,9 +42,13 @@
   background-color: $table-hover-bg;
 }
 
+.schedule-total {
+  font-size: 0.9rem;
+}
+
 @media print {
   .schedule-table {
-    font-size: 1em;
+    font-size: 1rem;
   }
 }
 
