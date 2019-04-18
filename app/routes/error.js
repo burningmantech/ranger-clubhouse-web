@@ -20,15 +20,19 @@ export default class ErrorRoute extends Route {
       data.append('error_type', 'ember-route-error');
       data.append('url', window.location.href);
 
-      const route_error = {
-        message: error.message,
-        stack: error.stack
-      };
+      let route_error;
+      if (error.stack) {
+        route_error = {
+          message: error.message,
+          stack: error.stack
+        };
+      } else {
+        route_error = error;
+      }
 
       data.append('data', JSON.stringify({
         build_timestamp: ENV.APP.buildTimestamp,
         version: ENV.APP.version,
-        user_agent: navigator.userAgent,
         route_error
       }));
 

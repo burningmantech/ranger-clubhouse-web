@@ -9,7 +9,6 @@ export default function markSlotsOverlap(slots) {
 
   slots.forEach(function(slot) {
     if (slot.slot_begins_time < prevEndTime) {
-      console.log(`slot.position_id [${slot.position_id}/${prevSlot.position_id == Position.TRAINING}] ${Position.TRAINING}`);
       if (slot.isTraining && prevSlot.isTraining
       && (
           (slot.position_id == Position.TRAINING && prevSlot.position_id != Position.TRAINING)
