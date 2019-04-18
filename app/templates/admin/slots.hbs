@@ -65,7 +65,8 @@
           <th>ID</th>
           <th>From</th>
           <th>To</th>
-          <th class="text-right">Max / Sign ups</th>
+          <th class="text-right">Max</th>
+          <th class="text-right">Count</th>
           <th class="text-right">Credits</th>
           <th>Description</th>
           <th>Active</th>
@@ -78,7 +79,8 @@
             <td>{{slot.id}}</td>
             <td>{{shift-format slot.begins}}</td>
             <td>{{shift-format slot.ends}}</td>
-            <td class="text-right">{{slot.max}} / {{slot.signed_up}}</td>
+            <td class="text-right">{{slot.max}}</td>
+            <td class="text-right">{{slot.signed_up}}</td>
             <td class="text-right">{{credits-format slot.credits}}</td>
             <td>
               {{slot-info-link slot.description slot.url}}
@@ -100,7 +102,7 @@
           {{#if slot.trainer_slot}}
             <tr class="{{if slot.trainer_slot "tr-no-border"}}">
               <td colspan="8">
-                Trainer slot: <a href="#slot-{{slot.trainer_slot.id}}">#{{slot.trainer_slot.id}} {{slot.trainer_slot_title}} {{slot.trainer_slot.description}} {{shift-format slot.trainer_slot.begins}}</a>
+                Multipler slot: <a href="#slot-{{slot.trainer_slot.id}}">#{{slot.trainer_slot.id}} {{slot.trainer_slot_title}} {{slot.trainer_slot.description}} {{shift-format slot.trainer_slot.begins}}</a>
               </td>
             </tr>
           {{/if}}

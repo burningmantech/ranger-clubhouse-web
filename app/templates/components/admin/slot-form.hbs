@@ -2,11 +2,12 @@
   <div class="form-row">
     {{f.input "position_id" label="Position" type="select" options=positionOptions grid="col-md-auto"}}
     {{f.input "trainer_slot_id"
-      label="Trainer's Slot"
+      label="Sign Up Multiplier Trainer's Slot"
       type="select"
       options=trainerSlotsOptions
       includeBlank=true
-      grid="col-md-auto"}}
+      grid="col-md-auto"
+    }}
   </div>
 
   <div class="form-row">
@@ -15,7 +16,18 @@
     }}
     {{f.input "begins" label="Begining Time" type="datetime" maxlength=25 grid="col-md-auto col-sm-12"}}
     {{f.input "ends" label="Ending Time" type="datetime"  maxlength=20 grid="col-md-auto col-sm-12"}}
-    {{f.input "max" label="Max" type="text" size=3 maxlength=3 grid="col-md-auto col-sm-12"}}
+    {{f.input "max" label=(if f.model.trainer_slot_id "Multiplier" "Max Sign Ups") type="text" size=3 maxlength=3 grid="col-md-2 col-sm-12"}}
+    {{#if f.model.trainer_slot_id}}
+    <div class="col-md-9 col-sm-12">
+      <span class="text-danger">NOTE:</span>
+       The Trainer's Slot has been set and the Max Sign Ups is acting as a multiplier instead of a
+      hard count. The total sign ups allowed will be computed as the number of trainers signed up in
+      the trainer's slot TIMES the Max Sign Ups limit.
+      (e.g., if 2 trainers are signed up, and the sign up limitis 10, the total signups allowed will
+      be 20.)
+    </div>
+    {{/if}}
+
   </div>
 
   <div class="form-row">

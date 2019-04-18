@@ -191,9 +191,10 @@ export default class TrainingSlotController extends Controller {
       break;
 
     case 'multiple-enrollment':
-      modal.open('modal-multiple-enrollment', 'Multiple Enrollments Not Allowed', {
+      modal.open('modal-multiple-enrollment', {
+        title: 'Multiple Enrollments Not Allowed',
         slots: result.slots,
-        person,
+        person
       });
       break;
 
@@ -228,8 +229,10 @@ export default class TrainingSlotController extends Controller {
         } else if (result.trainer_forced) {
           this.toast.success('Successfully signed up, and the trainer is now signed up for multiple training sessions.');
         } else if (result.multiple_forced) {
-          this.modal.open('modal-multiple-enrollment', 'Sign Up Forced - Other Enrollments Found', {
+          this.modal.open('modal-multiple-enrollment', {
+            title: 'Sign Up Forced - Other Enrollments Found',
             slots: result.slots,
+            person,
             forced: true,
           });
         } else {

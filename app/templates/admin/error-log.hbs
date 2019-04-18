@@ -46,7 +46,10 @@
 
           {{#if log.showing}}
           <tr>
-            <td colspan="6"> {{json-format json=log.data}} </td>
+            <td colspan="6">
+              User Agent: {{log.user_agent}}<br>
+              {{json-format json=log.data}}
+            </td>
           </tr>
           {{/if}}
         {{/each}}

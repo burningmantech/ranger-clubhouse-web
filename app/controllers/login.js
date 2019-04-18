@@ -29,7 +29,7 @@ export default class LoginController extends Controller {
       .catch((response) => {
         if (response.status == 401) {
           const data = response.json ? response.json : response.payload;
-          this.set('loginError', data.status);
+          this.set('loginError', (data ? data.status : `Unknown error ${JSON.stringify(data)}`));
         } else {
           this.house.handleErrorResponse(response)
         }
