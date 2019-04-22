@@ -33,7 +33,6 @@ Router.map(function() {
     this.route('timesheet');
     this.route('schedule', function() {
       this.route('index',  { path: '/' });
-      this.route('print');
     });
     this.route('tickets');
     this.route('help');
@@ -65,6 +64,7 @@ Router.map(function() {
     this.route('settings');
     this.route('slots');
     this.route('motd');
+    this.route('assets');
   });
 
   this.route('hq', { path: '/hq/:person_id' }, function() {

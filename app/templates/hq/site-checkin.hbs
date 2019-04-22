@@ -1,18 +1,17 @@
 {{#if person.on_site}}
-  {{person.callsign}} has been marked on site.
-{{else}}
-  <strong class="text-danger">{{person.callsign}} is marked as OFF SITE.</strong>
-  <ul>
-    <li>Verify their camp name &amp; location</li>
-    <li>Update the emergency contact information</li>
-    <li>Check to see if the person has signed the Radio Authorization form, and Motorpool Policy Agreement</li>
-    <li>{{#if eventInfo.radio_eligible}}Check out an Event Radio if person would like one now{{else}}Person is only authorized for shift radios.{{/if}}</li>
-    <li>After you hand the person their Ranger laminate and field guide, mark the person as on site.</li>
-  </ul>
-
+<p>
+  <strong class="text-success">{{person.callsign}} is marked as ON SITE.</strong>
+</p>
 {{/if}}
+<h2>Site Check In</h2>
+<ul>
+  <li>Verify &amp; the camp name, location, and the emergency contacts</li>
+  <li>Check to see if the person has signed the Radio Authorization form, and Motorpool Policy Agreement</li>
+  <li>{{#if eventInfo.radio_eligible}}Check out an Event Radio if person would like one now{{else}}Person is only authorized for shift radios.{{/if}}</li>
+  <li>After you hand the person their Ranger laminate and field guide, mark the person as on site.</li>
+</ul>
 <div class="border rounded p-2">
-  <h4>Verify &amp; Update Contact Information</h4>
+  <h4>Update Contact Information</h4>
 
   {{#ch-form "contact" person onSubmit=(action saveContactForm) as |f|}}
     <div class="form-row">
@@ -56,8 +55,11 @@
 </div>
 
 <div class="mt-2 border rounded p-2">
-  <h4>Event Radio Checkout</h4>
   {{#if eventInfo.radio_eligible}}
+    <h4>Event Radio Checkout - Authorized For {{pluralize eventInfo.radio_max "Event Radio"}}</h4>
+    <p>
+      The radio may be checked out now, or at the start of their first shift.
+    </p>
     {{asset-checkout-form person=person assets=assets attachments=attachments eventInfo=eventInfo}}
     {{#if activeAssets}}
       {{pluralize activeAssets.length "asset"}} checked out.
@@ -93,8 +95,11 @@
 
 <div class="mt-4">
   {{#if person.on_site}}
+    <p class="font-weight-bold text-success">
+      {{person.callsign}} is marked as ON SITE.
+    </p>
     {{#link-to "hq.shift" class="btn btn-success"}}Start Shift Checkin{{/link-to}}
   {{else}}
-    <button class="btn btn-success" {{action markOnSite}}>Mark As On Site</button>
+    <button class="btn btn-primary" {{action markOnSite}}>Mark As On Site</button>
   {{/if}}
 </div>

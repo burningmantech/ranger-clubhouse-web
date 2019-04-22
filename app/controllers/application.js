@@ -64,6 +64,11 @@ export default class ApplicationController extends Controller {
     mode: 'account'
   });
 
+  @action
+  searchFormChange() {
+    this.house.setKey('person-search-prefs', this.searchForm);
+  }
+
   /*
    * Called from route/application when the user is logged in.
    */

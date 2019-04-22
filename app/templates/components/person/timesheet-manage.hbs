@@ -52,11 +52,7 @@
               {{hour-minute-format ts.duration}}
             </td>
             <td class="text-right">
-              {{#if ts.off_duty}}
-                {{credits-format ts.credits}}
-              {{else}}
-                &nbsp;
-              {{/if}}
+              {{credits-format ts.credits}}
             </td>
             <td data-title="Position">{{ts.position.title}}</td>
             <td>

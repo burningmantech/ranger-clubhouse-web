@@ -21,7 +21,7 @@ export default class HqScheduleRoute extends Route {
 
     controller.setProperties(model);
     controller.set('person', hq.person);
-    controller.set('credits', hq.credits);
+    controller.set('timesheets', hq.timesheets);
     controller.set('year', this.house.currentYear());
   }
 }

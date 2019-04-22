@@ -23,7 +23,7 @@ const SortOptions = [
 ];
 
 export default class AdminActionLogController extends Controller {
-  queryParams = [ 'person', 'target', 'start_time', 'end_time', 'events', 'sort', 'page' ];
+  queryParams = [ 'person', 'start_time', 'end_time', 'events', 'sort', 'page' ];
 
   eventOptions = EventOptions;
   sortOptions = SortOptions;

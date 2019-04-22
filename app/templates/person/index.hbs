@@ -1,4 +1,3 @@
-
 <h3>General Account Info</h3>
 {{#if editPositions}}
   {{person/position-form positions=positions positionIds=positionIds onSave=(action "savePositions") onCancel=(action "cancelPositions")}}
@@ -167,7 +166,7 @@
         {{/if}}
       </div>
       {{#unless personRoles}}
-        <strong class="text-danger">Person hold any roles</strong>
+        <strong class="text-danger">Person does not hold any roles</strong>
       {{/unless}}
       {{#if showRoles}}
         <div class="row">
@@ -217,6 +216,17 @@
         {{#if person.osha30}}OSHA-30{{/if}}
       {{else}}
         No OSHA certifications
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-form-label-fixed col-sm-12 col-md-2">Agreements</label>
+    <div class="col-sm-12 col-md-9">
+      {{#if isAdminOrVC}}
+        {{f.input "behavioral_agreement" label="Burning Man's Behavioral Standards Agreement" type="checkbox" inline=true }}
+      {{else}}
+        Behavioral Standards Agreement {{if person.behavioral_agreement "signed" "NOT SIGNED"}}
       {{/if}}
     </div>
   </div>

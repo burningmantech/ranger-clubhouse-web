@@ -1,5 +1,6 @@
 import Route from '@ember/routing/route';
 import { action } from '@ember-decorators/object';
+import setCookie from 'clubhouse/utils/set-cookie';
 
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import ENV from 'clubhouse/config/environment';
@@ -54,11 +55,17 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
 
   setupController(controller) {
     super.setupController(...arguments);
-    controller.set('user', this.session.user)
+    controller.set('user', this.session.user);
+    const searchPrefs = this.house.getKey('person-search-prefs');
+    if (searchPrefs) {
+      controller.searchForm.setProperties(searchPrefs);
+    }
   }
 
   @action
   logout() {
+    setCookie('C2AUTHTOKEN', 'nothing', 0);
+    this.house.clearStorage();
     this.session.invalidate();
   }
 

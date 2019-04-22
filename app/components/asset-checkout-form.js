@@ -41,7 +41,7 @@ export default class AssetCheckoutFormComponent extends Component {
     this.toast.clear();
     this.clearErrors();
 
-    this.ajax.request('asset-person/checkout', {
+    this.ajax.request('asset/checkout', {
       method: 'POST',
       data: { person_id: this.person.id, barcode, attachment_id: model.get('attachment_id') }
     }).then((result) => {
@@ -57,13 +57,20 @@ export default class AssetCheckoutFormComponent extends Component {
           break;
 
         case 'checked-out':
-          this.set('barcodeCheckedOut', {
-            person_id: result.person_id,
-            callsign: result.callsign,
-            barcode
-          })
+          result.barcode = barcode;
+          this.set('barcodeCheckedOut', result);
           break;
       }
     }).catch((response) => this.house.handleErrorResponse(response) );
+  }
+
+  @action
+  showHistoryAction() {
+    this.set('showHistory', true);
+  }
+
+  @action
+  closeHistory() {
+    this.set('showHistory', false);
   }
 }

@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember-decorators/object';
 import { validatePresence } from 'ember-changeset-validations/validators';
+import { set } from '@ember/object';
 
 export default class HqShiftController extends Controller {
   ignoreTimesheetVerification = false;
@@ -22,7 +23,7 @@ export default class HqShiftController extends Controller {
 
   @computed('assets.@each.checked_in')
   get assetsCheckedOut() {
-    return this.assets.filter((asset) => !asset.checked_in);
+    return this.assets.filter((a) => !a.checked_in);
   }
 
   @computed('assetsCheckedOut')
@@ -83,10 +84,11 @@ export default class HqShiftController extends Controller {
   }
 
   @action
-  assetCheckInAction(asset) {
-    asset.checkInAction().then(() => {
+  assetCheckInAction(ap) {
+    this.ajax.request(`asset/${ap.asset.id}/checkin`, { method: 'POST'})
+    .then((result) => {
+      set(ap, 'checked_in', result.checked_in);
       this.toast.success('Asset has been successfully checked in.');
-      this.assets.update();
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
@@ -110,18 +112,14 @@ export default class HqShiftController extends Controller {
         unverifiedTimesheetCount: this.unverifiedTimesheets.length,
       }, () => { this._updateOnSite(false) });
     } else {
-      this._updateOnSite(false);
+      this.modal.confirm('Confirm Marking Person Off Site',
+        `Are you sure you wish to mark ${this.person.callsign} as OFF SITE?`,
+        () => { this._updateOnSite(false) });
     }
   }
 
   @action
   markOnSite() {
     this._updateOnSite(true);
-  }
-
-  @action
-  endShiftNotify() {
-    // Kick the top hq route to update the credits in the sidebar
-    this.send('refreshCredits');
   }
 }

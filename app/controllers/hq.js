@@ -23,4 +23,26 @@ export default class HqController extends Controller {
     }
     return false;
   }
+
+
+
+  @computed('timesheets.@each.credits')
+  get creditsEarned() {
+    return this.timesheets.reduce((total, row) => (row.credits + total), 0);
+  }
+
+  @computed('creditsEarned', 'expected.credits')
+  get creditsExpected() {
+    return this.creditsEarned + this.expected.credits;
+  }
+
+  @computed('timesheets.@each.duration')
+  get durationWorked() {
+    return this.timesheets.reduce((total, row) => (row.duration + total), 0);
+  }
+
+  @computed('durationWorked', 'expected.duration')
+  get durationExpected() {
+    return this.durationWorked + this.expected.duration;
+  }
 }

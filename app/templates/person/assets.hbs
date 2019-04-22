@@ -1,4 +1,4 @@
-{{year-select "Asset History" year=year years=person.all_years subheader=true onChange=(action "changeYearAction")}}
+{{year-select "Asset History" year=year years=person.all_years subheader=true onChange=(action (mut year))}}
 
 {{#if person.asset_authorized}}
   {{#if (is-current-year year)}}
@@ -13,4 +13,4 @@
   {{/ch-alert}}
 {{/if}}
 
-{{asset-table assets=assets onCheckIn=(action checkInAction) year=year}}
+{{asset-table assets=assets year=year}}

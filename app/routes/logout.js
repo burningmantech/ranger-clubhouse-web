@@ -1,6 +1,10 @@
 import Route from '@ember/routing/route';
 import setCookie from 'clubhouse/utils/set-cookie';
 
+/*
+ * The logout route is for CH1 to CH2 routing.
+ */
+
 export default class LogoutRoute extends Route {
   beforeModel() {
     // Invalidate the existing Classic clubhouse cookie

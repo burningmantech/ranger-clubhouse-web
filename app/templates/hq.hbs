@@ -11,12 +11,17 @@
 {{/ch-sidebar}}
 
 <main class="col">
-  <div class="float-right text-right">
-    {{#link-to "person.index" person.id class="btn btn-secondary btn-sm"}}Account Manage{{/link-to}}
+  <div class="d-flex justify-content-between d-print-none">
+    <h2>
+      {{#link-to "hq.index" person.id}}{{person.callsign}}{{/link-to}} &lt;{{person.status}}{{if person.vintage "/vintage"}}{{if isShinyPenny ", Shiny Penny"}}&gt;
+      {{#unless person.on_site}} <span class="text-danger">OFF SITE</span>{{/unless}}
+    </h2>
+    <div class="text-muted">HQ Window</div>
+    <div class="text-right">
+      {{#link-to "person.index" person.id class="btn btn-secondary btn-sm"}}Account Manage{{/link-to}}
+    </div>
   </div>
-  <h2>
-    {{person.callsign}} &lt;{{person.status}}{{if person.vintage "/vintage"}}{{if isShinyPenny ", Shiny Penny"}}&gt;
-  </h2>
+
 
   {{#if person.message}}
     {{#ch-box "Important Account Message" type="warning"}}
@@ -25,10 +30,8 @@
     {{/ch-box}}
   {{/if}}
 
-  <hr class="mr-n2 ml-n2">
-
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-9 d-print-block">
       {{#if (not person.user_authorized)}}
         {{#ch-alert "danger"}}
           <div class="float-left mr-2">
@@ -61,7 +64,7 @@
       {{/if}}
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3 d-print-none">
       <div class="mugshot">
         {{#if photo}}
           {{#if photo.photo_url}}
@@ -87,48 +90,56 @@
       </div>
 
       <div class="border rounded p-2">
-        <p>
-          <strong>{{currentYear}} Credits</strong><br>
-          {{credits-format credits}}
-        </p>
+        <dl>
+          <dt>Earned Credits</dt>
+          <dd>{{credits-format creditsEarned}}</dd>
 
-        <p>
-          <strong>Meals</strong><br>
-          {{meal-info eventInfo.meals}}
-        </p>
+          <dt>Est. Total Credits</dt>
+          <dd>{{credits-format creditsExpected}}</dd>
 
-        <p>
-          <strong>Showers</strong><br>
-          {{#if eventInfo.showers}}
-            {{badge "secondary" "Wet Spot"}} BMID allows access to the Wet Spot.
-          {{else}}
-            {{badge "secondary" "Shower Pogs"}} for every 40 hours worked.
-          {{/if}}
-        </p>
+          <dt>Time Worked</dt>
+          <dd>{{hour-minute-format durationWorked}}</dd>
 
-        <p>
-          <strong>Motorpool</strong><br>
-          {{#if person.vehicle_blacklisted}}
-            {{badge "danger" "Blacklisted"}} Vehicle is blacklisted. May not drive gators, cars, or trucks on playa for Ranger business.
-          {{else}}
-            {{#if person.vehicle_paperwork}}
-              {{badge "success" "Authorized"}}
+          <dt>Est. Total Time</dt>
+          <dd>{{hour-minute-format durationExpected}}</dd>
+
+          <dt>Meals</dt>
+          <dd>{{meal-info eventInfo.meals}}</dd>
+
+          <dt>Showers</dt>
+          <dd>
+            {{#if eventInfo.showers}}
+              {{badge "secondary" "Wet Spot"}} BMID allows access to the Wet Spot.
             {{else}}
-              {{badge "warning" "Not Authorized"}}
+              {{badge "secondary" "Shower Pogs"}} for every 40 hours worked.
             {{/if}}
-            to drive golf carts &amp; UTVs on playa for Ranger business
-          {{/if}}
-        </p>
+          </dd>
 
-        <p>
-          <strong>Org Vehicle Insurance</strong><br>
-          {{#if person.vehicle_insurance_paperwork}}
-            {{badge "success" "Authorized" }}
-          {{else}}
-            {{badge "warning" "Not Authorized" }}
-          {{/if}}
-          to drive cars and trucks (incl. personal vehicle) on playa for Ranger business.
-        </p>
+          <dt>Motorpool</dt>
+          <dd>
+            {{#if person.vehicle_blacklisted}}
+              {{badge "danger" "Blacklisted"}} Vehicle is blacklisted. May not drive gators, cars, or trucks on playa for Ranger business.
+            {{else}}
+              {{#if person.vehicle_paperwork}}
+                {{badge "success" "Authorized"}}
+              {{else}}
+                {{badge "warning" "Not Authorized"}}
+              {{/if}}
+              to drive golf carts &amp; UTVs on playa for Ranger business
+            {{/if}}
+          </dd>
+
+          <dt>Org Vehicle Insurance</dt>
+          <dd>
+            {{#if person.vehicle_insurance_paperwork}}
+              {{badge "success" "Authorized" }}
+            {{else}}
+              {{badge "warning" "Not Authorized" }}
+            {{/if}}
+            to drive cars and trucks (incl. personal vehicle) on playa for Ranger business.
+          </dd>
+        </dl>
+
       </div>
     </div>
   </div>

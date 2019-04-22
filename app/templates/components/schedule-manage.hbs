@@ -33,7 +33,12 @@
         </p>
       {{else}}
         <p>
-          You cannot signup for training and/or shifts because {{deniedReason}}.
+          You cannot signup for training and/or shifts because you need to:
+          <ul class="mt-2">
+            {{#each deniedReason as |reason|}}
+              <li>{{reason}}</li>
+            {{/each}}
+          </ul>
         </p>
         {{#if (not hasApprovedPhoto)}}
           <p>
@@ -53,7 +58,8 @@
       {{#if (and permission.manual_review_allowed hasApprovedPhoto)}}
         {{#if permission.manual_review_url}}
           <p>
-            Please <a href="{{permission.manual_review_url}}">click here</a> to take the Manual Review.
+            <a href="{{permission.manual_review_url}}" class="btn btn-primary">Click here</a> to take the Manual Review.
+             <strong>Do not use the browser's back button when taking the review.</strong> The review takes 15 to 20 minutes on average to complete.
           </p>
         {{else}}
           <strong class="text-danger">Unfortunately, the Manual Review is still
@@ -64,119 +70,166 @@
       {{/if}}
     {{/if}}
 
-    {{#if permission.missing_bpguid}}
-      {{person-missing-bpguid}}
-    {{/if}}
-
     {{#if (or person.isPastProspective (and (not person.callsign_approved) (not person.isAuditor) (not person.isNonRanger)))}}
       <p>
-        Please email {{vc-email}} if you are interested in
-        volunteering with us or if you think you have received this message in error.
+        Please email {{vc-email}} if you are interested in volunteering with us
+        or if you think you have received this message in error.
       </p>
+    {{else}}
+      {{#if permission.missing_bpguid}}
+        {{person-missing-bpguid}}
+      {{/if}}
+
+      {{#if permission.missing_behavioral_agreement}}
+        <p>
+          Starting in 2019, all individuals who attend training, and/or volunteer for the BRC Rangers MUST agree
+          to Burning Man's Behavioral Standards Agreement.
+        </p>
+        <p>
+          <button class="btn btn-primary" {{action showBehaviorAgreementAction}}>Click here</button> to read about the Behavioral Standards, and be given a chance to agree.
+        </p>
+      {{/if}}
+
     {{/if}}
   {{/ch-box}}
 {{else}}
   {{schedule-table slots=signedUpSlots person=person year=year creditsEarned=creditsEarned}}
-  <h3>{{if isCurrentYear "Available Shifts" "Past Shifts"}}</h3>
-  {{#if availableSlots}}
-    {{#if inactiveSlots}}
-      {{#ch-alert "warning"}}
-        Because you have the Trainer, VC, and/or Admin role, the shift listing
-        may contain inactive shifts.
-        Sign ups are disabled for inactive shifts until the shift has been activated.
-      {{/ch-alert}}
-    {{/if}}
 
-    <div class="row mb-1">
-      <div class="col-sm-5 col-md-4 col-lg-3 mb-2">
-        {{#power-select
-            selected=filterDay
-            options=dayOptions
-            searchEnabled=false
-            searchField="title"
-            onchange=(action (mut filterDay))
-                      as |item| }}
-          {{item.title}}
-        {{/power-select}}
-      </div>
+  <div class="d-print-none">
+    <h3>{{if isCurrentYear "Available Shifts" "Past Shifts"}}</h3>
+    {{#if availableSlots}}
       {{#if inactiveSlots}}
-        <div class="col-sm-5 col-md-4 col-lg-3 mb-2">
-          {{#power-select
-            selected=filterActive
-            options=activeOptions
-            searchEnabled=false
-            onchange=(action (mut filterActive)) as |item| }}
-            {{item.title}}
-          {{/power-select}}
-        </div>
+        {{#ch-alert "warning"}}
+          Because you have the Trainer, VC, and/or Admin role, the shift listing
+          may contain inactive shifts.
+          Sign ups are disabled for inactive shifts until the shift has been activated.
+        {{/ch-alert}}
       {{/if}}
-    </div>
 
-    <p class="text-muted">Showing {{viewSlots.length}} of {{availableSlots.length}}</p>
+      <div class="row mb-1">
+        <div class="col-sm-5 col-md-auto mb-2">
+          {{ch-form/select name="filterDay" value=filterDay options=dayOptions onChange=(action setFilterDay) controlClass="form-control"}}
+        </div>
+        {{#if inactiveSlots}}
+          <div class="col-sm-5 col-md-auto mb-2">
+            {{ch-form/select name="filterActive" value=filterActive options=activeOptions onChange=(action (mut filterActive)) controlClass="form-control"}}
+          </div>
+        {{/if}}
+      </div>
 
-    {{#if slotGroups}}
-      {{#each slotGroups as |group|}}
-        <div class="schedule-table schedule-signup-sheet">
-          <div class="schedule-title">{{if group.show (fa-icon "caret-down") (fa-icon "caret-right")}} <a href="#" {{action "toggleGroup" group}}>{{group.title}} ({{group.slots.length}})</a></div>
-          {{#if group.show}}
-            <div class="schedule-row schedule-header">
-              <div class="schedule-time">From</div>
-              <div class="schedule-time">To</div>
-              <div class="schedule-credits">Credits</div>
-              <div class="schedule-description">Description</div>
-              <div class="schedule-signups">Sign Ups</div>
-              <div class="schedule-actions">Actions</div>
-            </div>
-            {{#each group.slots as |slot|}}
-              <div class="schedule-row {{if slot.person_assigned "table-success"}}">
-                <div class="schedule-time">
-                  {{#if slot.person_assigned}}
-                    {{fa-icon "check" title="You are signed up for this shift."}}
-                  {{else if (not slot.slot_active)}}
-                    {{fa-icon "exclamation-triangle" title="Shift is inactive and may not be signed up for"}}
-                  {{/if}}
-                  {{shift-format slot.slot_begins}}
-                </div>
-                <div class="schedule-time">{{shift-format slot.slot_ends}}</div>
-                <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span> {{credits-format slot.credits}}</div>
-                <div class="schedule-description">
-                  <span class="schedule-sm-label">{{group.title}} - </span>{{slot-info-link slot.slot_description slot.slot_url}}
-                </div>
-                <div class="schedule-signups">{{slot-full-indicator slot.slot_signed_up slot.slot_max}}</div>
-                <div class="schedule-actions">
-                  <button {{action "showPeople" slot}} class="btn btn-secondary btn-sm" title="View people signed up">{{fa-icon "users" type="fas"}}</button>
-                  {{#if slot.person_assigned}}
-                    {{#if (or (has-role "admin") (not slot.has_started))}}
-                      {{! Only allow admins to remove a sign up that has started}}
-                      <button {{action "leaveSlot" slot}} class="btn btn-danger btn-sm" title="Remove from schedule">{{fa-icon "trash-alt" type="fas"}}</button>
+      <p class="text-muted">Showing {{viewSlots.length}} of {{availableSlots.length}}</p>
+
+      {{#if slotGroups}}
+        {{#each slotGroups as |group|}}
+          <div class="schedule-table schedule-signup-sheet">
+            <div class="schedule-title">{{if group.show (fa-icon "caret-down") (fa-icon "caret-right")}} <a href="#" {{action "toggleGroup" group}}>{{group.title}} ({{group.slots.length}})</a></div>
+            {{#if group.show}}
+              <div class="schedule-row schedule-header">
+                <div class="schedule-time">From</div>
+                <div class="schedule-time">To</div>
+                <div class="schedule-credits">Credits</div>
+                <div class="schedule-description">Description</div>
+                <div class="schedule-signups">Sign Ups</div>
+                <div class="schedule-actions">Actions</div>
+              </div>
+              {{#each group.slots as |slot|}}
+                <div class="schedule-row {{if slot.person_assigned "table-success"}}">
+                  <div class="schedule-time">
+                    {{#if slot.person_assigned}}
+                      {{fa-icon "check" title="You are signed up for this shift."}}
+                    {{else if (not slot.slot_active)}}
+                      {{fa-icon "exclamation-triangle" title="Shift is inactive and may not be signed up for"}}
                     {{/if}}
-                  {{else}}
-                    {{! Only show action buttons for the current year}}
-                    {{#if isCurrentYear}}
-                      {{#if slot.slot_active}}
-                        {{#if (or (not slot.isFull) (not slot.has_started) (has-role "admin"))}}
-                          <button {{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Sign up for the shift">{{fa-icon "user-plus" type="fas"}}</button>
+                    {{shift-format slot.slot_begins}}
+                  </div>
+                  <div class="schedule-time">{{shift-format slot.slot_ends}}</div>
+                  <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span> {{credits-format slot.credits}}</div>
+                  <div class="schedule-description">
+                    <span class="schedule-sm-label">{{group.title}} - </span>{{slot-info-link slot.slot_description slot.slot_url}}
+                  </div>
+                  <div class="schedule-signups">{{slot-full-indicator slot.slot_signed_up slot.slot_max}}</div>
+                  <div class="schedule-actions">
+                    <button {{action "showPeople" slot}} class="btn btn-secondary btn-sm" title="View people signed up">{{fa-icon "users" type="fas"}}</button>
+                    {{#if slot.person_assigned}}
+                      {{#if (or (has-role "admin") (not slot.has_started))}}
+                        {{! Only allow admins to remove a sign up that has started}}
+                        <button {{action "leaveSlot" slot}} class="btn btn-danger btn-sm" title="Remove from schedule">{{fa-icon "trash-alt" type="fas"}}</button>
+                      {{/if}}
+                    {{else}}
+                      {{! Only show action buttons for the current year}}
+                      {{#if isCurrentYear}}
+                        {{#if slot.slot_active}}
+                          {{#if (or (not slot.isFull) (not slot.has_started) (has-role "admin"))}}
+                            <button {{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Sign up for the shift">{{fa-icon "user-plus" type="fas"}}</button>
+                          {{/if}}
+                        {{else}}
+                          <small class="text-danger">Inactive</small>
                         {{/if}}
-                      {{else}}
-                        <small class="text-danger">Inactive</small>
                       {{/if}}
                     {{/if}}
-                  {{/if}}
+                  </div>
                 </div>
-              </div>
-            {{/each}}
-          {{/if}}
-        </div>
-      {{/each}}
+              {{/each}}
+            {{/if}}
+          </div>
+        {{/each}}
+      {{else}}
+        <div class="text-danger">There are no shifts which match.</div>
+      {{/if}}
+      <div class="mt-2"><strong>Note:</strong>
+        <ul>
+          <li>A shift may not be added to or removed from your schedule if the shift has already started.</li>
+        </ul>
+      </div>
     {{else}}
-      <div class="text-danger">There are no shifts which match.</div>
+      <div class="text-danger">There are no shifts available.</div>
     {{/if}}
-    <div class="mt-2"><strong>Note:</strong>
-      <ul>
-        <li>A shift may not be added to or removed from your schedule if the shift has already started.</li>
-      </ul>
-    </div>
-  {{else}}
-    <div class="text-danger">There are no shifts available.</div>
-  {{/if}}
+  </div>
+
+  <p class="d-print-none text-muted">
+    Use your browser's print command to send this page to the printer. Don't
+    worry, the navigation bar, website footer, and this message will not appear
+    on the paper.
+  </p>
+{{/if}}
+
+
+
+{{#if showBehaviorAgreement}}
+  {{#modal-dialog title="Burning Man's Behavioral Standards Agreement" onClose=closeAgreement onConfirm=signAgreement confirmLabel="I Agree" cancelLabel="I do not agree" }}
+    <p>
+      Burning Man’s culture honors and promotes freedom of expression, unless that expression harms others.
+    </p>
+
+    <p>
+      The Burning Man organization that supports the year-round activities
+      of the Burning Man community, has zero tolerance for behavior that is
+      non-consensual, abusive, or harmful to others. This includes and is
+      not limited to:
+    </p>
+
+    <ul>
+      <li>Violence – both physical and verbal</li>
+      <li>
+        Harassment, including non-consensual interactions, as stated in our Harassment Discrimination and Retaliation
+        Prevention Policy (<a href="https://bit.ly/2HgVXOK" target="_blank" rel="noopener">Click here</a> to read -- opens in a new window.)
+      </li>
+      <li>Coercion (abuse of power – including but not limited to sex, drugs, resources, etc.)</li>
+      <li>Sexual Assault</li>
+      <li>Intoxication while on duty</li>
+      <li>Theft or Vandalism</li>
+    </ul>
+
+    <p>
+      By clicking on "I Agree", you as both staff and/or a manager, agree to
+      abide by this Behavioral Standards Agreement. Nothing in this Agreement
+      modifies, conflicts, or affects the Burning Man Harassment,
+      Discrimination and Retaliation Prevention Policy
+      (<a href="https://bit.ly/2HgVXOK" target="_blank" rel="noopener">Click here</a> to read -- opens in a new window.).
+    </p>
+    <p>
+      In addition to the above, you agree to be my awesome self, look out
+      for others and encourage the good in all!
+    </p>
+  {{/modal-dialog}}
 {{/if}}

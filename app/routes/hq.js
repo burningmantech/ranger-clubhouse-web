@@ -15,13 +15,11 @@ export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
   model({ person_id }) {
     const year = this.house.currentYear();
 
-    this.store.unloadAll('person');
     this.store.unloadAll('timesheet');
     this.store.unloadAll('asset-person');
-    this.store.unloadAll('asset-attachment');
 
     return RSVP.hash({
-      person: this.store.find('person', person_id),
+      person: this.store.findRecord('person', person_id, { reload: true }),
 
       eventInfo: this.ajax.request(`person/${person_id}/event-info`, { data: { year } })
                   .then((result) => result.event_info),
@@ -30,10 +28,6 @@ export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
                   data: { include_training: 1, year }
                 }).then((results) => results.positions),
 
-      credits: this.ajax.request(`person/${person_id}/credits`, {
-                data: { year }
-              }).then((result) => result.credits),
-
       timesheets: this.store.query('timesheet', { person_id, year }),
 
       unread_message_count: this.ajax.request(`person/${person_id}/unread-message-count`)
@@ -41,10 +35,13 @@ export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
 
       assets: this.store.query('asset-person', { person_id, year }),
 
-      attachments: this.store.findAll('asset-attachment'),
+      attachments: this.store.findAll('asset-attachment', { reload: true }),
 
       imminentSlots: this.ajax.request(`person/${person_id}/schedule/imminent`)
-        .then((result) => result.slots)
+        .then((result) => result.slots),
+
+      expected: this.ajax.request(`person/${person_id}/schedule/expected`)
+
     });
   }
 
@@ -52,6 +49,7 @@ export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
     const person = model.person;
     person.set('unread_message_count', model.unread_message_count);
     controller.setProperties(model);
+    controller.set('photo', null);
 
     // Allow the photo to lazy load.
     this.ajax.request(`person/${person.id}/photo`)
@@ -71,12 +69,5 @@ export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
       this.house.handleErrorResponse(response);
       return true;
     }
-  }
-
-  @action
-  refreshCredits() {
-    this.ajax.request(`person/${this.controller.person.id}/credits`, {
-              data: { year: this.house.currentYear() }
-        }).then((result) => this.controller.set('credits', result.credits));
   }
 }
