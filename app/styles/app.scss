@@ -83,14 +83,17 @@ $sizes: (
 @import "ticketing";
 
 @media print {
-  h1 { page-break-before: always; font-size: 1.2rem; }
+  h1 { font-size: 1.2rem; }
 
   body {
     margin: 1.6cm;
-    font: 13pt Verdana, "Times New Roman", Times, serif;
     line-height: 1.3;
-    background: #fff !important;
+    background: #ffffff !important;
     color: #000;
+  }
+
+  .d-print-page-break {
+    page-break-before: always;
   }
 }
 
@@ -427,4 +430,14 @@ caption {
 
 .json-formatter-row {
   font-size: 0.9rem;
+}
+
+/*
+ * Safari printing work around
+ */
+
+ @media print {
+  .container {
+    width: auto;
+  }
 }

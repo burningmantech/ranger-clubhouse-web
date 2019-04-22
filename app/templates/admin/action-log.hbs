@@ -1,12 +1,17 @@
 <main class="col">
   <h1>Action Log</h1>
 
+  {{#if error}}
+    <p class="text-danger">
+        {{error}}
+    </p>
+  {{/if}}
+
   {{#ch-form "query" query changeSet=false onSubmit=(action searchAction) as |f|}}
     <div class="form-row">
-      {{f.input "person" label="Person" type="search" size=30 onSearch=(action searchCallsignAction) grid="col-md-2"}}
-      {{f.input "target" label="Target" type="search" size=30 onSearch=(action searchCallsignAction) grid="col-md-2"}}
-      {{f.input "start_time" label="Start time" controlClass="form-control form-control-sm" type="datetime" size=30 grid="col-md-2"}}
-      {{f.input "end_time" label="End time" controlClass="form-control form-control-sm" type="datetime" size=30 grid="col-md-2"}}
+      {{f.input "person" label="Person" type="text" size=30 grid="col-sm-12 col-md-2" controlClass="form-control form-control-sm" hint="Callsign or person id"}}
+      {{f.input "start_time" label="Start time" controlClass="form-control form-control-sm" type="datetime" size=30 grid="col-sm-12 col-md-2"}}
+      {{f.input "end_time" label="End time" controlClass="form-control form-control-sm" type="datetime" size=30 grid="col-sm-12 col-md-2"}}
     </div>
     <div class="form-group row mb-2">
       <label class="col-1">Events</label>
@@ -97,6 +102,12 @@
 
                 {{#if log.slot}}
                   Slot #{{log.slot.id}} {{log.slot.position.title}} - {{log.slot.description}} {{shift-format log.slot.begins}}<br>
+                {{/if}}
+
+                {{#if log.enrolled_slots}}
+                  {{#each log.enrolled_slots as |slot|}}
+                    Previously Enrolled #{{slot.id}} {{slot.position.title}} - {{slot.description}} {{shift-format slot.begins}}<br>
+                  {{/each}}
                 {{/if}}
               </td>
             </tr>

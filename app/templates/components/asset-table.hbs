@@ -16,24 +16,20 @@
     {{#each assets as |ap|}}
       <tr>
         <td>{{ap.asset.description}}</td>
-        <td>{{present-or-not ap.asset.barcode "-"}}</td>
-        <td>{{ap.attachment.description}}</td>
-        <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
+        <td>{{ap.asset.barcode}}</td>
+        <td>{{present-or-not ap.attachment.description "-"}}</td>
+        <td>{{if ap.asset.perm_assign "Perm" "Temp"}}</td>
         <td>{{present-or-not ap.asset.temp_id "-"}}</td>
         <td>{{shift-format ap.checked_out}}</td>
         <td>
           {{#if ap.checked_in}}
             {{shift-format ap.checked_in}}
           {{else}}
-            <i>Checked-Out</i>
+            <button class="btn btn-primary btn-sm" {{action checkInAsset ap.asset ap}}>Check In</button>
           {{/if}}
         </td>
         <td>
-          {{#unless ap.checked_in}}
-            <button class="btn btn-primary btn-sm" {{action onCheckIn ap}}>Check In</button>
-          {{else}}
-            -
-          {{/unless}}
+          <button class="btn btn-secondary btn-sm" {{action showHistoryAction ap.asset}}>History</button>
         </td>
       </tr>
     {{else}}
@@ -45,3 +41,7 @@
     {{/each}}
   </tbody>
 </table>
+
+{{#if assetForHistory}}
+  {{modal-asset-history assetId=assetForHistory.id onClose=(action closeHistory)}}
+{{/if}}

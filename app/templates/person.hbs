@@ -37,14 +37,17 @@
   {{/if}}
 
 
-  {{#if session.user.has_hq_window}}
-    <div class="float-sm-none float-md-right">
-      {{#link-to "hq.index" person.id class="btn btn-secondary btn-sm"}}HQ Window{{/link-to}}
-    </div>
-  {{/if}}
-  <h2>
-    {{person-link person=person}} &lt;{{person.status}}{{if person.vintage "/vintage"}}, {{person.first_name}} {{person.last_name}}&gt;
-  </h2>
+  <div class="d-flex flex-md-row flex-column justify-content-between">
+    <h2>
+      {{person-link person=person}} &lt;{{person.status}}{{if person.vintage "/vintage"}}, {{person.first_name}} {{person.last_name}}&gt;
+    </h2>
+    <div class="text-muted">Person Page</div>
+    {{#if session.user.has_hq_window}}
+      <div class="text-md-right">
+        {{#link-to "hq.index" person.id class="btn btn-secondary btn-sm"}}HQ Window{{/link-to}}
+      </div>
+    {{/if}}
+  </div>
 
   {{#if person.message}}
     {{#ch-box "Important Account Message" type="warning"}}
@@ -53,7 +56,7 @@
     {{/ch-box}}
   {{/if}}
 
-  <hr class="mr-n2 ml-n2">
+  <hr class="mt-1 mr-n2 ml-n2">
 
   <div class="row">
     {{!

@@ -3,23 +3,19 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | event-info', function(hooks) {
+module('Integration | Component | modal-asset-history', function(hooks) {
   setupRenderingTest(hooks);
 
   skip('it renders', async function(assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{event-info}}`);
+    await render(hbs`{{asset-history}}`);
 
     assert.equal(this.element.textContent.trim(), '');
 
     // Template block usage:
-    await render(hbs`
-      {{#event-info}}
-        template block text
-      {{/event-info}}
-    `);
+    await render(hbs`{{modal-asset-history}}`);
 
     assert.equal(this.element.textContent.trim(), 'template block text');
   });

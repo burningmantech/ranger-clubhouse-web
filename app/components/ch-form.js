@@ -23,7 +23,7 @@ export default class ChFormComponent extends Component {
   @argument(optional('object')) onSubmit;
   @argument(optional('object')) onReset;
   @argument(optional('object')) onCancel;
-  @argument(optional('object')) onFormChange;
+  @argument(optional('object')) ge;
 
   @argument(optional('boolean')) modalBox = false; // Open form as a modal dialog
   @argument(optional('string')) modalTitle = ''; // title

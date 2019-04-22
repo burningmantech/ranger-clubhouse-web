@@ -110,4 +110,9 @@ export default class ScheduleTableComponent extends Component {
       }
     );
   }
+
+  @action
+  printPage() {
+    window.print();
+  }
 }

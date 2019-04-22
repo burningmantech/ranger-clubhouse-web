@@ -67,6 +67,11 @@ export default class PersonModel extends DS.Model.extend(PersonMixin) {
   @attr('string') bpguid;
   @attr('string') sfuid;
 
+  @attr('boolean') behavioral_agreement;
+
+  @attr('boolean') osha10;
+  @attr('boolean') osha30;
+
   @attr('boolean') mentors_flag;
   @attr('string') mentors_flag_note;
   @attr('string') mentors_notes;

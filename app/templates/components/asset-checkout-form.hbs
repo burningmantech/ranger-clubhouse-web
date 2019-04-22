@@ -12,8 +12,15 @@
     </div>
   {{else if barcodeCheckedOut}}
     <p class="text-danger">
-      Barcode {{barcodeCheckedOut.barcode}} is already checked out by
+      Barcode {{barcodeCheckedOut.barcode}} still checked out by
       {{#link-to "person.assets" barcodeCheckedOut.person_id}}{{barcodeCheckedOut.callsign}}{{/link-to}}
+      on {{shift-format barcodeCheckedOut.checked_out}}
+    </p>
+    <p>
+      <button class="btn btn-secondary btn-sm" {{action showHistoryAction}}>Show Asset History</button>
     </p>
   {{/if}}
 {{/ch-form}}
+{{#if showHistory}}
+  {{modal-asset-history assetId=barcodeCheckedOut.asset_id onClose=(action closeHistory)}}
+{{/if}}

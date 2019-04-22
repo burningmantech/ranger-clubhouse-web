@@ -4,7 +4,6 @@ import EmberObject from '@ember/object';
 export default class AdminActionLogRoute extends Route {
   queryParams = {
     person: { refreshModel: true },
-    target_person: { refreshModel: true },
     start_time: { refreshModel: true },
     end_time: { refreshModel: true },
     events: { refreshModel: true },
@@ -22,12 +21,17 @@ export default class AdminActionLogRoute extends Route {
             hash.events = params[key].split(',');
           } else {
             hash[key] = params[key];
-          }} return hash; }, {});
+          }
+        }
+        return hash;
+      }, {});
+
     this.set('searchParams', searchParams);
     return this.ajax.request('action-log', { data: searchParams  });
   }
 
   setupController(controller, model) {
+    controller.set('error', model.error);
     controller.set('logs', model.logs);
     controller.set('total', model.total);
     controller.set('currentPage', model.page);

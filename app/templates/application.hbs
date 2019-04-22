@@ -147,47 +147,54 @@
                 <div class="container">
                   <div class="row">
                     <div class="col-sm-12 col-md-3">
+                      <div class="navbar-text">Edit Records</div>
                       {{#if (has-role "admin" "edit-slots")}}
-                        {{#link-to "admin.slots" class="dropdown-item"}}Edit Schedule Slots{{/link-to}}
+                        {{#link-to "admin.slots" class="dropdown-item"}}Schedule Slots{{/link-to}}
                       {{/if}}
                       {{#if (has-role "admin")}}
-                        {{#link-to "admin.credits" class="dropdown-item"}}Edit Schedule Credits{{/link-to}}
-                        {{#link-to "admin.positions" class="dropdown-item"}}Edit Positions{{/link-to}}
-                        {{#link-to "admin.roles" class="dropdown-item"}}Edit (System) Roles{{/link-to}}
-                        {{#link-to "admin.settings" class="dropdown-item"}}Edit Settings{{/link-to}}
-                        {{#link-to "admin.event-dates" class="dropdown-item"}}Edit Event Dates{{/link-to}}
-                        {{#link-to "admin.motd" class="dropdown-item"}}Edit MOTD{{/link-to}}
-                        <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
-                        <a href="{{cgo "logview" "show"}}" class="dropdown-item">Log View (CH1)</a>
-                        {{#link-to "admin.error-log" class="dropdown-item"}}Error Log{{/link-to}}
-                        {{#link-to "admin.action-log" class="dropdown-item"}}Action Log{{/link-to}}
+                        {{#link-to "admin.credits" class="dropdown-item"}}Schedule Credits{{/link-to}}
+                        {{#link-to "admin.assets" class="dropdown-item"}}Assets{{/link-to}}
+                        {{#link-to "admin.event-dates" class="dropdown-item"}}Event Dates{{/link-to}}
+                        {{#link-to "admin.motd" class="dropdown-item"}}MOTD{{/link-to}}
+                        {{#link-to "admin.positions" class="dropdown-item"}}Positions{{/link-to}}
+                        {{#link-to "admin.roles" class="dropdown-item"}}(System) Roles{{/link-to}}
                       {{/if}}
                     </div>
                     {{#if (has-role "admin")}}
                       <div class="col-sm-12 col-md-3">
-                        {{#link-to "admin.salesforce" class="dropdown-item"}}Salesforce Import{{/link-to}}
-                        <a href="{{cgo "conversion" "convert"}}" class="dropdown-item">Database Conversions</a>
-                        <a href="{{cgo "reminders" "index"}}" class="dropdown-item">Reminder Emails</a>
-                        {{#link-to "admin.bulk-upload" class="dropdown-item"}}Bulk Upload{{/link-to}}
-                        <a href="{{cgo "timesheet" "bulkSignInOut"}}" class="dropdown-item">Bulk Sign In/Out</a>
+                        <div class="navbar-text">Site Administration</div>
+                        {{#link-to "admin.settings" class="dropdown-item"}}Settings{{/link-to}}
+                        <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
+                        <a href="{{cgo "logview" "show"}}" class="dropdown-item">Log View (CH1)</a>
+                        {{#link-to "admin.error-log" class="dropdown-item"}}Error Log{{/link-to}}
+                        {{#link-to "admin.action-log" class="dropdown-item"}}Action Log{{/link-to}}
+                        <div class="navbar-text">Lambase</div>
                         <a href="{{cgo "lam" "syncLamPhotos"}}" class="dropdown-item">Synchronize Lam Photos</a>
                         <a href="{{cgo "lam" "exportLamPhotos"}}" class="dropdown-item">Export Lam Photos</a>
+                      </div>
+                      <div class="col-sm-12 col-md-3">
+                        <div class="navbar-text">Pre-Event</div>
+                        {{#link-to "admin.salesforce" class="dropdown-item"}}Salesforce Import{{/link-to}}
+                        <a href="{{cgo "reminders" "index"}}" class="dropdown-item">Reminder Emails</a>
+                        <a href="{{cgo "manualreview" "selectAll"}}" class="dropdown-item">Manual Review</a>
+                        <a href="{{cgo "timesheet" "radioEligibilityReport"}}" class="dropdown-item">Radio Eligibility</a>
+                        <div class="navbar-text">Bulk Operations</div>
+                        {{#link-to "admin.bulk-upload" class="dropdown-item"}}Bulk Upload{{/link-to}}
+                        <a href="{{cgo "timesheet" "bulkSignInOut"}}" class="dropdown-item">Bulk Sign In/Out</a>
                         <a href="{{cgo "timesheet" "signoutOnDuty"}}" class="dropdown-item">Bulk Signout</a>
                       </div>
                     {{/if}}
                     {{#if (has-role "admin" "megaphone")}}
                       <div class="col-sm-12 col-md-3">
                         {{#if (has-role "admin")}}
+                          <div class="navbar-text">Post Event</div>
                           <a href="{{cgo "timesheet" "thankYouCards"}}" class="dropdown-item">Thank-You Cards</a>
                           <a href="{{cgo "timesheet" "sanityCheckTimeSheets"}}" class="dropdown-item">Timesheet Sanity Check</a>
-                          <a href="{{cgo "manualreview" "selectAll"}}" class="dropdown-item">Manual Review</a>
                           <a href="{{cgo "timesheet" "hoursAndCredits"}}" class="dropdown-item">Hours/Credits</a>
                           <a href="{{cgo "person" "selectByStatusChange"}}" class="dropdown-item">People by Status Change</a>
-                          <a href="{{cgo "timesheet" "radioEligibilityReport"}}" class="dropdown-item">Radio Eligibility</a>
                         {{/if}}
-                        {{#if (has-role "megaphone")}}
-                          <a href="{{cgo "broadcast" "index"}}" class="dropdown-item">Ranger Broadcast</a>
-                        {{/if}}
+                        <div class="navbar-text">Communications</div>
+                        <a href="{{cgo "broadcast" "index"}}" class="dropdown-item">Ranger Broadcast</a>
                       </div>
                     {{/if}}
                   </div>
@@ -299,7 +306,7 @@
         &nbsp;
       </div>
 
-      {{#ch-form "person-search" searchForm formClass="col mb-2 ml-3 mr-3" changeSet=false onSubmit=(action "submit") as |f|}}
+      {{#ch-form "person-search" searchForm formClass="col mb-2 ml-3 mr-3" changeSet=false onSubmit=(action "submit") onFormChange=(action searchFormChange) as |f|}}
         {{#power-select-typeahead
                         search=(action searchAction)
                         onchange=(action searchChangeAction)

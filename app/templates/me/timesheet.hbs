@@ -14,22 +14,20 @@
       <div class="timesheet-entry">
         <div class="timesheet-row">
           <div class="timesheet-time">{{shift-format ts.on_duty}}</div>
-          <div class="timesheet-time">{{shift-format ts.off_duty}}</div>
-          <div class="timesheet-duration">
-            <span class="timesheet-sm-label">Time:</span>
+          <div class="timesheet-time">
             {{#if ts.off_duty}}
-              {{hour-minute-format ts.duration}}
+              {{shift-format ts.off_duty}}
             {{else}}
               <i>On Duty</i>
             {{/if}}
           </div>
+          <div class="timesheet-duration">
+            <span class="timesheet-sm-label">Time:</span>
+            {{hour-minute-format ts.duration}}
+          </div>
           <div class="timesheet-credits">
             <span class="timesheet-sm-label">Credits:</span>
-            {{#if ts.off_duty}}
-              {{credits-format ts.credits}}
-            {{else}}
-              -
-            {{/if}}
+            {{credits-format ts.credits}}
           </div>
           <div class="timesheet-position">{{ts.position.title}}</div>
         </div>
@@ -46,7 +44,7 @@
     <div class="col"><strong>Position Summary:</strong> {{timesheet-position-summary timesheets=timesheets}}</div>
   </div>
 
-  <div class="mt-4">
+  <div class="mt-4 d-print-none">
     Is an entry incorrect, or is there a missing shift that was not recorded?
     {{#link-to "me.timesheet-corrections.index"}}Submit a correction request.{{/link-to}}
   </div>

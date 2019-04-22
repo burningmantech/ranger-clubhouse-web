@@ -12,7 +12,7 @@ export default class ShiftCheckInOutComponent extends Component {
   @argument('object') timesheets; // The timesheets
   @argument('object') positions; // And possible positions person can sign into.
   @argument(optional('object')) imminentSlots; // (optional) slots that might be starting
-  @argument(optional('any')) hasUnverifiedTimesheetEntries; // (optional) true if entries are unverified
+  @argument(optional('any')) hasUnverifiedTimesheet; // (optional) true if entries are unverified
   @argument(optional('object')) endShiftNotify; // (optional) callback when a shift was successfully ended.
 
   @service store;

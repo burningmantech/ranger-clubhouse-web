@@ -10,9 +10,9 @@ export default class PersonRoute extends Route.extend(AuthenticatedRouteMixin) {
     this.house.roleCheck([Role.ADMIN, Role.MANAGE, Role.VC, Role.MENTOR, Role.TRAINER]);
   }
 
-  model(params) {
-    return this.store.find('person', params.person_id).then((person) => {
-        return person.loadUserInfo().then(() => { return person });
+  model({ person_id }) {
+    return this.store.findRecord('person', person_id, { reload: true }).then((person) => {
+        return person.loadUserInfo().then(() => person);
       });
   }
 
@@ -20,6 +20,10 @@ export default class PersonRoute extends Route.extend(AuthenticatedRouteMixin) {
     super.setupController(...arguments);
 
     controller.set('person', model);
+  }
+
+  resetController(controller) {
+    controller.set('person', null);
   }
 
   @action
