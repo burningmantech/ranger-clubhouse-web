@@ -24,6 +24,6 @@ export default class ReportsAlphaShirtsController extends Controller {
       { title: 'Count', key: 'count' },
     ];
 
-    this.house.downloadCsv(`${this.year}-alpha-shirt-counts.csv`, CSV_COLUMNS, shirts.types);
+    this.house.downloadCsv(`${this.year}-alpha-${shirts.exportName}-counts.csv`, CSV_COLUMNS, shirts.types);
   }
 }
