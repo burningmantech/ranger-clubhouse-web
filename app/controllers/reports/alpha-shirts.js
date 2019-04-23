@@ -1,5 +1,6 @@
 import Controller from '@ember/controller';
 import { action } from '@ember-decorators/object';
+import _ from 'lodash';
 
 export default class ReportsAlphaShirtsController extends Controller {
   @action
