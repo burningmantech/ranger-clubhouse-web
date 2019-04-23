@@ -130,6 +130,7 @@ Router.map(function() {
     this.route('radio-checkout');
     this.route('shirts');
     this.route('freaking-years');
+    this.route('alpha-shirts');
   });
 
   this.route('vc', function() {
