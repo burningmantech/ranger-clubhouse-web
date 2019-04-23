@@ -30,18 +30,21 @@ Signups: {{students.length}} of {{slot.max}}
     {{/each}}<br>
   {{/each}}
 {{else}}
-  <p class="bg-danger">
-    No trainer slots were found. Verify the trainer slot's description matches exactly this slot's description.
-  </p>
+  <div class="border p-2 rounded mt-2 mb-2">
+    <h4 class="text-danger">No trainer slots were found.</h4>
+    In order to correctly show how many trainers are signed up to teach this session, a trainer's slot needs to exists where the
+    slot's description matches this session's description exactly and where the start time within one hour
+    of this session.
+  </div>
 {{/if}}
 
 <div class="mt-2 mb-2">
   {{! Desktop Display }}
   <div class="d-sm-block d-none">
-    <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}}  disabled={{or isSubmitting (is-empty students)}}>{{if isSubmitting "Saving" "Save All"}}</button>
+    <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{or isSubmitting (is-empty students)}}>{{if isSubmitting "Saving" "Save All"}}</button>
     {{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary btn-sm"}}Trainer's Report{{/link-to}}
     {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary btn-sm"}}Sign up Sheet{{/link-to}}
-    <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}}  disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
+    <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}} disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
     <button class="btn btn-secondary btn-sm" {{action "showAddPersonAction"}}>Add Person</button>
     <button class="btn btn-secondary btn-sm" {{action "showRemovePersonAction"}} disabled={{is-empty students}}>Remove Person</button>
   </div>
@@ -72,55 +75,55 @@ Signups: {{students.length}} of {{slot.max}}
 {{/if}}
 
 {{#if students}}
-<table class="table table-sm table-hover">
-  <caption>{{pluralize students.length "student"}} {{passedCount}} passed</caption>
-  <thead>
-    <tr>
-      <th class="w-20">Callsign</th>
-      <th class="w-10">Status</th>
-      <th class="w-5">Passed?</th>
-      <th class="w-5">Rank</th>
-      <th class="w-60">Comment</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    {{#each students as |student|}}
-      <tr class="{{if (or student.is_retired student.is_inactive) "bg-highlight"}}">
-        <td class="w-20">
-          {{#if (or student.is_retired student.is_inactive)}}
-            {{fa-icon "exclamation-triangle"}}
-          {{/if}}
-          {{person-link person=student}}
-        </td>
-        <td class="w-10">{{student.status}}{{#if student.is_art_alpha}}*{{/if}}</td>
-        <td class="w-5">{{input type="checkbox" checked=student.passed}}</td>
-        <td class="text-center w-5">
-          {{#if student.need_ranking}}
-            {{ch-form/select name=(concat "student" student.id) value=student.rank onChange=(action "changeRankAction" student) includeBlank=true options=rankOptions}}
-          {{else}}
-            &nbsp;
-          {{/if}}
-        </td>
-        <td class="w-60">
-          {{input type="text" value=student.notes size=60}}
-        </td>
+  <table class="table table-sm table-hover">
+    <caption>{{pluralize students.length "student"}} {{passedCount}} passed</caption>
+    <thead>
+      <tr>
+        <th class="w-20">Callsign</th>
+        <th class="w-10">Status</th>
+        <th class="w-5">Passed?</th>
+        <th class="w-5">Rank</th>
+        <th class="w-60">Comment</th>
       </tr>
-    {{/each}}
-  </tbody>
+    </thead>
 
-</table>
+    <tbody>
+      {{#each students as |student|}}
+        <tr class="{{if (or student.is_retired student.is_inactive) "bg-highlight"}}">
+          <td class="w-20">
+            {{#if (or student.is_retired student.is_inactive)}}
+              {{fa-icon "exclamation-triangle"}}
+            {{/if}}
+            {{person-link person=student}}
+          </td>
+          <td class="w-10">{{student.status}}{{#if student.is_art_alpha}}*{{/if}}</td>
+          <td class="w-5">{{input type="checkbox" checked=student.passed}}</td>
+          <td class="text-center w-5">
+            {{#if student.need_ranking}}
+              {{ch-form/select name=(concat "student" student.id) value=student.rank onChange=(action "changeRankAction" student) includeBlank=true options=rankOptions}}
+            {{else}}
+              &nbsp;
+            {{/if}}
+          </td>
+          <td class="w-60">
+            {{input type="text" value=student.notes size=60}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+
+  </table>
 {{else}}
-<p class="mt-4 mb-4 text-danger font-weight-bold">
-  No students have signed up.
-</p>
+  <p class="mt-4 mb-4 text-danger font-weight-bold">
+    No students have signed up.
+  </p>
 {{/if}}
 
 <div class="mt-2 mb-2 d-sm-block d-none">
   <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{or isSubmitting (is-empty students)}}>{{if isSubmitting "Saving" "Save All"}}</button>
   {{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary btn-sm"}}Trainer's Report{{/link-to}}
   {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary btn-sm"}}Signup Sheet{{/link-to}}
-  <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}}  disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
+  <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}} disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
   <button class="btn btn-secondary btn-sm" {{action "showAddPersonAction"}}>Add Person</button>
   <button class="btn btn-secondary btn-sm" {{action "showRemovePersonAction"}} disabled={{is-empty students}}>Remove Person</button>
 </div>
