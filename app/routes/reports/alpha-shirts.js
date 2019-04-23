@@ -1,5 +1,6 @@
 import Route from '@ember/routing/route';
 import { Role } from 'clubhouse/constants/roles';
+import _ from 'lodash';
 
 export default class ReportsAlphaShirtsRoute extends Route {
   beforeModel() {

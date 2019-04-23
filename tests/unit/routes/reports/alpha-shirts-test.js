@@ -5,7 +5,7 @@ module('Unit | Route | reports/alpha-shirts', function(hooks) {
   setupTest(hooks);
 
   test('it exists', function(assert) {
-    let route = this.owner.lookup('route:reports/alpha-shirt');
+    let route = this.owner.lookup('route:reports/alpha-shirts');
     assert.ok(route);
   });
 });
