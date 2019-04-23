@@ -47,6 +47,11 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
   }
 
   setCurrentUser() {
+    if (!this.session.isAuthenticated) {
+      this.transitionTo('login');
+      return Promise.resolve();
+    }
+
     return this.session.loadUser().catch((response) => {
       this.transitionTo('/login');
       this.house.handleErrorResponse(response);
