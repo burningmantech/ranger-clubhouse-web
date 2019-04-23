@@ -73,21 +73,37 @@ Showing {{viewAssets.length}} of {{pluralize assets.length "asset"}}
       {{f.input "notes" type="textarea" label="Notes"  rows=2 cols=80}}
     </div>
     <div class="form-row">
-      <label class="col-form-label">Assignment</label>
-      {{f.input "perm_assign" type="radioGroup" options=permanentOptions inline=true}}
+      <label class="col-auto">Assignment</label>
     </div>
-      <fieldset>
-        <legend>Vehichle Information</legend>
-        <div class="form-row">
-          {{f.input "category" type="select" label="Category" options=categoryOptions grid="col-auto"}}
-          {{f.input "subtype" type="text" label="Type" size=25 grid="col-auto"}}
-          {{f.input "color" type="text" label="Color" size=25 grid="col-auto"}}
-          {{f.input "style" type="text" label="Style" size=25 grid="col-auto"}}
-        </div>
-      </fieldset>
+    <div class="form-row">
+      <div class="col-auto">
+        {{f.input "perm_assign" type="radioGroup" options=permanentOptions inline=true}}
+      </div>
+    </div>
+
+    {{#if entry.isNew}}
+      <div class="form-row mt-2">
+        <label class="col-auto">Copies (including the first) - Leave blank if only creating one</label>
+      </div>
+      <div class="form-row">
+        {{f.input "copies" type="text" size=4 maxlength=4 controlClass="form-control" grid="col-auto"}}
+      </div>
+    {{/if}}
+    <fieldset>
+      <legend>Vehichle Information</legend>
+      <div class="form-row">
+        {{f.input "category" type="select" label="Category" options=categoryOptions grid="col-auto"}}
+        {{f.input "subtype" type="text" label="Type" size=25 grid="col-auto"}}
+        {{f.input "color" type="text" label="Color" size=25 grid="col-auto"}}
+        {{f.input "style" type="text" label="Style" size=25 grid="col-auto"}}
+      </div>
+    </fieldset>
     <div class="mt-2">
-      {{f.submit label=(if f.model.isNew "Save Asset" "Update Asset")}}
-      {{f.cancel}}
+      {{f.submit label=(if f.model.isNew "Create" "Update") disabled=isSubmitting}}
+      {{f.cancel disabled=isSubmitting}}
+      {{#if (and isSubmitting creatingBarcode)}}
+        <b>Creating {{creatingBarcode}}</b>
+      {{/if}}
     </div>
   {{/ch-form}}
 {{/if}}
