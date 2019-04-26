@@ -85,7 +85,7 @@ export default class ApplicationController extends Controller {
   @computed('session.user.has_hq_window')
   get modeOptions() {
     const user = this.session.user;
-    const options = [ { id: 'account', title: 'Account Manage' } ];
+    const options = [ { id: 'account', title: 'Person Manage' } ];
 
     if (user.has_hq_window) {
       options.push({ id: 'hq', title: 'HQ Window' });

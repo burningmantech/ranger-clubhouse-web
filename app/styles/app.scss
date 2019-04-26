@@ -3,6 +3,7 @@
 //
 
 $enable-responsive-font-sizes: true;
+$enable-shadows: true;
 
 $kakhi: #d2b48c;
 
@@ -39,7 +40,7 @@ $modal-header-padding: 0.75rem !important;
 $modal-sm: 95%;
 $modal-md: 80%;
 
-
+$popover-max-width: 400px;
 
 // Add additional w-XX width sizes beyond what bootstrap provides.
 $sizes: (
@@ -424,6 +425,44 @@ caption {
   opacity: 1 !important;
 }
 
+.popover-container {
+  position: relative;
+  display: inline-block;
+
+  .popover {
+    width: $popover-max-width;
+    @include box-shadow($modal-content-box-shadow-sm-up);
+  }
+
+  .popover-top {
+    top: -300px;
+  }
+
+  .popover-bottom {
+    top: 25px;
+  }
+
+  .popover-left {
+    left: -($popover-max-width + 10px);
+  }
+
+  .popover-right {
+    left: 10px;
+  }
+
+  .popover-body {
+    overflow-y: auto;
+    max-height: 250px;
+  }
+
+  .popover-footer {
+    border-top: 1px solid #eee;
+    padding: 10px;
+    margin-top: 10px;
+    text-align: right;
+  }
+}
+
 /*
  * JSON formatter
  */
@@ -436,7 +475,7 @@ caption {
  * Safari printing work around
  */
 
- @media print {
+@media print {
   .container {
     width: auto;
   }

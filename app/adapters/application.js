@@ -23,7 +23,8 @@ const SINGULAR_MODELS = [
   'setting',
   'slot',
   'timesheet',
-  'timesheet-missing'
+  'timesheet-missing',
+  'help'
 ];
 
 export default class ApplicationAdapter extends DS.RESTAdapter.extend(DataAdapterMixin) {

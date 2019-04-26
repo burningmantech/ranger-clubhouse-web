@@ -50,6 +50,8 @@ export default class RegisterController extends Controller {
     'country',
     'zip',
     'password',
+    'home_phone',
+    'alt_phone',
   ];
 
   registerForm = EmberObject.create({ });

@@ -1,0 +1,22 @@
+<a href {{action clickHelp}} class="popover-button">{{fa-icon "question-circle"}}{{#if label}} {{label}}{{/if}}</a>
+{{#if this.isShowing}}
+  <div class="popover d-block {{if this.bottom "popover-bottom"}} {{if this.left "popover-left"}}">
+    <h3 class="popover-header">{{if isLoading "Hang tight" title}}</h3>
+    <div class="arrow"></div>
+    <div class="popover-body">
+      {{#if this.isLoading}}
+        Loading help {{fa-icon "spinner" spin=true}}
+      {{else if this.body}}
+        {{nl2br this.body allowHtml=true}}
+      {{else}}
+        <p>
+          Ooops! Looks like we forgot to write some help for this.
+        </p>
+        help id=[{{@slug}}]
+      {{/if}}
+    </div>
+    <div class="popover-footer">
+      <button class="btn btn-primary" {{action closeHelp}}>Close</button>
+    </div>
+  </div>
+{{/if}}

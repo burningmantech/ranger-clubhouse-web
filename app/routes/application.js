@@ -1,5 +1,6 @@
 import Route from '@ember/routing/route';
 import { action } from '@ember-decorators/object';
+import { inject as service } from '@ember-decorators/service';
 import setCookie from 'clubhouse/utils/set-cookie';
 
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
@@ -8,6 +9,44 @@ import ENV from 'clubhouse/config/environment';
 import $ from 'jquery';
 
 export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin) {
+  @service router;
+
+  init() {
+    super.init(...arguments);
+
+    /*if (!ENV.logRoutes || !navigator.sendBeacon) {
+      return;
+    }*/
+
+    // Tracking cookie
+
+    // Record route transitions
+    this.router.on('routeDidChange', (transition) => {
+      if (transition.to.name == 'admin.action-log') {
+        return;
+      }
+
+      const analytics = new FormData;
+      const pathname = window.location.pathname;
+
+      analytics.append('event', 'client-route');
+      analytics.append('message', pathname);
+      const data = {
+          build_timestamp: ENV.APP.buildTimestamp,
+          route_to: transition.to.name,
+          route_from: transition.from ? transition.from.name : 'unknown',
+          params: transition.to.params,
+          pathname,
+      };
+
+      analytics.append('data', JSON.stringify(data));
+      if (this.session.isAuthenticated) {
+        analytics.append('person_id', this.get('session.user.id'));
+      }
+      navigator.sendBeacon(ENV['api-server'] + '/action-log/record', analytics);
+    });
+  }
+
   beforeModel(transition) {
     // If heading to the offline target, simply return
     if (transition.targetName == 'offline') {
@@ -79,8 +118,8 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
     // Close up the navbar when clicking on a menu item and
     // the navigation bar is not expanded - i.e. when showning
     // on a cellphone.
-    $('header a.dropdown-item').on('click', function(){
-        $('.navbar-collapse').collapse('hide');
-     });
+    $('header a.dropdown-item').on('click', function () {
+      $('.navbar-collapse').collapse('hide');
+    });
   }
 }

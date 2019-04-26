@@ -1,0 +1,50 @@
+<h1>Help Documents</h1>
+<div class="text-muted mb-4">
+  {{fa-icon "music"}} Help me if you can, I'm feeling down. And I do appreciate you being 'round {{fa-icon "music"}}
+</div>
+
+<div class="d-flex">
+  Showing {{pluralize documents.length "help document"}}
+  <div class="ml-auto">
+    <button class="btn btn-primary" {{action newHelp}}>New Help Doc</button>
+  </div>
+</div>
+
+<table class="table table-sm table-hover">
+  <thead>
+    <tr>
+      <th class="w-15">Slug</th>
+      <th class="w-20">Tags</th>
+      <th>Title / Body</th>
+      <th class="w-10">Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each viewDocuments as |document|}}
+      <tr>
+        <td class="w-15">{{document.slug}}</td>
+        <td class="w-20">{{document.tags}}</td>
+        <td>
+          <strong>{{document.title}}</strong><br>
+          {{read-more text=document.body}}
+        </td>
+        <td class="w-10">
+          <button class="btn btn-secondary btn-sm" {{action deleteHelp document}}>{{fa-icon "trash"}}</button>
+          <button class="btn btn-primary btn-sm" {{action editHelp document}}>{{fa-icon "edit"}}</button>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+{{#if entry}}
+  {{#ch-form "help" entry modalBox=true modalTitle=(if entry.isNew "New Help Document" "Edit Help Document") onSubmit=(action saveHelp) onCancel=(action cancelHelp) as |f|}}
+    {{f.input "slug" label="Slug / Help Identifier" type="text" size=20 maxlength=255}}
+    {{f.input "tags" label="Tags (separated by comma)" size=20 maxlength=255}}
+    {{f.input "title" label="Help Title" type="text" size=20 maxlength=255}}
+    {{f.input "body" label="Help Body" type="textarea" rows=10 cols=80}}
+    {{f.submit label=(if entry.isNew "Create" "Update")}}
+    {{f.cancel}}
+  {{/ch-form}}
+{{/if}}
