@@ -65,6 +65,7 @@ Router.map(function() {
     this.route('slots');
     this.route('motd');
     this.route('assets');
+    this.route('help');
   });
 
   this.route('hq', { path: '/hq/:person_id' }, function() {

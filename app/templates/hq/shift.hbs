@@ -1,3 +1,13 @@
+{{#unless person.on_site}}
+  <div class="mt-2 mb-2 border rounded p-2">
+    <p>
+      <strong class="text-danger">{{person.callsign}} is marked as OFF SITE.</strong> The recommendation
+      is to go to the Site Check-In page before signing in the person into a shift.
+    </p>
+    {{#link-to "hq.site-checkin" person.id class="btn btn-primary"}}Site Check In{{/link-to}}
+  </div>
+{{/unless}}
+
 {{#if unread_message_count}}
   {{#ch-alert "warning" bold=true}}
     {{fa-icon "envelope"}} {{pluralize person.unread_message_count "unread Clubhouse message"}}.
@@ -6,7 +16,12 @@
 {{/if}}
 
 <div class="border rounded p-2">
-  <h3>Timesheet Verification - {{#if unverifiedTimesheets }}{{pluralize unverifiedTimesheets.length "entry" }}{{else}}No Action Needed{{/if}}</h3>
+  <div class="d-flex">
+    <h3>Timesheet Verification - {{#if unverifiedTimesheets }}{{pluralize unverifiedTimesheets.length "entry" }}{{else}}No Action Needed{{/if}}</h3>
+    <div class="ml-auto">
+      {{help-popover slug="hq-timesheet-verification" left=true}}
+    </div>
+  </div>
   {{#if unverifiedTimesheetEntry}}
     {{#if ignoreTimesheetVerification}}
       <button class="btn btn-secondary" {{action toggleIgnoreVerification}}>Show Verfication</button>
@@ -44,7 +59,12 @@
 </div>
 
 <div class="border rounded p-2 mt-2">
-  <h3>Shift Management</h3>
+  <div class="d-flex">
+    <h3>Shift Management</h3>
+    <div class="ml-auto">
+      {{help-popover slug="hq-shift-management" left=true}}
+    </div>
+  </div>
   {{shift-check-in-out positions=positions timesheets=timesheets person=person imminentSlots=imminentSlots hasUnverifiedTimesheet=(and unverifiedTimesheets (not ignoreTimesheetVerification))}}
 </div>
 
@@ -80,16 +100,21 @@
 
 
 <div class="border rounded p-2 mt-2">
-  <h3>Radio &amp; Assets
-    {{#if radioCount}}
-      -
-      {{#if eventInfo.radio_eligible}}
-        <span class="text-success">{{pluralize radioCount "event radio"}} - collect at event end</span>
-      {{else}}
-        <span class="text-danger">Collect radio at end of shift</span>
+  <div class="d-flex">
+    <h3>Radio &amp; Assets
+      {{#if radioCount}}
+        -
+        {{#if eventInfo.radio_eligible}}
+          <span class="text-success">{{pluralize radioCount "event radio"}} - collect at event end</span>
+        {{else}}
+          <span class="text-danger">Collect radio at end of shift</span>
+        {{/if}}
       {{/if}}
-    {{/if}}
-  </h3>
+    </h3>
+    <div class="ml-auto">
+      {{help-popover slug="hq-assets" left=true}}
+    </div>
+  </div>
 
   {{#if person.asset_authorized}}
     {{asset-checkout-form person=person assets=assets attachments=attachments eventInfo=eventInfo}}
@@ -132,14 +157,8 @@
   </table>
 </div>
 
-
-<div class="mt-4">
-  {{#if person.on_site}}
+{{#if person.on_site}}
+  <div class="mt-4">
     <button class="btn btn-secondary" {{action markOffSite}}>Mark As Off Site</button>
-  {{else}}
-    <p class="font-weight-bold text-danger">
-      {{person.callsign}} has been marked as OFF SITE.
-    </p>
-    <button class="btn btn-primary" {{action markOnSite}}>Mark As On Site</button>
-  {{/if}}
-</div>
+  </div>
+{{/if}}
