@@ -14,9 +14,10 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
   init() {
     super.init(...arguments);
 
-    /*if (!ENV.logRoutes || !navigator.sendBeacon) {
+    if (!ENV.logRoutes || !navigator.sendBeacon) {
+      // Not logging routes or sendBeacon is not available.
       return;
-    }*/
+    }
 
     // Tracking cookie
 
@@ -26,24 +27,31 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
         return;
       }
 
-      const analytics = new FormData;
-      const pathname = window.location.pathname;
+      try {
+        const analytics = new FormData;
+        const pathname = window.location.pathname;
 
-      analytics.append('event', 'client-route');
-      analytics.append('message', pathname);
-      const data = {
-          build_timestamp: ENV.APP.buildTimestamp,
-          route_to: transition.to.name,
-          route_from: transition.from ? transition.from.name : 'unknown',
-          params: transition.to.params,
-          pathname,
-      };
+        analytics.append('event', 'client-route');
+        analytics.append('message', pathname);
+        const data = {
+            build_timestamp: ENV.APP.buildTimestamp,
+            route_to: transition.to.name,
+            route_from: transition.from ? transition.from.name : 'unknown',
+            pathname,
+        };
 
-      analytics.append('data', JSON.stringify(data));
-      if (this.session.isAuthenticated) {
-        analytics.append('person_id', this.get('session.user.id'));
+        analytics.append('data', JSON.stringify(data));
+        if (this.session.isAuthenticated) {
+          const person_id = this.get('session.user.id');
+
+          if (person_id) {
+            analytics.append('person_id', person_id);
+          }
+        }
+        navigator.sendBeacon(ENV['api-server'] + '/action-log/record', analytics);
+      } catch (e) {
+        // ignore any exceptions.
       }
-      navigator.sendBeacon(ENV['api-server'] + '/action-log/record', analytics);
     });
   }
 
