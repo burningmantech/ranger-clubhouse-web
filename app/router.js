@@ -66,6 +66,7 @@ Router.map(function() {
     this.route('motd');
     this.route('assets');
     this.route('help');
+    this.route('radio-eligibility');
   });
 
   this.route('hq', { path: '/hq/:person_id' }, function() {
