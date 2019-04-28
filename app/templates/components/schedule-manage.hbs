@@ -1,9 +1,14 @@
-{{#if (and isCurrentYear (not permission.signup_allowed))}}
+{{#unless isCurrentYear}}
+  {{#ch-alert "warning"}}
+    Warning: You are viewing a past schedule ({{year}}).
+  {{/ch-alert}}
+{{/unless}}
+{{#if (and noPermissionToSignUp (not requirementsOverride))}}
   {{#ch-box "Sign ups for training and/or shifts is not allowed" type="warning" icon="exclamation-circle"}}
     {{#if person.isPastProspective}}
       <p>
-        You cannot signup for trainings and/or shifts because it looks like
-        you were interested in volunteering with us some time ago but your account
+        {{if isMe "You" person.callsign}} cannot signup for trainings and/or shifts because it looks like
+        you were interested in volunteering with us some time ago but the account
         isn't in our volunteer intake pipeline for this year.
       </p>
 
@@ -14,26 +19,26 @@
         from the start of the process.
       </p>
     {{else if permission.manual_review_window_missed}}
-      We are sorry to report that you were not among the first
+      We are sorry to report that {{if isMe "you were" (concat person.callsign " was")}} among the first
       {{permission.manual_review_cap}} prospective volunteers to have passed
       the Manual Review. Sadly
-      this means that you have missed the window for volunteering with us
-      as a Ranger this year. If you have questions or believe you have received
+      this means that {{if isMe "you have" (concat person.callsign "has")}} missed the window for volunteering with us
+      as a Ranger this year. If {{if isMe "you" person.callsign}}  have questions or believe you have received
       this message in error, please contact {{vc-email}} .
     {{else}}
       {{#if (eq permission.photo_status "error")}}
-        <h3>Oops! There was a problem communicating with our photo server.</h3>
+        <h3 class="mt-2">Oops! There was a problem communicating with our photo server.</h3>
         <p>
-          We cannot determine if you have uploaded a photo, or if it has been approved. Please
-          check back in a few minutes to see if the problem has resolved. If this
-          problems persists, please contact {{admin-email}} for help.
+          We cannot determine if {{if isMe "you have" (concat person.callsign " has")}} uploaded a photo,
+          or if it has been approved. Please check back in a few minutes to see if the problem has resolved.
+          If this problems persists, please contact {{admin-email}} for help.
         </p>
         <p>
           We are sorry if this is an inconvenience for you.
         </p>
       {{else}}
         <p>
-          You cannot signup for training and/or shifts because you need to:
+          {{if isMe "You have" (concat person.callsign " has")}} not met all the requirements to sign up for training and/or shifts. The following item(s) need to be done:
           <ul class="mt-2">
             {{#each deniedReason as |reason|}}
               <li>{{reason}}</li>
@@ -41,26 +46,30 @@
           </ul>
         </p>
         {{#if (not hasApprovedPhoto)}}
-          <p>
-            {{#if (eq permission.photo_status "missing")}}
-              Please upload a BMID (lam) photo. Note that photos can take 2-3 days to be
-              approved. A new photo may be uploaded on the {{#link-to "me.overview"}}Home Page{{/link-to}}.
-            {{else if (eq permission.photo_status "rejected")}}
-              The photo was rejected. Please upload a new photo that conforms to the guidelines.
-            {{else}}
-              Your photo has been submitted and may take up to 2 to 3 days to review. Please check back then.
-            {{/if}}
-          </p>
+          {{#if (eq permission.photo_status "missing")}}
+            <h3 class="mt-2">Upload a photo</h3>
+            Please upload a BMID (lam) photo. Note that photos can take 2-3 days to be
+            approved. A new photo may be uploaded on the {{#link-to "me.overview"}}Home Page{{/link-to}}.
+          {{else if (eq permission.photo_status "rejected")}}
+            <h3 class="mt-2">Photo rejected</h3>
+            The photo was rejected. Please upload a new photo that conforms to the guidelines.
+          {{else}}
+            <h3 class="mt-2">Photo pending approval</h3>
+            The photo has been submitted and may take up to 2 to 3 days to review. Please check back then.
+          {{/if}}
         {{/if}}
       {{/if}}
 
       {{! Required photo approval before allowing Manual Review}}
       {{#if (and permission.manual_review_allowed hasApprovedPhoto)}}
+        <h3 class="mt-2">Pass the Manual Review</h3>
         {{#if permission.manual_review_url}}
-          <p>
+          {{#if isMe}}
             <a href="{{permission.manual_review_url}}" class="btn btn-primary">Click here</a> to take the Manual Review.
-             <strong>Do not use the browser's back button when taking the review.</strong> The review takes 15 to 20 minutes on average to complete.
-          </p>
+            <strong>Do not use the browser's back button when taking the review.</strong> The review takes 15 to 20 minutes on average to complete.
+          {{else}}
+            <strong class="text-danger">{{person.callsign}} will need to login and take the Manual Review.</strong>
+          {{/if}}
         {{else}}
           <strong class="text-danger">Unfortunately, the Manual Review is still
             being worked on.</strong> You may not signup for shifts, including
@@ -72,31 +81,50 @@
 
     {{#if (or person.isPastProspective (and (not person.callsign_approved) (not person.isAuditor) (not person.isNonRanger)))}}
       <p>
-        Please email {{vc-email}} if you are interested in volunteering with us
+        Please email {{vc-email}} if {{if isMe "you are" (concat person.callsign " is")}} interested in volunteering with us
         or if you think you have received this message in error.
       </p>
     {{else}}
       {{#if permission.missing_bpguid}}
+        <h3 class="mt-2">Missing Burner Profile ID</h3>
         {{person-missing-bpguid}}
       {{/if}}
 
       {{#if permission.missing_behavioral_agreement}}
+        <h3 class="mt-2">Agree to the Behavioral Standards</h3>
+        Starting in 2019, all individuals who attend training, and/or volunteer for the BRC Rangers MUST agree
+        to Burning Man's Behavioral Standards Agreement.
         <p>
-          Starting in 2019, all individuals who attend training, and/or volunteer for the BRC Rangers MUST agree
-          to Burning Man's Behavioral Standards Agreement.
-        </p>
-        <p>
-          <button class="btn btn-primary" {{action showBehaviorAgreementAction}}>Click here</button> to read about the Behavioral Standards, and be given a chance to agree.
+          {{#if isMe}}
+            <button class="btn btn-primary" {{action showBehaviorAgreementAction}}>Click here</button> to read about the Behavioral Standards, and be given a chance to agree.
+          {{else}}
+            <strong class="text-danger">{{person.callsign}} will need to login and sign the Behavioral Agreement.</strong>
+          {{/if}}
         </p>
       {{/if}}
 
     {{/if}}
+
+    {{#if isAdmin}}
+      <p class="text-danger">
+        As a Clubhouse Admin, you may override the requirement(s) to gain access to the schedule. You better know what you are doing!
+        YOUR ACTIONS WILL BE LOGGED.
+        <button class="btn btn-danger btn-sm" {{action setRequirementsOverride}}>Click To Override</button>
+      </p>
+    {{/if}}
   {{/ch-box}}
-{{else}}
+{{/if}}
+{{#if (or requirementsOverride (not noPermissionToSignUp))}}
+  {{#if requirementsOverride}}
+    {{#ch-alert "danger"}}
+      {{fa-icon "exclamation-triangle"}}
+      The scheduling requirements override is enabled. You better know what you are doing! Remember, the Clubhouse logs all scheduling actions.
+    {{/ch-alert}}
+  {{/if}}
   {{schedule-table slots=signedUpSlots person=person year=year creditsEarned=creditsEarned}}
 
   <div class="d-print-none">
-    <h3>{{if isCurrentYear "Available Shifts" "Past Shifts"}}</h3>
+    <h3 class="mt-2">{{if isCurrentYear "Available Shifts" "Past Shifts"}}</h3>
     {{#if availableSlots}}
       {{#if inactiveSlots}}
         {{#ch-alert "warning"}}
@@ -192,7 +220,6 @@
     on the paper.
   </p>
 {{/if}}
-
 
 
 {{#if showBehaviorAgreement}}
