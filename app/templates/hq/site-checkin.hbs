@@ -11,7 +11,10 @@
   <li>After you hand the person their Ranger laminate and field guide, mark the person as on site.</li>
 </ul>
 <div class="border rounded p-2">
-  <h4>Update Contact Information</h4>
+  <div class="d-flex">
+    <h4>Update Contact Information</h4>
+    <div class="ml-auto">{{help-popover slug="hq-site-checkin-contact-info" left=true}}</div>
+  </div>
 
   {{#ch-form "contact" person onSubmit=(action saveContactForm) as |f|}}
     <div class="form-row">
@@ -25,7 +28,7 @@
       Their playa name, real world name, relationship, camp location &amp; description.<br>
     </p>
     <div class="form-row">
-      {{f.input "emergency_contact" type="textarea" label="Emergency Contact Information:" rows=6 cols=80 }}
+      {{f.input "emergency_contact" type="textarea" label="Emergency Contact Information:" rows=4 cols=80 }}
     </div>
     {{f.submit label="Update Camp & Emergency Contact Info"}}
     {{#if contactSaved}}
@@ -35,7 +38,11 @@
 </div>
 
 <div class="mt-2 border rounded p-2">
-  <h4>Agreements</h4>
+  <div class="d-flex">
+    <h4>Agreements</h4>
+    <div class="ml-auto">{{help-popover slug="hq-site-checkin-agreements" left=true}}</div>
+  </div>
+
   <p>
     {{#if person.asset_authorized}}
       Radio checkout form has been <strong class="text-success">SIGNED</strong>.
@@ -55,6 +62,10 @@
 </div>
 
 <div class="mt-2 border rounded p-2">
+  <div class="float-right">
+    {{help-popover slug="hq-site-checkin-radios" left=true}}
+  </div>
+
   {{#if eventInfo.radio_eligible}}
     <h4>Event Radio Checkout - Authorized For {{pluralize eventInfo.radio_max "Event Radio"}}</h4>
     <p>

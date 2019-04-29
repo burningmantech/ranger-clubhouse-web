@@ -158,6 +158,7 @@
                         {{#link-to "admin.motd" class="dropdown-item"}}MOTD{{/link-to}}
                         {{#link-to "admin.positions" class="dropdown-item"}}Positions{{/link-to}}
                         {{#link-to "admin.roles" class="dropdown-item"}}(System) Roles{{/link-to}}
+                        {{#link-to "admin.help" class="dropdown-item"}}Help Documents{{/link-to}}
                       {{/if}}
                     </div>
                     {{#if (has-role "admin")}}
@@ -177,10 +178,10 @@
                         {{#link-to "admin.salesforce" class="dropdown-item"}}Salesforce Import{{/link-to}}
                         <a href="{{cgo "reminders" "index"}}" class="dropdown-item">Reminder Emails</a>
                         <a href="{{cgo "manualreview" "selectAll"}}" class="dropdown-item">Manual Review</a>
-                        <a href="{{cgo "timesheet" "radioEligibilityReport"}}" class="dropdown-item">Radio Eligibility</a>
+                        {{#link-to "admin.radio-eligibility" class="dropdown-item"}}Radio Eligibility{{/link-to}}
                         <div class="navbar-text">Bulk Operations</div>
                         {{#link-to "admin.bulk-upload" class="dropdown-item"}}Bulk Upload{{/link-to}}
-                        <a href="{{cgo "timesheet" "bulkSignInOut"}}" class="dropdown-item">Bulk Sign In/Out</a>
+                        {{#link-to "admin.bulk-sign-in-out" class="dropdown-item"}}Bulk Sign In/Out{{/link-to}}
                         <a href="{{cgo "timesheet" "signoutOnDuty"}}" class="dropdown-item">Bulk Signout</a>
                       </div>
                     {{/if}}

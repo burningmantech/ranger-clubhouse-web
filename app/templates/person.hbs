@@ -1,5 +1,5 @@
 {{#ch-sidebar}}
-  {{#ch-sidebar-group "PROFILE"}}
+  {{#ch-sidebar-group "PERSON MANAGE"}}
     {{ch-sidebar-link "person.index" title="Account Info" icon="info" iconType="s"}}
     {{ch-sidebar-link "person.schedule" title="Schedule / Sign Up" icon="clipboard"}}
     {{ch-sidebar-link "person.event-info" title="Event/Training Info" icon="user" iconType="s"}}
@@ -38,15 +38,13 @@
 
 
   <div class="d-flex flex-md-row flex-column justify-content-between">
-    <h2>
+    <h2 class="align-middle">
       {{person-link person=person}} &lt;{{person.status}}{{if person.vintage "/vintage"}}, {{person.first_name}} {{person.last_name}}&gt;
     </h2>
-    <div class="text-muted">Person Page</div>
-    {{#if session.user.has_hq_window}}
-      <div class="text-md-right">
-        {{#link-to "hq.index" person.id class="btn btn-secondary btn-sm"}}HQ Window{{/link-to}}
-      </div>
-    {{/if}}
+    <div class="text-muted align-middle">Person Manage</div>
+    <div class="text-right align-middle">
+      {{#link-to "hq.index" person.id class="btn btn-secondary btn-sm"}}HQ Window{{/link-to}}
+    </div>
   </div>
 
   {{#if person.message}}
@@ -63,10 +61,10 @@
       The drop down menu only appear on mobile/small screen devices
       When adding new areas, be sure to add the link to person-sidebar.hbs
     }}
-    <div class="col-sm-12 d-md-none">
+    <div class="col-sm-12 d-md-none text-right">
       <div class="btn-group">
-        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Section
+        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Account Section
         </button>
         <div class="dropdown-menu">
           {{#link-to "person.index" person.id class="dropdown-item"}}Account Info{{/link-to}}

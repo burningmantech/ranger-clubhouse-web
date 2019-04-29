@@ -18,7 +18,7 @@ export default class AdminActionLogRoute extends Route {
           if (key == 'events') {
             // action log api expects a json array for events, while we
             // want a comma separated field on the url
-            hash.events = params[key].split(',');
+            hash[key] = params[key].split(',');
           } else {
             hash[key] = params[key];
           }

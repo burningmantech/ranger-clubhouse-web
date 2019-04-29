@@ -65,6 +65,9 @@ Router.map(function() {
     this.route('slots');
     this.route('motd');
     this.route('assets');
+    this.route('help');
+    this.route('radio-eligibility');
+    this.route('bulk-sign-in-out');
   });
 
   this.route('hq', { path: '/hq/:person_id' }, function() {

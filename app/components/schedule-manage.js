@@ -22,6 +22,8 @@ export default class ScheduleManageComponent extends Component {
   filterDay = 'upcoming';
   filterActive = 'active';
 
+  requirementsOverride = false;
+
   activeOptions = [
     [ 'Active', 'active' ],
     [ 'Inactive', 'inactive' ]
@@ -34,6 +36,11 @@ export default class ScheduleManageComponent extends Component {
   @computed('year')
   get isCurrentYear() {
     return (this.year == (new Date()).getFullYear())
+  }
+
+  @computed('year', 'permission')
+  get noPermissionToSignUp() {
+    return this.isCurrentYear  && !this.permission.signup_allowed;
   }
 
   /*
@@ -162,6 +169,21 @@ export default class ScheduleManageComponent extends Component {
     const status = this.permission.photo_status;
 
     return (status == 'approved' || status == 'not-required');
+  }
+
+  @computed('person.id')
+  get isMe() {
+    return this.session.user.id == this.person.id;
+  }
+
+  @computed('session.user')
+  get isAdmin() {
+    return this.session.user.isAdmin;
+  }
+
+  @action
+  setRequirementsOverride() {
+    this.set('requirementsOverride', true);
   }
 
   handleErrorJoinResponse(result, slot) {
