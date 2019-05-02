@@ -7,10 +7,9 @@
     <div class="col-auto">
       {{ch-form/select name="shiftSelect" value=shiftSelect options=shiftOptions onChange=(action changeShift) disabled=isLoading controlClass="form-control"}}
     </div>
-    <div class="col-auto text-muted">
+    <div class="col-12 text-muted">
       Use the browser's print command to send this page to the printer. The navigation header, footer, and this message will not appear on the page.
     </div>
-
   </div>
 {{else}}
   <strong class="text-danger">No shifts could be located for {{year}}.</strong>

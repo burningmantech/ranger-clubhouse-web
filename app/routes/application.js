@@ -23,7 +23,7 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
 
     // Record route transitions
     this.router.on('routeDidChange', (transition) => {
-      if (transition.to.name == 'admin.action-log') {
+      if (!transition || !transition.to || transition.to.name == 'admin.action-log') {
         return;
       }
 

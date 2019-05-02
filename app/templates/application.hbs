@@ -322,6 +322,11 @@
                         noMatchesMessage="No results found"
                         as |person| }}
           <strong>{{person.callsign}}</strong> &lt;{{person.first_name}} {{person.last_name}}, {{person.status}}&gt;
+          {{#if (eq person.email_match "full")}}
+            - email full match
+          {{else if (eq person.email_match "partial")}}
+            - email partial match
+          {{/if}}
         {{/power-select-typeahead}}
         {{#if showSearchOptions}}
           <fieldset class="bg-white">
