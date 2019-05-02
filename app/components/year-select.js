@@ -22,6 +22,7 @@ export default class YearSelectComponent extends Component {
 
   // Is this a subheader?
   @argument(optional('boolean')) subheader = false;
+  @argument(optional('boolean')) inline = false;
 
   // Additional classnames to add
   @argument(optional('string')) gridClass = null;
@@ -32,6 +33,8 @@ export default class YearSelectComponent extends Component {
     if (this.subheader) {
       this.tagName = 'div';
       this.classNames = [ 'h2' ];
+    } else if (this.inline) {
+      this.tagName = 'div'
     }
 
     if (this.gridClass) {

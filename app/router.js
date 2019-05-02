@@ -134,6 +134,7 @@ Router.map(function() {
     this.route('shirts');
     this.route('freaking-years');
     this.route('alpha-shirts');
+    this.route('shift-lead');
   });
 
   this.route('vc', function() {
