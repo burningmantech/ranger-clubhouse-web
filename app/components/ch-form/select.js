@@ -53,7 +53,7 @@ export default class ChFormSelectComponent extends Component {
       const type = typeOf(opt);
       let label, value;
 
-      if (type == 'object' && opt.id) {
+      if (type == 'object' && ("id" in opt)) {
         label = opt.title
         value = opt.id
       // Simple [ 'label', value ]

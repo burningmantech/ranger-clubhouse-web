@@ -96,12 +96,14 @@ $sizes: (
   .d-print-page-break {
     page-break-before: always;
   }
+
 }
 
 @media not print {
   body {
     background-color: #fcfcfc;
   }
+
 }
 
 .text-black {
@@ -371,13 +373,17 @@ table.table-box {
 caption {
   caption-side: top;
   color: #000;
-  background-color: #e3e3e3;
-  font-size: 0.9rem;
+  background-color: #c8d2dc;
+  font-size: 1rem;
   padding: 5px 10px;
 }
 
 .table-sm caption {
   padding: 5px;
+}
+
+.table-width-auto {
+  width: auto !important;
 }
 
 .tr-no-border td {
@@ -479,4 +485,17 @@ caption {
   .container {
     width: auto;
   }
+}
+
+/*
+ * Shift Lead Reports
+ */
+
+.shift-lead-greendot {
+  background-color: #d8fbd8;
+}
+
+.shift-lead-troubleshooter {
+  background-color: #ffc5c5;
+
 }
