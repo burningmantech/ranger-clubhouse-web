@@ -34,7 +34,9 @@ export default class AdminBulkUploadController extends Controller {
     {
       groupName: 'Other',
       options: [
-        { id: 'eventradio', title: 'Event radio eligibility' }
+        { id: 'eventradio', title: 'Event radio eligibility' },
+        { id: 'osha10', title: 'Set OSHA-10 flag' },
+        { id: 'osha30', title: 'Set OSHA-30 flag' }
       ]
     }
   ];
