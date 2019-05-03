@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
-import { action } from '@ember-decorators/object';
+import { action } from '@ember/object';
 import { debounce } from '@ember/runloop';
 import $ from 'jquery';
 

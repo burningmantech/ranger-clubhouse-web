@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { debounce } from '@ember/runloop';
-import { computed, action } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import EmberObject from '@ember/object';
 
 const SEARCH_RATE_MS = 350;
@@ -71,6 +71,7 @@ export default class SearchLanguagesController extends Controller {
     }
 
     this.set('searchLanguage', language);
+    this.set('isLoading', true);
     this.ajax.request('language/speakers', { data: params })
       .then((results) => {
         this.set('onDuty', results.on_duty);
@@ -82,7 +83,7 @@ export default class SearchLanguagesController extends Controller {
         } else {
           this.house.handleErrorResponse(response);
         }
-      });
+      }).finally(() => this.set('isLoading', false));
   }
 
   @action

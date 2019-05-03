@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
-import { action, computed } from '@ember-decorators/object';
-import { inject as service } from '@ember-decorators/service';
+import { action, computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 import { Role } from 'clubhouse/constants/roles';
 

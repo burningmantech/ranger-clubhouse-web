@@ -19,7 +19,7 @@
 
 ## Use ES2015 classes
 
-Clubhouse 2.0 is using ember-decorators which automatically provide ES2015 blueprints for creating new routes, controllers, and components.
+Clubhouse 2.0 is using  ember-decorators which automatically provide ES2015 blueprints for creating new routes, controllers, and components.
 
 EmberJS is slowly moving towards ES2015 classes which allow for bettering tooling, and a cleaner, more descriptive syntax.
 
@@ -43,7 +43,7 @@ The full documentation is  [here](http://ember-decorators.github.io/ember-decora
 For computed values:
 
 ```javascript
-import { computed } from '@ember-decorators/object';
+import { computed } from '@ember/object';
 
 ....
 @computed('key1', 'key2', ...)
@@ -76,7 +76,7 @@ export default Component.extend({
 with this:
 
 ```javascript
-import { action } from '@ember-decorators/object';
+import { action } from '@ember/object';
 
 export default class MyComponent extends Component {
 
@@ -146,26 +146,6 @@ berlinOutpost.title = 'New Berlin';
 
 * The testing framework will wait until ALL active timers have expired before allowing
 the test to finish and move on to the next one. e.g., an outstanding setTimeout() may cause grief.
-
-* When testing, observed object properties must be wrapped in Ember.run() when setting.
-
-Say you have a model called user.js with a computed method:
-
-```javascript
-....
-  @computed('status')
-  get isActive() {
-    return this.status == 'active';
-  }
-
-```
-
-In the model test - tests/model/user.js, the following should be done:
-
-```Javascript
-  run(() => model.set('status', 'active'));
-  assert.equal(model.isActive, true);
-```
 
 ### PRINTING
 

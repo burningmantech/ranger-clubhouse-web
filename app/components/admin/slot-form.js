@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import SlotValidations from 'clubhouse/validations/slot';
-import { computed, action } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
 
 export default class SlotFormComponent extends Component {

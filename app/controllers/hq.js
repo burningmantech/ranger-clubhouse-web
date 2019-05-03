@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember-decorators/object';
+import { computed } from '@ember/object';
 import * as Position from 'clubhouse/constants/positions';
 
 export default class HqController extends Controller {

@@ -1,9 +1,9 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
-import { alias } from '@ember-decorators/object/computed';
-import { computed } from '@ember-decorators/object';
-import { inject as service } from '@ember-decorators/service';
+import { alias } from '@ember/object/computed';
+import { computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 export default class ModalMultipleEnrollmentComponent extends Component {
   @argument(optional('object')) dialog;

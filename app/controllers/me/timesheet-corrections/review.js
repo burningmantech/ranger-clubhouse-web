@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action } from '@ember-decorators/object';
+import { action } from '@ember/object';
 import { validatePresence } from 'ember-changeset-validations/validators';
 
 export default class MeTimesheetCorrectionsReviewController extends Controller {

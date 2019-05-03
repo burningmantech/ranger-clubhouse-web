@@ -1,6 +1,6 @@
 import DS from 'ember-data';
 const { Model } = DS;
-import { attr } from '@ember-decorators/data';
+const { attr } = DS;
 
 export default class AssetPersonModel extends Model {
   @attr('number') person_id;

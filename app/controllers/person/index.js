@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import inGroups from 'clubhouse/utils/in-groups';
 
@@ -196,7 +196,7 @@ export default class PersonIndexController extends Controller {
   }
 
   @action
-  editPositions() {
+  editPositionsAction() {
     this.set('editPositions', true);
   }
 
@@ -226,7 +226,7 @@ export default class PersonIndexController extends Controller {
   }
 
   @action
-  editRoles() {
+  editRolesAction() {
     this.set('editRoles', true);
   }
 

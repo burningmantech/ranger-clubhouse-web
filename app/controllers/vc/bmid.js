@@ -1,5 +1,6 @@
 import Controller from '@ember/controller';
-import { action, computed, observes } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
+import { observes } from '@ember-decorators/object';
 import { isEmpty } from '@ember/utils';
 import { schedule, later } from '@ember/runloop';
 import { MealOptions, BmidStatusOptions, ShowerOptions } from 'clubhouse/constants/bmid';

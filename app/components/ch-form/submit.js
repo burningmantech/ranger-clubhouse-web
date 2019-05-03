@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { isEmpty } from '@ember/utils';
-import { action } from '@ember-decorators/object';
+import { action } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';

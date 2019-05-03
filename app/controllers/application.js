@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import EmberObject from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import { debounce, run } from '@ember/runloop';

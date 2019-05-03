@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { computed, action } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import PositionTypes from 'clubhouse/constants/position-types';
 
 export default class PositionController extends Controller {

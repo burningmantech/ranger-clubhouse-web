@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember-decorators/object';
+import { computed } from '@ember/object';
 
 export default class MeTimesheetCorrectionsController extends Controller {
   @computed('timesheets.@each.isUnverified')

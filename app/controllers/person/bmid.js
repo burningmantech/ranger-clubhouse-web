@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 
 export default class PersonBmidController extends Controller {

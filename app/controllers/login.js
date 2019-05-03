@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 import LoginValidations from 'clubhouse/validations/login';
 import ENV from 'clubhouse/config/environment';
-import { action } from '@ember-decorators/object';
+import { action } from '@ember/object';
 import setCookie from 'clubhouse/utils/set-cookie';
 
 export default class LoginController extends Controller {

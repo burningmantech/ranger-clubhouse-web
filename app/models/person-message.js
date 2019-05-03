@@ -1,6 +1,6 @@
 import DS from 'ember-data';
-import { computed } from '@ember-decorators/object';
-import { attr } from '@ember-decorators/data';
+import { computed } from '@ember/object';
+const { attr } = DS;
 import { memberAction } from 'ember-api-actions';
 
 export default class PersonMessageModel extends DS.Model {

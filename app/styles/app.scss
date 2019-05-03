@@ -106,6 +106,18 @@ $sizes: (
 
 }
 
+h1 select option {
+  font-size: $h1-font-size;
+}
+
+h2 select option {
+  font-size: $h2-font-size;
+}
+
+h3 select option {
+  font-size: $h3-font-size;
+}
+
 .text-black {
   color: #000 !important;
 }

@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { set } from '@ember/object';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 
 export default class AdminErrorLogController extends Controller {
 

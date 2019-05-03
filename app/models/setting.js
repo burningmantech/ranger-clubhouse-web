@@ -1,7 +1,7 @@
 import DS from 'ember-data';
 const { Model } = DS;
-import { computed } from '@ember-decorators/object';
-import { attr } from '@ember-decorators/data';
+import { computed } from '@ember/object';
+const { attr } = DS;
 
 export default class SettingModel extends Model {
   @attr('string') name;

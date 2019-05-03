@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import { set } from '@ember/object';
 
 export default class VcBmidPrintController extends Controller {

@@ -3,10 +3,10 @@
  */
 
 import Component from '@ember/component';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
 import { validatePresence } from 'ember-changeset-validations/validators';
-import { inject as service } from '@ember-decorators/service';
+import { inject as service } from '@ember/service';
 import validateDateTime from 'clubhouse/validators/datetime';
 
 

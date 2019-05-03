@@ -11,30 +11,30 @@ module('Unit | Model | access document', function(hooks) {
     let model = run(() => store.createRecord('access-document', {}));
     assert.ok(model);
 
-    run(() => model.set('status', 'qualified'));
+    model.set('status', 'qualified');
     assert.equal(model.isQualified, true);
 
-    run(() => model.set('status', 'claimed'));
+    model.set('status', 'claimed');
     assert.equal(model.isClaimed, true);
 
 
-    run(() => model.set('status', 'banked'));
+    model.set('status', 'banked');
     assert.equal(model.isBanked, true);
 
 
-    run(() => model.set('status', 'submitted'));
+    model.set('status', 'submitted');
     assert.equal(model.isSubmitted, true);
 
 
-    run(() => model.set('status', 'used'));
+    model.set('status', 'used');
     assert.equal(model.isUsed, true);
 
 
-    run(() => model.set('status', 'cancelled'));
+    model.set('status', 'cancelled');
     assert.equal(model.isCancelled, true);
 
 
-    run(() => model.set('status', 'expired'));
+    model.set('status', 'expired');
     assert.equal(model.isExpired, true);
   });
 });

@@ -1,6 +1,5 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { run } from '@ember/runloop';
 import EmberObject from '@ember/object';
 
 module('Unit | Controller | admin/positions', function(hooks) {
@@ -16,15 +15,13 @@ module('Unit | Controller | admin/positions', function(hooks) {
   test('viewPositions works', function(assert) {
     let controller = this.owner.lookup('controller:admin/positions');
 
-    run(() => {
       controller.set('positions', positions)
       controller.set('typeFilter', 'All');
-    });
 
     let view = controller.viewPositions;
     assert.equal(view.length, 4, 'All positions shown');
 
-    run(() => controller.set('typeFilter', 'A Type'));
+    controller.set('typeFilter', 'A Type');
     view = controller.viewPositions;
     assert.equal(view.length, 2, 'Only A Type shown');
     assert.equal(view[0].id, 1);
@@ -34,7 +31,7 @@ module('Unit | Controller | admin/positions', function(hooks) {
   test('trainingPositions works', function(assert) {
     let controller = this.owner.lookup('controller:admin/positions');
 
-    run(() => { controller.set('positions', positions) });
+    controller.set('positions', positions);
     const trainings = controller.trainingPositions;
     assert.equal(trainings.length, 2, 'training positions');
     assert.equal(trainings[0].id, 3);
