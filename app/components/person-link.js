@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
 import { optional, unionOf } from '@ember-decorators/argument/types';
-import { computed } from '@ember-decorators/object';
+import { computed } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
 
 // Component to build a link to the person's page.

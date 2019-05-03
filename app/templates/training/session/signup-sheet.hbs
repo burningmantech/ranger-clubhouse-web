@@ -8,7 +8,7 @@
 
 <div class="signup-page">
   {{#each studentPages as |studentPage idx|}}
-    <h1>{{year-format slot.begins}} {{slot.description}} - {{shift-format slot.begins}}
+    <h1 class="{{if idx "d-print-page-break"}}">{{year-format slot.begins}} {{slot.description}} - {{shift-format slot.begins}}
       <div class="float-right small">Page {{add idx 1}} of {{add studentPages.length 1}}</div>
     </h1>
 
@@ -47,7 +47,7 @@
   </h1>
   <table class="signup-table">
     <tbody>
-      {{#number-of-times times=9}}
+      {{#number-of-times times=8}}
         <tr>
           <td class="w-25">
             <div class="signup-label">Handle (if known)</div>

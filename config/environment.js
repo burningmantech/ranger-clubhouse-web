@@ -67,7 +67,7 @@ module.exports = function(environment) {
         closeDuration: 0,
         hideDuration: 0,
 
-        positionClass: 'toast-top-center'
+        positionClass: 'toast-top-right'
       }
     }
 
@@ -102,6 +102,7 @@ module.exports = function(environment) {
       enabled: false
     };
 
+    ENV.newVersion = { enabled: false };
   }
 
   if (environment === 'test') {

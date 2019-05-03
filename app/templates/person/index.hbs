@@ -134,7 +134,7 @@
       <div class="row col-12 mt-1 mb-2">
         <button type="button" {{action "togglePositions"}} class="btn btn-secondary btn-sm mr-2">{{if showPositions "Hide" "Show"}} Positions</button>
         {{#if (or isAdmin isManageAndGrantPosition)}}
-          <button type="button" {{action "editPositions"}} class="btn btn-secondary btn-sm">Edit Positions</button>
+          <button type="button" {{action "editPositionsAction"}} class="btn btn-secondary btn-sm">Edit Positions</button>
         {{/if}}
       </div>
       {{#unless personPositions}}
@@ -162,7 +162,7 @@
       <div class="row col-12 mt-1 mb-2">
         <button type="button" {{action "toggleRoles"}} class="btn btn-secondary btn-sm mr-2">{{if showRoles "Hide" "Show"}} Roles</button>
         {{#if (has-role "admin")}}
-          <button type="button" {{action "editRoles"}} class="btn btn-secondary btn-sm">Edit Roles</button>
+          <button type="button" {{action "editRolesAction"}} class="btn btn-secondary btn-sm">Edit Roles</button>
         {{/if}}
       </div>
       {{#unless personRoles}}

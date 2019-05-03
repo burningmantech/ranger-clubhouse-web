@@ -1,5 +1,5 @@
 import DS from 'ember-data';
-import { attr } from '@ember-decorators/data';
+const { attr } = DS;
 
 export default class SlotSignupModel extends DS.Model {
   @attr('number') person_id;

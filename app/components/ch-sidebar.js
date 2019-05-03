@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { classNames } from '@ember-decorators/component';
-import { action } from '@ember-decorators/object';
+import { action } from '@ember/object';
 import $ from 'jquery';
 
 @classNames('sidebar-expanded', 'd-none', 'd-md-block', 'd-print-none')

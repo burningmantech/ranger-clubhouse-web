@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember-decorators/object';
-import { filterBy } from '@ember-decorators/object/computed';
+import { action, computed } from '@ember/object';
+import { filterBy } from '@ember/object/computed';
 
 import moment from 'moment';
 

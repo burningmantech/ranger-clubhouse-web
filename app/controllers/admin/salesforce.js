@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { set } from '@ember/object';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import groupBy from 'clubhouse/utils/group-by';
 
 export default class AdminSalesforceController extends Controller {

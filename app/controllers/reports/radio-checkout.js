@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action } from '@ember-decorators/object';
+import { action } from '@ember/object';
 
 export default class ReportsRadioCheckoutController extends Controller {
   queryParams = [ 'year', 'include_qualified', 'event_summary' ];

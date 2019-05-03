@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { debounce } from '@ember/runloop';
-import { action } from '@ember-decorators/object';
+import { action } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
 import RSVP from 'rsvp';
 

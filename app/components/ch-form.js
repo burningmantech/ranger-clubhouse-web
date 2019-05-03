@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
 import { typeOf, isEmpty } from '@ember/utils';
 import Changeset from 'ember-changeset';
@@ -162,11 +162,11 @@ export default class ChFormComponent extends Component {
   }
 
   @action
-  submitForm(action) {
+  submitForm(callback) {
     const model = this.model;
     const original = this.originalModel;
 
-    const submitAction = (action || this.onSubmit);
+    const submitAction = (callback || this.onSubmit);
 
     if (model.validate) {
       model.validate().then(() => {

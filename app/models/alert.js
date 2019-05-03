@@ -1,5 +1,5 @@
 import DS from 'ember-data';
-import { attr } from '@ember-decorators/data';
+const { attr } = DS;
 
 export default class AlertModel extends DS.Model {
   @attr('string') title;

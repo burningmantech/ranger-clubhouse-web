@@ -1,7 +1,7 @@
 import DS from 'ember-data';
+const { attr } = DS;
 import { memberAction } from 'ember-api-actions';
-import { attr } from '@ember-decorators/data';
-import { inject as service } from '@ember-decorators/service';
+import { inject as service } from '@ember/service';
 import PersonMixin from 'clubhouse/mixins/models/person';
 
 export default class PersonModel extends DS.Model.extend(PersonMixin) {

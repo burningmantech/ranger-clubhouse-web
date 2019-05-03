@@ -1,7 +1,7 @@
 import DS from 'ember-data';
 import { isEmpty } from '@ember/utils';
-import { attr } from '@ember-decorators/data';
-import { computed } from '@ember-decorators/object';
+const { attr } = DS;
+import { computed } from '@ember/object';
 
 export default class TimesheetModel extends DS.Model {
   @attr('number') person_id;

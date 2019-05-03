@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed } from '@ember-decorators/object';
+import { computed } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
 import { config } from 'clubhouse/utils/config';
 import { tagName } from '@ember-decorators/component';

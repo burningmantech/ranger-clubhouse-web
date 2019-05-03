@@ -1,7 +1,8 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import { later } from '@ember/runloop';
-import { action, computed, observes } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
+import { observes } from '@ember-decorators/object';
 import { HandleConflict } from '../utils/handle-conflict';
 import {
   AmericanSoundexRule,

@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import { run } from '@ember/runloop';
-import { action } from '@ember-decorators/object';
+import { action } from '@ember/object';
 import $ from 'jquery';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import _ from 'lodash';

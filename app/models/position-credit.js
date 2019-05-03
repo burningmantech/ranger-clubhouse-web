@@ -1,6 +1,6 @@
 import DS from 'ember-data';
-import { attr } from '@ember-decorators/data';
-import { computed } from '@ember-decorators/object';
+const { attr } = DS;
+import { computed } from '@ember/object';
 import moment from 'moment';
 
 export default class PositionCreditModel extends DS.Model {

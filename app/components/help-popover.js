@@ -1,11 +1,11 @@
 import Component from '@ember/component';
-import { action } from '@ember-decorators/object';
+import { action } from '@ember/object';
 import { classNames } from '@ember-decorators/component';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
 
 import { isEmpty } from '@ember/utils';
-import { inject as service } from '@ember-decorators/service';
+import { inject as service } from '@ember/service';
 
 @classNames('popover-container')
 export default class HelpPopoverComponent extends Component {

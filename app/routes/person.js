@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-import { action } from '@ember-decorators/object';
+import { action } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import DS from 'ember-data';
 

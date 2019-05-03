@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { set } from '@ember/object';
-import { computed, action } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import moment from 'moment';
 
 const allDays = { id: 'all', title: 'All' };

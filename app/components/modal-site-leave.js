@@ -1,6 +1,6 @@
 import Component from '@ember/component';
-import { computed } from '@ember-decorators/object';
-import { alias } from '@ember-decorators/object/computed';
+import { computed } from '@ember/object';
+import { alias } from '@ember/object/computed';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
 

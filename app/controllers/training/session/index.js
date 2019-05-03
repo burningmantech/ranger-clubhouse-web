@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import { debounce } from '@ember/runloop';
 import { set } from '@ember/object';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 
 const SEARCH_RATE_MS = 300;
 

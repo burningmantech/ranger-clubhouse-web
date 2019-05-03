@@ -1,10 +1,10 @@
 import Component from '@ember/component';
 import { set } from '@ember/object';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import { argument
 } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
-import { inject as service } from '@ember-decorators/service';
+import { inject as service } from '@ember/service';
 import * as Position from 'clubhouse/constants/positions';
 
 export default class ShiftCheckInOutComponent extends Component {

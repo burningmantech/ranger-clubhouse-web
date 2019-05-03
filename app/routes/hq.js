@@ -1,5 +1,5 @@
 import Route from '@ember/routing/route';
-import { action } from '@ember-decorators/object';
+import { action } from '@ember/object';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { Role } from 'clubhouse/constants/roles';
 import RSVP from 'rsvp';
