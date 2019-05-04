@@ -32,6 +32,13 @@ export default class AdminBulkUploadController extends Controller {
       ]
     },
     {
+      groupName: 'Vehicle Actions',
+      options: [
+        { id: 'vehicle_paperwork', title: 'Set Vehicle Paperwork (gators/golf carts)' },
+        { id: 'vehicle_insurance_paperwork', title: 'Set Org Vehicle Insurance (trucks/SUVs)' },
+      ]
+    },
+    {
       groupName: 'Other',
       options: [
         { id: 'eventradio', title: 'Event radio eligibility' },
