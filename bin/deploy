@@ -3,81 +3,40 @@
 # Deploy Docker image.
 #
 
+# These variables must be provided by the CI environment:
+# * AWS_ACCESS_KEY_ID
+# * AWS_DEFAULT_REGION
+# * AWS_ECR_IMAGE_NAME
+# * AWS_ECS_CLUSTER_PRODUCTION
+# * AWS_ECS_CLUSTER_STAGING
+# * AWS_ECS_SERVICE_PRODUCTION
+# * AWS_ECS_SERVICE_STAGING
+# * AWS_SECRET_ACCESS_KEY
+# * LOCAL_IMAGE_NAME
+# * NOTIFY_EMAIL_RECIPIENT
+# * NOTIFY_EMAIL_SENDER
+# * NOTIFY_SMTP_HOST
+# * NOTIFY_SMTP_PASSWORD
+# * NOTIFY_SMTP_PORT
+# * NOTIFY_SMTP_USER
+# * PROJECT_NAME (optional)
+
 . "$(dirname "$0")/.common.sh";
 
-# Provided by the CI environment:
-# * AWS_DEFAULT_REGION
-# * AWS_ACCESS_KEY_ID
-# * AWS_SECRET_ACCESS_KEY
-# * AWS_ECR_IMAGE_REPOSITORY
+version="master";
 
-if [ $# -lt 1 ]; then
-    echo "No target specified.";
-    exit 64;  # EX_USAGE
-fi;
+host="raw.githubusercontent.com";
+repo="burningmantech/ranger-deploy";
+path="bin/deploy_aws_ecs";
 
-target="$1"; shift;
+script_url="https://${host}/${repo}/${version}/${path}";
 
-if ! type python3 > /dev/null 2>&1; then
-    echo "Python 3 is required.";
-    exit 72;  # EX_OSFILE
-fi;
-if ! type docker > /dev/null 2>&1; then
-    echo "Docker is required.";
-    exit 72;  # EX_OSFILE
-fi;
-if [ "${TRAVIS:-}" = "true" ]; then
-    pip_user_flag="";
-else
-    pip_user_flag="--user";
-fi;
-if ! type aws > /dev/null 2>&1; then
-    echo "No aws command. Installing...";
-    python3 -m pip install ${pip_user_flag} awscli;
-fi;
-if ! python3 -c 'import boto3' 2> /dev/null; then
-    echo "No boto3 module. Installing...";
-    python3 -m pip install ${pip_user_flag} boto3;
-fi;
+export DEPLOY_TOOLS_VERSION="${version}";
+export     LOCAL_IMAGE_NAME="${image_name}";
 
-if [ "${target}" = "staging" ]; then
-    if [ "${TRAVIS:-}" != "true" ]; then
-        echo "No deployments to staging outside of Travis CI.";
-        exit 78;  # EX_CONFIG
-    fi;
-    if [ "${TRAVIS_PULL_REQUEST:-}" != "false" ]; then
-        echo "No deployments allowed from a pull request.";
-        exit 78;  # EX_CONFIG
-    fi;
-    if [ "${TRAVIS_BRANCH:-}" != "master" ]; then
-        echo "No deployments allowed from non-master branches.";
-        exit 78;  # EX_CONFIG
-    fi;
-fi;
-
-export    AWS_ECS_CLUSTER_STAGING="rangers";
-export    AWS_ECS_SERVICE_STAGING="ranger-clubhouse-web-staging-fg";
-export AWS_ECS_CLUSTER_PRODUCTION="rangers";
-export AWS_ECS_SERVICE_PRODUCTION="ranger-clubhouse-web-production-fg";
-
-docker --version;
-
-echo "Logging into AWS...";
-$(aws ecr get-login --no-include-email);
-
-if [ "${target}" = "staging" ]; then
-    tag="$(git rev-parse --short "${TRAVIS_COMMIT}")";
-    export AWS_ECR_IMAGE_NAME="${AWS_ECR_IMAGE_REPOSITORY}:${tag}";
-
-    echo "Tagging image for AWS ECR...";
-    docker tag "${image_name}" "${AWS_ECR_IMAGE_NAME}";
-
-    echo "Pushing image to AWS ECR...";
-    docker push "${AWS_ECR_IMAGE_NAME}";
-fi;
-
-"$(dirname "$0")/deploy_aws" "${target}";
-
-if [ "${target}" = "staging" ]; then
-    "$(dirname "$0")/deploy_notify" "${target}";
-fi;
+# Download and run the deploy script.
+echo "Running: ${script_url} ${@}";
+deploy_cmd="$(mktemp)";
+curl --silent "${script_url}" --output "${deploy_cmd}";
+sh "${deploy_cmd}" --profile="clubhouse-api" "${@}";
+rm "${deploy_cmd}";

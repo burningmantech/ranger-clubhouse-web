@@ -152,6 +152,8 @@ cleanup_db_container() {
         echo "Terminating database container: ${db_container_name}...";
 
         docker kill "${db_container_name}" > /dev/null;
+
+        db_container_name="";
     fi;
 }
 
@@ -161,6 +163,10 @@ cleanup_db_container() {
 ##
 
 start_api_container() {
+    start_db_container;
+    wait_for_db;
+    db_init;
+
     api_container_name="ranger-clubhouse-api-test_${$}";
 
     trap cleanup_api_container EXIT;
@@ -247,6 +253,8 @@ cleanup_api_container() {
         echo "Terminating API application container: ${api_container_name}...";
 
         docker kill "${api_container_name}" > /dev/null;
+
+        api_container_name="";
     fi;
 
     cleanup_db_container;

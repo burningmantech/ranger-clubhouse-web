@@ -10,6 +10,7 @@ set -eu
 src="/var/src";
 
 docker run                    \
+    --rm                      \
     --volume="${PWD}:${src}"  \
     --workdir="${src}"        \
     "${build_image_name}"     \

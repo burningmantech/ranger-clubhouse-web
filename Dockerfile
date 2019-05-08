@@ -1,6 +1,6 @@
-#
+# -----------------------------------------------------------------------------
 # This stage builds the Ember application
-#
+# -----------------------------------------------------------------------------
 # Note we need a version of Node that is supported by ember-cli.
 # See: https://github.com/ember-cli/ember-cli/blob/master/docs/node-support.md
 #
@@ -32,10 +32,10 @@ RUN yarn install;
 RUN ember build --environment production;
 
 
-#
-# This stage builds the application container
-#
-FROM nginx:1.15-alpine
+# -----------------------------------------------------------------------------
+# This stage builds the application container using Nginx
+# -----------------------------------------------------------------------------
+FROM nginx:1.15-alpine as application
 
 # Copy the application with dependencies from the build container
 COPY --from=build /build/dist /var/www/application/client
