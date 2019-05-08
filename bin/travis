@@ -50,21 +50,36 @@ load_images() {
 case "${travis_action}" in
 
     "test")
+        # Load cached docker images
+        echo "Docker image cache contents:";
+        ls -l "${docker_cache_dir}";
+        load_images;
+
         # Build
         "${wd}/bin/build";
 
         # Run linter
         "${wd}/bin/test_lint" .;
 
-        # Run tests in Docker container
+        # Run basic tests on the Docker container
         echo "Testing Docker image...";
         "${wd}/bin/test_docker";
+
+        # Cache stable docker images for later use
+        cache_images                  \
+            "${build_image_name}"     \
+            "${app_image_name}"       \
+            ;
+
+        # Go through the motions for deployment without actually deploying
+        "${wd}/bin/deploy" staging --trial-run;
+
         ;;
 
     "deploy")
         if [ "${TRAVIS_PULL_REQUEST:-}" != "false" ]; then
             echo "No deploy from a pull request branch.";
-            exit 0;
+            exit 1;
         fi;
         if [ "${TRAVIS_BRANCH}" != "master" ]; then
             echo "No deploy from non-master branch branch. Aborting.";
@@ -78,11 +93,13 @@ case "${travis_action}" in
 
         # Deploy
         "${wd}/bin/deploy" staging;
+
         ;;
 
     *)
         echo "Unknown Travis action: ${travis_action}";
         exit 1;
+
         ;;
 
 esac;
