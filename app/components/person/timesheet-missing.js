@@ -1,6 +1,6 @@
 import Component from '@ember/component';
-import { action } from '@ember-decorators/object';
-import { inject as service } from '@ember-decorators/service';
+import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 import { argument } from '@ember-decorators/argument';
 import { validatePresence } from 'ember-changeset-validations/validators';

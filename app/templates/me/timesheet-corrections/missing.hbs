@@ -11,58 +11,7 @@
   and mark the entry as incorrect.
 </p>
 
-{{#if timesheetsMissing}}
-  <div class="timesheet-table">
-    <div class="timesheet-row timesheet-header">
-      <div class="timesheet-time">From</div>
-      <div class="timesheet-time">To</div>
-      <div class="timesheet-duration">Time</div>
-      <div class="timesheet-position">Position</div>
-    </div>
-    {{#each timesheetsMissing as |tsm|}}
-      <div class="timesheet-entry">
-        <div class="timesheet-row">
-          <div class="timesheet-time">{{shift-format tsm.on_duty}}</div>
-          <div class="timesheet-time">{{shift-format tsm.off_duty}}</div>
-          <div class="timesheet-duration">
-            <span class="timesheet-sm-label">Time:</span>
-            {{hour-minute-format tsm.duration}}
-          </div>
-          <div class="timesheet-position">{{tsm.position.title}}</div>
-        </div>
-        <div class="timesheet-row">
-          <div>
-            {{#if tsm.isPending}}
-              <span class="text-info font-weight-bold">The request is pending review.</span>
-            {{else}}
-              {{#if tsm.isApproved}}
-                The request has been APPROVED. Your timesheet has been updated with the missing shift.
-              {{else}}
-                The request has been rejected.
-              {{/if}}
-              <p>
-                <strong>Response from the reviewer:</strong><br>
-                {{tsm.reviewer_note}}
-              </p>
-            {{/if}}
-          </div>
-        </div>
-        {{#if tsm.isPending}}
-        <div class="timesheet-row timesheet-actions">
-            <button type="button" class="btn btn-primary btn-sm" {{action "editAction" tsm}}>Edit</button>
-            <button type="button" class="btn btn-danger btn-sm" {{action "deleteAction" tsm}}>Delete</button>
-        </div>
-        {{/if}}
-      </div>
-    {{/each}}
-  </div>
-{{else}}
-  <p class="mt-2 ml-2">
-    No missing timesheet entries have been submitted yet.
-  </p>
-{{/if}}
-
-<button type="button" class="btn btn-primary" {{action "newRequestAction"}}>New Missing Timesheet Request</button>
+{{me/timesheet-missing-common person=person timesheetsMissing=timesheetsMissing timesheetInfo=timesheetInfo positions=positions}}
 
 <div class="mt-4">
   <div class="row">
@@ -74,41 +23,3 @@
     </div>
   </div>
 </div>
-
-
-{{#if entry}}
-  {{#ch-form "tm" entry
-        modalBox=true modalTitle="Missing Timesheet Request"
-        validator=timesheetValidations
-        onSubmit=(action "saveAction") onCancel=(action "cancelAction") as |f|}}
-    <div class="form-group mb-4">
-      Use this form for <b>MISSING TIMESHEET ENTRIES ONLY</b>. If you have
-      an existing entry that needs correction, go back to the
-      Timesheet Review page and submit a correction by clicking on 'Mark Entry Incorrect'.
-    </div>
-    <div class="form-row">
-      {{f.input "position_id" label="Which position was the shift for?" type="select" options=positionOptions grid="col-auto"}}
-    </div>
-    <div class="form-row">
-      {{f.input "on_duty" label="What was the START date & time of the shift?" type="datetime" size=15 grid="col-auto" startDate=startDateForEntry}}
-      {{f.input "off_duty" label="What was the END date & time of the shift?" type="datetime" size=15 grid="col-auto" startDate=startDateForEntry}}
-    </div>
-    <div class="form-row">
-      {{f.input "partner" label="Who was your partner (if any) for the shift?" type="text" size=20}}
-    </div>
-    <div class="form-row">
-      <p>
-        <span class="font-weight-bold">Give as much supporting details on why a shift should be added to your timesheet.</span><br>
-        <span class="text-danger">Your request may be denied if not enough supporting details are provided.</span>
-      </p>
-    </div>
-    <ul>
-      <li>If you had no partner for the shift, is there anyone who can verify your hours?</li>
-      <li>Was another person responsible for checking you in, and why did they fail to do that?</li>
-      <li>If you called Ranger HQ on the radio to check you in for the shift, who was the Ranger on the other end?</li>
-    </ul>
-    {{f.input "notes" label="Why is this new entry needed?" type="textarea" cols=80 rows=4}}
-    {{f.submit label=(if f.model.isNew "Submit Request" "Update Request") disabled=isSubmitting}}
-    {{f.cancel}}
-  {{/ch-form}}
-{{/if}}

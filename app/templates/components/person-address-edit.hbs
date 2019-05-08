@@ -1,7 +1,7 @@
   <div class="form-row">
-    {{f.input "street1" label="Street" grid="col-md-8 col-sm-6"}}
-    {{f.input "apt" label="Apt" grid="col-md-1 col-sm-4"}}
-    {{f.input "street2" label="Street Line 2" grid="col-sm-8"}}
+    {{f.input "street1" label="Street" maxlength=128 grid="col-md-8 col-sm-6"}}
+    {{f.input "apt" label="Apt" maxlength=10 grid="col-md-1 col-sm-4"}}
+    {{f.input "street2" label="Street Line 2" maxlength=128 grid="col-sm-8"}}
   </div>
   <div class="form-row">
     {{f.input "country" label="Country" type="select" options=countryOptions grid="col-sm-5 col-md-4"}}
@@ -11,7 +11,7 @@
     {{#if stateOptions}}
       {{f.input "state" label=stateLabel type="select" options=stateOptions grid="col-sm-5 col-md-4"}}
     {{else}}
-      {{f.input "state" label=stateLabel disabled=(if f.model.country false true) grid="col-sm-5 col-md-4"}}
+      {{f.input "state" label=stateLabel maxlength=128 disabled=(if f.model.country false true) grid="col-sm-5 col-md-4"}}
     {{/if}}
-    {{f.input "zip" label="Zip / Postal Code" grid="col-sm-5 col-md-4"}}
+    {{f.input "zip" label="Zip / Postal Code" maxlength=10 grid="col-sm-5 col-md-4"}}
   </div>

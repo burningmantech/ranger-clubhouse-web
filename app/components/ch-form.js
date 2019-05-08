@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
 import { typeOf, isEmpty } from '@ember/utils';
 import Changeset from 'ember-changeset';
@@ -23,7 +23,7 @@ export default class ChFormComponent extends Component {
   @argument(optional('object')) onSubmit;
   @argument(optional('object')) onReset;
   @argument(optional('object')) onCancel;
-  @argument(optional('object')) onFormChange;
+  @argument(optional('object')) ge;
 
   @argument(optional('boolean')) modalBox = false; // Open form as a modal dialog
   @argument(optional('string')) modalTitle = ''; // title
@@ -34,6 +34,8 @@ export default class ChFormComponent extends Component {
   @argument(optional('string')) autocomplete = "off";
 
   @argument(optional('string')) formClass;
+
+  @argument(optional('boolean')) formless = false;
 
   // Was the original backing model updated?
   watchingModel = false;
@@ -46,7 +48,7 @@ export default class ChFormComponent extends Component {
 
     if (this.changeSet) {
       if (validator) {
-        model = new Changeset(original, lookupValidator(validator), validator);
+        model = new Changeset(original, lookupValidator(validator), validator, { skipValidate: true });
       } else {
         model = new Changeset(original);
       }
@@ -149,22 +151,22 @@ export default class ChFormComponent extends Component {
      }
 
      const field = Object.keys(error)[0];
-     const label = `#${this.formId} label[for="${field}"]`;
+     const label = `label[for="${this.formId}-${field}"]`;
 
      // Scroll the label into view if it exists, otherwise the element
      if (document.querySelector(label)) {
        this.house.scrollToElement(label);
      } else {
-       this.house.scrollToElement(`#${this.formId} [name="${field}"]`);
+       this.house.scrollToElement(`[name="${this.formId}-${field}"]`);
      }
   }
 
   @action
-  submitForm(action) {
+  submitForm(callback) {
     const model = this.model;
     const original = this.originalModel;
 
-    const submitAction = (action || this.onSubmit);
+    const submitAction = (callback || this.onSubmit);
 
     if (model.validate) {
       model.validate().then(() => {

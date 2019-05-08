@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
 import { Role } from 'clubhouse/constants/roles';
 import { validatePresence } from 'ember-changeset-validations/validators';

@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { set } from '@ember/object';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
 
 export default class TicketingOpenComponent extends Component {

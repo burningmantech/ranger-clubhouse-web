@@ -1,4 +1,5 @@
-{{year-select "Event Information" year=year years=person.years subheader=true onChange=(action "changeYearAction")}}
+{{year-select "Event / Training Information" year=year years=person.all_years subheader=true onChange=(action "changeYearAction")}}
+
 <dl class="row">
   <dt class="col-md-2">Years Active</dt>
   <dd class="col-md-9">
@@ -10,45 +11,18 @@
       None yet.
     {{/if}}
   </dd>
-  <dt class="col-md-2">Training</dt>
+
+  <dt class="col-md-2">Manual Review</dt>
   <dd class="col-md-9">
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <th>Position</th>
-          <th>Pass</th>
-          <th>Date</th>
-          <th>Location</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each eventInfo.trainings as |training|}}
-          <tr>
-            <td>{{training.position_title}}</td>
-            <td>
-              {{#if (eq training.status "pass")}}
-                <span class="text-success">YES</span>
-              {{else if (eq training.status "pending")}}
-                Pending
-              {{else if (eq training.status "no-shift")}}
-                <span class="text-danger">No training sign up found</span>
-              {{else}}
-                <span class="text-danger">NO</span>
-              {{/if}}
-            </td>
-            <td>
-              {{#if training.date}}
-                {{mdy-format training.date}}
-              {{else}}
-                -
-              {{/if}}
-            </td>
-            <td>{{training.location}}</td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
+    {{#if eventInfo.manual_review_pass}}
+      {{shift-format eventInfo.manual_review_date}}
+    {{else}}
+      not passed
+    {{/if}}
   </dd>
+
+  <dt class="col-md-2">Training</dt>
+  <dd class="col-md-9">{{training-info trainings=eventInfo.trainings}}</dd>
 
   <dt class="col-md-2">Meals</dt>
   <dd class="col-md-9">{{meal-info eventInfo.meals}}</dd>

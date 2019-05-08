@@ -55,6 +55,8 @@ module.exports = function(environment) {
 
     showAjaxErrors: true,
 
+    logRoutes: false, // Send each route transition to the backend for analytic reporting
+
     'ember-toastr': {
       toastrOptions: {
         progressBar: false,
@@ -65,7 +67,7 @@ module.exports = function(environment) {
         closeDuration: 0,
         hideDuration: 0,
 
-        positionClass: 'toast-top-center'
+        positionClass: 'toast-top-right'
       }
     }
 
@@ -88,8 +90,8 @@ module.exports = function(environment) {
       'media-src': "'self' *"
     }
 
-    //ENV.dualClubhouse = true;
-    //ENV.clubhouseClassicUrl = 'http://localhost:9000';
+    ENV.dualClubhouse = true;
+    ENV.clubhouseClassicUrl = 'http://localhost:9000';
 
     ENV['api-server'] = 'http://localhost:8000';
 
@@ -100,6 +102,7 @@ module.exports = function(environment) {
       enabled: false
     };
 
+    ENV.newVersion = { enabled: false };
   }
 
   if (environment === 'test') {
@@ -145,6 +148,9 @@ module.exports = function(environment) {
 
     // Try to report any non-recoverable errors.
     ENV.logEmberErrors = true;
+
+    // Trace people has they navigate thru the client
+    ENV.logRoutes = true;
 
     ENV['api-server'] = (process.env.RANGER_CLUBHOUSE_API_URL || '/api');
     ENV['ember-simple-auth-token'].serverTokenEndpoint = ENV['api-server']+'/auth/login';

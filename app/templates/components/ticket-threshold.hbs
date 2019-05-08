@@ -4,53 +4,54 @@
   for a reduced-price ticket and {{credits-format scThreshold}} credits for a staff credential.
 </p>
 
-{{#if reachedSCThreshold}}
- <p>
- <strong>Congratulations!</strong> You're signed up for {{credits-format credits}} credits
- worth of shifts, which is above the {{credits-format scThreshold}} credits required
- to qualify for a {{ticketYear}} free staff credential.
- {{#if withinSCThreshold}}
-    But since you are close to the threshold, you may want to sign up for
-    one more shift. (See fine print below.)
- {{/if}}
-</p>
-{{else if almostSCThreshold}}
-<p>
-  <strong class="text-danger">Almost there!</strong> You're signed up for
-  {{credits-format credits}} credits worth of shifts, and you need
-  {{credits-format scThreshold}} to qualify for a {{ticketYear}} Staff Credential ticket.
-</p>
-{{else if reachedRPThreshold}}
-<p>
-  <br><strong>Congratulations!</strong> You're signed up for {{credits-format credits}} credits worth of shifts,
-  which is above the {{credits-format rpThreshold}} credits required to qualify for a reduced-price ticket in {{ticketYear}}.
-  You need only {{credits-format scDelta}} credits more to qualify for a staff credential.
-  {{#if withinRPThreshold}}
-    Since you are close to the threshold, you may want to sign up for one more shift.
-    (See fine print below.)
+  {{#if reachedSCThreshold}}
+    <p>
+      <strong>Congratulations!</strong> You're signed up for {{credits-format credits}} credits
+      worth of shifts, which is above the {{credits-format scThreshold}} credits required
+      to qualify for a {{ticketYear}} free staff credential.
+      {{#if withinSCThreshold}}
+        But since you are close to the threshold, you may want to sign up for
+        one more shift. (See fine print below.)
+      {{/if}}
+    </p>
+  {{else if almostSCThreshold}}
+    <p>
+      <strong class="text-danger">Almost there!</strong> You're signed up for
+      {{credits-format credits}} credits worth of shifts, and you need
+      {{credits-format scThreshold}} to qualify for a {{ticketYear}} Staff Credential ticket.
+    </p>
+  {{else if reachedRPThreshold}}
+    <p>
+      <br><strong>Congratulations!</strong> You're signed up for {{credits-format credits}} credits worth of shifts,
+      which is above the {{credits-format rpThreshold}} credits required to qualify for a reduced-price ticket in {{ticketYear}}.
+      You need only {{credits-format scDelta}} credits more to qualify for a staff credential.
+      {{#if withinRPThreshold}}
+        Since you are close to the threshold, you may want to sign up for one more shift.
+        (See fine print below.)
+      {{/if}}
+    </p>
+  {{else if almostRPTicket}}
+    <p>
+      <strong class="text-danger">Almost there!</strong> You're signed up for
+      {{credits-format credits}} credits worth of shifts,
+      and you need {{credits-format rpThreshold}} to qualify for a
+      {{ticketYear}} reduced-price ticket.
+    </p>
   {{/if}}
-</p>
-{{else if almostRPTicket}}
-<p>
-  <strong class="text-danger">Almost there!</strong> You're signed up for
-  {{credits-format credits}} credits worth of shifts, and you need {{credits-format rpThreshold}} to qualify for a
-  {{ticketYear}} reduced-price ticket.
-</p>
-{{/if}}
 
-{{#if (gt credits 0)}}
-<p>
-  <strong>The fine print:</strong> The total credits listed above are based on scheduled
-  shift times,  but ticket qualification credits are based on the hours you
-  actually work.  In other words, if a shift runs longer than the scheduled time,
-  you'll receive more credits -- but  more importantly, if a shift runs shorter
-  than the scheduled time (which is typical for Burn Perimeter  and Art Safety
-  shifts), you'll receive fewer credits.  If by the end of the event your total
-  credits based on actual shift times are less than the required threhhold,  then
-  you won't qualify for a (reduced-price or staff credential) ticket in
-  {{ticketYear}}.  If you're just over a threshold and are depending on Burn
-  Perimeter or Art Safety shifts to get you there, you might consider adding
-  another shift or two to be on the safe side.
-</p>
-{{/if}}
+  {{#if (gt credits 0)}}
+    <p>
+      <strong>The fine print:</strong> The total credits listed above are based on scheduled
+      shift times, but ticket qualification credits are based on the hours you
+      actually work. In other words, if a shift runs longer than the scheduled time,
+      you'll receive more credits -- but more importantly, if a shift runs shorter
+      than the scheduled time (which is typical for Burn Perimeter and Art Safety
+      shifts), you'll receive fewer credits. If by the end of the event your total
+      credits based on actual shift times are less than the required threhhold, then
+      you won't qualify for a (reduced-price or staff credential) ticket in
+      {{ticketYear}}. If you're just over a threshold and are depending on Burn
+      Perimeter or Art Safety shifts to get you there, you might consider adding
+      another shift or two to be on the safe side.
+    </p>
+  {{/if}}
 {{/if}}

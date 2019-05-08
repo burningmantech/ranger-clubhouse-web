@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
 import { optional, unionOf } from '@ember-decorators/argument/types';
-import { computed } from '@ember-decorators/object';
+import { computed } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
 
 // Component to build a link to the person's page.
@@ -11,7 +11,7 @@ export default class PersonLinkComponent extends Component {
   @argument(optional('object')) person;
 
   // Otherwise personId and callsign component arguments are used
-  @argument(optional('number')) personId;
+  @argument(optional(unionOf('number', 'string'))) personId;
   @argument(optional('string')) callsign;
 
   // should a specific

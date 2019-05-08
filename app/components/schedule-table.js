@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
 import { tagName } from '@ember-decorators/component';
 
@@ -70,6 +70,11 @@ export default class ScheduleTableComponent extends Component {
     return this.slots.reduce(function(total, slot) { return (slot.is_overlapping ? 1 : 0)+total;}, 0);
   }
 
+  @computed('slots')
+  get trainingOverlap() {
+    return this.slots.reduce(function(total, slot) { return (slot.is_training_overlap ? 1 : 0)+total;}, 0);
+  }
+
   @action
   changeView(value) {
     this.set('viewSchedule', value);
@@ -104,5 +109,10 @@ export default class ScheduleTableComponent extends Component {
         })
       }
     );
+  }
+
+  @action
+  printPage() {
+    window.print();
   }
 }

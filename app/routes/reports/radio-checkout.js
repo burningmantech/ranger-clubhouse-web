@@ -13,10 +13,8 @@ export default class ReportsRadioCheckoutRoute extends Route {
     const year = requestYear(params);
     const query = { year };
 
-    console.log('params', params);
     if (this._isSet(params.include_qualified)) {
       query.include_qualified = 1;
-      console.log('including QUALIFY');
     }
 
     if (this._isSet(params.event_summary)) {

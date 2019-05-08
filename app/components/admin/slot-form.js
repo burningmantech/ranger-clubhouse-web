@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import SlotValidations from 'clubhouse/validations/slot';
-import { computed, action } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
 
 export default class SlotFormComponent extends Component {
@@ -19,6 +19,8 @@ export default class SlotFormComponent extends Component {
   @argument('object') onSave;
   // cancel action
   @argument('object') onCancel;
+
+  @argument('object') onClone;
 
   @computed('positions')
   get positionOptions() {
@@ -56,6 +58,12 @@ export default class SlotFormComponent extends Component {
   save(model, isValid, originalModel) {
     this.onSave(model, isValid, originalModel);
   }
+
+  @action
+  cloneRecord(model, isValid, originalModel) {
+    this.onClone(model, isValid, originalModel);
+  }
+
 
   @action
   cancel(model) {

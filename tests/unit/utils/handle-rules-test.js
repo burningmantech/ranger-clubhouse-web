@@ -3,6 +3,7 @@ import {
   AmericanSoundexRule,
   DoubleMetaphoneRule,
   EditDistanceRule,
+  // TODO test ExperimentalEyeRhymeRule
   EyeRhymeRule,
   FccRule,
   MinLengthRule,
@@ -71,6 +72,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
       'american-soundex',
       'double-metaphone',
       'edit-distance',
+      'experimental-eye-rhyme',
       'eye-rhyme',
       'fcc',
       'min-length',

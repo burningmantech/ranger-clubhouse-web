@@ -4,7 +4,11 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     {{#link-to "me.overview" class="navbar-brand"}}
-      Clubhouse
+      {{#if (eq (config "DeploymentEnvironment") "Staging")}}
+        <span class="text-danger">Staging Server</span>
+      {{else}}
+        Clubhouse
+      {{/if}}
     {{/link-to}}
 
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -129,7 +133,7 @@
                   {{#link-to "vc.access-documents" class="dropdown-item"}}Manage Access Docs{{/link-to}}
                 {{/if}}
                 {{#if (has-role "edit-bmids")}}
-                  <a href="{{cgo "bmidc" "listAllBMIDs"}}" class="dropdown-item">Manage BMIDs</a>
+                  {{#link-to "vc.bmid" class="dropdown-item"}}Manage BMIDs{{/link-to}}
                 {{/if}}
                 <a href="{{cgo "timesheet" "noobTracker"}}" class="dropdown-item">N00b Tracker!</a>
               </div>
@@ -143,45 +147,55 @@
                 <div class="container">
                   <div class="row">
                     <div class="col-sm-12 col-md-3">
+                      <div class="navbar-text">Edit Records</div>
                       {{#if (has-role "admin" "edit-slots")}}
-                        {{#link-to "admin.slots" class="dropdown-item"}}Edit Schedule Slots{{/link-to}}
+                        {{#link-to "admin.slots" class="dropdown-item"}}Schedule Slots{{/link-to}}
                       {{/if}}
                       {{#if (has-role "admin")}}
-                        {{#link-to "admin.credits" class="dropdown-item"}}Edit Schedule Credits{{/link-to}}
-                        {{#link-to "admin.positions" class="dropdown-item"}}Edit Positions{{/link-to}}
-                        {{#link-to "admin.roles" class="dropdown-item"}}Edit (System) Roles{{/link-to}}
-                        {{#link-to "admin.settings" class="dropdown-item"}}Edit Settings{{/link-to}}
-                        <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
-                        <a href="{{cgo "logview" "show"}}" class="dropdown-item">Log View (CH1)</a>
-                        {{#link-to "admin.error-log" class="dropdown-item"}}Error Log{{/link-to}}
-                        {{#link-to "admin.action-log" class="dropdown-item"}}Action Log{{/link-to}}
+                        {{#link-to "admin.credits" class="dropdown-item"}}Schedule Credits{{/link-to}}
+                        {{#link-to "admin.assets" class="dropdown-item"}}Assets{{/link-to}}
+                        {{#link-to "admin.event-dates" class="dropdown-item"}}Event Dates{{/link-to}}
+                        {{#link-to "admin.motd" class="dropdown-item"}}MOTD{{/link-to}}
+                        {{#link-to "admin.positions" class="dropdown-item"}}Positions{{/link-to}}
+                        {{#link-to "admin.roles" class="dropdown-item"}}(System) Roles{{/link-to}}
+                        {{#link-to "admin.help" class="dropdown-item"}}Help Documents{{/link-to}}
                       {{/if}}
                     </div>
                     {{#if (has-role "admin")}}
                       <div class="col-sm-12 col-md-3">
-                        {{#link-to "admin.salesforce" class="dropdown-item"}}Salesforce Import{{/link-to}}
-                        <a href="{{cgo "conversion" "convert"}}" class="dropdown-item">Database Conversions</a>
-                        <a href="{{cgo "reminders" "index"}}" class="dropdown-item">Reminder Emails</a>
-                        {{#link-to "admin.bulk-upload" class="dropdown-item"}}Bulk Upload{{/link-to}}
-                        <a href="{{cgo "timesheet" "bulkSignInOut"}}" class="dropdown-item">Bulk Sign In/Out</a>
+                        <div class="navbar-text">Site Administration</div>
+                        {{#link-to "admin.settings" class="dropdown-item"}}Settings{{/link-to}}
+                        <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
+                        <a href="{{cgo "logview" "show"}}" class="dropdown-item">Log View (CH1)</a>
+                        {{#link-to "admin.error-log" class="dropdown-item"}}Error Log{{/link-to}}
+                        {{#link-to "admin.action-log" class="dropdown-item"}}Action Log{{/link-to}}
+                        <div class="navbar-text">Lambase</div>
                         <a href="{{cgo "lam" "syncLamPhotos"}}" class="dropdown-item">Synchronize Lam Photos</a>
                         <a href="{{cgo "lam" "exportLamPhotos"}}" class="dropdown-item">Export Lam Photos</a>
+                      </div>
+                      <div class="col-sm-12 col-md-3">
+                        <div class="navbar-text">Pre-Event</div>
+                        {{#link-to "admin.salesforce" class="dropdown-item"}}Salesforce Import{{/link-to}}
+                        <a href="{{cgo "reminders" "index"}}" class="dropdown-item">Reminder Emails</a>
+                        <a href="{{cgo "manualreview" "selectAll"}}" class="dropdown-item">Manual Review</a>
+                        {{#link-to "admin.radio-eligibility" class="dropdown-item"}}Radio Eligibility{{/link-to}}
+                        <div class="navbar-text">Bulk Operations</div>
+                        {{#link-to "admin.bulk-upload" class="dropdown-item"}}Bulk Upload{{/link-to}}
+                        {{#link-to "admin.bulk-sign-in-out" class="dropdown-item"}}Bulk Sign In/Out{{/link-to}}
                         <a href="{{cgo "timesheet" "signoutOnDuty"}}" class="dropdown-item">Bulk Signout</a>
                       </div>
                     {{/if}}
                     {{#if (has-role "admin" "megaphone")}}
                       <div class="col-sm-12 col-md-3">
                         {{#if (has-role "admin")}}
+                          <div class="navbar-text">Post Event</div>
                           <a href="{{cgo "timesheet" "thankYouCards"}}" class="dropdown-item">Thank-You Cards</a>
                           <a href="{{cgo "timesheet" "sanityCheckTimeSheets"}}" class="dropdown-item">Timesheet Sanity Check</a>
-                          <a href="{{cgo "manualreview" "selectAll"}}" class="dropdown-item">Manual Review</a>
                           <a href="{{cgo "timesheet" "hoursAndCredits"}}" class="dropdown-item">Hours/Credits</a>
                           <a href="{{cgo "person" "selectByStatusChange"}}" class="dropdown-item">People by Status Change</a>
-                          <a href="{{cgo "timesheet" "radioEligibilityReport"}}" class="dropdown-item">Radio Eligibility</a>
                         {{/if}}
-                        {{#if (has-role "megaphone")}}
-                          <a href="{{cgo "broadcast" "index"}}" class="dropdown-item">Ranger Broadcast</a>
-                        {{/if}}
+                        <div class="navbar-text">Communications</div>
+                        <a href="{{cgo "broadcast" "index"}}" class="dropdown-item">Ranger Broadcast</a>
                       </div>
                     {{/if}}
                   </div>
@@ -198,7 +212,7 @@
                   <div class="row">
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Schedule</div>
-                      <a href="{{cgo "slot" "selectNewShiftLead"}}" class="dropdown-item">Shift Lead Report</a>
+                      {{#link-to "reports.shift-lead" class="dropdown-item"}}Shift Lead Report{{/link-to}}
                       <a href="{{cgo "slot" "selectAllScheduled" "order=1"}}" class="dropdown-item">Schedule by Callsign</a>
                       <a href="{{cgo "slot" "selectAllScheduled" "order=2"}}" class="dropdown-item">Schedule by Position</a>
                       <a href="{{cgo "slot_coverage" "coverageReport"}}" class="dropdown-item">Coverage Report</a>
@@ -234,7 +248,9 @@
                       <div class="navbar-text">Other</div>
                       <a href="{{cgo "position" "selectSanityChecks"}}" class="dropdown-item">Position Sanity Check</a>
                       <a href="{{cgo "languages" "reportByLanguage"}}" class="dropdown-item">Languages</a>
-                      <a href="{{cgo "person" "SelectByYears"}}" class="dropdown-item">Freaking Years</a>
+                      {{#link-to "reports.freaking-years" class="dropdown-item"}}Freaking Years{{/link-to}}
+                      {{#link-to "reports.shirts" class="dropdown-item"}}Earned Shirts{{/link-to}}
+                      {{#link-to "reports.alpha-shirts" class="dropdown-item"}}Alpha Shirts{{/link-to}}
                     </div>
                   </div>
                 </div>
@@ -285,14 +301,14 @@
       {{/if}}
     </div>
   </nav>
-  {{#if (has-role "manage")}}
+  {{#if canAccountManage}}
     <div class="bg-khaki row no-gutters">
       {{! line up the search bar with main content}}
       <div class="d-none d-md-block sidebar-expanded">
         &nbsp;
       </div>
 
-      {{#ch-form "person-search" searchForm formClass="col mb-2 ml-3 mr-3" changeSet=false onSubmit=(action "submit") as |f|}}
+      {{#ch-form "person-search" searchForm formClass="col mb-2 ml-3 mr-3" changeSet=false onSubmit=(action "submit") onFormChange=(action searchFormChange) as |f|}}
         {{#power-select-typeahead
                         search=(action searchAction)
                         onchange=(action searchChangeAction)
@@ -306,6 +322,11 @@
                         noMatchesMessage="No results found"
                         as |person| }}
           <strong>{{person.callsign}}</strong> &lt;{{person.first_name}} {{person.last_name}}, {{person.status}}&gt;
+          {{#if (eq person.email_match "full")}}
+            - email full match
+          {{else if (eq person.email_match "partial")}}
+            - email partial match
+          {{/if}}
         {{/power-select-typeahead}}
         {{#if showSearchOptions}}
           <fieldset class="bg-white">
@@ -325,32 +346,30 @@
                 {{f.input "past_prospective" type="checkbox" label="Past Prospective" inline=true}}
               </div>
             </div>
-            <div class="form-row mb-2">
-              <div class="col-sm-12 col-md-8 small">
-                Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.
-              </div>
-            </div>
-            <div class="float-right mr-2">
-              <button type="button" class="btn btn-sm btn-secondary" {{action "hideSearchBoxAction"}}>Hide Options</button>
-            </div>
             <div class="form-row">
-              <div class="text-muted mt-2 col-sm-12">(Future feature - waiting for HQ interface)</div>
               <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Mode:</label>
-              {{f.input "display_mode" type="radioGroup" options=displayModeOptions label="Display Mode" inline=true }}
+              {{f.input "mode" type="radioGroup" options=modeOptions label="Interface Mode" inline=true }}
+            </div>
+            <div class="form-row mb-2">
+              <div class="col-auto">
+                <small>Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.</small>
+              </div>
+              <div class="col-auto ml-auto mr-2">
+                <button type="button" class="btn btn-sm btn-secondary" {{action "hideSearchBoxAction"}}>Hide Options</button>
+              </div>
             </div>
           </fieldset>
         {{/if}}
       {{/ch-form}}
     </div>
   {{/if}}
-
 </header>
 
 {{#if session.isAuthenticated}}
   {{#new-version-notifier as |version lastVersion reload|}}
     <div class="alert alert-danger text-center p-1 m-0">
       <p class="mb-2">
-        Hey! The Ranger Tech Ninjas has been busy hammering the bits and bytes.<br>
+        Hey! The Ranger Tech Ninjas have been busy hammering the bits and bytes.<br>
         A new version of the Clubhouse is available.<br>
         Click "Reload" to update to the latest version ({{version}}).
       </p>

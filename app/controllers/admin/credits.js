@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
-import { action, computed } from '@ember-decorators/object';
-import { filterBy } from '@ember-decorators/object/computed';
+import { action, computed } from '@ember/object';
+import { filterBy } from '@ember/object/computed';
 import { validateNumber, validatePresence } from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 import moment from 'moment';
@@ -166,6 +166,7 @@ export default class AdminCreditsController extends Controller {
 
     if (isNew) {
       const positionIds = model.get('position_id');
+      let success = true;
       // Bulk creation - loop through all select position ids
       for (let i = 0; i < positionIds.length; i++) {
         const newCredit = this.store.createRecord('position-credit', {
@@ -177,16 +178,19 @@ export default class AdminCreditsController extends Controller {
         });
 
         try {
-          await newCredit.save();
-          this.credits.pushObject(newCredit);
+          const record = await newCredit.save();
+          this.credits.pushObject(record);
           this.toast.success(`${newCredit.positionTitle} position credit created.`);
         } catch (response) {
           this.house.handleErrorResponse(response);
+          success = false;
           break;
         }
       }
 
-      this.set('credit', null);
+      if (success) {
+        this.set('credit', null);
+      }
     } else {
       this.house.saveModel(model, 'The position credit has been successfully updated.', () => {
         this.set('credit', null);

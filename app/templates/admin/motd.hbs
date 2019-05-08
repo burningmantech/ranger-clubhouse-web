@@ -1,0 +1,45 @@
+<h1>Messages Of The Day (MOTD)</h1>
+
+<p>
+  Any messages entered here will be shown on the home page when the user logins in.
+</p>
+
+<div class="float-right">
+  <button class="btn btn-secondary btn-sm" {{action newEntry}}>New Message</button>
+</div>
+
+{{pluralize motds.length "message"}}
+<table class="table table-striped table-sm">
+  <thead>
+    <tr>
+      <th>Person</th>
+      <th>Created</th>
+      <th>Edited</th>
+      <th class="w-50">Message</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each motds as |motd|}}
+    <tr>
+      <td>{{person-link person=motd.person}}</td>
+      <td>{{shift-format motd.created_at}}</td>
+      <td>{{shift-format motd.updated_at}}</td>
+      <td class="w-50">{{read-more text=motd.message limit=50}}</td>
+      <td>
+          <button class="btn btn-danger btn-sm" {{action deleteEntry motd}}>{{fa-icon "trash"}}</button>
+          <button class="btn btn-primary btn-sm" {{action editEntry motd}}>{{fa-icon "edit"}}</button>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+{{#if entry}}
+  {{#ch-form "entry" entry modalBox=true modalTitle=(if entry.isNew "New Message" "Edit Message") onSubmit=(action saveEntry) onCancel=(action cancelEntry) as |f|}}
+    {{f.input "message" label="Message To Show" type="textarea" rows=10 cols=80 }}
+    {{f.submit}}
+    {{f.cancel}}
+  {{/ch-form}}
+{{/if}}

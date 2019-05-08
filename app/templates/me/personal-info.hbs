@@ -21,27 +21,39 @@
       {{f.input "last_name" label="Last Name" maxlength=25 grid="col-sm-4"}}
     </div>
     <div class="form-row">
-      {{f.input "email" label="Email" maxlength=50 grid="col-sm-6" }}
+      {{f.input "email" label="Email" maxlength=50 grid="col-sm-6" noSpaces=true}}
       <div class="form-group ">
-        <strong>Note:</strong> Updating the email address here WILL NOT update the email address used for various ranger mailing lists. Please contact {{general-support-email}} for help.
+        <strong>Note:</strong> Updating your email address here WILL NOT update the email address used for various Ranger mailing lists. Contact {{general-support-email}} to update your email address for the forums.
+      </div>
+      <div class="form-group">
+        Ranger teams and leads may use your email address to send important messages to you regarding scheduling and operations.
+        Keep your email address up to date.
       </div>
     </div>
     <div class="form-row">
-      {{f.input "home_phone" label="Primary Phone" grid="col-sm-4"}}
-      {{f.input "alt_phone" label="Alternative Phone" grid="col-sm-4"}}
+      {{f.input "home_phone" label="Primary Phone" grid="col-sm-4" maxlength=25}}
+      {{f.input "alt_phone" label="Alternative Phone" grid="col-sm-4" maxlength=25}}
     </div>
 
     <div class="form-row">
-      {{f.input "gender" label="Gender" hint="female, male, non-binary, gender fluid, etc." }}
+      {{f.input "gender" label="Gender" hint="Examples: female, male, non-binary, gender fluid, etc." maxlength=32 }}
     </div>
 
     {{#unless person.isAuditor}}
+      <div class="form-group">
+        List the English names of the  languages you are comfortable speaking with the level of fluency in parenthesis, each separated by a comma.<br>
+        <div class="mt-2 mb-2">
+          Example: "japanese (basic), spanish (fluent)"
+        </div>
+        Keep the list simple:<br>
+        GOOD: "french (fluent), italian (written only), spanish (basic)"<br>
+        BAD: "French - I taught in Paris and can only write in Italian. Took 1 year of high school spanish"<br>
+      </div>
       <div class="form-row">
-        {{f.input "languages" label="Languages Spoken"
-          hint="List the English names of languages you are comfortable speaking separated by a comma. Ex: english, french, japanese"}}
+        {{f.input "languages" label="Languages Spoken" type="text" size=80}}
       </div>
       <div class="form-row col-auto">
-        {{f.input "camp_location" type="textarea" label="Camp Location" cols=50 rows=4 maxlength=200}}
+        {{f.input "camp_location" type="textarea" label="Camp Name & Location" cols=50 rows=4 maxlength=200 hint=(concat (if f.model.camp_location f.model.camp_location.length "0") " of 200 characters")}}
       </div>
     {{/unless}}
   </fieldset>

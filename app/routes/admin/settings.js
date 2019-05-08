@@ -7,7 +7,8 @@ export default class AdminSettingsRoute extends Route {
   }
 
   model() {
-    return this.store.findAll('setting');
+    this.store.unloadAll('setting');
+    return this.store.findAll('setting', { reload: true });
   }
 
   setupController(controller, model) {

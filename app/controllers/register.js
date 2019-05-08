@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import { validatePresence, validateFormat, validateLength, validateConfirmation } from 'ember-changeset-validations/validators';
 import validateState from 'clubhouse/validators/state';
-import { action } from '@ember-decorators/object';
+import { action } from '@ember/object';
 
 const HUMAN_ANSWER = 35;
 
@@ -50,6 +50,8 @@ export default class RegisterController extends Controller {
     'country',
     'zip',
     'password',
+    'home_phone',
+    'alt_phone',
   ];
 
   registerForm = EmberObject.create({ });

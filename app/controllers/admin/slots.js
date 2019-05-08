@@ -1,41 +1,44 @@
 import Controller from '@ember/controller';
-import { computed, action } from '@ember-decorators/object';
+import { set } from '@ember/object';
+import { action, computed } from '@ember/object';
 import moment from 'moment';
 
-const allDays = { id: 'all', title: 'All Days'};
-const allPositions = {id: 'all', title: 'All Positions'};
+const allDays = { id: 'all', title: 'All' };
+
+const DATETIME_FORMAT = 'YYYY-MM-DD hh:mm:ss';
 
 export default class SlotsController extends Controller {
   queryParams = [ 'year' ];
 
-  dayFilter =  allDays;
-  positionFilter =  allPositions;
-  activeFilter = 0;
+  dayFilter = 'all';
+  positionFilter = 'all';
+  activeFilter = 'all';
 
-  @computed('slots[]','slots.@each.{position_id,begins}', 'dayFilter', 'positionFilter', 'activeFilter')
+  activeOptions = [
+    { id: 'all', title: 'All' },
+    { id: 'active', title: 'Active' },
+    { id: 'inactive', title: 'Inactive' },
+  ];
+
+  showingGroups = { };
+
+  @computed('slots[]','slots.@each.{position_id,begins}', 'dayFilter', 'activeFilter')
   get viewSlots() {
     let slots = this.slots;
     const dayFilter = this.dayFilter;
-    const positionFilter = this.positionFilter;
     const activeFilter = this.activeFilter;
 
-    if (activeFilter == 1) {
+    if (activeFilter == 'active') {
       slots = slots.filterBy('active', true);
-    } else if (activeFilter == 2) {
+    } else if (activeFilter == 'inactive') {
       slots = slots.filterBy('active', false);
     }
 
-    if (positionFilter && positionFilter.id && positionFilter.id != 'all') {
-        slots = slots.filterBy('position_id', positionFilter.id);
-    }
-
-    if (dayFilter && dayFilter.id) {
-      const day = dayFilter.id;
-
-      if (day == 'upcoming') {
+    if (dayFilter) {
+      if (dayFilter == 'upcoming') {
         slots = slots.filterBy('has_started', false);
-      } else if (day != 'all') {
-        slots = slots.filterBy('slotDay', day);
+      } else if (dayFilter != 'all') {
+        slots = slots.filterBy('slotDay', dayFilter);
       }
     }
 
@@ -47,12 +50,18 @@ export default class SlotsController extends Controller {
     const unique = this.slots.uniqBy('slotDay').mapBy('slotDay');
     const days = [ allDays ];
 
+    unique.sort((a,b) => {
+      if (a < b) return -1;
+      if (a > b) return 1;
+      return 0;
+    });
+
     unique.forEach((day) => days.pushObject({id: day, title: moment(day).format('ddd MMM DD')}));
 
     return days;
   }
 
-  @computed('viewSlots', 'dayFilter', 'positionFilter', 'active')
+  @computed('viewSlots.@each.{active,position_id}', 'dayFilter', 'activeFilter')
   get slotGroups() {
     let slots = this.viewSlots;
     let groups = [];
@@ -64,26 +73,21 @@ export default class SlotsController extends Controller {
       if (group) {
         group.slots.push(slot);
       } else {
-        groups.push({title, position_id: slot.position_id, slots: [ slot ]});
+        group = {
+          title,
+          position_id: slot.position_id,
+          slots: [ slot ],
+          inactive: 0
+        }
+        groups.push(group);
+      }
+
+      if (!slot.active) {
+        group.inactive++;
       }
     });
 
     return groups.sortBy('title');
-  }
-
-  @computed('slots.{[],@each.position_id}')
-	get positionOptions() {
-    const unique = this.slots.uniqBy('position_title');
-
-    let options = [];
-
-    unique.forEach(function(slot) {
-      options.push({id: slot.position_id, title: slot.position_title});
-    });
-
-    options = options.sortBy('title');
-    options.unshift(allPositions);
-    return options;
   }
 
   @computed('slots.{[],@each.position_id}')
@@ -128,6 +132,44 @@ export default class SlotsController extends Controller {
     })
   }
 
+  _duplicateSlot(model) {
+    return this.store.createRecord('slot', {
+      begins: model.get('begins'),
+      ends: model.get('ends'),
+      description: model.get('description'),
+      active: model.get('active'),
+      position_id: model.get('position_id'),
+      //trainer_slot_id: model.get('trainer_slot_id'),
+      max: model.get('max'),
+      url: model.get('url')
+    });
+  }
+
+  @action
+  repeatSlot(slot) {
+    const duplicate = this._duplicateSlot(slot);
+
+    duplicate.save().then(() => {
+      this.slots.pushObject(duplicate);
+      duplicate.set('signed_up', 0);
+      this.toast.success('Slot was successfully repeated.');
+    });
+  }
+
+  @action
+  repeatSlotAdd24Hours(slot) {
+    const duplicate = this._duplicateSlot(slot);
+
+    duplicate.set('begins', moment(slot.begins).add(24, 'hours').format(DATETIME_FORMAT));
+    duplicate.set('ends',moment(slot.ends).add(24, 'hours').format(DATETIME_FORMAT));
+
+    duplicate.save().then(() => {
+      duplicate.set('signed_up', 0);
+      this.slots.pushObject(duplicate);
+      this.toast.success('Slot was successfully repeated with 24 hour addition.');
+    });
+  }
+
   @action
   deleteSlot(slot) {
     this.modal.confirm(
@@ -142,6 +184,20 @@ export default class SlotsController extends Controller {
             .catch((response) => this.house.handleErrorResponse(response) )
       }
     );
+  }
+
+  @action
+  cloneSlot(model, isValid) {
+    if (!isValid) {
+      return;
+    }
+
+    const duplicate = this._duplicateSlot(model);
+    duplicate.save().then(() => {
+      this.slots.pushObject(duplicate);
+      this.toast.success(`Slot successfully created from existing slot.`);
+      this.set('slot', duplicate);
+    });
   }
 
   @action
@@ -170,5 +226,10 @@ export default class SlotsController extends Controller {
   changeYear(year) {
     // Magic! set the year, and the query params fire off.
     this.set('year', year);
+  }
+
+  @action
+  toggleShowing(group) {
+    set(this.showingGroups, group.position_id, !this.showingGroups[group.position_id]);
   }
 }

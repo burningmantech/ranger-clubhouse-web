@@ -8,6 +8,7 @@ export default class AdminPositionRoute extends Route {
   }
 
   model() {
+    this.store.unloadAll('position');
     return this.store.query('position', {});
   }
 

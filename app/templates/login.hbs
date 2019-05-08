@@ -28,13 +28,13 @@
     </div>
     <div class="col-sm-12 col-md-6 col-lg-6">
       {{#ch-form "auth" auth validator=loginValidations onSubmit=(action "submit") as |f|}}
-        {{f.input "identification" label="Email" autofocus=true}}
+        {{f.input "identification" label="Email" autofocus=true noSpaces=true}}
         {{f.input "password" label="Password" type="password"}}
 
         <div class="row">
           <div class="col-sm-12 col-md-6 mb-4">
             {{f.submit label=(unless isSubmitting "Login" "Please Wait") disabled=isSubmitting submitClass="btn-lg login-submit"}}
-            {{#if isSubmitting}}    <span class="loading-spinner"></span>{{/if}}
+            {{#if isSubmitting}}<span class="loading-spinner"></span>{{/if}}
           </div>
           <div class="col-sm-12 col-md-6 mt-2">
             {{#link-to "reset-password" class="d-block"}}Forgot your password?{{/link-to}}
@@ -44,7 +44,7 @@
     </div>
 
     <div class="col-sm-12 col-md-6 col-lg-5 mt-4">
-      {{#ch-box "Interest in volunteering with The Rangers?"}}
+      {{#ch-box "Interested in volunteering with the Rangers?"}}
         <a href="http://rangers.burningman.org/ranger-application-process/">Click here</a>
         to read about our intake process for this event cycle. If you have
         applied previously, our process may have changed since you last applied.

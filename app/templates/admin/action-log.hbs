@@ -1,80 +1,81 @@
 <main class="col">
   <h1>Action Log</h1>
 
+  {{#if error}}
+    <p class="text-danger">
+        {{error}}
+    </p>
+  {{/if}}
+
   {{#ch-form "query" query changeSet=false onSubmit=(action searchAction) as |f|}}
     <div class="form-row">
-      <div class="col-md-2">
-        {{f.input "person" label="Person" type="search" size=30 onSearch=(action searchCallsignAction)}}
-      </div>
-      <div class="col-md-2">
-        {{f.input "target" label="Target" type="search" size=30 onSearch=(action searchCallsignAction)}}
-      </div>
-      <div class="col-md-2">
-        {{f.input "start_time" label="Start time" controlClass="form-control form-control-sm" type="datetime" size=30}}
-      </div>
-      <div class="col-md-2">
-        {{f.input "end_time" label="End time" controlClass="form-control form-control-sm" type="datetime" size=30}}
-      </div>
+      {{f.input "person" label="Person" type="text" size=30 grid="col-sm-12 col-md-2" controlClass="form-control form-control-sm" hint="Callsign or person id"}}
+      {{f.input "start_time" label="Start time" controlClass="form-control form-control-sm" type="datetime" size=30 grid="col-sm-12 col-md-2"}}
+      {{f.input "end_time" label="End time" controlClass="form-control form-control-sm" type="datetime" size=30 grid="col-sm-12 col-md-2"}}
     </div>
-    <div class="form-row">
-        <label>Events</label>
-        {{f.input "events" type="checkboxGroup" cols=4 options=eventOptions}}
+    <div class="form-group row mb-2">
+      <label class="col-1">Events</label>
+      {{f.input "events" type="checkboxGroup" cols=3 options=eventOptions}}
     </div>
-    <div class="form-row">
+    <div class="form-row mb-2">
+      <label class="col-1">Sort</label>
       <div class="col-auto">
-        <label>Sort</label>
-      </div>
-        <div class="col-auto">
-        {{f.input "sort" type="radioGroup" options=sortOptions inline=true}}
+        {{f.input "sort" type="radioGroup" options=sortOptions label="Sort" inline=true}}
       </div>
     </div>
-    {{f.submit label=(if isSubmitting "Searching" "Search") disabled=isSubmitting}}
+    {{f.submit label="Search"}}
     <button class="btn btn-secondary" {{action resetFilters f.model}}>Reset</button>
   {{/ch-form}}
 
-  {{#if isSubmitting}}
-    {{loading-message "the Action Log"}}
-  {{else if logs}}
+  {{#if logs}}
     <div class="mt-4">
-      Showing {{page}} of {{total_pages}} pages. {{pluralize total "row"}}
+      Showing {{currentPage}} of {{total_pages}} pages. {{pluralize total "row"}}
     </div>
     <table class="table table-hover table-sm">
       <thead>
         <tr>
-          <th>Timestamp</th>
-          <th>Person</th>
-          <th>Target</th>
-          <th>Message / Reason</th>
-          <th>Action</th>
+          <th class="w-15">Timestamp</th>
+          <th class="w-15">Person</th>
+          <th class="w-15">Target</th>
+          <th class="w-15">Event</th>
+          <th class="w-30">Message / Reason</th>
+          <th class="w-15">Action</th>
         </tr>
       </thead>
 
       <tbody>
         {{#each logs as |log|}}
           <tr>
-            <td>{{log.created_at}}</td>
-            <td>
+            <td class="w-15">{{log.created_at}}</td>
+            <td class="w-15">
               {{#if log.person}}
                 {{person-link person=log.person}}
+              {{else if log.person_id}}
+                #{{log.person_id}}
               {{else}}
                 -
               {{/if}}
             </td>
-            <td>
+            <td class="w-15">
               {{#if log.target_person}}
                 {{person-link person=log.target_person}}
+              {{else if log.target_person_id}}
+                #{{log.target_person_id}}
               {{else}}
                 -
               {{/if}}
             </td>
-            <td>
+            <td class="w-15">
+              {{log.event}}
+            </td>
+            <td class="w-30">
               {{#if log.message}}
                 {{log.message}}
               {{else}}
                 -
               {{/if}}
             </td>
-            <td>
+            <td class="w-5">
               {{#if log.data}}
                 <button class="btn btn-secondary btn-sm" {{action toggleLog log}}>{{if log.showing "Hide" "Show"}}</button>
               {{else}}
@@ -83,12 +84,9 @@
             </td>
           </tr>
 
-          <tr class="tr-no-border">
-            <td>
-              {{log.event}}
-            </td>
-            <td colspan="5">
-              {{#if (or log.positions log.roles log.slot)}}
+          {{#if (or log.positions log.roles log.slot)}}
+            <tr class="tr-no-border">
+              <td colspan="6">
                 {{#if log.positions}}
                   {{#each log.positions as |p idx|}}
                     {{if idx " / "}} {{p.title}}
@@ -105,23 +103,29 @@
                 {{#if log.slot}}
                   Slot #{{log.slot.id}} {{log.slot.position.title}} - {{log.slot.description}} {{shift-format log.slot.begins}}<br>
                 {{/if}}
-              {{/if}}
-            </td>
-          </tr>
+
+                {{#if log.enrolled_slots}}
+                  {{#each log.enrolled_slots as |slot|}}
+                    Previously Enrolled #{{slot.id}} {{slot.position.title}} - {{slot.description}} {{shift-format slot.begins}}<br>
+                  {{/each}}
+                {{/if}}
+              </td>
+            </tr>
+          {{/if}}
 
           {{#if log.showing}}
-            <tr>
+            <tr class="tr-no-border">
               <td colspan="6">
-                <pre>{{json-stringify log.data}}</pre>
+                {{json-format json=log.data}}
               </td>
             </tr>
           {{/if}}
         {{/each}}
       </tbody>
     </table>
-    <button class="btn btn-secondary" {{action goPrevPage}} disabled={{eq page 1}}>Prev Page</button>
-    <button class="btn btn-secondary" {{action goNextPage}} disabled={{eq page total_pages}}>Next Page</button>
-  {{else if noResults}}
+    <button class="btn btn-secondary" {{action goPrevPage}} disabled={{eq currentPage 1}}>Prev Page</button>
+    <button class="btn btn-secondary" {{action goNextPage}} disabled={{eq currentPage total_pages}}>Next Page</button>
+  {{else}}
     <p class="text-danger font-weight-bold mt-4">No Action Logs matched the criteria.</p>
   {{/if}}
 </main>

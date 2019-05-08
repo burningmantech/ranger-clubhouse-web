@@ -1,7 +1,7 @@
 import DS from 'ember-data';
+const { attr } = DS;
 import { memberAction } from 'ember-api-actions';
-import { attr } from '@ember-decorators/data';
-import { inject as service } from '@ember-decorators/service';
+import { inject as service } from '@ember/service';
 import PersonMixin from 'clubhouse/mixins/models/person';
 
 export default class PersonModel extends DS.Model.extend(PersonMixin) {
@@ -43,6 +43,8 @@ export default class PersonModel extends DS.Model.extend(PersonMixin) {
   @attr('string') longsleeveshirt_size_style;
   @attr('string') teeshirt_size_style;
 
+  @attr('string') message;
+  @attr('string') message_updated_at;
 
   // Emergency contact
 
@@ -64,6 +66,11 @@ export default class PersonModel extends DS.Model.extend(PersonMixin) {
   @attr('string') lam_status;
   @attr('string') bpguid;
   @attr('string') sfuid;
+
+  @attr('boolean') behavioral_agreement;
+
+  @attr('boolean') osha10;
+  @attr('boolean') osha30;
 
   @attr('boolean') mentors_flag;
   @attr('string') mentors_flag_note;

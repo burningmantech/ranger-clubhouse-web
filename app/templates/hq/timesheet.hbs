@@ -1,0 +1,15 @@
+<h3 class="d-print-none">Timesheet Entries</h3>
+<h1 class="d-none d-print-block">{{year}} Timesheet Entries For {{person.callsign}}</h1>
+
+{{#if timesheets}}
+  {{me/timesheet-review-common timesheets=timesheets timesheetInfo=timesheetInfo}}
+{{else}}
+  <p class="text-danger">
+    No timesheet entries were found.
+  </p>
+{{/if}}
+
+<div class="d-print-none">
+  <h3>Missing Timesheet Entry Requests</h3>
+  {{me/timesheet-missing-common person=person timesheetsMissing=timesheetsMissing timesheetInfo=timesheetInfo positions=positions}}
+</div>

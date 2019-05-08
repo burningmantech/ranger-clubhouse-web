@@ -16,6 +16,8 @@ export default class MeTimesheetRoute extends Route.extend(MeRouteMixin) {
       year,
     };
 
+    this.store.unloadAll('timesheet');
+
     return RSVP.hash({
       timesheets: this.store.query('timesheet', queryParams),
       timesheetInfo: this.ajax.request('timesheet/info', {

@@ -1,14 +1,13 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
-import { action, computed } from '@ember-decorators/object';
-import { inject as service } from '@ember-decorators/service';
+import { action, computed } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 import { Role } from 'clubhouse/constants/roles';
 
 export default class ClubhouseMessagesComponent extends Component {
   @argument('object') person;
   @argument('object') messages;
-  @argument('number') currentUnread;
 
   @service store;
 
@@ -48,11 +47,19 @@ export default class ClubhouseMessagesComponent extends Component {
     return this.session.user.hasRole([ Role.ADMIN, Role.MANAGE, Role.TRAINER, Role.VC]);
   }
 
+  _updateUnreadCount() {
+    const unreadCount = this.unreadCount;
+    this.person.set('unread_message_count', this.unreadCount);
+    if (this.session.user.id == this.person.id) {
+      this.session.user.set('unread_message_count', unreadCount);
+    }
+  }
+
   @action
   markReadAction(message) {
     return message.markRead().then(() => {
       message.set('delivered', true);
-      this.set('currentUnread', this.messages.reduce((total, msg) => total + (msg.delivered ? 0 : 1), 0));
+      this._updateUnreadCount();
     })
   }
 
@@ -72,7 +79,12 @@ export default class ClubhouseMessagesComponent extends Component {
       return;
     }
 
-    this.house.saveModel(model, `Message sent to ${model.get('recipient_callsign')}.`, () => {
+    this.house.saveModel(model, `Message successfully sent to ${model.get('recipient_callsign')}.`, () => {
+      if (this.newMessage.person_id == this.session.user.id) {
+        this.messages.update().then(() => {
+          this._updateUnreadCount();
+        });
+      }
       this.set('newMessage', null);
     });
   }

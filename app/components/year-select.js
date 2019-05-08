@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed } from '@ember-decorators/object';
+import { computed } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
 import { tagName } from '@ember-decorators/component';
@@ -22,6 +22,7 @@ export default class YearSelectComponent extends Component {
 
   // Is this a subheader?
   @argument(optional('boolean')) subheader = false;
+  @argument(optional('boolean')) inline = false;
 
   // Additional classnames to add
   @argument(optional('string')) gridClass = null;
@@ -32,6 +33,8 @@ export default class YearSelectComponent extends Component {
     if (this.subheader) {
       this.tagName = 'div';
       this.classNames = [ 'h2' ];
+    } else if (this.inline) {
+      this.tagName = 'div'
     }
 
     if (this.gridClass) {

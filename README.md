@@ -21,7 +21,7 @@ You will need the following things properly installed on your computer.
 * `git clone https://github.com/burningmantech/ranger-clubhouse-web` this repository
 * `cd ranger-clubhouse-web`
 * `yarn install`
-* Install the Clubhouse API server - see https://github.com/burningmantech/ranger-clubhouse-api/README.md for more information
+* Install the Clubhouse API server - see https://github.com/burningmantech/ranger-clubhouse-api/blob/master/README.md for more information
 
 ## Running / Development
 

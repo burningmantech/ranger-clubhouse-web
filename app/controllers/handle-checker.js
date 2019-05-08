@@ -1,12 +1,14 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import { later } from '@ember/runloop';
-import { action, computed, observes } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
+import { observes } from '@ember-decorators/object';
 import { HandleConflict } from '../utils/handle-conflict';
 import {
   AmericanSoundexRule,
   DoubleMetaphoneRule,
   EditDistanceRule,
+  ExperimentalEyeRhymeRule,
   EyeRhymeRule,
   FccRule,
   MinLengthRule,
@@ -52,11 +54,11 @@ export default class HandlerCheckerController extends Controller {
   get handleRules() {
     const handles = this.model.toArray();
     const rules = [];
-    const addRule = (rule, name) => rules.pushObject(EmberObject.create({
+    const addRule = (rule, name, enabled=true) => rules.pushObject(EmberObject.create({
       id: rule.id,
       name: name,
       rule: rule,
-      enabled: true,
+      enabled: enabled,
     }));
     // Rule ordering: Substring is first per 2019 request from Threepio.
     // No input yet on ideal ordering for all checks.
@@ -68,6 +70,7 @@ export default class HandlerCheckerController extends Controller {
     addRule(new AmericanSoundexRule(handles), 'American Soundex');
     addRule(new DoubleMetaphoneRule(handles), 'Double Metaphone');
     addRule(new EyeRhymeRule(handles), 'Eye rhymes');
+    addRule(new ExperimentalEyeRhymeRule(handles), 'Experimental eye rhymes', false);
     return rules;
   }
 
@@ -90,10 +93,12 @@ export default class HandlerCheckerController extends Controller {
       }
       return entity1.localeCompare(entity2);
     }
+    // By default, alphas can choose the handle of a non-vintage retired Ranger
+    const disabledByDefault = new Set(['retired ranger']);
     return this.model.mapBy('entityType').uniq().sort(comparator).map((type) => EmberObject.create({
       id: type.dasherize(),
       name: type,
-      enabled: true,
+      enabled: !disabledByDefault.has(type),
     }));
   }
 

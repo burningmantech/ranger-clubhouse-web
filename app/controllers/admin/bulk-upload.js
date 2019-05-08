@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 
 export default class AdminBulkUploadController extends Controller {
@@ -17,11 +17,12 @@ export default class AdminBulkUploadController extends Controller {
       ]
     },
     {
-      groupName: 'BMID Actions',
+      groupName: 'BMID & Radio Actions',
       options: [
         { id: 'meals', title: 'Set meals'},
         { id: 'showers', title: 'Set showers'},
-        { id: 'bmidsubmitted', title: 'Mark as submitted' }
+        { id: 'bmidsubmitted', title: 'Mark BMID as submitted' },
+        { id: 'eventradio', title: 'Event radio eligibility' }
       ]
     },
     {
@@ -32,9 +33,17 @@ export default class AdminBulkUploadController extends Controller {
       ]
     },
     {
-      groupName: 'Other',
+      groupName: 'Vehicle Paperwork Flags',
       options: [
-        { id: 'eventradio', title: 'Event radio eligibility' }
+        { id: 'vehicle_paperwork', title: 'Signed Motorpool Agreement (gators/golf carts)' },
+        { id: 'vehicle_insurance_paperwork', title: 'Has Org Vehicle Insurance (trucks/SUVs)' },
+      ]
+    },
+    {
+      groupName: 'OSHA Certification',
+      options: [
+        { id: 'osha10', title: 'Mark as OSHA-10 certified' },
+        { id: 'osha30', title: 'Mark as OSHA-30 certified' }
       ]
     }
   ];
@@ -59,8 +68,7 @@ export default class AdminBulkUploadController extends Controller {
     return this.actionResults.filter((r) => (r.status != 'success'));
   }
 
-  @action
-  submitAction() {
+  _submitCallsigns(commit) {
     this.toast.clear();
 
     this.set('isSubmitting', true);
@@ -70,7 +78,7 @@ export default class AdminBulkUploadController extends Controller {
       data: {
         action: this.uploadAction,
         records: this.records,
-        commit: this.commit
+        commit
       }
     }).then((results) => {
       this.set('actionResults', results.results);
@@ -85,10 +93,18 @@ export default class AdminBulkUploadController extends Controller {
         } else {
           this.toast.error('1 or more uploads were not successful.');
         }
-      } else  {
-        this.toast.warning('The upload has been verified but NOT submitted.');
       }
     }).catch((response) => this.house.handleErrorResponse(response))
     .finally(() => this.set('isSubmitting', false));
+  }
+
+  @action
+  submitAction() {
+    this._submitCallsigns(false);
+  }
+
+  @action
+  commitAction() {
+    this._submitCallsigns(true);
   }
 }

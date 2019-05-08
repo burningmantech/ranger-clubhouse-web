@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { isEmpty } from '@ember/utils';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 
 export default class AdminSettingsController extends Controller {
   typeOptions = [

@@ -1,0 +1,53 @@
+<h1>Freaking Years Report</h1>
+
+<p>
+  <label>
+    {{radio-button value=0 groupValue=showAll radioId="showAllFalse"}}
+    Show only active status accounts
+  </label>
+
+  <label class="ml-2">
+    {{radio-button value=1 groupValue=showAll radioId="showAllTrue"}}
+    Show all accounts
+  </label>
+</p>
+<p>
+  Report on people's service based on years rangered. The "Signed Up" column
+  indicates if ANY shift sign up (training, dirt shift, etc) was found for the
+  current year which may indicate the person will be working the event.
+</p>
+
+<p>
+<button class="btn btn-secondary btn-sm" {{action exportToCsv}}>Export To CSV</button>
+</p>
+
+{{#each freaking as |freaks|}}
+  <strong>{{pluralize freaks.years "year"}} - {{pluralize freaks.people.length "person"}}</strong>
+
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th class="w-20">Callsign</th>
+        <th class="w-25">Name</th>
+        <th class="w-10">Status</th>
+        <th>First Year</th>
+        <th>Last Year</th>
+        <th>Signed Up {{signed_up_year}}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each freaks.people as |person| }}
+        <tr>
+          <td class="w-20">{{person-link person=person}}</td>
+          <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
+          <td class="w-10">{{person.status}}</td>
+          <td>{{person.first_year}}</td>
+          <td>{{person.last_year}}</td>
+          <td>{{yesno person.signed_up}}</td>
+        </tr>
+
+      {{/each}}
+    </tbody>
+  </table>
+{{/each}}

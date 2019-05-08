@@ -6,5 +6,6 @@ export default class LoginRoute extends Route.extend(UnauthenticatedRouteMixin) 
   setupController(controller) {
     super.setupController(...arguments);
     controller.set('auth', Login.create());
+    this.house.clearStorage();
   }
 }

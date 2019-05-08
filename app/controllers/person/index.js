@@ -1,11 +1,11 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import inGroups from 'clubhouse/utils/in-groups';
 
 const CallsignApprovedOptions = [
   [ 'Approved', true ],
-  [ 'Rejected', false ]
+  [ 'Not Approved', false ]
 ];
 
 const StatusOptions = [
@@ -111,12 +111,13 @@ export default class PersonIndexController extends Controller {
     const statusChanged = model._changes['status'];
 
     model.save().then(() => {
+      this.set('showEditMessage', false);
       this.house.scrollToTop();
 
       this.toast.success('The information was successfully updated.');
 
       // Reload the current user.
-      if (model.get('id') == this.session.user_id) {
+      if (model.get('id') == this.session.user.id) {
         this.session.loadUser();
       }
 
@@ -132,6 +133,22 @@ export default class PersonIndexController extends Controller {
           .catch((response) => this.house.handleErrorResponse(response));
       }
     }).catch((response) => this.house.handleErrorResponse(response));
+  }
+
+  @action
+  editMessage() {
+    this.set('showEditMessage', true);
+  }
+
+  @action
+  hideMessage() {
+    this.set('showEditMessage', false);
+  }
+
+  @action
+  saveMessage(model) {
+    this.toast.clear();
+    this._savePersonModel(model);
   }
 
   @action
@@ -179,7 +196,7 @@ export default class PersonIndexController extends Controller {
   }
 
   @action
-  editPositions() {
+  editPositionsAction() {
     this.set('editPositions', true);
   }
 
@@ -209,7 +226,7 @@ export default class PersonIndexController extends Controller {
   }
 
   @action
-  editRoles() {
+  editRolesAction() {
     this.set('editRoles', true);
   }
 

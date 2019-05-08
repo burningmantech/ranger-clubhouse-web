@@ -1,4 +1,4 @@
-<div class="mb-2">
+<div class="mb-2 d-print-none">
   <div class="form-check form-check-inline">
     {{radio-button value="upcoming" groupValue=viewSchedule radioId="view-upcoming" radioClass="form-check-input"}}
     <label for="view-upcoming" class="form-check-label">Upcoming Shifts ({{upcomingCount}})</label>
@@ -7,6 +7,16 @@
     {{radio-button value="all" groupValue=viewSchedule radioId="view-all" classNames="form-check-label" radioClass="form-check-input" }} <label for="view-all" class="form-check-label">All Shifts ({{slots.length}})</label>
   </div>
 </div>
+
+{{#if overlapping}}
+  <p>
+    <span class="text-danger">You are signed up for overlapping shifts, marked with a
+      {{fa-icon "exclamation-triangle"}}.</span>
+    This might be an error, and you
+    didn't mean to be in two places at once. It might be just fine and you plan to work two shifts back-to-back.
+    You only get credit for the time you work, and won't receive double credit for the overlapping time.
+  </p>
+{{/if}}
 
 <div class="schedule-table schedule-itinerary">
   <div class="schedule-row schedule-header">
@@ -22,7 +32,9 @@
     {{#each viewSlots as |slot| }}
       <div class="schedule-row {{if slot.is_overlapping "schedule-overlapping"}}">
         <div class="schedule-time">
-          {{#if slot.is_overlapping}}{{fa-icon "exclamation-triangle"}}{{/if}}
+          {{#if slot.is_overlapping}}
+            <span class="text-danger">{{fa-icon "exclamation-triangle"}}</span>
+          {{/if}}
           {{shift-format slot.slot_begins}}
         </div>
         <div class="schedule-time">{{shift-format slot.slot_ends}}</div>
@@ -41,32 +53,25 @@
     <div class="schedule-row">
       <div>
         {{#if slots}}
-          <span class="text-danger">No upcoming shifts were found.</span>
+          <span class="text-danger">No upcoming {{year}} shifts were found.</span>
         {{else}}
-          <strong>You have nothing schedule for {{year}}.</strong>
+          <strong>No scheduled shifts were found for {{year}}.</strong>
         {{/if}}
       </div>
     </div>
   {{/if}}
   <div class="schedule-row">
     <div class="schedule-total mt-1">
-      <b>Total Time:</b> {{hour-minute-format (sum-column slots "slot_duration")}}
-      <b>Scheduled Credits:</b> {{credits-format creditsTotal}}
-      <b>Earned Credits:</b> {{credits-format creditsEarned}}
+      <span class="mr-2 d-inline-block"><b>Total Schedule Time:</b> {{hour-minute-format (sum-column slots "slot_duration")}}</span>
+      <span class="mr-2 d-inline-block"><b>Scheduled Credits:</b> {{credits-format creditsTotal}}</span>
+      <span class="d-inline-block"><b>Earned Credits:</b> {{credits-format creditsEarned}}</span>
     </div>
     <div class="schedule-actions d-print-none">
-      {{#link-to "me.schedule.print" class="btn btn-sm btn-secondary"}}Print{{/link-to}}
+      <button class="btn btn-secondary btn-sm" {{action printPage}}>Print</button>
     </div>
   </div>
 </div>
 
-{{#if overlapping}}
-  <p><span class="text-danger">You are signed up for overlapping shifts</span>, marked with a {{fa-icon "exclamation-triangle"}}.
-    This might be an error, and you
-    didn't mean to be in two places at once. It might be just fine and you plan to work two shifts back-to-back.
-    You only get credit for the time you work, and won"t receive double credit for the overlapping time.</p>
-{{/if}}
-
-{{#if person.isRanger}}
+{{#if (and person.isRanger isCurrentYear)}}
   {{ticket-threshold year=year credits=creditsTotal creditsEarned=creditsEarned}}
 {{/if}}

@@ -7,30 +7,30 @@ export default SessionService.extend({
 
   user: null,
 
-  async loadUser() {
+  loadUser() {
     if (!this.isAuthenticated) {
-      return;
+      return Promise.resolve();
     }
+
     const person_id = this.get('session.authenticated.person_id');
-    const person = await this.store.find("person", person_id);
-    await person.loadUserInfo();
 
-    /*
-     * A separate record is used to handle the login user to avoid
-     * some quirks with using a person Ember Data record.
-     */
+    return this.store.findRecord('person', person_id, { reload: true })
+    .then((person) => {
+      return person.loadUserInfo().then(() => {
+        const user = User.create({
+          id: person.id,
+          callsign: person.callsign,
+          callsign_approved: person.callsign_approved,
+          roles: person.roles,
+          status: person.status,
+          teacher: person.teacher,
+          has_hq_window: person.has_hq_window,
+          unread_message_count: person.unread_message_count,
+          bpguid: person.bpguid,    // PNV or Actives must have a BPGUID to sign up.
+        });
 
-    const user = User.create({
-      id: person.id,
-      callsign: person.callsign,
-      callsign_approved: person.callsign_approved,
-      roles: person.roles,
-      status: person.status,
-      teacher: person.teacher,
-      unread_message_count: person.unread_message_count,
-      bpguid: person.bpguid,    // PNV or Actives must have a BPGUID to sign up.
+        this.set('user', user);
+      });
     });
-
-    this.set('user', user);
   }
 });

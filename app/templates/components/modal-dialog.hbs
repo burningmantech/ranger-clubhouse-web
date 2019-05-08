@@ -2,19 +2,19 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       {{#if title}}
-      <div class="modal-header">
-        <h5 class="modal-title">{{title}}</h5>
-      </div>
+        <div class="modal-header">
+          <h5 class="modal-title">{{title}}</h5>
+        </div>
       {{/if}}
       <div class="modal-body">
         {{yield}}
         <div class="row mt-2">
           <div class="text-right col-sm-12">
             {{#if onConfirm}}
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary" {{action onConfirm}}>Confirm</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">{{cancelLabel}}</button>
+              <button type="button" class="btn btn-primary" {{action onConfirm}}>{{confirmLabel}}</button>
             {{else}}
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">{{closeLabel}}</button>
             {{/if}}
           </div>
         </div>

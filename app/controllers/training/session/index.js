@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import { debounce } from '@ember/runloop';
 import { set } from '@ember/object';
-import { action, computed } from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 
 const SEARCH_RATE_MS = 300;
 
@@ -191,10 +191,10 @@ export default class TrainingSlotController extends Controller {
       break;
 
     case 'multiple-enrollment':
-      modal.open('modal-multiple-enrollment', 'Multiple Enrollments Not Allowed', {
+      modal.open('modal-multiple-enrollment', {
+        title: 'Multiple Enrollments Not Allowed',
         slots: result.slots,
-        isMe: (person.id == this.session.user.id),
-        isAlpha: (result.slots[0].position.title == 'Alpha')
+        person
       });
       break;
 
@@ -229,9 +229,10 @@ export default class TrainingSlotController extends Controller {
         } else if (result.trainer_forced) {
           this.toast.success('Successfully signed up, and the trainer is now signed up for multiple training sessions.');
         } else if (result.multiple_forced) {
-          this.modal.open('modal-multiple-enrollment', 'Sign Up Forced - Other Enrollments Found', {
+          this.modal.open('modal-multiple-enrollment', {
+            title: 'Sign Up Forced - Other Enrollments Found',
             slots: result.slots,
-            isMe: (person.id == this.session.user.id),
+            person,
             forced: true,
           });
         } else {

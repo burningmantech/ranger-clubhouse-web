@@ -56,37 +56,39 @@
             {{#if position.allSelected}}deselect{{else}}select{{/if}} all
           </button>
         </caption>
-        <thead><tr>
-          <th>Copy</th>
-          <th>Start time</th>
-          <th>End time</th>
-          <th>Credits</th>
-          <th>Description</th>
-        </tr></thead>
+        <thead>
+          <tr>
+            <th>Copy</th>
+            <th>Start time</th>
+            <th>End time</th>
+            <th class="text-right">Credits</th>
+            <th>Description</th>
+          </tr>
+        </thead>
         <tbody>
-        {{#if position.expanded}}
-          {{#each position.credits as |credit|}}
-            <tr>
-              {{#let (concat "copy-credit-" credit.source.id) as |checkid|}}
-                <td>{{input type="checkbox" checked=credit.selected id=checkid}}</td>
-                <td>
-                  <label for={{checkid}}>
-                    {{shift-format credit.source.start_time}} →
-                    <br>{{credit.start_time}}
-                  </label>
-                </td>
-                <td>
-                  <label for={{checkid}}>
-                    {{shift-format credit.source.end_time}} →
-                    <br>{{credit.end_time}}
-                  </label>
-                </td>
-                <td class="text-right"><label for={{checkid}}>{{credits-format credit.source.credits_per_hour}}</label></td>
-                <td><label for={{checkid}}>{{credit.source.description}}</label></td>
-              {{/let}}
-            </tr>
-          {{/each}}
-        {{/if}}
+          {{#if position.expanded}}
+            {{#each position.credits as |credit|}}
+              <tr>
+                {{#let (concat "copy-credit-" credit.source.id) as |checkid|}}
+                  <td>{{input type="checkbox" checked=credit.selected id=checkid}}</td>
+                  <td>
+                    <label for={{checkid}}>
+                      {{shift-format credit.source.start_time}} &rarr;
+                      <br>{{credit.start_time}}
+                    </label>
+                  </td>
+                  <td>
+                    <label for={{checkid}}>
+                      {{shift-format credit.source.end_time}} &rarr;
+                      <br>{{credit.end_time}}
+                    </label>
+                  </td>
+                  <td class="text-right"><label for={{checkid}}>{{credits-format credit.source.credits_per_hour}}</label></td>
+                  <td><label for={{checkid}}>{{credit.source.description}}</label></td>
+                {{/let}}
+              </tr>
+            {{/each}}
+          {{/if}}
         </tbody>
       </table>
     {{/each}}
@@ -95,7 +97,7 @@
 
 
 <div class="row mb-1">
-  <div class="col-md-4 mb-2">
+  <div class="col-4">
     {{#power-select
           options=filterPositionOptions
           selected=positionFilter
@@ -103,10 +105,10 @@
           searchField="title"
           onchange=(action (mut positionFilter))
                     as |item| }}
-        {{item.title}}
+      {{item.title}}
     {{/power-select}}
   </div>
-  <div class="col-md-3 mb-2">
+  <div class="col-3">
     {{#power-select
           selected=dayFilter
           options=dayOptions
@@ -114,66 +116,62 @@
           searchField="title"
           onchange=(action (mut dayFilter))
                     as |item| }}
-        {{item.title}}
+      {{item.title}}
     {{/power-select}}
   </div>
 
-  <div class="col-md-2 mb-2">
-    <a href {{action "newCredit"}} class="btn btn-primary">New Position Credit</a>
+  <div class="col-auto ml-auto">
+    {{#if credits.length}}
+      <button {{action "startCopy"}} class="btn btn-secondary">Copy Credits</button>
+    {{/if}}
+    <button {{action "newCredit"}} class="btn btn-primary">New Position Credit</button>
   </div>
-
-  {{#if credits.length}}
-    <div class="col-md-2 mb-2">
-      <a href {{action "startCopy"}} class="btn btn-secondary">Copy Credits</a>
-    </div>
-  {{/if}}
 </div>
 
 {{#if credits.length}}
-<div class="text-muted">Showing {{viewCredits.length}} of {{credits.length}}</div>
-{{#unless viewCredits}}
-  <p class="text-danger">
-    No credits matched the filter criteria.
-  </p>
-{{/unless}}
+  <div class="text-muted">Showing {{viewCredits.length}} of {{credits.length}}</div>
+  {{#unless viewCredits}}
+    <p class="text-danger">
+      No credits matched the filter criteria.
+    </p>
+  {{/unless}}
 {{else}}
-No position credits were found for {{year}}?
-<br>
-To copy credits from a previous year, select that year from the list above.
+  <p class="text-danger">No position credits were found for {{year}}?</p>
+  To copy credits from a previous year, select that year from the list above.
 {{/if}}
 
 
 {{#each creditGroups as |group|}}
-<table class="table table-sm table-box table-hover">
-  <caption>
-    {{group.title}}
-  </caption>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>From</th>
-      <th>To</th>
-      <th class="text-right">Credits</th>
-      <th>Description</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each group.credits as |credit|}}
-    <tr id="credit-{{credit.id}}" >
-      <td>{{credit.id}}</td>
-      <td>{{shift-format credit.start_time}}</td>
-      <td>{{shift-format credit.end_time}}</td>
-      <td class="text-right">{{credits-format credit.credits_per_hour}}</td>
-      <td>
-        {{credit.description}}
-      </td>
-      <td>
-        <button {{action "editCredit" credit}} class="btn btn-primary btn-sm" title="Edit credit">{{fa-icon "edit"}}</button>
-        <button {{action "deleteCredit" credit}} class="btn btn-danger btn-sm" title="Delete credit">{{fa-icon "trash-alt" type="fas"}}</button>
-      </td>
-    </tr>
-  {{/each}}
-  </tbody>
-</table>
+  <table class="table table-sm table-box table-hover">
+    <caption>
+      {{group.title}}
+    </caption>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>From</th>
+        <th>To</th>
+        <th class="text-right">Credits</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each group.credits as |credit|}}
+        <tr id="credit-{{credit.id}}">
+          <td>{{credit.id}}</td>
+          <td>{{shift-format credit.start_time}}</td>
+          <td>{{shift-format credit.end_time}}</td>
+          <td class="text-right">{{credits-format credit.credits_per_hour}}</td>
+          <td>
+            {{credit.description}}
+          </td>
+          <td>
+            <button {{action "editCredit" credit}} class="btn btn-primary btn-sm" title="Edit credit">{{fa-icon "edit"}}</button>
+            <button {{action "deleteCredit" credit}} class="btn btn-danger btn-sm" title="Delete credit">{{fa-icon "trash-alt" type="fas"}}</button>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
 {{/each}}

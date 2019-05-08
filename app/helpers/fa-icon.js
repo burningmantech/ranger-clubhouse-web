@@ -6,7 +6,8 @@ export function faIcon([ name ], namedParams) {
   const type = namedParams.type || 'fas';
   const color = namedParams.color ? ` text-${namedParams.color}` : '';
   const title = namedParams.title ? ` title="${namedParams.title}"` : '';
-  return htmlSafe(`<i class="${type} fa-${name}${size}${color}"${title}></i>`)
+  const spinner = namedParams.spin ? ` fa-spin` : '';
+  return htmlSafe(`<i class="${type} fa-${name}${size}${color}${spinner}"${title}></i>`)
 }
 
 export default helper(faIcon);

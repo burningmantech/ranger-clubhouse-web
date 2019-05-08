@@ -1,16 +1,8 @@
 import Controller from '@ember/controller';
-import {
-  action,
-  computed
-} from '@ember-decorators/object';
+import { action, computed } from '@ember/object';
 import EmberObject from '@ember/object';
-import {
-  Role
-} from 'clubhouse/constants/roles';
-import {
-  debounce,
-  run
-} from '@ember/runloop';
+import { Role } from 'clubhouse/constants/roles';
+import { debounce, run } from '@ember/runloop';
 import ENV from 'clubhouse/config/environment';
 import RSVP from 'rsvp';
 
@@ -68,30 +60,39 @@ export default class ApplicationController extends Controller {
 
     auditor: false,
     past_prospective: false,
+
+    mode: 'account'
   });
 
-  @computed('session.user.roles')
-  get displayModeOptions() {
-    const user = this.session.user;
-    const options = [];
+  @action
+  searchFormChange() {
+    this.house.setKey('person-search-prefs', this.searchForm);
+  }
 
-    if (user.hasRole([Role.ADMIN, Role.VIEW_PII, Role.VC, Role.TRAINER, Role.MENTOR])) {
-      options.push({
-        id: 'full',
-        title: 'Account Manage'
-      });
+  /*
+   * Called from route/application when the user is logged in.
+   */
+
+  @computed('session.user.roles')
+  get canAccountManage() {
+    if (this.session.user) {
+      return this.session.user.hasRole([Role.ADMIN, Role.MANAGE, Role.VIEW_PII, Role.VC, Role.TRAINER, Role.MENTOR, Role.TIMESHEET_MANAGER]);
+    } else {
+      return false;
+    }
+  }
+
+  @computed('session.user.has_hq_window')
+  get modeOptions() {
+    const user = this.session.user;
+    const options = [ { id: 'account', title: 'Person Manage' } ];
+
+    if (user.has_hq_window) {
+      options.push({ id: 'hq', title: 'HQ Window' });
     }
 
-    options.push({
-      id: 'hq',
-      title: 'HQ Window'
-    });
-
-    if (user.hasRole(Role.TIMESHEET_MANAGER)) {
-      options.push({
-        id: 'timesheet',
-        title: 'Timesheet Management'
-      });
+    if (user.hasRole([Role.ADMIN, Role.TIMESHEET_MANAGER])) {
+      options.push({ id: 'timesheet', title: 'Timesheet Manage' });
     }
 
     return options;
@@ -107,11 +108,19 @@ export default class ApplicationController extends Controller {
    * the input field
    */
 
+   _modeRoutes = {
+     'account':   'person.index',
+     'hq':        'hq.index',
+     'timesheet': 'hq.timesheet'
+   };
+
   _showPerson(person) {
+      const mode = this.searchForm.mode;
+
       this.set('showSearchOptions', false);
       this.set('query', '');
       this.set('enterPressed', false);
-      this.transitionToRoute('person.index', person.id);
+      this.transitionToRoute((this._modeRoutes[mode] || 'person.index'), person.id);
       $('#person-search-query input').blur();
   }
 

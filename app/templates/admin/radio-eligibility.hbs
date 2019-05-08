@@ -1,0 +1,41 @@
+{{year-select "Radio Eligibility Report" year=year onChange=(action (mut year))}}
+<p>
+  The report will list all active, inactive, inactive extension, and retired
+  Rangers with their last year, and previous to last year hours. The Alpha
+  and Training shifts are not included.
+</p>
+<p>
+  "Shift Lead" indicates if the person is shift lead.<br>
+  "Signed Up" indicates if the person has signed up for a shift beginning  August 15, {{year}} or later.
+</p>
+<div class="d-flex">
+  {{pluralize people.length "person"}}
+  <div class="ml-auto">
+    <button class="btn btn-primary btn-sm" {{action exportToCsv}}>Export To CSV</button>
+  </div>
+</div>
+<table class="table table-sm table-striped">
+  <thead>
+    <tr>
+      <th>Callsign</th>
+      <th class="text-right">{{year_last}} Hours</th>
+      <th class="text-right">{{year_prev}} Hours</th>
+      <th class="text-right">Eligibility Hours</th>
+      <th>Shift Lead</th>
+      <th>{{year}} Signup</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each people as |person|}}
+      <tr>
+        <td>{{person-link person=person}}</td>
+        <td class="text-right">{{person.hours_last_year}}</td>
+        <td class="text-right">{{person.hours_prev_year}}</td>
+        <td class="text-right">{{person.radio_hours}}</td>
+        <td>{{yesno person.shift_lead}}</td>
+        <td>{{yesno person.signed_up}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

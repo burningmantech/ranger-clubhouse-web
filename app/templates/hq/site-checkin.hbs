@@ -1,0 +1,116 @@
+{{#if person.on_site}}
+<p>
+  <strong class="text-success">{{person.callsign}} is marked as ON SITE.</strong>
+</p>
+{{/if}}
+<h2>Site Check In</h2>
+<ul>
+  <li>Verify &amp; the camp name, location, and the emergency contacts</li>
+  <li>Check to see if the person has signed the Radio Authorization form, and Motorpool Policy Agreement</li>
+  <li>{{#if eventInfo.radio_eligible}}Check out an Event Radio if person would like one now{{else}}Person is only authorized for shift radios.{{/if}}</li>
+  <li>After you hand the person their Ranger laminate and field guide, mark the person as on site.</li>
+</ul>
+<div class="border rounded p-2">
+  <div class="d-flex">
+    <h4>Update Contact Information</h4>
+    <div class="ml-auto">{{help-popover slug="hq-site-checkin-contact-info" left=true}}</div>
+  </div>
+
+  {{#ch-form "contact" person onSubmit=(action saveContactForm) as |f|}}
+    <div class="form-row">
+      {{f.input "camp_location" type="textarea" label="Camp Name & Location" autofocus=true rows=2 cols=80}}
+    </div>
+    <p class="ml-2">
+      <strong>Off-Playa:</strong>
+      Real world name, relationship (partner, friend, sibling, parent), phone number, &amp; email.<br>
+
+      <strong>On-Playa:</strong>
+      Their playa name, real world name, relationship, camp location &amp; description.<br>
+    </p>
+    <div class="form-row">
+      {{f.input "emergency_contact" type="textarea" label="Emergency Contact Information:" rows=4 cols=80 }}
+    </div>
+    {{f.submit label="Update Camp & Emergency Contact Info"}}
+    {{#if contactSaved}}
+      <span class="text-success">{{fa-icon "check"}}</span>
+    {{/if}}
+  {{/ch-form}}
+</div>
+
+<div class="mt-2 border rounded p-2">
+  <div class="d-flex">
+    <h4>Agreements</h4>
+    <div class="ml-auto">{{help-popover slug="hq-site-checkin-agreements" left=true}}</div>
+  </div>
+
+  <p>
+    {{#if person.asset_authorized}}
+      Radio checkout form has been <strong class="text-success">SIGNED</strong>.
+    {{else}}
+      <div class="text-danger">Radio checkout form has NOT BEEN SIGNED.</div>
+      <button class="btn btn-primary" {{action markAssetAuthorized}} disabled={{isSubmitting}}>Mark Form As Signed</button>
+    {{/if}}
+  </p>
+  <p>
+    {{#if person.vehicle_paperwork}}
+      Motorpool Policy has been <strong class="text-success">AGREED</strong> to.
+    {{else}}
+      <div class="text-danger">Motorpool Polcy has NOT BEEN AGREED TO.</div>
+      <button class="btn btn-primary" {{action markMotorpoolAgreed}} disabled={{isSubmitting}}>Mark As Agreed To Policy</button>
+    {{/if}}
+  </p>
+</div>
+
+<div class="mt-2 border rounded p-2">
+  <div class="float-right">
+    {{help-popover slug="hq-site-checkin-radios" left=true}}
+  </div>
+
+  {{#if eventInfo.radio_eligible}}
+    <h4>Event Radio Checkout - Authorized For {{pluralize eventInfo.radio_max "Event Radio"}}</h4>
+    <p>
+      The radio may be checked out now, or at the start of their first shift.
+    </p>
+    {{asset-checkout-form person=person assets=assets attachments=attachments eventInfo=eventInfo}}
+    {{#if activeAssets}}
+      {{pluralize activeAssets.length "asset"}} checked out.
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th>Barcode</th>
+            <th>Type</th>
+            <th>Assigned</th>
+            <th>Attachment</th>
+            <th>Out</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each activeAssets as |ap|}}
+            <tr>
+              <td>{{ap.asset.barcode}}</td>
+              <td>{{ap.asset.description}}</td>
+              <td>{{if ap.asset.perm_assign "permanent" "temporary"}}</td>
+              <td>{{ap.attachment.description}}</td>
+              <td>{{shift-format ap.checked_out}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{/if}}
+
+  {{else}}
+    <strong class="text-danger"> {{person.callsign}} is not eligible for an event radio.</strong>
+    A radio will need be to checked out for each shift, and then returned at the end of the shift.
+  {{/if}}
+</div>
+
+<div class="mt-4">
+  {{#if person.on_site}}
+    <p class="font-weight-bold text-success">
+      {{person.callsign}} is marked as ON SITE.
+    </p>
+    {{#link-to "hq.shift" class="btn btn-success"}}Start Shift Checkin{{/link-to}}
+  {{else}}
+    <button class="btn btn-primary" {{action markOnSite}}>Mark As On Site</button>
+  {{/if}}
+</div>

@@ -1,8 +1,6 @@
 import Service from '@ember/service';
 import ENV from 'clubhouse/config/environment';
-import {
-  inject as service
-} from '@ember-decorators/service';
+import { inject as service } from '@ember/service';
 import {
   isAbortError,
   isTimeoutError
@@ -13,12 +11,15 @@ import {
 import {
   run
 } from '@ember/runloop';
+import { isEmpty } from '@ember/utils';
+
 import DS from 'ember-data';
 
 export default class HouseService extends Service {
   @service toast;
   @service session;
   @service router;
+  @service store;
 
   /*
    * Handle an error response from either an ajax request or an Ember Data request.
@@ -162,12 +163,33 @@ export default class HouseService extends Service {
    */
 
   downloadCsv(filename, columns, data) {
-    let contents = columns.join(',') + "\n";
+    const headers = columns.map((column) => {
+      if (typeof column == 'string') {
+        return column;
+      } else {
+        return column.title;
+      }
+    });
+
+    let contents = headers.join(',')+"\n";
 
     data.forEach((line) => {
       let fields = [];
       columns.forEach((column) => {
-        fields.push(line[column]);
+        let value;
+        if (typeof column == 'string') {
+          value = line[column];
+        } else {
+          value = line[column.key];
+        }
+
+        value = isEmpty(value) ? '' : value.toString();
+
+        value = value.replace(/"/g, '""');
+        if (value.search(/("|,|\n)/g) >= 0) {
+          value = `"${value}"`;
+        }
+        fields.push(value);
       });
       contents += fields.join(',') + "\n";
     });
@@ -234,5 +256,72 @@ export default class HouseService extends Service {
         });
       }
     });
+  }
+
+  /*
+   * Obtain the current year
+   */
+
+   currentYear() {
+     return (new Date()).getFullYear();
+   }
+
+   _getStorage() {
+     let storage;
+
+     try {
+       storage = window.sessionStorage.getItem('clubhouse');
+
+       if (storage) {
+         storage = JSON.parse(storage);
+       }
+     } catch (e) {
+       // browser blocking sessionStorage or not available.
+       return {};
+     }
+
+
+     return storage || { };
+   }
+
+   /*
+    * local storage management
+    */
+   setKey(key, data) {
+     const storage = this._getStorage();
+
+     if (data == null) {
+       delete storage[key];
+     } else {
+       storage[key] = data;
+     }
+
+     try {
+       window.sessionStorage.setItem('clubhouse', JSON.stringify(storage));
+     } catch (e) {
+       // browser blocking sessionStorage or not available.
+     }
+   }
+
+   getKey(key) {
+     return this._getStorage()[key];
+   }
+
+   clearStorage() {
+     try {
+       window.sessionStorage.removeItem('clubhouse');
+     } catch (e) {
+       // browser blocking sessionStorage or not available.
+     }
+   }
+
+  /*
+   * Avoids common pitfalls and the weird undocumented special-sauce format that must be used with the built in pushPayload
+   *
+   * From https://gist.github.com/runspired/96618af26fb1c687a74eb30bf15e58b6/
+   */
+
+  pushPayload(modelName, rawPayload) {
+    return this.store.push(this.store.normalize(modelName, rawPayload));
   }
 }

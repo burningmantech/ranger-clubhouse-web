@@ -1,7 +1,6 @@
 import DS from 'ember-data';
 const { Model } = DS;
-import { attr } from '@ember-decorators/data';
-import { memberAction } from 'ember-api-actions';
+const { attr } = DS;
 
 export default class AssetPersonModel extends Model {
   @attr('number') person_id;
@@ -13,6 +12,4 @@ export default class AssetPersonModel extends Model {
   @attr('', { readOnly: true }) asset;
   @attr('', { readOnly: true }) attachment;
   @attr('', { readOnly: true }) person;
-
-  checkInAction = memberAction({ type: 'POST', path: 'checkin' });
 }

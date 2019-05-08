@@ -2,18 +2,32 @@
   <div class="form-row">
     {{f.input "position_id" label="Position" type="select" options=positionOptions grid="col-md-auto"}}
     {{f.input "trainer_slot_id"
-      label="Trainer's Slot"
+      label="Sign Up Multiplier Trainer's Slot"
       type="select"
       options=trainerSlotsOptions
       includeBlank=true
-      grid="col-md-auto"}}
+      grid="col-md-auto"
+    }}
   </div>
 
   <div class="form-row">
-    {{f.input "description" label="Description" type="text" size=25 maxlength=25 grid="col-md-auto"}}
+    {{f.input "description" label="Description" type="text" size=40 maxlength=40 grid="col-md-auto"
+      hint=(concat (if f.model.description f.model.description.length "0") " of 40 characters.")
+    }}
     {{f.input "begins" label="Begining Time" type="datetime" maxlength=25 grid="col-md-auto col-sm-12"}}
     {{f.input "ends" label="Ending Time" type="datetime"  maxlength=20 grid="col-md-auto col-sm-12"}}
-    {{f.input "max" label="Max" type="text" size=3 maxlength=3 grid="col-md-auto col-sm-12"}}
+    {{f.input "max" label=(if f.model.trainer_slot_id "Multiplier" "Max Sign Ups") type="text" size=3 maxlength=3 grid="col-md-2 col-sm-12"}}
+    {{#if f.model.trainer_slot_id}}
+    <div class="col-md-9 col-sm-12">
+      <span class="text-danger">NOTE:</span>
+       The Trainer's Slot has been set and the Max Sign Ups is acting as a multiplier instead of a
+      hard count. The total sign ups allowed will be computed as the number of trainers signed up in
+      the trainer's slot TIMES the Max Sign Ups limit.
+      (e.g., if 2 trainers are signed up, and the sign up limitis 10, the total signups allowed will
+      be 20.)
+    </div>
+    {{/if}}
+
   </div>
 
   <div class="form-row">
@@ -23,13 +37,17 @@
   </div>
 
   <div class="form-row">
-    {{f.input "url" label="Information" type="textarea" rows=3 cols=80 maxlength=255 wrapClass="col-12"
-        hint="Additional information may be given about the shift in the above area.
-    e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.khaki/meetup or email women@khaki.rangers"}}
+    {{f.input "url" label="Information" type="textarea" rows=3 cols=80 maxlength=512 wrapClass="col-12"
+        hint=(concat (if f.model.url f.model.url.length "0") " of 512 characters.
+Additional information may be given about the shift in the above area.
+e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.khaki/meetup or email women@khaki.rangers")}}
   </div>
 
   <div class="form-group mt-2">
     {{f.submit label=(if slot.isNew "Create" "Update")}}
+    {{#unless slot.isNew}}
+      {{f.submit label="Create New Slot" onSubmit=(action cloneRecord)}}
+    {{/unless}}
     {{f.cancel}}
   </div>
 

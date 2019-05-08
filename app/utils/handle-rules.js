@@ -345,12 +345,18 @@ class Syllable {
 
 /**
  * Identifies names which contain syllables that rhyme.  These are "eye rhymes" because they're based on spelling
- * rather than true punctuation.  By matching any rhyming syllable, this produces a lot of false positives.
+ * rather than true pronunciation.  By matching any rhyming syllable, this produces a lot of false positives.
  * TODO In poetry, a rhyme is the last stressed vowel to the end of the word.  Consider identifying stress so that
  * "avo" (not "o") matches "bravo."
  */
-export class EyeRhymeRule {
-  constructor(handles) {
+class EyeRhymeBase {
+  /**
+   * handles: Array of handle objects.
+   * conflictPercent: Floating point from 0 (at least 1 syllable rhymes) to 1 (all syllables rhyme)
+   *     determining the ratio of rhyming syllables to total syllables required to make a conflict.
+   */
+  constructor(handles, conflictPercent) {
+    this.conflictPercent = conflictPercent;
     this.rimeIndex = {}; // rime to array of {handle, syllables[]}
     for (const handle of handles) {
       const entity = {handle: handle, syllables: this.toSyllables(handle.name)};
@@ -363,8 +369,6 @@ export class EyeRhymeRule {
       }
     }
   }
-
-  get id() { return 'eye-rhyme'; }
 
   check(name) {
     const syllables = this.toSyllables(name);
@@ -384,11 +388,14 @@ export class EyeRhymeRule {
     const result = [];
     rhymes.forEach((count, handle) => {
       // TODO consider rhyming syllable position
-      // TODO if there's only one rhyming syllable in two long names, don't complain
-      const description = (count === 1)
-        ? `has a syllable rhyming with ${handle.name}`
-        : `shares ${count} rhyming syllables with ${handle.name}`;
-      result.push(new HandleConflict(name, description, 'medium', this.id, handle));
+      // TODO if a handle has multiple rhyming syllables, only count one per matching rhyme in
+      // another handle, e.g. "big wig" only has 1 match with "my fig", not 2 matches
+      if (count / syllables.length >= this.conflictPercent) {
+        const description = (count === 1)
+          ? `has a syllable rhyming with ${handle.name}`
+          : `shares ${count} rhyming syllables with ${handle.name}`;
+        result.push(new HandleConflict(name, description, 'medium', this.id, handle));
+      }
     });
     return result;
   }
@@ -414,8 +421,7 @@ export class EyeRhymeRule {
       // Work backwards, consume silent e, then coda, then nucleus, then onset.
       // If onset is preceeded by more than one cluster, pick the optimal
       // coda/onset breaking point.
-      const clusters = word.split(/([aeiouy]+|[^aeiouy]+)/)
-        .filter((s) => s.length > 0);
+      const clusters = word.split(/([aeiouy]+|[^aeiouy]+)/).filter((s) => s.length > 0);
       while (clusters.length > 0) {
         // TODO to preserve order, make the loop return an array and use shift
         let onset = '';
@@ -454,7 +460,10 @@ export class EyeRhymeRule {
             clusters.push(split[0]); // coda for next round
           }
         }
-        syllables.push(new Syllable(onset, nucleus, coda, silentEnding));
+        // Collapse double consonants, since they typically sound like single consonants
+        // ("barbel" rhymes with "bar bell" for our purposes).  Don't collapse double vowels,
+        // because they usually indicate different phonemes ("moon" doesn't rhyme with "mon").
+        syllables.push(new Syllable(this.collapseDoubles(onset), nucleus, this.collapseDoubles(coda), silentEnding));
       }
     }); // each word
     return syllables;
@@ -474,6 +483,31 @@ export class EyeRhymeRule {
   }
 
   vowelsOnly(s) { return !!s.match(/^[aeiouy]+$/); }
+
+  collapseDoubles(s) {
+    for (let i = 1; i < s.length; ++i) {
+      if (s[i] === s[i - 1]) {
+        s = s.substr(0, i) + s.substr(i + 1);
+      }
+    }
+    return s;
+  }
+}
+
+export class EyeRhymeRule extends EyeRhymeBase {
+  constructor(handles) {
+    super(handles, 0.0);
+  }
+
+  get id() { return 'eye-rhyme'; }
+}
+
+export class ExperimentalEyeRhymeRule extends EyeRhymeBase {
+  constructor(handles) {
+    super(handles, 0.5);
+  }
+
+  get id() { return 'experimental-eye-rhyme'; }
 }
 
 export const ALL_RULE_CLASSES = [
@@ -481,6 +515,7 @@ export const ALL_RULE_CLASSES = [
   DoubleMetaphoneRule,
   EditDistanceRule,
   EyeRhymeRule,
+  ExperimentalEyeRhymeRule,
   FccRule,
   MinLengthRule,
   PhoneticAlphabetRule,

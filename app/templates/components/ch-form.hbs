@@ -1,57 +1,4 @@
-{{#if modalBox}}
-<div id="form-dialog" class="modal" tabindex="-1" role="dialog" data-backdrop="static">
-  <div class="modal-dialog  modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{modalTitle}}</h5>
-      </div>
-      <div class="modal-body">
-        <form id="{{formId}}" class="{{formClass}}" method="post" autocomplete={{autocomplete}} {{action "submitForm" on="submit"}}>
-        {{yield (hash
-          model=model
-          input=(component "ch-form/field"
-            model=model
-            formId=formId
-            placeholder=placeholder
-            size=size
-            maxlength=maxlength
-            disabled=disabled
-            onChange=onChange
-            fieldChangeAction=(action "fieldChangeAction")
-            autofocus=autofocus
-            autocomplete=autocomplete
-            includeBlank=includeBlank
-            startDate=startDate
-            onFocus=onFocus
-          )
-          submit=(component "ch-form/submit"
-            label=label
-            submitClass=submitClass
-            formSubmitAction=(action "submitForm")
-            onSubmit=onSubmit
-            disabled=disabled
-          )
-          reset=(component "ch-form/reset-button"
-            label=label
-            class=resetClass
-            resetAction=(action "resetForm")
-            disabled=disabled
-          )
-          cancel=(component "ch-form/cancel"
-            label=label
-            cancelClass=cancelClass
-            cancelAction=(action "cancelForm")
-            disabled=disabled
-          )
-        ) }}
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-{{else}}
-<form id="{{formId}}" method="post" autocomplete={{autocomplete}} {{action "submitForm" on="submit"}} class={{formClass}}>
-{{yield (hash
+{{#let (hash
   model=model
   input=(component "ch-form/field"
     model=model
@@ -67,6 +14,7 @@
     includeBlank=includeBlank
     startDate=startDate
     onFocus=onFocus
+    noSpaces=noSpaces
   )
   submit=(component "ch-form/submit"
     label=label
@@ -81,13 +29,33 @@
     resetAction=(action "resetForm")
     disabled=disabled
   )
-
   cancel=(component "ch-form/cancel"
     label=label
     cancelClass=cancelClass
     cancelAction=(action "cancelForm")
     disabled=disabled
   )
-) }}
-</form>
-{{/if}}
+) as |controls|}}
+  {{#if formless}}
+    {{yield controls}}
+  {{else if modalBox}}
+    <div id="form-dialog" class="modal" tabindex="-1" role="dialog" data-backdrop="static">
+      <div class="modal-dialog  modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">{{modalTitle}}</h5>
+          </div>
+          <div class="modal-body">
+            <form id="{{formId}}" class="{{formClass}}" method="post" autocomplete={{autocomplete}} {{action "submitForm" on="submit"}}>
+              {{yield controls}}
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{else}}
+    <form id="{{formId}}" class="{{formClass}}" method="post" autocomplete={{autocomplete}} {{action "submitForm" on="submit"}}>
+      {{yield controls}}
+    </form>
+  {{/if}}
+{{/let}}

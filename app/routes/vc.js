@@ -5,6 +5,7 @@ import { Role } from 'clubhouse/constants/roles';
 
 export default class VcRoute extends Route.extend(AuthenticatedRouteMixin) {
   beforeModel() {
-    this.house.roleCheck([ Role.ADMIN, Role.VC ]);
+    super.beforeModel(...arguments);
+    this.house.roleCheck([ Role.ADMIN, Role.VC, Role.EDIT_BMIDS ]);
   }
 }

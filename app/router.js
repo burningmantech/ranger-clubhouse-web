@@ -33,7 +33,6 @@ Router.map(function() {
     this.route('timesheet');
     this.route('schedule', function() {
       this.route('index',  { path: '/' });
-      this.route('print');
     });
     this.route('tickets');
     this.route('help');
@@ -54,15 +53,32 @@ Router.map(function() {
     this.route('languages');
   });
   this.route('admin', function() {
-    this.route('positions');
-    this.route('slots');
-    this.route('credits');
-    this.route('roles');
-    this.route('error-log');
-    this.route('bulk-upload');
-    this.route('settings');
-    this.route('salesforce');
     this.route('action-log');
+    this.route('bulk-upload');
+    this.route('credits');
+    this.route('error-log');
+    this.route('event-dates');
+    this.route('positions');
+    this.route('roles');
+    this.route('salesforce');
+    this.route('settings');
+    this.route('slots');
+    this.route('motd');
+    this.route('assets');
+    this.route('help');
+    this.route('radio-eligibility');
+    this.route('bulk-sign-in-out');
+  });
+
+  this.route('hq', { path: '/hq/:person_id' }, function() {
+    this.route('index', { path: '/' });
+    this.route('site-checkin');
+    this.route('shift');
+    this.route('schedule');
+    this.route('timesheet');
+    this.route('assets');
+    this.route('messages');
+    this.route('training-info');
   });
 
   this.route('debug');
@@ -89,6 +105,7 @@ Router.map(function() {
     this.route('broadcast-log');
     this.route('access-documents');
     this.route('tickets');
+    this.route('bmid');
   });
 
   this.route('logout');
@@ -114,6 +131,10 @@ Router.map(function() {
     this.route('assets-outstanding');
     this.route('radio-assets');
     this.route('radio-checkout');
+    this.route('shirts');
+    this.route('freaking-years');
+    this.route('alpha-shirts');
+    this.route('shift-lead');
   });
 
   this.route('vc', function() {
@@ -122,6 +143,9 @@ Router.map(function() {
       this.route('expiring');
       this.route('trs');
     });
+    this.route('bmid');
+    this.route('bmid-sanity-check');
+    this.route('bmid-print');
   });
   this.route('register');
 

@@ -1,0 +1,42 @@
+{{#modal-dialog title="Asset Check Out/In History" onClose=onClose}}
+  <table class="table table-striped table-sm mt-4">
+    <thead>
+      <tr>
+        <th>Person</th>
+        <th>Attachment</th>
+        <th>Out</th>
+        <th>In</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#if isLoading}}
+        <tr>
+          <td colspan="5">
+            Loading history {{fa-icon "spinner" spin=true}}
+          </td>
+        </tr>
+      {{else}}
+        {{#each assetHistory as |row|}}
+          <tr>
+            <td>{{#link-to "person.assets" row.person.id}}{{row.person.callsign}}{{/link-to}}</td>
+            <td>{{present-or-not row.attachment.description "-"}}</td>
+            <td>{{shift-format row.checked_out}}</td>
+            <td>
+              {{#if row.checked_in}}
+                {{shift-format row.checked_in}}
+              {{else}}
+                <button class="btn btn-primary btn-sm" {{action checkin row}}>Check In</button>
+              {{/if}}
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="5" class="text-danger">
+              No asset history was found - this asset has not been checked out.
+            </td>
+          </tr>
+        {{/each}}
+      {{/if}}
+    </tbody>
+  </table>
+{{/modal-dialog}}

@@ -1,0 +1,149 @@
+{{#ch-sidebar}}
+  {{#ch-sidebar-group "HQ WINDOW"}}
+    {{ch-sidebar-link "hq.shift" title="Shift Manage" icon="walking" iconType="s"}}
+    {{ch-sidebar-link "hq.schedule" title="Schedule / Sign Up" icon="clipboard"}}
+    {{ch-sidebar-link "hq.messages" title="Messages" icon="envelope" badgeText=person.unread_message_count}}
+    {{ch-sidebar-link "hq.timesheet" title="Timesheets" class="dropdown-item" icon="clock"}}
+    {{ch-sidebar-link "hq.assets" title="Asset History" class="dropdown-item" icon="broadcast-tower" iconType="s"}}
+    {{ch-sidebar-link "hq.training-info" title="Training Info" icon="graduation-cap" iconType="s"}}
+    {{ch-sidebar-link "hq.site-checkin" title="Site Check In" icon="list-ol" iconType="s"}}
+  {{/ch-sidebar-group}}
+{{/ch-sidebar}}
+
+<main class="col">
+  <div class="d-flex justify-content-between d-print-none">
+    <h2>
+      {{#link-to "hq.index" person.id}}{{person.callsign}}{{/link-to}} &lt;{{person.status}}{{if person.vintage "/vintage"}}{{if isShinyPenny ", Shiny Penny"}}&gt;
+      {{#unless person.on_site}} <span class="text-danger">OFF SITE</span>{{/unless}}
+    </h2>
+    <div class="text-muted">HQ Window</div>
+    <div class="text-right">
+      {{#link-to "person.index" person.id class="btn btn-secondary btn-sm"}}Person Manage{{/link-to}}
+    </div>
+  </div>
+
+
+  {{#if person.message}}
+    {{#ch-box "Important Account Message" type="warning"}}
+      {{nl2br person.message}}
+      <div class="mt-2 text-muted">Message added {{shift-format person.message_updated_at}}</div>
+    {{/ch-box}}
+  {{/if}}
+
+  <div class="row">
+    <div class="col-md-9 d-print-block">
+      {{#if (not person.user_authorized)}}
+        {{#ch-alert "danger"}}
+          <div class="float-left mr-2">
+            {{fa-icon "exclamation-triangle" size="3x"}}
+          </div>
+          Account is DISABLED. Contact the HQ Lead or the Personnel Manager {{mail-to (config "PersonnelEmail")}}.
+        {{/ch-alert}}
+      {{else if person.isSuspended}}
+        {{#ch-alert "danger"}}
+          <div class="float-left mr-2">
+            {{fa-icon "exclamation-triangle" size="3x"}}
+          </div>
+          Account is SUSPENDED. Contact the HQ Lead or the Personnel Manager {{mail-to (config "PersonnelEmail")}}.
+        {{/ch-alert}}
+      {{else if (not allowedCheckIn)}}
+        {{#ch-alert "danger"}}
+          <div class="float-left mr-2">
+            {{fa-icon "exclamation-triangle" size="3x"}}
+          </div>
+          This account cannot use the HQ Window Interface because the status is {{person.status}}
+        {{/ch-alert}}
+      {{else}}
+        {{#if person.needsBpguid}}
+          {{#ch-alert "warning"}}
+            Account does not have Burner Profile ID on file. Shift sign ups are disabled.
+          {{/ch-alert}}
+        {{/if}}
+
+        {{outlet}}
+      {{/if}}
+    </div>
+
+    <div class="col-md-3 d-print-none">
+      <div class="mugshot">
+        {{#if photo}}
+          {{#if photo.photo_url}}
+            <img src="{{photo.photo_url}}" class="mx-auto d-block" alt="profile photo">
+            Status:
+            {{#if (eq photo.photo_status "approved")}}
+              <span class="text-success">Approved</span>
+            {{else}}
+              <span class="text-danger">{{photo.photo_status}}</span>
+            {{/if}}
+            <br>
+          {{else}}
+            <i class="far fa-user fa-8x"></i><br>
+            No Photo Uploaded<br>
+          {{/if}}
+          {{#if photo.message}}
+            <div class="text-danger">ERROR: {{photo.message}}</div>
+          {{/if}}
+        {{else}}
+          <div class="loading-spinner"></div>
+          . . Loading photo . .
+        {{/if}}
+      </div>
+
+      <div class="border rounded p-2">
+        <div class="float-right">
+          {{help-popover slug="hq-sidebar" left=true}}
+        </div>
+        <dl>
+          <dt>Earned Credits</dt>
+          <dd>{{credits-format creditsEarned}}</dd>
+
+          <dt>Est. Total Credits</dt>
+          <dd>{{credits-format creditsExpected}}</dd>
+
+          <dt>Time Worked</dt>
+          <dd>{{hour-minute-format durationWorked}}</dd>
+
+          <dt>Est. Total Time</dt>
+          <dd>{{hour-minute-format durationExpected}}</dd>
+
+          <dt>Meals</dt>
+          <dd>{{meal-info eventInfo.meals}}</dd>
+
+          <dt>Showers</dt>
+          <dd>
+            {{#if eventInfo.showers}}
+              {{badge "secondary" "Wet Spot"}} BMID allows access to the Wet Spot.
+            {{else}}
+              {{badge "secondary" "Shower Pogs"}} for every 40 hours worked.
+            {{/if}}
+          </dd>
+
+          <dt>Motorpool</dt>
+          <dd>
+            {{#if person.vehicle_blacklisted}}
+              {{badge "danger" "Blacklisted"}} Vehicle is blacklisted. May not drive gators, cars, or trucks on playa for Ranger business.
+            {{else}}
+              {{#if person.vehicle_paperwork}}
+                {{badge "success" "Authorized"}}
+              {{else}}
+                {{badge "warning" "Not Authorized"}}
+              {{/if}}
+              to drive golf carts &amp; UTVs on playa for Ranger business
+            {{/if}}
+          </dd>
+
+          <dt>Org Vehicle Insurance</dt>
+          <dd>
+            {{#if person.vehicle_insurance_paperwork}}
+              {{badge "success" "Authorized" }}
+            {{else}}
+              {{badge "warning" "Not Authorized" }}
+            {{/if}}
+            to drive cars and trucks (incl. personal vehicle) on playa for Ranger business.
+          </dd>
+        </dl>
+
+      </div>
+    </div>
+  </div>
+</main>

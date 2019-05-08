@@ -1,9 +1,14 @@
-{{#if (and isCurrentYear (not permission.signup_allowed))}}
+{{#unless isCurrentYear}}
+  {{#ch-alert "warning"}}
+    Warning: You are viewing a past schedule ({{year}}).
+  {{/ch-alert}}
+{{/unless}}
+{{#if (and noPermissionToSignUp (not requirementsOverride))}}
   {{#ch-box "Sign ups for training and/or shifts is not allowed" type="warning" icon="exclamation-circle"}}
     {{#if person.isPastProspective}}
       <p>
-        You cannot signup for trainings and/or shifts because it looks like
-        you were interested in volunteering with us some time ago but your account
+        {{if isMe "You" person.callsign}} cannot signup for trainings and/or shifts because it looks like
+        you were interested in volunteering with us some time ago but the account
         isn't in our volunteer intake pipeline for this year.
       </p>
 
@@ -14,47 +19,57 @@
         from the start of the process.
       </p>
     {{else if permission.manual_review_window_missed}}
-      We are sorry to report that you were not among the first
+      We are sorry to report that {{if isMe "you were" (concat person.callsign " was")}} among the first
       {{permission.manual_review_cap}} prospective volunteers to have passed
       the Manual Review. Sadly
-      this means that you have missed the window for volunteering with us
-      as a Ranger this year. If you have questions or believe you have received
+      this means that {{if isMe "you have" (concat person.callsign "has")}} missed the window for volunteering with us
+      as a Ranger this year. If {{if isMe "you" person.callsign}}  have questions or believe you have received
       this message in error, please contact {{vc-email}} .
     {{else}}
       {{#if (eq permission.photo_status "error")}}
-        <h3>Oops! There was a problem communicating with our photo server.</h3>
+        <h3 class="mt-2">Oops! There was a problem communicating with our photo server.</h3>
         <p>
-          We cannot determine if you have uploaded a photo, or if it has been approved. Please
-          check back in a few minutes to see if the problem has resolved. If this
-          problems persists, please contact {{admin-email}} for help.
+          We cannot determine if {{if isMe "you have" (concat person.callsign " has")}} uploaded a photo,
+          or if it has been approved. Please check back in a few minutes to see if the problem has resolved.
+          If this problems persists, please contact {{admin-email}} for help.
         </p>
         <p>
           We are sorry if this is an inconvenience for you.
         </p>
       {{else}}
         <p>
-          You cannot signup for training and/or shifts because {{deniedReason}}.
+          {{if isMe "You have" (concat person.callsign " has")}} not met all the requirements to sign up for training and/or shifts. The following item(s) need to be done:
+          <ul class="mt-2">
+            {{#each deniedReason as |reason|}}
+              <li>{{reason}}</li>
+            {{/each}}
+          </ul>
         </p>
         {{#if (not hasApprovedPhoto)}}
-          <p>
-            {{#if (eq permission.photo_status "missing")}}
-              Please upload a BMID (lam) photo. Note that photos can take 2-3 days to be
-              approved. A new photo may be uploaded on the {{#link-to "me.overview"}}Home Page{{/link-to}}.
-            {{else if (eq permission.photo_status "rejected")}}
-              The photo was rejected. Please upload a new photo that conforms to the guidelines.
-            {{else}}
-              Your photo has been submitted and may take up to 2 to 3 days to review. Please check back then.
-            {{/if}}
-          </p>
+          {{#if (eq permission.photo_status "missing")}}
+            <h3 class="mt-2">Upload a photo</h3>
+            Please upload a BMID (lam) photo. Note that photos can take 2-3 days to be
+            approved. A new photo may be uploaded on the {{#link-to "me.overview"}}Home Page{{/link-to}}.
+          {{else if (eq permission.photo_status "rejected")}}
+            <h3 class="mt-2">Photo rejected</h3>
+            The photo was rejected. Please upload a new photo that conforms to the guidelines.
+          {{else}}
+            <h3 class="mt-2">Photo pending approval</h3>
+            The photo has been submitted and may take up to 2 to 3 days to review. Please check back then.
+          {{/if}}
         {{/if}}
       {{/if}}
 
       {{! Required photo approval before allowing Manual Review}}
       {{#if (and permission.manual_review_allowed hasApprovedPhoto)}}
+        <h3 class="mt-2">Pass the Manual Review</h3>
         {{#if permission.manual_review_url}}
-          <p>
-            Please <a href="{{permission.manual_review_url}}">click here</a> to take the Manual Review.
-          </p>
+          {{#if isMe}}
+            <a href="{{permission.manual_review_url}}" class="btn btn-primary">Click here</a> to take the Manual Review.
+            <strong>Do not use the browser's back button when taking the review.</strong> The review takes 15 to 20 minutes on average to complete.
+          {{else}}
+            <strong class="text-danger">{{person.callsign}} will need to login and take the Manual Review.</strong>
+          {{/if}}
         {{else}}
           <strong class="text-danger">Unfortunately, the Manual Review is still
             being worked on.</strong> You may not signup for shifts, including
@@ -64,119 +79,184 @@
       {{/if}}
     {{/if}}
 
-    {{#if permission.missing_bpguid}}
-      {{person-missing-bpguid}}
-    {{/if}}
-
     {{#if (or person.isPastProspective (and (not person.callsign_approved) (not person.isAuditor) (not person.isNonRanger)))}}
       <p>
-        Please email {{vc-email}} if you are interested in
-        volunteering with us or if you think you have received this message in error.
+        Please email {{vc-email}} if {{if isMe "you are" (concat person.callsign " is")}} interested in volunteering with us
+        or if you think you have received this message in error.
+      </p>
+    {{else}}
+      {{#if permission.missing_bpguid}}
+        <h3 class="mt-2">Missing Burner Profile ID</h3>
+        {{person-missing-bpguid}}
+      {{/if}}
+
+      {{#if permission.missing_behavioral_agreement}}
+        <h3 class="mt-2">Agree to the Behavioral Standards</h3>
+        Starting in 2019, all individuals who attend training, and/or volunteer for the BRC Rangers MUST agree
+        to Burning Man's Behavioral Standards Agreement.
+        <p>
+          {{#if isMe}}
+            <button class="btn btn-primary" {{action showBehaviorAgreementAction}}>Click here</button> to read about the Behavioral Standards, and be given a chance to agree.
+          {{else}}
+            <strong class="text-danger">{{person.callsign}} will need to login and sign the Behavioral Agreement.</strong>
+          {{/if}}
+        </p>
+      {{/if}}
+
+    {{/if}}
+
+    {{#if isAdmin}}
+      <p class="text-danger">
+        As a Clubhouse Admin, you may override the requirement(s) to gain access to the schedule. You better know what you are doing!
+        YOUR ACTIONS WILL BE LOGGED.
+        <button class="btn btn-danger btn-sm" {{action setRequirementsOverride}}>Click To Override</button>
       </p>
     {{/if}}
   {{/ch-box}}
-{{else}}
+{{/if}}
+{{#if (or requirementsOverride (not noPermissionToSignUp))}}
+  {{#if requirementsOverride}}
+    {{#ch-alert "danger"}}
+      {{fa-icon "exclamation-triangle"}}
+      The scheduling requirements override is enabled. You better know what you are doing! Remember, the Clubhouse logs all scheduling actions.
+    {{/ch-alert}}
+  {{/if}}
   {{schedule-table slots=signedUpSlots person=person year=year creditsEarned=creditsEarned}}
-  <h3>{{if isCurrentYear "Available Shifts" "Past Shifts"}}</h3>
-  {{#if availableSlots}}
-    {{#if inactiveSlots}}
-      {{#ch-alert "warning"}}
-        Because you have the Trainer, VC, and/or Admin role, the shift listing
-        may contain inactive shifts.
-        Sign ups are disabled for inactive shifts until the shift has been activated.
-      {{/ch-alert}}
-    {{/if}}
 
-    <div class="row mb-1">
-      <div class="col-sm-5 col-md-4 col-lg-3 mb-2">
-        {{#power-select
-            selected=filterDay
-            options=dayOptions
-            searchEnabled=false
-            searchField="title"
-            onchange=(action (mut filterDay))
-                      as |item| }}
-          {{item.title}}
-        {{/power-select}}
-      </div>
+  <div class="d-print-none">
+    <h3 class="mt-2">{{if isCurrentYear "Available Shifts" "Past Shifts"}}</h3>
+    {{#if availableSlots}}
       {{#if inactiveSlots}}
-        <div class="col-sm-5 col-md-4 col-lg-3 mb-2">
-          {{#power-select
-            selected=filterActive
-            options=activeOptions
-            searchEnabled=false
-            onchange=(action (mut filterActive)) as |item| }}
-            {{item.title}}
-          {{/power-select}}
-        </div>
+        {{#ch-alert "warning"}}
+          Because you have the Trainer, VC, and/or Admin role, the shift listing
+          may contain inactive shifts.
+          Sign ups are disabled for inactive shifts until the shift has been activated.
+        {{/ch-alert}}
       {{/if}}
-    </div>
 
-    <p class="text-muted">Showing {{viewSlots.length}} of {{availableSlots.length}}</p>
+      <div class="row mb-1">
+        <div class="col-sm-5 col-md-auto mb-2">
+          {{ch-form/select name="filterDay" value=filterDay options=dayOptions onChange=(action setFilterDay) controlClass="form-control"}}
+        </div>
+        {{#if inactiveSlots}}
+          <div class="col-sm-5 col-md-auto mb-2">
+            {{ch-form/select name="filterActive" value=filterActive options=activeOptions onChange=(action (mut filterActive)) controlClass="form-control"}}
+          </div>
+        {{/if}}
+      </div>
 
-    {{#if slotGroups}}
-      {{#each slotGroups as |group|}}
-        <div class="schedule-table schedule-signup-sheet">
-          <div class="schedule-title">{{if group.show (fa-icon "caret-down") (fa-icon "caret-right")}} <a href="#" {{action "toggleGroup" group}}>{{group.title}} ({{group.slots.length}})</a></div>
-          {{#if group.show}}
-            <div class="schedule-row schedule-header">
-              <div class="schedule-time">From</div>
-              <div class="schedule-time">To</div>
-              <div class="schedule-credits">Credits</div>
-              <div class="schedule-description">Description</div>
-              <div class="schedule-signups">Sign Ups</div>
-              <div class="schedule-actions">Actions</div>
-            </div>
-            {{#each group.slots as |slot|}}
-              <div class="schedule-row {{if slot.person_assigned "table-success"}}">
-                <div class="schedule-time">
-                  {{#if slot.person_assigned}}
-                    {{fa-icon "check" title="You are signed up for this shift."}}
-                  {{else if (not slot.slot_active)}}
-                    {{fa-icon "exclamation-triangle" title="Shift is inactive and may not be signed up for"}}
-                  {{/if}}
-                  {{shift-format slot.slot_begins}}
-                </div>
-                <div class="schedule-time">{{shift-format slot.slot_ends}}</div>
-                <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span> {{credits-format slot.credits}}</div>
-                <div class="schedule-description">
-                  <span class="schedule-sm-label">{{group.title}} - </span>{{slot-info-link slot.slot_description slot.slot_url}}
-                </div>
-                <div class="schedule-signups">{{slot-full-indicator slot.slot_signed_up slot.slot_max}}</div>
-                <div class="schedule-actions">
-                  <button {{action "showPeople" slot}} class="btn btn-secondary btn-sm" title="View people signed up">{{fa-icon "users" type="fas"}}</button>
-                  {{#if slot.person_assigned}}
-                    {{#if (or (has-role "admin") (not slot.has_started))}}
-                      {{! Only allow admins to remove a sign up that has started}}
-                      <button {{action "leaveSlot" slot}} class="btn btn-danger btn-sm" title="Remove from schedule">{{fa-icon "trash-alt" type="fas"}}</button>
+      <p class="text-muted">Showing {{viewSlots.length}} of {{availableSlots.length}}</p>
+
+      {{#if slotGroups}}
+        {{#each slotGroups as |group|}}
+          <div class="schedule-table schedule-signup-sheet">
+            <div class="schedule-title">{{if group.show (fa-icon "caret-down") (fa-icon "caret-right")}} <a href="#" {{action "toggleGroup" group}}>{{group.title}} ({{group.slots.length}})</a></div>
+            {{#if group.show}}
+              <div class="schedule-row schedule-header">
+                <div class="schedule-time">From</div>
+                <div class="schedule-time">To</div>
+                <div class="schedule-credits">Credits</div>
+                <div class="schedule-description">Description</div>
+                <div class="schedule-signups">Sign Ups</div>
+                <div class="schedule-actions">Actions</div>
+              </div>
+              {{#each group.slots as |slot|}}
+                <div class="schedule-row {{if slot.person_assigned "table-success"}}">
+                  <div class="schedule-time">
+                    {{#if slot.person_assigned}}
+                      {{fa-icon "check" title="You are signed up for this shift."}}
+                    {{else if (not slot.slot_active)}}
+                      {{fa-icon "exclamation-triangle" title="Shift is inactive and may not be signed up for"}}
                     {{/if}}
-                  {{else}}
-                    {{! Only show action buttons for the current year}}
-                    {{#if isCurrentYear}}
-                      {{#if slot.slot_active}}
-                        {{#if (or (not slot.isFull) (not slot.has_started) (has-role "admin"))}}
-                          <button {{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Show people who are signed up">{{fa-icon "user-plus" type="fas"}}</button>
+                    {{shift-format slot.slot_begins}}
+                  </div>
+                  <div class="schedule-time">{{shift-format slot.slot_ends}}</div>
+                  <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span> {{credits-format slot.credits}}</div>
+                  <div class="schedule-description">
+                    <span class="schedule-sm-label">{{group.title}} - </span>{{slot-info-link slot.slot_description slot.slot_url}}
+                  </div>
+                  <div class="schedule-signups">{{slot-full-indicator slot.slot_signed_up slot.slot_max}}</div>
+                  <div class="schedule-actions">
+                    <button {{action "showPeople" slot}} class="btn btn-secondary btn-sm" title="View people signed up">{{fa-icon "users" type="fas"}}</button>
+                    {{#if slot.person_assigned}}
+                      {{#if (or (has-role "admin") (not slot.has_started))}}
+                        {{! Only allow admins to remove a sign up that has started}}
+                        <button {{action "leaveSlot" slot}} class="btn btn-danger btn-sm" title="Remove from schedule">{{fa-icon "trash-alt" type="fas"}}</button>
+                      {{/if}}
+                    {{else}}
+                      {{! Only show action buttons for the current year}}
+                      {{#if isCurrentYear}}
+                        {{#if slot.slot_active}}
+                          {{#if (or (not slot.isFull) (not slot.has_started) (has-role "admin"))}}
+                            <button {{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Sign up for the shift">{{fa-icon "user-plus" type="fas"}}</button>
+                          {{/if}}
+                        {{else}}
+                          <small class="text-danger">Inactive</small>
                         {{/if}}
-                      {{else}}
-                        <small class="text-danger">Inactive</small>
                       {{/if}}
                     {{/if}}
-                  {{/if}}
+                  </div>
                 </div>
-              </div>
-            {{/each}}
-          {{/if}}
-        </div>
-      {{/each}}
+              {{/each}}
+            {{/if}}
+          </div>
+        {{/each}}
+      {{else}}
+        <div class="text-danger">There are no shifts which match.</div>
+      {{/if}}
+      <div class="mt-2"><strong>Note:</strong>
+        <ul>
+          <li>A shift may not be added to or removed from your schedule if the shift has already started.</li>
+        </ul>
+      </div>
     {{else}}
-      <div class="text-danger">There are no shifts which match.</div>
+      <div class="text-danger">There are no shifts available.</div>
     {{/if}}
-    <div class="mt-2"><strong>Note:</strong>
-      <ul>
-        <li>A shift may not be added to or removed from your schedule if the shift has already started.</li>
-      </ul>
-    </div>
-  {{else}}
-    <div class="text-danger">There are no shifts available.</div>
-  {{/if}}
+  </div>
+
+  <p class="d-print-none text-muted">
+    Use your browser's print command to send this page to the printer. Don't
+    worry, the navigation bar, website footer, and this message will not appear
+    on the paper.
+  </p>
+{{/if}}
+
+
+{{#if showBehaviorAgreement}}
+  {{#modal-dialog title="Burning Man's Behavioral Standards Agreement" onClose=closeAgreement onConfirm=signAgreement confirmLabel="I Agree" cancelLabel="I do not agree" }}
+    <p>
+      Burning Man’s culture honors and promotes freedom of expression, unless that expression harms others.
+    </p>
+
+    <p>
+      The Burning Man organization that supports the year-round activities
+      of the Burning Man community, has zero tolerance for behavior that is
+      non-consensual, abusive, or harmful to others. This includes and is
+      not limited to:
+    </p>
+
+    <ul>
+      <li>Violence – both physical and verbal</li>
+      <li>
+        Harassment, including non-consensual interactions, as stated in our Harassment Discrimination and Retaliation
+        Prevention Policy (<a href="https://bit.ly/2HgVXOK" target="_blank" rel="noopener">Click here</a> to read -- opens in a new window)
+      </li>
+      <li>Coercion (abuse of power – including but not limited to sex, drugs, resources, etc.)</li>
+      <li>Sexual Assault</li>
+      <li>Intoxication while on duty</li>
+      <li>Theft or Vandalism</li>
+    </ul>
+
+    <p>
+      By clicking on "I Agree", you as both staff and/or a manager, agree to
+      abide by this Behavioral Standards Agreement. Nothing in this Agreement
+      modifies, conflicts, or affects the Burning Man Harassment,
+      Discrimination and Retaliation Prevention Policy
+      (<a href="https://bit.ly/2HgVXOK" target="_blank" rel="noopener">Click here</a> to read -- opens in a new window)
+    </p>
+    <p>
+      In addition to the above, you agree to be your awesome self, look out
+      for others and encourage the good in all!
+    </p>
+  {{/modal-dialog}}
 {{/if}}

@@ -1,0 +1,51 @@
+{{#ch-form "bmid" @entry modalBox=modalBox modalTitle=(if @entry.id (concat "Edit BMID #" @entry.id) "New BMID") onSubmit=(action @onSave) as |f|}}
+  {{#if modalBox}}
+    <h3>{{@year}} {{@entry.person.callsign}} &lt;{{@entry.person.status}},{{@entry.person.first_name}} {{@entry.person.last_name}}&gt;</h3>
+  {{/if}}
+  <p>
+    {{#if @entry.wap_id}}
+      WAP ID #{{@entry.wap_id}} - {{@entry.wapTypeHuman}} - {{@entry.wap_status}}
+      {{#if @entry.wapSubmitted}}
+        <br>
+        <strong class="text-danger">WAP has been submitted for processing - WAP Date cannot be changed.</strong>
+      {{/if}}
+    {{else}}
+      <strong class="text-danger">WAP could not be located - WAP Date cannot be changed.</strong>
+    {{/if}}
+  </p>
+  <div class="form-row">
+    {{f.input "status" label="BMID Status" type="select" options=bmidStatusOptions}}
+    {{f.input "meals" label="Meals" type="select" options=mealOptions grid="col-auto"}}
+    {{f.input "showers" label="Showers" type="select" options=showerOptions grid="col-auto"}}
+    {{f.input "admission_date" label="WAP Date" type="select" disabled=@entry.wapDisabled options=admissionDateOptions}}
+  </div>
+
+  <div class="form-row">
+    {{f.input "title1" label="Title 1" type="text" size=64 grid="col-auto"}}
+    {{f.input "title2" label="Title 2" type="text" size=64 grid="col-auto"}}
+    {{f.input "title3" label="Title 3" type="text" size=64 grid="col-auto"}}
+  </div>
+
+  <div class="form-row">
+    {{f.input "team" label="Team" type="text" size=80 grid="col-auto"}}
+    {{f.input "notes" label="Notes" type="textarea" rows=4 cols=80}}
+  </div>
+  <div class="form-group row">
+    <div class="col-auto">
+      {{#if @entry.isNew}}
+        BMID record will be created on save.
+      {{else}}
+        Created {{@entry.create_datetime}} Last modified {{@entry.modified_datetime}}
+      {{/if}}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-auto">
+      {{f.submit}}
+      {{#if @onCancel}}
+        {{f.cancel cancelAction=(action @onCancel)}}
+      {{/if}}
+    </div>
+  </div>
+{{/ch-form}}

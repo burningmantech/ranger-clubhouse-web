@@ -57,4 +57,11 @@ module('Acceptance | login', function(hooks) {
     // And there should be a flash modal with login error
     assert.dom('.alert-danger', document).includesText('The account has been permanently disabled');
   });
+
+  test('prevent space for being entered in email field', async function (assert) {
+    const person = server.create('person', { user_authorized: false});
+    await visit('/login');
+    await fillIn('input[name="identification"]', person.email+' ');
+    assert.dom('input[name="identification"]').hasValue(person.email);
+  });
 });

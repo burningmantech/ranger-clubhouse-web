@@ -1,6 +1,6 @@
 import DS from 'ember-data';
-import { computed } from '@ember-decorators/object';
-import { attr } from '@ember-decorators/data';
+import { computed } from '@ember/object';
+const { attr } = DS;
 import moment from 'moment';
 
 export default class ScheduleModel extends DS.Model {
@@ -80,5 +80,10 @@ export default class ScheduleModel extends DS.Model {
     }
 
     return false;
+  }
+
+  @computed('position_type')
+  get isTraining() {
+    return (this.position_type == 'Training');
   }
 }

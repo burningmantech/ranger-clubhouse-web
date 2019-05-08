@@ -14,18 +14,26 @@ export default class ErrorRoute extends Route {
     controller.set('config', ENV);
 
     // Try to send the down the error to the server for logging
-    if (true /*ENV.logEmberErrors*/ && navigator.sendBeacon) {
+    if (ENV.logEmberErrors && navigator.sendBeacon) {
       const data = new FormData;
 
       data.append('error_type', 'ember-route-error');
       data.append('url', window.location.href);
+
+      let route_error;
+      if (error.stack) {
+        route_error = {
+          message: error.message,
+          stack: error.stack
+        };
+      } else {
+        route_error = error;
+      }
+
       data.append('data', JSON.stringify({
         build_timestamp: ENV.APP.buildTimestamp,
         version: ENV.APP.version,
-        route_error: {
-          message: error.message,
-          stack: error.stack
-        }
+        route_error
       }));
 
       const personId = this.session.get('user.id');

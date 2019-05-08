@@ -1,0 +1,26 @@
+{{#ch-form "checkout" assetForm validator=assetValdiations onSubmit=(action checkoutAsset) as |f|}}
+  <div class="form-row">
+    {{f.input "barcode" placeholder="Enter Barcode" type="text" size=15 grid="col-auto"}}
+    {{f.input "attachment_id" type="select" options=attachmentOptions}}
+    <div class="col">
+      {{f.submit label="Checkout" disabled=(is-empty f.model.barcode)}}
+    </div>
+  </div>
+  {{#if barcodeNotFound}}
+    <div class="form-row text-danger">
+      Barcode "{{barcodeNotFound}}" was not found.
+    </div>
+  {{else if barcodeCheckedOut}}
+    <p class="text-danger">
+      Barcode {{barcodeCheckedOut.barcode}} still checked out by
+      {{#link-to "person.assets" barcodeCheckedOut.person_id}}{{barcodeCheckedOut.callsign}}{{/link-to}}
+      on {{shift-format barcodeCheckedOut.checked_out}}
+    </p>
+    <p>
+      <button class="btn btn-secondary btn-sm" {{action showHistoryAction}}>Show Asset History</button>
+    </p>
+  {{/if}}
+{{/ch-form}}
+{{#if showHistory}}
+  {{modal-asset-history assetId=barcodeCheckedOut.asset_id onClose=(action closeHistory)}}
+{{/if}}
