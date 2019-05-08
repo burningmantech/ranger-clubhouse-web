@@ -35,7 +35,7 @@ RUN ember build --environment production;
 # -----------------------------------------------------------------------------
 # This stage builds the application container using Nginx
 # -----------------------------------------------------------------------------
-FROM nginx:1.15-alpine
+FROM nginx:1.15-alpine as application
 
 # Copy the application with dependencies from the build container
 COPY --from=build /build/dist /var/www/application/client
