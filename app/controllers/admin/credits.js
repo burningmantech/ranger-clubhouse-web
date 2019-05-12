@@ -179,8 +179,8 @@ export default class AdminCreditsController extends Controller {
 
         try {
           const record = await newCredit.save();
-          this.credits.pushObject(record);
-          this.toast.success(`${newCredit.positionTitle} position credit created.`);
+          this.credits.update();
+          this.toast.success(`${record.positionTitle} position credit created.`);
         } catch (response) {
           this.house.handleErrorResponse(response);
           success = false;
@@ -248,7 +248,7 @@ export default class AdminCreditsController extends Controller {
     this.set('selectedYearLaborDay', selectedLaborDay.format('MMMM Do'));
     this.set('presentYearLaborDay', presentLaborDay.format('MMMM Do'));
     this.set('laborDayDiff', presentLaborDay.diff(selectedLaborDay, 'days'));
-    const copyPositions = [];
+    let copyPositions = [];
     _.forOwn(_.groupBy(this.get('viewCredits'), 'position_id'),
       (credits, positionId) => copyPositions.push(CopySourcePosition.create({
         id: positionId,
@@ -259,7 +259,7 @@ export default class AdminCreditsController extends Controller {
           source: c,
         })),
       })));
-    copyPositions.sortBy('title');
+    copyPositions = copyPositions.sortBy('title');
     if (copyPositions.length === 1) {
       copyPositions[0].set('expanded', true);
     }
@@ -296,8 +296,10 @@ export default class AdminCreditsController extends Controller {
           ids: sourceIds,
         }
       }).then((result) => {
-        if (result.message == 'success') {
-          this.toast.success(`Copied ${result.length} credits`);
+        if (result.position_credit.length) {
+          this.toast.success(`Copied ${result.position_credit.length} credits`);
+        } else if (result.message === 'success') {
+          this.toast.success('No credits copied');
         } else {
           this.house.handleErrorResponse(result);
         }
