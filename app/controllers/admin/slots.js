@@ -5,7 +5,7 @@ import moment from 'moment';
 
 const allDays = { id: 'all', title: 'All' };
 
-const DATETIME_FORMAT = 'YYYY-MM-DD hh:mm:ss';
+const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 export default class SlotsController extends Controller {
   queryParams = [ 'year' ];
