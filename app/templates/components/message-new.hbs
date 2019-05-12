@@ -4,10 +4,10 @@
   onSubmit=(action "submitAction") onCancel=(action "cancelAction")
   validator=personMessageValidations as |f|}}
   <p>
-    Clubhouse messages are intended for communications with other Rangers while
-    the event is happening.  Please consider using email during the rest of the
-    year.
-   </p>
+    Clubhouse Messaging is intended <strong class="text-danger">for official Ranger business while the event is happening.</strong>
+    Use regular email or the Contact Ranger service if your message is more of a personal nature or the event is over.
+    All messages are logged.
+  </p>
   {{f.input "message_from" label="From" type="text" size=30 maxlength=120 autofocus=true}}
   {{f.input "recipient_callsign" label="To" type="search" onSearch=(action "searchCallsignAction") }}
   {{f.input "subject" label="Subject" maxlength=80}}

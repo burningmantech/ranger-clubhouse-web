@@ -5,7 +5,7 @@ import moment from 'moment';
 
 const allDays = { id: 'all', title: 'All' };
 
-const DATETIME_FORMAT = 'YYYY-MM-DD hh:mm:ss';
+const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 export default class SlotsController extends Controller {
   queryParams = [ 'year' ];
@@ -153,7 +153,7 @@ export default class SlotsController extends Controller {
       this.slots.pushObject(duplicate);
       duplicate.set('signed_up', 0);
       this.toast.success('Slot was successfully repeated.');
-    });
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
@@ -167,7 +167,7 @@ export default class SlotsController extends Controller {
       duplicate.set('signed_up', 0);
       this.slots.pushObject(duplicate);
       this.toast.success('Slot was successfully repeated with 24 hour addition.');
-    });
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
@@ -191,13 +191,13 @@ export default class SlotsController extends Controller {
     if (!isValid) {
       return;
     }
-
+  
     const duplicate = this._duplicateSlot(model);
     duplicate.save().then(() => {
       this.slots.pushObject(duplicate);
       this.toast.success(`Slot successfully created from existing slot.`);
       this.set('slot', duplicate);
-    });
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
