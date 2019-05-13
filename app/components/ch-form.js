@@ -185,29 +185,11 @@ export default class ChFormComponent extends Component {
   @action
   fieldChangeAction(field) {
     const model = this.model;
-    const original = this.originalModel;
-    const fieldChange = field.onChange;
     const formChange = this.onFormChange;
 
-    /*    if (model.validate) {
-          model.validate().then(() => {
-              if (fieldChange) {
-                fieldChange(field, model, this.model.isValid, original);
-              }
-
-              if (formChange) {
-                formChange(field, model, this.model.isValid, original);
-              }
-          });
-        } else {*/
-    if (fieldChange) {
-      fieldChange(field, model, this.model.isValid, original);
-    }
-
     if (formChange) {
-      formChange(field, model, this.model.isValid, original);
+      formChange(field, model, model.isValid, this.originalModel);
     }
-    /*}*/
   }
 
   @action

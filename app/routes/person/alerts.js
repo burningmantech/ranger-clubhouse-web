@@ -2,9 +2,9 @@ import Route from '@ember/routing/route';
 import MeRouteMixin from 'clubhouse/mixins/route/me';
 import RSVP from 'rsvp';
 
-export default class MeAlertsRoute extends Route.extend(MeRouteMixin) {
+export default class PersonAlertsRoute extends Route.extend(MeRouteMixin) {
   model() {
-    const personId = this.session.user.id;
+    const personId = this.modelFor('person').id;
 
     // Retrieve the alert preferences and SMS numbers
     return RSVP.hash({
@@ -16,5 +16,6 @@ export default class MeAlertsRoute extends Route.extend(MeRouteMixin) {
   setupController(controller, model) {
     super.setupController(...arguments);
     controller.setProperties({ alerts: model.alerts, numbers: model.numbers });
+    controller.set('person', this.modelFor('person'));
   }
 }

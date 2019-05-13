@@ -29,15 +29,19 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
 
       try {
         const analytics = new FormData;
-        const pathname = window.location.pathname;
+        let pathname = window.location.pathname;
+
+        if (window.location.search) {
+          pathname += window.location.search;
+        }
 
         analytics.append('event', 'client-route');
         analytics.append('message', pathname);
         const data = {
-            build_timestamp: ENV.APP.buildTimestamp,
-            route_to: transition.to.name,
-            route_from: transition.from ? transition.from.name : 'unknown',
-            pathname,
+          build_timestamp: ENV.APP.buildTimestamp,
+          route_to: transition.to.name,
+          route_from: transition.from ? transition.from.name : 'unknown',
+          pathname,
         };
 
         analytics.append('data', JSON.stringify(data));

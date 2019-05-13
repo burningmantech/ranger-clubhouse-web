@@ -1,0 +1,91 @@
+{{#if isStopped}}
+  {{#ch-alert "danger"}}
+    {{fa-icon "exclamation-triangle"}} WARNING: Someone, most likely you, texted the STOP command from one of the following numbers. That phone number
+    will not be able to receive alerts until the START command is texted from the same number.
+    <ul>
+      {{#if numbers.on_playa.is_stopped}}
+        <li>The number {{numbers.on_playa.phone}} is stopped</li>
+      {{/if}}
+      {{#if (and numbers.off_playa.is_stopped (not numbers.is_same))}}
+        <li>The pre-event number {{numbers.off_playa.phone}} is stopped</li>
+      {{/if}}
+    </ul>
+    Contact {{general-support-mail}} for help.
+  {{/ch-alert}}
+{{/if}}
+
+{{#if notVerified}}
+  {{#ch-alert "danger"}}
+    <div class="float-left mt-2 mr-3">
+      {{fa-icon "exclamation-triangle" size="2x"}}
+    </div>
+    Please verify your SMS number(s). You will not be able receive Clubhouse alert messages
+    until you do so. (Data rates may apply.)
+  {{/ch-alert}}
+  {{#ch-box "Verify Your Phone Number(s)"}}
+    <p>
+      <strong>A verification code has been sent to {{unverifiedPhones}}</strong>
+    </p>
+    {{#ch-form "verify" verifyForm as |f|}}
+      {{#if (or numbers.is_same (and numbers.off_playa.phone (not numbers.off_playa.is_verified)))}}
+        <div class="form-row">
+          {{f.input "off_playa" label=(concat "Enter verification code for " numbers.off_playa.phone) type="text" size=5 maxlength=5 grid="col-auto"}}
+        </div>
+        <div class="form-row">
+          <button class="btn btn-primary" disabled={{isVerifying}} {{action confirmCodeAction f.model "off-playa"}}>Verify</button>
+          <button type="submit" class="btn btn-secondary ml-2" {{action sendNewCodeAction "off-playa"}} disabled={{isVerifying}}>Resend verification code</button>
+        </div>
+      {{/if}}
+      {{#if (and (not numbers.is_same) numbers.on_playa.phone (not numbers.on_playa.is_verified))}}
+        <div class="form-row">
+          {{f.input "on_playa" label=(concat "Enter verification code for " numbers.on_playa.phone) type="text" size=5 maxlength=5 grid="col-auto"}}
+        </div>
+        <div class="form-row">
+          <button class="btn btn-primary" disabled={{isVerifying}} {{action confirmCodeAction f.model "on-playa"}}>Verify</button>
+          <button type="submit" class="btn btn-secondary ml-2" {{action sendNewCodeAction "on-playa"}} disabled={{isVerifying}}>Resend verification code</button>
+        </div>
+      {{/if}}
+    {{/ch-form}}
+  {{/ch-box}}
+{{/if}}
+
+<h3>Pre-Event &amp; On Playa SMS Numbers</h3>
+<p>
+  {{#if (not-eq person.country "US")}}
+    {{#ch-alert "warning"}}
+      Your home address is listed as outside the USA. In case you have a non-USA phone number, be sure to include the country code when entering your phone number(s).
+    {{/ch-alert}}
+  {{/if}}
+  <b>For non-USA phone numbers:</b> Include your country code when entering a phone number.<br>
+  Australia: +61, Canada: +1, France: +33, Mexico: +52, New Zealand: +64, UK: +44.
+</p>
+
+{{#ch-form "numbers" phoneForm validator=numberValidations onSubmit=(action "saveNumbersAction") as |f|}}
+  <div class="form-row">
+    {{f.input "off_playa" label=(if f.model.is_same "Pre-Event & On Playa phone number:" "Pre-Event phone number:") type="text" size=30 grid="col-auto"}}
+  </div>
+  <div class="form-row">
+    {{f.input "is_same" label="On playa number is the same as the pre-event number" type="checkbox"}}
+  </div>
+  <div class="form-row mt-2 {{if f.model.is_same "d-none"}}">
+    {{f.input "on_playa" label="On Playa phone number:" type="text" size=30 grid="col-auto"}}
+  </div>
+
+  <div class="mt-2">
+    {{f.submit label="Update SMS Numbers" disabled=isUpdatingNumbers}}
+  </div>
+{{/ch-form}}
+<hr>
+
+<h3>Alert Preference Options</h3>
+{{#if isMe}}
+  <p class="ml-2">
+    To change your email visit {{#link-to "me.personal-info"}}Personal Info{{/link-to}}.
+  </p>
+{{/if}}
+
+
+{{alert-group numbers=numbers email=person.email group=offPlayaAlerts heading="Pre & Post Event Alerts" description="These alerts may be sent to you before or after the event."}}
+{{alert-group numbers=numbers email=person.email group=onPlayaAlerts heading="On Playa Alerts" description="These alerts may be sent to you while the event is happening."}}
+
+<button type="button" class="btn btn-primary" {{action "updatePrefsAction"}}>Update Preferences</button>

@@ -1,0 +1,50 @@
+
+<div class="d-flex">
+  <h1>RBS Alerts</h1>
+  <div class="ml-auto">
+    <button class="btn btn-primary" {{action newAlert}}>New Alert Doc</button>
+  </div>
+</div>
+<table class="table table-sm table-hover">
+  <caption>
+    Showing {{pluralize alerts.length "alert"}}
+  </caption>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>On Playa?</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each alerts as |alert|}}
+      <tr>
+        <td>{{alert.id}}</td>
+        <td>{{alert.title}}</td>
+        <td>{{alert.description}}</td>
+        <td>{{yesno alert.on_playa}}</td>
+        <td class="w-10">
+          <button class="btn btn-secondary btn-sm" {{action deleteAlert alert}}>{{fa-icon "trash"}}</button>
+          <button class="btn btn-primary btn-sm" {{action editAlert alert}}>{{fa-icon "edit"}}</button>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+{{#if entry}}
+  {{#ch-form "alert" entry modalBox=true modalTitle=(if entry.isNew "New Alert" "Edit Alert") onSubmit=(action saveAlert) onCancel=(action cancelAlert) as |f|}}
+    <div class="form-row">
+      {{f.input "title" label="Title" type="text" size=30 maxlength=255}}
+      {{f.input "description" label="Alert Description" type="textarea" rows=10 cols=80}}
+      {{f.input "on_playa" type="checkbox" label="Is alert related to a broadcast that will happen on playa?"}}
+    </div>
+    <div class="mt-4">
+      {{f.submit label=(if entry.isNew "Create" "Update")}}
+      {{f.cancel}}
+    </div>
+  {{/ch-form}}
+{{/if}}
