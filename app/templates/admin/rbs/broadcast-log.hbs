@@ -1,0 +1,142 @@
+<div class="float-right">
+  {{#link-to "admin.rbs"}}Back to RBS{{/link-to}}
+</div>
+{{year-select (if failed "Ranger Failed Broadcast Log" "Ranger Broadcast Log") year=year onChange=(action (mut year))}}
+
+<table class="table table-striped table-sm">
+  <caption>{{pluralize logs.length "log"}}</caption>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Timestamp</th>
+      <th>Sender</th>
+      <th>Alert</th>
+      <th class="text-right">People</th>
+      <th>Delivery</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each logs as |log|}}
+      <tr class="{{if (or log.sms_failed log.email_failed) "bg-highlight"}}">
+        <td>{{log.id}}</td>
+        <td>{{log.created_at}}</td>
+        <td>{{person-link person=log.sender}}</td>
+        <td>
+          {{if log.alert.on_playa "On Playa" "Pre-Event"}}: {{log.alert.title}}
+        </td>
+        <td class="text-right">
+          {{log.people.length}}
+        </td>
+        <td>
+          {{#if log.sent_sms}}SMS{{else}}&nbsp;{{/if}}
+          {{#if log.sent_email}}email{{else}}&nbsp;{{/if}}
+          {{#if log.sent_clubhouse}}CH{{/if}}
+        </td>
+        <td>
+          <button class="btn btn-secondary btn-sm" {{action toggleMessage log}}>Message</button>
+          <button class="btn btn-secondary btn-sm" {{action toggleRecipients log}}>Recipients</button>
+          {{#if (or log.sms_failed log.email_failed)}}
+            <button class="btn btn-danger btn-sm" {{action retryAction log}}>Retry</button>
+          {{/if}}
+        </td>
+      </tr>
+      {{#if (or log.retry_at log.sms_failed log.email_failed)}}
+        <tr class="no-border">
+          <td>&nbsp;</td>
+          <td colspan="2" class="actions">
+            {{#if log.retry_at}}
+              Retry at {{log.retry_at}} by {{person-link person=log.retry_person}}
+            {{else}}
+              &nbsp;
+            {{/if}}
+          </td>
+          <td colspan="4">
+            {{#if (or log.sms_failed log.email_failed)}}
+              {{#if log.sms_failed}}
+                SMS fail: {{log.sms_failed}}
+              {{/if}}
+              {{#if log.email_failed}}
+                Email fail: {{log.email_failed}}
+              {{/if}}
+            {{else}}
+              &nbsp;
+            {{/if}}
+          </td>
+        </tr>
+      {{/if}}
+
+      {{#if log.showMessage}}
+        <tr class="no-border">
+          <td colspan="7">
+            {{#if log.sent_sms}}
+              <p>
+                <b>SMS:</b><br>
+                {{log.sms_message}}
+              </p>
+            {{/if}}
+            {{#if (or log.sent_email log.sent_clubhouse)}}
+              <p>
+                {{#if log.sender_address}}
+                  From: {{log.sender_address}}<br>
+                {{/if}}
+                <strong>Subject: {{log.subject}}</strong><br>
+                {{nl2br log.email_message}}
+              </p>
+            {{/if}}
+          </td>
+        </tr>
+      {{/if}}
+
+      {{#if log.showRecipients}}
+        <tr>
+          <td colspan="7">
+            Broadcast count {{log.people.length}}
+            <table>
+              <thead>
+              <th>Callsign</th>
+              <th>Name</th>
+              <th>SMS</th>
+              <th>Email</th>
+              <th>Clubhouse</th>
+              </thead>
+              <tbody>
+                {{#each log.people as |person|}}
+                  <tr>
+                    <td>{{person.callsign}}</td>
+                    <td>{{person.first_name}} {{person.last_name}}</td>
+                    <td>{{present-or-not person.sms.status "-"}}</td>
+                    <td>{{present-or-not person.email.status "-"}}</td>
+                    <td>{{present-or-not person.clubhouse.status "-"}}</td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </td>
+        </tr>
+    {{/if}}
+    {{/each}}
+</tbody>
+</table>
+
+{{#if confirmRetry}}
+  {{#modal-dialog title="Retry Broadcast" onConfirm=(action attemptRetry) onClose=(action closeRetry)}}
+    <p>
+      <b>ID:</b> #{{confirmRetry.id}} <b>Created:</b> {{confirmRetry.created_at}} <b>Sender:</b> {{confirmRetry.sender.callsign}}<br>
+      <b>Alert:</b> {{if confirmRetry.alert.on_playa "On Playa" "Pre-Event"}}: {{confirmRetry.alert.title}}
+      <b>SMS Fail:</b> {{confirmRetry.sms_failed}} <b>Email Fail:</b> {{confirmRetry.email_failed}}
+    </p>
+    <p>
+      Are you sure you want to retry this broadcast?
+    </p>
+  {{/modal-dialog}}
+{{else if retryingBroadcast}}
+  {{#modal-dialog title="Retying Broadcast" onClose=closeRetry}}
+    Working.. {{fa-icon "spinner" spin=true}}
+  {{/modal-dialog}}
+{{else if retryResult}}
+  {{#modal-dialog title="Retry Results" onClose=closeRetry}}
+    {{broadcast-sent-table result=retryResult}}
+  {{/modal-dialog}}
+{{/if}}

@@ -3,7 +3,8 @@ import { action, computed } from '@ember/object';
 
 export default class AdminHelpController extends Controller {
 
-  @computed('documents{[],@each.slug}')
+  // eslint-disable-next-line ember/use-brace-expansion
+  @computed('documents.[]', 'documents.@each.slug')
   get viewDocuments() {
     return this.documents.sortBy('slug');
   }
@@ -37,6 +38,9 @@ export default class AdminHelpController extends Controller {
 
       this.toast.success(`Help document was succesfully ${isNew ? 'created' : 'updated'}.`);
       this.set('entry', null);
+    }).catch((response) => {
+      this.house.handleErrorResponse(response);
+      this.entry.rollbackAttributes();
     });
   }
 
@@ -46,7 +50,8 @@ export default class AdminHelpController extends Controller {
       () => {
         help.destroyRecord().then(() => {
           this.documents.removeObject(help);
-        })
+          this.toast.success(`Help document was succesfully deleted.`);
+        }).catch((response) => this.house.handleErrorResponse(response));
       });
   }
 }

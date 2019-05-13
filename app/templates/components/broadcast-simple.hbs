@@ -1,0 +1,78 @@
+{{#if isSubmitting}}
+  {{loading-message "broadcasts"}}
+{{else if didTransmit}}
+  {{broadcast-sent-table result=result}}
+{{else if isReviewing}}
+  <div class="border rounded p-2 mb-2">
+    <h2>Review your message to be sent:</h2>
+    <p class="h4 mb-2">
+      {{broadcastForm.message}}
+    </p>
+  </div>
+  <button class="btn btn-success btn-lg" {{action transmitAction}}>SEND MESSAGE</button>
+  <button class="btn btn-secondary btn-lg" {{action editMessageAction}}>EDIT</button>
+
+  {{broadcast-candidates-table people=people}}
+{{else}}
+  {{#unless config.is_during_event}}
+    {{#ch-alert "warning"}}
+      <h4>{{fa-icon "exclamation-triangle"}} Event has not started yet</h4>
+      HEY! The event hasn't started yet. This broadcast may not be appropriate
+      to send out right now. You might want to check out the General Broadcast Actions.
+    {{/ch-alert}}
+  {{/unless}}
+
+
+  {{#if (eq type "emergency")}}
+    {{#ch-box "SEND TO ALL ON-PLAYA RANGERS" type="danger"}}
+      This will send a text and email message to
+      <b>ALL {{broadcast.receivers}} ON-PLAYA Rangers</b>.<br>
+      It should ONLY be used in emergencies (mass mobliziation for fire,
+      fatality, plane crash, etc.).<br>
+      <br>
+      Please be brief and choose your words carefully as they may end up on the front page of the New York Times.
+    {{/ch-box}}
+  {{else if (eq type "onshift")}}
+    {{#ch-box (concat "Text Message ONLY to " (pluralize broadcast.receivers "ON SHIFT Ranger"))}}
+      This will send only a TEXT message to {{broadcast.receivers}} ON SHIFT Rangers.
+      Only Rangers who have opted-in to receive On Shift messages AND who are
+      carrying their cellphones might receive this message. Delivery is
+      not guaranteed.<br>
+      <br>
+      If you need to send an emergency message to EVERYONE,
+      you're in the wrong place.
+    {{/ch-box}}
+  {{else}}
+    {{#ch-box "Text And Email Off-Duty Ranger"}}
+      This will send a text and email to {{if (eq type "recruit-dirt") broadcast.receivers}} off-duty
+      Rangers who have indicated they might be willing to come in and work some extra shifts when needed.
+      You can use this if your shift is low on people.<br>
+      <br>
+      <span class="text-danger">If you need to send an emergency message to EVERYONE, you're in the wrong place.</span>
+    {{/ch-box}}
+  {{/if}}
+
+  {{#ch-form "broadcast-form" broadcastForm validator=broadcastValidations onSubmit=(action reviewAction) as |f|}}
+    {{#if broadcast.has_muster_position}}
+      <h3>Special Team That Needs More Rangers</h3>
+      <div class="form-group row">
+        <div class="col-auto">
+          {{f.input "position_id" type="select" options=positionOptions controlClass="form-control form-control-lg"}}
+        </div>
+      </div>
+    {{/if}}
+    <h3>Message to send (limited to {{config.sms_limit}} characters)</h3>
+    <div class="form-group row">
+      <div class="col-auto">
+        {{f.input "message"
+        type="textarea" maxlength=config.sms_limit autofocus=true
+        rows=2 cols=80
+        hint=(concat (if f.model.message f.model.message.length "0") " of " config.sms_limit " characters")
+        controlClass="form-control form-control-lg"
+      }}
+      </div>
+    </div>
+    {{f.submit label="REVIEW MESSAGE & RECIPIENTS" submitClass="btn-lg"}}
+    <p>Don’t worry, you’ll have a chance to confirm the message and exactly who it is being sent to before it is actually sent.</p>
+  {{/ch-form}}
+{{/if}}

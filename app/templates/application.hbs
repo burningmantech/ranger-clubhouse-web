@@ -58,11 +58,9 @@
                   {{/if}}
                   <div class="col-sm-12 col-md-4 col-lg-3">
                     <div class="navbar-text">Communication</div>
+                    {{#link-to "me.alerts" class="dropdown-item"}}Alert Preferences{{/link-to}}
                     {{#if session.user.isRanger}}
                       {{#link-to "me.messages" class="dropdown-item"}}Messages{{/link-to}}
-                    {{/if}}
-                    {{#link-to "me.alerts" class="dropdown-item"}}Alert Preferences{{/link-to}}
-                    {{#if user.isRanger}}
                       {{#link-to "me.contact" class="dropdown-item"}}Contact Ranger{{/link-to}}
                     {{/if}}
                     {{#if session.user.teacher.have_mentored}}
@@ -159,6 +157,7 @@
                         {{#link-to "admin.positions" class="dropdown-item"}}Positions{{/link-to}}
                         {{#link-to "admin.roles" class="dropdown-item"}}(System) Roles{{/link-to}}
                         {{#link-to "admin.help" class="dropdown-item"}}Help Documents{{/link-to}}
+                        {{#link-to "admin.alerts" class="dropdown-item"}}RBS Alerts{{/link-to}}
                       {{/if}}
                     </div>
                     {{#if (has-role "admin")}}
@@ -195,7 +194,7 @@
                           <a href="{{cgo "person" "selectByStatusChange"}}" class="dropdown-item">People by Status Change</a>
                         {{/if}}
                         <div class="navbar-text">Communications</div>
-                        <a href="{{cgo "broadcast" "index"}}" class="dropdown-item">Ranger Broadcast</a>
+                        {{#link-to "admin.rbs" class="dropdown-item"}}Ranger Broadcast{{/link-to}}
                       </div>
                     {{/if}}
                   </div>

@@ -77,11 +77,11 @@ export default class TrainingSessionTrainersReportController extends Controller 
 
       if (this.training.is_art) {
         if (student.is_art_alpha) {
-          vetCount++;
-          vetStudents.push(student);
-        } else {
           alphaCount++;
           binaryStudents.push(student);
+        } else {
+          vetCount++;
+          vetStudents.push(student);
         }
       } else {
         if (student.years > 1) {
