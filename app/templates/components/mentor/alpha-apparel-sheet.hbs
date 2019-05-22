@@ -1,0 +1,64 @@
+{{#each alphaPages as |alphas idx|}}
+  <div class="d-flex justify-content-between {{if idx "d-print-page-break"}}">
+    <h1 class="align-middle">{{year-format slot.begins}} {{slot.description}} {{shift-format slot.begins}}</h1>
+    <h1 class="align-middel">Alpha Apparel Distribution</h1>
+    <h1 class="align-middle">Page {{add idx 1}} of {{alphaPages.length}}</h1>
+  </div>
+
+  {{pluralize slot.people.length "total alpha"}}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Callsign</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Result</th>
+        <th>Tee Shirt</th>
+        <th>Long Sleeve</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each alphas as |person|}}
+        <tr>
+          <td>{{person.callsign}}</td>
+          <td>{{person.first_name}} {{person.last_name}}</td>
+          <td>{{person.status}}</td>
+          <td>{{person.mentor_status}}</td>
+          <td>
+              {{present-or-not person.teeshirt_size_style "UNKNOWN"}}
+
+          </td>
+          <td>
+            {{present-or-not person.longsleeveshirt_size_style "UNKNOWN"}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{/each}}
+
+<h1 class="d-print-page-break">{{year-format this.slot.begins}} {{shift-format this.slot.begins}} Shirt Summary</h1>
+<div class="row">
+  {{#each shirtGroups as |shirts|}}
+    <div class="col-5">
+      <table class="table table-box">
+        <caption>{{shirts.name}} Totals</caption>
+        <thead>
+          <tr>
+            <th>Shirt Type</th>
+            <th class="text-right">Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each shirts.types as |shirt|}}
+            <tr>
+              <td>{{shirt.type}}</td>
+              <td class="text-right">{{shirt.count}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  {{/each}}
+</div>

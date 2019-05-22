@@ -1,0 +1,90 @@
+<div class="signup-page">
+  {{#each alphaPages as |alphaPage idx|}}
+    <h1 class="{{if idx "d-print-page-break"}} mb-4">
+      {{year-format slot.begins}} {{slot.description}} &mdash; {{shift-format slot.begins}} &mdash; Alpha Information
+      <div class="float-right small">Page {{add idx 1}} of {{alphaPages.length}}</div>
+    </h1>
+
+    <table class="signup-table">
+      <tbody>
+        {{#each alphaPage as |person|}}
+          <tr>
+            <td class="w-5 text-center">
+              <div class="signup-label">&nbsp;</div>
+              {{#if person.mentors_flag}}
+                {{fa-icon "flag" size="2x"}}
+              {{else}}
+                &nbsp;
+              {{/if}}
+            </td>
+            <td class="w-20">
+              <div class="signup-label">Handle</div>
+              {{person.callsign}}
+            </td>
+            <td class="w-5  text-center">
+              <div class="signup-label">Gender</div>
+              {{person.gender}}
+            </td>
+            <td class="w-25">
+              <div class="signup-label">Training Location</div>
+              {{#each person.trainings as |place|}}
+                {{place.description}}<br>
+              {{/each}}
+            </td>
+            <td class="w-25">
+              <div class="signup-label">Home</div>
+              {{person.city}} {{person.state}} {{person.country}}
+            </td>
+          </tr>
+          <tr>
+            <td class="w-5">
+              <div class="signup-label">Flag Type</div>
+              {{person.mentors_flag_note}}
+            </td>
+            <td class="w-35" colspan="2">
+              <div class="signup-label">Known Rangers</div>
+              &nbsp;
+            </td>
+            <td class="w-35" colspan="2">
+              <div class="signup-label">Known Alphas</div>
+              &nbsp;
+            </td>
+          </tr>
+          <tr>
+            <td class="w-5 text-center">
+              <div class="signup-label">Rank</div>
+              {{#each person.trainings as |place|}}
+                {{#if place.rank}}
+                  {{place.rank}}<br>
+                {{/if}}
+              {{/each}}
+            </td>
+            <td class="w-40" colspan="2">
+              <div class="signup-label">Prior Mentors</div>
+              {{#each alpha.mentor_history as |history historyIdx| }}
+                {{if historyIdx ","}}
+                {{history.year}} ({{mentor-short-status history.status}})
+                {{#each history.mentors as |mentor idx|}}
+                  {{if idx " / "}}{{mentor.callsign}}
+                {{/each}}
+              {{else}}
+                None
+              {{/each}}
+            </td>
+            <td class="w-40" colspan="2">
+              <div class="signup-label">Mentor Notes</div>
+              {{present-or-not person.mentors_notes}}
+            </td>
+          </tr>
+          <tr class="signup-separator">
+            <td colspan="5">&nbsp;</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <p class="h4 text-danger">
+      No Alphas were found that were signed into this shift. If you believe this is an error, try refreshing the page.
+    </p>
+  {{/each}}
+</div>

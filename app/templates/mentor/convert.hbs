@@ -1,0 +1,61 @@
+<h1>Alpha Conversions</h1>
+
+<table class="table table-sm table-hover mb-4">
+  <caption>{{pluralize passed.length "Shiny Penny candidate"}}</caption>
+  <thead>
+    <tr>
+      <th class="w-5">{{input type="checkbox" checked=passAll change=(action togglePassAll value="target.checked")}}</th>
+      <th class="w-15">Callsign</th>
+      <th class="w-20">Name</th>
+      <th class="w-5">Status</th>
+      <th>Mentor Result</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each passed as |person|}}
+      <tr class="{{if person.selected "bg-highlight"}}">
+        <td class="w-5">{{input type="checkbox" checked=person.selected}}</td>
+        <td class="w-15">{{if person.converted (fa-icon "check")}}{{person-link person=person}}</td>
+        <td class="w-20">{{person.first_name}} {{person.last_name}}</td>
+        <td class="w-5">{{person.status}}</td>
+        <td>{{person.mentor_status}}</td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="5"><strong class="text-danger">No passed Alphas were found</strong></td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+<button class="btn btn-success" {{action convertAction passed "active"}} disabled={{not passCount}}>Mint Selected Shiny Pennies ({{passCount}})</button>
+
+<table class="table table-sm table-hover mt-4 mb-2">
+  <caption>{{pluralize bonked.length "Bonked Alpha"}}</caption>
+  <thead>
+    <tr>
+      <th class="w-5">{{input type="checkbox" checked=bonkAll change=(action toggleBonkAll value="target.checked")}}</th>
+      <th class="w-15">Callsign</th>
+      <th class="w-20">Name</th>
+      <th class="w-5">Status</th>
+      <th>Mentor Result</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each bonked as |person|}}
+      <tr class="{{if person.selected "bg-highlight"}}">
+        <td class="w-5">{{input type="checkbox" checked=person.selected}}</td>
+        <td class="w-15">{{if person.converted (fa-icon "check")}}{{person-link person=person}}</td>
+        <td class="w-20">{{person.first_name}} {{person.last_name}}</td>
+        <td class="w-5">{{person.status}}</td>
+        <td>{{person.mentor_status}}</td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="5"><strong class="text-danger">No bonked Alphas were found</strong></td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+<button class="btn btn-danger" disabled={{not bonkCount}} {{action convertAction bonked "bonked"}}>Bonk Selected Alphas ({{bonkCount}})</button>

@@ -16,7 +16,8 @@
 
 {{#ch-form "person" person  onSubmit=(action "savePersonAction") as |f|}}
 
-  {{person-photo photo=photo}}
+  {{person-photo photo=photo person=person syncAction=(action syncPhotoAction)}}
+
 
   {{! The following block is floated left on md or larger screen to ensure
     the photo is on the right and the form flows around it.

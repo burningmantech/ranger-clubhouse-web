@@ -26,7 +26,7 @@ export default class ReadMoreComponent extends Component {
   }
 
   @action
-  readMoreAction() {
-    this.set('hideFullText', false);
+  toggleText() {
+    this.toggleProperty('hideFullText');
   }
 }

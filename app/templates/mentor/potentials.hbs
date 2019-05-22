@@ -1,0 +1,263 @@
+<h1>{{year}} Potential Alphas</h1>
+
+<div class="form-group row">
+  <label class="col-form-label col-auto">Filter</label>
+  <div class="col-auto">
+    {{ch-form/select name="filter" value=filter options=filterOptions onChange=(action (mut filter)) class="form-control"}}
+  </div>
+</div>
+
+<p>
+  Gender = F: Female, M: Male, NB: Non-binary, Q: Queer (unspecified), GF: Gender Fluid, - (dash): not stated
+</p>
+<table class="table table-sm table-striped table-hover">
+  <caption>Showing {{viewPotentials.length}} of {{pluralize potentials.length "potential alpha"}}</caption>
+  <thead>
+    <tr>
+      <th colspan="9">&nbsp;</th>
+      <th colspan="4" class="text-center">Mentoring Data</th>
+      <th colspan="2" class="text-center">Training Data</th>
+      <th>&nbsp;</th>
+    </tr>
+    <tr>
+      <th>Callsign</th>
+      <th>Name</th>
+      <th>Gender</th>
+      <th>Status</th>
+      <th>Trained</th>
+      <th>Handle</th>
+      <th>Photo</th>
+      <th>Created</th>
+      <th>Pers</th>
+      <th>History</th>
+      <th>Flag</th>
+      <th>Flag Type</th>
+      <th>Mentor Notes</th>
+      <th>Rank</th>
+      <th>Trainer Notes</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each viewPotentials as |person|}}
+      <tr>
+        <td>{{person-link person=person}}</td>
+        <td>{{person.first_name}} {{person.last_name}}</td>
+        <td>{{present-or-not person.gender "-"}}</td>
+        <td>{{person.status}}</td>
+        <td class="text-center">
+          {{#if person.trained}}
+            <span class="text-success">{{fa-icon "check"}}</span>
+          {{else}}
+            <span class="text-danger">{{fa-icon "times"}}</span>
+          {{/if}}
+        </td>
+        <td class="text-center">
+          {{#if person.callsign_approved}}
+            <span class="text-success">{{fa-icon "check"}}</span>
+          {{else}}
+            <span class="text-danger">{{fa-icon "times"}}</span>
+          {{/if}}
+        </td>
+        <td class="text-center">
+          {{#if person.photo_approved}}
+            <span class="text-success">{{fa-icon "check"}}</span>
+          {{else}}
+            <span class="text-danger">{{fa-icon "times"}}</span>
+          {{/if}}
+        </td>
+        <td>
+          {{year-format person.create_date}}
+        </td>
+        <td>
+          {{#if person.has_note_on_file}}
+            <span class="text-danger">{{fa-icon "exclamation-triangle"}}</span>
+          {{else}}
+            &nbsp;
+          {{/if}}
+        </td>
+        <td>
+          {{#each person.mentor_history as |history|}}
+            {{history.year~}}
+            {{~#if (eq history.status "bonk")~}}
+            (B)
+            {{~else if (eq history.status "self-bonk")~}}
+            (SB)
+            {{~else~}}
+            (P)
+            {{~/if}}
+          {{else}}
+            -
+          {{/each}}
+        </td>
+        <td>
+          {{#if person.mentors_flag}}
+            <span class="text-danger">{{fa-icon "flag"}}</span>
+          {{else}}
+            &nbsp;
+          {{/if}}
+        </td>
+        <td>
+          {{person.mentors_flag_note}}
+        </td>
+        <td>
+          {{#if person.mentors_notes}}
+            {{read-more text=person.mentors_notes}}
+          {{else}}
+            -
+          {{/if}}
+        </td>
+        <td class="text-center">
+          {{#each person.trainings as |place|}}
+            {{#if (eq place.rank 4)}}
+              <span class="text-danger">FLAG</span>
+            {{else}}
+              {{place.rank}}
+            {{/if}}
+          {{else}}
+            -
+          {{/each}}
+        </td>
+        <td>
+          {{#each person.trainings as |place|}}
+            {{#if place.notes}}
+              {{read-more text=place.notes}}
+            {{else}}
+              -
+            {{/if}}
+          {{else}}
+            -
+          {{/each}}
+        </td>
+        <td>
+          <button class="btn btn-primary btn-sm" {{action editAction person}}>Edit</button>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+{{#if person}}
+  {{#ch-form "person" person modalBox=true modalTitle=(concat person.callsign " Details") onSubmit=(action saveAction) onCancel=(action cancelAction) as |f|}}
+    <dl class="form-row">
+      <dt class="col-2">Callsign:</dt>
+      <dd class="col-10">
+        {{person.callsign}} ({{if person.callsign_approved "approved" "NOT APPROVED"}})
+      </dd>
+      <dt class="col-2">Photo:</dt>
+      <dd class="col-10">
+        {{#if person.photo_approved}}
+          <span class="text-success">Yes</span>
+        {{else}}
+          <span class="text-danger">NO</span>
+        {{/if}}
+      </dd>
+      <dt class="col-2">Alpha Shift:</dt>
+      <dd class="col-10">
+        {{#if person.alpha_slot}}
+          {{shift-format person.alpha_slot.begins}} {{person.alpha_slot.description}}
+        {{else}}
+          none found
+        {{/if}}
+      </dd>
+      <dt class="col-2">Prior Mentors:</dt>
+      <dd class="col-10">
+        {{#each person.mentor_history as |history|}}
+          {{history.year}} {{history.status}}:
+          {{#each history.mentors as |mentor idx|}}
+            {{if idx " / "}}
+            {{mentor.callsign}}
+          {{/each}}
+          <br>
+        {{else}}
+          none
+        {{/each}}
+      </dd>
+      <dt class="col-2">Trained</dt>
+      <dd class="col-10">
+        {{#if person.trained}}
+          <span class="text-success">Trained</span>
+        {{else}}
+          <span class="text-danger">Not Trained</span>
+        {{/if}}
+      </dd>
+
+      <dt class="col-12">Training</dt>
+      <dd class="col-12">
+        <table class="table table-striped table-sm table-auto-width">
+          <thead>
+            <tr>
+              <th class="w-20">Date</th>
+              <th class="w-20">Location</th>
+              <th class="w-10 text-center">Passed?</th>
+              <th class="w-10 text-center">Rank</th>
+              <th>Training Notes</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {{#each person.trainings as |place|}}
+              <tr>
+                <td class="w-20">{{shift-format place.begins}}</td>
+                <td class="w-20">{{place.description}}</td>
+                <td class="w-10 text-center">
+                  {{#if place.has_started}}
+                    {{yesno place.passed}}
+                  {{else}}
+                    Pending
+                  {{/if}}
+                </td>
+                <td class="w-10 text-center">{{#if (gte place.rank 4)}}
+                    <span class="text-danger">FLAG</span>
+                  {{else if place.rank}}
+                    {{place.rank}}
+                  {{else}}
+                    -
+                  {{/if}}
+                </td>
+                <td>
+                  {{#if place.notes}}
+                    {{read-more text=place.notes}}
+                  {{else}}
+                    -
+                  {{/if}}
+                </td>
+              </tr>
+            {{else}}
+              <tr>
+                <td class="5"><strong class="text-danger">No training sign ups found</strong></td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </dd>
+    </dl>
+    <div class="form-row">
+      <div class="col-auto">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col-auto ml-2">
+        {{f.input "mentors_flag" type="checkbox" label="Mentor's Flag" inline=true}}
+      </div>
+    </div>
+    <div class="form-row mt-2">
+      <div class="col-auto">
+        {{f.input "mentors_flag_note" type="text" label="Mentor's Flag Notes" size=32 maxlength=32}}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col-auto">
+        {{f.input "mentors_notes" type="textarea" label="Mentor's Notes" cols=80 rows=10}}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col-auto">
+        {{f.submit label="Update"}}
+      </div>
+      <div class="col-auto">
+        {{f.cancel}}
+      </div>
+    </div>
+  {{/ch-form}}
+{{/if}}

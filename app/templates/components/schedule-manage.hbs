@@ -23,7 +23,7 @@
       {{permission.manual_review_cap}} prospective volunteers to have passed
       the Manual Review. Sadly
       this means that {{if isMe "you have" (concat person.callsign "has")}} missed the window for volunteering with us
-      as a Ranger this year. If {{if isMe "you" person.callsign}}  have questions or believe you have received
+      as a Ranger this year. If {{if isMe "you" person.callsign}} have questions or believe you have received
       this message in error, please contact {{vc-email}} .
     {{else}}
       {{#if (eq permission.photo_status "error")}}
@@ -51,8 +51,9 @@
             Please upload a BMID (lam) photo. Note that photos can take 2-3 days to be
             approved. A new photo may be uploaded on the {{#link-to "me.overview"}}Home Page{{/link-to}}.
           {{else if (eq permission.photo_status "rejected")}}
-            <h3 class="mt-2">Photo rejected</h3>
+            <h3 class="mt-2">Submitted photo was rejected</h3>
             The photo was rejected. Please upload a new photo that conforms to the guidelines.
+            A new photo may be uploaded on the {{#link-to "me.overview"}}Home Page{{/link-to}}.
           {{else}}
             <h3 class="mt-2">Photo pending approval</h3>
             The photo has been submitted and may take up to 2 to 3 days to review. Please check back then.
@@ -60,8 +61,7 @@
         {{/if}}
       {{/if}}
 
-      {{! Required photo approval before allowing Manual Review}}
-      {{#if (and permission.manual_review_allowed hasApprovedPhoto)}}
+      {{#if permission.manual_review_allowed}}
         <h3 class="mt-2">Pass the Manual Review</h3>
         {{#if permission.manual_review_url}}
           {{#if isMe}}
@@ -76,6 +76,9 @@
           trainings, until the review is ready and you have passed it. Please
           check back later.
         {{/if}}
+      {{else if (and (not hasApprovedPhoto) (not permission.manual_review_passed))}}
+        <h3 class="mt-2">Pass the Manual Review</h3>
+        You will need to upload a photo and have it approved before being allowed to take the Manual Review.
       {{/if}}
     {{/if}}
 

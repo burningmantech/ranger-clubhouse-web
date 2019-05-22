@@ -29,7 +29,7 @@
     {{#ch-form "verify" verifyForm as |f|}}
       {{#if (or numbers.is_same (and numbers.off_playa.phone (not numbers.off_playa.is_verified)))}}
         <div class="form-row">
-          {{f.input "off_playa" label=(concat "Enter verification code for " numbers.off_playa.phone) type="text" size=5 maxlength=5 grid="col-auto"}}
+          {{f.input "off_playa" label=(concat "Enter verification code for " numbers.off_playa.phone) type="text" inputmode="decimal" size=5 maxlength=5 rid="col-auto"}}
         </div>
         <div class="form-row">
           <button class="btn btn-primary" disabled={{isVerifying}} {{action confirmCodeAction f.model "off-playa"}}>Verify</button>
@@ -38,7 +38,7 @@
       {{/if}}
       {{#if (and (not numbers.is_same) numbers.on_playa.phone (not numbers.on_playa.is_verified))}}
         <div class="form-row">
-          {{f.input "on_playa" label=(concat "Enter verification code for " numbers.on_playa.phone) type="text" size=5 maxlength=5 grid="col-auto"}}
+          {{f.input "on_playa" label=(concat "Enter verification code for " numbers.on_playa.phone) type="text" inputmode="decimal"  size=5 maxlength=5 grid="col-auto"}}
         </div>
         <div class="form-row">
           <button class="btn btn-primary" disabled={{isVerifying}} {{action confirmCodeAction f.model "on-playa"}}>Verify</button>
@@ -62,13 +62,13 @@
 
 {{#ch-form "numbers" phoneForm validator=numberValidations onSubmit=(action "saveNumbersAction") as |f|}}
   <div class="form-row">
-    {{f.input "off_playa" label=(if f.model.is_same "Pre-Event & On Playa phone number:" "Pre-Event phone number:") type="text" size=30 grid="col-auto"}}
+    {{f.input "off_playa" label=(if f.model.is_same "Pre-Event & On Playa phone number:" "Pre-Event phone number:") type="text" inputmode="tel" size=30 grid="col-auto"}}
   </div>
   <div class="form-row">
     {{f.input "is_same" label="On playa number is the same as the pre-event number" type="checkbox"}}
   </div>
   <div class="form-row mt-2 {{if f.model.is_same "d-none"}}">
-    {{f.input "on_playa" label="On Playa phone number:" type="text" size=30 grid="col-auto"}}
+    {{f.input "on_playa" label="On Playa phone number:" type="text" inputmode="tel" size=30 grid="col-auto"}}
   </div>
 
   <div class="mt-2">

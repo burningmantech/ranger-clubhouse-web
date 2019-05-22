@@ -94,6 +94,12 @@ Router.map(function() {
 
   this.route('mentor', function() {
     this.route('mentees');
+    this.route('potentials');
+    this.route('alpha-status');
+    this.route('acceptance-sheets');
+    this.route('schedule');
+    this.route('assignment');
+    this.route('convert');
   });
 
   this.route('handle-checker');
