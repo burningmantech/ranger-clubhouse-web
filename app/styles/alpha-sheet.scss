@@ -1,0 +1,95 @@
+/*
+ * Dead tree media support (aka printing!)
+ *
+ * The stylesheet is geared for the Alpha Acceptance Sheet.
+ */
+
+.alpha-sheet-header {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  margin-left:auto;
+}
+// Section header with box
+.alpha-sheet-section-header {
+  width: 100%;
+  border: 1px solid #222;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.alpha-sheet-logo {
+  height: 60px;
+}
+
+.alpha-sheet-table {
+  border-spacing: 10px 0;
+  border-collapse: separate;
+  td {
+    padding: 10px;
+  }
+}
+
+.alpha-sheet-headshot-box {
+  margin-right: 20px;
+
+  height: 330px;
+  img {
+    display: block;
+    margin: 0 auto;
+    max-width: 225px;
+    max-height: 325px;
+  }
+}
+
+.alpha-sheet-column {
+  width: 100%;
+  padding: 0 10px;
+  margin-top: 25px;
+}
+
+.alpha-sheet-column-lg {
+  font-size: 1.8rem !important;
+}
+
+.alpha-sheet-column-label {
+  font-size: 1.2rem;
+  font-weight: 500;
+  display: inline-block;
+  width: 30%;
+}
+
+.alpha-sheet-column-field {
+  display: inline-block;
+  width: 69%;
+  font-size: 1.2rem;
+}
+
+.alpha-sheet-column-auto {
+  width: auto;
+  margin-right: 5px;
+}
+
+.alpha-sheet-column-input {
+  display: inline-block;
+  width: 55%;
+  border-bottom: 1px solid #222;
+  font-size: 1.2rem;
+}
+
+.alpha-sheet-comment-box-md {
+  font-size: 1rem;
+  margin: 20px 0;
+  border-top: 1px solid #222;
+  min-height: 75px;
+}
+
+.alpha-sheet-comment-box-lg {
+  font-size: 1.1rem;
+  margin: 20px 0;
+  border-top: 1px solid #222;
+  height: 150px;
+}

@@ -17,6 +17,7 @@ export default class ChSidebarLinkComponent extends Component {
   @argument(optional('any')) routePath;
   @argument(optional('any')) routeArg;
   @argument(optional('any')) badgeText;
+  @argument(optional('string')) linkBg = 'bg-dark';
 
   @computed('routePath')
   get isUrl() {

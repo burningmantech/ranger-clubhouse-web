@@ -1,22 +1,22 @@
-{{#ch-sidebar}}
+{{#ch-sidebar linkBg="bg-person"}}
   {{#ch-sidebar-group "PERSON MANAGE"}}
-    {{ch-sidebar-link "person.index" title="Account Info" icon="info" iconType="s"}}
-    {{ch-sidebar-link "person.schedule" title="Schedule / Sign Up" icon="clipboard"}}
-    {{ch-sidebar-link "person.event-info" title="Event/Training Info" icon="user" iconType="s"}}
-    {{ch-sidebar-link "person.timesheet" title="Timesheets" class="dropdown-item" icon="clock"}}
-    {{ch-sidebar-link "person.assets" title="Assets" class="dropdown-item" icon="broadcast-tower" iconType="s"}}
-    {{ch-sidebar-link "person.messages" title="Messages" icon="envelope" badgeText=person.unread_message_count}}
+    {{ch-sidebar-link "person.index" title="Account Info" linkBg="bg-person" icon="info" iconType="s"}}
+    {{ch-sidebar-link "person.schedule" title="Schedule / Sign Up" linkBg="bg-person"  icon="clipboard"}}
+    {{ch-sidebar-link "person.event-info" title="Event/Training Info" icon="user" linkBg="bg-person" iconType="s"}}
+    {{ch-sidebar-link "person.timesheet" title="Timesheets" class="dropdown-item" linkBg="bg-person" icon="clock"}}
+    {{ch-sidebar-link "person.assets" title="Assets" class="dropdown-item" linkBg="bg-person" icon="broadcast-tower" iconType="s"}}
+    {{ch-sidebar-link "person.messages" title="Messages" icon="envelope" linkBg="bg-person"  badgeText=person.unread_message_count}}
     {{#if (has-role "admin" "manage+view-pii")}}
-      {{ch-sidebar-link "person.personal-info" title="Personal Info" icon="home" iconType="s"}}
+      {{ch-sidebar-link "person.personal-info" title="Personal Info" linkBg="bg-person"  icon="home" iconType="s"}}
     {{/if}}
     {{#if (has-role "admin" "manage")}}
-      {{ch-sidebar-link "person.emergency-contact" title="Emergency Contact" icon="exclamation" iconType="s"}}
+      {{ch-sidebar-link "person.emergency-contact" title="Emergency Contact" linkBg="bg-person" icon="exclamation" iconType="s"}}
     {{/if}}
     {{#if (has-role "admin" "vc" "mentor")}}
-      {{ch-sidebar-link "person.mentors" title="Mentors" icon="users" iconType="s"}}
+      {{ch-sidebar-link "person.mentors" title="Mentors" icon="users" linkBg="bg-person" iconType="s"}}
     {{/if}}
     {{#if (has-role "admin")}}
-      {{ch-sidebar-link "person.password" title="Change Password" icon="key" iconType="s"}}
+      {{ch-sidebar-link "person.password" title="Change Password" linkBg="bg-person"  icon="key" iconType="s"}}
     {{/if}}
   {{/ch-sidebar-group}}
 {{/ch-sidebar}}

@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
-import { action, computed } from '@ember/object';
+import { action, computed, set } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
 import { typeOf, isEmpty } from '@ember/utils';
 import Changeset from 'ember-changeset';
@@ -76,7 +76,7 @@ export default class ChFormComponent extends Component {
       }
     } else {
       model = original;
-      model.set('isValid', true);
+      set(model, 'isValid', true);
     }
 
     return model;

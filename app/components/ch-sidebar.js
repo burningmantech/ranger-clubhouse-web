@@ -6,6 +6,7 @@ import $ from 'jquery';
 @classNames('sidebar-expanded', 'd-none', 'd-md-block', 'd-print-none')
 export default class ChSidebarComponent extends Component {
   elementId = 'sidebar-container';
+  linkBg = 'bg-dark';
 
   didInsertElement() {
     super.didInsertElement(...arguments);

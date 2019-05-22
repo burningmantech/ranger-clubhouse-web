@@ -51,7 +51,7 @@ spamming us and creating bogus accounts." }}
       </div>
     </div>
     <div class="form-row">
-      {{f.input "email" label="Email Address" size=30}}
+      {{f.input "email" label="Email Address" type="text" inputmode="email" size=30}}
     </div>
 
     <div class="form-row">
@@ -68,8 +68,8 @@ spamming us and creating bogus accounts." }}
     {{person-address-edit f=f}}
 
     <div class="form-row">
-      {{f.input "home_phone" label="Primary Phone" grid="col-sm-4"}}
-      {{f.input "alt_phone" label="Alternative Phone" grid="col-sm-4"}}
+      {{f.input "home_phone" label="Primary Phone" type="text" inputmode="tel" grid="col-sm-4"}}
+      {{f.input "alt_phone" label="Alternative Phone" type="text" inputmode="tel" grid="col-sm-4"}}
     </div>
 
     {{f.submit label="Create My Auditor Account"}}

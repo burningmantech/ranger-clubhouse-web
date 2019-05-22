@@ -1,15 +1,15 @@
 {{#if isUrl}}
-<a href="{{routePath}}" class="bg-dark list-group-item list-group-item-action">
+<a href="{{routePath}}" class="{{linkBg}} list-group-item list-group-item-action">
   {{ch-sidebar-link-content iconUrl=iconUrl icon=icon iconType=iconType title=title badgeText=badgeText}}
 </a>
 {{else}}
   {{! ARG.. link-to cannot accept an empty dynamic segment}}
   {{#if routeArg}}
-    {{#link-to routePath routeArg class="bg-dark list-group-item list-group-item-action" activeClass="sidebar-active"}}
+    {{#link-to routePath routeArg class=(concat linkBg " list-group-item list-group-item-action" ) activeClass="sidebar-active"}}
       {{ch-sidebar-link-content iconUrl=iconUrl icon=icon iconType=iconType title=title badgeText=badgeText}}
     {{/link-to}}
   {{else}}
-    {{#link-to routePath class="bg-dark list-group-item list-group-item-action" activeClass="sidebar-active"}}
+    {{#link-to routePath class=(concat linkBg " list-group-item list-group-item-action") activeClass="sidebar-active"}}
       {{ch-sidebar-link-content iconUrl=iconUrl icon=icon iconType=iconType title=title badgeText=badgeText}}
     {{/link-to}}
   {{/if}}

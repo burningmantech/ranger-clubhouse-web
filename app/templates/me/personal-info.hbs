@@ -21,7 +21,7 @@
       {{f.input "last_name" label="Last Name" maxlength=25 grid="col-sm-4"}}
     </div>
     <div class="form-row">
-      {{f.input "email" label="Email" maxlength=50 grid="col-sm-6" noSpaces=true}}
+      {{f.input "email" label="Email" type="text" inputmode="email" maxlength=50 grid="col-sm-6" noSpaces=true}}
       <div class="form-group ">
         <strong>Note:</strong> Updating your email address here WILL NOT update the email address used for various Ranger mailing lists. Contact {{general-support-email}} to update your email address for the forums.
       </div>
@@ -31,8 +31,8 @@
       </div>
     </div>
     <div class="form-row">
-      {{f.input "home_phone" label="Primary Phone" grid="col-sm-4" maxlength=25}}
-      {{f.input "alt_phone" label="Alternative Phone" grid="col-sm-4" maxlength=25}}
+      {{f.input "home_phone" label="Primary Phone" type="text" inputmode="tel" grid="col-sm-4" maxlength=25}}
+      {{f.input "alt_phone" label="Alternative Phone" type="text" inputmode="tel" grid="col-sm-4" maxlength=25}}
     </div>
 
     <div class="form-row">

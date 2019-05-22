@@ -1,0 +1,98 @@
+<h1>{{year}} Prospective And Alpha Status</h1>
+
+<div class="form-group row">
+  <label class="col-form-label col-auto">Filter</label>
+  <div class="col-auto">
+    {{ch-form/select name="filter" value=filter options=filterOptions onChange=(action (mut filter)) class="form-control"}}
+  </div>
+</div>
+
+Showing {{viewPotentials.length}} of {{potentials.length}}.
+Current alphas: {{alphaCount}}, Potential Alpha status: {{statusEligibleCount}},
+Potential Alpha position: {{positionEligibleCount}}.
+<table class="table table-sm table-hover table-striped">
+  <thead>
+    <tr>
+      <th>Callsign</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Status</th>
+      <th>Flag?</th>
+      <th class="text-center">Handle?</th>
+      <th class="text-center">Trained?</th>
+      <th class="text-center">Photo?</th>
+      <th class="text-center">Alpha Status</th>
+      <th class="text-center">Alpha Position</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each viewPotentials as |person|}}
+      <tr>
+        <td>{{person-link person=person}}</td>
+        <td>{{person.first_name}} {{person.last_name}}</td>
+        <td>{{mail-to person.email}}</td>
+        <td>{{person.status}}</td>
+        <td class="text-center">
+          {{#if person.mentors_flag}}
+            <span class="text-danger">{{fa-icon "flag"}}</span>
+          {{else}}
+            &nbsp;
+          {{/if}}
+        </td>
+        <td class="text-center">
+          {{#if person.callsign_approved}}
+            <span class="text-success">{{fa-icon "check"}}</span>
+          {{else}}
+            <span class="text-danger">{{fa-icon "times"}}</span>
+          {{/if}}
+        </td>
+        <td class="text-center">
+          {{#if person.trained}}
+            <span class="text-success">{{fa-icon "check"}}</span>
+          {{else}}
+            <span class="text-danger">{{fa-icon "times"}}</span>
+          {{/if}}
+        </td>
+        <td class="text-center">
+          {{#if person.photo_approved}}
+            <span class="text-success">{{fa-icon "check"}}</span>
+          {{else}}
+            <span class="text-danger">{{fa-icon "minus-circle"}}
+              {{#if (eq person.photo_status "rejected")}}
+                Rejected
+              {{else if (eq person.photo_status "error")}}
+                Lambase Error
+              {{else}}
+                None
+              {{/if}}
+            </span>
+          {{/if}}
+        </td>
+        <td class="text-center">
+          {{#if person.status_eligible}}
+            <span class="text-success">{{fa-icon "check"}}</span>
+          {{else}}
+            &nbsp;
+          {{/if}}
+        </td>
+        <td class="text-center">
+          {{#if person.position_eligible}}
+            <span class="text-success">{{fa-icon "check"}}</span>
+          {{else}}
+            &nbsp;
+          {{/if}}
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="10">
+          {{#if potentials}}
+            No matches found.
+          {{else}}
+            No Alpha or Prospectives were found.
+          {{/if}}
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

@@ -23,6 +23,7 @@ export default class PersonIndexRoute extends Route {
 
     // Retrieving the photo may cause a delay, hence its here and not in model()
     controller.set('photo', null);
+    controller.set('isSyncing', false);
     this.ajax.request(`person/${person.id}/photo`)
           .then((result) => controller.set('photo', result.photo))
           .catch(() => {

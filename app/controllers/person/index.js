@@ -249,4 +249,14 @@ export default class PersonIndexController extends Controller {
   cancelRoles() {
     this.set('editRoles', false);
   }
+
+  @action
+  syncPhotoAction() {
+    this.set('photo', null);
+    this.ajax.request(`person/${this.person.id}/photo`, { data: { sync: 1 }})
+          .then((result) => this.set('photo', result.photo))
+          .catch(() => {
+            this.set('photo', { status: 'error', message: 'There was a server error.'});
+          });
+  }
 }

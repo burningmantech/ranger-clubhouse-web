@@ -107,14 +107,14 @@
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Mentoring</a>
               <div class="dropdown-menu">
                 <div class="navbar-text">Pre-Playa</div>
-                <a href="{{cgo "alpha" "selectPotential"}}" class="dropdown-item">Potential Alphas</a>
-                <a href="{{cgo "person" "selectByAlphaStatus"}}" class="dropdown-item">Alpha Status</a>
-                <a href="{{cgo "alpha" "selectFlagged"}}" class="dropdown-item">Flagged Alphas</a>
+                {{#link-to "mentor.potentials" class="dropdown-item"}}Potential Alphas{{/link-to}}
+                {{#link-to "mentor.alpha-status" class="dropdown-item"}}Alpha Status{{/link-to}}
 
                 <div class="navbar-text">On Playa</div>
-                <a href="{{cgo "alpha" "selectScheduledShifts"}}" class="dropdown-item">Alpha Scheduled Shifts</a>
-                <a href="{{cgo "alpha" "index"}}" class="dropdown-item">Alpha Acceptance Sheets</a>
-                <a href="{{cgo "mentor" "selectAlphas"}}" class="dropdown-item">Alpha Mentors Assignment</a>
+                {{#link-to "mentor.schedule" class="dropdown-item"}}Alpha Scheduled Shifts{{/link-to}}
+                {{#link-to "mentor.acceptance-sheets" class="dropdown-item"}}Alpha Acceptance Sheets{{/link-to}}
+                {{#link-to "mentor.assignment" class="dropdown-item"}}Alpha Mentors Assignment{{/link-to}}
+                {{#link-to "mentor.convert" class="dropdown-item"}}Alpha Conversion{{/link-to}}
 
                 <div class="navbar-text">Post Playa</div>
                 {{#link-to "mentor.mentees" class="dropdown-item"}}Mentees For Year{{/link-to}}
