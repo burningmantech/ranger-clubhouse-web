@@ -27,7 +27,7 @@
       {{/if}}
     </div>
     <div class="col-sm-12 col-md-6 col-lg-6">
-      {{#ch-form "auth" auth validator=loginValidations onSubmit=(action "submit") as |f|}}
+      {{#ch-form "auth" auth validator=loginValidations autocomplete="on" onSubmit=(action "submit") as |f|}}
         {{f.input "identification" label="Email" type="text" inputmode="email" autofocus=true noSpaces=true}}
         {{f.input "password" label="Password" type="password"}}
 
