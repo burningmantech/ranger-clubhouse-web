@@ -92,10 +92,17 @@ export default class ScheduleTableComponent extends Component {
 
   @action
   leaveSlot(slot) {
-    this.modal.confirm(
-      'Confirm removal',
-        `Are you sure you want to remove "${slot.position_title} - ${slot.slot_description}" from the schedule?`,
-      () => {
+    let message;
+
+    if (slot.has_started && this.session.user.isAdmin) {
+      message = 'The shift has already started. Because you are an admin, you are allowed to removed the shift. '
+    } else {
+      message = '';
+    }
+
+    message += `Are you sure you want to remove "${slot.position_title} - ${slot.slot_description}" from the schedule?`
+
+    this.modal.confirm(null, message, () => {
         const personId = this.person.id;
         const slotId = slot.id;
 

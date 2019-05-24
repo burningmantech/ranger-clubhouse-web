@@ -190,7 +190,7 @@
                       {{! Only show action buttons for the current year}}
                       {{#if isCurrentYear}}
                         {{#if slot.slot_active}}
-                          {{#if (or (not slot.isFull) (not slot.has_started) (has-role "admin"))}}
+                          {{#if (or (has-role "admin") (and (not slot.isFull) (not slot.has_started)))}}
                             <button {{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Sign up for the shift">{{fa-icon "user-plus" type="fas"}}</button>
                           {{/if}}
                         {{else}}
