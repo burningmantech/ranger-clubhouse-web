@@ -22,7 +22,7 @@ export default class MentorAcceptanceSheetsController extends Controller {
     return this.alphas.filter((a) => (a.alpha_slot && this.filter == a.alpha_slot.begins));
   }
 
-  @computed('alphas.@each.alpha_slot.begins')
+  @computed('alphas')
   get filterOptions() {
     const dates = this.alphas.filter((a) => a.alpha_slot != null)
           .uniqBy('alpha_slot.begins')

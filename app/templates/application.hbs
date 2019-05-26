@@ -216,7 +216,7 @@
                       <a href="{{cgo "slot" "selectAllScheduled" "order=2"}}" class="dropdown-item">Schedule by Position</a>
                       <a href="{{cgo "slot_coverage" "coverageReport"}}" class="dropdown-item">Coverage Report</a>
                       <a href="{{cgo "slot" "shiftSignupsReport"}}" class="dropdown-item">Shift Signups</a>
-                      <a href="{{cgo "slot" "checkInOutForecastReport"}}" class="dropdown-item">HQ Checkin/Out Forecast</a>
+                      {{#link-to "reports.hq-forecast" class="dropdown-item"}}HQ Checkin/Out Forecast{{/link-to}}
                     </div>
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">People</div>

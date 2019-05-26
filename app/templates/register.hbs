@@ -39,7 +39,7 @@
   <p>
     <strong>Let's get started &hellip;</strong>
   </p>
-  {{#ch-form "register" registerForm validator=registerValidations onSubmit=(action "createAccount") as |f|}}
+  {{#ch-form "register" registerForm autocomplete="on" validator=registerValidations onSubmit=(action "createAccount") as |f|}}
     <div class="form-row">
       {{f.input "human" size=4 maxlength=10 grid="col-auto" label="First, prove you are human - What is 33 + 2?" hint="We're sorry about this, but our web site gets a lot of robots
 spamming us and creating bogus accounts." }}

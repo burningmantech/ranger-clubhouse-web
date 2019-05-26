@@ -151,6 +151,7 @@ Router.map(function() {
     this.route('freaking-years');
     this.route('alpha-shirts');
     this.route('shift-lead');
+    this.route('hq-forecast');
   });
 
   this.route('vc', function() {
