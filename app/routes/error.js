@@ -1,5 +1,7 @@
 import Route from '@ember/routing/route';
 import ENV from 'clubhouse/config/environment';
+import { isAbortError, isTimeoutError } from 'ember-ajax/errors';
+import DS from 'ember-data';
 
 //
 // Called by Ember when a route encounters an uncaught exception.
@@ -8,13 +10,23 @@ import ENV from 'clubhouse/config/environment';
 
 export default class ErrorRoute extends Route {
   setupController(controller, error) {
-
     super.setupController(...arguments);
     controller.set('error', error);
     controller.set('config', ENV);
 
+    // Check for offline errors
+    const isOffline =
+      (error instanceof DS.TimeoutError || error instanceof DS.AbortError
+        || isAbortError(error) || isTimeoutError(error));
+
+    controller.set('isOffline', isOffline);
+
+    if (!isOffline) {
+      console.error('Uncaught routing error', error);
+    }
+
     // Try to send the down the error to the server for logging
-    if (ENV.logEmberErrors && navigator.sendBeacon) {
+    if (!isOffline && ENV.logEmberErrors && navigator.sendBeacon) {
       const data = new FormData;
 
       data.append('error_type', 'ember-route-error');
@@ -43,6 +55,5 @@ export default class ErrorRoute extends Route {
       navigator.sendBeacon(ENV['api-server'] + '/error-log/record', data);
     }
 
-    console.error('Uncaught routing error', error);
   }
 }

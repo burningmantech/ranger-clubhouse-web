@@ -1,47 +1,56 @@
 <main class="col">
-  <h1>Khaki, Khaki, Clubhouse - I need a Tech Ninja for a crash.</h1>
-  <p>Sorry! The clubhouse experienced an unrecoverable error while trying to process your request.</p>
-  <p>
-    Email the following information to {{admin-email}} to help figure out what went wrong:
-  </p>
+  {{#if isOffline}}
+    <p class="text-danger">
+      Uh oh, the request to the Clubhouse server could not be completed. The server might be offline or the Internet connection is spotty.
+    </p>
+    <button class="btn btn-primary" {{action reload}}>Reload the page</button>
+  {{else}}
+    <h1>Khaki, Khaki, Clubhouse - I need a Tech Ninja for a crash.</h1>
+    <p>Sorry! The clubhouse experienced an unrecoverable error while trying to process your request.</p>
+    <p>
+      Email the following information to {{admin-email}} to help figure out what went wrong:
+    </p>
 
-  <dl>
-    <dt>Version</dt>
-    <dd>{{config.APP.version}} / {{config.APP.buildTimestamp}}</dd>
+    <dl>
+      <dt>Version</dt>
+      <dd>{{config.APP.version}} / {{config.APP.buildTimestamp}}</dd>
 
-    <dt>Error Message:</dt>
-    <dd>{{error.message}}</dd>
-    {{#if error.payload.errors}}
-      <dt>Response from server:</dt>
+      <dt>Error Message:</dt>
+      <dd>{{error.message}}</dd>
+      {{#if error.payload.errors}}
+        <dt>Response from server:</dt>
+        <dd>
+          {{#each error.payload.errors as |message|}}
+            {{message.title}}<br>
+          {{/each}}
+        </dd>
+      {{/if}}
+
+      {{#if error.isAdapterError}}
+        <dt>Description:</dt>
+        <dd>{{error.description}}</dd>
+
+        <dt>Filename / Line:</dt>
+        <dd>{{error.fileName}}:{{error.lineNumber}}</dd>
+
+        <dt>Name:</dt>
+        <dd>{{error.name}}</dd>
+
+        <dt>Number / Code:</dt>
+        <dd>{{error.number}} / {{error.code}}</dd>
+      {{/if}}
+
+      <dt>Stack:</dt>
       <dd>
-        {{#each error.payload.errors as |message|}}
-          {{message.title}}<br>
-        {{/each}}
+        <pre>{{error.stack}}</pre>
       </dd>
-    {{/if}}
+    </dl>
 
-    {{#if error.isAdapterError}}
-      <dt>Description:</dt>
-      <dd>{{error.description}}</dd>
-
-      <dt>Filename / Line:</dt>
-      <dd>{{error.fileName}}:{{error.lineNumber}}</dd>
-
-      <dt>Name:</dt>
-      <dd>{{error.name}}</dd>
-
-      <dt>Number / Code:</dt>
-      <dd>{{error.number}} / {{error.code}}</dd>
-    {{/if}}
-
-    <dt>Stack:</dt>
-    <dd>
-      <pre>{{error.stack}}</pre>
-    </dd>
-  </dl>
-
-  <p>
-    Its recommended at this time that you do not attempt the request again until you hear from the tech ninjas.
-  </p>
-  {{#link-to "me.overview"}}Back To The Home Page{{/link-to}}
+    <p>
+      Its recommended at this time that you do not attempt the request again until you hear from the tech ninjas.
+    </p>
+    <p>
+      {{#link-to "me.overview"}}Back To The Home Page{{/link-to}}
+    </p>
+  {{/if}}
 </main>

@@ -1,6 +1,8 @@
 import Controller from '@ember/controller';
-
+import { action } from '@ember/object';
 export default class ErrorController extends Controller {
-  // Nothing here at the moment, everything is in the template
-
+  @action
+  reload() {
+    location.reload(false);
+  }
 }

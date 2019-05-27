@@ -1,0 +1,55 @@
+<h1>Bulk Signout</h1>
+<p>
+  This page will show anyone still on duty. Select those individuals you which to sign out in bulk.
+</p>
+
+<table class="table table-sm table-hover table-striped">
+  <caption>{{pluralize onDutyCount "person"}} still on duty</caption>
+  <thead>
+    <tr>
+      <th>{{input type="checkbox" checked=selectAll change=(action toggleAll value="target.checked")}}</th>
+      <th>Callsign</th>
+      <th>From</th>
+      <th>To</th>
+      <th class="text-right">Time</th>
+      <th class="text-right">Credits</th>
+      <th>Position</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each timesheets as |ts|}}
+      <tr>
+        <td>
+          {{#if ts.off_duty}}
+            &nbsp;
+          {{else}}
+            {{input type="checkbox" checked=ts.selected}}
+          {{/if}}
+        </td>
+        <td>{{person-link person=ts.person}}</td>
+        <td>{{shift-format ts.on_duty}}</td>
+        <td>
+          {{#if ts.off_duty}}
+            {{shift-format ts.off_duty}}
+          {{else}}
+            <i>On Duty</i>
+          {{/if}}
+        </td>
+        <td class="text-right">
+          {{hour-minute-format ts.duration}}
+        </td>
+        <td class="text-right">
+          {{credits-format ts.credits}}
+        </td>
+        <td>
+          {{ts.position.title}}
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="7"><strong class="text-success">Congratulations! No one is on duty.</strong></td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+<button class="btn btn-primary" disabled={{not selectedCount}} {{action signoffAction}}>Sign out selected entries ({{selectedCount}})</button>

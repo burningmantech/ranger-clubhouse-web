@@ -77,6 +77,7 @@ Router.map(function() {
       this.route('unverified-stopped');
     });
     this.route('alerts');
+    this.route('bulk-signout');
   });
 
   this.route('hq', { path: '/hq/:person_id' }, function() {
