@@ -1,5 +1,5 @@
 {{#if isSubmitting}}
-  {{loading-message "broadcasts"}}
+  {{loading-dialog "broadcasts"}}
 {{else if didTransmit}}
   {{broadcast-sent-table result=result}}
 {{else if isReviewing}}

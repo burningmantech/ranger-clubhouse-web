@@ -3,7 +3,7 @@ import { argument } from '@ember-decorators/argument';
 import { tagName } from '@ember-decorators/component';
 
 @tagName('')
-export default class LoadingMessageComponent extends Component {
+export default class LoadingDialogComponent extends Component {
   static positionalParams = [ 'message' ];
 
   @argument('string') message;
