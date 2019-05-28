@@ -228,8 +228,8 @@
                     </div>
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Timesheets</div>
-                      <a href="{{cgo "timesheet" "selectOnDuty"}}" class="dropdown-item">People On Duty</a>
-                      <a href="{{cgo "timesheet" "selectOnDuty" "overHours=6"}}" class="dropdown-item">...Over 6 Hours</a>
+                      {{#link-to "reports.on-duty" (query-params over_hours=null) class="dropdown-item"}}People On Duty{{/link-to}}
+                      {{#link-to "reports.on-duty" (query-params over_hours=6) class="dropdown-item"}}... Over 6 Hours{{/link-to}}
                       <a href="{{cgo "slot" "selectFlakeReport"}}" class="dropdown-item">Flake Report</a>
                       <a href="{{cgo "timesheet" "totalPersonPosition"}}" class="dropdown-item">Timesheet Totals</a>
                       <a href="{{cgo "timesheet" "selectByCallsign"}}" class="dropdown-item">Timesheet By Callsign</a>
