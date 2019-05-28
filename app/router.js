@@ -153,6 +153,7 @@ Router.map(function() {
     this.route('alpha-shirts');
     this.route('shift-lead');
     this.route('hq-forecast');
+    this.route('on-duty');
   });
 
   this.route('vc', function() {
