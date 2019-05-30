@@ -35,7 +35,7 @@ export default class ScheduleManageComponent extends Component {
 
   @computed('year')
   get isCurrentYear() {
-    return (this.year == (new Date()).getFullYear())
+    return (this.year == this.house.currentYear())
   }
 
   @computed('year', 'permission')

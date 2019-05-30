@@ -1,5 +1,6 @@
 import Route from '@ember/routing/route';
 import RSVP from 'rsvp';
+import requestYear from 'clubhouse/utils/request-year';
 
 export default class TrainingMultipleEnrollmentsRoute extends Route {
   queryParams = {
@@ -8,7 +9,7 @@ export default class TrainingMultipleEnrollmentsRoute extends Route {
 
   model(params) {
     const training = this.modelFor('training');
-    const year = (params.year || (new Date).getFullYear());
+    const year = requestYear(params);
 
     return RSVP.hash({
         enrollments: this.ajax.request(`training/${training.id}/multiple-enrollments`, { data: {year} })

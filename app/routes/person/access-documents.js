@@ -10,7 +10,7 @@ export default class PersonAccessDocumentsRoute extends Route {
 
   model() {
     const person = this.modelFor('person');
-    const year  = (new Date()).getFullYear();
+    const year  = this.house.currentYear();
 
     this.store.unloadAll('access-document');
     this.store.unloadAll('access-document-delivery');

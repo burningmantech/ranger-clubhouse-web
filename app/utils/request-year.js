@@ -1,3 +1,5 @@
+import currentYear from 'clubhouse/utils/current-year';
+
 export default function requestYear(params) {
 
   if (params.year) {
@@ -8,5 +10,5 @@ export default function requestYear(params) {
     }
   }
 
-  return (new Date).getFullYear();
+  return currentYear();
 }
