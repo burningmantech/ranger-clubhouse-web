@@ -19,7 +19,7 @@ export default class ScheduleTableComponent extends Component {
 
   @computed('year')
   get isCurrentYear() {
-    return this.year == (new Date()).getFullYear();
+    return this.year == this.house.currentYear();
   }
 
   @computed('slots')

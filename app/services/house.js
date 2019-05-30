@@ -12,6 +12,7 @@ import {
   run
 } from '@ember/runloop';
 import { isEmpty } from '@ember/utils';
+import currentYear from 'clubhouse/utils/current-year';
 
 import DS from 'ember-data';
 
@@ -263,7 +264,7 @@ export default class HouseService extends Service {
    */
 
    currentYear() {
-     return (new Date()).getFullYear();
+     return currentYear();
    }
 
    _getStorage() {
