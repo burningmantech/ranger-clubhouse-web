@@ -62,8 +62,8 @@
     <div class="alpha-sheet-section-header">
       Mentoring Information
     </div>
-    <div class="row">
-      <div class="col-12">
+    <div class="row no-gutters">
+      <div class="col-6">
         <div class="alpha-sheet-column">
           <div class="alpha-sheet-column-label alpha-sheet-column-auto ">Prior Mentors:</div>
           <div class="alpha-sheet-column-field">
@@ -81,27 +81,18 @@
       </div>
       <div class="col-6">
         <div class="alpha-sheet-column">
-          <div class="alpha-sheet-column-label">1st Mentor:</div>
-          <div class="alpha-sheet-column-input">&nbsp;</div>
-        </div>
-        <div class="alpha-sheet-column">
-          <div class="alpha-sheet-column-label">2nd Mentor:</div>
-          <div class="alpha-sheet-column-input">&nbsp;</div>
-        </div>
-        <div class="alpha-sheet-column">
-          <div class="alpha-sheet-column-label">3rd Mentor:</div>
-          <div class="alpha-sheet-column-input">&nbsp;</div>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="alpha-sheet-column">
           <div class="alpha-sheet-column-label">Pass/Bonk:</div>
           <div class="alpha-sheet-column-input">&nbsp;</div>
         </div>
+      </div>
+
+      <div class="col-6">
         <div class="alpha-sheet-column">
           <div class="alpha-sheet-column-label">Flag Type:</div>
           <div class="alpha-sheet-column-{{if alpha.mentors_flag_note "field" "input"}}">{{alpha.mentors_flag_note}}</div>
         </div>
+      </div>
+      <div class="col-6">
         <div class="alpha-sheet-column">
           <div class="alpha-sheet-column-label">Training Rank:</div>
           <div class="alpha-sheet-column-{{if alpha.trainings.firstObject.rank "field" "input"}}">
@@ -113,39 +104,36 @@
         </div>
       </div>
 
-      <div class="col-12 mt-4">
-        <table class="alpha-sheet-table">
+    </div>
+
+    <div class="row no-gutters">
+      <div class="col-12">
+        <table class="alpha-sheet-table my-4">
           <thead>
             <tr>
-              <th class="w-15">1st Mentor</th>
-              <th class="w-15">2nd Mentor</th>
-              <th class="w-15">3rd Mentor</th>
               <th>&nbsp;</th>
+              <th class="w-35">{{year}} MENTOR NAME</th>
+              <th class="w-20">ACCEPT</th>
+              <th class="w-20">ACCEPT W/RESERV.</th>
+              <th class="w-20">REJECT</th>
             </tr>
           </thead>
           <tbody>
+            {{#number-of-times times=3 as |mentor|}}
+              <tr>
+                <td class="text-right">{{add mentor 1}}.</td>
+                <td class="w-40 border-bottom border-dark">&nbsp;</td>
+                <td class="w-20 border-bottom border-dark">&nbsp;</td>
+                <td class="w-20 border-bottom border-dark">&nbsp;</td>
+                <td class="w-20 border-bottom border-dark">&nbsp;</td>
+              </tr>
+            {{/number-of-times}}
             <tr>
-              <td class="w-15 border-bottom border-dark">&nbsp;</td>
-              <td class="w-15 border-bottom border-dark">&nbsp;</td>
-              <td class="w-15 border-bottom border-dark">&nbsp;</td>
-              <td>
-                ACCEPT Alpha into the Rangers.
-              </td>
-            </tr>
-            <tr>
-              <td class="w-15 border-bottom border-dark">&nbsp;</td>
-              <td class="w-15 border-bottom border-dark">&nbsp;</td>
-              <td class="w-15 border-bottom border-dark">&nbsp;</td>
-              <td>
-                ACCEPT with Reservations. Other feedback outweighs my concerns.
-              </td>
-            </tr>
-            <tr>
-              <td class="w-15 border-bottom border-dark">&nbsp;</td>
-              <td class="w-15 border-bottom border-dark">&nbsp;</td>
-              <td class="w-15 border-bottom border-dark">&nbsp;</td>
-              <td>
-                REJECT Alpha - BONKED
+              <td>&nbsp;</td>
+              <td colspan="4">
+                Legend: <b>ACCEPT</b> = Accept Alpha into the Rangers.
+                <b>ACCEPT W/RESERV.</b> = Accept Alpha into the Rangers. Other feedback outweighs my concerns.<br>
+                <b>REJECT</b> = Bonk Alpha
               </td>
             </tr>
           </tbody>
