@@ -511,13 +511,21 @@ caption {
  * Shift Lead Reports
  */
 
-.shift-lead-greendot {
+.bg-shift-lead-greendot {
   background-color: #d8fbd8;
 }
 
-.shift-lead-troubleshooter {
-  background-color: #ffc5c5;
+.text-shift-lead-greendot {
+  color: #038403;
+}
 
+.bg-shift-lead-troubleshooter {
+  background-color: #ffff99;
+
+}
+
+.text-shift-lead-troubleshooter {
+  color: #555;
 }
 
 .rbs-green-button, .rbs-green-button a:visited { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }

@@ -26,8 +26,12 @@
 }
 
 .alpha-sheet-table {
+  width: 100%;
   border-spacing: 10px 0;
   border-collapse: separate;
+  th {
+    font-size: 1rem;
+  }
   td {
     padding: 10px;
   }
@@ -59,12 +63,12 @@
   font-size: 1.2rem;
   font-weight: 500;
   display: inline-block;
-  width: 30%;
+  width: 25%;
 }
 
 .alpha-sheet-column-field {
   display: inline-block;
-  width: 69%;
+  width: 74%;
   font-size: 1.2rem;
 }
 
