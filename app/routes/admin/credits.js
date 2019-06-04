@@ -14,7 +14,7 @@ export default class AdminCreditsRoute extends Route {
     this.store.unloadAll('position');
 
     return RSVP.hash({
-      credits: this.store.query('position-credit', { year }).then((result) => result.toArray()),
+      credits: this.store.query('position-credit', { year }),
       positions: this.store.query('position', {}),
       year,
     });
