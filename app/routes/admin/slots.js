@@ -14,7 +14,7 @@ export default class AdminSlotsRoute extends Route {
     this.store.unloadAll('position');
 
     return RSVP.hash({
-      slots: this.store.query('slot', { year }).then((result) => { return result.toArray() }),
+      slots: this.store.query('slot', { year }),
       positions: this.store.query('position', {}),
       year,
       yearList: this.ajax.request('slot/years').then((result) => result.years),

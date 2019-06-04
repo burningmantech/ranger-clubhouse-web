@@ -3,6 +3,7 @@ import EmberObject from '@ember/object';
 import { action, computed } from '@ember/object';
 import { filterBy } from '@ember/object/computed';
 import { validateNumber, validatePresence } from 'ember-changeset-validations/validators';
+import laborDay from 'clubhouse/utils/labor-day';
 import validateDateTime from 'clubhouse/validators/datetime';
 import moment from 'moment';
 import _ from 'lodash';
@@ -17,7 +18,7 @@ class CopyParams extends EmberObject {
 }
 
 class CopySourcePosition extends EmberObject {
-  // create with {controller: this, id: …, title: …, credits: […]}
+  // create with {controller: this, id: â¦, title: â¦, credits: [â¦]}
   expanded = false;
 
   @computed('credits.@each.selected')
@@ -234,14 +235,6 @@ export default class AdminCreditsController extends Controller {
 
   @action
   startCopy() {
-    const laborDay = (year) => {
-      for (let i = 1; i <= 7; i++) {
-        let day = moment([year, 8, i]);
-        if (day.day() === 1) { // first Monday of September
-          return day;
-        }
-      }
-    };
     this.set('presentYear', moment().year());
     const selectedLaborDay = laborDay(this.get('year'));
     const presentLaborDay = laborDay(this.get('presentYear'));
