@@ -4,7 +4,90 @@
   {{admin/slot-form slot=slot positions=positions trainerSlots=trainerSlots onSave=(action saveSlot) onCancel=(action cancel) onClone=(action cloneSlot)}}
 {{/if}}
 
+{{#if copyParams}}
+  {{#ch-form "copySlots" copyParams modalBox=true modalTitle="Copy Slots" changeSet=false
+        validator=copyValidations onSubmit=(action "performCopy") onCancel=(action "cancelCopy") as |f|}}
+    <fieldset>
+      <legend>Add/Subtract Time to New Slots</legend>
+      <div class="form-row">
+        {{f.input "deltaDays" label="Days" type="number" maxlength=5 size=5 grid="col-sm-auto"}}
+        {{f.input "deltaHours" label="Hours" type="number" maxlength=5 size=5 grid="col-sm-auto"}}
+        {{f.input "deltaMinutes" label="Minutes" type="number" maxlength=5 size=5 grid="col-sm-auto"}}
+      </div>
+      <legend>Set New Slot Attributes</legend>
+      <div class="form-row">
+        {{f.input "newPositionId" label="Position" type="select" options=positionOptionsForCopy grid="col-md-auto"}}
+        {{f.input "description" label="Description" type="text" maxlength=40 size=40 grid="col-md-auto"}}
+        {{f.input "max" label="Max" type="number" maxlength=3 size=3 grid="col-sm-2"}}
+      </div>
+      <div class="form-row">
+        {{f.input "url" label="Information" type="textarea" rows=3 cols=80 maxlength=512 wrapClass="col-12"}}
+      </div>
+      <div class="form-row">
+        {{f.input "activate" label="Activate new slots" type="checkbox"}}
+      </div>
+      Labor Day of {{year}} is {{selectedYearLaborDay}}.
+      Labor Day of {{presentYear}} is {{presentYearLaborDay}}, {{laborDayDiff}} days later.
+      <br>
+      Note: training and mentor/mentee slots cannot be copied yet.
+    </fieldset>
+    {{f.submit label=(concat "Copy " copySelectedSlotCount " selected slots")}}
+    {{f.cancel}}
+    {{#each copySourcePositions as |position|}}
+      <table class="table table-sm table-box table-hover">
+        <caption>
+          {{position.selectedSlots.length}} / {{position.slots.length}} <strong>{{position.title}}</strong> slots to copy
+          <button {{action "copyToggleExpanded" position}}>
+            {{#if position.expanded}}collapse{{else}}expand{{/if}}
+          </button>
+          <button {{action "copyPositionSelectAll" position}}>
+            {{#if position.allSelected}}deselect{{else}}select{{/if}} all
+          </button>
+        </caption>
+        <thead>
+          <tr>
+            <th>Copy</th>
+            <th>Start time</th>
+            <th>End time</th>
+            <th class="text-right">Max</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#if position.expanded}}
+            {{#each position.slots as |slot|}}
+              <tr>
+                {{#let (concat "copy-slot-" slot.source.id) as |checkid|}}
+                  <td>{{input type="checkbox" checked=slot.selected id=checkid}}</td>
+                  <td>
+                    <label for={{checkid}}>
+                      {{shift-format slot.source.begins}} &rarr;
+                      <br>{{slot.ends}}
+                    </label>
+                  </td>
+                  <td>
+                    <label for={{checkid}}>
+                      {{shift-format slot.source.ends}} &rarr;
+                      <br>{{slot.ends}}
+                    </label>
+                  </td>
+                  <td class="text-right"><label for={{checkid}}>{{slot.source.max}}</label></td>
+                  <td><label for={{checkid}}>{{slot.source.description}}</label></td>
+                {{/let}}
+              </tr>
+            {{/each}}
+          {{/if}}
+        </tbody>
+      </table>
+    {{/each}}
+  {{/ch-form}}
+{{/if}}
+
+
 <div class="float-right">
+  {{#if slots.length}}
+    <button {{action "startCopy"}} class="btn btn-secondary">Copy Slots</button>
+  {{/if}}
   <button {{action "newSlot"}} class="btn btn-primary">New Slot</button>
 </div>
 
@@ -48,6 +131,7 @@
 <div class="schedule-title mt-2">
   {{#if (get showingGroups group.position_id)}}
     <div class="float-right mr-4">
+      <button class="btn btn-secondary btn-sm" {{action startCopy group.position_id}}>Bulk Copy</button>
       <button class="btn btn-primary btn-sm" {{action activate group}}>Activate All</button>
       <button class="btn btn-primary btn-sm" {{action deactivate group}}>Deactivate All</button>
     </div>
