@@ -1,0 +1,26 @@
+<div class="d-flex justify-content-between mb-2">
+  <h1>{{title}}</h1>
+  <div class="text-right">
+    {{#link-to "admin.rbs" class="btn btn-secondary"}}Back To RBS{{/link-to}}
+  </div>
+</div>
+
+{{#if (or config.sms_sandbox config.email_sandbox config.clubhouse_message_sandbox)}}
+  <div class="border rounded p-2 text-danger mb-2">Sandboxed delivery mechanisms:
+    {{#if config.sms_sandbox}}
+      Text/SMS messages,
+    {{/if}}
+    {{#if config.email_sandbox}}
+      Email,
+    {{/if}}
+    {{#if config.clubhouse_message_sandbox}}
+      Clubhouse messages
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if broadcast.is_simple}}
+  {{broadcast-simple config=config type=type broadcast=broadcast}}
+{{else}}
+  {{broadcast-complex config=config type=type broadcast=broadcast}}
+{{/if}}

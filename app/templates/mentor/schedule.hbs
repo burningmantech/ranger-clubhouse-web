@@ -1,0 +1,123 @@
+{{#if signupSheetSlot}}
+  {{print-instruction backLabel="Back to Alpha Schedule" backAction=(action clearSignupSheet)}}
+  {{mentor/alpha-signup-sheet slot=signupSheetSlot}}
+{{else if signedInSlot}}
+  {{print-instruction backLabel="Back to Alpha Schedule" backAction=(action clearSignedInSheet)}}
+  {{mentor/alphas-signed-in-sheet slot=signedInSlot}}
+{{else if apparelSlot}}
+  {{print-instruction backLabel="Back to Alpha Schedule" backAction=(action clearAlphaApparel)}}
+  {{mentor/alpha-apparel-sheet slot=apparelSlot}}
+{{else}}
+  <div class="d-print-none">
+    {{year-select "Alpha Scheduled Shift" year=year onChange=(action (mut year))}}
+  </div>
+  {{#each slots as |slot|}}
+    <div class="my-3">
+      <table class="table table-sm table-striped table-hover">
+        <caption>{{shift-format slot.begins}} - {{slot.description}} - {{pluralize slot.people.length "Alpha"}}</caption>
+        <thead>
+          <tr>
+            <td colspan="6">
+              <button class="btn btn-secondary btn-sm" {{action showSignupSheet slot}}>Alpha Sign-In Sheet</button>
+              <button class="btn btn-secondary btn-sm" {{action showSignedInSheet slot}}>Alpha Info Sheet</button>
+              <button class="btn btn-secondary btn-sm" {{action showAlphaApparel slot}}>Alpha Apparel Distribution</button>
+            </td>
+            <td>
+              <button class="btn btn-secondary btn-sm" {{action showAddPersonAction slot}}>Add Person</button>
+              <button class="btn btn-secondary btn-sm" {{action showRemovePersonAction slot}}>Remove Person</button>
+            </td>
+          </tr>
+          <tr>
+            <th class="w-15">Callsign</th>
+            <th class="w-20">Name</th>
+            <th class="w-5 text-center">Gender</th>
+            <th class="w-10 text-center">Signed In</th>
+            <th class="w-5">Flag</th>
+            <th class="w-20">Training Location</th>
+            <th class="w-25">Home</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each slot.people as |person|}}
+            <tr>
+              <td class="w-15">{{person-link person=person}}</td>
+              <td class="w-20">{{person.first_name}} {{person.last_name}}</td>
+              <td class="w-5 text-center">{{person.gender}}</td>
+              <td class="w-10 text-center">{{yesno person.on_alpha_shift}}</td>
+              <td class="w-5">{{#if person.mentors_flag}}
+                  <span class="text-danger">{{fa-icon "flag"}}</span>
+                {{else}}
+                  &nbsp;
+                {{/if}}
+              </td>
+              <td class="w-20">
+                {{#each person.trainings as |place|}}
+                  {{place.description}}<br>
+                {{/each}}
+              </td>
+              <td class="w-25">
+                {{person.city}} {{person.state}} {{person.country}}
+              </td>
+            </tr>
+          {{else}}
+            <tr>
+              <td colspan="7" class="text-danger"><b>No sign ups found for this shift</b></td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  {{else}}
+    {{#ch-alert "warning"}}
+      No {{year}} Alpha shifts found.
+    {{/ch-alert}}
+  {{/each}}
+{{/if}}
+
+
+{{! Add Person dialog box}}
+{{#if addPersonForm}}
+  {{#ch-form "search" addPersonForm modalBox=true modalTitle=(concat "Add Person To " (shift-format slot.begins)) changeSet=false onFormChange=(action "searchPeopleAction") onCancel=(action "cancelSearchAction") as |f|}}
+    <div class="form-row">
+      {{f.input "name" label="Enter the callsign, real name, or email of the person to add:" type="text" size=30 autofocus=true}}
+    </div>
+    <div class="form-row">
+      {{f.cancel}}
+    </div>
+    {{#if foundPeople}}
+      Click on the callsign to add the person.
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th class="w-25">Callsign</th>
+            <th class="w-25">Name</th>
+            <th class="w-25">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each foundPeople as |person|}}
+            <tr>
+              <td class="w-25"><a href="#" {{action "addPersonAction" person}}>{{person.callsign}}</a></td>
+              <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
+              <td class="w-25">{{person.status}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else if noSearchMatch}}
+      <div class="text-danger">No person found matching "{{noSearchMatch}}"</div>
+    {{/if}}
+  {{/ch-form}}
+{{/if}}
+
+{{! Remove person dialog box}}
+{{#if removePersonForm}}
+  {{#ch-form "removePerson" removePersonForm modalBox=true modalTitle="Remove Person From Session" changeSet=false onSubmit=(action "removePersonAction") onCancel=(action "cancelRemovePersonAction") as |f|}}
+    <div class="form-row">
+      {{f.input "person_id" label="Select the person to remove" type="select" options=removeStudentOptions}}
+    </div>
+
+    {{f.submit label="Remove Person" disabled=(not f.model.person_id)}}
+    {{f.cancel}}
+  {{/ch-form}}
+{{/if}}

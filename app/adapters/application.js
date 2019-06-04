@@ -11,20 +11,21 @@ import ENV from 'clubhouse/config/environment';
 const SINGULAR_MODELS = [
   'access-document-delivery',
   'access-document',
-  'asset',
-  'asset-person',
+  'alert',
   'asset-attachment',
+  'asset-person',
+  'asset',
   'bmid',
+  'help',
   'motd',
   'person',
-  'position',
   'position-credit',
+  'position',
   'role',
   'setting',
   'slot',
-  'timesheet',
   'timesheet-missing',
-  'help'
+  'timesheet',
 ];
 
 export default class ApplicationAdapter extends DS.RESTAdapter.extend(DataAdapterMixin) {

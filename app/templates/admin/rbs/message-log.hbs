@@ -1,0 +1,54 @@
+<div class="float-right">
+  {{#link-to "admin.rbs"}}Back to RBS{{/link-to}}
+</div>
+{{year-select "RBS Message Log" year=year onChange=(action changeYearAction)}}
+
+{{#ch-form "search" searchForm changeSet=false onSubmit=(action submitAction) as |f|}}
+  <div class="form-row">
+    {{f.input "direction" label="Message direction" type="select" options=directionOptions wrapClass="col-auto"}}
+    <label class="col-1">Status</label>
+    {{f.input "status" cols=3 type="checkboxGroup" options=statusOptions inline=true}}
+  </div>
+  <div class="form-row mt-2">
+    {{f.submit label="Search"}}
+  </div>
+{{/ch-form}}
+<table class="table table-sm table-striped mt-2">
+  <caption>Showing {{currentPage}} of {{total_pages}} pages. {{pluralize total "row"}}</caption>
+  <thead>
+    <tr>
+      <th>Timestamp</th>
+      <th>Person</th>
+      <th>Status</th>
+      <th>Direction</th>
+      <th>Address</th>
+      <th>Broadcast</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each messages as |message|}}
+      <tr>
+        <td>{{message.created_at}}</td>
+        <td>{{person-link person=message.person}}</td>
+        <td>{{message.status}}</td>
+        <td>{{message.direction}}</td>
+        <td>{{message.address}}</td>
+        <td>{{present-or-not message.broadcast_id "-"}}</td>
+      </tr>
+      {{#if (or (eq message.direction "inbound") (eq message.status "reply"))}}
+        <tr class="no-border">
+          <td colspan="6">
+            {{#if message.message}}
+              {{nl2br message.message}}
+            {{else}}
+              <i>empty message</i>
+            {{/if}}
+          </td>
+        </tr>
+      {{/if}}
+    {{/each}}
+  </tbody>
+</table>
+
+<button class="btn btn-secondary" {{action goPrevPage}} disabled={{eq currentPage 1}}>Prev Page</button>
+<button class="btn btn-secondary" {{action goNextPage}} disabled={{eq currentPage total_pages}}>Next Page</button>

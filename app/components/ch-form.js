@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
-import { action, computed } from '@ember/object';
+import { action, computed, set } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
 import { typeOf, isEmpty } from '@ember/utils';
 import Changeset from 'ember-changeset';
@@ -76,7 +76,7 @@ export default class ChFormComponent extends Component {
       }
     } else {
       model = original;
-      model.set('isValid', true);
+      set(model, 'isValid', true);
     }
 
     return model;
@@ -185,29 +185,11 @@ export default class ChFormComponent extends Component {
   @action
   fieldChangeAction(field) {
     const model = this.model;
-    const original = this.originalModel;
-    const fieldChange = field.onChange;
     const formChange = this.onFormChange;
 
-    /*    if (model.validate) {
-          model.validate().then(() => {
-              if (fieldChange) {
-                fieldChange(field, model, this.model.isValid, original);
-              }
-
-              if (formChange) {
-                formChange(field, model, this.model.isValid, original);
-              }
-          });
-        } else {*/
-    if (fieldChange) {
-      fieldChange(field, model, this.model.isValid, original);
-    }
-
     if (formChange) {
-      formChange(field, model, this.model.isValid, original);
+      formChange(field, model, model.isValid, this.originalModel);
     }
-    /*}*/
   }
 
   @action

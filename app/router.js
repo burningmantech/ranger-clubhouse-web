@@ -68,6 +68,16 @@ Router.map(function() {
     this.route('help');
     this.route('radio-eligibility');
     this.route('bulk-sign-in-out');
+    this.route('rbs', function() {
+      this.route('broadcast');
+      this.route('broadcast-log');
+      this.route('message-log');
+      this.route('unknown-phones');
+      this.route('stats');
+      this.route('unverified-stopped');
+    });
+    this.route('alerts');
+    this.route('bulk-signout');
   });
 
   this.route('hq', { path: '/hq/:person_id' }, function() {
@@ -85,6 +95,12 @@ Router.map(function() {
 
   this.route('mentor', function() {
     this.route('mentees');
+    this.route('potentials');
+    this.route('alpha-status');
+    this.route('acceptance-sheets');
+    this.route('schedule');
+    this.route('assignment');
+    this.route('convert');
   });
 
   this.route('handle-checker');
@@ -106,6 +122,7 @@ Router.map(function() {
     this.route('access-documents');
     this.route('tickets');
     this.route('bmid');
+    this.route('alerts');
   });
 
   this.route('logout');
@@ -135,6 +152,8 @@ Router.map(function() {
     this.route('freaking-years');
     this.route('alpha-shirts');
     this.route('shift-lead');
+    this.route('hq-forecast');
+    this.route('on-duty');
   });
 
   this.route('vc', function() {

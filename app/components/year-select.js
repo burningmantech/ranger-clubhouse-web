@@ -44,7 +44,7 @@ export default class YearSelectComponent extends Component {
 
   @computed("years")
   get yearOptions() {
-    const currentYear = (new Date()).getFullYear();
+    const currentYear = this.house.currentYear();
     let years = this.years;
 
     if (!years) {

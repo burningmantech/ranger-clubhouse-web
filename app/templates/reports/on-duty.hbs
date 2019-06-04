@@ -1,0 +1,30 @@
+<h1>Currently On Duty {{#if over_hours}}Over {{over_hours}} Hours{{/if}}</h1>
+
+{{#each positions as |position|}}
+  <table class="table table-sm table-striped table-hover">
+    <caption>{{position.title}} - {{pluralize position.timesheets.length "person"}}</caption>
+    <thead>
+      <tr>
+        <th class="w-20">Callsign</th>
+        <th class="w-20">On Duty Since</th>
+        <th class="w-10 text-right">Duration</th>
+        <th class="w-50">&nbsp;</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each position.timesheets as |ts|}}
+        <tr>
+          <td class="w-20">{{person-link person=ts.person}}</td>
+          <td class="w-20">{{shift-format ts.on_duty}}</td>
+          <td class="w-10 text-right">{{hour-minute-format ts.duration}}</td>
+          <td class="w-50">&nbsp;</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>
+    <strong class="text-success">Congratulations! Nobody is on duty {{#if over_hours}}for more than {{over_hours}} hours{{/if}}.</strong>
+  </p>
+{{/each}}

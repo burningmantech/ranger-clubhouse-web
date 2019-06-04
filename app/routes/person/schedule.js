@@ -28,7 +28,7 @@ export default class PersonScheduleRoute extends Route {
     }
 
     // Only bother with permissions for the current year
-    if (year == (new Date()).getFullYear()) {
+    if (year == this.house.currentYear()) {
       records.permission = this.ajax.request(`person/${person_id}/schedule/permission`, {data: { year }})
                   .then((results) => results.permission );
     } else {

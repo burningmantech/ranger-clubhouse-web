@@ -17,12 +17,17 @@
   {{/if}}
   {{#if photo.upload_url}}
     <div class="mt-1">
-      <a href="{{photo.upload_url}}" class="btn btn-primary btn-sm" target="_blank" rel="noopener">Upload a new photo</a>
+      <button class="btn btn-primary btn-sm" {{action uploadAction}}>Upload a new photo</button>
     </div>
   {{else}}
     <small>Photo uploading is currently disabled.</small>
   {{/if}}
+
+  {{#if syncAction}}
+    <div class="mt-2">
+      <button class="btn btn-secondary btn-sm" {{action syncAction}}>Sync Photo</button>
+    </div>
+  {{/if}}
 {{else}}
   <div class="loading-spinner"></div>
-  . . Loading photo . .
 {{/if}}

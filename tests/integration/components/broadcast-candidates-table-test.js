@@ -1,26 +1,26 @@
-import { module, skip /* test */ } from 'qunit';
+import { module, skip } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | loading-message', function(hooks) {
+module('Integration | Component | broadcast-candidates-table', function(hooks) {
   setupRenderingTest(hooks);
 
   skip('it renders', async function(assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{loading-message}}`);
+    await render(hbs`{{broadcast-candidates-table}}`);
 
-    assert.dom(this.element).hasText('');
+    assert.equal(this.element.textContent.trim(), '');
 
     // Template block usage:
     await render(hbs`
-      {{#loading-message}}
+      {{#broadcast-candidates-table}}
         template block text
-      {{/loading-message}}
+      {{/broadcast-candidates-table}}
     `);
 
-    assert.dom(this.element).hasText('template block text');
+    assert.equal(this.element.textContent.trim(), 'template block text');
   });
 });

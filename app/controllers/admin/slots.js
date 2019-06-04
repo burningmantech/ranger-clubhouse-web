@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 const allDays = { id: 'all', title: 'All' };
 
-const DATETIME_FORMAT = 'YYYY-MM-DD hh:mm:ss';
+const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 class CopyParams extends EmberObject {
   deltaDays = 0;
@@ -207,7 +207,7 @@ export default class SlotsController extends Controller {
     duplicate.save().then(() => {
       this.slots.update();
       this.toast.success('Slot was successfully repeated.');
-    });
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
@@ -220,7 +220,7 @@ export default class SlotsController extends Controller {
     duplicate.save().then(() => {
       this.slots.update();
       this.toast.success('Slot was successfully repeated with 24 hour addition.');
-    });
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
@@ -244,13 +244,13 @@ export default class SlotsController extends Controller {
     if (!isValid) {
       return;
     }
-
+  
     const duplicate = this._duplicateSlot(model);
     duplicate.save().then(() => {
       this.slots.update();
       this.toast.success(`Slot successfully created from existing slot.`);
       this.set('slot', duplicate);
-    });
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action

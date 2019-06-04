@@ -1,0 +1,30 @@
+<table class="table table-sm table-striped table-hover">
+  <caption>{{title}}</caption>
+  <thead>
+    <tr>
+      <th>Time ({{interval}} min interval)</th>
+      <th class="text-right">Check In</th>
+      <th class="text-right">Check Out</th>
+      <th class="text-right">Windows</th>
+      <th class="text-right">Runners</th>
+      <th class="text-right">Shorts</th>
+      <th class="text-right">Leads</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each visits as |visit|}}
+      <tr class="{{if (and (not visit.windows) (not visit.shorts) (not visit.leads)) "bg-highlight"}}">
+        <td>
+          {{if (and (not visit.windows) (not visit.shorts) (not visit.leads)) (fa-icon "exclamation-triangle")}}
+          {{shift-format visit.period}}
+        </td>
+        <td class="text-right">{{visit.checkin}}</td>
+        <td class="text-right">{{visit.checkout}}</td>
+        <td class="text-right">{{visit.windows}}</td>
+        <td class="text-right">{{visit.runners}}</td>
+        <td class="text-right">{{visit.shorts}}</td>
+        <td class="text-right">{{visit.leads}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

@@ -6,7 +6,7 @@ export default class TrainingCapacityController extends Controller {
 
   @computed('year')
   get notCurrentYear() {
-    return (this.year != (new Date()).getFullYear());
+    return (this.year != this.house.currentYear());
   }
 
   @computed('slots')

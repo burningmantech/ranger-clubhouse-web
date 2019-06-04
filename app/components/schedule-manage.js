@@ -35,7 +35,7 @@ export default class ScheduleManageComponent extends Component {
 
   @computed('year')
   get isCurrentYear() {
-    return (this.year == (new Date()).getFullYear())
+    return (this.year == this.house.currentYear())
   }
 
   @computed('year', 'permission')
@@ -138,11 +138,11 @@ export default class ScheduleManageComponent extends Component {
     const denied = [];
 
     if (!permission.callsign_approved) {
-      denied.push('an approved callsign');
+      denied.push('have an approved callsign');
     }
 
     if (permission.photo_status != 'approved' && permission.photo_status != 'not-required') {
-      denied.push('an approved BMID (lam) photo');
+      denied.push('have an approved BMID (lam) photo');
     }
 
     if (!permission.manual_review_passed) {

@@ -1,6 +1,6 @@
 import { helper } from '@ember/component/helper';
 import { isArray } from '@ember/array';
-import { typeOf } from '@ember/utils';
+import { typeOf, isEmpty } from '@ember/utils';
 
 export function chFormContains([haystack, value]) {
   if (isArray(haystack)) {
@@ -10,7 +10,18 @@ export function chFormContains([haystack, value]) {
     // option value is an actual Boolean type.
     if (typeOf(value) == "boolean" && typeOf(haystack) == "string") {
         haystack = /^(true|t|1)$/i.test(haystack);
+        return haystack == value;
     }
+
+    const haystackEmpty = isEmpty(haystack);
+    const valueEmpty = isEmpty(value);
+
+    // Avoids ('' == 0) is true scenario
+    if ((haystackEmpty && !valueEmpty)
+      || (!haystackEmpty && valueEmpty)) {
+      return false;
+    }
+
     return haystack == value;
   }
 }
