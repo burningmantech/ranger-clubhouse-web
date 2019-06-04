@@ -26,7 +26,7 @@ export default class PersonAccessDocumentsController extends Controller {
 
   @computed
   get yearOptions() {
-    const currentYear = (new Date()).getFullYear();
+    const currentYear = this.house.currentYear();
     const years = [];
     for (let year = currentYear - 4; year < currentYear + 4; year++) {
       years.push(year);
@@ -42,7 +42,7 @@ export default class PersonAccessDocumentsController extends Controller {
 
   @action
   newAccessDocument() {
-    const currentYear = (new Date()).getFullYear();
+    const currentYear = this.house.currentYear();
 
     this.set('entry', this.store.createRecord('access-document', {
       person_id: this.person.id,

@@ -39,7 +39,7 @@
   <p>
     <strong>Let's get started &hellip;</strong>
   </p>
-  {{#ch-form "register" registerForm validator=registerValidations onSubmit=(action "createAccount") as |f|}}
+  {{#ch-form "register" registerForm autocomplete="on" validator=registerValidations onSubmit=(action "createAccount") as |f|}}
     <div class="form-row">
       {{f.input "human" size=4 maxlength=10 grid="col-auto" label="First, prove you are human - What is 33 + 2?" hint="We're sorry about this, but our web site gets a lot of robots
 spamming us and creating bogus accounts." }}
@@ -51,7 +51,7 @@ spamming us and creating bogus accounts." }}
       </div>
     </div>
     <div class="form-row">
-      {{f.input "email" label="Email Address" size=30}}
+      {{f.input "email" label="Email Address" type="text" inputmode="email" size=30}}
     </div>
 
     <div class="form-row">
@@ -68,8 +68,8 @@ spamming us and creating bogus accounts." }}
     {{person-address-edit f=f}}
 
     <div class="form-row">
-      {{f.input "home_phone" label="Primary Phone" grid="col-sm-4"}}
-      {{f.input "alt_phone" label="Alternative Phone" grid="col-sm-4"}}
+      {{f.input "home_phone" label="Primary Phone" type="text" inputmode="tel" grid="col-sm-4"}}
+      {{f.input "alt_phone" label="Alternative Phone" type="text" inputmode="tel" grid="col-sm-4"}}
     </div>
 
     {{f.submit label="Create My Auditor Account"}}

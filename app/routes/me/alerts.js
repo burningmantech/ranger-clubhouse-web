@@ -15,13 +15,6 @@ export default class MeAlertsRoute extends Route.extend(MeRouteMixin) {
 
   setupController(controller, model) {
     super.setupController(...arguments);
-
-    controller.setProperties(model);
-
-    // Setup the phone form
-    const numbers = model.numbers;
-    controller.set('phoneForm.off_playa', numbers.off_playa.phone);
-    controller.set('phoneForm.on_playa', numbers.on_playa.phone);
-    controller.set('phoneForm.is_same', numbers.is_same);
+    controller.setProperties({ alerts: model.alerts, numbers: model.numbers });
   }
 }

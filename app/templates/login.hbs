@@ -1,7 +1,7 @@
 {{login-sidebar}}
 <main class="col">
 {{#if session.isAuthenticated}}
-  {{loading-message "your account"}}
+  {{loading-dialog "your account"}}
 {{else}}
   <div class="row">
     <h1 class="col-sm-12">Welcome To The Ranger Secret Clubhouse!</h1>
@@ -27,8 +27,8 @@
       {{/if}}
     </div>
     <div class="col-sm-12 col-md-6 col-lg-6">
-      {{#ch-form "auth" auth validator=loginValidations onSubmit=(action "submit") as |f|}}
-        {{f.input "identification" label="Email" autofocus=true noSpaces=true}}
+      {{#ch-form "auth" auth validator=loginValidations autocomplete="on" onSubmit=(action "submit") as |f|}}
+        {{f.input "identification" label="Email" type="text" inputmode="email" autofocus=true noSpaces=true}}
         {{f.input "password" label="Password" type="password"}}
 
         <div class="row">

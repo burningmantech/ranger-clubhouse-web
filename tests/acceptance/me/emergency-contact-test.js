@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { visit, fillIn, click } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import { authenticateSession } from 'ember-simple-auth/test-support';
-import { faker } from 'ember-cli-mirage';
+import faker from 'faker';
 
 module('Acceptance | me/emergency contact', function (hooks) {
   setupApplicationTest(hooks);

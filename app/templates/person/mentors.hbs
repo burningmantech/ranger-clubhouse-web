@@ -1,23 +1,29 @@
 <h3>Mentors</h3>
+
 <table class="table table-striped mt-4">
   <thead>
     <tr>
-      <th>Mentor</th>
       <th>Year</th>
       <th>Status</th>
+      <th>Mentors</th>
     </tr>
   </thead>
   <tbody>
-    {{#each mentors as |mentor|}}
-    <tr>
-      <td>{{person-link personId=mentor.person_id callsign=mentor.callsign}}</td>
-      <td>{{mentor.year}}</td>
-      <td>{{mentor.status}}</td>
-    </tr>
+    {{#each mentors as |event|}}
+      <tr>
+        <td>{{event.year}}</td>
+        <td>{{event.status}}</td>
+        <td>
+          {{#each event.mentors as |mentor idx|~}}
+            {{if idx "/"}}
+            {{person-link person=mentor}}
+          {{/each}}
+        </td>
+      </tr>
     {{else}}
-    <tr>
-      <td colspan="3">No mentor records located</td>
-    </tr>
+      <tr>
+        <td colspan="3">No mentor records located?!?</td>
+      </tr>
     {{/each}}
   </tbody>
 </table>

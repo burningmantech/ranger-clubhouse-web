@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import EmberObject from '@ember/object';
-import { action, computed } from '@ember/object';
+import { action, computed, set, get } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
@@ -40,6 +40,7 @@ export default class ChFormFieldComponent extends Component {
   @argument(optional('string')) autocomplete;
   @argument(optional('string')) placeholder;
   @argument(optional('string')) hint;
+  @argument(optional('string')) inputmode;
 
   // ignore spaces entered.
   @argument(optional('boolean')) noSpaces = false;
@@ -193,7 +194,7 @@ export default class ChFormFieldComponent extends Component {
 
   @computed('value', 'model', 'name')
   get _val() {
-    return this.value || this.model.get(this.name);
+    return this.value || get(this.model, this.name);
   }
 
 
@@ -203,7 +204,7 @@ export default class ChFormFieldComponent extends Component {
       value = value.replace(/ /g, '');
     }
 
-    this.model.set(this.name, value);
+    set(this.model, this.name, value);
 
     if (this.onChange) {
       this.onChange(this.name, value);

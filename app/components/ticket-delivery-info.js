@@ -14,7 +14,6 @@ export default class TicketDeliverInfoComponent extends Component {
   @argument('object') person;
   @argument(optional('object')) ticket;
   @argument(optional('object')) vehiclePass;
-  @argument(optional('object')) delivery;
   @argument('object') showing;
   @argument('object') toggleCard;
 

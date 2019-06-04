@@ -1,13 +1,21 @@
-import Controller from '@ember/controller';
-import EmberObject from '@ember/object';
-import { action, computed } from '@ember/object';
+/*
+ * Manage a person's Alert Preferences - used by me/alerts, and person/N/alerts 
+ */
+
+import Component from '@ember/component';
+import EmberObject, { action, computed } from '@ember/object';
+import { argument } from '@ember-decorators/argument';
 import { filterBy } from '@ember/object/computed';
 import { validateFormat } from 'ember-changeset-validations/validators';
 import { isEmpty } from '@ember/utils';
 
 const PHONE_REGEXP = /^(?=(?:\D*\d){10,15}\D*$)\+?[0-9]{1,3}[\s-]?(?:\(0?[0-9]{1,5}\)|[0-9]{1,5})[-\s]?[0-9][\d\s-]{5,7}\s?(?:x[\d-]{0,4})?$/;
 
-export default class MeAlertsController extends Controller {
+export default class AlertsManageComponent extends Component {
+  @argument('object') numbers;
+  @argument('object') person;
+  @argument('object') alerts;
+
   alerts = [];
   numbers = {};
 
@@ -32,6 +40,18 @@ export default class MeAlertsController extends Controller {
   // Sort alert prefs into on playa and off playa groups for display.
   @filterBy('alerts', 'on_playa', true) onPlayaAlerts;
   @filterBy('alerts', 'on_playa', false) offPlayaAlerts;
+
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
+    const numbers = this.numbers;
+    const form = this.phoneForm;
+
+    form.set('off_playa', numbers.off_playa.phone);
+    form.set('on_playa', numbers.on_playa.phone);
+    form.set('is_same', numbers.is_same);
+
+    this.set('isMe', (this.person.id == this.session.user.id));
+  }
 
   // Are one or both numbers stopped?
   @computed('numbers.{off_playa,on_playa}.is_stopped')
@@ -79,7 +99,7 @@ export default class MeAlertsController extends Controller {
     this.ajax.request(`person/${this.person.id}/alerts`, {
           method: 'PATCH',
           data: { alerts }
-    }).then(() => { this.toast.success('Your preferences have been successfully updated.') })
+    }).then(() => { this.toast.success('The alert preferences have been successfully updated.') })
     .catch((response) => { this.house.handleErrorResponse(response) });
   }
 

@@ -58,11 +58,9 @@
                   {{/if}}
                   <div class="col-sm-12 col-md-4 col-lg-3">
                     <div class="navbar-text">Communication</div>
+                    {{#link-to "me.alerts" class="dropdown-item"}}Alert Preferences{{/link-to}}
                     {{#if session.user.isRanger}}
                       {{#link-to "me.messages" class="dropdown-item"}}Messages{{/link-to}}
-                    {{/if}}
-                    {{#link-to "me.alerts" class="dropdown-item"}}Alert Preferences{{/link-to}}
-                    {{#if user.isRanger}}
                       {{#link-to "me.contact" class="dropdown-item"}}Contact Ranger{{/link-to}}
                     {{/if}}
                     {{#if session.user.teacher.have_mentored}}
@@ -109,14 +107,14 @@
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Mentoring</a>
               <div class="dropdown-menu">
                 <div class="navbar-text">Pre-Playa</div>
-                <a href="{{cgo "alpha" "selectPotential"}}" class="dropdown-item">Potential Alphas</a>
-                <a href="{{cgo "person" "selectByAlphaStatus"}}" class="dropdown-item">Alpha Status</a>
-                <a href="{{cgo "alpha" "selectFlagged"}}" class="dropdown-item">Flagged Alphas</a>
+                {{#link-to "mentor.potentials" class="dropdown-item"}}Potential Alphas{{/link-to}}
+                {{#link-to "mentor.alpha-status" class="dropdown-item"}}Alpha Status{{/link-to}}
 
                 <div class="navbar-text">On Playa</div>
-                <a href="{{cgo "alpha" "selectScheduledShifts"}}" class="dropdown-item">Alpha Scheduled Shifts</a>
-                <a href="{{cgo "alpha" "index"}}" class="dropdown-item">Alpha Acceptance Sheets</a>
-                <a href="{{cgo "mentor" "selectAlphas"}}" class="dropdown-item">Alpha Mentors Assignment</a>
+                {{#link-to "mentor.schedule" class="dropdown-item"}}Alpha Scheduled Shifts{{/link-to}}
+                {{#link-to "mentor.acceptance-sheets" class="dropdown-item"}}Alpha Acceptance Sheets{{/link-to}}
+                {{#link-to "mentor.assignment" class="dropdown-item"}}Alpha Mentors Assignment{{/link-to}}
+                {{#link-to "mentor.convert" class="dropdown-item"}}Alpha Conversion{{/link-to}}
 
                 <div class="navbar-text">Post Playa</div>
                 {{#link-to "mentor.mentees" class="dropdown-item"}}Mentees For Year{{/link-to}}
@@ -159,6 +157,7 @@
                         {{#link-to "admin.positions" class="dropdown-item"}}Positions{{/link-to}}
                         {{#link-to "admin.roles" class="dropdown-item"}}(System) Roles{{/link-to}}
                         {{#link-to "admin.help" class="dropdown-item"}}Help Documents{{/link-to}}
+                        {{#link-to "admin.alerts" class="dropdown-item"}}RBS Alerts{{/link-to}}
                       {{/if}}
                     </div>
                     {{#if (has-role "admin")}}
@@ -182,7 +181,7 @@
                         <div class="navbar-text">Bulk Operations</div>
                         {{#link-to "admin.bulk-upload" class="dropdown-item"}}Bulk Upload{{/link-to}}
                         {{#link-to "admin.bulk-sign-in-out" class="dropdown-item"}}Bulk Sign In/Out{{/link-to}}
-                        <a href="{{cgo "timesheet" "signoutOnDuty"}}" class="dropdown-item">Bulk Signout</a>
+                        {{#link-to "admin.bulk-signout" class="dropdown-item"}}Bulk Signout{{/link-to}}
                       </div>
                     {{/if}}
                     {{#if (has-role "admin" "megaphone")}}
@@ -195,7 +194,7 @@
                           <a href="{{cgo "person" "selectByStatusChange"}}" class="dropdown-item">People by Status Change</a>
                         {{/if}}
                         <div class="navbar-text">Communications</div>
-                        <a href="{{cgo "broadcast" "index"}}" class="dropdown-item">Ranger Broadcast</a>
+                        {{#link-to "admin.rbs" class="dropdown-item"}}Ranger Broadcast{{/link-to}}
                       </div>
                     {{/if}}
                   </div>
@@ -217,7 +216,7 @@
                       <a href="{{cgo "slot" "selectAllScheduled" "order=2"}}" class="dropdown-item">Schedule by Position</a>
                       <a href="{{cgo "slot_coverage" "coverageReport"}}" class="dropdown-item">Coverage Report</a>
                       <a href="{{cgo "slot" "shiftSignupsReport"}}" class="dropdown-item">Shift Signups</a>
-                      <a href="{{cgo "slot" "checkInOutForecastReport"}}" class="dropdown-item">HQ Checkin/Out Forecast</a>
+                      {{#link-to "reports.hq-forecast" class="dropdown-item"}}HQ Checkin/Out Forecast{{/link-to}}
                     </div>
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">People</div>
@@ -229,8 +228,8 @@
                     </div>
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Timesheets</div>
-                      <a href="{{cgo "timesheet" "selectOnDuty"}}" class="dropdown-item">People On Duty</a>
-                      <a href="{{cgo "timesheet" "selectOnDuty" "overHours=6"}}" class="dropdown-item">...Over 6 Hours</a>
+                      {{#link-to "reports.on-duty" (query-params over_hours=null) class="dropdown-item"}}People On Duty{{/link-to}}
+                      {{#link-to "reports.on-duty" (query-params over_hours=6) class="dropdown-item"}}... Over 6 Hours{{/link-to}}
                       <a href="{{cgo "slot" "selectFlakeReport"}}" class="dropdown-item">Flake Report</a>
                       <a href="{{cgo "timesheet" "totalPersonPosition"}}" class="dropdown-item">Timesheet Totals</a>
                       <a href="{{cgo "timesheet" "selectByCallsign"}}" class="dropdown-item">Timesheet By Callsign</a>

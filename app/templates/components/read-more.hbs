@@ -1,5 +1,8 @@
 {{#if (and shouldTruncate hideFullText)}}
-  {{truncatedText}} <a href {{action readMoreAction}}> &hellip; read more</a>
+  {{truncatedText}} <a href {{action toggleText}}> [+more]</a>
 {{else}}
   {{text}}
+  {{#if shouldTruncate}}
+    <a class="d-block" href {{action toggleText}}> [-less]</a>
+  {{/if}}
 {{/if}}

@@ -6,6 +6,7 @@ $enable-responsive-font-sizes: true;
 $enable-shadows: true;
 
 $kakhi: #d2b48c;
+$wheatfield: #ded7be;
 
 $theme-colors: (
   "primary": $kakhi,
@@ -13,6 +14,8 @@ $theme-colors: (
   "gray": #dcdcdc,
   "light-red": #ff6666,
   "highlight": #ffff99,
+  "wheatfield": $wheatfield,
+  "person": #444
 );
 
 // bootstrap set the link-color to the primary color
@@ -82,12 +85,13 @@ $sizes: (
 @import "timesheet-log";
 @import "training-print";
 @import "ticketing";
+@import "alpha-sheet";
 
 @media print {
   h1 { font-size: 1.2rem; }
 
   body {
-    margin: 1.6cm;
+    margin: 0.1cm !important;
     line-height: 1.3;
     background: #ffffff !important;
     color: #000;
@@ -97,6 +101,10 @@ $sizes: (
     page-break-before: always;
   }
 
+  main, main.col, #body-row {
+    margin: 0px !important;
+    padding: 0px !important;
+  }
 }
 
 @media not print {
@@ -168,7 +176,7 @@ dl {
   width: 100%;
   padding: 15px 0;
   color: #000;
-  background-color: #d2b48c;
+  background-color: $kakhi;
 }
 
 .footer {
@@ -503,11 +511,23 @@ caption {
  * Shift Lead Reports
  */
 
-.shift-lead-greendot {
+.bg-shift-lead-greendot {
   background-color: #d8fbd8;
 }
 
-.shift-lead-troubleshooter {
-  background-color: #ffc5c5;
+.text-shift-lead-greendot {
+  color: #038403;
+}
+
+.bg-shift-lead-troubleshooter {
+  background-color: #ffff99;
 
 }
+
+.text-shift-lead-troubleshooter {
+  color: #555;
+}
+
+.rbs-green-button, .rbs-green-button a:visited { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
+.rbs-yellow-button, .rbs-yellow-button a:visited { background-color: #fff3cd; color: #856404; border-color: #ffeeba; }
+.rbs-red-button, .rbs-red-button a:visited { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }

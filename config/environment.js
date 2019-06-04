@@ -103,6 +103,7 @@ module.exports = function(environment) {
     };
 
     ENV.newVersion = { enabled: false };
+
   }
 
   if (environment === 'test') {
@@ -155,6 +156,8 @@ module.exports = function(environment) {
     ENV['api-server'] = (process.env.RANGER_CLUBHOUSE_API_URL || '/api');
     ENV['ember-simple-auth-token'].serverTokenEndpoint = ENV['api-server']+'/auth/login';
     ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = ENV['api-server']+'/auth/refresh';
+
+    ENV.groundHogYear = process.env.RANGER_CLUBHOUSE_GROUNDHOG_YEAR || null;
   }
 
   return ENV;

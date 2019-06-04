@@ -7,7 +7,7 @@
     height: 40px;
     padding: 5px;
     vertical-align: top;
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .signup-label {
@@ -15,7 +15,8 @@
   }
 
   .signup-separator td {
-    height: 8px;
+    height: 5px !important;
+    padding: 0px !important;
     border: none;
   }
 }

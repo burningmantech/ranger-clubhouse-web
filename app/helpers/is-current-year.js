@@ -1,7 +1,8 @@
 import { helper } from '@ember/component/helper';
+import currentYear from 'clubhouse/utils/current-year';
 
 export function isCurrentYear([ year ]/*, hash*/) {
-  return (new Date).getFullYear() == year;
+  return currentYear() == year;
 }
 
 export default helper(isCurrentYear);
