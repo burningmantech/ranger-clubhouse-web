@@ -13,8 +13,9 @@ export default class MeRangerInfoRoute extends Route.extend(MeRouteMixin) {
     const year = requestYear(params);
 
     return RSVP.hash({
-      eventInfo: this.ajax.request('person/'+person_id+'/event-info', { data: { year } })
+      eventInfo: this.ajax.request(`person/${person_id}/event-info`, { data: { year } })
                 .then((result) => { return result.event_info; }),
+      personPositions: this.ajax.request(`person/${person_id}/positions`).then((results) => results.positions),
       year,
     });
   }
@@ -22,6 +23,7 @@ export default class MeRangerInfoRoute extends Route.extend(MeRouteMixin) {
   setupController(controller, model) {
     super.setupController(...arguments);
     controller.set('eventInfo', model.eventInfo);
+    controller.set('personPositions', model.personPositions);
     controller.set('year', model.year);
   }
 

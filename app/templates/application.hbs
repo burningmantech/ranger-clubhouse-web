@@ -307,8 +307,10 @@
         &nbsp;
       </div>
 
-      {{#ch-form "person-search" searchForm formClass="col mb-2 ml-3 mr-3" changeSet=false onSubmit=(action "submit") onFormChange=(action searchFormChange) as |f|}}
-        {{#power-select-typeahead
+      {{#ch-form "person-search" searchForm formClass="col-xs-12 col-md-10 col-lg-8 mb-2 mx-2" changeSet=false onSubmit=(action "submit") onFormChange=(action searchFormChange) as |f|}}
+        <div class="form-row no-gutters">
+          <div class="col-xs-12 col-md-8">
+            {{#power-select-typeahead
                         search=(action searchAction)
                         onchange=(action searchChangeAction)
                         onfocus=(action searchFocusAction)
@@ -320,13 +322,18 @@
                         loadingMessage="Searching . . ."
                         noMatchesMessage="No results found"
                         as |person| }}
-          <strong>{{person.callsign}}</strong> &lt;{{person.first_name}} {{person.last_name}}, {{person.status}}&gt;
-          {{#if (eq person.email_match "full")}}
-            - email full match
-          {{else if (eq person.email_match "partial")}}
-            - email partial match
-          {{/if}}
-        {{/power-select-typeahead}}
+              <strong>{{person.callsign}}</strong> &lt;{{person.first_name}} {{person.last_name}}, {{person.status}}&gt;
+              {{#if (eq person.email_match "full")}}
+                - email full match
+              {{else if (eq person.email_match "partial")}}
+                - email partial match
+              {{/if}}
+            {{/power-select-typeahead}}
+          </div>
+          <div class="mt-xs-2 mt-sm-2 mt-md-0">
+            {{f.input "mode" type="select" options=modeOptions controlClass="form-control form-control-sm"}}
+          </div>
+        </div>
         {{#if showSearchOptions}}
           <fieldset class="bg-white">
             <div class="form-row">
@@ -344,10 +351,6 @@
                 {{f.input "auditor" type="checkbox" label="Auditor" inline=true}}
                 {{f.input "past_prospective" type="checkbox" label="Past Prospective" inline=true}}
               </div>
-            </div>
-            <div class="form-row">
-              <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Mode:</label>
-              {{f.input "mode" type="radioGroup" options=modeOptions label="Interface Mode" inline=true }}
             </div>
             <div class="form-row mb-2">
               <div class="col-auto">

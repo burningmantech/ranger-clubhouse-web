@@ -193,9 +193,21 @@
   <div class="form-group row">
     <label class="col-form-label-fixed col-sm-12 col-md-2">Vehicles</label>
     <div class="col-md-9 col-sm-12">
-      {{f.input "vehicle_paperwork" label="Motorpool Policy" type="checkbox" inline=true}}
-      {{f.input "vehicle_insurance_paperwork" label="Vehicle Insurance Paperwork" type="checkbox" inline=true}}
-      {{f.input "vehicle_blacklisted" label="Vehicle Blacklisted" type="checkbox" inline=true}}
+      {{#if (has-role "admin")}}
+        {{f.input "vehicle_paperwork" label="Motorpool Policy" type="checkbox" inline=true}}
+        {{f.input "vehicle_insurance_paperwork" label="Vehicle Insurance Paperwork" type="checkbox" inline=true}}
+        {{f.input "vehicle_blacklisted" label="Vehicle Blacklisted" type="checkbox" inline=true}}
+      {{else}}
+        {{#if person.vehicle_paperwork}}
+          Motorpool Policy agreed to
+        {{else}}
+          Motorpool Policy NOT agreed to
+        {{/if}}<br>
+        {{if person.vehicle_insurance_paperwork "Has" "No"}} org insurance<br>
+        {{#if person.vehicle_blacklisted}}
+          <strong class="text-danger">VEHICLE BLACKLISTED</strong>
+        {{/if}}
+      {{/if}}
     </div>
   </div>
 

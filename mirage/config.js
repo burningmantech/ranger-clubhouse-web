@@ -212,6 +212,10 @@ export default function() {
     return { credits: person.credits || 0 };
   });
 
+  this.get('/api/person/:id/positions', ({positions}) => {
+    return positions.all();
+  });
+
   this.get('/api/position', ({positions}) => {
     return positions.all();
   });
