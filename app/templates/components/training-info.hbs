@@ -1,5 +1,5 @@
 <div class="table-responsive mt-2">
-  <table class="table table-sm">
+  <table class="table table-sm table-width-auto">
     <thead>
       <tr>
         <th>Position</th>
@@ -30,7 +30,7 @@
               -
             {{/if}}
           </td>
-          <td>{{training.location}}</td>
+          <td>{{present-or-not training.location "-"}}</td>
         </tr>
       {{/each}}
     </tbody>

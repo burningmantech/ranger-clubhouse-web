@@ -10,7 +10,7 @@
   rangering on the playa.
 {{/if}}
 
-<p class="h3 mt-4">{{fa-icon "graduation-cap"}} Training</p>
+<h3 class="mt-4">{{fa-icon "graduation-cap"}} Training</h3>
 
 {{#if (and dirtTraining (not-eq dirtTraining.status "no-shift"))}}
   {{#if (eq dirtTraining.status "pending")}}
@@ -39,7 +39,7 @@
 {{/if}}
 
 {{#if artTrainings}}
-  <p class="h3 mt-4">{{fa-icon "university"}} Advanced Ranger Training (ART)</p>
+  <h3 class="mt-4">{{fa-icon "university"}} Advanced Ranger Training (ART)</h3>
   {{pluralize artTrainings.length "position"}} requires ART Training. While
   you may sign up for an ART shift at anytime, you will not be allowed to work
   an ART shift unless you have passed ART training.
@@ -47,12 +47,27 @@
   {{training-info trainings=artTrainings}}
 {{/if}}
 
+<h3>{{fa-icon "list"}} Positions</h3>
+Positions indicate which shifts you are allowed to sign up for and what ART trainings you may attend. You have
+{{pluralize personPositions.length "position"}} granted:
+<div class="form-row mt-2">
+  {{#each personPositions as |position| }}
+    <div class="col-sm-6 col-md-3">
+      {{position.title}}
+    </div>
+  {{else}}
+    <div class="col-auto">
+      You currently do not hold any positions.
+    </div>
+  {{/each}}
+</div>
+
 {{#if (or person.isActive person.isAlpha)}}
-  <p class="h3 mt-4">{{fa-icon "utensils"}} Meals</p>
+  <h3 class="mt-4">{{fa-icon "utensils"}} Meals</h3>
 
   {{meal-info eventInfo.meals}}
 
-  <p class="h3 mt-4">{{fa-icon "shower"}} Showers</p>
+  <h3 class="mt-4">{{fa-icon "shower"}} Showers</h3>
   {{#if eventInfo.showers}}
     {{badge "secondary" "Wet Spot"}} Your BMID will allow you to take showers at the Wet Spot.
   {{else}}
@@ -60,7 +75,7 @@
   {{/if}}
 
 
-  <p class="h3 mt-4">{{fa-icon "broadcast-tower"}} Radios</p>
+  <h3 class="mt-4">{{fa-icon "broadcast-tower"}} Radios</h3>
   {{#if eventInfo.radio_info_available}}
     {{#if eventInfo.radio_eligible}}
       {{badge "success" "Event Radio"}}
@@ -76,7 +91,7 @@
     Radio eligibility for this year is not yet available.
   {{/if}}
 
-  <p class="h3 mt-4">{{fa-icon "car"}} Motorpool</p>
+  <h3 class="mt-4">{{fa-icon "car"}} Motorpool</h3>
   {{#if person.vehicle_blacklisted}}
     {{badge "danger" "Blacklisted"}} We're sorry, but you cannot drive gators, cars, or trucks on playa for Ranger business.
   {{else}}
@@ -87,7 +102,7 @@
       {{#link-to "me.motorpool-policy"}}Motorpool Policy{{/link-to}}.
     {{/if}}
 
-    <p class="h3 mt-4">{{fa-icon "car-crash"}} Organization Vehicle Insurance</p>
+    <h3 class="mt-4">{{fa-icon "car-crash"}} Organization Vehicle Insurance</h3>
     {{#if person.vehicle_insurance_paperwork}}
       {{badge "success" "Authorized" }} You are authorized to drive cars and
       trucks (including your own personal vehicle) on playa for Ranger business.

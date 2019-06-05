@@ -47,22 +47,26 @@ export default class ApplicationController extends Controller {
     });
   }
 
+  setup() {
+    // Call from setCurrentUser in route after user has been authenticated
+    this.set('searchForm', EmberObject.create({
+      query: '',
+      name: true,
+      callsign: true,
+      email: true,
+      formerly_known_as: true,
+
+      auditor: false,
+      past_prospective: false,
+
+      mode: (this.session.user.is_on_duty_at_hq) ? 'hq' : 'account',
+    }));
+  }
+
   isSubmitting = false;
   showFKA = false;
 
-  searchForm = EmberObject.create({
-    query: '',
-
-    name: true,
-    callsign: true,
-    email: true,
-    formerly_known_as: true,
-
-    auditor: false,
-    past_prospective: false,
-
-    mode: 'account'
-  });
+  searchForm = {};
 
   @action
   searchFormChange() {
@@ -82,7 +86,7 @@ export default class ApplicationController extends Controller {
     }
   }
 
-  @computed('session.user.has_hq_window')
+  @computed('session.user.{is_on_duty_at_hq,has_hq_window}')
   get modeOptions() {
     const user = this.session.user;
     const options = [ { id: 'account', title: 'Person Manage' } ];

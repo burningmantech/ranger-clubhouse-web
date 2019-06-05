@@ -1,8 +1,7 @@
 import Component from '@ember/component';
 import { set } from '@ember/object';
 import { action, computed } from '@ember/object';
-import { argument
-} from '@ember-decorators/argument';
+import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
 import { inject as service } from '@ember/service';
 import * as Position from 'clubhouse/constants/positions';
@@ -54,10 +53,17 @@ export default class ShiftCheckInOutComponent extends Component {
     // hack for operator convenience - Dirt is the most common
     // shift, so put that at top.
 
-    const dirt = signins.find((p) => p.id == 2);
+    const dirt = signins.find((p) => p.id == Position.DIRT);
     if (dirt) {
       signins.removeObject(dirt);
       signins.unshift(dirt);
+    }
+
+    // .. and Shiny Penny shift should also be on top
+    const sp = signins.find((p) => p.id == Position.DIRT_SHINY_PENNY);
+    if (sp) {
+      signins.removeObject(sp);
+      signins.unshift(sp);
     }
 
     return signins;

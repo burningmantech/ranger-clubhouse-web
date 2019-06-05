@@ -51,14 +51,6 @@
       <button class="btn btn-primary" {{action markAssetAuthorized}} disabled={{isSubmitting}}>Mark Form As Signed</button>
     {{/if}}
   </p>
-  <p>
-    {{#if person.vehicle_paperwork}}
-      Motorpool Policy has been <strong class="text-success">AGREED</strong> to.
-    {{else}}
-      <div class="text-danger">Motorpool Polcy has NOT BEEN AGREED TO.</div>
-      <button class="btn btn-primary" {{action markMotorpoolAgreed}} disabled={{isSubmitting}}>Mark As Agreed To Policy</button>
-    {{/if}}
-  </p>
 </div>
 
 <div class="mt-2 border rounded p-2">

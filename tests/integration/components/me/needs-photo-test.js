@@ -10,7 +10,8 @@ module('Integration | Component | me/needs photo', function(hooks) {
     const uploadUrl = 'https://upload.local/upload';
 
     this.set('photo', { upload_url: uploadUrl });
-    await render(hbs`{{me/needs-photo photo=photo}}`);
+    this.set('person', { })
+    await render(hbs`{{me/needs-photo photo=photo person=person}}`);
 
     assert.dom(`a[href="${uploadUrl}"]`).exists();
   });

@@ -22,9 +22,9 @@ export default class HqSiteCheckinController extends Controller {
   }
 
   @action
-  markMotorpoolAgreed() {
-    this.person.set('vehicle_paperwork', true);
-    this._savePerson(this.person, 'Person marked as agreeing to the Motorpool Policy.');
+  markOnSite() {
+    this.person.set('on_site', true);
+    this._savePerson(this.person,  'Person has been successfully marked as ON SITE.');
   }
 
   _savePerson(model, message, callback) {
@@ -37,11 +37,5 @@ export default class HqSiteCheckinController extends Controller {
       }
     }).catch((response) => this.house.handleErrorResponse(response))
     .finally(() => this.set('isSubmitting', false));
-  }
-
-  @action
-  markOnSite() {
-    this.person.set('on_site', true);
-    this._savePerson(this.person,  'Person has been successfully marked as ON SITE.');
   }
 }
