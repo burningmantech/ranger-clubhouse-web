@@ -63,8 +63,21 @@ export default class AdminSalesforceController extends Controller {
   @action
   import() {
     this.toast.clear();
-    this.set('isSubmitting', true);
+
+    // Normal both create accouht and update sf should be checked together
+    if (this.createAccounts && !this.updateSalesforce) {
+      this.modal.confirm(null, 'You have checked "Create accounts" but "Update Salesforce flag" is unchecked. Normally, these two are checked togehter. Did you mean to do that?', () => {
+        this._runImport();
+      });
+    } else {
+      this._runImport();
+    }
+  }
+
+  _runImport() {
     const options = {};
+    this.set('isSubmitting', true);
+
     if (this.showAll) {
       options.showall = 1;
     }
