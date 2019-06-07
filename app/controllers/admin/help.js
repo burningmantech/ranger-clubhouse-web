@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { action, computed } from '@ember/object';
 
 export default class AdminHelpController extends Controller {
+  queryParams = [ 'createSlug', 'editSlug' ];
 
   // eslint-disable-next-line ember/use-brace-expansion
   @computed('documents.[]', 'documents.@each.slug')

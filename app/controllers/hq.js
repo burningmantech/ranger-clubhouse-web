@@ -24,8 +24,6 @@ export default class HqController extends Controller {
     return false;
   }
 
-
-
   @computed('timesheets.@each.credits')
   get creditsEarned() {
     return this.timesheets.reduce((total, row) => (row.credits + total), 0);

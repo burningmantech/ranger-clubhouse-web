@@ -190,33 +190,39 @@ export default class ApplicationController extends Controller {
       query
     };
 
-    // Find out which fields to search
-    const search_fields = [];
-    SearchFields.forEach((field) => {
-      if (form[field]) {
-        search_fields.push(field);
+    if (form.mode == 'hq') {
+      // restrict search to callsign and a handful of active-like statuses
+      params.search_fields = 'callsign';
+      params.statuses = 'active,alpha,prospective,retired,non ranger,inactive';
+    } else {
+      // Find out which fields to search
+      const search_fields = [];
+      SearchFields.forEach((field) => {
+        if (form[field]) {
+          search_fields.push(field);
+        }
+      });
+
+      if (search_fields.length > 0) {
+        params.search_fields = search_fields.join(',');
       }
-    });
 
-    if (search_fields.length > 0) {
-      params.search_fields = search_fields.join(',');
-    }
+      // By default, certain status are exclude.
+      // The take status off the list if the user wants
+      // those included
+      const toExclude = ExcludeStatus.slice();
 
-    // By default, certain status are exclude.
-    // The take status off the list if the user wants
-    // those included
-    const toExclude = ExcludeStatus.slice();
+      if (form.auditor) {
+        toExclude.removeObject('auditor');
+      }
 
-    if (form.auditor) {
-      toExclude.removeObject('auditor');
-    }
+      if (form.past_prospective) {
+        toExclude.removeObject('past prospective');
+      }
 
-    if (form.past_prospective) {
-      toExclude.removeObject('past prospective');
-    }
-
-    if (toExclude.length > 0) {
-      params.exclude_statuses = toExclude.join(',');
+      if (toExclude.length > 0) {
+        params.exclude_statuses = toExclude.join(',');
+      }
     }
 
     // And fire away!
@@ -280,7 +286,7 @@ export default class ApplicationController extends Controller {
   @action
   searchFocusAction() {
     this.set('searchResults', null);
-    this.set('showSearchOptions', true);
+    this.set('showSearchOptions', (this.searchForm.mode != 'hq'));
     this.set('enterPressed', false);
   }
 
@@ -289,26 +295,30 @@ export default class ApplicationController extends Controller {
     this.set('showSearchOptions', false);
   }
 
-  @computed('searchForm.{name,callsign,email,formerly_known_as}')
+  @computed('searchForm.{name,callsign,email,formerly_known_as,mode}')
   get searchPlaceholder() {
     const form = this.searchForm;
 
     const fields = [];
 
-    if (form.callsign) {
+    if (form.mode == 'hq') {
       fields.push('callsign');
-    }
+    } else {
+      if (form.callsign) {
+        fields.push('callsign');
+      }
 
-    if (form.name) {
-      fields.push('name');
-    }
+      if (form.name) {
+        fields.push('name');
+      }
 
-    if (form.email) {
-      fields.push('email');
-    }
+      if (form.email) {
+        fields.push('email');
+      }
 
-    if (form.formerly_known_as) {
-      fields.push('fka');
+      if (form.formerly_known_as) {
+        fields.push('fka');
+      }
     }
 
     const arrayToSentence = (a, conjunction) => [a.slice(0, -1).join(', '), a.pop()].filter(w => w !== '').join(` ${conjunction} `);
