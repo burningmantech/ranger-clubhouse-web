@@ -3,8 +3,8 @@
 {{#if isPrinting}}
   {{print-instruction backAction=(action showAlphasAction) backLabel="Back to Alpha selection"}}
   {{#each printAlphas as |alpha alphaIdx|}}
-    <div class="d-flex mx-2 mb-2 {{if alphaIdx "d-print-page-break"}}">
-      <img src="/assets/images/ranger-logo-bw.png" class="alpha-sheet-logo" alt="ranger logo">
+    <div class="d-flex mx-2 mt-4 mb-2 {{if alphaIdx "d-print-page-break"}}">
+      <img src={{root-url "assets/images/ranger-logo-bw.png"}} class="alpha-sheet-logo" alt="ranger logo">
       <div class="alpha-sheet-header align-middle">{{year}} Alpha To Dirt Ranger Acceptance Form ({{add alphaIdx 1}}/{{printAlphas.length}})</div>
     </div>
 
@@ -65,10 +65,10 @@
     <div class="row no-gutters">
       <div class="col-6">
         <div class="alpha-sheet-column">
-          <div class="alpha-sheet-column-label alpha-sheet-column-auto ">Prior Mentors:</div>
+          <div class="alpha-sheet-column-label align-top">Prior Mentors:</div>
           <div class="alpha-sheet-column-field">
             {{#each alpha.mentor_history as |history historyIdx| }}
-              {{if historyIdx ","}}
+              {{#if historyIdx}}<br>{{/if}}
               {{history.year}} ({{mentor-short-status history.status}})
               {{#each history.mentors as |mentor idx|}}
                 {{if idx " / "}}{{mentor.callsign}}

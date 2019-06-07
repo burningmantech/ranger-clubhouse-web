@@ -16,6 +16,7 @@ const EventOptions = [
     [ 'Position Changes', 'person-position-%' ],
     [ 'Status Changes', 'person-status-change' ],
     [ 'Client Routing', 'client-route' ],
+    [ 'Slot Changes', 'slot-%' ],
 ];
 
 const SortOptions = [

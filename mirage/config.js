@@ -1,5 +1,4 @@
 import Response from 'ember-cli-mirage/response';
-import JWT from 'jsonwebtoken';
 import moment from 'moment';
 
 export default function() {
@@ -75,9 +74,9 @@ export default function() {
       )
     }
 
-    let token = JWT.sign({person_id: person.id}, 'secret', { expiresIn: 1000 });
     let data =  {
-      token,
+      // ember-simple-auth only cares about the middle token
+      token: btoa("dummy") + "." + btoa(JSON.stringify({ exp: (Math.ceil(Date.now() / 1000) + 1000) })) + "." + btoa("dummy"),
       token_type: 'bearer',
       expires_in: 1000,
       person_id:  person.id,

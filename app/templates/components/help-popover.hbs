@@ -8,14 +8,24 @@
         Loading help {{fa-icon "spinner" spin=true}}
       {{else if this.body}}
         {{nl2br this.body allowHtml=true}}
+
       {{else}}
         <p>
           Ooops! Looks like we forgot to write some help for this.
         </p>
-        help id=[{{@slug}}]
+        <p>
+          help id=[{{@slug}}]
+        </p>
       {{/if}}
     </div>
     <div class="popover-footer">
+      {{#if (has-role "admin")}}
+        {{#if this.body}}
+          {{#link-to "admin.help" (query-params editSlug=@slug) class="btn btn-secondary"}}Edit Help{{/link-to}}
+        {{else if (not this.isLoading)}}
+          {{#link-to "admin.help" (query-params createSlug=@slug) class="btn btn-secondary btn-sm"}}Create Help{{/link-to}}
+        {{/if}}
+      {{/if}}
       <button class="btn btn-primary" {{action closeHelp}}>Close</button>
     </div>
   </div>
