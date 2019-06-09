@@ -7,9 +7,10 @@ import { set } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import markSlotsOverlap from 'clubhouse/utils/mark-slots-overlap';
 import moment from 'moment';
+import { slotSignup } from 'clubhouse/utils/slot-signup';
 
-const allDays = [ 'All Days', 'all' ];
-const upcomingShifts = [ 'Upcoming Shifts', 'upcoming' ];
+const allDays = ['All Days', 'all'];
+const upcomingShifts = ['Upcoming Shifts', 'upcoming'];
 
 @tagName('')
 export default class ScheduleManageComponent extends Component {
@@ -25,8 +26,8 @@ export default class ScheduleManageComponent extends Component {
   requirementsOverride = false;
 
   activeOptions = [
-    [ 'Active', 'active' ],
-    [ 'Inactive', 'inactive' ]
+    ['Active', 'active'],
+    ['Inactive', 'inactive']
   ];
 
   didReceiveAttrs() {
@@ -40,7 +41,7 @@ export default class ScheduleManageComponent extends Component {
 
   @computed('year', 'permission')
   get noPermissionToSignUp() {
-    return this.isCurrentYear  && !this.permission.signup_allowed;
+    return this.isCurrentYear && !this.permission.signup_allowed;
   }
 
   /*
@@ -50,7 +51,7 @@ export default class ScheduleManageComponent extends Component {
   get availableSlots() {
     // Filter based on roles.
 
-    if (this.person.hasRole([ Role.ADMIN, Role.VC, Role.TRAINER, Role.ART_TRAINER ])) {
+    if (this.person.hasRole([Role.ADMIN, Role.VC, Role.TRAINER, Role.ART_TRAINER])) {
       return this.slots;
     }
 
@@ -82,14 +83,14 @@ export default class ScheduleManageComponent extends Component {
   get slotGroups() {
     const slots = this.viewSlots;
     let groups = A();
-    slots.forEach(function(slot) {
+    slots.forEach(function (slot) {
       const title = slot.position_title;
       let group = groups.findBy('title', title)
 
       if (group) {
         group.slots.push(slot);
       } else {
-        groups.pushObject({title, position_id: slot.position_id, slots: [slot]});
+        groups.pushObject({ title, position_id: slot.position_id, slots: [slot] });
       }
     });
 
@@ -101,9 +102,9 @@ export default class ScheduleManageComponent extends Component {
     const unique = this.availableSlots.uniqBy('slotDay').mapBy('slotDay');
     const days = A();
 
-    unique.sort((a,b) => {
+    unique.sort((a, b) => {
       if (a < b) return -1;
-      if ( a > b) return 1;
+      if (a > b) return 1;
       return 0;
     });
 
@@ -113,8 +114,8 @@ export default class ScheduleManageComponent extends Component {
 
     days.pushObject(allDays);
 
-    unique.forEach(function(day) {
-      days.pushObject([ moment(day).format('ddd MMM DD'), day ])
+    unique.forEach(function (day) {
+      days.pushObject([moment(day).format('ddd MMM DD'), day])
     });
 
     return days;
@@ -186,99 +187,9 @@ export default class ScheduleManageComponent extends Component {
     this.set('requirementsOverride', true);
   }
 
-  handleErrorJoinResponse(result, slot) {
-    const modal = this.modal;
-    const status = result.status;
-
-    slot.set('slot_signed_up', result.signed_up);
-
-    switch (status) {
-      case 'full':
-        modal.info('The shift is full.', 'The shift has become full with '+slot.slot_signed_up+' indivduals signed up.');
-        break;
-
-      case 'no-slot':
-        modal.info('The slot could not be found?', 'The slot '+slot.id+' was not found in the database. This looks like a bug!');
-        break;
-
-      case 'no-position':
-        modal.info('Position not held', 'You do not hold the position ['+slot.position_title+'] in order to sign up for this shift.');
-        break;
-
-      case 'exists':
-        modal.info('Already signed up','Huh, looks like you already signed up for the shift.');
-        break;
-
-      case 'not-active':
-        modal.info('Inactive Shift', 'Sign ups are not allowed because the shift has not been activated. Please check back later and try again.');
-        break;
-
-      case 'multiple-enrollment':
-        modal.open(
-          'modal-multiple-enrollment',
-          {
-            title: 'Multiple Enrollments Not Allowed',
-            slots: result.slots,
-            person: this.person,
-          } );
-        break;
-
-      default:
-        modal.info('Unknown status response', `Sorry, I did not understand the status response of [${status}] from the server`);
-        break;
-    }
-  }
-
-  joinSlotRequest(slot) {
-    this.ajax.request(`person/${this.person.id}/schedule`, {
-      method: 'POST',
-      data: { slot_id: slot.id }
-    }).then((result) => {
-        if (result.status == 'success') {
-          slot.set('person_assigned', true);
-          slot.set('slot_signed_up', result.signed_up);
-          if (result.full_forced) {
-              this.toast.success('Successfully signed up, and the shift is overcapacity. Hope you know what you are doing!');
-          } else if (result.trainer_forced) {
-            this.toast.success('Successfully signed up, and the trainer is now signed up for multiple training sessions.');
-          } else if (result.multiple_forced) {
-            this.modal.open('modal-multiple-enrollment',
-              {
-                title: 'Sign Up Forced - Other Enrollments Found',
-                slots: result.slots,
-                person: this.person,
-                forced: true,
-              });
-          } else {
-            this.toast.success('Successfully signed up.');
-          }
-        } else {
-          this.handleErrorJoinResponse(result, slot);
-        }
-    }).catch((response) => {
-      this.house.handleErrorResponse(response);
-    });
-  }
-
   @action
   joinSlot(slot) {
-    const isAdmin = this.session.user.isAdmin;
-    const title = `${slot.position_title} ${slot.slot_description}`;
-
-    if (slot.has_started && isAdmin) {
-      this.modal.confirm(
-            `${title} has started`,
-            'This shift has already started. Since you are an admin, you may force adding this shift to the schedule. Please confirm you wish to do this.',
-            () => { this.joinSlotRequest(slot); });
-
-    } else if (slot.isFull && isAdmin) {
-      this.modal.confirm(
-            `${title} is full`,
-            'Since you are an admin, you may force adding this shift to the schedule. Please confirm you wish to do this.',
-            () => { this.joinSlotRequest(slot); });
-    } else {
-      this.joinSlotRequest(slot);
-    }
+    slotSignup(this, slot, this.person, () => { slot.set('person_assigned', true) });
   }
 
   @action
@@ -300,13 +211,13 @@ export default class ScheduleManageComponent extends Component {
   @action
   showPeople(slot) {
     this.ajax.request('slot/' + slot.id + '/people').then((result) => {
-      let callsigns = result.people.map((person) => person.callsign );
+      let callsigns = result.people.map((person) => person.callsign);
       if (callsigns.length == 0) {
         callsigns = "No one is signed up for this shift. Be the first!";
       } else {
         callsigns = callsigns.join(', ');
       }
-      this.modal.info('Scheduled (Callsigns) for '+slot.slot_description, callsigns);
+      this.modal.info('Scheduled (Callsigns) for ' + slot.slot_description, callsigns);
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
@@ -336,11 +247,11 @@ export default class ScheduleManageComponent extends Component {
     this.person.save().then(() => {
       this.toast.success('Your agreement has been succesfully recorded.');
       // Reload the permissions.
-      this.ajax.request(`person/${this.person.id}/schedule/permission`, {data: { year: this.year }})
-                  .then((results) => {
-                    this.set('permission', results.permission)
-                    this.set('showBehaviorAgreement', false);
-                  });
+      this.ajax.request(`person/${this.person.id}/schedule/permission`, { data: { year: this.year } })
+        .then((results) => {
+          this.set('permission', results.permission)
+          this.set('showBehaviorAgreement', false);
+        });
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 }
