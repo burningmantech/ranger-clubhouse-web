@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import EmberObject, { action, computed } from '@ember/object';
 import { debounce } from '@ember/runloop';
+import { slotSignup } from 'clubhouse/utils/slot-signup';
 
 const SEARCH_RATE_MS = 300;
 
@@ -60,45 +61,6 @@ export default class MentorScheduleController extends Controller {
     })
   }
 
-  // Deal with add a student to a session error
-  _handleJoinSessionError(result, person) {
-    const modal = this.modal;
-    const slot = this.slot;
-
-    switch (result.status) {
-    case 'full':
-      modal.info('The shift is full.', `The shift is at capacity with ${result.signed_up} indivduals signed up.`);
-      break;
-
-    case 'no-slot':
-      modal.info('The slot could not be found?', `The slot ${slot.id} was not found in the database. This looks like a bug!`);
-      break;
-
-    case 'no-position':
-      modal.info('Position not held', `The person does not hold the Alpha position order to sign up for this shift.`);
-      break;
-
-    case 'exists':
-      modal.info('Already signed up', `Huh, looks like ${person.callsign} is already signed up for the session.`);
-      break;
-
-    case 'not-active':
-      modal.info('Inactive Shift', 'Sign ups are not allowed because the shift has not been activated. Please check back later and try again.');
-      break;
-
-    case 'multiple-enrollment':
-      modal.open('modal-multiple-enrollment', {
-        title: 'Multiple Enrollments Not Allowed',
-        slots: result.slots,
-        person
-      });
-      break;
-
-    default:
-      modal.info('Unknown status response', `Sorry, I did not understand the status response of [${result.status}] from the server`);
-      break;
-    }
-  }
 
   @action
   cancelSearchAction() {
@@ -107,37 +69,10 @@ export default class MentorScheduleController extends Controller {
 
   @action
   addPersonAction(person) {
-    this.ajax.post(`person/${person.id}/schedule`, {
-        data: {
-          slot_id: this.slot.id
-        }
-      })
-      .then((result) => {
-        if (result.status != 'success') {
-          this._handleJoinSessionError(result, person);
-          return;
-        }
-
-        this.set('addPersonForm', null);
-
-        if (result.full_forced) {
-          this.toast.success('Successfully signed up, and the shift is overcapacity. Hope you know what you are doing!');
-        } else if (result.trainer_forced) {
-          this.toast.success('Successfully signed up, and the trainer is now signed up for multiple training sessions.');
-        } else if (result.multiple_forced) {
-          this.modal.open('modal-multiple-enrollment', {
-            title: 'Sign Up Forced - Other Enrollments Found',
-            slots: result.slots,
-            person,
-            forced: true,
-          });
-        } else {
-          this.toast.success('Successfully signed up.');
-        }
-
-        this.send('refreshRoute');
-      })
-      .catch((response) => this.house.handleErrorResponse(response));
+    slotSignup(this, this.training, person, () => {
+      this.set('addPersonForm', null);
+      this.send('refreshRoute');
+    });
   }
 
   // Remove a student from the session
