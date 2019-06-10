@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import { action, computed, set } from '@ember/object';
 import { filterBy } from '@ember/object/computed';
+import currentYear from 'clubhouse/utils/current-year';
 import laborDay from 'clubhouse/utils/labor-day';
 import moment from 'moment';
 import _ from 'lodash';
@@ -244,7 +245,7 @@ export default class SlotsController extends Controller {
     if (!isValid) {
       return;
     }
-  
+
     const duplicate = this._duplicateSlot(model);
     duplicate.save().then(() => {
       this.slots.update();
@@ -288,7 +289,7 @@ export default class SlotsController extends Controller {
 
   @action
   startCopy(selectedPositionId = null) {
-    this.set('presentYear', moment().year());
+    this.set('presentYear', currentYear());
     const selectedLaborDay = laborDay(this.get('year'));
     const presentLaborDay = laborDay(this.get('presentYear'));
     this.set('selectedYearLaborDay', selectedLaborDay.format('MMMM Do'));

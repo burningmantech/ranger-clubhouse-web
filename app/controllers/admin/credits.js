@@ -3,6 +3,7 @@ import EmberObject from '@ember/object';
 import { action, computed } from '@ember/object';
 import { filterBy } from '@ember/object/computed';
 import { validateNumber, validatePresence } from 'ember-changeset-validations/validators';
+import currentYear from 'clubhouse/utils/current-year';
 import laborDay from 'clubhouse/utils/labor-day';
 import validateDateTime from 'clubhouse/validators/datetime';
 import moment from 'moment';
@@ -235,7 +236,7 @@ export default class AdminCreditsController extends Controller {
 
   @action
   startCopy() {
-    this.set('presentYear', moment().year());
+    this.set('presentYear', currentYear());
     const selectedLaborDay = laborDay(this.get('year'));
     const presentLaborDay = laborDay(this.get('presentYear'));
     this.set('selectedYearLaborDay', selectedLaborDay.format('MMMM Do'));

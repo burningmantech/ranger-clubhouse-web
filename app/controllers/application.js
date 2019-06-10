@@ -3,6 +3,9 @@ import { action, computed } from '@ember/object';
 import EmberObject from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import { debounce, run } from '@ember/runloop';
+import { config } from 'clubhouse/utils/config';
+import moment from 'moment';
+
 import ENV from 'clubhouse/config/environment';
 import RSVP from 'rsvp';
 
@@ -25,6 +28,9 @@ const SearchFields = ['name', 'callsign', 'email', 'formerly_known_as'];
 const ExcludeStatus = ['auditor', 'past prospective'];
 
 export default class ApplicationController extends Controller {
+  groundHogDayTime = null;
+  groundHogDayTimerId = null;
+
   init() {
     super.init(...arguments);
     /*
@@ -48,6 +54,20 @@ export default class ApplicationController extends Controller {
   }
 
   setup() {
+    /*
+     * Is the server in an groundhog day configuration where science and demonology blend
+     * seamlessly together and the entire 1970s decade loops infinitely ?.. err wait, that's Scarfolk.
+     * If the the server reported a Ground Hog Day time, show the time in a banner,
+     * and update the time on a minute basis. The time may not stay in sync with the backend.
+     * That's okay, a groundhog day server is only intended for training.
+     */
+    if (config('GroundhogDayTime') && !this.groundHogDayTimerId) {
+      this.set('groundHogDayTime', moment(config('GroundhogDayTime')));
+      this.set('groundHogDayTimerId', setInterval(() => {
+        this.set('groundHogDayTime', moment(this.groundHogDayTime).add(1, 's').format('YYYY-MM-DD HH:mm:ss'));
+      }, 1000));
+    }
+
     // Call from setCurrentUser in route after user has been authenticated
     this.set('searchForm', EmberObject.create({
       query: '',

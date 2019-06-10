@@ -13,7 +13,6 @@ export function cgo([ controller, method], params) {
   if (params) {
     Object.keys(params).forEach((key) => {
       url += `&${key}=${params[key]}`;
-
     });
   }
 
