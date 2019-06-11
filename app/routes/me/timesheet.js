@@ -24,6 +24,7 @@ export default class MeTimesheetRoute extends Route.extend(MeRouteMixin) {
         method: 'GET',
         data: { person_id }
       }).then((result) => result.info),
+      timesheetSummary: this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }}).then((result) => result.summary),
       year: year,
     });
   }

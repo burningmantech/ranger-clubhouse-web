@@ -40,8 +40,9 @@ export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
       imminentSlots: this.ajax.request(`person/${person_id}/schedule/imminent`)
         .then((result) => result.slots),
 
-      expected: this.ajax.request(`person/${person_id}/schedule/expected`)
+      expected: this.ajax.request(`person/${person_id}/schedule/expected`),
 
+      timesheetSummary: this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }}).then((result) => result.summary),
     });
   }
 
@@ -69,5 +70,12 @@ export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
       this.house.handleErrorResponse(response);
       return true;
     }
+  }
+
+  @action
+  refreshHQSidebar() {
+    this.ajax.request(`person/${this.modelFor('hq').person.id}/timesheet-summary`, { data: { year: this.house.currentYear() }}).then((result) => {
+      this.controllerFor('hq').set('timesheetSummary', result.summary);
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 }

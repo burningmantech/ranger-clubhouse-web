@@ -37,6 +37,12 @@ export default class HqShiftController extends Controller {
   }
 
   @action
+  refreshTimesheetSummary() {
+    // Called when the shift has ended.. need to refresh the timesheet summary.
+    this.send('refreshHQSidebar');
+  }
+
+  @action
   toggleIgnoreVerification() {
     this.set('ignoreTimesheetVerification', !this.ignoreTimesheetVerification);
   }

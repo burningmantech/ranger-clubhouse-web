@@ -61,13 +61,28 @@
     </div>
   {{/if}}
   <div class="schedule-row">
-    <div class="schedule-total mt-1">
-      <span class="mr-2 d-inline-block"><b>Total Schedule Time:</b> {{hour-minute-format (sum-column slots "slot_duration")}}</span>
-      <span class="mr-2 d-inline-block"><b>Scheduled Credits:</b> {{credits-format creditsTotal}}</span>
-      <span class="d-inline-block"><b>Earned Credits:</b> {{credits-format creditsEarned}}</span>
-    </div>
-    <div class="schedule-actions d-print-none">
-      <button class="btn btn-secondary btn-sm" {{action printPage}}>Print</button>
+    <div class="mt-1">
+      {{#if scheduleSummary}}
+        <span class="mr-2 d-inline-block"><b>Total Schedule Time:</b> {{hour-minute-format scheduleSummary.total_duration}}</span>
+        <span class="mr-2 d-inline-block"><b>Scheduled Credits:</b> {{credits-format scheduleSummary.total_credits}}</span>
+        <span class="d-inline-block"><b>Earned Credits:</b> {{credits-format creditsEarned}}</span><br>
+        <div class="mt-1">
+          <span class="d-inline-block"><b>Scheduled Credits Breakdown (Pre-Event / Event / Post-Event):</b></span>
+          <span class="d-inline-block">{{credits-format scheduleSummary.pre_event_credits}} / {{credits-format scheduleSummary.event_credits}} / {{credits-format scheduleSummary.post_event_credits}}</span><br>
+          <span class="d-inline-block"><b>Scheduled Hours Breakdown (Pre-Event / Event / Post-Event / Training):</b></span>
+          <span class="d-inline-block">{{hour-minute-format scheduleSummary.pre_event_duration}} / {{hour-minute-format scheduleSummary.event_duration}} / {{hour-minute-format scheduleSummary.post_event_duration}} / {{hour-minute-format scheduleSummary.other_duration}}</span>
+        </div>
+      {{else}}
+        <span class="mr-2 d-inline-block"><b>Total Schedule Time:</b> {{hour-minute-format totalDuration}}</span>
+        <span class="mr-2 d-inline-block"><b>Scheduled Credits:</b> {{credits-format creditsTotal}}</span>
+      {{/if}}
+      <div class="mt-1">
+        {{#if scheduleSummary.event_start}}
+          <b>{{year}} Event Week:</b> <span class="d-inline-block">{{shift-format scheduleSummary.event_start}} to {{shift-format scheduleSummary.event_end}}</span>
+        {{else}}
+          <strong class="text-danger">{{year}} event dates have not been determined. Estimate breakdowns will not be accurate.</strong>
+        {{/if}}
+      </div>
     </div>
   </div>
 </div>

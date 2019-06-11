@@ -1,0 +1,21 @@
+<div class="row my-1">
+  <div class="col-12">
+    <span class="d-inline-block"><b>Credits Breakdown (Pre-Event / Event / Post-Event):</b></span>
+    {{credits-format summary.pre_event_credits}} / {{credits-format summary.event_credits}} / {{credits-format summary.post_event_credits}}
+  </div>
+
+  <div class="col-12">
+    <span class="d-inline-block"><b>Hours Breakdown (Pre-Event / Event / Post-Event):</b></span>
+    {{hour-minute-format summary.pre_event_duration}} / {{hour-minute-format summary.event_duration}} / {{hour-minute-format summary.post_event_duration}}
+  </div>
+</div>
+
+<div class="row my-1">
+  <div class="col-12">
+    {{#if summary.event_start}}
+      <b>{{year}} Event Week:</b> <span class="d-inline-block">{{shift-format summary.event_start}} to {{shift-format summary.event_end}}</span>
+    {{else}}
+      <strong class="text-danger">{{year}} event dates have not been determined. Hour and credit breakdowns will not be accurate.</strong>
+    {{/if}}
+  </div>
+</div>

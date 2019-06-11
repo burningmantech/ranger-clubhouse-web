@@ -11,5 +11,5 @@
     Select the current year to start or end a shift
   {{/if}}
 </div>
-{{person/timesheet-manage timesheets=timesheets person=person year=year positions=positions}}
-{{person/timesheet-missing timesheetMissing=timesheetMissing timesheets=timesheets person=person year=year positions=positions}}
+{{person/timesheet-manage timesheets=timesheets person=person year=year positions=positions onChange=(action updateTimesheetSummary) timesheetSummary=timesheetSummary}}
+{{person/timesheet-missing timesheetMissing=timesheetMissing timesheets=timesheets person=person year=year positions=positions onChange=(action updateTimesheetSummary)}}

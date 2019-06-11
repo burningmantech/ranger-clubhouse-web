@@ -8,4 +8,11 @@ export default class PersonTimesheetController extends Controller {
   changeYearAction(year) {
     this.set('year', year);
   }
+
+  @action
+  updateTimesheetSummary() {
+    this.ajax.request(`person/${this.person.id}/schedule/summary`, { data: { year: this.year }}).then((result) => {
+      this.set('timesheetSummary', result.summary);
+    });
+  }
 }

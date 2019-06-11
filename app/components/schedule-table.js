@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { action, computed } from '@ember/object';
+import { optional } from '@ember-decorators/argument/types';
 import { argument } from '@ember-decorators/argument';
 import { tagName } from '@ember-decorators/component';
 
@@ -10,6 +11,8 @@ export default class ScheduleTableComponent extends Component {
   @argument('object') person;
   @argument('number') year;
   @argument('number') creditsEarned;
+  @argument(optional('object')) scheduleSummary;
+  @argument(optional('object')) onChange;
 
   viewSchedule = 'upcoming';
 
@@ -34,17 +37,15 @@ export default class ScheduleTableComponent extends Component {
     return creditsTotal;
   }
 
-  @computed('slots')
+  @computed('slots.@each.slot_duration')
   get totalDuration() {
-    let totalDuration = 0;
-
     const slots = this.slots;
 
     if (slots) {
-      totalDuration = slots.reduce((sum, slot) => sum + slot.slot_duration, 0);
+      return slots.reduce((sum, slot) => sum + slot.slot_duration, 0);
+    } else {
+      return 0;
     }
-
-    return totalDuration;
   }
 
   @computed('slots', 'viewSchedule')
@@ -111,6 +112,9 @@ export default class ScheduleTableComponent extends Component {
         }).then((result) => {
           slot.set('person_assigned', false);
           slot.set('slot_signed_up', result.signed_up);
+          if (this.onChange) {
+            this.onChange();
+          }
         }).catch((response) => {
           this.house.handleErrorResponse(response);
         })

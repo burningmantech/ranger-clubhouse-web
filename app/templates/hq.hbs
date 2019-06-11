@@ -33,12 +33,10 @@
       <div class="float-left mr-2">
         {{fa-icon "exclamation-triangle"}}
       </div>
-        {{if person.isAlpha "ALPHA" "PROSPECTIVE"}} RANGER - DIRECT PERSON TO HAT RACK
+      {{if person.isAlpha "ALPHA" "PROSPECTIVE"}} RANGER - DIRECT PERSON TO HAT RACK
     {{/ch-alert}}
   {{else if isShinyPenny}}
-    {{#ch-alert "success"}}
-      {{person.callsign}} is a Shiny Penny. Make them feel welcomed.
-    {{/ch-alert}}
+      <h4 class="text-success">Newly minted Shiny Penny. Welcome {{person.callsign}} to the Ranger family. {{fa-icon "smile-beam" type="far"}}</h4>
   {{/if}}
 
   <div class="row">
@@ -105,14 +103,23 @@
           {{help-popover slug="hq-sidebar" left=true}}
         </div>
         <dl>
-          <dt>Earned Credits</dt>
-          <dd>{{credits-format creditsEarned}}</dd>
+          <dt>Total Earned Credits</dt>
+          <dd>{{credits-format timesheetSummary.total_credits}}</dd>
+
+          <dt>Credits Pre / Event / Post</dt>
+          <dd>
+            {{credits-format timesheetSummary.pre_event_credits}} / {{credits-format timesheetSummary.event_credits}} / {{credits-format timesheetSummary.post_event_credits}}
+          </dd>
 
           <dt>Est. Total Credits</dt>
           <dd>{{credits-format creditsExpected}}</dd>
 
           <dt>Time Worked</dt>
-          <dd>{{hour-minute-format durationWorked}}</dd>
+          <dd>{{hour-minute-format timesheetSummary.total_duration}}</dd>
+          <dt>Time Pre / Event / Post</dt>
+          <dd>
+            {{hour-minute-format timesheetSummary.pre_event_duration}} / {{hour-minute-format timesheetSummary.event_duration}} / {{hour-minute-format timesheetSummary.post_event_duration}}
+          </dd>
 
           <dt>Est. Total Time</dt>
           <dd>{{hour-minute-format durationExpected}}</dd>
