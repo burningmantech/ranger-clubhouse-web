@@ -10,6 +10,8 @@ export default class PersonTimesheetManageComponent extends Component {
   @argument('object') person;     // The person we're dealing with
   @argument('object') positions;  // Possible positions a person can sign into.
   @argument('number') year;       // The year being viewed
+  @argument('object') timesheetSummary; // breakdown on hours & credits.
+  @argument('object') onChange;   // call back to refresh the various views
 
   editEntry = null;
 
@@ -76,6 +78,7 @@ export default class PersonTimesheetManageComponent extends Component {
     this.toast.clear();
     this.house.saveModel(model, 'The timesheet entry has been successfully updated.', () => {
       this.set('editEntry', null);
+      this.onChange();
     });
   }
 
@@ -84,6 +87,7 @@ export default class PersonTimesheetManageComponent extends Component {
   signoffAction(timesheet) {
     this.ajax.request(`timesheet/${timesheet.id}/signoff`, { method: 'POST' }).then(() => {
       this.timesheets.update();
+      this.onChange();
       this.toast.success(`${this.person.callsign} has been successfully signed off. Enjoy your rest.`);
     })
   }
@@ -94,7 +98,8 @@ export default class PersonTimesheetManageComponent extends Component {
     this.modal.confirm('Remove Timesheet', `Position: ${timesheet.position.title}<br>Time: ${timesheet.on_duty} to ${timesheet.off_duty}<br> Are you sure you wish to remove this timesheet?`, () => {
       timesheet.destroyRecord().then(() => {
         this.toast.success('The entry has been deleted.');
-      }).catch((response) => this.house.handleErrorResponse(response));
+        this.onChange();
+    }).catch((response) => this.house.handleErrorResponse(response));
     });
   }
 

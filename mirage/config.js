@@ -211,6 +211,12 @@ export default function() {
     return { credits: person.credits || 0 };
   });
 
+  this.get('/api/person/:id/schedule/summary', ({people}, request) => {
+    const person = people.find(request.params.id); // eslint-disable-line no-unused-vars
+
+    return { summary: {} };
+  });
+
   this.get('/api/person/:id/positions', ({positions}) => {
     return positions.all();
   });

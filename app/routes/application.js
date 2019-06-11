@@ -103,7 +103,7 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
       return Promise.resolve();
     }
 
-    return this.session.loadUser().then(() => { 
+    return this.session.loadUser().then(() => {
       this.controllerFor('application').setup();
     }).catch((response) => {
       this.transitionTo('/login');
@@ -114,7 +114,7 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
   setupController(controller) {
     super.setupController(...arguments);
     const searchPrefs = this.house.getKey('person-search-prefs');
-    if (searchPrefs) {
+    if (searchPrefs && controller.searchForm) {
       controller.searchForm.setProperties(searchPrefs);
     }
   }

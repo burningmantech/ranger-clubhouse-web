@@ -20,6 +20,8 @@ export default class ScheduleManageComponent extends Component {
   @argument('number') creditsEarned = 0.0;
   @argument('object') permission;
 
+  scheduleSummary = null;
+
   filterDay = 'upcoming';
   filterActive = 'active';
 
@@ -32,6 +34,13 @@ export default class ScheduleManageComponent extends Component {
 
   didReceiveAttrs() {
     this.set('filterDay', this.isCurrentYear ? 'upcoming' : 'all');
+    this._retrieveScheduleSummary();
+  }
+
+  _retrieveScheduleSummary() {
+    this.ajax.request(`person/${this.person.id}/schedule/summary`, { data: { year: this.year }}).then((result) => {
+      this.set('scheduleSummary', result.summary);
+    });
   }
 
   @computed('year')
@@ -183,13 +192,21 @@ export default class ScheduleManageComponent extends Component {
   }
 
   @action
+  updateScheduleSummary() {
+    this._retrieveScheduleSummary();
+  }
+
+  @action
   setRequirementsOverride() {
     this.set('requirementsOverride', true);
   }
 
   @action
   joinSlot(slot) {
-    slotSignup(this, slot, this.person, () => { slot.set('person_assigned', true) });
+    slotSignup(this, slot, this.person, () => {
+      slot.set('person_assigned', true);
+      this._retrieveScheduleSummary();
+    });
   }
 
   @action
@@ -202,6 +219,7 @@ export default class ScheduleManageComponent extends Component {
         }).then((result) => {
           slot.set('person_assigned', false);
           slot.set('slot_signed_up', result.signed_up);
+          this._retrieveScheduleSummary();
           this.toast.success('The shift as been removed from the schedule.');
         }).catch((response) => { this.house.handleErrorResponse(response); });
       }

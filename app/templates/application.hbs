@@ -6,6 +6,8 @@
     {{#link-to "me.overview" class="navbar-brand"}}
       {{#if (eq (config "DeploymentEnvironment") "Staging")}}
         <span class="text-danger">Staging Server</span>
+      {{else if (eq (config "DeploymentEnvironment") "Training")}}
+        <span class="text-danger">Training Server</span>
       {{else}}
         Clubhouse
       {{/if}}
@@ -369,8 +371,8 @@
 
 {{#if session.isAuthenticated}}
   {{#if groundHogDayTime}}
-    <div class="alert alert-warning text-center p-1 m-0">
-      Groundhog Day Server -  {{moment-format groundHogDayTime "dddd, MMMM Do YYYY @ HH:mm"}}
+    <div class="h4 alert alert-light-red text-center p-2 m-0">
+      Simulated Time {{moment-format groundHogDayTime "dddd, MMMM Do YYYY @ HH:mm"}}
     </div>
   {{/if}}
 

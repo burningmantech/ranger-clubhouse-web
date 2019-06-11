@@ -12,6 +12,7 @@ export default class PersonTimesheetMissingComponent extends Component {
   @argument('object') person;           // The person we're dealing with
   @argument('object') positions;        // The possible positions a person can be in.
   @argument('number') year;             // The year being viewed
+  @argument('object') onChange;         // callback when a new timesheet is created
 
   @service store;
 
@@ -92,6 +93,8 @@ export default class PersonTimesheetMissingComponent extends Component {
       if (nextEntry) {
         this._setupEdit(nextEntry);
       }
+
+      this.onChange();
     });
   }
 
