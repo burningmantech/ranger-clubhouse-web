@@ -11,7 +11,7 @@ export default class PersonTimesheetController extends Controller {
 
   @action
   updateTimesheetSummary() {
-    this.ajax.request(`person/${this.person.id}/schedule/summary`, { data: { year: this.year }}).then((result) => {
+    this.ajax.request(`person/${this.person.id}/timesheet-summary`, { data: { year: this.year }}).then((result) => {
       this.set('timesheetSummary', result.summary);
     });
   }
