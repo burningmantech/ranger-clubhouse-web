@@ -29,7 +29,7 @@ export default class PersonTimesheetRoute extends Route {
       positions: this.ajax.request(`person/${person_id}/positions`,{
         data: { include_training: 1, year }
       }).then((results) => results.positions),
-      timesheetSummary: this.ajax.request(`person/${person_id}/schedule/summary`, { data: { year }}).then((result) => result.summary),
+      timesheetSummary: this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }}).then((result) => result.summary),
     });
   }
 
