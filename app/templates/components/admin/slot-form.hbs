@@ -16,7 +16,7 @@
     }}
     {{f.input "begins" label="Begining Time" type="datetime" maxlength=25 grid="col-md-auto col-sm-12"}}
     {{f.input "ends" label="Ending Time" type="datetime"  maxlength=20 grid="col-md-auto col-sm-12"}}
-    {{f.input "max" label=(if f.model.trainer_slot_id "Multiplier" "Max Sign Ups") type="text" size=3 maxlength=3 grid="col-md-2 col-sm-12"}}
+    {{f.input "max" label=(if f.model.trainer_slot_id "Multiplier" "Max Sign Ups") type="number" size=3 maxlength=3 grid="col-md-2 col-sm-12"}}
     {{#if f.model.trainer_slot_id}}
     <div class="col-md-9 col-sm-12">
       <span class="text-danger">NOTE:</span>
