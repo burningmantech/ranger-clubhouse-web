@@ -3,12 +3,12 @@
     <button class="btn btn-link m-0" type="button" {{action toggleCard "ticket"}}>
       {{fa-icon (if showing.ticket "caret-down" "caret-right")}}
       {{#if ticket}}
-        {{ticketType}}
+        {{ticketType}} - {{ticket-status ticket.status}}
+        {{#if (eq ticket.status "claimed")}}
+          <span class="text-success">{{fa-icon "check"}}</span>
+        {{/if}}
       {{else}}
-        Event Ticket
-      {{/if}}
-      {{#if ticket}}
-        - {{ticket-status ticket.status}}
+        Event Ticket <span class="text-muted">- None</span>
       {{/if}}
     </button>
   </div>
@@ -27,7 +27,7 @@
           <ul>
             {{#each ticketPackage.tickets as |onfile|}}
               <li>
-                A {{ticket-type-human onfile.type}} qualified in {{onfile.source_year}} and will expire on {{mdy-format onfile.expiry_date}}
+                A {{ticket-type-human onfile.type}} qualified in {{onfile.source_year}} and will expire on {{mdy-format onfile.expiry_date full=true}}
                 {{#if onfile.selected}}
                   <span class="text-danger">(SELECTED)</span>
                 {{/if}}
@@ -46,43 +46,45 @@
       {{else if (eq ticketingInfo.ticket_status "accept")}}
         {{#if (eq ticket.status "claimed")}}
           <p>
-            <strong class="text-success">You have claimed your {{ticketType}} this year.</strong> If your plans have changed,
-            you may bank the ticket. Note: the ticket will expire on {{mdy-format ticket.expiry_date}}.
+            <b>You have claimed your {{ticketType}}.</b> If your plans have changed,
+            you may bank the ticket. Note: the ticket will expire on {{mdy-format ticket.expiry_date full=true}}.
           </p>
-          <button type="button" class="btn btn-primary" {{action setTicketStatus ticket "banked"}}>Bank Ticket</button>
+          <button type="button" class="btn btn-primary btn-lg" {{action setTicketStatus ticket "banked"}}>Bank Ticket</button>
         {{else if (eq ticket.status "banked")}}
           <p>
-            <strong>You have banked your {{ticketType}} this year.</strong>
-            If your plans have changed, you may claim the ticket.
-            Note: the ticket will expire on {{mdy-format ticket.expiry_date}}.
+            <b>You have banked your {{ticketType}} this year.</b>
           </p>
-          <button type="button" class="btn btn-primary" {{action setTicketStatus ticket "claimed"}}>Claim Ticket</button>
+          <p>
+            If your plans have changed, you may claim the ticket.
+            Note: the ticket will expire on {{mdy-format ticket.expiry_date full=true}}.
+          </p>
+          <button type="button" class="btn btn-primary btn-lg" {{action setTicketStatus ticket "claimed"}}>Claim Ticket</button>
         {{else if (eq ticket.status "qualified")}}
           <h4>You qualified for a {{ticketType}} in {{ticket.source_year}}!</h4>
 
           <p>
-            You may <strong>Claim</strong> your ticket for this year's event, or <strong>Bank</strong> it for a future event.
-             Note: your {{ticketType}} will expire on {{mdy-format ticket.expiry_date}}.
+            You may <b>Claim</b> your ticket for this year's event, or <b>Bank</b> it for a future event.
+            Note: your {{ticketType}} will expire on {{mdy-format ticket.expiry_date full=true}}.
           </p>
-          <div class="mt-2 mb-2">What do you want to do with your {{ticketType}}?</div>
-          <button type="button" class="btn btn-primary" {{action setTicketStatus ticket "claimed"}}>Claim Ticket</button>
-          <span class="ml-4 mr-4">OR</span>
-          <button type="button" class="btn btn-primary" {{action setTicketStatus ticket "banked"}}>Bank Ticket</button>
+          <div class="mt-2 mb-2"><b>What do you want to do with your {{ticketType}}?</b></div>
+          <button type="button" class="btn btn-primary btn-lg" {{action setTicketStatus ticket "claimed"}}>Claim Ticket</button>
+          <span class="ml-4 mr-4 h5">OR</span>
+          <button type="button" class="btn btn-primary btn-lg" {{action setTicketStatus ticket "banked"}}>Bank Ticket</button>
         {{/if}}
       {{else if (eq ticketingInfo.ticket_status "frozen")}}
         {{#if (eq ticket.status "qualified")}}
-          <strong>You did not claim nor bank your {{ticketType}}. The item will be automatically banked and will expire on {{mdy-format ticket.expiry_date}}.</strong>
+          <b>You did not claim nor bank your {{ticketType}}. The item will be automatically banked and will expire on {{mdy-format ticket.expiry_date}}.</b>
         {{else if (eq ticket.status "banked")}}
-          <strong>Your {{ticketType}} has been banked, and will expire on {{mdy-format ticket.expiry_date}}.</strong>
+          <b>Your {{ticketType}} has been banked, and will expire on {{mdy-format ticket.expiry_date}}.</b>
         {{else if (Eq ticket.status "claimed")}}
-          <strong>Your {{ticketType}} will be used for the event.</strong>
+          <b>Your {{ticketType}} will be used for the event.</b>
         {{/if}}
         {{ticket-frozen item="ticket" ticketingInfo=ticketingInfo}}
       {{else}}
         You qualified for a {{ticketType}}! Ticketing is not yet open. Please check back later.
       {{/if}}
     {{else}}
-      <strong>Sorry, it doesn't look like you qualified for a Reduced-Price Ticket or Staff Credential.</strong>
+      <b>Sorry, it doesn't look like you qualified for a Reduced-Price Ticket or Staff Credential.</b>
       <p>
         You earned {{credits-format ticketPackage.credits_earned}} last event. The minimum credits needed to earn
         a Reduced-Price Ticket was {{credits-format ticketingInfo.rpt_credits}}, and a Staff Credential was
@@ -90,8 +92,7 @@
       </p>
     {{/if}}
     <div class="float-right">
-      <button type="button" class="btn btn-success" {{action nextSection}}>Next {{fa-icon "arrow-right"}}</button>
+      <button type="button" class="btn btn-success btn-lg" {{action nextSection}}>Next {{fa-icon "arrow-right"}}</button>
     </div>
-    {{ticket-faq topic="ticketing" ticketingInfo=ticketingInfo}}
   </div>
 </div>

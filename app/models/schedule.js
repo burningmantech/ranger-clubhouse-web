@@ -11,6 +11,9 @@ export default class ScheduleModel extends DS.Model {
   // position type
   @attr('string', { readOnly: true }) position_type;
 
+  // do hours count towards appreciations
+  @attr('boolean', { readOnly: true }) position_count_hours;
+
   // slot begin and end times. human formatted
   @attr('string', { readOnly: true }) slot_begins;
   @attr('string', { readOnly: true }) slot_ends;

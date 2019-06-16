@@ -7,6 +7,7 @@ import { tagName } from '@ember-decorators/component';
 export default class TicketVpInfoComponent extends Component {
   @argument('object') ticketingInfo;
   @argument('object') ticketPackage;
+  @argument(optional('object')) ticket;
   @argument('object') person;
   @argument(optional('object')) vehiclePass;
   @argument('object') setTicketStatus;

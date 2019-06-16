@@ -4,40 +4,38 @@
       {{fa-icon (if showing.delivery "caret-down" "caret-right")}} Ticket Delivery
       {{#if (eq ticketingInfo.delivery_status "none")}}
         <span class="text-black-50">- To Be Announced</span>
-      {{else}}
-        {{#if usingStaffCredential}}
-          <span class="text-success">- Pick up at Will Call</span>
-        {{else if mailables}}
+      {{else if (not-eq ticket.status "qualified")}}
+        {{#if itemsToMail}}
           {{#if (eq deliveryMethod "mail")}}
-            <span class="text-success">- Sent By Mail</span>
+            {{#if (or (not itemsNeedAddress) haveAddress)}}
+              <span class="text-success">- US Mail {{fa-icon "check"}}</span>
+            {{else}}
+              <span class="text-danger">- US Mail: Need Address {{fa-icon "exclamation-circle"}}</span>
+            {{/if}}
           {{else if (eq deliveryMethod "will_call")}}
-            <span class="text-success">- Pickup at Will Call</span>
+            <span class="text-success">- Pickup at Will Call {{fa-icon "check"}}</span>
           {{else}}
-            <span class="text-danger">- Need Answer</span>
+            <span class="text-danger">- Need Answer {{fa-icon "exclamation-circle"}}</span>
           {{/if}}
         {{else if (eq ticketingInfo.wap_status "frozen")}}
           <span class="text-danger">- Frozen</span>
+        {{/if}}
+
+        {{#if (and usingStaffCredential (not needAnswer))}}
+          <span class="text-success">- Staff Credential: Pick up at Will Call {{fa-icon "check"}}</span>
         {{/if}}
       {{/if}}
     </button>
   </div>
   <div class="card-body collapse {{if showing.delivery "show"}}">
-
     {{#if (eq ticketingInfo.delivery_status "none")}}
       Information about ticket delivery is not yet available in the Clubhouse, please check back soon.
-    {{else if usingStaffCredential}}
-      <p class="font-weight-bold">
-        Your Staff Credential {{if (eq vehiclePass.status "claimed") "and Vehicle Pass"}} will be held at Will Call under your name "{{person.first_name}} {{person.last_name}}".
-      </p>
-      <p>
-        Sorry, Staff Credentials cannot be mailed due to Burning Man organization policies.
-      </p>
     {{else if (eq ticketingInfo.delivery_status "frozen")}}
       <p class="text-danger">The deadline has passed for being able to change your delivery option.</p>
-      {{#if mailables}}
-        You have the following {{pluralize mailables.length "item"}}:
+      {{#if itemsToMail}}
+        You have the following {{pluralize itemsToMail.length "item"}}:
         <ul>
-          {{#each mailables as |item|}}
+          {{#each itemsToMail as |item|}}
             <li>A {{ticket-type-human item.type}}</li>
           {{/each}}
         </ul>
@@ -51,80 +49,117 @@
       {{else}}
         Huh, it doesn't appear you have any items needing to be mailed or picked up.
       {{/if}}
-    {{else if mailables}}
-      The following {{pluralize mailables.length "item"}}
-      {{#if (eq deliveryMethod "none")}}
-        can be mailed to you or held at Will Call for you to pick up:
-      {{else if (eq deliveryMethod "mail")}}
-        <span class="text-success">will be mailed to you</span>:
-      {{else}}
-        <span class="text-success">will be at Will Call for you to pickup</span>:
+    {{else if usingStaffCredential}}
+      <p>
+        <b>Your Staff Credential {{if (eq vehiclePass.status "claimed") "and Vehicle Pass"}} will be held at Will Call under your name "{{person.first_name}} {{person.last_name}}".</b>
+      </p>
+      <p>
+        Sorry, Staff Credentials cannot be mailed due to Burning Man organization policies.
+      </p>
+      {{#unless ticket.access_any_time}}
+        <p class="text-danger">
+          You may pick your Staff Credential early, however you may only enter the event on {{mdy-format ticket.access_date full=true}} @ 00:001.
+        </p>
+      {{/unless}}
+      <p>
+        Your Staff Credential will be available for pick up at the following locations on the given dates:
+      </p>
+      <p>
+        {{#if ticketingInfo.pickup_locations}}
+          {{nl2br ticketingInfo.pickup_locations}}
+        {{else}}
+          <b class="text-danger">Oops! We haven't set the pickup locations yet! Email the ticketing team and let us know about this problem - {{mail-to ticketingInfo.ranger_ticketing_email}}</b>
+        {{/if}}
+      </p>
+
+    {{else if (eq ticket.status "qualified")}}
+      <b>You will need to claim or bank your event ticket first.</b>
+    {{else if (or (eq ticket.status "claimed") (eq vehiclePass.status "claimed"))}}
+      <p>
+        <b>
+          The following {{if (eq itemsToMail.length 1) "item" (pluralize itemsToMail.length "item")}}
+          {{#if (eq deliveryMethod "none")}}
+            can be mailed to you or held at Will Call for you to pick up:
+          {{else if (eq deliveryMethod "mail")}}
+            will be mailed to you:
+          {{else}}
+            will be at Will Call for you to pickup:
+          {{/if}}
+        </b>
+        <ul>
+          {{#each itemsToMail as |item|}}
+            <li>A {{ticket-type-human item.type}}</li>
+          {{/each}}
+        </ul>
+      </p>
+
+      {{#if (and  (eq deliveryMethod "mail") (eq ticket.type "reduced_price_ticket"))}}
+        <p class="mt-2">
+          <b>Note about your Reduce Price Ticket:</b>
+          When your ticket is uploaded the Burning Man Ticketing website, you will need to enter in your credit card and mailing address there.
+          {{#if (eq vehiclePass.status "claimed")}}
+            <b>You will need to enter your mailing address TWICE. Enter your address below for your Vehicle Pass, and then again for the ticket on the Burning Man Ticketing website.</b>
+          {{/if}}
+        </p>
       {{/if}}
 
-      <ul>
-        {{#each mailables as |item|}}
-          <li>A {{ticket-type-human item.type}}</li>
-        {{/each}}
-      </ul>
+      {{#if (eq deliveryMethod "none")}}
+        <div class="font-weight-bold">How do you want your {{pluralize itemsToMail.length "item"}} delivered?</div>
+        <button type="button" class="btn btn-primary btn-lg" {{action setDeliveryMethod "mail"}}>Deliver By US Mail</button>
+        <span class="ml-3 mr-3">OR</span>
+        <button type="button" class="btn btn-primary btn-lg" {{action setDeliveryMethod "will_call"}}>Pickup At Will Call</button>
+      {{else if (eq deliveryMethod "mail")}}
+        <div class="font-weight-bold">Would you rather use Will Call?</div>
+        <button type="button" class="btn btn-primary btn-lg" {{action setDeliveryMethod "will_call"}}>Pickup at Will Call</button>
+      {{else if (eq deliveryMethod "will_call")}}
+        <div class="font-weight-bold">Do you want delivery by mail instead?</div>
+        <button type="button" class="btn btn-primary btn-lg" {{action setDeliveryMethod "mail"}}>Deliver By US Mail</button>
+      {{else}}
+        Uh oh, I don't understand what the method [{{deliveryMethod}}] is. This is a bug!
+      {{/if}}
 
-      {{#if (eq ticketingInfo.delivery_status "accept")}}
-        {{#if (eq deliveryMethod "none")}}
-          <div class="font-weight-bold">How do you want your {{pluralize mailables.length "item"}} delivered?</div>
-          <button type="button" class="btn btn-primary" {{action setDeliveryMethod "mail"}}>Deliver By Mail</button>
-          <span class="ml-3 mr-3">OR</span>
-          <button type="button" class="btn btn-primary" {{action setDeliveryMethod "will_call"}}>Pickup At Will Call</button>
-        {{else if (eq deliveryMethod "mail")}}
-          <div class="font-weight-bold">Would you rather use Will Call?</div>
-          <button type="button" class="btn btn-primary" {{action setDeliveryMethod "will_call"}}>Pickup at Will Call</button>
-        {{else if (eq deliveryMethod "will_call")}}
-          <div class="font-weight-bold">Do you want delivery by mail instead?</div>
-          <button type="button" class="btn btn-primary" {{action setDeliveryMethod "mail"}}>Deliver By Mail</button>
-        {{else}}
-          Uh oh, I don't understand what the method [{{deliveryMethod}}] is. This is a bug!
-        {{/if}}
-
-        {{#if (eq deliveryMethod "mail")}}
-          <div class="font-weight-bold mt-4">Please note:</div>
+      {{#if (eq deliveryMethod "mail")}}
+        {{#if itemsNeedAddress}}
+          <div class="mt-4">Please note:</div>
           <ul>
-            <li><span class="text-danger">We can only mail to destinations in the United States and Canada.</span></li>
-            <li>Mailing is via the United States Postal Service in the U.S. and via UPS in Canada.</li>
-            <li><span class="text-danger">We cannot guarantee delivery times of mailed items.</span>
-              So if you are planning to leave home for
-              a three-week road trip on August 2 and then show up at Burning Man, it is
-              probably best to have your items held for you at Will-Call.</li>
-            <li>
-              <span class="text-danger">Mailed items cannot be tracked.</span> If you are worried that your
-              items might get lost or stolen in the mail, it is safest to have
-              them held at Will-Call.
+            <li><b class="text-danger">ITEMS MAY ONLY BE MAILED TO AN UNITED STATES ADDRESS VIA USPS.</b> Sorry, Canada, Australia, and the rest of the world - you will have to use Will Call instead.</li>
+            <li><b class="text-danger">We cannot guarantee delivery times of mailed items NOR provide tracking information.</b>
+              If you are worried that your items might get lost in the mail or not be delivered in time, it is safest to have
+              them held at Will Call.
             </li>
+            {{#if (eq ticket.type "reduced_price_ticket")}}
+              <li>
+                <b class="text-danger">The address entered below will NOT be used for your event ticket.</b>
+                The Burning Man Ticketing website will ask again for the address which will be used
+                for the event ticket. We apologize for the inconvenience.
+              </li>
+            {{/if}}
           </ul>
-          <strong></strong>
           {{#ch-form "delivery" delivery validator=ticketDeliveryValidations onSubmit=(action saveDelivery) as |f|}}
             <legend>
               Enter your mailing address:
             </legend>
-            <p class="text-danger mt-2 mb-2 ml-2">Your delivery choice will not be saved until you click on 'Save Address'.</p>
             <div class="form-row">
               {{f.input "street" label="Street" grid="col-md-8 col-sm-6"}}
             </div>
             <div class="form-row">
               {{f.input "city" label="City" grid="col-sm-5 col-md-4"}}
-              {{f.input "state" label="State / Province"  maxlength=2 size=2 grid="col-sm-5 col-md-4"}}
-              {{f.input "postal_code" label="Zip / Postal Code" grid="col-sm-5 col-md-4"}}
+              {{f.input "state" label="State"  maxlength=2 size=2 grid="col-sm-5 col-md-4"}}
+              {{f.input "postal_code" label="Zip Code" grid="col-sm-5 col-md-4"}}
             </div>
-            <div class="form-row">
-              {{f.input "country" type="select" options=countryOptions label="Country" grid="col-sm-5 col-md-4"}}
-            </div>
-            {{f.submit label="Save Address"}}
+            {{f.submit label="Save Address" submitClass="btn-lg"}}
+            {{#if f.model.isDirty}}
+              <strong class="text-danger">Don't forget to click 'Save Address'</strong>
+            {{else if isSaved}}
+              <strong class="text-success">{{fa-icon "check" size="2x"}}</strong>
+            {{/if}}
           {{/ch-form}}
         {{/if}}
       {{/if}}
+    {{else if (eq ticket.status "banked")}}
+      <b>You have chosen to bank your event ticket{{if (eq vehiclePass.status "qualified") " and not claimed your vehicle pass"}}. No action is need.</b>
     {{else}}
-      {{#if (or (eq ticket.status "qualified") (eq vehiclePass.status "qualified"))}}
-        Once you've claimed a ticket or Vehicle Pass we can talk about how we might be able to get it to you.
-      {{else}}
-        You have no items which can be mailed or held at Will Call.
-      {{/if}}
+      <b>You have no items which can be mailed or held at Will Call.</b>
     {{/if}}
   </div>
 </div>

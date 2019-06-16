@@ -8,9 +8,9 @@
       {{else if (eq ticketingInfo.wap_so_status "frozen")}}
         <span class="text-danger">- Frozen</span>
       {{else if wapSOCount}}
-        <span class="text-success">- {{pluralize wapSOCount "person"}}</span>
+        <span class="text-success">- {{pluralize wapSOCount "person"}} {{fa-icon "check"}}</span>
       {{else}}
-        <span class="text-black">- Available</span>
+        <span class="text-success">- Available</span>
       {{/if}}
     </button>
   </div>
@@ -21,7 +21,7 @@
         <ul>
           {{#each wapSOList as |row|}}
             {{#if row.name}}
-              <li>{{row.name}} can enter on or after {{mdy-format row.access_date}} @ 0001.</li>
+              <li>{{row.name}} can enter on or after {{mdy-format row.access_date full=true}} @ 00:01.</li>
             {{/if}}
           {{/each}}
         </ul>
@@ -33,20 +33,17 @@
         available in the Clubhouse, please check back soon.
       </p>
     {{else if (eq ticketingInfo.wap_so_status "accept")}}
+      {{#if wapSOCount}}
+        <p><b>You are requesting {{pluralize wapSOCount "Work Access Pass"}} for your Significant {{if (eq wapSOCount 1) "Other" "Others"}}.</b></p>
+      {{else}}
+        <p><b>No Significant Other Work Access passes have been requested, yet.</b></p>
+      {{/if}}
+
       <p>
         You may request up to {{pluralize ticketingInfo.wap_so_max "Significant Other Work Access Passs"}} below.
         You may add, remove, or change names until the ticketing deadline. All Work Access passes
         are sent by email.
       </p>
-      <p class="text-danger">
-        Changes will not be saved until you click on 'Save Names'
-      </p>
-
-      {{#if wapSOCount}}
-        <p class="text-success font-weight-bold">You are requesting {{pluralize wapSOCount "pass"}}.</p>
-      {{else}}
-        <p class="font-weight-bold">You have not requested any Work Access Passes for Significant Others.</p>
-      {{/if}}
 
       <div class="wap-so-table">
         <div class="wap-so-header wap-so-row d-sm-none d-md-block">
@@ -61,24 +58,29 @@
             </div>
             <div class="wap-so-access">
               <span class="wap-so-sm-label">Arrival Date</span>
-              {{mdy-format row.access_date}}
+              {{mdy-format row.access_date full=true}}
             </div>
           </div>
         {{/each}}
       </div>
 
-      <button type="button" class="btn btn-primary" {{action saveSONamesAction}}>Save Names</button>
+      <button type="button" class="btn btn-primary btn-lg" {{action saveSONamesAction}}>Save Names</button>
+      {{#if isSOListDirty}}
+        <b class="text-danger">Changes will not be saved until you click on 'Save Names'</b>
+      {{else if isSaved}}
+        <span class="text-success ml-2">{{fa-icon "check" size="2x"}}</span>
+      {{/if}}
+
       <p class="mt-4">
         If you need more than {{pluralize ticketingInfo.wap_so_max "pass"}} passes or
-        need the Significant Others to arrive before {{mdy-format defaultDate}},
+        need the Significant Others to arrive before {{mdy-format defaultDate full=true}},
         email {{mail-to ticketingInfo.ranger_ticketing_email}}
         and plead your case.
       </p>
     {{/if}}
 
     <div class="float-right">
-      <button type="button" class="btn btn-success" {{action nextSection}}>Next {{fa-icon "arrow-right"}}</button>
+      <button type="button" class="btn btn-success btn-lg" {{action nextSection}}>Next {{fa-icon "arrow-right"}}</button>
     </div>
-    {{ticket-faq topic=(if (or person.isAlpha person.isProspective) "alpha" "wap") ticketingInfo=ticketingInfo}}
   </div>
 </div>

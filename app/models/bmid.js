@@ -22,8 +22,8 @@ export default class BmidModel extends Model {
   @attr('string') batch;
   @attr('string') team;
   @attr('string') notes;
-  @attr('string') create_datetime;
-  @attr('string') modified_datetime;
+  @attr('string', { readOnly: true }) create_datetime;
+  @attr('string', { readOnly: true }) modified_datetime;
 
   @attr('string') access_date;
   @attr('boolean') access_any_time;
@@ -45,6 +45,21 @@ export default class BmidModel extends Model {
       }
     }
   }
+
+  @computed('access_date', 'access_any_time')
+  get admissionDateShort() {
+    if (this.access_any_time) {
+      return 'any';
+    } else {
+      if (this.access_date) {
+        return moment(this.access_date).format('ddd, M/DD');
+      } else {
+        return '(no date)';
+      }
+    }
+  }
+
+
 
   set admission_date(value) {
     if (value == 'any') {
