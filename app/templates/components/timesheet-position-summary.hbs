@@ -1,4 +1,4 @@
 {{#each workedPositions as |position idx|}}
 {{if idx ", "}}
-{{position.title}} ({{credits-format position.credits}}, {{hour-minute-format position.duration}})
+<span class="d-inline-block">{{position.title}} ({{credits-format position.credits}}, {{hour-minute-format position.duration}})</span>
 {{/each}}

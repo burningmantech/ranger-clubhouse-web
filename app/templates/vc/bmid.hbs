@@ -174,10 +174,8 @@
               <td class="w-10">
                 {{#if bmid.wapMissing}}
                   <strong class="text-danger">missing</strong>
-                {{else if bmid.admission_date}}
-                  {{bmid.admission_date}}
                 {{else}}
-                  (no date)
+                  {{bmid.admissionDateShort}}
                 {{/if}}
               </td>
               <td>{{bmid.team}}</td>

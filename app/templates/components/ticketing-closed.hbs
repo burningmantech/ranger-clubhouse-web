@@ -7,13 +7,13 @@ Below is a summary of the tickets and/or items you have claimed, banked, and/or 
 {{else}}
 A summary of your Work Access Pass is below:
 {{/if}}
-<ul>
+<ul class="mt-1">
   {{#if hasFullPackage}}
     <li>
       {{#if ticket}}
         A {{ticket-type-human ticket.type}}
         {{#if (eq ticket.status "banked")}}
-          has been banked for this year. It will expire on {{mdy-format ticket.expiry_date}}.
+          has been banked for this year. It will expire on {{mdy-format ticket.expiry_date full=true}}.
         {{else if (or (eq ticket.type "staff_credential") (eq ticketPackage.delivery.method "will_call"))}}
           picked up at Will Call.
         {{else}}
@@ -38,10 +38,10 @@ A summary of your Work Access Pass is below:
         {{#if usingMail}}
           A Vehicle Pass will be mailed to you.
         {{else if usingWillCall}}
-          will be picked up at Will Call.
+          A Vehicle Pass will be picked up at Will Call.
         {{else}}
           Uh oh, this may be a bug. You have a claimed Vehicle Pass yet I can't figure out the delivery method.
-          Please contact {{vc-email}} for help.
+          Please contact {{mail-to ticketingInfo.ranger_ticketing_email}} for help.
         {{/if}}
       {{else}}
         The vehicle pass was not used.
@@ -55,7 +55,7 @@ A summary of your Work Access Pass is below:
       {{#if wap.access_any_time}}
         at any time!
       {{else}}
-        on or after {{mdy-format wap.access_date}} @ 0001.
+        on or after {{mdy-format wap.access_date full=true}} @ 00:01.
       {{/if}}
     {{else}}
       No Work Access Pass was claimed.
@@ -68,7 +68,7 @@ A summary of your Work Access Pass is below:
         {{pluralize wapSOList.length "pass"}} for your Significant Other{{if (gt wapSOList.length 1) "s"}} will be emailed to you:
         <ul>
           {{#each wapSOList as |so|}}
-            <li>{{so.name}} may enter the event on or after {{mdy-format so.access_date}} @ 0001.</li>
+            <li>{{so.name}} may enter the event on or after {{mdy-format so.access_date full=true}} @ 00:01.</li>
           {{/each}}
         </ul>
       {{else}}

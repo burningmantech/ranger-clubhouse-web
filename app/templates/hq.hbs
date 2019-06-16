@@ -114,15 +114,16 @@
           <dt>Est. Total Credits</dt>
           <dd>{{credits-format creditsExpected}}</dd>
 
-          <dt>Time Worked</dt>
-          <dd>{{hour-minute-format timesheetSummary.total_duration}}</dd>
+          <dt>Counted Time / Total</dt>
+          <dd>{{hour-minute-format timesheetSummary.counted_duration}} / {{hour-minute-format timesheetSummary.total_duration}}</dd>
+
           <dt>Time Pre / Event / Post</dt>
           <dd>
             {{hour-minute-format timesheetSummary.pre_event_duration}} / {{hour-minute-format timesheetSummary.event_duration}} / {{hour-minute-format timesheetSummary.post_event_duration}}
           </dd>
 
-          <dt>Est. Total Time</dt>
-          <dd>{{hour-minute-format durationExpected}}</dd>
+          <dt>Est. Counted Time / Total</dt>
+          <dd>{{hour-minute-format countedDurationExpected}} / {{hour-minute-format totalDurationExpected}}</dd>
 
           <dt>Meals</dt>
           <dd>{{meal-info eventInfo.meals}}</dd>

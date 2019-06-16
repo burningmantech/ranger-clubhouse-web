@@ -1,3 +1,9 @@
+<div class="row my-2">
+  <div class="col-auto"><strong>Total Time:</strong> {{hour-minute-format summary.total_duration}}</div>
+  <div class="col-auto"><strong>Time Counted Towards Appreciations:</strong> {{hour-minute-format summary.counted_duration}}</div>
+  <div class="col-auto"><strong>Total Credits:</strong> {{credits-format summary.total_credits}}</div>
+</div>
+
 <div class="row my-1">
   <div class="col-12">
     <span class="d-inline-block"><b>Credits Breakdown (Pre-Event / Event / Post-Event):</b></span>
@@ -5,11 +11,10 @@
   </div>
 
   <div class="col-12">
-    <span class="d-inline-block"><b>Hours Breakdown (Pre-Event / Event / Post-Event):</b></span>
-    {{hour-minute-format summary.pre_event_duration}} / {{hour-minute-format summary.event_duration}} / {{hour-minute-format summary.post_event_duration}}
+    <span class="d-inline-block"><b>Hours Breakdown (Pre-Event / Event / Post-Event / Other):</b></span>
+    {{hour-minute-format summary.pre_event_duration}} / {{hour-minute-format summary.event_duration}} / {{hour-minute-format summary.post_event_duration}} / {{hour-minute-format summary.other_duration}}
   </div>
 </div>
-
 <div class="row my-1">
   <div class="col-12">
     {{#if summary.event_start}}

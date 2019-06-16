@@ -29,8 +29,14 @@ export default class HqController extends Controller {
     return this.timesheetSummary.total_credits + this.expected.credits;
   }
 
+  @computed('timesheetSummary.counted_duration', 'expected.duration')
+  get countedDurationExpected() {
+    return this.timesheetSummary.counted_duration + this.expected.duration;
+  }
+
   @computed('timesheetSummary.total_duration', 'expected.duration')
-  get durationExpected() {
+  get totalDurationExpected() {
     return this.timesheetSummary.total_duration + this.expected.duration;
   }
+
 }

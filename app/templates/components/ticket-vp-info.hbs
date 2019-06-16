@@ -4,10 +4,13 @@
       {{fa-icon (if showing.vp "caret-down" "caret-right")}} Vehicle Pass
       {{#if (eq ticketingInfo.vp_status "none")}}
         <span class="text-black-50">- To Be Announced</span>
-      {{else if (eq ticketingInfo.vp_status "frozen")}}
-        <span class="text-danger">- Frozen</span>
       {{else if vehiclePass}}
-        - {{ticket-status vehiclePass.status}}
+          - {{ticket-status vehiclePass.status}}
+          {{#if (eq vehiclePass.status "claimed")}}
+            <span class="text-success">{{fa-icon "check"}}</span>
+          {{/if}}
+      {{else}}
+        <span class="text-muted">- None</span>
       {{/if}}
     </button>
   </div>
@@ -15,10 +18,9 @@
     {{#if (eq ticketingInfo.vp_status "none")}}
       Vehicle Pass information is not yet available. Please check back later.
     {{else if vehiclePass}}
-      <p class="font-weight-bold">
-        You qualify for a Vehicle Pass for this year's event.
-      </p>
-      {{#if (eq vehiclePass.status "submitted")}}
+      {{#if (eq ticket.status "qualified")}}
+        <p><b>Claim your event ticket first before claiming your Vehicle Pass.</b></p>
+      {{else if (eq vehiclePass.status "submitted")}}
         Your Vehicle Pass has been submitted to the Burning Man Ticket Request System.
         You should have received an email from {{ticketingInfo.ticket_vendor_name}} informing you about it.
         You cannot request changes to it via the Secret Clubhouse at this time.
@@ -28,19 +30,22 @@
         Information about how to claim your Vehicle Pass will be available in June or early July.
       {{else if (eq ticketingInfo.vp_status "accept")}}
         {{#if (eq vehiclePass.status "qualified")}}
-          <div class="mt-2 mb-2">Do you want to use your Vehicle Pass?</div>
-          <button type="button" class="btn btn-primary" {{action setTicketStatus vehiclePass "claimed"}}>
+          <p><b>You qualify for a Vehicle Pass for this year's event.</b></p>
+
+          <div class="mt-2 mb-2">Do you want to claim your Vehicle Pass?</div>
+          <button type="button" class="btn btn-primary btn-lg" {{action setTicketStatus vehiclePass "claimed"}}>
             Claim Vehicle Pass
           </button>
         {{else if (eq vehiclePass.status "claimed")}}
-          <div class="mt-2 mb-2"> <strong class="text-success">You will be using the Vehicle Pass.</strong> Do you no longer need a Vehicle Pass?</div>
-          <button type="button" class="btn btn-primary" {{action setTicketStatus vehiclePass "qualified"}}>
+          <p><b>You will be using the Vehicle Pass.</b></p>
+          <div class="mt-2 mb-2">  Do you no longer need a Vehicle Pass?</div>
+          <button type="button" class="btn btn-primary btn-lg" {{action setTicketStatus vehiclePass "qualified"}}>
             Release Vehicle Pass
           </button>
         {{/if}}
       {{/if}}
     {{else}}
-      <strong>Sorry, but it doesn't look like you qualified for a free Vehicle Pass.</strong>
+      <p><b>Sorry, but it doesn't look like you qualified for a free Vehicle Pass.</b></p>
       <p>
         Free Vehicle Passes are provided to Rangers who qualified for a Staff Credential or
         Reduced-Price Ticket.
@@ -51,9 +56,8 @@
       {{ticket-frozen item="Vehicle Pass" ticketingInfo=ticketingInfo}}
     {{/if}}
     <div class="float-right">
-      <button type="button" class="btn btn-success" {{action nextSection}}>Next {{fa-icon "arrow-right"}}</button>
+      <button type="button" class="btn btn-success btn-lg" {{action nextSection}}>Next {{fa-icon "arrow-right"}}</button>
     </div>
 
-    {{ticket-faq topic="vp" ticketingInfo=ticketingInfo}}
   </div>
 </div>

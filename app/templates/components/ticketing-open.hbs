@@ -11,20 +11,19 @@
     others/critical campmates.
   </p>
   <p>
-    You have <strong> until {{moment-format ticketingInfo.submit_date "dddd MMMM Do"}} at
-    {{moment-format ticketingInfo.submit_date "hh:mm A"}} Pacific Time
+    You have <strong> until {{full-datetime-format ticketingInfo.submit_date}} Pacific Time
     to make your selection(s)</strong> below. After that, we'll start
     uploading everyone's requests into the Burning Man Ticket Request System.
   </p>
   {{#if hasFullPackage}}
     <p>
-      <button type="button" class="btn btn-success" {{action nextSection "ticket"}}>Begin Ticketing</button>
+      <button type="button" class="btn btn-success btn-lg" {{action nextSection "ticket"}}>Begin Ticketing</button>
     </p>
   {{/if}}
   <div class="accordion">
     {{#if hasFullPackage}}
       {{ticket-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket setTicketStatus=setTicketStatus showing=showing toggleCard=toggleCard nextSection=(action nextSection "vp")}}
-      {{ticket-vp-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo vehiclePass=vehiclePass setTicketStatus=setTicketStatus  showing=showing toggleCard=toggleCard nextSection=(action nextSection "wap")}}
+      {{ticket-vp-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket vehiclePass=vehiclePass setTicketStatus=setTicketStatus  showing=showing toggleCard=toggleCard nextSection=(action nextSection "wap")}}
     {{/if}}
 
     {{ticket-wap-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket wap=wap setTicketStatus=setTicketStatus  showing=showing toggleCard=toggleCard nextSection=(if hasFullPackage (action nextSection "wapso") false)}}

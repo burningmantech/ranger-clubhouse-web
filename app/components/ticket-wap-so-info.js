@@ -5,6 +5,7 @@ import { action, computed } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
 import { tagName } from '@ember-decorators/component';
+import Changeset from 'ember-changeset';
 
 import moment from 'moment';
 
@@ -18,6 +19,12 @@ export default class TicketWapSoInfoComponent extends Component {
   @argument('object') nextSection;
   @argument('object') showing;
 
+  isSaved = false;
+
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments)
+  }
+
   @computed('wapSOList.@each.name')
   get wapSOCount() {
     return this.ticketPackage.wapso.length;
@@ -28,25 +35,29 @@ export default class TicketWapSoInfoComponent extends Component {
     return moment(this.ticketingInfo.wap_so_default_date);
   }
 
-  // Return a list of WAP SO names
-  @computed('ticketPackage.wapso')
+  @computed('wapSOList.@each.isDirty')
+  get isSOListDirty() {
+    return this.wapSOList.find((so) => so.isDirty) ? true : false;
+  }
+
+  @computed('ticketPackage.wapso.@each.{id,name}')
   get wapSOList() {
     const info = this.ticketingInfo;
     const defaultDate = this.defaultDate;
 
     const list = this.ticketPackage.wapso.map((row) => {
-      return {
+      return new Changeset({
         id: row.id,
         name: row.name,
         access_date: (row.access_date || defaultDate)
-      }
+      });
     });
 
     // Pad out to the max
     const max = info.wap_so_max;
 
     while (list.length < max) {
-      list.pushObject({id: 'new', name: '', access_date: defaultDate });
+      list.pushObject(new Changeset({id: 'new', name: '', access_date: defaultDate }));
     }
 
     return list;
@@ -63,12 +74,13 @@ export default class TicketWapSoInfoComponent extends Component {
     // Grab the name for a new record, or any name value (blank or not)
     // for an existing ticket
     this.wapSOList.forEach((row) => {
-      if (!isEmpty(row.name)) {
-        set(row, 'name', row.name.trim());
+      const name = row.get('name'), id = row.get('id');
+      if (!isEmpty(name)) {
+        set(row, 'name', name.trim());
       }
 
-      if ((row.id == 'new' && !isEmpty(row.name)) || row.id != 'new') {
-        names.push({id: row.id, name: row.name});
+      if ((id == 'new' && !isEmpty(name)) || id != 'new') {
+        names.push({ id, name });
       }
     });
 
@@ -80,6 +92,7 @@ export default class TicketWapSoInfoComponent extends Component {
       // Update the list
       this.set('ticketPackage.wapso', result.names);
       this.toast.success('Your Significant Other Work Access Passes have been sucessfully updated.');
+      this.set('isSaved', true);
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
