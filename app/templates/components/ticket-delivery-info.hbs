@@ -56,13 +56,14 @@
       <p>
         Sorry, Staff Credentials cannot be mailed due to Burning Man organization policies.
       </p>
-      {{#unless ticket.access_any_time}}
-        <p class="text-danger">
-          You may pick your Staff Credential early, however you may only enter the event on {{mdy-format ticket.access_date full=true}} @ 00:001.
-        </p>
-      {{/unless}}
       <p>
-        Your Staff Credential will be available for pick up at the following locations on the given dates:
+        {{#if ticket.access_any_time}}
+          Your Staff Credential allows you to enter the event at any time, and may be picked up at the following locations on the given dates:
+        {{else}}
+          <p>
+            You may pick up the Staff Credential on or after the day you are allowed to enter the event - {{mdy-format ticket.access_date full=true}}. Early pick ups are NOT allowed. Your Staff Credential is available for pickup at the following locations on the given dates and times:
+          </p>
+        {{/if}}
       </p>
       <p>
         {{#if ticketingInfo.pickup_locations}}
