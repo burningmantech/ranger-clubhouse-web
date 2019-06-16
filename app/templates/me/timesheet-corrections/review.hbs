@@ -11,12 +11,11 @@
     Use the {{#link-to "me.timesheet-corrections.missing"}}Missing Entries Requests{{/link-to}}
     page to ask for a missing shift to be recorded.
   </p>
-  {{me/timesheet-review-common timesheets=timesheets timesheetInfo=timesheetInfo}}
+  {{me/timesheet-review-common timesheets=timesheets timesheetSummary=timesheetSummary timesheetInfo=timesheetInfo}}
 {{else}}
   <p class="lead mt-3 text-danger">
     No timesheet entries were found for {{timesheetInfo.correction_year}}.
   </p>
-
 {{/if}}
 
 <div class="mt-4">

@@ -20,7 +20,11 @@
           </div>
           <div class="timesheet-duration">
             <span class="timesheet-sm-label">Time:</span>
-            {{hour-minute-format ts.duration}}
+            {{#if ts.position.count_hours}}
+              {{hour-minute-format ts.duration}}
+            {{else}}
+              ({{hour-minute-format ts.duration}})
+            {{/if}}
           </div>
           <div class="timesheet-credits">
             <span class="timesheet-sm-label">Credits:</span>
@@ -82,10 +86,14 @@
     {{/each}}
   </div>
 
-  <div class="row mt-2 mb-2">
-    <div class="col-auto"><strong>Total Time:</strong> {{hour-minute-format (sum-column timesheets "duration")}}</div>
-    <div class="col-auto"><strong>Total Credits:</strong> {{credits-format (sum-column timesheets "credits")}}</div>
-  </div>
+  {{#if timesheetSummary}}
+    {{timesheet-summary summary=timesheetSummary}}
+  {{else}}
+    <div class="row mt-2 mb-2">
+      <div class="col-auto"><strong>Total Time:</strong> {{hour-minute-format (sum-column timesheets "duration")}}</div>
+      <div class="col-auto"><strong>Total Credits:</strong> {{credits-format (sum-column timesheets "credits")}}</div>
+    </div>
+  {{/if}}
 
   <div class="row mb-4">
     <div class="col"><strong>Position Summary:</strong> {{timesheet-position-summary timesheets=timesheets}}</div>

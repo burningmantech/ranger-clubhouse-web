@@ -1,71 +1,83 @@
 {{login-sidebar}}
 <main class="col">
-{{#if session.isAuthenticated}}
-  {{loading-dialog "your account"}}
-{{else}}
-  <div class="row">
-    <h1 class="col-sm-12">Welcome To The Ranger Secret Clubhouse!</h1>
-    <div class="col-12">
-      {{#if loginError}}
-        {{#ch-alert "danger"}}
-          {{fa-icon "exclamation-triangle"}}
-          {{#if (eq loginError "invalid-credentials")}}
-            The email and/or password is incorrect.
-          {{else if (eq loginError "account-disabled")}}
-            The account has been permanently disabled.
-            <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
-          {{else if (eq loginError "login-disabled")}}
-            Login has been disabled for this account.
-            <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
-          {{else if (eq loginError "account-suspended")}}
-            The account has been suspended.
-            <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
-          {{else}}
-            An unknown server response was received. status=[{{loginError}}]
-          {{/if}}
-        {{/ch-alert}}
-      {{/if}}
-    </div>
-    <div class="col-sm-12 col-md-6 col-lg-6">
-      {{#ch-form "auth" auth validator=loginValidations autocomplete="on" onSubmit=(action "submit") as |f|}}
-        {{f.input "identification" label="Email" type="text" inputmode="email" autofocus=true noSpaces=true}}
-        {{f.input "password" label="Password" type="password"}}
+  {{#if (eq (config "DeploymentEnvironment") "Staging")}}
+    {{#ch-alert "danger"}}
+      <p>
+        <b>WARNING: This is the Clubhouse Staging Server used for testing and verification. Here be dragons.</b>
+      </p>
+      <p>
+        The real production server can be found
+        here:
+      </p>
+      <a href="https://ranger-clubhouse.burningman.org">https://ranger-clubhouse.burningman.org</a>
+    {{/ch-alert}}
+  {{/if}}
+  {{#if session.isAuthenticated}}
+    {{loading-dialog "your account"}}
+  {{else}}
+    <div class="row">
+      <h1 class="col-sm-12">Welcome To The Ranger Secret Clubhouse!</h1>
+      <div class="col-12">
+        {{#if loginError}}
+          {{#ch-alert "danger"}}
+            {{fa-icon "exclamation-triangle"}}
+            {{#if (eq loginError "invalid-credentials")}}
+              The email and/or password is incorrect.
+            {{else if (eq loginError "account-disabled")}}
+              The account has been permanently disabled.
+              <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
+            {{else if (eq loginError "login-disabled")}}
+              Login has been disabled for this account.
+              <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
+            {{else if (eq loginError "account-suspended")}}
+              The account has been suspended.
+              <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
+            {{else}}
+              An unknown server response was received. status=[{{loginError}}]
+            {{/if}}
+          {{/ch-alert}}
+        {{/if}}
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-6">
+        {{#ch-form "auth" auth validator=loginValidations autocomplete="on" onSubmit=(action "submit") as |f|}}
+          {{f.input "identification" label="Email" type="text" inputmode="email" autofocus=true noSpaces=true}}
+          {{f.input "password" label="Password" type="password"}}
 
-        <div class="row">
-          <div class="col-sm-12 col-md-6 mb-4">
-            {{f.submit label=(unless isSubmitting "Login" "Please Wait") disabled=isSubmitting submitClass="btn-lg login-submit"}}
-            {{#if isSubmitting}}<span class="loading-spinner"></span>{{/if}}
+          <div class="row">
+            <div class="col-sm-12 col-md-6 mb-4">
+              {{f.submit label=(unless isSubmitting "Login" "Please Wait") disabled=isSubmitting submitClass="btn-lg login-submit"}}
+              {{#if isSubmitting}}<span class="loading-spinner"></span>{{/if}}
+            </div>
+            <div class="col-sm-12 col-md-6 mt-2">
+              {{#link-to "reset-password" class="d-block"}}Forgot your password?{{/link-to}}
+            </div>
           </div>
-          <div class="col-sm-12 col-md-6 mt-2">
-            {{#link-to "reset-password" class="d-block"}}Forgot your password?{{/link-to}}
-          </div>
-        </div>
-      {{/ch-form}}
+        {{/ch-form}}
+      </div>
+
+      <div class="col-sm-12 col-md-6 col-lg-5 mt-4">
+        {{#ch-box "Interested in volunteering with the Rangers?"}}
+          <a href="http://rangers.burningman.org/ranger-application-process/">Click here</a>
+          to read about our intake process for this event cycle. If you have
+          applied previously, our process may have changed since you last applied.
+          All prospective Rangers must reapply each year from the start of the process.
+          A link to apply can be found at the top of that page.
+        {{/ch-box}}
+
+        {{#ch-box "Interested in training but not volunteering?"}}
+          If you do NOT intend to volunteer with the Rangers on playa but are
+          interested in taking Ranger training anyway, please
+          {{#link-to "register"}}click here{{/link-to}} to create a Secret Clubhouse account.
+        {{/ch-box}}
+      </div>
     </div>
 
-    <div class="col-sm-12 col-md-6 col-lg-5 mt-4">
-      {{#ch-box "Interested in volunteering with the Rangers?"}}
-        <a href="http://rangers.burningman.org/ranger-application-process/">Click here</a>
-        to read about our intake process for this event cycle. If you have
-        applied previously, our process may have changed since you last applied.
-        All prospective Rangers must reapply each year from the start of the process.
-        A link to apply can be found at the top of that page.
-      {{/ch-box}}
-
-      {{#ch-box "Interested in training but not volunteering?"}}
-        If you do NOT intend to volunteer with the Rangers on playa but are
-        interested in taking Ranger training anyway, please
-        {{#link-to "register"}}click here{{/link-to}} to create a Secret Clubhouse account.
-      {{/ch-box}}
-    </div>
-  </div>
-
-  <p class="mt-4">
+    <p class="mt-4">
       Email {{general-support-email}} if you have a general question about the Rangers.
-  </p>
-  <p class="mt-4">
-    For help logging in or registering, email the Rangers Tech Ninjas at {{admin-email}}
-  </p>
+    </p>
+    <p class="mt-4">
+      For help logging in or registering, email the Rangers Tech Ninjas at {{admin-email}}
+    </p>
 
-{{/if}}
+  {{/if}}
 </main>
