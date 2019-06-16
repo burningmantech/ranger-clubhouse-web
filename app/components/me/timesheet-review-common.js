@@ -8,6 +8,7 @@ import { validatePresence } from 'ember-changeset-validations/validators';
 export default class MeTimesheetReviewCommonComponent extends Component {
   @argument('object') timesheets;
   @argument(optional('object')) timesheetInfo;
+  @argument(optional('object')) timesheetSummary;
 
   entry = null; // Incorrect entry
 

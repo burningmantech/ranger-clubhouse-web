@@ -6,7 +6,7 @@
 <h1 class="d-none d-print-block">{{year}} Timesheet Entries For {{person.callsign}}</h1>
 
 {{#if timesheets}}
-  {{me/timesheet-review-common timesheets=timesheets timesheetInfo=timesheetInfo}}
+  {{me/timesheet-review-common timesheets=timesheets timesheetSummary=timesheetSummary timesheetInfo=timesheetInfo}}
 {{else}}
   <p class="text-danger">
     No timesheet entries were found.

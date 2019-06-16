@@ -21,7 +21,8 @@ export default class MeTimesheetCorrectionsRoute extends Route.extend(MeRouteMix
     // and person positions (for missing requests)
 
     if (timesheetInfo.correction_enabled) {
-      const queryParams = { person_id, year: timesheetInfo.correction_year };
+      const year =  timesheetInfo.correction_year;
+      const queryParams = { person_id, year };
 
       this.store.unloadAll('timesheet');
       this.store.unloadAll('timesheet-missing');
@@ -29,12 +30,14 @@ export default class MeTimesheetCorrectionsRoute extends Route.extend(MeRouteMix
       data.timesheets = this.store.query('timesheet', queryParams);
       data.timesheetsMissing = this.store.query('timesheet-missing', queryParams).then((result) => result.toArray());
       data.positions =  this.ajax.request(`person/${person_id}/positions`).then((result) => result.positions);
+      data.timesheetSummary = this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }}).then((result) => result.summary);
 
       return RSVP.hash(data);
     } else {
       data.timesheets = [ ];
       data.timesheetsMissing = [];
       data.positions = [];
+      data.timesheetSummary = {};
 
       return data;
     }
