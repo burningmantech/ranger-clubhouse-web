@@ -6,6 +6,7 @@ import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
 import { tagName } from '@ember-decorators/component';
 import TicketDeliveryValidations from 'clubhouse/validations/ticket-delivery';
+import { StateOptions } from 'clubhouse/constants/countries';
 
 @tagName('')
 export default class TicketDeliverInfoComponent extends Component {
@@ -22,6 +23,8 @@ export default class TicketDeliverInfoComponent extends Component {
 
   countryOptions = ['United States', 'Canada'];
   ticketDeliveryValidations = TicketDeliveryValidations;
+
+  stateOptions = StateOptions['US'];
 
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);

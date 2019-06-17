@@ -68,10 +68,10 @@
               <td class="align-middle">{{shift-format slot.slot_begins}}</td>
               <td class="align-middle">{{shift-format slot.slot_ends}}</td>
               <td class="align-middle">
-                {{#if slot.is_trained}}
+                {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
                   <button class="btn btn-primary" {{action "signinPositionAction" slot.position_id}}>Start Shift</button>
                 {{else}}
-                  <div class="text-danger">Not Trained</div>
+                  <div class="text-danger">{{if slot.is_untrained "Not Trained"}} {{if slot.is_unqualified slot.unqualified_reason}}</div>
                   {{#if (has-role "admin")}}
                     <button class="btn btn-warning" {{action "signinPositionAction" slot.position_id}}>Force Start Shift</button>
                   {{/if}}

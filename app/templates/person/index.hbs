@@ -237,9 +237,11 @@
     <label class="col-form-label-fixed col-sm-12 col-md-2">Agreements</label>
     <div class="col-sm-12 col-md-9">
       {{#if isAdminOrVC}}
-        {{f.input "behavioral_agreement" label="Burning Man's Behavioral Standards Agreement" type="checkbox" inline=true }}
+        {{f.input "behavioral_agreement" label="Burning Man's Behavioral Standards Agreement" type="checkbox" inline=true }}<br>
+        {{f.input "sandman_affidavit" label="Sandman Affidavit" type="checkbox" inline=true }}
       {{else}}
-        Behavioral Standards Agreement {{if person.behavioral_agreement "signed" "NOT SIGNED"}}
+        Behavioral Standards Agreement {{if person.behavioral_agreement "signed" "NOT SIGNED"}}<br>
+        Sandman Affidavit {{if person.behavioral_agreement "signed" "NOT SIGNED"}}
       {{/if}}
     </div>
   </div>

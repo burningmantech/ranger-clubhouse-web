@@ -18,14 +18,14 @@ export default {
   state: [
     validatePresence({
       presence: true,
-      message: 'Enter a state or province name.'
+      message: 'Select a state.'
     }),
   ],
 
   postal_code: [
     validatePresence({
       presence: true,
-      message: 'Enter a zip or postal code.'
+      message: 'Enter a zip code.'
     })
   ]
 };

@@ -1,0 +1,34 @@
+<h1>Motorpool Policy &amp; Org Insurance Report</h1>
+<p>
+  This report will show who has signed the Motorpool Policy Agreement and/or who has Burning Man vehicle insurance.
+</p>
+<p>
+  <button class="btn btn-primary" {{action exportToCsv}}>Export to CSV</button>
+</p>
+
+<table class="table table-striped table-hover table-width-auto">
+  <caption>{{pluralize people.length "person"}}</caption>
+  <thead>
+    <tr>
+      <th>Callsign</th>
+      <th>Status</th>
+      <th>{{year}} Motorpool</th>
+      <th>{{year}} Org Ins.</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each people as |person|}}
+      <tr>
+        <td>{{person-link person=person}}</td>
+        <td>{{person.status}}</td>
+        <td class="text-center">{{yesno person.vehicle_paperwork}}</td>
+        <td class="text-center">{{yesno person.vehicle_insurance_paperwork}}</td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="4" class="text-danger"><b>No one was found to have signed the Motorpool Policy or has Org insurance.</b></td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
