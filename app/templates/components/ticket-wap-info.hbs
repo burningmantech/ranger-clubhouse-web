@@ -5,16 +5,18 @@
       {{#if (eq ticketingInfo.wap_status "none")}}
         <span class="text-black-50">- To Be Announced</span>
       {{else if usingStaffCredential}}
-        <span class="text-success">- Part of Staff Credential {{fa-icon "check"}}</span>
+        <span class="text-success d-inline-block">- Part of Staff Credential {{fa-icon "check"}}</span>
       {{else if wap}}
+        <span class="d-inline-block">
         - {{ticket-status wap.status}}
         {{#if (eq wap.status "claimed")}}
           <span class="text-success">{{fa-icon "check"}}</span>
         {{/if}}
+      </span>
       {{else if isStaffCredentialBanked}}
-        <span class="text-black-50">- None (Staff Credential Banked)</span>
+        <span class="text-black-50 d-inline-block">- None (Staff Credential Banked)</span>
       {{else if (eq ticket.type "staff_credential")}}
-        <span class="text-muted">- Part of Staff Credential</span>
+        <span class="text-muted d-inline-block">- Part of Staff Credential</span>
       {{else}}
         <span class="text-black-50">- None</span>
       {{/if}}

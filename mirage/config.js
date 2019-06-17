@@ -36,7 +36,7 @@ export default function() {
 
       // Optional ticket credit warning messages.
       // If any are not set, no message will be displayed
-      RpTicketThreshold: 19,  // Ticket threshold for reduced price
+      RpTicketThreshold: 19,  // Ticket threshold for Reduced-Price
       ScTicketThreshold: 38,  // Ticket threshold for staff credential
       YrTicketThreshold: 2018,  // Ticket threshold year
     };

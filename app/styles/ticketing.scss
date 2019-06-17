@@ -1,10 +1,30 @@
 .card-ticket {
   .card-header button {
-    font-size: 16pt;
     text-decoration: none !important;
   }
 
 }
+
+@media only screen and (max-width: 799px) {
+  .card-ticket {
+    .card-header button {
+      font-size: 13pt;
+      text-decoration: none !important;
+    }
+
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  .card-ticket {
+    .card-header button {
+      font-size: 16pt;
+      text-decoration: none !important;
+    }
+
+  }
+}
+
 /*
  * WAP SO responsive table
  */

@@ -154,6 +154,8 @@ Router.map(function() {
     this.route('shift-lead');
     this.route('hq-forecast');
     this.route('on-duty');
+    this.route('sandman-qualified');
+    this.route('vehicle-paperwork');
   });
 
   this.route('vc', function() {

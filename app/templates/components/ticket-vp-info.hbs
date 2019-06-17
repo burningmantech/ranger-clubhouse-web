@@ -5,10 +5,12 @@
       {{#if (eq ticketingInfo.vp_status "none")}}
         <span class="text-black-50">- To Be Announced</span>
       {{else if vehiclePass}}
+        <span class="d-inline-block">
           - {{ticket-status vehiclePass.status}}
           {{#if (eq vehiclePass.status "claimed")}}
             <span class="text-success">{{fa-icon "check"}}</span>
           {{/if}}
+        </span>
       {{else}}
         <span class="text-muted">- None</span>
       {{/if}}
@@ -38,7 +40,7 @@
           </button>
         {{else if (eq vehiclePass.status "claimed")}}
           <p><b>You will be using the Vehicle Pass.</b></p>
-          <div class="mt-2 mb-2">  Do you no longer need a Vehicle Pass?</div>
+          <div class="mt-2 mb-2"> Do you no longer need a Vehicle Pass?</div>
           <button type="button" class="btn btn-primary btn-lg" {{action setTicketStatus vehiclePass "qualified"}}>
             Release Vehicle Pass
           </button>

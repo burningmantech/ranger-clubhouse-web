@@ -29,10 +29,15 @@ export default class ShiftCheckInOutComponent extends Component {
       const positions = this.positions;
       slots.forEach((slot) => {
         const position = positions.find((p) => slot.position_id == p.id);
-        if (position && position.training_required) {
-          set(slot, 'is_trained', position.is_trained);
-        } else {
-          set(slot, 'is_trained', true);
+        if (position) {
+          if (position.is_untrained) {
+            set(slot, 'is_untrained', true);
+          }
+
+          if (position.is_unqualified) {
+            set(slot, 'is_unqualified', true);
+            set(slot, 'unqualified_reason', position.unqualified_reason);
+          }
         }
       });
     }
@@ -43,11 +48,20 @@ export default class ShiftCheckInOutComponent extends Component {
   @computed('positions')
   get signinPositions() {
     const signins = this.positions.map((pos) => {
-      if (pos.training_required && !pos.is_trained) {
-        return { id: pos.id, title: `${pos.title} (UNTRAINED)` };
-      } else {
-        return { id: pos.id, title: pos.title };
+      let title = pos.title;
+      let disqualified = null;
+
+      if (pos.is_untrained) {
+        disqualified = 'UNTRAINED';
+      } else if (pos.is_unqualified) {
+        disqualified = pos.unqualified_reason;
       }
+
+      if (disqualified) {
+        title = `${title} (${disqualified.toUpperCase()})`;
+      }
+
+      return { id: pos.id, title };
     });
 
     // hack for operator convenience - Dirt is the most common
@@ -75,12 +89,7 @@ export default class ShiftCheckInOutComponent extends Component {
   get isPersonDirtTrained() {
     const dirt = this.positions.find((p) => p.id == Position.DIRT);
 
-    // Fail safe..
-    if (!dirt || !dirt.training_required) {
-      return false;
-    }
-
-    return dirt.is_trained;
+    return (dirt && !dirt.is_untrained);
   }
 
   // Find the on duty shift
@@ -104,7 +113,13 @@ export default class ShiftCheckInOutComponent extends Component {
       switch (result.status) {
       case 'success':
         if (result.forced) {
-          this.toast.error(`WARNING: The person has not completed '${position.training_title}'. Because you are an admin, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
+          let reason;
+          if (result.unqualified_reason) {
+            reason = `is unqualified ('${result.unqualified_reason}')`;
+          } else {
+            reason = `has not completed '${result.required_training}'`;
+          }
+          this.toast.error(`WARNING: The person ${reason}. Because you are an admin, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
         } else {
           this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
         }
@@ -120,7 +135,11 @@ export default class ShiftCheckInOutComponent extends Component {
         break;
 
       case 'not-trained':
-        this.toast.error(`The person has not pass training for ${result.position_title}`);
+        this.toast.error(`The person has has not completed "${result.position_title}"`);
+        break;
+
+      case 'not-qualified':
+        this.toast.error(`The person is not qualified to sign in: ${result.unqualified_reason}`);
         break;
 
       default:

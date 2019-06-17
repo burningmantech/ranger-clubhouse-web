@@ -3,7 +3,7 @@
     We have the following {{if (eq ticketPackage.event_tickets.length 1) "ticket" "tickets"}} for you:
   <ul>
     {{#each ticketPackage.event_tickets as |ticket|}}
-      <li>A {{if (eq ticket.type "staff_credentials") "Staff Credential" "Reduced Price Ticket"}} earned for {{ticket.source_year}} and expiring after {{mdy-format ticket.expiry_date}}.</li>
+      <li>A {{if (eq ticket.type "staff_credentials") "Staff Credential" "Reduced-Price Ticket"}} earned for {{ticket.source_year}} and expiring after {{mdy-format ticket.expiry_date}}.</li>
     {{/each}}
   </ul>
 

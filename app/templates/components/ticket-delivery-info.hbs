@@ -8,21 +8,21 @@
         {{#if itemsToMail}}
           {{#if (eq deliveryMethod "mail")}}
             {{#if (or (not itemsNeedAddress) haveAddress)}}
-              <span class="text-success">- US Mail {{fa-icon "check"}}</span>
+              <span class="text-success d-inline-block">- US Mail {{fa-icon "check"}}</span>
             {{else}}
-              <span class="text-danger">- US Mail: Need Address {{fa-icon "exclamation-circle"}}</span>
+              <span class="text-danger d-inline-block">-  Need Address {{fa-icon "exclamation-circle"}}</span>
             {{/if}}
           {{else if (eq deliveryMethod "will_call")}}
-            <span class="text-success">- Pickup at Will Call {{fa-icon "check"}}</span>
+            <span class="text-success d-inline-block">- Pickup at Will Call {{fa-icon "check"}}</span>
           {{else}}
-            <span class="text-danger">- Need Answer {{fa-icon "exclamation-circle"}}</span>
+            <span class="text-danger d-inline-block">- Need Answer {{fa-icon "exclamation-circle"}}</span>
           {{/if}}
         {{else if (eq ticketingInfo.wap_status "frozen")}}
           <span class="text-danger">- Frozen</span>
         {{/if}}
 
         {{#if (and usingStaffCredential (not needAnswer))}}
-          <span class="text-success">- Staff Credential: Pick up at Will Call {{fa-icon "check"}}</span>
+          <span class="text-success d-inline-block">- Staff Credential: Pick up at Will Call {{fa-icon "check"}}</span>
         {{/if}}
       {{/if}}
     </button>
@@ -96,10 +96,11 @@
 
       {{#if (and  (eq deliveryMethod "mail") (eq ticket.type "reduced_price_ticket"))}}
         <p class="mt-2">
-          <b>Note about your Reduce Price Ticket:</b>
+          <b>Note about your Reduced-Price Ticket:</b>
           When your ticket is uploaded the Burning Man Ticketing website, you will need to enter in your credit card and mailing address there.
           {{#if (eq vehiclePass.status "claimed")}}
-            <b>You will need to enter your mailing address TWICE. Enter your address below for your Vehicle Pass, and then again for the ticket on the Burning Man Ticketing website.</b>
+            You will also need to enter your mailing address below if you are claiming a Vehicle Pass.
+            <b>This means you will need to enter your mailing address TWICE, once here, and once when you pay for your Reduced-Price ticket. Each address will be used for the corresponding item.</b>
           {{/if}}
         </p>
       {{/if}}
@@ -145,7 +146,7 @@
             </div>
             <div class="form-row">
               {{f.input "city" label="City" grid="col-sm-5 col-md-4"}}
-              {{f.input "state" label="State"  maxlength=2 size=2 grid="col-sm-5 col-md-4"}}
+              {{f.input "state" label="State" type="select" options=stateOptions grid="col-sm-5 col-md-4"}}
               {{f.input "postal_code" label="Zip Code" grid="col-sm-5 col-md-4"}}
             </div>
             {{f.submit label="Save Address" submitClass="btn-lg"}}

@@ -177,14 +177,21 @@ export default class HouseService extends Service {
     data.forEach((line) => {
       let fields = [];
       columns.forEach((column) => {
-        let value;
+        let value, yesno = false;
         if (typeof column == 'string') {
           value = line[column];
         } else {
           value = line[column.key];
+          if (column.yesno) {
+            yesno = true;
+          }
         }
 
-        value = isEmpty(value) ? '' : value.toString();
+        if (yesno) {
+          value = value ? 'Y' : 'N';
+        } else {
+          value = isEmpty(value) ? '' : value.toString();
+        }
 
         value = value.replace(/"/g, '""');
         if (value.search(/("|,|\n)/g) >= 0) {

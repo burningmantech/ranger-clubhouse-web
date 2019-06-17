@@ -45,6 +45,12 @@ export default class AdminBulkUploadController extends Controller {
         { id: 'osha10', title: 'Mark as OSHA-10 certified' },
         { id: 'osha30', title: 'Mark as OSHA-30 certified' }
       ]
+    },
+    {
+      groupName: 'Affidavits',
+      options: [
+        { id: 'sandman_affidavit', title: 'Sandman Affidavit' }
+      ]
     }
   ];
 

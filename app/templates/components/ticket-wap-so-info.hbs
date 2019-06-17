@@ -4,13 +4,13 @@
       {{fa-icon (if showing.wapso "caret-down" "caret-right")}}
       Work Access Passes For SOs
       {{#if (or (eq ticketingInfo.wap_so_status "none") (eq ticketingInfo.wap_so_status "view"))}}
-        <span class="text-black-50">- To Be Announced</span>
+        <span class="text-black-50 d-inline-block">- To Be Announced</span>
       {{else if (eq ticketingInfo.wap_so_status "frozen")}}
         <span class="text-danger">- Frozen</span>
       {{else if wapSOCount}}
-        <span class="text-success">- {{pluralize wapSOCount "person"}} {{fa-icon "check"}}</span>
+        <span class="text-success d-inline-block">- {{pluralize wapSOCount "person"}} {{fa-icon "check"}}</span>
       {{else}}
-        <span class="text-success">- Available</span>
+        <span class="text-success d-inline-block">- Available</span>
       {{/if}}
     </button>
   </div>
@@ -54,7 +54,7 @@
           <div class="wap-so-row">
             <div class="wap-so-name">
               <span class="wap-so-sm-label">SO Legal Name</span>
-              {{input type="text" value=row.name size=30 maxlength=100}}
+              {{input type="text" value=row.name size=30 maxlength=100 class="form-control form-control-sm"}}
             </div>
             <div class="wap-so-access">
               <span class="wap-so-sm-label">Arrival Date</span>
