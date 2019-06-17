@@ -29,7 +29,8 @@ export default class ScheduleManageComponent extends Component {
 
   activeOptions = [
     ['Active', 'active'],
-    ['Inactive', 'inactive']
+    ['Inactive', 'inactive'],
+    ['All', 'all'],
   ];
 
   didReceiveAttrs() {
@@ -55,12 +56,13 @@ export default class ScheduleManageComponent extends Component {
 
   /*
    * Filter out what the person can actual see based on their roles.
+   * TODO Revisit whether everyone should be able to see inactive slots if they choose.
    */
   @computed('slots')
   get availableSlots() {
     // Filter based on roles.
-
-    if (this.person.hasRole([Role.ADMIN, Role.VC, Role.TRAINER, Role.ART_TRAINER])) {
+    if (this.person.hasRole(
+        [Role.ADMIN, Role.EDIT_SLOTS, Role.GRANT_POSITION, Role.VC, Role.TRAINER, Role.ART_TRAINER])) {
       return this.slots;
     }
 
@@ -84,8 +86,11 @@ export default class ScheduleManageComponent extends Component {
         slots = slots.filterBy('slotDay', filterDay);
       }
     }
+    if (this.filterActive !== 'all') {
+      slots = slots.filterBy('slot_active', this.filterActive === 'active');
+    }
 
-    return slots.filterBy('slot_active', this.filterActive == 'active');
+    return slots;
   }
 
   @computed('viewSlots')
