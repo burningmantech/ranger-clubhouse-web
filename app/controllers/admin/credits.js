@@ -16,6 +16,7 @@ class CopyParams extends EmberObject {
   deltaDays = 0;
   deltaHours = 0;
   deltaMinutes = 0;
+  newPositionId = 0;
 }
 
 class CopySourcePosition extends EmberObject {
@@ -146,6 +147,11 @@ export default class AdminCreditsController extends Controller {
     return this.positions.map((p) => [ p.title, p.id ]);
   }
 
+  @computed('positions')
+  get positionOptionsForCopy() {
+    return [['(same position)', 0], ...this.get('positions').map((p) => [p.title, p.id])];
+  }
+
   @action
   newCredit() {
     this.set('credit', this.store.createRecord('position-credit', { position_ids: [] }));
@@ -235,15 +241,19 @@ export default class AdminCreditsController extends Controller {
   }
 
   @action
-  startCopy() {
+  startCopy(selectedPositionId = null) {
     this.set('presentYear', currentYear());
     const selectedLaborDay = laborDay(this.get('year'));
     const presentLaborDay = laborDay(this.get('presentYear'));
     this.set('selectedYearLaborDay', selectedLaborDay.format('MMMM Do'));
     this.set('presentYearLaborDay', presentLaborDay.format('MMMM Do'));
     this.set('laborDayDiff', presentLaborDay.diff(selectedLaborDay, 'days'));
+    let sourceCredits = this.get('viewCredits');
+    if (selectedPositionId != null) {
+      sourceCredits = sourceCredits.filterBy('position_id', selectedPositionId);
+    }
     let copyPositions = [];
-    _.forOwn(_.groupBy(this.get('viewCredits'), 'position_id'),
+    _.forOwn(_.groupBy(sourceCredits, 'position_id'),
       (credits, positionId) => copyPositions.push(CopySourcePosition.create({
         id: positionId,
         title: credits[0].positionTitle,
@@ -276,19 +286,23 @@ export default class AdminCreditsController extends Controller {
 
   @action
   performCopy() {
-    let params = this.get('copyParams');
-    let sourceIds = this.get('copySourcePositions').flatMap((p) => p.get('selectedCredits')).map((c) => c.source.id);
+    const params = this.get('copyParams');
+    const sourceCredits = this.get('copySourcePositions').flatMap((p) => p.get('selectedCredits'));
+    const sourceIds = sourceCredits.map((c) => c.source.id);
     if (sourceIds.length === 0) {
       this.toast.warning('No credits selected to copy; no changes made');
+    } else if (params.newPositionId > 0 && sourceCredits.map((c) => c.source.position_id).uniq().length > 1) {
+      this.toast.warning("Can't copy credits from multiple positions to a new position");
     } else {
+      const data = {ids: sourceIds};
+      ['deltaDays', 'deltaHours', 'deltaMinutes', 'newPositionId'].forEach((key) => {
+        if (params[key] != 0) {
+          data[key] = params[key];
+        }
+      });
       this.ajax.request(`position-credit/copy`, {
         method: 'POST',
-        data: {
-          deltaDays: params.deltaDays,
-          deltaHours: params.deltaHours,
-          deltaMinutes: params.deltaMinutes,
-          ids: sourceIds,
-        }
+        data: data,
       }).then((result) => {
         if (result.position_credit.length) {
           this.toast.success(`Copied ${result.position_credit.length} credits`);

@@ -39,6 +39,7 @@
         {{f.input "deltaDays" label="Days" type="number" maxlength=5 grid="col-sm"}}
         {{f.input "deltaHours" label="Hours" type="number" maxlength=5 grid="col-sm"}}
         {{f.input "deltaMinutes" label="Minutes" type="number" maxlength=5 grid="col-sm"}}
+        {{f.input "newPositionId" label="Position" type="select" options=positionOptionsForCopy grid="col-md-auto"}}
       </div>
       Labor Day of {{year}} is {{selectedYearLaborDay}}.
       Labor Day of {{presentYear}} is {{presentYearLaborDay}}, {{laborDayDiff}} days later.
@@ -145,6 +146,7 @@
   <table class="table table-sm table-box table-hover">
     <caption>
       {{group.title}}
+      <button {{action "startCopy" group.position_id}} class="btn btn-secondary btn-sm">Bulk Copy</button>
     </caption>
     <thead>
       <tr>
