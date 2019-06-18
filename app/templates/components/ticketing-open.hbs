@@ -11,9 +11,12 @@
     others/critical campmates.
   </p>
   <p>
-    You have <strong> until {{full-datetime-format ticketingInfo.submit_date}} Pacific Time
-    to make your selection(s)</strong> below. After that, we'll start
+    You have <b>until {{full-datetime-format ticketingInfo.submit_date}} Pacific Time
+    to make your selection(s)</b> below. After that, we'll start
     uploading everyone's requests into the Burning Man Ticket Request System.
+  </p>
+  <p>
+    <b>It may not be possible to fulfill any requests made after the {{moment-format ticketingInfo.submit_date "dddd, MMMM Do"}} deadline.</b>
   </p>
   {{#if hasFullPackage}}
     <p>
