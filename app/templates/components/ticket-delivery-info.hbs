@@ -22,7 +22,7 @@
         {{/if}}
 
         {{#if (and usingStaffCredential (not needAnswer))}}
-          <span class="text-success d-inline-block">- Staff Credential: Pick up at Will Call {{fa-icon "check"}}</span>
+          <span class="text-success d-inline-block">- Pick up at Staff Credentialing {{fa-icon "check"}}</span>
         {{/if}}
       {{/if}}
     </button>
@@ -51,7 +51,7 @@
       {{/if}}
     {{else if usingStaffCredential}}
       <p>
-        <b>Your Staff Credential {{if (eq vehiclePass.status "claimed") "and Vehicle Pass"}} will be held at Will Call under your name "{{person.first_name}} {{person.last_name}}".</b>
+        <b>Your Staff Credential {{if (eq vehiclePass.status "claimed") "and Vehicle Pass"}} will be held at Staff Credentialing under your name "{{person.first_name}} {{person.last_name}}".</b>
       </p>
       <p>
         Sorry, Staff Credentials cannot be mailed due to Burning Man organization policies.
@@ -59,9 +59,16 @@
       <p>
         {{#if ticket.access_any_time}}
           Your Staff Credential allows you to enter the event at any time, and may be picked up at the following locations on the given dates:
-        {{else}}
+        {{else if ticket.access_date}}
           <p>
             You may pick up the Staff Credential on or after the day you are allowed to enter the event - {{mdy-format ticket.access_date full=true}}. Early pick ups are NOT allowed. Your Staff Credential is available for pickup at the following locations on the given dates and times:
+          </p>
+        {{else}}
+          <p>
+            You may pick up the Staff Credential on or after the day you are allowed to enter the event. <b class="text-danger">However, we forgot to set the entry date on your ticket. Please contact Ranger Ticketing at {{mail-to ticketingInfo.ranger_ticketing_email}} to get this sorted out.</b>
+          </p>
+          <p>
+            Once the date is fixed, your Staff Credential will be available for pickup at the following locations on the given dates and times:
           </p>
         {{/if}}
       </p>
