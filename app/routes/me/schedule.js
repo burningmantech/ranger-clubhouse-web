@@ -11,16 +11,13 @@ export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
   model(params) {
     const person_id = this.session.user.id;
     const year = requestYear(params);
-    const scheduleParams = {
-      person_id,
-      year,
-      shifts_available: 1,
-    };
 
     this.store.unloadAll('schedule');
 
     return RSVP.hash({
-      slots: this.store.query('schedule', scheduleParams),
+      signedUpSlots: this.store.query('schedule', { person_id, year }).then((result) => result.toArray()),
+      slots: this.store.query('schedule', { person_id, year, shifts_available: 1}),
+      scheduleSummary: this.ajax.request(`person/${person_id}/schedule/summary`, { data: { year }}).then((result) => result.summary),
       permission: this.ajax.request(`person/${person_id}/schedule/permission`, {data: { year }})
                   .then((results) => results.permission ),
       creditsEarned: this.ajax.request(`person/${person_id}/credits`, { data: { year }})

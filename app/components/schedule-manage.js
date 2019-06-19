@@ -17,8 +17,10 @@ export default class ScheduleManageComponent extends Component {
   @argument('object') person;
   @argument('number') year;
   @argument('object') slots;
+  @argument('object') signedUpSlots;
   @argument('number') creditsEarned = 0.0;
   @argument('object') permission;
+  @argument('object') scheduleSummary;
 
   scheduleSummary = null;
 
@@ -35,13 +37,29 @@ export default class ScheduleManageComponent extends Component {
 
   didReceiveAttrs() {
     this.set('filterDay', this.isCurrentYear ? 'upcoming' : 'all');
-    this._retrieveScheduleSummary();
+    this._sortAndMarkSignups();
+
+    this.signedUpSlots.forEach((signedUp) => {
+      const slot = this.slots.find((slot) => signedUp.id == slot.id);
+      if (slot) {
+        slot.set('person_assigned', true);
+      }
+    });
+  }
+
+  _sortAndMarkSignups() {
+    this.signedUpSlots.sort((a,b) => a.slot_begins_time - b.slot_begins_time);
+    this.signedUpSlots.forEach((slot) => {
+      slot.set('is_overlapping', false);
+      slot.set('is_training_overlap', false);
+    });
+    markSlotsOverlap(this.signedUpSlots);
   }
 
   _retrieveScheduleSummary() {
     this.ajax.request(`person/${this.person.id}/schedule/summary`, { data: { year: this.year }}).then((result) => {
       this.set('scheduleSummary', result.summary);
-    });
+    }).catch((result) => this.house.handleErrorResponse(result));
   }
 
   @computed('year')
@@ -135,18 +153,6 @@ export default class ScheduleManageComponent extends Component {
     return days;
   }
 
-  @computed('slots.@each.person_assigned')
-  get signedUpSlots() {
-    /*
-     * Note: don't used availableSlots in case a person is signed up
-     * for an inactive slot, and they cannot see inactive slots. in the schedule.
-     */
-
-    const slots = this.slots.filterBy('person_assigned', true);
-    markSlotsOverlap(slots);
-    return slots;
-  }
-
   @computed('permission')
   get deniedReason() {
     const permission = this.permission;
@@ -197,11 +203,6 @@ export default class ScheduleManageComponent extends Component {
   }
 
   @action
-  updateScheduleSummary() {
-    this._retrieveScheduleSummary();
-  }
-
-  @action
   setRequirementsOverride() {
     this.set('requirementsOverride', true);
   }
@@ -209,19 +210,37 @@ export default class ScheduleManageComponent extends Component {
   @action
   joinSlot(slot) {
     slotSignup(this, slot, this.person, () => {
+      this.signedUpSlots.pushObject(slot);
       slot.set('person_assigned', true);
+      this._sortAndMarkSignups();
       this._retrieveScheduleSummary();
     });
   }
 
   @action
   leaveSlot(slot) {
+    let message;
+
+    if (slot.has_started && this.session.user.isAdmin) {
+      message = 'The shift has already started. Because you are an admin, you are allowed to removed the shift. '
+    } else {
+      message = '';
+    }
+
+    message += `Are you sure you want to remove "${slot.position_title} - ${slot.slot_description}" from the schedule?`
+
     this.modal.confirm('Confirm Leaving Shift',
-      `Are you sure you want to leave the shift "${slot.slot_description}"?`,
+      message,
       () => {
         this.ajax.request(`person/${this.person.id}/schedule/${slot.id}`, {
           method: 'DELETE',
         }).then((result) => {
+          const signedUp = this.signedUpSlots.find((s) => s.id == slot.id);
+          if (signedUp) {
+            this.signedUpSlots.removeObject(signedUp);
+            this._sortAndMarkSignups();
+          }
+
           slot.set('person_assigned', false);
           slot.set('slot_signed_up', result.signed_up);
           this._retrieveScheduleSummary();
