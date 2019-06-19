@@ -21,7 +21,9 @@ export default class PersonScheduleRoute extends Route {
     this.store.unloadAll('schedule');
 
     const records = {
+      signedUpSlots: this.store.query('schedule', { person_id, year }).then((result) => result.toArray()),
       slots: this.store.query('schedule', scheduleParams),
+      scheduleSummary: this.ajax.request(`person/${person_id}/schedule/summary`, { data: { year }}).then((result) => result.summary),
       creditsEarned: this.ajax.request(`person/${person_id}/credits`, {data: { year }})
                   .then((result) => result.credits),
       year,

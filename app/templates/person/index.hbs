@@ -29,7 +29,11 @@
       <div class="form-group row">
         <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Contact</label>
         <div class="mt-2 col-auto">
-          {{mail-to person.email}}
+          {{#if person.email}}
+            email address {{mail-to person.email}}
+          {{else}}
+            <div class="text-muted">missing</div>
+          {{/if}}
           {{#if (has-role "admin" "vc" "view-pii")}}
             <div class="mt-2">primary phone {{#if person.home_phone}}{{phone-link person.home_phone}}{{else}}n/a{{/if}}</div>
             {{#if person.alt_phone}}

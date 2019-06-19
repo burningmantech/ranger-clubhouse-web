@@ -128,7 +128,7 @@
     The <i class="fas fa-info-circle info-icon"></i> icon indicates additional information is available. Click on the icon and/or text.
   </p>
 
-  {{schedule-table slots=signedUpSlots person=person year=year creditsEarned=creditsEarned onChange=(action updateScheduleSummary) scheduleSummary=scheduleSummary}}
+  {{schedule-table slots=signedUpSlots person=person year=year creditsEarned=creditsEarned scheduleSummary=scheduleSummary leaveSlot=(action leaveSlot) showPeople=(action showPeople)}}
   <div class="d-print-none">
     <h3 class="mt-2">{{if isCurrentYear "Available Shifts" "Past Shifts"}}</h3>
     {{#if availableSlots}}

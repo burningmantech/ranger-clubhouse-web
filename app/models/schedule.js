@@ -38,8 +38,6 @@ export default class ScheduleModel extends DS.Model {
   // is slot active?
   @attr('boolean', { readOnly: true }) slot_active;
 
-  // Is the person signed up for this slot?
-  @attr('boolean', { readOnly: true}) person_assigned;
   // How many trainers are signed up
   @attr('number', { readOnly: true }) trainers;
   // Possible credits earned
