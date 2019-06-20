@@ -38,7 +38,7 @@ export default class VcBmidController extends Controller {
   filterOptions = [
     [ 'Specials (titles, meals, showers, or early arrival)', 'special' ],
     [ 'Alphas', 'alpha' ],
-    [ 'Vets w/shift after 8/15 OR PASSED training; excludes PNVs', 'signedup' ],
+    [ 'Vets w/shift after 8/10 OR PASSED training; excludes PNVs', 'signedup' ],
     [ 'BMIDs marked as "Issues" or "Do Not Print"', 'nonprint' ],
     [ 'Submitted BMIDs', 'submitted' ],
     [ 'Printed BMIDs', 'printed' ]

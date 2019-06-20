@@ -7,6 +7,7 @@ import { optional } from '@ember-decorators/argument/types';
 import { tagName } from '@ember-decorators/component';
 import TicketDeliveryValidations from 'clubhouse/validations/ticket-delivery';
 import { StateOptions } from 'clubhouse/constants/countries';
+import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
 
 @tagName('')
 export default class TicketDeliverInfoComponent extends Component {
@@ -152,5 +153,10 @@ export default class TicketDeliverInfoComponent extends Component {
         this.set('isSaved', true);
         this.set('haveAddress', true);
       }).catch((response) => this.house.handleErrorResponse(response));
+  }
+
+  * transition({ insertedSprites, removedSprites }) { // eslint-disable-line require-yield
+    insertedSprites.forEach(fadeIn);
+    removedSprites.forEach(fadeOut);
   }
 }

@@ -4,6 +4,7 @@ import { argument } from '@ember-decorators/argument';
 import { unionOf } from '@ember-decorators/argument/types';
 import { optional } from '@ember-decorators/argument/types';
 import { tagName } from '@ember-decorators/component';
+import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
 
 @tagName('')
 export default class TicketWapInfoComponent extends Component {
@@ -29,5 +30,10 @@ export default class TicketWapInfoComponent extends Component {
     const ticket = this.ticket;
 
     return (ticket && ticket.type == 'staff_credential' && (ticket.status == 'claimed' || ticket.status == 'submitted'));
+  }
+
+  * transition({ insertedSprites, removedSprites }) { // eslint-disable-line require-yield
+    insertedSprites.forEach(fadeIn);
+    removedSprites.forEach(fadeOut);
   }
 }
