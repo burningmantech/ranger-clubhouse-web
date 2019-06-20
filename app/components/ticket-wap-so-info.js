@@ -6,6 +6,7 @@ import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
 import { tagName } from '@ember-decorators/component';
 import Changeset from 'ember-changeset';
+import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
 
 import moment from 'moment';
 
@@ -96,4 +97,8 @@ export default class TicketWapSoInfoComponent extends Component {
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
+  * transition({ insertedSprites, removedSprites }) { // eslint-disable-line require-yield
+    insertedSprites.forEach(fadeIn);
+    removedSprites.forEach(fadeOut);
+  }
 }

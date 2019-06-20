@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import { set } from '@ember/object';
 import { action, computed } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
+import { later } from '@ember/runloop';
 
 export default class TicketingOpenComponent extends Component {
   @argument('object') person;
@@ -54,7 +55,8 @@ export default class TicketingOpenComponent extends Component {
   @action
   nextSection(card) {
     this.set('showing', { [card]: true });
-    this.house.scrollToElement(`#ticket-${card}`);
+    later(() => { this.house.scrollToElement(`#ticket-${card}`); }, 500);
+
   }
 
   @action
