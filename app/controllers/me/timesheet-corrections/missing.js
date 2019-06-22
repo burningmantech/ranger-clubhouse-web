@@ -35,7 +35,7 @@ export default class MeTimesheetCorrectionsMissingController extends Controller 
   @action
   newRequestAction() {
     this.set('entry', this.store.createRecord('timesheet-missing', {
-      person_id: this.session.user.id,
+      person_id: this.session.userId,
       position_id: this.positions.firstObject.id,
      }));
   }

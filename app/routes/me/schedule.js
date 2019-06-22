@@ -9,7 +9,7 @@ export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
   };
 
   model(params) {
-    const person_id = this.session.user.id;
+    const person_id = this.session.userId;
     const year = requestYear(params);
 
     this.store.unloadAll('schedule');

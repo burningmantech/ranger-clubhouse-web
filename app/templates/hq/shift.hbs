@@ -1,10 +1,10 @@
 {{#unless person.on_site}}
-  {{#ch-alert "warning"}}
-    <strong class="text-danger">{{person.callsign}} is marked as OFF SITE.</strong> The recommendation
-    is to follow the procedures on the Site Check In page before signing the person into a shift.
-    <p class="mt-2">
+  {{#ch-alert "danger"}}
+    <h4>{{person.callsign}} is marked as OFF SITE.</h4>
+    The recommendation is to follow the procedures on the Site Check In page before signing the person into a shift.
+    <div class="mt-2">
       {{#link-to "hq.site-checkin" person.id class="btn btn-primary"}}Site Check In{{/link-to}}
-    </p>
+    </div>
   {{/ch-alert}}
 {{/unless}}
 
@@ -12,6 +12,13 @@
   {{#ch-alert "warning" bold=true}}
     {{fa-icon "envelope"}} {{pluralize person.unread_message_count "unread Clubhouse message"}}.
     {{#link-to "hq.messages" class="btn btn-success"}}Read Now{{/link-to}}
+  {{/ch-alert}}
+{{/if}}
+
+{{#if scheduleRecommendations.burn_weekend_shift}}
+  {{#ch-alert "warning"}}
+    <div class="h4">{{person.callsign}} has not signed up for a Burn Weekend shift.</div>
+    Ask if they are interested in signing up for a shift.
   {{/ch-alert}}
 {{/if}}
 

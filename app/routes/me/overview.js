@@ -16,7 +16,7 @@ export default class MeOverviewRoute extends Route.extend(MeRouteMixin) {
     controller.set('motds', model);
 
     if (!person.isPastProspective && !person.isAuditor) {
-      this.ajax.request(`person/${this.session.user.id}/photo`)
+      this.ajax.request(`person/${this.session.userId}/photo`)
         .then((result) => controller.set('photo', result.photo))
         .catch(() => {
           controller.set('photo', { status: 'error', message: 'There was a server error.' });

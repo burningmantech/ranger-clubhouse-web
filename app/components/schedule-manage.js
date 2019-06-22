@@ -194,7 +194,7 @@ export default class ScheduleManageComponent extends Component {
 
   @computed('person.id')
   get isMe() {
-    return this.session.user.id == this.person.id;
+    return this.session.userId == this.person.id;
   }
 
   @computed('session.user')
@@ -209,9 +209,10 @@ export default class ScheduleManageComponent extends Component {
 
   @action
   joinSlot(slot) {
-    slotSignup(this, slot, this.person, () => {
+    slotSignup(this, slot, this.person, (result) => {
       this.signedUpSlots.pushObject(slot);
       slot.set('person_assigned', true);
+      set(this.permission, 'recommend_burn_weekend_shift', result.recommend_burn_weekend_shift);
       this._sortAndMarkSignups();
       this._retrieveScheduleSummary();
     });
@@ -243,6 +244,7 @@ export default class ScheduleManageComponent extends Component {
 
           slot.set('person_assigned', false);
           slot.set('slot_signed_up', result.signed_up);
+          set(this.permission, 'recommend_burn_weekend_shift', result.recommend_burn_weekend_shift);
           this._retrieveScheduleSummary();
           this.toast.success('The shift as been removed from the schedule.');
         }).catch((response) => { this.house.handleErrorResponse(response); });

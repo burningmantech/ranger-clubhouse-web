@@ -117,7 +117,7 @@ export default class PersonIndexController extends Controller {
       this.toast.success('The information was successfully updated.');
 
       // Reload the current user.
-      if (model.get('id') == this.session.user.id) {
+      if (model.get('id') == this.session.userId) {
         this.session.loadUser();
       }
 

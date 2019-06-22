@@ -7,6 +7,10 @@ export default SessionService.extend({
 
   user: null,
 
+  get userId() {
+    return (this.isAuthenticated && this.user) ? this.user.id : null;
+  },
+
   loadUser() {
     if (!this.isAuthenticated) {
       return Promise.resolve();

@@ -48,7 +48,7 @@ export default class ErrorRoute extends Route {
         route_error
       }));
 
-      const personId = this.session.get('user.id');
+      const personId = this.session.userId;
       if (personId) {
         data.append('person_id', personId);
       }

@@ -3,7 +3,7 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 
 export default class MeRoute extends Route.extend(AuthenticatedRouteMixin) {
   model() {
-    return this.store.find('person', this.session.user.id);
+    return this.store.find('person', this.session.userId);
   }
 
   setupController(controller, model) {
