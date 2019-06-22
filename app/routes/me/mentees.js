@@ -3,7 +3,7 @@ import MeRouteMixin from 'clubhouse/mixins/route/me';
 
 export default class MeMenteesRoute extends Route.extend(MeRouteMixin) {
   model() {
-    return this.ajax.request(`person/${this.session.user.id}/mentees`).then((result) => result.mentees);
+    return this.ajax.request(`person/${this.session.userId}/mentees`).then((result) => result.mentees);
   }
 
   setupController(controller, model) {

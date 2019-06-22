@@ -50,7 +50,7 @@ export default class ClubhouseMessagesComponent extends Component {
   _updateUnreadCount() {
     const unreadCount = this.unreadCount;
     this.person.set('unread_message_count', this.unreadCount);
-    if (this.session.user.id == this.person.id) {
+    if (this.session.userId == this.person.id) {
       this.session.user.set('unread_message_count', unreadCount);
     }
   }
@@ -80,7 +80,7 @@ export default class ClubhouseMessagesComponent extends Component {
     }
 
     this.house.saveModel(model, `Message successfully sent to ${model.get('recipient_callsign')}.`, () => {
-      if (this.newMessage.person_id == this.session.user.id) {
+      if (this.newMessage.person_id == this.session.userId) {
         this.messages.update().then(() => {
           this._updateUnreadCount();
         });

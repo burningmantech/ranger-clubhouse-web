@@ -10,7 +10,7 @@ export default class MeTimesheetRoute extends Route.extend(MeRouteMixin) {
 
   model(params) {
     const year = requestYear(params);
-    const person_id = this.session.user.id;
+    const person_id = this.session.userId;
     const queryParams = {
       person_id,
       year,

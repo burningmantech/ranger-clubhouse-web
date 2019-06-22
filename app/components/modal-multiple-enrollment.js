@@ -18,7 +18,7 @@ export default class ModalMultipleEnrollmentComponent extends Component {
 
   @computed('data.person')
   get isMe() {
-    return this.session.user.id == this.data.person.id;
+    return this.session.userId == this.data.person.id;
   }
 
   @computed('data.slots.firstObject')

@@ -124,8 +124,17 @@
       The scheduling requirements override is enabled. You better know what you are doing! Remember, the Clubhouse logs all scheduling actions.
     {{/ch-alert}}
   {{/if}}
+  {{#if (and person.isRanger permission.recommend_burn_weekend_shift)}}
+    {{#ch-alert "warning"}}
+      <b>We strongly urge all Rangers to work at least one shift on Burn Weekend (Friday night through Sunday night) —
+      including at least one Burn Perimeter shift.</b> Burn Weekend is our busiest time
+      and having solid staffing is critical. This annoying text box will stick
+      around until you sign up for a weekend shift.
+    {{/ch-alert}}
+  {{/if}}
+
   <p>
-    The <i class="fas fa-info-circle info-icon"></i> icon indicates additional information is available. Click on the icon and/or text.
+    The <i class="fas fa-info-circle info-icon"></i> icon on a shift description  means additional information is available. Click on the icon and/or text.
   </p>
 
   {{schedule-table slots=signedUpSlots person=person year=year creditsEarned=creditsEarned scheduleSummary=scheduleSummary leaveSlot=(action leaveSlot) showPeople=(action showPeople)}}

@@ -37,9 +37,6 @@ export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
 
       attachments: this.store.findAll('asset-attachment', { reload: true }),
 
-      imminentSlots: this.ajax.request(`person/${person_id}/schedule/imminent`)
-        .then((result) => result.slots),
-
       expected: this.ajax.request(`person/${person_id}/schedule/expected`),
 
       timesheetSummary: this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }}).then((result) => result.summary),

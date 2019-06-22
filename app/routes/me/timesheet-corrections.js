@@ -4,7 +4,7 @@ import RSVP from 'rsvp';
 
 export default class MeTimesheetCorrectionsRoute extends Route.extend(MeRouteMixin) {
   async model() {
-    const person_id = this.session.user.id;
+    const person_id = this.session.userId;
 
     // Figure out if timesheet corrections are enabled, and for what year.
     const timesheetInfo = await this.ajax.request('timesheet/info', {

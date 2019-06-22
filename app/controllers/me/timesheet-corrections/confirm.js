@@ -26,7 +26,7 @@ export default class MeTimesheetCorrectionsConfirmController extends Controller 
   @action
   confirmAction(model) {
     const confirmed = model.get('confirm') ? 1 : 0;
-    const person_id = this.session.user.id;
+    const person_id = this.session.userId;
 
     this.toast.clear();
 

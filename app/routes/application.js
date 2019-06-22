@@ -1,5 +1,5 @@
 import Route from '@ember/routing/route';
-import { action } from '@ember/object';
+import { action, setProperties } from '@ember/object';
 import { inject as service } from '@ember/service';
 import setCookie from 'clubhouse/utils/set-cookie';
 
@@ -46,7 +46,7 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
 
         analytics.append('data', JSON.stringify(data));
         if (this.session.isAuthenticated) {
-          const person_id = this.get('session.user.id');
+          const person_id = this.session.userId;
 
           if (person_id) {
             analytics.append('person_id', person_id);
@@ -113,9 +113,12 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
 
   setupController(controller) {
     super.setupController(...arguments);
-    const searchPrefs = this.house.getKey('person-search-prefs');
-    if (searchPrefs && controller.searchForm) {
-      controller.searchForm.setProperties(searchPrefs);
+
+    if (this.session.isAuthenticated) {
+      const searchPrefs = this.house.getKey('person-search-prefs');
+      if (searchPrefs && controller.searchForm) {
+        setProperties(controller.searchForm, searchPrefs);
+      }
     }
   }
 
