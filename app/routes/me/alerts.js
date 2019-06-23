@@ -4,7 +4,7 @@ import RSVP from 'rsvp';
 
 export default class MeAlertsRoute extends Route.extend(MeRouteMixin) {
   model() {
-    const personId = this.session.user.id;
+    const personId = this.session.userId;
 
     // Retrieve the alert preferences and SMS numbers
     return RSVP.hash({

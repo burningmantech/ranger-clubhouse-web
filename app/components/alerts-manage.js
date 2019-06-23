@@ -50,7 +50,7 @@ export default class AlertsManageComponent extends Component {
     form.set('on_playa', numbers.on_playa.phone);
     form.set('is_same', numbers.is_same);
 
-    this.set('isMe', (this.person.id == this.session.user.id));
+    this.set('isMe', (this.person.id == this.session.userId));
   }
 
   // Are one or both numbers stopped?

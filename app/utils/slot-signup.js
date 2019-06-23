@@ -7,7 +7,7 @@ export function slotSignup(controller, slot, person, callback = null, force = fa
   }).then((result) => {
     if (result.status == 'success') {
       const toast = controller.toast;
-      const isMe = controller.session.user.id == person.id;
+      const isMe = controller.session.userId == person.id;
       const name = isMe ? "You are" : person.callsign+" is";
 
       set(slot, 'slot_signed_up', result.signed_up);
@@ -27,7 +27,7 @@ export function slotSignup(controller, slot, person, callback = null, force = fa
       }
 
       if (callback) {
-        callback();
+        callback(result);
       }
     } else {
       handleSignupError(controller, result, slot, person, callback);
@@ -40,7 +40,7 @@ export function slotSignup(controller, slot, person, callback = null, force = fa
 function handleSignupError(controller, result, slot, person, callback) {
   const modal = controller.modal;
   const status = result.status;
-  const isMe = controller.session.user.id == person.id;
+  const isMe = controller.session.userId == person.id;
 
   set(slot, 'slot_signed_up', result.signed_up);
 

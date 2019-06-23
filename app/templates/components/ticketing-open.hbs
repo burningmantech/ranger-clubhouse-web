@@ -3,37 +3,53 @@
     {{person-missing-bpguid}}
   {{/ch-box}}
 {{else}}
-  <h2>Ticketing Is Open!</h2>
-  <p>
-    You may request, claim, or bank any items you've qualified
-    for, such as a Staff Credential, Reduced-Price Ticket, Vehicle Pass,
-    Work Access Pass, or Work Access Passes for your significant
-    others/critical campmates.
-  </p>
-  <p>
-    You have <b>until {{full-datetime-format ticketingInfo.submit_date}} Pacific Time
-    to make your selection(s)</b> below. After that, we'll start
-    uploading everyone's requests into the Burning Man Ticket Request System.
-  </p>
-  <p>
-    <b>It may not be possible to fulfill any requests made after the {{moment-format ticketingInfo.submit_date "dddd, MMMM Do"}} deadline.</b>
-  </p>
-  {{#if hasFullPackage}}
+  {{#if (and (or person.isProspective person.isAlpha) (not ticketingInfo.is_enabled_for_pnv))}}
+    <h2>Work Access Passes Not Available</h2>
     <p>
-      <button type="button" class="btn btn-success btn-lg" {{action nextSection "ticket"}}>Begin Ticketing</button>
+      Information about Work Access Passes (WAP) for qualified Alpha &amp; Prospective Rangers is not available at this time. An email about WAPs  will be sent out in early-to-mid August.
     </p>
+  {{else}}
+    {{#if (or person.isProspective person.isAlpha)}}
+      <h2>Work Access Passes Now Available!</h2>
+      <p>
+        Alphas and Prospective Rangers who have signed up for or completed
+        training and intend to walk an Alpha shift on playa are eligible for a
+        Work Access Pass (WAP). You may claim your WAP below.
+      </p>
+    {{else}}
+      <h2>Ticketing Is Open!</h2>
+      <p>
+        You may request, claim, or bank any items you've qualified
+        for, such as a Staff Credential, Reduced-Price Ticket, Vehicle Pass,
+        Work Access Pass, or Work Access Passes for your significant
+        others/critical campmates.
+      </p>
+      <p>
+        You have <b>until {{full-datetime-format ticketingInfo.submit_date}} Pacific Time
+          to make your selection(s)</b> below. After that, we'll start
+        uploading everyone's requests into the Burning Man Ticket Request System.
+      </p>
+      <p>
+        <b>It may not be possible to fulfill any requests made after the {{moment-format ticketingInfo.submit_date "dddd, MMMM Do"}} deadline.</b>
+      </p>
+    {{/if}}
+    {{#if hasFullPackage}}
+      <p>
+        <button type="button" class="btn btn-success btn-lg" {{action nextSection "ticket"}}>Begin Ticketing</button>
+      </p>
+    {{/if}}
+    <div class="accordion">
+      {{#if hasFullPackage}}
+        {{ticket-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket setTicketStatus=setTicketStatus showing=showing toggleCard=toggleCard nextSection=(action nextSection "vp")}}
+        {{ticket-vp-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket vehiclePass=vehiclePass setTicketStatus=setTicketStatus  showing=showing toggleCard=toggleCard nextSection=(action nextSection "wap")}}
+      {{/if}}
+
+      {{ticket-wap-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket wap=wap setTicketStatus=setTicketStatus  showing=showing toggleCard=toggleCard nextSection=(if hasFullPackage (action nextSection "wapso") false)}}
+
+      {{#if hasFullPackage}}
+        {{ticket-wap-so-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket  showing=showing toggleCard=toggleCard nextSection=(action nextSection "delivery")}}
+        {{ticket-delivery-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket vehiclePass=vehiclePass  showing=showing toggleCard=toggleCard}}
+      {{/if}}
+    </div>
   {{/if}}
-  <div class="accordion">
-    {{#if hasFullPackage}}
-      {{ticket-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket setTicketStatus=setTicketStatus showing=showing toggleCard=toggleCard nextSection=(action nextSection "vp")}}
-      {{ticket-vp-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket vehiclePass=vehiclePass setTicketStatus=setTicketStatus  showing=showing toggleCard=toggleCard nextSection=(action nextSection "wap")}}
-    {{/if}}
-
-    {{ticket-wap-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket wap=wap setTicketStatus=setTicketStatus  showing=showing toggleCard=toggleCard nextSection=(if hasFullPackage (action nextSection "wapso") false)}}
-
-    {{#if hasFullPackage}}
-      {{ticket-wap-so-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket  showing=showing toggleCard=toggleCard nextSection=(action nextSection "delivery")}}
-      {{ticket-delivery-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket vehiclePass=vehiclePass  showing=showing toggleCard=toggleCard}}
-    {{/if}}
-  </div>
 {{/if}}

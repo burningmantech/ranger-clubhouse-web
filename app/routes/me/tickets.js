@@ -15,7 +15,7 @@ export default class MeTicketsRoute extends Route.extend(MeRouteMixin) {
     return RSVP.hash({
       ticketingInfo: this.ajax.request('ticketing/info')
                 .then((results) => results.ticketing_info ),
-      ticketPackage: this.ajax.request(`ticketing/${this.session.user.id}/package`)
+      ticketPackage: this.ajax.request(`ticketing/${this.session.userId}/package`)
                 .then((results) => results.package)
     });
   }

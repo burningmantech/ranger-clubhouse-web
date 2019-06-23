@@ -213,7 +213,7 @@ export default class ApplicationController extends Controller {
     if (form.mode == 'hq') {
       // restrict search to callsign and a handful of active-like statuses
       params.search_fields = 'callsign';
-      params.statuses = 'active,alpha,prospective,retired,non ranger,inactive';
+      params.statuses = 'active,alpha,prospective,retired,non ranger,inactive,inactive extension';
     } else {
       // Find out which fields to search
       const search_fields = [];
