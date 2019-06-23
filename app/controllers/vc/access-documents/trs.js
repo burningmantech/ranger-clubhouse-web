@@ -58,7 +58,6 @@ export default class VcAccessDocumentsTrsController extends Controller {
       const deliveryMethod = human.delivery_method;
 
       let numSC = 0,
-        numRPT = 0,
         numGT = 0,
         numVP = 0;
       const VPids = [];
@@ -76,9 +75,6 @@ export default class VcAccessDocumentsTrsController extends Controller {
           numSC++;
           break;
 
-        case 'reduced_price_ticket':
-          numRPT++;
-          break;
         case 'gift_ticket':
           numGT++;
           break;
