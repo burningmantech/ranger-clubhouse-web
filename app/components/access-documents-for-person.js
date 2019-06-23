@@ -19,11 +19,6 @@ export default class AccessDocumentsForPersonComponent extends Component {
     gift_ticket: 'GIFT'
   };
 
-  wapInfoTypes = {
-    staff_credential: 'SC',
-    work_access_pass: 'WAP'
-  };
-
   vpTicketInfo = {
     vehicle_pass: 'VP'
   };
@@ -32,20 +27,66 @@ export default class AccessDocumentsForPersonComponent extends Component {
     work_access_pass_so: 'WAPSO'
   };
 
-  @computed('documents')
-  get record() {
+  didReceiveAttrs() {
     const notes = [];
 
-    const record = {
-      tickets: this._accessDocumentInfo('tickets', this.ticketInfoTypes, notes),
-      arrivalDate: this._accessDocumentInfo('WAPs', this.wapInfoTypes, notes),
-      vpTickets: this._accessDocumentInfo('VPs', this.vpTicketInfo, notes),
-      significantOtherCount: this._accessDocumentInfo('WAPSOs', this.wapSOsInfo, notes),
-    };
+    this.set('tickets',this._accessDocumentInfo('tickets', this.ticketInfoTypes, notes));
+    this._findArrivalDate(notes);
+    this.set('vpTickets',  this._accessDocumentInfo('VPs', this.vpTicketInfo, notes));
+    this.set('significantOtherCount',  this._accessDocumentInfo('WAPSOs', this.wapSOsInfo, notes));
+    this.set('notes', notes);
+  }
 
-    record.notes = notes;
+  _buildAccessDate(doc) {
+    if (doc.access_any_time) {
+      return 'any';
+    } else if (!doc.access_date) {
+      return 'missing';
+    } else if (doc.access_date == 'any') {
+      return 'any';
+    } else {
+      return moment(doc.access_date).format('ddd MM/DD/YY');
+    }
+  }
 
-    return record;
+  _findArrivalDate(notes) {
+    const docs = this.documents;
+    const waps = docs.filter((doc) => (doc.type == 'work_access_pass'));
+
+    if (waps.length > 1) {
+      notes.push(`${waps.length} WAPs`);
+    }
+
+    // Find a claimed SC
+    let doc = docs.find((doc) => (doc.type == 'staff_credential' && doc.status == 'claimed'));
+
+    // Nope, try find a WAP.
+    if (!doc) {
+        doc = docs.find((doc) => doc.type == 'work_access_pass');
+    }
+
+    // Try again -- ANY SCs.
+    if (!doc) {
+        doc = docs.find((doc) => doc.type == 'staff_credential');
+    }
+
+    let style = '', text = '';
+    if (!doc) {
+        text = 'missing';
+    } else {
+      // Alert to someone having a staff credential AND WAP.
+      if (doc.type == 'staff_credential' && waps.length > 0) {
+        notes.push('SC+WAP');
+      }
+
+      if (doc.status == 'claimed' || doc.status == 'banked' || doc.status == 'submitted') {
+        style = `access-document-${doc.status}`;
+      }
+
+      text = this._buildAccessDate(doc);
+    }
+
+    this.set('arrivalDate',  { style, text });
   }
 
   _accessDocumentInfo(type, typeMap, notes) {
@@ -58,23 +99,7 @@ export default class AccessDocumentsForPersonComponent extends Component {
     const theOne = documents[0];
 
     let text = '';
-
     switch (type) {
-    case 'WAPs':
-      if (theOne.access_any_time) {
-        text = 'any';
-      } else {
-        const accessDate = theOne.access_date;
-        if (accessDate == '') {
-          text = 'Unspecified';
-        } else if (accessDate != 'any') {
-          text = moment(theOne.access_date).format('ddd MM/DD/YY');
-        } else {
-          text = accessDate;
-        }
-      }
-      break;
-
     case 'WAPSOs':
       text = +documents.length;
       break;
