@@ -7,6 +7,7 @@ Showing {{pluralize expiring.length "person"}}
   <thead>
     <tr>
       <th>Callsign</th>
+      <th>Status</th>
       <th>Email</th>
       <th>RAD</th>
       <th>Ticket Type</th>
@@ -19,6 +20,7 @@ Showing {{pluralize expiring.length "person"}}
     {{#each expiring as |person|}}
       <tr>
         <td>{{person-link person=person.person page="access-documents"}}</td>
+        <td>{{person.person.status}}</td>
         <td>{{mail-to person.person.email}}</td>
         {{#with person.tickets.firstObject as |ticket|}}
           <td>RAD-{{ticket.id}}</td>

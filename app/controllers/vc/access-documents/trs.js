@@ -94,7 +94,9 @@ export default class VcAccessDocumentsTrsController extends Controller {
           if (deliveryMethod != "mail") {
             return;
           }
-          if (doc.type != "reduced_price_ticket" && doc.type != "gift_ticket") {
+          if (doc.type != "reduced_price_ticket"
+          && doc.type != "gift_ticket"
+          && doc.type != 'vehicle_pass') {
             return;
           }
         }
@@ -141,7 +143,7 @@ export default class VcAccessDocumentsTrsController extends Controller {
         }
 
         switch (shortType) {
-        case 'RPT':
+        //case 'RPT': - for 2019 RPT is a paid item, VP not paid
         case 'SC':
         case 'GT':
           if (numVP > 0) {
@@ -150,19 +152,19 @@ export default class VcAccessDocumentsTrsController extends Controller {
           break;
         }
 
-        // If we have a SC, RPT, or GT we will include the VP on
+        // If we have a SC, or GT we will include the VP on
         // that line of the CSV, so there's nothing for us to do here.
-        if (shortType == "VP" && (numSC > 0 || numRPT > 0 || numGT > 0)) {
+        if (shortType == "VP" && (numSC > 0 || numGT > 0)) {
           return;
         }
 
-        let dateInfo = "";
+        let dateInfo = '';
         if (doc.type == "staff_credential" ||
           doc.type == "reduced_price_ticket" ||
           doc.type == "work_access_pass" ||
           doc.type == "work_access_pass_so") {
           if (doc.access_any_time) {
-            dateInfo = " Anytime";
+            dateInfo = ' Anytime';
           } else if (doc.access_date) {
             dateInfo = moment(doc.access_date).format(' ddd MM/D');
           }
