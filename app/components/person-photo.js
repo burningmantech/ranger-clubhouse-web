@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { action } from '@ember/object';
+import { action, computed } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
 import { classNames } from '@ember-decorators/component';
@@ -9,6 +9,11 @@ export default class PersonPhotoComponent extends Component {
   @argument('object') person;
   @argument(optional('object')) photo;
   @argument(optional('object')) syncAction;
+
+  @computed('person')
+  get canShowUploadUrl() {
+    return (this.person.id == this.session.userId || this.session.user.isAdmin);
+  }
 
   @action
   uploadAction() {
