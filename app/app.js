@@ -6,6 +6,9 @@ import config from './config/environment';
 import LinkComponent from '@ember/routing/link-component';
 import RSVP from 'rsvp';
 import buildErrorHandler from 'ember-test-friendly-error-handler';
+import { isAbortError, isTimeoutError } from 'ember-ajax/errors';
+import DS from 'ember-data';
+
 
 RSVP.on('error', function(error) {
   // TODO: keep an eye on this
@@ -29,6 +32,15 @@ RSVP.on('error', function(error) {
       throw error;
     }
     console.error(error);
+
+    const isOffline =
+      (error instanceof DS.TimeoutError || error instanceof DS.AbortError
+        || isAbortError(error) || isTimeoutError(error));
+
+    if (isOffline) {
+      // Don't record timed out, or offline errors.
+      return;
+    }
 
     if (config.logEmberErrors && navigator.sendBeacon) {
       const data = new FormData;

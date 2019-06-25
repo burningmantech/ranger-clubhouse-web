@@ -314,9 +314,9 @@
         &nbsp;
       </div>
 
-      {{#ch-form "person-search" searchForm formClass="col-xs-12 col-md-10 col-lg-8 mb-2 mx-2" changeSet=false onSubmit=(action "submit") onFormChange=(action searchFormChange) as |f|}}
-        <div class="form-row no-gutters">
-          <div class="col-xs-12 col-md-8">
+      {{#ch-form "person-search" searchForm formClass="col-11 col-md-9 col-lg-7 mb-2 mx-2" changeSet=false onSubmit=(action "submit") onFormChange=(action searchFormChange) as |f|}}
+        <div class="form-row">
+          <div class="col-12 col-sm-10 col-lg-9 col-xl-8">
             {{#power-select-typeahead
                         search=(action searchAction)
                         onchange=(action searchChangeAction)
@@ -331,18 +331,18 @@
                         as |person| }}
               <strong>{{person.callsign}}</strong> &lt;{{person.first_name}} {{person.last_name}}, {{person.status}}&gt;
               {{#if (eq person.email_match "full")}}
-                - email full match
+                - email exact match
               {{else if (eq person.email_match "partial")}}
                 - email partial match
               {{/if}}
             {{/power-select-typeahead}}
           </div>
-          <div class="mt-xs-2 mt-sm-2 mt-md-0">
+          <div class="col-auto mt-2 mt-sm-0 no-gutters">
             {{f.input "mode" type="select" options=modeOptions controlClass="form-control form-control-sm"}}
           </div>
         </div>
         {{#if showSearchOptions}}
-          <fieldset class="bg-white">
+          <div class="bg-white p-2">
             <div class="form-row">
               <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Search By:</label>
               <div class="col-sm-12 col-md-9 mt-2">
@@ -367,7 +367,7 @@
                 <button type="button" class="btn btn-sm btn-secondary" {{action "hideSearchBoxAction"}}>Hide Options</button>
               </div>
             </div>
-          </fieldset>
+          </div>
         {{/if}}
       {{/ch-form}}
     </div>

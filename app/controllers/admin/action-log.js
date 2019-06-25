@@ -5,18 +5,19 @@ import { debounce } from '@ember/runloop';
 import RSVP from 'rsvp';
 
 const EventOptions = [
-    [ 'Login', 'auth-login' ],
-    [ 'Login Failures', 'auth-failed' ],
-    [ 'Password Resets', 'auth-password-%' ],
-    [ 'Person Update', 'person-update' ],
-    [ 'Person Creation', 'person-create' ],
-    [ 'Person Creation Fails', 'person-create-fail' ],
-    [ 'Schedule Updates', 'person-slot-%' ],
-    [ 'Role Changes', 'person-role-%' ],
-    [ 'Position Changes', 'person-position-%' ],
-    [ 'Status Changes', 'person-status-change' ],
     [ 'Client Routing', 'client-route' ],
+    [ 'Login Failures', 'auth-failed' ],
+    [ 'Login', 'auth-login' ],
+    [ 'Password Resets', 'auth-password-%' ],
+    [ 'Person Creation Fails', 'person-create-fail' ],
+    [ 'Person Creation', 'person-create' ],
+    [ 'Person Update', 'person-update' ],
+    [ 'Position Changes', 'person-position-%' ],
+    [ 'Role Changes', 'person-role-%' ],
+    [ 'Schedule Updates', 'person-slot-%' ],
     [ 'Slot Changes', 'slot-%' ],
+    [ 'Status Changes', 'person-status-change' ],
+    [ 'Ticketing Changes', 'access-document-%' ]
 ];
 
 const SortOptions = [
