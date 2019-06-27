@@ -21,6 +21,9 @@ export default class AccessDocumentModel extends DS.Model {
   @attr('string', { readOnly: true }) create_date;
   @attr('string', { readOnly: true }) modified_date;
 
+  // Only returned when requesting items available for delivery
+  @attr('boolean', { readOnly: true }) has_staff_credential;
+
   // Update the status
   updateStatus = memberAction({ path: 'status', type: 'patch'});
 

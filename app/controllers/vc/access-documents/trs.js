@@ -1,45 +1,131 @@
 import Controller from '@ember/controller';
-import {
-  action,
-  computed
-} from '@ember/object';
+import { action, computed, set } from '@ember/object';
 import moment from 'moment';
 
+const SHORT_TYPES = {
+  gift_ticket: 'GIFT',
+  reduced_price_ticket: 'RPT',
+  staff_credential: 'SC',
+  vehicle_pass: 'VP',
+  work_access_pass_so: 'SOWAP',
+  work_access_pass: 'WAP'
+};
+
+const TRS_COLUMN = {
+  'staff_credential': 'sc',
+  'reduced_price_ticket': 'rpt',
+  'gift_ticket': 'gift_ticket',
+  'vehicle_pass': 'vp',
+  'work_access_pass': 'wap',
+  'work_access_pass_so': 'wap'
+};
+
+const PAID_EXPORT_FORMAT = [
+  ['First Name', 'first_name'],
+  ['Last Name', 'last_name'],
+  ['Email', 'email'],
+  ['Question: Method Of Delivery', 'delivery_method'],
+  ['Question: Nickname/Project:', 'project_name'],
+  ['Question: Notes:', 'note'],
+  ['Request: $210 Ticket', 'rpt'],
+  ['Request: $100 Vehicle Pass', 'vp'],
+  ['Request: Transferrable $210 Ticket', 'rpt_xfer'],
+  ['Request: Transferrable $100 Vehicle Pass', 'vp_xfer']
+];
+
+const UNPAID_EXPORT_FORMAT = [
+  ['First Name', 'first_name'],
+  ['Last Name', 'last_name'],
+  ['Email', 'email'],
+  ['Question: Method of Delivery', 'delivery_method'],
+  ['Question: Nickname/Project', 'project_name'],
+  ['Question: Notes', 'note'],
+  ['Shipping Address (Required if Mail Delivery type ): Country', 'country'],
+  ['Shipping Address (Required if Mail Delivery type selected): Full Name', 'full_name'],
+  ['Shipping Address (Required if Mail Delivery type selected): Address', 'address1'],
+  ['Shipping Address (Required if Mail Delivery type selected): Address Line 2', 'address2'],
+  ['Shipping Address (Required if Mail Delivery type selected): City', 'city'],
+  ['Shipping Address (Required if Mail Delivery type selected): State', 'state'],
+  ['Shipping Address (Required if Mail Delivery type selected): Zip', 'zip'],
+  ['Shipping Address (Required if Mail Delivery type selected): Phone', 'phone'],
+  ['Request: Gift Ticket', 'gift_ticket'],
+  ['Request: Gift Vehicle Pass', 'vp'],
+  ['Request: STAFF WAP 8/3 & Later', 'wap_0803'],
+  ['Request: STAFF WAP 8/4 & Later', 'wap_0804'],
+  ['Request: STAFF WAP 8/5 & Later', 'wap_0805'],
+  ['Request: STAFF WAP 8/6 & Later', 'wap_0806'],
+  ['Request: STAFF WAP 8/7 & Later', 'wap_0807'],
+  ['Request: STAFF WAP 8/8 & Later', 'wap_0808'],
+  ['Request: STAFF WAP 8/9 & Later', 'wap_0809'],
+  ['Request: STAFF WAP 8/10 & Later', 'wap_0810'],
+  ['Request: STAFF WAP 8/11 & Later', 'wap_0811'],
+  ['Request: STAFF WAP 8/12 & Later', 'wap_0812'],
+  ['Request: STAFF WAP 8/13 & Later', 'wap_0813'],
+  ['Request: STAFF WAP 8/14 & Later', 'wap_0814'],
+  ['Request: STAFF WAP 8/15 & Later', 'wap_0815'],
+  ['Request: STAFF WAP 8/16 & Later', 'wap_0816'],
+  ['Request: STAFF WAP 8/17 & Later', 'wap_0817'],
+  ['Request: STAFF WAP 8/18 & Later', 'wap_0818'],
+  ['Request: STAFF WAP 8/19 & Later', 'wap_0819'],
+  ['Request: STAFF WAP 8/20 & Later', 'wap_0820'],
+  ['Request: STAFF WAP 8/21 & Later', 'wap_0821'],
+  ['Request: STAFF WAP 8/22 & Later', 'wap_0822'],
+  ['Request: STAFF WAP 8/23 & Later', 'wap_0823'],
+  ['Request: STAFF WAP 8/24 & Later', 'wap_0824'],
+  ['Request: STAFF WAP - Anytime', 'wap_anytime'],
+  ['Request: Staff Credential Pickup 8/3 & After', 'sc_0803'],
+  ['Request: Staff Credential Pickup 8/4 & After', 'sc_0804'],
+  ['Request: Staff Credential Pickup 8/5 & After', 'sc_0805'],
+  ['Request: Staff Credential Pickup 8/6 & After', 'sc_0806'],
+  ['Request: Staff Credential Pickup 8/7 & After', 'sc_0807'],
+  ['Request: Staff Credential Pickup 8/8 & After', 'sc_0808'],
+  ['Request: Staff Credential Pickup 8/9 & After', 'sc_0809'],
+  ['Request: Staff Credential Pickup 8/10 & After', 'sc_0810'],
+  ['Request: Staff Credential Pickup 8/11 & After', 'sc_0811'],
+  ['Request: Staff Credential Pickup 8/12 & After', 'sc_0812'],
+  ['Request: Staff Credential Pickup 8/13 & After', 'sc_0813'],
+  ['Request: Staff Credential Pickup 8/14 & After', 'sc_0814'],
+  ['Request: Staff Credential Pickup 8/15 & After', 'sc_0815'],
+  ['Request: Staff Credential Pickup 8/16 & After', 'sc_0816'],
+  ['Request: Staff Credential Pickup 8/17 & After', 'sc_0817'],
+  ['Request: Staff Credential Pickup 8/18 & After', 'sc_0818'],
+  ['Request: Staff Credential Pickup 8/19 & After', 'sc_0819'],
+  ['Request: Staff Credential Pickup 8/20 & After', 'sc_0820'],
+  ['Request: Staff Credential Pickup 8/21 & After', 'sc_0821'],
+  ['Request: Staff Credential Pickup 8/22 & After', 'sc_0822'],
+  ['Request: Staff Credential Pickup 8/23 & After', 'sc_0823'],
+  ['Request: Staff Credential Pickup 8/24 & After', 'sc_0824'],
+  ['Request: Staff Credential Pickup Anytime', 'sc_anytime'],
+  ['Request: Transferrable Gift Ticket', 'xfer_gift_ticket'],
+  ['Request: Transferrable Gift Vehicle Pass', 'xfer_vehicle_pass']
+];
+
 export default class VcAccessDocumentsTrsController extends Controller {
-  selectedTypes = 'all';
-
-  CSV_HEADER = "First Name,Last Name,Email Address,Notes,External Notes,Street Address,Street Address 2,City,State/Province,Postal Code,Country,Delivery Type,4921824,4921825,4921826,4921827,4921828,4921829,4921830,4921831,4921832,4921833,4921834,4921835,4921836,4921837,4921838,4921839,4921840,4921841,4921842,4921843,4921844,4921845,4921846,4921847,4921848,4921850,4921851,4921852,4921853,4921854,4921855,4921856,4921857,4921858,4921859,4921860,4921861,4921862,4921863,4921864,4921865,4921866,4921867,4921868,4921869,4921870,4921871,4921872,4921873\rMandatory,Mandatory,Mandatory,Any additional comments about the order,Any external notes about the order,,,,,,,WILL_CALL;USPS;UPS;CANADA_POST;CANADA_UPS;PRINT_AT_HOME,$190 Ticket $190.00 WILL_CALL;USPS;UPS;CANADA_POST;CANADA_UPS,$80 Vehicle Pass $80.00 WILL_CALL;USPS;UPS;CANADA_POST;CANADA_UPS,Gift Ticket $0.00 WILL_CALL;USPS;UPS;CANADA_POST;CANADA_UPS,Gift Vehicle Pass $0.00 WILL_CALL;USPS;UPS;CANADA_POST;CANADA_UPS,STAFF - WAP 8/5 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/6 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/7 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/8 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/9 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/10 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/11 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/12 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/13 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/14 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/15 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/16 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/17 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/18 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/19 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/20 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/21 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/22 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/23 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/24 & later $0.00 PRINT_AT_HOME,STAFF - WAP 8/25 & later $0.00 PRINT_AT_HOME,STAFF - WAP Anytime $0.00 PRINT_AT_HOME,STAFF CREDENTIAL pickup 8/4 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/5 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/6 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/7 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/8 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/9 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/10 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/11 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/12 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/13 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/14 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/15 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/16 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/17 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/18 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/19 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/20 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/21 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/22 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/23 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/24 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup 8/25 & after $0.00 WILL_CALL,STAFF CREDENTIAL pickup Anytime $0.00 WILL_CALL\r";
-
-  MAX_BATCH_SIZE = 700;
+  filter = 'all';
 
   filterOptions = [
     ['All', 'all'],
-    ['All being mailed', 'allmail'],
-    ['WAP only', 'wap'],
-    ['SOWAP only', 'sowap'],
-    ['VP only (excluding any SC+VP or RPT_VP people)', 'vp'],
-    ['SC only (including any associated VPs)', 'sc'],
-    ['RPT only (including any associated VPs)', 'rpt'],
-    ['GT only (including any associated VPs)', 'gt'],
-    ['SC+RPT only (including any associated VPs)', 'sc+rpt']
+    ['Staff Credentials', 'staff_credential'],
+    ['Reduced-Price Tickets', 'reduced_price_ticket'],
+    ['Vehicle Passes', 'vehicle_pass'],
+    ['Work Access Passes', 'work_access_pass'],
+    ['Work Access Passes SO', 'work_access_pass_so'],
+    ['Gift Tickets', 'gift_ticket']
   ];
 
-  @computed('selectedRecords.@each.selected')
+  @computed('viewRecords.@each.selected')
   get selectedCount() {
-    return this.selectedRecords.reduce((total, r) => (r.selected ? 1 : 0) + total, 0);
+    return this.viewRecords.reduce((total, r) => (r.selected ? 1 : 0) + total, 0);
   }
 
-  @computed('selectedTypes', 'people')
+  @computed('filter', 'people')
   get badRecords() {
     const records = [];
 
     this.people.forEach((human) => {
       human.documents.forEach((document) => {
         if (document.has_error) {
-          records.push({
-            person: human.person,
-            document
-          });
+          records.push({ person: human.person, document });
         }
       })
     });
@@ -47,241 +133,163 @@ export default class VcAccessDocumentsTrsController extends Controller {
     return records;
   }
 
-  @computed('selectedTypes', 'people')
-  get selectedRecords() {
-    const selectedTypes = this.selectedTypes;
+  _setupRecords() {
     const records = [];
 
     this.people.forEach((human) => {
       const person = human.person;
-      const callsign = person.callsign;
-      const deliveryMethod = human.delivery_method;
+      const delivery_method = human.delivery_method;
 
-      let numSC = 0,
-        numGT = 0,
-        numVP = 0;
-      const VPids = [];
-
-      // Do a quick summation to build the notes fields
       human.documents.forEach((doc) => {
-        doc.selected = false;
-
-        if (doc.has_error) {
-          return;
-        }
+        const shortType = SHORT_TYPES[doc.type] || 'UNK';
+        let trsColumn = '', dateInfo = '';
 
         switch (doc.type) {
         case 'staff_credential':
-          numSC++;
-          break;
-
-        case 'gift_ticket':
-          numGT++;
-          break;
-        case 'vehicle_pass':
-          VPids.push(`RAD-${doc.id}`);
-          numVP++;
-          break;
-        }
-      });
-
-      human.documents.forEach((doc) => {
-        if (selectedTypes == "allmail") {
-          if (deliveryMethod != "mail") {
-            return;
-          }
-          if (doc.type != "reduced_price_ticket"
-          && doc.type != "gift_ticket"
-          && doc.type != 'vehicle_pass') {
-            return;
-          }
-        }
-
-        if (selectedTypes == "wap" && doc.type != "work_access_pass") {
-          return;
-        } else if (selectedTypes == "sowap" &&
-          doc.type != "work_access_pass_so") {
-          return;
-        } else if (selectedTypes == "rpt" &&
-          doc.type != "reduced_price_ticket") {
-          return;
-        } else if (selectedTypes == "gt" &&
-          doc.type != "gift_ticket") {
-          return;
-        } else if (selectedTypes == "sc" &&
-          doc.type != "staff_credential") {
-          return;
-        } else if (selectedTypes == "sc+rpt") {
-          if (doc.type != "staff_credential" &&
-            doc.type != "reduced_price_ticket") {
-            return;
-          }
-        } else if (selectedTypes == "vp") {
-          // This is people who have VPs but no SC or RPT!
-          if (doc.type != "vehicle_pass") {
-            return;
-          }
-        }
-
-        let shortType = "UNK";
-        if (doc.type == "staff_credential") {
-          shortType = "SC";
-        } else if (doc.type == "reduced_price_ticket") {
-          shortType = "RPT";
-        } else if (doc.type == "work_access_pass") {
-          shortType = "WAP";
-        } else if (doc.type == "work_access_pass_so") {
-          shortType = "SOWAP";
-        } else if (doc.type == "gift_ticket") {
-          shortType = "GT";
-        } else if (doc.type == "vehicle_pass") {
-          shortType = "VP";
-        }
-
-        switch (shortType) {
-        //case 'RPT': - for 2019 RPT is a paid item, VP not paid
-        case 'SC':
-        case 'GT':
-          if (numVP > 0) {
-            shortType = `${shortType}+VP`;
-          }
-          break;
-        }
-
-        // If we have a SC, or GT we will include the VP on
-        // that line of the CSV, so there's nothing for us to do here.
-        if (shortType == "VP" && (numSC > 0 || numGT > 0)) {
-          return;
-        }
-
-        let dateInfo = '';
-        if (doc.type == "staff_credential" ||
-          doc.type == "reduced_price_ticket" ||
-          doc.type == "work_access_pass" ||
-          doc.type == "work_access_pass_so") {
-          if (doc.access_any_time) {
+        case 'work_access_pass':
+        case 'work_access_pass_so':
+          if (doc.access_any_time || doc.access_date == null) {
             dateInfo = ' Anytime';
-          } else if (doc.access_date) {
+            trsColumn = 'anytime';
+          } else {
             dateInfo = moment(doc.access_date).format(' ddd MM/D');
+            trsColumn = moment(doc.access_date).format('MMDD');
           }
+          trsColumn = TRS_COLUMN[doc.type] + '_' + trsColumn;
+          break;
+
+        default:
+          trsColumn = TRS_COLUMN[doc.type];
+          break;
         }
 
         // Internal notes gets document numbers
-        let internalNote = `Ranger ${callsign} - ${shortType}${dateInfo} - RAD-${doc.id}`;
-        if (shortType == "RPT+VP" || shortType == "SC+VP" || shortType == "GT+VP") {
-          internalNote += '+' + VPids.join('+');
-        }
-        if (doc.type == "work_access_pass_so") {
-          internalNote += ` - for ${doc.name}`;
-        }
+        let note = `${shortType}${dateInfo} - RAD-${doc.id}`;
 
-        // External notes gets doc type and name
-        let externalNote = `Ranger ${callsign} - ${shortType}${dateInfo}`;
         if (doc.type == "work_access_pass_so") {
-          externalNote += ` for ${doc.name}`;
-        }
-
-        let ticketCol = 99;
-        if (doc.type == "work_access_pass" ||
-          doc.type == "work_access_pass_so") {
-          if (doc.access_any_time) {
-            ticketCol = 37;
-          } else {
-            const day = moment(doc.access_date).date();
-            ticketCol = 16 + day - 5;
-          }
-        } else if (doc.type == "staff_credential") {
-          if (doc.access_any_time) {
-            ticketCol = 60;
-          } else {
-            const day = moment(doc.access_date).date();
-            ticketCol = 39 + day - 5;
-          }
-        } else if (doc.type == "reduced_price_ticket") {
-          ticketCol = 12;
-        } else if (doc.type == "vehicle_pass") {
-          ticketCol = 15;
-        } else if (doc.type == "gift_ticket") {
-          ticketCol = 14;
+          note += ` - for ${doc.name}`;
         }
 
         const record = {
           person,
           document: doc,
-          deliveryMethod,
-          internalNote,
-          externalNote,
-          ticketCol
+          delivery_method,
+          note,
+          trsColumn,
+          selected: false,
+          submitted: false
         };
-
-        if (shortType == "RPT+VP" || shortType == "SC+VP" || shortType == "GT+VP") {
-          record.numVP = numVP;
-        }
 
         records.push(record);
       });
     });
 
-    return records;
+    this.set('accessDocuments', records);
+  }
+
+  @computed('filter', 'people')
+  get viewRecords() {
+    const filter = this.filter;
+
+    return this.accessDocuments.filter((r) => (filter == 'all' || r.document.type == filter));
   }
 
   @action
   updateSelectTypes(value) {
-    this.set('selectedTypes', value);
+    this.set('filter', value);
   }
 
   @action
   exportSelectedAction() {
-    const records = this.selectedRecords.filter((r) => r.selected );
+    const records = this.viewRecords.filter((r) => r.selected);
+    const isRPT = (this.filter == 'reduced_price_ticket');
 
-    let data = this.CSV_HEADER;
-
-    records.forEach((rec) => {
-      const cols = [];
+    const rows = records.map((rec) => {
       const person = rec.person;
       const doc = rec.document;
-      const type = doc.type;
+      const row = {
+        first_name: person.first_name,
+        last_name: person.last_name,
+        email: person.email,
+        project_name: `Ranger ${person.callsign}`,
+        note: rec.note
+      };
 
+      switch (doc.type) {
+      case 'reduced_price_ticket':
+      case 'gift_ticket':
+        row.delivery_method = doc.delivery_type == 'mail' ? 'USPS' : 'Will Call';
+        break;
 
-      cols[0] = person.first_name;
-      cols[1] = person.last_name;
-      cols[2] = person.email;
-      cols[3] = rec.internalNote;
-      cols[4] = rec.externalNote;
-      cols[rec.ticketCol] = 1;
-
-      if (type == 'vehicle_pass'
-      || type == 'reduced_price_ticket'
-      || type == 'gift_ticket') {
-        const address = doc.delivery_address;
-        cols[5] = address.street;
-        cols[6] = '';
-        cols[7] = address.city;
-        cols[8] = address.state;
-        cols[9] = address.postal_code;
-        cols[10] = address.country;
-      }
-
-      cols[11] = doc.delivery_type;
-      if (rec.numVP) {
-        cols[15] = rec.numVP;
-      }
-
-      const line = [];
-      for (let i = 0; i <= 60; i++) {
-        if (cols[i]) {
-          const str = cols[i].toString();
-          line.push(str.replace(',',''));
+      case 'vehicle_pass':
+        if (doc.has_staff_credential) {
+          row.delivery_method = 'Credential Pick Up';
         } else {
-          line.push('');
+          row.delivery_method = (doc.delivery_type == 'mail') ? 'USPS' : 'Will Call';
         }
+        break;
+
+      case 'staff_credential':
+        row.delivery_method = 'Credential Pick Up';
+        break;
+
+      case 'work_access_pass':
+      case 'work_access_pass_so':
+        row.delivery_method = 'Print At Home';
+        break;
       }
 
-      data += line.join(',') + "\r";
+      console.log(`COL ${rec.trsColumn}`);
+
+      row[rec.trsColumn] = 1;
+
+      if ((doc.type == 'gift_ticket' || doc.type == 'vehicle_pass') && doc.delivery_type == 'mail') {
+        const address = doc.delivery_address;
+        row.full_name = `${person.first_name} ${person.last_name}`
+        row.address1 = address.street;
+        row.city = address.city;
+        row.state = address.state;
+        row.zip = address.postal_code;
+        row.phone = address.phone
+        row.country = 'US';
+      }
+
+      return row;
+    });
+
+    const format = isRPT ? PAID_EXPORT_FORMAT : UNPAID_EXPORT_FORMAT;
+
+    const columns = format.map((r) => {
+      return { title: r[0], key: r[1] };
     });
 
     const date = moment().format('YYYY-MM-DD-HH:mm');
 
-    this.house.downloadFile(`ranger-trs-${this.selectedTypes}-${date}`, data, 'text/csv');
+    this.house.downloadCsv(`ranger-trs-${this.filter}-${date}`, columns, rows);
+  }
+
+  @action
+  markSubmitted() {
+    const ids = [];
+
+    this.viewRecords.forEach((rec) => {
+      if (!rec.selected)
+        return;
+
+      ids.push(rec.document.id);
+    });
+
+    this.modal.confirm('Confirm mask as submitted', `Are you sure you want to mark ${ids.length} as submitted?`, () => {
+      this.ajax.request('access-document/mark-submitted', { data: { ids } }).then(() => {
+        this.toast.success('Access documents have been succesfully marked as submitted.');
+        this.viewRecords.forEach((rec) => {
+          if (!rec.selected)
+            return;
+
+          set(rec, 'selected', false);
+          set(rec, 'submitted', true);
+        });
+      });
+    });
   }
 }

@@ -9,5 +9,6 @@ export default class VcAccessDocumentsTrsRoute extends Route {
 
   setupController(controller, model) {
     controller.set('people', model.documents.people);
+    controller._setupRecords();
   }
 }

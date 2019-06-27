@@ -4,10 +4,6 @@ import requestYear from 'clubhouse/utils/request-year';
 import RSVP from 'rsvp';
 
 export default class VcBmidSanityCheckRoute extends Route {
-  queryParams = {
-    year: { refreshModel: true },
-  };
-
   beforeModel() {
     this.house.roleCheck([ Role.ADMIN, Role.EDIT_BMIDS ]);
   }
