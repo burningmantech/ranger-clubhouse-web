@@ -103,15 +103,17 @@ const UNPAID_EXPORT_FORMAT = [
 export default class VcAccessDocumentsTrsController extends Controller {
   filter = 'all';
 
-  MAX_BATCH_SIZE = 2;
+  MAX_BATCH_SIZE = 2000;
 
   filterOptions = [
     ['All', 'all'],
     ['Staff Credentials', 'staff_credential'],
     ['Reduced-Price Tickets', 'reduced_price_ticket'],
     ['Vehicle Passes', 'vehicle_pass'],
-    ['Work Access Passes', 'work_access_pass'],
+    ['Work Access Passes Ranger', 'work_access_pass_ranger'],
     ['Work Access Passes SO', 'work_access_pass_so'],
+    ['Work Access Passes PNV', 'work_access_pass_pnv'],
+    ['Work Access Passes All', 'work_access_pass'],
     ['Gift Tickets', 'gift_ticket']
   ];
 
@@ -193,8 +195,23 @@ export default class VcAccessDocumentsTrsController extends Controller {
   get viewRecords() {
     const filter = this.filter;
 
+    this.accessDocuments.forEach((r) => set(r, 'selected', false) );
+    this.set('selectAll', false);
+
+    if (filter == 'work_access_pass_pnv') {
+      return this.accessDocuments.filter((r) =>  r.document.type == 'work_access_pass' && (r.person.status == 'alpha' || r.person.status == 'prospective'));
+    } else if (filter == 'work_access_pass_ranger') {
+      return this.accessDocuments.filter((r) =>  r.document.type == 'work_access_pass' && r.person.status != 'alpha' && r.person.status != 'prospective');
+    }
     return this.accessDocuments.filter((r) => (filter == 'all' || r.document.type == filter));
   }
+
+  @action
+  toggleAll(selected) {
+    this.set('selectAll', selected);
+    this.viewRecords.forEach((r) => set(r, 'selected', selected));
+  }
+
 
   @action
   exportSelectedAction() {
@@ -260,9 +277,9 @@ export default class VcAccessDocumentsTrsController extends Controller {
       return { title: r[0], key: r[1] };
     });
 
-    const date = moment().format('YYYY-MM-DD-HH:mm');
+    const date = moment().format('YYYY-MM-DD-HH-mm');
 
-    this.house.downloadCsv(`ranger-trs-${this.filter}-${date}`, columns, rows);
+    this.house.downloadCsv(`trs-${this.filter.replace('_','-')}-${date}`, columns, rows);
   }
 
   @action

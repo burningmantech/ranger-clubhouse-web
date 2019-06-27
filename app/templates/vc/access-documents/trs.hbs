@@ -61,6 +61,10 @@
       controlClass="form-control"
     }}
   </div>
+  <div class="col-auto">
+    <label class="col-form-label">Export is limited to {{MAX_BATCH_SIZE}} items</label>
+  </div>
+
 </div>
 <table class="table table-sm table-hover">
   <caption>
@@ -68,7 +72,7 @@
   </caption>
   <thead>
     <tr>
-      <th>&nbsp;</th>
+      <th>{{input type="checkbox" checked=selectAll change=(action toggleAll value="target.checked") disabled=(eq filter "all")}}</th>
       <th>Callsign</th>
       <th>First Name</th>
       <th>Last Name</th>

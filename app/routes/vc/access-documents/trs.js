@@ -10,6 +10,7 @@ export default class VcAccessDocumentsTrsRoute extends Route {
   setupController(controller, model) {
     controller.set('filter', 'all');
     controller.set('people', model.documents.people);
+    controller.set('selectAll', false);
     controller._setupRecords();
   }
 }
