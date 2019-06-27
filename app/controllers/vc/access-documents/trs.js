@@ -103,6 +103,8 @@ const UNPAID_EXPORT_FORMAT = [
 export default class VcAccessDocumentsTrsController extends Controller {
   filter = 'all';
 
+  MAX_BATCH_SIZE = 2;
+
   filterOptions = [
     ['All', 'all'],
     ['Staff Credentials', 'staff_credential'],
@@ -192,11 +194,6 @@ export default class VcAccessDocumentsTrsController extends Controller {
     const filter = this.filter;
 
     return this.accessDocuments.filter((r) => (filter == 'all' || r.document.type == filter));
-  }
-
-  @action
-  updateSelectTypes(value) {
-    this.set('filter', value);
   }
 
   @action

@@ -22,9 +22,9 @@
   upload that batch, mark it as submitted, and get on with the next batch.</p>
 
 
-{{#if badRecords}}
+{{#if this.badRecords}}
   <table class="table table-sm table-hover table-box">
-    <caption class="text-danger">{{pluralize badRecords.length "record"}} with errors</caption>
+    <caption class="text-danger">{{pluralize this.badRecords.length "item"}} with errors</caption>
     <thead>
       <tr>
         <td>Callsign</td>
@@ -35,7 +35,7 @@
       </tr>
     </thead>
     <tbody>
-      {{#each badRecords as |rec|}}
+      {{#each this.badRecords as |rec|}}
         <tr>
           <td>{{person-link person=rec.person page="access-documents"}}</td>
           <td>RAD-{{rec.document.id}}</td>
@@ -55,21 +55,16 @@
   <div class="col-auto">
     {{ch-form/select
       name="selectTypes"
-      value=filter
-      options=filterOptions
-      onChange=(action "updateSelectTypes")
+      value=this.filter
+      options=this.filterOptions
+      onChange=(action (mut this.filter))
       controlClass="form-control"
     }}
   </div>
 </div>
-{{#if (gt viewRecords.length MAX_BATCH_SIZE)}}
-  {{#ch-alert "danger" }}
-    The records shown currently exceed the maximum TRS upload batch size of {{MAX_BATCH_SIZE}}. The rows which exceed the limit have been highlighted in yellow.
-  {{/ch-alert}}
-{{/if}}
 <table class="table table-sm table-hover">
   <caption>
-    Showing {{pluralize viewRecords.length "record"}} of type "{{filter}}". Selected {{pluralize selectedCount "record"}}.
+    Showing {{pluralize this.viewRecords.length "item"}} of type "{{this.filter}}". Selected {{pluralize this.selectedCount "item"}}.
   </caption>
   <thead>
     <tr>
@@ -84,8 +79,8 @@
   </thead>
 
   <tbody>
-    {{#each viewRecords as |rec idx|}}
-      <tr class="{{if (gte idx MAX_BATCH_SIZE) "bg-warning"}}">
+    {{#each this.viewRecords as |rec|}}
+      <tr>
         <td>
           {{#if rec.submitted}}
             <span class="text-success">{{fa-icon "check"}}</span>
@@ -106,14 +101,14 @@
   </tbody>
 </table>
 
-<button class="btn btn-primary" {{action exportSelectedAction}} disabled={{or (eq selectedCount 0) (eq filter "all")}}>
-  {{#if (eq filter "all")}}
+<button class="btn btn-primary" {{action this.exportSelectedAction}} disabled={{or (gt this.selectedCount MAX_BATCH_SIZE) (eq this.selectedCount 0) (eq this.filter "all")}}>
+  {{#if (eq this.filter "all")}}
     Export Disabled For "All" View
   {{else}}
-    Export {{pluralize selectedCount "Selected Document"}}
+    Export {{pluralize this.selectedCount "Selected Document"}}
   {{/if}}
 </button>
-<button class="btn btn-secondary" {{action markSubmitted}} disabled={{or (eq selectedCount 0) (eq filter "all")}}>Mark Selected As Submitted</button>
-{{#if (gt viewRecords.length MAX_BATCH_SIZE)}}
-  <div class="text-danger"><b>More than {{MAX_BATCH_SIZE}} selected. Reduce the selection</b></div>
+<button class="btn btn-secondary" {{action this.markSubmitted}} disabled={{or (eq this.selectedCount 0) (eq this.filter "all")}}>Mark Selected As Submitted</button>
+{{#if (gt this.selectedCount MAX_BATCH_SIZE)}}
+  <div class="text-danger"><b>{{this.selectedCount}} items has been selected which exceeds the max. TRS batch size of {{MAX_BATCH_SIZE}} items. Reduce the number selected.</b></div>
 {{/if}}
