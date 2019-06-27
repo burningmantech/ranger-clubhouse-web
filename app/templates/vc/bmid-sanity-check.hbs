@@ -3,7 +3,7 @@
       {{#link-to "vc.bmid-print" class="btn btn-secondary"}}Print via Lambase{{/link-to}}
       {{#link-to "vc.bmid" class="btn btn-secondary"}}Manage BMIDs{{/link-to}}
   </div>
-  {{year-select "Sanity Check BMIDs" year=year onChange=(action (mut year))}}
+  <h1>Sanity Check {{year}} BMIDs</h1>
 
   {{#each bmidMadHouse as |asylum|}}
     <h3>

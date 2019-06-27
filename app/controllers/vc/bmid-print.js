@@ -3,7 +3,7 @@ import { action, computed } from '@ember/object';
 import { set } from '@ember/object';
 
 export default class VcBmidPrintController extends Controller {
-  queryParams = [ 'year', 'filter' ];
+  queryParams = [ 'filter' ];
 
   batchForm = {};
 

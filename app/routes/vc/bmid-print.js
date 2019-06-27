@@ -11,7 +11,6 @@ const ALLOWED_STATUSES = [
 
 export default class VcBmidPrintRoute extends Route {
   queryParams = {
-    year: { refreshModel: true },
     filter: { refreshModel: true },
   };
 
@@ -75,10 +74,12 @@ export default class VcBmidPrintRoute extends Route {
     controller.set('totalBmids', model.bmids.length);
   }
 
-  resetController(controller) {
-    controller.setProperties({
-      bmids: null, doNotPrint: null, issues: null, printed: null, submitted: null, unusualStatus: null
-    });
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.setProperties({
+        bmids: null, doNotPrint: null, issues: null, printed: null, submitted: null, unusualStatus: null, year: null
+      });
+    }
     this.store.unloadAll('bmid');
   }
 }
