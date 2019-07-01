@@ -1,0 +1,76 @@
+{{year-select "Shift Signups Report" year=this.year onChange=(action (mut this.year))}}
+
+The report shows all shifts available in the Clubhouse for a given year. A shift will be hightlighted in red if no one has signed up, or highlighted in yellow if the shift is less than 20% full.
+<p class="my-3">
+<a href="#summary">Jump to Empty Shifts summary</a>
+</p>
+
+<button class="btn btn-primary" {{action exportToCSV}}>Export to CSV</button>
+{{! template-lint-disable table-groups}}
+<table class="table table-sm table-hover table-width-auto mt-2">
+  {{#each this.positions as |position|}}
+    <thead>
+      <tr>
+        <th>Position</th>
+        <th>Begins</th>
+        <th>Ends</th>
+        <th>Description</th>
+        <th class="text-right">Signed Up</th>
+        <th class="text-right">Max</th>
+        <th class="text-right">Percent</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each position.shifts as |shift|}}
+        <tr class="{{if (eq shift.full_percentage 0) "bg-light-red" (if (lt shift.full_percentage 20) "bg-warning")}}">
+          <td>{{position.title}}</td>
+          <td>{{shift-format shift.begins}}</td>
+          <td>{{shift-format shift.ends}}</td>
+          <td>{{shift.description}}</td>
+          <td class="text-right">{{shift.signed_up}}</td>
+          <td class="text-right">{{shift.max}}</td>
+          <td class="text-right">
+            {{#if shift.max}}
+              {{shift.full_percentage}}%
+            {{else}}
+              &inf;
+            {{/if}}
+          </td>
+          <td>
+            <progress value={{shift.full_percentage}} max="100"></progress>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  {{/each}}
+</table>
+
+<h3 id="summary">{{year}} Empty Shifts</h3>
+<p>The following shift types have some shifts with nobody signed up for them. Lonely. So very lonely. {{fa-icon "frown" type="far"}}</p>
+
+<table class="table table-sm table-hover table-width-auto">
+  <thead>
+    <tr>
+      <th>Position</th>
+      <th class="text-right">Empty Shifts</th>
+      <th class="text-right">Signed Up</th>
+      <th class="text-right">Max</th>
+      <th class="text-center">Total Signed Up</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each this.emptyPositions as |position|}}
+        <tr>
+          <td>{{position.title}}</td>
+          <td class="text-right">{{position.total_empty}}</td>
+          <td class="text-right">{{position.total_signed_up}}</td>
+          <td class="text-right">{{position.total_max}}</td>
+          <td><progress value={{position.full_percentage}} max="100"></progress></td>
+        </tr>
+    {{/each}}
+  </tbody>
+</table>
