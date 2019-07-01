@@ -13,7 +13,7 @@ export default class LoginController extends Controller {
    * Obtain an authorization token from the API server (aka login)
    */
 
-  apiLogin(credentials) {
+  apiLogin(credentials, model) {
     this.set('isSubmitting', true);
     return this.session.authenticate('authenticator:jwt', credentials)
       .then(() => {
@@ -30,6 +30,7 @@ export default class LoginController extends Controller {
         if (response.status == 401) {
           const data = response.json ? response.json : response.payload;
           this.set('loginError', (data ? data.status : `Unknown error ${JSON.stringify(data)}`));
+          model.set('password', '');
         } else {
           this.house.handleErrorResponse(response)
         }
@@ -84,6 +85,6 @@ export default class LoginController extends Controller {
       height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
     };
 
-    this.apiLogin(credentials);
+    this.apiLogin(credentials, model);
   }
 }
