@@ -1,5 +1,5 @@
 import { helper } from '@ember/component/helper';
-import { config } from 'clubhouse/helpers/config';
+import { config } from 'clubhouse/utils/config';
 import { htmlSafe } from '@ember/string';
 
 const MEALS = {

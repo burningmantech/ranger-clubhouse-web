@@ -156,6 +156,9 @@ Router.map(function() {
     this.route('on-duty');
     this.route('sandman-qualified');
     this.route('vehicle-paperwork');
+    this.route('shift-coverage');
+    this.route('shift-signups');
+    this.route('special-teams');
   });
 
   this.route('vc', function() {

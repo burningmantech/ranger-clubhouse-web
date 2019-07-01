@@ -216,8 +216,8 @@
                       {{#link-to "reports.shift-lead" class="dropdown-item"}}Shift Lead Report{{/link-to}}
                       <a href="{{cgo "slot" "selectAllScheduled" order=1}}" class="dropdown-item">Schedule by Callsign</a>
                       <a href="{{cgo "slot" "selectAllScheduled" order=2}}" class="dropdown-item">Schedule by Position</a>
-                      <a href="{{cgo "slot_coverage" "coverageReport"}}" class="dropdown-item">Coverage Report</a>
-                      <a href="{{cgo "slot" "shiftSignupsReport"}}" class="dropdown-item">Shift Signups</a>
+                      {{#link-to "reports.shift-coverage" class="dropdown-item"}}Coverage Report{{/link-to}}
+                      {{#link-to "reports.shift-signups" class="dropdown-item"}}Shift Signups{{/link-to}}
                       {{#link-to "reports.hq-forecast" class="dropdown-item"}}HQ Checkin/Out Forecast{{/link-to}}
                     </div>
                     <div class="col-sm-12 col-md-4 col-lg-3">
@@ -226,7 +226,7 @@
                       <a href="{{cgo "person" "selectByRole"}}" class="dropdown-item">People by Role</a>
                       <a href="{{cgo "person" "selectByStatus"}}" class="dropdown-item">People by Status</a>
                       <a href="{{cgo "person" "selectByLocation"}}" class="dropdown-item">People by Location</a>
-                      <a href="{{cgo "timesheet" "selectBySpecialTeam"}}" class="dropdown-item">People By Special Team</a>
+                      {{#link-to "reports.special-teams" class="dropdown-item"}}People By Special Team{{/link-to}}
                     </div>
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Timesheets</div>
