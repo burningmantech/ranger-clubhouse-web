@@ -132,22 +132,57 @@ export default class VcBmidController extends Controller {
           if (!aCol) { return 1; }
           if (!bCol) { return -1; }
 
-          return aCol.toLowerCase().localeCompare(bCol.toLowerCase());
+          const result = aCol.toLowerCase().localeCompare(bCol.toLowerCase());
+          if (result) {
+            return result;
+          }
+
+          const personA = (a.person ? a.person.callsign.toLowerCase() : `Deleted #${a.person_id}`);
+          const personB = (b.person ? b.person.callsign.toLowerCase() : `Deleted #${b.person_id}`);
+          return personA.localeCompare(personB);
         });
         break;
 
       case 'mvr':
         // With Insurance first
-        bmids.sort((a,b) => b.org_vehicle_insurance - a.org_vehicle_insurance);
+        bmids.sort((a,b) => {
+          const result = b.org_vehicle_insurance - a.org_vehicle_insurance;
+          if (result) {
+            return result;
+          }
+
+          const personA = (a.person ? a.person.callsign.toLowerCase() : `Deleted #${a.person_id}`);
+          const personB = (b.person ? b.person.callsign.toLowerCase() : `Deleted #${b.person_id}`);
+          return personA.localeCompare(personB);
+        });
         break;
 
       case 'showers':
         // With showers first
-        bmids.sort((a,b) => b.showers - a.showers);
+        bmids.sort((a,b) => {
+          const result = b.showers - a.showers;
+          if (result) {
+            return result;
+          }
+
+          const personA = (a.person ? a.person.callsign.toLowerCase() : `Deleted #${a.person_id}`);
+          const personB = (b.person ? b.person.callsign.toLowerCase() : `Deleted #${b.person_id}`);
+          return personA.localeCompare(personB);
+
+        });
         break;
 
       case 'wap':
-        bmids.sort((a,b) => a.access_date_sortable - b.access_date_sortable);
+        bmids.sort((a,b) => {
+          const result = a.access_date_sortable - b.access_date_sortable;
+          if (result) {
+            return result;
+          }
+          const personA = (a.person ? a.person.callsign.toLowerCase() : `Deleted #${a.person_id}`);
+          const personB = (b.person ? b.person.callsign.toLowerCase() : `Deleted #${b.person_id}`);
+          return personA.localeCompare(personB);
+
+        });
         break;
     }
 

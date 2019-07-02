@@ -72,6 +72,10 @@ export default class VcBmidPrintRoute extends Route {
     });
 
     controller.set('totalBmids', model.bmids.length);
+
+    controller.set('textFilterInput', '');
+    controller.set('textFilter', '');
+    controller.set('textFilterError', '');
   }
 
   resetController(controller, isExiting) {
