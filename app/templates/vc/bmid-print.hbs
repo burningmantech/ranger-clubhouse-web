@@ -15,8 +15,24 @@
     </div>
     <div class="col-auto ml-4">
       {{#link-to "vc.bmid" class="btn btn-secondary btn-sm"}}Manage BMIDs{{/link-to}}
+      {{#link-to "vc.bmid-sanity-check" class="btn btn-secondary btn-sm" disabled=this.isRendering}}Sanity Check{{/link-to}}
     </div>
-</div>
+  </div>
+  <div class="form-group row">
+    <div class="col-auto">
+      <div class="input-group">
+        <label>Callsign, title, team, notes filter:</label>
+        {{input type="text" value=this.textFilterInput class="form-control-sm ml-2" enter=(action textFilterAction) disabled=this.isRendering}}
+        <button class="btn btn-primary btn-sm ml-1" {{action textFilterAction}} disabled={{this.isRendering}}>Filter</button>
+        <button class="btn btn-secondary btn-sm ml-1" {{action clearTextFilterAction}} disabled={{this.isRendering}}>Clear</button>
+      </div>
+      {{#if textFilterError}}
+        <div class="text-danger">{{this.textFilterError}}</div>
+      {{/if}}
+      <div class="text-muted small">Regular Expression allowed</div>
+    </div>
+  </div>
+
 
   <p>
     <span class="d-inline">
@@ -49,16 +65,16 @@
   {{/if}}
 
   {{#if issues}}
-  <div class="border p-2">
+    <div class="border p-2">
       Issues:
       {{#each issues as |bmid idx|~}}
         {{~if idx ","}}{{person-link person=bmid.person~}}
       {{/each}}
-</div>
+    </div>
   {{/if}}
 
   {{#if unusualStatus}}
-  <div class="border p-2">
+    <div class="border p-2">
       Unusual Status:
       {{#each unusualStatus as |bmid idx|~}}
         {{~if idx ","}}<span class="d-inline-block">{{person-link person=bmid.person~}} ({{bmid.person.status}})</span>
@@ -66,38 +82,49 @@
     </div>
   {{/if}}
 
-  Showing {{pluralize bmids.length "BMID"}} / {{bmidsSelectedCount}} selected.
+  Showing {{this.viewBmids.length}} of {{this.bmids.length}} ({{bmidsSelectedCount}} selected)
+  {{#if textFilter}}
+    <span class="ml-2 font-weight-bold">Text filtering by "{{this.textFilter}}"</span>
+  {{/if}}
   <table class="table table-sm table-striped">
     <thead>
       <tr>
         <th>{{fa-icon "check"}}</th>
         <th>Status</th>
         <th>Callsign</th>
-        <th>First Name</th>
-        <th>Last Name</th>
+        <th>Name</th>
         <th>Title 1</th>
         <th>Title 2</th>
         <th>Title 3</th>
         <th>MVR</th>
         <th>Showers</th>
         <th>Meals</th>
+        <th>WAP</th>
+        <th>Note</th>
       </tr>
     </thead>
 
     <tbody>
-      {{#each bmids as |bmid|}}
+      {{#each this.viewBmids as |bmid|}}
         <tr class="{{if (eq bmid.status "failed") "bg-danger"}}">
           <td>{{input type="checkbox" checked=bmid.selected}}</td>
           <td>{{bmid.statusHuman}}</td>
           <td>{{bmid.person.callsign}}</td>
-          <td>{{bmid.person.first_name}}</td>
-          <td>{{bmid.person.last_name}}</td>
+          <td>{{bmid.person.first_name}} {{bmid.person.last_name}}</td>
           <td>{{present-or-not bmid.title1 "-"}}</td>
           <td>{{present-or-not bmid.title2 "-"}}</td>
           <td>{{present-or-not bmid.title3 "-"}}</td>
           <td>{{yesno bmid.org_vehicle_insurance}}</td>
           <td>{{yesno bmid.showers}}</td>
           <td>{{bmid.mealsHuman}}</td>
+          <td class="w-10">
+            {{#if bmid.wapMissing}}
+              <strong class="text-danger">missing</strong>
+            {{else}}
+              {{bmid.admissionDateShort}}
+            {{/if}}
+          </td>
+          <td>{{nl2br bmid.notes}}</td>
         </tr>
       {{/each}}
     </tbody>
@@ -117,6 +144,6 @@ your name and the date and time you submitted to Lambase."
         You will be asked to confirm the operation after clicking below.
       </div>
     </div>
-    {{f.submit label="Send To Lambase" disabled=(or isSubmitting (not bmidsSelectedCount))}}
+    {{f.submit label="Submit To Lambase" disabled=(or isSubmitting (not bmidsSelectedCount))}}
   {{/ch-form}}
 </main>
