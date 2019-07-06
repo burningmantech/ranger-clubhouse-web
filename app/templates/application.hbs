@@ -192,7 +192,7 @@
                           <div class="navbar-text">Post Event</div>
                           <a href="{{cgo "timesheet" "thankYouCards"}}" class="dropdown-item">Thank-You Cards</a>
                           <a href="{{cgo "timesheet" "sanityCheckTimeSheets"}}" class="dropdown-item">Timesheet Sanity Check</a>
-                          <a href="{{cgo "timesheet" "hoursAndCredits"}}" class="dropdown-item">Hours/Credits</a>
+                          {{#link-to "admin.hours-credits" class="dropdown-item"}}Hours/Credits{{/link-to}}
                           <a href="{{cgo "person" "selectByStatusChange"}}" class="dropdown-item">People by Status Change</a>
                         {{/if}}
                         <div class="navbar-text">Communications</div>
