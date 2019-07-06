@@ -24,7 +24,7 @@ export default class AdminHoursCreditsController extends Controller {
 
       const rows = this.people.map((person) => {
         return {
-          callsign: person.person,
+          callsign: person.callsign,
           name: `${person.first_name} ${person.last_name}`,
           status: person.status,
           email: person.email,
