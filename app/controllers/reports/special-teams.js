@@ -99,11 +99,11 @@ export default class ReportsSpecialTeamsController extends Controller {
         name: `${person.first_name} ${person.last_name}`,
         status: person.status,
         email: person.email,
-        total: (person.total_duration / 3600.0).toFixed(1)
+        total: (person.total_duration / 3600.0).toFixed(2)
       };
 
       this.yearList.forEach((year, idx) => {
-        row[year.toString()] = (person.years[idx] / 3600.0).toFixed(1);
+        row[year.toString()] = (person.years[idx] / 3600.0).toFixed(2);
       });
 
       return row;

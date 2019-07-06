@@ -1,0 +1,48 @@
+{{year-select "Hours And Credits Report" year=this.year onChange=(action (mut this.year))}}
+
+<p>
+  The report shows Rangers show the total hours (counted positions only) and credits worked for a given year. Alpha, Auditors, Bonked, Prospective, and Past Prospectives are not included.
+</p>
+<p>
+<button class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
+</p>
+<table class="table table-sm table-striped table-hover">
+  <caption>Showing {{pluralize this.people.length "person"}}. {{this.year}} Event week: {{shift-format this.eventStart}} - {{shift-format this.eventEnd}}</caption>
+  <thead>
+    <tr>
+      <th>Callsign</th>
+      <th>Full Name</th>
+      <th>Status</th>
+      <th>Email</th>
+      <th class="text-right">Total Hours</th>
+      <th class="text-right">Total Credits</th>
+      <th class="text-right">Pre-Event Hrs</th>
+      <th class="text-right">Pre-Event Crds.</th>
+      <th class="text-right">Event Hours</th>
+      <th class="text-right">Event Credits</th>
+      <th class="text-right">Post-Event Hrs</th>
+      <th class="text-right">Post-Event Crdt</th>
+      <th class="text-right">Years</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {{#each this.people as |person|}}
+      <tr>
+        <td>{{person-link person=person}}</td>
+        <td>{{person.first_name}} {{person.last_name}}</td>
+        <td>{{person.status}}</td>
+        <td>{{mail-to person.email}}</td>
+        <td class="text-right">{{hour-format person.counted_duration}}</td>
+        <td class="text-right">{{credits-format person.total_credits}}</td>
+        <td class="text-right">{{hour-format person.pre_event_duration}}</td>
+        <td class="text-right">{{credits-format person.pre_event_credits}}</td>
+        <td class="text-right">{{hour-format person.event_duration}}</td>
+        <td class="text-right">{{credits-format person.event_credits}}</td>
+        <td class="text-right">{{hour-format person.post_event_duration}}</td>
+        <td class="text-right">{{credits-format person.post_event_credits}}</td>
+        <td class="text-right">{{person.years}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
