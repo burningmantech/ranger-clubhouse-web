@@ -23,18 +23,19 @@ export default class AdminHoursCreditsController extends Controller {
       ];
 
       const rows = this.people.map((person) => {
+        console.log(`${person.callsign} ${Math.floor(+person.counted_duration / 3600.0).toFixed(2)}`);
         return {
           callsign: person.callsign,
           name: `${person.first_name} ${person.last_name}`,
           status: person.status,
           email: person.email,
-          counted_hours: Math.floor(person.counted_duration / 3600).toFixed(2),
+          counted_hours: (person.counted_duration / 3600.0).toFixed(2),
           total_credits: person.total_credits.toFixed(2),
-          pre_event_hours: Math.floor(person.pre_event_duration / 3600).toFixed(2),
+          pre_event_hours: (person.pre_event_duration / 3600.0).toFixed(2),
           pre_event_credits: person.pre_event_credits.toFixed(2),
-          event_hours: Math.floor(person.event_duration / 3600).toFixed(2),
+          event_hours: (person.event_duration / 3600.0).toFixed(2),
           event_credits: person.event_credits.toFixed(2),
-          post_event_hours: Math.floor(person.post_event_duration / 3600).toFixed(2),
+          post_event_hours: (person.post_event_duration / 3600.0).toFixed(2),
           post_event_credits: person.post_event_credits.toFixed(2),
           years: person.years
         };
