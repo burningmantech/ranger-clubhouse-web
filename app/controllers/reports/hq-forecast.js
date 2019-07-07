@@ -51,9 +51,10 @@ export default class ReportsHqForecastController extends Controller {
       { title: `Time (${this.interval} min interval)`, key: 'period' },
       { title: 'Check Ins', key: 'checkin' },
       { title: 'Check Outs', key: 'checkout' },
+      { title: 'Window', key: 'windows' },
       { title: 'Runners', key: 'runners' },
       { title: 'Shorts', key: 'shorts' },
-      { title: 'Leads', key: 'leads' },
+      { title: 'Leads', key: 'leads' }
     ];
 
     this.house.downloadCsv(`${this.year}-hq-forecast.csv`, CSV_COLUMNS, this.visits);
