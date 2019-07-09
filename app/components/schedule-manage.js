@@ -8,6 +8,9 @@ import { Role } from 'clubhouse/constants/roles';
 import markSlotsOverlap from 'clubhouse/utils/mark-slots-overlap';
 import moment from 'moment';
 import { slotSignup } from 'clubhouse/utils/slot-signup';
+import { run } from '@ember/runloop';
+
+import $ from 'jquery';
 
 const allDays = ['All Days', 'all'];
 const upcomingShifts = ['Upcoming Shifts', 'upcoming'];
@@ -208,18 +211,29 @@ export default class ScheduleManageComponent extends Component {
   }
 
   @action
-  joinSlot(slot) {
+  joinSlot(slot, event) {
     slotSignup(this, slot, this.person, (result) => {
+      // Record the original row position on the page
+      const row = $(event.target).closest('.schedule-row');
+      const doc = $(document);
+      const currentOffset = row.offset().top - doc.scrollTop();
+
       this.signedUpSlots.pushObject(slot);
       slot.set('person_assigned', true);
       set(this.permission, 'recommend_burn_weekend_shift', result.recommend_burn_weekend_shift);
       this._sortAndMarkSignups();
       this._retrieveScheduleSummary();
+
+      // And reposition the page so things appear not to move when the sign up is added
+      // to the schedule.
+      run.schedule('afterRender', () => {
+        doc.scrollTop(row.offset().top - currentOffset);
+      });
     });
   }
 
   @action
-  leaveSlot(slot) {
+  leaveSlot(slot, event) {
     let message;
 
     if (slot.has_started && this.session.user.isAdmin) {
@@ -237,6 +251,19 @@ export default class ScheduleManageComponent extends Component {
           method: 'DELETE',
         }).then((result) => {
           const signedUp = this.signedUpSlots.find((s) => s.id == slot.id);
+
+          if (event) {
+            // Try to keep the page position static. The sign up will be removed
+            // from the schedule, the row deleted, and the browser may want
+            // to reposition the page. 
+            const row = $(event.target).closest('.schedule-row');
+            const doc = $(document);
+            const currentOffset = row.offset().top - doc.scrollTop();
+            run.schedule('afterRender', () => {
+              doc.scrollTop(row.offset().top - currentOffset);
+            });
+          }
+
           if (signedUp) {
             this.signedUpSlots.removeObject(signedUp);
             this._sortAndMarkSignups();
@@ -247,6 +274,7 @@ export default class ScheduleManageComponent extends Component {
           set(this.permission, 'recommend_burn_weekend_shift', result.recommend_burn_weekend_shift);
           this._retrieveScheduleSummary();
           this.toast.success('The shift as been removed from the schedule.');
+
         }).catch((response) => { this.house.handleErrorResponse(response); });
       }
     );

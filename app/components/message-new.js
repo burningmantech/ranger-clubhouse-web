@@ -10,6 +10,7 @@ export default class MessageNewComponent extends Component {
   @argument('object') message;
   @argument('object') onSubmit;
   @argument('object') onCancel;
+  @argument('boolean') isSubmitting;
 
   personMessageValidations = PersonMessageValidations;
 
