@@ -12,8 +12,8 @@ export default class ClubhouseMessagesComponent extends Component {
   @service store;
 
   filterMessages = 'all';
-  isSending = false;
-  newMessage = null
+  isSubmitting = false;
+  newMessage = null;
 
   @computed('messages', 'filterMessages')
   get viewMessages() {
@@ -79,6 +79,8 @@ export default class ClubhouseMessagesComponent extends Component {
       return;
     }
 
+    this.set('isSubmitting', true);
+
     this.house.saveModel(model, `Message successfully sent to ${model.get('recipient_callsign')}.`, () => {
       if (this.newMessage.person_id == this.session.userId) {
         this.messages.update().then(() => {
@@ -86,6 +88,8 @@ export default class ClubhouseMessagesComponent extends Component {
         });
       }
       this.set('newMessage', null);
+    }).finally(() => {
+      this.set('isSubmitting', false);
     });
   }
 

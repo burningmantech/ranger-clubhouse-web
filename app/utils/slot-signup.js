@@ -48,7 +48,7 @@ function handleSignupError(controller, result, slot, person, callback) {
     switch (status) {
     case 'full':
       modal.confirm(
-        null,
+        'Shift is at capacity',
         'The shift is full, however you have permission to add this shift to the schedule. Please confirm you wish to force add the shift to the schedule.',
         () => { slotSignup(controller, slot, person, callback, true); }
       );
@@ -57,7 +57,7 @@ function handleSignupError(controller, result, slot, person, callback) {
 
     case 'has-started':
       modal.confirm(
-        null,
+        'Shift has started',
         'This shift has already started, however you have permission to add this shift to the schedule. Please confirm you wish to force add the shift to the schedule.',
         () => { slotSignup(controller, slot, person, callback, true); }
       );
@@ -67,11 +67,11 @@ function handleSignupError(controller, result, slot, person, callback) {
 
   switch (status) {
   case 'full':
-    modal.info(null, 'Sorry, the shift is now full.');
+    modal.info('Shift is full', 'Sorry, the shift you wished to sign up for has become full.');
     break;
 
   case 'no-slot':
-    modal.info('The slot could not be found?', `The slot id=[${slot.id}] was not found in the database. This looks like a bug!`);
+    modal.info('Shift not found?', `The shift id=[${slot.id}] was not found in the database. This looks like a bug, please report this!`);
     break;
 
   case 'no-position':
@@ -96,7 +96,7 @@ function handleSignupError(controller, result, slot, person, callback) {
     break;
 
   default:
-    modal.info('Unknown status response', `Sorry, I did not understand the status response of [${status}] from the server`);
+    modal.info('Unknown status response', `Sorry, I did not understand the status response of [${status}] from the server. This is a BUG and should be reported.`);
     break;
   }
 }

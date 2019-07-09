@@ -49,9 +49,10 @@
         <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}</div>
         <div class="schedule-long-description">{{slot.position_title}}<br>{{slot-info-link slot.slot_description slot.slot_url}}</div>
         <div class="schedule-actions d-print-none">
-          <button {{action showPeople slot}} class="btn btn-secondary btn-sm" title="View people signed up">{{fa-icon "users" type="fas"}}</button>
+          <button onclick={{action showPeople slot}} class="btn btn-secondary btn-sm" title="View people signed up">{{fa-icon "users" type="fas"}}</button>
           {{#if (or (not slot.has_started) (has-role "admin"))}}
-            <button {{action leaveSlot slot}} class="btn btn-danger btn-sm" title="Remove shoft from schedule">{{fa-icon "trash-alt" type="fas"}}</button>
+            {{! Note: magic here -  by not using onclick, no event argument will be passed to leaveSlot. That tells the method to allow the page to scroll.}}
+            <button {{action leaveSlot slot}} class="btn btn-danger btn-sm" title="Remove shift from schedule">{{fa-icon "trash-alt" type="fas"}}</button>
           {{/if}}
         </div>
       </div>
