@@ -255,7 +255,7 @@ export default class ScheduleManageComponent extends Component {
           if (event) {
             // Try to keep the page position static. The sign up will be removed
             // from the schedule, the row deleted, and the browser may want
-            // to reposition the page. 
+            // to reposition the page.
             const row = $(event.target).closest('.schedule-row');
             const doc = $(document);
             const currentOffset = row.offset().top - doc.scrollTop();
@@ -273,7 +273,7 @@ export default class ScheduleManageComponent extends Component {
           slot.set('slot_signed_up', result.signed_up);
           set(this.permission, 'recommend_burn_weekend_shift', result.recommend_burn_weekend_shift);
           this._retrieveScheduleSummary();
-          this.toast.success('The shift as been removed from the schedule.');
+          this.toast.success('The shift has been removed from the schedule.');
 
         }).catch((response) => { this.house.handleErrorResponse(response); });
       }
