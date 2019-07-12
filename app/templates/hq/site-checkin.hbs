@@ -10,10 +10,8 @@
   <li>{{#if eventInfo.radio_eligible}}Check out an Event Radio if person would like one now{{else}}Person is only authorized for shift radios.{{/if}}</li>
   <li>After you hand the person their Ranger laminate and field guide, mark the person as on site.</li>
 </ul>
-<div class="d-flex">
-  <h4>Update Contact Information</h4>
-  <div class="ml-auto">{{help-popover slug="hq-site-checkin-contact-info" left=true}}</div>
-</div>
+
+<h4>Update Contact Information {{help-popover slug="hq-site-checkin-contact-info"}}</h4>
 
 {{#ch-form "contact" person onSubmit=(action saveContactForm) as |f|}}
   <div class="form-row">
@@ -36,10 +34,7 @@
 {{/ch-form}}
 
 <hr class="my-3">
-<div class="d-flex">
-  <h4>Agreements</h4>
-  <div class="ml-auto">{{help-popover slug="hq-site-checkin-agreements" left=true}}</div>
-</div>
+<h4>Agreements {{help-popover slug="hq-site-checkin-agreements"}}</h4>
 
 <p>
   {{#if person.asset_authorized}}
@@ -51,11 +46,12 @@
 </p>
 <hr class="my-3">
 <div class="float-right">
-  {{help-popover slug="hq-site-checkin-radios" left=true}}
+
 </div>
 
 {{#if eventInfo.radio_eligible}}
-  <h4>Event Radio Checkout - Authorized For {{pluralize eventInfo.radio_max "Event Radio"}}</h4>
+  <h4>Event Radio Checkout {{help-popover slug="hq-site-checkin-radios"}}</h4>
+  <p class="text-success"><b>{{person.callsign}} is authorized For {{pluralize eventInfo.radio_max "Event Radio"}}</b></p>
   <p>
     The radio may be checked out now, or at the start of their first shift.
   </p>
@@ -85,9 +81,8 @@
       </tbody>
     </table>
   {{/if}}
-
 {{else}}
-  <strong class="text-danger"> {{person.callsign}} is not eligible for an event radio.</strong>
+  <h4><span class="text-danger">{{person.callsign}} is only authorized for a shift radio.</span> {{help-popover slug="hq-site-checkin-radios"}}</h4>
   A radio will need be to checked out for each shift, and then returned at the end of the shift.
 {{/if}}
 

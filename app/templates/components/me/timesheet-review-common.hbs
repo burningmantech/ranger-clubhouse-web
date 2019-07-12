@@ -71,9 +71,9 @@
         <div class="timesheet-row timesheet-actions d-print-none">
           {{#if ts.off_duty}}
             {{#unless ts.verified}}
-              <button type="button" class="btn btn-success btn-sm" {{action markCorrectAction ts}} disabled={{isSubmitting}}>Mark Entry Correct</button>
+              <button type="button" class="btn btn-success" {{action markCorrectAction ts}} disabled={{isSubmitting}}>Mark Entry Correct</button>
             {{/unless}}
-            <button type="button" class="btn btn-secondary btn-sm" {{action markIncorrectAction ts}} disabled={{isSubmitting}}>
+            <button type="button" class="btn btn-secondary" {{action markIncorrectAction ts}} disabled={{isSubmitting}}>
               {{#if ts.isPendingReview}}
                 Edit Correction Note
               {{else}}
@@ -133,9 +133,17 @@
       Use the following area to explain why this entry is incorrect. Provide as
       much information as possible to help us understand why this entry should be fixed.
       <ul>
-        <li>State the correct times if the starting and/or ending time is wrong.</li>
-        <li>If the position is wrong, tell us what is the correct position.</li>
-        <li>Provide an explanation on why you think the entry is wrong.</li>
+        {{#if isMe}}
+          <li><b>State the correct times</b> if the starting and/or ending time is wrong.</li>
+          <li><b>If the position is wrong,</b> tell us what is the correct position.</li>
+          <li><b>Provide an explanation</b> on why you think the entry is wrong.</li>
+          <li><b>Who was your partner for the shift?</b></li>
+        {{else}}
+          <li><b>Why does {{person.callsign}} think the entry is wrong?</b></li>
+          <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
+          <li><b>Is the position "{{entry.position.title}}" wrong?</b> State the correct position</li>
+          <li><b>Who was their shift partner(s)?</b></li>
+        {{/if}}
       </ul>
     </div>
     {{f.input "notes" label="Your correction note:" type="textarea" cols=80 rows=3}}

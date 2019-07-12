@@ -35,8 +35,6 @@
       </div>
       {{if person.isAlpha "ALPHA" "PROSPECTIVE"}} RANGER - DIRECT PERSON TO HAT RACK
     {{/ch-alert}}
-  {{else if isShinyPenny}}
-      <h4 class="text-success">Newly minted Shiny Penny. Welcome {{person.callsign}} to the Ranger family. {{fa-icon "smile-beam" type="far"}}</h4>
   {{/if}}
 
   <div class="row">
@@ -99,11 +97,8 @@
       </div>
 
       <div class="border rounded p-2">
-        <div class="float-right">
-          {{help-popover slug="hq-sidebar" left=true}}
-        </div>
         <dl>
-          <dt>Total Earned Credits</dt>
+          <dt>Total Earned Credits {{help-popover slug="hq-sidebar" left=true}}</dt>
           <dd>{{credits-format timesheetSummary.total_credits}}</dd>
 
           <dt>Credits Pre / Event / Post</dt>

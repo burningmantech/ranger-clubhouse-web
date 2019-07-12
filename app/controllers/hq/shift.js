@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { action, computed } from '@ember/object';
 import { validatePresence } from 'ember-changeset-validations/validators';
 import { set } from '@ember/object';
+import * as Position from 'clubhouse/constants/positions';
 
 export default class HqShiftController extends Controller {
   ignoreTimesheetVerification = false;
@@ -10,6 +11,11 @@ export default class HqShiftController extends Controller {
   correctionValidations = {
     notes: validatePresence(true)
   };
+
+  @computed('timesheets.@each.position_id')
+  get isShinyPenny() {
+    return this.timesheets.find((t) => t.position_id == Position.ALPHA) && this.person.isActive;
+  }
 
   @computed('timesheets.@each.isUnverified')
   get unverifiedTimesheets() {
@@ -29,6 +35,38 @@ export default class HqShiftController extends Controller {
   @computed('assetsCheckedOut')
   get radioCount() {
     return this.assetsCheckedOut.filter((a) => a.asset.description == 'Radio').length;
+  }
+
+  @computed('radioCount')
+  get shiftRadios() {
+    const radioCount = this.radioCount;
+    const eventInfo = this.eventInfo;
+
+    if (!eventInfo.radio_eligible) {
+      return radioCount;
+    }
+
+    if (radioCount > eventInfo.radio_max) {
+      return radioCount - eventInfo.radio_max;
+    }
+
+    return 0;
+  }
+
+  @computed('radioCount')
+  get eventRadios() {
+    const radioCount = this.radioCount;
+    const eventInfo = this.eventInfo;
+
+    if (!eventInfo.radio_eligible) {
+      return 0;
+    }
+
+    if (radioCount < eventInfo.radio_max) {
+      return radioCount;
+    } else {
+      return eventInfo.radio_max;
+    }
   }
 
   @computed('timesheets.@each.stillOnDuty')
@@ -56,11 +94,11 @@ export default class HqShiftController extends Controller {
     entry.set('verified', true);
     this.set('isSubmitting', true);
     entry.save().then(() => {
-      this.toast.success('Timesheet was successfully marked correct.');
-      this.set('showCorrectionForm', false);
-    })
-    .catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('isSubmitting', false));
+        this.toast.success('Timesheet was successfully marked correct.');
+        this.set('showCorrectionForm', false);
+      })
+      .catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.set('isSubmitting', false));
   }
 
   @action
@@ -83,34 +121,34 @@ export default class HqShiftController extends Controller {
 
     this.set('isSubmitting', true);
     model.save().then(() => {
-      this.set('showCorrectionForm', false);
-      this.toast.success('Correction request was succesfully submitted.');
-    }).catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('isSubmitting', false));
+        this.set('showCorrectionForm', false);
+        this.toast.success('Correction request was succesfully submitted.');
+      }).catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.set('isSubmitting', false));
   }
 
   @action
   assetCheckInAction(ap) {
-    this.ajax.request(`asset/${ap.asset.id}/checkin`, { method: 'POST'})
-    .then((result) => {
-      set(ap, 'checked_in', result.checked_in);
-      this.toast.success('Asset has been successfully checked in.');
-    }).catch((response) => this.house.handleErrorResponse(response));
+    this.ajax.request(`asset/${ap.asset.id}/checkin`, { method: 'POST' })
+      .then((result) => {
+        set(ap, 'checked_in', result.checked_in);
+        this.toast.success('Asset has been successfully checked in.');
+      }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   _updateOnSite(on_site) {
     this.person.set('on_site', on_site);
     this.person.save().then(() => {
-      this.toast.success(`${this.person.callsign} has been successfully marked ${on_site ? 'ON' : 'OFF'} SITE.`);
-    })
-    .catch((response) => this.house.handleErrorResponse(response));
+        this.toast.success(`${this.person.callsign} has been successfully marked ${on_site ? 'ON' : 'OFF'} SITE.`);
+      })
+      .catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
   markOffSite() {
-    if (this.assetsCheckedOut.length
-      || this.unverifiedTimesheets.length
-      || !this.isOffDuty) {
+    if (this.assetsCheckedOut.length ||
+      this.unverifiedTimesheets.length ||
+      !this.isOffDuty) {
 
       this.modal.open('modal-site-leave', {
         assetsCheckedOut: this.assetsCheckedOut,

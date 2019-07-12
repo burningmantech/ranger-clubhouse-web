@@ -68,7 +68,15 @@
       </div>
     </div>
   {{/if}}
+
   <div class="schedule-row">
+    <div class="schedule-line">
+      {{#if scheduleSummary.event_start}}
+        <b>{{year}} Event Week:</b> {{shift-format scheduleSummary.event_start}} to {{shift-format scheduleSummary.event_end}}
+      {{else}}
+        <strong class="text-danger">{{year}} event dates have not been determined. Estimate breakdowns will not be accurate.</strong>
+      {{/if}}
+    </div>
     <div>
       <span class="mr-2 d-inline-block"><b>Total Schedule Time:</b> {{hour-minute-format scheduleSummary.total_duration}}</span>
       <div class="d-inline-block"><b>Est. Time Counted Towards Appreciations:</b> {{hour-minute-format scheduleSummary.counted_duration}}</div>
@@ -77,7 +85,7 @@
       <span class="d-inline-block"><b>Scheduled Hours Breakdown (Pre-Event / Event / Post-Event / Other):</b></span>
       <span class="d-inline-block">{{hour-minute-format scheduleSummary.pre_event_duration}} / {{hour-minute-format scheduleSummary.event_duration}} / {{hour-minute-format scheduleSummary.post_event_duration}} / {{hour-minute-format scheduleSummary.other_duration}}</span>
     </div>
-    <div>
+    <div class="schedule-line">
       <span class="mr-2 d-inline-block"><b>Scheduled Credits:</b> {{credits-format scheduleSummary.total_credits}}</span>
       <span class="d-inline-block"><b>Earned Credits:</b> {{credits-format creditsEarned}}</span>
     </div>
@@ -85,14 +93,7 @@
       <span class="d-inline-block"><b>Scheduled Credits Breakdown (Pre-Event / Event / Post-Event):</b></span>
       <span class="d-inline-block">{{credits-format scheduleSummary.pre_event_credits}} / {{credits-format scheduleSummary.event_credits}} / {{credits-format scheduleSummary.post_event_credits}}</span><br>
     </div>
-    <div>
-      {{#if scheduleSummary.event_start}}
-        <b>{{year}} Event Week:</b> <span class="d-inline-block">{{shift-format scheduleSummary.event_start}} to {{shift-format scheduleSummary.event_end}}</span>
-      {{else}}
-        <strong class="text-danger">{{year}} event dates have not been determined. Estimate breakdowns will not be accurate.</strong>
-      {{/if}}
-    </div>
-</div>
+  </div>
 </div>
 
 {{#if (and scheduleSummary person.isRanger isCurrentYear)}}

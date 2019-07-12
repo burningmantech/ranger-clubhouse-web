@@ -1,12 +1,9 @@
-<div class="float-right d-print-none">
-  {{help-popover slug="hq-timesheet-entries" left=true}}
-</div>
-<h3 class="d-print-none">Timesheet Entries</h3>
+<h3 class="d-print-none">Timesheet Entries {{help-popover slug="hq-timesheet-entries"}}</h3>
 
 <h1 class="d-none d-print-block">{{year}} Timesheet Entries For {{person.callsign}}</h1>
 
 {{#if timesheets}}
-  {{me/timesheet-review-common timesheets=timesheets timesheetSummary=timesheetSummary timesheetInfo=timesheetInfo}}
+  {{me/timesheet-review-common timesheets=timesheets timesheetSummary=timesheetSummary timesheetInfo=timesheetInfo person=person}}
 {{else}}
   <p class="text-danger">
     No timesheet entries were found.
@@ -14,9 +11,5 @@
 {{/if}}
 
 <hr class="mb-4">
-
-<div class="float-right">
-  {{help-popover slug="hq-missing-timesheets" left=true}}
-</div>
-<h3>Missing Timesheet Entry Requests</h3>
+<h3>Missing Timesheet Entry Requests  {{help-popover slug="hq-missing-timesheets"}}</h3>
 {{me/timesheet-missing-common person=person timesheetsMissing=timesheetsMissing timesheetInfo=timesheetInfo positions=positions}}

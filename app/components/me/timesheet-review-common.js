@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { action } from '@ember/object';
+import { action, computed } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
 
@@ -9,12 +9,18 @@ export default class MeTimesheetReviewCommonComponent extends Component {
   @argument('object') timesheets;
   @argument(optional('object')) timesheetInfo;
   @argument(optional('object')) timesheetSummary;
+  @argument('object') person;
 
   entry = null; // Incorrect entry
 
   correctionValidations = {
     notes: validatePresence({ presence: true})
   };
+
+  @computed('person')
+  get isMe() {
+    return this.session.userId == this.person.id;
+  }
 
   // Mark an entry as correct
   @action
