@@ -40,7 +40,7 @@ const UNPAID_EXPORT_FORMAT = [
   ['Question: Method of Delivery', 'delivery_method'],
   ['Question: Nickname/Project', 'project_name'],
   ['Question: Notes', 'note'],
-  ['Shipping Address (Required if Mail Delivery type ): Country', 'country'],
+  ['Shipping Address (Required if Mail Delivery type selected): Country', 'country'],
   ['Shipping Address (Required if Mail Delivery type selected): Full Name', 'full_name'],
   ['Shipping Address (Required if Mail Delivery type selected): Address', 'address1'],
   ['Shipping Address (Required if Mail Delivery type selected): Address Line 2', 'address2'],
@@ -272,10 +272,19 @@ export default class VcAccessDocumentsTrsController extends Controller {
         const row = {
           first_name: person.first_name,
           last_name: person.last_name,
+          full_name: `${person.first_name} ${person.last_name}`,
           email: person.email,
           project_name: `Ranger ${person.callsign}`,
           delivery_method,
-          note: rec.trsNote
+          note: rec.trsNote,
+          // Populate from address from person record
+          address1: person.street1,
+          address2: person.street2,
+          city: person.city,
+          state: person.state,
+          zip: person.zip,
+          country: person.country,
+          phone: person.home_phone
         };
 
         let docCount = 0;
@@ -334,15 +343,24 @@ export default class VcAccessDocumentsTrsController extends Controller {
 
         row[doc.trsColumn] = 1;
 
+        row.full_name = `${person.first_name} ${person.last_name}`
         if ((doc.type == 'gift_ticket' || doc.type == 'vehicle_pass') && doc.delivery_type == 'mail') {
           const address = doc.delivery_address;
-          row.full_name = `${person.first_name} ${person.last_name}`
           row.address1 = address.street;
           row.city = address.city;
           row.state = address.state;
           row.zip = address.postal_code;
           row.phone = address.phone
           row.country = 'US';
+        } else {
+          // Populate from address from person record
+          row.address1 = person.street1;
+          row.address2 = person.street2;
+          row.city = person.city;
+          row.state = person.state;
+          row.zip = person.zip;
+          row.country = person.country;
+          row.phone = person.home_phone;
         }
 
         return row;
