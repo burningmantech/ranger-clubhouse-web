@@ -1,7 +1,13 @@
+{{#if isShinyPenny}}
+  {{#ch-alert "success"}}
+    <b>{{person.callsign}} is newly minted Shiny Penny. Share the Ranger love and welcome them to the family. {{fa-icon "smile-beam" type="far"}}</b>
+  {{/ch-alert}}
+{{/if}}
+
 {{#unless person.on_site}}
   {{#ch-alert "danger"}}
     <h4>{{person.callsign}} is marked as OFF SITE.</h4>
-    The recommendation is to follow the procedures on the Site Check In page before signing the person into a shift.
+    Follow the procedures on the Site Check In page before signing the person into a shift.
     <div class="mt-2">
       {{#link-to "hq.site-checkin" person.id class="btn btn-primary"}}Site Check In{{/link-to}}
     </div>
@@ -17,23 +23,25 @@
 
 {{#if scheduleRecommendations.burn_weekend_shift}}
   {{#ch-alert "warning"}}
-    <div class="h4">{{person.callsign}} has not signed up for a Burn Weekend shift.</div>
-    Ask if they are interested in signing up for a shift.
+    <div class="d-flex">
+      <div class="mr-2">
+        {{fa-icon "exclamation-circle" size="2x"}}
+      </div>
+      <div class="mt-1">
+        <h5> {{person.callsign}} is not signed up for a Burn Weekend shift</h5>
+      Ask {{person.callsign}} if they are interested in signing up for a weekend shift.
+      </div>
+    </div>
   {{/ch-alert}}
 {{/if}}
 
-<div class="d-flex">
-  <h3>Timesheet Verification - {{#if unverifiedTimesheets }}{{pluralize unverifiedTimesheets.length "entry" }}{{else}}No Action Needed{{/if}}</h3>
-  <div class="ml-auto">
-    {{help-popover slug="hq-timesheet-verification" left=true}}
-  </div>
-</div>
+<h3>Timesheet Verification {{help-popover slug="hq-timesheet-verification"}} - {{#if unverifiedTimesheets }}{{pluralize unverifiedTimesheets.length "entry" }}{{else}}No Action Needed{{/if}}</h3>
 {{#if unverifiedTimesheetEntry}}
   {{#if ignoreTimesheetVerification}}
     <button class="btn btn-secondary" {{action toggleIgnoreVerification}}>Show Verfication</button>
   {{else}}
     <p>Ask {{person.callsign}} if the following timesheet entry is correct:</p>
-    <table class="table table-sm">
+    <table class="table table-width-auto">
       <thead>
         <tr>
           <th>Position</th>
@@ -60,16 +68,11 @@
     </div>
   {{/if}}
 {{else}}
-  No timesheet entries needing review at this time.
+  No timesheet entries need review at this time.
 {{/if}}
 
 <hr class="my-3">
-<div class="d-flex">
-  <h3>Shift Management</h3>
-  <div class="ml-auto">
-    {{help-popover slug="hq-shift-management" left=true}}
-  </div>
-</div>
+<h3>Shift Management {{help-popover slug="hq-shift-management"}}</h3>
 {{shift-check-in-out
     positions=positions timesheets=timesheets person=person imminentSlots=imminentSlots
     hasUnverifiedTimesheet=(and unverifiedTimesheets (not ignoreTimesheetVerification))
@@ -95,9 +98,10 @@
     <div class="form-row">
       Provide as much information as possible to help the reviewer understand why this entry should be fixed.
       <ul>
-        <li>State the correct times if the starting and/or ending time is wrong.</li>
-        <li>If the position {{unverifiedTimesheetEntry.position.title}} is wrong, what is the correct position?</li>
         <li>Why does {{person.callsign}} think the entry is wrong?</li>
+        <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
+        <li><b>Is the position "{{unverifiedTimesheetEntry.position.title}}" wrong?</b> State the correct position</li>
+        <li><b>Who was their shift partner(s)?</b></li>
       </ul>
     </div>
     {{f.input "notes" label="Timesheet entry correction note:" type="textarea" autofocus=true cols=80 rows=3}}
@@ -106,31 +110,38 @@
   {{/ch-form}}
 {{/if}}
 
-<hr class="my-3">
-<div class="d-flex">
-  <h3>Radio &amp; Assets
-    {{#if radioCount}}
-      -
-      {{#if eventInfo.radio_eligible}}
-        <span class="text-success">{{pluralize radioCount "event radio"}} - collect at event end</span>
-      {{else}}
-        <span class="text-danger">Collect radio at end of shift</span>
-      {{/if}}
-    {{/if}}
-  </h3>
-  <div class="ml-auto">
-    {{help-popover slug="hq-assets" left=true}}
-  </div>
+<hr>
+<h3 class="mb-2">Radio &amp; Assets {{help-popover slug="hq-assets"}}</h3>
+
+{{#if radioCount}}
+  {{#if shiftRadios}}
+    <h3 class="text-danger">Collect {{pluralize shiftRadios "radio"}} at end of shift</h3>
+  {{/if}}
+  {{#if eventRadios}}
+    <h3 class="text-success">Collect {{pluralize eventRadios "event radio"}} at event end</h3>
+  {{/if}}
+{{/if}}
+
+<div class="mb-2">
+  {{person.callsign}} is
+  {{#if eventInfo.radio_eligible}}
+    authorized for {{pluralize eventInfo.radio_max "event radio"}}.
+  {{else}}
+    only authorized for shift radios.
+  {{/if}}
 </div>
 
 {{#if person.asset_authorized}}
   {{asset-checkout-form person=person assets=assets attachments=attachments eventInfo=eventInfo}}
 {{else}}
-  <strong class="text-danger">{{person.callsign}} is not asset authorized and may not check out equipment at this time. Have the person sign the appropriate paperwork.</strong>
+  <p class="text-danger"><b>{{person.callsign}} is not asset authorized and may not check out equipment at this time. Have the person sign the Radio Checkout form, then to go Site Check In and mark the person having signed the document.</b></p>
+  <p>
+    {{#link-to "hq.site-checkin" person.id class="btn btn-primary"}}Site Check In{{/link-to}}
+  </p>
 {{/if}}
 
 
-<table class="table table-striped table-sm">
+<table class="table table-striped">
   <thead>
     <tr>
       <th>Type</th>
@@ -145,14 +156,14 @@
   <tbody>
     {{#each assetsCheckedOut as |ap|}}
       <tr>
-        <td>{{ap.asset.description}}</td>
-        <td>{{present-or-not ap.asset.barcode "-"}}</td>
-        <td>{{ap.attachment.description}}</td>
-        <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
-        <td>{{present-or-not ap.asset.temp_id "-"}}</td>
-        <td>{{shift-format ap.checked_out}}</td>
-        <td>
-          <button class="btn btn-primary btn-sm" {{action assetCheckInAction ap}}>Check In</button>
+        <td class="align-middle">{{ap.asset.description}}</td>
+        <td class="align-middle">{{present-or-not ap.asset.barcode "-"}}</td>
+        <td class="align-middle">{{present-or-not ap.attachmentap.attachment.description "-"}}</td>
+        <td class="align-middle">{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
+        <td class="align-middle">{{present-or-not ap.asset.temp_id "-"}}</td>
+        <td class="align-middle">{{shift-format ap.checked_out}}</td>
+        <td class="align-middle">
+          <button class="btn btn-primary" {{action assetCheckInAction ap}}>Check In</button>
         </td>
       </tr>
     {{else}}

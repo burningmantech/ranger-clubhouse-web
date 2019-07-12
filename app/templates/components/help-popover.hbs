@@ -23,7 +23,7 @@
         {{#if this.body}}
           {{#link-to "admin.help" (query-params editSlug=@slug) class="btn btn-secondary"}}Edit Help{{/link-to}}
         {{else if (not this.isLoading)}}
-          {{#link-to "admin.help" (query-params createSlug=@slug) class="btn btn-secondary btn-sm"}}Create Help{{/link-to}}
+          {{#link-to "admin.help" (query-params createSlug=@slug) class="btn btn-secondary"}}Create Help{{/link-to}}
         {{/if}}
       {{/if}}
       <button class="btn btn-primary" {{action closeHelp}}>Close</button>

@@ -1,4 +1,6 @@
-import BooleanTransform from 'ember-data/transforms/boolean';
+import { isNone } from '@ember/utils';
+import DS from 'ember-data';
+
 
 /*
  * Grr.. the ember-data boolean transformer does not serialize boolean strings,
@@ -6,12 +8,33 @@ import BooleanTransform from 'ember-data/transforms/boolean';
  *
  */
 
-export default BooleanTransform.extend({
-  serialize(value) {
-    if (typeof value === "string") {
-      return /^(true|t|1)$/i.test(value);
+export default DS.Transform.extend({
+  deserialize(serialized, options) {
+    if (isNone(serialized) && options.allowNull === true) {
+      return null;
     }
 
-    return this._super(...arguments);
+    let type = typeof serialized;
+    if (type === 'boolean') {
+      return serialized;
+    } else if (type === 'string') {
+      return /^(true|t|1)$/i.test(serialized);
+    } else if (type === 'number') {
+      return serialized === 1;
+    } else {
+      return false;
+    }
+  },
+
+  serialize(deserialized, options) {
+    if (typeof deserialized === "string") {
+      return /^(true|t|1)$/i.test(deserialized);
+    }
+
+    if (isNone(deserialized) && options.allowNull === true) {
+      return null;
+    }
+
+    return Boolean(deserialized);
   }
 });

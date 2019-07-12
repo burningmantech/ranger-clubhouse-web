@@ -1,6 +1,6 @@
 {{#if onDutyEntry}}
   <div class="text-success font-weight-bold mb-2">{{person.callsign}} is on duty.</div>
-  <table class="table table-sm mt-1 mb-0">
+  <table class="table mt-1 mb-0">
     <thead>
       <tr>
         <th>Position</th>
@@ -39,9 +39,13 @@
   {{else}}
     {{#unless isPersonDirtTrained}}
       <div class="text-danger font-weight-bold mb-2">
-        <div class="float-left mr-2 mt-2">{{fa-icon "exclamation-circle" size="2x"}}</div>
-        This person cannot start a shift because they have not been trained.
-        If this is an error, check with the HQ Lead.
+        <div class="d-flex">
+          <div class="my-auto mr-2 d-inline-block">{{fa-icon "exclamation-circle" size="2x"}}</div>
+          <div class="my-auto d-inline-block">
+            This person cannot start a shift because they have not been trained.
+            If this is an error, check with the HQ Lead.
+          </div>
+        </div>
       </div>
     {{/unless}}
 
