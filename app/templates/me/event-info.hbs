@@ -91,21 +91,22 @@ Positions indicate which shifts you are allowed to sign up for and what ART trai
     Radio eligibility for this year is not yet available.
   {{/if}}
 
-  <h3 class="mt-4">{{fa-icon "car"}} Motorpool</h3>
+  <h3 class="mt-4">{{fa-icon "car"}} Motorpool Policy</h3>
   {{#if person.vehicle_blacklisted}}
     {{badge "danger" "Blacklisted"}} We're sorry, but you cannot drive gators, cars, or trucks on playa for Ranger business.
   {{else}}
     {{#if person.vehicle_paperwork}}
-      {{badge "success" "Authorized"}} You are authorized to drive golf carts &amp; gators (UTVs) on playa for Ranger business
+      {{badge "success" "Authorized"}} You are authorized to drive golf carts &amp; gators (UTVs) on playa for Ranger business. Vehicle must have a valid Burning Man driving sticker.
     {{else}}
       {{badge "warning" "Not Authorized"}} You are NOT authorized to drive golf carts &amp; gators (UTVs) on the playa for Ranger business. You can fix this by agreeing to the
       {{#link-to "me.motorpool-policy"}}Motorpool Policy{{/link-to}}.
     {{/if}}
 
-    <h3 class="mt-4">{{fa-icon "car-crash"}} Organization Vehicle Insurance</h3>
+    <h3 class="mt-4">{{fa-icon "car-crash"}} Motor Vehicle Record (MVR)</h3>
     {{#if person.vehicle_insurance_paperwork}}
       {{badge "success" "Authorized" }} You are authorized to drive cars and
       trucks (including your own personal vehicle) on playa for Ranger business.
+      Vehicle must have a valid Burning Man driving sticker.
     {{else}}
       {{badge "warning" "Not Authorized" }} You are NOT authorized to drive cars
       and trucks (including your own personal vehicle) on playa for Ranger

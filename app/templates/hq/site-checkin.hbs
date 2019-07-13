@@ -49,6 +49,12 @@
 
 </div>
 
+{{#unless eventInfo.radio_info_available}}
+  {{#ch-alert "danger"}}
+    Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
+  {{/ch-alert}}
+{{/unless}}
+
 {{#if eventInfo.radio_eligible}}
   <h4>Event Radio Checkout {{help-popover slug="hq-site-checkin-radios"}}</h4>
   <p class="text-success"><b>{{person.callsign}} is authorized For {{pluralize eventInfo.radio_max "Event Radio"}}</b></p>

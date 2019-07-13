@@ -29,7 +29,7 @@
       </div>
       <div class="mt-1">
         <h5> {{person.callsign}} is not signed up for a Burn Weekend shift</h5>
-      Ask {{person.callsign}} if they are interested in signing up for a weekend shift.
+        Ask {{person.callsign}} if they are interested in signing up for a weekend shift.
       </div>
     </div>
   {{/ch-alert}}
@@ -112,7 +112,11 @@
 
 <hr>
 <h3 class="mb-2">Radio &amp; Assets {{help-popover slug="hq-assets"}}</h3>
-
+{{#unless eventInfo.radio_info_available}}
+  {{#ch-alert "danger"}}
+    Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
+  {{/ch-alert}}
+{{/unless}}
 {{#if radioCount}}
   {{#if shiftRadios}}
     <h3 class="text-danger">Collect {{pluralize shiftRadios "radio"}} at end of shift</h3>
