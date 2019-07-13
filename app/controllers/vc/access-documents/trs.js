@@ -1,5 +1,6 @@
 import Controller from '@ember/controller';
 import { action, computed, set } from '@ember/object';
+import { isBlank } from '@ember/utils';
 import moment from 'moment';
 
 const SHORT_TYPES = {
@@ -248,6 +249,25 @@ export default class VcAccessDocumentsTrsController extends Controller {
     this.viewRecords.forEach((r) => set(r, 'selected', selected));
   }
 
+  _fillAddress(person, row) {
+    // Provide a dummy address in case one is missing.
+    row.address1 = isBlank(person.street1) ? '1 Street Address Unknown' : person.street1;
+    row.address2 = person.street2;
+    row.city = isBlank(person.city) ? 'Small Town' : person.city;
+    row.state = isBlank(person.state) ? 'CA' : person.state;
+    row.zip = isBlank(person.zip) ? '94111' : person.zip;
+    row.country = isBlank(person.country) ? 'US' : person.country;
+
+    row.phone = isBlank(person.home_phone) ? '415-555-1212' : person.home_phone;
+  }
+
+  _fillName(person, row) {
+    row.first_name = person.first_name;
+    row.last_name = person.last_name;
+    row.full_name = `${person.first_name} ${person.last_name}`;
+    row.email =  person.email;
+    row.project_name = `Ranger ${person.callsign}`;
+  }
 
   @action
   exportSelectedAction() {
@@ -266,26 +286,16 @@ export default class VcAccessDocumentsTrsController extends Controller {
         if (this.filter == 'staff_credential_vp') {
           delivery_method = 'Credential Pick Up';
         } else {
-          delivery_method = (documents[0].delivery_type == 'mail' ? 'USPS' : 'Will Call');
+          delivery_method = (documents[0].delivery_type == 'mail' ? 'USPS' : 'Credential Pick Up' /*'Will Call'*/);
         }
 
         const row = {
-          first_name: person.first_name,
-          last_name: person.last_name,
-          full_name: `${person.first_name} ${person.last_name}`,
-          email: person.email,
-          project_name: `Ranger ${person.callsign}`,
           delivery_method,
-          note: rec.trsNote,
-          // Populate from address from person record
-          address1: person.street1,
-          address2: person.street2,
-          city: person.city,
-          state: person.state,
-          zip: person.zip,
-          country: person.country,
-          phone: person.home_phone
+          note: rec.trsNote
         };
+
+        this._fillName(person, row);
+        this._fillAddress(person, row);
 
         let docCount = 0;
         rec.documents.forEach((doc) => {
@@ -309,25 +319,21 @@ export default class VcAccessDocumentsTrsController extends Controller {
     } else {
        rows = records.map((doc) => {
         const person = doc.person;
-        const row = {
-          first_name: person.first_name,
-          last_name: person.last_name,
-          email: person.email,
-          project_name: `Ranger ${person.callsign}`,
-          note: doc.trsNote
-        };
+        const row = { note: doc.trsNote };
+
+        this._fillName(person, row);
 
         switch (doc.type) {
         case 'reduced_price_ticket':
         case 'gift_ticket':
-          row.delivery_method = doc.delivery_type == 'mail' ? 'USPS' : 'Will Call';
+          row.delivery_method = doc.delivery_type == 'mail' ? 'USPS' : 'Credential Pick Up' /*'Will Call'*/;
           break;
 
         case 'vehicle_pass':
           if (doc.has_staff_credential) {
             row.delivery_method = 'Credential Pick Up';
           } else {
-            row.delivery_method = (doc.delivery_type == 'mail') ? 'USPS' : 'Will Call';
+            row.delivery_method = (doc.delivery_type == 'mail') ? 'USPS' : 'Credential Pick Up' /*'Will Call'*/;
           }
           break;
 
@@ -343,24 +349,16 @@ export default class VcAccessDocumentsTrsController extends Controller {
 
         row[doc.trsColumn] = 1;
 
-        row.full_name = `${person.first_name} ${person.last_name}`
         if ((doc.type == 'gift_ticket' || doc.type == 'vehicle_pass') && doc.delivery_type == 'mail') {
           const address = doc.delivery_address;
           row.address1 = address.street;
           row.city = address.city;
           row.state = address.state;
           row.zip = address.postal_code;
-          row.phone = address.phone
+          row.phone = isBlank(address.phone) ? '415-555-1212' : address.phone;
           row.country = 'US';
         } else {
-          // Populate from address from person record
-          row.address1 = person.street1;
-          row.address2 = person.street2;
-          row.city = person.city;
-          row.state = person.state;
-          row.zip = person.zip;
-          row.country = person.country;
-          row.phone = person.home_phone;
+          this._fillAddress(person, row);
         }
 
         return row;
@@ -376,7 +374,7 @@ export default class VcAccessDocumentsTrsController extends Controller {
 
     const date = moment().format('YYYY-MM-DD-HH-mm');
 
-    this.house.downloadCsv(`trs-${this.filter.replace('_','-')}-${date}`, columns, rows);
+    this.house.downloadCsv(`trs-${this.filter.replace(/_/g,'-')}-${date}`, columns, rows);
   }
 
   @action
