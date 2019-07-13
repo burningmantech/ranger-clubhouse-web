@@ -7,13 +7,14 @@ export default class ReportsShiftCoveragController extends Controller {
   queryParams = [ 'year', 'type' ];
 
   typeOptions = [
+    [ 'Burn Perimeter', 'perimeter' ],
     [ 'Command', 'command' ],
     [ 'Echelon', 'echelon' ],
     [ 'Gerlach Patrol', 'gerlach-patrol' ],
     [ 'Green Dot', 'gd' ],
     [ 'HQ Window', 'hq' ],
-    [ 'HQ Window Pre-event', 'hq-pre-event' ],
     [ 'Intercept', 'intercept' ],
+    [ 'Mentors', 'mentor' ],
     [ 'Pre-event', 'pre-event' ],
     [ 'RSCI Mentor/Mentee', 'rsci-mentor' ],
   ];
