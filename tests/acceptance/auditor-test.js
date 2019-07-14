@@ -33,6 +33,7 @@ module('Acceptance | auditor', function (hooks) {
   test('Auditor sidebar view', async function (assert) {
     await visit('/me');
     assert.equal(currentURL(), '/me');
+    assert.equal(document.title, 'Overview | Me | Ranger Clubhouse');
 
     const links = [
       ['/me/schedule', true, 'Schedule'],
@@ -87,32 +88,38 @@ module('Acceptance | auditor', function (hooks) {
 
     assert.dom('.schedule-itinerary').exists();
     assert.dom('.schedule-signup-sheet').exists({count: 2});
+    assert.equal(document.title, 'Schedule | Me | Ranger Clubhouse');
   });
 
   test('Auditor should be able to visit the Personal Info page', async function(assert) {
     await visit('/me/personal-info');
     assert.equal(currentURL(), '/me/personal-info');
+    assert.equal(document.title, 'Personal info | Me | Ranger Clubhouse');
   });
 
   test('Auditor should not be able to visit the Emergency Contact page', async function(assert) {
     await visit('/me/emergency-contact');
     // should bounce back to overview.
     assert.equal(currentURL(), '/me');
+    assert.equal(document.title, 'Overview | Me | Ranger Clubhouse');
   });
 
   test('Auditor should not be able to visit the Tickets & Stuff page', async function(assert) {
     await visit('/me/tickets');
     // should bounce back to overview.
     assert.equal(currentURL(), '/me');
+    assert.equal(document.title, 'Overview | Me | Ranger Clubhouse');
   });
 
   test('Auditor should be able to visit the Event Info page', async function(assert) {
     await visit('/me/event-info');
     assert.equal(currentURL(), '/me/event-info');
+    assert.equal(document.title, 'Event info | Me | Ranger Clubhouse');
   });
 
   test('Auditor should not be able to visit the Contact Ranger page', async function(assert) {
     await visit('/me/contact');
     assert.equal(currentURL(), '/me');
+    assert.equal(document.title, 'Overview | Me | Ranger Clubhouse');
   });
 });

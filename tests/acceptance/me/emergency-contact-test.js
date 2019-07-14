@@ -17,6 +17,7 @@ module('Acceptance | me/emergency contact', function (hooks) {
     await visit('/me/emergency-contact');
 
     assert.dom(`[name="emergency_contact"]`).hasValue(person.emergency_contact);
+    assert.equal(document.title, 'Emergency contact | Me | Ranger Clubhouse');
   });
 
   test('update /me/emergency-contact', async function (assert) {

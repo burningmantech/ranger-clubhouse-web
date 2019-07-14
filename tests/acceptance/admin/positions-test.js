@@ -19,5 +19,6 @@ module('Acceptance | admin/positions', function(hooks) {
     const numPositions = this.server.schema.positions.all().length;
     assert.dom('.position-line')
       .exists({ count: numPositions }, `should render ${numPositions} lines`);
+    assert.equal(document.title, 'Positions | Admin | Ranger Clubhouse');
   });
 });
