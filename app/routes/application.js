@@ -1,6 +1,8 @@
 import Route from '@ember/routing/route';
 import { action, setProperties } from '@ember/object';
+import { humanize } from 'ember-cli-string-helpers/helpers/humanize';
 import { inject as service } from '@ember/service';
+import { config } from 'clubhouse/utils/config';
 import setCookie from 'clubhouse/utils/set-cookie';
 
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
@@ -137,5 +139,25 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
     $('header a.dropdown-item').on('click', function () {
       $('.navbar-collapse').collapse('hide');
     });
+  }
+
+  // Dynamic page title: https://github.com/mike-north/ember-cli-document-title-northm
+  // Routes can customize their portion of the name with a titleToken property or function,
+  // see routes/person.js for an example.
+  title(tokens) {
+    if (tokens.length === 0) {
+      tokens = this.get('router').currentRouteName.split('.').map((x) => humanize([x]));
+      if (tokens[tokens.length - 1] === 'Index') {
+        tokens.pop();
+      }
+    }
+    tokens = tokens.reverse();
+    let siteName = 'Ranger Clubhouse';
+    let env = config('DeploymentEnvironment');
+    if (env && env !== 'Production') {
+      siteName = `${env} Clubhouse`;
+    }
+    tokens.push(siteName);
+    return tokens.join(' | ');
   }
 }
