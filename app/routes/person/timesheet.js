@@ -19,17 +19,17 @@ export default class PersonTimesheetRoute extends Route {
     this.store.unloadAll('timesheet-missing');
 
     return RSVP.hash({
-      timesheets: this.store.query('timesheet', queryParams),
-      timesheetInfo: this.ajax.request('timesheet/info', {
-        method: 'GET',
-        data: { person_id }
-      }).then((result) => result.info),
-      timesheetMissing: this.store.query('timesheet-missing', queryParams),
       year: year,
-      positions: this.ajax.request(`person/${person_id}/positions`,{
-        data: { include_training: 1, year }
-      }).then((results) => results.positions),
-      timesheetSummary: this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }}).then((result) => result.summary),
+      timesheets: this.store.query('timesheet', queryParams),
+      timesheetInfo: this.ajax.request('timesheet/info', { data: { person_id } })
+        .then((result) => result.info),
+      timesheetMissing: this.store.query('timesheet-missing', queryParams),
+      positions: this.ajax.request(`person/${person_id}/positions`,{ data: { include_training: 1, year } })
+        .then((results) => results.positions),
+      timesheetSummary: this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }})
+        .then((result) => result.summary),
+      eventInfo: this.ajax.request(`person/${person_id}/event-info`, { data: { year } })
+        .then((result) => result.event_info)
     });
   }
 

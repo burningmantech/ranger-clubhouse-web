@@ -6,7 +6,7 @@
 <div class="border rounded p-2 mt-2 mb-2">
   <h3>Shift Manage</h3>
   {{#if (is-current-year year)}}
-    {{shift-check-in-out positions=positions timesheets=timesheets person=person}}
+    {{shift-check-in-out positions=positions timesheets=timesheets person=person eventInfo=eventInfo}}
   {{else}}
     Select the current year to start or end a shift
   {{/if}}
