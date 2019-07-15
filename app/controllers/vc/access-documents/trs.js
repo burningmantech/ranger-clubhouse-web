@@ -115,7 +115,7 @@ export default class VcAccessDocumentsTrsController extends Controller {
     ['Work Access Passes Ranger', 'work_access_pass_ranger'],
     ['Work Access Passes SO', 'work_access_pass_so'],
     ['Work Access Passes PNV', 'work_access_pass_pnv'],
-    ['Work Access Passes All', 'work_access_pass'],
+    ['Work Access Passes All', 'work_access_pass_all'],
     ['Gift Tickets', 'gift_ticket'],
     ['Gift Tickets+VP', 'gift_ticket_vp']
   ];
@@ -208,6 +208,9 @@ export default class VcAccessDocumentsTrsController extends Controller {
       return this.accessDocuments.filter((r) =>  r.type == 'work_access_pass' && (r.person.status == 'alpha' || r.person.status == 'prospective'));
     } else if (filter == 'work_access_pass_ranger') {
       return this.accessDocuments.filter((r) =>  r.type == 'work_access_pass' && r.person.status != 'alpha' && r.person.status != 'prospective');
+    } else if (filter == 'work_access_pass_all') {
+      return this.accessDocuments.filter((r) =>  r.type == 'work_access_pass' || r.type == 'work_access_pass_so');
+
     } else if (filter == 'staff_credential_vp'
       || filter == 'gift_ticket_vp') {
       const rows = [];
@@ -395,7 +398,7 @@ export default class VcAccessDocumentsTrsController extends Controller {
     });
 
     this.modal.confirm('Confirm mask as submitted', `Are you sure you want to mark the ${itemCount} item(s) as submitted?`, () => {
-      this.ajax.request('access-document/mark-submitted', { data: { ids } }).then(() => {
+      this.ajax.request('access-document/mark-submitted', { method: 'POST', data: { ids } }).then(() => {
         this.toast.success('Access documents have been succesfully marked as submitted.');
         this.viewRecords.forEach((rec) => {
           if (!rec.selected)
