@@ -44,6 +44,14 @@
     <button class="btn btn-primary" {{action markAssetAuthorized}} disabled={{isSubmitting}}>Mark Form As Signed</button>
   {{/if}}
 </p>
+<p>
+  {{#if person.vehicle_paperwork}}
+    {{person.callsign}} has signed the Motorpool Policy and is authorized to drive golf carts and gators.
+  {{else}}
+    <span class="text-danger">{{person.callsign}} has NOT signed the Motorpool Policy. Direct the person to a kiosk and have them agree to the Motorpool Policy if they would like to drive golf carts &amp; UTVs on playa for Ranger business.</span>
+  {{/if}}
+</p>
+
 <hr class="my-3">
 <div class="float-right">
 
