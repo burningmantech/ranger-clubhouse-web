@@ -3,7 +3,7 @@
   <p>
     Alphas and Prospective Rangers who have signed up for or completed
     training and intend to walk an Alpha shift on playa are eligible for a
-    Work Access Pass (WAP) that allows them to enter the event on or after
+    Work Access Pass (WAP) that allows them to enter the event on or any day after
     {{mdy-format ticketingInfo.wap_alpha_default_date full=true}}
     at 00:01 (one minute after midnight).
   </p>
@@ -18,9 +18,10 @@
     <b>The WAP is not an event ticket. All Alphas &amp; Prospectives must provide their own event ticket.</b>
   </p>
 {{else}}
-  <h2>
-    Ticketing has closed. You may not request changes through the Clubhouse at this time.
-  </h2>
+  <h2>Ticketing is closed.</h2>
+  <p>
+    You may not request changes through the Clubhouse at this time.
+  </p>
 
   {{#if hasFullPackage}}
     Below is a summary of the tickets and/or items you have claimed, banked, and/or submitted for this year's event:
@@ -35,6 +36,9 @@
           {{#if (eq ticket.status "banked")}}
             <b>A {{ticket-type-human ticket.type}} has been banked for this year.</b><br>
             <b class="text-danger">It will expire on {{mdy-format ticket.expiry_date full=true}}.</b>
+          {{else if (eq ticket.status "qualified")}}
+            <b class="text-danger">A {{ticket-type-human ticket.type}} has NOT BEEN CLAIMED for this year.</b><br>
+            The ticket will automatically be banked and will expire on {{mdy-format ticket.expiry_date full=true}}.
           {{else if (or (eq ticket.type "staff_credential") (eq ticketPackage.delivery.method "will_call"))}}
             <b class="text-success">A {{ticket-type-human ticket.type}} will be held at {{if (eq ticket.type "staff_credential") "Staff Credentialing" "Will Call"}}.</b><br>
             The ticket will be under your name "{{person.first_name}} {{person.last_name}}".<br>
@@ -42,7 +46,7 @@
               {{#if ticket.access_any_time}}
                 <b>You may enter the event at any time.</b>
               {{else}}
-                <b>You may enter the event on or after {{mdy-format ticket.access_date full=true}} @ 00:01</b>
+                <b>You may enter the event on or any day after {{mdy-format ticket.access_date full=true}} @ 00:01</b>
               {{/if}}
           {{else}}
             <b class="text-success">A {{ticket-type-human ticket.type}} will be mailed.</b><br>
@@ -90,7 +94,7 @@
         {{else if haveVP}}
           <b>The Vehicle Pass was not claimed.</b>
         {{else}}
-          <b>No qualifying Vehicle Pass was issued.</b>
+          <b>No Vehicle Pass was qualified for.</b>
         {{/if}}
       </li>
     {{/if}}
@@ -103,7 +107,7 @@
             {{#if wap.access_any_time}}
               at any time!
             {{else}}
-              on or after {{mdy-format wap.access_date full=true}} @ 00:01.
+              on or any day after {{mdy-format wap.access_date full=true}} @ 00:01.
             {{/if}}</b>
           <br>
           An email will be sent out in the coming weeks which contains your WAP.
@@ -120,7 +124,7 @@
           Your {{if (gt wapSOList.length 1) "Significant Others are" "Significant Other is"}}:
           <ul>
             {{#each wapSOList as |so|}}
-              <li>{{so.name}} may enter the event on or after {{mdy-format so.access_date full=true}} @ 00:01.</li>
+              <li>{{so.name}} may enter the event on or any day after {{mdy-format so.access_date full=true}} @ 00:01.</li>
             {{/each}}
           </ul>
           An email or emails will be sent out in the coming weeks which contains your Significant Other WAP(s).
