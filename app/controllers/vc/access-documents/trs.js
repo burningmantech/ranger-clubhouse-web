@@ -397,9 +397,12 @@ export default class VcAccessDocumentsTrsController extends Controller {
       itemCount++;
     });
 
+
     this.modal.confirm('Confirm mask as submitted', `Are you sure you want to mark the ${itemCount} item(s) as submitted?`, () => {
+      this.set('isSubmitting', true);
       this.ajax.request('access-document/mark-submitted', { method: 'POST', data: { ids } }).then(() => {
         this.toast.success('Access documents have been succesfully marked as submitted.');
+        this.set('isSubmitting', false);
         this.viewRecords.forEach((rec) => {
           if (!rec.selected)
             return;
@@ -411,7 +414,7 @@ export default class VcAccessDocumentsTrsController extends Controller {
             rec.documents.forEach((doc) => set(doc, 'submitted', true));
           }
         });
-      });
+      }).finally(() => this.set('isSubmitting', false));
     });
   }
 }
