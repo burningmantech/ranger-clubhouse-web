@@ -336,7 +336,7 @@ export default class VcAccessDocumentsTrsController extends Controller {
           if (doc.has_staff_credential) {
             row.delivery_method = 'Credential Pick Up';
           } else {
-            row.delivery_method = (doc.delivery_type == 'mail') ? 'USPS' : 'Will Call';
+            row.delivery_method = (doc.delivery_type == 'mail') ? 'USPS' : 'Credential Pick Up';
           }
           break;
 
