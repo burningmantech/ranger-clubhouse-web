@@ -329,14 +329,14 @@ export default class VcAccessDocumentsTrsController extends Controller {
         switch (doc.type) {
         case 'reduced_price_ticket':
         case 'gift_ticket':
-          row.delivery_method = doc.delivery_type == 'mail' ? 'USPS' : 'Credential Pick Up' /*'Will Call'*/;
+          row.delivery_method = doc.delivery_type == 'mail' ? 'USPS' : 'Will Call';
           break;
 
         case 'vehicle_pass':
           if (doc.has_staff_credential) {
             row.delivery_method = 'Credential Pick Up';
           } else {
-            row.delivery_method = (doc.delivery_type == 'mail') ? 'USPS' : 'Credential Pick Up' /*'Will Call'*/;
+            row.delivery_method = (doc.delivery_type == 'mail') ? 'USPS' : 'Credential Pick Up';
           }
           break;
 
@@ -377,7 +377,7 @@ export default class VcAccessDocumentsTrsController extends Controller {
 
     const date = moment().format('YYYY-MM-DD-HH-mm');
 
-    this.house.downloadCsv(`trs-${this.filter.replace(/_/g,'-')}-${date}`, columns, rows);
+    this.house.downloadCsv(`trs-${this.filter.replace(/_/g,'-')}-${date}.csv`, columns, rows);
   }
 
   @action
@@ -397,9 +397,12 @@ export default class VcAccessDocumentsTrsController extends Controller {
       itemCount++;
     });
 
+
     this.modal.confirm('Confirm mask as submitted', `Are you sure you want to mark the ${itemCount} item(s) as submitted?`, () => {
+      this.set('isSubmitting', true);
       this.ajax.request('access-document/mark-submitted', { method: 'POST', data: { ids } }).then(() => {
         this.toast.success('Access documents have been succesfully marked as submitted.');
+        this.set('isSubmitting', false);
         this.viewRecords.forEach((rec) => {
           if (!rec.selected)
             return;
@@ -411,7 +414,7 @@ export default class VcAccessDocumentsTrsController extends Controller {
             rec.documents.forEach((doc) => set(doc, 'submitted', true));
           }
         });
-      });
+      }).finally(() => this.set('isSubmitting', false));
     });
   }
 }

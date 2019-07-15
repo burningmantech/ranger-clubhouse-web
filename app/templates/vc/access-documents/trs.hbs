@@ -105,14 +105,20 @@
   </tbody>
 </table>
 
-<button class="btn btn-primary" {{action this.exportSelectedAction}} disabled={{or (gt this.selectedCount MAX_BATCH_SIZE) (eq this.selectedCount 0) (eq this.filter "all")}}>
+<button class="btn btn-primary" {{action this.exportSelectedAction}} disabled={{or isSubmitting (gt this.selectedCount MAX_BATCH_SIZE) (eq this.selectedCount 0) (eq this.filter "all")}}>
   {{#if (eq this.filter "all")}}
     Export Disabled For "All" View
   {{else}}
     Export {{pluralize this.selectedCount "Selected Document"}}
   {{/if}}
 </button>
-<button class="btn btn-secondary" {{action this.markSubmitted}} disabled={{or (eq this.selectedCount 0) (eq this.filter "all")}}>Mark Selected As Submitted</button>
+<button class="btn btn-secondary" {{action this.markSubmitted}} disabled={{or isSubmitting (eq this.selectedCount 0) (eq this.filter "all")}}>
+  {{#if isSubmitting}}
+    Marking as Submitted. {{fa-icon "spinner" spin=true}}
+  {{else}}
+    Mark Selected As Submitted
+  {{/if}}
+</button>
 {{#if (gt this.selectedCount MAX_BATCH_SIZE)}}
   <div class="text-danger"><b>{{this.selectedCount}} items has been selected which exceeds the max. TRS batch size of {{MAX_BATCH_SIZE}} items. Reduce the number selected.</b></div>
 {{/if}}
