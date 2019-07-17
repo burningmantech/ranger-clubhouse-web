@@ -59,6 +59,10 @@
     </div>
   </div>
 
+  <p>
+    {{fa-icon "exclamation-circle"}} = indicates person has not signed up for any shifts.
+  </p>
+
   {{#if this.isRendering}}
     <div class="text-danger h3 font-weight-bold">Hang Tight - Rendering {{this.renderBmids.length}} of {{this.viewBmids.length}} {{fa-icon "spinner" spin=true}}</div>
   {{else}}
@@ -97,6 +101,9 @@
           {{#each this.editableBmids as |bmid|}}
             <tr class="{{if bmid.isDirty "bg-warning"}}">
               <td>
+                {{#if (not bmid.has_signups)}}
+                  {{fa-icon "exclamation-circle"}}
+                {{/if}}
                 {{#if bmid.person}}
                   {{person-link person=bmid.person}}
                 {{else}}
@@ -121,7 +128,7 @@
               <td><input value={{bmid.title1}} onblur={{action updateColumn bmid "title1"}} size="30"></td>
               <td><input value={{bmid.title2}} onblur={{action updateColumn bmid "title2"}} size="30"></td>
               <td><input value={{bmid.title3}} onblur={{action updateColumn bmid "title3"}} size="30"></td>
-              <td>{{yesno bmid.org_vehicle_insurance}}</td>
+              <td>{{if bmid.org_vehicle_insurance "M" "-"}}</td>
               <td>
                 {{ch-form/select name=(concat "showers" bmid.person.id) value=bmid.showers options=showerOptions
                       onChange=(action (mut bmid.showers))
@@ -157,6 +164,9 @@
           {{#each this.renderBmids as |bmid|}}
             <tr>
               <td>
+                {{#if (not bmid.has_signups)}}
+                  {{fa-icon "exclamation-circle"}}
+                {{/if}}
                 {{#if bmid.person}}
                   {{person-link person=bmid.person}}
                 {{else}}
@@ -168,8 +178,8 @@
               <td class="w-10">{{present-or-not bmid.title1 "-"}}</td>
               <td class="w-10">{{present-or-not bmid.title2 "-"}}</td>
               <td class="w-10">{{present-or-not bmid.title3 "-"}}</td>
-              <td>{{yesno bmid.org_vehicle_insurance}}</td>
-              <td>{{yesno bmid.showers}}</td>
+              <td>{{if bmid.org_vehicle_insurance "M" "-"}}</td>
+              <td>{{if bmid.showers "S" "-"}}</td>
               <td>{{bmid.mealsHuman}}</td>
               <td class="w-10">
                 {{#if bmid.wapMissing}}

@@ -41,7 +41,8 @@ export default class VcBmidController extends Controller {
     [ 'Vets w/shift after 8/10 OR PASSED training; excludes PNVs', 'signedup' ],
     [ 'BMIDs marked as "Issues" or "Do Not Print"', 'nonprint' ],
     [ 'Submitted BMIDs', 'submitted' ],
-    [ 'Printed BMIDs', 'printed' ]
+    [ 'Printed BMIDs', 'printed' ],
+    [ 'No shift signups', 'no-shifts' ]
   ];
 
   sortColumn = 'callsign';
