@@ -17,6 +17,8 @@ const EventOptions = [
     [ 'Schedule Updates', 'person-slot-%' ],
     [ 'Slot Changes', 'slot-%' ],
     [ 'Status Changes', 'person-status-change' ],
+    [ 'BMID Changes', 'bmid-%' ],
+    [ 'Lambase Interactions', 'lambase-%' ],
     [ 'Ticketing Changes', 'access-document-%' ]
 ];
 
