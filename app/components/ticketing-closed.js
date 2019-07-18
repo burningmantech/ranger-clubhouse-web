@@ -67,8 +67,7 @@ export default class TicketingClosedComponent extends Component {
   @computed('ticketPackage.delivery.method')
   get usingWillCall() {
     const delivery = this.ticketPackage.delivery;
-
-    return (delivery && delivery.method == 'will_call');
+    return (!delivery || delivery.method != 'mail');
   }
 
   // Return a list of WAP SO names
