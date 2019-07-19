@@ -51,21 +51,22 @@ Showing {{pluralize documents.length "current access document"}}
 </table>
 
 <p>
-Delivery Method:
-{{#if delivery}}
-  {{#if (eq delivery.method "will_call")}}
-    Will Call
+  Delivery Method:
+  {{#if delivery}}
+    {{#if (eq delivery.method "will_call")}}
+      Will Call
+    {{else}}
+      By mail - {{delivery.street}}, {{delivery.city}}, {{delivery.state}}, {{delivery.postal_code}} {{delivery.country}}
+    {{/if}}
   {{else}}
-    By mail - {{delivery.street}}, {{delivery.city}}, {{delivery.state}}, {{delivery.postal_code}} {{delivery.country}}
+    No method supplied, defaulting to Will Call.
   {{/if}}
-{{else}}
-  No method supplied, defaulting to Will Call.
-{{/if}}
 </p>
 
-
-<button class="btn btn-primary" {{action "newAccessDocument"}}>New Access Document</button>
+<button class="btn btn-primary" {{action newAccessDocument}}>New Access Document</button>
 {{#link-to "person.tickets" class="btn btn-secondary"}}View Tickets &amp; Stuff{{/link-to}}
+<button class="btn btn-secondary" {{action editDelivery}}>Edit Delivery Method</button>
+
 {{#if entry}}
   {{#ch-form "entry" entry modalBox=true modalTitle=(concat (if entry.isNew "Create A New Access Document" "Edit Access Document") " For " person.callsign)
     onSubmit=(action "saveAccessDocument")
@@ -111,5 +112,32 @@ Delivery Method:
       <button class="btn btn-danger float-right" {{action "deleteAccessDocument" entry}}>Delete (Cancel) Document</button>
     {{/unless}}
   {{/ch-form}}
+{{/if}}
 
+{{#if deliveryEntry}}
+  {{#ch-form "delivery" deliveryEntry modalBox=true modalTitle=(concat "Edit Delivery Method for " person.callsign)
+    onSubmit=(action saveDelivery)
+    onCancel=(action cancelDelivery) as |f|
+    }}
+
+    <div class="form-row">
+      {{f.input "method" type="select" options=methodOptions label="Type" grid="col-auto"}}
+    </div>
+
+    <div class="form-row mb-2">
+      <div class="col">
+        Note: the mailing address will be retain but not used if the method is set to Will Call.
+      </div>
+    </div>
+    <div class="form-row">
+      {{f.input "street" label="Street" grid="col-md-8 col-sm-6"}}
+    </div>
+    <div class="form-row">
+      {{f.input "city" label="City" grid="col-sm-5 col-md-4"}}
+      {{f.input "state" label="State" type="select" options=stateOptions grid="col-sm-5 col-md-4"}}
+      {{f.input "postal_code" label="Zip Code" grid="col-sm-5 col-md-4"}}
+    </div>
+    {{f.submit label="Update" disabled=isSubmitting}}
+    {{f.cancel}}
+  {{/ch-form}}
 {{/if}}

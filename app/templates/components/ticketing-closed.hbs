@@ -42,12 +42,14 @@
           {{else if (or (eq ticket.type "staff_credential") (eq ticketPackage.delivery.method "will_call"))}}
             <b class="text-success">A {{ticket-type-human ticket.type}} will be held at {{if (eq ticket.type "staff_credential") "Staff Credentialing" "Will Call"}}.</b><br>
             The ticket will be under your name "{{person.first_name}} {{person.last_name}}".<br>
+            {{#if usingStaffCredential}}
               Your Staff Credential acts as your WAP.<br>
               {{#if ticket.access_any_time}}
                 <b>You may enter the event at any time.</b>
               {{else}}
                 <b>You may enter the event on or any day after {{mdy-format ticket.access_date full=true}} @ 00:01</b>
               {{/if}}
+            {{/if}}
           {{else}}
             <b class="text-success">A {{ticket-type-human ticket.type}} will be mailed.</b><br>
             <span class="text-danger">You have until July 26, 2019 to pay for it.</span>
@@ -86,7 +88,8 @@
               </p>
             {{/if}}
           {{else if usingWillCall}}
-            <b class="text-success">A Vehicle Pass will be held at Will Call</b> under your name "{{person.first_name}} {{person.last_name}}".
+          <b class="text-success">A Vehicle Pass will be held at Staff Credentialing.</b><br>
+          The Vehicle Passs will be under your name "{{person.first_name}} {{person.last_name}}".
           {{else}}
             Uh oh, this may be a bug. You have a claimed Vehicle Pass yet I can't figure out the delivery method.
             Please contact {{mail-to ticketingInfo.ranger_ticketing_email}} for help.

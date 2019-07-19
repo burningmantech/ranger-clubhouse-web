@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember/object';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
+import { StateOptions } from 'clubhouse/constants/countries';
 
 export default class PersonAccessDocumentsController extends Controller {
   entry = null;
@@ -23,6 +24,13 @@ export default class PersonAccessDocumentsController extends Controller {
     ["Cancelled", "cancelled"],
     ["Expired", "expired"]
   ];
+
+  methodOptions = [
+    [ "Will Call", 'will_call' ],
+    [ "US Mail", 'mail' ]
+  ];
+
+  stateOptions = StateOptions['US'];
 
   @computed
   get yearOptions() {
@@ -93,5 +101,50 @@ export default class PersonAccessDocumentsController extends Controller {
         this.toast.success('The document was successfully deleted.');
       }).catch((response) => this.house.handleErrorResponse(response));
     });
+  }
+
+  @action
+  editDelivery() {
+    let delivery = this.delivery;
+
+    if (!delivery) {
+      delivery =  { method: 'will_call' };
+    }
+
+    this.set('deliveryEntry', delivery);
+  }
+
+  @action
+  cancelDelivery() {
+    this.set('deliveryEntry', null);
+  }
+
+  @action
+  saveDelivery(model, isValid) {
+    if (!isValid)
+      return;
+
+    this.set('isSubmitting', false);
+    this.toast.clear();
+    const delivery = {
+      method:  model.get('method'),
+      street: model.get('street'),
+      city: model.get('city'),
+      state: model.get('state'),
+      postal_code: model.get('postal_code'),
+      //  country: model.get('country'),
+      country: 'United States'
+    };
+
+    this.ajax.request(`ticketing/${this.person.id}/delivery`, {
+        method: 'POST',
+        data: delivery
+      })
+      .then(() => {
+        this.toast.success('The delivery method and/or address was successfully saved.');
+        this.set('delivery', delivery);
+        this.set('deliveryEntry', null);
+      }).catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.set('isSubmitting', false));
   }
 }
