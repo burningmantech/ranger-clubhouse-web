@@ -68,8 +68,8 @@ export default class MentorScheduleController extends Controller {
   }
 
   @action
-  addPersonAction(person) {
-    slotSignup(this, this.training, person, () => {
+  addPersonAction(person, slot) {
+    slotSignup(this, slot, person, () => {
       this.set('addPersonForm', null);
       this.send('refreshRoute');
     });
