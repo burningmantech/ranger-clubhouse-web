@@ -1,0 +1,114 @@
+<div class="form-group row">
+  <legend>Options</legend>
+  <div class="form-check form-check-inline d-inline-block">
+    {{input type="checkbox" id="on-playa-only" class="form-check-input" checked=onPlaya}}
+    <label for="on-playa-only" class="form-check-label">On playa only</label>
+  </div>
+  <div class="col-md d-inline-block">
+    <a href {{action "expandAllPositions" true}}>Expand all</a>
+    &ndash; <a href {{action "expandAllPositions" false}}>Collapse all</a>
+  </div>
+</div>
+
+<div class="form-group row">
+  <legend>Position types</legend>
+  {{#each positionTypes as |type|}}
+    <div class="form-check form-check-inline">
+      {{#let (concat "show-type-" type) as |id|}}
+        {{input type="checkbox" id=id class="form-check-input" checked=type.selected}}
+        <label for="{{id}}" class="form-check-label">{{type.name}}</label>
+      {{/let}}
+    </div>
+  {{/each}}
+</div>
+
+<div class="form-group row">
+  <legend>Person statuses</legend>
+  {{#each statuses as |status|}}
+    <div class="form-check form-check-inline">
+      {{#let (concat "show-status-" status) as |id|}}
+        {{input type="checkbox" id=id class="form-check-input" checked=status.selected}}
+        <label for="{{id}}" class="form-check-label">{{status.name}}</label>
+      {{/let}}
+    </div>
+  {{/each}}
+</div>
+
+<h1>People by Position</h1>
+{{#each visiblePositions as |position|}}
+  <h2 class="d-inline-block">
+    <a href {{action toggleExpanded position}}>
+      {{fa-icon (if position.expanded "caret-down" "caret-right")}}
+      {{position.title}}
+    </a>
+  </h2>
+  {{#if position.allRangers}}
+    &ndash; all rangers
+  {{/if}}
+  {{#if position.allPeople}}
+    &ndash; all people
+  {{/if}}
+  &ndash; {{pluralize position.totalPeople "person"}}
+  ({{position.onPlayaCount}} on playa)
+  {{#if (not-eq position.visiblePeople.length position.people.length)}}
+    {{pluralize position.visiblePeople.length "person"}} shown
+  {{/if}}
+  {{#if (or position.allRangers position.allPeople)}}
+    &ndash; {{pluralize position.missingPeople.length "unassigned person"}}
+    ({{position.missingOnPlayaCount}} on playa)
+  {{/if}}
+  &ndash; {{position.type}}
+  {{#if position.expanded}}
+    {{#if position.people}}
+      <table class="table table-md table-hover table-width-auto">
+        <thead>
+          <tr>
+            <th>Callsign</th>
+            <th>Status</th>
+            <th>On playa</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each position.visiblePeople as |person|}}
+            <tr>
+              <td>{{person-link person=person}}</td>
+              <td>{{person.status}}</td>
+              <td>{{#if person.on_site}}{{fa-icon "check"}}{{/if}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{/if}}
+    {{#if (and position.missingPeople position.missingPeople.length)}}
+      <table class="table table-md table-hover table-width-auto">
+        <thead>
+          <tr>
+            <td><span class="text-danger">{{fa-icon "exclamation-triangle"}}</span></td>
+            <th>Callsign</th>
+            <th>Status</th>
+            <th>On playa</th>
+            <th>Missing position</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each position.missingPeople as |person|}}
+            <tr>
+              <td><span class="text-danger">{{fa-icon "exclamation-triangle"}}</span></td>
+              <td>{{person-link person=person}}</td>
+              <td>{{person.status}}</td>
+              <td>{{#if person.on_site}}{{fa-icon "check" title="On playa"}}{{/if}}</td>
+              <td>{{position.title}} not assigned</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{/if}}
+    <a href {{action toggleExpanded position}}>
+      {{fa-icon (if position.expanded "caret-up" "caret-right")}}
+      {{position.title}}
+      &ndash; {{pluralize position.totalPeople "person"}}
+      ({{position.onPlayaCount}} on playa)
+    </a>
+  {{/if}}
+  <hr>
+{{/each}}
