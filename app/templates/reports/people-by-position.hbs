@@ -62,6 +62,10 @@
   &ndash; {{position.type}}
   {{#if position.expanded}}
     {{#if position.people}}
+      {{#if (and position.allRangers position.visiblePeople.length)}}
+        <br>Note: {{position.title}} is granted to all active and inactive rangers.
+        The following list is just people who aren't active/inactive.
+      {{/if}}
       <table class="table table-md table-hover table-width-auto">
         <thead>
           <tr>
