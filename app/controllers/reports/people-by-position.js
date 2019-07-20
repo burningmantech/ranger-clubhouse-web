@@ -25,6 +25,7 @@ class ViewPosition extends EmberObject {
 
 export default class PeopleByPositionController extends Controller {
   queryParams = ['onPlaya'];
+  onPlaya = false;
 
   @computed('positions', 'people')
   get viewPositions() {

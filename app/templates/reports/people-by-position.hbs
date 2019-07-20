@@ -1,8 +1,10 @@
 <div class="form-group row">
   <legend>Options</legend>
   <div class="form-check form-check-inline d-inline-block">
-    {{input type="checkbox" id="on-playa-only" class="form-check-input" checked=onPlaya}}
-    <label for="on-playa-only" class="form-check-label">On playa only</label>
+    <label class="form-check-label">
+      {{input type="checkbox" class="form-check-input" checked=onPlaya}}
+      On playa only
+    </label>
   </div>
   <div class="col-md d-inline-block">
     <a href {{action "expandAllPositions" true}}>Expand all</a>
@@ -14,10 +16,10 @@
   <legend>Position types</legend>
   {{#each positionTypes as |type|}}
     <div class="form-check form-check-inline">
-      {{#let (concat "show-type-" type) as |id|}}
-        {{input type="checkbox" id=id class="form-check-input" checked=type.selected}}
-        <label for="{{id}}" class="form-check-label">{{type.name}}</label>
-      {{/let}}
+      <label class="form-check-label">
+        {{input type="checkbox" class="form-check-input" checked=type.selected}}
+        {{type.name}}
+      </label>
     </div>
   {{/each}}
 </div>
@@ -26,10 +28,10 @@
   <legend>Person statuses</legend>
   {{#each statuses as |status|}}
     <div class="form-check form-check-inline">
-      {{#let (concat "show-status-" status) as |id|}}
+      <label for="{{id}}" class="form-check-label">
         {{input type="checkbox" id=id class="form-check-input" checked=status.selected}}
-        <label for="{{id}}" class="form-check-label">{{status.name}}</label>
-      {{/let}}
+        {{status.name}}
+      </label>
     </div>
   {{/each}}
 </div>
