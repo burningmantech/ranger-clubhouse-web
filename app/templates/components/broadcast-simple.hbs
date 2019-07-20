@@ -24,34 +24,30 @@
 
 
   {{#if (eq type "emergency")}}
-    {{#ch-box "SEND TO ALL ON-PLAYA RANGERS" type="danger"}}
+    <h3 class="text-danger">SEND TO ALL ON-PLAYA RANGERS</h3>
       This will send a text and email message to
       <b>ALL {{broadcast.receivers}} ON-PLAYA Rangers</b>.<br>
       It should ONLY be used in emergencies (mass mobliziation for fire,
       fatality, plane crash, etc.).<br>
       <br>
-      Please be brief and choose your words carefully as they may end up on the front page of the New York Times.
-    {{/ch-box}}
+      <b class="text-danger">Please be brief and choose your words carefully as they may end up on the front page of the New York Times.</b>
   {{else if (eq type "onshift")}}
-    {{#ch-box (concat "Text Message ONLY to " (pluralize broadcast.receivers "ON SHIFT Ranger"))}}
+    <h3>Text Message ONLY to {{pluralize broadcast.receivers "ON SHIFT Ranger"}}</h3>
       This will send only a TEXT message to {{broadcast.receivers}} ON SHIFT Rangers.
       Only Rangers who have opted-in to receive On Shift messages AND who are
       carrying their cellphones might receive this message. Delivery is
       not guaranteed.<br>
       <br>
-      If you need to send an emergency message to EVERYONE,
-      you're in the wrong place.
-    {{/ch-box}}
+      <span class="text-danger">If you need to send an emergency message to EVERYONE, you're in the wrong place.</span>
   {{else}}
-    {{#ch-box "Text And Email Off-Duty Ranger"}}
+      <h3>Text And Email Off-Duty Ranger</h3>
       This will send a text and email to {{if (eq type "recruit-dirt") broadcast.receivers}} off-duty
       Rangers who have indicated they might be willing to come in and work some extra shifts when needed.
       You can use this if your shift is low on people.<br>
-      <br>
       <span class="text-danger">If you need to send an emergency message to EVERYONE, you're in the wrong place.</span>
-    {{/ch-box}}
   {{/if}}
 
+  <hr>
   {{#ch-form "broadcast-form" broadcastForm validator=broadcastValidations onSubmit=(action reviewAction) as |f|}}
     {{#if broadcast.has_muster_position}}
       <h3>Special Team That Needs More Rangers</h3>

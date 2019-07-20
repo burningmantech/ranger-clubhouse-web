@@ -3,7 +3,7 @@ import { Role } from 'clubhouse/constants/roles';
 
 export default class AdminRbsRoute extends Route {
   beforeModel() {
-    this.house.roleCheck([ Role.ADMIN, Role.MEGAPHONE ]);
+    this.house.roleCheck([ Role.ADMIN, Role.MEGAPHONE, Role.EDIT_SLOTS ]);
   }
 
   model() {

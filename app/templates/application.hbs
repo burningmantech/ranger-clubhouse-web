@@ -146,47 +146,48 @@
               <div class="dropdown-menu dropdown-menu-large">
                 <div class="container">
                   <div class="row">
-                    <div class="col-sm-12 col-md-3">
-                      <div class="navbar-text">Edit Records</div>
-                      {{#if (has-role "admin" "edit-slots")}}
+                    {{#if (has-role "admin" "edit-slots")}}
+                      <div class="col-sm-12 col-md-3">
+                        <div class="navbar-text">Edit Records</div>
                         {{#link-to "admin.slots" class="dropdown-item"}}Schedule Slots{{/link-to}}
-                      {{/if}}
+                        {{#if (has-role "admin")}}
+                          {{#link-to "admin.credits" class="dropdown-item"}}Schedule Credits{{/link-to}}
+                          {{#link-to "admin.assets" class="dropdown-item"}}Assets{{/link-to}}
+                          {{#link-to "admin.event-dates" class="dropdown-item"}}Event Dates{{/link-to}}
+                          {{#link-to "admin.motd" class="dropdown-item"}}MOTD{{/link-to}}
+                          {{#link-to "admin.positions" class="dropdown-item"}}Positions{{/link-to}}
+                          {{#link-to "admin.roles" class="dropdown-item"}}(System) Roles{{/link-to}}
+                          {{#link-to "admin.help" class="dropdown-item"}}Help Documents{{/link-to}}
+                          {{#link-to "admin.alerts" class="dropdown-item"}}RBS Alerts{{/link-to}}
+                        {{/if}}
+                      </div>
                       {{#if (has-role "admin")}}
-                        {{#link-to "admin.credits" class="dropdown-item"}}Schedule Credits{{/link-to}}
-                        {{#link-to "admin.assets" class="dropdown-item"}}Assets{{/link-to}}
-                        {{#link-to "admin.event-dates" class="dropdown-item"}}Event Dates{{/link-to}}
-                        {{#link-to "admin.motd" class="dropdown-item"}}MOTD{{/link-to}}
-                        {{#link-to "admin.positions" class="dropdown-item"}}Positions{{/link-to}}
-                        {{#link-to "admin.roles" class="dropdown-item"}}(System) Roles{{/link-to}}
-                        {{#link-to "admin.help" class="dropdown-item"}}Help Documents{{/link-to}}
-                        {{#link-to "admin.alerts" class="dropdown-item"}}RBS Alerts{{/link-to}}
+                        <div class="col-sm-12 col-md-3">
+                          <div class="navbar-text">Site Administration</div>
+                          {{#link-to "admin.settings" class="dropdown-item"}}Settings{{/link-to}}
+                          <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
+                          <a href="{{cgo "logview" "show"}}" class="dropdown-item">Log View (CH1)</a>
+                          {{#link-to "admin.error-log" class="dropdown-item"}}Error Log{{/link-to}}
+                          {{#link-to "admin.action-log" class="dropdown-item"}}Action Log{{/link-to}}
+                          <div class="navbar-text">Lambase</div>
+                          <a href="{{cgo "lam" "syncLamPhotos"}}" class="dropdown-item">Synchronize Lam Photos</a>
+                          <a href="{{cgo "lam" "exportLamPhotos"}}" class="dropdown-item">Export Lam Photos</a>
+                        </div>
+                        <div class="col-sm-12 col-md-3">
+                          <div class="navbar-text">Pre-Event</div>
+                          {{#link-to "admin.salesforce" class="dropdown-item"}}Salesforce Import{{/link-to}}
+                          <a href="{{cgo "reminders" "index"}}" class="dropdown-item">Reminder Emails</a>
+                          <a href="{{cgo "manualreview" "selectAll"}}" class="dropdown-item">Manual Review</a>
+                          {{#link-to "admin.radio-eligibility" class="dropdown-item"}}Radio Eligibility{{/link-to}}
+                          <div class="navbar-text">Bulk Operations</div>
+                          {{#link-to "admin.bulk-upload" class="dropdown-item"}}Bulk Upload{{/link-to}}
+                          {{#link-to "admin.bulk-sign-in-out" class="dropdown-item"}}Bulk Sign In/Out{{/link-to}}
+                          {{#link-to "admin.bulk-signout" class="dropdown-item"}}Bulk Signout{{/link-to}}
+                        </div>
                       {{/if}}
-                    </div>
-                    {{#if (has-role "admin")}}
-                      <div class="col-sm-12 col-md-3">
-                        <div class="navbar-text">Site Administration</div>
-                        {{#link-to "admin.settings" class="dropdown-item"}}Settings{{/link-to}}
-                        <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
-                        <a href="{{cgo "logview" "show"}}" class="dropdown-item">Log View (CH1)</a>
-                        {{#link-to "admin.error-log" class="dropdown-item"}}Error Log{{/link-to}}
-                        {{#link-to "admin.action-log" class="dropdown-item"}}Action Log{{/link-to}}
-                        <div class="navbar-text">Lambase</div>
-                        <a href="{{cgo "lam" "syncLamPhotos"}}" class="dropdown-item">Synchronize Lam Photos</a>
-                        <a href="{{cgo "lam" "exportLamPhotos"}}" class="dropdown-item">Export Lam Photos</a>
-                      </div>
-                      <div class="col-sm-12 col-md-3">
-                        <div class="navbar-text">Pre-Event</div>
-                        {{#link-to "admin.salesforce" class="dropdown-item"}}Salesforce Import{{/link-to}}
-                        <a href="{{cgo "reminders" "index"}}" class="dropdown-item">Reminder Emails</a>
-                        <a href="{{cgo "manualreview" "selectAll"}}" class="dropdown-item">Manual Review</a>
-                        {{#link-to "admin.radio-eligibility" class="dropdown-item"}}Radio Eligibility{{/link-to}}
-                        <div class="navbar-text">Bulk Operations</div>
-                        {{#link-to "admin.bulk-upload" class="dropdown-item"}}Bulk Upload{{/link-to}}
-                        {{#link-to "admin.bulk-sign-in-out" class="dropdown-item"}}Bulk Sign In/Out{{/link-to}}
-                        {{#link-to "admin.bulk-signout" class="dropdown-item"}}Bulk Signout{{/link-to}}
-                      </div>
                     {{/if}}
-                    {{#if (has-role "admin" "megaphone")}}
+
+                    {{#if (has-role "admin" "megaphone" "edit-slots")}}
                       <div class="col-sm-12 col-md-3">
                         {{#if (has-role "admin")}}
                           <div class="navbar-text">Post Event</div>

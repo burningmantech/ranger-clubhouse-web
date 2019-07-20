@@ -1,47 +1,50 @@
-  <h1>The Ranger Broadcasting System </h1>
-  <i>&ldquo;We interrupt our regularly scheduled program to bring you this important message . . . &rdquo;</i>
+<h1>The Ranger Broadcasting System </h1>
+<i>&ldquo;We interrupt our regularly scheduled program to bring you this important message . . . &rdquo;</i>
 
 <div class="row mt-2">
-  <div class="col-sm-12 col-md-6">
-    <h3>On Playa Broadcast Actions</h3>
-    <div class="border rounded p-2 mb-2 text-center">
-      {{#link-to "admin.rbs.broadcast" (query-params type="recruit-dirt") class="btn btn-success btn-lg btn-block"}}Message off-duty DIRT RANGERS{{/link-to}}
-      City currently is understaffed. Call upon willing off-duty Dirt Rangers to help out. Sent via text message and email.
-    </div>
-
-    <div class="border rounded p-2 mb-2 text-center">
-      {{#link-to "admin.rbs.broadcast" (query-params type="recruit-position") class="btn btn-success btn-lg btn-block"}}Message off-duty SPECIAL TEAM RANGERS{{/link-to}}
-      A team (e.g., Green Dots, LEALs, Shift Leads) in the city is understaffed. Call up the willing specialized ranks. Sent via text message and email.
-    </div>
-
-    <div class="border rounded p-2 mb-2 text-center">
-      {{#link-to "admin.rbs.broadcast" (query-params type="onshift") class="btn btn-warning btn-lg btn-block"}}Text all ON-SHIFT RANGERS{{/link-to}}
-      Radio repeater failure, imminent city split, etc. Text message only.
-    </div>
-
-    <div class="border rounded p-2 mb-2 text-center">
-      {{#link-to "admin.rbs.broadcast" (query-params type="emergency") class="btn btn-danger btn-lg btn-block"}}Emergency Broadcast to ALL ON-PLAYA RANGERS{{/link-to}}
-      <div class="text-danger">
-        {{fa-icon "bell"}} <b>The Big Red Button</b> {{fa-icon "bell"}}<br>
+  {{#if (has-role "admin" "megaphone")}}
+    <div class="col-sm-12 col-md-6">
+      <h3>On Playa Broadcast Actions</h3>
+      <div class="border rounded p-2 mb-2 text-center">
+        {{#link-to "admin.rbs.broadcast" (query-params type="recruit-dirt") class="btn btn-success btn-lg btn-block"}}Message off-duty DIRT RANGERS{{/link-to}}
+        City currently is understaffed. Call upon willing off-duty Dirt Rangers to help out. Sent via text message and email.
       </div>
-      All hands on deck. Fatality, fire, plane crash, or other crises has happend.
-    </div>
 
-  </div>
+      <div class="border rounded p-2 mb-2 text-center">
+        {{#link-to "admin.rbs.broadcast" (query-params type="recruit-position") class="btn btn-success btn-lg btn-block"}}Message off-duty SPECIAL TEAM RANGERS{{/link-to}}
+        A team (e.g., Green Dots, LEALs, Shift Leads) in the city is understaffed. Call up the willing specialized ranks. Sent via text message and email.
+      </div>
+
+      <div class="border rounded p-2 mb-2 text-center">
+        {{#link-to "admin.rbs.broadcast" (query-params type="onshift") class="btn btn-warning btn-lg btn-block"}}Text all ON-SHIFT RANGERS{{/link-to}}
+        Radio repeater failure, imminent city split, etc. Text message only.
+      </div>
+
+      <div class="border rounded p-2 mb-2 text-center">
+        {{#link-to "admin.rbs.broadcast" (query-params type="emergency") class="btn btn-danger btn-lg btn-block"}}Emergency Broadcast to ALL ON-PLAYA RANGERS{{/link-to}}
+        <div class="text-danger">
+          {{fa-icon "bell"}} <b>The Big Red Button</b> {{fa-icon "bell"}}<br>
+        </div>
+        All hands on deck. Fatality, fire, plane crash, or other crises has happend.
+      </div>
+    </div>
+  {{/if}}
   <div class="col-sm-12 col-md-6">
     <h3>General Broadcast Actions</h3>
     <div class="border rounded p-2 mb-2 text-center">
       {{#link-to "admin.rbs.broadcast" (query-params type="slot") class="btn btn-secondary btn-lg btn-block"}}SHIFT SIGN-UP BROADCAST{{/link-to}}
-      Notify Rangers signed up for a particular shift of a time change, or other related information.  Text, email, and/or Clubhouse message.
+      Notify Rangers signed up for a particular shift of a time change, or other related information. Text, email, and/or Clubhouse message.
     </div>
-    <div class="border rounded p-2 mb-2 text-center">
-      {{#link-to "admin.rbs.broadcast" (query-params type="position") class="btn btn-secondary btn-lg btn-block"}}TEAM/POSITION BROADCAST{{/link-to}}
-      Send a message to everyone who holds a position or is on a Special Team. Useful for meeting requests.  Text, email, and/or Clubhouse message.
-    </div>
-    <div class="border rounded p-2 mb-2 text-center">
-      {{#link-to "admin.rbs.broadcast" (query-params type="general") class="btn btn-secondary btn-lg btn-block"}}GENERAL BROADCAST{{/link-to}}
-      General broadcast to most Clubhouse users. Text, email, and/or Clubhouse message.
-    </div>
+    {{#if (has-role "admin" "megaphone")}}
+      <div class="border rounded p-2 mb-2 text-center">
+        {{#link-to "admin.rbs.broadcast" (query-params type="position") class="btn btn-secondary btn-lg btn-block"}}TEAM/POSITION BROADCAST{{/link-to}}
+        Send a message to everyone who holds a position or is on a Special Team. Useful for meeting requests. Text, email, and/or Clubhouse message.
+      </div>
+      <div class="border rounded p-2 mb-2 text-center">
+        {{#link-to "admin.rbs.broadcast" (query-params type="general") class="btn btn-secondary btn-lg btn-block"}}GENERAL BROADCAST{{/link-to}}
+        General broadcast to most Clubhouse users. Text, email, and/or Clubhouse message.
+      </div>
+    {{/if}}
   </div>
 </div>
 {{#if (has-role "admin")}}
