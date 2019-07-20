@@ -97,7 +97,7 @@
         <tbody>
           {{#each foundPeople as |person|}}
             <tr>
-              <td class="w-25"><a href="#" {{action "addPersonAction" person}}>{{person.callsign}}</a></td>
+              <td class="w-25"><a href {{action "addPersonAction" person slot}}>{{person.callsign}}</a></td>
               <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
               <td class="w-25">{{person.status}}</td>
             </tr>
