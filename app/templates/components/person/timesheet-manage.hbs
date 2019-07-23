@@ -78,6 +78,7 @@
     {{timesheet-summary summary=timesheetSummary}}
     <div class="row">
       <div class="col-auto">
+        <b>Position Summary:</b><br>
         {{timesheet-position-summary timesheets=timesheets}}
       </div>
     </div>
@@ -137,7 +138,7 @@
             </div>
           </div>
           <div class="form-row">
-            {{f.input "notes" label="Correciton request notes:" type="textarea" cols=80 rows=3}}
+            {{f.input "notes" label="Correction Request Notes:" type="textarea" cols=80 rows=3}}
           </div>
         {{else}}
           <div class="form-row">

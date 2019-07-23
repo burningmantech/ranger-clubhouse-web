@@ -4,6 +4,22 @@
       Uh oh, the request to the Clubhouse server could not be completed. The server might be offline or the Internet connection is spotty.
     </p>
     <button class="btn btn-primary" {{action reload}}>Reload the page</button>
+  {{else if notAuthorized}}
+    <h1>You are not authorized.</h1>
+    <p>
+      It appears you do not have the appropriate Clubhouse privilieges to perform that action.
+    </p>
+    <p>
+      Error message from the server: {{error.message}}
+    </p>
+    <p>
+      Please contact the Tech Team Ninjas at {{admin-email}} if you believe this is a mistake.
+    </p>
+    {{#if session.user}}
+      <p>
+        {{#link-to "me.overview" class="btn btn-primary"}}Back To The Home Page{{/link-to}}
+      </p>
+    {{/if}}
   {{else}}
     <h1>Khaki, Khaki, Clubhouse - I need a Tech Ninja for a crash.</h1>
     <p>Sorry! The clubhouse experienced an unrecoverable error while trying to process your request.</p>
@@ -49,8 +65,10 @@
     <p>
       Its recommended at this time that you do not attempt the request again until you hear from the tech ninjas.
     </p>
-    <p>
-      {{#link-to "me.overview"}}Back To The Home Page{{/link-to}}
-    </p>
+    {{#if session.user}}
+      <p>
+        {{#link-to "me.overview" class="btn btn-primary"}}Back To The Home Page{{/link-to}}
+      </p>
+    {{/if}}
   {{/if}}
 </main>
