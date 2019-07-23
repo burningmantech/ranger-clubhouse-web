@@ -1,9 +1,9 @@
 <div class="float-right mt-1">
-  {{#link-to "person.timesheet-log" (query-params year=year) class="btn btn-secondary btn-sm"}}Timesheet Log{{/link-to}}
+  {{#link-to "person.timesheet-log" (query-params year=year) class="btn btn-primary"}}Timesheet Log{{/link-to}}
 </div>
 {{year-select "Timesheet" year=year years=person.all_years onChange=(action "changeYearAction") subheader=true}}
 
-<div class="border rounded p-2 mt-2 mb-2">
+<div class="border rounded p-2 mt-3 mb-2">
   <h3>Shift Manage</h3>
   {{#if (is-current-year year)}}
     {{shift-check-in-out positions=positions timesheets=timesheets person=person eventInfo=eventInfo}}
