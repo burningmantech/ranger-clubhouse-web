@@ -12,6 +12,9 @@
 
 <h3 class="mt-4">{{fa-icon "graduation-cap"}} Training</h3>
 
+{{#if person.isNonRanger}}
+  <p>Non Rangers are not required to pass training.</p>
+{{/if}}
 {{#if (and dirtTraining (not-eq dirtTraining.status "no-shift"))}}
   {{#if (eq dirtTraining.status "pending")}}
     Signed up for training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}.
@@ -28,7 +31,9 @@
     Uh oh, I did not understand the status [{{dirtTraining.status}}]
   {{/if}}
 {{else}}
-  <strong class="text-danger">No training sign ups were found for {{year}}.</strong>
+  <p>
+    <b class="text-danger">No training sign ups were found for {{year}}.</b>
+  </p>
   {{#if (is-current-year year)}}
     {{#if person.isActive}}
       You will need to sign up for and pass training before being allowed to sign in for your shifts.

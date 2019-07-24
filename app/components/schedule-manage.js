@@ -166,7 +166,7 @@ export default class ScheduleManageComponent extends Component {
     }
 
     if (permission.photo_status != 'approved' && permission.photo_status != 'not-required') {
-      denied.push('have an approved BMID (lam) photo');
+      denied.push(`have an approved ${this.person.isNonRanger ? 'Clubhouse' : 'BMID (lam)'} photo`);
     }
 
     if (!permission.manual_review_passed) {

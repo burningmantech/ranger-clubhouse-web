@@ -22,7 +22,12 @@
   </dd>
 
   <dt class="col-md-2">Training</dt>
-  <dd class="col-md-9">{{training-info trainings=eventInfo.trainings}}</dd>
+  <dd class="col-md-9">
+    {{#if person.isNonRanger}}
+      <p>Non Rangers are not required to pass training.</p>
+    {{/if}}
+    {{training-info trainings=eventInfo.trainings}}
+  </dd>
 
   <dt class="col-md-2">Meals</dt>
   <dd class="col-md-9">{{meal-info eventInfo.meals}}</dd>

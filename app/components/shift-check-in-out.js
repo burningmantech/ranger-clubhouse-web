@@ -89,6 +89,10 @@ export default class ShiftCheckInOutComponent extends Component {
 
   @computed('eventInfo.training.@each.position_id')
   get isPersonDirtTrained() {
+    if (this.person.status == 'non ranger') {
+      return true;
+    }
+
     return !!this.eventInfo.trainings.find((training) => (training.position_id == Position.DIRT && training.status == 'pass'));
   }
 

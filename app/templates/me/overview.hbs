@@ -3,21 +3,21 @@
 {{#if motds}}
   <div class="border rounded-lg border-danger p-2 mb-2">
     <h3 class="text-danger">{{if (eq motds.length 1) "Clubhouse Announcement" "Clubhouse Announcements"}}</h3>
-  {{#each motds as |motd idx|}}
-    {{#if idx}}
-      <hr>{{/if}}
-    <p class="mt-1">
-      {{nl2br motd.message allowHtml=true}}
-    </p>
-    <div class="mt-1 small">
-      {{#if motd.isModified}}
-        Updated {{moment-format motd.updated_at "dddd MMMM Do [@] HH:mm"}}
-      {{else}}
-        Posted {{moment-format motd.created_at "dddd MMMM Do [@] HH:mm"}}
-      {{/if}}
-      (Pacific Time)
-    </div>
-  {{/each}}
+    {{#each motds as |motd idx|}}
+      {{#if idx}}
+        <hr>{{/if}}
+      <p class="mt-1">
+        {{nl2br motd.message allowHtml=true}}
+      </p>
+      <div class="mt-1 small">
+        {{#if motd.isModified}}
+          Updated {{moment-format motd.updated_at "dddd MMMM Do [@] HH:mm"}}
+        {{else}}
+          Posted {{moment-format motd.created_at "dddd MMMM Do [@] HH:mm"}}
+        {{/if}}
+        (Pacific Time)
+      </div>
+    {{/each}}
   </div>
 {{/if}}
 {{!
@@ -115,6 +115,8 @@ then let them know what's up.
       <dd>
         {{#if person.isRanger}}
           Signup for training and shifts:
+        {{else if person.isNonRanger}}
+          Signup for shifts:
         {{else}}
           Signup for training:
         {{/if}}
@@ -122,14 +124,16 @@ then let them know what's up.
         {{#link-to "me.schedule"}}Schedule / Sign Up{{/link-to}}
 
         <ul class="mt-2">
-          <li>Training shifts start getting posted in April.</li>
+          {{#unless person.isNonRanger}}
+            <li>Training shifts start getting posted in April.</li>
+          {{/unless}}
 
           {{#if (or person.isAlpha person.isProspective)}}
             <li>
               Alpha shifts begin to be posted in mid-July, and continue to be posted through the beginning of the event.
-               You must pass training first before you are allowed to sign up for an Alpha shift.
+              You must pass training first before you are allowed to sign up for an Alpha shift.
             </li>
-          {{else if (and (not person.isAuditor) person.canSignupForShifts)}}
+          {{else if (and (not person.isAuditor) (not person.isNonRanger) person.canSignupForShifts)}}
             <li>
               Ranger shifts start getting posted in June. You <strong>do not</strong> have to be
               trained to sign up for shifts, but you <strong>must</strong> be trained before
