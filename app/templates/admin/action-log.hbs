@@ -84,7 +84,7 @@
             </td>
           </tr>
 
-          {{#if (or log.positions log.roles log.slot)}}
+          {{#if (or log.positions log.position log.roles log.slot)}}
             <tr class="tr-no-border">
               <td colspan="6">
                 {{#if log.positions}}
@@ -92,6 +92,9 @@
                     {{if idx " / "}} {{p.title}}
                   {{/each}}
                   <br>
+                {{/if}}
+                {{#if log.position}}
+                  Position #{{log.position.id}} {{log.position.title}}
                 {{/if}}
 
                 {{#if log.roles}}

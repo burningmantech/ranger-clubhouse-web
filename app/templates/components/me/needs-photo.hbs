@@ -1,7 +1,11 @@
 {{#ch-box "Your Photo Is Needed" type="warning" }}
   <p>
-    {{fa-icon "exclamation-triangle" size="2x"}} You need to upload a photo for
-    your Burning Man ID badge.
+    {{fa-icon "exclamation-triangle" size="2x"}} You need to upload a photo
+    {{#if person.isNonRanger}}
+      to the Clubhouse.
+    {{else}}
+      for your Burning Man ID badge.
+    {{/if}}
   </p>
   {{#if photo.upload_url}}
     <p>
@@ -16,12 +20,19 @@
       <a target="_blank" rel="noopener" href="http://www.lambase.com/help/RangerHelpSheet.pdf">this helpful document.</a>
     </p>
   {{else}}
-    Photo uploading is currently disabled. Please check back later.
+    <p>
+      Photo uploading is currently disabled. Please check back later.
+    </p>
   {{/if}}
   <p>
-    Note that you will <span class="text-danger">not be able to sign up for
-    shifts or training</span> until you have an approved ID photo and have
-    completed the Ranger Manual Review. Photos may take 2-3 days to be approved
-    once you have uploaded an acceptable photo.
-   </p>
+    {{#if person.isNonRanger}}
+      Note that you will <span class="text-danger">not be able to sign up for shifts</span>
+      until you have an approved Clubhouse photo. Usually photos are approved within 2 to 3 days.
+    {{else}}
+      Note that you will <span class="text-danger">not be able to sign up for
+        shifts or training</span> until you have an approved ID photo and have
+      completed the Ranger Manual Review. Photos may take 2-3 days to be approved
+      once you have uploaded an acceptable photo.
+    {{/if}}
+  </p>
 {{/ch-box}}

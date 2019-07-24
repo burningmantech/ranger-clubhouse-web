@@ -48,7 +48,7 @@
         {{#if (not hasApprovedPhoto)}}
           {{#if (eq permission.photo_status "missing")}}
             <h3 class="mt-2">Upload a photo</h3>
-            Please upload a BMID (lam) photo. Note that photos can take 2-3 days to be
+            Please upload a {{if person.isNonRanger "Clubhouse" "BMID (lam)"}} photo. Note that photos can take 2-3 days to be
             approved. A new photo may be uploaded on the {{#link-to "me.overview"}}Home Page{{/link-to}}.
           {{else if (eq permission.photo_status "rejected")}}
             <h3 class="mt-2">Submitted photo was rejected</h3>
@@ -96,10 +96,12 @@
     {{/if}}
 
     {{#if isAdmin}}
-      <p class="text-danger">
+      <p class="text-danger mt-2">
         As a Clubhouse Admin, you may override the requirement(s) to gain access to the schedule. You better know what you are doing!
         YOUR ACTIONS WILL BE LOGGED.
-        <button class="btn btn-danger btn-sm" {{action setRequirementsOverride}}>Click To Override</button>
+      </p>
+      <p>
+        <button class="btn btn-danger" {{action setRequirementsOverride}}>Click To Override</button>
       </p>
     {{/if}}
   {{/ch-box}}
