@@ -4,6 +4,8 @@
 {{#if (or person.isActive person.isAlpha)}}
   This page contains information about your training and various bits (meals, showers, radios, vehicles, etc.)
   related to rangering on the playa.
+{{else if person.isNonRanger}}
+This page contains information regarding granted positions, meals, radios, showers, and vehicle authorizations.
 {{else}}
   This page contains information about your training. If you were to become a
   Black Rock Ranger, this page would contain additional information related to
@@ -67,7 +69,7 @@ Positions indicate which shifts you are allowed to sign up for and what ART trai
   {{/each}}
 </div>
 
-{{#if (or person.isActive person.isAlpha)}}
+{{#if (or person.isActive person.isAlpha person.isNonRanger)}}
   <h3 class="mt-4">{{fa-icon "utensils"}} Meals</h3>
 
   {{meal-info eventInfo.meals}}

@@ -2,7 +2,7 @@
 {{#ch-sidebar}}
   {{#ch-sidebar-group "RANGERING"}}
     {{ch-sidebar-link "me.schedule" title="Schedule / Sign Up" icon="clipboard"}}
-    {{#if (or user.isAlpha user.isRanger)}}
+    {{#if (or user.isAlpha user.isNonRanger user.isRanger)}}
       {{ch-sidebar-link "me.timesheet-corrections.index" title="Timesheet Corrections" icon="list-ol" iconType="s"}}
       {{ch-sidebar-link "me.timesheet" title="Timesheets" icon="clock"}}
     {{/if}}
@@ -11,14 +11,16 @@
     {{/unless}}
   {{/ch-sidebar-group}}
 
-  {{#if (or user.isRanger user.isAlpha user.isProspective)}}
+  {{#if (or user.isRanger user.isAlpha user.isProspective user.isNonRanger)}}
     {{#ch-sidebar-group "PRE-EVENT"}}
-      {{#if (or user.isAlpha user.isProspective)}}
-        {{ch-sidebar-link "me.tickets" title="Work Access Pass" icon="ticket-alt" iconType="s"}}
-      {{else}}
-        {{ch-sidebar-link "me.tickets" title="Tickets & Stuff" icon="ticket-alt" iconType="s"}}
-      {{/if}}
-      {{#if (and (config "MotorpoolPolicyEnable") (or session.user.isRanger session.user.isAlpha))}}
+      {{#unless user.isNonRanger}}
+        {{#if (or user.isAlpha user.isProspective)}}
+          {{ch-sidebar-link "me.tickets" title="Work Access Pass" icon="ticket-alt" iconType="s"}}
+        {{else}}
+          {{ch-sidebar-link "me.tickets" title="Tickets & Stuff" icon="ticket-alt" iconType="s"}}
+        {{/if}}
+      {{/unless}}
+      {{#if (and (config "MotorpoolPolicyEnable") (or user.isRanger user.isAlpha user.isNonRanger))}}
         {{ch-sidebar-link "me.motorpool-policy" title="Motorpool Policy" icon="car" iconType="s"}}
       {{/if}}
     {{/ch-sidebar-group}}
