@@ -36,8 +36,14 @@
         </div>
         {{#if tsm.isPending}}
           <div class="timesheet-row timesheet-actions">
-            <button type="button" class="btn btn-primary btn-sm" {{action "editAction" tsm}}>Edit</button>
-            <button type="button" class="btn btn-danger btn-sm" {{action "deleteAction" tsm}}>Delete</button>
+            <button type="button" class="btn btn-primary" {{action "editAction" tsm}} disabled={{tsm.isSaving}}>Edit</button>
+            <button type="button" class="btn btn-light-red" {{action "deleteAction" tsm}} disabled={{tsm.isSaving}}>
+              {{#if tsm.isSaving}}
+                Deleting {{fa-icon "spinner" spin=true}}
+              {{else}}
+                Delete
+              {{/if}}
+            </button>
           </div>
         {{/if}}
       </div>
@@ -83,7 +89,10 @@
       <li>If you called Ranger HQ on the radio to check you in for the shift, who was the Ranger on the other end?</li>
     </ul>
     {{f.input "notes" label="Why is this new entry needed?" type="textarea" cols=80 rows=4}}
-    {{f.submit label=(if f.model.isNew "Submit Request" "Update Request") disabled=isSubmitting}}
-    {{f.cancel}}
+    {{f.submit label=(if f.model.isNew "Submit New Request" "Update Request") disabled=isSubmitting}}
+    {{f.cancel disabled=isSubmitting}}
+    {{#if isSubmitting}}
+      Submitting {{fa-icon "spinner" spin=true}} . . .
+    {{/if}}
   {{/ch-form}}
 {{/if}}

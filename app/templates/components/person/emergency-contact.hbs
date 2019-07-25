@@ -1,15 +1,20 @@
 {{#ch-form "person" person validator=emergencyContactValidations onSubmit=(action "saveAction") onCancel=(action onCancel) as |f|}}
   <p class="m-2">
     Supply your emergency contact information for both on-playa and off-playa contacts.<br>
-      <strong>Off-Playa:</strong>
-      Their name, relationship to you (partner, friend, sibling, parent, etc.), a phone number, and email.<br>
+    <strong>Off-Playa:</strong>
+    Their name, relationship to you (partner, friend, sibling, parent, etc.), a phone number, and email.<br>
 
-      <strong>On-Playa:</strong>
-      Their playa name, real-world name, relationship, camp location and camp description.<br>
+    <strong>On-Playa:</strong>
+    Their playa name, real-world name, relationship, camp location and camp description.<br>
   </p>
   <div class="form-row mt-2">
     {{f.input "emergency_contact" type="textarea" label="Emergency Contact Information:" rows=10 cols=80}}
   </div>
-  {{f.submit label="Update"}}
-  {{f.cancel}}
+  {{f.submit label=(if isSubmitting "Updating" "Update") disabled=isSubmitting}}
+  {{f.cancel disabled=isSubmitting}}
+  {{#if isSubmitting}}
+    {{fa-icon "spinner" spin=true}}
+  {{else if isSaved}}
+    <span class="text-success">{{fa-icon "check"}}</span>
+  {{/if}}
 {{/ch-form}}

@@ -32,8 +32,8 @@
           {{f.input "off_playa" label=(concat "Enter verification code for " numbers.off_playa.phone) type="text" inputmode="decimal" size=5 maxlength=5 rid="col-auto"}}
         </div>
         <div class="form-row">
-          <button class="btn btn-primary" disabled={{isVerifying}} {{action confirmCodeAction f.model "off-playa"}}>Verify</button>
-          <button type="submit" class="btn btn-secondary ml-2" {{action sendNewCodeAction "off-playa"}} disabled={{isVerifying}}>Resend verification code</button>
+          <button class="btn btn-primary" disabled={{isSubmitting}} {{action confirmCodeAction f.model "off-playa"}}>Verify</button>
+          <button type="submit" class="btn btn-secondary ml-2" {{action sendNewCodeAction "off-playa"}} disabled={{isSubmitting}}>Resend verification code</button>
         </div>
       {{/if}}
       {{#if (and (not numbers.is_same) numbers.on_playa.phone (not numbers.on_playa.is_verified))}}
@@ -41,10 +41,19 @@
           {{f.input "on_playa" label=(concat "Enter verification code for " numbers.on_playa.phone) type="text" inputmode="decimal"  size=5 maxlength=5 grid="col-auto"}}
         </div>
         <div class="form-row">
-          <button class="btn btn-primary" disabled={{isVerifying}} {{action confirmCodeAction f.model "on-playa"}}>Verify</button>
-          <button type="submit" class="btn btn-secondary ml-2" {{action sendNewCodeAction "on-playa"}} disabled={{isVerifying}}>Resend verification code</button>
+          <button class="btn btn-primary" disabled={{isSubmitting}} {{action confirmCodeAction f.model "on-playa"}}>Verify</button>
+          <button type="submit" class="btn btn-secondary ml-2" {{action sendNewCodeAction "on-playa"}} disabled={{isSubmitting}}>Resend verification code</button>
         </div>
       {{/if}}
+      <div class="form-row">
+        <div class="col-auto">
+          {{#if isSubmitting}}
+            <span class="text-muted">Submitting {{fa-icon "spinner" spin=true}}</span>
+          {{else}}
+            &nbsp;
+          {{/if}}
+        </div>
+      </div>
     {{/ch-form}}
   {{/ch-box}}
 {{/if}}
@@ -72,7 +81,7 @@
   </div>
 
   <div class="mt-2">
-    {{f.submit label="Update SMS Numbers" disabled=isUpdatingNumbers}}
+    {{f.submit label=(if isUpdatingNumbers "Updating" "Update SMS Numbers") disabled=isUpdatingNumbers}}
   </div>
 {{/ch-form}}
 <hr>
@@ -88,4 +97,10 @@
 {{alert-group numbers=numbers email=person.email group=offPlayaAlerts heading="Pre & Post Event Alerts" description="These alerts may be sent to you before or after the event."}}
 {{alert-group numbers=numbers email=person.email group=onPlayaAlerts heading="On Playa Alerts" description="These alerts may be sent to you while the event is happening."}}
 
-<button type="button" class="btn btn-primary" {{action "updatePrefsAction"}}>Update Preferences</button>
+<button type="button" class="btn btn-primary" {{action "updatePrefsAction"}} disabled={{isSubmitting}}>
+  {{#if isSubmitting}}
+    Updating {{fa-icon "spinner" spin=true}}
+  {{else}}
+    Update Preferences
+  {{/if}}
+</button>

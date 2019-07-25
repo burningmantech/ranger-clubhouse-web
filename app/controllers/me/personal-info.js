@@ -17,7 +17,12 @@ export default class MePersonalInfoEditController extends Controller {
     if (!isValid) {
       return;
     }
-    this.house.saveModel(model, 'Your personal information was successfully updated.');
+
+    this.set('isSubmitting', true);
+    this.house.saveModel(model, 'Your personal information was successfully updated.', () => {
+      this.set('isSaved', true);
+    })
+    .finally(() => this.set('isSubmitting', false) );
   }
 
   @action
