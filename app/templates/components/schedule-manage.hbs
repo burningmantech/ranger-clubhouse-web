@@ -197,14 +197,26 @@
                     {{#if slot.person_assigned}}
                       {{#if (or (has-role "admin") (not slot.has_started))}}
                         {{! Only allow admins to remove a sign up that has started}}
-                        <button onclick={{action "leaveSlot" slot}} class="btn btn-danger btn-sm" title="Remove from schedule">{{fa-icon "trash-alt" type="fas"}}</button>
+                        <button onclick={{action "leaveSlot" slot}} class="btn btn-danger btn-sm" title="Remove from schedule" disabled={{slot.is_submitting}}>
+                          {{#if slot.is_submitting}}
+                            {{fa-icon "spinner" spin=true}}
+                          {{else}}
+                            {{fa-icon "trash-alt" type="fas"}}
+                          {{/if}}
+                        </button>
                       {{/if}}
                     {{else}}
                       {{! Only show action buttons for the current year}}
                       {{#if isCurrentYear}}
                         {{#if slot.slot_active}}
                           {{#if (or (has-role "admin") (and (not slot.isFull) (not slot.has_started)))}}
-                            <button onclick={{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Sign up for the shift">{{fa-icon "user-plus" type="fas"}}</button>
+                            <button onclick={{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Sign up for the shift" disabled={{slot.is_submitting}}>
+                              {{#if slot.is_submitting}}
+                                {{fa-icon "spinner" spin=true}}
+                              {{else}}
+                                {{fa-icon "user-plus" type="fas"}}
+                              {{/if}}
+                            </button>
                           {{/if}}
                         {{else}}
                           <small class="text-danger">Inactive</small>

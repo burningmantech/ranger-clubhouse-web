@@ -73,6 +73,11 @@
     </fieldset>
   {{/unless}}
 
-  {{f.submit label="Update" disabled=isSubmitting}}
-  {{f.cancel}}
+  {{f.submit label=(if isSubmitting "Updating " "Update") disabled=isSubmitting}}
+  {{f.cancel disabled=isSubmitting}}
+  {{#if isSubmitting}}
+    {{fa-icon "spinner" spin=true}}
+  {{else if isSaved}}
+    <span class="text-success">{{fa-icon "check"}}</span>
+  {{/if}}
 {{/ch-form}}

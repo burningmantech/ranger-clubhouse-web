@@ -43,6 +43,7 @@ export default class MentorScheduleController extends Controller {
       return;
     }
 
+    this.set('isSearching', true);
     this.ajax.request('person', {
       data: {
         query,
@@ -58,7 +59,7 @@ export default class MentorScheduleController extends Controller {
       }
     }).catch((response) => {
       this.house.handleErrorResponse(response);
-    })
+    }).finally(() => { this.set('isSearching', false); })
   }
 
 
@@ -81,6 +82,8 @@ export default class MentorScheduleController extends Controller {
     const personId = model.get('person_id');
     const person = this.slot.people.find((student) => student.id == personId );
 
+    this.set('isSubmitting', true);
+
     this.ajax.delete(`person/${personId}/schedule/${this.slot.id}`)
       .then((results) => {
         if (results.status == 'success') {
@@ -91,7 +94,8 @@ export default class MentorScheduleController extends Controller {
         }
         this.set('removePersonForm', null);
       })
-      .catch((response) => this.house.handleErrorResponse(response));
+      .catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.set('isSubmitting', false));
   }
 
   // Show the remove student dialog

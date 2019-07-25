@@ -55,7 +55,13 @@
         </div>
         <div class="mt-3">
           {{#unless message.delivered}}
-            <button {{action "markReadAction" message}} type="button" class="btn btn-secondary">Mark Read</button>
+            <button {{action "markReadAction" message}} type="button" class="btn btn-secondary" disabled={{isSubmitting}}>
+              {{#if message.isSubmitting}}
+                Marking Read {{fa-icon "spinner" spin=true}}
+              {{else}}
+                Mark Read
+              {{/if}}
+            </button>
           {{/unless}}
         </div>
       </div>

@@ -9,11 +9,17 @@ export default class PersonEmergencyContactComponent extends Component {
 
   emergencyContactValidations = EmergencyContactValidations;
 
+  isSaved = false;
+
   @action
   saveAction(model, isValid) {
     if (!isValid) {
       return;
     }
-    this.house.saveModel(model, 'Emergency contact info has been succesfully updated.');
+    this.set('isSubmitting', true);
+    this.house.saveModel(model, 'Emergency contact info has been succesfully updated.', () => {
+      this.set('isSaved', true);
+    })
+      .finally(() => this.set('isSubmitting', false));
   }
 }
