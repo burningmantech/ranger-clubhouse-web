@@ -48,7 +48,7 @@
         {{#if (not hasApprovedPhoto)}}
           {{#if (eq permission.photo_status "missing")}}
             <h3 class="mt-2">Upload a photo</h3>
-            Please upload a BMID (lam) photo. Note that photos can take 2-3 days to be
+            Please upload a {{if person.isNonRanger "Clubhouse" "BMID (lam)"}} photo. Note that photos can take 2-3 days to be
             approved. A new photo may be uploaded on the {{#link-to "me.overview"}}Home Page{{/link-to}}.
           {{else if (eq permission.photo_status "rejected")}}
             <h3 class="mt-2">Submitted photo was rejected</h3>
@@ -96,10 +96,12 @@
     {{/if}}
 
     {{#if isAdmin}}
-      <p class="text-danger">
+      <p class="text-danger mt-2">
         As a Clubhouse Admin, you may override the requirement(s) to gain access to the schedule. You better know what you are doing!
         YOUR ACTIONS WILL BE LOGGED.
-        <button class="btn btn-danger btn-sm" {{action setRequirementsOverride}}>Click To Override</button>
+      </p>
+      <p>
+        <button class="btn btn-danger" {{action setRequirementsOverride}}>Click To Override</button>
       </p>
     {{/if}}
   {{/ch-box}}
@@ -195,14 +197,26 @@
                     {{#if slot.person_assigned}}
                       {{#if (or (has-role "admin") (not slot.has_started))}}
                         {{! Only allow admins to remove a sign up that has started}}
-                        <button onclick={{action "leaveSlot" slot}} class="btn btn-danger btn-sm" title="Remove from schedule">{{fa-icon "trash-alt" type="fas"}}</button>
+                        <button onclick={{action "leaveSlot" slot}} class="btn btn-danger btn-sm" title="Remove from schedule" disabled={{slot.is_submitting}}>
+                          {{#if slot.is_submitting}}
+                            {{fa-icon "spinner" spin=true}}
+                          {{else}}
+                            {{fa-icon "trash-alt" type="fas"}}
+                          {{/if}}
+                        </button>
                       {{/if}}
                     {{else}}
                       {{! Only show action buttons for the current year}}
                       {{#if isCurrentYear}}
                         {{#if slot.slot_active}}
                           {{#if (or (has-role "admin") (and (not slot.isFull) (not slot.has_started)))}}
-                            <button onclick={{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Sign up for the shift">{{fa-icon "user-plus" type="fas"}}</button>
+                            <button onclick={{action "joinSlot" slot}} class="btn btn-primary btn-sm" title="Sign up for the shift" disabled={{slot.is_submitting}}>
+                              {{#if slot.is_submitting}}
+                                {{fa-icon "spinner" spin=true}}
+                              {{else}}
+                                {{fa-icon "user-plus" type="fas"}}
+                              {{/if}}
+                            </button>
                           {{/if}}
                         {{else}}
                           <small class="text-danger">Inactive</small>

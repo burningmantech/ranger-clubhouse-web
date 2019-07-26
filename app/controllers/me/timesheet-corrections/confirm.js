@@ -29,6 +29,7 @@ export default class MeTimesheetCorrectionsConfirmController extends Controller 
     const person_id = this.session.userId;
 
     this.toast.clear();
+    this.set('isSubmitting', true);
 
     this.ajax.request(`timesheet/confirm`, {
       method: 'POST',
@@ -39,6 +40,7 @@ export default class MeTimesheetCorrectionsConfirmController extends Controller 
       this.set('timesheetInfo.timesheet_confirmed', ci.timesheet_confirmed);
       this.set('timesheetInfo.timesheet_confirmed_at', ci.timesheet_confirmed_at);
       this.toast.success(`Your timesheet has been marked as ${ci.timesheet_confirmed ? 'CONFIRMED' : 'UNCONFIRMED'}.`);
-    }).catch((response) => this.house.handleErrorResponse(response));
+    }).catch((response) => this.house.handleErrorResponse(response))
+    .finally(() => this.set('isSubmitting', false));
   }
 }

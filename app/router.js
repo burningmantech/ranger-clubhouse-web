@@ -143,23 +143,24 @@ Router.map(function() {
 
 
   this.route('reports', function() {
-    this.route('timesheet-correction-requests');
-    this.route('timesheet-unconfirmed');
+    this.route('alpha-shirts');
     this.route('asset-history');
     this.route('assets-outstanding');
-    this.route('radio-assets');
-    this.route('radio-checkout');
-    this.route('shirts');
     this.route('freaking-years');
-    this.route('alpha-shirts');
-    this.route('shift-lead');
     this.route('hq-forecast');
     this.route('on-duty');
+    this.route('people-by-position');
+    this.route('radio-assets');
+    this.route('radio-checkout');
     this.route('sandman-qualified');
-    this.route('vehicle-paperwork');
     this.route('shift-coverage');
+    this.route('shift-lead');
     this.route('shift-signups');
+    this.route('shirts');
     this.route('special-teams');
+    this.route('timesheet-correction-requests');
+    this.route('timesheet-unconfirmed');
+    this.route('vehicle-paperwork');
   });
 
   this.route('vc', function() {

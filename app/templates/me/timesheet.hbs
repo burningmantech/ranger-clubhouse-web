@@ -2,6 +2,11 @@
 
 {{#if timesheets}}
 
+  <div class="row mt-4 mb-2">
+    <div class="col-auto">
+      (hh:mm) = time in parentheses indicates the time does not count towards appreciations.
+    </div>
+  </div>
   <div class="timesheet-table">
     <div class="timesheet-row timesheet-header">
       <div class="timesheet-time">From</div>
@@ -38,14 +43,12 @@
       </div>
     {{/each}}
   </div>
-  <div class="row my-2">
-    <div class="col-auto">
-      (hh:mm) = time in parentheses indicates the time does not count towards appreciations.
-    </div>
-  </div>
   {{timesheet-summary summary=timesheetSummary}}
   <div class="row">
-    <div class="col"><strong>Position Summary:</strong> {{timesheet-position-summary timesheets=timesheets}}</div>
+    <div class="col-auto">
+      <b>Position Summary:</b><br>
+      {{timesheet-position-summary timesheets=timesheets}}
+    </div>
   </div>
 
 
@@ -55,6 +58,6 @@
   </div>
 {{else}}
   <p class="mt-3 text-danger">
-    No timesheet entries were found for {{year}}.
+    <b>No timesheet entries were found for {{year}}.</b>
   </p>
 {{/if}}

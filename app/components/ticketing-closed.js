@@ -28,10 +28,22 @@ export default class TicketingClosedComponent extends Component {
     return (ticket && ticket.type == 'staff_credential' && (ticket.status == 'claimed' || ticket.status == 'submitted'));
   }
 
+  @computed('ticket.{status,type}')
+  get usingRPT() {
+    const ticket = this.ticket;
+    return (ticket && ticket.type == 'reduced_price_ticket' && (ticket.status == 'claimed' || ticket.status == 'submitted'));
+  }
+
   @computed('ticketPackage.vehicle_pass')
   get usingVehiclePass() {
     const pass = this.ticketPackage.vehicle_pass;
     return (pass && (pass.status == 'claimed' || pass.status == 'submitted'));
+  }
+
+  @computed('ticketPackage.vehicle_pass')
+  get haveVP() {
+    const pass = this.ticketPackage.vehicle_pass;
+    return (pass && (pass.status == 'qualified' || pass.status == 'claimed' || pass.status == 'submitted'));
   }
 
   @computed('ticketPackage.vehicle_pass')
@@ -55,8 +67,7 @@ export default class TicketingClosedComponent extends Component {
   @computed('ticketPackage.delivery.method')
   get usingWillCall() {
     const delivery = this.ticketPackage.delivery;
-
-    return (delivery && delivery.method == 'will_call');
+    return (!delivery || delivery.method != 'mail');
   }
 
   // Return a list of WAP SO names

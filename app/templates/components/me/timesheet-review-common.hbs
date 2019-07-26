@@ -71,7 +71,9 @@
         <div class="timesheet-row timesheet-actions d-print-none">
           {{#if ts.off_duty}}
             {{#unless ts.verified}}
-              <button type="button" class="btn btn-success" {{action markCorrectAction ts}} disabled={{isSubmitting}}>Mark Entry Correct</button>
+              <button type="button" class="btn btn-success" {{action markCorrectAction ts}} disabled={{isSubmitting}}>
+                  Mark Entry Correct
+              </button>
             {{/unless}}
             <button type="button" class="btn btn-secondary" {{action markIncorrectAction ts}} disabled={{isSubmitting}}>
               {{#if ts.isPendingReview}}
@@ -80,6 +82,9 @@
                 Mark Entry Incorrect
               {{/if}}
             </button>
+          {{/if}}
+          {{#if ts.isSaving}}
+            <span class="ml-2 text-muted">Submitting {{fa-icon "spinner" spin=true}}</span>
           {{/if}}
         </div>
       </div>
@@ -96,7 +101,10 @@
   {{/if}}
 
   <div class="row mb-4">
-    <div class="col"><strong>Position Summary:</strong> {{timesheet-position-summary timesheets=timesheets}}</div>
+    <div class="col">
+      <strong>Position Summary:</strong><br>
+      {{timesheet-position-summary timesheets=timesheets}}
+    </div>
   </div>
 
 {{else}}
@@ -149,5 +157,8 @@
     {{f.input "notes" label="Your correction note:" type="textarea" cols=80 rows=3}}
     {{f.submit label="Submit Correction" disabled=isSubmitting}}
     {{f.cancel}}
+    {{#if isSubmitting}}
+      <span class="text-muted">Submitting {{fa-icon "spinner" spin=true}} . . .</span>
+    {{/if}}
   {{/ch-form}}
 {{/if}}

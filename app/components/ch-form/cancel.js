@@ -15,7 +15,13 @@ export default class ChFormCancelComponent extends Component {
     super.init(...arguments);
 
     if (isEmpty(this.label)) {
-      this.label = 'Cancel';
+      this.set('label', 'Cancel');
+    }
+  }
+
+  didRender() {
+    if (isEmpty(this.label)) {
+      this.set('label', 'Cancel');
     }
   }
 }

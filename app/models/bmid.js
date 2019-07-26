@@ -32,6 +32,7 @@ export default class BmidModel extends Model {
   @attr('number', { readOnly: true }) wap_id;
   @attr('string', { readOnly: true }) wap_status;
   @attr('string', { readOnly: true }) wap_type;
+  @attr('boolean', { readOnly: true }) has_signups;
 
   @computed('access_date', 'access_any_time')
   get admission_date() {

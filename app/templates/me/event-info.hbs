@@ -4,6 +4,8 @@
 {{#if (or person.isActive person.isAlpha)}}
   This page contains information about your training and various bits (meals, showers, radios, vehicles, etc.)
   related to rangering on the playa.
+{{else if person.isNonRanger}}
+This page contains information regarding granted positions, meals, radios, showers, and vehicle authorizations.
 {{else}}
   This page contains information about your training. If you were to become a
   Black Rock Ranger, this page would contain additional information related to
@@ -12,6 +14,9 @@
 
 <h3 class="mt-4">{{fa-icon "graduation-cap"}} Training</h3>
 
+{{#if person.isNonRanger}}
+  <p>Non Rangers are not required to pass training.</p>
+{{/if}}
 {{#if (and dirtTraining (not-eq dirtTraining.status "no-shift"))}}
   {{#if (eq dirtTraining.status "pending")}}
     Signed up for training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}.
@@ -28,7 +33,9 @@
     Uh oh, I did not understand the status [{{dirtTraining.status}}]
   {{/if}}
 {{else}}
-  <strong class="text-danger">No training sign ups were found for {{year}}.</strong>
+  <p>
+    <b class="text-danger">No training sign ups were found for {{year}}.</b>
+  </p>
   {{#if (is-current-year year)}}
     {{#if person.isActive}}
       You will need to sign up for and pass training before being allowed to sign in for your shifts.
@@ -62,7 +69,7 @@ Positions indicate which shifts you are allowed to sign up for and what ART trai
   {{/each}}
 </div>
 
-{{#if (or person.isActive person.isAlpha)}}
+{{#if (or person.isActive person.isAlpha person.isNonRanger)}}
   <h3 class="mt-4">{{fa-icon "utensils"}} Meals</h3>
 
   {{meal-info eventInfo.meals}}
@@ -91,21 +98,22 @@ Positions indicate which shifts you are allowed to sign up for and what ART trai
     Radio eligibility for this year is not yet available.
   {{/if}}
 
-  <h3 class="mt-4">{{fa-icon "car"}} Motorpool</h3>
+  <h3 class="mt-4">{{fa-icon "car"}} Motorpool Policy</h3>
   {{#if person.vehicle_blacklisted}}
     {{badge "danger" "Blacklisted"}} We're sorry, but you cannot drive gators, cars, or trucks on playa for Ranger business.
   {{else}}
     {{#if person.vehicle_paperwork}}
-      {{badge "success" "Authorized"}} You are authorized to drive golf carts &amp; gators (UTVs) on playa for Ranger business
+      {{badge "success" "Authorized"}} You are authorized to drive golf carts &amp; gators (UTVs) on playa for Ranger business. Vehicle must have a valid Burning Man driving sticker.
     {{else}}
       {{badge "warning" "Not Authorized"}} You are NOT authorized to drive golf carts &amp; gators (UTVs) on the playa for Ranger business. You can fix this by agreeing to the
       {{#link-to "me.motorpool-policy"}}Motorpool Policy{{/link-to}}.
     {{/if}}
 
-    <h3 class="mt-4">{{fa-icon "car-crash"}} Organization Vehicle Insurance</h3>
+    <h3 class="mt-4">{{fa-icon "car-crash"}} Motor Vehicle Record (MVR)</h3>
     {{#if person.vehicle_insurance_paperwork}}
       {{badge "success" "Authorized" }} You are authorized to drive cars and
       trucks (including your own personal vehicle) on playa for Ranger business.
+      Vehicle must have a valid Burning Man driving sticker.
     {{else}}
       {{badge "warning" "Not Authorized" }} You are NOT authorized to drive cars
       and trucks (including your own personal vehicle) on playa for Ranger

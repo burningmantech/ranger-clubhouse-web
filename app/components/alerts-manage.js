@@ -1,5 +1,5 @@
 /*
- * Manage a person's Alert Preferences - used by me/alerts, and person/N/alerts 
+ * Manage a person's Alert Preferences - used by me/alerts, and person/N/alerts
  */
 
 import Component from '@ember/component';
@@ -96,11 +96,13 @@ export default class AlertsManageComponent extends Component {
       use_email: alert.use_email ? 1 : 0,
     }});
 
+    this.set('isSubmitting', true);
     this.ajax.request(`person/${this.person.id}/alerts`, {
           method: 'PATCH',
           data: { alerts }
     }).then(() => { this.toast.success('The alert preferences have been successfully updated.') })
-    .catch((response) => { this.house.handleErrorResponse(response) });
+    .catch((response) => { this.house.handleErrorResponse(response) })
+    .finally(() => this.set('isSubmitting', false));
   }
 
   // Confirm a phone number as verified.
@@ -121,6 +123,7 @@ export default class AlertsManageComponent extends Component {
 
     this.toast.clear();
 
+    this.set('isSubmitting', true);
     this.ajax.request('sms/confirm-code', {
       method: 'POST',
       data: {
@@ -136,11 +139,11 @@ export default class AlertsManageComponent extends Component {
         break;
 
       case 'already-verified':
-        this.toast.warning(`${phone} has already been verified. There is nothing else to do.`);
+        this.modal.info(null, `${phone} has already been verified. There is nothing else to do.`);
         break;
 
       case 'no-match':
-        this.toast.error(`The verification code entered for ${phone} does not match.`);
+        this.modal.info(null, `Sorry, the verification code entered for ${phone} does not match.`);
         break;
 
       default:
@@ -149,7 +152,7 @@ export default class AlertsManageComponent extends Component {
       }
     }).catch((response) => {
       this.house.handleErrorResponse(response);
-    })
+    }).finally(() => this.set('isSubmitting'));
   }
 
   // Save the phone numbers entered.
@@ -203,7 +206,7 @@ export default class AlertsManageComponent extends Component {
     const personId = this.person.id;
     this.toast.clear();
 
-    this.set('isSendingCode', true);
+    this.set('isSubmitting', true);
     this.ajax.request('sms/send-code', { method: 'POST', data: { person_id: personId, type }})
     .then((result) => {
       switch (result.status) {
@@ -220,6 +223,7 @@ export default class AlertsManageComponent extends Component {
         break;
       }
     })
-    .catch((response) => this.house.handleErrorResponse(response));
+    .catch((response) => this.house.handleErrorResponse(response))
+    .finally(() => this.set('isSubmitting', false));
   }
 }

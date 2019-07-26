@@ -14,7 +14,7 @@ export default class MeTimesheetReviewCommonComponent extends Component {
   entry = null; // Incorrect entry
 
   correctionValidations = {
-    notes: validatePresence({ presence: true})
+    notes: validatePresence({ presence: true })
   };
 
   @computed('person')
@@ -27,9 +27,15 @@ export default class MeTimesheetReviewCommonComponent extends Component {
   markCorrectAction(timesheet) {
     timesheet.set('verified', 1);
     this.toast.clear();
+    this.set('isSubmitting', true);
     timesheet.save().then(() => {
+      this.set('isSubmitting', false);
       this.toast.success('The entry has been marked as correct.');
-    }).catch((response) => this.house.handleErrorResponse(response));
+    }).catch((response) => {
+      this.set('isSubmitting', false);
+      timesheet.rollback();
+      this.house.handleErrorResponse(response);
+    });
   }
 
   // Setup to mark an entry as incorrect - i.e. display the form
@@ -47,13 +53,18 @@ export default class MeTimesheetReviewCommonComponent extends Component {
 
     this.toast.clear();
     model.set('verified', 0);
+    this.set('isSubmitting', true);
     model.save().then(() => {
       this.set('entry', null);
+      this.set('isSubmitting', false);
       if (this.timesheetInfo) {
         this.set('timesheetInfo.timesheet_confirmed', 0);
       }
       this.toast.success('Your correction note has been submitted.');
-    }).catch((response) => this.house.handleErrorResponse(response));
+    }).catch((response) => {
+      this.set('isSubmitting', false);
+      this.house.handleErrorResponse(response);
+    });
   }
 
   // Cancel out the correction request - i.e. hide the form

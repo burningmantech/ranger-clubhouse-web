@@ -1,10 +1,14 @@
 import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { action } from '@ember/object';
+import { humanize } from 'ember-cli-string-helpers/helpers/humanize';
+import { inject as service } from '@ember/service';
 import { Role } from 'clubhouse/constants/roles';
 import DS from 'ember-data';
 
 export default class PersonRoute extends Route.extend(AuthenticatedRouteMixin) {
+  @service router;
+
   beforeModel() {
     super.beforeModel(...arguments);
     this.house.roleCheck([Role.ADMIN, Role.MANAGE, Role.VC, Role.MENTOR, Role.TRAINER]);
@@ -36,5 +40,16 @@ export default class PersonRoute extends Route.extend(AuthenticatedRouteMixin) {
       this.house.handleErrorResponse(response);
       return true;
     }
+  }
+
+  titleToken(model) {
+    // Includes the full route path like ApplicationRoute, but replace "Person" with their callsign.
+    return this.get('router')
+      .currentRouteName
+      .split('.')
+      .filter((x) => x !== 'index')
+      .map((x) => x === 'person' ? model.get('callsign') : humanize([x]))
+      .reverse()
+      .join(' | ');
   }
 }

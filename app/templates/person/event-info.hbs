@@ -22,7 +22,12 @@
   </dd>
 
   <dt class="col-md-2">Training</dt>
-  <dd class="col-md-9">{{training-info trainings=eventInfo.trainings}}</dd>
+  <dd class="col-md-9">
+    {{#if person.isNonRanger}}
+      <p>Non Rangers are not required to pass training.</p>
+    {{/if}}
+    {{training-info trainings=eventInfo.trainings}}
+  </dd>
 
   <dt class="col-md-2">Meals</dt>
   <dd class="col-md-9">{{meal-info eventInfo.meals}}</dd>
@@ -49,7 +54,7 @@
     {{/if}}
   </dd>
 
-  <dt class="col-md-2">Motorpool</dt>
+  <dt class="col-md-2">Motorpool Policy</dt>
   {{#if person.vehicle_blacklisted}}
     <dd class="col-md-9">
       {{badge "danger" "Blacklisted"}} Vehicle is blacklisted. May not drive gators, cars, or trucks on playa for Ranger business.
@@ -61,17 +66,17 @@
       {{else}}
         {{badge "warning" "Not Authorized"}}
       {{/if}}
-      to drive golf carts &amp; gators (UTVs) on playa for Ranger business
+      to drive golf carts &amp; gators (UTVs) on playa for Ranger business. Vehicle must have a valid Burning Man driving sticker.
     </dd>
 
-    <dt class="col-md-2">Org Vehicle Insurance</dt>
+    <dt class="col-md-2">Motor Vehicle Record (MVR)</dt>
     <dd class="col-md-9">
       {{#if person.vehicle_insurance_paperwork}}
         {{badge "success" "Authorized" }}
       {{else}}
         {{badge "warning" "Not Authorized" }}
       {{/if}}
-      to drive cars and trucks (including own personal vehicle) on playa for Ranger business.
+      to drive cars and trucks (including own personal vehicle) on playa for Ranger business. Vehicle must have a valid Burning Man driving sticker.
     </dd>
   {{/if}}
 </dl>

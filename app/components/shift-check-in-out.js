@@ -10,6 +10,8 @@ export default class ShiftCheckInOutComponent extends Component {
   @argument('object') person; // Person we're dealing with
   @argument('object') timesheets; // The timesheets
   @argument('object') positions; // And possible positions person can sign into.
+  @argument('object') eventInfo; // Used to determine if person has been dirt trained
+
   @argument(optional('object')) imminentSlots; // (optional) slots that might be starting
   @argument(optional('any')) hasUnverifiedTimesheet; // (optional) true if entries are unverified
   @argument(optional('object')) endShiftNotify; // (optional) callback when a shift was successfully ended.
@@ -85,11 +87,13 @@ export default class ShiftCheckInOutComponent extends Component {
 
   // Has the person gone through dirt training?
 
-  @computed
+  @computed('eventInfo.training.@each.position_id')
   get isPersonDirtTrained() {
-    const dirt = this.positions.find((p) => p.id == Position.DIRT);
+    if (this.person.status == 'non ranger') {
+      return true;
+    }
 
-    return (dirt && !dirt.is_untrained);
+    return !!this.eventInfo.trainings.find((training) => (training.position_id == Position.DIRT && training.status == 'pass'));
   }
 
   // Find the on duty shift

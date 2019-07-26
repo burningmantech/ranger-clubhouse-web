@@ -14,6 +14,7 @@ module('Acceptance | login', function(hooks) {
     await visit('/');
 
     assert.equal(currentURL(), '/login');
+    assert.equal(document.title, 'Login | Ranger Clubhouse');
   });
 
   test('successful login', async function(assert) {
@@ -24,6 +25,7 @@ module('Acceptance | login', function(hooks) {
     await fillIn('input[name="password"]', person.password);
     await click('button.login-submit');
     assert.equal(currentURL(), '/me');
+    assert.equal(document.title, 'Overview | Me | Ranger Clubhouse');
   });
 
   test('invalid login', async function(assert) {
@@ -36,6 +38,7 @@ module('Acceptance | login', function(hooks) {
     assert.equal(currentURL(), '/login', 'stay on the login page');
     // And there should be a flash modal with login error
     assert.dom('.alert-danger', document).includesText('The email and/or password is incorrect');
+    assert.equal(document.title, 'Login | Ranger Clubhouse');
   });
 
   test('successful logout', async function(assert) {
@@ -43,6 +46,7 @@ module('Acceptance | login', function(hooks) {
     await authenticateSession({ person_id: person.id });
     await visit('/logout');
     assert.equal(currentSession().isAuthenticated, false);
+    assert.equal(document.title, 'Login | Ranger Clubhouse');
   });
 
   test('person not authorized', async function(assert) {
@@ -56,6 +60,7 @@ module('Acceptance | login', function(hooks) {
     assert.equal(currentURL(), '/login', 'stay on the login page');
     // And there should be a flash modal with login error
     assert.dom('.alert-danger', document).includesText('The account has been permanently disabled');
+    assert.equal(document.title, 'Login | Ranger Clubhouse');
   });
 
   test('prevent space for being entered in email field', async function (assert) {

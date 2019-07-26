@@ -7,8 +7,8 @@ import { action, computed } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
 import { validatePresence } from 'ember-changeset-validations/validators';
 import { inject as service } from '@ember/service';
+import * as Position from 'clubhouse/constants/positions';
 import validateDateTime from 'clubhouse/validators/datetime';
-
 
 export default class MeTimesheetMissingCommonComponent extends Component {
   @argument('object') positions;
@@ -21,15 +21,23 @@ export default class MeTimesheetMissingCommonComponent extends Component {
   entry = null;
 
   timesheetValidations = {
-    on_duty:  [ validateDateTime({ before: 'off_duty' }), validatePresence(true) ],
-    off_duty:  [ validateDateTime({ after: 'on_duty' }),validatePresence(true) ],
+    on_duty: [validateDateTime({ before: 'off_duty' }), validatePresence(true)],
+    off_duty: [validateDateTime({ after: 'on_duty' }), validatePresence(true)],
     notes: validatePresence(true)
   };
 
   // Create a list of positions options to check
   @computed('positions')
   get positionOptions() {
-      return this.positions.map((p) => [ p.title, p.id ]);
+    const positions = this.positions.map((p) => [p.title, p.id]);
+
+    const dirt = positions.find((p) => p[1] == Position.DIRT);
+    if (dirt) {
+      positions.removeObject(dirt);
+      positions.unshift(dirt);
+    }
+
+    return positions;
   }
 
   // Suggest a starting date for the datetime picker when creating
@@ -50,8 +58,8 @@ export default class MeTimesheetMissingCommonComponent extends Component {
   newRequestAction() {
     this.set('entry', this.store.createRecord('timesheet-missing', {
       person_id: this.person.id,
-      position_id: this.positions.firstObject.id,
-     }));
+      position_id: this.positionOptions[0][1],
+    }));
   }
 
   // Edit an existing request
@@ -79,13 +87,13 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     this.set('isSubmitting', true);
 
     model.save().then(() => {
-      this.toast.success(`Your request has been succesfully ${isNew ? 'submitted' : 'updated'}.`);
-      if (isNew) {
-        this.timesheetsMissing.pushObject(this.entry);
-      }
-      this.set('entry', null);
-    }).catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('isSubmitting', false));
+        this.toast.success(`Your request has been succesfully ${isNew ? 'submitted' : 'updated'}.`);
+        if (isNew) {
+          this.timesheetsMissing.pushObject(this.entry);
+        }
+        this.set('entry', null);
+      }).catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.set('isSubmitting', false));
   }
 
   // Delete a request - confirm first before proceeding.

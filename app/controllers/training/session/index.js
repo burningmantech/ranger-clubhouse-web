@@ -4,6 +4,7 @@ import { debounce } from '@ember/runloop';
 import { set } from '@ember/object';
 import { action, computed } from '@ember/object';
 import { slotSignup } from 'clubhouse/utils/slot-signup';
+import _ from 'lodash';
 
 const SEARCH_RATE_MS = 300;
 
@@ -174,7 +175,11 @@ export default class TrainingSlotController extends Controller {
       this.set('addPersonForm', null);
       // Refresh the list
       this.ajax.request(`training-session/${this.slot.id}`).then((results) => {
-        this.set('students', results.students);
+        const student = results.students.find((s) => s.id == person.id);
+        if (student) {
+          this.students.push(student);
+          this.set('students', _.orderBy(this.students, [ (s) => s.callsign.toLowerCase() ], ['asc']));
+        }
       });
     });
   }

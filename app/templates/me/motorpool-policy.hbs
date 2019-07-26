@@ -1,7 +1,7 @@
 <h1>2019 Ranger Vehicle Motorpool Policy</h1>
 
 {{#if (config "MotorpoolPolicyEnable")}}
-  {{#if person.vehicle_paperwork}}
+  {{#if hasAgreed}}
     {{#ch-alert "success"}}
       You have agreed to the motorpool policy. Thank you. Please drive safely.
     {{/ch-alert}}
@@ -123,7 +123,7 @@
     <li>The vehicle accident claim form must be provided to the current Shift Lead immediately following the incident so it can be logged and forwarded to the Logistics or Operations Manager.</li>
   </ul>
 
-  {{#if person.vehicle_paperwork}}
+  {{#if hasAgreed}}
     <p class="text-success font-weight-bold">Thank you for agreeing to the motorpool policy.
       You have acknowledged you have read the Ranger motorpool policy and understand
       the terms and conditions of driving a vehicle for Ranger business.
@@ -135,7 +135,12 @@
       the terms and conditions of driving a vehicle for Ranger business.
     </p>
 
-    <button type="submit" {{action "agreeAction"}} class="btn btn-primary">Yes, I agree to the motorpool policy.</button>
+    <button type="submit" {{action "agreeAction"}} class="btn btn-primary" disabled={{isSubmitting}}>
+      Yes, I agree to the motorpool policy.
+    </button>
+    {{#if isSubmitting}}
+      Submitting {{fa-icon "spinner" spin=true}} . . .
+    {{/if}}
   {{/if}}
 {{else}}
   <p>

@@ -1,10 +1,12 @@
 import { set } from '@ember/object';
 
 export function slotSignup(controller, slot, person, callback = null, force = false) {
+  set(slot, 'is_submitting', true);
   controller.ajax.request(`person/${person.id}/schedule`, {
     method: 'POST',
     data: { slot_id: slot.id, force: (force ? 1 : 0) }
   }).then((result) => {
+    set(slot, 'is_submitting', false);
     if (result.status == 'success') {
       const toast = controller.toast;
       const isMe = controller.session.userId == person.id;
@@ -33,6 +35,7 @@ export function slotSignup(controller, slot, person, callback = null, force = fa
       handleSignupError(controller, result, slot, person, callback);
     }
   }).catch((response) => {
+    set(slot, 'is_submitting', false);
     controller.house.handleErrorResponse(response);
   });
 }

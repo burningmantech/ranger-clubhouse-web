@@ -12,11 +12,14 @@ const EventOptions = [
     [ 'Person Creation Fails', 'person-create-fail' ],
     [ 'Person Creation', 'person-create' ],
     [ 'Person Update', 'person-update' ],
-    [ 'Position Changes', 'person-position-%' ],
+    [ 'Position Grant/Revokes', 'person-position-%' ],
+    [ 'Position Changes', 'position-%' ],
     [ 'Role Changes', 'person-role-%' ],
     [ 'Schedule Updates', 'person-slot-%' ],
     [ 'Slot Changes', 'slot-%' ],
     [ 'Status Changes', 'person-status-change' ],
+    [ 'BMID Changes', 'bmid-%' ],
+    [ 'Lambase Interactions', 'lambase-%' ],
     [ 'Ticketing Changes', 'access-document-%' ]
 ];
 

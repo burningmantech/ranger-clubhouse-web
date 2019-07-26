@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import ENV from 'clubhouse/config/environment';
-import { isAbortError, isTimeoutError } from 'ember-ajax/errors';
+import { isAbortError, isTimeoutError, isForbiddenError } from 'ember-ajax/errors';
 import DS from 'ember-data';
 
 //
@@ -21,9 +21,7 @@ export default class ErrorRoute extends Route {
 
     controller.set('isOffline', isOffline);
 
-    if (!isOffline) {
-      console.error('Uncaught routing error', error);
-    }
+    controller.set('notAuthorized', (error && (isForbiddenError(error) || error.status == 403)));
 
     // Try to send the down the error to the server for logging
     if (!isOffline && ENV.logEmberErrors && navigator.sendBeacon) {
