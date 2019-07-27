@@ -50,7 +50,11 @@
                     <small class="d-inline-block">{{moment-format shift.begins "HH:mm"}} - {{moment-format shift.ends "HH:mm"}}</small><br>
                   {{/if}}
                   {{#each shift.people as |person|}}
-                    {{person-link person=person~}}<br>
+                    {{person-link person=person~}}
+                    {{#if person.parenthetical}}
+                      ({{person.parenthetical}})
+                    {{/if}}
+                  <br>
                   {{/each}}
                 </div>
               {{else}}
