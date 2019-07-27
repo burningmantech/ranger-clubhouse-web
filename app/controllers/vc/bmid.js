@@ -69,7 +69,7 @@ export default class VcBmidController extends Controller {
     'title1',
     'title2',
     'title3',
-    'teams',
+    'team',
     'notes'
   ];
 
