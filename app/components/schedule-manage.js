@@ -289,6 +289,7 @@ export default class ScheduleManageComponent extends Component {
 
   @action
   showPeople(slot) {
+    set(slot, 'is_retrieving_people', true);
     this.ajax.request('slot/' + slot.id + '/people').then((result) => {
       let callsigns = result.people.map((person) => person.callsign);
       if (callsigns.length == 0) {
@@ -297,7 +298,9 @@ export default class ScheduleManageComponent extends Component {
         callsigns = callsigns.join(', ');
       }
       this.modal.info('Scheduled (Callsigns) for ' + slot.slot_description, callsigns);
-    }).catch((response) => this.house.handleErrorResponse(response));
+    })
+    .catch((response) => this.house.handleErrorResponse(response))
+    .finally(() => set(slot, 'is_retrieving_people', false));
   }
 
   @action
