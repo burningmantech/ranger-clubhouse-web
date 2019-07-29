@@ -1,4 +1,4 @@
-<h1>Rangers By Special Teams</h1>
+<h1>People By Special Teams</h1>
 <p>
   This report shows the hours worked by Rangers in chosen positions (special
   teams) for the years chosen. If you check the "Show Inactives" box, the report
@@ -21,7 +21,7 @@
       {{f.input "showInactives" type="checkbox" }}
     </div>
     <div class="form-row text-muted">
-      Note: The Clubhouse  has timesheets dating back only to 2010.
+      Note: The Clubhouse has timesheets dating back only to 2010.
     </div>
     <div class="form-group mt-4">
       {{f.submit label="Submit"}}
@@ -33,7 +33,7 @@
 </div>
 
 {{#if isSubmitting}}
-  {{loading-dialog "special teasm report"}}
+  {{loading-dialog "the Special Team report"}}
 {{else if (and haveResults people)}}
   <p>
     <button class="btn btn-secondary" {{action exportToCSV}}>Export to CSV</button>
@@ -41,19 +41,21 @@
   <table class="table table-sm table-striped table-width-auto">
     <caption>Found {{pluralize people.length "person"}} for
       {{#each positionsUsed as |position idx|~}}
-          {{if idx ", "~}}{{position.title~}}
-        {{/each}}
-      </caption>
+        {{if idx ", "~}}{{position.title~}}
+      {{/each}}
+    </caption>
     <thead>
       <tr>
         <th>Callsign</th>
         <th>Name</th>
         <th>Status</th>
-        <th>Email</th>
+        {{#if session.user.canViewEmail}}
+          <th>Email</th>
+        {{/if}}
         {{#each yearList as |year|}}
-          <th>{{year}} Hours</th>
+          <th class="text-right">{{year}} Hours</th>
         {{/each}}
-        <th>Total</th>
+        <th class="text-right">Total</th>
       </tr>
     </thead>
 
@@ -63,7 +65,15 @@
           <td>{{person-link person=person}}</td>
           <td>{{person.first_name}} {{person.last_name}}</td>
           <td>{{person.status}}</td>
-          <td>{{mail-to person.email}}</td>
+          {{#if session.user.canViewEmail}}
+            <td>
+              {{#if person.email}}
+                {{mail-to person.email}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+          {{/if}}
           {{#each person.years as |duration|}}
             <td class="text-right">{{hour-format duration}}</td>
           {{/each}}

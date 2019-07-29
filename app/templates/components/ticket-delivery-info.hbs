@@ -63,13 +63,22 @@
               Your Staff Credential allows you to enter the event at any time, and may be picked up on or after the early arrival date on the credential at the following locations on the given dates:
             {{else if ticket.access_date}}
               <p>
-                You may pick up the Staff Credential on or after the day you are allowed to enter the event - {{mdy-format ticket.access_date full=true}}. Early pick ups are NOT allowed. Your Staff Credential is available for pickup at the following
+                You may pick up the Staff Credential on or after the day you are
+                allowed to enter the event - {{mdy-format ticket.access_date full=true}}.
+                Early pickups are not allowed unless you have a separate Work Access Pass good for
+                entry on a date earlier than that of your staff credential.
+              </p>
+              <p>
+                Your Staff Credential is available for pickup at the following
                 locations on the given dates and times:
               </p>
             {{else}}
               <p>
-                You may pick up the Staff Credential on or after the day you are allowed to enter the event. <b class="text-danger">However, we forgot to set the entry date on your ticket. Please contact Ranger Ticketing at {{mail-to ticketingInfo.ranger_ticketing_email}}
-                  to get this sorted out.</b>
+                You may pick up the Staff Credential on or after the day you are allowed to enter the
+                event. <b class="text-danger">However, we
+                forgot to set the entry date on your ticket. Please contact
+                Ranger Ticketing at {{mail-to ticketingInfo.ranger_ticketing_email}} to get this sorted
+                out.</b>
               </p>
               <p>
                 Once the date is fixed, your Staff Credential will be available for pickup at the following locations on the given dates and times:

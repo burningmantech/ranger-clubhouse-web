@@ -165,4 +165,8 @@ export default Mixin.create({
     return this.hasRole(Role.ADMIN);
   }),
 
+  canViewEmail: computed('roles', function () {
+    return this.hasRole([ Role.ADMIN, Role.VIEW_EMAIL, Role.VIEW_PII ]);
+  })
+
 });
