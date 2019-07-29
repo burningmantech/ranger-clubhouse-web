@@ -12,7 +12,7 @@ module('helper:meal-info', function(hooks) {
 
     await render(hbs`{{meal-info meal}}`);
 
-    assert.ok(find('*').textContent.trim().indexOf('you qualify for three meals/day') !== -1);
+    assert.ok(find('*').textContent.trim().indexOf('You qualify for three meals/day') !== -1);
   });
 
   test('it renders meal info with null value', async function(assert) {

@@ -38,7 +38,7 @@ This page contains information regarding granted positions, meals, radios, showe
   </p>
   {{#if (is-current-year year)}}
     {{#if person.isActive}}
-      You will need to sign up for and pass training before being allowed to sign in for your shifts.
+      You do not have to be trained to sign up for shifts, but you must be trained before actually working shifts on playa.
     {{else if person.isProspective}}
       You will need to sign up for and pass a training session before becoming an Alpha.
     {{/if}}
@@ -47,10 +47,10 @@ This page contains information regarding granted positions, meals, radios, showe
 
 {{#if artTrainings}}
   <h3 class="mt-4">{{fa-icon "university"}} Advanced Ranger Training (ART)</h3>
-  {{pluralize artTrainings.length "position"}} requires ART Training. While
-  you may sign up for an ART shift at anytime, you will not be allowed to work
-  an ART shift unless you have passed ART training.
-
+  The following {{if (eq artTrainings.length 1) "position" (concat artTrainings.length " positions")}}
+  require ART Training. Although you can sign up for an
+  ART-required shift at any time, you will not be allowed to work such a shift
+  until you have passed the relevant ART training.
   {{training-info trainings=artTrainings}}
 {{/if}}
 
@@ -109,7 +109,7 @@ Positions indicate which shifts you are allowed to sign up for and what ART trai
       {{#link-to "me.motorpool-policy"}}Motorpool Policy{{/link-to}}.
     {{/if}}
 
-    <h3 class="mt-4">{{fa-icon "car-crash"}} Motor Vehicle Record (MVR)</h3>
+    <h3 class="mt-4">{{fa-icon "truck-pickup"}} Motor Vehicle Record (MVR)</h3>
     {{#if person.vehicle_insurance_paperwork}}
       {{badge "success" "Authorized" }} You are authorized to drive cars and
       trucks (including your own personal vehicle) on playa for Ranger business.

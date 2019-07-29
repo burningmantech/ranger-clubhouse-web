@@ -35,8 +35,8 @@ export default class ReportsSpecialTeamsController extends Controller {
     const form = this.teamsForm;
     const position_ids = form.positionIds,
         include_inactive = form.showInactives ? 1 : 0,
-        start_year = form.startYear,
-        end_year = form.endYear;
+        start_year = parseInt(form.startYear),
+        end_year = parseInt(form.endYear);
 
     if (position_ids.length == 0) {
       this.modal.info(null, 'No team/positions were selected.');
@@ -50,7 +50,7 @@ export default class ReportsSpecialTeamsController extends Controller {
 
     this.set('isSubmitting', true);
     this.set('haveResults', false);
-    this.ajax.request('timesheet/special-teams', { data: { position_ids, include_inactive, start_year, end_year }})
+    this.ajax.request('timesheet/special-teams', { method: 'POST', data: { position_ids, include_inactive, start_year, end_year }})
       .then((result) => {
         this.set('people', result.people);
         this.set('haveResults', true);
