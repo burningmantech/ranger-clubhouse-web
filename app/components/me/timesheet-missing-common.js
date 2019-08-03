@@ -81,9 +81,15 @@ export default class MeTimesheetMissingCommonComponent extends Component {
       return;
     }
 
+    const isNew = model.get('isNew');
     this.toast.clear();
 
-    const isNew = model.get('isNew');
+    if (!model.get('isDirty')) {
+      this.set('entry', null);
+      this.modal.info('', `You did not enter any ${isNew ? 'new' : ''} information.`);
+      return;
+    }
+
     this.set('isSubmitting', true);
 
     model.save().then(() => {

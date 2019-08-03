@@ -105,6 +105,8 @@ export default class ShiftCheckInOutComponent extends Component {
   _startShift(positionId) {
     const position = this.positions.find((p) => p.id == positionId);
 
+    const callsign = this.person.callsign;
+
     this.toast.clear();
     this.ajax.request('timesheet/signin', {
       method: 'POST',
@@ -123,7 +125,7 @@ export default class ShiftCheckInOutComponent extends Component {
           } else {
             reason = `has not completed '${result.required_training}'`;
           }
-          this.toast.error(`WARNING: The person ${reason}. Because you are an admin, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
+          this.modal.info(`${callsign} not trained - sign in forced', 'WARNING: The person ${reason}. Because you are an admin, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
         } else {
           this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
         }
@@ -131,23 +133,23 @@ export default class ShiftCheckInOutComponent extends Component {
         break;
 
       case 'position-not-held':
-        this.toast.error(`The person does hold the '${position.title}' in order to start the shift.`);
+        this.modal.info('Position Not Held', `${callsign} does hold the '${position.title}' in order to start the shift.`);
         break;
 
       case 'already-on-duty':
-        this.toast.error('The person is already on duty.');
+        this.modal.info('Already On Shift', 'The person is already on duty.');
         break;
 
       case 'not-trained':
-        this.toast.error(`The person has has not completed "${result.position_title}"`);
+        this.modal.info('Not Trained', `${callsign} has has not completed "${result.position_title}" and cannot be signed into the shift.`);
         break;
 
       case 'not-qualified':
-        this.toast.error(`The person is not qualified to sign in: ${result.unqualified_reason}`);
+        this.modal.info('Not Qualified', `${callsign} has not meet one or more of the qualifiers needed to sign into the shift.<br>Reason: ${result.unqualified_reason}`);
         break;
 
       default:
-        this.toast.error(`An unknown status [${result.status}] from the server.`);
+        this.modal.info('Unknown Server Status', `An unknown status [${result.status}] from the server. This is a bug. Please report this to the Tech Ninjas.`);
         break;
       }
     }).catch((response) => this.house.handleErrorResponse(response));
