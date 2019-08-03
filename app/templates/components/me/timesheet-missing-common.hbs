@@ -36,15 +36,17 @@
         </div>
         <div class="timesheet-row timesheet-actions">
           {{#if (or tsm.isPending tsm.isRejected)}}
-            <button type="button" class="btn btn-primary" {{action "editAction" tsm}} disabled={{tsm.isSaving}}>
+            <button type="button" class="btn btn-primary" {{action "editAction" tsm}} disabled={{or tsm.isReloading tsm.isSaving}}>
               {{#if tsm.isRejected}}
                 Submit Appeal
+              {{else if tsm.isReloading}}
+                {{fa-icon "spinner" spin=true}}
               {{else}}
                 Edit
               {{/if}}
             </button>
             {{#if tsm.isPending}}
-              <button type="button" class="btn btn-danger" {{action "deleteAction" tsm}} disabled={{tsm.isSaving}}>
+              <button type="button" class="btn btn-danger" {{action "deleteAction" tsm}} disabled={{or tsm.isReloading tsm.isSaving}}>
                 {{#if tsm.isSaving}}
                   Deleting {{fa-icon "spinner" spin=true}}
                 {{else}}

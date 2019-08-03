@@ -65,7 +65,13 @@ export default class MeTimesheetMissingCommonComponent extends Component {
   // Edit an existing request
   @action
   editAction(timesheetMissing) {
-    this.set('entry', timesheetMissing);
+    timesheetMissing.reload().then(() => {
+      if (timesheetMissing.isApproved) {
+        this.modal.info('Missing Timesheet Entry Request Approved!', 'Hold up! The timesheet entry has been approved since this page has been refreshed.');
+        return;
+      }
+      this.set('entry', timesheetMissing);
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   // Cancel the form

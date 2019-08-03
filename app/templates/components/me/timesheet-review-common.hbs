@@ -68,7 +68,7 @@
                 Mark Entry Correct
               </button>
             {{/unless}}
-            <button type="button" class="btn btn-secondary" {{action markIncorrectAction ts}} disabled={{isSubmitting}}>
+            <button type="button" class="btn btn-secondary" {{action markIncorrectAction ts}} disabled={{ts.isLoading}}>
               {{#if ts.isPendingReview}}
                 Edit Correction Note
               {{else if (and ts.isRejected (not ts.verified))}}
@@ -77,6 +77,9 @@
                 Mark Entry Incorrect
               {{/if}}
             </button>
+            {{#if ts.isReloading}}
+              <span class="text-muted">Loading {{fa-icon "spinner" spin=true}}</span>
+            {{/if}}
           {{/if}}
           {{#if ts.isSaving}}
             <span class="ml-2 text-muted">Submitting {{fa-icon "spinner" spin=true}}</span>

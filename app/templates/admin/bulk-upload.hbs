@@ -1,17 +1,14 @@
 <h1>Bulk Upload</h1>
 
 <p>This page allows you to bulk upload a list of Rangers who should have
-  their Ranger vehicle paperwork checked, or their Org vehicle insurance
+  their Ranger vehicle paperwork checked, or their Motor Vehicle Record (MVR)
   checked, or who should be marked as eligible for an event radio, etc.</p>
 
 <p>Please select which action you want to take, and then enter Ranger
   callsigns in the big text input area below. Some actions require you to have
   comma-separated parameters after each Ranger's callsign.</p>
-
-<p>If you don't check the "Really, do the thing" box before clicking
-  "Submit" at the very bottom, the database won't be updated.
-  This is useful as a "dry run" feature to make sure that you don't
-  have typos in your list of callsigns.
+<p>
+  No changes will be made until you click on the 'Commit' button which appears after clicking on 'Verify Upload'.
 </p>
 
 {{#if actionResults}}
@@ -75,7 +72,7 @@
     <label class="col-form-label">Select bulk action:</label>
   </div>
   <div class="col-auto">
-      {{ch-form/select name="uploadAction" value=uploadAction options=uploadOptions
+    {{ch-form/select name="uploadAction" value=uploadAction options=uploadOptions
         includeBlank=true onChange=(action (mut uploadAction)) controlClass="form-control"}}
   </div>
 </div>

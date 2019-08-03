@@ -35,8 +35,14 @@
             <td class="text-right">{{credits-format tm.credits}}</td>
             <td>{{tm.position.title}}</td>
             <td>
-              <button class="btn btn-primary btn-sm" {{action editEntryAction tm}}>Manage</button>
-              <button class="btn btn-secondary btn-sm" {{action removeEntryAction tm}} title="Delete">{{fa-icon "trash"}}</button>
+              <button class="btn btn-primary btn-sm" {{action editEntryAction tm}} disabled={{tm.isReloading}}>
+                {{#if tm.isReloading}}
+                  {{fa-icon "spinner" spin=true}}
+                {{else}}
+                  Manage
+                {{/if}}
+              </button>
+              <button class="btn btn-secondary btn-sm" {{action removeEntryAction tm}} title="Delete" disabled={{tm.isReloading}}>{{fa-icon "trash"}}</button>
             </td>
           </tr>
         {{/each}}

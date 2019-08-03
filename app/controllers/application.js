@@ -135,7 +135,7 @@ export default class ApplicationController extends Controller {
    _modeRoutes = {
      'account':   'person.index',
      'hq':        'hq.index',
-     'timesheet': 'hq.timesheet'
+     'timesheet': 'person.timesheet'
    };
 
   _showPerson(person) {

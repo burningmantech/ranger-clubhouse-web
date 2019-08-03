@@ -58,8 +58,10 @@ export default class PersonTimesheetManageComponent extends Component {
   // Edit a timesheet - i.e. display the form
   @action
   editEntryAction(timesheet) {
-    this.set('editVerification', false);
-    this.set('editEntry', timesheet);
+    timesheet.reload().then(() => {
+      this.set('editVerification', false);
+      this.set('editEntry', timesheet);
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   // Cancel editing - i.e. hide the form
