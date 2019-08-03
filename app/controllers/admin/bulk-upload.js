@@ -36,7 +36,7 @@ export default class AdminBulkUploadController extends Controller {
       groupName: 'Vehicle Paperwork Flags',
       options: [
         { id: 'vehicle_paperwork', title: 'Signed Motorpool Agreement (gators/golf carts)' },
-        { id: 'vehicle_insurance_paperwork', title: 'Has Org Vehicle Insurance (trucks/SUVs)' },
+        { id: 'vehicle_insurance_paperwork', title: 'Has Motor Vehicle Record (MVR)' },
       ]
     },
     {

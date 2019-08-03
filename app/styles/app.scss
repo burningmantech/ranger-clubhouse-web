@@ -105,6 +105,12 @@ $sizes: (
     margin: 0px !important;
     padding: 0px !important;
   }
+
+  a {
+      text-decoration: none !important;
+      color: #000 !important;
+  }
+
 }
 
 @media not print {

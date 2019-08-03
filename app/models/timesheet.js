@@ -19,8 +19,6 @@ export default class TimesheetModel extends DS.Model {
   @attr('boolean') verified;
   @attr('string') verified_at;
 
-  @attr('boolean') is_incorrect;  // Mark entry as incorrect
-
   @attr('', { readOnly: true}) verified_person;
   @attr('', { readOnly: true}) reviewer_person;
   @attr('', { readOnly: true}) position;

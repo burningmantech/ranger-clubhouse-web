@@ -52,15 +52,20 @@ export default class PersonTimesheetMissingComponent extends Component {
       }
     }
 
-    timesheet.set('new_on_duty', timesheet.on_duty);
-    timesheet.set('new_off_duty', timesheet.off_duty);
-    timesheet.set('new_position_id', timesheet.position_id);
-    timesheet.set('create_entry', 0);
+    timesheet.reload().then(() => {
+      timesheet.set('new_on_duty', timesheet.on_duty);
+      timesheet.set('new_off_duty', timesheet.off_duty);
+      timesheet.set('new_position_id', timesheet.position_id);
+      timesheet.set('create_entry', 0);
 
-    this.set('nextEntry', nextEntry);
-    this.set('editEntry', timesheet);
-    this.set('partnerInfo', timesheet.partner_info);
-    this.set('havePartnerTimesheet', false);
+      this.set('nextEntry', nextEntry);
+      this.set('editEntry', timesheet);
+      this.set('partnerInfo', timesheet.partner_info);
+      this.set('havePartnerTimesheet', false);
+    }).catch((response) => {
+      this.house.handleErrorResponse(response);
+      this.set('editEntry', null);
+    });
   }
 
   @action

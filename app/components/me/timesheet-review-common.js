@@ -41,7 +41,9 @@ export default class MeTimesheetReviewCommonComponent extends Component {
   // Setup to mark an entry as incorrect - i.e. display the form
   @action
   markIncorrectAction(timesheet) {
-    this.set('entry', timesheet);
+    timesheet.reload().then(() => {
+      this.set('entry', timesheet);
+    }).catch((response) => this.house.handleErrorResponse(response))
   }
 
   // Save correction notes
@@ -54,13 +56,11 @@ export default class MeTimesheetReviewCommonComponent extends Component {
     this.toast.clear();
 
     if (!model.get('isDirty')) {
-      this.set('entry', null);
-      this.modal.info('', 'You did not enter a new correction note. The correction was not submitted.');
+      this.modal.info('Enter More Information', 'You did not add to the correction note.');
       return;
     }
 
     model.set('verified', 0);
-    model.set('is_incorrect', 1);
 
     this.set('isSubmitting', true);
 
