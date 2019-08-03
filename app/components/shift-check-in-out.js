@@ -105,8 +105,6 @@ export default class ShiftCheckInOutComponent extends Component {
   _startShift(positionId) {
     const position = this.positions.find((p) => p.id == positionId);
 
-    const callsign = this.person.callsign;
-
     this.toast.clear();
     this.ajax.request('timesheet/signin', {
       method: 'POST',
@@ -125,7 +123,7 @@ export default class ShiftCheckInOutComponent extends Component {
           } else {
             reason = `has not completed '${result.required_training}'`;
           }
-          this.modal.info(`${callsign} not trained - sign in forced', 'WARNING: The person ${reason}. Because you are an admin, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
+          this.modal.info('Sign in forced', `WARNING: The person ${reason}. Because you are an admin, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
         } else {
           this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
         }
