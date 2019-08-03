@@ -36,29 +36,22 @@
         <div class="timesheet-row d-print-none">
           <div>
             {{#if ts.off_duty}}
-              {{#if ts.isApproved}}
+              {{#if ts.verified}}
+                <span class="text-success">{{fa-icon "check"}} Entry was marked correct on {{shift-format ts.verified_at}}</span>
+              {{else if ts.isApproved}}
                 The correction request has been APPROVED.
-                The timesheet has been updated with the new times.
+                The timesheet has been updated.
               {{else if ts.isRejected}}
-                The correction request has been denied. Contact
-                {{general-support-email}} if you wish to appeal this decision.
-
-                {{#if ts.haveReviewerResponse}}
-                  <p class="text-bold">Response from the timesheet review team:</p>
-                  <p>{{ts.reviewer_notes}}</p>
-                {{/if}}
-
+                The correction request has been denied.
               {{else if ts.isPendingReview }}
                 <span class="text-info font-weight-bold">The correction request is pending review.</span>
               {{else if ts.isUnverified}}
                 <strong>This entry has not been verified.</strong>
-              {{else if ts.verified}}
-                <span class="text-success">{{fa-icon "check"}} Entry was marked correct on {{shift-format ts.verified_at}}</span>
               {{else}}
                 Unknown state?
               {{/if}}
 
-              {{#if (and ts.haveReviewerResponse (not ts.verified) (or ts.isApproved ts.isRejected))}}
+              {{#if (and ts.haveReviewerResponse (not ts.verified))}}
                 <p class="text-bold">Response from the timesheet review team:</p>
                 <p>{{ts.reviewer_notes}}</p>
               {{/if}}
@@ -72,12 +65,14 @@
           {{#if ts.off_duty}}
             {{#unless ts.verified}}
               <button type="button" class="btn btn-success" {{action markCorrectAction ts}} disabled={{isSubmitting}}>
-                  Mark Entry Correct
+                Mark Entry Correct
               </button>
             {{/unless}}
             <button type="button" class="btn btn-secondary" {{action markIncorrectAction ts}} disabled={{isSubmitting}}>
               {{#if ts.isPendingReview}}
                 Edit Correction Note
+              {{else if (and ts.isRejected (not ts.verified))}}
+                Submit Appeal
               {{else}}
                 Mark Entry Incorrect
               {{/if}}
@@ -129,14 +124,6 @@
       <dd class="col-sm-10">{{credits-format entry.credits}}</dd>
     </dl>
 
-    {{#if entry.reviewer_notes}}
-      <div class="card mb-4">
-        <div class="card-header">The timesheet correction team has left you a note:</div>
-        <div class="card-body">
-          {{entry.reviewer_notes}}
-        </div>
-      </div>
-    {{/if}}
     <div class="form-row">
       Use the following area to explain why this entry is incorrect. Provide as
       much information as possible to help us understand why this entry should be fixed.
@@ -154,8 +141,17 @@
         {{/if}}
       </ul>
     </div>
-    {{f.input "notes" label="Your correction note:" type="textarea" cols=80 rows=3}}
-    {{f.submit label="Submit Correction" disabled=isSubmitting}}
+    {{#if entry.isRejected}}
+      <b class="text-danger">The correction request has been rejected.</b>
+      <div class="card mb-4">
+        <div class="card-header">The timesheet correction team has left you a note:</div>
+        <div class="card-body">
+          {{entry.reviewer_notes}}
+        </div>
+      </div>
+    {{/if}}
+    {{f.input "notes" label=(if entry.isRejected "Supply additional information for an apeal:" "Your correction note:") type="textarea" cols=80 rows=3}}
+    {{f.submit label="Submit Correction Request" disabled=isSubmitting}}
     {{f.cancel}}
     {{#if isSubmitting}}
       <span class="text-muted">Submitting {{fa-icon "spinner" spin=true}} . . .</span>

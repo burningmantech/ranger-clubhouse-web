@@ -1,7 +1,7 @@
 <h1>Timesheet Corrections for <span class="d-inline-block">{{person.callsign}}</span></h1>
 
 {{#if (or unverifiedCount correctionPendingReviewCount missingPendingReviewCount)}}
-  <div class="text-danger">
+  <p class="h4 text-danger">
     {{#if unverifiedCount}}
       You need to review {{pluralize unverifiedCount "timesheet entry"}}.<br>
     {{/if}}
@@ -12,7 +12,7 @@
     {{#if missingPendingReviewCount}}
       {{pluralize missingPendingReviewCount "missing timesheet entry request"}} {{if (eq missingPendingReviewCount 1) "is" "are"}} pending review.<br>
     {{/if}}
-  </div>
+  </p>
 {{else if timesheetInfo.timesheet_confirmed}}
   {{#ch-alert "success"}}
     {{fa-icon "thumbs-up" type="far"}} <strong>Congratulations!</strong> All your timesheet

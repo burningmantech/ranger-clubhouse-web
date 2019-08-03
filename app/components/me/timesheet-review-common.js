@@ -52,8 +52,18 @@ export default class MeTimesheetReviewCommonComponent extends Component {
     }
 
     this.toast.clear();
+
+    if (!model.get('isDirty')) {
+      this.set('entry', null);
+      this.modal.info('', 'You did not enter a new correction note. The correction was not submitted.');
+      return;
+    }
+
     model.set('verified', 0);
+    model.set('is_incorrect', 1);
+
     this.set('isSubmitting', true);
+
     model.save().then(() => {
       this.set('entry', null);
       this.set('isSubmitting', false);

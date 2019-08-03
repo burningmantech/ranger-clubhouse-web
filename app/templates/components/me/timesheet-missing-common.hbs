@@ -23,29 +23,37 @@
               <span class="text-info font-weight-bold">The request is pending review.</span>
             {{else}}
               {{#if tsm.isApproved}}
-                The request has been APPROVED. Your timesheet has been updated with the missing shift.
+                <span class="text-success">{{fa-icon "check"}} The request has been APPROVED. Your timesheet has been updated with the missing shift.</span>
               {{else}}
                 The request has been rejected.
               {{/if}}
-              <p>
+              <p class="mt-2">
                 <strong>Response from the reviewer:</strong><br>
-                {{tsm.reviewer_note}}
+                {{nl2br tsm.reviewer_notes}}
               </p>
             {{/if}}
           </div>
         </div>
-        {{#if tsm.isPending}}
-          <div class="timesheet-row timesheet-actions">
-            <button type="button" class="btn btn-primary" {{action "editAction" tsm}} disabled={{tsm.isSaving}}>Edit</button>
-            <button type="button" class="btn btn-light-red" {{action "deleteAction" tsm}} disabled={{tsm.isSaving}}>
-              {{#if tsm.isSaving}}
-                Deleting {{fa-icon "spinner" spin=true}}
+        <div class="timesheet-row timesheet-actions">
+          {{#if (or tsm.isPending tsm.isRejected)}}
+            <button type="button" class="btn btn-primary" {{action "editAction" tsm}} disabled={{tsm.isSaving}}>
+              {{#if tsm.isRejected}}
+                Submit Appeal
               {{else}}
-                Delete
+                Edit
               {{/if}}
             </button>
-          </div>
-        {{/if}}
+            {{#if tsm.isPending}}
+              <button type="button" class="btn btn-danger" {{action "deleteAction" tsm}} disabled={{tsm.isSaving}}>
+                {{#if tsm.isSaving}}
+                  Deleting {{fa-icon "spinner" spin=true}}
+                {{else}}
+                  Delete
+                {{/if}}
+              </button>
+            {{/if}}
+          {{/if}}
+        </div>
       </div>
     {{/each}}
   </div>
@@ -88,7 +96,16 @@
       <li>Was another person responsible for checking you in, and why did they fail to do that?</li>
       <li>If you called Ranger HQ on the radio to check you in for the shift, who was the Ranger on the other end?</li>
     </ul>
-    {{f.input "notes" label="Why is this new entry needed?" type="textarea" cols=80 rows=4}}
+    {{#if entry.isRejected}}
+      <b class="text-danger">The correction request has been rejected.</b>
+      <div class="card mb-4">
+        <div class="card-header">The timesheet correction team has left you a note:</div>
+        <div class="card-body">
+          {{entry.reviewer_notes}}
+        </div>
+      </div>
+    {{/if}}
+    {{f.input "notes" label=(if entry.isRejected "Supply additional information for an appeal:" "Why is this new entry needed?") type="textarea" cols=80 rows=4}}
     {{f.submit label=(if f.model.isNew "Submit New Request" "Update Request") disabled=isSubmitting}}
     {{f.cancel disabled=isSubmitting}}
     {{#if isSubmitting}}
