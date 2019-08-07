@@ -13,7 +13,7 @@ module.exports = {
         // --no-sandbox is needed when running Chrome inside a container
         process.env.CI ? '--no-sandbox' : null,
         '--headless',
-        '--disable-gpu',
+//        '--disable-gpu', No longer needed in Chrome 76 for Windows?
         '--disable-dev-shm-usage',
         '--disable-software-rasterizer',
         '--mute-audio',
