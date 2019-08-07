@@ -44,6 +44,8 @@ export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
   }
 
   setupController(controller, model) {
+    super.setupController(...arguments);
+
     const person = model.person;
     person.set('unread_message_count', model.unread_message_count);
     controller.setProperties(model);

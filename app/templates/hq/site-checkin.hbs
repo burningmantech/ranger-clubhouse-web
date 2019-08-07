@@ -1,3 +1,27 @@
+{{#unless isPersonDirtTrained}}
+  {{#ch-alert "danger"}}
+    <h3>{{person.callsign}} is not eligible for site check in.</h3>
+    <p>
+      <b>DO NOT HAND OVER THEIR BMID AND/OR CHECKOUT RADIOS AT THIS TIME.</b>
+    </p>
+    <p>
+      {{#if (eq dirtTraining.status "pending")}}
+        {{person.callsign}} is signed up training on {{mdy-format dirtTraining.date full=true}} @ {{time-format dirtTraining.date}}
+        at {{dirtTraining.location}}. This training has not happened yet.
+      {{else if (eq dirtTraining.status "fail")}}
+        {{person.callsign}} did not pass training held {{mdy-format dirtTraining.date full=true}} at {{dirtTraining.location}}.
+      {{else if (eq dirtTraining.status "no-shift")}}
+        No training sign up was found for {{person.callsign}}.
+      {{else}}
+        Uh oh, I did not understand the status [{{dirtTraining.status}}]. This is a bug. Please report this to the tech team.
+      {{/if}}
+    </p>
+    <p class="mt-2">
+      {{person.callsign}} may only be issued their BMID, be allowed to check out radios,
+      and work a shift AFTER they have attended &amp; passed training.
+    </p>
+  {{/ch-alert}}
+{{/unless}}
 {{#if person.on_site}}
   <p>
     <strong class="text-success">{{person.callsign}} is marked as ON SITE.</strong>

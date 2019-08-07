@@ -1,10 +1,27 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember/object';
+import * as Position from 'clubhouse/constants/positions';
 
 export default class HqSiteCheckinController extends Controller {
   @computed('assets.@each.checked_in')
   get activeAssets() {
     return this.assets.filter((asset) => !asset.checked_in);
+  }
+
+  @computed('eventInfo.trainings')
+  get dirtTraining() {
+    return this.eventInfo.trainings.find((training) => training.position_id == Position.DIRT);
+  }
+
+  @computed('eventInfo.training.@each.position_id')
+  get isPersonDirtTrained() {
+    if (this.person.status == 'non ranger') {
+      return true;
+    }
+
+    const training = this.dirtTraining;
+
+    return (training && training.status == 'pass');
   }
 
   @action
