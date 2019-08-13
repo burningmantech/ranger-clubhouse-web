@@ -35,7 +35,7 @@ Mentor shift = Shift Alpha is signed up for. On Shift = Is the Alpha currently s
         <td>{{person.first_name}} {{person.last_name}}</td>
         <td>
           {{#if person.alpha_slot}}
-            {{shift-format person.alpha_slot}}
+            {{shift-format person.alpha_slot.begins}}
           {{else}}
             -
           {{/if}}
