@@ -39,7 +39,10 @@ export default class ScheduleManageComponent extends Component {
   ];
 
   didReceiveAttrs() {
-    this.set('filterDay', this.isCurrentYear ? 'upcoming' : 'all');
+    if (!this.isCurrentYear) {
+      this.set('filterDay', 'all');
+    }
+
     this._sortAndMarkSignups();
 
     this.signedUpSlots.forEach((signedUp) => {
@@ -132,7 +135,7 @@ export default class ScheduleManageComponent extends Component {
     return groups.sortBy('title');
   }
 
-  @computed('slots.[]')
+  @computed('slots')
   get dayOptions() {
     const unique = this.availableSlots.uniqBy('slotDay').mapBy('slotDay');
     const days = A();
