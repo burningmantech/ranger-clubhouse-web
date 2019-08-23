@@ -74,3 +74,6 @@ Mentor shift = Shift Alpha is signed up for. On Shift = Is the Alpha currently s
   </tbody>
 </table>
 <button class="btn btn-primary" disabled={{isSubmitting}} {{action saveAlphas}}>Save Assignments &amp; Results</button>
+{{#if isSubmitting}}
+  <span class="ml-1">Submitting {{fa-icon "spinner" spin=true}}</span>
+{{/if}}
