@@ -81,7 +81,8 @@ export default class MentorAssignmentController extends Controller {
     }
 
     if (!assignments.length) {
-      this.modal.info(null, "No alphas/mentor assignments were found");
+      this.modal.info(null, "No alphas/mentor assignments were found. Perhaps you marked a PNV as passed or failed without assigning mentors?");
+      return;
     }
 
     this.set('isSubmitting', true);
