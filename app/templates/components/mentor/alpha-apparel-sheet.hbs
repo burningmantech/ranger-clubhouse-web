@@ -1,44 +1,45 @@
-{{#each alphaPages as |alphas idx|}}
-  <div class="d-flex justify-content-between {{if idx "d-print-page-break"}}">
-    <h1 class="align-middle">{{year-format slot.begins}} {{slot.description}} {{shift-format slot.begins}}</h1>
-    <h1 class="align-middel">Alpha Apparel Distribution</h1>
-    <h1 class="align-middle">Page {{add idx 1}} of {{alphaPages.length}}</h1>
-  </div>
+{{#each alphaGroups as |group groupIdx|}}
+  {{#each group.pages as |alphas idx|}}
+    <div class="d-flex justify-content-between {{if (or idx groupIdx) "d-print-page-break"}}">
+      <h2 class="align-middle">{{year-format slot.begins}} {{slot.description}} {{shift-format slot.begins}}</h2>
+      <h2 class="align-middel">Alpha Apparel Distribution - {{group.title}}</h2>
+      <h2 class="align-middle">Page {{add idx 1}} of {{group.pages.length}}</h2>
+    </div>
 
-  {{pluralize slot.people.length "total alpha"}}
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Callsign</th>
-        <th>Name</th>
-        <th>Status</th>
-        <th>Result</th>
-        <th>Tee Shirt</th>
-        <th>Long Sleeve</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {{#each alphas as |person|}}
+    {{pluralize group.people.length group.title}}
+    <table class="table table-striped">
+      <thead>
         <tr>
-          <td>{{person.callsign}}</td>
-          <td>{{person.first_name}} {{person.last_name}}</td>
-          <td>{{person.status}}</td>
-          <td>{{person.mentor_status}}</td>
-          <td>
-              {{present-or-not person.teeshirt_size_style "UNKNOWN"}}
-
-          </td>
-          <td>
-            {{present-or-not person.longsleeveshirt_size_style "UNKNOWN"}}
-          </td>
+          <th>Callsign</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Result</th>
+          <th>Tee Shirt</th>
+          <th>Long Sleeve</th>
         </tr>
-      {{/each}}
-    </tbody>
-  </table>
+      </thead>
+
+      <tbody>
+        {{#each alphas as |person|}}
+          <tr>
+            <td>{{person.callsign}}</td>
+            <td>{{person.first_name}} {{person.last_name}}</td>
+            <td>{{person.status}}</td>
+            <td>{{person.mentor_status}}</td>
+            <td>
+              {{present-or-not person.teeshirt_size_style "UNKNOWN"}}
+            </td>
+            <td>
+              {{present-or-not person.longsleeveshirt_size_style "UNKNOWN"}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{/each}}
 {{/each}}
 
-<h1 class="d-print-page-break">{{year-format this.slot.begins}} {{shift-format this.slot.begins}} Shirt Summary</h1>
+<h2 class="d-print-page-break">{{year-format this.slot.begins}} {{shift-format this.slot.begins}} Shirt Summary (EXCLUDING BONKS)</h2>
 <div class="row">
   {{#each shirtGroups as |shirts|}}
     <div class="col-5">
