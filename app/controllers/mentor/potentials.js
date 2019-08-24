@@ -5,6 +5,7 @@ import { isEmpty } from '@ember/utils';
 export default class MentorPotentialsController extends Controller {
   filterOptions = [
     [ 'All', 'all' ],
+    [ 'Mentor / Training Flagged', 'mentor-training-flag' ],
     [ 'Mentor Flagged', 'mentor-flag' ],
     [ 'Training Flagged', 'training-flag' ],
     [ 'No Photo', 'no-photo' ],
@@ -17,6 +18,9 @@ export default class MentorPotentialsController extends Controller {
     const potentials = this.potentials;
 
     switch (this.filter) {
+    case 'mentor-training-flag':
+      return potentials.filter((p) => (p.mentors_flag == 1 || p.trainings.find((t) => t.rank >= 4)));
+
     case 'mentor-flag':
       return potentials.filter((p) => p.mentors_flag == 1);
 
