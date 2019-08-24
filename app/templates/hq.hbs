@@ -29,12 +29,13 @@
     {{/ch-box}}
   {{/if}}
   {{#if (or person.isAlpha person.isProspective)}}
-    {{#ch-alert "danger"}}
-      <div class="float-left mr-2">
+    <div class="border border-danger p-4 text-danger">
+      <div class="float-left mr-4 h1">
         {{fa-icon "exclamation-triangle"}}
       </div>
-      {{if person.isAlpha "ALPHA" "PROSPECTIVE"}} RANGER - DIRECT PERSON TO HAT RACK
-    {{/ch-alert}}
+      <b class="h4">{{if person.isAlpha "ALPHA" "PROSPECTIVE"}} RANGER - DIRECT PERSON TO HAT RACK.<br>
+        * * * DO NOT CHECK IN/OUT AT HQ WINDOW. * * *</b>
+    </div>
   {{/if}}
 
   <div class="row">
