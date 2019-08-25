@@ -43,12 +43,7 @@ export default class MentorAssignmentController extends Controller {
       const mentors = [];
 
       person.mentors.forEach((mentor) => {
-        if (isEmpty(mentor.mentor_id)) {
-          if (mentor.person_mentor_id) {
-            haveErrors = true;
-            this.toast.error(`${person.callsign} cannot blank previously assigned mentor`);
-          }
-        } else {
+        if (!isEmpty(mentor.mentor_id)) {
           const assignment = { mentor_id: mentor.mentor_id };
           if (mentor.person_mentor_id) {
             assignment.person_mentor_id = mentor.person_mentor_id;
