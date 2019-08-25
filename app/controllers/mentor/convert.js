@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 import { action, computed, set } from '@ember/object';
 
-export default class MentorConvertController extends  Controller {
+export default class MentorConvertController extends Controller {
 
   @computed('alphas')
   get passed() {
@@ -15,24 +15,32 @@ export default class MentorConvertController extends  Controller {
 
   @computed('bonked.@each.selected')
   get bonkCount() {
-    return this.bonked.reduce((total, a) => (a.selected ? 1 : 0)+total, 0);
+    return this.bonked.reduce((total, a) => (a.selected ? 1 : 0) + total, 0);
   }
 
   @computed('passed.@each.selected')
   get passCount() {
-    return this.passed.reduce((total, a) => (a.selected ? 1 : 0)+total, 0);
+    return this.passed.reduce((total, a) => (a.selected ? 1 : 0) + total, 0);
   }
 
   @action
   togglePassAll(checked) {
     this.set('passAll', checked);
-    this.passed.forEach((p) => set(p, 'selected', checked));
+    this.passed.forEach((p) => {
+      if (!p.converted) {
+        set(p, 'selected', checked)
+      }
+    });
   }
 
   @action
   toggleBonkAll(checked) {
     this.set('bonkAll', checked);
-    this.bonked.forEach((p) => set(p, 'selected', checked));
+    this.bonked.forEach((p) => {
+      if (!p.converted) {
+        set(p, 'selected', checked);
+      }
+    });
   }
 
   @action
@@ -48,7 +56,8 @@ export default class MentorConvertController extends  Controller {
       return { id: s.id, status };
     });
 
-    this.ajax.request('mentor/convert', { method: 'POST', data: { alphas }}).then((result) => {
+    this.set('isSubmitting', true);
+    this.ajax.request('mentor/convert', { method: 'POST', data: { alphas } }).then((result) => {
       const converted = result.alphas;
 
       converted.forEach((convert) => {
@@ -60,9 +69,10 @@ export default class MentorConvertController extends  Controller {
 
         set(person, 'status', convert.status);
         set(person, 'converted', true);
+        set(person, 'selected', false);
       });
 
       this.toast.success(`${converted.length} Alpha(s) have been converted`);
-    });
+    }).finally(() => this.set('isSubmitting', false));
   }
 }

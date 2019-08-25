@@ -9,5 +9,6 @@ export default class MentorConvertRoute extends Route {
     controller.set('alphas', model.alphas);
     controller.set('passAll', false);
     controller.set('bonkAll', false);
+    controller.set('isSubmitting', false);
   }
 }
