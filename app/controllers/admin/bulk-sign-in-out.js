@@ -25,7 +25,6 @@ export default class AdminBulkSignInOutController extends Controller {
   _sendSigninOuts(commit) {
     const lines = this.bulkForm.lines;
 
-    this.set('isSubmitting', true);
     this.set('committed', false);
     const data = { lines };
 
@@ -33,7 +32,9 @@ export default class AdminBulkSignInOutController extends Controller {
       data.commit = 1;
     }
 
+    this.set('isSubmitting', true);
     this.ajax.post('timesheet/bulk-sign-in-out', { data }).then((result) => {
+      this.house.scrollToTop();
       this.set('haveError', (result.status == 'error'));
       this.set('entries', result.entries);
       if (commit && !this.haveError) {
@@ -42,7 +43,7 @@ export default class AdminBulkSignInOutController extends Controller {
       }
     })
     .catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('isSubmitting', true) );
+    .finally(() => this.set('isSubmitting', false) );
   }
 
   @action
