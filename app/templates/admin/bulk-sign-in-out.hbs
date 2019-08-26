@@ -87,7 +87,10 @@
 
     {{#if (and (not haveError) (not committed))}}
       <div class="mt-2 mb-2">
-        <button class="btn btn-success" {{action commitAction}}>Submit Sign In/Outs</button>
+        <button class="btn btn-success" disabled={{isSubmitting}} {{action commitAction}}>Submit Sign In/Outs</button>
+        {{#if isSubmitting}}
+          Submitting {{fa-icon "spinner" spin=true}} . . .
+        {{/if}}
       </div>
     {{/if}}
   </div>
@@ -104,7 +107,10 @@
   </p>
   <div class="form-row">
     <div class="col-auto">
-      {{f.submit label="Verify & Review Bulk Sign Ins/Outs" disabled=(is-empty f.model.lines)}}
+      {{f.submit label="Verify & Review Bulk Sign Ins/Outs" disabled=(or (is-empty f.model.lines) isSubmitting)}}
+      {{#if isSubmitting}}
+        Submitting {{fa-icon "spinner" spin=true}} . . .
+      {{/if}}
     </div>
     <div class="col-auto mt-2">
       <p>
