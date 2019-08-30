@@ -45,8 +45,8 @@ export default class ScheduleTableComponent extends Component {
     return slots.reduce(function(upcoming, slot) { return (slot.has_started ? 0 : 1)+upcoming; }, 0);
   }
 
-  @computed('slots.[]')
+  @computed('viewSlots')
   get overlapping() {
-    return this.slots.reduce(function(total, slot) { return (slot.is_overlapping ? 1 : 0)+total;}, 0);
+    return this.viewSlots.reduce(function(total, slot) { return (slot.is_overlapping ? 1 : 0)+total;}, 0);
   }
 }

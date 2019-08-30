@@ -18,7 +18,7 @@
           {{#if onDutyEntry.position.count_hours}}
             {{hour-minute-format onDutyEntry.duration}}
           {{else}}
-            ({{hour-minute-format onDutyEntry.duration}})
+            [{{hour-minute-format onDutyEntry.duration}}]
           {{/if}}
         </td>
         <td class="text-right">{{credits-format onDutyEntry.credits}}</td>
@@ -27,7 +27,7 @@
     </tbody>
   </table>
   {{#unless onDutyEntry.position.count_hours}}
-    Note: {{onDutyEntry.position.title}} hours do count towards appreciations.
+    Note: {{onDutyEntry.position.title}} hours do not count towards appreciations.
   {{/unless}}
 {{else}}
   {{#if (not person.user_authorized)}}
