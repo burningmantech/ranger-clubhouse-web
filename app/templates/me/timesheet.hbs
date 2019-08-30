@@ -4,7 +4,7 @@
 
   <div class="row mt-4 mb-2">
     <div class="col-auto">
-      (hh:mm) = time in parentheses indicates the time does not count towards appreciations.
+      [hh:mm] = time in brackets indicates the time does not count towards appreciations.
     </div>
   </div>
   <div class="timesheet-table">
@@ -31,7 +31,7 @@
             {{#if ts.position.count_hours}}
               {{hour-minute-format ts.duration}}
             {{else}}
-              ({{hour-minute-format ts.duration}})
+              [{{hour-minute-format ts.duration}}]
             {{/if}}
           </div>
           <div class="timesheet-credits">

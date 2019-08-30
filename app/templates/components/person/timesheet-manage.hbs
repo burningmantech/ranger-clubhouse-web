@@ -6,7 +6,7 @@
   <span class="d-inline-block">{{fa-icon "thumbs-down" type="far"}} = requested correction rejected.</span>
   <span class="d-inline-block">{{fa-icon "thumbs-up" type="far"}} = correction approved, awaiting verify.</span>
   <span class="d-inline-block">{{fa-icon "question-circle" type="far"}} = correction needs more info.</span>
-  <span class="d-inline-block">(hh:mm) = time in parentheses indicates the time does not count towards appreciations.
+  <span class="d-inline-block">[hh:mm] = time in brackets indicates the time does not count towards appreciations.
   </span>
 
   {{#if timesheets}}
@@ -54,7 +54,7 @@
               {{#if ts.position.count_hours}}
                 {{hour-minute-format ts.duration}}
               {{else}}
-                ({{hour-minute-format ts.duration}})
+                [{{hour-minute-format ts.duration}}]
               {{/if}}
             </td>
             <td class="text-right">

@@ -17,7 +17,7 @@
     You only get credit for the time you work, and won't receive double credit for the overlapping time.
   </p>
 {{/if}}
-<div>(hh:mm) = time in parentheses indicates the time does not count towards appreciations.</div>
+<div>[hh:mm] = time in brackets indicates the time does not count towards appreciations.</div>
 
 <div class="schedule-table schedule-itinerary">
   <div class="schedule-row schedule-header">
@@ -43,7 +43,7 @@
           {{#if slot.position_count_hours}}
             {{hour-minute-format slot.slot_duration}}
           {{else}}
-            ({{hour-minute-format slot.slot_duration}})
+            [{{hour-minute-format slot.slot_duration}}]
           {{/if}}
         </div>
         <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}</div>
