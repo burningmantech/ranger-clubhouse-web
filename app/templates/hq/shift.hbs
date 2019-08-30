@@ -14,7 +14,7 @@
   {{/ch-alert}}
 {{/unless}}
 
-{{#if unread_message_count}}
+{{#if (gt person.unread_message_count 0)}}
   {{#ch-alert "warning" bold=true}}
     {{fa-icon "envelope"}} {{pluralize person.unread_message_count "unread Clubhouse message"}}.
     {{#link-to "hq.messages" class="btn btn-success"}}Read Now{{/link-to}}
@@ -163,7 +163,7 @@
       <tr>
         <td class="align-middle">{{ap.asset.description}}</td>
         <td class="align-middle">{{present-or-not ap.asset.barcode "-"}}</td>
-        <td class="align-middle">{{present-or-not ap.attachmentap.attachment.description "-"}}</td>
+        <td class="align-middle">{{present-or-not ap.attachment.description "-"}}</td>
         <td class="align-middle">{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
         <td class="align-middle">{{present-or-not ap.asset.temp_id "-"}}</td>
         <td class="align-middle">{{shift-format ap.checked_out}}</td>
