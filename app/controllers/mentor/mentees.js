@@ -3,10 +3,17 @@ import { action, computed } from '@ember/object';
 
 export default class MentorMenteesController extends Controller {
   queryParams = ['year'];
+  filter = 'all';
+
+  filterOptions = [
+    { id: 'all', title: 'All' },
+    { id: 'pass', title: 'Passed' },
+    { id: 'bonked', title: 'Bonked' }
+  ];
 
   @computed('mentees')
   get bonkedCount() {
-    return this.mentees.filter((mentee) => mentee.mentor_status == 'bonk').length;
+    return this.mentees.filter((mentee) => mentee.mentor_status != 'pass').length;
   }
 
   @computed('mentees')
@@ -14,12 +21,27 @@ export default class MentorMenteesController extends Controller {
     return this.mentees.filter((mentee) => mentee.mentor_status == 'pass').length;
   }
 
+  @computed('mentees', 'filter')
+  get viewMentees() {
+    const filter = this.filter;
+    const mentees = this.mentees;
+
+    switch (filter) {
+    case 'pass':
+      return mentees.filter((mentee) => mentee.mentor_status == 'pass');
+    case 'bonked':
+      return mentees.filter((mentee) => mentee.mentor_status != 'pass');
+    default:
+      return mentees;
+    }
+  }
+
   @action
   exportToCSV() {
     const canViewEmail = this.house.canViewEmail;
 
     const CSV_COLUMNS = [
-      { title: 'Callsign', key: 'callsign' },
+      { title: `Callsign (${this.filter})`, key: 'callsign' },
       { title: 'First Name', key: 'first_name' },
       { title: 'Last Name', key: 'last_name' },
       { title: 'Status', key: 'status' },
@@ -34,7 +56,7 @@ export default class MentorMenteesController extends Controller {
     }
     const people = [];
 
-    this.mentees.forEach((mentee) => {
+    this.viewMentees.forEach((mentee) => {
       const person = {
         callsign: mentee.callsign,
         first_name: mentee.first_name,
@@ -54,6 +76,6 @@ export default class MentorMenteesController extends Controller {
       people.push(person);
     });
 
-    this.house.downloadCsv(`${this.year}-mentees.csv`, CSV_COLUMNS, people);
+    this.house.downloadCsv(`${this.year}-mentees-${this.filter}.csv`, CSV_COLUMNS, people);
   }
 }
