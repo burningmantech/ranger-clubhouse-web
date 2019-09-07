@@ -25,7 +25,8 @@ export default class MentorMenteesController extends Controller {
       { title: 'Status', key: 'status' },
       { title: 'Mentor 1', key: 'mentor1' },
       { title: 'Mentor 2', key: 'mentor2' },
-      { title: 'Mentor 3', key: 'mentor3' }
+      { title: 'Mentor 3', key: 'mentor3' },
+      { title: 'Pass', key: 'mentor_status' },
     ];
 
     if (canViewEmail) {
@@ -38,7 +39,8 @@ export default class MentorMenteesController extends Controller {
         callsign: mentee.callsign,
         first_name: mentee.first_name,
         last_name: mentee.last_name,
-        status: mentee.status
+        status: mentee.status,
+        mentor_status: mentee.mentor_status
       };
 
       mentee.mentors.forEach((mentor, idx) => {
