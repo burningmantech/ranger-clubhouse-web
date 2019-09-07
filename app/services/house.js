@@ -13,6 +13,7 @@ import {
 } from '@ember/runloop';
 import { isEmpty } from '@ember/utils';
 import currentYear from 'clubhouse/utils/current-year';
+import { Role } from 'clubhouse/constants/roles';
 
 import DS from 'ember-data';
 
@@ -172,7 +173,7 @@ export default class HouseService extends Service {
       }
     });
 
-    let contents = headers.join(',')+"\n";
+    let contents = headers.join(',') + "\n";
 
     data.forEach((line) => {
       let fields = [];
@@ -250,11 +251,11 @@ export default class HouseService extends Service {
       // Only scroll if the element is not in view
       const rect = element.getBoundingClientRect();
       if (!(
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-      )) {
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+          rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        )) {
         // Get the y axis, and leave a little space for the header.
         const y = rect.top + window.scrollY - 20;
         window.scroll({
@@ -270,58 +271,57 @@ export default class HouseService extends Service {
    * Obtain the current year
    */
 
-   currentYear() {
-     return currentYear();
-   }
+  currentYear() {
+    return currentYear();
+  }
 
-   _getStorage() {
-     let storage;
+  _getStorage() {
+    let storage;
 
-     try {
-       storage = window.sessionStorage.getItem('clubhouse');
+    try {
+      storage = window.sessionStorage.getItem('clubhouse');
 
-       if (storage) {
-         storage = JSON.parse(storage);
-       }
-     } catch (e) {
-       // browser blocking sessionStorage or not available.
-       return {};
-     }
+      if (storage) {
+        storage = JSON.parse(storage);
+      }
+    } catch (e) {
+      // browser blocking sessionStorage or not available.
+      return {};
+    }
 
+    return storage || {};
+  }
 
-     return storage || { };
-   }
+  /*
+   * local storage management
+   */
+  setKey(key, data) {
+    const storage = this._getStorage();
 
-   /*
-    * local storage management
-    */
-   setKey(key, data) {
-     const storage = this._getStorage();
+    if (data == null) {
+      delete storage[key];
+    } else {
+      storage[key] = data;
+    }
 
-     if (data == null) {
-       delete storage[key];
-     } else {
-       storage[key] = data;
-     }
+    try {
+      window.sessionStorage.setItem('clubhouse', JSON.stringify(storage));
+    } catch (e) {
+      // browser blocking sessionStorage or not available.
+    }
+  }
 
-     try {
-       window.sessionStorage.setItem('clubhouse', JSON.stringify(storage));
-     } catch (e) {
-       // browser blocking sessionStorage or not available.
-     }
-   }
+  getKey(key) {
+    return this._getStorage()[key];
+  }
 
-   getKey(key) {
-     return this._getStorage()[key];
-   }
-
-   clearStorage() {
-     try {
-       window.sessionStorage.removeItem('clubhouse');
-     } catch (e) {
-       // browser blocking sessionStorage or not available.
-     }
-   }
+  clearStorage() {
+    try {
+      window.sessionStorage.removeItem('clubhouse');
+    } catch (e) {
+      // browser blocking sessionStorage or not available.
+    }
+  }
 
   /*
    * Avoids common pitfalls and the weird undocumented special-sauce format that must be used with the built in pushPayload
@@ -331,5 +331,9 @@ export default class HouseService extends Service {
 
   pushPayload(modelName, rawPayload) {
     return this.store.push(this.store.normalize(modelName, rawPayload));
+  }
+
+  get canViewEmail() {
+    return this.session.user && this.session.user.hasRole([Role.ADMIN, Role.VIEW_PII, Role.VIEW_EMAIL]);
   }
 }
