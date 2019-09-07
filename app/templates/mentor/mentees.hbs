@@ -1,33 +1,42 @@
 {{year-select "Mentee Listing" year=year onChange=(action (mut year))}}
 
 {{#if mentees}}
-  {{pluralize mentees.length "mentee"}}. {{passedCount}} passed. {{bonkedCount}} bonked.
-  <table class="table table-stripped table-hover">
-    <thead>
-      <tr>
-        <th>Mentee</th>
-        <th>Name</th>
-        <th>Status</th>
-        <th>Mentors</th>
-        <th>Pass</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each mentees as |mentee|}}
-      <tr>
-        <td>{{person-link person=mentee}}</td>
-        <td>{{mentee.first_name}} {{mentee.last_name}}</td>
-        <td>{{mentee.status}}</td>
-        <td>
-          {{#each mentee.mentors as |mentor idx| ~}}
-            {{#if idx}}/{{/if}} {{person-link person=mentor}}
-          {{/each}}
-        </td>
-        <td>{{mentee.mentor_status}}</td>
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
+  <p>
+    {{pluralize mentees.length "mentee"}}. {{passedCount}} passed. {{bonkedCount}} bonked.
+  </p>
+  <button class="btn btn-primary" {{action exportToCSV}}>Export to CSV</button>
+    <table class="table table-stripped table-hover table-width-auto">
+      <thead>
+        <tr>
+          <th>Mentee</th>
+          <th>Name</th>
+          {{#if house.canViewEmail}}
+            <th>Email</th>
+          {{/if}}
+          <th>Status</th>
+          <th>Mentors</th>
+          <th>Pass</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each mentees as |mentee|}}
+          <tr>
+            <td>{{person-link person=mentee}}</td>
+            <td>{{mentee.first_name}} {{mentee.last_name}}</td>
+            {{#if house.canViewEmail}}
+              <td>{{mail-to mentee.email}}</td>
+            {{/if}}
+            <td>{{mentee.status}}</td>
+            <td>
+              {{#each mentee.mentors as |mentor idx| ~}}
+                {{#if idx}}/{{/if}} {{person-link person=mentor}}
+              {{/each}}
+            </td>
+            <td>{{mentee.mentor_status}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
 {{else}}
   <strong class="text-danger">No mentees found for {{year}}</strong>
 {{/if}}
