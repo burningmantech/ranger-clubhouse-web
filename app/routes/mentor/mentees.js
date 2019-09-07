@@ -26,6 +26,7 @@ export default class MentorMenteesRoute extends Route {
   resetController(controller, isExiting) {
     if (isExiting) {
       controller.set('year', null);
+      controller.set('filter', 'all');
     }
   }
 }
