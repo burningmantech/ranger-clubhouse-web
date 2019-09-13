@@ -1,7 +1,13 @@
 {{year-select "Assets Outstanding" year=year onChange=(action (mut year))}}
 
 {{#if assets}}
-  <table class="table table-sm table-striped">
+<p>
+{{pluralize assets.length "asset"}} outstanding.
+</p>
+<p>
+  <button class="btn btn-primary" {{action exportToCSV}}>Export To CSV</button>
+</p>
+  <table class="table table-sm table-striped table-width-auto">
     <thead>
       <tr>
         <th>Barcode</th>

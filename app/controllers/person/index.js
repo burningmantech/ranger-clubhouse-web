@@ -111,7 +111,7 @@ export default class PersonIndexController extends Controller {
     const statusChanged = model._changes['status'];
 
     model.save().then(() => {
-      this.set('showEditMessage', false);
+      this.set('showEditNote', false);
       this.house.scrollToTop();
 
       this.toast.success('The information was successfully updated.');
@@ -136,17 +136,33 @@ export default class PersonIndexController extends Controller {
   }
 
   @action
-  editMessage() {
-    this.set('showEditMessage', true);
+  confirmNoteOrMessage() {
+    this.set('showConfirmNoteOrMessage', true);
   }
 
   @action
-  hideMessage() {
-    this.set('showEditMessage', false);
+  closeNoteOrMessage() {
+    this.set('showConfirmNoteOrMessage', false);
   }
 
   @action
-  saveMessage(model) {
+  sendClubhouseMessage() {
+    this.transitionToRoute('person.messages', this.person.id);
+  }
+
+  @action
+  editNote() {
+    this.set('showConfirmNoteOrMessage', false);
+    this.set('showEditNote', true);
+  }
+
+  @action
+  closeNote() {
+    this.set('showEditNote', false);
+  }
+
+  @action
+  saveNote(model) {
     this.toast.clear();
     this._savePersonModel(model);
   }
