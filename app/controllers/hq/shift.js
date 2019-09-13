@@ -87,15 +87,16 @@ export default class HqShiftController extends Controller {
 
   @action
   markEntryCorrect() {
-    const entry = this.unverifiedTimesheetEntry;
+    const entry = this.entry;
 
     this.toast.clear();
 
-    entry.set('verified', true);
     this.set('isSubmitting', true);
+    entry.set('verified', true);
     entry.save().then(() => {
         this.toast.success('Timesheet was successfully marked correct.');
         this.set('showCorrectionForm', false);
+        this.set('entry', null);
       })
       .catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.set('isSubmitting', false));
@@ -103,11 +104,13 @@ export default class HqShiftController extends Controller {
 
   @action
   markEntryIncorrect() {
+    this.set('entry', this.unverifiedTimesheetEntry);
     this.set('showCorrectionForm', true);
   }
 
   @action
   cancelEntryCorrection() {
+    this.set('entry', null);
     this.set('showCorrectionForm', false);
   }
 
@@ -119,29 +122,33 @@ export default class HqShiftController extends Controller {
 
     this.toast.clear();
 
-    this.set('isSubmitting', true);
+    this.set('isCorrectionSubmitting', true);
     model.save().then(() => {
         this.set('showCorrectionForm', false);
         this.toast.success('Correction request was succesfully submitted.');
       }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isSubmitting', false));
+      .finally(() => this.set('isCorrectionSubmitting', false));
   }
 
   @action
   assetCheckInAction(ap) {
+    set(ap, 'isSubmitting', true);
     this.ajax.request(`asset/${ap.asset.id}/checkin`, { method: 'POST' })
       .then((result) => {
         set(ap, 'checked_in', result.checked_in);
         this.toast.success('Asset has been successfully checked in.');
-      }).catch((response) => this.house.handleErrorResponse(response));
+      }).catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => set(ap, 'isSubmitting', false));
   }
 
   _updateOnSite(on_site) {
+    this.set('isMarkingOffSite', true);
     this.person.set('on_site', on_site);
     this.person.save().then(() => {
         this.toast.success(`${this.person.callsign} has been successfully marked ${on_site ? 'ON' : 'OFF'} SITE.`);
       })
-      .catch((response) => this.house.handleErrorResponse(response));
+      .catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.set('isMarkingOffSite', false));
   }
 
   @action

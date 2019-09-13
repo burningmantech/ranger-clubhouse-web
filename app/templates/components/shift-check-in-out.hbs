@@ -1,6 +1,8 @@
-{{#if onDutyEntry}}
+{{#if isReloadingTimesheets}}
+  <div class="text-muted">Reloading timesheets {{fa-icon "spinner" spin=true}}</div>
+{{else if onDutyEntry}}
   <div class="text-success font-weight-bold mb-2">{{person.callsign}} is on duty.</div>
-  <table class="table mt-1 mb-0">
+  <table class="table mt-1 mb-0 table-width-auto">
     <thead>
       <tr>
         <th>Position</th>
@@ -22,7 +24,12 @@
           {{/if}}
         </td>
         <td class="text-right">{{credits-format onDutyEntry.credits}}</td>
-        <td> <button class="btn btn-danger btn-sm" {{action "endShiftAction"}}>End Shift</button></td>
+        <td>
+          <button class="btn btn-danger" {{action endShiftAction}} disabled={{isSubmitting}}>End Shift</button>
+          {{#if isSubmitting}}
+            {{fa-icon "spinner" spin=true}}
+          {{/if}}
+        </td>
       </tr>
     </tbody>
   </table>
@@ -73,12 +80,15 @@
               <td class="align-middle">{{shift-format slot.slot_ends}}</td>
               <td class="align-middle">
                 {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
-                  <button class="btn btn-primary" {{action "signinPositionAction" slot.position_id}}>Start Shift</button>
+                  <button class="btn btn-primary" {{action "signinPositionAction" slot.position_id}} disabled={{isSubmitting}}>Start Shift</button>
                 {{else}}
                   <div class="text-danger">{{if slot.is_untrained "Not Trained"}} {{if slot.is_unqualified slot.unqualified_reason}}</div>
-                  {{#if (has-role "admin")}}
-                    <button class="btn btn-warning" {{action "signinPositionAction" slot.position_id}}>Force Start Shift</button>
+                  {{#if (has-role "admin" "timesheet-management")}}
+                    <button class="btn btn-warning" {{action "signinPositionAction" slot.position_id}} disabled={{isSubmitting}}>Force Start Shift</button>
                   {{/if}}
+                {{/if}}
+                {{#if isSubmitting}}
+                  {{fa-icon "spinner" spin=true}}
                 {{/if}}
               </td>
             </tr>
@@ -95,11 +105,14 @@
       </div>
       <div class="col-auto">
         {{#if isPersonDirtTrained}}
-          <button class="btn btn-primary" {{action "signinShiftAction"}}>Start Shift</button>
-        {{else if (has-role "admin")}}
-          <button class="btn btn-warning" {{action "signinShiftAction"}}>Force Shift Start</button>
+          <button class="btn btn-primary" {{action "signinShiftAction"}} disabled={{isSubmitting}}>Start Shift</button>
+        {{else if (has-role "admin" "timesheet-management")}}
+          <button class="btn btn-warning" {{action "signinShiftAction"}} disabled={{isSubmitting}}>Force Shift Start</button>
         {{else}}
           <div class="text-danger mt-1">NOT DIRT TRAINED - SHIFT START IS NOT ALLOWED</div>
+        {{/if}}
+        {{#if isSubmitting}}
+          {{fa-icon "spinner" spin=true}}
         {{/if}}
       </div>
     </div>

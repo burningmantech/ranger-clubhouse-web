@@ -22,7 +22,7 @@
     </p>
   {{/ch-alert}}
 {{/unless}}
-{{#if person.on_site}}
+{{#if isOnSite}}
   <p>
     <strong class="text-success">{{person.callsign}} is marked as ON SITE.</strong>
   </p>
@@ -51,9 +51,12 @@
   <div class="form-row">
     {{f.input "emergency_contact" type="textarea" label="Emergency Contact Information:" rows=4 cols=80 }}
   </div>
-  {{f.submit label="Update Camp & Emergency Contact Info"}}
+  {{f.submit label="Update Camp & Emergency Contact Info" disabled=isSubmitting}}
   {{#if contactSaved}}
     <span class="text-success">{{fa-icon "check"}}</span>
+  {{/if}}
+  {{#if isSubmitting}}
+    {{submitting-indicator}}
   {{/if}}
 {{/ch-form}}
 
@@ -66,6 +69,9 @@
   {{else}}
     <div class="text-danger">Radio checkout form has NOT BEEN SIGNED.</div>
     <button class="btn btn-primary" {{action markAssetAuthorized}} disabled={{isSubmitting}}>Mark Form As Signed</button>
+    {{#if isSubmitting}}
+      {{submitting-indicator}}
+    {{/if}}
   {{/if}}
 </p>
 <p>
@@ -111,13 +117,16 @@
           <tr>
             <td>{{ap.asset.barcode}}</td>
             <td>{{ap.asset.description}}</td>
-            <td>{{if ap.asset.perm_assign "permanent" "temporary"}}</td>
-            <td>{{ap.attachment.description}}</td>
+            <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
+            <td>{{present-or-not ap.attachment.description "-"}}</td>
             <td>{{shift-format ap.checked_out}}</td>
           </tr>
         {{/each}}
       </tbody>
     </table>
+  {{/if}}
+  {{#if assets.isUpdating}}
+    {{submitting-indicator text="Refreshing assets"}}
   {{/if}}
 {{else}}
   <h4><span class="text-danger">{{person.callsign}} is only authorized for a shift radio.</span> {{help-popover slug="hq-site-checkin-radios"}}</h4>
@@ -125,12 +134,15 @@
 {{/if}}
 
 <div class="mt-4">
-  {{#if person.on_site}}
+  {{#if isOnSite}}
     <p class="font-weight-bold text-success">
       {{person.callsign}} is marked as ON SITE.
     </p>
     {{#link-to "hq.shift" class="btn btn-success"}}Start Shift Checkin{{/link-to}}
   {{else}}
-    <button class="btn btn-primary" {{action markOnSite}}>Mark As On Site</button>
+    <button class="btn btn-primary" {{action markOnSite}} disabled={{isSubmitting}}>Mark As On Site</button>
+    {{#if isSubmitting}}
+      {{submitting-indicator}}
+    {{/if}}
   {{/if}}
 </div>

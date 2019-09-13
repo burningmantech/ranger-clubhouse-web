@@ -8,7 +8,7 @@ export default class ReportsTimesheetUnconfirmedRoute extends Route {
   };
 
   beforeModel() {
-    this.house.roleCheck([ Role.ADMIN, Role.TIMESHEET_MANAGER, Role.VIEW_PII ]);
+    this.house.roleCheck([ Role.ADMIN, Role.TIMESHEET_MANAGEMENT, Role.VIEW_PII ]);
   }
 
   model(params) {

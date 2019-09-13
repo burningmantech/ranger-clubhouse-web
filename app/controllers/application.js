@@ -100,7 +100,7 @@ export default class ApplicationController extends Controller {
   @computed('session.user.roles')
   get canAccountManage() {
     if (this.session.user) {
-      return this.session.user.hasRole([Role.ADMIN, Role.MANAGE, Role.VIEW_PII, Role.VC, Role.TRAINER, Role.MENTOR, Role.TIMESHEET_MANAGER]);
+      return this.session.user.hasRole([Role.ADMIN, Role.MANAGE, Role.VIEW_PII, Role.VC, Role.TRAINER, Role.MENTOR, Role.TIMESHEET_MANAGEMENT]);
     } else {
       return false;
     }
@@ -115,7 +115,7 @@ export default class ApplicationController extends Controller {
       options.push({ id: 'hq', title: 'HQ Window' });
     }
 
-    if (user.hasRole([Role.ADMIN, Role.TIMESHEET_MANAGER])) {
+    if (user.hasRole([Role.ADMIN, Role.TIMESHEET_MANAGEMENT])) {
       options.push({ id: 'timesheet', title: 'Timesheet Manage' });
     }
 

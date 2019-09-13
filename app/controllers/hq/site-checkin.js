@@ -41,7 +41,9 @@ export default class HqSiteCheckinController extends Controller {
   @action
   markOnSite() {
     this.person.set('on_site', true);
-    this._savePerson(this.person,  'Person has been successfully marked as ON SITE.');
+    this._savePerson(this.person,  'Person has been successfully marked as ON SITE.', () => {
+      this.set('isOnSite', true);
+    });
   }
 
   _savePerson(model, message, callback) {
@@ -52,7 +54,10 @@ export default class HqSiteCheckinController extends Controller {
       if (callback) {
         callback();
       }
-    }).catch((response) => this.house.handleErrorResponse(response))
+    }).catch((response) => {
+        this.house.handleErrorResponse(response);
+        model.rollbackAttributes();
+    })
     .finally(() => this.set('isSubmitting', false));
   }
 }

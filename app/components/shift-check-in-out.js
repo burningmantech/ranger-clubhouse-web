@@ -106,6 +106,7 @@ export default class ShiftCheckInOutComponent extends Component {
     const position = this.positions.find((p) => p.id == positionId);
 
     this.toast.clear();
+    this.set('isSubmitting', true);
     this.ajax.request('timesheet/signin', {
       method: 'POST',
       data: {
@@ -123,11 +124,15 @@ export default class ShiftCheckInOutComponent extends Component {
           } else {
             reason = `has not completed '${result.required_training}'`;
           }
-          this.modal.info('Sign In Forced', `WARNING: The person ${reason}. Because you are an admin, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
+          this.modal.info('Sign In Forced', `WARNING: The person ${reason}. Because you are an admin or have the timesheet management role, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
         } else {
           this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
         }
-        this.timesheets.update(); // Refresh the timesheets
+        this.set('isReloadingTimesheets', true);
+        // Refresh the timesheets
+        this.timesheets.update()
+        .catch((response) => this.house.handleErrorResponse(response))
+        .finally(() => { this.set('isReloadingTimesheets', false) });
         break;
 
       case 'position-not-held':
@@ -150,7 +155,8 @@ export default class ShiftCheckInOutComponent extends Component {
         this.modal.info('Unknown Server Status', `An unknown status [${result.status}] from the server. This is a bug. Please report this to the Tech Ninjas.`);
         break;
       }
-    }).catch((response) => this.house.handleErrorResponse(response));
+    }).catch((response) => this.house.handleErrorResponse(response))
+    .finally(() => this.set('isSubmitting', false));
   }
 
   // Attempt to sign in the person to the selected position
@@ -170,6 +176,7 @@ export default class ShiftCheckInOutComponent extends Component {
   endShiftAction() {
     const shift = this.onDutyEntry;
 
+    this.set('isSubmitting', true);
     this.ajax.request(`timesheet/${shift.id}/signoff`, { method: 'POST' })
       .then((result) => {
         this.store.pushPayload(result);
@@ -177,7 +184,8 @@ export default class ShiftCheckInOutComponent extends Component {
           this.endShiftNotify();
         }
         this.toast.success(`${this.person.callsign} has been successfully signed out.`);
-      }).catch((response) => this.house.handleErrorResponse(response));
+      }).catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.set('isSubmitting', false));
   }
 
   // Update the position signin
