@@ -25,7 +25,10 @@
           {{#if ap.checked_in}}
             {{shift-format ap.checked_in}}
           {{else}}
-            <button class="btn btn-primary btn-sm" {{action checkInAsset ap.asset ap}}>Check In</button>
+            <button class="btn btn-primary btn-sm" {{action checkInAsset ap.asset ap}} disabled={{ap.asset.isSubmitting}}>Check In</button>
+            {{#if ap.asset.isSubmitting}}
+              {{fa-icon "spinner" spin=true}}
+            {{/if}}
           {{/if}}
         </td>
         <td>

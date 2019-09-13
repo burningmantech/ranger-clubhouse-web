@@ -46,7 +46,7 @@ export default class PersonTimesheetManageComponent extends Component {
   @computed
   get canManageTimesheets() {
     const user = this.session.user;
-    return user.hasRole(Role.TIMESHEET_MANAGER) || (user.hasRole(Role.ADMIN) && user.hasRole(Role.MANAGE));
+    return user.hasRole(Role.TIMESHEET_MANAGEMENT) || (user.hasRole(Role.ADMIN) && user.hasRole(Role.MANAGE));
   }
 
   // Can the user verify the person's timesheet?

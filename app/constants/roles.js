@@ -13,7 +13,7 @@ const TRAINER          = 102; // Trainer
 const VC               = 103; // Volunteer Coordinator
 const ART_TRAINER      = 104; // ART Trainer
 const MEGAPHONE        = 105; // RBS access
-const TIMESHEET_MANAGER = 106;
+const TIMESHEET_MANAGEMENT = 106;
 
 const Role = {
   ADMIN,
@@ -30,7 +30,7 @@ const Role = {
   VC,
   ART_TRAINER,
   MEGAPHONE,
-  TIMESHEET_MANAGER,
+  TIMESHEET_MANAGEMENT,
 };
 
 const RoleToString = {
@@ -44,7 +44,7 @@ const RoleToString = {
   [MANAGE]:           'manage',
   [MEGAPHONE]:        'megaphone',
   [MENTOR]:           'mentor',
-  [TIMESHEET_MANAGER]: 'timesheet-manager',
+  [TIMESHEET_MANAGEMENT]: 'timesheet-management',
   [TRAINER]:          'trainer',
   [VC]:               'vc',
   [VIEW_EMAIL]:       'view-email',

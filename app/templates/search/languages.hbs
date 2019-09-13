@@ -23,7 +23,7 @@
 {{/ch-form}}
 
 <hr>
-{{#if isLoadin}}
+{{#if isLoading}}
   {{loading-dialog "languages"}}
 {{else}}
   <h3 class="mt-4">On Duty Rangers ({{onDuty.length}})</h3>
@@ -32,8 +32,8 @@
       {{#each onDutyGroup as |group|}}
         <dt>{{group.language_name}}</dt>
         <dd>
-          {{#each group.items as |person|}}
-            {{#link-to "person.index" person.person_id}}{{person.callsign}}{{/link-to}},
+          {{#each group.items as |person idx|}}
+            {{~if idx ", "}}{{#link-to "person.index" person.person_id class="d-inline-block"}}{{person.callsign}}{{/link-to~}}
           {{/each}}
         </dd>
       {{/each}}
@@ -48,8 +48,8 @@
       {{#each hasRadioGroup as |group|}}
         <dt>{{group.language_name}}</dt>
         <dd>
-          {{#each group.items as |person|}}
-            {{#link-to "person.index" person.person_id}}{{person.callsign}}{{/link-to}},
+          {{#each group.items as |person idx|~}}
+            {{~if idx ", "}}{{#link-to "person.index" person.person_id class="d-inline-block"}}{{person.callsign}}{{/link-to~}}
           {{/each}}
         </dd>
       {{/each}}
@@ -64,8 +64,8 @@
       {{#each offDutyGroup as |group|}}
         <dt>{{group.language_name}}</dt>
         <dd>
-          {{#each group.items as |person|}}
-            {{#link-to "person.index" person.person_id}}{{person.callsign}}{{/link-to}},
+          {{#each group.items as |person idx|}}
+            {{~if idx ", "}}{{#link-to "person.index" person.person_id class="d-inline-block"}}{{person.callsign}}{{/link-to~}}
           {{/each}}
         </dd>
       {{/each}}

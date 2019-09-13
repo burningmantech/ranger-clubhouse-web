@@ -41,6 +41,7 @@ export default class AssetCheckoutFormComponent extends Component {
     this.toast.clear();
     this.clearErrors();
 
+    this.set('isSubmitting', true);
     this.ajax.request('asset/checkout', {
       method: 'POST',
       data: { person_id: this.person.id, barcode, attachment_id: model.get('attachment_id') }
@@ -49,7 +50,10 @@ export default class AssetCheckoutFormComponent extends Component {
         case 'success':
           this.toast.success('Asset was succesfully checked out.');
           this.set('assetForm', EmberObject.create({ }));
-          this.assets.update();
+          this.set('isAssetsRefreshing', true);
+          this.assets.update()
+            .catch((response) => this.house.handleErrorResponse(response))
+            .finally(() => this.set('isAssetsRefreshing', true));
           break;
 
         case 'not-found':
@@ -61,7 +65,8 @@ export default class AssetCheckoutFormComponent extends Component {
           this.set('barcodeCheckedOut', result);
           break;
       }
-    }).catch((response) => this.house.handleErrorResponse(response) );
+    }).catch((response) => this.house.handleErrorResponse(response))
+    .finally(() => this.set('isSubmitting', false));
   }
 
   @action

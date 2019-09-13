@@ -111,6 +111,30 @@
       {{/if}}
 
       <fieldset>
+        <legend>Entry Verification</legend>
+        {{#if editVerification}}
+          <div class="form-group row">
+            <div class="col-auto">Entry marked for verification:</div>
+            <div class="col-auto">
+              {{f.input "verified" type="radioGroup" options=verifyOptions inline=true}}
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-12 text-danger">Updating the correction note will automatically mark the entry as incorrect / unverified</div>
+            {{f.input "notes" label="Correction Request Notes:" type="textarea" cols=80 rows=5}}
+          </div>
+        {{else}}
+          <div class="form-row">
+            <div class="col-6">Correction Note:</div>
+            <div class="col-6 text-right">
+              <button class="btn btn-secondary btn-sm" {{action "editVerificationAction"}}>Edit Verification Flag &amp; Note</button>
+            </div>
+            <div class="mb-3 col-12">{{present-or-not editEntry.notes}}</div>
+          </div>
+        {{/if}}
+      </fieldset>
+
+      <fieldset>
         <legend>
           Time/Position
         </legend>
@@ -135,30 +159,6 @@
             <dd class="col-sm-10">{{credits-format editEntry.credits}}</dd>
           </dl>
         {{/if}}
-      </fieldset>
-      <fieldset>
-        <legend>Entry Verification</legend>
-        {{#if editVerification}}
-          <div class="form-group row">
-            <div class="col-auto">Entry marked for verification:</div>
-            <div class="col-auto">
-              {{f.input "verified" type="radioGroup" options=verifyOptions inline=true}}
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-12 text-danger">Updating the correction note will automatically mark the entry as incorrect / unverified</div>
-            {{f.input "notes" label="Correction Request Notes:" type="textarea" cols=80 rows=5}}
-          </div>
-        {{else}}
-          <div class="form-row">
-            <div class="col-6">Correction Note:</div>
-            <div class="col-6 text-right">
-              <button class="btn btn-secondary btn-sm" {{action "editVerificationAction"}}>Edit Verification Flag &amp; Note</button>
-            </div>
-            <div class="mb-3 col-12">{{present-or-not editEntry.notes}}</div>
-          </div>
-        {{/if}}
-
       </fieldset>
       <fieldset>
         <legend>Entry Review</legend>
