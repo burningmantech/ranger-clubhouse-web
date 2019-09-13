@@ -4,14 +4,18 @@
     <label><input type="checkbox" checked={{include_qualified}} onclick={{action toggleIncludeQualified}}> Include Event Radio Eligible</label>
   </div>
   <div class="col-auto">
-    <label><input type="checkbox" checked={{event_summary}} onclick={{action toggleEventSummary}}>Report as Event Summary</label>
+    <label><input type="checkbox" checked={{event_summary}} onclick={{action toggleEventSummary}}> Report as Event Summary</label>
   </div>
 </div>
 
 {{#if radios}}
-  <table class="table table-striped table-sm">
+<p>
+  Showing {{pluralize radios.length "entry"}}
+</p>
+
+  <table class="table table-striped table-sm table-width-auto">
     <thead>
-      <th>Call Sign</th>
+      <th>Callsign</th>
       <th>Barcode</th>
       <th>Checkout </th>
       {{#if (or event_summary include_eligible)}}

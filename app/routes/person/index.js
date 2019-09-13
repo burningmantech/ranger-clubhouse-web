@@ -32,6 +32,6 @@ export default class PersonIndexRoute extends Route {
   }
 
   resetController(controller) {
-    controller.set('showEditMessage', false);
+    controller.set('showEditNote', false);
   }
 }

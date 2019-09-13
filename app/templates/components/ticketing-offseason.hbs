@@ -1,19 +1,21 @@
 {{#if (or person.isAlpha person.isProspective)}}
   The Work Access Passes page is currently disabled. Please check back later.
 {{else}}
-  <p class="lead">
-    Hold up! We're in the off season. Ticket announcements will be available in January.
-  </p>
-  {{#if ticketPackage.tickets}}
-    You have {{pluralize ticketPackage.tickets.length "ticket"}} banked:
+  <h2>
+    Hold up! The event is over, and we're in the offseason. Ticket announcements will be available in January.
+  </h2>
+  {{#if bankedTickets}}
+    You have {{pluralize bankedTickets.length "ticket"}} banked:
     <ul>
-      {{#each ticketPackage.tickets as |ticket|}}
-        <li>A {{ticket-type-human ticket.type}} earned in {{ticket.source_year}} and will expire after {{mdy-format ticket.expiry_date}}</li>
+      {{#each bankedTickets as |ticket|}}
+        <li>A {{ticket-type-human ticket.type}} earned in {{ticket.source_year}} and will expire after {{mdy-format ticket.expiry_date full=true}}</li>
       {{/each}}
     </ul>
   {{else}}
     <p>
-      You have no banked tickets on record.
+      <b>
+        You have no banked tickets on file.
+      </b>
     </p>
   {{/if}}
 {{/if}}
