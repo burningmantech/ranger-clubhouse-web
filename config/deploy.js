@@ -2,9 +2,6 @@
 'use strict';
 
 module.exports = function (deployTarget) {
-
-  let s3Prefix = (process.env.RANGER_CLUBHOUSE_CLIENT_PREFIX || 'client').replace(/^\//, '');
-
   let ENV = {
     build: {},
     // include other plugin configuration that applies to all deploy targets here
