@@ -21,6 +21,7 @@ export default class ReportsTimesheetCorrectionRequestsRoute extends Route {
   setupController(controller, model) {
     // corrections, missing_requests
     controller.setProperties(model);
+    controller.set('callsignFilter', 'All');
   }
 
   resetController(controller, isExiting) {

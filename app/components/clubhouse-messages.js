@@ -57,15 +57,30 @@ export default class ClubhouseMessagesComponent extends Component {
 
   @action
   markReadAction(message) {
+    this._markMessage(message, true);
+  }
+
+  @action
+  markUnreadAction(message) {
+    this._markMessage(message, false);
+  }
+
+  _markMessage(message, delivered) {
     message.set('isSubmitting', true);
-    return message.markRead().then(() => {
+    this.ajax.request(`messages/${message.id}/markread`, {
+      method: 'PATCH',
+      data: { delivered }
+    }).then(() => {
       message.set('isSubmitting', false);
-      message.set('delivered', true);
+      message.set('delivered', delivered);
       this._updateUnreadCount();
-    }).catch((response) => {
-      message.set('isSubmitting', false);
+    })
+    .catch((response) => {
       this.house.handleErrorResponse(response);
     })
+    .finally(() => {
+      message.set('isSubmitting', false);
+    });
   }
 
   @action
