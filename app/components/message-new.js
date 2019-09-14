@@ -15,6 +15,12 @@ export default class MessageNewComponent extends Component {
   personMessageValidations = PersonMessageValidations;
 
   _performSearch(callsign, resolve, reject) {
+    callsign = callsign.trim();
+
+    if (callsign.length < 2) {
+      return reject();
+    }
+
     return this.ajax
           .request('callsigns', { data: {query: callsign, type: "message", limit: 20} })
           .then((result) => {

@@ -1,10 +1,19 @@
-{{year-select "Timesheet Corrections Report" year=year onChange=(action "changeYear")}}
+{{year-select "Timesheet Corrections Report" year=year onChange=(action (mut year))}}
+
+<div class="form-row mb-1">
+  <div class="col-auto">
+    <label class="col-form-label">Filter requests by callsigns starting with</label>
+  </div>
+  <div class="col-auto mb-2">
+    {{ch-form/select name="callsignFilter" value=callsignFilter options=letterOptions onChange=(action (mut callsignFilter)) controlClass="form-control"}}
+  </div>
+</div>
 
 <table class="table table-hover table-box">
-  <caption>Timesheet Entry Corrections</caption>
   <thead>
     <tr>
       <th>Callsign</th>
+      <th>Type</th>
       <th>Position</th>
       <th>On Duty</th>
       <th>Off Duty</th>
@@ -13,87 +22,33 @@
     </tr>
   </thead>
   <tbody>
-    {{#each groupedCorrections as |corrections|}}
-      {{#each corrections.requests as |correction idx|}}
+    {{#each viewGroupCorrections as |person|}}
+      {{#each person.requests as |request idx|}}
         <tr class="{{if idx "no-border"}}">
           <td>
             {{#unless idx}}
-              {{person-link person=correction.person page="timesheet" year=year}}
+              {{person-link person=request.person page="timesheet" year=year}}
             {{else}}
               &nbsp;
             {{/unless}}
           </td>
-          <td>{{correction.position.title}}</td>
-          <td>{{shift-format correction.on_duty}}</td>
-          <td>{{shift-format correction.off_duty}}</td>
-          <td>{{hour-minute-format correction.duration}}</td>
-          <td>{{credits-format correction.credits}}</td>
+          <td>{{if request.is_missing "Missing Entry" "Correction"}}</td>
+          <td>{{request.position.title}}</td>
+          <td>{{shift-format request.on_duty}}</td>
+          <td>{{shift-format request.off_duty}}</td>
+          <td>{{hour-minute-format request.duration}}</td>
+          <td>{{credits-format request.credits}}</td>
         </tr>
         <tr class="no-border">
           <td>&nbsp;</td>
-          <td colspan="5">
-            Note: {{correction.notes}}
+          <td colspan="6">
+            Note: {{request.notes}}
           </td>
         </tr>
       {{/each}}
     {{else}}
       <tr>
-        <td colspan="6">Congratulations! There are no timesheet corrections.</td>
-      </tr>
-    {{/each}}
-  </tbody>
-</table>
-
-
-<table class="table table-hover table-box">
-  <caption>Missing Timesheet Entry Requests</caption>
-  <thead>
-    <tr>
-      <th>Callsign</th>
-      <th>Position</th>
-      <th>On Duty</th>
-      <th>Off Duty</th>
-      <th>Duration</th>
-      <th>Credits</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each missing_requests as |missing|}}
-      <tr>
-        <td>
-          {{person-link person=missing.person page="timesheet" year=year}}
-        </td>
-        <td>{{missing.position.title}}</td>
-        <td>{{shift-format missing.on_duty}}</td>
-        <td>{{shift-format missing.off_duty}}</td>
-        <td>{{hour-minute-format missing.duration}}</td>
-        <td>{{credits-format missing.credits}}</td>
-      </tr>
-      <tr class="no-border">
-        <td>&nbsp;</td>
-        <td colspan="5">
-          {{#if missing.partner_info}}
-            {{#each missing.partner_info as |partner|}}
-              Partner:
-              {{#if partner.person_id}}
-                {{person-link personId=partner.person_id callsign=partner.callsign page="timesheet"}}
-                {{#if partner.timesheet_id}}
-                  {{partner.position_title}} {{shift-format partner.on_duty}} to {{shift-format partner.off_duty}}
-                {{else}}
-                  <i class="text-muted">no corresponding timesheet found starting within 30 mins.</i>
-                {{/if}}
-              {{else}}
-                <i>Callsign "{{partner.callsign}}" not found</i>
-              {{/if}}
-              <br>
-            {{/each}}
-          {{/if}}
-          <p>Note: {{missing.notes}}</p>
-        </td>
-      </tr>
-    {{else}}
-      <tr>
-        <td colspan="5">Congratulations! There are no missing timesheet requests.</td>
+        <td colspan="7" class="text-success">Congratulations! There are no outstanding timesheet corrections or missing timesheet requests.</td>
       </tr>
     {{/each}}
   </tbody>

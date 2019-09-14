@@ -27,6 +27,9 @@
   </div>
   {{f.input "subject" label="Subject" maxlength=80}}
   {{f.input "body" label="The message (be civil, courteous, polite, & professional)" type="textarea" rows=4 cols=8}}
-  {{f.submit label=(if isSubmitting "Sending" "Send") disabled=isSubmitting}}
+  {{f.submit label="Send" disabled=isSubmitting}}
   {{f.cancel disabled=isSubmitting}}
+  {{#if isSubmitting}}
+    <SubmittingIndicator @text="Sending Message" />
+  {{/if}}
 {{/ch-form}}

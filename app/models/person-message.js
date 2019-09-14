@@ -1,7 +1,6 @@
 import DS from 'ember-data';
 import { computed } from '@ember/object';
 const { attr } = DS;
-import { memberAction } from 'ember-api-actions';
 
 export default class PersonMessageModel extends DS.Model {
   @attr('number') person_id;
@@ -26,6 +25,4 @@ export default class PersonMessageModel extends DS.Model {
   get isDictacted() {
       return (this.creator_person_id != this.sender_person_id);
   }
-
-  markRead = memberAction({ path: 'markread', type: 'patch'});
 }
