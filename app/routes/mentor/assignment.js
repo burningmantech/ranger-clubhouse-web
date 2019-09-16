@@ -49,5 +49,6 @@ export default class MentorAssignmentRoute extends Route {
     controller.set('mentors', model.mentors);
     controller.set('year', year);
     controller.set('filter', 'all');
+    controller.set('isPrinting', false);
   }
 }
