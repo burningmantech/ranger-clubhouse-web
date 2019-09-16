@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action, computed, set} from '@ember/object';
+import { action, computed, set } from '@ember/object';
 import { isEmpty } from '@ember/utils'
 
 export default class MentorAssignmentController extends Controller {
@@ -11,27 +11,42 @@ export default class MentorAssignmentController extends Controller {
   ];
 
   filterOptions = [
-    [ 'All', 'all' ],
-    [ 'On Alpha Shift', 'signed-in' ]
+    ['All', 'all'],
+    ['On Alpha Shift', 'signed-in'],
+    ['Pending w/Mentor assignment', 'pending'],
+    ['Passed', 'passed'],
+    ['Bonked', 'bonked']
   ];
 
   @computed('mentors')
   get mentorOptions() {
-    const options =  this.mentors.map((mentor) => [ mentor.callsign, mentor.id ]);
-    options.unshift([ '-', '']);
+    const options = this.mentors.map((mentor) => [mentor.callsign, mentor.id]);
+    options.unshift(['-', '']);
 
     return options;
   }
 
   @computed('alphas', 'filter')
   get viewAlphas() {
-    const alphas = this.alphas, filter = this.filter;
+    const alphas = this.alphas,
+      filter = this.filter;
 
-    if (filter == 'signed-in') {
+    switch (filter) {
+    case 'signed-in':
       return alphas.filter((a) => a.on_alpha_shift);
-    }
 
-    return alphas;
+    case 'pending':
+      return alphas.filter((a) => (a.mentor_status == 'pending' && a.mentors[0].mentor_id > 0));
+
+    case 'passed':
+      return alphas.filter((a) => (a.mentor_status == 'pass'));
+
+    case 'bonked':
+      return alphas.filter((a) => (a.mentor_status == 'bonked' || a.mentor_status == 'self-bonk'));
+
+    default:
+      return alphas;
+    }
   }
 
   @action
@@ -53,7 +68,6 @@ export default class MentorAssignmentController extends Controller {
         }
       });
 
-
       if (mentors.length > 0) {
         assignments.push({
           person_id: person.id,
@@ -64,11 +78,11 @@ export default class MentorAssignmentController extends Controller {
 
       // Check for duplicate assignment
       const guides = person.mentors;
-      if ((guides[0].mentor_id && (guides[0].mentor_id == guides[1].mentor_id || guides[0].mentor_id == guides[2].mentor_id))
-        || (guides[1].mentor_id && guides[1].mentor_id == guides[2].mentor_id)) {
-          haveErrors = true;
-          this.toast.error(`${person.callsign} has duplicate mentor assignments`);
-        }
+      if ((guides[0].mentor_id && (guides[0].mentor_id == guides[1].mentor_id || guides[0].mentor_id == guides[2].mentor_id)) ||
+        (guides[1].mentor_id && guides[1].mentor_id == guides[2].mentor_id)) {
+        haveErrors = true;
+        this.toast.error(`${person.callsign} has duplicate mentor assignments`);
+      }
     });
 
     if (haveErrors) {
@@ -81,24 +95,30 @@ export default class MentorAssignmentController extends Controller {
     }
 
     this.set('isSubmitting', true);
-    this.ajax.request('mentor/mentor-assignment', { method: 'POST', data: { assignments }}).then((result) => {
-      result.assignments.forEach((assignment) => {
-        const person = this.alphas.find((p) => assignment.person_id == p.id);
+    this.ajax.request('mentor/mentor-assignment', { method: 'POST', data: { assignments } }).then((result) => {
+        result.assignments.forEach((assignment) => {
+          const person = this.alphas.find((p) => assignment.person_id == p.id);
 
-        if (!person) {
-          return;
-        }
+          if (!person) {
+            return;
+          }
 
-        set(person, 'mentors', assignment.mentors);
+          set(person, 'mentors', assignment.mentors);
 
-        // pad out the mentor assignment
-        for (let i = assignment.mentors.length; i < 3; i++) {
-          person.mentors.push({ mentor_id: null });
-        }
+          // pad out the mentor assignment
+          for (let i = assignment.mentors.length; i < 3; i++) {
+            person.mentors.push({ mentor_id: null });
+          }
 
-      });
-      this.toast.success('Assignments succesfully saved.');
-    }).catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('isSubmitting', false));
+        });
+        this.toast.success('Assignments succesfully saved.');
+        this.house.scrollToTop();
+      }).catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.set('isSubmitting', false));
+  }
+
+  @action
+  togglePrinting() {
+    this.set('isPrinting', !this.isPrinting);
   }
 }
