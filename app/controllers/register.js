@@ -1,6 +1,11 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
-import { validatePresence, validateFormat, validateLength, validateConfirmation } from 'ember-changeset-validations/validators';
+import {
+  validatePresence,
+  validateFormat,
+  validateLength,
+  validateConfirmation
+} from 'ember-changeset-validations/validators';
 import validateState from 'clubhouse/validators/state';
 import { action } from '@ember/object';
 

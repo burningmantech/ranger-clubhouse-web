@@ -11,7 +11,7 @@ import {
   typeOf, isEmpty
 } from '@ember/utils';
 
-export default Mixin.create({
+export default Mixin.create({ // eslint-disable-line ember/no-new-mixins
   // Computed methods
   isActive: computed('status', function () {
     return (this.status == PersonStatus.ACTIVE);
@@ -70,12 +70,12 @@ export default Mixin.create({
 
   canStartShift: computed('status', function () {
     return !(
-      this.status == "auditor" ||
-      this.status == "deceased" ||
-      this.status == "dismissed" ||
-      this.status == "past prospective" ||
-      this.status == "prospective" ||
-      this.status == "uberbonked"
+      this.status == PersonStatus.AUDITOR ||
+      this.status == PersonStatus.DECEASED ||
+      this.status == PersonStatus.DISMISSED ||
+      this.status == PersonStatus.PAST_PROSPECTIVE ||
+      this.status == PersonStatus.PROSPECTIVE ||
+      this.status == PersonStatus.UBERBONKED
     );
   }),
 

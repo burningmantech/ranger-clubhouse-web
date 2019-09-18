@@ -1,6 +1,10 @@
 import Route from '@ember/routing/route';
 import ENV from 'clubhouse/config/environment';
-import { isAbortError, isTimeoutError, isForbiddenError } from 'ember-ajax/errors';
+import {
+  isAbortError,
+  isTimeoutError,
+  isForbiddenError
+} from 'ember-ajax/errors';
 import DS from 'ember-data';
 
 //

@@ -104,7 +104,7 @@
           selected=positionFilter
           searchEnabled=false
           searchField="title"
-          onchange=(action (mut positionFilter))
+          onChange=(action (mut positionFilter))
                     as |item| }}
       {{item.title}}
     {{/power-select}}
@@ -115,7 +115,7 @@
           options=dayOptions
           searchEnabled=false
           searchField="title"
-          onchange=(action (mut dayFilter))
+          onChange=(action (mut dayFilter))
                     as |item| }}
       {{item.title}}
     {{/power-select}}

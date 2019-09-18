@@ -11,16 +11,12 @@ import {
   SubstringRule,
 } from 'clubhouse/utils/handle-rules';
 import { module, test } from 'qunit';
-import { assertionCleanup, assertionInjector } from 'clubhouse/tests/assertions';
+import setupCustomAssertions from 'ember-cli-custom-assertions/test-support';
+import { setupTest } from 'ember-qunit';
 
 module('Unit | Utility | handle-rules', function(hooks) {
-  hooks.beforeEach(function(/*assert*/) {
-    assertionInjector('https://github.com/DockYard/ember-cli-custom-assertions/issues/10');
-  });
-
-  hooks.afterEach(function(/*assert*/) {
-    assertionCleanup('https://github.com/DockYard/ember-cli-custom-assertions/issues/10');
-  });
+  setupTest(hooks);
+  setupCustomAssertions(hooks);
 
   const natoHandles = [
     {name: 'Alfa', entityType: 'phonetic-alphabet'},
