@@ -1,5 +1,5 @@
 import doubleMetaphone from 'double-metaphone';
-import {HandleConflict} from './handle-conflict';
+import { HandleConflict } from './handle-conflict';
 
 /** Warns about handles that are really short words, though initials like JC are allowed. */
 export class MinLengthRule {

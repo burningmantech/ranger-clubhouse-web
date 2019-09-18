@@ -68,10 +68,8 @@ export default class ChFormComponent extends Component {
        */
 
       if (original instanceof DS.Model) {
-        // Watch for the original model being updated.
-        this.set('watchingModelEvent', (original.isNew ? 'didCreate' : 'didUpdate'));
+        original.set('onSaved', () => { this._modelUpdated() });
         this.set('watchingModel', original);
-        original.on(this.watchingModelEvent, this, this._modelUpdated);
       }
     } else {
       model = original;
@@ -89,12 +87,8 @@ export default class ChFormComponent extends Component {
     super.didReceiveAttrs(...arguments);
 
     // Remove the event handler for the record update
-    if (this.watchingModelEvent && this.watchingModel != this.originalModel) {
-      if (this.originalModel.has(this.watchingModelEvent)) {
-        // TODO - Ember 3.10 might have a bug where the event handler is lost.
-        this.originalModel.off(this.watchingModelEvent, this, this._modelUpdated);
-      }
-      this.set('watchingModelEvent', null);
+    if (this.watchingModel) {
+      this.watchingModel.set('onSaved', null);
       this.set('watchingModel', null);
     }
   }
@@ -128,8 +122,9 @@ export default class ChFormComponent extends Component {
     super.willDestroyElement(...arguments);
 
     // Remove the event handler for the record update
-    if (this.watchingModelEvent && this.originalModel.has(this.watchingModelEvent)) {
-      this.originalModel.off(this.watchingModelEvent, this, this._modelUpdated);
+    if (this.watchingModel) {
+      this.watchingModel.set('onSaved', null);
+      this.set('watchingModel', null);
     }
 
     if (!this.modalBox) {

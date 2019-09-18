@@ -3,7 +3,11 @@ import { action, computed } from '@ember/object';
 import { observes } from '@ember-decorators/object';
 import { isEmpty } from '@ember/utils';
 import { schedule, later } from '@ember/runloop';
-import { MealOptions, BmidStatusOptions, ShowerOptions } from 'clubhouse/constants/bmid';
+import {
+  MealOptions,
+  BmidStatusOptions,
+  ShowerOptions
+} from 'clubhouse/constants/bmid';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import Changeset from 'ember-changeset';
 

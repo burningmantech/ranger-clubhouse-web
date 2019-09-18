@@ -1,7 +1,11 @@
 import Component from '@ember/component';
 import { argument } from '@ember-decorators/argument';
 import { optional } from '@ember-decorators/argument/types';
-import { MealOptions, BmidStatusOptions, ShowerOptions } from 'clubhouse/constants/bmid';
+import {
+  MealOptions,
+  BmidStatusOptions,
+  ShowerOptions
+} from 'clubhouse/constants/bmid';
 
 export default class BmidEditComponent extends Component {
   @argument('object') entry;
