@@ -191,7 +191,7 @@
                       <div class="col-sm-12 col-md-3">
                         {{#if (has-role "admin")}}
                           <div class="navbar-text">Post Event</div>
-                          <a href="{{cgo "timesheet" "thankYouCards"}}" class="dropdown-item">Thank-You Cards</a>
+                          {{#link-to "admin.thank-you-cards" class="dropdown-item"}}Thank-You Cards{{/link-to}}
                           {{#link-to "admin.timesheet-sanity-checker" class="dropdown-item"}}Timesheet Sanity Checker{{/link-to}}
                           {{#link-to "admin.hours-credits" class="dropdown-item"}}Hours/Credits{{/link-to}}
                           <a href="{{cgo "person" "selectByStatusChange"}}" class="dropdown-item">People by Status Change</a>

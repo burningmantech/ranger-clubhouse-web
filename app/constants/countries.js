@@ -254,6 +254,11 @@ export const CountryOptions = [
   [ "Zimbabwe", "ZW" ]
 ];
 
+export const CountryLabels = CountryOptions.reduce((hash, row) => {
+  hash[row[1]] = row[0];
+  return hash;
+}, {});
+
 export const StateOptions = {
   "US": [
     [ "Choose State", "" ],
