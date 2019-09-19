@@ -79,6 +79,7 @@ Router.map(function() {
     this.route('alerts');
     this.route('bulk-signout');
     this.route('hours-credits');
+    this.route('timesheet-sanity-checker');
   });
 
   this.route('hq', { path: '/hq/:person_id' }, function() {
