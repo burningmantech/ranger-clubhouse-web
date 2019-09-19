@@ -1,0 +1,59 @@
+{{year-select "Thank You Cards" year=year onChange=(action (mut year))}}
+
+{{#unless this.passwordOkay}}
+  <div class="form-row">
+    <div class="col-auto">
+      <label class="col-form-label">Enter the Thank You card password:</label>
+    </div>
+    <div class="col-auto">
+      {{input type="password" class="form-control" name="password" size="10" value=this.password }}
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-primary" {{action this.submit}} disabled={{this.isSubmitting}}>Submit</button>
+      {{#if this.isSubmitting}}
+        <SubmittingIndicator />
+      {{/if}}
+    </div>
+  </div>
+{{/unless}}
+
+{{#if this.passwordOkay}}
+  <p>
+    <button class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
+  </p>
+  {{pluralize this.people.length "person"}} to send {{this.year}} Thank You cards to.
+  <table class="table table-sm table-hover table-striped table-width-auto">
+    <thead>
+      <tr>
+        <th>Callsign</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Address 1</th>
+        <th>Address 2</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Postal Code</th>
+        <th>Country</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each this.people as |person|}}
+        <tr>
+          <td>{{person-link person=person}}</td>
+          <td>{{person.first_name}} {{person.last_name}}</td>
+          <td>{{mail-to person.email}}</td>
+          <td>{{person.street1}}</td>
+          <td>{{person.street2}}</td>
+          <td>{{person.city}}</td>
+          <td>{{person.state}}</td>
+          <td>{{person.zip}}</td>
+          <td>{{person.country}}</td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="11" class="text-danger"><b>No Thank You card candidates found.</b></td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{/if}}
