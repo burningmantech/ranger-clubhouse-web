@@ -87,7 +87,7 @@ export default class HqShiftController extends Controller {
 
   @action
   markEntryCorrect() {
-    const entry = this.entry;
+    const entry = this.unverifiedTimesheetEntry;
 
     this.toast.clear();
 
@@ -95,7 +95,6 @@ export default class HqShiftController extends Controller {
     entry.set('verified', true);
     entry.save().then(() => {
         this.toast.success('Timesheet was successfully marked correct.');
-        this.set('showCorrectionForm', false);
         this.set('entry', null);
       })
       .catch((response) => this.house.handleErrorResponse(response))

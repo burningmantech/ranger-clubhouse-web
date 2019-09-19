@@ -23,7 +23,6 @@ export default class AdminHoursCreditsController extends Controller {
       ];
 
       const rows = this.people.map((person) => {
-        console.log(`${person.callsign} ${Math.floor(+person.counted_duration / 3600.0).toFixed(2)}`);
         return {
           callsign: person.callsign,
           name: `${person.first_name} ${person.last_name}`,
