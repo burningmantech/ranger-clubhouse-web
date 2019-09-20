@@ -215,8 +215,8 @@
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Schedule</div>
                       {{#link-to "reports.shift-lead" class="dropdown-item"}}Shift Lead Report{{/link-to}}
-                      <a href="{{cgo "slot" "selectAllScheduled" order=1}}" class="dropdown-item">Schedule by Callsign</a>
-                      <a href="{{cgo "slot" "selectAllScheduled" order=2}}" class="dropdown-item">Schedule by Position</a>
+                      {{#link-to "reports.schedule-by-callsign" class="dropdown-item"}}Schedule by Callsign{{/link-to}}
+                      {{#link-to "reports.schedule-by-position" class="dropdown-item"}}Schedule by Position{{/link-to}}
                       {{#link-to "reports.shift-coverage" class="dropdown-item"}}Coverage Report{{/link-to}}
                       {{#link-to "reports.shift-signups" class="dropdown-item"}}Shift Signups{{/link-to}}
                       {{#link-to "reports.hq-forecast" class="dropdown-item"}}HQ Checkin/Out Forecast{{/link-to}}

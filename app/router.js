@@ -163,6 +163,8 @@ Router.map(function() {
     this.route('timesheet-correction-requests');
     this.route('timesheet-unconfirmed');
     this.route('vehicle-paperwork');
+    this.route('schedule-by-position');
+    this.route('schedule-by-callsign');
   });
 
   this.route('vc', function() {
