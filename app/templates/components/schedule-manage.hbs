@@ -199,6 +199,7 @@
                       {{else}}
                         {{fa-icon "users" type="fas"}}
                       {{/if}}
+                      Sign Ups
                     </button>
                     {{#if slot.person_assigned}}
                       {{#if (or (has-role "admin") (not slot.has_started))}}
@@ -209,6 +210,7 @@
                           {{else}}
                             {{fa-icon "trash-alt" type="fas"}}
                           {{/if}}
+                          Remove
                         </button>
                       {{/if}}
                     {{else}}
@@ -222,6 +224,7 @@
                               {{else}}
                                 {{fa-icon "user-plus" type="fas"}}
                               {{/if}}
+                              Add
                             </button>
                           {{/if}}
                         {{else}}

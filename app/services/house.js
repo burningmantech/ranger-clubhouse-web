@@ -241,7 +241,7 @@ export default class HouseService extends Service {
    * Scroll to element
    */
 
-  scrollToElement(selector) {
+  scrollToElement(selector, scroll=true) {
     run.schedule('afterRender', () => {
       const element = document.querySelector(selector);
       if (!element) {
@@ -261,7 +261,7 @@ export default class HouseService extends Service {
         window.scroll({
           top: y,
           left: 0,
-          behavior: 'smooth'
+          behavior: scroll ? 'smooth' : 'auto'
         });
       }
     });
