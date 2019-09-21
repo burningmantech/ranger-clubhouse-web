@@ -224,7 +224,7 @@
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">People</div>
                       {{#link-to "reports.people-by-position" class="dropdown-item"}}People by Position{{/link-to}}
-                      <a href="{{cgo "person" "selectByRole"}}" class="dropdown-item">People by Role</a>
+                      {{#link-to "reports.people-by-role" class="dropdown-item"}}People by Role{{/link-to}}
                       <a href="{{cgo "person" "selectByStatus"}}" class="dropdown-item">People by Status</a>
                       {{#link-to "reports.people-by-location" class="dropdown-item"}}People by Location{{/link-to}}
                       {{#link-to "reports.special-teams" class="dropdown-item"}}People By Special Team{{/link-to}}
