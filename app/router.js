@@ -165,6 +165,7 @@ Router.map(function() {
     this.route('vehicle-paperwork');
     this.route('schedule-by-position');
     this.route('schedule-by-callsign');
+    this.route('people-by-location');
   });
 
   this.route('vc', function() {
