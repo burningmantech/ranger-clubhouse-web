@@ -1,0 +1,17 @@
+<h1>People By Role Report</h1>
+
+{{#each roles as |role|}}
+  <div class="border mb-2">
+    <div class="bg-light-gray p-2">
+      <a href class="h4" {{action this.toggleRole role}}>{{fa-icon (if role.showing "caret-down" "caret-right")}} {{role.title}}</a> ({{pluralize role.people.length "person"}})
+    </div>
+
+    <div class="row p-2 {{unless role.showing "d-none"}}">
+      {{#each role.people as |person|}}
+        <div class="col-sm-6 col-md-3 col-lg-2">
+          {{person-link person=person}}
+        </div>
+      {{/each}}
+    </div>
+  </div>
+{{/each}}
