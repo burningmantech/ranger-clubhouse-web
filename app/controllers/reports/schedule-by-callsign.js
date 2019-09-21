@@ -27,7 +27,6 @@ export default class ReportsScheduleByCallsignController extends Controller {
 
   @action
   scrollToCallsign(id) {
-    console.log(`scrolling to ${id}`);
     this.house.scrollToElement(`#person-${id}`, false);
   }
 
