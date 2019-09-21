@@ -167,6 +167,7 @@ Router.map(function() {
     this.route('schedule-by-callsign');
     this.route('people-by-location');
     this.route('people-by-role');
+    this.route('people-by-status');
   });
 
   this.route('vc', function() {
