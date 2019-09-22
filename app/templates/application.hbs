@@ -235,7 +235,7 @@
                       {{#link-to "reports.on-duty" (query-params over_hours=6) class="dropdown-item"}}... Over 6 Hours{{/link-to}}
                       <a href="{{cgo "slot" "selectFlakeReport"}}" class="dropdown-item">Flake Report</a>
                       <a href="{{cgo "timesheet" "totalPersonPosition"}}" class="dropdown-item">Timesheet Totals</a>
-                      <a href="{{cgo "timesheet" "selectByCallsign"}}" class="dropdown-item">Timesheet By Callsign</a>
+                      {{#link-to "reports.timesheet-by-callsign" class="dropdown-item"}}Timesheet By Callsign{{/link-to}}
                       {{#link-to "reports.timesheet-correction-requests" class="dropdown-item"}}Corrections Requests{{/link-to}}
                       {{#link-to "reports.timesheet-unconfirmed" class="dropdown-item"}}Timesheet Unconfirmed{{/link-to}}
                     </div>

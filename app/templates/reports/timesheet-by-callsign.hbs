@@ -1,0 +1,80 @@
+{{year-select "Timesheet By Callsign" year=year onChange=(action (mut year))}}
+
+<p>
+  Jump to callsigns starting with the letter:
+</p>
+<p>
+  {{#each this.letterOptions as |letter|}}
+    <a href {{action this.scrollToCallsign letter.id}} class="d-inline-block border p-2 mr-2 mb-2">{{letter.letter}}</a>
+  {{/each}}
+</p>
+
+<p>
+  <button class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
+  <button class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>{{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}</button>
+  {{#if this.isExpanding}}
+    <SubmittingIndicator @text="Working" />
+  {{/if}}
+</p>
+<p>
+  [hh:mm] = Time does not count towards appreciations.
+</p>
+{{#each this.people as |person|}}
+  <div class="border mb-2" id="person-{{person.id}}">
+    <div class="bg-light-gray p-2">
+      <a href {{action this.togglePerson person}} class="h4">{{fa-icon (if person.showing "caret-down" "caret-right")}} {{person.callsign}}</a>
+    </div>
+    {{#if person.showing}}
+      <div class="p-2">
+        <p>
+          {{#link-to "person.index" person.id class="btn btn-secondary btn-sm"}}View {{person.callsign}}{{/link-to}}
+          {{#link-to "person.timesheet" person.id (query-params year=this.year) class="btn btn-secondary btn-sm"}}View {{this.year}} Timesheet{{/link-to}}
+          {{#link-to "person.schedule" person.id (query-params year=this.year)  class="btn btn-secondary btn-sm"}}View {{this.year}} Schedule{{/link-to}}
+        </p>
+        <table class="table table-hover table-striped table-width-auto">
+          <thead>
+            <tr>
+              <th>From</th>
+              <th>To</th>
+              <th class="text-right">Duration</th>
+              <th class="text-right">Credits</th>
+              <th>Position</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each person.timesheet as |entry|}}
+              <tr>
+                <td>{{shift-format entry.on_duty}}</td>
+                <td>{{shift-format entry.off_duty}}</td>
+                <td class="text-right">
+                  {{#if entry.position.count_hours}}
+                  {{hour-minute-format entry.duration}}
+                  {{else}}
+                    [{{hour-minute-format entry.duration}}]
+                  {{/if}}
+                </td>
+                <td class="text-right">{{credits-format entry.credits}}</td>
+                <td>{{entry.position.title}}</td>
+              </tr>
+            {{/each}}
+            <tr>
+              <td colspan="2" class="text-right"><b>Totals:</b></td>
+              <td class="text-right">
+                {{hour-minute-format person.total_duration}}
+              </td>
+              <td class="text-right">{{credits-format person.total_credits}}</td>
+              <td>&nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="2" class="text-right"><b>Total Appreciated Hours:</b></td>
+              <td class="text-right">
+                {{hour-minute-format person.total_appreciation_duration}}
+              </td>
+              <td colspan="2">&nbsp;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    {{/if}}
+  </div>
+{{/each}}
