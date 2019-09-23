@@ -170,6 +170,7 @@ Router.map(function() {
     this.route('people-by-status');
     this.route('languages');
     this.route('timesheet-by-callsign');
+    this.route('flakes');
   });
 
   this.route('vc', function() {
