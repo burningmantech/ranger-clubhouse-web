@@ -1,0 +1,98 @@
+<h1>Flake Report for {{mdy-format this.date full=true}} @ {{time-format this.date}}</h1>
+
+<p>
+  Note: This page is a work in progress and will evolve throughout the remainder of 2019 into 2020.
+</p>
+
+<p>
+  The report will show shifts that were active at specified date &amp; time. Each
+  shift will be broken down into people who signed up &amp; checked in, people
+  who were signed up but signed into a different position/shift, people who
+  either signed into the shift without signing up first (rogues) and/or people
+  who were are still on duty from the pervious shfit (overlaps). Anyone who
+  signed up but who was not working during the shift period is labled as a
+  flake.
+</p>
+
+
+{{#ch-form "dateform" this.dateForm onSubmit=(action this.submitForm) as |f|}}
+  <div class="form-row mt-4">
+    <div class="col-auto">
+      <label class="col-form-label">Shift date &amp; time to view:</label>
+    </div>
+    <div class="col-auto">
+      {{f.input "date" type="datetime"}}
+    </div>
+    <div class="col-auto">
+      {{f.submit label="Submit"}}
+      <button class="btn btn-secondary" {{action this.viewCurrentPeriod}}>View Current Period</button>
+    </div>
+  </div>
+{{/ch-form}}
+{{#each this.positions as |position|}}
+  <table class="table table-sm border">
+    <caption>{{position.title}}</caption>
+    <thead>
+      <tr>
+        <th>From</th>
+        <th>To</th>
+        <th>Description</th>
+        <th class="text-right">Signed Up</th>
+        <th class="text-right">Max</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each position.slots as |slot|}}
+        <tr>
+          <td>{{shift-format slot.begins}}</td>
+          <td>{{shift-format slot.ends}}</td>
+          <td>{{slot.description}}</td>
+          <td class="text-right">{{slot.signed_up}}</td>
+          <td class="text-right">{{slot.max}}</td>
+        </tr>
+        <tr class="tr-no-border">
+          <td colspan="5">
+            {{#if slot.checked_in}}
+              <b>Signed up &amp; in ({{slot.checked_in.length}}):</b>
+              {{#each slot.checked_in as |person idx|}}
+                {{~if idx ", "}}<span class="d-inline-block">{{person-link person=person}} ({{time-format person.timesheet.on_duty}})</span>
+              {{/each}}
+            {{else if slot.signed_up}}
+              <b class="text-danger">No scheduled sign ups on shift.</b>
+            {{else}}
+              <b class="text-danger">No shift sign ups.</b>
+            {{/if}}
+            <br>
+            {{#if slot.different_shift}}
+              <b>Went on different shift ({{slot.different_shift.length}}):</b>
+              {{#each slot.different_shift as |person idx|}}
+                {{~if idx ", "}}<span class="d-inline-block">{{person-link person=person}} ({{person.timesheet.position_title}} @ {{time-format person.timesheet.on_duty}})</span>
+              {{/each}}
+              <br>
+            {{/if}}
+            {{#if slot.rogues}}
+              <b>Rogues / Overlaps ({{slot.rogues.length}}):</b>
+              {{#each slot.rogues as |person idx|}}
+                {{~if idx ", "}}<span class="d-inline-block">{{person-link person=person}} ({{moment-format person.on_duty "ddd DD @ HH:MM"}} - {{if person.off_duty (moment-format person.off_duty "ddd DD @ HH:MM") "now"}})</span>
+                {{~/each}}
+                <br>
+            {{/if}}
+            {{#if slot.not_present}}
+              <b>Flakes ({{slot.not_present.length}}):</b>
+              {{#each slot.not_present as |person idx|}}
+                {{~if idx ", "}}{{person-link person=person~}}
+              {{/each}}
+            {{else if slot.signed_up}}
+              <b class="text-success">No flakes.</b>
+            {{/if}}
+            <br>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>
+    <b class="text-danger">No shifts were found for the date &amp; time given.</b>
+  </p>
+{{/each}}

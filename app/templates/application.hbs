@@ -233,7 +233,7 @@
                       <div class="navbar-text">Timesheets</div>
                       {{#link-to "reports.on-duty" (query-params over_hours=null) class="dropdown-item"}}People On Duty{{/link-to}}
                       {{#link-to "reports.on-duty" (query-params over_hours=6) class="dropdown-item"}}... Over 6 Hours{{/link-to}}
-                      <a href="{{cgo "slot" "selectFlakeReport"}}" class="dropdown-item">Flake Report</a>
+                      {{#link-to "reports.flakes" class="dropdown-item"}}Flake Report{{/link-to}}
                       <a href="{{cgo "timesheet" "totalPersonPosition"}}" class="dropdown-item">Timesheet Totals</a>
                       {{#link-to "reports.timesheet-by-callsign" class="dropdown-item"}}Timesheet By Callsign{{/link-to}}
                       {{#link-to "reports.timesheet-correction-requests" class="dropdown-item"}}Corrections Requests{{/link-to}}
