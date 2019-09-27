@@ -1,28 +1,29 @@
 # -----------------------------------------------------------------------------
-# This stage builds the Ember application
+# This stage builds the development image
 # -----------------------------------------------------------------------------
 # Note we need a version of Node that is supported by ember-cli.
 # See: https://github.com/ember-cli/ember-cli/blob/master/docs/node-support.md
 #
-FROM node:10.15-alpine as build
+FROM node:10.15-alpine as development
 
 # Install Yarn
 RUN apk add --no-cache yarn;
+RUN yarn --version;
 
 # Install Ember CLI
 # "unsafe-perm" step is a workaround for a bug.
 # See: https://github.com/npm/uid-number/issues/7
 RUN npm config set unsafe-perm true;
-RUN npm install -g ember-cli;
+RUN npm install --global ember-cli;
+RUN ember --version;
 
 # Install ESLint, used by test_lint
-RUN npm install -g eslint;
-RUN npm install -g eslint-plugin-ember;
-RUN npm install -g babel-eslint;
+RUN npm install --global eslint;
+RUN eslint --version;
 
-RUN yarn --version; ember --version;
-
+# Set up build directory
 WORKDIR /build
+
 COPY ./app/               ./app/
 COPY ./config/            ./config/
 COPY ./mirage/            ./mirage/
@@ -36,6 +37,13 @@ COPY ./ember-cli-build.js ./
 COPY ./package.json       ./
 COPY ./testem.js          ./
 COPY ./yarn.lock          ./
+
+
+# -----------------------------------------------------------------------------
+# This stage builds the Ember application
+# -----------------------------------------------------------------------------
+
+FROM development as build
 
 # Install dependencies
 RUN yarn install;

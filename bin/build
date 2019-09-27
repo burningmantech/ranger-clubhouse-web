@@ -37,5 +37,6 @@ build() {
 #
 # Build and tag each stage
 #
+build development "${dev_image_name}";
 build build       "${build_image_name}";
 build application "${app_image_name}";
