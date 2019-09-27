@@ -23,7 +23,19 @@ RUN npm install -g babel-eslint;
 RUN yarn --version; ember --version;
 
 WORKDIR /build
-COPY ./ ./
+COPY ./app/               ./app/
+COPY ./config/            ./config/
+COPY ./mirage/            ./mirage/
+COPY ./public/            ./public/
+COPY ./tests/             ./tests/
+COPY ./vendor/            ./vendor/
+COPY ./.ember-cli         ./
+COPY ./.eslintignore      ./
+COPY ./.eslintrc.js       ./
+COPY ./ember-cli-build.js ./
+COPY ./package.json       ./
+COPY ./testem.js          ./
+COPY ./yarn.lock          ./
 
 # Install dependencies
 RUN yarn install;
