@@ -34,7 +34,7 @@ export default class PersonPasswordController extends Controller {
 
     let passwords = model.getProperties('password', 'password_confirmation');
 
-    return person.changePassword(passwords).then(() => {
+    return this.ajax.request(`person/${person.id}/password`, { method: 'PATCH', data: passwords }).then(() => {
       this.toast.success('Password has been changed.');
       this.transitionToRoute('person.index', person.id);
     }).catch((response) => { this.house.handleErrorResponse(response) })

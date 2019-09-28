@@ -1,6 +1,5 @@
 import DS from 'ember-data';
 const { attr } = DS;
-import { memberAction } from 'ember-api-actions';
 import { inject as service } from '@ember/service';
 import PersonMixin from 'clubhouse/mixins/models/person';
 
@@ -102,11 +101,4 @@ export default class PersonModel extends DS.Model.extend(PersonMixin) {
       this.setProperties(result.user_info);
     });
   }
-
-  //
-  // AJAX methods
-  //
-
-  changePassword = memberAction({ path: 'password', type: 'patch'});
-
 }
