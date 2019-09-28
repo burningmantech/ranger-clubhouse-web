@@ -4,7 +4,6 @@ const { attr } = DS;
 import { ticketTypeLabel } from 'clubhouse/constants/ticket-types';
 
 import moment from 'moment';
-import { memberAction } from 'ember-api-actions';
 
 export default class AccessDocumentModel extends DS.Model {
   @attr('number') person_id;
@@ -23,9 +22,6 @@ export default class AccessDocumentModel extends DS.Model {
 
   // Only returned when requesting items available for delivery
   @attr('boolean', { readOnly: true }) has_staff_credential;
-
-  // Update the status
-  updateStatus = memberAction({ path: 'status', type: 'patch'});
 
   @computed('type')
   get isTicket() {

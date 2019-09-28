@@ -16,7 +16,7 @@ export default class MePasswordController extends Controller {
     let passwords = model.getProperties('password_old', 'password', 'password_confirmation');
 
     this.set('isSubmitting', true);
-    return person.changePassword(passwords).then(() => {
+    return this.ajax.request(`person/${person.id}/password`, { method: 'PATCH', data: passwords }).then(() => {
       this.toast.success('Password has been changed.');
       this.transitionToRoute('me.overview');
     }).catch((response) => { this.house.handleErrorResponse(response) })
