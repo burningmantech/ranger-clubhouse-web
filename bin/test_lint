@@ -7,11 +7,4 @@ set -eu
 
 . "$(dirname "$0")/.common.sh";
 
-src="/var/src";
-
-docker run                    \
-    --rm                      \
-    --volume="${PWD}:${src}"  \
-    --workdir="${src}"        \
-    "${build_image_name}"     \
-    yarn lint:js "$@";
+docker run --rm "${build_image_name}" yarn lint:js;
