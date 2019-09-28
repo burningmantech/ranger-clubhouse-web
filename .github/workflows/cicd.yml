@@ -79,7 +79,7 @@ jobs:
 
   lint:
 
-    name: Run unit tests
+    name: Run linter
 
     needs: [docker]
 
