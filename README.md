@@ -1,6 +1,6 @@
 # Clubhouse 2.0 - A Single Page Application (SPA) frontend
 
-[![Travis CI](https://travis-ci.com/burningmantech/ranger-clubhouse-web.svg?branch=master)](https://travis-ci.com/burningmantech/ranger-clubhouse-web)
+[![Build Status](https://github.com/burningmantech/ranger-ims-server/workflows/CI%2fCD/badge.svg)](https://github.com/burningmantech/ranger-ims-server/actions)
 
 This README outlines the details of collaborating on this Ember application.
 
