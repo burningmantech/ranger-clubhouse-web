@@ -28,6 +28,11 @@ export default class MeTimesheetCorrectionsConfirmController extends Controller 
     const confirmed = model.get('confirm') ? 1 : 0;
     const person_id = this.session.userId;
 
+    if (!confirmed) {
+      this.modal.info(null, 'You need to mark the checkbox to indicate your timesheet is accurate and does not require additional corrections.');
+      return;
+    }
+
     this.toast.clear();
     this.set('isSubmitting', true);
 
@@ -40,6 +45,7 @@ export default class MeTimesheetCorrectionsConfirmController extends Controller 
       this.set('timesheetInfo.timesheet_confirmed', ci.timesheet_confirmed);
       this.set('timesheetInfo.timesheet_confirmed_at', ci.timesheet_confirmed_at);
       this.toast.success(`Your timesheet has been marked as ${ci.timesheet_confirmed ? 'CONFIRMED' : 'UNCONFIRMED'}.`);
+      this.house.scrollToTop();
     }).catch((response) => this.house.handleErrorResponse(response))
     .finally(() => this.set('isSubmitting', false));
   }

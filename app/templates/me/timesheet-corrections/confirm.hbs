@@ -18,10 +18,21 @@
       </ul>
       Until these items are completed, you cannot confirm your entire timesheet as accurate.
     </div>
+  {{else if timesheetInfo.timesheet_confirmed}}
+    <p class="text-success">
+      {{fa-icon "check"}} Thank you for verifying
+      your {{timesheetInfo.correction_year}} timesheet is accurate and does not require any changes.
+    </p>
+    <p>
+      If you do submit a correction and/or missing entry request after this point, you will need to reconfirm your
+      timesheet is accurate.
+    </p>
   {{else}}
     {{#ch-form "confirm" confirmForm onSubmit=(action "confirmAction") as |f|}}
       <div class="form-row">
-        By checking the box below, you are agreeing to:
+          By checking the box below, you are agreeing to:
+      </div>
+      <div class="form-row">
         <ul class="mt-2">
           <li>All your timesheet entries have been reviewed.</li>
           <li>The entries are correct.</li>
