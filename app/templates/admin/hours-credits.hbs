@@ -12,9 +12,9 @@
     <thead>
       <tr>
         <th>Callsign</th>
+        <th>Email</th>
         <th>Full Name</th>
         <th>Status</th>
-        <th>Email</th>
         <th class="text-right">Total Hours</th>
         <th class="text-right">Total Credits</th>
         <th class="text-right">Pre-Event Hrs</th>
@@ -31,9 +31,9 @@
       {{#each this.people as |person|}}
         <tr>
           <td>{{person-link person=person}}</td>
+          <td>{{mail-to person.email}}</td>
           <td>{{person.first_name}} {{person.last_name}}</td>
           <td>{{person.status}}</td>
-          <td>{{mail-to person.email}}</td>
           <td class="text-right">{{hour-format person.counted_duration}}</td>
           <td class="text-right">{{credits-format person.total_credits}}</td>
           <td class="text-right">{{hour-format person.pre_event_duration}}</td>
