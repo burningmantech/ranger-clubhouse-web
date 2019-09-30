@@ -8,9 +8,9 @@ export default class AdminHoursCreditsController extends Controller {
     exportToCSV() {
       const COLUMNS = [
         { title: 'Callsign', key: 'callsign' },
+        { title: 'Email', key: 'email' },
         { title: 'Full Name', key: 'name' },
         { title: 'Status', key: 'status' },
-        { title: 'Email', key: 'email' },
         { title: `${this.year} Total Hours`, key: 'counted_hours' },
         { title: `${this.year} Total Credits`, key: 'total_credits' },
         { title: 'Pre-Event Hours', key: 'pre_event_hours' },
