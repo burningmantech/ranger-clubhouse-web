@@ -45,7 +45,7 @@ export default class MeTimesheetCorrectionsConfirmController extends Controller 
       this.set('timesheetInfo.timesheet_confirmed', ci.timesheet_confirmed);
       this.set('timesheetInfo.timesheet_confirmed_at', ci.timesheet_confirmed_at);
       this.toast.success(`Your timesheet has been marked as ${ci.timesheet_confirmed ? 'CONFIRMED' : 'UNCONFIRMED'}.`);
-      this.house.scrollToTop();
+      this.transitionToRoute('me.timesheet-corrections.index');
     }).catch((response) => this.house.handleErrorResponse(response))
     .finally(() => this.set('isSubmitting', false));
   }

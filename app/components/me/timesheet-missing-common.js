@@ -3,7 +3,7 @@
  */
 
 import Component from '@ember/component';
-import { action, computed } from '@ember/object';
+import { action, computed, set } from '@ember/object';
 import { argument } from '@ember-decorators/argument';
 import { validatePresence } from 'ember-changeset-validations/validators';
 import { inject as service } from '@ember/service';
@@ -104,6 +104,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
           this.timesheetsMissing.pushObject(this.entry);
         }
         this.set('entry', null);
+        set(this.timesheetInfo, 'timesheet_confirmed', false);
       }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.set('isSubmitting', false));
   }
