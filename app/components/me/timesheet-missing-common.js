@@ -104,6 +104,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
           this.timesheetsMissing.pushObject(this.entry);
         }
         this.set('entry', null);
+        set(this.timesheetInfo.timesheet_confirmed, false);
       }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.set('isSubmitting', false));
   }
