@@ -1,11 +1,11 @@
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
+import { computed } from '@ember/object';
 
 export default class MeTimesheetController extends Controller {
   queryParams = [ 'year' ];
 
-  @action
-  changeYearAction(year) {
-    this.set('year', year);
+  @computed('year')
+  get isCurrentYear() {
+    return this.house.currentYear() == this.year;
   }
 }

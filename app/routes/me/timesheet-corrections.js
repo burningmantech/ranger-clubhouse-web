@@ -46,5 +46,6 @@ export default class MeTimesheetCorrectionsRoute extends Route.extend(MeRouteMix
   setupController(controller, model) {
     super.setupController(...arguments);
     controller.setProperties(model);
+    controller.set('showReviewSteps', false);
   }
 }

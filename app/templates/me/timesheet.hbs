@@ -1,7 +1,12 @@
-{{year-select (concat "Timesheet For " session.user.callsign) year=year years=person.all_years onChange=(action "changeYearAction")}}
+{{year-select (concat "Timesheet For " session.user.callsign) year=year years=person.all_years onChange=(action (mut year))}}
 
 {{#if timesheets}}
-
+  {{#if (and this.isCurrentYear this.timesheetInfo.correction_enabled (not this.timesheetInfo.timesheet_confirmed))}}
+    <p>
+      <b class="text-danger">It appears you have not confirmed your timesheet as accurate.</b> Please to go the {{#link-to "me.timesheet-corrections"}}Timesheet Corrections{{/link-to}} page,
+      review your timesheet entries, submit any missing timesheet entries requests, and confirm your {{year}} timesheet as accurate.
+    </p>
+  {{/if}}
   <div class="row mt-4 mb-2">
     <div class="col-auto">
       [hh:mm] = time in brackets indicates the time does not count towards appreciations.
