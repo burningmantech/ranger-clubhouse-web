@@ -81,6 +81,7 @@ Router.map(function() {
     this.route('hours-credits');
     this.route('timesheet-sanity-checker');
     this.route('thank-you-cards');
+    this.route('people-by-status-change');
   });
 
   this.route('hq', { path: '/hq/:person_id' }, function() {

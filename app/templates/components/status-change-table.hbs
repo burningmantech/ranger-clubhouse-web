@@ -1,0 +1,80 @@
+{{#if this.isVintage}}
+  <h3>Mark Callsign As Vintage: {{pluralize @people.length "person"}}</h3>
+{{else}}
+  <h3>Convert to {{@newStatus}}: {{pluralize @people.length "person"}}</h3>
+{{/if}}
+
+<table class="table table-hover table-striped table-sm table-width-auto mt-2">
+  <thead>
+    <tr>
+      <th>
+        <Input @type="checkbox" @checked={{this.selectAll}} @change={{action toggleAll value="target.checked"}} />
+      </th>
+      <th>Callsign</th>
+      <th>Current Status</th>
+      {{#if this.isVintage}}
+        <th>Last year worked</th>
+        <th>Total years</th>
+
+      {{else}}
+        <th>Proposed Status</th>
+        {{#unless this.isPastProspective}}
+          <th>Last year worked</th>
+        {{/unless}}
+      {{/if}}
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each @people as |person|}}
+      <tr class="{{if person.error "bg-danger"}}">
+        <td>
+          {{#if person.converted}}
+            {{fa-icon "check"}}
+          {{else}}
+            {{#if person.error}}
+              {{fa-icon "excalamation-triangle"}}
+            {{/if}}
+            <Input @type="checkbox" @checked={{person.selected}} />
+          {{/if}}
+        </td>
+        <td>
+          <PersonLink @person={{person}} />
+        </td>
+        <td>{{person.status}}</td>
+        {{#if this.isVintage}}
+          <td>{{person.last_year}}</td>
+          <td>{{person.years}}</td>
+        {{else}}
+          <td>{{@newStatus}}</td>
+          {{#unless this.isPastProspective}}
+            <td>{{person.last_year}}</td>
+          {{/unless}}
+        {{/if}}
+        <td>{{mail-to person.email}}</td>
+      </tr>
+      {{#if person.error}}
+        <tr class="tr-no-border">
+          <td colspan="5">{{person.error_message}}</td>
+        </tr>
+      {{/if}}
+    {{else}}
+      <tr>
+        <td colspan="5" class="text-danger">No accounts found</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<p class="mb-4">
+  <button class="btn btn-primary" disabled={{or this.isSubmitting (not this.selectedCount)}} {{action this.submit}}>
+    {{#if this.isVintage}}
+      Mark as Vintage ({{this.selectedCount}})
+    {{else}}
+      Convert to {{@newStatus}} ({{this.selectedCount}})
+    {{/if}}
+  </button>
+  {{#if this.isSubmitting}}
+    <SubmittingIndicator />
+  {{/if}}
+</p>
