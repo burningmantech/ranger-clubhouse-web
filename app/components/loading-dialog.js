@@ -1,10 +1,10 @@
 import Component from '@ember/component';
-import { argument } from '@ember-decorators/argument';
 import { tagName } from '@ember-decorators/component';
 
 @tagName('')
 export default class LoadingDialogComponent extends Component {
-  static positionalParams = [ 'message' ];
+  static positionalParams = [ 'item' ];
 
-  @argument('string') message;
+  item = 'the information';
+  customMessage = null;
 }

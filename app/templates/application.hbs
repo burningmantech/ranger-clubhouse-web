@@ -165,7 +165,7 @@
                         <div class="col-sm-12 col-md-3">
                           <div class="navbar-text">Site Administration</div>
                           {{#link-to "admin.settings" class="dropdown-item"}}Settings{{/link-to}}
-                          <a href="{{cgo "maintenance" "selectAll"}}" class="dropdown-item">Maintenance</a>
+                          {{#link-to "admin.maintenance" class="dropdown-item"}}Maintenance{{/link-to}}
                           <a href="{{cgo "logview" "show"}}" class="dropdown-item">Log View (CH1)</a>
                           {{#link-to "admin.error-log" class="dropdown-item"}}Error Log{{/link-to}}
                           {{#link-to "admin.action-log" class="dropdown-item"}}Action Log{{/link-to}}
