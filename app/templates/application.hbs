@@ -339,7 +339,7 @@
             {{/power-select-typeahead}}
           </div>
           <div class="col-auto mt-2 mt-sm-0 no-gutters">
-            {{f.input "mode" type="select" options=modeOptions controlClass="form-control form-control-sm"}}
+            {{f.input "mode" type="select" options=modeOptions onChange=this.modeChange controlClass="form-control form-control-sm"}}
           </div>
         </div>
         {{#if showSearchOptions}}
