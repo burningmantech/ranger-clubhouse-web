@@ -4,6 +4,9 @@ import EmberObject from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import { debounce, run } from '@ember/runloop';
 import { config } from 'clubhouse/utils/config';
+import { inject as service } from '@ember/service';
+import { inject as controller } from '@ember/controller';
+
 import moment from 'moment';
 
 import ENV from 'clubhouse/config/environment';
@@ -30,6 +33,10 @@ const ExcludeStatus = ['auditor', 'past prospective'];
 export default class ApplicationController extends Controller {
   groundHogDayTime = null;
   groundHogDayTimerId = null;
+
+  @service router;
+  @controller('person') personController;
+  @controller('hq') hqController;
 
   init() {
     super.init(...arguments);
@@ -122,21 +129,43 @@ export default class ApplicationController extends Controller {
     return options;
   }
 
-  @computed('session.user.roles')
-  get canViewEmail() {
-    return this.session.user.hasRole([Role.ADMIN, Role.VIEW_PII, Role.VIEW_EMAIL]);
+  _modeRoutes = {
+    'account':   'person.index',
+    'hq':        'hq.index',
+    'timesheet': 'person.timesheet'
+  };
+
+  /*
+   * Called when the user changes the search mode.
+   *
+   * If the current route is a person or hq page, switch to the new view with displayed person.
+   *
+   * HQ Window workers were viewing a person in the wrong mode, and wanting to use options to
+   * change the view instead of using the 'Switch to {HQ Window,Person}' link -- because
+   * playa brain is a thing and interfaces get used in ways you never intended.
+   */
+
+  @action
+  modeChange(fieldName, mode) {
+    const route = this.router.currentRouteName;
+
+    if (!route.startsWith('person.') && !route.startsWith('hq.')) {
+      return;
+    }
+
+    const person = route.startsWith('person') ? this.personController.person : this.hqController.person;
+
+    if (!person) {
+      return;
+    }
+
+    this.transitionToRoute((this._modeRoutes[mode] || 'person.index'), person.id);
   }
 
   /*
    * Transition to the selected person. Clear the query and results, blur
    * the input field
    */
-
-   _modeRoutes = {
-     'account':   'person.index',
-     'hq':        'hq.index',
-     'timesheet': 'person.timesheet'
-   };
 
   _showPerson(person) {
       const mode = this.searchForm.mode;
