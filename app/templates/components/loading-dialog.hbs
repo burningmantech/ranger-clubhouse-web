@@ -1,6 +1,10 @@
 <div class="loading-pane">
   <div class="loading-message">
-    First, do nothing.  We're loading {{message}}
+    {{#if this.customMessage}}
+      {{this.customMessage}}
+    {{else}}
+      First, do nothing. We're loading {{this.item}}.
+    {{/if}}
     <div class="loading-spinner"></div>
   </div>
 </div>

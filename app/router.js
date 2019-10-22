@@ -82,6 +82,7 @@ Router.map(function() {
     this.route('timesheet-sanity-checker');
     this.route('thank-you-cards');
     this.route('people-by-status-change');
+    this.route('maintenance');
   });
 
   this.route('hq', { path: '/hq/:person_id' }, function() {
