@@ -1,0 +1,41 @@
+{{year-select "Timesheet Totals" year=year onChange=(action (mut year))}}
+
+<p>
+  <button class="btn btn-primary" {{action this.exportToCSV}}>Export to CSV</button>
+</p>
+
+<table class="table table-hover table-width-auto">
+  <thead>
+    <tr>
+      <th>Callsign</th>
+      <th>Status</th>
+      <th>Position</th>
+      <th class="text-right">Hours</th>
+      <th class="text-right">Credits</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each this.people as |person|}}
+      {{#each person.positions as |pos idx|}}
+        <tr>
+          {{#unless idx}}
+            <td rowspan="{{add person.positions.length 1}}">
+              <PersonLink @person={{person}} @page="timesheet" />
+            </td>
+            <td rowspan="{{add person.positions.length 1}}">
+              {{person.status}}
+            </td>
+        {{/unless}}
+          <td>{{pos.title}}</td>
+          <td class="text-right">{{hour-format pos.duration}}</td>
+          <td class="text-right">{{credits-format pos.credits}}</td>
+        </tr>
+      {{/each}}
+      <tr>
+        <td class="text-right"><b>Total Hours / Credits</b></td>
+        <td class="text-right">{{hour-format person.total_duration}}</td>
+        <td class="text-right">{{credits-format person.total_credits}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

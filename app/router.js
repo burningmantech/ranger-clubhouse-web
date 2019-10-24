@@ -173,6 +173,7 @@ Router.map(function() {
     this.route('languages');
     this.route('timesheet-by-callsign');
     this.route('flakes');
+    this.route('timesheet-totals');
   });
 
   this.route('vc', function() {

@@ -135,7 +135,6 @@
                 {{#if (has-role "edit-bmids")}}
                   {{#link-to "vc.bmid" class="dropdown-item"}}Manage BMIDs{{/link-to}}
                 {{/if}}
-                <a href="{{cgo "timesheet" "noobTracker"}}" class="dropdown-item">N00b Tracker!</a>
               </div>
             </li>
           {{/if}}
@@ -169,14 +168,10 @@
                           <a href="{{cgo "logview" "show"}}" class="dropdown-item">Log View (CH1)</a>
                           {{#link-to "admin.error-log" class="dropdown-item"}}Error Log{{/link-to}}
                           {{#link-to "admin.action-log" class="dropdown-item"}}Action Log{{/link-to}}
-                          <div class="navbar-text">Lambase</div>
-                          <a href="{{cgo "lam" "syncLamPhotos"}}" class="dropdown-item">Synchronize Lam Photos</a>
-                          <a href="{{cgo "lam" "exportLamPhotos"}}" class="dropdown-item">Export Lam Photos</a>
                         </div>
                         <div class="col-sm-12 col-md-3">
                           <div class="navbar-text">Pre-Event</div>
                           {{#link-to "admin.salesforce" class="dropdown-item"}}Salesforce Import{{/link-to}}
-                          <a href="{{cgo "reminders" "index"}}" class="dropdown-item">Reminder Emails</a>
                           <a href="{{cgo "manualreview" "selectAll"}}" class="dropdown-item">Manual Review</a>
                           {{#link-to "admin.radio-eligibility" class="dropdown-item"}}Radio Eligibility{{/link-to}}
                           <div class="navbar-text">Bulk Operations</div>
@@ -225,7 +220,7 @@
                       <div class="navbar-text">People</div>
                       {{#link-to "reports.people-by-position" class="dropdown-item"}}People by Position{{/link-to}}
                       {{#link-to "reports.people-by-role" class="dropdown-item"}}People by Role{{/link-to}}
-                      <a href="{{cgo "person" "selectByStatus"}}" class="dropdown-item">People by Status</a>
+                      {{#link-to "reports.people-by-status" class="dropdown-item"}}People By Status{{/link-to}}
                       {{#link-to "reports.people-by-location" class="dropdown-item"}}People by Location{{/link-to}}
                       {{#link-to "reports.special-teams" class="dropdown-item"}}People By Special Team{{/link-to}}
                     </div>
@@ -234,7 +229,7 @@
                       {{#link-to "reports.on-duty" (query-params over_hours=null) class="dropdown-item"}}People On Duty{{/link-to}}
                       {{#link-to "reports.on-duty" (query-params over_hours=6) class="dropdown-item"}}... Over 6 Hours{{/link-to}}
                       {{#link-to "reports.flakes" class="dropdown-item"}}Flake Report{{/link-to}}
-                      <a href="{{cgo "timesheet" "totalPersonPosition"}}" class="dropdown-item">Timesheet Totals</a>
+                      {{#link-to "reports.timesheet-totals" class="dropdown-item"}}Timesheet Totals{{/link-to}}
                       {{#link-to "reports.timesheet-by-callsign" class="dropdown-item"}}Timesheet By Callsign{{/link-to}}
                       {{#link-to "reports.timesheet-correction-requests" class="dropdown-item"}}Corrections Requests{{/link-to}}
                       {{#link-to "reports.timesheet-unconfirmed" class="dropdown-item"}}Timesheet Unconfirmed{{/link-to}}
@@ -255,7 +250,7 @@
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Other</div>
                       <a href="{{cgo "position" "selectSanityChecks"}}" class="dropdown-item">Position Sanity Check</a>
-                      <a href="{{cgo "languages" "reportByLanguage"}}" class="dropdown-item">Languages</a>
+                      {{#link-to "reports.languages" class="dropdown-item"}}Languages{{/link-to}}
                       {{#link-to "reports.sandman-qualified" class="dropdown-item"}}Sandman Qualified{{/link-to}}
                       {{#link-to "reports.vehicle-paperwork" class="dropdown-item"}}Vehicle Paperwork{{/link-to}}
                     </div>
