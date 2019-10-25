@@ -174,6 +174,7 @@ Router.map(function() {
     this.route('timesheet-by-callsign');
     this.route('flakes');
     this.route('timesheet-totals');
+    this.route('position-sanity-checker');
   });
 
   this.route('vc', function() {
