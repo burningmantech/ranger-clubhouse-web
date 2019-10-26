@@ -36,24 +36,6 @@ of time looking at that window during development.
 * Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
 (Tests are coming)
 
-## Dual Clubhouse: Running with Classic and 2.0 together
-
-By default in the development environment, Clubhouse 2.0 does not run in
-a 'Dual Clubhouse' mode.
-
-To enable this, two configuration needs to be edited:
-
-* In Clubhouse 2.0, edit 'config/environment.js' and set 'dualClubhouse' to true.
-
-* In Clubhouse Classic, edit 'local.config.php' and set 'DualClubhouse' to true.
-
-* Start Clubhouse Classic on port 9000 `php -S localhost:9000 -t .`
-(yes three servers are running at this point: the ember development server,
-the api server, and Clubhouse Classic)
-
-* Be sure to log out of Clubhouse 2.0 and then log in again to make sure a Classic
-  Clubhouse cookie has been set.
-
 ## API Server Endpoint
 
 The API endpoint is specified in app/config/environment.js
