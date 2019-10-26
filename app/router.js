@@ -26,26 +26,26 @@ Router.map(function() {
   this.route('reset-password');
   this.route('me', function() {
     this.route('overview', { path: '/' });
-    this.route('personal-info');
+    this.route('alerts');
+    this.route('contact');
     this.route('emergency-contact');
-    this.route('password');
+    this.route('event-info');
+    this.route('help');
+    this.route('mentees');
     this.route('messages');
+    this.route('motorpool-policy');
+    this.route('password');
+    this.route('personal-info');
+    this.route('tickets');
     this.route('timesheet');
     this.route('schedule', function() {
       this.route('index',  { path: '/' });
     });
-    this.route('tickets');
-    this.route('help');
-    this.route('motorpool-policy');
-    this.route('alerts');
-    this.route('mentees');
-    this.route('contact');
     this.route('timesheet-corrections', function() {
       this.route('review');
       this.route('missing');
       this.route('confirm');
     });
-    this.route('event-info');
   });
 
   this.route('search', function() {
@@ -54,20 +54,22 @@ Router.map(function() {
   });
   this.route('admin', function() {
     this.route('action-log');
+    this.route('alerts');
+    this.route('assets');
+    this.route('bulk-sign-in-out');
+    this.route('bulk-signout');
     this.route('bulk-upload');
+    this.route('clubhouse1-log');
     this.route('credits');
     this.route('error-log');
     this.route('event-dates');
-    this.route('positions');
-    this.route('roles');
-    this.route('salesforce');
-    this.route('settings');
-    this.route('slots');
-    this.route('motd');
-    this.route('assets');
     this.route('help');
+    this.route('hours-credits');
+    this.route('maintenance');
+    this.route('motd');
+    this.route('people-by-status-change');
+    this.route('positions');
     this.route('radio-eligibility');
-    this.route('bulk-sign-in-out');
     this.route('rbs', function() {
       this.route('broadcast');
       this.route('broadcast-log');
@@ -76,58 +78,57 @@ Router.map(function() {
       this.route('stats');
       this.route('unverified-stopped');
     });
-    this.route('alerts');
-    this.route('bulk-signout');
-    this.route('hours-credits');
-    this.route('timesheet-sanity-checker');
+    this.route('roles');
+    this.route('salesforce');
+    this.route('settings');
+    this.route('slots');
     this.route('thank-you-cards');
-    this.route('people-by-status-change');
-    this.route('maintenance');
+    this.route('timesheet-sanity-checker');
   });
 
   this.route('hq', { path: '/hq/:person_id' }, function() {
     this.route('index', { path: '/' });
-    this.route('site-checkin');
-    this.route('shift');
-    this.route('schedule');
-    this.route('timesheet');
     this.route('assets');
     this.route('messages');
+    this.route('schedule');
+    this.route('shift');
+    this.route('site-checkin');
+    this.route('timesheet');
     this.route('training-info');
   });
 
   this.route('debug');
 
   this.route('mentor', function() {
-    this.route('mentees');
-    this.route('potentials');
-    this.route('alpha-status');
     this.route('acceptance-sheets');
-    this.route('schedule');
+    this.route('alpha-status');
     this.route('assignment');
     this.route('convert');
+    this.route('mentees');
+    this.route('potentials');
+    this.route('schedule');
   });
 
   this.route('handle-checker');
 
   this.route('person', { path: '/person/:person_id' } ,function() {
     this.route('index', { path: '/' });
-    this.route('assets');
-    this.route('password');
-    this.route('event-info');
-    this.route('personal-info');
-    this.route('emergency-contact');
-    this.route('timesheet');
-    this.route('messages');
-    this.route('mentors');
-    this.route('schedule');
-    this.route('timesheet-log');
-    this.route('contact-log');
-    this.route('broadcast-log');
     this.route('access-documents');
-    this.route('tickets');
-    this.route('bmid');
     this.route('alerts');
+    this.route('assets');
+    this.route('bmid');
+    this.route('broadcast-log');
+    this.route('contact-log');
+    this.route('emergency-contact');
+    this.route('event-info');
+    this.route('mentors');
+    this.route('messages');
+    this.route('password');
+    this.route('personal-info');
+    this.route('schedule');
+    this.route('tickets');
+    this.route('timesheet-log');
+    this.route('timesheet');
   });
 
   this.route('logout');
@@ -150,31 +151,31 @@ Router.map(function() {
     this.route('alpha-shirts');
     this.route('asset-history');
     this.route('assets-outstanding');
+    this.route('flakes');
     this.route('freaking-years');
     this.route('hq-forecast');
+    this.route('languages');
     this.route('on-duty');
+    this.route('people-by-location');
     this.route('people-by-position');
+    this.route('people-by-role');
+    this.route('people-by-status');
+    this.route('position-sanity-checker');
     this.route('radio-assets');
     this.route('radio-checkout');
     this.route('sandman-qualified');
+    this.route('schedule-by-callsign');
+    this.route('schedule-by-position');
     this.route('shift-coverage');
     this.route('shift-lead');
     this.route('shift-signups');
     this.route('shirts');
     this.route('special-teams');
+    this.route('timesheet-by-callsign');
     this.route('timesheet-correction-requests');
+    this.route('timesheet-totals');
     this.route('timesheet-unconfirmed');
     this.route('vehicle-paperwork');
-    this.route('schedule-by-position');
-    this.route('schedule-by-callsign');
-    this.route('people-by-location');
-    this.route('people-by-role');
-    this.route('people-by-status');
-    this.route('languages');
-    this.route('timesheet-by-callsign');
-    this.route('flakes');
-    this.route('timesheet-totals');
-    this.route('position-sanity-checker');
   });
 
   this.route('vc', function() {

@@ -1,0 +1,87 @@
+<main class="col">
+  <h1>Clubhouse 1 Log</h1>
+
+  <p>
+    This page allows the Clubhouse 1 log to be searched. Entries range from July 16, 2008 to late October 2019.
+  </p>
+
+  {{#if error}}
+    <p class="text-danger">
+        {{error}}
+    </p>
+  {{/if}}
+
+  {{#ch-form "query" query changeSet=false onSubmit=(action searchAction) as |f|}}
+    <div class="form-row">
+      {{f.input "person" label="Person" type="text" size=30 grid="col-sm-12 col-md-2" controlClass="form-control form-control-sm" hint="Callsign or person id"}}
+      {{f.input "start_time" label="Start time" controlClass="form-control form-control-sm" type="datetime" size=30 grid="col-sm-12 col-md-2"}}
+      {{f.input "end_time" label="End time" controlClass="form-control form-control-sm" type="datetime" size=30 grid="col-sm-12 col-md-2"}}
+    </div>
+    <div class="form-group row mb-2">
+      <label class="col-1">Events</label>
+      {{f.input "events" type="checkboxGroup" cols=3 options=eventOptions}}
+    </div>
+    <div class="form-group row mb-2">
+      <label class="col-1">Event Contains</label>
+      {{f.input "event_text" type="text" size=40 grid="col-sm-12 col-md-2" controlClass="form-control form-control-sm"}}
+    </div>
+    <div class="form-row mb-2">
+      <label class="col-1">Sort</label>
+      <div class="col-auto">
+        {{f.input "sort" type="radioGroup" options=sortOptions label="Sort" inline=true}}
+      </div>
+    </div>
+    {{f.submit label="Search"}}
+    <button class="btn btn-secondary" {{action resetFilters f.model}}>Reset</button>
+  {{/ch-form}}
+
+  {{#if logs}}
+    <div class="mt-4">
+      Showing {{currentPage}} of {{total_pages}} pages. {{pluralize total "row"}}
+    </div>
+    <table class="table table-hover table-sm table-width-auto">
+      <thead>
+        <tr>
+          <th class="w-15">Timestamp</th>
+          <th class="w-15">Person</th>
+          <th class="w-15">Target</th>
+          <th class="w-50">Event</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {{#each logs as |log|}}
+          <tr>
+            <td class="w-15">{{log.occurred}}</td>
+            <td class="w-15">
+              {{#if log.user_person}}
+                {{person-link person=log.user_person}}
+              {{else if log.user_person_id}}
+                #{{log.user_person_id}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            <td class="w-15">
+              {{#if log.current_person}}
+                {{person-link person=log.current_person}}
+              {{else if log.current_person_id}}
+                #{{log.current_person_id}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            <td class="w-50">
+              {{log.event}}
+            </td>
+          </tr>
+
+        {{/each}}
+      </tbody>
+    </table>
+    <button class="btn btn-secondary" {{action goPrevPage}} disabled={{eq currentPage 1}}>Prev Page</button>
+    <button class="btn btn-secondary" {{action goNextPage}} disabled={{eq currentPage total_pages}}>Next Page</button>
+  {{else}}
+    <p class="text-danger font-weight-bold mt-4">No Action Logs matched the criteria.</p>
+  {{/if}}
+</main>
