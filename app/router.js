@@ -84,6 +84,7 @@ Router.map(function() {
     this.route('slots');
     this.route('thank-you-cards');
     this.route('timesheet-sanity-checker');
+    this.route('manual-review');
   });
 
   this.route('hq', { path: '/hq/:person_id' }, function() {
