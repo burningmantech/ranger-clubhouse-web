@@ -51,8 +51,6 @@ module.exports = function(environment) {
       headers                  : {}
     },
 
-    'dualClubhouse':    false,
-
     showAjaxErrors: true,
 
     logRoutes: false, // Send each route transition to the backend for analytic reporting
@@ -90,9 +88,6 @@ module.exports = function(environment) {
       'media-src': "'self' *"
     }
 
-    ENV.dualClubhouse = true;
-    ENV.clubhouseClassicUrl = 'http://localhost:9000';
-
     ENV['api-server'] = 'http://localhost:8000';
 
     ENV['ember-simple-auth-token'].serverTokenEndpoint = ENV['api-server']+'/auth/login';
@@ -109,9 +104,6 @@ module.exports = function(environment) {
   if (environment === 'test') {
     // Testem prefers this...
     ENV.locationType = 'none';
-
-    ENV.dualClubhouse = false;
-    ENV.clubhouseClassicUrl = null;
 
     /*
      * The ember-simple-auth-token addon will fire up a timer when the JWT has an expiration property.
@@ -144,8 +136,6 @@ module.exports = function(environment) {
   if (environment === 'production') {
     // here you can enable a production-specific feature
     ENV.rootURL = (process.env.RANGER_CLUBHOUSE_CLIENT_PREFIX || '/client');
-    ENV.dualClubhouse = true;
-    ENV.clubhouseClassicUrl = (process.env.RANGER_CLUBHOUSE_CLASSIC_URL || '/clubhouse');
 
     // Try to report any non-recoverable errors.
     ENV.logEmberErrors = true;

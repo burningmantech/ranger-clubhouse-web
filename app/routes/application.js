@@ -3,7 +3,6 @@ import { action, setProperties } from '@ember/object';
 import { humanize } from 'ember-cli-string-helpers/helpers/humanize';
 import { inject as service } from '@ember/service';
 import { config } from 'clubhouse/utils/config';
-import setCookie from 'clubhouse/utils/set-cookie';
 
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import ENV from 'clubhouse/config/environment';
@@ -126,7 +125,6 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
 
   @action
   logout() {
-    setCookie('C2AUTHTOKEN', 'nothing', 0);
     this.house.clearStorage();
     this.session.invalidate();
   }
