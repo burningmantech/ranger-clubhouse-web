@@ -17,7 +17,6 @@ export default class ReportsPositionSanityCheckerController extends Controller {
       return;
     }
 
-    console.log('people', fixPeople);
     const people_ids = fixPeople.map((p) => p.id);
 
     this.set('isSubmitting', true);
