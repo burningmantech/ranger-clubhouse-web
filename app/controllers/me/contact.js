@@ -12,15 +12,19 @@ export default class MeContactController extends Controller {
   searchForm = EmberObject.create({ callsign: '' });
 
   _performSearch(model) {
-    const callsign = model.get('callsign');
+    const callsign = model.get('callsign').trim();
 
     if (callsign == '' || callsign.length < 2) {
       return;
     }
 
     this.set('isSubmitting', true);
+    this.set('noMatch', null);
     this.ajax.request('callsigns', { data: { query: callsign, type: 'contact', limit: 10 }}).then((results) => {
       this.set('foundCallsigns', results.callsigns);
+      if (this.foundCallsigns.length == 0) {
+        this.set('noMatch', callsign);
+      }
     }).catch((response) => {
       this.house.handleErrorResponse(response);
     }).finally(() => {
