@@ -31,13 +31,11 @@ export default class AdminClubhouse1LogRoute extends Route {
   model(params) {
     // Take the query parameters, and build up the action log search parameters
     const searchParams = Object.keys(this.queryParams).reduce((hash, key) => {
-      console.log(`Looking at ${key}`);
       if (params[key]) {
         if (key == 'events') {
           // action log api expects a json array for events, while we
           // want a comma separated field on the url
           hash[key] = params[key].split(',').map((event) => Clubhouse1Events[event]).join(',');
-          console.log(`KEY ${key} -> ${params[key]} -> ${hash[key]}`);
         } else {
           hash[key] = params[key];
         }

@@ -20,8 +20,6 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
       return;
     }
 
-    // Tracking cookie
-
     // Record route transitions
     this.router.on('routeDidChange', (transition) => {
       if (!transition || !transition.to || transition.to.name == 'admin.action-log') {
@@ -65,6 +63,7 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
     if (transition.targetName == 'offline') {
       return;
     }
+
     // Has the app configuration been loaded?
     if (ENV['clientConfig']) {
       return this.setCurrentUser();
@@ -89,27 +88,19 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
     this.session.invalidate();
   }
 
-  sessionAuthenticated() {
-    // don't call the parent method - it will attempt to route
-    // before everything is setup.
-    //this._super(...arguments);
-    return this.setCurrentUser().then(() => {
-      return this.transitionTo('me.overview');
-    });
+  async sessionAuthenticated() {
+    await this.setCurrentUser();
+    super.sessionAuthenticated(...arguments);
   }
 
   setCurrentUser() {
     if (!this.session.isAuthenticated) {
-      this.transitionTo('login');
       return Promise.resolve();
     }
 
     return this.session.loadUser().then(() => {
       this.controllerFor('application').setup();
-    }).catch((response) => {
-      this.transitionTo('/login');
-      this.house.handleErrorResponse(response);
-    });
+    }).catch(() => this.session.invalidate());
   }
 
   setupController(controller) {
@@ -130,13 +121,11 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
   }
 
   @action
-  didTransition() {
+  willTransition() {
     // Close up the navbar when clicking on a menu item and
     // the navigation bar is not expanded - i.e. when showning
     // on a cellphone.
-    $('header a.dropdown-item').on('click', function () {
-      $('.navbar-collapse').collapse('hide');
-    });
+    $('.navbar-collapse').collapse('hide');
   }
 
   // Dynamic page title: https://github.com/mike-north/ember-cli-document-title-northm
