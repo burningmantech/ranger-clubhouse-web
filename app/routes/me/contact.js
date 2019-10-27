@@ -22,8 +22,9 @@ export default class MeContactRoute extends Route.extend(MeRouteMixin) {
   setupController(controller) {
     controller.set('searchForm.callsign', this.callsign);
     controller.set('noMatch', null);
+    controller.set('isSearchingParam', false);
     if (this.callsign) {
-      controller._performSearch(controller.searchForm);
+      controller._performSearch(controller.searchForm, true);
     }
   }
 
