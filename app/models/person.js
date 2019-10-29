@@ -14,8 +14,7 @@ export default class PersonModel extends DS.Model.extend(PersonMixin) {
   @attr('boolean') callsign_approved;
   @attr('string') formerly_known_as;
   @attr('string') status;
-  @attr('string') status_date;
-  @attr('boolean') vintage;
+  @attr('string', { readOnly: true }) status_date;
   @attr('boolean') user_authorized;
   @attr('string') date_verified;
   @attr('string') create_date;
@@ -37,7 +36,6 @@ export default class PersonModel extends DS.Model.extend(PersonMixin) {
 
   @attr('string') camp_location;
   @attr('string') gender;
-  @attr('string') birthdate;
 
   @attr('string') longsleeveshirt_size_style;
   @attr('string') teeshirt_size_style;
@@ -48,21 +46,12 @@ export default class PersonModel extends DS.Model.extend(PersonMixin) {
   // Emergency contact
 
   @attr('string') emergency_contact;
-  @attr('string') em_first_name;
-  @attr('string') em_mi;
-  @attr('string') em_last_name;
-  @attr('string') em_handle;
-  @attr('string') em_home_phone;
-  @attr('string') em_alt_phone;
-  @attr('string') em_email;
-  @attr('string') em_camp_location;
 
-  @attr('string') barcode;
   @attr('boolean') asset_authorized;
   @attr('boolean') vehicle_blacklisted;
   @attr('boolean') vehicle_paperwork;
   @attr('boolean') vehicle_insurance_paperwork;
-  @attr('string') lam_status;
+
   @attr('string') bpguid;
   @attr('string') sfuid;
 
