@@ -17,9 +17,9 @@
   as submitted.)</p>
 
 <p>Note that there is a recommended TRS batch size of not more than
-  700 items. (An item is any goodie of any sort.) If you have more
-  than 700 items, the system will stop at around 700, and you can then
-  upload that batch, mark it as submitted, and get on with the next batch.</p>
+  {{this.MAX_BATCH_SIZE}} items. (An item is any goodie of any sort.) If you have more
+  than {{this.MAX_BATCH_SIZE}} items, the system will stop at around {{this.MAX_BATCH_SIZE}},
+  and you can then upload that batch, mark it as submitted, and get on with the next batch.</p>
 
 
 {{#if this.badRecords}}
@@ -62,7 +62,7 @@
     }}
   </div>
   <div class="col-auto">
-    <label class="col-form-label">Export is limited to {{MAX_BATCH_SIZE}} items</label>
+    <label class="col-form-label">Export is limited to {{this.MAX_BATCH_SIZE}} items</label>
   </div>
 
 </div>
