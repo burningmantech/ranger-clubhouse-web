@@ -1,15 +1,15 @@
 import Component from '@ember/component';
 import { action, computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 
 import { validatePresence } from 'ember-changeset-validations/validators';
 
 export default class MeTimesheetReviewCommonComponent extends Component {
-  @argument('object') timesheets;
-  @argument(optional('object')) timesheetInfo;
-  @argument(optional('object')) timesheetSummary;
-  @argument('object') person;
+  timesheets = null;
+  timesheetInfo = null;
+  timesheetSummary = null;
+  person = null;
 
   entry = null; // Incorrect entry
 

@@ -1,14 +1,14 @@
 import Component from '@ember/component';
 import EmberObject from '@ember/object';
 import { action, computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
+
 import { validatePresence } from 'ember-changeset-validations/validators';
 
 export default class AssetCheckoutFormComponent extends Component {
-  @argument('object') attachments;
-  @argument('object') person;
-  @argument('object') assets;
-  @argument('object') eventInfo;
+  attachments = null;
+  person = null;
+  assets = null;
+  eventInfo = null;
 
   assetValdiations = {
     barcode: validatePresence(true)

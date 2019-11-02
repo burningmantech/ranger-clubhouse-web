@@ -2,8 +2,8 @@ import Component from '@ember/component';
 import { set } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { action, computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 import { tagName } from '@ember-decorators/component';
 import TicketDeliveryValidations from 'clubhouse/validations/ticket-delivery';
 import { StateOptions } from 'clubhouse/constants/countries';
@@ -11,13 +11,13 @@ import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
 
 @tagName('')
 export default class TicketDeliverInfoComponent extends Component {
-  @argument('object') ticketingInfo;
-  @argument('object') ticketPackage;
-  @argument('object') person;
-  @argument(optional('object')) ticket;
-  @argument(optional('object')) vehiclePass;
-  @argument('object') showing;
-  @argument('object') toggleCard;
+  ticketingInfo = null;
+  ticketPackage = null;
+  person = null;
+  ticket = null;
+  vehiclePass = null;
+  showing = null;
+  toggleCard = null;
 
   deliveryMethod = 'none';
   isSaved = false;

@@ -2,16 +2,16 @@ import Component from '@ember/component';
 import { isEmpty } from '@ember/utils';
 import { action } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 
 @tagName('')
 export default class ChFormSubmitComponent extends Component {
-  @argument(optional('string')) label;
-  @argument(optional('string')) submitClass;
-  @argument(optional('boolean')) disabled;
-  @argument(optional('object')) formSubmitAction; // Form submit action
-  @argument('object') onSubmit; // Form submit action
+  label = null;
+  submitClass = null;
+  disabled = null;
+  formSubmitAction = null; // Form submit action
+  onSubmit = null; // Form submit action
 
  init() {
     super.init(...arguments);

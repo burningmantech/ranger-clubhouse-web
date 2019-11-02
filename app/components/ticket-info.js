@@ -1,21 +1,21 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 import { tagName } from '@ember-decorators/component';
 import { ticketTypeLabel } from 'clubhouse/constants/ticket-types';
 import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
 
 @tagName('')
 export default class TicketInfoComponent extends Component {
-  @argument('object') ticketingInfo;
-  @argument('object') ticketPackage;
-  @argument('object') person;
-  @argument(optional('object')) ticket;
-  @argument('object') setTicketStatus;
-  @argument('object') showing;
-  @argument('object') toggleCard;
-  @argument('object') nextSection;
+  ticketingInfo = null;
+  ticketPackage = null;
+  person = null;
+  ticket = null;
+  setTicketStatus = null;
+  showing = null;
+  toggleCard = null;
+  nextSection = null;
 
   @computed('ticket.type')
   get ticketType() {

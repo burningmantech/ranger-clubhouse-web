@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { action } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 import { tagName } from '@ember-decorators/component';
 import { isEmpty } from '@ember/utils';
 
@@ -9,8 +9,8 @@ import { isEmpty } from '@ember/utils';
 export default class SlotInfoLink extends Component {
   static  positionalParams =  [ 'description', 'info' ];
 
-  @argument(optional('string')) description;
-  @argument(optional('string')) info;
+  description = null;
+  info = null;
 
   @action
   show() {

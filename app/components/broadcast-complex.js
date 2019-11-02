@@ -13,7 +13,7 @@
 
 import Component from '@ember/component';
 import EmberObject, { action, computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
+
 import { isEmpty } from '@ember/utils';
 import { validatePresence } from 'ember-changeset-validations/validators';
 import validatePresenceIf from 'clubhouse/validators/presence-if';
@@ -22,9 +22,9 @@ import { Broadcasts } from 'clubhouse/constants/broadcast';
 import moment from 'moment';
 
 export default class BroadcastComplexComponent extends Component {
-  @argument('object') config;
-  @argument('string') type;
-  @argument('object') broadcast;
+  config = null;
+  type = null;
+  broadcast = null;
 
   isReviewing = false;
   isSubmitting = false;

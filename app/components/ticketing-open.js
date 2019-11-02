@@ -1,13 +1,13 @@
 import Component from '@ember/component';
 import { set } from '@ember/object';
 import { action, computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
+
 import { later } from '@ember/runloop';
 
 export default class TicketingOpenComponent extends Component {
-  @argument('object') person;
-  @argument('object') ticketingInfo;
-  @argument('object') ticketPackage;
+  person = null;
+  ticketingInfo = null;
+  ticketPackage = null;
 
   showing = { };
 

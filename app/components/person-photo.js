@@ -1,14 +1,14 @@
 import Component from '@ember/component';
 import { action, computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 import { classNames } from '@ember-decorators/component';
 
 @classNames('mugshot', 'float-md-right')
 export default class PersonPhotoComponent extends Component {
-  @argument('object') person;
-  @argument(optional('object')) photo;
-  @argument(optional('object')) syncAction;
+  person = null;
+  photo = null;
+  syncAction = null;
 
   @computed('person')
   get canShowUploadUrl() {

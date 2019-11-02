@@ -4,7 +4,7 @@
 
 import Component from '@ember/component';
 import EmberObject, { action, computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
+
 import { filterBy } from '@ember/object/computed';
 import { validateFormat } from 'ember-changeset-validations/validators';
 import { isEmpty } from '@ember/utils';
@@ -12,9 +12,9 @@ import { isEmpty } from '@ember/utils';
 const PHONE_REGEXP = /^(?=(?:\D*\d){10,15}\D*$)\+?[0-9]{1,3}[\s-]?(?:\(0?[0-9]{1,5}\)|[0-9]{1,5})[-\s]?[0-9][\d\s-]{5,7}\s?(?:x[\d-]{0,4})?$/;
 
 export default class AlertsManageComponent extends Component {
-  @argument('object') numbers;
-  @argument('object') person;
-  @argument('object') alerts;
+  numbers = null;
+  person = null;
+  alerts = null;
 
   alerts = [];
   numbers = {};

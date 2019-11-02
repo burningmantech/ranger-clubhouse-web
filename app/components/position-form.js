@@ -1,15 +1,15 @@
 import Component from '@ember/component';
 import { action, computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 import PositionValidations from 'clubhouse/validations/position';
 import PositionTypes from 'clubhouse/constants/position-types';
 
 export default class PositionFormComponent extends Component {
-  @argument('object') position;
-  @argument(optional('object')) trainingPositions;
-  @argument('object') onSave;
-  @argument('object') onCancel;
+  position = null;
+  trainingPositions = null;
+  onSave = null;
+  onCancel = null;
 
   positionTypes = PositionTypes;
   positionValidations = PositionValidations;

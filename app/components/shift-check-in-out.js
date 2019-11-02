@@ -1,20 +1,20 @@
 import Component from '@ember/component';
 import { set } from '@ember/object';
 import { action, computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 import { inject as service } from '@ember/service';
 import * as Position from 'clubhouse/constants/positions';
 
 export default class ShiftCheckInOutComponent extends Component {
-  @argument('object') person; // Person we're dealing with
-  @argument('object') timesheets; // The timesheets
-  @argument('object') positions; // And possible positions person can sign into.
-  @argument('object') eventInfo; // Used to determine if person has been dirt trained
+  person = null; // Person we're dealing with
+  timesheets = null; // The timesheets
+  positions = null; // And possible positions person can sign into.
+  eventInfo = null; // Used to determine if person has been dirt trained
 
-  @argument(optional('object')) imminentSlots; // (optional) slots that might be starting
-  @argument(optional('any')) hasUnverifiedTimesheet; // (optional) true if entries are unverified
-  @argument(optional('object')) endShiftNotify; // (optional) callback when a shift was successfully ended.
+  imminentSlots = null; // (optional) slots that might be starting
+  hasUnverifiedTimesheet = null; // (optional) true if entries are unverified
+  endShiftNotify = null; // (optional) callback when a shift was successfully ended.
 
   @service store;
 

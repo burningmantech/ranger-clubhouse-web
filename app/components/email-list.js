@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import { argument } from "@ember-decorators/argument";
-import { optional } from "@ember-decorators/argument/types";
+
+
 import { action } from "@ember/object";
 import $ from 'jquery';
 
@@ -10,11 +10,11 @@ export default class EmailListComponent extends Component {
    * The object format is:
    *  id, callsign, first_name, last_name, email
    */
-  @argument('object') people;
+  people = null;
 
   // if true, scroll to the email list when list is rendered
-  @argument(optional('boolean')) scrollOnRender = false;
-  @argument(optional('string')) listId = 'email-list';
+  scrollOnRender = false;
+  listId = 'email-list';
 
   didRender() {
     if (!this.scrollOnRender) {

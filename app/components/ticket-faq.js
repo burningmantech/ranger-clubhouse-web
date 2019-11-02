@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { argument } from '@ember-decorators/argument';
+
 import { tagName } from '@ember-decorators/component';
 
 const topicDescriptions = {
@@ -11,8 +11,8 @@ const topicDescriptions = {
 
 @tagName('')
 export default class TicketFaqComponent extends Component {
-  @argument('string') topic;
-  @argument('object') ticketingInfo;
+  topic = null;
+  ticketingInfo = null;
 
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);

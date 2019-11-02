@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { argument } from '@ember-decorators/argument';
+
 import { computed } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
 
@@ -9,7 +9,7 @@ import { tagName } from '@ember-decorators/component';
 
 @tagName('')
 export default class NumberOfTimesComponent extends Component {
-  @argument('number') times;
+  times = null;
 
   @computed('times')
   get loops() {

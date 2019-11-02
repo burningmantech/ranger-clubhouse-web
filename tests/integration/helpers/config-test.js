@@ -9,23 +9,17 @@ module('helper:config', function(hooks) {
 
   // Replace this with your real tests.
   test('it should find config', async function(assert) {
-    if (!ENV['clientConfig'])
-      ENV['clientConfig'] = {}
-
-    ENV['clientConfig'].parent = 'rick';
+    ENV['clientConfig'] = { parent: 'rick' };
 
     await render(hbs`{{config 'parent'}}`);
 
-    assert.dom('*').hasText('rick');
+    assert.equal(this.element.textContent.trim(), 'rick');
   });
 
   test('it should not find config', async function(assert) {
-    if (!ENV['clientConfig'])
-      ENV['clientConfig'] = {}
-
-    delete ENV['clientConfig']['parent'];
+    ENV['clientConfig'] = {}
 
     await render(hbs`{{config 'parent'}}`);
-    assert.dom('*').hasText('');
+    assert.equal(this.element.textContent.trim(), '');
   });
 });

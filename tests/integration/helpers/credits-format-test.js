@@ -12,6 +12,6 @@ module('helper:credits-format', function(hooks) {
 
     await render(hbs`{{credits-format credits}}`);
 
-    assert.dom('*').hasText('12.00');
+    assert.equal(this.element.textContent.trim(), '12.00');
   });
 });

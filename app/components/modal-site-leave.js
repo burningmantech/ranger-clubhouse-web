@@ -1,14 +1,14 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { alias } from '@ember/object/computed';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 
 export default class ModalSiteLeaveComponent extends Component {
-  @argument(optional('string')) title;
-  @argument(optional('object')) dialog;
-  @argument(optional('object')) onClose;
-  @argument(optional('object')) onConfirm;
+  title = null;
+  dialog = null;
+  onClose = null;
+  onConfirm = null;
 
   @alias('dialog.data.isOnDuty') isOnDuty;
   @alias('dialog.data.unverifiedTimesheetCount') unverifiedTimesheetCount;

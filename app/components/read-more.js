@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { action, computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 import { tagName } from '@ember-decorators/component';
 
 /*
@@ -10,8 +10,8 @@ import { tagName } from '@ember-decorators/component';
 
 @tagName('')
 export default class ReadMoreComponent extends Component {
-  @argument('string') text;
-  @argument(optional('number')) limit = 20;
+  text = null;
+  limit = 20;
 
   hideFullText = true;
 

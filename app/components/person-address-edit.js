@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
+
 import {
   CountryOptions,
   StateOptions,
@@ -8,7 +8,7 @@ import {
 } from 'clubhouse/constants/countries';
 
 export default class PersonAddressEditComponent extends Component {
-  @argument('object') f;
+  f = null;
 
   countryOptions = CountryOptions;
 

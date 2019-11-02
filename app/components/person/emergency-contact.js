@@ -1,11 +1,11 @@
 import Component from '@ember/component';
-import { argument } from '@ember-decorators/argument';
+
 import { action } from '@ember/object';
 import EmergencyContactValidations from 'clubhouse/validations/emergency-contact';
 
 export default class PersonEmergencyContactComponent extends Component {
-  @argument('object') person;
-  @argument('object') onCancel;
+  person = null;
+  onCancel = null;
 
   emergencyContactValidations = EmergencyContactValidations;
 

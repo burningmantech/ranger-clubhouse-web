@@ -4,17 +4,17 @@
 
 import Component from '@ember/component';
 import { action, computed, set } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
+
 import { validatePresence } from 'ember-changeset-validations/validators';
 import { inject as service } from '@ember/service';
 import * as Position from 'clubhouse/constants/positions';
 import validateDateTime from 'clubhouse/validators/datetime';
 
 export default class MeTimesheetMissingCommonComponent extends Component {
-  @argument('object') positions;
-  @argument('object') timesheetsMissing;
-  @argument('object') person;
-  @argument('object') timesheetInfo;
+  positions = null;
+  timesheetsMissing = null;
+  person = null;
+  timesheetInfo = null;
 
   @service store;
 

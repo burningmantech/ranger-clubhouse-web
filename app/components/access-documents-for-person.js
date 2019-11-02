@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
+
 import { tagName } from '@ember-decorators/component';
 import moment from 'moment';
 
@@ -10,8 +10,8 @@ import moment from 'moment';
 
 @tagName('tr')
 export default class AccessDocumentsForPersonComponent extends Component {
-  @argument('object') person;
-  @argument('object') documents;
+  person = null;
+  documents = null;
 
   ticketInfoTypes = {
     staff_credential: 'CRED',

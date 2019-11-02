@@ -1,12 +1,12 @@
 import Component from '@ember/component';
-import { argument } from '@ember-decorators/argument';
+
 import { set } from '@ember/object';
 
 import _ from 'lodash';
 
 const ALPHAS_PER_PAGE = 28;
 export default class MentorAlphaAparelSheetComponent extends Component {
-    @argument('object') slot;
+    slot = null;
 
     didReceiveAttrs() {
       super.didReceiveAttrs(...arguments);

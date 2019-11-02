@@ -1,16 +1,16 @@
 import Component from '@ember/component';
 import { debounce } from '@ember/runloop';
 import { action } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
+
 import RSVP from 'rsvp';
 
 import PersonMessageValidations from 'clubhouse/validations/person-message';
 
 export default class MessageNewComponent extends Component {
-  @argument('object') message;
-  @argument('object') onSubmit;
-  @argument('object') onCancel;
-  @argument('boolean') isSubmitting;
+  message = null;
+  onSubmit = null;
+  onCancel = null;
+  isSubmitting = null;
 
   personMessageValidations = PersonMessageValidations;
 

@@ -1,13 +1,13 @@
 import Component from '@ember/component';
-import { argument } from '@ember-decorators/argument';
+
 import { action, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 import { Role } from 'clubhouse/constants/roles';
 
 export default class ClubhouseMessagesComponent extends Component {
-  @argument('object') person;
-  @argument('object') messages;
+  person = null;
+  messages = null;
 
   @service store;
 
