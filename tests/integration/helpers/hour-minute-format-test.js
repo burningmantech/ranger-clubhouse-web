@@ -12,6 +12,6 @@ module('helper:hour-minute-format', function(hooks) {
 
     await render(hbs`{{hour-minute-format duration}}`);
 
-    assert.dom('*').hasText('2:01');
+    assert.equal(this.element.textContent.trim(), '2:01');
   });
 });

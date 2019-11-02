@@ -1,14 +1,14 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
+
 import { config } from 'clubhouse/utils/config';
 import { tagName } from '@ember-decorators/component';
 
 @tagName('')
 export default class TicketThresholdComponent extends Component {
-  @argument('number') credits;
-  @argument('number') creditsEarned;
-  @argument('number') year;
+  credits = null;
+  creditsEarned = null;
+  year = null;
 
   // Reduce price ticket threshold
   rpThreshold = parseFloat(config('RpTicketThreshold'));

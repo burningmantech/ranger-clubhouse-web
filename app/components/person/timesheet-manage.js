@@ -1,17 +1,17 @@
 import Component from '@ember/component';
 import { action, computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
+
 import { Role } from 'clubhouse/constants/roles';
 import { validatePresence } from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 
 export default class PersonTimesheetManageComponent extends Component {
-  @argument('object') timesheets; // Person's timesheet
-  @argument('object') person;     // The person we're dealing with
-  @argument('object') positions;  // Possible positions a person can sign into.
-  @argument('number') year;       // The year being viewed
-  @argument('object') timesheetSummary; // breakdown on hours & credits.
-  @argument('object') onChange;   // call back to refresh the various views
+  timesheets = null; // Person's timesheet
+  person = null;     // The person we're dealing with
+  positions = null;  // Possible positions a person can sign into.
+  year = null;       // The year being viewed
+  timesheetSummary = null; // breakdown on hours & credits.
+  onChange = null;   // call back to refresh the various views
 
   editEntry = null;
 

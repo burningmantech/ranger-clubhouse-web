@@ -1,18 +1,18 @@
 import Component from '@ember/component';
 import EmberObject from '@ember/object';
 import { action, computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 
 export default class PersonPositionFormComponent extends Component {
   // position id array
-  @argument(optional('object')) positionIds = null;
+  positionIds = null;
   // available positions to select from
-  @argument('object') positions = null;
+  positions = null;
 
   // actions for save & cancel
-  @argument('object') onSave = null;
-  @argument('object') onCancel = null;
+  onSave = null;
+  onCancel = null;
 
   positionForm = null;
 

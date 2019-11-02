@@ -5,8 +5,8 @@ import EmberObject from '@ember/object';
 import Component from '@ember/component';
 import { action, computed } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 
 import { typeOf } from '@ember/utils';
 import inGroups from 'clubhouse/utils/in-groups';
@@ -17,19 +17,19 @@ class MultiCheckboxField extends EmberObject {
 @tagName('')
 export default class ChFormCheckboxGroupComponent extends Component {
   // field name
-  @argument(optional('string')) name;
+  name = null;
   // initial value
-  @argument(optional('any')) value = '';
+  value = '';
 
-  @argument(optional('any')) options = null;
-  @argument(optional('number')) cols;
-  @argument(optional('string')) _domId;
+  options = null;
+  cols = null;
+  _domId = null;
 
   // Callback for when the group updates (i.e., the user clicks on stuff)
-  @argument(optional('object')) onUpdate;
+  onUpdate = null;
 
   // Used purely to be notified when the model completely changes
-  @argument('object') model;
+  model = null;
 
   gridColumn = 'col-auto';
 

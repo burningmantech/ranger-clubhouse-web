@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { action, computed } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
-import { argument } from '@ember-decorators/argument';
+
 import { A } from '@ember/array';
 import { set } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
@@ -17,13 +17,13 @@ const upcomingShifts = ['Upcoming Shifts', 'upcoming'];
 
 @tagName('')
 export default class ScheduleManageComponent extends Component {
-  @argument('object') person;
-  @argument('number') year;
-  @argument('object') slots;
-  @argument('object') signedUpSlots;
-  @argument('number') creditsEarned = 0.0;
-  @argument('object') permission;
-  @argument('object') scheduleSummary;
+  person = null;
+  year = null;
+  slots = null;
+  signedUpSlots = null;
+  creditsEarned = 0.0;
+  permission = null;
+  scheduleSummary = null;
 
   scheduleSummary = null;
 

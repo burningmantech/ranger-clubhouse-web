@@ -1,11 +1,11 @@
 import Component from '@ember/component';
-import { argument } from '@ember-decorators/argument';
+
 import { computed } from '@ember/object';
 
 export default class TicketingClosedComponent extends Component {
-  @argument('object') person;
-  @argument('object') ticketingInfo;
-  @argument('object') ticketPackage;
+  person = null;
+  ticketingInfo = null;
+  ticketPackage = null;
 
   @computed('ticketPackage.tickets')
   get ticket() {

@@ -1,6 +1,4 @@
 import Component from '@ember/component';
-import { argument } from '@ember-decorators/argument';
-import { optional, unionOf } from '@ember-decorators/argument/types';
 import { computed } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
 
@@ -8,17 +6,17 @@ import { tagName } from '@ember-decorators/component';
 @tagName('')
 export default class PersonLinkComponent extends Component {
   // use the person record if present. person.id and person.callsign are used.
-  @argument(optional('object')) person;
+  person = null;
 
   // Otherwise personId and callsign component arguments are used
-  @argument(optional(unionOf('number', 'string'))) personId;
-  @argument(optional('string')) callsign;
+  personId = null;
+  callsign = null;
 
   // should a specific
-  @argument(optional('string')) page;
+  page = null;
 
   // Year argument?
-  @argument(optional(unionOf('string', 'number'))) year;
+  year = null;
 
   @computed('page')
   get routePath() {

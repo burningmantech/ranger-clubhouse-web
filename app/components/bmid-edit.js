@@ -1,6 +1,6 @@
 import Component from '@ember/component';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 import {
   MealOptions,
   BmidStatusOptions,
@@ -8,12 +8,12 @@ import {
 } from 'clubhouse/constants/bmid';
 
 export default class BmidEditComponent extends Component {
-  @argument('object') entry;
-  @argument('number') year;
-  @argument('object') onSave;
-  @argument(optional('object')) onCancel;
-  @argument(optional('boolean')) modalBox = true;
-  @argument('object') admissionDateOptions;
+  entry = null;
+  year = null;
+  onSave = null;
+  onCancel = null;
+  modalBox = true;
+  admissionDateOptions = null;
 
   bmidStatusOptions = BmidStatusOptions;
   mealOptions = MealOptions;

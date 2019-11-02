@@ -1,6 +1,6 @@
 import Component from '@ember/component';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 import { action, computed, set } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
 import { typeOf, isEmpty } from '@ember/utils';
@@ -14,28 +14,27 @@ import $ from 'jquery';
 export default class ChFormComponent extends Component {
   static positionalParams = ['formId', 'originalModel'];
 
-  @argument(optional('string')) formId;
-  @argument(optional('object')) validator;
+  formId = null;
+  validator = null;
 
   // The original model being edited.
-  @argument('object') originalModel;
+  originalModel = null;
 
-  @argument(optional('object')) onSubmit;
-  @argument(optional('object')) onReset;
-  @argument(optional('object')) onCancel;
-  @argument(optional('object')) ge;
+  onSubmit = null;
+  onReset = null;
+  onCancel = null;
 
-  @argument(optional('boolean')) modalBox = false; // Open form as a modal dialog
-  @argument(optional('string')) modalTitle = ''; // title
+  modalBox = false; // Open form as a modal dialog
+  modalTitle = ''; // title
 
   // By default a changset object will be created for the model and used.
-  @argument(optional('boolean')) changeSet = true;
+  changeSet = true;
 
-  @argument(optional('string')) autocomplete = "off";
+  autocomplete = "off";
 
-  @argument(optional('string')) formClass;
+  formClass = null;
 
-  @argument(optional('boolean')) formless = false;
+  formless = false;
 
   // Was the original backing model updated?
   watchingModel = false;

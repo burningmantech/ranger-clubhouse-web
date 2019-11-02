@@ -1,18 +1,18 @@
 import Component from '@ember/component';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 import $ from 'jquery';
 
 export default class ModalDialogComponent extends Component {
-  @argument(optional('string')) title;
+  title = null;
 
-  @argument(optional('object')) onConfirm;
-  @argument(optional('object')) onClose;
-  @argument(optional('object')) onShow;
+  onConfirm = null;
+  onClose = null;
+  onShow = null;
 
-  @argument(optional('string')) confirmLabel = 'Confirm';
-  @argument(optional('string')) cancelLabel = 'Cancel';
-  @argument(optional('string')) closeLabel = 'Close';
+  confirmLabel = 'Confirm';
+  cancelLabel = 'Cancel';
+  closeLabel = 'Close';
 
   didInsertElement() {
     super.didInsertElement(...arguments);

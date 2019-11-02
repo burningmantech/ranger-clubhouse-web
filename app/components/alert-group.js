@@ -1,21 +1,21 @@
 import Component from '@ember/component';
-import { argument } from '@ember-decorators/argument';
+
 import { tagName } from '@ember-decorators/component';
 
 @tagName('')
 export default class AlertGroupComponent extends Component {
   // Preference list
-  @argument('object') group;
+  group = null;
 
   // Phone numbers and verification status
-  @argument('object') numbers;
+  numbers = null;
 
   // Heading text for group
-  @argument('string') heading;
+  heading = null;
 
   // group description
-  @argument('string') description;
+  description = null;
 
   // person's email address
-  @argument('string') email;
+  email = null;
 }

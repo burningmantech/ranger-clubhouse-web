@@ -1,18 +1,18 @@
 import Component from '@ember/component';
 import { action } from '@ember/object';
 import { classNames } from '@ember-decorators/component';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 
 import { isEmpty } from '@ember/utils';
 import { inject as service } from '@ember/service';
 
 @classNames('popover-container')
 export default class HelpPopoverComponent extends Component {
-  @argument('string') slug;
-  @argument(optional('boolean')) bottom = false;
-  @argument(optional('boolean')) left = false;
-  @argument(optional('string')) label = '';
+  slug = null;
+  bottom = false;
+  left = false;
+  label = '';
 
   @service ajax;
 

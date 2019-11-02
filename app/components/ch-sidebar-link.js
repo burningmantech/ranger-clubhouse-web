@@ -1,8 +1,8 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { classNames, tagName } from '@ember-decorators/component';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 import { isEmpty } from '@ember/utils';
 
 @tagName('')
@@ -10,14 +10,14 @@ import { isEmpty } from '@ember/utils';
 export default class ChSidebarLinkComponent extends Component {
   static positionalParams = [ 'routePath', 'routeArg' ];
 
-  @argument(optional('string')) title;
-  @argument(optional('string')) icon;
-  @argument(optional('string')) iconType = 'r';
-  @argument(optional('string')) iconUrl;
-  @argument(optional('any')) routePath;
-  @argument(optional('any')) routeArg;
-  @argument(optional('any')) badgeText;
-  @argument(optional('string')) linkBg = 'bg-dark';
+  title = null;
+  icon = null;
+  iconType = 'r';
+  iconUrl = null;
+  routePath = null;
+  routeArg = null;
+  badgeText = null;
+  linkBg = 'bg-dark';
 
   @computed('routePath')
   get isUrl() {

@@ -282,13 +282,13 @@
           </li>
         {{/if}}
         {{!
-          -- This menu is hidden in bigger devices with d-sm-none.
-           The sidebar isn't proper for smaller screens imo, so this dropdown
-           menu can keep all the useful sidebar itens exclusively for
-           smaller screens
-        <li class="nav-item d-sm-block d-md-none">
-        </li>
-      }}
+            -- This menu is hidden in bigger devices with d-sm-none.
+             The sidebar isn't proper for smaller screens imo, so this dropdown
+             menu can keep all the useful sidebar itens exclusively for
+             smaller screens
+          <li class="nav-item d-sm-block d-md-none">
+          </li>
+        }}
 
       </ul>
       {{#if session.isAuthenticated}}
@@ -314,17 +314,17 @@
         <div class="form-row">
           <div class="col-12 col-sm-10 col-lg-9 col-xl-8">
             {{#power-select-typeahead
-                        search=(action searchAction)
-                        onchange=(action searchChangeAction)
-                        onfocus=(action searchFocusAction)
-                        onkeydown=(action searchKeydownAction)
-                        renderInPlace=true
-                        placeholder=searchPlaceholder
-                        triggerId="person-search-query"
-                        defaultHighlighted=(action defaultHighlightedAction)
-                        loadingMessage="Searching . . ."
-                        noMatchesMessage="No results found"
-                        as |person| }}
+                          search=(action searchAction)
+                          onchange=(action searchChangeAction)
+                          onfocus=(action searchFocusAction)
+                          onkeydown=(action searchKeydownAction)
+                          renderInPlace=true
+                          placeholder=searchPlaceholder
+                          triggerId="person-search-query"
+                          defaultHighlighted=(action defaultHighlightedAction)
+                          loadingMessage="Searching . . ."
+                          noMatchesMessage="No results found"
+                          as |person| }}
               <strong>{{person.callsign}}</strong> &lt;{{person.first_name}} {{person.last_name}}, {{person.status}}&gt;
               {{#if (eq person.email_match "full")}}
                 - email exact match

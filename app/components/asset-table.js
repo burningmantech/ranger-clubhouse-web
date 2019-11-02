@@ -1,14 +1,14 @@
 import Component from '@ember/component';
 import { set } from '@ember/object';
 import { action } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
-import { unionOf } from '@ember-decorators/argument/types';
+
+
 import { tagName } from '@ember-decorators/component';
 
 @tagName('')
 export default class AssetTableComponent extends Component {
-  @argument('object') assets;
-  @argument(unionOf('string', 'number')) year;
+  assets = null;
+  year = null;
 
   @action
   checkInAsset(asset, row) {

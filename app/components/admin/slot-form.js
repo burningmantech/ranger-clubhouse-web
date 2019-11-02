@@ -1,26 +1,26 @@
 import Component from '@ember/component';
 import SlotValidations from 'clubhouse/validations/slot';
 import { action, computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
+
 
 export default class SlotFormComponent extends Component {
   slotValidations = SlotValidations;
 
   // Slot to edit or create
-  @argument('object') slot;
+  slot = null;
 
   // Positions to select from for assignment
-  @argument('object') positions;
+  positions = null;
 
   // Training slots to select form
-  @argument('object') trainerSlots;
+  trainerSlots = null;
 
   // save action
-  @argument('object') onSave;
+  onSave = null;
   // cancel action
-  @argument('object') onCancel;
+  onCancel = null;
 
-  @argument('object') onClone;
+  onClone = null;
 
   @computed('positions')
   get positionOptions() {

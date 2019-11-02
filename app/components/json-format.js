@@ -1,9 +1,9 @@
 import Component from '@ember/component';
-import { argument } from '@ember-decorators/argument';
+
 import JSONFormatter from 'json-formatter-js'
 
 export default class JsonFormatComponent extends Component {
-  @argument('any') json;
+  json = null;
 
   didInsertElement() {
     super.didInsertElement(...arguments);

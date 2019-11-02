@@ -1,7 +1,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('helper:phone-link', function(hooks) {
@@ -13,6 +13,6 @@ module('helper:phone-link', function(hooks) {
 
     await render(hbs`{{phone-link phone}}`);
 
-    assert.equal(find('*').innerHTML, `<a href="tel:${phoneNumber}">${phoneNumber}</a>`);
+    assert.equal(this.element.innerHTML, `<a href="tel:${phoneNumber}">${phoneNumber}</a>`);
   });
 });

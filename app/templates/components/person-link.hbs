@@ -1,5 +1,5 @@
-{{#if person}}
-  {{~#link-to routePath person.id (query-params year=year)}}{{person.callsign}}{{/link-to~}}
-{{else}}
-  {{~#link-to routePath personId (query-params year=year)}}{{callsign}}{{/link-to~}}
-{{/if}}
+{{#if @person~}}
+  <LinkTo @route={{this.routePath}} @model={{@person.id}} @query={{hash year=@year}}>{{@person.callsign}}</LinkTo>
+{{~else~}}
+  <LinkTo @route={{this.routePath}} @model={{@personId}} @query={{hash year=@year}}>{{@person.callsign}}</LinkTo>
+{{~/if~}}

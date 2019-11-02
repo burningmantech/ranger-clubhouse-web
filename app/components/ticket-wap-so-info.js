@@ -2,8 +2,8 @@ import Component from '@ember/component';
 import { set } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { action, computed } from '@ember/object';
-import { argument } from '@ember-decorators/argument';
-import { optional } from '@ember-decorators/argument/types';
+
+
 import { tagName } from '@ember-decorators/component';
 import Changeset from 'ember-changeset';
 import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
@@ -12,13 +12,13 @@ import moment from 'moment';
 
 @tagName('')
 export default class TicketWapSoInfoComponent extends Component {
-  @argument('object') ticketingInfo;
-  @argument('object') ticketPackage;
-  @argument('object') person;
-  @argument(optional('object')) ticket;
-  @argument('object') toggleCard;
-  @argument('object') nextSection;
-  @argument('object') showing;
+  ticketingInfo = null;
+  ticketPackage = null;
+  person = null;
+  ticket = null;
+  toggleCard = null;
+  nextSection = null;
+  showing = null;
 
   isSaved = false;
 

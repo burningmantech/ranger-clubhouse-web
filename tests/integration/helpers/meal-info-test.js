@@ -1,7 +1,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('helper:meal-info', function(hooks) {
@@ -12,7 +12,7 @@ module('helper:meal-info', function(hooks) {
 
     await render(hbs`{{meal-info meal}}`);
 
-    assert.ok(find('*').textContent.trim().indexOf('You qualify for three meals/day') !== -1);
+    assert.ok(this.element.textContent.trim().indexOf('You qualify for three meals/day') !== -1);
   });
 
   test('it renders meal info with null value', async function(assert) {
@@ -20,7 +20,7 @@ module('helper:meal-info', function(hooks) {
 
     await render(hbs`{{meal-info meal}}`);
 
-    assert.ok(find('*').textContent.trim().indexOf('Meal Pogs') !== -1);
+    assert.ok(this.element.textContent.trim().indexOf('Meal Pogs') !== -1);
   });
 
   test('it renders meal info with unknown value', async function(assert) {
@@ -28,6 +28,6 @@ module('helper:meal-info', function(hooks) {
 
     await render(hbs`{{meal-info meal}}`);
 
-    assert.ok(find('*').textContent.trim().indexOf('Unknown meal type') !== -1);
+    assert.ok(this.element.textContent.trim().indexOf('Unknown meal type') !== -1);
   });
 });
