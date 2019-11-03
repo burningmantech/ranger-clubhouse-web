@@ -19,7 +19,7 @@
         <td class="w-10 {{if person.is_greendot_shift "bg-shift-lead-greendot"}}">
           {{if person.short_title person.short_title person.position_title}}
         </td>
-        <td class="w-15">{{person-link callsign=person.callsign personId=person.person_id}}</td>
+        <td class="w-15"><PersonLink @callsign={{person.callsign}} @personId={{person.person_id}} /></td>
         <td class="w-5">{{present-or-not person.gender "-"}}</td>
         <td class="w-5 text-right">{{person.years}}</td>
         <td class="w-5 text-center">
