@@ -1,5 +1,5 @@
 {{#if @person~}}
   <LinkTo @route={{this.routePath}} @model={{@person.id}} @query={{hash year=@year}}>{{@person.callsign}}</LinkTo>
 {{~else~}}
-  <LinkTo @route={{this.routePath}} @model={{@personId}} @query={{hash year=@year}}>{{@person.callsign}}</LinkTo>
+  <LinkTo @route={{this.routePath}} @model={{@personId}} @query={{hash year=@year}}>{{@callsign}}</LinkTo>
 {{~/if~}}
