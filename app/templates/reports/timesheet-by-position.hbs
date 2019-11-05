@@ -1,0 +1,65 @@
+{{year-select "Timesheet By Position" year=year onChange=(action (mut year))}}
+
+<p>
+  <button class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>{{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}</button>
+  {{#if this.isExpanding}}
+    <SubmittingIndicator @text="Working" />
+  {{/if}}
+</p>
+<p>
+  Showing {{pluralize this.positions.length "position"}}
+</p>
+{{#each this.positions as |position|}}
+  <div class="bg-light-gray p-2 my-2" id="position-{{position.id}}">
+    <a href {{action this.togglePosition position}} class="h4">{{fa-icon (if position.showing "caret-down" "caret-right")}} {{position.title}}</a> ({{pluralize position.timesheets.length "entry"}})
+  </div>
+  {{#if position.showing}}
+    <p>
+      <button class="btn btn-primary" {{action this.exportToCSV position}}>Export To CSV</button>
+    </p>
+    <table class="table table-sm table-hover table-striped table-width-auto">
+      <thead>
+        <tr>
+          <th>From</th>
+          <th>To</th>
+          <th class="text-right">Hours</th>
+          <th>Callsign</th>
+          {{#if this.house.canViewEmail}}
+            <th>Email</th>
+          {{/if}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each position.timesheets as |entry|}}
+          <tr>
+            <td>{{shift-format entry.on_duty}}</td>
+            <td>
+              {{#if entry.off_duty}}
+                {{shift-format entry.off_duty}}
+              {{else}}
+                <i>still on duty</i>
+              {{/if}}
+            </td>
+            <td class="text-right">{{hour-format entry.duration}}</td>
+            <td>
+              <PersonLink @person={{entry.person}} />
+            </td>
+            {{#if this.house.canViewEmail}}
+              <td>
+                {{#if entry.person.email}}
+                  {{mail-to entry.person.email}}
+                {{else}}
+                  -
+                {{/if}}
+              </td>
+            {{/if}}
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{/if}}
+{{else}}
+  <p class="text-danger">
+    <b>No timesheets found for {{this.year}}</b>
+  </p>
+{{/each}}
