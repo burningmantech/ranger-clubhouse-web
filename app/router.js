@@ -173,6 +173,7 @@ Router.map(function() {
     this.route('shirts');
     this.route('special-teams');
     this.route('timesheet-by-callsign');
+    this.route('timesheet-by-position');
     this.route('timesheet-correction-requests');
     this.route('timesheet-totals');
     this.route('timesheet-unconfirmed');
