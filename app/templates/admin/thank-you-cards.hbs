@@ -11,7 +11,7 @@
     <div class="col-auto">
       <button class="btn btn-primary" {{action this.submit}} disabled={{this.isSubmitting}}>Submit</button>
       {{#if this.isSubmitting}}
-        <SubmittingIndicator />
+        <LoadingIndicator />
       {{/if}}
     </div>
   </div>

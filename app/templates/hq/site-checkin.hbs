@@ -56,7 +56,7 @@
     <span class="text-success">{{fa-icon "check"}}</span>
   {{/if}}
   {{#if isSubmitting}}
-    {{submitting-indicator}}
+    {{loading-indicator}}
   {{/if}}
 {{/ch-form}}
 
@@ -70,7 +70,7 @@
     <div class="text-danger">Radio checkout form has NOT BEEN SIGNED.</div>
     <button class="btn btn-primary" {{action markAssetAuthorized}} disabled={{isSubmitting}}>Mark Form As Signed</button>
     {{#if isSubmitting}}
-      {{submitting-indicator}}
+      {{loading-indicator}}
     {{/if}}
   {{/if}}
 </p>
@@ -126,7 +126,7 @@
     </table>
   {{/if}}
   {{#if assets.isUpdating}}
-    {{submitting-indicator text="Refreshing assets"}}
+    {{loading-indicator text="Refreshing assets"}}
   {{/if}}
 {{else}}
   <h4><span class="text-danger">{{person.callsign}} is only authorized for a shift radio.</span> {{help-popover slug="hq-site-checkin-radios"}}</h4>
@@ -142,7 +142,7 @@
   {{else}}
     <button class="btn btn-primary" {{action markOnSite}} disabled={{isSubmitting}}>Mark As On Site</button>
     {{#if isSubmitting}}
-      {{submitting-indicator}}
+      {{loading-indicator}}
     {{/if}}
   {{/if}}
 </div>

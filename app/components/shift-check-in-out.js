@@ -183,7 +183,18 @@ export default class ShiftCheckInOutComponent extends Component {
         if (this.endShiftNotify) {
           this.endShiftNotify();
         }
-        this.toast.success(`${this.person.callsign} has been successfully signed out.`);
+        switch (result.status) {
+        case 'success':
+            this.toast.success(`${this.person.callsign} has been successfully signed off. Enjoy your rest.`);
+            break;
+        case 'already-signed-off':
+          this.toast.error(`${this.person.callsign} was already signed off.`);
+          break;
+
+        default:
+          this.toast.error(`Unknown signoff response [${result.status}].`);
+          break;
+        }
       }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.set('isSubmitting', false));
   }

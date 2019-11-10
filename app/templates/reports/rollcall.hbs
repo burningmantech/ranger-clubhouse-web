@@ -1,0 +1,62 @@
+<h1>{{this.year}} Roll Call Interface</h1>
+<p>
+  Use this page to sign people into a shift they have signed up for. The interface
+  is intended for Burn Perimeter checkins were people do not need gear
+  before being deployed.
+</p>
+
+<p>
+  Click a callsign to sign in the person in. A person may be signed out by clicking on
+  their callsign again.
+</p>
+<p>
+  <span class="text-success">{{fa-icon "check"}}</span> = the person was succesfully signed in.
+  <span class="text-danger">{{fa-icon "exclamation"}}</span> = the person is already on duty, or indicate some other
+  problem.
+</p>
+
+<div class="form-row mb-1">
+  <div class="col-auto">
+    <label class="col-form-label">Position</label>
+  </div>
+  <div class="col-md-3 mb-2">
+    {{ch-form/select name="positionId" value=this.positionId options=positionOptions onChange=(action this.selectPosition) controlClass="form-control"}}
+  </div>
+  <div class="col-auto">
+    <label class="col-form-label">Shift</label>
+  </div>
+  <div class="col-md-3 mb-2">
+    {{ch-form/select name="slotId" value=this.slotId options=slotOptions onChange=(action this.selectSlot) disabled=(eq this.positionId 0) controlClass="form-control"}}
+  </div>
+</div>
+
+{{#if this.slot}}
+  <h3>{{this.position.title}} - {{this.slot.description}} - {{shift-format this.slot.begins}}</h3>
+{{/if}}
+{{#if this.isRetrievingPeople}}
+  {{loading-dialog "the sign ups"}}
+{{else if this.people}}
+  {{pluralize this.people.length "sign up"}}
+  <div class="form-row">
+    {{#each this.people as |person|}}
+      <a href class="d-block bg-light-gray col-sm-6 col-md-3 col-lg-2 border rounded mx-2 my-2 p-2 {{if person.signedIn "border-success" (if person.on_duty "border-danger")}}" {{action this.clickPerson person}} disabled={{person.isSubmitting}}>
+        {{~#if person.on_duty~}}
+        <h4 class="text-light-red">{{fa-icon "exclamation"}} {{person.callsign}}</h4>
+        {{~else if person.signedIn~}}
+        <h4 class="text-success"> {{fa-icon "check"}} {{person.callsign}}</h4>
+        {{~else~}}
+        <h4>{{person.callsign}}</h4>
+        {{~/if~}}
+        {{~#if person.isSubmitting~}}
+        <LoadingIndicator />
+        {{~else if person.on_duty}}
+        <span class="text-danger"><small>Already on duty<br>{{person.on_duty.position.title}}<br>{{shift-format person.on_duty.on_duty}}</small></span>
+        {{~/if}}<br>
+      </a>
+    {{/each}}
+  </div>
+{{else if (gt this.slotId 0)}}
+  <p class="text-danger">
+    <b>No sign ups found for the shift.</b>
+  </p>
+{{/if}}

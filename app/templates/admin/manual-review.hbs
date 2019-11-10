@@ -94,7 +94,7 @@
   <p>
     <button class="btn btn-primary" {{action this.retrieveRawSpreadsheet}} disabled={{this.isSubmitting}}>Show Raw Spreadsheet</button>
     {{#if this.isSubmitting}}
-      <SubmittingIndicator />
+      <LoadingIndicator />
     {{/if}}
   </p>
   {{#if this.showSpreadsheet}}
