@@ -7,11 +7,11 @@ import validateDateTime from 'clubhouse/validators/datetime';
 
 export default class PersonTimesheetManageComponent extends Component {
   timesheets = null; // Person's timesheet
-  person = null;     // The person we're dealing with
-  positions = null;  // Possible positions a person can sign into.
-  year = null;       // The year being viewed
+  person = null; // The person we're dealing with
+  positions = null; // Possible positions a person can sign into.
+  year = null; // The year being viewed
   timesheetSummary = null; // breakdown on hours & credits.
-  onChange = null;   // call back to refresh the various views
+  onChange = null; // call back to refresh the various views
 
   editEntry = null;
 
@@ -22,24 +22,24 @@ export default class PersonTimesheetManageComponent extends Component {
   ];
 
   verifyOptions = [
-    [ 'Is verified', true ],
-    [ 'is NOT verified', false ]
+    ['Is verified', true],
+    ['is NOT verified', false]
   ];
 
   timesheetValidations = {
-    on_duty:  [ validateDateTime({ before: 'off_duty'}), validatePresence({ presence: true })],
-    off_duty:  [ validateDateTime({ after: 'on_duty'}) ],
+    on_duty: [validateDateTime({ before: 'off_duty' }), validatePresence({ presence: true })],
+    off_duty: [validateDateTime({ after: 'on_duty' })],
   };
 
   @computed('timesheets.@each.isUnverified')
   get unverifiedCount() {
-    return this.timesheets.reduce((total, ts) => total+(ts.isUnverified ? 1 : 0), 0);
+    return this.timesheets.reduce((total, ts) => total + (ts.isUnverified ? 1 : 0), 0);
   }
 
   // Build a position list the person can be in.
   @computed('positions')
   get positionOptions() {
-    return this.positions.map((p) => [ p.title, p.id ]);
+    return this.positions.map((p) => [p.title, p.id]);
   }
 
   // Is the user allowed to manage timesheets (edit, delete, review)
@@ -87,11 +87,22 @@ export default class PersonTimesheetManageComponent extends Component {
   // Signoff the person from a shift.
   @action
   signoffAction(timesheet) {
-    this.ajax.request(`timesheet/${timesheet.id}/signoff`, { method: 'POST' }).then(() => {
+    this.ajax.request(`timesheet/${timesheet.id}/signoff`, { method: 'POST' }).then((result) => {
       this.timesheets.update();
       this.onChange();
-      this.toast.success(`${this.person.callsign} has been successfully signed off. Enjoy your rest.`);
-    })
+      switch (result.status) {
+      case 'success':
+        this.toast.success(`${this.person.callsign} has been successfully signed off. Enjoy your rest.`);
+        break;
+      case 'already-signed-off':
+        this.toast.error(`${this.person.callsign} was already signed off.`);
+        break;
+
+      default:
+        this.toast.error(`Unknown signoff response [${result.status}].`);
+        break;
+      }
+    });
   }
 
   // Delete the entry.
@@ -101,7 +112,7 @@ export default class PersonTimesheetManageComponent extends Component {
       timesheet.destroyRecord().then(() => {
         this.toast.success('The entry has been deleted.');
         this.onChange();
-    }).catch((response) => this.house.handleErrorResponse(response));
+      }).catch((response) => this.house.handleErrorResponse(response));
     });
   }
 

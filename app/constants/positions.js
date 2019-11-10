@@ -3,9 +3,10 @@
  *
  * This file should be sync'ed with the backend.
  */
- 
+
 export const ALPHA = 1;
 export const ART_SAFETY = 16;
+export const ART_CAR_WRANGLER = 125;
 export const ASSOCIATE_TRAINER = 88;
 export const BURN_COMMAND_TEAM = 99;
 export const BURN_PERIMETER = 19;

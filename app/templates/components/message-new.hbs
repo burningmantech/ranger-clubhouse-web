@@ -30,6 +30,6 @@
   {{f.submit label="Send" disabled=isSubmitting}}
   {{f.cancel disabled=isSubmitting}}
   {{#if isSubmitting}}
-    <SubmittingIndicator @text="Sending Message" />
+    <LoadingIndicator @text="Sending Message" />
   {{/if}}
 {{/ch-form}}

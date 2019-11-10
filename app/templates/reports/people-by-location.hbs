@@ -15,7 +15,7 @@
   <button class="btn btn-primary" disabled={{if this.viewPeople false true}} {{action exportAllToCSV}}>Export {{pluralize this.viewPeople.length "person"}} to CSV</button>
   <button class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>{{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}</button>
   {{#if this.isExpanding}}
-    <SubmittingIndicator @text="Working" />
+    <LoadingIndicator @text="Working" />
   {{/if}}
 </p>
 

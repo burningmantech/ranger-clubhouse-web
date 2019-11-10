@@ -13,7 +13,7 @@
   <button class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
   <button class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>{{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}</button>
   {{#if this.isExpanding}}
-    <SubmittingIndicator @text="Working" />
+    <LoadingIndicator @text="Working" />
   {{/if}}
 </p>
 <p>

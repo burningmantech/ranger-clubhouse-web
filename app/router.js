@@ -178,6 +178,7 @@ Router.map(function() {
     this.route('timesheet-totals');
     this.route('timesheet-unconfirmed');
     this.route('vehicle-paperwork');
+    this.route('rollcall');
   });
 
   this.route('vc', function() {
