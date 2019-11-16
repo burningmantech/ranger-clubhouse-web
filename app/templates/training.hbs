@@ -4,6 +4,7 @@
     {{ch-sidebar-link "training.capacity" training.id title="Training Capacity" icon="battery-half" iconType="s"}}
     {{ch-sidebar-link "training.multiple-enrollments" training.id title="Multiple Enrollments" icon="copy" iconType="s"}}
     {{ch-sidebar-link "training.people-training-completed" training.id title="Training Completed" icon="check-square" iconType="s"}}
+    {{ch-sidebar-link "training.trainer-attendance" training.id title="Trainer Attendance" icon="user-check" iconType="s"}}
     {{#if training.is_art}}
       {{ch-sidebar-link "training.untrained-people" training.id title="Untrained People" icon="exclamation-circle" iconType="s"}}
     {{/if}}
@@ -21,6 +22,7 @@
           {{#link-to "training.capacity" training.id class="dropdown-item"}}Training Capacity{{/link-to}}
           {{#link-to "training.multiple-enrollments" training.id class="dropdown-item"}}Multiple Enrollments{{/link-to}}
           {{#link-to "training.people-training-completed" training.id class="dropdown-item"}}Training Completed{{/link-to}}
+          {{#link-to "training.trainer-attendance" training.id class="dropdown-item"}}Trainer Attendance{{/link-to}}
           {{#if training.is_art}}
             {{#link-to "training.untrained-people" training.id class="dropdown-item"}}Untrained People{{/link-to}}
           {{/if}}

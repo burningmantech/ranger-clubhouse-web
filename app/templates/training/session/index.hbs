@@ -75,7 +75,7 @@ Signups: {{students.length}} of {{slot.max}}
 {{/if}}
 
 {{#if students}}
-  <table class="table table-sm table-hover">
+  <table class="table table-sm table-hover table-width-auto">
     <caption>{{pluralize students.length "student"}} {{passedCount}} passed</caption>
     <thead>
       <tr>
@@ -101,12 +101,14 @@ Signups: {{students.length}} of {{slot.max}}
           <td class="text-center w-5">
             {{#if student.need_ranking}}
               {{ch-form/select name=(concat "student" student.id) value=student.rank onChange=(action "changeRankAction" student) includeBlank=true options=rankOptions}}
+            {{else if student.rank}}
+              {{student.rank}}
             {{else}}
               &nbsp;
             {{/if}}
           </td>
           <td class="w-60">
-            {{input type="text" value=student.notes size=60}}
+            {{textarea rows=1 cols=80 value=student.notes focusIn=(action focusNote) focusOut=(action blurNote)}}
           </td>
         </tr>
       {{/each}}
@@ -127,6 +129,46 @@ Signups: {{students.length}} of {{slot.max}}
   <button class="btn btn-secondary btn-sm" {{action "showAddPersonAction"}}>Add Person</button>
   <button class="btn btn-secondary btn-sm" {{action "showRemovePersonAction"}} disabled={{is-empty students}}>Remove Person</button>
 </div>
+
+<table class="table table-striped table-sm table-width-auto">
+  <caption>Trainer Attendance ({{this.trainerCount}})</caption>
+  <thead>
+    <tr>
+      <th>Trainer</th>
+      <th>Type</th>
+      <th>Attended?</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#if this.trainerCount}}
+      {{#each trainers as |trainerType|}}
+        {{#each trainerType.trainers as |trainer|}}
+          <tr>
+            <td>
+              <PersonLink @person={{trainer}} />
+            </td>
+            <td>{{trainerType.position_title}}</td>
+            <td>
+              {{ch-form/select name=(concat "trainer" trainer.id) value=trainer.status onChange=(action (mut trainer.status)) options=trainerStatusOptions}}
+            </td>
+          </tr>
+        {{/each}}
+      {{/each}}
+    {{else}}
+      <tr>
+        <td colpsan="3"><b class="text-danger">No trainers were found.</b></td>
+      </tr>
+    {{/if}}
+  </tbody>
+</table>
+{{#if this.trainerCount}}
+  <p>
+    <button class="btn btn-primary btn-sm" {{action this.saveTrainers}} disabled={{this.isSubmitting}}>Save Trainers</button>
+    {{#if this.isSubmitting}}
+      <LoadingIndicator />
+    {{/if}}
+  </p>
+{{/if}}
 
 {{#if showEmails}}
   {{email-list people=students scrollOnRender=true}}

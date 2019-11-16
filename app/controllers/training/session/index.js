@@ -14,6 +14,12 @@ export default class TrainingSlotController extends Controller {
     ["FLAG", 4]
   ];
 
+  trainerStatusOptions = [
+    ['Pending', 'pending'],
+    ['Attended', 'attended'],
+    ['No Show', 'no-show'],
+  ];
+
   showEmails = false;
 
   // How many people have passed
@@ -84,14 +90,21 @@ export default class TrainingSlotController extends Controller {
   @computed('students.[]')
   get removeStudentOptions() {
     const options = [
-      [ '-', null ]
+      ['-', null]
     ];
 
     this.students.forEach((student) => {
-      options.push([ `${student.callsign} (${student.first_name} ${student.last_name})`, student.id]);
+      options.push([`${student.callsign} (${student.first_name} ${student.last_name})`, student.id]);
     });
 
     return options;
+  }
+
+  @computed('trainers')
+  get trainerCount() {
+    return this.trainers.reduce((total, group) => {
+      return group.trainers.length + total;
+    }, 0);
   }
 
   // Set the ranking for a person
@@ -119,6 +132,33 @@ export default class TrainingSlotController extends Controller {
       }).then((results) => {
         this.set('students', results.students);
         this.toast.success('The entire training session was successfully updated.');
+      })
+      .catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.set('isSubmitting', false));
+  }
+
+  // Save the student scores in bulk.
+  @action
+  saveTrainers() {
+    const trainers = [];
+
+    this.trainers.forEach((type) => {
+      type.trainers.forEach((trainer) => {
+        trainers.push({
+          id: trainer.id,
+          status: trainer.status,
+          trainer_slot_id: trainer.trainer_slot_id
+        });
+      });
+    });
+
+    this.toast.clear();
+    this.set('isSubmitting', true);
+    this.ajax.post(`training-session/${this.slot.id}/trainer-status`, {
+        data: { trainers }
+      }).then((results) => {
+        this.set('trainers', results.trainers);
+        this.toast.success('Trainer attendance was successfully updated.');
       })
       .catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.set('isSubmitting', false));
@@ -178,7 +218,7 @@ export default class TrainingSlotController extends Controller {
         const student = results.students.find((s) => s.id == person.id);
         if (student) {
           this.students.push(student);
-          this.set('students', _.orderBy(this.students, [ (s) => s.callsign.toLowerCase() ], ['asc']));
+          this.set('students', _.orderBy(this.students, [(s) => s.callsign.toLowerCase()], ['asc']));
         }
       });
     });
@@ -188,7 +228,7 @@ export default class TrainingSlotController extends Controller {
   @action
   removePersonAction(model) {
     const personId = model.get('person_id');
-    const person = this.students.find((student) => student.id == personId );
+    const person = this.students.find((student) => student.id == personId);
 
     this.ajax.delete(`person/${personId}/schedule/${this.slot.id}`)
       .then((results) => {
@@ -219,5 +259,25 @@ export default class TrainingSlotController extends Controller {
   @action
   toggleEmailListAction() {
     this.set('showEmails', !this.showEmails);
+  }
+
+  /*
+   * Increase the note textarea rows when editing inline and the note receives
+   * focus.
+   */
+
+  @action
+  focusNote(event) {
+    event.target.rows = 5;
+  }
+
+  /*
+   * When losing focus on the note field - reduce the textarea rows back to 1
+   * and store what was entered.
+   */
+
+  @action
+  blurNote(event) {
+    event.target.rows = 1;
   }
 }

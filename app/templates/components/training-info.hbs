@@ -19,8 +19,13 @@
               Pending
             {{else if (eq training.status "no-shift")}}
               <span class="text-danger">No training sign up found</span>
+            {{else if (eq training.status "no-show")}}
+              <span class="text-danger">No show</span>
             {{else}}
               <span class="text-danger">NO</span>
+            {{/if}}
+            {{#if training.is_trainer}}
+              (as trainer)
             {{/if}}
           </td>
           <td>
