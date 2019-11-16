@@ -5,7 +5,7 @@
   This page contains information about your training and various bits (meals, showers, radios, vehicles, etc.)
   related to rangering on the playa.
 {{else if person.isNonRanger}}
-This page contains information regarding granted positions, meals, radios, showers, and vehicle authorizations.
+  This page contains information regarding granted positions, meals, radios, showers, and vehicle authorizations.
 {{else}}
   This page contains information about your training. If you were to become a
   Black Rock Ranger, this page would contain additional information related to
@@ -26,6 +26,8 @@ This page contains information regarding granted positions, meals, radios, showe
       <br>
       You still need to pass your Alpha shift on playa in order to become a Ranger.
     {{/if}}
+  {{else if (eq dirtTraining.status "no-show")}}
+    Did not attend training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}
   {{else if (eq dirtTraining.status "fail")}}
     Did not pass training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}
   {{else if (eq dirtTraining.status "no-shift")}}

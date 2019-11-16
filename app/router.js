@@ -145,6 +145,7 @@ Router.map(function() {
     this.route('multiple-enrollments');
     this.route('people-training-completed');
     this.route('untrained-people');
+    this.route('trainer-attendance');
   });
 
 
