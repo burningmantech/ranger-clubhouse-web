@@ -1,7 +1,7 @@
-{{#if isReloadingTimesheets}}
+{{#if this.isReloadingTimesheets}}
   <div class="text-muted">Reloading timesheets {{fa-icon "spinner" spin=true}}</div>
-{{else if onDutyEntry}}
-  <div class="text-success font-weight-bold mb-2">{{person.callsign}} is on duty.</div>
+{{else if this.onDutyEntry}}
+  <div class="text-success font-weight-bold mb-2">{{@person.callsign}} is on duty.</div>
   <table class="table mt-1 mb-0 table-width-auto">
     <thead>
       <tr>
@@ -14,37 +14,37 @@
     </thead>
     <tbody>
       <tr>
-        <td>{{onDutyEntry.position.title}}</td>
-        <td>{{shift-format onDutyEntry.on_duty}}</td>
+        <td>{{this.onDutyEntry.position.title}}</td>
+        <td>{{shift-format this.onDutyEntry.on_duty}}</td>
         <td class="text-right">
-          {{#if onDutyEntry.position.count_hours}}
-            {{hour-minute-format onDutyEntry.duration}}
+          {{#if this.onDutyEntry.position.count_hours}}
+            {{hour-minute-format this.onDutyEntry.duration}}
           {{else}}
-            [{{hour-minute-format onDutyEntry.duration}}]
+            [{{hour-minute-format this.onDutyEntry.duration}}]
           {{/if}}
         </td>
-        <td class="text-right">{{credits-format onDutyEntry.credits}}</td>
+        <td class="text-right">{{credits-format this.onDutyEntry.credits}}</td>
         <td>
-          <button class="btn btn-danger" {{action endShiftAction}} disabled={{isSubmitting}}>End Shift</button>
-          {{#if isSubmitting}}
+          <button class="btn btn-danger" {{action this.endShiftAction}} disabled={{this.isSubmitting}}>End Shift</button>
+          {{#if this.isSubmitting}}
             {{fa-icon "spinner" spin=true}}
           {{/if}}
         </td>
       </tr>
     </tbody>
   </table>
-  {{#unless onDutyEntry.position.count_hours}}
-    Note: {{onDutyEntry.position.title}} hours do not count towards appreciations.
+  {{#unless this.onDutyEntry.position.count_hours}}
+    Note: {{this.onDutyEntry.position.title}} hours do not count towards appreciations.
   {{/unless}}
 {{else}}
-  {{#if (not person.user_authorized)}}
-    <strong class="text-danger">{{person.callsign}} cannot start a shift until they are cleared to do so by the Personnel Manager.</strong>
+  {{#if (not @person.user_authorized)}}
+    <strong class="text-danger">{{@person.callsign}} cannot start a shift until they are cleared to do so by the Personnel Manager.</strong>
   {{else if (not person.canStartShift)}}
-    <strong class="text-danger">{{person.callsign}} cannot start a shift because their status does not allow them to work shifts</strong>
-  {{else if hasUnverifiedTimesheet}}
+    <strong class="text-danger">{{@person.callsign}} cannot start a shift because their status does not allow them to work shifts</strong>
+  {{else if @hasUnverifiedTimesheet}}
     The timesheet entry needs to be verified before a shift can be started.
   {{else}}
-    {{#unless isPersonDirtTrained}}
+    {{#unless this.isPersonDirtTrained}}
       <div class="text-danger font-weight-bold mb-2">
         <div class="d-flex">
           <div class="my-auto mr-2 d-inline-block">{{fa-icon "exclamation-circle" size="2x"}}</div>
@@ -56,9 +56,9 @@
       </div>
     {{/unless}}
 
-    {{#if (and isPersonDirtTrained imminentSlots)}}
+    {{#if (and this.isPersonDirtTrained @imminentSlots)}}
       <p>
-        {{pluralize imminentSlots.length "upcoming shift"}} found.
+        {{pluralize @imminentSlots.length "upcoming shift"}} found.
       </p>
       <table class="table table-hover table-striped table-sm m-0">
         <thead>
@@ -72,7 +72,7 @@
         </thead>
 
         <tbody>
-          {{#each imminentSlots as |slot|}}
+          {{#each @imminentSlots as |slot|}}
             <tr>
               <td class="align-middle">{{slot.position_title}}</td>
               <td class="w-25 align-middle">{{slot.slot_description}}</td>
@@ -80,11 +80,11 @@
               <td class="align-middle">{{shift-format slot.slot_ends}}</td>
               <td class="align-middle">
                 {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
-                  <button class="btn btn-primary" {{action "signinPositionAction" slot.position_id}} disabled={{isSubmitting}}>Start Shift</button>
+                  <button class="btn btn-primary" {{action this.signinShiftAction slot}} disabled={{this.isSubmitting}}>Start Shift</button>
                 {{else}}
                   <div class="text-danger">{{if slot.is_untrained "Not Trained"}} {{if slot.is_unqualified slot.unqualified_reason}}</div>
                   {{#if (has-role "admin" "timesheet-management")}}
-                    <button class="btn btn-warning" {{action "signinPositionAction" slot.position_id}} disabled={{isSubmitting}}>Force Start Shift</button>
+                    <button class="btn btn-warning" {{action this.signinShiftAction slot}} disabled={{this.isSubmitting}}>Force Start Shift</button>
                   {{/if}}
                 {{/if}}
                 {{#if isSubmitting}}
@@ -104,14 +104,14 @@
         {{ch-form/select name="signin_position_id" controlClass="form-control" value=signinPositionId options=signinPositions onChange=(action "updateShiftPosition")}}
       </div>
       <div class="col-auto">
-        {{#if isPersonDirtTrained}}
-          <button class="btn btn-primary" {{action "signinShiftAction"}} disabled={{isSubmitting}}>Start Shift</button>
+        {{#if this.isPersonDirtTrained}}
+          <button class="btn btn-primary" {{action this.startShiftAction}} disabled={{this.isSubmitting}}>Start Shift</button>
         {{else if (has-role "admin" "timesheet-management")}}
-          <button class="btn btn-warning" {{action "signinShiftAction"}} disabled={{isSubmitting}}>Force Shift Start</button>
+          <button class="btn btn-warning" {{action this.startShiftAction}} disabled={{this.isSubmitting}}>Force Shift Start</button>
         {{else}}
           <div class="text-danger mt-1">NOT DIRT TRAINED - SHIFT START IS NOT ALLOWED</div>
         {{/if}}
-        {{#if isSubmitting}}
+        {{#if this.isSubmitting}}
           {{fa-icon "spinner" spin=true}}
         {{/if}}
       </div>
