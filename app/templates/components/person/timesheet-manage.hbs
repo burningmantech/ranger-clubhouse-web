@@ -95,7 +95,7 @@
   {{/if}}
 
   {{#if editEntry}}
-    {{#ch-form "entry" editEntry modalBox=true modalTitle="Edit Timesheet" validator=timesheetValidations onSubmit=(action "saveEntryAction") onCancel=(action "cancelEntryAction") as |f|}}
+    {{#ch-form "entry" editEntry modalBox=true modalTitle=(concat "Edit Timesheet #" editEntry.id) validator=timesheetValidations onSubmit=(action "saveEntryAction") onCancel=(action "cancelEntryAction") as |f|}}
       {{#if editEntry.isPendingReview}}
         {{#ch-alert "danger"}}
           Entry has a correction request and needs to be reviewed.

@@ -6,6 +6,7 @@ import { computed } from '@ember/object';
 export default class TimesheetModel extends DS.Model {
   @attr('number') person_id;
   @attr('number') position_id;
+  @attr('slot_id') slot_id;
   @attr('string', { readOnly: true }) position_title;
   @attr('shiftdate') on_duty;
   @attr('shiftdate') off_duty;
@@ -22,6 +23,7 @@ export default class TimesheetModel extends DS.Model {
   @attr('', { readOnly: true}) verified_person;
   @attr('', { readOnly: true}) reviewer_person;
   @attr('', { readOnly: true}) position;
+  @attr('', { readOnly: true}) slot;
 
   @computed('verified', 'notes', 'review_status')
   get isPendingReview() {

@@ -102,18 +102,21 @@ export default class ShiftCheckInOutComponent extends Component {
     return this.timesheets.findBy('off_duty', null);
   }
 
-  _startShift(positionId) {
+  _startShift(positionId, slotId = null) {
     const position = this.positions.find((p) => p.id == positionId);
+    const data = {
+      position_id: position.id,
+      person_id: this.person.id
+    };
+
+    if (slotId) {
+      data.slot_id = slotId;
+    }
 
     this.toast.clear();
     this.set('isSubmitting', true);
-    this.ajax.request('timesheet/signin', {
-      method: 'POST',
-      data: {
-        position_id: position.id,
-        person_id: this.person.id
-      }
-    }).then((result) => {
+    this.ajax.request('timesheet/signin', { method: 'POST', data })
+    .then((result) => {
       const callsign = this.person.callsign;
       switch (result.status) {
       case 'success':
@@ -131,8 +134,8 @@ export default class ShiftCheckInOutComponent extends Component {
         this.set('isReloadingTimesheets', true);
         // Refresh the timesheets
         this.timesheets.update()
-        .catch((response) => this.house.handleErrorResponse(response))
-        .finally(() => { this.set('isReloadingTimesheets', false) });
+          .catch((response) => this.house.handleErrorResponse(response))
+          .finally(() => { this.set('isReloadingTimesheets', false) });
         break;
 
       case 'position-not-held':
@@ -161,14 +164,14 @@ export default class ShiftCheckInOutComponent extends Component {
 
   // Attempt to sign in the person to the selected position
   @action
-  signinShiftAction() {
+  startShiftAction() {
     this._startShift(this.signinPositionId);
   }
 
   // Attempt sign in the person for a predictive shift position
   @action
-  signinPositionAction(positionId) {
-    this._startShift(positionId);
+  signinShiftAction(slot) {
+    this._startShift(slot.position_id, slot.slot_id);
   }
 
   // End a person's shift.
