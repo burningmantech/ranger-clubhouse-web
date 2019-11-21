@@ -6,7 +6,7 @@ import { computed } from '@ember/object';
 export default class TimesheetModel extends DS.Model {
   @attr('number') person_id;
   @attr('number') position_id;
-  @attr('slot_id') slot_id;
+  @attr('number') slot_id;
   @attr('string', { readOnly: true }) position_title;
   @attr('shiftdate') on_duty;
   @attr('shiftdate') off_duty;
