@@ -222,7 +222,7 @@ export default class VcBmidController extends Controller {
    * Kick off building up over time the BMIDs to be shown
    */
 
-  @observes('viewBmids', 'bmids', 'editMode')
+  @observes('viewBmids', 'bmids', 'editMode') // eslint-disable-line ember/no-observers
   startRenderBmids() {
     if (this.isRendering) {
       return;
