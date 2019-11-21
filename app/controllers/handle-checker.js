@@ -118,7 +118,7 @@ export default class HandlerCheckerController extends Controller {
     }
   }
 
-  @observes('model')
+  @observes('model') // eslint-disable-line ember/no-observers
   incrementallyBuildAllHandles() {
     // Rendering 2500 handles takes a long time, so don't prevent interactivity.
     // Copy 100 handles at a time into allHandles and let the template
