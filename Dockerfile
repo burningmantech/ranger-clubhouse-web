@@ -30,7 +30,7 @@ COPY ./mirage/            ./mirage/
 COPY ./public/            ./public/
 COPY ./tests/             ./tests/
 COPY ./vendor/            ./vendor/
-COPY ./.ember-cli         ./
+COPY ./.ember-cli.js      ./
 COPY ./.eslintignore      ./
 COPY ./.eslintrc.js       ./
 COPY ./ember-cli-build.js ./
