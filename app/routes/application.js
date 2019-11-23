@@ -12,8 +12,8 @@ import $ from 'jquery';
 export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin) {
   @service router;
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
 
     if (!ENV.logRoutes || !navigator.sendBeacon) {
       // Not logging routes or sendBeacon is not available.

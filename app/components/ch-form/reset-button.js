@@ -10,8 +10,8 @@ export default class ChFormResetButtonComponent extends Component {
   label = null;
   disabled = null;
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
 
     if (isEmpty(this.label)) {
       this.label = 'Reset';

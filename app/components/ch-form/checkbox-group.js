@@ -33,8 +33,8 @@ export default class ChFormCheckboxGroupComponent extends Component {
 
   gridColumn = 'col-auto';
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
 
     if (!this.cols) {
       this.set('cols', 3);

@@ -1,12 +1,11 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 
-
 import { tagName } from '@ember-decorators/component';
 
 @tagName('h1')
 export default class YearSelectComponent extends Component {
-  static positionalParams = [ 'title' ];
+  static positionalParams = ['title'];
 
   // Heading
   title = null;
@@ -27,18 +26,18 @@ export default class YearSelectComponent extends Component {
   // Additional classnames to add
   gridClass = null;
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
 
     if (this.subheader) {
       this.tagName = 'div';
-      this.classNames = [ 'h2' ];
+      this.classNames = ['h2'];
     } else if (this.inline) {
       this.tagName = 'div'
     }
 
     if (this.gridClass) {
-        this.classNames = this.gridClass.split(' ').concat(this.classNames)
+      this.classNames = this.gridClass.split(' ').concat(this.classNames)
     }
   }
 

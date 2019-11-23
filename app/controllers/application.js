@@ -38,8 +38,8 @@ export default class ApplicationController extends Controller {
   @controller('person') personController;
   @controller('hq') hqController;
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
     /*
      * Bind the keyup event on the body element to intercept the user's
      * typing so ESC to as shortcuts to the search page.

@@ -6,8 +6,8 @@ export default class Router extends EmberRouter {
   location = config.locationType;
   rootURL = config.rootURL;
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
 
     this.on('routeDidChange', () => {
       // Move the window back to the top when heading to a new route

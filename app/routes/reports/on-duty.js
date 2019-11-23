@@ -3,11 +3,20 @@ import _ from 'lodash';
 
 export default class ReportsOnDutyRoute extends  Route {
   queryParams = {
-    over_hours: { refreshModel: true }
+    over_hours: { refreshModel: true },
+    duty_date: { refreshModel: true }
   };
 
-  model({ over_hours }) {
-    const data = { on_duty: 1};
+  model({ over_hours, duty_date }) {
+    const data = {};
+
+    if (duty_date) {
+      data.duty_date = duty_date;
+    } else {
+      data.on_duty = 1;
+    }
+
+    this.duty_date = duty_date;
 
     over_hours = parseInt(over_hours);
     if (over_hours) {
@@ -23,11 +32,14 @@ export default class ReportsOnDutyRoute extends  Route {
     }), ['title']);
 
     controller.set('positions', positions);
+    controller.set('dateForm', { date: this.duty_date });
+    controller.set('timesheet', model.timesheet);
   }
 
   resetController(controller, isExiting) {
     if (isExiting) {
       controller.set('over_hours', null);
+      controller.set('duty_date', null);
     }
   }
 }

@@ -1,30 +1,70 @@
-<h1>Currently On Duty {{#if over_hours}}Over {{over_hours}} Hours{{/if}}</h1>
+<h1>
+  {{#if over_hours}}
+    Currently On Duty Over {{over_hours}} Hours
+  {{else if duty_date}}
+    On Duty at {{full-datetime-format duty_date}}
+  {{else}}
+    Currently On Duty
+  {{/if}}
+</h1>
 
-{{#each positions as |position|}}
-  <table class="table table-sm table-striped table-hover">
+{{#unless over_hours}}
+  {{#ch-form "dateform" this.dateForm validator=this.dateValidations onSubmit=(action this.submitForm) as |f|}}
+    <div class="form-row mt-4">
+      <div class="col-auto">
+        <label class="col-form-label">Date &amp; time to view:</label>
+      </div>
+      <div class="col-auto">
+        {{f.input "date" type="datetime"}}
+      </div>
+      <div class="col-auto">
+        {{f.submit label="Submit"}}
+        <button class="btn btn-secondary" {{action this.viewCurrentTime}}>View Current Time</button>
+      </div>
+    </div>
+  {{/ch-form}}
+{{/unless}}
+
+<p>
+  Showing {{pluralize this.timesheet.length "person"}} on duty in {{pluralize this.positions.length "position"}}.
+</p>
+{{#each this.positions as |position|}}
+  <table class="table table-sm table-striped table-hover table-width-auto">
     <caption>{{position.title}} - {{pluralize position.timesheets.length "person"}}</caption>
     <thead>
       <tr>
-        <th class="w-20">Callsign</th>
-        <th class="w-20">On Duty Since</th>
-        <th class="w-10 text-right">Duration</th>
-        <th class="w-50">&nbsp;</th>
+        <th>Callsign</th>
+        {{#if this.duty_date}}
+          <th>On Duty</th>
+          <th>Off Duty</th>
+        {{else}}
+          <th>On Duty Since</th>
+        {{/if}}
+        <th class="text-right">Duration</th>
       </tr>
     </thead>
 
     <tbody>
       {{#each position.timesheets as |ts|}}
         <tr>
-          <td class="w-20">{{person-link person=ts.person}}</td>
-          <td class="w-20">{{shift-format ts.on_duty}}</td>
-          <td class="w-10 text-right">{{hour-minute-format ts.duration}}</td>
-          <td class="w-50">&nbsp;</td>
+          <td>{{person-link person=ts.person}}</td>
+          <td>{{shift-format ts.on_duty}}</td>
+          {{#if this.duty_date}}
+            <td>
+              {{#if ts.off_duty}}
+                {{shift-format ts.off_duty}}
+              {{else}}
+                <i>On Duty</i>
+              {{/if}}
+            </td>
+          {{/if}}
+          <td class="text-right">{{hour-minute-format ts.duration}}</td>
         </tr>
       {{/each}}
     </tbody>
   </table>
 {{else}}
   <p>
-    <strong class="text-success">Congratulations! Nobody is on duty {{#if over_hours}}for more than {{over_hours}} hours{{/if}}.</strong>
+    <strong class="text-success">Congratulations! No one is on duty {{#if over_hours}}for more than {{over_hours}} hours{{/if}}.</strong>
   </p>
 {{/each}}
