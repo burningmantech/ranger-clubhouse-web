@@ -3,8 +3,6 @@ import { isEmpty } from '@ember/utils';
 import { action } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
 
-
-
 @tagName('')
 export default class ChFormSubmitComponent extends Component {
   label = null;
@@ -13,8 +11,8 @@ export default class ChFormSubmitComponent extends Component {
   formSubmitAction = null; // Form submit action
   onSubmit = null; // Form submit action
 
- init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
 
     if (isEmpty(this.label)) {
       this.label = 'Save';
