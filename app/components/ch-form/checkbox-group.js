@@ -5,11 +5,9 @@ import EmberObject from '@ember/object';
 import Component from '@ember/component';
 import { action, computed } from '@ember/object';
 import { tagName } from '@ember-decorators/component';
-
-
-
 import { typeOf } from '@ember/utils';
 import inGroups from 'clubhouse/utils/in-groups';
+import { isEmpty } from '@ember/utils';
 
 class MultiCheckboxField extends EmberObject {
 }
@@ -33,12 +31,9 @@ export default class ChFormCheckboxGroupComponent extends Component {
 
   gridColumn = 'col-auto';
 
-  constructor() {
-    super(...arguments);
-
-    if (!this.cols) {
-      this.set('cols', 3);
-    }
+  @computed('cols')
+  get _cols() {
+    return isEmpty(this.cols) ? 3 : this.cols;
   }
 
   @computed('options', 'model')
@@ -54,7 +49,7 @@ export default class ChFormCheckboxGroupComponent extends Component {
       return [];
     }
 
-    const columns = inGroups(options, this.cols, true);
+    const columns = inGroups(options, this._cols, true);
 
     let index = 0;
     const checkboxes = [];

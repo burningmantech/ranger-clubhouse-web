@@ -1,8 +1,7 @@
 import Component from '@ember/component';
 import { tagName } from '@ember-decorators/component';
-
-
 import { isEmpty } from '@ember/utils';
+import { computed } from '@ember/object';
 
 @tagName('')
 export default class ChFormResetButtonComponent extends Component {
@@ -10,11 +9,8 @@ export default class ChFormResetButtonComponent extends Component {
   label = null;
   disabled = null;
 
-  constructor() {
-    super(...arguments);
-
-    if (isEmpty(this.label)) {
-      this.label = 'Reset';
-    }
+  @computed('label')
+  get _label() {
+    return isEmpty(this.label) ? 'Reset' : this.label;
   }
 }
