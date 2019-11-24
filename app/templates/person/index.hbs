@@ -67,9 +67,9 @@
     </div>
 
     <div class="form-group row">
-      <label class="ol-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign Approved</label>
+      <label class="col-form-label col-form-label-fixed col-2">Callsign Approved</label>
       {{#if isAdminMentorOrVC}}
-        {{f.input "callsign_approved" type="select" wrapClass="col-sm-12 col-md-auto" options=callsignApprovedOptions}}
+        {{f.input "callsign_approved" type="select" wrapClass="col-auto" options=callsignApprovedOptions}}
       {{else}}
         <div class="mt-2 col-sm-12 col-md-auto">
           {{if person.callsign_approved "Approved" "Not Approved"}}
@@ -78,23 +78,23 @@
     </div>
 
     <div class="form-group row">
-      <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Status</label>
+      <label class="col-form-label col-form-label-fixed col-2">Status</label>
       {{#if isAdminMentorOrVC}}
-        {{f.input "status" type="select" options=statusOptions wrapClass="col-sm-12 col-md-auto"}}
+        {{f.input "status" type="select" options=statusOptions wrapClass="col-auto"}}
       {{else}}
-        <div class="mt-2 col-sm-12 col-md-auto">
+        <div class="mt-2 col-auto">
           {{person.status}}
         </div>
       {{/if}}
     </div>
 
     <div class="form-group row">
-      <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Personnel</label>
+      <label class="col-form-label col-form-label-fixed col-2">Personnel</label>
       {{#if session.user.isAdmin}}
-        {{f.input "user_authorized" type="select" wrapClass="col-sm-12 col-md-auto" options=userAuthorizedOptions}}
-        {{f.input "has_note_on_file" label="Note on file" type="checkbox" wrapClass="col-sm-12 col-md-auto mt-2" value=1}}
+        {{f.input "user_authorized" type="select" wrapClass="col-auto" options=userAuthorizedOptions}}
+        {{f.input "has_note_on_file" label="Note on file" type="checkbox" wrapClass="col-auto mt-2" value=1}}
       {{else}}
-        <div class="mt-2 col-sm-12 col-md-auto">
+        <div class="mt-2 col-auto">
           {{#if person.user_authorized}}
             Authorized
           {{else}}
@@ -127,8 +127,8 @@
   </div>
 
   <div class="form-group row">
-    <label class="col-form-label-fixed col-sm-12 col-md-2">On Site</label>
-    <div class="col-md-9 col-sm-12">
+    <label class="col-form-label-fixed col-2">On Site</label>
+    <div class="col-8">
       {{f.input "on_site" type="radioGroup" options=onSiteOptions inline=true}}
     </div>
   </div>
@@ -152,7 +152,7 @@
       {{#if showPositions}}
         <div class="row">
           {{#each personPositions as |position| }}
-            <div class="col-6">
+            <div class="col-sm-6 col-md-4 col-xl-3">
               {{position.title}}
             </div>
           {{/each}}
@@ -175,11 +175,9 @@
       {{/unless}}
       {{#if showRoles}}
         <div class="row">
-          {{#each roleColumns as |roleColumn| }}
-            <div class="col-6">
-              {{#each roleColumn as |role|}}
-                {{role.title}}<br>
-              {{/each}}
+          {{#each personRoles as |role| }}
+            <div class="col-sm-6 col-md-4 col-xl-3">
+              {{role.title}}
             </div>
           {{/each}}
         </div>
@@ -353,12 +351,12 @@
   </div>
 
   <div class="form-group row">
-    <label class="col-form-label-fixed col-sm-12 col-md-2">&nbsp;</label>
-    <div class="col-sm-12 col-md-6">
+    <label class="col-form-label-fixed d-none d-md-block col-md-2">&nbsp;</label>
+    <div class="col-sm-7 col-md-5">
       {{f.submit label="Update" disabled=(not f.model.isDirty)}}
     </div>
     {{#if (has-role "admin")}}
-      <div class="col-sm-12 col-md-2 ml-auto">
+      <div class="col-sm-3 col-md-2 text-right">
         <button type="button" class="btn btn-secondary btn-sm" {{action "removePerson"}}>Remove</button>
       </div>
     {{/if}}
