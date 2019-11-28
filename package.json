@@ -56,7 +56,7 @@
     "ember-math-helpers": "^2.12.0",
     "ember-maybe-import-regenerator": "^0.1.6",
     "ember-moment": "^8.0.0",
-    "ember-power-select": "^3.0.4",
+    "ember-power-select": "^3.0.5",
     "ember-qunit": "^4.6.0",
     "ember-radio-button": "^2.0.1",
     "ember-resolver": "^6.0.0",
