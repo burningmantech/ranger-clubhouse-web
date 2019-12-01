@@ -1,29 +1,43 @@
-<div class="row my-1">
-  <div class="col-auto">
-    {{#if summary.event_start}}
-      <b>Event Week:</b> {{shift-format summary.event_start}} to {{shift-format summary.event_end}}
-    {{else}}
-      <strong class="text-danger">Event dates have not been entered for the year. Hour &amp; credit breakdowns will not be accurate.</strong>
-    {{/if}}
-  </div>
-</div>
+<h4>Worked Hours &amp; Earned Credits Breakdown</h4>
+<p>
+  {{#if summary.event_start}}
+    The {{this.year}} Event Week is {{shift-format summary.event_start}} to {{shift-format summary.event_end}}.
+  {{else}}
+    <b class="text-danger">Event dates have not been entered for the year. Hour &amp; credits breakdowns will not be accurate.</b>
+  {{/if}}
+</p>
 
-<div class="row my-1">
-  <div class="col-auto"><strong>Total Time:</strong> {{hour-minute-format summary.total_duration}}</div>
-  <div class="col-auto"><strong>Time Counted Towards Appreciations:</strong> {{hour-minute-format summary.counted_duration}}</div>
-  <div class="col-auto"><strong>Total Credits:</strong> {{credits-format summary.total_credits}}</div>
-</div>
-
-<div class="row my-1">
-  <div class="col-auto">
-    <span class="d-inline-block"><b>Credits Breakdown (Pre-Event / Event / Post-Event):</b></span>
-    {{credits-format summary.pre_event_credits}} / {{credits-format summary.event_credits}} / {{credits-format summary.post_event_credits}}
-  </div>
-</div>
-
-<div class="row my-1">
-  <div class="col-auto">
-    <span class="d-inline-block"><b>Hours Breakdown (Pre-Event / Event / Post-Event / Other):</b></span>
-    {{hour-minute-format summary.pre_event_duration}} / {{hour-minute-format summary.event_duration}} / {{hour-minute-format summary.post_event_duration}} / {{hour-minute-format summary.other_duration}}
-  </div>
-</div>
+<table class="table table-sm table-width-auto">
+  <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th class="text-right">Total</th>
+      <th>Pre-Event</th>
+      <th>Event</th>
+      <th>Post-Event</th>
+      <th>Training / Other</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Hours</td>
+      <td class="text-right">{{hour-minute-format summary.counted_duration}} (counted)<br>
+        {{hour-minute-format summary.total_duration}} (total)</td>
+      <td class="text-right">{{hour-minute-format summary.pre_event_duration}}</td>
+      <td class="text-right">{{hour-minute-format summary.event_duration}}</td>
+      <td class="text-right">{{hour-minute-format summary.post_event_duration}}</td>
+      <td class="text-right">{{hour-minute-format summary.other_duration}}</td>
+    </tr>
+    <tr>
+      <td>Credits</td>
+      <td class="text-right">{{credits-format summary.total_credits}}</td>
+      <td class="text-right">{{credits-format summary.pre_event_credits}}</td>
+      <td class="text-right">{{credits-format summary.event_credits}}</td>
+      <td class="text-right">{{credits-format summary.post_event_credits}}</td>
+      <td class="text-center">-</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+counted = the number of hours which count towards appreciation.
+</p>

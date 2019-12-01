@@ -87,6 +87,7 @@ $sizes: (
 @import "training-print";
 @import "ticketing";
 @import "alpha-sheet";
+@import "hq";
 
 @media print {
   h1 { font-size: 1.2rem; }

@@ -18,7 +18,8 @@ export default class ScheduleTableComponent extends Component {
 
   viewSchedule = 'upcoming';
 
-  didReceiveAttrs() {
+  init() {
+    super.init(...arguments);
     this.set('viewSchedule', this.isCurrentYear ? 'upcoming' : 'all');
   }
 

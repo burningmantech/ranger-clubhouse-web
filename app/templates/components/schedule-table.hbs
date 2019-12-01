@@ -17,8 +17,8 @@
     You only get credit for the time you work, and won't receive double credit for the overlapping time.
   </p>
 {{/if}}
-<div>[hh:mm] = time in brackets indicates the time does not count towards appreciations.</div>
 
+[hh:mm] = time in brackets indicates the time does not count towards appreciations.
 <div class="schedule-table schedule-itinerary">
   <div class="schedule-row schedule-header">
     <div class="schedule-time">From</div>
@@ -55,6 +55,7 @@
             {{else}}
               {{fa-icon "users" type="fas"}}
             {{/if}}
+            Sign Ups
           </button>
           {{#if (or (not slot.has_started) (has-role "admin"))}}
             {{! Note: magic here -  by not using onclick, no event argument will be passed to leaveSlot. That tells the method to allow the page to scroll.}}
@@ -64,6 +65,7 @@
               {{else}}
                 {{fa-icon "trash-alt" type="fas"}}
               {{/if}}
+              Remove
             </button>
           {{/if}}
         </div>
@@ -73,41 +75,66 @@
     <div class="schedule-row">
       <div>
         {{#if slots}}
-          <span class="text-danger">No upcoming {{year}} shifts were found.</span>
+          <b class="text-danger">No upcoming shifts were found.</b>
+          <a href {{action (mut viewSchedule) "all"}}>View All Shifts</a>
         {{else}}
-          <strong>No scheduled shifts were found for {{year}}.</strong>
+          <b>No scheduled shifts were found for {{year}}.</b>
         {{/if}}
       </div>
     </div>
   {{/if}}
-
-  <div class="schedule-row">
-    <div class="schedule-line">
-      {{#if scheduleSummary.event_start}}
-        <b>{{year}} Event Week:</b> {{shift-format scheduleSummary.event_start}} to {{shift-format scheduleSummary.event_end}}
-      {{else}}
-        <strong class="text-danger">{{year}} event dates have not been determined. Estimate breakdowns will not be accurate.</strong>
-      {{/if}}
-    </div>
-    <div>
-      <span class="mr-2 d-inline-block"><b>Total Schedule Time:</b> {{hour-minute-format scheduleSummary.total_duration}}</span>
-      <div class="d-inline-block"><b>Est. Time Counted Towards Appreciations:</b> {{hour-minute-format scheduleSummary.counted_duration}}</div>
-    </div>
-    <div class="schedule-line">
-      <span class="d-inline-block"><b>Scheduled Hours Breakdown (Pre-Event / Event / Post-Event / Other):</b></span>
-      <span class="d-inline-block">{{hour-minute-format scheduleSummary.pre_event_duration}} / {{hour-minute-format scheduleSummary.event_duration}} / {{hour-minute-format scheduleSummary.post_event_duration}} / {{hour-minute-format scheduleSummary.other_duration}}</span>
-    </div>
-    <div class="schedule-line">
-      <span class="mr-2 d-inline-block"><b>Scheduled Credits:</b> {{credits-format scheduleSummary.total_credits}}</span>
-      <span class="d-inline-block"><b>Earned Credits:</b> {{credits-format creditsEarned}}</span>
-    </div>
-    <div>
-      <span class="d-inline-block"><b>Scheduled Credits Breakdown (Pre-Event / Event / Post-Event):</b></span>
-      <span class="d-inline-block">{{credits-format scheduleSummary.pre_event_credits}} / {{credits-format scheduleSummary.event_credits}} / {{credits-format scheduleSummary.post_event_credits}}</span><br>
-    </div>
-  </div>
 </div>
 
+<h4>Scheduled Hours &amp; Credits Breakdown</h4>
+<p>
+  {{#if scheduleSummary.event_start}}
+    The {{this.year}} Event Week is {{shift-format scheduleSummary.event_start}} to {{shift-format scheduleSummary.event_end}}.
+  {{else}}
+    <b class="text-danger">Event dates have not been entered for the year. Hour &amp; credits breakdowns will not be accurate.</b>
+  {{/if}}
+</p>
+
+<table class="table table-sm table-width-auto">
+  <thead>
+    <tr>
+      <th>Scheduled</th>
+      <th class="text-right">Total</th>
+      <th>Pre-Event</th>
+      <th>Event</th>
+      <th>Post-Event</th>
+      <th>Training / Other</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Hours</td>
+      <td class="text-right">{{hour-minute-format scheduleSummary.counted_duration}} (counted)<br>
+        {{hour-minute-format scheduleSummary.total_duration}} (total)</td>
+      <td class="text-right">{{hour-minute-format scheduleSummary.pre_event_duration}}</td>
+      <td class="text-right">{{hour-minute-format scheduleSummary.event_duration}}</td>
+      <td class="text-right">{{hour-minute-format scheduleSummary.post_event_duration}}</td>
+      <td class="text-right">{{hour-minute-format scheduleSummary.other_duration}}</td>
+    </tr>
+    <tr>
+      <td>Credits</td>
+      <td class="text-right">{{credits-format scheduleSummary.total_credits}}</td>
+      <td class="text-right">{{credits-format scheduleSummary.pre_event_credits}}</td>
+      <td class="text-right">{{credits-format scheduleSummary.event_credits}}</td>
+      <td class="text-right">{{credits-format scheduleSummary.post_event_credits}}</td>
+      <td class="text-center">-</td>
+    </tr>
+  </tbody>
+</table>
+<p>
+counted = the estimated number of hours which may count towards appreciations
+</p>
+
+<p>
+  You have earned {{credits-format creditsEarned}} credits so far.
+</p>
+
+
 {{#if (and scheduleSummary person.isRanger isCurrentYear)}}
+  <hr>
   {{ticket-threshold year=year credits=scheduleSummary.total_credits creditsEarned=creditsEarned}}
 {{/if}}

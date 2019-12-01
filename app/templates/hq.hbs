@@ -1,71 +1,71 @@
-{{#ch-sidebar}}
-  {{#ch-sidebar-group "HQ WINDOW"}}
-    {{ch-sidebar-link "hq.shift" title="Shift Manage" icon="walking" iconType="s"}}
-    {{ch-sidebar-link "hq.schedule" title="Schedule / Sign Up" icon="clipboard"}}
-    {{ch-sidebar-link "hq.messages" title="Messages" icon="envelope" badgeText=person.unread_message_count}}
-    {{ch-sidebar-link "hq.timesheet" title="Timesheets" class="dropdown-item" icon="clock"}}
-    {{ch-sidebar-link "hq.assets" title="Asset History" class="dropdown-item" icon="broadcast-tower" iconType="s"}}
-    {{ch-sidebar-link "hq.training-info" title="Training Info" icon="graduation-cap" iconType="s"}}
-    {{ch-sidebar-link "hq.site-checkin" title="Site Check In" icon="list-ol" iconType="s"}}
-  {{/ch-sidebar-group}}
-{{/ch-sidebar}}
+<ChSidebar>
+  <ChSidebarGroup @title="HQ Window">
+    <ChSidebarLink @routePath="hq.shift" @title="Shift Manage" @icon="walking" @iconType="s" />
+    <ChSidebarLink @routePath="hq.schedule" @title="Schedule / Sign Up" @icon="clipboard" />
+    <ChSidebarLink @routePath="hq.messages" @title="Messages" @icon="envelope" @badgeText={{this.person.unread_message_count}} />
+    <ChSidebarLink @routePath="hq.timesheet" @title="Timesheets" @class="dropdown-item" @icon="clock" />
+    <ChSidebarLink @routePath="hq.assets" @title="Asset History" @class="dropdown-item" @icon="broadcast-tower" @iconType="s" />
+    <ChSidebarLink @routePath="hq.training-info" @title="Training Info" @icon="graduation-cap" @iconType="s" />
+    <ChSidebarLink @routePath="hq.site-checkin" @title="Site Check In" @icon="list-ol" @iconType="s" />
+  </ChSidebarGroup>
+</ChSidebar>
 
 <main class="col">
   <div class="d-flex justify-content-between d-print-none">
     <h2>
-      {{#link-to "hq.index" person.id}}{{person.callsign}}{{/link-to}} &lt;{{person.first_name}} {{person.last_name}}, {{person.status}}{{if person.vintage "/vintage"}}&gt;
-      {{#unless person.on_site}} <span class="text-danger">OFF SITE</span>{{/unless}}
+      <LinkTo @route="hq.index" @model={{this.person.id}}>{{this.person.callsign}}</LinkTo> &lt;{{this.person.first_name}} {{this.person.last_name}}, {{this.person.status}}{{if this.person.vintage "/vintage"}}&gt;
+      {{#unless this.person.on_site}} <span class="text-danger">OFF SITE</span>{{/unless}}
     </h2>
     <div class="text-muted">HQ Window</div>
     <div class="text-right">
-      {{#link-to "person.index" person.id}}Switch to Person Manage{{/link-to}}
+      <LinkTo @route="person.index" @model={{this.person.id}}>Switch to Person Manage</LinkTo>
     </div>
   </div>
 
-  {{#if person.message}}
-    {{#ch-box "Important Account Message" type="warning"}}
-      {{nl2br person.message}}
-      <div class="mt-2 text-muted">Message added {{shift-format person.message_updated_at}}</div>
-    {{/ch-box}}
+  {{#if this.person.message}}
+    <ChBox @title="Important Account Message" @type="warning">
+      {{nl2br this.person.message}}
+      <div class="mt-2 text-muted">Message added {{shift-format this.person.message_updated_at}}</div>
+    </ChBox>
   {{/if}}
-  {{#if (or person.isAlpha person.isProspective)}}
+  {{#if (or this.person.isAlpha this.person.isProspective)}}
     <div class="border border-danger p-4 text-danger">
       <div class="float-left mr-4 h1">
         {{fa-icon "exclamation-triangle"}}
       </div>
-      <b class="h4">{{if person.isAlpha "ALPHA" "PROSPECTIVE"}} RANGER - DIRECT PERSON TO HAT RACK.<br>
+      <b class="h4">{{if this.person.isAlpha "ALPHA" "PROSPECTIVE"}} RANGER - DIRECT PERSON TO HAT RACK.<br>
         * * * DO NOT CHECK IN/OUT AT HQ WINDOW. * * *</b>
     </div>
   {{/if}}
 
   <div class="row">
     <div class="col-md-9 d-print-block">
-      {{#if (not person.user_authorized)}}
-        {{#ch-alert "danger"}}
+      {{#if (not this.person.user_authorized)}}
+        <ChAlert @type="danger">
           <div class="float-left mr-2">
             {{fa-icon "exclamation-triangle" size="3x"}}
           </div>
           Account is DISABLED. Contact the HQ Lead or the Personnel Manager {{mail-to (config "PersonnelEmail")}}.
-        {{/ch-alert}}
-      {{else if person.isSuspended}}
-        {{#ch-alert "danger"}}
+        </ChAlert>
+      {{else if this.person.isSuspended}}
+        <ChAlert @type="danger">
           <div class="float-left mr-2">
             {{fa-icon "exclamation-triangle" size="3x"}}
           </div>
           Account is SUSPENDED. Contact the HQ Lead or the Personnel Manager {{mail-to (config "PersonnelEmail")}}.
-        {{/ch-alert}}
+        </ChAlert>
       {{else if (not allowedCheckIn)}}
-        {{#ch-alert "danger"}}
+        <ChAlert @type="danger">
           <div class="float-left mr-2">
             {{fa-icon "exclamation-triangle" size="3x"}}
           </div>
-          This account cannot use the HQ Window Interface because the status is {{person.status}}
-        {{/ch-alert}}
+          This account cannot use the HQ Window Interface because the status is {{this.person.status}}
+        </ChAlert>
       {{else}}
-        {{#if person.needsBpguid}}
-          {{#ch-alert "warning"}}
+        {{#if this.person.needsBpguid}}
+          <ChAlert @type="warning">
             Account does not have Burner Profile ID on file. Shift sign ups are disabled.
-          {{/ch-alert}}
+          </ChAlert>
         {{/if}}
 
         {{outlet}}
@@ -74,90 +74,26 @@
 
     <div class="col-md-3 d-print-none">
       <div class="mugshot">
-        {{#if photo}}
-          {{#if photo.photo_url}}
-            <img src="{{photo.photo_url}}" class="mx-auto d-block" alt="profile photo">
+        {{#if this.photo}}
+          {{#if this.photo.photo_url}}
+            <img src="{{this.photo.photo_url}}" class="mx-auto d-block" alt="profile photo">
             Status:
-            {{#if (eq photo.photo_status "approved")}}
+            {{#if (eq this.photo.photo_status "approved")}}
               <span class="text-success">Approved</span>
             {{else}}
-              <span class="text-danger">{{photo.photo_status}}</span>
+              <span class="text-danger">{{this.photo.photo_status}}</span>
             {{/if}}
             <br>
           {{else}}
             <i class="far fa-user fa-8x"></i><br>
             No Photo Uploaded<br>
           {{/if}}
-          {{#if photo.message}}
+          {{#if his.photo.message}}
             <div class="text-danger">ERROR: {{photo.message}}</div>
           {{/if}}
         {{else}}
-          <div class="loading-spinner"></div>
-          . . Loading photo . .
+          Loading photo <LoadingIndicator />
         {{/if}}
-      </div>
-
-      <div class="border rounded p-2">
-        <dl>
-          <dt>Total Earned Credits {{help-popover slug="hq-sidebar" left=true}}</dt>
-          <dd>{{credits-format timesheetSummary.total_credits}}</dd>
-
-          <dt>Credits Pre / Event / Post</dt>
-          <dd>
-            {{credits-format timesheetSummary.pre_event_credits}} / {{credits-format timesheetSummary.event_credits}} / {{credits-format timesheetSummary.post_event_credits}}
-          </dd>
-
-          <dt>Est. Total Credits</dt>
-          <dd>{{credits-format creditsExpected}}</dd>
-
-          <dt>Counted Time / Total</dt>
-          <dd>{{hour-minute-format timesheetSummary.counted_duration}} / {{hour-minute-format timesheetSummary.total_duration}}</dd>
-
-          <dt>Time Pre / Event / Post</dt>
-          <dd>
-            {{hour-minute-format timesheetSummary.pre_event_duration}} / {{hour-minute-format timesheetSummary.event_duration}} / {{hour-minute-format timesheetSummary.post_event_duration}}
-          </dd>
-
-          <dt>Est. Counted Time / Total</dt>
-          <dd>{{hour-minute-format countedDurationExpected}} / {{hour-minute-format totalDurationExpected}}</dd>
-
-          <dt>Meals</dt>
-          <dd>{{meal-info eventInfo.meals}}</dd>
-
-          <dt>Showers</dt>
-          <dd>
-            {{#if eventInfo.showers}}
-              {{badge "secondary" "Wet Spot"}} BMID allows access to the Wet Spot.
-            {{else}}
-              {{badge "secondary" "Shower Pogs"}} for every 40 hours worked.
-            {{/if}}
-          </dd>
-
-          <dt>Motorpool Policy</dt>
-          <dd>
-            {{#if person.vehicle_blacklisted}}
-              {{badge "danger" "Blacklisted"}} Vehicle is blacklisted. May not drive gators, cars, or trucks on playa for Ranger business.
-            {{else}}
-              {{#if person.vehicle_paperwork}}
-                {{badge "success" "Authorized"}}
-              {{else}}
-                {{badge "warning" "Not Authorized"}}
-              {{/if}}
-              to drive golf carts &amp; UTVs on playa for Ranger business
-            {{/if}}
-          </dd>
-
-          <dt>Motor Vehicle Record (MVR)</dt>
-          <dd>
-            {{#if person.vehicle_insurance_paperwork}}
-              {{badge "success" "Authorized" }}
-            {{else}}
-              {{badge "warning" "Not Authorized" }}
-            {{/if}}
-            to drive cars and trucks (incl. personal vehicle) on playa for Ranger business.
-          </dd>
-        </dl>
-
       </div>
     </div>
   </div>
