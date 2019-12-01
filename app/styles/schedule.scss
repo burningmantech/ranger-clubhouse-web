@@ -60,7 +60,7 @@
 
 @media print, (min-width: 801px) {
   .schedule-time {
-    width: 17%;
+    width: 12%;
   }
 
   .schedule-duration {
@@ -78,7 +78,7 @@
   }
 
   .schedule-long-description {
-    width: 35%;
+    width: 30%;
   }
 
   .schedule-signups {
@@ -87,7 +87,7 @@
   }
 
   .schedule-actions {
-    width: 15%;
+    width: 28%;
   }
 
   .schedule-total {
@@ -99,6 +99,10 @@
 }
 
 @media only screen and (max-width: 800px) {
+  .schedule-table {
+    font-size: 1rem;
+  }
+
   .schedule-header {
     display: none !important;
   }

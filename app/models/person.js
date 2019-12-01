@@ -14,6 +14,7 @@ export default class PersonModel extends DS.Model.extend(PersonMixin) {
   @attr('boolean') callsign_approved;
   @attr('string') formerly_known_as;
   @attr('string') status;
+  @attr('boolean') vintage;
   @attr('string', { readOnly: true }) status_date;
   @attr('boolean') user_authorized;
   @attr('string') date_verified;

@@ -1,37 +1,37 @@
 {{#unless isPersonDirtTrained}}
-  {{#ch-alert "danger"}}
-    <h3>{{person.callsign}} is not eligible for site check in.</h3>
+  <ChAlert @type="danger">
+    <h3>{{this.person.callsign}} is not eligible for site check in.</h3>
     <p>
       <b>DO NOT HAND OVER THEIR BMID AND/OR CHECKOUT RADIOS AT THIS TIME.</b>
     </p>
     <p>
       {{#if (eq dirtTraining.status "pending")}}
-        {{person.callsign}} is signed up training on {{mdy-format dirtTraining.date full=true}} @ {{time-format dirtTraining.date}}
+        {{this.person.callsign}} is signed up training on {{mdy-format dirtTraining.date full=true}} @ {{time-format dirtTraining.date}}
         at {{dirtTraining.location}}. This training has not happened yet.
       {{else if (eq dirtTraining.status "fail")}}
-        {{person.callsign}} did not pass training held {{mdy-format dirtTraining.date full=true}} at {{dirtTraining.location}}.
+        {{this.person.callsign}} did not pass training held {{mdy-format dirtTraining.date full=true}} at {{dirtTraining.location}}.
       {{else if (eq dirtTraining.status "no-shift")}}
-        No training sign up was found for {{person.callsign}}.
+        No training sign up was found for {{this.person.callsign}}.
       {{else}}
         Uh oh, I did not understand the status [{{dirtTraining.status}}]. This is a bug. Please report this to the tech team.
       {{/if}}
     </p>
     <p class="mt-2">
-      {{person.callsign}} may only be issued their BMID, be allowed to check out radios,
+      {{this.person.callsign}} may only be issued their BMID, be allowed to check out radios,
       and work a shift AFTER they have attended &amp; passed training.
     </p>
-  {{/ch-alert}}
+  </ChAlert>
 {{/unless}}
-{{#if isOnSite}}
+{{#if this.isOnSite}}
   <p>
-    <strong class="text-success">{{person.callsign}} is marked as ON SITE.</strong>
+    <strong class="text-success">{{this.person.callsign}} is marked as ON SITE.</strong>
   </p>
 {{/if}}
 <h2>Site Check In</h2>
 <ul>
   <li>Verify the camp name, location, and the emergency contacts</li>
   <li>Check to see if the person has signed the Radio Authorization form and Motorpool Policy Agreement.</li>
-  <li>{{#if eventInfo.radio_eligible}}Check out an Event Radio if person would like one now{{else}}Person is only authorized for shift radios.{{/if}}</li>
+  <li>{{#if this.eventInfo.radio_eligible}}Check out an Event Radio if person would like one now{{else}}Person is only authorized for shift radios.{{/if}}</li>
   <li>After you hand the person their Ranger laminate and field guide, mark the person as on site.</li>
 </ul>
 
@@ -64,7 +64,7 @@
 <h4>Agreements {{help-popover slug="hq-site-checkin-agreements"}}</h4>
 
 <p>
-  {{#if person.asset_authorized}}
+  {{#if this.person.asset_authorized}}
     Radio checkout form has been <strong class="text-success">SIGNED</strong>.
   {{else}}
     <div class="text-danger">Radio checkout form has NOT BEEN SIGNED.</div>
@@ -75,10 +75,10 @@
   {{/if}}
 </p>
 <p>
-  {{#if person.vehicle_paperwork}}
-    {{person.callsign}} has signed the Motorpool Policy and is authorized to drive golf carts and gators.
+  {{#if this.person.vehicle_paperwork}}
+    {{this.person.callsign}} has signed the Motorpool Policy and is authorized to drive golf carts and gators.
   {{else}}
-    <span class="text-danger">{{person.callsign}} has NOT signed the Motorpool Policy. Direct the person to a kiosk and have them agree to the Motorpool Policy if they would like to drive golf carts &amp; UTVs on playa for Ranger business.</span>
+    <span class="text-danger">{{this.person.callsign}} has NOT signed the Motorpool Policy. Direct the person to a kiosk and have them agree to the Motorpool Policy if they would like to drive golf carts &amp; UTVs on playa for Ranger business.</span>
   {{/if}}
 </p>
 
@@ -87,19 +87,19 @@
 
 </div>
 
-{{#unless eventInfo.radio_info_available}}
-  {{#ch-alert "danger"}}
+{{#unless this.eventInfo.radio_info_available}}
+  <ChAlert @type="danger">
     Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
-  {{/ch-alert}}
+  </ChAlert>
 {{/unless}}
 
-{{#if eventInfo.radio_eligible}}
+{{#if this.eventInfo.radio_eligible}}
   <h4>Event Radio Checkout {{help-popover slug="hq-site-checkin-radios"}}</h4>
-  <p class="text-success"><b>{{person.callsign}} is authorized For {{pluralize eventInfo.radio_max "Event Radio"}}</b></p>
+  <p class="text-success"><b>Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}</b></p>
   <p>
     The radio may be checked out now, or at the start of their first shift.
   </p>
-  {{asset-checkout-form person=person assets=assets attachments=attachments eventInfo=eventInfo}}
+  {{asset-checkout-form person=person assets=assets attachments=attachments eventInfo=this.eventInfo}}
   {{#if activeAssets}}
     {{pluralize activeAssets.length "asset"}} checked out.
     <table class="table table-striped table-sm">
@@ -129,14 +129,14 @@
     {{loading-indicator text="Refreshing assets"}}
   {{/if}}
 {{else}}
-  <h4><span class="text-danger">{{person.callsign}} is only authorized for a shift radio.</span> {{help-popover slug="hq-site-checkin-radios"}}</h4>
+  <h4><span class="text-danger">{{this.person.callsign}} is only authorized for a shift radio.</span> {{help-popover slug="hq-site-checkin-radios"}}</h4>
   A radio will need be to checked out for each shift, and then returned at the end of the shift.
 {{/if}}
 
 <div class="mt-4">
   {{#if isOnSite}}
     <p class="font-weight-bold text-success">
-      {{person.callsign}} is marked as ON SITE.
+      {{this.person.callsign}} is marked as ON SITE.
     </p>
     {{#link-to "hq.shift" class="btn btn-success"}}Start Shift Checkin{{/link-to}}
   {{else}}

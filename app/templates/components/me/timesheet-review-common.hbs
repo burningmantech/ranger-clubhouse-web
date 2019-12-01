@@ -89,22 +89,8 @@
     {{/each}}
   </div>
 
-  {{#if timesheetSummary}}
-    {{timesheet-summary summary=timesheetSummary}}
-  {{else}}
-    <div class="row mt-2 mb-2">
-      <div class="col-auto"><strong>Total Time:</strong> {{hour-minute-format (sum-column timesheets "duration")}}</div>
-      <div class="col-auto"><strong>Total Credits:</strong> {{credits-format (sum-column timesheets "credits")}}</div>
-    </div>
-  {{/if}}
-
-  <div class="row mb-4">
-    <div class="col">
-      <strong>Position Summary:</strong><br>
-      {{timesheet-position-summary timesheets=timesheets}}
-    </div>
-  </div>
-
+  {{timesheet-summary summary=timesheetSummary}}
+  {{timesheet-position-summary timesheets=timesheets}}
 {{else}}
   <p class="text-danger font-weight-bold">No timesheet entries were found.</p>
 {{/if}}

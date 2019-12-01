@@ -84,12 +84,7 @@
       </tbody>
     </table>
     {{timesheet-summary summary=timesheetSummary}}
-    <div class="row">
-      <div class="col-auto">
-        <b>Position Summary:</b><br>
-        {{timesheet-position-summary timesheets=timesheets}}
-      </div>
-    </div>
+    {{timesheet-position-summary timesheets=timesheets}}
   {{else}}
     <p class="mt-2 text-danger">No timesheet entries found for {{year}}</p>
   {{/if}}

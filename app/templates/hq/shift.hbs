@@ -35,6 +35,136 @@
   {{/ch-alert}}
 {{/if}}
 
+<p class="my-2 hours-credits-header">
+  <b>Worked Hours:</b> {{hour-minute-format timesheetSummary.counted_duration}}
+  <b>Earned Credits:</b> {{credits-format timesheetSummary.total_credits}}
+  <button class="btn btn-secondary btn-sm" {{action this.toggleHoursCreditBreakdown}}>View Hours &amp; Credits Breakdown</button>
+</p>
+<table class="table table-width-auto">
+  <thead>
+    <tr>
+      <th>Meal Pogs</th>
+      <th>Shower Pogs</th>
+      <th>Motorpool Policy</th>
+      <th>Motor Vehicle Record</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        {{#if (eq this.eventInfo.meals "all")}}
+          {{fa-icon "ban"}} NO POG<br>has All You Can Eat BMID
+        {{else}}
+          {{this.mealInfo}}
+        {{/if}}
+      </td>
+      <td>
+        {{#if eventInfo.showers}}
+          {{fa-icon "ban"}} NO POG<br>has Wet Spot BMID
+        {{else}}
+          Every 40 hours worked
+        {{/if}}
+      </td>
+      {{#if person.vehicle_blacklisted}}
+
+        <td colspan="2">
+          <b>{{fa-icon "exclamation-triangle"}} Vehicle blacklisted</b>
+        </td>
+      {{else}}
+        <td>
+          {{#if person.vehicle_paperwork}}
+            {{fa-icon "check"}} Signed
+          {{else}}
+            <span class="text-danger">NOT SIGNED</span>
+          {{/if}}
+        </td>
+        <td>
+          {{#if person.vehicle_insurance_paperwork}}
+            <b class="text-success">Authorized</b>
+          {{else}}
+            NOT AUTHORIZED
+          {{/if}}
+        </td>
+      {{/if}}
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+{{#if this.showHoursCreditsBreakdown}}
+  <ModalDialog @title="Hours And Credits Breakdown" @onClose={{action this.toggleHoursCreditBreakdown}}>
+    The estimated hours and credits are based on the shifts already worked, plus the possible hours and credits earned from upcoming shifts signed up for.
+    <div class="row">
+      <div class="col-auto">
+        <table class="table table-width-auto table-hover table-striped">
+          <caption>Hours Summary</caption>
+          <tbody>
+            <tr>
+              <th class="text-right">Appreciation Hours Total</th>
+              <td class="text-right">{{hour-minute-format timesheetSummary.counted_duration}}</td>
+            </tr>
+            <tr>
+              <th class="text-right">All Hours Total</th>
+              <td class="text-right"> {{hour-minute-format timesheetSummary.total_duration}}</td>
+            </tr>
+            <tr>
+              <th class="text-right">Estimated Hours Total</th>
+              <td class="text-right">{{hour-minute-format countedDurationExpected}}</td>
+            </tr>
+            <tr>
+              <th class="text-right">Pre-Event Hours</th>
+
+              <td class="text-right">
+                {{hour-minute-format timesheetSummary.pre_event_duration}}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right">Event Week Hours</th>
+              <td class="text-right">{{hour-minute-format timesheetSummary.event_duration}}</td>
+            </tr>
+            <tr>
+              <th class="text-right">Post-Event Hours</th>
+              <td class="text-right">{{hour-minute-format timesheetSummary.post_event_duration}}</td>
+            </tr>
+            <tr>
+              <th class="text-right">Training + Other Hours</th>
+              <td class="text-right">{{hour-minute-format timesheetSummary.other_duration}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-auto">
+        <table class="table table-hover table-width-auto table-striped">
+          <caption>Credits Summary</caption>
+          <tbody>
+            <tr>
+              <th class="text-right">Total Credits</th>
+              <td class="text-right">{{credits-format timesheetSummary.total_credits}}</td>
+            </tr>
+            <tr>
+              <th class="text-right">Estimated Credits</th>
+              <td class="text-right">{{credits-format creditsExpected}}</td>
+            </tr>
+            <tr>
+              <th class="text-right">Pre-Event Credits</th>
+              <td class="text-right">{{credits-format timesheetSummary.pre_event_credits}}</td>
+            </tr>
+            <tr>
+              <th class="text-right">Event Week Credits</th>
+              <td class="text-right">{{credits-format timesheetSummary.event_credits}}</td>
+            </tr>
+            <tr>
+              <th class="text-right">Post-Event Credits</th>
+              <td class="text-right">{{credits-format timesheetSummary.post_event_credits}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ModalDialog>
+{{/if}}
+
 <h3>Timesheet Verification {{help-popover slug="hq-timesheet-verification"}} - {{#if unverifiedTimesheets }}{{pluralize unverifiedTimesheets.length "entry" }}{{else}}No Action Needed{{/if}}</h3>
 {{#if unverifiedTimesheetEntry}}
   {{#if ignoreTimesheetVerification}}

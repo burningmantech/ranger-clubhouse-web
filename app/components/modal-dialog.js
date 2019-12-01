@@ -14,6 +14,8 @@ export default class ModalDialogComponent extends Component {
   cancelLabel = 'Cancel';
   closeLabel = 'Close';
 
+  isClosed = false;
+
   didInsertElement() {
     super.didInsertElement(...arguments);
     const dialog = $('#dialog-box');
@@ -25,7 +27,10 @@ export default class ModalDialogComponent extends Component {
     });
 
     dialog.modal().on('hide.bs.modal', () => {
-      return this.onClose ? this.onClose() : null;
+      if (!this.isClosed) {
+        this.isClosed = true;
+        return this.onClose ? this.onClose() : null;
+      }
     });
   }
 

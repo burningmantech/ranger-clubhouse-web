@@ -172,4 +172,50 @@ export default class HqShiftController extends Controller {
   markOnSite() {
     this._updateOnSite(true);
   }
+
+  @computed('creditsEarned', 'expected.credits')
+  get creditsExpected() {
+    return this.timesheetSummary.total_credits + this.expected.credits;
+  }
+
+  @computed('timesheetSummary.counted_duration', 'expected.duration')
+  get countedDurationExpected() {
+    return this.timesheetSummary.counted_duration + this.expected.duration;
+  }
+
+  @computed('timesheetSummary.total_duration', 'expected.duration')
+  get totalDurationExpected() {
+    return this.timesheetSummary.total_duration + this.expected.duration;
+  }
+
+  @action
+  toggleHoursCreditBreakdown() {
+    this.set('showHoursCreditsBreakdown', !this.showHoursCreditsBreakdown);
+  }
+
+  @computed('eventInfo.meals')
+  get mealInfo() {
+    switch (this.eventInfo.meals) {
+    case 'all':
+      return 'NO POG - has Eat It All BMID';
+    case 'pre':
+      return 'Event Week & Post';
+    case 'post':
+      return 'Pre- and Event Week';
+    case 'event':
+      return 'Pre-Event & Post-Event';
+    case 'pre+event':
+      return 'Post-Event';
+    case 'event+post':
+      return 'Pre-Event';
+    case 'pre+post':
+      return 'Event Week';
+    case 'pogs':
+    case null:
+      return 'Every shift worked';
+    default:
+      return `Unknown ${this.eventInfo.meals}`;
+    }
+  }
+
 }
