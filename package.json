@@ -62,7 +62,7 @@
     "ember-resolver": "^6.0.0",
     "ember-simple-auth": "^2.1",
     "ember-simple-auth-token": "^4.0.7",
-    "ember-source": "~3.14.2",
+    "ember-source": "~3.14.3",
     "ember-test-friendly-error-handler": "^2.1.1",
     "ember-toastr": "^2.0.1",
     "eslint-plugin-ember": "^7.7.1",
