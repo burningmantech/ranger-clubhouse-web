@@ -3,6 +3,8 @@ import { action, computed } from '@ember/object';
 import { validatePresence } from 'ember-changeset-validations/validators';
 import { set } from '@ember/object';
 import * as Position from 'clubhouse/constants/positions';
+import { fadeIn, fadeOut } from "ember-animated/motions/opacity";
+import { wait } from "ember-animated";
 
 export default class HqShiftController extends Controller {
   ignoreTimesheetVerification = false;
@@ -11,6 +13,29 @@ export default class HqShiftController extends Controller {
   correctionValidations = {
     notes: validatePresence(true)
   };
+
+  /*
+   * The timesheet verification section uses fade in/out animation
+   * to transition between entries to give a visual clue when multiple
+   * entries are being verified. Some HQ Window Workers did not catch
+   * the entries' dates were changing when a bulk of same positions
+   * were being presented. (e.g., five SITE Setup entries being presented one
+   * right after the other)
+   */
+
+  fadeDuration = 500;  // Time in ms to fade in/out text
+
+  *fade({ duration, insertedSprites, removedSprites }) {
+    removedSprites.forEach(sprite => {
+      fadeOut(sprite, { duration: duration / 2 });
+    });
+
+    yield wait(duration / 2);
+
+    insertedSprites.forEach(sprite => {
+      fadeIn(sprite, { duration: duration / 2 });
+    });
+  }
 
   @computed('timesheets.@each.position_id')
   get isShinyPenny() {
@@ -211,9 +236,11 @@ export default class HqShiftController extends Controller {
     case 'pre+post':
       return 'Event Week';
     case 'pogs':
-    case null:
       return 'Every shift worked';
     default:
+      if (!this.eventInfo.meals) {
+        return 'Every shift worked';
+      }
       return `Unknown ${this.eventInfo.meals}`;
     }
   }

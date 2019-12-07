@@ -1,0 +1,4 @@
+<span class="badge badge-secondary">{{this.title}}</span> {{this.description}}
+{{#if (and this.meals (eq this.meals "all"))}}
+  <p class="my-2">Helpful date info: {{config "MealDates"}}</p>
+{{/if}}
