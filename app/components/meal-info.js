@@ -1,6 +1,4 @@
-import { helper } from '@ember/component/helper';
-import { config } from 'clubhouse/utils/config';
-import { htmlSafe } from '@ember/string';
+import Component from '@glimmer/component';
 
 const MEALS = {
   'all': {
@@ -34,33 +32,37 @@ const MEALS = {
   'pogs': {
     title: "Meal Pogs",
     description: "Every time you work a shift, we'll give you a meal pog good for one of the next three meals (breakfast, lunch, or dinner)."
+  },
+
+  'no-info': {
+    title: 'Pending',
+    description: 'Meal information is not yet available.'
   }
 };
 
-export function mealInfo([meal]) {
-  let meal_info;
+export default class MealInfoComponent extends Component {
+  get title() {
+    const mealInfo = this._mealInfo();
 
-  if (meal == 'no-info') {
-    return 'Meal information for this year is not yet available';
-  }
-
-  if (meal) {
-    meal_info = MEALS[meal];
-
-    if (!meal_info) {
-      return `Unknown meal type [${meal}]`;
+    if (mealInfo) {
+      return mealInfo.title;
     }
-  } else {
-    meal_info = MEALS['pogs'];
+
+    return `Unknown`;
   }
 
-  let description = meal_info.description;
+  get description() {
+    const mealInfo = this._mealInfo();
 
-  if (meal && meal != "all") {
-    description += `<p class="my-2">Helpful date info: ${config("MealDates")}</p>`;
+    if (mealInfo) {
+      return mealInfo.description;
+    }
+
+    return `Unknown meal type ${this.args.meals}. This is a bug.`;
   }
 
-  return htmlSafe(`<span class="badge badge-secondary">${meal_info.title}</span> ${description}`);
+  _mealInfo() {
+    const meals = this.args.meals;
+    return meals ? MEALS[meals] : MEALS['pogs'];
+  }
 }
-
-export default helper(mealInfo);

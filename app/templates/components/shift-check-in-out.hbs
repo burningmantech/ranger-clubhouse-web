@@ -42,7 +42,7 @@
   {{else if (not person.canStartShift)}}
     <strong class="text-danger">{{@person.callsign}} cannot start a shift because their status does not allow them to work shifts</strong>
   {{else if @hasUnverifiedTimesheet}}
-    The timesheet entry needs to be verified before a shift can be started.
+    One or more timesheet entries has to be verified before a shift can be started.
   {{else}}
     {{#unless this.isPersonDirtTrained}}
       <div class="text-danger font-weight-bold mb-2">

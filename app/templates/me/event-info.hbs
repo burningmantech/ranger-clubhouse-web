@@ -73,8 +73,7 @@ Positions indicate which shifts you are allowed to sign up for and what ART trai
 
 {{#if (or person.isActive person.isAlpha person.isNonRanger)}}
   <h3 class="mt-4">{{fa-icon "utensils"}} Meals</h3>
-
-  {{meal-info eventInfo.meals}}
+  <MealInfo @meals={{eventInfo.meals}} />
 
   <h3 class="mt-4">{{fa-icon "shower"}} Showers</h3>
   {{#if eventInfo.showers}}

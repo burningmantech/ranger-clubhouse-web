@@ -80,7 +80,7 @@
         </td>
         <td>
           {{#if person.vehicle_insurance_paperwork}}
-            <b class="text-success">Authorized</b>
+            Authorized
           {{else}}
             NOT AUTHORIZED
           {{/if}}
@@ -94,11 +94,15 @@
 
 {{#if this.showHoursCreditsBreakdown}}
   <ModalDialog @title="Hours And Credits Breakdown" @onClose={{action this.toggleHoursCreditBreakdown}}>
-    The estimated hours and credits are based on the shifts already worked, plus the possible hours and credits earned from upcoming shifts signed up for.
-    <div class="row">
+    <p>
+      The estimated hours and credits are based on the shifts already worked,
+      plus the possible hours and credits earned from upcoming shifts signed up
+      for.
+    </p>
+     <div class="row">
       <div class="col-auto">
         <table class="table table-width-auto table-hover table-striped">
-          <caption>Hours Summary</caption>
+          <caption>Hours Breakdown</caption>
           <tbody>
             <tr>
               <th class="text-right">Appreciation Hours Total</th>
@@ -136,7 +140,7 @@
       </div>
       <div class="col-auto">
         <table class="table table-hover table-width-auto table-striped">
-          <caption>Credits Summary</caption>
+          <caption>Credits Breakdown</caption>
           <tbody>
             <tr>
               <th class="text-right">Total Credits</th>
@@ -183,11 +187,41 @@
       </thead>
       <tbody>
         <tr>
-          <td>{{unverifiedTimesheetEntry.position.title}}</td>
-          <td>{{shift-format unverifiedTimesheetEntry.on_duty}}</td>
-          <td>{{shift-format unverifiedTimesheetEntry.off_duty}}</td>
-          <td class="text-right">{{hour-minute-format unverifiedTimesheetEntry.duration}}</td>
-          <td class="text-right">{{credits-format unverifiedTimesheetEntry.credits}}</td>
+          <td>
+            <AnimatedContainer>
+              {{#animated-value unverifiedTimesheetEntry.position.title use=this.fade duration=this.fadeDuration as |value|}}
+                <span>{{value}}</span>
+              {{/animated-value}}
+            </AnimatedContainer>
+          </td>
+          <td>
+            <AnimatedContainer>
+              {{#animated-value unverifiedTimesheetEntry.on_duty use=this.fade duration=this.fadeDuration as |value|}}
+                <span>{{shift-format value}}</span>
+              {{/animated-value}}
+            </AnimatedContainer>
+          </td>
+          <td>
+            <AnimatedContainer>
+              {{#animated-value unverifiedTimesheetEntry.off_duty use=this.fade duration=this.fadeDuration as |value|}}
+                <span>{{shift-format value}}</span>
+              {{/animated-value}}
+            </AnimatedContainer>
+          </td>
+          <td class="text-right">
+            <AnimatedContainer>
+              {{#animated-value unverifiedTimesheetEntry.duration use=this.fade duration=this.fadeDuration as |value|}}
+                <span>{{hour-minute-format value}}</span>
+              {{/animated-value}}
+            </AnimatedContainer>
+          </td>
+          <td class="text-right">
+            <AnimatedContainer>
+              {{#animated-value unverifiedTimesheetEntry.credits use=this.fade duration=this.fadeDuration as |value|}}
+                <span>{{credits-format value}}</span>
+              {{/animated-value}}
+            </AnimatedContainer>
+          </td>
         </tr>
       </tbody>
     </table>
