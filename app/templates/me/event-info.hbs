@@ -49,15 +49,13 @@
 
 {{#if artTrainings}}
   <h3 class="mt-4">{{fa-icon "university"}} Advanced Ranger Training (ART)</h3>
-  The following {{if (eq artTrainings.length 1) "position" (concat artTrainings.length " positions")}}
-  require ART Training. Although you can sign up for an
-  ART-required shift at any time, you will not be allowed to work such a shift
-  until you have passed the relevant ART training.
-  {{training-info trainings=artTrainings}}
+  You are allowed to attend the following ART trainings. 
+  <TrainingInfo @trainings={{artTrainings}} />
 {{/if}}
 
 <h3>{{fa-icon "list"}} Positions</h3>
-Positions indicate which shifts you are allowed to sign up for and what ART trainings you may attend. You have
+Positions indicate which shifts you are allowed to sign up for and what ART
+trainings you may attend. You have
 {{pluralize personPositions.length "position"}} granted:
 <div class="form-row mt-2">
   {{#each personPositions as |position| }}
