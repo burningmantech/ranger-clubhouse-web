@@ -10,7 +10,7 @@ export default class HqSiteCheckinController extends Controller {
 
   @computed('eventInfo.trainings')
   get dirtTraining() {
-    return this.eventInfo.trainings.find((training) => training.position_id == Position.DIRT);
+    return this.eventInfo.trainings.find((training) => training.position_id == Position.TRAINING);
   }
 
   @computed('eventInfo.training.@each.position_id')

@@ -1,43 +1,75 @@
-<div class="table-responsive mt-2">
+<div class="table-responsive my-2">
   <table class="table table-sm table-width-auto">
     <thead>
       <tr>
-        <th>Position</th>
-        <th>Pass</th>
+        <th>Training</th>
+        <th>Required For</th>
+        <th>Trained?</th>
         <th>Date</th>
         <th>Location</th>
       </tr>
     </thead>
     <tbody>
-      {{#each trainings as |training|}}
+      {{#each @trainings as |training|}}
         <tr>
           <td>{{training.position_title}}</td>
           <td>
-            {{#if (eq training.status "pass")}}
-              <span class="text-success">YES</span>
-            {{else if (eq training.status "pending")}}
-              Pending
-            {{else if (eq training.status "no-shift")}}
+            {{#each training.required_by as |position|}}
+              {{#if position.not_granted}}
+                <i>*{{position.title}}</i>
+              {{else}}
+                {{position.title}}
+              {{/if}}
+              <br>
+            {{/each}}
+          </td>
+          {{#if (eq training.status "no-shift")}}
+            <td colspan="3">
               <span class="text-danger">No training sign up found</span>
-            {{else if (eq training.status "no-show")}}
-              <span class="text-danger">No show</span>
-            {{else}}
-              <span class="text-danger">NO</span>
-            {{/if}}
-            {{#if training.is_trainer}}
-              (as trainer)
-            {{/if}}
-          </td>
-          <td>
-            {{#if training.date}}
-              {{mdy-format training.date}}
-            {{else}}
-              -
-            {{/if}}
-          </td>
-          <td>{{present-or-not training.location "-"}}</td>
+            </td>
+          {{else}}
+            <td>
+              {{#if (eq training.status "pass")}}
+                <span class="text-success">{{fa-icon "check"}} TRAINED</span>
+              {{else if (eq training.status "pending")}}
+                Pending
+              {{else if (eq training.status "no-show")}}
+                <span class="text-danger">{{fa-icon "ban"}} No Show</span>
+              {{else}}
+                <span class="text-danger">{{fa-icon "ban"}} UNTRAINED</span>
+              {{/if}}
+              {{#if training.is_trainer}}
+                (as trainer)
+              {{/if}}
+            </td>
+            <td>
+              {{#if training.date}}
+                {{mdy-format training.date}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            <td>{{present-or-not training.location "-"}}</td>
+          {{/if}}
         </tr>
+        {{#if training.is_green_dot_pnv}}
+          <tr class="tr-no-border">
+            <td colspan="5">
+              In order to become a Green Dot, a person must be Green Dot TRAINED and PASS a Green Dot mentee shift.<br>
+              {{#if training.mentee_timesheet}}
+                A mentee shift was worked on {{shift-format training.mentee_timesheet.on_duty}}. Check with a Green Dot trainer to see if the mentee shift was passed.
+              {{else if training.mentee_slot}}
+                A mentee shift has been signed up for starting {{shift-format training.mentee_slot.begins}} but no mentee shift has been walked (yet).
+              {{else}}
+                <span class="text-danger">No Green Dot Mentee shift sign up was found.</span>
+              {{/if}}
+            </td>
+          </tr>
+        {{/if}}
       {{/each}}
     </tbody>
   </table>
+  {{#if this.hasNotGrantedPositions}}
+    * = The position will be granted once all ART training requirements have been passed.
+  {{/if}}
 </div>

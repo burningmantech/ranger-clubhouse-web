@@ -26,7 +26,7 @@
     {{#if person.isNonRanger}}
       <p>Non Rangers are not required to pass training.</p>
     {{/if}}
-    {{training-info trainings=eventInfo.trainings}}
+    <TrainingInfo @trainings={{eventInfo.trainings}} />
   </dd>
 
   <dt class="col-md-2">Meals</dt>

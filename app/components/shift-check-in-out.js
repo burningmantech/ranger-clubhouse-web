@@ -93,7 +93,7 @@ export default class ShiftCheckInOutComponent extends Component {
       return true;
     }
 
-    return !!this.eventInfo.trainings.find((training) => (training.position_id == Position.DIRT && training.status == 'pass'));
+    return !!this.eventInfo.trainings.find((training) => (training.position_id == Position.TRAINING && training.status == 'pass'));
   }
 
   // Find the on duty shift
