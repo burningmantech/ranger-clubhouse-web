@@ -81,7 +81,7 @@
     "ember-module-migrator": "^0.8.0",
     "global": "^4.4.0",
     "jquery-datetimepicker": "^2.5.21",
-    "jscodeshift": "^0.6.4",
+    "jscodeshift": "^0.7.0",
     "json-formatter-js": "^2.2.1",
     "lodash": "^4.17.15"
   }
