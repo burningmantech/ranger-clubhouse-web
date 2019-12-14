@@ -15,14 +15,17 @@
       {{#if this.isVintage}}
         <th>Last year worked</th>
         <th>Total years</th>
-
       {{else}}
         <th>Proposed Status</th>
         {{#unless this.isPastProspective}}
+          <th>Total years</th>
           <th>Last year worked</th>
         {{/unless}}
       {{/if}}
       <th>Email</th>
+      {{#unless (or this.isPastProspective this.isVintage)}}
+        <th>Vintage?</th>
+      {{/unless}}
     </tr>
   </thead>
   <tbody>
@@ -44,14 +47,18 @@
         <td>{{person.status}}</td>
         {{#if this.isVintage}}
           <td>{{person.last_year}}</td>
-          <td>{{person.years}}</td>
+          <td class="text-right">{{person.years}}</td>
         {{else}}
           <td>{{@newStatus}}</td>
           {{#unless this.isPastProspective}}
+            <td class="text-right">{{person.years}}</td>
             <td>{{person.last_year}}</td>
           {{/unless}}
         {{/if}}
         <td>{{mail-to person.email}}</td>
+        {{#unless (or this.isPastProspective this.isVintage)}}
+          <td class="text-center">{{if person.vintage "Y" "-"}}</td>
+        {{/unless}}
       </tr>
       {{#if person.error}}
         <tr class="tr-no-border">
