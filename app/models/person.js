@@ -12,6 +12,7 @@ export default class PersonModel extends DS.Model.extend(PersonMixin) {
   @attr('string') email;
   @attr('string') callsign;
   @attr('boolean') callsign_approved;
+  @attr('string') callsign_pronounce;
   @attr('string') formerly_known_as;
   @attr('string') status;
   @attr('boolean') vintage;

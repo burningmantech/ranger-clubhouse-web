@@ -19,8 +19,13 @@
       <div class="form-row">
         {{f.input "gender" label="Gender" hint="female, male, non-binary, gender fluid, etc." maxlength=32}}
       </div>
+
       <div class="form-row">
-      {{f.input "languages" label="Languages Spoken"
+        {{f.input "callsign_pronounce" label="Callsign Pronounciation" size=32 maxlength=32 }}
+      </div>
+
+      <div class="form-row">
+        {{f.input "languages" label="Languages Spoken"
             hint="List the English names of languages you are comfortable speaking separated by a comma. Ex: english, french, japanese"}}
       </div>
       <div class="form-row col-auto">
@@ -48,7 +53,7 @@
   <dl class="row">
     <dt class="col-md-3">Name</dt>
     <dd class="col-md-8">
-        {{person.first_name}} {{person.mi}} {{person.last_name}}
+      {{person.first_name}} {{person.mi}} {{person.last_name}}
     </dd>
 
     <dt class="col-md-3">Email</dt>
