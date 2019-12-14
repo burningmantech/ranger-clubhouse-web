@@ -50,12 +50,14 @@ export default class AdminPeopleByStatusChangeRoute extends Route {
       year++;
     }
 
-    this.set('year', year)
+    this.set('year', year);
+    this.set('period', period);
     return this.ajax.request('person/by-status-change', { data: { year }});
   }
 
   setupController(controller, model) {
     controller.setProperties(model);
     controller.set('year', this.year);
+    controller.set('period', !this.period ? 'current-date' : this.period);
   }
 }
