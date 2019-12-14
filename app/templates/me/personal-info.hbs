@@ -41,7 +41,15 @@
 
     {{#unless person.isAuditor}}
       <div class="form-group">
-        List the English names of the  languages you are comfortable speaking with the level of fluency in parenthesis, each separated by a comma.<br>
+        Do you have a difficult to pronounce callsign? Enter the phoenitic spelling below. (e.g., 3pio -&gt; "Three-Pee-Oh", Jschool -> "JAY-school", etc)
+      </div>
+
+      <div class="form-row">
+        {{f.input "callsign_pronounce" label="Callsign Pronounciation" size=20 maxlength=20 }}
+      </div>
+
+      <div class="form-group">
+        List the English names of the languages you are comfortable speaking with the level of fluency in parenthesis, each separated by a comma.<br>
         <div class="mt-2 mb-2">
           Example: "japanese (basic), spanish (fluent)"
         </div>

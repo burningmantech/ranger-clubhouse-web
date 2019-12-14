@@ -1,5 +1,5 @@
 <table class="table table-sm table-striped table-box table-hover">
-  <caption>{{title}} - {{if people (pluralize people.length "Ranger") "NONE"}}</caption>
+  <caption>{{@title}} - {{if @people (pluralize @people.length "Ranger") "NONE"}}</caption>
   <thead>
     <tr>
       <th class="w-10">Position</th>
@@ -14,12 +14,14 @@
     </tr>
   </thead>
   <tbody>
-    {{#each people as |person|}}
+    {{#each @people as |person|}}
       <tr>
         <td class="w-10 {{if person.is_greendot_shift "bg-shift-lead-greendot"}}">
           {{if person.short_title person.short_title person.position_title}}
         </td>
-        <td class="w-15"><PersonLink @callsign={{person.callsign}} @personId={{person.person_id}} /></td>
+        <td class="w-15">
+          <PersonLink @callsign={{person.callsign}} @personId={{person.person_id}} />
+        </td>
         <td class="w-5">{{present-or-not person.gender "-"}}</td>
         <td class="w-5 text-right">{{person.years}}</td>
         <td class="w-5 text-center">
@@ -42,8 +44,8 @@
         </td>
         <td class="w-35 {{if person.is_greendot "bg-shift-lead-greendot" (if (and person.is_troubleshooter (not (or person.is_rsl person.is_ood) ) ) "bg-shift-lead-troubleshooter")}}">
           {{#each person.positions as |p idx|~}}
-            {{if idx ", "}}{{p~}}
-          {{else}}
+            {{if idx ", "}}{{p}}
+          {{~else}}
             -
           {{/each}}
         </td>

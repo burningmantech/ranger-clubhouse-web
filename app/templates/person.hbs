@@ -40,6 +40,9 @@
   <div class="d-flex flex-md-row flex-column justify-content-between">
     <h2 class="align-middle">
       {{person-link person=person}} &lt;{{person.status}}{{if person.vintage "/vintage"}}, {{person.first_name}} {{person.last_name}}&gt;
+      {{#if person.callsign_pronounce}}
+        <br><i>"{{person.callsign_pronounce}}"</i>
+      {{/if}}
     </h2>
     <div class="text-muted align-middle">Person Manage</div>
     <div class="text-right align-middle">

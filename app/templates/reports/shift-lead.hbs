@@ -31,13 +31,13 @@
           {{/if}}
         </h3>
         {{#if green_dot_total}}
-        <p>
-          {{#if green_dot_females}}
-            {{pluralize green_dot_females "female Green Dot"}}
-          {{else}}
-            No female green dots are signed up.
-          {{/if}}
-        </p>
+          <p>
+            {{#if green_dot_females}}
+              {{pluralize green_dot_females "female Green Dot"}}
+            {{else}}
+              No female green dots are signed up.
+            {{/if}}
+          </p>
         {{/if}}
         <h3>{{pluralize command_staff_signups.length "Command Staff Ranger"}}</h3>
         <h3>{{pluralize non_dirt_signups.length "Special Team Ranger"}}</h3>
@@ -85,9 +85,9 @@
     GTR? = Indicates person signed the Motorpool Vehicle Agreement<br>
     Veh? = Indicates person has BM Org insurance<br>
   </p>
-  {{shift-lead-table title="DIRT/GREEN DOTS Scheduled" people=dirt_signups}}
-  {{shift-lead-table title="COMMAND STAFF Scheduled" people=command_staff_signups}}
-  {{shift-lead-table title="SPECIAL TEAMS Scheduled" people=non_dirt_signups}}
+  <ShiftLeadTable @title="DIRT/GREEN DOTS Scheduled" @people={{dirt_signups}} />
+  <ShiftLeadTable @title="COMMAND STAFF Scheduled" @people={{command_staff_signups}} />
+  <ShiftLeadTable @title="SPECIAL TEAMS Scheduled" @people={{non_dirt_signups}} />
   <p>
     <b>Secret decoder ring:</b>
     Dspch = Dispatcher,
