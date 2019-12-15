@@ -12,17 +12,17 @@
       </th>
       <th>Callsign</th>
       <th>Current Status</th>
-      {{#if this.isVintage}}
+      {{#unless this.isVintage}}
+        <th>Proposed Status</th>
+      {{/unless}}
+      {{#unless this.isPastProspective}}
         <th>Last year worked</th>
         <th>Total years</th>
-
-      {{else}}
-        <th>Proposed Status</th>
-        {{#unless this.isPastProspective}}
-          <th>Last year worked</th>
-        {{/unless}}
-      {{/if}}
+      {{/unless}}
       <th>Email</th>
+      {{#unless this.isVintage}}
+        <th>Vintage?</th>
+      {{/unless}}
     </tr>
   </thead>
   <tbody>
@@ -42,16 +42,17 @@
           <PersonLink @person={{person}} />
         </td>
         <td>{{person.status}}</td>
-        {{#if this.isVintage}}
-          <td>{{person.last_year}}</td>
-          <td>{{person.years}}</td>
-        {{else}}
+        {{#unless this.isVintage}}
           <td>{{@newStatus}}</td>
-          {{#unless this.isPastProspective}}
-            <td>{{person.last_year}}</td>
-          {{/unless}}
-        {{/if}}
+        {{/unless}}
+        {{#unless this.isPastProspective}}
+          <td class="text-right">{{person.last_year}}</td>
+          <td class="text-right">{{person.years}}</td>
+        {{/unless}}
         <td>{{mail-to person.email}}</td>
+        {{#unless this.isVintage}}
+          <td class="text-center">{{if person.vintage "Y" "-"}}</td>
+        {{/unless}}
       </tr>
       {{#if person.error}}
         <tr class="tr-no-border">
