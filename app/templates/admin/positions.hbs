@@ -27,7 +27,8 @@
       <th>Count Hours</th>
       <th>Auto Signout</th>
       <th>On SL report</th>
-      <th>Training</th>
+      <th>Prevent Multi. Enrollments</th>
+      <th>Training / Full Email</th>
       <th>Action</th>
     </tr>
   </thead>
@@ -44,9 +45,13 @@
       <td>{{yesno position.count_hours}}</td>
       <td>{{yesno position.auto_signout}}</td>
       <td>{{yesno position.on_sl_report}}</td>
+      <td>{{if position.prevent_multiple_enrollments "Y" "-"}}</td>
       <td>
         {{#if position.training_position_id}}
-          {{pluck position.training_position_id positions "title" "-"}}
+          {{pluck position.training_position_id positions "title" "-"}}<br>
+        {{/if}}
+        {{#if position.slot_full_email}}
+          {{mail-to position.slot_full_email}}
         {{/if}}
       </td>
       <td class="actions">
