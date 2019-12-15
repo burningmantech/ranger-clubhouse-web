@@ -13,4 +13,6 @@ export default class PositionModel extends DS.Model {
   @attr('string') short_title;
   @attr('string') type;
   @attr('number') training_position_id;
+  @attr('boolean') prevent_multiple_enrollments;
+  @attr('string') slot_full_email;
 }
