@@ -77,7 +77,7 @@
   },
   "dependencies": {
     "double-metaphone": "^1.0.4",
-    "ember-cli-update": "^0.47.2",
+    "ember-cli-update": "^0.48.0",
     "ember-module-migrator": "^0.8.0",
     "global": "^4.4.0",
     "jquery-datetimepicker": "^2.5.21",
