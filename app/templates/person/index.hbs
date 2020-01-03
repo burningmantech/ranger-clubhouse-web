@@ -1,22 +1,22 @@
 <h3>General Account Info</h3>
 {{#if editPositions}}
-  {{person/position-form positions=positions positionIds=positionIds onSave=(action "savePositions") onCancel=(action "cancelPositions")}}
+  <Person::PositionForm @positions={{positions}} @positionIds={{positionIds}} @onSave={{action "savePositions"}} @onCancel={{action "cancelPositions"}} />
 {{/if}}
 
 {{#if editRoles}}
-  {{person/role-form roles=roles roleIds=roleIds onSave=(action "saveRoles") onCancel=(action "cancelRoles")}}
+  <Person::RoleForm @roles={{roles}} @roleIds={{roleIds}} @onSave={{action "saveRoles"}} @onCancel={{action "cancelRoles"}} />
 {{/if}}
 
 {{#if person.unread_message_count}}
   {{#ch-alert "warning" bold=true}}
     {{fa-icon "envelope"}} {{pluralize person.unread_message_count "unread Clubhouse message"}}
-    {{#link-to "person.messages" class="btn btn-success"}}Read Now{{/link-to}}
+    <LinkTo @route="person.messages" class="btn btn-success">Read Now</LinkTo>
   {{/ch-alert}}
 {{/if}}
 
 {{#ch-form "person" person  onSubmit=(action "savePersonAction") as |f|}}
 
-  {{person-photo photo=photo person=person syncAction=(action syncPhotoAction)}}
+  <PersonPhoto @photo={{photo}} @person={{person}} @syncAction={{action syncPhotoAction}} />
 
 
   {{! The following block is floated left on md or larger screen to ensure
@@ -266,11 +266,11 @@
     <div class="col-sm-12 col-md-9">
       {{#if (or canEditBMIT canEditAccessDocs)}}
         {{#if canEditBMIT}}
-          {{#link-to "person.bmid" class="btn btn-secondary btn-sm"}}Edit BMID{{/link-to}}
+          <LinkTo @route="person.bmid" class="btn btn-secondary btn-sm">Edit BMID</LinkTo>
         {{/if}}
         {{#if canEditAccessDocs}}
-          {{#link-to "person.tickets" class="btn btn-secondary btn-sm"}}View Tickets &amp; Stuff{{/link-to}}
-          {{#link-to "person.access-documents" class="btn btn-secondary btn-sm"}}Edit Access Docs{{/link-to}}
+          <LinkTo @route="person.tickets" class="btn btn-secondary btn-sm">View Tickets &amp; Stuff</LinkTo>
+          <LinkTo @route="person.access-documents" class="btn btn-secondary btn-sm">Edit Access Docs</LinkTo>
         {{/if}}
       {{else}}
         <div class="text-muted">No permission to edit BMID and/or access documents.</div>
@@ -282,9 +282,9 @@
     <div class="form-group row">
       <label class="col-form-label-fixed col-sm-12 col-md-2">Logs</label>
       <div class="col-sm-12 col-md-9 ">
-        {{#link-to "person.contact-log" class="btn btn-secondary btn-sm"}}Contact Log{{/link-to}}
-        {{#link-to "person.broadcast-log" class="btn btn-secondary btn-sm"}}Broadcast Log{{/link-to}}
-        {{#link-to "admin.action-log" (query-params person=person.callsign) class="btn btn-secondary btn-sm"}}Action Log{{/link-to}}
+        <LinkTo @route="person.contact-log" class="btn btn-secondary btn-sm">Contact Log</LinkTo>
+        <LinkTo @route="person.broadcast-log" class="btn btn-secondary btn-sm">Broadcast Log</LinkTo>
+        <LinkTo @route="admin.action-log" @query={{hash person=person.callsign}} class="btn btn-secondary btn-sm">Action Log</LinkTo>
       </div>
     </div>
 
@@ -292,7 +292,7 @@
       <label class="col-form-label-fixed col-sm-12 col-md-2">Note</label>
       <div class="col-sm-12 col-md-9">
         {{#if showConfirmNoteOrMessage}}
-          {{#modal-dialog title="Add Account Note" onClose=(action closeNoteOrMessage)}}
+          <ModalDialog @title="Add Account Note" @onClose={{action closeNoteOrMessage}}>
             <p>
               The note will be shown to all Volunteer Coordinators, HQ Window Workers, and other Login Management role
               holders when this account is viewed. The account note may only be cleared by a Clubhouse Admin. HQ Window workers and other similar user will not be able to remove the note.
@@ -305,9 +305,9 @@
             </p>
             <button class="btn btn-primary mr-3" {{action sendClubhouseMessage}}>Send Clubhouse Message</button>
             <button class="btn btn-primary" {{action editNote}}>Add Note</button>
-          {{/modal-dialog}}
+          </ModalDialog>
         {{else if showEditNote}}
-          {{#modal-dialog title=(if person.messsage "Add Account Note" "Update Account Note") onConfirm=(action saveNote f.model) onClose=(action closeNote) confirmLabel="Save Note"}}
+          <ModalDialog @title={{if person.messsage "Add Account Note" "Update Account Note"}} @onConfirm={{action saveNote f.model}} @onClose={{action closeNote}} @confirmLabel="Save Note">
             <p>
               The note will be shown to all Volunteer Coordinators, HQ Window Workers, and other Login Management role
               holders when this account is viewed. <span class="text-danger">A NOTE IS INTENDED TO BE RETAIN ACROSS MULTIPLE VIEWS OF THE ACCOUNT.</span>
@@ -320,7 +320,7 @@
             </p>
 
             {{f.input "message" type="textarea" label="Enter the note to be shown:" cols=80 rows=6}}
-          {{/modal-dialog}}
+          </ModalDialog>
         {{/if}}
         {{#if person.message}}
           <button class="btn btn-secondary btn-sm" {{action editNote}}>Update Note</button>
@@ -353,7 +353,7 @@
   <div class="form-group row">
     <label class="col-form-label-fixed d-none d-md-block col-md-2">&nbsp;</label>
     <div class="col-sm-7 col-md-5">
-      {{f.submit label="Update" disabled=(not f.model.isDirty)}}
+      <f.submit @label="Update" @disabled={{not f.model.isDirty}} />
     </div>
     {{#if (has-role "admin")}}
       <div class="col-sm-3 col-md-2 text-right">

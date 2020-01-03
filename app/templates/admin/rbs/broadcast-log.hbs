@@ -1,5 +1,5 @@
 <div class="float-right">
-  {{#link-to "admin.rbs"}}Back to RBS{{/link-to}}
+  <LinkTo @route="admin.rbs">Back to RBS</LinkTo>
 </div>
 {{year-select (if failed "Ranger Failed Broadcast Log" "Ranger Broadcast Log") year=year onChange=(action (mut year))}}
 
@@ -22,7 +22,7 @@
       <tr class="{{if (or log.sms_failed log.email_failed) "bg-highlight"}}">
         <td>{{log.id}}</td>
         <td>{{log.created_at}}</td>
-        <td>{{person-link person=log.sender}}</td>
+        <td><PersonLink @person={{log.sender}} /></td>
         <td>
           {{if log.alert.on_playa "On Playa" "Pre-Event"}}: {{log.alert.title}}
         </td>
@@ -47,7 +47,7 @@
           <td>&nbsp;</td>
           <td colspan="2" class="actions">
             {{#if log.retry_at}}
-              Retry at {{log.retry_at}} by {{person-link person=log.retry_person}}
+              Retry at {{log.retry_at}} by <PersonLink @person={{log.retry_person}} />
             {{else}}
               &nbsp;
             {{/if}}
@@ -121,7 +121,7 @@
 </table>
 
 {{#if confirmRetry}}
-  {{#modal-dialog title="Retry Broadcast" onConfirm=(action attemptRetry) onClose=(action closeRetry)}}
+  <ModalDialog @title="Retry Broadcast" @onConfirm={{action attemptRetry}} @onClose={{action closeRetry}}>
     <p>
       <b>ID:</b> #{{confirmRetry.id}} <b>Created:</b> {{confirmRetry.created_at}} <b>Sender:</b> {{confirmRetry.sender.callsign}}<br>
       <b>Alert:</b> {{if confirmRetry.alert.on_playa "On Playa" "Pre-Event"}}: {{confirmRetry.alert.title}}
@@ -130,13 +130,13 @@
     <p>
       Are you sure you want to retry this broadcast?
     </p>
-  {{/modal-dialog}}
+  </ModalDialog>
 {{else if retryingBroadcast}}
-  {{#modal-dialog title="Retying Broadcast" onClose=closeRetry}}
+  <ModalDialog @title="Retying Broadcast" @onClose={{closeRetry}}>
     Working.. {{fa-icon "spinner" spin=true}}
-  {{/modal-dialog}}
+  </ModalDialog>
 {{else if retryResult}}
-  {{#modal-dialog title="Retry Results" onClose=closeRetry}}
-    {{broadcast-sent-table result=retryResult}}
-  {{/modal-dialog}}
+  <ModalDialog @title="Retry Results" @onClose={{closeRetry}}>
+    <BroadcastSentTable @result={{retryResult}} />
+  </ModalDialog>
 {{/if}}

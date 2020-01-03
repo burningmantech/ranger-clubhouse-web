@@ -29,7 +29,7 @@
     <tbody>
       {{#each radios as |radio|}}
         <tr>
-          <td>{{person-link personId=radio.person_id callsign=radio.callsign}}</td>
+          <td><PersonLink @personId={{radio.person_id}} @callsign={{radio.callsign}} /></td>
           <td>{{radio.barcode}}</td>
           <td>{{shift-format radio.checked_out}}</td>
           {{#if (or event_summary include_eligible)}}

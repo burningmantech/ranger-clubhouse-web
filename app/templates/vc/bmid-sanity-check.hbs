@@ -1,7 +1,7 @@
 <main class="col">
   <div class="float-right">
-      {{#link-to "vc.bmid-print" class="btn btn-secondary"}}Print via Lambase{{/link-to}}
-      {{#link-to "vc.bmid" class="btn btn-secondary"}}Manage BMIDs{{/link-to}}
+      <LinkTo @route="vc.bmid-print" class="btn btn-secondary">Print via Lambase</LinkTo>
+      <LinkTo @route="vc.bmid" class="btn btn-secondary">Manage BMIDs</LinkTo>
   </div>
   <h1>Sanity Check {{year}} BMIDs</h1>
 
@@ -36,7 +36,7 @@
         {{#each asylum.people as |person|}}
           <tr>
             <td class="w-15">
-              {{person-link person=person}}
+              <PersonLink @person={{person}} />
             </td>
             <td class="w-10">
               {{person.first_name}} {{person.last_name}}
@@ -48,9 +48,9 @@
               {{mail-to person.email}}
             </td>
             <td class="w-20">
-              {{#link-to "person.index" person.id class="btn btn-primary btn-sm"}}View{{/link-to}}
-              {{#link-to "person.schedule" person.id class="btn btn-primary btn-sm"}}Schedule{{/link-to}}
-              {{#link-to "person.access-documents" person.id class="btn btn-primary btn-sm"}}Access Docs{{/link-to}}
+              <LinkTo @route="person.index" @model={{person.id}} class="btn btn-primary btn-sm">View</LinkTo>
+              <LinkTo @route="person.schedule" @model={{person.id}} class="btn btn-primary btn-sm">Schedule</LinkTo>
+              <LinkTo @route="person.access-documents" @model={{person.id}} class="btn btn-primary btn-sm">Access Docs</LinkTo>
             </td>
           </tr>
         {{else}}

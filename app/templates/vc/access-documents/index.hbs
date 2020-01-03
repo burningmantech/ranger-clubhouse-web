@@ -21,7 +21,7 @@ Showing {{pluralize documents.people.length "person"}}
 
   <tbody>
     {{#each documents.people as |person|}}
-      {{access-documents-for-person person=person.person documents=person.documents}}
+      <AccessDocumentsForPerson @person={{person.person}} @documents={{person.documents}} />
     {{else}}
       <tr>
         <td colspan="7" class="text-danger">

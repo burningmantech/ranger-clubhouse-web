@@ -1,3 +1,4 @@
+import { TimeoutError, AbortError } from '@ember-data/adapter/error';
 import Route from '@ember/routing/route';
 import ENV from 'clubhouse/config/environment';
 import {
@@ -5,7 +6,6 @@ import {
   isTimeoutError,
   isForbiddenError
 } from 'ember-ajax/errors';
-import DS from 'ember-data';
 
 //
 // Called by Ember when a route encounters an uncaught exception.
@@ -20,7 +20,7 @@ export default class ErrorRoute extends Route {
 
     // Check for offline errors
     const isOffline =
-      (error instanceof DS.TimeoutError || error instanceof DS.AbortError
+      (error instanceof TimeoutError || error instanceof AbortError
         || isAbortError(error) || isTimeoutError(error));
 
     controller.set('isOffline', isOffline);

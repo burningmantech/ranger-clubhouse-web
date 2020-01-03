@@ -28,7 +28,7 @@ created and edited to restrict access to extended information.
     </div>
 
     <div class="form-group mt-2">
-      {{f.submit label=(if entry.isNew "Create" "Update")}}
+      <f.submit @label={{if entry.isNew "Create" "Update"}} />
       {{f.cancel}}
     </div>
 

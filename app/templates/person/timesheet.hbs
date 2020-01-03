@@ -1,15 +1,15 @@
 <div class="float-right mt-1">
-  {{#link-to "person.timesheet-log" (query-params year=year) class="btn btn-primary"}}Timesheet Log{{/link-to}}
+  <LinkTo @route="person.timesheet-log" @query={{hash year=year}} class="btn btn-primary">Timesheet Log</LinkTo>
 </div>
 {{year-select "Timesheet" year=year years=person.all_years onChange=(action "changeYearAction") subheader=true}}
 
 <div class="border rounded p-2 mt-3 mb-2">
   <h3>Shift Manage</h3>
   {{#if (is-current-year year)}}
-    {{shift-check-in-out positions=positions timesheets=timesheets person=person eventInfo=eventInfo}}
+    <ShiftCheckInOut @positions={{positions}} @timesheets={{timesheets}} @person={{person}} @eventInfo={{eventInfo}} />
   {{else}}
     Select the current year to start or end a shift
   {{/if}}
 </div>
-{{person/timesheet-manage timesheets=timesheets person=person year=year positions=positions onChange=(action updateTimesheetSummary) timesheetSummary=timesheetSummary}}
-{{person/timesheet-missing timesheetMissing=timesheetMissing timesheets=timesheets person=person year=year positions=positions onChange=(action updateTimesheetSummary)}}
+<Person::TimesheetManage @timesheets={{timesheets}} @person={{person}} @year={{year}} @positions={{positions}} @onChange={{action updateTimesheetSummary}} @timesheetSummary={{timesheetSummary}} />
+<Person::TimesheetMissing @timesheetMissing={{timesheetMissing}} @timesheets={{timesheets}} @person={{person}} @year={{year}} @positions={{positions}} @onChange={{action updateTimesheetSummary}} />

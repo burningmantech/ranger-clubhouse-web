@@ -1,5 +1,5 @@
 {{#if this.ranger}}
-  {{contact-form callsign=this.ranger.callsign recipientId=this.ranger.id isInactive=this.ranger.is_inactive contactType="ranger" onDone=(action this.doneAction)}}
+  <ContactForm @callsign={{this.ranger.callsign}} @recipientId={{this.ranger.id}} @isInactive={{this.ranger.is_inactive}} @contactType="ranger" @onDone={{action this.doneAction}} />
 {{/if}}
 
 <h1>Contact An Active Ranger</h1>

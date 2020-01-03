@@ -1,25 +1,20 @@
 {{#if newMessage}}
-  {{message-new message=newMessage onSubmit=(action submitAction) onCancel=(action cancelAction) isSubmitting=isSubmitting}}
+  <MessageNew @message={{newMessage}} @onSubmit={{action submitAction}} @onCancel={{action cancelAction}} @isSubmitting={{isSubmitting}} />
 {{/if}}
 
 <div class="row">
   <div class="col-sm-12 col-md-6 mb-2">
     <div class="form-check form-check-inline">
-      {{radio-button value="all" groupValue=filterMessages
-                    radioId="filter-all" radioClass="form-check-input"}}
+      <RadioButton @value="all" @groupValue={{filterMessages}} @radioId="filter-all" @radioClass="form-check-input" />
       <label for="filter-all" class="form-check-label">All</label>
     </div>
     <div class="form-check form-check-inline">
-      {{radio-button value="unread" groupValue=filterMessages
-          radioId="filter-unread" classNames="form-check-label"
-          radioClass="form-check-input" }}
+      <RadioButton @value="unread" @groupValue={{filterMessages}} @radioId="filter-unread" @classNames="form-check-label" @radioClass="form-check-input" />
       <label for="filter-unread" class="form-check-label">Unread ({{unreadCount}})</label>
     </div>
 
     <div class="form-check form-check-inline">
-      {{radio-button value="read" groupValue=filterMessages
-          radioId="filter-read" classNames="form-check-label"
-          radioClass="form-check-input" }}
+      <RadioButton @value="read" @groupValue={{filterMessages}} @radioId="filter-read" @classNames="form-check-label" @radioClass="form-check-input" />
       <label for="filter-read" class="form-check-label">Read ({{readCount}})</label>
     </div>
   </div>

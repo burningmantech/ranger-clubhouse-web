@@ -1,7 +1,7 @@
-import DS from 'ember-data';
+import RESTSerializer from '@ember-data/serializer/rest';
 import { underscore } from '@ember/string';
 
-export default class ApplicationSerializer extends DS.RESTSerializer {
+export default class ApplicationSerializer extends RESTSerializer {
   // Only send the attributes that have changed.
   serializeAttribute(snapshot, json, key, attributes) {
 

@@ -18,7 +18,7 @@
   <tbody>
   {{#each enrollments as |person|}}
     <tr>
-      <td>{{person-link personId=person.person_id callsign=person.callsign}}</td>
+      <td><PersonLink @personId={{person.person_id}} @callsign={{person.callsign}} /></td>
       <td>{{mail-to person.email}}</td>
       <td>
         {{#each person.enrollments as |slot|}}
@@ -34,7 +34,7 @@
   {{/each}}
   </tbody>
 </table>
-{{email-list people=enrollments}}
+<EmailList @people={{enrollments}} />
 {{else}}
 <p class="text-success">Congratulations! Nobody was found to have enrolled for multiple trainings.</p>
 {{/if}}

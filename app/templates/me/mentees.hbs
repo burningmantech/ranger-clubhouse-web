@@ -1,5 +1,5 @@
 {{#if contactMentee}}
-  {{contact-form callsign=contactMentee.callsign isInactive=(eq contactMentee.status "not active") recipientId=contactMentee.person_id contactType="mentor" onDone=(action "doneAction")}}
+  <ContactForm @callsign={{contactMentee.callsign}} @isInactive={{eq contactMentee.status "not active"}} @recipientId={{contactMentee.person_id}} @contactType="mentor" @onDone={{action "doneAction"}} />
 {{/if}}
 
 <h1>{{person.callsign}}'s Mentees</h1>
@@ -37,7 +37,7 @@
     {{#each year.mentees as |mentee|}}
     <tr>
       <td>
-        {{#link-to "person.index" mentee.person_id}}{{mentee.callsign}}{{/link-to}}
+        <LinkTo @route="person.index" @model={{mentee.person_id}}>{{mentee.callsign}}</LinkTo>
         {{#if mentee.formerly_known_as}}
         <div>(FKA: {{mentee.formerly_known_as}})</div>
         {{/if}}

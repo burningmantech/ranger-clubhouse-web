@@ -4,7 +4,7 @@
   {{#if (is-current-year year)}}
     <div class="border rounded p-2 mt-2 mb-2">
       <strong>Asset Checkout</strong>
-      {{asset-checkout-form person=person assets=assets attachments=attachments eventInfo=eventInfo}}
+      <AssetCheckoutForm @person={{person}} @assets={{assets}} @attachments={{attachments}} @eventInfo={{eventInfo}} />
     </div>
   {{/if}}
 {{else}}
@@ -13,4 +13,4 @@
   {{/ch-alert}}
 {{/if}}
 
-{{asset-table assets=assets year=year}}
+<AssetTable @assets={{assets}} @year={{year}} />

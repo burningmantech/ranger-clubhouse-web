@@ -4,7 +4,7 @@
     <label class="col-form-label">Filter</label>
   </div>
   <div class="col-auto">
-    {{ch-form/select name="filter" value=filter options=filterOptions onChange=(action (mut filter)) class="form-control"}}
+    <ChForm::Select @name="filter" @value={{filter}} @options={{filterOptions}} @onChange={{action (mut filter)}} @class="form-control" />
   </div>
 </div>
 
@@ -47,7 +47,7 @@
           <tbody>
             {{#each country.people as |person|}}
               <tr>
-                <td>{{person-link person=person}}</td>
+                <td><PersonLink @person={{person}} /></td>
                 <td>{{person.status}}</td>
                 <td>{{person.first_name}} {{person.last_name}}</td>
                 <td>

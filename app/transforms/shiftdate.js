@@ -1,5 +1,4 @@
-import DS from 'ember-data';
-const { Serializer } = DS;
+import Serializer from '@ember-data/serializer';
 
 /*
  * A shift date does not contain the seconds.

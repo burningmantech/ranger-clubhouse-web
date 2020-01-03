@@ -102,7 +102,7 @@
         {{/if}}
 
         {{#if (eq ticketingInfo.wap_status "frozen")}}
-          {{ticket-frozen item="Work Accesss Pass" ticketingInfo=ticketingInfo}}
+          <TicketFrozen @item="Work Accesss Pass" @ticketingInfo={{ticketingInfo}} />
         {{/if}}
         {{#if nextSection}}
           <div class="float-right">

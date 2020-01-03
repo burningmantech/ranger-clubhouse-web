@@ -22,7 +22,7 @@
 
 
     <div class="form-group mt-2">
-      {{f.submit label=(if credit.isNew "Create" "Update")}}
+      <f.submit @label={{if credit.isNew "Create" "Update"}} />
       {{f.cancel}}
     </div>
 
@@ -44,7 +44,7 @@
       Labor Day of {{year}} is {{selectedYearLaborDay}}.
       Labor Day of {{presentYear}} is {{presentYearLaborDay}}, {{laborDayDiff}} days later.
     </fieldset>
-    {{f.submit label=(concat "Copy " copySelectedCreditCount " selected credits")}}
+    <f.submit @label={{concat "Copy " copySelectedCreditCount " selected credits"}} />
     {{f.cancel}}
     {{#each copySourcePositions as |position|}}
       <table class="table table-sm table-box table-hover">
@@ -71,7 +71,7 @@
             {{#each position.credits as |credit|}}
               <tr>
                 {{#let (concat "copy-credit-" credit.source.id) as |checkid|}}
-                  <td>{{input type="checkbox" checked=credit.selected id=checkid}}</td>
+                  <td><Input @type="checkbox" @checked={{credit.selected}} @id={{checkid}} /></td>
                   <td>
                     <label for={{checkid}}>
                       {{shift-format credit.source.start_time}} &rarr;
@@ -99,26 +99,14 @@
 
 <div class="row mb-1">
   <div class="col-4">
-    {{#power-select
-          options=filterPositionOptions
-          selected=positionFilter
-          searchEnabled=false
-          searchField="title"
-          onChange=(action (mut positionFilter))
-                    as |item| }}
+    <PowerSelect @options={{filterPositionOptions}} @selected={{positionFilter}} @searchEnabled={{false}} @searchField="title" @onChange={{action (mut positionFilter)}} as |item|>
       {{item.title}}
-    {{/power-select}}
+    </PowerSelect>
   </div>
   <div class="col-3">
-    {{#power-select
-          selected=dayFilter
-          options=dayOptions
-          searchEnabled=false
-          searchField="title"
-          onChange=(action (mut dayFilter))
-                    as |item| }}
+    <PowerSelect @selected={{dayFilter}} @options={{dayOptions}} @searchEnabled={{false}} @searchField="title" @onChange={{action (mut dayFilter)}} as |item|>
       {{item.title}}
-    {{/power-select}}
+    </PowerSelect>
   </div>
 
   <div class="col-auto ml-auto">

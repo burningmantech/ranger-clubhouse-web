@@ -5,7 +5,7 @@
     <label class="col-form-label">Filter requests by callsigns starting with</label>
   </div>
   <div class="col-auto mb-2">
-    {{ch-form/select name="callsignFilter" value=callsignFilter options=letterOptions onChange=(action (mut callsignFilter)) controlClass="form-control"}}
+    <ChForm::Select @name="callsignFilter" @value={{callsignFilter}} @options={{letterOptions}} @onChange={{action (mut callsignFilter)}} @controlClass="form-control" />
   </div>
 </div>
 
@@ -27,7 +27,7 @@
         <tr class="{{if idx "no-border"}}">
           <td>
             {{#unless idx}}
-              {{person-link person=request.person page="timesheet" year=year}}
+              <PersonLink @person={{request.person}} @page="timesheet" @year={{year}} />
             {{else}}
               &nbsp;
             {{/unless}}

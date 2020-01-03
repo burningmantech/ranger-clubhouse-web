@@ -21,9 +21,9 @@
     <div class="popover-footer">
       {{#if (has-role "admin")}}
         {{#if this.body}}
-          {{#link-to "admin.help" (query-params editSlug=@slug) class="btn btn-secondary"}}Edit Help{{/link-to}}
+          <LinkTo @route="admin.help" @query={{hash editSlug=@slug}} class="btn btn-secondary">Edit Help</LinkTo>
         {{else if (not this.isLoading)}}
-          {{#link-to "admin.help" (query-params createSlug=@slug) class="btn btn-secondary"}}Create Help{{/link-to}}
+          <LinkTo @route="admin.help" @query={{hash createSlug=@slug}} class="btn btn-secondary">Create Help</LinkTo>
         {{/if}}
       {{/if}}
       <button class="btn btn-primary" {{action closeHelp}}>Close</button>

@@ -9,7 +9,7 @@
     <h4>{{person.callsign}} is marked as OFF SITE.</h4>
     Follow the procedures on the Site Check In page before signing the person into a shift.
     <div class="mt-2">
-      {{#link-to "hq.site-checkin" person.id class="btn btn-primary"}}Site Check In{{/link-to}}
+      <LinkTo @route="hq.site-checkin" @model={{person.id}} class="btn btn-primary">Site Check In</LinkTo>
     </div>
   {{/ch-alert}}
 {{/unless}}
@@ -17,7 +17,7 @@
 {{#if (gt person.unread_message_count 0)}}
   {{#ch-alert "warning" bold=true}}
     {{fa-icon "envelope"}} {{pluralize person.unread_message_count "unread Clubhouse message"}}.
-    {{#link-to "hq.messages" class="btn btn-success"}}Read Now{{/link-to}}
+    <LinkTo @route="hq.messages" class="btn btn-success">Read Now</LinkTo>
   {{/ch-alert}}
 {{/if}}
 
@@ -169,7 +169,7 @@
   </ModalDialog>
 {{/if}}
 
-<h3>Timesheet Verification {{help-popover slug="hq-timesheet-verification"}} - {{#if unverifiedTimesheets }}{{pluralize unverifiedTimesheets.length "entry" }}{{else}}No Action Needed{{/if}}</h3>
+<h3>Timesheet Verification <HelpPopover @slug="hq-timesheet-verification" /> - {{#if unverifiedTimesheets }}{{pluralize unverifiedTimesheets.length "entry" }}{{else}}No Action Needed{{/if}}</h3>
 {{#if unverifiedTimesheetEntry}}
   {{#if ignoreTimesheetVerification}}
     <button class="btn btn-secondary" {{action toggleIgnoreVerification}}>Show Verfication</button>
@@ -229,7 +229,7 @@
       <button class="btn btn-success py-2 px-4 mr-3" {{action markEntryCorrect}} disabled={{isSubmitting}}>YES</button>
       <button class="btn btn-danger  py-2 px-4 p-2 mr-3" {{action markEntryIncorrect}} disabled={{isSubmitting}}>NO</button>
       <button class="btn btn-gray  py-2 px-4" {{action toggleIgnoreVerification}} disabled={{isSubmitting}}>IGNORE</button>
-      {{#if isSubmitting}}{{loading-indicator}}{{/if}}
+      {{#if isSubmitting}}<LoadingIndicator />{{/if}}
     </div>
   {{/if}}
 {{else}}
@@ -237,13 +237,8 @@
 {{/if}}
 
 <hr class="my-3">
-<h3>Shift Management {{help-popover slug="hq-shift-management"}}</h3>
-{{shift-check-in-out
-    positions=positions timesheets=timesheets person=person imminentSlots=imminentSlots
-    hasUnverifiedTimesheet=(and unverifiedTimesheets (not ignoreTimesheetVerification))
-    endShiftNotify=(action refreshTimesheetSummary)
-    eventInfo=eventInfo
-  }}
+<h3>Shift Management <HelpPopover @slug="hq-shift-management" /></h3>
+<ShiftCheckInOut @positions={{positions}} @timesheets={{timesheets}} @person={{person}} @imminentSlots={{imminentSlots}} @hasUnverifiedTimesheet={{and unverifiedTimesheets (not ignoreTimesheetVerification)}} @endShiftNotify={{action refreshTimesheetSummary}} @eventInfo={{eventInfo}} />
 
 
 {{#if showCorrectionForm}}
@@ -271,16 +266,16 @@
       </ul>
     </div>
     {{f.input "notes" label="Timesheet entry correction note:" type="textarea" autofocus=true cols=80 rows=3}}
-    {{f.submit label="Submit Correction" disabled=isCorrectionSubmitting}}
+    <f.submit @label="Submit Correction" @disabled={{isCorrectionSubmitting}} />
     {{f.cancel}}
     {{#if isCorrectionSubmitting}}
-      {{loading-indicator}}
+      <LoadingIndicator />
     {{/if}}
   {{/ch-form}}
 {{/if}}
 
 <hr>
-<h3 class="mb-2">Radio &amp; Assets {{help-popover slug="hq-assets"}}</h3>
+<h3 class="mb-2">Radio &amp; Assets <HelpPopover @slug="hq-assets" /></h3>
 {{#unless eventInfo.radio_info_available}}
   {{#ch-alert "danger"}}
     Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
@@ -305,11 +300,11 @@
 </div>
 
 {{#if person.asset_authorized}}
-  {{asset-checkout-form person=person assets=assets attachments=attachments eventInfo=eventInfo}}
+  <AssetCheckoutForm @person={{person}} @assets={{assets}} @attachments={{attachments}} @eventInfo={{eventInfo}} />
 {{else}}
   <p class="text-danger"><b>{{person.callsign}} is not asset authorized and may not check out equipment at this time. Have the person sign the Radio Checkout form, then to go Site Check In and mark the person having signed the document.</b></p>
   <p>
-    {{#link-to "hq.site-checkin" person.id class="btn btn-primary"}}Site Check In{{/link-to}}
+    <LinkTo @route="hq.site-checkin" @model={{person.id}} class="btn btn-primary">Site Check In</LinkTo>
   </p>
 {{/if}}
 
@@ -351,7 +346,7 @@
 </table>
 <div>
   {{#if assets.isUpdating}}
-    {{loading-indicator text="Refreshing Assets"}}
+    <LoadingIndicator @text="Refreshing Assets" />
   {{/if}}
 </div>
 
@@ -359,7 +354,7 @@
   <div class="mt-4">
     <button class="btn btn-secondary" {{action markOffSite}} disabled={{isMarkingOffSite}}>Mark As Off Site</button>
     {{#if isMarkingOffSite}}
-      {{loading-indicator}}
+      <LoadingIndicator />
     {{/if}}
   </div>
 {{/if}}

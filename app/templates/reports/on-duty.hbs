@@ -18,7 +18,7 @@
         {{f.input "date" type="datetime"}}
       </div>
       <div class="col-auto">
-        {{f.submit label="Submit"}}
+        <f.submit @label="Submit" />
         <button class="btn btn-secondary" {{action this.viewCurrentTime}}>View Current Time</button>
       </div>
     </div>
@@ -47,7 +47,7 @@
     <tbody>
       {{#each position.timesheets as |ts|}}
         <tr>
-          <td>{{person-link person=ts.person}}</td>
+          <td><PersonLink @person={{ts.person}} /></td>
           <td>{{shift-format ts.on_duty}}</td>
           {{#if this.duty_date}}
             <td>

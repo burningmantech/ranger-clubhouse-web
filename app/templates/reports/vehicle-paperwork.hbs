@@ -20,7 +20,7 @@
   <tbody>
     {{#each people as |person|}}
       <tr>
-        <td>{{person-link person=person}}</td>
+        <td><PersonLink @person={{person}} /></td>
         <td>{{person.status}}</td>
         <td class="text-center">{{yesno person.vehicle_paperwork}}</td>
         <td class="text-center">{{yesno person.vehicle_insurance_paperwork}}</td>

@@ -24,7 +24,7 @@
       {{f.input "date" type="datetime"}}
     </div>
     <div class="col-auto">
-      {{f.submit label="Submit"}}
+      <f.submit @label="Submit" />
       <button class="btn btn-secondary" {{action this.viewCurrentPeriod}}>View Current Period</button>
     </div>
   </div>
@@ -55,7 +55,7 @@
             {{#if slot.checked_in}}
               <b>Signed up &amp; in ({{slot.checked_in.length}}):</b>
               {{#each slot.checked_in as |person idx|}}
-                {{~if idx ", "}}<span class="d-inline-block">{{person-link person=person}} ({{time-format person.timesheet.on_duty}})</span>
+                {{~if idx ", "}}<span class="d-inline-block"><PersonLink @person={{person}} /> ({{time-format person.timesheet.on_duty}})</span>
               {{/each}}
             {{else if slot.signed_up}}
               <b class="text-danger">No scheduled sign ups on shift.</b>
@@ -66,21 +66,21 @@
             {{#if slot.different_shift}}
               <b>Went on different shift ({{slot.different_shift.length}}):</b>
               {{#each slot.different_shift as |person idx|}}
-                {{~if idx ", "}}<span class="d-inline-block">{{person-link person=person}} ({{person.timesheet.position_title}} @ {{time-format person.timesheet.on_duty}})</span>
+                {{~if idx ", "}}<span class="d-inline-block"><PersonLink @person={{person}} /> ({{person.timesheet.position_title}} @ {{time-format person.timesheet.on_duty}})</span>
               {{/each}}
               <br>
             {{/if}}
             {{#if slot.rogues}}
               <b>Rogues / Overlaps ({{slot.rogues.length}}):</b>
               {{#each slot.rogues as |person idx|}}
-                {{~if idx ", "}}<span class="d-inline-block">{{person-link person=person}} ({{moment-format person.on_duty "ddd DD @ HH:MM"}} - {{if person.off_duty (moment-format person.off_duty "ddd DD @ HH:MM") "now"}})</span>
+                {{~if idx ", "}}<span class="d-inline-block"><PersonLink @person={{person}} /> ({{moment-format person.on_duty "ddd DD @ HH:MM"}} - {{if person.off_duty (moment-format person.off_duty "ddd DD @ HH:MM") "now"}})</span>
                 {{~/each}}
                 <br>
             {{/if}}
             {{#if slot.not_present}}
               <b>Flakes ({{slot.not_present.length}}):</b>
               {{#each slot.not_present as |person idx|}}
-                {{~if idx ", "}}{{person-link person=person~}}
+                {{~if idx ", "}}<PersonLink @person={{person}} />
               {{/each}}
             {{else if slot.signed_up}}
               <b class="text-success">No flakes.</b>

@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  extends: 'recommended',
+  extends: 'octane',
   rules: {
       'attribute-indentation': false,
       'block-indentation': false,
@@ -9,6 +9,8 @@ module.exports = {
       // e..g, {{cgo 'person' 'edit'}}
       'no-unnecessary-concat': false,
       'no-triple-curlies': false,
-      'simple-unless': false
+      'simple-unless': false,
+
+      'no-implicit-this ': false,
   },
 };

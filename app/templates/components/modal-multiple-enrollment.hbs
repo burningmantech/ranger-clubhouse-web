@@ -1,4 +1,4 @@
-{{#modal-dialog title=data.title onClose=onClose}}
+<ModalDialog @title={{data.title}} @onClose={{onClose}}>
   <p>
     {{#if isMe}}You are{{else}}The person is{{/if}} already
     enrolled in {{pluralize data.slots.length (if data.isAlpha "Alpha shift" (concat trainingType " session")) }}:
@@ -33,4 +33,4 @@
       For example, you may sign up for one Training session, one ART Green Dot session (if qualified), and one ART Sandman session (if qualified).
     </p>
   {{/if}}
-{{/modal-dialog}}
+</ModalDialog>

@@ -44,7 +44,7 @@
     <div class="col-auto">
       {{f.submit}}
       {{#if @onCancel}}
-        {{f.cancel cancelAction=(action @onCancel)}}
+        <f.cancel @cancelAction={{action @onCancel}} />
       {{/if}}
     </div>
   </div>

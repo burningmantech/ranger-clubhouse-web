@@ -4,7 +4,7 @@
   <caption>{{pluralize passed.length "Shiny Penny candidate"}}</caption>
   <thead>
     <tr>
-      <th class="w-5">{{input type="checkbox" checked=passAll change=(action togglePassAll value="target.checked")}}</th>
+      <th class="w-5"><Input @type="checkbox" @checked={{passAll}} @change={{action togglePassAll value="target.checked"}} /></th>
       <th class="w-15">Callsign</th>
       <th class="w-20">Name</th>
       <th class="w-5">Status</th>
@@ -19,10 +19,10 @@
           {{#if person.converted}}
             {{fa-icon "check"}}
           {{else}}
-            {{input type="checkbox" checked=person.selected}}
+            <Input @type="checkbox" @checked={{person.selected}} />
           {{/if}}
         </td>
-        <td class="w-15">{{person-link person=person}}</td>
+        <td class="w-15"><PersonLink @person={{person}} /></td>
         <td class="w-20">{{person.first_name}} {{person.last_name}}</td>
         <td class="w-5">{{person.status}}</td>
         <td>{{person.mentor_status}}</td>
@@ -43,7 +43,7 @@
   <caption>{{pluralize bonked.length "Bonked Alpha"}}</caption>
   <thead>
     <tr>
-      <th class="w-5">{{input type="checkbox" checked=bonkAll change=(action toggleBonkAll value="target.checked")}}</th>
+      <th class="w-5"><Input @type="checkbox" @checked={{bonkAll}} @change={{action toggleBonkAll value="target.checked"}} /></th>
       <th class="w-15">Callsign</th>
       <th class="w-20">Name</th>
       <th class="w-5">Status</th>
@@ -58,10 +58,10 @@
           {{#if person.converted}}
             {{fa-icon "check"}}
           {{else}}
-            {{input type="checkbox" checked=person.selected}}
+            <Input @type="checkbox" @checked={{person.selected}} />
           {{/if}}
         </td>
-        <td class="w-15">{{person-link person=person}}</td>
+        <td class="w-15"><PersonLink @person={{person}} /></td>
         <td class="w-20">{{person.first_name}} {{person.last_name}}</td>
         <td class="w-5">{{person.status}}</td>
         <td>{{person.mentor_status}}</td>

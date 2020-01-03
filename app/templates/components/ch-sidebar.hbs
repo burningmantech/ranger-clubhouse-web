@@ -1,14 +1,14 @@
 <ul class="list-group">
   {{yield}}
 
-  {{#ch-sidebar-group}}
+  <ChSidebarGroup>
     <a href class="{{linkBg}} list-group-item list-group-item-action d-flex align-items-center" {{action sidebarToggle}}>
       <div class="d-flex w-100 justify-content-start align-items-center">
         <span id="collapse-icon" class="fas fa-lg mr-3"></span>
         <span id="collapse-text" class="menu-collapsed">Collapse</span>
       </div>
     </a>
-  {{/ch-sidebar-group}}
+  </ChSidebarGroup>
 
   <div class="ranger-logo menu-collapsed">
     <img src={{root-url "assets/images/ranger-logo.png"}} alt="ranger logo">

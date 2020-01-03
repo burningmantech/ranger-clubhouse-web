@@ -40,7 +40,7 @@
               <td class="col-lg-1 col-xl-1 text-right">{{slot.sign_ups.length}} / {{slot.max}}</td>
               <td class="col-lg-5 col-xl-5">
                 {{#each slot.sign_ups as |person idx|}}
-                  {{~if idx ", "~}}{{~person-link person=person~}}
+                  {{~if idx ", "~}}<PersonLink @person={{person}} />
                 {{else}}
                   <b class="text-danger">No sign ups</b>
                 {{/each}}

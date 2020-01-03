@@ -14,7 +14,7 @@
   <tbody>
     {{#each sent_logs as |log|}}
       <tr class="separated">
-          <td>{{person-link person=log.recipient_person}}</td>
+          <td><PersonLink @person={{log.recipient_person}} /></td>
           <td>{{log.recipient_address}}</td>
           <td>{{shift-format log.sent_at}}</td>
           <td>{{log.action}}</td>
@@ -56,7 +56,7 @@
   <tbody>
     {{#each received_logs as |log|}}
       <tr class="separated">
-          <td>{{person-link person=log.sender_person}}</td>
+          <td><PersonLink @person={{log.sender_person}} /></td>
           <td>{{log.recipient_address}}</td>
           <td>{{shift-format log.sent_at}}</td>
           <td>{{log.action}}</td>

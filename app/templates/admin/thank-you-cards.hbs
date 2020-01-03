@@ -6,7 +6,7 @@
       <label class="col-form-label">Enter the Thank You card password:</label>
     </div>
     <div class="col-auto">
-      {{input type="password" class="form-control" name="password" size="10" value=this.password }}
+      <Input @type="password" class="form-control" @name="password" @size="10" @value={{this.password}} />
     </div>
     <div class="col-auto">
       <button class="btn btn-primary" {{action this.submit}} disabled={{this.isSubmitting}}>Submit</button>
@@ -39,7 +39,7 @@
     <tbody>
       {{#each this.people as |person|}}
         <tr>
-          <td>{{person-link person=person}}</td>
+          <td><PersonLink @person={{person}} /></td>
           <td>{{person.first_name}} {{person.last_name}}</td>
           <td>{{mail-to person.email}}</td>
           <td>{{person.street1}}</td>

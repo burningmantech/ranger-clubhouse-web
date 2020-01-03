@@ -1,13 +1,13 @@
+import { TimeoutError, AbortError } from '@ember-data/adapter/error';
 import Ember from 'ember';
 import Application from '@ember/application';
-import Resolver from './resolver';
+import Resolver from 'ember-resolver';
 import loadInitializers from 'ember-load-initializers';
 import config from './config/environment';
 import LinkComponent from '@ember/routing/link-component';
 import RSVP from 'rsvp';
 import buildErrorHandler from 'ember-test-friendly-error-handler';
 import { isAbortError, isTimeoutError } from 'ember-ajax/errors';
-import DS from 'ember-data';
 
 
 RSVP.on('error', function(error) {
@@ -34,7 +34,7 @@ RSVP.on('error', function(error) {
     console.error(error);
 
     const isOffline =
-      (error instanceof DS.TimeoutError || error instanceof DS.AbortError
+      (error instanceof TimeoutError || error instanceof AbortError
         || isAbortError(error) || isTimeoutError(error));
 
     if (isOffline) {

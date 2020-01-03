@@ -43,7 +43,7 @@
       {{f.input "on_playa" type="checkbox" label="Is alert related to a broadcast that will happen on playa?"}}
     </div>
     <div class="mt-4">
-      {{f.submit label=(if entry.isNew "Create" "Update")}}
+      <f.submit @label={{if entry.isNew "Create" "Update"}} />
       {{f.cancel}}
     </div>
   {{/ch-form}}

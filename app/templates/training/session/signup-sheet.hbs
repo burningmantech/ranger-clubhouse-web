@@ -1,5 +1,5 @@
 <div class="d-print-none mb-4">
-  {{#link-to "training.session"}}Back to Training Session{{/link-to}}
+  <LinkTo @route="training.session">Back to Training Session</LinkTo>
   <p class="text-muted">
     Use your browser's print command to send this page to the printer. Don't worry, the navigation bar, website footer, and this message will
     not appear on the paper.
@@ -47,7 +47,7 @@
   </h1>
   <table class="signup-table">
     <tbody>
-      {{#number-of-times times=8}}
+      <NumberOfTimes @times={{8}}>
         <tr>
           <td class="w-25">
             <div class="signup-label">Handle (if known)</div>
@@ -77,7 +77,7 @@
         <tr class="signup-separator">
           <td colspan="3">&nbsp;</td>
         </tr>
-      {{/number-of-times}}
+      </NumberOfTimes>
     </tbody>
   </table>
 </div>

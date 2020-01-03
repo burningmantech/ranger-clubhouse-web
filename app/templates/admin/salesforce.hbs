@@ -80,16 +80,16 @@
   <div class="col-auto">
     <strong>Import options</strong>
     <p>
-      <label>{{input type="checkbox" checked=createAccounts}} Create accounts</label><br>
-      <label>{{input type="checkbox" checked=updateSalesforce disabled=(not createAccounts)}}<span class="{{if (not createAccounts) "text-muted"}}"> Update Salesforce (create account only, cauton!)</span></label><br>
-      <label>{{input type="checkbox" checked=nonTestAccounts}} Use non-test accounts (caution!)</label><br>
+      <label><Input @type="checkbox" @checked={{createAccounts}} /> Create accounts</label><br>
+      <label><Input @type="checkbox" @checked={{updateSalesforce}} @disabled={{not createAccounts}} /><span class="{{if (not createAccounts) "text-muted"}}"> Update Salesforce (create account only, cauton!)</span></label><br>
+      <label><Input @type="checkbox" @checked={{nonTestAccounts}} /> Use non-test accounts (caution!)</label><br>
     </p>
   </div>
   <div class="col-auto">
     <strong>Debugging options</strong>
     <p>
-      <label>{{input type="checkbox" checked=showAll}} Show all records (first 1,000 records, create & reset account disabled)</label><br>
-      <label>{{input type="checkbox" checked=resetTestAccounts}} Reset test accounts in Salesforce</label><br>
+      <label><Input @type="checkbox" @checked={{showAll}} /> Show all records (first 1,000 records, create & reset account disabled)</label><br>
+      <label><Input @type="checkbox" @checked={{resetTestAccounts}} /> Reset test accounts in Salesforce</label><br>
     </p>
   </div>
 </div>
@@ -126,7 +126,7 @@
           <tr>
             <td>
               {{#if (and (eq account.status "succeeded") account.chuid)}}
-                {{person-link personId=account.chuid callsign=account.callsign}}
+                <PersonLink @personId={{account.chuid}} @callsign={{account.callsign}} />
               {{else}}
                 {{account.callsign}}
               {{/if}}
@@ -144,7 +144,7 @@
               <td colspan="8">
                 <span class="text-danger font-weight-bold">{{account.message}}</span>
                 {{#if account.existing_person}}
-                  {{person-link person=account.existing_person}} - {{account.existing_person.status}} - {{account.existing_person.first_name}} {{account.existing_person.last_name}}
+                  <PersonLink @person={{account.existing_person}} /> - {{account.existing_person.status}} - {{account.existing_person.first_name}} {{account.existing_person.last_name}}
                 {{/if}}
               </td>
             </tr>
@@ -153,7 +153,7 @@
             <tr class="tr-no-border">
               <td colspan="8">
                 {{#if account.existing_person}}
-                  <b>Existing Person:</b> {{person-link person=account.existing_person}} ({{account.existing_person.status}})<br>
+                  <b>Existing Person:</b> <PersonLink @person={{account.existing_person}} /> ({{account.existing_person.status}})<br>
                 {{/if}}
                 <b>Ranger Obj. Name:</b> {{account.salesforce_ranger_object_name}}<br>
                 <b>BPGUID:</b>{{account.bpguid}}<br>

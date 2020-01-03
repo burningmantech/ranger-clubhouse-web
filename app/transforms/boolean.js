@@ -1,5 +1,5 @@
+import Transform from '@ember-data/serializer/transform';
 import { isNone } from '@ember/utils';
-import DS from 'ember-data';
 
 
 /*
@@ -8,7 +8,7 @@ import DS from 'ember-data';
  *
  */
 
-export default DS.Transform.extend({
+export default Transform.extend({
   deserialize(serialized, options) {
     if (isNone(serialized) && options.allowNull === true) {
       return null;

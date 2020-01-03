@@ -64,7 +64,7 @@ Showing {{pluralize documents.length "current access document"}}
 </p>
 
 <button class="btn btn-primary" {{action newAccessDocument}}>New Access Document</button>
-{{#link-to "person.tickets" class="btn btn-secondary"}}View Tickets &amp; Stuff{{/link-to}}
+<LinkTo @route="person.tickets" class="btn btn-secondary">View Tickets &amp; Stuff</LinkTo>
 <button class="btn btn-secondary" {{action editDelivery}}>Edit Delivery Method</button>
 
 {{#if entry}}
@@ -106,7 +106,7 @@ Showing {{pluralize documents.length "current access document"}}
 
     {{f.input "additional_comments" label="Additional Comments" type="textarea" rows=4 cols=60
       hint="(Your callsign and date will be automatically added to any additional comments you provide.)"}}
-    {{f.submit label=(if entry.isNew "Create" "Update")}}
+    <f.submit @label={{if entry.isNew "Create" "Update"}} />
     {{f.cancel}}
     {{#unless entry.isNew}}
       <button class="btn btn-danger float-right" {{action "deleteAccessDocument" entry}}>Delete (Cancel) Document</button>
@@ -137,7 +137,7 @@ Showing {{pluralize documents.length "current access document"}}
       {{f.input "state" label="State" type="select" options=stateOptions grid="col-sm-5 col-md-4"}}
       {{f.input "postal_code" label="Zip Code" grid="col-sm-5 col-md-4"}}
     </div>
-    {{f.submit label="Update" disabled=isSubmitting}}
+    <f.submit @label="Update" @disabled={{isSubmitting}} />
     {{f.cancel}}
   {{/ch-form}}
 {{/if}}

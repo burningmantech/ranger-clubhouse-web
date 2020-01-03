@@ -44,7 +44,7 @@
   </fieldset>
 
   <div class="mt-4">
-    {{f.submit label=(if position.isNew "Create" "Update")}}
+    <f.submit @label={{if position.isNew "Create" "Update"}} />
     {{f.cancel}}
   </div>
 

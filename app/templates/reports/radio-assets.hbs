@@ -1,7 +1,7 @@
 {{year-select "Radio Assets Report" year=year onChange=(action (mut year))}}
 
 <div class="form-row">
-  <label>{{input type="checkbox" checked=summary}} Summarize report</label>
+  <label><Input @type="checkbox" @checked={{summary}} /> Summarize report</label>
 </div>
 {{#if assets}}
   {{pluralize assets.length "radio"}},

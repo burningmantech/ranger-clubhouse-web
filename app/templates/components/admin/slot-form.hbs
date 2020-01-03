@@ -44,9 +44,9 @@ e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.
   </div>
 
   <div class="form-group mt-2">
-    {{f.submit label=(if slot.isNew "Create" "Update")}}
+    <f.submit @label={{if slot.isNew "Create" "Update"}} />
     {{#unless slot.isNew}}
-      {{f.submit label="Create New Slot" onSubmit=(action cloneRecord)}}
+      <f.submit @label="Create New Slot" @onSubmit={{action cloneRecord}} />
     {{/unless}}
     {{f.cancel}}
   </div>

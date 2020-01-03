@@ -2,7 +2,7 @@
   <legend>Options</legend>
   <div class="form-check form-check-inline d-inline-block">
     <label class="form-check-label">
-      {{input type="checkbox" class="form-check-input" checked=onPlaya}}
+      <Input @type="checkbox" class="form-check-input" @checked={{onPlaya}} />
       On playa only
     </label>
   </div>
@@ -17,7 +17,7 @@
   {{#each positionTypes as |type|}}
     <div class="form-check form-check-inline">
       <label class="form-check-label">
-        {{input type="checkbox" class="form-check-input" checked=type.selected}}
+        <Input @type="checkbox" class="form-check-input" @checked={{type.selected}} />
         {{type.name}}
       </label>
     </div>
@@ -29,7 +29,7 @@
   {{#each statuses as |status|}}
     <div class="form-check form-check-inline">
       <label for="{{id}}" class="form-check-label">
-        {{input type="checkbox" id=id class="form-check-input" checked=status.selected}}
+        <Input @type="checkbox" @id={{id}} class="form-check-input" @checked={{status.selected}} />
         {{status.name}}
       </label>
     </div>
@@ -77,7 +77,7 @@
         <tbody>
           {{#each position.visiblePeople as |person|}}
             <tr>
-              <td>{{person-link person=person}}</td>
+              <td><PersonLink @person={{person}} /></td>
               <td>{{person.status}}</td>
               <td>{{#if person.on_site}}{{fa-icon "check"}}{{/if}}</td>
             </tr>
@@ -100,7 +100,7 @@
           {{#each position.missingPeople as |person|}}
             <tr>
               <td><span class="text-danger">{{fa-icon "exclamation-triangle"}}</span></td>
-              <td>{{person-link person=person}}</td>
+              <td><PersonLink @person={{person}} /></td>
               <td>{{person.status}}</td>
               <td>{{#if person.on_site}}{{fa-icon "check" title="On playa"}}{{/if}}</td>
               <td>{{position.title}} not assigned</td>

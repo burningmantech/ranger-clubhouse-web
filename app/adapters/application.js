@@ -1,4 +1,4 @@
-import DS from 'ember-data';
+import RESTAdapter from '@ember-data/adapter/rest';
 import Inflector from 'ember-inflector';
 import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
 import ENV from 'clubhouse/config/environment';
@@ -28,7 +28,7 @@ const SINGULAR_MODELS = [
   'timesheet',
 ];
 
-export default class ApplicationAdapter extends DS.RESTAdapter.extend(DataAdapterMixin) {
+export default class ApplicationAdapter extends RESTAdapter.extend(DataAdapterMixin) {
   host = ENV['api-server'];
 
   authorize(xhr) {

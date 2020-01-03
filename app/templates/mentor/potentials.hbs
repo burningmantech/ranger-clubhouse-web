@@ -3,7 +3,7 @@
 <div class="form-group row">
   <label class="col-form-label col-auto">Filter</label>
   <div class="col-auto">
-    {{ch-form/select name="filter" value=filter options=filterOptions onChange=(action (mut filter)) class="form-control"}}
+    <ChForm::Select @name="filter" @value={{filter}} @options={{filterOptions}} @onChange={{action (mut filter)}} @class="form-control" />
   </div>
 </div>
 
@@ -41,7 +41,7 @@
   <tbody>
     {{#each viewPotentials as |person|}}
       <tr>
-        <td>{{person-link person=person}}</td>
+        <td><PersonLink @person={{person}} /></td>
         <td>{{person.first_name}} {{person.last_name}}</td>
         <td>{{present-or-not person.gender "-"}}</td>
         <td>{{person.status}}</td>
@@ -102,7 +102,7 @@
         </td>
         <td>
           {{#if person.mentors_notes}}
-            {{read-more text=person.mentors_notes}}
+            <ReadMore @text={{person.mentors_notes}} />
           {{else}}
             -
           {{/if}}
@@ -121,7 +121,7 @@
         <td>
           {{#each person.trainings as |place|}}
             {{#if place.notes}}
-              {{read-more text=place.notes}}
+              <ReadMore @text={{place.notes}} />
             {{else}}
               -
             {{/if}}
@@ -217,7 +217,7 @@
                 </td>
                 <td>
                   {{#if place.notes}}
-                    {{read-more text=place.notes}}
+                    <ReadMore @text={{place.notes}} />
                   {{else}}
                     -
                   {{/if}}
@@ -253,7 +253,7 @@
     </div>
     <div class="form-row">
       <div class="col-auto">
-        {{f.submit label="Update"}}
+        <f.submit @label="Update" />
       </div>
       <div class="col-auto">
         {{f.cancel}}

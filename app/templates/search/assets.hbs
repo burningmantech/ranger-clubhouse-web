@@ -1,7 +1,7 @@
 <h1>Asset Search</h1>
 
 <form class="form-inline" {{action "search" on="submit"}} autocomplete="off">
-  {{input type="text" size=30 value=barcode placeholder="Enter the asset barcode" class="form-control"}}
+  <Input @type="text" @size={{30}} @value={{barcode}} placeholder="Enter the asset barcode" class="form-control" />
   <button type="submit" class="btn btn-primary ml-1" disabled={{isLoading}}>Search</button>
   {{#if isLoading}}
     {{fa-icon "spinner" spin=true}}
@@ -28,7 +28,7 @@
     <tbody>
       {{#each asset.asset_history as |row|}}
         <tr>
-          <td>{{#link-to "person.assets" row.person.id}}{{row.person.callsign}}{{/link-to}}</td>
+          <td><LinkTo @route="person.assets" @model={{row.person.id}}>{{row.person.callsign}}</LinkTo></td>
           <td>{{present-or-not row.attachment.description "-"}}</td>
           <td>{{shift-format row.checked_out}}</td>
           <td>{{#if row.checked_in}}

@@ -8,10 +8,10 @@
   </p>
   <p>
     <b>Is the timesheet missing a shift that you worked?</b>
-    Use the {{#link-to "me.timesheet-corrections.missing"}}Missing Entries Requests{{/link-to}}
+    Use the <LinkTo @route="me.timesheet-corrections.missing">Missing Entries Requests</LinkTo>
     page to ask for a missing shift to be recorded.
   </p>
-  {{me/timesheet-review-common timesheets=timesheets timesheetSummary=timesheetSummary timesheetInfo=timesheetInfo person=person}}
+  <Me::TimesheetReviewCommon @timesheets={{timesheets}} @timesheetSummary={{timesheetSummary}} @timesheetInfo={{timesheetInfo}} @person={{person}} />
 {{else}}
   <p class="lead mt-3 text-danger">
     No timesheet entries were found for {{timesheetInfo.correction_year}}.
@@ -21,10 +21,10 @@
 <div class="mt-4">
   <div class="row">
     <div class="col-6 mb-2">
-      {{#link-to "me.timesheet-corrections.index" class="btn btn-success"}}{{fa-icon "arrow-left"}} Correction Instructions{{/link-to}}
+      <LinkTo @route="me.timesheet-corrections.index" class="btn btn-success">{{fa-icon "arrow-left"}} Correction Instructions</LinkTo>
     </div>
     <div class="col-6 text-right">
-      {{#link-to "me.timesheet-corrections.missing" class="btn btn-success"}}Missing Entries Requests {{fa-icon "arrow-right"}}{{/link-to}}
+      <LinkTo @route="me.timesheet-corrections.missing" class="btn btn-success">Missing Entries Requests {{fa-icon "arrow-right"}}</LinkTo>
     </div>
   </div>
 </div>

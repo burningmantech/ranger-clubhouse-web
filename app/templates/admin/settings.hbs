@@ -6,7 +6,7 @@
 <div class="form-row mb-2">
   <label class="col-form-label">Filter name:</label>
   <div class="col-auto">
-    {{input type="text" value=this.filterByName size=20 class="form-control"}}
+    <Input @type="text" @value={{this.filterByName}} @size={{20}} class="form-control" />
   </div>
   <div class="col-auto">
     <button class="btn btn-primary" {{action this.clearFilter}}>Clear</button>
@@ -31,7 +31,7 @@
         <td>{{setting.type}}</td>
         <td>
           {{#if setting.value}}
-            <code class="text-black">{{read-more text=setting.value limit=60}}</code>
+            <code class="text-black"><ReadMore @text={{setting.value}} @limit={{60}} /></code>
           {{else}}
             <strong class="text-danger">NULL</strong>
           {{/if}}
@@ -66,7 +66,7 @@
         {{f.input "value" label=(concat "Enter a " this.editSetting.type " value") type="textarea" rows=10 cols=80}}
       {{/if}}
     </div>
-    {{f.submit label="Update Setting"}}
+    <f.submit @label="Update Setting" />
     {{f.cancel}}
   {{/ch-form}}
 {{/if}}

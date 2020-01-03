@@ -1,4 +1,4 @@
-{{#modal-dialog title="Outstanding Item(s)" onClose=onClose onConfirm=onConfirm confirmLabel="Mark Person As Off Site" cancelLabel="Deal With Items" }}
+<ModalDialog @title="Outstanding Item(s)" @onClose={{onClose}} @onConfirm={{onConfirm}} @confirmLabel="Mark Person As Off Site" @cancelLabel="Deal With Items">
   <strong class="text-danger">{{pluralize pendingItems "item"}} still needs to be dealt with before marking this person off site:</strong>
   <ul class="mt-2 mb-2">
     {{#if isOnDuty}}
@@ -20,4 +20,4 @@
   <p>
     You may choose to ignore this warning and proceed to mark this person off site. However, you really should take care of the items listed above.
   </p>
-{{/modal-dialog}}
+</ModalDialog>

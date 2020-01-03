@@ -7,31 +7,11 @@
 {{/if}}
 
 {{#if (eq type "search")}}
-  {{#power-select-typeahead
-                  search=onSearch
-                  selected=(get model name)
-                  onchange=(action "update")
-                  disabled=disabled
-                  renderInPlace=true
-                  noMatchesMessage="No results found"
-                  loadingMessage="Searching . . ."
-                  onfocus=onFocus
-                  placeholder=placeholder
-                  as |item| }}
+  <PowerSelectTypeahead @search={{onSearch}} @selected={{get model name}} @onchange={{action "update"}} @disabled={{disabled}} @renderInPlace={{true}} @noMatchesMessage="No results found" @loadingMessage="Searching . . ." @onfocus={{onFocus}} @placeholder={{placeholder}} as |item|>
       {{item}}
-{{/power-select-typeahead}}
+</PowerSelectTypeahead>
 {{else if (eq type "select")}}
-  {{ch-form/select
-    name=name
-    controlClass=controlClass
-    disabled=disabled
-    includeBlank=includeBlank
-    multiple=multiple
-    onChange=(action "update")
-    options=options
-    size=size
-    value=(get model name)
-  }}
+  <ChForm::Select @name={{name}} @controlClass={{controlClass}} @disabled={{disabled}} @includeBlank={{includeBlank}} @multiple={{multiple}} @onChange={{action "update"}} @options={{options}} @size={{size}} @value={{get model name}} />
 {{else if (eq type "radioGroup")}}
   {{#each radioOptions as |option idx|}}
     <div class="{{wrapClass}}">
@@ -71,15 +51,7 @@
       <label class="form-check-label" for="{{_domId}}">{{label}}</label>
     {{/if}}
 {{else if (eq type "checkboxGroup")}}
-  {{ch-form/checkbox-group
-      name=name
-      value=_val
-      options=options
-      cols=cols
-      _domId=_domId
-      model=model
-      onUpdate=(action "update")
-  }}
+  <ChForm::CheckboxGroup @name={{name}} @value={{_val}} @options={{options}} @cols={{cols}} @_domId={{_domId}} @model={{model}} @onUpdate={{action "update"}} />
 {{else if (eq type "textarea")}}
   <textarea
     name        = {{name}}
@@ -94,17 +66,7 @@
     oninput     = {{action "update" value = "target.value"}}
   >{{_val}}</textarea>
 {{else if (or (eq type "datetime") (eq type "date"))}}
-  {{datetime-picker
-    autofocus=autofocus
-    classNames=controlClass
-    size=size
-    maxlength=maxlength
-    onChange=(action "update")
-    placeholder=placeholder
-    value=(get model name)
-    dateOnly=(eq type "date")
-    startDate=startDate
-   }}
+  <DatetimePicker @autofocus={{autofocus}} @classNames={{controlClass}} @size={{size}} @maxlength={{maxlength}} @onChange={{action "update"}} @placeholder={{placeholder}} @value={{get model name}} @dateOnly={{eq type "date"}} @startDate={{startDate}} />
 {{else}}
   <input
     type        = {{type}}

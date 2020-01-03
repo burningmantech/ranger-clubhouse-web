@@ -1,3 +1,3 @@
 {{year-select "Schedule / Sign Up" year=year years=person.all_years subheader=true onChange=(action "changeYearAction")}}
 
-{{schedule-manage person=person slots=slots signedUpSlots=signedUpSlots scheduleSummary=scheduleSummary creditsEarned=creditsEarned year=year permission=permission}}
+<ScheduleManage @person={{person}} @slots={{slots}} @signedUpSlots={{signedUpSlots}} @scheduleSummary={{scheduleSummary}} @creditsEarned={{creditsEarned}} @year={{year}} @permission={{permission}} />

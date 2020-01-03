@@ -15,7 +15,7 @@
             <span class="text-muted">only email used</span>
           {{else}}
             {{#if (has-alert-phone alert numbers)}}
-              <label>{{input type="checkbox" checked=(mut (get alert "use_sms"))}} {{if alert.on_playa numbers.on_playa.phone numbers.off_playa.phone}}</label>
+              <label><Input @type="checkbox" @checked={{mut (get alert "use_sms")}} /> {{if alert.on_playa numbers.on_playa.phone numbers.off_playa.phone}}</label>
             {{else}}
               <i class="text-muted">no phone number given</i>
             {{/if}}
@@ -27,7 +27,7 @@
           {{else if alert.sms_only}}
             <span class="text-muted">only SMS used</span>
           {{else}}
-            <label>{{input type="checkbox" checked=(mut (get alert "use_email"))}} {{email}}</label>
+            <label><Input @type="checkbox" @checked={{mut (get alert "use_email")}} /> {{email}}</label>
           {{/if}}
         </div>
       </div>

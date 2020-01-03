@@ -1,10 +1,10 @@
 <div class="mb-2 d-print-none">
   <div class="form-check form-check-inline">
-    {{radio-button value="upcoming" groupValue=viewSchedule radioId="view-upcoming" radioClass="form-check-input"}}
+    <RadioButton @value="upcoming" @groupValue={{viewSchedule}} @radioId="view-upcoming" @radioClass="form-check-input" />
     <label for="view-upcoming" class="form-check-label">Upcoming Shifts ({{upcomingCount}})</label>
   </div>
   <div class="form-check form-check-inline">
-    {{radio-button value="all" groupValue=viewSchedule radioId="view-all" classNames="form-check-label" radioClass="form-check-input" }} <label for="view-all" class="form-check-label">All Shifts ({{slots.length}})</label>
+    <RadioButton @value="all" @groupValue={{viewSchedule}} @radioId="view-all" @classNames="form-check-label" @radioClass="form-check-input" /> <label for="view-all" class="form-check-label">All Shifts ({{slots.length}})</label>
   </div>
 </div>
 
@@ -136,5 +136,5 @@ counted = the estimated number of hours which may count towards appreciations
 
 {{#if (and scheduleSummary person.isRanger isCurrentYear)}}
   <hr>
-  {{ticket-threshold year=year credits=scheduleSummary.total_credits creditsEarned=creditsEarned}}
+  <TicketThreshold @year={{year}} @credits={{scheduleSummary.total_credits}} @creditsEarned={{creditsEarned}} />
 {{/if}}

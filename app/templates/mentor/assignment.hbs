@@ -2,13 +2,13 @@
 <p class="d-print-none">
   Use this page to assign mentors to Alphas (anyone with the Alpha position).
   Passing or bonking an Alpha here will <b>NOT change the account status</b>. Use the
-  {{#link-to "mentor.convert"}}Alpha Conversion{{/link-to}} page to mint Shiny Pennies, and/or bonk Alphas.
+  <LinkTo @route="mentor.convert">Alpha Conversion</LinkTo> page to mint Shiny Pennies, and/or bonk Alphas.
 </p>
 
 <div class="form-row mb-2 d-print-none">
   <label class="col-form-label col-auto">Filter</label>
   <div class="col-auto">
-    {{ch-form/select name="filter" value=filter options=filterOptions onChange=(action (mut filter)) controlClass="form-control"}}
+    <ChForm::Select @name="filter" @value={{filter}} @options={{filterOptions}} @onChange={{action (mut filter)}} @controlClass="form-control" />
   </div>
 </div>
 {{#if isPrinting}}
@@ -93,7 +93,7 @@
       {{#each viewAlphas as |person|}}
         <tr>
           <td>
-            {{person-link person=person}}
+            <PersonLink @person={{person}} />
           </td>
           <td>{{person.first_name}} {{person.last_name}}</td>
           <td>
@@ -107,16 +107,16 @@
             {{yesno person.on_alpha_shift}}
           </td>
           <td>
-            {{ch-form/select name=(concat "mentor1_" person.id) value=person.mentors.0.mentor_id onChange=(action (mut person.mentors.0.mentor_id)) options=mentorOptions}}
+            <ChForm::Select @name={{concat "mentor1_" person.id}} @value={{person.mentors.0.mentor_id}} @onChange={{action (mut person.mentors.0.mentor_id)}} @options={{mentorOptions}} />
           </td>
           <td>
-            {{ch-form/select name=(concat "mentor1_" person.id) value=person.mentors.1.mentor_id onChange=(action (mut person.mentors.1.mentor_id)) options=mentorOptions}}
+            <ChForm::Select @name={{concat "mentor1_" person.id}} @value={{person.mentors.1.mentor_id}} @onChange={{action (mut person.mentors.1.mentor_id)}} @options={{mentorOptions}} />
           </td>
           <td>
-            {{ch-form/select name=(concat "mentor1_" person.id) value=person.mentors.2.mentor_id onChange=(action (mut person.mentors.2.mentor_id)) options=mentorOptions}}
+            <ChForm::Select @name={{concat "mentor1_" person.id}} @value={{person.mentors.2.mentor_id}} @onChange={{action (mut person.mentors.2.mentor_id)}} @options={{mentorOptions}} />
           </td>
           <td>
-            {{ch-form/select name=(concat "status_" person.id) value=person.mentor_status onChange=(action (mut person.mentor_status)) options=statusOptions}}
+            <ChForm::Select @name={{concat "status_" person.id}} @value={{person.mentor_status}} @onChange={{action (mut person.mentor_status)}} @options={{statusOptions}} />
           </td>
         </tr>
         {{#if person.mentor_history}}
@@ -126,7 +126,7 @@
               {{#each person.mentor_history as |history|}}
                 {{history.year}} ({{history.status}}):
                 {{#each history.mentors as |mentor mentor_idx|}}
-                  {{if mentor_idx " / "}}{{person-link person=mentor}}
+                  {{if mentor_idx " / "}}<PersonLink @person={{mentor}} />
                 {{/each}}
                 <br>
               {{/each}}

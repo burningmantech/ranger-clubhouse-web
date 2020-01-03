@@ -1,7 +1,7 @@
 {{#if isSubmitting}}
   {{loading-dialog "broadcasts"}}
 {{else if didTransmit}}
-  {{broadcast-sent-table result=result}}
+  <BroadcastSentTable @result={{result}} />
 {{else if isReviewing}}
   <table class="table">
     <caption>Review the criteria and message</caption>
@@ -97,7 +97,7 @@
   <button class="btn btn-success btn-lg" {{action transmitAction}}>SEND MESSAGE</button>
   <button class="btn btn-secondary btn-lg" {{action editMessageAction}}>EDIT</button>
 
-  {{broadcast-candidates-table people=people}}
+  <BroadcastCandidatesTable @people={{people}} />
 {{else}}
   {{#if noPeople}}
     {{#ch-alert "danger"}}
@@ -201,7 +201,7 @@
       </div>
     </div>
 
-    {{f.submit label="REVIEW MESSAGE & RECIPIENTS" submitClass="btn-lg"}}
+    <f.submit @label="REVIEW MESSAGE & RECIPIENTS" @submitClass="btn-lg" />
     <p>Don’t worry, you’ll have a chance to confirm the message and exactly who it is being sent to before it is actually sent.</p>
 
   {{/ch-form}}

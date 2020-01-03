@@ -37,7 +37,7 @@
     <tbody>
       {{#each this.badRecords as |rec|}}
         <tr>
-          <td>{{person-link person=rec.person page="access-documents"}}</td>
+          <td><PersonLink @person={{rec.person}} @page="access-documents" /></td>
           <td>RAD-{{rec.document.id}}</td>
           <td>{{rec.document.type}}</td>
           <td>{{rec.document.access_date}}</td>
@@ -53,13 +53,7 @@
     <label class="col-form-label">Export Filter</label>
   </div>
   <div class="col-auto">
-    {{ch-form/select
-      name="selectTypes"
-      value=this.filter
-      options=this.filterOptions
-      onChange=(action (mut this.filter))
-      controlClass="form-control"
-    }}
+    <ChForm::Select @name="selectTypes" @value={{this.filter}} @options={{this.filterOptions}} @onChange={{action (mut this.filter)}} @controlClass="form-control" />
   </div>
   <div class="col-auto">
     <label class="col-form-label">Export is limited to {{this.MAX_BATCH_SIZE}} items</label>
@@ -72,7 +66,7 @@
   </caption>
   <thead>
     <tr>
-      <th>{{input type="checkbox" checked=selectAll change=(action toggleAll value="target.checked") disabled=(eq filter "all")}}</th>
+      <th><Input @type="checkbox" @checked={{selectAll}} @change={{action toggleAll value="target.checked"}} @disabled={{eq filter "all"}} /></th>
       <th>Callsign</th>
       <th>First Name</th>
       <th>Last Name</th>
@@ -91,10 +85,10 @@
           {{else if (eq filter "all")}}
             &nbsp;
           {{else}}
-            {{input type="checkbox" checked=rec.selected disabled=(eq filter "all")}}
+            <Input @type="checkbox" @checked={{rec.selected}} @disabled={{eq filter "all"}} />
           {{/if}}
         </td>
-        <td>{{person-link person=rec.person page="access-documents"}}</td>
+        <td><PersonLink @person={{rec.person}} @page="access-documents" /></td>
         <td>{{rec.person.first_name}}</td>
         <td>{{rec.person.last_name}}</td>
         <td>{{mail-to rec.person.email}}</td>

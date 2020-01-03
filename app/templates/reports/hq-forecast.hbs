@@ -9,19 +9,19 @@
     <label class="col-form-label">Interval</label>
   </div>
   <div class="col-auto">
-    {{ch-form/select name="interval" value=interval options=intervalOptions onChange=(action (mut interval)) controlClass="form-control"}}
+    <ChForm::Select @name="interval" @value={{interval}} @options={{intervalOptions}} @onChange={{action (mut interval)}} @controlClass="form-control" />
   </div>
   <div class="col-auto">
     <label class="col-form-label">Day Filter</label>
   </div>
   <div class="col-auto">
-    {{ch-form/select name="dayFilter" value=dayFilter options=dayOptions onChange=(action (mut dayFilter)) controlClass="form-control"}}
+    <ChForm::Select @name="dayFilter" @value={{dayFilter}} @options={{dayOptions}} @onChange={{action (mut dayFilter)}} @controlClass="form-control" />
   </div>
   <div class="col-auto">
     <label class="col-form-label">Staffing Filter</label>
   </div>
   <div class="col-auto">
-    {{ch-form/select name="staffFilter" value=staffFilter options=staffOptions onChange=(action (mut staffFilter))  controlClass="form-control"}}
+    <ChForm::Select @name="staffFilter" @value={{staffFilter}} @options={{staffOptions}} @onChange={{action (mut staffFilter)}} @controlClass="form-control" />
   </div>
   <div class="col-auto ml-auto">
     <button class="btn btn-secondary" {{action exportToCsv}}>Export to CSV</button>
@@ -32,7 +32,7 @@
   Highlighted rows indicate no HQ staff (window, short, or lead) is available for the given period.
 </p>
 {{#if viewVisits}}
-  {{hq-visits-table visits=viewVisits title="All Shifts (excluding Training, Trainer, TiT, Uber & Burn Perimeter)" interval=interval}}
+  <HqVisitsTable @visits={{viewVisits}} @title="All Shifts (excluding Training, Trainer, TiT, Uber & Burn Perimeter)" @interval={{interval}} />
 {{else}}
   {{#if visits}}
     <p class="text-danger font-weight-bold">No shifts were found based on the filtering criteria</p>
@@ -43,7 +43,7 @@
 
 <h1 id="burn-perimeters">{{year}} Burn Perimeters</h1>
 {{#each burns as |burn|}}
-  {{hq-visits-table visits=burn.visits title=(join " / " burn.descriptions) interval=interval}}
+  <HqVisitsTable @visits={{burn.visits}} @title={{join " / " burn.descriptions}} @interval={{interval}} />
 {{else}}
   <p class="text-danger font-weight-bold">No Burn Perimeter shifts found for {{year}}</p>
 {{/each}}

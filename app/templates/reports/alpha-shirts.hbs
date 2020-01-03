@@ -27,7 +27,7 @@
     <tbody>
       {{#each alphas as |person|}}
         <tr>
-          <td>{{person-link person=person}}</td>
+          <td><PersonLink @person={{person}} /></td>
           <td>{{person.status}}</td>
           <td>{{person.first_name}} {{person.last_name}}</td>
           <td>

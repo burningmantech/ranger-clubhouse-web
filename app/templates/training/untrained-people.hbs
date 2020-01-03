@@ -17,7 +17,7 @@
   {{/if}}
   signed up for a shift who {{if (eq not_signed_up.length 1) "has" "have"}} not signed up for a corresponding training shift.
 </p>
-{{email-list people=not_signed_up listId="no-signup-emails"}}
+<EmailList @people={{not_signed_up}} @listId="no-signup-emails" />
 
 <table class="table table-border table-sm table-hover mt-2">
   <caption>No Training Shifts - Details</caption>
@@ -32,7 +32,7 @@
   <tbody>
     {{#each not_signed_up as |person|}}
       <tr>
-        <td>{{person-link person=person}}</td>
+        <td><PersonLink @person={{person}} /></td>
         <td>{{person.first_name}} {{person.last_name}}</td>
         <td>{{mail-to person.email}}</td>
         <td>
@@ -59,7 +59,7 @@
     (This could be because their training hasn’t happened yet.)
   </p>
 
-  {{email-list people=not_passed}}
+  <EmailList @people={{not_passed}} />
 
   <table class="table table-sm table-hover mt-2">
     <caption>Training Not Passed - Details</caption>
@@ -73,7 +73,7 @@
     <tbody>
       {{#each not_passed as |person|}}
         <tr>
-          <td>{{person-link person=person}}</td>
+          <td><PersonLink @person={{person}} /></td>
           <td>{{person.first_name}} {{person.last_name}}</td>
           <td>{{mail-to person.email}}</td>
         </tr>
@@ -81,7 +81,7 @@
           <td colspan="3">
             <dl>
               <dt>Training:</dt>
-              <dd>{{#link-to "training.session" training.id person.training_slot_id}}{{shift-format person.training_begins}} {{person.training_description}}{{/link-to}}</dd>
+              <dd><LinkTo @route="training.session" @models={{array training.id person.training_slot_id}}>{{shift-format person.training_begins}} {{person.training_description}}</LinkTo></dd>
               <dt>{{pluralize person.slots.length "shift sign up"}}:</dt>
               <dd>
                 {{#each person.slots as |slot|}}

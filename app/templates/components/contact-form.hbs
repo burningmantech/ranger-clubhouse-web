@@ -25,7 +25,7 @@
   </div>
 
   <div class="mt-4">
-    {{f.submit label=(if isSending "Sending" "Send Message") disabled=isSending}}
+    <f.submit @label={{if isSending "Sending" "Send Message"}} @disabled={{isSending}} />
     {{f.cancel}}
   </div>
 {{/ch-form}}

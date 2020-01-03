@@ -1,10 +1,10 @@
-{{login-sidebar}}
+<LoginSidebar />
 <main class="col">
   <h1>Create A Secret Clubhouse Account For Auditing</h1>
 
   <p>
     <strong>Already have a secret Clubhouse account?</strong> Don't fill out this form.
-    Rather, just go {{#link-to "login"}}here{{/link-to}} and log in.
+    Rather, just go <LinkTo @route="login">here</LinkTo> and log in.
   </p>
 
   <p class="border border-danger text-danger p-2">
@@ -65,14 +65,14 @@ spamming us and creating bogus accounts." }}
       {{f.input "last_name" label="Last Name" maxlength=25 grid="col-sm-4"}}
     </div>
 
-    {{person-address-edit f=f}}
+    <PersonAddressEdit @f={{f}} />
 
     <div class="form-row">
       {{f.input "home_phone" label="Primary Phone" type="text" inputmode="tel" grid="col-sm-4"}}
       {{f.input "alt_phone" label="Alternative Phone" type="text" inputmode="tel" grid="col-sm-4"}}
     </div>
 
-    {{f.submit label="Create My Auditor Account"}}
+    <f.submit @label="Create My Auditor Account" />
   {{/ch-form}}
 
 </main>

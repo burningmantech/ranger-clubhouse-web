@@ -1,6 +1,6 @@
 <h1>RBS - Unverified &amp; Stopped Phone Numbers</h1>
 <p>
-  {{#link-to "admin.rbs"}}Back to the RBS{{/link-to}}
+  <LinkTo @route="admin.rbs">Back to the RBS</LinkTo>
 </p>
 <p>
   The report shows which numbers have not been verified. The stopped table are those phone numbers which a stop command was issued by the owner.
@@ -18,7 +18,7 @@
   <tbody>
     {{#each unverified as |person|}}
       <tr>
-        <td>{{person-link person=person}}</td>
+        <td><PersonLink @person={{person}} /></td>
         <td>{{person.status}}</td>
         <td>
           {{#if (and person.sms_on_playa  (not person.sms_on_playa_verified))}}
@@ -52,7 +52,7 @@
   <tbody>
     {{#each stopped as |person|}}
       <tr>
-        <td>{{person-link person=person}}</td>
+        <td><PersonLink @person={{person}} /></td>
         <td>{{person.status}}</td>
         <td>{{#if (and person.sms_on_playa person.sms_on_playa_verified person.sms_on_playa_stopped)}}
             {{person.sms_on_playa}}
