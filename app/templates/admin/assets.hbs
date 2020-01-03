@@ -11,14 +11,14 @@
     <label class="col-form-label">Description Filter</label>
   </div>
   <div class="col-md-3 mb-2">
-    {{ch-form/select name="descriptionFilter" value=descriptionFilter options=descriptionOptions onChange=(action (mut descriptionFilter)) controlClass="form-control"}}
+    <ChForm::Select @name="descriptionFilter" @value={{descriptionFilter}} @options={{descriptionOptions}} @onChange={{action (mut descriptionFilter)}} @controlClass="form-control" />
   </div>
 
   <div class="col-auto">
     <label class="col-form-label">Temp ID Filter</label>
   </div>
   <div class="col-md-3 mb-2">
-    {{ch-form/select name="tempIdFilter" value=tempIdFilter options=tempIdOptions onChange=(action (mut tempIdFilter)) controlClass="form-control"}}
+    <ChForm::Select @name="tempIdFilter" @value={{tempIdFilter}} @options={{tempIdOptions}} @onChange={{action (mut tempIdFilter)}} @controlClass="form-control" />
   </div>
 </div>
 
@@ -99,8 +99,8 @@ Showing {{viewAssets.length}} of {{pluralize assets.length "asset"}}
       </div>
     </fieldset>
     <div class="mt-2">
-      {{f.submit label=(if f.model.isNew "Create" "Update") disabled=isSubmitting}}
-      {{f.cancel disabled=isSubmitting}}
+      <f.submit @label={{if f.model.isNew "Create" "Update"}} @disabled={{isSubmitting}} />
+      <f.cancel @disabled={{isSubmitting}} />
       {{#if (and isSubmitting creatingBarcode)}}
         <b>Creating {{creatingBarcode}}</b>
       {{/if}}
@@ -108,5 +108,5 @@ Showing {{viewAssets.length}} of {{pluralize assets.length "asset"}}
   {{/ch-form}}
 {{/if}}
 {{#if assetForHistory}}
-  {{modal-asset-history assetId=assetForHistory.id onClose=(action closeAssetHistory)}}
+  <ModalAssetHistory @assetId={{assetForHistory.id}} @onClose={{action closeAssetHistory}} />
 {{/if}}

@@ -6,7 +6,7 @@
       {{fa-icon "exclamation-triangle"}} Hold up! The following item(s) are outstanding:
       <ul class="mt-2">
         {{#if unverifiedCount}}
-          <li>You need to still review {{pluralize unverifiedCount "timesheet entry"}}. {{#link-to "me.timesheet-corrections.review"}}Click here{{/link-to}} to do that.</li>
+          <li>You need to still review {{pluralize unverifiedCount "timesheet entry"}}. <LinkTo @route="me.timesheet-corrections.review">Click here</LinkTo> to do that.</li>
         {{/if}}
         {{#if correctionPendingReviewCount}}
           <li>{{pluralize correctionPendingReviewCount "timesheet entry"}} {{if (eq correctionPendingReviewCount 1) "is" "are"}} pending review.</li>
@@ -45,14 +45,14 @@
         </label>
       </div>
       <div class="form-row mt-2">
-        {{f.submit label=(if isSubmitting "Submitting" "Submit Confirmation") disabled=isSubmitting}}
+        <f.submit @label={{if isSubmitting "Submitting" "Submit Confirmation"}} @disabled={{isSubmitting}} />
       </div>
     {{/ch-form}}
   {{/if}}
 
   <div class="row mt-4">
     <div class="col-sm-12">
-      {{#link-to "me.timesheet-corrections.missing" class="btn btn-success"}}{{fa-icon "arrow-left"}} Missing Entries Requests{{/link-to}}
+      <LinkTo @route="me.timesheet-corrections.missing" class="btn btn-success">{{fa-icon "arrow-left"}} Missing Entries Requests</LinkTo>
     </div>
   </div>
 </div>

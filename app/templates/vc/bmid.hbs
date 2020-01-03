@@ -4,36 +4,15 @@
   <div class="form-group row">
     <div class="col-auto">
       <label>Filter:</label>
-      {{ch-form/select
-          name="filter"
-          value=this.filter
-          options=this.filterOptions
-          onChange=(action (mut this.filter))
-          controlClass="form-control-sm"
-          disabled=this.isRendering
-        }}
+      <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}} @onChange={{action (mut this.filter)}} @controlClass="form-control-sm" @disabled={{this.isRendering}} />
     </div>
     <div class="col-auto">
       <label>Title Filter:</label>
-      {{ch-form/select
-          name="titleFilter"
-          value=this.titleFilter
-          options=this.titleFilterOptions
-          onChange=(action (mut this.titleFilter))
-          controlClass="form-control-sm"
-          disabled=this.isRendering
-          }}
+      <ChForm::Select @name="titleFilter" @value={{this.titleFilter}} @options={{this.titleFilterOptions}} @onChange={{action (mut this.titleFilter)}} @controlClass="form-control-sm" @disabled={{this.isRendering}} />
     </div>
     <div class="col-auto">
       <label>Team Filter:</label>
-      {{ch-form/select
-          name="teamFilter"
-          value=this.teamFilter
-          options=this.teamFilterOptions
-          onChange=(action (mut this.teamFilter))
-          controlClass="form-control-sm"
-          disabled=this.isRendering
-          }}
+      <ChForm::Select @name="teamFilter" @value={{this.teamFilter}} @options={{this.teamFilterOptions}} @onChange={{action (mut this.teamFilter)}} @controlClass="form-control-sm" @disabled={{this.isRendering}} />
 
     </div>
   </div>
@@ -41,7 +20,7 @@
     <div class="col-auto">
       <div class="input-group">
         <label>Callsign, title, team, notes filter:</label>
-        {{input type="text" value=this.textFilterInput class="form-control-sm ml-2" enter=(action textFilterAction) disabled=this.isRendering}}
+        <Input @type="text" @value={{this.textFilterInput}} class="form-control-sm ml-2" @enter={{action textFilterAction}} @disabled={{this.isRendering}} />
         <button class="btn btn-primary btn-sm ml-1" {{action textFilterAction}} disabled={{this.isRendering}}>Filter</button>
         <button class="btn btn-secondary btn-sm ml-1" {{action clearTextFilterAction}} disabled={{this.isRendering}}>Clear</button>
       </div>
@@ -54,8 +33,8 @@
     <div class="col-auto">
       <button class="btn btn-secondary btn-sm" disabled={{this.isRendering}} {{action toggleEditMode}}>{{#if editMode}}Table View{{else}}Edit Mode{{/if}}</button>
       <button class="btn btn-secondary btn-sm" disabled={{this.isRendering}} {{action exportCSV}}>Export CSV</button>
-      {{#link-to "vc.bmid-sanity-check" class="btn btn-secondary btn-sm" disabled=this.isRendering}}Sanity Check{{/link-to}}
-      {{#link-to "vc.bmid-print" class="btn btn-secondary btn-sm" disabled=this.isRendering}}Print via Lambase{{/link-to}}
+      <LinkTo @route="vc.bmid-sanity-check" class="btn btn-secondary btn-sm" @disabled={{this.isRendering}}>Sanity Check</LinkTo>
+      <LinkTo @route="vc.bmid-print" class="btn btn-secondary btn-sm" @disabled={{this.isRendering}}>Print via Lambase</LinkTo>
     </div>
   </div>
 
@@ -105,16 +84,13 @@
                   {{fa-icon "exclamation-circle"}}
                 {{/if}}
                 {{#if bmid.person}}
-                  {{person-link person=bmid.person}}
+                  <PersonLink @person={{bmid.person}} />
                 {{else}}
                   Deleted #{{bmid.person_id}}
                 {{/if}}
               </td>
               <td>
-                {{ch-form/select name=(concat "status" bmid.person.id) value=bmid.status options=bmidStatusOptions
-                      onChange=(action (mut bmid.status))
-                      controlClass="form-control-sm"
-                    }}
+                <ChForm::Select @name={{concat "status" bmid.person.id}} @value={{bmid.status}} @options={{bmidStatusOptions}} @onChange={{action (mut bmid.status)}} @controlClass="form-control-sm" />
               </td>
               {{!
                   Performance optimization here - using ch-form to manage over 1,000+ rows is too much for
@@ -130,23 +106,13 @@
               <td><input value={{bmid.title3}} onblur={{action updateColumn bmid "title3"}} size="30"></td>
               <td>{{if bmid.org_vehicle_insurance "M" "-"}}</td>
               <td>
-                {{ch-form/select name=(concat "showers" bmid.person.id) value=bmid.showers options=showerOptions
-                      onChange=(action (mut bmid.showers))
-                      controlClass="form-control-sm"
-                      }}
+                <ChForm::Select @name={{concat "showers" bmid.person.id}} @value={{bmid.showers}} @options={{showerOptions}} @onChange={{action (mut bmid.showers)}} @controlClass="form-control-sm" />
               </td>
               <td>
-                {{ch-form/select name=(concat "meals" bmid.person.id) value=bmid.meals options=mealOptions
-                      onChange=(action (mut bmid.meals))
-                      controlClass="form-control-sm"
-                  }}
+                <ChForm::Select @name={{concat "meals" bmid.person.id}} @value={{bmid.meals}} @options={{mealOptions}} @onChange={{action (mut bmid.meals)}} @controlClass="form-control-sm" />
               </td>
               <td>
-                {{ch-form/select name=(concat "admission_date" bmid.person.id) value=bmid.admission_date options=admissionDateOptions
-                      onChange=(action (mut bmid.admission_date))
-                      controlClass="form-control-sm"
-                      disabled=bmid.wapDisabled
-                      }}
+                <ChForm::Select @name={{concat "admission_date" bmid.person.id}} @value={{bmid.admission_date}} @options={{admissionDateOptions}} @onChange={{action (mut bmid.admission_date)}} @controlClass="form-control-sm" @disabled={{bmid.wapDisabled}} />
                 {{#if bmid.wapDisabled}}
                   {{#if bmid.wapMissing}}
                     <strong class="text-danger">WAP misssing</strong>
@@ -168,7 +134,7 @@
                   {{fa-icon "exclamation-circle"}}
                 {{/if}}
                 {{#if bmid.person}}
-                  {{person-link person=bmid.person}}
+                  <PersonLink @person={{bmid.person}} />
                 {{else}}
                   Deleted #{{bmid.person_id}}
                 {{/if}}
@@ -211,5 +177,5 @@
 </main>
 
 {{#if this.entry}}
-  {{bmid-edit entry=this.entry year=this.year admissionDateOptions=admissionDateOptions onSave=(action saveBmid) onCancel=(action cancelBmid)}}
+  <BmidEdit @entry={{this.entry}} @year={{this.year}} @admissionDateOptions={{admissionDateOptions}} @onSave={{action saveBmid}} @onCancel={{action cancelBmid}} />
 {{/if}}

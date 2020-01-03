@@ -1,6 +1,6 @@
+import { NotFoundError } from '@ember-data/adapter/error';
 import Route from '@ember/routing/route';
 import { Role } from 'clubhouse/constants/roles';
-import DS from 'ember-data';
 import RSVP from 'rsvp';
 
 export default class PersonAccessDocumentsRoute extends Route {
@@ -19,7 +19,7 @@ export default class PersonAccessDocumentsRoute extends Route {
       documents: this.store.query('access-document', { person_id: person.id }),
       delivery: this.store.findRecord('access-document-delivery', `${person.id}:${year}`)
                 .catch((response) => {
-                  if (!(response instanceof DS.NotFoundError)) {
+                  if (!(response instanceof NotFoundError)) {
                     this.house.handleErrorResponse(response);
                   }
                   return null;

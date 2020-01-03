@@ -23,10 +23,10 @@
   <tbody>
     {{#each motds as |motd|}}
     <tr>
-      <td>{{person-link person=motd.person}}</td>
+      <td><PersonLink @person={{motd.person}} /></td>
       <td>{{shift-format motd.created_at}}</td>
       <td>{{shift-format motd.updated_at}}</td>
-      <td class="w-50">{{read-more text=motd.message limit=50}}</td>
+      <td class="w-50"><ReadMore @text={{motd.message}} @limit={{50}} /></td>
       <td>
           <button class="btn btn-danger btn-sm" {{action deleteEntry motd}}>{{fa-icon "trash"}}</button>
           <button class="btn btn-primary btn-sm" {{action editEntry motd}}>{{fa-icon "edit"}}</button>

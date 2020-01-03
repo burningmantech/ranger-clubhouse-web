@@ -3,7 +3,7 @@
 <div class="form-group row">
   <label class="col-form-label col-auto">Filter</label>
   <div class="col-auto">
-    {{ch-form/select name="filter" value=filter options=filterOptions onChange=(action (mut filter)) class="form-control"}}
+    <ChForm::Select @name="filter" @value={{filter}} @options={{filterOptions}} @onChange={{action (mut filter)}} @class="form-control" />
   </div>
 </div>
 
@@ -28,7 +28,7 @@ Potential Alpha position: {{positionEligibleCount}}.
   <tbody>
     {{#each viewPotentials as |person|}}
       <tr>
-        <td>{{person-link person=person}}</td>
+        <td><PersonLink @person={{person}} /></td>
         <td>{{person.first_name}} {{person.last_name}}</td>
         <td>{{mail-to person.email}}</td>
         <td>{{person.status}}</td>

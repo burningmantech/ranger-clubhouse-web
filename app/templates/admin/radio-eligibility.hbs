@@ -29,7 +29,7 @@
   <tbody>
     {{#each people as |person|}}
       <tr>
-        <td>{{person-link person=person}}</td>
+        <td><PersonLink @person={{person}} /></td>
         <td class="text-right">{{person.hours_last_year}}</td>
         <td class="text-right">{{person.hours_prev_year}}</td>
         <td class="text-right">{{person.radio_hours}}</td>

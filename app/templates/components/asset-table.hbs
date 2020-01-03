@@ -46,5 +46,5 @@
 </table>
 
 {{#if assetForHistory}}
-  {{modal-asset-history assetId=assetForHistory.id onClose=(action closeHistory)}}
+  <ModalAssetHistory @assetId={{assetForHistory.id}} @onClose={{action closeHistory}} />
 {{/if}}

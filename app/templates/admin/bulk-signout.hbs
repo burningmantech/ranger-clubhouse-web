@@ -7,7 +7,7 @@
   <caption>{{pluralize onDutyCount "person"}} still on duty</caption>
   <thead>
     <tr>
-      <th>{{input type="checkbox" checked=selectAll change=(action toggleAll value="target.checked")}}</th>
+      <th><Input @type="checkbox" @checked={{selectAll}} @change={{action toggleAll value="target.checked"}} /></th>
       <th>Callsign</th>
       <th>From</th>
       <th>To</th>
@@ -23,10 +23,10 @@
           {{#if ts.off_duty}}
             &nbsp;
           {{else}}
-            {{input type="checkbox" checked=ts.selected}}
+            <Input @type="checkbox" @checked={{ts.selected}} />
           {{/if}}
         </td>
-        <td>{{person-link person=ts.person}}</td>
+        <td><PersonLink @person={{ts.person}} /></td>
         <td>{{shift-format ts.on_duty}}</td>
         <td>
           {{#if ts.off_duty}}

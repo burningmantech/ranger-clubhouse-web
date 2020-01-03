@@ -1,5 +1,5 @@
 {{! Besure to keep application.hbs in sync with the links}}
-{{#ch-sidebar}}
+<ChSidebar>
   {{#ch-sidebar-group "ME MENU"}}
     {{ch-sidebar-link "me.schedule" title="Schedule / Sign Up" icon="clipboard"}}
     {{#if (or user.isAlpha user.isNonRanger user.isRanger)}}
@@ -47,10 +47,10 @@
     {{ch-sidebar-link "me.password" title="Change Password" icon="key" iconType="s"}}
   {{/ch-sidebar-group}}
 
-  {{#ch-sidebar-group}}
+  <ChSidebarGroup>
     {{ch-sidebar-link "me.help" title="Help" icon="question" iconType="s"}}
-  {{/ch-sidebar-group}}
-{{/ch-sidebar}}
+  </ChSidebarGroup>
+</ChSidebar>
 <main class="col">
   {{outlet}}
 </main>

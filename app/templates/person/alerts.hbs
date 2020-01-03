@@ -7,7 +7,7 @@
   {{/ch-alert}}
 {{/unless}}
 
-{{alerts-manage person=person numbers=numbers alerts=alerts}}
+<AlertsManage @person={{person}} @numbers={{numbers}} @alerts={{alerts}} />
 
 {{#if (has-role "admin")}}
 <div class="border rounded p-2 mt-3">

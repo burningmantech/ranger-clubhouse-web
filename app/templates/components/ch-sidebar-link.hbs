@@ -1,16 +1,16 @@
 {{#if isUrl}}
 <a href="{{routePath}}" class="{{linkBg}} list-group-item list-group-item-action">
-  {{ch-sidebar-link-content iconUrl=iconUrl icon=icon iconType=iconType title=title badgeText=badgeText}}
+  <ChSidebarLinkContent @iconUrl={{iconUrl}} @icon={{icon}} @iconType={{iconType}} @title={{title}} @badgeText={{badgeText}} />
 </a>
 {{else}}
   {{! ARG.. link-to cannot accept an empty dynamic segment}}
   {{#if routeArg}}
-    {{#link-to routePath routeArg class=(concat linkBg " list-group-item list-group-item-action" ) activeClass="sidebar-active"}}
-      {{ch-sidebar-link-content iconUrl=iconUrl icon=icon iconType=iconType title=title badgeText=badgeText}}
-    {{/link-to}}
+    <LinkTo @route={{routePath}} @model={{routeArg}} class={{concat linkBg " list-group-item list-group-item-action"}} @activeClass="sidebar-active">
+      <ChSidebarLinkContent @iconUrl={{iconUrl}} @icon={{icon}} @iconType={{iconType}} @title={{title}} @badgeText={{badgeText}} />
+    </LinkTo>
   {{else}}
-    {{#link-to routePath class=(concat linkBg " list-group-item list-group-item-action") activeClass="sidebar-active"}}
-      {{ch-sidebar-link-content iconUrl=iconUrl icon=icon iconType=iconType title=title badgeText=badgeText}}
-    {{/link-to}}
+    <LinkTo @route={{routePath}} class={{concat linkBg " list-group-item list-group-item-action"}} @activeClass="sidebar-active">
+      <ChSidebarLinkContent @iconUrl={{iconUrl}} @icon={{icon}} @iconType={{iconType}} @title={{title}} @badgeText={{badgeText}} />
+    </LinkTo>
   {{/if}}
 {{/if}}

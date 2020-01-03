@@ -49,11 +49,11 @@
           {{#if (eq permission.photo_status "missing")}}
             <h3 class="mt-2">Upload a photo</h3>
             Please upload a {{if person.isNonRanger "Clubhouse" "BMID (lam)"}} photo. Note that photos can take 2-3 days to be
-            approved. A new photo may be uploaded on the {{#link-to "me.overview"}}Home Page{{/link-to}}.
+            approved. A new photo may be uploaded on the <LinkTo @route="me.overview">Home Page</LinkTo>.
           {{else if (eq permission.photo_status "rejected")}}
             <h3 class="mt-2">Submitted photo was rejected</h3>
             The photo was rejected. Please upload a new photo that conforms to the guidelines.
-            A new photo may be uploaded on the {{#link-to "me.overview"}}Home Page{{/link-to}}.
+            A new photo may be uploaded on the <LinkTo @route="me.overview">Home Page</LinkTo>.
           {{else}}
             <h3 class="mt-2">Photo pending approval</h3>
             The photo has been submitted and may take up to 2 to 3 days to review. Please check back then.
@@ -90,7 +90,7 @@
     {{else}}
       {{#if permission.missing_bpguid}}
         <h3 class="mt-2">Missing Burner Profile ID</h3>
-        {{person-missing-bpguid}}
+        <PersonMissingBpguid />
       {{/if}}
 
     {{/if}}
@@ -138,7 +138,7 @@
     The <i class="fas fa-info-circle info-icon"></i> icon on a shift description means additional information is available. Click on the icon and/or text.
   </p>
 
-  {{schedule-table slots=signedUpSlots person=person year=year creditsEarned=creditsEarned scheduleSummary=scheduleSummary leaveSlot=(action leaveSlot) showPeople=(action showPeople)}}
+  <ScheduleTable @slots={{signedUpSlots}} @person={{person}} @year={{year}} @creditsEarned={{creditsEarned}} @scheduleSummary={{scheduleSummary}} @leaveSlot={{action leaveSlot}} @showPeople={{action showPeople}} />
   <div class="d-print-none">
     <h3 class="mt-2">{{if isCurrentYear "Available Shifts" "Past Shifts"}}</h3>
     {{#if availableSlots}}
@@ -152,11 +152,11 @@
 
       <div class="row mb-1">
         <div class="col-sm-5 col-md-auto mb-2">
-          {{ch-form/select name="filterDay" value=filterDay options=dayOptions onChange=(action setFilterDay) controlClass="form-control"}}
+          <ChForm::Select @name="filterDay" @value={{filterDay}} @options={{dayOptions}} @onChange={{action setFilterDay}} @controlClass="form-control" />
         </div>
         {{#if inactiveSlots}}
           <div class="col-sm-5 col-md-auto mb-2">
-            {{ch-form/select name="filterActive" value=filterActive options=activeOptions onChange=(action (mut filterActive)) controlClass="form-control"}}
+            <ChForm::Select @name="filterActive" @value={{filterActive}} @options={{activeOptions}} @onChange={{action (mut filterActive)}} @controlClass="form-control" />
           </div>
         {{/if}}
       </div>
@@ -260,7 +260,7 @@
 
 
 {{#if showBehaviorAgreement}}
-  {{#modal-dialog title="Burning Man's Behavioral Standards Agreement" onClose=closeAgreement onConfirm=signAgreement confirmLabel="I Agree" cancelLabel="I do not agree" }}
+  <ModalDialog @title="Burning Man's Behavioral Standards Agreement" @onClose={{closeAgreement}} @onConfirm={{signAgreement}} @confirmLabel="I Agree" @cancelLabel="I do not agree">
     <p>
       Burning Man’s culture honors and promotes freedom of expression, unless that expression harms others.
     </p>
@@ -295,5 +295,5 @@
       In addition to the above, you agree to be your awesome self, look out
       for others and encourage the good in all!
     </p>
-  {{/modal-dialog}}
+  </ModalDialog>
 {{/if}}

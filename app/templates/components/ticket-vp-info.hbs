@@ -57,7 +57,7 @@
         {{/if}}
 
         {{#if (eq ticketingInfo.vp_status "frozen")}}
-          {{ticket-frozen item="Vehicle Pass" ticketingInfo=ticketingInfo}}
+          <TicketFrozen @item="Vehicle Pass" @ticketingInfo={{ticketingInfo}} />
         {{/if}}
         <div class="float-right">
           <button type="button" class="btn btn-success btn-lg mb-4" {{action nextSection}}>Next {{fa-icon "arrow-right"}}</button>

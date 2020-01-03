@@ -70,5 +70,5 @@ export default function validateDateTime(opts = {}) {
     }
 
     return true;
-  }
+  };
 }

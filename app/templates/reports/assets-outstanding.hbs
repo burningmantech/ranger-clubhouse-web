@@ -49,7 +49,7 @@
             {{shift-format asset.checked_out.checked_out}}
           </td>
           <td class="separated">
-            {{person-link person=asset.checked_out.person}}
+            <PersonLink @person={{asset.checked_out.person}} />
           </td>
         </tr>
       {{/each}}

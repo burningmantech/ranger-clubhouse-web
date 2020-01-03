@@ -8,13 +8,13 @@
   <strong>1. Review your timesheet entries and mark each as correct or incorrect.</strong>
   If the entry is incorrect, provide an explanation on why the entry is wrong.
   <br>
-  {{#link-to "me.timesheet-corrections.review" class="btn btn-primary"}}Review Timesheet{{/link-to}}
+  <LinkTo @route="me.timesheet-corrections.review" class="btn btn-primary">Review Timesheet</LinkTo>
 </p>
 <p>
   <strong>2. Is your timesheet missing a shift?</strong>
   For any missing shifts, fill out the Missing Timesheet Entry Request form.
   You may submit more than one request.<br>
-  {{#link-to "me.timesheet-corrections.missing" class="btn btn-primary"}}Submit A Missing Entry Request{{/link-to}}
+  <LinkTo @route="me.timesheet-corrections.missing" class="btn btn-primary">Submit A Missing Entry Request</LinkTo>
 </p>
 <p>
   <strong>3. Final step - Let us know you believe the timesheet is correct, and you
@@ -23,5 +23,5 @@
   After your very last shift for the event, AND all your timesheets
   have been marked as correct, AND there are no outstanding correction requests,
   let us know.<br>
-  {{#link-to "me.timesheet-corrections.confirm" class="btn btn-primary"}}Final Confirmation{{/link-to}}
+  <LinkTo @route="me.timesheet-corrections.confirm" class="btn btn-primary">Final Confirmation</LinkTo>
 </p>

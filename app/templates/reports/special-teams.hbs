@@ -24,7 +24,7 @@
       Note: The Clubhouse has timesheets dating back only to 2010.
     </div>
     <div class="form-group mt-4">
-      {{f.submit label="Submit"}}
+      <f.submit @label="Submit" />
       {{#if (and haveResults (not people))}}
         <b class="text-danger">No people were found who matched the criteria.</b>
       {{/if}}
@@ -62,7 +62,7 @@
     <tbody>
       {{#each people as |person|}}
         <tr>
-          <td>{{person-link person=person}}</td>
+          <td><PersonLink @person={{person}} /></td>
           <td>{{person.first_name}} {{person.last_name}}</td>
           <td>{{person.status}}</td>
           {{#if session.user.canViewEmail}}

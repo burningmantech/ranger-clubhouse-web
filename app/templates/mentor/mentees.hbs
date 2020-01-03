@@ -9,7 +9,7 @@
       <label class="col-form-label">Filter</label>
     </div>
     <div class="col-auto">
-      {{ch-form/select name="filter" value=filter options=filterOptions onChange=(action (mut filter)) controlClass="form-control"}}
+      <ChForm::Select @name="filter" @value={{filter}} @options={{filterOptions}} @onChange={{action (mut filter)}} @controlClass="form-control" />
     </div>
     <div class="col-auto">
       <button class="btn btn-primary" {{action exportToCSV}}>Export to CSV</button>
@@ -31,7 +31,7 @@
     <tbody>
       {{#each viewMentees as |mentee|}}
         <tr>
-          <td>{{person-link person=mentee}}</td>
+          <td><PersonLink @person={{mentee}} /></td>
           <td>{{mentee.first_name}} {{mentee.last_name}}</td>
           {{#if house.canViewEmail}}
             <td>{{mail-to mentee.email}}</td>
@@ -39,7 +39,7 @@
           <td>{{mentee.status}}</td>
           <td>
             {{#each mentee.mentors as |mentor idx| ~}}
-              {{#if idx}}/{{/if}} {{person-link person=mentor}}
+              {{#if idx}}/{{/if}} <PersonLink @person={{mentor}} />
             {{/each}}
           </td>
           <td>{{mentee.mentor_status}}</td>

@@ -22,8 +22,8 @@
     {{#if person.showing}}
       <div class="p-2">
         <div class="ml-1">
-          {{#link-to "person.index" person.id class="btn btn-primary btn-sm"}}View {{person.callsign}}{{/link-to}}
-          {{#link-to "person.timesheet" person.id class="btn btn-primary btn-sm" year=this.year}}View {{this.year}} Timesheet{{/link-to}}
+          <LinkTo @route="person.index" @model={{person.id}} class="btn btn-primary btn-sm">View {{person.callsign}}</LinkTo>
+          <LinkTo @route="person.timesheet" @model={{person.id}} class="btn btn-primary btn-sm" @year={{this.year}}>View {{this.year}} Timesheet</LinkTo>
         </div>
         <table class="table table-striped table-hover table-width-auto mt-2">
           <thead>

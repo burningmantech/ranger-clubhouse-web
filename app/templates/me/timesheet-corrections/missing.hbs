@@ -7,19 +7,19 @@
 </p>
 <p>
   <b>Is a timesheet entry wrong?</b> Do not use the Missing Timesheet Request form,
-  instead go back to the {{#link-to "me.timesheet-corrections.review"}}Timesheet Review{{/link-to}} page
+  instead go back to the <LinkTo @route="me.timesheet-corrections.review">Timesheet Review</LinkTo> page
   and mark the entry as incorrect.
 </p>
 
-{{me/timesheet-missing-common person=person timesheetsMissing=timesheetsMissing timesheetInfo=timesheetInfo positions=positions}}
+<Me::TimesheetMissingCommon @person={{person}} @timesheetsMissing={{timesheetsMissing}} @timesheetInfo={{timesheetInfo}} @positions={{positions}} />
 
 <div class="mt-4">
   <div class="row">
     <div class="col-6 mb-2">
-      {{#link-to "me.timesheet-corrections.review" class="btn btn-success"}}{{fa-icon "arrow-left"}} Timesheet Review{{/link-to}}
+      <LinkTo @route="me.timesheet-corrections.review" class="btn btn-success">{{fa-icon "arrow-left"}} Timesheet Review</LinkTo>
     </div>
     <div class="col-6 text-md-right">
-      {{#link-to "me.timesheet-corrections.confirm" class="btn btn-success"}}Final Confirmation {{fa-icon "arrow-right"}}{{/link-to}}
+      <LinkTo @route="me.timesheet-corrections.confirm" class="btn btn-success">Final Confirmation {{fa-icon "arrow-right"}}</LinkTo>
     </div>
   </div>
 </div>

@@ -10,7 +10,7 @@
         <li>The pre-event number {{numbers.off_playa.phone}} is stopped</li>
       {{/if}}
     </ul>
-    Contact {{general-support-mail}} for help.
+    Contact <GeneralSupportMail /> for help.
   {{/ch-alert}}
 {{/if}}
 
@@ -81,7 +81,7 @@
   </div>
 
   <div class="mt-2">
-    {{f.submit label=(if isUpdatingNumbers "Updating" "Update SMS Numbers") disabled=isUpdatingNumbers}}
+    <f.submit @label={{if isUpdatingNumbers "Updating" "Update SMS Numbers"}} @disabled={{isUpdatingNumbers}} />
   </div>
 {{/ch-form}}
 <hr>
@@ -89,13 +89,13 @@
 <h3>Alert Preference Options</h3>
 {{#if isMe}}
   <p class="ml-2">
-    To change your email visit {{#link-to "me.personal-info"}}Personal Info{{/link-to}}.
+    To change your email visit <LinkTo @route="me.personal-info">Personal Info</LinkTo>.
   </p>
 {{/if}}
 
 
-{{alert-group numbers=numbers email=person.email group=offPlayaAlerts heading="Pre & Post Event Alerts" description="These alerts may be sent to you before or after the event."}}
-{{alert-group numbers=numbers email=person.email group=onPlayaAlerts heading="On Playa Alerts" description="These alerts may be sent to you while the event is happening."}}
+<AlertGroup @numbers={{numbers}} @email={{person.email}} @group={{offPlayaAlerts}} @heading="Pre & Post Event Alerts" @description="These alerts may be sent to you before or after the event." />
+<AlertGroup @numbers={{numbers}} @email={{person.email}} @group={{onPlayaAlerts}} @heading="On Playa Alerts" @description="These alerts may be sent to you while the event is happening." />
 
 <button type="button" class="btn btn-primary" {{action "updatePrefsAction"}} disabled={{isSubmitting}}>
   {{#if isSubmitting}}

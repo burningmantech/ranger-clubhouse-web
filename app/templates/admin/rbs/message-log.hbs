@@ -1,5 +1,5 @@
 <div class="float-right">
-  {{#link-to "admin.rbs"}}Back to RBS{{/link-to}}
+  <LinkTo @route="admin.rbs">Back to RBS</LinkTo>
 </div>
 {{year-select "RBS Message Log" year=year onChange=(action changeYearAction)}}
 
@@ -10,7 +10,7 @@
     {{f.input "status" cols=3 type="checkboxGroup" options=statusOptions inline=true}}
   </div>
   <div class="form-row mt-2">
-    {{f.submit label="Search"}}
+    <f.submit @label="Search" />
   </div>
 {{/ch-form}}
 <table class="table table-sm table-striped mt-2">
@@ -29,7 +29,7 @@
     {{#each messages as |message|}}
       <tr>
         <td>{{message.created_at}}</td>
-        <td>{{person-link person=message.person}}</td>
+        <td><PersonLink @person={{message.person}} /></td>
         <td>{{message.status}}</td>
         <td>{{message.direction}}</td>
         <td>{{message.address}}</td>

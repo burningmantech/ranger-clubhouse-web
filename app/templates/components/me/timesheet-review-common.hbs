@@ -89,8 +89,8 @@
     {{/each}}
   </div>
 
-  {{timesheet-summary summary=timesheetSummary}}
-  {{timesheet-position-summary timesheets=timesheets}}
+  <TimesheetSummary @summary={{timesheetSummary}} />
+  <TimesheetPositionSummary @timesheets={{timesheets}} />
 {{else}}
   <p class="text-danger font-weight-bold">No timesheet entries were found.</p>
 {{/if}}
@@ -140,7 +140,7 @@
       </div>
     {{/if}}
     {{f.input "notes" label=(if entry.isRejected "Supply additional information for an apeal:" "Your correction note:") type="textarea" cols=80 rows=3}}
-    {{f.submit label="Submit Correction Request" disabled=isSubmitting}}
+    <f.submit @label="Submit Correction Request" @disabled={{isSubmitting}} />
     {{f.cancel}}
     {{#if isSubmitting}}
       <span class="text-muted">Submitting {{fa-icon "spinner" spin=true}} . . .</span>

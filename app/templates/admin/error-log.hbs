@@ -25,7 +25,7 @@
             <td>{{log.created_at}}</td>
             <td>
               {{#if log.person}}
-                {{person-link person=log.person}}
+                <PersonLink @person={{log.person}} />
               {{else}}
                 -
               {{/if}}
@@ -48,7 +48,7 @@
           <tr>
             <td colspan="6">
               User Agent: {{log.user_agent}}<br>
-              {{json-format json=log.data}}
+              <JsonFormat @json={{log.data}} />
             </td>
           </tr>
           {{/if}}
@@ -58,14 +58,14 @@
     <div class="row">
       <div class="col-sm-12 col-md-6">
         {{#if (not-eq page 1)}}
-          {{#link-to "admin.error-log" (query-params page=previousPage) class="btn btn-primary"}}Prev Page{{/link-to}}
+          <LinkTo @route="admin.error-log" @query={{hash page=previousPage}} class="btn btn-primary">Prev Page</LinkTo>
         {{else}}
           &nbsp;
         {{/if}}
       </div>
       <div class="col-sm-12 col-md-6">
         {{#if (not-eq page total_pages)}}
-          {{#link-to "admin.error-log" (query-params page=nextPage) class="btn btn-primary"}}Next Page{{/link-to}}
+          <LinkTo @route="admin.error-log" @query={{hash page=nextPage}} class="btn btn-primary">Next Page</LinkTo>
         {{else}}
           &nbsp;
         {{/if}}

@@ -16,7 +16,7 @@
         {{#each group.trainers as |trainerGroup|}}
           <b>{{trainerGroup.position_title}} ({{trainerGroup.trainers.length}}):</b>
           {{#each trainerGroup.trainers as |trainer index|}}
-            {{if index ", "}}{{person-link person=trainer}}
+            {{if index ", "}}<PersonLink @person={{trainer}} />
           {{else}}
             <i>none found</i>
           {{/each}}<br>
@@ -28,7 +28,7 @@
         of this session.
     {{/if}}
     <div class="mt-2">
-      {{#link-to "training.session.index" training.id group.slot.id class="btn btn-primary"}}Manage{{/link-to}}
+      <LinkTo @route="training.session.index" @models={{array training.id group.slot.id}} class="btn btn-primary">Manage</LinkTo>
     </div>
   {{/ch-box}}
 {{else}}

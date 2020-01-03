@@ -33,7 +33,7 @@
         <dt>{{group.language_name}}</dt>
         <dd>
           {{#each group.items as |person idx|}}
-            {{~if idx ", "}}{{#link-to "person.index" person.person_id class="d-inline-block"}}{{person.callsign}}{{/link-to~}}
+            {{~if idx ", "}}<LinkTo @route="person.index" @model={{person.person_id}} class="d-inline-block">{{person.callsign}}</LinkTo>
           {{/each}}
         </dd>
       {{/each}}
@@ -49,7 +49,7 @@
         <dt>{{group.language_name}}</dt>
         <dd>
           {{#each group.items as |person idx|~}}
-            {{~if idx ", "}}{{#link-to "person.index" person.person_id class="d-inline-block"}}{{person.callsign}}{{/link-to~}}
+            {{~if idx ", "}}<LinkTo @route="person.index" @model={{person.person_id}} class="d-inline-block">{{person.callsign}}</LinkTo>
           {{/each}}
         </dd>
       {{/each}}
@@ -65,7 +65,7 @@
         <dt>{{group.language_name}}</dt>
         <dd>
           {{#each group.items as |person idx|}}
-            {{~if idx ", "}}{{#link-to "person.index" person.person_id class="d-inline-block"}}{{person.callsign}}{{/link-to~}}
+            {{~if idx ", "}}<LinkTo @route="person.index" @model={{person.person_id}} class="d-inline-block">{{person.callsign}}</LinkTo>
           {{/each}}
         </dd>
       {{/each}}

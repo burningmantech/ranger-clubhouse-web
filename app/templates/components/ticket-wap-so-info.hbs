@@ -28,7 +28,7 @@
               {{/each}}
             </ul>
           {{/if}}
-          {{ticket-frozen item="Work Access Passes For Significant Others" ticketingInfo=ticketingInfo}}
+          <TicketFrozen @item="Work Access Passes For Significant Others" @ticketingInfo={{ticketingInfo}} />
         {{else if (or (eq ticketingInfo.wap_so_status "none") (eq ticketingInfo.wap_so_status "view"))}}
           <p>
             Information about Significant Other Work Access Passes is not yet
@@ -56,7 +56,7 @@
               <div class="wap-so-row">
                 <div class="wap-so-name">
                   <span class="wap-so-sm-label">SO Legal Name</span>
-                  {{input type="text" value=row.name size=30 maxlength=100 class="form-control form-control-sm"}}
+                  <Input @type="text" @value={{row.name}} @size={{30}} @maxlength={{100}} class="form-control form-control-sm" />
                 </div>
                 <div class="wap-so-access">
                   <span class="wap-so-sm-label">Arrival Date</span>

@@ -4,7 +4,7 @@
   <div class="form-row align-items-left">
     <label class="col-form-label">Proposed handle</label>
     <div class="col-auto">
-      {{input type="text" value=currentName id="currentName" enter=(action "checkCurrentName") class="form-control" size=20}}
+      <Input @type="text" @value={{currentName}} @id="currentName" @enter={{action "checkCurrentName"}} class="form-control" @size={{20}} />
     </div>
     <div class="col-auto">
       <button type="button" class="btn btn-primary" {{action "checkCurrentName"}}>Check handle</button>
@@ -20,7 +20,7 @@
       {{#each handleRules as |rule|}}
         <div class="form-check form-check-inline">
           {{#let (concat "handle-rule-checkbox-" rule.id) as |checkid|}}
-            {{input type="checkbox" checked=rule.enabled class="form-check-input" id=checkid}}
+            <Input @type="checkbox" @checked={{rule.enabled}} class="form-check-input" @id={{checkid}} />
             <label class="form-check-label" for="{{checkid}}">{{rule.name}}</label>
           {{/let}}
         </div>
@@ -32,13 +32,13 @@
   <div class="form-group row">
     <div class="col">
       <div class="form-check form-check-inline">
-        {{input type="checkbox" checked=includeVintage class="form-check-input" id="include-vintage"}}
+        <Input @type="checkbox" @checked={{includeVintage}} class="form-check-input" @id="include-vintage" />
         <label class="form-check-label" for="include-vintage">Include all vintage handles</label>
       </div>
       {{#each entityTypes as |type|}}
         <div class="form-check form-check-inline">
           {{#let (concat "entity-type-checkbox-" type.id) as |checkid|}}
-            {{input type="checkbox" checked=type.enabled class="form-check-input" id=checkid}}
+            <Input @type="checkbox" @checked={{type.enabled}} class="form-check-input" @id={{checkid}} />
             <label class="form-check-label" for="{{checkid}}">{{type.name}}</label>
           {{/let}}
         </div>
@@ -68,9 +68,9 @@
                   {{#if conflict.conflictingHandle}}
                     {{#with conflict.conflictingHandle as |handle|}}
                       {{#if handle.personId}}
-                        {{#link-to "person.index" handle.personId target="_blank" rel="noopener"}}
+                        <LinkTo @route="person.index" @model={{handle.personId}} @target="_blank" @rel="noopener">
                           {{handle.entityType}} {{handle.name}}
-                        {{/link-to}}
+                        </LinkTo>
                       {{else}}
                         {{handle.entityType}} {{handle.name}}
                       {{/if}}
@@ -105,9 +105,9 @@
               <tr>
                 <td>
                   {{#if handle.personId}}
-                    {{#link-to "person.index" handle.personId target="_blank" rel="noopener"}}
+                    <LinkTo @route="person.index" @model={{handle.personId}} @target="_blank" @rel="noopener">
                       {{handle.name}}
-                    {{/link-to}}
+                    </LinkTo>
                   {{else}}
                     {{handle.name}}
                   {{/if}}

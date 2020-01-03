@@ -9,7 +9,7 @@
     <label class="col-form-label">Show proposed statuses as of:</label>
   </div>
   <div class="col-auto">
-    {{ch-form/select name="period" value=this.period options=this.periodOptions onChange=(action (mut this.period)) controlClass="form-control"}}
+    <ChForm::Select @name="period" @value={{this.period}} @options={{this.periodOptions}} @onChange={{action (mut this.period)}} @controlClass="form-control" />
   </div>
 </div>
 {{#if (eq this.period "current-date")}}

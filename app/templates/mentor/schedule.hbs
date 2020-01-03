@@ -1,12 +1,12 @@
 {{#if signupSheetSlot}}
-  {{print-instruction backLabel="Back to Alpha Schedule" backAction=(action clearSignupSheet)}}
-  {{mentor/alpha-signup-sheet slot=signupSheetSlot}}
+  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{action clearSignupSheet}} />
+  <Mentor::AlphaSignupSheet @slot={{signupSheetSlot}} />
 {{else if signedInSlot}}
-  {{print-instruction backLabel="Back to Alpha Schedule" backAction=(action clearSignedInSheet)}}
-  {{mentor/alphas-signed-in-sheet slot=signedInSlot}}
+  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{action clearSignedInSheet}} />
+  <Mentor::AlphasSignedInSheet @slot={{signedInSlot}} />
 {{else if apparelSlot}}
-  {{print-instruction backLabel="Back to Alpha Schedule" backAction=(action clearAlphaApparel)}}
-  {{mentor/alpha-apparel-sheet slot=apparelSlot}}
+  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{action clearAlphaApparel}} />
+  <Mentor::AlphaApparelSheet @slot={{apparelSlot}} />
 {{else}}
   <div class="d-print-none">
     {{year-select "Alpha Scheduled Shift" year=year onChange=(action (mut year))}}
@@ -40,7 +40,7 @@
         <tbody>
           {{#each slot.people as |person|}}
             <tr>
-              <td class="w-15">{{person-link person=person}}</td>
+              <td class="w-15"><PersonLink @person={{person}} /></td>
               <td class="w-20">{{person.first_name}} {{person.last_name}}</td>
               <td class="w-5 text-center">{{person.gender}}</td>
               <td class="w-10 text-center">{{yesno person.on_alpha_shift}}</td>
@@ -130,7 +130,7 @@
       {{f.input "person_id" label="Select the person to remove" type="select" options=removeStudentOptions}}
     </div>
 
-    {{f.submit label=(if isSubmitting "Removing" "Remove Person") disabled=(or isSubmitting (not f.model.person_id))}}
+    <f.submit @label={{if isSubmitting "Removing" "Remove Person"}} @disabled={{or isSubmitting (not f.model.person_id)}} />
     {{f.cancel}}
   {{/ch-form}}
 {{/if}}

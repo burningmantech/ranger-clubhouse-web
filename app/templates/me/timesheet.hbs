@@ -4,14 +4,14 @@
   {{#if (and this.isCurrentYear this.timesheetInfo.correction_enabled)}}
     <p class="d-print-none">
       Is an entry incorrect, or is there a missing shift that was not recorded?
-      {{#link-to "me.timesheet-corrections.index"}}Submit a correction request.{{/link-to}}
+      <LinkTo @route="me.timesheet-corrections.index">Submit a correction request.</LinkTo>
     </p>
 
     <p class="d-print-none">
       {{#if this.timesheetInfo.timesheet_confirmed}}
         <b>Thank you for confirming your timesheet is accurate.</b>
       {{else}}
-        <b class="text-danger">It appears you have not confirmed your timesheet as accurate.</b> Please to go the {{#link-to "me.timesheet-corrections"}}Timesheet Corrections{{/link-to}} page,
+        <b class="text-danger">It appears you have not confirmed your timesheet as accurate.</b> Please to go the <LinkTo @route="me.timesheet-corrections">Timesheet Corrections</LinkTo> page,
         review your timesheet entries, submit any missing timesheet entries requests, and confirm your {{year}} timesheet as accurate.
       {{/if}}
     </p>
@@ -58,8 +58,8 @@
     {{/each}}
   </div>
 
-  {{timesheet-summary summary=timesheetSummary}}
-  {{timesheet-position-summary timesheets=timesheets}}
+  <TimesheetSummary @summary={{timesheetSummary}} />
+  <TimesheetPositionSummary @timesheets={{timesheets}} />
 {{else}}
   <p class="mt-3 text-danger">
     <b>No timesheet entries were found for {{year}}.</b>

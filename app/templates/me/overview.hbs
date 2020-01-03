@@ -27,7 +27,7 @@ OR if the callsign is not approved and they are not an Auditor or Non Ranger.
 then let them know what's up.
 }}
 {{#if (or person.isPastProspective (and (not person.callsign_approved) (not person.isAuditor) (not person.isNonRanger)))}}
-  {{me/past-prospective-disabled person=person}}
+  <Me::PastProspectiveDisabled @person={{person}} />
 {{else if person.isProspectiveWaitlist}}
   {{#ch-alert "warning"}}
     <h3>You are current on our waitlist</h3>
@@ -53,20 +53,20 @@ then let them know what's up.
   {{! Person needs to have BPGUID aka Burner Profile ID}}
   {{#if person.needsBpguid}}
     {{#ch-box "Missing Burner Profile ID" type="warning"}}
-      {{person-missing-bpguid}}
+      <PersonMissingBpguid />
     {{/ch-box}}
   {{/if}}
   {{#if person.unread_message_count}}
     {{#ch-alert "warning" bold=true}}
       {{fa-icon "envelope"}} You have {{pluralize person.unread_message_count "unread Clubhouse message"}}.
-      {{#link-to "me.messages" class="btn btn-success"}}Read Now{{/link-to}}
+      <LinkTo @route="me.messages" class="btn btn-success">Read Now</LinkTo>
     {{/ch-alert}}
   {{/if}}
 
   {{#unless (or person.isAuditor person.isPastProspective)}}
     {{#if photo}}
       {{#if (eq photo.photo_status "missing")}}
-        {{me/needs-photo person=person photo=photo}}
+        <Me::NeedsPhoto @person={{person}} @photo={{photo}} />
       {{else if (eq photo.photo_status "rejected")}}
         {{#ch-alert "danger"}}
           {{fa-icon "exclamation-triangle" size="2x"}} <strong>Your photo has been rejected.</strong> A new one will need to be submitted.
@@ -82,7 +82,7 @@ then let them know what's up.
         {{/ch-alert}}
       {{/if}}
     {{/if}}
-    {{person-photo photo=photo person=person}}
+    <PersonPhoto @photo={{photo}} @person={{person}} />
   {{/unless}}
 
   {{#if person.isRanger}}
@@ -100,7 +100,7 @@ then let them know what's up.
   <dl>
     <dt>Verify Your Personal Info</dt>
     <dd>
-      Look in the Me menu in the top navigation bar or sidebar menu for {{#link-to "me.personal-info"}}Personal Info{{/link-to}}
+      Look in the Me menu in the top navigation bar or sidebar menu for <LinkTo @route="me.personal-info">Personal Info</LinkTo>
       to edit your address, email address, phone numbers, etc.
       {{#unless person.isAuditor}}
         <p class="mt-2">
@@ -121,7 +121,7 @@ then let them know what's up.
           Signup for training:
         {{/if}}
 
-        {{#link-to "me.schedule"}}Schedule / Sign Up{{/link-to}}
+        <LinkTo @route="me.schedule">Schedule / Sign Up</LinkTo>
 
         <ul class="mt-2">
           {{#unless person.isNonRanger}}
@@ -147,7 +147,7 @@ then let them know what's up.
     {{#if person.isRanger}}
       <dt>Tickets, Staff Credientals, Vehicle &amp; Work Passes</dt>
       <dd>
-        {{#link-to "me.tickets"}}Tickets &amp; Stuff{{/link-to}} is the place
+        <LinkTo @route="me.tickets">Tickets &amp; Stuff</LinkTo> is the place
         to claim staff credentials, reduced-price tickets, vehicle passes,
         and work access passes.
       </dd>
@@ -155,7 +155,7 @@ then let them know what's up.
       <dt>Timesheets</dt>
       <dd>
         Check that your timesheet is accurate: your timesheet is located in
-        {{#link-to "me.timesheet"}}Timesheets{{/link-to}}
+        <LinkTo @route="me.timesheet">Timesheets</LinkTo>
       </dd>
 
       <dt>Radio Checkout Form</dt>
@@ -173,7 +173,7 @@ then let them know what's up.
           any type of vehicle for Ranger business at Burning Man must agree to the
           Ranger Motorpool Policy by reading and filling out the acknowledgment form
           located here:
-          {{#link-to "me.motorpool-policy"}}Motorpool Policy{{/link-to}}
+          <LinkTo @route="me.motorpool-policy">Motorpool Policy</LinkTo>
         </dd>
       {{/if}}
 

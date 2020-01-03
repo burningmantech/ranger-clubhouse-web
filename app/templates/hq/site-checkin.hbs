@@ -35,7 +35,7 @@
   <li>After you hand the person their Ranger laminate and field guide, mark the person as on site.</li>
 </ul>
 
-<h4>Update Contact Information {{help-popover slug="hq-site-checkin-contact-info"}}</h4>
+<h4>Update Contact Information <HelpPopover @slug="hq-site-checkin-contact-info" /></h4>
 
 {{#ch-form "contact" person onSubmit=(action saveContactForm) as |f|}}
   <div class="form-row">
@@ -51,17 +51,17 @@
   <div class="form-row">
     {{f.input "emergency_contact" type="textarea" label="Emergency Contact Information:" rows=4 cols=80 }}
   </div>
-  {{f.submit label="Update Camp & Emergency Contact Info" disabled=isSubmitting}}
+  <f.submit @label="Update Camp & Emergency Contact Info" @disabled={{isSubmitting}} />
   {{#if contactSaved}}
     <span class="text-success">{{fa-icon "check"}}</span>
   {{/if}}
   {{#if isSubmitting}}
-    {{loading-indicator}}
+    <LoadingIndicator />
   {{/if}}
 {{/ch-form}}
 
 <hr class="my-3">
-<h4>Agreements {{help-popover slug="hq-site-checkin-agreements"}}</h4>
+<h4>Agreements <HelpPopover @slug="hq-site-checkin-agreements" /></h4>
 
 <p>
   {{#if this.person.asset_authorized}}
@@ -70,7 +70,7 @@
     <div class="text-danger">Radio checkout form has NOT BEEN SIGNED.</div>
     <button class="btn btn-primary" {{action markAssetAuthorized}} disabled={{isSubmitting}}>Mark Form As Signed</button>
     {{#if isSubmitting}}
-      {{loading-indicator}}
+      <LoadingIndicator />
     {{/if}}
   {{/if}}
 </p>
@@ -94,12 +94,12 @@
 {{/unless}}
 
 {{#if this.eventInfo.radio_eligible}}
-  <h4>Event Radio Checkout {{help-popover slug="hq-site-checkin-radios"}}</h4>
+  <h4>Event Radio Checkout <HelpPopover @slug="hq-site-checkin-radios" /></h4>
   <p class="text-success"><b>Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}</b></p>
   <p>
     The radio may be checked out now, or at the start of their first shift.
   </p>
-  {{asset-checkout-form person=person assets=assets attachments=attachments eventInfo=this.eventInfo}}
+  <AssetCheckoutForm @person={{person}} @assets={{assets}} @attachments={{attachments}} @eventInfo={{this.eventInfo}} />
   {{#if activeAssets}}
     {{pluralize activeAssets.length "asset"}} checked out.
     <table class="table table-striped table-sm">
@@ -126,10 +126,10 @@
     </table>
   {{/if}}
   {{#if assets.isUpdating}}
-    {{loading-indicator text="Refreshing assets"}}
+    <LoadingIndicator @text="Refreshing assets" />
   {{/if}}
 {{else}}
-  <h4><span class="text-danger">{{this.person.callsign}} is only authorized for a shift radio.</span> {{help-popover slug="hq-site-checkin-radios"}}</h4>
+  <h4><span class="text-danger">{{this.person.callsign}} is only authorized for a shift radio.</span> <HelpPopover @slug="hq-site-checkin-radios" /></h4>
   A radio will need be to checked out for each shift, and then returned at the end of the shift.
 {{/if}}
 
@@ -138,11 +138,11 @@
     <p class="font-weight-bold text-success">
       {{this.person.callsign}} is marked as ON SITE.
     </p>
-    {{#link-to "hq.shift" class="btn btn-success"}}Start Shift Checkin{{/link-to}}
+    <LinkTo @route="hq.shift" class="btn btn-success">Start Shift Checkin</LinkTo>
   {{else}}
     <button class="btn btn-primary" {{action markOnSite}} disabled={{isSubmitting}}>Mark As On Site</button>
     {{#if isSubmitting}}
-      {{loading-indicator}}
+      <LoadingIndicator />
     {{/if}}
   {{/if}}
 </div>

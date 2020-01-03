@@ -5,15 +5,13 @@
     <label class="col-form-label">Shift Type</label>
   </div>
   <div class="col-auto">
-    {{ch-form/select name="type" value=this.type options=this.typeOptions
-        onChange=(action (mut this.type)) controlClass="form-control"}}
+    <ChForm::Select @name="type" @value={{this.type}} @options={{this.typeOptions}} @onChange={{action (mut this.type)}} @controlClass="form-control" />
   </div>
   <div class="col-auto">
     <label class="col-form-label">Day Filter</label>
   </div>
   <div class="col-auto">
-    {{ch-form/select name="type" value=this.dayFilter options=this.dayOptions
-        onChange=(action (mut this.dayFilter)) controlClass="form-control"}}
+    <ChForm::Select @name="type" @value={{this.dayFilter}} @options={{this.dayOptions}} @onChange={{action (mut this.dayFilter)}} @controlClass="form-control" />
   </div>
 </div>
 

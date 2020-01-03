@@ -169,7 +169,7 @@
                   {{f.input "state" label="State" type="select" options=stateOptions grid="col-sm-5 col-md-4"}}
                   {{f.input "postal_code" label="Zip Code" grid="col-sm-5 col-md-4"}}
                 </div>
-                {{f.submit label="Save Address" submitClass="btn-lg"}}
+                <f.submit @label="Save Address" @submitClass="btn-lg" />
                 {{#if f.model.isDirty}}
                   <strong class="text-danger">Don't forget to click 'Save Address'</strong>
                 {{else if isSaved}}

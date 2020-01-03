@@ -36,7 +36,7 @@
                 <span class="text-danger">{{fa-icon "exclamation-triangle"}}</span>
               {{/if}}
               {{#if entry.person_id}}
-                {{person-link callsign=entry.callsign personId=entry.person_id}}
+                <PersonLink @callsign={{entry.callsign}} @personId={{entry.person_id}} />
               {{else}}
                 {{entry.callsign}}
               {{/if}}
@@ -107,7 +107,7 @@
   </p>
   <div class="form-row">
     <div class="col-auto">
-      {{f.submit label="Verify & Review Bulk Sign Ins/Outs" disabled=(or (is-empty f.model.lines) isSubmitting)}}
+      <f.submit @label="Verify & Review Bulk Sign Ins/Outs" @disabled={{or (is-empty f.model.lines) isSubmitting}} />
       {{#if isSubmitting}}
         Submitting {{fa-icon "spinner" spin=true}} . . .
       {{/if}}

@@ -27,9 +27,9 @@
     {{#if person.showing}}
       <div class="p-2">
         <p>
-          {{#link-to "person.index" person.id class="btn btn-secondary btn-sm"}}View {{person.callsign}}{{/link-to}}
-          {{#link-to "person.timesheet" person.id (query-params year=this.year) class="btn btn-secondary btn-sm"}}View {{this.year}} Timesheet{{/link-to}}
-          {{#link-to "person.schedule" person.id (query-params year=this.year)  class="btn btn-secondary btn-sm"}}View {{this.year}} Schedule{{/link-to}}
+          <LinkTo @route="person.index" @model={{person.id}} class="btn btn-secondary btn-sm">View {{person.callsign}}</LinkTo>
+          <LinkTo @route="person.timesheet" @model={{person.id}} @query={{hash year=this.year}} class="btn btn-secondary btn-sm">View {{this.year}} Timesheet</LinkTo>
+          <LinkTo @route="person.schedule" @model={{person.id}} @query={{hash year=this.year}} class="btn btn-secondary btn-sm">View {{this.year}} Schedule</LinkTo>
         </p>
         <table class="table table-hover table-striped table-width-auto">
           <thead>

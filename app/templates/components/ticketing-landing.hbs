@@ -1,11 +1,11 @@
 {{#if (eq ticketingInfo.period "announce")}}
-  {{ticketing-announce ticketingInfo=ticketingInfo ticketPackage=ticketPackage person=person}}
+  <TicketingAnnounce @ticketingInfo={{ticketingInfo}} @ticketPackage={{ticketPackage}} @person={{person}} />
 {{else if (eq ticketingInfo.period "open")}}
-  {{ticketing-open ticketingInfo=ticketingInfo ticketPackage=ticketPackage person=person}}
+  <TicketingOpen @ticketingInfo={{ticketingInfo}} @ticketPackage={{ticketPackage}} @person={{person}} />
 {{else if (eq ticketingInfo.period "closed")}}
-  {{ticketing-closed ticketingInfo=ticketingInfo ticketPackage=ticketPackage person=person}}
+  <TicketingClosed @ticketingInfo={{ticketingInfo}} @ticketPackage={{ticketPackage}} @person={{person}} />
 {{else if (eq ticketingInfo.period "offseason")}}
-  {{ticketing-offseason ticketingInfo=ticketingInfo ticketPackage=ticketPackage person=person}}
+  <TicketingOffseason @ticketingInfo={{ticketingInfo}} @ticketPackage={{ticketPackage}} @person={{person}} />
 {{else}}
   Uh oh, I do not understand the ticketing period status [{{ticketingInfo.period}}]
 {{/if}}
@@ -16,8 +16,8 @@
 The ticketing FAQs can answer most of your questions. Click one of the following topics to open the FAQ in a new window:
 <ul>
   {{#unless (or person.isAlpha person.isProspective)}}
-    <li>{{ticket-faq topic="ticketing" ticketingInfo=ticketingInfo}}</li>
-    <li>{{ticket-faq topic="vp" ticketingInfo=ticketingInfo}}</li>
+    <li><TicketFaq @topic="ticketing" @ticketingInfo={{ticketingInfo}} /></li>
+    <li><TicketFaq @topic="vp" @ticketingInfo={{ticketingInfo}} /></li>
   {{/unless}}
-  <li>{{ticket-faq topic=(if (or person.isAlpha person.isProspective) "alpha" "wap") ticketingInfo=ticketingInfo}}</li>
+  <li><TicketFaq @topic={{if (or person.isAlpha person.isProspective) "alpha" "wap"}} @ticketingInfo={{ticketingInfo}} /></li>
 </ul>

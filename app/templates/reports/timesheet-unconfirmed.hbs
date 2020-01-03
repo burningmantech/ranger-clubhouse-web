@@ -29,7 +29,7 @@
     <tbody>
       {{#each unconfirmed_people as |person|}}
         <tr>
-          <td>{{person-link person=person}}</td>
+          <td><PersonLink @person={{person}} /></td>
           <td>{{person.first_name}} {{person.last_name}}</td>
           <td>{{mail-to person.email}}</td>
           <td><a href="tel:{{person.home_phone}}">{{person.home_phone}}</a></td>
@@ -39,7 +39,7 @@
     </tbody>
   </table>
 
-  {{email-list people=unconfirmed_people}}
+  <EmailList @people={{unconfirmed_people}} />
 
 {{else}}
   <p class="text-danger">Congratulations (or WTF?), everyone has marked their timesheets as confirmed.</p>

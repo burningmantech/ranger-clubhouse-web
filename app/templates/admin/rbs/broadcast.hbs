@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-between mb-2">
   <h1>{{title}}</h1>
   <div class="text-right">
-    {{#link-to "admin.rbs" class="btn btn-secondary"}}Back To RBS{{/link-to}}
+    <LinkTo @route="admin.rbs" class="btn btn-secondary">Back To RBS</LinkTo>
   </div>
 </div>
 
@@ -20,7 +20,7 @@
 {{/if}}
 
 {{#if broadcast.is_simple}}
-  {{broadcast-simple config=config type=type broadcast=broadcast}}
+  <BroadcastSimple @config={{config}} @type={{type}} @broadcast={{broadcast}} />
 {{else}}
-  {{broadcast-complex config=config type=type broadcast=broadcast}}
+  <BroadcastComplex @config={{config}} @type={{type}} @broadcast={{broadcast}} />
 {{/if}}

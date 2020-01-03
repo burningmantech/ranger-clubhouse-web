@@ -35,7 +35,7 @@
 
     <fieldset>
       <legend>Home Address</legend>
-      {{person-address-edit f=f}}
+      <PersonAddressEdit @f={{f}} />
     </fieldset>
 
     <fieldset>
@@ -46,7 +46,7 @@
       </div>
     </fieldset>
 
-    {{f.submit label="Update" disabled=isSubmitting}}
+    <f.submit @label="Update" @disabled={{isSubmitting}} />
     {{f.cancel}}
   {{/ch-form}}
 {{else}}

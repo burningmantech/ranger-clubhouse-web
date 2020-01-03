@@ -62,7 +62,7 @@
       {{f.input "pre_event_slot_end" label="Pre-Event Slot End" type="datetime" grid="col-auto" size=25}}
     </div>
     <div class="form-group">
-    {{f.submit label=(if f.model.isNew "Create" "Update")}}
+    <f.submit @label={{if f.model.isNew "Create" "Update"}} />
     {{f.cancel}}
   </div>
   {{/ch-form}}

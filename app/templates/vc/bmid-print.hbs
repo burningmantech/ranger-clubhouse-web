@@ -4,25 +4,18 @@
   <div class="form-group row">
     <div class="col-auto">
       <label>Filter:</label>
-      {{ch-form/select
-        name="filter"
-        value=this.filter
-        options=this.filterOptions
-        onChange=(action (mut this.filter))
-        controlClass="form-control-sm"
-        disabled=this.isRendering
-      }}
+      <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}} @onChange={{action (mut this.filter)}} @controlClass="form-control-sm" @disabled={{this.isRendering}} />
     </div>
     <div class="col-auto ml-4">
-      {{#link-to "vc.bmid" class="btn btn-secondary btn-sm"}}Manage BMIDs{{/link-to}}
-      {{#link-to "vc.bmid-sanity-check" class="btn btn-secondary btn-sm" disabled=this.isRendering}}Sanity Check{{/link-to}}
+      <LinkTo @route="vc.bmid" class="btn btn-secondary btn-sm">Manage BMIDs</LinkTo>
+      <LinkTo @route="vc.bmid-sanity-check" class="btn btn-secondary btn-sm" @disabled={{this.isRendering}}>Sanity Check</LinkTo>
     </div>
   </div>
   <div class="form-group row">
     <div class="col-auto">
       <div class="input-group">
         <label>Callsign, title, team, notes filter:</label>
-        {{input type="text" value=this.textFilterInput class="form-control-sm ml-2" enter=(action textFilterAction) disabled=this.isRendering}}
+        <Input @type="text" @value={{this.textFilterInput}} class="form-control-sm ml-2" @enter={{action textFilterAction}} @disabled={{this.isRendering}} />
         <button class="btn btn-primary btn-sm ml-1" {{action textFilterAction}} disabled={{this.isRendering}}>Filter</button>
         <button class="btn btn-secondary btn-sm ml-1" {{action clearTextFilterAction}} disabled={{this.isRendering}}>Clear</button>
       </div>
@@ -59,7 +52,7 @@
     <div class="border p-2">
       Do Not Print:
       {{#each doNotPrint as |bmid idx|~}}
-        {{~if idx ","}}{{person-link person=bmid.person~}}
+        {{~if idx ","}}<PersonLink @person={{bmid.person}} />
       {{/each}}
     </div>
   {{/if}}
@@ -68,7 +61,7 @@
     <div class="border p-2">
       Issues:
       {{#each issues as |bmid idx|~}}
-        {{~if idx ","}}{{person-link person=bmid.person~}}
+        {{~if idx ","}}<PersonLink @person={{bmid.person}} />
       {{/each}}
     </div>
   {{/if}}
@@ -77,7 +70,7 @@
     <div class="border p-2">
       Unusual Status:
       {{#each unusualStatus as |bmid idx|~}}
-        {{~if idx ","}}<span class="d-inline-block">{{person-link person=bmid.person~}} ({{bmid.person.status}})</span>
+        {{~if idx ","}}<span class="d-inline-block"><PersonLink @person={{bmid.person}} /> ({{bmid.person.status}})</span>
       {{/each}}
     </div>
   {{/if}}
@@ -107,7 +100,7 @@
     <tbody>
       {{#each this.viewBmids as |bmid|}}
         <tr class="{{if (eq bmid.status "failed") "bg-danger"}}">
-          <td>{{input type="checkbox" checked=bmid.selected}}</td>
+          <td><Input @type="checkbox" @checked={{bmid.selected}} /></td>
           <td>{{bmid.statusHuman}}</td>
           <td>{{bmid.person.callsign}}</td>
           <td>{{bmid.person.first_name}} {{bmid.person.last_name}}</td>
@@ -144,6 +137,6 @@ your name and the date and time you submitted to Lambase."
         You will be asked to confirm the operation after clicking below.
       </div>
     </div>
-    {{f.submit label="Submit To Lambase" disabled=(or isSubmitting (not bmidsSelectedCount))}}
+    <f.submit @label="Submit To Lambase" @disabled={{or isSubmitting (not bmidsSelectedCount)}} />
   {{/ch-form}}
 </main>

@@ -1,7 +1,7 @@
 {{year-select "Clubhouse Slots" year=year years=yearList onChange=(action "changeYear")}}
 
 {{#if slot}}
-  {{admin/slot-form slot=slot positions=positions trainerSlots=trainerSlots onSave=(action saveSlot) onCancel=(action cancel) onClone=(action cloneSlot)}}
+  <Admin::SlotForm @slot={{slot}} @positions={{positions}} @trainerSlots={{trainerSlots}} @onSave={{action saveSlot}} @onCancel={{action cancel}} @onClone={{action cloneSlot}} />
 {{/if}}
 
 {{#if copyParams}}
@@ -31,7 +31,7 @@
       <br>
       Note: training and mentor/mentee slots cannot be copied yet.
     </fieldset>
-    {{f.submit label=(concat "Copy " copySelectedSlotCount " selected slots")}}
+    <f.submit @label={{concat "Copy " copySelectedSlotCount " selected slots"}} />
     {{f.cancel}}
     {{#each copySourcePositions as |position|}}
       <table class="table table-sm table-box table-hover">
@@ -58,7 +58,7 @@
             {{#each position.slots as |slot|}}
               <tr>
                 {{#let (concat "copy-slot-" slot.source.id) as |checkid|}}
-                  <td>{{input type="checkbox" checked=slot.selected id=checkid}}</td>
+                  <td><Input @type="checkbox" @checked={{slot.selected}} @id={{checkid}} /></td>
                   <td>
                     <label for={{checkid}}>
                       {{shift-format slot.source.begins}} &rarr;
@@ -96,14 +96,14 @@
     <label class="col-form-label">Day Filter</label>
   </div>
   <div class="col-md-3 mb-2">
-    {{ch-form/select name="dayFilter" value=dayFilter options=dayOptions onChange=(action (mut dayFilter)) controlClass="form-control"}}
+    <ChForm::Select @name="dayFilter" @value={{dayFilter}} @options={{dayOptions}} @onChange={{action (mut dayFilter)}} @controlClass="form-control" />
   </div>
 
   <div class="col-auto">
     <label class="col-form-label">Active Filter</label>
   </div>
   <div class="col-md-3 mb-2">
-    {{ch-form/select name="activeFilter" value=activeFilter options=activeOptions onChange=(action (mut activeFilter)) controlClass="form-control"}}
+    <ChForm::Select @name="activeFilter" @value={{activeFilter}} @options={{activeOptions}} @onChange={{action (mut activeFilter)}} @controlClass="form-control" />
   </div>
 </div>
 
@@ -111,7 +111,7 @@
   <p>{{year}} Pre-event is {{shift-format eventDate.pre_event_slot_start}} to {{shift-format eventDate.pre_event_slot_end}}.</p>
 {{else}}
   {{#ch-alert "danger"}}
-    WARNING: {{year}} pre-event slot dates are not set. Pre-Event slots may not be properly vetted. Visit {{#link-to "admin.event-dates"}}Admin &gt; Edit Event Dates{{/link-to}} to set the dates.
+    WARNING: {{year}} pre-event slot dates are not set. Pre-Event slots may not be properly vetted. Visit <LinkTo @route="admin.event-dates">Admin &gt; Edit Event Dates</LinkTo> to set the dates.
   {{/ch-alert}}
 {{/if}}
 

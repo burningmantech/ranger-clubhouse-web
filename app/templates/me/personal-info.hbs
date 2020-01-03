@@ -68,7 +68,7 @@
 
   <fieldset>
     <legend>Home Address</legend>
-    {{person-address-edit f=f}}
+    <PersonAddressEdit @f={{f}} />
   </fieldset>
 
   {{#unless person.isAuditor}}
@@ -81,8 +81,8 @@
     </fieldset>
   {{/unless}}
 
-  {{f.submit label=(if isSubmitting "Updating " "Update") disabled=isSubmitting}}
-  {{f.cancel disabled=isSubmitting}}
+  <f.submit @label={{if isSubmitting "Updating " "Update"}} @disabled={{isSubmitting}} />
+  <f.cancel @disabled={{isSubmitting}} />
   {{#if isSubmitting}}
     {{fa-icon "spinner" spin=true}}
   {{else if isSaved}}

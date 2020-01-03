@@ -1,6 +1,6 @@
 {{#if person.needsBpguid}}
   {{#ch-box "Missing Burner Profile ID" type="warning"}}
-    {{person-missing-bpguid}}
+    <PersonMissingBpguid />
   {{/ch-box}}
 {{else if (or person.isProspective person.isAlpha)}}
   <p>
@@ -43,15 +43,15 @@
   {{/if}}
   <div class="accordion">
     {{#if hasFullPackage}}
-      {{ticket-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket setTicketStatus=setTicketStatus showing=showing toggleCard=toggleCard nextSection=(action nextSection "vp")}}
-      {{ticket-vp-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket vehiclePass=vehiclePass setTicketStatus=setTicketStatus  showing=showing toggleCard=toggleCard nextSection=(action nextSection "wap")}}
+      <TicketInfo @person={{person}} @ticketPackage={{ticketPackage}} @ticketingInfo={{ticketingInfo}} @ticket={{ticket}} @setTicketStatus={{setTicketStatus}} @showing={{showing}} @toggleCard={{toggleCard}} @nextSection={{action nextSection "vp"}} />
+      <TicketVpInfo @person={{person}} @ticketPackage={{ticketPackage}} @ticketingInfo={{ticketingInfo}} @ticket={{ticket}} @vehiclePass={{vehiclePass}} @setTicketStatus={{setTicketStatus}} @showing={{showing}} @toggleCard={{toggleCard}} @nextSection={{action nextSection "wap"}} />
     {{/if}}
 
-    {{ticket-wap-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket wap=wap setTicketStatus=setTicketStatus  showing=showing toggleCard=toggleCard nextSection=(if hasFullPackage (action nextSection "wapso") false)}}
+    <TicketWapInfo @person={{person}} @ticketPackage={{ticketPackage}} @ticketingInfo={{ticketingInfo}} @ticket={{ticket}} @wap={{wap}} @setTicketStatus={{setTicketStatus}} @showing={{showing}} @toggleCard={{toggleCard}} @nextSection={{if hasFullPackage (action nextSection "wapso") false}} />
 
     {{#if hasFullPackage}}
-      {{ticket-wap-so-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket  showing=showing toggleCard=toggleCard nextSection=(action nextSection "delivery")}}
-      {{ticket-delivery-info person=person ticketPackage=ticketPackage ticketingInfo=ticketingInfo ticket=ticket vehiclePass=vehiclePass  showing=showing toggleCard=toggleCard}}
+      <TicketWapSoInfo @person={{person}} @ticketPackage={{ticketPackage}} @ticketingInfo={{ticketingInfo}} @ticket={{ticket}} @showing={{showing}} @toggleCard={{toggleCard}} @nextSection={{action nextSection "delivery"}} />
+      <TicketDeliveryInfo @person={{person}} @ticketPackage={{ticketPackage}} @ticketingInfo={{ticketingInfo}} @ticket={{ticket}} @vehiclePass={{vehiclePass}} @showing={{showing}} @toggleCard={{toggleCard}} />
     {{/if}}
   </div>
 {{/if}}

@@ -30,7 +30,7 @@
     <tbody>
       {{#each this.people as |person|}}
         <tr>
-          <td>{{person-link person=person}}</td>
+          <td><PersonLink @person={{person}} /></td>
           <td>{{mail-to person.email}}</td>
           <td>{{person.first_name}} {{person.last_name}}</td>
           <td>{{person.status}}</td>

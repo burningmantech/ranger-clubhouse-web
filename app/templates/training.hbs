@@ -1,4 +1,4 @@
-{{#ch-sidebar}}
+<ChSidebar>
   {{#ch-sidebar-group training.title}}
     {{ch-sidebar-link "training.index" title="Trainer's Report" icon="list-alt" iconType="r"}}
     {{ch-sidebar-link "training.capacity" training.id title="Training Capacity" icon="battery-half" iconType="s"}}
@@ -9,7 +9,7 @@
       {{ch-sidebar-link "training.untrained-people" training.id title="Untrained People" icon="exclamation-circle" iconType="s"}}
     {{/if}}
   {{/ch-sidebar-group}}
-{{/ch-sidebar}}
+</ChSidebar>
 
 <main class="col min-width-500">
   <div class="d-md-none mb-2">
@@ -18,13 +18,13 @@
           Training Section
         </button>
         <div class="dropdown-menu">
-          {{#link-to "training.index" training.id class="dropdown-item"}}Trainer's Report{{/link-to}}
-          {{#link-to "training.capacity" training.id class="dropdown-item"}}Training Capacity{{/link-to}}
-          {{#link-to "training.multiple-enrollments" training.id class="dropdown-item"}}Multiple Enrollments{{/link-to}}
-          {{#link-to "training.people-training-completed" training.id class="dropdown-item"}}Training Completed{{/link-to}}
-          {{#link-to "training.trainer-attendance" training.id class="dropdown-item"}}Trainer Attendance{{/link-to}}
+          <LinkTo @route="training.index" @model={{training.id}} class="dropdown-item">Trainer's Report</LinkTo>
+          <LinkTo @route="training.capacity" @model={{training.id}} class="dropdown-item">Training Capacity</LinkTo>
+          <LinkTo @route="training.multiple-enrollments" @model={{training.id}} class="dropdown-item">Multiple Enrollments</LinkTo>
+          <LinkTo @route="training.people-training-completed" @model={{training.id}} class="dropdown-item">Training Completed</LinkTo>
+          <LinkTo @route="training.trainer-attendance" @model={{training.id}} class="dropdown-item">Trainer Attendance</LinkTo>
           {{#if training.is_art}}
-            {{#link-to "training.untrained-people" training.id class="dropdown-item"}}Untrained People{{/link-to}}
+            <LinkTo @route="training.untrained-people" @model={{training.id}} class="dropdown-item">Untrained People</LinkTo>
           {{/if}}
         </div>
       </div>

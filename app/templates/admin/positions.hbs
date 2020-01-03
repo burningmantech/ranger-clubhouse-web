@@ -2,12 +2,12 @@
 <h1>Clubhouse Positions</h1>
 
 {{#if position}}
-  {{position-form position=position trainingPositions=trainingPositions onSave=(action "save") onCancel=(action "cancel")}}
+  <PositionForm @position={{position}} @trainingPositions={{trainingPositions}} @onSave={{action "save"}} @onCancel={{action "cancel"}} />
 {{/if}}
 
 <div class="row mb-2">
   <div class="col-sm-3">
-    {{ch-form/select name="typeFilter" value=typeFilter options=typeOptions onChange=(action (mut typeFilter)) controlClass="form-control"}}
+    <ChForm::Select @name="typeFilter" @value={{typeFilter}} @options={{typeOptions}} @onChange={{action (mut typeFilter)}} @controlClass="form-control" />
   </div>
   <div class="col-sm-9 text-right">
     <button type="button" class="btn btn-primary" {{action "new"}}>New Position</button>

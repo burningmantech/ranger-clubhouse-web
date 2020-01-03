@@ -1,10 +1,10 @@
-import DS from 'ember-data';
+import Model from '@ember-data/model';
 
 export default {
   name: 'ember-data-extend',
 
   initialize: function() {
-    DS.Model.reopen({
+    Model.reopen({
       save() {
         return this._super(...arguments).then(() => {
           if (this.onSaved) {

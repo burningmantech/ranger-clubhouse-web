@@ -85,7 +85,7 @@
             {{else if (Eq ticket.status "claimed")}}
               <b>Your {{ticketType}} will be used for the event.</b>
             {{/if}}
-            {{ticket-frozen item="ticket" ticketingInfo=ticketingInfo}}
+            <TicketFrozen @item="ticket" @ticketingInfo={{ticketingInfo}} />
           {{else}}
             You qualified for a {{ticketType}}! Ticketing is not yet open. Please check back later.
           {{/if}}

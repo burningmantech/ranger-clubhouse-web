@@ -16,7 +16,7 @@
         <td>
           {{#each event.mentors as |mentor idx|~}}
             {{if idx "/"}}
-            {{person-link person=mentor}}
+            <PersonLink @person={{mentor}} />
           {{/each}}
         </td>
       </tr>

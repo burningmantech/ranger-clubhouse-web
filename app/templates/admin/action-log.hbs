@@ -23,7 +23,7 @@
         {{f.input "sort" type="radioGroup" options=sortOptions label="Sort" inline=true}}
       </div>
     </div>
-    {{f.submit label="Search"}}
+    <f.submit @label="Search" />
     <button class="btn btn-secondary" {{action resetFilters f.model}}>Reset</button>
   {{/ch-form}}
 
@@ -49,7 +49,7 @@
             <td class="w-15">{{log.created_at}}</td>
             <td class="w-15">
               {{#if log.person}}
-                {{person-link person=log.person}}
+                <PersonLink @person={{log.person}} />
               {{else if log.person_id}}
                 #{{log.person_id}}
               {{else}}
@@ -58,7 +58,7 @@
             </td>
             <td class="w-15">
               {{#if log.target_person}}
-                {{person-link person=log.target_person}}
+                <PersonLink @person={{log.target_person}} />
               {{else if log.target_person_id}}
                 #{{log.target_person_id}}
               {{else}}
@@ -119,7 +119,7 @@
           {{#if log.showing}}
             <tr class="tr-no-border">
               <td colspan="6">
-                {{json-format json=log.data}}
+                <JsonFormat @json={{log.data}} />
               </td>
             </tr>
           {{/if}}

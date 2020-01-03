@@ -24,7 +24,7 @@ Signups: {{students.length}} of {{slot.max}}
   {{#each trainers as |group|}}
     {{group.position_title}} ({{group.trainers.length}}):
     {{#each group.trainers as |trainer index|}}
-      {{if index ", "}}{{person-link person=trainer}}
+      {{if index ", "}}<PersonLink @person={{trainer}} />
     {{else}}
       <i>none found</i>
     {{/each}}<br>
@@ -42,8 +42,8 @@ Signups: {{students.length}} of {{slot.max}}
   {{! Desktop Display }}
   <div class="d-sm-block d-none">
     <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{or isSubmitting (is-empty students)}}>{{if isSubmitting "Saving" "Save All"}}</button>
-    {{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary btn-sm"}}Trainer's Report{{/link-to}}
-    {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary btn-sm"}}Sign up Sheet{{/link-to}}
+    <LinkTo @route="training.session.trainers-report" @models={{array training.id slot.id}} class="btn btn-secondary btn-sm">Trainer's Report</LinkTo>
+    <LinkTo @route="training.session.signup-sheet" @models={{array training.id slot.id}} class="btn btn-secondary btn-sm">Sign up Sheet</LinkTo>
     <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}} disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
     <button class="btn btn-secondary btn-sm" {{action "showAddPersonAction"}}>Add Person</button>
     <button class="btn btn-secondary btn-sm" {{action "showRemovePersonAction"}} disabled={{is-empty students}}>Remove Person</button>
@@ -57,8 +57,8 @@ Signups: {{students.length}} of {{slot.max}}
         Additional Actions
       </button>
       <div class="dropdown-menu">
-        {{#link-to "training.session.trainers-report" training.id slot.id class="dropdown-item"}}Trainer's Report{{/link-to}}
-        {{#link-to "training.session.signup-sheet" training.id slot.id class="dropdown-item"}}Sign up Sheet{{/link-to}}
+        <LinkTo @route="training.session.trainers-report" @models={{array training.id slot.id}} class="dropdown-item">Trainer's Report</LinkTo>
+        <LinkTo @route="training.session.signup-sheet" @models={{array training.id slot.id}} class="dropdown-item">Sign up Sheet</LinkTo>
         <div class="dropdown-divider"></div>
         <a href class="dropdown-item" {{action "toggleEmailListAction"}} disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</a>
         <div class="dropdown-divider"></div>
@@ -94,13 +94,13 @@ Signups: {{students.length}} of {{slot.max}}
             {{#if (or student.is_retired student.is_inactive)}}
               {{fa-icon "exclamation-triangle"}}
             {{/if}}
-            {{person-link person=student}}
+            <PersonLink @person={{student}} />
           </td>
           <td class="w-10">{{student.status}}{{#if student.is_art_alpha}}*{{/if}}</td>
-          <td class="w-5">{{input type="checkbox" checked=student.passed}}</td>
+          <td class="w-5"><Input @type="checkbox" @checked={{student.passed}} /></td>
           <td class="text-center w-5">
             {{#if student.need_ranking}}
-              {{ch-form/select name=(concat "student" student.id) value=student.rank onChange=(action "changeRankAction" student) includeBlank=true options=rankOptions}}
+              <ChForm::Select @name={{concat "student" student.id}} @value={{student.rank}} @onChange={{action "changeRankAction" student}} @includeBlank={{true}} @options={{rankOptions}} />
             {{else if student.rank}}
               {{student.rank}}
             {{else}}
@@ -108,7 +108,7 @@ Signups: {{students.length}} of {{slot.max}}
             {{/if}}
           </td>
           <td class="w-60">
-            {{textarea rows=1 cols=80 value=student.notes focusIn=(action focusNote) focusOut=(action blurNote)}}
+            <Textarea @rows={{1}} @cols={{80}} @value={{student.notes}} @focusIn={{action focusNote}} @focusOut={{action blurNote}} />
           </td>
         </tr>
       {{/each}}
@@ -123,8 +123,8 @@ Signups: {{students.length}} of {{slot.max}}
 
 <div class="mt-2 mb-2 d-sm-block d-none">
   <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{or isSubmitting (is-empty students)}}>{{if isSubmitting "Saving" "Save All"}}</button>
-  {{#link-to "training.session.trainers-report" training.id slot.id class="btn btn-secondary btn-sm"}}Trainer's Report{{/link-to}}
-  {{#link-to "training.session.signup-sheet" training.id slot.id class="btn btn-secondary btn-sm"}}Signup Sheet{{/link-to}}
+  <LinkTo @route="training.session.trainers-report" @models={{array training.id slot.id}} class="btn btn-secondary btn-sm">Trainer's Report</LinkTo>
+  <LinkTo @route="training.session.signup-sheet" @models={{array training.id slot.id}} class="btn btn-secondary btn-sm">Signup Sheet</LinkTo>
   <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}} disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
   <button class="btn btn-secondary btn-sm" {{action "showAddPersonAction"}}>Add Person</button>
   <button class="btn btn-secondary btn-sm" {{action "showRemovePersonAction"}} disabled={{is-empty students}}>Remove Person</button>
@@ -149,7 +149,7 @@ Signups: {{students.length}} of {{slot.max}}
             </td>
             <td>{{trainerType.position_title}}</td>
             <td>
-              {{ch-form/select name=(concat "trainer" trainer.id) value=trainer.status onChange=(action (mut trainer.status)) options=trainerStatusOptions}}
+              <ChForm::Select @name={{concat "trainer" trainer.id}} @value={{trainer.status}} @onChange={{action (mut trainer.status)}} @options={{trainerStatusOptions}} />
             </td>
           </tr>
         {{/each}}
@@ -171,7 +171,7 @@ Signups: {{students.length}} of {{slot.max}}
 {{/if}}
 
 {{#if showEmails}}
-  {{email-list people=students scrollOnRender=true}}
+  <EmailList @people={{students}} @scrollOnRender={{true}} />
 {{/if}}
 
 {{! Add Person dialog box}}
@@ -216,7 +216,7 @@ Signups: {{students.length}} of {{slot.max}}
       {{f.input "person_id" label="Select the person to remove" type="select" options=removeStudentOptions}}
     </div>
 
-    {{f.submit label="Remove Person" disabled=(not f.model.person_id)}}
+    <f.submit @label="Remove Person" @disabled={{not f.model.person_id}} />
     {{f.cancel}}
   {{/ch-form}}
 {{/if}}

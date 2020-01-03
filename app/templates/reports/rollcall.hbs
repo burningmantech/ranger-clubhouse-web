@@ -20,13 +20,13 @@
     <label class="col-form-label">Position</label>
   </div>
   <div class="col-md-3 mb-2">
-    {{ch-form/select name="positionId" value=this.positionId options=positionOptions onChange=(action this.selectPosition) controlClass="form-control"}}
+    <ChForm::Select @name="positionId" @value={{this.positionId}} @options={{positionOptions}} @onChange={{action this.selectPosition}} @controlClass="form-control" />
   </div>
   <div class="col-auto">
     <label class="col-form-label">Shift</label>
   </div>
   <div class="col-md-3 mb-2">
-    {{ch-form/select name="slotId" value=this.slotId options=slotOptions onChange=(action this.selectSlot) disabled=(eq this.positionId 0) controlClass="form-control"}}
+    <ChForm::Select @name="slotId" @value={{this.slotId}} @options={{slotOptions}} @onChange={{action this.selectSlot}} @disabled={{eq this.positionId 0}} @controlClass="form-control" />
   </div>
 </div>
 
