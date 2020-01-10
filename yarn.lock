@@ -4904,10 +4904,10 @@ ember-changeset@3.0.0-beta.3:
     ember-cli-babel "^7.13.0"
     ember-cli-typescript "2.0.2"
 
-ember-changeset@^3.0.0-beta.4:
-  version "3.0.0-beta.4"
-  resolved "https://registry.yarnpkg.com/ember-changeset/-/ember-changeset-3.0.0-beta.4.tgz#397fcfa02d642e4d099b69c14c071fcd60aaad77"
-  integrity sha512-zhtDKpqUWWbmk5sen6lNq18NxYLo9gXTcytQL3u8eNjWuLmbzHqomwFEK8G30oABlYRzjbwwRXTdZ6m1hFbsYw==
+ember-changeset@^3.0.0-beta.5:
+  version "3.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/ember-changeset/-/ember-changeset-3.0.0-beta.5.tgz#02c100ee0d5bc889dd7bacaa09822dc7d559df81"
+  integrity sha512-86QlS9/nhwIoZGJ69LA1y1oSV44uwpBdcHkyrZEb0tIMaChmWcAGocaBuYUwzW5QJz+xF4bMZE6Bz+v6zufFVA==
   dependencies:
     "@glimmer/tracking" "^1.0.0"
     ember-cli-babel "^7.13.0"
