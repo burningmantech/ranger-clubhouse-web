@@ -25,5 +25,6 @@ export default Factory.extend({
   camp_location() { return faker.address.latitude() + faker.address.longitude(); },
   teeshirt_size_style: 'Mens Crew S',
   longsleeveshirt_size_style: 'Mens Regular S',
-  gender: ''
+  gender: '',
+  has_reviewed_pi : false
 });

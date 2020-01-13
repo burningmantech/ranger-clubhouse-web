@@ -1,0 +1,153 @@
+{{#if this.isDevelopmentEnv}}
+  <a href="#" {{action this.toggleDebugging}}>{{if this.showDebugging "Hide Debugging Options" "Show Debugging Options"}}</a>
+
+  {{#if this.showDebugging}}
+    <dl class="row">
+      <dt class="col-2">Clear Flags</dt>
+      <dd class="col-9">
+        <button class="btn btn-secondary btn-sm" {{action this.clearBehavioralAgreement}}> Behavioral Agreement</button>
+        <button class="btn btn-secondary btn-sm" {{action this.clearPIReview}}>P.I. Review</button>
+      </dd>
+      <dt class="col-2">Photo</dt>
+      <dd class="col-9">
+        <button class="btn btn-secondary btn-sm" {{action this.photoStatus "approved"}}>Approved</button>
+        <button class="btn btn-secondary btn-sm" {{action this.photoStatus "submitted"}}>Submitted</button>
+        <button class="btn btn-secondary btn-sm" {{action this.photoStatus "rejected"}}>Rejected</button>
+        <button class="btn btn-secondary btn-sm" {{action this.photoStatus "missing"}}> Missing</button>
+      </dd>
+      <dt class="col-2">Manual Review</dt>
+      <dd class="col-9">
+        <button class="btn btn-secondary btn-sm" {{action this.manualReview "pass"}}>Pass</button>
+        <button class="btn btn-secondary btn-sm" {{action this.manualReview "missing"}}>Missing</button>
+      </dd>
+      <dt class="col-2">Training</dt>
+      <dd class="col-9">
+        <button class="btn btn-secondary btn-sm" {{action this.training "signup"}}>Create Tomorrow Shift &amp; Sign Up</button>
+        <button class="btn btn-secondary btn-sm" {{action this.training "signup-past"}}>Create Yesterday/Fail Shift &amp; Sign Up</button>
+        <button class="btn btn-secondary btn-sm" {{action this.training "signup-now"}}>Create Now Shift &amp; Sign Up</button>
+        <button class="btn btn-secondary btn-sm" {{action this.training "pass"}}>Pass</button>
+        <button class="btn btn-secondary btn-sm" {{action this.training "remove"}}>Remove Signup</button>
+      </dd>
+      <dt class="col-2">Alpha</dt>
+      <dd class="col-9">
+        <button class="btn btn-secondary btn-sm" {{action this.alphaShift "signup"}}>Create Tomorrow Shift &amp; Sign Up</button>
+        <button class="btn btn-secondary btn-sm" {{action this.alphaShift "signup-past"}}>Create Yesterday Shift &amp; Sign Up</button>
+        <button class="btn btn-secondary btn-sm" {{action this.alphaShift "pass"}}>Convert to Active</button>
+        <button class="btn btn-secondary btn-sm" {{action this.alphaShift "bonk"}}>Convert to Bonked</button>
+        <button class="btn btn-secondary btn-sm" {{action this.alphaShift "remove"}}>Remove Signup</button>
+      </dd>
+      <dt class="col-2">DESTRUCTION!</dt>
+      <dd class="col-9">
+        <button class="btn btn-danger btn-sm" {{action this.goBoom "remove-trainings"}}>Remove ALL Training shifts</button>
+        <button class="btn btn-danger btn-sm" {{action this.goBoom "remove-alphas"}}>Remove All Alpha shifts</button>
+      </dd>
+    </dl>
+  {{/if}}
+{{/if}}
+<p>
+  {{#if (eq @person.status "bonked")}}
+    <b>Hello {{@person.callsign}}!</b>
+  {{else}}
+    <b id="hello-ranger">Hello Prospective Ranger {{@person.callsign}}!</b>
+  {{/if}}
+</p>
+<p>
+  The following is your Onboarding Checklist:
+</p>
+{{#if this.haveUrgentActions}}
+  <p>
+    <span class="text-danger align-middle">{{fa-icon "exclamation-circle" size="2x"}} There are one or more URGENT items that need your attention.</span>
+  </p>
+{{else if this.haveActions}}
+  <p>
+    <b>{{fa-icon "exclamation-circle" size="2x"}} There are one or more items that need your attention.</b>
+  </p>
+{{else if this.haveWaiting}}
+  <p>
+    {{fa-icon "hourglass-half" size="2x"}} You're not done, however there is nothing to be done in the Clubhouse right now. Please check back as indicated below.
+  </p>
+{{/if}}
+
+{{#each this.taskGroups as |group idx|}}
+  <div class="onboard-group">
+    <div class="onboard-title-box {{if group.isActive "onboard-group-active"}} {{if (gt idx 0) "onboard-title-top-arrow"}} {{if (not-eq this.taskGroups.lastObject group) "onboard-title-bottom-arrow"}}">
+      <h3 class="onboard-title-text {{if (not group.isActive) "text-muted"}}">{{group.title}}</h3>
+    </div>
+    <div class="onboard-tasks {{if group.isActive "bg-light-gray" "bg-gray"}}">
+      {{#if (and (not this.isMobileScreen) (eq idx 0))}}
+        <PersonPhoto @photo={{@photo}} @person={{@person}} />
+      {{/if}}
+
+      {{#each group.tasks as |task|}}
+        <div class="onboard-task-row {{if (not (and task.isActive group.isActive)) "text-muted"}}">
+          <div class="onboard-icon">
+            {{#if (eq task.result "completed")}}
+              {{fa-icon "check-circle" size="2x"}}
+            {{else if (eq task.result "waiting")}}
+              {{fa-icon "hourglass-half" size="2x"}}
+            {{else if (eq task.result "action-needed")}}
+              {{fa-icon "arrow-right" size="2x" color="success"}}
+            {{else if (eq task.result "not-available")}}
+              {{fa-icon "circle" size="2x" type="far"}}
+            {{else if (eq task.result "urgent")}}
+              {{fa-icon "exclamation-circle" size="2x" color="danger"}}
+            {{else if (eq task.result "blocked")}}
+              {{fa-icon "times" size="2x" color="danger"}}
+            {{else if (eq task.result "optional")}}
+              {{fa-icon "file-signature" size="2x"}}
+            {{else}}
+              Uh oh! The task check result [{{task.result}}] is not understood. This is a bug! Please report this to the tech team.<br>
+            {{/if}}
+          </div>
+          <div class="onboard-text">
+            <div class="{{if (and task.isActive group.isActive) "h4"}}">
+              {{#if (and task.isBehavioralAgreement (not-eq task.result "completed"))}}
+                <a href {{on "click" this.showBehaviorAgreementAction}} disabled={{this.isNotUser}}>{{task.name}}</a>
+              {{else if task.route}}
+                <LinkTo @route={{task.route}} disabled={{this.isNotUser}}>{{task.name}}</LinkTo>
+              {{else if task.linkUrl}}
+                <a href={{task.linkUrl}} rel="noopener" target="_blank" disabled={{this.isNotUser}}>{{task.name}}</a>
+              {{else if (or (eq task.result "blocked") (eq task.result "urgent"))}}
+                <span class="text-danger">{{task.name}}</span>
+              {{else}}
+                {{task.name}}
+              {{/if}}
+            </div>
+            <div>
+              &mdash;
+              {{#if (eq task.result "completed")}}
+                Completed.
+              {{else if task.isSignup}}
+                Visit the <LinkTo @route="me.schedule">Me &gt; Schedule / Sign Up</LinkTo> page to sign up.
+              {{else if task.isVisitPersonInfo}}
+                Visit the <LinkTo @route="me.personal-info">Me &gt; Personal Info page</LinkTo>.
+                Click the Update button at the bottom of the page to save your changes
+                or to verify that the existing information is correct.
+              {{else}}
+                {{#if task.message}}
+                  {{task.message}}<br>
+                {{/if}}
+                {{#if task.isPhotoUpload}}
+                    <a href="#">Submit a headshot </a> to use on a BMID.
+                {{/if}}
+                {{#if task.email}}
+                  <br>
+                  {{mail-to task.email}}
+                {{/if}}
+              {{/if}}
+            </div>
+          </div>
+        </div>
+        {{#if (and task.isPhotoTask this.isMobileScreen)}}
+          <PersonPhoto @photo={{@photo}} @person={{@person}} @noFloat=true />
+        {{/if}}
+
+
+      {{/each}}
+    </div>
+  </div>
+{{/each}}
+
+{{#if showBehaviorAgreement}}
+  <BehavioralAgreementModal @closeAgreement={{this.closeAgreement}} @signAgreement={{this.signAgreement}} />
+{{/if}}

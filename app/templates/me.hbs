@@ -1,54 +1,54 @@
 {{! Besure to keep application.hbs in sync with the links}}
 <ChSidebar>
-  {{#ch-sidebar-group "ME MENU"}}
-    {{ch-sidebar-link "me.schedule" title="Schedule / Sign Up" icon="clipboard"}}
-    {{#if (or user.isAlpha user.isNonRanger user.isRanger)}}
-      {{ch-sidebar-link "me.timesheet-corrections.index" title="Timesheet Corrections" icon="list-ol" iconType="s"}}
-      {{ch-sidebar-link "me.timesheet" title="Timesheets" icon="clock"}}
+  <ChSidebarGroup @title="ME MENU">
+    <ChSidebarLink @route="me.schedule" @title="Schedule / Sign Up" @icon="clipboard" />
+    {{#if (or user.isNonRanger user.isRanger)}}
+      <ChSidebarLink @route="me.timesheet-corrections.index" @title="Timesheet Corrections" @icon="list-ol" @iconType="s" />
+      <ChSidebarLink @route="me.timesheet" @title="Timesheets" @icon="clock" />
     {{/if}}
     {{#unless user.isAuditor}}
-      {{ch-sidebar-link "me.event-info" title="Event Info" icon="user"}}
+      <ChSidebarLink @route="me.event-info" @title="Event Info" @icon="user" />
     {{/unless}}
-  {{/ch-sidebar-group}}
+  </ChSidebarGroup>
 
   {{#if (or user.isRanger user.isAlpha user.isProspective user.isNonRanger)}}
-    {{#ch-sidebar-group "PRE-EVENT"}}
+    <ChSidebarGroup @title="PRE-EVENT">
       {{#unless user.isNonRanger}}
         {{#if (or user.isAlpha user.isProspective)}}
-          {{ch-sidebar-link "me.tickets" title="Work Access Pass" icon="ticket-alt" iconType="s"}}
+          <ChSidebarLink @route="me.tickets" @title="Work Access Pass" @icon="ticket-alt" @iconType="s" />
         {{else}}
-          {{ch-sidebar-link "me.tickets" title="Tickets & Stuff" icon="ticket-alt" iconType="s"}}
+          <ChSidebarLink @route="me.tickets" @title="Tickets & Stuff" @icon="ticket-alt" @iconType="s" />
         {{/if}}
       {{/unless}}
       {{#if (and (config "MotorpoolPolicyEnable") (or user.isRanger user.isAlpha user.isNonRanger))}}
-        {{ch-sidebar-link "me.motorpool-policy" title="Motorpool Policy" icon="car" iconType="s"}}
+        <ChSidebarLink @route="me.motorpool-policy" @title="Motorpool Policy" @icon="car" @iconType="s" />
       {{/if}}
-    {{/ch-sidebar-group}}
+    </ChSidebarGroup>
   {{/if}}
 
-  {{#ch-sidebar-group "COMMUNICATION"}}
+  <ChSidebarGroup @title="COMMUNICATION">
     {{#if user.isRanger}}
-      {{ch-sidebar-link "me.messages" title="Messages" icon="envelope" badgeText=user.unread_message_count}}
+      <ChSidebarLink @route="me.messages" @title="Messages" @icon="envelope" @badgeText={{user.unread_message_count}} />
     {{/if}}
-    {{ch-sidebar-link "me.alerts" title="Alert Preferences" icon="bell"}}
+    <ChSidebarLink @route="me.alerts" @title="Alert Preferences" @icon="bell" />
     {{#if user.teacher.have_mentored}}
-      {{ch-sidebar-link "me.mentees" title="My Mentees" icon="users" iconType="s"}}
+      <ChSidebarLink @route="me.mentees" @title="My Mentees" @icon="users" @iconType="s" />
     {{/if}}
     {{#if user.isRanger}}
-      {{ch-sidebar-link "me.contact" title="Contact Ranger" icon="comments" iconType="s"}}
+      <ChSidebarLink @route="me.contact" @title="Contact Ranger" @icon="comments" @iconType="s" />
     {{/if}}
-  {{/ch-sidebar-group}}
+  </ChSidebarGroup>
 
-  {{#ch-sidebar-group "MY ACCOUNT"}}
-    {{ch-sidebar-link "me.personal-info" title="Personal Info" icon="home" iconType="s"}}
+  <ChSidebarGroup @title="MY ACCOUNT">
+    <ChSidebarLink @route="me.personal-info" @title="Personal Info" @icon="home" @iconType="s" />
     {{#if (or user.isRanger user.isAlpha user.isProspective)}}
-      {{ch-sidebar-link "me.emergency-contact" title="Emergency Contact" icon="exclamation" iconType="s"}}
+      <ChSidebarLink @route="me.emergency-contact" @title="Emergency Contact" @icon="exclamation" @iconType="s" />
     {{/if}}
-    {{ch-sidebar-link "me.password" title="Change Password" icon="key" iconType="s"}}
-  {{/ch-sidebar-group}}
+    <ChSidebarLink @route="me.password" @title="Change Password" @icon="key" @iconType="s" />
+  </ChSidebarGroup>
 
   <ChSidebarGroup>
-    {{ch-sidebar-link "me.help" title="Help" icon="question" iconType="s"}}
+    <ChSidebarLink @route="me.help" @title="Help" @icon="question" @iconType="s" />
   </ChSidebarGroup>
 </ChSidebar>
 <main class="col">

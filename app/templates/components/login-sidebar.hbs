@@ -1,10 +1,10 @@
 <ChSidebar>
-  {{#ch-sidebar-group "BLACK ROCK RANGERS"}}
-    {{ch-sidebar-link "login" title="Login" icon="sign-in-alt" iconType="s"}}
-    {{ch-sidebar-link "reset-password" title="Forgot Password" icon="unlock" iconType="s"}}
-  {{/ch-sidebar-group}}
-  {{#ch-sidebar-group "POTENTIAL RANGERS"}}
-    {{ch-sidebar-link "register" title="Register" icon="user-plus" iconType="s"}}
-    {{ch-sidebar-link "https://profiles.burningman.com/participate" iconUrl="assets/images/Burning-Man-logo.png" title="Burner Profile"}}
-  {{/ch-sidebar-group}}
+  <ChSidebarGroup @title="BLACK ROCK RANGERS">
+    <ChSidebarLink @route="login" @title="Login" @icon="sign-in-alt" @iconType="s" />
+    <ChSidebarLink @route="reset-password" @title="Forgot Password" @icon="unlock" @iconType="s" />
+  </ChSidebarGroup>
+  <ChSidebarGroup @title="POTENTIAL RANGERS">
+    <ChSidebarLink @route="register" @title="Register" @icon="user-plus" @iconType="s" />
+    <ChSidebarLink @route="https://profiles.burningman.com/participate" @title="Burner Profile" @iconUrl="assets/images/Burning-Man-logo.png" />
+  </ChSidebarGroup>
 </ChSidebar>

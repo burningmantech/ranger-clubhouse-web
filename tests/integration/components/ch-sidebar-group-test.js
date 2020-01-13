@@ -1,4 +1,4 @@
-import { module, skip /* test */ } from 'qunit';
+import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
@@ -6,21 +6,10 @@ import hbs from 'htmlbars-inline-precompile';
 module('Integration | Component | ch sidebar group', function(hooks) {
   setupRenderingTest(hooks);
 
-  skip('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
+  test('it renders', async function(assert) {
+    await render(hbs`<ChSidebarGroup @title="I haz title">template block text</ChSidebarGroup>`);
 
-    await render(hbs`{{ch-sidebar-group}}`);
-
-    assert.dom('*').hasText('');
-
-    // Template block usage:
-    await render(hbs`
-      {{#ch-sidebar-group}}
-        template block text
-      {{/ch-sidebar-group}}
-    `);
-
-    assert.dom('*').hasText('template block text');
+    // component will uppercase the title
+    assert.dom('li').hasText('I HAZ TITLE');
   });
 });

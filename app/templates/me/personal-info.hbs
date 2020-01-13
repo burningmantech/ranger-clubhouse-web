@@ -1,6 +1,6 @@
 <h1>Personal Information For <span class="d-inline-block">{{person.callsign}}</span></h1>
 
-{{#ch-form "person" person autocomplete="on" validator=personInfoValidations onSubmit=(action "onSubmit") onCancel=(action "onCancel") as |f|}}
+<ChForm @formId="person" @originalModel={{this.person}} @autocomplete="on" @validator={{this.personInfoValidations}} @onSubmit={{action this.onSubmit}} @onCancel={{action this.onCancel}} as |f|>
   <div class="form-row mb-2">
     <div class="col-12">
       Your account status is {{person.status}}.
@@ -71,7 +71,7 @@
     <PersonAddressEdit @f={{f}} />
   </fieldset>
 
-  {{#unless person.isAuditor}}
+  {{#unless this.person.isAuditor}}
     <fieldset>
       <legend>Ranger Clothing</legend>
       <div class="form-row">
@@ -84,8 +84,8 @@
   <f.submit @label={{if isSubmitting "Updating " "Update"}} @disabled={{isSubmitting}} />
   <f.cancel @disabled={{isSubmitting}} />
   {{#if isSubmitting}}
-    {{fa-icon "spinner" spin=true}}
+    <LoadingIndicator />
   {{else if isSaved}}
     <span class="text-success">{{fa-icon "check"}}</span>
   {{/if}}
-{{/ch-form}}
+</ChForm>

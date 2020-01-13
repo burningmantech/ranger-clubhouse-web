@@ -13,6 +13,7 @@ $theme-colors: (
   "khaki": $kakhi,
   "gray": #dcdcdc,
   "light-gray": #f0f0f0,
+  "dark-gray": #808080,
   "light-red": #ff6666,
   "highlight": #ffff99,
   "wheatfield": $wheatfield,
@@ -27,18 +28,18 @@ $btn-border-radius: 0;
 $btn-border-radius-lg: 0;
 $btn-border-radius-sm: 0;
 
-$card-spacer-y: .5rem !default;
-$card-spacer-x: .75rem !default;
+$card-spacer-y: 0.5rem !default;
+$card-spacer-x: 0.75rem !default;
 
 // Adjust h tags
-$font-size-base:              0.9rem;
+$font-size-base: 0.9rem;
 
-$h1-font-size:                $font-size-base * 1.75;
-$h2-font-size:                $font-size-base * 1.5;
-$h3-font-size:                $font-size-base * 1.35;
-$h4-font-size:                $font-size-base * 1.25;
-$h5-font-size:                $font-size-base * 1.1;
-$h6-font-size:                $font-size-base;
+$h1-font-size: $font-size-base * 1.75;
+$h2-font-size: $font-size-base * 1.5;
+$h3-font-size: $font-size-base * 1.35;
+$h4-font-size: $font-size-base * 1.25;
+$h5-font-size: $font-size-base * 1.1;
+$h6-font-size: $font-size-base;
 
 $modal-header-padding: 0.75rem !important;
 $modal-sm: 95%;
@@ -48,28 +49,28 @@ $popover-max-width: 400px;
 
 // Add additional w-XX width sizes beyond what bootstrap provides.
 $sizes: (
-     5: 5%,
-    10: 10%,
-    15: 15%,
-    20: 20%,
-    25: 25%,
-    30: 30%,
-    35: 35%,
-    40: 40%,
-    45: 45%,
-    50: 50%,
-    55: 55%,
-    60: 60%,
-    65: 65%,
-    70: 70%,
-    75: 75%,
-    80: 80%,
-    85: 85%,
-    90: 90%,
-    95: 95%,
-    100: 100%,
-    auto: auto
-  );
+  5: 5%,
+  10: 10%,
+  15: 15%,
+  20: 20%,
+  25: 25%,
+  30: 30%,
+  35: 35%,
+  40: 40%,
+  45: 45%,
+  50: 50%,
+  55: 55%,
+  60: 60%,
+  65: 65%,
+  70: 70%,
+  75: 75%,
+  80: 80%,
+  85: 85%,
+  90: 90%,
+  95: 95%,
+  100: 100%,
+  auto: auto
+);
 
 @import "bootstrap-custom";
 
@@ -88,9 +89,12 @@ $sizes: (
 @import "ticketing";
 @import "alpha-sheet";
 @import "hq";
+@import "onboard";
 
 @media print {
-  h1 { font-size: 1.2rem; }
+  h1 {
+    font-size: 1.2rem;
+  }
 
   body {
     margin: 0.1cm !important;
@@ -103,14 +107,16 @@ $sizes: (
     page-break-before: always;
   }
 
-  main, main.col, #body-row {
-    margin: 0px !important;
-    padding: 0px !important;
+  #body-row,
+  main,
+  main.col {
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   a {
-      text-decoration: none !important;
-      color: #000 !important;
+    text-decoration: none !important;
+    color: #000 !important;
   }
 
 }
@@ -144,7 +150,7 @@ h3 select option {
 }
 
 main {
-  margin: 10px 0px;
+  margin: 10px 0;
 }
 
 dl {
@@ -160,11 +166,11 @@ dl {
 }
 
 .dropdown-menu-large {
-  width:90%;
-   left:0;
-   right:0;
- /*  height of nav-item  */
-   top:45px;
+  width: 90%;
+  left: 0;
+  right: 0;
+  /*  height of nav-item  */
+  top: 45px;
 }
 
 .dropdown-menu .navbar-text {
@@ -176,7 +182,7 @@ dl {
 
 @media only screen and (max-width: 799px) {
   .navbar-brand {
-    margin-right: 0px;
+    margin-right: 0;
   }
 }
 
@@ -188,7 +194,8 @@ dl {
 }
 
 .footer {
-  a, a:visited {
+  a,
+  a:visited {
     color: #000;
     font-weight: bold;
   }
@@ -233,6 +240,7 @@ ul.nav-pills li {
 
 .card-header {
   font-weight: bold;
+
   button {
     text-align: left !important;
   }
@@ -311,7 +319,7 @@ legend {
 
 .ranger-logo {
   text-align: center;
-  margin: 40px auto 0 auto;
+  margin: 40px auto 0;
 
   height: 200px;
   width: 200px;
@@ -331,6 +339,8 @@ legend {
   margin-bottom: 10px;
   border: 1px solid $border-color;
   border-radius: $border-radius-lg;
+
+  width: 200px;
 }
 
 .mugshot img {
@@ -354,7 +364,8 @@ legend {
   margin: auto;
   width: 80%;
   max-width: 600px;
-  z-index: 2000;  // Needs to be higher than the modal and tooltips z-indexs
+  z-index: 2000;
+  // Needs to be higher than the modal and tooltips z-indexs
 }
 
 .modal-header {
@@ -388,15 +399,13 @@ table.table-box {
   border-color: $table-border-color;
 }
 
-
 /*
  * Remove border on a row
  */
 
- .no-border td {
-   border: none !important;
- }
-
+.no-border td {
+  border: none !important;
+}
 
 caption {
   caption-side: top;
@@ -415,7 +424,7 @@ caption {
 }
 
 .tr-no-border td {
-  border: 0px !important;
+  border: 0 !important;
 }
 
 .col-form-label-fixed {
@@ -424,34 +433,37 @@ caption {
   min-width: 100px;
 }
 
-.sidebar-icon { width: 20px; height: 20px; }
+.sidebar-icon {
+  width: 20px;
+  height: 20px;
+}
 
 /*
  * ember power select fix when using within a modal
  */
 
- .ember-power-select-dropdown {
-   z-index: 3500;
- }
+.ember-power-select-dropdown {
+  z-index: 3500;
+}
 
 /*
  * Toastr message overrides
  */
 
- @media only screen and (max-width: 799px) {
-   #toast-container > div {
-     width: 96% !important;
-   }
- }
+@media only screen and (max-width: 799px) {
+  #toast-container > div {
+    width: 96% !important;
+  }
+}
 
- @media only screen and (min-width: 800px) {
-   #toast-container > div {
-     width:  500px !important;
-   }
- }
+@media only screen and (min-width: 800px) {
+  #toast-container > div {
+    width: 500px !important;
+  }
+}
 
 /* Remove opacity */
- .toast {
+.toast {
   opacity: 1 !important;
 }
 
@@ -536,9 +548,26 @@ caption {
   color: #555;
 }
 
-.rbs-green-button, .rbs-green-button a:visited { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
-.rbs-yellow-button, .rbs-yellow-button a:visited { background-color: #fff3cd; color: #856404; border-color: #ffeeba; }
-.rbs-red-button, .rbs-red-button a:visited { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+.rbs-green-button,
+.rbs-green-button a:visited {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.rbs-yellow-button,
+.rbs-yellow-button a:visited {
+  background-color: #fff3cd;
+  color: #856404;
+  border-color: #ffeeba;
+}
+
+.rbs-red-button,
+.rbs-red-button a:visited {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
 
 // Slot information icon
 .info-icon {

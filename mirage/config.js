@@ -229,6 +229,10 @@ export default function() {
     return { motd: [] };
   });
 
+  this.get('/api/person/:id/milestones', () => {
+    return { milestones: { training: { status: 'pass' }, alpha_shift: { status: 'pass' } } };
+  });
+
   /*
     Shorthand cheatsheet:
 

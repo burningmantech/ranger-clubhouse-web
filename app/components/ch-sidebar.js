@@ -1,25 +1,22 @@
-import Component from '@ember/component';
-import { classNames } from '@ember-decorators/component';
+import Component from '@glimmer/component';
 import { action } from '@ember/object';
+import { isEmpty} from '@ember/utils';
+import { inject as service } from '@ember/service';
 import $ from 'jquery';
 
-@classNames('sidebar-expanded', 'd-none', 'd-md-block', 'd-print-none')
 export default class ChSidebarComponent extends Component {
-  elementId = 'sidebar-container';
-  linkBg = 'bg-dark';
+  @service house;
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
+  get linkBg() {
+    return isEmpty(this.args.linkBg) ? 'bg-dark' : this.args.linkBg;
+  }
 
-    // Hide submenus
-    $('#body-row .collapse').collapse('hide');
-
+  @action
+  sidebarInserted() {
     // Collapse/Expand icon
     $('#collapse-icon').addClass('fa-angle-double-left');
 
-    // Collapse click
-    $('[data-toggle=sidebar-colapse]').click(this.sidebarCollapse);
-
+    // Does the user want the sidebar collapsed?
     if (this.house.getKey('sidebarCollapse')) {
       this.sidebarToggle();
     }
@@ -47,6 +44,7 @@ export default class ChSidebarComponent extends Component {
     // Collapse/Expand icon
     $('#collapse-icon').toggleClass('fa-angle-double-left fa-angle-double-right');
 
+    // Save the collapsed preference
     this.house.setKey('sidebarCollapse', collapsed);
 
     return false;

@@ -4,7 +4,7 @@ import { action } from '@ember/object';
 import { humanize } from 'ember-cli-string-helpers/helpers/humanize';
 import { inject as service } from '@ember/service';
 import { Role } from 'clubhouse/constants/roles';
-import DS from 'ember-data';
+import { NotFoundError } from '@ember-data/adapter/error';
 
 export default class PersonRoute extends Route.extend(AuthenticatedRouteMixin) {
   @service router;
@@ -32,7 +32,7 @@ export default class PersonRoute extends Route.extend(AuthenticatedRouteMixin) {
 
   @action
   error(response) {
-    if (response instanceof DS.NotFoundError) {
+    if (response instanceof NotFoundError) {
       this.toast.error('The person record was not found.');
       this.transitionTo('me');
       return false;
@@ -44,11 +44,10 @@ export default class PersonRoute extends Route.extend(AuthenticatedRouteMixin) {
 
   titleToken(model) {
     // Includes the full route path like ApplicationRoute, but replace "Person" with their callsign.
-    return this.get('router')
-      .currentRouteName
+    return this.router.currentRouteName
       .split('.')
       .filter((x) => x !== 'index')
-      .map((x) => x === 'person' ? model.get('callsign') : humanize([x]))
+      .map((x) => x === 'person' ? model.callsign : humanize([x]))
       .reverse()
       .join(' | ');
   }
