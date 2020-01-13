@@ -18,9 +18,20 @@ export default class MePersonalInfoEditController extends Controller {
       return;
     }
 
+    let reviewed = false;
+
     this.set('isSubmitting', true);
+
+    if (!this.person.has_reviewed_pi) {
+      this.person.set('has_reviewed_pi', true);
+      reviewed = true;
+    }
+
     this.house.saveModel(model, 'Your personal information was successfully updated.', () => {
       this.set('isSaved', true);
+      if (reviewed) {
+        this.transitionToRoute('me.overview');
+      }
     })
     .finally(() => this.set('isSubmitting', false) );
   }

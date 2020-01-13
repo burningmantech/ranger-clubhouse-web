@@ -40,6 +40,13 @@
               <div class="mt-2">alt phone {{phone-link person.alt_phone}}</div>
             {{/if}}
           {{/if}}
+          <div class="mt-2">last seen at
+            {{#if person.last_seen_at}}
+              {{moment-format person.last_seen_at "ddd MMM DD [@] HH:mm:ss YYYY"}}
+            {{else}}
+              <i>unknown</i>
+            {{/if}}
+          </div>
         </div>
       </div>
     {{/if}}
@@ -278,6 +285,14 @@
     </div>
   </div>
 
+  {{#if this.isAdminOrVC}}
+    <div class="form-group row">
+      <label class="col-form-label-fixed col-sm-12 col-md-2">Onboarding</label>
+      <div class="col-sm-12 col-md-9 ">
+        {{#link-to "person.onboard" class="btn btn-secondary btn-sm"}}Onboard View{{/link-to}}
+      </div>
+    </div>
+  {{/if}}
   {{#if isAdmin}}
     <div class="form-group row">
       <label class="col-form-label-fixed col-sm-12 col-md-2">Logs</label>

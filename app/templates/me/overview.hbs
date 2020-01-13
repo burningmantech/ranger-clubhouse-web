@@ -1,4 +1,4 @@
-<h1>Welcome To The Secret Clubhouse</h1>
+<h2>Welcome To The Secret Clubhouse</h2>
 
 {{#if motds}}
   <div class="border rounded-lg border-danger p-2 mb-2">
@@ -63,7 +63,7 @@ then let them know what's up.
     {{/ch-alert}}
   {{/if}}
 
-  {{#unless (or person.isAuditor person.isPastProspective)}}
+  {{#unless (or person.isAuditor person.isProspective person.isBonked)}}
     {{#if photo}}
       {{#if (eq photo.photo_status "missing")}}
         <Me::NeedsPhoto @person={{person}} @photo={{photo}} />
@@ -95,110 +95,13 @@ then let them know what's up.
     </div>
   {{/if}}
 
-  <div class="mt-1 mb-2">Thank for stopping by. There are a few things to do here:</div>
-
-  <dl>
-    <dt>Verify Your Personal Info</dt>
-    <dd>
-      Look in the Me menu in the top navigation bar or sidebar menu for <LinkTo @route="me.personal-info">Personal Info</LinkTo>
-      to edit your address, email address, phone numbers, etc.
-      {{#unless person.isAuditor}}
-        <p class="mt-2">
-          We'd really appreciate it if you'd make sure your phone numbers,
-          emergency contacts, languages, and shirt size info are all up to date!
-        </p>
-      {{/unless}}
-    </dd>
-
-    {{#unless person.isPastProspective}}
-      <dt>Current Schedule &amp; Shift Signups</dt>
-      <dd>
-        {{#if person.isRanger}}
-          Signup for training and shifts:
-        {{else if person.isNonRanger}}
-          Signup for shifts:
-        {{else}}
-          Signup for training:
-        {{/if}}
-
-        <LinkTo @route="me.schedule">Schedule / Sign Up</LinkTo>
-
-        <ul class="mt-2">
-          {{#unless person.isNonRanger}}
-            <li>Training shifts start getting posted in April.</li>
-          {{/unless}}
-
-          {{#if (or person.isAlpha person.isProspective)}}
-            <li>
-              Alpha shifts begin to be posted in mid-July, and continue to be posted through the beginning of the event.
-              You must pass training first before you are allowed to sign up for an Alpha shift.
-            </li>
-          {{else if (and (not person.isAuditor) (not person.isNonRanger) person.canSignupForShifts)}}
-            <li>
-              Ranger shifts start getting posted in June. You <strong>do not</strong> have to be
-              trained to sign up for shifts, but you <strong>must</strong> be trained before
-              actually working shifts on playa.
-            </li>
-          {{/if}}
-        </ul>
-      </dd>
-    {{/unless}}
-
-    {{#if person.isRanger}}
-      <dt>Tickets, Staff Credientals, Vehicle &amp; Work Passes</dt>
-      <dd>
-        <LinkTo @route="me.tickets">Tickets &amp; Stuff</LinkTo> is the place
-        to claim staff credentials, reduced-price tickets, vehicle passes,
-        and work access passes.
-      </dd>
-
-      <dt>Timesheets</dt>
-      <dd>
-        Check that your timesheet is accurate: your timesheet is located in
-        <LinkTo @route="me.timesheet">Timesheets</LinkTo>
-      </dd>
-
-      <dt>Radio Checkout Form</dt>
-      <dd>
-        Rangers must complete the Rangers Radio Checkout Form
-        before being issued a radio. Radio forms are available at Ranger HQ or
-        the form can be printed and filled out in advance. The form is located here:
-        <a href="{{config "RadioCheckoutFormUrl"}}" target="_blank" rel="noopener">Rangers Radio Checkout Form</a>
-      </dd>
-
-      {{#if (config "MotorpoolPolicyEnable")}}
-        <dt>Motorpool Agreement</dt>
-        <dd>
-          Complete your Ranger Motorpool Policy acknowledgement. Any Ranger operating
-          any type of vehicle for Ranger business at Burning Man must agree to the
-          Ranger Motorpool Policy by reading and filling out the acknowledgment form
-          located here:
-          <LinkTo @route="me.motorpool-policy">Motorpool Policy</LinkTo>
-        </dd>
-      {{/if}}
-
-      {{#if (config "RangerFeedbackFormUrl")}}
-        <dt>Ranger Feedback</dt>
-        <dd>
-          Did you have a (positive or negative) interaction on- or off-playa with a fellow Ranger?
-          Let us know by filling out the Ranger Feedback Form located here:
-          <a href="{{config "RangerFeedbackFormUrl"}}" target="_blank" rel="noopener">Ranger Feedback Form</a>
-          (opens in a new window)
-        </dd>
-
-      {{/if}}
-
-      <dt>Ranger Policies</dt>
-      <dd>Peruse our
-        <a href="{{config "RangerPoliciesUrl"}}" target="_blank" rel="noopener">Ranger policies</a> (opens in a new window)
-      </dd>
-
-      <dt>Get Involved More With Special Groups</dt>
-      <dd>
-        Learn how to <a href="{{config "JoiningRangerSpecialTeamsUrl"}}" target="_blank" rel="noopener">join Ranger special teams</a> (opens in a new window)
-      </dd>
-    {{/if}}
-  </dl>
+  {{#if (or this.person.isProspective this.person.isAlpha this.person.isBonked)}}
+    <DashboardPnv @milestones={{this.milestones}} @person={{this.person}} @photo={{this.photo}} />
+  {{else if this.person.isAuditor}}
+    <DashboardAuditor @milestones={{this.milestones}} @person={{this.person}} />
+  {{else}}
+    <DashboardRanger @milestones={{this.milestones}} @person={{this.person}} />
+  {{/if}}
 {{/if}}
 
 <hr>

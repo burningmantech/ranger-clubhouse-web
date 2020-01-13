@@ -1,36 +1,38 @@
-{{#if photo}}
-  {{#if photo.photo_url}}
-    <img src="{{photo.photo_url}}" class="mx-auto d-block" alt="profile photo">
-    Status:
-    {{#if (eq photo.photo_status "approved")}}
-      <span class="text-success">Approved</span>
+<div class="mugshot {{unless @noFloat "float-sm-right"}} mx-auto">
+  {{#if @photo}}
+    {{#if @photo.photo_url}}
+      <img src="{{@photo.photo_url}}" class="mx-auto d-block" alt="profile photo">
+      Status:
+      {{#if (eq @photo.photo_status "approved")}}
+        <span class="text-success">Approved</span>
+      {{else}}
+        <span class="text-danger">{{@photo.photo_status}}</span>
+      {{/if}}
+      <br>
     {{else}}
-      <span class="text-danger">{{photo.photo_status}}</span>
+      <i class="far fa-user fa-8x"></i><br>
+      Wanna supply a photo?<br>
     {{/if}}
-    <br>
-  {{else}}
-    <i class="far fa-user fa-8x"></i><br>
-    Wanna supply a photo?<br>
-  {{/if}}
-  {{#if photo.message}}
-    <div class="text-danger">ERROR: {{photo.message}}</div>
-  {{/if}}
+    {{#if @photo.message}}
+      <span class="text-danger">ERROR: {{@photo.message}}</span>
+    {{/if}}
 
-  {{#if canShowUploadUrl}}
-    {{#if photo.upload_url}}
-      <div class="mt-1">
-        <button class="btn btn-primary btn-sm" {{action uploadAction}}>Upload a new photo</button>
+    {{#if this.canShowUploadUrl}}
+      {{#if @photo.upload_url}}
+        <div class="mt-1">
+          <button class="btn btn-primary btn-sm" {{action this.uploadAction}}>Upload a new photo</button>
+        </div>
+      {{else}}
+        <small>Photo uploading is currently disabled.</small>
+      {{/if}}
+    {{/if}}
+
+    {{#if @syncAction}}
+      <div class="mt-2">
+        <button class="btn btn-secondary btn-sm" {{action @syncAction}}>Sync Photo</button>
       </div>
-    {{else}}
-      <small>Photo uploading is currently disabled.</small>
     {{/if}}
+  {{else}}
+    <div class="loading-spinner"></div>
   {{/if}}
-
-  {{#if syncAction}}
-    <div class="mt-2">
-      <button class="btn btn-secondary btn-sm" {{action syncAction}}>Sync Photo</button>
-    </div>
-  {{/if}}
-{{else}}
-  <div class="loading-spinner"></div>
-{{/if}}
+</div>

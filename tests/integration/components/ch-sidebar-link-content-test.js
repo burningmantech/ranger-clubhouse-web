@@ -1,4 +1,4 @@
-import { module, skip /* test */ } from 'qunit';
+import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
@@ -6,21 +6,9 @@ import hbs from 'htmlbars-inline-precompile';
 module('Integration | Component | ch-sidebar-link-content', function(hooks) {
   setupRenderingTest(hooks);
 
-  skip('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
-
-    await render(hbs`{{ch-sidebar-link-content}}`);
-
-    assert.dom(this.element).hasText('');
-
+  test('it renders', async function(assert) {
     // Template block usage:
-    await render(hbs`
-      {{#ch-sidebar-link-content}}
-        template block text
-      {{/ch-sidebar-link-content}}
-    `);
-
-    assert.dom(this.element).hasText('template block text');
+    await render(hbs`<ChSidebarLinkContent @title="I haz content" />`);
+    assert.dom('span.menu-collapsed').hasText('I haz content');
   });
 });

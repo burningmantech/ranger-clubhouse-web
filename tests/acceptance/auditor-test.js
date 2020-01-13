@@ -59,6 +59,7 @@ module('Acceptance | auditor', function (hooks) {
     });
   });
 
+/*
   test('Auditor home page', async function (assert) {
     await visit('/me');
 
@@ -79,6 +80,7 @@ module('Acceptance | auditor', function (hooks) {
       }
     });
   });
+  */
 
   test('Auditor see the schedule page', async function (assert) {
     const signedup = server.create('schedule', { person_assigned: true }); // eslint-disable-line no-unused-vars

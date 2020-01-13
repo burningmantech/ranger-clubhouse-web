@@ -18,10 +18,13 @@ export default class PersonModel extends DS.Model.extend(PersonMixin) {
   @attr('boolean') vintage;
   @attr('string', { readOnly: true }) status_date;
   @attr('boolean') user_authorized;
-  @attr('string') date_verified;
-  @attr('string') create_date;
+  @attr('string', { readOnly: true }) date_verified;
+  @attr('string', { readOnly: true }) create_date;
   @attr('boolean') active_next_event;
   @attr('boolean') on_site;
+  @attr('boolean') has_reviewed_pi;
+  @attr('string', { readOnly: true }) logged_in_at;
+  @attr('string', { readOnly: true }) last_seen_at;
 
   @attr('', { readOnly: true}) roles;
 

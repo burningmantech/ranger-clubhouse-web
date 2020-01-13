@@ -1,9 +1,9 @@
 <ChSidebar>
-  {{#ch-sidebar-group "Access Documents"}}
-    {{ch-sidebar-link "vc.access-documents.index" title="All Documents" icon="list-alt" iconType="r"}}
-    {{ch-sidebar-link "vc.access-documents.expiring" title="Expiring Tickets" icon="trash-alt" iconType="r"}}
-    {{ch-sidebar-link "vc.access-documents.trs" title="Export Documents" icon="file-export" iconType="s"}}
-  {{/ch-sidebar-group}}
+  <ChSidebarGroup @title="Access Documents">
+    <ChSidebarLink @route="vc.access-documents.index" @title="All Documents" @icon="list-alt" @iconType="r" />
+    <ChSidebarLink @route="vc.access-documents.expiring" @title="Expiring Tickets" @icon="trash-alt" @iconType="r" />
+    <ChSidebarLink @route="vc.access-documents.trs" @title="Export Documents" @icon="file-export" @iconType="s" />
+  </ChSidebarGroup>
 </ChSidebar>
 
 <main class="col min-width-500">

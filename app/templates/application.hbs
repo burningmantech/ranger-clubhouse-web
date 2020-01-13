@@ -316,7 +316,8 @@
       {{#ch-form "person-search" searchForm formClass="col-11 col-md-9 col-lg-7 mb-2 mx-2" changeSet=false onSubmit=(action "submit") onFormChange=(action searchFormChange) as |f|}}
         <div class="form-row">
           <div class="col-12 col-sm-10 col-lg-9 col-xl-8">
-            <PowerSelectTypeahead @search={{action searchAction}} @onchange={{action searchChangeAction}} @onfocus={{action searchFocusAction}} @onkeydown={{action searchKeydownAction}} @renderInPlace={{true}} @placeholder={{searchPlaceholder}} @triggerId="person-search-query" @defaultHighlighted={{action defaultHighlightedAction}} @loadingMessage="Searching . . ." @noMatchesMessage="No results found" as |person|>
+            <PowerSelectTypeahead @search={{action searchAction}} @onchange={{action searchChangeAction}} @onfocus={{action searchFocusAction}} @onkeydown={{action searchKeydownAction}} @renderInPlace={{true}} @placeholder={{searchPlaceholder}}
+              @triggerId="person-search-query" @defaultHighlighted={{action defaultHighlightedAction}} @loadingMessage="Searching . . ." @noMatchesMessage="No results found" as |person|>
               <strong>{{person.callsign}}</strong> &lt;{{person.first_name}} {{person.last_name}}, {{person.status}}&gt;
               {{#if (eq person.email_match "full")}}
                 - email exact match
@@ -384,6 +385,11 @@
       <button type="button" onclick={{action reload}} class="btn btn-danger">Reload</button>
     </div>
   </NewVersionNotifier>
+  {{#if session.user.isAuditor}}
+    <div class="alert alert-warning text-center p-2 m-0 h3">
+      {{fa-icon "exclamation-circle"}} You are an Auditor and NOT on a path to becoming a Ranger this season.
+    </div>
+  {{/if}}
 {{/if}}
 
 <div class="row" id="body-row">

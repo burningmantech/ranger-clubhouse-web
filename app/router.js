@@ -130,6 +130,7 @@ Router.map(function() {
     this.route('tickets');
     this.route('timesheet-log');
     this.route('timesheet');
+    this.route('onboard');
   });
 
   this.route('logout');

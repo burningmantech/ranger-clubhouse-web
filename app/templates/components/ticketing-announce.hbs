@@ -2,15 +2,15 @@
   Information about Work Access Passes will be made avaible in June or July. Please check back at that time.
 {{else}}
   {{#if ticketPackage.tickets}}
-  <h4 class="text-success">
-     Hooray! You have
-    {{#if (eq ticketPackage.tickets.length 1)}}
-      a ticket
-    {{else}}
-      {{ticketPackage.tickets.length}} tickets
-    {{/if}}
-    available:
-  </h4>
+    <h4 class="text-success">
+      Hooray! You have
+      {{#if (eq ticketPackage.tickets.length 1)}}
+        a ticket
+      {{else}}
+        {{ticketPackage.tickets.length}} tickets
+      {{/if}}
+      available:
+    </h4>
     <ul>
       {{#each ticketPackage.tickets as |ticket|}}
         <li>A {{ticket-type-human ticket.type}} earned in {{ticket.source_year}} and will expire after {{mdy-format ticket.expiry_date full=true}}</li>
@@ -18,10 +18,10 @@
     </ul>
     <strong>What happens next?</strong>
     <p>
-      There is nothing you need to do at this time.
-      Information about how to claim your Reduced-Price Ticket (RPT) or Staff Credential (SC) will be
-      available in the Clubhouse in June or early July. If you are not planning on attending
-      the Burn this year, you may bank the ticket(s).
+      You'll need to come back later to claim or bank your ticket once the
+      ticketing window has opened. Information about how to claim or bank your goodies
+      will be available in the Clubhouse in June or early July. If you are not
+      planning on attending the event this year, you may bank the ticket(s).
     </p>
   {{else}}
     <strong>Sorry, it doesn't appear you qualified for a Reduced-Price Ticket or Staff Credential.</strong>

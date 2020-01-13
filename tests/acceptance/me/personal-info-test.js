@@ -34,10 +34,11 @@ module('Acceptance | me/personal info', function(hooks) {
     await visit('/me/personal-info');
     await fillIn('[name="email"]', newEmail);
     await click('button.btn-submit');
+    assert.dom('#toast-container', document).includesText('Your personal information was successfully updated');
 
     person.reload();
     assert.equal(person.email, newEmail);
-    assert.dom('#toast-container', document).includesText('Your personal information was successfully updated');
+    assert.equal(person.has_reviewed_pi, true);
   });
 
   test('prevent space from being enter in email', async function(assert) {

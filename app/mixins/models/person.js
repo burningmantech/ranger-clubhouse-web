@@ -25,6 +25,11 @@ export default Mixin.create({ // eslint-disable-line ember/no-new-mixins
     return this.status == PersonStatus.AUDITOR;
   }),
 
+  isDeceased: computed('status', function () {
+    return this.status == PersonStatus.DECEASED;
+  }),
+
+
   isSuspended: computed('status', function() {
     return this.status == PersonStatus.SUSPENDED;
   }),
@@ -43,6 +48,18 @@ export default Mixin.create({ // eslint-disable-line ember/no-new-mixins
 
   isProspectiveWaitlist: computed('status', function () {
     return (this.status == PersonStatus.PROSPECTIVE_WAITLIST);
+  }),
+
+  isResigned: computed('status', function () {
+    return (this.status == PersonStatus.RESIGNED);
+  }),
+
+  isUberBonked: computed('status', function () {
+    return (this.status == PersonStatus.UBERBONKED);
+  }),
+
+  isBonked: computed('status', function () {
+    return (this.status == PersonStatus.BONKED);
   }),
 
   isAuditorOrPastProspective: computed('status', function () {

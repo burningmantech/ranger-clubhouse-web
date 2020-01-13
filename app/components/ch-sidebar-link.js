@@ -1,32 +1,17 @@
-import Component from '@ember/component';
-import { computed } from '@ember/object';
-import { classNames, tagName } from '@ember-decorators/component';
-
-
+import Component from '@glimmer/component';
 import { isEmpty } from '@ember/utils';
 
-@tagName('')
-@classNames('bg-dark', 'list-group-item', 'list-group-item-action')
 export default class ChSidebarLinkComponent extends Component {
-  static positionalParams = [ 'routePath', 'routeArg' ];
+  get linkBg() {
+    return isEmpty(this.args.linkBg) ? 'bg-dark' : this.args.linkBg;
+  }
 
-  title = null;
-  icon = null;
-  iconType = 'r';
-  iconUrl = null;
-  routePath = null;
-  routeArg = null;
-  badgeText = null;
-  linkBg = 'bg-dark';
+  get iconType() {
+    return isEmpty(this.args.iconType) ? 'r' : this.args.iconType;
+  }
 
-  @computed('routePath')
   get isUrl() {
-    const url = this.routePath;
-
-    if (isEmpty(url)) {
-      return false;
-    }
-
-    return (url == '#' || url.startsWith('http'));
+    const url = this.args.route;
+    return !isEmpty(url) && (url == '#' || url.startsWith('http'));
   }
 }

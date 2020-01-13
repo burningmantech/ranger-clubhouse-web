@@ -1,8 +1,8 @@
 <ChSidebar>
-  {{#ch-sidebar-group "SEARCH FOR"}}
-    {{ch-sidebar-link "search.assets" title="Assets" icon="broadcast-tower" iconType="s"}}
-    {{ch-sidebar-link "search.languages" title="Language" icon="language" iconType="s"}}
-  {{/ch-sidebar-group}}
+  <ChSidebarGroup @title="SEARCH FOR">
+    <ChSidebarLink @route="search.assets" @title="Assets" @icon="broadcast-tower" iconType="s" />
+    <ChSidebarLink @route="search.languages" @title="Language" @icon="language" iconType="s" />
+  </ChSidebarGroup>
 </ChSidebar>
 
 <main class="col">

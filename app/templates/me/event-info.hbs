@@ -24,7 +24,7 @@
     Passed training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}
     {{#if person.isAlpha}}
       <br>
-      You still need to pass your Alpha shift on playa in order to become a Ranger.
+      You still need to walk your Alpha shift on playa in order to become a Ranger.
     {{/if}}
   {{else if (eq dirtTraining.status "no-show")}}
     Did not attend training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}
@@ -49,7 +49,7 @@
 
 {{#if artTrainings}}
   <h3 class="mt-4">{{fa-icon "university"}} Advanced Ranger Training (ART)</h3>
-  You are allowed to attend the following ART trainings. 
+  You are allowed to attend the following ART trainings.
   <TrainingInfo @trainings={{artTrainings}} />
 {{/if}}
 
