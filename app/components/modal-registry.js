@@ -1,9 +1,9 @@
 import Component from '@ember/component';
-import { classNames } from '@ember-decorators/component';
 import { action } from '@ember/object';
 
-@classNames('modal-registry')
 export default class ModalRegistryComponent extends Component {
+  classNames = [ 'modal-registry' ];
+
   @action
   close() {
     this.modal.closeAction();

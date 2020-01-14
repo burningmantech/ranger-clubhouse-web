@@ -2,12 +2,12 @@ import Component from '@ember/component';
 import EmberObject from '@ember/object';
 import { typeOf } from '@ember/utils';
 import { computed } from '@ember/object';
-import { tagName, className } from '@ember-decorators/component';
 
-
-
-@tagName('select')
 export default class ChFormSelectComponent extends Component {
+  tagName = 'select';
+  attributeBindings = [ 'size', 'multiple', 'disabled', 'name' ];
+  classNameBindings = [ 'controlClass' ];
+
   // HTML attributes
   name = null;
   options = null;
@@ -16,14 +16,8 @@ export default class ChFormSelectComponent extends Component {
   value = null;
   multiple = null;
 
-  @className
-  controlClass = null;
   onChange = null;
-
   includeBlank = null;
-
-
-  attributeBindings = [ 'size', 'multiple', 'disabled', 'name' ];
 
   didReceiveAttrs() {
     const groupName = this.get('options.firstObject.groupName');

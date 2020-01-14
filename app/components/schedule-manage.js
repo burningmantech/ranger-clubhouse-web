@@ -1,6 +1,5 @@
 import Component from '@ember/component';
 import { action, computed } from '@ember/object';
-import { tagName } from '@ember-decorators/component';
 
 import { A } from '@ember/array';
 import { set } from '@ember/object';
@@ -15,8 +14,9 @@ import $ from 'jquery';
 const allDays = ['All Days', 'all'];
 const upcomingShifts = ['Upcoming Shifts', 'upcoming'];
 
-@tagName('')
 export default class ScheduleManageComponent extends Component {
+  tagName = '';
+
   person = null;
   year = null;
   slots = null;

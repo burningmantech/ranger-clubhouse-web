@@ -1,8 +1,5 @@
 import Component from '@ember/component';
-
-
 import { action, computed, set } from '@ember/object';
-import { tagName } from '@ember-decorators/component';
 import { typeOf, isEmpty } from '@ember/utils';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
@@ -10,8 +7,8 @@ import DS from 'ember-data';
 
 import $ from 'jquery';
 
-@tagName('')
 export default class ChFormComponent extends Component {
+  tagName = '';
   static positionalParams = ['formId', 'originalModel'];
 
   formId = null;

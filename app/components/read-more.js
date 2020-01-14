@@ -1,15 +1,12 @@
 import Component from '@ember/component';
 import { action, computed } from '@ember/object';
 
-
-import { tagName } from '@ember-decorators/component';
-
 /*
  * Component helper to truncate text with a 'read more' link.
  */
 
-@tagName('')
 export default class ReadMoreComponent extends Component {
+  tagName = '';
   text = null;
   limit = 20;
 

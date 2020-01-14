@@ -1,15 +1,14 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-
-import { tagName } from '@ember-decorators/component';
 import moment from 'moment';
 
 /*
  * Build a row showing the person's current documents.
  */
 
-@tagName('tr')
 export default class AccessDocumentsForPersonComponent extends Component {
+  tagName = 'tr';
+
   person = null;
   documents = null;
 

@@ -1,11 +1,8 @@
 import Component from '@ember/component';
-
-
-import { tagName } from '@ember-decorators/component';
 import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
 
-@tagName('')
 export default class TicketVpInfoComponent extends Component {
+  tagName = '';
   ticketingInfo = null;
   ticketPackage = null;
   ticket = null;

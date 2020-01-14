@@ -1,13 +1,11 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
-
-
-import { tagName } from '@ember-decorators/component';
 import { ticketTypeLabel } from 'clubhouse/constants/ticket-types';
 import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
 
-@tagName('')
 export default class TicketInfoComponent extends Component {
+  tagName = '';
+
   ticketingInfo = null;
   ticketPackage = null;
   person = null;

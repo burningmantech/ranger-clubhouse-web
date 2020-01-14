@@ -1,10 +1,9 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 
-import { tagName } from '@ember-decorators/component';
-
-@tagName('h1')
 export default class YearSelectComponent extends Component {
+  tagName = 'h1';
+
   static positionalParams = ['title'];
 
   // Heading

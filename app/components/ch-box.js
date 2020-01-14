@@ -1,11 +1,9 @@
 import Component from '@ember/component';
-import { tagName, classNames } from '@ember-decorators/component';
 
-
-
-@tagName('div')
-@classNames('card', 'mb-3')
 export default class ChBoxComponent extends Component {
+  tagName = 'div';
+  classNames = [ 'card', 'mb-3' ];
+
   static positionalParams =  [ 'title' ];
 
   // Box title

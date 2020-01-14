@@ -1,10 +1,9 @@
 import Component from '@ember/component';
-
 import { computed } from '@ember/object';
-import { tagName } from '@ember-decorators/component';
 
-@tagName('')
 export default class TimesheetPositionSummaryComponent extends Component {
+  tagName = '';
+
   timesheets = null;
 
   @computed('timesheets')

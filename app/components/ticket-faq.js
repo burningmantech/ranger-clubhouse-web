@@ -1,7 +1,5 @@
 import Component from '@ember/component';
 
-import { tagName } from '@ember-decorators/component';
-
 const topicDescriptions = {
     ticketing: 'Ticketing',
     vp: 'Vehicle Passes',
@@ -9,8 +7,8 @@ const topicDescriptions = {
     alpha: 'Work Access Passes for Prospectives and Alphas'
 };
 
-@tagName('')
 export default class TicketFaqComponent extends Component {
+  tagName = '';
   topic = null;
   ticketingInfo = null;
 
