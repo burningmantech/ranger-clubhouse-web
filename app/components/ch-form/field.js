@@ -1,15 +1,13 @@
 import Component from '@ember/component';
 import EmberObject from '@ember/object';
 import { action, computed, set, get } from '@ember/object';
-import { tagName } from '@ember-decorators/component';
-
-
 import { typeOf, isEmpty } from '@ember/utils';
 
 import $ from 'jquery';
 
-@tagName('')
 export default class ChFormFieldComponent extends Component {
+  tagName = '';
+
   static positionalParams =  [ 'name' ];
 
   wrapClass = null;

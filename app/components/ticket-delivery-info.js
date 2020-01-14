@@ -2,15 +2,12 @@ import Component from '@ember/component';
 import { set } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { action, computed } from '@ember/object';
-
-
-import { tagName } from '@ember-decorators/component';
 import TicketDeliveryValidations from 'clubhouse/validations/ticket-delivery';
 import { StateOptions } from 'clubhouse/constants/countries';
 import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
 
-@tagName('')
 export default class TicketDeliverInfoComponent extends Component {
+  tagName = '';
   ticketingInfo = null;
   ticketPackage = null;
   person = null;

@@ -1,6 +1,5 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember/object';
-import { observes } from '@ember-decorators/object';
 import { isEmpty } from '@ember/utils';
 import { schedule, later } from '@ember/runloop';
 import {
@@ -76,6 +75,14 @@ export default class VcBmidController extends Controller {
     'team',
     'notes'
   ];
+
+  constructor() {
+    super(...arguments);
+
+    this.addObserver('viewBmids', this.startRenderBmids);
+    this.addObserver('bmids', this.startRenderBmids);
+    this.addObserver('editMode', this.startRenderBmids);
+  }
 
   /*
    * Return the BMIDs to view which is filtered, and sorted
@@ -222,7 +229,7 @@ export default class VcBmidController extends Controller {
    * Kick off building up over time the BMIDs to be shown
    */
 
-  @observes('viewBmids', 'bmids', 'editMode') // eslint-disable-line ember/no-observers
+  //@observes('viewBmids', 'bmids', 'editMode') // eslint-disable-line ember/no-observers
   startRenderBmids() {
     if (this.isRendering) {
       return;

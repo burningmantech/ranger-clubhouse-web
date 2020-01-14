@@ -2,16 +2,14 @@ import Component from '@ember/component';
 import { set } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { action, computed } from '@ember/object';
-
-
-import { tagName } from '@ember-decorators/component';
 import Changeset from 'ember-changeset';
 import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
 
 import moment from 'moment';
 
-@tagName('')
 export default class TicketWapSoInfoComponent extends Component {
+  tagName = '';
+
   ticketingInfo = null;
   ticketPackage = null;
   person = null;

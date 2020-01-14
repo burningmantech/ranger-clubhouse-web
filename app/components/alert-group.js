@@ -1,9 +1,8 @@
 import Component from '@ember/component';
 
-import { tagName } from '@ember-decorators/component';
-
-@tagName('')
 export default class AlertGroupComponent extends Component {
+  tagName = '';
+
   // Preference list
   group = null;
 

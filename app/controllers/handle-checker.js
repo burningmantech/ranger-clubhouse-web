@@ -2,7 +2,6 @@ import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import { later } from '@ember/runloop';
 import { action, computed } from '@ember/object';
-import { observes } from '@ember-decorators/object';
 import { HandleConflict } from '../utils/handle-conflict';
 import {
   AmericanSoundexRule,
@@ -48,6 +47,11 @@ export default class HandlerCheckerController extends Controller {
   includeVintage = true; // Check vintage even if status isn't checked
   checkedHandles = []; // Array of {id string, name string, conflicts HandleConflict[]}
   allHandles = []; // Same Handle objects as model
+
+  constructor() {
+    super(...arguments);
+    this.addObserver('model', this.incrementallyBuildAllHandles);
+  }
 
   /** Maps rule ID to {name string, rule object, enabled boolean} */
   @computed('model')
@@ -118,7 +122,6 @@ export default class HandlerCheckerController extends Controller {
     }
   }
 
-  @observes('model') // eslint-disable-line ember/no-observers
   incrementallyBuildAllHandles() {
     // Rendering 2500 handles takes a long time, so don't prevent interactivity.
     // Copy 100 handles at a time into allHandles and let the template

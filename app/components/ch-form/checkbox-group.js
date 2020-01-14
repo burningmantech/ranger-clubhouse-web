@@ -4,7 +4,6 @@
 import EmberObject from '@ember/object';
 import Component from '@ember/component';
 import { action, computed } from '@ember/object';
-import { tagName } from '@ember-decorators/component';
 import { typeOf } from '@ember/utils';
 import inGroups from 'clubhouse/utils/in-groups';
 import { isEmpty } from '@ember/utils';
@@ -12,8 +11,9 @@ import { isEmpty } from '@ember/utils';
 class MultiCheckboxField extends EmberObject {
 }
 
-@tagName('')
 export default class ChFormCheckboxGroupComponent extends Component {
+  tagName = '';
+
   // field name
   name = null;
   // initial value

@@ -1,12 +1,8 @@
 import Component from '@ember/component';
-import { set } from '@ember/object';
-import { action } from '@ember/object';
+import { action, set } from '@ember/object';
 
-
-import { tagName } from '@ember-decorators/component';
-
-@tagName('')
 export default class AssetTableComponent extends Component {
+  tagName = '';
   assets = null;
   year = null;
 

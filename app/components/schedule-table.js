@@ -1,11 +1,9 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 
-
-import { tagName } from '@ember-decorators/component';
-
-@tagName('')
 export default class ScheduleTableComponent extends Component {
+  tagName = '';
+
   // Available slots signed up for
   slots = null;
   person = null;

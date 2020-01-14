@@ -1,7 +1,4 @@
 import Component from '@ember/component';
-
-
-import { tagName } from '@ember-decorators/component';
 import $ from 'jquery';
 
 /*
@@ -10,8 +7,8 @@ import $ from 'jquery';
  * Construct a basic input text element and attach the datepicker to it.
  */
 
-@tagName('input')
 export default class DatetimePickerComponent extends Component {
+  tagName = 'input';
   attributeBindings = [ 'type', 'size', 'placeholder', 'autofocus', 'maxlength', 'value', 'autocomplete' ];
   classNameBindings = [ 'classNames' ];
 
