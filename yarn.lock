@@ -4932,10 +4932,10 @@ ember-changeset-validations@^3.0.0-beta.2:
     ember-get-config "^0.2.4"
     ember-validators "^2.0.0"
 
-ember-changeset@^3.0.0-beta.3, ember-changeset@^3.0.0-beta.9:
-  version "3.0.0-beta.9"
-  resolved "https://registry.yarnpkg.com/ember-changeset/-/ember-changeset-3.0.0-beta.9.tgz#b3efb5c4d3bbfa2a5da1e32b04626d6f7df90f0a"
-  integrity sha512-CahbmA1SeomtJIQK/W+7cYWPjb/w6ZXX9z6rqBV8LY1WBukSgdyPkCL2VYMBZ9RPYZSfsdEZtnXqUYzjRSQKgg==
+ember-changeset@^3.0.0-beta.10, ember-changeset@^3.0.0-beta.3:
+  version "3.0.0-beta.10"
+  resolved "https://registry.yarnpkg.com/ember-changeset/-/ember-changeset-3.0.0-beta.10.tgz#c93c718bceecc32d378f5deae0f6c4bd4e54b3f6"
+  integrity sha512-Yx6MgCU7/vw4wVIxoQ6GxRImsaXLtkdF61zQgC5WRAlHXRuxWlKS6dhaD8i86TrNeoTJt0YWhhUmrQcq/B1tOw==
   dependencies:
     "@glimmer/tracking" "^1.0.0"
     ember-cli-babel "^7.13.0"
