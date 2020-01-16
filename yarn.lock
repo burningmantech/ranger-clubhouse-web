@@ -2694,15 +2694,16 @@ body@^5.1.0:
     raw-body "~1.1.0"
     safe-json-parse "~1.0.1"
 
-boilerplate-update@0.35.0:
-  version "0.35.0"
-  resolved "https://registry.yarnpkg.com/boilerplate-update/-/boilerplate-update-0.35.0.tgz#20f7e74f846fad7efb60035aa6d899601bc607f6"
-  integrity sha512-Fb24q/m2LgLgDeIxoT5Y2CBcCIExknosjEAckzxvK9KY1abKrZ1l+t3KkisCXm0IT1IRQBAydrKRDsiMZqqzYQ==
+boilerplate-update@0.36.1:
+  version "0.36.1"
+  resolved "https://registry.yarnpkg.com/boilerplate-update/-/boilerplate-update-0.36.1.tgz#44ecd7b87403d0865fe2ba6d20fd641c436d5e45"
+  integrity sha512-UFlfvdp+WejsVDiNkd4176GESsTCPUrovzdK0INfS4UXVnBPqFyVEYQyQ+8Eu77MiP8Mr88F2ChyIic+BQXMXg==
   dependencies:
     cpr "^3.0.1"
     debug "^4.1.1"
     execa "^3.0.0"
     git-diff-apply "0.22.5"
+    https-proxy-agent "^3.0.0"
     inquirer "^7.0.0"
     merge-package.json "^3.1.5"
     npm-package-arg "^7.0.0"
@@ -5305,12 +5306,12 @@ ember-cli-uglify@^3.0.0:
     broccoli-uglify-sourcemap "^3.1.0"
     lodash.defaultsdeep "^4.6.0"
 
-ember-cli-update@^0.50.0:
-  version "0.50.0"
-  resolved "https://registry.yarnpkg.com/ember-cli-update/-/ember-cli-update-0.50.0.tgz#a0627d2db86258f666d0f676d8a5253febb6cbd2"
-  integrity sha512-pn5RXtIkAYm/cXtK4HowJTEjLSf6eqvhg76LXfPbgw2f9dX7KmgYVqba7b6rfaEkKVBeLS9LDtqoYqA/LyU0FQ==
+ember-cli-update@^0.51.0:
+  version "0.51.0"
+  resolved "https://registry.yarnpkg.com/ember-cli-update/-/ember-cli-update-0.51.0.tgz#9ce305a48e95f6587869c0c413932dc7c081fea6"
+  integrity sha512-Ta0UCAslWjXLVOxiUX2WBxEyx4uACDacyOCxRopApGxxShe6GTCXLHxTEu/YN0PrbRRKfnzew2q3gNNJ3MlzCg==
   dependencies:
-    boilerplate-update "0.35.0"
+    boilerplate-update "0.36.1"
     debug "^4.1.1"
     execa "^3.4.0"
     fs-extra "^8.0.0"
@@ -7577,7 +7578,7 @@ https-proxy-agent@^2.1.0:
     agent-base "^4.3.0"
     debug "^3.1.0"
 
-https-proxy-agent@^3.0.1:
+https-proxy-agent@^3.0.0, https-proxy-agent@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-3.0.1.tgz#b8c286433e87602311b01c8ea34413d856a4af81"
   integrity sha512-+ML2Rbh6DAuee7d07tYGEKOEi2voWPUGan+ExdPbPW6Z3svq+JCqr0v8WmKPOkz1vOVykPCBSuobe7G8GJUtVg==
