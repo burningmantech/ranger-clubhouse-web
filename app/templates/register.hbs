@@ -1,78 +1,107 @@
 <LoginSidebar />
 <main class="col">
-  <h1>Create A Secret Clubhouse Account For Auditing</h1>
-
-  <p>
-    <strong>Already have a secret Clubhouse account?</strong> Don't fill out this form.
-    Rather, just go <LinkTo @route="login">here</LinkTo> and log in.
-  </p>
-
-  <p class="border border-danger text-danger p-2">
-    This form is only for people who are interested in auditing a Ranger training,
-    usually because they are a regional Ranger taking the Black Rock Ranger
-    training to satisfy a regional training requirement.
-  </p>
-
-  <p>
-    <strong>If you're interested in actually volunteering with the Black Rock Rangers,</strong>
-    you're in the wrong place! Please don't use this form. Instead, make sure that
-    you have a Burner Profile and have submitted a
-    <a href="https://profiles.burningman.com/participate/">Volunteer Questionnaire</a>.
-  </p>
-
-  <p>
-    <strong>Never been to Burning Man? Looking For A Camp? What Heck Is This Event?</strong><br>
-    Auditing Black Rock Ranger Training is not a good forum to
-    figure out what Burning Man is. Nor is it a good place to ask questions about
-    how the weather is out there, or should I camp in a theme camp, or are the porta
-    potties gross. This is a full day of learning intended for people who have been
-    to the Burning Man event <i>twice already.</i> Generally, auditing the Training is
-    intended for people who are Regional Rangers who are not going to Burning Man OR
-    people who have attended Burning Man many times who are, um, Ranger Curious.
-  </p>
-
-  <p>
-    <strong>Do you have questions?</strong> If you have any questions contact one of our fearless Volunteer
-    Coordinators at {{mail-to "ranger-vc-list@burningman.com"}}.
-  </p>
-
-  <p>
-    <strong>Let's get started &hellip;</strong>
-  </p>
-  {{#ch-form "register" registerForm autocomplete="on" validator=registerValidations onSubmit=(action "createAccount") as |f|}}
-    <div class="form-row">
-      {{f.input "human" size=4 maxlength=10 grid="col-auto" label="First, prove you are human - What is 33 + 2?" hint="We're sorry about this, but our web site gets a lot of robots
-spamming us and creating bogus accounts." }}
-    </div>
-    <div class="form-row">
-      <label class="col-form-label">Tell us about why you want to create a Secret Clubhouse account:</label>
-      <div class="form-group">
-        {{f.input "intent" type="radioGroup" options=intentOptions}}
+  {{#if (eq this.step "ask-intent")}}
+    <h3>Hello Auditor or Potential Ranger!</h3>
+    <p>
+      Thank you for visiting the Black Rock Ranger Secret Clubhouse.
+    </p>
+    <p>
+      <b>Why are you here today?</b>
+    </p>
+    <div class="row">
+      <div class="col-sm-6 col-lg-3 mb-3">
+        <button type="button" class="btn btn-block btn-primary" {{on "click" (fn this.stepAction "ranger")}}>To volunteer with the Rangers</button>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <button type="button" class="btn btn-block btn-primary" {{on "click" (fn this.stepAction "audit")}}>To audit Ranger Training</button>
       </div>
     </div>
-    <div class="form-row">
-      {{f.input "email" label="Email Address" type="text" inputmode="email" size=30}}
+  {{else if (eq this.step "ranger")}}
+    <h1>
+      You're in the wrong place to become a Ranger.
+    </h1>
+    <p>
+      <b>All pontential Black Rock Rangers need to submit an application first.</b>
+    </p>
+    <p>
+      <b class="text-danger">You do not register in the Clubhouse.</b>
+    </p>
+    <p>
+      Visit <a href="https://rangers.burningman.org/becoming-a-ranger/" rel="noopener">Becoming a Ranger</a>
+      to read about the Ranger volunteer requirements, qualifications, and how to submit a volunteer application.
+    </p>
+    <p>
+      Did you mean to <a href {{on "click" (fn this.stepAction "audit")}}>audit Ranger training</a> instead?
+    </p>
+  {{else if (eq this.step "audit")}}
+    <h1>Register to audit Ranger training</h1>
+    <p>
+      Before registering as an Auditor, take note of the following:
+    </p>
+    <p>
+      <b class="text-danger">Auditing is NOT a path to becoming a Black Rock Ranger.</b>
+    </p>
+    <p>
+      Did you mean become a Ranger instead? Vist <a href="https://rangers.burningman.org/becoming-a-ranger/" rel="noopener">Becoming a Ranger</a>
+      to find out how to submit a volunteer application.
+    </p>
+    <div class="row mb-4">
+      <div class="col-sm-12 col-md-9 col-lg-6">
+        <button type="button" class="btn btn-block btn-primary" {{on "click" (fn this.stepAction "register")}}>I understand auditing is not a path to becoming a Ranger</button>
+      </div>
     </div>
 
-    <div class="form-row">
-      {{f.input "password" type="password" label="Password" size=20 maxlength=30 grid="col-auto"}}
-      {{f.input "password_confirmation" type="password" label="Confirm Password" size=20 maxlength=30 grid="col-auto"}}
-    </div>
+  {{else if (eq this.step "register")}}
+    <h1>Register to audit Ranger training</h1>
+    <p>
+      In order to audit a training, you will need to create a Clubhouse account. Please supply the following information:
+    </p>
 
-    <div class="form-row">
-      {{f.input "first_name" label="First Name" maxlength=25 grid="col-sm-4" }}
-      {{f.input "mi" label="M.I." maxlength=10 grid="col-sm-1" }}
-      {{f.input "last_name" label="Last Name" maxlength=25 grid="col-sm-4"}}
-    </div>
+    {{#ch-form "register" registerForm autocomplete="on" validator=registerValidations onSubmit=(action "createAccount") as |f|}}
+      <div class="form-row">
+        {{f.input "human" size=4 maxlength=10 grid="col-auto" label="First, prove you are human - What is 33 + 2?" }}
+      </div>
+      <div class="form-row">
+        <label class="col-form-label">Tell us about why you want to create a Secret Clubhouse account:</label>
+        <div class="form-group">
+          {{f.input "intent" type="radioGroup" options=intentOptions}}
+        </div>
+      </div>
+      <div class="form-row">
+        {{f.input "email" label="Email Address" type="text" inputmode="email" size=30}}
+      </div>
 
-    <PersonAddressEdit @f={{f}} />
+      <div class="form-row">
+        {{f.input "password" type="password" label="Password" size=20 maxlength=30 grid="col-auto"}}
+        {{f.input "password_confirmation" type="password" label="Confirm Password" size=20 maxlength=30 grid="col-auto"}}
+      </div>
 
-    <div class="form-row">
-      {{f.input "home_phone" label="Primary Phone" type="text" inputmode="tel" grid="col-sm-4"}}
-      {{f.input "alt_phone" label="Alternative Phone" type="text" inputmode="tel" grid="col-sm-4"}}
-    </div>
+      <div class="form-row">
+        {{f.input "first_name" label="First Name" maxlength=25 grid="col-sm-4" }}
+        {{f.input "mi" label="M.I." maxlength=10 grid="col-sm-1" }}
+        {{f.input "last_name" label="Last Name" maxlength=25 grid="col-sm-4"}}
+      </div>
 
-    <f.submit @label="Create My Auditor Account" />
-  {{/ch-form}}
+      <PersonAddressEdit @f={{f}} />
+
+      <div class="form-row">
+        {{f.input "home_phone" label="Primary Phone" type="text" inputmode="tel" grid="col-sm-4"}}
+        {{f.input "alt_phone" label="Alternative Phone" type="text" inputmode="tel" grid="col-sm-4"}}
+      </div>
+
+      <f.submit @label="Create My Auditor Account" />
+    {{/ch-form}}
+  {{else}}
+    <p>
+      Uh oh, I don't undertand what the step [{{this.step}}] is. This is a bug and should be reported to the tech team.
+    </p>
+    <p>
+      <button type="button" class="btn btn-primary" {{on "click" (fn this.stepAction "ask-intent")}}>Back</button>
+    </p>
+  {{/if}}
+  <p class="mt-2">
+    <strong>Questions?</strong> Contact the Ranger Volunteer Coordinators at <span class="d-inline-block">{{mail-to "ranger-vc-list@burningman.com"}}</span>.
+  </p>
+
 
 </main>

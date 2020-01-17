@@ -185,11 +185,6 @@ export default class ChFormFieldComponent extends Component {
     return error ? error[this.name] : null;
   }
 
-  @computed('error')
-  get isValid() {
-    return !this.error;
-  }
-
   @computed('value', 'model', 'name')
   get _val() {
     return this.value || get(this.model, this.name);

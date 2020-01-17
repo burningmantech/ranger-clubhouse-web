@@ -12,6 +12,8 @@ import { action } from '@ember/object';
 const HUMAN_ANSWER = 35;
 
 export default class RegisterController extends Controller {
+  queryParams = [ 'step' ];
+
   intentOptions = [
     ["I am (or intend to become) a Regional Ranger but do not intend to become a Black Rock Ranger at Burning Man this year", "Regional"],
     ["I want to sit in on your training but don't intend to become a Black Rock Ranger this year", "Sitin"],
@@ -101,5 +103,11 @@ export default class RegisterController extends Controller {
         break;
       }
     }).catch((response) => this.house.handleErrorResponse(response));
+  }
+
+  @action
+  stepAction(step, event) {
+    event.preventDefault();
+    this.set('step', step);
   }
 }
