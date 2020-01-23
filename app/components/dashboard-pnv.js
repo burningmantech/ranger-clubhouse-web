@@ -199,12 +199,13 @@ const ALPHA_TASKS = [{
         if (milestones.alpha_shift.status == 'pending') {
           return {
             result: ACTION_NEEDED,
-            message: htmlSafe(`Please read "<a href="${milestones.alpha_shift_prep_link}" target="_blank" rel="noopener">Becoming a Ranger: On-playa Alpha Shifts</a>" in the Ranger Manual.<br>Your Alpha shift starts ${moment(milestones.alpha_shift.begins).format('ddd MMM DD [@] HH:mm')}.<br><b>ARRIVE 15 MINUTES EARLY. Late arrivals will NOT be allowed to walk.</b>`)
+            message: htmlSafe(`Please read "<a href="${milestones.alpha_shift_prep_link}" target="_blank" rel="noopener">Becoming a Ranger: On-playa Alpha Shifts</a>" in the Ranger Manual.<br>Your Alpha shift starts ${moment(milestones.alpha_shift.begins).format('ddd MMM DD [@] HH:mm')}.<br><b>ARRIVE 15 MINUTES EARLY. Late arrivals will NOT be allowed to walk.</b><br>If you know you won't be able to make your Alpha shift please email the Mentor Cadre or stop by Ranger HQ on playa.`),
+            email: 'MentorEmail'
           };
         } else {
           return {
             result: URGENT,
-            message: 'You did not show up for your Alpha shift. Directly talk with the Mentors located in the Hat Shack next to Ranger HQ or email to sign up for another shift.',
+            message: "It looks like you've missed your Alpha shift. You are welcome to apply again next year. If you believe this is in error, please email the Mentor Cadre.",
             email: 'MentorEmail'
           };
         }
@@ -283,7 +284,8 @@ export default class DashboardPNVComponent extends Component {
     let prevCompleted = true;
 
     return TASK_GROUPS.map((group) => {
-      let haveAction = false, tasksCompleted = true;
+      let haveAction = false,
+        tasksCompleted = true;
 
       const actions = { title: group.title };
 
@@ -340,7 +342,6 @@ export default class DashboardPNVComponent extends Component {
           }
         })
       }
-
 
       if (actions.isActive) {
         actions.haveUrgentActions = tasks.some((t) => (t.result == URGENT));
