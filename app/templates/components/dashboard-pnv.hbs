@@ -125,14 +125,13 @@
                 or to verify that the existing information is correct.
               {{else}}
                 {{#if task.message}}
-                  {{task.message}}<br>
+                  {{task.message}}
                 {{/if}}
                 {{#if task.isPhotoUpload}}
-                    <a href="#">Submit a headshot </a> to use on a BMID.
+                  <p><a href="#">Submit a headshot </a> to use on a BMID.</p>
                 {{/if}}
                 {{#if task.email}}
-                  <br>
-                  {{mail-to task.email}}
+                  <p>{{mail-to task.email}}</p>
                 {{/if}}
               {{/if}}
             </div>
