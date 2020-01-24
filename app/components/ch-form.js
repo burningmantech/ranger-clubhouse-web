@@ -138,12 +138,12 @@ export default class ChFormComponent extends Component {
    */
 
   _scrollToError(model) {
-     const error = model.get('error');
-     if (isEmpty(error)) {
+     const errors = model.get('errors');
+     if (isEmpty(errors)) {
        return;
      }
 
-     const field = Object.keys(error)[0];
+     const field = errors[0].key;
      const label = `label[for="${this.formId}-${field}"]`;
 
      // Scroll the label into view if it exists, otherwise the element
@@ -163,11 +163,13 @@ export default class ChFormComponent extends Component {
 
     if (model.validate) {
       model.validate().then(() => {
-        if (!this.model.isValid) {
+        const isValid = this._isValid();
+
+        if (!isValid) {
           this._scrollToError(model);
         }
         if (submitAction) {
-          return submitAction(model, this.model.isValid, original);
+          return submitAction(model, isValid, original);
         }
       });
     } else if (submitAction) {
@@ -181,7 +183,7 @@ export default class ChFormComponent extends Component {
     const formChange = this.onFormChange;
 
     if (formChange) {
-      formChange(field, model, model.isValid, this.originalModel);
+      formChange(field, model, this._isValid(), this.originalModel);
     }
   }
 
@@ -211,4 +213,7 @@ export default class ChFormComponent extends Component {
     }
   }
 
+  _isValid() {
+    return isEmpty(this.model.errors);
+  }
 }

@@ -3,8 +3,8 @@ import { action } from '@ember/object';
 
 export default class ReportsFlakesController extends Controller {
   @action
-  submitForm(model) {
-    if (!model.isValid) {
+  submitForm(model, isValid) {
+    if (!isValid) {
       return;
     }
 

@@ -85,7 +85,7 @@
   <f.cancel @disabled={{isSubmitting}} />
   {{#if isSubmitting}}
     <LoadingIndicator />
-  {{else if isSaved}}
+  {{else if this.isSaved}}
     <span class="text-success">{{fa-icon "check"}}</span>
   {{/if}}
 </ChForm>

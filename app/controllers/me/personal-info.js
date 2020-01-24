@@ -14,6 +14,8 @@ export default class MePersonalInfoEditController extends Controller {
 
   @action
   onSubmit(model, isValid) {
+    this.set('isSaved', false);
+
     if (!isValid) {
       return;
     }
