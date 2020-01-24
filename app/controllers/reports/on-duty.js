@@ -10,8 +10,8 @@ export default class ReportsOnDutyController extends Controller {
   };
 
   @action
-  submitForm(model) {
-    if (!model.isValid) {
+  submitForm(model, isValid) {
+    if (!isValid) {
       return;
     }
     this.set('duty_date', model.get('date'));
