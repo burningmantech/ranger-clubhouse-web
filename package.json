@@ -77,7 +77,7 @@
     "edition": "octane"
   },
   "dependencies": {
-    "blueimp-load-image": "https://github.com/blueimp/JavaScript-Load-Image.git",
+    "blueimp-load-image": "^2.26.0",
     "cropperjs": "^1.5.6",
     "double-metaphone": "^1.0.4",
     "ember-cli-update": "^0.52.1",
