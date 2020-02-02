@@ -1,15 +1,17 @@
 {{! Besure to keep application.hbs in sync with the links}}
 <ChSidebar>
-  <ChSidebarGroup @title="ME MENU">
-    <ChSidebarLink @route="me.schedule" @title="Schedule / Sign Up" @icon="clipboard" />
-    {{#if (or user.isNonRanger user.isRanger)}}
-      <ChSidebarLink @route="me.timesheet-corrections.index" @title="Timesheet Corrections" @icon="list-ol" @iconType="s" />
-      <ChSidebarLink @route="me.timesheet" @title="Timesheets" @icon="clock" />
-    {{/if}}
-    {{#unless user.isAuditor}}
-      <ChSidebarLink @route="me.event-info" @title="Event Info" @icon="user" />
-    {{/unless}}
-  </ChSidebarGroup>
+  {{#unless (or user.isPastProspective user.isProspectiveWaitlist)}}
+    <ChSidebarGroup @title="ME MENU">
+      <ChSidebarLink @route="me.schedule" @title="Schedule / Sign Up" @icon="clipboard" />
+      {{#if (or user.isNonRanger user.isRanger)}}
+        <ChSidebarLink @route="me.timesheet-corrections.index" @title="Timesheet Corrections" @icon="list-ol" @iconType="s" />
+        <ChSidebarLink @route="me.timesheet" @title="Timesheets" @icon="clock" />
+      {{/if}}
+      {{#unless user.isAuditor}}
+        <ChSidebarLink @route="me.event-info" @title="Event Info" @icon="user" />
+      {{/unless}}
+    </ChSidebarGroup>
+  {{/unless}}
 
   {{#if (or user.isRanger user.isAlpha user.isProspective user.isNonRanger)}}
     <ChSidebarGroup @title="PRE-EVENT">

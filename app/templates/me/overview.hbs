@@ -1,9 +1,9 @@
 <h2>Welcome To The Secret Clubhouse</h2>
 
-{{#if motds}}
+{{#if this.motds}}
   <div class="border rounded-lg border-danger p-2 mb-2">
     <h3 class="text-danger">{{if (eq motds.length 1) "Clubhouse Announcement" "Clubhouse Announcements"}}</h3>
-    {{#each motds as |motd idx|}}
+    {{#each this.motds as |motd idx|}}
       {{#if idx}}
         <hr>{{/if}}
       <p class="mt-1">
@@ -26,81 +26,31 @@ If the person is a past prospective
 OR if the callsign is not approved and they are not an Auditor or Non Ranger.
 then let them know what's up.
 }}
-{{#if (or person.isPastProspective (and (not person.callsign_approved) (not person.isAuditor) (not person.isNonRanger)))}}
-  <Me::PastProspectiveDisabled @person={{person}} />
-{{else if person.isProspectiveWaitlist}}
-  {{#ch-alert "warning"}}
-    <h3>You are current on our waitlist</h3>
-    <p>
-      Due to a limited number of spaces for new Rangers, we are only able to
-      reserve 158 Alpha shifts slots. As applicants drop from our process, or
-      miss key deadlines, we will reassign their reserved slots to waitlisted
-      applicants, with a preference for those who have uploaded a BMID photo,
-      taken the Manual Review, signed up for training, and are in good standing
-      with the department. This means waitlisted applicants who pursue the
-      process in good faith and respect deadlines will have a slight advantage
-      over folks who do not.
-    </p>
-    <p>
-      We will notify you if we are able to remove you from the waitlist.
-    </p>
-    <p>
-      You will see this message whenever you log into the Clubhouse
-      as long as you remain on the waitlist.
-    </p>
-  {{/ch-alert}}
+{{#if this.person.isPastProspective}}
+  <DashboardPastProspective />
+{{else if this.person.isProspectiveWaitlist}}
+  <DashboardProspectiveWaitlist />
 {{else}}
   {{! Person needs to have BPGUID aka Burner Profile ID}}
-  {{#if person.needsBpguid}}
-    {{#ch-box "Missing Burner Profile ID" type="warning"}}
+  {{#if this.person.needsBpguid}}
+    <ChBox @title="Missing Burner Profile ID" @type="warning">
       <PersonMissingBpguid />
-    {{/ch-box}}
+    </ChBox>
   {{/if}}
-  {{#if person.unread_message_count}}
-    {{#ch-alert "warning" bold=true}}
-      {{fa-icon "envelope"}} You have {{pluralize person.unread_message_count "unread Clubhouse message"}}.
+
+  {{#if this.person.unread_message_count}}
+    <ChAlert @type="warning" @bold=true>
+      {{fa-icon "envelope"}} You have {{pluralize this.person.unread_message_count "unread Clubhouse message"}}.
       <LinkTo @route="me.messages" class="btn btn-success">Read Now</LinkTo>
-    {{/ch-alert}}
-  {{/if}}
-
-  {{#unless (or person.isAuditor person.isProspective person.isBonked)}}
-    {{#if photo}}
-      {{#if (eq photo.photo_status "missing")}}
-        <Me::NeedsPhoto @person={{person}} @photo={{photo}} />
-      {{else if (eq photo.photo_status "rejected")}}
-        {{#ch-alert "danger"}}
-          {{fa-icon "exclamation-triangle" size="2x"}} <strong>Your photo has been rejected.</strong> A new one will need to be submitted.
-          Some common reasons a photo may be rejected are:
-          <ul>
-            <li>Sunglasses were on your face or head.</li>
-            <li>People were in the background.</li>
-            <li>Your face was not visible, and/or may have been obscured by paint.</li>
-            <li>A hat was worn</li>
-            <li>Your face was not centered, or facing the camera.</li>
-          </ul>
-          For a full list of photo requirements, please see <a target="_blank" rel="noopener" href="http://www.lambase.com/help/RangerHelpSheet.pdf">this helpful document.</a>.
-        {{/ch-alert}}
-      {{/if}}
-    {{/if}}
-    <PersonPhoto @photo={{photo}} @person={{person}} />
-  {{/unless}}
-
-  {{#if person.isRanger}}
-    <div class="mt-1 mb-1">
-      {{#if (lte person.years.length 1)}}
-        Hello Shiny Penny! Congratulations on becoming a Ranger.
-      {{else}}
-        Hello {{#if person.vintage}}Vintage{{/if}} Ranger! You have Rangered at {{pluralize person.years.length "burn"}}.
-      {{/if}}
-    </div>
+    </ChAlert>
   {{/if}}
 
   {{#if (or this.person.isProspective this.person.isAlpha this.person.isBonked)}}
-    <DashboardPnv @milestones={{this.milestones}} @person={{this.person}} @photo={{this.photo}} />
+    <DashboardPnv @milestones={{this.milestones}} @person={{this.person}} @photo={{this.photo}} @uploadAction={{this.showUploadDialogAction}} />
   {{else if this.person.isAuditor}}
     <DashboardAuditor @milestones={{this.milestones}} @person={{this.person}} />
   {{else}}
-    <DashboardRanger @milestones={{this.milestones}} @person={{this.person}} />
+    <DashboardRanger @milestones={{this.milestones}} @person={{this.person}} @photo={{this.photo}} @uploadAction={{this.showUploadDialogAction}} />
   {{/if}}
 {{/if}}
 
@@ -109,3 +59,7 @@ then let them know what's up.
 <h5>Need Help?</h5>
 <p>For general questions &amp; support email: {{general-support-email}}</p>
 <p>For technical support email: {{admin-email}}</p>
+
+{{#if this.showUploadDialog}}
+  <PhotoUpload @person={{this.person}} @refreshPhoto={{this.refreshPhoto}} @closeAction={{this.closeUploadDialogAction}} />
+{{/if}}

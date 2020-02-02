@@ -182,6 +182,10 @@ export default Mixin.create({ // eslint-disable-line ember/no-new-mixins
     return this.hasRole(Role.ADMIN);
   }),
 
+  isVC: computed('roles', function () {
+    return this.hasRole(Role.VC);
+  }),
+
   canViewEmail: computed('roles', function () {
     return this.hasRole([ Role.ADMIN, Role.VIEW_EMAIL, Role.VIEW_PII ]);
   })

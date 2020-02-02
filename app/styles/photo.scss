@@ -1,0 +1,117 @@
+@import "cropper";
+
+
+.mugshot {
+  background: #fcfcfc;
+  padding: 5px;
+  border: 1px solid #999;
+  text-align: center;
+
+  margin-bottom: 10px;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-lg;
+
+  width: 200px;
+
+  img {
+    display: block;
+    max-width: 190px;
+    max-height: 246px;
+  }
+}
+
+.mugshot-icon {
+
+img {
+  display: block;
+  max-width: 75px;
+  margin: 0 auto;
+}
+}
+
+#photo-edit-container {
+  background-color: #ececec;
+  max-width: 350px;
+  max-height: 450px;
+
+  margin: 0 auto;
+
+  img {
+    display: block;
+    width: 350px;
+    height: 450px;
+  }
+}
+
+.cropper-view-box {
+  //outline-width: 0 !important;
+}
+
+
+.cropper-container {
+  position: relative;
+}
+
+.cropper-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 9999;
+  background-image: url("images/headshot-template.png");
+  background-size: auto 100%;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+#photo-review {
+  padding: 5px;
+  img {
+    margin: 0 auto;
+    max-width: 80%;
+  }
+}
+
+.photo-icon {
+  max-width: 50px;
+}
+
+.photo-vc-review {
+    margin: 0 auto;
+    width: 250px;
+}
+
+/*
+ * Camera CSS
+ */
+
+#camera-container {
+  position: relative;
+  //max-width: 350px;
+
+  video {
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+   // Have the video be a mirror image
+    transform: scaleX(-1);
+  }
+}
+
+#camera-container::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 9999;
+    background-image: url("images/headshot-template.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: auto 100%;
+    opacity: 0.5;
+    pointer-events: none;
+}

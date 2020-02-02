@@ -64,14 +64,20 @@ const SETUP_ACCOUNT_TASKS = [{
 
   {
     name: 'Photo Approval',
-    check(milestones) {
+    check(milestones, prevCompleted, photo) {
+      let reasons;
       switch (milestones.photo_status) {
       case 'approved':
         return { result: COMPLETED };
       case 'submitted':
         return { result: WAITING, message: 'The photo is being reviewed. Usually photos are approved within 2 to 3 days.' }
       case 'rejected':
-        return { result: URGENT, message: 'Your photo was rejected. Please upload a new photo which comforms to the BMID requirements.', isPhotoUpload: true }
+        reasons = photo.rejections.map((reason) => `<li>${reason}</li>`).join();
+        return {
+          result: URGENT,
+          message: htmlSafe(`Your photo was rejected for the following reasons: <ul>${reasons}</ul> Please upload a new photo which comforms to the BMID requirements.`),
+          isPhotoUpload: true
+        };
       default:
         return { result: NOT_AVAILABLE, message: 'Upload a photo first.' };
       }
@@ -280,6 +286,7 @@ export default class DashboardPNVComponent extends Component {
   @computed('args.milestones.behavioral_agreement')
   get taskGroups() {
     const milestones = this.args.milestones;
+    const photo = this.args.photo;
     let haveActiveGroup = false;
     let prevCompleted = true;
 
@@ -292,7 +299,7 @@ export default class DashboardPNVComponent extends Component {
       const tasks = [];
 
       group.tasks.forEach((task) => {
-        const check = task.check(milestones, prevCompleted);
+        const check = task.check(milestones, prevCompleted, photo);
         if (check.result == SKIP) {
           return;
         }
@@ -392,6 +399,7 @@ export default class DashboardPNVComponent extends Component {
       set(this.args.milestones, 'behavioral_agreement', true);
     }).catch((response) => this.house.handleErrorResponse(response));
   }
+
 
   /*
    * For debugging purposes ONLY

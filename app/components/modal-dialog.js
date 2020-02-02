@@ -1,43 +1,49 @@
-import Component from '@ember/component';
-
-
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
 import $ from 'jquery';
 
 export default class ModalDialogComponent extends Component {
-  title = null;
-
-  onConfirm = null;
-  onClose = null;
-  onShow = null;
-
-  confirmLabel = 'Confirm';
-  cancelLabel = 'Cancel';
-  closeLabel = 'Close';
-
   isClosed = false;
+  dialogBox = null;
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    const dialog = $('#dialog-box');
+  get confirmLabel() {
+    return this.args.confirmLabel ? this.args.confirmLabel : 'Confirm';
+  }
+
+  get cancelLabel() {
+    return this.args.cancelLabel ? this.args.cancelLabel : 'Cancel';
+  }
+
+  get closeLabel() {
+    return this.args.closeLabel ? this.args.closeLabel : 'Close';
+  }
+
+  @action
+  boxInserted(element) {
+    this.dialogBox = element;
+
+    const dialog = $(element);
 
     // Setup modal, and attach to show & hide events
     dialog.modal({backdrop: 'static', keyboard: false});
     dialog.modal().on('show.bs.modal', () => {
-      return this.onShow ? this.onShow() : null;
+      return this.args.onShow ? this.args.onShow() : null;
     });
 
     dialog.modal().on('hide.bs.modal', () => {
       if (!this.isClosed) {
         this.isClosed = true;
-        return this.onClose ? this.onClose() : null;
+        return this.args.onClose ? this.args.onClose() : null;
       }
     });
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-    const dialog = $('#dialog-box');
+  willDestroy() {
+    if (!this.dialogBox) {
+      return;
+    }
 
+    const dialog = $(this.dialogBox);
     // Tear down modal
     dialog.modal('hide');
     dialog.modal('dispose');

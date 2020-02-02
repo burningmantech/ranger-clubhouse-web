@@ -3,38 +3,39 @@
 [![Build Status](https://github.com/burningmantech/ranger-clubhouse-web/workflows/CI%2fCD/badge.svg)](https://github.com/burningmantech/ranger-clubhouse-web/actions)
 
 This README outlines the details of collaborating on this Ember application.
+A short introduction of this app could easily go here.
 
 ## Prerequisites
 
 You will need the following things properly installed on your computer.
 
 * [Git](https://git-scm.com/)
-* [Yarn](https://yarnpkg.org/)
+* [Node.js](https://nodejs.org/) (with npm)
 * [Ember CLI](https://ember-cli.com/)
-* Google Chrome or Firefox is recommended since the Ember Inspector extension is supported for both browsers.
-  Safari and Windows IE Edge are supported.
-  Windows IE11 and lesser versions *are not* supported.
-* [Ember Inspector](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi?hl=en): useful for inspecting Ember Data objects, routes, URL names, etc.
+* [Google Chrome](https://google.com/chrome/)
 
 ## Installation
 
-* `git clone https://github.com/burningmantech/ranger-clubhouse-web` this repository
-* `cd ranger-clubhouse-web`
-* `yarn install`
-* Install the Clubhouse API server - see https://github.com/burningmantech/ranger-clubhouse-api/blob/master/README.md for more information
+* `git clone <repository-url>` this repository
+* `cd deploy`
+* `npm install`
 
 ## Running / Development
 
-* Start the frontend : `ember serve`
-
 * Make sure the API server is running, see ranger-clubhouse-api/README.md
 
-* Visit the clubhouse app at [http://localhost:4200](http://localhost:4200).
-Make sure the browser's javascript console is opened - you will be spending a lot
-of time looking at that window during development.
-
+* Start the Clubhouse `ember serve`
+* Visit the Clubhouse at [http://localhost:4200](http://localhost:4200).
 * Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
-(Tests are coming)
+
+### Code Generators
+
+Make use of the many generators for code, try `ember help generate` for more details
+
+### Running Tests
+
+* `ember test`
+* `ember test --server`
 
 ## API Server Endpoint
 
@@ -61,8 +62,9 @@ Look at the [tests/assertions] directory to see what custom assertions are avail
 
 ### Linting
 
-* `yarn run lint:js`
-* `yarn run lint:js -- --fix`
+* `npm run lint:hbs`
+* `npm run lint:js`
+* `npm run lint:js -- --fix`
 
 ### Building
 
@@ -78,5 +80,5 @@ TODO
 * [ember.js](https://emberjs.com/)
 * [ember-cli](https://ember-cli.com/)
 * Development Browser Extensions
-  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+* [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
+* [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)

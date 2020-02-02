@@ -131,6 +131,7 @@ Router.map(function() {
     this.route('timesheet-log');
     this.route('timesheet');
     this.route('onboard');
+    this.route('photos');
   });
 
   this.route('logout');
@@ -192,6 +193,7 @@ Router.map(function() {
     this.route('bmid');
     this.route('bmid-sanity-check');
     this.route('bmid-print');
+    this.route('photo-review');
   });
   this.route('register');
 

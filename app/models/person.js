@@ -26,6 +26,8 @@ export default class PersonModel extends DS.Model.extend(PersonMixin) {
   @attr('string', { readOnly: true }) logged_in_at;
   @attr('string', { readOnly: true }) last_seen_at;
 
+  @attr('number', { readOnly: true}) person_photo_id;
+
   @attr('', { readOnly: true}) roles;
 
   // Personal Information

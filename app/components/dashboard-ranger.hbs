@@ -1,3 +1,43 @@
+{{#if (eq @photo.photo_status "missing")}}
+  <ChBox @title="Your Photo Is Needed" @type="warning">
+    <p>
+      {{fa-icon "exclamation-triangle" size="2x"}} You need to upload a photo
+      {{#if @person.isNonRanger}}
+        to schedule shifts in Clubhouse.
+      {{else}}
+        for your Burning Man ID badge.
+      {{/if}}
+    </p>
+    <p>
+      Note that you will <span class="text-danger">not be able to sign up for shifts</span>
+      until you have an approved Clubhouse photo. Usually photos are approved within 2 to 3 days.
+    </p>
+  </ChBox>
+{{else if (eq @photo.photo_status "rejected")}}
+  <ChAlert @type="danger">
+    {{fa-icon "times" size="2x"}} <strong>Your photo has been rejected.</strong> A new one will need to be submitted.
+    <p>
+      The following reason(s) are why the photo was rejected:
+    </p>
+    <ul>
+      {{#each @photo.rejections as |reason|}}
+        <li>{{reason}}</li>
+      {{/each}}
+    </ul>
+    For a full list of photo requirements, please see <a target="_blank" rel="noopener" href="https://docs.google.com/document/d/1hUqrJwdMG6XB5nk7Eh8nY2GH4uvAFTppmCKCmfidIvQ/edit?usp=sharing">this helpful document.</a>.
+  </ChAlert>
+{{/if}}
+
+<PersonPhoto @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}} />
+
+<div class="mt-1 mb-1">
+  {{#if (lte @person.years.length 1)}}
+    Hello Shiny Penny! Congratulations on becoming a Ranger.
+  {{else}}
+    Hello {{#if @person.vintage}}Vintage{{/if}} Ranger! You have Rangered at {{pluralize @person.years.length "burn"}}.
+  {{/if}}
+</div>
+
 <div class="mt-1 mb-2">Thank for stopping by. There are a few things to do here:</div>
 
 <dl>

@@ -15,8 +15,7 @@
 {{/if}}
 
 {{#ch-form "person" person  onSubmit=(action "savePersonAction") as |f|}}
-
-  <PersonPhoto @photo={{photo}} @person={{person}} @syncAction={{action syncPhotoAction}} />
+  <PersonPhoto @photo={{photo}} @person={{person}} @uploadAction={{this.showUploadDialogAction}} />
 
 
   {{! The following block is floated left on md or larger screen to ensure
@@ -97,7 +96,7 @@
 
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-2">Personnel</label>
-      {{#if session.user.isAdmin}}
+      {{#if this.isAdmin}}
         {{f.input "user_authorized" type="select" wrapClass="col-auto" options=userAuthorizedOptions}}
         {{f.input "has_note_on_file" label="Note on file" type="checkbox" wrapClass="col-auto mt-2" value=1}}
       {{else}}
@@ -287,9 +286,10 @@
 
   {{#if this.isAdminOrVC}}
     <div class="form-group row">
-      <label class="col-form-label-fixed col-sm-12 col-md-2">Onboarding</label>
+      <label class="col-form-label-fixed col-sm-12 col-md-2">VC</label>
       <div class="col-sm-12 col-md-9 ">
         {{#link-to "person.onboard" class="btn btn-secondary btn-sm"}}Onboard View{{/link-to}}
+        {{#link-to "person.photos" class="btn btn-secondary btn-sm"}}Photo History{{/link-to}}
       </div>
     </div>
   {{/if}}
@@ -325,7 +325,7 @@
           <ModalDialog @title={{if person.messsage "Add Account Note" "Update Account Note"}} @onConfirm={{action saveNote f.model}} @onClose={{action closeNote}} @confirmLabel="Save Note">
             <p>
               The note will be shown to all Volunteer Coordinators, HQ Window Workers, and other Login Management role
-              holders when this account is viewed. <span class="text-danger">A NOTE IS INTENDED TO BE RETAIN ACROSS MULTIPLE VIEWS OF THE ACCOUNT.</span>
+              holders when this account is viewed. <span class="text-danger">A NOTE WILL NOT BE SEEN BY THE USER.</span>
             </p>
             <p>
               Examples: "Person is ok to sign-in for pre-event shifts.", "Do not let this person work a shift until this person talks with Hubcap"
@@ -377,3 +377,7 @@
     {{/if}}
   </div>
 {{/ch-form}}
+
+{{#if this.showUploadDialog}}
+  <PhotoUpload @person={{this.person}} @refreshPhoto={{this.refreshPhoto}} @closeAction={{this.closeUploadDialogAction}} />
+{{/if}}

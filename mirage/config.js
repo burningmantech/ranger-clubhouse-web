@@ -1,10 +1,10 @@
 import Response from 'ember-cli-mirage/response';
 import moment from 'moment';
 
-export default function() {
+export default function () {
   this.urlPrefix = 'http://localhost:8000';
 
-  this.get('/api/config', function()  {
+  this.get('/api/config', function () {
     return {
       VCSRevision: 'DEVELOPMENT',
 
@@ -28,7 +28,7 @@ export default function() {
 
       SiteNotice: 'Copyright 2008-2018 Black Rock City, LLC. All information contained within this website is strictly confidential.',
 
-      SiteTitle:  'Black Rock Rangers Secret Clubhouse',
+      SiteTitle: 'Black Rock Rangers Secret Clubhouse',
       AdminEmail: 'ranger-tech-ninjas@burningman.org',
       GeneralSupportEmail: 'rangers@burningman.org',
       VCEmail: 'ranger-vc-list@burningman.org',
@@ -36,76 +36,70 @@ export default function() {
 
       // Optional ticket credit warning messages.
       // If any are not set, no message will be displayed
-      RpTicketThreshold: 19,  // Ticket threshold for Reduced-Price
-      ScTicketThreshold: 38,  // Ticket threshold for staff credential
-      YrTicketThreshold: 2018,  // Ticket threshold year
+      RpTicketThreshold: 19, // Ticket threshold for Reduced-Price
+      ScTicketThreshold: 38, // Ticket threshold for staff credential
+      YrTicketThreshold: 2018, // Ticket threshold year
     };
   });
 
-  this.post('/api/auth/login', function(schema, request) {
+  this.post('/api/auth/login', function (schema, request) {
     let params = JSON.parse(request.requestBody);
 
     if (!params.identification || !params.password) {
       const errors = [];
 
       if (!params.identification) {
-        errors.push({ status: 422, title: 'Email cannot be blank'});
+        errors.push({ status: 422, title: 'Email cannot be blank' });
       }
 
       if (!params.password) {
-        errors.push({ status: 422, title: 'Password cannot be blank'});
+        errors.push({ status: 422, title: 'Password cannot be blank' });
       }
 
-      return new Response(422, {'Content-Type': 'application/json'}, { errors });
+      return new Response(422, { 'Content-Type': 'application/json' }, { errors });
     }
 
     const person = schema.db.people.findBy({ email: params.identification });
     if (!person) {
-      return new Response(401,
-        { 'Content-Type': 'application/json' },
-        { status: 'invalid-credentials' }
-      );
+      return new Response(401, { 'Content-Type': 'application/json' }, { status: 'invalid-credentials' });
     }
 
     if (!person.user_authorized) {
-      return new Response(401,
-        { 'Content-Type': 'application/json' },
-        { status: 'account-disabled' }
-      )
+      return new Response(401, { 'Content-Type': 'application/json' }, { status: 'account-disabled' })
     }
 
-    let data =  {
+    let data = {
       // ember-simple-auth only cares about the middle token
       token: btoa("dummy") + "." + btoa(JSON.stringify({ exp: (Math.ceil(Date.now() / 1000) + 1000) })) + "." + btoa("dummy"),
       token_type: 'bearer',
       expires_in: 1000,
-      person_id:  person.id,
-   };
+      person_id: person.id,
+    };
 
     return data;
   });
 
-  this.get('/api/person/:id', ({people}, request) => { // eslint-disable-line no-unused-vars
+  this.get('/api/person/:id', ({ people }, request) => { // eslint-disable-line no-unused-vars
     const person = people.find(request.params.id);
 
     if (!person) {
       return new Response(404, { 'Content-Type': 'application/json' }, {
-        errors: [ { status: 404, title: 'Record does not exist.'}]
-      } );
+        errors: [{ status: 404, title: 'Record does not exist.' }]
+      });
     }
 
     return person;
     //return this.serializerOrRegistry.serialize(person, 'person');
   });
 
-  this.put('/api/person/:id', ({people}, request) => {
+  this.put('/api/person/:id', ({ people }, request) => {
     const body = JSON.parse(request.requestBody);
     const person = people.find(request.params.id)
 
     if (!person) {
       return new Response(404, { 'Content-Type': 'application/json' }, {
-        errors: [ { status: 404, title: 'Record does not exist.'}]
-      } );
+        errors: [{ status: 404, title: 'Record does not exist.' }]
+      });
     }
 
     person.update(body.person);
@@ -113,28 +107,28 @@ export default function() {
     return person;
   });
 
-  this.get('/api/person/:id/user-info', ({people}, request) => { // eslint-disable-line no-unused-vars
+  this.get('/api/person/:id/user-info', ({ people }, request) => { // eslint-disable-line no-unused-vars
     return {
-       unread_message_count: 2,
-       years: [ 2017, 2018 ],
-       teacher: {
-         is_trainer: false,
-         is_art_trainer: false,
-         is_mentor: false,
-         have_mentored: false
-       }
-     };
+      unread_message_count: 2,
+      years: [2017, 2018],
+      teacher: {
+        is_trainer: false,
+        is_art_trainer: false,
+        is_mentor: false,
+        have_mentored: false
+      }
+    };
   });
 
-  this.get('/api/person/:id/years', ({people}, request) => { // eslint-disable-line no-unused-vars
-    return { years: [ 2017, 2018 ]};
+  this.get('/api/person/:id/years', ({ people }, request) => { // eslint-disable-line no-unused-vars
+    return { years: [2017, 2018] };
   });
 
-  this.get('/api/person/:id/unread-message-count', ({people}, request) => { // eslint-disable-line no-unused-vars
-    return { unread_message_count: 2};
+  this.get('/api/person/:id/unread-message-count', ({ people }, request) => { // eslint-disable-line no-unused-vars
+    return { unread_message_count: 2 };
   });
 
-  this.get('/api/person/:id/teacher', ({people}, request) => { // eslint-disable-line no-unused-vars
+  this.get('/api/person/:id/teacher', ({ people }, request) => { // eslint-disable-line no-unused-vars
     return {
       is_trainer: false,
       is_art_trainer: false,
@@ -143,13 +137,13 @@ export default function() {
     };
   });
 
-  this.get('/api/person/:id/photo', ({people}, request) => { // eslint-disable-line no-unused-vars
+  this.get('/api/person/:id/photo', ({ people }, request) => { // eslint-disable-line no-unused-vars
     return {
-      source: 'local',
-      photo_status: 'missing',
-      message: 'upload photo',
-      photo_url: '',
-      upload_url: ''
+      photo: {
+        photo_status: 'approved',
+        photo_url: 'http://127.0.0.1/test.jpg',
+        upload_enabled: true
+      }
     };
   });
 
@@ -164,15 +158,13 @@ export default function() {
     return {
       event_info: {
         year: (new Date()).getFullYear(),
-        trainings: [
-          {
-            position_title: 'Training',
-            position_id: 13,
-            location: 'Trainlandia',
-            date: moment().format('YYYY-MM-DD hh:mm:ss'),
-            status: 'pass'
-          }
-        ],
+        trainings: [{
+          position_title: 'Training',
+          position_id: 13,
+          location: 'Trainlandia',
+          date: moment().format('YYYY-MM-DD hh:mm:ss'),
+          status: 'pass'
+        }],
         radio_eligible: 1,
         radio_max: 1,
         meals: '',
@@ -182,7 +174,7 @@ export default function() {
     };
   });
 
-  this.get('/api/person/:id/schedule/permission', ({people}, request) => {
+  this.get('/api/person/:id/schedule/permission', ({ people }, request) => {
     const person = people.find(request.params.id); // eslint-disable-line no-unused-vars
 
     return {
@@ -205,23 +197,23 @@ export default function() {
 
   });
 
-  this.get('/api/person/:id/credits', ({people}, request) => {
+  this.get('/api/person/:id/credits', ({ people }, request) => {
     const person = people.find(request.params.id);
 
     return { credits: person.credits || 0 };
   });
 
-  this.get('/api/person/:id/schedule/summary', ({people}, request) => {
+  this.get('/api/person/:id/schedule/summary', ({ people }, request) => {
     const person = people.find(request.params.id); // eslint-disable-line no-unused-vars
 
     return { summary: {} };
   });
 
-  this.get('/api/person/:id/positions', ({positions}) => {
+  this.get('/api/person/:id/positions', ({ positions }) => {
     return positions.all();
   });
 
-  this.get('/api/position', ({positions}) => {
+  this.get('/api/position', ({ positions }) => {
     return positions.all();
   });
 
@@ -230,7 +222,16 @@ export default function() {
   });
 
   this.get('/api/person/:id/milestones', () => {
-    return { milestones: { training: { status: 'pass' }, alpha_shift: { status: 'pass' } } };
+    return {
+      milestones: {
+        training: { status: 'pass' },
+        alpha_shift: { status: 'pass' },
+        manual_review_passed: true,
+        behavioral_agreement: true,
+        has_reviewed_pi: true,
+        photo_upload_enabled: true
+      }
+    };
   });
 
   /*

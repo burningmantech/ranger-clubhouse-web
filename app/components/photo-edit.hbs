@@ -1,0 +1,27 @@
+<p class="h4 text-center">
+  Zoom IN &amp; OUT and DRAG THE IMAGE<br>
+  so your face<br>
+  FITS IN &amp; FILLS the red oval.<br>
+</p>
+
+{{#if this.showEditControls}}
+  <p class="mb-2 text-center">
+    <button type="button" class="btn btn btn-secondary mr-1" {{action this.zoomOutAction}}>{{fa-icon "search-minus"}}</button>
+    <button type="button" class="btn btn btn-secondary mr-1" {{action this.zoomInAction}}>{{fa-icon "search-plus"}}</button>
+    <button type="button" class="btn btn btn-secondary mr-1" {{action this.rotateRight}}>{{fa-icon "redo"}}</button>
+    <button type="button" class="btn btn btn-secondary mr-1" {{action this.rotateLeft}}>{{fa-icon "undo"}}</button>
+    <button type="button" class="btn btn btn-secondary mr-1" {{action this.fipHorizontalAction}}>{{fa-icon "arrows-alt-h"}}</button>
+    <button type="button" class="btn btn btn-secondary mr-2" {{action this.fipVerticalAction}}>{{fa-icon "arrows-alt-v"}}</button>
+  </p>
+{{/if}}
+
+<div id="photo-edit-container">
+  <img id="photo-edit-image" src={{@imageDataUrl}} {{on "load" (fn this.imageLoadedEvent)}} />
+</div>
+
+<div class="mt-2 text-center">
+  {{#if @cancelAction}}
+    <button type="button" class="btn btn-secondary ml-auto" {{action @cancelAction}} disabled={{@isSubmitting}}>Retake</button>
+  {{/if}}
+  <button type="button" class="btn btn-primary ml-right" {{action this.submitAction}} disabled={{@isSubmitting}}>Submit</button>
+</div>
