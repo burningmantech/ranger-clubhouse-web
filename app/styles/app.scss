@@ -42,8 +42,8 @@ $h5-font-size: $font-size-base * 1.1;
 $h6-font-size: $font-size-base;
 
 $modal-header-padding: 0.75rem !important;
-$modal-sm: 95%;
-$modal-md: 80%;
+$modal-sm: 99%;
+$modal-md: 90%;
 
 $popover-max-width: 400px;
 
@@ -81,15 +81,16 @@ $sizes: (
 
 // Clubhouse styling
 @import "access-documents";
-@import "schedule";
-@import "sidebar";
-@import "timesheet";
-@import "timesheet-log";
-@import "training-print";
-@import "ticketing";
 @import "alpha-sheet";
 @import "hq";
 @import "onboard";
+@import "photo";
+@import "schedule";
+@import "sidebar";
+@import "ticketing";
+@import "timesheet-log";
+@import "timesheet";
+@import "training-print";
 
 @media print {
   h1 {
@@ -328,28 +329,6 @@ legend {
     height: 180px;
     width: 180px;
   }
-}
-
-.mugshot {
-  background: #fcfcfc;
-  padding: 5px;
-  border: 1px solid #999;
-  text-align: center;
-
-  margin-bottom: 10px;
-  border: 1px solid $border-color;
-  border-radius: $border-radius-lg;
-
-  width: 200px;
-}
-
-.mugshot img {
-  display: block;
-  height: 200px;
-}
-
-.mugshot-icon {
-  width: 180px;
 }
 
 /*

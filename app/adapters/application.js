@@ -19,6 +19,7 @@ const SINGULAR_MODELS = [
   'help',
   'motd',
   'person',
+  'person-photo',
   'position-credit',
   'position',
   'role',

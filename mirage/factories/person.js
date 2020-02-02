@@ -26,5 +26,6 @@ export default Factory.extend({
   teeshirt_size_style: 'Mens Crew S',
   longsleeveshirt_size_style: 'Mens Regular S',
   gender: '',
-  has_reviewed_pi : false
+  has_reviewed_pi : false,
+  bpguid() { return faker.random.uuid(); }
 });

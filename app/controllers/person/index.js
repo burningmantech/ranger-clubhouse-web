@@ -4,8 +4,8 @@ import { Role } from 'clubhouse/constants/roles';
 import inGroups from 'clubhouse/utils/in-groups';
 
 const CallsignApprovedOptions = [
-  [ 'Approved', true ],
-  [ 'Not Approved', false ]
+  ['Approved', true],
+  ['Not Approved', false]
 ];
 
 const StatusOptions = [
@@ -28,13 +28,13 @@ const StatusOptions = [
 ];
 
 const UserAuthorizedOptions = [
-  [ 'User Enabled', true ],
-  [ 'User Suspended', false ]
+  ['User Enabled', true],
+  ['User Suspended', false]
 ];
 
 const OnSiteOptions = [
-  [ 'On Site', true ],
-  [ 'Off Site', false ],
+  ['On Site', true],
+  ['Off Site', false],
 ];
 
 export default class PersonIndexController extends Controller {
@@ -45,7 +45,7 @@ export default class PersonIndexController extends Controller {
   userAuthorizedOptions = UserAuthorizedOptions;
   onSiteOptions = OnSiteOptions;
 
-  showPositions =  false;
+  showPositions = false;
   editPositions = false;
 
   showRoles = false;
@@ -54,6 +54,11 @@ export default class PersonIndexController extends Controller {
   @computed
   get isAdmin() {
     return this.session.user.hasRole(Role.ADMIN);
+  }
+
+  @computed
+  get isPhotoManager() {
+    return this.session.user.hasRole([Role.ADMIN, Role.VC]);
   }
 
   @computed
@@ -68,17 +73,17 @@ export default class PersonIndexController extends Controller {
 
   @computed
   get isAdminTrainerMentorOrVC() {
-    return this.session.user.hasRole([ Role.ADMIN, Role.TRAINER, Role.MENTOR, Role.VC ]);
+    return this.session.user.hasRole([Role.ADMIN, Role.TRAINER, Role.MENTOR, Role.VC]);
   }
 
   @computed
   get isAdminMentorOrVC() {
-    return this.session.user.hasRole([ Role.ADMIN, Role.MENTOR, Role.VC ]);
+    return this.session.user.hasRole([Role.ADMIN, Role.MENTOR, Role.VC]);
   }
 
   @computed
   get isAdminOrVC() {
-    return this.session.user.hasRole([ Role.ADMIN, Role.VC ]);
+    return this.session.user.hasRole([Role.ADMIN, Role.VC]);
   }
 
   @computed
@@ -197,13 +202,13 @@ export default class PersonIndexController extends Controller {
       'also be removed. This will only happen if you confirm that you ' +
       'want to remove this person.  If you do not confirm, the ' +
       'person will not be removed.',
-    () => {
-      this.person.destroyRecord().then(() => {
-        this.toast.success('The person was successfully removed from the Clubhouse.');
-        this.transitionToRoute('me.overview');
-      }).catch((response) => this.house.handleErrorResponse(response));
-    }
-  )
+      () => {
+        this.person.destroyRecord().then(() => {
+          this.toast.success('The person was successfully removed from the Clubhouse.');
+          this.transitionToRoute('me.overview');
+        }).catch((response) => this.house.handleErrorResponse(response));
+      }
+    )
   }
 
   @action
@@ -267,12 +272,20 @@ export default class PersonIndexController extends Controller {
   }
 
   @action
-  syncPhotoAction() {
-    this.set('photo', null);
-    this.ajax.request(`person/${this.person.id}/photo`, { data: { sync: 1 }})
-          .then((result) => this.set('photo', result.photo))
-          .catch(() => {
-            this.set('photo', { status: 'error', message: 'There was a server error.'});
-          });
+  refreshPhoto() {
+    this.ajax.request(`person/${this.person.id}/photo`).then((result) => {
+      this.set('photo', result.photo);
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
+
+  @action
+  showUploadDialogAction() {
+    this.set('showUploadDialog', true);
+  }
+
+  @action
+  closeUploadDialogAction() {
+    this.set('showUploadDialog', false);
+  }
+
 }

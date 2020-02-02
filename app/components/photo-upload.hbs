@@ -1,0 +1,56 @@
+<ModalDialog @title="Upload A New BMID Photo" @onClose={{action @closeAction}} @closeLabel="Cancel">
+  {{#unless @photo.upload_enabled}}
+    <h3 class="text-danger border border-danger p-2">
+      <b>Photo uploading is disabled.</b> Because you have the Admin or VC role, you are allowed to upload a photo.
+      Do not abuse this.
+    </h3>
+  {{/unless}}
+  {{#if (eq this.step "source")}}
+    <h4>Your BMID photo is an ID photo. <span class="d-inline-block">Think “passport” or driver's license.</span></h4>
+    The photo must meet the following criteria:
+    <ul>
+      <li>Face the camera directly with full face in view.</li>
+      <li>Your face is evenly lit with no shadows.</li>
+      <li><b class="text-danger">NO sunglasses, goggles, facepaint, or masks.</b></li>
+      <li><b class="text-danger">NO hats, horns, wreaths, etc. Nothing covering your head.</b> (Religious attire is OK.)</li>
+      <li>Color ONLY. No black & white photos.</li>
+      <li>No other people in the photo.</li>
+    </ul>
+    <div class="row no-gutters">
+      <div class="col-sm-12 col-md-auto mb-2">
+        <div class="custom-file">
+          <label class="custom-file-label" for="photo-file">Select photo &amp; edit</label>
+          <input type="file" class="custom-file-input" capture="user" id="photo-file" accept="image/jpg,image/jpeg,image/png" {{on "change" this.fileChangeEvent}}>
+        </div>
+      </div>
+      {{#if this.hasCamera}}
+        <div class="col-sm-12 col-md-auto mx-4 text-center my-2">
+          <h4>- OR -</h4>
+        </div>
+        <div class="col-sm-12 col-md-auto text-center">
+          <button type="button" class="btn btn-primary" {{action this.takeSelfieAction}}>Use Camera / Take Selfie</button>
+        </div>
+      {{/if}}
+    </div>
+
+    <p class="mt-2">
+      Examples of a good BMID photo:
+    </p>
+
+    <div class="form-row mt-2">
+      <div class="col-sm-6 col-md-3 mb-2 text-center">
+        <img src={{root-url "assets/images/headshot-good-1.jpg"}} alt="example headshot 1" />
+      </div>
+      <div class="col-sm-6 col-md-3 mb-2 text-center">
+        <img src={{root-url "assets/images/headshot-good-2.jpg"}} alt="example headshot 2" />
+      </div>
+      <div class="col-sm-6 col-md-3 text-center">
+        <img src={{root-url "assets/images/headshot-good-3.jpg"}} alt="example headshot 3" />
+      </div>
+    </div>
+  {{else if (eq this.step "take-selfie")}}
+    <PhotoSelfie @useSelfieAction={{this.useSelfieAction}} @width={{this.width}} @height={{this.height}} />
+  {{else if (eq this.step "edit-photo")}}
+    <PhotoEdit @imageDataUrl={{this.originalImageDataUrl}} @submitAction={{this.uploadEditAction}} @cancelAction={{this.chooseSourceAction}} @isSubmitting={{this.isSubmitting}} @width={{this.width}} @height={{this.height}} />
+  {{/if}}
+</ModalDialog>

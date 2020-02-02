@@ -1,0 +1,12 @@
+<div id="camera-container">
+  <video id="photo-player" autoplay=true playsinline=true capture="user" {{did-insert this.setupCamera}} {{will-destroy this.destroyCamera}}></video>
+  <div class="mt-4">
+    <button type="button" class="btn btn-block btn-lg btn-primary" {{action this.snapShutterAction}} disabled={{not this.cameraReady}}>
+      {{#if this.cameraReady}}
+        {{fa-icon "camera"}} Use Image
+      {{else}}
+        <LoadingIndicator @text="Please wait" />
+      {{/if}}
+    </button>
+  </div>
+</div>

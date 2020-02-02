@@ -4,28 +4,28 @@ import RSVP from 'rsvp';
 
 export default class MeOverviewRoute extends Route.extend(MeRouteMixin) {
   model() {
+    const person = this.modelFor('me');
+
     this.store.unloadAll('motd');
-    return RSVP.hash({
+
+    const hash = {
       motd: this.store.query('motd', {}),
-      milestones: this.ajax.request(`person/${this.session.userId}/milestones`).then((result) => result.milestones)
-    });
+      milestones: this.ajax.request(`person/${person.id}/milestones`).then((result) => result.milestones)
+    };
+
+    // Auditors and past prospectives do no have photos
+    if (!person.isPastProspective && !person.isAuditor) {
+      hash.photo = this.ajax.request(`person/${person.id}/photo`).then((result) => result.photo)
+    }
+
+    return RSVP.hash(hash);
   }
 
   setupController(controller, model) {
     super.setupController(...arguments);
-
-    const person = this.modelFor('me');
-
-    controller.set('photo', null);
+    controller.set('photo', model.photo);
     controller.set('motds', model.motd);
     controller.set('milestones', model.milestones);
-
-    if (!person.isPastProspective && !person.isAuditor) {
-      this.ajax.request(`person/${this.session.userId}/photo`)
-        .then((result) => controller.set('photo', result.photo))
-        .catch(() => {
-          controller.set('photo', { status: 'error', message: 'There was a server error.' });
-        })
-    }
+    controller.set('showUploadDialog', false);
   }
 }

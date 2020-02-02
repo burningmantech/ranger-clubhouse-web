@@ -36,6 +36,8 @@ export default class ChFormComponent extends Component {
   // Was the original backing model updated?
   watchingModel = false;
 
+  formInline = false;
+
   @computed('originalModel')
   get model() {
     let model;

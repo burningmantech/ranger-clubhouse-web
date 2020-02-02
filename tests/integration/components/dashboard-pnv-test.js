@@ -2,16 +2,33 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import Service from '@ember/service';
 
-module('Integration | Component | dashboard-pnv', function(hooks) {
+// Stub out session
+
+const sessionStub = Service.extend({
+  user: { isAdmin: true, isVC: true }, // eslint-disable-line ember/avoid-leaking-state-in-ember-objects
+  userId: 0
+});
+
+module('Integration | Component | dashboard-pnv', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
-    this.set('person', { });
-    this.set('milestones', { training: { status: 'pending' }, alpha_shift: { status: 'pending' }});
-    this.set('photo', { });
-    await render(hbs`<DashboardPnv @milestones={{this.milestones}} @person={{this.person}} @photo={{this.photo}} />`);
+  hooks.beforeEach(function () {
+    this.owner.register('service:session', sessionStub);
+  });
 
-    assert.dom('#hello-ranger').exists();
+  test('it renders', async function (assert) {
+    const person = server.create('person', { roles: [  ]});
+
+    this.sessionService = this.owner.lookup('service:session');
+    this.set('sessionService.userId', person.id);
+    this.set('person', person);
+    this.set('milestones', { training: { status: 'pending' }, alpha_shift: { status: 'pending' } });
+    this.set('photo', { photo_status: 'approved' });
+    this.set('uploadAction', () => {});
+    await render(hbs `<DashboardPnv @milestones={{this.milestones}} @person={{this.person}} @photo={{this.photo}} @uploadAction={{this.uploadAction}} />`);
+
+    assert.dom('.mugshot').exists();
   });
 });

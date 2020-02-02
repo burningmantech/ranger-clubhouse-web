@@ -1,38 +1,26 @@
 <div class="mugshot {{unless @noFloat "float-sm-right"}} mx-auto">
-  {{#if @photo}}
-    {{#if @photo.photo_url}}
-      <img src="{{@photo.photo_url}}" class="mx-auto d-block" alt="profile photo">
-      Status:
-      {{#if (eq @photo.photo_status "approved")}}
-        <span class="text-success">Approved</span>
-      {{else}}
-        <span class="text-danger">{{@photo.photo_status}}</span>
-      {{/if}}
-      <br>
+  {{#if @photo.photo_url}}
+    <img src="{{@photo.photo_url}}" class="mx-auto d-block" alt="profile photo">
+    {{#if (eq @photo.photo_status "approved")}}
+      <span class="text-success">{{fa-icon "check"}} Approved</span>
+    {{else if (eq @photo.photo_status "submitted")}}
+      <b>{{fa-icon "hourglass-half"}} Awaiting Approval</b>
+    {{else if (eq @photo.photo_status "rejected")}}
+      <b class="text-danger">{{fa-icon "times"}} Rejected</b>
     {{else}}
-      <i class="far fa-user fa-8x"></i><br>
-      Wanna supply a photo?<br>
+      <span class="text-danger">Status: {{@photo.photo_status}}</span>
     {{/if}}
-    {{#if @photo.message}}
-      <span class="text-danger">ERROR: {{@photo.message}}</span>
-    {{/if}}
-
-    {{#if this.canShowUploadUrl}}
-      {{#if @photo.upload_url}}
-        <div class="mt-1">
-          <button class="btn btn-primary btn-sm" {{action this.uploadAction}}>Upload a new photo</button>
-        </div>
-      {{else}}
-        <small>Photo uploading is currently disabled.</small>
-      {{/if}}
-    {{/if}}
-
-    {{#if @syncAction}}
-      <div class="mt-2">
-        <button class="btn btn-secondary btn-sm" {{action @syncAction}}>Sync Photo</button>
-      </div>
-    {{/if}}
+    <br>
   {{else}}
-    <div class="loading-spinner"></div>
+    <i class="far fa-user fa-8x"></i><br>
+    Wanna supply a photo?<br>
+  {{/if}}
+
+  {{#if (and @uploadAction this.canShowUploadButton)}}
+    <div class="mt-1">
+      <button type="button" class="btn btn-primary" {{action @uploadAction}}>Upload new photo</button>
+    </div>
+  {{else}}
+    <small><b>Photo uploading is disabled</b></small>
   {{/if}}
 </div>

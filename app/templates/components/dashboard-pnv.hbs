@@ -75,7 +75,11 @@
     </div>
     <div class="onboard-tasks {{if group.isActive "bg-light-gray" "bg-gray"}}">
       {{#if (and (not this.isMobileScreen) (eq idx 0))}}
-        <PersonPhoto @photo={{@photo}} @person={{@person}} />
+        {{! On larger screens (aka desktop/tablets) float the photo on the right within the first task group
+          On smaller screens the photo is shown below the photo task -- see below.
+        }}
+
+        <PersonPhoto @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}} />
       {{/if}}
 
       {{#each group.tasks as |task|}}
@@ -128,7 +132,13 @@
                   {{task.message}}
                 {{/if}}
                 {{#if task.isPhotoUpload}}
-                  <p><a href="#">Submit a headshot </a> to use on a BMID.</p>
+                  <p>
+                    {{#if @photo.upload_enabled}}
+                      <a href="#" {{on "click" (fn @uploadAction)}}>Submit a headshot </a> to use on a BMID.
+                    {{else}}
+                      Unfortunately, photo upload is currently disabled.
+                    {{/if}}
+                  </p>
                 {{/if}}
                 {{#if task.email}}
                   <p>{{mail-to task.email}}</p>
@@ -137,11 +147,10 @@
             </div>
           </div>
         </div>
+        {{! On smaller screens (aka mobile) show the photo below the photo task}}
         {{#if (and task.isPhotoTask this.isMobileScreen)}}
-          <PersonPhoto @photo={{@photo}} @person={{@person}} @noFloat=true />
+          <PersonPhoto @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}} />
         {{/if}}
-
-
       {{/each}}
     </div>
   </div>

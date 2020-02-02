@@ -58,6 +58,31 @@ export default class ApplicationController extends Controller {
 
       return false;
     });
+
+    /*
+     * Polyfill canvas.toBlob for IE Edge
+     */
+
+    if (!HTMLCanvasElement.prototype.toBlob) {
+      Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
+        value: function (callback, type, quality) {
+          const dataURL = this.toDataURL(type, quality).split(',')[1];
+          setTimeout(function () {
+
+            let binStr = atob(dataURL),
+              len = binStr.length,
+              arr = new Uint8Array(len);
+
+            for (let i = 0; i < len; i++) {
+              arr[i] = binStr.charCodeAt(i);
+            }
+
+            callback(new Blob([arr], { type: type || 'image/png' }));
+
+          });
+        }
+      });
+    }
   }
 
   setup() {
@@ -116,7 +141,7 @@ export default class ApplicationController extends Controller {
   @computed('session.user.{is_on_duty_at_hq,has_hq_window}')
   get modeOptions() {
     const user = this.session.user;
-    const options = [ { id: 'account', title: 'Person Manage' } ];
+    const options = [{ id: 'account', title: 'Person Manage' }];
 
     if (user.has_hq_window) {
       options.push({ id: 'hq', title: 'HQ Window' });
@@ -130,8 +155,8 @@ export default class ApplicationController extends Controller {
   }
 
   _modeRoutes = {
-    'account':   'person.index',
-    'hq':        'hq.index',
+    'account': 'person.index',
+    'hq': 'hq.index',
     'timesheet': 'person.timesheet'
   };
 
@@ -168,13 +193,13 @@ export default class ApplicationController extends Controller {
    */
 
   _showPerson(person) {
-      const mode = this.searchForm.mode;
+    const mode = this.searchForm.mode;
 
-      this.set('showSearchOptions', false);
-      this.set('query', '');
-      this.set('enterPressed', false);
-      this.transitionToRoute((this._modeRoutes[mode] || 'person.index'), person.id);
-      $('#person-search-query input').blur();
+    this.set('showSearchOptions', false);
+    this.set('query', '');
+    this.set('enterPressed', false);
+    this.transitionToRoute((this._modeRoutes[mode] || 'person.index'), person.id);
+    $('#person-search-query input').blur();
   }
 
   @action
@@ -203,7 +228,7 @@ export default class ApplicationController extends Controller {
   @action
   searchAction(query, powerSelect) {
     return new RSVP.Promise((resolve, reject) => {
-      debounce(this, this._performSearch, [ query, powerSelect ], resolve, reject, SEARCH_RATE_MS);
+      debounce(this, this._performSearch, [query, powerSelect], resolve, reject, SEARCH_RATE_MS);
     });
   }
 
@@ -211,7 +236,7 @@ export default class ApplicationController extends Controller {
    * Search for the person
    */
 
-  _performSearch([ callsign, powerSelect ], resolve, reject) {
+  _performSearch([callsign, powerSelect], resolve, reject) {
     const query = callsign.trim();
     const form = this.searchForm;
 
@@ -223,7 +248,7 @@ export default class ApplicationController extends Controller {
     // Person id lookup
     if (query.startsWith('+')) {
       const id = query.substring(1, query.length);
-      const results = [ {
+      const results = [{
         callsign: `Person #${id}`,
         id,
         email: '-',
@@ -307,12 +332,12 @@ export default class ApplicationController extends Controller {
 
   @action
   submit() {
-/*    const results = this.searchResults;
-    if (!results || results.length != 1) {
-      return;
-    }
+    /*    const results = this.searchResults;
+        if (!results || results.length != 1) {
+          return;
+        }
 
-    this._showPerson(results.firstObject);*/
+        this._showPerson(results.firstObject);*/
   }
 
   @action
