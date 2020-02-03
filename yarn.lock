@@ -4811,10 +4811,10 @@ dotenv@^5.0.1:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-5.0.1.tgz#a5317459bd3d79ab88cff6e44057a6a3fbb1fcef"
   integrity sha512-4As8uPrjfwb7VXC+WnLCbXK7y+Ueb2B3zgNCePYfhxS1PYeaO1YTeplffTEcbfLhvFNGLAz90VvJs9yomG7bow==
 
-double-metaphone@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/double-metaphone/-/double-metaphone-1.0.4.tgz#0db1bc10c0530b2b7d0625ba5633763eb8c618f0"
-  integrity sha512-fx/cXLKZa3CAR/Udl7hk/7zqfCfQY45XxWQKWQjkydPP78QnsHuskSsUql7CYFfNdCduPuAwpEjy0P8Srmq6CQ==
+double-metaphone@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/double-metaphone/-/double-metaphone-1.0.5.tgz#083fa60571cf876499c03dcecbc75ffb8c472701"
+  integrity sha512-KMP/DMnXxe7/C1ike9Y7URr2HTYwgZ2MduCl3hDyBgr+dhXETmORfSsKIcEr+bKtqz186DDf385xY28Ikj5fww==
 
 duplexer3@^0.1.4:
   version "0.1.4"
