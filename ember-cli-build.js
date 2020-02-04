@@ -45,6 +45,9 @@ module.exports = function(defaults) {
   app.import('node_modules/blueimp-load-image/js/load-image.all.min.js')
 
   app.import('vendor/bootstrap/bootstrap-4.3.bundle.js');
+
+  // app.import('nod_modules/@okta/okta-signin-widget/dist/css/okta-sign-in.min.css');
+
   // If you need to use different assets in different
   // environments, specify an object as the first parameter. That
   // object's keys should be the environment name and the values

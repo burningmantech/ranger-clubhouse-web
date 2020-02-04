@@ -199,4 +199,5 @@ Router.map(function() {
 
   // Catch all for unrecognized urls
   this.route('not-found', { path: '/*path'} );
+  // this.route('sso'); -- uncomment if will SSO is ever implemented
 });
