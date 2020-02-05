@@ -7,18 +7,14 @@ export default class TicketingOffseasonComponent extends Component {
     return this.args.ticketPackage.tickets.filter((ticket) => (ticket.status == 'banked' || ticket.status == 'qualified'));
   }
 
+  /*
+   * Get the event year - September or later refers to the upcoming year's event.
+   */
+
   get eventYear() {
-    /*
-     * grrr. months are 0 to 11. seriously?
-     */
     const date = new Date();
-    const month = date.getMonth() + 1;
-    let year = date.getFullYear();
+    const year = date.getFullYear();
 
-    if (month >= 9) {
-      year++;
-    }
-
-    return year;
+    return date.getMonth() >= 8 ? year + 1 : year;
   }
 }
