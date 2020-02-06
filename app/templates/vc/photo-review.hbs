@@ -9,7 +9,7 @@
     <div class="border bg-light-gray mb-4 p-2">
       <div class="row">
         <div class="col-auto">
-          <img id={{concat "photo-" photo.id}} src="{{photo.image_url}}" class="photo-vc-review" />
+          <img id={{concat "photo-" photo.id}} src="{{photo.image_url}}" class="photo-vc-review"/>
         </div>
         <div class="col-auto">
           <h3>
@@ -17,104 +17,112 @@
             &lt;{{photo.person.first_name}} {{photo.person.last_name}}, {{photo.person.status}}&gt;
           </h3>
           <p>
-            <table class="table table-width-auto">
-              <thead>
-                <tr>
-                  <th>Status</th>
-                  <th>ID</th>
-                  <th>Uploaded</th>
-                  <th>Reviewed</th>
-                  <th>Edited</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    {{#if (eq photo.status "approved")}}
-                      <b class="text-success">{{fa-icon "check"}} {{photo.status}}</b>
-                    {{else if (eq photo.status "rejected")}}
-                      <b class="text-danger">{{fa-icon "times"}} {{photo.status}}</b>
-                    {{else}}
-                      {{photo.status}}
-                    {{/if}}
-                  </td>
-                  <td class="text-right">
-                    {{photo.id}}
-                  </td>
-                  <td>
-                    {{#if photo.uploaded_at}}
-                      {{photo.uploaded_at}}<br>
-                      by {{#if photo.upload_person}}
-                        <PersonLink @person={{photo.upload_person}} />
-                      {{else}}
-                        <i>unknown</i>
-                      {{/if}}
-                    {{else}}
-                      <i>never</i>
-                    {{/if}}
-                  </td>
-                  <td>
-                    {{#if photo.reviewed_at}}
-                      {{photo.reviewed_at}}<br>
-                      by {{#if photo.review_person}}
-                        <PersonLink @person={{photo.review_person}} />
-                      {{else}}
-                        <i>unknown</i>
-                      {{/if}}
-                    {{else}}
-                      <i>never</i>
-                    {{/if}}
-                  </td>
-                  <td>
-                    {{#if photo.edited_at}}
-                      {{photo.edited_at}}<br>
-                      by {{#if photo.edit_person}}
-                        <PersonLink @person={{photo.edit_person}} />
-                      {{else}}
-                        <i>unknown</i>
-                      {{/if}}
-                    {{else}}
-                      <i>never</i>
-                    {{/if}}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <table class="table table-width-auto">
+            <thead>
+            <tr>
+              <th>Status</th>
+              <th>ID</th>
+              <th>Uploaded</th>
+              <th>Reviewed</th>
+              <th>Edited</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                {{#if (eq photo.status "approved")}}
+                  <b class="text-success">{{fa-icon "check"}} {{photo.status}}</b>
+                {{else if (eq photo.status "rejected")}}
+                  <b class="text-danger">{{fa-icon "times"}} {{photo.status}}</b>
+                {{else}}
+                  {{photo.status}}
+                {{/if}}
+              </td>
+              <td class="text-right">
+                {{photo.id}}
+              </td>
+              <td>
+                {{#if photo.uploaded_at}}
+                  {{photo.uploaded_at}}<br>
+                  by {{#if photo.upload_person}}
+                  <PersonLink @person={{photo.upload_person}} />
+                {{else}}
+                  <i>unknown</i>
+                {{/if}}
+                {{else}}
+                  <i>never</i>
+                {{/if}}
+              </td>
+              <td>
+                {{#if photo.reviewed_at}}
+                  {{photo.reviewed_at}}<br>
+                  by {{#if photo.review_person}}
+                  <PersonLink @person={{photo.review_person}} />
+                {{else}}
+                  <i>unknown</i>
+                {{/if}}
+                {{else}}
+                  <i>never</i>
+                {{/if}}
+              </td>
+              <td>
+                {{#if photo.edited_at}}
+                  {{photo.edited_at}}<br>
+                  by {{#if photo.edit_person}}
+                  <PersonLink @person={{photo.edit_person}} />
+                {{else}}
+                  <i>unknown</i>
+                {{/if}}
+                {{else}}
+                  <i>never</i>
+                {{/if}}
+              </td>
+            </tr>
+            </tbody>
+          </table>
           </p>
           <p>
-            <button type="button" class="btn btn-secondary mr-1" disabled={{photo.isSaving}} {{on "click" (fn this.editPhotoAction photo)}}>{{fa-icon "edit"}} Edit</button>
+            <button type="button" class="btn btn-secondary mr-1" disabled={{photo.isSaving}} {{on "click"
+                                                                                                  (fn this.editPhotoAction photo)}}>{{fa-icon
+                    "edit"}} Edit
+            </button>
             {{#if (not-eq photo.status "rejected")}}
-              <button type="button" class="btn btn-danger mr-1" {{on "click" (fn this.showReviewPhoto photo)}} disabled={{photo.isSaving}}>{{fa-icon "times"}} Reject</button>
+              <button type="button" class="btn btn-danger mr-1" {{on "click" (fn this.showReviewPhoto photo)}}
+                      disabled={{photo.isSaving}}>{{fa-icon "times"}} Reject
+              </button>
             {{/if}}
             {{#if (not-eq photo.status "approved")}}
-              <button type="button" class="btn btn-success mr-1" {{on "click" (fn this.approveAction photo)}} disabled={{photo.isSaving}}>{{fa-icon "check"}} Approve</button>
+              <button type="button" class="btn btn-success mr-1" {{on "click" (fn this.approveAction photo)}}
+                      disabled={{photo.isSaving}}>{{fa-icon "check"}} Approve
+              </button>
             {{/if}}
             {{#if photo.isSaving}}
-              <LoadingIndicator />
+              <LoadingIndicator/>
             {{/if}}
           </p>
-          <p>
-            {{#if photo.rejection_history}}
-              <b>{{pluralize photo.rejection_history.length "previously rejected photo"}}</b>
-              <div class="row mt-2">
-                {{#each photo.rejection_history as |reject|}}
-                  <div class="col-auto">
-                    <div class="mugshot-icon">
-                      <img src={{reject.image_url}} {{on "click" (fn this.showPhotoInfoAction reject)}} />
-                      {{moment-format reject.uploaded_at "YYYY-MM-DD"}}
-                    </div>
+        <p>
+          {{#if photo.rejection_history}}
+            <b>{{pluralize photo.rejection_history.length "previously rejected photo"}}</b>
+            <div class="row mt-2">
+              {{#each photo.rejection_history as |reject|}}
+                <div class="col-auto">
+                  <div class="mugshot-icon">
+                    <img src={{reject.image_url}} {{on "click" (fn this.showPhotoInfoAction reject)}} />
+                    {{moment-format reject.uploaded_at "YYYY-MM-DD"}}
                   </div>
-                {{/each}}
-              </div>
-            {{else}}
-              <b>No prior rejected photos.</b>
-            {{/if}}
+                </div>
+              {{/each}}
+            </div>
+          {{else}}
+            <b>No prior rejected photos.</b>
+          {{/if}}
           </p>
           {{#if (eq photo.status "rejected")}}
             <p>
               Rejection reasons:
               {{#each photo.reject_reasons as |reason idx|~}}
-                {{~if idx ", " ~}}{{present-or-not (get this.rejectionLabels reason) (concat "Unknown reason " reason)~}}
+                {{~if idx ", " ~}}{{present-or-not (get this.rejectionLabels reason)
+                                                   (concat "Unknown reason " reason)~}}
               {{else}}
                 <i>none given</i>
               {{/each}}
@@ -133,22 +141,30 @@
 </main>
 
 {{#if this.reviewPhoto}}
-  <ModalDialog @title={{concat "Review Photo for " this.reviewPhoto.person.callsign}} @noButtons=true>
-    <ChForm @formId="photo" @originalModel={{this.reviewForm}} @changeSet={{false}} @onSubmit={{this.onRejectSubmit}} @onCancel={{this.onClose}} as |f|>
+  <ModalDialog @title={{concat "Reject Photo for " this.reviewPhoto.person.callsign}} @noButtons=true>
+    <ChForm @formId="photo" @originalModel={{this.reviewForm}} @changeSet={{false}} @onSubmit={{this.onRejectSubmit}}
+            @onCancel={{this.onClose}} as |f|>
       <div class="form-row">
-        <label>Rejection reason(s):</label>
       </div>
       <div class="form-row">
-        <f.input @name="reasons" @type="checkboxGroup" @cols=3 @options={{this.rejectionOptions}} />
+        <div class="col-3">
+          <img src={{this.reviewPhoto.image_url}} class="mugshot"/>
+        </div>
+        <div class="col-8">
+          <div class="form-row ml-2">
+            <f.input @name="reasons" @type="checkboxGroup" @cols=2 @options={{this.rejectionOptions}} />
+          </div>
+        </div>
       </div>
       <div class="form-row mt-2">
-        <f.input @name="message" @label="Custom message to include in the rejection email:" @type="textarea" @rows=10 @cols=80 @hint="All email addresses and links in the message will be hyperlinked." />
+        <f.input @name="message" @label="Custom message to include in the rejection email:" @type="textarea" @rows=5
+                 @cols=80 @hint="All email addresses and links in the message will be hyperlinked."/>
       </div>
       <div class="form-group mt-4">
         <f.submit @label="Reject Photo" @submitClass="btn-danger" disabled={{this.reviewPhoto.isSaving}} />
         <f.cancel disabled={{this.reviewPhoto.isSaving}} />
         {{#if this.reviewPhoto.isSaving}}
-          <LoadingIndicator />
+          <LoadingIndicator/>
         {{/if}}
       </div>
     </ChForm>
@@ -156,14 +172,17 @@
 {{/if}}
 
 {{#if this.editPhoto}}
-  <ModalDialog @title={{concat "Edit Photo for " this.editPhoto.person.callsign}} @closeLabel="Cancel" @onClose={{this.closeEditPhotoAction}}>
-    <PhotoEdit @imageDataUrl={{this.editPhoto.orig_url}} @submitAction={{this.submitEditedPhotoAction}} @width={{this.width}} @height={{this.height}} />
+  <ModalDialog @title={{concat "Edit Photo for " this.editPhoto.person.callsign}} @closeLabel="Cancel"
+               @onClose={{this.closeEditPhotoAction}}>
+    <PhotoEdit @imageDataUrl={{this.editPhoto.orig_url}} @submitAction={{this.submitEditedPhotoAction}}
+               @width={{this.width}} @height={{this.height}} />
   </ModalDialog>
 {{/if}}
 
 
 {{#if this.showPhoto}}
-  <ModalDialog @title={{concat "Photo ID #" this.showPhoto.id}} @closeLabel="Cancel" @onClose={{this.closePhotoInfoAction}}>
+  <ModalDialog @title="Previously Rejected Photo" @closeLabel="Cancel"
+               @onClose={{this.closePhotoInfoAction}}>
     <div class="row">
       <div class="col-auto">
         <img src={{this.showPhoto.image_url}} />
@@ -171,10 +190,10 @@
       <div class="col-auto">
         <h3>ID #{{this.showPhoto.id}}</h3>
         <p>
-          <b>Uploaded at</b> {{present-or-not this.showPhoto.uploaded_at}}
+          <b>Uploaded</b> {{present-or-not this.showPhoto.uploaded_at}}
         </p>
         <p>
-          <b>Reviewed at</b> {{present-or-not this.showPhoto.reviewed_at}}
+          <b>Reviewed</b> {{present-or-not this.showPhoto.reviewed_at}}
         </p>
         <p>
           <b>Rejection reasons</b><br>
@@ -183,6 +202,10 @@
           {{else}}
             <i>none given</i>
           {{/each}}
+        </p>
+        <p>
+          <b>Rejection Message:</b><br>
+          {{present-or-not this.showPhoto.reject_message "none given"}}
         </p>
       </div>
     </div>

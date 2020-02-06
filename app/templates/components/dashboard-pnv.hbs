@@ -132,13 +132,11 @@
                   {{task.message}}
                 {{/if}}
                 {{#if task.isPhotoUpload}}
-                  <p>
                     {{#if @photo.upload_enabled}}
                       <a href="#" {{on "click" (fn @uploadAction)}}>Submit a headshot </a> to use on a BMID.
                     {{else}}
                       Unfortunately, photo upload is currently disabled.
                     {{/if}}
-                  </p>
                 {{/if}}
                 {{#if task.email}}
                   <p>{{mail-to task.email}}</p>
