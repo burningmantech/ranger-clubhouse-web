@@ -31,7 +31,7 @@
     "ember-changeset-validations": "^2.2.1",
     "ember-cli": "~3.15.2",
     "ember-cli-app-version": "^3.2.0",
-    "ember-cli-babel": "^7.14.1",
+    "ember-cli-babel": "^7.17.1",
     "ember-cli-custom-assertions": "^0.2.0",
     "ember-cli-dependency-checker": "^3.2.0",
     "ember-cli-document-title-northm": "^1.0.3",
