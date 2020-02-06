@@ -58,25 +58,30 @@ const SETUP_ACCOUNT_TASKS = [{
       if (!milestones.photo_upload_enabled) {
         return { result: WAITING, message: 'Photo uploading is not available at this time. Check back later.' }
       }
-      return { result: ACTION_NEEDED, isPhotoUpload: true, isPhotoTask: true };
+      return { result: ACTION_NEEDED,  isPhotoUpload: true, isPhotoTask: true };
     }
   },
 
   {
     name: 'Photo Approval',
     check(milestones, prevCompleted, photo) {
-      let reasons;
+      let reasons, message;
       switch (milestones.photo_status) {
       case 'approved':
         return { result: COMPLETED };
       case 'submitted':
         return { result: WAITING, message: 'The photo is being reviewed. Usually photos are approved within 2 to 3 days.' }
       case 'rejected':
-        reasons = photo.rejections.map((reason) => `<li>${reason}</li>`).join();
+        reasons = photo.rejections.map((reason) => `<li>${reason}</li>`).join('');
+        message = `Your photo was rejected for the following reasons: <ul>${reasons}</ul>`;
+        if (photo.reject_message) {
+          message += `The photo reviewer left you an additional message:<br>${photo.reject_message}<br><br>`;
+        }
+        message += 'Please upload a new photo which conforms to the BMID requirements.';
         return {
           result: URGENT,
-          message: htmlSafe(`Your photo was rejected for the following reasons: <ul>${reasons}</ul> Please upload a new photo which comforms to the BMID requirements.`),
-          isPhotoUpload: true
+          isPhotoUpload: true,
+          message: htmlSafe(message)
         };
       default:
         return { result: NOT_AVAILABLE, message: 'Upload a photo first.' };

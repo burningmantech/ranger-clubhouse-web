@@ -11,10 +11,12 @@
   No changes will be made until you click on the 'Commit' button which appears after clicking on 'Verify Upload'.
 </p>
 
-{{#if actionResults}}
+{{#if this.isSubmitting}}
+  <LoadingDialog @customMessage={{if this.isCommitting "Submitting the upload." "Verifying the request."}} />
+{{else if this.actionResults}}
   <div class="border rounded p-2 mt-2 mb-2">
-    {{#if resultFailures}}
-      <h4 class="text-danger">{{pluralize resultFailures.length "error"}} encountered</h4>
+    {{#if this.resultFailures}}
+      <h4 class="text-danger">{{pluralize this.resultFailures.length "error"}} encountered</h4>
       <table class="table table-sm table-striped mt-4">
         <thead>
           <tr>
@@ -23,7 +25,7 @@
           </tr>
         </thead>
         <tbody>
-          {{#each resultFailures as |result|}}
+          {{#each this.resultFailures as |result|}}
             <tr>
               <td class="w-25">
                 {{#if (eq result.status "callsign-not-found")}}
@@ -46,23 +48,23 @@
           {{/each}}
         </tbody>
       </table>
-    {{else if resultsCommitted}}
+    {{else if this.resultsCommitted}}
       <h4 class="text-success">Bulk Upload SUCCESS!</h4>
     {{else}}
       <h4>Review Upload - Nothing submitted yet</h4>
     {{/if}}
 
-    {{#if resultSuccesses}}
-      <h4>{{pluralize resultSuccesses.length "callsign" }} {{if resultsCommitted "successfully uploaded" "with no errors"}}</h4>
+    {{#if this.resultSuccesses}}
+      <h4>{{pluralize this.resultSuccesses.length "callsign" }} {{if this.resultsCommitted "successfully uploaded" "with no errors"}}</h4>
       <div class="row">
-        {{#each resultSuccesses as |result|}}
+        {{#each this.resultSuccesses as |result|}}
           <div class="col-sm-6 col-md-3 col-lg-2 m-2"><PersonLink @person={{result}} /></div>
         {{/each}}
       </div>
     {{/if}}
 
-    {{#if (and resultSuccesses (not resultFailures) (not resultsCommitted))}}
-      <button class="btn btn-success" {{action commitAction}} disabled={{isSubmitting}}>Commit Upload</button>
+    {{#if (and this.resultSuccesses (not this.resultFailures) (not this.resultsCommitted))}}
+      <button class="btn btn-success" {{action this.commitAction}} disabled={{this.isSubmitting}}>Commit Upload</button>
     {{/if}}
   </div>
 {{/if}}
@@ -72,7 +74,7 @@
     <label class="col-form-label">Select bulk action:</label>
   </div>
   <div class="col-auto">
-    <ChForm::Select @name="uploadAction" @value={{uploadAction}} @options={{uploadOptions}} @includeBlank={{true}} @onChange={{action (mut uploadAction)}} @controlClass="form-control" />
+    <ChForm::Select @name="uploadAction" @value={{this.uploadAction}} @options={{this.uploadOptions}} @includeBlank={{true}} @onChange={{action (mut this.uploadAction)}} @controlClass="form-control" />
   </div>
 </div>
 
@@ -85,7 +87,11 @@
 
 <div class="form-group row">
   <div class="col-auto">
-    <button type="button" class="btn btn-primary" disabled={{or isSubmitting disableSubmit}} {{action submitAction}}>{{if isSubmitting "Submitting" "Verify Upload"}}</button>
+    <button type="button" class="btn btn-primary" disabled={{or this.isSubmitting this.disableSubmit}} {{action this.submitAction}}>{{if this.isSubmitting "Submitting" "Verify Upload"}}</button>
+    {{#if this.isSubmitting}}
+      <LoadingIndicator />
+    {{/if}}
+
   </div>
 </div>
 <p>

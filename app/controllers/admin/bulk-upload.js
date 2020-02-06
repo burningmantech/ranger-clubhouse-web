@@ -78,6 +78,7 @@ export default class AdminBulkUploadController extends Controller {
     this.toast.clear();
 
     this.set('isSubmitting', true);
+    this.set('isCommitting', commit);
     this.set('actionResults', []);
     this.ajax.request('bulk-upload', {
       method: 'POST',
@@ -101,7 +102,7 @@ export default class AdminBulkUploadController extends Controller {
         }
       }
     }).catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('isSubmitting', false));
+    .finally(() => { this.set('isSubmitting', false); this.set('isCommitting', false); });
   }
 
   @action
