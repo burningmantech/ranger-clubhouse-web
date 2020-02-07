@@ -1,11 +1,11 @@
-import { module, skip /* test */ } from 'qunit';
+import { module, test  } from 'qunit';
 import { setupTest } from 'ember-qunit';
 
 module('Unit | Route | handle-checker', function(hooks) {
   setupTest(hooks);
 
-  skip('it exists', function(assert) {
-    let route = this.owner.lookup('route:handle-checker');
+  test('it exists', function(assert) {
+    let route = this.owner.lookup('route:vc/handle-checker');
     assert.ok(route);
   });
 

@@ -110,7 +110,6 @@ Router.map(function() {
     this.route('schedule');
   });
 
-  this.route('handle-checker');
 
   this.route('person', { path: '/person/:person_id' } ,function() {
     this.route('index', { path: '/' });
@@ -193,6 +192,7 @@ Router.map(function() {
     this.route('bmid');
     this.route('bmid-sanity-check');
     this.route('bmid-print');
+    this.route('handle-checker');
     this.route('photo-review');
   });
   this.route('register');

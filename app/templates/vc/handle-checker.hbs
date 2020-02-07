@@ -4,7 +4,7 @@
   <div class="form-row align-items-left">
     <label class="col-form-label">Proposed handle</label>
     <div class="col-auto">
-      <Input @type="text" @value={{currentName}} @id="currentName" @enter={{action "checkCurrentName"}} class="form-control" @size={{20}} />
+      <Input @type="text" @value={{currentName}} @id="currentName" @enter={{action "checkCurrentName"}} class="form-control" @size={{20}} {{did-insert this.focusElement}} />
     </div>
     <div class="col-auto">
       <button type="button" class="btn btn-primary" {{action "checkCurrentName"}}>Check handle</button>
