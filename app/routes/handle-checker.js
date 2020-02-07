@@ -10,10 +10,4 @@ export default class HandleCheckerRoute extends Route.extend(AuthenticatedRouteM
     return this.ajax.request('handles')
         .then((result) => _.sortBy(result.data, [(h) => h.name.toLowerCase(), 'entityType']));
   }
-
-  @action
-  didTransition() {
-    // autofocus hack - controllers do not have a didInsertElement() sadly.
-    run.schedule('afterRender', () => { $('#currentName').focus(); });
-  }
 }

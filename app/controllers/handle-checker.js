@@ -98,7 +98,7 @@ export default class HandlerCheckerController extends Controller {
       return entity1.localeCompare(entity2);
     }
     // By default, alphas can choose the handle of a non-vintage retired Ranger
-    const disabledByDefault = new Set(['retired ranger']);
+    const disabledByDefault = new Set(['retired ranger', 'non ranger ranger']);
     return this.model.mapBy('entityType').uniq().sort(comparator).map((type) => EmberObject.create({
       id: type.dasherize(),
       name: type,
@@ -151,5 +151,10 @@ export default class HandlerCheckerController extends Controller {
   @action
   clearCheckedHandles() {
     this.set('checkedHandles', []);
+  }
+
+  @action
+  focusElement(element) {
+    element.focus();
   }
 }
