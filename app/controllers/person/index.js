@@ -146,11 +146,6 @@ export default class PersonIndexController extends Controller {
   }
 
   @action
-  closeNoteOrMessage() {
-    this.set('showConfirmNoteOrMessage', false);
-  }
-
-  @action
   sendClubhouseMessage() {
     this.transitionToRoute('person.messages', this.person.id);
   }
@@ -164,6 +159,11 @@ export default class PersonIndexController extends Controller {
   @action
   closeNote() {
     this.set('showEditNote', false);
+  }
+
+  @action
+  closeConfirmNoteOrMessage() {
+    this.set('showConfirmNoteOrMessage', false);
   }
 
   @action

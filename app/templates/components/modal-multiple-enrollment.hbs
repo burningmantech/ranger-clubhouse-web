@@ -1,36 +1,45 @@
-<ModalDialog @title={{data.title}} @onClose={{onClose}}>
-  <p>
-    {{#if isMe}}You are{{else}}The person is{{/if}} already
-    enrolled in {{pluralize data.slots.length (if data.isAlpha "Alpha shift" (concat trainingType " session")) }}:
-  </p>
-  <p>
-    {{#each data.slots as |slot|}}
-      <b>{{slot.position.title}} - {{slot.description}} {{shift-format slot.begins}}</b><br>
-    {{/each}}
-  </p>
+<ModalDialog @title={{data.title}} as |modal|>
+  <modal.body>
+    <p>
+      {{#if isMe}}You are{{else}}The person is{{/if}} already
+      enrolled in {{pluralize data.slots.length (if data.isAlpha "Alpha shift" (concat trainingType " session")) }}:
+    </p>
+    <p>
+      {{#each data.slots as |slot|}}
+        <b>{{slot.position.title}} - {{slot.description}} {{shift-format slot.begins}}</b><br>
+      {{/each}}
+    </p>
     {{#if data.forced}}
-    <p>
-      Because you either have the Admin, Trainer, VC or Mentor role, OR are a Trainer,
-      {{if isMe "you have" "the person has"}}
-      been added to the
-      {{#if data.isAlpha}}Alpha shift{{else}}{{trainingType}} session{{/if}}.
-      Hope you know what you are doing!
-    </p>
+      <p>
+        Because you either have the Admin, Trainer, VC or Mentor role, OR are a Trainer,
+        {{if isMe "you have" "the person has"}}
+        been added to the
+        {{#if data.isAlpha}}Alpha shift{{else}}{{trainingType}} session{{/if}}.
+        Hope you know what you are doing!
+      </p>
     {{else}}
-    <p>
-      {{if isMe "You" "The person"}} may only sign up for one {{#if data.isAlpha}}Alpha shift{{else}}{{trainingType}} session{{/if}}.
-      Multiple enrollments are not allowed. If you have missed a class and need to sign up for another session, you will neeed to
-      contact the Training Academy.
-    </p>
-    <p>
-      Contact {{mail-to (config "TrainingAcademyEmail")}} for help.
-    </p>
+      <p>
+        {{if isMe "You" "The person"}} may only sign up for one {{#if data.isAlpha}}
+        Alpha shift{{else}}{{trainingType}} session{{/if}}.
+        Multiple enrollments are not allowed. If you have missed a class and need to sign up for another session, you
+        will neeed to
+        contact the Training Academy.
+      </p>
+      <p>
+        Contact {{mail-to (config "TrainingAcademyEmail")}} for help.
+      </p>
     {{/if}}
 
-  {{#if (and data.person.isRanger (not data.forced))}}
-    <p>
-      {{if isMe "You are" "This person is"}} allowed to sign up for a Training session and different ART Training sessions.
-      For example, you may sign up for one Training session, one ART Green Dot session (if qualified), and one ART Sandman session (if qualified).
-    </p>
-  {{/if}}
+    {{#if (and data.person.isRanger (not data.forced))}}
+      <p>
+        {{if isMe "You are" "This person is"}} allowed to sign up for a Training session and different ART Training
+        sessions.
+        For example, you may sign up for one Training session, one ART Green Dot session (if qualified), and one ART
+        Sandman session (if qualified).
+      </p>
+    {{/if}}
+  </modal.body>
+  <modal.footer>
+    <modal.button @label="Close" @action={{onClose}} @type="primary"/>
+  </modal.footer>
 </ModalDialog>

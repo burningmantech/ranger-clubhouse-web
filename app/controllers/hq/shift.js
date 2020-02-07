@@ -1,10 +1,10 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
-import { validatePresence } from 'ember-changeset-validations/validators';
-import { set } from '@ember/object';
+import {action, computed} from '@ember/object';
+import {validatePresence} from 'ember-changeset-validations/validators';
+import {set} from '@ember/object';
 import * as Position from 'clubhouse/constants/positions';
-import { fadeIn, fadeOut } from "ember-animated/motions/opacity";
-import { wait } from "ember-animated";
+import {fadeIn, fadeOut} from "ember-animated/motions/opacity";
+import {wait} from "ember-animated";
 
 export default class HqShiftController extends Controller {
   ignoreTimesheetVerification = false;
@@ -25,15 +25,15 @@ export default class HqShiftController extends Controller {
 
   fadeDuration = 500;  // Time in ms to fade in/out text
 
-  *fade({ duration, insertedSprites, removedSprites }) {
+  * fade({duration, insertedSprites, removedSprites}) {
     removedSprites.forEach(sprite => {
-      fadeOut(sprite, { duration: duration / 2 });
+      fadeOut(sprite, {duration: duration / 2});
     });
 
     yield wait(duration / 2);
 
     insertedSprites.forEach(sprite => {
-      fadeIn(sprite, { duration: duration / 2 });
+      fadeIn(sprite, {duration: duration / 2});
     });
   }
 
@@ -119,9 +119,9 @@ export default class HqShiftController extends Controller {
     this.set('isSubmitting', true);
     entry.set('verified', true);
     entry.save().then(() => {
-        this.toast.success('Timesheet was successfully marked correct.');
-        this.set('entry', null);
-      })
+      this.toast.success('Timesheet was successfully marked correct.');
+      this.set('entry', null);
+    })
       .catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.set('isSubmitting', false));
   }
@@ -148,16 +148,16 @@ export default class HqShiftController extends Controller {
 
     this.set('isCorrectionSubmitting', true);
     model.save().then(() => {
-        this.set('showCorrectionForm', false);
-        this.toast.success('Correction request was succesfully submitted.');
-      }).catch((response) => this.house.handleErrorResponse(response))
+      this.set('showCorrectionForm', false);
+      this.toast.success('Correction request was succesfully submitted.');
+    }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.set('isCorrectionSubmitting', false));
   }
 
   @action
   assetCheckInAction(ap) {
     set(ap, 'isSubmitting', true);
-    this.ajax.request(`asset/${ap.asset.id}/checkin`, { method: 'POST' })
+    this.ajax.request(`asset/${ap.asset.id}/checkin`, {method: 'POST'})
       .then((result) => {
         set(ap, 'checked_in', result.checked_in);
         this.toast.success('Asset has been successfully checked in.');
@@ -169,28 +169,52 @@ export default class HqShiftController extends Controller {
     this.set('isMarkingOffSite', true);
     this.person.set('on_site', on_site);
     this.person.save().then(() => {
-        this.toast.success(`${this.person.callsign} has been successfully marked ${on_site ? 'ON' : 'OFF'} SITE.`);
-      })
+      this.toast.success(`${this.person.callsign} has been successfully marked ${on_site ? 'ON' : 'OFF'} SITE.`);
+    })
       .catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.set('isMarkingOffSite', false));
   }
 
   @action
   markOffSite() {
-    if (this.assetsCheckedOut.length ||
-      this.unverifiedTimesheets.length ||
-      !this.isOffDuty) {
-
-      this.modal.open('modal-site-leave', {
-        assetsCheckedOut: this.assetsCheckedOut,
-        isOnDuty: !this.isOffDuty,
-        unverifiedTimesheetCount: this.unverifiedTimesheets.length,
-      }, () => { this._updateOnSite(false) });
+    if (this.pendingItems > 0) {
+      this.set('showSiteLeaveDialog', true);
     } else {
       this.modal.confirm('Confirm Marking Person Off Site',
         `Are you sure you wish to mark ${this.person.callsign} as OFF SITE?`,
-        () => { this._updateOnSite(false) });
+        () => {
+          this._updateOnSite(false)
+        });
     }
+  }
+
+  get pendingItems() {
+    let items = 0;
+
+    if (!this.isOffDuty) {
+      items++;
+    }
+
+    if (this.unverifiedTimesheets.length) {
+      items++;
+    }
+
+    if (this.assetsCheckedOut.length) {
+      items++;
+    }
+
+    return items++;
+  }
+
+  @action
+  cancelSiteLeaveDialog() {
+    this.set('showSiteLeaveDialog', false);
+  }
+
+  @action
+  forceMarkOffSite() {
+    this._updateOnSite(false);
+    this.set('showSiteLeaveDialog', false);
   }
 
   @action
@@ -221,27 +245,27 @@ export default class HqShiftController extends Controller {
   @computed('eventInfo.meals')
   get mealInfo() {
     switch (this.eventInfo.meals) {
-    case 'all':
-      return 'NO POG - has Eat It All BMID';
-    case 'pre':
-      return 'Event Week & Post';
-    case 'post':
-      return 'Pre- and Event Week';
-    case 'event':
-      return 'Pre-Event & Post-Event';
-    case 'pre+event':
-      return 'Post-Event';
-    case 'event+post':
-      return 'Pre-Event';
-    case 'pre+post':
-      return 'Event Week';
-    case 'pogs':
-      return 'Every shift worked';
-    default:
-      if (!this.eventInfo.meals) {
+      case 'all':
+        return 'NO POG - has Eat It All BMID';
+      case 'pre':
+        return 'Event Week & Post';
+      case 'post':
+        return 'Pre- and Event Week';
+      case 'event':
+        return 'Pre-Event & Post-Event';
+      case 'pre+event':
+        return 'Post-Event';
+      case 'event+post':
+        return 'Pre-Event';
+      case 'pre+post':
+        return 'Event Week';
+      case 'pogs':
         return 'Every shift worked';
-      }
-      return `Unknown ${this.eventInfo.meals}`;
+      default:
+        if (!this.eventInfo.meals) {
+          return 'Every shift worked';
+        }
+        return `Unknown ${this.eventInfo.meals}`;
     }
   }
 

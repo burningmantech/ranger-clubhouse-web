@@ -6,18 +6,6 @@ export default class ModalDialogComponent extends Component {
   isClosed = false;
   dialogBox = null;
 
-  get confirmLabel() {
-    return this.args.confirmLabel ? this.args.confirmLabel : 'Confirm';
-  }
-
-  get cancelLabel() {
-    return this.args.cancelLabel ? this.args.cancelLabel : 'Cancel';
-  }
-
-  get closeLabel() {
-    return this.args.closeLabel ? this.args.closeLabel : 'Close';
-  }
-
   @action
   boxInserted(element) {
     this.dialogBox = element;

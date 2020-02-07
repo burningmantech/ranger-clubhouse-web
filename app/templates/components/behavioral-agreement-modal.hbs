@@ -1,36 +1,44 @@
-<ModalDialog @title="Burning Man's Behavioral Standards Agreement" @onClose={{@closeAgreement}} @onConfirm={{@signAgreement}} @confirmLabel="I Agree" @cancelLabel="I do not agree">
-  <p>
-    Burning Man’s culture honors and promotes freedom of expression, unless that expression harms others.
-  </p>
+<ModalDialog @title="Burning Man's Behavioral Standards Agreement" as |modal|>
+  <modal.body>
+    <p>
+      Burning Man’s culture honors and promotes freedom of expression, unless that expression harms others.
+    </p>
 
-  <p>
-    The Burning Man organization that supports the year-round activities
-    of the Burning Man community, has zero tolerance for behavior that is
-    non-consensual, abusive, or harmful to others. This includes and is
-    not limited to:
-  </p>
+    <p>
+      The Burning Man organization that supports the year-round activities
+      of the Burning Man community, has zero tolerance for behavior that is
+      non-consensual, abusive, or harmful to others. This includes and is
+      not limited to:
+    </p>
 
-  <ul>
-    <li>Violence – both physical and verbal</li>
-    <li>
-      Harassment, including non-consensual interactions, as stated in our Harassment Discrimination and Retaliation
-      Prevention Policy (<a href="https://bit.ly/2HgVXOK" target="_blank" rel="noopener">Click here</a> to read -- opens in a new window)
-    </li>
-    <li>Coercion (abuse of power – including but not limited to sex, drugs, resources, etc.)</li>
-    <li>Sexual Assault</li>
-    <li>Intoxication while on duty</li>
-    <li>Theft or Vandalism</li>
-  </ul>
+    <ul>
+      <li>Violence – both physical and verbal</li>
+      <li>
+        Harassment, including non-consensual interactions, as stated in our Harassment Discrimination and Retaliation
+        Prevention Policy (<a href="https://bit.ly/2HgVXOK" target="_blank" rel="noopener">Click here</a> to read --
+        opens
+        in a new window)
+      </li>
+      <li>Coercion (abuse of power – including but not limited to sex, drugs, resources, etc.)</li>
+      <li>Sexual Assault</li>
+      <li>Intoxication while on duty</li>
+      <li>Theft or Vandalism</li>
+    </ul>
 
-  <p>
-    By clicking on "I Agree", you as both staff and/or a manager, agree to
-    abide by this Behavioral Standards Agreement. Nothing in this Agreement
-    modifies, conflicts, or affects the Burning Man Harassment,
-    Discrimination and Retaliation Prevention Policy
-    (<a href="https://bit.ly/2HgVXOK" target="_blank" rel="noopener">Click here</a> to read -- opens in a new window)
-  </p>
-  <p>
-    In addition to the above, you agree to be your awesome self, look out
-    for others and encourage the good in all!
-  </p>
+    <p>
+      By clicking on "I Agree", you as both staff and/or a manager, agree to
+      abide by this Behavioral Standards Agreement. Nothing in this Agreement
+      modifies, conflicts, or affects the Burning Man Harassment,
+      Discrimination and Retaliation Prevention Policy
+      (<a href="https://bit.ly/2HgVXOK" target="_blank" rel="noopener">Click here</a> to read -- opens in a new window)
+    </p>
+    <p>
+      In addition to the above, you agree to be your awesome self, look out
+      for others and encourage the good in all!
+    </p>
+  </modal.body>
+  <modal.footer>
+    <modal.button @label="I do not agree" @action={{@closeAgreement}} @type="secondary"/>
+    <modal.button @label="I Agree" @action={{@signAgreement}} @type="primary"/>
+  </modal.footer>
 </ModalDialog>

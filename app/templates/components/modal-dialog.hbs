@@ -6,21 +6,10 @@
           <h5 class="modal-title">{{@title}}</h5>
         </div>
       {{/if}}
-      <div class="modal-body">
-        {{yield}}
-        {{#unless @noButtons}}
-          <div class="row mt-2">
-            <div class="text-right col-sm-12">
-              {{#if @onConfirm}}
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{this.cancelLabel}}</button>
-                <button type="button" class="btn btn-primary" {{action @onConfirm}}>{{this.confirmLabel}}</button>
-              {{else}}
-                <button type="button" class="btn btn-primary" data-dismiss="modal">{{this.closeLabel}}</button>
-              {{/if}}
-            </div>
-          </div>
-        {{/unless}}
-      </div>
+      {{yield (hash body=(component "modal/body")
+                    footer=(component "modal/footer")
+                    button=(component "modal/button" action=action label=label type=type))
+      }}
     </div>
   </div>
 </div>

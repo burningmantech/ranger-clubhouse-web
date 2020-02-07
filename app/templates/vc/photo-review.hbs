@@ -141,73 +141,82 @@
 </main>
 
 {{#if this.reviewPhoto}}
-  <ModalDialog @title={{concat "Reject Photo for " this.reviewPhoto.person.callsign}} @noButtons=true>
-    <ChForm @formId="photo" @originalModel={{this.reviewForm}} @changeSet={{false}} @onSubmit={{this.onRejectSubmit}}
-            @onCancel={{this.onClose}} as |f|>
-      <div class="form-row">
-      </div>
-      <div class="form-row">
-        <div class="col-3">
-          <img src={{this.reviewPhoto.image_url}} class="mugshot"/>
-        </div>
-        <div class="col-8">
-          <div class="form-row ml-2">
-            <f.input @name="reasons" @type="checkboxGroup" @cols=2 @options={{this.rejectionOptions}} />
+  <ModalDialog @title={{concat "Reject Photo for " this.reviewPhoto.person.callsign}} as |modal|>
+    <modal.body>
+      <ChForm @formId="photo" @originalModel={{this.reviewForm}} @changeSet={{false}} @onSubmit={{this.onRejectSubmit}}
+              @onCancel={{this.onClose}} as |f|>
+        <div class="form-row">
+          <div class="col-3">
+            <img src={{this.reviewPhoto.image_url}} class="mugshot"/>
+          </div>
+          <div class="col-8  ml-2">
+            <label>Rejection Reasons:</label>
+            <div class="form-row">
+              <f.input @name="reasons" @type="checkboxGroup" @cols=2 @options={{this.rejectionOptions}} />
+            </div>
           </div>
         </div>
-      </div>
-      <div class="form-row mt-2">
-        <f.input @name="message" @label="Custom message to include in the rejection email:" @type="textarea" @rows=5
-                 @cols=80 @hint="All email addresses and links in the message will be hyperlinked."/>
-      </div>
-      <div class="form-group mt-4">
-        <f.submit @label="Reject Photo" @submitClass="btn-danger" disabled={{this.reviewPhoto.isSaving}} />
-        <f.cancel disabled={{this.reviewPhoto.isSaving}} />
-        {{#if this.reviewPhoto.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
-      </div>
-    </ChForm>
+        <div class="form-row mt-2">
+          <f.input @name="message" @label="Custom message to include in the rejection email:" @type="textarea" @rows=5
+                   @cols=80 @hint="All email addresses and links in the message will be hyperlinked."/>
+        </div>
+        <div class="form-group mt-2">
+          <f.submit @label="Reject Photo" @submitClass="btn-danger" disabled={{this.reviewPhoto.isSaving}} />
+          <f.cancel disabled={{this.reviewPhoto.isSaving}} />
+          {{#if this.reviewPhoto.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
+        </div>
+      </ChForm>
+    </modal.body>
   </ModalDialog>
 {{/if}}
 
 {{#if this.editPhoto}}
-  <ModalDialog @title={{concat "Edit Photo for " this.editPhoto.person.callsign}} @closeLabel="Cancel"
-               @onClose={{this.closeEditPhotoAction}}>
-    <PhotoEdit @imageDataUrl={{this.editPhoto.orig_url}} @submitAction={{this.submitEditedPhotoAction}}
-               @width={{this.width}} @height={{this.height}} />
+  <ModalDialog @title={{concat "Edit Photo for " this.editPhoto.person.callsign}} as |modal|>
+    <modal.body>
+      <PhotoEdit @imageDataUrl={{this.editPhoto.orig_url}} @submitAction={{this.submitEditedPhotoAction}}
+                 @width={{this.width}} @height={{this.height}} />
+    </modal.body>
+    <modal.footer>
+      <modal.button @label="Cancel" @action={{this.closeEditPhotoAction}} @type="secondary"/>
+    </modal.footer>
   </ModalDialog>
 {{/if}}
 
 
 {{#if this.showPhoto}}
-  <ModalDialog @title="Previously Rejected Photo" @closeLabel="Cancel"
-               @onClose={{this.closePhotoInfoAction}}>
-    <div class="row">
-      <div class="col-auto">
-        <img src={{this.showPhoto.image_url}} />
+  <ModalDialog @title="Previously Rejected Photo" as |modal|>
+    <modal.body>
+      <div class="row">
+        <div class="col-auto">
+          <img src={{this.showPhoto.image_url}} />
+        </div>
+        <div class="col-auto">
+          <h3>ID #{{this.showPhoto.id}}</h3>
+          <p>
+            <b>Uploaded</b> {{present-or-not this.showPhoto.uploaded_at}}
+          </p>
+          <p>
+            <b>Reviewed</b> {{present-or-not this.showPhoto.reviewed_at}}
+          </p>
+          <p>
+            <b>Rejection reasons</b><br>
+            {{#each this.showPhoto.reject_reasons as |reason idx|~}}
+              {{~if idx ", " ~}}{{present-or-not (get this.rejectionLabels reason) (concat "Unknown reason " reason)~}}
+            {{else}}
+              <i>none given</i>
+            {{/each}}
+          </p>
+          <p>
+            <b>Rejection Message:</b><br>
+            {{present-or-not this.showPhoto.reject_message "none given"}}
+          </p>
+        </div>
       </div>
-      <div class="col-auto">
-        <h3>ID #{{this.showPhoto.id}}</h3>
-        <p>
-          <b>Uploaded</b> {{present-or-not this.showPhoto.uploaded_at}}
-        </p>
-        <p>
-          <b>Reviewed</b> {{present-or-not this.showPhoto.reviewed_at}}
-        </p>
-        <p>
-          <b>Rejection reasons</b><br>
-          {{#each this.showPhoto.reject_reasons as |reason idx|~}}
-            {{~if idx ", " ~}}{{present-or-not (get this.rejectionLabels reason) (concat "Unknown reason " reason)~}}
-          {{else}}
-            <i>none given</i>
-          {{/each}}
-        </p>
-        <p>
-          <b>Rejection Message:</b><br>
-          {{present-or-not this.showPhoto.reject_message "none given"}}
-        </p>
-      </div>
-    </div>
+    </modal.body>
+    <modal.footer>
+      <modal.button @label="Close" @action={{this.closePhotoInfoAction}} @type="primary"/>
+    </modal.footer>
   </ModalDialog>
 {{/if}}

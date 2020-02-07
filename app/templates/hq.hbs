@@ -1,12 +1,12 @@
 <ChSidebar>
   <ChSidebarGroup @title="HQ Window">
-    <ChSidebarLink @routePath="hq.shift" @title="Shift Manage" @icon="walking" @iconType="s" />
-    <ChSidebarLink @routePath="hq.schedule" @title="Schedule / Sign Up" @icon="clipboard" />
-    <ChSidebarLink @routePath="hq.messages" @title="Messages" @icon="envelope" @badgeText={{this.person.unread_message_count}} />
-    <ChSidebarLink @routePath="hq.timesheet" @title="Timesheets" @class="dropdown-item" @icon="clock" />
-    <ChSidebarLink @routePath="hq.assets" @title="Asset History" @class="dropdown-item" @icon="broadcast-tower" @iconType="s" />
-    <ChSidebarLink @routePath="hq.training-info" @title="Training Info" @icon="graduation-cap" @iconType="s" />
-    <ChSidebarLink @routePath="hq.site-checkin" @title="Site Check In" @icon="list-ol" @iconType="s" />
+    <ChSidebarLink @route="hq.shift" @title="Shift Manage" @icon="walking" @iconType="s" />
+    <ChSidebarLink @route="hq.schedule" @title="Schedule / Sign Up" @icon="clipboard" />
+    <ChSidebarLink @route="hq.messages" @title="Messages" @icon="envelope" @badgeText={{this.person.unread_message_count}} />
+    <ChSidebarLink @route="hq.timesheet" @title="Timesheets" @class="dropdown-item" @icon="clock" />
+    <ChSidebarLink @route="hq.assets" @title="Asset History" @class="dropdown-item" @icon="broadcast-tower" @iconType="s" />
+    <ChSidebarLink @route="hq.training-info" @title="Training Info" @icon="graduation-cap" @iconType="s" />
+    <ChSidebarLink @route="hq.site-checkin" @title="Site Check In" @icon="list-ol" @iconType="s" />
   </ChSidebarGroup>
 </ChSidebar>
 
