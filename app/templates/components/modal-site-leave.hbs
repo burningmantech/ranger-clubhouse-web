@@ -1,23 +1,34 @@
-<ModalDialog @title="Outstanding Item(s)" @onClose={{onClose}} @onConfirm={{onConfirm}} @confirmLabel="Mark Person As Off Site" @cancelLabel="Deal With Items">
-  <strong class="text-danger">{{pluralize pendingItems "item"}} still needs to be dealt with before marking this person off site:</strong>
-  <ul class="mt-2 mb-2">
-    {{#if isOnDuty}}
-      <li>
-        Person is still listed as being on duty.
-      </li>
-    {{/if}}
-    {{#if assetsCheckedOut}}
-      <li>
-        {{pluralize assetsCheckedOut.length "asset"}} has not been collected.
-      </li>
-    {{/if}}
-    {{#if unverifiedTimesheetCount}}
-      <li>
-        {{if (eq unverifiedTimesheetCount 1) "A timesheet entry has" (concat  unverifiedTimesheetCount " timesheet entries have")}} not been verified.
-      </li>
-    {{/if}}
-  </ul>
-  <p>
-    You may choose to ignore this warning and proceed to mark this person off site. However, you really should take care of the items listed above.
-  </p>
+<ModalDialog @title="Outstanding Item(s)" as |modal|>
+  <modal.body>
+    <strong class="text-danger">{{pluralize this.pendingItems "item"}} still needs to be dealt with before marking this
+      person off site:</strong>
+    <ul class="mt-2 mb-2">
+      {{#if this.isOnDuty}}
+        <li>
+          Person is still listed as being on duty.
+        </li>
+      {{/if}}
+      {{#if this.assetsCheckedOut}}
+        <li>
+          {{pluralize this.assetsCheckedOut.length "asset"}} has not been collected.
+        </li>
+      {{/if}}
+      {{#if this.unverifiedTimesheetCount}}
+        <li>
+          {{if (eq this.unverifiedTimesheetCount 1) "A timesheet entry has"
+               (concat  this.unverifiedTimesheetCount " timesheet entries have")}} not been verified.
+        </li>
+      {{/if}}
+    </ul>
+    <p>
+      You may choose to ignore this warning and proceed to mark this person off site. However, you really should take
+      care of the items listed above.
+    </p>
+  </modal.body>
+
+  <modal.footer>
+    <modal.button @label="Mark Person As Off Site" @action={{@onConfirm}} @type="secondary"/>
+    <modal.button @label="Deal With Items" @action={{@onClose}} @type="primary"/>
+  </modal.footer>
+
 </ModalDialog>

@@ -1,19 +1,4 @@
 <h3>General Account Info</h3>
-{{#if editPositions}}
-  <Person::PositionForm @positions={{positions}} @positionIds={{positionIds}} @onSave={{action "savePositions"}} @onCancel={{action "cancelPositions"}} />
-{{/if}}
-
-{{#if editRoles}}
-  <Person::RoleForm @roles={{roles}} @roleIds={{roleIds}} @onSave={{action "saveRoles"}} @onCancel={{action "cancelRoles"}} />
-{{/if}}
-
-{{#if person.unread_message_count}}
-  <ChAlert @type="warning" @bold=true>
-    {{fa-icon "envelope"}} {{pluralize person.unread_message_count "unread Clubhouse message"}}
-    <LinkTo @route="person.messages" class="btn btn-success">Read Now</LinkTo>
-  </ChAlert>
-{{/if}}
-
 {{#ch-form "person" person  onSubmit=(action "savePersonAction") as |f|}}
   <PersonPhoto @photo={{photo}} @person={{person}} @uploadAction={{this.showUploadDialogAction}} />
 
@@ -33,7 +18,8 @@
             <div class="text-muted">missing</div>
           {{/if}}
           {{#if (has-role "admin" "vc" "view-pii")}}
-            <div class="mt-2">primary phone {{#if person.home_phone}}{{phone-link person.home_phone}}{{else}}n/a{{/if}}</div>
+            <div class="mt-2">primary phone {{#if person.home_phone}}{{phone-link person.home_phone}}{{else}}
+              n/a{{/if}}</div>
             {{#if person.alt_phone}}
               <div class="mt-2">alt phone {{phone-link person.alt_phone}}</div>
             {{/if}}
@@ -142,9 +128,13 @@
     <label for="person_position" class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Positions</label>
     <div class="col-md-9 col-sm-12">
       <div class="row col-12 mt-1 mb-2">
-        <button type="button" {{action "togglePositions"}} class="btn btn-secondary btn-sm mr-2">{{if showPositions "Hide" "Show"}} Positions</button>
+        <button type="button" {{action "togglePositions"}} class="btn btn-secondary btn-sm mr-2">{{if showPositions
+                                                                                                      "Hide" "Show"}}
+          Positions
+        </button>
         {{#if (or isAdmin isManageAndGrantPosition)}}
-          <button type="button" {{action "editPositionsAction"}} class="btn btn-secondary btn-sm">Edit Positions</button>
+          <button type="button" {{action "editPositionsAction"}} class="btn btn-secondary btn-sm">Edit Positions
+          </button>
         {{/if}}
       </div>
       {{#unless personPositions}}
@@ -170,7 +160,9 @@
     <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Roles</label>
     <div class="col-md-9 col-sm-12">
       <div class="row col-12 mt-1 mb-2">
-        <button type="button" {{action "toggleRoles"}} class="btn btn-secondary btn-sm mr-2">{{if showRoles "Hide" "Show"}} Roles</button>
+        <button type="button" {{action "toggleRoles"}} class="btn btn-secondary btn-sm mr-2">{{if showRoles "Hide"
+                                                                                                  "Show"}} Roles
+        </button>
         {{#if (has-role "admin")}}
           <button type="button" {{action "editRolesAction"}} class="btn btn-secondary btn-sm">Edit Roles</button>
         {{/if}}
@@ -244,7 +236,8 @@
     <label class="col-form-label-fixed col-sm-12 col-md-2">Agreements</label>
     <div class="col-sm-12 col-md-9">
       {{#if isAdminOrVC}}
-        {{f.input "behavioral_agreement" label="Burning Man's Behavioral Standards Agreement" type="checkbox" inline=true }}<br>
+        {{f.input "behavioral_agreement" label="Burning Man's Behavioral Standards Agreement" type="checkbox"
+                  inline=true }}<br>
         {{f.input "sandman_affidavit" label="Sandman Affidavit" type="checkbox" inline=true }}
       {{else}}
         Behavioral Standards Agreement {{if person.behavioral_agreement "signed" "NOT SIGNED"}}<br>
@@ -298,48 +291,64 @@
       <div class="col-sm-12 col-md-9 ">
         <LinkTo @route="person.contact-log" class="btn btn-secondary btn-sm">Contact Log</LinkTo>
         <LinkTo @route="person.broadcast-log" class="btn btn-secondary btn-sm">Broadcast Log</LinkTo>
-        <LinkTo @route="admin.action-log" @query={{hash person=person.callsign}} class="btn btn-secondary btn-sm">Action Log</LinkTo>
+        <LinkTo @route="admin.action-log" @query={{hash person=person.callsign}} class="btn btn-secondary btn-sm">Action
+          Log
+        </LinkTo>
       </div>
     </div>
 
     <div class="form-group row">
       <label class="col-form-label-fixed col-sm-12 col-md-2">Note</label>
       <div class="col-sm-12 col-md-9">
-        {{#if showConfirmNoteOrMessage}}
-          <ModalDialog @title="Add Account Note" @onClose={{action closeNoteOrMessage}}>
-            <p>
-              The note will be shown to all Volunteer Coordinators, HQ Window Workers, and other Login Management role
-              holders when this account is viewed. The account note may only be cleared by a Clubhouse Admin. HQ Window workers and other similar user will not be able to remove the note.
-            </p>
-            <p class="text-danger">
-              <b>SEND A CLUBHOUSE MESSAGE if you are just wanting to leave a message for {{person.callsign}}</b>
-            </p>
-            <p>
-              Would you rather send a Clubhouse Message?
-            </p>
-            <button class="btn btn-primary mr-3" {{action sendClubhouseMessage}}>Send Clubhouse Message</button>
-            <button class="btn btn-primary" {{action editNote}}>Add Note</button>
-          </ModalDialog>
-        {{else if showEditNote}}
-          <ModalDialog @title={{if person.messsage "Add Account Note" "Update Account Note"}} @onConfirm={{action saveNote f.model}} @onClose={{action closeNote}} @confirmLabel="Save Note">
-            <p>
-              The note will be shown to all Volunteer Coordinators, HQ Window Workers, and other Login Management role
-              holders when this account is viewed. <span class="text-danger">A NOTE WILL NOT BE SEEN BY THE USER.</span>
-            </p>
-            <p>
-              Examples: "Person is ok to sign-in for pre-event shifts.", "Do not let this person work a shift until this person talks with Hubcap"
-            </p>
-            <p>
-              The note will automatically timestamped when saved or updated.
-            </p>
-
-            {{f.input "message" type="textarea" label="Enter the note to be shown:" cols=80 rows=6}}
-          </ModalDialog>
-        {{/if}}
         {{#if person.message}}
           <button class="btn btn-secondary btn-sm" {{action editNote}}>Update Note</button>
         {{else}}
           <button class="btn btn-secondary btn-sm" {{action confirmNoteOrMessage}}>Add Note</button>
+        {{/if}}
+        {{#if showConfirmNoteOrMessage}}
+          <ModalDialog @title="Add Account Note" as |modal|>
+            <modal.body>
+              <p>
+                A note will <b class="text-danger">NOT BE SHOWN TO {{person.callsign}}</b>. It is only meant to be seen by
+                Admins,
+                HQ Window workers, and Volunteer Coordinators.
+              </p>
+              <p>
+                <b>SEND A CLUBHOUSE MESSAGE to leave a message for {{person.callsign}}</b>
+              </p>
+              <p>
+                Would you rather send a Clubhouse Message?
+              </p>
+            </modal.body>
+            <modal.footer>
+              <button class="btn btn-primary mr-3" {{action sendClubhouseMessage}}>Send Clubhouse Message</button>
+              <button class="btn btn-primary mr-3" {{action editNote}}>Add Note</button>
+              <button class="btn btn-secondary" {{action closeConfirmNoteOrMessage}}>Cancel</button>
+            </modal.footer>
+
+          </ModalDialog>
+        {{else if showEditNote}}
+          <ModalDialog @title={{if person.messsage "Add Account Note" "Update Account Note"}} as |modal|>
+            <modal.body>
+              <p>
+                The note will be shown to all Volunteer Coordinators, HQ Window Workers, and other Login Management role
+                holders when this account is viewed. <span class="text-danger">A NOTE WILL NOT BE SEEN BY THE USER.</span>
+              </p>
+              <p>
+                Examples: "Person is ok to sign-in for pre-event shifts.", "Do not let this person work a shift until this
+                person talks with Hubcap"
+              </p>
+              <p>
+                The note will automatically timestamped when saved or updated.
+              </p>
+
+              {{f.input "message" type="textarea" label="Enter the note to be shown:" cols=80 rows=6}}
+            </modal.body>
+            <modal.footer>
+              <modal.button @label="Cancel" @action={{action closeNote}} @type="secondary"/>
+              <modal.button @label="Save Note" @action={{action saveNote f.model}} @type="primary"/>
+            </modal.footer>
+          </ModalDialog>
         {{/if}}
 
       </div>
@@ -377,6 +386,26 @@
   </div>
 {{/ch-form}}
 
-{{#if this.showUploadDialog}}
-  <PhotoUpload @person={{this.person}} @refreshPhoto={{this.refreshPhoto}} @closeAction={{this.closeUploadDialogAction}} />
+{{#if editPositions}}
+  <Person::PositionForm @positions={{positions}} @positionIds={{positionIds}} @onSave={{action "savePositions"}}
+                        @onCancel={{action cancelPositions}} />
 {{/if}}
+
+{{#if editRoles}}
+  <Person::RoleForm @roles={{roles}} @roleIds={{roleIds}} @onSave={{action "saveRoles"}}
+                    @onCancel={{action cancelRoles}} />
+{{/if}}
+
+{{#if person.unread_message_count}}
+  <ChAlert @type="warning" @bold=true>
+    {{fa-icon "envelope"}} {{pluralize person.unread_message_count "unread Clubhouse message"}}
+    <LinkTo @route="person.messages" class="btn btn-success">Read Now</LinkTo>
+  </ChAlert>
+{{/if}}
+
+
+{{#if this.showUploadDialog}}
+  <PhotoUpload @person={{this.person}} @refreshPhoto={{this.refreshPhoto}}
+               @closeAction={{this.closeUploadDialogAction}} />
+{{/if}}
+

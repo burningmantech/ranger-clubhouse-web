@@ -22,9 +22,7 @@ export default class PersonIndexRoute extends Route {
     controller.set('person', person);
     controller.setProperties(model);
     controller.set('showUploadDialog', false);
-  }
-
-  resetController(controller) {
     controller.set('showEditNote', false);
+    controller.set('showConfirmNoteOrMessage', false);
   }
 }
