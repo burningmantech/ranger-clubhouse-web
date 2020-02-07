@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import { later } from '@ember/runloop';
 import { action, computed } from '@ember/object';
-import { HandleConflict } from '../utils/handle-conflict';
+import { HandleConflict } from 'clubhouse/utils/handle-conflict';
 import {
   AmericanSoundexRule,
   DoubleMetaphoneRule,
@@ -13,7 +13,7 @@ import {
   MinLengthRule,
   PhoneticAlphabetRule,
   SubstringRule
-} from '../utils/handle-rules';
+} from 'clubhouse/utils/handle-rules';
 
 let nextCheckId = 1;
 
@@ -42,7 +42,7 @@ class CheckedHandle extends EmberObject {
   }
 }
 
-export default class HandlerCheckerController extends Controller {
+export default class VcHandlerCheckerController extends Controller {
   currentName = '';
   includeVintage = true; // Check vintage even if status isn't checked
   checkedHandles = []; // Array of {id string, name string, conflicts HandleConflict[]}

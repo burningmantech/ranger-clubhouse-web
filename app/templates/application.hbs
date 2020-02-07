@@ -132,7 +132,7 @@
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Vol Coord</a>
               <div class="dropdown-menu">
-                <LinkTo @route="handle-checker" class="dropdown-item">Check Callsigns</LinkTo>
+                <LinkTo @route="vc.handle-checker" class="dropdown-item">Check Callsigns</LinkTo>
                 {{#if (has-role "edit-access-docs")}}
                   <LinkTo @route="vc.access-documents" class="dropdown-item">Manage Access Docs</LinkTo>
                 {{/if}}
