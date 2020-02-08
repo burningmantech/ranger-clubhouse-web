@@ -21,7 +21,7 @@ const TASK_GROUPS = [{
       {
         action: 'deauthorize-assets',
         title: 'Asset Deauthorize / Flag Uncheck',
-        description: 'Uncheck all "Asset Authorized", "Vehicle Paper", "Motor Vechile Record", "Sandman Affidavit", etc. flags.',
+        description: 'Uncheck all "Asset Authorized", "Vehicle Paper", "Motor Vehicle Record", "Sandman Affidavit", etc. flags.',
         controller: 'maintenance'
       },
       {
