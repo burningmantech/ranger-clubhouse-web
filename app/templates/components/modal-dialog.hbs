@@ -7,7 +7,7 @@
         </div>
       {{/if}}
       {{yield (hash body=(component "modal/body")
-                    footer=(component "modal/footer")
+                    footer=(component "modal/footer" align=align)
                     button=(component "modal/button" action=action label=label type=type))
       }}
     </div>
