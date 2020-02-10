@@ -1,28 +1,33 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
 
 import JSONFormatter from 'json-formatter-js'
 
 export default class JsonFormatComponent extends Component {
   json = null;
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    let obj;
+  constructor() {
+    super(...arguments);
 
-    try {
-      if (typeof obj == "string") {
-        obj = JSON.parse(this.json);
-      } else {
-        obj = this.json;
+    let obj = this.args.json;
+
+    if (typeof obj == 'string') {
+      try {
+        obj = JSON.parse(obj);
+      } catch {
+        //ignore the exception
       }
-    } catch (e) {
-      obj = this.json;
     }
 
-    const formatter = new JSONFormatter(JSON.parse(this.json), 1, {
+    this.json = obj;
+  }
+
+  @action
+  componentInserted(element) {
+    const formatter = new JSONFormatter(this.json, 1, {
       animateOpen: false,
       animateClose: false,
     });
-    this.element.appendChild(formatter.render());
+    element.appendChild(formatter.render());
   }
 }

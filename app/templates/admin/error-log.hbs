@@ -1,58 +1,61 @@
 <main class="col">
   <h1>Error Log</h1>
 
-  <div class="float-right">
-    <button class="btn btn-danger btn-sm" {{action purgeLog}}>Purge Log</button>
-  </div>
 
-  {{#if logs}}
-    Showing {{page}} of {{total_pages}} pages. Total {{pluralize total "found row"}}
-    <table class="table table-hover table-sm">
+  {{#if this.error_logs}}
+    <p>
+      <button type="button" class="btn btn-danger" {{action purgeLog}}>Purge Log</button>
+    </p>
+    <p>
+      Showing {{this.page}} of {{this.total_pages}} pages. Total {{pluralize this.total "found row"}}
+    </p>
+    <table class="table table-hover table-sm table-width-auto">
       <thead>
-        <tr>
-          <th>Timestamp</th>
-          <th>Person</th>
-          <th>Type</th>
-          <th>IP</th>
-          <th>URL</th>
-          <th>Action</th>
-        </tr>
+      <tr>
+        <th>Timestamp</th>
+        <th>Person</th>
+        <th>Type</th>
+        <th>IP</th>
+        <th>URL</th>
+        <th>Action</th>
+      </tr>
       </thead>
 
       <tbody>
-        {{#each logs as |log|}}
-          <tr>
-            <td>{{log.created_at}}</td>
-            <td>
-              {{#if log.person}}
-                <PersonLink @person={{log.person}} />
-              {{else}}
-                -
-              {{/if}}
-            </td>
-            <td>
-              {{log.error_type}}
-            </td>
-            <td>
-              {{log.ip}}
-            </td>
-            <td>
-              {{log.url}}
-            </td>
-            <td>
-              <button class="btn btn-secondary btn-sm" {{action toggleLog log}}>{{if log.showing "Hide" "Show"}}</button>
-            </td>
-          </tr>
+      {{#each this.error_logs as |log|}}
+        <tr>
+          <td>{{log.created_at}}</td>
+          <td>
+            {{#if log.person}}
+              <PersonLink @person={{log.person}} />
+            {{else}}
+              -
+            {{/if}}
+          </td>
+          <td>
+            {{log.error_type}}
+          </td>
+          <td>
+            {{log.ip}}
+          </td>
+          <td>
+            {{log.url}}
+          </td>
+          <td>
+            <button type="button" class="btn btn-secondary btn-sm" {{action toggleLog log}}>{{if log.showing "Hide"
+                                                                                                 "Show"}}</button>
+          </td>
+        </tr>
 
-          {{#if log.showing}}
+        {{#if log.showing}}
           <tr>
             <td colspan="6">
               User Agent: {{log.user_agent}}<br>
               <JsonFormat @json={{log.data}} />
             </td>
           </tr>
-          {{/if}}
-        {{/each}}
+        {{/if}}
+      {{/each}}
       </tbody>
     </table>
     <div class="row">
@@ -72,6 +75,8 @@
       </div>
     </div>
   {{else}}
-    <strong class="text-danger">No log entries were found</strong>
+    <p>
+      <b class="text-danger">No log entries were found</b>
+    </p>
   {{/if}}
 </main>

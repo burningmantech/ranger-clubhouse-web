@@ -217,7 +217,7 @@ export default function () {
     return positions.all();
   });
 
-  this.get('/api/motd', () => {
+  this.get('/api/motd/bulletin', () => {
     return { motd: [] };
   });
 
