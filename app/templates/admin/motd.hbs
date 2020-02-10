@@ -4,42 +4,80 @@
   Any messages entered here will be shown on the home page when the user logins in.
 </p>
 
-<div class="float-right">
-  <button class="btn btn-secondary btn-sm" {{action newEntry}}>New Message</button>
-</div>
+<p>
+  <button class="btn btn-secondary btn-sm" {{action this.newEntry}}>New Message</button>
+</p>
 
-{{pluralize motds.length "message"}}
-<table class="table table-striped table-sm">
+{{pluralize this.motds.length "message"}}
+<table class="table table-striped table-sm table-width-auto">
   <thead>
-    <tr>
-      <th>Person</th>
-      <th>Created</th>
-      <th>Edited</th>
-      <th class="w-50">Message</th>
-      <th>Action</th>
-    </tr>
+  <tr>
+    <th>Person</th>
+    <th>Created</th>
+    <th>Edited</th>
+    <th>Audience</th>
+    <th class="w-50">Message</th>
+    <th>Action</th>
+  </tr>
   </thead>
 
   <tbody>
-    {{#each motds as |motd|}}
+  {{#each this.motds as |motd|}}
     <tr>
-      <td><PersonLink @person={{motd.person}} /></td>
+      <td>
+        <PersonLink @person={{motd.person}} />
+      </td>
       <td>{{shift-format motd.created_at}}</td>
       <td>{{shift-format motd.updated_at}}</td>
-      <td class="w-50"><ReadMore @text={{motd.message}} @limit={{50}} /></td>
       <td>
-          <button class="btn btn-danger btn-sm" {{action deleteEntry motd}}>{{fa-icon "trash"}}</button>
-          <button class="btn btn-primary btn-sm" {{action editEntry motd}}>{{fa-icon "edit"}}</button>
+        {{#if motd.for_pnvs}}
+          PNVs
+        {{/if}}
+        {{#if motd.for_auditors}}
+          Auditors
+        {{/if}}
+        {{#if motd.for_rangers}}
+          Rangers
+        {{/if}}
+      </td>
+      <td class="w-50">
+        <ReadMore @text={{motd.message}} @limit={{50}} />
+      </td>
+      <td>
+        <button class="btn btn-danger btn-sm" {{action this.deleteEntry motd}}>{{fa-icon "trash"}} Delete</button>
+        <button class="btn btn-primary btn-sm" {{action this.editEntry motd}}>{{fa-icon "edit"}} Edit</button>
       </td>
     </tr>
-    {{/each}}
+  {{/each}}
   </tbody>
 </table>
 
-{{#if entry}}
-  {{#ch-form "entry" entry modalBox=true modalTitle=(if entry.isNew "New Message" "Edit Message") onSubmit=(action saveEntry) onCancel=(action cancelEntry) as |f|}}
-    {{f.input "message" label="Message To Show" type="textarea" rows=10 cols=80 }}
-    {{f.submit}}
-    {{f.cancel}}
-  {{/ch-form}}
+{{#if this.entry}}
+  <ModalDialog @title={{if this.entry.isNew "New Message" "Edit Message"}} as |Modal|>
+    <ChForm @formId="entry" @originalModel={{this.entry}} @onSubmit={{action this.saveEntry}}
+            @onCancel={{action this.cancelEntry}} as |f|>
+    <Modal.body>
+        <div class="form-row">
+          <label class="col-form-label">Message Audience</label>
+          <div class="col-auto form-check-inline">
+            <f.input @name="for_pnvs" @label="For PNVs (Prospective + Alpha)" @type="checkbox"/>
+            <f.input @name="for_auditors" @label="For Auditors" @type="checkbox"/>
+            <f.input @name="for_rangers" @label="For Active Rangers" @type="checkbox"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <f.input @name="message" @label="Message To Show" @type="textarea" @rows=10 @cols=80/>
+        </div>
+        <div class="form-row">
+          <div class="col-auto">
+            <f.submit @disabled={{this.entry.isSaving }}/>
+            <f.cancel/>
+            {{#if this.entry.isSaving}}
+              <LoadingIndicator />
+            {{/if}}
+          </div>
+        </div>
+    </Modal.body>
+    </ChForm>
+  </ModalDialog>
 {{/if}}
