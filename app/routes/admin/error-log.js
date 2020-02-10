@@ -20,7 +20,8 @@ export default class AdminErrorLogRoute extends Route {
 
   setupController(controller, model) {
     super.setupController(...arguments);
-    controller.setProperties(model);
+    controller.setProperties(model.meta);
+    controller.set('error_logs', model.error_logs);
   }
 
   @action

@@ -3,40 +3,41 @@ import EmberObject from '@ember/object';
 
 export default class AdminActionLogRoute extends Route {
   queryParams = {
-    person: { refreshModel: true },
-    start_time: { refreshModel: true },
-    end_time: { refreshModel: true },
-    events: { refreshModel: true },
-    sort: { refreshModel: true },
-    page: { refreshModel: true },
+    person: {refreshModel: true},
+    start_time: {refreshModel: true},
+    end_time: {refreshModel: true},
+    events: {refreshModel: true},
+    sort: {refreshModel: true},
+    page: {refreshModel: true},
   };
 
   model(params) {
     // Take the query parameters, and build up the action log search parameters
-    const searchParams = Object.keys(this.queryParams).reduce((hash,key) => {
-        if (params[key]) {
-          if (key == 'events') {
-            // action log api expects a json array for events, while we
-            // want a comma separated field on the url
-            hash[key] = params[key].split(',');
-          } else {
-            hash[key] = params[key];
-          }
+    const searchParams = Object.keys(this.queryParams).reduce((hash, key) => {
+      if (params[key]) {
+        if (key == 'events') {
+          // action log api expects a json array for events, while we
+          // want a comma separated field on the url
+          hash[key] = params[key].split(',');
+        } else {
+          hash[key] = params[key];
         }
-        return hash;
-      }, {});
+      }
+      return hash;
+    }, {});
 
     this.set('searchParams', searchParams);
-    return this.ajax.request('action-log', { data: searchParams  });
+    return this.ajax.request('action-log', {data: searchParams});
   }
 
   setupController(controller, model) {
     controller.set('error', model.error);
-    controller.set('logs', model.logs);
-    controller.set('total', model.total);
-    controller.set('currentPage', model.page);
-    controller.set('total_pages', model.total_pages);
-    const query = EmberObject.create({ sort: 'desc' });
+    controller.set('logs', model.action_logs);
+    const meta = model.meta;
+    controller.set('total', meta.total);
+    controller.set('currentPage', meta.page);
+    controller.set('total_pages', meta.total_pages);
+    const query = EmberObject.create({sort: 'desc'});
     query.setProperties(this.searchParams);
     controller.set('query', query);
   }
