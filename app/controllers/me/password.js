@@ -13,7 +13,12 @@ export default class MePasswordController extends Controller {
 
     const person = this.person;
 
-    let passwords = model.getProperties('password_old', 'password', 'password_confirmation');
+    const passwords = {
+      password_old: model.password_old,
+      password: model.password,
+      password_confirmation: model.password_confirmation
+    };
+
 
     this.set('isSubmitting', true);
     return this.ajax.request(`person/${person.id}/password`, { method: 'PATCH', data: passwords }).then(() => {

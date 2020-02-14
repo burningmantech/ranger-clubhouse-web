@@ -1,5 +1,4 @@
 import Controller from '@ember/controller';
-import EmberObject from '@ember/object';
 import { action } from '@ember/object';
 import {
   validatePresence,
@@ -18,12 +17,6 @@ export default class PersonPasswordController extends Controller {
     ],
   };
 
-  passwordForm = EmberObject.create({
-    password: '',
-    password_confirmation: ''
-  });
-
-
   @action
   submitAction(model, isValid) { // eslint-disable-line no-unused-vars
     if (!isValid) {
@@ -32,7 +25,10 @@ export default class PersonPasswordController extends Controller {
 
     const person = this.person;
 
-    let passwords = model.getProperties('password', 'password_confirmation');
+    const passwords = {
+      password: model.password,
+      password_confirmation: model.password_confirmation
+    };
 
     return this.ajax.request(`person/${person.id}/password`, { method: 'PATCH', data: passwords }).then(() => {
       this.toast.success('Password has been changed.');
