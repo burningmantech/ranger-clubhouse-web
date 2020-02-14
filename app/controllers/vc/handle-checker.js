@@ -50,7 +50,7 @@ export default class VcHandlerCheckerController extends Controller {
 
   constructor() {
     super(...arguments);
-    this.addObserver('model', this.incrementallyBuildAllHandles);
+    this.addObserver('model', this.incrementallyBuildAllHandles); // eslint-disable-line ember/no-observers
   }
 
   /** Maps rule ID to {name string, rule object, enabled boolean} */

@@ -1,7 +1,7 @@
 import Helper from '@ember/component/helper';
 import { inject as service } from '@ember/service';
 import { StringToRole } from 'clubhouse/constants/roles';
-import { observer } from '@ember/object';
+import { observer } from '@ember/object'; // eslint-disable-line ember/no-observers
 import { assert } from '@ember/debug';
 
 export default Helper.extend({

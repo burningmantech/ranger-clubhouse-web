@@ -79,9 +79,9 @@ export default class VcBmidController extends Controller {
   constructor() {
     super(...arguments);
 
-    this.addObserver('viewBmids', this.startRenderBmids);
-    this.addObserver('bmids', this.startRenderBmids);
-    this.addObserver('editMode', this.startRenderBmids);
+    this.addObserver('viewBmids', this.startRenderBmids);  // eslint-disable-line ember/no-observers
+    this.addObserver('bmids', this.startRenderBmids);  // eslint-disable-line ember/no-observers
+    this.addObserver('editMode', this.startRenderBmids); // eslint-disable-line ember/no-observers
   }
 
   /*
