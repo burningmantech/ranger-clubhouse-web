@@ -63,7 +63,7 @@
     "ember-template-lint": "^1.13.2",
     "ember-test-friendly-error-handler": "^2.1.1",
     "ember-toastr": "^2.0.1",
-    "eslint-plugin-ember": "^7.8.0",
+    "eslint-plugin-ember": "^7.8.1",
     "faker": "^4.1.0",
     "loader.js": "^4.7.0",
     "qunit-dom": "^1.0.0",
