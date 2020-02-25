@@ -67,7 +67,7 @@
     "faker": "^4.1.0",
     "loader.js": "^4.7.0",
     "qunit-dom": "^1.0.0",
-    "sass": "^1.25.1-test.1",
+    "sass": "^1.26.0",
     "toastr": "^2.1.4"
   },
   "engines": {
