@@ -1,0 +1,113 @@
+<h2>Unified Flagging</h2>
+
+{{#if this.history.black_flag}}
+  <ChAlert @type="danger">
+    <h4>A PERSONNEL BLACK FLAG HAS BEEN RAISED FOR {{this.person.callsign}}</h4>
+    <p>
+      All training and mentor activity should be suspended and no further actions taken until the situation is resolved.
+    </p>
+    <p>
+      Contact the Personnel Manager for more information.
+    </p>
+
+  </ChAlert>
+{{/if}}
+<p>
+  Known Rangers & PNV are usually imported from Salesforce as part of the VolQ. The fields will be populated on various
+  Mentor pages and reports.
+</p>
+{{#if (has-role "admin" "vc" "intake")}}
+  <ChForm @formId="person" @originalModel={{this.person}} @onSubmit={{this.savePersonAction}} as |f|>
+    <div class="form-group row">
+      <label class="col-form-label col-sm-12 col-md-2">Known Rangers</label>
+      <f.input @name="known_rangers" @type="text" @size=50 @maxlength=150 @wrapClass="col-auto"/>
+    </div>
+    <div class="form-group row">
+      <label class="col-form-label col-sm-12 col-md-2">Known PNVs</label>
+      <f.input @name="known_pnvs" @type="text" @size=50 @maxlength=150 @wrapClass="col-auto"/>
+    </div>
+    <div class="form-group row">
+      <label class="col-form-label col-sm-12 col-md-2">&nbsp;</label>
+      <div class="col-auto">
+        <f.submit @label="Save" disabled={{f.model.isSaving}} />
+        {{#if f.model.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+      </div>
+    </div>
+  </ChForm>
+{{else}}
+  <dl class="row">
+    <dt class="col-1">Known Rangers:</dt>
+    <dd class="col-11">
+      {{present-or-not this.person.known_rangers "none"}}
+    </dd>
+    <dt class="col-1">Known PNVs:</dt>
+    <dd class="col-11">
+      {{present-or-not this.person.known_pnvs "none"}}
+    </dd>
+  </dl>
+{{/if}}
+
+
+<table class="table table-striped table-hover table-sm mt-2">
+  <thead>
+  <tr>
+    <th class="w-10">Team</th>
+    <th>Notes & Flags</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td class="w-10">
+      Personnel
+    </td>
+    <td>
+      {{#each this.history.black_flag_years as |year|}}
+        <b class="text-danger">{{year}} BLACK FLAG</b><br>
+      {{else}}
+        No Personnel history
+      {{/each}}
+      {{#if (has-role "admin")}}
+        <p>
+          <button type="button" class="btn btn-secondary btn-sm" {{on "click" this.toggleBlackFlag}}>
+            {{if this.history.black_flag "Clear" "Set"}} {{this.year}} Black Flag
+          </button>
+        </p>
+      {{/if}}
+    </td>
+  </tr>
+  <tr>
+    <td class="w-10">
+      RRN
+    </td>
+    <td>
+      <IntakeNotes @type="rrn" @person={{this.history}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
+    </td>
+  </tr>
+  <tr>
+    <td class="w-10">
+      VC
+    </td>
+    <td>
+      <IntakeNotes @type="vc" @person={{this.history}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
+    </td>
+  </tr>
+  <tr>
+    <td class="w-10">
+      Training
+    </td>
+    <td>
+      <IntakeTraining @trainings={{this.history.trainings}} @person={{this.person}} />
+    </td>
+  </tr>
+  <tr>
+    <td class="w-10">
+      MENTOR
+    </td>
+    <td>
+      <IntakeNotes @type="mentor" @person={{this.history}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
+    </td>
+  </tr>
+  </tbody>
+</table>

@@ -12,6 +12,7 @@ $theme-colors: (
   "primary": $kakhi,
   "khaki": $kakhi,
   "gray": #dcdcdc,
+  "orange": #ff8c00,
   "light-gray": #f0f0f0,
   "dark-gray": #808080,
   "light-red": #ff6666,
@@ -123,11 +124,24 @@ $sizes: (
 
 }
 
+
+.table-fixed {
+  table-layout: fixed;
+}
+
 @media not print {
   body {
     background-color: #fcfcfc;
   }
 
+  .table-sticky {
+    thead tr:nth-child(1) th{
+      background: $table-head-bg;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+  }
 }
 
 h1 select option {
@@ -352,6 +366,10 @@ legend {
   background-color: #f0f0f0;
 }
 
+.modal-footer-no-align {
+  justify-content: inherit !important;
+}
+
 /*
  * Add a box around a table
  */
@@ -554,4 +572,32 @@ caption {
   // readjust the size - the schedule listing reduces the font.
   color: $link-color;
   font-size: 1rem;
+}
+
+// Unified Flagging View Ranking styling
+
+.rank-none {
+  font-style: italic;
+  color: $gray-600;
+}
+
+// Rank 1 / Green, above average
+.rank-1 {
+  color: #28a745;
+}
+
+// Rank 2 - no styling
+
+// Rank 3 - Yellow / Problem
+.rank-3 {
+  color: #9a9005;
+}
+
+// Rank 4 - FLAG
+.rank-4 {
+  color: #dc3545;
+}
+
+.rank-1, .rank-2, .rank-3, .rank-4, .rank-none {
+  display: inline-block;
 }

@@ -23,6 +23,8 @@ export default class TrainingIndexRoute extends Route {
     super.setupController(...arguments);
     controller.set('training', this.modelFor('training'));
     controller.setProperties(model);
+    controller.set('editStudent', null);
+    controller.set('showEmails', false);
   }
 
   // Don't allow the year parameter to bleed over to other routes.

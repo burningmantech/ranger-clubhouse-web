@@ -1,4 +1,4 @@
-{{year-select (concat  "Trainer's Report - " training.title) year=year onChange=(action "changeYearAction") subheader=true}}
+{{year-select (concat training.title " Sessions") year=year onChange=(action "changeYearAction") subheader=true}}
 
 {{#each trainingSessions as |group|}}
   {{#ch-box (concat (shift-format group.slot.begins) " " group.slot.description)}}
@@ -32,5 +32,5 @@
     </div>
   {{/ch-box}}
 {{else}}
-<div class="text-danger">Odd, no training sessions were found for {{year}}</div>
+  <div class="text-danger mt-2"><b>No {{this.year}} {{this.training.title}} sessions were found.</b></div>
 {{/each}}

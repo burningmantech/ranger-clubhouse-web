@@ -276,16 +276,22 @@
     </div>
   </div>
 
-  {{#if this.isAdminOrVC}}
+  {{#if (has-role "admin" "vc" "intake")}}
     <div class="form-group row">
       <label class="col-form-label-fixed col-sm-12 col-md-2">VC</label>
-      <div class="col-sm-12 col-md-9 ">
-        {{#link-to "person.onboard" class="btn btn-secondary btn-sm"}}Onboard View{{/link-to}}
-        {{#link-to "person.photos" class="btn btn-secondary btn-sm"}}Photo History{{/link-to}}
+      <div class="col-sm-12 col-md-9">
+        {{#if this.isAdminOrVC}}
+          {{#link-to "person.onboard" class="btn btn-secondary btn-sm"}}Onboard View{{/link-to}}
+          {{#link-to "person.photos" class="btn btn-secondary btn-sm"}}Photo History{{/link-to}}
+        {{/if}}
+        {{#link-to "person.status-history" class="btn btn-secondary btn-sm"}}Status History{{/link-to}}
+        {{#if (has-role "intake")}}
+          {{#link-to "person.unified-flagging" class="btn btn-secondary btn-sm"}}Unified Flagging{{/link-to}}
+        {{/if}}
       </div>
     </div>
   {{/if}}
-  {{#if isAdmin}}
+  {{#if this.isAdmin}}
     <div class="form-group row">
       <label class="col-form-label-fixed col-sm-12 col-md-2">Logs</label>
       <div class="col-sm-12 col-md-9 ">
@@ -309,7 +315,8 @@
           <ModalDialog @title="Add Account Note" as |modal|>
             <modal.body>
               <p>
-                A note will <b class="text-danger">NOT BE SHOWN TO {{person.callsign}}</b>. It is only meant to be seen by
+                A note will <b class="text-danger">NOT BE SHOWN TO {{person.callsign}}</b>. It is only meant to be seen
+                by
                 Admins,
                 HQ Window workers, and Volunteer Coordinators.
               </p>
@@ -332,10 +339,12 @@
             <modal.body>
               <p>
                 The note will be shown to all Volunteer Coordinators, HQ Window Workers, and other Login Management role
-                holders when this account is viewed. <span class="text-danger">A NOTE WILL NOT BE SEEN BY THE USER.</span>
+                holders when this account is viewed. <span
+                      class="text-danger">A NOTE WILL NOT BE SEEN BY THE USER.</span>
               </p>
               <p>
-                Examples: "Person is ok to sign-in for pre-event shifts.", "Do not let this person work a shift until this
+                Examples: "Person is ok to sign-in for pre-event shifts.", "Do not let this person work a shift until
+                this
                 person talks with Hubcap"
               </p>
               <p>

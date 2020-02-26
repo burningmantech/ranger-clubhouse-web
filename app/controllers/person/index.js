@@ -20,7 +20,6 @@ const StatusOptions = [
   'non ranger',
   'past prospective',
   'prospective',
-  'prospective waitlist',
   'resigned',
   'retired',
   'suspended',

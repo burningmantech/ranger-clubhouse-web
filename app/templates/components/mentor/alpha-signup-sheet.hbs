@@ -9,8 +9,8 @@
       <tbody>
         {{#each alphaPage as |person|}}
           <tr>
-            <td class="w-5 text-center">
-              {{#if person.mentors_flag}}
+            <td class="w-5 text-center align-middle">
+              {{#if person.have_mentor_flags}}
                 {{fa-icon "check"}}
               {{else}}
                 &nbsp;
@@ -44,7 +44,7 @@
             <td class="w-25">
               <div class="signup-label">Training Location</div>
               {{#each person.trainings as |place|}}
-                {{place.description}}<br>
+                {{year-format place.slot_begins}} {{place.slot_description}}<br>
               {{/each}}
             </td>
             <td class="w-25">
@@ -86,7 +86,7 @@
       <div class="float-right small">Page {{add pageIdx 1}} of 2</div>
     </h1>
 
-    <div class="text-center h4">
+    <div class="text-center h3">
       PLEASE WRITE LEGIBLY
     </div>
 

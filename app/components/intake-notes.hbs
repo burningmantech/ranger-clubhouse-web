@@ -1,0 +1,33 @@
+{{#each this.teamNotes as |intake|}}
+  <div class="mb-1">
+    <b>{{intake.year}}
+      <IntakeRanking @rank={{intake.rank}} />
+    </b>
+    <br>
+    {{#if intake.have_notes}}
+      {{#each intake.notes as |note|}}
+        {{#unless note.is_log}}
+          <div class="mb-1">
+            &mdash; {{note.note}}
+          </div>
+        {{/unless}}
+      {{/each}}
+    {{else}}
+      <i>no notes</i>
+    {{/if}}
+  </div>
+{{else}}
+  No {{uppercase @type}} history
+{{/each}}
+<div class="mt-1">
+  <button type="button" class="btn btn-secondary btn-sm" {{on "click" this.addNoteAction}}>
+    {{if this.canAddNote "Add" "View"}} {{uppercase @type}} note / rank
+  </button>
+</div>
+
+{{#if this.addingNotes}}
+  <IntakeNoteEdit @teamNotes={{this.teamNotes}} @type={{@type}} @viewYear={{@viewYear}} @person={{@person}}
+                  @onSubmit={{@onSubmit}} @closeNoteAction={{this.closeNoteAction}}
+                  @canAddNote={{this.canAddNote}}
+  />
+{{/if}}

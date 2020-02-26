@@ -1,10 +1,18 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
+import Ember from 'ember';
 import $ from 'jquery';
 
 export default class ModalDialogComponent extends Component {
   isClosed = false;
   dialogBox = null;
+
+  // #modal-render lives in application.hbs
+  // during testing the use ember-testing instead since modal-render does not exist.
+  get destinationId() {
+     // eslint-disable-line ember/no-ember-testing-in-module-scope
+      return Ember.testing ? 'ember-testing' : 'modal-render';
+  }
 
   @action
   boxInserted(element) {

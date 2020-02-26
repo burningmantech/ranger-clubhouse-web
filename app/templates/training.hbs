@@ -1,6 +1,6 @@
 <ChSidebar>
   <ChSidebarGroup @title={{training.title}}>
-    <ChSidebarLink @route="training.index" @title="Trainer's Report" @icon="list-alt" iconType="r" />
+    <ChSidebarLink @route="training.index" @title="Training Sessions" @icon="list-alt" iconType="r" />
     <ChSidebarLink @route="training.capacity" @routeArg={{training.id}} @title="Training Capacity" @icon="battery-half" @iconType="s" />
     <ChSidebarLink @route="training.multiple-enrollments" @routeArg={{training.id}} @title="Multiple Enrollments" @icon="copy" @iconType="s" />
     <ChSidebarLink @route="training.people-training-completed" @routeArg={{training.id}} @title="Training Completed" @icon="check-square" @iconType="s" />
@@ -18,7 +18,7 @@
           Training Section
         </button>
         <div class="dropdown-menu">
-          <LinkTo @route="training.index" @model={{training.id}} class="dropdown-item">Trainer's Report</LinkTo>
+          <LinkTo @route="training.index" @model={{training.id}} class="dropdown-item">Training Sessions</LinkTo>
           <LinkTo @route="training.capacity" @model={{training.id}} class="dropdown-item">Training Capacity</LinkTo>
           <LinkTo @route="training.multiple-enrollments" @model={{training.id}} class="dropdown-item">Multiple Enrollments</LinkTo>
           <LinkTo @route="training.people-training-completed" @model={{training.id}} class="dropdown-item">Training Completed</LinkTo>

@@ -24,6 +24,12 @@
         <li>{{reason}}</li>
       {{/each}}
     </ul>
+    {{#if @photo.reject_message}}
+      <p>
+        The photo reviewer left you an additional message:<br>
+        {{@photo.reject_message}}
+      </p>
+    {{/if}}
     For a full list of photo requirements, please see <a target="_blank" rel="noopener" href="https://docs.google.com/document/d/1hUqrJwdMG6XB5nk7Eh8nY2GH4uvAFTppmCKCmfidIvQ/edit?usp=sharing">this helpful document.</a>.
   </ChAlert>
 {{/if}}

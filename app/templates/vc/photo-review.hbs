@@ -163,6 +163,7 @@
         <div class="form-group mt-2">
           <f.submit @label="Reject Photo" @submitClass="btn-danger" disabled={{this.reviewPhoto.isSaving}} />
           <f.cancel disabled={{this.reviewPhoto.isSaving}} />
+          <button type="button" class="btn btn-secondary" {{action this.rejectPreviewAction}}>Preview Email</button>
           {{#if this.reviewPhoto.isSaving}}
             <LoadingIndicator/>
           {{/if}}
@@ -170,6 +171,21 @@
       </ChForm>
     </modal.body>
   </ModalDialog>
+{{/if}}
+
+{{#if this.rejectMail}}
+  <ModalDialog @title="Rejection Email Preview" as |modal|>
+    <modal.body>
+      <div class="border">
+        <iframe {{on "load" this.insertRejectMail}} style="width: 100%; min-height: 200px;  overflow-y: scroll;">
+        </iframe>
+      </div>
+    </modal.body>
+    <modal.footer>
+      <modal.button @type="primary" @label="Close" @action={{this.closeRejectMail}} />
+    </modal.footer>
+  </ModalDialog>
+
 {{/if}}
 
 {{#if this.editPhoto}}

@@ -1,0 +1,40 @@
+<h2>Status History</h2>
+
+Showing {{pluralize this.history.length "status log" }}.
+<table class="table table-striped table-hover table-width-auto">
+  <thead>
+  <tr>
+    <th>Timestamp</th>
+    <th>Old</th>
+    <th>New</th>
+    <th>Person</th>
+    <th>Reason</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.history as |row|}}
+    <tr>
+      <td>{{row.created_at}}</td>
+      <td>{{row.old_status}}</td>
+      <td>{{row.new_status}}</td>
+      <td>
+        {{#if row.person_source}}
+          <PersonLink @person={{row.person_source}} />
+        {{else}}
+          * imported *
+        {{/if}}
+      </td>
+      <td>{{row.reason}}</td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="5"><b class="text-danger">No records found.</b></td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
+
+
+<p>
+  Note: the history may be inaccurate or have gaps prior to the 2020 PNV intake cycle.
+</p>

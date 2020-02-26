@@ -1,184 +1,351 @@
-<h1>{{year-format slot.begins}} {{training.title}} - {{shift-format slot.begins}} - {{slot.description}}</h1>
+<h1>{{year-format this.slot.begins}} {{this.training.title}} - {{shift-format this.slot.begins}}
+  - {{this.slot.description}}</h1>
 
-{{#unless slot.active}}
+{{#unless this.slot.active}}
   <p class="text-danger font-weight-bold">
     Training session has not been activated. Sign ups are disabled until the session (aka slot) has been activated.
   </p>
 {{/unless}}
-Signups: {{students.length}} of {{slot.max}}
 
-{{#if (gte students.length slot.max)}}
-  <span class="text-danger"> (FULL)</span>
-{{/if}}
+<div class="row no-gutter">
+  <div class="col-auto">
+    Signups: {{this.students.length}} of {{this.slot.max}}
+    {{#if (gte this.students.length this.slot.max)}}
+      <b class="text-danger"> (FULL)</b>
+    {{/if}}
+  </div>
+  {{#if training.is_art}}
+    <div class="col-auto">
+      ART Vets: {{this.vetCount}}
+    </div>
+    <div class="col-auto">
+      ART Prospectives: {{this.prospectiveCount}}
+    </div>
+  {{else}}
+    <div class="col-auto">
+      Vets: {{this.vetCount}}
+    </div>
+    <div class="col-auto">
+      First years: {{this.firstYearCount}}
+    </div>
+    <div class="col-auto">
+      Prospectives: {{this.prospectiveCount}}
+    </div>
+    <div class="col-auto">
+      Auditors: {{this.auditorCount}}
+    </div>
+  {{/if}}
+</div>
 
-{{#if training.is_art}}
-  ART Vets: {{vetCount}}
-  ART Alphas: {{alphaCount}}<br>
-{{else}}
-  Vets: {{vetCount}}
-  First years: {{firstYearCount}}
-  Alphas: {{alphaCount}}<br>
-{{/if}}
-
-{{#if trainers}}
-  {{#each trainers as |group|}}
-    {{group.position_title}} ({{group.trainers.length}}):
-    {{#each group.trainers as |trainer index|}}
-      {{if index ", "}}<PersonLink @person={{trainer}} />
-    {{else}}
-      <i>none found</i>
-    {{/each}}<br>
-  {{/each}}
+{{#if this.trainers}}
+  <p>
+    {{#each this.trainers as |group|}}
+      {{group.position_title}} ({{group.trainers.length}}):
+      {{#each group.trainers as |trainer index|}}
+        {{if index ", "}}
+        <PersonLink @person={{trainer}} />
+      {{else}}
+        <i>none found</i>
+      {{/each}}<br>
+    {{/each}}
+  </p>
 {{else}}
   <div class="border p-2 rounded mt-2 mb-2">
     <h4 class="text-danger">No trainer slots were found.</h4>
-    In order to correctly show how many trainers are signed up to teach this session, a trainer's slot needs to exists where the
+    In order to correctly show how many trainers are signed up to teach this session, a trainer's slot needs to exists
+    where the
     slot's description matches this session's description exactly and where the start time within one hour
     of this session.
   </div>
 {{/if}}
 
+<p>
+  The person's status is the status at the time of training. The current status will be shown below if the
+  time-of-training status differs from the current status.
+</p>
+
+{{#if this.training.is_art}}
+  A {{fa-icon "asterisk"}} by a person's status indicate an ART Prospective.
+{{/if}}
+
+
 <div class="mt-2 mb-2">
   {{! Desktop Display }}
   <div class="d-sm-block d-none">
-    <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{or isSubmitting (is-empty students)}}>{{if isSubmitting "Saving" "Save All"}}</button>
-    <LinkTo @route="training.session.trainers-report" @models={{array training.id slot.id}} class="btn btn-secondary btn-sm">Trainer's Report</LinkTo>
-    <LinkTo @route="training.session.signup-sheet" @models={{array training.id slot.id}} class="btn btn-secondary btn-sm">Sign up Sheet</LinkTo>
-    <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}} disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
-    <button class="btn btn-secondary btn-sm" {{action "showAddPersonAction"}}>Add Person</button>
-    <button class="btn btn-secondary btn-sm" {{action "showRemovePersonAction"}} disabled={{is-empty students}}>Remove Person</button>
+    <LinkTo @route="training.session.trainers-report" @models={{array this.training.id this.slot.id}}
+            class="btn btn-secondary">
+      {{fa-icon "list-alt"}} Trainer's Report
+    </LinkTo>
+    <LinkTo @route="training.session.signup-sheet" @models={{array this.training.id this.slot.id}}
+            class="btn btn-secondary">
+      {{fa-icon "clipboard-check"}} Sign up Sheet
+    </LinkTo>
+    <button class="btn btn-secondary" {{action "toggleEmailListAction"}} disabled={{is-empty this.students}}>
+      {{fa-icon "envelope"}} {{if this.showEmails "Hide Emails" "List Emails"}}
+    </button>
+    {{#if this.canAddStudent}}
+      <button class="btn btn-secondary" {{action this.showAddPersonAction}}>
+        {{fa-icon "plus-square"}} Add Person
+      </button>
+    {{/if}}
   </div>
 
   {{! Cellphone/Tablet display }}
   <div class="d-block d-sm-none">
-    <button class="btn btn-primary" {{action "saveAllStudentsAction"}} disabled={{isSubmitting}}>{{if isSubmitting "Saving" "Save All"}}</button>
     <div class="btn-group">
-      <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
         Additional Actions
       </button>
       <div class="dropdown-menu">
-        <LinkTo @route="training.session.trainers-report" @models={{array training.id slot.id}} class="dropdown-item">Trainer's Report</LinkTo>
-        <LinkTo @route="training.session.signup-sheet" @models={{array training.id slot.id}} class="dropdown-item">Sign up Sheet</LinkTo>
+        <LinkTo @route="training.session.trainers-report" @models={{array this.training.id this.slot.id}}
+                class="dropdown-item">
+          Trainer's Report
+        </LinkTo>
+        <LinkTo @route="training.session.signup-sheet" @models={{array this.training.id this.slot.id}}
+                class="dropdown-item">
+          Sign up Sheet
+        </LinkTo>
         <div class="dropdown-divider"></div>
-        <a href class="dropdown-item" {{action "toggleEmailListAction"}} disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</a>
-        <div class="dropdown-divider"></div>
-        <a href class="dropdown-item" {{action "showAddPersonAction"}}>Add Person</a>
-        <a href class="dropdown-item" {{action "showRemovePersonAction"}} disabled={{is-empty students}}>Remove Person</a>
+        <a href class="dropdown-item" {{action "toggleEmailListAction"}} disabled={{is-empty this.students}}>
+          {{if showEmails "Hide Emails" "List Emails"}}
+        </a>
+        {{#if this.canAddStudent}}
+          <div class="dropdown-divider"></div>
+          <a href class="dropdown-item" {{action "showAddPersonAction"}}>Add Person</a>
+        {{/if}}
       </div>
     </div>
   </div>
-
 </div>
 
-{{#if training.is_art}}
-  A '*' by a person's status indicate an ART Alpha.
-{{/if}}
 
-{{#if students}}
-  <table class="table table-sm table-hover table-width-auto">
-    <caption>{{pluralize students.length "student"}} {{passedCount}} passed</caption>
-    <thead>
-      <tr>
-        <th class="w-20">Callsign</th>
-        <th class="w-10">Status</th>
-        <th class="w-5">Passed?</th>
-        <th class="w-5">Rank</th>
-        <th class="w-60">Comment</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {{#each students as |student|}}
-        <tr class="{{if (or student.is_retired student.is_inactive) "bg-highlight"}}">
-          <td class="w-20">
-            {{#if (or student.is_retired student.is_inactive)}}
-              {{fa-icon "exclamation-triangle"}}
-            {{/if}}
-            <PersonLink @person={{student}} />
-          </td>
-          <td class="w-10">{{student.status}}{{#if student.is_art_alpha}}*{{/if}}</td>
-          <td class="w-5"><Input @type="checkbox" @checked={{student.passed}} /></td>
-          <td class="text-center w-5">
-            {{#if student.need_ranking}}
-              <ChForm::Select @name={{concat "student" student.id}} @value={{student.rank}} @onChange={{action "changeRankAction" student}} @includeBlank={{true}} @options={{rankOptions}} />
-            {{else if student.rank}}
-              {{student.rank}}
-            {{else}}
-              &nbsp;
-            {{/if}}
-          </td>
-          <td class="w-60">
-            <Textarea @rows={{1}} @cols={{80}} @value={{student.notes}} @focusIn={{action focusNote}} @focusOut={{action blurNote}} />
-          </td>
-        </tr>
-      {{/each}}
-    </tbody>
-
-  </table>
-{{else}}
-  <p class="mt-4 mb-4 text-danger font-weight-bold">
-    No students have signed up.
-  </p>
-{{/if}}
-
-<div class="mt-2 mb-2 d-sm-block d-none">
-  <button class="btn btn-primary btn-sm" {{action "saveAllStudentsAction"}} disabled={{or isSubmitting (is-empty students)}}>{{if isSubmitting "Saving" "Save All"}}</button>
-  <LinkTo @route="training.session.trainers-report" @models={{array training.id slot.id}} class="btn btn-secondary btn-sm">Trainer's Report</LinkTo>
-  <LinkTo @route="training.session.signup-sheet" @models={{array training.id slot.id}} class="btn btn-secondary btn-sm">Signup Sheet</LinkTo>
-  <button class="btn btn-secondary btn-sm" {{action "toggleEmailListAction"}} disabled={{is-empty students}}>{{if showEmails "Hide Emails" "List Emails"}}</button>
-  <button class="btn btn-secondary btn-sm" {{action "showAddPersonAction"}}>Add Person</button>
-  <button class="btn btn-secondary btn-sm" {{action "showRemovePersonAction"}} disabled={{is-empty students}}>Remove Person</button>
-</div>
-
-<table class="table table-striped table-sm table-width-auto">
-  <caption>Trainer Attendance ({{this.trainerCount}})</caption>
+<table class="table table-fixed table-striped table-hover table-sm">
+  <caption>{{pluralize this.students.length "student"}} ({{this.passedCount}} passed)</caption>
   <thead>
-    <tr>
-      <th>Trainer</th>
-      <th>Type</th>
-      <th>Attended?</th>
-    </tr>
+  <tr>
+    <th class="w-10">Callsign</th>
+    <th class="w-15">Status / Current</th>
+    <th class="w-5 text-right">Pass?</th>
+    <th class="w-5 text-center">Rank</th>
+    <th class="w-55">Notes</th>
+    <th class="w-10">Action</th>
+  </tr>
   </thead>
+
   <tbody>
-    {{#if this.trainerCount}}
-      {{#each trainers as |trainerType|}}
-        {{#each trainerType.trainers as |trainer|}}
-          <tr>
-            <td>
-              <PersonLink @person={{trainer}} />
-            </td>
-            <td>{{trainerType.position_title}}</td>
-            <td>
-              <ChForm::Select @name={{concat "trainer" trainer.id}} @value={{trainer.status}} @onChange={{action (mut trainer.status)}} @options={{trainerStatusOptions}} />
-            </td>
-          </tr>
+  {{#each this.students as |student|}}
+    <tr class="{{if (or student.is_retired student.is_inactive) "bg-highlight"}}">
+      <td class="w-10">
+        {{#if (or student.is_retired student.is_inactive)}}
+          {{fa-icon "exclamation-triangle"}}
+        {{/if}}
+        <PersonLink @person={{student}} />
+      </td>
+      <td class="w-15">
+        {{student.status}}{{if student.is_art_prospective (fa-icon "asterisk")}}
+        {{#if (not-eq student.status student.current_status)}}
+          <div class="small">&lt;{{student.current_status}}&gt;</div>
+        {{/if}}
+      </td>
+      <td class="w-5 text-center">
+        {{#if student.passed}}
+          {{fa-icon "check" color="success"}}
+        {{else}}
+          -
+        {{/if}}
+      </td>
+      <td class="w-5 text-center">
+        {{#if student.rank}}
+          {{student.rank}}
+        {{else if student.need_ranking}}
+          {{fa-icon "question"}}
+        {{else}}
+          -
+        {{/if}}
+      </td>
+      <td class="w-55">
+        {{#if student.black_flag}}
+          <div class="mb-2">
+            <b class="text-danger">Personnel Black Flag raised. Take no actions until resolved.</b>
+          </div>
+        {{/if}}
+        {{#each student.notes as |note|}}
+          {{#unless note.is_log}}
+            <div class="mb-2">
+              {{note.note}}
+            </div>
+          {{/unless}}
+        {{else}}
+          <i>none</i>
         {{/each}}
-      {{/each}}
-    {{else}}
-      <tr>
-        <td colpsan="3"><b class="text-danger">No trainers were found.</b></td>
-      </tr>
-    {{/if}}
+        {{#if student.fkas}}
+          <div class="mt-2">
+            FKA: {{join student.fkas ", "}}
+          </div>
+        {{/if}}
+
+      </td>
+      <td class="w-10">
+        <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.editStudentAction student)}}>
+          {{fa-icon "edit"}} Edit
+        </button>
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="{{if this.training.is_art 6 9}}"><b class="text-danger">No students have signed up yet.</b></td>
+    </tr>
+  {{/each}}
   </tbody>
 </table>
-{{#if this.trainerCount}}
-  <p>
-    <button class="btn btn-primary btn-sm" {{action this.saveTrainers}} disabled={{this.isSubmitting}}>Save Trainers</button>
-    {{#if this.isSubmitting}}
-      <LoadingIndicator />
+
+<div class="row">
+  <div class="col-sm-12 col-md-8 col-lg-5">
+    <table class="table table-striped table-hover">
+      <caption>Trainer Attendance ({{this.trainerCount}})</caption>
+      <thead>
+      <tr>
+        <th>Trainer</th>
+        <th>Type</th>
+        <th>Attended?</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#if this.trainerCount}}
+        {{#each this.trainers as |trainerType|}}
+          {{#each trainerType.trainers as |trainer|}}
+            <tr>
+              <td>
+                <PersonLink @person={{trainer}} />
+              </td>
+              <td>{{trainerType.position_title}}</td>
+              <td>
+                <ChForm::Select @name={{concat "trainer" trainer.id}} @value={{trainer.status}} @onChange={{action
+                        (mut trainer.status)}} @options={{trainerStatusOptions}} />
+              </td>
+            </tr>
+          {{/each}}
+        {{/each}}
+      {{else}}
+        <tr>
+          <td colpsan="3"><b class="text-danger">No trainers were found.</b></td>
+        </tr>
+      {{/if}}
+      </tbody>
+    </table>
+    {{#if this.trainerCount}}
+      <p>
+        <button class="btn btn-primary" {{action this.saveTrainers}} disabled={{this.isSubmitting}}>
+          Save Trainers
+        </button>
+        {{#if this.isSubmitting}}
+          <LoadingIndicator/>
+        {{/if}}
+      </p>
     {{/if}}
-  </p>
+  </div>
+</div>
+
+{{#if this.showEmails}}
+  <EmailList @people={{this.students}} @scrollOnRender={{true}} />
 {{/if}}
 
-{{#if showEmails}}
-  <EmailList @people={{students}} @scrollOnRender={{true}} />
+{{#if this.editStudent}}
+  <ModalDialog @title={{concat "Add a note and/or set rank for " this.editStudent.callsign}} as |Modal|>
+    <ChForm @formId="student-form" @originalModel={{this.studentForm}}
+            @changeSet={{false}}
+            @onSubmit={{this.saveStudentAction}}
+            @onCancel={{this.cancelStudentAction}} as |f|>
+
+      <Modal.body>
+        {{#if this.editStudent.black_flag}}
+          <h3 class="text-danger">Personnel Black Flag raised on {{this.editStudent.callsign}}. TAKE NO ACTIONS UNTIL
+            RESOLVED.</h3>
+        {{/if}}
+        <table class="table table-sm table-hover table-striped">
+          <thead>
+          <tr>
+            <th class="w-20">Timestamp</th>
+            <th class="w-15">Trainer</th>
+            <th class="w-65">Note</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.editStudent.notes as |note|}}
+            <tr>
+              <td class="w-20">{{note.created_at}}</td>
+              <td class="w-15">
+                {{#if note.person_source_id}}
+                  {{note.person_source.callsign}}
+                {{else}}
+                  * imported *
+                {{/if}}
+              </td>
+              <td class="w-65">
+                {{nl2br note.note}}
+              </td>
+            </tr>
+          {{else}}
+            <tr>
+              <td colspan="3">No previous notes.</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+        {{#let (concat this.editStudent.callsign " <" this.editStudent.status ">") as |studentName|}}
+          <div class="row mt-2">
+            <label class="col-12">Did {{studentName}} pass training?</label>
+            <div class="col-auto">
+              <f.input @name="passed" @type="radioGroup" @options={{this.passedOptions}} @inline=true/>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <f.input @name="rank" @label={{concat "Ranking for " studentName}}
+                     @type="select" @options={{if this.training.is_art this.artRankOptions this.dirtRankOptions}} />
+          </div>
+          <div class="row mt-2">
+            <f.input @name="note" @label={{concat "Enter the training notes about " studentName ":"}}
+                     @type="textarea"
+                     @hint="Your note will be timestamped and appended to any existing notes."
+                     @rows=3 @cols=80/>
+          </div>
+          {{#unless this.training.is_art}}
+            <div class="row mt-2">
+              <label class="col-12">Was feedback delivered to {{studentName}}?</label>
+              <div class="col-auto">
+                <f.input @name="feedback_delivered" @type="radioGroup" @options={{this.feedbackDeliveredOptions}}
+                         @inline=true/>
+              </div>
+            </div>
+
+          {{/unless}}
+        {{/let}}
+      </Modal.body>
+      <Modal.footer @noAlign=true>
+        <f.submit @label={{concat "Save " this.editStudent.callsign " info"}} @disabled={{this.isSubmitting}} />
+        <f.cancel @disabled={{this.isSubmitting}}/>
+        {{#if this.isSubmitting}}
+          <LoadingIndicator/>
+        {{/if}}
+        <div class="ml-auto">
+          <button type="button" class="btn btn-light-red" {{on "click" this.removeStudentAction}}>Remove From Training
+          </button>
+        </div>
+
+      </Modal.footer>
+
+    </ChForm>
+  </ModalDialog>
 {{/if}}
 
 {{! Add Person dialog box}}
-{{#if addPersonForm}}
-  {{#ch-form "search" addPersonForm modalBox=true modalTitle="Add Person To Session" changeSet=false onFormChange=(action "searchPeopleAction") onCancel=(action "cancelSearchAction") as |f|}}
+{{#if this.addPersonForm}}
+  {{#ch-form "search" addPersonForm modalBox=true modalTitle="Add Student To Session" changeSet=false
+             onFormChange=(action "searchPeopleAction") onCancel=(action "cancelSearchAction") as |f|}}
     <div class="form-row">
-      {{f.input "name" label="Enter the callsign, real name, or email of the person to add:" type="text" size=30 autofocus=true}}
+      {{f.input "name" label="Enter the callsign, real name, or email of the person to add:" type="text" size=30
+                autofocus=true}}
     </div>
     <div class="form-row">
       {{f.cancel}}
@@ -187,20 +354,20 @@ Signups: {{students.length}} of {{slot.max}}
       Click on the callsign to add the person.
       <table class="table table-hover">
         <thead>
-          <tr>
-            <th class="w-25">Callsign</th>
-            <th class="w-25">Name</th>
-            <th class="w-25">Status</th>
-          </tr>
+        <tr>
+          <th class="w-25">Callsign</th>
+          <th class="w-25">Name</th>
+          <th class="w-25">Status</th>
+        </tr>
         </thead>
         <tbody>
-          {{#each foundPeople as |person|}}
-            <tr>
-              <td class="w-25"><a href="#" {{action "addPersonAction" person}}>{{person.callsign}}</a></td>
-              <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
-              <td class="w-25">{{person.status}}</td>
-            </tr>
-          {{/each}}
+        {{#each foundPeople as |person|}}
+          <tr>
+            <td class="w-25"><a href="#" {{action "addPersonAction" person}}>{{person.callsign}}</a></td>
+            <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
+            <td class="w-25">{{person.status}}</td>
+          </tr>
+        {{/each}}
         </tbody>
       </table>
     {{else if noSearchMatch}}
@@ -209,14 +376,3 @@ Signups: {{students.length}} of {{slot.max}}
   {{/ch-form}}
 {{/if}}
 
-{{! Remove person dialog box}}
-{{#if removePersonForm}}
-  {{#ch-form "removePerson" removePersonForm modalBox=true modalTitle="Remove Person From Session" changeSet=false onSubmit=(action "removePersonAction") onCancel=(action "cancelRemovePersonAction") as |f|}}
-    <div class="form-row">
-      {{f.input "person_id" label="Select the person to remove" type="select" options=removeStudentOptions}}
-    </div>
-
-    <f.submit @label="Remove Person" @disabled={{not f.model.person_id}} />
-    {{f.cancel}}
-  {{/ch-form}}
-{{/if}}

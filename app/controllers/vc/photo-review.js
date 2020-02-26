@@ -10,6 +10,8 @@ export default class VcPhotoReviewController extends Controller {
   @tracked editPhoto = null;
   @tracked showPhoto = null;
 
+  @tracked rejectMail = null;
+
   width = 350;
   height = 450;
 
@@ -62,6 +64,35 @@ export default class VcPhotoReviewController extends Controller {
     }).finally(() => {
       this.isSubmitting = false;
     });
+  }
+
+  @action
+  rejectPreviewAction() {
+    const form = this.reviewForm;
+    const data = {
+      reject_reasons: form.reasons,
+      reject_message: form.message
+    };
+
+    this.ajax.request(`person-photo/${this.reviewPhoto.id}/reject-preview`, { method: 'GET', data })
+      .then((result) => {
+        this.rejectMail = result.mail;
+      }).catch((response) => this.house.handleErrorResponse(response));
+  }
+
+  @action
+  closeRejectMail() {
+    this.rejectMail = null;
+  }
+
+  @action
+  insertRejectMail(event) {
+    const doc = event.target.contentWindow.document;
+
+    // Insert the mail into the iframe
+    doc.open();
+    doc.write(this.rejectMail);
+    doc.close();
   }
 
   @action
