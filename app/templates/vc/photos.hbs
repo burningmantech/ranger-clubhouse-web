@@ -1,85 +1,18 @@
 <main class="col">
   <h1>Photo Uploads</h1>
+  <p>
+    Click on the photo to show a larger version and rejection messages (if any). Active = photo in use. Inactive = photo is archived.
+  </p>
 
   Showing page {{this.currentPage}} of {{this.total_pages}}
-  <table class="table table-sm table-width-auto table-striped table-hover">
-    <thead>
-    <tr>
-      <th>&nbsp;</th>
-      <th>ID</th>
-      <th>Callsign</th>
-      <th>Status</th>
-      <th>Uploaded</th>
-      <th>Reviewed</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each this.person_photo as |photo|}}
-      <tr>
-        <td>
-          <div class="photo-mini">
-            <img src={{photo.image_url}} {{on "click" (fn this.showPhotoAction photo)}}/>
-          </div>
-        </td>
-        <td>
-          {{photo.id}}
-        </td>
-        <td>
-          <PersonLink @person={{photo.person}} />
-        </td>
-        <td>{{photo.status}}</td>
-        <td>{{photo.created_at}}</td>
-        <td>{{present-or-not photo.reviewed_at "never"}}</td>
-      </tr>
-    {{/each}}
-    </tbody>
-  </table>
-
+  <PhotoTable @photos={{this.person_photo}} @rejectionLabels={{this.rejectionLabels}} />
   {{#if this.total}}
-    <button class="btn btn-secondary" {{action this.goPrevPage}} disabled={{eq this.currentPage 1}}>Prev Page</button>
-    <button class="btn btn-secondary" {{action this.goNextPage}} disabled={{eq this.currentPage this.total_pages}}>Next
-      Page
+    <button class="btn btn-secondary" {{action this.goPrevPage}} disabled={{eq this.currentPage 1}}>
+      Prev Page
+    </button>
+    <button class="btn btn-secondary" {{action this.goNextPage}} disabled={{eq this.currentPage this.total_pages}}>
+      Next Page
     </button>
   {{/if}}
 </main>
 
-{{#if this.showPhoto}}
-  <ModalDialog @title={{concat this.showPhoto.person.callsign " Photo"}} as |modal|>
-    <modal.body>
-      <div class="row">
-        <div class="col-6">
-          <img src={{this.showPhoto.image_url}} />
-        </div>
-        <div class="col-6">
-          <h3>ID #{{this.showPhoto.id}}</h3>
-          <p>
-            <b>Status</b> {{this.showPhoto.status}}
-          </p>
-          <p>
-            <b>Uploaded</b> {{present-or-not this.showPhoto.uploaded_at}}
-          </p>
-          <p>
-            <b>Reviewed</b> {{present-or-not this.showPhoto.reviewed_at}}
-          </p>
-          {{#if (eq this.showPhoto.status "rejected")}}
-          <p>
-            <b>Rejection reasons</b><br>
-            {{#each this.showPhoto.reject_reasons as |reason idx|~}}
-              {{~if idx ", " ~}}{{present-or-not (get this.rejectionLabels reason) (concat "Unknown reason " reason)~}}
-            {{else}}
-              <i>none given</i>
-            {{/each}}
-          </p>
-          <p>
-            <b>Rejection Message:</b><br>
-            {{present-or-not this.showPhoto.reject_message "none given"}}
-          </p>
-          {{/if}}
-        </div>
-      </div>
-    </modal.body>
-    <modal.footer>
-      <modal.button @label="Close" @action={{this.closePhotoAction}} @type="primary"/>
-    </modal.footer>
-  </ModalDialog>
-{{/if}}

@@ -1,0 +1,155 @@
+<table class="table table-stripped table-hover table-width-auto">
+  <thead>
+  <tr>
+    <th>Photo</th>
+    {{#unless @person}}
+      <th>Callsign</th>
+    {{/unless}}
+    <th>ID</th>
+    <th>Status</th>
+    <th>Uploaded</th>
+    <th>Reviewed</th>
+    <th>Edited</th>
+    {{#if @deletePhotoAction}}
+      <th>Actions</th>
+    {{/if}}
+    <th>Machine Analysis</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each @photos as |photo|}}
+    <tr>
+      <td>
+        <img id={{concat "photo-" photo.id}} src={{photo.image_url}}
+             class="float-left photo-icon"
+          {{on "click" (fn this.showPhotoAction photo)}} />
+      </td>
+      {{#unless @person}}
+        <td>
+          <PersonLink @person={{photo.person}} />
+        </td>
+      {{/unless}}
+      <td>
+        {{photo.id}}
+      </td>
+      <td>
+        {{#if (eq photo.status "approved")}}
+          <b class="text-success">{{fa-icon "check"}} {{photo.status}}</b>
+        {{else if (eq photo.status "rejected")}}
+          <b class="text-danger">{{fa-icon "times"}} {{photo.status}}</b>
+        {{else}}
+          {{photo.status}}
+        {{/if}}<br>
+        {{#if photo.is_active}}
+          <b>ACTIVE</b>
+        {{else}}
+          <span class="text-muted">inactive</span>
+        {{/if}}
+      </td>
+      <td>
+        {{#if photo.uploaded_at}}
+          {{photo.uploaded_at}}<br>
+          by {{#if photo.upload_person}}
+          <PersonLink @person={{photo.upload_person}} />
+        {{else}}
+          <i>unknown</i>
+        {{/if}}
+        {{else}}
+          <i>never</i>
+        {{/if}}
+      </td>
+      <td>
+        {{#if photo.reviewed_at}}
+          {{photo.reviewed_at}}<br>
+          by {{#if photo.review_person}}
+          <PersonLink @person={{photo.review_person}} />
+        {{else}}
+          <i>unknown</i>
+        {{/if}}
+        {{else}}
+          <i>never</i>
+        {{/if}}
+      </td>
+      <td>
+        {{#if photo.edited_at}}
+          {{photo.edited_at}}<br>
+          by {{#if photo.edit_person}}
+          <PersonLink @person={{photo.edit_person}} />
+        {{else}}
+          <i>unknown</i>
+        {{/if}}
+        {{else}}
+          <i>never</i>
+        {{/if}}
+      </td>
+      {{#if @deletePhotoAction}}
+        <td>
+          <button type="button" class="btn btn-light-red" {{action @deletePhotoAction photo}}
+                  disabled={{photo.isSaving}}>{{fa-icon "trash"}} Delete
+          </button>
+          {{#unless photo.is_active}}
+            <button type="button" class="btn btn-secondary" {{action @activatePhotoAction photo}}>{{fa-icon "star"}}
+              Activate
+            </button>
+          {{/unless}}
+        </td>
+      {{/if}}
+      <td>
+        {{#if (eq photo.analysis_details.status "success")}}
+          {{#each photo.analysis_details.issues as |issue|}}
+            {{issue}}
+          {{else}}
+            no problems found
+          {{/each}}<br>
+          sharpness {{photo.analysis_details.sharpness}}
+        {{else if (eq photo.analysis_status "failed")}}
+          failed
+        {{else}}
+          N/A
+        {{/if}}
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
+
+{{#if this.showPhoto}}
+  <ModalDialog @title={{concat this.showPhoto.person.callsign " Photo"}} as |modal|>
+    <modal.body>
+      <div class="row">
+        <div class="col-6">
+          <img src={{this.showPhoto.image_url}} />
+        </div>
+        <div class="col-6">
+          <h3>ID #{{this.showPhoto.id}} - {{this.showPhoto.person.callsign}}</h3>
+          <dl>
+            <dt>Status</dt>
+            <dd>{{this.showPhoto.status}}</dd>
+            <dt>Dimensions (WxH)</dt>
+            <dd>{{this.showPhoto.width}} x {{this.showPhoto.height}}</dd>
+            <dt>Uploaded</dt>
+            <dd>{{present-or-not this.showPhoto.uploaded_at "no upload date?"}}</dd>
+            <dt>Reviewed</dt>
+            <dd>{{present-or-not this.showPhoto.reviewed_at "never"}}</dd>
+            {{#if (eq this.showPhoto.status "rejected")}}
+              <dt>{{pluralize this.showPhoto.reject_reasons.length "Reject reason"}}</dt>
+              <dd>
+                {{#each this.showPhoto.reject_reasons as |reason idx|~}}
+                  {{~if idx ", " ~}}{{present-or-not (get @rejectionLabels reason)
+                                                     (concat "Unknown reason " reason)~}}
+                {{else}}
+                  <i>none given</i>
+                {{/each}}
+              </dd>
+              <dt>Rejection Message</dt>
+              <dd>{{present-or-not this.showPhoto.reject_message "none given"}}</dd>
+            {{/if}}
+          </dl>
+        </div>
+      </div>
+    </modal.body>
+    <modal.footer>
+      <modal.button @label="Close" @action={{this.closePhotoAction}} @type="primary"/>
+    </modal.footer>
+  </ModalDialog>
+{{/if}}
