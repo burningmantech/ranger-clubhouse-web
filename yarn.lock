@@ -11841,10 +11841,10 @@ sane@^4.0.0, sane@^4.1.0:
     minimist "^1.1.1"
     walker "~1.0.5"
 
-sass@^1.25.1-test.1:
-  version "1.25.1-test.1"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.25.1-test.1.tgz#23529419f9b11d01df3a5f31ebfb81d8b3c7e181"
-  integrity sha512-159duJa887wy9CKy7d9MUrKQhQvkwb3+l0C17HaJofFTLyHXdEbN5ean5l1gh2xI09ZpMmEJW7075b1VgtSSNA==
+sass@^1.26.1:
+  version "1.26.1"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.26.1.tgz#79a36c957530c1dfffa2958968b90cb736794e91"
+  integrity sha512-DWtzW0jDu+96MYkEdM8vUigjpisvM9qSlDwNvTFcr+XC7o2+3aXSAbHNcJ+8HzD1857uW9Opbxgu39esytVUKA==
   dependencies:
     chokidar ">=2.0.0 <4.0.0"
 
