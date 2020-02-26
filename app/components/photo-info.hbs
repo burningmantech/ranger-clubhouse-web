@@ -1,0 +1,73 @@
+<ModalDialog @title="Photo Information" as |modal|>
+  <modal.body>
+    <div class="row">
+      <div class="col-6">
+        <img src={{@photo.image_url}} />
+      </div>
+      <div class="col-6">
+        <h3>ID #{{@photo.id}} - {{@photo.person.callsign}}</h3>
+        <dl>
+          <dt>Status</dt>
+          <dd>{{@photo.status}}</dd>
+          <dt>Dimensions (WxH)</dt>
+          <dd>{{@photo.width}} x {{@photo.height}}</dd>
+          <dt>Uploaded</dt>
+          <dd>
+            {{#if @photo.uploaded_at}}
+              {{@photo.uploaded_at}}
+              by {{#if @photo.upload_person}}
+              <PersonLink @person={{@photo.upload_person}} />
+            {{else}}
+              <i>unknown</i>
+            {{/if}}
+            {{else}}
+              <i>never</i>
+            {{/if}}
+          </dd>
+          <dt>Reviewed</dt>
+          <dd>
+            {{#if @photo.reviewed_at}}
+              {{@photo.reviewed_at}}
+              by {{#if @photo.review_person}}
+              <PersonLink @person={{@photo.review_person}} />
+            {{else}}
+              <i>unknown</i>
+            {{/if}}
+            {{else}}
+              <i>never</i>
+            {{/if}}
+          </dd>
+          <dt>Edited</dt>
+          <dd>
+            {{#if @photo.edited_at}}
+              {{@photo.edited_at}}<br>
+              by {{#if @photo.edit_person}}
+              <PersonLink @person={{@photo.edit_person}} />
+            {{else}}
+              <i>unknown</i>
+            {{/if}}
+            {{else}}
+              <i>never</i>
+            {{/if}}
+          </dd>
+          {{#if (eq @photo.status "rejected")}}
+            <dt>{{pluralize @photo.reject_reasons.length "Reject reason"}}</dt>
+            <dd>
+              {{#each @photo.reject_reasons as |reason idx|~}}
+                {{~if idx ", " ~}}{{present-or-not (get @rejectionLabels reason)
+                                                   (concat "Unknown reason " reason)~}}
+              {{else}}
+                <i>none given</i>
+              {{/each}}
+            </dd>
+            <dt>Rejection Message</dt>
+            <dd>{{present-or-not @photo.reject_message "none given"}}</dd>
+          {{/if}}
+        </dl>
+      </div>
+    </div>
+  </modal.body>
+  <modal.footer>
+    <modal.button @label="Close" @action={{@closeAction}} @type="primary"/>
+  </modal.footer>
+</ModalDialog>
