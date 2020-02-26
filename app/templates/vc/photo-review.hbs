@@ -202,37 +202,5 @@
 
 
 {{#if this.showPhoto}}
-  <ModalDialog @title="Previously Rejected Photo" as |modal|>
-    <modal.body>
-      <div class="row">
-        <div class="col-auto">
-          <img src={{this.showPhoto.image_url}} />
-        </div>
-        <div class="col-auto">
-          <h3>ID #{{this.showPhoto.id}}</h3>
-          <p>
-            <b>Uploaded</b> {{present-or-not this.showPhoto.uploaded_at}}
-          </p>
-          <p>
-            <b>Reviewed</b> {{present-or-not this.showPhoto.reviewed_at}}
-          </p>
-          <p>
-            <b>Rejection reasons</b><br>
-            {{#each this.showPhoto.reject_reasons as |reason idx|~}}
-              {{~if idx ", " ~}}{{present-or-not (get this.rejectionLabels reason) (concat "Unknown reason " reason)~}}
-            {{else}}
-              <i>none given</i>
-            {{/each}}
-          </p>
-          <p>
-            <b>Rejection Message:</b><br>
-            {{present-or-not this.showPhoto.reject_message "none given"}}
-          </p>
-        </div>
-      </div>
-    </modal.body>
-    <modal.footer>
-      <modal.button @label="Close" @action={{this.closePhotoInfoAction}} @type="primary"/>
-    </modal.footer>
-  </ModalDialog>
+  <PhotoInfo @photo={{this.showPhoto}} @closeAction={{this.closePhotoInfoAction}} @rejectionLabels={{this.rejectionLabels}} />
 {{/if}}

@@ -114,42 +114,5 @@
 </table>
 
 {{#if this.showPhoto}}
-  <ModalDialog @title={{concat this.showPhoto.person.callsign " Photo"}} as |modal|>
-    <modal.body>
-      <div class="row">
-        <div class="col-6">
-          <img src={{this.showPhoto.image_url}} />
-        </div>
-        <div class="col-6">
-          <h3>ID #{{this.showPhoto.id}} - {{this.showPhoto.person.callsign}}</h3>
-          <dl>
-            <dt>Status</dt>
-            <dd>{{this.showPhoto.status}}</dd>
-            <dt>Dimensions (WxH)</dt>
-            <dd>{{this.showPhoto.width}} x {{this.showPhoto.height}}</dd>
-            <dt>Uploaded</dt>
-            <dd>{{present-or-not this.showPhoto.uploaded_at "no upload date?"}}</dd>
-            <dt>Reviewed</dt>
-            <dd>{{present-or-not this.showPhoto.reviewed_at "never"}}</dd>
-            {{#if (eq this.showPhoto.status "rejected")}}
-              <dt>{{pluralize this.showPhoto.reject_reasons.length "Reject reason"}}</dt>
-              <dd>
-                {{#each this.showPhoto.reject_reasons as |reason idx|~}}
-                  {{~if idx ", " ~}}{{present-or-not (get @rejectionLabels reason)
-                                                     (concat "Unknown reason " reason)~}}
-                {{else}}
-                  <i>none given</i>
-                {{/each}}
-              </dd>
-              <dt>Rejection Message</dt>
-              <dd>{{present-or-not this.showPhoto.reject_message "none given"}}</dd>
-            {{/if}}
-          </dl>
-        </div>
-      </div>
-    </modal.body>
-    <modal.footer>
-      <modal.button @label="Close" @action={{this.closePhotoAction}} @type="primary"/>
-    </modal.footer>
-  </ModalDialog>
+  <PhotoInfo @photo={{this.showPhoto}} @closeAction={{this.closePhotoAction}} />
 {{/if}}
