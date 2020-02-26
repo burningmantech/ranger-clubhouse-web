@@ -64,12 +64,13 @@
   font-weight: 500;
   display: inline-block;
   width: 25%;
+  vertical-align: top;
 }
 
 .alpha-sheet-column-field {
   display: inline-block;
   width: 74%;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 .alpha-sheet-column-auto {
@@ -82,6 +83,7 @@
   width: 55%;
   border-bottom: 1px solid #222;
   font-size: 1.2rem;
+  vertical-align: bottom;
 }
 
 .alpha-sheet-comment-box-md {

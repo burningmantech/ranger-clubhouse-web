@@ -14,7 +14,6 @@ module('Integration | Component | behavioral-agreement-modal', function(hooks) {
     this.set('signAgreement', () => { return true });
 
     await render(hbs`<BehavioralAgreementModal @closeAgreement={{this.closeAgreement}} @signAgreement={{this.signAgreement}} />`);
-
     assert.dom('.modal').exists();
   });
 });

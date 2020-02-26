@@ -52,3 +52,10 @@
     border: none;
   }
 }
+
+.trainers-report-no-bottom td {
+  border-bottom: none !important;
+}
+.trainers-report-no-top td {
+  border-top: none !important;
+}

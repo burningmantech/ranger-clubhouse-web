@@ -1,17 +1,30 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
-import { debounce } from '@ember/runloop';
-import { set } from '@ember/object';
-import { action, computed } from '@ember/object';
-import { slotSignup } from 'clubhouse/utils/slot-signup';
+import {debounce} from '@ember/runloop';
+import {action, computed} from '@ember/object';
+import {slotSignup} from 'clubhouse/utils/slot-signup';
 import _ from 'lodash';
 
 const SEARCH_RATE_MS = 300;
 
 export default class TrainingSlotController extends Controller {
-  rankOptions = [
+  dirtRankOptions = [
+    ["No Rank", ''],
+    ["1 - Above Average (Note Required)", 1],
+    ["2 - Average", 2],
+    ["3 - Below Average (Note Required)", 3],
+    ["4 - FLAG (Note Required)", 4]
+  ];
+
+  artRankOptions = [
+    ["No Rank", ''],
     1, 2, 3,
     ["FLAG", 4]
+  ];
+
+  passedOptions = [
+    ['Yes', 1],
+    ['No or No Show', 0]
   ];
 
   trainerStatusOptions = [
@@ -20,10 +33,15 @@ export default class TrainingSlotController extends Controller {
     ['No Show', 'no-show'],
   ];
 
+  feedbackDeliveredOptions = [
+    ['Yes', 1],
+    ['No', 0]
+  ];
+
   showEmails = false;
 
   // How many people have passed
-  @computed('students.@each.passed')
+  @computed('students.[]')
   get passedCount() {
     let passed = 0;
     this.students.forEach((student) => {
@@ -35,16 +53,27 @@ export default class TrainingSlotController extends Controller {
     return passed;
   }
 
+  /**
+   * Is the user allowed to add a student to the class?
+   *
+   * For dirt training - only Clubhouse Admins may do so. (per TA 2020 request)
+   * For ARTS - any trainer.
+   */
+
+  get canAddStudent() {
+    return this.training.is_art || this.session.user.isAdmin;
+  }
+
   // How many Dirt Vets (2 or more rangering years) OR
-  // ART vets (if not a ART alpha)
-  @computed('students')
+  // ART vets (if not a ART prospective)
+  @computed('students.[]')
   get vetCount() {
     let vets = 0;
     const is_art = this.training.is_art;
 
     this.students.forEach((student) => {
       if (is_art) {
-        if (!student.is_art_alpha) {
+        if (!student.is_art_prospective) {
           vets++;
         }
       } else if (student.years > 1) {
@@ -55,26 +84,41 @@ export default class TrainingSlotController extends Controller {
     return vets;
   }
 
-  // How many dirt alphas or ART alphas are there
-  @computed('students')
-  get alphaCount() {
+  // How many dirt PNV or ART prospectives
+  @computed('students.[]')
+  get prospectiveCount() {
     const is_art = this.training.is_art;
-    let alphas = 0;
+    let prospective = 0;
 
     this.students.forEach((student) => {
       if (is_art) {
-        if (student.is_art_alpha) {
-          alphas++;
+        if (student.is_art_prospective) {
+          prospective++;
         }
-      } else if (student.years == 0) {
-        alphas++;
+      } else if (student.status == 'prospective') {
+        prospective++;
       }
     });
 
-    return alphas;
+    return prospective;
   }
 
-  @computed('students')
+  // How many dirt PNV or ART prospectives
+
+  @computed('students.[]')
+  get auditorCount() {
+    let auditors = 0;
+
+    this.students.forEach((student) => {
+      if (student.status == 'auditor') {
+        auditors++;
+      }
+    });
+
+    return auditors;
+  }
+
+  @computed('students.[]')
   get firstYearCount() {
     let firstYear = 0;
 
@@ -87,54 +131,67 @@ export default class TrainingSlotController extends Controller {
     return firstYear;
   }
 
-  @computed('students.[]')
-  get removeStudentOptions() {
-    const options = [
-      ['-', null]
-    ];
-
-    this.students.forEach((student) => {
-      options.push([`${student.callsign} (${student.first_name} ${student.last_name})`, student.id]);
-    });
-
-    return options;
-  }
-
-  @computed('trainers')
   get trainerCount() {
     return this.trainers.reduce((total, group) => {
       return group.trainers.length + total;
     }, 0);
   }
 
-  // Set the ranking for a person
   @action
-  changeRankAction(student, rank) {
-    set(student, 'rank', rank);
+  editStudentAction(student) {
+    this.set('editStudent', student);
+    this.set('studentForm', {
+      rank: student.rank,
+      note: '',
+      passed: student.passed ? 1 : 0,
+      feedback_delivered: student.feedback_delivered ? 1 : 0
+    });
+  }
+
+  @action
+  cancelStudentAction() {
+    this.set('editStudent', null);
   }
 
   // Save the student scores in bulk.
   @action
-  saveAllStudentsAction() {
-    const scores = this.students.map((student) => ({
+  saveStudentAction() {
+    const student = this.editStudent;
+    const form = this.studentForm;
+    const score = {
       id: student.id,
-      notes: student.notes,
-      rank: student.rank,
-      passed: student.passed
-    }));
+      note: form.note,
+      rank: form.rank !== '' ? +form.rank : form.rank,
+      passed: +form.passed ? 1 : 0,
+    };
 
-    this.toast.clear();
+    if (!this.training.is_art) {
+      if (!form.rank && form.passed && student.need_rank) {
+        this.modal.info(null, 'Please enter a rank.');
+        return;
+      }
+
+      if ((form.rank > 0 && form.rank != 2) && (form.note == '' && student.notes.length == 0)) {
+        this.modal.info(null, 'A note needs to be entered if a rank is given.');
+        return;
+      }
+
+      score.feedback_delivered = form.feedback_delivered ? 1 : 0;
+    }
+
     this.set('isSubmitting', true);
-    this.ajax.post(`training-session/${this.slot.id}/score`, {
-        data: {
-          students: scores
-        }
-      }).then((results) => {
-        this.set('students', results.students);
-        this.toast.success('The entire training session was successfully updated.');
-      })
+
+    this.ajax.post(`training-session/${this.slot.id}/score-student`, {
+      data: score
+    }).then((results) => {
+      this.set('editStudent', null);
+      this.set('students', results.students);
+      this.toast.success(`${student.callsign} was successfully saved.`);
+    })
       .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isSubmitting', false));
+      .finally(() => {
+        this.set('isSubmitting', false);
+      });
   }
 
   // Save the student scores in bulk.
@@ -155,11 +212,11 @@ export default class TrainingSlotController extends Controller {
     this.toast.clear();
     this.set('isSubmitting', true);
     this.ajax.post(`training-session/${this.slot.id}/trainer-status`, {
-        data: { trainers }
-      }).then((results) => {
-        this.set('trainers', results.trainers);
-        this.toast.success('Trainer attendance was successfully updated.');
-      })
+      data: {trainers}
+    }).then((results) => {
+      this.set('trainers', results.trainers);
+      this.toast.success('Trainer attendance was successfully updated.');
+    })
       .catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.set('isSubmitting', false));
   }
@@ -226,58 +283,29 @@ export default class TrainingSlotController extends Controller {
 
   // Remove a student from the session
   @action
-  removePersonAction(model) {
-    const personId = model.get('person_id');
-    const person = this.students.find((student) => student.id == personId);
+  removeStudentAction() {
+    const student = this.editStudent;
 
-    this.ajax.delete(`person/${personId}/schedule/${this.slot.id}`)
-      .then((results) => {
-        if (results.status == 'success') {
-          this.students.removeObject(person);
-          this.toast.success(`${person.callsign} was successfully removed from this training session.`);
-        } else {
-          this.toast.error(`The server responded with an unknown status code [${results.status}]`);
-        }
-        this.set('removePersonForm', null);
-      })
-      .catch((response) => this.house.handleErrorResponse(response));
-  }
-
-  // Show the remove student dialog
-  @action
-  showRemovePersonAction() {
-    this.set('removePersonForm', EmberObject.create({ person_id: null }));
-  }
-
-  // Cancel/close the student detail dialog
-  @action
-  cancelRemovePersonAction() {
-    this.set('removePersonForm', null);
+    this.modal.confirm('Confirm Student Removal', `Are you really sure you want to remove ${student.callsign} from this session?`, () => {
+      this.set('iSubmitting', true);
+      this.ajax.delete(`person/${student.id}/schedule/${this.slot.id}`)
+        .then((results) => {
+          if (results.status == 'success') {
+            this.students.removeObject(student);
+            this.toast.success(`${student.callsign} was successfully removed from this training session.`);
+            this.set('editStudent', null);
+          } else {
+            this.toast.error(`The server responded with an unknown status code [${results.status}]`);
+          }
+        })
+        .catch((response) => this.house.handleErrorResponse(response))
+        .finally(() => this.set('isSubmitting', false));
+    });
   }
 
   // Toggle the email list
   @action
   toggleEmailListAction() {
     this.set('showEmails', !this.showEmails);
-  }
-
-  /*
-   * Increase the note textarea rows when editing inline and the note receives
-   * focus.
-   */
-
-  @action
-  focusNote(event) {
-    event.target.rows = 5;
-  }
-
-  /*
-   * When losing focus on the note field - reduce the textarea rows back to 1
-   * and store what was entered.
-   */
-
-  @action
-  blurNote(event) {
-    event.target.rows = 1;
   }
 }

@@ -1,0 +1,94 @@
+{{#if @trainings}}
+  {{#each @trainings as |training|}}
+    <div class="mb-2">
+      {{#if training.slot_has_ended}}
+        <b>
+          <LinkTo @route="training.session.index" @models={{array 13 training.slot_id}}>
+            {{ymd-format training.slot_begins}}
+          </LinkTo>
+          <span class="d-inline-block">&lt;{{training.person_status}}&gt;</span>
+          <span class="d-inline-block">{{if training.training_passed "Passed" "NOT PASSED"}}</span>
+          <IntakeRanking @rank={{training.training_rank}} @type="Training"/>
+        </b>
+        <br>
+        {{#each training.training_notes as |note|}}
+          &mdash; {{note.note}}<br>
+        {{else}}
+          <i>No training notes</i>
+        {{/each}}
+      {{else}}
+        <b>
+          <LinkTo @route="training.session.index" @models={{array 13 training.slot_id}}>{{ymd-format
+                  training.slot_begins}}</LinkTo> &lt;{{training.person_status}}&gt;
+          <i>Training Pending</i></b>
+      {{/if}}
+    </div>
+  {{/each}}
+
+  <div class="mt-1">
+    <button type="button" class="btn btn-secondary btn-sm" {{on "click" this.showHistoryAction}}>
+      View Training
+    </button>
+  </div>
+{{else}}
+  <i>No training signups</i>
+{{/if}}
+
+{{#if this.showHistory}}
+  <ModalDialog @title={{concat @person.callsign " Training History"}} @size="xl" as |Modal|>
+    <Modal.body>
+      <table class="table table-sm table-striped table-hover">
+        <thead>
+        <tr>
+          <th class="w-15">Date</th>
+          <th class="w-15">Location</th>
+          <th class="w-10">Status</th>
+          <th class="w-5">Passed?</th>
+          <th class="w-5">Rank</th>
+          <th class="w-50">Notes</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each @trainings as |row|}}
+          <tr>
+            <td class="w-15">{{ymd-format row.slot_begins}}</td>
+            <td class="w-15">{{row.slot_description}}</td>
+            <td class="w-10">{{row.person_status}}</td>
+            {{#if row.slot_has_ended}}
+              <td class="w-5 text-center">{{yesno row.training_passed}}</td>
+              <td class="w-5 text-center">
+                {{present-or-not row.training_rank "no rank"}}
+              </td>
+              <td class="w-50">
+                {{#if row.training_notes}}
+                  {{#each row.training_notes as |note|}}
+                    <div class="mb-2">
+                      Timestamp {{note.created_at}} by {{if note.person_source_id note.person_source.callsign
+                                                            "* imported *"}}:<br>
+                      {{nl2br note.note}}
+                    </div>
+                  {{/each}}
+                  <p>
+                    {{#if row.feedback_delivered}}
+                      {{fa-icon "check"}} Lead trainer feedback given.
+                    {{else}}
+                      {{fa-icon "times"}} Lead trainer feedback NOT given.
+                    {{/if}}
+                  </p>
+                {{else}}
+                  <i>no notes</i>
+                {{/if}}
+              </td>
+            {{else}}
+              <td colspan="4" class="w-70"><i>PENDING</i></td>
+            {{/if}}
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </Modal.body>
+    <Modal.footer>
+      <Modal.button @label="Close" @action={{this.closeHistoryAction}} @type="primary"/>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}

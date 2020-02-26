@@ -1,11 +1,13 @@
 <h1 class="d-print-none">Alpha Acceptance Sheet</h1>
 
-{{#if isPrinting}}
-  <PrintInstruction @backAction={{action showAlphasAction}} @backLabel="Back to Alpha selection" />
+{{#if this.isPrinting}}
+  <PrintInstruction @backAction={{action this.showAlphasAction}} @backLabel="Back to Alpha selection"/>
   {{#each printAlphas as |alpha alphaIdx|}}
     <div class="d-flex mx-2 mt-4 mb-2 {{if alphaIdx "d-print-page-break"}}">
       <img src={{root-url "assets/images/ranger-logo-bw.png"}} class="alpha-sheet-logo" alt="ranger logo">
-      <div class="alpha-sheet-header align-middle">{{year}} Alpha To Dirt Ranger Acceptance Form ({{add alphaIdx 1}}/{{printAlphas.length}})</div>
+      <div class="alpha-sheet-header align-middle">{{year}} Alpha To Dirt Ranger Acceptance Form ({{add alphaIdx 1}}
+        /{{printAlphas.length}})
+      </div>
     </div>
 
     <div class="alpha-sheet-section-header">
@@ -16,7 +18,12 @@
       <div class="col-8">
         <div class="alpha-sheet-column">
           <div class="alpha-sheet-column-label">Ranger Handle:</div>
-          <div class="alpha-sheet-column-field alpha-sheet-column-lg">{{alpha.callsign}}</div>
+          <div class="alpha-sheet-column-field ">
+            <div class="alpha-sheet-column-lg">{{alpha.callsign}}</div>
+            {{#if alpha.fkas}}
+              FKA: {{join alpha.fkas ", "}}
+            {{/if}}
+          </div>
         </div>
         <div class="alpha-sheet-column">
           <div class="alpha-sheet-column-label">Real Name:</div>
@@ -26,8 +33,7 @@
           <div class="alpha-sheet-column-label">Training Location:</div>
           <div class="alpha-sheet-column-{{if alpha.trainings "field" "input"}}">
             {{#each alpha.trainings as |place idx|}}
-              {{if idx "/"}}
-              {{shift-format place.begins}} {{place.description}}
+              {{ymd-format place.slot_begins}} {{place.slot_description}}<br>
             {{/each}}
           </div>
         </div>
@@ -36,7 +42,6 @@
           <div class="alpha-sheet-column-{{if alpha.alpha_slot "field" "input"}}">
             {{#if alpha.alpha_slot}}
               {{shift-format alpha.alpha_slot.begins}}
-              {{alpha.alpha_slot.description}}
             {{/if}}
           </div>
         </div>
@@ -48,12 +53,10 @@
 
       <div class="col-4">
         <div class="alpha-sheet-headshot-box">
-          {{#if alpha.photo_url}}
+          {{#if alpha.photo_approved}}
             <img src={{alpha.photo_url}} alt="headshot">
           {{else}}
-            NO APPROVED PHOTO<br>
-            or<br>
-            Lambase Connection error
+            {{fa-user "user" size="2x"}}
           {{/if}}
         </div>
       </div>
@@ -89,16 +92,19 @@
       <div class="col-6">
         <div class="alpha-sheet-column">
           <div class="alpha-sheet-column-label">Flag Type:</div>
-          <div class="alpha-sheet-column-{{if alpha.mentors_flag_note "field" "input"}}">{{alpha.mentors_flag_note}}</div>
+          <div class="alpha-sheet-column-{{if alpha.mentors_flag_note "field"
+                                              "input"}}">{{alpha.mentors_flag_note}}</div>
         </div>
       </div>
       <div class="col-6">
         <div class="alpha-sheet-column">
           <div class="alpha-sheet-column-label">Training Rank:</div>
-          <div class="alpha-sheet-column-{{if alpha.trainings.firstObject.rank "field" "input"}}">
+          <div class="alpha-sheet-column-{{if alpha.trainings "field" "input"}}">
             {{#each alpha.trainings as |place idx|}}
-              {{if idx " / "}}
-              {{if (gte place.rank 4) "FLAG" place.rank}}
+              {{#if place.training_passed}}
+                <span class="d-inline-block">{{year-format place.slot_begins}}
+                  <IntakeRanking @type="training" @rank={{place.rank}} /></span>
+              {{/if}}
             {{/each}}
           </div>
         </div>
@@ -110,45 +116,65 @@
       <div class="col-12">
         <table class="alpha-sheet-table my-4">
           <thead>
-            <tr>
-              <th>&nbsp;</th>
-              <th class="w-35">{{year}} MENTOR NAME</th>
-              <th class="w-20">ACCEPT</th>
-              <th class="w-20">ACCEPT W/RESERV.</th>
-              <th class="w-20">REJECT</th>
-            </tr>
+          <tr>
+            <th>&nbsp;</th>
+            <th class="w-35">{{year}} MENTOR NAME</th>
+            <th class="w-20">ACCEPT</th>
+            <th class="w-20">ACCEPT W/RESERV.</th>
+            <th class="w-20">REJECT</th>
+          </tr>
           </thead>
           <tbody>
-            <NumberOfTimes @times={{3}} as |mentor|>
-              <tr>
-                <td class="text-right">{{add mentor 1}}.</td>
-                <td class="w-40 border-bottom border-dark">&nbsp;</td>
-                <td class="w-20 border-bottom border-dark">&nbsp;</td>
-                <td class="w-20 border-bottom border-dark">&nbsp;</td>
-                <td class="w-20 border-bottom border-dark">&nbsp;</td>
-              </tr>
-            </NumberOfTimes>
+          <NumberOfTimes @times={{3}} as |mentor|>
             <tr>
-              <td>&nbsp;</td>
-              <td colspan="4">
-                Legend: <b>ACCEPT</b> = Accept Alpha into the Rangers.
-                <b>ACCEPT W/RESERV.</b> = Accept Alpha into the Rangers. Other feedback outweighs my concerns.<br>
-                <b>REJECT</b> = Bonk Alpha
-              </td>
+              <td class="text-right">{{add mentor 1}}.</td>
+              <td class="w-40 border-bottom border-dark">&nbsp;</td>
+              <td class="w-20 border-bottom border-dark">&nbsp;</td>
+              <td class="w-20 border-bottom border-dark">&nbsp;</td>
+              <td class="w-20 border-bottom border-dark">&nbsp;</td>
             </tr>
+          </NumberOfTimes>
+          <tr>
+            <td colspan="5" class="px-4">
+              Legend: <b>ACCEPT</b> = Accept Alpha into the Rangers.
+              <b>ACCEPT W/RESERV.</b> = Accept Alpha into the Rangers. Other feedback outweighs my concerns.
+              <b>REJECT</b> = Bonk Alpha
+            </td>
+          </tr>
           </tbody>
         </table>
       </div>
     </div>
 
     <div class="alpha-sheet-comment-box-md">
-      <h3>Mentor Comments:</h3>
-      {{alpha.mentors_notes}}
+      <h3>Mentor Notes/Ranking:</h3>
+      {{#each alpha.mentor_team as |info|}}
+        {{info.year}}
+        <IntakeRanking @type="mentor" @rank={{info.rank}} />
+        <br>
+        {{#each info.notes as |note|}}
+          {{#unless note.is_log}}
+            <div>
+              &mdash; {{note.note}}
+            </div>
+          {{/unless}}
+        {{/each}}
+      {{/each}}
     </div>
     <div class="alpha-sheet-comment-box-md">
-      <h3>Training Comments:</h3>
-      {{#each alpha.trainings as |place|}}
-        {{place.notes}}
+      <h3>Training Notes/Ranking:</h3>
+      {{#each this.alpha.trainings as |place|}}
+        {{#if place.training_passed}}
+          <div>
+            {{year-format place.slot_begins}}
+            <IntakeRanking @type="training" @rank={{note.rank}} />
+            {{#each place.training_notes as |note|}}
+              {{#unless note.is_log}}
+                {{note.note}}<br>
+              {{/unless}}
+            {{/each}}
+          </div>
+        {{/if}}
       {{/each}}
     </div>
     <div class="alpha-sheet-comment-box-lg">
@@ -159,7 +185,8 @@
   <div class="form-row mb-2">
     <label class="col-form-label col-auto">Mentor Shift Filter</label>
     <div class="col-auto">
-      <ChForm::Select @name="filter" @value={{filter}} @options={{filterOptions}} @onChange={{action (mut filter)}} @controlClass="form-control" />
+      <ChForm::Select @name="filter" @value={{filter}} @options={{filterOptions}} @onChange={{action (mut filter)}}
+                      @controlClass="form-control"/>
     </div>
   </div>
   <div class="mb-2">
@@ -168,50 +195,52 @@
   <table class="table table-striped table-sm table-hover">
     <caption>Showing {{viewAlphas.length}} of {{alphas.length}}</caption>
     <thead>
-      <tr>
-        <th><Input @type="checkbox" @checked={{selectAll}} @change={{action toggleAll value="target.checked"}} /></th>
-        <th>Callsign</th>
-        <th>Name</th>
-        <th>Training</th>
-        <th>Mentor Shift</th>
-        <th>Errors</th>
-      </tr>
+    <tr>
+      <th><Input @type="checkbox" @checked={{selectAll}} @change={{action toggleAll value="target.checked"}} /></th>
+      <th>Callsign</th>
+      <th>Name</th>
+      <th>Training</th>
+      <th>Mentor Shift</th>
+      <th>Errors</th>
+    </tr>
     </thead>
 
     <tbody>
-      {{#each viewAlphas as |alpha|}}
-        <tr>
-          <td><Input @type="checkbox" @checked={{alpha.selected}} /></td>
-          <td><PersonLink @person={{alpha}} /></td>
-          <td>{{alpha.first_name}} {{alpha.last_name}}</td>
-          <td>
-            {{#each alpha.trainings as |place|}}
-              {{shift-format place.begins}}
-              {{place.description}}<br>
-            {{else}}
-              none
-            {{/each}}
-          </td>
-          <td>
-            {{#if alpha.alpha_slot}}
-              {{shift-format alpha.alpha_slot.begins}}
-            {{else}}
-              none
-            {{/if}}
-          </td>
-          <td>
-            {{#unless alpha.training}}
-              No training signups<br>
-            {{/unless}}
-            {{#unless alpha.trained}}
-              Did not pass training<br>
-            {{/unless}}
-            {{#unless alpha.alpha_slot}}
-              No mentor shift
-            {{/unless}}
-          </td>
-        </tr>
-      {{/each}}
+    {{#each viewAlphas as |alpha|}}
+      <tr>
+        <td><Input @type="checkbox" @checked={{alpha.selected}} /></td>
+        <td>
+          <PersonLink @person={{alpha}} />
+        </td>
+        <td>{{alpha.first_name}} {{alpha.last_name}}</td>
+        <td>
+          {{#each alpha.trainings as |place|}}
+            {{shift-format place.begins}}
+            {{place.description}}<br>
+          {{else}}
+            none
+          {{/each}}
+        </td>
+        <td>
+          {{#if alpha.alpha_slot}}
+            {{shift-format alpha.alpha_slot.begins}}
+          {{else}}
+            none
+          {{/if}}
+        </td>
+        <td>
+          {{#unless alpha.training}}
+            No training signups<br>
+          {{/unless}}
+          {{#unless alpha.trained}}
+            Did not pass training<br>
+          {{/unless}}
+          {{#unless alpha.alpha_slot}}
+            No mentor shift
+          {{/unless}}
+        </td>
+      </tr>
+    {{/each}}
     </tbody>
   </table>
   <button class="btn btn-primary" {{action printAction}}>Print Selected ({{printAlphas.length}})</button>

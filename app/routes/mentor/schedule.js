@@ -12,7 +12,7 @@ export default class MentorScheduleRoute extends Route {
     const year = requestYear(params);
 
     this.set('year', year);
-    return this.ajax.request('mentor/alpha-schedule', { data: { year, exclude_photo: true } });
+    return this.ajax.request('mentor/alpha-schedule', { data: { year } });
   }
 
   setupController(controller, model) {

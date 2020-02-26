@@ -9,6 +9,5 @@ export default class MentorPotentialsRoute extends Route {
     controller.set('potentials', model.potentials);
     controller.set('year', this.house.currentYear());
     controller.set('filter', 'all');
-    controller.set('person', null);
   }
 }

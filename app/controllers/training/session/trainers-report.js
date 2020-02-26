@@ -76,7 +76,7 @@ export default class TrainingSessionTrainersReportController extends Controller 
       // Count the students
 
       if (this.training.is_art) {
-        if (student.is_art_alpha) {
+        if (student.is_art_prospective) {
           alphaCount++;
           binaryStudents.push(student);
         } else {
@@ -118,7 +118,7 @@ export default class TrainingSessionTrainersReportController extends Controller 
         students: vetStudents
       },
       {
-        groupName: (this.training.is_art ? 'ART Alphas' : 'Binaries'),
+        groupName: (this.training.is_art ? 'ART Prospectives' : 'Binaries'),
         students: binaryStudents
       },
     ]);

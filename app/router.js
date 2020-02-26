@@ -131,6 +131,8 @@ Router.map(function() {
     this.route('timesheet');
     this.route('onboard');
     this.route('photos');
+    this.route('status-history');
+    this.route('unified-flagging');
   });
 
   this.route('logout');
@@ -194,6 +196,8 @@ Router.map(function() {
     this.route('bmid-print');
     this.route('handle-checker');
     this.route('photo-review');
+    this.route('unified-flagging');
+    this.route('photos');
   });
   this.route('register');
 

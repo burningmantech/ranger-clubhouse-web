@@ -7,5 +7,6 @@ export default class TrainingSessionIndexRoute extends Route {
     controller.setProperties(this.modelFor('training/session'));
     controller.set('showEmails', false);
     controller.set('searchForm', null);
+    controller.set('editStudent', null);
   }
 }

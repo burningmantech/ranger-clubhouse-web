@@ -31,9 +31,9 @@
   <thead>
     <tr>
       <th>Callsign</th>
-      <th>Status</th>
-      <th>Passed?</th>
-      <th>Years</th>
+      <th class="text-center">Status</th>
+      <th class="text-center">Passed?</th>
+      <th class="text-right">Years</th>
       <th>Teams</th>
       <th>Name</th>
       <th>Email</th>
@@ -49,12 +49,12 @@
         </tr>
       {{/if}}
       {{#each group.students as |student|}}
-        <tr>
+        <tr class="{{if student.fkas "trainers-report-no-bottom"}}">
           <td>{{student.callsign}}</td>
           <td class="text-center">
             {{student.status}}
-            {{#if student.is_art_alpha}}
-            <br><small>ART Alpha</small>
+            {{#if student.is_art_prospective}}
+            <br><small>ART Prospective</small>
             {{/if}}
           </td>
           <td class="text-center">
@@ -77,6 +77,11 @@
             {{student.email}}
           </td>
         </tr>
+        {{#if student.fkas}}
+          <tr>
+            <td colspan="7">FKA: {{join student.fkas ", "}}</td>
+          </tr>
+        {{/if}}
       {{else}}
         <tr>
           <td colspan="7" class="text-center">

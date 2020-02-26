@@ -1,0 +1,78 @@
+<ModalDialog @title={{concat @person.callsign " add note"}} @size="xl" as |Modal|>
+  <Modal.body>
+    {{#each @teamNotes as |intake|}}
+      <table class="table table-striped table-sm">
+        <caption>Year {{intake.year}}
+          <IntakeRanking @rank={{intake.rank}} />
+        </caption>
+        <thead>
+        <tr>
+          <th class="w-20">Timestamp</th>
+          <th class="w-15">Person</th>
+          <th class="w-65">Note</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each intake.notes as |note|}}
+          <tr>
+            <td class="w-20">{{note.created_at}}</td>
+            <td class="w-15">
+              {{#if note.person_source}}
+                {{note.person_source.callsign}}
+              {{else}}
+                <i>* imported *</i>
+              {{/if}}
+            </td>
+            <td class="w-65">
+              {{nl2br note.note}}
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="3">No {{year}} {{uppercase @type}} notes are present.</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <b class="text-danger">No Intake History is available</b>
+    {{/each}}
+
+    {{#if @canAddNote}}
+      <ChForm @formId="person-note" @originalModel={{this.noteForm}}
+              @onSubmit={{this.submitNoteAction}}  @onCancel={{@closeNoteAction}} as |f|>
+        <b>Your note will be timestamped, and appended to any existing {{@viewYear}} notes.</b>
+        <div class="row mt-2">
+          <div class="col-auto">
+            <f.input @name="ranking" @label={{concat (uppercase @type) " Ranking"}} @type="select"
+                     @options={{this.rankingOptions}} />
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-auto">
+            <f.input @name="note" @label={{concat "Enter your " (uppercase @type) " notes:"}}
+                     @type="textarea"
+                     @rows=5 @cols=80/>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-auto">
+            <f.submit @label="Save Note" disabled={{or this.isSubmitting (is-empty f.model.note)}} />
+            <f.cancel/>
+            {{#if this.isSubmitting}}
+              <LoadingIndicator/>
+            {{/if}}
+          </div>
+        </div>
+      </ChForm>
+    {{else}}
+      <p>
+        You are not authorized to add a note or rank for this team.
+      </p>
+      <p>
+        <button type="button" class="btn btn-primary" {{action @closeNoteAction}}>Close</button>
+      </p>
+    {{/if}}
+  </Modal.body>
+
+</ModalDialog>
