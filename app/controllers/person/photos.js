@@ -3,20 +3,6 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 export default class PersonPhotosController extends Controller {
-  @tracked photo = null;
-
-  @action
-  showPhotoAction(photo, event) {
-    event.preventDefault();
-
-    this.photo = photo;
-  }
-
-  @action
-  closePhotoAction() {
-    this.photo = null;
-  }
-
   @action
   deletePhotoAction(photo) {
     this.modal.confirm('Confirm photo deletion', 'Are you really sure you want to delete the photo?', () => {
