@@ -1,6 +1,8 @@
 <header class="d-print-none">
   <nav class="navbar navbar-expand-md navbar-light bg-khaki">
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+            data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+            aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
       Menu
     </button>
@@ -16,7 +18,7 @@
 
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       {{#if session.isAuthenticated}}
-        {{! Show callsign and logout button on small screens with collapsed navbar}}
+      {{! Show callsign and logout button on small screens with collapsed navbar}}
         <div class="navbar-text d-md-none float-right">
           <LinkTo @route="logout" class="btn btn-sm btn-secondary text-white">Logout</LinkTo>
         </div>
@@ -38,7 +40,8 @@
                       <div class="navbar-text">Rangering</div>
                       <LinkTo @route="me.schedule" class="dropdown-item">Schedule / Sign Up</LinkTo>
                       {{#if (or session.user.isAlpha session.user.isRanger)}}
-                        <LinkTo @route="me.timesheet-corrections.index" class="dropdown-item">Timesheet Corrections</LinkTo>
+                        <LinkTo @route="me.timesheet-corrections.index" class="dropdown-item">Timesheet Corrections
+                        </LinkTo>
                         <LinkTo @route="me.timesheet" class="dropdown-item">Timesheets</LinkTo>
                       {{/if}}
                       {{#unless session.user.isAuditor}}
@@ -92,7 +95,9 @@
               <div class="dropdown-menu">
                 <LinkTo @route="training.index" @model="dirt" class="dropdown-item">Training Sessions</LinkTo>
                 <LinkTo @route="training.capacity" @model="dirt" class="dropdown-item">Training Capacity</LinkTo>
-                <LinkTo @route="training.multiple-enrollments" @model="dirt" class="dropdown-item">Multiple Enrollments Report</LinkTo>
+                <LinkTo @route="training.multiple-enrollments" @model="dirt" class="dropdown-item">Multiple Enrollments
+                  Report
+                </LinkTo>
               </div>
             </li>
           {{/if}}
@@ -132,19 +137,19 @@
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Vol Coord</a>
               <div class="dropdown-menu">
-               {{#if (has-role "vc")}}
+                {{#if (has-role "vc")}}
 
-                 <LinkTo @route="vc.handle-checker" class="dropdown-item">Check Callsigns</LinkTo>
-                 <LinkTo @route="vc.photo-review" class="dropdown-item">Photo Review</LinkTo>
-                 <LinkTo @route="vc.photos" class="dropdown-item">Photos</LinkTo>
+                  <LinkTo @route="vc.handle-checker" class="dropdown-item">Check Callsigns</LinkTo>
+                  <LinkTo @route="vc.photo-review" class="dropdown-item">Photo Review</LinkTo>
+                  <LinkTo @route="vc.photos" class="dropdown-item">Photos</LinkTo>
 
-                 {{#if (has-role "edit-access-docs")}}
-                  <LinkTo @route="vc.access-documents" class="dropdown-item">Manage Access Docs</LinkTo>
+                  {{#if (has-role "edit-access-docs")}}
+                    <LinkTo @route="vc.access-documents" class="dropdown-item">Manage Access Docs</LinkTo>
+                  {{/if}}
+                  {{#if (has-role "edit-bmids")}}
+                    <LinkTo @route="vc.bmid" class="dropdown-item">Manage BMIDs</LinkTo>
+                  {{/if}}
                 {{/if}}
-                {{#if (has-role "edit-bmids")}}
-                  <LinkTo @route="vc.bmid" class="dropdown-item">Manage BMIDs</LinkTo>
-                {{/if}}
-               {{/if}}
                 {{#if (has-role "intake")}}
                   <LinkTo @route="vc.unified-flagging" class="dropdown-item">Unified Flagging</LinkTo>
                 {{/if}}
@@ -200,9 +205,12 @@
                         {{#if (has-role "admin")}}
                           <div class="navbar-text">Post Event</div>
                           <LinkTo @route="admin.thank-you-cards" class="dropdown-item">Thank-You Cards</LinkTo>
-                          <LinkTo @route="admin.timesheet-sanity-checker" class="dropdown-item">Timesheet Sanity Checker</LinkTo>
+                          <LinkTo @route="admin.timesheet-sanity-checker" class="dropdown-item">Timesheet Sanity
+                            Checker
+                          </LinkTo>
                           <LinkTo @route="admin.hours-credits" class="dropdown-item">Hours/Credits</LinkTo>
-                          <LinkTo @route="admin.people-by-status-change" class="dropdown-item">People By Status Change</LinkTo>
+                          <LinkTo @route="admin.people-by-status-change" class="dropdown-item">People By Status Change
+                          </LinkTo>
                         {{/if}}
                         <div class="navbar-text">Communications</div>
                         <LinkTo @route="admin.rbs" class="dropdown-item">Ranger Broadcast</LinkTo>
@@ -239,14 +247,23 @@
                     </div>
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Timesheets</div>
-                      <LinkTo @route="reports.on-duty" @query={{hash over_hours=null}} class="dropdown-item">People On Duty</LinkTo>
-                      <LinkTo @route="reports.on-duty" @query={{hash over_hours=6}} class="dropdown-item">... Over 6 Hours</LinkTo>
+                      <LinkTo @route="reports.on-duty" @query={{hash over_hours=null}} class="dropdown-item">People On
+                        Duty
+                      </LinkTo>
+                      <LinkTo @route="reports.on-duty" @query={{hash over_hours=6}} class="dropdown-item">... Over 6
+                        Hours
+                      </LinkTo>
                       <LinkTo @route="reports.flakes" class="dropdown-item">Flake Report</LinkTo>
                       <LinkTo @route="reports.timesheet-totals" class="dropdown-item">Timesheet Totals</LinkTo>
-                      <LinkTo @route="reports.timesheet-by-callsign" class="dropdown-item">Timesheet By Callsign</LinkTo>
-                      <LinkTo @route="reports.timesheet-by-position" class="dropdown-item">Timesheet By Position</LinkTo>
-                      <LinkTo @route="reports.timesheet-correction-requests" class="dropdown-item">Corrections Requests</LinkTo>
-                      <LinkTo @route="reports.timesheet-unconfirmed" class="dropdown-item">Timesheet Unconfirmed</LinkTo>
+                      <LinkTo @route="reports.timesheet-by-callsign" class="dropdown-item">Timesheet By Callsign
+                      </LinkTo>
+                      <LinkTo @route="reports.timesheet-by-position" class="dropdown-item">Timesheet By Position
+                      </LinkTo>
+                      <LinkTo @route="reports.timesheet-correction-requests" class="dropdown-item">Corrections
+                        Requests
+                      </LinkTo>
+                      <LinkTo @route="reports.timesheet-unconfirmed" class="dropdown-item">Timesheet Unconfirmed
+                      </LinkTo>
                     </div>
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Assets</div>
@@ -263,7 +280,8 @@
                     </div>
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Other</div>
-                      <LinkTo @route="reports.position-sanity-checker" class="dropdown-item">Position Sanity Check</LinkTo>
+                      <LinkTo @route="reports.position-sanity-checker" class="dropdown-item">Position Sanity Check
+                      </LinkTo>
                       <LinkTo @route="reports.languages" class="dropdown-item">Languages</LinkTo>
                       <LinkTo @route="reports.sandman-qualified" class="dropdown-item">Sandman Qualified</LinkTo>
                       <LinkTo @route="reports.vehicle-paperwork" class="dropdown-item">Vehicle Paperwork</LinkTo>
@@ -285,7 +303,7 @@
             </li>
           {{/if}}
         {{else}}
-          {{! User not logged in}}
+        {{! User not logged in}}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Actions</a>
             <div class="dropdown-menu">
@@ -325,21 +343,34 @@
         &nbsp;
       </div>
 
-      {{#ch-form "person-search" searchForm formClass="col-11 col-md-9 col-lg-7 mb-2 mx-2" changeSet=false onSubmit=(action "submit") onFormChange=(action searchFormChange) as |f|}}
+      {{#ch-form "person-search" searchForm formClass="col-11 col-md-9 col-lg-7 mb-2 mx-2" changeSet=false
+                 onSubmit=(action "submit") onFormChange=(action searchFormChange) as |f|}}
         <div class="form-row">
           <div class="col-12 col-sm-10 col-lg-9 col-xl-8">
-            <PowerSelectTypeahead @search={{action searchAction}} @onchange={{action searchChangeAction}} @onfocus={{action searchFocusAction}} @onkeydown={{action searchKeydownAction}} @renderInPlace={{true}} @placeholder={{searchPlaceholder}}
-              @triggerId="person-search-query" @defaultHighlighted={{action defaultHighlightedAction}} @loadingMessage="Searching . . ." @noMatchesMessage="No results found" as |person|>
-              <strong>{{person.callsign}}</strong> &lt;{{person.first_name}} {{person.last_name}}, {{person.status}}&gt;
-              {{#if (eq person.email_match "full")}}
+            <PowerSelectTypeahead @search={{action searchAction}} @onchange={{action searchChangeAction}}
+                                  @onfocus={{action searchFocusAction}} @onkeydown={{action searchKeydownAction}}
+                                  @renderInPlace={{true}} @placeholder={{searchPlaceholder}}
+                                  @triggerId="person-search-query" @defaultHighlighted={{action
+                    defaultHighlightedAction}} @loadingMessage="Searching . . ." @noMatchesMessage="No results found" as
+                                  |item|>
+              {{#if this.searchById~}}
+                ID #{{item.id}} -
+              {{/if}}
+              <strong>{{item.callsign}}</strong>
+              &lt;{{item.first_name}} {{item.last_name}}, {{item.status}}&gt;
+              {{#if item.fka_match}}
+                <b>(FKA: {{item.fka_match}})</b>
+              {{/if}}
+              {{#if (eq item.email_match "full")}}
                 - email exact match
-              {{else if (eq person.email_match "partial")}}
+              {{else if (eq item.email_match "partial")}}
                 - email partial match
               {{/if}}
             </PowerSelectTypeahead>
           </div>
           <div class="col-auto mt-2 mt-sm-0 no-gutters">
-            {{f.input "mode" type="select" options=modeOptions onChange=this.modeChange controlClass="form-control form-control-sm"}}
+            {{f.input "mode" type="select" options=modeOptions onChange=this.modeChange
+                      controlClass="form-control form-control-sm"}}
           </div>
         </div>
         {{#if showSearchOptions}}
@@ -365,7 +396,8 @@
                 <small>Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.</small>
               </div>
               <div class="col-auto ml-auto mr-2">
-                <button type="button" class="btn btn-sm btn-secondary" {{action "hideSearchBoxAction"}}>Hide Options</button>
+                <button type="button" class="btn btn-sm btn-secondary" {{action "hideSearchBoxAction"}}>Hide Options
+                </button>
               </div>
             </div>
           </div>
@@ -411,11 +443,11 @@
 
 <footer class="footer d-print-none">
   <div class="container text-center">
-    &copy; 2008-{{moment-format (now) "YYYY"}} Black Rock City, LLC. All information contained within this website is strictly confidential.
+    &copy; 2008-{{moment-format (now) "YYYY"}} Black Rock City, LLC. All information contained within this website is
+    strictly confidential.
     <p>Build: {{buildTimestamp}} Tag: {{applicationVersion}}</p>
   </div>
 </footer>
 
-<ModalRegistry />
-
+<ModalRegistry/>
 <div id="modal-render"></div>

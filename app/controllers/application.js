@@ -132,7 +132,7 @@ export default class ApplicationController extends Controller {
   @computed('session.user.roles')
   get canAccountManage() {
     if (this.session.user) {
-      return this.session.user.hasRole([Role.ADMIN, Role.MANAGE, Role.VIEW_PII, Role.VC, Role.TRAINER, Role.MENTOR, Role.TIMESHEET_MANAGEMENT]);
+      return this.session.user.hasRole([Role.ADMIN, Role.MANAGE, Role.VIEW_PII, Role.VC, Role.MENTOR, Role.TIMESHEET_MANAGEMENT]);
     } else {
       return false;
     }
@@ -246,18 +246,7 @@ export default class ApplicationController extends Controller {
     }
 
     // Person id lookup
-    if (query.startsWith('+')) {
-      const id = query.substring(1, query.length);
-      const results = [{
-        callsign: `Person #${id}`,
-        id,
-        email: '-',
-        first_name: '-',
-        last_name: '-'
-      }];
-      this.set('searchResults', results);
-      return resolve(results);
-    }
+    this.set('searchById', query.startsWith('+'));
 
     const params = {
       basic: 1,
