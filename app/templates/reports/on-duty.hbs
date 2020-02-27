@@ -1,70 +1,78 @@
 <h1>
-  {{#if over_hours}}
+  {{#if this.over_hours}}
     Currently On Duty Over {{over_hours}} Hours
-  {{else if duty_date}}
+  {{else if this.duty_date}}
     On Duty at {{full-datetime-format duty_date}}
   {{else}}
     Currently On Duty
   {{/if}}
 </h1>
 
-{{#unless over_hours}}
-  {{#ch-form "dateform" this.dateForm validator=this.dateValidations onSubmit=(action this.submitForm) as |f|}}
+{{#unless this.over_hours}}
+  <ChForm @formId="date-form" @originalModel={{this.dateForm}} @validator={{this.dateValidations}}
+          @onSubmit={{this.submitForm}} as |f|>
     <div class="form-row mt-4">
       <div class="col-auto">
         <label class="col-form-label">Date &amp; time to view:</label>
       </div>
       <div class="col-auto">
-        {{f.input "date" type="datetime"}}
+        <f.input @name="date" @type="datetime" />
       </div>
       <div class="col-auto">
-        <f.submit @label="Submit" />
-        <button class="btn btn-secondary" {{action this.viewCurrentTime}}>View Current Time</button>
+        <f.submit @label="Submit"/>
+        <button type="button" class="btn btn-secondary" {{on "click" this.viewCurrentTime}}>View Current Time</button>
       </div>
     </div>
-  {{/ch-form}}
+  </ChForm>
 {{/unless}}
 
 <p>
   Showing {{pluralize this.timesheet.length "person"}} on duty in {{pluralize this.positions.length "position"}}.
 </p>
 {{#each this.positions as |position|}}
-  <table class="table table-sm table-striped table-hover table-width-auto">
-    <caption>{{position.title}} - {{pluralize position.timesheets.length "person"}}</caption>
-    <thead>
-      <tr>
-        <th>Callsign</th>
-        {{#if this.duty_date}}
-          <th>On Duty</th>
-          <th>Off Duty</th>
-        {{else}}
-          <th>On Duty Since</th>
-        {{/if}}
-        <th class="text-right">Duration</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {{#each position.timesheets as |ts|}}
+  <div class="row">
+    <div class="col-sm-12 col-md-8 col-lg-6">
+      <table class="table table-sm table-striped table-hover ">
+        <caption>{{position.title}} - {{pluralize position.timesheets.length "person"}}</caption>
+        <thead>
         <tr>
-          <td><PersonLink @person={{ts.person}} /></td>
-          <td>{{shift-format ts.on_duty}}</td>
+          <th class="w-25">Callsign</th>
           {{#if this.duty_date}}
-            <td>
-              {{#if ts.off_duty}}
-                {{shift-format ts.off_duty}}
-              {{else}}
-                <i>On Duty</i>
-              {{/if}}
-            </td>
+            <th class="w-30">On Duty</th>
+            <th class="w-30">Off Duty</th>
+          {{else}}
+            <th class="w-60">On Duty Since</th>
           {{/if}}
-          <td class="text-right">{{hour-minute-format ts.duration}}</td>
+          <th class="text-right w-15">Duration</th>
         </tr>
-      {{/each}}
-    </tbody>
-  </table>
+        </thead>
+
+        <tbody>
+        {{#each position.timesheets as |ts|}}
+          <tr>
+            <td class="w-25">
+              <PersonLink @person={{ts.person}} />
+            </td>
+            <td class={{if this.duty_date "w-30" "w-60"}}>{{shift-format ts.on_duty}}</td>
+            {{#if this.duty_date}}
+              <td class="w-30">
+                {{#if ts.off_duty}}
+                  {{shift-format ts.off_duty}}
+                {{else}}
+                  <i>On Duty</i>
+                {{/if}}
+              </td>
+            {{/if}}
+            <td class="w-15 text-right">{{hour-minute-format ts.duration}}</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
 {{else}}
   <p>
-    <strong class="text-success">Congratulations! No one is on duty {{#if over_hours}}for more than {{over_hours}} hours{{/if}}.</strong>
+    <strong class="text-success">Congratulations! No one is on duty {{#if over_hours}}
+      for more than {{over_hours}} hours{{/if}}.</strong>
   </p>
 {{/each}}

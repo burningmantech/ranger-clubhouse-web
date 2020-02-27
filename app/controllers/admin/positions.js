@@ -1,11 +1,17 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import {action, computed} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 import PositionTypes from 'clubhouse/constants/position-types';
+import PositionValidations from 'clubhouse/validations/position';
 
 export default class PositionController extends Controller {
-  typeFilter =  'All';
+  @tracked position = null;
 
-  @computed
+  positionTypes = PositionTypes;
+  positionValidations = PositionValidations;
+
+  @tracked typeFilter = 'All';
+
   get typeOptions() {
     const types = PositionTypes.slice();
 
@@ -27,40 +33,53 @@ export default class PositionController extends Controller {
 
   @computed('positions.@each.type')
   get trainingPositions() {
-    const positions = [ ];
+    const positions = [];
     this.positions.forEach((position) => {
       if (position.type == 'Training' && !position.title.match(/trainer/i)) {
         positions.pushObject(position);
       }
-    })
+    });
 
     return positions;
   }
 
-  @action
-  new() {
-    this.set('position', this.store.createRecord('position'));
+  get trainingOptions() {
+    const options = [
+      ['-', '']
+    ];
+
+    this.trainingPositions.forEach((position) => {
+      options.pushObject([position.title, position.id]);
+    });
+
+    return options;
   }
 
   @action
-  edit(position) {
-    this.set('position', position);
+  newAction() {
+    this.position = this.store.createRecord('position');
   }
 
   @action
-  delete(position) {
+  editAction(position) {
+    this.position = position;
+  }
 
-    this.modal.confirm(`Confirm Deleting "${position.title}"`, `By deleting this position important historical nformation will be lost. Are you use you want to do this?`,
+  @action
+  deleteAction() {
+    this.modal.confirm(`Confirm Deleting "${this.position.title}"`,
+      `By deleting this position important historical information will be lost. Are you use you want to do this?`,
       () => {
-          position.destroyRecord().then(() => {
-            this.toast.success('The position has been deleted.');
-          })
+        this.position.destroyRecord().then(() => {
+          this.toast.success('The position has been deleted.');
+          this.position = null;
+        }).catch((response) => this.house.handleErrorResponse(response));
       }
     )
   }
 
   @action
-  save(model, isValid) {
+  saveAction(model, isValid) {
     const isNew = model.get('isNew');
 
     if (!isValid) {
@@ -68,21 +87,13 @@ export default class PositionController extends Controller {
     }
 
     this.house.saveModel(model, `The position has been ${isNew ? 'created' : 'updated'}.`, () => {
-      this.set('position', null);
+      this.position = null;
       this.positions.update(); // refresh the list.
     })
   }
 
   @action
-  cancel(model) {
-    if (!model.get('isDirty')) {
-      this.set('position', null);
-      return;
-    }
-
-    this.modal.confirm('Unsaved changes', 'The position has unsaved changed. Are you sure you wish to cancel?', () => {
-      this.set('position', null);
-    })
+  cancelAction() {
+    this.position = null;
   }
-
 }
