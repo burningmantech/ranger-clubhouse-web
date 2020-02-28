@@ -1,45 +1,36 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { set } from '@ember/object';
+import { validatePresence } from 'ember-changeset-validations/validators';
 
 export default class SearchAssetsController extends Controller {
-  barcode = '';
+  searchValidations = {
+    barcode: validatePresence(true)
+  };
 
-  // The barcode that was not found
-  barcodeNotFound = '';
+  queryParams = [ 'barcode', 'year' ];
 
   @action
-  search() {
-    const barcode = this.barcode.trim();
-
-    if (barcode == '') {
+  searchAction(model, isValid) {
+    if (!isValid) {
       return;
     }
-
-    this.set('barcodeNotFound', '');
-    this.set('asset', null);
-
-    this.set('isLoading', true);
-    this.ajax.request('asset', { data: { barcode, year: this.house.currentYear(), include_history: 1 } })
-      .then((results) => {
-        if (results.asset.length == 0) {
-          this.set('barcodeNotFound', barcode);
-        } else {
-          this.set('asset', results.asset.firstObject);
-          this.set('barcode', '');
-        }
-      })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isLoading', false));
+    // Fire away!
+    this.set('barcode',model.barcode);
   }
 
   @action
   checkIn(row) {
+    set(row, 'isSaving', true);
     this.ajax.request(`asset/${this.asset.id}/checkin`, { method: 'POST' })
       .then((result) => {
         set(row, 'checked_in', result.checked_in);
+        if (this.checkedOut == row) {
+          this.set('checkedOut', null);
+        }
         this.toast.success('Asset successfully checked in');
       })
-      .catch((response) => this.house.handleErrorResponse(response));
+      .catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => set(row, 'isSaving', false));
   }
 }
