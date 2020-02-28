@@ -350,21 +350,25 @@
             <PowerSelectTypeahead @search={{action searchAction}} @onchange={{action searchChangeAction}}
                                   @onfocus={{action searchFocusAction}} @onkeydown={{action searchKeydownAction}}
                                   @renderInPlace={{true}} @placeholder={{searchPlaceholder}}
-                                  @triggerId="person-search-query" @defaultHighlighted={{action
+                                  @triggerId="search-bar" @defaultHighlighted={{action
                     defaultHighlightedAction}} @loadingMessage="Searching . . ." @noMatchesMessage="No results found" as
                                   |item|>
-              {{#if this.searchById~}}
-                ID #{{item.id}} -
-              {{/if}}
-              <strong>{{item.callsign}}</strong>
-              &lt;{{item.first_name}} {{item.last_name}}, {{item.status}}&gt;
-              {{#if item.fka_match}}
-                <b>(FKA: {{item.fka_match}})</b>
-              {{/if}}
-              {{#if (eq item.email_match "full")}}
-                - email exact match
-              {{else if (eq item.email_match "partial")}}
-                - email partial match
+              {{#if (eq this.searchType "asset")}}
+                {{this.searchYear}} #{{item.barcode}} {{item.description}} {{item.type}}
+              {{else}}
+                {{#if (eq this.searchType "person-id")}}
+                  ID #{{item.id}} -
+                {{/if}}
+                <strong>{{item.callsign}}</strong>
+                &lt;{{item.first_name}} {{item.last_name}}, {{item.status}}&gt;
+                {{#if item.fka_match}}
+                  <b>(FKA: {{item.fka_match}})</b>
+                {{/if}}
+                {{#if (eq item.email_match "full")}}
+                  - email exact match
+                {{else if (eq item.email_match "partial")}}
+                  - email partial match
+                {{/if}}
               {{/if}}
             </PowerSelectTypeahead>
           </div>
@@ -396,7 +400,8 @@
                 <small>Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.</small>
               </div>
               <div class="col-auto ml-auto mr-2">
-                <button type="button" class="btn btn-sm btn-secondary" {{action "hideSearchBoxAction"}}>Hide Options
+                <button type="button" class="btn btn-sm btn-secondary" {{on "click" this.hideSearchBoxAction}}>
+                  Hide Options
                 </button>
               </div>
             </div>
@@ -407,10 +412,10 @@
   {{/if}}
 </header>
 
-{{#if session.isAuthenticated}}
-  {{#if groundHogDayTime}}
+{{#if this.session.isAuthenticated}}
+  {{#if this.groundHogDayTime}}
     <div class="h4 alert alert-light-red text-center p-2 m-0">
-      Training Server - Simulated Time {{moment-format groundHogDayTime "dddd, MMMM Do YYYY @ HH:mm"}}
+      Training Server - Simulated Time {{moment-format this.groundHogDayTime "dddd, MMMM Do YYYY @ HH:mm"}}
     </div>
   {{else if (eq (config "DeploymentEnvironment") "Staging")}}
     <div class="h4 alert alert-light-red text-center p-2 m-0">
@@ -429,7 +434,7 @@
       <button type="button" onclick={{action reload}} class="btn btn-danger">Reload</button>
     </div>
   </NewVersionNotifier>
-  {{#if session.user.isAuditor}}
+  {{#if this.session.user.isAuditor}}
     <div class="alert alert-warning text-center p-2 m-0 h3">
       {{fa-icon "exclamation-circle"}} You are an Auditor and NOT on a path to becoming a Ranger this season.
     </div>

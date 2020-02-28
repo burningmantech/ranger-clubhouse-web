@@ -1,64 +1,89 @@
 <h1>Asset Search</h1>
+<YearSelect @title="Asset Search" @year={{this.year}} @onChange={{action (mut this.year)}} />
 
-<form class="form-inline" {{action "search" on="submit"}} autocomplete="off">
-  <Input @type="text" @size={{30}} @value={{barcode}} placeholder="Enter the asset barcode" class="form-control" />
-  <button type="submit" class="btn btn-primary ml-1" disabled={{isLoading}}>Search</button>
-  {{#if isLoading}}
-    {{fa-icon "spinner" spin=true}}
-  {{/if}}
-</form>
-
-
-{{#if barcodeNotFound}}
-  <div class="text-danger mt-2">
-    <strong>Barcode "{{barcodeNotFound}}" was not found.</strong>
+<ChForm @formId="search-form" @originalModel={{this.assetForm}} @validator={{this.searchValidations}}
+        @onSubmit={{this.searchAction}} @formClass="mt-2"
+        as |f|>
+  <div class="form-row">
+    <label class="col-form-label col-auto">
+      Enter the asset barcode:
+    </label>
+    <f.input @name="barcode" @type="text" @grid="col-auto" @size=30/>
+    <div class="col-auto">
+      <f.submit @label="Search"/>
+    </div>
   </div>
-{{else if asset}}
-  <h3 class="mt-3">Asset {{asset.barcode}} ({{if asset.perm_assign "permanent" "temporary"}}) {{asset.description}} {{asset.temp_id}}</h3>
-  <table class="table table-striped table-sm mt-4 table-width-auto">
+</ChForm>
+
+{{#if this.barcodeNotFound}}
+  <div class="text-danger mt-2">
+    <strong>Barcode "{{this.barcode}}" for the year {{this.year}} was not found.</strong>
+  </div>
+{{else if this.asset}}
+  {{#if this.checkedOut}}
+    <h3 class="text-danger">
+      Asset is checked out by
+      <LinkTo @route="person.assets" @model={{this.checkedOut.person.id}}>{{this.checkedOut.person.callsign}}</LinkTo>
+    </h3>
+  {{/if}}
+  <h3 class="mt-3">
+    Asset {{this.asset.barcode}}
+    ({{if this.asset.perm_assign "permanent" "temporary"}})
+    {{this.asset.description}} {{this.asset.temp_id}}
+  </h3>
+  <table class="table table-striped table-hover mt-4 table-width-auto">
     <caption>Checkout History</caption>
     <thead>
-      <tr>
-        <th>Person</th>
-        <th>Attachment</th>
-        <th>Out</th>
-        <th>In</th>
-      </tr>
+    <tr>
+      <th>Person</th>
+      <th>Attachment</th>
+      <th>Out</th>
+      <th>In</th>
+    </tr>
     </thead>
     <tbody>
-      {{#each asset.asset_history as |row|}}
-        <tr>
-          <td><LinkTo @route="person.assets" @model={{row.person.id}}>{{row.person.callsign}}</LinkTo></td>
-          <td>{{present-or-not row.attachment.description "-"}}</td>
-          <td>{{shift-format row.checked_out}}</td>
-          <td>{{#if row.checked_in}}
-              {{shift-format row.checked_in}}
-            {{else}}
-              <button class="btn btn-primary btn-sm" {{action checkIn row}}>Check In</button>
+    {{#each this.asset.asset_history as |row|}}
+      <tr>
+        <td>
+          <LinkTo @route="person.assets" @model={{row.person.id}}>{{row.person.callsign}}</LinkTo>
+        </td>
+        <td>{{present-or-not row.attachment.description "-"}}</td>
+        <td>{{shift-format row.checked_out}}</td>
+        <td>
+          {{#if row.checked_in}}
+            {{shift-format row.checked_in}}
+          {{else}}
+            <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.checkIn row)}}
+                    disabled={{row.isSaving}}>
+              Check In
+            </button>
+            {{#if row.isSaving}}
+              <LoadingIndicator/>
             {{/if}}
-          </td>
-        </tr>
-      {{/each}}
+          {{/if}}
+        </td>
+      </tr>
+    {{/each}}
     </tbody>
   </table>
 
-  <table class="table table-sm mt-4 table-width-auto">
+  <table class="table  mt-4 table-width-auto">
     <caption>Detailed Asset Information</caption>
     <thead>
-      <tr>
-        <th>Created</th>
-        <th>Category</th>
-        <th>Model</th>
-        <th>Notes</th>
-      </tr>
+    <tr>
+      <th>Created</th>
+      <th>Category</th>
+      <th>Model</th>
+      <th>Notes</th>
+    </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>{{asset.create_date}}</td>
-        <td>{{present-or-not asset.category "-"}}</td>
-        <td>{{asset.subtype}} {{asset.model}} {{asset.color}} {{asset.style}}</td>
-        <td>{{present-or-not asset.notes "-"}}</td>
-      </tr>
+    <tr>
+      <td>{{this.asset.create_date}}</td>
+      <td>{{present-or-not this.asset.category "-"}}</td>
+      <td>{{this.asset.subtype}} {{this.asset.model}} {{this.asset.color}} {{this.asset.style}}</td>
+      <td>{{present-or-not this.asset.notes "-"}}</td>
+    </tr>
     </tbody>
   </table>
 
