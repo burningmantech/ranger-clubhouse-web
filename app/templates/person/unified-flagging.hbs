@@ -49,8 +49,43 @@
   </dl>
 {{/if}}
 
-
+<table class="table table-sm table-striped table-hover table-width-auto  my-4">
+  <caption>PNV History</caption>
+  <thead>
+  <tr>
+    <th>Year</th>
+    <th>Training</th>
+    <th>Mentor</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each-in this.history.pnv_history as |pnvYear info|}}
+    <tr>
+      <td>{{pnvYear}}</td>
+      <td>
+        {{#if (is-empty info.training_status)}}
+          NONE
+        {{else}}
+          {{info.training_status}}
+        {{/if}}
+      </td>
+      <td>
+        {{#if info.was_auditor}}
+          Auditor
+        {{else if (not-eq info.mentor_status 'none')}}
+          {{info.mentor_status}}
+        {{else if info.have_alpha_shift}}
+          Walked w/No Mentors?
+        {{else}}
+          No Alpha shift
+        {{/if}}
+      </td>
+    </tr>
+  {{/each-in}}
+  </tbody>
+</table>
 <table class="table table-striped table-hover table-sm mt-2">
+  <caption>Team Notes &amp; Rank/Flags</caption>
   <thead>
   <tr>
     <th class="w-10">Team</th>
