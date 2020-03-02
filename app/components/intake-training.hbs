@@ -12,7 +12,9 @@
         </b>
         <br>
         {{#each training.training_notes as |note|}}
+          {{#unless note.is_log}}
           &mdash; {{note.note}}<br>
+          {{/unless}}
         {{else}}
           <i>No training notes</i>
         {{/each}}

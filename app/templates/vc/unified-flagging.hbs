@@ -49,7 +49,7 @@
             {{#each-in person.pnv_history as |pnvYear info|}}
               <div class="mb-2">
                 {{pnvYear}}<br>
-                {{#if (get person.intake_years (concat pnvYear ".black_flag"))}}
+                {{#if info.black_flag}}
                   <b class="text-danger">BLACK FLAG</b>
                 {{/if}}
                 Training
