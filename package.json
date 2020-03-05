@@ -86,7 +86,7 @@
     "global": "^4.4.0",
     "jquery-datetimepicker": "^2.5.21",
     "jscodeshift": "^0.7.0",
-    "json-formatter-js": "^2.3.3",
+    "json-formatter-js": "^2.3.4",
     "lodash": "^4.17.15",
     "mobile-detect": "^1.4.4"
   }

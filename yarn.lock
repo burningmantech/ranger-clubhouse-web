@@ -8517,10 +8517,10 @@ json-buffer@3.0.0:
   resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.0.tgz#5b1f397afc75d677bde8bcfc0e47e1f9a3d9a898"
   integrity sha1-Wx85evx11ne96Lz8Dkfh+aPZqJg=
 
-json-formatter-js@^2.3.3:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/json-formatter-js/-/json-formatter-js-2.3.3.tgz#2517e28b1b0ce07d318bb2e9fb66c53da0e90601"
-  integrity sha512-6JpHBCm6a+YB7cLye7b2Rxsim37pxpsP5674ASRZYaFiLK+397c7CLOENru2gtiBwMz6s2NCuHVENn4fC42oeQ==
+json-formatter-js@^2.3.4:
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/json-formatter-js/-/json-formatter-js-2.3.4.tgz#0b49b6facd0d54cb220eb65988157c0977a85c6f"
+  integrity sha512-gmAzYRtPRmYzeAT4T7+t3NhTF89JOAIioCVDddl9YDb3ls3kWcskirafw/MZGJaRhEU6fRimGJHl7CC7gaAI2Q==
 
 json-parse-better-errors@^1.0.0, json-parse-better-errors@^1.0.1, json-parse-better-errors@^1.0.2:
   version "1.0.2"
