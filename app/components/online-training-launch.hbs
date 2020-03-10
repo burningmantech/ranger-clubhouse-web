@@ -1,0 +1,50 @@
+<a href {{on "click" this.setupAccountAction}}>{{@text}}</a>
+{{#if this.showCreationDialog}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      <div class="text-center">
+        Setting up your Online Training account. Please wait.<br>
+        <LoadingIndicator @text="Working"/>
+      </div>
+    </Modal.body>
+  </ModalDialog>
+{{/if}}
+{{#if this.showExodusDialog}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      <h3>You are about to leave the Clubhouse and will be heading to the Burning Man Online Training
+        website.</h3>
+      <p>
+        After you complete the Online Training course, it may take the Clubhouse up to 15 minutes or more to register
+        your course completion.
+      </p>
+      {{#if this.alreadyExists}}
+        <p>
+          Your Online Training account has already been setup.
+        </p>
+      {{else}}
+        <p>
+          Your Online Training account has been created.
+        </p>
+        <p>
+          <b class="text-danger">WRITE DOWN the following credentials. You will need the username
+            and password to log into the Online Training website:</b>
+        </p>
+        <p>
+          <b>Username:</b> {{@person.email}}<br>
+          <b>Password:</b> {{this.password}}<br>
+        </p>
+        <p>
+          <b>The above credentials are ONLY for the Online Training website and are separate from the Clubhouse.</b>
+        </p>
+      {{/if}}
+    </Modal.body>
+    <Modal.footer>
+      <Modal.button @label="Go To Online Training" @action={{this.launchTrainingAction}} @type="primary"
+                    @disabled={{this.isSubmitting}} />
+      {{#if this.isSubmitting}}
+        <LoadingIndicator @text="Working"/>
+      {{/if}}
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}

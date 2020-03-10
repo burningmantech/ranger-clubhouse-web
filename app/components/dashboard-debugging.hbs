@@ -1,0 +1,55 @@
+<a href="#" {{on "click" this.toggleDebugging}}>
+  {{if this.showDebugging "Hide" "Show"}} Debugging Options
+</a>
+
+{{#if this.showDebugging}}
+  <dl class="row">
+    <dt class="col-2">Clear Flags</dt>
+    <dd class="col-9">
+      <button class="btn btn-secondary btn-sm" {{action this.clearBehavioralAgreement}}> Behavioral Agreement</button>
+      <button class="btn btn-secondary btn-sm" {{action this.clearPIReview}}>P.I. Review</button>
+    </dd>
+    <dt class="col-2">Photo</dt>
+    <dd class="col-9">
+      <button class="btn btn-secondary btn-sm" {{action this.photoStatus "approved"}}>Approved</button>
+      <button class="btn btn-secondary btn-sm" {{action this.photoStatus "submitted"}}>Submitted</button>
+      <button class="btn btn-secondary btn-sm" {{action this.photoStatus "rejected"}}>Rejected</button>
+      <button class="btn btn-secondary btn-sm" {{action this.photoStatus "missing"}}> Missing</button>
+    </dd>
+    <dt class="col-2">Online Training</dt>
+    <dd class="col-9">
+      <button class="btn btn-secondary btn-sm" {{action this.onlineTraining "pass"}}>Pass</button>
+      <button class="btn btn-secondary btn-sm" {{action this.onlineTraining "missing"}}>Missing</button>
+    </dd>
+    <dt class="col-2">Training</dt>
+    <dd class="col-9">
+      <button class="btn btn-secondary btn-sm" {{action this.training "signup"}}>Create Tomorrow Shift &amp; Sign Up
+      </button>
+      <button class="btn btn-secondary btn-sm" {{action this.training "signup-past"}}>Create Yesterday/Fail Shift
+        &amp; Sign Up
+      </button>
+      <button class="btn btn-secondary btn-sm" {{action this.training "signup-now"}}>Create Now Shift &amp; Sign Up
+      </button>
+      <button class="btn btn-secondary btn-sm" {{action this.training "pass"}}>Pass</button>
+      <button class="btn btn-secondary btn-sm" {{action this.training "remove"}}>Remove Signup</button>
+    </dd>
+    <dt class="col-2">Alpha</dt>
+    <dd class="col-9">
+      <button class="btn btn-secondary btn-sm" {{action this.alphaShift "signup"}}>Create Tomorrow Shift &amp; Sign
+        Up
+      </button>
+      <button class="btn btn-secondary btn-sm" {{action this.alphaShift "signup-past"}}>Create Yesterday Shift &amp;
+        Sign Up
+      </button>
+      <button class="btn btn-secondary btn-sm" {{action this.alphaShift "pass"}}>Convert to Active</button>
+      <button class="btn btn-secondary btn-sm" {{action this.alphaShift "bonk"}}>Convert to Bonked</button>
+      <button class="btn btn-secondary btn-sm" {{action this.alphaShift "remove"}}>Remove Signup</button>
+    </dd>
+    <dt class="col-2">DESTRUCTION!</dt>
+    <dd class="col-9">
+      <button class="btn btn-danger btn-sm" {{action this.goBoom "remove-trainings"}}>Remove ALL Training shifts
+      </button>
+      <button class="btn btn-danger btn-sm" {{action this.goBoom "remove-alphas"}}>Remove All Alpha shifts</button>
+    </dd>
+  </dl>
+{{/if}}

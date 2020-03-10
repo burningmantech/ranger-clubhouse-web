@@ -172,8 +172,8 @@ export default class ScheduleManageComponent extends Component {
       denied.push(`have an approved ${this.person.isNonRanger ? 'Clubhouse' : 'BMID (lam)'} photo`);
     }
 
-    if (!permission.manual_review_passed) {
-      denied.push('pass the Manual Review');
+    if (!permission.online_training_passed) {
+      denied.push('complete Online Training');
     }
 
     if (permission.missing_bpguid) {

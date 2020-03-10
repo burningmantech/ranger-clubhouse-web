@@ -1,45 +1,23 @@
 {{#if this.isDevelopmentEnv}}
-  <a href="#" {{action this.toggleDebugging}}>{{if this.showDebugging "Hide Debugging Options" "Show Debugging Options"}}</a>
-
-  {{#if this.showDebugging}}
-    <dl class="row">
-      <dt class="col-2">Clear Flags</dt>
-      <dd class="col-9">
-        <button class="btn btn-secondary btn-sm" {{action this.clearBehavioralAgreement}}> Behavioral Agreement</button>
-        <button class="btn btn-secondary btn-sm" {{action this.clearPIReview}}>P.I. Review</button>
-      </dd>
-      <dt class="col-2">Manual Review</dt>
-      <dd class="col-9">
-        <button class="btn btn-secondary btn-sm" {{action this.manualReview "pass"}}>Pass</button>
-        <button class="btn btn-secondary btn-sm" {{action this.manualReview "missing"}}>Missing</button>
-      </dd>
-      <dt class="col-2">Training</dt>
-      <dd class="col-9">
-        <button class="btn btn-secondary btn-sm" {{action this.training "signup"}}>Create Tomorrow Shift &amp; Sign Up</button>
-        <button class="btn btn-secondary btn-sm" {{action this.training "signup-past"}}>Create Yesterday/Fail Shift &amp; Sign Up</button>
-        <button class="btn btn-secondary btn-sm" {{action this.training "signup-now"}}>Create Now Shift &amp; Sign Up</button>
-        <button class="btn btn-secondary btn-sm" {{action this.training "pass"}}>Pass</button>
-        <button class="btn btn-secondary btn-sm" {{action this.training "remove"}}>Remove Signup</button>
-      </dd>
-      <dt class="col-2">DESTRUCTION!</dt>
-      <dd class="col-9">
-        <button class="btn btn-danger btn-sm" {{action this.goBoom "remove-trainings"}}>Remove ALL Training shifts</button>
-      </dd>
-    </dl>
-  {{/if}}
+  <DashboardDebugging @person={{@person}} />
 {{/if}}
 <p>
-  <h4 id="hello-auditor">Hello Auditor {{@person.callsign}}!</h4>
+<h4 id="hello-auditor">Hello Auditor {{@person.callsign}}!</h4>
 </p>
 <p>
   As an Auditor, take note of the following:
-  <ul class="pl-3 pr-1">
-    <li><b>Auditing is NOT a path to becoming a Black Rock Ranger.</b></li>
-    <li>You can sign up to participate in a ranger training to get a better understanding of what Black Rock Rangers do.</li>
-    <li>Visit <a href="https://rangers.burningman.org/becoming-a-ranger/" target="_blank" rel="noopener">Becoming a Ranger</a>
-      to read about the Ranger volunteer requirements and qualifications.</li>
-    <li>Your Clubhouse handle is your last name, first initial, and the year. Auditors are not allowed to choose their own handles. Black Rock Ranger handles are only assigned as part of the ranger onboarding process.</li>
-  </ul>
+<ul class="pl-3 pr-1">
+  <li><b>Auditing is NOT a path to becoming a Black Rock Ranger.</b></li>
+  <li>You can sign up to participate in a ranger training to get a better understanding of what Black Rock Rangers do.
+  </li>
+  <li>Visit <a href="https://rangers.burningman.org/becoming-a-ranger/" target="_blank" rel="noopener">Becoming a
+    Ranger</a>
+    to read about the Ranger volunteer requirements and qualifications.
+  </li>
+  <li>Your Clubhouse handle is your last name, first initial, and the year. Auditors are not allowed to choose their own
+    handles. Black Rock Ranger handles are only assigned as part of the ranger onboarding process.
+  </li>
+</ul>
 </p>
 
 <p>
@@ -47,60 +25,73 @@
 </p>
 
 <div class="onboard-auditor-tasks bg-gray">
-    {{#each this.tasks as |task|}}
-      <div class="onboard-task-row  {{if (and (not-eq task.result "optional") (not-eq task.result "waiting") (not task.isActive)) "text-muted"}}">
-        <div class="onboard-icon">
-          {{#if (eq task.result "completed")}}
-            {{fa-icon "check-circle" size="2x" color="dark-gray"}}
-          {{else if (eq task.result "action-needed")}}
-            {{fa-icon "arrow-right" size="2x" color="success"}}
-          {{else if (eq task.result "not-available")}}
-            {{fa-icon "circle" type="far" size="2x"}}
-          {{else if (eq task.result "urgent")}}
-            {{fa-icon "exclamation-circle" size="2x" color="danger"}}
-          {{else if (eq task.result "blocked")}}
-            {{fa-icon "times" size="2x" color="danger"}}
-          {{else if (eq task.result "waiting")}}
-            {{fa-icon "hourglass-half" size="2x"}}
-          {{else if (eq task.result "optional")}}
-            {{fa-icon "file-signature" size="2x"}}
+  {{#each this.tasks as |task|}}
+    <div class="onboard-task-row  {{if
+            (and (not-eq task.result "optional") (not-eq task.result "waiting") (not task.isActive)) "text-muted"}}">
+      <div class="onboard-icon">
+        {{#if (eq task.result "completed")}}
+          {{fa-icon "check-circle" size="2x" color="dark-gray"}}
+        {{else if (eq task.result "action-needed")}}
+          {{fa-icon "arrow-right" size="2x" color="success"}}
+        {{else if (eq task.result "not-available")}}
+          {{fa-icon "circle" type="far" size="2x"}}
+        {{else if (eq task.result "urgent")}}
+          {{fa-icon "exclamation-circle" size="2x" color="danger"}}
+        {{else if (eq task.result "blocked")}}
+          {{fa-icon "times" size="2x" color="danger"}}
+        {{else if (eq task.result "waiting")}}
+          {{fa-icon "hourglass-half" size="2x"}}
+        {{else if (eq task.result "optional")}}
+          {{fa-icon "file-signature" size="2x"}}
+        {{else}}
+          Uh oh! The task check result [{{task.result}}] is not understood. This is a bug! Please report this to the
+          tech team.<br>
+        {{/if}}
+      </div>
+
+      <div class="onboard-text">
+        <div class="h4">
+          {{#if task.isBehavioralAgreement}}
+            <a href {{on "click" this.showBehaviorAgreementAction}} disabled={{this.isNotUser}}>{{task.name}}</a>
+          {{else if task.linkUrl}}
+            <a href="{{task.linkUrl}}" target="_blank" rel="noopener" disabled={{this.isNotUser}}>{{task.name}}</a>
+          {{else if task.route}}
+            <LinkTo @route={{task.route}} disabled={{this.isNotUser}}>{{task.name}}</LinkTo>
           {{else}}
-            Uh oh! The task check result [{{task.result}}] is not understood. This is a bug! Please report this to the tech team.<br>
+            {{task.name}}
           {{/if}}
         </div>
-
-        <div class="onboard-text">
-          <div class="h4">
-            {{#if task.isBehavioralAgreement}}
-              <a href {{on "click" this.showBehaviorAgreementAction}} disabled={{this.isNotUser}}>{{task.name}}</a>
-            {{else if task.linkUrl}}
-              <a href="{{task.linkUrl}}" target="_blank" rel="noopener" disabled={{this.isNotUser}}>{{task.name}}</a>
-            {{else if task.route}}
-              <LinkTo @route={{task.route}} disabled={{this.isNotUser}}>{{task.name}}</LinkTo>
-            {{else}}
-              {{task.name}}
+        {{#if (eq task.result "completed")}}
+          <div>&mdash; {{if task.message task.message "Completed"}}</div>
+        {{else if task.isTrainingSignup}}
+          <div>&mdash; Visit the
+            <LinkTo @route="me.schedule">Me &gt; Schedule / Sign Up</LinkTo>
+            page to sign up.
+          </div>
+        {{else if task.isVisitPersonInfo}}
+          <div>&mdash; Visit the
+            <LinkTo @route="me.personal-info">Me &gt; Personal Info page</LinkTo>
+            .
+            Click the Update button at the bottom of the page to save your changes
+            or to verify that the existing information is correct.
+          </div>
+        {{else if task.message}}
+          <div>
+            &mdash; {{task.message}}
+            {{#if task.email}}
+              <br>
+              {{mail-to task.email}}
             {{/if}}
           </div>
-          {{#if (eq task.result "completed")}}
-            <div>&mdash; {{if task.message task.message "Completed"}}</div>
-          {{else if task.isTrainingSignup}}
-            <div>&mdash; Visit the <LinkTo @route="me.schedule">Me &gt; Schedule / Sign Up</LinkTo> page to sign up.</div>
-          {{else if task.isVisitPersonInfo}}
-            <div>&mdash; Visit the <LinkTo @route="me.personal-info">Me &gt; Personal Info page</LinkTo>.
-              Click the Update button at the bottom of the page to save your changes
-              or to verify that the existing information is correct.</div>
-          {{else if task.message}}
-            <div>
-              &mdash; {{task.message}}
-              {{#if task.email}}
-                <br>
-                {{mail-to task.email}}
-              {{/if}}
-            </div>
+
+          {{#if task.isOnlineTraining}}
+            <OnlineTrainingLaunch @text="Click Here" @person={{@person}} @url={{@milestones.online_training_url}} />
+            to take the online training course.
           {{/if}}
-        </div>
+        {{/if}}
       </div>
-    {{/each}}
+    </div>
+  {{/each}}
 </div>
 
 {{#if showBehaviorAgreement}}

@@ -107,7 +107,7 @@ const SETUP_ACCOUNT_TASKS = [{
 const TRAINING_TASKS = [{
     name: 'Read the Ranger Manual & Complete Part 1 of Training (online)',
     check(milestones, prevCompleted) {
-      if (milestones.manual_review_passed) {
+      if (milestones.online_training_passed) {
         return { result: COMPLETED };
       }
 
@@ -115,11 +115,15 @@ const TRAINING_TASKS = [{
         return { result: NOT_AVAILABLE, message: 'You need to complete the item(s) listed above.' }
       }
 
-      if (!milestones.manual_review_enabled) {
+      if (!milestones.online_training_enabled) {
         return { result: WAITING, message: 'Part 1 of Training (online) is not quite ready yet. Check back later.' }
       }
 
-      return { result: ACTION_NEEDED, message: 'The online portion of training will take 1 to 2 hours to complete.', linkUrl: milestones.manual_review_link };
+      return {
+        result: ACTION_NEEDED,
+        message: 'The online portion of training will take 1 to 2 hours to complete. Note: it may take up to 15 mins or more for the Clubhouse to record your course completion.',
+        isOnlineTraining: true,
+      };
     }
   },
 
@@ -130,7 +134,7 @@ const TRAINING_TASKS = [{
         return { result: COMPLETED };
       }
 
-      if (!milestones.manual_review_passed) {
+      if (!milestones.online_training_passed) {
         return { result: NOT_AVAILABLE, message: 'You need to complete Part 1 of Training (online) first before being allowed to sign up for Part 2 of Training (face-to-face).' };
       }
 
@@ -247,8 +251,6 @@ export default class DashboardPNVComponent extends Component {
   @service ajax;
 
   @tracked showBehaviorAgreement = false;
-  @tracked showDebugging = false;
-
   @tracked isMobileScreen = false;
 
   isDevelopmentEnv = (ENV.environment == 'development' || config('DeploymentEnvironment') == 'Staging');
@@ -319,7 +321,8 @@ export default class DashboardPNVComponent extends Component {
           isPhotoTask: check.isPhotoTask,
           isVisitPersonInfo: check.isVisitPersonInfo,
           isSignup: check.isSignup,
-          linkUrl: check.linkUrl
+          linkUrl: check.linkUrl,
+          isOnlineTraining: check.isOnlineTraining
         };
 
         if (check.email) {
@@ -403,87 +406,5 @@ export default class DashboardPNVComponent extends Component {
       this.showBehaviorAgreement = false;
       set(this.args.milestones, 'behavioral_agreement', true);
     }).catch((response) => this.house.handleErrorResponse(response));
-  }
-
-
-  /*
-   * For debugging purposes ONLY
-   */
-
-  @action
-  photoStatus(status) {
-    const person = this.args.person;
-
-    this.ajax.request(`person/${person.id}/onboard-debug`, { method: 'POST', data: { photo_status: status } }).then(() => {
-      this._reloadPage();
-    }).catch((response) => this.house.handleErrorResponse(response));
-  }
-
-  @action
-  manualReview(status) {
-    const person = this.args.person;
-
-    this.ajax.request(`person/${person.id}/onboard-debug`, { method: 'POST', data: { manual_review: status } }).then(() => {
-      this._reloadPage();
-    }).catch((response) => this.house.handleErrorResponse(response));
-  }
-
-  @action
-  clearBehavioralAgreement() {
-    const person = this.args.person;
-
-    person.set('behavioral_agreement', false);
-    person.save().then(() => {
-      this._reloadPage();
-    }).catch((response) => this.house.handleErrorResponse(response));
-
-  }
-
-  @action
-  clearPIReview() {
-    const person = this.args.person;
-
-    person.set('has_reviewed_pi', false);
-    person.save().then(() => {
-      set(this.args.milestones, 'has_reviewed_pi', false);
-      this._reloadPage();
-    }).catch((response) => this.house.handleErrorResponse(response));
-
-  }
-
-  @action
-  training(status) {
-    const person = this.args.person;
-
-    this.ajax.request(`person/${person.id}/onboard-debug`, { method: 'POST', data: { training: status } }).then(() => {
-      this._reloadPage();
-    }).catch((response) => this.house.handleErrorResponse(response));
-  }
-
-  @action
-  alphaShift(status) {
-    const person = this.args.person;
-
-    this.ajax.request(`person/${person.id}/onboard-debug`, { method: 'POST', data: { alpha: status } }).then(() => {
-      this._reloadPage();
-    }).catch((response) => this.house.handleErrorResponse(response));
-  }
-
-  @action
-  goBoom(act) {
-    const person = this.args.person;
-
-    this.ajax.request(`person/${person.id}/onboard-debug`, { method: 'POST', data: { action: act } }).then(() => {
-      this._reloadPage();
-    }).catch((response) => this.house.handleErrorResponse(response));
-  }
-
-  @action
-  toggleDebugging() {
-    this.showDebugging = !this.showDebugging;
-  }
-
-  _reloadPage() {
-    location.reload(false);
   }
 }

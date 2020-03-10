@@ -1,32 +1,38 @@
 <h3>General Account Info</h3>
-{{#ch-form "person" person  onSubmit=(action "savePersonAction") as |f|}}
-  <PersonPhoto @photo={{photo}} @person={{person}} @uploadAction={{this.showUploadDialogAction}} />
+{{#if this.person.unread_message_count}}
+  <ChAlert @type="warning" @bold=true>
+    {{fa-icon "envelope"}} {{pluralize this.person.unread_message_count "unread Clubhouse message"}}
+    <LinkTo @route="person.messages" class="btn btn-success">Read Now</LinkTo>
+  </ChAlert>
+{{/if}}
+
+<ChForm @formId="person" @originalModel={{this.person}} @onSubmit={{action this.savePersonAction}} as |f|>
+  <PersonPhoto @photo={{this.photo}} @person={{this.person}} @uploadAction={{this.showUploadDialogAction}} />
 
   {{! The following block is floated left on md or larger screen to ensure
     the photo is on the right and the form flows around it.
   }}
   <div class="float-md-left">
-
     {{! show contact information }}
     {{#if (has-role "admin" "vc" "view-pii" "view-email")}}
       <div class="form-group row">
         <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Contact</label>
         <div class="mt-2 col-auto">
-          {{#if person.email}}
-            email address {{mail-to person.email}}
+          {{#if this.person.email}}
+            email address {{mail-to this.person.email}}
           {{else}}
             <div class="text-muted">missing</div>
           {{/if}}
           {{#if (has-role "admin" "vc" "view-pii")}}
-            <div class="mt-2">primary phone {{#if person.home_phone}}{{phone-link person.home_phone}}{{else}}
+            <div class="mt-2">primary phone {{#if this.person.home_phone}}{{phone-link this.person.home_phone}}{{else}}
               n/a{{/if}}</div>
-            {{#if person.alt_phone}}
-              <div class="mt-2">alt phone {{phone-link person.alt_phone}}</div>
+            {{#if this.person.alt_phone}}
+              <div class="mt-2">alt phone {{phone-link this.person.alt_phone}}</div>
             {{/if}}
           {{/if}}
           <div class="mt-2">last seen at
-            {{#if person.last_seen_at}}
-              {{moment-format person.last_seen_at "ddd MMM DD [@] HH:mm:ss YYYY"}}
+            {{#if this.person.last_seen_at}}
+              {{moment-format this.person.last_seen_at "ddd MMM DD [@] HH:mm:ss YYYY"}}
             {{else}}
               <i>unknown</i>
             {{/if}}
@@ -37,61 +43,61 @@
 
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign</label>
-      {{#if isAdminMentorOrVC}}
+      {{#if (has-role "admin" "mentor" "vc")}}
         {{f.input "callsign" type="text" size=35 maxlength=100 wrapClass="col-auto"}}
       {{else}}
         <div class="mt-2 col-auto">
-          {{person.callsign}}
+          {{this.person.callsign}}
         </div>
       {{/if}}
     </div>
 
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">FKA</label>
-      {{#if isAdminMentorOrVC}}
+      {{#if (has-role "admin" "mentor" "vc")}}
         {{f.input "formerly_known_as" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
       {{else}}
         <div class="mt-2 col-auto">
-          {{present-or-not person.formerly_known_as "no previous callsigns"}}
+          {{present-or-not this.person.formerly_known_as "no previous callsigns"}}
         </div>
       {{/if}}
     </div>
 
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-2">Callsign Approved</label>
-      {{#if isAdminMentorOrVC}}
+      {{#if (has-role "admin" "mentor" "vc")}}
         {{f.input "callsign_approved" type="select" wrapClass="col-auto" options=callsignApprovedOptions}}
       {{else}}
         <div class="mt-2 col-sm-12 col-md-auto">
-          {{if person.callsign_approved "Approved" "Not Approved"}}
+          {{if this.person.callsign_approved "Approved" "Not Approved"}}
         </div>
       {{/if}}
     </div>
 
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-2">Status</label>
-      {{#if isAdminMentorOrVC}}
-        {{f.input "status" type="select" options=statusOptions wrapClass="col-auto"}}
+      {{#if (has-role "admin" "mentor" "vc")}}
+        {{f.input "status" type="select" options=this.statusOptions wrapClass="col-auto"}}
       {{else}}
         <div class="mt-2 col-auto">
-          {{person.status}}
+          {{this.person.status}}
         </div>
       {{/if}}
     </div>
 
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-2">Personnel</label>
-      {{#if this.isAdmin}}
-        {{f.input "user_authorized" type="select" wrapClass="col-auto" options=userAuthorizedOptions}}
+      {{#if (has-role "admin")}}
+        {{f.input "user_authorized" type="select" wrapClass="col-auto" options=this.userAuthorizedOptions}}
         {{f.input "has_note_on_file" label="Note on file" type="checkbox" wrapClass="col-auto mt-2" value=1}}
       {{else}}
         <div class="mt-2 col-auto">
-          {{#if person.user_authorized}}
+          {{#if this.person.user_authorized}}
             Authorized
           {{else}}
             <span class="text-danger">NOT AUTHORIZED</span>
           {{/if}}
-          {{#if person.has_note_on_file}}
+          {{#if this.person.has_note_on_file}}
             <strong class="text-danger">(note on file)</strong>
           {{/if}}
         </div>
@@ -106,13 +112,13 @@
 
   <div class="form-group row">
     <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Name</label>
-    {{#if isAdminMentorOrVC}}
+    {{#if (has-role "admin" "mentor" "vc")}}
       {{f.input "first_name" type="text" size=20 maxlength=25 wrapClass="col-sm-12 col-md-4 col-lg-3"}}
       {{f.input "mi" type="text" size=2 maxlength=10 wrapClass="col-sm-12 col-md-2 col-lg-1"}}
       {{f.input "last_name" type="text" size=20 maxlength=25 wrapClass="col-md-4 col-lg-3"}}
     {{else}}
       <div class="mt-2 col-md-9 col-sm-12">
-        {{person.first_name}} {{person.mi}} {{person.last_name}}
+        {{this.person.first_name}} {{this.person.mi}} {{this.person.last_name}}
       </div>
     {{/if}}
   </div>
@@ -120,7 +126,7 @@
   <div class="form-group row">
     <label class="col-form-label-fixed col-2">On Site</label>
     <div class="col-8">
-      {{f.input "on_site" type="radioGroup" options=onSiteOptions inline=true}}
+      {{f.input "on_site" type="radioGroup" options=this.onSiteOptions inline=true}}
     </div>
   </div>
 
@@ -128,25 +134,24 @@
     <label for="person_position" class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Positions</label>
     <div class="col-md-9 col-sm-12">
       <div class="row col-12 mt-1 mb-2">
-        <button type="button" {{action "togglePositions"}} class="btn btn-secondary btn-sm mr-2">{{if showPositions
-                                                                                                      "Hide" "Show"}}
-          Positions
+        <button type="button" {{action this.togglePositions}} class="btn btn-secondary btn-sm mr-2">
+          {{if this.showPositions "Hide" "Show"}} Positions
         </button>
-        {{#if (or isAdmin isManageAndGrantPosition)}}
+        {{#if (has-role "admin" "grant-position")}}
           <button type="button" {{action "editPositionsAction"}} class="btn btn-secondary btn-sm">Edit Positions
           </button>
         {{/if}}
       </div>
-      {{#unless personPositions}}
+      {{#unless this.personPositions}}
         <div class="row">
           <div class="col-12">
             <strong class="text-danger">Person does not hold any positions</strong>
           </div>
         </div>
       {{/unless}}
-      {{#if showPositions}}
+      {{#if this.showPositions}}
         <div class="row">
-          {{#each personPositions as |position| }}
+          {{#each this.personPositions as |position| }}
             <div class="col-sm-6 col-md-4 col-xl-3">
               {{position.title}}
             </div>
@@ -160,19 +165,19 @@
     <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Roles</label>
     <div class="col-md-9 col-sm-12">
       <div class="row col-12 mt-1 mb-2">
-        <button type="button" {{action "toggleRoles"}} class="btn btn-secondary btn-sm mr-2">{{if showRoles "Hide"
-                                                                                                  "Show"}} Roles
+        <button type="button" {{action this.toggleRoles}} class="btn btn-secondary btn-sm mr-2">
+          {{if this.showRoles "Hide" "Show"}} Roles
         </button>
         {{#if (has-role "admin")}}
-          <button type="button" {{action "editRolesAction"}} class="btn btn-secondary btn-sm">Edit Roles</button>
+          <button type="button" {{action this.editRolesAction}} class="btn btn-secondary btn-sm">Edit Roles</button>
         {{/if}}
       </div>
-      {{#unless personRoles}}
+      {{#unless this.personRoles}}
         <strong class="text-danger">Person does not hold any roles</strong>
       {{/unless}}
-      {{#if showRoles}}
+      {{#if this.showRoles}}
         <div class="row">
-          {{#each personRoles as |role| }}
+          {{#each this.personRoles as |role| }}
             <div class="col-sm-6 col-md-4 col-xl-3">
               {{role.title}}
             </div>
@@ -185,7 +190,7 @@
   <div class="form-group row">
     <label class="col-form-label-fixed col-sm-12 col-md-2">Years</label>
     <div class="col-md-9 col-sm-12">
-      {{#each person.years as |year|}}{{year}} {{/each}} ({{person.years.length}})
+      {{#each this.person.years as |year|}}{{year}} {{/each}} ({{this.person.years.length}})
     </div>
   </div>
 
@@ -197,13 +202,13 @@
         {{f.input "vehicle_insurance_paperwork" label="Motor Vehicle Record (MVR)" type="checkbox" inline=true}}
         {{f.input "vehicle_blacklisted" label="Vehicle Blacklisted" type="checkbox" inline=true}}
       {{else}}
-        {{#if person.vehicle_paperwork}}
+        {{#if this.person.vehicle_paperwork}}
           Motorpool Policy agreed to
         {{else}}
           Motorpool Policy NOT agreed to
         {{/if}}<br>
-        {{if person.vehicle_insurance_paperwork "Has" "No"}} Motor Vehicle Record (MVR)<br>
-        {{#if person.vehicle_blacklisted}}
+        {{if this.person.vehicle_insurance_paperwork "Has" "No"}} Motor Vehicle Record (MVR)<br>
+        {{#if this.person.vehicle_blacklisted}}
           <strong class="text-danger">VEHICLE BLACKLISTED</strong>
         {{/if}}
       {{/if}}
@@ -220,12 +225,12 @@
   <div class="form-group row">
     <label class="col-form-label-fixed col-sm-12 col-md-2">Certifications</label>
     <div class="col-sm-12 col-md-9">
-      {{#if isAdminOrVC}}
+      {{#if (has-role "admin" "vc")}}
         {{f.input "osha10" label="OSHA-10" type="checkbox" inline=true }}
         {{f.input "osha30" label="OSHA-30" type="checkbox" inline=true }}
-      {{else if (or person.osha10 person.osha30)}}
-        {{#if person.osha10}}OSHA-10{{/if}}
-        {{#if person.osha30}}OSHA-30{{/if}}
+      {{else if (or this.person.osha10 this.person.osha30)}}
+        {{#if this.person.osha10}}OSHA-10{{/if}}
+        {{#if this.person.osha30}}OSHA-30{{/if}}
       {{else}}
         No OSHA certifications
       {{/if}}
@@ -235,13 +240,13 @@
   <div class="form-group row">
     <label class="col-form-label-fixed col-sm-12 col-md-2">Agreements</label>
     <div class="col-sm-12 col-md-9">
-      {{#if isAdminOrVC}}
+      {{#if (has-role "admin" "vc")}}
         {{f.input "behavioral_agreement" label="Burning Man's Behavioral Standards Agreement" type="checkbox"
                   inline=true }}<br>
         {{f.input "sandman_affidavit" label="Sandman Affidavit" type="checkbox" inline=true }}
       {{else}}
-        Behavioral Standards Agreement {{if person.behavioral_agreement "signed" "NOT SIGNED"}}<br>
-        Sandman Affidavit {{if person.sandman_affidavit "signed" "NOT SIGNED"}}
+        Behavioral Standards Agreement {{if this.person.behavioral_agreement "signed" "NOT SIGNED"}}<br>
+        Sandman Affidavit {{if this.person.sandman_affidavit "signed" "NOT SIGNED"}}
       {{/if}}
     </div>
   </div>
@@ -249,24 +254,23 @@
   {{#if (has-role "admin")}}
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">BPGUID</label>
-      {{#if isAdminOrVC}}
-        {{f.input "bpguid" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
-      {{else}}
-        <div class="mt-2 col-auto">
-          {{present-or-not person.bpguid "No Burner Profile ID"}}
-        </div>
-      {{/if}}
+      {{f.input "bpguid" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
+    </div>
+
+    <div class="form-group row">
+      <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">LMS ID</label>
+      {{f.input "lms_id" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
     </div>
   {{/if}}
 
   <div class="form-group row">
     <label class="col-form-label-fixed col-sm-12 col-md-2">BMID/Tickets</label>
     <div class="col-sm-12 col-md-9">
-      {{#if (or canEditBMIT canEditAccessDocs)}}
-        {{#if canEditBMIT}}
+      {{#if  (has-role "edit-bmids" "edit-access-docs")}}
+        {{#if (has-role "edit-bmids")}}
           <LinkTo @route="person.bmid" class="btn btn-secondary btn-sm">Edit BMID</LinkTo>
         {{/if}}
-        {{#if canEditAccessDocs}}
+        {{#if (has-role "edit-access-docs")}}
           <LinkTo @route="person.tickets" class="btn btn-secondary btn-sm">View Tickets &amp; Stuff</LinkTo>
           <LinkTo @route="person.access-documents" class="btn btn-secondary btn-sm">Edit Access Docs</LinkTo>
         {{/if}}
@@ -280,7 +284,7 @@
     <div class="form-group row">
       <label class="col-form-label-fixed col-sm-12 col-md-2">VC</label>
       <div class="col-sm-12 col-md-9">
-        {{#if this.isAdminOrVC}}
+        {{#if (has-role "admin" "vc")}}
           {{#link-to "person.onboard" class="btn btn-secondary btn-sm"}}Onboard View{{/link-to}}
           {{#link-to "person.photos" class="btn btn-secondary btn-sm"}}Photo History{{/link-to}}
         {{/if}}
@@ -291,7 +295,7 @@
       </div>
     </div>
   {{/if}}
-  {{#if this.isAdmin}}
+  {{#if (has-role "admin")}}
     <div class="form-group row">
       <label class="col-form-label-fixed col-sm-12 col-md-2">Logs</label>
       <div class="col-sm-12 col-md-9 ">
@@ -306,41 +310,42 @@
     <div class="form-group row">
       <label class="col-form-label-fixed col-sm-12 col-md-2">Note</label>
       <div class="col-sm-12 col-md-9">
-        {{#if person.message}}
-          <button class="btn btn-secondary btn-sm" {{action editNote}}>Update Note</button>
+        {{#if this.person.message}}
+          <button type="button" class="btn btn-secondary btn-sm" {{action this.editNote}}>Update Note</button>
         {{else}}
-          <button class="btn btn-secondary btn-sm" {{action confirmNoteOrMessage}}>Add Note</button>
+          <button type="button" class="btn btn-secondary btn-sm" {{action this.confirmNoteOrMessage}}>Add Note</button>
         {{/if}}
-        {{#if showConfirmNoteOrMessage}}
+        {{#if this.showConfirmNoteOrMessage}}
           <ModalDialog @title="Add Account Note" as |modal|>
             <modal.body>
               <p>
-                A note will <b class="text-danger">NOT BE SHOWN TO {{person.callsign}}</b>. It is only meant to be seen
+                A note will <b class="text-danger">NOT BE SHOWN TO {{this.person.callsign}}</b>. It is only meant to be
+                seen
                 by
                 Admins,
                 HQ Window workers, and Volunteer Coordinators.
               </p>
               <p>
-                <b>SEND A CLUBHOUSE MESSAGE to leave a message for {{person.callsign}}</b>
+                <b>SEND A CLUBHOUSE MESSAGE to leave a message for {{this.person.callsign}}</b>
               </p>
               <p>
                 Would you rather send a Clubhouse Message?
               </p>
             </modal.body>
             <modal.footer>
-              <button class="btn btn-primary mr-3" {{action sendClubhouseMessage}}>Send Clubhouse Message</button>
-              <button class="btn btn-primary mr-3" {{action editNote}}>Add Note</button>
-              <button class="btn btn-secondary" {{action closeConfirmNoteOrMessage}}>Cancel</button>
+              <button class="btn btn-primary mr-3" {{action this.sendClubhouseMessage}}>Send Clubhouse Message</button>
+              <button class="btn btn-primary mr-3" {{action this.editNote}}>Add Note</button>
+              <button class="btn btn-secondary" {{action this.closeConfirmNoteOrMessage}}>Cancel</button>
             </modal.footer>
 
           </ModalDialog>
-        {{else if showEditNote}}
+        {{else if this.showEditNote}}
           <ModalDialog @title={{if person.messsage "Add Account Note" "Update Account Note"}} as |modal|>
             <modal.body>
               <p>
                 The note will be shown to all Volunteer Coordinators, HQ Window Workers, and other Login Management role
-                holders when this account is viewed. <span
-                      class="text-danger">A NOTE WILL NOT BE SEEN BY THE USER.</span>
+                holders when this account is viewed
+                <span class="text-danger">A NOTE WILL NOT BE SEEN BY THE USER.</span>
               </p>
               <p>
                 Examples: "Person is ok to sign-in for pre-event shifts.", "Do not let this person work a shift until
@@ -354,8 +359,8 @@
               {{f.input "message" type="textarea" label="Enter the note to be shown:" cols=80 rows=6}}
             </modal.body>
             <modal.footer>
-              <modal.button @label="Cancel" @action={{action closeNote}} @type="secondary"/>
-              <modal.button @label="Save Note" @action={{action saveNote f.model}} @type="primary"/>
+              <modal.button @label="Cancel" @action={{action this.closeNote}} @type="secondary"/>
+              <modal.button @label="Save Note" @action={{action this.saveNote f.model}} @type="primary"/>
             </modal.footer>
           </ModalDialog>
         {{/if}}
@@ -389,27 +394,20 @@
     </div>
     {{#if (has-role "admin")}}
       <div class="col-sm-3 col-md-2 text-right">
-        <button type="button" class="btn btn-secondary btn-sm" {{action "removePerson"}}>Remove</button>
+        <button type="button" class="btn btn-secondary btn-sm" {{action this.removePerson}}>Remove</button>
       </div>
     {{/if}}
   </div>
-{{/ch-form}}
+</ChForm>
 
 {{#if editPositions}}
-  <Person::PositionForm @positions={{positions}} @positionIds={{positionIds}} @onSave={{action "savePositions"}}
+  <Person::PositionForm @positions={{positions}} @positionIds={{positionIds}} @onSave={{action this.savePositions}}
                         @onCancel={{action cancelPositions}} />
 {{/if}}
 
 {{#if editRoles}}
-  <Person::RoleForm @roles={{roles}} @roleIds={{roleIds}} @onSave={{action "saveRoles"}}
-                    @onCancel={{action cancelRoles}} />
-{{/if}}
-
-{{#if person.unread_message_count}}
-  <ChAlert @type="warning" @bold=true>
-    {{fa-icon "envelope"}} {{pluralize person.unread_message_count "unread Clubhouse message"}}
-    <LinkTo @route="person.messages" class="btn btn-success">Read Now</LinkTo>
-  </ChAlert>
+  <Person::RoleForm @roles={{roles}} @roleIds={{roleIds}} @onSave={{action this.saveRoles}}
+                    @onCancel={{action this.cancelRoles}} />
 {{/if}}
 
 

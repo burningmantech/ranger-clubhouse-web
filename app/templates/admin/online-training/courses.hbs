@@ -1,0 +1,24 @@
+<table class="table table-sm table-hover table-striped table-width-auto">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Code</th>
+    <th>Type</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each @model.courses as |course|}}
+    <tr>
+      <td>{{course.id}}</td>
+      <td>{{course.title}}</td>
+      <td>{{course.code}}</td>
+      <td>{{course.type}}</td>
+      <td>{{course.start_date}}</td>
+      <td>{{course.end_date}}</td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
