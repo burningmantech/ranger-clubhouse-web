@@ -5073,26 +5073,26 @@ ember-basic-dropdown@^2.0.13:
     ember-maybe-in-element "^0.4.0"
     ember-truth-helpers "2.1.0"
 
-ember-changeset-validations@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/ember-changeset-validations/-/ember-changeset-validations-3.0.2.tgz#fad8619b1773efcb2f9d1f9a46297f63e4712517"
-  integrity sha512-9IuD/cbn5IihktlXCwhOQf0LnK3Q2j6+8E+XGtJ8jYGTq1pNpYNFdrAP3B41fSHwAga0TcRIjoCol62q7baavA==
+ember-changeset-validations@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/ember-changeset-validations/-/ember-changeset-validations-3.0.3.tgz#b7a37383656a5cd2207fd628a2a568dedb6c6254"
+  integrity sha512-RztQwMJGWQYFG2jH/KhCQXUPcJAGuDLxyw6544uInBDDmg9csRKbw0WxoRTGQM7ZpJIDn6IOuIKujUlUbvYUWA==
   dependencies:
-    ember-changeset "^3.0.4"
+    ember-changeset "^3.0.8"
     ember-cli-babel "^7.13.0"
     ember-cli-htmlbars "^4.0.5"
     ember-get-config "^0.2.4"
     ember-validators "^2.0.0"
 
-ember-changeset@^3.0.4:
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/ember-changeset/-/ember-changeset-3.0.6.tgz#8a29327f60f3e9b2920ed7ee003ecb4f411ecf14"
-  integrity sha512-vwA2W/ITeIih64oNt0Kh2WLaAylcLg5yGds2lUlNYfqdtHIm/5p9y8QqhaD7gEfjqULDDWuMJewUWIqlqOIk1g==
+ember-changeset@^3.0.4, ember-changeset@^3.0.8:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/ember-changeset/-/ember-changeset-3.0.8.tgz#75dc92f300876e3400f36939f01df8967e3cb279"
+  integrity sha512-hem4pg6wUfY5uG01vTYnRNU4KU1Jpqc1vpb+H3HybnYLWYrNZO+RyJsW4cRPV5yZ8PsJjfTuy494BCBHbjT4lw==
   dependencies:
     "@glimmer/tracking" "^1.0.0"
     ember-auto-import "^1.5.2"
     ember-cli-babel "^7.17.2"
-    validated-changeset "~0.2.1"
+    validated-changeset "~0.2.2"
 
 ember-cli-app-version@^3.2.0:
   version "3.2.0"
@@ -13448,10 +13448,10 @@ validate-npm-package-name@^3.0.0, validate-npm-package-name@~3.0.0:
   dependencies:
     builtins "^1.0.3"
 
-validated-changeset@~0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/validated-changeset/-/validated-changeset-0.2.1.tgz#9d96a3b4bbf386cfd9452d06a471c29d06d0d7a4"
-  integrity sha512-HByRaol40FhbK6okn+HpgBpN1ySap8IQ88TggL6WDDZzZ92mOlFjxbSDOLmTPy5hjC0h77mbmg7GWxpgf+O+fQ==
+validated-changeset@~0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/validated-changeset/-/validated-changeset-0.2.2.tgz#65b6f3b1ecc09e1c273e9fbdfe3a02458a0f62dd"
+  integrity sha512-ovtw1XD9o208HRLvmB+Bm/+V7y7aJllUcU/y+kYF9H9Z5S5oyObf8lRO8eCRbEmYDetfrLOrLDH+tjk/lKdhmg==
 
 vary@~1.1.2:
   version "1.1.2"
