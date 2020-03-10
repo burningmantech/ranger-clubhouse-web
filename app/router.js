@@ -67,6 +67,11 @@ Router.map(function() {
     this.route('hours-credits');
     this.route('maintenance');
     this.route('motd');
+    this.route('online-training', function() {
+      this.route('index', { path: '/'});
+      this.route('courses');
+      this.route('enrollment');
+    });
     this.route('people-by-status-change');
     this.route('positions');
     this.route('radio-eligibility');
@@ -84,7 +89,6 @@ Router.map(function() {
     this.route('slots');
     this.route('thank-you-cards');
     this.route('timesheet-sanity-checker');
-    this.route('manual-review');
   });
 
   this.route('hq', { path: '/hq/:person_id' }, function() {

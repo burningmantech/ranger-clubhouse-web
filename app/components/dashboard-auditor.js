@@ -1,9 +1,9 @@
 import Component from '@glimmer/component';
-import { tracked } from "@glimmer/tracking";
-import { action, computed, set } from '@ember/object';
-import { inject as service } from '@ember/service';
-import { config } from 'clubhouse/utils/config';
-import { htmlSafe } from '@ember/string';
+import {tracked} from "@glimmer/tracking";
+import {action, computed, set} from '@ember/object';
+import {inject as service} from '@ember/service';
+import {config} from 'clubhouse/utils/config';
+import {htmlSafe} from '@ember/string';
 import moment from 'moment';
 import ENV from 'clubhouse/config/environment';
 
@@ -16,46 +16,50 @@ const OPTIONAL = 'optional';
 const WAITING = 'waiting';
 
 const AUDITOR_TASKS = [{
-    name: 'Review and Update Personal Information',
-    check(milestones) {
-      if (milestones.has_reviewed_pi) {
-        return { result: COMPLETED };
-      }
-
-      return {
-        result: ACTION_NEEDED,
-        route: 'me.personal-info',
-        isVisitPersonInfo: true,
-      };
+  name: 'Review and Update Personal Information',
+  check(milestones) {
+    if (milestones.has_reviewed_pi) {
+      return {result: COMPLETED};
     }
-  },
+
+    return {
+      result: ACTION_NEEDED,
+      route: 'me.personal-info',
+      isVisitPersonInfo: true,
+    };
+  }
+},
 
   {
     name: 'Sign the Burning Man Behavioral Standards Agreement (optional)',
     check(milestones) {
       if (milestones.behavioral_agreement) {
-        return { result: COMPLETED };
+        return {result: COMPLETED};
       }
 
-      return { result: OPTIONAL, isBehavioralAgreement: true, message: 'All volunteers are asked to sign the optional Behavioral Standards Agreement.' };
+      return {
+        result: OPTIONAL,
+        isBehavioralAgreement: true,
+        message: 'All volunteers are asked to sign the optional Behavioral Standards Agreement.'
+      };
     }
   },
 
   {
     name: 'Read the Ranger Manual & Complete Part 1 of Training (online)',
     check(milestones) {
-      if (milestones.manual_review_passed) {
-        return { result: COMPLETED };
+      if (milestones.online_training_passed) {
+        return {result: COMPLETED};
       }
 
-      if (!milestones.manual_review_enabled) {
-        return { result: WAITING, message: 'Part 1 of Training (online) is not quite ready yet. Check back later.' }
+      if (!milestones.online_training_enabled) {
+        return {result: WAITING, message: 'Part 1 of Training (online) is not quite ready yet. Check back later.'}
       }
 
       return {
         result: ACTION_NEEDED,
-        message: 'The online portion of training will take 1 to 2 hours to complete.',
-        linkUrl: milestones.manual_review_link
+        message: 'The online portion of training will take 1 to 3 hours to complete. Note: it may take up to 15 mins or more for the Clubhouse to register your course completion.',
+        isOnlineTraining: true
       };
     }
   },
@@ -64,11 +68,11 @@ const AUDITOR_TASKS = [{
     name: 'Sign up for Part 2 of Training (face-to-face)',
     check(milestones, prevCompleted) {
       if (!prevCompleted) {
-        return { result: NOT_AVAILABLE, message: 'You need to complete the items listed above.' }
+        return {result: NOT_AVAILABLE, message: 'You need to complete the items listed above.'}
       }
 
       if (milestones.training.status != 'missing') {
-        return { result: COMPLETED };
+        return {result: COMPLETED};
       }
 
       if (milestones.trainings_available) {
@@ -78,7 +82,10 @@ const AUDITOR_TASKS = [{
           route: 'me.schedule',
         };
       } else {
-        return { result: WAITING, message: 'Training sign ups are not yet available and usually do not open until mid-to-late April. Please check back later.' };
+        return {
+          result: WAITING,
+          message: 'Training sign ups are not yet available and usually do not open until mid-to-late April. Please check back later.'
+        };
       }
     }
   },
@@ -87,30 +94,33 @@ const AUDITOR_TASKS = [{
     name: 'Complete Training',
     check(milestones) {
       switch (milestones.training.status) {
-      case 'passed':
-        return { result: COMPLETED };
+        case 'passed':
+          return {result: COMPLETED};
 
-      case 'missing':
-        return { result: NOT_AVAILABLE, message: 'You need to sign up for a training session. Walkins are not allowed.' };
+        case 'missing':
+          return {
+            result: NOT_AVAILABLE,
+            message: 'You need to sign up for a training session. Walkins are not allowed.'
+          };
 
-      case 'failed':
-        return {
-          result: BLOCKED,
-          message: `You did not attend or failed to complete training on ${moment(milestones.training.begins).format('dddd, MMMM Do YYYY')} located at ${milestones.training.description}. Email the Training Academy to sign up for another session.`,
-          email: 'TrainingAcademyEmail',
-        };
+        case 'failed':
+          return {
+            result: BLOCKED,
+            message: `You did not attend or failed to complete training on ${moment(milestones.training.begins).format('dddd, MMMM Do YYYY')} located at ${milestones.training.description}. Email the Training Academy to sign up for another session.`,
+            email: 'TrainingAcademyEmail',
+          };
 
-      case 'pending':
-        return {
-          result: ACTION_NEEDED,
-          message: `The training session starts ${moment(milestones.training.begins).format('ddd MMM DD [@] HH:mm')} located in ${milestones.training.description}. If you cannot make the session, please remove your sign up from the schedule.`,
-        };
+        case 'pending':
+          return {
+            result: ACTION_NEEDED,
+            message: `The training session starts ${moment(milestones.training.begins).format('ddd MMM DD [@] HH:mm')} located in ${milestones.training.description}. If you cannot make the session, please remove your sign up from the schedule.`,
+          };
 
-      default:
-        return {
-          result: BLOCKED,
-          message: `Unknown training status [${milestones.training.status}]. This is a bug`
-        };
+        default:
+          return {
+            result: BLOCKED,
+            message: `Unknown training status [${milestones.training.status}]. This is a bug`
+          };
       }
     }
   },
@@ -134,7 +144,6 @@ export default class DashboardAuditorComponent extends Component {
 
   @tracked showBehaviorAgreement = false;
 
-  @tracked showDebugging = false;
   isDevelopmentEnv = (ENV.environment == 'development' || config('DeploymentEnvironment') == 'Staging');
 
   @computed('args.milestones.behavioral_agreement')
@@ -158,6 +167,7 @@ export default class DashboardAuditorComponent extends Component {
         isTrainingSignup: check.isTrainingSignup,
         isVisitPersonInfo: check.isVisitPersonInfo,
         isNotifySignup: check.isNotifySignup,
+        isOnlineTraining: check.isOnlineTraining,
       };
 
       if (check.email) {
@@ -217,70 +227,4 @@ export default class DashboardAuditorComponent extends Component {
       set(this.args.milestones, 'behavioral_agreement', true);
     }).catch((response) => this.house.handleErrorResponse(response));
   }
-
-  /*
-   * Debugging actions
-   */
-
-  @action
-  manualReview(status) {
-    const person = this.args.person;
-
-    this.ajax.request(`person/${person.id}/onboard-debug`, { method: 'POST', data: { manual_review: status } }).then(() => {
-      this._reloadPage();
-    }).catch((response) => this.house.handleErrorResponse(response));
-  }
-
-  @action
-  clearBehavioralAgreement() {
-    const person = this.args.person;
-
-    person.set('behavioral_agreement', false);
-    person.save().then(() => {
-      this._reloadPage();
-    }).catch((response) => this.house.handleErrorResponse(response));
-
-  }
-
-  @action
-  clearPIReview() {
-    const person = this.args.person;
-
-    person.set('has_reviewed_pi', false);
-    person.save().then(() => {
-      set(this.args.milestones, 'has_reviewed_pi', false);
-      this._reloadPage();
-    }).catch((response) => this.house.handleErrorResponse(response));
-
-  }
-
-  @action
-  training(status) {
-    const person = this.args.person;
-
-    this.ajax.request(`person/${person.id}/onboard-debug`, { method: 'POST', data: { training: status } })
-      .then(() => {
-        this._reloadPage();
-      }).catch((response) => this.house.handleErrorResponse(response));
-  }
-
-  @action
-  goBoom(act) {
-    const person = this.args.person;
-
-    this.ajax.request(`person/${person.id}/onboard-debug`, { method: 'POST', data: { action: act } })
-      .then(() => {
-        this._reloadPage();
-      }).catch((response) => this.house.handleErrorResponse(response));
-  }
-
-  @action
-  toggleDebugging() {
-    this.showDebugging = !this.showDebugging;
-  }
-
-  _reloadPage() {
-    location.reload(false);
-  }
-
 }

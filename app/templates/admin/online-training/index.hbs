@@ -1,0 +1,16 @@
+<h3>Configuration</h3>
+
+<dl>
+  <dt>Online Training Enabled?</dt>
+  <dd>{{yesno @model.OnlineTrainingEnabled}}</dd>
+
+  <dt>Sign ups allowed without Online Training?</dt>
+  <dd>
+    {{yesno @model.OnlineTrainingDisabledAllowSignups}}
+  </dd>
+  <dt>Docebo Half Course ID</dt>
+  <dd>{{present-or-not @model.DoceboHalfCourseId "not set"}}</dd>
+
+  <dt>Docebo Full Course ID</dt>
+  <dd>{{present-or-not @model.DoceboFullCourseId "not set"}}</dd>
+</dl>

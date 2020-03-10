@@ -49,28 +49,28 @@ export default function () {
       const errors = [];
 
       if (!params.identification) {
-        errors.push({ status: 422, title: 'Email cannot be blank' });
+        errors.push({status: 422, title: 'Email cannot be blank'});
       }
 
       if (!params.password) {
-        errors.push({ status: 422, title: 'Password cannot be blank' });
+        errors.push({status: 422, title: 'Password cannot be blank'});
       }
 
-      return new Response(422, { 'Content-Type': 'application/json' }, { errors });
+      return new Response(422, {'Content-Type': 'application/json'}, {errors});
     }
 
-    const person = schema.db.people.findBy({ email: params.identification });
+    const person = schema.db.people.findBy({email: params.identification});
     if (!person) {
-      return new Response(401, { 'Content-Type': 'application/json' }, { status: 'invalid-credentials' });
+      return new Response(401, {'Content-Type': 'application/json'}, {status: 'invalid-credentials'});
     }
 
     if (!person.user_authorized) {
-      return new Response(401, { 'Content-Type': 'application/json' }, { status: 'account-disabled' })
+      return new Response(401, {'Content-Type': 'application/json'}, {status: 'account-disabled'})
     }
 
     let data = {
       // ember-simple-auth only cares about the middle token
-      token: btoa("dummy") + "." + btoa(JSON.stringify({ exp: (Math.ceil(Date.now() / 1000) + 1000) })) + "." + btoa("dummy"),
+      token: btoa("dummy") + "." + btoa(JSON.stringify({exp: (Math.ceil(Date.now() / 1000) + 1000)})) + "." + btoa("dummy"),
       token_type: 'bearer',
       expires_in: 1000,
       person_id: person.id,
@@ -79,12 +79,12 @@ export default function () {
     return data;
   });
 
-  this.get('/api/person/:id', ({ people }, request) => { // eslint-disable-line no-unused-vars
+  this.get('/api/person/:id', ({people}, request) => { // eslint-disable-line no-unused-vars
     const person = people.find(request.params.id);
 
     if (!person) {
-      return new Response(404, { 'Content-Type': 'application/json' }, {
-        errors: [{ status: 404, title: 'Record does not exist.' }]
+      return new Response(404, {'Content-Type': 'application/json'}, {
+        errors: [{status: 404, title: 'Record does not exist.'}]
       });
     }
 
@@ -92,13 +92,13 @@ export default function () {
     //return this.serializerOrRegistry.serialize(person, 'person');
   });
 
-  this.put('/api/person/:id', ({ people }, request) => {
+  this.put('/api/person/:id', ({people}, request) => {
     const body = JSON.parse(request.requestBody);
-    const person = people.find(request.params.id)
+    const person = people.find(request.params.id);
 
     if (!person) {
-      return new Response(404, { 'Content-Type': 'application/json' }, {
-        errors: [{ status: 404, title: 'Record does not exist.' }]
+      return new Response(404, {'Content-Type': 'application/json'}, {
+        errors: [{status: 404, title: 'Record does not exist.'}]
       });
     }
 
@@ -107,7 +107,7 @@ export default function () {
     return person;
   });
 
-  this.get('/api/person/:id/user-info', ({ people }, request) => { // eslint-disable-line no-unused-vars
+  this.get('/api/person/:id/user-info', ({people}, request) => { // eslint-disable-line no-unused-vars
     return {
       unread_message_count: 2,
       years: [2017, 2018],
@@ -120,15 +120,15 @@ export default function () {
     };
   });
 
-  this.get('/api/person/:id/years', ({ people }, request) => { // eslint-disable-line no-unused-vars
-    return { years: [2017, 2018] };
+  this.get('/api/person/:id/years', ({people}, request) => { // eslint-disable-line no-unused-vars
+    return {years: [2017, 2018]};
   });
 
-  this.get('/api/person/:id/unread-message-count', ({ people }, request) => { // eslint-disable-line no-unused-vars
-    return { unread_message_count: 2 };
+  this.get('/api/person/:id/unread-message-count', ({people}, request) => { // eslint-disable-line no-unused-vars
+    return {unread_message_count: 2};
   });
 
-  this.get('/api/person/:id/teacher', ({ people }, request) => { // eslint-disable-line no-unused-vars
+  this.get('/api/person/:id/teacher', ({people}, request) => { // eslint-disable-line no-unused-vars
     return {
       is_trainer: false,
       is_art_trainer: false,
@@ -137,7 +137,7 @@ export default function () {
     };
   });
 
-  this.get('/api/person/:id/photo', ({ people }, request) => { // eslint-disable-line no-unused-vars
+  this.get('/api/person/:id/photo', ({people}, request) => { // eslint-disable-line no-unused-vars
     return {
       photo: {
         photo_status: 'approved',
@@ -152,7 +152,7 @@ export default function () {
     return schema.schedules.all();
   });
 
-  this.get('/api/person/:id/event-info', ({ people }, request) => {
+  this.get('/api/person/:id/event-info', ({people}, request) => {
     const person = people.find(request.params.id); // eslint-disable-line no-unused-vars
 
     return {
@@ -174,7 +174,7 @@ export default function () {
     };
   });
 
-  this.get('/api/person/:id/schedule/permission', ({ people }, request) => {
+  this.get('/api/person/:id/schedule/permission', ({people}, request) => {
     const person = people.find(request.params.id); // eslint-disable-line no-unused-vars
 
     return {
@@ -182,51 +182,47 @@ export default function () {
         signup_allowed: true,
         callsign_approved: true,
         photo_status: true,
-        // is the manual review link allowed to be shown (if link is enabled)
-        manual_review_allowed: true,
-        // was manual review taken/passed?
-        manual_review_passed: true,
-        // did the prospective/alpha late in taking the review?
-        manual_review_window_missed: false,
-        // cap on how many prospective/alpha can take the manual review
-        manual_review_cap: 0,
-        // Manual Review page link - if enabled
-        manual_review_url: 'http://clubhouse.ranger/review',
+        // is the online training link allowed to be shown (if link is enabled)
+        online_training_allowed: true,
+        // was online training taken/passed?
+        online_training_passed: true,
+        // online training page link - if enabled
+        online_training_url: 'https://learning-foo.example.com',
       }
     };
 
   });
 
-  this.get('/api/person/:id/credits', ({ people }, request) => {
+  this.get('/api/person/:id/credits', ({people}, request) => {
     const person = people.find(request.params.id);
 
-    return { credits: person.credits || 0 };
+    return {credits: person.credits || 0};
   });
 
-  this.get('/api/person/:id/schedule/summary', ({ people }, request) => {
+  this.get('/api/person/:id/schedule/summary', ({people}, request) => {
     const person = people.find(request.params.id); // eslint-disable-line no-unused-vars
 
-    return { summary: {} };
+    return {summary: {}};
   });
 
-  this.get('/api/person/:id/positions', ({ positions }) => {
+  this.get('/api/person/:id/positions', ({positions}) => {
     return positions.all();
   });
 
-  this.get('/api/position', ({ positions }) => {
+  this.get('/api/position', ({positions}) => {
     return positions.all();
   });
 
   this.get('/api/motd/bulletin', () => {
-    return { motd: [] };
+    return {motd: []};
   });
 
   this.get('/api/person/:id/milestones', () => {
     return {
       milestones: {
-        training: { status: 'pass' },
-        alpha_shift: { status: 'pass' },
-        manual_review_passed: true,
+        training: {status: 'pass'},
+        alpha_shift: {status: 'pass'},
+        online_training_passed: true,
         behavioral_agreement: true,
         has_reviewed_pi: true,
         photo_upload_enabled: true
