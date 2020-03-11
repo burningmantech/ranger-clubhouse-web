@@ -5957,10 +5957,10 @@ ember-source@~3.16.3:
     semver "^6.1.1"
     silent-error "^1.1.1"
 
-ember-template-lint@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/ember-template-lint/-/ember-template-lint-2.1.0.tgz#b3d94c469884843bc7ba822df49e306eefd0a8e3"
-  integrity sha512-zljFYC1Vi0pMP0ijZ6cf55vJPLVgM7A7Uw5osfwDOckCLIbz2N2NnPuSU43h540VFt5ZE64R8DCu003wbN012w==
+ember-template-lint@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/ember-template-lint/-/ember-template-lint-2.4.0.tgz#17e401e0f2240d9d748cb94853857031fce33ebf"
+  integrity sha512-mzgfvEgXtCCwe7hX8TmFCPfVW362G9QAwlCWL9a8bJsqM719pCA2OOa+ttJRszRkpVTHXMJYwlvB4MqHoyOm2w==
   dependencies:
     chalk "^3.0.0"
     ember-template-recast "^4.1.1"
@@ -5968,7 +5968,7 @@ ember-template-lint@^2.1.0:
     globby "^11.0.0"
     micromatch "^4.0.2"
     resolve "^1.15.1"
-    strip-bom "^4.0.0"
+    yargs "^15.1.0"
 
 ember-template-recast@^4.1.1:
   version "4.1.1"
