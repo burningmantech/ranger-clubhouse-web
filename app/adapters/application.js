@@ -1,3 +1,4 @@
+import {computed} from '@ember/object';
 import RESTAdapter from '@ember-data/adapter/rest';
 import Inflector from 'ember-inflector';
 import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
@@ -32,16 +33,17 @@ const SINGULAR_MODELS = [
 export default class ApplicationAdapter extends RESTAdapter.extend(DataAdapterMixin) {
   host = ENV['api-server'];
 
-  authorize(xhr) {
-    // Add the authorization header to the API request
-
-    let token = this.get('session.data.authenticated.token');
-    if (this.session.isAuthenticated && token) {
-      xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+  @computed('session.data.authenticated.token')
+  get headers() {
+    let headers = {};
+    if (this.session.isAuthenticated) {
+      headers['Authorization'] = `Bearer ${this.session.data.authenticated.token}`;
     }
+
+    return headers;
   }
 
   pathForType(modelName) {
-    return SINGULAR_MODELS.includes(modelName) ?  modelName : Inflector.inflector.pluralize(modelName);
+    return SINGULAR_MODELS.includes(modelName) ? modelName : Inflector.inflector.pluralize(modelName);
   }
 }
