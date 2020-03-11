@@ -59,7 +59,7 @@
     "ember-resolver": "^7.0.0",
     "ember-simple-auth": "^3.0",
     "ember-simple-auth-token": "^5.0.0",
-    "ember-source": "~3.16.3",
+    "ember-source": "~3.17.0",
     "ember-template-lint": "^2.1.0",
     "ember-test-friendly-error-handler": "^2.1.1",
     "ember-toastr": "^2.0.1",
