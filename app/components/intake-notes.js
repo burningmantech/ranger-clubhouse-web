@@ -23,6 +23,9 @@ export default class IntakeNotesComponent extends Component {
       case 'vc':
         role = Role.VC;
         break;
+      case 'personnel':
+        role = Role.ADMIN;
+        break;
       default:
         role = Role.INTAKE;
         break;

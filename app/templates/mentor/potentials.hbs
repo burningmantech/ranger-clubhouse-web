@@ -23,8 +23,8 @@
     <label for="mentor-flag" class="form-check-label">Mentor Flagged</label>
   </div>
   <div class="form-check form-check-inline">
-    <Input @type="checkbox" @checked={{this.blackFlagged}} id="black-flag" class="form-check-input"/>
-    <label for="black-flag" class="form-check-label">Personnel Black Flagged</label>
+    <Input @type="checkbox" @checked={{this.personnelFlagged}} id="personnel-flag" class="form-check-input"/>
+    <label for="black-flag" class="form-check-label">Personnel Flagged</label>
   </div>
 
 </div>
@@ -96,9 +96,9 @@
         {{#if person.has_note_on_file}}
           <div class="mb-2"><b class="text-danger">Personnel Note</b></div>
         {{/if}}
-        {{#if person.black_flag}}
+        {{#if person.personnel_issue}}
           <div class="mb-2">
-            <b class="text-danger">PERSONNEL BLACK FLAG RAISED<br>
+            <b class="text-danger">PERSONNEL FLAG RAISED<br>
               TAKE NO ACTION UNTIL RESOLVED
             </b>
           </div>

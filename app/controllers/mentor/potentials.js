@@ -4,12 +4,11 @@ import {tracked} from '@glimmer/tracking';
 
 export default class MentorPotentialsController extends Controller {
   @tracked untrained;
-  @tracked blackFlagged;
+  @tracked personnelFlagged;
   @tracked rrnFlagged;
   @tracked vcFlagged;
   @tracked trainingFlagged;
   @tracked mentorFlagged;
-  @tracked blackFlagged;
 
   get viewPotentials() {
     let potentials = this.potentials;
@@ -18,8 +17,8 @@ export default class MentorPotentialsController extends Controller {
       potentials = potentials.filter((p) => !p.trained);
     }
 
-    if (this.blackFlagged) {
-      potentials = potentials.filter((p) => p.black_flag);
+    if (this.personnelFlagged) {
+      potentials = potentials.filter((p) => (p.personnel_ranks ? p.personnel_ranks.find((r) => r.rank >= 3) : false));
     }
 
     if (this.rrnFlagged) {

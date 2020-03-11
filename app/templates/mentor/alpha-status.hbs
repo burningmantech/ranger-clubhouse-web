@@ -29,9 +29,9 @@ Potential Alpha position: {{this.positionEligibleCount}}.
   </thead>
   <tbody>
   {{#each this.viewPotentials as |person|}}
-    <tr class={{if person.black_flag "table-danger"}}>
+    <tr class={{if person.personnel_issue "table-danger"}}>
       <td>
-        {{#if person.black_flag}}
+        {{#if person.personnel_issue}}
           {{fa-icon "exclamation-triangle" color="danger"}}
         {{/if}}
         <PersonLink @person={{person}} />
