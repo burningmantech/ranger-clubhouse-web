@@ -1,25 +1,24 @@
-import { inject as service } from '@ember/service';
-import { computed } from '@ember/object';
+import AjaxService from 'ember-ajax/services/ajax';
+import {inject as service} from '@ember/service';
+import {computed} from '@ember/object';
 import ENV from 'clubhouse/config/environment';
 
-import AjaxService from 'ember-ajax/services/ajax';
+/*
+ * Extend the Ajax service to add the JWT to the header for all requests.
+ */
 
-export default AjaxService.extend({
-  host: ENV['api-server'],
-  session: service(),
+export default class extends AjaxService {
+  @service session;
 
-  contentType: 'application/json; charset=utf-8',
+  host = ENV['api-server'];
+  contentType = 'application/json; charset=utf-8';
 
-  headers: computed('session.isAuthenticated', {
-    get() {
-      let headers = {};
-      if (this.session.isAuthenticated) {
-        let token = this.get('session.data.authenticated.token');
-        if (token) {
-          headers['Authorization'] = `Bearer ${token}`;
-        }
-      }
-      return headers;
+  @computed('session.data.authenticated.token')
+  get headers() {
+    let headers = {};
+    if (this.session.isAuthenticated) {
+      headers['Authorization'] = `Bearer ${this.session.data.authenticated.token}`;
     }
-  })
-});
+    return headers;
+  }
+}
