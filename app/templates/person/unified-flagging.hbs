@@ -1,15 +1,14 @@
 <h2>Unified Flagging</h2>
 
-{{#if this.history.black_flag}}
+{{#if this.history.personnel_issue}}
   <ChAlert @type="danger">
-    <h4>A PERSONNEL BLACK FLAG HAS BEEN RAISED FOR {{this.person.callsign}}</h4>
+    <h4>A PERSONNEL FLAG HAS BEEN RAISED FOR {{this.person.callsign}}</h4>
     <p>
       All training and mentor activity should be suspended and no further actions taken until the situation is resolved.
     </p>
     <p>
       Contact the Personnel Manager for more information.
     </p>
-
   </ChAlert>
 {{/if}}
 <p>
@@ -98,18 +97,7 @@
       Personnel
     </td>
     <td>
-      {{#each this.history.black_flag_years as |year|}}
-        <b class="text-danger">{{year}} BLACK FLAG</b><br>
-      {{else}}
-        No Personnel history
-      {{/each}}
-      {{#if (has-role "admin")}}
-        <p>
-          <button type="button" class="btn btn-secondary btn-sm" {{on "click" this.toggleBlackFlag}}>
-            {{if this.history.black_flag "Clear" "Set"}} {{this.year}} Black Flag
-          </button>
-        </p>
-      {{/if}}
+      <IntakeNotes @type="personnel" @person={{this.history}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
     </td>
   </tr>
   <tr>

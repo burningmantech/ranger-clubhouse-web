@@ -11,10 +11,11 @@ export default class AdminSalesforceRoute extends Route {
   }
 
   setupController(controller, model) {
-    controller.set('sfConfig', model.config);
-    controller.set('importStatus', '');
-    controller.set('importMessage', '');
-    controller.set('accounts', []);
+    controller.sfConfig = model.config;
+    controller.importStatus = '';
+    controller.importMessage = '';
+    controller.accounts = [];
+    controller.isSubmitting = false;
 
     controller.resetFlags();
   }

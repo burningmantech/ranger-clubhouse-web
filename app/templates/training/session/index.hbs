@@ -165,9 +165,9 @@
         {{/if}}
       </td>
       <td class="w-55">
-        {{#if student.black_flag}}
+        {{#if student.personnel_issue}}
           <div class="mb-2">
-            <b class="text-danger">Personnel Black Flag raised. Take no actions until resolved.</b>
+            <b class="text-danger">Personnel Flag raised. Take no actions until resolved.</b>
           </div>
         {{/if}}
         {{#each student.notes as |note|}}
@@ -229,7 +229,7 @@
         {{/each}}
       {{else}}
         <tr>
-          <td colpsan="3"><b class="text-danger">No trainers were found.</b></td>
+          <td colspan="3"><b class="text-danger">No trainers were found.</b></td>
         </tr>
       {{/if}}
       </tbody>
@@ -259,8 +259,8 @@
             @onCancel={{this.cancelStudentAction}} as |f|>
 
       <Modal.body>
-        {{#if this.editStudent.black_flag}}
-          <h3 class="text-danger">Personnel Black Flag raised on {{this.editStudent.callsign}}. TAKE NO ACTIONS UNTIL
+        {{#if this.editStudent.personnel_issue}}
+          <h3 class="text-danger">Personnel Flag raised on {{this.editStudent.callsign}}. TAKE NO ACTIONS UNTIL
             RESOLVED.</h3>
         {{/if}}
         <table class="table table-sm table-hover table-striped">

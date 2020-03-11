@@ -17,6 +17,14 @@ export default class IntakeNoteEditComponent extends Component {
     ["4 - FLAG", 4]
   ];
 
+  personnelRankingOptions = [
+    ["No Ranking", ''],
+    ["1 - Green (Above Average)", 1],
+    ["2 - Normal (Average)", 2],
+    ["3 - Yellow (Below Average)", 3],
+    ["4 - FLAG (will alert other teams)", 4]
+  ];
+
   @tracked isSubmitting = false;
 
   constructor() {

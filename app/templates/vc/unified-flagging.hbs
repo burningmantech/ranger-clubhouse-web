@@ -1,10 +1,8 @@
 <main class="col">
-  <YearSelect @title="Unified Flagging" @year={{this.year}} @onChange={{action
-          (mut this.year)}} />
-
+  <YearSelect @title="Unified Flagging" @year={{this.year}} @onChange={{action (mut this.year)}} />
   <p>
-    A {{this.year}} Prospective or Alpha is shown who meets one or more of criteria in {{this.year}} or previous year : a team
-    rank (aka flag) of 3/Yellow or 4/Flag, personnel black flag raised, or a bonk/self-bonk.
+    A {{this.year}} Prospective or Alpha is shown who meets one or more of criteria in {{this.year}} or previous year :
+    a team rank (aka flag) of 3/Yellow or 4/Flag, Personnel flag raised, or a bonk/self-bonk.
   </p>
   <p>
     Showing {{pluralize this.people.length "person"}} in the class of {{this.year}}.
@@ -15,6 +13,7 @@
     <tr>
       <th class="w-15">Callsign / Name / FKA</th>
       <th class="w-10">History</th>
+      <th>Personnel</th>
       <th>RRN</th>
       <th>VC</th>
       <th>TRAINING</th>
@@ -23,74 +22,72 @@
     </thead>
     <tbody>
     {{#each this.people as |person|}}
-      {{#let (get person.intake_years (concat this.year ".black_flag")) as |blackFlag|}}
-        {{#if blackFlag}}
-          <tr class="table-danger">
-            <td colspan="6" class="text-center h3">{{fa-icon "ban"}} PERSONNEL BLACK FLAG RAISED ON {{person.callsign}} -
-              TAKE NO ACTIONS UNTIL RESOLVED {{fa-icon "ban"}}</td>
-          </tr>
-        {{/if}}
-        <tr class="{{if blackFlag "table-light-red"}}">
-          <td class="w-15">
-            <PersonLink @person={{person}} />
-            <br>
-            &lt;{{person.status}}&gt;<br>
-            {{person.first_name}} {{person.last_name}}
-            <div class="mt-2">
-              FKA:<br>
-              {{#each person.formerly_known_as as |fka|}}
-                {{fka}}<br>
-              {{else}}
-                <i>none</i>
-              {{/each}}
-            </div>
-          </td>
-          <td class="w-10">
-            {{#each-in person.pnv_history as |pnvYear info|}}
-              <div class="mb-2">
-                {{pnvYear}}<br>
-                {{#if info.black_flag}}
-                  <b class="text-danger">BLACK FLAG</b>
-                {{/if}}
-                Training
-                {{#if (is-empty info.training_status)}}
-                  NONE
-                {{else}}
-                  {{info.training_status}}
-                {{/if}}
-                <br>
-                {{#if info.was_auditor}}
-                  Auditor
-                {{else if (not-eq info.mentor_status 'none')}}
-                  Mentor {{info.mentor_status}}
-                {{else if info.have_alpha_shift}}
-                  Walked w/No Mentors?
-                {{else}}
-                  No Alpha shift
-                {{/if}}
-              </div>
-            {{else}}
-              <i>No PNV History</i>
-            {{/each-in}}
-          </td>
-          <td>
-            <IntakeNotes @type="rrn" @person={{person}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
-          </td>
-          <td>
-            <IntakeNotes @type="vc" @person={{person}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
-          </td>
-          <td>
-            <IntakeTraining @trainings={{person.trainings}} @person={{person}} />
-          </td>
-          <td>
-            <IntakeNotes @type="mentor" @person={{person}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
-          </td>
+      {{#if person.personnel_issue}}
+        <tr class="table-danger">
+          <td colspan="7" class="text-center h3">{{fa-icon "ban"}} PERSONNEL FLAG RAISED ON {{person.callsign}} -
+            TAKE NO ACTIONS UNTIL RESOLVED {{fa-icon "ban"}}</td>
         </tr>
-      {{/let}}
+      {{/if}}
+      <tr class="{{if person.personnel_issue "table-light-red"}}">
+        <td class="w-15">
+          <PersonLink @person={{person}} />
+          <br>
+          &lt;{{person.status}}&gt;<br>
+          {{person.first_name}} {{person.last_name}}
+          <div class="mt-2">
+            FKA:<br>
+            {{#each person.formerly_known_as as |fka|}}
+              {{fka}}<br>
+            {{else}}
+              <i>none</i>
+            {{/each}}
+          </div>
+        </td>
+        <td class="w-10">
+          {{#each-in person.pnv_history as |pnvYear info|}}
+            <div class="mb-2">
+              {{pnvYear}}<br>
+              Training
+              {{#if (is-empty info.training_status)}}
+                NONE
+              {{else}}
+                {{info.training_status}}
+              {{/if}}
+              <br>
+              {{#if info.was_auditor}}
+                Auditor
+              {{else if (not-eq info.mentor_status 'none')}}
+                Mentor {{info.mentor_status}}
+              {{else if info.have_alpha_shift}}
+                Walked w/No Mentors?
+              {{else}}
+                No Alpha shift
+              {{/if}}
+            </div>
+          {{else}}
+            <i>No PNV History</i>
+          {{/each-in}}
+        </td>
+        <td>
+          <IntakeNotes @type="personnel" @person={{person}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
+        </td>
+        <td>
+          <IntakeNotes @type="rrn" @person={{person}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
+        </td>
+        <td>
+          <IntakeNotes @type="vc" @person={{person}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
+        </td>
+        <td>
+          <IntakeTraining @trainings={{person.trainings}} @person={{person}} />
+        </td>
+        <td>
+          <IntakeNotes @type="mentor" @person={{person}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
+        </td>
+      </tr>
     {{else}}
-    <tr>
-      <td colspan="6"><b class="text-danger">No {{this.year}} flagged Prospectives or Alphas were found</b></td>
-    </tr>
+      <tr>
+        <td colspan="6"><b class="text-danger">No {{this.year}} flagged Prospectives or Alphas were found</b></td>
+      </tr>
     {{/each}}
     </tbody>
   </table>
