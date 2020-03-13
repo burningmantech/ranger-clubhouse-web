@@ -29,6 +29,7 @@ export default class OnlineTrainingLaunchComponent extends Component {
         } else {
           this.password = result.password;
         }
+        this.expiryDate = result.expiry_date;
         this.showExodusDialog = true;
       }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() =>{

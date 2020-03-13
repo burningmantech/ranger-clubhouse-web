@@ -15,8 +15,8 @@
       <h3>You are about to leave the Clubhouse and will be heading to the Burning Man Online Training
         website.</h3>
       <p>
-        After you complete the Online Training course, it may take the Clubhouse up to 15 minutes or more to register
-        your course completion.
+        <b class="text-danger">You have until {{moment-format this.expiryDate "dddd, MMMM Do YYYY"}} to complete
+          Part 1 of Training (online).</b>
       </p>
       {{#if this.alreadyExists}}
         <p>
@@ -24,18 +24,19 @@
         </p>
       {{else}}
         <p>
-          Your Online Training account has been created.
+          A Burning Man Online Training website account has been setup and you have been enrolled in the Ranger online
+          training course.
         </p>
         <p>
-          <b class="text-danger">WRITE DOWN the following credentials. You will need the username
-            and password to log into the Online Training website:</b>
+          <b class="text-danger">WRITE DOWN the following Online Training website credentials. The username
+            and password will be needed to log into the Online Training website:</b>
         </p>
         <p>
           <b>Username:</b> {{@person.email}}<br>
           <b>Password:</b> {{this.password}}<br>
         </p>
         <p>
-          <b>The above credentials are ONLY for the Online Training website and are separate from the Clubhouse.</b>
+          <i>The above credentials are ONLY for the Online Training website and are SEPARATE from the Clubhouse.</i>
         </p>
       {{/if}}
     </Modal.body>
