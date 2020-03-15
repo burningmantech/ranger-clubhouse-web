@@ -1,0 +1,71 @@
+<div class="bg-khaki row no-gutters">
+  {{! line up the search bar with main content}}
+  <div class="d-none d-md-block sidebar-expanded">
+    &nbsp;
+  </div>
+
+  <ChForm @formId="search-bar-form"
+          @originalModel={{this.searchForm}}
+          @changeSet={{false}}
+          @formClass="col-sm-11 col-md-10 col-lg-8 mb-2 mx-2"
+          @onFormChange={{action this.searchFormChange}} as |f|>
+    <AutocompleteInput @placeholder={{this.searchPlaceholder}}
+                       @onSearch={{action this.searchAction}}
+                       @onSelect={{action this.searchSelectAction}}
+                       @onFocus={{action this.searchFocusAction}}
+                       @text={{this.searchText}}
+                       @modeOptions={{this.modeOptions}}
+                       @onModeChange={{action this.modeChange}}
+                       @mode={{this.searchForm.mode}}
+                       @appendSearchIcon=true
+                       as |item|>
+      {{#if (eq this.searchType "asset")}}
+        {{this.searchYear}} #{{item.barcode}} {{item.description}} {{item.type}}
+      {{else}}
+        {{#if (eq this.searchType "person-id")}}
+          ID #{{item.id}} -
+        {{/if}}
+        <strong>{{item.callsign}}</strong>
+        &lt;{{item.first_name}} {{item.last_name}}, {{item.status}}&gt;
+        {{#if item.fka_match}}
+          <b>(FKA: {{item.fka_match}})</b>
+        {{/if}}
+        {{#if (eq item.email_match "full")}}
+          - email exact match
+        {{else if (eq item.email_match "partial")}}
+          - email partial match
+        {{/if}}
+      {{/if}}
+    </AutocompleteInput>
+    {{#if this.showSearchOptions}}
+      <div class="bg-white p-2">
+        <div class="form-row">
+          <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Search By:</label>
+          <div class="col-sm-12 col-md-9 mt-2">
+            {{f.input "callsign" type="checkbox" label="Callsign" inline=true}}
+            {{f.input "name" type="checkbox" label="Name" inline=true}}
+            {{f.input "email" type="checkbox" label="Email" inline=true}}
+            {{f.input "formerly_known_as" type="checkbox" label="Formerly Known As" inline=true}}
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Include:</label>
+          <div class="col-sm-12 col-md-9 mt-2">
+            {{f.input "auditor" type="checkbox" label="Auditor" inline=true}}
+            {{f.input "past_prospective" type="checkbox" label="Past Prospective" inline=true}}
+          </div>
+        </div>
+        <div class="form-row mb-2">
+          <div class="col-auto">
+            <small>Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.</small>
+          </div>
+          <div class="col-auto ml-auto mr-2">
+            <button type="button" class="btn btn-sm btn-secondary" {{on "click" this.hideSearchBoxAction}}>
+              Hide Options
+            </button>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  </ChForm>
+</div>

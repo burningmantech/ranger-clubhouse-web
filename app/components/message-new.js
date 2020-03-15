@@ -1,17 +1,10 @@
 import Component from '@ember/component';
 import { debounce } from '@ember/runloop';
 import { action } from '@ember/object';
-
 import RSVP from 'rsvp';
-
 import PersonMessageValidations from 'clubhouse/validations/person-message';
 
 export default class MessageNewComponent extends Component {
-  message = null;
-  onSubmit = null;
-  onCancel = null;
-  isSubmitting = null;
-
   personMessageValidations = PersonMessageValidations;
 
   _performSearch(callsign, resolve, reject) {
@@ -36,15 +29,5 @@ export default class MessageNewComponent extends Component {
     return new RSVP.Promise((resolve, reject) => {
       debounce(this, this._performSearch, callsign, resolve, reject, 350);
     });
-  }
-
-  @action
-  submitAction(model, isValid) {
-    this.onSubmit(model, isValid);
-  }
-
-  @action
-  cancelAction() {
-    this.onCancel();
   }
 }

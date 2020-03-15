@@ -1,15 +1,15 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
-import { action, computed } from '@ember/object';
-import { filterBy } from '@ember/object/computed';
-import { validateNumber, validatePresence } from 'ember-changeset-validations/validators';
+import {action, computed} from '@ember/object';
+import {filterBy} from '@ember/object/computed';
+import {validateNumber, validatePresence} from 'ember-changeset-validations/validators';
 import currentYear from 'clubhouse/utils/current-year';
 import laborDay from 'clubhouse/utils/labor-day';
 import validateDateTime from 'clubhouse/validators/datetime';
 import moment from 'moment';
 import _ from 'lodash';
 
-const allDays = { id: 'all', title: 'All Days'};
+const allDays = {id: 'all', title: 'All Days'};
 const allPositions = {id: 'all', title: 'All Positions'};
 
 class CopyParams extends EmberObject {
@@ -25,7 +25,7 @@ class CopySourcePosition extends EmberObject {
 
   @computed('credits.@each.selected')
   get allSelected() {
-    return this.get('credits').every((c) => c.get('selected'));
+    return this.credits.every((c) => c.selected);
   }
 
   @filterBy('credits', 'selected', true) selectedCredits;
@@ -46,7 +46,7 @@ class CopySourceCredit extends EmberObject {
   }
 
   adjustTime(sourceDate) {
-    const delta = this.get('controller.copyParams');
+    const delta = this.controller.copyParams;
     return moment(sourceDate).add({
       days: delta.deltaDays,
       hours: delta.deltaHours,
@@ -56,42 +56,40 @@ class CopySourceCredit extends EmberObject {
 }
 
 export default class AdminCreditsController extends Controller {
-  queryParams = [ 'year' ];
+  queryParams = ['year'];
 
-  dayFilter =  allDays;
-  positionFilter =  allPositions;
+  dayFilter = 'all';
+  positionFilter = 'all';
 
   creditValidations = {
-    start_time: validateDateTime({ presence: true, before: 'end_time'}),
-    end_time: validateDateTime({ presence: true, after: 'start_time'}),
-    description: validatePresence({ presence: true }),
-    position_id: validatePresence({ presence: true }),
-    credits_per_hour: validatePresence({ presence: true }),
+    start_time: validateDateTime({presence: true, before: 'end_time'}),
+    end_time: validateDateTime({presence: true, after: 'start_time'}),
+    description: validatePresence({presence: true}),
+    position_id: validatePresence({presence: true}),
+    credits_per_hour: validatePresence({presence: true}),
   };
 
   copyValidations = {
-    deltaDays: validateNumber({ integer: true }),
-    deltaHours: validateNumber({ integer: true }),
-    deltaMinutes: validateNumber({ integer: true }),
+    deltaDays: validateNumber({integer: true}),
+    deltaHours: validateNumber({integer: true}),
+    deltaMinutes: validateNumber({integer: true}),
   };
 
-  @computed('credits[]','credits.@each.{position_id,start_time}', 'dayFilter', 'positionFilter')
+  @computed('credits[]', 'credits.@each.{position_id,start_time}', 'dayFilter', 'positionFilter')
   get viewCredits() {
     let credits = this.credits;
     const dayFilter = this.dayFilter;
     const positionFilter = this.positionFilter;
 
-    if (positionFilter && positionFilter.id && positionFilter.id != 'all') {
-        credits = credits.filterBy('position_id', positionFilter.id);
+    if (positionFilter != 'all') {
+      credits = credits.filter((p) => p.position_id == positionFilter);
     }
 
-    if (dayFilter && dayFilter.id) {
-      const day = dayFilter.id;
-
-      if (day == 'upcoming') {
-        credits = credits.filterBy('has_started', false);
-      } else if (day != 'all') {
-        credits = credits.filterBy('creditDay', day);
+    if (dayFilter != 'all') {
+      if (dayFilter == 'upcoming') {
+        credits = credits.filter((p) => p.has_started == false);
+      } else {
+        credits = credits.filter((p) => p.creditDay == dayFilter);
       }
     }
 
@@ -101,7 +99,7 @@ export default class AdminCreditsController extends Controller {
   @computed('credits.@each.start_time')
   get dayOptions() {
     const unique = this.credits.uniqBy('creditDay').mapBy('creditDay');
-    const days = [ allDays ];
+    const days = [allDays];
 
     unique.forEach((day) => days.pushObject({id: day, title: moment(day).format('ddd MMM DD')}));
 
@@ -113,14 +111,14 @@ export default class AdminCreditsController extends Controller {
     let credits = this.viewCredits;
     let groups = [];
 
-    credits.forEach(function(credit) {
+    credits.forEach(function (credit) {
       const title = credit.position ? credit.positionTitle : `Position #${credit.position_id}`;
       let group = groups.findBy('title', title);
 
       if (group) {
         group.credits.push(credit);
       } else {
-        groups.push({title, position_id: credit.position_id, credits: [ credit ]});
+        groups.push({title, position_id: credit.position_id, credits: [credit]});
       }
     });
 
@@ -131,10 +129,8 @@ export default class AdminCreditsController extends Controller {
   get filterPositionOptions() {
     const unique = this.credits.uniqBy('positionTitle');
 
-    let options = [];
-
-    unique.forEach(function(credit) {
-      options.push({id: credit.position_id, title: credit.positionTitle});
+    let options = unique.map((credit) => {
+      return {id: credit.position_id, title: credit.positionTitle};
     });
 
     options = options.sortBy('title');
@@ -144,17 +140,17 @@ export default class AdminCreditsController extends Controller {
 
   @computed('positions')
   get positionOptions() {
-    return this.positions.map((p) => [ p.title, p.id ]);
+    return this.positions.map((p) => [p.title, p.id]);
   }
 
   @computed('positions')
   get positionOptionsForCopy() {
-    return [['(same position)', 0], ...this.get('positions').map((p) => [p.title, p.id])];
+    return [['(same position)', 0], ...this.positions.map((p) => [p.title, p.id])];
   }
 
   @action
   newCredit() {
-    this.set('credit', this.store.createRecord('position-credit', { position_ids: [] }));
+    this.set('credit', this.store.createRecord('position-credit', {position_ids: []}));
   }
 
   @action
@@ -213,11 +209,11 @@ export default class AdminCreditsController extends Controller {
       `Are you sure you want to delete Position ${credit.positionTitle} ${credit.description} Time ${credit.start_time} - ${credit.end_time} Credits ${credit.credits_per_hour}?`,
       () => {
         credit.destroyRecord()
-            .then(() => {
-              this.credits.removeObject(credit);
-              this.toast.success('Credit has been deleted.')
-            })
-            .catch((response) => this.house.handleErrorResponse(response) )
+          .then(() => {
+            this.credits.removeObject(credit);
+            this.toast.success('Credit has been deleted.')
+          })
+          .catch((response) => this.house.handleErrorResponse(response))
       }
     );
   }
@@ -235,26 +231,23 @@ export default class AdminCreditsController extends Controller {
   }
 
   @action
-  changeYear(year) {
-    // Magic! set the year, and the query params fire off.
-    this.set('year', year);
-  }
-
-  @action
-  startCopy(selectedPositionId = null) {
+  startCopy(selectedPositionId = 0) {
     this.set('presentYear', currentYear());
-    const selectedLaborDay = laborDay(this.get('year'));
-    const presentLaborDay = laborDay(this.get('presentYear'));
+    const selectedLaborDay = laborDay(this.year);
+    const presentLaborDay = laborDay(this.presentYear);
     this.set('selectedYearLaborDay', selectedLaborDay.format('MMMM Do'));
     this.set('presentYearLaborDay', presentLaborDay.format('MMMM Do'));
     this.set('laborDayDiff', presentLaborDay.diff(selectedLaborDay, 'days'));
-    let sourceCredits = this.get('viewCredits');
-    if (selectedPositionId != null) {
-      sourceCredits = sourceCredits.filterBy('position_id', selectedPositionId);
+    let sourceCredits = this.viewCredits;
+    if (selectedPositionId > 0) {
+      sourceCredits = sourceCredits.filter((p) => p.position_id == selectedPositionId);
     }
+    console.log('SOURCE CREDITS', sourceCredits);
     let copyPositions = [];
     _.forOwn(_.groupBy(sourceCredits, 'position_id'),
-      (credits, positionId) => copyPositions.push(CopySourcePosition.create({
+      (credits, positionId) => {
+      console.log('CREDITS', credits);
+      copyPositions.push(CopySourcePosition.create({
         id: positionId,
         title: credits[0].positionTitle,
         controller: this,
@@ -262,20 +255,21 @@ export default class AdminCreditsController extends Controller {
           controller: this,
           source: c,
         })),
-      })));
+      }))
+    });
     copyPositions = copyPositions.sortBy('title');
     if (copyPositions.length === 1) {
       copyPositions[0].set('expanded', true);
     }
     this.set('copyParams', CopyParams.create({
-      deltaDays: this.get('laborDayDiff'),
+      deltaDays: this.laborDayDiff,
     }));
     this.set('copySourcePositions', copyPositions);
   }
 
   @computed('copySourcePositions.@each.selectedCredits')
   get copySelectedCreditCount() {
-    return _.sumBy(this.get('copySourcePositions'), (p) => p.get('selectedCredits').length);
+    return _.sumBy(this.copySourcePositions, (p) => p.selectedCredits.length);
   }
 
   @action
@@ -286,8 +280,8 @@ export default class AdminCreditsController extends Controller {
 
   @action
   performCopy() {
-    const params = this.get('copyParams');
-    const sourceCredits = this.get('copySourcePositions').flatMap((p) => p.get('selectedCredits'));
+    const params = this.copyParams;
+    const sourceCredits = this.copySourcePositions.flatMap((p) => p.selectedCredits);
     const sourceIds = sourceCredits.map((c) => c.source.id);
     if (sourceIds.length === 0) {
       this.toast.warning('No credits selected to copy; no changes made');

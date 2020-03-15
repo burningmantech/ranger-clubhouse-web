@@ -1,35 +1,50 @@
-{{#ch-form "message" message
-  modalBox=true
-  modalTitle="Send A New Clubhouse Message"
-  onSubmit=(action "submitAction") onCancel=(action "cancelAction")
-  validator=personMessageValidations as |f|}}
-  <p>
-    Please take note:
-    <ul>
-      <li><strong class="text-danger">Clubhouse messaging is intended for official Ranger business while the event is happening.</strong></li>
-      <li>Clubhouse messages are NOT private. The message might be seen by the HQ Window staff during the event and the Tech Team doing maintence.</li>
-      <li><b>Use email or the Contact Ranger page</b> if your message is more of a personal nature or
-        the event is over.</li>
-    <li>All messages are logged and archived at the end of each calendar year.</li>
-      <li>
-        Remember that Burning Man and the Rangers have a zero-tolerance policy for behavior that is non-consensual,
-        abusive, harassing, or harmful to others.
-      </li>
-    </ul>
-  </p>
-  <div class="forn-group row">
-    <div class="col-sm-12 col-md-6">
-      {{f.input "message_from" label="From" type="text" size=30 maxlength=120 autofocus=true}}
-    </div>
-    <div class="col-sm-12 col-md-6">
-      {{f.input "recipient_callsign" label="To" type="search" onSearch=(action "searchCallsignAction") }}
-    </div>
-  </div>
-  {{f.input "subject" label="Subject" maxlength=80}}
-  {{f.input "body" label="The message (be civil, courteous, polite, & professional)" type="textarea" rows=4 cols=8}}
-  <f.submit @label="Send" @disabled={{isSubmitting}} />
-  <f.cancel @disabled={{isSubmitting}} />
-  {{#if isSubmitting}}
-    <LoadingIndicator @text="Sending Message" />
-  {{/if}}
-{{/ch-form}}
+<ModalDialog @title="Send A New Clubhouse Message" as |Modal|>
+  <ChForm @formId="message-form"
+          @originalModel={{@message}}
+          @validator={{this.personMessageValidations}}
+          @onSubmit={{@onSubmit}}
+          @onCancel={{@onCancel}} as |f|>
+    <Modal.body>
+      <p>
+        Please take note:
+      <ul>
+        <li><strong class="text-danger">Clubhouse messaging is intended for official Ranger business while the event is
+          happening.</strong></li>
+        <li>Clubhouse messages are NOT private. The message might be seen by the HQ Window staff during the event and
+          the Tech Team doing maintence.
+        </li>
+        <li><b>Use email or the Contact Ranger page</b> if your message is more of a personal nature or
+          the event is over.
+        </li>
+        <li>All messages are logged and archived at the end of each calendar year.</li>
+        <li>
+          Remember that Burning Man and the Rangers have a zero-tolerance policy for behavior that is non-consensual,
+          abusive, harassing, or harmful to others.
+        </li>
+      </ul>
+      </p>
+      <div class="forn-group row">
+        <div class="col-sm-12 col-md-6">
+          <f.input @name="message_from" @label="From" @type="text" @size=30 @maxlength=120 @autofocus=true/>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <f.input @name="recipient_callsign"
+                   @placeholder="Enter a callsign"
+                   @label="To"
+                   @type="search"
+                   @onSearch={{this.searchCallsignAction}} />
+        </div>
+      </div>
+      <f.input @name="subject" @label="Subject" @maxlength=80 />
+      <f.input @name="body" @label="The message (be civil, courteous, polite, & professional)" @type="textarea" @rows=4
+               @cols=80 />
+    </Modal.body>
+    <Modal.footer @noAlign=true>
+      <f.submit @label="Send" @disabled={{@isSubmitting}} />
+      <f.cancel @disabled={{@isSubmitting}} />
+      {{#if @isSubmitting}}
+        <LoadingIndicator @text="Sending Message"/>
+      {{/if}}
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>

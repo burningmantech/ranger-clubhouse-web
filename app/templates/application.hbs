@@ -191,7 +191,8 @@
                           <div class="navbar-text">Pre-Event</div>
                           <LinkTo @route="admin.salesforce" class="dropdown-item">Salesforce Import</LinkTo>
                           <LinkTo @route="admin.radio-eligibility" class="dropdown-item">Radio Eligibility</LinkTo>
-                          <LinkTo @route="admin.online-training.index" class="dropdown-item">Online Training Admin</LinkTo>
+                          <LinkTo @route="admin.online-training.index" class="dropdown-item">Online Training Admin
+                          </LinkTo>
                           <div class="navbar-text">Bulk Operations</div>
                           <LinkTo @route="admin.bulk-upload" class="dropdown-item">Bulk Upload</LinkTo>
                           <LinkTo @route="admin.bulk-sign-in-out" class="dropdown-item">Bulk Sign In/Out</LinkTo>
@@ -336,79 +337,8 @@
       {{/if}}
     </div>
   </nav>
-  {{#if canAccountManage}}
-    <div class="bg-khaki row no-gutters">
-      {{! line up the search bar with main content}}
-      <div class="d-none d-md-block sidebar-expanded">
-        &nbsp;
-      </div>
-
-      {{#ch-form "person-search" searchForm formClass="col-11 col-md-9 col-lg-7 mb-2 mx-2" changeSet=false
-                 onSubmit=(action "submit") onFormChange=(action searchFormChange) as |f|}}
-        <div class="form-row">
-          <div class="col-12 col-sm-10 col-lg-9 col-xl-8">
-            <PowerSelectTypeahead @search={{action searchAction}} @onchange={{action searchChangeAction}}
-                                  @onfocus={{action searchFocusAction}} @onkeydown={{action searchKeydownAction}}
-                                  @renderInPlace={{true}} @placeholder={{searchPlaceholder}}
-                                  @triggerId="search-bar" @defaultHighlighted={{action
-                    defaultHighlightedAction}} @loadingMessage="Searching . . ." @noMatchesMessage="No results found" as
-                                  |item|>
-              {{#if (eq this.searchType "asset")}}
-                {{this.searchYear}} #{{item.barcode}} {{item.description}} {{item.type}}
-              {{else}}
-                {{#if (eq this.searchType "person-id")}}
-                  ID #{{item.id}} -
-                {{/if}}
-                <strong>{{item.callsign}}</strong>
-                &lt;{{item.first_name}} {{item.last_name}}, {{item.status}}&gt;
-                {{#if item.fka_match}}
-                  <b>(FKA: {{item.fka_match}})</b>
-                {{/if}}
-                {{#if (eq item.email_match "full")}}
-                  - email exact match
-                {{else if (eq item.email_match "partial")}}
-                  - email partial match
-                {{/if}}
-              {{/if}}
-            </PowerSelectTypeahead>
-          </div>
-          <div class="col-auto mt-2 mt-sm-0 no-gutters">
-            {{f.input "mode" type="select" options=modeOptions onChange=this.modeChange
-                      controlClass="form-control form-control-sm"}}
-          </div>
-        </div>
-        {{#if showSearchOptions}}
-          <div class="bg-white p-2">
-            <div class="form-row">
-              <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Search By:</label>
-              <div class="col-sm-12 col-md-9 mt-2">
-                {{f.input "callsign" type="checkbox" label="Callsign" inline=true}}
-                {{f.input "name" type="checkbox" label="Name" inline=true}}
-                {{f.input "email" type="checkbox" label="Email" inline=true}}
-                {{f.input "formerly_known_as" type="checkbox" label="Formerly Known As" inline=true}}
-              </div>
-            </div>
-            <div class="form-row">
-              <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Include:</label>
-              <div class="col-sm-12 col-md-9 mt-2">
-                {{f.input "auditor" type="checkbox" label="Auditor" inline=true}}
-                {{f.input "past_prospective" type="checkbox" label="Past Prospective" inline=true}}
-              </div>
-            </div>
-            <div class="form-row mb-2">
-              <div class="col-auto">
-                <small>Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.</small>
-              </div>
-              <div class="col-auto ml-auto mr-2">
-                <button type="button" class="btn btn-sm btn-secondary" {{on "click" this.hideSearchBoxAction}}>
-                  Hide Options
-                </button>
-              </div>
-            </div>
-          </div>
-        {{/if}}
-      {{/ch-form}}
-    </div>
+  {{#if (has-role "admin" "manage" "view-pii" "mentor")}}
+    <SearchItemBar />
   {{/if}}
 </header>
 

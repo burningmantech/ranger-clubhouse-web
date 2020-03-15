@@ -1,14 +1,14 @@
 import Component from '@ember/component';
 import EmberObject from '@ember/object';
-import { action, computed, set, get } from '@ember/object';
-import { typeOf, isEmpty } from '@ember/utils';
+import {action, computed, set, get} from '@ember/object';
+import {typeOf, isEmpty} from '@ember/utils';
 
 import $ from 'jquery';
 
 export default class ChFormFieldComponent extends Component {
   tagName = '';
 
-  static positionalParams =  [ 'name' ];
+  static positionalParams = ['name'];
 
   wrapClass = null;
   formId = null;
@@ -45,7 +45,7 @@ export default class ChFormFieldComponent extends Component {
 
   grid = null;
   label = '';
-  labelClass =  null;
+  labelClass = null;
   controlClass = null;
 
   // For date or datetime
@@ -66,60 +66,63 @@ export default class ChFormFieldComponent extends Component {
 
 
   elementErrorClass = 'is-invalid';
-  textErrorClass  ='text-danger';
+  textErrorClass = 'text-danger';
   hintClass = 'form-text text-muted';
 
 
   didReceiveAttrs() {
     if (this.wrapClass === null) {
       switch (this.type) {
-      case 'checkbox':
-      case 'checkboxGroup':
-      case 'radio':
-      case 'radioGroup':
-        this.set('wrapClass', (this.inline ? 'form-check form-check-inline' : 'form-check'));
-        break;
+        case 'checkbox':
+        case 'checkboxGroup':
+        case 'radio':
+        case 'radioGroup':
+          this.set('wrapClass', (this.inline ? 'form-check form-check-inline' : 'form-check'));
+          break;
+        case 'search':
+          this.set('wrapClass', '');
+          break;
 
-      default: {
-        const gridClasses = ' '+(this.grid === null ? 'col-auto' : this.grid);
-        this.set('wrapClass', 'form-group'+gridClasses);
-        break;
-       }
+        default: {
+          const gridClasses = ' ' + (this.grid === null ? 'col-auto' : this.grid);
+          this.set('wrapClass', 'form-group' + gridClasses);
+          break;
+        }
       }
     }
 
     if (this.controlClass === null) {
       switch (this.type) {
-      case 'checkbox':
-      case 'checkboxGroup':
-      case 'radio':
-      case 'radioGroup':
-        this.set('controlClass', 'form-check-input');
-        break;
+        case 'checkbox':
+        case 'checkboxGroup':
+        case 'radio':
+        case 'radioGroup':
+          this.set('controlClass', 'form-check-input');
+          break;
 
-      default:
-        this.set('controlClass', 'form-control');
-        break;
+        default:
+          this.set('controlClass', 'form-control');
+          break;
       }
     }
 
     if (this.labelClass === null) {
       switch (this.type) {
-      case 'checkbox':
-      case 'checkboxGroup':
-      case 'radio':
-      case 'radioGroup':
-        this.set('labelClass', 'form-check-label');
-        break;
+        case 'checkbox':
+        case 'checkboxGroup':
+        case 'radio':
+        case 'radioGroup':
+          this.set('labelClass', 'form-check-label');
+          break;
 
-      default:
-        this.set('labelClass', '');
-        break;
+        default:
+          this.set('labelClass', '');
+          break;
       }
     }
 
     if (this.wrapper === null) {
-      if (this.type == 'checkboxGroup' || this.type == 'radioGroup') {
+      if (this.type == 'checkboxGroup' || this.type == 'radioGroup' || this.type == 'search') {
         this.set('wrapper', false);
       } else {
         this.set('wrapper', true);
@@ -128,7 +131,7 @@ export default class ChFormFieldComponent extends Component {
 
     if (this.wrapper) {
       this.set('tagName', 'div');
-      this.set('classNameBindings', [ 'wrapClass' ]);
+      this.set('classNameBindings', ['wrapClass']);
     }
   }
 
@@ -162,9 +165,9 @@ export default class ChFormFieldComponent extends Component {
       let label, value;
 
       if (type == 'object' && opt.id) {
-        label = opt.title
+        label = opt.title;
         value = opt.id
-      // Simple [ 'label', value ]
+        // Simple [ 'label', value ]
       } else if (type == 'array') {
         label = opt[0];
         value = opt[1];
@@ -173,7 +176,7 @@ export default class ChFormFieldComponent extends Component {
         label = value = opt;
       }
 
-      return EmberObject.create({ label, value });
+      return EmberObject.create({label, value});
     });
   }
 
