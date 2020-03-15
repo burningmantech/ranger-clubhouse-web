@@ -76,11 +76,6 @@ $sizes: (
 
 @import "bootstrap-custom";
 
-// Addons
-@import "ember-power-select/themes/bootstrap";
-@import "ember-power-select";
-@import "ember-power-select-typeahead";
-
 // Clubhouse styling
 @import "access-documents";
 @import "alpha-sheet";
@@ -437,14 +432,6 @@ caption {
 }
 
 /*
- * ember power select fix when using within a modal
- */
-
-.ember-power-select-dropdown {
-  z-index: 3500;
-}
-
-/*
  * Toastr message overrides
  */
 
@@ -600,4 +587,42 @@ caption {
 
 .rank-1, .rank-2, .rank-3, .rank-4, .rank-none {
   display: inline-block;
+}
+
+
+.autocomplete-input-block {
+  position:relative;
+}
+
+.autocomplete-list {
+  max-height: 14em;
+  margin: 0;
+  padding: 0;
+}
+
+.autocomplete-list li {
+  list-style: none;
+  padding: 5px 10px;
+  margin: 2px 0;
+  font-size: 1.1em;
+}
+
+.autocomplete-list li:hover {
+  background-color: #ececec;
+}
+
+.autocomplete-results-box {
+  max-height: 14em;
+  position: absolute;
+  overflow-y: auto;
+  width: 100%;
+  z-index: 9500;
+  background-color: #fafafa;
+  padding: 5px 0;
+  border: 2px solid #ececec;
+  box-shadow: 5px #6c757d;
+}
+
+.autocomplete-option-selected {
+  background-color: #ececec;
 }

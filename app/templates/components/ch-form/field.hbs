@@ -1,89 +1,98 @@
 {{#if emitTopLabel}}
   {{#if label}}
-      <label class="{{labelClass}}" for="{{_domId}}">
-        {{label}}{{#if required}} {{requiredLabel}}{{/if}}
-      </label>
+    <label class="{{labelClass}}" for="{{_domId}}">
+      {{label}}{{#if required}} {{requiredLabel}}{{/if}}
+    </label>
   {{/if}}
 {{/if}}
 
 {{#if (eq type "search")}}
-  <PowerSelectTypeahead @search={{onSearch}} @selected={{get model name}} @onchange={{action "update"}} @disabled={{disabled}} @renderInPlace={{true}} @noMatchesMessage="No results found" @loadingMessage="Searching . . ." @onfocus={{onFocus}} @placeholder={{placeholder}} as |item|>
-      {{item}}
-</PowerSelectTypeahead>
+  <AutocompleteInput @placeholder={{placeholder}}
+                     @onSearch={{onSearch}}
+                     @onSelect={{action this.update}}
+                     @onFocus={{onFocus}}
+                     @text={{get model name}} as |item|>
+    {{item}}
+  </AutocompleteInput>
 {{else if (eq type "select")}}
-  <ChForm::Select @name={{name}} @controlClass={{controlClass}} @disabled={{disabled}} @includeBlank={{includeBlank}} @multiple={{multiple}} @onChange={{action "update"}} @options={{options}} @size={{size}} @value={{get model name}} />
+  <ChForm::Select @name={{name}} @controlClass={{controlClass}} @disabled={{disabled}} @includeBlank={{includeBlank}}
+                  @multiple={{multiple}} @onChange={{action "update"}} @options={{options}} @size={{size}} @value={{get
+          model name}} />
 {{else if (eq type "radioGroup")}}
   {{#each radioOptions as |option idx|}}
     <div class="{{wrapClass}}">
       <input
-        type     = "radio"
-        class    = {{controlClass}}
-        id       = {{concat _domId idx}}
-        onclick  = {{action "update" option.value}}
-        checked  = {{eq (get model name) option.value}}
-        disabled = {{disabled}}
+              type="radio"
+              class= {{controlClass}}
+                      id = {{concat _domId idx}}
+      onclick  = {{action "update" option.value}}
+      checked  = {{eq (get model name) option.value}}
+      disabled = {{disabled}}
       >
       <label class="{{labelClass}}" for="{{concat _domId idx}}">{{option.label}}</label>
     </div>
   {{/each}}
 {{else if (eq type "radio")}}
-    <input
-      type     = "radio"
-      class    = {{controlClass}}
-      id       = {{_domId}}
-      onclick  = {{action "update" value}}
-      checked  = {{eq (get model name) value}}
-      disabled = {{disabled}}
-    >
-    {{#if label}}
-      <label class="form-check-label" for="{{_domId}}">{{label}}</label>
-    {{/if}}
+  <input
+          type="radio"
+          class= {{controlClass}}
+                  id       = {{_domId}}
+          onclick  = {{action "update" value}}
+          checked  = {{eq (get model name) value}}
+          disabled = {{disabled}}
+          >
+  {{#if label}}
+    <label class="form-check-label" for="{{_domId}}">{{label}}</label>
+  {{/if}}
 {{else if (eq type "checkbox")}}
-   <input
-      type       = "checkbox"
-      class      = {{controlClass}}
-      id         = {{_domId}}
-      name       = {{name}}
-      checked    = {{get model name}}
-      onclick    = {{action "update" value="target.checked"}}
-    >
-    {{#if label}}
-      <label class="form-check-label" for="{{_domId}}">{{label}}</label>
-    {{/if}}
+  <input
+          type="checkbox"
+          class= {{controlClass}}
+                  id         = {{_domId}}
+          name       = {{name}}
+          checked    = {{get model name}}
+          onclick    = {{action "update" value="target.checked"}}
+          >
+  {{#if label}}
+    <label class="form-check-label" for="{{_domId}}">{{label}}</label>
+  {{/if}}
 {{else if (eq type "checkboxGroup")}}
-  <ChForm::CheckboxGroup @name={{name}} @value={{_val}} @options={{options}} @cols={{cols}} @_domId={{_domId}} @model={{model}} @onUpdate={{action "update"}} />
+  <ChForm::CheckboxGroup @name={{name}} @value={{_val}} @options={{options}} @cols={{cols}} @_domId={{_domId}}
+                         @model={{model}} @onUpdate={{action "update"}} />
 {{else if (eq type "textarea")}}
   <textarea
-    name        = {{name}}
-    id          = {{_domId}}
-    class       = {{concat controlClass " " (if (get model.error name) elementErrorClass)}}
-    placeholder = {{placeholder}}
-    disabled    = {{disabled}}
-    autofocus   = {{autofocus}}
-    rows        = {{rows}}
-    cols        = {{cols}}
-    maxlength   = {{maxlength}}
-    oninput     = {{action "update" value = "target.value"}}
-  >{{_val}}</textarea>
+          name= {{name}}
+                  id          = {{_domId}}
+          class       = {{concat controlClass " " (if (get model.error name) elementErrorClass)}}
+          placeholder = {{placeholder}}
+          disabled    = {{disabled}}
+          autofocus   = {{autofocus}}
+          rows        = {{rows}}
+          cols        = {{cols}}
+          maxlength   = {{maxlength}}
+          oninput     = {{action "update" value = "target.value"}}
+          >{{_val}}</textarea>
 {{else if (or (eq type "datetime") (eq type "date"))}}
-  <DatetimePicker @autofocus={{autofocus}} @classNames={{controlClass}} @size={{size}} @maxlength={{maxlength}} @onChange={{action "update"}} @placeholder={{placeholder}} @value={{get model name}} @dateOnly={{eq type "date"}} @startDate={{startDate}} />
+  <DatetimePicker @autofocus={{autofocus}} @classNames={{controlClass}} @size={{size}} @maxlength={{maxlength}}
+                  @onChange={{action "update"}} @placeholder={{placeholder}} @value={{get model name}} @dateOnly={{eq
+          type "date"}} @startDate={{startDate}} />
 {{else}}
   <input
-    type        = {{type}}
-    value       = {{get model name}}
-    name        = {{name}}
-    id          = {{_domId}}
-    class       = "{{controlClass}} {{if (get model.error name) elementErrorClass}}"
-    placeholder = {{placeholder}}
-    disabled    = {{disabled}}
-    autofocus   = {{autofocus}}
-    oninput     = {{action "update" value = "target.value"}}
-    maxlength   = {{maxlength}}
-    size        = {{size}}
-    autocomplete = {{autocomplete}}
-    onfocus     = {{onFocus}}
-    inputmode   = {{inputmode}}
-    >
+          type= {{type}}
+                  value       = {{get model name}}
+          name        = {{name}}
+          id          = {{_domId}}
+          class       = "{{controlClass}} {{if (get model.error name) elementErrorClass}}"
+          placeholder = {{placeholder}}
+          disabled    = {{disabled}}
+          autofocus   = {{autofocus}}
+          oninput     = {{action "update" value = "target.value"}}
+          maxlength   = {{maxlength}}
+          size        = {{size}}
+          autocomplete = {{autocomplete}}
+          onfocus     = {{onFocus}}
+          inputmode   = {{inputmode}}
+          >
 {{/if}}
 
 {{#if hint}}

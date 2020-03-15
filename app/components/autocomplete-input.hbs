@@ -1,0 +1,58 @@
+<div class="autocomplete-input-block">
+  <div class="input-group">
+    {{#if @modeOptions}}
+      <div class="input-group-prepend">
+        <button class="btn btn-outline-secondary dropdown-toggle input-group-text" type="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">{{this.modeText}}</button>
+        <div class="dropdown-menu">
+          {{#each @modeOptions as |opt idx|}}
+            <a class="dropdown-item" href="#" {{on "click" (fn this.selectModeEvent opt.value)}}>{{opt.label}}</a>
+          {{/each}}
+        </div>
+      </div>
+    {{/if}}
+    <Input @type="text"
+           placeholder={{@placeholder}}
+           @value={{@text}}
+           class="form-control autocomplete-input"
+      {{on "keydown" this.keyDownEvent}}
+      {{on "focus" this.focusEvent}}
+      {{on "blur" this.blurEvent}}
+      {{on "input" this.inputEvent}}
+      {{did-insert this.inputInsertElement}}
+    />
+
+    {{#if @appendSearchIcon}}
+    <div class="input-group-append">
+      <span class="input-group-text">{{fa-icon "search"}}</span>
+    </div>
+    {{/if}}
+  </div>
+  {{#if (and this.isFocused (or this.isSearching this.noResultsFound this.options))}}
+    <div class="autocomplete-results-box mt-1 border rounded"
+      {{did-insert this.resutsBoxInsertedEvent}}
+            {{will-destroy this.resutsBoxDestroyEvent}}
+    >
+      <ul class="autocomplete-list">
+        {{#if this.noResultsFound}}
+          <li>No results found</li>
+        {{else if this.isSearching}}
+          <li class="text-muted">Searching {{fa-icon "spinner" spin=true}}</li>
+        {{/if}}
+        {{#each this.options as |opt idx|}}
+          <li class="{{if (eq idx this.selectionIdx) "autocomplete-option-selected"}}"
+              data-result-id={{idx}}
+            {{on "click" (fn this.clickSelection opt)}}
+          >
+            {{yield opt}}
+          </li>
+        {{else}}
+          {{#if (and (not this.noResultsFound) (not this.isSearching))}}
+            <li class="text-muted">Start typing to search</li>
+          {{/if}}
+        {{/each}}
+      </ul>
+    </div>
+  {{/if}}
+
+</div>
