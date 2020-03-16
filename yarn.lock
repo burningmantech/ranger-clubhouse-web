@@ -2776,18 +2776,18 @@ body@^5.1.0:
     raw-body "~1.1.0"
     safe-json-parse "~1.0.1"
 
-boilerplate-update@0.36.2:
-  version "0.36.2"
-  resolved "https://registry.yarnpkg.com/boilerplate-update/-/boilerplate-update-0.36.2.tgz#0e3cbcb5308b82845fd4c2beb2f393aff1115274"
-  integrity sha512-ZQdoAXNlO2yioLHWumaUWvx4hV4N9CA2+98irVxMVMaeWnPajAifm2jORpwSE/lBlWC7Y2SmipM60nj8xY/5nw==
+boilerplate-update@0.37.2:
+  version "0.37.2"
+  resolved "https://registry.yarnpkg.com/boilerplate-update/-/boilerplate-update-0.37.2.tgz#0cec2f2b0e7dfb994d200ad8f7d600d173121281"
+  integrity sha512-d3Z6ylzF7aifHJsBELJJIAAL/3gWEvqYkUBRGKAqY5468v/7VXGe4wTUKHqbaiXs2dRwBkPXEd1D5WnHNBRwVQ==
   dependencies:
     cpr "^3.0.1"
     debug "^4.1.1"
     execa "^3.0.0"
-    git-diff-apply "0.22.6"
+    git-diff-apply "0.22.7"
     https-proxy-agent "^3.0.0"
     inquirer "^7.0.0"
-    merge-package.json "^3.1.5"
+    merge-package.json "^3.1.6"
     npm-package-arg "^7.0.0"
     npx "^10.2.0"
     open "^7.0.0"
@@ -5418,12 +5418,12 @@ ember-cli-uglify@^3.0.0:
     broccoli-uglify-sourcemap "^3.1.0"
     lodash.defaultsdeep "^4.6.0"
 
-ember-cli-update@^0.52.1:
-  version "0.52.1"
-  resolved "https://registry.yarnpkg.com/ember-cli-update/-/ember-cli-update-0.52.1.tgz#4b373d1b5b4f5e60c6af5ca00faecadd8f7946a2"
-  integrity sha512-i3/JK9dCDiO3mxJ52Y6xgCKsLe1LzipocyBdrKwNEZrcTliM5i/9kWXTJ+/Gq14xL5bQP68mUZstHMMTof42MA==
+ember-cli-update@^0.53.3:
+  version "0.53.3"
+  resolved "https://registry.yarnpkg.com/ember-cli-update/-/ember-cli-update-0.53.3.tgz#1c447b7154904e96d776adb79058307399f6a5ac"
+  integrity sha512-6R5ORG83qg7uQjWZWTt20bdK+pvwGMHYoS5BMzcWVBC+i8irC54E+VjZ9k0hjvh+ZLYNE+5xKLBDtPYKLNscBA==
   dependencies:
-    boilerplate-update "0.36.2"
+    boilerplate-update "0.37.2"
     debug "^4.1.1"
     execa "^3.4.0"
     fs-extra "^8.0.0"
@@ -7084,10 +7084,10 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-git-diff-apply@0.22.6:
-  version "0.22.6"
-  resolved "https://registry.yarnpkg.com/git-diff-apply/-/git-diff-apply-0.22.6.tgz#bb26f7d1084625257a198c7c22ea1f8dd5bd1fc7"
-  integrity sha512-QQaNsk3bWpPK+Zhdo1DX7ppDQ6G0rGhnb7TAMPHeXF1suh7JBPWwdlHwbNRlUuKb49Fdr47dgSIuZuCJRU9ayA==
+git-diff-apply@0.22.7:
+  version "0.22.7"
+  resolved "https://registry.yarnpkg.com/git-diff-apply/-/git-diff-apply-0.22.7.tgz#25989575c025f45f066579233894ba8a4afb7e28"
+  integrity sha512-tYExAfjrgh/ImXuOmHYnL4dC5spf3e4+mJSYUoaQTZkys3krEX303yFxhVxMTzljsWScgrWj0iGL3Lb0yROhtQ==
   dependencies:
     debug "^4.0.0"
     fixturify "^1.0.0"
@@ -9287,7 +9287,7 @@ merge-descriptors@1.0.1:
   resolved "https://registry.yarnpkg.com/merge-descriptors/-/merge-descriptors-1.0.1.tgz#b00aaa556dd8b44568150ec9d1b953f3f90cbb61"
   integrity sha1-sAqqVW3YtEVoFQ7J0blT8/kMu2E=
 
-merge-package.json@^3.1.5:
+merge-package.json@^3.1.6:
   version "3.1.6"
   resolved "https://registry.yarnpkg.com/merge-package.json/-/merge-package.json-3.1.6.tgz#fee3f7bb040f0ad07c316108e084b8dd9b1c05e7"
   integrity sha512-eJtijfWnfUmIWw1/rtQ1joG9kod7ZKWACdRqJ9vcEcZPXLN2X/LdRU3534fCBF4Z6wxTYJUhIIFyNFojYoRDfg==
