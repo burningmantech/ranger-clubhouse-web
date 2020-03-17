@@ -129,7 +129,8 @@ export default class SlotsController extends Controller {
           title,
           position_id: slot.position_id,
           slots: [ slot ],
-          inactive: 0
+          inactive: 0,
+          showing: false
         }
         groups.push(group);
       }
@@ -277,14 +278,9 @@ export default class SlotsController extends Controller {
   }
 
   @action
-  changeYear(year) {
-    // Magic! set the year, and the query params fire off.
-    this.set('year', year);
-  }
-
-  @action
-  toggleShowing(group) {
-    set(this.showingGroups, group.position_id, !this.showingGroups[group.position_id]);
+  toggleShowing(group, event) {
+    event.preventDefault();
+    set(group, 'showing', !group.showing);
   }
 
   @action

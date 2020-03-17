@@ -1,20 +1,23 @@
 <div class="mb-2 d-print-none">
   <div class="form-check form-check-inline">
-    <RadioButton @value="upcoming" @groupValue={{viewSchedule}} @radioId="view-upcoming" @radioClass="form-check-input" />
-    <label for="view-upcoming" class="form-check-label">Upcoming Shifts ({{upcomingCount}})</label>
+    <RadioButton @value="upcoming" @groupValue={{this.viewSchedule}} @radioId="view-upcoming"
+                 @radioClass="form-check-input"/>
+    <label for="view-upcoming" class="form-check-label">Upcoming Shifts ({{this.upcomingCount}})</label>
   </div>
   <div class="form-check form-check-inline">
-    <RadioButton @value="all" @groupValue={{viewSchedule}} @radioId="view-all" @classNames="form-check-label" @radioClass="form-check-input" /> <label for="view-all" class="form-check-label">All Shifts ({{slots.length}})</label>
+    <RadioButton @value="all" @groupValue={{this.viewSchedule}} @radioId="view-all" @classNames="form-check-label"
+                 @radioClass="form-check-input"/>
+    <label for="view-all" class="form-check-label">All Shifts ({{@slots.length}})</label>
   </div>
 </div>
 
-{{#if overlapping}}
+{{#if this.hasOverlapping}}
   <p>
-    <span class="text-danger">You are signed up for overlapping shifts, marked with a
-      {{fa-icon "exclamation-triangle"}}.</span>
-    This might be an error, and you
-    didn't mean to be in two places at once. It might be just fine and you plan to work two shifts back-to-back.
-    You only get credit for the time you work, and won't receive double credit for the overlapping time.
+  <div class="text-danger">
+    You are signed up for overlapping shifts, marked with a
+    {{fa-icon "exclamation-triangle"}}.
+  </div>
+  You only get credit for the time you work, and won't receive double credit for the overlapping time.
   </p>
 {{/if}}
 
@@ -29,48 +32,51 @@
     <div class="schedule-actions d-print-none">Actions</div>
   </div>
 
-  {{#if viewSlots}}
-    {{#each viewSlots as |slot| }}
-      <div class="schedule-row {{if slot.is_overlapping "schedule-overlapping"}}">
-        <div class="schedule-time">
-          {{#if slot.is_overlapping}}
-            <span class="text-danger">{{fa-icon "exclamation-triangle"}}</span>
-          {{/if}}
-          {{shift-format slot.slot_begins}}
-        </div>
-        <div class="schedule-time">{{shift-format slot.slot_ends}}</div>
-        <div class="schedule-duration"><span class="schedule-sm-label">Duration:</span>
-          {{#if slot.position_count_hours}}
-            {{hour-minute-format slot.slot_duration}}
-          {{else}}
-            [{{hour-minute-format slot.slot_duration}}]
-          {{/if}}
-        </div>
-        <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}</div>
-        <div class="schedule-long-description">{{slot.position_title}}<br>{{slot-info-link slot.slot_description slot.slot_url}}</div>
-        <div class="schedule-actions d-print-none">
-          <button onclick={{action showPeople slot}} class="btn btn-secondary btn-sm" title="View people signed up" disabled={{slot.is_retrieving_people}}>
-            {{#if slot.is_retrieving_people}}
-              {{fa-icon "spinner" spin="true"}}
-            {{else}}
-              {{fa-icon "users" type="fas"}}
-            {{/if}}
-            Sign Ups
-          </button>
-          {{#if (or (not slot.has_started) (has-role "admin"))}}
-            {{! Note: magic here -  by not using onclick, no event argument will be passed to leaveSlot. That tells the method to allow the page to scroll.}}
-            <button {{action leaveSlot slot}} class="btn btn-light-red btn-sm" title="Remove shift from schedule" disabled={{slot.is_submitting}}>
-              {{#if slot.is_submitting}}
-                {{fa-icon "spinner" spin=true}}
-              {{else}}
-                {{fa-icon "trash-alt" type="fas"}}
-              {{/if}}
-              Remove
-            </button>
-          {{/if}}
-        </div>
+  {{#each this.viewSlots as |slot| }}
+    <div class="schedule-row {{if slot.is_overlapping "schedule-overlapping"}}">
+      <div class="schedule-time">
+        {{#if slot.is_overlapping}}
+          <span class="text-danger">{{fa-icon "exclamation-triangle"}}</span>
+        {{/if}}
+        {{shift-format slot.slot_begins}}
       </div>
-    {{/each}}
+      <div class="schedule-time">{{shift-format slot.slot_ends}}</div>
+      <div class="schedule-duration"><span class="schedule-sm-label">Duration:</span>
+        {{#if slot.position_count_hours}}
+          {{hour-minute-format slot.slot_duration}}
+        {{else}}
+          [{{hour-minute-format slot.slot_duration}}]
+        {{/if}}
+      </div>
+      <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}</div>
+      <div class="schedule-long-description">
+        {{slot.position_title}}<br>
+        {{slot-info-link slot.slot_description slot.slot_url}}
+      </div>
+      <div class="schedule-actions d-print-none">
+        <button type="button" {{on "click" (fn @showPeople slot)}} class="btn btn-secondary btn-sm"
+                title="View people signed up" disabled={{slot.is_retrieving_people}}>
+          {{#if slot.is_retrieving_people}}
+            {{fa-icon "spinner" spin="true"}}
+          {{else}}
+            {{fa-icon "users" type="fas"}}
+          {{/if}}
+          Sign Ups
+        </button>
+        {{#if (or (not slot.has_started) (has-role "admin"))}}
+        {{! Note: magic here -  by not using onclick, no event argument will be passed to leaveSlot. That tells the method to allow the page to scroll.}}
+          <button type="button" {{on "click" (fn @leaveSlot slot)}} class="btn btn-light-red btn-sm"
+                  title="Remove shift from schedule" disabled={{slot.is_submitting}}>
+            {{#if slot.is_submitting}}
+              {{fa-icon "spinner" spin=true}}
+            {{else}}
+              {{fa-icon "trash-alt" type="fas"}}
+            {{/if}}
+            Remove
+          </button>
+        {{/if}}
+      </div>
+    </div>
   {{else}}
     <div class="schedule-row">
       <div>
@@ -82,59 +88,62 @@
         {{/if}}
       </div>
     </div>
-  {{/if}}
+  {{/each}}
 </div>
 
 <h4>Scheduled Hours &amp; Credits Breakdown</h4>
 <p>
-  {{#if scheduleSummary.event_start}}
-    The {{this.year}} Event Week is {{shift-format scheduleSummary.event_start}} to {{shift-format scheduleSummary.event_end}}.
+  {{#if @scheduleSummary.event_start}}
+    The {{@year}} Event Week is {{shift-format @scheduleSummary.event_start}} to {{shift-format
+          @scheduleSummary.event_end}}.
   {{else}}
-    <b class="text-danger">Event dates have not been entered for the year. Hour &amp; credits breakdowns will not be accurate.</b>
+    <b class="text-danger">Event dates have not been entered for the year. Hour &amp; credits breakdowns will not be
+      accurate.</b>
   {{/if}}
 </p>
 
 <table class="table table-sm table-width-auto">
   <thead>
-    <tr>
-      <th>Scheduled</th>
-      <th class="text-right">Total</th>
-      <th>Pre-Event</th>
-      <th>Event</th>
-      <th>Post-Event</th>
-      <th>Training / Other</th>
-    </tr>
+  <tr>
+    <th>Scheduled</th>
+    <th class="text-right">Total</th>
+    <th>Pre-Event</th>
+    <th>Event</th>
+    <th>Post-Event</th>
+    <th>Training / Other</th>
+  </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>Hours</td>
-      <td class="text-right">{{hour-minute-format scheduleSummary.counted_duration}} (counted)<br>
-        {{hour-minute-format scheduleSummary.total_duration}} (total)</td>
-      <td class="text-right">{{hour-minute-format scheduleSummary.pre_event_duration}}</td>
-      <td class="text-right">{{hour-minute-format scheduleSummary.event_duration}}</td>
-      <td class="text-right">{{hour-minute-format scheduleSummary.post_event_duration}}</td>
-      <td class="text-right">{{hour-minute-format scheduleSummary.other_duration}}</td>
-    </tr>
-    <tr>
-      <td>Credits</td>
-      <td class="text-right">{{credits-format scheduleSummary.total_credits}}</td>
-      <td class="text-right">{{credits-format scheduleSummary.pre_event_credits}}</td>
-      <td class="text-right">{{credits-format scheduleSummary.event_credits}}</td>
-      <td class="text-right">{{credits-format scheduleSummary.post_event_credits}}</td>
-      <td class="text-center">-</td>
-    </tr>
+  <tr>
+    <td>Hours</td>
+    <td class="text-right">
+      {{hour-minute-format @scheduleSummary.counted_duration}} (counted)<br>
+      {{hour-minute-format @scheduleSummary.total_duration}} (total)
+    </td>
+    <td class="text-right">{{hour-minute-format @scheduleSummary.pre_event_duration}}</td>
+    <td class="text-right">{{hour-minute-format @scheduleSummary.event_duration}}</td>
+    <td class="text-right">{{hour-minute-format @scheduleSummary.post_event_duration}}</td>
+    <td class="text-right">{{hour-minute-format @scheduleSummary.other_duration}}</td>
+  </tr>
+  <tr>
+    <td>Credits</td>
+    <td class="text-right">{{credits-format @scheduleSummary.total_credits}}</td>
+    <td class="text-right">{{credits-format @scheduleSummary.pre_event_credits}}</td>
+    <td class="text-right">{{credits-format @scheduleSummary.event_credits}}</td>
+    <td class="text-right">{{credits-format @scheduleSummary.post_event_credits}}</td>
+    <td class="text-center">-</td>
+  </tr>
   </tbody>
 </table>
 <p>
-counted = the estimated number of hours which may count towards appreciations
+  counted = the estimated number of hours which may count towards appreciations
 </p>
 
 <p>
-  You have earned {{credits-format creditsEarned}} credits so far.
+  You have earned {{credits-format @creditsEarned}} credits so far.
 </p>
 
-
-{{#if (and scheduleSummary person.isRanger isCurrentYear)}}
+{{#if (and @scheduleSummary @person.isRanger this.isCurrentYear)}}
   <hr>
-  <TicketThreshold @year={{year}} @credits={{scheduleSummary.total_credits}} @creditsEarned={{creditsEarned}} />
+  <TicketThreshold @year={{@year}} @credits={{@scheduleSummary.total_credits}} @creditsEarned={{@creditsEarned}} />
 {{/if}}

@@ -8,6 +8,14 @@ export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
     year: { refreshModel: true }
   };
 
+  beforeModel() {
+    const user = this.session.user;
+    if (user.isPastProspective || user.isBonked) {
+      this.toast.error('You are not permitted sign up for trainings or shifts at this time.');
+      this.transitionTo('me.overview');
+    }
+  }
+
   model(params) {
     const person_id = this.session.userId;
     const year = requestYear(params);
