@@ -1,14 +1,12 @@
 import Component from '@ember/component';
-import { action, computed } from '@ember/object';
-
-import { A } from '@ember/array';
-import { set } from '@ember/object';
-import { Role } from 'clubhouse/constants/roles';
+import {action, computed} from '@ember/object';
+import {A} from '@ember/array';
+import {set} from '@ember/object';
+import {Role} from 'clubhouse/constants/roles';
 import markSlotsOverlap from 'clubhouse/utils/mark-slots-overlap';
 import moment from 'moment';
-import { slotSignup } from 'clubhouse/utils/slot-signup';
-import { run } from '@ember/runloop';
-
+import {slotSignup} from 'clubhouse/utils/slot-signup';
+import {run} from '@ember/runloop';
 import $ from 'jquery';
 
 const allDays = ['All Days', 'all'];
@@ -23,8 +21,6 @@ export default class ScheduleManageComponent extends Component {
   signedUpSlots = null;
   creditsEarned = 0.0;
   permission = null;
-  scheduleSummary = null;
-
   scheduleSummary = null;
 
   filterDay = 'upcoming';
@@ -54,7 +50,7 @@ export default class ScheduleManageComponent extends Component {
   }
 
   _sortAndMarkSignups() {
-    this.signedUpSlots.sort((a,b) => a.slot_begins_time - b.slot_begins_time);
+    this.signedUpSlots.sort((a, b) => a.slot_begins_time - b.slot_begins_time);
     this.signedUpSlots.forEach((slot) => {
       slot.set('is_overlapping', false);
       slot.set('is_training_overlap', false);
@@ -63,17 +59,15 @@ export default class ScheduleManageComponent extends Component {
   }
 
   _retrieveScheduleSummary() {
-    this.ajax.request(`person/${this.person.id}/schedule/summary`, { data: { year: this.year }}).then((result) => {
+    this.ajax.request(`person/${this.person.id}/schedule/summary`, {data: {year: this.year}}).then((result) => {
       this.set('scheduleSummary', result.summary);
     }).catch((result) => this.house.handleErrorResponse(result));
   }
 
-  @computed('year')
   get isCurrentYear() {
     return (this.year == this.house.currentYear())
   }
 
-  @computed('year', 'permission')
   get noPermissionToSignUp() {
     return this.isCurrentYear && !this.permission.signup_allowed;
   }
@@ -86,7 +80,7 @@ export default class ScheduleManageComponent extends Component {
   get availableSlots() {
     // Filter based on roles.
     if (this.person.hasRole(
-        [Role.ADMIN, Role.EDIT_SLOTS, Role.GRANT_POSITION, Role.VC, Role.TRAINER, Role.ART_TRAINER])) {
+      [Role.ADMIN, Role.EDIT_SLOTS, Role.GRANT_POSITION, Role.VC, Role.TRAINER, Role.ART_TRAINER])) {
       return this.slots;
     }
 
@@ -123,12 +117,12 @@ export default class ScheduleManageComponent extends Component {
     let groups = A();
     slots.forEach(function (slot) {
       const title = slot.position_title;
-      let group = groups.findBy('title', title)
+      let group = groups.findBy('title', title);
 
       if (group) {
         group.slots.push(slot);
       } else {
-        groups.pushObject({ title, position_id: slot.position_id, slots: [slot] });
+        groups.pushObject({title, position_id: slot.position_id, slots: [slot]});
       }
     });
 
@@ -250,7 +244,7 @@ export default class ScheduleManageComponent extends Component {
       message = '';
     }
 
-    message += `Are you sure you want to remove "${slot.position_title} - ${slot.slot_description}" from the schedule?`
+    message += `Are you sure you want to remove "${slot.position_title} - ${slot.slot_description}" from the schedule?`;
 
     this.modal.confirm('Confirm Leaving Shift',
       message,
@@ -302,18 +296,14 @@ export default class ScheduleManageComponent extends Component {
       }
       this.modal.info('Scheduled (Callsigns) for ' + slot.slot_description, callsigns);
     })
-    .catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => set(slot, 'is_retrieving_people', false));
+      .catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => set(slot, 'is_retrieving_people', false));
   }
 
   @action
-  toggleGroup(group) {
+  toggleGroup(group, event) {
+    event.preventDefault();
     set(group, 'show', !group.show);
-  }
-
-  @action
-  setFilterDay(value) {
-    this.set('filterDay', value);
   }
 
   @action
@@ -332,9 +322,9 @@ export default class ScheduleManageComponent extends Component {
     this.person.save().then(() => {
       this.toast.success('Your agreement has been succesfully recorded.');
       // Reload the permissions.
-      this.ajax.request(`person/${this.person.id}/schedule/permission`, { data: { year: this.year } })
+      this.ajax.request(`person/${this.person.id}/schedule/permission`, {data: {year: this.year}})
         .then((results) => {
-          this.set('permission', results.permission)
+          this.set('permission', results.permission);
           this.set('showBehaviorAgreement', false);
         });
     }).catch((response) => this.house.handleErrorResponse(response));

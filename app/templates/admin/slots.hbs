@@ -1,5 +1,4 @@
-{{year-select "Clubhouse Slots" year=year years=yearList onChange=(action "changeYear")}}
-
+<YearSelect @title="Clubhouse Slots" @year={{this.year}} @years={{this.yearList}} @onChange={{action (mut this.year)}} />
 {{#if slot}}
   <Admin::SlotForm @slot={{slot}} @positions={{positions}} @trainerSlots={{trainerSlots}} @onSave={{action saveSlot}} @onCancel={{action cancel}} @onClone={{action cloneSlot}} />
 {{/if}}
@@ -129,20 +128,20 @@
 
 {{#each slotGroups as |group|}}
 <div class="schedule-title mt-2">
-  {{#if (get showingGroups group.position_id)}}
+  {{#if group.showing}}
     <div class="float-right mr-4">
       <button class="btn btn-secondary btn-sm" {{action startCopy group.position_id}}>Bulk Copy</button>
       <button class="btn btn-primary btn-sm" {{action activate group}}>Activate All</button>
       <button class="btn btn-primary btn-sm" {{action deactivate group}}>Deactivate All</button>
     </div>
   {{/if}}
-  <a href {{action toggleShowing group}}>
-    {{fa-icon (if (get showingGroups group.position_id) "caret-down" "caret-right")}} {{group.title}}
+  <a href {{on "click" (fn this.toggleShowing group)}}>
+    {{fa-icon (if group.showing "caret-down" "caret-right")}} {{group.title}}
     ({{group.slots.length}}{{#if group.inactive}} / <span class="text-danger">{{group.inactive}} inactive</span>{{/if}})
   </a>
 </div>
 {{! template-lint-disable table-groups}}
-{{#if (get showingGroups group.position_id)}}
+{{#if group.showing}}
   <table class="table table-sm table-hover">
       <thead>
         <tr>
