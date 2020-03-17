@@ -120,7 +120,7 @@
         Hide All{{else}}Expand All{{/if}}</button>
     </div>
     <h3>{{group.statusLabel}} ({{pluralize group.items.length "record"}})</h3>
-    <table class="table table-sm table-hover triped-border">
+    <table class="table table-sm table-hover table-striped">
       <thead>
       <tr>
         <th>Callsign</th>
@@ -199,20 +199,23 @@
                 &lt;{{account.existing_person.status}}&gt;<br>
               {{/if}}
               <b>Ranger Obj. Name:</b> {{account.salesforce_ranger_object_name}}<br>
+              <b>BPGUID:</b>{{account.bpguid}}<br>
               {{#if (eq account.status "existing")}}
-                <b>BPGUID:</b>{{account.bpguid}}<br>
                 <b>Street:</b> {{account.existing_person.street1}} &rarr; {{account.street1}}<br>
                 <b>State:</b> {{account.existing_person.state}} &rarr; {{account.state}}<br>
                 <b>Zip:</b> {{account.existing_person.zip}} &rarr; {{account.zip}}<br>
                 <b>Country:</b> {{account.existing_person.country}} &rarr; {{account.country}}<br>
                 <b>Phone:</b> {{account.existing_person.home_phone}} &rarr; {{account.phone}}<br>
-                <b>Emergency Contact:</b> {{account.existing_person.emergency_contact}} &rarr; {{account.emergency_contact}}<br>
-                <b>Known Ranger Names:</b> {{account.existing_person.known_rangers}} &rarr; {{account.known_ranger_names}}<br>
+                <b>Emergency Contact:</b> {{account.existing_person.emergency_contact}}
+                &rarr; {{account.emergency_contact}}<br>
+                <b>Known Ranger Names:</b> {{account.existing_person.known_rangers}}
+                &rarr; {{account.known_ranger_names}}<br>
                 <b>Known PNV Names:</b> {{account.existing_person.known_pnvs}} &rarr; {{account.known_pnv_names}}<br>
-                <b>T-Shirt Info:</b> {{account.existing_person.teeshirt_size_style}} &rarr; {{account.teeshirt_size_style}}<br>
-                <b>LS Shirt Info:</b> {{account.existing_person.longsleeveshirt_size_style}} &rarr; {{account.longsleeveshirt_size_style}}<br>
+                <b>T-Shirt Info:</b> {{account.existing_person.teeshirt_size_style}}
+                &rarr; {{account.teeshirt_size_style}}<br>
+                <b>LS Shirt Info:</b> {{account.existing_person.longsleeveshirt_size_style}}
+                &rarr; {{account.longsleeveshirt_size_style}}<br>
               {{else}}
-                <b>BPGUID:</b>{{account.bpguid}}<br>
                 <b>Street:</b> {{account.street1}}<br>
                 <b>State:</b> {{account.state}}<br>
                 <b>Zip:</b> {{account.zip}}<br>
