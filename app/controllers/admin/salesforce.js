@@ -18,11 +18,11 @@ export default class AdminSalesforceController extends Controller {
 
   statusLabels = {
     'succeeded': 'Successfully imported into Clubhouse',
+    'existing': 'Will convert to Prospective and update from Salesforce',
     'invalid': 'Invalid record status',
     'imported': 'Mark by Salesforce as already imported into Clubhouse',
     'ready': 'Ready for import',
     'notready': 'Not ready for import',
-    'existing': 'Existing account - will update from Salesforce & convert to Prospective',
     'existing-callsign': 'Callsign already exists',
     'existing-bad-status': 'Existing account cannot update due to non-Auditor or non-Past Prospective status',
     'reset': 'Reset Salesforce status',
@@ -47,11 +47,11 @@ export default class AdminSalesforceController extends Controller {
   get accountGroups() {
     const groups = groupBy(this.accounts, 'status');
 
-    this._orderStatus(groups,'succeeded');
     this._orderStatus(groups,'imported');
-    this._orderStatus(groups,'existing');
     this._orderStatus(groups,'existing-bad-status');
+    this._orderStatus(groups,'existing');
     this._orderStatus(groups,'ready');
+    this._orderStatus(groups,'succeeded');
 
     groups.forEach((g) => {
       g.statusLabel = this.statusLabels[g.status] || `Unknown status [${g.status}]`;
