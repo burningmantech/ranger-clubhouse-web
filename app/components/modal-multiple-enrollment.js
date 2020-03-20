@@ -1,28 +1,27 @@
-import Component from '@ember/component';
-
-
+import Component from '@glimmer/component';
 import { alias } from '@ember/object/computed';
-import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
+import * as Position from 'clubhouse/constants/positions';
 
 export default class ModalMultipleEnrollmentComponent extends Component {
-  dialog = null;
-  onClose = null;
-  onConfirm = null;
-
   @service session;
 
-  @alias('dialog.data') data;
+  @alias('args.dialog.data') data;
 
-  @alias('data.slots.firstObject.position.title') trainingType;
+  @alias('data.enrolledSlots') enrolledSlots;
 
-  @computed('data.person')
+  @alias('data.slot') slot;
+  @alias('data.slot.position_title') trainingType;
+
   get isMe() {
     return this.session.userId == this.data.person.id;
   }
 
-  @computed('data.slots.firstObject')
   get isAlpha() {
-    return this.data.slots.firstObject.position.title == 'Alpha';
+    return this.slot.position_id == Position.ALPHA;
+  }
+
+  get youAreOrCallsignIs() {
+    return this.isMe ? 'You are' : `${this.data.person.callsign} is`;
   }
 }

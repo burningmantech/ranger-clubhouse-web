@@ -49,6 +49,9 @@ export default class ScheduleModel extends DS.Model {
   // The year this slot occurs
   @attr('number', { readOnly: true }) year;
 
+  // contact email
+  @attr('string', { readOnly: true }) contact_email;
+
   @computed('slot_signed_up', 'slot_max')
   get isFull() {
     return (this.slot_signed_up >= this.slot_max);

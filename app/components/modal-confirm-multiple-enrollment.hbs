@@ -1,0 +1,24 @@
+<ModalDialog @title="Confirm Multiple Enrollment Sign Up" as |modal|>
+  <modal.body>
+    <p>
+      {{if this.isMe "You are " (concat this.data.person.callsign "is")}} already enrolled in
+      {{pluralize this.data.slots.length (if data.isAlpha "Alpha shift" (concat this.trainingType " session"))}}:
+    </p>
+    <p>
+      {{#each this.data.slots as |slot|}}
+        <b>{{slot.position.title}} - {{slot.description}} {{shift-format slot.begins}}</b><br>
+      {{/each}}
+    </p>
+    <p>
+      You have the privileges to force the sign up.
+    </p>
+    <p>
+      <b class="text-danger">Multiple enrollments usually require approval from the appropriate cadre.
+        Your actions will be logged if you force the sign up.</b>
+    </p>
+  </modal.body>
+  <modal.footer>
+    <modal.button @label="Cancel" @action={{@onClose}} @type="primary"/>
+    <modal.button @label="Confirm Sign Up" @action={{@onConfirm}} @type="danger"/>
+  </modal.footer>
+</ModalDialog>

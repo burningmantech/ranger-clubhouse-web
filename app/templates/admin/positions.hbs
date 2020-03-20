@@ -49,8 +49,8 @@
         {{#if position.training_position_id}}
           {{pluck position.training_position_id positions "title" "-"}}<br>
         {{/if}}
-        {{#if position.slot_full_email}}
-          {{mail-to position.slot_full_email}}
+        {{#if position.contact_email}}
+          {{mail-to position.contact_email}}
         {{/if}}
       </td>
       <td class="actions">
@@ -111,7 +111,7 @@
             <f.input @name=training_position_id" @label="Training Position" @type="select"
                      @options={{this.trainingOptions}}
                      @grid="col-auto"/>
-            <f.input @name="slot_full_email" @label="Shift Full Email" @type="text" @size=40 @maxlength=200
+            <f.input @name="contact_email" @label="Contact Email (shift full, questions, etc)" @type="text" @size=40 @maxlength=200
                      @grid="col-auto"/>
           </div>
         </fieldset>
