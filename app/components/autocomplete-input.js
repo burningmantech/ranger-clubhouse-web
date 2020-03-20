@@ -4,19 +4,61 @@ import {tracked} from '@glimmer/tracking';
 import {run} from '@ember/runloop';
 
 export default class AutocompleteInputComponent extends Component {
+  /**
+   * Is a search running?
+   * @type {boolean}
+   */
   @tracked isSearching = false;
+
+  /**
+   * Set true if no results were found.
+   * @type {boolean}
+   */
   @tracked noResultsFound = false;
+
+  /**
+   * Item currently select (key up/down is used to 'select' the item)
+   * @type {number}
+   */
   @tracked selectionIdx = -1;
+
+  /**
+   * An array of strings containing the search results
+   * @type {{string}[]}
+   */
   @tracked options = [];
+
+  /**
+   * True if the search input field has focus.
+   * @type {boolean}
+   */
   @tracked isFocused = false;
+
+  /**
+   * What the user has typed.
+   * @type {string}
+   */
   @tracked text = '';
 
+  /**
+   * Has the enter key been pressed?
+   * @type {boolean}
+   */
   enterPressed = false;
+
+  /**
+   * Prevent multiple selection from happening when multiple events fire.
+   * E.g., when a mousedown event happens the click event will follow - only
+   * process the first event.
+   *
+   * @type {boolean}
+   */
+  hasSelected = false;
 
   /**
    * Handle input into the search field.
    *
-   * @param event
+   * @param {InputEvent} event
    */
   @action
   inputEvent(event) {
@@ -31,6 +73,7 @@ export default class AutocompleteInputComponent extends Component {
       this.options = options;
       this.selectionIdx = -1;
 
+      // Choose the item if the enter key was pressed before the search completed.
       if (this.enterPressed && options.length == 1) {
         this._selectOption(options[0]);
       }
@@ -73,7 +116,7 @@ export default class AutocompleteInputComponent extends Component {
    *     - if only one item, select that
    *     - if searching, delay until results are received, and if only one result, select that
    *     - if item selected, use that
-   * @param event
+   * @param {KeyboardEvent} event
    */
 
   @action
@@ -107,7 +150,6 @@ export default class AutocompleteInputComponent extends Component {
         } else if (this.options) {
           if (this.options.length == 1) {
             this._selectOption(this.options[0]);
-            // select this.
           } else if (this.selectionIdx != -1) {
             this._selectOption(this.options[this.selectionIdx]);
           }
@@ -148,12 +190,28 @@ export default class AutocompleteInputComponent extends Component {
     }, 100);
   }
 
+  /**
+   * Handle either a mousedown or click event on a result item.
+   *
+   * @param {object} option
+   */
+
   @action
   clickSelection(option) {
     this._selectOption(option);
   }
 
+  /**
+   * Process the selected item. Callback to calling component, and blur the input element.
+   *
+   * @param {object} option
+   * @private
+   */
+
   _selectOption(option) {
+    if (this.hasSelected) {
+      return;
+    }
     const onSelect = this.args.onSelect;
     if (!onSelect) {
       return;
@@ -161,13 +219,14 @@ export default class AutocompleteInputComponent extends Component {
 
     onSelect(option);
     this.isFocused = false;
+    this.hasSelected = true;
     this.selectionIdx = -1;
     this.inputElement.blur();
   }
 
   /**
    * Track the input element when inserted into the dom
-   * @param element
+   * @param {InputEvent} element
    */
 
   @action
@@ -178,8 +237,8 @@ export default class AutocompleteInputComponent extends Component {
   /**
    * Callback to parent component when the mode has changed
    *
-   * @param value selected mode value
-   * @param event selection event.
+   * @param {string} value selected mode value
+   * @param {MouseEvent} event selection event.
    */
 
   @action
@@ -224,7 +283,8 @@ export default class AutocompleteInputComponent extends Component {
    */
 
   @action
-  resutsBoxDestroyEvent() {
+  resultsBoxDestroy() {
     this.resultsElement = null;
+    this.hasSelected = false;
   }
 }
