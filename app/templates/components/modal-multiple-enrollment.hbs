@@ -1,45 +1,34 @@
-<ModalDialog @title={{data.title}} as |modal|>
+<ModalDialog @title="Already Signed Up" as |modal|>
   <modal.body>
     <p>
-      {{#if isMe}}You are{{else}}The person is{{/if}} already
-      enrolled in {{pluralize data.slots.length (if data.isAlpha "Alpha shift" (concat trainingType " session")) }}:
+      {{this.youAreOrCallsignIs}} already enrolled in
+      {{pluralize this.enrolledSlots.length (if this.isAlpha "Alpha shift" (concat this.trainingType " session")) }}:
     </p>
     <p>
-      {{#each data.slots as |slot|}}
+      {{#each this.enrolledSlots as |slot|}}
         <b>{{slot.position.title}} - {{slot.description}} {{shift-format slot.begins}}</b><br>
       {{/each}}
     </p>
-    {{#if data.forced}}
+    <p>
+      Only one {{#if this.isAlpha}}Alpha shift{{else}}{{this.trainingType}} session{{/if}} may be signed up for.
+      You may remove yourself from the other session, if it has not past, and sign up for a new one.
+    </p>
+    <p>
+      To arrange another sign up or if you have questions, email
+      {{#if this.slot.contact_email}}
+        {{mail-to this.slot.contact_email}}
+      {{else}}
+        {{vc-email}}
+      {{/if}}
+    </p>
+    {{#if this.data.person.isRanger}}
       <p>
-        Because you either have the Admin, Trainer, VC or Mentor role, OR are a Trainer,
-        {{if isMe "you have" "the person has"}}
-        been added to the
-        {{#if data.isAlpha}}Alpha shift{{else}}{{trainingType}} session{{/if}}.
-        Hope you know what you are doing!
-      </p>
-    {{else}}
-      <p>
-        {{if isMe "You" "The person"}} may only sign up for one {{#if data.isAlpha}}
-        Alpha shift{{else}}{{trainingType}} session{{/if}}.
-        Multiple enrollments are not allowed. If you have missed a class and need to sign up for another session, you
-        will neeed to
-        contact the Training Academy.
-      </p>
-      <p>
-        Contact {{mail-to (config "TrainingAcademyEmail")}} for help.
-      </p>
-    {{/if}}
-
-    {{#if (and data.person.isRanger (not data.forced))}}
-      <p>
-        {{if isMe "You are" "This person is"}} allowed to sign up for a Training session and different ART Training
-        sessions.
-        For example, you may sign up for one Training session, one ART Green Dot session (if qualified), and one ART
-        Sandman session (if qualified).
+        NOTE: {{this.youAreOrCallsignIs}} allowed to sign up for a single  Training session and different
+        ART Training sessions.
       </p>
     {{/if}}
   </modal.body>
   <modal.footer>
-    <modal.button @label="Close" @action={{onClose}} @type="primary"/>
+    <modal.button @label="Close" @action={{@onClose}} @type="primary"/>
   </modal.footer>
 </ModalDialog>
