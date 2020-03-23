@@ -1,36 +1,47 @@
-{{year-select (concat training.title " Sessions") year=year onChange=(action "changeYearAction") subheader=true}}
+<YearSelect @title={{concat training.title " Sessions"}} @year={{this.year}} @onChange={{action (mut this.year)}}
+            @subheader=true/>
 
-{{#each trainingSessions as |group|}}
-  {{#ch-box (concat (shift-format group.slot.begins) " " group.slot.description)}}
-    {{#unless group.slot.active}}
-    <p class="text-danger font-weight-bold">
-        Training session has not been activated. Sign ups are disabled until the session (aka slot) has been activated.
-      </p>
-    {{/unless}}
-    <b>Sign ups:</b> {{group.slot.signed_up}} of {{group.slot.max}}
-    {{#if (gte group.slot.signed_up group.slot.max)}}
-      <span class="text-danger"> (FULL)</span>
-    {{/if}}
-    <br>
-    {{#if group.trainers}}
-        {{#each group.trainers as |trainerGroup|}}
+  {{#each this.trainingSessions as |session|}}
+    <ChBox @title={{concat (shift-format session.slot.begins) " " session.slot.description}}>
+      {{#unless session.slot.active}}
+        <p class="text-danger font-weight-bold">
+          Training session has not been activated. Sign ups are disabled until the session (aka slot) has been
+          activated.
+        </p>
+      {{/unless}}
+      {{#unless session.havePrimaryTrainers}}
+        <p>
+          <b class="text-danger">No {{if training.is_art "trainers" "trainers or Uber trainers"}} are signed up to teach
+            this session.</b>
+        </p>
+      {{/unless}}
+
+      <b>Sign ups:</b> {{session.slot.signed_up}} of {{session.slot.max}}
+      {{#if (gte session.slot.signed_up session.slot.max)}}
+        <span class="text-danger"> (FULL)</span>
+      {{/if}}
+      <p>
+        {{#each session.trainers as |trainerGroup|}}
           <b>{{trainerGroup.position_title}} ({{trainerGroup.trainers.length}}):</b>
-          {{#each trainerGroup.trainers as |trainer index|}}
-            {{if index ", "}}<PersonLink @person={{trainer}} />
-          {{else}}
+          {{#each trainerGroup.trainers as |trainer index|~}}
+            {{~if index ", "~}}
+            <PersonLink @person={{trainer}} />
+          {{~else}}
             <i>none found</i>
           {{/each}}<br>
+        {{else}}
+          <b class="text-danger">No trainer slots were found.</b> In order to correctly
+          show how many trainers are signed up to teach this session, a trainer's slot needs to exists where the
+          slot's description matches this session's description exactly and where the start time within one hour
+          of this session.
         {{/each}}
-    {{else}}
-        <strong class="text-danger font-weight-bold">No trainer slots were found.</strong> In order to correctly
-        show how many trainers are signed up to teach this session, a trainer's slot needs to exists where the
-        slot's description matches this session's description exactly and where the start time within one hour
-        of this session.
-    {{/if}}
-    <div class="mt-2">
-      <LinkTo @route="training.session.index" @models={{array training.id group.slot.id}} class="btn btn-primary">Manage</LinkTo>
-    </div>
-  {{/ch-box}}
-{{else}}
-  <div class="text-danger mt-2"><b>No {{this.year}} {{this.training.title}} sessions were found.</b></div>
-{{/each}}
+      </p>
+       <div class="mt-2">
+        <LinkTo @route="training.session.index" @models={{array this.training.id session.slot.id}} class="btn btn-primary">
+          Manage
+        </LinkTo>
+      </div>
+    </ChBox>
+  {{else}}
+    <div class="text-danger mt-2"><b>No {{this.year}} {{this.training.title}} sessions were found.</b></div>
+  {{/each}}
