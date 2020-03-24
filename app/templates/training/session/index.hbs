@@ -1,9 +1,25 @@
 <h1>{{year-format this.slot.begins}} {{this.training.title}} - {{shift-format this.slot.begins}}
   - {{this.slot.description}}</h1>
 
+{{#unless this.trainers}}
+  <div class="border p-2 rounded mt-2 mb-2">
+    <h4 class="text-danger">{{fa-icon "exclamation-triangle"}} No trainer slots were found.</h4>
+    In order to correctly record how many trainers are signed up to teach this session, a trainer's slot needs to exists
+    where the slot's description matches this session's description exactly and where the start time within one hour of
+    this session.
+  </div>
+{{/unless}}
+
 {{#unless this.slot.active}}
   <p class="text-danger font-weight-bold">
     Training session has not been activated. Sign ups are disabled until the session (aka slot) has been activated.
+  </p>
+{{/unless}}
+
+{{#unless this.havePrimaryTrainers}}
+  <p>
+    <b class="text-danger">No {{if this.training.is_art "trainers" "trainers or Uber trainers"}} are signed up to teach
+      this session.</b>
   </p>
 {{/unless}}
 
@@ -37,6 +53,7 @@
   {{/if}}
 </div>
 
+
 {{#if this.trainers}}
   <p>
     {{#each this.trainers as |group|}}
@@ -49,14 +66,6 @@
       {{/each}}<br>
     {{/each}}
   </p>
-{{else}}
-  <div class="border p-2 rounded mt-2 mb-2">
-    <h4 class="text-danger">No trainer slots were found.</h4>
-    In order to correctly show how many trainers are signed up to teach this session, a trainer's slot needs to exists
-    where the
-    slot's description matches this session's description exactly and where the start time within one hour
-    of this session.
-  </div>
 {{/if}}
 
 <p>
