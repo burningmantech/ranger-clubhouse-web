@@ -1,0 +1,14 @@
+<div class="popover-container">
+  <a href="#" {{on "click" this.showAction}}>{{@text}}</a>
+  {{~#if this.isShowing}}
+      <div class="popover d-block">
+        <h3 class="popover-header">{{@title}}</h3>
+        <div class="popover-body">
+          {{yield}}
+        </div>
+        <div class="popover-footer">
+          <button type="button" class="btn btn-primary" {{on "click" this.closeAction}}>Close</button>
+        </div>
+      </div>
+  {{/if~}}
+</div>

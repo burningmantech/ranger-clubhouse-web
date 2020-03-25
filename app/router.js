@@ -202,6 +202,7 @@ Router.map(function() {
     this.route('photo-review');
     this.route('unified-flagging');
     this.route('photos');
+    this.route('spigot');
   });
   this.route('register');
 

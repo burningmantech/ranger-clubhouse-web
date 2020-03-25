@@ -138,11 +138,10 @@
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Vol Coord</a>
               <div class="dropdown-menu">
                 {{#if (has-role "vc")}}
-
                   <LinkTo @route="vc.handle-checker" class="dropdown-item">Check Callsigns</LinkTo>
                   <LinkTo @route="vc.photo-review" class="dropdown-item">Photo Review</LinkTo>
                   <LinkTo @route="vc.photos" class="dropdown-item">Photos</LinkTo>
-
+                  <LinkTo @route="vc.spigot" class="dropdown-item">Spigot Flow</LinkTo>
                   {{#if (has-role "edit-access-docs")}}
                     <LinkTo @route="vc.access-documents" class="dropdown-item">Manage Access Docs</LinkTo>
                   {{/if}}
@@ -338,7 +337,7 @@
     </div>
   </nav>
   {{#if (has-role "admin" "manage" "view-pii" "mentor")}}
-    <SearchItemBar />
+    <SearchItemBar/>
   {{/if}}
 </header>
 
