@@ -242,11 +242,10 @@ export default class AdminCreditsController extends Controller {
     if (selectedPositionId > 0) {
       sourceCredits = sourceCredits.filter((p) => p.position_id == selectedPositionId);
     }
-    console.log('SOURCE CREDITS', sourceCredits);
+
     let copyPositions = [];
     _.forOwn(_.groupBy(sourceCredits, 'position_id'),
       (credits, positionId) => {
-      console.log('CREDITS', credits);
       copyPositions.push(CopySourcePosition.create({
         id: positionId,
         title: credits[0].positionTitle,

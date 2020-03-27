@@ -1,8 +1,8 @@
 import Route from '@ember/routing/route';
-import { action, setProperties } from '@ember/object';
-import { humanize } from 'ember-cli-string-helpers/helpers/humanize';
-import { inject as service } from '@ember/service';
-import { config } from 'clubhouse/utils/config';
+import {action} from '@ember/object';
+import {humanize} from 'ember-cli-string-helpers/helpers/humanize';
+import {inject as service} from '@ember/service';
+import {config} from 'clubhouse/utils/config';
 
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import ENV from 'clubhouse/config/environment';
@@ -101,17 +101,6 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
     return this.session.loadUser().then(() => {
       this.controllerFor('application').setup();
     }).catch(() => this.session.invalidate());
-  }
-
-  setupController(controller) {
-    super.setupController(...arguments);
-
-    if (this.session.isAuthenticated) {
-      const searchPrefs = this.house.getKey('person-search-prefs');
-      if (searchPrefs && controller.searchForm) {
-        setProperties(controller.searchForm, searchPrefs);
-      }
-    }
   }
 
   @action
