@@ -1,19 +1,22 @@
-{{#if (or person.isAlpha person.isProspective)}}
-  Information about Work Access Passes will be made avaible in June or July. Please check back at that time.
+{{#if (or @person.isAlpha @person.isProspective)}}
+  Information about Work Access Passes will be made available in June or July. Please check back at that time.
 {{else}}
-  {{#if ticketPackage.tickets}}
+  {{#if @ticketPackage.tickets}}
     <h4 class="text-success">
       Hooray! You have
-      {{#if (eq ticketPackage.tickets.length 1)}}
+      {{#if (eq @ticketPackage.tickets.length 1)}}
         a ticket
       {{else}}
-        {{ticketPackage.tickets.length}} tickets
+        {{@ticketPackage.tickets.length}} tickets
       {{/if}}
       available:
     </h4>
     <ul>
-      {{#each ticketPackage.tickets as |ticket|}}
-        <li>A {{ticket-type-human ticket.type}} earned in {{ticket.source_year}} and will expire after {{mdy-format ticket.expiry_date full=true}}</li>
+      {{#each @ticketPackage.tickets as |ticket|}}
+        <li>
+          A {{ticket-type-human ticket.type}} earned in {{ticket.source_year}} and will expire after
+          {{mdy-format ticket.expiry_date full=true}}
+        </li>
       {{/each}}
     </ul>
     <strong>What happens next?</strong>
@@ -26,9 +29,9 @@
   {{else}}
     <strong>Sorry, it doesn't appear you qualified for a Reduced-Price Ticket or Staff Credential.</strong>
     <p>
-      You earned {{credits-format ticketPackage.credits_earned}} last event. The minimum credits needed to earn
-      a Reduced-Price Ticket was {{credits-format ticketingInfo.rpt_credits}}, and a Staff Credential was
-      {{credits-format ticketingInfo.sc_credits}}.
+      You earned {{credits-format @ticketPackage.credits_earned}} last event. The minimum credits needed to earn
+      a Reduced-Price Ticket was {{credits-format @ticketingInfo.rpt_credits}}, and a Staff Credential was
+      {{credits-format @ticketingInfo.sc_credits}}.
     </p>
   {{/if}}
 
