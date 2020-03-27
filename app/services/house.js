@@ -326,13 +326,13 @@ export default class HouseService extends Service {
     let storage;
 
     try {
-      storage = window.sessionStorage.getItem('clubhouse');
+      storage = window.localStorage.getItem('clubhouse');
 
       if (storage) {
         storage = JSON.parse(storage);
       }
     } catch (e) {
-      // browser blocking sessionStorage or not available.
+      // browser blocking localStorage or not available.
       return {};
     }
 
@@ -352,9 +352,9 @@ export default class HouseService extends Service {
     }
 
     try {
-      window.sessionStorage.setItem('clubhouse', JSON.stringify(storage));
+      window.localStorage.setItem('clubhouse', JSON.stringify(storage));
     } catch (e) {
-      // browser blocking sessionStorage or not available.
+      // browser blocking localStorage or not available.
     }
   }
 
@@ -364,9 +364,9 @@ export default class HouseService extends Service {
 
   clearStorage() {
     try {
-      window.sessionStorage.removeItem('clubhouse');
+      window.localStorage.removeItem('clubhouse');
     } catch (e) {
-      // browser blocking sessionStorage or not available.
+      // browser blocking localStorage or not available.
     }
   }
 

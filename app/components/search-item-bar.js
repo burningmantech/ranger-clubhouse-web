@@ -51,6 +51,14 @@ export default class SearchItemBarComponent extends Component {
   @tracked searchResults = [];
   @tracked searchType = 'person';
 
+  constructor() {
+    super(...arguments);
+    const searchPrefs = this.house.getKey('person-search-prefs');
+    if (searchPrefs) {
+      this.searchForm.setProperties(searchPrefs);
+    }
+  }
+
   /**
    * Save the search prefs when changed. The local store is used so the prefs persist in case the user
    * reloads the page.
