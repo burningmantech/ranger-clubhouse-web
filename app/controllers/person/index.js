@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { action, computed } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import inGroups from 'clubhouse/utils/in-groups';
+import { tracked } from '@glimmer/tracking';
 
 const CallsignApprovedOptions = [
   ['Approved', true],
@@ -44,11 +45,22 @@ export default class PersonIndexController extends Controller {
   userAuthorizedOptions = UserAuthorizedOptions;
   onSiteOptions = OnSiteOptions;
 
-  showPositions = false;
-  editPositions = false;
+  @tracked personPositions;
+  @tracked showPositions = false;
+  @tracked editPositions = false;
 
-  showRoles = false;
-  editRoles = false;
+  @tracked personRoles = null;
+  @tracked showRoles = false;
+  @tracked editRoles = false;
+
+  @tracked showConfirmNoteOrMessage = false;
+  @tracked showEditNote = false;
+
+  @tracked isSaving = false;
+
+  @tracked showUploadDialog = false;
+
+  @tracked photo = null;
 
   @computed
   get isAdmin() {
@@ -91,22 +103,18 @@ export default class PersonIndexController extends Controller {
     return user.hasRole(Role.MANAGE) && user.hasRole(Role.GRANT_POSITION);
   }
 
-  @computed('personPositions')
   get positionIds() {
     return this.personPositions.map((position) => position.id);
   }
 
-  @computed('personPositions')
   get positionColumns() {
     return inGroups(this.personPositions, 3);
   }
 
-  @computed('personRoles')
   get roleIds() {
     return this.personRoles.map((role) => role.id);
   }
 
-  @computed('personRoles')
   get roleColumns() {
     return inGroups(this.personRoles, 2);
   }
@@ -114,14 +122,14 @@ export default class PersonIndexController extends Controller {
   _savePersonModel(model) {
     const statusChanged = model._changes['status'];
 
+    this.isSaing = true;
     model.save().then(() => {
-      this.set('showEditNote', false);
+      this.showEditNote = false;
       this.house.scrollToTop();
-
       this.toast.success('The information was successfully updated.');
 
       // Reload the current user.
-      if (model.get('id') == this.session.userId) {
+      if (model.id == this.session.userId) {
         this.session.loadUser();
       }
 
@@ -129,19 +137,20 @@ export default class PersonIndexController extends Controller {
       // Reload the roles & positions
       if (statusChanged) {
         this.ajax.request(`person/${this.person.id}/positions`)
-          .then((results) => this.set('personPositions', results.positions))
+          .then((results) => this.personPositions = results.positions)
           .catch((response) => this.house.handleErrorResponse(response));
 
         this.ajax.request(`person/${this.person.id}/roles`)
-          .then((results) => this.set('personRoles', results.roles))
+          .then((results) => this.personRoles = results.roles)
           .catch((response) => this.house.handleErrorResponse(response));
       }
-    }).catch((response) => this.house.handleErrorResponse(response));
+    }).catch((response) => this.house.handleErrorResponse(response, model))
+      .finally(() => this.iSaving = false );
   }
 
   @action
   confirmNoteOrMessage() {
-    this.set('showConfirmNoteOrMessage', true);
+    this.showConfirmNoteOrMessage = true;
   }
 
   @action
@@ -151,18 +160,18 @@ export default class PersonIndexController extends Controller {
 
   @action
   editNote() {
-    this.set('showConfirmNoteOrMessage', false);
-    this.set('showEditNote', true);
+    this.showConfirmNoteOrMessage = false;
+    this.showEditNote = true;
   }
 
   @action
   closeNote() {
-    this.set('showEditNote', false);
+    this.showEditNote = false;
   }
 
   @action
   closeConfirmNoteOrMessage() {
-    this.set('showConfirmNoteOrMessage', false);
+    this.showConfirmNoteOrMessage = false;
   }
 
   @action
@@ -179,7 +188,7 @@ export default class PersonIndexController extends Controller {
     this.toast.clear();
     // check to see if callsign has been disapproved..
     // (note: callsign_approved might be a string or boolean)
-    if (model._changes['callsign_approved'] && `${model.get('callsign_approved')}` == "false") {
+    if (model._changes['callsign_approved'] && `${model.callsign_approved}` == "false") {
       // Person is disapproving callsign, confirm that action.
 
       this.modal.confirm(
@@ -212,17 +221,17 @@ export default class PersonIndexController extends Controller {
 
   @action
   togglePositions() {
-    this.set('showPositions', !this.showPositions);
+    this.showPositions = !this.showPositions;
   }
 
   @action
   editPositionsAction() {
-    this.set('editPositions', true);
+    this.editPositions = true;
   }
 
   @action
   savePositions(model) {
-    const positionIds = model.get('positionIds');
+    const positionIds = model.positionIds;
 
     this.toast.clear();
     this.ajax.request(`person/${this.person.id}/positions`, {
@@ -230,29 +239,29 @@ export default class PersonIndexController extends Controller {
       data: { position_ids: positionIds }
     }).then((results) => {
       this.toast.success('The positions have been successfully updated.');
-      this.set('personPositions', results.positions);
-      this.set('editPositions', false);
+      this.personPositions = results.positions;
+      this.editPositions = false;
     }).catch((response) => { this.house.handleErrorResponse(response) });
   }
 
   @action
   cancelPositions() {
-    this.set('editPositions', false);
+    this.editPositions =  false;
   }
 
   @action
   toggleRoles() {
-    this.set('showRoles', !this.showRoles);
+    this.showRoles = !this.showRoles;
   }
 
   @action
   editRolesAction() {
-    this.set('editRoles', true);
+    this.editRoles = true;
   }
 
   @action
   saveRoles(model) {
-    const roleIds = model.get('roleIds');
+    const roleIds = model.roleIds;
 
     this.toast.clear();
     this.ajax.request(`person/${this.person.id}/roles`, {
@@ -260,31 +269,31 @@ export default class PersonIndexController extends Controller {
       data: { role_ids: roleIds }
     }).then((results) => {
       this.toast.success('The roles have been successfully updated.');
-      this.set('personRoles', results.roles);
-      this.set('editRoles', false);
+      this.personRoles = results.roles;
+      this.editRoles = false;
     }).catch((response) => { this.house.handleErrorResponse(response) });
   }
 
   @action
   cancelRoles() {
-    this.set('editRoles', false);
+    this.editRoles = false;
   }
 
   @action
   refreshPhoto() {
     this.ajax.request(`person/${this.person.id}/photo`).then((result) => {
-      this.set('photo', result.photo);
+      this.photo = result.photo;
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
   showUploadDialogAction() {
-    this.set('showUploadDialog', true);
+    this.showUploadDialog = true;
   }
 
   @action
   closeUploadDialogAction() {
-    this.set('showUploadDialog', false);
+    this.showUploadDialog = false;
   }
 
 }

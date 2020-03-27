@@ -1,4 +1,4 @@
-<LoginSidebar />
+<LoginSidebar/>
 <main class="col">
   {{#if (eq this.step "ask-intent")}}
     <h3>Hello Auditor or Potential Ranger!</h3>
@@ -10,10 +10,14 @@
     </p>
     <div class="row">
       <div class="col-sm-6 col-lg-3 mb-3">
-        <button type="button" class="btn btn-block btn-primary" {{on "click" (fn this.stepAction "ranger")}}>To volunteer with the Rangers</button>
+        <button type="button" class="btn btn-block btn-primary" {{on "click" (fn this.stepAction "ranger")}}>To
+          volunteer with the Rangers
+        </button>
       </div>
       <div class="col-sm-6 col-lg-3">
-        <button type="button" class="btn btn-block btn-primary" {{on "click" (fn this.stepAction "audit")}}>To audit Ranger Training</button>
+        <button type="button" class="btn btn-block btn-primary" {{on "click" (fn this.stepAction "audit")}}>To audit
+          Ranger Training
+        </button>
       </div>
     </div>
   {{else if (eq this.step "ranger")}}
@@ -21,7 +25,7 @@
       You're in the wrong place to become a Ranger.
     </h1>
     <p>
-      <b>All pontential Black Rock Rangers need to submit an application first.</b>
+      <b>All potential Black Rock Rangers need to submit an application first.</b>
     </p>
     <p>
       <b class="text-danger">You do not register in the Clubhouse.</b>
@@ -42,27 +46,34 @@
       <b class="text-danger">Auditing is NOT a path to becoming a Black Rock Ranger.</b>
     </p>
     <p>
-      Did you mean become a Ranger instead? Vist <a href="https://rangers.burningman.org/becoming-a-ranger/" rel="noopener">Becoming a Ranger</a>
+      Did you mean become a Ranger instead? Visit <a href="https://rangers.burningman.org/becoming-a-ranger/"
+                                                    rel="noopener">Becoming a Ranger</a>
       to find out how to submit a volunteer application.
     </p>
     <div class="row mb-4">
       <div class="col-sm-12 col-md-9 col-lg-6">
-        <button type="button" class="btn btn-block btn-primary" {{on "click" (fn this.stepAction "register")}}>I understand auditing is not a path to becoming a Ranger</button>
+        <button type="button" class="btn btn-block btn-primary" {{on "click" (fn this.stepAction "register")}}>
+          I understand auditing is not a path to becoming a Ranger
+        </button>
       </div>
     </div>
 
   {{else if (eq this.step "register")}}
     <h1>Register to audit Ranger training</h1>
     <p>
-      In order to audit a training, you will need to create a Clubhouse account. Please supply the following information:
+      In order to audit a training, you will need to create a Clubhouse account. Please supply the following
+      information:
     </p>
 
-    {{#ch-form "register" registerForm autocomplete="on" validator=registerValidations onSubmit=(action "createAccount") as |f|}}
+    {{#ch-form "register" registerForm autocomplete="on" validator=registerValidations
+               onSubmit=(action "createAccount") as |f|}}
       <div class="form-row">
         {{f.input "human" size=4 maxlength=10 grid="col-auto" label="First, prove you are human - What is 33 + 2?" }}
       </div>
       <div class="form-row">
-        <label class="col-form-label">Tell us about why you want to create a Secret Clubhouse account:</label>
+        <label class="col-form-label">Why are you creating a Clubhouse account?</label>
+      </div>
+      <div class="form-row">
         <div class="form-group">
           {{f.input "intent" type="radioGroup" options=intentOptions}}
         </div>
@@ -73,7 +84,8 @@
 
       <div class="form-row">
         {{f.input "password" type="password" label="Password" size=20 maxlength=30 grid="col-auto"}}
-        {{f.input "password_confirmation" type="password" label="Confirm Password" size=20 maxlength=30 grid="col-auto"}}
+        {{f.input "password_confirmation" type="password" label="Confirm Password" size=20 maxlength=30
+                  grid="col-auto"}}
       </div>
 
       <div class="form-row">
@@ -89,19 +101,21 @@
         {{f.input "alt_phone" label="Alternative Phone" type="text" inputmode="tel" grid="col-sm-4"}}
       </div>
 
-      <f.submit @label="Create My Auditor Account" />
+      <f.submit @label="Create My Auditor Account" disabled={{this.iSaving}} />
+      {{#if this.isSaving}}
+        <LoadingIndicator @text="Creating Account" />
+      {{/if}}
     {{/ch-form}}
   {{else}}
     <p>
-      Uh oh, I don't undertand what the step [{{this.step}}] is. This is a bug and should be reported to the tech team.
+      Uh oh, I don't understand what the step [{{this.step}}] is. This is a bug and should be reported to the tech team.
     </p>
     <p>
       <button type="button" class="btn btn-primary" {{on "click" (fn this.stepAction "ask-intent")}}>Back</button>
     </p>
   {{/if}}
   <p class="mt-2">
-    <strong>Questions?</strong> Contact the Ranger Volunteer Coordinators at <span class="d-inline-block">{{mail-to "ranger-vc-list@burningman.com"}}</span>.
+    <strong>Questions?</strong> Contact the Ranger Volunteer Coordinators at
+    <span class="d-inline-block">{{vc-email}}</span>.
   </p>
-
-
 </main>

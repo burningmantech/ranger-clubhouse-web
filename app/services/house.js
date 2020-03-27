@@ -1,19 +1,13 @@
 import Service from '@ember/service';
 import ENV from 'clubhouse/config/environment';
-import { inject as service } from '@ember/service';
-import {
-  isAbortError,
-  isTimeoutError
-} from 'ember-ajax/errors';
-import {
-  isArray
-} from '@ember/array';
-import {
-  run
-} from '@ember/runloop';
-import { isEmpty } from '@ember/utils';
+import {inject as service} from '@ember/service';
+import {isAbortError, isTimeoutError} from 'ember-ajax/errors';
+import {isArray} from '@ember/array';
+import {run} from '@ember/runloop';
+import {isEmpty} from '@ember/utils';
 import currentYear from 'clubhouse/utils/current-year';
-import { Role } from 'clubhouse/constants/roles';
+import {Role} from 'clubhouse/constants/roles';
+import {isChangeset} from 'validated-changeset';
 
 import DS from 'ember-data';
 
@@ -23,15 +17,20 @@ export default class HouseService extends Service {
   @service router;
   @service store;
 
-  /*
-   * Handle an error response from either an ajax request or an Ember Data request.
+  /**
+   * Handle a catch promise response (Ember Data save, ajax request, etc). If a Change Set object was
+   * passed, and the response was a validation error (http status 422), then populate the object with
+   * errors via pushErrors()
+   *
+   * @param {Object} response
+   * @param {Changeset} [changeSet=null]
    */
-
-  handleErrorResponse(response) {
+  handleErrorResponse(response, changeSet = null) {
     let message, errorType;
     let responseErrors = null;
 
     if (ENV.showAjaxErrors) {
+      // When debugging - dump all errors to the console.
       console.error(response);
     }
 
@@ -39,9 +38,21 @@ export default class HouseService extends Service {
     if (response instanceof DS.InvalidError) {
       responseErrors = response.errors.map((error) => error.title);
       errorType = 'validation';
+      if (changeSet && response.errors) {
+        // Populate change set model with the validation errors
+        response.errors.forEach(({title, source}) => {
+          const attr = source.pointer.replace('/data/attributes/', '');
+          changeSet.pushErrors(attr, title);
+        });
+
+        // After the form renders, scroll to the first marked invalid field
+        run.schedule('afterRender', () => {
+          this.scrollToElement('.is-invalid');
+        });
+      }
     } else if (response instanceof DS.ServerError) {
       if (response.errors) {
-        responseErrors = response.errors.map((error) => error.title);
+        responseErrors = response.errors.map(({title}) => title);
       } else {
         responseErrors = 'The record operation was unsuccessful due to a fatal server error';
       }
@@ -70,30 +81,42 @@ export default class HouseService extends Service {
       }
 
       switch (status) {
-      case 400:
-      case 404:
-        errorType = 'record not found';
-        break;
+        case 400:
+        case 404:
+          errorType = 'record not found';
+          break;
 
-      case 401:
-        errorType = 'authorization'
-        break;
+        case 401:
+          errorType = 'authorization';
+          break;
 
-      case 403:
-        errorType = 'not permitted';
-        break;
+        case 403:
+          errorType = 'not permitted';
+          break;
 
-      case 422:
-        errorType = 'validation';
-        break;
+        case 422:
+          errorType = 'validation';
+          if (changeSet && response.payload && response.payload.errors) {
+            // Populate change set model with the validation errors
+            response.payload.errors.forEach(({title, source}) => {
+              const attr = source.pointer.replace('/data/attributes/', '');
+              changeSet.pushErrors(attr, title);
+            });
 
-      default:
-        if (!status || status >= 500) {
-          errorType = `server error ${status}`;
-        } else {
-          errorType = `unknown (status ${status})`;
-        }
-        break;
+            // After the form renders, scroll to the first marked invalid field
+            run.schedule('afterRender', () => {
+              this.scrollToElement('.is-invalid');
+            });
+          }
+          break;
+
+        default:
+          if (!status || status >= 500) {
+            errorType = `server error ${status}`;
+          } else {
+            errorType = `unknown (status ${status})`;
+          }
+          break;
       }
     } else {
       errorType = 'unknown';
@@ -121,8 +144,16 @@ export default class HouseService extends Service {
     this.toast.error(message);
   }
 
-  saveModel(model, successMessage, routeOrCallback) {
+  /**
+   * Save an Ember Data record or Change Set object
+   *
+   * @param {DS.Model|Changeset} model
+   * @param {string} successMessage A toast message to show on success
+   * @param {string|function} routeOrCallback Route to transition to or callback function
+   * @returns {Promise<unknown>}
+   */
 
+  saveModel(model, successMessage, routeOrCallback) {
     this.toast.clear();
 
     const isCallback = typeof (routeOrCallback) == 'function';
@@ -146,10 +177,20 @@ export default class HouseService extends Service {
         this.transitionToRoute(routeOrCallback);
       }
     }).catch((response) => {
-      this.handleErrorResponse(response);
+      if (isChangeset(model)) {
+        this.handleErrorResponse(response, model);
+      } else {
+        this.handleErrorResponse(response);
+      }
     });
   }
 
+  /**
+   * Check to see if the user has one or more roles assigned
+   *
+   * @param {number[]} roles
+   * @returns {boolean} true if the user has permission, otherwise return false and transition to the home page.
+   */
   roleCheck(roles) {
     if (this.session.user.hasRole(roles)) {
       return true;
@@ -160,8 +201,14 @@ export default class HouseService extends Service {
     return false;
   }
 
-  /*
+  /**
    * Download an array as a CSV file.
+   *
+   * @param {string} filename
+   * @param {Object[]} columns column list
+   * @param {string} columns.title the title for each column
+   * @param {string} columns.key the key into each data row
+   * @param {Object[]} data
    */
 
   downloadCsv(filename, columns, data) {
@@ -241,7 +288,7 @@ export default class HouseService extends Service {
    * Scroll to element
    */
 
-  scrollToElement(selector, scroll=true) {
+  scrollToElement(selector, scroll = true) {
     run.schedule('afterRender', () => {
       const element = document.querySelector(selector);
       if (!element) {
@@ -251,13 +298,13 @@ export default class HouseService extends Service {
       // Only scroll if the element is not in view
       const rect = element.getBoundingClientRect();
       if (!(
-          rect.top >= 0 &&
-          rect.left >= 0 &&
-          rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-          rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        )) {
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+      )) {
         // Get the y axis, and leave a little space for the header.
-        const y = rect.top + window.scrollY - 20;
+        const y = rect.top + window.scrollY - 80;
         window.scroll({
           top: y,
           left: 0,

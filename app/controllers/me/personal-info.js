@@ -1,5 +1,6 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import PersonInfoValidations from 'clubhouse/validations/person-info';
 
 import {
@@ -12,17 +13,19 @@ export default class MePersonalInfoEditController extends Controller {
   shortSleeveOptions = ShortSleeveOptions;
   longSleeveOptions = LongSleeveOptions;
 
+  @tracked isSaved = false;
+  @tracked isSubmitting = false;
+
   @action
   onSubmit(model, isValid) {
-    this.set('isSaved', false);
-
     if (!isValid) {
       return;
     }
 
     let reviewed = false;
 
-    this.set('isSubmitting', true);
+    this.isSaved = false;
+    this.isSubmitting = true;
 
     if (!this.person.has_reviewed_pi) {
       this.person.set('has_reviewed_pi', true);
@@ -30,7 +33,7 @@ export default class MePersonalInfoEditController extends Controller {
     }
 
     this.house.saveModel(model, 'Your personal information was successfully updated.', () => {
-      this.set('isSaved', true);
+      this.isSaved = true;
       if (reviewed) {
         this.transitionToRoute('me.overview');
       }

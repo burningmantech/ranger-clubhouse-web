@@ -1,25 +1,25 @@
-import Component from '@ember/component';
-
+import Component from '@glimmer/component';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
 import EmergencyContactValidations from 'clubhouse/validations/emergency-contact';
 
 export default class PersonEmergencyContactComponent extends Component {
-  person = null;
-  onCancel = null;
+  @service house;
+  @tracked isSaved = false;
+  @tracked isSubmitting = false;
 
   emergencyContactValidations = EmergencyContactValidations;
-
-  isSaved = false;
 
   @action
   saveAction(model, isValid) {
     if (!isValid) {
       return;
     }
-    this.set('isSubmitting', true);
-    this.house.saveModel(model, 'Emergency contact info has been succesfully updated.', () => {
-      this.set('isSaved', true);
-    })
-      .finally(() => this.set('isSubmitting', false));
+    this.isSubmitting = true;
+    this.house.saveModel(model, 'Emergency contact info successfully updated.',
+      () => this.isSaved = true
+    )
+      .finally(() => this.isSubmitting = false);
   }
 }
