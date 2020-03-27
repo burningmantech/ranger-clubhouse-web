@@ -1,63 +1,49 @@
-import Component from '@ember/component';
-import { computed } from '@ember/object';
+import Component from '@glimmer/component';
 import { config } from 'clubhouse/utils/config';
+import eventYear from 'clubhouse/utils/event-year';
 
 export default class TicketThresholdComponent extends Component {
-  tagName = '';
-
-  credits = null;
-  creditsEarned = null;
-  year = null;
-
   // Reduce price ticket threshold
   rpThreshold = parseFloat(config('RpTicketThreshold'));
   // Staff credentials threshold
   scThreshold = parseFloat(config('ScTicketThreshold'));
-  yearThreshold = parseInt(config('YrTicketThreshold'));
-  ticketYear = parseInt(config('YrTicketThreshold'))+1;
 
-  @computed()
+  yearThreshold = eventYear();
+  ticketYear = eventYear() + 1;
+
   get showForThisYear() {
-    return this.year == this.yearThreshold;
+    return this.args.year == this.yearThreshold;
   }
 
-  @computed('credits')
   get almostRPTicket() {
-    return this.credits >= (this.rpThreshold - 2);
+    return this.args.credits >= (this.rpThreshold - 2);
   }
 
-  @computed('credits')
   get rpDelta() {
-    return (this.rpThreshold - this.credits);
+    return (this.rpThreshold - this.args.credits);
   }
 
-  @computed('credits')
   get reachedRPThreshold() {
-    return (this.credits >= this.rpThreshold);
+    return (this.args.credits >= this.rpThreshold);
   }
 
-  @computed('credits')
   get withinRPThreshold() {
-    return (this.credits >= this.rpThreshold) && (this.credits <= (this.rpThreshold+2));
+    return (this.args.credits >= this.rpThreshold) && (this.args.credits <= (this.rpThreshold+2.0));
   }
 
-  @computed('credits')
   get almostSCThreshold() {
-    return (this.credits >= (this.scThreshold - 5));
+    return (this.args.credits >= (this.scThreshold - 5));
   }
 
-  @computed('credits')
   get scDelta() {
-    return (this.scThreshold - this.credits);
+    return (this.scThreshold - this.args.credits);
   }
 
-  @computed('credits')
   get reachedSCThreshold() {
-    return (this.credits >= this.scThreshold);
+    return (this.args.credits >= this.scThreshold);
   }
 
-  @computed('credits')
   get withinSCThreshold() {
-    return (this.credits >= this.scThreshold && this.credits <= (this.scThreshold + 2));
+    return (this.args.credits >= this.scThreshold && this.args.credits <= (this.scThreshold + 2.0));
   }
 }

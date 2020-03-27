@@ -1,42 +1,45 @@
-{{#if showForThisYear}}
-  To qualify for a ticket to the {{ticketYear}} event you need {{credits-format rpThreshold}} credits
-  for a reduced-price ticket and {{credits-format scThreshold}} credits for a staff credential.
-  {{#if reachedSCThreshold}}
+{{#if this.showForThisYear}}
+  <p>
+    To qualify for a ticket to the {{this.ticketYear}} event you need {{credits-format this.rpThreshold}} credits
+    for a reduced-price ticket and {{credits-format scThreshold}} credits for a staff credential.
+  </p>
+  {{#if this.reachedSCThreshold}}
     <p>
-      <strong>Congratulations!</strong> You're signed up for {{credits-format credits}} credits
-      worth of shifts, which is above the {{credits-format scThreshold}} credits required
-      to qualify for a {{ticketYear}} free staff credential.
-      {{#if withinSCThreshold}}
+      <strong>Congratulations!</strong> You're signed up for {{credits-format @credits}} credits
+      worth of shifts, which is above the {{credits-format this.scThreshold}} credits required
+      to qualify for a {{this.ticketYear}} free staff credential.
+      {{#if this.withinSCThreshold}}
         But since you are close to the threshold, you may want to sign up for
         one more shift. (See fine print below.)
       {{/if}}
     </p>
-  {{else if almostSCThreshold}}
+  {{else if this.almostSCThreshold}}
     <p>
       <strong class="text-danger">Almost there!</strong> You're signed up for
-      {{credits-format credits}} credits worth of shifts, and you need
-      {{credits-format scThreshold}} to qualify for a {{ticketYear}} Staff Credential ticket.
+      {{credits-format @credits}} credits worth of shifts, and you need
+      {{credits-format this.scThreshold}} to qualify for a {{this.ticketYear}} Staff Credential ticket.
     </p>
-  {{else if reachedRPThreshold}}
+  {{else if this.reachedRPThreshold}}
     <p>
-      <br><strong>Congratulations!</strong> You're signed up for {{credits-format credits}} credits worth of shifts,
-      which is above the {{credits-format rpThreshold}} credits required to qualify for a reduced-price ticket in {{ticketYear}}.
-      You need only {{credits-format scDelta}} credits more to qualify for a staff credential.
-      {{#if withinRPThreshold}}
+      <br><strong>Congratulations!</strong> You're signed up for {{credits-format @credits}} credits worth of shifts,
+      which is above the {{credits-format this.rpThreshold}} credits required to qualify for a reduced-price ticket
+      in {{this.ticketYear}}.
+      You need only {{credits-format this.scDelta}} credits more to qualify for a staff credential.
+      {{#if this.withinRPThreshold}}
         Since you are close to the threshold, you may want to sign up for one more shift.
         (See fine print below.)
       {{/if}}
     </p>
-  {{else if almostRPTicket}}
+  {{else if this.almostRPTicket}}
     <p>
       <strong class="text-danger">Almost there!</strong> You're signed up for
       {{credits-format credits}} credits worth of shifts,
-      and you need {{credits-format rpThreshold}} to qualify for a
-      {{ticketYear}} reduced-price ticket.
+      and you need {{credits-format this.rpThreshold}} to qualify for a
+      {{this.ticketYear}} reduced-price ticket.
     </p>
   {{/if}}
 
-  {{#if (gt credits 0)}}
+  {{#if (gt @credits 0)}}
     <p>
       <strong>The fine print:</strong> The total credits listed above are based on scheduled
       shift times, but ticket qualification credits are based on the hours you
@@ -46,7 +49,7 @@
       shifts), you'll receive fewer credits. If by the end of the event your total
       credits based on actual shift times are less than the required threshold, then
       you won't qualify for a (reduced-price or staff credential) ticket in
-      {{ticketYear}}. If you're just over a threshold and are depending on Burn
+      {{this.ticketYear}}. If you're just over a threshold and are depending on Burn
       Perimeter or Art Safety shifts to get you there, you might consider adding
       another shift or two to be on the safe side.
     </p>

@@ -1,13 +1,13 @@
-{{#if (eq ticketingInfo.period "announce")}}
-  <TicketingAnnounce @ticketingInfo={{ticketingInfo}} @ticketPackage={{ticketPackage}} @person={{person}} />
-{{else if (eq ticketingInfo.period "open")}}
-  <TicketingOpen @ticketingInfo={{ticketingInfo}} @ticketPackage={{ticketPackage}} @person={{person}} />
-{{else if (eq ticketingInfo.period "closed")}}
-  <TicketingClosed @ticketingInfo={{ticketingInfo}} @ticketPackage={{ticketPackage}} @person={{person}} />
+{{#if (eq @ticketingInfo.period "announce")}}
+  <TicketingAnnounce @ticketingInfo={{@ticketingInfo}} @ticketPackage={{@ticketPackage}} @person={{@person}} />
+{{else if (eq @ticketingInfo.period "open")}}
+  <TicketingOpen @ticketingInfo={{@ticketingInfo}} @ticketPackage={{@ticketPackage}} @person={{@person}} />
+{{else if (eq @ticketingInfo.period "closed")}}
+  <TicketingClosed @ticketingInfo={{@ticketingInfo}} @ticketPackage={{@ticketPackage}} @person={{@person}} />
 {{else if (eq ticketingInfo.period "offseason")}}
-  <TicketingOffseason @ticketingInfo={{ticketingInfo}} @ticketPackage={{ticketPackage}} @person={{person}} />
+  <TicketingOffseason @ticketingInfo={{@ticketingInfo}} @ticketPackage={{@ticketPackage}} @person={{@person}} />
 {{else}}
-  Uh oh, I do not understand the ticketing period status [{{ticketingInfo.period}}]
+  Uh oh, I do not understand the ticketing period status [{{@ticketingInfo.period}}]
 {{/if}}
 
 <hr>
@@ -15,9 +15,9 @@
 <p class="h3">Have a ticketing question? Is something not right?</p>
 The ticketing FAQs can answer most of your questions. Click one of the following topics to open the FAQ in a new window:
 <ul>
-  {{#unless (or person.isAlpha person.isProspective)}}
-    <li><TicketFaq @topic="ticketing" @ticketingInfo={{ticketingInfo}} /></li>
-    <li><TicketFaq @topic="vp" @ticketingInfo={{ticketingInfo}} /></li>
+  {{#unless (or @person.isAlpha @person.isProspective)}}
+    <li><TicketFaq @topic="ticketing" @ticketingInfo={{@ticketingInfo}} /></li>
+    <li><TicketFaq @topic="vp" @ticketingInfo={{@ticketingInfo}} /></li>
   {{/unless}}
-  <li><TicketFaq @topic={{if (or person.isAlpha person.isProspective) "alpha" "wap"}} @ticketingInfo={{ticketingInfo}} /></li>
+  <li><TicketFaq @topic={{if (or @person.isAlpha @person.isProspective) "alpha" "wap"}} @ticketingInfo={{@ticketingInfo}} /></li>
 </ul>
