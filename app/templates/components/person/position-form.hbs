@@ -1,9 +1,14 @@
-{{#ch-form "positions" positionForm modalBox=true modalTitle="Edit Positions" onSubmit=(action "save") onCancel=(action "cancel") as |f|}}
-  <div class="form-row">
-    {{f.input "positionIds" type="checkboxGroup" wrapClass="form-row" options=positionOptions}}
-  </div>
-  <div class="form-group mt-4">
-    <f.submit @label="Update" />
-    {{f.cancel}}
-  </div>
-{{/ch-form}}
+<ModalDialog @title="Edit Positions" @size="xl" as |Modal|>
+  <ChForm @formId="positions" @originalModel={{this.positionForm}}  @onSubmit={{@onSave}}
+          @onCancel={{@onCancel}} as |f|>
+    <Modal.body>
+      <div class="form-row">
+        <f.input @name="positionIds" @type="checkboxGroup" @wrapClass="form-row" @cols=5 @options={{this.positionOptions}} />
+      </div>
+    </Modal.body>
+    <Modal.footer @noAlign=true>
+      <f.submit @label="Update"/>
+      <f.cancel/>
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>

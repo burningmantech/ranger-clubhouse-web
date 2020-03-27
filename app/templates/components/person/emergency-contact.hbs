@@ -1,4 +1,6 @@
-{{#ch-form "person" person validator=emergencyContactValidations onSubmit=(action "saveAction") onCancel=(action onCancel) as |f|}}
+<ChForm @formId="person" @originalModel={{@person}} @validator={{this.emergencyContactValidations}}
+        @onSubmit={{this.saveAction}}
+        @onCancel={{@onCancel}} as |f|>
   <p class="m-2">
     Supply your emergency contact information for both on-playa and off-playa contacts.<br>
     <strong>Off-Playa:</strong>
@@ -8,13 +10,13 @@
     Their playa name, real-world name, relationship, camp location and camp description.<br>
   </p>
   <div class="form-row mt-2">
-    {{f.input "emergency_contact" type="textarea" label="Emergency Contact Information:" rows=10 cols=80}}
+    <f.input @name="emergency_contact" @type="textarea" @label="Emergency Contact Information:" @rows=10 @cols=80/>
   </div>
-  <f.submit @label={{if isSubmitting "Updating" "Update"}} @disabled={{isSubmitting}} />
-  <f.cancel @disabled={{isSubmitting}} />
+  <f.submit @label="Update" @disabled={{this.isSubmitting}} />
+  <f.cancel @disabled={{this.isSubmitting}} />
   {{#if isSubmitting}}
-    {{fa-icon "spinner" spin=true}}
-  {{else if isSaved}}
+    <LoadingIndicator/>
+  {{else if this.isSaved}}
     <span class="text-success">{{fa-icon "check"}}</span>
   {{/if}}
-{{/ch-form}}
+</ChForm>

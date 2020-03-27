@@ -390,7 +390,10 @@
   <div class="form-group row">
     <label class="col-form-label-fixed d-none d-md-block col-md-2">&nbsp;</label>
     <div class="col-sm-7 col-md-5">
-      <f.submit @label="Update" @disabled={{not f.model.isDirty}} />
+      <f.submit @label="Update" @disabled={{or this.isSaving (not f.model.isDirty)}} />
+      {{#if this.isSaving}}
+        <LoadingIndicator />
+      {{/if}}
     </div>
     {{#if (has-role "admin")}}
       <div class="col-sm-3 col-md-2 text-right">

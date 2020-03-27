@@ -33,6 +33,6 @@ module('Acceptance | me/emergency contact', function (hooks) {
     person.reload();
     assert.equal(person.emergency_contact, 'Rampartus Emergencius');
 
-    assert.dom('#toast-container', document).includesText('Emergency contact info has been succesfully updated');
+    assert.dom('#toast-container', document).includesText('Emergency contact info successfully updated.');
   });
 });
