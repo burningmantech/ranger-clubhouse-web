@@ -1,26 +1,24 @@
-<div class="d-flex justify-content-between mb-2">
-  <h1>{{title}}</h1>
-  <div class="text-right">
-    <LinkTo @route="admin.rbs" class="btn btn-secondary">Back To RBS</LinkTo>
-  </div>
-</div>
+<h1>{{this.title}}</h1>
+<p>
+  <LinkTo @route="admin.rbs">Back To Ranger Broadcast System</LinkTo>
+</p>
 
-{{#if (or config.sms_sandbox config.email_sandbox config.clubhouse_message_sandbox)}}
+{{#if (or this.config.sms_sandbox this.config.email_sandbox this.config.clubhouse_message_sandbox)}}
   <div class="border rounded p-2 text-danger mb-2">Sandboxed delivery mechanisms:
-    {{#if config.sms_sandbox}}
+    {{#if this.config.sms_sandbox}}
       Text/SMS messages,
     {{/if}}
-    {{#if config.email_sandbox}}
+    {{#if this.config.email_sandbox}}
       Email,
     {{/if}}
-    {{#if config.clubhouse_message_sandbox}}
+    {{#if this.config.clubhouse_message_sandbox}}
       Clubhouse messages
     {{/if}}
   </div>
 {{/if}}
 
-{{#if broadcast.is_simple}}
-  <BroadcastSimple @config={{config}} @type={{type}} @broadcast={{broadcast}} />
+{{#if this.broadcast.is_simple}}
+  <BroadcastSimple @config={{this.config}} @type={{this.type}} @broadcast={{this.broadcast}} />
 {{else}}
-  <BroadcastComplex @config={{config}} @type={{type}} @broadcast={{broadcast}} />
+  <BroadcastComplex @config={{this.config}} @type={{this.type}} @broadcast={{this.broadcast}} />
 {{/if}}

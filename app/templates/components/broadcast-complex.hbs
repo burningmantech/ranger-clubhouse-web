@@ -1,158 +1,166 @@
-{{#if isSubmitting}}
-  {{loading-dialog "broadcasts"}}
-{{else if didTransmit}}
-  <BroadcastSentTable @result={{result}} />
-{{else if isReviewing}}
-  <table class="table">
+{{#if this.isSubmitting}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      <LoadingDialog @item="broadcasts"/>
+    </Modal.body>
+  </ModalDialog>
+{{else if this.didTransmit}}
+  <BroadcastSentTable @result={{this.result}} />
+{{else if this.isReviewing}}
+  <table class="table table-width-auto">
     <caption>Review the criteria and message</caption>
     <tbody>
-      {{#if broadcast.alerts}}
-        <tr>
-          <th class="w-15">Alert</th>
-          <td>{{broadcastAlert}}</td>
-        </tr>
-      {{/if}}
-      {{#if broadcast.has_status}}
-        <tr>
-          <th class="w-15">Status ({{broadcastForm.statuses.length}})</th>
-          <td>
-            {{#each broadcastForm.statuses as |status idx|~}}
-              {{~if idx ", "}}{{status}}
-            {{/each}}
-          </td>
-        </tr>
-      {{/if}}
-      {{#if broadcast.has_slot}}
-        <tr>
-          <th class="w-15">Shift</th>
-          <td>{{broadcastSlot}}</td>
-        </tr>
-      {{/if}}
-      {{#if broadcast.has_position}}
-        <tr>
-          <th class="w-15">Team/Position:</th>
-          <td>{{broadcastPosition}} -
-            {{#if (eq broadcastForm.position_signed_up "any")}}
-              anyone - signed up or not
-            {{else if (eq broadcastForm.position_signed_up "")}}
-              signed up for team shift
-            {{else if (eq broadcastForm.position_signed_up "not-signed-up")}}
-              NOT signed up for a team shift
-            {{/if}}
-          </td>
-        </tr>
-      {{/if}}
-      {{#if broadcast.has_restrictions}}
-        <tr>
-          <th class="w-15">Is On Site?</th>
-          <td>{{yesno broadcastForm.on_site}}</td>
-        </tr>
-        <tr>
-          <th class="w-15">Might attend?</th>
-          <td>{{yesno broadcastForm.attending}}</td>
-        </tr>
-        <tr>
-          <th class="w-15">Training</th>
-          <td>
-            {{#if (eq broadcastForm.training "passed")}}
-              passed Dirt Training
-            {{else if (eq broadcastForm.training "registered")}}
-              signed up for OR passed Dirt Training
-            {{else if (eq broadcastForm.training "no-training")}}
-              NOT signed up for Dirt Training
-            {{else}}
-              anyone regardless of being trained or not
-            {{/if}}
-          </td>
-        </tr>
-      {{/if}}
+    {{#if @broadcast.alerts}}
       <tr>
-        <th class="w-15">Send Text/SMS</th>
-        <td>{{if broadcastForm.send_sms "YES" "NO"}}<br>
-          {{#if broadcastForm.send_sms}}
-            Text message: {{broadcastForm.sms_message}}
+        <th>Alert</th>
+        <td>{{this.broadcastAlert}}</td>
+      </tr>
+    {{/if}}
+    {{#if @broadcast.has_status}}
+      <tr>
+        <th>Status ({{this.broadcastForm.statuses.length}})</th>
+        <td>
+          {{#each this.broadcastForm.statuses as |status idx|~}}
+            {{~if idx ", "}}{{status}}
+          {{~/each}}
+        </td>
+      </tr>
+    {{/if}}
+    {{#if @broadcast.has_slot}}
+      <tr>
+        <th>Shift</th>
+        <td>{{this.broadcastSlot}}</td>
+      </tr>
+    {{/if}}
+    {{#if @broadcast.has_position}}
+      <tr>
+        <th>Team/Position:</th>
+        <td>{{this.broadcastPosition}} -
+          {{#if (eq this.broadcastForm.position_signed_up "any")}}
+            anyone - signed up or not
+          {{else if (eq this.broadcastForm.position_signed_up "")}}
+            signed up for team shift
+          {{else if (eq this.broadcastForm.position_signed_up "not-signed-up")}}
+            NOT signed up for a team shift
           {{/if}}
         </td>
       </tr>
+    {{/if}}
+    {{#if @broadcast.has_restrictions}}
       <tr>
-        <th class="w-15">Send Clubhouse</th>
-        <td>{{if broadcastForm.send_clubhouse "YES" "NO"}}</td>
+        <th>Is On Site?</th>
+        <td>{{yesno this.broadcastForm.on_site}}</td>
       </tr>
       <tr>
-        <th class="w-15">Send Email</th>
-        <td>{{if broadcastForm.send_email "YES" "NO"}}</td>
+        <th>Might attend?</th>
+        <td>{{yesno this.broadcastForm.attending}}</td>
       </tr>
+      <tr>
+        <th>Training</th>
+        <td>
+          {{#if (eq this.broadcastForm.training "passed")}}
+            passed Dirt Training
+          {{else if (eq this.broadcastForm.training "registered")}}
+            signed up for OR passed Dirt Training
+          {{else if (eq this.broadcastForm.training "no-training")}}
+            NOT signed up for Dirt Training
+          {{else}}
+            anyone regardless of being trained or not
+          {{/if}}
+        </td>
+      </tr>
+    {{/if}}
+    <tr>
+      <th>Send Text/SMS</th>
+      <td>{{if this.broadcastForm.send_sms "YES" "NO"}}<br>
+        {{#if this.broadcastForm.send_sms}}
+          Text message: {{this.broadcastForm.sms_message}}
+        {{/if}}
+      </td>
+    </tr>
+    <tr>
+      <th>Send Clubhouse</th>
+      <td>{{if this.broadcastForm.send_clubhouse "YES" "NO"}}</td>
+    </tr>
+    <tr>
+      <th>Send Email</th>
+      <td>{{if this.broadcastForm.send_email "YES" "NO"}}</td>
+    </tr>
 
-      {{#if (or broadcastForm.send_clubhouse broadcastForm.send_email)}}
-        <tr>
-          <th class="w-15">Message</th>
-          <td>Subject: {{broadcastForm.subject}}<br>
-            {{nl2br broadcastForm.message}}
-          </td>
-        </tr>
-      {{/if}}
+    {{#if (or this.broadcastForm.send_clubhouse this.broadcastForm.send_email)}}
+      <tr>
+        <th class="w-15">Message</th>
+        <td>Subject: {{this.broadcastForm.subject}}<br>
+          {{nl2br this.broadcastForm.message}}
+        </td>
+      </tr>
+    {{/if}}
     </tbody>
   </table>
 
-  <button class="btn btn-success btn-lg" {{action transmitAction}}>SEND MESSAGE</button>
-  <button class="btn btn-secondary btn-lg" {{action editMessageAction}}>EDIT</button>
+  <button type="button" class="btn btn-success btn-lg" {{on "click" this.transmitAction}}>SEND MESSAGE</button>
+  <button type="button" class="btn btn-secondary btn-lg" {{on "click" this.editMessageAction}}>EDIT</button>
 
-  <BroadcastCandidatesTable @people={{people}} />
+  <BroadcastCandidatesTable @people={{this.people}} />
 {{else}}
-  {{#if noPeople}}
-    {{#ch-alert "danger"}}
+  {{#if this.noPeople}}
+    <ChAlert @type="danger">
       Nobody was found matching the criteria.
-    {{/ch-alert}}
+    </ChAlert>
   {{/if}}
-  {{#ch-form "broadcastForm" broadcastForm validator=broadcastValidations onSubmit=(action reviewAction) as |f|}}
-    {{#if broadcast.alerts}}
+  <ChForm @formId="broadcastForm" @originalModel={{this.broadcastForm}}
+          @validator={{this.broadcastValidations}}
+          @onSubmit={{this.reviewAction}} as |f|>
+    {{#if @broadcast.alerts}}
       <div class="border rounded p-2 mb-2">
         <div class="form-row">
           <label class="col-form-label col-1">Alert type:</label>
-          {{f.input "alert_id" type="select" options=alertOptions wrapClass="col-auto"}}
+          <f.input @name="alert_id" @type="select" @options={{this.alertOptions}} @wrapClass="col-auto"/>
         </div>
       </div>
     {{/if}}
-    {{#if broadcast.has_status}}
+    {{#if @broadcast.has_status}}
       <div class="border rounded p-2 mb-2">
         <div class="form-row">
           <label class="col-form-label col-form-label-fixed col-2">Status:</label>
-          {{f.input "statuses" type="checkboxGroup" options=statusOptions }}
+          <f.input @name="statuses" @type="checkboxGroup" @options={{this.statusOptions}}  />
         </div>
       </div>
     {{/if}}
-    {{#if broadcast.has_slot}}
+    {{#if @broadcast.has_slot}}
       <div class="border rounded p-2 mb-2">
-
         <div class="form-row">
-          {{f.input "slotPositionId" label="Select on the team to show available shifts" type="select" options=slotPositionOptions grid="col-auto" onChange=(action slotPositionChange)}}
+          <f.input @name="slotPositionId" @label="Select on the team to show available shifts" @type="select"
+                   @options={{this.slotPositionOptions}} @grid="col-auto" @onChange={{this.slotPositionChange}} />
           {{#if f.model.slotPositionId}}
-            {{f.input "slot_id"  label="Shift to broadcast to:" type="select" options=slotOptions}}
+            <f.input @name="slot_id" @label="Shift to broadcast to:" @type="select" @options={{this.slotOptions}} />
           {{/if}}
         </div>
       </div>
     {{/if}}
-    {{#if broadcast.has_position}}
+    {{#if @broadcast.has_position}}
       <div class="border rounded p-2 mb-2">
         <div class="form-row">
           <label class="col-form-label col-2">Team:</label>
-          {{f.input "position_id"type="select" options=positionOptions wrapClass="col-auto"}}
+          <f.input @name="position_id" @type="select" @options={{this.positionOptions}} @wrapClass="col-auto"/>
         </div>
         <div class="form-row mt-2">
           <label class="col-form-label col-2">Team Shift Sign Ups</label>
-          {{f.input "position_signed_up" type="select" wrapClass="col-auto" options=signedUpOptions}}
+          <f.input @name="position_signed_up" @type="select" @wrapClass="col-auto" @options={{this.signedUpOptions}} />
         </div>
       </div>
     {{/if}}
-    {{#if broadcast.has_restrictions}}
+    {{#if @broadcast.has_restrictions}}
       <div class="border rounded p-2 mb-2">
         <div class="form-row">
           <label class="col-form-label col-form-label-fixed col-2">Attendance:</label>
           <div class="col-10 mt-2">
-            {{f.input "on_site" type="checkbox" label="Who are signed up for any kind of shift during the event"}}
-            {{f.input "attending" type="checkbox" label="Indicated they will attend"}}
+            <f.input @name="on_site" @type="checkbox"
+                     @label="Who are signed up for any kind of shift during the event"/>
+            <f.input @name="attending" @type="checkbox" @label="Indicated they will attend"/>
             <div class="mt-2">
-              Checking both will search for people who are signed up for shifts during event OR indicated they will attend.
+              Checking both will search for people who are signed up for shifts during event OR indicated they will
+              attend.
             </div>
           </div>
         </div>
@@ -160,7 +168,7 @@
           <h3 class="col-12">AND</h3>
           <label class="col-form-label col-form-label-fixed col-2">Training:</label>
           <div class="col-10">
-            {{f.input "training" type="radioGroup" options=trainingOptions }}
+            <f.input @name="training" @type="radioGroup" @options={{this.trainingOptions}}  />
           </div>
         </div>
       </div>
@@ -169,40 +177,43 @@
     <div class="border rounded p-2">
       <div class="form-row">
         <div class="col-12 ml-2 mb-2">
-          {{f.input "send_sms" type="checkbox" label="Send Text/SMS message" inline=true}}
+          <f.input @name="send_sms" @type="checkbox" @label="Send Text/SMS message" @inline=true />
         </div>
         <div class="col-auto">
-        {{f.input "sms_message" label=(concat "Text/SMS to send (limited to " config.sms_limit " characters)")
-            type="textarea" maxlength=config.sms_limit rows=2 cols=100
-            controlClass="form-control form-control-sm" wrapClass="col-auto"
-            disabled=(not f.model.send_sms)
-            hint=(concat (if f.model.sms_message f.model.sms_message.length "0") " of " config.sms_limit " characters")}}
-          </div>
+          <f.input @name="sms_message"
+                   @label={{concat "Text/SMS to send (limited to " @config.sms_limit " characters)"}}
+                   @type="textarea" @maxlength={{@config.sms_limit}} @rows=2 @cols=100
+                   @controlClass="form-control form-control-sm" @wrapClass="col-auto"
+                   @disabled={{not f.model.send_sms}}
+                   @hint={{concat (if f.model.sms_message f.model.sms_message.length "0")
+                                  " of " @config.sms_limit " characters"}} />
+        </div>
       </div>
 
       <div class="form-row mt-2">
         <div class="col-12 ml-2">
-          {{f.input "send_email" type="checkbox" label="Send email message" inline=true}}
-          {{f.input "send_clubhouse" type="checkbox" label="Send Clubhouse message" inline=true}}
+          <f.input @name="send_email" @type="checkbox" @label="Send email message" @inline=true />
+            <f.input @name="send_clubhouse" @type="checkbox" @label="Send Clubhouse message" @inline=true />
         </div>
       </div>
       <div class="form-row mt-2">
         <div class="col-auto">
-          {{f.input "subject" type="text" label="Subject for message:" size=80 maxlength=80 controlClass="form-control form-control-sm" wrapClass="col-auto"}}
+          <f.input @name="subject" @type="text" @label="Subject for message:" @size=80 @maxlength=80
+                   @controlClass="form-control form-control-sm" @wrapClass="col-auto" />
         </div>
       </div>
       <div class="form-row">
         <div class="col-auto">
-          {{f.input "message" type="textarea" label="Message to send to email and/or Clubhouse Message"
-        rows=10 cols=100 wrapClass="col-auto"
-        disabled=(not (or f.model.send_email f.model.send_clubhouse))
-        controlClass="form-control form-control-sm"}}
+          <f.input @name="message" @type="textarea" @label="Message to send to email and/or Clubhouse Message"
+                   @rows=10 @cols=100 @wrapClass="col-auto"
+                   @disabled={{not (or f.model.send_email f.model.send_clubhouse)}}
+                   @controlClass="form-control form-control-sm" />
         </div>
       </div>
     </div>
 
-    <f.submit @label="REVIEW MESSAGE & RECIPIENTS" @submitClass="btn-lg" />
-    <p>Don’t worry, you’ll have a chance to confirm the message and exactly who it is being sent to before it is actually sent.</p>
-
-  {{/ch-form}}
+    <f.submit @label="REVIEW MESSAGE & RECIPIENTS" @submitClass="btn-lg"/>
+    <p>Don’t worry, you’ll have a chance to confirm the message and exactly who it is being sent to before it is
+      actually sent.</p>
+  </ChForm>
 {{/if}}

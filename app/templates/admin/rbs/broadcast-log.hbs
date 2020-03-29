@@ -126,18 +126,20 @@
   <ModalDialog @title="Retry Broadcast" as |modal|>
     <modal.body>
       <p>
-        <b>ID:</b> #{{confirmRetry.id}} <b>Created:</b> {{confirmRetry.created_at}}
+        <b>ID:</b> #{{confirmRetry.id}}<br>
+        <b>Created:</b> {{confirmRetry.created_at}}<br>
         <b>Sender:</b> {{confirmRetry.sender.callsign}}<br>
-        <b>Alert:</b> {{if confirmRetry.alert.on_playa "On Playa" "Pre-Event"}}: {{confirmRetry.alert.title}}
-        <b>SMS Fail:</b> {{confirmRetry.sms_failed}} <b>Email Fail:</b> {{confirmRetry.email_failed}}
+        <b>Alert:</b> {{if confirmRetry.alert.on_playa "On Playa" "Pre-Event"}}: {{confirmRetry.alert.title}}<br>
+        <b>SMS Fail:</b> {{confirmRetry.sms_failed}}<br>
+        <b>Email Fail:</b> {{confirmRetry.email_failed}}
       </p>
       <p>
         Are you sure you want to retry this broadcast?
       </p>
     </modal.body>
     <modal.footer>
-      <modal.button @label="Cancel" @action={{action closeRetry}}  @primary="secondary"/>
-      <modal.button @label="Confirm Retry" @action={{action attemptRetry}}  @primary="primary"/>
+      <modal.button @label="Cancel" @action={{action closeRetry}}  @type="secondary"/>
+      <modal.button @label="Confirm Retry" @action={{action attemptRetry}}  @type="primary"/>
     </modal.footer>
   </ModalDialog>
 {{else if retryingBroadcast}}
@@ -148,11 +150,12 @@
     <modal.footer>
       <modal.button @label="Close" @action={{closeRetry}} @type="primary"/>
     </modal.footer>
-
   </ModalDialog>
 {{else if retryResult}}
   <ModalDialog @title="Retry Results" as |modal|>
-    <BroadcastSentTable @result={{retryResult}} />
+    <modal.body>
+      <BroadcastSentTable @result={{retryResult}} />
+    </modal.body>
     <modal.footer>
       <modal.button @label="Close" @action={{closeRetry}} @type="primary"/>
     </modal.footer>

@@ -11,24 +11,33 @@
  * - if person is attending next event (based on shift sign ups)
  */
 
-import Component from '@ember/component';
-import EmberObject, { action, computed } from '@ember/object';
-
-import { isEmpty } from '@ember/utils';
-import { validatePresence } from 'ember-changeset-validations/validators';
+import Component from '@glimmer/component';
+import EmberObject, {action, computed, set} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
+import {isEmpty} from '@ember/utils';
+import {inject as service} from '@ember/service';
+import {validatePresence} from 'ember-changeset-validations/validators';
 import validatePresenceIf from 'clubhouse/validators/presence-if';
-
-import { Broadcasts } from 'clubhouse/constants/broadcast';
+import {Broadcasts} from 'clubhouse/constants/broadcast';
 import moment from 'moment';
 
 export default class BroadcastComplexComponent extends Component {
-  config = null;
-  type = null;
-  broadcast = null;
+  @service ajax;
+  @service house;
 
-  isReviewing = false;
-  isSubmitting = false;
-  noPeople = false;
+  @tracked broadcastForm;
+  @tracked broadcastAlert = null;
+  @tracked broadcastSlot = null;
+  @tracked broadcastPosition = null;
+
+  @tracked isReviewing = false;
+  @tracked isSubmitting = false;
+  @tracked didTransmit = false;
+
+
+  @tracked people = null;
+  @tracked noPeople = false;
+  @tracked result = null;
 
   statusOptions = [
     'active',
@@ -54,16 +63,17 @@ export default class BroadcastComplexComponent extends Component {
     ['Who are NOT signed up for Dirt Training', 'no-training']
   ];
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-    const defaults = Broadcasts[this.type];
+  constructor() {
+    super(...arguments);
+
+    const defaults = Broadcasts[this.args.type];
     const message = defaults.message;
     const subject = defaults.subject;
 
-    this.set('broadcastForm', EmberObject.create({
+    this.broadcastForm = EmberObject.create({
       alert_id: '',
       attending: true,
-      message: !isEmpty(message) ? message : '',
+      message: isEmpty(message) ? '' : message,
       on_site: true,
       position_id: '',
       position_signed_up: 'any',
@@ -73,79 +83,75 @@ export default class BroadcastComplexComponent extends Component {
       slot_id: '',
       slotPositionId: null,
       statuses: ['active'],
-      subject: !isEmpty(subject) ? subject : '',
+      subject: isEmpty(subject) ? '' : subject,
       training: 'any',
-    }));
+    });
   }
 
   // Build up a validation object based on the broadcast type
-  @computed('broadcast')
   get broadcastValidations() {
-    const broadcast = this.broadcast;
+    const broadcast = this.args.broadcast;
 
     // The basics - subject and messages
     const validations = {
-      sms_message: validatePresenceIf({ if_set: 'send_sms', message: 'Enter a text message.' }),
-      subject: validatePresenceIf({ if_set: ['send_clubhouse', 'send_email'], message: 'Enter a subject.' }),
-      message: validatePresenceIf({ if_set: ['send_clubhouse', 'send_email'], message: 'Enter a message.' })
+      sms_message: validatePresenceIf({if_set: 'send_sms', message: 'Enter a text message.'}),
+      subject: validatePresenceIf({if_set: ['send_clubhouse', 'send_email'], message: 'Enter a subject.'}),
+      message: validatePresenceIf({if_set: ['send_clubhouse', 'send_email'], message: 'Enter a message.'})
     };
 
     // Need to select a team/position
     if (broadcast.has_position) {
-      validations.position_id = validatePresence({ presence: true, message: 'Select a team' });
+      validations.position_id = validatePresence({presence: true, message: 'Select a team'});
     }
 
     // Need to select a position, and then a slot
     if (broadcast.has_slot) {
-      validations.slotPositionId = validatePresence({ presence: true, message: 'Select a position' });
-      validations.slot_id = validatePresence({ presence: true, message: 'Select a shift' });
+      validations.slotPositionId = validatePresence({presence: true, message: 'Select a position'});
+      validations.slot_id = validatePresence({presence: true, message: 'Select a shift'});
     }
 
     // Need to select an alert preference type
     if (broadcast.alerts) {
-      validations.alert_id = validatePresence({ presence: true, message: 'Choose an alert type' });
+      validations.alert_id = validatePresence({presence: true, message: 'Choose an alert type'});
     }
 
     return validations;
   }
 
   // Build alert options
-  @computed('broadcast.alerts')
   get alertOptions() {
-    const alerts = this.broadcast.alerts.map((alert) => {
+    const alerts = this.args.broadcast.alerts.map((alert) => {
       return [`${alert.on_playa ? "On Playa" : "Pre-Event"}: ${alert.title}`, alert.id];
     });
 
-    alerts.unshift({ id: '', title: '----' });
+    alerts.unshift({id: '', title: '----'});
     return alerts;
   }
 
   // Build up the position options from the available slots
-  @computed('broadcast.slots')
   get slotPositionOptions() {
-    const options = this.broadcast.slots.map((group, idx) => {
+    const options = this.args.broadcast.slots.map((group, idx) => {
       return {
         id: idx,
         title: group.title
       }
     });
 
-    options.unshift({ id: '', title: '----' });
+    options.unshift({id: '', title: '----'});
 
     return options;
   }
 
   // Build up the basic position options
-  @computed('broadcast.positions')
   get positionOptions() {
-    const positions = this.broadcast.positions.slice();
+    const positions = this.args.broadcast.positions.slice();
 
-    positions.unshift({ id: '', title: '----' });
+    positions.unshift({id: '', title: '----'});
 
     return positions;
   }
 
-  // Build the slot options based on the positon selected
+  // Build the slot options based on the position selected
   @computed('broadcastForm.slotPositionId')
   get slotOptions() {
     const id = this.broadcastForm.slotPositionId;
@@ -154,12 +160,12 @@ export default class BroadcastComplexComponent extends Component {
       return [];
     }
 
-    const position = this.broadcast.slots[parseInt(id)];
+    const position = this.args.broadcast.slots[parseInt(id)];
     const slots = position.slots.map((slot) => {
       const date = moment(slot.begins).format('ddd MMM DD [@] HH:mm');
-      return { id: slot.id, title: `${date} ${slot.description} (${slot.signed_up} sign up)` };
+      return {id: slot.id, title: `${date} ${slot.description} (${slot.signed_up} sign up)`};
     });
-    slots.unshift({ id: '', title: '----' });
+    slots.unshift({id: '', title: '----'});
 
     return slots;
   }
@@ -168,18 +174,18 @@ export default class BroadcastComplexComponent extends Component {
   slotPositionChange(name, value) {
     // Hackary: when the user selects the position from the available slots,
     // need to cause slotOptions to recomputed to only build for that positions.
-    this.broadcastForm.set('slotPositionId', value);
+    set(this.broadcastForm, 'slotPositionId', value);
   }
 
   // Build up the API params for the candidates or transmit request
   _buildParams() {
-    const data = { type: this.type };
-    const broadcast = this.broadcast;
+    const data = {type: this.args.type};
+    const broadcast = this.args.broadcast;
     const form = this.broadcastForm;
 
     if (broadcast.alerts) {
       data.alert_id = form.alert_id;
-      this.set('broadcastAlert', broadcast.alerts.find((alert) => form.alert_id == alert.id).title);
+      this.broadcastAlert = broadcast.alerts.find((alert) => form.alert_id == alert.id).title;
     }
 
     if (broadcast.has_status) {
@@ -188,12 +194,12 @@ export default class BroadcastComplexComponent extends Component {
 
     if (broadcast.has_slot) {
       data.slot_id = form.slot_id;
-      this.set('broadcastSlot', this.slotOptions.find((slot) => form.slot_id == slot.id).title);
+      this.broadcastSlot = this.slotOptions.find((slot) => form.slot_id == slot.id).title;
     }
 
     if (broadcast.has_position) {
       data.position_id = form.position_id;
-      this.set('broadcastPosition', this.positionOptions.find((p) => p.id == form.position_id).title);
+      this.broadcastPosition = this.positionOptions.find((p) => p.id == form.position_id).title;
       data.position_signed_up = form.position_signed_up;
 
     }
@@ -216,40 +222,37 @@ export default class BroadcastComplexComponent extends Component {
       return;
     }
 
-    this.toast.clear();
-    // commit to backing model
-    model.execute();
-
-    this.set('isReviewing', true);
-    this.set('isSubmitting', true);
-    this.set('noPeople', false);
+    model.execute(); // commit to backing object
+    this.isReviewing = true;
+    this.isSubmitting = true;
+    this.noPeople = false;
 
     const data = this._buildParams();
 
-    this.ajax.request(`rbs/recipients`, { data })
+    this.ajax.request(`rbs/recipients`, {data})
       .then((result) => {
-        this.set('people', result.people);
+        this.people = result.people;
 
         if (this.people.length == 0) {
-          this.set('isReviewing', false);
-          this.set('noPeople', true);
+          this.isReviewing = false;
+          this.noPeople = true;
         }
       }).catch((response) => {
-        this.house.handleErrorResponse(response);
-        // Kill the review
-        this.set('isReviewing', false);
-      })
-      .finally(() => this.set('isSubmitting', false));
+      this.house.handleErrorResponse(response);
+      // Kill the review
+      this.isReviewing = false;
+    })
+      .finally(() => this.isSubmitting = false);
   }
 
   @action
   editMessageAction() {
-    this.set('isReviewing', false);
+    this.isReviewing = false;
   }
 
   @action
   transmitAction() {
-    this.set('isSubmitting', true);
+    this.isSubmitting = true;
 
     const data = this._buildParams();
 
@@ -262,11 +265,11 @@ export default class BroadcastComplexComponent extends Component {
       data.message = this.broadcastForm.message;
     }
 
-    this.ajax.request('rbs/transmit', { method: 'POST', data })
+    this.ajax.request('rbs/transmit', {method: 'POST', data})
       .then((result) => {
-        this.set('result', result);
-        this.set('didTransmit', true);
+        this.result = result;
+        this.didTransmit = true;
       }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isSubmitting', false));
+      .finally(() => this.isSubmitting = false);
   }
 }

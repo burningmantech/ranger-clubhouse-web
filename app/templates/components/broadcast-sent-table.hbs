@@ -1,79 +1,84 @@
-{{#if (or result.sms_failed result.email_failed)}}
-  {{#ch-alert "danger"}}
-    One or more messages failed to be queued for delivery. The failed messages have been held and can be retransmitted at a later time.
-  {{/ch-alert}}
-{{else}}
-  {{#ch-alert "success"}}
-    Congratulations! All messages were successfully queued for delivery.
-  {{/ch-alert}}
-{{/if}}
-<table class="table table-striped table-width-auto mt-4 mb-2">
-  <caption>Broadcast Summary</caption>
-  <tbody>
-    <tr>
-      <th>Text Success / Fail</th>
-      <td>{{result.sms_success}} / {{result.sms_failed}}</td>
-    </tr>
-    <tr>
-      <th>Email Success / Fail</th>
-      <td>{{result.email_success}} / {{result.email_failed}}</td>
-    </tr>
-    {{#if result.sent_clubhouse}}
-      <tr>
-        <th>Clubhouse</th>
-        <td>{{result.people.length}}</td>
-      </tr>
+<b>Broadcast Summary:</b>
+{{#if @result.sent_sms}}
+  <div>
+    {{#if @result.sms_successes}}
+      <b class="text-success">{{fa-icon "check"}} {{pluralize @result.sms_successes "SMS message"}} successfully queued
+        for
+        delivery</b>
+    {{else}}
+      <b class="text-danger">{{fa-icon "times"}} No SMS messages were successfully queued for delivery</b>
     {{/if}}
-  </tbody>
-</table>
+  </div>
+  {{#if @result.sms_fails}}
+    <div><b class="text-danger">{{fa-icon "times"}} {{@result.sms_fails}} SMS delivery failures</b></div>
+  {{else}}
+    <div>No SMS queuing failures.</div>
+  {{/if}}
+{{else}}
+  <div><i>SMS delivery was not selected.</i></div>
+{{/if}}
+
+{{#if @result.sent_email}}
+  <div><b class="text-success">{{fa-icon "check"}} {{pluralize @result.emails_queued "Email"}} successfully queued for
+    delivery</b></div>
+{{else}}
+  <div><i>Email delivery was not selected.</i></div>
+{{/if}}
+
+{{#if @result.sent_clubhouse}}
+  <div>
+    <b class="text-success">{{fa-icon "check"}} {{pluralize @result.clubhouse_messages "Clubhouse message"}}
+      successfully
+      queued for delivery.</b>
+  </div>
+{{else}}
+  <div>
+    <i>Clubhouse Message delivery was not selected.</i>
+  </div>
+{{/if}}
+
 
 <table class="table table-striped table-width-auto mt-4">
-  <caption>Broadcasted to {{pluralize result.people.length "person"}}</caption>
+  <caption>Broadcasted to {{pluralize @result.people.length "person"}}</caption>
   <thead>
-    <tr>
-      <th>Callsign</th>
-      <th colspan="3">Deliver Via</th>
-    </tr>
+  <tr>
+    <th>Callsign</th>
+    <th colspan="3" class="text-center">Deliver Via</th>
+  </tr>
   </thead>
 
   <tbody>
-    {{#each result.people as |person|}}
-      <tr>
-        <td>{{person.callsign}}</td>
-        <td>
-          {{#if result.sent_sms}}
-            {{#if (eq person.sms_status "sent")}}
-              text
-            {{else if (eq person.sms_status "service-fail")}}
-              <span class="text-danger">text FAIL</span>
-            {{else}}
-              &nbsp;
-            {{/if}}
+  {{#each @result.people as |person|}}
+    <tr>
+      <td>{{person.callsign}}</td>
+      <td>
+        {{#if @result.sent_sms}}
+          {{#if (eq person.sms_status "sent")}}
+            text
+          {{else if (eq person.sms_status "service-fail")}}
+            <span class="text-danger">text FAIL</span>
           {{else}}
             &nbsp;
           {{/if}}
-        </td>
-        <td>
-          {{#if result.sent_email}}
-            {{#if (eq person.email_status "sent")}}
-              email
-            {{else if (eq person.email_status "service-fail")}}
-              <span class="text-danger">email FAIL</span>
-            {{else}}
-              &nbsp;
-            {{/if}}
-          {{else}}
-            &nbsp;
-          {{/if}}
-        </td>
-        <td>
-          {{#if result.sent_clubhouse}}
-            clubhouse
-          {{else}}
-            &nbsp;
-          {{/if}}
-        </td>
-      </tr>
-    {{/each}}
+        {{else}}
+          &nbsp;
+        {{/if}}
+      </td>
+      <td>
+        {{#if @result.sent_email}}
+          email
+        {{else}}
+          &nbsp;
+        {{/if}}
+      </td>
+      <td>
+        {{#if @result.sent_clubhouse}}
+          clubhouse
+        {{else}}
+          &nbsp;
+        {{/if}}
+      </td>
+    </tr>
+  {{/each}}
   </tbody>
 </table>
