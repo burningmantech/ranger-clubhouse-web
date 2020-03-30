@@ -1,7 +1,5 @@
-import DS from 'ember-data';
-const { Model } = DS;
+import Model, { attr } from '@ember-data/model';
 import { computed } from '@ember/object';
-const { attr } = DS;
 
 export default class TimesheetMissingModel extends Model {
   @attr('number') person_id;

@@ -8,8 +8,7 @@ import {isEmpty} from '@ember/utils';
 import currentYear from 'clubhouse/utils/current-year';
 import {Role} from 'clubhouse/constants/roles';
 import {isChangeset} from 'validated-changeset';
-
-import DS from 'ember-data';
+import { InvalidError, ServerError, TimeoutError, AbortError, NotFoundError } from '@ember-data/adapter/error'
 
 export default class HouseService extends Service {
   @service toast;
@@ -35,7 +34,7 @@ export default class HouseService extends Service {
     }
 
     // Ember Data request error
-    if (response instanceof DS.InvalidError) {
+    if (response instanceof InvalidError) {
       responseErrors = response.errors.map((error) => error.title);
       errorType = 'validation';
       if (changeSet && response.errors) {
@@ -50,21 +49,21 @@ export default class HouseService extends Service {
           this.scrollToElement('.is-invalid');
         });
       }
-    } else if (response instanceof DS.ServerError) {
+    } else if (response instanceof ServerError) {
       if (response.errors) {
         responseErrors = response.errors.map(({title}) => title);
       } else {
         responseErrors = 'The record operation was unsuccessful due to a fatal server error';
       }
       errorType = 'server';
-    } else if (response instanceof DS.TimeoutError ||
-      response instanceof DS.AbortError ||
+    } else if (response instanceof TimeoutError ||
+      response instanceof AbortError ||
       isAbortError(response) ||
       isTimeoutError(response)) {
       // Ajax Error
       responseErrors = 'The request to the Clubhouse server could not be completed. The server might be offline or the Internet connection is spotty.';
       errorType = 'server';
-    } else if (response instanceof DS.NotFoundError) {
+    } else if (response instanceof NotFoundError) {
       responseErrors = 'The record was not found.';
     } else if (response) {
       let status;

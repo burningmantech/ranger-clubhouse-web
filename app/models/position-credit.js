@@ -1,9 +1,8 @@
-import DS from 'ember-data';
-const { attr } = DS;
+import Model, { attr } from '@ember-data/model';
 import { computed } from '@ember/object';
 import moment from 'moment';
 
-export default class PositionCreditModel extends DS.Model {
+export default class PositionCreditModel extends Model {
   @attr('shiftdate') start_time;
   @attr('shiftdate') end_time;
   @attr('string') description;

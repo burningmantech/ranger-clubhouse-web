@@ -1,7 +1,6 @@
-import DS from 'ember-data';
-const { attr } = DS;
+import Model, { attr } from '@ember-data/model';
 
-export default class PositionModel extends DS.Model {
+export default class PositionModel extends Model {
   @attr('string') title;
   @attr('boolean') new_user_eligible;
   @attr('boolean') all_rangers;

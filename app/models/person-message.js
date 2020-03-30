@@ -1,8 +1,7 @@
-import DS from 'ember-data';
+import Model, { attr } from '@ember-data/model';
 import { computed } from '@ember/object';
-const { attr } = DS;
 
-export default class PersonMessageModel extends DS.Model {
+export default class PersonMessageModel extends Model {
   @attr('number') person_id;
 
   // Only used for creating the message

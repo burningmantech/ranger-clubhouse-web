@@ -1,7 +1,6 @@
-import DS from 'ember-data';
-const { attr } = DS;
+import Model, { attr } from '@ember-data/model';
 
-export default class CallsignModel extends DS.Model {
+export default class CallsignModel extends Model {
   @attr('string') callsign;
   @attr('string') status;
 }

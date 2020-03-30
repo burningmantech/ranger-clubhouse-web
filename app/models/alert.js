@@ -1,7 +1,6 @@
-import DS from 'ember-data';
-const { attr } = DS;
+import Model, { attr } from '@ember-data/model'
 
-export default class AlertModel extends DS.Model {
+export default class AlertModel extends Model {
   @attr('string') title;
   @attr('string') description;
   @attr('boolean') on_playa;

@@ -1,9 +1,8 @@
-import DS from 'ember-data';
-const { attr } = DS;
+import Model, { attr } from '@ember-data/model';
 import { inject as service } from '@ember/service';
 import PersonMixin from 'clubhouse/mixins/models/person';
 
-export default class PersonModel extends DS.Model.extend(PersonMixin) {
+export default class PersonModel extends Model.extend(PersonMixin) {
   @service ajax;
 
   @attr('string') first_name;

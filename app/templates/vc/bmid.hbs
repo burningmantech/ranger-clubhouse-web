@@ -54,20 +54,20 @@
   <table class="table table-sm table-striped table-hover">
     <thead>
       <tr>
-        <th>{{#if (eq sortColumn "callsign")}}[Callsign]{{else}}<a href {{action sortBmidsAction "callsign"}}>Callsign</a>{{/if}}</th>
+        <th>{{#if (eq this.sortColumn "callsign")}}[Callsign]{{else}}<a href {{action sortBmidsAction "callsign"}}>Callsign</a>{{/if}}</th>
         {{#unless this.editMode}}
           <th>Action</th>
         {{/unless}}
-        <th>{{#if (eq sortColumn "status")}}[Status]{{else}}<a href {{action sortBmidsAction "status"}}>Status</a>{{/if}}</th>
-        <th class="w-10">{{#if (eq sortColumn "title1")}}[Title 1]{{else}}<a href {{action sortBmidsAction "title1"}}>Title 1</a>{{/if}}</th>
-        <th class="w-10">{{#if (eq sortColumn "title2")}}[Title 2]{{else}}<a href {{action sortBmidsAction "title2"}}>Title 2</a>{{/if}}</th>
-        <th class="w-10">{{#if (eq sortColumn "title3")}}[Title 3]{{else}}<a href {{action sortBmidsAction "title3"}}>Title 3</a>{{/if}}</th>
-        <th>{{#if (eq sortColumn "mvr")}}[MVR]{{else}}<a href {{action sortBmidsAction "mvr"}}>MVR</a>{{/if}}</th>
-        <th>{{#if (eq sortColumn "showers")}}[Showers]{{else}}<a href {{action sortBmidsAction "showers"}}>Showers</a>{{/if}}</th>
-        <th>{{#if (eq sortColumn "meals")}}[Meals]{{else}}<a href {{action sortBmidsAction "meals"}}>Meals</a>{{/if}}</th>
-        <th class="w-10">{{#if (eq sortColumn "wap")}}[WAP]{{else}}<a href {{action sortBmidsAction "wap"}}>WAP</a>{{/if}}</th>
-        <th>{{#if (eq sortColumn "team")}}[Team]{{else}}<a href {{action sortBmidsAction "team"}}>Team</a>{{/if}}</th>
-        <th class="w-30">{{#if (eq sortColumn "notes")}}[Notes]{{else}}<a href {{action sortBmidsAction "notes"}}>Notes</a>{{/if}}</th>
+        <th>{{#if (eq this.sortColumn "status")}}[Status]{{else}}<a href {{action sortBmidsAction "status"}}>Status</a>{{/if}}</th>
+        <th class="w-10">{{#if (eq this.sortColumn "title1")}}[Title 1]{{else}}<a href {{action sortBmidsAction "title1"}}>Title 1</a>{{/if}}</th>
+        <th class="w-10">{{#if (eq this.sortColumn "title2")}}[Title 2]{{else}}<a href {{action sortBmidsAction "title2"}}>Title 2</a>{{/if}}</th>
+        <th class="w-10">{{#if (eq this.sortColumn "title3")}}[Title 3]{{else}}<a href {{action sortBmidsAction "title3"}}>Title 3</a>{{/if}}</th>
+        <th>{{#if (eq this.sortColumn "mvr")}}[MVR]{{else}}<a href {{action sortBmidsAction "mvr"}}>MVR</a>{{/if}}</th>
+        <th>{{#if (eq this.sortColumn "showers")}}[Showers]{{else}}<a href {{action sortBmidsAction "showers"}}>Showers</a>{{/if}}</th>
+        <th>{{#if (eq this.sortColumn "meals")}}[Meals]{{else}}<a href {{action sortBmidsAction "meals"}}>Meals</a>{{/if}}</th>
+        <th class="w-10">{{#if (eq this.sortColumn "wap")}}[WAP]{{else}}<a href {{action sortBmidsAction "wap"}}>WAP</a>{{/if}}</th>
+        <th>{{#if (eq this.sortColumn "team")}}[Team]{{else}}<a href {{action sortBmidsAction "team"}}>Team</a>{{/if}}</th>
+        <th class="w-30">{{#if (eq this.sortColumn "notes")}}[Notes]{{else}}<a href {{action sortBmidsAction "notes"}}>Notes</a>{{/if}}</th>
         {{#if this.editMode}}
           <th>Action</th>
         {{/if}}

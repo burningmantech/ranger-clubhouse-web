@@ -77,11 +77,11 @@ export default Mixin.create({ // eslint-disable-line ember/no-new-mixins
       status == PersonStatus.PROSPECTIVE_WAITLIST);
   }),
 
-  isRanger: computed('status', function () {
+  isRanger: computed('isNotRanger', 'status', function () {
     return (!this.isNotRanger && this.status != 'non ranger');
   }),
 
-  canSignupForShifts: computed('status', function () {
+  canSignupForShifts: computed('isNotARanger', 'status', function () {
     return (!this.isNotARanger && this.status != PersonStatus.PAST_PROSPECTIVE);
   }),
 
@@ -96,7 +96,7 @@ export default Mixin.create({ // eslint-disable-line ember/no-new-mixins
     );
   }),
 
-  needsBpguid: computed('bpguid', function() {
+  needsBpguid: computed('bpguid', 'isAuditor', 'isNonRanger', function() {
     return (!this.isAuditor && !this.isNonRanger && isEmpty(this.bpguid));
   }),
 

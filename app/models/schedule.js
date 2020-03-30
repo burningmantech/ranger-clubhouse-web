@@ -1,9 +1,8 @@
-import DS from 'ember-data';
+import Model, { attr } from '@ember-data/model';
 import { computed } from '@ember/object';
-const { attr } = DS;
 import moment from 'moment';
 
-export default class ScheduleModel extends DS.Model {
+export default class ScheduleModel extends Model {
   // the position row id
   @attr('number', { readOnly: true }) position_id;
   // position title associated with slot

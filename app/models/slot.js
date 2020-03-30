@@ -1,10 +1,8 @@
-import DS from 'ember-data';
+import Model, { attr } from '@ember-data/model';
 import { computed } from '@ember/object';
-const { attr } = DS;
-
 import moment from 'moment';
 
-export default class SlotModel extends DS.Model {
+export default class SlotModel extends Model {
   @attr('shiftdate') begins;
   @attr('shiftdate') ends;
   @attr('number') position_id;

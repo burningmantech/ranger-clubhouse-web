@@ -20,7 +20,7 @@ export default class ChFormSelectComponent extends Component {
   includeBlank = null;
 
   didReceiveAttrs() {
-    const groupName = this.get('options.firstObject.groupName');
+    const groupName = this.options.firstObject.groupName;
 
     this.set('isGrouped', !!groupName);
   }

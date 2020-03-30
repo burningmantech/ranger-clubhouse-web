@@ -3,7 +3,7 @@ import { action, computed, set } from '@ember/object';
 import { typeOf, isEmpty } from '@ember/utils';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
-import DS from 'ember-data';
+import Model from '@ember-data/model';
 
 import $ from 'jquery';
 
@@ -65,7 +65,7 @@ export default class ChFormComponent extends Component {
        * build a new changeset object which has the most recent data.
        */
 
-      if (original instanceof DS.Model) {
+      if (original instanceof Model) {
         original.set('onSaved', () => { this._modelUpdated() });
         this.set('watchingModel', original);
       }

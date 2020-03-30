@@ -125,7 +125,7 @@ export default class AdminCreditsController extends Controller {
     return groups.sortBy('title');
   }
 
-  @computed('credits.@each.position_id}')
+  @computed('credits.@each.position_id')
   get filterPositionOptions() {
     const unique = this.credits.uniqBy('positionTitle');
 

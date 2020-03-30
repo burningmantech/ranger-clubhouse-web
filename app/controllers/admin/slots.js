@@ -29,7 +29,7 @@ class CopySourcePosition extends EmberObject {
 
   @computed('slots.@each.selected')
   get allSelected() {
-    return this.get('slots').every((c) => c.get('selected'));
+    return this.slots.every((c) => c.selected);
   }
 
   @filterBy('slots', 'selected', true) selectedSlots;
@@ -50,7 +50,7 @@ class CopySourceSlot extends EmberObject {
   }
 
   adjustTime(sourceDate) {
-    const delta = this.get('controller.copyParams');
+    const delta = this.controller.copyParams;
     return moment(sourceDate).add({
       days: delta.deltaDays,
       hours: delta.deltaHours,
@@ -150,7 +150,7 @@ export default class SlotsController extends Controller {
 
   @computed('positions')
   get positionOptionsForCopy() {
-    const options = this.get('positions').map((p) => [p.title, p.id]);
+    const options = this.positions.map((p) => [p.title, p.id]);
     return [['(same position)', 0], ...options];
   }
 
@@ -177,7 +177,7 @@ export default class SlotsController extends Controller {
 
   @action
   saveSlot(model, isValid) {
-    const isNew = model.get('isNew');
+    const isNew = model.isNew;
 
     if (!isValid) {
       return;
@@ -191,14 +191,15 @@ export default class SlotsController extends Controller {
 
   _duplicateSlot(model) {
     return this.store.createRecord('slot', {
-      begins: model.get('begins'),
-      ends: model.get('ends'),
-      description: model.get('description'),
-      active: model.get('active'),
-      position_id: model.get('position_id'),
-      //trainer_slot_id: model.get('trainer_slot_id'),
-      max: model.get('max'),
-      url: model.get('url')
+      begins: model.begins,
+      ends: model.ends,
+      description: model.description,
+      active: model.active,
+      position_id: model.position_id,
+      //trainer_slot_id: model.trainer_slot_id,
+      max: model.max,
+      url: model.url,
+
     });
   }
 
@@ -267,7 +268,7 @@ export default class SlotsController extends Controller {
 
   @action
   cancel(model) {
-    if (!model.get('isDirty')) {
+    if (!model.isDirty) {
       this.set('slot', null);
       return;
     }
@@ -286,14 +287,14 @@ export default class SlotsController extends Controller {
   @action
   startCopy(selectedPositionId = null) {
     this.set('presentYear', currentYear());
-    const selectedLaborDay = laborDay(this.get('year'));
-    const presentLaborDay = laborDay(this.get('presentYear'));
+    const selectedLaborDay = laborDay(this.year);
+    const presentLaborDay = laborDay(this.presentYear);
     this.set('selectedYearLaborDay', selectedLaborDay.format('MMMM Do'));
     this.set('presentYearLaborDay', presentLaborDay.format('MMMM Do'));
     this.set('laborDayDiff', presentLaborDay.diff(selectedLaborDay, 'days'));
     let copyPositions = [];
     let canCopy = (s) => !s.training_id && !s.trainee_slot_id && !s.trainer_slot_id;
-    let slotsByPosition = _.groupBy(this.get('viewSlots').filter(canCopy), 'position_id');
+    let slotsByPosition = _.groupBy(this.viewSlots.filter(canCopy), 'position_id');
     if (selectedPositionId) {
       slotsByPosition = _.pick(slotsByPosition, [selectedPositionId]);
     }
@@ -314,14 +315,14 @@ export default class SlotsController extends Controller {
       copyPositions[0].set('expanded', true);
     }
     this.set('copyParams', CopyParams.create({
-      deltaDays: this.get('laborDayDiff'),
+      deltaDays: this.laborDayDiff,
     }));
     this.set('copySourcePositions', copyPositions);
   }
 
   @computed('copySourcePositions.@each.selectedSlots')
   get copySelectedSlotCount() {
-    return _.sumBy(this.get('copySourcePositions'), (p) => p.get('selectedSlots').length);
+    return _.sumBy(this.copySourcePositions, (p) => p.selectedSlots.length);
   }
 
   @action
@@ -332,14 +333,14 @@ export default class SlotsController extends Controller {
 
   @action
   performCopy() {
-    const params = this.get('copyParams');
+    const params = this.copyParams;
     if (params.newPositionId > 0) {
-      if (this.get('copySourcePositions').filter((p) => p.get('selectedSlots').length > 0).length > 1) {
+      if (this.copySourcePositions.filter((p) => p.selectedSlots.length > 0).length > 1) {
         this.toast.warning("Can't copy slots from multiple positions to a new position");
         return false;
       }
     }
-    const sourceIds = this.get('copySourcePositions').flatMap((p) => p.get('selectedSlots')).map((s) => s.source.id);
+    const sourceIds = this.copySourcePositions.flatMap((p) => p.selectedSlots).map((s) => s.source.id);
     if (sourceIds.length === 0) {
       this.toast.warning('No slots selected to copy; no changes made');
     } else {
@@ -384,7 +385,7 @@ export default class SlotsController extends Controller {
   @action
   copyPositionSelectAll(position) {
     // if all are selected, deselect all; otherwise select all
-    const value = !position.get('allSelected');
-    position.get('slots').forEach((s) => s.set('selected', value));
+    const value = !position.allSelected;
+    position.slots.forEach((s) => s.set('selected', value));
   }
 }

@@ -29,7 +29,7 @@ export default SessionService.extend({
       return Promise.resolve();
     }
 
-    const person_id = this.get('session.authenticated.person_id');
+    const person_id = this.session.get('authenticated.person_id');
 
     return this.store.findRecord('person', person_id, { reload: true })
       .then((person) => {

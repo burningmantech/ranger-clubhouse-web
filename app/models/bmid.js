@@ -1,13 +1,9 @@
-import DS from 'ember-data';
+import Model, { attr } from '@ember-data/model';
 import { computed } from '@ember/object';
-const { attr } = DS;
 import { isEmpty } from '@ember/utils';
 import { ticketTypeLabel } from 'clubhouse/constants/ticket-types';
 import { BmidStatusLabels, MealLabels } from 'clubhouse/constants/bmid';
-
 import moment from 'moment';
-
-const { Model } = DS;
 
 export default class BmidModel extends Model {
   @attr('number') person_id;
