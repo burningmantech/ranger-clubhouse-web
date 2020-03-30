@@ -1,7 +1,6 @@
-import DS from 'ember-data';
-const { attr } = DS;
+import Model, { attr } from '@ember-data/model';
 
-export default class SlotSignupModel extends DS.Model {
+export default class SlotSignupModel extends Model {
   @attr('number') person_id;
   @attr('string') callsign;
   @attr('number') position_id;

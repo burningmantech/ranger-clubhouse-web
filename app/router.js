@@ -1,6 +1,6 @@
 import EmberRouter from '@ember/routing/router';
 import config from './config/environment';
-import { run } from '@ember/runloop';
+import {run} from '@ember/runloop';
 
 export default class Router extends EmberRouter {
   location = config.locationType;
@@ -11,21 +11,19 @@ export default class Router extends EmberRouter {
 
     this.on('routeDidChange', () => {
       // Move the window back to the top when heading to a new route
-      if (!this.get('fastboot.isFastBoot')) {
-        run.schedule('afterRender', () => {
-          window.scrollTo(0,0);
-        });
-      }
+      run.schedule('afterRender', () => {
+        window.scrollTo(0, 0);
+      });
     });
   }
 }
 
-Router.map(function() {
+Router.map(function () {
   this.route('login');
   this.route('offline');
   this.route('reset-password');
-  this.route('me', function() {
-    this.route('overview', { path: '/' });
+  this.route('me', function () {
+    this.route('overview', {path: '/'});
     this.route('alerts');
     this.route('contact');
     this.route('emergency-contact');
@@ -38,21 +36,21 @@ Router.map(function() {
     this.route('personal-info');
     this.route('tickets');
     this.route('timesheet');
-    this.route('schedule', function() {
-      this.route('index',  { path: '/' });
+    this.route('schedule', function () {
+      this.route('index', {path: '/'});
     });
-    this.route('timesheet-corrections', function() {
+    this.route('timesheet-corrections', function () {
       this.route('review');
       this.route('missing');
       this.route('confirm');
     });
   });
 
-  this.route('search', function() {
+  this.route('search', function () {
     this.route('assets');
     this.route('languages');
   });
-  this.route('admin', function() {
+  this.route('admin', function () {
     this.route('action-log');
     this.route('alerts');
     this.route('assets');
@@ -67,15 +65,15 @@ Router.map(function() {
     this.route('hours-credits');
     this.route('maintenance');
     this.route('motd');
-    this.route('online-training', function() {
-      this.route('index', { path: '/'});
+    this.route('online-training', function () {
+      this.route('index', {path: '/'});
       this.route('courses');
       this.route('enrollment');
     });
     this.route('people-by-status-change');
     this.route('positions');
     this.route('radio-eligibility');
-    this.route('rbs', function() {
+    this.route('rbs', function () {
       this.route('broadcast');
       this.route('broadcast-log');
       this.route('message-log');
@@ -91,8 +89,8 @@ Router.map(function() {
     this.route('timesheet-sanity-checker');
   });
 
-  this.route('hq', { path: '/hq/:person_id' }, function() {
-    this.route('index', { path: '/' });
+  this.route('hq', {path: '/hq/:person_id'}, function () {
+    this.route('index', {path: '/'});
     this.route('assets');
     this.route('messages');
     this.route('schedule');
@@ -104,7 +102,7 @@ Router.map(function() {
 
   this.route('debug');
 
-  this.route('mentor', function() {
+  this.route('mentor', function () {
     this.route('acceptance-sheets');
     this.route('alpha-status');
     this.route('assignment');
@@ -115,8 +113,8 @@ Router.map(function() {
   });
 
 
-  this.route('person', { path: '/person/:person_id' } ,function() {
-    this.route('index', { path: '/' });
+  this.route('person', {path: '/person/:person_id'}, function () {
+    this.route('index', {path: '/'});
     this.route('access-documents');
     this.route('alerts');
     this.route('assets');
@@ -141,10 +139,10 @@ Router.map(function() {
 
   this.route('logout');
 
-  this.route('training', { path: '/training/:position_id' }, function() {
-    this.route('index', { path: '/'});
-    this.route('session', { path: '/session/:slot_id'}, function() {
-      this.route('index', { path: '/' });
+  this.route('training', {path: '/training/:position_id'}, function () {
+    this.route('index', {path: '/'});
+    this.route('session', {path: '/session/:slot_id'}, function () {
+      this.route('index', {path: '/'});
       this.route('signup-sheet');
       this.route('trainers-report');
     });
@@ -156,7 +154,7 @@ Router.map(function() {
   });
 
 
-  this.route('reports', function() {
+  this.route('reports', function () {
     this.route('alpha-shirts');
     this.route('asset-history');
     this.route('assets-outstanding');
@@ -189,9 +187,9 @@ Router.map(function() {
     this.route('rollcall');
   });
 
-  this.route('vc', function() {
-    this.route('access-documents', function() {
-      this.route('index', { path: '/'} );
+  this.route('vc', function () {
+    this.route('access-documents', function () {
+      this.route('index', {path: '/'});
       this.route('expiring');
       this.route('trs');
     });
@@ -207,6 +205,6 @@ Router.map(function() {
   this.route('register');
 
   // Catch all for unrecognized urls
-  this.route('not-found', { path: '/*path'} );
+  this.route('not-found', {path: '/*path'});
   // this.route('sso'); -- uncomment if will SSO is ever implemented
 });

@@ -110,7 +110,7 @@ export default class PersonTimesheetMissingComponent extends Component {
 
   @action
   saveAndManageNextEntryAction(model, isValid) {
-    this._saveEntry(model, isValid, this.get('nextEntry'));
+    this._saveEntry(model, isValid, this.nextEntry);
   }
 
   @action

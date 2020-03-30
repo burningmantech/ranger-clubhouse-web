@@ -3,7 +3,7 @@ import { action } from '@ember/object';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { Role } from 'clubhouse/constants/roles';
 import RSVP from 'rsvp';
-import DS from 'ember-data';
+import { NotFoundError } from '@ember-data/adapter/error'
 
 
 export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
@@ -61,7 +61,7 @@ export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
 
   @action
   error(response) {
-    if (response instanceof DS.NotFoundError) {
+    if (response instanceof NotFoundError) {
       this.toast.error('The person record was not found.');
       this.transitionTo('me');
       return false;

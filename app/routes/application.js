@@ -122,7 +122,7 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
   // see routes/person.js for an example.
   title(tokens) {
     if (tokens.length === 0) {
-      tokens = this.get('router').currentRouteName.split('.').map((x) => humanize([x]));
+      tokens = this.router.currentRouteName.split('.').map((x) => humanize([x]));
       if (tokens[tokens.length - 1] === 'Index') {
         tokens.pop();
       }

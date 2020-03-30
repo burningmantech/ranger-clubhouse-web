@@ -11,7 +11,7 @@ export default class NumberOfTimesComponent extends Component {
 
   @computed('times')
   get loops() {
-    const iterations = [], times = +this.get('times');
+    const iterations = [], times = +this.times;
     for (let i = 0; i < times; i++) {
       iterations.push(i);
     }

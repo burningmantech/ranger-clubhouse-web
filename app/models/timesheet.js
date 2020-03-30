@@ -1,9 +1,8 @@
-import DS from 'ember-data';
+import Model, { attr } from '@ember-data/model';
 import { isEmpty } from '@ember/utils';
-const { attr } = DS;
 import { computed } from '@ember/object';
 
-export default class TimesheetModel extends DS.Model {
+export default class TimesheetModel extends Model {
   @attr('number') person_id;
   @attr('number') position_id;
   @attr('number') slot_id;

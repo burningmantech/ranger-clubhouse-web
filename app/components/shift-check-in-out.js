@@ -22,7 +22,7 @@ export default class ShiftCheckInOutComponent extends Component {
 
   didReceiveAttrs() {
     // Set the position options to the first item
-    this.set('signinPositionId', this.get('signinPositions.firstObject.id'));
+    this.set('signinPositionId', this.signinPositions.firstObject.id);
 
     const slots = this.imminentSlots;
 

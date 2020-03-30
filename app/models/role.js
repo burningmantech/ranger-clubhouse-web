@@ -1,6 +1,4 @@
-import DS from 'ember-data';
-const { attr } = DS;
-const { Model } = DS;
+import Model, { attr } from '@ember-data/model';
 
 export default class RoleModel extends Model {
   @attr('string') title;
