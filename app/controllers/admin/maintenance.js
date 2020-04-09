@@ -1,5 +1,6 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 const TASK_GROUPS = [{
     group_title: 'Positions',
@@ -64,6 +65,16 @@ const TASK_GROUPS = [{
         title: 'Set Staff Cred. Access Dates',
         description: 'Set the default access date on all qualified, claimed, or banked Staff Credentials with a missing access date.',
         controller: 'access-document'
+      },
+      {
+        action: 'bump-expiration',
+        title: 'Bump Expiration Date',
+        description: 'Add 1 year to the expiration date on all banked and qualified tickets',
+        controller: 'access-document',
+        param: {
+          title: 'Enter a reason why the ticket expiration dates are being bumped:',
+          name: 'reason'
+        }
       }
     ]
   },
@@ -111,28 +122,50 @@ const TASK_GROUPS = [{
 ];
 
 export default class AdminMaintenanceController extends Controller {
-  iSubmitting = false;
-  task = null;
+  @tracked isSubmitting = false;
+  @tracked task = null;
+  @tracked taskAction = null;
+  @tracked results;
+  @tracked taskParam = null;
+  @tracked paramValue;
 
   taskGroups = TASK_GROUPS;
 
   @action
   executeTask(task) {
+    this.taskParam = null;
     this.modal.confirm('Execute Task', `Are you sure you want to '${task.title}'?`, () => {
-      this.set('task', task);
-      this.set('taskAction', task.action);
-      this.set('isSubmitting', true);
-      this.ajax.request(`${task.controller}/${task.action}`, { method: 'POST' })
-        .then((results) => this.set('results', results))
+      const data = {};
+      this.task = task;
+      this.taskAction = task.action;
+      this.isSubmitting = true;
+      this.askParam = null;
+      if (task.param) {
+        data[task.param.name] = this.paramValue;
+      }
+
+      this.ajax.request(`${task.controller}/${task.action}`, { method: 'POST', data })
+        .then((results) => this.results = results)
         .catch((response) => {
           this.house.handleErrorResponse(response);
-          this.set('task', null);
-        }).finally(() => this.set('isSubmitting', false) );
+          this.task = null;
+        }).finally(() => this.isSubmitting = false);
     });
   }
 
   @action
+  askParamAction(task) {
+    this.paramValue = '';
+    this.taskParam = task;
+  }
+
+  @action
+  cancelParamAction() {
+    this.taskParam = null;
+  }
+
+  @action
   showIndex() {
-    this.set('task', null);
+    this.task = null;
   }
 }

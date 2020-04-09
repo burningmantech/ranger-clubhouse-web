@@ -36,7 +36,7 @@ export default class PersonAccessDocumentsController extends Controller {
   get yearOptions() {
     const currentYear = this.house.currentYear();
     const years = [];
-    for (let year = currentYear - 4; year < currentYear + 4; year++) {
+    for (let year = currentYear - 5; year < currentYear + 5; year++) {
       years.push(year);
     }
 
