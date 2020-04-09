@@ -12,7 +12,9 @@ export default class AdminMaintenanceRoute extends Route {
 
   setupController(controller, model) {
     controller.set('ticketingInfo', model.ticketing_info);
-    controller.set('task', null);
-    controller.set('taskAction', null);
+    controller.task =  null;
+    controller.taskParam = null;
+    controller.isSubmitting = false;
+    controller.taskAction = null;
   }
 }
