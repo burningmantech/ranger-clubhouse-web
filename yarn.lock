@@ -2819,10 +2819,10 @@ body@^5.1.0:
     raw-body "~1.1.0"
     safe-json-parse "~1.0.1"
 
-boilerplate-update@0.37.2:
-  version "0.37.2"
-  resolved "https://registry.yarnpkg.com/boilerplate-update/-/boilerplate-update-0.37.2.tgz#0cec2f2b0e7dfb994d200ad8f7d600d173121281"
-  integrity sha512-d3Z6ylzF7aifHJsBELJJIAAL/3gWEvqYkUBRGKAqY5468v/7VXGe4wTUKHqbaiXs2dRwBkPXEd1D5WnHNBRwVQ==
+boilerplate-update@0.37.4:
+  version "0.37.4"
+  resolved "https://registry.yarnpkg.com/boilerplate-update/-/boilerplate-update-0.37.4.tgz#51993eccd468fab69457dff799c29b632faf942e"
+  integrity sha512-BMUFsxjugQAsRXHT3QPWckpiB+0jp7YU7U7cGSDbL7IATMfJJDCE7/LGppaIzN97/3iLemkbCeRpmjZWRHYdMA==
   dependencies:
     cpr "^3.0.1"
     debug "^4.1.1"
@@ -2830,7 +2830,7 @@ boilerplate-update@0.37.2:
     git-diff-apply "0.22.7"
     https-proxy-agent "^3.0.0"
     inquirer "^7.0.0"
-    merge-package.json "^3.1.6"
+    merge-package.json "^3.1.8"
     npm-package-arg "^7.0.0"
     npx "^10.2.0"
     open "^7.0.0"
@@ -5537,12 +5537,12 @@ ember-cli-uglify@^3.0.0:
     broccoli-uglify-sourcemap "^3.1.0"
     lodash.defaultsdeep "^4.6.0"
 
-ember-cli-update@^0.54.3:
-  version "0.54.3"
-  resolved "https://registry.yarnpkg.com/ember-cli-update/-/ember-cli-update-0.54.3.tgz#ccbf540ec69bb818c207c10b3f7fc4863b6c8b2a"
-  integrity sha512-cfcavvlEnG4+DNnMPKAsLqHKCV1bZMoMBYzBmkAEeWLMt1xrumr3bif+LtcfRdOppybzxsqm96uZX9kahcFyWw==
+ember-cli-update@^0.54.6:
+  version "0.54.6"
+  resolved "https://registry.yarnpkg.com/ember-cli-update/-/ember-cli-update-0.54.6.tgz#e9f405b4737558e53874025731568ae7c005a48c"
+  integrity sha512-0YWkfACDrITm9sl3UNrP8BMYXbRt+iPbAUUv/tY3JWveat8j3aHBR1SI4MqESt3ELkLeLbftTQfU42Tx4Bl/Kg==
   dependencies:
-    boilerplate-update "0.37.2"
+    boilerplate-update "0.37.4"
     debug "^4.1.1"
     execa "^3.4.0"
     fs-extra "^8.0.0"
@@ -9414,13 +9414,13 @@ merge-descriptors@1.0.1:
   resolved "https://registry.yarnpkg.com/merge-descriptors/-/merge-descriptors-1.0.1.tgz#b00aaa556dd8b44568150ec9d1b953f3f90cbb61"
   integrity sha1-sAqqVW3YtEVoFQ7J0blT8/kMu2E=
 
-merge-package.json@^3.1.6:
-  version "3.1.6"
-  resolved "https://registry.yarnpkg.com/merge-package.json/-/merge-package.json-3.1.6.tgz#fee3f7bb040f0ad07c316108e084b8dd9b1c05e7"
-  integrity sha512-eJtijfWnfUmIWw1/rtQ1joG9kod7ZKWACdRqJ9vcEcZPXLN2X/LdRU3534fCBF4Z6wxTYJUhIIFyNFojYoRDfg==
+merge-package.json@^3.1.8:
+  version "3.1.8"
+  resolved "https://registry.yarnpkg.com/merge-package.json/-/merge-package.json-3.1.8.tgz#2da5ee453c3745565b2fea3bf31dc6ef81e712d7"
+  integrity sha512-3/xqeMFcGqMpX79qNs3SDAsNNZ1Q31nqeH0ma4ilB++4SqDnkzmHcbDNEVy67RWIy+pdAdw6XnY31dircVG5lQ==
   dependencies:
     rfc6902-ordered "^4.0.5"
-    three-way-merger "0.6.1"
+    three-way-merger "0.6.3"
 
 merge-stream@^2.0.0:
   version "2.0.0"
@@ -12952,10 +12952,10 @@ text-table@^0.2.0, text-table@~0.2.0:
   resolved "https://registry.yarnpkg.com/textextensions/-/textextensions-2.6.0.tgz#d7e4ab13fe54e32e08873be40d51b74229b00fc4"
   integrity sha512-49WtAWS+tcsy93dRt6P0P3AMD2m5PvXRhuEA0kaXos5ZLlujtYmpmFsB+QvWUSxE1ZsstmYXfQ7L40+EcQgpAQ==
 
-three-way-merger@0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/three-way-merger/-/three-way-merger-0.6.1.tgz#9dd69bc06e9623168c04181a259b467b8ae4502e"
-  integrity sha512-58UkFHJaZ9G5s5GkQk4eaolsJNhfQdSNpPpfYGfBcW3aIMzdZykX12KQUUQoCZKLff584nLOfZc0gYplWLVTVA==
+three-way-merger@0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/three-way-merger/-/three-way-merger-0.6.3.tgz#ad4d9cd889f0c81ab2e820301a4663ee5def0334"
+  integrity sha512-sjXsAqIiluhRBvbXfri1dBI5NSqfl/fe8R3QypAR15qeMRrsBodrGeROBtve2BQnxB9Ub6Fs0e/H1OZdaELD7A==
   dependencies:
     semver "^6.0.0"
 
