@@ -60,7 +60,7 @@
     "ember-simple-auth": "^3.0",
     "ember-simple-auth-token": "^5.0.0",
     "ember-source": "~3.17.3",
-    "ember-template-lint": "^2.5.1",
+    "ember-template-lint": "^2.5.2",
     "ember-test-friendly-error-handler": "^2.1.1",
     "ember-toastr": "^2.0.1",
     "ember-truth-helpers": "^2.1.0",
