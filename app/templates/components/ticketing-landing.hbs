@@ -4,7 +4,7 @@
   <TicketingOpen @ticketingInfo={{@ticketingInfo}} @ticketPackage={{@ticketPackage}} @person={{@person}} />
 {{else if (eq @ticketingInfo.period "closed")}}
   <TicketingClosed @ticketingInfo={{@ticketingInfo}} @ticketPackage={{@ticketPackage}} @person={{@person}} />
-{{else if (eq ticketingInfo.period "offseason")}}
+{{else if (eq @ticketingInfo.period "offseason")}}
   <TicketingOffseason @ticketingInfo={{@ticketingInfo}} @ticketPackage={{@ticketPackage}} @person={{@person}} />
 {{else}}
   Uh oh, I do not understand the ticketing period status [{{@ticketingInfo.period}}]

@@ -7,6 +7,12 @@ export default class TicketingOffseasonComponent extends Component {
   }
 
   get eventYear() {
-    return eventYear();
+    const year = eventYear();
+    
+    if (year == 2020) {
+      return 2021;
+    }
+
+    return year;
   }
 }
