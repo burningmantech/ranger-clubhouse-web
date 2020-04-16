@@ -65,7 +65,7 @@
     "ember-toastr": "^2.0.1",
     "ember-truth-helpers": "^2.1.0",
     "ember-wormhole": "^0.5.5",
-    "eslint-plugin-ember": "^8.1.1",
+    "eslint-plugin-ember": "^8.4.0",
     "faker": "^4.1.0",
     "loader.js": "^4.7.0",
     "qunit-dom": "^1.1.0",
