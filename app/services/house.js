@@ -33,6 +33,12 @@ export default class HouseService extends Service {
       console.error(response);
     }
 
+    if (response.status == 401 && this.session.isAuthenticated) {
+      this.toast.warn('Your session has timed out. Please login again.')
+      this.session.invalidate();
+      return;
+    }
+
     // Ember Data request error
     if (response instanceof InvalidError) {
       responseErrors = response.errors.map((error) => error.title);
@@ -87,7 +93,7 @@ export default class HouseService extends Service {
 
         case 401:
           errorType = 'authorization';
-          break;
+           break;
 
         case 403:
           errorType = 'not permitted';
