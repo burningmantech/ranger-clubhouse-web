@@ -3,6 +3,7 @@ import {action} from '@ember/object';
 import {humanize} from 'ember-cli-string-helpers/helpers/humanize';
 import {inject as service} from '@ember/service';
 import {config} from 'clubhouse/utils/config';
+import {UnauthorizedError} from '@ember-data/adapter/error';
 
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import ENV from 'clubhouse/config/environment';
@@ -115,6 +116,22 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
     // the navigation bar is not expanded - i.e. when showning
     // on a cellphone.
     $('.navbar-collapse').collapse('hide');
+  }
+
+  @action
+  error(error) {
+    if (error instanceof UnauthorizedError || error.status == 401) {
+      // 401 error - not logged in, or JWT expired.
+      if (this.session.isAuthenicated) {
+        this.toast.warn('Your session has timed out. Please login again.')
+        this.session.invalidate();
+      } else {
+        this.transitionTo('login');
+      }
+      return false;
+    }
+    // allow the error to transition to ErrorRoute
+    return true;
   }
 
   // Dynamic page title: https://github.com/mike-north/ember-cli-document-title-northm
