@@ -106,10 +106,12 @@
         <PersonLink @person={{trainer}} />
       </h3>
       {{#if trainer.photo_url}}
-        <img src="{{trainer.photo_url}}" class="d-block mb-2" alt="trainer {{trainer.callsign}} photo">
+        <div class="mugshot">
+          <img src="{{trainer.photo_url}}" alt="trainer {{trainer.callsign}} photo">
+        </div>
       {{else}}
         <div class="my-2">
-          <i class="far fa-user fa-8x"></i><br>
+          <i class="far fa-user fa-4x"></i><br>
           Uh oh, {{trainer.callsign}} does not have a photo on file. Sorry!
         </div>
       {{/if}}
