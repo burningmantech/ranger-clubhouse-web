@@ -126,6 +126,22 @@ const AUDITOR_TASKS = [{
   },
 
   {
+    name: 'Take a Training Survey (optional)',
+    check(milestones) {
+
+      if (milestones.surveys.sessions.length > 0) {
+        return {
+          result: OPTIONAL,
+          message: 'Please take a moment to provide feedback on your face-to-face training experience.',
+          survey: true
+        };
+
+      }
+      return {result: SKIP}; // Only show the step IF a survey is available (marked as passed training, and a survey has been created)
+    }
+  },
+
+  {
     name: 'Interested in being a Black Rock Ranger?',
     check() {
       return {
@@ -159,32 +175,15 @@ export default class DashboardAuditorComponent extends Component {
         return;
       }
 
-      const result = {
-        name: task.name,
-        result: check.result,
-        message: check.message,
-        linkUrl: check.linkUrl,
-        isTrainingSignup: check.isTrainingSignup,
-        isVisitPersonInfo: check.isVisitPersonInfo,
-        isNotifySignup: check.isNotifySignup,
-        isOnlineTraining: check.isOnlineTraining,
-      };
+      check.name = task.name;
 
       if (check.email) {
-        result.email = config(check.email);
-      }
-
-      if (check.isBehavioralAgreement) {
-        result.isBehavioralAgreement = true;
-      }
-
-      if (check.route) {
-        result.route = check.route;
+        check.email = config(check.email);
       }
 
       if (check.result != COMPLETED && check.result != OPTIONAL) {
         if (check.result == ACTION_NEEDED || check.result == NOT_AVAILABLE) {
-          result.isActive = true;
+          check.isActive = true;
         } else if (check.result != BLOCKED) {
           // Another action needs to be taken first.
           check.result = NOT_AVAILABLE;
@@ -192,7 +191,7 @@ export default class DashboardAuditorComponent extends Component {
 
         prevCompleted = false;
       }
-      tasks.push(result);
+      tasks.push(check);
     });
 
     return tasks;

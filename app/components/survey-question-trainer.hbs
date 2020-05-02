@@ -1,0 +1,39 @@
+<div class="border p-2 mb-2">
+  {{#if this.question}}
+    <h3>{{#if @trainer}}{{@trainer.callsign}}: {{/if}}{{this.question.description}}</h3>
+    {{#if (eq this.question.type "rating")}}
+      Rating legend: 1 = needs improvement, 4 = ok/neutral, 7 = terrific!
+      <p class="mt-2">
+        Your average rating is {{this.question.mean}}
+        from {{pluralize this.question.rating_count "response"}}
+        with  a standard deviation of {{this.question.variance}}.
+      </p>
+      <p>
+        Rating distribution (rating x count):
+        {{#each-in this.question.distribution as |rating count|}}
+          {{rating}}x{{count}}
+        {{/each-in}}
+      </p>
+    {{else}}
+      <div class="mb-2">
+        {{#each this.question.slots as |slot|}}
+            <b>{{slot.description}} {{shift-format slot.begins}}</b>
+          ({{pluralize slot.answers.length "response"}})
+          <div class="ml-4">
+            {{#each slot.answers as |answer|}}
+              <div class="mb-1">
+                &mdash;
+                {{#if @isToTFeedback}}
+                  {{if answer.callsign answer.callsign "anonymous"}}:
+                {{/if}}
+                {{answer.response}}
+              </div>
+            {{/each}}
+          </div>
+        {{/each}}
+      </div>
+    {{/if}}
+  {{else}}
+    <b class="text-danger">Survey code [{{@code}}] was not found for this survey!</b>
+  {{/if}}
+</div>

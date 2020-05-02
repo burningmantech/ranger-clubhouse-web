@@ -164,11 +164,12 @@ export default class ChFormFieldComponent extends Component {
       const type = typeOf(opt);
       let label, value;
 
-      if (type == 'object' && opt.id) {
+      if (type == 'object' && ('id' in opt)) {
+        // { id: value, title: 'option label' }
         label = opt.title;
-        value = opt.id
-        // Simple [ 'label', value ]
+        value = opt.id;
       } else if (type == 'array') {
+        // Simple [ 'label', value ]
         label = opt[0];
         value = opt[1];
       } else {

@@ -1,0 +1,89 @@
+<div class="border p-2 mb-2" id="{{if @trainer (concat "trainer-" @trainer.id) "question"}}-{{@code}}">
+  {{#if this.question}}
+    {{#if @trainer}}
+      <h3>Trainer {{@trainer.callsign}}</h3>
+      <i>{{this.question.description}}</i>
+    {{else}}
+      <h3>{{this.question.description}}</h3>
+    {{/if}}
+
+    {{#if @isSlotRating}}
+      <table class="table table-width-auto table-striped table-hover table-sm">
+        <thead>
+        <tr>
+          <th>Training</th>
+          <th>Date</th>
+          <th>Average Rating</th>
+          <th>Std. Dev.</th>
+          <th>Count</th>
+          <th>Sign Ups</th>
+          <th>Distribution</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.slotRatings as |slot|}}
+          <tr>
+            <td>
+              <LinkTo @route="training.session.index" @models={{array @trainingId slot.id}}>
+                {{slot.description}}
+              </LinkTo>
+            </td>
+            <td>
+              {{shift-format slot.begins}}
+            </td>
+            <td>
+              <progress max="100" value="{{mult (div slot.mean 7) 100}}"/> {{slot.mean}}
+            </td>
+            <td class="text-right">{{slot.variance}}</td>
+            <td class="text-right">{{slot.rating_count}}</td>
+            <td class="text-right">{{slot.signed_up}}</td>
+            <td>
+              {{#each-in slot.distribution as |rating count|}}
+                {{rating}}x{{count}}
+              {{/each-in}}
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      {{#if (eq this.question.type "rating")}}
+        <p>
+          Responses: {{this.question.rating_count}};
+          average: {{this.question.mean}};
+          standard deviation: {{this.question.variance}};
+          distribution:
+          {{#each-in this.question.distribution as |rating count|}}
+            {{rating}}x{{count}}
+          {{/each-in}}
+        </p>
+      {{else}}
+        <div class="mb-4">
+          {{#each this.question.slots as |slot|}}
+            {{#if @trainingId}}
+              <LinkTo @route="training.session.index" @models={{array @trainingId slot.id}}>
+                <b>{{slot.description}} {{shift-format slot.begins}}</b>
+              </LinkTo>
+            {{else}}
+              <b>{{slot.description}} {{shift-format slot.begins}}</b>
+            {{/if}}
+            ({{pluralize slot.answers.length "response"}})
+            <div class="ml-4">
+              {{#if slot.answers}}
+                {{#each slot.answers as |answer|}}
+                  <div class="mb-1">
+                    &mdash; {{answer.response}}
+                  </div>
+                {{/each}}
+              {{else}}
+                <i>No feedback was given</i>
+              {{/if}}
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
+    {{/if}}
+  {{else}}
+    <b class="text-danger">Survey code [{{@code}}] was not found for this survey!</b>
+  {{/if}}
+</div>

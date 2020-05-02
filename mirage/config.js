@@ -224,7 +224,11 @@ export default function () {
         online_training_passed: true,
         behavioral_agreement: true,
         has_reviewed_pi: true,
-        photo_upload_enabled: true
+        photo_upload_enabled: true,
+        surveys: {
+          sessions: [],
+          trainers: []
+        }
       }
     };
   });

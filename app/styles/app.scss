@@ -278,6 +278,14 @@ legend {
   background-color: #f0f0f0;
 }
 
+@media only screen and (max-width: 799px) {
+  .form-check-inline-responsive .form-check-inline {
+    display: block !important;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+}
+
 /* Messages */
 
 .person-message-box {

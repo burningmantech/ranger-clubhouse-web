@@ -75,6 +75,9 @@
                     {{#if session.user.teacher.have_mentored}}
                       <LinkTo @route="me.mentees" class="dropdown-item">My Mentees</LinkTo>
                     {{/if}}
+                    {{#if session.user.teacher.have_feedback}}
+                      <LinkTo @route="me.trainer-feedback" class="dropdown-item">Trainer Feedback</LinkTo>
+                    {{/if}}
                   </div>
 
                   <div class="col-sm-12 col-md-4 col-lg-3">
@@ -98,6 +101,11 @@
                 <LinkTo @route="training.multiple-enrollments" @model="dirt" class="dropdown-item">Multiple Enrollments
                   Report
                 </LinkTo>
+                <LinkTo @route="training.people-training-completed" @model="dirt" class="dropdown-item">Training Completed</LinkTo>
+                <LinkTo @route="training.trainer-attendance" @model="dirt" class="dropdown-item">Trainer Attendance</LinkTo>
+                {{#if (has-role "survey-management")}}
+                  <LinkTo @route="training.survey.index" @model="dirt" class="dropdown-item">Training Surveys</LinkTo>
+                {{/if}}
               </div>
             </li>
           {{/if}}
@@ -175,6 +183,7 @@
                           <LinkTo @route="admin.roles" class="dropdown-item">(System) Roles</LinkTo>
                           <LinkTo @route="admin.help" class="dropdown-item">Help Documents</LinkTo>
                           <LinkTo @route="admin.alerts" class="dropdown-item">RBS Alerts</LinkTo>
+                          <LinkTo @route="admin.survey" class="dropdown-item">Surveys</LinkTo>
                         {{/if}}
                       </div>
                       {{#if (has-role "admin")}}

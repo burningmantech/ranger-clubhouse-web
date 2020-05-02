@@ -15,6 +15,8 @@ export default class ChBoxComponent extends Component {
   // Title icon
   icon = null;
 
+  iconType = null;
+
   // If true, then card-body div is not emitted.
   noBody = false;
 }

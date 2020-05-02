@@ -1,0 +1,31 @@
+<ModalDialog @title={{concat (if @surveyEntry.isNew "Create" "Edit") " Survey"}} as |Modal|>
+  <ChForm @formId="survey" @originalModel={{@survey}}
+          @validator={{this.surveyValidations}}
+          @onSubmit={{this.saveSurveyAction}}
+          @onCancel={{this.cancelSurveyAction}} as |f|>
+    <Modal.body>
+      <div class="form-row">
+        <f.input @name="type" @type="select" @label="Type" @options={{this.typeOptions}} />
+      </div>
+      <div class="form-row">
+        <f.input @name="position_id" @type="select" @label="Position" @options={{this.positionOptions}} />
+      </div>
+      <div class="form-row">
+        <f.input @name="title" @type="text" @label="Title" @size=80 @maxlength=190/>
+      </div>
+      <div class="form-row">
+        <f.input @name="prologue" @label="Survey prologue text" @type="textarea" @cols=80 @rows=4/>
+      </div>
+      <div class="form-row">
+        <f.input @name="epilogue" @label="Survey epilogue text" @type="textarea" @cols=80 @rows=4/>
+      </div>
+    </Modal.body>
+    <Modal.footer @noAlign=true>
+      <f.submit @label={{if @survey.isNew "Create" "Save"}} @disabled={{@survey.isSaving}} />
+      <f.cancel/>
+      {{#if @survey.isSaving}}
+        <LoadingIndicator/>
+      {{/if}}
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>

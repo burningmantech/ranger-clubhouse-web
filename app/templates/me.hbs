@@ -36,6 +36,10 @@
     {{#if user.teacher.have_mentored}}
       <ChSidebarLink @route="me.mentees" @title="My Mentees" @icon="users" @iconType="s" />
     {{/if}}
+    {{#if session.user.teacher.have_feedback}}
+      <ChSidebarLink @route="me.trainer-feedback" @title="Trainer Feedback" @icon="poll-h" @iconType="s" />
+    {{/if}}
+
     {{#if user.isRanger}}
       <ChSidebarLink @route="me.contact" @title="Contact Ranger" @icon="comments" @iconType="s" />
     {{/if}}
