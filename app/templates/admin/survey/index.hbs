@@ -2,9 +2,7 @@
 <p>
   <button type="button" class="btn btn-primary" {{on "click" this.newSurveyAction}}>New Survey</button>
 </p>
-<p>
-  Showing {{pluralize this.surveys.length "survey"}}
-</p>
+Showing {{pluralize this.surveys.length "survey"}}
 <table class="table table-width-auto table-striped table-hover">
   <thead>
   <tr>
@@ -32,26 +30,32 @@
       </td>
       <td>
         <LinkTo @route="admin.survey.manage" @model={{survey.id}} class="btn btn-primary btn-sm">Manage</LinkTo>
-        <button type="button" class="btn btn-secondary btn-sm" {{on "click" (fn this.duplicateSurveyAction survey)}}>Duplicate</button>
-        <button type="button" class="btn btn-danger btn-sm" {{on "click" (fn this.deleteSurveyAction survey)}}>{{fa-icon "trash"}} Delete</button>
-       </td>
+        <button type="button" class="btn btn-secondary btn-sm" {{on "click" (fn this.duplicateSurveyAction survey)}}>
+          Duplicate
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" {{on "click" (fn this.deleteSurveyAction survey)}}>{{fa-icon
+                "trash"}} Delete
+        </button>
+      </td>
     </tr>
   {{else}}
     <tr>
-      <td colspan="3" class="text-danger">No surveys found for {{this.year}}</td>
+      <td colspan="5" class="text-danger">No surveys found for {{this.year}}</td>
     </tr>
   {{/each}}
   </tbody>
 </table>
 
 {{#if this.surveyEntry}}
-  <SurveyForm @survey={{this.surveyEntry}} @positions={{this.positions}} @onCancel={{this.cancelSurveyAction}} @onSave={{this.saveSurveyAction}} />
+  <SurveyForm @survey={{this.surveyEntry}} @positions={{this.positions}} @onCancel={{this.cancelSurveyAction}}
+              @onSave={{this.saveSurveyAction}} />
 {{/if}}
 
 {{#if this.isDuplicating}}
   <ModalDialog as |Modal|>
     <Modal.body>
-      Duplicating Survey <LoadingIndicator />
+      Duplicating Survey
+      <LoadingIndicator/>
     </Modal.body>
   </ModalDialog>
 {{/if}}

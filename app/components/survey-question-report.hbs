@@ -3,6 +3,17 @@
     {{#if @trainer}}
       <h3>Trainer {{@trainer.callsign}}</h3>
       <i>{{this.question.description}}</i>
+      {{#if @trainer.photo_url}}
+        <div class="mugshot">
+          <img src="{{@trainer.photo_url}}" alt="trainer {{@trainer.callsign}} photo">
+        </div>
+      {{else}}
+        <div class="my-2">
+          <i class="far fa-user fa-4x"></i><br>
+          Uh oh, {{@trainer.callsign}} does not have a photo on file. Sorry!
+        </div>
+      {{/if}}
+
     {{else}}
       <h3>{{this.question.description}}</h3>
     {{/if}}
