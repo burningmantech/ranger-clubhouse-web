@@ -12,9 +12,10 @@
     {{#if training.is_art}}
       <ChSidebarLink @route="training.untrained-people" @routeArg={{training.id}} @title="Untrained People"
                      @icon="exclamation-circle" @iconType="s"/>
+    {{else if (has-role "survey-management")}}
+      <ChSidebarLink @route="training.survey.index" @routeArg={{training.id}} @title="Training Surveys" @icon="poll"
+                     @iconType="s"/>
     {{/if}}
-    <ChSidebarLink @route="training.survey.index" @routeArg={{training.id}} @title="Training Surveys" @icon="poll"
-                   @iconType="s"/>
   </ChSidebarGroup>
 </ChSidebar>
 
@@ -28,19 +29,20 @@
       <div class="dropdown-menu">
         <LinkTo @route="training.index" @model={{training.id}} class="dropdown-item">Training Sessions</LinkTo>
         <LinkTo @route="training.capacity" @model={{training.id}} class="dropdown-item">Training Capacity</LinkTo>
-        <LinkTo @route="training.multiple-enrollments" @model={{training.id}} class="dropdown-item">Multiple
-          Enrollments
+        <LinkTo @route="training.multiple-enrollments" @model={{training.id}} class="dropdown-item">
+          Multiple Enrollments
         </LinkTo>
-        <LinkTo @route="training.people-training-completed" @model={{training.id}} class="dropdown-item">Training
-          Completed
+        <LinkTo @route="training.people-training-completed" @model={{training.id}} class="dropdown-item">
+          Training Completed
         </LinkTo>
-        <LinkTo @route="training.trainer-attendance" @model={{training.id}} class="dropdown-item">Trainer Attendance
+        <LinkTo @route="training.trainer-attendance" @model={{training.id}} class="dropdown-item">
+          Trainer Attendance
         </LinkTo>
         {{#if training.is_art}}
-          <LinkTo @route="training.untrained-people" @model={{training.id}} class="dropdown-item">Untrained People
+          <LinkTo @route="training.untrained-people" @model={{training.id}} class="dropdown-item">
+            Untrained People
           </LinkTo>
-        {{/if}}
-        {{#if (has-role "survey-management")}}
+        {{else if (has-role "survey-management")}}
           <LinkTo @route="training.survey.index" @model={{training.id}} class="dropdown-item">Training Surveys</LinkTo>
         {{/if}}
       </div>
