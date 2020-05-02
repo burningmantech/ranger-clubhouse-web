@@ -44,12 +44,18 @@ Router.map(function () {
       this.route('missing');
       this.route('confirm');
     });
+    this.route('survey');
+    this.route('trainer-feedback', function() {
+      this.route('index', { path: '/' });
+      this.route('view', { path: '/:year' } );
+    });
   });
 
   this.route('search', function () {
     this.route('assets');
     this.route('languages');
   });
+
   this.route('admin', function () {
     this.route('action-log');
     this.route('alerts');
@@ -85,6 +91,12 @@ Router.map(function () {
     this.route('salesforce');
     this.route('settings');
     this.route('slots');
+    this.route('survey', function() {
+      this.route('index', { path: '/'});
+      this.route('manage', { path: '/:survey_id' });
+      this.route('preview', { path: '/:survey_id/preview' });
+    });
+
     this.route('thank-you-cards');
     this.route('timesheet-sanity-checker');
   });
@@ -151,6 +163,9 @@ Router.map(function () {
     this.route('people-training-completed');
     this.route('untrained-people');
     this.route('trainer-attendance');
+    this.route('survey', function() {
+      this.route('report', {path: '/:survey_id'});
+    });
   });
 
 

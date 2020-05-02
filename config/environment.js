@@ -94,11 +94,12 @@ module.exports = function(environment) {
     ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = ENV['api-server']+'/auth/refresh';
 
     ENV['ember-cli-mirage'] = {
-      enabled: false
+      enabled: false,
+      excludeFilesFromBuild: true // Don't include lodash and everything else mirage needs
+
     };
 
     ENV.newVersion = { enabled: false };
-
   }
 
   if (environment === 'test') {

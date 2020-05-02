@@ -1,10 +1,10 @@
 import Component from '@glimmer/component';
-import { tracked } from "@glimmer/tracking";
-import { action, computed, set } from '@ember/object';
-import { inject as service } from '@ember/service';
-import { config } from 'clubhouse/utils/config';
-import { htmlSafe } from '@ember/string';
-import { debounce } from '@ember/runloop';
+import {tracked} from "@glimmer/tracking";
+import {action, computed, set} from '@ember/object';
+import {inject as service} from '@ember/service';
+import {config} from 'clubhouse/utils/config';
+import {htmlSafe} from '@ember/string';
+import {debounce} from '@ember/runloop';
 import ENV from 'clubhouse/config/environment';
 import moment from 'moment';
 
@@ -18,25 +18,25 @@ const BLOCKED = 'blocked';
 const OPTIONAL = 'optional';
 
 const SETUP_ACCOUNT_TASKS = [{
-    name: 'Review and Update Personal Information',
-    check(milestones) {
-      if (milestones.has_reviewed_pi) {
-        return { result: COMPLETED };
-      }
-
-      return {
-        result: ACTION_NEEDED,
-        route: 'me.personal-info',
-        isVisitPersonInfo: true,
-      };
+  name: 'Review and Update Personal Information',
+  check(milestones) {
+    if (milestones.has_reviewed_pi) {
+      return {result: COMPLETED};
     }
-  },
+
+    return {
+      result: ACTION_NEEDED,
+      route: 'me.personal-info',
+      isVisitPersonInfo: true,
+    };
+  }
+},
 
   {
     name: 'Sign the Burning Man Behavioral Standards Agreement (optional)',
     check(milestones) {
       if (milestones.behavioral_agreement) {
-        return { result: COMPLETED };
+        return {result: COMPLETED};
       }
 
       return {
@@ -52,13 +52,13 @@ const SETUP_ACCOUNT_TASKS = [{
     name: 'Upload a BMID Photo',
     check(milestones) {
       if (milestones.photo_status != 'missing') {
-        return { result: COMPLETED, isPhotoTask: true };
+        return {result: COMPLETED, isPhotoTask: true};
       }
 
       if (!milestones.photo_upload_enabled) {
-        return { result: WAITING, message: 'Photo uploading is not available at this time. Check back later.' }
+        return {result: WAITING, message: 'Photo uploading is not available at this time. Check back later.'}
       }
-      return { result: ACTION_NEEDED,  isPhotoUpload: true, isPhotoTask: true };
+      return {result: ACTION_NEEDED, isPhotoUpload: true, isPhotoTask: true};
     }
   },
 
@@ -67,24 +67,27 @@ const SETUP_ACCOUNT_TASKS = [{
     check(milestones, prevCompleted, photo) {
       let reasons, message;
       switch (milestones.photo_status) {
-      case 'approved':
-        return { result: COMPLETED };
-      case 'submitted':
-        return { result: WAITING, message: 'The photo is being reviewed. Usually photos are approved within 2 to 3 days.' }
-      case 'rejected':
-        reasons = photo.rejections.map((reason) => `<li>${reason}</li>`).join('');
-        message = `Your photo was rejected for the following reasons: <ul>${reasons}</ul>`;
-        if (photo.reject_message) {
-          message += `The photo reviewer left you an additional message:<br>${photo.reject_message}<br><br>`;
-        }
-        message += 'Please upload a new photo which conforms to the BMID requirements.';
-        return {
-          result: URGENT,
-          isPhotoUpload: true,
-          message: htmlSafe(message)
-        };
-      default:
-        return { result: NOT_AVAILABLE, message: 'Upload a photo first.' };
+        case 'approved':
+          return {result: COMPLETED};
+        case 'submitted':
+          return {
+            result: WAITING,
+            message: 'The photo is being reviewed. Usually photos are approved within 2 to 3 days.'
+          }
+        case 'rejected':
+          reasons = photo.rejections.map((reason) => `<li>${reason}</li>`).join('');
+          message = `Your photo was rejected for the following reasons: <ul>${reasons}</ul>`;
+          if (photo.reject_message) {
+            message += `The photo reviewer left you an additional message:<br>${photo.reject_message}<br><br>`;
+          }
+          message += 'Please upload a new photo which conforms to the BMID requirements.';
+          return {
+            result: URGENT,
+            isPhotoUpload: true,
+            message: htmlSafe(message)
+          };
+        default:
+          return {result: NOT_AVAILABLE, message: 'Upload a photo first.'};
       }
     }
   },
@@ -99,43 +102,46 @@ const SETUP_ACCOUNT_TASKS = [{
         };
 
       }
-      return { result: SKIP }; // Only show the step IF a BPGUID is needed.
+      return {result: SKIP}; // Only show the step IF a BPGUID is needed.
     }
   }
 ];
 
 const TRAINING_TASKS = [{
-    name: 'Read the Ranger Manual & Complete Part 1 of Training (online)',
-    check(milestones, prevCompleted) {
-      if (milestones.online_training_passed) {
-        return { result: COMPLETED };
-      }
-
-      if (!prevCompleted) {
-        return { result: NOT_AVAILABLE, message: 'You need to complete the item(s) listed above.' }
-      }
-
-      if (!milestones.online_training_enabled) {
-        return { result: WAITING, message: 'Part 1 of Training (online) is not quite ready yet. Check back later.' }
-      }
-
-      return {
-        result: ACTION_NEEDED,
-        message: 'The online portion of training will take 1 to 2 hours to complete. Note: it may take up to 15 mins or more for the Clubhouse to record your course completion.',
-        isOnlineTraining: true,
-      };
+  name: 'Read the Ranger Manual & Complete Part 1 of Training (online)',
+  check(milestones, prevCompleted) {
+    if (milestones.online_training_passed) {
+      return {result: COMPLETED};
     }
-  },
+
+    if (!prevCompleted) {
+      return {result: NOT_AVAILABLE, message: 'You need to complete the item(s) listed above.'}
+    }
+
+    if (!milestones.online_training_enabled) {
+      return {result: WAITING, message: 'Part 1 of Training (online) is not quite ready yet. Check back later.'}
+    }
+
+    return {
+      result: ACTION_NEEDED,
+      message: 'The online portion of training will take 1 to 2 hours to complete. Note: it may take up to 15 mins or more for the Clubhouse to record your course completion.',
+      isOnlineTraining: true,
+    };
+  }
+},
 
   {
     name: 'Sign up for Part 2 of Ranger Training (face-to-face)',
     check(milestones) {
       if (milestones.training.status != 'missing') {
-        return { result: COMPLETED };
+        return {result: COMPLETED};
       }
 
       if (!milestones.online_training_passed) {
-        return { result: NOT_AVAILABLE, message: 'You need to complete Part 1 of Training (online) first before being allowed to sign up for Part 2 of Training (face-to-face).' };
+        return {
+          result: NOT_AVAILABLE,
+          message: 'You need to complete Part 1 of Training (online) first before being allowed to sign up for Part 2 of Training (face-to-face).'
+        };
       }
 
       if (milestones.trainings_available) {
@@ -145,7 +151,7 @@ const TRAINING_TASKS = [{
           route: 'me.schedule',
         };
       } else {
-        return { result: WAITING, message: 'Training sign ups are not yet available. Please check back later.' };
+        return {result: WAITING, message: 'Training sign ups are not yet available. Please check back later.'};
       }
     }
   },
@@ -154,51 +160,73 @@ const TRAINING_TASKS = [{
     name: 'Attend Part 2 of Training (face-to-face)',
     check(milestones) {
       switch (milestones.training.status) {
-      case 'passed':
-        return { result: COMPLETED };
+        case 'passed':
+          return {result: COMPLETED};
 
-      case 'missing':
-        return { result: NOT_AVAILABLE, message: 'You need to sign up for a training session.' };
+        case 'missing':
+          return {result: NOT_AVAILABLE, message: 'You need to sign up for a training session.'};
 
-      case 'failed':
-        return {
-          result: URGENT,
-          message: `You did not attend or failed to complete training on ${moment(milestones.training.begins).format('dddd, MMMM Do YYYY')} located at ${milestones.training.description}. Email the Training Academy to sign up for another session.`,
-          email: 'TrainingAcademyEmail',
-        };
+        case 'failed':
+          return {
+            result: URGENT,
+            message: `You did not attend or failed to complete training on ${moment(milestones.training.begins).format('dddd, MMMM Do YYYY')} located at ${milestones.training.description}. Email the Training Academy to sign up for another session.`,
+            email: 'TrainingAcademyEmail',
+          };
 
-      case 'pending':
-        return {
-          result: ACTION_NEEDED,
-          message: `The training session starts ${moment(milestones.training.begins).format('ddd MMM DD [@] HH:mm')} located in ${milestones.training.description}. If you cannot make the session, please remove your sign up from the schedule.`,
-        }
+        case 'pending':
+          return {
+            result: ACTION_NEEDED,
+            message: `The training session starts ${moment(milestones.training.begins).format('ddd MMM DD [@] HH:mm')} located in ${milestones.training.description}. If you cannot make the session, please remove your sign up from the schedule.`,
+          }
       }
     }
   },
+
+  {
+    name: 'Take a Training Survey (optional)',
+    check(milestones) {
+      if (milestones.surveys.sessions.length > 0) {
+        return {
+          result: OPTIONAL,
+          message: 'Please take a moment to provide feedback on your face-to-face training experience.',
+          survey: true
+        };
+
+      }
+      return {result: SKIP}; // Only show the step IF a survey is available (marked as passed training, and a survey has been created)
+    }
+  }
+
 ];
 
 const ALPHA_TASKS = [{
-    name: 'Sign up for an Alpha shift',
-    check(milestones) {
-      if (milestones.bonked) {
-        return { result: SKIP };
-      }
-
-      if (milestones.alpha_shift) {
-        return { result: COMPLETED }
-      }
-
-      if (milestones.training.status != 'passed') {
-        return { result: NOT_AVAILABLE, message: 'You need to attend and pass training before being allowed to sign up for an Alpha shift.' };
-      }
-
-      if (milestones.alpha_shifts_available) {
-        return { result: ACTION_NEEDED, isSignup: true, route: 'me.schedule' };
-      }
-
-      return { result: WAITING, message: 'Not Available Yet. Alpha shifts will be available on July 15th OR the Wednesday AFTER you complete training, which ever is later.' };
+  name: 'Sign up for an Alpha shift',
+  check(milestones) {
+    if (milestones.bonked) {
+      return {result: SKIP};
     }
-  },
+
+    if (milestones.alpha_shift) {
+      return {result: COMPLETED}
+    }
+
+    if (milestones.training.status != 'passed') {
+      return {
+        result: NOT_AVAILABLE,
+        message: 'You need to attend and pass training before being allowed to sign up for an Alpha shift.'
+      };
+    }
+
+    if (milestones.alpha_shifts_available) {
+      return {result: ACTION_NEEDED, isSignup: true, route: 'me.schedule'};
+    }
+
+    return {
+      result: WAITING,
+      message: 'Not Available Yet. Alpha shifts will be available on July 15th OR the Wednesday AFTER you complete training, which ever is later.'
+    };
+  }
+},
 
   {
     name: 'Walk your Alpha shift',
@@ -227,18 +255,18 @@ const ALPHA_TASKS = [{
       }
 
       if (!milestones.alpha_shifts_available) {
-        return { result: NOT_AVAILABLE, message: 'Alpha shifts are not available yet.' };
+        return {result: NOT_AVAILABLE, message: 'Alpha shifts are not available yet.'};
       }
 
-      return { result: NOT_AVAILABLE, message: 'Please sign up for an Alpha shift.' }
+      return {result: NOT_AVAILABLE, message: 'Please sign up for an Alpha shift.'}
     }
   }
 ]
 
 const TASK_GROUPS = [
-  { title: 'Setup Your Clubhouse Account', tasks: SETUP_ACCOUNT_TASKS },
-  { title: 'Train to be a Ranger ', tasks: TRAINING_TASKS },
-  { title: 'Walk your Alpha shift', tasks: ALPHA_TASKS }
+  {title: 'Setup Your Clubhouse Account', tasks: SETUP_ACCOUNT_TASKS},
+  {title: 'Train to be a Ranger ', tasks: TRAINING_TASKS},
+  {title: 'Walk your Alpha shift', tasks: ALPHA_TASKS}
 ];
 
 const MOBILE_MAX_WIDTH = 719;
@@ -301,7 +329,7 @@ export default class DashboardPNVComponent extends Component {
       let haveAction = false,
         tasksCompleted = true;
 
-      const actions = { title: group.title };
+      const actions = {title: group.title};
 
       const tasks = [];
 
@@ -311,33 +339,21 @@ export default class DashboardPNVComponent extends Component {
           return;
         }
 
-        const result = {
-          name: task.name,
-          result: check.result,
-          message: check.message,
-          route: check.route,
-          isBehavioralAgreement: check.isBehavioralAgreement,
-          isPhotoUpload: check.isPhotoUpload,
-          isPhotoTask: check.isPhotoTask,
-          isVisitPersonInfo: check.isVisitPersonInfo,
-          isSignup: check.isSignup,
-          linkUrl: check.linkUrl,
-          isOnlineTraining: check.isOnlineTraining
-        };
+        check.name = task.name;
 
         if (check.email) {
-          result.email = config(check.email);
+          check.email = config(check.email);
         }
 
         if (check.result != COMPLETED && check.result != OPTIONAL) {
           tasksCompleted = false;
           if (!haveAction || check.result == ACTION_NEEDED) {
-            result.isActive = true;
+            check.isActive = true;
             haveAction = true;
           }
         }
 
-        tasks.push(result);
+        tasks.push(check);
       });
 
       actions.tasks = tasks;

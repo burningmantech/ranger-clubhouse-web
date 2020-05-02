@@ -14,6 +14,7 @@ const VC = 103; // Volunteer Coordinator
 const ART_TRAINER = 104; // ART Trainer
 const MEGAPHONE = 105; // RBS access
 const TIMESHEET_MANAGEMENT = 106;
+const SURVEY_MANAGEMENT = 107;
 
 const Role = {
   ADMIN,
@@ -27,6 +28,7 @@ const Role = {
   MANAGE,
   MEGAPHONE,
   MENTOR,
+  SURVEY_MANAGEMENT,
   TIMESHEET_MANAGEMENT,
   TRAINER,
   VC,
@@ -48,6 +50,7 @@ const RoleToString = {
   [MENTOR]: 'mentor',
   [TIMESHEET_MANAGEMENT]: 'timesheet-management',
   [TRAINER]: 'trainer',
+  [SURVEY_MANAGEMENT]: 'survey-management',
   [VC]: 'vc',
   [VIEW_EMAIL]: 'view-email',
   [VIEW_PII]: 'view-pii',

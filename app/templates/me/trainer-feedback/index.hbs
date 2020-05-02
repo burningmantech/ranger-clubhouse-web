@@ -1,0 +1,38 @@
+<h1>Trainer Feedback</h1>
+
+{{#if this.surveys}}
+  <table class="table table-striped table-hover table-width-auto">
+    <thead>
+    <tr>
+      <th>Year</th>
+      <th>Responses</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each-in this.surveys as |year surveyTypes|}}
+      <tr>
+        <td>
+          <LinkTo @route="me.trainer-feedback.view" @model={{year}}>{{year}}</LinkTo>
+        </td>
+        <td>
+          {{#each surveyTypes as |survey|}}
+            <div>
+              {{#if (eq survey.type "training")}}
+                Student Feedback for Trainers
+              {{else if (eq survey.type "trainer")}}
+                Trainer Feedback for Trainers
+              {{else}}
+                {{survey.type}}
+              {{/if}}
+            </div>
+          {{/each}}
+        </td>
+      </tr>
+    {{/each-in}}
+    </tbody>
+  </table>
+{{else}}
+  <p>
+    <b class="text-danger">No one has left you trainer feedback or you are not a trainer.</b>
+  </p>
+{{/if}}

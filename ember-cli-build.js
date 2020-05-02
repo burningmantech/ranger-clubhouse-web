@@ -1,9 +1,13 @@
 'use strict';
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
+const env = EmberApp.env();
+const IS_PROD = env === 'production', IS_TEST = env === 'test' ;
 
 module.exports = function(defaults) {
   let app = new EmberApp(defaults, {
+    tests: IS_TEST, // Don't even generate test files unless a test build
+
     'ember-cli-uglify': {
       uglify: {
         mangle: false
@@ -11,7 +15,19 @@ module.exports = function(defaults) {
     },
 
     'ember-cli-babel': {
-      includePolyfill: true
+      includePolyfill: IS_PROD // Only include babel polyfill in prod
+    },
+
+    autoprefixer: {
+      sourcemap: false // Was never helpful
+    },
+
+    sourcemaps: {
+      enabled: IS_PROD
+    },
+
+    fingerprint: {
+      enabled: IS_PROD //Asset rewrite will takes more time and fingerprinting can be omitted in development
     },
 
     sassOptions: {

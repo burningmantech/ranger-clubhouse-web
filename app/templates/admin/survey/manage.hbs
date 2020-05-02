@@ -1,0 +1,188 @@
+<h1>ID #{{this.survey.id}}: {{this.survey.title}}</h1>
+<p>
+  <LinkTo @route="admin.survey" @query={{hash year=this.survey.year}}>
+    Back to {{this.survey.year}} Survey Administration
+  </LinkTo>
+</p>
+<dl>
+  <dt>Prologue:</dt>
+  <dd>
+    <ReadMore @text={{this.survey.prologue}} />
+  </dd>
+  <dt>Epilogue:</dt>
+  <dd>
+    <ReadMore @text={{this.survey.epilogue}} />
+  </dd>
+</dl>
+<p>
+  <button type="button" class="btn btn-primary" {{on "click" this.newGroupAction}}>{{fa-icon "plus"}} Add Group</button>
+  <button type="button" class="btn btn-secondary" {{on "click" this.editSurveyAction}}>
+    {{fa-icon "edit"}} Edit Survey
+  </button>
+  <LinkTo @route="admin.survey.preview" @model={{this.survey.id}} class="btn btn-secondary">
+    {{fa-icon "eye"}} Preview Survey
+  </LinkTo>
+</p>
+
+{{#each this.orderedGroups as |group idx|}}
+  <table class="table table-sm table-striped table-hover">
+    <caption>
+      <div class="d-flex">
+        ID #{{group.id}} {{group.title}} {{#if group.is_trainer_group}}<i>(Trainer Group)</i>{{/if}}
+        <div class="ml-2 mr-auto">
+          <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.newQuestionAction group)}}
+                  disabled={{group.isSaving}}>
+            {{fa-icon "plus"}} Add Question
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" {{on "click" (fn this.editGroupAction group)}}
+                  disabled={{group.isSaving}}>
+            {{fa-icon "edit"}} Edit Group
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" {{on "click" (fn this.deleteGroupAction group)}}
+                  disabled={{group.isSaving}}>
+            {{fa-icon "trash"}} Delete Group
+          </button>
+        </div>
+        <div class="ml-auto">
+          {{#if (not-eq idx 0)}}
+            <button type="button" class="btn btn-secondary btn-sm" {{on "click" (fn this.moveGroupAction group -1)}}
+                    disabled={{group.isSaving}}>
+              {{fa-icon "arrow-up"}} Move Group Up
+            </button>
+          {{/if}}
+          {{#if (not-eq group this.orderedGroups.lastObject)}}
+            <button type="button" class="btn btn-secondary btn-sm" {{on "click" (fn this.moveGroupAction group 1)}}
+                    disabled={{group.isSaving}}>
+              {{fa-icon "arrow-down"}} Move Group Down
+            </button>
+          {{/if}}
+
+        </div>
+      </div>
+    </caption>
+    <thead>
+    <tr>
+      <th class="w-5">ID</th>
+      <th class="w-55">Description</th>
+      <th class="w-5">Type</th>
+      <th class="w-5">Req?</th>
+      <th class="w-15">Action</th>
+      <th class="w-15 text-right">Move Position</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each group.surveyQuestions as |question idx|}}
+      <tr>
+        <td class="w-5">{{question.id}}</td>
+        <td class="w-55">{{question.description}}</td>
+        <td class="w-5">{{question.type}}</td>
+        <td class="w-5">{{yesno question.is_required}}</td>
+        <td class="w-15">
+          <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.editQuestionAction question)}}>
+            {{fa-icon "edit"}} Edit
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" {{on "click" (fn this.deleteQuestionAction question)}}>
+            {{fa-icon "trash"}} Delete
+          </button>
+        </td>
+        <td class="w-15 text-right">
+          {{#if (not-eq idx 0)}}
+            <button type="button" class="btn btn-secondary btn-sm"
+              {{on "click" (fn this.moveQuestionAction group question -1)}} disabled={{question.isSaving}}>
+              {{fa-icon "arrow-up"}} Move Up
+            </button>
+          {{/if}}
+          {{#if (not-eq question group.surveyQuestions.lastObject)}}
+            <button type="button" class="btn btn-secondary btn-sm"
+              {{on "click" (fn this.moveQuestionAction group question 1)}} disabled={{question.isSaving}}>
+              {{fa-icon "arrow-down"}} Move Down
+            </button>
+          {{/if}}
+
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="5"><b class="text-danger">No questions found for this group</b></td>
+      </tr>
+    {{/each}}
+
+    </tbody>
+  </table>
+{{else}}
+  <p>
+    <b class="text-danger">No groups were found for this survey. Try adding some.</b>
+  </p>
+{{/each}}
+
+{{#if this.groupEntry}}
+  <ModalDialog @title={{if this.groupEntry.isNew "Create New Group" (concat "Edit Group ID #" this.groupEntry.id)}} as
+               |Modal|>
+    <ChForm @formId="survey-group" @originalModel={{this.groupEntry}} @onSubmit={{this.saveGroupAction}}
+            @onCancel={{this.cancelGroupAction}} as |f|>
+      <Modal.body>
+        <div class="form-row mb-2">
+          <div class="col-auto">
+            <f.input @name="is_trainer_group" @label="Is trainer group" @type="checkbox" @inline=true/>
+          </div>
+        </div>
+        <div class="form-row">
+          <f.input @name="title" @type="text" @label="Group Title" @size=80 @maxlength=170/>
+        </div>
+        <div class="form-row">
+          <f.input @name="description" @type="textarea" @label="Group Description" @rows=4 @cols=80/>
+        </div>
+      </Modal.body>
+      <Modal.footer @noAlign=true>
+        <f.submit @label={{if this.groupEntry.isNew "Create" "Save"}} @disabled={{this.groupEntry.isSaving}} />
+        <f.cancel/>
+        {{#if this.groupEntry.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.questionEntry}}
+  <ModalDialog @title={{if this.questionEntry.isNew "Add Question" (concat "Edit Question ID #" this.questionEntry.id)}}
+               as |Modal|>
+    <ChForm @formId="survey-group" @originalModel={{this.questionEntry}} @onSubmit={{this.saveQuestionAction}}
+            @onCancel={{this.cancelQuestionAction}} as |f|>
+      <Modal.body>
+        <div class="form-row mb-2">
+          <div class="col-auto">
+            <f.input @name="code" @label="Question code" @type="select" @options={{this.codeOptions}} />
+          </div>
+        </div>
+        <div class="form-row">
+          <f.input @name="description" @type="textarea" @label="Question Description" @rows=4 @cols=80 />
+        </div>
+        <div class="form-row mb-2">
+          <div class="col-auto">
+            <f.input @name="is_required" @label="Question requires an answer" @type="checkbox" @inline=true />
+          </div>
+        </div>
+        <div class="form-row mb-2">
+          <f.input @name="type" @type="select" @label="Question Type" @options={{this.typeOptions}} />
+        </div>
+        <div class="form-row">
+          <f.input @name="options" @type="textarea" @label="Options (one per line)" @rows=4 @cols=80 @disabled={{not-eq
+                  f.model.type "options"}} />
+        </div>
+      </Modal.body>
+      <Modal.footer @noAlign=true>
+        <f.submit @label={{if this.questionEntry.isNew "Create" "Save"}} @disabled={{this.questionEntry.isSaving}} />
+        <f.cancel/>
+        {{#if this.questionEntry.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.surveyEdit}}
+  <SurveyForm @survey={{this.surveyEdit}} @positions={{this.positions}} @onCancel={{this.cancelSurveyAction}}
+              @onSave={{this.saveSurveyAction}} />
+{{/if}}

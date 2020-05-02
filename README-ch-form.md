@@ -112,7 +112,7 @@ Here is the role's model -
 ```javascript
 export default class RoleModel extends DS.Model {
   @attr('string') title;
-  @attr('bool') new_user_eligible;
+  @attr('boolean') new_user_eligible;
 }
 ```
 

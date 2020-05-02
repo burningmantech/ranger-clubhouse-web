@@ -30,7 +30,9 @@
         {{@photo.reject_message}}
       </p>
     {{/if}}
-    For a full list of photo requirements, please see <a target="_blank" rel="noopener" href="https://docs.google.com/document/d/1hUqrJwdMG6XB5nk7Eh8nY2GH4uvAFTppmCKCmfidIvQ/edit?usp=sharing">this helpful document.</a>.
+    For a full list of photo requirements, please see <a target="_blank" rel="noopener"
+                                                         href="https://docs.google.com/document/d/1hUqrJwdMG6XB5nk7Eh8nY2GH4uvAFTppmCKCmfidIvQ/edit?usp=sharing">this
+    helpful document.</a>.
   </ChAlert>
 {{/if}}
 
@@ -44,12 +46,42 @@
   {{/if}}
 </div>
 
-<div class="mt-1 mb-2">Thank for stopping by. There are a few things to do here:</div>
+{{#if @milestones.surveys.sessions}}
+  <ChBox @title="Your feedback on Ranger training is requested">
+    {{fa-icon "comment-dots" type="far" size="2x"}} Please take a few moments and provide feedback on the {{pluralize @milestones.surveys.sessions.length "training"}}
+    you attended:
+    {{#each @milestones.surveys.sessions as |slot|}}
+      <p class="my-1">
+        <LinkTo @route="me.survey" @query={{hash slot_id=slot.id type="training"}} >
+          {{slot.position_title}} - {{slot.description}} {{shift-format slot.begins}}
+        </LinkTo>
+      </p>
+    {{/each}}
+  </ChBox>
+{{/if}}
 
+{{#if @milestones.surveys.trainers}}
+  <ChBox @title="Provide feedback for your fellow trainers">
+    Thank you for teaching. Take a few minutes to provide feedback on your fellow trainers:
+    {{#each @milestones.surveys.trainers as |slot|}}
+      <p class="my-1">
+        <LinkTo @route="me.survey" @query={{hash slot_id=slot.id type="trainer"}} >
+          {{slot.position_title}} - {{slot.description}} {{shift-format slot.begins}}
+        </LinkTo>
+        {{#each slot.trainers as |trainer idx|}}
+          {{~if idx ", "}}{{trainer.callsign}}
+        {{~/each}}
+      </p>
+    {{/each}}
+  </ChBox>
+{{/if}}
+
+<div class="mt-1 mb-2">Thank for stopping by. There are a few things to do here:</div>
 <dl>
   <dt>Verify Your Personal Info</dt>
   <dd>
-    Look in the Me menu in the top navigation bar or sidebar menu for <LinkTo @route="me.personal-info">Personal Info</LinkTo>
+    Look in the Me menu in the top navigation bar or sidebar menu for
+    <LinkTo @route="me.personal-info">Personal Info</LinkTo>
     to edit your address, email address, phone numbers, etc.
     <p class="mt-2">
       We'd really appreciate it if you'd make sure your phone numbers,
@@ -85,7 +117,8 @@
   {{#if @person.isRanger}}
     <dt>Tickets, Staff Credientals, Vehicle &amp; Work Passes</dt>
     <dd>
-      <LinkTo @route="me.tickets">Tickets &amp; Stuff</LinkTo> is the place
+      <LinkTo @route="me.tickets">Tickets &amp; Stuff</LinkTo>
+      is the place
       to claim staff credentials, reduced-price tickets, vehicle passes,
       and work access passes.
     </dd>
@@ -127,12 +160,14 @@
 
     <dt>Ranger Policies</dt>
     <dd>Peruse our
-      <a href="{{config "RangerPoliciesUrl"}}" target="_blank" rel="noopener">Ranger policies</a> (opens in a new window)
+      <a href="{{config "RangerPoliciesUrl"}}" target="_blank" rel="noopener">Ranger policies</a> (opens in a new
+      window)
     </dd>
 
     <dt>Get Involved More With Special Groups</dt>
     <dd>
-      Learn how to <a href="{{config "JoiningRangerSpecialTeamsUrl"}}" target="_blank" rel="noopener">join Ranger special teams</a> (opens in a new window)
+      Learn how to <a href="{{config "JoiningRangerSpecialTeamsUrl"}}" target="_blank" rel="noopener">join Ranger
+      special teams</a> (opens in a new window)
     </dd>
   {{/if}}
 </dl>

@@ -14,8 +14,9 @@ module.exports = {
         process.env.CI ? '--no-sandbox' : null,
         '--headless',
 //        '--disable-gpu', No longer needed in Chrome 76 for Windows?
-        '--disable-dev-shm-usage',
-        '--disable-software-rasterizer',
+//        '--disable-dev-shm-usage',
+//        '--disable-software-rasterizer',
+        '--no-sandbox',
         '--mute-audio',
         '--remote-debugging-port=0',
         '--window-size=1440,900'

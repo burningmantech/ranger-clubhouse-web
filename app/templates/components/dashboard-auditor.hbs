@@ -89,6 +89,15 @@
             to take the online training course.
           {{/if}}
         {{/if}}
+        {{#if task.survey}}
+          {{#each @milestones.surveys.sessions as |slot|}}
+            <p class="my-1">
+              <LinkTo @route="me.survey" @query={{hash slot_id=slot.id type="training"}} >
+                {{slot.position_title}} - {{slot.description}} {{shift-format slot.begins}}
+              </LinkTo>
+            </p>
+          {{/each}}
+        {{/if}}
       </div>
     </div>
   {{/each}}
