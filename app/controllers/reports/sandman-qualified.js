@@ -12,7 +12,7 @@ export default class ReportsSandmanQualifiedController extends Controller {
     [ 'Unqualified', 'unqualified' ],
   ];
 
-  @computed('filter')
+  @computed('filter', 'sandpeople')
   get viewPeople() {
     const filter = this.filter;
     const people = this.sandpeople;

@@ -23,7 +23,7 @@ export default class VcBmidPrintController extends Controller {
     'notes'
   ];
 
-  @computed('textFilter', 'bmids')
+  @computed('bmids', 'textFilter', 'textFilterFields')
   get viewBmids() {
     let bmids = this.bmids;
 

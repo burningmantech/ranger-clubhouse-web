@@ -38,7 +38,7 @@ export default class ChFormComponent extends Component {
 
   formInline = false;
 
-  @computed('originalModel')
+  @computed('changeSet', 'originalModel', 'validator')
   get model() {
     let model;
     const original = this.originalModel;
@@ -67,11 +67,11 @@ export default class ChFormComponent extends Component {
 
       if (original instanceof Model) {
         original.set('onSaved', () => { this._modelUpdated() });
-        this.set('watchingModel', original);
+        this.set('watchingModel', original); // eslint-disable-line ember/no-side-effects
       }
     } else {
       model = original;
-      set(model, 'isValid', true);
+      set(model, 'isValid', true); // eslint-disable-line ember/no-side-effects
     }
 
     return model;

@@ -22,7 +22,7 @@ export default class SlotModel extends Model {
   @attr('', { readOnly: true}) trainer_slot;
 
 
-  @computed('slot_begins')
+  @computed('begins', 'slot_begins')
   get slotDay() {
     const begins = this.begins;
     let date;
@@ -46,7 +46,7 @@ export default class SlotModel extends Model {
     return position ? position.title : `Position #${this.position_id}`;
   }
 
-  @computed('trainer_slot.position.title')
+  @computed('trainer_slot.position.title', 'trainer_slot_id')
   get trainer_slot_title() {
     const trainer = this.trainer_slot;
     return (trainer && trainer.position) ? trainer.position.title : `Position #${this.trainer_slot_id}`;

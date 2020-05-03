@@ -88,7 +88,7 @@ export default class VcBmidController extends Controller {
    * Return the BMIDs to view which is filtered, and sorted
    */
 
-  @computed('sortColumn', 'titleFilter', 'teamFilter', 'textFilter', 'bmids.[]')
+  @computed('bmids.[]', 'sortColumn', 'teamFilter', 'textFilter', 'textFilterFields', 'titleFilter')
   get viewBmids() {
     let bmids = this.bmids;
     const titleFilter = this.titleFilter;
@@ -304,7 +304,7 @@ export default class VcBmidController extends Controller {
    * Build the access dates allowed for the current year
    */
 
-  @computed('year')
+  @computed('ticketingInfo.wap_date_range', 'year')
   get admissionDateOptions() {
     return admissionDateOptions(this.year, this.ticketingInfo.wap_date_range);
   }

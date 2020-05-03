@@ -197,12 +197,12 @@ export default class VcAccessDocumentsTrsController extends Controller {
     this.set('accessDocuments', records);
   }
 
-  @computed('filter', 'people')
+  @computed('accessDocuments', 'filter', 'people')
   get viewRecords() {
     const filter = this.filter;
 
-    this.accessDocuments.forEach((r) => set(r, 'selected', false) );
-    this.set('selectAll', false);
+    this.accessDocuments.forEach((r) => set(r, 'selected', false) ); // eslint-disable-line ember/no-side-effects
+    this.set('selectAll', false); // eslint-disable-line ember/no-side-effects
 
     if (filter == 'work_access_pass_pnv') {
       return this.accessDocuments.filter((r) =>  r.type == 'work_access_pass' && (r.person.status == 'alpha' || r.person.status == 'prospective'));

@@ -17,7 +17,7 @@ export default class MeTimesheetReviewCommonComponent extends Component {
     notes: validatePresence({ presence: true })
   };
 
-  @computed('person')
+  @computed('person.id', 'session.userId')
   get isMe() {
     return this.session.userId == this.person.id;
   }

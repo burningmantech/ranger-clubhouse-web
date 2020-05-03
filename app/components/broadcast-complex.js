@@ -152,7 +152,7 @@ export default class BroadcastComplexComponent extends Component {
   }
 
   // Build the slot options based on the position selected
-  @computed('broadcastForm.slotPositionId')
+  @computed('args.broadcast.slots', 'broadcastForm.slotPositionId')
   get slotOptions() {
     const id = this.broadcastForm.slotPositionId;
 

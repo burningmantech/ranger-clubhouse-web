@@ -35,12 +35,12 @@ class CopySourceCredit extends EmberObject {
   // create with {controller: this, source: creditModel}
   selected = true;
 
-  @computed('source', 'controller.copyParams.{deltaDays,deltaHours,deltaMinutes}')
+  @computed('controller.copyParams.{deltaDays,deltaHours,deltaMinutes}', 'source.start_time')
   get start_time() {
     return this.adjustTime(this.source.start_time);
   }
 
-  @computed('source', 'controller.copyParams.{deltaDays,deltaHours,deltaMinutes}')
+  @computed('controller.copyParams.{deltaDays,deltaHours,deltaMinutes}', 'source.end_time')
   get end_time() {
     return this.adjustTime(this.source.end_time);
   }

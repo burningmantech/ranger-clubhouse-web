@@ -79,7 +79,7 @@ export default class TicketDeliverInfoComponent extends Component {
     return items;
   }
 
-  @computed('itemsToMail', 'usingStaffCredential')
+  @computed('deliveryMethod', 'itemsToMail.length', 'usingStaffCredential')
   get needAnswer() {
     return (this.itemsToMail.length &&
       this.deliveryMethod != 'mail' &&

@@ -10,12 +10,12 @@ export default class ModalConfirmMultipleEnrollmentComponent extends Component {
 
   @alias('args.data.slots.firstObject.position.title') trainingType;
 
-  @computed('data.person')
+  @computed('data.person.id', 'session.userId')
   get isMe() {
     return this.session.userId == this.data.person.id;
   }
 
-  @computed('data.slots.firstObject')
+  @computed('data.slots.firstObject.position.title')
   get isAlpha() {
     return this.data.slots.firstObject.position.title == 'Alpha';
   }

@@ -24,7 +24,7 @@ export default class TicketWapSoInfoComponent extends Component {
     super.didReceiveAttrs(...arguments)
   }
 
-  @computed('wapSOList.@each.name')
+  @computed('ticketPackage.wapso.length', 'wapSOList.@each.name')
   get wapSOCount() {
     return this.ticketPackage.wapso.length;
   }
@@ -39,7 +39,7 @@ export default class TicketWapSoInfoComponent extends Component {
     return this.wapSOList.find((so) => so.isDirty) ? true : false;
   }
 
-  @computed('ticketPackage.wapso.@each.{id,name}')
+  @computed('defaultDate', 'ticketPackage.wapso.@each.{id,name}', 'ticketingInfo')
   get wapSOList() {
     const info = this.ticketingInfo;
     const defaultDate = this.defaultDate;

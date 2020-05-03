@@ -49,7 +49,7 @@ export default class TimesheetModel extends Model {
     return !this.verified && isEmpty(this.notes) && this.review_status == 'pending' && this.off_duty;
   }
 
-  @computed('status', 'reviewer_notes')
+  @computed('review_status', 'reviewer_notes', 'status')
   get haveReviewerResponse() {
     return this.review_status != 'pending' && !isEmpty(this.reviewer_notes);
   }

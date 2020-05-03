@@ -27,7 +27,7 @@ export default class SlotFormComponent extends Component {
     return this.positions.map((p) => [ p.title, p.id ]);
   }
 
-  @computed('slot')
+  @computed('slot.{description,id,isNew,position_title}')
   get formTitle() {
       return this.slot.isNew ? 'Create Slot' : `Edit Slot #${this.slot.id} ${this.slot.position_title} - ${this.slot.description}`;
   }

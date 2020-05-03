@@ -76,7 +76,7 @@ export default class ScheduleManageComponent extends Component {
    * Filter out what the person can actual see based on their roles.
    * TODO Revisit whether everyone should be able to see inactive slots if they choose.
    */
-  @computed('slots')
+  @computed('person', 'slots')
   get availableSlots() {
     // Filter based on roles.
     if (this.person.hasRole(
@@ -129,7 +129,7 @@ export default class ScheduleManageComponent extends Component {
     return groups.sortBy('title');
   }
 
-  @computed('slots')
+  @computed('availableSlots', 'isCurrentYear', 'slots')
   get dayOptions() {
     const unique = this.availableSlots.uniqBy('slotDay').mapBy('slotDay');
     const days = A();
@@ -153,7 +153,7 @@ export default class ScheduleManageComponent extends Component {
     return days;
   }
 
-  @computed('permission')
+  @computed('permission', 'person.isNonRanger')
   get deniedReason() {
     const permission = this.permission;
     const denied = [];
@@ -192,12 +192,12 @@ export default class ScheduleManageComponent extends Component {
     return (status == 'approved' || status == 'not-required');
   }
 
-  @computed('person.id')
+  @computed('person.id', 'session.userId')
   get isMe() {
     return this.session.userId == this.person.id;
   }
 
-  @computed('session.user')
+  @computed('session.user.isAdmin')
   get isAdmin() {
     return this.session.user.isAdmin;
   }

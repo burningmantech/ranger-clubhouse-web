@@ -7,7 +7,7 @@ const ALPHAS_PER_PAGE = 6;
 export default class MentorAlphaSignupComponent extends Component {
   alphasPerPage = ALPHAS_PER_PAGE;
 
-  @computed('slot')
+  @computed('slot.people')
   get alphaPages() {
     return _.chunk(this.slot.people, ALPHAS_PER_PAGE);
   }

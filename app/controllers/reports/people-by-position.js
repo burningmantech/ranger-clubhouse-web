@@ -27,7 +27,7 @@ export default class PeopleByPositionController extends Controller {
   queryParams = ['onPlaya'];
   onPlaya = false;
 
-  @computed('positions', 'people')
+  @computed('people', 'positions', 'statuses')
   get viewPositions() {
     const people = this.people;
     const lookupPeople = (ids) => ids ? ids.map((id) => people[id]).sortBy('callsign') : [];

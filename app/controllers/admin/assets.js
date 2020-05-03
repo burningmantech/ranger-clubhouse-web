@@ -30,7 +30,7 @@ export default class AdminAssetsController extends Controller {
 
   assetValidations = { barcode: validatePresence(true) };
 
-  @computed('year')
+  @computed('house', 'year')
   get isCurrentYear() {
     return this.house.currentYear() == this.year;
   }

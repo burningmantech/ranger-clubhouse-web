@@ -66,7 +66,7 @@ export default class TrainingSlotController extends Controller {
 
   // How many Dirt Vets (2 or more rangering years) OR
   // ART vets (if not a ART prospective)
-  @computed('students.[]')
+  @computed('students.[]', 'training.is_art')
   get vetCount() {
     let vets = 0;
     const is_art = this.training.is_art;
@@ -85,7 +85,7 @@ export default class TrainingSlotController extends Controller {
   }
 
   // How many dirt PNV or ART prospectives
-  @computed('students.[]')
+  @computed('students.[]', 'training.is_art')
   get prospectiveCount() {
     const is_art = this.training.is_art;
     let prospective = 0;

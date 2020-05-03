@@ -87,7 +87,7 @@ export default class ShiftCheckInOutComponent extends Component {
 
   // Has the person gone through dirt training?
 
-  @computed('eventInfo.training.@each.position_id')
+  @computed('eventInfo.{training.@each.position_id,trainings}', 'person.status')
   get isPersonDirtTrained() {
     if (this.person.status == 'non ranger') {
       return true;

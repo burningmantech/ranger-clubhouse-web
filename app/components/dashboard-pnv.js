@@ -318,7 +318,7 @@ export default class DashboardPNVComponent extends Component {
     return this.session.userId != this.args.person.id;
   }
 
-  @computed('args.milestones.behavioral_agreement')
+  @computed('args.{milestones.behavioral_agreement,photo}')
   get taskGroups() {
     const milestones = this.args.milestones;
     const photo = this.args.photo;

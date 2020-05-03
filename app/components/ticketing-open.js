@@ -20,7 +20,7 @@ export default class TicketingOpenComponent extends Component {
     }
   }
 
-  @computed('person.status')
+  @computed('person.{isAlpha,isProspective,status}')
   get hasFullPackage() {
     return (!this.person.isAlpha && !this.person.isProspective);
   }
