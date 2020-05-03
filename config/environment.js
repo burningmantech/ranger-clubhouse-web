@@ -1,15 +1,6 @@
 /* eslint-env node */
 'use strict';
 
-function pad(t) {
-  return (t < 10 ) ? ('0' + t) : t;
-}
-
-function formatBuildTimestamp() {
-  const date = new Date();
-  return ''+date.getFullYear()+'-'+pad(date.getMonth()+1)+'-'+pad(date.getDate())+' '+pad(date.getHours())+':'+pad(date.getMinutes());
-}
-
 module.exports = function(environment) {
   let ENV = {
     modulePrefix: 'clubhouse',
@@ -28,7 +19,7 @@ module.exports = function(environment) {
     },
 
     APP: {
-      buildTimestamp: formatBuildTimestamp(),
+      buildTimestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles', hour12: false, dateStyle: 'long', timeStyle: 'long' }),
     },
 
     'ember-simple-auth': {
