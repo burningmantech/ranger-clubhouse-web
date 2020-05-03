@@ -13,7 +13,7 @@ export default class extends AjaxService {
   host = ENV['api-server'];
   contentType = 'application/json; charset=utf-8';
 
-  @computed('session.data.authenticated.token')
+  @computed('session.{isAuthenticated,data.authenticated.token}')
   get headers() {
     let headers = {};
     if (this.session.isAuthenticated) {

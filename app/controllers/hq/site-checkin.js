@@ -13,7 +13,7 @@ export default class HqSiteCheckinController extends Controller {
     return this.eventInfo.trainings.find((training) => training.position_id == Position.TRAINING);
   }
 
-  @computed('eventInfo.training.@each.position_id')
+  @computed('dirtTraining', 'eventInfo.training.@each.position_id', 'person.status')
   get isPersonDirtTrained() {
     if (this.person.status == 'non ranger') {
       return true;

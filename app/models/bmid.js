@@ -68,7 +68,7 @@ export default class BmidModel extends Model {
     }
   }
 
-  @computed('access_date', 'access_any_time')
+  @computed('access_any_time', 'access_date', 'wapMissing')
   get access_date_sortable() {
     if (this.wapMissing) {
       return 0;

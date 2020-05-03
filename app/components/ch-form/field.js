@@ -183,7 +183,7 @@ export default class ChFormFieldComponent extends Component {
 
   // ember-changeset-validate uses model.error (singular)
   // to place validation errors
-  @computed('model.error')
+  @computed('model.error', 'name')
   get error() {
     const error = this.model.error;
     return error ? error[this.name] : null;

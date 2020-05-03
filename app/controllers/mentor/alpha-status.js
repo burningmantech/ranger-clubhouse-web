@@ -11,7 +11,7 @@ export default class MentorAlphaStatusController extends Controller {
     [' Mentor Flagged', 'mentor-flag' ]
   ];
 
-  @computed('filter')
+  @computed('filter', 'potentials')
   get viewPotentials() {
     const potentials = this.potentials;
 

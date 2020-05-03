@@ -37,7 +37,7 @@ export default class HqShiftController extends Controller {
     });
   }
 
-  @computed('timesheets.@each.position_id')
+  @computed('person.isActive', 'timesheets.@each.position_id')
   get isShinyPenny() {
     return this.timesheets.find((t) => t.position_id == Position.ALPHA) && this.person.isActive;
   }
@@ -47,7 +47,7 @@ export default class HqShiftController extends Controller {
     return this.timesheets.filter((ts) => ts.isUnverified);
   }
 
-  @computed('unverifiedTimesheets')
+  @computed('unverifiedTimesheets.firstObject')
   get unverifiedTimesheetEntry() {
     return this.unverifiedTimesheets.firstObject;
   }
@@ -62,7 +62,7 @@ export default class HqShiftController extends Controller {
     return this.assetsCheckedOut.filter((a) => a.asset.description == 'Radio').length;
   }
 
-  @computed('radioCount')
+  @computed('eventInfo', 'radioCount')
   get shiftRadios() {
     const radioCount = this.radioCount;
     const eventInfo = this.eventInfo;
@@ -78,7 +78,7 @@ export default class HqShiftController extends Controller {
     return 0;
   }
 
-  @computed('radioCount')
+  @computed('eventInfo', 'radioCount')
   get eventRadios() {
     const radioCount = this.radioCount;
     const eventInfo = this.eventInfo;
@@ -222,7 +222,7 @@ export default class HqShiftController extends Controller {
     this._updateOnSite(true);
   }
 
-  @computed('creditsEarned', 'expected.credits')
+  @computed('creditsEarned', 'expected.credits', 'timesheetSummary.total_credits')
   get creditsExpected() {
     return this.timesheetSummary.total_credits + this.expected.credits;
   }

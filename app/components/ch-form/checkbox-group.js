@@ -36,7 +36,7 @@ export default class ChFormCheckboxGroupComponent extends Component {
     return isEmpty(this.cols) ? 3 : this.cols;
   }
 
-  @computed('options', 'model')
+  @computed('_cols', '_domId', 'checkboxes', 'model', 'options', 'value')
   get checkboxColumns() {
     const options = this.options || [];
     let values = this.value;
@@ -53,14 +53,14 @@ export default class ChFormCheckboxGroupComponent extends Component {
 
     let index = 0;
     const checkboxes = [];
-    this.set('checkboxes', checkboxes);
+    this.set('checkboxes', checkboxes); // eslint-disable-line ember/no-side-effects
 
     return columns.map((column) => {
       return column.map((opt) => {
         const type = typeOf(opt);
         let label, value;
 
-        if (type == 'object' && opt.id) {
+        if (type == 'object' && ('id' in opt)) {
           label = opt.title
           value = opt.id
         // Simple [ 'label', value ]

@@ -37,7 +37,7 @@ const SINGULAR_MODELS = [
 export default class ApplicationAdapter extends RESTAdapter.extend(DataAdapterMixin) {
   host = ENV['api-server'];
 
-  @computed('session.data.authenticated.token')
+  @computed('session.{isAuthenticated,data.authenticated.token}')
   get headers() {
     let headers = {};
     if (this.session.isAuthenticated) {

@@ -20,7 +20,7 @@ export default class MeTimesheetCorrectionsMissingController extends Controller 
 
   // Suggest a starting date for the datetime picker when creating
   // a new request.
-  @computed('entry')
+  @computed('entry', 'timesheetInfo.correction_year')
   get startDateForEntry() {
     const entry = this.entry;
 

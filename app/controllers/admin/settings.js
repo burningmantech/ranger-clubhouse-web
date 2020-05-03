@@ -31,7 +31,7 @@ export default class AdminSettingsController extends Controller {
     return this.settings.filter((s) => RegExp(name, 'i').test(s.name) );
   }
 
-  @computed('editSetting')
+  @computed('editSetting.options')
   get editOptions() {
     if (!this.editSetting.options) {
       return null;

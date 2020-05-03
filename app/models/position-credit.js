@@ -11,7 +11,7 @@ export default class PositionCreditModel extends Model {
 
   @attr('', { readOnly: true}) position;
 
-  @computed('position_id')
+  @computed('position.title', 'position_id')
   get positionTitle() {
     return this.position ? this.position.title : `Position #${this.position_id}`;
   }

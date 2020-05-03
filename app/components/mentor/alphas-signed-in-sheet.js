@@ -7,7 +7,7 @@ const ALPHAS_PER_PAGE = 7;
 export default class MentorAlphasSignInSheetComponent extends Component {
   alphasPerPage = ALPHAS_PER_PAGE;
 
-  @computed('slot')
+  @computed('slot.people')
   get alphaPages() {
     // Filter to those only signed in
     return _.chunk(this.slot.people.filter((p) => p.on_alpha_shift), ALPHAS_PER_PAGE);

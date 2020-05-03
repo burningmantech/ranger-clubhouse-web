@@ -255,7 +255,7 @@ export default class AutocompleteInputComponent extends Component {
    * @returns {string}
    */
 
-  @computed('args.mode')
+  @computed('args.{mode,modeOptions}')
   get modeText() {
     const mode = this.args.mode;
     const opt = this.args.modeOptions.find((o) => o.value == mode);

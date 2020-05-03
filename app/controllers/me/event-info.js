@@ -27,7 +27,7 @@ export default class MeRangerInfoShowController extends Controller {
     return count;
   }
 
-  @computed('year')
+  @computed('house', 'year')
   get isCurrentYear() {
     return this.house.currentYear() == this.year;
   }

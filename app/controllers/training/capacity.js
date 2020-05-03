@@ -4,7 +4,7 @@ import { action, computed } from '@ember/object';
 export default class TrainingCapacityController extends Controller {
   queryParams = [ 'year' ];
 
-  @computed('year')
+  @computed('house', 'year')
   get notCurrentYear() {
     return (this.year != this.house.currentYear());
   }

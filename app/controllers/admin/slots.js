@@ -39,12 +39,12 @@ class CopySourceSlot extends EmberObject {
   // create with {controller: this, source: slot}
   selected = false;
 
-  @computed('source', 'controller.copyParams.{deltaDays,deltaHours,deltaMinutes}')
+  @computed('controller.copyParams.{deltaDays,deltaHours,deltaMinutes}', 'source.begins')
   get begins() {
     return this.adjustTime(this.source.begins);
   }
 
-  @computed('source', 'controller.copyParams.{deltaDays,deltaHours,deltaMinutes}')
+  @computed('controller.copyParams.{deltaDays,deltaHours,deltaMinutes}', 'source.ends')
   get ends() {
     return this.adjustTime(this.source.ends);
   }

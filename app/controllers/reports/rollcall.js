@@ -25,7 +25,7 @@ export default class ReportsRollcallController extends Controller {
     return options;
   }
 
-  @computed('positionId')
+  @computed('positionId', 'positions')
   get slotOptions() {
     const position = this.positions.find((p) => p.id == this.positionId);
     if (position == null) {

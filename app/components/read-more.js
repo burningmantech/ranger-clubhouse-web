@@ -12,12 +12,12 @@ export default class ReadMoreComponent extends Component {
 
   hideFullText = true;
 
-  @computed('text')
+  @computed('limit', 'text')
   get truncatedText() {
     return this.text.substr(0, this.limit);
  }
 
-  @computed('text')
+  @computed('limit', 'text.length')
   get shouldTruncate() {
     return this.text && (this.text.length > this.limit);
   }
