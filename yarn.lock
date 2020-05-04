@@ -5132,10 +5132,10 @@ ember-changeset-validations@^3.3.1:
     ember-get-config "^0.2.4"
     ember-validators "^2.0.0"
 
-ember-changeset@^3.3.1, ember-changeset@^3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/ember-changeset/-/ember-changeset-3.3.2.tgz#75a374d387022faf077a9eeb716d6839bd3407de"
-  integrity sha512-G+Yn2b0gLDO1MCjbxIdvmOBgDEf06uJdGEUwJI1eYjM28mSPa9j4M1AW4O3V6gLmveFX9wzktc9hYnEIcrRDJw==
+ember-changeset@^3.3.1, ember-changeset@^3.3.4:
+  version "3.3.4"
+  resolved "https://registry.yarnpkg.com/ember-changeset/-/ember-changeset-3.3.4.tgz#af70f2b1f840f41b45a6d4af36bd314bb05e5347"
+  integrity sha512-dZUMMpXzojJIXcsunhTTds+kyaXMw7aIR1++MvonIBlk0KXRrrPbPe8Lx3pwOjQtXjIUqjvF3QCjmMQcZ8rUqQ==
   dependencies:
     "@glimmer/tracking" "^1.0.0"
     ember-auto-import "^1.5.2"
