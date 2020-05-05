@@ -403,16 +403,14 @@
   </div>
 </ChForm>
 
-{{#if editPositions}}
+{{#if this.editPositions}}
   <Person::PositionForm @positions={{positions}} @positionIds={{positionIds}} @onSave={{action this.savePositions}}
                         @onCancel={{action cancelPositions}} />
 {{/if}}
 
-{{#if editRoles}}
-  <Person::RoleForm @roles={{roles}} @roleIds={{roleIds}} @onSave={{action this.saveRoles}}
-                    @onCancel={{action this.cancelRoles}} />
+{{#if this.editRoles}}
+  <Person::RoleForm @roles={{this.roles}} @roleIds={{this.roleIds}} @onSave={{this.saveRoles}} @onCancel={{this.cancelRoles}} @isSaving={{this.isSavingRoles}} />
 {{/if}}
-
 
 {{#if this.showUploadDialog}}
   <PhotoUpload @person={{this.person}} @refreshPhoto={{this.refreshPhoto}}

@@ -45,7 +45,7 @@ export default class BroadcastSimpleComponent extends Component {
   @computed('broadcast.has_muster_position')
   get broadcastValidations() {
     const validations = {
-      message: validatePresence({ presence: true, message: 'Enter a message.' }),
+      message: [ validatePresence({ presence: true, message: 'Enter a message.' }) ],
     };
 
     if (this.broadcast.has_muster_position) {

@@ -52,6 +52,7 @@ export default class PersonIndexController extends Controller {
   @tracked personRoles = null;
   @tracked showRoles = false;
   @tracked editRoles = false;
+  @tracked isSavingRoles = false;
 
   @tracked showConfirmNoteOrMessage = false;
   @tracked showEditNote = false;
@@ -263,7 +264,7 @@ export default class PersonIndexController extends Controller {
   saveRoles(model) {
     const roleIds = model.roleIds;
 
-    this.toast.clear();
+    this.isSavingRoles = true;
     this.ajax.request(`person/${this.person.id}/roles`, {
       type: 'POST',
       data: { role_ids: roleIds }
@@ -271,7 +272,8 @@ export default class PersonIndexController extends Controller {
       this.toast.success('The roles have been successfully updated.');
       this.personRoles = results.roles;
       this.editRoles = false;
-    }).catch((response) => { this.house.handleErrorResponse(response) });
+    }).catch((response) => { this.house.handleErrorResponse(response) })
+      .finally(() => this.isSavingRoles = false);
   }
 
   @action

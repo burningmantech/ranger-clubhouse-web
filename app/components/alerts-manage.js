@@ -33,8 +33,8 @@ export default class AlertsManageComponent extends Component {
   });
 
   numberValidations = {
-    on_playa: validateFormat({ regex: PHONE_REGEXP, allowBlank: true }),
-    off_playa: validateFormat({ regex: PHONE_REGEXP, allowBlank: true}),
+    on_playa: [ validateFormat({ regex: PHONE_REGEXP, allowBlank: true }) ],
+    off_playa: [ validateFormat({ regex: PHONE_REGEXP, allowBlank: true}) ],
   }
 
   // Sort alert prefs into on playa and off playa groups for display.

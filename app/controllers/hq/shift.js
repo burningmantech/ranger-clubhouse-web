@@ -11,7 +11,7 @@ export default class HqShiftController extends Controller {
   showCorrectionForm = false;
 
   correctionValidations = {
-    notes: validatePresence(true)
+    notes:[ validatePresence(true)]
   };
 
   /*

@@ -1,72 +1,89 @@
 <h1>Clubhouse Settings</h1>
-
-
-<p class="font-weight-bold text-danger">DO NOT TOUCH ANY SETTINGS UNLESS INSTRUCTED TO DO SO BY THE TECH TEAM</p>
+<p class="text-danger">
+  <b>DO NOT TOUCH ANY SETTINGS UNLESS INSTRUCTED TO DO SO BY THE TECH TEAM</b>
+</p>
 
 <div class="form-row mb-2">
   <label class="col-form-label">Filter name:</label>
   <div class="col-auto">
-    <Input @type="text" @value={{this.filterByName}} @size={{20}} class="form-control" />
+    <Input @type="text" @value={{this.filterByName}} @size={{20}} class="form-control"/>
   </div>
   <div class="col-auto">
-    <button class="btn btn-primary" {{action this.clearFilter}}>Clear</button>
+    <button type="button" class="btn btn-primary" {{action this.clearFilter}}>Clear</button>
   </div>
 </div>
 
+Showing {{this.viewSettings.length}} of {{this.settings.length}}
 <table class="table table-striped table-sm table-hover table-width-auto">
   <thead>
-    <tr>
-      <th>Setting</th>
-      <th>Type</th>
-      <th>Value</th>
-      <th>Action</th>
-    </tr>
+  <tr>
+    <th>Setting</th>
+    <th>Type</th>
+    <th>Value</th>
+    <th>Action</th>
+  </tr>
   </thead>
   <tbody>
-    {{#each this.viewSettings as |setting|}}
-      <tr>
-        <td>
-          {{setting.name}}
-        </td>
-        <td>{{setting.type}}</td>
-        <td>
-          {{#if setting.value}}
-            <code class="text-black"><ReadMore @text={{setting.value}} @limit={{60}} /></code>
-          {{else}}
-            <strong class="text-danger">NULL</strong>
-          {{/if}}
-        </td>
-        <td>
-          <button class="btn btn-sm btn-secondary" {{action this.edit setting}}>Edit</button>
-        </td>
-      </tr>
-    {{/each}}
+  {{#each this.viewSettings as |setting|}}
+    <tr>
+      <td>
+        {{setting.name}}
+      </td>
+      <td>{{setting.type}}</td>
+      <td>
+        {{#if setting.value}}
+          <code class="text-black">
+            <ReadMore @text={{setting.value}} @limit={{60}} />
+          </code>
+        {{else}}
+          <b class="text-danger">NULL</b>
+        {{/if}}
+      </td>
+      <td>
+        <button type="button" class="btn btn-sm btn-secondary" {{action this.edit setting}}>
+          {{fa-icon "edit"}} Edit
+        </button>
+      </td>
+    </tr>
+  {{/each}}
   </tbody>
 </table>
 
 {{#if this.editSetting}}
-  {{#ch-form "setting" editSetting modalBox=true modalTitle=(concat "Edit Setting " this.editSetting.name) onSubmit=(action this.save) onCancel=(action this.cancel) as |f|}}
-    {{#if this.editSetting.description}}
-      <p>
-        {{nl2br this.editSetting.description}}
-      </p>
-    {{/if}}
-    <div class="form-group row">
-      {{#if (eq this.editSetting.type "bool")}}
-        <div class="col-auto">
-          {{f.input "value" type="radioGroup" options=this.booleanOptions inline=true}}
+  <ModalDialog @title={{concat  "Edit Setting " this.editSetting.name}} as |Modal|>
+    <ChForm @formId="setting" @originalModel={{this.editSetting}}
+            @onSubmit={{this.save}} @onCancel={{this.cancel}} as |f|>
+      <Modal.body>
+        {{#if this.editSetting.description}}
+          <p>
+            {{nl2br this.editSetting.description}}
+          </p>
+        {{/if}}
+        <div class="form-group row">
+          {{#if (eq this.editSetting.type "bool")}}
+            <div class="col-auto">
+              <f.input @name="value" @type="radioGroup" @options={{this.booleanOptions}} @inline=true/>
+            </div>
+          {{else if (eq editSetting.type "integer")}}
+            <div class="col-auto">
+              <f.input @name="value" @label="Integer value" @type="text" @size=10/>
+            </div>
+          {{else if this.editSetting.options}}
+            <f.input @name="value" @label="Option value" @type="select" @options={{this.editOptions}} />
+          {{else}}
+            <f.input @name="value" @label={{concat "Enter a " this.editSetting.type " value"}}
+                     @type="textarea" @rows=10 @cols=80/>
+          {{/if}}
         </div>
-      {{else if (eq editSetting.type "integer")}}
-        <div class="col-auto">
-          {{f.input "value" label="Integer value" type="text" size=10}}
-        </div>
-      {{else if this.editSetting.options}}
-        {{f.input "value" label="Option value" type="select" options=this.editOptions}}
-      {{else}}
-        {{f.input "value" label=(concat "Enter a " this.editSetting.type " value") type="textarea" rows=10 cols=80}}
-      {{/if}}
-    </div>
-    <f.submit @label="Update Setting" />
-    {{f.cancel}}
-  {{/ch-form}}
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Update Setting" @disabled={{this.editSetting.isSaving}} />
+        <f.cancel @disabled={{this.editSetting.isSaving}} />
+        {{#if this.editSetting.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+
 {{/if}}

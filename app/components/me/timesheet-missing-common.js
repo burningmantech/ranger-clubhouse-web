@@ -4,7 +4,6 @@
 
 import Component from '@ember/component';
 import { action, computed, set } from '@ember/object';
-
 import { validatePresence } from 'ember-changeset-validations/validators';
 import { inject as service } from '@ember/service';
 import * as Position from 'clubhouse/constants/positions';
@@ -23,7 +22,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
   timesheetValidations = {
     on_duty: [validateDateTime({ before: 'off_duty' }), validatePresence(true)],
     off_duty: [validateDateTime({ after: 'on_duty' }), validatePresence(true)],
-    notes: validatePresence(true)
+    notes: [validatePresence(true)]
   };
 
   // Create a list of positions options to check

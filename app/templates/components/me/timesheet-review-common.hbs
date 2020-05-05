@@ -1,4 +1,4 @@
-{{#if timesheets}}
+{{#if @timesheets}}
   <div class="timesheet-table">
     <div class="timesheet-row timesheet-header">
       <div class="timesheet-time">From</div>
@@ -7,7 +7,7 @@
       <div class="timesheet-credits">Credits</div>
       <div class="timesheet-position">Position</div>
     </div>
-    {{#each timesheets as |ts|}}
+    {{#each @timesheets as |ts|}}
       <div class="timesheet-entry">
         <div class="timesheet-row">
           <div class="timesheet-time">{{shift-format ts.on_duty}}</div>
@@ -37,26 +37,27 @@
           <div>
             {{#if ts.off_duty}}
               {{#if ts.verified}}
-                <span class="text-success">{{fa-icon "check"}} Entry was marked correct on {{shift-format ts.verified_at}}</span>
+                <span class="text-success">
+                  {{fa-icon "check"}} Entry was marked correct on {{shift-formatts.verified_at}}
+                </span>
               {{else if ts.isApproved}}
-                The correction request has been APPROVED.
-                The timesheet has been updated.
+                The correction request has been APPROVED. The timesheet has been updated.
               {{else if ts.isRejected}}
                 The correction request has been denied.
               {{else if ts.isPendingReview }}
-                <span class="text-info font-weight-bold">The correction request is pending review.</span>
+                <b class="text-info ">The correction request is pending review.</b>
               {{else if ts.isUnverified}}
-                <strong>This entry has not been verified.</strong>
+                <b>This entry has not been verified.</b>
               {{else}}
                 Unknown state?
               {{/if}}
 
               {{#if (and ts.haveReviewerResponse (not ts.verified))}}
-                <p class="text-bold">Response from the timesheet review team:</p>
+                <p><b>Response from the timesheet review team:</b></p>
                 <p>{{ts.reviewer_notes}}</p>
               {{/if}}
             {{else}}
-              <strong>You are still on duty. You may submit a correction after the shift has ended.</strong>
+              <b>You are still on duty. You may submit a correction after the shift has ended.</b>
             {{/if}}
           </div>
         </div>
@@ -64,7 +65,7 @@
         <div class="timesheet-row timesheet-actions d-print-none">
           {{#if ts.off_duty}}
             {{#unless ts.verified}}
-              <button type="button" class="btn btn-success" {{action markCorrectAction ts}} disabled={{isSubmitting}}>
+              <button type="button" class="btn btn-success" {{action markCorrectAction ts}} disabled={{ts.isSaving}}>
                 Mark Entry Correct
               </button>
             {{/unless}}
@@ -78,72 +79,83 @@
               {{/if}}
             </button>
             {{#if ts.isReloading}}
-              <span class="text-muted">Loading {{fa-icon "spinner" spin=true}}</span>
+              <LoadingIndicator />
             {{/if}}
           {{/if}}
           {{#if ts.isSaving}}
-            <span class="ml-2 text-muted">Submitting {{fa-icon "spinner" spin=true}}</span>
+            <LoadingIndicator />
           {{/if}}
         </div>
       </div>
     {{/each}}
   </div>
 
-  <TimesheetSummary @summary={{timesheetSummary}} />
-  <TimesheetPositionSummary @timesheets={{timesheets}} />
+  <TimesheetSummary @summary={{@timesheetSummary}} />
+  <TimesheetPositionSummary @timesheets={{@timesheets}} />
 {{else}}
   <p class="text-danger font-weight-bold">No timesheet entries were found.</p>
 {{/if}}
 
 
 {{! Timesheet entry correction form dialog }}
-{{#if entry}}
-  {{#ch-form "correction" entry modalBox=true modalTitle="Timesheet Correction" validator=correctionValidations onSubmit=(action saveCorrectionAction) onCancel=(action cancelCorrectionAction) as |f|}}
-    <dl class="form-row">
-      <dt class="col-sm-2">Position:</dt>
-      <dd class="col-sm-10">{{entry.position.title}}</dd>
+{{#if this.entry}}
+  <ModalDialog @title="Timesheet Correction" as |Modal|>
+    <ChForm @formId="correction"
+            @originalModel={{this.entry}}
+            @validator={{this.correctionValidations}}
+            @onSubmit={{this.saveCorrectionAction}}
+            @onCancel={{this.cancelCorrectionAction}} as |f|>
+      <Modal.body>
+        <dl class="form-row">
+          <dt class="col-sm-2">Position:</dt>
+          <dd class="col-sm-10">{{this.entry.position.title}}</dd>
 
-      <dt class="col-sm-2">Time:</dt>
-      <dd class="col-sm-10">{{shift-format entry.on_duty}} to {{shift-format entry.off_duty}}</dd>
+          <dt class="col-sm-2">Time:</dt>
+          <dd class="col-sm-10">{{shift-format this.entry.on_duty}} to {{shift-format this.entry.off_duty}}</dd>
 
-      <dt class="col-sm-2">Duration:</dt>
-      <dd class="col-sm-10">{{hour-minute-format entry.duration}}</dd>
+          <dt class="col-sm-2">Duration:</dt>
+          <dd class="col-sm-10">{{hour-minute-format this.entry.duration}}</dd>
 
-      <dt class="col-sm-2">Credits:</dt>
-      <dd class="col-sm-10">{{credits-format entry.credits}}</dd>
-    </dl>
+          <dt class="col-sm-2">Credits:</dt>
+          <dd class="col-sm-10">{{credits-format this.entry.credits}}</dd>
+        </dl>
 
-    <div class="form-row">
-      Use the following area to explain why this entry is incorrect. Provide as
-      much information as possible to help us understand why this entry should be fixed.
-      <ul>
-        {{#if isMe}}
-          <li><b>State the correct times</b> if the starting and/or ending time is wrong.</li>
-          <li><b>If the position is wrong,</b> tell us what is the correct position.</li>
-          <li><b>Provide an explanation</b> on why you think the entry is wrong.</li>
-          <li><b>Who was your partner for the shift?</b></li>
-        {{else}}
-          <li><b>Why does {{person.callsign}} think the entry is wrong?</b></li>
-          <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
-          <li><b>Is the position "{{entry.position.title}}" wrong?</b> State the correct position</li>
-          <li><b>Who was their shift partner(s)?</b></li>
-        {{/if}}
-      </ul>
-    </div>
-    {{#if entry.isRejected}}
-      <b class="text-danger">The correction request has been rejected.</b>
-      <div class="card mb-4">
-        <div class="card-header">The timesheet correction team has left you a note:</div>
-        <div class="card-body">
-          {{entry.reviewer_notes}}
+        <div class="form-row">
+          Use the following area to explain why this entry is incorrect. Provide as
+          much information as possible to help us understand why this entry should be fixed.
+          <ul>
+            {{#if this.isMe}}
+              <li><b>State the correct times</b> if the starting and/or ending time is wrong.</li>
+              <li><b>If the position is wrong,</b> tell us what is the correct position.</li>
+              <li><b>Provide an explanation</b> on why you think the entry is wrong.</li>
+              <li><b>Who was your partner for the shift?</b></li>
+            {{else}}
+              <li><b>Why does {{@person.callsign}} think the entry is wrong?</b></li>
+              <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
+              <li><b>Is the position "{{this.entry.position.title}}" wrong?</b> State the correct position</li>
+              <li><b>Who was their shift partner(s)?</b></li>
+            {{/if}}
+          </ul>
         </div>
-      </div>
-    {{/if}}
-    {{f.input "notes" label=(if entry.isRejected "Supply additional information for an apeal:" "Your correction note:") type="textarea" cols=80 rows=3}}
-    <f.submit @label="Submit Correction Request" @disabled={{isSubmitting}} />
-    {{f.cancel}}
-    {{#if isSubmitting}}
-      <span class="text-muted">Submitting {{fa-icon "spinner" spin=true}} . . .</span>
-    {{/if}}
-  {{/ch-form}}
+        {{#if this.entry.isRejected}}
+          <b class="text-danger">The correction request has been rejected.</b>
+          <div class="card mb-4">
+            <div class="card-header">The timesheet correction team has left you a note:</div>
+            <div class="card-body">
+              {{this.entry.reviewer_notes}}
+            </div>
+          </div>
+        {{/if}}
+        <f.input @name="notes" @label={{if this.entry.isRejected "Supply additional information for an apeal:"
+                                           "Your correction note:"}} @type="textarea" @cols=80 @rows=3/>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Submit Correction Request" @disabled={{this.entry.isSaving}} />
+        <f.cancel @disabled={{this.entry.isSaving}} />
+        {{#if this.entry.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
 {{/if}}

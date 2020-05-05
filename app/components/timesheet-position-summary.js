@@ -1,15 +1,11 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import { computed } from '@ember/object';
 
 export default class TimesheetPositionSummaryComponent extends Component {
-  tagName = '';
-
-  timesheets = null;
-
-  @computed('timesheets')
+  @computed('args.timesheets.@each.{credits,duration,position}')
   get workedPositions() {
     let positionGroups = {};
-    const timesheets = this.timesheets;
+    const timesheets = this.args.timesheets;
 
     timesheets.forEach((sheet) => {
       const title = sheet.position.title;

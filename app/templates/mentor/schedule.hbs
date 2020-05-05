@@ -14,7 +14,8 @@
   {{#each slots as |slot|}}
     <div class="my-3">
       <table class="table table-sm table-striped table-hover">
-        <caption>{{shift-format slot.begins}} - {{slot.description}} - {{pluralize slot.people.length "Alpha"}}</caption>
+        <caption>{{shift-format slot.begins}} - {{slot.description}} - {{pluralize slot.people.length
+                                                                                   "Alpha"}}</caption>
         <thead>
         <tr>
           <td colspan="6">
@@ -49,16 +50,16 @@
             <td class="w-5 text-center">{{yesno person.on_alpha_shift}}</td>
             <td class="w-10">
               {{#if person.have_mentor_flags}}
-              {{#each person.mentor_team as |info|}}
-                {{#if (gte info.rank 3)}}
-                  {{info.year}}
-                  <IntakeRanking @type="mentor" @rank={{info.rank}} />
-                  <br>
-                {{/if}}
-              {{/each}}
-            {{else}}
-              -
-            {{/if}}
+                {{#each person.mentor_team as |info|}}
+                  {{#if (gte info.rank 3)}}
+                    {{info.year}}
+                    <IntakeRanking @type="mentor" @rank={{info.rank}} />
+                    <br>
+                  {{/if}}
+                {{/each}}
+              {{else}}
+                -
+              {{/if}}
             </td>
             <td class="w-20">
               {{#each person.trainings as |training|}}
@@ -86,65 +87,73 @@
 
 
 {{! Add Person dialog box}}
-{{#if addPersonForm}}
-  {{#ch-form "search" addPersonForm modalBox=true modalTitle=(concat "Add Person To " (shift-format slot.begins))
-             changeSet=false onFormChange=(action "searchPeopleAction") onCancel=(action "cancelSearchAction") as |f|}}
-    <div class="form-row">
-      {{f.input "name" label="Enter the callsign, real name, or email of the person to add:" type="text" size=30
-                autofocus=true disabled=slot.is_submitting}}
-    </div>
-    <div class="form-row">
-      {{f.cancel}}
-      {{#if slot.is_submitting}}
-        <div class="col-auto text-muted">
-          Adding {{fa-icon "spinner" spin=true}}
+{{#if this.addPersonForm}}
+  <ModalDialog @title={{concat "Add Person To " (shift-format slot.begins)}} as |Modal|>
+    <ChForm @formId="search" @originalModel={{this.addPersonForm}}
+            @changeSet={{false}} @onFormChange={{this.searchPeopleAction}} @onCancel={{this.cancelSearchAction}} as |f|>
+      <Modal.body>
+        <div class="form-row">
+          <f.input @name="name" @label="Enter the callsign, real name, or email of the person to add:"
+                   @type="text" @size=30 @autofocus=true @disabled={{slot.is_submitting}} />
         </div>
-      {{else if isSearching}}
-        <div class="col-auto text-muted">
-          Searching {{fa-icon "spinner" spin=true}}
+        <div class="form-row">
+          <f.cancel/>
+          {{#if this.slot.is_submitting}}
+            <LoadingIndicator @text="Adding"/>
+          {{else if isSearching}}
+            <LoadingIndicator @text="Searching"/>
+          {{/if}}
         </div>
-      {{/if}}
-    </div>
-    {{#if foundPeople}}
-      Click on the callsign to add the person to the Alpha shift.
-      <table class="table table-hover mt-2">
-        <thead>
-        <tr>
-          <th class="w-25">Callsign</th>
-          <th class="w-25">Name</th>
-          <th class="w-25">Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each foundPeople as |person|}}
-          <tr>
-            <td class="w-25">
-              <a href {{action "addPersonAction" person slot}} disabled={{slot.is_submitting}}>
-                {{person.callsign}}
-              </a>
-            </td>
-            <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
-            <td class="w-25">{{person.status}}</td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
-    {{else if noSearchMatch}}
-      <div class="text-danger">No person found matching "{{noSearchMatch}}"</div>
-    {{/if}}
-  {{/ch-form}}
+        {{#if this.foundPeople}}
+          Click on the callsign to add the person to the Alpha shift.
+          <table class="table table-hover mt-2">
+            <thead>
+            <tr>
+              <th class="w-25">Callsign</th>
+              <th class="w-25">Name</th>
+              <th class="w-25">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each foundPeople as |person|}}
+              <tr>
+                <td class="w-25">
+                  <a href {{action this.addPersonAction person slot}} disabled={{slot.is_submitting}}>
+                    {{person.callsign}}
+                  </a>
+                </td>
+                <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
+                <td class="w-25">{{person.status}}</td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </table>
+        {{else if this.noSearchMatch}}
+          <div class="text-danger">No person found matching "{{this.noSearchMatch}}"</div>
+        {{/if}}
+      </Modal.body>
+    </ChForm>
+  </ModalDialog>
 {{/if}}
 
 {{! Remove person dialog box}}
-{{#if removePersonForm}}
-  {{#ch-form "removePerson" removePersonForm modalBox=true modalTitle="Remove Person From Session" changeSet=false
-             onSubmit=(action "removePersonAction") onCancel=(action "cancelRemovePersonAction") as |f|}}
-    <div class="form-row">
-      {{f.input "person_id" label="Select the person to remove" type="select" options=removeStudentOptions}}
-    </div>
-
-    <f.submit @label={{if isSubmitting "Removing" "Remove Person"}} @disabled={{or isSubmitting
-                                                                                   (not f.model.person_id)}} />
-    {{f.cancel}}
-  {{/ch-form}}
+{{#if this.removePersonForm}}
+  <ModalDialog @title="Remove Person From Session" as |Modal|>
+    <ChForm @formId="removePerson" @originalModel={{this.removePersonForm}} @changeSet={{false}}
+            @onSubmit={{this.removePersonAction}} @onCancel={{this.cancelRemovePersonAction}} as |f|>
+      <Modal.body>
+        <div class="form-row">
+          <f.input @name="person_id" @label="Select the person to remove" @type="select"
+                   @options={{this.removeStudentOptions}} />
+        </div>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Remove Person" @disabled={{or this.isSubmitting (not f.model.person_id)}} />
+        <f.cancel @disabled={{this.isSubmitting}} />
+        {{#if this.isSubmitting}}
+          <LoadingIndicator/>
+        {{/if}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
 {{/if}}

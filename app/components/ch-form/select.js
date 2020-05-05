@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import EmberObject from '@ember/object';
 import { typeOf } from '@ember/utils';
 import { computed } from '@ember/object';
+import { assert } from '@ember/debug';
 
 export default class ChFormSelectComponent extends Component {
   tagName = 'select';
@@ -20,9 +21,9 @@ export default class ChFormSelectComponent extends Component {
   includeBlank = null;
 
   didReceiveAttrs() {
-    const groupName = this.options.firstObject.groupName;
-
-    this.set('isGrouped', !!groupName);
+    assert('select options is not an array', typeOf(this.options) == 'array');
+    const item = this.options[0];
+    this.set('isGrouped', (typeOf(item) == 'object' && ('groupName' in item)));
   }
 
   // Component event..
@@ -43,6 +44,10 @@ export default class ChFormSelectComponent extends Component {
   }
 
   _buildOptions(options) {
+    if (!options) {
+      return [];
+    }
+
     return options.map((opt) => {
       const type = typeOf(opt);
       let label, value;

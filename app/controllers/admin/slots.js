@@ -1,13 +1,14 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
-import { action, computed, set } from '@ember/object';
-import { filterBy } from '@ember/object/computed';
+import {action, computed, set} from '@ember/object';
+import {filterBy} from '@ember/object/computed';
 import currentYear from 'clubhouse/utils/current-year';
 import laborDay from 'clubhouse/utils/labor-day';
 import moment from 'moment';
 import _ from 'lodash';
+import { tracked } from '@glimmer/tracking';
 
-const allDays = { id: 'all', title: 'All' };
+const allDays = {id: 'all', title: 'All'};
 
 const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
@@ -60,21 +61,23 @@ class CopySourceSlot extends EmberObject {
 }
 
 export default class SlotsController extends Controller {
-  queryParams = [ 'year' ];
+  queryParams = ['year'];
 
   dayFilter = 'all';
   positionFilter = 'all';
   activeFilter = 'all';
 
   activeOptions = [
-    { id: 'all', title: 'All' },
-    { id: 'active', title: 'Active' },
-    { id: 'inactive', title: 'Inactive' },
+    {id: 'all', title: 'All'},
+    {id: 'active', title: 'Active'},
+    {id: 'inactive', title: 'Inactive'},
   ];
 
-  showingGroups = { };
+  showingGroups = {};
 
-  @computed('slots[]','slots.@each.{position_id,begins}', 'dayFilter', 'activeFilter')
+  @tracked isCopyingSlots = false;
+
+  @computed('slots[]', 'slots.@each.{position_id,begins}', 'dayFilter', 'activeFilter')
   get viewSlots() {
     let slots = this.slots;
     const dayFilter = this.dayFilter;
@@ -100,9 +103,9 @@ export default class SlotsController extends Controller {
   @computed('slots.{[],@each.begins}')
   get dayOptions() {
     const unique = this.slots.uniqBy('slotDay').mapBy('slotDay');
-    const days = [ allDays ];
+    const days = [allDays];
 
-    unique.sort((a,b) => {
+    unique.sort((a, b) => {
       if (a < b) return -1;
       if (a > b) return 1;
       return 0;
@@ -118,7 +121,7 @@ export default class SlotsController extends Controller {
     let slots = this.viewSlots;
     let groups = [];
 
-    slots.forEach(function(slot) {
+    slots.forEach(function (slot) {
       const title = slot.position_title;
       let group = groups.findBy('title', title);
 
@@ -128,7 +131,7 @@ export default class SlotsController extends Controller {
         group = {
           title,
           position_id: slot.position_id,
-          slots: [ slot ],
+          slots: [slot],
           inactive: 0,
           showing: false
         }
@@ -167,7 +170,7 @@ export default class SlotsController extends Controller {
   @action
   newSlot() {
     const position_id = this.positions.firstObject.id;
-    this.set('slot', this.store.createRecord('slot', { position_id }));
+    this.set('slot', this.store.createRecord('slot', {position_id}));
   }
 
   @action
@@ -218,7 +221,7 @@ export default class SlotsController extends Controller {
     const duplicate = this._duplicateSlot(slot);
 
     duplicate.set('begins', moment(slot.begins).add(24, 'hours').format(DATETIME_FORMAT));
-    duplicate.set('ends',moment(slot.ends).add(24, 'hours').format(DATETIME_FORMAT));
+    duplicate.set('ends', moment(slot.ends).add(24, 'hours').format(DATETIME_FORMAT));
 
     duplicate.save().then(() => {
       this.slots.update();
@@ -233,11 +236,11 @@ export default class SlotsController extends Controller {
       `Are you sure you want to delete ${slot.position_title} - ${slot.description}?`,
       () => {
         slot.destroyRecord()
-            .then(() => {
-              this.slots.removeObject(slot);
-              this.toast.success('Slot has been deleted.')
-            })
-            .catch((response) => this.house.handleErrorResponse(response) )
+          .then(() => {
+            this.slots.removeObject(slot);
+            this.toast.success('Slot has been deleted.')
+          })
+          .catch((response) => this.house.handleErrorResponse(response))
       }
     );
   }
@@ -343,38 +346,41 @@ export default class SlotsController extends Controller {
     const sourceIds = this.copySourcePositions.flatMap((p) => p.selectedSlots).map((s) => s.source.id);
     if (sourceIds.length === 0) {
       this.toast.warning('No slots selected to copy; no changes made');
-    } else {
-      const data = {
-        ids: sourceIds,
-        activate: params.activate,
-        attributes: {},
-      };
-      ['deltaDays', 'deltaHours', 'deltaMinutes', 'newPositionId'].forEach(function(key) {
-        if (params[key] != 0) {
-          data[key] = params[key];
-        }
-      });
-      ['description', 'url', 'max'].forEach(function(key) {
-        if (params[key]) {
-          data.attributes[key] = params[key];
-        }
-      });
-      this.ajax.request(`slot/copy`, {method: 'POST', data: data}).then((result) => {
-        if (result.slot.length) {
-          this.toast.success(`Copied ${result.slot.length} slots`);
-        } else if (result.message === 'success') {
-          this.toast.success('No slots copied');
-        } else {
-          this.house.handleErrorResponse(result);
-        }
-        this.slots.update(); // refresh the list
-      }).catch((response) => {
-        this.house.handleErrorResponse(response);
-      });
+      return;
     }
-    this.set('copySourcePositions', null);
-    this.set('copyParams', null);
-    return true;
+    const data = {
+      ids: sourceIds,
+      activate: params.activate,
+      attributes: {},
+    };
+    ['deltaDays', 'deltaHours', 'deltaMinutes', 'newPositionId'].forEach(function (key) {
+      if (params[key] != 0) {
+        data[key] = params[key];
+      }
+    });
+    ['description', 'url', 'max'].forEach(function (key) {
+      if (params[key]) {
+        data.attributes[key] = params[key];
+      }
+    });
+
+    this.isCopyingSlots = true;
+    this.ajax.request(`slot/copy`, {method: 'POST', data: data}).then((result) => {
+      if (result.slot.length) {
+        this.toast.success(`Copied ${result.slot.length} slots`);
+      } else if (result.message === 'success') {
+        this.toast.success('No slots copied');
+      } else {
+        this.house.handleErrorResponse(result);
+      }
+
+      return this.slots.update().then(() => {
+        this.set('copySourcePositions', null);
+        this.set('copyParams', null);
+      })
+    }).catch((response) => {
+      this.house.handleErrorResponse(response);
+    }).finally(() => this.isCopyingSlots = false);
   }
 
   @action

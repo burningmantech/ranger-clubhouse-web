@@ -1,40 +1,30 @@
-import Component from '@ember/component';
-import EmberObject from '@ember/object';
-import { action, computed } from '@ember/object';
-
-
-import { Role } from 'clubhouse/constants/roles';
+import Component from '@glimmer/component';
+import EmberObject, { action } from '@ember/object';
+import {Role} from 'clubhouse/constants/roles';
 
 export default class PersonRoleFormComponent extends Component {
-  // role id array
-  roleIds = null;
-  // available roles to select from
-  roles = null;
-  onSave = null;
-  onCancel = null;
-
-  didReceiveAttrs() {
-    this.set('roleForm', EmberObject.create({ roleIds: this.roleIds }))
-  }
+  roleForm = EmberObject.create({roleIds: this.args.roleIds});
 
   // Create a list of roles options to check
-  @computed('roles')
   get roleOptions() {
-      if (!this.roles) {
-        return [];
-      }
+    const roles = this.args.roles;
 
-      return this.roles.map((role) => {
-        return [ role.title, role.id ];
-      });
+    if (!roles) {
+      return [];
+    }
+
+    return roles.map((role) => {
+      return [role.title, role.id];
+    });
   }
 
   @action
   save(model, isValid) {
-    const originalIds = this.roleIds;
-    const updatedIds = model.get('roleIds');
+    const originalIds = this.args.roleIds;
+    const updatedIds = model.roleIds;
     const wantAdmin = (!originalIds.includes(Role.ADMIN) && updatedIds.includes(Role.ADMIN));
     const wantPII = (!originalIds.includes(Role.VIEW_PII) && updatedIds.includes(Role.VIEW_PII));
+    const onSave = this.args.onSave;
 
     if (wantAdmin || wantPII) {
       let abilities;
@@ -52,13 +42,13 @@ export default class PersonRoleFormComponent extends Component {
       }
 
       this.modal.confirm('Confirmation Required',
-        `WARNING: The ${roles.join(' and ')} role${roles.length > 1 ? 's':''} requires prior approval by the Ranger Council. This person will ${abilities}. Are you absolutely 100% sure you want to do this?`,
+        `WARNING: The ${roles.join(' and ')} role${roles.length > 1 ? 's' : ''} requires prior approval by the Ranger Council. This person will ${abilities}. Are you absolutely 100% sure you want to do this?`,
         () => {
-          this.onSave(model, isValid);
+          onSave(model, isValid);
         }
       );
     } else {
-      this.onSave(model, isValid);
+      onSave(model, isValid);
     }
   }
 

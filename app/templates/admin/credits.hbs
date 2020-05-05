@@ -1,6 +1,6 @@
 <YearSelect @title="Position Credits" @year={{this.year}} @onChange={{action (mut this.year)}} />
 
-<div class="row mb-1">
+<div class="row">
   <div class="col-auto">
     <ChForm::Select @name="positionFilter" @value={{this.positionFilter}} @options={{this.filterPositionOptions}}
                     @onChange={{action (mut this.positionFilter)}}  @controlClass="form-control"/>
@@ -9,14 +9,13 @@
     <ChForm::Select @name="dayFilter" @value={{this.dayFilter}} @options={{this.dayOptions}} @onChange={{action
             (mut this.dayFilter)}}  @controlClass="form-control"/>
   </div>
-
-  <div class="col-auto ml-auto">
-    {{#if this.credits.length}}
-      <button type="button" {{on "click" (fn this.startCopy 0)}} class="btn btn-secondary">Copy Credits</button>
-    {{/if}}
-    <button type="button" {{on "click" this.newCredit}} class="btn btn-primary">New Position Credit</button>
-  </div>
 </div>
+<p class="mt-2">
+  <button type="button" {{on "click" this.newCredit}} class="btn btn-primary">New Position Credit</button>
+  {{#if this.credits.length}}
+    <button type="button" {{on "click" (fn this.startCopy 0)}} class="btn btn-secondary">Copy Credits</button>
+  {{/if}}
+</p>
 
 {{#if this.credits.length}}
   <p>
@@ -42,31 +41,28 @@
     </caption>
     <thead>
     <tr>
-      <th>ID</th>
-      <th>From</th>
-      <th>To</th>
-      <th class="text-right">Credits</th>
-      <th>Description</th>
-      <th>Actions</th>
+      <th class="w-5">ID</th>
+      <th class="w-15">From</th>
+      <th class="w-15">To</th>
+      <th class="w-10 text-right">Credits</th>
+      <th class="w-35">Description</th>
+      <th class="w-20">Actions</th>
     </tr>
     </thead>
     <tbody>
     {{#each group.credits as |credit|}}
       <tr id="credit-{{credit.id}}">
-        <td>{{credit.id}}</td>
-        <td>{{shift-format credit.start_time}}</td>
-        <td>{{shift-format credit.end_time}}</td>
-        <td class="text-right">{{credits-format credit.credits_per_hour}}</td>
-        <td>
-          {{credit.description}}
-        </td>
-        <td>
+        <td class="w-5">{{credit.id}}</td>
+        <td class="w-15">{{shift-format credit.start_time}}</td>
+        <td class="w-15">{{shift-format credit.end_time}}</td>
+        <td class="w-10 text-right">{{credits-format credit.credits_per_hour}}</td>
+        <td class="w-35">{{credit.description}}</td>
+        <td class="w-20">
+          <button type="button" {{on "click" (fn this.deleteCredit credit)}} class="btn btn-danger btn-sm">
+            {{fa-icon "trash-alt" type="fas"}} Delete
+          </button>
           <button type="button" {{on "click" (fn this.editCredit credit)}} class="btn btn-primary btn-sm">
             {{fa-icon "edit"}} Edit
-          </button>
-          <button type="button" {{on "click" (fn this.deleteCredit credit)}} class="btn btn-danger btn-sm"
-                  title="Delete credit">
-            {{fa-icon "trash-alt" type="fas"}}
           </button>
         </td>
       </tr>
@@ -76,31 +72,36 @@
 {{/each}}
 
 {{#if this.credit}}
-  <ModalDialog @title={{if credit.isNew "New Position Credit"  "Edit Position Credit"}} as |Modal|>
+  <ModalDialog @title={{if this.credit.isNew "New Position Credit"  "Edit Position Credit"}} as |Modal|>
     <ChForm @formId="credit-form" @originalModel={{this.credit}} @validator={{this.creditValidations}}
             @onSubmit={{this.saveCredit}} @onCancel={{this.cancelCredit}} as |f|>
       <Modal.body>
         <div class="form-row">
           {{#if this.credit.isNew}}
-            {{f.input "position_id" label="Position" type="select" options=this.positionOptions multiple=true size=15
-                      grid="col-4" hint="Select multiple positions to create in bulk"}}
+            <f.input @name="position_id" @label="Position" @type="select" @options={{this.positionOptions}}
+                     @multiple=true @size=15 @grid="col-4" @hint="Select multiple positions to create in bulk"/>
           {{else}}
-            {{f.input "position_id" label="Position" type="select" options=this.positionOptions grid="col-4"}}
+            <f.input @name="position_id" @label="Position" @type="select" @options={{this.positionOptions}}
+                     @grid="col-4"/>
           {{/if}}
 
           <div class="col-7">
             <div class="form-row">
-              {{f.input "start_time" label="Begining Time" type="datetime" maxlength=25 grid="col-auto"}}
-              {{f.input "end_time" label="Ending Time" type="datetime"  maxlength=20 grid="col-auto"}}
-              {{f.input "credits_per_hour" label="Credits Per Hour" type="text"  maxlength=20 grid="col-auto"}}
-              {{f.input "description" label="Description" size=25 maxlength=25 grid="col-md-auto"}}
+              <f.input @name="start_time" @label="Begining Time" @type="datetime" @maxlength=25 @grid="col-auto"/>
+              <f.input @name="end_time" @label="Ending Time" @type="datetime" @maxlength=20 @grid="col-auto"/>
+              <f.input @name="credits_per_hour" @label="Credits Per Hour" @type="text" @maxlength=20 @grid="col-auto"/>
+              <f.input @name="description" @label="Description" @size=25 @maxlength=25 @grid="col-md-auto"/>
             </div>
           </div>
         </div>
       </Modal.body>
       <Modal.footer @noAlign=true>
-        <f.submit @label={{if credit.isNew "Create" "Update"}} />
-        <f.cancel/>
+        <f.submit @label={{if this.credit.isNew "Create" "Update"}} @disabled={{or this.credit.isSaving
+                                                                                   this.isCreditSubmitting}} />
+        <f.cancel @disabled={{or this.credit.isSaving this.isCreditSubmitting}} />
+        {{#if (or this.credit.isSaving this.isCreditSubmitting)}}
+          <LoadingIndicator/>
+        {{/if}}
       </Modal.footer>
     </ChForm>
   </ModalDialog>
@@ -108,71 +109,80 @@
 
 
 {{#if this.copyParams}}
-  {{#ch-form "copyCredits" copyParams modalBox=true modalTitle="Copy Credits" changeSet=false
-             validator=copyValidations onSubmit=(action "performCopy") onCancel=(action "cancelCopy") as |f|}}
-    <fieldset>
-      <legend>Add/Subtract Time to New Credits</legend>
-      <div class="form-row">
-        {{f.input "deltaDays" label="Days" type="number" maxlength=5 grid="col-sm"}}
-        {{f.input "deltaHours" label="Hours" type="number" maxlength=5 grid="col-sm"}}
-        {{f.input "deltaMinutes" label="Minutes" type="number" maxlength=5 grid="col-sm"}}
-        {{f.input "newPositionId" label="Position" type="select" options=positionOptionsForCopy grid="col-md-auto"}}
-      </div>
-      <p>
-        Labor Day of {{this.year}} is {{this.selectedYearLaborDay}}.
-        Labor Day of {{this.presentYear}} is {{this.presentYearLaborDay}}, {{this.laborDayDiff}} days later.
-      </p>
-    </fieldset>
-    <f.submit @label={{concat "Copy " this.copySelectedCreditCount " selected credits"}} />
-    <f.cancel/>
-    {{#each this.copySourcePositions as |position|}}
-      <table class="table table-sm table-box table-hover mt-1">
-        <caption>
-          {{position.selectedCredits.length}} <strong>{{position.title}}</strong> credits to copy
-          <button {{action "copyToggleExpanded" position}}>
-            {{#if position.expanded}}collapse{{else}}expand{{/if}}
-          </button>
-          <button {{action "copyPositionSelectAll" position}}>
-            {{#if position.allSelected}}deselect{{else}}select{{/if}} all
-          </button>
-        </caption>
-        <thead>
-        <tr>
-          <th>Copy</th>
-          <th>Start time</th>
-          <th>End time</th>
-          <th class="text-right">Credits</th>
-          <th>Description</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#if position.expanded}}
-          {{#each position.credits as |credit|}}
-            <tr>
-              {{#let (concat "copy-credit-" credit.source.id) as |checkid|}}
-                <td><Input @type="checkbox" @checked={{credit.selected}} @id={{checkid}} /></td>
-                <td>
-                  <label for={{checkid}}>
-                    {{shift-format credit.source.start_time}} &rarr;
-                    <br>{{credit.start_time}}
-                  </label>
-                </td>
-                <td>
-                  <label for={{checkid}}>
-                    {{shift-format credit.source.end_time}} &rarr;
-                    <br>{{credit.end_time}}
-                  </label>
-                </td>
-                <td class="text-right"><label for={{checkid}}>{{credits-format
-                        credit.source.credits_per_hour}}</label>
-                </td>
-                <td><label for={{checkid}}>{{credit.source.description}}</label></td>
-              {{/let}}
-            </tr>
-          {{/each}}
+  <ModalDialog @title="Copy Credits" as |Modal|>
+    <ChForm @formId="copyCredits" @originalModel={{this.copyParams}} @changeSet={{false}}
+            @validator={{this.copyValidations}} @onSubmit={{this.performCopy}}
+            @onCancel={{this.cancelCopy}} as |f|>
+      <Modal.body>
+        <fieldset>
+          <legend>Add/Subtract Time to New Credits</legend>
+          <div class="form-row">
+            <f.input @name="deltaDays" @label="Days" @type="number" @maxlength=5 @grid="col-sm"/>
+            <f.input @name="deltaHours" @label="Hours" @type="number" @maxlength=5 @grid="col-sm"/>
+            <f.input @name="deltaMinutes" @label="Minutes" @type="number" @maxlength=5 @grid="col-sm"/>
+            <f.input @name="newPositionId" @label="Position" @type="select" @options={{this.positionOptionsForCopy}}
+                     @grid="col-md-auto"/>
+          </div>
+          <p>
+            Labor Day of {{this.year}} is {{this.selectedYearLaborDay}}.
+            Labor Day of {{this.presentYear}} is {{this.presentYearLaborDay}}, {{this.laborDayDiff}} days later.
+          </p>
+        </fieldset>
+        <f.submit @label={{concat "Copy " this.copySelectedCreditCount " selected credits"}} @disabled={{this.isCopying}} />
+        <f.cancel @disabled={{this.isCopying}} />
+        {{#if this.isCopying}}
+          <LoadingIndicator />
         {{/if}}
-        </tbody>
-      </table>
-    {{/each}}
-  {{/ch-form}}
+        {{#each this.copySourcePositions as |position|}}
+          <table class="table table-sm table-box table-hover mt-1">
+            <caption>
+              {{position.selectedCredits.length}} <strong>{{position.title}}</strong> credits to copy
+              <button type="button" {{action this.copyToggleExpanded position}}>
+                {{#if position.expanded}}collapse{{else}}expand{{/if}}
+              </button>
+              <button type="button" {{action this.copyPositionSelectAll position}}>
+                {{#if position.allSelected}}deselect{{else}}select{{/if}} all
+              </button>
+            </caption>
+            <thead>
+            <tr>
+              <th>Copy</th>
+              <th>Start time</th>
+              <th>End time</th>
+              <th class="text-right">Credits</th>
+              <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#if position.expanded}}
+              {{#each position.credits as |credit|}}
+                <tr>
+                  {{#let (concat "copy-credit-" credit.source.id) as |checkid|}}
+                    <td><Input @type="checkbox" @checked={{credit.selected}} @id={{checkid}} /></td>
+                    <td>
+                      <label for={{checkid}}>
+                        {{shift-format credit.source.start_time}} &rarr;
+                        <br>{{credit.start_time}}
+                      </label>
+                    </td>
+                    <td>
+                      <label for={{checkid}}>
+                        {{shift-format credit.source.end_time}} &rarr;
+                        <br>{{credit.end_time}}
+                      </label>
+                    </td>
+                    <td class="text-right">
+                      <label for={{checkid}}>{{credits-format credit.source.credits_per_hour}}</label>
+                    </td>
+                    <td><label for={{checkid}}>{{credit.source.description}}</label></td>
+                  {{/let}}
+                </tr>
+              {{/each}}
+            {{/if}}
+            </tbody>
+          </table>
+        {{/each}}
+      </Modal.body>
+    </ChForm>
+  </ModalDialog>
 {{/if}}

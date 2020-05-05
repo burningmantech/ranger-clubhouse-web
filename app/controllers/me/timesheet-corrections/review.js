@@ -6,7 +6,7 @@ export default class MeTimesheetCorrectionsReviewController extends Controller {
   entry = null; // Incorrect entry
 
   correctionValidations = {
-    notes: validatePresence({ presence: true})
+    notes: [ validatePresence({ presence: true}) ]
   };
 
   // Mark an entry as correct

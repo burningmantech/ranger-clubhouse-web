@@ -2,7 +2,6 @@ import Component from '@ember/component';
 import SlotValidations from 'clubhouse/validations/slot';
 import { action, computed } from '@ember/object';
 
-
 export default class SlotFormComponent extends Component {
   slotValidations = SlotValidations;
 
@@ -35,8 +34,11 @@ export default class SlotFormComponent extends Component {
   @computed('trainerSlots')
   get trainerSlotsOptions() {
     const slots = this.trainerSlots;
+    const groupOptions = [];
 
-    let groupOptions = [];
+    if (!slots || slots.length == 0) {
+      return [];
+    }
 
     slots.forEach((slot) => {
       const title = slot.position_title;

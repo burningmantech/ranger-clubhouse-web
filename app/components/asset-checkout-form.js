@@ -11,7 +11,7 @@ export default class AssetCheckoutFormComponent extends Component {
   eventInfo = null;
 
   assetValdiations = {
-    barcode: validatePresence(true)
+    barcode: [ validatePresence(true) ]
   };
 
   assetForm = EmberObject.create({ });

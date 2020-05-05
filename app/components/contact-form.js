@@ -1,49 +1,45 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import EmberObject from '@ember/object';
-import { action, computed } from '@ember/object';
-
-
-
+import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
 import containsEmail from 'clubhouse/utils/contains-email';
 import { validatePresence } from 'ember-changeset-validations/validators';
 
 export default class ContactFormComponent extends Component {
-  callsign = null;
-  recipientId = null;
-  contactType = null;
-  onDone = null;
-  personStatus = null;
-  isInactive = null;
+  @service house;
+  @service toast;
+  @service modal;
+  @service ajax;
 
-  isSending = false;
+  @tracked isSending = false;
 
   contactValidation = {
-    message: validatePresence({ presence: true,  message: 'Enter a message.' }),
+    message: [ validatePresence({ presence: true,  message: 'Enter a message.' }) ],
   };
 
   contactForm = EmberObject.create({ message: '' });
 
-  @computed('callsign')
   get title() {
-    return `Send a contact message to ${this.callsign}`;
+    return `Send a contact message to ${this.args.callsign}`;
   }
 
   _sendMessage(message) {
-    this.set('isSending', true);
+    this.isSending = true;
     this.ajax.request('contact/send', {
       method: 'POST',
       data: {
-        recipient_id: this.recipientId,
+        recipient_id: this.args.recipientId,
         message,
-        type: this.contactType,
+        type: this.args.contactType,
       }
     }).then(() => {
-      this.toast.success(`Your message to ${this.callsign} has been sent.`);
-      this.onDone(true);
+      this.toast.success(`Your message to ${this.args.callsign} has been sent.`);
+      this.args.onDone(true);
     }).catch((response) => {
-      this.house.handleErrorResponse(response);
+      this.house.handleErrorResponse(response, message);
     }).finally(() => {
-      this.set('isSending', false);
+      this.isSending = false;
     });
   }
 
@@ -53,7 +49,7 @@ export default class ContactFormComponent extends Component {
       return;
     }
 
-    const message = form.get('message').trim();
+    const message = form.message.trim();
 
     if (!containsEmail(message)) {
       this.modal.confirm('No email address detected',
@@ -67,6 +63,6 @@ export default class ContactFormComponent extends Component {
 
   @action
   cancelAction() {
-    this.onDone(false);
+    this.args.onDone(false);
   }
 }

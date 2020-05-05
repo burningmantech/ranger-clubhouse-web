@@ -69,7 +69,6 @@
       {{/if}}
     </td>
     {{#if person.vehicle_blacklisted}}
-
       <td colspan="2">
         <b>{{fa-icon "exclamation-triangle"}} Vehicle blacklisted</b>
       </td>
@@ -96,12 +95,15 @@
 <hr>
 
 
-<h3>Timesheet Verification
+<h3>
+  Timesheet Verification
+  - {{#if unverifiedTimesheets }}{{pluralize unverifiedTimesheets.length "entry" }}{{else}}No Action Needed{{/if}}
   <HelpPopover @slug="hq-timesheet-verification"/>
-  - {{#if unverifiedTimesheets }}{{pluralize unverifiedTimesheets.length "entry" }}{{else}}No Action Needed{{/if}}</h3>
+</h3>
+
 {{#if unverifiedTimesheetEntry}}
   {{#if ignoreTimesheetVerification}}
-    <button class="btn btn-secondary" {{action toggleIgnoreVerification}}>Show Verfication</button>
+    <button type="button" class="btn btn-secondary" {{action toggleIgnoreVerification}}>Show Verfication</button>
   {{else}}
     <p>Ask {{person.callsign}} if the following timesheet entry is correct:</p>
     <table class="table table-width-auto">
@@ -179,39 +181,46 @@
 
 
 {{#if showCorrectionForm}}
-  {{#ch-form "correction" entry modalBox=true modalTitle="Timesheet Entry Correction" validator=correctionValidations
-             onSubmit=(action saveEntryCorrection) onCancel=(action cancelEntryCorrection) as |f|}}
-    <dl class="form-row">
-      <dt class="col-sm-2">Position:</dt>
-      <dd class="col-sm-10">{{entry.position.title}}</dd>
+  <ModalDialog @title="Timesheet Entry Correction" as |Modal|>
+    <ChForm @formId="correction" @originalModel={{this.entry}}
+            @validator={{this.correctionValidations}}
+            @onSubmit={{this.saveEntryCorrection}} @onCancel={{this.cancelEntryCorrection}} as |f|>
+      <Modal.body>
+        <dl class="form-row">
+          <dt class="col-sm-2">Position:</dt>
+          <dd class="col-sm-10">{{entry.position.title}}</dd>
 
-      <dt class="col-sm-2">Time:</dt>
-      <dd class="col-sm-10">{{shift-format entry.on_duty}} to {{shift-format entry.off_duty}}</dd>
+          <dt class="col-sm-2">Time:</dt>
+          <dd class="col-sm-10">{{shift-format entry.on_duty}} to {{shift-format entry.off_duty}}</dd>
 
-      <dt class="col-sm-2">Duration:</dt>
-      <dd class="col-sm-10">{{hour-minute-format entry.duration}}</dd>
+          <dt class="col-sm-2">Duration:</dt>
+          <dd class="col-sm-10">{{hour-minute-format entry.duration}}</dd>
 
-      <dt class="col-sm-2">Credits:</dt>
-      <dd class="col-sm-10">{{credits-format entry.credits}}</dd>
-    </dl>
-    <div class="form-row">
-      Provide as much information as possible to help the reviewer understand why this entry should be fixed.
-      <ul>
-        <li>Why does {{person.callsign}} think the entry is wrong?</li>
-        <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
-        <li><b>Is the position "{{entry.position.title}}" wrong?</b> State the correct position</li>
-        <li><b>Who was their shift partner(s)?</b></li>
-      </ul>
-    </div>
-    {{f.input "notes" label="Timesheet entry correction note:" type="textarea" autofocus=true cols=80 rows=3}}
-    <f.submit @label="Submit Correction" @disabled={{isCorrectionSubmitting}} />
-    {{f.cancel}}
-    {{#if isCorrectionSubmitting}}
-      <LoadingIndicator/>
-    {{/if}}
-  {{/ch-form}}
+          <dt class="col-sm-2">Credits:</dt>
+          <dd class="col-sm-10">{{credits-format entry.credits}}</dd>
+        </dl>
+        <div class="form-row">
+          Provide as much information as possible to help the reviewer understand why this entry should be fixed.
+          <ul>
+            <li>Why does {{person.callsign}} think the entry is wrong?</li>
+            <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
+            <li><b>Is the position "{{entry.position.title}}" wrong?</b> State the correct position</li>
+            <li><b>Who was their shift partner(s)?</b></li>
+          </ul>
+        </div>
+        <f.input @name="notes" @label="Timesheet entry correction note:" @type="textarea" @autofocus={{true}} @cols=80
+                 @rows=3 />
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Submit Correction" @disabled={{this.isCorrectionSubmitting}} />
+        <f.cancel @disabled={{this.isCorrectionSubmitting}} />
+        {{#if this.isCorrectionSubmitting}}
+          <LoadingIndicator/>
+        {{/if}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
 {{/if}}
-
 <hr>
 <h3 class="mb-2">Radio &amp; Assets
   <HelpPopover @slug="hq-assets"/>
@@ -294,19 +303,20 @@
 
 {{#if (or person.on_site isMarkingOffSite)}}
   <div class="mt-4">
-    <button class="btn btn-secondary" {{action markOffSite}} disabled={{isMarkingOffSite}}>Mark As Off Site</button>
-    {{#if isMarkingOffSite}}
+    <button class="btn btn-secondary" {{action this.markOffSite}} disabled={{this.isMarkingOffSite}}>Mark As Off Site</button>
+    {{#if this.isMarkingOffSite}}
       <LoadingIndicator/>
     {{/if}}
   </div>
 {{/if}}
 
 {{#if this.showSiteLeaveDialog}}
-  <ModalDialog @title="Outstanding Item(s)" as |modal|>
-    <modal.body>
-      <strong class="text-danger">{{pluralize this.pendingItems "item"}} still needs to be dealt with before marking
-        this
-        person off site:</strong>
+  <ModalDialog @title="Outstanding Item(s)" as |Modal|>
+    <Modal.body>
+      <b class="text-danger">
+        {{pluralize this.pendingItems "item"}} still needs to be dealt with before marking
+        this person off site:
+      </b>
       <ul class="mt-2 mb-2">
         {{#unless this.isOffDuty}}
           <li>
@@ -329,18 +339,17 @@
         You may choose to ignore this warning and proceed to mark this person off site. However, you really should take
         care of the items listed above.
       </p>
-    </modal.body>
-    <modal.footer>
-      <modal.button @label="Mark As Off Site" @action={{this.forceMarkOffSite}} @type="secondary"/>
-      <modal.button @label="Deal With Items" @action={{this.cancelSiteLeaveDialog}} @type="primary"/>
-    </modal.footer>
-
+    </Modal.body>
+    <Modal.footer>
+      <Modal.button @label="Mark As Off Site" @action={{this.forceMarkOffSite}} @type="secondary"/>
+      <Modal.button @label="Deal With Items" @action={{this.cancelSiteLeaveDialog}} @type="primary"/>
+    </Modal.footer>
   </ModalDialog>
 {{/if}}
 
 {{#if this.showHoursCreditsBreakdown}}
-  <ModalDialog @title="Hours And Credits Breakdown" as |modal|>
-    <modal.body>
+  <ModalDialog @title="Hours And Credits Breakdown" as |Modal|>
+    <Modal.body>
       <p>
         The estimated hours and credits are based on the shifts already worked,
         plus the possible hours and credits earned from upcoming shifts signed up
@@ -413,9 +422,9 @@
           </table>
         </div>
       </div>
-    </modal.body>
-    <modal.footer>
-      <modal.button @label="Close" @action={{action this.toggleHoursCreditBreakdown}} @type="primary"/>
-    </modal.footer>
+    </Modal.body>
+    <Modal.footer>
+      <Modal.button @label="Close" @action={{this.toggleHoursCreditBreakdown}} @type="primary"/>
+    </Modal.footer>
   </ModalDialog>
 {{/if}}

@@ -5,7 +5,7 @@ import { validatePresence } from 'ember-changeset-validations/validators';
 
 export default class SearchAssetsController extends Controller {
   searchValidations = {
-    barcode: validatePresence(true)
+    barcode: [ validatePresence(true) ]
   };
 
   queryParams = [ 'barcode', 'year' ];

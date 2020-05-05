@@ -31,8 +31,6 @@ Additional arguments are:
 * changeSet: by default ember-changeset will be used to clone the model to
   prevent the original model from being updated during editing. Set this
   property to false if you the form is to operate directly on the object.
-* modalBox: if set to true, the form will be rendered in a modal box.
-* modalTitle: a string to use as modal box's title if the form is rendered in a modal.
 
 
 ## input: Form Field Builder Component
@@ -98,10 +96,6 @@ The arguments to the component are:
 
 * label: The button text. The default text is 'Cancel'
 * disabled: if true, the button will be disabled.
-
-## Form as a modal box
-
-The form can be rendered as a modal box. Simply set the modalBox to true and give a box title by setting modalTitle.
 
 ## Basic Example
 

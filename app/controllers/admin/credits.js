@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import {action, computed} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 import {filterBy} from '@ember/object/computed';
 import {validateNumber, validatePresence} from 'ember-changeset-validations/validators';
 import currentYear from 'clubhouse/utils/current-year';
@@ -62,18 +63,23 @@ export default class AdminCreditsController extends Controller {
   positionFilter = 'all';
 
   creditValidations = {
-    start_time: validateDateTime({presence: true, before: 'end_time'}),
-    end_time: validateDateTime({presence: true, after: 'start_time'}),
-    description: validatePresence({presence: true}),
-    position_id: validatePresence({presence: true}),
-    credits_per_hour: validatePresence({presence: true}),
+    start_time: [ validateDateTime({presence: true, before: 'end_time'}) ],
+    end_time: [ validateDateTime({presence: true, after: 'start_time'}) ],
+    description: [ validatePresence({presence: true}) ],
+    position_id: [ validatePresence({presence: true}) ],
+    credits_per_hour: [ validatePresence({presence: true}) ],
   };
 
   copyValidations = {
-    deltaDays: validateNumber({integer: true}),
-    deltaHours: validateNumber({integer: true}),
-    deltaMinutes: validateNumber({integer: true}),
+    deltaDays: [ validateNumber({integer: true}) ],
+    deltaHours: [ validateNumber({integer: true}) ],
+    deltaMinutes: [ validateNumber({integer: true}) ],
   };
+
+  @tracked isCopying = false;
+
+  @tracked isCreditSubmitting = false;
+  @tracked credit = null;
 
   @computed('credits[]', 'credits.@each.{position_id,start_time}', 'dayFilter', 'positionFilter')
   get viewCredits() {
@@ -93,7 +99,7 @@ export default class AdminCreditsController extends Controller {
       }
     }
 
-    return credits.sortBy('');
+    return credits.sortBy('start_time');
   }
 
   @computed('credits.@each.start_time')
@@ -150,12 +156,12 @@ export default class AdminCreditsController extends Controller {
 
   @action
   newCredit() {
-    this.set('credit', this.store.createRecord('position-credit', {position_ids: []}));
+    this.credit = this.store.createRecord('position-credit', {position_ids: []});
   }
 
   @action
   editCredit(credit) {
-    this.set('credit', credit);
+    this.credit = credit;
   }
 
   @action
@@ -164,40 +170,35 @@ export default class AdminCreditsController extends Controller {
       return;
     }
 
-    const isNew = model.get('isNew');
-
-    this.toast.clear();
-
-    if (isNew) {
-      const positionIds = model.get('position_id');
-      let success = true;
+    if (model.isNew) {
+      this.isCreditSubmitting = true;
+      const positionIds = model.position_id;
       // Bulk creation - loop through all select position ids
       for (let i = 0; i < positionIds.length; i++) {
         const newCredit = this.store.createRecord('position-credit', {
           position_id: positionIds[i],
-          start_time: model.get('start_time'),
-          end_time: model.get('end_time'),
-          description: model.get('description'),
-          credits_per_hour: model.get('credits_per_hour')
+          start_time: model.start_time,
+          end_time: model.end_time,
+          description: model.description,
+          credits_per_hour: model.credits_per_hour
         });
 
         try {
-          const record = await newCredit.save();
-          this.credits.update();
-          this.toast.success(`${record.positionTitle} position credit created.`);
+          await newCredit.save();
+          this.toast.success(`${newCredit.positionTitle} position credit created.`);
         } catch (response) {
-          this.house.handleErrorResponse(response);
-          success = false;
+          this.house.handleErrorResponse(response, model);
           break;
         }
       }
 
-      if (success) {
-        this.set('credit', null);
-      }
+      this.credits.update().then(() => {
+        this.credit = null;
+      }).catch((response) => this.house.handleErrorResponse(response))
+        .finally(() => this.isCreditSubmitting = false);
     } else {
       this.house.saveModel(model, 'The position credit has been successfully updated.', () => {
-        this.set('credit', null);
+        this.credit = null;
       });
     }
   }
@@ -246,16 +247,16 @@ export default class AdminCreditsController extends Controller {
     let copyPositions = [];
     _.forOwn(_.groupBy(sourceCredits, 'position_id'),
       (credits, positionId) => {
-      copyPositions.push(CopySourcePosition.create({
-        id: positionId,
-        title: credits[0].positionTitle,
-        controller: this,
-        credits: credits.map((c) => CopySourceCredit.create({
+        copyPositions.push(CopySourcePosition.create({
+          id: positionId,
+          title: credits[0].positionTitle,
           controller: this,
-          source: c,
-        })),
-      }))
-    });
+          credits: credits.map((c) => CopySourceCredit.create({
+            controller: this,
+            source: c,
+          })),
+        }))
+      });
     copyPositions = copyPositions.sortBy('title');
     if (copyPositions.length === 1) {
       copyPositions[0].set('expanded', true);
@@ -284,33 +285,47 @@ export default class AdminCreditsController extends Controller {
     const sourceIds = sourceCredits.map((c) => c.source.id);
     if (sourceIds.length === 0) {
       this.toast.warning('No credits selected to copy; no changes made');
-    } else if (params.newPositionId > 0 && sourceCredits.map((c) => c.source.position_id).uniq().length > 1) {
-      this.toast.warning("Can't copy credits from multiple positions to a new position");
-    } else {
-      const data = {ids: sourceIds};
-      ['deltaDays', 'deltaHours', 'deltaMinutes', 'newPositionId'].forEach((key) => {
-        if (params[key] != 0) {
-          data[key] = params[key];
-        }
-      });
-      this.ajax.request(`position-credit/copy`, {
-        method: 'POST',
-        data: data,
-      }).then((result) => {
-        if (result.position_credit.length) {
-          this.toast.success(`Copied ${result.position_credit.length} credits`);
-        } else if (result.message === 'success') {
-          this.toast.success('No credits copied');
-        } else {
-          this.house.handleErrorResponse(result);
-        }
-        this.credits.update(); // refresh the list
-      }).catch((response) => {
-        this.house.handleErrorResponse(response);
-      });
+      return;
     }
-    this.set('copySourcePositions', null);
-    this.set('copyParams', null);
+
+    if (params.newPositionId > 0 && sourceCredits.map((c) => c.source.position_id).uniq().length > 1) {
+      this.toast.warning("Can't copy credits from multiple positions to a new position");
+      return;
+    }
+
+    const data = {ids: sourceIds};
+    ['deltaDays', 'deltaHours', 'deltaMinutes', 'newPositionId'].forEach((key) => {
+      if (params[key] != 0) {
+        data[key] = params[key];
+      }
+    });
+    this.isCopying = true;
+    this.ajax.request(`position-credit/copy`, {
+      method: 'POST',
+      data: data,
+    }).then((result) => {
+      if (result.position_credit.length) {
+        this.toast.success(`Copied ${result.position_credit.length} credits`);
+      } else if (result.message === 'success') {
+        this.toast.success('No credits copied');
+      } else {
+        this.house.handleErrorResponse(result);
+      }
+      // refresh the list
+      this.credits.update()
+        .catch((response) => this.house.handleErrorResponse(response))
+        .finally(() => {
+          this.isCopying = false
+          this.set('copySourcePositions', null);
+          this.set('copyParams', null);
+
+        });
+    }).catch((response) => {
+      this.house.handleErrorResponse(response);
+      this.isCopying = false;
+      this.set('copySourcePositions', null);
+      this.set('copyParams', null);
+    });
   }
 
   @action
