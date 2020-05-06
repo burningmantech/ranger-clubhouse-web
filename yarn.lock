@@ -2392,6 +2392,11 @@ babel-plugin-htmlbars-inline-precompile@^3.0.1:
   resolved "https://registry.yarnpkg.com/babel-plugin-htmlbars-inline-precompile/-/babel-plugin-htmlbars-inline-precompile-3.0.1.tgz#e1e38a4087f446578e419a21c112530c8df02345"
   integrity sha512-ZiFY0nQjtdMPGIDwp/5LYOs6rCr54QfcSV5nPbrA7C++Fv4Vb2Q/qrKYx78t+dwmARJztnOBlObFk4z8veHxNA==
 
+babel-plugin-htmlbars-inline-precompile@^4.0.0:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/babel-plugin-htmlbars-inline-precompile/-/babel-plugin-htmlbars-inline-precompile-4.0.1.tgz#2650f6a0011faa2dc9494dedf945c1957d38c1b3"
+  integrity sha512-7ZOGqUFAuMl7mT1U7ktrnGhhj/BJ0UB0Km19pi6VTON8AEKrU9+wNjzkRBbPB9HpgdK4AeqTOER6aKMy/XMivA==
+
 babel-plugin-module-resolver@^3.1.1:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-module-resolver/-/babel-plugin-module-resolver-3.2.0.tgz#ddfa5e301e3b9aa12d852a9979f18b37881ff5a7"
@@ -2902,10 +2907,10 @@ bluebird@~3.5.0:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.5.tgz#a8d0afd73251effbbd5fe384a77d73003c17a71f"
   integrity sha512-5am6HnnfN+urzt4yfg7IgTbotDjIT/u8AJpEt0sIU9FtXfVeezXAPKswrG+xKUCOYAINpSdgZVDU6QFh+cuH3w==
 
-blueimp-load-image@^5.5.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/blueimp-load-image/-/blueimp-load-image-5.5.0.tgz#cd056e881b1a522e1708d90a6851d904ee8f8b61"
-  integrity sha512-ca+ZnY5mquibckewjN+IY2NoQJpV5wq1mgbG7PXtysbj8nCZ+U90fyFCFZ4Enh5kZ98tgsVEr61HoCCME+qDgA==
+blueimp-load-image@^5.6.0:
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/blueimp-load-image/-/blueimp-load-image-5.6.0.tgz#34aa36840cbdd010bb9c67caa522ad4b067df2ea"
+  integrity sha512-3fcMbfyFJGZWEyl+xaLuA28skNLC4yWOLriy3HW+TeuaSqsSKh4CZ6i1vdwSw40IvlkWqFIBU5EuNarPWRVsAQ==
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.8"
@@ -5418,13 +5423,13 @@ ember-cli-htmlbars@^4.0.0, ember-cli-htmlbars@^4.0.5, ember-cli-htmlbars@^4.2.0,
     strip-bom "^4.0.0"
     walk-sync "^2.0.2"
 
-ember-cli-htmlbars@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/ember-cli-htmlbars/-/ember-cli-htmlbars-5.0.0.tgz#ba5469d3f3412e154b01c4d8b9fbc1d6f7dc7af1"
-  integrity sha512-K1bPl1X3eermPcZMThzRXHmGCfk1+GGceHhLar5b3NPZy55DKlUsuQOjsWKQ0vHG/c5aR3G40i3Drt1DdnIoSA==
+ember-cli-htmlbars@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/ember-cli-htmlbars/-/ember-cli-htmlbars-5.1.0.tgz#f7ef64fe22b3f258d3e1d704f6b1b04e0917e371"
+  integrity sha512-t02GVC/EbyC/I3GKfmxQ6sA5HCVubrHUfdJmNDnyqZ9Yh64TiXinw+8Ve5Sj/lvpKxp6VU7IwCthGpNQRWZrtA==
   dependencies:
     "@ember/edition-utils" "^1.2.0"
-    babel-plugin-htmlbars-inline-precompile "^3.0.1"
+    babel-plugin-htmlbars-inline-precompile "^4.0.0"
     broccoli-debug "^0.6.5"
     broccoli-persistent-filter "^2.3.1"
     broccoli-plugin "^4.0.3"
@@ -6380,10 +6385,10 @@ escodegen@^1.11.0:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-plugin-ember@^8.4.0:
-  version "8.4.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-ember/-/eslint-plugin-ember-8.4.0.tgz#bf66c1abf76b1039c8c253bf755b06382dd5c2b9"
-  integrity sha512-jzSpyA3+aQrEHydo3Tz8cNAbgmtYVlp0eSe8X52OsHYLdVc7i4vzMwA+ptfO06dzpLQNHWW5ziprB5hoAEt95A==
+eslint-plugin-ember@^8.5.0:
+  version "8.5.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-ember/-/eslint-plugin-ember-8.5.0.tgz#08660485edcf78c716b7db7c0834c970d06a3dc1"
+  integrity sha512-tj8GQbm5XknbUDp4FrwMLGBprxqzoi9JAszXyCwMPJQBipinHyyAxIRbu57/ENJVyeGRmQTme1WM4PJuMh3kFQ==
   dependencies:
     "@ember-data/rfc395-data" "^0.0.4"
     ember-rfc176-data "^0.3.12"
