@@ -1,9 +1,8 @@
 import Controller from '@ember/controller';
-import { action, computed, set } from '@ember/object';
+import { action, set } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 
 export default class ReportsPositionSanityCheckerController extends Controller {
-  @computed
   get userCanRepair() {
     return this.session.user.hasRole([ Role.ADMIN, Role.GRANT_POSITION ]);
   }

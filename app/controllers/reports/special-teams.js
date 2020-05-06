@@ -7,7 +7,6 @@ export default class ReportsSpecialTeamsController extends Controller {
     return this.positions.map((p) => [p.title, p.id]);
   }
 
-  @computed
   get yearOptions() {
     const endYear = this.house.currentYear();
 

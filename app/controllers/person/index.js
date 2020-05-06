@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import inGroups from 'clubhouse/utils/in-groups';
 import { tracked } from '@glimmer/tracking';
@@ -63,42 +63,34 @@ export default class PersonIndexController extends Controller {
 
   @tracked photo = null;
 
-  @computed
   get isAdmin() {
     return this.session.user.hasRole(Role.ADMIN);
   }
 
-  @computed
   get isPhotoManager() {
     return this.session.user.hasRole([Role.ADMIN, Role.VC]);
   }
 
-  @computed
   get canEditBMIT() {
     return this.session.user.hasRole(Role.EDIT_BMIDS);
   }
 
-  @computed
   get canEditAccessDocs() {
     return this.session.user.hasRole(Role.EDIT_ACCESS_DOCS);
   }
 
-  @computed
   get isAdminTrainerMentorOrVC() {
     return this.session.user.hasRole([Role.ADMIN, Role.TRAINER, Role.MENTOR, Role.VC]);
   }
 
-  @computed
   get isAdminMentorOrVC() {
     return this.session.user.hasRole([Role.ADMIN, Role.MENTOR, Role.VC]);
   }
 
-  @computed
   get isAdminOrVC() {
     return this.session.user.hasRole([Role.ADMIN, Role.VC]);
   }
 
-  @computed
   get isManageAndGrantPosition() {
     const user = this.session.user;
     return user.hasRole(Role.MANAGE) && user.hasRole(Role.GRANT_POSITION);
