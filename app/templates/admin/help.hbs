@@ -1,50 +1,58 @@
 <h1>Help Documents</h1>
 
-<div class="float-right mb-2">
-  <button class="btn btn-primary" {{action newHelp}}>New Help Doc</button>
-</div>
-<div class="text-muted mb-4">
+<p class="text-muted mb-4">
   {{fa-icon "music"}} Help me if you can, I'm feeling down. And I do appreciate you being 'round {{fa-icon "music"}}
-</div>
-
-<table class="table table-sm table-hover">
+</p>
+<p>
+  <button type="button" class="btn btn-primary" {{on "click" this.newHelp}}>New Help Doc</button>
+</p>
+<table class="table table-sm table-hover table-striped">
   <caption>
-    Showing {{pluralize documents.length "help document"}}
+    Showing {{pluralize this.documents.length "help document"}}
   </caption>
   <thead>
-    <tr>
-      <th class="w-15">Slug</th>
-      <th class="w-20">Tags</th>
-      <th>Title / Body</th>
-      <th class="w-10">Action</th>
-    </tr>
+  <tr>
+    <th class="w-15">Slug</th>
+    <th class="w-45">Title / Body</th>
+    <th class="w-15">Tags</th>
+    <th class="w-25">Action</th>
+  </tr>
   </thead>
 
   <tbody>
-    {{#each viewDocuments as |document|}}
-      <tr>
-        <td class="w-15">{{document.slug}}</td>
-        <td class="w-20">{{document.tags}}</td>
-        <td>
-          <strong>{{document.title}}</strong><br>
-          <ReadMore @text={{document.body}} />
-        </td>
-        <td class="w-10">
-          <button class="btn btn-secondary btn-sm" {{action deleteHelp document}}>{{fa-icon "trash"}}</button>
-          <button class="btn btn-primary btn-sm" {{action editHelp document}}>{{fa-icon "edit"}}</button>
-        </td>
-      </tr>
-    {{/each}}
+  {{#each this.viewDocuments as |document|}}
+    <tr>
+      <td class="w-15">{{document.slug}}</td>
+      <td class="w-45">
+        <strong>{{document.title}}</strong><br>
+        <ReadMore @text={{document.body}} />
+      </td>
+      <td class="w-20">{{document.tags}}</td>
+      <td class="w-25">
+        <button class="btn btn-secondary btn-sm" {{action this.editHelp document}}>{{fa-icon "edit"}} Edit</button>
+        <button class="btn btn-danger btn-sm" {{action this.deleteHelp document}}>{{fa-icon "trash"}} Delete</button>
+      </td>
+    </tr>
+  {{/each}}
   </tbody>
 </table>
 
-{{#if entry}}
-  {{#ch-form "help" entry modalBox=true modalTitle=(if entry.isNew "New Help Document" "Edit Help Document") onSubmit=(action saveHelp) onCancel=(action cancelHelp) as |f|}}
-    {{f.input "slug" label="Slug / Help Identifier" type="text" size=20 maxlength=255}}
-    {{f.input "tags" label="Tags (separated by comma)" size=20 maxlength=255}}
-    {{f.input "title" label="Help Title" type="text" size=20 maxlength=255}}
-    {{f.input "body" label="Help Body" type="textarea" rows=10 cols=80}}
-    <f.submit @label={{if entry.isNew "Create" "Update"}} />
-    {{f.cancel}}
-  {{/ch-form}}
+{{#if this.entry}}
+  <ModalDialog @title={{if this.entry.isNew "New Help Document" "Edit Help Document"}} as |Modal|>
+    <ChForm @formId="help"
+            @originalModel={{this.entry}}
+            @onSubmit={{action this.saveHelp}}
+            @onCancel={{action this.cancelHelp}} as |f|>
+      <Modal.body>
+        <f.input @name="slug" @label="Slug / Help Identifier" @type="text" @size=20 @maxlength=255/>
+        <f.input @name="tags" @label="Tags (separated by comma)" @size=20 @maxlength=255/>
+        <f.input @name="title" @label="Help Title" @type="text" @size=20 @maxlength=255/>
+        <f.input @name="body" @label="Help Body" @type="textarea" @rows=10 @cols=80/>
+      </Modal.body>
+      <Modal.footer @noAlign=true>
+        <f.submit @label={{if entry.isNew "Create" "Update"}} />
+        <f.cancel/>
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
 {{/if}}

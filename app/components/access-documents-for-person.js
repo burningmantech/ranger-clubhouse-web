@@ -1,5 +1,4 @@
 import Component from '@ember/component';
-import { computed } from '@ember/object';
 import moment from 'moment';
 
 /*
@@ -142,7 +141,6 @@ export default class AccessDocumentsForPersonComponent extends Component {
     return { style, text };
   }
 
-  @computed
   get documentsErrors() {
     const errors = [ ];
 

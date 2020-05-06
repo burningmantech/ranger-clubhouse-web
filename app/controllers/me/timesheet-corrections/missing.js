@@ -9,7 +9,7 @@ export default class MeTimesheetCorrectionsMissingController extends Controller 
   timesheetValidations = {
     on_duty:  [ validateDateTime({ before: 'off_duty' }), validatePresence(true) ],
     off_duty:  [ validateDateTime({ after: 'on_duty' }),validatePresence(true) ],
-    notes: validatePresence(true)
+    notes: [ validatePresence(true) ]
   };
 
   // Create a list of positions options to check

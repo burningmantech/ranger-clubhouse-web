@@ -14,10 +14,10 @@ export default class SurveyFormComponent extends Component {
   ];
 
   surveyValidations = {
-    title: validatePresence(true),
-    prologue: validatePresence(true),
-    epilogue: validatePresence(true),
-    type: validatePresence(true)
+    title: [ validatePresence(true) ],
+    prologue: [ validatePresence(true) ],
+    epilogue: [ validatePresence(true) ],
+    type: [ validatePresence(true) ]
   };
 
   get positionOptions() {

@@ -1,5 +1,7 @@
 <h4>Position Summary (hours, credits)</h4>
-{{#each workedPositions as |position idx|~}}
+{{#each this.workedPositions as |position idx|~}}
   {{~if idx ", "}}
   <span class="d-inline-block">{{position.title}} ({{hour-minute-format position.duration}}, {{credits-format position.credits}})</span>
+{{else}}
+  No positions were worked.
 {{~/each}}

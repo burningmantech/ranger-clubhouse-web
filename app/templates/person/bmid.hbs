@@ -1,6 +1,6 @@
-<div class="float-right">
-  <LinkTo @route="person.access-documents" @model={{person.id}} class="btn btn-secondary">Access Documents</LinkTo>
+<h3>{{this.year}} BMID</h3>
+<p>
+  <LinkTo @route="person.access-documents" @model={{this.person.id}} class="btn btn-secondary">Access Documents</LinkTo>
   <LinkTo @route="vc.bmid" class="btn btn-secondary">Manage BMIDs</LinkTo>
-</div>
-<h3>{{year}} BMID</h3>
-<BmidEdit @entry={{bmid}} @modalBox={{false}} @year={{year}} @admissionDateOptions={{admissionDateOptions}} @onSave={{action save}} />
+</p>
+<BmidEdit @entry={{this.bmid}} @year={{this.year}} @admissionDateOptions={{this.admissionDateOptions}} @onSave={{this.save}} />

@@ -1,54 +1,60 @@
-{{#ch-form "slot" slot modalBox=true modalTitle=formTitle validator=slotValidations onSubmit=(action "save") onCancel=(action "cancel") as |f|}}
-  <div class="form-row">
-    {{f.input "position_id" label="Position" type="select" options=positionOptions grid="col-md-auto"}}
-    {{f.input "trainer_slot_id"
-      label="Sign Up Multiplier Trainer's Slot"
-      type="select"
-      options=trainerSlotsOptions
-      includeBlank=true
-      grid="col-md-auto"
-    }}
-  </div>
+<ModalDialog @title={{this.formTitle}} as |Modal|>
+  <ChForm @formId="slot" @originalModel={{this.slot}} @validator={{this.slotValidations}}
+          @onSubmit={{action this.save}} @onCancel={{action this.cancel}} as |f|>
+    <Modal.body>
+      <div class="form-row">
+        <f.input @name="position_id" @label="Position" @type="select" @options={{this.positionOptions}} @grid="col-md-auto"/>
+        <f.input @name="trainer_slot_id"
+                 @label="Sign Up Multiplier Trainer's Slot"
+                 @type="select"
+                 @options={{this.trainerSlotsOptions}}
+                 @includeBlank=true
+                 @grid="col-md-auto"/>
+      </div>
 
-  <div class="form-row">
-    {{f.input "description" label="Description" type="text" size=40 maxlength=40 grid="col-md-auto"
-      hint=(concat (if f.model.description f.model.description.length "0") " of 40 characters.")
-    }}
-    {{f.input "begins" label="Begining Time" type="datetime" maxlength=25 grid="col-md-auto col-sm-12"}}
-    {{f.input "ends" label="Ending Time" type="datetime"  maxlength=20 grid="col-md-auto col-sm-12"}}
-    {{f.input "max" label=(if f.model.trainer_slot_id "Multiplier" "Max Sign Ups") type="number" size=3 maxlength=3 grid="col-md-2 col-sm-12"}}
-    {{#if f.model.trainer_slot_id}}
-    <div class="col-md-9 col-sm-12">
-      <span class="text-danger">NOTE:</span>
-       The Trainer's Slot has been set and the Max Sign Ups is acting as a multiplier instead of a
-      hard count. The total sign ups allowed will be computed as the number of trainers signed up in
-      the trainer's slot TIMES the Max Sign Ups limit.
-      (e.g., if 2 trainers are signed up, and the sign up limitis 10, the total signups allowed will
-      be 20.)
-    </div>
-    {{/if}}
+      <div class="form-row">
+        <f.input @name="description" @label="Description" @type="text" @size=40 @maxlength=40 @grid="col-md-auto"
+                 @hint={{concat (if f.model.description f.model.description.length "0") " of 40 characters."}} />
+        <f.input @name="begins" @label="Begining Time" @type="datetime" @maxlength=25 @grid="col-md-auto col-sm-12"/>
+        <f.input @name="ends" @label="Ending Time" @type="datetime" @maxlength=20 @grid="col-md-auto col-sm-12"/>
+        <f.input @name="max" @label={{if f.model.trainer_slot_id "Multiplier" "Max Sign Ups"}} @type="number" @size=3
+                 @maxlength=3
+                 @grid="col-md-2 col-sm-12"/>
+        {{#if f.model.trainer_slot_id}}
+          <div class="col-md-9 col-sm-12">
+            <span class="text-danger">NOTE:</span>
+            The Trainer's Slot has been set and the Max Sign Ups will act as a multiplier instead of a
+            hard count. The total sign ups allowed will be computed as the number of trainers signed up in
+            the trainer's slot TIMES the Max Sign Ups limit.
+            (e.g., if 2 trainers are signed up, and the sign up limitis 10, the total signups allowed will
+            be 20.)
+          </div>
+        {{/if}}
 
-  </div>
+      </div>
 
-  <div class="form-row">
-    <div class="form-group">
-      {{f.input "active" label="Active" type="checkbox" wrapClass="form-check col-md-auto"}}
-    </div>
-  </div>
+      <div class="form-row">
+        <div class="form-group">
+          <f.input @name="active" @label="Active" @type="checkbox" @wrapClass="form-check col-md-auto"/>
+        </div>
+      </div>
 
-  <div class="form-row">
-    {{f.input "url" label="Information" type="textarea" rows=3 cols=80 maxlength=512 wrapClass="col-12"
-        hint=(concat (if f.model.url f.model.url.length "0") " of 512 characters.
+      <div class="form-row">
+        <f.input @name="url" @label="Information" @type="textarea" @rows=3 @cols=80 @maxlength=512 @wrapClass="col-12"
+                 @hint={{concat (if f.model.url f.model.url.length "0") " of 512 characters.
 Additional information may be given about the shift in the above area.
-e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.khaki/meetup or email women@khaki.rangers")}}
-  </div>
-
-  <div class="form-group mt-2">
-    <f.submit @label={{if slot.isNew "Create" "Update"}} />
-    {{#unless slot.isNew}}
-      <f.submit @label="Create New Slot" @onSubmit={{action cloneRecord}} />
-    {{/unless}}
-    {{f.cancel}}
-  </div>
-
-{{/ch-form}}
+e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.khaki/meetup or email women@khaki.rangers"}} />
+      </div>
+    </Modal.body>
+    <Modal.footer @noAlign={{true}}>
+      <f.submit @label={{if this.slot.isNew "Create" "Update"}} @disabled={{this.slot.isSaving}} />
+      {{#unless this.slot.isNew}}
+        <f.submit @label="Create New Slot" @onSubmit={{action this.cloneRecord}} />
+      {{/unless}}
+      <f.cancel @disabled={{this.slot.isSaving}} />
+      {{#if this.slot.isSaving}}
+        <LoadingIndicator/>
+      {{/if}}
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>

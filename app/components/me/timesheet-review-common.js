@@ -1,40 +1,32 @@
-import Component from '@ember/component';
-import { action, computed } from '@ember/object';
-
-
-
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
 import { validatePresence } from 'ember-changeset-validations/validators';
+import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
 
 export default class MeTimesheetReviewCommonComponent extends Component {
-  timesheets = null;
-  timesheetInfo = null;
-  timesheetSummary = null;
-  person = null;
+  @service toast;
+  @service session;
 
-  entry = null; // Incorrect entry
+  @tracked entry = null; // Incorrect entry
 
   correctionValidations = {
-    notes: validatePresence({ presence: true })
+    notes: [validatePresence({ presence: true })]
   };
 
-  @computed('person.id', 'session.userId')
   get isMe() {
-    return this.session.userId == this.person.id;
+    return this.session.userId == this.args.person.id;
   }
 
   // Mark an entry as correct
   @action
   markCorrectAction(timesheet) {
-    timesheet.set('verified', 1);
-    this.toast.clear();
-    this.set('isSubmitting', true);
+    timesheet.verified = 1;
     timesheet.save().then(() => {
-      this.set('isSubmitting', false);
       this.toast.success('The entry has been marked as correct.');
     }).catch((response) => {
-      this.set('isSubmitting', false);
-      timesheet.rollback();
-      this.house.handleErrorResponse(response);
+      timesheet.rollbackAttributes();
+      this.house.handleErrorResponse(response, timesheet);
     });
   }
 
@@ -42,8 +34,8 @@ export default class MeTimesheetReviewCommonComponent extends Component {
   @action
   markIncorrectAction(timesheet) {
     timesheet.reload().then(() => {
-      this.set('entry', timesheet);
-    }).catch((response) => this.house.handleErrorResponse(response))
+      this.entry = timesheet;
+    }).catch((response) => this.house.handleErrorResponse(response, timesheet))
   }
 
   // Save correction notes
@@ -53,33 +45,25 @@ export default class MeTimesheetReviewCommonComponent extends Component {
       return;
     }
 
-    this.toast.clear();
-
-    if (!model.get('isDirty')) {
+    if (!model.isDirty) {
       this.modal.info('Enter More Information', 'You did not add to the correction note.');
       return;
     }
 
-    model.set('verified', 0);
-
-    this.set('isSubmitting', true);
+    model.verified = 0;
 
     model.save().then(() => {
-      this.set('entry', null);
-      this.set('isSubmitting', false);
+      this.entry = null;
       if (this.timesheetInfo) {
-        this.set('timesheetInfo.timesheet_confirmed', 0);
+        this.timesheetInfo.timesheet_confirmed =  0;
       }
       this.toast.success('Your correction note has been submitted.');
-    }).catch((response) => {
-      this.set('isSubmitting', false);
-      this.house.handleErrorResponse(response);
-    });
+    }).catch((response) => this.house.handleErrorResponse(response, model));
   }
 
   // Cancel out the correction request - i.e. hide the form
   @action
   cancelCorrectionAction() {
-    this.set('entry', null);
+    this.entry = null;
   }
 }

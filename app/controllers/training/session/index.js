@@ -267,7 +267,8 @@ export default class TrainingSlotController extends Controller {
   }
 
   @action
-  addPersonAction(person) {
+  addPersonAction(person, event) {
+    event.preventDefault();
     slotSignup(this, this.slot, person, () => {
       this.set('addPersonForm', null);
       // Refresh the list
@@ -277,7 +278,7 @@ export default class TrainingSlotController extends Controller {
           this.students.push(student);
           this.set('students', _.orderBy(this.students, [(s) => s.callsign.toLowerCase()], ['asc']));
         }
-      });
+      }).catch((response) => this.house.handleErrorResponse(response))
     });
   }
 

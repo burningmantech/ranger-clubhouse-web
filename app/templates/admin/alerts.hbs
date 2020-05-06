@@ -1,50 +1,60 @@
+<h1>RBS Alerts</h1>
+<p>
+  <button class="btn btn-primary" {{action newAlert}}>New Alert Doc</button>
+</p>
 
-<div class="d-flex">
-  <h1>RBS Alerts</h1>
-  <div class="ml-auto">
-    <button class="btn btn-primary" {{action newAlert}}>New Alert Doc</button>
-  </div>
-</div>
+Showing {{pluralize alerts.length "alert"}}
 <table class="table table-sm table-hover">
-  <caption>
-    Showing {{pluralize alerts.length "alert"}}
-  </caption>
   <thead>
-    <tr>
-      <th>ID</th>
-      <th>Title</th>
-      <th>Description</th>
-      <th>On Playa?</th>
-      <th>Action</th>
-    </tr>
+  <tr>
+    <th class="w-10">ID</th>
+    <th class="w-65">Title / Description</th>
+    <th class="w-5">On Playa?</th>
+    <th class="w-20">Action</th>
+  </tr>
   </thead>
 
   <tbody>
-    {{#each alerts as |alert|}}
-      <tr>
-        <td>{{alert.id}}</td>
-        <td>{{alert.title}}</td>
-        <td>{{alert.description}}</td>
-        <td>{{yesno alert.on_playa}}</td>
-        <td class="w-10">
-          <button class="btn btn-secondary btn-sm" {{action deleteAlert alert}}>{{fa-icon "trash"}}</button>
-          <button class="btn btn-primary btn-sm" {{action editAlert alert}}>{{fa-icon "edit"}}</button>
-        </td>
-      </tr>
-    {{/each}}
+  {{#each this.alerts as |alert|}}
+    <tr>
+      <td class="w-10">{{alert.id}}</td>
+      <td class="w-65">{{alert.title}}<br>{{alert.description}}</td>
+      <td class="w-5">{{yesno alert.on_playa}}</td>
+      <td class="w-20">
+        <button type="button" class="btn btn-danger btn-sm" {{action this.deleteAlert alert}}>
+          {{fa-icon "trash"}} Delete
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" {{action this.editAlert alert}}>
+          {{fa-icon "edit"}} Edit
+        </button>
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="4" class="w-100"><b class="text-danger">No alerts found?</b></td>
+    </tr>
+  {{/each}}
   </tbody>
 </table>
 
-{{#if entry}}
-  {{#ch-form "alert" entry modalBox=true modalTitle=(if entry.isNew "New Alert" "Edit Alert") onSubmit=(action saveAlert) onCancel=(action cancelAlert) as |f|}}
-    <div class="form-row">
-      {{f.input "title" label="Title" type="text" size=30 maxlength=255}}
-      {{f.input "description" label="Alert Description" type="textarea" rows=10 cols=80}}
-      {{f.input "on_playa" type="checkbox" label="Is alert related to a broadcast that will happen on playa?"}}
-    </div>
-    <div class="mt-4">
-      <f.submit @label={{if entry.isNew "Create" "Update"}} />
-      {{f.cancel}}
-    </div>
-  {{/ch-form}}
+{{#if this.entry}}
+  <ModalDialog @title={{if entry.isNew "New Alert" "Edit Alert"}} as |Modal|>
+    <ChForm @formId="alert" @originalModel={{this.entry}}
+            @onSubmit={{action this.saveAlert}} @onCancel={{action this.cancelAlert}} as |f|>
+      <Modal.body>
+      <div class="form-row">
+        <f.input @name="title" @label="Title" @type="text" @size=30 @maxlength=255 />
+        <f.input @name="description" @label="Alert Description" @type="textarea" @rows=10 @cols=80 />
+        <f.input @name="on_playa" @type="checkbox" @label="Is alert related to a broadcast that will happen on playa?" />
+      </div>
+      </Modal.body>
+      <Modal.footer @noAlign=true>
+        <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
+        <f.cancel @disabled={{this.entry.isSaving}} />
+        {{#if this.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
 {{/if}}

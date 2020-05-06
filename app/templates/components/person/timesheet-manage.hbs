@@ -8,196 +8,214 @@
   <span class="d-inline-block">{{fa-icon "question-circle" type="far"}} = correction needs more info.</span>
   <span class="d-inline-block">[hh:mm] = time in brackets indicates the time does not count towards appreciations.</span>
 
-  {{#if timesheets}}
-    <table class="table table-hover table-striped table-sm table-width-auto">
-      <thead>
-      <tr>
-        <th>&nbsp;</th>
-        <th>From</th>
-        <th>To</th>
-        <th class="text-right">Time</th>
-        <th class="text-right">Credits</th>
-        <th>Position</th>
-        <th>Action</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each timesheets as |ts|}}
-        <tr class="{{if ts.isPendingReview "bg-warning"}}">
-          <td>
-            {{#if (is-empty ts.off_duty)}}
-              -
-            {{else if ts.verified}}
-              {{fa-icon "check"}}
-            {{else if ts.isPendingReview}}
-              {{fa-icon "exclamation-triangle"}}
-            {{else if ts.isRejected}}
-              {{fa-icon "thumbs-down" type="far"}}
-            {{else if ts.isUnverified}}
-              {{fa-icon "question"}}
-            {{else if ts.isApproved}}
-              {{fa-icon "thumbs-up" type="far"}}
-            {{else}}
-              &nbsp;
-            {{/if}}
-          </td>
-          <td>{{shift-format ts.on_duty}}</td>
-          <td>
-            {{#if ts.off_duty}}
-              {{shift-format ts.off_duty}}
-            {{else}}
-              <i>On Duty</i>
-            {{/if}}
-          </td>
-          <td class="text-right">
-            {{#if ts.position.count_hours}}
-              {{hour-minute-format ts.duration}}
-            {{else}}
-              [{{hour-minute-format ts.duration}}]
-            {{/if}}
-          </td>
-          <td class="text-right">
-            {{credits-format ts.credits}}
-          </td>
-          <td data-title="Position">{{ts.position.title}}</td>
-          <td>
-            {{#if (is-empty ts.off_duty)}}
-              <button type="button" class="btn btn-danger btn-sm" {{action "signoffAction" ts}}>End Shift</button>
-            {{else }}
-              <button type="button" class="btn btn-primary btn-sm" {{action "editEntryAction" ts}}
-                      disabled={{ts.isReloading}}>
-                {{#if ts.isReloading}}
-                  {{fa-icon "spinner" spin=true}}
-                {{else}}
-                  {{fa-icon "edit"}}
-                {{/if}}
-                Edit
-              </button>
-              {{#if canManageTimesheets}}
-                <button type="button" class="btn btn-secondary btn-sm" {{action "removeEntryAction" ts}}
-                        title="Delete timesheet entry" disabled={{ts.isReloading}}>
-                  {{fa-icon "trash"}} Delete
-                </button>
+  <table class="table table-hover table-striped table-sm table-width-auto">
+    <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th>From</th>
+      <th>To</th>
+      <th class="text-right">Time</th>
+      <th class="text-right">Credits</th>
+      <th>Position</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each @timesheets as |ts|}}
+      <tr class="{{if ts.isPendingReview "bg-warning"}}">
+        <td>
+          {{#if (is-empty ts.off_duty)}}
+            -
+          {{else if ts.verified}}
+            {{fa-icon "check"}}
+          {{else if ts.isPendingReview}}
+            {{fa-icon "exclamation-triangle"}}
+          {{else if ts.isRejected}}
+            {{fa-icon "thumbs-down" type="far"}}
+          {{else if ts.isUnverified}}
+            {{fa-icon "question"}}
+          {{else if ts.isApproved}}
+            {{fa-icon "thumbs-up" type="far"}}
+          {{else}}
+            &nbsp;
+          {{/if}}
+        </td>
+        <td>{{shift-format ts.on_duty}}</td>
+        <td>
+          {{#if ts.off_duty}}
+            {{shift-format ts.off_duty}}
+          {{else}}
+            <i>On Duty</i>
+          {{/if}}
+        </td>
+        <td class="text-right">
+          {{#if ts.position.count_hours}}
+            {{hour-minute-format ts.duration}}
+          {{else}}
+            [{{hour-minute-format ts.duration}}]
+          {{/if}}
+        </td>
+        <td class="text-right">
+          {{credits-format ts.credits}}
+        </td>
+        <td data-title="Position">{{ts.position.title}}</td>
+        <td>
+          {{#if (is-empty ts.off_duty)}}
+            <button type="button" class="btn btn-danger btn-sm" {{action this.signoffAction ts}}>End Shift</button>
+          {{else }}
+            <button type="button" class="btn btn-primary btn-sm" {{action this.editEntryAction ts}}
+                    disabled={{ts.isReloading}}>
+              {{#if ts.isReloading}}
+                {{fa-icon "spinner" spin=true}}
+              {{else}}
+                {{fa-icon "edit"}}
               {{/if}}
-            {{/if}}
-          </td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-    <TimesheetSummary @summary={{timesheetSummary}} />
-    <TimesheetPositionSummary @timesheets={{timesheets}} />
-  {{else}}
-    <p class="mt-2 text-danger">No timesheet entries found for {{year}}</p>
-  {{/if}}
-
-  {{#if editEntry}}
-    {{#ch-form "entry" editEntry modalBox=true modalTitle=(concat "Edit Timesheet #" editEntry.id)
-               validator=timesheetValidations onSubmit=(action "saveEntryAction")
-               onCancel=(action "cancelEntryAction") as |f|}}
-      {{#if editEntry.isPendingReview}}
-        {{#ch-alert "danger"}}
-          Entry has a correction request and needs to be reviewed.
-        {{/ch-alert}}
-      {{else if editEntry.isUnverified}}
-        {{#ch-alert "warning"}}
-          Entry needs to be verified by the person. No review action is needed at this time.
-        {{/ch-alert}}
-      {{else if editEntry.verified}}
-        {{#ch-alert "success"}}
-          <span class="text-success font-weight-bold">Entry was verified on {{shift-format editEntry.verified_at}}
-            by {{editEntry.verified_person.callsign}}. Review is not needed at this time.</span>
-        {{/ch-alert}}
-      {{/if}}
-
-      <fieldset>
-        <legend>Entry Verification</legend>
-        {{#if editVerification}}
-          <div class="form-group row">
-            <div class="col-auto">Entry marked for verification:</div>
-            <div class="col-auto">
-              {{f.input "verified" type="radioGroup" options=verifyOptions inline=true}}
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col-12 text-danger">Updating the correction note will automatically mark the entry as incorrect
-              / unverified
-            </div>
-            {{f.input "notes" label="Correction Request Notes:" type="textarea" cols=80 rows=5}}
-          </div>
-        {{else}}
-          <div class="form-row">
-            <div class="col-6">Correction Note:</div>
-            <div class="col-6 text-right">
-              <button class="btn btn-secondary btn-sm" {{action "editVerificationAction"}}>Edit Verification Flag &amp;
-                Note
+              Edit
+            </button>
+            {{#if this.canManageTimesheets}}
+              <button type="button" class="btn btn-danger btn-sm" {{action this.removeEntryAction ts}}
+                      title="Delete timesheet entry" disabled={{ts.isReloading}}>
+                {{fa-icon "trash"}} Delete
               </button>
-            </div>
-            <div class="mb-3 col-12">{{present-or-not editEntry.notes}}</div>
-          </div>
-        {{/if}}
-      </fieldset>
-
-      <fieldset>
-        <legend>
-          Time/Position
-        </legend>
-        {{#if canManageTimesheets}}
-          <div class="form-row">
-            {{f.input "on_duty" label="On Duty" type="datetime" size=20 grid="col-auto"}}
-            {{f.input "off_duty" label="Off Duty" type="datetime" size=20 grid="col-auto"}}
-            {{f.input "position_id" label="Position" type="select" options=positionOptions grid="col-auto"}}
-          </div>
-        {{else}}
-          <dl class="form-row">
-            <dt class="col-sm-2">Position:</dt>
-            <dd class="col-sm-10">{{editEntry.position.title}}</dd>
-
-            <dt class="col-sm-2">Time:</dt>
-            <dd class="col-sm-10">{{shift-format editEntry.on_duty}} to {{shift-format editEntry.off_duty}}</dd>
-
-            <dt class="col-sm-2">Duration:</dt>
-            <dd class="col-sm-10">{{hour-minute-format editEntry.duration}}</dd>
-
-            <dt class="col-sm-2">Credits:</dt>
-            <dd class="col-sm-10">{{credits-format editEntry.credits}}</dd>
-          </dl>
-        {{/if}}
-      </fieldset>
-      <fieldset>
-        <legend>Entry Review</legend>
-        {{#if canManageTimesheets}}
-          <div class="form-row">
-            {{f.input "reviewer_notes" label="Timesheet reviewer response:" type="textarea" cols=80 rows=2
-                      hint="The user will see any notes entered in above."
-            }}
-          </div>
-          <div class="form-group row">
-            <div class="col-auto">Review Status:</div>
-            <div class="col-auto">
-              {{f.input "review_status" label="Review Status" type="radioGroup" options=reviewOptions inline=true}}
-            </div>
-          </div>
-        {{else}}
-          <dl class="form-row">
-            <dt class="col-2">
-              Reviewer Note:
-            </dt>
-            <dd class="col-10">
-              {{present-or-not editEntry.reviewer_notes}}
-            </dd>
-
-            <dt class="col-2">
-              Review Status:
-            </dt>
-            <dd class="col-10">
-              {{editEntry.review_status}}
-            </dd>
-          </dl>
-        {{/if}}
-      </fieldset>
-      <f.submit @label="Update"/>
-      {{f.cancel}}
-    {{/ch-form}}
-  {{/if}}
+            {{/if}}
+          {{/if}}
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td>&nbsp;</td>
+        <td colspan="6"><b class="mt-2 text-danger">No timesheet entries found for {{@year}}</b></td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+  <TimesheetSummary @summary={{@timesheetSummary}} />
+  <TimesheetPositionSummary @timesheets={{@timesheets}} />
 </div>
+
+{{#if this.editEntry}}
+  <ModalDialog @title={{concat "Edit Timesheet #" this.editEntry.id}} as |Modal|>
+    <ChForm @formId="entry" @originalModel={{this.editEntry}}
+            @validator={{this.timesheetValidations}}
+            @onSubmit={{this.saveEntryAction}}
+            @onCancel={{this.cancelEntryAction}} as |f|>
+      <Modal.body>
+        {{#if this.editEntry.isPendingReview}}
+          <ChAlert @type="danger">
+            Entry has a correction request and needs to be reviewed.
+          </ChAlert>
+        {{else if this.editEntry.isUnverified}}
+          <ChAlert @type="warning">
+            Entry needs to be verified by the person. No review action is needed at this time.
+          </ChAlert>
+        {{else if this.editEntry.verified}}
+          <ChAlert @type="success">
+            <b class="text-success">
+              Entry was verified on {{shift-format this.editEntry.verified_at}}
+              by {{this.editEntry.verified_person.callsign}}.
+              Review is not needed at this time.
+            </b>
+          </ChAlert>
+        {{/if}}
+
+        <fieldset>
+          <legend>Entry Verification</legend>
+          {{#if this.editVerification}}
+            <div class="form-group row">
+              <div class="col-auto">Entry marked for verification:</div>
+              <div class="col-auto">
+                <f.input @name="verified" @type="radioGroup" @options={{this.verifyOptions}} @inline={{true}} />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-12 text-danger">Updating the correction note will automatically mark the entry as
+                incorrect
+                / unverified
+              </div>
+              <f.input @name="notes" @label="Correction Request Notes:" @type="textarea" @cols=80 @rows=5/>
+            </div>
+          {{else}}
+            <div class="form-row">
+              <div class="col-6">Correction Note:</div>
+              <div class="col-6 text-right">
+                <button type="button" class="btn btn-secondary btn-sm" {{action this.editVerificationAction}}>
+                  Edit Verification Flag &amp; Note
+                </button>
+              </div>
+              <div class="mb-3 col-12">{{present-or-not this.editEntry.notes}}</div>
+            </div>
+          {{/if}}
+        </fieldset>
+
+        <fieldset>
+          <legend>
+            Time/Position
+          </legend>
+          {{#if this.canManageTimesheets}}
+            <div class="form-row">
+              <f.input @name="on_duty" @label="On Duty" @type="datetime" @size=20 @grid="col-auto"/>
+              <f.input @name="off_duty" @label="Off Duty" @type="datetime" @size=20 @grid="col-auto"/>
+              <f.input @name="position_id" @label="Position" @type="select" @options={{this.positionOptions}}
+                       @grid="col-auto"/>
+            </div>
+          {{else}}
+            <dl class="form-row">
+              <dt class="col-sm-2">Position:</dt>
+              <dd class="col-sm-10">{{this.editEntry.position.title}}</dd>
+
+              <dt class="col-sm-2">Time:</dt>
+              <dd class="col-sm-10">
+                {{shift-format this.editEntry.on_duty}} to {{shift-format this.editEntry.off_duty}}
+              </dd>
+
+              <dt class="col-sm-2">Duration:</dt>
+              <dd class="col-sm-10">{{hour-minute-format this.editEntry.duration}}</dd>
+
+              <dt class="col-sm-2">Credits:</dt>
+              <dd class="col-sm-10">{{credits-format this.editEntry.credits}}</dd>
+            </dl>
+          {{/if}}
+        </fieldset>
+        <fieldset>
+          <legend>Entry Review</legend>
+          {{#if this.canManageTimesheets}}
+            <div class="form-row">
+              <f.input @name="reviewer_notes" @label="Timesheet reviewer response:" @type="textarea" @cols=80 @rows=2
+                       @hint="The user will see any notes entered in above."/>
+            </div>
+            <div class="form-group row">
+              <div class="col-auto">Review Status:</div>
+              <div class="col-auto">
+                <f.input @name="review_status" @label="Review Status" @type="radioGroup" @options={{this.reviewOptions}}
+                         @inline={{true}} />
+              </div>
+            </div>
+          {{else}}
+            <dl class="form-row">
+              <dt class="col-2">
+                Reviewer Note:
+              </dt>
+              <dd class="col-10">
+                {{present-or-not this.editEntry.reviewer_notes}}
+              </dd>
+
+              <dt class="col-2">
+                Review Status:
+              </dt>
+              <dd class="col-10">
+                {{this.editEntry.review_status}}
+              </dd>
+            </dl>
+          {{/if}}
+        </fieldset>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Update" @disabled={{this.editEntry.isSaving}} />
+        <f.cancel @disabled={{this.editEntry.isSaving}} />
+        {{#if this.editEntry.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}

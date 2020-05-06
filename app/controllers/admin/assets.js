@@ -28,7 +28,7 @@ export default class AdminAssetsController extends Controller {
     'Gerlach Patrol'
   ];
 
-  assetValidations = { barcode: validatePresence(true) };
+  assetValidations = { barcode: [ validatePresence(true) ] };
 
   @computed('house', 'year')
   get isCurrentYear() {

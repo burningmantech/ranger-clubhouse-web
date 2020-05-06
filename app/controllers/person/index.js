@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import inGroups from 'clubhouse/utils/in-groups';
 import { tracked } from '@glimmer/tracking';
@@ -52,6 +52,7 @@ export default class PersonIndexController extends Controller {
   @tracked personRoles = null;
   @tracked showRoles = false;
   @tracked editRoles = false;
+  @tracked isSavingRoles = false;
 
   @tracked showConfirmNoteOrMessage = false;
   @tracked showEditNote = false;
@@ -62,42 +63,34 @@ export default class PersonIndexController extends Controller {
 
   @tracked photo = null;
 
-  @computed
   get isAdmin() {
     return this.session.user.hasRole(Role.ADMIN);
   }
 
-  @computed
   get isPhotoManager() {
     return this.session.user.hasRole([Role.ADMIN, Role.VC]);
   }
 
-  @computed
   get canEditBMIT() {
     return this.session.user.hasRole(Role.EDIT_BMIDS);
   }
 
-  @computed
   get canEditAccessDocs() {
     return this.session.user.hasRole(Role.EDIT_ACCESS_DOCS);
   }
 
-  @computed
   get isAdminTrainerMentorOrVC() {
     return this.session.user.hasRole([Role.ADMIN, Role.TRAINER, Role.MENTOR, Role.VC]);
   }
 
-  @computed
   get isAdminMentorOrVC() {
     return this.session.user.hasRole([Role.ADMIN, Role.MENTOR, Role.VC]);
   }
 
-  @computed
   get isAdminOrVC() {
     return this.session.user.hasRole([Role.ADMIN, Role.VC]);
   }
 
-  @computed
   get isManageAndGrantPosition() {
     const user = this.session.user;
     return user.hasRole(Role.MANAGE) && user.hasRole(Role.GRANT_POSITION);
@@ -263,7 +256,7 @@ export default class PersonIndexController extends Controller {
   saveRoles(model) {
     const roleIds = model.roleIds;
 
-    this.toast.clear();
+    this.isSavingRoles = true;
     this.ajax.request(`person/${this.person.id}/roles`, {
       type: 'POST',
       data: { role_ids: roleIds }
@@ -271,7 +264,8 @@ export default class PersonIndexController extends Controller {
       this.toast.success('The roles have been successfully updated.');
       this.personRoles = results.roles;
       this.editRoles = false;
-    }).catch((response) => { this.house.handleErrorResponse(response) });
+    }).catch((response) => { this.house.handleErrorResponse(response) })
+      .finally(() => this.isSavingRoles = false);
   }
 
   @action

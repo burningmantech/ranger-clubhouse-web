@@ -1,9 +1,13 @@
 import Controller from '@ember/controller';
 import { isEmpty } from '@ember/utils';
 import { action, computed } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 export default class AdminSettingsController extends Controller {
   booleanOptions = [ 'true', 'false' ];
+
+  @tracked editSetting = null;
+  @tracked filterByName = '';
 
   _isValidJson(value) {
     if (isEmpty(value)) {
@@ -42,7 +46,7 @@ export default class AdminSettingsController extends Controller {
 
   @action
   edit(setting) {
-    this.set('editSetting', setting);
+    this.editSetting = setting;
   }
 
   @action
@@ -50,31 +54,29 @@ export default class AdminSettingsController extends Controller {
     if (!isValid)
       return;
 
-    this.toast.clear();
-
-    if (model.get('type') == 'json' && !this._isValidJson(model.get('value'))) {
+    if (model.type == 'json' && !this._isValidJson(model.value)) {
       this.toast.error('The JSON blob does not appear to be valid. Sorry.');
       return;
     }
 
     model.save().then(() => {
-      this.set('editSetting', null);
+      this.editSetting = null;
       this.toast.success(`The setting value has been successfully update.`);
-    }).catch((response) => this.house.handleErrorResponse(response));
+    }).catch((response) => this.house.handleErrorResponse(response, model));
   }
 
   @action
   cancel() {
-    this.set('editSetting', null);
+    this.editSetting = null;
   }
 
   @action
   filterSettings(name) {
-    this.set('filterByName', name);
+    this.filterByName = name;
   }
 
   @action
   clearFilter() {
-    this.set('filterByName', '');
+    this.filterByName = '';
   }
 }

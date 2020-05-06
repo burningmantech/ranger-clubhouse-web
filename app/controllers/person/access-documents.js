@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import { StateOptions } from 'clubhouse/constants/countries';
 
@@ -32,7 +32,6 @@ export default class PersonAccessDocumentsController extends Controller {
 
   stateOptions = StateOptions['US'];
 
-  @computed
   get yearOptions() {
     const currentYear = this.house.currentYear();
     const years = [];
@@ -43,7 +42,6 @@ export default class PersonAccessDocumentsController extends Controller {
     return years;
   }
 
-  @computed
   get admissionDateOptions() {
     return admissionDateOptions(this.house.currentYear(), this.ticketingInfo.wap_date_range);
   }

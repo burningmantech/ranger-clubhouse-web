@@ -173,7 +173,7 @@
       </Modal.body>
       <Modal.footer @noAlign=true>
         <f.submit @label={{if this.questionEntry.isNew "Create" "Save"}} @disabled={{this.questionEntry.isSaving}} />
-        <f.cancel/>
+        <f.cancel  @disabled={{this.questionEntry.isSaving}} />
         {{#if this.questionEntry.isSaving}}
           <LoadingIndicator/>
         {{/if}}

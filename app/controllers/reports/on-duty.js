@@ -6,7 +6,7 @@ export default class ReportsOnDutyController extends Controller {
   queryParams = ['over_hours', 'duty_date' ];
 
   dateValidations = {
-    date: validateDateTime({ presence: true })
+    date: [ validateDateTime({ presence: true }) ]
   };
 
   @action

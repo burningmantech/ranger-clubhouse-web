@@ -36,7 +36,8 @@
         </div>
         <div class="timesheet-row timesheet-actions">
           {{#if (or tsm.isPending tsm.isRejected)}}
-            <button type="button" class="btn btn-primary" {{action "editAction" tsm}} disabled={{or tsm.isReloading tsm.isSaving}}>
+            <button type="button" class="btn btn-primary" {{action "editAction" tsm}} disabled={{or tsm.isReloading
+                                                                                                    tsm.isSaving}}>
               {{#if tsm.isRejected}}
                 Submit Appeal
               {{else if tsm.isReloading}}
@@ -46,7 +47,8 @@
               {{/if}}
             </button>
             {{#if tsm.isPending}}
-              <button type="button" class="btn btn-danger" {{action "deleteAction" tsm}} disabled={{or tsm.isReloading tsm.isSaving}}>
+              <button type="button" class="btn btn-danger" {{action "deleteAction" tsm}} disabled={{or tsm.isReloading
+                                                                                                       tsm.isSaving}}>
                 {{#if tsm.isSaving}}
                   Deleting {{fa-icon "spinner" spin=true}}
                 {{else}}
@@ -65,53 +67,67 @@
   </p>
 {{/if}}
 
-<button type="button" class="btn btn-primary" {{action "newRequestAction"}}>New Missing Timesheet Request</button>
+<button type="button" class="btn btn-primary" {{on "click" this.newRequestAction}}>
+  New Missing Timesheet Request
+</button>
 
-{{#if entry}}
-  {{#ch-form "tm" entry
-        modalBox=true modalTitle="Missing Timesheet Request"
-        validator=timesheetValidations
-        onSubmit=(action "saveAction") onCancel=(action "cancelAction") as |f|}}
-    <div class="form-group mb-4">
-      Use this form for <b>MISSING TIMESHEET ENTRIES ONLY</b>. If you have
-      an existing entry that needs correction, go back to the
-      Timesheet Review page and submit a correction by clicking on 'Mark Entry Incorrect'.
-    </div>
-    <div class="form-row">
-      {{f.input "position_id" label="Which position was the shift for?" type="select" options=positionOptions grid="col-auto"}}
-    </div>
-    <div class="form-row">
-      {{f.input "on_duty" label="What was the START date & time of the shift?" type="datetime" size=15 grid="col-auto" startDate=startDateForEntry}}
-      {{f.input "off_duty" label="What was the END date & time of the shift?" type="datetime" size=15 grid="col-auto" startDate=startDateForEntry}}
-    </div>
-    <div class="form-row">
-      {{f.input "partner" label="Who was your partner (if any) for the shift?" type="text" size=20}}
-    </div>
-    <div class="form-row">
-      <p>
-        <span class="font-weight-bold">Give as much supporting details on why a shift should be added to your timesheet.</span><br>
-        <span class="text-danger">Your request may be denied if not enough supporting details are provided.</span>
-      </p>
-    </div>
-    <ul>
-      <li>If you had no partner for the shift, is there anyone who can verify your hours?</li>
-      <li>Was another person responsible for checking you in, and why did they fail to do that?</li>
-      <li>If you called Ranger HQ on the radio to check you in for the shift, who was the Ranger on the other end?</li>
-    </ul>
-    {{#if entry.isRejected}}
-      <b class="text-danger">The correction request has been rejected.</b>
-      <div class="card mb-4">
-        <div class="card-header">The timesheet correction team has left you a note:</div>
-        <div class="card-body">
-          {{entry.reviewer_notes}}
+{{#if this.entry}}
+  <ModalDialog @title="Missing Timesheet Request" as |Modal|>
+    <ChForm @formId="tm" @originalModel={{this.entry}}  @validator={{this.timesheetValidations}}
+            @onSubmit={{this.saveAction}} @onCancel={{this.cancelAction}} as |f|>
+      <Modal.body>
+        <div class="form-group mb-4">
+          Use this form for <b>MISSING TIMESHEET ENTRIES ONLY</b>. If you have
+          an existing entry that needs correction, go back to the
+          Timesheet Review page and submit a correction by clicking on 'Mark Entry Incorrect'.
         </div>
-      </div>
-    {{/if}}
-    {{f.input "notes" label=(if entry.isRejected "Supply additional information for an appeal:" "Why is this new entry needed?") type="textarea" cols=80 rows=4}}
-    <f.submit @label={{if f.model.isNew "Submit New Request" "Update Request"}} @disabled={{isSubmitting}} />
-    <f.cancel @disabled={{isSubmitting}} />
-    {{#if isSubmitting}}
-      Submitting {{fa-icon "spinner" spin=true}} . . .
-    {{/if}}
-  {{/ch-form}}
+        <div class="form-row">
+          <f.input @name="position_id" @label="Which position was the shift for?" @type="select"
+                   @options={{this.positionOptions}}
+                   @grid="col-auto"/>
+        </div>
+        <div class="form-row">
+          <f.input @name="on_duty" @label="What was the START date & time of the shift?" @type="datetime" @size=15
+                   @grid="col-auto" @startDate={{this.startDateForEntry}} />
+          <f.input @name="off_duty" @label="What was the END date & time of the shift?" @type="datetime" @size=15
+                   @grid="col-auto"
+                   @startDate={{this.startDateForEntry}} />
+        </div>
+        <div class="form-row">
+          <f.input @name="partner" @label="Who was your partner (if any) for the shift?" @type="text" @size=20 />
+        </div>
+        <div class="form-row">
+          <p>
+            <b>Give as much supporting details on why a shift should be added to your timesheet.</b><br>
+            <span class="text-danger">Your request may be denied if not enough supporting details are provided.</span>
+          </p>
+        </div>
+        <ul>
+          <li>If you had no partner for the shift, is there anyone who can verify your hours?</li>
+          <li>Was another person responsible for checking you in, and why did they fail to do that?</li>
+          <li>If you called Ranger HQ on the radio to check you in for the shift, who was the Ranger on the other end?
+          </li>
+        </ul>
+        {{#if this.entry.isRejected}}
+          <b class="text-danger">The correction request has been rejected.</b>
+          <div class="card mb-4">
+            <div class="card-header">The timesheet correction team has left you a note:</div>
+            <div class="card-body">
+              {{this.entry.reviewer_notes}}
+            </div>
+          </div>
+        {{/if}}
+        <f.input @name="notes"
+                 @label={{if entry.isRejected "Supply additional information for an appeal:" "Why is this new entry needed?"}}
+                 @type="textarea" @cols=80 @rows=4 />
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label={{if f.model.isNew "Submit New Request" "Update Request"}} @disabled={{this.isSubmitting}} />
+        <f.cancel @disabled={{this.isSubmitting}} />
+        {{#if this.isSubmitting}}
+          <LoadingIndicator/>
+        {{/if}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
 {{/if}}

@@ -1,196 +1,228 @@
-<YearSelect @title="Clubhouse Slots" @year={{this.year}} @years={{this.yearList}} @onChange={{action (mut this.year)}} />
-{{#if slot}}
-  <Admin::SlotForm @slot={{slot}} @positions={{positions}} @trainerSlots={{trainerSlots}} @onSave={{action saveSlot}} @onCancel={{action cancel}} @onClone={{action cloneSlot}} />
-{{/if}}
+<YearSelect @title="Clubhouse Slots" @year={{this.year}} @years={{this.yearList}}
+            @onChange={{action (mut this.year)}} />
 
-{{#if copyParams}}
-  {{#ch-form "copySlots" copyParams modalBox=true modalTitle="Copy Slots" changeSet=false
-        validator=copyValidations onSubmit=(action "performCopy") onCancel=(action "cancelCopy") as |f|}}
-    <fieldset>
-      <legend>Add/Subtract Time to New Slots</legend>
-      <div class="form-row">
-        {{f.input "deltaDays" label="Days" type="number" maxlength=5 size=5 grid="col-sm-auto"}}
-        {{f.input "deltaHours" label="Hours" type="number" maxlength=5 size=5 grid="col-sm-auto"}}
-        {{f.input "deltaMinutes" label="Minutes" type="number" maxlength=5 size=5 grid="col-sm-auto"}}
-      </div>
-      <legend>Set New Slot Attributes</legend>
-      <div class="form-row">
-        {{f.input "newPositionId" label="Position" type="select" options=positionOptionsForCopy grid="col-md-auto"}}
-        {{f.input "description" label="Description" type="text" maxlength=40 size=40 grid="col-md-auto"}}
-        {{f.input "max" label="Max" type="number" maxlength=3 size=3 grid="col-sm-2"}}
-      </div>
-      <div class="form-row">
-        {{f.input "url" label="Information" type="textarea" rows=3 cols=80 maxlength=512 wrapClass="col-12"}}
-      </div>
-      <div class="form-row">
-        {{f.input "activate" label="Activate new slots" type="checkbox"}}
-      </div>
-      Labor Day of {{year}} is {{selectedYearLaborDay}}.
-      Labor Day of {{presentYear}} is {{presentYearLaborDay}}, {{laborDayDiff}} days later.
-      <br>
-      Note: training and mentor/mentee slots cannot be copied yet.
-    </fieldset>
-    <f.submit @label={{concat "Copy " copySelectedSlotCount " selected slots"}} />
-    {{f.cancel}}
-    {{#each copySourcePositions as |position|}}
-      <table class="table table-sm table-box table-hover">
-        <caption>
-          {{position.selectedSlots.length}} / {{position.slots.length}} <strong>{{position.title}}</strong> slots to copy
-          <button {{action "copyToggleExpanded" position}}>
-            {{#if position.expanded}}collapse{{else}}expand{{/if}}
-          </button>
-          <button {{action "copyPositionSelectAll" position}}>
-            {{#if position.allSelected}}deselect{{else}}select{{/if}} all
-          </button>
-        </caption>
-        <thead>
-          <tr>
-            <th>Copy</th>
-            <th>Start time</th>
-            <th>End time</th>
-            <th class="text-right">Max</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#if position.expanded}}
-            {{#each position.slots as |slot|}}
-              <tr>
-                {{#let (concat "copy-slot-" slot.source.id) as |checkid|}}
-                  <td><Input @type="checkbox" @checked={{slot.selected}} @id={{checkid}} /></td>
-                  <td>
-                    <label for={{checkid}}>
-                      {{shift-format slot.source.begins}} &rarr;
-                      <br>{{slot.begins}}
-                    </label>
-                  </td>
-                  <td>
-                    <label for={{checkid}}>
-                      {{shift-format slot.source.ends}} &rarr;
-                      <br>{{slot.ends}}
-                    </label>
-                  </td>
-                  <td class="text-right"><label for={{checkid}}>{{slot.source.max}}</label></td>
-                  <td><label for={{checkid}}>{{slot.source.description}}</label></td>
-                {{/let}}
-              </tr>
-            {{/each}}
-          {{/if}}
-        </tbody>
-      </table>
-    {{/each}}
-  {{/ch-form}}
-{{/if}}
-
-
-<div class="float-right">
-  {{#if slots.length}}
-    <button {{action "startCopy"}} class="btn btn-secondary">Copy Slots</button>
+<p>
+  <button type="button" {{action this.newSlot}} class="btn btn-primary">New Slot</button>
+  {{#if this.slots.length}}
+    <button type="button" {{action this.startCopy}} class="btn btn-secondary">Copy Slots</button>
   {{/if}}
-  <button {{action "newSlot"}} class="btn btn-primary">New Slot</button>
-</div>
+</p>
 
 <div class="form-row mb-1">
   <div class="col-auto">
     <label class="col-form-label">Day Filter</label>
   </div>
   <div class="col-md-3 mb-2">
-    <ChForm::Select @name="dayFilter" @value={{dayFilter}} @options={{dayOptions}} @onChange={{action (mut dayFilter)}} @controlClass="form-control" />
+    <ChForm::Select @name="dayFilter" @value={{dayFilter}} @options={{dayOptions}} @onChange={{action (mut dayFilter)}}
+                    @controlClass="form-control"/>
   </div>
 
   <div class="col-auto">
     <label class="col-form-label">Active Filter</label>
   </div>
   <div class="col-md-3 mb-2">
-    <ChForm::Select @name="activeFilter" @value={{activeFilter}} @options={{activeOptions}} @onChange={{action (mut activeFilter)}} @controlClass="form-control" />
+    <ChForm::Select @name="activeFilter" @value={{activeFilter}} @options={{activeOptions}} @onChange={{action
+            (mut activeFilter)}} @controlClass="form-control"/>
   </div>
 </div>
 
 {{#if (and eventDate.pre_event_slot_start eventDate.pre_event_slot_end)}}
-  <p>{{year}} Pre-event is {{shift-format eventDate.pre_event_slot_start}} to {{shift-format eventDate.pre_event_slot_end}}.</p>
+  <p>{{year}} Pre-event is {{shift-format eventDate.pre_event_slot_start}} to {{shift-format
+          eventDate.pre_event_slot_end}}.</p>
 {{else}}
   {{#ch-alert "danger"}}
-    WARNING: {{year}} pre-event slot dates are not set. Pre-Event slots may not be properly vetted. Visit <LinkTo @route="admin.event-dates">Admin &gt; Edit Event Dates</LinkTo> to set the dates.
+    WARNING: {{year}} pre-event slot dates are not set. Pre-Event slots may not be properly vetted. Visit
+    <LinkTo @route="admin.event-dates">Admin &gt; Edit Event Dates</LinkTo> to set the dates.
   {{/ch-alert}}
 {{/if}}
 
-{{#if slots.length}}
-  <div class="text-muted">Showing {{viewSlots.length}} of {{slots.length}}</div>
+{{#if this.slots.length}}
+  <p>Showing {{this.viewSlots.length}} of {{pluralize this.slots.length "slot"}}</p>
   {{#unless viewSlots}}
     <p class="text-danger">
       No slots matched the filter criteria.
     </p>
   {{/unless}}
 {{else}}
-  No slots were found for {{year}}?
+  No slots were found for {{this.year}}?
 {{/if}}
 
 
 {{#each slotGroups as |group|}}
-<div class="schedule-title mt-2">
+  <div class="schedule-title mt-2">
+    {{#if group.showing}}
+      <div class="float-right mr-4">
+        <button class="btn btn-secondary btn-sm" {{action startCopy group.position_id}}>Bulk Copy</button>
+        <button class="btn btn-primary btn-sm" {{action activate group}}>Activate All</button>
+        <button class="btn btn-primary btn-sm" {{action deactivate group}}>Deactivate All</button>
+      </div>
+    {{/if}}
+    <a href {{on "click" (fn this.toggleShowing group)}}>
+      {{fa-icon (if group.showing "caret-down" "caret-right")}} {{group.title}}
+      ({{group.slots.length}}{{#if group.inactive}}
+      / <span class="text-danger">{{group.inactive}} inactive</span>{{/if}})
+    </a>
+  </div>
+  {{! template-lint-disable table-groups}}
   {{#if group.showing}}
-    <div class="float-right mr-4">
-      <button class="btn btn-secondary btn-sm" {{action startCopy group.position_id}}>Bulk Copy</button>
-      <button class="btn btn-primary btn-sm" {{action activate group}}>Activate All</button>
-      <button class="btn btn-primary btn-sm" {{action deactivate group}}>Deactivate All</button>
-    </div>
-  {{/if}}
-  <a href {{on "click" (fn this.toggleShowing group)}}>
-    {{fa-icon (if group.showing "caret-down" "caret-right")}} {{group.title}}
-    ({{group.slots.length}}{{#if group.inactive}} / <span class="text-danger">{{group.inactive}} inactive</span>{{/if}})
-  </a>
-</div>
-{{! template-lint-disable table-groups}}
-{{#if group.showing}}
-  <table class="table table-sm table-hover">
+    <table class="table table-sm table-hover">
       <thead>
-        <tr>
-          <th>ID</th>
-          <th>From</th>
-          <th>To</th>
-          <th class="text-right">Max</th>
-          <th class="text-right">Count</th>
-          <th class="text-right">Credits</th>
-          <th>Description</th>
-          <th>Active</th>
-          <th>Actions</th>
-        </tr>
+      <tr>
+        <th>ID</th>
+        <th>From</th>
+        <th>To</th>
+        <th class="text-right">Max</th>
+        <th class="text-right">Count</th>
+        <th class="text-right">Credits</th>
+        <th>Description</th>
+        <th>Active</th>
+        <th>Actions</th>
+      </tr>
       </thead>
       <tbody>
-        {{#each group.slots as |slot|}}
-          <tr id="slot-{{slot.id}}">
-            <td>{{slot.id}}</td>
-            <td>{{shift-format slot.begins}}</td>
-            <td>{{shift-format slot.ends}}</td>
-            <td class="text-right">{{slot.max}}</td>
-            <td class="text-right">{{slot.signed_up}}</td>
-            <td class="text-right">{{credits-format slot.credits}}</td>
-            <td>
-              {{slot-info-link slot.description slot.url}}
-            </td>
-            <td clas="text-center">
-              {{#if slot.active}}
-                {{fa-icon "check"}}
-              {{else}}
-                <span class="text-danger">{{fa-icon "times"}}</span>
-              {{/if}}
-            </td>
-            <td>
-              <button {{action repeatSlot slot}} class="btn btn-secondary btn-sm" title="Repeat Slot">Repeat</button>
-              <button {{action repeatSlotAdd24Hours slot}} class="btn btn-secondary btn-sm" title="Repeat Slot With 24 hours addition">Repeat+24</button>
-              <button {{action deleteSlot slot}} class="btn btn-danger btn-sm" title="Delete slot">{{fa-icon "trash-alt" type="fas"}}</button>
-              <button {{action editSlot slot}} class="btn btn-primary btn-sm" title="Edit slot">{{fa-icon "edit"}}</button>
+      {{#each group.slots as |slot|}}
+        <tr id="slot-{{slot.id}}">
+          <td>{{slot.id}}</td>
+          <td>{{shift-format slot.begins}}</td>
+          <td>{{shift-format slot.ends}}</td>
+          <td class="text-right">{{slot.max}}</td>
+          <td class="text-right">{{slot.signed_up}}</td>
+          <td class="text-right">{{credits-format slot.credits}}</td>
+          <td>
+            {{slot-info-link slot.description slot.url}}
+          </td>
+          <td clas="text-center">
+            {{#if slot.active}}
+              {{fa-icon "check"}}
+            {{else}}
+              <span class="text-danger">{{fa-icon "times"}}</span>
+            {{/if}}
+          </td>
+          <td>
+            <button {{action this.repeatSlot slot}} type="button" class="btn btn-secondary btn-sm">
+              {{fa-icon "clone"}} Repeat
+            </button>
+            <button {{action this.repeatSlotAdd24Hours slot}} class="btn btn-secondary btn-sm">
+              {{fa-icon "clone"}} Repeat+24
+            </button>
+            <button {{action this.deleteSlot slot}} type="button" class="btn btn-danger btn-sm">
+              {{fa-icon "trash-alt"type="fas"}} Delete
+            </button>
+            <button {{action editSlot slot}} class="btn btn-primary btn-sm">
+              {{fa-icon "edit"}} Edit
+            </button>
+          </td>
+        </tr>
+        {{#if slot.trainer_slot}}
+          <tr class="{{if slot.trainer_slot "tr-no-border"}}">
+            <td colspan="8">
+              Multiplier slot:
+              <a href="#slot-{{slot.trainer_slot.id}}">
+                #{{slot.trainer_slot.id}} {{slot.trainer_slot_title}} {{slot.trainer_slot.description}} {{shift-format
+                      slot.trainer_slot.begins}}
+              </a>
             </td>
           </tr>
-          {{#if slot.trainer_slot}}
-            <tr class="{{if slot.trainer_slot "tr-no-border"}}">
-              <td colspan="8">
-                Multiplier slot: <a href="#slot-{{slot.trainer_slot.id}}">#{{slot.trainer_slot.id}} {{slot.trainer_slot_title}} {{slot.trainer_slot.description}} {{shift-format slot.trainer_slot.begins}}</a>
-              </td>
-            </tr>
-          {{/if}}
-        {{/each}}
+        {{/if}}
+      {{/each}}
       </tbody>
-  </table>
+    </table>
   {{/if}}
 {{/each}}
+
+{{#if slot}}
+  <Admin::SlotForm @slot={{slot}} @positions={{positions}} @trainerSlots={{trainerSlots}} @onSave={{action saveSlot}}
+                   @onCancel={{action cancel}} @onClone={{action cloneSlot}} />
+{{/if}}
+
+{{#if copyParams}}
+  <ModalDialog @title="Copy Slots" as |Modal|>
+    <ChForm @formId="copySlots" @originalModel={{this.copyParams}}
+            @changeSet={{false}} @validator={{this.copyValidations}}
+            @onSubmit={{this.performCopy}} @onCancel={{this.cancelCopy}} as |f|>
+      <Modal.body>
+        <fieldset>
+          <legend>Add/Subtract Time to New Slots</legend>
+          <div class="form-row">
+            <f.input @name="deltaDays" @label="Days" @type="number" @maxlength=5 @size=5 @grid="col-auto"/>
+            <f.input @name="deltaHours" @label="Hours" @type="number" @maxlength=5 @size=5 @grid="col-auto"/>
+            <f.input @name="deltaMinutes" @label="Minutes" @type="number" @maxlength=5 @size=5 @grid="col-auto"/>
+          </div>
+          <legend>Set New Slot Attributes</legend>
+          <div class="form-row">
+            <f.input @name="newPositionId" @label="Position" @type="select" @options={{this.positionOptionsForCopy}}
+                     @grid="col-auto"/>
+            <f.input @name="description" @label="Description" @type="text" @maxlength=40 @size=40 @grid="col-auto"/>
+            <f.input @name="max" @label="Max" @type="number" @maxlength=3 @size=3 @grid="col-2"/>
+          </div>
+          <div class="form-row">
+            <f.input @name="url" @label="Information" @type="textarea" @rows=3 @cols=80 @maxlength=512
+                     @wrapClass="col-12"/>
+          </div>
+          <div class="form-row">
+            <f.input @name="activate" @label="Activate new slots" @type="checkbox"/>
+          </div>
+          Labor Day of {{this.year}} is {{this.selectedYearLaborDay}}.
+          Labor Day of {{this.presentYear}} is {{this.presentYearLaborDay}}, {{this.laborDayDiff}} days later.
+          <br>
+          Note: training and mentor/mentee slots cannot be copied yet.
+        </fieldset>
+        <p>
+          <f.submit @label={{concat "Copy " this.copySelectedSlotCount " selected slots"}} @disabled={{this.isCopyingSlots}} />
+          <f.cancel @disabled={{this.isCopyingSlots}} />
+          {{#if this.isCopyingSlots}}
+            <LoadingIndicator/>
+          {{/if}}
+        </p>
+        {{#each this.copySourcePositions as |position|}}
+          <table class="table table-sm table-box table-hover">
+            <caption>
+              {{position.selectedSlots.length}} / {{position.slots.length}} <strong>{{position.title}}</strong> slots to
+              copy
+              <button {{action "copyToggleExpanded" position}}>
+                {{#if position.expanded}}collapse{{else}}expand{{/if}}
+              </button>
+              <button {{action "copyPositionSelectAll" position}}>
+                {{#if position.allSelected}}deselect{{else}}select{{/if}} all
+              </button>
+            </caption>
+            <thead>
+            <tr>
+              <th>Copy</th>
+              <th>Start time</th>
+              <th>End time</th>
+              <th class="text-right">Max</th>
+              <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#if position.expanded}}
+              {{#each position.slots as |slot|}}
+                <tr>
+                  {{#let (concat "copy-slot-" slot.source.id) as |checkid|}}
+                    <td><Input @type="checkbox" @checked={{slot.selected}} @id={{checkid}} /></td>
+                    <td>
+                      <label for={{checkid}}>
+                        {{shift-format slot.source.begins}} &rarr;
+                        <br>{{slot.begins}}
+                      </label>
+                    </td>
+                    <td>
+                      <label for={{checkid}}>
+                        {{shift-format slot.source.ends}} &rarr;<br>
+                        {{slot.ends}}
+                      </label>
+                    </td>
+                    <td class="text-right"><label for={{checkid}}>{{slot.source.max}}</label></td>
+                    <td><label for={{checkid}}>{{slot.source.description}}</label></td>
+                  {{/let}}
+                </tr>
+              {{/each}}
+            {{/if}}
+            </tbody>
+          </table>
+        {{/each}}
+      </Modal.body>
+    </ChForm>
+  </ModalDialog>
+{{/if}}

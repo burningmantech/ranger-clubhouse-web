@@ -350,38 +350,44 @@
 
 {{! Add Person dialog box}}
 {{#if this.addPersonForm}}
-  {{#ch-form "search" addPersonForm modalBox=true modalTitle="Add Student To Session" changeSet=false
-             onFormChange=(action "searchPeopleAction") onCancel=(action "cancelSearchAction") as |f|}}
-    <div class="form-row">
-      {{f.input "name" label="Enter the callsign, real name, or email of the person to add:" type="text" size=30
-                autofocus=true}}
-    </div>
-    <div class="form-row">
-      {{f.cancel}}
-    </div>
-    {{#if foundPeople}}
-      Click on the callsign to add the person.
-      <table class="table table-hover">
-        <thead>
-        <tr>
-          <th class="w-25">Callsign</th>
-          <th class="w-25">Name</th>
-          <th class="w-25">Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each foundPeople as |person|}}
-          <tr>
-            <td class="w-25"><a href="#" {{action "addPersonAction" person}}>{{person.callsign}}</a></td>
-            <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
-            <td class="w-25">{{person.status}}</td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
-    {{else if noSearchMatch}}
-      <div class="text-danger">No person found matching "{{noSearchMatch}}"</div>
-    {{/if}}
-  {{/ch-form}}
+  <ModalDialog @title="Add Student To Session" as |Modal|>
+    <ChForm @formId="search" @originalModel={{this.addPersonForm}} @changeSet={{false}}
+            @onFormChange={{action this.searchPeopleAction}} @onCancel={{action this.cancelSearchAction}} as |f|>
+      <Modal.body>
+        <div class="form-row">
+          <f.input @name="name" @label="Enter the callsign, real name, or email of the person to add:"
+                   @type="text" @size=30 @autofocus={{true}} />
+        </div>
+        <div class="form-row">
+          <f.cancel/>
+        </div>
+        {{#if this.foundPeople}}
+          Click on the callsign to add the person.
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th class="w-25">Callsign</th>
+              <th class="w-25">Name</th>
+              <th class="w-25">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each this.foundPeople as |person|}}
+              <tr>
+                <td class="w-25"><a href {{on "click" (fn this.addPersonAction person)}}>{{person.callsign}}</a></td>
+                <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
+                <td class="w-25">{{person.status}}</td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </table>
+        {{else if this.noSearchMatch}}
+          <p class="text-danger">
+            <b>No person found matching "{{this.noSearchMatch}}"</b>
+          </p>
+        {{/if}}
+      </Modal.body>
+    </ChForm>
+  </ModalDialog>
 {{/if}}
 

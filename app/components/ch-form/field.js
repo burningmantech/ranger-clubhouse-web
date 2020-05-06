@@ -2,8 +2,7 @@ import Component from '@ember/component';
 import EmberObject from '@ember/object';
 import {action, computed, set, get} from '@ember/object';
 import {typeOf, isEmpty} from '@ember/utils';
-
-import $ from 'jquery';
+import {run} from '@ember/runloop';
 
 export default class ChFormFieldComponent extends Component {
   tagName = '';
@@ -138,7 +137,15 @@ export default class ChFormFieldComponent extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
     if (this.autofocus) {
-      $('[autofocus]').focus();
+
+      const field = document.querySelector('[autofocus]');
+      if (field) {
+        setTimeout(() => {
+          run('afterRender', () => {
+            field.focus();
+          })
+        }, 100);
+      }
     }
   }
 

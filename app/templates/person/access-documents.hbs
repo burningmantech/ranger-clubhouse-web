@@ -1,143 +1,164 @@
 <h3>Access Documents</h3>
-Showing {{pluralize documents.length "current access document"}}
+Showing {{pluralize this.documents.length "current access document"}}
 <table class="table table-sm table-hover table-width-auto">
   <thead>
-    <tr>
-      <th>ID</th>
-      <th>Type</th>
-      <th>Status</th>
-      <th>Access Date</th>
-      <th>Source Year</th>
-      <th>Good Through</th>
-      <th>Other Details</th>
-    </tr>
+  <tr>
+    <th>ID</th>
+    <th>Type</th>
+    <th>Status</th>
+    <th>Access Date</th>
+    <th>Source Year</th>
+    <th>Good Through</th>
+    <th>Other Details</th>
+  </tr>
   </thead>
 
   <tbody>
-    {{#each documents as |document|}}
-      <tr>
-        <td><a href {{action "editAccessDocument" document}}>RAD-{{document.id}}</a></td>
-        <td>{{document.typeHuman}}</td>
-        <td>{{document.status}}</td>
-        <td>
-          {{#if document.access_any_time}}
-            Any
-          {{else if document.access_date}}
-            {{moment-format document.access_date "ddd MM/DD/YY"}}
-          {{else}}
-            -
-          {{/if}}
-        </td>
-        <td>
-          {{document.source_year}}
-        </td>
-        <td>
-          {{document.expiryYear}}
-        </td>
-        <td>
-          {{#if document.name}}
-            {{document.name}}
-          {{else}}
-            -
-          {{/if}}
-        </td>
-      </tr>
-    {{else}}
-      <tr>
-        <td colspan="7" class="text-danger">No current/non-expired access documents were found.</td>
-      </tr>
-    {{/each}}
+  {{#each this.documents as |document|}}
+    <tr>
+      <td><a href {{action this.editAccessDocument document}}>RAD-{{document.id}}</a></td>
+      <td>{{document.typeHuman}}</td>
+      <td>{{document.status}}</td>
+      <td>
+        {{#if document.access_any_time}}
+          Any
+        {{else if document.access_date}}
+          {{moment-format document.access_date "ddd MM/DD/YY"}}
+        {{else}}
+          -
+        {{/if}}
+      </td>
+      <td>
+        {{document.source_year}}
+      </td>
+      <td>
+        {{document.expiryYear}}
+      </td>
+      <td>
+        {{#if document.name}}
+          {{document.name}}
+        {{else}}
+          -
+        {{/if}}
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="7" class="text-danger">No current/non-expired access documents were found.</td>
+    </tr>
+  {{/each}}
   </tbody>
 </table>
 
 <p>
   Delivery Method:
-  {{#if delivery}}
-    {{#if (eq delivery.method "will_call")}}
+  {{#if this.delivery}}
+    {{#if (eq this.delivery.method "will_call")}}
       Will Call
     {{else}}
-      By mail - {{delivery.street}}, {{delivery.city}}, {{delivery.state}}, {{delivery.postal_code}} {{delivery.country}}
+      By mail - {{this.delivery.street}}, {{this.delivery.city}}, {{this.delivery.state}}
+      , {{this.delivery.postal_code}} {{this.delivery.country}}
     {{/if}}
   {{else}}
     No method supplied, defaulting to Will Call.
   {{/if}}
 </p>
 
-<button class="btn btn-primary" {{action newAccessDocument}}>New Access Document</button>
+<button type="button" class="btn btn-primary" {{action this.newAccessDocument}}>New Access Document</button>
 <LinkTo @route="person.tickets" class="btn btn-secondary">View Tickets &amp; Stuff</LinkTo>
-<button class="btn btn-secondary" {{action editDelivery}}>Edit Delivery Method</button>
+<button type="button" class="btn btn-secondary" {{action this.editDelivery}}>Edit Delivery Method</button>
 
-{{#if entry}}
-  {{#ch-form "entry" entry modalBox=true modalTitle=(concat (if entry.isNew "Create A New Access Document" "Edit Access Document") " For " person.callsign)
-    onSubmit=(action "saveAccessDocument")
-    onCancel=(action "cancelAccessDocument") as |f|
-  }}
-    <div class="form-row">
-      {{f.input "type" type="select" options=typeOptions label="Type" grid="col-auto"}}
-      {{f.input "status" type="select" options=statusOptions label="Status" grid="col-auto"}}
-      {{f.input "source_year" type="select" options=yearOptions label="Source Year"}}
-      {{f.input "expiry_year" type="select" options=yearOptions label="Good Through"}}
+{{#if this.entry}}
+  <ModalDialog @title={{concat (if entry.isNew "Create A New" "Edit ") " Access Document For " person.callsign}}
+               as |Modal|>
+    <ChForm @formId="entry" @originalModel={{this.entry}}
+            @onSubmit={{this.saveAccessDocument}} @onCancel={{this.cancelAccessDocument}} as |f|>
+      <Modal.body>
+        <div class="form-row">
+          <f.input @name="type" @type="select" @options={{this.typeOptions}} @label="Type" @grid="col-auto"/>
+          <f.input @name="status" @type="select" @options={{this.statusOptions}} @label="Status" @grid="col-auto"/>
+          <f.input @name="source_year" @type="select" @options={{this.yearOptions}} @label="Source Year"/>
+          <f.input @name="expiry_year" @type="select" @options={{this.yearOptions}} @label="Good Through"/>
 
-      {{#if (and (not-eq f.model.type "reduced_price_ticket") (not-eq f.model.type "gift_ticket") (not-eq f.model.type "vehicle_pass"))}}
-        {{f.input "admission_date" label="Access Date" type="select" options=admissionDateOptions grid="col-auto"}}
-      {{/if}}
-    </div>
-
-    {{f.input "name" label="Name" type="text" size=40 grid="col-auto"}}
-    {{#unless entry.isNew}}
-      <div class="form-row">
-        <label class="col-form-label">Last Modified:</label>
-        <div class="mt-2 col-auto">
-          {{entry.modified_date}}
+          {{#if (and (not-eq f.model.type "reduced_price_ticket") (not-eq f.model.type "gift_ticket") (not-eq f.model.type "vehicle_pass"))}}
+            <f.input @name="admission_date" @label="Access Date" @type="select" @options={{this.admissionDateOptions}}
+                     @grid="col-auto"/>
+          {{/if}}
         </div>
-        <label class="col-form-label">Created:</label>
-        <div class="mt-2 col-auto">
-          {{entry.create_date}}
-        </div>
-      </div>
 
-      <div class="form-row mb-4">
-        <label class="col-form-label">Comments:</label>
-        <div class="mt-2 col-auto">
-          {{nl2br entry.comments}}
-        </div>
-      </div>
-    {{/unless}}
+        <f.input @name="name" @label="Name" @type="text" @size=40 @grid="col-auto"/>
+        {{#unless entry.isNew}}
+          <div class="form-row">
+            <label class="col-form-label">Last Modified:</label>
+            <div class="mt-2 col-auto">
+              {{entry.modified_date}}
+            </div>
+            <label class="col-form-label">Created:</label>
+            <div class="mt-2 col-auto">
+              {{entry.create_date}}
+            </div>
+          </div>
 
-    {{f.input "additional_comments" label="Additional Comments" type="textarea" rows=4 cols=60
-      hint="(Your callsign and date will be automatically added to any additional comments you provide.)"}}
-    <f.submit @label={{if entry.isNew "Create" "Update"}} />
-    {{f.cancel}}
-    {{#unless entry.isNew}}
-      <button class="btn btn-danger float-right" {{action "deleteAccessDocument" entry}}>Delete (Cancel) Document</button>
-    {{/unless}}
-  {{/ch-form}}
+          <div class="form-row mb-4">
+            <label class="col-form-label">Comments:</label>
+            <div class="mt-2 col-auto">
+              {{nl2br entry.comments}}
+            </div>
+          </div>
+        {{/unless}}
+
+        <f.input @name="additional_comments" @label="Additional Comments" @type="textarea" @rows=4 @cols=60
+                 @hint="(Your callsign and date will be automatically added to any additional comments you provide.)"/>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label={{if entry.isNew "Create" "Update"}}  @disabled={{this.entry.isSaving}} />
+        <f.cancel @disabled={{this.entry.isSaving}} />
+        {{#if this.entry.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+        {{#unless entry.isNew}}
+          <button type="button" class="btn btn-danger float-right"
+            {{action this.deleteAccessDocument entry}} disabled={{this.entry.isSaving}}>
+            Delete (Cancel) Document
+          </button>
+        {{/unless}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
 {{/if}}
 
-{{#if deliveryEntry}}
-  {{#ch-form "delivery" deliveryEntry modalBox=true modalTitle=(concat "Edit Delivery Method for " person.callsign)
-    onSubmit=(action saveDelivery)
-    onCancel=(action cancelDelivery) as |f|
-    }}
+{{#if this.deliveryEntry}}
+  <ModalDialog @title={{concat "Edit Delivery Method for " person.callsign}} as |Modal|>
+    <ChForm @formId="delivery" @originalModel={{this.deliveryEntry}}
+            @onSubmit={{this.saveDelivery}}
+            @onCancel={{this.cancelDelivery}} as |f|>
+      <Modal.body>
+        <div class="form-row">
+          <f.input @name="method" @type="select" @options={{this.methodOptions}} @label="Type" @grid="col-auto"/>
+        </div>
 
-    <div class="form-row">
-      {{f.input "method" type="select" options=methodOptions label="Type" grid="col-auto"}}
-    </div>
-
-    <div class="form-row mb-2">
-      <div class="col">
-        Note: the mailing address will be retain but not used if the method is set to Will Call.
-      </div>
-    </div>
-    <div class="form-row">
-      {{f.input "street" label="Street" grid="col-md-8 col-sm-6"}}
-    </div>
-    <div class="form-row">
-      {{f.input "city" label="City" grid="col-sm-5 col-md-4"}}
-      {{f.input "state" label="State" type="select" options=stateOptions grid="col-sm-5 col-md-4"}}
-      {{f.input "postal_code" label="Zip Code" grid="col-sm-5 col-md-4"}}
-    </div>
-    <f.submit @label="Update" @disabled={{isSubmitting}} />
-    {{f.cancel}}
-  {{/ch-form}}
+        <div class="form-row mb-2">
+          <div class="col">
+            Note: the mailing address will be retain but not used if the method is set to Will Call.
+          </div>
+        </div>
+        <div class="form-row">
+          <f.input @name="street" @label="Street" @grid="col-md-8 col-sm-6"/>
+        </div>
+        <div class="form-row">
+          <f.input @name="city" @label="City" @grid="col-sm-5 col-md-4"/>
+          <f.input @name="state" @label="State" @type="select" @options={{this.stateOptions}}
+                   @grid="col-sm-5 col-md-4"/>
+          <f.input @name="postal_code" @label="Zip Code" @grid="col-sm-5 col-md-4"/>
+        </div>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Update" @disabled={{this.isSubmitting}} />
+        <f.cancel @disabled={{this.isSubmitting}} />
+        {{#if this.isSubmitting}}
+          <LoadingIndicator/>
+        {{/if}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
 {{/if}}

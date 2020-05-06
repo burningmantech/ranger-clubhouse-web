@@ -94,9 +94,9 @@ export default class BroadcastComplexComponent extends Component {
 
     // The basics - subject and messages
     const validations = {
-      sms_message: validatePresenceIf({if_set: 'send_sms', message: 'Enter a text message.'}),
-      subject: validatePresenceIf({if_set: ['send_clubhouse', 'send_email'], message: 'Enter a subject.'}),
-      message: validatePresenceIf({if_set: ['send_clubhouse', 'send_email'], message: 'Enter a message.'})
+      sms_message: [ validatePresenceIf({if_set: 'send_sms', message: 'Enter a text message.'}) ],
+      subject: [ validatePresenceIf({if_set: ['send_clubhouse', 'send_email'], message: 'Enter a subject.'}) ],
+      message: [ validatePresenceIf({if_set: ['send_clubhouse', 'send_email'], message: 'Enter a message.'}) ]
     };
 
     // Need to select a team/position
