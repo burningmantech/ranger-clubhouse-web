@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { action, computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { validatePresence } from 'ember-changeset-validations/validators';
+import _ from 'lodash';
 
 export default class AdminAssetsController extends Controller {
   queryParams = ['year'];
@@ -58,7 +59,7 @@ export default class AdminAssetsController extends Controller {
 
   @computed('assets.@each.description')
   get tempIdOptions() {
-    let options = this.assets.uniqBy('temp_id').mapBy('temp_id');
+    let options = _.uniqBy(this.assets, 'temp_id').map((a) => a.temp_id);
 
     options = options.map((opt) => (isEmpty(opt) ? 'Blank' : opt));
 
@@ -70,7 +71,7 @@ export default class AdminAssetsController extends Controller {
 
   @computed('assets.@each.type')
   get descriptionOptions() {
-    const options = this.assets.uniqBy('description').mapBy('description');
+    const options = _.uniqBy(this.assets, 'description').map((a) => a.description);
     options.sort((a, b) => a.localeCompare(b));
     options.unshift('All');
     return options;
@@ -136,6 +137,7 @@ export default class AdminAssetsController extends Controller {
       }
     }
 
+
     this.set('isSubmitting', false);
     this.set('entry', null);
     this.set('creatingBarcode', null);
@@ -174,9 +176,9 @@ export default class AdminAssetsController extends Controller {
     }
 
     this.set('isSubmitting', true);
-    model.save().then((result) => {
+    model.save().then(() => {
       if (isNew) {
-        this.assets.pushObject(result);
+        this.assets.pushObject(this.entry);
       }
       this.toast.success(`The asset was successfully ${isNew ? 'created' : 'updated'}`);
       this.set('entry', null);

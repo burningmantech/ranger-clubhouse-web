@@ -68,22 +68,23 @@ Showing {{viewAssets.length}} of {{pluralize this.assets.length "asset"}}
 {{#if this.entry}}
   <ModalDialog @title={{if this.entry.isNew "New Asset" "Edit Asset"}} as |Modal|>
     <ChForm @formId="asset" @originalModel={{this.entry}} @validator={{this.assetValidations}}
-              @onSubmit={{action this.saveAsset}} @onCancel={{action this.cancelAsset}} as |f|>
+            @onSubmit={{action this.saveAsset}} @onCancel={{action this.cancelAsset}} as |f|>
       <Modal.body>
         <div class="form-row">
-          <f.input @name="description" @label="Description/Type" @type="select" @options={{this.assetDescriptionOptions}}
-                    @grid="col-auto" />
-          <f.input @name="barcode" @label="Barcode" @size=25 @grid="col-auto" />
+          <f.input @name="description" @label="Description/Type" @type="select"
+                   @options={{this.assetDescriptionOptions}}
+                   @grid="col-auto"/>
+          <f.input @name="barcode" @label="Barcode" @size=25 @grid="col-auto"/>
 
-          <f.input @name="temp_id" @label="Temp ID (aka secondary description)" @type="text" @size=25 @grid="col-auto" />
-          <f.input @name="notes" @type="textarea" @label="Notes" @rows=2 @cols=80 />
+          <f.input @name="temp_id" @label="Temp ID (aka secondary description)" @type="text" @size=25 @grid="col-auto"/>
+          <f.input @name="notes" @type="textarea" @label="Notes" @rows=2 @cols=80/>
         </div>
         <div class="form-row">
           <label class="col-auto">Assignment</label>
         </div>
         <div class="form-row">
           <div class="col-auto">
-            <f.input @name="perm_assign" @type="radioGroup" @options={{this.permanentOptions}} @inline=true />
+            <f.input @name="perm_assign" @type="radioGroup" @options={{this.permanentOptions}} @inline=true/>
           </div>
         </div>
 
@@ -92,25 +93,30 @@ Showing {{viewAssets.length}} of {{pluralize this.assets.length "asset"}}
             <label class="col-auto">Copies (including the first) - Leave blank if only creating one</label>
           </div>
           <div class="form-row">
-            <f.input @name="copies" @type="text" @size=4 @maxlength=4 @controlClass="form-control" @grid="col-auto" />
+            <f.input @name="copies" @type="text" @size=4 @maxlength=4 @controlClass="form-control" @grid="col-auto"/>
           </div>
         {{/if}}
         <fieldset>
           <legend>Vehichle Information</legend>
           <div class="form-row">
-            <f.input @name="category" @type="select" @label="Category" @options={{this.categoryOptions}} @grid="col-auto" />
-            <f.input @name="subtype" @type="text" @label="Type" @size=25 @grid="col-auto" />
-            <f.input @name="color" @type="text" @label="Color" @size=25 @grid="col-auto" />
-            <f.input @name="style" @type="text" @label="Style" @size=25 @grid="col-auto" />
+            <f.input @name="category" @type="select" @label="Category" @options={{this.categoryOptions}}
+                     @grid="col-auto"/>
+            <f.input @name="subtype" @type="text" @label="Type" @size=25 @grid="col-auto"/>
+            <f.input @name="color" @type="text" @label="Color" @size=25 @grid="col-auto"/>
+            <f.input @name="style" @type="text" @label="Style" @size=25 @grid="col-auto"/>
           </div>
         </fieldset>
       </Modal.body>
       <Modal.footer @noAlign=true>
-          <f.submit @label={{if f.model.isNew "Create" "Update"}} @disabled={{this.isSubmitting}} />
-          <f.cancel @disabled={{this.isSubmitting}} />
-          {{#if (and this.isSubmitting this.creatingBarcode)}}
-            <b>Creating {{this.creatingBarcode}}</b>
+        <f.submit @label={{if f.model.isNew "Create" "Update"}} @disabled={{this.isSubmitting}} />
+        <f.cancel @disabled={{this.isSubmitting}} />
+        {{#if this.isSubmitting}}
+          {{#if this.creatingBarcode}}
+            <LoadingIndicator @text={{concat "Creating " this.creatingBarcode}} />
+          {{else}}
+            <LoadingIndicator/>
           {{/if}}
+        {{/if}}
       </Modal.footer>
     </ChForm>
   </ModalDialog>

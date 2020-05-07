@@ -42,17 +42,17 @@
         <div class="form-row">
           <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Search By:</label>
           <div class="col-sm-12 col-md-9 mt-2">
-            {{f.input "callsign" type="checkbox" label="Callsign" inline=true}}
-            {{f.input "name" type="checkbox" label="Name" inline=true}}
-            {{f.input "email" type="checkbox" label="Email" inline=true}}
-            {{f.input "formerly_known_as" type="checkbox" label="Formerly Known As" inline=true}}
+            <f.input @name="callsign" @type="checkbox" @label="Callsign" @inline={{true}} />
+            <f.input @name="name" @type="checkbox" @label="Name" @inline={{true}} />
+            <f.input @name="email" @type="checkbox" @label="Email" @inline={{true}} />
+            <f.input @name="formerly_known_as" @type="checkbox" @label="Formerly Known As" @inline={{true}} />
           </div>
         </div>
         <div class="form-row">
           <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Include:</label>
           <div class="col-sm-12 col-md-9 mt-2">
-            {{f.input "auditor" type="checkbox" label="Auditor" inline=true}}
-            {{f.input "past_prospective" type="checkbox" label="Past Prospective" inline=true}}
+            <f.input @name="auditor" @type="checkbox" @label="Auditor" @inline={{true}} />
+            <f.input @name="past_prospective" @type="checkbox" @label="Past Prospective" @inline={{true}} />
           </div>
         </div>
         <div class="form-row mb-2">

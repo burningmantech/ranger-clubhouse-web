@@ -1,17 +1,17 @@
 <div class="form-row">
-  {{f.input "country" label="Country" type="select" options=countryOptions grid="col-sm-5 col-md-4"}}
+  <@f.input @name="country" @label="Country" @type="select" @options={{this.countryOptions}} @autocomplete="country" @grid="col-sm-5 col-md-4" />
 </div>
 <div class="form-row">
-  {{f.input "street1" label="Street" maxlength=128 grid="col-md-8 col-sm-6"}}
-  {{f.input "apt" label="Apt" maxlength=10 grid="col-md-1 col-sm-4"}}
-  {{f.input "street2" label="Street Line 2" maxlength=128 grid="col-sm-8"}}
+  <@f.input @name="street1" @type="text" @label="Street" @maxlength=128 @autocomplete="address-line1" @grid="col-md-8 col-sm-6" />
+  <@f.input @name="apt" @type="text"  @label="Apt" @maxlength=10 @grid="col-md-1 col-sm-4" />
+  <@f.input @name="street2" @type="text" @label="Street Line 2" @maxlength=128 @autocomplete="address-line2" @grid="col-sm-8" />
 </div>
 <div class="form-row">
-  {{f.input "city" label="City" grid="col-sm-5 col-md-4"}}
-  {{#if stateOptions}}
-    {{f.input "state" label=stateLabel type="select" options=stateOptions grid="col-sm-5 col-md-4"}}
+  <@f.input @name="city" @type="text"  @label="City" @autocomplete="address-level2"  @grid="col-sm-5 col-md-4" />
+  {{#if this.stateOptions}}
+    <@f.input @name="state" @label={{this.stateLabel}} @type="select" @options={{this.stateOptions}} @autocomplete="address-level1" @grid="col-sm-5 col-md-4" />
   {{else}}
-    {{f.input "state" label=stateLabel maxlength=128 disabled=(if f.model.country false true) grid="col-sm-5 col-md-4"}}
+    <@f.input @name="state" @label={{this.stateLabel}} @maxlength=128 @disabled={{if @f.model.country false true}} @autocomplete="address-level1" @grid="col-sm-5 col-md-4" />
   {{/if}}
-  {{f.input "zip" label="Zip / Postal Code" maxlength=10 grid="col-sm-5 col-md-4"}}
+  <@f.input @name="zip" @label="Zip / Postal Code" @maxlength=10 @autocomplete="postal-code" @grid="col-sm-5 col-md-4" />
 </div>

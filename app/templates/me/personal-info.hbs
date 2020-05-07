@@ -3,10 +3,10 @@
 <ChForm @formId="person" @originalModel={{this.person}} @autocomplete="on" @validator={{this.personInfoValidations}} @onSubmit={{action this.onSubmit}} @onCancel={{action this.onCancel}} as |f|>
   <div class="form-row mb-2">
     <div class="col-12">
-      Your account status is {{person.status}}.
-      {{#if (and person.isActive person.years)}}
-        You have rangered for {{pluralize person.years.length "year"}}:
-        {{#each person.years as |year|}}
+      Your account status is {{this.person.status}}.
+      {{#if (and this.person.isActive this.person.years)}}
+        You have rangered for {{pluralize this.person.years.length "year"}}:
+        {{#each this.person.years as |year|}}
           {{year}}
         {{/each}}
       {{/if}}
@@ -16,12 +16,12 @@
   <fieldset>
     <legend>General Information</legend>
     <div class="form-row">
-      {{f.input "first_name" label="First Name" maxlength=25 grid="col-sm-4" }}
-      {{f.input "mi" label="M.I." maxlength=10 grid="col-sm-1" }}
-      {{f.input "last_name" label="Last Name" maxlength=25 grid="col-sm-4"}}
+      <f.input @name="first_name" @label="First Name" @maxlength=25 @grid="col-sm-4"  />
+      <f.input @name="mi" @label="M.I." @maxlength=10 @grid="col-sm-1"  />
+      <f.input @name="last_name" @label="Last Name" @maxlength=25 @grid="col-sm-4" />
     </div>
     <div class="form-row">
-      {{f.input "email" label="Email" type="text" inputmode="email" maxlength=50 grid="col-sm-6" noSpaces=true}}
+      <f.input @name="email" @label="Email" @type="text" @inputmode="email" @maxlength=50 @grid="col-sm-6" @noSpaces={{true}} />
       <div class="form-group ">
         <strong>Note:</strong> Updating your email address here WILL NOT update the email address used for various Ranger mailing lists. Contact {{general-support-email}} to update your email address for the forums.
       </div>
@@ -31,21 +31,21 @@
       </div>
     </div>
     <div class="form-row">
-      {{f.input "home_phone" label="Primary Phone" type="text" inputmode="tel" grid="col-sm-4" maxlength=25}}
-      {{f.input "alt_phone" label="Alternative Phone" type="text" inputmode="tel" grid="col-sm-4" maxlength=25}}
+      <f.input @name="home_phone" @label="Primary Phone" @type="text" @inputmode="tel" @grid="col-sm-4" @maxlength=25 />
+      <f.input @name="alt_phone" @label="Alternative Phone" @type="text" @inputmode="tel" @grid="col-sm-4" @maxlength=25 />
     </div>
 
     <div class="form-row">
-      {{f.input "gender" label="Gender" hint="Examples: female, male, non-binary, gender fluid, etc." maxlength=32 }}
+      <f.input @name="gender" @label="Gender" @hint="Examples: female, male, non-binary, gender fluid, etc." @maxlength=32  />
     </div>
 
-    {{#unless person.isAuditor}}
+    {{#unless this.person.isAuditor}}
       <div class="form-group">
         Do you have a difficult to pronounce callsign? Enter the phoenitic spelling below. (e.g., 3pio -&gt; "Three-Pee-Oh", Jschool -> "JAY-school", etc)
       </div>
 
       <div class="form-row">
-        {{f.input "callsign_pronounce" label="Callsign Pronounciation" size=20 maxlength=20 }}
+        <f.input @name="callsign_pronounce" @label="Callsign Pronounciation" @size=20 @maxlength=20  />
       </div>
 
       <div class="form-group">
@@ -58,10 +58,10 @@
         BAD: "French - I taught in Paris and can only write in Italian. Took 1 year of high school spanish"<br>
       </div>
       <div class="form-row">
-        {{f.input "languages" label="Languages Spoken" type="text" size=80}}
+        <f.input @name="languages" @label="Languages Spoken" @type="text" @size=80 />
       </div>
       <div class="form-row col-auto">
-        {{f.input "camp_location" type="textarea" label="Camp Name & Location" cols=50 rows=4 maxlength=200 hint=(concat (if f.model.camp_location f.model.camp_location.length "0") " of 200 characters")}}
+        <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @cols=50 @rows=4 @maxlength=200 @hint={{concat (if f.model.camp_location f.model.camp_location.length "0") " of 200 characters"}} />
       </div>
     {{/unless}}
   </fieldset>
@@ -75,17 +75,17 @@
     <fieldset>
       <legend>Ranger Clothing</legend>
       <div class="form-row">
-        {{f.input "teeshirt_size_style" type="select" label="T-Shirt Size" options=shortSleeveOptions grid="col-md-5 col-sm-8"}}
-        {{f.input "longsleeveshirt_size_style" type="select" label="Long Sleeve Shirt Size" options=longSleeveOptions grid="col-md-5 col-sm-8"}}
+        <f.input @name="teeshirt_size_style" @type="select" @label="T-Shirt Size" @options={{this.shortSleeveOptions}} @grid="col-md-4 col-sm-8" />
+        <f.input @name="longsleeveshirt_size_style" @type="select" @label="Long Sleeve Shirt Size" @options={{this.longSleeveOptions}} @grid="col-md-4 col-sm-8" />
       </div>
     </fieldset>
   {{/unless}}
 
-  <f.submit @label={{if isSubmitting "Updating " "Update"}} @disabled={{isSubmitting}} />
-  <f.cancel @disabled={{isSubmitting}} />
-  {{#if isSubmitting}}
+  <f.submit @label="Update" @disabled={{this.isSubmitting}} />
+  <f.cancel @disabled={{this.isSubmitting}} />
+  {{#if this.isSubmitting}}
     <LoadingIndicator />
-  {{else if this.isSaved}}
+  {{else if (and (not f.model.isDirty) this.isSaved)}}
     <span class="text-success">{{fa-icon "check"}}</span>
   {{/if}}
 </ChForm>

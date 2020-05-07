@@ -1,11 +1,13 @@
 import Controller from '@ember/controller';
 import LoginValidations from 'clubhouse/validations/login';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 export default class LoginController extends Controller {
   loginValidations = LoginValidations;
-  isSubmitting = false;
-  loginError = null;
+
+  @tracked isSubmitting = false;
+  @tracked loginError = null;
 
 /*
 
@@ -53,8 +55,7 @@ export default class LoginController extends Controller {
     if (!isValid)
       return;
 
-    this.set('loginError', null);
-    this.toast.clear();
+    this.loginError = null;
     let credentials = model.getProperties('identification', 'password');
 
     // For analytics
@@ -63,18 +64,18 @@ export default class LoginController extends Controller {
       height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
     };
 
-    this.set('isSubmitting', true);
+    this.isSubmitting = true;
     return this.session.authenticate('authenticator:jwt', credentials)
       .catch((response) => {
         if (response.status == 401) {
           const data = response.json ? response.json : response.payload;
-          this.set('loginError', (data ? data.status : `Unknown error ${JSON.stringify(data)}`));
-          model.set('password', '');
+          this.loginError =  (data ? data.status : `Unknown error ${JSON.stringify(data)}`);
+          model.password = '';
         } else {
           this.house.handleErrorResponse(response)
         }
       }).finally(() => {
-        this.set('isSubmitting', false);
+        this.isSubmitting = false;
         this.house.scrollToTop();
       });
   }

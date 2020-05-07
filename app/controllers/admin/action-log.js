@@ -94,7 +94,6 @@ export default class AdminActionLogController extends Controller {
       }
     });
     params.page = null;
-    this.setProperties(params);
-    this.toast.clear();
+    this.setProperties(params); // Boom! Force route to reload
   }
 }

@@ -14,9 +14,9 @@ module('Integration | Component | person-address-edit', function(hooks) {
     this.set('person', person);
     this.set('submitAction', () => { });
     await render(hbs`
-      {{#ch-form "person" person onSubmit=(action submitAction) as |f|}}
-        {{person-address-edit f=f}}
-      {{/ch-form}}
+    <ChForm @form="person" @originalModel={{this.person}} @onSubmit={{this.submitAction}} as |f|>
+        <PersonAddressEdit @f={{f}} />
+      </ChForm>
     `);
 
     const fields = [

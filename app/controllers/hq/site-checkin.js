@@ -1,8 +1,13 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember/object';
 import * as Position from 'clubhouse/constants/positions';
+import { tracked } from '@glimmer/tracking';
 
 export default class HqSiteCheckinController extends Controller {
+  @tracked isSubmitting = false;
+  @tracked isContactSaved = false;
+  @tracked isOnSite = false;
+
   @computed('assets.@each.checked_in')
   get activeAssets() {
     return this.assets.filter((asset) => !asset.checked_in);
@@ -26,29 +31,28 @@ export default class HqSiteCheckinController extends Controller {
 
   @action
   saveContactForm(model) {
-    this.set('contactSaved', false);
+    this.isContactSaved = false;
     this._savePerson(model, 'Contact information successfully saved.',() => {
-      this.set('contactSaved', true);
+      this.isContactSaved = true;
     });
   }
 
   @action
   markAssetAuthorized() {
-    this.person.set('asset_authorized', true);
+    this.person.asset_authorized = true;
     this._savePerson(this.person, 'Person marked as signing the radio checkout form.');
   }
 
   @action
   markOnSite() {
-    this.person.set('on_site', true);
+    this.person.on_site = true;
     this._savePerson(this.person,  'Person has been successfully marked as ON SITE.', () => {
-      this.set('isOnSite', true);
+      this.isOnSite = true;
     });
   }
 
   _savePerson(model, message, callback) {
-    this.set('isSubmitting', true);
-    this.toast.clear();
+    this.isSubmitting = true;
     model.save().then(() => {
       this.toast.success(message);
       if (callback) {
@@ -58,6 +62,6 @@ export default class HqSiteCheckinController extends Controller {
         this.house.handleErrorResponse(response);
         model.rollbackAttributes();
     })
-    .finally(() => this.set('isSubmitting', false));
+    .finally(() => this.isSubmitting = false);
   }
 }

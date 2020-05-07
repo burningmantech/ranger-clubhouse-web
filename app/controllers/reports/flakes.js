@@ -2,6 +2,8 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 
 export default class ReportsFlakesController extends Controller {
+  queryParams = [ 'date' ];
+
   @action
   submitForm(model, isValid) {
     if (!isValid) {

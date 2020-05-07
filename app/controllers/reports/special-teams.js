@@ -1,8 +1,17 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 export default class ReportsSpecialTeamsController extends Controller {
-  @computed('positions')
+  @tracked isSubmitting = false;
+  @tracked haveResults = false;
+  @tracked startYear;
+  @tracked endYear;
+  @tracked positionsUsed;
+  @tracked totalsList;
+  @tracked grandTotal;
+  @tracked people;
+
   get positionOptions() {
     return this.positions.map((p) => [p.title, p.id]);
   }
@@ -17,7 +26,6 @@ export default class ReportsSpecialTeamsController extends Controller {
     return years;
   }
 
-  @computed('startYear', 'endYear')
   get yearList() {
     const start = this.startYear, end = this.endYear;
 
@@ -47,16 +55,15 @@ export default class ReportsSpecialTeamsController extends Controller {
       return;
     }
 
-    this.set('isSubmitting', true);
-    this.set('haveResults', false);
+    this.isSubmitting = true;
     this.ajax.request('timesheet/special-teams', { method: 'POST', data: { position_ids, include_inactive, start_year, end_year }})
       .then((result) => {
-        this.set('people', result.people);
-        this.set('haveResults', true);
-        this.set('startYear', start_year);
-        this.set('endYear', end_year);
+        this.people = result.people;
+        this.haveResults = true;
+        this.startYear = start_year;
+        this.endYear = end_year;
 
-        this.set('positionsUsed', this.positions.filter((p) => position_ids.includes(p.id)));
+        this.positionsUsed =  this.positions.filter((p) => position_ids.includes(p.id));
 
         const years = (end_year - start_year)+1;
         const totals = new Array(years);
@@ -71,10 +78,10 @@ export default class ReportsSpecialTeamsController extends Controller {
           });
         });
 
-        this.set('totalsList', totals);
-        this.set('grandTotal', this.people.reduce((total, p) => p.total_duration + total, 0));
+        this.totalsList = totals;
+        this.grandTotal = this.people.reduce((total, p) => p.total_duration + total, 0);
       }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isSubmitting', false));
+      .finally(() => this.isSubmitting = false);
   }
 
   @action

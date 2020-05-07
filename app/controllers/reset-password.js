@@ -1,17 +1,23 @@
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
+import EmberObject, {action} from '@ember/object';
 import ResetPasswordValidations from '../validations/reset-password';
+import { tracked } from '@glimmer/tracking';
 
 export default class ResetPasswordController extends Controller {
+  @tracked isSubmitting = false;
+
   resetPasswordValidations = ResetPasswordValidations;
+
+  authForm = EmberObject.create({});
 
   @action
   submit(model, isValid) {
     if (!isValid)
       return;
 
-    let identification = model.get('identification');
+    let identification = model.identification;
 
+    this.isSubmitting = true;
     return this.ajax.request('/auth/reset-password', {
       method: 'POST',
       data: {
@@ -23,18 +29,18 @@ export default class ResetPasswordController extends Controller {
       this.transitionToRoute('login');
     }).catch((response) => {
       switch (response.status) {
-      case 400:
-        this.toast.error('Sorry, the email address could not be found.');
-        break;
+        case 400:
+          this.modal.info(null, 'Sorry, no account was found with the email address entered.');
+          break;
 
-      case 403:
-        this.toast.error('Sorry, this account has been temporarily disabled. Please contact the Ranger Personnel Manager.');
-        break;
+        case 403:
+          this.modal.info(null, 'Sorry, this account has been temporarily disabled. Please contact the Ranger Personnel Manager.');
+          break;
 
-      default:
-        this.house.handleErrorResponse(response)
-        break;
+        default:
+          this.house.handleErrorResponse(response)
+          break;
       }
-    });
+    }).finally(() => this.isSubmitting = false);
   }
 }

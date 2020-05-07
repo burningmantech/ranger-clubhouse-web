@@ -2,31 +2,35 @@ import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import { action } from '@ember/object';
 import { debounce } from '@ember/runloop';
-import $ from 'jquery';
+import { tracked } from '@glimmer/tracking';
 
 const SEARCH_RATE_MS = 300;
 
 export default class MeContactController extends Controller {
   queryParams = [ 'callsign' ];
 
-  ranger = null;
-  isSubmitting = null;
   searchForm = EmberObject.create({ callsign: '' });
 
+  @tracked ranger = null;
+  @tracked isSubmitting = null;
+  @tracked isSearchingParam = '';
+  @tracked noMatch = '';
+  @tracked foundCallsigns = [];
+
   _performSearch(model, fromRoute=false) {
-    const callsign = model.get('callsign').trim();
+    const callsign = model.callsign.trim();
 
     if (callsign == '' || callsign.length < 2) {
       return;
     }
 
-    this.set('isSubmitting', true);
-    this.set('noMatch', null);
-    this.set('isSearchingParam', fromRoute);
+    this.isSubmitting =  true;
+    this.noMatch = null;
+    this.isSearchingParam = fromRoute;
     this.ajax.request('callsigns', { data: { query: callsign, type: 'contact', limit: 10 }}).then((results) => {
-      this.set('foundCallsigns', results.callsigns);
+      this.foundCallsigns =  results.callsigns;
       if (this.foundCallsigns.length == 0) {
-        this.set('noMatch', callsign);
+        this.noMatch = callsign;
       } else if (fromRoute) {
         // When the search was initiated from the route because the 'callsign' parameter
         // was on the URL, loop through the results and pop up the contact form automatically
@@ -35,16 +39,16 @@ export default class MeContactController extends Controller {
         const callsign = this.callsign.toLowerCase();
         this.foundCallsigns.forEach((person) => {
           if (person.allow_contact && person.callsign.toLowerCase() == callsign) {
-            this.set('ranger', this.foundCallsigns[0]);
-            this.set('foundCallsigns', []);
+            this.ranger =  this.foundCallsigns[0];
+            this.foundCallsigns = [];
           }
         });
       }
     }).catch((response) => {
       this.house.handleErrorResponse(response);
     }).finally(() => {
-      this.set('isSubmitting', false);
-      this.set('isSearchingParam', false);
+      this.isSubmitting =  false;
+      this.isSearchingParam = '';
     })
 
   }
@@ -56,14 +60,17 @@ export default class MeContactController extends Controller {
   }
 
   @action
-  contactRanger(ranger) {
-    this.set('ranger', ranger);
+  contactRanger(callsign) {
+    this.ranger = callsign;
   }
 
   @action
   doneAction() {
-    this.set('ranger', null);
+    this.ranger = null;
     this.searchForm.set('callsign', '');
-    $('[autofocus]').focus();
+    const field = document.querySelector('[autofocus]');
+    if (field) {
+      field.focus();
+    }
   }
 }
