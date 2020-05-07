@@ -1,35 +1,42 @@
 <h3>Update Personal Information</h3>
-{{#if canEditPersonalInfo}}
-  {{#ch-form "person" person validator=personInfoValidations onSubmit=(action "onSubmit") onCancel=(action "onCancel") as |f|}}
+{{#if this.canEditPersonalInfo}}
+  <ChForm @formId="person" @originalModel={{this.person}} @validator={{this.personInfoValidations}}
+          @onSubmit={{this.onSubmit}}
+          @onCancel={{this.onCancel}} as |f|>
     <fieldset>
       <legend>General Information</legend>
       <div class="form-row">
-        {{f.input "first_name" label="First Name" maxlength=25 grid="col-sm-4" }}
-        {{f.input "mi" label="M.I." maxlength=10 grid="col-sm-1" }}
-        {{f.input "last_name" label="Last Name" maxlength=25 grid="col-sm-4"}}
+        <f.input @name="first_name" @type="text" @label="First Name" @maxlength=25 @grid="col-sm-4"/>
+        <f.input @name="mi" @type="text" @label="M.I." @maxlength=10 @grid="col-sm-1"/>
+        <f.input @name="last_name" @type="text" @label="Last Name" @maxlength=25 @grid="col-sm-4"/>
       </div>
       <div class="form-row">
-        {{f.input "email" label="Email" type="text" inputmode="email" maxlength=50 grid="col-sm-6" noSpaces=true}}
+        <f.input @name="email" @label="Email" @type="text" @inputmode="email" @maxlength=50 @grid="col-sm-6"
+                 @noSpaces={{true}} />
       </div>
       <div class="form-row">
-        {{f.input "home_phone" label="Primary Phone" grid="col-sm-4" inputmode="tel" maxlength=25}}
-        {{f.input "alt_phone" label="Alternative Phone" grid="col-sm-4" inputmode="tel" maxlength=25}}
-      </div>
-
-      <div class="form-row">
-        {{f.input "gender" label="Gender" hint="female, male, non-binary, gender fluid, etc." maxlength=32}}
-      </div>
-
-      <div class="form-row">
-        {{f.input "callsign_pronounce" label="Callsign Pronounciation" size=32 maxlength=32 }}
+        <f.input @name="home_phone" @type="text" @inputmode="tel" @label="Primary Phone" @grid="col-sm-4"
+                 @inputmode="tel" @maxlength=25/>
+        <f.input @name="alt_phone" @type="text" @inputmode="tel" @label="Alternative Phone" @grid="col-sm-4"
+                 @inputmode="tel" @maxlength=25/>
       </div>
 
       <div class="form-row">
-        {{f.input "languages" label="Languages Spoken"
-            hint="List the English names of languages you are comfortable speaking separated by a comma. Ex: english, french, japanese"}}
+        <f.input @name="gender" @type="text" @label="Gender" @hint="female, male, non-binary, gender fluid, etc."
+                 @maxlength=32/>
+      </div>
+
+      <div class="form-row">
+        <f.input @name="callsign_pronounce" @type="text" @label="Callsign Pronounciation" @size=32 @maxlength=32/>
+      </div>
+
+      <div class="form-row">
+        <f.input @name="languages" @label="Languages Spoken"
+                 @hint="List the English names of languages you are comfortable speaking separated by a comma. Ex: english, french, japanese"/>
       </div>
       <div class="form-row col-auto">
-        {{f.input "camp_location" type="textarea" label="Camp Name & Location" cols=50 rows=4 maxlength=200 hint=(concat (if f.model.camp_location f.model.camp_location.length "0") " of 200 characters")}}
+        <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @cols=50 @rows=4 @maxlength=200
+                 @hint={{concat (if f.model.camp_location f.model.camp_location.length "0") " of 200 characters"}} />
       </div>
     </fieldset>
 
@@ -41,72 +48,77 @@
     <fieldset>
       <legend>Ranger Clothing</legend>
       <div class="form-row">
-        {{f.input "teeshirt_size_style" type="select" label="T-Shirt Size" options=shortSleeveOptions grid="col-md-5 col-sm-8"}}
-        {{f.input "longsleeveshirt_size_style" type="select" label="Long Sleeve Shirt Size" options=longSleeveOptions grid="col-md-5 col-sm-8"}}
+        <f.input @name="teeshirt_size_style" @type="select" @label="T-Shirt Size" @options={{this.shortSleeveOptions}}
+                 @grid="col-md-5 col-sm-8"/>
+        <f.input @name="longsleeveshirt_size_style" @type="select" @label="Long Sleeve Shirt Size"
+                 @options={{this.longSleeveOptions}} @grid="col-md-5 col-sm-8"/>
       </div>
     </fieldset>
 
-    <f.submit @label="Update" @disabled={{isSubmitting}} />
-    {{f.cancel}}
-  {{/ch-form}}
+    <f.submit @label="Update" @disabled={{this.person.isSaving}} />
+    <f.cancel  @disabled={{this.person.isSaving}} />
+    {{#if this.person.isSaving}}
+      <LoadingIndicator/>
+    {{/if}}
+  </ChForm>
 {{else}}
   <dl class="row">
     <dt class="col-md-3">Name</dt>
     <dd class="col-md-8">
-      {{person.first_name}} {{person.mi}} {{person.last_name}}
+      {{this.person.first_name}} {{this.person.mi}} {{this.person.last_name}}
     </dd>
 
     <dt class="col-md-3">Email</dt>
     <dd class="col-md-8">
-      {{mail-to person.email}}
+      {{mail-to this.person.email}}
     </dd>
 
     <dt class="col-md-3">Gender</dt>
     <dd class="col-md-8">
-      {{present-or-not person.gender}}
+      {{present-or-not this.person.gender}}
     </dd>
 
     <dt class="col-md-3">Languages</dt>
     <dd class="col-md-8">
-      {{present-or-not person.languages}}
+      {{present-or-not this.person.languages}}
     </dd>
 
     <dt class="col-md-3">Camp Location</dt>
     <dd class="col-md-8">
-      {{present-or-not person.camp_location}}
+      {{present-or-not this.person.camp_location}}
     </dd>
 
     <dt class="col-md-3">Short Sleeve</dt>
     <dd class="col-md-8">
-      {{person.teeshirt_size_style}}
+      {{this.person.teeshirt_size_style}}
     </dd>
 
     <dt class="col-md-3">Long Sleeve</dt>
     <dd class="col-md-8">
-      {{person.longsleeveshirt_size_style}}
+      {{this.person.longsleeveshirt_size_style}}
     </dd>
 
     <dt class="col-md-3">Home Address</dt>
     <dd class="col-md-8">
-      {{person.street1}} {{person.apt}}<br>
-      {{#if person.street2}}
-        {{person.street2}}<br>
+      {{this.person.street1}} {{this.person.apt}}<br>
+      {{#if this.person.street2}}
+        {{this.person.street2}}<br>
       {{/if}}
-      {{person.city}}, {{person.state}} {{person.zip}}<br>
-      {{person.country}}
+      {{this.person.city}}, {{this.person.state}} {{this.person.zip}}<br>
+      {{this.person.country}}
     </dd>
 
     <dt class="col-md-3">Home Phone</dt>
     <dd class="col-md-8">
-      {{#present-or-not person.home_phone}}
-        {{phone-link person.home_phone}}
+      {{#present-or-not this.person.home_phone}}
+        {{phone-link this.person.home_phone}}
       {{/present-or-not}}
     </dd>
 
     <dt class="col-md-3">Alt. Phone</dt>
     <dd class="col-md-8">
-      {{#present-or-not person.alt_phone}}
-        {{phone-link person.alt_phone}}
+      {{#present-or-not this.person.alt_phone}}
+        {{phone-link this.person.alt_phone}}
       {{/present-or-not}}
     </dd>
   </dl>

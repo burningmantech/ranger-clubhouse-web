@@ -1,26 +1,36 @@
-import Component from '@ember/component';
-import EmberObject, { action, computed } from '@ember/object';
-import { isEmpty } from '@ember/utils';
-import { Broadcasts } from 'clubhouse/constants/broadcast';
-import { validatePresence } from 'ember-changeset-validations/validators';
+import Component from '@glimmer/component';
+import {tracked} from '@glimmer/tracking';
+import EmberObject, {action, computed} from '@ember/object';
+import {isEmpty} from '@ember/utils';
+import {Broadcasts} from 'clubhouse/constants/broadcast';
+import {validatePresence} from 'ember-changeset-validations/validators';
+import { inject as service } from '@ember/service';
 
 export default class BroadcastSimpleComponent extends Component {
-  isReviewing = false;
-  isSubmitting = false;
+  @tracked isReviewing = false;
+  @tracked isSubmitting = false;
+  @tracked people = null;
+  @tracked didTransmit = false;
+  @tracked result;
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-    const message = Broadcasts[this.type].message;
+  @service ajax;
+  @service toast;
+  @service modal;
+  @service house;
 
-    this.set('broadcastForm', EmberObject.create({ message: !isEmpty(message) ? message : '' }));
+  constructor() {
+    super(...arguments);
+    const message = Broadcasts[this.args.type].message;
+
+    this.broadcastForm = EmberObject.create({message: !isEmpty(message) ? message : ''});
   }
 
-  @computed('broadcast.muster_positions')
+  @computed('args.broadcast.muster_positions')
   get positionOptions() {
-    const positions = this.broadcast.muster_positions;
+    const positions = this.args.broadcast.muster_positions;
     const frequent = positions.frequent.slice();
 
-    frequent.unshift({ id: '', title: '---' });
+    frequent.unshift({id: '', title: '---'});
 
     const groupOptions = [{
       groupName: 'Common Shifts',
@@ -42,14 +52,14 @@ export default class BroadcastSimpleComponent extends Component {
     return groupOptions;
   }
 
-  @computed('broadcast.has_muster_position')
+  @computed('args.broadcast.has_muster_position')
   get broadcastValidations() {
     const validations = {
-      message: [ validatePresence({ presence: true, message: 'Enter a message.' }) ],
+      message: [validatePresence({presence: true, message: 'Enter a message.'})],
     };
 
-    if (this.broadcast.has_muster_position) {
-      validations.position_id = validatePresence({ presence: true, message: 'Select a team' });
+    if (this.args.broadcast.has_muster_position) {
+      validations.position_id = validatePresence({presence: true, message: 'Select a team'});
     }
 
     return validations;
@@ -61,64 +71,59 @@ export default class BroadcastSimpleComponent extends Component {
       return;
     }
 
-    this.toast.clear();
-
     // commit to backing model
     model.execute();
 
-    this.set('isReviewing', true);
-    this.set('isSubmitting', true);
+    this.isReviewing = true;
+    this.isSubmitting = true;
 
-    const data = { type: this.type };
+    const data = {type: this.args.type};
 
-    if (this.broadcast.has_muster_position) {
+    if (this.args.broadcast.has_muster_position) {
       data.position_id = this.broadcastForm.position_id;
       data.position_signed_up = 'any';
     }
 
-    this.set('textMessage', this.broadcastForm.message);
-
-    this.ajax.request(`rbs/recipients`, { data })
+    this.ajax.request(`rbs/recipients`, {data})
       .then((result) => {
-        this.set('people', result.people);
+        this.people = result.people;
 
         if (this.people.length == 0) {
-          this.set('isReviewing', false);
-          this.toast.error('No qualifying people were found.');
+          this.isReviewing = false;
+          this.modal.info(null, 'No qualifying people were found.');
         }
       }).catch((response) => {
-        this.house.handleErrorResponse(response);
-        // Kill the review
-        this.set('isReviewing', false);
-      })
-      .finally(() => this.set('isSubmitting', false));
+      this.house.handleErrorResponse(response);
+      // Kill the review
+      this.isReviewing = false;
+    }).finally(() => this.isSubmitting = false);
   }
 
   @action
   editMessageAction() {
-    this.set('isReviewing', false);
+    this.isReviewing = false;
   }
 
   @action
   transmitAction() {
-    this.set('isSubmitting', true);
+    this.isSubmitting = true;
 
     const data = {
-      type: this.type,
+      type: this.args.type,
       sms_message: this.broadcastForm.message
     };
 
-    if (this.broadcast.has_muster_position) {
+    if (this.args.broadcast.has_muster_position) {
       data.position_id = this.broadcastForm.position_id;
       data.position_signed_up = 'any';
     }
 
     data.sms_message = this.broadcastForm.message;
-    this.ajax.request('rbs/transmit', { method: 'POST', data })
+    this.ajax.request('rbs/transmit', {method: 'POST', data})
       .then((result) => {
-        this.set('result', result);
-        this.set('didTransmit', true);
+        this.result = result;
+        this.didTransmit = true;
       }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isSubmitting', false));
+      .finally(() => this.isSubmitting = false);
   }
 }

@@ -1,7 +1,7 @@
 <LoginSidebar />
 <main class="col">
   {{#if (eq (config "DeploymentEnvironment") "Staging")}}
-    {{#ch-alert "danger"}}
+    <ChAlert @type="danger">
       <p>
         <b>WARNING: This is the Clubhouse Staging Server used for testing and verification. Here be dragons.</b>
       </p>
@@ -10,49 +10,49 @@
         here:
       </p>
       <a href="https://ranger-clubhouse.burningman.org">https://ranger-clubhouse.burningman.org</a>
-    {{/ch-alert}}
+    </ChAlert>
   {{/if}}
-  {{#if session.isAuthenticated}}
-    {{loading-dialog "your account"}}
+  {{#if this.session.isAuthenticated}}
+    <LoadingIndicator @text="your account" />
   {{else}}
     <div class="row">
       <h1 class="col-sm-12">Welcome To The Ranger Secret Clubhouse!</h1>
       <div class="col-12">
-        {{#if loginError}}
-          {{#ch-alert "danger"}}
+        {{#if this.loginError}}
+          <ChAlert @type="danger">
             {{fa-icon "exclamation-triangle"}}
-            {{#if (eq loginError "invalid-credentials")}}
+            {{#if (eq this.loginError "invalid-credentials")}}
               The email and/or password is incorrect.
-            {{else if (eq loginError "account-disabled")}}
+            {{else if (eq this.loginError "account-disabled")}}
               The account has been permanently disabled.
               <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
-            {{else if (eq loginError "login-disabled")}}
+            {{else if (eq this.loginError "login-disabled")}}
               Login has been disabled for this account.
               <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
-            {{else if (eq loginError "account-suspended")}}
+            {{else if (eq this.loginError "account-suspended")}}
               The account has been suspended.
               <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
             {{else}}
               An unknown server response was received. status=[{{loginError}}]
             {{/if}}
-          {{/ch-alert}}
+          </ChAlert>
         {{/if}}
       </div>
       <div class="col-sm-12 col-md-6 col-lg-4">
-        {{#ch-form "auth" auth validator=loginValidations autocomplete="on" onSubmit=(action "submit") as |f|}}
-          {{f.input "identification" label="Email" type="text" inputmode="email" autocomplete="username" autofocus=true noSpaces=true}}
-          {{f.input "password" label="Password" type="password" autocomplete="current-password"}}
-
+        <ChForm @formId="auth" @originalModel={{this.authForm}} @validator={{this.loginValidations}}
+                @autocomplete="on" @onSubmit={{this.submit}} as |f|>
+          <f.input @name="identification" @label="Email" @type="text" @inputmode="email" @autocomplete="username" @autofocus={{true}} @noSpaces={{true}} />
+          <f.input @name="password" @label="Password" @type="password" @autocomplete="current-password" />
           <div class="row">
             <div class="col-sm-12 col-md-6 mb-4">
-              <f.submit @label={{unless isSubmitting "Login" "Please Wait"}} @disabled={{isSubmitting}} @submitClass="btn-lg login-submit" />
-              {{#if isSubmitting}}<span class="loading-spinner"></span>{{/if}}
+              <f.submit @label="Login" @disabled={{this.isSubmitting}} @submitClass="btn-lg login-submit" />
+              {{#if this.isSubmitting}}<LoadingIndicator />{{/if}}
             </div>
             <div class="col-sm-12 col-md-6 mt-2">
               <LinkTo @route="reset-password" class="d-block">Forgot your password?</LinkTo>
             </div>
           </div>
-        {{/ch-form}}
+        </ChForm>
       </div>
       {{! Uncomment if SSO is to be used.
       <div class="col-12">

@@ -1,24 +1,16 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import PersonInfoValidations from 'clubhouse/validations/person-info';
-
-import {
-  ShortSleeve as ShortSleeveOptions,
-  LongSleeve as LongSleeveOptions
-} from 'clubhouse/constants/shirts';
-
+import { ShortSleeve, LongSleeve } from 'clubhouse/constants/shirts';
 
 export default class PersonPersonalInfoController extends Controller {
   personInfoValidations = PersonInfoValidations;
-  shortSleeveOptions = ShortSleeveOptions;
-  longSleeveOptions = LongSleeveOptions;
+  shortSleeveOptions = ShortSleeve;
+  longSleeveOptions = LongSleeve;
 
-  @computed('session.user')
   get canEditPersonalInfo() {
-    const user = this.session.user;
-
-    return user.hasRole(Role.ADMIN);
+    return this.session.user.hasRole(Role.ADMIN);
   }
 
   @action

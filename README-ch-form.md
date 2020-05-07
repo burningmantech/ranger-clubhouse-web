@@ -14,7 +14,7 @@ is located here:
 
 https://github.com/poteto/ember-changeset-validations
 
-## {{#ch-form formName model ... arguments ... as |f| }}
+## <ChForm @formId="formName" @originalModel={{this.model}} ... arguments ... as |f| >
 The component takes two argument as a minimum: a form name, and model (object) to edited.
 The form name is used to build up the form and field element ids.
 
@@ -41,10 +41,10 @@ A single argument tells which model property is to be edited.
 
 The following example:
 ```htmlbars
-{{#ch-form 'role' roleRecord onSubmit=(action 'saveRole') as |f| }}
-  {{f.input 'title' label="Role Name:"}}
-  {{f.submit}}
-{{/ch-form}}
+<ChForm @formId="role" @originalModel={{this.roleRecord}} @onSubmit={{this.saveRole}} as |f| >
+  <f.input @name="title" @type="text" @label="Role Name:" />
+  <f.submit @disabled={{this.roleRecord.isSaving}} />
+</ChForm>
 ```
 
 . . . will generate a form with a input text field using 'title' from the roleRecord model and provide a submit button.
@@ -113,14 +113,14 @@ export default class RoleModel extends DS.Model {
 The template file to edit the role is:
 
 ```htmlbars
-{{#ch-form 'roles' roles
-      validator=roleValidations
-      onSubmit=(action 'saveAction') as |f|}}
-  {{f.input 'title' label="Role Title:" type="text" size=20}}
-  {{f.input 'new_user_eligible' label="New User Eligible?" type="checkbox"}}
-  {{f.submit disabled=isSubmitting}}
-  {{f.cancel}}
-{{/ch-form}}
+<ChForm @formId="roles" @originalModel={{this.roles}}
+      @validator={{this.roleValidations}}
+      @onSubmit={{this.saveAction}} as |f|>
+  <f.input @name="title" @label="Role Title:" @type="text" @size=20 />
+  <f.input @name="new_user_eligible" @label="New User Eligible?" @type="checkbox" />
+  <f.submit @disabled={{isSubmitting}} />
+  <f.cancel @disabled={{this.isSubmitting}} />
+</ChForm>
 ```
 
 The controller file is:

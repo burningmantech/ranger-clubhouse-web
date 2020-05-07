@@ -14,10 +14,10 @@ module('Integration | Component | ch form', function(hooks) {
 
     this.set('formModel', formModel);
     await render(hbs`
-      {{#ch-form "someform" formModel as |f|}}
+      <ChForm @formId="someform" @originalModel={{this.formModel}} as |f|>
         Some form text
-        {{f.input "field1" type="text"}}
-      {{/ch-form}}
+        <f.input @name="field1" @type="text" />
+      </ChForm>
     `);
 
     assert.dom('form').hasText('Some form text');

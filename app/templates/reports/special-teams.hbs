@@ -6,87 +6,93 @@
   work any hours.
 </p>
 
-<div class="border border-dark p-2 mb-2">
-  {{#ch-form "teamsForm" teamsForm changeSet=false onSubmit=(action searchTeamsAction) as |f|}}
-    <div class="form-row">
-      <label class="col-form">Teams:</label>
-      {{f.input "positionIds" type="checkboxGroup" wrapClass="form-row" options=positionOptions cols=4}}
+<div class="border border-dark p-4 mb-2">
+  <ChForm @formId="teamsForm" @originalModel={{this.teamsForm}} @changeSet={{false}}
+          @onSubmit={{this.searchTeamsAction}} as |f|>
+    <div class="row form-group">
+      <label class="col-form-label-fixed">Teams:</label>
+      <f.input @name="positionIds" @type="checkboxGroup" wrapClass="form-row" @options={{this.positionOptions}}
+               @cols=4/>
+    </div>
+    <div class="row form-group">
+      <label class="col-form-label col-form-label-fixed">Year range:</label>
+      <f.input @name="startYear" @type="select" @options={{this.yearOptions}} />
+      <label class="col-form-label"> to </label>
+      <f.input @name="endYear" @type="select" @options={{this.yearOptions}} />
+      <div class="col-auto mt-2">
+        <f.input @name="showInactives" @label="Include people who hold the position(s) but may not have worked in the year range" @type="checkbox" @inline={{true}} />
+      </div>
     </div>
     <div class="form-row">
-      {{f.input "startYear" label="Start Year" type="select" options=yearOptions}}
-      {{f.input "endYear" label="End Year" type="select" options=yearOptions}}
+      <label class="col-form-label col-form-label-fixed">&nbsp;</label>
+      <div class="col-auto">
+        <f.submit @label="Submit" @disabled={{this.isSubmitting}} />
+        {{#if this.isSubmitting}}
+          <LoadingIndicator/>
+        {{/if}}
+        {{#if (and this.haveResults (not this.people))}}
+          <p class="text-danger">No people were found who matched the criteria.</p>
+        {{/if}}
+      </div>
     </div>
-    <div class="form-row">
-      <label class="col-form">Show Inactives</label>
-      {{f.input "showInactives" type="checkbox" }}
-    </div>
-    <div class="form-row text-muted">
-      Note: The Clubhouse has timesheets dating back only to 2010.
-    </div>
-    <div class="form-group mt-4">
-      <f.submit @label="Submit" />
-      {{#if (and haveResults (not people))}}
-        <b class="text-danger">No people were found who matched the criteria.</b>
-      {{/if}}
-    </div>
-  {{/ch-form}}
+  </ChForm>
 </div>
 
-{{#if isSubmitting}}
-  {{loading-dialog "the Special Team report"}}
-{{else if (and haveResults people)}}
+{{#if (and this.haveResults this.people)}}
   <p>
-    <button class="btn btn-secondary" {{action exportToCSV}}>Export to CSV</button>
+    <button type="button" class="btn btn-secondary" {{action this.exportToCSV}}>Export to CSV</button>
   </p>
   <table class="table table-sm table-striped table-width-auto">
-    <caption>Found {{pluralize people.length "person"}} for
-      {{#each positionsUsed as |position idx|~}}
+    <caption>Found {{pluralize this.people.length "person"}} for
+      {{#each this.positionsUsed as |position idx|~}}
         {{if idx ", "~}}{{position.title~}}
       {{/each}}
     </caption>
     <thead>
-      <tr>
-        <th>Callsign</th>
-        <th>Name</th>
-        <th>Status</th>
-        {{#if session.user.canViewEmail}}
-          <th>Email</th>
-        {{/if}}
-        {{#each yearList as |year|}}
-          <th class="text-right">{{year}} Hours</th>
-        {{/each}}
-        <th class="text-right">Total</th>
-      </tr>
+    <tr>
+      <th>Callsign</th>
+      <th>Name</th>
+      <th>Status</th>
+      {{#if this.session.user.canViewEmail}}
+        <th>Email</th>
+      {{/if}}
+      {{#each this.yearList as |year|}}
+        <th class="text-right">{{year}} Hours</th>
+      {{/each}}
+      <th class="text-right">Total</th>
+    </tr>
     </thead>
 
     <tbody>
-      {{#each people as |person|}}
-        <tr>
-          <td><PersonLink @person={{person}} /></td>
-          <td>{{person.first_name}} {{person.last_name}}</td>
-          <td>{{person.status}}</td>
-          {{#if session.user.canViewEmail}}
-            <td>
-              {{#if person.email}}
-                {{mail-to person.email}}
-              {{else}}
-                -
-              {{/if}}
-            </td>
-          {{/if}}
-          {{#each person.years as |duration|}}
-            <td class="text-right">{{hour-format duration}}</td>
-          {{/each}}
-          <td class="text-right">{{hour-format person.total_duration}}</td>
-        </tr>
-      {{/each}}
+    {{#each this.people as |person|}}
       <tr>
-        <td colspan="4" class="text-right">Totals</td>
-        {{#each totalsList as |total|}}
-          <td class="text-right">{{hour-format total}}</td>
+        <td>
+          <PersonLink @person={{person}} />
+        </td>
+        <td>{{person.first_name}} {{person.last_name}}</td>
+        <td>{{person.status}}</td>
+        {{#if this.session.user.canViewEmail}}
+          <td>
+            {{#if person.email}}
+              {{mail-to person.email}}
+            {{else}}
+              -
+            {{/if}}
+          </td>
+        {{/if}}
+        {{#each person.years as |duration|}}
+          <td class="text-right">{{hour-format duration}}</td>
         {{/each}}
-        <td class="text-right">{{hour-format grandTotal}}</td>
+        <td class="text-right">{{hour-format person.total_duration}}</td>
       </tr>
+    {{/each}}
+    <tr>
+      <td colspan="4" class="text-right">Totals</td>
+      {{#each this.totalsList as |total|}}
+        <td class="text-right">{{hour-format total}}</td>
+      {{/each}}
+      <td class="text-right">{{hour-format grandTotal}}</td>
+    </tr>
     </tbody>
   </table>
 {{/if}}

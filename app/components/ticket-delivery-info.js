@@ -5,6 +5,7 @@ import { action, computed } from '@ember/object';
 import TicketDeliveryValidations from 'clubhouse/validations/ticket-delivery';
 import { StateOptions } from 'clubhouse/constants/countries';
 import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
+import { tracked } from '@glimmer/tracking';
 
 export default class TicketDeliverInfoComponent extends Component {
   tagName = '';
@@ -18,6 +19,7 @@ export default class TicketDeliverInfoComponent extends Component {
 
   deliveryMethod = 'none';
   isSaved = false;
+  @tracked isSaving = false;
 
   countryOptions = ['United States', 'Canada'];
   ticketDeliveryValidations = TicketDeliveryValidations;
@@ -103,6 +105,7 @@ export default class TicketDeliverInfoComponent extends Component {
     this.toast.clear();
 
     if (method == 'will_call' || !this.itemsNeedAddress.length) {
+      this.isSaving = true;
       this.ajax.request(`ticketing/${this.person.id}/delivery`, {
           method: 'POST',
           data: { method }
@@ -111,7 +114,8 @@ export default class TicketDeliverInfoComponent extends Component {
           this.toast.success(`Your choice has been recorded.`);
           this.set('haveAddress', true);
         })
-        .catch((response) => this.house.handleErrorResponse(response));
+        .catch((response) => this.house.handleErrorResponse(response))
+        .finally(() => this.isSaving = false);
     } else {
       if (isEmpty(this.delivery.country)) {
         set(this.delivery, 'country', 'United States');
@@ -127,6 +131,8 @@ export default class TicketDeliverInfoComponent extends Component {
       return;
 
     this.set('isSaved', false);
+    this.isSaving = true;
+
     const delivery = this.delivery;
 
     this.toast.clear();
@@ -149,7 +155,8 @@ export default class TicketDeliverInfoComponent extends Component {
         this.set('deliveryMethod', 'mail');
         this.set('isSaved', true);
         this.set('haveAddress', true);
-      }).catch((response) => this.house.handleErrorResponse(response));
+      }).catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.isSaving = false);
   }
 
   * transition({ insertedSprites, removedSprites }) { // eslint-disable-line require-yield

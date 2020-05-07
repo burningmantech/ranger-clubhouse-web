@@ -1,32 +1,32 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import EmberObject from '@ember/object';
-import { action, computed } from '@ember/object';
-
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import { validatePresence } from 'ember-changeset-validations/validators';
+import { inject as service } from '@ember/service';
 
 export default class AssetCheckoutFormComponent extends Component {
-  attachments = null;
-  person = null;
-  assets = null;
-  eventInfo = null;
+  @service ajax;
+  @service toast;
+  @service house;
 
   assetValdiations = {
     barcode: [ validatePresence(true) ]
   };
 
-  assetForm = EmberObject.create({ });
+  @tracked assetForm = EmberObject.create({ });
 
-  barcodeNotFound = false;
-  barcodeCheckedOut = null;
+  @tracked barcodeNotFound = false;
+  @tracked barcodeCheckedOut = null;
+  @tracked isSubmitting = false;
 
   clearErrors() {
-    this.set('barcodeNotFound', false);
-    this.set('barcodeCheckedOut', null);
+    this.barcodeNotFound = false;
+    this.barcodeCheckedOut = null;
   }
 
-  @computed('attachments')
   get attachmentOptions() {
-    const options =  this.attachments.map((a) => [a.description, a.id]);
+    const options =  this.args.attachments.map((a) => [a.description, a.id]);
     options.unshift([ '-', '']);
     return options;
   }
@@ -37,45 +37,41 @@ export default class AssetCheckoutFormComponent extends Component {
       return;
     }
 
-    const barcode = model.get('barcode');
-    this.toast.clear();
+    const barcode = model.barcode;
     this.clearErrors();
 
-    this.set('isSubmitting', true);
+    this.isSubmitting = true;
     this.ajax.request('asset/checkout', {
       method: 'POST',
-      data: { person_id: this.person.id, barcode, attachment_id: model.get('attachment_id') }
+      data: { person_id: this.args.person.id, barcode, attachment_id: model.attachment_id }
     }).then((result) => {
       switch (result.status) {
         case 'success':
           this.toast.success('Asset was succesfully checked out.');
-          this.set('assetForm', EmberObject.create({ }));
-          this.set('isAssetsRefreshing', true);
-          this.assets.update()
-            .catch((response) => this.house.handleErrorResponse(response))
-            .finally(() => this.set('isAssetsRefreshing', true));
+          this.assetForm = EmberObject.create({ });
+          this.args.assets.update()
+            .catch((response) => this.house.handleErrorResponse(response));
           break;
 
         case 'not-found':
-          this.set('barcodeNotFound', barcode);
+          this.barcodeNotFound = barcode;
           break;
 
         case 'checked-out':
-          result.barcode = barcode;
-          this.set('barcodeCheckedOut', result);
+          this.barcodeCheckedOut =  result;
           break;
       }
     }).catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('isSubmitting', false));
+    .finally(() => this.isSubmitting = false);
   }
 
   @action
   showHistoryAction() {
-    this.set('showHistory', true);
+    this.showHistory = true;
   }
 
   @action
   closeHistory() {
-    this.set('showHistory', false);
+    this.showHistory = false;
   }
 }

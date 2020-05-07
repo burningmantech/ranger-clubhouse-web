@@ -44,7 +44,7 @@
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign</label>
       {{#if (has-role "admin" "mentor" "vc")}}
-        {{f.input "callsign" type="text" size=35 maxlength=100 wrapClass="col-auto"}}
+        <f.input @name="callsign" @type="text" @size=35 @maxlength=100 @wrapClass="col-auto" />
       {{else}}
         <div class="mt-2 col-auto">
           {{this.person.callsign}}
@@ -55,7 +55,7 @@
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">FKA</label>
       {{#if (has-role "admin" "mentor" "vc")}}
-        {{f.input "formerly_known_as" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
+        <f.input @name="formerly_known_as" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto" />
       {{else}}
         <div class="mt-2 col-auto">
           {{present-or-not this.person.formerly_known_as "no previous callsigns"}}
@@ -66,7 +66,7 @@
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-2">Callsign Approved</label>
       {{#if (has-role "admin" "mentor" "vc")}}
-        {{f.input "callsign_approved" type="select" wrapClass="col-auto" options=callsignApprovedOptions}}
+        <f.input @name="callsign_approved" @type="select" @wrapClass="col-auto" @options={{this.callsignApprovedOptions}} />
       {{else}}
         <div class="mt-2 col-sm-12 col-md-auto">
           {{if this.person.callsign_approved "Approved" "Not Approved"}}
@@ -77,7 +77,7 @@
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-2">Status</label>
       {{#if (has-role "admin" "mentor" "vc")}}
-        {{f.input "status" type="select" options=this.statusOptions wrapClass="col-auto"}}
+        <f.input @name="status" @type="select" @options={{this.statusOptions}} @wrapClass="col-auto" />
       {{else}}
         <div class="mt-2 col-auto">
           {{this.person.status}}
@@ -88,8 +88,8 @@
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-2">Personnel</label>
       {{#if (has-role "admin")}}
-        {{f.input "user_authorized" type="select" wrapClass="col-auto" options=this.userAuthorizedOptions}}
-        {{f.input "has_note_on_file" label="Note on file" type="checkbox" wrapClass="col-auto mt-2" value=1}}
+        <f.input @name="user_authorized" @type="select" @wrapClass="col-auto" @options={{this.userAuthorizedOptions}} />
+        <f.input @name="has_note_on_file" @label="Note on file" @type="checkbox" @wrapClass="col-auto mt-2" @value=1 />
       {{else}}
         <div class="mt-2 col-auto">
           {{#if this.person.user_authorized}}
@@ -113,9 +113,9 @@
   <div class="form-group row">
     <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Name</label>
     {{#if (has-role "admin" "mentor" "vc")}}
-      {{f.input "first_name" type="text" size=20 maxlength=25 wrapClass="col-sm-12 col-md-4 col-lg-3"}}
-      {{f.input "mi" type="text" size=2 maxlength=10 wrapClass="col-sm-12 col-md-2 col-lg-1"}}
-      {{f.input "last_name" type="text" size=20 maxlength=25 wrapClass="col-md-4 col-lg-3"}}
+      <f.input @name="first_name" @type="text" @size=20 @maxlength=25 @wrapClass="col-sm-12 col-md-4 col-lg-3" />
+      <f.input @name="mi" @type="text" @size=2 @maxlength=10 @wrapClass="col-sm-12 col-md-2 col-lg-1" />
+      <f.input @name="last_name" @type="text" @size=20 @maxlength=25 @wrapClass="col-md-4 col-lg-3" />
     {{else}}
       <div class="mt-2 col-md-9 col-sm-12">
         {{this.person.first_name}} {{this.person.mi}} {{this.person.last_name}}
@@ -126,7 +126,7 @@
   <div class="form-group row">
     <label class="col-form-label-fixed col-2">On Site</label>
     <div class="col-8">
-      {{f.input "on_site" type="radioGroup" options=this.onSiteOptions inline=true}}
+      <f.input @name="on_site" @type="radioGroup" @options={{this.onSiteOptions }} @inline={{true}} />
     </div>
   </div>
 
@@ -198,9 +198,9 @@
     <label class="col-form-label-fixed col-sm-12 col-md-2">Vehicles</label>
     <div class="col-md-9 col-sm-12">
       {{#if (has-role "admin")}}
-        {{f.input "vehicle_paperwork" label="Motorpool Policy" type="checkbox" inline=true}}
-        {{f.input "vehicle_insurance_paperwork" label="Motor Vehicle Record (MVR)" type="checkbox" inline=true}}
-        {{f.input "vehicle_blacklisted" label="Vehicle Blacklisted" type="checkbox" inline=true}}
+        <f.input @name="vehicle_paperwork" @label="Motorpool Policy" @type="checkbox" @inline={{true}} />
+        <f.input @name="vehicle_insurance_paperwork" @label="Motor Vehicle Record (MVR)" @type="checkbox" @inline={{true}} />
+        <f.input @name="vehicle_blacklisted" @label="Vehicle Blacklisted" @type="checkbox" @inline={{true}} />
       {{else}}
         {{#if this.person.vehicle_paperwork}}
           Motorpool Policy agreed to
@@ -218,7 +218,7 @@
   <div class="form-group row">
     <label class="col-form-label-fixed col-sm-12 col-md-2">Assets</label>
     <div class="col-sm-12 col-md-9">
-      {{f.input "asset_authorized" label="Assets Authorized" type="checkbox" inline=true }}
+      <f.input @name="asset_authorized" @label="Assets Authorized" @type="checkbox" @inline={{true}}  />
     </div>
   </div>
 
@@ -226,8 +226,8 @@
     <label class="col-form-label-fixed col-sm-12 col-md-2">Certifications</label>
     <div class="col-sm-12 col-md-9">
       {{#if (has-role "admin" "vc")}}
-        {{f.input "osha10" label="OSHA-10" type="checkbox" inline=true }}
-        {{f.input "osha30" label="OSHA-30" type="checkbox" inline=true }}
+        <f.input @name="osha10" @label="OSHA-10" @type="checkbox" @inline={{true}}  />
+        <f.input @name="osha30" @label="OSHA-30" @type="checkbox" @inline={{true}}  />
       {{else if (or this.person.osha10 this.person.osha30)}}
         {{#if this.person.osha10}}OSHA-10{{/if}}
         {{#if this.person.osha30}}OSHA-30{{/if}}
@@ -241,9 +241,9 @@
     <label class="col-form-label-fixed col-sm-12 col-md-2">Agreements</label>
     <div class="col-sm-12 col-md-9">
       {{#if (has-role "admin" "vc")}}
-        {{f.input "behavioral_agreement" label="Burning Man's Behavioral Standards Agreement" type="checkbox"
-                  inline=true }}<br>
-        {{f.input "sandman_affidavit" label="Sandman Affidavit" type="checkbox" inline=true }}
+        <f.input @name="behavioral_agreement" @label="Burning Man's Behavioral Standards Agreement" @type="checkbox"
+                  @inline={{true}} /><br>
+        <f.input @name="sandman_affidavit" @label="Sandman Affidavit" @type="checkbox" @inline={{true}}  />
       {{else}}
         Behavioral Standards Agreement {{if this.person.behavioral_agreement "signed" "NOT SIGNED"}}<br>
         Sandman Affidavit {{if this.person.sandman_affidavit "signed" "NOT SIGNED"}}
@@ -254,12 +254,12 @@
   {{#if (has-role "admin")}}
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">BPGUID</label>
-      {{f.input "bpguid" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
+      <f.input @name="bpguid" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto" />
     </div>
 
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">LMS ID</label>
-      {{f.input "lms_id" type="text" size=35 maxlength=200 wrapClass="col-auto"}}
+      <f.input @name="lms_id" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto" />
     </div>
   {{/if}}
 
@@ -356,7 +356,7 @@
                 The note will automatically timestamped when saved or updated.
               </p>
 
-              {{f.input "message" type="textarea" label="Enter the note to be shown:" cols=80 rows=6}}
+              <f.input @name="message" @type="textarea" @label="Enter the note to be shown:" @cols=80 @rows=6 />
             </modal.body>
             <modal.footer>
               <modal.button @label="Cancel" @action={{action this.closeNote}} @type="secondary"/>

@@ -1,20 +1,24 @@
-<div class="float-right">
+<YearSelect @title="RBS Message Log" @year={{this.year}} @onChange={{this.changeYearAction}} />
+<p>
   <LinkTo @route="admin.rbs">Back to RBS</LinkTo>
-</div>
-{{year-select "RBS Message Log" year=year onChange=(action changeYearAction)}}
+</p>
 
-{{#ch-form "search" searchForm changeSet=false onSubmit=(action submitAction) as |f|}}
-  <div class="form-row">
-    {{f.input "direction" label="Message direction" type="select" options=directionOptions wrapClass="col-auto"}}
-    <label class="col-1">Status</label>
-    {{f.input "status" cols=3 type="checkboxGroup" options=statusOptions inline=true}}
+<ChForm @formId="search" @originalModel={{this.searchForm}} @changeSet={{false}} @onSubmit={{this.submitAction}} as |f|>
+  <div class="row form-group">
+    <label class="col-form-label">Message direction</label>
+    <f.input @name="direction"@type="select" @options={{this.directionOptions}} @wrapClass="col-auto" />
+  </div>
+  <div class="row form-group">
+    <label class="col-auto">Status</label>
+    <f.input @name="status" @cols=4 @type="checkboxGroup" @options={{this.statusOptions}} @inline={{true}} />
   </div>
   <div class="form-row mt-2">
     <f.submit @label="Search" />
   </div>
-{{/ch-form}}
+</ChForm>
+
 <table class="table table-sm table-striped mt-2">
-  <caption>Showing {{currentPage}} of {{total_pages}} pages. {{pluralize total "row"}}</caption>
+  <caption>Showing {{this.currentPage}} of {{this.total_pages}} pages. {{pluralize this.total "row"}}</caption>
   <thead>
     <tr>
       <th>Timestamp</th>
@@ -26,7 +30,7 @@
     </tr>
   </thead>
   <tbody>
-    {{#each messages as |message|}}
+    {{#each this.messages as |message|}}
       <tr>
         <td>{{message.created_at}}</td>
         <td><PersonLink @person={{message.person}} /></td>
@@ -46,9 +50,15 @@
           </td>
         </tr>
       {{/if}}
+    {{else}}
+    <tr>
+      <td colspan="6">
+        <b class="text-danger">No message logs matched critiera.</b>
+      </td>
+    </tr>
     {{/each}}
   </tbody>
 </table>
 
-<button class="btn btn-secondary" {{action goPrevPage}} disabled={{eq currentPage 1}}>Prev Page</button>
-<button class="btn btn-secondary" {{action goNextPage}} disabled={{eq currentPage total_pages}}>Next Page</button>
+<button type="button" class="btn btn-secondary" {{action this.goPrevPage}} disabled={{eq this.currentPage 1}}>Prev Page</button>
+<button type="button" class="btn btn-secondary" {{action this.goNextPage}} disabled={{eq this.currentPage this.total_pages}}>Next Page</button>

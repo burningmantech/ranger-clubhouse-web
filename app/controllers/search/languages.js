@@ -1,16 +1,11 @@
 import Controller from '@ember/controller';
-import { debounce } from '@ember/runloop';
-import { action, computed } from '@ember/object';
-import EmberObject from '@ember/object';
+import {debounce} from '@ember/runloop';
+import EmberObject, {action, computed} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 
 const SEARCH_RATE_MS = 350;
 
-class LanguageForm extends EmberObject {
-  language = '';
-  offSite = false;
-}
-
-const groupBy = function(items, key) {
+const groupBy = function (items, key) {
   const groups = [];
 
   if (items == null) {
@@ -24,7 +19,7 @@ const groupBy = function(items, key) {
     if (group) {
       group.items.push(item);
     } else {
-      groups.push({[key]: value, items: [ item ]});
+      groups.push({[key]: value, items: [item]});
     }
   });
 
@@ -32,13 +27,17 @@ const groupBy = function(items, key) {
 }
 
 export default class SearchLanguagesController extends Controller {
-  notFound = '';
-  searchLanguage = '';
+  @tracked notFound = '';
+  @tracked searchLanguage = '';
 
-  onDuty = [ ];
-  offDuty = [ ];
-  hasRadio = [ ];
-  searchForm = LanguageForm.create({});
+  @tracked onDuty = [];
+  @tracked offDuty = [];
+  @tracked hasRadio = [];
+
+  searchForm = EmberObject.create({
+    language: '',
+    offSite: false
+  });
 
   @computed('onDuty')
   get onDutyGroup() {
@@ -64,26 +63,26 @@ export default class SearchLanguagesController extends Controller {
       return;
     }
 
-    const params = { language };
+    const params = {language};
 
     if (this.searchForm.offSite) {
       params.off_site = 1;
     }
 
-    this.set('searchLanguage', language);
-    this.set('isLoading', true);
-    this.ajax.request('language/speakers', { data: params })
+    this.searchLanguage = language;
+    this.isLoading = true;
+    this.ajax.request('language/speakers', {data: params})
       .then((results) => {
-        this.set('onDuty', results.on_duty);
-        this.set('offDuty', results.off_duty);
-        this.set('hasRadio', results.has_radio);
+        this.onDuty = results.on_duty;
+        this.offDuty = results.off_duty;
+        this.hasRadio = results.has_radio;
       }).catch((response) => {
-        if (response.status == 404) {
-          this.set('notFound', language);
-        } else {
-          this.house.handleErrorResponse(response);
-        }
-      }).finally(() => this.set('isLoading', false));
+      if (response.status == 404) {
+        this.notFound = language;
+      } else {
+        this.house.handleErrorResponse(response);
+      }
+    }).finally(() => this.isSubmitting = false);
   }
 
   @action
@@ -99,7 +98,7 @@ export default class SearchLanguagesController extends Controller {
 
   @action
   setLanguage(language) {
-    this.set('searchForm.language', language);
+    this.searchForm.set('language', language);
     this._performSearch();
   }
 }

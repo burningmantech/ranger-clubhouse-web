@@ -1,11 +1,13 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember/object';
-
+import { tracked } from '@glimmer/tracking';
 /*
  * Confirm a person's entire timesheet correct/incorrect.
  */
 
 export default class MeTimesheetCorrectionsConfirmController extends Controller {
+  @tracked isSubmitting = false;
+
   confirmForm = null; // setup in the route
 
   @computed('timesheets.@each.isUnverified')
@@ -25,7 +27,7 @@ export default class MeTimesheetCorrectionsConfirmController extends Controller 
 
   @action
   confirmAction(model) {
-    const confirmed = model.get('confirm') ? 1 : 0;
+    const confirmed = model.confirm ? 1 : 0;
     const person_id = this.session.userId;
 
     if (!confirmed) {
@@ -33,8 +35,7 @@ export default class MeTimesheetCorrectionsConfirmController extends Controller 
       return;
     }
 
-    this.toast.clear();
-    this.set('isSubmitting', true);
+    this.isSubmitting = true;
 
     this.ajax.request(`timesheet/confirm`, {
       method: 'POST',
@@ -47,6 +48,6 @@ export default class MeTimesheetCorrectionsConfirmController extends Controller 
       this.toast.success(`Your timesheet has been marked as ${ci.timesheet_confirmed ? 'CONFIRMED' : 'UNCONFIRMED'}.`);
       this.transitionToRoute('me.timesheet-corrections.index');
     }).catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('isSubmitting', false));
+    .finally(() => this.isSubmitting = false);
   }
 }

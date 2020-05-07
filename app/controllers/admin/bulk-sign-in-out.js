@@ -1,12 +1,15 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
-import { isEmpty } from '@ember/utils';
+import {action, computed} from '@ember/object';
+import {isEmpty} from '@ember/utils';
+import {tracked} from '@glimmer/tracking';
 
 export default class AdminBulkSignInOutController extends Controller {
   bulkForm = null;  // Setup in route
-  committed = false;
-  haveError = false;
-  entries = [];
+  @tracked committed = false;
+  @tracked haveError = false;
+  @tracked entries = [];
+  @tracked isSubmitting = false;
+  @tracked showHelp = false;
 
   @computed('entries.@each.errors')
   get errorCount() {
@@ -25,25 +28,25 @@ export default class AdminBulkSignInOutController extends Controller {
   _sendSigninOuts(commit) {
     const lines = this.bulkForm.lines;
 
-    this.set('committed', false);
-    const data = { lines };
+    this.committed = false;
+    const data = {lines};
 
     if (commit) {
       data.commit = 1;
     }
 
-    this.set('isSubmitting', true);
-    this.ajax.post('timesheet/bulk-sign-in-out', { data }).then((result) => {
+    this.isSubmitting = true;
+    this.ajax.post('timesheet/bulk-sign-in-out', {data}).then((result) => {
       this.house.scrollToTop();
-      this.set('haveError', (result.status == 'error'));
-      this.set('entries', result.entries);
+      this.haveError = result.status == 'error';
+      this.entries = result.entries;
       if (commit && !this.haveError) {
-        this.set('committed', true);
+        this.committed = true;
         this.bulkForm.set('lines', '');
       }
     })
-    .catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('isSubmitting', false) );
+      .catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.isSubmitting = false)
   }
 
   @action
@@ -58,6 +61,6 @@ export default class AdminBulkSignInOutController extends Controller {
 
   @action
   toggleHelp() {
-    this.set('showHelp', !this.showHelp);
+    this.showHelp = !this.showHelp;
   }
 }

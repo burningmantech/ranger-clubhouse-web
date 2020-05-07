@@ -1,5 +1,6 @@
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 import {
   validatePresence,
   validateLength,
@@ -7,13 +8,15 @@ import {
 } from 'ember-changeset-validations/validators';
 
 export default class PersonPasswordController extends Controller {
+  @tracked isSubmitting = false;
+
   passwordValidations = {
     password: [
-      validatePresence({ presence: true, message: 'Enter the new password.' }),
-      validateLength({ min: 5, message: 'The password should be 5 characters or more.' })
+      validatePresence({presence: true, message: 'Enter the new password.'}),
+      validateLength({min: 5, message: 'The password should be 5 characters or more.'})
     ],
     password_confirmation: [
-      validateConfirmation({ on: 'password', message: 'The password do not match.' })
+      validateConfirmation({on: 'password', message: 'The password do not match.'})
     ],
   };
 
@@ -30,9 +33,14 @@ export default class PersonPasswordController extends Controller {
       password_confirmation: model.password_confirmation
     };
 
-    return this.ajax.request(`person/${person.id}/password`, { method: 'PATCH', data: passwords }).then(() => {
-      this.toast.success('Password has been changed.');
-      this.transitionToRoute('person.index', person.id);
-    }).catch((response) => { this.house.handleErrorResponse(response) })
+    this.isSubmitting = true;
+    return this.ajax.request(`person/${person.id}/password`, {method: 'PATCH', data: passwords})
+      .then(() => {
+        this.toast.success('Password has been changed.');
+        this.transitionToRoute('person.index', person.id);
+      }).catch((response) => {
+        this.house.handleErrorResponse(response)
+      })
+      .finally(() => this.isSubmitting = false);
   }
 }

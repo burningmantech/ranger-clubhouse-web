@@ -1,34 +1,34 @@
 <h3>Final Timesheet Confirmation &amp; Agreement</h3>
 
 <div class="ml-3 mt-4">
-  {{#if (or unverifiedCount correctionPendingReviewCount missingPendingReviewCount)}}
+  {{#if (or this.unverifiedCount this.correctionPendingReviewCount this.missingPendingReviewCount)}}
     <div class="text-danger">
       {{fa-icon "exclamation-triangle"}} Hold up! The following item(s) are outstanding:
       <ul class="mt-2">
-        {{#if unverifiedCount}}
-          <li>You need to still review {{pluralize unverifiedCount "timesheet entry"}}. <LinkTo @route="me.timesheet-corrections.review">Click here</LinkTo> to do that.</li>
+        {{#if this.unverifiedCount}}
+          <li>You need to still review {{pluralize this.unverifiedCount "timesheet entry"}}. <LinkTo @route="me.timesheet-corrections.review">Click here</LinkTo> to do that.</li>
         {{/if}}
-        {{#if correctionPendingReviewCount}}
-          <li>{{pluralize correctionPendingReviewCount "timesheet entry"}} {{if (eq correctionPendingReviewCount 1) "is" "are"}} pending review.</li>
+        {{#if this.correctionPendingReviewCount}}
+          <li>{{pluralize this.correctionPendingReviewCount "timesheet entry"}} {{if (eq this.correctionPendingReviewCount 1) "is" "are"}} pending review.</li>
         {{/if}}
 
-        {{#if missingPendingReviewCount}}
-          <li>{{pluralize missingPendingReviewCount "missing timesheet entry request"}} {{if (eq missingPendingReviewCount 1) "is" "are"}} pending review.</li>
+        {{#if this.missingPendingReviewCount}}
+          <li>{{pluralize this.missingPendingReviewCount "missing timesheet entry request"}} {{if (eq this.missingPendingReviewCount 1) "is" "are"}} pending review.</li>
         {{/if}}
       </ul>
       Until these items are completed, you cannot confirm your entire timesheet as accurate.
     </div>
-  {{else if timesheetInfo.timesheet_confirmed}}
+  {{else if this.timesheetInfo.timesheet_confirmed}}
     <p class="text-success">
       {{fa-icon "check"}} Thank you for verifying
-      your {{timesheetInfo.correction_year}} timesheet is accurate and does not require any changes.
+      your {{this.timesheetInfo.correction_year}} timesheet is accurate and does not require any changes.
     </p>
     <p>
       If you do submit a correction and/or missing entry request after this point, you will need to reconfirm your
       timesheet is accurate.
     </p>
   {{else}}
-    {{#ch-form "confirm" confirmForm onSubmit=(action "confirmAction") as |f|}}
+    <ChForm @formId="confirm" @originalModel={{this.confirmForm}} @onSubmit={{this.confirmAction}} as |f|>
       <div class="form-row">
           By checking the box below, you are agreeing to:
       </div>
@@ -40,14 +40,17 @@
           <li>You do not plan to submit any additional corrections and/or missing entry requests for your {{timesheetInfo.correction_year}} timesheet.</li>
         </ul>
         <label class="col-form-label">
-          {{f.input "confirm" type="checkbox" wrapper=false controlClass=""}}
-          <b>I have reviewed and verified that my timesheet for {{timesheetInfo.correction_year}} is accurate and does not require any changes.</b>
+          <f.input @name="confirm" @type="checkbox" @wrapper={{false}} @controlClass="" />
+          <b>I have reviewed and verified that my timesheet for {{this.timesheetInfo.correction_year}} is accurate and does not require any changes.</b>
         </label>
       </div>
       <div class="form-row mt-2">
-        <f.submit @label={{if isSubmitting "Submitting" "Submit Confirmation"}} @disabled={{isSubmitting}} />
+        <f.submit @label="Submit Confirmation"@disabled={{this.isSubmitting}} />
+        {{#if this.isSubmitting}}
+          <LoadingIndicator />
+        {{/if}}
       </div>
-    {{/ch-form}}
+    </ChForm>
   {{/if}}
 
   <div class="row mt-4">

@@ -1,40 +1,42 @@
-<h3>Alert Preferences For <span class="d-inline-block">{{person.callsign}}</span></h3>
-{{#unless isMe}}
-  {{#ch-alert "danger"}}
-    You are editing {{person.callsign}}'s alert preferences. Do not update the
-    phone number(s) unless instructed to do by the tech team. A new
-    verification code will be sent to the person when the number is changed.
-  {{/ch-alert}}
+<h3>Alert Preferences For <span class="d-inline-block">{{this.person.callsign}}</span></h3>
+{{#unless this.isMe}}
+  <ChAlert @type="danger">
+    You are editing {{this.person.callsign}}'s alert preferences. Do not update the  phone number(s) unless
+    instructed to do by the tech team. A new verification code will be sent to the person when the number is updated.
+  </ChAlert>
 {{/unless}}
 
-<AlertsManage @person={{person}} @numbers={{numbers}} @alerts={{alerts}} />
+<AlertsManage @person={{this.person}} @numbers={{this.numbers}} @alerts={{this.alerts}} />
 
 {{#if (has-role "admin")}}
-<div class="border rounded p-2 mt-3">
-  <h3>SMS Administration Flags</h3>
-  {{#ch-alert "danger"}}
-    Do not touch the following unless instructed to do so by the tech team.
-  {{/ch-alert}}
-  {{#ch-form "person" person onSubmit=(action savePerson) as |f|}}
-    <div class="form-row mb-2">
-      <label class="col-form-label col-2">On Playa Flags</label>
-      <div class="col-auto mt-2">
-        {{f.input "sms_on_playa_verified" label="Verified" type="checkbox"}}
+  <div class="border rounded p-2 mt-3">
+    <h3>SMS Administration Flags</h3>
+    <ChAlert @type="danger">
+      Do not touch the following unless instructed to do so by the tech team.
+    </ChAlert>
+    <ChForm @formId="person" @originalModel={{this.person}} @onSubmit={{this.savePerson}} as |f|>
+      <div class="form-row mb-2">
+        <label class="col-form-label col-2">On Playa Flags</label>
+        <div class="col-auto mt-2">
+          <f.input @name="sms_on_playa_verified" @label="Verified" @type="checkbox" />
+        </div>
+        <div class="col-auto mt-2">
+          <f.input @name="sms_on_playa_stopped" @label="Stopped" @type="checkbox" />
+        </div>
       </div>
-      <div class="col-auto mt-2">
-        {{f.input "sms_on_playa_stopped" label="Stopped" type="checkbox"}}
+      <div class="form-row">
+        <label class="col-form-label col-2">Off Playa Flags</label>
+        <div class="col-auto mt-2">
+          <f.input @name="sms_off_playa_verified" @label="Verified" @type="checkbox" />
+        </div>
+        <div class="col-auto mt-2">
+          <f.input @name="sms_off_playa_stopped" @label="Stopped" @type="checkbox" />
+        </div>
       </div>
-    </div>
-    <div class="form-row">
-      <label class="col-form-label col-2">Off Playa Flags</label>
-      <div class="col-auto mt-2">
-        {{f.input "sms_off_playa_verified" label="Verified" type="checkbox"}}
-      </div>
-      <div class="col-auto mt-2">
-        {{f.input "sms_off_playa_stopped" label="Stopped" type="checkbox"}}
-      </div>
-    </div>
-    {{f.submit}}
-  {{/ch-form}}
-</div>
+      <f.submit @label="Update Flags" @disabled={{this.person.isSaving}} />
+      {{#if this.person.isSaving}}
+        <LoadingIndicator />
+      {{/if}}
+    </ChForm>
+  </div>
 {{/if}}
