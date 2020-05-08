@@ -107,7 +107,9 @@
               {{#each photo.rejection_history as |reject|}}
                 <div class="col-auto">
                   <div class="mugshot-icon">
-                    <img src={{reject.image_url}} {{on "click" (fn this.showPhotoInfoAction reject)}} />
+                    <img src={{reject.image_url}} alt="rejected photo"
+                      {{on "click" (fn this.showPhotoInfoAction reject)}}
+                    />
                     {{moment-format reject.uploaded_at "YYYY-MM-DD"}}
                   </div>
                 </div>
@@ -121,15 +123,16 @@
             <p>
               Rejection reasons:
               {{#each photo.reject_reasons as |reason idx|~}}
-                {{~if idx ", " ~}}{{present-or-not (get this.rejectionLabels reason)
-                                                   (concat "Unknown reason " reason)~}}
-              {{else}}
+                {{~if idx ", " ~}}
+                <PresentOrNot @value={{get this.rejectionLabels reason}}
+                              @empty={{concat "Unknown reason " reason}} />
+                {{~else~}}
                 <i>none given</i>
-              {{/each}}
+              {{~/each~}}
             </p>
             <p>
               Reject message:<br>
-              {{present-or-not photo.reject_message "none given"}}
+              <PresentOrNot @value={{photo.reject_message}} @empty="none given"/>
             </p>
           {{/if}}
         </div>
@@ -202,5 +205,6 @@
 
 
 {{#if this.showPhoto}}
-  <PhotoInfo @photo={{this.showPhoto}} @closeAction={{this.closePhotoInfoAction}} @rejectionLabels={{this.rejectionLabels}} />
+  <PhotoInfo @photo={{this.showPhoto}} @closeAction={{this.closePhotoInfoAction}}
+             @rejectionLabels={{this.rejectionLabels}} />
 {{/if}}

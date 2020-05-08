@@ -1,17 +1,15 @@
-import Component from '@ember/component';
-import { action } from '@ember/object';
-import { isEmpty } from '@ember/utils';
+import Component from '@glimmer/component';
+import {action} from '@ember/object';
+import {isEmpty} from '@ember/utils';
+import { inject as service } from '@ember/service';
 
 export default class SlotInfoLink extends Component {
-  tagName = '';
-  static  positionalParams =  [ 'description', 'info' ];
-
-  description = null;
-  info = null;
+  @service modal;
 
   @action
-  show() {
-    let text = this.info;
+  show(event) {
+    event.preventDefault();
+    let text = this.args.info;
 
     if (isEmpty(text)) {
       return;

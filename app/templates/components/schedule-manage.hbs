@@ -197,7 +197,7 @@
                 </div>
                 <div class="schedule-description">
                   <span class="schedule-sm-label">{{group.title}} - </span>
-                  {{slot-info-link slot.slot_description slot.slot_url}}
+                  <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
                 </div>
                 <div class="schedule-signups">{{slot-full-indicator slot.slot_signed_up slot.slot_max}}</div>
                 <div class="schedule-actions">

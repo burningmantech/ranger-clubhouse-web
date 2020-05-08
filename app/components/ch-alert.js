@@ -1,9 +1,7 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 
 export default class ChAlertComponent extends Component {
-  tagName = '';
-  static positionalParams = [ 'type' ];
-
-  type='danger';
-  bold = false;
+  get type() {
+    return this.args.type || 'danger';
+  }
 }

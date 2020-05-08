@@ -9,9 +9,9 @@ module('Integration | Component | ch-alert', function(hooks) {
   test('it renders type warning', async function(assert) {
     // Template block usage:
     await render(hbs`
-      {{#ch-alert "warning"}}
+      <ChAlert @type="warning">
         template block text
-      {{/ch-alert}}
+      </ChAlert>
     `);
 
     assert.dom(this.element).includesText('template block text');
@@ -21,9 +21,9 @@ module('Integration | Component | ch-alert', function(hooks) {
   test('it renders type danger', async function(assert) {
     // Template block usage:
     await render(hbs`
-      {{#ch-alert "danger"}}
+      <ChAlert @type="danger">
         template block text
-      {{/ch-alert}}
+      </ChAlert>
     `);
 
     assert.dom('div.alert.alert-danger').exists();

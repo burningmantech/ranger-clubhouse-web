@@ -1,11 +1,11 @@
 {{year-select (concat "Training Capacity for " training.title) year=year onChange=(action "changeYearAction")}}
 
 {{#if notCurrentYear}}
-{{#ch-alert "warning"}}
+<ChAlert @type="warning">
 This is a historical report and PNV counts above do not accurately reflect
 the number of PNVs trained.  This is because many people who were PNVs then are Rangers now.
 The total number of Rangers plus PNVs trained is accurate.
-{{/ch-alert}}
+</ChAlert>
 {{/if}}
 
 <table class="table table-border table-sm">

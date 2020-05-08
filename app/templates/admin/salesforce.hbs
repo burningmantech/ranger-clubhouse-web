@@ -109,7 +109,7 @@
 </p>
 
 {{#if this.isSubmitting}}
-  {{loading-dialog "Salesforce Accounts"}}
+  <LoadingDialog @item="Salesforce Accounts" />
 {{else if this.accounts}}
   <p>
     Showing {{pluralize this.accounts.length "record"}}

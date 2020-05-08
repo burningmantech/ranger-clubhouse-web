@@ -1,9 +1,7 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 
 export default class LoadingDialogComponent extends Component {
-  tagName = '';
-  static positionalParams = [ 'item' ];
-
-  item = 'the information';
-  customMessage = null;
+  get item() {
+    return this.args.item || 'the information';
+  }
 }

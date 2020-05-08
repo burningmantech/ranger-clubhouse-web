@@ -1,10 +1,9 @@
-<ModalDialog @title={{dialog.title}} as |modal|>
+<ModalDialog @title={{@dialog.title}} as |modal|>
   <modal.body>
-    {{{dialog.message}}}
+    {{{@dialog.message}}}
   </modal.body>
-
   <modal.footer>
-    <modal.button @label="Cancel" @action={{onClose}} @type="secondary"/>
-    <modal.button @label="Confirm" @action={{onConfirm}} @type="primary"/>
+    <modal.button @label="Cancel" @action={{@onClose}} @type="secondary"/>
+    <modal.button @label="Confirm" @action={{@onConfirm}} @type="primary"/>
   </modal.footer>
 </ModalDialog>

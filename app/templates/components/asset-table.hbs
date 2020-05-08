@@ -1,4 +1,4 @@
-{{pluralize assets.length "asset"}} found
+{{pluralize @assets.length "asset"}} found
 <table class="table table-striped table-sm">
   <thead>
     <tr>
@@ -13,38 +13,38 @@
     </tr>
   </thead>
   <tbody>
-    {{#each assets as |ap|}}
+    {{#each @assets as |ap|}}
       <tr>
         <td>{{ap.asset.description}}</td>
         <td>{{ap.asset.barcode}}</td>
-        <td>{{present-or-not ap.attachment.description "-"}}</td>
+        <td><PresentOrNot @value={{ap.attachment.description}} @empty="-" /></td>
         <td>{{if ap.asset.perm_assign "Perm" "Temp"}}</td>
-        <td>{{present-or-not ap.asset.temp_id "-"}}</td>
+        <td><PresentOrNot @value={{ap.asset.temp_id}} @empty="-" /></td>
         <td>{{shift-format ap.checked_out}}</td>
         <td>
           {{#if ap.checked_in}}
             {{shift-format ap.checked_in}}
           {{else}}
-            <button class="btn btn-primary btn-sm" {{action checkInAsset ap.asset ap}} disabled={{ap.asset.isSubmitting}}>Check In</button>
+            <button type="button" class="btn btn-primary btn-sm" {{action this.checkInAsset ap.asset ap}} disabled={{ap.asset.isSubmitting}}>Check In</button>
             {{#if ap.asset.isSubmitting}}
               {{fa-icon "spinner" spin=true}}
             {{/if}}
           {{/if}}
         </td>
         <td>
-          <button class="btn btn-secondary btn-sm" {{action showHistoryAction ap.asset}}>History</button>
+          <button type="button" class="btn btn-secondary btn-sm" {{action this.showHistoryAction ap.asset}}>History</button>
         </td>
       </tr>
     {{else}}
       <tr>
         <td colspan="8">
-          <strong class="text-danger">No assets were found for {{year}}</strong>
+          <strong class="text-danger">No assets were found for {{@year}}</strong>
         </td>
       </tr>
     {{/each}}
   </tbody>
 </table>
 
-{{#if assetForHistory}}
-  <ModalAssetHistory @assetId={{assetForHistory.id}} @onClose={{action closeHistory}} />
+{{#if this.assetForHistory}}
+  <ModalAssetHistory @assetId={{this.assetForHistory.id}} @onClose={{this.closeHistory}} />
 {{/if}}

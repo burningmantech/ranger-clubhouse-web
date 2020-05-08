@@ -10,7 +10,6 @@ module('Integration | Component | timesheet-summary', function(hooks) {
     this.set('summary', {});
     await render(hbs`<TimesheetSummary @summary={{summary}} />`);
 
-    assert.dom('div').exists();
-
+    assert.dom('table').exists();
   });
 });

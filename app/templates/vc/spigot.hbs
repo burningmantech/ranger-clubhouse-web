@@ -32,7 +32,7 @@
     {{#each @model.days as |day|}}
       <tr>
         <td>
-          {{present-or-not day.day "-"}}
+          <PresentOrNot @value={{day.day}} @empty="-" />
         </td>
         <td class="text-right">
           {{#if day.imported}}

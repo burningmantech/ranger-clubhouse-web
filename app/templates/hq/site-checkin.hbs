@@ -118,7 +118,7 @@
             <td>{{ap.asset.barcode}}</td>
             <td>{{ap.asset.description}}</td>
             <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
-            <td>{{present-or-not ap.attachment.description "-"}}</td>
+            <td><PresentOrNot @value={{ap.attachment.description}} @empty="-" /></td>
             <td>{{shift-format ap.checked_out}}</td>
           </tr>
         {{/each}}

@@ -10,25 +10,25 @@
       </tr>
       </thead>
       <tbody>
-      {{#if isLoading}}
+      {{#if this.isLoading}}
         <tr>
           <td colspan="5">
-            Loading history {{fa-icon "spinner" spin=true}}
+            <LoadingIndicator @text="Loading asset history"/>
           </td>
         </tr>
       {{else}}
-        {{#each assetHistory as |row|}}
+        {{#each this.assetHistory as |row|}}
           <tr>
             <td>
               <LinkTo @route="person.assets" @model={{row.person.id}}>{{row.person.callsign}}</LinkTo>
             </td>
-            <td>{{present-or-not row.attachment.description "-"}}</td>
+            <td><PresentOrNot @value={{row.attachment.description}} @empty="-" /></td>
             <td>{{shift-format row.checked_out}}</td>
             <td>
               {{#if row.checked_in}}
                 {{shift-format row.checked_in}}
               {{else}}
-                <button class="btn btn-primary btn-sm" {{action checkin row}}>Check In</button>
+                <button type="button" class="btn btn-primary btn-sm" {{action this.checkin row}}>Check In</button>
               {{/if}}
             </td>
           </tr>

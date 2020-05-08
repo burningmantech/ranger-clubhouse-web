@@ -9,7 +9,7 @@ module('Integration | Component | present or not', function(hooks) {
   skip('it renders a present value', async function(assert) {
     this.set('value', 'something');
 
-    await render(hbs`{{present-or-not value}}`);
+    await render(hbs`<PresentOrNot @value={{this.value}} />`);
 
     assert.dom('*').hasText('something');
   });
@@ -17,7 +17,7 @@ module('Integration | Component | present or not', function(hooks) {
   skip('it renders a not present/empty value', async function(assert) {
     this.set('value', '');
 
-    await render(hbs`{{present-or-not value}}`);
+    await render(hbs`<PresentOrNot @value={{this.value}} />`);
 
     assert.equal(find('*').innerHTML.trim(), '<i>not given</i>');
   });

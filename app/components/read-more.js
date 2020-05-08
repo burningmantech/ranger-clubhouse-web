@@ -1,29 +1,30 @@
-import Component from '@ember/component';
-import { action, computed } from '@ember/object';
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 /*
  * Component helper to truncate text with a 'read more' link.
  */
 
 export default class ReadMoreComponent extends Component {
-  tagName = '';
-  text = null;
-  limit = 20;
+  @tracked hideFullText = true;
 
-  hideFullText = true;
+  constructor() {
+    super(...arguments);
+    this.limit = this.args.limit ? +this.args.limit : 20;
+  }
 
-  @computed('limit', 'text')
   get truncatedText() {
-    return this.text.substr(0, this.limit);
+    return this.args.text.substr(0, this.limit);
  }
 
-  @computed('limit', 'text.length')
   get shouldTruncate() {
-    return this.text && (this.text.length > this.limit);
+    const text = this.args.text;
+    return text && (text.length > this.limit);
   }
 
   @action
   toggleText() {
-    this.toggleProperty('hideFullText');
+    this.hideFullText = !this.hideFullText;
   }
 }

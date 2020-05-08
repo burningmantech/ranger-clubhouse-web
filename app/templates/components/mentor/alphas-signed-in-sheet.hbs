@@ -1,8 +1,8 @@
 <div class="signup-page">
-  {{#each alphaPages as |alphaPage idx|}}
+  {{#each this.alphaPages as |alphaPage idx|}}
     <h1 class="{{if idx "d-print-page-break"}} mb-4">
-      {{year-format slot.begins}} {{slot.description}} &mdash; {{shift-format slot.begins}} &mdash; Alpha Information
-      <div class="float-right small">Page {{add idx 1}} of {{alphaPages.length}}</div>
+      {{year-format @slot.begins}} {{@slot.description}} &mdash; {{shift-format @slot.begins}} &mdash; Alpha Information
+      <div class="float-right small">Page {{add idx 1}} of {{this.alphaPages.length}}</div>
     </h1>
 
     <table class="signup-table">
@@ -61,7 +61,7 @@
             </td>
             <td class="w-40" colspan="2">
               <div class="signup-label">Prior Mentors</div>
-              {{#each alpha.mentor_history as |history historyIdx| }}
+              {{#each person.mentor_history as |history historyIdx| }}
                 {{if historyIdx ","}}
                 {{history.year}} ({{mentor-short-status history.status}})
                 {{#each history.mentors as |mentor idx|}}
@@ -73,7 +73,7 @@
             </td>
             <td class="w-40" colspan="2">
               <div class="signup-label">Mentor Notes</div>
-              {{present-or-not person.mentors_notes}}
+              <PresentOrNot @value={{person.mentors_notes}} />
             </td>
           </tr>
           <tr class="signup-separator">

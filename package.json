@@ -37,7 +37,7 @@
     "ember-cli-dependency-checker": "^3.2.0",
     "ember-cli-document-title-northm": "^1.0.3",
     "ember-cli-eslint": "^5.1.0",
-    "ember-cli-htmlbars": "^5.1.0",
+    "ember-cli-htmlbars": "^5.1.2",
     "ember-cli-inject-live-reload": "^2.0.2",
     "ember-cli-mirage": "^1.1.6",
     "ember-cli-moment-shim": "^3.7.1",
@@ -79,7 +79,7 @@
     "edition": "octane"
   },
   "dependencies": {
-    "blueimp-load-image": "^5.6.0",
+    "blueimp-load-image": "^5.9.0",
     "cropperjs": "^1.5.6",
     "double-metaphone": "^1.0.5",
     "ember-cli-update": "^0.54.6",

@@ -58,7 +58,7 @@
         <f.input @name="formerly_known_as" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto" />
       {{else}}
         <div class="mt-2 col-auto">
-          {{present-or-not this.person.formerly_known_as "no previous callsigns"}}
+          <PresentOrNot @value={{this.person.formerly_known_as}} @empty="no previous callsigns" />
         </div>
       {{/if}}
     </div>

@@ -59,7 +59,7 @@
             {{#if row.slot_has_ended}}
               <td class="w-5 text-center">{{yesno row.training_passed}}</td>
               <td class="w-5 text-center">
-                {{present-or-not row.training_rank "no rank"}}
+                <PresentOrNot @value={{row.training_rank}} @empty="no rank" />
               </td>
               <td class="w-50">
                 {{#if row.training_notes}}

@@ -46,7 +46,7 @@
         <td>
           <LinkTo @route="person.assets" @model={{row.person.id}}>{{row.person.callsign}}</LinkTo>
         </td>
-        <td>{{present-or-not row.attachment.description "-"}}</td>
+        <td><PresentOrNot @value={{row.attachment.description}} @empty="-" /></td>
         <td>{{shift-format row.checked_out}}</td>
         <td>
           {{#if row.checked_in}}
@@ -79,9 +79,9 @@
     <tbody>
     <tr>
       <td>{{this.asset.create_date}}</td>
-      <td>{{present-or-not this.asset.category "-"}}</td>
+      <td><PresentOrNot @value={{this.asset.category}} @empty="-" /></td>
       <td>{{this.asset.subtype}} {{this.asset.model}} {{this.asset.color}} {{this.asset.style}}</td>
-      <td>{{present-or-not this.asset.notes "-"}}</td>
+      <td><PresentOrNot @value={{this.asset.notes}} @empty="-" /></td>
     </tr>
     </tbody>
   </table>

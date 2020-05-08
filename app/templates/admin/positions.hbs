@@ -36,7 +36,7 @@
     <tr>
       <td class="text-right">{{position.id}}</td>
       <td>{{position.title}}</td>
-      <td>{{present-or-not position.short_title "-"}}</td>
+      <td><PresentOrNot @value={{position.short_title}} @empty="-" /></td>
       <td>{{position.type}}</td>
       <td class="text-center">{{position.min}} / {{position.max}}</td>
       <td class="text-center">{{yesno position.new_user_eligible}}</td>

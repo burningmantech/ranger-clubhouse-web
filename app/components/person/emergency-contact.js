@@ -7,7 +7,6 @@ import EmergencyContactValidations from 'clubhouse/validations/emergency-contact
 export default class PersonEmergencyContactComponent extends Component {
   @service house;
   @tracked isSaved = false;
-  @tracked isSubmitting = false;
 
   emergencyContactValidations = EmergencyContactValidations;
 
@@ -16,10 +15,8 @@ export default class PersonEmergencyContactComponent extends Component {
     if (!isValid) {
       return;
     }
-    this.isSubmitting = true;
     this.house.saveModel(model, 'Emergency contact info successfully updated.',
       () => this.isSaved = true
     )
-      .finally(() => this.isSubmitting = false);
   }
 }

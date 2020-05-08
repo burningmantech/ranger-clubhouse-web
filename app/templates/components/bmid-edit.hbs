@@ -14,7 +14,7 @@
     <f.input @name="status" @label="BMID Status" @type="select" @options={{this.bmidStatusOptions}} />
     <f.input @name="meals" @label="Meals" @type="select" @options={{this.mealOptions}} @grid="col-auto" />
     <f.input @name="showers" @label="Showers" @type="select" @options={{this.showerOptions}} @grid="col-auto" />
-    <f.input @name="admission_date" @label="WAP Date" @type="select" disabled={{@entry.wapDisabled}} @options={{this.admissionDateOptions}} />
+    <f.input @name="admission_date" @label="WAP Date" @type="select" @disabled={{@entry.wapDisabled}} @options={{@admissionDateOptions}} />
   </div>
 
   <div class="form-row">

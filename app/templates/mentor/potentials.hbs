@@ -55,7 +55,7 @@
         <PersonLink @person={{person}} />
         <br>
         {{person.first_name}} {{person.last_name}}<br>
-        {{present-or-not person.gender "no gender stated"}}
+        <PresentOrNot @value={{person.gender}} @empty="no gender stated" />
       </td>
       <td>{{person.status}}</td>
       <td>

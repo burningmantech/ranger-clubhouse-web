@@ -16,7 +16,7 @@
 {{/if}}
 
 {{#if isLoading}}
-  {{loading-dialog "Shift Lead Report"}}
+  <LoadingDialog @item="Shift Lead Report" />
 {{else if shiftSelect}}
   <h1>Shift Lead Report for {{moment-format shiftStart "dddd, MMMM Do YYYY @ HH:mm"}}</h1>
 

@@ -1,7 +1,7 @@
 <h1>Maintenace Tasks {{#if this.task}}- {{this.task.title}}{{/if}}</h1>
 
 {{#if this.isSubmitting}}
-  <LoadingDialog @customMessage={{concat "The task '" this.task.title "' is being performed. Hang tight!"}} />
+  <LoadingDialog @text={{concat "The task '" this.task.title "' is being performed. Hang tight!"}} />
 {{else if this.task}}
   <p>
     <a href {{action this.showIndex}}>{{fa-icon "angle-double-left"}} Back to Maintenance Tasks</a>

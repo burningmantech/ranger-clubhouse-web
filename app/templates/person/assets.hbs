@@ -8,9 +8,9 @@
     </div>
   {{/if}}
 {{else}}
-  {{#ch-alert "warning"}}
+  <ChAlert @type="warning">
     {{person.callsign}} is not asset authorized and may not check out equipment at this time. Have the person sign the appropriate paperwork.
-  {{/ch-alert}}
+  </ChAlert>
 {{/if}}
 
 <AssetTable @assets={{assets}} @year={{year}} />

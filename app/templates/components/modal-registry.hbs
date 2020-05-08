@@ -1,3 +1,3 @@
-{{#each modal.dialogs as |dialog|}}
-  {{component dialog.component dialog=dialog onClose=(action "close") onConfirm=(action "confirm")}}
+{{#each this.modal.dialogs as |dialog|}}
+  {{component dialog.component dialog=dialog onClose=this.modal.closeAction onConfirm=this.modal.confirmAction}}
 {{/each}}

@@ -108,9 +108,9 @@
               <tr>
                 <td>{{person.callsign}}</td>
                 <td>{{person.first_name}} {{person.last_name}}</td>
-                <td>{{present-or-not person.sms.status "-"}}</td>
-                <td>{{present-or-not person.email.status "-"}}</td>
-                <td>{{present-or-not person.clubhouse.status "-"}}</td>
+                <td><PresentOrNot @value={{person.sms.status}} @empty="-" /></td>
+                <td><PresentOrNot @value={{person.email.status}} @empty="-" /></td>
+                <td><PresentOrNot @value={{person.clubhouse.status}} @empty="-" /></td>
               </tr>
             {{/each}}
             </tbody>

@@ -1,8 +1,6 @@
 import Component from '@glimmer/component';
-import { computed } from '@ember/object';
 
 export default class TrainingInfoComponent extends Component {
-  @computed('args.trainings')
   get hasNotGrantedPositions() {
     let notGranted = false;
     this.args.trainings.forEach((training) => {
@@ -15,6 +13,6 @@ export default class TrainingInfoComponent extends Component {
       }
     });
 
-    return notGranted
+    return notGranted;
   }
 }

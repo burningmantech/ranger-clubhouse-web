@@ -142,7 +142,7 @@
                   Edit Verification Flag &amp; Note
                 </button>
               </div>
-              <div class="mb-3 col-12">{{present-or-not this.editEntry.notes}}</div>
+              <div class="mb-3 col-12"><PresentOrNot @value={{this.editEntry.notes}} /></div>
             </div>
           {{/if}}
         </fieldset>
@@ -196,7 +196,7 @@
                 Reviewer Note:
               </dt>
               <dd class="col-10">
-                {{present-or-not this.editEntry.reviewer_notes}}
+                <PresentOrNot @value={{this.editEntry.reviewer_notes}} />
               </dd>
 
               <dt class="col-2">

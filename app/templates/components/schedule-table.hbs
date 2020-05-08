@@ -51,7 +51,7 @@
       <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}</div>
       <div class="schedule-long-description">
         {{slot.position_title}}<br>
-        {{slot-info-link slot.slot_description slot.slot_url}}
+        <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
       </div>
       <div class="schedule-actions d-print-none">
         <button type="button" {{on "click" (fn @showPeople slot)}} class="btn btn-secondary btn-sm"

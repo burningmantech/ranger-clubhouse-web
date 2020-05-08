@@ -1,8 +1,7 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 
 export default class PresentOrNotComponent extends Component {
-  tagName = '';
-  static positionalParams = [ 'value', 'empty' ];
-  value = '';
-  empty = 'not given';
+  get empty() {
+    return this.args.empty || 'not given';
+  }
 }

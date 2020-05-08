@@ -1,6 +1,7 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 
 export default class LoadingIndicatorComponent extends Component {
-  tagName = '';
-  text = 'Submitting';
+  get text() {
+    return this.args.text || 'Submitting';
+  }
 }

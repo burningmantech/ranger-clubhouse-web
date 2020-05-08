@@ -1,41 +1,46 @@
-import Component from '@ember/component';
-import { action, computed, set } from '@ember/object';
+import Component from '@glimmer/component';
+import {action, computed, set} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
+import {inject as service} from '@ember/service';
 
 export default class StatusChangeTableComponent extends Component {
-  isSubmitting = false;
+  @service ajax;
+  @service house;
+  @service toast;
 
-  @computed('newStatus')
-  get isVintage() {
-    return this.newStatus == 'vintage';
+  @tracked isSubmitting = false;
+
+  constructor() {
+    super(...arguments);
+    const newStatus = this.args.newStatus;
+
+    this.isVintage = (newStatus == 'vintage');
+    this.isPastProspective = (newStatus == 'past prospective');
   }
 
-  @computed('newStatus')
-  get isPastProspective() {
-    return this.newStatus == 'past prospective';
-  }
-
-  @computed('people.@each.selected')
+  @computed('args.people.@each.selected')
   get selectedCount() {
-    return this.people.reduce((total, p) => (p.selected ? 1 : 0) + total, 0);
+    return this.args.people.reduce((total, p) => (p.selected ? 1 : 0) + total, 0);
   }
 
   @action
   submit() {
     const callsigns = [];
+    const people = this.args.people;
 
-    this.people.forEach((p) => {
+    people.forEach((p) => {
       if (p.selected) {
         callsigns.push(p.callsign);
       }
     });
 
     const records = callsigns.join("\n");
-    this.set('isSubmitting', true);
+    this.isSubmitting = true;
 
     this.ajax.request('bulk-upload', {
       method: 'POST',
       data: {
-        action: this.isVintage ? 'vintage' : this.newStatus,
+        action: this.isVintage ? 'vintage' : this.args.newStatus,
         records,
         commit: 1
       }
@@ -43,7 +48,7 @@ export default class StatusChangeTableComponent extends Component {
       let failures = 0;
 
       results.results.forEach((r) => {
-        const person = this.people.find((p) => r.id == p.id);
+        const person = people.find((p) => r.id == p.id);
 
         if (person) {
           if (r.status == 'success') {
@@ -63,14 +68,13 @@ export default class StatusChangeTableComponent extends Component {
         this.toast.error(`${failures} status changes were not successful.`);
       }
     }).catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('isSubmitting', false));
+      .finally(() => this.isSubmitting = false);
   }
 
   @action
   toggleAll(checked) {
-    this.people.forEach((person) => {
+    this.args.people.forEach((person) => {
       set(person, 'selected', checked);
     });
   }
-
 }

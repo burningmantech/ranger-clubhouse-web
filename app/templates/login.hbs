@@ -1,4 +1,4 @@
-<LoginSidebar />
+<LoginSidebar/>
 <main class="col">
   {{#if (eq (config "DeploymentEnvironment") "Staging")}}
     <ChAlert @type="danger">
@@ -13,7 +13,7 @@
     </ChAlert>
   {{/if}}
   {{#if this.session.isAuthenticated}}
-    <LoadingIndicator @text="your account" />
+    <LoadingDialog @text="Please wait. Your account is being loaded."/>
   {{else}}
     <div class="row">
       <h1 class="col-sm-12">Welcome To The Ranger Secret Clubhouse!</h1>
@@ -25,13 +25,16 @@
               The email and/or password is incorrect.
             {{else if (eq this.loginError "account-disabled")}}
               The account has been permanently disabled.
-              <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
+              <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more
+                information.</p>
             {{else if (eq this.loginError "login-disabled")}}
               Login has been disabled for this account.
-              <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
+              <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more
+                information.</p>
             {{else if (eq this.loginError "account-suspended")}}
               The account has been suspended.
-              <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more information.</p>
+              <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more
+                information.</p>
             {{else}}
               An unknown server response was received. status=[{{loginError}}]
             {{/if}}
@@ -41,12 +44,14 @@
       <div class="col-sm-12 col-md-6 col-lg-4">
         <ChForm @formId="auth" @originalModel={{this.authForm}} @validator={{this.loginValidations}}
                 @autocomplete="on" @onSubmit={{this.submit}} as |f|>
-          <f.input @name="identification" @label="Email" @type="text" @inputmode="email" @autocomplete="username" @autofocus={{true}} @noSpaces={{true}} />
-          <f.input @name="password" @label="Password" @type="password" @autocomplete="current-password" />
+          <f.input @name="identification" @label="Email" @type="text" @inputmode="email" @autocomplete="username"
+                   @autofocus={{true}} @noSpaces={{true}} />
+          <f.input @name="password" @label="Password" @type="password" @autocomplete="current-password"/>
           <div class="row">
             <div class="col-sm-12 col-md-6 mb-4">
-              <f.submit @label="Login" @disabled={{this.isSubmitting}} @submitClass="btn-lg login-submit" />
-              {{#if this.isSubmitting}}<LoadingIndicator />{{/if}}
+              <f.submit @label="Login" @disabled={{this.isSubmitting}} @submitClass="btn-lg login-submit"/>
+              {{#if this.isSubmitting}}
+                <LoadingIndicator/>{{/if}}
             </div>
             <div class="col-sm-12 col-md-6 mt-2">
               <LinkTo @route="reset-password" class="d-block">Forgot your password?</LinkTo>
@@ -63,19 +68,19 @@
     }}
 
       <div class="col-sm-12 col-md-6 col-lg-5 mt-4">
-        {{#ch-box "Interested in volunteering with the Rangers?"}}
+        <ChBox @title="Interested in volunteering with the Rangers?">
           <a href="http://rangers.burningman.org/ranger-application-process/">Click here</a>
           to read about our intake process for this event cycle. If you have
           applied previously, our process may have changed since you last applied.
           All prospective Rangers must reapply each year from the start of the process.
           A link to apply can be found at the top of that page.
-        {{/ch-box}}
-
-        {{#ch-box "Interested in training but not volunteering?"}}
+        </ChBox>
+        <ChBox @title="Interested in training but not volunteering?">
           If you do NOT intend to volunteer with the Rangers on playa but are
           interested in taking Ranger training anyway, please
-          <LinkTo @route="register">click here</LinkTo> to create a Secret Clubhouse account.
-        {{/ch-box}}
+          <LinkTo @route="register">click here</LinkTo>
+          to create a Secret Clubhouse account.
+        </ChBox>
       </div>
     </div>
 
@@ -85,6 +90,5 @@
     <p class="mt-4">
       For help logging in or registering, email the Rangers Tech Ninjas at {{admin-email}}
     </p>
-
   {{/if}}
 </main>

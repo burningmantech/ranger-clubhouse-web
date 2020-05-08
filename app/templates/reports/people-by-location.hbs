@@ -58,7 +58,7 @@
                   {{/if}}
                 </td>
                 <td>{{person.city}}</td>
-                <td>{{present-or-not person.state "-"}}</td>
+                <td><PresentOrNot @value={{person.state}} @empty="-" /></td>
                 <td>{{person.zip}}</td>
                 <td>{{yesno person.signed_up}}</td>
                 <td>{{yesno person.worked}}</td>

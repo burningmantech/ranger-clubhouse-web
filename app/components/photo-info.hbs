@@ -54,14 +54,17 @@
             <dt>{{pluralize @photo.reject_reasons.length "Reject reason"}}</dt>
             <dd>
               {{#each @photo.reject_reasons as |reason idx|~}}
-                {{~if idx ", " ~}}{{present-or-not (get @rejectionLabels reason)
-                                                   (concat "Unknown reason " reason)~}}
-              {{else}}
+                {{~if idx ", " ~}}
+                <PresentOrNot @value={{get @rejectionLabels reason}}
+                              @empty={{concat "Unknown reason " reason}} />
+              {{~else}}
                 <i>none given</i>
               {{/each}}
             </dd>
             <dt>Rejection Message</dt>
-            <dd>{{present-or-not @photo.reject_message "none given"}}</dd>
+            <dd>
+              <PresentOrNot @value={{@photo.reject_message}} />
+            </dd>
           {{/if}}
         </dl>
       </div>

@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
-import {action, computed, set} from '@ember/object';
+import {action, computed } from '@ember/object';
 import {filterBy} from '@ember/object/computed';
 import currentYear from 'clubhouse/utils/current-year';
 import laborDay from 'clubhouse/utils/labor-day';
@@ -73,7 +73,7 @@ export default class SlotsController extends Controller {
     {id: 'inactive', title: 'Inactive'},
   ];
 
-  showingGroups = {};
+  @tracked showingGroups = {};
 
   @tracked isCopyingSlots = false;
 
@@ -284,7 +284,7 @@ export default class SlotsController extends Controller {
   @action
   toggleShowing(group, event) {
     event.preventDefault();
-    set(group, 'showing', !group.showing);
+    this.showingGroups = { ...this.showingGroups, [group.position_id]: !this.showingGroups[group.position_id] };
   }
 
   @action

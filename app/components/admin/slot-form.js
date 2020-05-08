@@ -1,39 +1,44 @@
-import Component from '@ember/component';
-import SlotValidations from 'clubhouse/validations/slot';
-import { action, computed } from '@ember/object';
+import Component from '@glimmer/component';
+import {validatePresence, validateNumber} from 'ember-changeset-validations/validators';
+import validateDateTime from 'clubhouse/validators/datetime';
 
 export default class SlotFormComponent extends Component {
-  slotValidations = SlotValidations;
+  slotValidations = {
+    description: [
+      validatePresence({presence: true, message: 'Enter a description.'}),
+    ],
 
-  // Slot to edit or create
-  slot = null;
+    begins: [
+      validatePresence({presence: true, message: 'Enter a date and time.'}),
+      validateDateTime({before: 'ends'})
+    ],
 
-  // Positions to select from for assignment
-  positions = null;
+    ends: [
+      validatePresence({presence: true, message: 'Enter a date and time.'}),
+      validateDateTime({after: 'begins'})
+    ],
 
-  // Training slots to select form
-  trainerSlots = null;
+    position_id: [
+      validatePresence({presence: true, message: 'Select a position.'}),
+    ],
 
-  // save action
-  onSave = null;
-  // cancel action
-  onCancel = null;
+    max: [
+      validateNumber({integer: true, message: 'Enter a number'}),
+    ],
 
-  onClone = null;
+  };
 
-  @computed('positions')
   get positionOptions() {
-    return this.positions.map((p) => [ p.title, p.id ]);
+    return this.args.positions.map((p) => [p.title, p.id]);
   }
 
-  @computed('slot.{description,id,isNew,position_title}')
   get formTitle() {
-      return this.slot.isNew ? 'Create Slot' : `Edit Slot #${this.slot.id} ${this.slot.position_title} - ${this.slot.description}`;
+    const slot = this.args.slot;
+    return slot.isNew ? 'Create Slot' : `Edit Slot #${slot.id} ${slot.position_title} - ${slot.description}`;
   }
 
-  @computed('trainerSlots')
   get trainerSlotsOptions() {
-    const slots = this.trainerSlots;
+    const slots = this.args.trainerSlots;
     const groupOptions = [];
 
     if (!slots || slots.length == 0) {
@@ -43,32 +48,19 @@ export default class SlotFormComponent extends Component {
     slots.forEach((slot) => {
       const title = slot.position_title;
 
-      let group = groupOptions.find((opt) => { return title == opt.groupName });
+      let group = groupOptions.find((opt) => {
+        return title == opt.groupName
+      });
 
       if (!group) {
-        group = { groupName: title, options: [ ] };
+        group = {groupName: title, options: []};
         groupOptions.push(group);
       }
 
-      group.options.push([ `${slot.description} ${slot.begins_format}`, slot.id ]);
+      group.options.push([`${slot.description} ${slot.begins_format}`, slot.id]);
     });
 
     return groupOptions.sortBy('groupName');
   }
-
-  @action
-  save(model, isValid, originalModel) {
-    this.onSave(model, isValid, originalModel);
-  }
-
-  @action
-  cloneRecord(model, isValid, originalModel) {
-    this.onClone(model, isValid, originalModel);
-  }
-
-
-  @action
-  cancel(model) {
-    this.onCancel(model);
-  }
 }
+

@@ -36,7 +36,7 @@
             <tr class="d-flex">
               <td class="col-lg-2 col-xl-2">{{shift-format slot.begins}}</td>
               <td class="col-lg-2 col-xl-2">{{shift-format slot.ends}}</td>
-              <td class="col-lg-2 col-xl-2">{{present-or-not slot.description "-"}}</td>
+              <td class="col-lg-2 col-xl-2"><PresentOrNot @value={{slot.description}} @empty="-" /></td>
               <td class="col-lg-1 col-xl-1 text-right">{{slot.sign_ups.length}} / {{slot.max}}</td>
               <td class="col-lg-5 col-xl-5">
                 {{#each slot.sign_ups as |person idx|}}

@@ -1,6 +1,6 @@
 <div class="card card-ticket" id="ticket-delivery">
   <div class="card-header p-0">
-    <button class="btn btn-link m-0" type="button" {{action this.toggleCard "delivery"}}>
+    <button class="btn btn-link m-0" type="button" {{action toggleCard "delivery"}}>
       {{fa-icon (if showing.delivery "caret-down" "caret-right")}} Ticket Delivery
       {{#if (eq ticketingInfo.delivery_status "none")}}
         <span class="text-black-50">- To Be Announced</span>

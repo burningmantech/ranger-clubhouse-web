@@ -26,7 +26,7 @@
 </ChForm>
 <hr>
 {{#if this.isLoading}}
-  {{loading-dialog "languages"}}
+  <LoadingDialog @item="languages" />
 {{else}}
   <h3 class="mt-4">On Duty Rangers ({{this.onDuty.length}})</h3>
   {{#if this.onDutyGroup}}
