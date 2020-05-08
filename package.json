@@ -79,7 +79,7 @@
     "edition": "octane"
   },
   "dependencies": {
-    "blueimp-load-image": "^5.6.0",
+    "blueimp-load-image": "^5.7.0",
     "cropperjs": "^1.5.6",
     "double-metaphone": "^1.0.5",
     "ember-cli-update": "^0.54.6",

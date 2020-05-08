@@ -2907,10 +2907,10 @@ bluebird@~3.5.0:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.5.tgz#a8d0afd73251effbbd5fe384a77d73003c17a71f"
   integrity sha512-5am6HnnfN+urzt4yfg7IgTbotDjIT/u8AJpEt0sIU9FtXfVeezXAPKswrG+xKUCOYAINpSdgZVDU6QFh+cuH3w==
 
-blueimp-load-image@^5.6.0:
-  version "5.6.0"
-  resolved "https://registry.yarnpkg.com/blueimp-load-image/-/blueimp-load-image-5.6.0.tgz#34aa36840cbdd010bb9c67caa522ad4b067df2ea"
-  integrity sha512-3fcMbfyFJGZWEyl+xaLuA28skNLC4yWOLriy3HW+TeuaSqsSKh4CZ6i1vdwSw40IvlkWqFIBU5EuNarPWRVsAQ==
+blueimp-load-image@^5.7.0:
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/blueimp-load-image/-/blueimp-load-image-5.7.0.tgz#21101b9448a73893b15cf8b1adc5655e7ba8313e"
+  integrity sha512-Y6RATfkyYNeUAUBgD/3cafUYkWQbdVO0/9uk0t+bDffsoBVE4YmNEiVFBX2PjG0D1MJqPnhrjucqLgA6zrnX2w==
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.8"
