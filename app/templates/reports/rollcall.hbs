@@ -34,7 +34,7 @@
   <h3>{{this.position.title}} - {{this.slot.description}} - {{shift-format this.slot.begins}}</h3>
 {{/if}}
 {{#if this.isRetrievingPeople}}
-  {{loading-dialog "the sign ups"}}
+  <LoadingDialog @item="the sign ups" />
 {{else if this.people}}
   {{pluralize this.people.length "sign up"}}
   <div class="form-row">

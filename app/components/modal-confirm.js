@@ -1,4 +1,5 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 
-export default Component.extend({
-});
+export default class ModalConfirmComponent extends Component {
+
+}

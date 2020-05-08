@@ -50,7 +50,7 @@
       </td>
       <td>{{mentee.mentor_status}}</td>
       <td>
-        {{present-or-not mentee.last_contact "-"}}
+        <PresentOrNot @value={{mentee.last_contact}} @empty="-" />
       </td>
       <td>
         {{#if (eq mentee.contact_status "allow")}}

@@ -27,7 +27,7 @@ Showing {{pluralize this.trainers.length "trainer"}}
           {{/unless}}
           <td><LinkTo @route="training.session.index" @models={{array this.training.id slot.training_slot_id}}>{{shift-format slot.begins}}</LinkTo></td>
           <td>{{slot.position_title}}</td>
-          <td>{{present-or-not slot.description "-"}}</td>
+          <td><PresentOrNot @value={{slot.description}} @empty="-" /></td>
           <td>{{slot.status}}</td>
         </tr>
       {{/each}}

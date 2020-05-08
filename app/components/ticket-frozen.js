@@ -1,7 +1,4 @@
-import Component from '@ember/component';
-
+import Component from '@glimmer/component';
 
 export default class TicketFrozenComponent extends Component {
-  item = null;
-  ticketingInfo = null;
 }

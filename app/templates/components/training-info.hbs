@@ -49,7 +49,7 @@
                 -
               {{/if}}
             </td>
-            <td>{{present-or-not training.location "-"}}</td>
+            <td><PresentOrNot @value={{training.location}} @empty="-" /></td>
           {{/if}}
         </tr>
         {{#if training.is_green_dot_pnv}}

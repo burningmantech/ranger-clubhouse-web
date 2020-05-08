@@ -1,23 +1,20 @@
 <main class="col">
-  {{year-select "Manage BMIDs" year=year onChange=(action (mut year))}}
-
+  <YearSelect @title="Manage BMIDs" @year={{this.year}} @onChange={{action (mut this.year)}} />
   <div class="form-group row">
     <div class="col-auto">
       <label>Filter:</label>
       <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}} @onChange={{action
-              (mut this.filter)}} @controlClass="form-control-sm" @disabled={{this.isRendering}} />
+              (mut this.filter)}} @controlClass="form-control-sm"/>
     </div>
     <div class="col-auto">
       <label>Title Filter:</label>
       <ChForm::Select @name="titleFilter" @value={{this.titleFilter}} @options={{this.titleFilterOptions}}
-                      @onChange={{action (mut this.titleFilter)}} @controlClass="form-control-sm"
-                      @disabled={{this.isRendering}} />
+                      @onChange={{action (mut this.titleFilter)}} @controlClass="form-control-sm"/>
     </div>
     <div class="col-auto">
       <label>Team Filter:</label>
       <ChForm::Select @name="teamFilter" @value={{this.teamFilter}} @options={{this.teamFilterOptions}}
-                      @onChange={{action (mut this.teamFilter)}} @controlClass="form-control-sm"
-                      @disabled={{this.isRendering}} />
+                      @onChange={{action (mut this.teamFilter)}} @controlClass="form-control-sm"/>
 
     </div>
   </div>
@@ -26,10 +23,10 @@
       <div class="input-group">
         <label>Callsign, title, team, notes filter:</label>
         <Input @type="text" @value={{this.textFilterInput}} class="form-control-sm ml-2" @enter={{action
-                textFilterAction}} @disabled={{this.isRendering}} />
-        <button class="btn btn-primary btn-sm ml-1" {{action textFilterAction}} disabled={{this.isRendering}}>Filter
+                this.textFilterAction}}  />
+        <button class="btn btn-primary btn-sm ml-1" {{action this.textFilterAction}}>Filter
         </button>
-        <button class="btn btn-secondary btn-sm ml-1" {{action clearTextFilterAction}} disabled={{this.isRendering}}>
+        <button class="btn btn-secondary btn-sm ml-1" {{action this.clearTextFilterAction}}>
           Clear
         </button>
       </div>
@@ -40,13 +37,15 @@
     </div>
 
     <div class="col-auto">
-      <button class="btn btn-secondary btn-sm" disabled={{this.isRendering}} {{action toggleEditMode}}>{{#if editMode}}
-        Table View{{else}}Edit Mode{{/if}}</button>
-      <button class="btn btn-secondary btn-sm" disabled={{this.isRendering}} {{action exportCSV}}>Export CSV</button>
-      <LinkTo @route="vc.bmid-sanity-check" class="btn btn-secondary btn-sm" @disabled={{this.isRendering}}>Sanity
-        Check
+      <button class="btn btn-secondary btn-sm" {{action this.toggleEditMode}}>
+        {{#if editMode}}Table View{{else}}Edit Mode{{/if}}
+      </button>
+      <button class="btn btn-secondary btn-sm" {{action this.exportCSV}}>Export CSV</button>
+      <LinkTo @route="vc.bmid-sanity-check" class="btn btn-secondary btn-sm">
+        Sanity Check
       </LinkTo>
-      <LinkTo @route="vc.bmid-print" class="btn btn-secondary btn-sm" @disabled={{this.isRendering}}>Print via Lambase
+      <LinkTo @route="vc.bmid-print" class="btn btn-secondary btn-sm">
+        Print via Lambase
       </LinkTo>
     </div>
   </div>
@@ -55,16 +54,13 @@
     {{fa-icon "exclamation-circle"}} = indicates person has not signed up for any shifts.
   </p>
 
-  {{#if this.isRendering}}
-    <div class="text-danger h3 font-weight-bold">Hang Tight - Rendering {{this.renderBmids.length}}
-      of {{this.viewBmids.length}} {{fa-icon "spinner" spin=true}}</div>
-  {{else}}
-    Showing {{this.viewBmids.length}} of {{this.bmids.length}}
-    {{#if textFilter}}
+  Showing {{this.viewBmids.length}} of {{this.bmids.length}}
+  {{#unless this.isRendering}}
+    {{#if this.textFilter}}
       <span class="ml-2 font-weight-bold">Text filtering by "{{this.textFilter}}"</span>
     {{/if}}
-  {{/if}}
-  {{#if unsaveRows}}<span class="ml-4 text-danger">UNSAVED {{pluralize unsaveRows "record"}}</span>{{/if}}
+    {{#if this.unsaveRows}}<span class="ml-4 text-danger">UNSAVED {{pluralize this.unsaveRows "record"}}</span>{{/if}}
+  {{/unless}}
   <table class="table table-sm table-striped table-hover">
     <thead>
     <tr>
@@ -74,24 +70,26 @@
         <th>Action</th>
       {{/unless}}
       <th>{{#if (eq this.sortColumn "status")}}[Status]{{else}}
-        <a href {{action sortBmidsAction "status"}}>Status</a>{{/if}}</th>
+        <a href {{action this.sortBmidsAction "status"}}>Status</a>{{/if}}</th>
       <th class="w-10">{{#if (eq this.sortColumn "title1")}}[Title 1]{{else}}
-        <a href {{action sortBmidsAction "title1"}}>Title 1</a>{{/if}}</th>
+        <a href {{action this.sortBmidsAction "title1"}}>Title 1</a>{{/if}}</th>
       <th class="w-10">{{#if (eq this.sortColumn "title2")}}[Title 2]{{else}}
-        <a href {{action sortBmidsAction "title2"}}>Title 2</a>{{/if}}</th>
+        <a href {{action this.sortBmidsAction "title2"}}>Title 2</a>{{/if}}</th>
       <th class="w-10">{{#if (eq this.sortColumn "title3")}}[Title 3]{{else}}
-        <a href {{action sortBmidsAction "title3"}}>Title 3</a>{{/if}}</th>
+        <a href {{action this.sortBmidsAction "title3"}}>Title 3</a>{{/if}}</th>
       <th>{{#if (eq this.sortColumn "mvr")}}[MVR]{{else}}<a href {{action sortBmidsAction "mvr"}}>MVR</a>{{/if}}</th>
       <th>{{#if (eq this.sortColumn "showers")}}[Showers]{{else}}
-        <a href {{action sortBmidsAction "showers"}}>Showers</a>{{/if}}</th>
-      <th>{{#if (eq this.sortColumn "meals")}}[Meals]{{else}}<a href {{action sortBmidsAction "meals"}}>Meals</a>{{/if}}
+        <a href {{action this.sortBmidsAction "showers"}}>Showers</a>{{/if}}</th>
+      <th>{{#if (eq this.sortColumn "meals")}}[Meals]{{else}}
+        <a href {{action this.sortBmidsAction "meals"}}>Meals</a>{{/if}}
       </th>
       <th class="w-10">{{#if (eq this.sortColumn "wap")}}[WAP]{{else}}
-        <a href {{action sortBmidsAction "wap"}}>WAP</a>{{/if}}</th>
-      <th>{{#if (eq this.sortColumn "team")}}[Team]{{else}}<a href {{action sortBmidsAction "team"}}>Team</a>{{/if}}
+        <a href {{action this.sortBmidsAction "wap"}}>WAP</a>{{/if}}</th>
+      <th>{{#if (eq this.sortColumn "team")}}[Team]{{else}}
+        <a href {{action this.sortBmidsAction "team"}}>Team</a>{{/if}}
       </th>
       <th class="w-30">{{#if (eq this.sortColumn "notes")}}[Notes]{{else}}
-        <a href {{action sortBmidsAction "notes"}}>Notes</a>{{/if}}</th>
+        <a href {{action this.sortBmidsAction "notes"}}>Notes</a>{{/if}}</th>
       {{#if this.editMode}}
         <th>Action</th>
       {{/if}}
@@ -104,18 +102,18 @@
         {{#each this.editableBmids as |bmid|}}
           <tr class="{{if bmid.isDirty "bg-warning"}}">
             <td>
-              {{#if (not bmid.has_signups)}}
+              {{~#if (not bmid.has_signups)~}}
                 {{fa-icon "exclamation-circle"}}
-              {{/if}}
-              {{#if bmid.person}}
+              {{~/if}}
+              {{~#if bmid.person~}}
                 <PersonLink @person={{bmid.person}} />
-              {{else}}
+                {{~else~}}
                 Deleted #{{bmid.person_id}}
-              {{/if}}
+              {{~/if~}}
             </td>
             <td>
               <ChForm::Select @name={{concat "status" bmid.person.id}} @value={{bmid.status}}
-                              @options={{bmidStatusOptions}} @onChange={{action (mut bmid.status)}}
+                              @options={{this.bmidStatusOptions}} @onChange={{action (mut bmid.status)}}
                               @controlClass="form-control-sm"/>
             </td>
             {{!
@@ -127,22 +125,23 @@
 
                 editBmid is the changeset object which the data is manipulated in.
               }}
-            <td><input value={{bmid.title1}} onblur={{action updateColumn bmid "title1"}} size="30"></td>
-            <td><input value={{bmid.title2}} onblur={{action updateColumn bmid "title2"}} size="30"></td>
-            <td><input value={{bmid.title3}} onblur={{action updateColumn bmid "title3"}} size="30"></td>
+            <td><input value={{bmid.title1}} onblur={{action this.updateColumn bmid "title1"}} size="30"></td>
+            <td><input value={{bmid.title2}} onblur={{action this.updateColumn bmid "title2"}} size="30"></td>
+            <td><input value={{bmid.title3}} onblur={{action this.updateColumn bmid "title3"}} size="30"></td>
             <td>{{if bmid.org_vehicle_insurance "M" "-"}}</td>
             <td>
               <ChForm::Select @name={{concat "showers" bmid.person.id}} @value={{bmid.showers}}
-                              @options={{showerOptions}} @onChange={{action (mut bmid.showers)}}
+                              @options={{this.showerOptions}} @onChange={{action (mut bmid.showers)}}
                               @controlClass="form-control-sm"/>
             </td>
             <td>
-              <ChForm::Select @name={{concat "meals" bmid.person.id}} @value={{bmid.meals}} @options={{mealOptions}}
+              <ChForm::Select @name={{concat "meals" bmid.person.id}} @value={{bmid.meals}}
+                              @options={{this.mealOptions}}
                               @onChange={{action (mut bmid.meals)}} @controlClass="form-control-sm"/>
             </td>
             <td>
               <ChForm::Select @name={{concat "admission_date" bmid.person.id}} @value={{bmid.admission_date}}
-                              @options={{admissionDateOptions}} @onChange={{action (mut bmid.admission_date)}}
+                              @options={{this.admissionDateOptions}} @onChange={{action (mut bmid.admission_date)}}
                               @controlClass="form-control-sm" @disabled={{bmid.wapDisabled}} />
               {{#if bmid.wapDisabled}}
                 {{#if bmid.wapMissing}}
@@ -152,12 +151,13 @@
                 {{/if}}
               {{/if}}
             </td>
-            <td><input value={{bmid.team}} onblur={{action updateColumn bmid "team"}} size="10"></td>
-            <td><textarea cols="40" rows="1" onfocus={{action focusNote}} onblur={{action blurNote
-                                                                                          bmid}}>{{bmid.notes}}</textarea>
+            <td><input value={{bmid.team}} onblur={{action this.updateColumn bmid "team"}} size="10"></td>
+            <td><textarea cols="40" rows="1"
+                          onfocus={{action this.focusNote}}
+                          onblur={{action this.blurNote bmid}}>{{bmid.notes}}</textarea>
             </td>
             <td>
-              <button type="button" {{action saveInlineBmid bmid}}>Save</button>
+              <button type="button" {{action this.saveInlineBmid bmid}}>Save</button>
             </td>
           </tr>
         {{/each}}
@@ -174,11 +174,17 @@
                 Deleted #{{bmid.person_id}}
               {{/if}}
             </td>
-            <td><a href {{action editBmid bmid}}>Edit</a></td>
+            <td><a href {{action this.editBmid bmid}}>Edit</a></td>
             <td>{{bmid.statusHuman}}</td>
-            <td class="w-10">{{present-or-not bmid.title1 "-"}}</td>
-            <td class="w-10">{{present-or-not bmid.title2 "-"}}</td>
-            <td class="w-10">{{present-or-not bmid.title3 "-"}}</td>
+            <td class="w-10">
+              <PresentOrNot @value={{bmid.title1}} @empty="-"/>
+            </td>
+            <td class="w-10">
+              <PresentOrNot @value={{bmid.title2}} @empty="-"/>
+            </td>
+            <td class="w-10">
+              <PresentOrNot @value={{bmid.title3}} @empty="-"/>
+            </td>
             <td>{{if bmid.org_vehicle_insurance "M" "-"}}</td>
             <td>{{if bmid.showers "S" "-"}}</td>
             <td>{{bmid.mealsHuman}}</td>
@@ -201,7 +207,7 @@
             {{#if this.bmids}}
               No BMIDs match the filter criteria.
             {{else}}
-              No BMIDs were found for {{year}}.
+              No BMIDs were found for {{this.year}}.
             {{/if}}
           </strong>
         </td>
@@ -214,9 +220,18 @@
 {{#if this.entry}}
   <ModalDialog @title={{if this.entry.id (concat "Edit BMID #" this.entry.id) "New BMID"}} as |Modal|>
     <Modal.body>
-      <h3>{{this.year}} {{this.entry.person.callsign}} &lt;{{this.entry.person.status}},{{this.entry.person.first_name}} {{this.entry.person.last_name}}&gt;</h3>
+      <h3>{{this.year}} {{this.entry.person.callsign}} &lt;{{this.entry.person.status}}
+        ,{{this.entry.person.first_name}} {{this.entry.person.last_name}}&gt;</h3>
       <BmidEdit @entry={{this.entry}} @year={{this.year}} @admissionDateOptions={{this.admissionDateOptions}}
                 @onSave={{this.saveBmid}} @onCancel={{this.cancelBmid}} />
+    </Modal.body>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.isRendering}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      Hang Tight - Rendering {{this.renderBmids.length}} of {{this.viewBmids.length}} {{fa-icon "spinner" spin=true}}
     </Modal.body>
   </ModalDialog>
 {{/if}}

@@ -30,10 +30,10 @@
   <p>{{year}} Pre-event is {{shift-format eventDate.pre_event_slot_start}} to {{shift-format
           eventDate.pre_event_slot_end}}.</p>
 {{else}}
-  {{#ch-alert "danger"}}
+  <ChAlert @type="danger">
     WARNING: {{year}} pre-event slot dates are not set. Pre-Event slots may not be properly vetted. Visit
     <LinkTo @route="admin.event-dates">Admin &gt; Edit Event Dates</LinkTo> to set the dates.
-  {{/ch-alert}}
+  </ChAlert>
 {{/if}}
 
 {{#if this.slots.length}}
@@ -47,24 +47,25 @@
   No slots were found for {{this.year}}?
 {{/if}}
 
-
-{{#each slotGroups as |group|}}
+{{#each this.slotGroups as |group|}}
   <div class="schedule-title mt-2">
-    {{#if group.showing}}
+    {{#if (get this.showingGroups group.position_id)}}
       <div class="float-right mr-4">
-        <button class="btn btn-secondary btn-sm" {{action startCopy group.position_id}}>Bulk Copy</button>
-        <button class="btn btn-primary btn-sm" {{action activate group}}>Activate All</button>
-        <button class="btn btn-primary btn-sm" {{action deactivate group}}>Deactivate All</button>
+        <button class="btn btn-secondary btn-sm" {{action this.startCopy group.position_id}}>Bulk Copy</button>
+        <button class="btn btn-primary btn-sm" {{action this.activate group}}>Activate All</button>
+        <button class="btn btn-primary btn-sm" {{action this.deactivate group}}>Deactivate All</button>
       </div>
     {{/if}}
     <a href {{on "click" (fn this.toggleShowing group)}}>
-      {{fa-icon (if group.showing "caret-down" "caret-right")}} {{group.title}}
-      ({{group.slots.length}}{{#if group.inactive}}
-      / <span class="text-danger">{{group.inactive}} inactive</span>{{/if}})
+      {{fa-icon (if (get this.showingGroups group.position_id) "caret-down" "caret-right")}} {{group.title}}
+      ({{group.slots.length}}
+      {{~#if group.inactive}}
+      / <span class="text-danger">{{group.inactive}} inactive</span>
+      {{~/if}})
     </a>
   </div>
   {{! template-lint-disable table-groups}}
-  {{#if group.showing}}
+  {{#if (get this.showingGroups group.position_id)}}
     <table class="table table-sm table-hover">
       <thead>
       <tr>
@@ -89,7 +90,7 @@
           <td class="text-right">{{slot.signed_up}}</td>
           <td class="text-right">{{credits-format slot.credits}}</td>
           <td>
-            {{slot-info-link slot.description slot.url}}
+            <SlotInfoLink @description={{slot.description}} @info={{slot.url}} />
           </td>
           <td clas="text-center">
             {{#if slot.active}}
@@ -130,12 +131,12 @@
   {{/if}}
 {{/each}}
 
-{{#if slot}}
-  <Admin::SlotForm @slot={{slot}} @positions={{positions}} @trainerSlots={{trainerSlots}} @onSave={{action saveSlot}}
-                   @onCancel={{action cancel}} @onClone={{action cloneSlot}} />
+{{#if this.slot}}
+  <Admin::SlotForm @slot={{this.slot}} @positions={{this.positions}} @trainerSlots={{this.trainerSlots}}
+                   @onSave={{this.saveSlot}} @onCancel={{this.cancel}} @onClone={{this.cloneSlot}} />
 {{/if}}
 
-{{#if copyParams}}
+{{#if this.copyParams}}
   <ModalDialog @title="Copy Slots" as |Modal|>
     <ChForm @formId="copySlots" @originalModel={{this.copyParams}}
             @changeSet={{false}} @validator={{this.copyValidations}}

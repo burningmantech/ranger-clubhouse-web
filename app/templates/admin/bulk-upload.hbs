@@ -12,7 +12,7 @@
 </p>
 
 {{#if this.isSubmitting}}
-  <LoadingDialog @customMessage={{if this.isCommitting "Submitting the upload." "Verifying the request."}} />
+  <LoadingDialog @text={{if this.isCommitting "Submitting the upload." "Verifying the request."}} />
 {{else if this.actionResults}}
   <div class="border rounded p-2 mt-2 mb-2">
     {{#if this.resultFailures}}

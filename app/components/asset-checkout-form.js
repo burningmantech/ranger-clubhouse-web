@@ -19,6 +19,7 @@ export default class AssetCheckoutFormComponent extends Component {
   @tracked barcodeNotFound = false;
   @tracked barcodeCheckedOut = null;
   @tracked isSubmitting = false;
+  @tracked showHistory = false;
 
   clearErrors() {
     this.barcodeNotFound = false;

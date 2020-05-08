@@ -22,7 +22,7 @@
         <td class="w-15">
           <PersonLink @callsign={{person.callsign}} @personId={{person.person_id}} />
         </td>
-        <td class="w-5">{{present-or-not person.gender "-"}}</td>
+        <td class="w-5"><PresentOrNot @value={{person.gender}} @empty="-" /></td>
         <td class="w-5 text-right">{{person.years}}</td>
         <td class="w-5 text-center">
           {{#if person.vehicle_blacklisted}}

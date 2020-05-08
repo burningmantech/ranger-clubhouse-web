@@ -1,28 +1,30 @@
-import Component from '@ember/component';
-
-
+import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { set } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
 
 export default class modalAssetHistoryComponent extends Component {
-  assetId = null;
-  onClose = null;
+  @tracked isLoading = false;
+  @tracked history = [];
 
-  isLoading = false;
-  history = [];
+  @service ajax;
+  @service house;
+  @service toast;
 
-  didReceiveAttrs() {
-    this.set('isLoading', true);
+  constructor() {
+    super(...arguments);
 
-    this.ajax.request(`asset/${this.assetId}/history`)
-      .then((results) => this.set('assetHistory', results.asset_history))
+    this.isLoading = true;
+    this.ajax.request(`asset/${this.args.assetId}/history`)
+      .then((results) => this.assetHistory = results.asset_history)
       .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isLoading', false));
+      .finally(() => this.isLoading = false);
   }
 
   @action
   checkin(row) {
-    this.ajax.request(`asset/${this.assetId}/checkin`, { method: 'POST' })
+    this.ajax.request(`asset/${this.args.assetId}/checkin`, { method: 'POST' })
       .then((result) => {
         set(row, 'checked_in', result.checked_in);
         this.toast.success('Asset has been successfully checked in.');

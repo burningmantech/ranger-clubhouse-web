@@ -8,7 +8,9 @@
     Showing {{pluralize this.photos.length "photo"}}.
   </p>
   <PhotoTable @photos={{this.photos}} @deletePhotoAction={{this.deletePhotoAction}}
-              @activatePhotoAction={{this.activatePhotoAction}} @person={{this.person}}/>
+              @activatePhotoAction={{this.activatePhotoAction}} @person={{this.person}}
+              @rejectionLabels={{this.rejectionLabels}}
+  />
 {{else}}
   <p>
     <b>{{this.person.callsign}} has no photos on file.</b>

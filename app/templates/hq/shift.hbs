@@ -1,29 +1,29 @@
 {{#if isShinyPenny}}
-  {{#ch-alert "success"}}
+  <ChAlert @type="success">
     <b>{{person.callsign}} is newly minted Shiny Penny. Share the Ranger love and welcome them to the family. {{fa-icon
             "smile-beam" type="far"}}</b>
-  {{/ch-alert}}
+  </ChAlert>
 {{/if}}
 
 {{#unless person.on_site}}
-  {{#ch-alert "danger"}}
+  <ChAlert @type="danger">
     <h4>{{person.callsign}} is marked as OFF SITE.</h4>
     Follow the procedures on the Site Check In page before signing the person into a shift.
     <div class="mt-2">
       <LinkTo @route="hq.site-checkin" @model={{person.id}} class="btn btn-primary">Site Check In</LinkTo>
     </div>
-  {{/ch-alert}}
+  </ChAlert>
 {{/unless}}
 
 {{#if (gt person.unread_message_count 0)}}
-  {{#ch-alert "warning" bold=true}}
+  <ChAlert @type="warning" @bold={{true}}>
     {{fa-icon "envelope"}} {{pluralize person.unread_message_count "unread Clubhouse message"}}.
     <LinkTo @route="hq.messages" class="btn btn-success">Read Now</LinkTo>
-  {{/ch-alert}}
+  </ChAlert>
 {{/if}}
 
 {{#if scheduleRecommendations.burn_weekend_shift}}
-  {{#ch-alert "warning"}}
+  <ChAlert @type="warning">
     <div class="d-flex">
       <div class="mr-2">
         {{fa-icon "exclamation-circle" size="2x"}}
@@ -33,7 +33,7 @@
         Ask {{person.callsign}} if they are interested in signing up for a weekend shift.
       </div>
     </div>
-  {{/ch-alert}}
+  </ChAlert>
 {{/if}}
 
 <p class="my-2 hours-credits-header">
@@ -93,7 +93,6 @@
 </table>
 
 <hr>
-
 
 <h3>
   Timesheet Verification
@@ -226,9 +225,9 @@
   <HelpPopover @slug="hq-assets"/>
 </h3>
 {{#unless eventInfo.radio_info_available}}
-  {{#ch-alert "danger"}}
+  <ChAlert @type="danger">
     Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
-  {{/ch-alert}}
+  </ChAlert>
 {{/unless}}
 {{#if radioCount}}
   {{#if shiftRadios}}
@@ -276,10 +275,10 @@
   {{#each assetsCheckedOut as |ap|}}
     <tr>
       <td class="align-middle">{{ap.asset.description}}</td>
-      <td class="align-middle">{{present-or-not ap.asset.barcode "-"}}</td>
-      <td class="align-middle">{{present-or-not ap.attachment.description "-"}}</td>
+      <td class="align-middle"><PresentOrNot @value={{ap.asset.barcode}} @empty="-" /></td>
+      <td class="align-middle"><PresentOrNot @value={{ap.attachment.description}} @empty="-" /></td>
       <td class="align-middle">{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
-      <td class="align-middle">{{present-or-not ap.asset.temp_id "-"}}</td>
+      <td class="align-middle"><PresentOrNot @value={{ap.asset.temp_id}} @empty="-" /></td>
       <td class="align-middle">{{shift-format ap.checked_out}}</td>
       <td class="align-middle">
         <button class="btn btn-primary" {{action assetCheckInAction ap}} disabled={{ap.isSubmitting}}>Check In</button>

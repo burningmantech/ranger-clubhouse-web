@@ -1,4 +1,4 @@
-{{#each alphaGroups as |group groupIdx|}}
+{{#each this.alphaGroups as |group groupIdx|}}
   {{#each group.pages as |alphas idx|}}
     <div class="d-flex justify-content-between {{if (or idx groupIdx) "d-print-page-break"}}">
       <h2 class="align-middle">{{year-format slot.begins}} {{slot.description}} {{shift-format slot.begins}}</h2>
@@ -27,10 +27,10 @@
             <td>{{person.status}}</td>
             <td>{{person.mentor_status}}</td>
             <td>
-              {{present-or-not person.teeshirt_size_style "UNKNOWN"}}
+              <PresentOrNot @value={{person.teeshirt_size_style}} @empty="UNKNOWN" />
             </td>
             <td>
-              {{present-or-not person.longsleeveshirt_size_style "UNKNOWN"}}
+              <PresentOrNot @value={{person.longsleeveshirt_size_style}} @empty="UNKNOWN" />
             </td>
           </tr>
         {{/each}}
@@ -39,9 +39,9 @@
   {{/each}}
 {{/each}}
 
-<h2 class="d-print-page-break">{{year-format this.slot.begins}} {{shift-format this.slot.begins}} Shirt Summary (EXCLUDING BONKS)</h2>
+<h2 class="d-print-page-break">{{year-format @slot.begins}} {{shift-format @slot.begins}} Shirt Summary (EXCLUDING BONKS)</h2>
 <div class="row">
-  {{#each shirtGroups as |shirts|}}
+  {{#each this.shirtGroups as |shirts|}}
     <div class="col-5">
       <table class="table table-box">
         <caption>{{shirts.name}} Totals</caption>

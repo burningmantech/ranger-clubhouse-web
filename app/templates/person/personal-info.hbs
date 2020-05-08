@@ -17,8 +17,8 @@
       <div class="form-row">
         <f.input @name="home_phone" @type="text" @inputmode="tel" @label="Primary Phone" @grid="col-sm-4"
                  @inputmode="tel" @maxlength=25/>
-        <f.input @name="alt_phone" @type="text" @inputmode="tel" @label="Alternative Phone" @grid="col-sm-4"
-                 @inputmode="tel" @maxlength=25/>
+          <f.input @name="alt_phone" @type="text" @inputmode="tel" @label="Alternative Phone" @grid="col-sm-4"
+                   @inputmode="tel" @maxlength=25/>
       </div>
 
       <div class="form-row">
@@ -56,7 +56,7 @@
     </fieldset>
 
     <f.submit @label="Update" @disabled={{this.person.isSaving}} />
-    <f.cancel  @disabled={{this.person.isSaving}} />
+    <f.cancel @disabled={{this.person.isSaving}} />
     {{#if this.person.isSaving}}
       <LoadingIndicator/>
     {{/if}}
@@ -75,17 +75,17 @@
 
     <dt class="col-md-3">Gender</dt>
     <dd class="col-md-8">
-      {{present-or-not this.person.gender}}
+      <PresentOrNot @value={{this.person.gender}} />
     </dd>
 
     <dt class="col-md-3">Languages</dt>
     <dd class="col-md-8">
-      {{present-or-not this.person.languages}}
+      <PresentOrNot @value={{this.person.languages}} />
     </dd>
 
     <dt class="col-md-3">Camp Location</dt>
     <dd class="col-md-8">
-      {{present-or-not this.person.camp_location}}
+      <PresentOrNot @value={{this.person.camp_location}} />
     </dd>
 
     <dt class="col-md-3">Short Sleeve</dt>
@@ -110,16 +110,20 @@
 
     <dt class="col-md-3">Home Phone</dt>
     <dd class="col-md-8">
-      {{#present-or-not this.person.home_phone}}
+      {{#if this.person.home_phone}}
         {{phone-link this.person.home_phone}}
-      {{/present-or-not}}
+      {{else}}
+        <i>none given</i>
+      {{/if}}
     </dd>
 
     <dt class="col-md-3">Alt. Phone</dt>
     <dd class="col-md-8">
-      {{#present-or-not this.person.alt_phone}}
+      {{#if this.person.alt_phone}}
         {{phone-link this.person.alt_phone}}
-      {{/present-or-not}}
+      {{else}}
+        <i>none given</i>
+      {{/if}}
     </dd>
   </dl>
 {{/if}}

@@ -2,9 +2,9 @@
 
 {{#if (config "MotorpoolPolicyEnable")}}
   {{#if hasAgreed}}
-    {{#ch-alert "success"}}
+    <ChAlert @type="success">
       You have agreed to the motorpool policy. Thank you. Please drive safely.
-    {{/ch-alert}}
+    </ChAlert>
   {{/if}}
   <b>Motorpool Policy</b>
   <p>All vehicles used for Ranger business shall be used in accordance with the Motorpool policy.</p>

@@ -1,7 +1,7 @@
-{{#ch-box "Account Is Disabled" type="warning" icon="exclamation-circle"}}
-{{#if (and (not person.callsign_approved) (not person.isPastProspective))}}
-  <p>Your callsign is not approved.</p>
-{{/if}}
+<ChBox @title="Account Is Disabled" @type="warning" @icon="exclamation-circle">
+  {{#if (and (not person.callsign_approved) (not person.isPastProspective))}}
+    <p>Your callsign is not approved.</p>
+  {{/if}}
   <p>
     Your account has been (somewhat) disabled because you seem to have
     fallen out of our volunteer application process. Likely this is because you
@@ -13,7 +13,7 @@
 
   <p>
     Please see <a href="https://rangers.burningman.org/ranger-application-process/">
-      our web page</a> for more information on our volunteer application process.
+    our web page</a> for more information on our volunteer application process.
   </p>
 
   <p>
@@ -36,4 +36,4 @@
     Thanks,<br>
     The Black Rock Rangers
   </p>
-{{/ch-box}}
+</ChBox>

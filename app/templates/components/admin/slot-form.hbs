@@ -1,14 +1,15 @@
 <ModalDialog @title={{this.formTitle}} as |Modal|>
-  <ChForm @formId="slot" @originalModel={{this.slot}} @validator={{this.slotValidations}}
-          @onSubmit={{action this.save}} @onCancel={{action this.cancel}} as |f|>
+  <ChForm @formId="slot" @originalModel={{@slot}} @validator={{this.slotValidations}}
+          @onSubmit={{@onSave}} @onCancel={{@onCancel}} as |f|>
     <Modal.body>
       <div class="form-row">
-        <f.input @name="position_id" @label="Position" @type="select" @options={{this.positionOptions}} @grid="col-md-auto"/>
+        <f.input @name="position_id" @label="Position" @type="select" @options={{this.positionOptions}}
+                 @grid="col-md-auto"/>
         <f.input @name="trainer_slot_id"
                  @label="Sign Up Multiplier Trainer's Slot"
                  @type="select"
                  @options={{this.trainerSlotsOptions}}
-                 @includeBlank=true
+                 @includeBlank={{true}}
                  @grid="col-md-auto"/>
       </div>
 
@@ -47,12 +48,12 @@ e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.
       </div>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <f.submit @label={{if this.slot.isNew "Create" "Update"}} @disabled={{this.slot.isSaving}} />
-      {{#unless this.slot.isNew}}
-        <f.submit @label="Create New Slot" @onSubmit={{action this.cloneRecord}} />
+      <f.submit @label={{if @slot.isNew "Create" "Update"}} @disabled={{@slot.isSaving}} />
+      {{#unless @slot.isNew}}
+        <f.submit @label="Create New Slot" @onSubmit={{@onClone}} />
       {{/unless}}
-      <f.cancel @disabled={{this.slot.isSaving}} />
-      {{#if this.slot.isSaving}}
+      <f.cancel @disabled={{@slot.isSaving}} />
+      {{#if @slot.isSaving}}
         <LoadingIndicator/>
       {{/if}}
     </Modal.footer>

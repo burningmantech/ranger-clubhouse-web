@@ -37,7 +37,7 @@
         <td>{{message.status}}</td>
         <td>{{message.direction}}</td>
         <td>{{message.address}}</td>
-        <td>{{present-or-not message.broadcast_id "-"}}</td>
+        <td><PresentOrNot @value={{message.broadcast_id}} @empty="-" /></td>
       </tr>
       {{#if (or (eq message.direction "inbound") (eq message.status "reply"))}}
         <tr class="no-border">

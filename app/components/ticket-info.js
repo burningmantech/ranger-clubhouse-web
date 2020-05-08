@@ -1,23 +1,11 @@
-import Component from '@ember/component';
-import { computed } from '@ember/object';
+import Component from '@glimmer/component';
 import { ticketTypeLabel } from 'clubhouse/constants/ticket-types';
 import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
 
 export default class TicketInfoComponent extends Component {
-  tagName = '';
-
-  ticketingInfo = null;
-  ticketPackage = null;
-  person = null;
-  ticket = null;
-  setTicketStatus = null;
-  showing = null;
-  toggleCard = null;
-  nextSection = null;
-
-  @computed('ticket.type')
   get ticketType() {
-    return ticketTypeLabel[this.ticket.type] || `Unknown ticket type [${this.ticket.type}]`;
+    const type = this.args.ticket.type;
+    return ticketTypeLabel[type] || `Unknown ticket type [${type}]`;
   }
 
   * transition({ insertedSprites, removedSprites }) { // eslint-disable-line require-yield

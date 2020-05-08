@@ -54,7 +54,7 @@
             {{/if}}
           </td>
           <td>
-            {{present-or-not entry.position "-"}}
+            <PresentOrNot @value={{entry.position}} @empty="-" />
           </td>
           <td>
             {{#if entry.signin}}

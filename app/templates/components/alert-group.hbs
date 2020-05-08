@@ -1,7 +1,7 @@
 <div class="card mb-3">
-  <div class="card-header">{{heading}} - {{description}}</div>
+  <div class="card-header">{{@heading}} - {{@description}}</div>
   <div class="card-body">
-    {{#each group as |alert idx|}}
+    {{#each @group as |alert idx|}}
       {{#if idx}}<hr>{{/if}}
       <div class="row">
         <div class="col-sm-12">
@@ -14,8 +14,8 @@
           {{else if alert.email_only}}
             <span class="text-muted">only email used</span>
           {{else}}
-            {{#if (has-alert-phone alert numbers)}}
-              <label><Input @type="checkbox" @checked={{mut (get alert "use_sms")}} /> {{if alert.on_playa numbers.on_playa.phone numbers.off_playa.phone}}</label>
+            {{#if (has-alert-phone alert @numbers)}}
+              <label><Input @type="checkbox" @checked={{mut (get alert "use_sms")}} /> {{if alert.on_playa @numbers.on_playa.phone @numbers.off_playa.phone}}</label>
             {{else}}
               <i class="text-muted">no phone number given</i>
             {{/if}}
@@ -27,7 +27,7 @@
           {{else if alert.sms_only}}
             <span class="text-muted">only SMS used</span>
           {{else}}
-            <label><Input @type="checkbox" @checked={{mut (get alert "use_email")}} /> {{email}}</label>
+            <label><Input @type="checkbox" @checked={{mut (get alert "use_email")}} /> {{@email}}</label>
           {{/if}}
         </div>
       </div>

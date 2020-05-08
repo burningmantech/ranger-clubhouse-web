@@ -1,4 +1,4 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import moment from 'moment';
 
 /*
@@ -6,11 +6,6 @@ import moment from 'moment';
  */
 
 export default class AccessDocumentsForPersonComponent extends Component {
-  tagName = 'tr';
-
-  person = null;
-  documents = null;
-
   ticketInfoTypes = {
     staff_credential: 'CRED',
     reduced_price_ticket: 'RPT',
@@ -25,14 +20,15 @@ export default class AccessDocumentsForPersonComponent extends Component {
     work_access_pass_so: 'WAPSO'
   };
 
-  didReceiveAttrs() {
+  constructor() {
+    super(...arguments);
     const notes = [];
 
-    this.set('tickets',this._accessDocumentInfo('tickets', this.ticketInfoTypes, notes));
+    this.tickets = this._accessDocumentInfo('tickets', this.ticketInfoTypes, notes);
     this._findArrivalDate(notes);
-    this.set('vpTickets',  this._accessDocumentInfo('VPs', this.vpTicketInfo, notes));
-    this.set('significantOtherCount',  this._accessDocumentInfo('WAPSOs', this.wapSOsInfo, notes));
-    this.set('notes', notes);
+    this.vpTickets = this._accessDocumentInfo('VPs', this.vpTicketInfo, notes);
+    this.significantOtherCount = this._accessDocumentInfo('WAPSOs', this.wapSOsInfo, notes);
+    this.notes = notes;
   }
 
   _buildAccessDate(doc) {
@@ -48,7 +44,7 @@ export default class AccessDocumentsForPersonComponent extends Component {
   }
 
   _findArrivalDate(notes) {
-    const docs = this.documents;
+    const docs = this.args.documents;
     const waps = docs.filter((doc) => (doc.type == 'work_access_pass'));
 
     if (waps.length > 1) {
@@ -84,11 +80,11 @@ export default class AccessDocumentsForPersonComponent extends Component {
       text = this._buildAccessDate(doc);
     }
 
-    this.set('arrivalDate',  { style, text });
+    this.arrivalDate =  { style, text };
   }
 
   _accessDocumentInfo(type, typeMap, notes) {
-    const documents = this.documents.filter((doc) => typeMap[doc.type] ? 1 : 0);
+    const documents = this.args.documents.filter((doc) => typeMap[doc.type] ? 1 : 0);
 
     if (documents.length == 0) {
       return { style: '', text: '' };
@@ -144,7 +140,7 @@ export default class AccessDocumentsForPersonComponent extends Component {
   get documentsErrors() {
     const errors = [ ];
 
-    this.documents.forEach((doc) => {
+    this.args.documents.forEach((doc) => {
       if (doc.has_error) {
         errors.push(`RAD-${doc.id} - ${doc.error}`);
       }

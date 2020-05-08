@@ -39,11 +39,11 @@
   <dl class="row">
     <dt class="col-1">Known Rangers:</dt>
     <dd class="col-11">
-      {{present-or-not this.person.known_rangers "none"}}
+      <PresentOrNot @value={{this.person.known_rangers}} @empty="none" />
     </dd>
     <dt class="col-1">Known PNVs:</dt>
     <dd class="col-11">
-      {{present-or-not this.person.known_pnvs "none"}}
+      <PresentOrNot @value={{this.person.known_pnvs}} @empty="none" />
     </dd>
   </dl>
 {{/if}}

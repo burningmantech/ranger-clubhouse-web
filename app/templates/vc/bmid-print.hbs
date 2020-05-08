@@ -114,9 +114,9 @@
         <td>{{bmid.statusHuman}}</td>
         <td>{{bmid.person.callsign}}</td>
         <td>{{bmid.person.first_name}} {{bmid.person.last_name}}</td>
-        <td>{{present-or-not bmid.title1 "-"}}</td>
-        <td>{{present-or-not bmid.title2 "-"}}</td>
-        <td>{{present-or-not bmid.title3 "-"}}</td>
+        <td><PresentOrNot @value={{bmid.title1}} @empty="-" /></td>
+        <td><PresentOrNot @value={{bmid.title2}} @empty="-" /></td>
+        <td><PresentOrNot @value={{bmid.title3}} @empty="-" /></td>
         <td>{{yesno bmid.org_vehicle_insurance}}</td>
         <td>{{yesno bmid.showers}}</td>
         <td>{{bmid.mealsHuman}}</td>

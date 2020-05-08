@@ -61,14 +61,14 @@
       {{/if}}
     {{else}}
       <tr>
-        <td colspan="5" class="text-danger">No accounts found</td>
+        <td colspan="{{if (or this.isVintage this.isPastProspective) 6 8}}" class="text-danger">No accounts found</td>
       </tr>
     {{/each}}
   </tbody>
 </table>
 
 <p class="mb-4">
-  <button class="btn btn-primary" disabled={{or this.isSubmitting (not this.selectedCount)}} {{action this.submit}}>
+  <button type="button" class="btn btn-primary" disabled={{or this.isSubmitting (not this.selectedCount)}} {{action this.submit}}>
     {{#if this.isVintage}}
       Mark as Vintage ({{this.selectedCount}})
     {{else}}

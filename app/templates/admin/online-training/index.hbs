@@ -9,8 +9,8 @@
     {{yesno @model.OnlineTrainingDisabledAllowSignups}}
   </dd>
   <dt>Docebo Half Course ID</dt>
-  <dd>{{present-or-not @model.DoceboHalfCourseId "not set"}}</dd>
+  <dd><PresentOrNot @value={{@model.DoceboHalfCourseId}} @empty="not set" /></dd>
 
   <dt>Docebo Full Course ID</dt>
-  <dd>{{present-or-not @model.DoceboFullCourseId "not set"}}</dd>
+  <dd><PresentOrNot @value={{@model.DoceboFullCourseId}} @empty="not set" /></dd>
 </dl>

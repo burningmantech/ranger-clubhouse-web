@@ -1,4 +1,4 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 
 const topicDescriptions = {
     ticketing: 'Ticketing',
@@ -8,13 +8,10 @@ const topicDescriptions = {
 };
 
 export default class TicketFaqComponent extends Component {
-  tagName = '';
-  topic = null;
-  ticketingInfo = null;
-
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-    this.set('url', this.ticketingInfo.faqs[this.topic]);
-    this.set('topicDescription', topicDescriptions[this.topic]);
+  constructor() {
+    super(...arguments);
+    const topic = this.args.topic;
+    this.url = this.args.ticketingInfo.faqs[topic];
+    this.topicDescription = topicDescriptions[topic];
   }
 }

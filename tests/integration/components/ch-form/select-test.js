@@ -12,10 +12,10 @@ module('Integration | Component | ch-form/select', function(hooks) {
     this.set('value', 'Banana');
     this.set('options', ['Apple', 'Banana', 'Cherry', 'Durian']);
 
-    await render(hbs`{{ch-form/select name="test" value="Banana" options=options name="fruit" controlClass="myselect"}}`);
+    await render(hbs`<ChForm::Select @name="test" @value="Banana" @options={{this.options}} @name="fruit" @controlClass="myselect" />`);
 
     assert.dom('select').hasClass('myselect');
-    assert.dom('select').hasAttribute('name', 'fruit');
+    assert.dom('select').hasAttribute('name', 'test');
     assert.dom('option').exists({ count: 4 }, 'should render 4 options');
     assert.equal(this.element.querySelector('select option[value="Apple"]').selected, false);
     assert.dom('select option[value="Apple"]').hasText('Apple');
@@ -29,10 +29,10 @@ module('Integration | Component | ch-form/select', function(hooks) {
     this.set('value', 'm');
     this.set('options', [{id: 'b', title: 'Berlin'}, {id: 'm', title: 'Moscow'}, {id: 't', title: 'Tokyo'}]);
 
-    await render(hbs`{{ch-form/select name="test" value=value options=options name="fruit" controlClass="myselect"}}`);
+    await render(hbs`<ChForm::Select @name="test" @value={{this.value}} @options={{this.options}} @controlClass="myselect" />`);
 
     assert.dom('select').hasClass('myselect');
-    assert.dom('select').hasAttribute('name', 'fruit');
+    assert.dom('select').hasAttribute('name', 'test');
     assert.dom('option').exists({ count: 3 }, 'should render 3 options');
     assert.dom('select option[value="b"]').hasText('Berlin');
     assert.equal(this.element.querySelector('select option[value="b"]').selected, false);
@@ -46,7 +46,7 @@ module('Integration | Component | ch-form/select', function(hooks) {
     this.set('value', '');
     this.set('options', ['Apple', 'Banana', 'Cherry', 'Durian']);
 
-    await render(hbs`{{ch-form/select name="test" value=value options=options includeBlank=true}}`);
+    await render(hbs`<ChForm::Select @name="test" @value={{this.value}} @options={{this.options}} @includeBlank={{true}} />`);
 
     assert.dom('select option').exists({ count: 5 }, 'should render 5 options');
     assert.equal(this.element.querySelector('option[value=""]').selected, true);
@@ -61,7 +61,7 @@ module('Integration | Component | ch-form/select', function(hooks) {
     this.set('value', ['Apple', 'Durian']);
     this.set('options', ['Apple', 'Banana', 'Cherry', 'Durian']);
 
-    await render(hbs`{{ch-form/select name="test" value=value options=options multiple=true}}`);
+    await render(hbs`<ChForm::Select @name="test" @value={{this.value}} @options={{this.options}} @multiple={{true}} />`);
 
     assert.dom('select').hasAttribute('multiple');
     assert.dom('select option').exists({ count: 4 }, 'should render 4 options');

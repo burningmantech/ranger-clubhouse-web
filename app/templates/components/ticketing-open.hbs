@@ -1,7 +1,7 @@
 {{#if person.needsBpguid}}
-  {{#ch-box "Missing Burner Profile ID" type="warning"}}
+  <ChBox @title="Missing Burner Profile ID" @type="warning">
     <PersonMissingBpguid />
-  {{/ch-box}}
+  </ChBox>
 {{else if (or person.isProspective person.isAlpha)}}
   <p>
     Alphas and Prospective Rangers who have signed up for or completed

@@ -33,7 +33,7 @@
         {{person.first_name}} {{person.last_name}}
       </td>
       <td>
-          {{present-or-not person.date_complete "-"}}
+          <PresentOrNot @value={{person.date_complete}} @empty="-" />
       </td>
     </tr>
   {{/each}}

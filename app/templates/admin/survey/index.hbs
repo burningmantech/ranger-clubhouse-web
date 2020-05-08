@@ -20,7 +20,7 @@ Showing {{pluralize this.surveys.length "survey"}}
       <td>{{survey.type}}</td>
       <td>
         {{#if survey.position_id}}
-          {{present-or-not (get this.positionsById survey.position_id) (concat "Unknown #" survey.position_id)}}
+          <PresentOrNot @value={{get this.positionsById survey.position_id}} @empty={{concat "Unknown #" survey.position_id}} />
         {{else}}
           -
         {{/if}}

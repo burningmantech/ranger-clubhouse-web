@@ -1,10 +1,9 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import { action, set } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 export default class AssetTableComponent extends Component {
-  tagName = '';
-  assets = null;
-  year = null;
+  @tracked assetForHistory = null;
 
   @action
   checkInAsset(asset, row) {
@@ -19,11 +18,11 @@ export default class AssetTableComponent extends Component {
 
   @action
   showHistoryAction(asset) {
-    this.set('assetForHistory', asset);
+    this.assetForHistory = asset;
   }
 
   @action
   closeHistory() {
-    this.set('assetForHistory', null);
+    this.assetForHistory = null;
   }
 }

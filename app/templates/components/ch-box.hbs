@@ -1,10 +1,10 @@
-{{#if title}}
-  <div class="card-header {{if type (concat "bg-" type)}}{{if (eq type "danger") " text-white"}}">{{if icon (fa-icon icon size="lg" type=iconType)}} {{title}}</div>
-{{/if}}
-{{#if noBody}}
-  {{yield}}
-{{else}}
+<div class="card mb-3">
+  {{#if @title}}
+    <div class="card-header {{if @type (concat "bg-" type)}}{{if (eq @type "danger") " text-white"}}">
+      {{~if @icon (fa-icon @icon size="lg" type=@iconType)~}} {{@title~}}
+    </div>
+  {{/if}}
   <div class="card-body">
     {{yield}}
   </div>
-{{/if}}
+</div>

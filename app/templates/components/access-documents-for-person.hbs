@@ -1,16 +1,20 @@
-<td><PersonLink @person={{person}} @page="access-documents" /></td>
-<td>{{person.status}}</td>
-<td class={{tickets.style}}>{{tickets.text}}</td>
-<td class={{arrivalDate.style}}>{{arrivalDate.text}}</td>
-<td class={{vpTickets.style}}>{{vpTickets.text}}</td>
-<td class="text-right {{significantOtherCount.style}}">{{significantOtherCount.text}}</td>
-<td>
-  {{notes}}
-  {{#if documentsErrors}}
-    <p class="text-danger">
-      {{#each documentsErrors as |error|}}
-        {{error}}<br>
-      {{/each}}
-    </p>
-  {{/if}}
-</td>
+<tr>
+  <td>
+    <PersonLink @person={{@person}} @page="access-documents"/>
+  </td>
+  <td>{{@person.status}}</td>
+  <td class={{this.tickets.style}}>{{this.tickets.text}}</td>
+  <td class={{this.arrivalDate.style}}>{{this.arrivalDate.text}}</td>
+  <td class={{this.vpTickets.style}}>{{this.vpTickets.text}}</td>
+  <td class="text-right {{this.significantOtherCount.style}}">{{this.significantOtherCount.text}}</td>
+  <td>
+    {{~this.notes}}
+    {{~#if this.documentsErrors~}}
+      <p class="text-danger">
+        {{~#each this.documentsErrors as |error|~}}
+          {{error}}<br>
+        {{~/each~}}
+      </p>
+    {{/if}}
+  </td>
+</tr>

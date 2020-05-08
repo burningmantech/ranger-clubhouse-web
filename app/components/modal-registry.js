@@ -1,16 +1,6 @@
-import Component from '@ember/component';
-import { action } from '@ember/object';
+import Component from '@glimmer/component';
+import { inject as service } from '@ember/service';
 
 export default class ModalRegistryComponent extends Component {
-  tagName = '';
-
-  @action
-  close() {
-    this.modal.closeAction();
-  }
-
-  @action
-  confirm() {
-    this.modal.confirmAction()
-  }
+  @service modal;
 }

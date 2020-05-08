@@ -1,5 +1,6 @@
 import Service from '@ember/service';
 import { A } from '@ember/array';
+import { action } from '@ember/object';
 
 export default Service.extend({
   dialogs: A(),
@@ -22,6 +23,7 @@ export default Service.extend({
     });
   },
 
+  @action
   closeAction() {
     const dialog = this.dialogs.shiftObject();
 
@@ -30,6 +32,7 @@ export default Service.extend({
     }
   },
 
+  @action
   confirmAction() {
     const dialog = this.dialogs.shiftObject();
     dialog.confirmCallback();

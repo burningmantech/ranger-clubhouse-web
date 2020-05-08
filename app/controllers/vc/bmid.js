@@ -235,6 +235,13 @@ export default class VcBmidController extends Controller {
       return;
     }
 
+    if (this.viewBmids.length < 200) {
+      // Don't bother with smaller batches
+      this.set('renderBmids', this.viewBmids);
+      this.set('editableBmids', this.viewBmids);
+      return;
+    }
+
     this.set('isRendering', true);
     this.set('renderBmids', []);
     this.set('editableBmids', []);
@@ -317,7 +324,6 @@ export default class VcBmidController extends Controller {
   @action
   editBmid(bmid) {
     this.set('entry', bmid);
-
   }
 
   @action

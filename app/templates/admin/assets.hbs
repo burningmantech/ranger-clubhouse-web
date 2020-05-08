@@ -47,7 +47,7 @@ Showing {{viewAssets.length}} of {{pluralize this.assets.length "asset"}}
     <tr>
       <td>{{asset.barcode}}</td>
       <td>{{asset.description}}</td>
-      <td>{{present-or-not asset.temp_id "-"}}</td>
+      <td><PresentOrNot @value={{asset.temp_id}} @empty="-" /></td>
       <td>{{if asset.perm_assign "Perm" "Temp"}}</td>
       <td>
         <button class="btn btn-secondary btn-sm" {{action this.assetHistoryAction asset}}>History</button>

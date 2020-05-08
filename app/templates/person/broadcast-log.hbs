@@ -14,7 +14,7 @@
   {{#each messages as |msg|}}
       <tr>
           <td>{{msg.created_at}}</td>
-          <td>{{present-or-not msg.broadcast_id "-"}}</td>
+          <td><PresentOrNot @value={{msg.broadcast_id}} @empty="-" /></td>
           <td>{{msg.address}}</td>
           <td>{{msg.status}}</td>
           <td>{{msg.direction}}</td>
