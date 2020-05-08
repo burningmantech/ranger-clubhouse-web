@@ -3,7 +3,7 @@ import Ember from 'ember';
 import Application from '@ember/application';
 import Resolver from 'ember-resolver';
 import loadInitializers from 'ember-load-initializers';
-import config from './config/environment';
+import config from 'clubhouse/config/environment';
 import LinkComponent from '@ember/routing/link-component';
 import RSVP from 'rsvp';
 import buildErrorHandler from 'ember-test-friendly-error-handler';
@@ -28,24 +28,23 @@ RSVP.on('error', function (error) {
  */
 
 Ember.onerror = buildErrorHandler('Ember.onerror', (error) => {
+  var didAlertError = false;
+
   if (Ember.testing) { // eslint-disable-line ember/no-ember-testing-in-module-scope
     throw error;
   }
   console.error(error);
 
-  const dontReport =
-    (error instanceof TimeoutError
-      || error instanceof AbortError
-      || isAbortError(error)
-      || isTimeoutError(error)
-      || error instanceof UnauthorizedError);
-
-  if (dontReport) {
+  if ((error instanceof TimeoutError
+    || error instanceof AbortError
+    || isAbortError(error)
+    || isTimeoutError(error)
+    || error instanceof UnauthorizedError)) {
     // Don't record timed out, unauthorized, or offline errors.
     return;
   }
 
-  if (config.logEmberErrors && navigator.sendBeacon) {
+  if (config.logEmberErrors) {
     const data = new FormData;
 
     data.append('url', window.location.href);
@@ -71,7 +70,15 @@ Ember.onerror = buildErrorHandler('Ember.onerror', (error) => {
     navigator.sendBeacon(config['api-server'] + '/error-log/record', data);
   }
 
-  alert("Exception " + error.stack);
+  if (config.environment == 'development') {
+    if (!didAlertError) {
+      didAlertError = true;
+      alert("Exception " + error.stack);
+      debugger;  // eslint-disable-line no-debugger
+    }
+  } else {
+    alert("Exception " + error.stack);
+  }
 });
 
 LinkComponent.reopen({

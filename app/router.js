@@ -1,21 +1,9 @@
 import EmberRouter from '@ember/routing/router';
-import config from './config/environment';
-import {run} from '@ember/runloop';
+import config from 'clubhouse/config/environment';
 
 export default class Router extends EmberRouter {
   location = config.locationType;
   rootURL = config.rootURL;
-
-  constructor() {
-    super(...arguments);
-
-    this.on('routeDidChange', () => {
-      // Move the window back to the top when heading to a new route
-      run.schedule('afterRender', () => {
-        window.scrollTo(0, 0);
-      });
-    });
-  }
 }
 
 Router.map(function () {

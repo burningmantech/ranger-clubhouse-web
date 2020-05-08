@@ -4,7 +4,7 @@ import {humanize} from 'ember-cli-string-helpers/helpers/humanize';
 import {inject as service} from '@ember/service';
 import {config} from 'clubhouse/utils/config';
 import {UnauthorizedError} from '@ember-data/adapter/error';
-
+import {run} from '@ember/runloop';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import ENV from 'clubhouse/config/environment';
 
@@ -16,13 +16,17 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
   constructor() {
     super(...arguments);
 
-    if (!ENV.logRoutes || !navigator.sendBeacon) {
-      // Not logging routes or sendBeacon is not available.
-      return;
-    }
-
     // Record route transitions
     this.router.on('routeDidChange', (transition) => {
+      // Move the window back to the top when heading to a new route
+      run.schedule('afterRender', () => {
+        window.scrollTo(0, 0);
+      });
+
+      if (!ENV.logRoutes) {
+        return;
+      }
+
       if (!transition || !transition.to || transition.to.name == 'admin.action-log') {
         return;
       }
