@@ -92,7 +92,7 @@ export default class PhotoUploadComponent extends Component {
       processData: false,
       contentType: false,
     }).then(() => {
-      this.toast.success('Photo succesfully uploaded.');
+      this.toast.success('Photo successfully uploaded.');
       this.args.refreshPhoto();
       this.args.closeAction();
     }).catch((response) => {

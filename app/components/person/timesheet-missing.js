@@ -163,7 +163,7 @@ export default class PersonTimesheetMissingComponent extends Component {
       return;
     }
 
-    this.house.saveModel(model, 'A new missing timesheet request has been succesfully created.', () => {
+    this.house.saveModel(model, 'A new missing timesheet request has been successfully created.', () => {
       this.set('newEntry', null);
       this.timesheetMissing.update();
     });

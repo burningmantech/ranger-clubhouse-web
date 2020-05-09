@@ -418,7 +418,7 @@ export default class DashboardPNVComponent extends Component {
 
     person.set('behavioral_agreement', true);
     person.save().then(() => {
-      this.toast.success('Your agreement has been succesfully recorded.');
+      this.toast.success('Your agreement has been successfully recorded.');
       this.showBehaviorAgreement = false;
       set(this.args.milestones, 'behavioral_agreement', true);
     }).catch((response) => this.house.handleErrorResponse(response));

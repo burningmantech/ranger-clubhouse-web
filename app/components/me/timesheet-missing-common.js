@@ -98,7 +98,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     this.set('isSubmitting', true);
 
     model.save().then(() => {
-        this.toast.success(`Your request has been succesfully ${isNew ? 'submitted' : 'updated'}.`);
+        this.toast.success(`Your request has been successfully ${isNew ? 'submitted' : 'updated'}.`);
         if (isNew) {
           this.timesheetsMissing.pushObject(this.entry);
         }

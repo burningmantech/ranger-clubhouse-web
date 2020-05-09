@@ -401,7 +401,7 @@ export default class VcAccessDocumentsTrsController extends Controller {
     this.modal.confirm('Confirm mask as submitted', `Are you sure you want to mark the ${itemCount} item(s) as submitted?`, () => {
       this.set('isSubmitting', true);
       this.ajax.request('access-document/mark-submitted', { method: 'POST', data: { ids } }).then(() => {
-        this.toast.success('Access documents have been succesfully marked as submitted.');
+        this.toast.success('Access documents have been successfully marked as submitted.');
         this.set('isSubmitting', false);
         this.viewRecords.forEach((rec) => {
           if (!rec.selected)

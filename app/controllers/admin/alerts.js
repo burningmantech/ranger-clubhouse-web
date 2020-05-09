@@ -29,7 +29,7 @@ export default class AdminAlertsController extends Controller {
         this.alerts.pushObject(record);
       }
 
-      this.toast.success(`Alert was succesfully ${isNew ? 'created' : 'updated'}.`);
+      this.toast.success(`Alert was successfully ${isNew ? 'created' : 'updated'}.`);
       this.set('entry', null);
     }).catch((response) => {
       this.house.handleErrorResponse(response);
@@ -43,7 +43,7 @@ export default class AdminAlertsController extends Controller {
       () => {
         alert.destroyRecord().then(() => {
           this.alerts.removeObject(alert);
-          this.toast.success(`Alert was succesfully deleted.`);
+          this.toast.success(`Alert was successfully deleted.`);
       })
       });
   }

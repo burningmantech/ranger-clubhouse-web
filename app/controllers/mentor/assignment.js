@@ -111,7 +111,7 @@ export default class MentorAssignmentController extends Controller {
           }
 
         });
-        this.toast.success('Assignments succesfully saved.');
+        this.toast.success('Assignments successfully saved.');
         this.house.scrollToTop();
       }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.set('isSubmitting', false));

@@ -48,7 +48,7 @@ export default class AssetCheckoutFormComponent extends Component {
     }).then((result) => {
       switch (result.status) {
         case 'success':
-          this.toast.success('Asset was succesfully checked out.');
+          this.toast.success('Asset was successfully checked out.');
           this.assetForm = EmberObject.create({ });
           this.args.assets.update()
             .catch((response) => this.house.handleErrorResponse(response));

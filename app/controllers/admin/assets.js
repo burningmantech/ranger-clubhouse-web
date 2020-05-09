@@ -200,7 +200,7 @@ export default class AdminAssetsController extends Controller {
       () => {
         asset.destroyRecord().then(() => {
           this.assets.removeObject(asset);
-          this.toast.success('Asset was succesfully deleted');
+          this.toast.success('Asset was successfully deleted');
         });
       });
   }

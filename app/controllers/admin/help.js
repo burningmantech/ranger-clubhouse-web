@@ -37,7 +37,7 @@ export default class AdminHelpController extends Controller {
         this.documents.pushObject(record);
       }
 
-      this.toast.success(`Help document was succesfully ${isNew ? 'created' : 'updated'}.`);
+      this.toast.success(`Help document was successfully ${isNew ? 'created' : 'updated'}.`);
       this.set('entry', null);
     }).catch((response) => {
       this.house.handleErrorResponse(response);
@@ -51,7 +51,7 @@ export default class AdminHelpController extends Controller {
       () => {
         help.destroyRecord().then(() => {
           this.documents.removeObject(help);
-          this.toast.success(`Help document was succesfully deleted.`);
+          this.toast.success(`Help document was successfully deleted.`);
         }).catch((response) => this.house.handleErrorResponse(response));
       });
   }
