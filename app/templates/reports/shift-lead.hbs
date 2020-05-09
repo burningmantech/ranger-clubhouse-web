@@ -1,81 +1,87 @@
-{{year-select "Shift Lead Report" year=year gridClass="d-print-none" onChange=(action (mut year))}}
-{{#if dirtShiftTimes}}
+<div class="d-print-none">
+  <YearSelect @title="Shift Lead Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+</div>
+{{#if this.dirtShiftTimes}}
   <div class="form-row d-print-none mb-3">
     <div class="col-auto">
       <label class="col-form-label">Select Shift</label>
     </div>
     <div class="col-auto">
-      <ChForm::Select @name="shiftSelect" @value={{shiftSelect}} @options={{shiftOptions}} @onChange={{action changeShift}} @disabled={{isLoading}} @controlClass="form-control" />
+      <ChForm::Select @name="shiftSelect" @value={{this.shiftSelect}} @options={{this.shiftOptions}}
+                      @onChange={{this.changeShift}} @disabled={{this.isLoading}} @controlClass="form-control"/>
     </div>
     <div class="col-12 text-muted">
-      Use the browser's print command to send this page to the printer. The navigation header, footer, and this message will not appear on the page.
+      Use the browser's print command to send this page to the printer. The navigation header, footer, and this message
+      will not appear on the page.
     </div>
   </div>
 {{else}}
-  <strong class="text-danger">No shifts could be located for {{year}}.</strong>
+  <b class="text-danger">No {{this.year}} shifts could be located.</b>
 {{/if}}
 
-{{#if isLoading}}
-  <LoadingDialog @item="Shift Lead Report" />
-{{else if shiftSelect}}
-  <h1>Shift Lead Report for {{moment-format shiftStart "dddd, MMMM Do YYYY @ HH:mm"}}</h1>
+{{#if this.isLoading}}
+  <LoadingDialog @item="Shift Lead Report"/>
+{{else if this.shiftSelect}}
+  <h1>Shift Lead Report for {{moment-format this.shiftStart "dddd, MMMM Do YYYY @ HH:mm"}}</h1>
 
   <div class="row">
     <div class="col-sm-12 col-md-6">
       <div class="border rounded p-2 mb-2">
-        <h3>{{pluralize dirt_signups.length "Dirt Ranger"}},
-          {{#if green_dot_total}}
-            including {{pluralize green_dot_total "Green Dot"}}
+        <h3>{{pluralize this.dirt_signups.length "Dirt Ranger"}},
+          {{#if this.green_dot_total}}
+            including {{pluralize this.green_dot_total "Green Dot"}}
           {{else}}
             and no Green Dots
           {{/if}}
         </h3>
-        {{#if green_dot_total}}
+        {{#if this.green_dot_total}}
           <p>
-            {{#if green_dot_females}}
-              {{pluralize green_dot_females "female Green Dot"}}
+            {{#if this.green_dot_females}}
+              {{pluralize this.green_dot_females "female Green Dot"}}
             {{else}}
               No female green dots are signed up.
             {{/if}}
           </p>
         {{/if}}
-        <h3>{{pluralize command_staff_signups.length "Command Staff Ranger"}}</h3>
-        <h3>{{pluralize non_dirt_signups.length "Special Team Ranger"}}</h3>
+        <h3>{{pluralize this.command_staff_signups.length "Command Staff Ranger"}}</h3>
+        <h3>{{pluralize this.non_dirt_signups.length "Special Team Ranger"}}</h3>
 
       </div>
     </div>
 
     <div class="col-sm-12 col-md-6">
-
       <table class="table table-sm table-box table-striped">
-        <caption>{{below_min_positions.length}} POSITION{{if (not-eq below_min_positions.length 1) "S"}} BELOW MIN. STAFFING</caption>
+        <caption>
+          {{pluralize this.below_min_positions.length "position"}} BELOW MIN. STAFFING
+        </caption>
         <thead>
-          <tr>
-            <th>Position</th>
-            <th>Shift</th>
-            <th class="text-center">Need</th>
-            <th class="text-right">Signed Up</th>
-          </tr>
+        <tr>
+          <th>Position</th>
+          <th>Shift</th>
+          <th class="text-center">Need</th>
+          <th class="text-right">Signed Up</th>
+        </tr>
         </thead>
         <tbody>
-          {{#each below_min_positions as |position|}}
-            <tr>
-              <td>{{position.title}}</td>
-              <td>{{time-format position.slot_begins}} - {{time-format position.slot_ends }}</td>
-              <td class="text-center">{{#if (eq position.min position.max)}}
-                  {{position.min}}
-                {{else}}
-                  {{position.min}} - {{position.max}}
-                {{/if}}
-              </td>
-              <td class="text-right">{{if position.signed_up position.signed_up "NONE"}}</td>
-            </tr>
-          {{else}}
-            <tr>
-              <td colspan="4">
-                <strong class="text-success text-center">Well done! All positions are fully staffed for this shift period.</strong></td>
-            </tr>
-          {{/each}}
+        {{#each this.below_min_positions as |position|}}
+          <tr>
+            <td>{{position.title}}</td>
+            <td>{{time-format position.slot_begins}} - {{time-format position.slot_ends }}</td>
+            <td class="text-center">{{#if (eq position.min position.max)}}
+              {{position.min}}
+            {{else}}
+              {{position.min}} - {{position.max}}
+            {{/if}}
+            </td>
+            <td class="text-right">{{if position.signed_up position.signed_up "NONE"}}</td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="4">
+              <b class="text-success text-center">Well done! All positions are fully staffed for this shift period.</b>
+            </td>
+          </tr>
+        {{/each}}
         </tbody>
       </table>
     </div>
@@ -85,9 +91,9 @@
     GTR? = Indicates person signed the Motorpool Vehicle Agreement<br>
     Veh? = Indicates person has BM Org insurance<br>
   </p>
-  <ShiftLeadTable @title="DIRT/GREEN DOTS Scheduled" @people={{dirt_signups}} />
-  <ShiftLeadTable @title="COMMAND STAFF Scheduled" @people={{command_staff_signups}} />
-  <ShiftLeadTable @title="SPECIAL TEAMS Scheduled" @people={{non_dirt_signups}} />
+  <ShiftLeadTable @title="DIRT/GREEN DOTS Scheduled" @people={{this.dirt_signups}} />
+  <ShiftLeadTable @title="COMMAND STAFF Scheduled" @people={{this.command_staff_signups}} />
+  <ShiftLeadTable @title="SPECIAL TEAMS Scheduled" @people={{this.non_dirt_signups}} />
   <p>
     <b>Secret decoder ring:</b>
     Dspch = Dispatcher,
@@ -109,5 +115,4 @@
     TowMnt = Tow Truck Mentee,
     VEH = Vehicle (SUV, pick-up)
   </p>
-{{else}}
 {{/if}}

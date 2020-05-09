@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { computed } from '@ember/object';
 
 export default class TrainingCapacityController extends Controller {
   queryParams = [ 'year' ];
@@ -16,10 +16,5 @@ export default class TrainingCapacityController extends Controller {
     const seats = slots.reduce((total, slot) => slot.max + total, 0);
 
     return Math.round((signups  / seats) * 100);
-  }
-
-  @action
-  changeYearAction(year) {
-    this.set('year', year);
   }
 }

@@ -1,60 +1,57 @@
-{{year-select "Assets Outstanding" year=year onChange=(action (mut year))}}
-
-{{#if assets}}
+<YearSelect @title="Assets Outstanding" @year={{this.year}} @onChange={{action (mut this.year)}} />
 <p>
-{{pluralize assets.length "asset"}} outstanding.
+  <button type="button" class="btn btn-primary" {{on "click" this.exportToCSV}}>Export To CSV</button>
 </p>
-<p>
-  <button class="btn btn-primary" {{action exportToCSV}}>Export To CSV</button>
-</p>
-  <table class="table table-sm table-striped table-width-auto">
-    <thead>
-      <tr>
-        <th>Barcode</th>
-        <th>Description</th>
-        <th>Attachment</th>
-        <th>Assigned</th>
-        <th>Temp ID</th>
-        <th>Checked Out</th>
-        <th>Callsign</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each assets as |asset|}}
-        <tr>
-          <td class="separated">
-            {{asset.barcode}}
-          </td>
-          <td class="separated">
-            {{asset.description}}
-          </td>
-          <td class="separated">
-            {{#if asset.checked_out.attachment}}
-              {{asset.checked_out.attachment.description}}
-            {{else}}
-              -
-            {{/if}}
-          </td>
-          <td class="separated">
-            {{if asset.perm_assign "Permanent" "Temporary"}}
-          </td>
-          <td class="separated">
-            {{#if asset.temp_id}}
-              {{asset.temp_id}}
-            {{else}}
-              -
-            {{/if}}
-          </td>
-          <td class="separated">
-            {{shift-format asset.checked_out.checked_out}}
-          </td>
-          <td class="separated">
-            <PersonLink @person={{asset.checked_out.person}} />
-          </td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
-{{else}}
-  <p class="font-weight-bold text-danger">No outstanding assets were found for {{year}}</p>
-{{/if}}
+Showing {{pluralize this.assets.length "asset"}} outstanding.
+<table class="table table-sm table-striped table-width-auto">
+  <thead>
+  <tr>
+    <th>Barcode</th>
+    <th>Description</th>
+    <th>Attachment</th>
+    <th>Assigned</th>
+    <th>Temp ID</th>
+    <th>Checked Out</th>
+    <th>Callsign</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.assets as |asset|}}
+    <tr>
+      <td class="separated">
+        {{asset.barcode}}
+      </td>
+      <td class="separated">
+        {{asset.description}}
+      </td>
+      <td class="separated">
+        {{#if asset.checked_out.attachment}}
+          {{asset.checked_out.attachment.description}}
+        {{else}}
+          -
+        {{/if}}
+      </td>
+      <td class="separated">
+        {{if asset.perm_assign "Permanent" "Temporary"}}
+      </td>
+      <td class="separated">
+        {{#if asset.temp_id}}
+          {{asset.temp_id}}
+        {{else}}
+          -
+        {{/if}}
+      </td>
+      <td class="separated">
+        {{shift-format asset.checked_out.checked_out}}
+      </td>
+      <td class="separated">
+        <PersonLink @person={{asset.checked_out.person}} />
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="7"><b class="text-danger">No {{this.year}} outstanding assets were found.</b></td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>

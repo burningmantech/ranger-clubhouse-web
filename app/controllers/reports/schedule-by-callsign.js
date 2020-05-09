@@ -1,24 +1,29 @@
 import Controller from '@ember/controller';
 import { action, computed, set } from '@ember/object';
 import { run, later } from '@ember/runloop';
+import { tracked } from '@glimmer/tracking';
 
 export default class ReportsScheduleByCallsignController extends Controller {
   queryParams = ['year'];
 
+  @tracked isExpanding = false;
+  @tracked expandAll = false;
+
   @action
-  togglePerson(person) {
+  togglePerson(person, event) {
+    event.preventDefault();
     set(person, 'showing', !person.showing);
   }
 
   @action
   toggleExpandAll() {
-    this.set('isExpanding', true);
+    this.isExpanding = true;
     later(() => {
       run.schedule('afterRender', () => {
-        this.set('expandAll', !this.expandAll);
+        this.expandAll = !this.expandAll;
         this.people.forEach((p) => set(p, 'showing', this.expandAll));
         run.schedule('afterRender', () => {
-          this.set('isExpanding', false);
+          this.isExpanding = false;
         });
       });
     }, 10);
@@ -26,7 +31,8 @@ export default class ReportsScheduleByCallsignController extends Controller {
   }
 
   @action
-  scrollToCallsign(id) {
+  scrollToCallsign(id, event) {
+    event.preventDefault();
     this.house.scrollToElement(`#person-${id}`, false);
   }
 

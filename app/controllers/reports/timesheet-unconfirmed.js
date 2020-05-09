@@ -8,11 +8,6 @@ const CSV_COLUMNS = [
 export default class ReportsTimesheetUnconfirmedController extends Controller {
   queryParmas = ['year'];
 
-  @action
-  changeYear(year) {
-    this.set('year', year);
-  }
-
   @action downloadCsv() {
     this.house.downloadCsv('timesheet-unconfirmed.csv', CSV_COLUMNS, this.unconfirmed_people);
   }

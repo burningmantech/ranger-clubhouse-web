@@ -7,20 +7,11 @@ module('Integration | Component | year select', function(hooks) {
   setupRenderingTest(hooks);
 
   skip('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    await render(hbs`{{year-select}}`);
-
-    assert.dom('*').hasText('');
-
-    // Template block usage:
-    await render(hbs`
-      {{#year-select}}
-        template block text
-      {{/year-select}}
-    `);
-
-    assert.dom('*').hasText('template block text');
+    this.set('year', 2019);
+    this.set('years', [ 2017, 2018, 2019, 2020]);
+    this.set('onChange', () => { });
+    await render(hbs`<YearSelect @title="Silent All These Years" @year={{this.year}} @years={{this.years}} @onChange={{fn this.onChange}} />`);
+    assert.dom('h1').hasText(/Silent All These Years/);
+    assert.dom('options').exists({ exists: 4 });
   });
 });

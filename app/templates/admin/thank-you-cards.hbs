@@ -1,4 +1,4 @@
-{{year-select "Thank You Cards" year=year onChange=(action (mut year))}}
+<YearSelect @title="Thank You Cards" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
 {{#unless this.passwordOkay}}
   <div class="form-row">
@@ -9,7 +9,7 @@
       <Input @type="password" class="form-control" @name="password" @size="10" @value={{this.password}} />
     </div>
     <div class="col-auto">
-      <button class="btn btn-primary" {{action this.submit}} disabled={{this.isSubmitting}}>Submit</button>
+      <button type="button" class="btn btn-primary" {{action this.submit}} disabled={{this.isSubmitting}}>Submit</button>
       {{#if this.isSubmitting}}
         <LoadingIndicator />
       {{/if}}

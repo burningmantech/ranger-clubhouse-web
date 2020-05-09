@@ -1,49 +1,12 @@
-import Component from '@ember/component';
-import { computed } from '@ember/object';
+import Component from '@glimmer/component';
+import { inject as service } from '@ember/service';
 
 export default class YearSelectComponent extends Component {
-  tagName = 'h1';
+  @service house;
 
-  static positionalParams = ['title'];
-
-  // Heading
-  title = null;
-
-  // action to call when year is changed
-  onChange = null;
-
-  // Year list
-  years = null;
-
-  // Starting year
-  year = 0;
-
-  // Is this a subheader?
-  subheader = false;
-  inline = false;
-
-  // Additional classnames to add
-  gridClass = null;
-
-  constructor() {
-    super(...arguments);
-
-    if (this.subheader) {
-      this.tagName = 'div';
-      this.classNames = ['h2'];
-    } else if (this.inline) {
-      this.tagName = 'div'
-    }
-
-    if (this.gridClass) {
-      this.classNames = this.gridClass.split(' ').concat(this.classNames)
-    }
-  }
-
-  @computed('house', 'years')
   get yearOptions() {
     const currentYear = this.house.currentYear();
-    let years = this.years;
+    let years = this.args.years;
 
     if (!years) {
       years = [];
@@ -51,7 +14,7 @@ export default class YearSelectComponent extends Component {
         years.push(y);
       }
     } else {
-      years = this.years.slice();
+      years = this.args.years.slice();
     }
 
     if (!years.includes(currentYear)) {

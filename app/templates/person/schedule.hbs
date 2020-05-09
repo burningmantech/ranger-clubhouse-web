@@ -1,3 +1,7 @@
-{{year-select "Schedule / Sign Up" year=year years=person.all_years subheader=true onChange=(action "changeYearAction")}}
+<YearSelect @title="Schedule / Sign Up" @year={{this.year}} @years={{this.person.all_years}}
+            @subheader={{true}}
+            @onChange={{action (mut this.year)}} />
 
-<ScheduleManage @person={{person}} @slots={{slots}} @signedUpSlots={{signedUpSlots}} @scheduleSummary={{scheduleSummary}} @creditsEarned={{creditsEarned}} @year={{year}} @permission={{permission}} />
+<ScheduleManage @person={{this.person}} @slots={{this.slots}} @signedUpSlots={{this.signedUpSlots}}
+                @scheduleSummary={{this.scheduleSummary}} @creditsEarned={{this.creditsEarned}} @year={{this.year}}
+                @permission={{this.permission}} />

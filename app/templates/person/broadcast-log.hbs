@@ -1,6 +1,6 @@
-{{year-select "Broadcast Messages" year=year years=person.all_years subheader=true onChange=(action "changeYearAction")}}
+<YearSelect @title="Broadcast Messages" @year={{this.year}} @years={{this.person.all_years}} @subheader={{true}} @onChange={{action (mut this.year)}} />
 
-<table class="table table-sm table-hover">
+<table class="table table-sm table-hover table-width-auto">
   <thead>
       <tr>
           <th>Timestamp</th>

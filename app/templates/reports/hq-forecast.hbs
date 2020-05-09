@@ -1,4 +1,4 @@
-{{year-select "HQ Window Check In/Out Forecast Report" year=year onChange=(action (mut year))}}
+<YearSelect @title="HQ Window Check In/Out Forecast Report" @year={{this.year}} @onChange={{action (mut this.year)}} />
 
 <p>
   <a href="#burn-perimeters">Jump to Burn Perimeters</a>
@@ -9,41 +9,44 @@
     <label class="col-form-label">Interval</label>
   </div>
   <div class="col-auto">
-    <ChForm::Select @name="interval" @value={{interval}} @options={{intervalOptions}} @onChange={{action (mut interval)}} @controlClass="form-control" />
+    <ChForm::Select @name="interval" @value={{this.interval}} @options={{this.intervalOptions}}
+                    @onChange={{action (mut this.interval)}} @controlClass="form-control"/>
   </div>
   <div class="col-auto">
     <label class="col-form-label">Day Filter</label>
   </div>
   <div class="col-auto">
-    <ChForm::Select @name="dayFilter" @value={{dayFilter}} @options={{dayOptions}} @onChange={{action (mut dayFilter)}} @controlClass="form-control" />
+    <ChForm::Select @name="dayFilter" @value={{this.dayFilter}} @options={{this.dayOptions}}
+                    @onChange={{action (mut this.dayFilter)}} @controlClass="form-control"/>
   </div>
   <div class="col-auto">
     <label class="col-form-label">Staffing Filter</label>
   </div>
   <div class="col-auto">
-    <ChForm::Select @name="staffFilter" @value={{staffFilter}} @options={{staffOptions}} @onChange={{action (mut staffFilter)}} @controlClass="form-control" />
+    <ChForm::Select @name="staffFilter" @value={{this.staffFilter}} @options={{this.staffOptions}}
+                    @onChange={{action (mut this.staffFilter)}} @controlClass="form-control"/>
   </div>
   <div class="col-auto ml-auto">
-    <button class="btn btn-secondary" {{action exportToCsv}}>Export to CSV</button>
+    <button type="button" class="btn btn-secondary" {{action this.exportToCsv}}>Export to CSV</button>
   </div>
 </div>
 
 <p class="mt-2">
   Highlighted rows indicate no HQ staff (window, short, or lead) is available for the given period.
 </p>
-{{#if viewVisits}}
-  <HqVisitsTable @visits={{viewVisits}} @title="All Shifts (excluding Training, Trainer, TiT, Uber & Burn Perimeter)" @interval={{interval}} />
+{{#if this.viewVisits}}
+  <HqVisitsTable @visits={{this.viewVisits}}
+                 @title="All Shifts (excluding Training, Trainer, TiT, Uber & Burn Perimeter)"
+                 @interval={{this.interval}} />
+{{else if this.visits}}
+  <p class="text-danger font-weight-bold">No shifts were found based on the filtering criteria</p>
 {{else}}
-  {{#if visits}}
-    <p class="text-danger font-weight-bold">No shifts were found based on the filtering criteria</p>
-  {{else}}
-    <p class="text-danger font-weight-bold">No HQ Window shifts found for {{year}}</p>
-  {{/if}}
+  <p class="text-danger font-weight-bold">No HQ Window shifts found for {{this.year}}</p>
 {{/if}}
 
-<h1 id="burn-perimeters">{{year}} Burn Perimeters</h1>
-{{#each burns as |burn|}}
-  <HqVisitsTable @visits={{burn.visits}} @title={{join " / " burn.descriptions}} @interval={{interval}} />
+<h1 id="burn-perimeters">{{this.year}} Burn Perimeters</h1>
+{{#each this.burns as |burn|}}
+  <HqVisitsTable @visits={{burn.visits}} @title={{join " / " burn.descriptions}} @interval={{this.interval}} />
 {{else}}
-  <p class="text-danger font-weight-bold">No Burn Perimeter shifts found for {{year}}</p>
+  <p class="text-danger font-weight-bold">No Burn Perimeter shifts found for {{this.year}}</p>
 {{/each}}

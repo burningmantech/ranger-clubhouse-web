@@ -1,34 +1,31 @@
-import Component from "@ember/component";
-
-
+import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import $ from 'jquery';
+import { inject as service } from '@ember/service';
 
 export default class EmailListComponent extends Component {
-  /*
-   * people list to show
-   * The object format is:
-   *  id, callsign, first_name, last_name, email
-   */
-  people = null;
+  @service house;
+  @service toast;
 
-  // if true, scroll to the email list when list is rendered
-  scrollOnRender = false;
-  listId = 'email-list';
+  constructor() {
+    super(...arguments);
 
-  didRender() {
-    if (!this.scrollOnRender) {
+    this.listId = this.args.listId || 'email-list';
+  }
+
+  elementInserted() {
+    if (!this.args.scrollOnRender) {
       return;
     }
 
-    // Scroll the list into view
-    $('#'+this.listId+'-link').get(0).scrollIntoView();
+    this.house.scrollToElement(`#${this.listId}-link`);
   }
 
   @action
-  copyToClipboardAction() {
+  copyToClipboardAction(event) {
+    event.preventDefault();
+
     // Find out the element to copy to the clipboard
-    const element = $('#'+this.listId).get(0);
+    const element = document.querySelector('#'+this.listId);
 
     if (!element) {
       this.toast.error("Cannot locate element");

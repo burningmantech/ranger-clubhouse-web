@@ -1,24 +1,21 @@
-{{year-select "People By Location" year=year onChange=(action (mut year))}}
-<div class="form-row">
+<YearSelect @title="People By Location" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<div class="form-row mb-2">
   <div class="col-auto">
     <label class="col-form-label">Filter</label>
   </div>
   <div class="col-auto">
-    <ChForm::Select @name="filter" @value={{filter}} @options={{filterOptions}} @onChange={{action (mut filter)}} @class="form-control" />
+    <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}} @onChange={{action (mut this.filter)}} @controlClass="form-control" />
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary" disabled={{if this.viewPeople false true}} {{action this.exportAllToCSV}}>Export {{pluralize this.viewPeople.length "person"}} to CSV</button>
+    <button class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>{{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}</button>
+    {{#if this.isExpanding}}
+      <LoadingIndicator @text="Working" />
+    {{/if}}
   </div>
 </div>
 
-<p class="mt-2">
-  Showing {{this.viewPeople.length}} of {{this.people.length}}.
-</p>
-<p>
-  <button class="btn btn-primary" disabled={{if this.viewPeople false true}} {{action exportAllToCSV}}>Export {{pluralize this.viewPeople.length "person"}} to CSV</button>
-  <button class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>{{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}</button>
-  {{#if this.isExpanding}}
-    <LoadingIndicator @text="Working" />
-  {{/if}}
-</p>
-
+Showing {{this.viewPeople.length}} of {{this.people.length}}.
 {{#each this.countries as |country idx|}}
   <div class="border mb-2" id="country-{{idx}}">
     <div class="bg-light-gray p-2">

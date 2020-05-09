@@ -1,52 +1,45 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { isEmpty } from '@ember/utils';
+import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 
 export default class HelpPopoverComponent extends Component {
-  classNames = [ 'popover-container' ];
-
-  slug = null;
-  bottom = false;
-  left = false;
-  label = '';
-
   @service ajax;
 
-  isLoading = false;
-  isShowing = false;
+  @tracked isLoading = false;
+  @tracked isShowing = false;
 
-  body = '';
+  @tracked title = '';
+  @tracked body = '';
 
   @action
-  clickHelp() {
+  clickHelp(event) {
+    event.preventDefault();
     if (this.isShowing) {
       return;
     }
 
-    this.set('isShowing', true);
-    if (!isEmpty(this.helpText)) {
-      return;
-    }
+    this.isShowing = true;
+    this.isLoading = true;
 
-    this.set('isLoading', true);
-    this.ajax.request(`help/${this.slug}`).then((result) => {
-      this.set('title', result.help.title);
-      this.set('body', result.help.body);
+    this.ajax.request(`help/${this.args.slug}`).then((result) => {
+      this.title = result.help.title;
+      this.body = result.help.body;
     })
     .catch((response) => {
       if (response.status == 404) {
-        this.set('title', 'Help not found');
-        this.set('body', null);
+        this.title = 'Help not found';
+        this.body =  null;
       } else {
         this.house.handleErrorResponse(response);
       }
     })
-    .finally(() => this.set('isLoading', false));
+    .finally(() => this.isLoading = false);
   }
 
   @action
-  closeHelp() {
-    this.set('isShowing', false);
+  closeHelp(event) {
+    event.preventDefault();
+    this.isShowing = false;
   }
 }

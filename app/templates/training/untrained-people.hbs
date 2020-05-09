@@ -1,101 +1,96 @@
-{{year-select (concat "Untrained People Report for " training.title) year=year onChange=(action "changeYearAction")}}
+<YearSelect @title="Untrained People Report for {{this.training.title}}" @year={{this.year}}
+            @onChange={{action (mut this.year)}} />
 <p>
   This report has two sections:
-  <ol>
-    <li>People who have signed up for shifts but have not signed up for training.</li>
-    <li>People who have signed up for shifts but did not pass training (yet).</li>
-  </ol>
+<ol>
+  <li>People who have signed up for shifts but have not signed up for training.</li>
+  <li>People who have signed up for shifts but did not pass training (yet).</li>
+</ol>
 </p>
 
 <h3>People signed up and no training shift</h3>
-<p>
-  There
-  {{#if (eq not_signed_up.length 1)}}
-    is 1 individual
-  {{else}}
-    are {{not_signed_up.length}} individuals
-  {{/if}}
-  signed up for a shift who {{if (eq not_signed_up.length 1) "has" "have"}} not signed up for a corresponding training shift.
-</p>
-<EmailList @people={{not_signed_up}} @listId="no-signup-emails" />
-
-<table class="table table-border table-sm table-hover mt-2">
-  <caption>No Training Shifts - Details</caption>
+{{pluralize this.not_signed_up.length "person"}} signed up for a shift who
+{{if (eq this.not_signed_up.length 1) "has" "have"}} not signed up for a corresponding training shift.
+<table class="table table-border table-sm table-hover table-width-auto mt-2">
   <thead>
-    <tr>
-      <th>Callsign</th>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Shifts</th>
-    </tr>
+  <tr>
+    <th>Callsign</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Shifts</th>
+  </tr>
   </thead>
   <tbody>
-    {{#each not_signed_up as |person|}}
-      <tr>
-        <td><PersonLink @person={{person}} /></td>
-        <td>{{person.first_name}} {{person.last_name}}</td>
-        <td>{{mail-to person.email}}</td>
-        <td>
-          {{#each person.slots as |slot|}}
-            {{shift-format slot.begins}} {{slot.description}} ({{slot.title}})<br>
-          {{/each}}
-        </td>
-      </tr>
-    {{/each}}
+  {{#each this.not_signed_up as |person|}}
+    <tr>
+      <td>
+        <PersonLink @person={{person}} />
+      </td>
+      <td>{{person.first_name}} {{person.last_name}}</td>
+      <td>{{mail-to person.email}}</td>
+      <td>
+        {{#each person.slots as |slot|}}
+          {{shift-format slot.begins}} {{slot.description}} ({{slot.title}})<br>
+        {{/each}}
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="4">
+        <b class="text-danger">No trained people without sign ups were found for {{this.year}}</b>
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
+{{#if this.not_signed_up}}
+  <EmailList @people={{this.not_signed_up}} @listId="no-signup-emails"/>
+{{/if}}
+
+<hr>
+<h3 class="mt-2">Signed up for shifts &amp; have not (yet) passed training</h3>
+{{pluralize this.not_passed.length "individual"}} signed up for a shift who
+{{if (eq not_passed.length 1) "has" "have"}} not passed training.
+(This could be because their training hasn’t happened yet.)
+<table class="table table-sm table-hover mt-2 table-width-auto">
+  <thead>
+  <tr>
+    <th>Callsign</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Shifts</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.not_passed as |person|}}
+    <tr>
+      <td>
+        <PersonLink @person={{person}} />
+      </td>
+      <td>{{person.first_name}} {{person.last_name}}</td>
+      <td>{{mail-to person.email}}</td>
+      <td>
+        <b>Training:</b>
+        <LinkTo @route="training.session" @models={{array this.training.id person.training_slot_id}}>
+          {{shift-format person.training_begins}} {{person.training_description}}
+        </LinkTo>
+        <br>
+        <b>{{pluralize person.slots.length "shift sign up"}}:</b><br>
+        {{#each person.slots as |slot|}}
+          {{shift-format slot.begins}} {{slot.description}} ({{slot.position_title}})<br>
+        {{/each}}
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="4">
+        <b class="text-danger">No untrained people with sign ups were found for {{this.year}}</b>
+      </td>
+    </tr>
+  {{/each}}
   </tbody>
 </table>
 
-<h3>Signed up for shifts &amp; have not (yet) passed training</h3>
-
-{{#if not_passed}}
-  <p>
-    There
-    {{#if (eq not_passed.length 1)}}
-      is 1 individual
-    {{else}}
-      are {{not_passed.length}} individuals
-    {{/if}}
-    signed up for a shift who {{if (eq not_passed.length 1) "has" "have"}} not passed training.<br>
-    (This could be because their training hasn’t happened yet.)
-  </p>
-
-  <EmailList @people={{not_passed}} />
-
-  <table class="table table-sm table-hover mt-2">
-    <caption>Training Not Passed - Details</caption>
-    <thead>
-      <tr>
-        <th>Callsign</th>
-        <th>Name</th>
-        <th>Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each not_passed as |person|}}
-        <tr>
-          <td><PersonLink @person={{person}} /></td>
-          <td>{{person.first_name}} {{person.last_name}}</td>
-          <td>{{mail-to person.email}}</td>
-        </tr>
-        <tr class="no-border">
-          <td colspan="3">
-            <dl>
-              <dt>Training:</dt>
-              <dd><LinkTo @route="training.session" @models={{array training.id person.training_slot_id}}>{{shift-format person.training_begins}} {{person.training_description}}</LinkTo></dd>
-              <dt>{{pluralize person.slots.length "shift sign up"}}:</dt>
-              <dd>
-                {{#each person.slots as |slot|}}
-                  {{shift-format slot.begins}} {{slot.description}} ({{slot.position_title}})<br>
-                {{/each}}
-              </dd>
-            </dl>
-          </td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
-{{else}}
-  <p>
-    Congratulations! Everyone who signed up for a shift also passed training.
-  </p>
+{{#if this.not_passed}}
+  <EmailList @people={{this.not_passed}} />
 {{/if}}
