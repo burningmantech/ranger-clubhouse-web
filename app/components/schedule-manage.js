@@ -131,7 +131,7 @@ export default class ScheduleManageComponent extends Component {
     return groups.sortBy('title');
   }
 
-  @computed('availableSlots', 'slots')
+  @computed('availableSlots', 'slots', 'isCurrentYear')
   get dayOptions() {
     const unique = this.availableSlots.uniqBy('slotDay').mapBy('slotDay');
     const days = A();
@@ -153,9 +153,6 @@ export default class ScheduleManageComponent extends Component {
     });
 
     return days;
-  }
-
-  get deniedReason() {
   }
 
   @action
