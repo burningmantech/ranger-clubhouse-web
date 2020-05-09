@@ -3,11 +3,11 @@
   This page will show anyone still on duty. Select those individuals you which to sign out in bulk.
 </p>
 
-<table class="table table-sm table-hover table-striped">
-  <caption>{{pluralize onDutyCount "person"}} still on duty</caption>
+<table class="table table-sm table-hover table-striped table-width-auto">
+  <caption>{{pluralize this.onDutyCount "person"}} still on duty</caption>
   <thead>
     <tr>
-      <th><Input @type="checkbox" @checked={{selectAll}} @change={{action toggleAll value="target.checked"}} /></th>
+      <th><Input @type="checkbox" @checked={{this.selectAll}} @change={{action this.toggleAll value="target.checked"}} /></th>
       <th>Callsign</th>
       <th>From</th>
       <th>To</th>
@@ -17,7 +17,7 @@
     </tr>
   </thead>
   <tbody>
-    {{#each timesheets as |ts|}}
+    {{#each this.timesheets as |ts|}}
       <tr>
         <td>
           {{#if ts.off_duty}}
@@ -47,9 +47,18 @@
       </tr>
     {{else}}
       <tr>
-        <td colspan="7"><strong class="text-success">Congratulations! No one is on duty.</strong></td>
+        <td colspan="7"><b class="text-success">Congratulations! No one is on duty.</b></td>
       </tr>
     {{/each}}
   </tbody>
 </table>
-<button class="btn btn-primary" disabled={{not selectedCount}} {{action signoffAction}}>Sign out selected entries ({{selectedCount}})</button>
+
+<button type="button" class="btn btn-primary" disabled={{not this.selectedCount}} {{on "click" this.signoffAction}}>Sign out selected entries ({{this.selectedCount}})</button>
+
+{{#if this.isSubmitting}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      Signing out {{this.signOffTimesheet.person.callsign}} <LoadingIndicator />
+    </Modal.body>
+  </ModalDialog>
+{{/if}}

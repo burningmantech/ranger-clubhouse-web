@@ -227,3 +227,12 @@
     </ChForm>
   </ModalDialog>
 {{/if}}
+
+{{#if this.activatingSlot}}
+  <ModalDialog @title="Activating Slots" as |Modal|>
+    <Modal.body>
+      Saving slot id #{{this.activatingSlot.id}} - {{this.activatingSlot.begins}} - {{this.this.activatingSlot.description}}
+      <LoadingIndicator />
+    </Modal.body>
+  </ModalDialog>
+{{/if}}

@@ -1,8 +1,10 @@
 import { isEmpty } from '@ember/utils';
+import { get } from '@ember/object';
 
 const CountriesWithStates = [ 'US', 'CA', 'AU' ];
+
 function getProperty(changes, content, name) {
-  return changes.hasOwnProperty(name) ? changes[name] : content.get(name);
+  return (name in changes) ? changes[name] : get(content, name);
 }
 
 export default function validateState(/* options = {} */) {

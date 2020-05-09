@@ -2,9 +2,9 @@
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const env = EmberApp.env();
-const IS_PROD = env === 'production', IS_TEST = env === 'test' ;
+const IS_PROD = env === 'production', IS_TEST = env === 'test';
 
-module.exports = function(defaults) {
+module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     tests: IS_TEST, // Don't even generate test files unless a test build
 
@@ -15,8 +15,9 @@ module.exports = function(defaults) {
     },
 
     'ember-cli-babel': {
-      includePolyfill: IS_PROD // Only include babel polyfill in prod
+      includePolyfill: IS_PROD,
     },
+
 
     autoprefixer: {
       sourcemap: false // Was never helpful
@@ -33,8 +34,8 @@ module.exports = function(defaults) {
     sassOptions: {
       onlyIncluded: true,
       includePaths: [
-      'node_modules/cropperjs/src/css'
-    ]
+        'node_modules/cropperjs/src/css'
+      ]
 
     },
 
