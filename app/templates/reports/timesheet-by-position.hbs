@@ -1,7 +1,8 @@
-{{year-select "Timesheet By Position" year=year onChange=(action (mut year))}}
-
+<YearSelect @title="Timesheet By Position" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 <p>
-  <button class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>{{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}</button>
+  <button class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>
+    {{if this.expandAll "Hide" "Expand"}} All
+  </button>
   {{#if this.isExpanding}}
     <LoadingIndicator @text="Working" />
   {{/if}}
@@ -11,7 +12,9 @@
 </p>
 {{#each this.positions as |position|}}
   <div class="bg-light-gray p-2 my-2" id="position-{{position.id}}">
-    <a href {{action this.togglePosition position}} class="h4">{{fa-icon (if position.showing "caret-down" "caret-right")}} {{position.title}}</a> ({{pluralize position.timesheets.length "entry"}})
+    <a href {{action this.togglePosition position}} class="h4">
+      {{fa-icon (if position.showing "caret-down" "caret-right")}} {{position.title}}
+    </a> ({{pluralize position.timesheets.length "entry"}})
   </div>
   {{#if position.showing}}
     <p>
@@ -60,6 +63,6 @@
   {{/if}}
 {{else}}
   <p class="text-danger">
-    <b>No timesheets found for {{this.year}}</b>
+    <b>No {{this.year}} timesheet entries were found.</b>
   </p>
 {{/each}}

@@ -1,4 +1,4 @@
-{{year-select "Event / Training Information" year=year years=person.all_years subheader=true onChange=(action "changeYearAction")}}
+<YearSelect @title="Event / Training Information" @year={{this.year}} @years={{this.person.all_years}} @subheader={{true}} @onChange={{action (mut this.year)}} />
 
 <dl class="row">
   <dt class="col-md-2">Years Active</dt>

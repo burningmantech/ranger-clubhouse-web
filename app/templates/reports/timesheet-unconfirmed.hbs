@@ -1,47 +1,54 @@
-{{year-select "Timesheet Unconfirmed Report" year=year onChange=(action "changeYear")}}
+<YearSelect @title="Timesheet Unconfirmed Report" @year={{this.year}} @onChange={{action (mut this.year)}} />
 <p>
-  The report will show people who have not confirmed their timesheets as correct (i.e. have not checked the "I have reviewed and verified" checkbox on "My Timesheet Corrections")
+  The report will show people who have not confirmed their timesheets as correct (i.e. have not checked the "I have
+  reviewed and verified" checkbox on "My Timesheet Corrections")
 </p>
 
-{{#if unconfirmed_people}}
-<div class="row">
-  <div class="col-sm-6">
-    <button class="btn btn-primary" {{action "downloadCsv"}}>Download as CSV</button>
+{{#if this.unconfirmed_people}}
+  <div class="row mb-2">
+    <div class="col-auto">
+      <button class="btn btn-primary" {{action "downloadCsv"}}>Download as CSV</button>
+    </div>
+    <div class="col-auto mt-2">
+      <a href="#email-list">Jump to the email list</a>
+    </div>
   </div>
-  <div class="col-sm-6 text-right">
-    <a href="#email-list" class="btn btn-secondary">Jump to the email list</a>
-  </div>
-</div>
+{{/if}}
+<p>
+  count = How many timesheet entries are not verified
+</p>
+Showing {{pluralize this.unconfirmed_people.length "person"}}
+<table class="table table-hover table-striped table-width-auto">
+  <thead>
+  <tr>
+    <th>Callsign</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Home Phone</th>
+    <th>Count</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.unconfirmed_people as |person|}}
+    <tr>
+      <td>
+        <PersonLink @person={{person}} />
+      </td>
+      <td>{{person.first_name}} {{person.last_name}}</td>
+      <td>{{mail-to person.email}}</td>
+      <td><a href="tel:{{person.home_phone}}">{{person.home_phone}}</a></td>
+      <td>{{person.unverified_count}}</td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="5">
+        <b class="text-success">Congratulations (or WTF?), everyone has marked their timesheets as correct.</b>
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
 
-  <p>
-    count = How many timesheet entries are not verified
-  </p>
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>Callsign</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Home Phone</th>
-        <th>Count</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each unconfirmed_people as |person|}}
-        <tr>
-          <td><PersonLink @person={{person}} /></td>
-          <td>{{person.first_name}} {{person.last_name}}</td>
-          <td>{{mail-to person.email}}</td>
-          <td><a href="tel:{{person.home_phone}}">{{person.home_phone}}</a></td>
-          <td>{{person.unverified_count}}</td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
-
+{{#if this.unconfirmed_people}}
   <EmailList @people={{unconfirmed_people}} />
-
-{{else}}
-  <p class="text-danger">Congratulations (or WTF?), everyone has marked their timesheets as confirmed.</p>
-
 {{/if}}

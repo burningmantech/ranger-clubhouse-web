@@ -1,4 +1,4 @@
-{{year-select "Timesheet Sanity Checker" year=year onChange=(action (mut year))}}
+<YearSelect @title="Timesheet Sanity Checker" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
 <table class="table table-hover table-striped table-width-auto mb-4">
   <caption>{{pluralize this.on_duty.length "person"}} still on duty</caption>

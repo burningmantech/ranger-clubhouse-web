@@ -1,4 +1,4 @@
-{{year-select "Hours And Credits Report" year=this.year onChange=(action (mut this.year))}}
+<YearSelect @title="Hours And Credits Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
 <p>
   The report shows Rangers show the total hours (counted positions only) and credits worked for a given year. Alpha, Auditors, Bonked, Prospective, and Past Prospectives are not included.

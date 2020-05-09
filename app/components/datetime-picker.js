@@ -1,4 +1,5 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
+import {action} from '@ember/object';
 import $ from 'jquery';
 
 /*
@@ -8,49 +9,37 @@ import $ from 'jquery';
  */
 
 export default class DatetimePickerComponent extends Component {
-  tagName = 'input';
-  attributeBindings = [ 'type', 'size', 'placeholder', 'autofocus', 'maxlength', 'value', 'autocomplete' ];
-  classNameBindings = [ 'classNames' ];
+  element = null;
 
-  classNames = null;
-
-  size = null;
-  format = null;
-  onChange = null;
-  placeholder = null;
-  autofocus = null;
-  maxlength = null;
-  value = null;
-  autocomplete = "off";
-  dateOnly = null; // set true if only want to deal with dates, no time.
-  startDate = null;
-
-  didInsertElement() {
+  @action
+  elementInserted(element) {
+    this.element = element;
     const options = {
       format: 'Y-m-d H:i',
       inline: false,
       lang: 'en',
       step: 5,
       allowBlank: true,
-      onChangeDateTime: (datetime,field) => {
-        this.onChange(field.val())
+      onChangeDateTime: (datetime, field) => {
+        this.args.onChange(field.val())
       },
       validateOnBlur: true  // BUG with datepicker. The package will not allow a blank field is validateOnBlur is false.
     };
 
-    if (this.dateOnly) {
+    if (this.args.dateOnly) {
       options.format = 'Y-m-d';
       options.timepicker = false;
     }
 
-    if (this.startDate) {
-      options.startDate = this.startDate;
+    if (this.args.startDate) {
+      options.startDate = this.args.startDate;
     }
 
-    $('#'+this.elementId).datetimepicker(options);
+    $(this.element).datetimepicker(options);
   }
 
   willDestroyElement() {
-    $('#'+this.elementId).datetimepicker('destroy');
+    $(this.element).datetimepicker('destroy');
+    this.element = null;
   }
 }

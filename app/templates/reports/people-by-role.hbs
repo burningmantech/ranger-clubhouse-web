@@ -1,6 +1,6 @@
 <h1>People By Role Report</h1>
 
-{{#each roles as |role|}}
+{{#each this.roles as |role|}}
   <div class="border mb-2">
     <div class="bg-light-gray p-2">
       <a href class="h4" {{action this.toggleRole role}}>{{fa-icon (if role.showing "caret-down" "caret-right")}} {{role.title}}</a> ({{pluralize role.people.length "person"}})

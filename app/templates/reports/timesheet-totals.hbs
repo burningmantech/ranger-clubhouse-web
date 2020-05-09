@@ -1,10 +1,11 @@
-{{year-select "Timesheet Totals" year=year onChange=(action (mut year))}}
+<YearSelect @title="Timesheet Totals" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
 <p>
   <button class="btn btn-primary" {{action this.exportToCSV}}>Export to CSV</button>
 </p>
 
-<table class="table table-hover table-width-auto">
+Showing {{pluralize this.people.length "person"}}
+<table class="table table-width-auto">
   <thead>
     <tr>
       <th>Callsign</th>
@@ -36,6 +37,10 @@
         <td class="text-right">{{hour-format person.total_duration}}</td>
         <td class="text-right">{{credits-format person.total_credits}}</td>
       </tr>
+    {{else}}
+    <tr>
+      <td colspan="5"><b class="text-danger">No {{this.year}} timesheet entries were found.</b></td>
+    </tr>
     {{/each}}
   </tbody>
 </table>

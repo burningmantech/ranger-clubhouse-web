@@ -1,4 +1,4 @@
-{{year-select "Trainer Attendance" year=this.year onChange=(action (mut this.year))}}
+<YearSelect @title="Trainer Attendance" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
 <p>
   <button class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
@@ -7,30 +7,39 @@
 Showing {{pluralize this.trainers.length "trainer"}}
 <table class="table table-sm table-hover table-width-auto">
   <thead>
-    <tr>
-      <th>Trainer</th>
-      <th>Time</th>
-      <th>Type</th>
-      <th>Location</th>
-      <th>Attended?</th>
-    </tr>
+  <tr>
+    <th>Trainer</th>
+    <th>Time</th>
+    <th>Type</th>
+    <th>Location</th>
+    <th>Attended?</th>
+  </tr>
   </thead>
-
   <tbody>
-    {{#each this.trainers as |trainer|}}
-      {{#each trainer.slots as |slot idx|}}
-        <tr>
-          {{#unless idx}}
-            <td rowspan="{{trainer.slots.length}}">
-              <PersonLink @person={{trainer}} />
-            </td>
-          {{/unless}}
-          <td><LinkTo @route="training.session.index" @models={{array this.training.id slot.training_slot_id}}>{{shift-format slot.begins}}</LinkTo></td>
-          <td>{{slot.position_title}}</td>
-          <td><PresentOrNot @value={{slot.description}} @empty="-" /></td>
-          <td>{{slot.status}}</td>
-        </tr>
-      {{/each}}
+  {{#each this.trainers as |trainer|}}
+    {{#each trainer.slots as |slot idx|}}
+      <tr>
+        {{#unless idx}}
+          <td rowspan="{{trainer.slots.length}}">
+            <PersonLink @person={{trainer}} />
+          </td>
+        {{/unless}}
+        <td>
+          <LinkTo @route="training.session.index" @models={{array this.training.id
+                                                                  slot.training_slot_id}}>{{shift-format
+                  slot.begins}}</LinkTo>
+        </td>
+        <td>{{slot.position_title}}</td>
+        <td>
+          <PresentOrNot @value={{slot.description}} @empty="-"/>
+        </td>
+        <td>{{slot.status}}</td>
+      </tr>
     {{/each}}
+  {{else}}
+    <tr>
+      <td colspan="5"><b class="text-danger">No trainers were found for {{this.year}}</b></td>
+    </tr>
+  {{/each}}
   </tbody>
 </table>

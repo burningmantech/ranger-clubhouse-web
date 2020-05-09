@@ -10,6 +10,7 @@ export default class TrainingUntrainedPeopleRoute extends Route {
     const year = requestYear(params);
     const training = this.modelFor('training');
 
+    this.year = year;
     return this.ajax.request(`training/${training.id}/untrained-people`, {
       data: { year }
     });
@@ -20,6 +21,7 @@ export default class TrainingUntrainedPeopleRoute extends Route {
     // model.not_passed - people who have not passed
     controller.setProperties(model);
     controller.set('training', this.modelFor('training'));
+    controller.set('year', this.year);
   }
 
   // Don't allow the year parameter to bleed over to other routes.

@@ -1,11 +1,12 @@
 import Controller from '@ember/controller';
-import { later } from '@ember/runloop';
+import {later} from '@ember/runloop';
 import EmberObject from '@ember/object';
-import { action, computed } from '@ember/object';
+import {action, computed} from '@ember/object';
 import _ from 'lodash';
+import {tracked} from '@glimmer/tracking';
 
 class ViewPosition extends EmberObject {
-  expanded = false;
+  @tracked expanded = false;
 
   @computed('statuses.@each.selected', 'people')
   get visiblePeople() {
@@ -63,22 +64,22 @@ export default class PeopleByPositionController extends Controller {
   @computed('people')
   get statuses() {
     return _.map(_.uniq(_.map(_.values(this.people), 'status')).sort(),
-      (status) => EmberObject.create({name: status, selected: true}));
+      (status) =>{ return {name: status, selected: true} });
   }
 
   @action
   toggleExpanded(position) {
-    position.set('expanded', !position.get('expanded'));
+    position.expanded = !position.expanded;
   }
 
   @action
   expandAllPositions(expanded) {
     // Expand or collapse all iteratively asynchronously because rendering the contents takes awhile
     const positions = this.viewPositions;
-    const advance = (i) => ( () => {
+    const advance = (i) => (() => {
       if (i < positions.length) {
-        positions[i].set('expanded', expanded);
-        later(advance(i+1), 1);
+        positions[i].expanded = expanded;
+        later(advance(i + 1), 1);
       }
     });
     later(advance(0), 1);

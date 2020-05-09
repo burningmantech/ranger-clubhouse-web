@@ -1,6 +1,6 @@
-{{year-select (concat "Timesheet For " session.user.callsign) year=year years=person.all_years onChange=(action (mut year))}}
+<YearSelect @title="Timesheet For {{session.user.callsign}}" @year={{this.year}} @years={{this.person.all_years}} @onChange={{action (mut this.year)}} />
 
-{{#if timesheets}}
+{{#if this.timesheets}}
   {{#if (and this.isCurrentYear this.timesheetInfo.correction_enabled)}}
     <p class="d-print-none">
       Is an entry incorrect, or is there a missing shift that was not recorded?
@@ -29,7 +29,7 @@
       <div class="timesheet-credits">Credits</div>
       <div class="timesheet-position">Position</div>
     </div>
-    {{#each timesheets as |ts|}}
+    {{#each this.timesheets as |ts|}}
       <div class="timesheet-entry">
         <div class="timesheet-row">
           <div class="timesheet-time">{{shift-format ts.on_duty}}</div>
@@ -58,10 +58,10 @@
     {{/each}}
   </div>
 
-  <TimesheetSummary @summary={{timesheetSummary}} />
-  <TimesheetPositionSummary @timesheets={{timesheets}} />
+  <TimesheetSummary @summary={{this.timesheetSummary}} />
+  <TimesheetPositionSummary @timesheets={{this.timesheets}} />
 {{else}}
-  <p class="mt-3 text-danger">
-    <b>No timesheet entries were found for {{year}}.</b>
+  <p class="mt-3">
+    <b class="text-danger">No timesheet entries were found for {{this.year}}.</b>
   </p>
 {{/if}}

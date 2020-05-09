@@ -1,32 +1,33 @@
-{{#if signupSheetSlot}}
-  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{action clearSignupSheet}} />
-  <Mentor::AlphaSignupSheet @slot={{signupSheetSlot}} />
-{{else if signedInSlot}}
-  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{action clearSignedInSheet}} />
-  <Mentor::AlphasSignedInSheet @slot={{signedInSlot}} />
-{{else if apparelSlot}}
-  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{action clearAlphaApparel}} />
-  <Mentor::AlphaApparelSheet @slot={{apparelSlot}} />
+{{#if this.signupSheetSlot}}
+  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{action this.clearSignupSheet}} />
+  <Mentor::AlphaSignupSheet @slot={{this.signupSheetSlot}} />
+{{else if this.signedInSlot}}
+  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{action this.clearSignedInSheet}} />
+  <Mentor::AlphasSignedInSheet @slot={{this.signedInSlot}} />
+{{else if this.apparelSlot}}
+  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{action this.clearAlphaApparel}} />
+  <Mentor::AlphaApparelSheet @slot={{this.apparelSlot}} />
 {{else}}
   <div class="d-print-none">
-    {{year-select "Alpha Scheduled Shift" year=year onChange=(action (mut year))}}
+    <YearSelect @title="Alpha Scheduled Shift" @year={{this.year}} @onChange={{action (mut this.year)}} />
   </div>
-  {{#each slots as |slot|}}
+  {{#each this.slots as |slot|}}
     <div class="my-3">
       <table class="table table-sm table-striped table-hover">
-        <caption>{{shift-format slot.begins}} - {{slot.description}} - {{pluralize slot.people.length
-                                                                                   "Alpha"}}</caption>
+        <caption>
+          {{shift-format slot.begins}} - {{slot.description}} - {{pluralize slot.people.length "Alpha"}}
+        </caption>
         <thead>
         <tr>
           <td colspan="6">
-            <button class="btn btn-secondary btn-sm" {{action showSignupSheet slot}}>Alpha Sign-In Sheet</button>
-            <button class="btn btn-secondary btn-sm" {{action showSignedInSheet slot}}>Alpha Info Sheet</button>
-            <button class="btn btn-secondary btn-sm" {{action showAlphaApparel slot}}>Alpha Apparel Distribution
+            <button class="btn btn-secondary btn-sm" {{action this.showSignupSheet slot}}>Alpha Sign-In Sheet</button>
+            <button class="btn btn-secondary btn-sm" {{action this.showSignedInSheet slot}}>Alpha Info Sheet</button>
+            <button class="btn btn-secondary btn-sm" {{action this.showAlphaApparel slot}}>Alpha Apparel Distribution
             </button>
           </td>
           <td>
-            <button class="btn btn-secondary btn-sm" {{action showAddPersonAction slot}}>Add Person</button>
-            <button class="btn btn-secondary btn-sm" {{action showRemovePersonAction slot}}>Remove Person</button>
+            <button class="btn btn-secondary btn-sm" {{action this.showAddPersonAction slot}}>Add Person</button>
+            <button class="btn btn-secondary btn-sm" {{action this.showRemovePersonAction slot}}>Remove Person</button>
           </td>
         </tr>
         <tr>
@@ -79,28 +80,26 @@
       </table>
     </div>
   {{else}}
-    <ChAlert @type="warning">
-      No {{year}} Alpha shifts found.
-    </ChAlert>
+    <b class="text-danger">No {{this.year}} Alpha shifts found.</b>
   {{/each}}
 {{/if}}
 
 
 {{! Add Person dialog box}}
 {{#if this.addPersonForm}}
-  <ModalDialog @title={{concat "Add Person To " (shift-format slot.begins)}} as |Modal|>
+  <ModalDialog @title={{concat "Add Person To " (shift-format this.slot.begins)}} as |Modal|>
     <ChForm @formId="search" @originalModel={{this.addPersonForm}}
             @changeSet={{false}} @onFormChange={{this.searchPeopleAction}} @onCancel={{this.cancelSearchAction}} as |f|>
       <Modal.body>
         <div class="form-row">
           <f.input @name="name" @label="Enter the callsign, real name, or email of the person to add:"
-                   @type="text" @size=30 @autofocus=true @disabled={{slot.is_submitting}} />
+                   @type="text" @size=30 @autofocus=true @disabled={{this.slot.is_submitting}} />
         </div>
         <div class="form-row">
-          <f.cancel/>
+          <f.cancel  @disabled={{this.slot.is_submitting}} />
           {{#if this.slot.is_submitting}}
             <LoadingIndicator @text="Adding"/>
-          {{else if isSearching}}
+          {{else if this.isSearching}}
             <LoadingIndicator @text="Searching"/>
           {{/if}}
         </div>
@@ -115,10 +114,10 @@
             </tr>
             </thead>
             <tbody>
-            {{#each foundPeople as |person|}}
+            {{#each this.foundPeople as |person|}}
               <tr>
                 <td class="w-25">
-                  <a href {{action this.addPersonAction person slot}} disabled={{slot.is_submitting}}>
+                  <a href {{action this.addPersonAction person this.slot}} disabled={{this.slot.is_submitting}}>
                     {{person.callsign}}
                   </a>
                 </td>

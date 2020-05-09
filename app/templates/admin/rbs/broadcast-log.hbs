@@ -1,9 +1,10 @@
-{{year-select (if failed "Ranger Failed Broadcast Log" "Ranger Broadcast Log") year=year onChange=(action (mut year))}}
+<YearSelect @title={{if this.failed "Ranger Failed Broadcast Log" "Ranger Broadcast Log"}} @year={{this.year}}
+            @onChange={{action (mut this.year)}} />
 <p>
   <LinkTo @route="admin.rbs">Back to RBS</LinkTo>
 </p>
-<table class="table table-striped table-sm">
-  <caption>{{pluralize logs.length "log"}}</caption>
+<table class="table table-striped table-hover table-sm table-width-auto">
+  <caption>{{pluralize this.logs.length "log"}}</caption>
   <thead>
   <tr>
     <th>#</th>
@@ -17,29 +18,23 @@
   </thead>
 
   <tbody>
-  {{#each logs as |log|}}
+  {{#each this.logs as |log|}}
     <tr class="{{if (or log.sms_failed log.email_failed) "bg-highlight"}}">
       <td>{{log.id}}</td>
       <td>{{log.created_at}}</td>
-      <td>
-        <PersonLink @person={{log.sender}} />
-      </td>
-      <td>
-        {{if log.alert.on_playa "On Playa" "Pre-Event"}}: {{log.alert.title}}
-      </td>
-      <td class="text-right">
-        {{log.people.length}}
-      </td>
+      <td><PersonLink @person={{log.sender}} /></td>
+      <td>{{if log.alert.on_playa "On Playa" "Pre-Event"}}: {{log.alert.title}}</td>
+      <td class="text-right">{{log.people.length}}</td>
       <td>
         {{#if log.sent_sms}}SMS{{else}}&nbsp;{{/if}}
         {{#if log.sent_email}}email{{else}}&nbsp;{{/if}}
         {{#if log.sent_clubhouse}}CH{{/if}}
       </td>
       <td>
-        <button class="btn btn-secondary btn-sm" {{action toggleMessage log}}>Message</button>
-        <button class="btn btn-secondary btn-sm" {{action toggleRecipients log}}>Recipients</button>
+        <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleMessage log}}>Message</button>
+        <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleRecipients log}}>Recipients</button>
         {{#if (or log.sms_failed log.email_failed)}}
-          <button class="btn btn-danger btn-sm" {{action retryAction log}}>Retry</button>
+          <button type="button" class="btn btn-danger btn-sm" {{action this.retryAction log}}>Retry</button>
         {{/if}}
       </td>
     </tr>
@@ -108,9 +103,15 @@
               <tr>
                 <td>{{person.callsign}}</td>
                 <td>{{person.first_name}} {{person.last_name}}</td>
-                <td><PresentOrNot @value={{person.sms.status}} @empty="-" /></td>
-                <td><PresentOrNot @value={{person.email.status}} @empty="-" /></td>
-                <td><PresentOrNot @value={{person.clubhouse.status}} @empty="-" /></td>
+                <td>
+                  <PresentOrNot @value={{person.sms.status}} @empty="-"/>
+                </td>
+                <td>
+                  <PresentOrNot @value={{person.email.status}} @empty="-"/>
+                </td>
+                <td>
+                  <PresentOrNot @value={{person.clubhouse.status}} @empty="-"/>
+                </td>
               </tr>
             {{/each}}
             </tbody>
@@ -122,42 +123,43 @@
   </tbody>
 </table>
 
-{{#if confirmRetry}}
+{{#if this.confirmRetry}}
   <ModalDialog @title="Retry Broadcast" as |modal|>
     <modal.body>
       <p>
-        <b>ID:</b> #{{confirmRetry.id}}<br>
-        <b>Created:</b> {{confirmRetry.created_at}}<br>
-        <b>Sender:</b> {{confirmRetry.sender.callsign}}<br>
-        <b>Alert:</b> {{if confirmRetry.alert.on_playa "On Playa" "Pre-Event"}}: {{confirmRetry.alert.title}}<br>
-        <b>SMS Fail:</b> {{confirmRetry.sms_failed}}<br>
-        <b>Email Fail:</b> {{confirmRetry.email_failed}}
+        <b>ID:</b> #{{this.confirmRetry.id}}<br>
+        <b>Created:</b> {{this.confirmRetry.created_at}}<br>
+        <b>Sender:</b> {{this.confirmRetry.sender.callsign}}<br>
+        <b>Alert:</b> {{if this.confirmRetry.alert.on_playa "On Playa" "Pre-Event"}}: {{this.confirmRetry.alert.title}}
+        <br>
+        <b>SMS Fail:</b> {{this.confirmRetry.sms_failed}}<br>
+        <b>Email Fail:</b> {{this.confirmRetry.email_failed}}
       </p>
       <p>
         Are you sure you want to retry this broadcast?
       </p>
     </modal.body>
     <modal.footer>
-      <modal.button @label="Cancel" @action={{action closeRetry}}  @type="secondary"/>
-      <modal.button @label="Confirm Retry" @action={{action attemptRetry}}  @type="primary"/>
+      <modal.button @label="Cancel" @action={{this.closeRetry}}  @type="secondary"/>
+      <modal.button @label="Confirm Retry" @action={{this.attemptRetry}}  @type="primary"/>
     </modal.footer>
   </ModalDialog>
-{{else if retryingBroadcast}}
+{{else if this.retryingBroadcast}}
   <ModalDialog @title="Retying Broadcast" as |modal|>
     <modal.body>
       <LoadingIndicator @text="Retrying Broadcast"/>
     </modal.body>
     <modal.footer>
-      <modal.button @label="Close" @action={{closeRetry}} @type="primary"/>
+      <modal.button @label="Close" @action={{this.closeRetry}} @type="primary"/>
     </modal.footer>
   </ModalDialog>
-{{else if retryResult}}
+{{else if this.retryResult}}
   <ModalDialog @title="Retry Results" as |modal|>
     <modal.body>
-      <BroadcastSentTable @result={{retryResult}} />
+      <BroadcastSentTable @result={{this.retryResult}} />
     </modal.body>
     <modal.footer>
-      <modal.button @label="Close" @action={{closeRetry}} @type="primary"/>
+      <modal.button @label="Close" @action={{this.closeRetry}} @type="primary"/>
     </modal.footer>
   </ModalDialog>
 {{/if}}

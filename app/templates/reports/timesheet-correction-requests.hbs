@@ -1,55 +1,51 @@
-{{year-select "Timesheet Corrections Report" year=year onChange=(action (mut year))}}
+<YearSelect @title="Timesheet Corrections Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
-<div class="form-row mb-1">
+<div class="form-row mb-2">
+  <label class="col-form-label">Filter requests by callsigns starting with</label>
   <div class="col-auto">
-    <label class="col-form-label">Filter requests by callsigns starting with</label>
-  </div>
-  <div class="col-auto mb-2">
-    <ChForm::Select @name="callsignFilter" @value={{callsignFilter}} @options={{letterOptions}} @onChange={{action (mut callsignFilter)}} @controlClass="form-control" />
+    <ChForm::Select @name="callsignFilter" @value={{this.callsignFilter}} @options={{this.letterOptions}}
+                    @onChange={{action (mut callsignFilter)}} @controlClass="form-control"/>
   </div>
 </div>
 
-<table class="table table-hover table-box">
+Showing {{this.viewGroupCorrections.length}} of {{this.requests.length}}
+<table class="table table-hover table-width-auto">
   <thead>
-    <tr>
-      <th>Callsign</th>
-      <th>Type</th>
-      <th>Position</th>
-      <th>On Duty</th>
-      <th>Off Duty</th>
-      <th>Time</th>
-      <th>Credits</th>
-    </tr>
+  <tr>
+    <th>Callsign</th>
+    <th>Type</th>
+    <th>Position</th>
+    <th>On Duty</th>
+    <th>Off Duty</th>
+    <th>Time</th>
+    <th>Credits</th>
+  </tr>
   </thead>
   <tbody>
-    {{#each viewGroupCorrections as |person|}}
-      {{#each person.requests as |request idx|}}
-        <tr class="{{if idx "no-border"}}">
-          <td>
-            {{#unless idx}}
-              <PersonLink @person={{request.person}} @page="timesheet" @year={{year}} />
-            {{else}}
-              &nbsp;
-            {{/unless}}
-          </td>
-          <td>{{if request.is_missing "Missing Entry" "Correction"}}</td>
-          <td>{{request.position.title}}</td>
-          <td>{{shift-format request.on_duty}}</td>
-          <td>{{shift-format request.off_duty}}</td>
-          <td>{{hour-minute-format request.duration}}</td>
-          <td>{{credits-format request.credits}}</td>
-        </tr>
-        <tr class="no-border">
-          <td>&nbsp;</td>
-          <td colspan="6">
-            Note: {{request.notes}}
-          </td>
-        </tr>
-      {{/each}}
-    {{else}}
-      <tr>
-        <td colspan="7" class="text-success">Congratulations! There are no outstanding timesheet corrections or missing timesheet requests.</td>
+  {{#each viewGroupCorrections as |person|}}
+    {{#each person.requests as |request idx|}}
+      <tr class="{{if idx "no-border"}}">
+        <td>
+          {{#unless idx}}
+            <PersonLink @person={{request.person}} @page="timesheet" @year={{year}} />
+          {{else}}
+            &nbsp;
+          {{/unless}}
+        </td>
+        <td>{{if request.is_missing "Missing Entry" "Correction"}}</td>
+        <td>{{request.position.title}}</td>
+        <td>{{shift-format request.on_duty}}</td>
+        <td>{{shift-format request.off_duty}}</td>
+        <td>{{hour-minute-format request.duration}}</td>
+        <td>{{credits-format request.credits}}</td>
       </tr>
     {{/each}}
+  {{else}}
+    <tr>
+      <td colspan="7">
+        <b class="text-success">Congratulations! There are no outstanding timesheet corrections or missing timesheet requests.</b>
+      </td>
+    </tr>
+  {{/each}}
   </tbody>
 </table>

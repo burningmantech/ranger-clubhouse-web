@@ -1,24 +1,28 @@
-{{year-select (concat "Multiple Enrollments Report for " training.title) year=year onChange=(action "changeYearAction")}}
-
-{{#if enrollments}}
-<p>
-<a href="#email-list-link" class="btn btn-primary">Jump to email list</a>
+<YearSelect @title="Multiple Enrollments Report for {{this.training.title}}"
+            @year={{this.year}}
+            @onChange={{action (mut this.year)}} />
+{{#if this.enrollments}}
+<p class="mt-4">
+  <a href="#email-list-link" >Jump to email list</a>
 </p>
-<table class="table table-sm table-striped">
-  <caption>{{pluralize enrollments.length "student"}} have multiple enrollments</caption>
+{{/if}}
+Showing {{pluralize this.enrollments.length "student"}}
+<table class="table table-sm table-width-auto table-striped table-width-auto">
   <thead>
-    <tr>
-      <th>Callsign</th>
-      <th>Email</th>
-      <th>Training Date</th>
-      <th>Training Location</th>
-    </tr>
+  <tr>
+    <th>Callsign</th>
+    <th>Email</th>
+    <th>Training Date</th>
+    <th>Training Location</th>
+  </tr>
   </thead>
 
   <tbody>
-  {{#each enrollments as |person|}}
+  {{#each this.enrollments as |person|}}
     <tr>
-      <td><PersonLink @personId={{person.person_id}} @callsign={{person.callsign}} /></td>
+      <td>
+        <PersonLink @personId={{person.person_id}} @callsign={{person.callsign}} />
+      </td>
       <td>{{mail-to person.email}}</td>
       <td>
         {{#each person.enrollments as |slot|}}
@@ -31,10 +35,14 @@
         {{/each}}
       </td>
     </tr>
+  {{else}}
+    <tr>
+      <td colspan="4"><b class="text-success">Congratulations! No multiple enrollments were found for {{this.year}}.</b>
+      </td>
+    </tr>
   {{/each}}
   </tbody>
 </table>
-<EmailList @people={{enrollments}} />
-{{else}}
-<p class="text-success">Congratulations! Nobody was found to have enrolled for multiple trainings.</p>
+{{#if this.enrollments}}
+  <EmailList @people={{this.enrollments}} />
 {{/if}}

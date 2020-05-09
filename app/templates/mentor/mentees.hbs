@@ -1,52 +1,54 @@
-{{year-select "Mentee Listing" year=year onChange=(action (mut year))}}
+<YearSelect @title="Mentee Listing" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
-{{#if mentees}}
-  <p>
-    Showing {{viewMentees.length}} of {{mentees.length}}. {{passedCount}} passed. {{bonkedCount}} bonked.
-  </p>
+{{#if this.mentees}}
   <div class="form-row mb-2">
     <div class="col-auto">
       <label class="col-form-label">Filter</label>
     </div>
     <div class="col-auto">
-      <ChForm::Select @name="filter" @value={{filter}} @options={{filterOptions}} @onChange={{action (mut filter)}} @controlClass="form-control" />
+      <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}} @onChange={{action
+              (mut this.filter)}} @controlClass="form-control"/>
     </div>
     <div class="col-auto">
-      <button class="btn btn-primary" {{action exportToCSV}}>Export to CSV</button>
+      <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export to CSV</button>
     </div>
   </div>
-  <table class="table table-stripped table-hover table-width-auto">
+  Showing {{this.viewMentees.length}} of {{this.mentees.length}}. {{this.passedCount}} passed. {{this.bonkedCount}} bonked.
+  <table class="table table-striped table-hover table-width-auto">
     <thead>
-      <tr>
-        <th>Mentee</th>
-        <th>Name</th>
-        {{#if house.canViewEmail}}
-          <th>Email</th>
-        {{/if}}
-        <th>Status</th>
-        <th>Mentors</th>
-        <th>Pass</th>
-      </tr>
+    <tr>
+      <th>Mentee</th>
+      <th>Name</th>
+      {{#if this.house.canViewEmail}}
+        <th>Email</th>
+      {{/if}}
+      <th>Status</th>
+      <th>Mentors</th>
+      <th>Pass</th>
+    </tr>
     </thead>
     <tbody>
-      {{#each viewMentees as |mentee|}}
-        <tr>
-          <td><PersonLink @person={{mentee}} /></td>
-          <td>{{mentee.first_name}} {{mentee.last_name}}</td>
-          {{#if house.canViewEmail}}
-            <td>{{mail-to mentee.email}}</td>
-          {{/if}}
-          <td>{{mentee.status}}</td>
-          <td>
-            {{#each mentee.mentors as |mentor idx| ~}}
-              {{#if idx}}/{{/if}} <PersonLink @person={{mentor}} />
-            {{/each}}
-          </td>
-          <td>{{mentee.mentor_status}}</td>
-        </tr>
-      {{/each}}
+    {{#each this.viewMentees as |mentee|}}
+      <tr>
+        <td>
+          <PersonLink @person={{mentee}} />
+        </td>
+        <td>{{mentee.first_name}} {{mentee.last_name}}</td>
+        {{#if this.house.canViewEmail}}
+          <td>{{mail-to mentee.email}}</td>
+        {{/if}}
+        <td>{{mentee.status}}</td>
+        <td>
+          {{#each mentee.mentors as |mentor idx| ~}}
+            {{#if idx}}/{{/if}}
+            <PersonLink @person={{mentor}} />
+          {{/each}}
+        </td>
+        <td>{{mentee.mentor_status}}</td>
+      </tr>
+    {{/each}}
     </tbody>
   </table>
 {{else}}
-  <strong class="text-danger">No mentees found for {{year}}</strong>
+  <b class="text-danger">No mentees found for {{this.year}}</b>
 {{/if}}

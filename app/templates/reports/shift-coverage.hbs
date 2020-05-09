@@ -1,4 +1,4 @@
-{{year-select "Shift Coverage Report" year=year onChange=(action (mut year))}}
+<YearSelect @title="Shift Coverage Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
 <div class="form-group row">
   <div class="col-auto">
@@ -15,8 +15,8 @@
   </div>
 </div>
 
-{{#unless periods}}
-  <strong class="text-danger">No shifts were found for {{year}}</strong>
+{{#unless this.periods}}
+  <b class="text-danger">No {{this.year}} shifts were found</b>
 {{/unless}}
 
 {{! template-lint-disable table-groups}}
@@ -25,7 +25,7 @@
     <thead>
       <tr>
         <th>Period</th>
-        {{#each columns as |col|}}
+        {{#each this.columns as |col|}}
           <th>{{col.short_title}}</th>
         {{/each}}
       </tr>

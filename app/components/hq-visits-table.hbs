@@ -1,8 +1,8 @@
-<table class="table table-sm table-striped table-hover">
-  <caption>{{title}}</caption>
+<table class="table table-sm table-striped table-hover table-width-auto">
+  <caption>{{@title}}</caption>
   <thead>
     <tr>
-      <th>Time ({{interval}} min interval)</th>
+      <th>Time ({{@interval}} min interval)</th>
       <th class="text-right">Check In</th>
       <th class="text-right">Check Out</th>
       <th class="text-right">Windows</th>
@@ -12,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-    {{#each visits as |visit|}}
+    {{#each @visits as |visit|}}
       <tr class="{{if (and (not visit.windows) (not visit.shorts) (not visit.leads)) "bg-highlight"}}">
         <td>
           {{if (and (not visit.windows) (not visit.shorts) (not visit.leads)) (fa-icon "exclamation-triangle")}}

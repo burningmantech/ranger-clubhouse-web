@@ -85,16 +85,19 @@ export default class ReportsRadioAssetsRoute extends Route {
   }
 
   _buildSummary(radioSummaries, start, current, temp_id, perm_assign) {
-    let barcode;
+    let barcode, count;
 
     if (start == current) {
       barcode = start;
+      count = 1;
     } else {
-      barcode = `${start} - ${current} (${current - start + 1})`;
+      barcode = `${start} - ${current}`;
+      count =  current - start + 1;
     }
 
     radioSummaries.push({
       barcode,
+      count,
       temp_id,
       perm_assign
     });

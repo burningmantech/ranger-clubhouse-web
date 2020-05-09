@@ -9,9 +9,4 @@ export default class PersonContactLogController extends Controller {
   showMessageAction(log) {
     set(log, 'showMessage', !log.showMessage);
   }
-
-  @action
-  changeYearAction(year) {
-    this.set('year', year);
-  }
 }

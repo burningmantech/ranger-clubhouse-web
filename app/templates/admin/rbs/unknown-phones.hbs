@@ -1,23 +1,26 @@
-<div class="float-right">
+<YearSelect @title="Unknown Phone Numbers Log" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<p>
   <LinkTo @route="admin.rbs">Back to RBS</LinkTo>
-</div>
-{{year-select "Unknown Phone Numbers Log" year=year onChange=(action (mut year))}}
-
-<table class="table table-striped table-sm">
-  <caption>Showning {{pluralize phones.length "record"}}</caption>
+</p>
+Showing {{pluralize phones.length "record"}}
+<table class="table table-striped table-sm table-width-auto">
   <thead>
     <tr>
-      <th class="w-15">Timestamp</th>
-      <th class="w-15">Phone</th>
+      <th>Timestamp</th>
+      <th>Phone</th>
       <th>Message</th>
     </tr>
   </thead>
   <tbody>
-    {{#each phones as |phone|}}
+    {{#each this.phones as |phone|}}
       <tr>
-        <td class="w-15">{{phone.created_at}}</td>
-        <td class="w-15">{{phone.address}}</td>
+        <td>{{phone.created_at}}</td>
+        <td>{{phone.address}}</td>
         <td>{{phone.message}}</td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="3"><b class="text-success">Congratulations! No messages were received from unknown phone numbers in {{this.year}}</b></td>
       </tr>
     {{/each}}
   </tbody>
