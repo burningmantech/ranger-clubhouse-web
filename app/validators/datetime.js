@@ -1,8 +1,9 @@
-
 import moment from 'moment';
+import { get } from '@ember/object';
+import { isEmpty } from '@ember/utils';
 
 function getProperty(changes, content, name) {
-  return changes.hasOwnProperty(name) ? changes[name] : content.get(name);
+  return (name in changes) ? changes[name] : get(content, name);
 }
 
 function getDateProperty(changes, content, name) {
@@ -24,11 +25,12 @@ export default function validateDateTime(opts = {}) {
     const { before, after, if_set } = opts;
     let date;
 
+    console.log(`new=[${newValue}] old=[${oldValue}]`);
     if (if_set && !getProperty(changes, content, if_set)) {
       return true;
     }
 
-    if (newValue == '' || newValue == undefined) {
+    if (isEmpty(newValue)) {
       if (opts.presence) {
         return 'Must not be blank';
       }

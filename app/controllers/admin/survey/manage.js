@@ -59,7 +59,10 @@ export default class AdminSurveyManageController extends Controller {
         },
         {id: 'nam_rating', title: 'nam_rating: How well did the trainer not make it about themselves (rating)'},
         {id: 'ontime_rating', title: 'ontime_rating: Trainer stayed on time (rating)'},
-        {id: 'confidential_comments', title: 'confidential_comments: Parting thoughts about Trainer (text, T.A. only see answers)'},
+        {
+          id: 'confidential_comments',
+          title: 'confidential_comments: Parting thoughts about Trainer (text, T.A. only see answers)'
+        },
         {id: 'overall_rating', title: 'overall_raing: Overall effectiveness on training delivery (rating)'},
         {id: 'preparedness_rating', title: 'preparedness_rating: Trainer preparations (rating)'},
         {id: 'suggestions', title: 'suggestions: Trainer improvement suggestions (text)'},
@@ -133,7 +136,7 @@ export default class AdminSurveyManageController extends Controller {
   }
 
   @action
-  moveGroupAction(group, direction) {
+  async moveGroupAction(group, direction) {
     let groups = this.orderedGroups;
     const idx = groups.findIndex((g) => g.id == group.id);
 
@@ -143,20 +146,30 @@ export default class AdminSurveyManageController extends Controller {
       if (idx == 1) {
         groups.unshift(group);
       } else if (idx > 0) {
-        groups = groups.splice(idx - 1, 0, group);
+        groups.splice(idx - 1, 0, group);
       }
     } else {
       if (idx < (groups.length - 1)) {
-        groups = groups.splice(idx + 1, 0, group);
+        groups.splice(idx + 1, 0, group);
       } else {
         groups.push(group);
       }
     }
 
-    groups.forEach((g, idx) => {
-      g.sort_index = (idx + 1);
-      g.save();
-    });
+    for (let idx = 0; idx < groups.length; idx++) {
+      const g = groups[idx];
+      const sortIdx = idx + 1;
+      if (sortIdx != g.sort_index) {
+        g.sort_index = sortIdx;
+        try {
+          await g.save();
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        }
+      }
+    }
+
+    this.toast.success('Group order successfully updated.');
   }
 
 
@@ -218,36 +231,39 @@ export default class AdminSurveyManageController extends Controller {
   }
 
   @action
-  moveQuestionAction(group, question, direction) {
-    let questions = group.surveyQuestions.toArray();
-    const idx = questions.findIndex((q) => q.id == question.id);
+  async moveQuestionAction(group, question, direction, event) {
+    event.preventDefault();
+    const idx = group.surveyQuestions.findIndex((q) => q.id == question.id);
+    let questions = group.surveyQuestions.toArray().filter((q) => q.id != question.id);
 
-    questions.removeObject(question);
-
-    console.log('FIND IDX ', idx);
     if (direction < 0) {
       if (idx == 1) {
         questions.unshift(question);
       } else if (idx > 0) {
-        questions = questions.splice(idx - 1, 0, question);
+        questions.splice(idx - 1, 0, question);
       }
     } else {
       if (idx < (questions.length - 1)) {
-        questions = questions.splice(idx + 1, 0, question);
+        questions.splice(idx + 1, 0, question);
       } else {
         questions.push(question);
       }
     }
 
-    let sortIdx = 1;
-    console.log(`QUESTIONS ${questions.length}`);
-    questions.forEach(async (q) => {
-      console.log(`q#${q.id} ${q.sort_index} -> ${sortIdx}`);
-      q.sort_index = sortIdx;
-      sortIdx++;
-      await q.save();
-    });
+    for (let i = 0; i < questions.length; i++) {
+      const sortIdx = i + 1;
+      const q = questions[i];
+      if (q.sort_index != sortIdx) {
+        q.sort_index = sortIdx;
+        try {
+          await q.save();
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        }
+      }
+    }
 
+    this.toast.success('Question order successfully updated.');
     this._assignQuestions();
   }
 

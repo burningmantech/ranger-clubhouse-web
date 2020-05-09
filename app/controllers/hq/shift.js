@@ -149,7 +149,7 @@ export default class HqShiftController extends Controller {
     this.set('isCorrectionSubmitting', true);
     model.save().then(() => {
       this.set('showCorrectionForm', false);
-      this.toast.success('Correction request was succesfully submitted.');
+      this.toast.success('Correction request was successfully submitted.');
     }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.set('isCorrectionSubmitting', false));
   }

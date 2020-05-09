@@ -65,7 +65,7 @@ export default class MeTimesheetCorrectionsMissingController extends Controller 
     this.set('isSubmitting', true);
 
     model.save().then(() => {
-      this.toast.success(`Your request has been succesfully ${isNew ? 'submitted' : 'updated'}.`);
+      this.toast.success(`Your request has been successfully ${isNew ? 'submitted' : 'updated'}.`);
       this.timesheetsMissing.pushObject(this.entry);
       this.set('entry', null);
     }).catch((response) => this.house.handleErrorResponse(response))

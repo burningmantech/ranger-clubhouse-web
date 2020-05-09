@@ -141,7 +141,7 @@ export default class AdminAssetsController extends Controller {
     this.set('isSubmitting', false);
     this.set('entry', null);
     this.set('creatingBarcode', null);
-    this.toast.success(`${copies} assets were succesfully created`);
+    this.toast.success(`${copies} assets were successfully created`);
   }
 
   @action
@@ -200,7 +200,7 @@ export default class AdminAssetsController extends Controller {
       () => {
         asset.destroyRecord().then(() => {
           this.assets.removeObject(asset);
-          this.toast.success('Asset was succesfully deleted');
+          this.toast.success('Asset was successfully deleted');
         });
       });
   }

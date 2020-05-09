@@ -82,9 +82,9 @@
       <div>
         {{#if slots}}
           <b class="text-danger">No upcoming shifts were found.</b>
-          <a href {{action (mut viewSchedule) "all"}}>View All Shifts</a>
+          <a href {{action (mut this.viewSchedule) "all"}}>View All Shifts</a>
         {{else}}
-          <b>No scheduled shifts were found for {{year}}.</b>
+          <b>No scheduled {{@year}} shifts were found.</b>
         {{/if}}
       </div>
     </div>

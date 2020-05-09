@@ -120,7 +120,7 @@ export default class VcPhotoReviewController extends Controller {
       processData: false,
       contentType: false,
     }).then(() => {
-      this.toast.success('Edited photo succesfully uploaded.');
+      this.toast.success('Edited photo successfully uploaded.');
       photo.reload()
         .finally(() => {
           this.editPhoto = null;

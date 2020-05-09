@@ -76,6 +76,7 @@ export default class SlotsController extends Controller {
   @tracked showingGroups = {};
 
   @tracked isCopyingSlots = false;
+  @tracked activatingSlot = null;
 
   @computed('slots[]', 'slots.@each.{position_id,begins}', 'dayFilter', 'activeFilter')
   get viewSlots() {
@@ -157,13 +158,20 @@ export default class SlotsController extends Controller {
     return [['(same position)', 0], ...options];
   }
 
-  _updateGroupActive(group, isActive) {
-    // TODO: figure out a single api to due bulk updates.
-    group.slots.forEach(async (slot) => {
-      slot.set('active', isActive);
-      await slot.save();
-    });
+  async _updateGroupActive(group, isActive) {
+    const slots = group.slots;
 
+    for (let i = 0; i < slots.length; i++){
+      const slot = slots[i];
+      slot.active = isActive;
+      this.activatingSlot = slot;
+      try {
+        await slot.save();
+      } catch (response) {
+        this.house.handleErrorResponse(response);
+      }
+    }
+    this.activatingSlot = null;
     this.toast.success(`Slots has been ${isActive ? 'activated' : 'deactivated'}`);
   }
 

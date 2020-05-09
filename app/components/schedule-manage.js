@@ -1,4 +1,4 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import {action, computed} from '@ember/object';
 import {A} from '@ember/array';
 import {set} from '@ember/object';
@@ -7,26 +7,26 @@ import markSlotsOverlap from 'clubhouse/utils/mark-slots-overlap';
 import moment from 'moment';
 import {slotSignup} from 'clubhouse/utils/slot-signup';
 import {run} from '@ember/runloop';
+import {tracked} from '@glimmer/tracking';
+import {inject as service} from '@ember/service';
 import $ from 'jquery';
 
 const allDays = ['All Days', 'all'];
 const upcomingShifts = ['Upcoming Shifts', 'upcoming'];
 
 export default class ScheduleManageComponent extends Component {
-  tagName = '';
+  @service ajax;
+  @service modal;
+  @service toast;
+  @service house;
+  @service session;
 
-  person = null;
-  year = null;
-  slots = null;
-  signedUpSlots = null;
-  creditsEarned = 0.0;
-  permission = null;
-  scheduleSummary = null;
-
-  filterDay = 'upcoming';
-  filterActive = 'active';
-
-  requirementsOverride = false;
+  @tracked filterDay = 'upcoming';
+  @tracked filterActive = 'active';
+  @tracked scheduleSummary;
+  @tracked requirementsOverride = false;
+  @tracked showBehaviorAgreement = false;
+  @tracked permission;
 
   activeOptions = [
     ['Active', 'active'],
@@ -34,62 +34,64 @@ export default class ScheduleManageComponent extends Component {
     ['All', 'all'],
   ];
 
-  didReceiveAttrs() {
+  constructor() {
+    super(...arguments);
+
+    const person = this.args.person;
+    const permission = this.args.permission;
+
     if (!this.isCurrentYear) {
-      this.set('filterDay', 'all');
+      this.filterDay = 'all';
     }
 
+    this.scheduleSummary = this.args.scheduleSummary;
     this._sortAndMarkSignups();
 
-    this.signedUpSlots.forEach((signedUp) => {
-      const slot = this.slots.find((slot) => signedUp.id == slot.id);
+    this.args.signedUpSlots.forEach((signedUp) => {
+      const slot = this.args.slots.find((slot) => signedUp.id == slot.id);
       if (slot) {
         slot.set('person_assigned', true);
       }
     });
+
+    /*
+     * Filter out what the person can actual see based on their roles.
+     * TODO Revisit whether everyone should be able to see inactive slots if they choose.
+     */
+
+    if (this.args.person.hasRole(
+      [Role.ADMIN, Role.EDIT_SLOTS, Role.GRANT_POSITION, Role.VC, Role.TRAINER, Role.ART_TRAINER])) {
+      this.availableSlots = this.args.slots;
+    } else {
+      this.availableSlots = this.args.slots.filter((slot) => slot.slot_active);
+    }
+
+    this.inactiveSlots = this.availableSlots.filter((slot) => !slot.slot_active);
+    this.isCurrentYear = (this.args.year == this.house.currentYear());
+    this.isMe = (this.session.userId == person.id);
+    this.isAdmin = this.session.user.isAdmin;
+    this.permission = permission;
+
+    this.noPermissionToSignUp = (this.isCurrentYear && !permission.signup_allowed);
+    const photoStatus = permission.photo_status;
+    this.hasApprovedPhoto = (photoStatus == 'approved' || photoStatus == 'not-required')
   }
 
   _sortAndMarkSignups() {
-    this.signedUpSlots.sort((a, b) => a.slot_begins_time - b.slot_begins_time);
-    this.signedUpSlots.forEach((slot) => {
+    const slots = this.args.signedUpSlots;
+
+    slots.sort((a, b) => a.slot_begins_time - b.slot_begins_time);
+    slots.forEach((slot) => {
       slot.set('is_overlapping', false);
       slot.set('is_training_overlap', false);
     });
-    markSlotsOverlap(this.signedUpSlots);
+    markSlotsOverlap(slots);
   }
 
   _retrieveScheduleSummary() {
-    this.ajax.request(`person/${this.person.id}/schedule/summary`, {data: {year: this.year}}).then((result) => {
-      this.set('scheduleSummary', result.summary);
-    }).catch((result) => this.house.handleErrorResponse(result));
-  }
-
-  get isCurrentYear() {
-    return (this.year == this.house.currentYear())
-  }
-
-  get noPermissionToSignUp() {
-    return this.isCurrentYear && !this.permission.signup_allowed;
-  }
-
-  /*
-   * Filter out what the person can actual see based on their roles.
-   * TODO Revisit whether everyone should be able to see inactive slots if they choose.
-   */
-  @computed('person', 'slots')
-  get availableSlots() {
-    // Filter based on roles.
-    if (this.person.hasRole(
-      [Role.ADMIN, Role.EDIT_SLOTS, Role.GRANT_POSITION, Role.VC, Role.TRAINER, Role.ART_TRAINER])) {
-      return this.slots;
-    }
-
-    return this.slots.filter((slot) => slot.slot_active);
-  }
-
-  @computed('availableSlots')
-  get inactiveSlots() {
-    return this.availableSlots.filter((slot) => !slot.slot_active);
+    this.ajax.request(`person/${this.args.person.id}/schedule/summary`, {data: {year: this.args.year}})
+      .then((result) => this.scheduleSummary = result.summary)
+      .catch((result) => this.house.handleErrorResponse(result));
   }
 
   @computed('availableSlots', 'filterDay', 'filterActive')
@@ -115,7 +117,7 @@ export default class ScheduleManageComponent extends Component {
   get slotGroups() {
     const slots = this.viewSlots;
     let groups = A();
-    slots.forEach(function (slot) {
+    slots.forEach((slot) => {
       const title = slot.position_title;
       let group = groups.findBy('title', title);
 
@@ -129,7 +131,7 @@ export default class ScheduleManageComponent extends Component {
     return groups.sortBy('title');
   }
 
-  @computed('availableSlots', 'isCurrentYear', 'slots')
+  @computed('availableSlots', 'slots', 'isCurrentYear')
   get dayOptions() {
     const unique = this.availableSlots.uniqBy('slotDay').mapBy('slotDay');
     const days = A();
@@ -153,58 +155,9 @@ export default class ScheduleManageComponent extends Component {
     return days;
   }
 
-  @computed('permission', 'person.isNonRanger')
-  get deniedReason() {
-    const permission = this.permission;
-    const denied = [];
-
-    if (!permission.callsign_approved) {
-      denied.push('have an approved callsign');
-    }
-
-    if (permission.photo_status != 'approved' && permission.photo_status != 'not-required') {
-      denied.push(`have an approved ${this.person.isNonRanger ? 'Clubhouse' : 'BMID (lam)'} photo`);
-    }
-
-    if (!permission.online_training_passed) {
-      denied.push('complete Online Training');
-    }
-
-    if (permission.missing_bpguid) {
-      denied.push('link your Clubhouse account to a Burner Profile ID');
-    }
-
-    if (permission.missing_behavioral_agreement) {
-      denied.push("agree to the Burning Man's Behavioral Standards Agreement");
-    }
-
-    if (denied.length == 0) {
-      denied.push('Oops! An internal error occured');
-    }
-
-    return denied;
-  }
-
-  @computed('permission.photo_status')
-  get hasApprovedPhoto() {
-    const status = this.permission.photo_status;
-
-    return (status == 'approved' || status == 'not-required');
-  }
-
-  @computed('person.id', 'session.userId')
-  get isMe() {
-    return this.session.userId == this.person.id;
-  }
-
-  @computed('session.user.isAdmin')
-  get isAdmin() {
-    return this.session.user.isAdmin;
-  }
-
   @action
   setRequirementsOverride() {
-    this.set('requirementsOverride', true);
+    this.requirementsOverride = true;
   }
 
   @action
@@ -212,12 +165,12 @@ export default class ScheduleManageComponent extends Component {
     const row = $(event.target).closest('.schedule-row');
     const currentOffset = row.offset().top - $(document).scrollTop();
 
-    slotSignup(this, slot, this.person, (result) => {
+    slotSignup(this, slot, this.args.person, (result) => {
       // Record the original row position on the page
 
-      this.signedUpSlots.pushObject(slot);
+      this.args.signedUpSlots.pushObject(slot);
       slot.set('person_assigned', true);
-      set(this.permission, 'recommend_burn_weekend_shift', result.recommend_burn_weekend_shift);
+      this.permission = {...this.permission, recommend_burn_weekend_shift: result.recommend_burn_weekend_shift};
       this._sortAndMarkSignups();
       this._retrieveScheduleSummary();
 
@@ -238,7 +191,7 @@ export default class ScheduleManageComponent extends Component {
       currentOffset = row.offset().top - $(document).scrollTop();
     }
 
-    if (slot.has_started && this.session.user.isAdmin) {
+    if (slot.has_started && this.isAdmin) {
       message = 'The shift has already started. Because you are an admin, you are allowed to removed the shift. '
     } else {
       message = '';
@@ -250,11 +203,11 @@ export default class ScheduleManageComponent extends Component {
       message,
       () => {
         set(slot, 'is_submitting', true);
-        this.ajax.request(`person/${this.person.id}/schedule/${slot.id}`, {
+        this.ajax.request(`person/${this.args.person.id}/schedule/${slot.id}`, {
           method: 'DELETE',
         }).then((result) => {
           set(slot, 'is_submitting', false);
-          const signedUp = this.signedUpSlots.find((s) => s.id == slot.id);
+          const signedUp = this.args.signedUpSlots.find((s) => s.id == slot.id);
 
           if (row) {
             // Try to keep the page position static. The sign up will be removed
@@ -266,7 +219,7 @@ export default class ScheduleManageComponent extends Component {
           }
 
           if (signedUp) {
-            this.signedUpSlots.removeObject(signedUp);
+            this.args.signedUpSlots.removeObject(signedUp);
             this._sortAndMarkSignups();
           }
 
@@ -275,7 +228,6 @@ export default class ScheduleManageComponent extends Component {
           set(this.permission, 'recommend_burn_weekend_shift', result.recommend_burn_weekend_shift);
           this._retrieveScheduleSummary();
           this.toast.success('The shift has been removed from the schedule.');
-
         }).catch((response) => {
           set(slot, 'is_submitting', false);
           this.house.handleErrorResponse(response);
@@ -308,24 +260,26 @@ export default class ScheduleManageComponent extends Component {
 
   @action
   showBehaviorAgreementAction() {
-    this.set('showBehaviorAgreement', true);
+    this.showBehaviorAgreement = true;
   }
 
   @action
   closeAgreement() {
-    this.set('showBehaviorAgreement', false);
+    this.showBehaviorAgreement = false;
   }
 
   @action
   signAgreement() {
-    this.person.set('behavioral_agreement', true);
-    this.person.save().then(() => {
-      this.toast.success('Your agreement has been succesfully recorded.');
+    const person = this.args.person;
+
+    person.behavioral_agreement = true;
+    person.save().then(() => {
+      this.toast.success('Your agreement has been successfully recorded.');
       // Reload the permissions.
-      this.ajax.request(`person/${this.person.id}/schedule/permission`, {data: {year: this.year}})
+      this.ajax.request(`person/${person.id}/schedule/permission`, {data: {year: this.args.year}})
         .then((results) => {
-          this.set('permission', results.permission);
-          this.set('showBehaviorAgreement', false);
+          this.permission = results.permission;
+          this.showBehaviorAgreement = false;
         });
     }).catch((response) => this.house.handleErrorResponse(response));
   }

@@ -44,7 +44,7 @@
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign</label>
       {{#if (has-role "admin" "mentor" "vc")}}
-        <f.input @name="callsign" @type="text" @size=35 @maxlength=100 @wrapClass="col-auto" />
+        <f.input @name="callsign" @type="text" @size=35 @maxlength=100 @wrapClass="col-auto"/>
       {{else}}
         <div class="mt-2 col-auto">
           {{this.person.callsign}}
@@ -55,10 +55,10 @@
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">FKA</label>
       {{#if (has-role "admin" "mentor" "vc")}}
-        <f.input @name="formerly_known_as" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto" />
+        <f.input @name="formerly_known_as" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto"/>
       {{else}}
         <div class="mt-2 col-auto">
-          <PresentOrNot @value={{this.person.formerly_known_as}} @empty="no previous callsigns" />
+          <PresentOrNot @value={{this.person.formerly_known_as}} @empty="no previous callsigns"/>
         </div>
       {{/if}}
     </div>
@@ -66,7 +66,8 @@
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-2">Callsign Approved</label>
       {{#if (has-role "admin" "mentor" "vc")}}
-        <f.input @name="callsign_approved" @type="select" @wrapClass="col-auto" @options={{this.callsignApprovedOptions}} />
+        <f.input @name="callsign_approved" @type="select" @wrapClass="col-auto"
+                 @options={{this.callsignApprovedOptions}} />
       {{else}}
         <div class="mt-2 col-sm-12 col-md-auto">
           {{if this.person.callsign_approved "Approved" "Not Approved"}}
@@ -77,7 +78,7 @@
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-2">Status</label>
       {{#if (has-role "admin" "mentor" "vc")}}
-        <f.input @name="status" @type="select" @options={{this.statusOptions}} @wrapClass="col-auto" />
+        <f.input @name="status" @type="select" @options={{this.statusOptions}} @wrapClass="col-auto"/>
       {{else}}
         <div class="mt-2 col-auto">
           {{this.person.status}}
@@ -89,7 +90,7 @@
       <label class="col-form-label col-form-label-fixed col-2">Personnel</label>
       {{#if (has-role "admin")}}
         <f.input @name="user_authorized" @type="select" @wrapClass="col-auto" @options={{this.userAuthorizedOptions}} />
-        <f.input @name="has_note_on_file" @label="Note on file" @type="checkbox" @wrapClass="col-auto mt-2" @value=1 />
+        <f.input @name="has_note_on_file" @label="Note on file" @type="checkbox" @wrapClass="col-auto mt-2" @value=1/>
       {{else}}
         <div class="mt-2 col-auto">
           {{#if this.person.user_authorized}}
@@ -113,9 +114,9 @@
   <div class="form-group row">
     <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Name</label>
     {{#if (has-role "admin" "mentor" "vc")}}
-      <f.input @name="first_name" @type="text" @size=20 @maxlength=25 @wrapClass="col-sm-12 col-md-4 col-lg-3" />
-      <f.input @name="mi" @type="text" @size=2 @maxlength=10 @wrapClass="col-sm-12 col-md-2 col-lg-1" />
-      <f.input @name="last_name" @type="text" @size=20 @maxlength=25 @wrapClass="col-md-4 col-lg-3" />
+      <f.input @name="first_name" @type="text" @size=20 @maxlength=25 @wrapClass="col-sm-12 col-md-4 col-lg-3"/>
+      <f.input @name="mi" @type="text" @size=2 @maxlength=10 @wrapClass="col-sm-12 col-md-2 col-lg-1"/>
+      <f.input @name="last_name" @type="text" @size=20 @maxlength=25 @wrapClass="col-md-4 col-lg-3"/>
     {{else}}
       <div class="mt-2 col-md-9 col-sm-12">
         {{this.person.first_name}} {{this.person.mi}} {{this.person.last_name}}
@@ -199,7 +200,8 @@
     <div class="col-md-9 col-sm-12">
       {{#if (has-role "admin")}}
         <f.input @name="vehicle_paperwork" @label="Motorpool Policy" @type="checkbox" @inline={{true}} />
-        <f.input @name="vehicle_insurance_paperwork" @label="Motor Vehicle Record (MVR)" @type="checkbox" @inline={{true}} />
+        <f.input @name="vehicle_insurance_paperwork" @label="Motor Vehicle Record (MVR)" @type="checkbox"
+                 @inline={{true}} />
         <f.input @name="vehicle_blacklisted" @label="Vehicle Blacklisted" @type="checkbox" @inline={{true}} />
       {{else}}
         {{#if this.person.vehicle_paperwork}}
@@ -242,7 +244,8 @@
     <div class="col-sm-12 col-md-9">
       {{#if (has-role "admin" "vc")}}
         <f.input @name="behavioral_agreement" @label="Burning Man's Behavioral Standards Agreement" @type="checkbox"
-                  @inline={{true}} /><br>
+                 @inline={{true}} />
+        <br>
         <f.input @name="sandman_affidavit" @label="Sandman Affidavit" @type="checkbox" @inline={{true}}  />
       {{else}}
         Behavioral Standards Agreement {{if this.person.behavioral_agreement "signed" "NOT SIGNED"}}<br>
@@ -254,12 +257,12 @@
   {{#if (has-role "admin")}}
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">BPGUID</label>
-      <f.input @name="bpguid" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto" />
+      <f.input @name="bpguid" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto"/>
     </div>
 
     <div class="form-group row">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">LMS ID</label>
-      <f.input @name="lms_id" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto" />
+      <f.input @name="lms_id" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto"/>
     </div>
   {{/if}}
 
@@ -285,12 +288,12 @@
       <label class="col-form-label-fixed col-sm-12 col-md-2">VC</label>
       <div class="col-sm-12 col-md-9">
         {{#if (has-role "admin" "vc")}}
-          {{#link-to "person.onboard" class="btn btn-secondary btn-sm"}}Onboard View{{/link-to}}
-          {{#link-to "person.photos" class="btn btn-secondary btn-sm"}}Photo History{{/link-to}}
+          <LinkTo @route="person.onboard" class="person.onboard">Onboard View</LinkTo>
+          <LinkTo @route="person.photos" class="person.photos">Photo History</LinkTo>
         {{/if}}
-        {{#link-to "person.status-history" class="btn btn-secondary btn-sm"}}Status History{{/link-to}}
+        <LinkTo @route="person.status-history" class="person.status-history">Status History</LinkTo>
         {{#if (has-role "intake")}}
-          {{#link-to "person.unified-flagging" class="btn btn-secondary btn-sm"}}Unified Flagging{{/link-to}}
+          <LinkTo @route="person.unified-flagging" class="person.unified-flagging">Unified Flagging</LinkTo>
         {{/if}}
       </div>
     </div>
@@ -314,55 +317,6 @@
           <button type="button" class="btn btn-secondary btn-sm" {{action this.editNote}}>Update Note</button>
         {{else}}
           <button type="button" class="btn btn-secondary btn-sm" {{action this.confirmNoteOrMessage}}>Add Note</button>
-        {{/if}}
-        {{#if this.showConfirmNoteOrMessage}}
-          <ModalDialog @title="Add Account Note" as |modal|>
-            <modal.body>
-              <p>
-                A note will <b class="text-danger">NOT BE SHOWN TO {{this.person.callsign}}</b>. It is only meant to be
-                seen
-                by
-                Admins,
-                HQ Window workers, and Volunteer Coordinators.
-              </p>
-              <p>
-                <b>SEND A CLUBHOUSE MESSAGE to leave a message for {{this.person.callsign}}</b>
-              </p>
-              <p>
-                Would you rather send a Clubhouse Message?
-              </p>
-            </modal.body>
-            <modal.footer>
-              <button class="btn btn-primary mr-3" {{action this.sendClubhouseMessage}}>Send Clubhouse Message</button>
-              <button class="btn btn-primary mr-3" {{action this.editNote}}>Add Note</button>
-              <button class="btn btn-secondary" {{action this.closeConfirmNoteOrMessage}}>Cancel</button>
-            </modal.footer>
-
-          </ModalDialog>
-        {{else if this.showEditNote}}
-          <ModalDialog @title={{if person.messsage "Add Account Note" "Update Account Note"}} as |modal|>
-            <modal.body>
-              <p>
-                The note will be shown to all Volunteer Coordinators, HQ Window Workers, and other Login Management role
-                holders when this account is viewed
-                <span class="text-danger">A NOTE WILL NOT BE SEEN BY THE USER.</span>
-              </p>
-              <p>
-                Examples: "Person is ok to sign-in for pre-event shifts.", "Do not let this person work a shift until
-                this
-                person talks with Hubcap"
-              </p>
-              <p>
-                The note will automatically timestamped when saved or updated.
-              </p>
-
-              <f.input @name="message" @type="textarea" @label="Enter the note to be shown:" @cols=80 @rows=6 />
-            </modal.body>
-            <modal.footer>
-              <modal.button @label="Cancel" @action={{action this.closeNote}} @type="secondary"/>
-              <modal.button @label="Save Note" @action={{action this.saveNote f.model}} @type="primary"/>
-            </modal.footer>
-          </ModalDialog>
         {{/if}}
 
       </div>
@@ -392,7 +346,7 @@
     <div class="col-sm-7 col-md-5">
       <f.submit @label="Update" @disabled={{or this.isSaving (not f.model.isDirty)}} />
       {{#if this.isSaving}}
-        <LoadingIndicator />
+        <LoadingIndicator/>
       {{/if}}
     </div>
     {{#if (has-role "admin")}}
@@ -409,7 +363,8 @@
 {{/if}}
 
 {{#if this.editRoles}}
-  <Person::RoleForm @roles={{this.roles}} @roleIds={{this.roleIds}} @onSave={{this.saveRoles}} @onCancel={{this.cancelRoles}} @isSaving={{this.isSavingRoles}} />
+  <Person::RoleForm @roles={{this.roles}} @roleIds={{this.roleIds}} @onSave={{this.saveRoles}}
+                    @onCancel={{this.cancelRoles}} @isSaving={{this.isSavingRoles}} />
 {{/if}}
 
 {{#if this.showUploadDialog}}
@@ -417,3 +372,51 @@
                @closeAction={{this.closeUploadDialogAction}} />
 {{/if}}
 
+{{#if this.showConfirmNoteOrMessage}}
+  <ModalDialog @title="Add Account Note" as |modal|>
+    <modal.body>
+      <p>
+        A note will <b class="text-danger">NOT BE SHOWN TO {{this.person.callsign}}</b>. It is only meant to be
+        seen
+        by
+        Admins,
+        HQ Window workers, and Volunteer Coordinators.
+      </p>
+      <p>
+        <b>SEND A CLUBHOUSE MESSAGE to leave a message for {{this.person.callsign}}</b>
+      </p>
+      <p>
+        Would you rather send a Clubhouse Message?
+      </p>
+    </modal.body>
+    <modal.footer>
+      <button class="btn btn-primary mr-3" {{action this.sendClubhouseMessage}}>Send Clubhouse Message</button>
+      <button class="btn btn-primary mr-3" {{action this.editNote}}>Add Note</button>
+      <button class="btn btn-secondary" {{action this.closeConfirmNoteOrMessage}}>Cancel</button>
+    </modal.footer>
+  </ModalDialog>
+{{else if this.showEditNote}}
+  <ModalDialog @title={{if person.messsage "Add Account Note" "Update Account Note"}} as |modal|>
+    <modal.body>
+      <p>
+        The note will be shown to all Volunteer Coordinators, HQ Window Workers, and other Login Management role
+        holders when this account is viewed
+        <span class="text-danger">A NOTE WILL NOT BE SEEN BY THE USER.</span>
+      </p>
+      <p>
+        Examples: "Person is ok to sign-in for pre-event shifts.", "Do not let this person work a shift until
+        this
+        person talks with Hubcap"
+      </p>
+      <p>
+        The note will automatically timestamped when saved or updated.
+      </p>
+
+      <f.input @name="message" @type="textarea" @label="Enter the note to be shown:" @cols=80 @rows=6/>
+    </modal.body>
+    <modal.footer>
+      <modal.button @label="Cancel" @action={{action this.closeNote}} @type="secondary"/>
+      <modal.button @label="Save Note" @action={{action this.saveNote f.model}} @type="primary"/>
+    </modal.footer>
+  </ModalDialog>
+{{/if}}

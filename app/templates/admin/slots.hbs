@@ -1,43 +1,42 @@
 <YearSelect @title="Clubhouse Slots" @year={{this.year}} @years={{this.yearList}}
             @onChange={{action (mut this.year)}} />
 
-<p>
-  <button type="button" {{action this.newSlot}} class="btn btn-primary">New Slot</button>
-  {{#if this.slots.length}}
-    <button type="button" {{action this.startCopy}} class="btn btn-secondary">Copy Slots</button>
-  {{/if}}
-</p>
-
 <div class="form-row mb-1">
+  <label class="col-form-label">Day Filter</label>
   <div class="col-auto">
-    <label class="col-form-label">Day Filter</label>
-  </div>
-  <div class="col-md-3 mb-2">
     <ChForm::Select @name="dayFilter" @value={{dayFilter}} @options={{dayOptions}} @onChange={{action (mut dayFilter)}}
                     @controlClass="form-control"/>
   </div>
 
+  <label class="col-form-label">Active Filter</label>
   <div class="col-auto">
-    <label class="col-form-label">Active Filter</label>
-  </div>
-  <div class="col-md-3 mb-2">
     <ChForm::Select @name="activeFilter" @value={{activeFilter}} @options={{activeOptions}} @onChange={{action
             (mut activeFilter)}} @controlClass="form-control"/>
+  </div>
+  <div class="pl-4 col-auto">
+    <button type="button" {{action this.newSlot}} class="btn btn-primary">New Slot</button>
+    {{#if this.slots.length}}
+      <button type="button" {{action this.startCopy}} class="btn btn-secondary">Copy Slots</button>
+    {{/if}}
+
   </div>
 </div>
 
 {{#if (and eventDate.pre_event_slot_start eventDate.pre_event_slot_end)}}
-  <p>{{year}} Pre-event is {{shift-format eventDate.pre_event_slot_start}} to {{shift-format
-          eventDate.pre_event_slot_end}}.</p>
+  <p class="mt-2">
+    {{this.year}} Pre-event is {{shift-format eventDate.pre_event_slot_start}} to
+    {{shift-format eventDate.pre_event_slot_end}}
+  </p>
 {{else}}
   <ChAlert @type="danger">
-    WARNING: {{year}} pre-event slot dates are not set. Pre-Event slots may not be properly vetted. Visit
-    <LinkTo @route="admin.event-dates">Admin &gt; Edit Event Dates</LinkTo> to set the dates.
+    WARNING: {{this.year}} pre-event slot dates are not set. Pre-Event slots may not be properly vetted. Visit
+    <LinkTo @route="admin.event-dates">Admin &gt; Edit Event Dates</LinkTo>
+    to set the dates.
   </ChAlert>
 {{/if}}
 
 {{#if this.slots.length}}
-  <p>Showing {{this.viewSlots.length}} of {{pluralize this.slots.length "slot"}}</p>
+  Showing {{this.viewSlots.length}} of {{pluralize this.slots.length "slot"}}
   {{#unless viewSlots}}
     <p class="text-danger">
       No slots matched the filter criteria.
@@ -60,7 +59,7 @@
       {{fa-icon (if (get this.showingGroups group.position_id) "caret-down" "caret-right")}} {{group.title}}
       ({{group.slots.length}}
       {{~#if group.inactive}}
-      / <span class="text-danger">{{group.inactive}} inactive</span>
+        / <span class="text-danger">{{group.inactive}} inactive</span>
       {{~/if}})
     </a>
   </div>
@@ -169,7 +168,8 @@
           Note: training and mentor/mentee slots cannot be copied yet.
         </fieldset>
         <p>
-          <f.submit @label={{concat "Copy " this.copySelectedSlotCount " selected slots"}} @disabled={{this.isCopyingSlots}} />
+          <f.submit @label={{concat "Copy " this.copySelectedSlotCount " selected slots"}}
+                    @disabled={{this.isCopyingSlots}} />
           <f.cancel @disabled={{this.isCopyingSlots}} />
           {{#if this.isCopyingSlots}}
             <LoadingIndicator/>
@@ -225,5 +225,15 @@
         {{/each}}
       </Modal.body>
     </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.activatingSlot}}
+  <ModalDialog @title="Activating Slots" as |Modal|>
+    <Modal.body>
+      Saving slot id #{{this.activatingSlot.id}} - {{this.activatingSlot.begins}}
+      - {{this.this.activatingSlot.description}}
+      <LoadingIndicator/>
+    </Modal.body>
   </ModalDialog>
 {{/if}}
