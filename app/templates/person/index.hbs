@@ -288,12 +288,12 @@
       <label class="col-form-label-fixed col-sm-12 col-md-2">VC</label>
       <div class="col-sm-12 col-md-9">
         {{#if (has-role "admin" "vc")}}
-          <LinkTo @route="person.onboard" class="person.onboard">Onboard View</LinkTo>
-          <LinkTo @route="person.photos" class="person.photos">Photo History</LinkTo>
+          <LinkTo @route="person.onboard" class="btn btn-secondary btn-sm">Onboard View</LinkTo>
+          <LinkTo @route="person.photos" class="btn btn-secondary btn-sm">Photo History</LinkTo>
         {{/if}}
-        <LinkTo @route="person.status-history" class="person.status-history">Status History</LinkTo>
+        <LinkTo @route="person.status-history" class="btn btn-secondary btn-sm">Status History</LinkTo>
         {{#if (has-role "intake")}}
-          <LinkTo @route="person.unified-flagging" class="person.unified-flagging">Unified Flagging</LinkTo>
+          <LinkTo @route="person.unified-flagging" class="btn btn-secondary btn-sm">Unified Flagging</LinkTo>
         {{/if}}
       </div>
     </div>
