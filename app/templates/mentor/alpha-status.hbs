@@ -1,17 +1,17 @@
-<h1>{{year}} Prospective And Alpha Status</h1>
+<h1>{{this.year}} Prospective And Alpha Status</h1>
 
-<div class="form-group row">
-  <label class="col-form-label col-auto">Filter</label>
+<div class="form-row">
+  <label class="col-form-label">Filter</label>
   <div class="col-auto">
-    <ChForm::Select @name="filter" @value={{filter}} @options={{filterOptions}} @onChange={{action (mut filter)}}
-                    @class="form-control"/>
+    <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}}
+                    @onChange={{action (mut this.filter)}} @controlClass="form-control"/>
   </div>
 </div>
-<p>
-  {{fa-icon "exclamation-triangle" color="danger"}} = Personnel Black Flag Raised. Take no actions until resolved.
+<p class="mt-2">
+  Legend:{{fa-icon "exclamation-triangle" color="danger"}} = Personnel Black Flag Raised. Take no actions until resolved.
 </p>
 
-Showing {{this.viewPotentials.length}} of {{this.potentials.length}}.
+Showing {{this.viewPotentials.length}} of {{this.mentees.length}}.
 Current alphas: {{this.alphaCount}}, Potential Alpha status: {{this.statusEligibleCount}},
 Potential Alpha position: {{this.positionEligibleCount}}.
 <table class="table table-sm table-hover table-striped">
@@ -21,7 +21,7 @@ Potential Alpha position: {{this.positionEligibleCount}}.
     <th>Name</th>
     <th>Email</th>
     <th>Status</th>
-    <th>Mentor Flags</th>
+    <th>Mentor Issue<br>(Rank >=3)</th>
     <th class="text-center">Trained?</th>
     <th class="text-center">Alpha Status</th>
     <th class="text-center">Alpha Position</th>
@@ -69,7 +69,7 @@ Potential Alpha position: {{this.positionEligibleCount}}.
         {{#if person.alpha_position_eligible}}
           <span class="text-success">{{fa-icon "check"}}</span>
         {{else}}
-          <span class="text-danger">{{fa-icon "times"}}</span>
+          <span class="text-danger">{{fa-icon "times"}} missing</span>
         {{/if}}
       </td>
     </tr>
@@ -77,9 +77,9 @@ Potential Alpha position: {{this.positionEligibleCount}}.
     <tr>
       <td colspan="10">
         {{#if this.potentials}}
-          No Alphas or Prospective were found that matched the filter criteria.
+          <b class="text-danger">No Alphas or Prospectives matched the filter criteria.</b>
         {{else}}
-          No Alpha or Prospectives were found.
+          <b class="text-danger">No Alpha or Prospectives were found for {{this.year}}.</b>
         {{/if}}
       </td>
     </tr>

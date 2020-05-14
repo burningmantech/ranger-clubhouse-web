@@ -92,6 +92,7 @@ export default Mixin.create({ // eslint-disable-line ember/no-new-mixins
       this.status == PersonStatus.DISMISSED ||
       this.status == PersonStatus.PAST_PROSPECTIVE ||
       this.status == PersonStatus.PROSPECTIVE ||
+      this.status == PersonStatus.SUSPENDED ||
       this.status == PersonStatus.UBERBONKED
     );
   }),

@@ -136,7 +136,7 @@
                 <LinkTo @route="mentor.convert" class="dropdown-item">Alpha Conversion</LinkTo>
 
                 <div class="navbar-text">Post Playa</div>
-                <LinkTo @route="mentor.mentees" class="dropdown-item">Mentees For Year</LinkTo>
+                <LinkTo @route="mentor.post-season-summary" class="dropdown-item">Post Season Summary</LinkTo>
               </div>
             </li>
           {{/if}}
@@ -356,7 +356,7 @@
       Training Server - Simulated Time {{moment-format this.groundHogDayTime "dddd, MMMM Do YYYY @ HH:mm"}}
     </div>
   {{else if (eq (config "DeploymentEnvironment") "Staging")}}
-    <div class="h4 alert alert-light-red text-center p-2 m-0">
+    <div class="h4 alert alert-light-red text-center p-2 m-0 d-print-none">
       You are on the Staging Server used for testing. This is not the production server.
     </div>
   {{/if}}

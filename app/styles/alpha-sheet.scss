@@ -10,14 +10,14 @@
   margin-bottom: 10px;
   margin-left:auto;
 }
-// Section header with box
+// Section header
 .alpha-sheet-section-header {
   width: 100%;
-  border: 1px solid #222;
-  border-radius: 5px;
-  padding: 5px 10px;
+  background-color: #ececec;
+  padding: 5px 15px;
   font-weight: bold;
   font-size: 1.2rem;
+  margin-top: 10px;
   margin-bottom: 5px;
 }
 
@@ -38,21 +38,22 @@
 }
 
 .alpha-sheet-headshot-box {
-  margin-right: 20px;
-
   height: 300px;
+  width: 210px;
+  margin: 0 auto;
   img {
     display: block;
     margin: 0 auto;
     max-width: 200px;
     max-height: 288px;
+    vertical-align: center;
   }
-}
+ }
 
 .alpha-sheet-column {
   width: 100%;
   padding: 0 10px;
-  margin-top: 25px;
+  margin-top: 10px;
 }
 
 .alpha-sheet-column-lg {
@@ -63,18 +64,18 @@
   font-size: 1.2rem;
   font-weight: 500;
   display: inline-block;
-  width: 25%;
+  width: 30%;
   vertical-align: top;
 }
 
 .alpha-sheet-column-field {
   display: inline-block;
-  width: 74%;
+  width: 69%;
   font-size: 1.1rem;
 }
 
 .alpha-sheet-column-auto {
-  width: auto;
+  width: auto !important;
   margin-right: 5px;
 }
 
@@ -89,8 +90,8 @@
 .alpha-sheet-comment-box-md {
   font-size: 1rem;
   margin: 5px 0;
-  border-top: 1px solid #222;
   min-height: 75px;
+  padding-left: 15px;
 }
 
 .alpha-sheet-comment-box-lg {
@@ -98,4 +99,20 @@
   margin: 20px 0;
   border-top: 1px solid #222;
   height: 150px;
+}
+
+.alpha-sheet-footer {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+@media print {
+  .alpha-sheet-footer {
+    position: fixed;
+    bottom: 50px;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+  }
 }

@@ -28,7 +28,7 @@
     <div class="form-group row">
       <label class="col-form-label col-sm-12 col-md-2">&nbsp;</label>
       <div class="col-auto">
-        <f.submit @label="Save" disabled={{f.model.isSaving}} />
+        <f.submit @label="Save" @disabled={{f.model.isSaving}} />
         {{#if f.model.isSaving}}
           <LoadingIndicator/>
         {{/if}}

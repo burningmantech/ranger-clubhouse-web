@@ -4,28 +4,29 @@
 <div class="form-row mb-1">
   <label class="col-form-label">Day Filter</label>
   <div class="col-auto">
-    <ChForm::Select @name="dayFilter" @value={{dayFilter}} @options={{dayOptions}} @onChange={{action (mut dayFilter)}}
-                    @controlClass="form-control"/>
+    <ChForm::Select @name="dayFilter" @value={{this.dayFilter}} @options={{this.dayOptions}}
+                    @onChange={{action (mut this.dayFilter)}} @controlClass="form-control"/>
   </div>
 
   <label class="col-form-label">Active Filter</label>
   <div class="col-auto">
-    <ChForm::Select @name="activeFilter" @value={{activeFilter}} @options={{activeOptions}} @onChange={{action
-            (mut activeFilter)}} @controlClass="form-control"/>
+    <ChForm::Select @name="activeFilter" @value={{this.activeFilter}} @options={{this.activeOptions}}
+                    @onChange={{action (mut activeFilter)}} @controlClass="form-control"/>
   </div>
+  <label class="col-form-label">Actions</label>
+
   <div class="pl-4 col-auto">
     <button type="button" {{action this.newSlot}} class="btn btn-primary">New Slot</button>
     {{#if this.slots.length}}
       <button type="button" {{action this.startCopy}} class="btn btn-secondary">Copy Slots</button>
     {{/if}}
-
   </div>
 </div>
 
-{{#if (and eventDate.pre_event_slot_start eventDate.pre_event_slot_end)}}
+{{#if (and this.eventDate.pre_event_slot_start this.eventDate.pre_event_slot_end)}}
   <p class="mt-2">
-    {{this.year}} Pre-event is {{shift-format eventDate.pre_event_slot_start}} to
-    {{shift-format eventDate.pre_event_slot_end}}
+    {{this.year}} Pre-event is {{shift-format this.eventDate.pre_event_slot_start}} to
+    {{shift-format this.eventDate.pre_event_slot_end}}
   </p>
 {{else}}
   <ChAlert @type="danger">

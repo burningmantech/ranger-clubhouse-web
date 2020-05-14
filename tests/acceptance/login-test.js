@@ -50,7 +50,7 @@ module('Acceptance | login', function(hooks) {
   });
 
   test('person not authorized', async function(assert) {
-    const person = server.create('person', { user_authorized: false});
+    const person = server.create('person', { status: 'suspended'});
     await visit('/login');
     await fillIn('input[name="identification"]', person.email);
     await fillIn('input[name="password"]', person.password);
@@ -64,7 +64,7 @@ module('Acceptance | login', function(hooks) {
   });
 
   test('prevent space for being entered in email field', async function (assert) {
-    const person = server.create('person', { user_authorized: false});
+    const person = server.create('person');
     await visit('/login');
     await fillIn('input[name="identification"]', person.email+' ');
     assert.dom('input[name="identification"]').hasValue(person.email);

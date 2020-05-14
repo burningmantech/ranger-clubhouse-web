@@ -1,9 +1,9 @@
 <h1>RBS Alerts</h1>
 <p>
-  <button class="btn btn-primary" {{action newAlert}}>New Alert Doc</button>
+  <button type="button" class="btn btn-primary" {{action this.newAlert}}>New Alert</button>
 </p>
 
-Showing {{pluralize alerts.length "alert"}}
+Showing {{pluralize this.alerts.length "alert"}}
 <table class="table table-sm table-hover">
   <thead>
   <tr>

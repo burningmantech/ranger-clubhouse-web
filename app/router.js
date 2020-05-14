@@ -107,7 +107,7 @@ Router.map(function () {
     this.route('alpha-status');
     this.route('assignment');
     this.route('convert');
-    this.route('mentees');
+    this.route('post-season-summary');
     this.route('potentials');
     this.route('schedule');
   });

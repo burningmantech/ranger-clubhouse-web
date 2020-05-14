@@ -155,28 +155,29 @@ export default class TrainingSlotController extends Controller {
 
   // Save the student scores in bulk.
   @action
-  saveStudentAction() {
+  saveStudentAction(model) {
     const student = this.editStudent;
-    const form = this.studentForm;
+    const {rank, note, passed} = model;
+
     const score = {
       id: student.id,
-      note: form.note,
-      rank: form.rank !== '' ? +form.rank : form.rank,
-      passed: +form.passed ? 1 : 0,
+      note,
+      rank: rank !== '' ? +rank : rank,
+      passed: +passed ? 1 : 0,
     };
 
     if (!this.training.is_art) {
-      if (!form.rank && form.passed && student.need_rank) {
-        this.modal.info(null, 'Please enter a rank.');
+      if (!rank && passed && student.need_ranking) {
+        model.pushErrors('rank', ['Please enter a rank.']);
         return;
       }
 
-      if ((form.rank > 0 && form.rank != 2) && (form.note == '' && student.notes.length == 0)) {
-        this.modal.info(null, 'A note needs to be entered if a rank is given.');
+      if ((rank > 0 && rank != 2) && (note == '' && student.notes.length == 0)) {
+        model.addError('note', ['A note needs to be entered if a rank is given.']);
         return;
       }
 
-      score.feedback_delivered = form.feedback_delivered ? 1 : 0;
+      score.feedback_delivered = model.feedback_delivered ? 1 : 0;
     }
 
     this.set('isSubmitting', true);

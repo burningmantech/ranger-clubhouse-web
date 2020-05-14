@@ -11,41 +11,41 @@ export default class MentorAlphaStatusController extends Controller {
     [' Mentor Flagged', 'mentor-flag' ]
   ];
 
-  @computed('filter', 'potentials')
+  @computed('filter', 'mentees')
   get viewPotentials() {
-    const potentials = this.potentials;
+    const mentees = this.mentees;
 
     switch (this.filter) {
     case 'status':
-      return potentials.filter((p) => p.status_eligible);
+      return mentees.filter((p) => p.status_eligible);
     case 'position':
-      return potentials.filter((p) => p.position_eligible);
+      return mentees.filter((p) => p.position_eligible);
     case 'both':
-      return potentials.filter((p) => p.status_eligible && p.position_eligible);
+      return mentees.filter((p) => p.status_eligible && p.position_eligible);
 
     case 'alpha':
-      return potentials.filter((p) => p.status == 'alpha');
+      return mentees.filter((p) => p.status == 'alpha');
 
     case 'mentor-flag':
-      return potentials.filter((p) => p.mentors_flag);
+      return mentees.filter((p) => p.have_mentor_flags);
 
     default:
-      return potentials;
+      return mentees;
     }
   }
 
-  @computed('potentials')
+  @computed('mentees')
   get statusEligibleCount() {
-    return this.potentials.reduce((total,p) => (p.status_eligible ? 1 : 0)+total, 0);
+    return this.mentees.reduce((total,p) => (p.status_eligible ? 1 : 0)+total, 0);
   }
 
-  @computed('potentials')
+  @computed('mentees')
   get positionEligibleCount() {
-    return this.potentials.reduce((total,p) => (p.position_eligible ? 1 : 0)+total, 0);
+    return this.mentees.reduce((total,p) => (p.position_eligible ? 1 : 0)+total, 0);
   }
 
-  @computed('potentials')
+  @computed('mentees')
   get alphaCount() {
-    return this.potentials.reduce((total,p) => (p.status == 'alpha' ? 1 : 0)+total, 0);
+    return this.mentees.reduce((total,p) => (p.status == 'alpha' ? 1 : 0)+total, 0);
   }
 }

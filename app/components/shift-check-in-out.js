@@ -1,8 +1,6 @@
 import Component from '@ember/component';
 import { set } from '@ember/object';
 import { action, computed } from '@ember/object';
-
-
 import { inject as service } from '@ember/service';
 import * as Position from 'clubhouse/constants/positions';
 

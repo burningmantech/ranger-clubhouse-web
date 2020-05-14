@@ -63,7 +63,7 @@ export default function () {
       return new Response(401, {'Content-Type': 'application/json'}, {status: 'invalid-credentials'});
     }
 
-    if (!person.user_authorized) {
+    if (person.status == 'suspended') {
       return new Response(401, {'Content-Type': 'application/json'}, {status: 'account-disabled'})
     }
 

@@ -37,9 +37,7 @@
     Note: {{this.onDutyEntry.position.title}} hours do not count towards appreciations.
   {{/unless}}
 {{else}}
-  {{#if (not @person.user_authorized)}}
-    <strong class="text-danger">{{@person.callsign}} cannot start a shift until they are cleared to do so by the Personnel Manager.</strong>
-  {{else if (not person.canStartShift)}}
+  {{#if (not @person.canStartShift)}}
     <strong class="text-danger">{{@person.callsign}} cannot start a shift because their status does not allow them to work shifts</strong>
   {{else if @hasUnverifiedTimesheet}}
     One or more timesheet entries has to be verified before a shift can be started.

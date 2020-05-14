@@ -1,4 +1,4 @@
-<h1>{{year}} Potential Alphas</h1>
+<h1>{{this.year}} Potential Alphas</h1>
 
 <div class="form-group row">
   <label class="col-form-label col-auto">Filter By:</label>
@@ -35,8 +35,8 @@
   Legend: RRN Rank = Ranger Regional Network. VC = Volunteer Coordinators.<br>
   Rankings: 1/Green = Above Avg., 2/Normal = Average, 3/Yellow = Below Avg., 4/FLAG = Major issue.
 </p>
+Showing {{this.viewPotentials.length}} of {{pluralize this.mentees.length "potential alpha"}}
 <table class="table table-sm table-striped table-hover">
-  <caption>Showing {{viewPotentials.length}} of {{pluralize potentials.length "potential alpha"}}</caption>
   <thead>
   <tr>
     <th>Callsign / Name / Gender</th>
@@ -44,12 +44,12 @@
     <th>History</th>
     <th>RRN Rank</th>
     <th>VC Rank</th>
-    <th>Mentor Notes/Rank/FKA</th>
+    <th>FKA / Mentor Notes &amp; Rank</th>
     <th>Training</th>
   </tr>
   </thead>
   <tbody>
-  {{#each viewPotentials as |person|}}
+  {{#each this.viewPotentials as |person|}}
     <tr>
       <td>
         <PersonLink @person={{person}} />
@@ -125,7 +125,7 @@
     <tr>
       <td colspan="7">
         <b class="text-danger">
-          {{#if this.potentials}}
+          {{#if this.mentees}}
             No potential Alphas matched the filter criteria.
           {{else}}
             No potential Alphas were found for this year.

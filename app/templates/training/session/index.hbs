@@ -263,7 +263,6 @@
 {{#if this.editStudent}}
   <ModalDialog @title={{concat "Add a note and/or set rank for " this.editStudent.callsign}} as |Modal|>
     <ChForm @formId="student-form" @originalModel={{this.studentForm}}
-            @changeSet={{false}}
             @onSubmit={{this.saveStudentAction}}
             @onCancel={{this.cancelStudentAction}} as |f|>
 
@@ -303,26 +302,26 @@
           </tbody>
         </table>
         {{#let (concat this.editStudent.callsign " <" this.editStudent.status ">") as |studentName|}}
-          <div class="row mt-2">
-            <label class="col-12">Did {{studentName}} pass training?</label>
-            <div class="col-auto">
-              <f.input @name="passed" @type="radioGroup" @options={{this.passedOptions}} @inline={{true}}/>
+          <div class="form-row mt-2">
+            <label>Did {{studentName}} pass training?</label>
+            <div class="col-12">
+              <f.input @name="passed" @type="radioGroup" @options={{this.passedOptions}} @inline={{this}}/>
             </div>
           </div>
-          <div class="row mt-2">
-            <f.input @name="rank" @label={{concat "Ranking for " studentName}}
+          <div class="form-row mt-2">
+            <f.input @name="rank" @label="Ranking for {{studentName}}"
                      @type="select" @options={{if this.training.is_art this.artRankOptions this.dirtRankOptions}} />
           </div>
-          <div class="row mt-2">
-            <f.input @name="note" @label={{concat "Enter the training notes about " studentName ":"}}
+          <div class="form-row mt-2">
+            <f.input @name="note" @label="Enter the training notes about {{studentName}}:"
                      @type="textarea"
                      @hint="Your note will be timestamped and appended to any existing notes."
                      @rows=3 @cols=80/>
           </div>
           {{#unless this.training.is_art}}
-            <div class="row mt-2">
-              <label class="col-12">Was feedback delivered to {{studentName}}?</label>
-              <div class="col-auto">
+            <div class="form-row mt-2">
+              <label>Was feedback delivered to {{studentName}}?</label>
+              <div class="col-12">
                 <f.input @name="feedback_delivered" @type="radioGroup" @options={{this.feedbackDeliveredOptions}}
                          @inline=true/>
               </div>
@@ -332,7 +331,7 @@
         {{/let}}
       </Modal.body>
       <Modal.footer @noAlign=true>
-        <f.submit @label={{concat "Save " this.editStudent.callsign " info"}} @disabled={{this.isSubmitting}} />
+        <f.submit @label="Save {{this.editStudent.callsign}} info" @disabled={{this.isSubmitting}} />
         <f.cancel @disabled={{this.isSubmitting}}/>
         {{#if this.isSubmitting}}
           <LoadingIndicator/>

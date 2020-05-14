@@ -13,6 +13,6 @@ export default class MentorAcceptanceSheetsRoute extends Route {
     controller.set('filter', ['all']);
     controller.set('selectAll', true);
     controller.set('year', this.house.currentYear());
-    controller.set('isPrinting', true);
+    controller.set('isPrinting', false);
   }
 }
