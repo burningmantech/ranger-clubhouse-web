@@ -26,14 +26,9 @@
 </ChSidebar>
 
 <main class="col">
-  {{#if (or this.person.isSuspended this.person.isRetired this.person.isDeceased this.person.isUberBonked (not this.person.user_authorized))}}
+  {{#if (or this.person.isSuspended this.person.isResigned this.person.isDeceased this.person.isUberBonked this.person.isDismissed)}}
     <ChAlert @type="danger">
-      {{fa-icon "exclamation-triangle" size="2x"}} The account
-      {{#if this.person.user_authorized}}
-        has the status "{{person.status}}"
-      {{else}}
-        is disabled
-      {{/if}}
+      {{fa-icon "exclamation-triangle" size="2x"}} The account has the status "{{person.status}}"
       and is not accessible. Contact the Personnel Manager: {{mail-to (config "PersonnelEmail")}}.
     </ChAlert>
   {{else if this.person.needsBpguid}}

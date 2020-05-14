@@ -5,7 +5,7 @@
 </p>
 
 <p>
-  <button class="btn btn-secondary btn-sm" {{action this.newEntry}}>New Message</button>
+  <button class="btn btn-primary" {{action this.newEntry}}>New Message</button>
 </p>
 
 {{pluralize this.motds.length "message"}}
@@ -48,6 +48,10 @@
         <button class="btn btn-primary btn-sm" {{action this.editEntry motd}}>{{fa-icon "edit"}} Edit</button>
       </td>
     </tr>
+  {{else}}
+  <tr>
+    <td colspan="6"><b class="text-danger">No messages were found.</b></td>
+  </tr>
   {{/each}}
   </tbody>
 </table>
@@ -71,7 +75,7 @@
         <div class="form-row">
           <div class="col-auto">
             <f.submit @disabled={{this.entry.isSaving }}/>
-            <f.cancel/>
+            <f.cancel @disabled={{this.entry.isSaving }}/>
             {{#if this.entry.isSaving}}
               <LoadingIndicator />
             {{/if}}

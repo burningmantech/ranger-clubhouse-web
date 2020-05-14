@@ -2,11 +2,11 @@
 
 {{#if this.isPrinting}}
   <PrintInstruction @backAction={{action this.showAlphasAction}} @backLabel="Back to Alpha selection"/>
-  {{#each printAlphas as |alpha alphaIdx|}}
+  {{#each this.printAlphas as |alpha alphaIdx|}}
     <div class="d-flex mx-2 mt-4 mb-2 {{if alphaIdx "d-print-page-break"}}">
       <img src={{root-url "assets/images/ranger-logo-bw.png"}} class="alpha-sheet-logo" alt="ranger logo">
-      <div class="alpha-sheet-header align-middle">{{year}} Alpha To Dirt Ranger Acceptance Form ({{add alphaIdx 1}}
-        /{{printAlphas.length}})
+      <div class="alpha-sheet-header align-middle">
+        {{this.year}} Alpha To Dirt Ranger Acceptance Form ({{add alphaIdx 1}} / {{printAlphas.length}})
       </div>
     </div>
 
@@ -18,8 +18,8 @@
       <div class="col-8">
         <div class="alpha-sheet-column">
           <div class="alpha-sheet-column-label">Ranger Handle:</div>
-          <div class="alpha-sheet-column-field ">
-            <div class="alpha-sheet-column-lg">{{alpha.callsign}}</div>
+          <div class="alpha-sheet-column-field">
+            <h1>{{alpha.callsign}}</h1>
             {{#if alpha.fkas}}
               FKA: {{join alpha.fkas ", "}}
             {{/if}}
@@ -30,7 +30,7 @@
           <div class="alpha-sheet-column-field">{{alpha.first_name}} {{alpha.last_name}}</div>
         </div>
         <div class="alpha-sheet-column">
-          <div class="alpha-sheet-column-label">Training Location:</div>
+          <div class="alpha-sheet-column-label">Training Location ({{alpha.trainings.length}}):</div>
           <div class="alpha-sheet-column-{{if alpha.trainings "field" "input"}}">
             {{#each alpha.trainings as |place idx|}}
               {{ymd-format place.slot_begins}} {{place.slot_description}}<br>
@@ -56,7 +56,9 @@
           {{#if alpha.photo_approved}}
             <img src={{alpha.photo_url}} alt="headshot">
           {{else}}
-            {{fa-icon "user" size="2x"}}
+            <div class="text-center align-middle">
+              {{fa-icon "user" size="8x" type="far"}}<br>No approved photo
+            </div>
           {{/if}}
         </div>
       </div>
@@ -64,6 +66,32 @@
 
     <div class="alpha-sheet-section-header">
       Mentoring Information
+    </div>
+    <div class="row no-gutters">
+      <div class="col-6">
+        <div class="alpha-sheet-column">
+          <div class="alpha-sheet-column-label">Known Rangers:</div>
+          <div class="alpha-sheet-column-{{if alpha.known_rangers "field" "input"}}">
+            {{#if alpha.known_rangers}}
+              {{join ", " alpha.known_rangers}}
+            {{else}}
+              &nbsp;
+            {{/if}}
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="alpha-sheet-column">
+          <div class="alpha-sheet-column-label">Known PNVs:</div>
+          <div class="alpha-sheet-column-{{if alpha.known_pnvs "field" "input"}}">
+            {{#if alpha.known_pnvs}}
+              {{join ", " alpha.known_pnvs}}
+            {{else}}
+              &nbsp;
+            {{/if}}
+          </div>
+        </div>
+      </div>
     </div>
     <div class="row no-gutters">
       <div class="col-6">
@@ -88,33 +116,11 @@
           <div class="alpha-sheet-column-input">&nbsp;</div>
         </div>
       </div>
-
-      <div class="col-6">
-        <div class="alpha-sheet-column">
-          <div class="alpha-sheet-column-label">Flag Type:</div>
-          <div class="alpha-sheet-column-{{if alpha.mentors_flag_note "field"
-                                              "input"}}">{{alpha.mentors_flag_note}}</div>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="alpha-sheet-column">
-          <div class="alpha-sheet-column-label">Training Rank:</div>
-          <div class="alpha-sheet-column-{{if alpha.trainings "field" "input"}}">
-            {{#each alpha.trainings as |place idx|}}
-              {{#if place.training_passed}}
-                <span class="d-inline-block">{{year-format place.slot_begins}}
-                  <IntakeRanking @type="training" @rank={{place.rank}} /></span>
-              {{/if}}
-            {{/each}}
-          </div>
-        </div>
-      </div>
-
     </div>
 
-    <div class="row no-gutters">
-      <div class="col-12">
-        <table class="alpha-sheet-table my-4">
+    <div class="row">
+      <div class="col-12 no-gutters">
+        <table class="alpha-sheet-table mt-4">
           <thead>
           <tr>
             <th>&nbsp;</th>
@@ -145,9 +151,76 @@
         </table>
       </div>
     </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="alpha-sheet-column align-middle">
+          <div class="alpha-sheet-column-label alpha-sheet-column-auto">
+            For bonked Alpha <span class="text-muted">(check one)</span>:
 
+          </div>
+          <div class="alpha-sheet-column-field">
+            <span class="align-middle">
+              <span class="ml-2">{{fa-icon "square" type="far"}} Asked to return</span>
+              <span class="ml-2">{{fa-icon "square" type="far"}} Discourage from returning</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ml-3 mb-2 mt-4 text-center">
+      Legend for VC, Mentor &amp; Training rankings: 1/Green = Above Avg., 2/Normal = Average,  3/Yellow = Below Avg., 4/FLAG = Major issue.
+    </div>
+
+    <div class="alpha-sheet-section-header">
+      Volunteer Coordinators (VC) Notes/Flags
+    </div>
     <div class="alpha-sheet-comment-box-md">
-      <h3>Mentor Notes/Ranking:</h3>
+      {{#each alpha.vc_team as |info|}}
+        Year {{info.year}}
+        <IntakeRanking @type="vc" @rank={{info.rank}} />
+        <br>
+        {{#each info.notes as |note|}}
+          {{#unless note.is_log}}
+            <div>
+              &mdash; {{note.person_source.callsign}}: {{note.note}}
+            </div>
+          {{/unless}}
+        {{/each}}
+      {{else}}
+        No VC notes
+      {{/each}}
+    </div>
+    <div class="alpha-sheet-section-header">
+      Training Notes/Ranking
+    </div>
+    <div class="alpha-sheet-comment-box-md">
+      {{#each alpha.trainings as |place|}}
+        {{#if place.training_passed}}
+          <div class="mb-2">
+            {{ymd-format place.slot_begins}} {{place.slot_description}}
+            <IntakeRanking @type="training" @rank={{place.training_rank}} />
+            {{#if place.feedback_delivered}}
+              (feedback delivered)
+            {{else}}
+              <b>(FEEDBACK NOT DELIVERED)</b>
+            {{/if}}
+            :<br>
+            {{#each place.training_notes as |note|}}
+              {{#unless note.is_log}}
+                {{note.note}}<br>
+              {{/unless}}
+            {{else}}
+              <i>No notes given.</i>
+            {{/each}}
+          </div>
+        {{/if}}
+      {{/each}}
+    </div>
+    <div class="alpha-sheet-section-header">
+      Mentor Notes/Ranking
+    </div>
+    <div class="alpha-sheet-comment-box-md">
       {{#each alpha.mentor_team as |info|}}
         {{info.year}}
         <IntakeRanking @type="mentor" @rank={{info.rank}} />
@@ -155,48 +228,35 @@
         {{#each info.notes as |note|}}
           {{#unless note.is_log}}
             <div>
-              &mdash; {{note.note}}
+              &mdash; {{#if note.person_source}}{{note.person_source.callsign}}{{else}}<i>Unknown</i>{{/if}}: {{note.note}}
             </div>
           {{/unless}}
         {{/each}}
+      {{else}}
+        No prior mentor notes
       {{/each}}
     </div>
-    <div class="alpha-sheet-comment-box-md">
-      <h3>Training Notes/Ranking:</h3>
-      {{#each this.alpha.trainings as |place|}}
-        {{#if place.training_passed}}
-          <div>
-            {{year-format place.slot_begins}}
-            <IntakeRanking @type="training" @rank={{note.rank}} />
-            {{#each place.training_notes as |note|}}
-              {{#unless note.is_log}}
-                {{note.note}}<br>
-              {{/unless}}
-            {{/each}}
-          </div>
-        {{/if}}
-      {{/each}}
-    </div>
-    <div class="alpha-sheet-comment-box-lg">
-      <h3>Comments:</h3>
-    </div>
+    <div class="alpha-sheet-footer">* * * WRITE COMMENTS ON BACK * * *</div>
   {{/each}}
 {{else}}
   <div class="form-row mb-2">
-    <label class="col-form-label col-auto">Mentor Shift Filter</label>
+    <label class="col-form-label">Mentor Shift Filter</label>
     <div class="col-auto">
-      <ChForm::Select @name="filter" @value={{filter}} @options={{filterOptions}} @onChange={{action (mut filter)}}
+      <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}} @onChange={{action
+              (mut filter)}}
                       @controlClass="form-control"/>
     </div>
+    <div class="col-auto">
+      <button class="btn btn-primary" {{action this.printAction}}>Print Selected ({{this.printAlphas.length}})
+      </button>
+    </div>
   </div>
-  <div class="mb-2">
-    <button class="btn btn-primary" {{action printAction}}>Print Selected ({{printAlphas.length}})</button>
-  </div>
-  <table class="table table-striped table-sm table-hover">
-    <caption>Showing {{viewAlphas.length}} of {{alphas.length}}</caption>
+  Showing {{this.viewAlphas.length}} of {{pluralize this.alphas.length "Alpha"}}
+  <table class="table table-striped table-sm table-hover table-width-auto">
     <thead>
     <tr>
-      <th><Input @type="checkbox" @checked={{selectAll}} @change={{action toggleAll value="target.checked"}} /></th>
+      <th><Input @type="checkbox" @checked={{this.selectAll}} @change={{action this.toggleAll
+                                                                               value="target.checked"}} /></th>
       <th>Callsign</th>
       <th>Name</th>
       <th>Training</th>
@@ -206,7 +266,7 @@
     </thead>
 
     <tbody>
-    {{#each viewAlphas as |alpha|}}
+    {{#each this.viewAlphas as |alpha|}}
       <tr>
         <td><Input @type="checkbox" @checked={{alpha.selected}} /></td>
         <td>
@@ -215,8 +275,8 @@
         <td>{{alpha.first_name}} {{alpha.last_name}}</td>
         <td>
           {{#each alpha.trainings as |place|}}
-            {{shift-format place.begins}}
-            {{place.description}}<br>
+            {{shift-format place.slot_begins}}
+            {{place.slot_description}}<br>
           {{else}}
             none
           {{/each}}
@@ -229,20 +289,23 @@
           {{/if}}
         </td>
         <td>
-          {{#unless alpha.training}}
-            No training signups<br>
-          {{/unless}}
-          {{#unless alpha.trained}}
-            Did not pass training<br>
-          {{/unless}}
-          {{#unless alpha.alpha_slot}}
-            No mentor shift
-          {{/unless}}
+          {{#if (and alpha.trainings alpha.trained alpha.alpha_slot)}}
+            <span class="text-success">{{fa-icon "check"}} none</span>
+          {{else}}
+            {{#unless alpha.trainings}}
+              <b class="text-danger">{{fa-icon "minus-circle"}} No training signups</b><br>
+            {{/unless}}
+            {{#unless alpha.trained}}
+              <b class="text-danger">{{fa-icon "times"}} Did not pass training</b><br>
+            {{/unless}}
+            {{#unless alpha.alpha_slot}}
+              <b class="text-danger">{{fa-icon "user-friends"}} No mentor shift</b>
+            {{/unless}}
+          {{/if}}
         </td>
       </tr>
     {{/each}}
     </tbody>
   </table>
-  <button class="btn btn-primary" {{action printAction}}>Print Selected ({{printAlphas.length}})</button>
-
+  <button class="btn btn-primary" {{action this.printAction}}>Print Selected ({{this.printAlphas.length}})</button>
 {{/if}}

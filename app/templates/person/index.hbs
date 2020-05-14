@@ -6,8 +6,9 @@
   </ChAlert>
 {{/if}}
 
+<PersonPhoto @photo={{this.photo}} @person={{this.person}} @uploadAction={{this.showUploadDialogAction}} />
+
 <ChForm @formId="person" @originalModel={{this.person}} @onSubmit={{action this.savePersonAction}} as |f|>
-  <PersonPhoto @photo={{this.photo}} @person={{this.person}} @uploadAction={{this.showUploadDialogAction}} />
 
   {{! The following block is floated left on md or larger screen to ensure
     the photo is on the right and the form flows around it.
@@ -15,7 +16,7 @@
   <div class="float-md-left">
     {{! show contact information }}
     {{#if (has-role "admin" "vc" "view-pii" "view-email")}}
-      <div class="form-group row">
+      <div class="form-row mb-2">
         <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Contact</label>
         <div class="mt-2 col-auto">
           {{#if this.person.email}}
@@ -41,7 +42,7 @@
       </div>
     {{/if}}
 
-    <div class="form-group row">
+    <div class="form-row mb-2">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign</label>
       {{#if (has-role "admin" "mentor" "vc")}}
         <f.input @name="callsign" @type="text" @size=35 @maxlength=100 @wrapClass="col-auto"/>
@@ -52,7 +53,7 @@
       {{/if}}
     </div>
 
-    <div class="form-group row">
+    <div class="form-row mb-2">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">FKA</label>
       {{#if (has-role "admin" "mentor" "vc")}}
         <f.input @name="formerly_known_as" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto"/>
@@ -63,7 +64,7 @@
       {{/if}}
     </div>
 
-    <div class="form-group row">
+    <div class="form-row mb-2">
       <label class="col-form-label col-form-label-fixed col-2">Callsign Approved</label>
       {{#if (has-role "admin" "mentor" "vc")}}
         <f.input @name="callsign_approved" @type="select" @wrapClass="col-auto"
@@ -75,7 +76,7 @@
       {{/if}}
     </div>
 
-    <div class="form-group row">
+    <div class="form-row mb-2">
       <label class="col-form-label col-form-label-fixed col-2">Status</label>
       {{#if (has-role "admin" "mentor" "vc")}}
         <f.input @name="status" @type="select" @options={{this.statusOptions}} @wrapClass="col-auto"/>
@@ -86,20 +87,18 @@
       {{/if}}
     </div>
 
-    <div class="form-group row">
+    <div class="form-row mb-2">
       <label class="col-form-label col-form-label-fixed col-2">Personnel</label>
       {{#if (has-role "admin")}}
-        <f.input @name="user_authorized" @type="select" @wrapClass="col-auto" @options={{this.userAuthorizedOptions}} />
-        <f.input @name="has_note_on_file" @label="Note on file" @type="checkbox" @wrapClass="col-auto mt-2" @value=1/>
+        <div class="col-auto mt-2">
+          <f.input @name="has_note_on_file" @label="Note on file" @value=1 @type="checkbox" @inline={{true}}/>
+        </div>
       {{else}}
         <div class="mt-2 col-auto">
-          {{#if this.person.user_authorized}}
-            Authorized
-          {{else}}
-            <span class="text-danger">NOT AUTHORIZED</span>
-          {{/if}}
           {{#if this.person.has_note_on_file}}
-            <strong class="text-danger">(note on file)</strong>
+            <b class="text-danger">Note on file</b>
+          {{else}}
+            <i class="text-muted">no note on file</i>
           {{/if}}
         </div>
       {{/if}}
@@ -111,7 +110,7 @@
   }}
   <div class="clearfix"></div>
 
-  <div class="form-group row">
+  <div class="form-row mb-2">
     <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Name</label>
     {{#if (has-role "admin" "mentor" "vc")}}
       <f.input @name="first_name" @type="text" @size=20 @maxlength=25 @wrapClass="col-sm-12 col-md-4 col-lg-3"/>
@@ -124,14 +123,14 @@
     {{/if}}
   </div>
 
-  <div class="form-group row">
+  <div class="form-row mb-2">
     <label class="col-form-label-fixed col-2">On Site</label>
     <div class="col-8">
       <f.input @name="on_site" @type="radioGroup" @options={{this.onSiteOptions }} @inline={{true}} />
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-row mb-2">
     <label for="person_position" class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Positions</label>
     <div class="col-md-9 col-sm-12">
       <div class="row col-12 mt-1 mb-2">
@@ -162,7 +161,7 @@
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-row mb-2">
     <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Roles</label>
     <div class="col-md-9 col-sm-12">
       <div class="row col-12 mt-1 mb-2">
@@ -188,14 +187,14 @@
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-row mb-2">
     <label class="col-form-label-fixed col-sm-12 col-md-2">Years</label>
     <div class="col-md-9 col-sm-12">
       {{#each this.person.years as |year|}}{{year}} {{/each}} ({{this.person.years.length}})
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-row mb-2">
     <label class="col-form-label-fixed col-sm-12 col-md-2">Vehicles</label>
     <div class="col-md-9 col-sm-12">
       {{#if (has-role "admin")}}
@@ -217,14 +216,14 @@
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-row mb-2">
     <label class="col-form-label-fixed col-sm-12 col-md-2">Assets</label>
     <div class="col-sm-12 col-md-9">
       <f.input @name="asset_authorized" @label="Assets Authorized" @type="checkbox" @inline={{true}}  />
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-row mb-2">
     <label class="col-form-label-fixed col-sm-12 col-md-2">Certifications</label>
     <div class="col-sm-12 col-md-9">
       {{#if (has-role "admin" "vc")}}
@@ -239,7 +238,7 @@
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-row mb-2">
     <label class="col-form-label-fixed col-sm-12 col-md-2">Agreements</label>
     <div class="col-sm-12 col-md-9">
       {{#if (has-role "admin" "vc")}}
@@ -255,18 +254,18 @@
   </div>
 
   {{#if (has-role "admin")}}
-    <div class="form-group row">
+    <div class="form-row mb-2">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">BPGUID</label>
       <f.input @name="bpguid" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto"/>
     </div>
 
-    <div class="form-group row">
+    <div class="form-row mb-2">
       <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">LMS ID</label>
       <f.input @name="lms_id" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto"/>
     </div>
   {{/if}}
 
-  <div class="form-group row">
+  <div class="form-row mb-2">
     <label class="col-form-label-fixed col-sm-12 col-md-2">BMID/Tickets</label>
     <div class="col-sm-12 col-md-9">
       {{#if  (has-role "edit-bmids" "edit-access-docs")}}
@@ -284,7 +283,7 @@
   </div>
 
   {{#if (has-role "admin" "vc" "intake")}}
-    <div class="form-group row">
+    <div class="form-row mb-2">
       <label class="col-form-label-fixed col-sm-12 col-md-2">VC</label>
       <div class="col-sm-12 col-md-9">
         {{#if (has-role "admin" "vc")}}
@@ -299,31 +298,33 @@
     </div>
   {{/if}}
   {{#if (has-role "admin")}}
-    <div class="form-group row">
+    <div class="form-row mb-2">
       <label class="col-form-label-fixed col-sm-12 col-md-2">Logs</label>
       <div class="col-sm-12 col-md-9 ">
         <LinkTo @route="person.contact-log" class="btn btn-secondary btn-sm">Contact Log</LinkTo>
         <LinkTo @route="person.broadcast-log" class="btn btn-secondary btn-sm">Broadcast Log</LinkTo>
-        <LinkTo @route="admin.action-log" @query={{hash person=person.callsign}} class="btn btn-secondary btn-sm">Action
+        <LinkTo @route="admin.action-log" @query={{hash person=person.callsign}} class="btn btn-secondary btn-sm">
+          Action
           Log
         </LinkTo>
       </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-row mb-2">
       <label class="col-form-label-fixed col-sm-12 col-md-2">Note</label>
       <div class="col-sm-12 col-md-9">
         {{#if this.person.message}}
           <button type="button" class="btn btn-secondary btn-sm" {{action this.editNote}}>Update Note</button>
         {{else}}
-          <button type="button" class="btn btn-secondary btn-sm" {{action this.confirmNoteOrMessage}}>Add Note</button>
+          <button type="button" class="btn btn-secondary btn-sm" {{action this.confirmNoteOrMessage}}>Add Note
+          </button>
         {{/if}}
 
       </div>
     </div>
   {{/if}}
 
-  <div class="form-group row">
+  <div class="form-row mb-2">
     <label class="col-form-label-fixed col-sm-12 col-md-2">Created</label>
     <div class="col-sm-12 col-md-9">
       {{#if person.create_date}}
@@ -334,14 +335,14 @@
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-row mb-2">
     <label class="col-form-label-fixed col-sm-12 col-md-2">Modified</label>
     <div class="col-sm-12 col-md-9">
       {{person.date_verified}}
     </div>
   </div>
 
-  <div class="form-group row">
+  <div class="form-row mb-2">
     <label class="col-form-label-fixed d-none d-md-block col-md-2">&nbsp;</label>
     <div class="col-sm-7 col-md-5">
       <f.submit @label="Update" @disabled={{or this.isSaving (not f.model.isDirty)}} />

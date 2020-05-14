@@ -40,36 +40,21 @@
 
   <div class="row">
     <div class="col-md-9 d-print-block">
-      {{#if (not this.person.user_authorized)}}
+      {{#if (not this.allowedCheckIn)}}
         <ChAlert @type="danger">
           <div class="float-left mr-2">
             {{fa-icon "exclamation-triangle" size="3x"}}
           </div>
-          Account is DISABLED. Contact the HQ Lead or the Personnel Manager {{mail-to (config "PersonnelEmail")}}.
+          This account cannot use the HQ Window Interface because the status is {{this.person.status}}.
+          Contact the HQ Lead or the Personnel Manager {{mail-to (config "PersonnelEmail")}}.
         </ChAlert>
-      {{else if this.person.isSuspended}}
-        <ChAlert @type="danger">
-          <div class="float-left mr-2">
-            {{fa-icon "exclamation-triangle" size="3x"}}
-          </div>
-          Account is SUSPENDED. Contact the HQ Lead or the Personnel Manager {{mail-to (config "PersonnelEmail")}}.
-        </ChAlert>
-      {{else if (not allowedCheckIn)}}
-        <ChAlert @type="danger">
-          <div class="float-left mr-2">
-            {{fa-icon "exclamation-triangle" size="3x"}}
-          </div>
-          This account cannot use the HQ Window Interface because the status is {{this.person.status}}
-        </ChAlert>
-      {{else}}
-        {{#if this.person.needsBpguid}}
+      {{else if this.person.needsBpguid}}
           <ChAlert @type="warning">
             Account does not have Burner Profile ID on file. Shift sign ups are disabled.
           </ChAlert>
-        {{/if}}
-
-        {{outlet}}
       {{/if}}
+
+      {{outlet}}
     </div>
 
     <div class="col-md-3 d-print-none">
@@ -88,8 +73,8 @@
             <i class="far fa-user fa-8x"></i><br>
             No Photo Uploaded<br>
           {{/if}}
-          {{#if his.photo.message}}
-            <div class="text-danger">ERROR: {{photo.message}}</div>
+          {{#if this.photo.message}}
+            <div class="text-danger">ERROR: {{this.photo.message}}</div>
           {{/if}}
         {{else}}
           Loading photo <LoadingIndicator />

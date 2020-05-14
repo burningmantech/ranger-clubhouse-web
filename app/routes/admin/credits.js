@@ -26,6 +26,7 @@ export default class AdminCreditsRoute extends Route {
     controller.set('entry', null);
     controller.set('positionFilter', 'all');
     controller.set('dayFilter', 'all');
+    controller.set('showingGroups', {});
     controller.setProperties(model)
   }
 

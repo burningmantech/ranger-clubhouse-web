@@ -7,31 +7,26 @@
 {{/unless}}
 
 <div class="form-row mb-1">
-  <div class="col-auto">
     <label class="col-form-label">Description Filter</label>
-  </div>
-  <div class="col-md-3 mb-2">
-    <ChForm::Select @name="descriptionFilter" @value={{descriptionFilter}} @options={{descriptionOptions}}
-                    @onChange={{action (mut descriptionFilter)}} @controlClass="form-control"/>
+  <div class="col-auto">
+    <ChForm::Select @name="descriptionFilter" @value={{this.descriptionFilter}} @options={{this.descriptionOptions}}
+                    @onChange={{action (mut this.descriptionFilter)}} @controlClass="form-control"/>
   </div>
 
-  <div class="col-auto">
     <label class="col-form-label">Temp ID Filter</label>
-  </div>
-  <div class="col-md-3 mb-2">
+  <div class="col-auto">
     <ChForm::Select @name="tempIdFilter" @value={{this.tempIdFilter}} @options={{this.tempIdOptions}}
                     @onChange={{action (mut this.tempIdFilter)}} @controlClass="form-control"/>
   </div>
+  <label class="col-form-label">Action</label>
+  <div class="col-auto">
+    <button type="button" class="btn btn-primary" {{action this.newAsset}}>New Asset</button>
+
+  </div>
 </div>
 
-{{#if this.isCurrentYear}}
-  <p>
-    <button type="button" class="btn btn-primary" {{action this.newAsset}}>New Asset</button>
-  </p>
-{{/if}}
-
 Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped table-width-auto">
   <thead>
   <tr>
     <th>Barcode</th>

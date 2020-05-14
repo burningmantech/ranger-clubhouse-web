@@ -18,7 +18,6 @@ export default class PersonModel extends Model.extend(PersonMixin) {
   @attr('string') status;
   @attr('boolean') vintage;
   @attr('string', { readOnly: true }) status_date;
-  @attr('boolean') user_authorized;
   @attr('string', { readOnly: true }) date_verified;
   @attr('string', { readOnly: true }) create_date;
   @attr('boolean') active_next_event;
@@ -72,12 +71,9 @@ export default class PersonModel extends Model.extend(PersonMixin) {
   @attr('boolean') osha10;
   @attr('boolean') osha30;
 
-  @attr('boolean') mentors_flag;
-  @attr('string') mentors_flag_note;
-  @attr('string') mentors_notes;
   @attr('boolean') has_note_on_file;
 
-  @attr('string') timestamp;
+  @attr('string', { readOnly: true }) timestamp;
 
   // a seperate table the database and not
   // filled in when retrieving the person

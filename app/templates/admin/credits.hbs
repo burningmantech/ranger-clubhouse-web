@@ -1,25 +1,23 @@
 <YearSelect @title="Position Credits" @year={{this.year}} @onChange={{action (mut this.year)}} />
 
-<div class="row">
-  <div class="col-auto">
-    <ChForm::Select @name="positionFilter" @value={{this.positionFilter}} @options={{this.filterPositionOptions}}
-                    @onChange={{action (mut this.positionFilter)}}  @controlClass="form-control"/>
-  </div>
-  <div class="col-auto">
+<div class="form-row my-3 no-gutters">
+  <label class="col-form-label">Day Filter</label>
+   <div class="col-auto">
     <ChForm::Select @name="dayFilter" @value={{this.dayFilter}} @options={{this.dayOptions}} @onChange={{action
             (mut this.dayFilter)}}  @controlClass="form-control"/>
   </div>
+  <label class="col-form-label">Actions</label>
+  <div class="col-auto">
+    <button type="button" {{on "click" this.newCredit}} class="btn btn-primary">New Position Credit</button>
+    {{#if this.credits.length}}
+      <button type="button" {{on "click" (fn this.startCopy 0)}} class="btn btn-secondary">Copy Credits</button>
+    {{/if}}
+  </div>
 </div>
-<p class="mt-2">
-  <button type="button" {{on "click" this.newCredit}} class="btn btn-primary">New Position Credit</button>
-  {{#if this.credits.length}}
-    <button type="button" {{on "click" (fn this.startCopy 0)}} class="btn btn-secondary">Copy Credits</button>
-  {{/if}}
-</p>
 
 {{#if this.credits.length}}
   <p>
-    Showing {{this.viewCredits.length}} of {{this.credits.length}}
+    Showing {{this.viewCredits.length}} of {{pluralize this.credits.length "position credit"}}
   </p>
   {{#unless this.viewCredits}}
     <p class="text-danger">
@@ -32,43 +30,56 @@
 {{/if}}
 
 {{#each this.creditGroups as |group|}}
-  <table class="table table-sm table-box table-hover">
-    <caption>
-      {{group.title}}
-      <button type="button" {{on "click" (fn this.startCopy group.position_id)}} class="btn btn-secondary btn-sm">
-        Bulk Copy
-      </button>
-    </caption>
-    <thead>
-    <tr>
-      <th class="w-5">ID</th>
-      <th class="w-15">From</th>
-      <th class="w-15">To</th>
-      <th class="w-10 text-right">Credits</th>
-      <th class="w-35">Description</th>
-      <th class="w-20">Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each group.credits as |credit|}}
-      <tr id="credit-{{credit.id}}">
-        <td class="w-5">{{credit.id}}</td>
-        <td class="w-15">{{shift-format credit.start_time}}</td>
-        <td class="w-15">{{shift-format credit.end_time}}</td>
-        <td class="w-10 text-right">{{credits-format credit.credits_per_hour}}</td>
-        <td class="w-35">{{credit.description}}</td>
-        <td class="w-20">
-          <button type="button" {{on "click" (fn this.deleteCredit credit)}} class="btn btn-danger btn-sm">
-            {{fa-icon "trash-alt" type="fas"}} Delete
-          </button>
-          <button type="button" {{on "click" (fn this.editCredit credit)}} class="btn btn-primary btn-sm">
-            {{fa-icon "edit"}} Edit
-          </button>
-        </td>
-      </tr>
-    {{/each}}
-    </tbody>
-  </table>
+  <div class="border mb-2">
+    <div class="bg-light-gray p-2">
+      <a href {{on "click" (fn this.toggleShowing group)}} class="h4">
+        {{fa-icon (if (get this.showingGroups group.position_id) "caret-down" "caret-right")}} {{group.title}} ({{group.credits.length}})
+      </a>
+      {{#if (get this.showingGroups group.position_id)}}
+        <button type="button" {{on "click" (fn this.startCopy group.position_id)}}
+                class="btn btn-secondary btn-sm ml-2">
+          Bulk Copy
+        </button>
+      {{/if}}
+    </div>
+    {{! template-lint-disable table-groups}}
+    {{#if (get this.showingGroups group.position_id)}}
+      <table class="table table-sm table-hover table-striped">
+        <caption>
+          {{group.title}}
+        </caption>
+        <thead>
+        <tr>
+          <th class="w-5">ID</th>
+          <th class="w-15">From</th>
+          <th class="w-15">To</th>
+          <th class="w-10 text-right">Credits</th>
+          <th class="w-35">Description</th>
+          <th class="w-20">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each group.credits as |credit|}}
+          <tr id="credit-{{credit.id}}">
+            <td class="w-5">{{credit.id}}</td>
+            <td class="w-15">{{shift-format credit.start_time}}</td>
+            <td class="w-15">{{shift-format credit.end_time}}</td>
+            <td class="w-10 text-right">{{credits-format credit.credits_per_hour}}</td>
+            <td class="w-35">{{credit.description}}</td>
+            <td class="w-20">
+              <button type="button" {{on "click" (fn this.deleteCredit credit)}} class="btn btn-danger btn-sm">
+                {{fa-icon "trash-alt" type="fas"}} Delete
+              </button>
+              <button type="button" {{on "click" (fn this.editCredit credit)}} class="btn btn-primary btn-sm">
+                {{fa-icon "edit"}} Edit
+              </button>
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    {{/if}}
+  </div>
 {{/each}}
 
 {{#if this.credit}}
@@ -89,7 +100,8 @@
             <div class="form-row">
               <f.input @name="start_time" @label="Begining Time" @type="datetime" @maxlength=25 @grid="col-auto"/>
               <f.input @name="end_time" @label="Ending Time" @type="datetime" @maxlength=20 @grid="col-auto"/>
-              <f.input @name="credits_per_hour" @label="Credits Per Hour" @type="text" @maxlength=20 @grid="col-auto"/>
+              <f.input @name="credits_per_hour" @label="Credits Per Hour" @type="text" @maxlength=20
+                       @grid="col-auto"/>
               <f.input @name="description" @label="Description" @size=25 @maxlength=25 @grid="col-md-auto"/>
             </div>
           </div>
@@ -128,10 +140,11 @@
             Labor Day of {{this.presentYear}} is {{this.presentYearLaborDay}}, {{this.laborDayDiff}} days later.
           </p>
         </fieldset>
-        <f.submit @label={{concat "Copy " this.copySelectedCreditCount " selected credits"}} @disabled={{this.isCopying}} />
+        <f.submit @label={{concat "Copy " this.copySelectedCreditCount " selected credits"}}
+                  @disabled={{this.isCopying}} />
         <f.cancel @disabled={{this.isCopying}} />
         {{#if this.isCopying}}
-          <LoadingIndicator />
+          <LoadingIndicator/>
         {{/if}}
         {{#each this.copySourcePositions as |position|}}
           <table class="table table-sm table-box table-hover mt-1">

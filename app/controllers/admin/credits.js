@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
-import {action, computed} from '@ember/object';
+import {action, computed, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {filterBy} from '@ember/object/computed';
 import {validateNumber, validatePresence} from 'ember-changeset-validations/validators';
@@ -80,6 +80,8 @@ export default class AdminCreditsController extends Controller {
 
   @tracked isCreditSubmitting = false;
   @tracked credit = null;
+
+  @tracked showingGroups;
 
   @computed('credits[]', 'credits.@each.{position_id,start_time}', 'dayFilter', 'positionFilter')
   get viewCredits() {
@@ -229,6 +231,12 @@ export default class AdminCreditsController extends Controller {
     this.modal.confirm('Unsaved Changes', 'The changes have not been saved. Are you sure you wish to leave this form without saving first?', () => {
       this.set('credit', null);
     })
+  }
+
+  @action
+  toggleShowing(group, event) {
+    event.preventDefault();
+    this.showingGroups = { ...this.showingGroups, [group.position_id]: !this.showingGroups[group.position_id] };
   }
 
   @action

@@ -49,9 +49,9 @@ export default class ChFormComponent extends Component {
        * the ember-changeset object will be updated as well BUT NO observers
        * will fire for properties that were not changed directly in the changeset
        *
-       * Example: the user changes the person status to "uberbonked", the server will set,
-       *  user_authorized to false. Any observers for status will fire since it
-       *  was changed via the changeset object. Since user_authorized was not
+       * Example: the user changes the person status to "past prospective", the server will set
+       *  change the callsign to LastFirstYY. Any observers for status will fire since it
+       *  was changed via the changeset object. Since the callsign was not
        *  originally touched in the changeset, no observers will fire.
        *
        * The solution is to watch for the record to be updated or created, and then

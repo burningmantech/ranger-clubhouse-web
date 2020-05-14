@@ -19,7 +19,6 @@ export default Factory.extend({
   zip() { return faker.address.zipCode(); },
   home_phone() { return faker.phone.phoneNumberFormat(); },
   alt_phone() { return faker.phone.phoneNumberFormat(); },
-  user_authorized: true,
   create_date() { return moment().format('YYYY-MM-DD hh:mm:ss'); },
   password: 'ineedashower!',
   camp_location() { return faker.address.latitude() + faker.address.longitude(); },

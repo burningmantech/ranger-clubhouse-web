@@ -160,6 +160,10 @@ h3 select option {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: not-allowed !important;
+}
+
 main {
   margin: 10px 0;
 }

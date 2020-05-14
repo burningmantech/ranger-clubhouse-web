@@ -2,13 +2,13 @@ import Route from '@ember/routing/route';
 
 export default class MentorAlphaStatusRoute extends Route {
   model() {
-    return this.ajax.request('mentor/potentials', { data: { exclude_bonks: 1 }});
+    return this.ajax.request('mentor/mentees', { data: { exclude_bonks: 1 }});
   }
 
   setupController(controller, model) {
-    const potentials = model.potentials;
+    const mentees = model.mentees;
 
-    potentials.forEach((person) => {
+    mentees.forEach((person) => {
       if (person.callsign_approved && person.photo_approved && person.trained) {
         person.position_eligible = true;
 
@@ -17,7 +17,7 @@ export default class MentorAlphaStatusRoute extends Route {
         }
       }
     });
-    controller.set('potentials', model.potentials);
+    controller.set('mentees', model.mentees);
     controller.set('year', this.house.currentYear());
 
     controller.set('filter', 'all');
