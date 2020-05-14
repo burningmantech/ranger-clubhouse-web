@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
-import {action, computed, set} from '@ember/object';
+import {action, computed } from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {filterBy} from '@ember/object/computed';
 import {validateNumber, validatePresence} from 'ember-changeset-validations/validators';
