@@ -95,7 +95,7 @@
 
 {{#if this.editEntry}}
   <ModalDialog @title={{concat "Edit Timesheet #" this.editEntry.id}} as |Modal|>
-    <ChForm @formId="entry" @originalModel={{this.editEntry}}
+    <ChForm @formId="entry" @formFor={{this.editEntry}}
             @validator={{this.timesheetValidations}}
             @onSubmit={{this.saveEntryAction}}
             @onCancel={{this.cancelEntryAction}} as |f|>

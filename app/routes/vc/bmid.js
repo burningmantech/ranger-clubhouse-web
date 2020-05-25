@@ -17,6 +17,8 @@ export default class VcBmidRoute extends Route {
     const year = requestYear(params);
     const filter = params.filter || 'special';
 
+    this.store.unloadAll('bmid');
+
     return RSVP.hash({
       year,
       filter,
@@ -26,21 +28,18 @@ export default class VcBmidRoute extends Route {
   }
 
   setupController(controller, model) {
-    const bmids = [];
-
-    this.store.unloadAll('bmid');
-
     // Loop through the list
-    model.bmids.forEach((bmid) => {
+    const bmids = model.bmids.map((bmid) => {
       let rec;
       if (bmid.id) {
         rec = this.house.pushPayload('bmid', bmid);
       } else {
         // Potential new BMID
-        rec = this.store.createRecord('bmid', bmid);
+        rec =  this.store.createRecord('bmid', bmid);
       }
 
-      bmids.push(rec);
+      rec.sortCallsign = (bmid.person ? bmid.person.callsign.toLowerCase() : `Deleted #${a.person_id}`);
+      return rec;
     });
 
     controller.set('bmids', bmids);

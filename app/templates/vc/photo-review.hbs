@@ -146,7 +146,7 @@
 {{#if this.reviewPhoto}}
   <ModalDialog @title={{concat "Reject Photo for " this.reviewPhoto.person.callsign}} as |modal|>
     <modal.body>
-      <ChForm @formId="photo" @originalModel={{this.reviewForm}} @changeSet={{false}} @onSubmit={{this.onRejectSubmit}}
+      <ChForm @formId="photo" @formFor={{this.reviewForm}} @changeSet={{false}} @onSubmit={{this.onRejectSubmit}}
               @onCancel={{this.onClose}} as |f|>
         <div class="form-row">
           <div class="col-3">

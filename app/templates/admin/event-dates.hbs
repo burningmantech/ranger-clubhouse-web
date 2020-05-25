@@ -44,7 +44,7 @@
 {{#if this.entry}}
   <ModalDialog @title={{if this.entry.isNew "Create Event Data Record" "Edit Event Date Record"}} as |Modal|>
     <ChForm @formId="event_date"
-            @originalModel={{this.entry}}
+            @formFor={{this.entry}}
             @validator={{this.eventDateValidations}}
             @onSubmit={{this.save}} @onCancel={{this.cancel}} as |f|>
       <Modal.body>

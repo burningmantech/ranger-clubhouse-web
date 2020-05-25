@@ -3,7 +3,7 @@
   <LinkTo @route="admin.rbs">Back to RBS</LinkTo>
 </p>
 
-<ChForm @formId="search" @originalModel={{this.searchForm}} @changeSet={{false}} @onSubmit={{this.submitAction}} as |f|>
+<ChForm @formId="search" @formFor={{this.searchForm}} @changeSet={{false}} @onSubmit={{this.submitAction}} as |f|>
   <div class="row form-group">
     <label class="col-form-label">Message direction</label>
     <f.input @name="direction"@type="select" @options={{this.directionOptions}} @wrapClass="col-auto" />

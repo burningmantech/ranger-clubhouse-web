@@ -14,7 +14,7 @@
     <ChAlert @type="danger">
       Do not touch the following unless instructed to do so by the tech team.
     </ChAlert>
-    <ChForm @formId="person" @originalModel={{this.person}} @onSubmit={{this.savePerson}} as |f|>
+    <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.savePerson}} as |f|>
       <div class="form-row mb-2">
         <label class="col-form-label col-2">On Playa Flags</label>
         <div class="col-auto mt-2">

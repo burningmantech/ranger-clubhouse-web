@@ -27,7 +27,7 @@
     <p>
       <strong>A verification code has been sent to {{this.unverifiedPhones}}</strong>
     </p>
-    <ChForm @formId="verify" @originalModel={{this.verifyForm}} as |f|>
+    <ChForm @formId="verify" @formFor={{this.verifyForm}} as |f|>
       {{#if (or this.numbers.is_same (and this.numbers.off_playa.phone (not this.numbers.off_playa.is_verified)))}}
         <div class="form-row">
           <f.input @name="off_playa" @label={{concat "Enter verification code for " this.numbers.off_playa.phone}}
@@ -84,7 +84,7 @@
   Australia: +61, Canada: +1, France: +33, Mexico: +52, New Zealand: +64, UK: +44.
 </p>
 
-<ChForm @formId="numbers" @originalModel={{this.phoneForm}} @validator={{this.numberValidations}}
+<ChForm @formId="numbers" @formFor={{this.phoneForm}} @validator={{this.numberValidations}}
         @onSubmit={{this.saveNumbersAction}} as |f|>
   <div class="form-row">
     <f.input @name="off_playa"

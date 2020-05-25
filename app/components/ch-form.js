@@ -1,193 +1,184 @@
-import Component from '@ember/component';
-import {action, computed, set} from '@ember/object';
+import Component from '@glimmer/component';
+import {action, set} from '@ember/object';
 import {typeOf, isEmpty} from '@ember/utils';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
 import Model from '@ember-data/model';
+import {tracked} from '@glimmer/tracking';
+import {inject as service} from '@ember/service';
+import {run} from '@ember/runloop';
 
 export default class ChFormComponent extends Component {
-  tagName = '';
-  static positionalParams = ['formId', 'originalModel'];
+  @service house;
 
-  formId = null;
-  validator = null;
+  @tracked model;
 
-  // The original model being edited.
-  originalModel = null;
-
-  onSubmit = null;
-  onReset = null;
-  onCancel = null;
-
-  // By default a changset object will be created for the model and used.
-  changeSet = true;
-
-  autocomplete = "off";
-
-  formClass = null;
-
-  // Was the original backing model updated?
   watchingModel = false;
 
-  formInline = false;
+  constructor() {
+    super(...arguments);
 
-  @computed('changeSet', 'originalModel', 'validator')
-  get model() {
-    let model;
-    const original = this.originalModel;
-    const validator = this.validator;
+    const {changeSet, autocomplete} = this.args;
 
-    if (this.changeSet) {
-      if (validator) {
-        model = new Changeset(original, lookupValidator(validator), validator, {skipValidate: true});
-      } else {
-        model = new Changeset(original);
-      }
-
-      /*
-       * Magic going on here. When the backing model updates from the server,
-       * the ember-changeset object will be updated as well BUT NO observers
-       * will fire for properties that were not changed directly in the changeset
-       *
-       * Example: the user changes the person status to "past prospective", the server will set
-       *  change the callsign to LastFirstYY. Any observers for status will fire since it
-       *  was changed via the changeset object. Since the callsign was not
-       *  originally touched in the changeset, no observers will fire.
-       *
-       * The solution is to watch for the record to be updated or created, and then
-       * build a new changeset object which has the most recent data.
-       */
-
-      if (original instanceof Model) {
-        original.set('onSaved', () => {
-          this._modelUpdated()
-        });
-        this.set('watchingModel', original); // eslint-disable-line ember/no-side-effects
-      }
-    } else {
-      model = original;
-      set(model, 'isValid', true); // eslint-disable-line ember/no-side-effects
-    }
-
-    return model;
+    this.changeSet = changeSet ?? true;
+    this.autocomplete = autocomplete ?? 'off';
+    this._buildChangeSet();
   }
 
-  _modelUpdated() {
-    this.notifyPropertyChange('model'); // Recompute model
-  }
+  _buildChangeSet() {
+    const {formFor, validator} = this.args;
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    // Remove the event handler for the record update
-    if (this.watchingModel) {
-      this.watchingModel.set('onSaved', null);
-      this.set('watchingModel', null);
-    }
-  }
-
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    const field = document.querySelector(`#${this.formId} [autofocus]`)
-    if (field) {
-      field.focus();
-    }
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    // Remove the event handler for the record update
-    if (this.watchingModel) {
-      this.watchingModel.set('onSaved', null);
-      this.set('watchingModel', null);
-    }
-  }
-
-  /*
-   * Scroll to the first error
-   */
-
-  _scrollToError(model) {
-    const errors = model.get('errors');
-    if (isEmpty(errors)) {
+    if (!this.changeSet) {
+      this.model = formFor;
       return;
     }
 
-    const field = errors[0].key;
-    const label = `label[for="${this.formId}-${field}"]`;
-
-    // Scroll the label into view if it exists, otherwise the element
-    if (document.querySelector(label)) {
-      this.house.scrollToElement(label);
+    if (validator) {
+      this.model = new Changeset(formFor, lookupValidator(validator), validator, {skipValidate: true});
     } else {
-      this.house.scrollToElement(`[name="${this.formId}-${field}"]`);
+      this.model = new Changeset(formFor);
+    }
+
+    /*
+     * Magic going on here. When the backing model updates from the server,
+     * the ember-changeset object will be updated as well BUT NO observers
+     * will fire for properties that were not changed directly in the changeset
+     *
+     * Example: the user changes the person status to "past prospective", the server will set
+     *  change the callsign to LastFirstYY. Any observers for status will fire since it
+     *  was changed via the changeset object. Since the callsign was not
+     *  originally touched in the changeset, no observers will fire.
+     *
+     * The solution is to watch for the record to be updated or created, and then
+     * build a new changeset object which has the most recent data.
+     */
+
+    if (formFor instanceof Model) {
+      set(formFor, 'onSaved', () => this._buildChangeSet());
+      this.watchingModel = formFor;
     }
   }
 
+  /**
+   * When the form is inserted into the DOM, find the first element that wants
+   * to be autofocused, and focus it.
+   *
+   * @param element form tag inserted
+   */
+
+  @action
+  insertedFormElement(element) {
+    const field = element.querySelector(`[autofocus]`);
+    if (field) {
+      setTimeout(() => {
+        run('afterRender', () => {
+          field.focus();
+        })
+      }, 100);
+    }
+  }
+
+  /**
+   * Teardown the form - clear the on save callback for the model if it exists.
+   */
+
+  willDestroy() {
+    // Remove the event handler for the record update
+    if (this.watchingModel) {
+      set(this.watchingModel, 'onSaved', null);
+      this.watchingModel = null;
+    }
+  }
+
+  /**
+   * Scroll to the first error on the form
+   * @private
+   */
+
+  _scrollToError() {
+    const {errors} = this.model;
+
+    if (isEmpty(errors)) {
+      // Who's a good little user with no errors in the form.. yes, you are!
+      return;
+    }
+
+    const field = `${this.args.formId}-${errors[0].key}`;
+    const label = `label[for="${field}"]`;
+    // Scroll the label into view if it exists, otherwise the form element
+    if (document.querySelector(label)) {
+      this.house.scrollToElement(label);
+    } else {
+      this.house.scrollToElement(`[name="${field}"]`);
+    }
+  }
+
+  /**
+   * When the user submits the form via <enter> or similar, prevent the default
+   * action from happening
+   * @param event
+   */
   @action
   submitEvent(event) {
     event.preventDefault();
     this.submitForm();
   }
 
-  @action
-  submitForm(callback) {
-    const model = this.model;
-    const original = this.originalModel;
+  /**
+   * Called when the user hits the submit button or presses entered in first fields (via this.submitEvent).
+   * Verify the model if a validator is attached, scroll to any errors if they exist, and/or execute the
+   * callbacks.
+   *
+   * @param {Function} callback method to call (usually set by ch-form/submit with @onSubmit arg)
+   */
 
-    const submitAction = (callback || this.onSubmit);
+  @action
+  submitForm(callback = null) {
+    const model = this.model;
+    const {formFor} = this.args;
+
+    const submitAction = (callback ?? this.args.onSubmit);
 
     if (model.validate) {
       model.validate().then(() => {
         const isValid = this._isValid();
-
         if (!isValid) {
-          this._scrollToError(model);
+          this._scrollToError();
         }
-        if (submitAction) {
-          return submitAction(model, isValid, original);
-        }
+        submitAction(model, isValid, formFor);
       });
-    } else if (submitAction) {
-      return submitAction(model, undefined, original);
+    } else {
+      submitAction(model, undefined, formFor);
     }
   }
+
+  /**
+   * When a particular field changes call @onFormChange
+   *
+   * @param field
+   */
 
   @action
   fieldChangeAction(field) {
-    const model = this.model;
-    const formChange = this.onFormChange;
+    const {onFormChange, formFor} = this.args;
 
-    if (formChange) {
-      formChange(field, model, this._isValid(), this.originalModel);
-    }
-  }
-
-  @action
-  resetForm() {
-    const model = this.model;
-    const onReset = this.onReset;
-    if (onReset) {
-      onReset(model)
-    } else if (model.rollback) {
-      model.rollback();
+    if (onFormChange) {
+      onFormChange(field, this.model, this._isValid(), formFor);
     }
   }
 
   @action
   cancelForm() {
-    const onCancel = this.onCancel;
+    const {onCancel, formFor} = this.args;
 
     if (!onCancel) {
       return;
     }
 
-    if (typeOf(onCancel) == 'string') {
-      this.send(onCancel, this.originalModel)
+    if (typeOf(onCancel) === 'string') {
+      this.send(onCancel, formFor)
     } else {
-      onCancel(this.originalModel)
+      onCancel(formFor)
     }
   }
 

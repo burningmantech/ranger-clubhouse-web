@@ -58,7 +58,7 @@
 
 {{#if this.entry}}
   <ModalDialog @title={{if this.entry.isNew "New Message" "Edit Message"}} as |Modal|>
-    <ChForm @formId="entry" @originalModel={{this.entry}} @onSubmit={{action this.saveEntry}}
+    <ChForm @formId="entry" @formFor={{this.entry}} @onSubmit={{action this.saveEntry}}
             @onCancel={{action this.cancelEntry}} as |f|>
     <Modal.body>
         <div class="form-row">

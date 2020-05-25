@@ -7,7 +7,7 @@
 </p>
 
 <div class="border border-dark p-4 mb-2">
-  <ChForm @formId="teamsForm" @originalModel={{this.teamsForm}} @changeSet={{false}}
+  <ChForm @formId="teamsForm" @formFor={{this.teamsForm}} @changeSet={{false}}
           @onSubmit={{this.searchTeamsAction}} as |f|>
     <div class="row form-group">
       <label class="col-form-label-fixed">Teams:</label>

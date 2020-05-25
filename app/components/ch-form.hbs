@@ -1,42 +1,18 @@
-<form id={{formId}} class={{formClass}} autocomplete={{autocomplete}} {{on "submit" this.submitEvent}}>
+<form id={{@formId}}
+      class={{@formClass}}
+      autocomplete={{this.autocomplete}}
+  {{on "submit" this.submitEvent}}
+  {{did-insert this.insertedFormElement}}
+>
   {{yield (hash model=model
                   input=(component "ch-form/field"
-                          model=model
-                          formId=formId
-                          placeholder=placeholder
-                          size=size
-                          maxlength=maxlength
-                          disabled=disabled
-                          onChange=onChange
+                          model=this.model
+                          formId=@formId
                           fieldChangeAction=this.fieldChangeAction
-                          autofocus=autofocus
-                          autocomplete=autocomplete
-                          includeBlank=includeBlank
-                          startDate=startDate
-                          onFocus=onFocus
-                          noSpaces=noSpaces
-                          inputmode=inputmode
-                          originalModel=originalModel
+                          autocomplete=this.autocomplete
                   )
-                  submit=(component "ch-form/submit"
-                          label=label
-                          submitClass=submitClass
-                          formSubmitAction=this.submitForm
-                          onSubmit=onSubmit
-                          disabled=disabled
-                  )
-                  reset=(component "ch-form/reset-button"
-                          label=label
-                          class=resetClass
-                          resetAction=this.resetForm
-                          disabled=disabled
-                  )
-                  cancel=(component "ch-form/cancel"
-                          label=label
-                          cancelClass=cancelClass
-                          cancelAction=this.cancelForm
-                          disabled=disabled
-                  )
+                  submit=(component "ch-form/submit" formSubmitAction=this.submitForm)
+                  cancel=(component "ch-form/cancel" cancelAction=this.cancelForm)
           )
   }}
 </form>

@@ -1,6 +1,6 @@
 <ModalDialog @title={{this.title}} as |Modal|>
   <ChForm @formId="contact"
-          @originalModel={{this.contactForm}}
+          @formFor={{this.contactForm}}
           @validator={{this.contactValidation}}
           @onSubmit={{action this.sendAction}}
           @onCancel={{action this.cancelAction}} as |f|>

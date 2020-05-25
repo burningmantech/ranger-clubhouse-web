@@ -7,7 +7,7 @@
   {{{@survey.prologue}}}
 {{/if}}
 <ChForm @formId="survey"
-        @originalModel={{this.surveyForm}}
+        @formFor={{this.surveyForm}}
         @validator={{this.validations}}
         @onSubmit={{this.submitAction}} as |f|>
   {{#each this.surveyGroups as |group idx|}}

@@ -68,7 +68,7 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
 {{#if this.position}}
   <ModalDialog @title={{if this.position.isNew "Create Position"
                            (concat "Edit Position ID #" this.position.id " - " this.position.title)}} as |Modal|>
-    <ChForm @formId="position-form" @originalModel={{this.position}}
+    <ChForm @formId="position-form" @formFor={{this.position}}
             @validator={{this.positionValidations}} @onSubmit={{this.saveAction}}
             @onCancel={{this.cancelAction}} as |f|>
       <Modal.body>

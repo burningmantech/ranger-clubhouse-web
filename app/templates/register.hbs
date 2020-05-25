@@ -65,7 +65,7 @@
       information:
     </p>
 
-    <ChForm @formId="register" @originalModel={{this.registerForm}} @autocomplete="on" @validator={{this.registerValidations}}
+    <ChForm @formId="register" @formFor={{this.registerForm}} @autocomplete="on" @validator={{this.registerValidations}}
                @onSubmit={{this.createAccount}} as |f|>
       <div class="form-row">
         <f.input @name="human" @size=4 @maxlength=10 @grid="col-auto" @label="First, prove you are human - What is 33 + 2?"  />

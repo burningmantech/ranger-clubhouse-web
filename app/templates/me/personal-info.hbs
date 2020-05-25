@@ -1,6 +1,6 @@
 <h1>Personal Information For <span class="d-inline-block">{{person.callsign}}</span></h1>
 
-<ChForm @formId="person" @originalModel={{this.person}} @autocomplete="on" @validator={{this.personInfoValidations}} @onSubmit={{action this.onSubmit}} @onCancel={{action this.onCancel}} as |f|>
+<ChForm @formId="person" @formFor={{this.person}} @autocomplete="on" @validator={{this.personInfoValidations}} @onSubmit={{action this.onSubmit}} @onCancel={{action this.onCancel}} as |f|>
   <div class="form-row mb-2">
     <div class="col-12">
       Your account status is {{this.person.status}}.

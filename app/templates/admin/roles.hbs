@@ -54,7 +54,7 @@
 
 {{#if this.entry}}
   <ModalDialog @title={{if entry.isNew "New Role"  "Edit Role"}} as |Modal|>
-    <ChForm @formId="role" @originalModel={{this.entry}}
+    <ChForm @formId="role" @formFor={{this.entry}}
             @validator={{this.roleValidations}} @onSubmit={{this.saveRole}} @onCancel={{this.cancelRole}} as |f|>
       <Modal.body>
         <div class="form-row">

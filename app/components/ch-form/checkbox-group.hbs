@@ -1,16 +1,15 @@
-{{#each checkboxColumns as |column|}}
-  <div class="{{gridColumn}}">
-    {{#each column as |cb|}}
+{{#each this.checkboxColumns as |column|~}}
+  <div class={{this.gridClass}}>
+    {{~#each column as |cb idx|~}}
       <div class="form-check">
-        <input
-          type="checkbox"
-          id={{cb._domId}}
-          class="form-check-input"
-          checked={{cb.isChecked}}
-          onclick={{action "onClick" cb}}
-        >
-        <label for="{{cb._domId}}" class="form-check-label">{{cb.label}}</label>
-       </div>
-    {{/each}}
+        <Input @type="checkbox"
+               id="{{@domId}}-{{idx}}"
+               class="form-check-input"
+               @checked={{cb.isChecked}}
+               @click={{action this.onClickEvent cb}}
+        />
+        <label for="{{@domId}}-{{idx}}" class="form-check-label">{{cb.label}}</label>
+      </div>
+    {{~/each~}}
   </div>
-{{/each}}
+{{~/each}}

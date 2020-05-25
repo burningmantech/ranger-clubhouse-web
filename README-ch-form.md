@@ -14,7 +14,7 @@ is located here:
 
 https://github.com/poteto/ember-changeset-validations
 
-## <ChForm @formId="formName" @originalModel={{this.model}} ... arguments ... as |f| >
+## <ChForm @formId="formName" @formFor={{this.model}} ... arguments ... as |f| >
 The component takes two argument as a minimum: a form name, and model (object) to edited.
 The form name is used to build up the form and field element ids.
 
@@ -41,7 +41,7 @@ A single argument tells which model property is to be edited.
 
 The following example:
 ```htmlbars
-<ChForm @formId="role" @originalModel={{this.roleRecord}} @onSubmit={{this.saveRole}} as |f| >
+<ChForm @formId="role" @formFor={{this.roleRecord}} @onSubmit={{this.saveRole}} as |f| >
   <f.input @name="title" @type="text" @label="Role Name:" />
   <f.submit @disabled={{this.roleRecord.isSaving}} />
 </ChForm>
@@ -113,7 +113,7 @@ export default class RoleModel extends DS.Model {
 The template file to edit the role is:
 
 ```htmlbars
-<ChForm @formId="roles" @originalModel={{this.roles}}
+<ChForm @formId="roles" @formFor={{this.roles}}
       @validator={{this.roleValidations}}
       @onSubmit={{this.saveAction}} as |f|>
   <f.input @name="title" @label="Role Title:" @type="text" @size=20 />

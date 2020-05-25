@@ -42,7 +42,7 @@
         {{/if}}
       </div>
       <div class="col-sm-12 col-md-6 col-lg-4">
-        <ChForm @formId="auth" @originalModel={{this.authForm}} @validator={{this.loginValidations}}
+        <ChForm @formId="auth" @formFor={{this.authForm}} @validator={{this.loginValidations}}
                 @autocomplete="on" @onSubmit={{this.submit}} as |f|>
           <f.input @name="identification" @label="Email" @type="text" @inputmode="email" @autocomplete="username"
                    @autofocus={{true}} @noSpaces={{true}} />

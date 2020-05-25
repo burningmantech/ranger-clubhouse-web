@@ -135,7 +135,7 @@
 
   <h3>Submit Selected BMIDs To Lambase</h3>
 
-  <ChForm @formId="batch" @originalModel={{this.batchForm}} @onSubmit={{this.sendToLambase}} as |f|>
+  <ChForm @formId="batch" @formFor={{this.batchForm}} @onSubmit={{this.sendToLambase}} as |f|>
     <div class="form-row">
       <f.input @name="batchInfo" @label="Batch Information" @size=32 @maxlength=32 @grid="col-auto"
                @hint="Example batch info might be 'Batch #1, specials' or 'Batch #2, special stragglers', or 'Batch #3, alphas', etc. The Clubhouse will automatically add

@@ -1,4 +1,4 @@
-<ChForm @formId="checkout" @originalModel={{this.assetForm}} @validator={{this.assetValdiations}} @onSubmit={{this.checkoutAsset}} as |f|>
+<ChForm @formId="checkout" @formFor={{this.assetForm}} @validator={{this.assetValdiations}} @onSubmit={{this.checkoutAsset}} as |f|>
   <div class="form-row">
     <f.input @name="barcode" @placeholder="Enter Barcode" @type="text" @size=15 @grid="col-auto" />
     <f.input @name="attachment_id" @type="select" @options={{this.attachmentOptions}} />

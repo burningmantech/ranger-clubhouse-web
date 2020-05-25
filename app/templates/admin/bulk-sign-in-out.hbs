@@ -99,7 +99,7 @@
   </div>
 {{/if}}
 
-<ChForm @formId="bulkForm" @originalModel={{this.bulkForm}} @changeSet={{false}} @onSubmit={{this.verifyAction}} as |f|>
+<ChForm @formId="bulkForm" @formFor={{this.bulkForm}} @changeSet={{false}} @onSubmit={{this.verifyAction}} as |f|>
   <div class="form-row">
     <div class="col-auto">
       <f.input @name="lines"

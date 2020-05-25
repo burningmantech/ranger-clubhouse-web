@@ -9,7 +9,7 @@
 </h1>
 
 {{#unless this.over_hours}}
-  <ChForm @formId="date-form" @originalModel={{this.dateForm}} @validator={{this.dateValidations}}
+  <ChForm @formId="date-form" @formFor={{this.dateForm}} @validator={{this.dateValidations}}
           @onSubmit={{this.submitForm}} as |f|>
     <div class="form-row mt-4">
       <div class="col-auto">

@@ -1,19 +1,19 @@
 import Component from '@glimmer/component';
-import EmberObject, { action } from '@ember/object';
-import { typeOf } from '@ember/utils';
-import { computed } from '@ember/object';
-import { assert } from '@ember/debug';
-import { tracked } from '@glimmer/tracking';
+import {action} from '@ember/object';
+import {typeOf} from '@ember/utils';
+import {computed} from '@ember/object';
+import {assert} from '@ember/debug';
+import {tracked} from '@glimmer/tracking';
 
 export default class ChFormSelectComponent extends Component {
   @tracked isGrouped = false;
 
   constructor() {
     super(...arguments);
-    const options = this.args.options;
-    assert('select options is not an array', typeOf(options) == 'array');
+    const {options} = this.args;
+    assert('select options is not an array', typeOf(options) === 'array');
     const item = options[0];
-    this.isGrouped = (typeOf(item) == 'object' && ('groupName' in item));
+    this.isGrouped = (typeOf(item) === 'object' && ('groupName' in item));
   }
 
   // select change
@@ -44,19 +44,23 @@ export default class ChFormSelectComponent extends Component {
       const type = typeOf(opt);
       let label, value;
 
-      if (type == 'object' && ("id" in opt)) {
-        label = opt.title
-        value = opt.id
-      // Simple [ 'label', value ]
-      } else if (type == 'array') {
-        label = opt[0];
-        value = opt[1];
-      } else {
-        // Or just [  value ]
-        label = value = opt;
+      switch (type) {
+        case 'object':
+          // { id: value, title: 'label' }
+          label = opt.title;
+          value = opt.id;
+          break;
+
+        case 'array':
+          // Simple [ 'label', value ]
+          [label, value] = opt;
+          break;
+        default:
+          label = value = opt;
+          break;
       }
 
-      return EmberObject.create({ label, value });
+      return {label, value};
     });
   }
 
@@ -68,7 +72,7 @@ export default class ChFormSelectComponent extends Component {
   @computed('args.options.[]')
   get selectGroupOptions() {
     return this.args.options.map((opt) => {
-      return { groupName: opt.groupName, options: this._buildOptions(opt.options) };
+      return {groupName: opt.groupName, options: this._buildOptions(opt.options)};
     });
   }
 }

@@ -16,7 +16,7 @@
   Mentor pages and reports.
 </p>
 {{#if (has-role "admin" "vc" "intake")}}
-  <ChForm @formId="person" @originalModel={{this.person}} @onSubmit={{this.savePersonAction}} as |f|>
+  <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.savePersonAction}} as |f|>
     <div class="form-group row">
       <label class="col-form-label col-sm-12 col-md-2">Known Rangers</label>
       <f.input @name="known_rangers" @type="text" @size=50 @maxlength=150 @wrapClass="col-auto"/>

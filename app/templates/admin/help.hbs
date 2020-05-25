@@ -40,7 +40,7 @@
 {{#if this.entry}}
   <ModalDialog @title={{if this.entry.isNew "New Help Document" "Edit Help Document"}} as |Modal|>
     <ChForm @formId="help"
-            @originalModel={{this.entry}}
+            @formFor={{this.entry}}
             @onSubmit={{action this.saveHelp}}
             @onCancel={{action this.cancelHelp}} as |f|>
       <Modal.body>

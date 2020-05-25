@@ -11,7 +11,7 @@
     </p>
   {{/if}}
 
-  <ChForm @formId="query" @originalModel={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
+  <ChForm @formId="query" @formFor={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
     <div class="form-row">
       <f.input @name="person" @label="Person" @type="text" @size=30 @grid="col-sm-12 col-md-2"
                @controlClass="form-control form-control-sm" @hint="Callsign or person id"/>
