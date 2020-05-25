@@ -1,6 +1,6 @@
 <h3>Update Personal Information</h3>
 {{#if this.canEditPersonalInfo}}
-  <ChForm @formId="person" @originalModel={{this.person}} @validator={{this.personInfoValidations}}
+  <ChForm @formId="person" @formFor={{this.person}} @validator={{this.personInfoValidations}}
           @onSubmit={{this.onSubmit}}
           @onCancel={{this.onCancel}} as |f|>
     <fieldset>

@@ -1,5 +1,5 @@
 <ModalDialog @title="Edit Positions" @size="xl" as |Modal|>
-  <ChForm @formId="positions" @originalModel={{this.positionForm}}  @onSubmit={{@onSave}}
+  <ChForm @formId="positions" @formFor={{this.positionForm}}  @onSubmit={{@onSave}}
           @onCancel={{@onCancel}} as |f|>
     <Modal.body>
       <div class="form-row">

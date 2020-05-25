@@ -29,7 +29,7 @@
     <b>A Ranger callsign may not appear in the search results if the person is no longer active.</b>
   </p>
 
-  <ChForm @formId="search" @originalModel={{this.searchForm}} @changeSet={{false}} @onFormChange={{this.searchOnChange}}
+  <ChForm @formId="search" @formFor={{this.searchForm}} @changeSet={{false}} @onFormChange={{this.searchOnChange}}
           as |f|>
     <div class="form-row">
       <div class="col-auto">

@@ -5,7 +5,7 @@
   </div>
 
   <ChForm @formId="search-bar-form"
-          @originalModel={{this.searchForm}}
+          @formFor={{this.searchForm}}
           @changeSet={{false}}
           @formClass="col-sm-11 col-md-10 col-lg-8 mb-2 mx-2"
           @onFormChange={{action this.searchFormChange}} as |f|>

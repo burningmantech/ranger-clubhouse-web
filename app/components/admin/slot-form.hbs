@@ -1,5 +1,5 @@
 <ModalDialog @title={{this.formTitle}} as |Modal|>
-  <ChForm @formId="slot" @originalModel={{@slot}} @validator={{this.slotValidations}}
+  <ChForm @formId="slot" @formFor={{@slot}} @validator={{this.slotValidations}}
           @onSubmit={{@onSave}} @onCancel={{@onCancel}} as |f|>
     <Modal.body>
       <div class="form-row">

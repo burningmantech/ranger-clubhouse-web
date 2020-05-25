@@ -62,7 +62,7 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
 
 {{#if this.entry}}
   <ModalDialog @title={{if this.entry.isNew "New Asset" "Edit Asset"}} as |Modal|>
-    <ChForm @formId="asset" @originalModel={{this.entry}} @validator={{this.assetValidations}}
+    <ChForm @formId="asset" @formFor={{this.entry}} @validator={{this.assetValidations}}
             @onSubmit={{action this.saveAsset}} @onCancel={{action this.cancelAsset}} as |f|>
       <Modal.body>
         <div class="form-row">

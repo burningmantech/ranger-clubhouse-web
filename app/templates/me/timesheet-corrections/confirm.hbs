@@ -28,7 +28,7 @@
       timesheet is accurate.
     </p>
   {{else}}
-    <ChForm @formId="confirm" @originalModel={{this.confirmForm}} @onSubmit={{this.confirmAction}} as |f|>
+    <ChForm @formId="confirm" @formFor={{this.confirmForm}} @onSubmit={{this.confirmAction}} as |f|>
       <div class="form-row">
           By checking the box below, you are agreeing to:
       </div>

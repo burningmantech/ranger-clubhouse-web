@@ -1,6 +1,4 @@
-<ChForm @formId="person" @originalModel={{@person}} @validator={{this.emergencyContactValidations}}
-        @onSubmit={{this.saveAction}}
-        @onCancel={{@onCancel}} as |f|>
+<ChForm @formId="person" @formFor={{@person}} @onSubmit={{this.saveAction}} @onCancel={{@onCancel}} as |f|>
   <p class="m-2">
     Supply your emergency contact information for both on-playa and off-playa contacts.<br>
     <strong>Off-Playa:</strong>

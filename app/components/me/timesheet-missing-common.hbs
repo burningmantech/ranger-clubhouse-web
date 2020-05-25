@@ -73,7 +73,7 @@
 
 {{#if this.entry}}
   <ModalDialog @title="Missing Timesheet Request" as |Modal|>
-    <ChForm @formId="tm" @originalModel={{this.entry}}  @validator={{this.timesheetValidations}}
+    <ChForm @formId="tm" @formFor={{this.entry}}  @validator={{this.timesheetValidations}}
             @onSubmit={{this.saveAction}} @onCancel={{this.cancelAction}} as |f|>
       <Modal.body>
         <div class="form-group mb-4">

@@ -1,4 +1,4 @@
-<ChForm @formId="bmid" @originalModel={{@entry}} @onSubmit={{@onSave}} @onCancel={{@onCancel}} as |f|>
+<ChForm @formId="bmid" @formFor={{@entry}} @onSubmit={{@onSave}} @onCancel={{@onCancel}} as |f|>
   <p>
     {{#if @entry.wap_id}}
       WAP ID #{{@entry.wap_id}} - {{@entry.wapTypeHuman}} - {{@entry.wap_status}}

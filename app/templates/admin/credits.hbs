@@ -84,7 +84,7 @@
 
 {{#if this.credit}}
   <ModalDialog @title={{if this.credit.isNew "New Position Credit"  "Edit Position Credit"}} as |Modal|>
-    <ChForm @formId="credit-form" @originalModel={{this.credit}} @validator={{this.creditValidations}}
+    <ChForm @formId="credit-form" @formFor={{this.credit}} @validator={{this.creditValidations}}
             @onSubmit={{this.saveCredit}} @onCancel={{this.cancelCredit}} as |f|>
       <Modal.body>
         <div class="form-row">
@@ -122,7 +122,7 @@
 
 {{#if this.copyParams}}
   <ModalDialog @title="Copy Credits" as |Modal|>
-    <ChForm @formId="copyCredits" @originalModel={{this.copyParams}} @changeSet={{false}}
+    <ChForm @formId="copyCredits" @formFor={{this.copyParams}} @changeSet={{false}}
             @validator={{this.copyValidations}} @onSubmit={{this.performCopy}}
             @onCancel={{this.cancelCopy}} as |f|>
       <Modal.body>

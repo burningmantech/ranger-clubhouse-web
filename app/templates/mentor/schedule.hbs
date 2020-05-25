@@ -88,7 +88,7 @@
 {{! Add Person dialog box}}
 {{#if this.addPersonForm}}
   <ModalDialog @title={{concat "Add Person To " (shift-format this.slot.begins)}} as |Modal|>
-    <ChForm @formId="search" @originalModel={{this.addPersonForm}}
+    <ChForm @formId="search" @formFor={{this.addPersonForm}}
             @changeSet={{false}} @onFormChange={{this.searchPeopleAction}} @onCancel={{this.cancelSearchAction}} as |f|>
       <Modal.body>
         <div class="form-row">
@@ -138,7 +138,7 @@
 {{! Remove person dialog box}}
 {{#if this.removePersonForm}}
   <ModalDialog @title="Remove Person From Session" as |Modal|>
-    <ChForm @formId="removePerson" @originalModel={{this.removePersonForm}} @changeSet={{false}}
+    <ChForm @formId="removePerson" @formFor={{this.removePersonForm}} @changeSet={{false}}
             @onSubmit={{this.removePersonAction}} @onCancel={{this.cancelRemovePersonAction}} as |f|>
       <Modal.body>
         <div class="form-row">

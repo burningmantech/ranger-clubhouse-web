@@ -1,5 +1,5 @@
 <ModalDialog @title="Edit Roles" as |Modal|>
-  <ChForm @formId="roles" @originalModel={{this.roleForm}} @onSubmit={{this.save}} @onCancel={{@onCancel}} as |f|>
+  <ChForm @formId="roles" @formFor={{this.roleForm}} @onSubmit={{this.save}} @onCancel={{@onCancel}} as |f|>
     <Modal.body>
       <div class="form-row">
         <f.input @name="roleIds" @type="checkboxGroup" @wrapClass="form-row" @options={{this.roleOptions}} />

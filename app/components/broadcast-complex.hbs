@@ -108,7 +108,7 @@
       Nobody was found matching the criteria.
     </ChAlert>
   {{/if}}
-  <ChForm @formId="broadcastForm" @originalModel={{this.broadcastForm}}
+  <ChForm @formId="broadcastForm" @formFor={{this.broadcastForm}}
           @validator={{this.broadcastValidations}}
           @onSubmit={{this.reviewAction}} as |f|>
     {{#if @broadcast.alerts}}

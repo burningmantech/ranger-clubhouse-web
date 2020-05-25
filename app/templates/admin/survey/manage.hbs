@@ -118,7 +118,7 @@
 {{#if this.groupEntry}}
   <ModalDialog @title={{if this.groupEntry.isNew "Create New Group" (concat "Edit Group ID #" this.groupEntry.id)}} as
                |Modal|>
-    <ChForm @formId="survey-group" @originalModel={{this.groupEntry}} @onSubmit={{this.saveGroupAction}}
+    <ChForm @formId="survey-group" @formFor={{this.groupEntry}} @onSubmit={{this.saveGroupAction}}
             @onCancel={{this.cancelGroupAction}} as |f|>
       <Modal.body>
         <div class="form-row mb-2">
@@ -147,7 +147,7 @@
 {{#if this.questionEntry}}
   <ModalDialog @title={{if this.questionEntry.isNew "Add Question" (concat "Edit Question ID #" this.questionEntry.id)}}
                as |Modal|>
-    <ChForm @formId="survey-group" @originalModel={{this.questionEntry}} @onSubmit={{this.saveQuestionAction}}
+    <ChForm @formId="survey-group" @formFor={{this.questionEntry}} @onSubmit={{this.saveQuestionAction}}
             @onCancel={{this.cancelQuestionAction}} as |f|>
       <Modal.body>
         <div class="form-row mb-2">

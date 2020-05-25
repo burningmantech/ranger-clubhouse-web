@@ -51,7 +51,7 @@ Showing {{this.viewSettings.length}} of {{this.settings.length}}
 
 {{#if this.editSetting}}
   <ModalDialog @title={{concat  "Edit Setting " this.editSetting.name}} as |Modal|>
-    <ChForm @formId="setting" @originalModel={{this.editSetting}}
+    <ChForm @formId="setting" @formFor={{this.editSetting}}
             @onSubmit={{this.save}} @onCancel={{this.cancel}} as |f|>
       <Modal.body>
         {{#if this.editSetting.description}}

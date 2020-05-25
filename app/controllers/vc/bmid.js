@@ -1,12 +1,9 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
-import { isEmpty } from '@ember/utils';
-import { schedule, later } from '@ember/runloop';
-import {
-  MealOptions,
-  BmidStatusOptions,
-  ShowerOptions
-} from 'clubhouse/constants/bmid';
+import {action, computed, get} from '@ember/object';
+import {isEmpty} from '@ember/utils';
+import {schedule, later} from '@ember/runloop';
+import { tracked } from '@glimmer/tracking';
+import {MealOptions, BmidStatusOptions, ShowerOptions} from 'clubhouse/constants/bmid';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import Changeset from 'ember-changeset';
 
@@ -31,26 +28,44 @@ const CSV_COLUMNS = [
   'access_date',
 ];
 
+const TEXT_FILTER_FIELDS = [
+  'person.callsign',
+  'title1',
+  'title2',
+  'title3',
+  'team',
+  'notes'
+];
+
 export default class VcBmidController extends Controller {
-  queryParams = [ 'year', 'filter' ];
+  queryParams = ['year', 'filter'];
 
   bmidStatusOptions = BmidStatusOptions;
   mealOptions = MealOptions;
   showerOptions = ShowerOptions;
 
   filterOptions = [
-    [ 'Specials (titles, meals, showers, or early arrival)', 'special' ],
-    [ 'Alphas', 'alpha' ],
-    [ 'Vets w/shift after 8/10 OR PASSED training; excludes PNVs', 'signedup' ],
-    [ 'BMIDs marked as "Issues" or "Do Not Print"', 'nonprint' ],
-    [ 'Submitted BMIDs', 'submitted' ],
-    [ 'Printed BMIDs', 'printed' ],
-    [ 'No shift signups', 'no-shifts' ]
+    ['Specials (titles, meals, showers, or early arrival)', 'special'],
+    ['Alphas', 'alpha'],
+    ['Vets w/shift after 8/10 OR PASSED training; excludes PNVs', 'signedup'],
+    ['BMIDs marked as "Issues" or "Do Not Print"', 'nonprint'],
+    ['Submitted BMIDs', 'submitted'],
+    ['Printed BMIDs', 'printed'],
+    ['No shift signups', 'no-shifts']
   ];
 
-  sortColumn = 'callsign';
-  titleFilter = 'All';
-  teamFilter = 'All';
+  @tracked sortColumn = 'callsign';
+  @tracked titleFilter = 'All';
+  @tracked teamFilter = 'All';
+  @tracked textFilter = '';
+  @tracked textFilterInput = '';
+  @tracked textFilterError = null;
+
+  @tracked isRendering = false;
+  @tracked renderBmids = [];
+  @tracked editableBmids = [];
+
+  @tracked entry = null;
 
   sortOptions = [
     'callsign',
@@ -67,38 +82,29 @@ export default class VcBmidController extends Controller {
   ];
 
 
-  textFilterFields = [
-    'person.callsign',
-    'title1',
-    'title2',
-    'title3',
-    'team',
-    'notes'
-  ];
 
   constructor() {
     super(...arguments);
 
     this.addObserver('viewBmids', this.startRenderBmids);  // eslint-disable-line ember/no-observers
     this.addObserver('bmids', this.startRenderBmids);  // eslint-disable-line ember/no-observers
-    this.addObserver('editMode', this.startRenderBmids); // eslint-disable-line ember/no-observers
   }
 
   /*
    * Return the BMIDs to view which is filtered, and sorted
    */
 
-  @computed('bmids.[]', 'sortColumn', 'teamFilter', 'textFilter', 'textFilterFields', 'titleFilter')
+  @computed('bmids.[]', 'teamFilter', 'textFilter', 'titleFilter', 'sortColumn')
   get viewBmids() {
     let bmids = this.bmids;
     const titleFilter = this.titleFilter;
     let key;
 
-    if (this.titleFilter != 'All') {
-      bmids = bmids.filter((bmid) => (bmid.title1 == titleFilter || bmid.title2 == titleFilter || bmid.title3 == titleFilter ));
+    if (this.titleFilter !== 'All') {
+      bmids = bmids.filter((bmid) => (bmid.title1 === titleFilter || bmid.title2 === titleFilter || bmid.title3 === titleFilter));
     }
 
-    if (this.teamFilter != 'All') {
+    if (this.teamFilter !== 'All') {
       bmids = bmids.filter((bmid) => (!isEmpty(bmid.team) && bmid.team.indexOf(this.teamFilter) !== -1));
     }
 
@@ -107,7 +113,7 @@ export default class VcBmidController extends Controller {
 
       bmids = bmids.filter((bmid) => {
         let haveMatch = false;
-        this.textFilterFields.forEach((field) => {
+        TEXT_FILTER_FIELDS.forEach((field) => {
           const value = bmid.get(field);
 
           if (!isEmpty(value) && regexp.test(value)) {
@@ -122,11 +128,7 @@ export default class VcBmidController extends Controller {
     switch (this.sortColumn) {
       case 'callsign':
         // Sort by callsign
-        bmids.sort((a,b) => {
-          const personA = (a.person ? a.person.callsign.toLowerCase() : `Deleted #${a.person_id}`);
-          const personB = (b.person ? b.person.callsign.toLowerCase() : `Deleted #${b.person_id}`);
-          return personA.localeCompare(personB);
-        });
+        bmids.sort((a, b) => a.sortCallsign.localeCompare(b.sortCallsign));
         break;
 
       case 'status':
@@ -137,63 +139,56 @@ export default class VcBmidController extends Controller {
       case 'team':
       case 'notes':
         key = this.sortColumn;
-        bmids.sort((a,b) => {
-          const aCol = a[key], bCol = b[key];
+        bmids.sort((a, b) => {
+          const aCol = get(a, key), bCol = get(b, key);
 
           // Have empty values appear at the end
-          if (!aCol) { return 1; }
-          if (!bCol) { return -1; }
+          if (isEmpty(aCol)) {
+            return 1;
+          }
+          if (isEmpty(bCol)) {
+            return -1;
+          }
 
           const result = aCol.toLowerCase().localeCompare(bCol.toLowerCase());
           if (result) {
             return result;
           }
-
-          const personA = (a.person ? a.person.callsign.toLowerCase() : `Deleted #${a.person_id}`);
-          const personB = (b.person ? b.person.callsign.toLowerCase() : `Deleted #${b.person_id}`);
-          return personA.localeCompare(personB);
+          return a.sortCallsign.localeCompare(b.sortCallsign);
         });
         break;
 
       case 'mvr':
         // With Insurance first
-        bmids.sort((a,b) => {
+        bmids.sort((a, b) => {
           const result = b.org_vehicle_insurance - a.org_vehicle_insurance;
           if (result) {
             return result;
           }
 
-          const personA = (a.person ? a.person.callsign.toLowerCase() : `Deleted #${a.person_id}`);
-          const personB = (b.person ? b.person.callsign.toLowerCase() : `Deleted #${b.person_id}`);
-          return personA.localeCompare(personB);
+          return a.sortCallsign.localeCompare(b.sortCallsign);
         });
         break;
 
       case 'showers':
         // With showers first
-        bmids.sort((a,b) => {
+        bmids.sort((a, b) => {
           const result = b.showers - a.showers;
           if (result) {
             return result;
           }
 
-          const personA = (a.person ? a.person.callsign.toLowerCase() : `Deleted #${a.person_id}`);
-          const personB = (b.person ? b.person.callsign.toLowerCase() : `Deleted #${b.person_id}`);
-          return personA.localeCompare(personB);
-
+          return a.sortCallsign.localeCompare(b.sortCallsign);
         });
         break;
 
       case 'wap':
-        bmids.sort((a,b) => {
+        bmids.sort((a, b) => {
           const result = a.access_date_sortable - b.access_date_sortable;
           if (result) {
             return result;
           }
-          const personA = (a.person ? a.person.callsign.toLowerCase() : `Deleted #${a.person_id}`);
-          const personB = (b.person ? b.person.callsign.toLowerCase() : `Deleted #${b.person_id}`);
-          return personA.localeCompare(personB);
-
+          return a.sortCallsign.localeCompare(b.sortCallsign);
         });
         break;
     }
@@ -211,17 +206,19 @@ export default class VcBmidController extends Controller {
 
   _setRenderBmidsSlice(startSlice) {
     const viewBmids = this.viewBmids;
-    let slice =  viewBmids.slice(startSlice, startSlice + BMID_RENDER_SLICE);
-    this.set('renderBmids', this.renderBmids.concat(slice));
+    let slice = viewBmids.slice(startSlice, startSlice + BMID_RENDER_SLICE);
+    this.renderBmids = this.renderBmids.concat(slice);
     slice = slice.map((row) => new Changeset(row));
-    this.set('editableBmids', this.editableBmids.concat(slice));
+    this.editableBmids = this.editableBmids.concat(slice);
 
     if (this.renderBmids.length < viewBmids.length) {
       schedule('afterRender', this, () => {
-        later(() => { this._setRenderBmidsSlice(startSlice + BMID_RENDER_SLICE) }, 1)
+        later(() => {
+          this._setRenderBmidsSlice(startSlice + BMID_RENDER_SLICE)
+        }, 1)
       });
     } else {
-      this.set('isRendering', false);
+      this.isRendering = false;
     }
   }
 
@@ -235,17 +232,20 @@ export default class VcBmidController extends Controller {
       return;
     }
 
+
     if (this.viewBmids.length < 200) {
       // Don't bother with smaller batches
-      this.set('renderBmids', this.viewBmids);
-      this.set('editableBmids', this.viewBmids);
+      this.renderBmids = this.viewBmids;
+      this.editableBmids = this.viewBmids;
       return;
     }
 
-    this.set('isRendering', true);
-    this.set('renderBmids', []);
-    this.set('editableBmids', []);
-    later(() => { this._setRenderBmidsSlice(0) }, 1);
+    this.isRendering = true;
+    this.renderBmids = [];
+    this.editableBmids = [];
+    later(() => {
+      this._setRenderBmidsSlice(0)
+    }, 1);
   }
 
   /*
@@ -254,7 +254,7 @@ export default class VcBmidController extends Controller {
 
   @computed('editableBmids.@each.isDirty')
   get unsaveRows() {
-    return this.editableBmids.reduce((total, row) => (row.isDirty ? 1 : 0)+total, 0);
+    return this.editableBmids.reduce((total, row) => (row.isDirty ? 1 : 0) + total, 0);
   }
 
   /*
@@ -295,9 +295,9 @@ export default class VcBmidController extends Controller {
     this.bmids.forEach((bmid) => {
       if (!isEmpty(bmid.team)) {
         bmid.team.split(/(\+|\/)/).forEach((word) => {
-          if (word != '+' && word != '/')
+          if (word !== '+' && word !== '/')
             teams[word] = true;
-         });
+        });
       }
     });
 
@@ -319,16 +319,17 @@ export default class VcBmidController extends Controller {
   @action
   toggleEditMode() {
     this.toggleProperty('editMode');
+    this.startRenderBmids();
   }
 
   @action
   editBmid(bmid) {
-    this.set('entry', bmid);
+    this.entry = bmid;
   }
 
   @action
   cancelBmid() {
-    this.set('entry', null);
+    this.entry = null;
   }
 
   /*
@@ -344,9 +345,9 @@ export default class VcBmidController extends Controller {
 
     model.save().then(() => {
       this.toast.success('BMID successfully updated.');
-      this.set('entry', null);
+      this.entry = null;
     })
-    .catch((response) => this.house.handleErrorResponse(response));
+      .catch((response) => this.house.handleErrorResponse(response));
   }
 
   /*
@@ -358,7 +359,7 @@ export default class VcBmidController extends Controller {
     model.save().then(() => {
       this.toast.success('BMID successfully updated.');
     })
-    .catch((response) => this.house.handleErrorResponse(response));
+      .catch((response) => this.house.handleErrorResponse(response));
   }
 
   /*
@@ -367,8 +368,8 @@ export default class VcBmidController extends Controller {
 
   @action
   textFilterAction() {
-    this.set('textFilterError', '');
     const filter = this.textFilterInput;
+    this.textFilterError = '';
 
     if (isEmpty(filter)) {
       return;
@@ -376,17 +377,17 @@ export default class VcBmidController extends Controller {
 
     try {
       RegExp(filter);
-      this.set('textFilter', filter);
-    } catch(e) {
-      this.set('textFilterError', e.toString());
+      this.textFilter = filter;
+    } catch (e) {
+      this.textFilterError = e.toString();
     }
   }
 
   @action
   clearTextFilterAction() {
-    this.set('textFilter', '');
-    this.set('textFilterInput', '');
-    this.set('textFilterError', '');
+    this.textFilter = '';
+    this.textFilterInput = '';
+    this.textFilterError = '';
   }
 
   /*
@@ -464,6 +465,7 @@ export default class VcBmidController extends Controller {
 
   @action
   sortBmidsAction(column) {
-    this.set('sortColumn', column);
+    this.sortColumn = column;
+    this.startRenderBmids();
   }
 }

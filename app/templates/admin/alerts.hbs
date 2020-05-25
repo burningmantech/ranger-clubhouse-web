@@ -39,7 +39,7 @@ Showing {{pluralize this.alerts.length "alert"}}
 
 {{#if this.entry}}
   <ModalDialog @title={{if entry.isNew "New Alert" "Edit Alert"}} as |Modal|>
-    <ChForm @formId="alert" @originalModel={{this.entry}}
+    <ChForm @formId="alert" @formFor={{this.entry}}
             @onSubmit={{action this.saveAlert}} @onCancel={{action this.cancelAlert}} as |f|>
       <Modal.body>
       <div class="form-row">

@@ -183,7 +183,7 @@
                   </li>
                 {{/if}}
               </ul>
-              <ChForm @name="delivery" @originalModel={{this.delivery}} @validator={{this.ticketDeliveryValidations}}
+              <ChForm @name="delivery" @formFor={{this.delivery}} @validator={{this.ticketDeliveryValidations}}
                       @onSubmit={{this.saveDelivery}} as |f|>
                 <legend>
                   Enter your mailing address:

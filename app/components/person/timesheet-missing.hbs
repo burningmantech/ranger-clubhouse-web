@@ -62,7 +62,7 @@
 {{#if this.newEntry}}
   <ModalDialog @title="Create New Missing Timesheet Request" as |Modal|>
     <ChForm @formId="entry"
-            @originalModel={{this.newEntry}}
+            @formFor={{this.newEntry}}
             @validator={{this.newEntryValidations}}
             @onSubmit={{this.createEntryAction}}
             @onCancel={{this.cancelNewEntryAction}} as |f|>
@@ -94,7 +94,7 @@
 {{#if editEntry}}
   <ModalDialog @title={{concat "Manage Missing Timesheet Request ID #" editEntry.id}} as |Modal|>
     <ChForm @formId="entry"
-            @originalModel={{this.editEntry}}
+            @formFor={{this.editEntry}}
             @validator={{this.timesheetValidations}}
             @onSubmit={{this.saveEntryAction}}
             @onCancel={{this.cancelEntryAction}} as |f|>

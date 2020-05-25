@@ -1,6 +1,6 @@
 <YearSelect @title="Asset Search" @year={{this.year}} @onChange={{action (mut this.year)}} />
 
-<ChForm @formId="search-form" @originalModel={{this.assetForm}} @validator={{this.searchValidations}}
+<ChForm @formId="search-form" @formFor={{this.assetForm}} @validator={{this.searchValidations}}
         @onSubmit={{this.searchAction}} @formClass="mt-2"
         as |f|>
   <div class="form-row">

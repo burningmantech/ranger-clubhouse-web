@@ -39,7 +39,7 @@
     {{/each}}
 
     {{#if @canAddNote}}
-      <ChForm @formId="person-note" @originalModel={{this.noteForm}}
+      <ChForm @formId="person-note" @formFor={{this.noteForm}}
               @onSubmit={{this.submitNoteAction}}  @onCancel={{@closeNoteAction}} as |f|>
         <b>Your note will be timestamped, and appended to any existing {{@viewYear}} notes.</b>
         <div class="row mt-2">

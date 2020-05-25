@@ -1,6 +1,6 @@
 <ModalDialog @title="Send A New Clubhouse Message" as |Modal|>
   <ChForm @formId="message-form"
-          @originalModel={{@message}}
+          @formFor={{@message}}
           @validator={{this.personMessageValidations}}
           @onSubmit={{@onSubmit}}
           @onCancel={{@onCancel}} as |f|>

@@ -1,109 +1,103 @@
-{{#if emitTopLabel}}
-  {{#if label}}
-    <label class="{{labelClass}}" for="{{_domId}}">
-      {{label}}{{#if required}} {{requiredLabel}}{{/if}}
-    </label>
-  {{/if}}
-{{/if}}
+<div class={{this.wrapClass}}>
+  {{#if (and this.emitTopLabel @label)~}}
+    <label class={{this.labelClass}} for={{this.domId}}>{{@label}}</label>
+  {{/if~}}
 
-{{#if (eq type "search")}}
-  <AutocompleteInput @placeholder={{placeholder}}
-                     @onSearch={{onSearch}}
-                     @onSelect={{action this.update}}
-                     @onFocus={{onFocus}}
-                     @text={{get model name}} as |item|>
-    {{item}}
-  </AutocompleteInput>
-{{else if (eq type "select")}}
-  <ChForm::Select @name={{name}} @controlClass={{controlClass}} @disabled={{disabled}} @includeBlank={{includeBlank}}
-                  @multiple={{multiple}} @onChange={{action "update"}} @options={{options}} @size={{size}} @value={{get
-          model name}} />
-{{else if (eq type "radioGroup")}}
-  {{#each radioOptions as |option idx|}}
-    <div class="{{wrapClass}}">
-      <input
-              type="radio"
-              class= {{controlClass}}
-                      id = {{concat _domId idx}}
-      onclick  = {{action "update" option.value}}
-      checked  = {{eq (get model name) option.value}}
-      disabled = {{disabled}}
-      >
-      <label class="{{labelClass}}" for="{{concat _domId idx}}">{{option.label}}</label>
-    </div>
-  {{/each}}
-{{else if (eq type "radio")}}
-  <input
-          type="radio"
-          class= {{controlClass}}
-                  id       = {{_domId}}
-          onclick  = {{action "update" value}}
-          checked  = {{eq (get model name) value}}
-          disabled = {{disabled}}
-          >
-  {{#if label}}
-    <label class="form-check-label" for="{{_domId}}">{{label}}</label>
-  {{/if}}
-{{else if (eq type "checkbox")}}
-  <input
-          type="checkbox"
-          class= {{controlClass}}
-                  id         = {{_domId}}
-          name       = {{name}}
-          checked    = {{get model name}}
-          onclick    = {{action "update" value="target.checked"}}
-          >
-  {{#if label}}
-    <label class="form-check-label" for="{{_domId}}">{{label}}</label>
-  {{/if}}
-{{else if (eq type "checkboxGroup")}}
-  <ChForm::CheckboxGroup @name={{name}} @value={{_val}} @options={{options}} @cols={{cols}} @_domId={{_domId}}
-                         @model={{model}} @onUpdate={{action "update"}} />
-{{else if (eq type "textarea")}}
-  <textarea
-          name= {{name}}
-                  id          = {{_domId}}
-          class       = {{concat controlClass " " (if (get model.error name) elementErrorClass)}}
-          placeholder = {{placeholder}}
-          disabled    = {{disabled}}
-          autofocus   = {{autofocus}}
-          rows        = {{rows}}
-          cols        = {{cols}}
-          maxlength   = {{maxlength}}
-          oninput     = {{action "update" value = "target.value"}}
-          >{{_val}}</textarea>
-{{else if (or (eq type "datetime") (eq type "date"))}}
-  <DatetimePicker @autofocus={{autofocus}} @classNames={{controlClass}} @size={{size}} @maxlength={{maxlength}}
-                  @onChange={{action "update"}} @placeholder={{placeholder}} @value={{get model name}} @dateOnly={{eq
-          type "date"}} @startDate={{startDate}} />
-{{else}}
-  <input
-          type= {{type}}
-                  value       = {{get model name}}
-          name        = {{name}}
-          id          = {{_domId}}
-          class       = "{{controlClass}} {{if (get model.error name) elementErrorClass}}"
-          placeholder = {{placeholder}}
-          disabled    = {{disabled}}
-          autofocus   = {{autofocus}}
-          oninput     = {{action "update" value = "target.value"}}
-          maxlength   = {{maxlength}}
-          size        = {{size}}
-          autocomplete = {{autocomplete}}
-          onfocus     = {{onFocus}}
-          inputmode   = {{inputmode}}
-          >
-{{/if}}
+  {{#if (eq @type "search")~}}
+    <AutocompleteInput @placeholder={{@placeholder}}
+                       @onSearch={{@onSearch}}
+                       @onSelect={{this.update}}
+                       @onFocus={{@onFocus}}
+                       @text={{get @model @name}} as |item|>
+      {{item}}
+    </AutocompleteInput>
+  {{else if (eq @type "select")~}}
+    <ChForm::Select @name={{@name}} @controlClass={{this.controlClass}} @disabled={{@disabled}}
+                    @includeBlank={{@includeBlank}}
+                    @multiple={{@multiple}} @onChange={{action this.update}} @options={{@options}} @size={{@size}}
+                    @value={{this._val}} />
+  {{else if (eq @type "radioGroup")~}}
+    {{#each this.radioOptions as |option idx|~}}
+      <div class={{this.wrapClass}}>
+        <input type="radio"
+               class={{this.controlClass}}
+               id={{concat this.domId idx}}
+               onclick={{action this.update option.value}}
+               checked={{eq (get @model @name) option.value}}
+               disabled={{@disabled}}
+        >
+        <label class={{this.labelClass}} for={{concat this.domId idx}}>{{option.label}}</label>
+      </div>
+    {{~/each}}
+  {{else if (eq @type "radio")~}}
+    <input type="radio"
+           class={{this.controlClass}}
+           id={{this.domId}}
+           onclick={{action this.update value}}
+           checked={{eq (get @model @name) value}}
+           disabled={{@disabled}}
+    >
+    {{#if @label}}
+      <label class="form-check-label" for={{this.domId}}>{{@label}}</label>
+    {{/if}}
+  {{else if (eq @type "checkbox")~}}
+    <input type="checkbox"
+           class={{this.controlClass}}
+           id={{this.domId}}
+           name={{@name}}
+           checked={{get @model @name}}
+           onclick={{action this.update value="target.checked"}}
+    >
+    {{#if @label~}}
+      <label class="form-check-label" for={{this.domId}}>{{@label}}</label>
+    {{~/if~}}
+  {{else if (eq @type "checkboxGroup")}}
+    <ChForm::CheckboxGroup @name={{@name}} @value={{this._val}} @options={{@options}} @cols={{@cols}}
+                           @domId={{this.domId}}
+                           @model={{@model}} @onUpdate={{this.update}} />
+  {{else if (eq @type "textarea")}}
+    <textarea
+            name={{@name}}
+            id={{this.domId}}
+            class={{concat this.controlClass " " (if (get @model.error @name) "is-invalid")}}
+            placeholder={{@placeholder}}
+            disabled={{@disabled}}
+            autofocus={{@autofocus}}
+            rows={{@rows}}
+            cols={{@cols}}
+            maxlength={{@maxlength}}
+            oninput={{action this.update value="target.value"}}
+    >{{this._val}}</textarea>
+  {{else if (or (eq @type "datetime") (eq @type "date"))}}
+    <DatetimePicker @autofocus={{@autofocus}} @classNames={{this.controlClass}} @size={{@size}}
+                    @maxlength={{@maxlength}}
+                    @onChange={{this.update}} @placeholder={{@placeholder}} @value={{get @model @name}}
+                    @dateOnly={{eq @type "date"}} @startDate={{@startDate}} />
+  {{else}}
+    <input type={{@type}}
+           value={{get @model @name}}
+           name={{@name}}
+           id={{this.domId}}
+           class="{{this.controlClass}} {{if (get @model.error @name) "is-invalid"}}"
+           placeholder={{@placeholder}}
+           disabled={{@disabled}}
+           autofocus={{@autofocus}}
+           oninput={{action this.update value="target.value"}}
+           maxlength={{@maxlength}}
+           size={{@size}}
+           autocomplete={{@autocomplete}}
+           onfocus={{@onFocus}}
+           inputmode={{@inputmode}}
+    >
+  {{/if~}}
 
-{{#if hint}}
-  <small id="{{_domId}}Help" class="{{hintClass}}">{{nl2br hint}}</small>
-{{/if}}
+  {{#if @hint~}}
+    <small class="form-text text-muted">{{nl2br @hint}}</small>
+  {{~/if~}}
 
-{{#if (or (get model.error name) errors)}}
-  {{#each errors as |msg|}}
-    <div class="{{textErrorClass}}">&bullet; {{msg}}</div>
-  {{/each}}
-  {{#each (get (get model.error name) "validation") as |msg|}}
-    <div class="{{textErrorClass}}">&bullet; {{msg}}</div>
-  {{/each}}
-{{/if}}
+  {{#if (get @model.error @name)~}}
+    {{#each (get (get @model.error @name) "validation") as |msg|~}}
+      <div class="text-danger">&bullet; {{msg}}</div>
+    {{~/each~}}
+  {{/if~}}
+</div>

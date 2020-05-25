@@ -71,7 +71,7 @@ Showing {{pluralize this.documents.length "current access document"}}
 {{#if this.entry}}
   <ModalDialog @title={{concat (if entry.isNew "Create A New" "Edit ") " Access Document For " person.callsign}}
                as |Modal|>
-    <ChForm @formId="entry" @originalModel={{this.entry}}
+    <ChForm @formId="entry" @formFor={{this.entry}}
             @onSubmit={{this.saveAccessDocument}} @onCancel={{this.cancelAccessDocument}} as |f|>
       <Modal.body>
         <div class="form-row">
@@ -129,7 +129,7 @@ Showing {{pluralize this.documents.length "current access document"}}
 
 {{#if this.deliveryEntry}}
   <ModalDialog @title={{concat "Edit Delivery Method for " person.callsign}} as |Modal|>
-    <ChForm @formId="delivery" @originalModel={{this.deliveryEntry}}
+    <ChForm @formId="delivery" @formFor={{this.deliveryEntry}}
             @onSubmit={{this.saveDelivery}}
             @onCancel={{this.cancelDelivery}} as |f|>
       <Modal.body>

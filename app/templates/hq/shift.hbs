@@ -181,7 +181,7 @@
 
 {{#if showCorrectionForm}}
   <ModalDialog @title="Timesheet Entry Correction" as |Modal|>
-    <ChForm @formId="correction" @originalModel={{this.entry}}
+    <ChForm @formId="correction" @formFor={{this.entry}}
             @validator={{this.correctionValidations}}
             @onSubmit={{this.saveEntryCorrection}} @onCancel={{this.cancelEntryCorrection}} as |f|>
       <Modal.body>

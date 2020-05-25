@@ -262,7 +262,7 @@
 
 {{#if this.editStudent}}
   <ModalDialog @title={{concat "Add a note and/or set rank for " this.editStudent.callsign}} as |Modal|>
-    <ChForm @formId="student-form" @originalModel={{this.studentForm}}
+    <ChForm @formId="student-form" @formFor={{this.studentForm}}
             @onSubmit={{this.saveStudentAction}}
             @onCancel={{this.cancelStudentAction}} as |f|>
 
@@ -350,7 +350,7 @@
 {{! Add Person dialog box}}
 {{#if this.addPersonForm}}
   <ModalDialog @title="Add Student To Session" as |Modal|>
-    <ChForm @formId="search" @originalModel={{this.addPersonForm}} @changeSet={{false}}
+    <ChForm @formId="search" @formFor={{this.addPersonForm}} @changeSet={{false}}
             @onFormChange={{action this.searchPeopleAction}} @onCancel={{action this.cancelSearchAction}} as |f|>
       <Modal.body>
         <div class="form-row">

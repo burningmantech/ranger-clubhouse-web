@@ -13,13 +13,15 @@ module('Integration | Component | ch form/field', function(hooks) {
     });
 
     this.set('model', model);
-    await render(hbs`{{ch-form/field "textfield" type="text" model=model label="A Label"}}`);
+
+    await render(hbs`<ChForm::Field @name="textfield"
+                        @type="text" @label="A Label"
+                        @model={{this.model}} @formId="myform" />`);
 
     const input = assert.dom('input[type="text"]');
 
     assert.ok(input, 'Text field present');
     input.hasValue('Hi There');
     assert.dom('label').hasText('A Label', 'Label text should be present');
-
   });
 });

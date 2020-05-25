@@ -37,7 +37,7 @@
 
 <h4>Update Contact Information <HelpPopover @slug="hq-site-checkin-contact-info" /></h4>
 
-<ChForm @formId="contact" @originalModel={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
+<ChForm @formId="contact" @formFor={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
   <div class="form-row">
     <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @autofocus={{true}} @rows=2 @cols=80 />
   </div>

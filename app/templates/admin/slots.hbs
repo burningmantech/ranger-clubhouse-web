@@ -138,7 +138,7 @@
 
 {{#if this.copyParams}}
   <ModalDialog @title="Copy Slots" as |Modal|>
-    <ChForm @formId="copySlots" @originalModel={{this.copyParams}}
+    <ChForm @formId="copySlots" @formFor={{this.copyParams}}
             @changeSet={{false}} @validator={{this.copyValidations}}
             @onSubmit={{this.performCopy}} @onCancel={{this.cancelCopy}} as |f|>
       <Modal.body>

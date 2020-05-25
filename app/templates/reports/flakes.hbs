@@ -15,7 +15,7 @@
 </p>
 
 
-<ChForm @formId="dateform" @originalModel={{this.dateForm}} @onSubmit={{this.submitForm}} as |f|>
+<ChForm @formId="dateform" @formFor={{this.dateForm}} @onSubmit={{this.submitForm}} as |f|>
   <div class="row form-group mt-4">
       <label class="col-form-label">Shift date &amp; time to view:</label>
       <f.input @name="date" @type="datetime" @wrapClass="col-auto" />

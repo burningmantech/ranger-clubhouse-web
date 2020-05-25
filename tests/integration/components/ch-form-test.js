@@ -14,7 +14,7 @@ module('Integration | Component | ch form', function(hooks) {
 
     this.set('formModel', formModel);
     await render(hbs`
-      <ChForm @formId="someform" @originalModel={{this.formModel}} as |f|>
+      <ChForm @formId="someform" @formFor={{this.formModel}} as |f|>
         Some form text
         <f.input @name="field1" @type="text" />
       </ChForm>
