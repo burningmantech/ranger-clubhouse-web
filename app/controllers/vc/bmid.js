@@ -28,6 +28,15 @@ const CSV_COLUMNS = [
   'access_date',
 ];
 
+const TEXT_FILTER_FIELDS = [
+  'person.callsign',
+  'title1',
+  'title2',
+  'title3',
+  'team',
+  'notes'
+];
+
 export default class VcBmidController extends Controller {
   queryParams = ['year', 'filter'];
 
@@ -73,14 +82,6 @@ export default class VcBmidController extends Controller {
   ];
 
 
-  textFilterFields = [
-    'person.callsign',
-    'title1',
-    'title2',
-    'title3',
-    'team',
-    'notes'
-  ];
 
   constructor() {
     super(...arguments);
@@ -112,7 +113,7 @@ export default class VcBmidController extends Controller {
 
       bmids = bmids.filter((bmid) => {
         let haveMatch = false;
-        this.textFilterFields.forEach((field) => {
+        TEXT_FILTER_FIELDS.forEach((field) => {
           const value = bmid.get(field);
 
           if (!isEmpty(value) && regexp.test(value)) {

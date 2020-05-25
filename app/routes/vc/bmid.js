@@ -38,7 +38,7 @@ export default class VcBmidRoute extends Route {
         rec =  this.store.createRecord('bmid', bmid);
       }
 
-      rec.sortCallsign = (bmid.person ? bmid.person.callsign.toLowerCase() : `Deleted #${a.person_id}`);
+      rec.sortCallsign = (bmid.person ? bmid.person.callsign.toLowerCase() : `Deleted #${bmid.person_id}`);
       return rec;
     });
 
