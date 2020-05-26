@@ -25,6 +25,7 @@ export default class ChFormFieldComponent extends Component {
         break;
     }
 
+    this.wrapField = (type !== 'radioGroup' && type !== 'checkboxGroup');
   }
 
   get wrapClass() {
@@ -36,9 +37,9 @@ export default class ChFormFieldComponent extends Component {
 
     switch (type) {
       case 'checkbox':
-      case 'checkboxGroup':
       case 'radio':
       case 'radioGroup':
+      case 'checkboxGroup':
         return (this.args.inline ? 'form-check form-check-inline' : 'form-check');
 
       case 'search':
