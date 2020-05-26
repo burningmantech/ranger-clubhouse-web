@@ -1,9 +1,7 @@
 <h1>People By Special Teams</h1>
 <p>
   This report shows the hours worked by Rangers in chosen positions (special
-  teams) for the years chosen. If you check the "Show Inactives" box, the report
-  will also include people who are qualified to work that team but who didn't
-  work any hours.
+  teams) for the years chosen.
 </p>
 
 <div class="border border-dark p-4 mb-2">
@@ -11,8 +9,7 @@
           @onSubmit={{this.searchTeamsAction}} as |f|>
     <div class="row form-group">
       <label class="col-form-label-fixed">Teams:</label>
-      <f.input @name="positionIds" @type="checkboxGroup" wrapClass="form-row" @options={{this.positionOptions}}
-               @cols=4/>
+      <f.input @name="positionIds" @type="checkboxGroup" @options={{this.positionOptions}} @cols=4/>
     </div>
     <div class="row form-group">
       <label class="col-form-label col-form-label-fixed">Year range:</label>

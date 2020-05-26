@@ -19,8 +19,7 @@ export default class ChFormCheckboxGroupComponent extends Component {
     super(...arguments);
 
     this.gridClass = this.args.gridClass || 'col-auto';
-    this.cols = isEmpty(this.args.cols) ? 3 : this.args.cols;
-
+    this.cols = isEmpty(this.args.cols) ? 3 : +this.args.cols;
     const options = this.args.options || [];
     let values = this.args.value;
 
@@ -35,6 +34,7 @@ export default class ChFormCheckboxGroupComponent extends Component {
     const columns = inGroups(options, this.cols, true);
     this.checkboxes = [];
 
+    let index = 0;
     this.checkboxColumns = columns.map((column) => {
       return column.map((opt) => {
         const type = typeOf(opt);
@@ -58,7 +58,8 @@ export default class ChFormCheckboxGroupComponent extends Component {
             break;
 
         }
-        const field = new ChFormCheckboxField({label, value, isChecked: values.includes(value)});
+        const field = new ChFormCheckboxField({label, value, isChecked: values.includes(value), index });
+        index++;
         this.checkboxes.push(field);
         return field;
       })

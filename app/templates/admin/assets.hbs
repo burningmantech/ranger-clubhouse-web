@@ -76,19 +76,15 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
         </div>
         <div class="form-row">
           <label class="col-auto">Assignment</label>
-        </div>
-        <div class="form-row">
           <div class="col-auto">
-            <f.input @name="perm_assign" @type="radioGroup" @options={{this.permanentOptions}} @inline=true/>
+            <f.input @name="perm_assign" @type="radioGroup" @options={{this.permanentOptions}} @inline={{true}}/>
           </div>
         </div>
 
         {{#if entry.isNew}}
-          <div class="form-row mt-2">
-            <label class="col-auto">Copies (including the first) - Leave blank if only creating one</label>
-          </div>
           <div class="form-row">
-            <f.input @name="copies" @type="text" @size=4 @maxlength=4 @controlClass="form-control" @grid="col-auto"/>
+            <label class="col-12">Copies (including the first) - Leave blank if only creating one</label>
+             <f.input @name="copies" @type="text" @size=4 @maxlength=4 @controlClass="form-control" @grid="col-auto"/>
           </div>
         {{/if}}
         <fieldset>
