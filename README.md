@@ -17,14 +17,14 @@ You will need the following things properly installed on your computer.
 ## Installation
 
 * `git clone <repository-url>` this repository
-* `cd deploy`
+* `cd ranger-clubhouse-web`
 * `npm install`
 
 ## Running / Development
 
 * Make sure the API server is running, see ranger-clubhouse-api/README.md
 
-* Start the Clubhouse `ember serve`
+* Start the Clubhouse `npm start`
 * Visit the Clubhouse at [http://localhost:4200](http://localhost:4200).
 * Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
 
