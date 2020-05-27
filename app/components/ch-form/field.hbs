@@ -8,7 +8,7 @@
       <ChForm::Select @name={{@name}} @controlClass={{this.controlClass}} @disabled={{@disabled}}
                       @includeBlank={{@includeBlank}}
                       @multiple={{@multiple}} @onChange={{action this.update}} @options={{@options}} @size={{@size}}
-                      @value={{this._val}} />
+                      @value={{get @model @name}} />
     {{else if (eq @type "radio")~}}
       <input type="radio"
              class={{this.controlClass}}
@@ -83,7 +83,7 @@
   {{/if~}}
 
   {{#if (eq @type "checkboxGroup")}}
-    <ChForm::CheckboxGroup @name={{@name}} @value={{this._val}} @options={{@options}} @cols={{@cols}}
+    <ChForm::CheckboxGroup @name={{@name}} @value={{get @model @name}} @options={{@options}} @cols={{@cols}}
                            @domId={{this.domId}}
                            @model={{@model}} @onUpdate={{this.update}} />
   {{else if (eq @type "radioGroup")~}}

@@ -13,7 +13,7 @@ export default class ChFormComponent extends Component {
 
   @tracked model;
 
-  watchingModel = false;
+  watchingModel = null;
 
   constructor() {
     super(...arguments);
@@ -38,7 +38,7 @@ export default class ChFormComponent extends Component {
     } else {
       this.model = new Changeset(formFor);
     }
-
+    
     /*
      * Magic going on here. When the backing model updates from the server,
      * the ember-changeset object will be updated as well BUT NO observers
@@ -53,7 +53,7 @@ export default class ChFormComponent extends Component {
      * build a new changeset object which has the most recent data.
      */
 
-    if (formFor instanceof Model) {
+    if (!this.watchingModel && formFor instanceof Model) {
       set(formFor, 'onSaved', () => this._buildChangeSet());
       this.watchingModel = formFor;
     }
