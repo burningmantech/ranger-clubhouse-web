@@ -10,7 +10,7 @@
   <ChForm @formId="query" @formFor={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
     <div class="form-row">
       <f.input @name="person" @label="Person" @type="text" @size=30 @grid="col-sm-12 col-md-2"
-               @controlClass="form-control form-control-sm" @hint="Callsign or person id"/>
+               @controlClass="form-control form-control-sm" @hint="Callsign or person id" />
       <f.input @name="start_time" @label="Start time" @controlClass="form-control form-control-sm" @type="datetime"
                @size=30 @grid="col-sm-12 col-md-2"/>
       <f.input @name="end_time" @label="End time" @controlClass="form-control form-control-sm" @type="datetime" @size=30
@@ -18,7 +18,7 @@
     </div>
     <div class="form-group row mb-2">
       <label class="col-1">Events</label>
-      <f.input @name="events" @type="checkboxGroup" @cols=3 @options={{this.eventOptions}} />
+      <f.input @name="events" @type="checkboxGroup" @cols=4 @options={{this.eventOptions}} />
     </div>
     <div class="form-row mb-2">
       <label class="col-1">Sort</label>
@@ -26,7 +26,7 @@
         <f.input @name="sort" @type="radioGroup" @options={{this.sortOptions}} @label="Sort" @inline=true/>
       </div>
     </div>
-    <f.submit @label="Search"/>
+    <f.submit @label="Search" />
     <button type="button" class="btn btn-secondary" {{action this.resetFilters f.model}}>Reset</button>
   </ChForm>
 

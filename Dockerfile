@@ -4,11 +4,7 @@
 # Note we need a version of Node that is supported by ember-cli.
 # See: https://github.com/ember-cli/ember-cli/blob/master/docs/node-support.md
 #
-FROM node:10.15-alpine as development
-
-# Install Yarn
-RUN apk add --no-cache yarn;
-RUN yarn --version;
+FROM node:14.3.0-alpine as development
 
 # Install Ember CLI
 # "unsafe-perm" step is a workaround for a bug.
@@ -35,8 +31,8 @@ COPY ./.eslintignore      ./
 COPY ./.eslintrc.js       ./
 COPY ./ember-cli-build.js ./
 COPY ./package.json       ./
+COPY ./package-lock.json  ./
 COPY ./testem.js          ./
-COPY ./yarn.lock          ./
 
 
 # -----------------------------------------------------------------------------
@@ -46,7 +42,7 @@ COPY ./yarn.lock          ./
 FROM development as build
 
 # Install dependencies
-RUN yarn install;
+RUN npm install;
 
 # Build the application
 RUN ember build --environment production;

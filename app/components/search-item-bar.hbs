@@ -7,7 +7,7 @@
   <ChForm @formId="search-bar-form"
           @formFor={{this.searchForm}}
           @changeSet={{false}}
-          @formClass="col-sm-11 col-md-10 col-lg-8 mb-2 mx-2"
+          @formClass="col-sm-11 col-md-10 col-lg-6 mb-2 mx-2"
           @onFormChange={{action this.searchFormChange}} as |f|>
     <AutocompleteInput @placeholder={{this.searchPlaceholder}}
                        @onSearch={{action this.searchAction}}

@@ -1,8 +1,12 @@
 <h1>{{year-format this.slot.begins}} {{this.training.title}} - {{shift-format this.slot.begins}}
   - {{this.slot.description}}</h1>
-
+<p>
+  <LinkTo @route="training.index" @model={{this.training.id}} @query={{hash year=this.year}}>
+    Back to {{this.year}} {{this.training.title}} Sessions
+  </LinkTo>
+</p>
 {{#unless this.trainers}}
-  <div class="border p-2 rounded mt-2 mb-2">
+  <div class="border p-2 rounded mb-2">
     <h4 class="text-danger">{{fa-icon "exclamation-triangle"}} No trainer slots were found.</h4>
     In order to correctly record how many trainers are signed up to teach this session, a trainer's slot needs to exists
     where the slot's description matches this session's description exactly and where the start time within one hour of
@@ -53,7 +57,6 @@
   {{/if}}
 </div>
 
-
 {{#if this.trainers}}
   <p>
     {{#each this.trainers as |group|}}
@@ -74,7 +77,7 @@
 </p>
 
 {{#if this.training.is_art}}
-  A {{fa-icon "asterisk"}} by a person's status indicate an ART Prospective.
+  A {{fa-icon "asterisk"}} by a person's status indicates an ART Prospective.
 {{/if}}
 
 

@@ -4,6 +4,7 @@ import {debounce} from '@ember/runloop';
 import {action, computed} from '@ember/object';
 import {slotSignup} from 'clubhouse/utils/slot-signup';
 import _ from 'lodash';
+import moment from 'moment';
 
 const SEARCH_RATE_MS = 300;
 
@@ -51,6 +52,10 @@ export default class TrainingSlotController extends Controller {
     });
 
     return passed;
+  }
+
+  get year() {
+    return moment(this.slot.begins).year();
   }
 
   /**

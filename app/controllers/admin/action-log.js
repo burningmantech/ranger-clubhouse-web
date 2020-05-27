@@ -5,21 +5,20 @@ import { debounce } from '@ember/runloop';
 import RSVP from 'rsvp';
 
 const EventOptions = [
+    [ 'BMID Changes', 'bmid-%' ],
     [ 'Client Routing', 'client-route' ],
     [ 'Login Failures', 'auth-failed' ],
-    [ 'Login', 'auth-login' ],
+    [ 'Logins', 'auth-login' ],
     [ 'Password Resets', 'auth-password-%' ],
     [ 'Person Creation Fails', 'person-create-fail' ],
     [ 'Person Creation', 'person-create' ],
     [ 'Person Update', 'person-update' ],
-    [ 'Position Grant/Revokes', 'person-position-%' ],
     [ 'Position Changes', 'position-%' ],
+    [ 'Position Grant/Revokes', 'person-position-%' ],
     [ 'Role Changes', 'person-role-%' ],
     [ 'Schedule Updates', 'person-slot-%' ],
     [ 'Slot Changes', 'slot-%' ],
     [ 'Status Changes', 'person-status-change' ],
-    [ 'BMID Changes', 'bmid-%' ],
-    [ 'Lambase Interactions', 'lambase-%' ],
     [ 'Ticketing Changes', 'access-document-%' ]
 ];
 
