@@ -374,50 +374,44 @@
 {{/if}}
 
 {{#if this.showConfirmNoteOrMessage}}
-  <ModalDialog @title="Add Account Note" as |modal|>
-    <modal.body>
+  <ModalDialog @title="Add Account Note" as |Modal|>
+    <Modal.body>
+      <h4  class="text-danger">A NOTE WILL NOT BE SHOWN TO {{this.person.callsign}}</h4>
       <p>
-        A note will <b class="text-danger">NOT BE SHOWN TO {{this.person.callsign}}</b>. It is only meant to be
-        seen
-        by
-        Admins,
-        HQ Window workers, and Volunteer Coordinators.
+        Notes are only meant to be seen by Admins, HQ Window workers, and Volunteer Coordinators.
       </p>
-      <p>
-        <b>SEND A CLUBHOUSE MESSAGE to leave a message for {{this.person.callsign}}</b>
-      </p>
-      <p>
         Would you rather send a Clubhouse Message?
-      </p>
-    </modal.body>
-    <modal.footer>
+    </Modal.body>
+    <Modal.footer @noAlign={{true}}>
       <button class="btn btn-primary mr-3" {{action this.sendClubhouseMessage}}>Send Clubhouse Message</button>
       <button class="btn btn-primary mr-3" {{action this.editNote}}>Add Note</button>
       <button class="btn btn-secondary" {{action this.closeConfirmNoteOrMessage}}>Cancel</button>
-    </modal.footer>
+    </Modal.footer>
   </ModalDialog>
 {{else if this.showEditNote}}
-  <ModalDialog @title={{if person.messsage "Add Account Note" "Update Account Note"}} as |modal|>
-    <modal.body>
-      <p>
-        The note will be shown to all Volunteer Coordinators, HQ Window Workers, and other Login Management role
-        holders when this account is viewed
-        <span class="text-danger">A NOTE WILL NOT BE SEEN BY THE USER.</span>
-      </p>
-      <p>
-        Examples: "Person is ok to sign-in for pre-event shifts.", "Do not let this person work a shift until
-        this
-        person talks with Hubcap"
-      </p>
-      <p>
-        The note will automatically timestamped when saved or updated.
-      </p>
+  <ModalDialog @title={{if person.messsage "Add Account Note" "Update Account Note"}} as |Modal|>
+    <ChForm @formId="person-note" @formFor={{this.personNote}} @changeSet={{false}}
+            @onSubmit={{this.saveNote}} @onCancel={{this.closeNote}} as |f|>
+      <Modal.body>
+        <p>
+          The note will be shown to all Volunteer Coordinators, HQ Window Workers, and other Login Management role
+          holders when this account is viewed
+          <span class="text-danger">A NOTE WILL NOT BE SEEN BY {{this.person.callsign}}.</span>
+        </p>
+        <p>
+          Examples: "Person is ok to sign-in for pre-event shifts.",
+          "Do not let this person work a shift until this person talks with Hubcap"
+        </p>
+        <p>
+          The note will automatically timestamped when saved or updated.
+        </p>
 
-      <f.input @name="message" @type="textarea" @label="Enter the note to be shown:" @cols=80 @rows=6/>
-    </modal.body>
-    <modal.footer>
-      <modal.button @label="Cancel" @action={{action this.closeNote}} @type="secondary"/>
-      <modal.button @label="Save Note" @action={{action this.saveNote f.model}} @type="primary"/>
-    </modal.footer>
+        <f.input @name="message" @type="textarea" @label="Enter the note to be shown:" @cols=80 @rows=6/>
+      </Modal.body>
+      <Modal.footer>
+        <f.submit @label="Save Note"/>
+        <f.cancel/>
+      </Modal.footer>
+    </ChForm>
   </ModalDialog>
 {{/if}}
