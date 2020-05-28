@@ -56,6 +56,7 @@ export default class PersonIndexController extends Controller {
 
   @tracked showConfirmNoteOrMessage = false;
   @tracked showEditNote = false;
+  @tracked personNote = null;
 
   @tracked isSaving = false;
 
@@ -155,6 +156,7 @@ export default class PersonIndexController extends Controller {
   editNote() {
     this.showConfirmNoteOrMessage = false;
     this.showEditNote = true;
+    this.personNote = { message: this.person.message };
   }
 
   @action
@@ -168,9 +170,14 @@ export default class PersonIndexController extends Controller {
   }
 
   @action
-  saveNote(model) {
+  saveNote() {
     this.toast.clear();
-    this._savePersonModel(model);
+    this.person.message = this.personNote.message;
+    this.person.save().then(() => {
+      this.toast.success('Note update');
+      this.showEditNote = false;
+      this.showConfirmNoteOrMessage =false;
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
