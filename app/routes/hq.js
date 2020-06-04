@@ -50,6 +50,7 @@ export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
     person.set('unread_message_count', model.unread_message_count);
     controller.setProperties(model);
     controller.set('photo', null);
+    controller.set('meals', model.eventInfo.meals);
 
     // Allow the photo to lazy load.
     this.ajax.request(`person/${person.id}/photo`)

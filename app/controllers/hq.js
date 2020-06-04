@@ -17,4 +17,31 @@ export default class HqController extends Controller {
     return false;
   }
 
+  get mealInfo() {
+    switch (this.eventInfo.meals) {
+      case 'all':
+        return 'NO POG - has Eat It All BMID';
+      case 'pre':
+        return "NO POG PRE-EVENT";
+      case 'post':
+        return 'NO POG POST-EVENT';
+      case 'event':
+        return 'NO POG PRE OR POST-EVENT';
+      case 'pre+event':
+        return 'NO POG PRE & EVENT WEEK';
+      case 'event+post':
+        return 'NO POG EVENT & POST EVENT';
+      case 'pre+post':
+        return 'NO POG DURING EVENT';
+
+      case 'pogs':
+        return 'Every shift worked';
+      default:
+        if (!this.eventInfo.meals) {
+          return 'Every shift worked';
+        }
+        return `Unknown ${this.eventInfo.meals}`;
+    }
+  }
+
 }

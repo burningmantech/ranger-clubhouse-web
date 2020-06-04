@@ -1,39 +1,45 @@
-{{#if newMessage}}
-  <MessageNew @message={{newMessage}} @onSubmit={{action submitAction}} @onCancel={{action cancelAction}} @isSubmitting={{isSubmitting}} />
+{{#if this.newMessage}}
+  <MessageNew @message={{this.newMessage}} @onSubmit={{this.submitAction}} @onCancel={{this.cancelAction}}
+              @isSubmitting={{this.isSubmitting}} />
 {{/if}}
 
 <div class="row">
   <div class="col-sm-12 col-md-6 mb-2">
     <div class="form-check form-check-inline">
-      <RadioButton @value="all" @groupValue={{filterMessages}} @radioId="filter-all" @radioClass="form-check-input" />
+      <RadioButton @value="all" @groupValue={{this.filterMessages}} @radioId="filter-all"
+                   @radioClass="form-check-input"/>
       <label for="filter-all" class="form-check-label">All</label>
     </div>
     <div class="form-check form-check-inline">
-      <RadioButton @value="unread" @groupValue={{filterMessages}} @radioId="filter-unread" @classNames="form-check-label" @radioClass="form-check-input" />
-      <label for="filter-unread" class="form-check-label">Unread ({{unreadCount}})</label>
+      <RadioButton @value="unread" @groupValue={{this.filterMessages}} @radioId="filter-unread"
+                   @classNames="form-check-label" @radioClass="form-check-input"/>
+      <label for="filter-unread" class="form-check-label">Unread ({{this.unreadCount}})</label>
     </div>
 
     <div class="form-check form-check-inline">
-      <RadioButton @value="read" @groupValue={{filterMessages}} @radioId="filter-read" @classNames="form-check-label" @radioClass="form-check-input" />
-      <label for="filter-read" class="form-check-label">Read ({{readCount}})</label>
+      <RadioButton @value="read" @groupValue={{this.filterMessages}} @radioId="filter-read"
+                   @classNames="form-check-label"
+                   @radioClass="form-check-input"/>
+      <label for="filter-read" class="form-check-label">Read ({{this.readCount}})</label>
     </div>
   </div>
-  {{#if canSendMessages}}
-    <div class="col-sm-12 col-md-6 text-right">
-      <a href="#" class="btn btn-primary" {{action "newMessageAction"}}>New Message</a>
-    </div>
-  {{/if}}
 </div>
+{{#if this.canSendMessages}}
+  <p>
+    <a href="#" class="btn btn-primary" {{on "click" this.newMessageAction}}>New Message</a>
+  </p>
+{{/if}}
 
-<p class="text-muted">Showing {{pluralize viewMessages.length "message"}}</p>
-{{#if messages}}
-  {{#each viewMessages as |message|}}
+<p class="text-muted">Showing {{pluralize this.viewMessages.length "message"}}</p>
+{{#if @messages}}
+  {{#each this.viewMessages as |message|}}
     <div class="card mb-2">
       <div class="card-body">
         <div class="row">
           <div class="col-sm-12 col-md-8">
             <h5>From: {{message.message_from}}</h5>
-            <h5>{{#unless message.delivered}}<span class="text-danger">&bullet;</span> {{/unless}}Subject: {{message.subject}}</h5>
+            <h5>{{#unless message.delivered}}<span class="text-danger">&bullet;</span> {{/unless}}
+              Subject: {{message.subject}}</h5>
             {{#if message.isDictacted}}
               <div class="text-muted">(written by {{message.creator_callsign}})</div>
             {{/if}}
@@ -48,16 +54,18 @@
         </div>
         <div class="mt-3">
           {{#if message.delivered}}
-            <button {{action markUnreadAction message}} type="button" class="btn btn-secondary" disabled={{isSubmitting}}>
+            <button {{on "click" (fn this.markUnreadAction message)}}
+                    type="button" class="btn btn-secondary" disabled={{message.isSubmitting}}>
               Mark Unread
             </button>
           {{else}}
-            <button {{action markReadAction message}} type="button" class="btn btn-primary" disabled={{isSubmitting}}>
+            <button {{on "click" (fn this.markReadAction message)}}
+                    type="button" class="btn btn-primary" disabled={{message.isSubmitting}}>
               Mark Read
             </button>
           {{/if}}
           {{#if message.isSubmitting}}
-            <LoadingIndicator />
+            <LoadingIndicator/>
           {{/if}}
         </div>
       </div>

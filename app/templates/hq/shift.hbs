@@ -1,7 +1,7 @@
-{{#if isShinyPenny}}
+{{#if this.isShinyPenny}}
   <ChAlert @type="success">
-    <b>{{person.callsign}} is newly minted Shiny Penny. Share the Ranger love and welcome them to the family. {{fa-icon
-            "smile-beam" type="far"}}</b>
+    <b>{{person.callsign}} is newly minted Shiny Penny. Share some Ranger love and welcome them to the family.
+      {{fa-icon "smile-beam" type="far"}}</b>
   </ChAlert>
 {{/if}}
 
@@ -37,60 +37,12 @@
 {{/if}}
 
 <p class="my-2 hours-credits-header">
-  <b>Worked Hours:</b> {{hour-minute-format timesheetSummary.counted_duration}}
   <b>Earned Credits:</b> {{credits-format timesheetSummary.total_credits}}
-  <button class="btn btn-secondary btn-sm" {{action this.toggleHoursCreditBreakdown}}>View Hours &amp; Credits
+  <b>Worked Hours:</b> {{hour-minute-format timesheetSummary.counted_duration}}
+  <button class="btn btn-secondary btn-sm ml-2 align-middle" {{action this.toggleHoursCreditBreakdown}}>View Credits &amp; Hours
     Breakdown
   </button>
 </p>
-<table class="table table-width-auto">
-  <thead>
-  <tr>
-    <th>Meal Pogs</th>
-    <th>Shower Pogs</th>
-    <th>Motorpool Policy</th>
-    <th>Motor Vehicle Record</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td>
-      {{#if (eq this.eventInfo.meals "all")}}
-        {{fa-icon "ban"}} NO POG<br>has All You Can Eat BMID
-      {{else}}
-        {{this.mealInfo}}
-      {{/if}}
-    </td>
-    <td>
-      {{#if eventInfo.showers}}
-        {{fa-icon "ban"}} NO POG<br>has Wet Spot BMID
-      {{else}}
-        Every 40 hours worked
-      {{/if}}
-    </td>
-    {{#if person.vehicle_blacklisted}}
-      <td colspan="2">
-        <b>{{fa-icon "exclamation-triangle"}} Vehicle blacklisted</b>
-      </td>
-    {{else}}
-      <td>
-        {{#if person.vehicle_paperwork}}
-          {{fa-icon "check"}} Signed
-        {{else}}
-          <span class="text-danger">NOT SIGNED</span>
-        {{/if}}
-      </td>
-      <td>
-        {{#if person.vehicle_insurance_paperwork}}
-          Authorized
-        {{else}}
-          NOT AUTHORIZED
-        {{/if}}
-      </td>
-    {{/if}}
-  </tr>
-  </tbody>
-</table>
 
 <hr>
 
@@ -208,7 +160,7 @@
           </ul>
         </div>
         <f.input @name="notes" @label="Timesheet entry correction note:" @type="textarea" @autofocus={{true}} @cols=80
-                 @rows=3 />
+                 @rows=3/>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Submit Correction" @disabled={{this.isCorrectionSubmitting}} />
@@ -275,10 +227,16 @@
   {{#each assetsCheckedOut as |ap|}}
     <tr>
       <td class="align-middle">{{ap.asset.description}}</td>
-      <td class="align-middle"><PresentOrNot @value={{ap.asset.barcode}} @empty="-" /></td>
-      <td class="align-middle"><PresentOrNot @value={{ap.attachment.description}} @empty="-" /></td>
+      <td class="align-middle">
+        <PresentOrNot @value={{ap.asset.barcode}} @empty="-"/>
+      </td>
+      <td class="align-middle">
+        <PresentOrNot @value={{ap.attachment.description}} @empty="-"/>
+      </td>
       <td class="align-middle">{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
-      <td class="align-middle"><PresentOrNot @value={{ap.asset.temp_id}} @empty="-" /></td>
+      <td class="align-middle">
+        <PresentOrNot @value={{ap.asset.temp_id}} @empty="-"/>
+      </td>
       <td class="align-middle">{{shift-format ap.checked_out}}</td>
       <td class="align-middle">
         <button class="btn btn-primary" {{action assetCheckInAction ap}} disabled={{ap.isSubmitting}}>Check In</button>
@@ -302,7 +260,8 @@
 
 {{#if (or person.on_site isMarkingOffSite)}}
   <div class="mt-4">
-    <button class="btn btn-secondary" {{action this.markOffSite}} disabled={{this.isMarkingOffSite}}>Mark As Off Site</button>
+    <button class="btn btn-secondary" {{action this.markOffSite}} disabled={{this.isMarkingOffSite}}>Mark As Off Site
+    </button>
     {{#if this.isMarkingOffSite}}
       <LoadingIndicator/>
     {{/if}}
@@ -355,67 +314,119 @@
         for.
       </p>
       <div class="row">
-        <div class="col-auto">
-          <table class="table table-width-auto table-hover table-striped">
+        <div class="col-6">
+          <table class="table-hover table-striped">
+            <caption>Credits Breakdown</caption>
+            <tbody>
+            <tr>
+              <th>Total Earned Credits</th>
+              <td class="text-right">{{credits-format timesheetSummary.total_credits}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                How many credits have been earned (worked) so far that count towards reduced-price tickets and staff
+                credentials.
+              </td>
+            </tr>
+            <tr>
+              <th>Estimated Credits</th>
+              <td class="text-right">{{credits-format creditsExpected}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                Calculated total credits that might be received based on the credits earned so far
+                and what upcoming shifts the person is signed up for.
+              </td>
+            </tr>
+            <tr>
+              <th>Earned Pre-Event Credits</th>
+              <td class="text-right">{{credits-format timesheetSummary.pre_event_credits}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">How many credits have been earned in the pre-event period (before gate open).</td>
+            </tr>
+            <tr>
+              <th>Earned Event Week Credits</th>
+              <td class="text-right">{{credits-format timesheetSummary.event_credits}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">Credits have been earned during the event week (gate open thru Labor Day)</td>
+            </tr>
+            <tr>
+              <th>Earned Post-Event Credits</th>
+              <td class="text-right">{{credits-format timesheetSummary.post_event_credits}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">Credits have been earned during the post-event week (after Labor Day)</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-6">
+          <table class="table-hover table-striped">
             <caption>Hours Breakdown</caption>
             <tbody>
             <tr>
-              <th class="text-right">Appreciation Hours Total</th>
+              <th>Total Appreciations Hours</th>
               <td class="text-right">{{hour-minute-format timesheetSummary.counted_duration}}</td>
             </tr>
             <tr>
-              <th class="text-right">All Hours Total</th>
-              <td class="text-right"> {{hour-minute-format timesheetSummary.total_duration}}</td>
+              <td colspan="2">
+                The total number of hours which count towards appreciations such as t-shirts, all-you-eat
+                passes, and shower pogs.
+              </td>
             </tr>
             <tr>
-              <th class="text-right">Estimated Hours Total</th>
-              <td class="text-right">{{hour-minute-format countedDurationExpected}}</td>
+              <th>Total Estimated Appreciated Hours</th>
+              <td class="text-right">{{hour-minute-format this.countedDurationExpected}}</td>
             </tr>
             <tr>
-              <th class="text-right">Pre-Event Hours</th>
-
+              <td colspan="2">
+                Calculated total hours which count towards appreciations that might be received based on
+                the hours worked so far and what upcoming shifts the person is signed up for.
+              </td>
+            </tr>
+            <tr>
+              <th>Total Hours</th>
+              <td class="text-right">{{hour-minute-format timesheetSummary.total_duration}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                The total number of hours worked so far that include appreciated and non-appreciated hours.
+              </td>
+            </tr>
+            <tr>
+              <th>Pre-Event Hours</th>
               <td class="text-right">
                 {{hour-minute-format timesheetSummary.pre_event_duration}}
               </td>
             </tr>
             <tr>
-              <th class="text-right">Event Week Hours</th>
+              <td colspan="2">How many hours have been worked in the pre-event period (before gate open).</td>
+            </tr>
+            <tr>
+              <th>Event Week Hours</th>
               <td class="text-right">{{hour-minute-format timesheetSummary.event_duration}}</td>
             </tr>
             <tr>
-              <th class="text-right">Post-Event Hours</th>
+              <td colspan="2">Credits have been earned during the event week (gate open thru Labor Day)</td>
+            </tr>
+            <tr>
+              <th>Post-Event Hours</th>
               <td class="text-right">{{hour-minute-format timesheetSummary.post_event_duration}}</td>
             </tr>
             <tr>
-              <th class="text-right">Training + Other Hours</th>
+              <td colspan="2">The hours have been earned during the post-event week (after Labor Day)</td>
+            </tr>
+            <tr>
+              <th>Hours not counted towards appreciations</th>
               <td class="text-right">{{hour-minute-format timesheetSummary.other_duration}}</td>
             </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="col-auto">
-          <table class="table table-hover table-width-auto table-striped">
-            <caption>Credits Breakdown</caption>
-            <tbody>
             <tr>
-              <th class="text-right">Total Credits</th>
-              <td class="text-right">{{credits-format timesheetSummary.total_credits}}</td>
-            </tr>
-            <tr>
-              <th class="text-right">Estimated Credits</th>
-              <td class="text-right">{{credits-format creditsExpected}}</td>
-            </tr>
-            <tr>
-              <th class="text-right">Pre-Event Credits</th>
-              <td class="text-right">{{credits-format timesheetSummary.pre_event_credits}}</td>
-            </tr>
-            <tr>
-              <th class="text-right">Event Week Credits</th>
-              <td class="text-right">{{credits-format timesheetSummary.event_credits}}</td>
-            </tr>
-            <tr>
-              <th class="text-right">Post-Event Credits</th>
-              <td class="text-right">{{credits-format timesheetSummary.post_event_credits}}</td>
+              <td colspan="2">
+                Some shifts (trainings, certain on-call positions, etc) have hours which are not counted
+                towards appreciations.
+              </td>
             </tr>
             </tbody>
           </table>

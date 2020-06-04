@@ -1,10 +1,13 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import { debounce } from '@ember/runloop';
 import { action } from '@ember/object';
 import RSVP from 'rsvp';
 import PersonMessageValidations from 'clubhouse/validations/person-message';
+import { inject as service } from '@ember/service';
 
 export default class MessageNewComponent extends Component {
+  @service ajax;
+
   personMessageValidations = PersonMessageValidations;
 
   _performSearch(callsign, resolve, reject) {
@@ -14,8 +17,7 @@ export default class MessageNewComponent extends Component {
       return reject();
     }
 
-    return this.ajax
-          .request('callsigns', { data: {query: callsign, type: "message", limit: 20} })
+    return this.ajax.request('callsigns', { data: {query: callsign, type: "message", limit: 20} })
           .then((result) => {
             if (result.callsigns.length > 0) {
               return resolve(result.callsigns.map(row => row.callsign));
