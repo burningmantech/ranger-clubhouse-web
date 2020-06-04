@@ -35,9 +35,9 @@
                    @onSearch={{this.searchCallsignAction}} />
         </div>
       </div>
-      <f.input @name="subject" @label="Subject" @maxlength=80 />
+      <f.input @name="subject" @label="Subject" @maxlength=80/>
       <f.input @name="body" @label="The message (be civil, courteous, polite, & professional)" @type="textarea" @rows=4
-               @cols=80 />
+               @cols=80/>
     </Modal.body>
     <Modal.footer @noAlign=true>
       <f.submit @label="Send" @disabled={{@isSubmitting}} />

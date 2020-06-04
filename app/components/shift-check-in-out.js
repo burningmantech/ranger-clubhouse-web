@@ -1,8 +1,9 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import { set } from '@ember/object';
 import { action, computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import * as Position from 'clubhouse/constants/positions';
+import { tracked } from '@glimmer/tracking';
 
 export default class ShiftCheckInOutComponent extends Component {
   person = null; // Person we're dealing with
@@ -14,21 +15,24 @@ export default class ShiftCheckInOutComponent extends Component {
   hasUnverifiedTimesheet = null; // (optional) true if entries are unverified
   endShiftNotify = null; // (optional) callback when a shift was successfully ended.
 
+  @service ajax;
+  @service house;
+  @service modal;
   @service store;
+  @service toast;
 
-  signinPositionId = null;
+  @tracked signinPositionId = null;
+  @tracked isSubmitting = false;
+  @tracked isReloadingTimesheets = false;
 
-  didReceiveAttrs() {
-    // Set the position options to the first item
-    this.set('signinPositionId', this.signinPositions.firstObject.id);
-
-    const slots = this.imminentSlots;
+  constructor() {
+    super(...arguments);
 
     // Mark immeninate slots as trained or not.
+    const slots = this.args.imminentSlots;
     if (slots) {
-      const positions = this.positions;
       slots.forEach((slot) => {
-        const position = positions.find((p) => slot.position_id == p.id);
+        const position = this.args.positions.find((p) => slot.position_id == p.id);
         if (position) {
           if (position.is_untrained) {
             set(slot, 'is_untrained', true);
@@ -41,13 +45,8 @@ export default class ShiftCheckInOutComponent extends Component {
         }
       });
     }
-  }
 
-  // Build a position list with the postfix ' (untrained)' added
-  // if the person has not been trained for that.
-  @computed('positions')
-  get signinPositions() {
-    const signins = this.positions.map((pos) => {
+    const signins = this.args.positions.map((pos) => {
       let title = pos.title;
       let disqualified = null;
 
@@ -80,31 +79,35 @@ export default class ShiftCheckInOutComponent extends Component {
       signins.unshift(sp);
     }
 
-    return signins;
+    this.signinPositions = signins;
+
+    // Set the position options to the first item
+    this.signinPositionId = this.signinPositions.firstObject.id;
   }
 
   // Has the person gone through dirt training?
 
-  @computed('eventInfo.{training.@each.position_id,trainings}', 'person.status')
   get isPersonDirtTrained() {
-    if (this.person.status == 'non ranger') {
+    if (this.args.person.status == 'non ranger') {
       return true;
     }
 
-    return !!this.eventInfo.trainings.find((training) => (training.position_id == Position.TRAINING && training.status == 'pass'));
+    return !!this.args.eventInfo.trainings.find((training) => (training.position_id == Position.TRAINING && training.status == 'pass'));
   }
 
   // Find the on duty shift
-  @computed('timesheets.@each.off_duty')
+  @computed('args.timesheets.@each.off_duty')
   get onDutyEntry() {
-    return this.timesheets.findBy('off_duty', null);
+    return this.args.timesheets.findBy('off_duty', null);
   }
 
   _startShift(positionId, slotId = null) {
-    const position = this.positions.find((p) => p.id == positionId);
+    const position = this.args.positions.find((p) => p.id == positionId);
+    const person = this.args.person;
+
     const data = {
       position_id: position.id,
-      person_id: this.person.id
+      person_id: person.id
     };
 
     if (slotId) {
@@ -112,10 +115,10 @@ export default class ShiftCheckInOutComponent extends Component {
     }
 
     this.toast.clear();
-    this.set('isSubmitting', true);
+    this.isSubmitting = true;
     this.ajax.request('timesheet/signin', { method: 'POST', data })
     .then((result) => {
-      const callsign = this.person.callsign;
+      const callsign = person.callsign;
       switch (result.status) {
       case 'success':
         if (result.forced) {
@@ -129,11 +132,11 @@ export default class ShiftCheckInOutComponent extends Component {
         } else {
           this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
         }
-        this.set('isReloadingTimesheets', true);
+        this.isReloadingTimesheets = true;
         // Refresh the timesheets
-        this.timesheets.update()
+        this.args.timesheets.update()
           .catch((response) => this.house.handleErrorResponse(response))
-          .finally(() => { this.set('isReloadingTimesheets', false) });
+          .finally(() => this.isReloadingTimesheets = false);
         break;
 
       case 'position-not-held':
@@ -141,7 +144,7 @@ export default class ShiftCheckInOutComponent extends Component {
         break;
 
       case 'already-on-duty':
-        this.modal.info('Already On Shift', 'The person is already on duty.');
+        this.modal.info('Already On Shift', `${callsign} is already on duty.`);
         break;
 
       case 'not-trained':
@@ -157,7 +160,7 @@ export default class ShiftCheckInOutComponent extends Component {
         break;
       }
     }).catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('isSubmitting', false));
+    .finally(() => this.isSubmitting = false);
   }
 
   // Attempt to sign in the person to the selected position
@@ -176,20 +179,22 @@ export default class ShiftCheckInOutComponent extends Component {
   @action
   endShiftAction() {
     const shift = this.onDutyEntry;
+    const endShiftNotify = this.args.endShiftNotify;
+    const callsign = this.args.person.callsign;
 
-    this.set('isSubmitting', true);
+    this.isSubmitting =  true;
     this.ajax.request(`timesheet/${shift.id}/signoff`, { method: 'POST' })
       .then((result) => {
         this.store.pushPayload(result);
-        if (this.endShiftNotify) {
-          this.endShiftNotify();
+        if (endShiftNotify) {
+          endShiftNotify();
         }
         switch (result.status) {
         case 'success':
-            this.toast.success(`${this.person.callsign} has been successfully signed off. Enjoy your rest.`);
+            this.toast.success(`${callsign} has been successfully signed off. Enjoy your rest.`);
             break;
         case 'already-signed-off':
-          this.toast.error(`${this.person.callsign} was already signed off.`);
+          this.toast.error(`${callsign} was already signed off.`);
           break;
 
         default:
@@ -197,12 +202,12 @@ export default class ShiftCheckInOutComponent extends Component {
           break;
         }
       }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isSubmitting', false));
+      .finally(() => this.isSubmitting = false);
   }
 
   // Update the position signin
   @action
   updateShiftPosition(value) {
-    this.set('signinPositionId', value);
+    this.signinPositionId = value;
   }
 }

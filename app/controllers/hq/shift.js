@@ -241,32 +241,4 @@ export default class HqShiftController extends Controller {
   toggleHoursCreditBreakdown() {
     this.set('showHoursCreditsBreakdown', !this.showHoursCreditsBreakdown);
   }
-
-  @computed('eventInfo.meals')
-  get mealInfo() {
-    switch (this.eventInfo.meals) {
-      case 'all':
-        return 'NO POG - has Eat It All BMID';
-      case 'pre':
-        return 'Event Week & Post';
-      case 'post':
-        return 'Pre- and Event Week';
-      case 'event':
-        return 'Pre-Event & Post-Event';
-      case 'pre+event':
-        return 'Post-Event';
-      case 'event+post':
-        return 'Pre-Event';
-      case 'pre+post':
-        return 'Event Week';
-      case 'pogs':
-        return 'Every shift worked';
-      default:
-        if (!this.eventInfo.meals) {
-          return 'Every shift worked';
-        }
-        return `Unknown ${this.eventInfo.meals}`;
-    }
-  }
-
 }

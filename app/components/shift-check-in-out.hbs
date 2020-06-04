@@ -1,5 +1,5 @@
 {{#if this.isReloadingTimesheets}}
-  <div class="text-muted">Reloading timesheets {{fa-icon "spinner" spin=true}}</div>
+  <LoadingIndicator @text="Reloading Timesheets" />
 {{else if this.onDutyEntry}}
   <div class="text-success font-weight-bold mb-2">{{@person.callsign}} is on duty.</div>
   <table class="table mt-1 mb-0 table-width-auto">
@@ -27,7 +27,7 @@
         <td>
           <button class="btn btn-danger" {{action this.endShiftAction}} disabled={{this.isSubmitting}}>End Shift</button>
           {{#if this.isSubmitting}}
-            {{fa-icon "spinner" spin=true}}
+            <LoadingIndicator />
           {{/if}}
         </td>
       </tr>
@@ -42,6 +42,7 @@
   {{else if @hasUnverifiedTimesheet}}
     One or more timesheet entries has to be verified before a shift can be started.
   {{else}}
+    {{log this.isPersonDirtTrained}}
     {{#unless this.isPersonDirtTrained}}
       <div class="text-danger font-weight-bold mb-2">
         <div class="d-flex">
@@ -85,8 +86,8 @@
                     <button class="btn btn-warning" {{action this.signinShiftAction slot}} disabled={{this.isSubmitting}}>Force Start Shift</button>
                   {{/if}}
                 {{/if}}
-                {{#if isSubmitting}}
-                  {{fa-icon "spinner" spin=true}}
+                {{#if this.isSubmitting}}
+                  <LoadingIndicator />
                 {{/if}}
               </td>
             </tr>
@@ -99,7 +100,7 @@
 
     <div class="form-row">
       <div class="col-auto">
-        <ChForm::Select @name="signin_position_id" @controlClass="form-control" @value={{signinPositionId}} @options={{signinPositions}} @onChange={{action "updateShiftPosition"}} />
+        <ChForm::Select @name="signin_position_id" @controlClass="form-control" @value={{signinPositionId}} @options={{this.signinPositions}} @onChange={{this.updateShiftPosition}} />
       </div>
       <div class="col-auto">
         {{#if this.isPersonDirtTrained}}
@@ -110,7 +111,7 @@
           <div class="text-danger mt-1">NOT DIRT TRAINED - SHIFT START IS NOT ALLOWED</div>
         {{/if}}
         {{#if this.isSubmitting}}
-          {{fa-icon "spinner" spin=true}}
+          <LoadingIndicator />
         {{/if}}
       </div>
     </div>
