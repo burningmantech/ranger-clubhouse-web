@@ -44,7 +44,7 @@
     "ember-ajax": "^5.0.0",
     "ember-animated": "^0.10.1",
     "ember-auto-import": "^1.5.3",
-    "ember-changeset": "^3.5.3",
+    "ember-changeset": "^3.7.0",
     "ember-changeset-validations": "^3.5.1",
     "ember-cli": "~3.18.0",
     "ember-cli-app-version": "^3.2.0",
