@@ -11,11 +11,12 @@ export default class MentorPostSeasonSummaryController extends Controller {
   filterOptions = [
     {id: 'all', title: 'All'},
     {id: 'pass', title: 'Passed'},
-    {id: 'bonked', title: 'Bonked'}
+    {id: 'bonked', title: 'Bonked'},
+    {id: 'no-walk', title: 'Did not walk' },
   ];
 
   get bonkedCount() {
-    return this.mentees.filter(({mentor_status}) => mentor_status == 'bonked' || mentor_status == 'self-bonked').length;
+    return this.mentees.filter((m) => (m.mentor_status == 'bonk' || m.mentor_status == 'self-bonk' || m.status == 'uberbonked')).length;
   }
 
   get passedCount() {
@@ -29,7 +30,10 @@ export default class MentorPostSeasonSummaryController extends Controller {
       case 'pass':
         return mentees.filter(({mentor_status}) => mentor_status == 'pass');
       case 'bonked':
-        return mentees.filter(({mentor_status}) => mentor_status == 'bonked' || mentor_status == 'self-bonked');
+        // Filter on mentor bonk, self-bonk, or uberbonk (person status, not mentor status)
+        return mentees.filter((m) => (m.mentor_status == 'bonk' || m.mentor_status == 'self-bonk' || m.status == 'uberbonked'));
+      case 'no-walk':
+        return mentees.filter((m) => (m.mentor_status == 'pending' && !m.alpha_shift));
       default:
         return mentees;
     }
