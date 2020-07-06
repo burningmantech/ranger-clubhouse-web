@@ -1,6 +1,5 @@
 import Route from '@ember/routing/route';
 import requestYear from 'clubhouse/utils/request-year';
-import RSVP from 'rsvp';
 
 export default class MentorPostSeasonSummaryRoute extends Route {
   queryParams = {
