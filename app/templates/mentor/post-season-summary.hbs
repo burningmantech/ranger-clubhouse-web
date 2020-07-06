@@ -1,5 +1,4 @@
 <YearSelect @title="Post Season Summary" @year={{this.year}} @onChange={{action (mut this.year)}}  />
-
 <div class="form-row mb-2">
   <div class="col-auto">
     <label class="col-form-label">Filter</label>
@@ -12,33 +11,29 @@
     <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export to CSV</button>
   </div>
 </div>
+
+<p>
 Showing {{this.viewMentees.length}} of {{this.mentees.length}}. {{this.passedCount}} passed. {{this.bonkedCount}} bonked.
+</p>
 <table class="table table-striped table-hover table-sm">
   <thead>
   <tr>
-    <th>Mentee</th>
-    <th>Name</th>
-    {{#if this.house.canViewEmail}}
-      <th>Email</th>
-    {{/if}}
-    <th>Status</th>
-    <th>Mentors</th>
-    <th>Pass</th>
-    <th>Mentor Notes/Flags</th>
+    <th class="w-10">Mentee / Name </th>
+    <th class="w-10">Current Status</th>
+    <th class="w-15">Mentors</th>
+    <th class="w-10">Pass</th>
+    <th class="w-60">Mentor Notes/Flags</th>
   </tr>
   </thead>
   <tbody>
   {{#each this.viewMentees as |mentee|}}
     <tr>
-      <td>
-        <PersonLink @person={{mentee}} />
+      <td class="w-10">
+        <PersonLink @person={{mentee}} /><br>
+        {{mentee.first_name}} {{mentee.last_name}}
       </td>
-      <td>{{mentee.first_name}} {{mentee.last_name}}</td>
-      {{#if this.house.canViewEmail}}
-        <td>{{mail-to mentee.email}}</td>
-      {{/if}}
-      <td>{{mentee.status}}</td>
-      <td>
+       <td class="w-10">{{mentee.status}}</td>
+      <td class="w-15">
         {{#each mentee.mentors as |mentor idx| ~}}
           {{#if idx}}/{{/if}}
           <PersonLink @person={{mentor}} />
@@ -46,8 +41,14 @@ Showing {{this.viewMentees.length}} of {{this.mentees.length}}. {{this.passedCou
           <i>none</i>
         {{/each}}
       </td>
-      <td>{{mentee.mentor_status}}</td>
-      <td>
+      <td class="w-10">
+        {{#if (and (eq mentee.mentor_status 'pending') (not mentee.alpha_slot))}}
+          no alpha shift
+        {{else}}
+          {{mentee.mentor_status}}
+        {{/if}}
+      </td>
+      <td class="w-60">
         <IntakeNotes @type="mentor" @person={{mentee}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
       </td>
     </tr>
