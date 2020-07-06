@@ -18,7 +18,7 @@ Showing {{this.viewMentees.length}} of {{this.mentees.length}}. {{this.passedCou
 <table class="table table-striped table-hover table-sm">
   <thead>
   <tr>
-    <th class="w-10">Mentee / Name </th>
+    <th class="w-10">Mentee / FKAs</th>
     <th class="w-10">Current Status</th>
     <th class="w-15">Mentors</th>
     <th class="w-10">Pass</th>
@@ -30,7 +30,9 @@ Showing {{this.viewMentees.length}} of {{this.mentees.length}}. {{this.passedCou
     <tr>
       <td class="w-10">
         <PersonLink @person={{mentee}} /><br>
-        {{mentee.first_name}} {{mentee.last_name}}
+        {{#each mentee.fkas as |name|}}
+          {{name}}<br>
+        {{/each}}
       </td>
        <td class="w-10">{{mentee.status}}</td>
       <td class="w-15">
