@@ -1,4 +1,3 @@
-import {TimeoutError, AbortError, UnauthorizedError} from '@ember-data/adapter/error';
 import Ember from 'ember';
 import Application from '@ember/application';
 import Resolver from 'ember-resolver';
@@ -7,8 +6,9 @@ import config from 'clubhouse/config/environment';
 import LinkComponent from '@ember/routing/link-component';
 import RSVP from 'rsvp';
 import buildErrorHandler from 'ember-test-friendly-error-handler';
-import {isAbortError, isTimeoutError} from 'ember-ajax/errors';
-
+import {isAbortError, isTimeoutError, isForbiddenError, isUnauthorizedError} from 'ember-ajax/errors';
+import {TimeoutError, AbortError, ForbiddenError, UnauthorizedError} from '@ember-data/adapter/error';
+import logError from 'clubhouse/utils/log-error';
 
 RSVP.on('error', function (error) {
   // TODO: keep an eye on this
@@ -33,51 +33,37 @@ Ember.onerror = buildErrorHandler('Ember.onerror', (error) => {
   if (Ember.testing) { // eslint-disable-line ember/no-ember-testing-in-module-scope
     throw error;
   }
+
   console.error(error);
 
-  if ((error instanceof TimeoutError
+  if (error instanceof TimeoutError
     || error instanceof AbortError
+    || error instanceof ForbiddenError
     || isAbortError(error)
     || isTimeoutError(error)
-    || error instanceof UnauthorizedError)) {
-    // Don't record timed out, unauthorized, or offline errors.
+    || isForbiddenError(error)
+    || isUnauthorizedError(error)
+    || error instanceof UnauthorizedError) {
+    // Don't bother with offline, timeouts, or unauthorized
     return;
   }
 
-  if (config.logEmberErrors) {
-    const data = new FormData;
+  logError(error, 'ember-onerror');
 
-    data.append('url', window.location.href);
-    data.append('error_type', 'ember-onerror');
-    data.append('data', JSON.stringify({
-      exception: {
-        name: error.name,
-        message: error.message,
-        stack: error.stack
-      },
-      build_timestamp: config.APP.buildTimestamp,
-      version: config.APP.version,
-    }));
+  const isDev = (config.environment === 'development');
 
-    try {
-      // Grab the logged in user id if possible.
-      const personId = window.Clubhouse.__container__.lookup('service:session').get('user.id')
-      data.append('person_id', personId);
-    } catch (exception) {
-      // eslint-disable-line no-empty
+  if (isDev) {
+    if (didAlertError) {
+      return;
     }
 
-    navigator.sendBeacon(config['api-server'] + '/error-log/record', data);
+    didAlertError = true;
   }
 
-  if (config.environment == 'development') {
-    if (!didAlertError) {
-      didAlertError = true;
-      alert("Exception " + error.stack);
-      debugger;  // eslint-disable-line no-debugger
-    }
-  } else {
-    alert("Exception " + error.stack);
+  alert("Exception " + error.stack);
+
+  if (isDev) {
+    debugger;  // eslint-disable-line no-debugger
   }
 });
 
