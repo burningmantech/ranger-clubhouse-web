@@ -1,16 +1,19 @@
-<YearSelect @title="Asset History" @year={{this.year}} @years={{this.person.all_years}} @subheader={{true}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="Asset History" @year={{this.year}} @years={{this.person.all_years}} @subheader={{true}}
+            @onChange={{action (mut this.year)}} />
 
-{{#if person.asset_authorized}}
-  {{#if (is-current-year year)}}
-    <div class="border rounded p-2 mt-2 mb-2">
-      <strong>Asset Checkout</strong>
-      <AssetCheckoutForm @person={{this.person}} @assets={{this.assets}} @attachments={{this.attachments}} @eventInfo={{this.eventInfo}} />
-    </div>
-  {{/if}}
-{{else}}
-  <ChAlert @type="warning">
-    {{this.person.callsign}} is not asset authorized and may not check out equipment at this time. Have the person sign the appropriate paperwork.
-  </ChAlert>
+{{#if (is-current-year this.year)}}
+  {{#unless this.personEvent.asset_authorized}}
+    <ChAlert @type="warning">
+      {{this.person.callsign}} is not asset authorized and may not check out equipment at this time. Have the person
+      sign the appropriate paperwork.
+    </ChAlert>
+  {{/unless}}
+
+  <div class="border rounded p-2 mt-2 mb-2">
+    <strong>Asset Checkout</strong>
+    <AssetCheckoutForm @person={{this.person}} @assets={{this.assets}} @attachments={{this.attachments}}
+                       @eventInfo={{this.eventInfo}} />
+  </div>
 {{/if}}
 
 <AssetTable @assets={{this.assets}} @year={{this.year}} />

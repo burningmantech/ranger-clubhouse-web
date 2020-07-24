@@ -11,7 +11,6 @@ export default class AdminBulkUploadController extends Controller {
         'alpha',
         'inactive',
         'prospective',
-        'prospective waitlist',
         'retired',
         { id: 'vintage', title: 'set vintage flag' }
       ]
@@ -35,8 +34,9 @@ export default class AdminBulkUploadController extends Controller {
     {
       groupName: 'Vehicle Paperwork Flags',
       options: [
-        { id: 'vehicle_paperwork', title: 'Signed Motorpool Agreement (gators/golf carts)' },
-        { id: 'vehicle_insurance_paperwork', title: 'Has Motor Vehicle Record (MVR)' },
+        { id: 'signed_motorpool_agreement', title: 'Signed Motorpool Agreement (gators/golf carts)' },
+        { id: 'org_vehicle_insurance', title: 'Has Org Vehicle Insurance (MVR)' },
+        { id: 'may_request_stickers', title: 'May Request Vehicle Use Items' },
       ]
     },
     {

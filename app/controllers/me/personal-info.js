@@ -38,7 +38,7 @@ export default class MePersonalInfoEditController extends Controller {
         this.transitionToRoute('me.overview');
       }
     })
-    .finally(() => this.set('isSubmitting', false) );
+    .finally(() => this.isSubmitting = false);
   }
 
   @action

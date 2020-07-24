@@ -1,10 +1,10 @@
-<h1>{{year}} Event Info For <span class="d-inline-block">{{person.callsign}}</span></h1>
+<h1>{{year}} Event Info For <span class="d-inline-block">{{this.person.callsign}}</span></h1>
 
 
-{{#if (or person.isActive person.isAlpha)}}
+{{#if (or this.person.isActive this.person.isAlpha)}}
   This page contains information about your training and various bits (meals, showers, radios, vehicles, etc.)
   related to rangering on the playa.
-{{else if person.isNonRanger}}
+{{else if this.person.isNonRanger}}
   This page contains information regarding granted positions, meals, radios, showers, and vehicle authorizations.
 {{else}}
   This page contains information about your training. If you were to become a
@@ -14,7 +14,7 @@
 
 <h3 class="mt-4">{{fa-icon "graduation-cap"}} Training</h3>
 
-{{#if person.isNonRanger}}
+{{#if this.person.isNonRanger}}
   <p>Non Rangers are not required to pass training.</p>
 {{/if}}
 {{#if (and dirtTraining (not-eq dirtTraining.status "no-shift"))}}
@@ -22,7 +22,7 @@
     Signed up for training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}.
   {{else if (eq dirtTraining.status "pass")}}
     Passed training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}
-    {{#if person.isAlpha}}
+    {{#if this.person.isAlpha}}
       <br>
       You still need to walk your Alpha shift on playa in order to become a Ranger.
     {{/if}}
@@ -39,26 +39,26 @@
     <b class="text-danger">No training sign ups were found for {{year}}.</b>
   </p>
   {{#if (is-current-year year)}}
-    {{#if person.isActive}}
+    {{#if this.person.isActive}}
       You do not have to be trained to sign up for shifts, but you must be trained before actually working shifts on playa.
-    {{else if person.isProspective}}
+    {{else if this.person.isProspective}}
       You will need to sign up for and pass a training session before becoming an Alpha.
     {{/if}}
   {{/if}}
 {{/if}}
 
-{{#if artTrainings}}
+{{#if this.artTrainings}}
   <h3 class="mt-4">{{fa-icon "university"}} Advanced Ranger Training (ART)</h3>
   You are allowed to attend the following ART trainings.
-  <TrainingInfo @trainings={{artTrainings}} />
+  <TrainingInfo @trainings={{this.artTrainings}} />
 {{/if}}
 
-<h3>{{fa-icon "list"}} Positions</h3>
+<h3 class="mt-4">{{fa-icon "list"}} Positions</h3>
 Positions indicate which shifts you are allowed to sign up for and what ART
 trainings you may attend. You have
-{{pluralize personPositions.length "position"}} granted:
+{{pluralize this.personPositions.length "position"}} granted:
 <div class="form-row mt-2">
-  {{#each personPositions as |position| }}
+  {{#each this.personPositions as |position| }}
     <div class="col-sm-6 col-md-3">
       {{position.title}}
     </div>
@@ -69,47 +69,52 @@ trainings you may attend. You have
   {{/each}}
 </div>
 
-{{#if (or person.isActive person.isAlpha person.isNonRanger)}}
+{{#if (or this.person.isActive this.person.isAlpha this.person.isNonRanger)}}
   <h3 class="mt-4">{{fa-icon "utensils"}} Meals</h3>
-  <MealInfo @meals={{eventInfo.meals}} />
+  <MealInfo @meals={{this.eventInfo.meals}} />
 
   <h3 class="mt-4">{{fa-icon "shower"}} Showers</h3>
-  {{#if eventInfo.showers}}
+  {{#if this.eventInfo.showers}}
     {{badge "secondary" "Wet Spot"}} Your BMID will allow you to take showers at the Wet Spot.
   {{else}}
-    {{badge "secondary" "Shower Pogs"}} For every 40 hours you work on playa, you can get a shower pog from HQ, good for one shower at the Wet Spot.
+    {{badge "secondary""Shower Pogs"}} For every 40 hours you work on playa, you can get a shower
+    pog from HQ, good for one shower at the Wet Spot.
   {{/if}}
 
 
   <h3 class="mt-4">{{fa-icon "broadcast-tower"}} Radios</h3>
-  {{#if eventInfo.radio_info_available}}
-    {{#if eventInfo.radio_eligible}}
+  {{#if this.eventInfo.radio_info_available}}
+    {{#if this.eventInfo.radio_eligible}}
       {{badge "success" "Event Radio"}}
-      {{#if (eq eventInfo.radio_max 1)}}
+      {{#if (eq this.eventInfo.radio_max 1)}}
         You may check out an Event radio for the duration of the event.
       {{else}}
-        You may check out up to {{eventInfo.radio_max}} Event radios for the duration of the event.
+        You may check out up to {{this.eventInfo.radio_max}} Event radios for the duration of the event.
       {{/if}}
     {{else}}
-      {{badge "success" "Shift Radio"}} You will need to check out a radio each time you show up to Ranger HQ for shift (and check it in at the end of your shift!).
+      {{badge "success" "Shift Radio"}} You will need to check out a radio each time you show up to Ranger HQ
+      for shift (and check it in at the end of your shift!).
     {{/if}}
   {{else}}
     Radio eligibility for this year is not yet available.
   {{/if}}
 
   <h3 class="mt-4">{{fa-icon "car"}} Motorpool Policy</h3>
-  {{#if person.vehicle_blacklisted}}
-    {{badge "danger" "Blacklisted"}} We're sorry, but you cannot drive gators, cars, or trucks on playa for Ranger business.
+  {{#if this.person.vehicle_blacklisted}}
+    {{badge "danger" "Blacklisted"}} We're sorry, but you cannot drive gators, cars, or trucks on playa for
+    Ranger business.
   {{else}}
-    {{#if person.vehicle_paperwork}}
-      {{badge "success" "Authorized"}} You are authorized to drive golf carts &amp; gators (UTVs) on playa for Ranger business. Vehicle must have a valid Burning Man driving sticker.
+    {{#if this.eventInfo.signed_motorpool_agreement}}
+      {{badge "success" "Authorized"}} You are authorized to drive golf carts &amp; gators (UTVs) on playa for
+      Ranger business. Vehicle must have a valid Burning Man driving sticker.
     {{else}}
-      {{badge "warning" "Not Authorized"}} You are NOT authorized to drive golf carts &amp; gators (UTVs) on the playa for Ranger business. You can fix this by agreeing to the
+      {{badge "warning" "Not Authorized"}} You are NOT authorized to drive golf carts &amp; gators (UTVs) on
+      the playa for Ranger business. You can fix this by agreeing to the
       <LinkTo @route="me.motorpool-policy">Motorpool Policy</LinkTo>.
     {{/if}}
 
     <h3 class="mt-4">{{fa-icon "truck-pickup"}} Motor Vehicle Record (MVR)</h3>
-    {{#if person.vehicle_insurance_paperwork}}
+    {{#if this.personEvent.org_vehicle_insurance}}
       {{badge "success" "Authorized" }} You are authorized to drive cars and
       trucks (including your own personal vehicle) on playa for Ranger business.
       Vehicle must have a valid Burning Man driving sticker.

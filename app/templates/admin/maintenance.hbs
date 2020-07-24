@@ -82,11 +82,6 @@
     <p>
       {{pluralize this.results.count "person"}} have been marked off-site.
     </p>
-  {{else if (eq this.taskAction "deauthorize-assets")}}
-    <p>
-      {{pluralize this.results.count "person"}} have been asset deauthorized, motorpool agreement cleared, MVR notation
-      removed, and Sandman affidavit cleared.
-    </p>
   {{else if (eq this.taskAction "reset-pnvs")}}
     {{#if results.people}}
       <b>{{pluralize results.people.length  "PNV"}} reset to Past Prospective</b>

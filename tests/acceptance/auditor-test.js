@@ -1,20 +1,8 @@
-import {
-  module,
-  test
-} from 'qunit';
-import {
-  visit,
-  currentURL
-} from '@ember/test-helpers';
-import {
-  setupApplicationTest
-} from 'ember-qunit';
-import {
-  authenticateSession
-} from 'ember-simple-auth/test-support';
-import {
-  Role
-} from 'clubhouse/constants/roles';
+import {module, test} from 'qunit';
+import {visit, currentURL} from '@ember/test-helpers';
+import {setupApplicationTest} from 'ember-qunit';
+import {authenticateSession} from 'ember-simple-auth/test-support';
+import {Role} from 'clubhouse/constants/roles';
 
 module('Acceptance | auditor', function (hooks) {
   setupApplicationTest(hooks);
@@ -33,7 +21,6 @@ module('Acceptance | auditor', function (hooks) {
   test('Auditor sidebar view', async function (assert) {
     await visit('/me');
     assert.equal(currentURL(), '/me');
-    assert.equal(document.title, 'Overview | Me | Ranger Clubhouse');
 
     const links = [
       ['/me/schedule', true, 'Schedule'],
@@ -59,69 +46,63 @@ module('Acceptance | auditor', function (hooks) {
     });
   });
 
-/*
-  test('Auditor home page', async function (assert) {
-    await visit('/me');
+  /*
+    test('Auditor home page', async function (assert) {
+      await visit('/me');
 
-    const links = [
-      ['/me/schedule', true, 'Schedule'],
-      ['/me/timesheet', false, 'Timesheet'],
-      ['/me/tickets', false, 'Tickets and Stuff'],
-      ['/me/motorpool-policy', false, 'Motorpool Policy'],
-      ['/me/personal-info', true, 'Personal Info'],
-    ];
+      const links = [
+        ['/me/schedule', true, 'Schedule'],
+        ['/me/timesheet', false, 'Timesheet'],
+        ['/me/tickets', false, 'Tickets and Stuff'],
+        ['/me/motorpool-policy', false, 'Motorpool Policy'],
+        ['/me/personal-info', true, 'Personal Info'],
+      ];
 
-    links.forEach((link) => {
-      const dom = assert.dom(`main a[href="${link[0]}"]`);
-      if (link[1]) {
-        dom.exists(`${link[2]} overview link exists`);
-      } else {
-        dom.doesNotExist(`${link[2]} overview link does not exist`);
-      }
+      links.forEach((link) => {
+        const dom = assert.dom(`main a[href="${link[0]}"]`);
+        if (link[1]) {
+          dom.exists(`${link[2]} overview link exists`);
+        } else {
+          dom.doesNotExist(`${link[2]} overview link does not exist`);
+        }
+      });
     });
-  });
-  */
+    */
 
   test('Auditor see the schedule page', async function (assert) {
-    const signedup = server.create('schedule', { person_assigned: true }); // eslint-disable-line no-unused-vars
-    const available = server.create('schedule', { person_assigned: false }); // eslint-disable-line no-unused-vars
+    const signedup = server.create('schedule', {person_assigned: true}); // eslint-disable-line no-unused-vars
+    const available = server.create('schedule', {person_assigned: false}); // eslint-disable-line no-unused-vars
 
     await visit('/me/schedule');
 
     assert.dom('.schedule-itinerary').exists();
     assert.dom('.schedule-signup-sheet').exists({count: 2});
-    assert.equal(document.title, 'Schedule | Me | Ranger Clubhouse');
   });
 
-  test('Auditor should be able to visit the Personal Info page', async function(assert) {
+  test('Auditor should be able to visit the Personal Info page', async function (assert) {
     await visit('/me/personal-info');
     assert.equal(currentURL(), '/me/personal-info');
-    assert.equal(document.title, 'Personal info | Me | Ranger Clubhouse');
   });
 
-  test('Auditor should not be able to visit the Emergency Contact page', async function(assert) {
+  test('Auditor should not be able to visit the Emergency Contact page', async function (assert) {
     await visit('/me/emergency-contact');
     // should bounce back to overview.
     assert.equal(currentURL(), '/me');
-    assert.equal(document.title, 'Overview | Me | Ranger Clubhouse');
   });
 
-  test('Auditor should not be able to visit the Tickets & Stuff page', async function(assert) {
+  test('Auditor should not be able to visit the Tickets & Stuff page', async function (assert) {
     await visit('/me/tickets');
     // should bounce back to overview.
     assert.equal(currentURL(), '/me');
-    assert.equal(document.title, 'Overview | Me | Ranger Clubhouse');
   });
 
-  test('Auditor should be able to visit the Event Info page', async function(assert) {
+  test('Auditor should be able to visit the Event Info page', async function (assert) {
     await visit('/me/event-info');
     assert.equal(currentURL(), '/me/event-info');
-    assert.equal(document.title, 'Event info | Me | Ranger Clubhouse');
   });
 
-  test('Auditor should not be able to visit the Contact Ranger page', async function(assert) {
+  test('Auditor should not be able to visit the Contact Ranger page', async function (assert) {
     await visit('/me/contact');
     assert.equal(currentURL(), '/me');
-    assert.equal(document.title, 'Overview | Me | Ranger Clubhouse');
   });
 });

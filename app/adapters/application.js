@@ -20,6 +20,7 @@ const SINGULAR_MODELS = [
   'help',
   'motd',
   'person',
+  'person-event',
   'person-photo',
   'position',
   'position-credit',
@@ -32,6 +33,7 @@ const SINGULAR_MODELS = [
   'survey-question',
   'timesheet',
   'timesheet-missing',
+  'vehicle',
 ];
 
 export default class ApplicationAdapter extends RESTAdapter.extend(DataAdapterMixin) {

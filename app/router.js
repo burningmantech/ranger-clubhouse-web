@@ -37,6 +37,7 @@ Router.map(function () {
       this.route('index', { path: '/' });
       this.route('view', { path: '/:year' } );
     });
+    this.route('vehicles');
   });
 
   this.route('search', function () {
@@ -173,6 +174,7 @@ Router.map(function () {
     this.route('position-sanity-checker');
     this.route('radio-assets');
     this.route('radio-checkout');
+    this.route('rollcall');
     this.route('sandman-qualified');
     this.route('schedule-by-callsign');
     this.route('schedule-by-position');
@@ -187,7 +189,7 @@ Router.map(function () {
     this.route('timesheet-totals');
     this.route('timesheet-unconfirmed');
     this.route('vehicle-paperwork');
-    this.route('rollcall');
+    this.route('vehicle-registry');
   });
 
   this.route('vc', function () {

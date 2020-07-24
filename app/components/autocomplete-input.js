@@ -56,6 +56,18 @@ export default class AutocompleteInputComponent extends Component {
   hasSelected = false;
 
   /**
+   * CSS classes to be used on the input field
+   *
+   * @type {string}
+   */
+
+
+  constructor() {
+    super(...arguments);
+
+    this.inputClass = this.args.inputClass || 'form-control autocomplete-input';
+  }
+  /**
    * Handle input into the search field.
    *
    * @param {InputEvent} event

@@ -1,17 +1,20 @@
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 
 export default class MotorpoolPolicyController extends Controller {
+  @tracked isSubmitting;
+  @tracked hasAgreed;
 
   @action
   agreeAction() {
-    this.person.set('vehicle_paperwork', true);
+    this.personEvent.signed_motorpool_agreement = true;
 
-    this.set('isSubmitting', true);
-    this.person.save().then(() => {
-        this.set('hasAgreed', true);
-        this.toast.success('Agreement acknowledged.');
-      }).catch((response) => { this.house.handleErrorResponse(response) })
-      .finally(() => this.set('isSubmitting', false));
+    this.isSubmitting = true;
+    this.personEvent.save().then(() => {
+      this.hasAgreed = true;
+      this.toast.success('Agreement has been successfully recorded.');
+    }).catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.isSubmitting = false);
   }
 }

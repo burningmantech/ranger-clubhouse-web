@@ -11,7 +11,7 @@ export default class ChFormSelectComponent extends Component {
   constructor() {
     super(...arguments);
     const {options} = this.args;
-    assert('select options is not an array', typeOf(options) === 'array');
+    assert(`select options for field "${this.args.name}" is not an array`, typeOf(options) === 'array');
     const item = options[0];
     this.isGrouped = (typeOf(item) === 'object' && ('groupName' in item));
   }

@@ -51,9 +51,7 @@ export default class HouseService extends Service {
         });
 
         // After the form renders, scroll to the first marked invalid field
-        run.schedule('afterRender', () => {
           this.scrollToElement('.is-invalid');
-        });
       }
     } else if (response instanceof ServerError) {
       if (response.errors) {
@@ -109,9 +107,7 @@ export default class HouseService extends Service {
             });
 
             // After the form renders, scroll to the first marked invalid field
-            run.schedule('afterRender', () => {
               this.scrollToElement('.is-invalid');
-            });
           }
           break;
 
@@ -299,6 +295,8 @@ export default class HouseService extends Service {
       if (!element) {
         return;
       }
+
+      element.scrollIntoView();
 
       // Only scroll if the element is not in view
       const rect = element.getBoundingClientRect();

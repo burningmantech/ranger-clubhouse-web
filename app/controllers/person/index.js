@@ -241,6 +241,10 @@ export default class PersonIndexController extends Controller {
       this.toast.success('The positions have been successfully updated.');
       this.personPositions = results.positions;
       this.editPositions = false;
+      if (this.session.userId == this.person.id) {
+        // Reload the user.
+        this.session.loadUser();
+      }
     }).catch((response) => { this.house.handleErrorResponse(response) });
   }
 
@@ -271,6 +275,10 @@ export default class PersonIndexController extends Controller {
       this.toast.success('The roles have been successfully updated.');
       this.personRoles = results.roles;
       this.editRoles = false;
+      if (this.session.userId == this.person.id) {
+        // Reload the user.
+        this.session.loadUser();
+      }
     }).catch((response) => { this.house.handleErrorResponse(response) })
       .finally(() => this.isSavingRoles = false);
   }

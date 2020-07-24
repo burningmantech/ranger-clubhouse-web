@@ -24,6 +24,8 @@ export default class HqRoute extends Route.extend(AuthenticatedRouteMixin) {
       eventInfo: this.ajax.request(`person/${person_id}/event-info`, { data: { year } })
                   .then((result) => result.event_info),
 
+      personEvent: this.store.findRecord('person-event', `${this.session.userId}-${this.house.currentYear()}`, { reload: true }),
+
       positions: this.ajax.request(`person/${person_id}/positions`,{
                   data: { include_training: 1, year }
                 }).then((results) => results.positions),

@@ -25,6 +25,9 @@
       {{#if (and (config "MotorpoolPolicyEnable") (or user.isRanger user.isAlpha user.isNonRanger))}}
         <ChSidebarLink @route="me.motorpool-policy" @title="Motorpool Policy" @icon="car" @iconType="s" />
       {{/if}}
+      {{#if user.may_request_stickers}}
+        <ChSidebarLink @route="me.vehicles" @title="Vehicle Requests" @icon="truck-monster" @iconType="s" />
+      {{/if}}
     </ChSidebarGroup>
   {{/if}}
 
@@ -36,7 +39,7 @@
     {{#if user.teacher.have_mentored}}
       <ChSidebarLink @route="me.mentees" @title="My Mentees" @icon="users" @iconType="s" />
     {{/if}}
-    {{#if session.user.teacher.have_feedback}}
+    {{#if user.teacher.have_feedback}}
       <ChSidebarLink @route="me.trainer-feedback" @title="Trainer Feedback" @icon="poll-h" @iconType="s" />
     {{/if}}
 

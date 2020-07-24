@@ -233,6 +233,36 @@ export default function () {
     };
   });
 
+  this.get('/api/person-event/:id', ()=> {
+    return {
+      person_event: {
+        id: '1-2020',
+        may_request_stickers: 1,
+        org_vehicle_insurance: 1,
+        signed_motorpool_agreement: 1,
+        signed_personal_vehicle_agreement: 1,
+        asset_authorized: 1,
+        timesheet_confirmed_at: 1,
+        timesheet_confirmed: 1,
+        sandman_affidavit: 1
+      }
+    };
+  });
+
+  this.get('/api/vehicle/:id', () => {
+    return {
+      vehicle: {
+        id: 1,
+        vehicle_make: 'ford',
+        vehicle_model: 'f-350',
+        vehicle_color: 'khaki',
+        vehicle_year: 2019,
+        person_id: 1,
+        person: { callsign: 'hubcap' },
+      }
+    };
+  });
+
   /*
     Shorthand cheatsheet:
 

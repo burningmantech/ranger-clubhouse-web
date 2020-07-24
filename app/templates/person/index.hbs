@@ -198,30 +198,15 @@
     <label class="col-form-label-fixed col-sm-12 col-md-2">Vehicles</label>
     <div class="col-md-9 col-sm-12">
       {{#if (has-role "admin")}}
-        <f.input @name="vehicle_paperwork" @label="Motorpool Policy" @type="checkbox" @inline={{true}} />
-        <f.input @name="vehicle_insurance_paperwork" @label="Motor Vehicle Record (MVR)" @type="checkbox"
-                 @inline={{true}} />
-        <f.input @name="vehicle_blacklisted" @label="Vehicle Blacklisted" @type="checkbox" @inline={{true}} />
+         <f.input @name="vehicle_blacklisted" @label="Vehicle Blacklisted" @type="checkbox" @inline={{true}} />
+      {{else if this.person.vehicle_blacklisted}}
+          <b class="text-danger">VEHICLE BLACKLISTED</b>
       {{else}}
-        {{#if this.person.vehicle_paperwork}}
-          Motorpool Policy agreed to
-        {{else}}
-          Motorpool Policy NOT agreed to
-        {{/if}}<br>
-        {{if this.person.vehicle_insurance_paperwork "Has" "No"}} Motor Vehicle Record (MVR)<br>
-        {{#if this.person.vehicle_blacklisted}}
-          <strong class="text-danger">VEHICLE BLACKLISTED</strong>
-        {{/if}}
+        <i>No blacklisted vehicle</i>
       {{/if}}
     </div>
   </div>
 
-  <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-md-2">Assets</label>
-    <div class="col-sm-12 col-md-9">
-      <f.input @name="asset_authorized" @label="Assets Authorized" @type="checkbox" @inline={{true}}  />
-    </div>
-  </div>
 
   <div class="form-row mb-2">
     <label class="col-form-label-fixed col-sm-12 col-md-2">Certifications</label>
@@ -244,11 +229,8 @@
       {{#if (has-role "admin" "vc")}}
         <f.input @name="behavioral_agreement" @label="Burning Man's Behavioral Standards Agreement" @type="checkbox"
                  @inline={{true}} />
-        <br>
-        <f.input @name="sandman_affidavit" @label="Sandman Affidavit" @type="checkbox" @inline={{true}}  />
       {{else}}
         Behavioral Standards Agreement {{if this.person.behavioral_agreement "signed" "NOT SIGNED"}}<br>
-        Sandman Affidavit {{if this.person.sandman_affidavit "signed" "NOT SIGNED"}}
       {{/if}}
     </div>
   </div>
