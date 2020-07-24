@@ -9,9 +9,9 @@ export default class ModalDialogComponent extends Component {
 
   // #modal-render lives in application.hbs
   // during testing the use ember-testing instead since modal-render does not exist.
-  get destinationId() {
+  get destinationElement() {
      // eslint-disable-line ember/no-ember-testing-in-module-scope
-      return Ember.testing ? 'ember-testing' : 'modal-render';
+      return document.querySelector(Ember.testing ? '#ember-testing' : '#modal-render');
   }
 
   @action
