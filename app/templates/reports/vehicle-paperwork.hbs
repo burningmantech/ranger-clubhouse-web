@@ -3,27 +3,27 @@
   This report will show who has signed the Motorpool Policy Agreement and/or who has a Motor Vehicle Record (MVR).
 </p>
 <p>
-  <button class="btn btn-primary" {{action exportToCsv}}>Export to CSV</button>
+  <button class="btn btn-primary" {{action this.exportToCsv}}>Export to CSV</button>
 </p>
 
 <table class="table table-striped table-hover table-width-auto">
-  <caption>{{pluralize people.length "person"}}</caption>
+  <caption>{{pluralize this.people.length "person"}}</caption>
   <thead>
     <tr>
       <th>Callsign</th>
       <th>Status</th>
-      <th>{{year}} Motorpool</th>
-      <th>{{year}} Motor Vehicle Record</th>
+      <th>{{this.year}} Motorpool</th>
+      <th>{{this.year}} Motor Vehicle Record</th>
     </tr>
   </thead>
 
   <tbody>
-    {{#each people as |person|}}
+    {{#each this.people as |person|}}
       <tr>
         <td><PersonLink @person={{person}} /></td>
         <td>{{person.status}}</td>
-        <td class="text-center">{{yesno person.vehicle_paperwork}}</td>
-        <td class="text-center">{{yesno person.vehicle_insurance_paperwork}}</td>
+        <td class="text-center">{{yesno person.signed_motorpool_agreement}}</td>
+        <td class="text-center">{{yesno person.org_vehicle_insurance}}</td>
       </tr>
     {{else}}
       <tr>

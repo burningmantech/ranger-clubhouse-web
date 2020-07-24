@@ -5,7 +5,7 @@ import requestYear from 'clubhouse/utils/request-year';
 
 export default class PersonAssetsRoute extends Route {
   queryParams = {
-    year: { refreshModel: true }
+    year: {refreshModel: true}
   };
 
   model(params) {
@@ -14,13 +14,14 @@ export default class PersonAssetsRoute extends Route {
 
     this.store.unloadAll('asset-person');
     this.store.unloadAll('asset-attachment');
+    this.year = year;
 
     return RSVP.hash({
-      assets: this.store.query('asset-person', { person_id, year }),
+      assets: this.store.query('asset-person', {person_id, year}),
       attachments: this.store.findAll('asset-attachment'),
-      eventInfo: this.ajax.request(`person/${person_id}/event-info`, { data: { year } })
-                  .then((result) => result.event_info),
-      year,
+      eventInfo: this.ajax.request(`person/${person_id}/event-info`, {data: {year}})
+        .then((result) => result.event_info),
+      personEvent: this.store.findRecord('person-event', `${person_id}-${year}`, {reload: true}),
     });
   }
 
@@ -28,6 +29,7 @@ export default class PersonAssetsRoute extends Route {
     super.setupController(...arguments);
 
     controller.set('person', this.modelFor('person'));
+    controller.set('year', this.year);
     controller.setProperties(model);
   }
 

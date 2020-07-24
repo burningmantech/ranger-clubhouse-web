@@ -199,7 +199,7 @@
   {{/if}}
 </div>
 
-{{#if person.asset_authorized}}
+{{#if this.personEvent.asset_authorized}}
   <AssetCheckoutForm @person={{person}} @assets={{assets}} @attachments={{attachments}} @eventInfo={{eventInfo}} />
 {{else}}
   <p class="text-danger"><b>{{person.callsign}} is not asset authorized and may not check out equipment at this time.

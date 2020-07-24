@@ -38,7 +38,7 @@ export default class ChFormComponent extends Component {
     } else {
       this.model = new Changeset(formFor);
     }
-    
+
     /*
      * Magic going on here. When the backing model updates from the server,
      * the ember-changeset object will be updated as well BUT NO observers
@@ -105,12 +105,9 @@ export default class ChFormComponent extends Component {
 
     const field = `${this.args.formId}-${errors[0].key}`;
     const label = `label[for="${field}"]`;
+
     // Scroll the label into view if it exists, otherwise the form element
-    if (document.querySelector(label)) {
-      this.house.scrollToElement(label);
-    } else {
-      this.house.scrollToElement(`[name="${field}"]`);
-    }
+    this.house.scrollToElement(document.querySelector(label) ? label : `[name="${field}"]`);
   }
 
   /**

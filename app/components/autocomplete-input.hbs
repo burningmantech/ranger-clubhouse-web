@@ -14,7 +14,8 @@
     <Input @type="text"
            placeholder={{@placeholder}}
            @value={{@text}}
-           class="form-control autocomplete-input"
+           class={{this.inputClass}}
+            disabled={{@disabled}}
       {{on "keydown" this.keyDownEvent}}
       {{on "focus" this.focusEvent}}
       {{on "blur" this.blurEvent}}

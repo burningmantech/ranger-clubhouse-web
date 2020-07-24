@@ -54,10 +54,7 @@ export default class PersonModel extends Model.extend(PersonMixin) {
 
   @attr('string') emergency_contact;
 
-  @attr('boolean') asset_authorized;
   @attr('boolean') vehicle_blacklisted;
-  @attr('boolean') vehicle_paperwork;
-  @attr('boolean') vehicle_insurance_paperwork;
 
   @attr('string') bpguid;
 
@@ -66,7 +63,6 @@ export default class PersonModel extends Model.extend(PersonMixin) {
 
 
   @attr('boolean') behavioral_agreement;
-  @attr('boolean') sandman_affidavit;
 
   @attr('boolean') osha10;
   @attr('boolean') osha30;
@@ -75,7 +71,7 @@ export default class PersonModel extends Model.extend(PersonMixin) {
 
   @attr('string', { readOnly: true }) timestamp;
 
-  // a seperate table the database and not
+  // a separate table the database and not
   // filled in when retrieving the person
   // however updated thru here.
   @attr('string') languages;
@@ -93,8 +89,6 @@ export default class PersonModel extends Model.extend(PersonMixin) {
    */
 
   loadUserInfo() {
-    return this.ajax.request(`person/${this.id}/user-info`).then((result) => {
-      this.setProperties(result.user_info);
-    });
+    return this.ajax.request(`person/${this.id}/user-info`).then(({ user_info }) => this.setProperties(user_info));
   }
 }

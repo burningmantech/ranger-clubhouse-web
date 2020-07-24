@@ -119,16 +119,16 @@
         </dd>
         <dt>Shower Pogs</dt>
         <dd>
-          {{#if eventInfo.showers}}
+          {{#if this.eventInfo.showers}}
             <div class="text-danger">{{fa-icon "ban"}} NO POG</div>
             Has Wet Spot BMID
           {{else}}
-            Every 40 hours worked
+            Every 40 h
           {{/if}}
         </dd>
         <dt>Motorpool Policy</dt>
         <dd>
-          {{#if person.vehicle_paperwork}}
+          {{#if this.personEvent.signed_motorpool_agreement}}
             {{fa-icon "check"}} Signed
           {{else}}
             <span class="text-danger">NOT SIGNED</span>

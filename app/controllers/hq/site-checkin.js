@@ -39,8 +39,10 @@ export default class HqSiteCheckinController extends Controller {
 
   @action
   markAssetAuthorized() {
-    this.person.asset_authorized = true;
-    this._savePerson(this.person, 'Person marked as signing the radio checkout form.');
+    this.personEvent.asset_authorized = true;
+    this.personEvent.save()
+      .then(() => this.toast.success('Person successfully save.'))
+      .catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action

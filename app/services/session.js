@@ -45,6 +45,7 @@ export default SessionService.extend({
             is_on_duty_at_hq: person.is_on_duty_at_hq,
             unread_message_count: person.unread_message_count,
             bpguid: person.bpguid, // PNV or Actives must have a BPGUID to sign up.
+            may_request_stickers: person.may_request_stickers,
           });
 
           this.set('user', user);

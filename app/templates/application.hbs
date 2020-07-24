@@ -62,6 +62,9 @@
                       {{#if (and (config "MotorpoolPolicyEnable") (or session.user.isRanger session.user.isAlpha))}}
                         <LinkTo @route="me.motorpool-policy" class="dropdown-item">Motorpool Policy</LinkTo>
                       {{/if}}
+                      {{#if this.session.user.may_request_stickers}}
+                        <LinkTo @route="me.vehicles" class="dropdown-item">Vehicle Requests</LinkTo>
+                      {{/if}}
                     </div>
 
                   {{/if}}
@@ -101,8 +104,11 @@
                 <LinkTo @route="training.multiple-enrollments" @model="dirt" class="dropdown-item">Multiple Enrollments
                   Report
                 </LinkTo>
-                <LinkTo @route="training.people-training-completed" @model="dirt" class="dropdown-item">Training Completed</LinkTo>
-                <LinkTo @route="training.trainer-attendance" @model="dirt" class="dropdown-item">Trainer Attendance</LinkTo>
+                <LinkTo @route="training.people-training-completed" @model="dirt" class="dropdown-item">Training
+                  Completed
+                </LinkTo>
+                <LinkTo @route="training.trainer-attendance" @model="dirt" class="dropdown-item">Trainer Attendance
+                </LinkTo>
                 {{#if (has-role "survey-management")}}
                   <LinkTo @route="training.survey.index" @model="dirt" class="dropdown-item">Training Surveys</LinkTo>
                 {{/if}}
@@ -288,12 +294,17 @@
                       <LinkTo @route="reports.alpha-shirts" class="dropdown-item">Alpha Shirts</LinkTo>
                     </div>
                     <div class="col-sm-12 col-md-4 col-lg-3">
+                      <div class="navbar-text">Vehicles</div>
+                      <LinkTo @route="reports.vehicle-paperwork" class="dropdown-item">Vehicle Paperwork</LinkTo>
+                      <LinkTo @route="reports.vehicle-registry" class="dropdown-item">Vehicle Registry</LinkTo>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Other</div>
                       <LinkTo @route="reports.position-sanity-checker" class="dropdown-item">Position Sanity Check
                       </LinkTo>
                       <LinkTo @route="reports.languages" class="dropdown-item">Languages</LinkTo>
                       <LinkTo @route="reports.sandman-qualified" class="dropdown-item">Sandman Qualified</LinkTo>
-                      <LinkTo @route="reports.vehicle-paperwork" class="dropdown-item">Vehicle Paperwork</LinkTo>
                       <LinkTo @route="reports.rollcall" class="dropdown-item">Rollcall</LinkTo>
                     </div>
                   </div>

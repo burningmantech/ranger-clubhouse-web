@@ -64,21 +64,22 @@
 <h4>Agreements <HelpPopover @slug="hq-site-checkin-agreements" /></h4>
 
 <p>
-  {{#if this.person.asset_authorized}}
+  {{#if this.personEvent.asset_authorized}}
     Radio checkout form has been <strong class="text-success">SIGNED</strong>.
   {{else}}
     <div class="text-danger">Radio checkout form has NOT BEEN SIGNED.</div>
-    <button class="btn btn-primary" {{action this.markAssetAuthorized}} disabled={{this.isSubmitting}}>Mark Form As Signed</button>
-    {{#if this.isSubmitting}}
+    <button class="btn btn-primary" {{action this.markAssetAuthorized}} disabled={{this.personEvent.isSaving}}>Mark Form As Signed</button>
+    {{#if this.personEvent.isSaving}}
       <LoadingIndicator />
     {{/if}}
   {{/if}}
 </p>
 <p>
-  {{#if this.person.vehicle_paperwork}}
+  {{#if this.personEvent.signed_motorpool_agreement}}
     {{this.person.callsign}} has signed the Motorpool Policy and is authorized to drive golf carts and gators.
   {{else}}
-    <span class="text-danger">{{this.person.callsign}} has NOT signed the Motorpool Policy. Direct the person to a kiosk and have them agree to the Motorpool Policy if they would like to drive golf carts &amp; UTVs on playa for Ranger business.</span>
+    <span class="text-danger">{{this.person.callsign}} has NOT signed the Motorpool Policy. Direct the person to a
+      kiosk and have them agree to the Motorpool Policy if they would like to drive golf carts &amp; UTVs on playa for Ranger business.</span>
   {{/if}}
 </p>
 

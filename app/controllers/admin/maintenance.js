@@ -20,12 +20,6 @@ const TASK_GROUPS = [{
         controller: 'maintenance'
       },
       {
-        action: 'deauthorize-assets',
-        title: 'Asset Deauthorize / Flag Uncheck',
-        description: 'Uncheck all "Asset Authorized", "Vehicle Paper", "Motor Vehicle Record", "Sandman Affidavit", etc. flags.',
-        controller: 'maintenance'
-      },
-      {
         action: 'reset-pnvs',
         title: 'Reset PNVs To Past Prospectives',
         description: 'Revert Alpha/Bonked/Prospective/Prospective Waitlist people to "past prospective" status, change their callsigns to LastFirstYY, and mark callsigns as unapproved.',
