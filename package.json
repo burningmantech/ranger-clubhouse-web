@@ -20,7 +20,7 @@
     "test:ember": "ember test"
   },
   "dependencies": {
-    "blueimp-load-image": "^5.13.0",
+    "blueimp-load-image": "^5.14.0",
     "cropperjs": "^1.5.7",
     "double-metaphone": "^1.0.5",
     "ember-cli-update": "^0.54.6",
