@@ -296,7 +296,7 @@ export default class HouseService extends Service {
         return;
       }
 
-      element.scrollIntoView();
+      element.scrollIntoView({behavior: scroll ? 'smooth' : 'auto'});
 
       // Only scroll if the element is not in view
       const rect = element.getBoundingClientRect();

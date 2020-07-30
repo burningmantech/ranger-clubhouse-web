@@ -213,7 +213,9 @@ export default function () {
   });
 
   this.get('/api/motd/bulletin', () => {
-    return {motd: []};
+    return {motd: [], meta: {
+      total: 0, page: 1, page_size: 100
+      }};
   });
 
   this.get('/api/person/:id/milestones', () => {
@@ -262,6 +264,7 @@ export default function () {
       }
     };
   });
+
 
   /*
     Shorthand cheatsheet:

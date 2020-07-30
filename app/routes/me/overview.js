@@ -7,7 +7,7 @@ export default class MeOverviewRoute extends Route.extend(MeRouteMixin) {
     const person = this.modelFor('me');
 
     const hash = {
-      motd: this.ajax.request('motd/bulletin').then((result) => result.motd),
+      bullentins: this.ajax.request('motd/bulletin', { data: { type: 'active', page_size: 100 }}),
       milestones: this.ajax.request(`person/${person.id}/milestones`).then((result) => result.milestones)
     };
 
@@ -20,9 +20,11 @@ export default class MeOverviewRoute extends Route.extend(MeRouteMixin) {
   }
 
   setupController(controller, model) {
+    const bullentins = model.bullentins;
     super.setupController(...arguments);
     controller.set('photo', model.photo);
-    controller.set('motds', model.motd);
+    controller.set('motds', bullentins.motd);
+    controller.set('motdsMeta', bullentins.meta.total);
     controller.set('milestones', model.milestones);
     controller.set('showUploadDialog', false);
   }

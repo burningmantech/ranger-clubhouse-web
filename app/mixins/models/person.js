@@ -50,6 +50,10 @@ export default Mixin.create({ // eslint-disable-line ember/no-new-mixins
     return (this.status == PersonStatus.PROSPECTIVE_WAITLIST);
   }),
 
+  isPNV: computed('status', function () {
+    return (this.status == PersonStatus.PROSPECTIVE || this.status == PersonStatus.ALPHA);
+  }),
+
   isResigned: computed('status', function () {
     return (this.status == PersonStatus.RESIGNED);
   }),

@@ -130,7 +130,7 @@ $sizes: (
   }
 
   .table-sticky {
-    thead tr:nth-child(1) th{
+    thead tr:nth-child(1) th {
       background: $table-head-bg;
       position: sticky;
       top: 0;
@@ -603,7 +603,7 @@ caption {
 
 
 .autocomplete-input-block {
-  position:relative;
+  position: relative;
 }
 
 .autocomplete-list {

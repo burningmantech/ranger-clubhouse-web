@@ -17,7 +17,7 @@
     </p>
     {{#if session.user}}
       <p>
-        <LinkTo @route="me.overview" class="btn btn-primary">Back To The Home Page</LinkTo>
+        <LinkTo @route="me.overview">Back To The Home Page</LinkTo>
       </p>
     {{/if}}
   {{else}}
@@ -67,7 +67,7 @@
     </p>
     {{#if session.user}}
       <p>
-        <LinkTo @route="me.overview" class="btn btn-primary">Back To The Home Page</LinkTo>
+        <LinkTo @route="me.overview">Back To The Home Page</LinkTo>
       </p>
     {{/if}}
   {{/if}}
