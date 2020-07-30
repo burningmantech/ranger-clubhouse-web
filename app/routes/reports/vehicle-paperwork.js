@@ -2,7 +2,7 @@ import Route from '@ember/routing/route';
 
 export default class ReportsVehiclePaperworkRoute extends Route {
   model() {
-    return this.ajax.request(`person/vehicle-paperwork`);
+    return this.ajax.request(`vehicle/paperwork`);
   }
 
   setupController(controller, model) {

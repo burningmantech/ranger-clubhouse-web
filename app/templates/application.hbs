@@ -35,7 +35,6 @@
               <div class="container">
                 <div class="row">
                   {{#unless (or session.user.isPastProspective session.user.isProspectiveWaitlist)}}
-
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Rangering</div>
                       <LinkTo @route="me.schedule" class="dropdown-item">Schedule / Sign Up</LinkTo>
@@ -50,10 +49,10 @@
                     </div>
                   {{/unless}}
 
-                  {{#if (or session.user.isRanger session.user.isAlpha session.user.isProspective)}}
+                  {{#if (or session.user.isRanger session.user.isPNV)}}
                     <div class="col-sm-12 col-md-4 col-lg-3">
                       <div class="navbar-text">Pre-Event</div>
-                      {{#if (or session.user.isAlpha session.user.isProspective)}}
+                      {{#if (or session.user.isPNV)}}
                         <LinkTo @route="me.tickets" class="dropdown-item">Work Access Pass</LinkTo>
                       {{else}}
                         <LinkTo @route="me.tickets" class="dropdown-item">Tickets &amp; Stuff</LinkTo>
@@ -71,6 +70,9 @@
                   <div class="col-sm-12 col-md-4 col-lg-3">
                     <div class="navbar-text">Communication</div>
                     <LinkTo @route="me.alerts" class="dropdown-item">Alert Preferences</LinkTo>
+                    {{#if (or session.user.isRanger session.user.isPNV session.user.isAuditor)}}
+                      <LinkTo @route="me.announcements" class="dropdown-item">Announcements</LinkTo>
+                    {{/if}}
                     {{#if session.user.isRanger}}
                       <LinkTo @route="me.messages" class="dropdown-item">Messages</LinkTo>
                       <LinkTo @route="me.contact" class="dropdown-item">Contact Ranger</LinkTo>
@@ -86,7 +88,7 @@
                   <div class="col-sm-12 col-md-4 col-lg-3">
                     <div class="navbar-text">My Account</div>
                     <LinkTo @route="me.personal-info" class="dropdown-item">Personal Info</LinkTo>
-                    {{#if (or session.user.isProspective session.user.isRanger)}}
+                    {{#if (or session.user.isPNV session.user.isRanger)}}
                       <LinkTo @route="me.emergency-contact" class="dropdown-item">Emergency Contact</LinkTo>
                     {{/if}}
                     <LinkTo @route="me.password" class="dropdown-item">Change Password</LinkTo>
@@ -176,7 +178,7 @@
               <div class="dropdown-menu dropdown-menu-large">
                 <div class="container">
                   <div class="row">
-                    {{#if (has-role "admin" "edit-slots")}}
+                    {{#if (has-role "admin" "edit-slots" "megaphone")}}
                       <div class="col-sm-12 col-md-3">
                         <div class="navbar-text">Edit Records</div>
                         <LinkTo @route="admin.slots" class="dropdown-item">Schedule Slots</LinkTo>
@@ -184,7 +186,11 @@
                           <LinkTo @route="admin.credits" class="dropdown-item">Schedule Credits</LinkTo>
                           <LinkTo @route="admin.assets" class="dropdown-item">Assets</LinkTo>
                           <LinkTo @route="admin.event-dates" class="dropdown-item">Event Dates</LinkTo>
+                        {{/if}}
+                        {{#if (has-role "admin" "megaphone")}}
                           <LinkTo @route="admin.motd" class="dropdown-item">MOTD</LinkTo>
+                        {{/if}}
+                        {{#if (has-role "admin")}}
                           <LinkTo @route="admin.positions" class="dropdown-item">Positions</LinkTo>
                           <LinkTo @route="admin.roles" class="dropdown-item">(System) Roles</LinkTo>
                           <LinkTo @route="admin.help" class="dropdown-item">Help Documents</LinkTo>

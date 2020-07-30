@@ -1,0 +1,44 @@
+<h1>Clubhouse Announcements</h1>
+
+{{#if this.motds}}
+  <p>
+    Showing  {{pluralize this.motds.length "current Clubhouse announcement"}}.
+    {{#if this.unreadCount}}
+      <span class="text-danger">
+        {{pluralize this.unreadCount "announcement"}} {{if (eq this.unreadCount 1) "is" "are"}} unread.
+      </span>
+      <br>
+      <button type="button" class="btn btn-primary" {{action this.showFirstUnread}}>
+        Show first unread announcement
+      </button>
+    {{/if}}
+  </p>
+  Click the subject line to read the announcement.
+  {{#each this.motds as |motd|}}
+    <div class="card card-announce mb-2" id="motd-{{motd.id}}">
+      <div class="card-header p-2 h5 {{if motd.has_read "text-muted"}}" {{action this.toggleMotd motd}}>
+        {{fa-icon (if motd.showing "caret-down" "caret-right")}} {{motd.subject}}
+      </div>
+      <div class="card-body {{if (not motd.showing) "d-none"}}">
+        <div class="text-muted mb-2">Posted {{moment-format motd.created_at "dddd, MMMM Do YYYY"}}</div>
+        {{nl2br motd.message allowHtml=true}}
+        <div class="mt-2">
+          {{#if motd.has_read}}
+            <i class="text-muted">You have read this announcement.</i>
+          {{else}}
+            <button class="btn btn-secondary" {{action this.markMotdAsRead motd}} disabled={{motd.isMarking}}>
+              Mark As Read
+            </button>
+            {{#if motd.isMarking}}
+              <LoadingIndicator @text="marking ..."/>
+            {{/if}}
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  {{/each}}
+{{else}}
+  <p>
+    <b>There are no Clubhouse announcements at this time.</b>
+  </p>
+{{/if}}

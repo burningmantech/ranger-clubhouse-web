@@ -38,6 +38,7 @@ Router.map(function () {
       this.route('view', { path: '/:year' } );
     });
     this.route('vehicles');
+    this.route('announcements');
   });
 
   this.route('search', function () {

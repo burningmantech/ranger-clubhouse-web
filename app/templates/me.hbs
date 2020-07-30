@@ -13,10 +13,10 @@
     </ChSidebarGroup>
   {{/unless}}
 
-  {{#if (or user.isRanger user.isAlpha user.isProspective user.isNonRanger)}}
+  {{#if (or user.isRanger user.isPNV user.isNonRanger)}}
     <ChSidebarGroup @title="PRE-EVENT">
       {{#unless user.isNonRanger}}
-        {{#if (or user.isAlpha user.isProspective)}}
+        {{#if user.isPNV}}
           <ChSidebarLink @route="me.tickets" @title="Work Access Pass" @icon="ticket-alt" @iconType="s" />
         {{else}}
           <ChSidebarLink @route="me.tickets" @title="Tickets & Stuff" @icon="ticket-alt" @iconType="s" />
@@ -35,6 +35,9 @@
     {{#if user.isRanger}}
       <ChSidebarLink @route="me.messages" @title="Messages" @icon="envelope" @badgeText={{user.unread_message_count}} />
     {{/if}}
+    {{#if (or user.isRanger user.isPNV user.isAuditor)}}
+      <ChSidebarLink @route="me.announcements" @title="Announcements" @icon="bullhorn" @iconType="s"/>
+    {{/if}}
     <ChSidebarLink @route="me.alerts" @title="Alert Preferences" @icon="bell" />
     {{#if user.teacher.have_mentored}}
       <ChSidebarLink @route="me.mentees" @title="My Mentees" @icon="users" @iconType="s" />
@@ -50,7 +53,7 @@
 
   <ChSidebarGroup @title="MY ACCOUNT">
     <ChSidebarLink @route="me.personal-info" @title="Personal Info" @icon="home" @iconType="s" />
-    {{#if (or user.isRanger user.isAlpha user.isProspective)}}
+    {{#if (or user.isRanger user.isPNV)}}
       <ChSidebarLink @route="me.emergency-contact" @title="Emergency Contact" @icon="exclamation" @iconType="s" />
     {{/if}}
     <ChSidebarLink @route="me.password" @title="Change Password" @icon="key" @iconType="s" />
