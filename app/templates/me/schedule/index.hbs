@@ -1,3 +1,6 @@
-<h1>{{year}} Schedule / Shift Sign Up</h1>
-
-<ScheduleManage @person={{person}} @slots={{slots}} @signedUpSlots={{signedUpSlots}} @scheduleSummary={{scheduleSummary}} @creditsEarned={{creditsEarned}} @year={{year}} @permission={{permission}} />
+<h1>{{this.year}} Schedule / Shift Sign Up</h1>
+<BackToHome />
+<ScheduleManage @person={{this.person}} @slots={{this.slots}}
+                @signedUpSlots={{this.signedUpSlots}}
+                @scheduleSummary={{this.scheduleSummary}} @creditsEarned={{this.creditsEarned}} @year={{this.year}}
+                @permission={{this.permission}} />

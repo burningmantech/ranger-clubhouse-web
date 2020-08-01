@@ -1,9 +1,5 @@
-{{#if this.ranger}}
-  <ContactForm @callsign={{this.ranger.callsign}} @recipientId={{this.ranger.id}}
-               @isInactive={{this.ranger.is_inactive}} @contactType="ranger" @onDone={{action this.doneAction}} />
-{{/if}}
-
 <h1>Contact An Active Ranger</h1>
+<BackToHome />
 
 <p>
   Use this page to send a contact message, via email, to a Ranger. Messages may only be
@@ -65,3 +61,9 @@
     <p class="text-danger"><b>No callsigns match "{{this.noMatch}}"</b></p>
   {{/if}}
 {{/if}}
+
+{{#if this.ranger}}
+  <ContactForm @callsign={{this.ranger.callsign}} @recipientId={{this.ranger.id}}
+               @isInactive={{this.ranger.is_inactive}} @contactType="ranger" @onDone={{action this.doneAction}} />
+{{/if}}
+

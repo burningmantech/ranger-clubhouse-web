@@ -1,5 +1,12 @@
 /* Sidebar CSS */
 
+.sidebar-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
 #body-row {
   margin-left: 0;
   margin-right: 0;
@@ -8,16 +15,77 @@
 #sidebar-container {
   position: relative;
   min-height: 100vh;
-  background-color: #333;
   padding: 0;
-  /*  position:fixed;
-  z-index: 1;*/
-  font-size: 0.90rem;
+  font-size: 0.85rem;
+
+  a.list-group-item {
+    background-color: #333;
+    padding: 0.70rem;
+    border-top: 1px solid #181818;
+  }
 }
 
-#sidebar-container a.list-group-item {
-  padding: 0.70rem;
+.sidebar-theme-person {
+  background-color: #00051d;
+
+  .sidebar-link {
+    background-color: #1a2c46 !important;
+  }
+
+  .sidebar-active {
+    background-color: #507da9 !important;
+  }
+
+  .sidebar-separator {
+    background-color: #000 !important;
+  }
+
+  .sidebar-group-title {
+    background-color: #00051d;
+    color: #ececec;
+  }
 }
+
+.sidebar-theme-hq {
+  background-color: #000;
+
+  .sidebar-link {
+    background-color: #524737 !important;
+  }
+
+  .sidebar-active {
+    //background-color: #a79170 !important;
+    background-color: #8f7c60 !important;
+    color: #ffffff !important;
+  }
+
+  .sidebar-separator {
+    background-color: #000 !important;
+  }
+
+  .sidebar-group-title {
+    background-color: #00051d;
+    color: #ececec;
+  }
+}
+
+.sidebar-theme-default {
+  background-color: #333;
+
+  .sidebar-link {
+    background-color: #3e4348 !important;
+  }
+
+  .sidebar-active {
+    color: #ffffff !important;
+    background-color: #425f7c !important;
+  }
+
+  .sidebar-group-title {
+    color: #ececec;
+  }
+}
+
 
 /* Sidebar sizes when expanded and expanded */
 
@@ -40,7 +108,7 @@
 /* Menu item*/
 
 #sidebar-container .list-group a {
-  height: 50px;
+  height: 45px;
   color: white;
 }
 
@@ -51,15 +119,20 @@
   padding-left: 30px;
 }
 
-.sidebar-submenu {
-  //font-size: 0.9rem;
+/*
+ .sidebar-submenu {
+
+  font-size: 0.9rem;
 }
+*/
+
 
 .sidebar-group-title {
   overflow: hidden;
   text-overflow: ellipsis !important;
   color: $text-muted;
   padding-left: 1rem;
+  font-size: 0.85rem;
 }
 
 /* Separators */
@@ -68,14 +141,10 @@
   background-color: #333;
   height: 35px;
 }
+
 .sidebar-separator {
   background-color: #333;
   height: 25px;
-}
-
-.logo-separator {
-  background-color: #333;
-  height: 60px;
 }
 
 /* Closed submenu icon */
@@ -98,12 +167,17 @@
   padding-left: 10px;
 }
 
-.sidebar-callsign {
-  color: white;
+
+.sidebar-ranger-logo {
+  text-align: center;
+  margin: 40px auto 0;
+
+  height: 200px;
+  width: 200px;
+
+  img {
+    height: 180px;
+    width: 180px;
+  }
 }
 
-/* end of sidebar */
-
-.sidebar-active {
-  background-color: #747c84 !important;
-}

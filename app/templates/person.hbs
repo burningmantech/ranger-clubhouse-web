@@ -1,28 +1,24 @@
-<ChSidebar @linkBg="bg-person">
-  <ChSidebarGroup @title="PERSON MANAGE">
-    <ChSidebarLink @route="person.index" @title="Account Info" @linkBg="bg-person" @icon="info" @iconType="s"/>
-    <ChSidebarLink @route="person.schedule" @title="Schedule / Sign Up" @linkBg="bg-person" @icon="clipboard"/>
-    <ChSidebarLink @route="person.event-info" @title="Event/Training Info" @icon="user" @linkBg="bg-person"
-                   @iconType="s"/>
-    <ChSidebarLink @route="person.timesheet" @title="Timesheets" @linkBg="bg-person" @icon="clock"/>
-    <ChSidebarLink @route="person.assets" @title="Assets" @linkBg="bg-person" @icon="broadcast-tower" @iconType="s"/>
-    <ChSidebarLink @route="person.messages" @title="Messages" @linkBg="bg-person" @icon="envelope"
-                   @badgeText={{this.person.unread_message_count}} />
+<ChSidebar @theme="person" as |s|>
+  <s.group @title="PERSON MANAGE">
+    <s.link @route="person.index" @title="Account Info" @icon="info" @iconType="s"/>
+    <s.link @route="person.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
+    <s.link @route="person.event-info" @title="Event/Training Info" @icon="user" @iconType="s"/>
+    <s.link @route="person.timesheet" @title="Timesheets" @icon="clock"/>
+    <s.link @route="person.assets" @title="Assets" @icon="broadcast-tower" @iconType="s"/>
+    <s.link @route="person.messages" @title="Messages" @icon="envelope" @badgeText={{this.person.unread_message_count}} />
     {{#if (has-role "admin" "manage+view-pii")}}
-      <ChSidebarLink @route="person.personal-info" @title="Personal Info" @linkBg="bg-person" @icon="home"
-                     @iconType="s"/>
+      <s.link @route="person.personal-info" @title="Personal Info" @icon="home" @iconType="s"/>
     {{/if}}
     {{#if (has-role "admin" "manage")}}
-      <ChSidebarLink @route="person.emergency-contact" @title="Emergency Contact" @linkBg="bg-person"
-                     @icon="exclamation" @iconType="s"/>
+      <s.link @route="person.emergency-contact" @title="Emergency Contact" @icon="exclamation" @iconType="s"/>
     {{/if}}
     {{#if (has-role "admin" "vc" "mentor")}}
-      <ChSidebarLink @route="person.mentors" @title="Mentors" @icon="users" @linkBg="bg-person" @iconType="s"/>
+      <s.link @route="person.mentors" @title="Mentors" @icon="users" @iconType="s"/>
     {{/if}}
     {{#if (has-role "admin")}}
-      <ChSidebarLink @route="person.password" @title="Change Password" @linkBg="bg-person" @icon="key" @iconType="s"/>
+      <s.link @route="person.password" @title="Change Password" @icon="key" @iconType="s"/>
     {{/if}}
-  </ChSidebarGroup>
+  </s.group>
 </ChSidebar>
 
 <main class="col">
@@ -39,7 +35,8 @@
 
   <div class="d-flex flex-md-row flex-column justify-content-between">
     <h2 class="align-middle">
-      <PersonLink @person={{this.person}} /> &lt;{{this.person.status}}{{if this.person.vintage "/vintage"}}, {{this.person.first_name}} {{this.person.last_name}}&gt;
+      <PersonLink @person={{this.person}} /> &lt;{{this.person.status}}{{if this.person.vintage "/vintage"}}
+      , {{this.person.first_name}} {{this.person.last_name}}&gt;
       {{#if this.person.callsign_pronounce}}
         <br><i>"{{this.person.callsign_pronounce}}"</i>
       {{/if}}

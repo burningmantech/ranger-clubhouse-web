@@ -1,13 +1,13 @@
-<ChSidebar>
-  <ChSidebarGroup @title="BLACK ROCK RANGERS">
-    <ChSidebarLink @route="login" @title="Login" @icon="sign-in-alt" @iconType="s" />
-    <ChSidebarLink @route="reset-password" @title="Forgot Password" @icon="unlock" @iconType="s" />
-  </ChSidebarGroup>
-  <ChSidebarGroup @title="POTENTIAL RANGERS">
-    <ChSidebarLink @route="https://rangers.burningman.org/becoming-a-ranger/" @title="Ranger Application" @iconUrl="assets/images/Burning-Man-logo.png" />
-  </ChSidebarGroup>
-  <ChSidebarGroup @title="AUDITORS">
-    <ChSidebarLink @route="register" @title="Auditor Register" @icon="user-plus" @iconType="s" />
-  </ChSidebarGroup>
+<ChSidebar as |s|>
+  <s.group @title="BLACK ROCK RANGERS">
+    <s.link @route="login" @title="Login" @icon="sign-in-alt" @iconType="s" />
+    <s.link @route="reset-password" @title="Forgot Password" @icon="unlock" @iconType="s" />
+  </s.group>
+  <s.group @title="POTENTIAL RANGERS">
+    <s.link @route="https://rangers.burningman.org/becoming-a-ranger/" @title="Ranger Application" @iconUrl="{{rootURL}}assets/images/Burning-Man-logo.png" />
+  </s.group>
+  <s.group @title="AUDITORS">
+    <s.link @route="register" @title="Auditor Register" @icon="user-plus" @iconType="s" />
+  </s.group>
 
 </ChSidebar>

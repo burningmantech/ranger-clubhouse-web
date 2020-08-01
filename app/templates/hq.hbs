@@ -1,15 +1,15 @@
-<ChSidebar>
-  <ChSidebarGroup @title="HQ Window">
-    <ChSidebarLink @route="hq.shift" @title="Shift Manage" @icon="walking" @iconType="s"/>
-    <ChSidebarLink @route="hq.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
-    <ChSidebarLink @route="hq.messages" @title="Messages" @icon="envelope"
-                   @badgeText={{this.person.unread_message_count}} />
-    <ChSidebarLink @route="hq.timesheet" @title="Timesheets" @class="dropdown-item" @icon="clock"/>
-    <ChSidebarLink @route="hq.assets" @title="Asset History" @class="dropdown-item" @icon="broadcast-tower"
-                   @iconType="s"/>
-    <ChSidebarLink @route="hq.training-info" @title="Training Info" @icon="graduation-cap" @iconType="s"/>
-    <ChSidebarLink @route="hq.site-checkin" @title="Site Check In" @icon="list-ol" @iconType="s"/>
-  </ChSidebarGroup>
+<ChSidebar @theme="hq" as |s|>
+  <s.group @title="HQ Window">
+    <s.link @route="hq.shift" @title="Shift Manage" @icon="walking" @iconType="s"/>
+    <s.link @route="hq.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
+    <s.link @route="hq.messages" @title="Messages" @icon="envelope"
+            @badgeText={{this.person.unread_message_count}} />
+    <s.link @route="hq.timesheet" @title="Timesheets" @class="dropdown-item" @icon="clock"/>
+    <s.link @route="hq.assets" @title="Asset History" @class="dropdown-item" @icon="broadcast-tower"
+            @iconType="s"/>
+    <s.link @route="hq.training-info" @title="Training Info" @icon="graduation-cap" @iconType="s"/>
+    <s.link @route="hq.site-checkin" @title="Site Check In" @icon="list-ol" @iconType="s"/>
+  </s.group>
 </ChSidebar>
 
 <main class="col">
@@ -90,7 +90,7 @@
           {{#if (eq this.meals "all")}}
             <b class="text-danger">{{fa-icon "ban"}} NO POGS</b><br>
             Has Eat-It-All BMID
-            {{else if (eq this.meals "pre")}}
+          {{else if (eq this.meals "pre")}}
             <b class="text-danger">{{fa-icon "ban"}} NO POGS FOR PRE-EVENT</b><br>
             Pogs for Event &amp; Post-Event
           {{else if (eq this.meals "post")}}
@@ -98,7 +98,7 @@
             Pogs for Pre-Event &amp; Event Week
           {{else if (eq this.meals "event")}}
             <b class="text-danger">{{fa-icon "ban"}} NO POGS FOR EVENT WEEK</b><br>
-            Pogs for Pre-Event &amp; Post-Event
+            Pogs for Pre- &amp; Post-Event
           {{else if (eq this.meals "pre+event")}}
             <b class="text-danger">{{fa-icon "ban"}} NO POGS FOR PRE- &amp; EVENT WEEK</b><br>
             Pogs for Post-Event
@@ -113,8 +113,8 @@
           {{/if}}
           {{#if (not-eq this.meals "all")}}
             <br>
-            Full Pog = 6 or more hours worked<br>
-            1/2 Pog = less-than 6 hours worked
+            Full Pog: 6 or more hours<br>
+            &frac12; Pog: less than 6 hours
           {{/if}}
         </dd>
         <dt>Shower Pogs</dt>
@@ -123,7 +123,7 @@
             <div class="text-danger">{{fa-icon "ban"}} NO POG</div>
             Has Wet Spot BMID
           {{else}}
-            Every 40 h
+            Every 40 hrs
           {{/if}}
         </dd>
         <dt>Motorpool Policy</dt>

@@ -1,29 +1,27 @@
-{{#if contactMentee}}
-  <ContactForm @callsign={{contactMentee.callsign}} @isInactive={{eq contactMentee.status "not active"}} @recipientId={{contactMentee.person_id}} @contactType="mentor" @onDone={{action "doneAction"}} />
-{{/if}}
-
 <h1>{{person.callsign}}'s Mentees</h1>
+<BackToHome/>
 
 <p>
-    A message may be sent to your mentees by clicking on 'Contact'. You are only
-     allowed to send a contact message to active Rangers. If you wish to contact
-     a non-active Ranger, please email the Mentor Cadre.
+  A message may be sent to your mentees by clicking on 'Contact'. You are only
+  allowed to send a contact message to active Rangers. If you wish to contact
+  a non-active Ranger, please email the Mentor Cadre.
 </p>
 
 <p>
-    <i>No Contact</i> indicates that individual wishes not to be contacted by
-    their Mentors.
+  <i>No Contact</i> indicates that individual wishes not to be contacted by
+  their Mentors.
 </p>
 
 <p>
-    From {{firstYear}} to {{lastYear}}, you have mentored {{totalMentees}} alphas
-    of whom {{totalPassed}} have passed, and {{totalBonked}} were bonked.
+  From {{firstYear}} to {{lastYear}}, you have mentored {{totalMentees}} alphas
+  of whom {{totalPassed}} have passed, and {{totalBonked}} were bonked.
 </p>
 
-{{#each menteeList as |year| }}
-<h3>{{year.year}} Mentees <small>({{year.mentees.length}} alphas, {{year.passed}} passed, {{year.bonked}} bonked)</small></h3>
-<table class="table table-hover">
-  <thead>
+{{#each this.menteeList as |year| }}
+  <h3>{{year.year}} Mentees <small>({{year.mentees.length}} alphas, {{year.passed}} passed, {{year.bonked}}
+    bonked)</small></h3>
+  <table class="table table-hover">
+    <thead>
     <tr>
       <th>Callsign</th>
       <th>Status</th>
@@ -32,37 +30,42 @@
       <th>Last Contact</th>
       <th>Contact</th>
     </tr>
-  </thead>
-  <tbody>
+    </thead>
+    <tbody>
     {{#each year.mentees as |mentee|}}
-    <tr>
-      <td>
-        <LinkTo @route="person.index" @model={{mentee.person_id}}>{{mentee.callsign}}</LinkTo>
-        {{#if mentee.formerly_known_as}}
-        <div>(FKA: {{mentee.formerly_known_as}})</div>
-        {{/if}}
-      </td>
-      <td>{{mentee.status}}</td>
-      <td>
-        {{#each mentee.mentors as |mentor|}}
-          {{mentor.callsign}}<br>
-        {{/each}}
-      </td>
-      <td>{{mentee.mentor_status}}</td>
-      <td>
-        <PresentOrNot @value={{mentee.last_contact}} @empty="-" />
-      </td>
-      <td>
-        {{#if (eq mentee.contact_status "allow")}}
-          <button type="button" class="btn btn-primary btn-sm" {{action "contactAction" mentee}}>Contact</button>
-        {{else if (eq mentee.contact_status "block")}}
-          <span class="text-muted">No Contact</span>
-        {{else}}
-          -
-        {{/if}}
-      </td>
-    </tr>
+      <tr>
+        <td>
+          <LinkTo @route="person.index" @model={{mentee.person_id}}>{{mentee.callsign}}</LinkTo>
+          {{#if mentee.formerly_known_as}}
+            <div>(FKA: {{mentee.formerly_known_as}})</div>
+          {{/if}}
+        </td>
+        <td>{{mentee.status}}</td>
+        <td>
+          {{#each mentee.mentors as |mentor|}}
+            {{mentor.callsign}}<br>
+          {{/each}}
+        </td>
+        <td>{{mentee.mentor_status}}</td>
+        <td>
+          <PresentOrNot @value={{mentee.last_contact}} @empty="-"/>
+        </td>
+        <td>
+          {{#if (eq mentee.contact_status "allow")}}
+            <button type="button" class="btn btn-primary btn-sm" {{action "contactAction" mentee}}>Contact</button>
+          {{else if (eq mentee.contact_status "block")}}
+            <span class="text-muted">No Contact</span>
+          {{else}}
+            -
+          {{/if}}
+        </td>
+      </tr>
     {{/each}}
-  </tbody>
-</table>
+    </tbody>
+  </table>
 {{/each}}
+{{#if this.contactMentee}}
+  <ContactForm @callsign={{this.contactMentee.callsign}} @isInactive={{eq this.contactMentee.status "not active"}}
+               @recipientId={{this.contactMentee.person_id}} @contactType="mentor" @onDone={{action this.doneAction}} />
+{{/if}}
+

@@ -18,11 +18,13 @@ $theme-colors: (
   "light-red": #ff6666,
   "highlight": #ffff99,
   "wheatfield": $wheatfield,
-  "person": #444
 );
 
 // bootstrap set the link-color to the primary color
 $link-color: #007bff;
+
+$navbar-light-color: #28221b;
+$navbar-light-hover-color:#0139cc;
 
 // Do not enable rounded corners
 $btn-border-radius: 0;
@@ -174,6 +176,10 @@ dl {
 
 .min-width-500 {
   min-width: 500px;
+  overflow: scroll;
+}
+.min-width-1000 {
+  min-width: 1000px;
 }
 
 .dropdown-large {
@@ -340,19 +346,6 @@ legend {
   background-size: cover;
 }
 
-.ranger-logo {
-  text-align: center;
-  margin: 40px auto 0;
-
-  height: 200px;
-  width: 200px;
-
-  img {
-    height: 180px;
-    width: 180px;
-  }
-}
-
 /*
  * position the flash messages on top
 */
@@ -436,11 +429,6 @@ caption {
   width: 100px !important;
   max-width: 100px;
   min-width: 100px;
-}
-
-.sidebar-icon {
-  width: 20px;
-  height: 20px;
 }
 
 /*

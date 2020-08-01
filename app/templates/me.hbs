@@ -1,67 +1,68 @@
 {{! Besure to keep application.hbs in sync with the links}}
-<ChSidebar>
-  {{#unless (or user.isPastProspective user.isProspectiveWaitlist)}}
-    <ChSidebarGroup @title="ME MENU">
-      <ChSidebarLink @route="me.schedule" @title="Schedule / Sign Up" @icon="clipboard" />
+<ChSidebar as |s|>
+  <s.group @title="ME MENU">
+    <s.link @route="me.overview" @title="Home" @icon="home" @iconType="s"/>
+    {{#unless (or user.isPastProspective user.isProspectiveWaitlist)}}
+      <s.link @route="me.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
       {{#if (or user.isNonRanger user.isRanger)}}
-        <ChSidebarLink @route="me.timesheet-corrections.index" @title="Timesheet Corrections" @icon="list-ol" @iconType="s" />
-        <ChSidebarLink @route="me.timesheet" @title="Timesheets" @icon="clock" />
+        <s.link @route="me.timesheet-corrections.index" @title="Timesheet Corrections" @icon="list-ol" @iconType="s"/>
+        <s.link @route="me.timesheet" @title="Timesheets" @icon="clock"/>
       {{/if}}
       {{#unless user.isAuditor}}
-        <ChSidebarLink @route="me.event-info" @title="Event Info" @icon="user" />
+        <s.link @route="me.event-info" @title="Event Info" @icon="user"/>
       {{/unless}}
-    </ChSidebarGroup>
-  {{/unless}}
+    {{/unless}}
+  </s.group>
 
   {{#if (or user.isRanger user.isPNV user.isNonRanger)}}
-    <ChSidebarGroup @title="PRE-EVENT">
+    <s.group @title="PRE-EVENT">
       {{#unless user.isNonRanger}}
         {{#if user.isPNV}}
-          <ChSidebarLink @route="me.tickets" @title="Work Access Pass" @icon="ticket-alt" @iconType="s" />
+          <s.link @route="me.tickets" @title="Work Access Pass" @icon="ticket-alt" @iconType="s"/>
         {{else}}
-          <ChSidebarLink @route="me.tickets" @title="Tickets & Stuff" @icon="ticket-alt" @iconType="s" />
+          <s.link @route="me.tickets" @title="Tickets & Stuff" @icon="ticket-alt" @iconType="s"/>
         {{/if}}
       {{/unless}}
       {{#if (and (config "MotorpoolPolicyEnable") (or user.isRanger user.isAlpha user.isNonRanger))}}
-        <ChSidebarLink @route="me.motorpool-policy" @title="Motorpool Policy" @icon="car" @iconType="s" />
+        <s.link @route="me.motorpool-policy" @title="Motorpool Policy" @icon="car" @iconType="s"/>
       {{/if}}
       {{#if user.may_request_stickers}}
-        <ChSidebarLink @route="me.vehicles" @title="Vehicle Requests" @icon="truck-monster" @iconType="s" />
+        <s.link @route="me.vehicles" @title="Vehicle Requests" @icon="truck-monster" @iconType="s"/>
       {{/if}}
-    </ChSidebarGroup>
+    </s.group>
   {{/if}}
 
-  <ChSidebarGroup @title="COMMUNICATION">
+  <s.group @title="COMMUNICATION">
     {{#if user.isRanger}}
-      <ChSidebarLink @route="me.messages" @title="Messages" @icon="envelope" @badgeText={{user.unread_message_count}} />
+      <s.link @route="me.messages" @title="Messages" @icon="envelope" @badgeText={{user.unread_message_count}} />
     {{/if}}
     {{#if (or user.isRanger user.isPNV user.isAuditor)}}
-      <ChSidebarLink @route="me.announcements" @title="Announcements" @icon="bullhorn" @iconType="s"/>
+      <s.link @route="me.announcements" @title="Announcements" @icon="bullhorn" @iconType="s"/>
     {{/if}}
-    <ChSidebarLink @route="me.alerts" @title="Alert Preferences" @icon="bell" />
+    <s.link @route="me.alerts" @title="Alert Preferences" @icon="bell"/>
     {{#if user.teacher.have_mentored}}
-      <ChSidebarLink @route="me.mentees" @title="My Mentees" @icon="users" @iconType="s" />
+      <s.link @route="me.mentees" @title="My Mentees" @icon="users" @iconType="s"/>
     {{/if}}
     {{#if user.teacher.have_feedback}}
-      <ChSidebarLink @route="me.trainer-feedback" @title="Trainer Feedback" @icon="poll-h" @iconType="s" />
+      <s.link @route="me.trainer-feedback" @title="Trainer Feedback" @icon="poll-h" @iconType="s"/>
     {{/if}}
 
     {{#if user.isRanger}}
-      <ChSidebarLink @route="me.contact" @title="Contact Ranger" @icon="comments" @iconType="s" />
+      <s.link @route="me.contact" @title="Contact Ranger" @icon="comments" @iconType="s"/>
     {{/if}}
-  </ChSidebarGroup>
+  </s.group>
 
-  <ChSidebarGroup @title="MY ACCOUNT">
-    <ChSidebarLink @route="me.personal-info" @title="Personal Info" @icon="home" @iconType="s" />
+  <s.group @title="MY ACCOUNT">
+    <s.link @route="me.personal-info" @title="Personal Info" @icon="address-card" @iconType="r"/>
     {{#if (or user.isRanger user.isPNV)}}
-      <ChSidebarLink @route="me.emergency-contact" @title="Emergency Contact" @icon="exclamation" @iconType="s" />
+      <s.link @route="me.emergency-contact" @title="Emergency Contact" @icon="exclamation" @iconType="s"/>
     {{/if}}
-    <ChSidebarLink @route="me.password" @title="Change Password" @icon="key" @iconType="s" />
-  </ChSidebarGroup>
+    <s.link @route="me.password" @title="Change Password" @icon="key" @iconType="s"/>
+  </s.group>
 
-  <ChSidebarGroup>
-    <ChSidebarLink @route="me.help" @title="Help" @icon="question" @iconType="s" />
-  </ChSidebarGroup>
+  <s.group>
+    <s.link @route="me.help" @title="Help" @icon="question" @iconType="s"/>
+  </s.group>
 </ChSidebar>
 <main class="col">
   {{outlet}}
