@@ -46,8 +46,20 @@ export default class IntakeNoteEditComponent extends Component {
     this.notesToShow = notes;
     this.noteForm = {
       note: '',
-      ranking
+      ranking,
+      event_year: viewYear,
     };
+  }
+
+  get yearOptions() {
+    const current = +(new Date().getFullYear());
+    const list = [];
+
+    for (let year = current; year >= 2010; year--) {
+      list.push(year);
+    }
+
+    return list;
   }
 
   @action
@@ -70,7 +82,7 @@ export default class IntakeNoteEditComponent extends Component {
 
     const data = {
       type: this.args.type,
-      year: this.args.viewYear
+      year: model.event_year
     };
 
     if (ranking != this.ranking) {
