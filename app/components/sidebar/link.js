@@ -1,9 +1,9 @@
 import Component from '@glimmer/component';
 import { isEmpty } from '@ember/utils';
 
-export default class ChSidebarLinkComponent extends Component {
-  get linkBg() {
-    return isEmpty(this.args.linkBg) ? 'bg-dark' : this.args.linkBg;
+export default class SidebarLinkComponent extends Component {
+  get theme() {
+    return isEmpty(this.args.theme) ? 'default' : this.args.theme;
   }
 
   get iconType() {

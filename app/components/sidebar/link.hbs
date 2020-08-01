@@ -1,0 +1,23 @@
+{{#if this.isUrl}}
+  <a href="{{@route}}" class="sidebar-link list-group-item list-group-item-action">
+    <Sidebar::LinkText @iconUrl={{@iconUrl}} @icon={{@icon}} @iconType={{this.iconType}} @title={{@title}}
+                          @badgeText={{@badgeText}} />
+  </a>
+{{else}}
+{{! ARG.. link-to cannot accept an empty dynamic segment}}
+  {{#if @routeArg}}
+    <LinkTo @route={{@route}} @model={{@routeArg}}
+            class="sidebar-link list-group-item list-group-item-action"
+            @activeClass="sidebar-active">
+      <Sidebar::LinkText  @iconUrl={{@iconUrl}} @icon={{@icon}} @iconType={{this.iconType}} @title={{@title}}
+                            @badgeText={{@badgeText}} />
+    </LinkTo>
+  {{else}}
+    <LinkTo @route={{@route}}
+            class="sidebar-link list-group-item list-group-item-action"
+            @activeClass="sidebar-active">
+      <Sidebar::LinkText  @iconUrl={{@iconUrl}} @icon={{@icon}} @iconType={{this.iconType}} @title={{@title}}
+                            @badgeText={{@badgeText}} />
+    </LinkTo>
+  {{/if}}
+{{/if}}

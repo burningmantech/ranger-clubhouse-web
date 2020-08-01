@@ -1,8 +1,8 @@
-<ChSidebar>
-  <ChSidebarGroup @title="SEARCH FOR">
-    <ChSidebarLink @route="search.assets" @title="Assets" @icon="broadcast-tower" iconType="s" />
-    <ChSidebarLink @route="search.languages" @title="Language" @icon="language" iconType="s" />
-  </ChSidebarGroup>
+<ChSidebar as |s|>
+  <s.group @title="SEARCH FOR">
+    <s.link @route="search.assets" @title="Assets" @icon="broadcast-tower" @iconType="s" />
+    <s.link @route="search.languages" @title="Language" @icon="language" @iconType="s" />
+  </s.group>
 </ChSidebar>
 
 <main class="col">

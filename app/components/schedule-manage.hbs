@@ -61,10 +61,8 @@
                   Training.</b>
               {{/if}}
             {{else}}
-              <b class="text-danger">Unfortunately, the Online Training course is still being worked on.</b><br>
-              You may not signup for shifts, including trainings, until the course is ready and you have passed it.
-              Please
-              check back later.
+              {{fa-icon "hourglass-half"}} <b class="text-danger">Unfortunately, the Online Training course is still being worked on.</b><br>
+              Please check back later.
             {{/if}}
           </li>
         {{else if (and (not this.hasApprovedPhoto) (not this.permission.online_training_passed))}}

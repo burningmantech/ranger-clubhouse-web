@@ -7,8 +7,8 @@ import $ from 'jquery';
 export default class ChSidebarComponent extends Component {
   @service house;
 
-  get linkBg() {
-    return isEmpty(this.args.linkBg) ? 'bg-dark' : this.args.linkBg;
+  get themeClass() {
+    return isEmpty(this.args.theme) ? 'default' : this.args.theme;
   }
 
   @action

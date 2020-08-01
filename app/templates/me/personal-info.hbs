@@ -1,19 +1,8 @@
 <h1>Personal Information For <span class="d-inline-block">{{person.callsign}}</span></h1>
+<BackToHome/>
 
 <ChForm @formId="person" @formFor={{this.person}} @autocomplete="on" @validator={{this.personInfoValidations}}
         @onSubmit={{action this.onSubmit}} @onCancel={{action this.onCancel}} as |f|>
-  <div class="form-row mb-2">
-    <div class="col-12">
-      Your account status is {{this.person.status}}.
-      {{#if (and this.person.isActive this.person.years)}}
-        You have rangered for {{pluralize this.person.years.length "year"}}:
-        {{#each this.person.years as |year|}}
-          {{year}}
-        {{/each}}
-      {{/if}}
-    </div>
-  </div>
-
   <fieldset>
     <legend>General Information</legend>
     <div class="form-row">
@@ -52,11 +41,13 @@
     {{#unless this.person.isAuditor}}
       <div class="form-group">
         Do you have a difficult to pronounce callsign? Enter the phonetic spelling below.
+        <span class="d-inline-block">
         (e.g., 3pio -&gt; "Three-Pee-Oh", Jschool -> "JAY-school", etc)
+        </span>
       </div>
 
       <div class="form-row">
-        <f.input @name="callsign_pronounce" @label="Callsign Pronounciation" @size=20 @maxlength=20 />
+        <f.input @name="callsign_pronounce" @label="Callsign Pronounciation" @size=20 @maxlength=20/>
       </div>
 
       <div class="form-group">

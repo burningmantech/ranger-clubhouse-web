@@ -131,87 +131,87 @@
   </div>
 </div>
 
-
-<table class="table table-fixed table-striped table-hover table-sm">
-  <caption>{{pluralize this.students.length "student"}} ({{this.passedCount}} passed)</caption>
-  <thead>
-  <tr>
-    <th class="w-10">Callsign</th>
-    <th class="w-15">Status / Current</th>
-    <th class="w-5 text-right">Pass?</th>
-    <th class="w-5 text-center">Rank</th>
-    <th class="w-55">Notes</th>
-    <th class="w-10">Action</th>
-  </tr>
-  </thead>
-
-  <tbody>
-  {{#each this.students as |student|}}
-    <tr class="{{if (or student.is_retired student.is_inactive) "bg-highlight"}}">
-      <td class="w-10">
-        {{#if (or student.is_retired student.is_inactive)}}
-          {{fa-icon "exclamation-triangle"}}
-        {{/if}}
-        <PersonLink @person={{student}} />
-      </td>
-      <td class="w-15">
-        {{student.status}}{{if student.is_art_prospective (fa-icon "asterisk")}}
-        {{#if (not-eq student.status student.current_status)}}
-          <div class="small">&lt;{{student.current_status}}&gt;</div>
-        {{/if}}
-      </td>
-      <td class="w-5 text-center">
-        {{#if student.passed}}
-          {{fa-icon "check" color="success"}}
-        {{else}}
-          -
-        {{/if}}
-      </td>
-      <td class="w-5 text-center">
-        {{#if student.rank}}
-          {{student.rank}}
-        {{else if student.need_ranking}}
-          {{fa-icon "question"}}
-        {{else}}
-          -
-        {{/if}}
-      </td>
-      <td class="w-55">
-        {{#if student.personnel_issue}}
-          <div class="mb-2">
-            <b class="text-danger">Personnel Flag raised. Take no actions until resolved.</b>
-          </div>
-        {{/if}}
-        {{#each student.notes as |note|}}
-          {{#unless note.is_log}}
-            <div class="mb-2">
-              {{note.note}}
-            </div>
-          {{/unless}}
-        {{else}}
-          <i>none</i>
-        {{/each}}
-        {{#if student.fkas}}
-          <div class="mt-2">
-            FKA: {{join student.fkas ", "}}
-          </div>
-        {{/if}}
-
-      </td>
-      <td class="w-10">
-        <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.editStudentAction student)}}>
-          {{fa-icon "edit"}} Edit
-        </button>
-      </td>
-    </tr>
-  {{else}}
+<div class="table-responsive">
+  <table class="table table-fixed table-striped table-hover table-sm min-width-1000">
+    <caption>{{pluralize this.students.length "student"}} ({{this.passedCount}} passed)</caption>
+    <thead>
     <tr>
-      <td colspan="{{if this.training.is_art 6 9}}"><b class="text-danger">No students have signed up yet.</b></td>
+      <th class="w-15">Callsign</th>
+      <th class="w-15">Status / Current</th>
+      <th class="w-5 text-right">Pass?</th>
+      <th class="w-5 text-center">Rank</th>
+      <th class="w-50">Notes</th>
+      <th class="w-10">Action</th>
     </tr>
-  {{/each}}
-  </tbody>
-</table>
+    </thead>
 
+    <tbody>
+    {{#each this.students as |student|}}
+      <tr class="{{if (or student.is_retired student.is_inactive) "bg-highlight"}}">
+        <td class="w-15">
+          {{#if (or student.is_retired student.is_inactive)}}
+            {{fa-icon "exclamation-triangle"}}
+          {{/if}}
+          <PersonLink @person={{student}} />
+        </td>
+        <td class="w-15">
+          {{student.status}}{{if student.is_art_prospective (fa-icon "asterisk")}}
+          {{#if (not-eq student.status student.current_status)}}
+            <div class="small">&lt;{{student.current_status}}&gt;</div>
+          {{/if}}
+        </td>
+        <td class="w-5 text-center">
+          {{#if student.passed}}
+            {{fa-icon "check" color="success"}}
+          {{else}}
+            -
+          {{/if}}
+        </td>
+        <td class="w-5 text-center">
+          {{#if student.rank}}
+            {{student.rank}}
+          {{else if student.need_ranking}}
+            {{fa-icon "question"}}
+          {{else}}
+            -
+          {{/if}}
+        </td>
+        <td class="w-50">
+          {{#if student.personnel_issue}}
+            <div class="mb-2">
+              <b class="text-danger">Personnel Flag raised. Take no actions until resolved.</b>
+            </div>
+          {{/if}}
+          {{#each student.notes as |note|}}
+            {{#unless note.is_log}}
+              <div class="mb-2">
+                {{note.note}}
+              </div>
+            {{/unless}}
+          {{else}}
+            <i>none</i>
+          {{/each}}
+          {{#if student.fkas}}
+            <div class="mt-2">
+              FKA: {{join student.fkas ", "}}
+            </div>
+          {{/if}}
+
+        </td>
+        <td class="w-10">
+          <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.editStudentAction student)}}>
+            {{fa-icon "edit"}} Edit
+          </button>
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="{{if this.training.is_art 6 9}}"><b class="text-danger">No students have signed up yet.</b></td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</div>
 <div class="row">
   <div class="col-sm-12 col-md-8 col-lg-5">
     <table class="table table-striped table-hover">

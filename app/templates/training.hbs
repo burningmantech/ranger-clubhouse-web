@@ -1,22 +1,22 @@
-<ChSidebar>
-  <ChSidebarGroup @title={{training.title}}>
-    <ChSidebarLink @route="training.index" @title="Training Sessions" @icon="list-alt" @iconType="r"/>
-    <ChSidebarLink @route="training.capacity" @routeArg={{training.id}} @title="Training Capacity" @icon="battery-half"
+<ChSidebar as |s|>
+  <s.group @title={{training.title}}>
+    <s.link @route="training.index" @title="Training Sessions" @icon="list-alt" @iconType="r"/>
+    <s.link @route="training.capacity" @routeArg={{training.id}} @title="Training Capacity" @icon="battery-half"
                    @iconType="s"/>
-    <ChSidebarLink @route="training.multiple-enrollments" @routeArg={{training.id}} @title="Multiple Enrollments"
+    <s.link @route="training.multiple-enrollments" @routeArg={{training.id}} @title="Multiple Enrollments"
                    @icon="copy" @iconType="s"/>
-    <ChSidebarLink @route="training.people-training-completed" @routeArg={{training.id}} @title="Training Completed"
+    <s.link @route="training.people-training-completed" @routeArg={{training.id}} @title="Training Completed"
                    @icon="check-square" @iconType="s"/>
-    <ChSidebarLink @route="training.trainer-attendance" @routeArg={{training.id}} @title="Trainer Attendance"
+    <s.link @route="training.trainer-attendance" @routeArg={{training.id}} @title="Trainer Attendance"
                    @icon="user-check" @iconType="s"/>
     {{#if training.is_art}}
-      <ChSidebarLink @route="training.untrained-people" @routeArg={{training.id}} @title="Untrained People"
+      <s.link @route="training.untrained-people" @routeArg={{training.id}} @title="Untrained People"
                      @icon="exclamation-circle" @iconType="s"/>
     {{else if (has-role "survey-management")}}
-      <ChSidebarLink @route="training.survey.index" @routeArg={{training.id}} @title="Training Surveys" @icon="poll"
+      <s.link @route="training.survey.index" @routeArg={{training.id}} @title="Training Surveys" @icon="poll"
                      @iconType="s"/>
     {{/if}}
-  </ChSidebarGroup>
+  </s.group>
 </ChSidebar>
 
 <main class="col min-width-500">
