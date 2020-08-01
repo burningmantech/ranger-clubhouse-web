@@ -41,8 +41,11 @@
     {{#if @canAddNote}}
       <ChForm @formId="person-note" @formFor={{this.noteForm}}
               @onSubmit={{this.submitNoteAction}}  @onCancel={{@closeNoteAction}} as |f|>
-        <b>Your note will be timestamped, and appended to any existing {{@viewYear}} notes.</b>
+        <b>Your note will be timestamped, and appended to any existing notes.</b>
         <div class="row mt-2">
+          <div class="col-auto">
+            <f.input @name="event_year" @label="Event Year" @type="select" @options={{this.yearOptions}} />
+          </div>
           <div class="col-auto">
             <f.input @name="ranking" @label={{concat (uppercase @type) " Ranking"}} @type="select"
                      @options={{if (eq @type "personnel") this.personnelRankingOptions this.rankingOptions}} />
