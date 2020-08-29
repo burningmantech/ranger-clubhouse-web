@@ -1,0 +1,93 @@
+<div class="d-print-none">
+  <YearSelect @title="Potential Shirt Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+  <p>
+    The report shows people who may potentialy earn a short and long sleeve shirts for a given event year.
+  </p>
+  <p>
+    <a href="#shirt-totals">Jump to shirt totals</a>
+  </p>
+  <p>
+    <button type="button" class="btn btn-secondary" {{action this.exportPeople}}>
+      Export as CSV
+    </button>
+  </p>
+</div>
+
+<div class="d-none d-print-block">
+  <h1>Quartermaster Potential Earned Shirts Earned In {{this.year}}</h1>
+</div>
+
+Showing  {{pluralize this.people.length "person"}}
+<table class="table table-hover table-striped table-sm">
+  <thead>
+  <tr>
+    <th>Callsign</th>
+    <th>Name</th>
+    <th class="text-right">Estimated Hours</th>
+    <th class="text-right">Actual Hours</th>
+    <th>Tee Shirt ({{threshold_ss}} hrs)</th>
+    <th>Long Sleeve ({{threshold_ls}} hrs)</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  {{#each this.people as |person|}}
+    <tr>
+      <td>
+        <PersonLink @person={{person}} />
+      </td>
+      <td>{{person.first_name}} {{person.middle_name}} {{person.last_name}}</td>
+      <td class="text-right">{{person.estimated_hours}}</td>
+      <td class="text-right">{{person.actual_hours}}</td>
+      <td>
+        {{#unless person.earned_ss}}
+          not earned -
+        {{/unless}}
+        {{person.teeshirt_size_style}}
+      </td>
+      <td>
+        {{#unless person.earned_ls}}
+          not earned -
+        {{/unless}}
+        {{person.longsleeveshirt_size_style}}
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="5"><b class="text-danger">No one was found to have qualified for clothing in {{this.year}}</b></td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
+
+{{#if this.people}}
+  <h3 id="shirt-totals">Shirt Totals</h3>
+  <div class="row">
+    {{#each this.shirtGroups as |shirts|}}
+      <div class="col-3">
+        <table class="table table-sm table-box">
+          <caption>
+            {{shirts.name}} Totals
+            <span class="d-inline-block float-right">
+            <button class="btn btn-secondary btn-sm" {{action this.exportCounts shirts}}>Export</button>
+          </span>
+          </caption>
+          <thead>
+          <tr>
+            <th>Shirt Type</th>
+            <th class="text-right">Count</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each shirts.types as |shirt|}}
+            <tr>
+              <td>{{shirt.type}}</td>
+              <td class="text-right">{{shirt.count}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    {{/each}}
+  </div>
+{{/if}}
