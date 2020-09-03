@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import {action, computed} from '@ember/object';
+import {action, set} from '@ember/object';
 import {inject as service} from '@ember/service';
 import {Role} from 'clubhouse/constants/roles';
 import {tracked} from '@glimmer/tracking';
@@ -10,33 +10,42 @@ export default class ClubhouseMessagesComponent extends Component {
   @service session;
   @service ajax;
 
-  @tracked filterMessages = 'all';
+//  @tracked filterMessages = 'all';
+//  @tracked sortBy = 'desc';
+
   @tracked isSubmitting = false;
   @tracked newMessage = null;
 
-  get viewMessages() {
-    const messages = this.args.messages;
+  /*
+   get viewMessages() {
+     let messages = this.args.messages;
 
-    switch (this.filterMessages) {
-      case 'read':
-        return messages.filterBy('delivered', true);
-
+     switch (this.filterMessages) {
+     case 'read':
+       messages = messages.filterBy('delivered', true);
+       break;
       case 'unread':
-        return messages.filterBy('delivered', false);
-
-      default:
-        return messages;
+       messages = messages.filterBy('delivered', false);
+       break;
     }
-  }
 
-  @computed('args.messages.@each.delivered')
+    if (this.sortBy === 'asc') {
+      messages.sortBy('sent_at', 'asc');
+    } else {
+      messages.sortBy('sent_at', 'desc');
+    }
+
+     return messages;
+   }
+
+   */
+
   get unreadCount() {
     return this.args.messages.reduce(function (total, msg) {
       return (msg.delivered ? 0 : 1) + total;
     }, 0);
   }
 
-  @computed('args.messages.@each.delivered')
   get readCount() {
     return this.args.messages.reduce(function (total, msg) {
       return (msg.delivered ? 1 : 0) + total;
@@ -54,6 +63,13 @@ export default class ClubhouseMessagesComponent extends Component {
     if (this.session.userId == person.id) {
       this.session.user.set('unread_message_count', unreadCount);
     }
+  }
+
+  @action
+  toggleMessage(message, event) {
+    event.preventDefault();
+    set(message, 'showing', !message.showing);
+    $(`#message-text-${message.id}`).collapse('toggle');
   }
 
   @action

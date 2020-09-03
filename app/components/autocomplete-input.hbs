@@ -21,6 +21,8 @@
       {{on "blur" this.blurEvent}}
       {{on "input" this.inputEvent}}
       {{did-insert this.inputInsertElement}}
+            autofocus={{@autofocus}}
+           @inputClass="{{this.controlClass}} autocomplete-input {{if (get @model.error @name) "is-invalid"}}"
     />
 
     {{#if @appendSearchIcon}}

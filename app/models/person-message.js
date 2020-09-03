@@ -18,7 +18,10 @@ export default class PersonMessageModel extends Model {
   @attr('string') body;
   @attr('date') sent_at;
 
+  @attr('string') sender_photo_url;
+
   @attr('boolean', { readOnly: true }) delivered;
+  @attr('boolean', { readOnly: true }) is_rbs;
 
   @computed('creator_person_id', 'sender_person_id')
   get isDictacted() {
