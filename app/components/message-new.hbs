@@ -5,39 +5,35 @@
           @onSubmit={{@onSubmit}}
           @onCancel={{@onCancel}} as |f|>
     <Modal.body>
-      <p>
-        Please take note:
-      <ul>
-        <li><strong class="text-danger">Clubhouse messaging is intended for official Ranger business while the event is
-          happening.</strong></li>
-        <li>Clubhouse messages are NOT private. The message might be seen by the HQ Window staff during the event and
-          the Tech Team doing maintence.
-        </li>
-        <li><b>Use email or the Contact Ranger page</b> if your message is more of a personal nature or
-          the event is over.
-        </li>
-        <li>All messages are logged and archived at the end of each calendar year.</li>
-        <li>
-          Remember that Burning Man and the Rangers have a zero-tolerance policy for behavior that is non-consensual,
-          abusive, harassing, or harmful to others.
-        </li>
-      </ul>
+      <p class="ml-2">
+        Messages <b class="text-danger">are NOT private</b> (will be seen by HQ staff &amp; Tech Team), for official
+        Ranger business only, and archived each year.
+        Burning Man and the Rangers have a zero-tolerance policy for behavior that is non-consensual,
+        abusive, harassing, or harmful to others.
       </p>
-      <div class="forn-group row">
-        <div class="col-sm-12 col-md-6">
-          <f.input @name="message_from" @label="From" @type="text" @size=30 @maxlength=120 @autofocus=true/>
-        </div>
+      <div class="form-row mb-2">
+        {{#unless @isMe}}
+          <f.input @name="message_from" @label="From" @type="text" @size=30 @maxlength=120 @autofocus=true
+                   @gridClass="col-sm-12 col-md-6"/>
+        {{/unless}}
         <div class="col-sm-12 col-md-6">
           <f.input @name="recipient_callsign"
                    @placeholder="Enter a callsign"
                    @label="To"
                    @type="search"
-                   @onSearch={{this.searchCallsignAction}} />
+                   @size={{30}}
+                   @onSearch={{this.searchCallsignAction}}
+                   @autofocus={{@isMe}}
+          />
         </div>
       </div>
-      <f.input @name="subject" @label="Subject" @maxlength=80/>
-      <f.input @name="body" @label="The message (be civil, courteous, polite, & professional)" @type="textarea" @rows=4
-               @cols=80/>
+      <div class="form-row">
+        <f.input @name="subject" @label="Subject" @size={{80}} @maxlength={{80}} @gridClass="col-auto"/>
+      </div>
+      <div class="form-row">
+        <f.input @name="body" @label="The message (be civil, courteous, polite, & professional)"
+                 @type="textarea" @rows={{4}} @cols={{80}} @gridClass="col-auto"/>
+      </div>
     </Modal.body>
     <Modal.footer @noAlign=true>
       <f.submit @label="Send" @disabled={{@isSubmitting}} />
