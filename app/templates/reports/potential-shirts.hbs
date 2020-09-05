@@ -1,8 +1,7 @@
 <div class="d-print-none">
-  <YearSelect @title="Earned Shirt Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+  <YearSelect @title="Potential Shirt Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
   <p>
-    The report shows people who earned a short and long sleeve shirts for a given event year. Only active accounts
-    meeting the tee shirt threshold will be shown.
+    The report shows people who may potentialy earn a short and long sleeve shirts for a given event year.
   </p>
   <p>
     <a href="#shirt-totals">Jump to shirt totals</a>
@@ -15,7 +14,7 @@
 </div>
 
 <div class="d-none d-print-block">
-  <h1>Quartermaster Earned Shirts Earned In {{this.year}}</h1>
+  <h1>Quartermaster Potential Earned Shirts Earned In {{this.year}}</h1>
 </div>
 
 Showing  {{pluralize this.people.length "person"}}
@@ -24,7 +23,8 @@ Showing  {{pluralize this.people.length "person"}}
   <tr>
     <th>Callsign</th>
     <th>Name</th>
-    <th class="text-right">Hours</th>
+    <th class="text-right">Estimated Hours</th>
+    <th class="text-right">Actual Hours</th>
     <th>Tee Shirt ({{threshold_ss}} hrs)</th>
     <th>Long Sleeve ({{threshold_ls}} hrs)</th>
   </tr>
@@ -36,8 +36,9 @@ Showing  {{pluralize this.people.length "person"}}
       <td>
         <PersonLink @person={{person}} />
       </td>
-      <td>{{person.first_name}} {{person.last_name}}</td>
-      <td class="text-right">{{person.hours}}</td>
+      <td>{{person.first_name}} {{person.middle_name}} {{person.last_name}}</td>
+      <td class="text-right">{{person.estimated_hours}}</td>
+      <td class="text-right">{{person.actual_hours}}</td>
       <td>
         {{#unless person.earned_ss}}
           not earned -

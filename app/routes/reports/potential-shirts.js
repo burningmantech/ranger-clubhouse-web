@@ -2,7 +2,7 @@ import Route from '@ember/routing/route';
 import requestYear from 'clubhouse/utils/request-year';
 import _ from 'lodash';
 
-export default class ReportsShirtsRoute extends Route {
+export default class ReportsPotentialShirtsRoute extends Route {
   queryParams = {
     year: { refreshModel: true },
   };
@@ -11,7 +11,7 @@ export default class ReportsShirtsRoute extends Route {
     const year = requestYear(params);
 
     this.set('year', year);
-    return this.ajax.request(`timesheet/shirts-earned`, {
+    return this.ajax.request(`timesheet/potential-shirts-earned`, {
       data: { year }
     });
   }

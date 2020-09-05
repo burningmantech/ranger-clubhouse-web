@@ -182,7 +182,7 @@ Router.map(function () {
     this.route('shift-coverage');
     this.route('shift-lead');
     this.route('shift-signups');
-    this.route('shirts');
+    this.route('potential-shirts');
     this.route('special-teams');
     this.route('timesheet-by-callsign');
     this.route('timesheet-by-position');
