@@ -1,9 +1,9 @@
-<h1>Clubhouse Messages for <span class="d-inline-block">{{this.person.callsign}}</span></h1>
+<h1>Messages for <span class="d-inline-block">{{this.person.callsign}}</span></h1>
 <BackToHome/>
 
+<ClubhouseMessages @person={{this.person}} @messages={{this.messages}} @isMe={{true}} />
+
 <p>
-  Clubhouse messages are way for various departments to communicate with Rangers
+  Clubhouse messages are way for various Ranger departments to communicate with Rangers
   while the event is happening.
 </p>
-
-<ClubhouseMessages @person={{this.person}} @messages={{this.messages}} />

@@ -4,7 +4,10 @@
             data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
             aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
-      Menu
+      Menu {{#if this.session.user.unread_message_count}}
+      <span class="badge badge-pill badge-success">{{fa-icon
+              "envelope"}} {{this.session.user.unread_message_count}}</span>
+    {{/if}}
     </button>
     <LinkTo @route="me.overview" class="navbar-brand">
       {{#if (eq (config "DeploymentEnvironment") "Staging")}}
@@ -20,11 +23,17 @@
       {{#if session.isAuthenticated}}
       {{! Show callsign and logout button on small screens with collapsed navbar}}
         <div class="navbar-text d-md-none float-right">
-          <LinkTo @route="logout" class="btn btn-sm btn-secondary text-white">Logout</LinkTo>
+          <LinkTo @route="logout" class="btn btn-secondary text-white">Logout</LinkTo>
         </div>
-        <div class="navbar-text d-md-none h4 text-black">
+        <div class="navbar-text d-md-none h4 text-black mt-2">
           {{session.user.callsign}}
         </div>
+        {{#if this.session.user.unread_message_count}}
+          <div class="navbar-item d-md-none h4 text-black mt-2">
+            <LinkTo @route="me.messages" class="btn btn-success btn-block text-white">Read {{pluralize
+                    this.session.user.unread_message_count "Message"}}</LinkTo>
+          </div>
+        {{/if}}
       {{/if}}
 
       <ul class="navbar-nav mr-auto">
@@ -353,8 +362,20 @@
       {{#if session.isAuthenticated}}
         <ul class="navbar-nav d-none d-md-inline">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">{{session.user.callsign}}</a>
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+              {{#if this.session.user.unread_message_count}}
+                <span class="badge badge-pill badge-success">{{fa-icon
+                        "envelope"}} {{this.session.user.unread_message_count}}</span>
+              {{/if}}
+              {{session.user.callsign}}
+            </a>
             <div class="dropdown-menu">
+              {{#if this.session.user.isRanger}}
+                <LinkTo @route="me.messages" class="dropdown-item">
+                  {{pluralize this.session.user.unread_message_count "message"}}
+                </LinkTo>
+                <div class="dropdown-divider"></div>
+              {{/if}}
               <a href="#" class="dropdown-item" {{action "logout"}}>Logout</a>
             </div>
           </li>

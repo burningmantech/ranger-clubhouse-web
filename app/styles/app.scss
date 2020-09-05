@@ -82,6 +82,7 @@ $sizes: (
 @import "access-documents";
 @import "alpha-sheet";
 @import "hq";
+@import "mail";
 @import "onboard";
 @import "photo";
 @import "schedule";
@@ -625,4 +626,11 @@ caption {
 
 .autocomplete-option-selected {
   background-color: #ececec;
+}
+
+@include media-breakpoint-down(md) {
+  .btn-md-block {
+    display: block;
+    width: 100%;
+  }
 }

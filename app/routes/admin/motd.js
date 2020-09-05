@@ -13,7 +13,7 @@ export default class AdminMotdRoute extends Route {
 
   model(params) {
     const query = Object.keys(this.queryParams).reduce((hash, key) => {
-      if (key in params) {
+      if (params[key]) {
         hash[key] = params[key];
       }
       return hash;
@@ -54,7 +54,6 @@ export default class AdminMotdRoute extends Route {
   resetController(controller, isExiting) {
     if (isExiting) {
       Object.keys(this.queryParams).forEach((param) => controller.set(param, null));
-      controller.set('logs', null);
     }
   }
 }
