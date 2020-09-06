@@ -1,5 +1,6 @@
 import Controller from '@ember/controller';
 import {action, set} from '@ember/object';
+import $ from 'jquery';
 
 export default class MeAnnouncementsController extends Controller {
   @action
