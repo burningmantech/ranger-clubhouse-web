@@ -13,32 +13,16 @@ export default class MePersonalInfoEditController extends Controller {
   shortSleeveOptions = ShortSleeveOptions;
   longSleeveOptions = LongSleeveOptions;
 
-  @tracked isSaved = false;
-  @tracked isSubmitting = false;
-
   @action
   onSubmit(model, isValid) {
     if (!isValid) {
       return;
     }
 
-    let reviewed = false;
-
-    this.isSaved = false;
-    this.isSubmitting = true;
-
-    if (!this.person.has_reviewed_pi) {
-      this.person.set('has_reviewed_pi', true);
-      reviewed = true;
-    }
-
+    this.person.has_reviewed_pi = true;
     this.house.saveModel(model, 'Your personal information was successfully updated.', () => {
-      this.isSaved = true;
-      if (reviewed) {
-        this.transitionToRoute('me.overview');
-      }
+         this.transitionToRoute('me.overview');
     })
-    .finally(() => this.isSubmitting = false);
   }
 
   @action

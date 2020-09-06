@@ -26,12 +26,24 @@ export default class ChFormSelectComponent extends Component {
       let selectedValues = [];
       for (let i = 0; i < options.length; i++) {
         if (options[i].selected) {
-          selectedValues.push(options[i].value);
+          selectedValues.push(this._getOptValue(options[i]));
         }
       }
       return this.args.onChange(selectedValues);
     } else {
-      return this.args.onChange(element.value);
+      return this.args.onChange(this._getOptValue(element));
+    }
+  }
+
+  _getOptValue(element) {
+    const value = element.value;
+
+    if (value === 'true') {
+      return true;
+    } else if (value === 'false') {
+      return false;
+    } else {
+      return value;
     }
   }
 

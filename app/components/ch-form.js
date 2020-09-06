@@ -11,7 +11,7 @@ import {run} from '@ember/runloop';
 export default class ChFormComponent extends Component {
   @service house;
 
-  @tracked model;
+  @tracked changeSetModel;
 
   watchingModel = null;
 
@@ -25,18 +25,21 @@ export default class ChFormComponent extends Component {
     this._buildChangeSet();
   }
 
+  get model() {
+    return this.changeSet ? this.changeSetModel : this.args.formFor;
+  }
+
   _buildChangeSet() {
     const {formFor, validator} = this.args;
 
     if (!this.changeSet) {
-      this.model = formFor;
       return;
     }
 
     if (validator) {
-      this.model = new Changeset(formFor, lookupValidator(validator), validator, {skipValidate: true});
+      this.changeSetModel = new Changeset(formFor, lookupValidator(validator), validator, {skipValidate: true});
     } else {
-      this.model = new Changeset(formFor);
+      this.changeSetModel = new Changeset(formFor);
     }
 
     /*

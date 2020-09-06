@@ -1,108 +1,56 @@
-{{#if this.isDevelopmentEnv}}
-  <DashboardDebugging @person={{@person}} />
-{{/if}}
+<h2 id="homepage-title">Clubhouse Auditor Checklist</h2>
 <p>
-<h4 id="hello-auditor">Hello Auditor {{@person.callsign}}!</h4>
-</p>
-<p>
-  As an Auditor, take note of the following:
-<ul class="pl-3 pr-1">
-  <li><b>Auditing is NOT a path to becoming a Black Rock Ranger.</b></li>
-  <li>You can sign up to participate in a ranger training to get a better understanding of what Black Rock Rangers do.
-  </li>
-  <li>Visit <a href="https://rangers.burningman.org/becoming-a-ranger/" target="_blank" rel="noopener">Becoming a
-    Ranger</a>
-    to read about the Ranger volunteer requirements and qualifications.
-  </li>
-  <li>Your Clubhouse handle is your last name, first initial, and the year. Auditors are not allowed to choose their own
-    handles. Black Rock Ranger handles are only assigned as part of the ranger onboarding process.
-  </li>
-</ul>
+  Hello Auditor {{@person.first_name}}! Your Clubhouse handle is {{@person.callsign}}.
 </p>
 
-<p>
-  Please complete the following checklist.
-</p>
-
-<div class="onboard-auditor-tasks bg-gray">
-  {{#each this.tasks as |task|}}
-    <div class="onboard-task-row  {{if
-            (and (not-eq task.result "optional") (not-eq task.result "waiting") (not task.isActive)) "text-muted"}}">
-      <div class="onboard-icon">
-        {{#if (eq task.result "completed")}}
-          {{fa-icon "check-circle" size="2x" color="dark-gray"}}
-        {{else if (eq task.result "action-needed")}}
-          {{fa-icon "arrow-right" size="2x" color="success"}}
-        {{else if (eq task.result "not-available")}}
-          {{fa-icon "circle" type="far" size="2x"}}
-        {{else if (eq task.result "urgent")}}
-          {{fa-icon "exclamation-circle" size="2x" color="danger"}}
-        {{else if (eq task.result "blocked")}}
-          {{fa-icon "times" size="2x" color="danger"}}
-        {{else if (eq task.result "waiting")}}
-          {{fa-icon "hourglass-half" size="2x"}}
-        {{else if (eq task.result "optional")}}
-          {{fa-icon "file-signature" size="2x"}}
-        {{else}}
-          Uh oh! The task check result [{{task.result}}] is not understood. This is a bug! Please report this to the
-          tech team.<br>
-        {{/if}}
-      </div>
-
-      <div class="onboard-text">
-        <div class="h4">
-          {{#if task.isBehavioralAgreement}}
-            <a href {{on "click" this.showBehaviorAgreementAction}} disabled={{this.isNotUser}}>{{task.name}}</a>
-          {{else if task.linkUrl}}
-            <a href="{{task.linkUrl}}" target="_blank" rel="noopener" disabled={{this.isNotUser}}>{{task.name}}</a>
-          {{else if task.route}}
-            <LinkTo @route={{task.route}} disabled={{this.isNotUser}}>{{task.name}}</LinkTo>
-          {{else}}
-            {{task.name}}
-          {{/if}}
+<div class="dashboard-box">
+  {{#if @motds}}
+    <DashboardMotd @motds={{@motds}} />
+  {{/if}}
+  <DashboardGroup @title="Complete the Checklist" @isActive={{true}} @hasTopArrow={{not (is-empty @motds)}} >
+    <div class="dashboard-step-row dashboard-step-active">
+      <div class="dashboard-step-title">
+        <div class="dashboard-icon">
+          <DashboardIcon @result="note"/>
         </div>
-        {{#if (eq task.result "completed")}}
-          <div>&mdash; {{if task.message task.message "Completed"}}</div>
-        {{else if task.isTrainingSignup}}
-          <div>&mdash; Visit the
-            <LinkTo @route="me.schedule">Me &gt; Schedule / Sign Up</LinkTo>
-            page to sign up.
-          </div>
-        {{else if task.isVisitPersonInfo}}
-          <div>&mdash; Visit the
-            <LinkTo @route="me.personal-info">Me &gt; Personal Info page</LinkTo>
-            .
-            Click the Update button at the bottom of the page to save your changes
-            or to verify that the existing information is correct.
-          </div>
-        {{else if task.message}}
-          <div>
-            &mdash; {{task.message}}
-            {{#if task.email}}
-              <br>
-              {{mail-to task.email}}
-            {{/if}}
-          </div>
+        As an auditor, take note of the following:
+      </div>
+      <div class="dashboard-step-description">
+        {{#if this.isOffSeason}}
+          <p>
+            This is the off season and trainings will not
+            be available until April. Check back in March when the training schedule is posted.
+          </p>
+        {{/if}}
+        <p>
+          <b class="text-danger">You are NOT on a path to becoming a Black Rock Ranger.</b>
+        </p>
+        <p>
+          Visit
+          <a href="https://rangers.burningman.org/becoming-a-ranger/" target="_blank" rel="noopener">
+            Becoming a Ranger
+          </a>
+          to read about the Ranger volunteer requirements and qualifications.
+        </p>
+        <p>
+          You can sign up to participate in a ranger training to get a better understanding of what Black Rock
+          Rangers do.
+        </p>
+        <p>
+          Your Clubhouse handle, {{@person.callsign}}, is your last name, first initial, and the year.
+          Auditors are not allowed to choose their own handles. Black Rock Ranger handles are only assigned
+          as part of the ranger onboarding  process.
+        </p>
 
-          {{#if task.isOnlineTraining}}
-            <OnlineTrainingLaunch @text="Click Here" @person={{@person}} @url={{@milestones.online_training_url}} />
-            to take the online training course.
-          {{/if}}
-        {{/if}}
-        {{#if task.survey}}
-          {{#each @milestones.surveys.sessions as |slot|}}
-            <p class="my-1">
-              <LinkTo @route="me.survey" @query={{hash slot_id=slot.id type="training"}} >
-                {{slot.position_title}} - {{slot.description}} {{shift-format slot.begins}}
-              </LinkTo>
-            </p>
-          {{/each}}
-        {{/if}}
       </div>
     </div>
-  {{/each}}
+    {{#each this.steps as |step|}}
+      <DashboardStep @step={{step}}
+                     @isActive={{step.isActive}}
+                     @showBehaviorAgreementAction={{@showBehaviorAgreementAction}}
+      />
+    {{/each}}
+  </DashboardGroup>
+  <DashboardLinks @isPNV={{true}} />
 </div>
 
-{{#if showBehaviorAgreement}}
-  <BehavioralAgreementModal @closeAgreement={{this.closeAgreement}} @signAgreement={{this.signAgreement}} />
-{{/if}}

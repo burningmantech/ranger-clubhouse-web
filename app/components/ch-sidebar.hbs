@@ -1,5 +1,5 @@
 <div id="sidebar-container"
-     class="sidebar-theme-{{this.themeClass}} sidebar-expanded d-none d-md-block d-print-none"
+     class="sidebar-theme-{{this.themeClass}} sidebar-expanded d-none d-lg-block d-print-none"
   {{did-insert this.sidebarInserted}}>
   <ul class="list-group">
     {{yield (hash group=(component "sidebar/group" theme=@theme title=title)

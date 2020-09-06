@@ -1,3 +1,4 @@
+<h2 class="homepage-title">Welcome to the Secret Clubhouse</h2>
 {{#if (eq @photo.photo_status "missing")}}
   <ChBox @title="Your Photo Is Needed" @type="warning">
     <p>
@@ -36,6 +37,7 @@
   </ChAlert>
 {{/if}}
 
+
 <PersonPhoto @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}} />
 
 <div class="mt-1 mb-1">
@@ -45,6 +47,10 @@
     Hello {{#if @person.vintage}}Vintage{{/if}} Ranger! You have Rangered at {{pluralize @person.years.length "burn"}}.
   {{/if}}
 </div>
+
+{{#if @motds}}
+  <DashboardMotd @motds={{@motds}} @hasBottomArrow={{false}} />
+{{/if}}
 
 {{#if @milestones.surveys.sessions}}
   <ChBox @title="Your feedback on Ranger training is requested">

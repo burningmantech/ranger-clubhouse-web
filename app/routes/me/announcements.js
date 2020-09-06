@@ -6,7 +6,9 @@ export default class MeAnnouncementsRoute extends Route {
   }
 
   setupController(controller, model) {
-    controller.set('motds', model.motd);
+    const motd = model.motd;
+    motd.sort((a,b) => (a.has_read ? 1 : 0) - (b.has_read ? 1 : 0));
+    controller.set('motds', motd);
     controller.set('motdMeta', model.meta);
   }
 }

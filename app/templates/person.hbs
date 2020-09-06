@@ -33,7 +33,7 @@
     </ChAlert>
   {{/if}}
 
-  <div class="d-flex flex-md-row flex-column justify-content-between">
+  <div class="d-flex flex-lg-row flex-column justify-content-between">
     <h2 class="align-middle">
       <PersonLink @person={{this.person}} /> &lt;{{this.person.status}}{{if this.person.vintage "/vintage"}}
       , {{this.person.first_name}} {{this.person.last_name}}&gt;
@@ -56,7 +56,7 @@
 
   <hr class="mt-1 mr-n2 ml-n2">
 
-  <div class="row d-md-none mb-2">
+  <div class="row d-lg-none mb-2">
     {{!
       The drop down menu only appear on mobile/small screen devices
       When adding new areas, be sure to add the link to person-sidebar.hbs
@@ -67,7 +67,7 @@
                 aria-expanded="false">
           Account Section
         </button>
-        <div class="dropdown-menu">
+        <div class="dropdown-menu w-100">
           <LinkTo @route="person.index" @model={{this.person.id}} class="dropdown-item">Account Info</LinkTo>
           <LinkTo @route="person.schedule" @model={{this.person.id}} class="dropdown-item">Schedule / Sign Up</LinkTo>
           <LinkTo @route="person.event-info" @model={{this.person.id}} class="dropdown-item">Event Info</LinkTo>

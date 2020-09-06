@@ -123,6 +123,7 @@ Router.map(function () {
     this.route('bmid');
     this.route('broadcast-log');
     this.route('contact-log');
+    this.route('dashboard');
     this.route('emergency-contact');
     this.route('event-info');
     this.route('mentors');
@@ -133,7 +134,6 @@ Router.map(function () {
     this.route('tickets');
     this.route('timesheet-log');
     this.route('timesheet');
-    this.route('onboard');
     this.route('photos');
     this.route('status-history');
     this.route('unified-flagging');

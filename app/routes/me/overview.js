@@ -7,7 +7,7 @@ export default class MeOverviewRoute extends Route.extend(MeRouteMixin) {
     const person = this.modelFor('me');
 
     const hash = {
-      bullentins: this.ajax.request('motd/bulletin', { data: { type: 'active', page_size: 100 }}),
+      bullentins: this.ajax.request('motd/bulletin', { data: { type: 'unread', page_size: 100 }}),
       milestones: this.ajax.request(`person/${person.id}/milestones`).then((result) => result.milestones)
     };
 

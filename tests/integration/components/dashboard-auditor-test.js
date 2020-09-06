@@ -11,8 +11,18 @@ module('Integration | Component | dashboard-auditor', function (hooks) {
     this.set('milestones', {
       training: {status: 'pending'}, alpha_shift: {status: 'pending'}, surveys: {sessions: [], trainers: []}
     });
-    await render(hbs`<DashboardAuditor @milestones={{this.milestones}} @person={{this.person}} />`);
+    this.set('motds', []);
+    this.set('showBehaviorAgreementAction', () => {});
+    this.set('debugUpdateAction', () => {});
 
-    assert.dom('#hello-auditor').exists();
+    await render(hbs`<DashboardAuditor
+                    @milestones={{this.milestones}}
+                    @person={{this.person}}
+                    @motds={{this.motds}}
+                    @showBehaviorAgreementAction={{this.showBehaviorAgreementAction}}
+                    @debugUpdateAction={{this.debugUpdateAction}}
+                    />`);
+
+    assert.dom('#homepage-title').exists();
   });
 });

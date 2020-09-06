@@ -3,10 +3,9 @@
 .photo-mini {
   background: #fcfcfc;
   border: 1px solid #999;
+  border-radius: $border-radius-lg;
   text-align: center;
 
-  border: 1px solid $border-color;
-  border-radius: $border-radius-lg;
   width: 60px;
   img {
     display: block;
@@ -18,19 +17,16 @@
 .mugshot {
   background: #fcfcfc;
   padding: 5px;
-  border: 1px solid #999;
-  text-align: center;
-
-  margin-bottom: 10px;
-  border: 1px solid $border-color;
+  border: 1px solid #dee2e6;
   border-radius: $border-radius-lg;
-
-  width: 200px;
+  text-align: center;
+  margin-bottom: 10px;
+  width: 170px;
 
   img {
     display: block;
-    max-width: 190px;
-    max-height: 246px;
+    max-width: 140px;
+    margin-bottom:5px;
   }
 }
 
