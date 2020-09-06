@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import {inject as service} from '@ember/service';
 
 export default class OnlineTrainingLaunchComponent extends Component {
   @service house;
@@ -9,6 +9,7 @@ export default class OnlineTrainingLaunchComponent extends Component {
 
   @tracked showCreationDialog = false;
   @tracked showExodusDialog = false;
+  @tracked showErrorDialog = false;
 
   @tracked password = null;
   @tracked alreadyExists = false;
@@ -22,17 +23,17 @@ export default class OnlineTrainingLaunchComponent extends Component {
 
     this.showCreationDialog = true;
     this.isSubmitting = true;
-    this.ajax.request(`online-training/${person.id}/setup`, { method: 'POST' })
+    this.ajax.request(`online-training/${person.id}/setup`, {method: 'POST'})
       .then((result) => {
-        if (result.status == 'exists') {
+        if (result.status === 'exists') {
           this.alreadyExists = true;
         } else {
           this.password = result.password;
         }
         this.expiryDate = result.expiry_date;
         this.showExodusDialog = true;
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() =>{
+      }).catch(() => this.showErrorDialog = true)
+      .finally(() => {
         this.isSubmitting = false;
         this.showCreationDialog = false;
       });
@@ -42,5 +43,10 @@ export default class OnlineTrainingLaunchComponent extends Component {
   launchTrainingAction() {
     this.isSubmitting = true;
     window.location.href = this.args.url;
+  }
+
+  @action
+  closeAction() {
+    this.showErrorDialog = false;
   }
 }

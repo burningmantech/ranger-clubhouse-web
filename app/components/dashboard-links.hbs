@@ -1,0 +1,28 @@
+<div class="dashboard-group dashboard-links-things">
+  <div class="dashboard-group-title-box">
+    <div class="dashboard-group-title-text">Links &amp; Things</div>
+  </div>
+  <div class="dashboard-steps">
+    <div class="dashboard-step-row">
+      <div class="dashboard-step">
+        <div class="dashboard-step-description">
+        <p><a href={{config "RangerManualUrl"}}>Ranger Manual (online)</a></p>
+        {{#if (not @isPNV)}}
+          <p><a href={{config "RangerFeedbackFormUrl"}} rel="noopener" target="_blank">Ranger Feedback Form</a></p>
+          <p>
+            <a href={{config "JoiningRangerSpecialTeamsUrl"}} rel="noopener" target="_blank">
+              How To Join Ranger Special Teams
+            </a>
+          </p>
+          <p>
+            <a href={{config "RangerPoliciesUrl"}} rel="noopener" target="_blank">Ranger Polices Folder</a>
+          </p>
+          <p>
+            <a href={{config "RadioCheckoutFormUrl"}} rel="noopener" target="_blank">Radio Checkout Form</a>
+          </p>
+        {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

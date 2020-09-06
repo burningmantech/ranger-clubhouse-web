@@ -105,6 +105,11 @@ export default Mixin.create({ // eslint-disable-line ember/no-new-mixins
     return (!this.isAuditor && !this.isNonRanger && isEmpty(this.bpguid));
   }),
 
+  get isCheetahCub() {
+    const status = this.status;
+    return status === PersonStatus.INACTIVE_EXTENSION || status === PersonStatus.RETIRED || status === PersonStatus.RESIGNED;
+  },
+
   hasRole(roles) {
     let personRoles = this.roles;
 

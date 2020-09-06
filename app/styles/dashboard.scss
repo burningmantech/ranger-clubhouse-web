@@ -1,0 +1,214 @@
+/*
+   Ranger/PNV/Auditor dashboard style sheet
+ */
+
+.dashboard-box {
+  max-width: 900px;
+}
+
+.dashboard-group {
+  display: flex;
+  margin-bottom: 10px;
+
+  .mugshot {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+  }
+}
+
+.dashboard-group-title-box {
+  background-color: $wheatfield;
+  font-weight: 400;
+}
+
+
+.dashboard-steps {
+  flex: 1;
+  background-color: #efefef;
+  padding-top: 10px;
+}
+
+.dashboard-step-header {
+  padding: 5px 5px 10px 10px;
+  font-weight: 400;
+  color: #152A23;
+  font-size: 0.85rem;
+}
+
+.dashboard-group-active {
+  .dashboard-group-title-box {
+    background-color: $kakhi !important;
+    font-weight: 500;
+  }
+
+  .dashboard-steps {
+    background-color: #fcf8e3 !important;
+  }
+}
+
+.dashboard-step-row {
+  margin-bottom: 10px;
+}
+
+.dashboard-icon {
+  display: inline-block;
+  text-align: center;
+}
+
+
+.dashboard-step-title {
+  margin: 0px 5px 7px 5px;
+  vertical-align: center;
+  font-weight: 400;
+  color: #495057;
+}
+
+.dashboard-step-description {
+  color: #6c757d;
+}
+
+.dashboard-step-active {
+  .dashboard-step-title {
+    font-weight: 600;
+    color: #000 !important;
+  }
+
+  .dashboard-step-description {
+    font-weight: 400;
+    color: #000 !important;
+  }
+}
+
+table.dashboard-art-table {
+  // min-width: 500px;
+  background-color: #ffffff;
+}
+
+
+/*
+ * Mobile screens - transform the group title text from a column
+ * to a row.
+ */
+
+@include media-breakpoint-down(md) {
+  .dashboard-sub-heading {
+    font-size: 4vw;
+  }
+  .dashboard-group {
+    flex-direction: column;
+  }
+
+  .dashboard-group-title-box {
+    padding: 5px 10px;
+  }
+
+  .dashboard-group-title-text {
+    padding-top: 5px;
+    font-size: 1rem;
+  }
+
+  .dashboard-step {
+    margin-left: 0 !important;
+  }
+
+  .dashboard-icon {
+    width: 30px;
+  }
+
+  .dashboard-step-title {
+    margin: 0 5px;
+  }
+
+  .dashboard-step-active .dashboard-step-title {
+    font-size: 1rem;
+    margin: 5px 5px 7px 5px;
+  }
+
+  .dashboard-step-description {
+    margin: 5px 10px 5px 10px;
+  }
+
+
+  .dashboard-box .mugshot {
+    margin: 10px auto;
+  }
+
+  .dashboard-button {
+    width: 100%;
+  }
+}
+
+/*
+  Desktop/tablet view
+ */
+@include media-breakpoint-up(lg) {
+  .dashboard-group-title-box {
+    padding: 5px 15px 10px 15px;
+    text-align: center;
+    width: 160px;
+    position: relative;
+  }
+
+  .dashboard-group-title-text {
+    font-size: 1.1rem;
+    padding-top: 10px;
+    line-height: 35px;
+    text-align: center;
+  }
+
+  .dashboard-icon {
+    width: 40px;
+    font-size: 1rem;
+  }
+
+  .dashboard-step-title {
+    font-size: 0.95rem;
+  }
+
+  .dashboard-step-active {
+    .dashboard-icon {
+      font-size: 1.4rem;
+    }
+    .dashboard-step-title {
+      font-size: 1rem;
+    }
+  }
+
+  .dashboard-step-description {
+    margin-left: 50px;
+  }
+
+  .dashboard-group-bottom-arrow:after,
+  .dashboard-group-top-arrow:before {
+    position: absolute;
+    content: "";
+    left: 25%;
+    border: 35px solid transparent;
+    height: 0;
+    width: 0;
+  }
+
+  .dashboard-group-title-box.dashboard-group-top-arrow {
+    padding-top: 40px;
+
+  }
+
+  .dashboard-group-top-arrow:before {
+    top: 0;
+    border-top-color: white;
+    z-index: 25;
+  }
+
+  .dashboard-group-bottom-arrow:after {
+    top: 100%;
+    border-top-color: $wheatfield;
+    z-index: 30;
+  }
+
+  .dashboard-group-active {
+    .dashboard-group-bottom-arrow:after {
+      border-top-color: $kakhi;
+    }
+  }
+}

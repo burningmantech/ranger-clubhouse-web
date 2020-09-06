@@ -1,5 +1,5 @@
-<div class="mugshot {{unless @noFloat "float-sm-right"}} mx-auto">
-  {{#if @photo.photo_url}}
+<div class="mugshot {{unless @noFloat "float-sm-right"}}">
+  {{#if (and (not-eq @photo.photo_status "missing") @photo.photo_url)}}
     <img src="{{@photo.photo_url}}" class="mx-auto d-block" alt="profile photo">
     {{#if (eq @photo.photo_status "approved")}}
       <span class="text-success">{{fa-icon "check"}} Approved</span>

@@ -1,14 +1,33 @@
-import Controller from '@ember/controller';
+import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
+import fade from 'ember-animated/transitions/fade';
+import {inject as service} from '@ember/service';
 import $ from 'jquery';
 
-export default class MeAnnouncementsController extends Controller {
+export default class DashboardMotdComponent extends Component {
+  @service ajax;
+  @service toast;
+  @service house;
+
+  fadeMotdEffect = fade;
+
+  constructor() {
+    super(...arguments);
+    const { hasBottomArrow } = this.args;
+
+    this.hasBottomArrow = (hasBottomArrow === undefined ? true : hasBottomArrow);
+  }
+
   @action
   toggleMotd(motd) {
-    this.motds.forEach((m) => {
-      set(m, 'showing', (motd.id == m.id) ? !motd.showing : false);
+    this.args.motds.forEach((m) => {
+      set(m, 'showing', (motd.id === m.id) ? !motd.showing : false);
       $(`#motd-text-${motd.id}`).collapse(m.showing ? 'show' : 'hide');
     });
+  }
+
+  get unreadMotds() {
+    return this.args.motds.filter((m) => !m.has_read);
   }
 
   @action
@@ -24,3 +43,4 @@ export default class MeAnnouncementsController extends Controller {
       .finally(() => set(motd, 'isMarking', false));
   }
 }
+

@@ -1,5 +1,5 @@
 <header class="d-print-none">
-  <nav class="navbar navbar-expand-md navbar-light bg-khaki">
+  <nav class="navbar navbar-expand-lg navbar-light bg-khaki">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
             data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -22,14 +22,14 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       {{#if session.isAuthenticated}}
       {{! Show callsign and logout button on small screens with collapsed navbar}}
-        <div class="navbar-text d-md-none float-right">
+        <div class="navbar-text d-lg-none float-right">
           <LinkTo @route="logout" class="btn btn-secondary text-white">Logout</LinkTo>
         </div>
-        <div class="navbar-text d-md-none h4 text-black mt-2">
+        <div class="navbar-text d-lg-none h4 text-black mt-2">
           {{session.user.callsign}}
         </div>
         {{#if this.session.user.unread_message_count}}
-          <div class="navbar-item d-md-none h4 text-black mt-2">
+          <div class="navbar-item d-lg-none h4 text-black mt-2">
             <LinkTo @route="me.messages" class="btn btn-success btn-block text-white">Read {{pluralize
                     this.session.user.unread_message_count "Message"}}</LinkTo>
           </div>
@@ -44,7 +44,7 @@
               <div class="container">
                 <div class="row">
                   {{#unless (or session.user.isPastProspective session.user.isProspectiveWaitlist)}}
-                    <div class="col-sm-12 col-md-4 col-lg-3">
+                    <div class="col-sm-12 col-lg-3">
                       <div class="navbar-text">Rangering</div>
                       <LinkTo @route="me.schedule" class="dropdown-item">Schedule / Sign Up</LinkTo>
                       {{#if (or session.user.isAlpha session.user.isRanger)}}
@@ -59,7 +59,7 @@
                   {{/unless}}
 
                   {{#if (or session.user.isRanger session.user.isPNV)}}
-                    <div class="col-sm-12 col-md-4 col-lg-3">
+                    <div class="col-sm-12 col-lg-3">
                       <div class="navbar-text">Pre-Event</div>
                       {{#if (or session.user.isPNV)}}
                         <LinkTo @route="me.tickets" class="dropdown-item">Work Access Pass</LinkTo>
@@ -76,7 +76,7 @@
                     </div>
 
                   {{/if}}
-                  <div class="col-sm-12 col-md-4 col-lg-3">
+                  <div class="col-sm-12 col-lg-3">
                     <div class="navbar-text">Communication</div>
                     <LinkTo @route="me.alerts" class="dropdown-item">Alert Preferences</LinkTo>
                     {{#if (or session.user.isRanger session.user.isPNV session.user.isAuditor)}}
@@ -94,7 +94,7 @@
                     {{/if}}
                   </div>
 
-                  <div class="col-sm-12 col-md-4 col-lg-3">
+                  <div class="col-sm-12 col-lg-3">
                     <div class="navbar-text">My Account</div>
                     <LinkTo @route="me.personal-info" class="dropdown-item">Personal Info</LinkTo>
                     {{#if (or session.user.isPNV session.user.isRanger)}}
@@ -188,7 +188,7 @@
                 <div class="container">
                   <div class="row">
                     {{#if (has-role "admin" "edit-slots" "megaphone")}}
-                      <div class="col-sm-12 col-md-3">
+                      <div class="col-sm-12 col-lg-3">
                         <div class="navbar-text">Edit Records</div>
                         <LinkTo @route="admin.slots" class="dropdown-item">Schedule Slots</LinkTo>
                         {{#if (has-role "admin")}}
@@ -208,7 +208,7 @@
                         {{/if}}
                       </div>
                       {{#if (has-role "admin")}}
-                        <div class="col-sm-12 col-md-3">
+                        <div class="col-sm-12 col-lg-3">
                           <div class="navbar-text">Site Administration</div>
                           <LinkTo @route="admin.settings" class="dropdown-item">Settings</LinkTo>
                           <LinkTo @route="admin.maintenance" class="dropdown-item">Maintenance</LinkTo>
@@ -216,7 +216,7 @@
                           <LinkTo @route="admin.error-log" class="dropdown-item">Error Log</LinkTo>
                           <LinkTo @route="admin.action-log" class="dropdown-item">Action Log</LinkTo>
                         </div>
-                        <div class="col-sm-12 col-md-3">
+                        <div class="col-sm-12 col-lg-3">
                           <div class="navbar-text">Pre-Event</div>
                           <LinkTo @route="admin.salesforce" class="dropdown-item">Salesforce Import</LinkTo>
                           <LinkTo @route="admin.radio-eligibility" class="dropdown-item">Radio Eligibility</LinkTo>
@@ -231,7 +231,7 @@
                     {{/if}}
 
                     {{#if (has-role "admin" "megaphone" "edit-slots")}}
-                      <div class="col-sm-12 col-md-3">
+                      <div class="col-sm-12 col-lg-3">
                         {{#if (has-role "admin")}}
                           <div class="navbar-text">Post Event</div>
                           <LinkTo @route="admin.thank-you-cards" class="dropdown-item">Thank-You Cards</LinkTo>
@@ -258,7 +258,7 @@
               <div class="dropdown-menu dropdown-menu-large">
                 <div class="container">
                   <div class="row">
-                    <div class="col-sm-12 col-md-4 col-lg-3">
+                    <div class="col-sm-12 col-lg-3">
                       <div class="navbar-text">Schedule</div>
                       <LinkTo @route="reports.shift-lead" class="dropdown-item">Shift Lead Report</LinkTo>
                       <LinkTo @route="reports.schedule-by-callsign" class="dropdown-item">Schedule by Callsign</LinkTo>
@@ -267,7 +267,7 @@
                       <LinkTo @route="reports.shift-signups" class="dropdown-item">Shift Signups</LinkTo>
                       <LinkTo @route="reports.hq-forecast" class="dropdown-item">HQ Checkin/Out Forecast</LinkTo>
                     </div>
-                    <div class="col-sm-12 col-md-4 col-lg-3">
+                    <div class="col-sm-12 col-md-3">
                       <div class="navbar-text">People</div>
                       <LinkTo @route="reports.people-by-position" class="dropdown-item">People by Position</LinkTo>
                       <LinkTo @route="reports.people-by-role" class="dropdown-item">People by Role</LinkTo>
@@ -275,7 +275,7 @@
                       <LinkTo @route="reports.people-by-location" class="dropdown-item">People by Location</LinkTo>
                       <LinkTo @route="reports.special-teams" class="dropdown-item">People By Special Team</LinkTo>
                     </div>
-                    <div class="col-sm-12 col-md-4 col-lg-3">
+                    <div class="col-sm-12 col-lg-3">
                       <div class="navbar-text">Timesheets</div>
                       <LinkTo @route="reports.on-duty" @query={{hash over_hours=null}} class="dropdown-item">People On
                         Duty
@@ -295,26 +295,26 @@
                       <LinkTo @route="reports.timesheet-unconfirmed" class="dropdown-item">Timesheet Unconfirmed
                       </LinkTo>
                     </div>
-                    <div class="col-sm-12 col-md-4 col-lg-3">
+                    <div class="col-sm-12 col-lg-3">
                       <div class="navbar-text">Assets</div>
                       <LinkTo @route="reports.asset-history" class="dropdown-item">Non-Radio Asset History</LinkTo>
                       <LinkTo @route="reports.assets-outstanding" class="dropdown-item">Assets Outstanding</LinkTo>
                       <LinkTo @route="reports.radio-assets" class="dropdown-item">Radio Assets</LinkTo>
                       <LinkTo @route="reports.radio-checkout" class="dropdown-item">Radio Checkout Report</LinkTo>
                     </div>
-                    <div class="col-sm-12 col-md-4 col-lg-3">
+                    <div class="col-sm-12 col-lg-3">
                       <div class="navbar-text">Quartermaster</div>
                       <LinkTo @route="reports.freaking-years" class="dropdown-item">Freaking Years</LinkTo>
                       <LinkTo @route="reports.potential-shirts" class="dropdown-item">Potential Earned Shirts</LinkTo>
                       <LinkTo @route="reports.alpha-shirts" class="dropdown-item">Alpha Shirts</LinkTo>
                     </div>
-                    <div class="col-sm-12 col-md-4 col-lg-3">
+                    <div class="col-sm-12 col-lg-3">
                       <div class="navbar-text">Vehicles</div>
                       <LinkTo @route="reports.vehicle-paperwork" class="dropdown-item">Vehicle Paperwork</LinkTo>
                       <LinkTo @route="reports.vehicle-registry" class="dropdown-item">Vehicle Registry</LinkTo>
                     </div>
 
-                    <div class="col-sm-12 col-md-4 col-lg-3">
+                    <div class="col-sm-12 col-lg-3">
                       <div class="navbar-text">Other</div>
                       <LinkTo @route="reports.position-sanity-checker" class="dropdown-item">Position Sanity Check
                       </LinkTo>
@@ -360,7 +360,7 @@
 
       </ul>
       {{#if session.isAuthenticated}}
-        <ul class="navbar-nav d-none d-md-inline">
+        <ul class="navbar-nav d-none d-lg-inline">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
               {{#if this.session.user.unread_message_count}}
@@ -410,12 +410,7 @@
       <button type="button" onclick={{action reload}} class="btn btn-danger">Reload</button>
     </div>
   </NewVersionNotifier>
-  {{#if this.session.user.isAuditor}}
-    <div class="alert alert-warning text-center p-2 m-0 h3">
-      {{fa-icon "exclamation-circle"}} You are an Auditor and NOT on a path to becoming a Ranger this season.
-    </div>
-  {{/if}}
-{{/if}}
+ {{/if}}
 
 <div class="row" id="body-row">
   {{outlet}}
@@ -424,9 +419,10 @@
 
 <footer class="footer d-print-none">
   <div class="container text-center">
-    &copy; 2008-{{moment-format (now) "YYYY"}} Black Rock City, LLC. All information contained within this website is
-    strictly confidential.
-    <p>Build: {{buildTimestamp}} Tag: {{applicationVersion}}</p>
+    &copy; 2008-{{moment-format (now) "YYYY"}} Black Rock City, LLC.
+    <span class="d-inline-block">All information contained within this website is
+      strictly confidential.</span>
+    <p>Build: {{buildTimestamp}} <span class="d-inline-block">Tag: {{applicationVersion}}</span></p>
   </div>
 </footer>
 

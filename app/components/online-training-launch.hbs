@@ -9,6 +9,22 @@
     </Modal.body>
   </ModalDialog>
 {{/if}}
+{{#if this.showErrorDialog}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      <h3 class="text-danger">An unexpected error occurred.</h3>
+      <p>
+        Sorry, there was an issue trying to launch the Online Training course. You can try again in a few minutes.
+      </p>
+      <p>
+        If the problem persists, please contact the Ranger Tech Team {{admin-email}} for help.
+      </p>
+    </Modal.body>
+    <Modal.footer>
+      <Modal.button @label="Close" @action={{this.closeAction}} @type="primary"/>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
 {{#if this.showExodusDialog}}
   <ModalDialog as |Modal|>
     <Modal.body>
@@ -41,7 +57,9 @@
       {{/if}}
     </Modal.body>
     <Modal.footer>
-      <Modal.button @label="Go To Online Training" @action={{this.launchTrainingAction}} @type="primary"
+      <Modal.button @label="Go To Online Training"
+                    @action={{this.launchTrainingAction}}
+                    @type="primary"
                     @disabled={{this.isSubmitting}} />
       {{#if this.isSubmitting}}
         <LoadingIndicator @text="Working"/>

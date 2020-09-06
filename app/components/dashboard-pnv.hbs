@@ -1,23 +1,19 @@
-{{#if this.isDevelopmentEnv}}
-  <DashboardDebugging @person={{@person}} />
-{{/if}}
+<h2 class="homepage-title">Clubhouse Onboarding Checklist</h2>
 <p>
   {{#if (eq @person.status "bonked")}}
-    <b>Hello {{@person.callsign}}!</b>
+    Hello {{@person.callsign}}.
   {{else}}
-    <b id="hello-ranger">Hello Prospective Ranger {{@person.callsign}}!</b>
+    Hello Prospective Ranger {{@person.callsign}}.
   {{/if}}
-</p>
-<p>
-  The following is your Onboarding Checklist:
 </p>
 {{#if this.haveUrgentActions}}
   <p>
-    <span class="text-danger align-middle">{{fa-icon "exclamation-circle" size="2x"}} There are one or more URGENT items that need your attention.</span>
+    <b class="text-danger">{{fa-icon "exclamation-circle" size="2x"}} There are one or more URGENT items that need your
+      attention.</b>
   </p>
 {{else if this.haveActions}}
   <p>
-    <b>{{fa-icon "exclamation-circle" size="2x"}} There are one or more items that need your attention.</b>
+    <b>{{fa-icon "exclamation-circle" size="2x" type="fas"}} There are one or more items that need your attention.</b>
   </p>
 {{else if this.haveWaiting}}
   <p>
@@ -26,116 +22,34 @@
   </p>
 {{/if}}
 
-{{#each this.taskGroups as |group idx|}}
-  <div class="onboard-group">
-    <div class="onboard-title-box {{if group.isActive "onboard-group-active"}} {{if (gt idx 0)
-                                                                                    "onboard-title-top-arrow"}} {{if
-            (not-eq this.taskGroups.lastObject group) "onboard-title-bottom-arrow"}}">
-      <h3 class="onboard-title-text {{if (not group.isActive) "text-muted"}}">{{group.title}}</h3>
-    </div>
-    <div class="onboard-tasks {{if group.isActive "bg-light-gray" "bg-gray"}}">
-      {{#if (and (not this.isMobileScreen) (eq idx 0))}}
-      {{! On larger screens (aka desktop/tablets) float the photo on the right within the first task group
-        On smaller screens the photo is shown below the photo task -- see below.
-      }}
+<div class="dashboard-box">
+  {{#if @motds}}
+    <DashboardMotd @motds={{@motds}} />
+  {{/if}}
 
-        <PersonPhoto @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}} />
-      {{/if}}
-
-      {{#each group.tasks as |task|}}
-        <div class="onboard-task-row {{if (not (and task.isActive group.isActive)) "text-muted"}}">
-          <div class="onboard-icon">
-            {{#if (eq task.result "completed")}}
-              {{fa-icon "check-circle" size="2x"}}
-            {{else if (eq task.result "waiting")}}
-              {{fa-icon "hourglass-half" size="2x"}}
-            {{else if (eq task.result "action-needed")}}
-              {{fa-icon "arrow-right" size="2x" color="success"}}
-            {{else if (eq task.result "not-available")}}
-              {{fa-icon "circle" size="2x" type="far"}}
-            {{else if (eq task.result "urgent")}}
-              {{fa-icon "exclamation-circle" size="2x" color="danger"}}
-            {{else if (eq task.result "blocked")}}
-              {{fa-icon "times" size="2x" color="danger"}}
-            {{else if (eq task.result "optional")}}
-              {{fa-icon "file-signature" size="2x"}}
-            {{else}}
-              Uh oh! The task check result [{{task.result}}] is not understood. This is a bug! Please report this to the
-              tech team.<br>
-            {{/if}}
-          </div>
-          <div class="onboard-text">
-            <div class="{{if (and task.isActive group.isActive) "h4"}}">
-              {{#if (and task.isBehavioralAgreement (not-eq task.result "completed"))}}
-                <a href {{on "click" this.showBehaviorAgreementAction}} disabled={{this.isNotUser}}>{{task.name}}</a>
-              {{else if task.route}}
-                <LinkTo @route={{task.route}} disabled={{this.isNotUser}}>{{task.name}}</LinkTo>
-              {{else if task.linkUrl}}
-                <a href={{task.linkUrl}} rel="noopener" target="_blank" disabled={{this.isNotUser}}>{{task.name}}</a>
-              {{else if (or (eq task.result "blocked") (eq task.result "urgent"))}}
-                <span class="text-danger">{{task.name}}</span>
-              {{else}}
-                {{task.name}}
-              {{/if}}
-            </div>
-            <div>
-              &mdash;
-              {{#if (eq task.result "completed")}}
-                Completed.
-              {{else if task.isSignup}}
-                Visit the
-                <LinkTo @route="me.schedule">Me &gt; Schedule / Sign Up</LinkTo>
-                page to sign up.
-              {{else if task.isVisitPersonInfo}}
-                Visit the
-                <LinkTo @route="me.personal-info">Me &gt; Personal Info page</LinkTo>
-                .
-                Click the Update button at the bottom of the page to save your changes
-                or to verify that the existing information is correct.
-              {{else}}
-                {{#if task.message}}
-                  {{task.message}}
-                {{/if}}
-                {{#if task.isOnlineTraining}}
-                  <div class="mt-2">
-                    <OnlineTrainingLaunch @text="Click Here" @person={{@person}}
-                                          @url={{@milestones.online_training_url}} />
-                    to take the online training course.
-                  </div>
-                {{/if}}
-
-                {{#if task.isPhotoUpload}}
-                  {{#if @photo.upload_enabled}}
-                    <a href="#" {{on "click" (fn @uploadAction)}}>Submit a headshot </a> to use on a BMID.
-                  {{else}}
-                    Unfortunately, photo upload is currently disabled.
-                  {{/if}}
-                {{/if}}
-                {{#if task.email}}
-                  <p>{{mail-to task.email}}</p>
-                {{/if}}
-                {{#if task.survey}}
-                  {{#each @milestones.surveys.sessions as |slot|}}
-                    <p class="my-1">
-                      <LinkTo @route="me.survey" @query={{hash slot_id=slot.id type="training"}} >
-                        {{slot.position_title}} - {{slot.description}} {{shift-format slot.begins}}
-                      </LinkTo>
-                    </p>
-                  {{/each}}
-                {{/if}}
-              {{/if}}
-            </div>
-          </div>
-        </div>
-        {{! On smaller screens (aka mobile) show the photo below the photo task}}
-        {{#if (and task.isPhotoTask this.isMobileScreen)}}
-          <PersonPhoto @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}} />
-        {{/if}}
+  {{#each this.stepGroups as |group idx|}}
+    <DashboardGroup @title={{group.title}}
+                    @isActive={{group.isActive}}
+                    @hasTopArrow={{or @motds (gt idx 0)}}
+                    @hasBottomArrow={{not group.isLast}}>
+      {{#each group.steps as |step stepIdx|}}
+      {{!
+         On larger screens (aka desktop/tablets) float the photo on the right within the first step group
+         On smaller screens the photo is shown below the photo step.
+       }}
+        <DashboardStep @step={{step}}
+                       @isActive={{and step.isActive group.isActive}}
+                       @showBehaviorAgreementAction={{@showBehaviorAgreementAction}}
+                       @includePhoto={{or
+                (and (not this.session.isMobileScreen)  (eq idx 0) (eq stepIdx 0))
+                (and step.isPhotoStep this.session.isMobileScreen)}}
+                       @isNotUser={{this.isNotUser}}
+                       @photoPosition={{if (and (not this.session.isMobileScreen) (eq idx 0)) "above" "inside"}}
+                       @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}}
+        />
       {{/each}}
-    </div>
-  </div>
-{{/each}}
+    </DashboardGroup>
+  {{/each}}
+</div>
 
-{{#if showBehaviorAgreement}}
-  <BehavioralAgreementModal @closeAgreement={{this.closeAgreement}} @signAgreement={{this.signAgreement}} />
-{{/if}}
+<DashboardLinks @isPNV={{true}} />

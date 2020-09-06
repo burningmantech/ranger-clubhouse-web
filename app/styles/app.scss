@@ -24,7 +24,7 @@ $theme-colors: (
 $link-color: #007bff;
 
 $navbar-light-color: #28221b;
-$navbar-light-hover-color:#0139cc;
+$navbar-light-hover-color: #0139cc;
 
 // Do not enable rounded corners
 $btn-border-radius: 0;
@@ -83,7 +83,7 @@ $sizes: (
 @import "alpha-sheet";
 @import "hq";
 @import "mail";
-@import "onboard";
+@import "dashboard";
 @import "photo";
 @import "schedule";
 @import "sidebar";
@@ -179,6 +179,7 @@ dl {
   min-width: 500px;
   overflow: scroll;
 }
+
 .min-width-1000 {
   min-width: 1000px;
 }
@@ -627,6 +628,20 @@ caption {
 .autocomplete-option-selected {
   background-color: #ececec;
 }
+
+@include media-breakpoint-up(md) {
+  .homepage-title {
+    font-size: $h1-font-size;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .homepage-title {
+    font-size: 5vw;
+  }
+}
+
+
 
 @include media-breakpoint-down(md) {
   .btn-md-block {

@@ -1,7 +1,13 @@
-import { inject as service } from "@ember/service";
+import {inject as service} from "@ember/service";
+import { action } from '@ember/object';
 import SessionService from "ember-simple-auth/services/session";
 import User from "clubhouse/models/user";
 import MobileDetect from 'mobile-detect';
+import {debounce} from '@ember/runloop';
+
+
+const MOBILE_MAX_WIDTH = 719;
+const RESIZE_DEBOUNCE_DELY = 250;
 
 export default SessionService.extend({
   store: service(),
@@ -9,6 +15,7 @@ export default SessionService.extend({
   user: null,
 
   isMobileDevice: false,
+  isMobileScreen: false,
   isTabletDevice: false,
 
   get userId() {
@@ -22,6 +29,22 @@ export default SessionService.extend({
 
     this.isMobileDevice = md.mobile();
     this.isTabletDevice = md.tablet();
+
+    /*
+     * Notify when the screen resizes so the layout can adjust accordingly.
+      */
+
+    window.addEventListener('resize', this._bounceResizeEvent, false);
+    this._windowResized();
+  },
+
+  @action
+  _bounceResizeEvent() {
+    debounce(this, this._windowResized, RESIZE_DEBOUNCE_DELY);
+  },
+
+  _windowResized() {
+    this.set('isMobileScreen', (document.documentElement.clientWidth <= MOBILE_MAX_WIDTH));
   },
 
   loadUser() {
@@ -31,7 +54,7 @@ export default SessionService.extend({
 
     const person_id = this.session.get('authenticated.person_id');
 
-    return this.store.findRecord('person', person_id, { reload: true })
+    return this.store.findRecord('person', person_id, {reload: true})
       .then((person) => {
         return person.loadUserInfo().then(() => {
           const user = User.create({

@@ -1,9 +1,12 @@
 <h3>General Account Info</h3>
 {{#if this.person.unread_message_count}}
-  <ChAlert @type="warning" @bold=true>
-    {{fa-icon "envelope"}} {{pluralize this.person.unread_message_count "unread Clubhouse message"}}
-    <LinkTo @route="person.messages" class="btn btn-success">Read Now</LinkTo>
-  </ChAlert>
+  <p>
+    <LinkTo @route="person.messages">
+      <b>
+        {{fa-icon "envelope" color="success"}} {{pluralize this.person.unread_message_count "unread message"}}
+      </b>
+    </LinkTo>
+  </p>
 {{/if}}
 
 <PersonPhoto @photo={{this.photo}} @person={{this.person}} @uploadAction={{this.showUploadDialogAction}} />
@@ -17,33 +20,51 @@
     {{! show contact information }}
     {{#if (has-role "admin" "vc" "view-pii" "view-email")}}
       <div class="form-row mb-2">
-        <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Contact</label>
+        <label class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">Contact</label>
         <div class="mt-2 col-auto">
-          {{#if this.person.email}}
-            email address {{mail-to this.person.email}}
-          {{else}}
-            <div class="text-muted">missing</div>
-          {{/if}}
-          {{#if (has-role "admin" "vc" "view-pii")}}
-            <div class="mt-2">primary phone {{#if this.person.home_phone}}{{phone-link this.person.home_phone}}{{else}}
-              n/a{{/if}}</div>
-            {{#if this.person.alt_phone}}
-              <div class="mt-2">alt phone {{phone-link this.person.alt_phone}}</div>
-            {{/if}}
-          {{/if}}
-          <div class="mt-2">last seen at
-            {{#if this.person.last_seen_at}}
-              {{moment-format this.person.last_seen_at "ddd MMM DD [@] HH:mm:ss YYYY"}}
+          <span class="d-inline-block">
+            {{#if this.person.email}}
+              email {{mail-to this.person.email}}
             {{else}}
-              <i>unknown</i>
+              <i class="text-muted">missing</i>
             {{/if}}
+          </span>
+          {{#if (has-role "admin" "vc" "view-pii")}}
+            <span class="d-inline-block ml-lg-2">
+              phone
+              {{#if this.person.home_phone}}
+                {{phone-link this.person.home_phone}}
+              {{else}}
+                n/a
+              {{/if}}
+            </span>
+            {{#if this.person.alt_phone}}
+              <span class="d-inline-block ml-md-2">alt phone {{phone-link this.person.alt_phone}}</span>
+            {{/if}}
+          {{/if}}
+
+          <div class="mt-2">
+            <span class="d-inline-block">last seen
+              {{#if this.person.last_seen_at}}
+                {{moment-format this.person.last_seen_at "MMM DD, YYYY @ HH:mm"}}
+              {{else}}
+                <i>unknown</i>
+              {{/if}}
+              </span>
+            <span class="ml-lg-2 d-inline-block">reviewed P.I
+              {{#if this.person.reviewed_pi_at}}
+                {{moment-format this.person.reviewed_pi_at "MMM DD, YYYY @ HH:mm"}}
+              {{else}}
+                <i>unknown</i>
+              {{/if}}
+            </span>
           </div>
         </div>
       </div>
     {{/if}}
 
     <div class="form-row mb-2">
-      <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Callsign</label>
+      <label class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">Callsign</label>
       {{#if (has-role "admin" "mentor" "vc")}}
         <f.input @name="callsign" @type="text" @size=35 @maxlength=100 @wrapClass="col-auto"/>
       {{else}}
@@ -54,7 +75,7 @@
     </div>
 
     <div class="form-row mb-2">
-      <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">FKA</label>
+      <label class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">FKA</label>
       {{#if (has-role "admin" "mentor" "vc")}}
         <f.input @name="formerly_known_as" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto"/>
       {{else}}
@@ -67,7 +88,7 @@
     <div class="form-row mb-2">
       <label class="col-form-label col-form-label-fixed col-2">Callsign Approved</label>
       {{#if (has-role "admin" "mentor" "vc")}}
-        <f.input @name="callsign_approved" @type="select" @wrapClass="col-auto"
+        <f.input @name="callsign_approved" @type="select" @grid="col-auto"
                  @options={{this.callsignApprovedOptions}} />
       {{else}}
         <div class="mt-2 col-sm-12 col-md-auto">
@@ -79,7 +100,7 @@
     <div class="form-row mb-2">
       <label class="col-form-label col-form-label-fixed col-2">Status</label>
       {{#if (has-role "admin" "mentor" "vc")}}
-        <f.input @name="status" @type="select" @options={{this.statusOptions}} @wrapClass="col-auto"/>
+        <f.input @name="status" @type="select" @options={{this.statusOptions}} @grid="col-auto"/>
       {{else}}
         <div class="mt-2 col-auto">
           {{this.person.status}}
@@ -111,13 +132,13 @@
   <div class="clearfix"></div>
 
   <div class="form-row mb-2">
-    <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Name</label>
+    <label class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">Name</label>
     {{#if (has-role "admin" "mentor" "vc")}}
-      <f.input @name="first_name" @type="text" @size=20 @maxlength=25 @wrapClass="col-sm-12 col-md-4 col-lg-3"/>
-      <f.input @name="mi" @type="text" @size=2 @maxlength=10 @wrapClass="col-sm-12 col-md-2 col-lg-1"/>
-      <f.input @name="last_name" @type="text" @size=20 @maxlength=25 @wrapClass="col-md-4 col-lg-3"/>
+      <f.input @name="first_name" @type="text" @size=20 @maxlength=25 @grid="col-sm-12 col-lg-auto"/>
+      <f.input @name="mi" @type="text" @size=2 @maxlength=10 @grid="col-sm-12 col-lg-auto"/>
+      <f.input @name="last_name" @type="text" @size=20 @maxlength=25 @grid="col-sm-12 col-lg-auto"/>
     {{else}}
-      <div class="mt-2 col-md-9 col-sm-12">
+      <div class="mt-2 col-sm-12 col-lg-9">
         {{this.person.first_name}} {{this.person.mi}} {{this.person.last_name}}
       </div>
     {{/if}}
@@ -131,7 +152,7 @@
   </div>
 
   <div class="form-row mb-2">
-    <label for="person_position" class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Positions</label>
+    <label for="person_position" class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">Positions</label>
     <div class="col-md-9 col-sm-12">
       <div class="row col-12 mt-1 mb-2">
         <button type="button" {{action this.togglePositions}} class="btn btn-secondary btn-sm mr-2">
@@ -162,7 +183,7 @@
   </div>
 
   <div class="form-row mb-2">
-    <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Roles</label>
+    <label class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">Roles</label>
     <div class="col-md-9 col-sm-12">
       <div class="row col-12 mt-1 mb-2">
         <button type="button" {{action this.toggleRoles}} class="btn btn-secondary btn-sm mr-2">
@@ -188,19 +209,19 @@
   </div>
 
   <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-md-2">Years</label>
+    <label class="col-form-label-fixed col-sm-12 col-lg-2">Years</label>
     <div class="col-md-9 col-sm-12">
       {{#each this.person.years as |year|}}{{year}} {{/each}} ({{this.person.years.length}})
     </div>
   </div>
 
   <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-md-2">Vehicles</label>
+    <label class="col-form-label-fixed col-sm-12 col-lg-2">Vehicles</label>
     <div class="col-md-9 col-sm-12">
       {{#if (has-role "admin")}}
-         <f.input @name="vehicle_blacklisted" @label="Vehicle Blacklisted" @type="checkbox" @inline={{true}} />
+        <f.input @name="vehicle_blacklisted" @label="Vehicle Blacklisted" @type="checkbox" @inline={{true}} />
       {{else if this.person.vehicle_blacklisted}}
-          <b class="text-danger">VEHICLE BLACKLISTED</b>
+        <b class="text-danger">VEHICLE BLACKLISTED</b>
       {{else}}
         <i>No blacklisted vehicle</i>
       {{/if}}
@@ -209,7 +230,7 @@
 
 
   <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-md-2">Certifications</label>
+    <label class="col-form-label-fixed col-sm-12 col-lg-2">Certifications</label>
     <div class="col-sm-12 col-md-9">
       {{#if (has-role "admin" "vc")}}
         <f.input @name="osha10" @label="OSHA-10" @type="checkbox" @inline={{true}}  />
@@ -224,7 +245,7 @@
   </div>
 
   <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-md-2">Agreements</label>
+    <label class="col-form-label-fixed col-sm-12 col-lg-2">Agreements</label>
     <div class="col-sm-12 col-md-9">
       {{#if (has-role "admin" "vc")}}
         <f.input @name="behavioral_agreement" @label="Burning Man's Behavioral Standards Agreement" @type="checkbox"
@@ -237,18 +258,18 @@
 
   {{#if (has-role "admin")}}
     <div class="form-row mb-2">
-      <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">BPGUID</label>
-      <f.input @name="bpguid" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto"/>
+      <label class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">BPGUID</label>
+      <f.input @name="bpguid" @type="text" @size=35 @maxlength=200 @grid="col-auto"/>
     </div>
 
     <div class="form-row mb-2">
-      <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">LMS ID</label>
-      <f.input @name="lms_id" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto"/>
+      <label class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">LMS ID</label>
+      <f.input @name="lms_id" @type="text" @size=35 @maxlength=200 @grid="col-auto"/>
     </div>
   {{/if}}
 
   <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-md-2">BMID/Tickets</label>
+    <label class="col-form-label-fixed col-sm-12 col-lg-2">BMID/Tickets</label>
     <div class="col-sm-12 col-md-9">
       {{#if  (has-role "edit-bmids" "edit-access-docs")}}
         {{#if (has-role "edit-bmids")}}
@@ -266,10 +287,10 @@
 
   {{#if (has-role "admin" "vc" "intake")}}
     <div class="form-row mb-2">
-      <label class="col-form-label-fixed col-sm-12 col-md-2">VC</label>
+      <label class="col-form-label-fixed col-sm-12 col-lg-2">VC</label>
       <div class="col-sm-12 col-md-9">
         {{#if (has-role "admin" "vc")}}
-          <LinkTo @route="person.onboard" class="btn btn-secondary btn-sm">Onboard View</LinkTo>
+          <LinkTo @route="person.dashboard" class="btn btn-secondary btn-sm">View Dashboard</LinkTo>
           <LinkTo @route="person.photos" class="btn btn-secondary btn-sm">Photo History</LinkTo>
         {{/if}}
         <LinkTo @route="person.status-history" class="btn btn-secondary btn-sm">Status History</LinkTo>
@@ -281,7 +302,7 @@
   {{/if}}
   {{#if (has-role "admin")}}
     <div class="form-row mb-2">
-      <label class="col-form-label-fixed col-sm-12 col-md-2">Logs</label>
+      <label class="col-form-label-fixed col-sm-12 col-lg-2">Logs</label>
       <div class="col-sm-12 col-md-9 ">
         <LinkTo @route="person.contact-log" class="btn btn-secondary btn-sm">Contact Log</LinkTo>
         <LinkTo @route="person.broadcast-log" class="btn btn-secondary btn-sm">Broadcast Log</LinkTo>
@@ -293,7 +314,7 @@
     </div>
 
     <div class="form-row mb-2">
-      <label class="col-form-label-fixed col-sm-12 col-md-2">Note</label>
+      <label class="col-form-label-fixed col-sm-12 col-lg-2">Note</label>
       <div class="col-sm-12 col-md-9">
         {{#if this.person.message}}
           <button type="button" class="btn btn-secondary btn-sm" {{action this.editNote}}>Update Note</button>
@@ -307,7 +328,7 @@
   {{/if}}
 
   <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-md-2">Created</label>
+    <label class="col-form-label-fixed col-sm-12 col-lg-2">Created</label>
     <div class="col-sm-12 col-md-9">
       {{#if person.create_date}}
         {{person.create_date}}
@@ -318,7 +339,7 @@
   </div>
 
   <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-md-2">Modified</label>
+    <label class="col-form-label-fixed col-sm-12 col-lg-2">Modified</label>
     <div class="col-sm-12 col-md-9">
       {{person.date_verified}}
     </div>
@@ -358,11 +379,11 @@
 {{#if this.showConfirmNoteOrMessage}}
   <ModalDialog @title="Add Account Note" as |Modal|>
     <Modal.body>
-      <h4  class="text-danger">A NOTE WILL NOT BE SHOWN TO {{this.person.callsign}}</h4>
+      <h4 class="text-danger">A NOTE WILL NOT BE SHOWN TO {{this.person.callsign}}</h4>
       <p>
         Notes are only meant to be seen by Admins, HQ Window workers, and Volunteer Coordinators.
       </p>
-        Would you rather send a Clubhouse Message?
+      Would you rather send a Clubhouse Message?
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
       <button class="btn btn-primary mr-3" {{action this.sendClubhouseMessage}}>Send Clubhouse Message</button>

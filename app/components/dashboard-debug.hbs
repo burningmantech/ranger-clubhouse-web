@@ -1,0 +1,144 @@
+<div class="float-right">
+  <a href {{action this.toggleShow}}>{{if this.show "Hide" "Show"}}  debug controls</a>
+</div>
+{{#if this.show}}
+  <ChForm @formId="milestone" @formFor={{@milestones}} @changeSet={{false}} @onSubmit={{@update}}
+          @onFormChange={{@update}} as |f|>
+    <div class="form-row">
+      <label class="col-form-label col-auto">Period</label>
+      <div class="col-auto">
+        <f.input @name="period" @type="select" @options={{this.periodOpts}} />
+      </div>
+      <label class="col-form-label col-auto">Photo</label>
+      <div class="col-auto mt-2">
+        <Input @type="checkbox" @checked={{@photo.upload_enabled}} /> Upload enabled
+      </div>
+      <div class="col-auto">
+        <ChForm::Select @name="photo_status" @value={{@photo.photo_status}} @options={{this.photoOpts}}
+                        @onChange={{this.updatePhotoStatus}} @controlClass="form-control"/>
+      </div>
+    </div>
+    <div class="form-row mt-2">
+      <label class="col-form-label col-auto">Online Training</label>
+      <div class="col-auto mt-2">
+        <f.input @name="online_training_enabled" @label="Enabled" @type="checkbox" @inline={{true}}/>
+        <f.input @name="online_training_passed" @label="Passed" @type="checkbox" @inline={{true}}/>
+      </div>
+    </div>
+    <div class="form-row mt-2">
+      <label class="col-form-label col-auto">Training</label>
+      <div class="col-auto mt-2">
+        <f.input @name="trainings_available" @label="Trainings available" @type="checkbox"/>
+        <f.input @name="is_trainer" @label="Is Trainer" @type="checkbox" @onChange={{this.setIsTrainer}}/>
+      </div>
+      <div class="col-auto">
+        <button type="button" {{action this.setTraining "no-shift"}}>Missing</button>
+        <button type="button" {{action this.setTraining "pending"}}>Pending</button>
+        <button type="button" {{action this.setTraining "fail"}}>Failed</button>
+        <button type="button" {{action this.setTraining "pass"}}>Passed</button>
+      </div>
+      <div class="col-auto">
+        <button type="button" {{action this.setFullDay true}}>Needs Full Day</button>
+        <button type="button" {{action this.setFullDay false}}>Only Half Day</button>
+      </div>
+    </div>
+    <div class="form-row mt-2">
+      <label class="col-form-label col-auto">ART</label>
+      <div class="col-auto">
+        <button type="button" {{action this.setARTs "none"}}>None</button>
+        <button type="button" {{action this.setARTs "no-shift"}}>Missing</button>
+        <button type="button" {{action this.setARTs "pending"}}>Pending</button>
+        <button type="button" {{action this.setARTs "fail"}}>Failed</button>
+        <button type="button" {{action this.setARTs "pass"}}>Passed</button>
+      </div>
+    </div>
+    <div class="form-row mt-2">
+      <label class="col-form-label col-auto">Surveys</label>
+      <div class="col-auto">
+        <button type="button" {{action this.setSurveys}}>Set Student</button>
+        <button type="button" {{action this.clearSurveys}}>Clear Student</button>
+        <button type="button" {{action this.setTrainerSurveys}}>Set Trainers</button>
+        <button type="button" {{action this.clearTrainerSurveys}}>Clear Trainers</button>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label class="col-form-label col-auto">Shifts</label>
+      <div class="col-auto mt-2">
+        <f.input @name="dirt_shifts_available" @label="Dirt Shifts Available" @type="checkbox" @inline={{true}} />
+        <f.input @name="burn_weekend_available" @label="Burn Shifts Available" @type="checkbox" @inline={{true}} />
+        <f.input @name="burn_weekend_signup" @label="Have Burn Shift Signup" @type="checkbox" @inline={{true}} />
+      </div>
+      <label class="col-form-label col-auto">Shift Sign Up Count</label>
+      <div class="col-auto">
+        <button type="button" {{action this.setShiftSignups 0}}>0</button>
+        <button type="button" {{action this.setShiftSignups 1}}>1</button>
+        <button type="button" {{action this.setShiftSignups 2}}>2</button>
+      </div>
+    </div>
+
+    <div class="form-row mt-2">
+      <label class="col-form-label col-auto">Cheetah Cub</label>
+      <div class="col-auto">
+        <f.input @name="is_cheetah_cub" @label="Is Cub" @type="checkbox" @inline={{true}}
+                 @onChange={{this.setCheetahCub}} />
+      </div>
+      <label class="col-form-label col-auto"> Shift</label>
+      <div class="col-auto">
+        <button type="button" {{action this.setCheetahCubShift true}}>Add</button>
+        <button type="button" {{action this.setCheetahCubShift false}}>Remove</button>
+      </div>
+    </div>
+    <div class="form-row mt-2">
+      <label class="col-form-label col-auto">Ticketing</label>
+      <f.input @name="ticketing_period" @type="select" @options={{this.ticketingPeriodOpts}}
+               @onChange={{this.updateTicketingPeriod}} />
+      <label class="col-form-label col-auto">Packages</label>
+      <div class="col-auto">
+        <button type="button" {{action this.setTicketPackage "claimed"}}>Claimed</button>
+        <button type="button" {{action this.setTicketPackage "qualified"}}>Qualified</button>
+        <button type="button" {{action this.setTicketPackage "banked"}}>Banked</button>
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="col-form-label col-auto">Timesheets</label>
+      <div class="col-auto mt-2">
+        <f.input @name="did_work" @label="Did Work" @type="checkbox" @inline={{true}} />
+      </div>
+      <label class="col-form-label col-auto">Unverified Timesheets</label>
+      <div class="col-auto mt-2">
+        <button type="button" {{action this.setUnverifiedTS 0}}>0</button>
+        <button type="button" {{action this.setUnverifiedTS 1}}>1</button>
+        <button type="button" {{action this.setUnverifiedTS 2}}>2</button>
+      </div>
+      <div class="col-auto mt-2">
+        <f.input @name="timesheet_confirmed" @label="Final Confirmation" @type="checkbox" @inline={{true}} />
+      </div>
+    </div>
+    <div class="form-row mt-2">
+      <label class="col-form-label col-auto">Motorpool Agreement</label>
+      <div class="col-auto mt-2">
+        <f.input @name="motorpool_agreement_available" @label="Available" @type="checkbox" @inline={{true}}/>
+        <f.input @name="motorpool_agreement_signed" @label="Signed" @type="checkbox" @inline={{true}}/>
+      </div>
+      <label class="col-form-label col-auto">Vehicle Requests</label>
+      <div class="col-auto mt-2">
+        <f.input @name="vehicle_requests_allowed" @label="Allowed" @type="checkbox" @inline={{true}}
+                 @onChange={{this.updateVehicleRequests}}/>
+      </div>
+      <div class="col-auto">
+        <button type="button" {{action this.setVehicleRequests "missing"}}>Missing</button>
+        <button type="button" {{action this.setVehicleRequests "pending"}}>Submit</button>
+        <button type="button" {{action this.setVehicleRequests "approved"}}>Approved</button>
+        <button type="button" {{action this.setVehicleRequests "rejected"}}>Denied</button>
+      </div>
+    </div>
+    <div class="form-row mt-2">
+      <label class="col-form-label col-auto">Misc</label>
+      <div class="col-auto mt-2">
+        <f.input @name="behavioral_agreement" @label="Behavioral agreement signed" @type="checkbox" @inline={{true}}/>
+        <f.input @name="missing_bpguid" @label="Missing BPGUID" @type="checkbox" @inline={{true}} />
+      </div>
+    </div>
+  </ChForm>
+{{/if}}

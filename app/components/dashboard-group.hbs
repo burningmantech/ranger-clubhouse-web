@@ -1,0 +1,12 @@
+<div class="dashboard-group {{if @isActive "dashboard-group-active"}}">
+  <div class="dashboard-group-title-box {{if @hasTopArrow "dashboard-group-top-arrow"}} {{if @hasBottomArrow
+                                                                                             "dashboard-group-bottom-arrow"}}">
+    <div class="dashboard-group-title-text">{{@title}}</div>
+  </div>
+  <div class="dashboard-steps">
+    {{yield}}
+  </div>
+  {{#if @includeSidePhoto}}
+    <PersonPhoto @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}} @noFloat={{true}}/>
+  {{/if}}
+</div>

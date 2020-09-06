@@ -16,11 +16,11 @@
   <@f.input @name="city" @type="text" @label="City" @autocomplete="address-level2" @grid="col-sm-5 col-md-4" />
   {{#if this.stateOptions}}
     <@f.input @name="state" @label={{this.stateLabel}} @type="select" @options={{this.stateOptions}}
-    @autocomplete="address-level1" @grid="col-sm-12 col-md-6 col-lg-3" />
+    @autocomplete="address-level1" @grid="col-sm-12 col-md-6 col-lg-auto" />
   {{else}}
     <@f.input @name="state" @label={{this.stateLabel}} @maxlength=128 @disabled={{if @f.model.country false true}}
-    @autocomplete="address-level1" @grid="col-sm-12 col-md-6 col-lg-3" />
+    @autocomplete="address-level1" @grid="col-sm-12 col-md-6 col-lg-auto" />
   {{/if}}
   <@f.input @name="zip" @label={{if (eq @f.model.country "US") "Zip code" "Postal Code"}} @maxlength=10
-  @autocomplete="postal-code" @grid="col-sm-12 col-md-4 col-lg-2" />
+  @autocomplete="postal-code" @grid="col-sm-12 col-md-auto" />
 </div>

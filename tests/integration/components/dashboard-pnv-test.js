@@ -30,10 +30,19 @@ module('Integration | Component | dashboard-pnv', function (hooks) {
       surveys: {sessions: [], trainers: []}
     });
     this.set('photo', {photo_status: 'approved'});
-    this.set('uploadAction', () => {
-    });
-    await render(hbs`<DashboardPnv @milestones={{this.milestones}} @person={{this.person}} @photo={{this.photo}} @uploadAction={{this.uploadAction}} />`);
+    this.set('uploadAction', () => {});
+    this.set('showBehaviorAgreementAction', () => {});
+    this.set('debugUpdateAction', () => {});
+    await render(hbs`<DashboardPnv @milestones={{this.milestones}}
+                  @person={{this.person}}
+                  @photo={{this.photo}}
+                  @motds={{this.motds}}
+                  @uploadAction={{this.showUploadDialogAction}}
+                  @showBehaviorAgreementAction={{this.showBehaviorAgreementAction}}
+                  @debugUpdateAction={{this.debugUpdateAction}} />`);
 
     assert.dom('.mugshot').exists();
+    assert.dom('.dashboard-box').exists();
+    assert.dom('.dashboard-group').exists();
   });
 });

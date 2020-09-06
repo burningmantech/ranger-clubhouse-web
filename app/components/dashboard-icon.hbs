@@ -1,0 +1,5 @@
+{{#if this.icon}}
+  {{fa-icon this.icon.name color=this.icon.color type=this.icon.type}}
+{{else}}
+  Uh oh! The task check result [{{@result}}] is not understood. This is a bug! Please report this to the tech team.<br>
+{{/if}}

@@ -1,0 +1,145 @@
+{{#if (and @includePhoto (eq @photoPosition "above"))}}
+  <PersonPhoto @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}} />
+{{/if}}
+<div class="dashboard-step-row {{if @isActive "dashboard-step-active"}}">
+  <div class="dashboard-step-title">
+    <div class="dashboard-icon">
+      <DashboardIcon @result={{@step.result}} />
+    </div>
+    {{#if (and @step.isBehavioralAgreement (not-eq @step.result "completed"))}}
+      <a href {{on "click" @showBehaviorAgreementAction}} disabled={{@isNotUser}}>{{@step.name}}</a>
+    {{else if (or @step.route @step.linkedMessage.route)}}
+      <LinkTo @route={{or @step.route @step.linkedMessage.route}} disabled={{@isNotUser}}>
+        {{@step.name}}
+      </LinkTo>
+    {{else if (or (eq @step.result "blocked") (eq @step.result "urgent"))}}
+      <span class="text-danger">{{@step.name}}</span>
+    {{else}}
+      {{@step.name}}
+    {{/if}}
+  </div>
+  <div class="dashboard-step-description">
+    {{#if (eq @step.result "completed")}}
+      Completed.
+    {{/if}}
+    {{#if @step.message}}
+      {{@step.message}}
+    {{/if}}
+    {{#if @step.linkedMessage}}
+      {{@step.linkedMessage.prefix}}
+      <LinkTo @route={{@step.linkedMessage.route}} disabled={{@isNotUser}}>{{@step.linkedMessage.text}}</LinkTo>
+      {{@step.linkedMessage.suffix}}
+    {{/if}}
+    {{#if @step.isOnlineTraining}}
+      <OnlineTrainingLaunch @text="Launch online training"
+                            @person={{@person}}
+                            @url={{@milestones.online_training_url}} />
+    {{/if}}
+    {{#if (and @step.isBehavioralAgreement (not-eq @step.result "completed"))}}
+      <p>
+        <a href {{on "click" @showBehaviorAgreementAction}} disabled={{@isNotUser}}>Click here</a>
+        to review &amp; sign the document.
+      </p>
+    {{/if}}
+    {{#if @step.isPhotoStep}}
+      {{#if @photo.upload_enabled}}
+        <a href {{on "click" @uploadAction}} disabled={{@isNotUser}}>Submit a headshot</a>
+        to use on a BMID.
+      {{else}}
+        Unfortunately, photo upload is currently disabled.
+      {{/if}}
+    {{/if}}
+
+    {{#if @step.arts}}
+      <DashboardArts @step={{@step}} />
+    {{/if}}
+
+    {{#if @step.email}}
+      <div>{{mail-to @step.email}}</div>
+    {{/if}}
+
+    {{#if @step.survey}}
+      {{#if (eq @step.survey "student")}}
+        {{#each @milestones.surveys.sessions as |slot|}}
+          <p class="my-1">
+            <LinkTo @route="me.survey" @query={{hash slot_id=slot.id type="training"}} disabled={{@isNotUser}}>
+              {{slot.position_title}} - {{slot.description}} {{shift-format slot.begins}}
+            </LinkTo>
+          </p>
+        {{/each}}
+      {{else}}
+        {{#each @milestones.surveys.trainers as |slot|}}
+          <p class="my-1">
+            <LinkTo @route="me.survey" @query={{hash slot_id=slot.id type="trainer"}}
+                    disabled={{@isNotUser}}>
+              {{slot.position_title}} - {{slot.description}} {{shift-format slot.begins}}
+            </LinkTo>
+            {{#each slot.trainers as |trainer idx|}}
+              {{~if idx ", "}}{{trainer.callsign}}
+            {{~/each}}
+          </p>
+        {{/each}}
+      {{/if}}
+    {{/if}}
+
+    {{#if @step.isMissingBpguid}}
+      <PersonMissingBpguid/>
+    {{/if}}
+    {{#if @step.isTicketing}}
+      {{#if @step.ticketingOpen }}
+        Visit
+        <LinkTo @route="me.tickets" disabled={{@isNotUser}}>Me &gt; Tickets &amp; Stuff</LinkTo>
+        to claim or adjust your item(s).
+      {{else}}
+        Visit
+        <LinkTo @route="me.tickets">Me &gt; Tickets &amp; Stuff</LinkTo>
+        if you have questions or concerns.
+      {{/if}}
+      <div class="mt-1">
+        {{#if @step.tickets.claimed}}
+          You have claimed:
+          <ul>
+            {{#each @step.tickets.claimed as |ticket|}}
+              <li>
+                {{#if (eq ticket.type "work_access_pass_so")}}
+                  Significant Other WAP(s) for {{pluralize ticket.count "person"}}:
+                  {{#each ticket.names as |name idx|}}
+                    {{~if idx ", "}}{{name}}
+                  {{~/each}}
+                {{else if (eq ticket.type "work_access_pass")}}
+                  A Work Access Pass for yourself
+                {{else}}
+                  A {{ticket-type-human ticket.type}}
+                  {{#if (eq ticket.type "staff_credential")}}
+                    which is also your Work Access Pass.
+                  {{/if}}
+                {{/if}}
+              </li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <p class="text-danger">
+            No items have been claimed.
+          </p>
+        {{/if}}
+      </div>
+
+      {{#if @step.tickets.banked}}
+        <div>
+          You have banked:
+          <ul>
+            {{#each @step.tickets.banked as |ticket|}}
+              <li>
+                A {{ticket-type-human ticket.type}} expires after the
+                {{moment-format ticket.expiry_date "YYYY"}} event.
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
+    {{/if}}
+  </div>
+  {{#if (and @includePhoto (eq @photoPosition "inside"))}}
+    <PersonPhoto @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}} />
+  {{/if}}
+</div>
