@@ -1,10 +1,19 @@
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
-import { StateOptions } from 'clubhouse/constants/countries';
+import {StateOptions} from 'clubhouse/constants/countries';
+
 
 export default class PersonAccessDocumentsController extends Controller {
-  entry = null;
+  @tracked isSubmitting = false;
+  @tracked isLoadingLog = false;
+  @tracked isShowingAll = false;
+
+  @tracked documents = null;
+  @tracked entry = null;
+  @tracked delivery;
+  @tracked deliveryEntry = null;
 
   typeOptions = [
     ["Staff Credential", "staff_credential"],
@@ -26,8 +35,8 @@ export default class PersonAccessDocumentsController extends Controller {
   ];
 
   methodOptions = [
-    [ "Will Call", 'will_call' ],
-    [ "US Mail", 'mail' ]
+    ["Will Call", 'will_call'],
+    ["US Mail", 'mail']
   ];
 
   stateOptions = StateOptions['US'];
@@ -50,25 +59,25 @@ export default class PersonAccessDocumentsController extends Controller {
   newAccessDocument() {
     const currentYear = this.house.currentYear();
 
-    this.set('entry', this.store.createRecord('access-document', {
+    this.entry = this.store.createRecord('access-document', {
       person_id: this.person.id,
       type: 'staff_credential',
       status: 'qualified',
       source_year: currentYear,
       expiry_year: currentYear + 3,
       admission_date: null,
-    }));
+    });
   }
 
   @action
   editAccessDocument(document) {
-    this.set('entry', document);
+    this.entry = document;
     document.set('additional_comments', '');
   }
 
   @action
   cancelAccessDocument() {
-    this.set('entry', null)
+    this.entry = null;
   }
 
   @action
@@ -77,25 +86,23 @@ export default class PersonAccessDocumentsController extends Controller {
       return;
     }
 
-    const isNew = model.get('isNew');
+    const isNew = model.isNew;
 
     model.save().then(() => {
-        this.set('entry', null);
-        this.toast.success(`The access document was successfully ${isNew ? 'created' : 'updated'}.`);
-        if (isNew) {
-          this.documents.update();
-        }
-      })
-      .catch((response) => {
-        this.house.handleErrorResponse(response);
-      })
+      this.entry = null;
+      this.toast.success(`The access document was successfully ${isNew ? 'created' : 'updated'}.`);
+      if (isNew) {
+        this.documents.update();
+      }
+    })
+      .catch((response) => this.house.handleErrorResponse(response, model));
   }
 
   @action
   deleteAccessDocument(document) {
     this.modal.confirm('Confirm Delete Document', 'Are you sure you want to delete this document? This operation cannot be undone.', () => {
       document.destroyRecord().then(() => {
-        this.set('entry', null);
+        this.entry = null;
         this.toast.success('The document was successfully deleted.');
       }).catch((response) => this.house.handleErrorResponse(response));
     });
@@ -106,7 +113,7 @@ export default class PersonAccessDocumentsController extends Controller {
     let delivery = this.delivery;
 
     if (!delivery) {
-      delivery =  { method: 'will_call' };
+      delivery = {method: 'will_call'};
     }
 
     this.set('deliveryEntry', delivery);
@@ -122,27 +129,40 @@ export default class PersonAccessDocumentsController extends Controller {
     if (!isValid)
       return;
 
-    this.set('isSubmitting', false);
+    this.isSubmitting = true;
     this.toast.clear();
     const delivery = {
-      method:  model.get('method'),
-      street: model.get('street'),
-      city: model.get('city'),
-      state: model.get('state'),
-      postal_code: model.get('postal_code'),
+      method: model.method,
+      street: model.street,
+      city: model.city,
+      state: model.state,
+      postal_code: model.postal_code,
       //  country: model.get('country'),
       country: 'United States'
     };
 
     this.ajax.request(`ticketing/${this.person.id}/delivery`, {
-        method: 'POST',
-        data: delivery
-      })
+      method: 'POST',
+      data: delivery
+    })
       .then(() => {
         this.toast.success('The delivery method and/or address was successfully saved.');
-        this.set('delivery', delivery);
-        this.set('deliveryEntry', null);
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isSubmitting', false));
+        this.delivery = delivery;
+        this.deliveryEntry = null;
+      }).catch((response) => this.house.handleErrorResponse(response, model))
+      .finally(() => this.isSubmitting = false);
+  }
+
+  @action
+  async showAllAction() {
+    this.isLoading = true;
+    try {
+      this.documents = await this.store.query('access-document', {person_id: this.person.id, status: 'all'});
+      this.isShowingAll = true;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
+    }
   }
 }

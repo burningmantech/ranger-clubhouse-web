@@ -1,5 +1,9 @@
 <h3>Access Documents</h3>
-Showing {{pluralize this.documents.length "current access document"}}
+Showing {{pluralize this.documents.length "access document"}}
+({{if this.isShowingAll "all - current/used/etc." "current"}})
+{{#if this.isLoading}}
+  <LoadingIndicator @text="Loading all documents" />
+{{/if}}
 <table class="table table-sm table-hover table-width-auto">
   <thead>
   <tr>
@@ -8,7 +12,7 @@ Showing {{pluralize this.documents.length "current access document"}}
     <th>Status</th>
     <th>Access Date</th>
     <th>Source Year</th>
-    <th>Good Through</th>
+    <th>Expires in</th>
     <th>Other Details</th>
   </tr>
   </thead>
@@ -28,10 +32,10 @@ Showing {{pluralize this.documents.length "current access document"}}
           -
         {{/if}}
       </td>
-      <td>
+      <td class="text-right">
         {{document.source_year}}
       </td>
-      <td>
+      <td class="text-right">
         {{document.expiryYear}}
       </td>
       <td>
@@ -64,9 +68,18 @@ Showing {{pluralize this.documents.length "current access document"}}
   {{/if}}
 </p>
 
-<button type="button" class="btn btn-primary" {{action this.newAccessDocument}}>New Access Document</button>
-<LinkTo @route="person.tickets" class="btn btn-secondary">View Tickets &amp; Stuff</LinkTo>
-<button type="button" class="btn btn-secondary" {{action this.editDelivery}}>Edit Delivery Method</button>
+<p>
+  <button type="button" class="btn btn-primary btn-sm" {{action this.newAccessDocument}}>New Access Document</button>
+  <button type="button" class="btn btn-secondary btn-sm" {{action this.editDelivery}}>Edit Delivery Method</button>
+  <button type="button" class="btn btn-secondary btn-sm" {{action this.showAllAction}} disabled={{this.isLoading}}>
+    {{#if this.isLoading}}
+      <LoadingIndicator @text="Retrieving"/>
+    {{else}}
+      Show All Documents
+    {{/if}}
+  </button>
+  <LinkTo @route="person.tickets">View Tickets &amp; Stuff</LinkTo>
+</p>
 
 {{#if this.entry}}
   <ModalDialog @title={{concat (if entry.isNew "Create A New" "Edit ") " Access Document For " person.callsign}}
@@ -143,13 +156,13 @@ Showing {{pluralize this.documents.length "current access document"}}
           </div>
         </div>
         <div class="form-row">
-          <f.input @name="street" @label="Street" @grid="col-md-8 col-sm-6"/>
+          <f.input @name="street" @label="Street" @grid="col-lg-auto col-sm-6"/>
         </div>
         <div class="form-row">
-          <f.input @name="city" @label="City" @grid="col-sm-5 col-md-4"/>
+          <f.input @name="city" @label="City" @grid="col-sm-5 col-lg-4"/>
           <f.input @name="state" @label="State" @type="select" @options={{this.stateOptions}}
-                   @grid="col-sm-5 col-md-4"/>
-          <f.input @name="postal_code" @label="Zip Code" @grid="col-sm-5 col-md-4"/>
+                   @grid="col-sm-5 col-lg-auto"/>
+          <f.input @name="postal_code" @label="Zip Code" @grid="col-sm-5 col-lg-auto"/>
         </div>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
