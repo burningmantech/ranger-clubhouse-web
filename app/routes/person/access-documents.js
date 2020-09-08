@@ -36,6 +36,7 @@ export default class PersonAccessDocumentsRoute extends Route {
   resetController(controller, isExiting) {
     if (isExiting) {
       controller.set('year', null);
+      controller.set('isShowingAll', false);
     }
   }
 }
