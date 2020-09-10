@@ -6,14 +6,14 @@
 {{else}}
 {{! ARG.. link-to cannot accept an empty dynamic segment}}
   {{#if @routeArg}}
-    <LinkTo @route={{@route}} @model={{@routeArg}}
+    <LinkTo @route={{@route}} @model={{@routeArg}} @query={{@query}}
             class="sidebar-link list-group-item list-group-item-action"
             @activeClass="sidebar-active">
       <Sidebar::LinkText  @iconUrl={{@iconUrl}} @icon={{@icon}} @iconType={{this.iconType}} @title={{@title}}
                             @badgeText={{@badgeText}} />
     </LinkTo>
   {{else}}
-    <LinkTo @route={{@route}}
+    <LinkTo @route={{@route}}  @query={{@query}}
             class="sidebar-link list-group-item list-group-item-action"
             @activeClass="sidebar-active">
       <Sidebar::LinkText  @iconUrl={{@iconUrl}} @icon={{@icon}} @iconType={{this.iconType}} @title={{@title}}

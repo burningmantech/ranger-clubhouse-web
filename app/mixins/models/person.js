@@ -29,6 +29,10 @@ export default Mixin.create({ // eslint-disable-line ember/no-new-mixins
     return this.status == PersonStatus.DECEASED;
   }),
 
+  isDismissed: computed('status', function () {
+    return this.status == PersonStatus.DISMISSED;
+
+  }),
 
   isSuspended: computed('status', function() {
     return this.status == PersonStatus.SUSPENDED;

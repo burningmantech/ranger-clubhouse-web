@@ -5,7 +5,8 @@
     <s.link @route="person.event-info" @title="Event/Training Info" @icon="user" @iconType="s"/>
     <s.link @route="person.timesheet" @title="Timesheets" @icon="clock"/>
     <s.link @route="person.assets" @title="Assets" @icon="broadcast-tower" @iconType="s"/>
-    <s.link @route="person.messages" @title="Messages" @icon="envelope" @badgeText={{this.person.unread_message_count}} />
+    <s.link @route="person.messages" @title="Messages" @icon="envelope"
+            @badgeText={{this.person.unread_message_count}} />
     {{#if (has-role "admin" "manage+view-pii")}}
       <s.link @route="person.personal-info" @title="Personal Info" @icon="home" @iconType="s"/>
     {{/if}}
@@ -19,44 +20,88 @@
       <s.link @route="person.password" @title="Change Password" @icon="key" @iconType="s"/>
     {{/if}}
   </s.group>
-</ChSidebar>
 
-<main class="col">
-  {{#if (or this.person.isSuspended this.person.isResigned this.person.isDeceased this.person.isUberBonked this.person.isDismissed)}}
-    <ChAlert @type="danger">
-      {{fa-icon "exclamation-triangle" size="2x"}} The account has the status "{{person.status}}"
-      and is not accessible. Contact the Personnel Manager: {{mail-to (config "PersonnelEmail")}}.
-    </ChAlert>
-  {{else if this.person.needsBpguid}}
-    <ChAlert @type="danger">
-      Account does not have a Burner Profile ID on file. Signups and ticketing are disabled.
-    </ChAlert>
+  {{#if (has-role "admin" "vc" "intake")}}
+    <s.group @title="Vol Coords">
+      {{#if (has-role "intake")}}
+        <s.link @route="person.unified-flagging" @title="Unified Flagging" @icon="flag"/>
+      {{/if}}
+      {{#if (has-role "admin" "vc")}}
+        <s.link @route="person.dashboard" @title="Dashboard" @icon="columns" @iconType="s"/>
+      {{/if}}
+      {{#if (has-role "admin")}}
+        <s.link @route="person.external-ids" @title="External IDs" @icon="external-link-alt" @iconType="s"/>
+      {{/if}}
+    </s.group>
   {{/if}}
 
-  <div class="d-flex flex-lg-row flex-column justify-content-between">
-    <h2 class="align-middle">
-      <PersonLink @person={{this.person}} /> &lt;{{this.person.status}}{{if this.person.vintage "/vintage"}}
-      , {{this.person.first_name}} {{this.person.last_name}}&gt;
+  {{#if  (has-role "edit-bmids" "edit-access-docs")}}
+    <s.group @title="PRE-PLAYA">
+      {{#if (has-role "edit-bmids")}}
+        <s.link @route="person.bmid" @title="BMID" @icon="id-badge" @iconType="s"/>
+      {{/if}}
+      {{#if (has-role "edit-access-docs")}}
+        <s.link @route="person.access-documents" @title="Access Documents" @icon="ticket-alt" @iconType="s"/>
+      {{/if}}
+    </s.group>
+  {{/if}}
+
+  {{#if (has-role "admin" "vc")}}
+    <s.group @title="Logs">
+      {{#if (has-role "admin")}}
+        <s.link @route="admin.action-log" @title="Action Log" @query={{hash person=person.callsign}} @icon="arrows-alt"
+                @iconType="s"/>
+        <s.link @route="person.contact-log" @title="Contact Log" @icon="paper-plane"/>
+        <s.link @route="person.broadcast-log" @title="Broadcast Log" @icon="volume-up" @iconType="s"/>
+      {{/if}}
+      {{#if (has-role "admin" "vc")}}
+        <s.link @route="person.status-history" @title="Status History" @icon="history" @iconType="s"/>
+        <s.link @route="person.photos" @title="Photo History" @icon="portrait" @iconType="s"/>
+      {{/if}}
+    </s.group>
+  {{/if}}
+</ChSidebar>
+
+<main class="col ">
+  <div class="person-manage-header">
+    <h2 class="homepage-title col-sm-12 col-lg-auto">
+      <PersonLink @person={{this.person}} />
+      <span class="d-inline-block">
+        &lt;{{this.person.status}}{{if this.person.vintage "/vintage"}}
+        , {{this.person.first_name}} {{this.person.last_name}}&gt;
+      </span>
       {{#if this.person.callsign_pronounce}}
         <br><i>"{{this.person.callsign_pronounce}}"</i>
       {{/if}}
     </h2>
-    <div class="text-muted align-middle">Person Manage</div>
-    <div class="text-right align-middle">
+    <div class="col-sm-12 col-lg-auto ml-lg-auto">
       <LinkTo @route="hq.index" @model={{this.person.id}}>Switch to HQ Window</LinkTo>
     </div>
+    {{#if (or this.person.isSuspended this.person.isResigned this.person.isDeceased this.person.isUberBonked this.person.isDismissed)}}
+      <div class="col-12 mb-2">
+        <h5 class="text-danger">
+          {{fa-icon "exclamation-triangle"}} The account has the status "{{this.person.status}}" and may not be logged
+          into.
+        </h5>
+        For more information, contact the Personnel Manager: {{mail-to (config "PersonnelEmail")}}
+      </div>
+    {{else if this.person.needsBpguid}}
+      <div class="h4 col-12 text-danger">
+        Account does not have a Burner Profile ID on file. Signups and ticketing are disabled.
+      </div>
+    {{/if}}
+
   </div>
+
 
   {{#if this.person.message}}
     <ChBox @title="Important Account Message" @type="warning">
       {{nl2br this.person.message}}
-      <div class="mt-2 text-muted">Message added {{shift-format this.person.message_updated_at}}</div>
+      <div class="mt-2 text-muted">Posted {{shift-format this.person.message_updated_at}}</div>
     </ChBox>
   {{/if}}
 
-  <hr class="mt-1 mr-n2 ml-n2">
-
-  <div class="row d-lg-none mb-2">
+  <div class="row d-lg-none mb-2 max-width-900">
     {{!
       The drop down menu only appear on mobile/small screen devices
       When adding new areas, be sure to add the link to person-sidebar.hbs
@@ -65,7 +110,7 @@
       <div class="btn-group btn-block">
         <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
-          Account Section
+          Account Management Pages
         </button>
         <div class="dropdown-menu w-100">
           <LinkTo @route="person.index" @model={{this.person.id}} class="dropdown-item">Account Info</LinkTo>
@@ -86,6 +131,41 @@
           {{/if}}
           {{#if (has-role "admin")}}
             <LinkTo @route="person.password" @model={{this.person.id}} class="dropdown-item">Change Password</LinkTo>
+          {{/if}}
+          {{#if (has-role "admin" "vc" "intake")}}
+            <div class="dropdown-header">Vol Coords</div>
+            {{#if (has-role "intake")}}
+              <LinkTo @route="person.unified-flagging" class="dropdown-item">Unified Flagging</LinkTo>
+            {{/if}}
+            {{#if (has-role "admin" "vc")}}
+              <LinkTo @route="person.dashboard" class="dropdown-item">Dashboard</LinkTo>
+            {{/if}}
+            {{#if (has-role "admin")}}
+              <LinkTo @route="person.external-ids" class="dropdown-item">External IDs</LinkTo>
+            {{/if}}
+          {{/if}}
+
+          {{#if  (has-role "edit-bmids" "edit-access-docs")}}
+            <div class="dropdown-header">Pre-Playa</div>
+            {{#if (has-role "edit-bmids")}}
+              <LinkTo @route="person.bmid" class="dropdown-item">BMID</LinkTo>
+            {{/if}}
+            {{#if (has-role "edit-access-docs")}}
+              <LinkTo @route="person.access-documents" class="dropdown-item">Access Documents</LinkTo>
+            {{/if}}
+          {{/if}}
+
+          {{#if (has-role "admin" "vc")}}
+            <div class="dropdown-header">Logs</div>
+            <LinkTo @route="person.photos" class="dropdown-item">Photo History</LinkTo>
+            <LinkTo @route="person.status-history" class="dropdown-item">Status History</LinkTo>
+            {{#if (has-role "admin")}}
+              <LinkTo @route="person.contact-log" class="dropdown-item">Contact Log</LinkTo>
+              <LinkTo @route="person.broadcast-log" class="dropdown-item">Broadcast Log</LinkTo>
+              <LinkTo @route="admin.action-log" @query={{hash person=person.callsign}} class="dropdown-item">
+                Action Log
+              </LinkTo>
+            {{/if}}
           {{/if}}
         </div>
       </div>

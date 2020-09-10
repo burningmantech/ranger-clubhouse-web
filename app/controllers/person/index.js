@@ -1,49 +1,41 @@
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
-import { Role } from 'clubhouse/constants/roles';
+import {action} from '@ember/object';
+import {Role} from 'clubhouse/constants/roles';
 import inGroups from 'clubhouse/utils/in-groups';
-import { tracked } from '@glimmer/tracking';
-
-const CallsignApprovedOptions = [
-  ['Approved', true],
-  ['Not Approved', false]
-];
-
-const StatusOptions = [
-  'active',
-  'alpha',
-  'auditor',
-  'bonked',
-  'deceased',
-  'dismissed',
-  'inactive extension',
-  'inactive',
-  'non ranger',
-  'past prospective',
-  'prospective',
-  'resigned',
-  'retired',
-  'suspended',
-  'uberbonked',
-];
-
-const UserAuthorizedOptions = [
-  ['User Enabled', true],
-  ['User Suspended', false]
-];
-
-const OnSiteOptions = [
-  ['On Site', true],
-  ['Off Site', false],
-];
+import {tracked} from '@glimmer/tracking';
 
 export default class PersonIndexController extends Controller {
   person = null;
 
-  callsignApprovedOptions = CallsignApprovedOptions;
-  statusOptions = StatusOptions;
-  userAuthorizedOptions = UserAuthorizedOptions;
-  onSiteOptions = OnSiteOptions;
+  callsignApprovedOptions = [
+    ['Approved', true],
+    ['Not Approved', false]
+  ];
+
+  statusOptions = [
+    'active',
+    'alpha',
+    'auditor',
+    'bonked',
+    'deceased',
+    'dismissed',
+    'inactive extension',
+    'inactive',
+    'non ranger',
+    'past prospective',
+    'prospective',
+    'resigned',
+    'retired',
+    'suspended',
+    'uberbonked',
+  ];
+
+
+  onSiteOptions = [
+    ['On Site', true],
+    ['Off Site', false],
+  ];
+
 
   @tracked personPositions;
   @tracked showPositions = false;
@@ -139,7 +131,7 @@ export default class PersonIndexController extends Controller {
           .catch((response) => this.house.handleErrorResponse(response));
       }
     }).catch((response) => this.house.handleErrorResponse(response, model))
-      .finally(() => this.iSaving = false );
+      .finally(() => this.iSaving = false);
   }
 
   @action
@@ -156,7 +148,7 @@ export default class PersonIndexController extends Controller {
   editNote() {
     this.showConfirmNoteOrMessage = false;
     this.showEditNote = true;
-    this.personNote = { message: this.person.message };
+    this.personNote = {message: this.person.message};
   }
 
   @action
@@ -176,7 +168,7 @@ export default class PersonIndexController extends Controller {
     this.person.save().then(() => {
       this.toast.success('Note update');
       this.showEditNote = false;
-      this.showConfirmNoteOrMessage =false;
+      this.showConfirmNoteOrMessage = false;
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
@@ -194,8 +186,12 @@ export default class PersonIndexController extends Controller {
       this.modal.confirm(
         'Confirm Action',
         'You are about to disapprove a previously approved callsign. Are you sure you want to do that?',
-        () => { this._savePersonModel(model); },
-        () => { this.toast.warning('The record has not been saved.'); }
+        () => {
+          this._savePersonModel(model);
+        },
+        () => {
+          this.toast.warning('The record has not been saved.');
+        }
       );
     } else {
       this._savePersonModel(model);
@@ -203,7 +199,7 @@ export default class PersonIndexController extends Controller {
   }
 
   @action
-  removePerson() {
+  removePersonAction() {
     this.modal.confirm('Confirm Person Removal',
       'Removing a person is permanent and cannot be ' +
       'undone. All of the information associated with the person will ' +
@@ -236,7 +232,7 @@ export default class PersonIndexController extends Controller {
     this.toast.clear();
     this.ajax.request(`person/${this.person.id}/positions`, {
       type: 'POST',
-      data: { position_ids: positionIds }
+      data: {position_ids: positionIds}
     }).then((results) => {
       this.toast.success('The positions have been successfully updated.');
       this.personPositions = results.positions;
@@ -245,12 +241,14 @@ export default class PersonIndexController extends Controller {
         // Reload the user.
         this.session.loadUser();
       }
-    }).catch((response) => { this.house.handleErrorResponse(response) });
+    }).catch((response) => {
+      this.house.handleErrorResponse(response)
+    });
   }
 
   @action
   cancelPositions() {
-    this.editPositions =  false;
+    this.editPositions = false;
   }
 
   @action
@@ -270,7 +268,7 @@ export default class PersonIndexController extends Controller {
     this.isSavingRoles = true;
     this.ajax.request(`person/${this.person.id}/roles`, {
       type: 'POST',
-      data: { role_ids: roleIds }
+      data: {role_ids: roleIds}
     }).then((results) => {
       this.toast.success('The roles have been successfully updated.');
       this.personRoles = results.roles;
@@ -279,7 +277,9 @@ export default class PersonIndexController extends Controller {
         // Reload the user.
         this.session.loadUser();
       }
-    }).catch((response) => { this.house.handleErrorResponse(response) })
+    }).catch((response) => {
+      this.house.handleErrorResponse(response)
+    })
       .finally(() => this.isSavingRoles = false);
   }
 

@@ -9,357 +9,49 @@
   </p>
 {{/if}}
 
-<PersonPhoto @photo={{this.photo}} @person={{this.person}} @uploadAction={{this.showUploadDialogAction}} />
-
-<ChForm @formId="person" @formFor={{this.person}} @onSubmit={{action this.savePersonAction}} as |f|>
-
-  {{! The following block is floated left on md or larger screen to ensure
-    the photo is on the right and the form flows around it.
-  }}
-  <div class="float-md-left">
-    {{! show contact information }}
-    {{#if (has-role "admin" "vc" "view-pii" "view-email")}}
-      <div class="form-row mb-2">
-        <label class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">Contact</label>
-        <div class="mt-2 col-auto">
-          <span class="d-inline-block">
-            {{#if this.person.email}}
-              email {{mail-to this.person.email}}
-            {{else}}
-              <i class="text-muted">missing</i>
-            {{/if}}
-          </span>
-          {{#if (has-role "admin" "vc" "view-pii")}}
-            <span class="d-inline-block ml-lg-2">
-              phone
-              {{#if this.person.home_phone}}
-                {{phone-link this.person.home_phone}}
-              {{else}}
-                n/a
-              {{/if}}
-            </span>
-            {{#if this.person.alt_phone}}
-              <span class="d-inline-block ml-md-2">alt phone {{phone-link this.person.alt_phone}}</span>
-            {{/if}}
-          {{/if}}
-
-          <div class="mt-2">
-            <span class="d-inline-block">last seen
-              {{#if this.person.last_seen_at}}
-                {{moment-format this.person.last_seen_at "MMM DD, YYYY @ HH:mm"}}
-              {{else}}
-                <i>unknown</i>
-              {{/if}}
-              </span>
-            <span class="ml-lg-2 d-inline-block">reviewed P.I
-              {{#if this.person.reviewed_pi_at}}
-                {{moment-format this.person.reviewed_pi_at "MMM DD, YYYY @ HH:mm"}}
-              {{else}}
-                <i>unknown</i>
-              {{/if}}
-            </span>
-          </div>
-        </div>
-      </div>
-    {{/if}}
-
-    <div class="form-row mb-2">
-      <label class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">Callsign</label>
-      {{#if (has-role "admin" "mentor" "vc")}}
-        <f.input @name="callsign" @type="text" @size=35 @maxlength=100 @wrapClass="col-auto"/>
-      {{else}}
-        <div class="mt-2 col-auto">
-          {{this.person.callsign}}
-        </div>
-      {{/if}}
-    </div>
-
-    <div class="form-row mb-2">
-      <label class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">FKA</label>
-      {{#if (has-role "admin" "mentor" "vc")}}
-        <f.input @name="formerly_known_as" @type="text" @size=35 @maxlength=200 @wrapClass="col-auto"/>
-      {{else}}
-        <div class="mt-2 col-auto">
-          <PresentOrNot @value={{this.person.formerly_known_as}} @empty="no previous callsigns"/>
-        </div>
-      {{/if}}
-    </div>
-
-    <div class="form-row mb-2">
-      <label class="col-form-label col-form-label-fixed col-2">Callsign Approved</label>
-      {{#if (has-role "admin" "mentor" "vc")}}
-        <f.input @name="callsign_approved" @type="select" @grid="col-auto"
-                 @options={{this.callsignApprovedOptions}} />
-      {{else}}
-        <div class="mt-2 col-sm-12 col-md-auto">
-          {{if this.person.callsign_approved "Approved" "Not Approved"}}
-        </div>
-      {{/if}}
-    </div>
-
-    <div class="form-row mb-2">
-      <label class="col-form-label col-form-label-fixed col-2">Status</label>
-      {{#if (has-role "admin" "mentor" "vc")}}
-        <f.input @name="status" @type="select" @options={{this.statusOptions}} @grid="col-auto"/>
-      {{else}}
-        <div class="mt-2 col-auto">
-          {{this.person.status}}
-        </div>
-      {{/if}}
-    </div>
-
-    <div class="form-row mb-2">
-      <label class="col-form-label col-form-label-fixed col-2">Personnel</label>
-      {{#if (has-role "admin")}}
-        <div class="col-auto mt-2">
-          <f.input @name="has_note_on_file" @label="Note on file" @value=1 @type="checkbox" @inline={{true}}/>
-        </div>
-      {{else}}
-        <div class="mt-2 col-auto">
-          {{#if this.person.has_note_on_file}}
-            <b class="text-danger">Note on file</b>
-          {{else}}
-            <i class="text-muted">no note on file</i>
-          {{/if}}
-        </div>
-      {{/if}}
-    </div>
-  </div>
-
-  {{!
-   Ensure the following is not floated next to photo
-  }}
-  <div class="clearfix"></div>
-
-  <div class="form-row mb-2">
-    <label class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">Name</label>
+<div class="row">
+  <div class="col-sm-12 col-lg-9">
     {{#if (has-role "admin" "mentor" "vc")}}
-      <f.input @name="first_name" @type="text" @size=20 @maxlength=25 @grid="col-sm-12 col-lg-auto"/>
-      <f.input @name="mi" @type="text" @size=2 @maxlength=10 @grid="col-sm-12 col-lg-auto"/>
-      <f.input @name="last_name" @type="text" @size=20 @maxlength=25 @grid="col-sm-12 col-lg-auto"/>
+      <Person::FullForm @person={{this.person}}
+                            @savePersonAction={{this.savePersonAction}}
+                            @callsignApprovedOptions={{this.callsignApprovedOptions}}
+                            @statusOptions={{this.statusOptions}}
+                            @onSiteOptions={{this.onSiteOptions}}
+
+                            @personRoles={{this.personRoles}}
+                            @toggleRoles={{this.toggleRoles}}
+                            @showRoles={{this.showRoles}}
+                            @editRolesAction={{this.editRolesAction}}
+
+                            @personPositions={{this.personPositions}}
+                            @togglePositions={{this.togglePositions}}
+                            @showPositions={{this.showPositions}}
+                            @editPositionsAction={{this.editPositionsAction}}
+
+                            @editNote={{this.editNote}}
+                            @confirmNoteOrMessage={{this.confirmNoteOrMessage}}
+                            @removePersonAction={{this.removePersonAction}}
+      />
     {{else}}
-      <div class="mt-2 col-sm-12 col-lg-9">
-        {{this.person.first_name}} {{this.person.mi}} {{this.person.last_name}}
-      </div>
+      <Person::SimpleForm @person={{this.person}}
+                          @savePersonAction={{this.savePersonAction}}
+                          @onSiteOptions={{this.onSiteOptions}}
+
+                          @personRoles={{this.personRoles}}
+                          @toggleRoles={{this.toggleRoles}}
+                          @showRoles={{this.showRoles}}
+
+                          @personPositions={{this.personPositions}}
+                          @togglePositions={{this.togglePositions}}
+                          @showPositions={{this.showPositions}}
+                          @editPositionsAction={{this.editPositionsAction}}
+      />
     {{/if}}
   </div>
-
-  <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-2">On Site</label>
-    <div class="col-8">
-      <f.input @name="on_site" @type="radioGroup" @options={{this.onSiteOptions }} @inline={{true}} />
-    </div>
+  <div class="col-sm-12 col-lg-1">
+    <PersonPhoto @photo={{this.photo}} @person={{this.person}} @uploadAction={{this.showUploadDialogAction}} />
   </div>
-
-  <div class="form-row mb-2">
-    <label for="person_position" class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">Positions</label>
-    <div class="col-md-9 col-sm-12">
-      <div class="row col-12 mt-1 mb-2">
-        <button type="button" {{action this.togglePositions}} class="btn btn-secondary btn-sm mr-2">
-          {{if this.showPositions "Hide" "Show"}} Positions
-        </button>
-        {{#if (has-role "admin" "grant-position")}}
-          <button type="button" {{action "editPositionsAction"}} class="btn btn-secondary btn-sm">Edit Positions
-          </button>
-        {{/if}}
-      </div>
-      {{#unless this.personPositions}}
-        <div class="row">
-          <div class="col-12">
-            <strong class="text-danger">Person does not hold any positions</strong>
-          </div>
-        </div>
-      {{/unless}}
-      {{#if this.showPositions}}
-        <div class="row">
-          {{#each this.personPositions as |position| }}
-            <div class="col-sm-6 col-md-4 col-xl-3">
-              {{position.title}}
-            </div>
-          {{/each}}
-        </div>
-      {{/if}}
-    </div>
-  </div>
-
-  <div class="form-row mb-2">
-    <label class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">Roles</label>
-    <div class="col-md-9 col-sm-12">
-      <div class="row col-12 mt-1 mb-2">
-        <button type="button" {{action this.toggleRoles}} class="btn btn-secondary btn-sm mr-2">
-          {{if this.showRoles "Hide" "Show"}} Roles
-        </button>
-        {{#if (has-role "admin")}}
-          <button type="button" {{action this.editRolesAction}} class="btn btn-secondary btn-sm">Edit Roles</button>
-        {{/if}}
-      </div>
-      {{#unless this.personRoles}}
-        <strong class="text-danger">Person does not hold any roles</strong>
-      {{/unless}}
-      {{#if this.showRoles}}
-        <div class="row">
-          {{#each this.personRoles as |role| }}
-            <div class="col-sm-6 col-md-4 col-xl-3">
-              {{role.title}}
-            </div>
-          {{/each}}
-        </div>
-      {{/if}}
-    </div>
-  </div>
-
-  <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-lg-2">Years</label>
-    <div class="col-md-9 col-sm-12">
-      {{#each this.person.years as |year|}}{{year}} {{/each}} ({{this.person.years.length}})
-    </div>
-  </div>
-
-  <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-lg-2">Vehicles</label>
-    <div class="col-md-9 col-sm-12">
-      {{#if (has-role "admin")}}
-        <f.input @name="vehicle_blacklisted" @label="Vehicle Blacklisted" @type="checkbox" @inline={{true}} />
-      {{else if this.person.vehicle_blacklisted}}
-        <b class="text-danger">VEHICLE BLACKLISTED</b>
-      {{else}}
-        <i>No blacklisted vehicle</i>
-      {{/if}}
-    </div>
-  </div>
-
-
-  <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-lg-2">Certifications</label>
-    <div class="col-sm-12 col-md-9">
-      {{#if (has-role "admin" "vc")}}
-        <f.input @name="osha10" @label="OSHA-10" @type="checkbox" @inline={{true}}  />
-        <f.input @name="osha30" @label="OSHA-30" @type="checkbox" @inline={{true}}  />
-      {{else if (or this.person.osha10 this.person.osha30)}}
-        {{#if this.person.osha10}}OSHA-10{{/if}}
-        {{#if this.person.osha30}}OSHA-30{{/if}}
-      {{else}}
-        No OSHA certifications
-      {{/if}}
-    </div>
-  </div>
-
-  <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-lg-2">Agreements</label>
-    <div class="col-sm-12 col-md-9">
-      {{#if (has-role "admin" "vc")}}
-        <f.input @name="behavioral_agreement" @label="Burning Man's Behavioral Standards Agreement" @type="checkbox"
-                 @inline={{true}} />
-      {{else}}
-        Behavioral Standards Agreement {{if this.person.behavioral_agreement "signed" "NOT SIGNED"}}<br>
-      {{/if}}
-    </div>
-  </div>
-
-  {{#if (has-role "admin")}}
-    <div class="form-row mb-2">
-      <label class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">BPGUID</label>
-      <f.input @name="bpguid" @type="text" @size=35 @maxlength=200 @grid="col-auto"/>
-    </div>
-
-    <div class="form-row mb-2">
-      <label class="col-form-label col-form-label-fixed col-sm-12 col-lg-2">LMS ID</label>
-      <f.input @name="lms_id" @type="text" @size=35 @maxlength=200 @grid="col-auto"/>
-    </div>
-  {{/if}}
-
-  <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-lg-2">BMID/Tickets</label>
-    <div class="col-sm-12 col-md-9">
-      {{#if  (has-role "edit-bmids" "edit-access-docs")}}
-        {{#if (has-role "edit-bmids")}}
-          <LinkTo @route="person.bmid" class="btn btn-secondary btn-sm">Edit BMID</LinkTo>
-        {{/if}}
-        {{#if (has-role "edit-access-docs")}}
-          <LinkTo @route="person.tickets" class="btn btn-secondary btn-sm">View Tickets &amp; Stuff</LinkTo>
-          <LinkTo @route="person.access-documents" class="btn btn-secondary btn-sm">Edit Access Docs</LinkTo>
-        {{/if}}
-      {{else}}
-        <div class="text-muted">No permission to edit BMID and/or access documents.</div>
-      {{/if}}
-    </div>
-  </div>
-
-  {{#if (has-role "admin" "vc" "intake")}}
-    <div class="form-row mb-2">
-      <label class="col-form-label-fixed col-sm-12 col-lg-2">VC</label>
-      <div class="col-sm-12 col-md-9">
-        {{#if (has-role "admin" "vc")}}
-          <LinkTo @route="person.dashboard" class="btn btn-secondary btn-sm">View Dashboard</LinkTo>
-          <LinkTo @route="person.photos" class="btn btn-secondary btn-sm">Photo History</LinkTo>
-        {{/if}}
-        <LinkTo @route="person.status-history" class="btn btn-secondary btn-sm">Status History</LinkTo>
-        {{#if (has-role "intake")}}
-          <LinkTo @route="person.unified-flagging" class="btn btn-secondary btn-sm">Unified Flagging</LinkTo>
-        {{/if}}
-      </div>
-    </div>
-  {{/if}}
-  {{#if (has-role "admin")}}
-    <div class="form-row mb-2">
-      <label class="col-form-label-fixed col-sm-12 col-lg-2">Logs</label>
-      <div class="col-sm-12 col-md-9 ">
-        <LinkTo @route="person.contact-log" class="btn btn-secondary btn-sm">Contact Log</LinkTo>
-        <LinkTo @route="person.broadcast-log" class="btn btn-secondary btn-sm">Broadcast Log</LinkTo>
-        <LinkTo @route="admin.action-log" @query={{hash person=person.callsign}} class="btn btn-secondary btn-sm">
-          Action
-          Log
-        </LinkTo>
-      </div>
-    </div>
-
-    <div class="form-row mb-2">
-      <label class="col-form-label-fixed col-sm-12 col-lg-2">Note</label>
-      <div class="col-sm-12 col-md-9">
-        {{#if this.person.message}}
-          <button type="button" class="btn btn-secondary btn-sm" {{action this.editNote}}>Update Note</button>
-        {{else}}
-          <button type="button" class="btn btn-secondary btn-sm" {{action this.confirmNoteOrMessage}}>Add Note
-          </button>
-        {{/if}}
-
-      </div>
-    </div>
-  {{/if}}
-
-  <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-lg-2">Created</label>
-    <div class="col-sm-12 col-md-9">
-      {{#if person.create_date}}
-        {{person.create_date}}
-      {{else}}
-        <i>created prior to 2010</i>
-      {{/if}}
-    </div>
-  </div>
-
-  <div class="form-row mb-2">
-    <label class="col-form-label-fixed col-sm-12 col-lg-2">Modified</label>
-    <div class="col-sm-12 col-md-9">
-      {{person.date_verified}}
-    </div>
-  </div>
-
-  <div class="form-row mb-2">
-    <label class="col-form-label-fixed d-none d-md-block col-md-2">&nbsp;</label>
-    <div class="col-sm-7 col-md-5">
-      <f.submit @label="Update" @disabled={{or this.isSaving (not f.model.isDirty)}} />
-      {{#if this.isSaving}}
-        <LoadingIndicator/>
-      {{/if}}
-    </div>
-    {{#if (has-role "admin")}}
-      <div class="col-sm-3 col-md-2 text-right">
-        <button type="button" class="btn btn-secondary btn-sm" {{action this.removePerson}}>Remove</button>
-      </div>
-    {{/if}}
-  </div>
-</ChForm>
+</div>
 
 {{#if this.editPositions}}
   <Person::PositionForm @positions={{positions}} @positionIds={{positionIds}} @onSave={{action this.savePositions}}
