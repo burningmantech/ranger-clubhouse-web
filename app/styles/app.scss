@@ -142,15 +142,15 @@ $sizes: (
   }
 }
 
-h1 select option {
+h1 select, h1 option, .h1 select, .h1 option {
   font-size: $h1-font-size;
 }
 
-h2 select option {
+h2 select, h2 option, .h2 select, .h2 option {
   font-size: $h2-font-size;
 }
 
-h3 select option {
+h3 select, h3 option, .h3 select, .h3 option {
   font-size: $h3-font-size;
 }
 
@@ -275,15 +275,14 @@ ul.nav-pills li {
 }
 
 legend {
-  padding-left: 10px;
-  border-bottom: 1px solid #ececec;
+  border-bottom: 1px solid #dcdcdc;
   font-size: 1rem;
   font-weight: bold;
 }
 
 .form-group,
 .form-row {
-  padding-left: 10px;
+  //padding-left: 10px;
 }
 
 .form-check-label:hover {
@@ -298,28 +297,8 @@ legend {
   }
 }
 
-/* Messages */
-
-.person-message-box {
-  margin-bottom: 10px;
-}
-
-.person-message-header {
-  padding: 10px 0;
-  margin-bottom: 10px;
-  background-color: #f0f0f0;
-}
-
 .year-select {
   font-size: 1.4em;
-}
-
-.error-pane {
-  margin: 25px auto;
-}
-
-.error-message {
-  color: red;
 }
 
 .loading-pane {
@@ -427,23 +406,31 @@ caption {
   border: 0 !important;
 }
 
-.col-form-label-fixed {
-  width: 100px !important;
-  max-width: 100px;
-  min-width: 100px;
+@include media-breakpoint-down(md) {
+  .col-form-label-fixed {
+    width: 100% !important;
+    display: block;
+  }
 }
+
+@include media-breakpoint-up(lg) {
+  .col-form-label-fixed {
+    width: 120px !important;
+  }
+}
+
 
 /*
  * Toastr message overrides
  */
 
-@media only screen and (max-width: 799px) {
+@include media-breakpoint-down(md) {
   #toast-container > div {
     width: 96% !important;
   }
 }
 
-@media only screen and (min-width: 800px) {
+@include media-breakpoint-up(lg) {
   #toast-container > div {
     width: 500px !important;
   }
@@ -635,17 +622,28 @@ caption {
   }
 }
 
-@include media-breakpoint-down(sm) {
+@include media-breakpoint-down(md) {
   .homepage-title {
-    font-size: 5vw;
+    font-size: 4vw;
   }
 }
 
-
-
 @include media-breakpoint-down(md) {
-  .btn-md-block {
+  .btn-responsive {
     display: block;
     width: 100%;
   }
+}
+
+.person-manage-header {
+  @include make-row();
+  background-color: #f4f4f4 !important;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.max-width-900 {
+  max-width: 900px;
 }

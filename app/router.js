@@ -137,6 +137,7 @@ Router.map(function () {
     this.route('photos');
     this.route('status-history');
     this.route('unified-flagging');
+    this.route('external-ids');
   });
 
   this.route('logout');

@@ -29,6 +29,7 @@
     "jquery-datetimepicker": "^2.5.21",
     "jscodeshift": "^0.11.0",
     "json-formatter-js": "^2.3.4",
+    "libphonenumber-js": "^1.7.57",
     "lodash": "^4.17.20",
     "mobile-detect": "^1.4.4"
   },

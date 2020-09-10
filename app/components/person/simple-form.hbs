@@ -1,0 +1,123 @@
+<dl class="row">
+  {{#if (has-role "view-pii" "view-email")}}
+    <dt class="col-sm-12 col-lg-3">Contact</dt>
+    <dd class="col-sm-12 col-lg-9">
+      {{#if @person.email}}
+        email {{mail-to @person.email}}
+      {{else}}
+        <i class="text-muted">missing</i>
+      {{/if}}
+      {{#if (has-role "view-pii")}}
+        <div>
+          phone
+          {{#if @person.home_phone}}
+            {{phone-link @person.home_phone}}
+          {{else}}
+            n/a
+          {{/if}}
+        </div>
+        {{#if @person.alt_phone}}
+          <div>
+            alt phone {{phone-link @person.alt_phone}}
+          </div>
+        {{/if}}
+      {{/if}}
+    </dd>
+  {{/if}}
+  <dt class="col-sm-12 col-lg-3">Years ({{@person.years.length}})</dt>
+  <dd class="col-sm-12 col-lg-9">
+    {{#if @person.years}}
+      {{year-range @person.years}}
+    {{else}}
+      Has not worked yet
+    {{/if}}
+  </dd>
+  <dt class="col-sm-12 col-lg-3">Callsign</dt>
+  <dd class="col-sm-12 col-lg-9">
+    {{#if @person.callsign_approved}}
+      <span class="text-success">{{fa-icon "check"}} Approved</span>
+    {{else}}
+      <span class="text-danger">{{fa-icon "times"}} Not approved</span>
+    {{/if}}
+  </dd>
+  <dt class="col-sm-12 col-lg-3">FKAs</dt>
+  <dd class="col-sm-12 col-lg-9">
+    <PresentOrNot @value={{@person.formerly_known_as}} @empty="no previous callsigns"/>
+  </dd>
+  {{#if @person.has_note_on_file}}
+    <dt class="col-sm-12 col-lg-3">Personnel Note</dt>
+    <dd class="col-sm-12 col-lg-9">
+      <b class="text-danger">Has note on file</b>. Contact the Personnel Manager for more information:
+      {{mail-to (config "PersonnelEmail")}}
+    </dd>
+  {{/if}}
+  <dt class="col-sm-12 col-lg-3">On Site</dt>
+  <dd class="col-sm-12 col-lg-9">
+    <ChForm @formId="person" @formFor={{@person}} @onSubmit={{@savePersonAction}} as |f|>
+      <f.input @name="on_site" @type="radioGroup" @options={{@onSiteOptions}} @inline={{true}} />
+      <f.submit @label="Update" @disabled={{@person.isSaving}} />
+      {{#if @person.isSaving}}
+        <LoadingIndicator/>
+      {{/if}}
+    </ChForm>
+  </dd>
+  <dt class="col-sm-12 col-lg-3">Positions</dt>
+  <dd class="col-sm-12 col-lg-9">
+    <div>
+      <button type="button" {{action @togglePositions}} class="btn btn-secondary btn-sm mr-2">
+        {{if @showPositions "Hide" "Show"}} Positions
+      </button>
+      {{#if (has-role "grant-position")}}
+        <button type="button" {{action @editPositionsAction}} class="btn btn-secondary btn-sm">
+          Edit Positions
+        </button>
+      {{/if}}
+    </div>
+    {{#unless @personPositions}}
+      <b class="text-danger">No positions granted</b>
+    {{/unless}}
+    {{#if @showPositions}}
+      <div class="row">
+        {{#each @personPositions as |position| }}
+          <div class="col-sm-6 col-xl-4">
+            {{position.title}}
+          </div>
+        {{/each}}
+      </div>
+    {{/if}}
+  </dd>
+  <dt class="col-sm-12 col-lg-3">Roles</dt>
+  <dd class="col-sm-12 col-lg-9">
+    <div>
+      <button type="button" {{action @toggleRoles}} class="btn btn-secondary btn-sm mr-2">
+        {{if @showRoles "Hide" "Show"}} Roles
+      </button>
+    </div>
+    {{#unless @personRoles}}
+      <b class="text-danger">No roles granted</b>
+    {{/unless}}
+    {{#if @showRoles}}
+      <div class="row">
+        {{#each @personRoles as |role| }}
+          <div class="col-sm-6 col-xl-4">
+            {{role.title}}
+          </div>
+        {{/each}}
+      </div>
+    {{/if}}
+  </dd>
+  <dt class="col-sm-12 col-lg-3">Certifications</dt>
+  <dd class="col-sm-12 col-lg-9">
+    {{#if (or @person.osha10 @person.osha30)}}
+      {{#if @person.osha10}}OSHA-10{{/if}}
+      {{#if @person.osha30}}OSHA-30{{/if}}
+    {{else}}
+      No OSHA certifications
+    {{/if}}
+  </dd>
+  <dt class="col-sm-12 col-lg-3">&nbsp;</dt>
+  <dd class="col-sm-12 col-lg-9">
+    <LinkTo @route="person.event-info">Person &gt; Event/Training Info</LinkTo>
+    has additional agreements, affidavits, and vehicles flags.
+  </dd>
+</dl>

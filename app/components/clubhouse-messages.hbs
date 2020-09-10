@@ -14,7 +14,7 @@
     </div>
     <div class="col-md-12 col-lg-auto">
     {{#if this.canSendMessages}}
-      <button class="btn btn-primary ml-md-auto btn-md-block" {{on "click" this.newMessageAction}}>{{fa-icon "plus"}}
+      <button class="btn btn-primary ml-md-auto btn-responsive" {{on "click" this.newMessageAction}}>{{fa-icon "plus"}}
         New Message
       </button>
     {{/if}}
@@ -60,7 +60,7 @@
           <div class="mail-actions">
             {{#if message.delivered}}
               <button {{on "click" (fn this.markUnreadAction message)}}
-                      type="button" class="btn btn-secondary btn-md-block" disabled={{message.isSubmitting}}>
+                      type="button" class="btn btn-secondary btn-responsive" disabled={{message.isSubmitting}}>
                 Mark Unread
                 {{#if message.isSubmitting}}
                   {{fa-icon "spinner" spin=true}}
@@ -68,7 +68,7 @@
               </button>
             {{else}}
               <button {{on "click" (fn this.markReadAction message)}}
-                      type="button" class="btn btn-primary btn-md-block" disabled={{message.isSubmitting}}>
+                      type="button" class="btn btn-primary btn-responsive" disabled={{message.isSubmitting}}>
                 Mark Read
                 {{#if message.isSubmitting}}
                   {{fa-icon "spinner" spin=true}}
