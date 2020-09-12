@@ -1,16 +1,16 @@
 {{#if this.isShinyPenny}}
   <ChAlert @type="success">
-    <b>{{person.callsign}} is newly minted Shiny Penny. Share some Ranger love and welcome them to the family.
+    <b>{{this.person.callsign}} is newly minted Shiny Penny. Share some Ranger love and welcome them to the family.
       {{fa-icon "smile-beam" type="far"}}</b>
   </ChAlert>
 {{/if}}
 
 {{#unless person.on_site}}
   <ChAlert @type="danger">
-    <h4>{{person.callsign}} is marked as OFF SITE.</h4>
+    <h4>{{this.person.callsign}} is marked as OFF SITE.</h4>
     Follow the procedures on the Site Check In page before signing the person into a shift.
     <div class="mt-2">
-      <LinkTo @route="hq.site-checkin" @model={{person.id}} class="btn btn-primary">Site Check In</LinkTo>
+      <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-primary">Site Check In</LinkTo>
     </div>
   </ChAlert>
 {{/unless}}
@@ -29,8 +29,8 @@
         {{fa-icon "exclamation-circle" size="2x"}}
       </div>
       <div class="mt-1">
-        <h5> {{person.callsign}} is not signed up for a Burn Weekend shift</h5>
-        Ask {{person.callsign}} if they are interested in signing up for a weekend shift.
+        <h5> {{this.person.callsign}} is not signed up for a Burn Weekend shift</h5>
+        Ask {{this.person.callsign}} if they are interested in signing up for a weekend shift.
       </div>
     </div>
   </ChAlert>
@@ -39,7 +39,7 @@
 <p class="my-2 hours-credits-header">
   <b>Earned Credits:</b> {{credits-format timesheetSummary.total_credits}}
   <b>Worked Hours:</b> {{hour-minute-format timesheetSummary.counted_duration}}
-  <button class="btn btn-secondary btn-sm ml-2 align-middle" {{action this.toggleHoursCreditBreakdown}}>View Credits &amp; Hours
+  <button type="button" class="btn btn-secondary btn-sm ml-2 align-middle" {{action this.toggleHoursCreditBreakdown}}>View Credits &amp; Hours
     Breakdown
   </button>
 </p>
@@ -48,15 +48,15 @@
 
 <h3>
   Timesheet Verification
-  - {{#if unverifiedTimesheets }}{{pluralize unverifiedTimesheets.length "entry" }}{{else}}No Action Needed{{/if}}
+  - {{#if this.unverifiedTimesheets }}{{pluralize this.unverifiedTimesheets.length "entry" }}{{else}}No Action Needed{{/if}}
   <HelpPopover @slug="hq-timesheet-verification"/>
 </h3>
 
-{{#if unverifiedTimesheetEntry}}
-  {{#if ignoreTimesheetVerification}}
-    <button type="button" class="btn btn-secondary" {{action toggleIgnoreVerification}}>Show Verfication</button>
+{{#if this.unverifiedTimesheetEntry}}
+  {{#if this.ignoreTimesheetVerification}}
+    <button type="button" class="btn btn-secondary" {{action this.toggleIgnoreVerification}}>Show Verfication</button>
   {{else}}
-    <p>Ask {{person.callsign}} if the following timesheet entry is correct:</p>
+    <p>Ask {{this.person.callsign}} if the following timesheet entry is correct:</p>
     <table class="table table-width-auto">
       <thead>
       <tr>
@@ -109,12 +109,12 @@
       </tbody>
     </table>
     <div class="mt-2">
-      <button class="btn btn-success py-2 px-4 mr-3" {{action markEntryCorrect}} disabled={{isSubmitting}}>YES</button>
-      <button class="btn btn-danger  py-2 px-4 p-2 mr-3" {{action markEntryIncorrect}} disabled={{isSubmitting}}>NO
+      <button type="button" class="btn btn-success py-2 px-4 mr-3" {{action this.markEntryCorrect}} disabled={{this.isSubmitting}}>YES</button>
+      <button type="button" class="btn btn-danger  py-2 px-4 p-2 mr-3" {{action this.markEntryIncorrect}} disabled={{this.isSubmitting}}>NO
       </button>
-      <button class="btn btn-gray  py-2 px-4" {{action toggleIgnoreVerification}} disabled={{isSubmitting}}>IGNORE
+      <button type="button" class="btn btn-gray  py-2 px-4" {{action this.toggleIgnoreVerification}} disabled={{this.isSubmitting}}>IGNORE
       </button>
-      {{#if isSubmitting}}
+      {{#if this.isSubmitting}}
         <LoadingIndicator/>{{/if}}
     </div>
   {{/if}}
@@ -126,9 +126,9 @@
 <h3>Shift Management
   <HelpPopover @slug="hq-shift-management"/>
 </h3>
-<ShiftCheckInOut @positions={{positions}} @timesheets={{timesheets}} @person={{person}} @imminentSlots={{imminentSlots}}
-                 @hasUnverifiedTimesheet={{and unverifiedTimesheets (not ignoreTimesheetVerification)}}
-                 @endShiftNotify={{action refreshTimesheetSummary}} @eventInfo={{eventInfo}} />
+<ShiftCheckInOut @positions={{this.positions}} @timesheets={{this.timesheets}} @person={{this.person}} @imminentSlots={{this.imminentSlots}}
+                 @hasUnverifiedTimesheet={{and this.unverifiedTimesheets (not this.ignoreTimesheetVerification)}}
+                 @endShiftNotify={{action this.refreshTimesheetSummary}} @eventInfo={{this.eventInfo}} />
 
 
 {{#if showCorrectionForm}}
@@ -139,28 +139,28 @@
       <Modal.body>
         <dl class="form-row">
           <dt class="col-sm-2">Position:</dt>
-          <dd class="col-sm-10">{{entry.position.title}}</dd>
+          <dd class="col-sm-10">{{this.entry.position.title}}</dd>
 
           <dt class="col-sm-2">Time:</dt>
-          <dd class="col-sm-10">{{shift-format entry.on_duty}} to {{shift-format entry.off_duty}}</dd>
+          <dd class="col-sm-10">{{shift-format this.entry.on_duty}} to {{shift-format this.entry.off_duty}}</dd>
 
           <dt class="col-sm-2">Duration:</dt>
-          <dd class="col-sm-10">{{hour-minute-format entry.duration}}</dd>
+          <dd class="col-sm-10">{{hour-minute-format this.entry.duration}}</dd>
 
           <dt class="col-sm-2">Credits:</dt>
-          <dd class="col-sm-10">{{credits-format entry.credits}}</dd>
+          <dd class="col-sm-10">{{credits-format this.entry.credits}}</dd>
         </dl>
         <div class="form-row">
           Provide as much information as possible to help the reviewer understand why this entry should be fixed.
           <ul>
-            <li>Why does {{person.callsign}} think the entry is wrong?</li>
+            <li>Why does {{this.person.callsign}} think the entry is wrong?</li>
             <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
-            <li><b>Is the position "{{entry.position.title}}" wrong?</b> State the correct position</li>
+            <li><b>Is the position "{{this.entry.position.title}}" wrong?</b> State the correct position</li>
             <li><b>Who was their shift partner(s)?</b></li>
           </ul>
         </div>
-        <f.input @name="notes" @label="Timesheet entry correction note:" @type="textarea" @autofocus={{true}} @cols=80
-                 @rows=3/>
+        <f.input @name="notes" @label="Timesheet entry correction note:" @type="textarea" @autofocus={{true}} @cols={{80}}
+                 @rows={{3}}/>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Submit Correction" @disabled={{this.isCorrectionSubmitting}} />
@@ -176,37 +176,37 @@
 <h3 class="mb-2">Radio &amp; Assets
   <HelpPopover @slug="hq-assets"/>
 </h3>
-{{#unless eventInfo.radio_info_available}}
+{{#unless this.eventInfo.radio_info_available}}
   <ChAlert @type="danger">
     Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
   </ChAlert>
 {{/unless}}
-{{#if radioCount}}
-  {{#if shiftRadios}}
-    <h3 class="text-danger">Collect {{pluralize shiftRadios "radio"}} at end of shift</h3>
+{{#if this.radioCount}}
+  {{#if this.shiftRadios}}
+    <h3 class="text-danger">Collect {{pluralize this.shiftRadios "radio"}} at end of shift</h3>
   {{/if}}
-  {{#if eventRadios}}
-    <h3 class="text-success">Collect {{pluralize eventRadios "event radio"}} at event end</h3>
+  {{#if this.eventRadios}}
+    <h3 class="text-success">Collect {{pluralize this.eventRadios "event radio"}} at event end</h3>
   {{/if}}
 {{/if}}
 
 <div class="mb-2">
-  {{person.callsign}} is
-  {{#if eventInfo.radio_eligible}}
-    authorized for {{pluralize eventInfo.radio_max "event radio"}}.
+  {{this.person.callsign}} is
+  {{#if this.eventInfo.radio_eligible}}
+    authorized for {{pluralize this.eventInfo.radio_max "event radio"}}.
   {{else}}
     only authorized for shift radios.
   {{/if}}
 </div>
 
 {{#if this.personEvent.asset_authorized}}
-  <AssetCheckoutForm @person={{person}} @assets={{assets}} @attachments={{attachments}} @eventInfo={{eventInfo}} />
+  <AssetCheckoutForm @person={{this.person}} @assets={{this.assets}} @attachments={{this.attachments}} @eventInfo={{this.eventInfo}} />
 {{else}}
-  <p class="text-danger"><b>{{person.callsign}} is not asset authorized and may not check out equipment at this time.
+  <p class="text-danger"><b>{{this.person.callsign}} is not asset authorized and may not check out equipment at this time.
     Have the person sign the Radio Checkout form, then to go Site Check In and mark the person having signed the
     document.</b></p>
   <p>
-    <LinkTo @route="hq.site-checkin" @model={{person.id}} class="btn btn-primary">Site Check In</LinkTo>
+    <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-primary">Site Check In</LinkTo>
   </p>
 {{/if}}
 
@@ -224,7 +224,7 @@
   </tr>
   </thead>
   <tbody>
-  {{#each assetsCheckedOut as |ap|}}
+  {{#each this.assetsCheckedOut as |ap|}}
     <tr>
       <td class="align-middle">{{ap.asset.description}}</td>
       <td class="align-middle">
@@ -239,7 +239,7 @@
       </td>
       <td class="align-middle">{{shift-format ap.checked_out}}</td>
       <td class="align-middle">
-        <button class="btn btn-primary" {{action assetCheckInAction ap}} disabled={{ap.isSubmitting}}>Check In</button>
+        <button type="button" class="btn btn-primary" {{action this.assetCheckInAction ap}} disabled={{ap.isSubmitting}}>Check In</button>
         {{#if ap.isSubmitting}}
           {{fa-icon "spinner" spin=true}}
         {{/if}}
@@ -253,14 +253,15 @@
   </tbody>
 </table>
 <div>
-  {{#if assets.isUpdating}}
+  {{#if this.assets.isUpdating}}
     <LoadingIndicator @text="Refreshing Assets"/>
   {{/if}}
 </div>
 
-{{#if (or person.on_site isMarkingOffSite)}}
+{{#if (or this.person.on_site this.isMarkingOffSite)}}
   <div class="mt-4">
-    <button class="btn btn-secondary" {{action this.markOffSite}} disabled={{this.isMarkingOffSite}}>Mark As Off Site
+    <button type="button" class="btn btn-secondary" {{action this.markOffSite}} disabled={{this.isMarkingOffSite}}>
+      Mark As Off Site
     </button>
     {{#if this.isMarkingOffSite}}
       <LoadingIndicator/>

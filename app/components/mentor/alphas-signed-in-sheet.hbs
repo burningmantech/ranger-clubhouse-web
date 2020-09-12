@@ -49,7 +49,7 @@
           <tr>
             <td class="w-45" colspan="3">
               <div class="signup-label">Prior Mentors</div>
-              {{#each person.mentor_history as |history historyIdx| }}
+              {{#each person.mentor_history as |history| }}
                 {{history.year}} ({{mentor-short-status history.status}})
                 {{#each history.mentors as |mentor idx|}}
                   {{if idx " / "}}{{mentor.callsign}}

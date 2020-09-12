@@ -9,7 +9,8 @@
     <div class="border bg-light-gray mb-4 p-2">
       <div class="row">
         <div class="col-auto">
-          <img id={{concat "photo-" photo.id}} src="{{photo.image_url}}" class="photo-vc-review"/>
+          <img id={{concat "photo-" photo.id}} src="{{photo.image_url}}" class="photo-vc-review"
+               alt="{{photo.person.callsign}}"/>
         </div>
         <div class="col-auto">
           <h3>
@@ -106,10 +107,8 @@
             <div class="row mt-2">
               {{#each photo.rejection_history as |reject|}}
                 <div class="col-auto">
-                  <div class="mugshot-icon">
-                    <img src={{reject.image_url}} alt="rejected photo"
-                      {{on "click" (fn this.showPhotoInfoAction reject)}}
-                    />
+                  <div class="mugshot-icon" role="link" {{on "click" (fn this.showPhotoInfoAction reject)}}>
+                    <img src={{reject.image_url}} alt="rejected"/>
                     {{moment-format reject.uploaded_at "YYYY-MM-DD"}}
                   </div>
                 </div>
@@ -150,7 +149,7 @@
               @onCancel={{this.onClose}} as |f|>
         <div class="form-row">
           <div class="col-3">
-            <img src={{this.reviewPhoto.image_url}} class="mugshot"/>
+            <img src={{this.reviewPhoto.image_url}} alt="{{this.reviewPhoto.person.callsign}}" class="mugshot"/>
           </div>
           <div class="col-8  ml-2">
             <label>Rejection Reasons:</label>
@@ -180,7 +179,7 @@
   <ModalDialog @title="Rejection Email Preview" as |modal|>
     <modal.body>
       <div class="border">
-        <iframe {{on "load" this.insertRejectMail}} style="width: 100%; min-height: 200px;  overflow-y: scroll;">
+        <iframe {{on "load" this.insertRejectMail}} class="photo-reject-preview-box" title="rejection message preview">
         </iframe>
       </div>
     </modal.body>

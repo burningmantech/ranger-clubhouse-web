@@ -14,7 +14,7 @@
     </div>
     <div class="col-md-12 col-lg-auto">
     {{#if this.canSendMessages}}
-      <button class="btn btn-primary ml-md-auto btn-responsive" {{on "click" this.newMessageAction}}>{{fa-icon "plus"}}
+      <button type="button" class="btn btn-primary ml-md-auto btn-responsive" {{on "click" this.newMessageAction}}>{{fa-icon "plus"}}
         New Message
       </button>
     {{/if}}
@@ -22,17 +22,17 @@
   </div>
 
   {{#each @messages as |message|}}
-    <div class="mail {{if (not message.delivered) "mail-unread"}}">
+    <div class="mail {{unless message.delivered "mail-unread"}}">
         <div class="mail-photo">
           {{#if message.is_rbs}}
             {{fa-icon "bullhorn"}}
           {{else if message.sender_photo_url}}
-            <img src={{message.sender_photo_url}} loading="lazy"  alt="{{message.message_from}} photo" />
+            <img src={{message.sender_photo_url}} loading="lazy"  alt="{{message.message_from}}" />
           {{else}}
             {{fa-icon "user"}}
           {{/if}}
         </div>
-        <div class="mail-header {{if message.showing "mail-showing"}}" {{on "click" (fn this.toggleMessage message)}}>
+        <div class="mail-header {{if message.showing "mail-showing"}}" {{on "click" (fn this.toggleMessage message)}} role="button">
           <div class="mail-indicator">
             {{#if message.delivered}}
               {{fa-icon "check-circle" type="far"}}

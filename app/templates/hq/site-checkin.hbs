@@ -68,7 +68,7 @@
     Radio checkout form has been <strong class="text-success">SIGNED</strong>.
   {{else}}
     <div class="text-danger">Radio checkout form has NOT BEEN SIGNED.</div>
-    <button class="btn btn-primary" {{action this.markAssetAuthorized}} disabled={{this.personEvent.isSaving}}>Mark Form As Signed</button>
+    <button type="button" class="btn btn-primary" {{action this.markAssetAuthorized}} disabled={{this.personEvent.isSaving}}>Mark Form As Signed</button>
     {{#if this.personEvent.isSaving}}
       <LoadingIndicator />
     {{/if}}

@@ -1,6 +1,6 @@
 <div class="card card-ticket" id="ticket-vp">
   <div class="card-header p-0">
-    <button class="btn btn-link m-0" type="button" {{action toggleCard "vp"}}>
+    <button type="button" class="btn btn-link m-0" {{action toggleCard "vp"}}>
       {{fa-icon (if showing.vp "caret-down" "caret-right")}} Vehicle Pass
       {{#if (eq ticketingInfo.vp_status "none")}}
         <span class="text-black-50">- To Be Announced</span>

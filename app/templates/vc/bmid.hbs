@@ -24,9 +24,9 @@
         <label>Callsign, title, team, notes filter:</label>
         <Input @type="text" @value={{this.textFilterInput}} class="form-control-sm ml-2" @enter={{action
                 this.textFilterAction}}  />
-        <button class="btn btn-primary btn-sm ml-1" {{action this.textFilterAction}}>Filter
+        <button type="button" class="btn btn-primary btn-sm ml-1" {{action this.textFilterAction}}>Filter
         </button>
-        <button class="btn btn-secondary btn-sm ml-1" {{action this.clearTextFilterAction}}>
+        <button type="button" class="btn btn-secondary btn-sm ml-1" {{action this.clearTextFilterAction}}>
           Clear
         </button>
       </div>
@@ -37,10 +37,10 @@
     </div>
 
     <div class="col-auto">
-      <button class="btn btn-secondary btn-sm" {{action this.toggleEditMode}}>
+      <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleEditMode}}>
         {{#if editMode}}Table View{{else}}Edit Mode{{/if}}
       </button>
-      <button class="btn btn-secondary btn-sm" {{action this.exportCSV}}>Export CSV</button>
+      <button type="button" class="btn btn-secondary btn-sm" {{action this.exportCSV}}>Export CSV</button>
       <LinkTo @route="vc.bmid-sanity-check" class="btn btn-secondary btn-sm">
         Sanity Check
       </LinkTo>
@@ -102,9 +102,9 @@
         {{#each this.editableBmids as |bmid|}}
           <tr class="{{if bmid.isDirty "bg-warning"}}">
             <td>
-              {{~#if (not bmid.has_signups)~}}
+              {{~#unless bmid.has_signups~}}
                 {{fa-icon "exclamation-circle"}}
-              {{~/if}}
+              {{~/unless}}
               {{~#if bmid.person~}}
                 <PersonLink @person={{bmid.person}} />
                 {{~else~}}
@@ -165,9 +165,9 @@
         {{#each this.renderBmids as |bmid|}}
           <tr>
             <td>
-              {{#if (not bmid.has_signups)}}
+              {{#unless bmid.has_signups}}
                 {{fa-icon "exclamation-circle"}}
-              {{/if}}
+              {{/unless}}
               {{#if bmid.person}}
                 <PersonLink @person={{bmid.person}} />
               {{else}}

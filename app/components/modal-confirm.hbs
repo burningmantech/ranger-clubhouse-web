@@ -1,6 +1,6 @@
 <ModalDialog @title={{@dialog.title}} as |modal|>
   <modal.body>
-    {{{@dialog.message}}}
+    {{this.htmlMessage}}
   </modal.body>
   <modal.footer>
     <modal.button @label="Cancel" @action={{@onClose}} @type="secondary"/>

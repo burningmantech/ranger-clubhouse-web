@@ -1,7 +1,7 @@
 <YearSelect @title="Non-Radio Asset History" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
 <p>
-  <button class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
+  <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
 </p>
 
 Showing {{pluralize assets.length "non-radio asset entry"}}

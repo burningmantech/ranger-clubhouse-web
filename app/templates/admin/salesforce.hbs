@@ -87,7 +87,7 @@
     <p>
       <label><Input @type="checkbox" @checked={{this.createAccounts}} /> Create accounts</label><br>
       <label><Input @type="checkbox" @checked={{this.updateSalesforce}} @disabled={{not createAccounts}} /><span
-              class="{{if (not createAccounts) "text-muted"}}"> Update Salesforce (create account only, cauton!)</span></label><br>
+              class="{{unless createAccounts "text-muted"}}"> Update Salesforce (create account only, cauton!)</span></label><br>
       <label><Input @type="checkbox" @checked={{this.nonTestAccounts}} /> Use non-test accounts (caution!)</label><br>
     </p>
   </div>
@@ -103,7 +103,7 @@
 </div>
 
 <p>
-  <button class="btn btn-primary" {{action this.import}} disabled={{this.isSubmitting}}>{{#if this.isSubmitting}}
+  <button type="button" class="btn btn-primary" {{action this.import}} disabled={{this.isSubmitting}}>{{#if this.isSubmitting}}
     Please Wait{{else}}Submit{{/if}}</button>
   <br>
 </p>
@@ -116,7 +116,7 @@
   </p>
   {{#each this.accountGroups as |group|}}
     <div class="float-right">
-      <button class="btn btn-secondary btn-sm" {{action this.toggleAll group}}>{{#if group.expandedAll}}
+      <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleAll group}}>{{#if group.expandedAll}}
         Hide All{{else}}Expand All{{/if}}</button>
     </div>
     <h3>{{group.statusLabel}} ({{pluralize group.items.length "record"}})</h3>
@@ -152,7 +152,7 @@
             </td>
             <td>{{account.vc_status}}</td>
             <td>
-              <button class="btn btn-secondary btn-sm" {{action toggleAccount account}}>
+              <button type="button" class="btn btn-secondary btn-sm" {{action toggleAccount account}}>
                 {{if account.showing "Hide" "Show"}}
               </button>
             </td>
@@ -171,7 +171,7 @@
             <td>{{account.applicant_type}}</td>
             <td>{{account.vc_status}}</td>
             <td>
-              <button class="btn btn-secondary btn-sm" {{action toggleAccount account}}>
+              <button type="button" class="btn btn-secondary btn-sm" {{action toggleAccount account}}>
                 {{if account.showing "Hide" "Show"}}
               </button>
             </td>

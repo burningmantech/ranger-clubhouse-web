@@ -10,7 +10,7 @@
     <ChForm::Select @name="filter" @value={{filter}} @options={{filterOptions}} @onChange={{action (mut filter)}} @controlClass="form-control" />
   </div>
   <div class="col-auto">
-    <button class="btn btn-secondary" {{action exportToCSV}}>Export all to CSV</button>
+    <button type="button" class="btn btn-secondary" {{action exportToCSV}}>Export all to CSV</button>
 </div>
 </div>
 

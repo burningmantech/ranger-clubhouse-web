@@ -357,11 +357,11 @@
         <tr>
           <td class="w-30">
             {{#if task.param}}
-              <button class="btn btn-primary btn-block" {{on "click" (fn this.askParamAction task)}}>
+              <button type="button" class="btn btn-primary btn-block" {{on "click" (fn this.askParamAction task)}}>
                 {{task.title}}
               </button>
             {{else}}
-              <button class="btn btn-primary btn-block" {{on "click" (fn this.executeTask task)}}>
+              <button type="button" class="btn btn-primary btn-block" {{on "click" (fn this.executeTask task)}}>
                 {{task.title}}
               </button>
             {{/if}}

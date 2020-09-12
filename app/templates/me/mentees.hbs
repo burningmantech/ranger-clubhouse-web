@@ -1,4 +1,4 @@
-<h1>{{person.callsign}}'s Mentees</h1>
+<h1>{{this.person.callsign}}'s Mentees</h1>
 <BackToHome/>
 
 <p>
@@ -13,8 +13,8 @@
 </p>
 
 <p>
-  From {{firstYear}} to {{lastYear}}, you have mentored {{totalMentees}} alphas
-  of whom {{totalPassed}} have passed, and {{totalBonked}} were bonked.
+  From {{this.firstYear}} to {{this.lastYear}}, you have mentored {{this.totalMentees}} alphas
+  of whom {{this.totalPassed}} have passed, and {{this.totalBonked}} were bonked.
 </p>
 
 {{#each this.menteeList as |year| }}

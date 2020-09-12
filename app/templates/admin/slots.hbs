@@ -51,9 +51,9 @@
   <div class="schedule-title mt-2">
     {{#if (get this.showingGroups group.position_id)}}
       <div class="float-right mr-4">
-        <button class="btn btn-secondary btn-sm" {{action this.startCopy group.position_id}}>Bulk Copy</button>
-        <button class="btn btn-primary btn-sm" {{action this.activate group}}>Activate All</button>
-        <button class="btn btn-primary btn-sm" {{action this.deactivate group}}>Deactivate All</button>
+        <button type="button" class="btn btn-secondary btn-sm" {{action this.startCopy group.position_id}}>Bulk Copy</button>
+        <button type="button" class="btn btn-primary btn-sm" {{action this.activate group}}>Activate All</button>
+        <button type="button" class="btn btn-primary btn-sm" {{action this.deactivate group}}>Deactivate All</button>
       </div>
     {{/if}}
     <a href {{on "click" (fn this.toggleShowing group)}}>
@@ -100,16 +100,16 @@
             {{/if}}
           </td>
           <td>
-            <button {{action this.repeatSlot slot}} type="button" class="btn btn-secondary btn-sm">
+            <button type="button" {{action this.repeatSlot slot}} class="btn btn-secondary btn-sm">
               {{fa-icon "clone"}} Repeat
             </button>
-            <button {{action this.repeatSlotAdd24Hours slot}} class="btn btn-secondary btn-sm">
+            <button type="button" {{action this.repeatSlotAdd24Hours slot}} class="btn btn-secondary btn-sm">
               {{fa-icon "clone"}} Repeat+24
             </button>
-            <button {{action this.deleteSlot slot}} type="button" class="btn btn-danger btn-sm">
+            <button type="button" {{action this.deleteSlot slot}} class="btn btn-danger btn-sm">
               {{fa-icon "trash-alt"type="fas"}} Delete
             </button>
-            <button {{action editSlot slot}} class="btn btn-primary btn-sm">
+            <button type="button" {{action editSlot slot}} class="btn btn-primary btn-sm">
               {{fa-icon "edit"}} Edit
             </button>
           </td>
@@ -181,10 +181,10 @@
             <caption>
               {{position.selectedSlots.length}} / {{position.slots.length}} <strong>{{position.title}}</strong> slots to
               copy
-              <button {{action "copyToggleExpanded" position}}>
+              <button type="button" {{action "copyToggleExpanded" position}}>
                 {{#if position.expanded}}collapse{{else}}expand{{/if}}
               </button>
-              <button {{action "copyPositionSelectAll" position}}>
+              <button type="button" {{action "copyPositionSelectAll" position}}>
                 {{#if position.allSelected}}deselect{{else}}select{{/if}} all
               </button>
             </caption>

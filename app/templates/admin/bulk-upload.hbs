@@ -64,7 +64,7 @@
     {{/if}}
 
     {{#if (and this.resultSuccesses (not this.resultFailures) (not this.resultsCommitted))}}
-      <button class="btn btn-success" {{action this.commitAction}} disabled={{this.isSubmitting}}>Commit Upload</button>
+      <button type="button" class="btn btn-success" {{action this.commitAction}} disabled={{this.isSubmitting}}>Commit Upload</button>
     {{/if}}
   </div>
 {{/if}}
