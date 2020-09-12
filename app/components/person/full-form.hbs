@@ -39,8 +39,8 @@ Everyone else will see person/simple-form
     </div>
     <div class="col-sm-6 col-lg-auto">
       Created
-      {{#if person.create_date}}
-        {{moment-format person.create_date "MMM DD, YYYY @ HH:mm"}}
+      {{#if @person.create_date}}
+        {{moment-format @person.create_date "MMM DD, YYYY @ HH:mm"}}
       {{else}}
         <i>prior to 2010</i>
       {{/if}}

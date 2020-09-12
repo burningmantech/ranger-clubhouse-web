@@ -25,7 +25,7 @@
         </td>
         <td class="text-right">{{credits-format this.onDutyEntry.credits}}</td>
         <td>
-          <button class="btn btn-danger" {{action this.endShiftAction}} disabled={{this.isSubmitting}}>End Shift</button>
+          <button type="button" class="btn btn-danger" {{action this.endShiftAction}} disabled={{this.isSubmitting}}>End Shift</button>
           {{#if this.isSubmitting}}
             <LoadingIndicator />
           {{/if}}
@@ -42,7 +42,6 @@
   {{else if @hasUnverifiedTimesheet}}
     One or more timesheet entries has to be verified before a shift can be started.
   {{else}}
-    {{log this.isPersonDirtTrained}}
     {{#unless this.isPersonDirtTrained}}
       <div class="text-danger font-weight-bold mb-2">
         <div class="d-flex">
@@ -79,11 +78,11 @@
               <td class="align-middle">{{shift-format slot.slot_ends}}</td>
               <td class="align-middle">
                 {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
-                  <button class="btn btn-primary" {{action this.signinShiftAction slot}} disabled={{this.isSubmitting}}>Start Shift</button>
+                  <button type="button" class="btn btn-primary" {{action this.signinShiftAction slot}} disabled={{this.isSubmitting}}>Start Shift</button>
                 {{else}}
                   <div class="text-danger">{{if slot.is_untrained "Not Trained"}} {{if slot.is_unqualified slot.unqualified_reason}}</div>
                   {{#if (has-role "admin" "timesheet-management")}}
-                    <button class="btn btn-warning" {{action this.signinShiftAction slot}} disabled={{this.isSubmitting}}>Force Start Shift</button>
+                    <button type="button" class="btn btn-warning" {{action this.signinShiftAction slot}} disabled={{this.isSubmitting}}>Force Start Shift</button>
                   {{/if}}
                 {{/if}}
                 {{#if this.isSubmitting}}
@@ -104,9 +103,9 @@
       </div>
       <div class="col-auto">
         {{#if this.isPersonDirtTrained}}
-          <button class="btn btn-primary" {{action this.startShiftAction}} disabled={{this.isSubmitting}}>Start Shift</button>
+          <button type="button" class="btn btn-primary" {{action this.startShiftAction}} disabled={{this.isSubmitting}}>Start Shift</button>
         {{else if (has-role "admin" "timesheet-management")}}
-          <button class="btn btn-warning" {{action this.startShiftAction}} disabled={{this.isSubmitting}}>Force Shift Start</button>
+          <button type="button" class="btn btn-warning" {{action this.startShiftAction}} disabled={{this.isSubmitting}}>Force Shift Start</button>
         {{else}}
           <div class="text-danger mt-1">NOT DIRT TRAINED - SHIFT START IS NOT ALLOWED</div>
         {{/if}}

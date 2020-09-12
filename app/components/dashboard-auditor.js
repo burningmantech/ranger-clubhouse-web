@@ -18,7 +18,7 @@ const RANGER_INTEREST_STEP =   {
   check() {
     return {
       result: ACTION_NEEDED,
-      message: htmlSafe(`<a href="https://rangers.burningman.org/ranger-application-process/" target="_blank" rel="noopener">Sign up</a> to be notified when the ${(new Date).getFullYear() + 1} Ranger applications open up.`)
+      message: htmlSafe(`<a href="https://rangers.burningman.org/ranger-application-process/" target="_blank" rel="noopener noreferrer">Sign up</a> to be notified when the ${(new Date).getFullYear() + 1} Ranger applications open up.`)
     }
   }
 };

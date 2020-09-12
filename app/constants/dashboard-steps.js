@@ -156,7 +156,7 @@ export const ONLINE_TRAINING = {
 
     return {
       result: ACTION_NEEDED,
-      message: htmlSafe('<p>The Ranger Manual can be found at <a href="' + config('RangerManualUrl') + '" rel="noopener" target="_blank">rangers.burningman.org</a>.</p>' +
+      message: htmlSafe('<p>The Ranger Manual can be found at <a href="' + config('RangerManualUrl') + '" rel="noopener noreferrer" target="_blank">rangers.burningman.org</a>.</p>' +
         '<p>The online training will take 1 to 2 hours to complete. </p> <p>Note: it may take up to 15 mins or more for the Clubhouse to record your course completion.</p>'),
       isOnlineTraining: true,
     };

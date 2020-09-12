@@ -14,7 +14,7 @@
     <div class="input-group">
       <label class="col-form-label">Filter by rental, driving, or license #:</label>
       <Input @type="text" @value={{this.numberFilter}} size="5" class="form-control ml-2"/>
-      <button class="btn btn-secondary btn-sm ml-1" {{action this.clearNumberFilterAction}}>Clear</button>
+      <button type="button" class="btn btn-secondary btn-sm ml-1" {{action this.clearNumberFilterAction}}>Clear</button>
     </div>
   </div>
   {{#if (has-role "admin")}}

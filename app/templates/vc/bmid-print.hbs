@@ -20,9 +20,9 @@
         <label>Callsign, title, team, notes filter:</label>
         <Input @type="text" @value={{this.textFilterInput}} class="form-control-sm ml-2" @enter={{action
                 textFilterAction}} @disabled={{this.isRendering}} />
-        <button class="btn btn-primary btn-sm ml-1" {{action textFilterAction}} disabled={{this.isRendering}}>Filter
+        <button type="button" class="btn btn-primary btn-sm ml-1" {{action textFilterAction}} disabled={{this.isRendering}}>Filter
         </button>
-        <button class="btn btn-secondary btn-sm ml-1" {{action clearTextFilterAction}} disabled={{this.isRendering}}>
+        <button type="button" class="btn btn-secondary btn-sm ml-1" {{action clearTextFilterAction}} disabled={{this.isRendering}}>
           Clear
         </button>
       </div>

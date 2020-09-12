@@ -18,7 +18,7 @@
     </div>
     <label class="col-form-label col-auto">Actions</label>
     <div class="col-auto">
-      <button class="btn btn-primary" {{action this.newEntry}}>New Message</button>
+      <button type="button" class="btn btn-primary" {{action this.newEntry}}>New Message</button>
     </div>
   </div>
 </ChForm>
@@ -71,7 +71,7 @@ Page {{this.currentPage}} of {{this.total_pages}} ({{this.total}} matching of {{
         {{motd.subject}}
       </td>
       <td>
-        <button class="btn btn-primary btn-sm" {{action this.editEntry motd}}>{{fa-icon "edit"}} Edit</button>
+        <button type="button" class="btn btn-primary btn-sm" {{action this.editEntry motd}}>{{fa-icon "edit"}} Edit</button>
       </td>
     </tr>
   {{else}}
@@ -124,7 +124,7 @@ Page {{this.currentPage}} of {{this.total_pages}} ({{this.total}} matching of {{
         {{/if}}
         {{#unless this.entry.isNew}}
           <div class="ml-auto">
-            <button class="btn btn-danger" {{action this.deleteEntry motd}}>{{fa-icon "trash"}} Delete</button>
+            <button type="button" class="btn btn-danger" {{action this.deleteEntry motd}}>{{fa-icon "trash"}} Delete</button>
           </div>
         {{/unless}}
       </Modal.footer>

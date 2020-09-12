@@ -1,6 +1,6 @@
 <YearSelect @title="Timesheet By Position" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 <p>
-  <button class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>
+  <button type="button" class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>
     {{if this.expandAll "Hide" "Expand"}} All
   </button>
   {{#if this.isExpanding}}
@@ -18,7 +18,7 @@
   </div>
   {{#if position.showing}}
     <p>
-      <button class="btn btn-primary" {{action this.exportToCSV position}}>Export To CSV</button>
+      <button type="button" class="btn btn-primary" {{action this.exportToCSV position}}>Export To CSV</button>
     </p>
     <table class="table table-sm table-hover table-striped table-width-auto">
       <thead>

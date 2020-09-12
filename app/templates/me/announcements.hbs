@@ -24,7 +24,7 @@ Click the subject line to read the announcement.
         {{#if motd.has_read}}
           <i class="text-muted">You have read this announcement.</i>
         {{else}}
-          <button class="btn btn-secondary" {{action this.markMotdAsRead motd}} disabled={{motd.isMarking}}>
+          <button type="button" class="btn btn-secondary" {{action this.markMotdAsRead motd}} disabled={{motd.isMarking}}>
             Mark As Read
           </button>
           {{#if motd.isMarking}}

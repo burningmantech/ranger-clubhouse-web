@@ -19,7 +19,7 @@
 
 {{#if this.passwordOkay}}
   <p>
-    <button class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
+    <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
   </p>
   {{pluralize this.people.length "person"}} to send {{this.year}} Thank You cards to.
   <table class="table table-sm table-hover table-striped table-width-auto">

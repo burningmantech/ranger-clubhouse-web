@@ -1,6 +1,6 @@
 {{#each this.checkboxColumns as |column|~}}
   <div class={{this.gridClass}}>
-    {{~#each column as |cb idx|~}}
+    {{~#each column as |cb|~}}
       <div class="form-check">
         <Input @type="checkbox"
                id="{{@domId}}-{{cb.index}}"

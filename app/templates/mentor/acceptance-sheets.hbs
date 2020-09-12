@@ -4,7 +4,7 @@
   <PrintInstruction @backAction={{action this.showAlphasAction}} @backLabel="Back to Alpha selection"/>
   {{#each this.printAlphas as |alpha alphaIdx|}}
     <div class="d-flex mx-2 mt-4 mb-2 {{if alphaIdx "d-print-page-break"}}">
-      <img src={{root-url "assets/images/ranger-logo-bw.png"}} class="alpha-sheet-logo" alt="ranger logo">
+      <img src={{root-url "assets/images/ranger-logo-bw.png"}} class="alpha-sheet-logo" alt="ranger">
       <div class="alpha-sheet-header align-middle">
         {{this.year}} Alpha To Dirt Ranger Acceptance Form ({{add alphaIdx 1}} / {{printAlphas.length}})
       </div>
@@ -32,7 +32,7 @@
         <div class="alpha-sheet-column">
           <div class="alpha-sheet-column-label">Training Location ({{alpha.trainings.length}}):</div>
           <div class="alpha-sheet-column-{{if alpha.trainings "field" "input"}}">
-            {{#each alpha.trainings as |place idx|}}
+            {{#each alpha.trainings as |place|}}
               {{ymd-format place.slot_begins}} {{place.slot_description}}<br>
             {{/each}}
           </div>
@@ -247,7 +247,7 @@
                       @controlClass="form-control"/>
     </div>
     <div class="col-auto">
-      <button class="btn btn-primary" {{action this.printAction}}>Print Selected ({{this.printAlphas.length}})
+      <button type="button" class="btn btn-primary" {{action this.printAction}}>Print Selected ({{this.printAlphas.length}})
       </button>
     </div>
   </div>
@@ -307,5 +307,5 @@
     {{/each}}
     </tbody>
   </table>
-  <button class="btn btn-primary" {{action this.printAction}}>Print Selected ({{this.printAlphas.length}})</button>
+  <button type="button" class="btn btn-primary" {{action this.printAction}}>Print Selected ({{this.printAlphas.length}})</button>
 {{/if}}

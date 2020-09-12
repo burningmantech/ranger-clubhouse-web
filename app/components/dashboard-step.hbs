@@ -37,8 +37,7 @@
     {{/if}}
     {{#if (and @step.isBehavioralAgreement (not-eq @step.result "completed"))}}
       <p>
-        <a href {{on "click" @showBehaviorAgreementAction}} disabled={{@isNotUser}}>Click here</a>
-        to review &amp; sign the document.
+        <a href {{on "click" @showBehaviorAgreementAction}} disabled={{@isNotUser}}>Click here to review &amp; sign the document.</a>
       </p>
     {{/if}}
     {{#if @step.isPhotoStep}}

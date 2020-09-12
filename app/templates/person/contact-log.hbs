@@ -19,7 +19,7 @@
           <td>{{shift-format log.sent_at}}</td>
           <td>{{log.action}}</td>
           <td>
-            <button class="btn btn-sm btn-secondary" {{action "showMessageAction" log}}  title="show message">
+            <button type="button" class="btn btn-sm btn-secondary" {{action "showMessageAction" log}}  title="show message">
               {{fa-icon (if log.showMessage "envelope-open" "envelope") type="fas"}}
             </button>
           </td>
@@ -61,7 +61,7 @@
           <td>{{shift-format log.sent_at}}</td>
           <td>{{log.action}}</td>
           <td>
-            <button class="btn btn-sm btn-secondary" {{action "showMessageAction" log}} title="show message">
+            <button type="button" class="btn btn-sm btn-secondary" {{action "showMessageAction" log}} title="show message">
               {{fa-icon (if log.showMessage "envelope-open" "envelope") type="fas"}}
             </button>
           </td>

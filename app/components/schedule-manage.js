@@ -28,6 +28,9 @@ export default class ScheduleManageComponent extends Component {
   @tracked showBehaviorAgreement = false;
   @tracked permission;
 
+  @tracked availableSlots;
+  @tracked isCurrentYear;
+
   activeOptions = [
     ['Active', 'active'],
     ['Inactive', 'inactive'],

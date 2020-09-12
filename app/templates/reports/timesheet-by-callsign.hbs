@@ -11,8 +11,8 @@
   </p>
 {{/if}}
 <p>
-  <button class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
-  <button class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>
+  <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
+  <button type="button" class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>
     {{if this.expandAll "Hide" "Expand"}} All
   </button>
   {{#if this.isExpanding}}

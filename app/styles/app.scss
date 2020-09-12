@@ -589,14 +589,14 @@ caption {
   padding: 0;
 }
 
-.autocomplete-list li {
+.autocomplete-list div {
   list-style: none;
   padding: 5px 10px;
   margin: 2px 0;
   font-size: 1.1em;
 }
 
-.autocomplete-list li:hover {
+.autocomplete-list div:hover {
   background-color: #ececec;
 }
 

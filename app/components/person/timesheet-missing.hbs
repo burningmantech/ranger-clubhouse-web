@@ -37,7 +37,7 @@
           <td class="text-right">{{credits-format tm.credits}}</td>
           <td>{{tm.position.title}}</td>
           <td>
-            <button class="btn btn-primary btn-sm" {{action editEntryAction tm}} disabled={{tm.isReloading}}>
+            <button type="button" class="btn btn-primary btn-sm" {{action editEntryAction tm}} disabled={{tm.isReloading}}>
               {{#if tm.isReloading}}
                 {{fa-icon "spinner" spin=true}}
               {{else}}
@@ -45,7 +45,7 @@
               {{/if}}
               Manage
             </button>
-            <button class="btn btn-secondary btn-sm" {{action removeEntryAction tm}}
+            <button type="button" class="btn btn-secondary btn-sm" {{action removeEntryAction tm}}
                     disabled={{tm.isReloading}}>{{fa-icon "trash"}} Delete
             </button>
           </td>
@@ -154,7 +154,7 @@
                     {{/if}}
                     {{#if pi.person_id}}
                       <td>
-                        <button class="btn btn-secondary btn-sm" {{action "viewPartnerTimesheetAction" pi}}>
+                        <button type="button" class="btn btn-secondary btn-sm" {{action "viewPartnerTimesheetAction" pi}}>
                           View
                         </button>
                       </td>

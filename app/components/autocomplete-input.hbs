@@ -5,7 +5,7 @@
         <button class="btn btn-outline-secondary dropdown-toggle input-group-text" type="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">{{this.modeText}}</button>
         <div class="dropdown-menu">
-          {{#each @modeOptions as |opt idx|}}
+          {{#each @modeOptions as |opt|}}
             <a class="dropdown-item" href="#" {{on "click" (fn this.selectModeEvent opt.value)}}>{{opt.label}}</a>
           {{/each}}
         </div>
@@ -34,28 +34,29 @@
   {{#if (and this.isFocused (or this.isSearching this.noResultsFound this.options))}}
     <div class="autocomplete-results-box mt-1 border rounded"
       {{did-insert this.resutsBoxInsertedEvent}}
-            {{will-destroy this.resultsBoxDestroy}}
+      {{will-destroy this.resultsBoxDestroy}}
     >
-      <ul class="autocomplete-list">
+      <div class="autocomplete-list">
         {{#if this.noResultsFound}}
-          <li>No results found</li>
+          <div>No results found</div>
         {{else if this.isSearching}}
-          <li class="text-muted">Searching {{fa-icon "spinner" spin=true}}</li>
+          <div class="text-muted">Searching {{fa-icon "spinner" spin=true}}</div>
         {{/if}}
         {{#each this.options as |opt idx|}}
-          <li class="{{if (eq idx this.selectionIdx) "autocomplete-option-selected"}}"
+          <div class="{{if (eq idx this.selectionIdx) "autocomplete-option-selected"}}"
               data-result-id={{idx}}
+               role="link"
             {{on "click" (fn this.clickSelection opt)}}
             {{on "mousedown" (fn this.clickSelection opt)}}
           >
             {{yield opt}}
-          </li>
+          </div>
         {{else}}
           {{#if (and (not this.noResultsFound) (not this.isSearching))}}
-            <li class="text-muted">Start typing to search</li>
+            <div class="text-muted">Start typing to search</div>
           {{/if}}
         {{/each}}
-      </ul>
+      </div>
     </div>
   {{/if}}
 

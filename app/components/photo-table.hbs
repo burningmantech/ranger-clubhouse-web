@@ -21,8 +21,11 @@
     <tr>
       <td>
         <img id={{concat "photo-" photo.id}} src={{photo.image_url}}
-             class="float-left photo-icon"
-          {{on "click" (fn this.showPhotoAction photo)}} />
+             class="photo-icon"
+             role="button"
+          {{on "click" (fn this.showPhotoAction photo)}}
+                alt={{photo.person.callsign}}
+        />
       </td>
       {{#unless @person}}
         <td>

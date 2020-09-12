@@ -45,9 +45,9 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
       <td><PresentOrNot @value={{asset.temp_id}} @empty="-" /></td>
       <td>{{if asset.perm_assign "Perm" "Temp"}}</td>
       <td>
-        <button class="btn btn-secondary btn-sm" {{action this.assetHistoryAction asset}}>History</button>
-        <button class="btn btn-danger btn-sm" {{action this.deleteAsset asset}}>{{fa-icon "trash"}} Delete</button>
-        <button class="btn btn-primary btn-sm" {{action this.editAsset asset}}>{{fa-icon "edit"}} Edit</button>
+        <button type="button" class="btn btn-secondary btn-sm" {{action this.assetHistoryAction asset}}>History</button>
+        <button type="button" class="btn btn-danger btn-sm" {{action this.deleteAsset asset}}>{{fa-icon "trash"}} Delete</button>
+        <button type="button" class="btn btn-primary btn-sm" {{action this.editAsset asset}}>{{fa-icon "edit"}} Edit</button>
       </td>
     </tr>
   {{else if assets}}

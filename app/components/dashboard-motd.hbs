@@ -1,7 +1,7 @@
 <DashboardGroup @title="Clubhouse Announcements" @isActive={{true}} @hasBottomArrow={{this.hasBottomArrow}}>
   <div class="dashboard-step-header">Click the subject to read the announcement.</div>
   {{#each @motds as |motd|}}
-    <div class="dashboard-step-row {{if (not motd.has_read) "dashboard-step-active"}}">
+    <div class="dashboard-step-row {{unless motd.has_read "dashboard-step-active"}}">
       <div class="dashboard-step-title">
         <div class="dashboard-icon">
           {{#if motd.has_read}}
@@ -18,9 +18,9 @@
       <div class="dashboard-step-description collapse" id="motd-text-{{motd.id}}">
         <p class="text-muted">Posted {{moment-format motd.created_at "dddd, MMMM Do YYYY"}}</p>
         {{nl2br motd.message allowHtml=true}}
-        {{#if (not motd.has_read)}}
+        {{#unless motd.has_read}}
           <div class="mt-2">
-            <button class="btn btn-secondary btn-responsive" {{action this.markMotdAsRead motd}} disabled={{motd.isMarking}}>
+            <button type="button" class="btn btn-secondary btn-responsive" {{action this.markMotdAsRead motd}} disabled={{motd.isMarking}}>
               {{#if motd.isMarking}}
                 <LoadingIndicator @text="Marking read"/>
               {{else}}
@@ -28,7 +28,7 @@
               {{/if}}
             </button>
           </div>
-        {{/if}}
+        {{/unless}}
       </div>
     </div>
   {{/each}}

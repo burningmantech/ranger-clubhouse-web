@@ -78,9 +78,9 @@
       Would you rather send a Clubhouse Message?
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <button class="btn btn-primary mr-3" {{action this.sendClubhouseMessage}}>Send Clubhouse Message</button>
-      <button class="btn btn-primary mr-3" {{action this.editNote}}>Add Note</button>
-      <button class="btn btn-secondary" {{action this.closeConfirmNoteOrMessage}}>Cancel</button>
+      <button type="button" class="btn btn-primary mr-3" {{action this.sendClubhouseMessage}}>Send Clubhouse Message</button>
+      <button type="button" class="btn btn-primary mr-3" {{action this.editNote}}>Add Note</button>
+      <button type="button" class="btn btn-secondary" {{action this.closeConfirmNoteOrMessage}}>Cancel</button>
     </Modal.footer>
   </ModalDialog>
 {{else if this.showEditNote}}

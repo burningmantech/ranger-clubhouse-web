@@ -63,7 +63,7 @@
     </tbody>
   </table>
   {{#if this.userCanRepair}}
-    <button class="btn btn-primary" {{action this.repairPeople "shiny-penny" this.shiny_pennies}} disabled={{this.isSubmitting}}>Fix Shiny Pennies</button>
+    <button type="button" class="btn btn-primary" {{action this.repairPeople "shiny-penny" this.shiny_pennies}} disabled={{this.isSubmitting}}>Fix Shiny Pennies</button>
     {{#if this.isSubmitting}}
       <LoadingIndicator />
     {{/if}}
@@ -128,7 +128,7 @@
   </table>
 
   {{#if this.userCanRepair}}
-    <button class="btn btn-primary" {{action this.repairPeople "green-dot" this.green_dot}} disabled={{this.isSubmitting}}>Fix Green Dots</button>
+    <button type="button" class="btn btn-primary" {{action this.repairPeople "green-dot" this.green_dot}} disabled={{this.isSubmitting}}>Fix Green Dots</button>
     {{#if this.isSubmitting}}
       <LoadingIndicator />
     {{/if}}
@@ -201,7 +201,7 @@
     </tbody>
   </table>
   {{#if this.userCanRepair}}
-    <button class="btn btn-primary" {{action this.repairPeople "management-role" this.management_role}} disabled={{this.isSubmitting}}>Fix Management Mode role</button>
+    <button type="button" class="btn btn-primary" {{action this.repairPeople "management-role" this.management_role}} disabled={{this.isSubmitting}}>Fix Management Mode role</button>
     {{#if this.isSubmitting}}
       <LoadingIndicator />
     {{/if}}

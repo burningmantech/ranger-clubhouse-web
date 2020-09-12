@@ -92,11 +92,11 @@
             class="btn btn-secondary">
       {{fa-icon "clipboard-check"}} Sign up Sheet
     </LinkTo>
-    <button class="btn btn-secondary" {{action "toggleEmailListAction"}} disabled={{is-empty this.students}}>
+    <button type="button" class="btn btn-secondary" {{action "toggleEmailListAction"}} disabled={{is-empty this.students}}>
       {{fa-icon "envelope"}} {{if this.showEmails "Hide Emails" "List Emails"}}
     </button>
     {{#if this.canAddStudent}}
-      <button class="btn btn-secondary" {{action this.showAddPersonAction}}>
+      <button type="button" class="btn btn-secondary" {{action this.showAddPersonAction}}>
         {{fa-icon "plus-square"}} Add Person
       </button>
     {{/if}}
@@ -248,7 +248,7 @@
     </table>
     {{#if this.trainerCount}}
       <p>
-        <button class="btn btn-primary" {{action this.saveTrainers}} disabled={{this.isSubmitting}}>
+        <button type="button" class="btn btn-primary" {{action this.saveTrainers}} disabled={{this.isSubmitting}}>
           Save Trainers
         </button>
         {{#if this.isSubmitting}}

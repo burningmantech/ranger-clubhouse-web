@@ -24,7 +24,7 @@
       {{if this.isMe "You have" (concat @person.callsign " has")}} not met all the requirements to sign up for
       training and/or shifts. The following item(s) need to be done:
       <ul class="mt-2">
-        {{#if (not this.hasApprovedPhoto)}}
+        {{#unless this.hasApprovedPhoto}}
           {{#if (eq this.permission.photo_status "missing")}}
             <li>
               <b>Upload a photo</b>:<br>
@@ -47,7 +47,7 @@
               The photo has been submitted and may take up to 2 to 3 days to review. Please check back then.
             </li>
           {{/if}}
-        {{/if}}
+        {{/unless}}
 
         {{#if this.permission.online_training_allowed}}
           <li><b>Complete Online Training</b><br>
@@ -61,7 +61,8 @@
                   Training.</b>
               {{/if}}
             {{else}}
-              {{fa-icon "hourglass-half"}} <b class="text-danger">Unfortunately, the Online Training course is still being worked on.</b><br>
+              {{fa-icon "hourglass-half"}} <b class="text-danger">Unfortunately, the Online Training course is still
+              being worked on.</b><br>
               Please check back later.
             {{/if}}
           </li>
@@ -113,7 +114,8 @@
     <div class="border p-2 border-danger mb-2 d-print-none">
       <h4 class="text-danger">We need help! The Burn Weekend shifts are understaffed.</h4>
       The Burn Weekend &mdash; Friday night through Sunday night &mdash; is our busiest time.
-      We strongly urge people to sign up for a weekend shift, especially a Burn Perimeter shift, to help fill in the gaps.
+      We strongly urge people to sign up for a weekend shift, especially a Burn Perimeter shift, to help fill in the
+      gaps.
       This message will stick around until you sign up for one.
     </div>
   {{/if}}
