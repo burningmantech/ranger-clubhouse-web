@@ -39,12 +39,12 @@ export default class WysiwygEditorComponent extends Component {
           this.editor = editor;
           editor.on('Change', () => this.args.onChange(editor.getContent()));
         },
-        plugins: 'print preview paste casechange  searchreplace autolink  visualblocks visualchars fullscreen link media mediaembed table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern help formatpainter permanentpen pageembed charmap  quickbars linkchecker emoticons advtable',
+        plugins: 'print preview paste casechange  searchreplace autolink  visualblocks visualchars fullscreen link media mediaembed table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern help  pageembed charmap  emoticons advtable',
         menubar: 'edit view insert format tools table tc help',
         toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment',
         image_advtab: true,
         height: 600,
-        image_caption: true,
+      //  image_caption: true,
         quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
         toolbar_mode: 'sliding',
         contextmenu: 'link image imagetools table configurepermanentpen',
