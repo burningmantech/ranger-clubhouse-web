@@ -7,6 +7,7 @@ import { VehicleClassOptions } from 'clubhouse/constants/vehicles';
 
 export default class MeVehiclesController extends Controller {
   @tracked entry = null;
+  @tracked documentLoaded = false;
 
   stateOptions = [
     {
@@ -114,5 +115,10 @@ export default class MeVehiclesController extends Controller {
     this.personEvent.save().then(() => {
       this.toast.success('Agreement has been successfully recorded.');
     }).catch((response) => this.house.handleErrorResponse(response));
+  }
+
+  @action
+  documentLoadedAction() {
+    this.documentLoaded = true;
   }
 }

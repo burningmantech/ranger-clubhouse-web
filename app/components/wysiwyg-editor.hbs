@@ -1,0 +1,14 @@
+{{#if this.isLoading}}
+  <LoadingIndicator/>
+{{else if this.didError}}
+  <p>
+    <b class="text-danger">The WYSIWYG editor failed to load</b>
+  </p>
+{{/if}}
+{{#unless this.didError}}
+  <textarea
+          id={{this.elementId}}
+          name={{@name}}
+    {{did-insert this.elementInsertedEvent}} disabled={{not this.isReady}}>{{this.initialText}}</textarea>
+{{/unless}}
+

@@ -10,5 +10,6 @@ export default class MeMotorpoolPolicyRoute extends Route.extend(MeRouteMixin) {
     controller.set('person', this.modelFor('me'));
     controller.set('personEvent', model);
     controller.set('hasAgreed', model.signed_motorpool_agreement);
+    controller.set('documentHasLoaded', false);
   }
 }

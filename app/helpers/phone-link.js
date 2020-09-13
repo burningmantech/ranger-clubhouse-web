@@ -3,7 +3,7 @@ import {htmlSafe} from '@ember/string';
 import {parsePhoneNumberFromString, ParseError} from 'libphonenumber-js'
 
 export function phoneLink([number]) {
-  let phoneURI, phoneFormatted, suffix = '';
+  let phoneURI, phoneFormatted;
 
   try {
     const normalized = number.replace(/[^\w]+/g, '');
@@ -13,7 +13,6 @@ export function phoneLink([number]) {
         phoneFormatted = phone.formatNational();
       } else {
         phoneFormatted = phone.formatInternational();
-        suffix = ` (${phone.country})`;
       }
       phoneURI = phone.getURI();
     } else {
@@ -29,7 +28,7 @@ export function phoneLink([number]) {
     }
   }
 
-  return htmlSafe(`<a href="${phoneURI}">${phoneFormatted}</a>${suffix}`)
+  return htmlSafe(`<a href="${phoneURI}">${phoneFormatted}</a>`)
 }
 
 export default helper(phoneLink);

@@ -1,5 +1,5 @@
 <h1>{{this.year}} Vehicle Requests for Stickers and Other Items</h1>
-<BackToHome />
+<BackToHome/>
 
 <p>
   Using a Personal Vehicle while on Ranger business requires specific approval.
@@ -143,7 +143,7 @@
 {{else}}
   <p>
     You must agree to both the Motorpool Policy Agreement and the Personal Vehicle Agreement before you may submit
-    requests for driving stickers and
+    requests for driving stickers.
   </p>
   <p>
     {{#if this.personEvent.signed_motorpool_agreement}}
@@ -158,13 +158,16 @@
     {{#if this.personEvent.signed_personal_vehicle_agreement}}
       You have already agreed to the Personal Vehicle Agreement.
     {{else}}
-      (TODO write a better description)You have been approved to request driving stickers for your vehicle.<br>
-      <button type="button" class="btn btn-primary" {{action this.signPersonVehicleAgreementAction}}
-              disabled={{this.personEvent.isSaving}}>
-        Agree To The Personal Vehicle Agreement
-      </button>
-      {{#if this.personEvent.isSaving}}
-        <LoadingIndicator/>
+      <h2>{{this.year}} Personal Vehicle Agreement Policy</h2>
+      <DocumentShow @tag="personal-vehicle-agreement" @onLoad={{this.documentLoadedAction}}/>
+      {{#if this.documentLoaded}}
+        <button type="button" class="btn btn-primary" {{action this.signPersonVehicleAgreementAction}}
+                disabled={{this.personEvent.isSaving}}>
+          I Agree To The Personal Vehicle Agreement
+        </button>
+        {{#if this.personEvent.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
       {{/if}}
     {{/if}}
   </p>

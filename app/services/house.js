@@ -8,13 +8,15 @@ import {isEmpty} from '@ember/utils';
 import currentYear from 'clubhouse/utils/current-year';
 import {Role} from 'clubhouse/constants/roles';
 import {isChangeset} from 'validated-changeset';
-import { InvalidError, ServerError, TimeoutError, AbortError, NotFoundError } from '@ember-data/adapter/error'
+import {InvalidError, ServerError, TimeoutError, AbortError, NotFoundError} from '@ember-data/adapter/error'
 
 export default class HouseService extends Service {
   @service toast;
   @service session;
   @service router;
   @service store;
+
+  cachedScripts = {};
 
   /**
    * Handle a catch promise response (Ember Data save, ajax request, etc). If a Change Set object was
@@ -51,7 +53,7 @@ export default class HouseService extends Service {
         });
 
         // After the form renders, scroll to the first marked invalid field
-          this.scrollToElement('.is-invalid');
+        this.scrollToElement('.is-invalid');
       }
     } else if (response instanceof ServerError) {
       if (response.errors) {
@@ -91,7 +93,7 @@ export default class HouseService extends Service {
 
         case 401:
           errorType = 'authorization';
-           break;
+          break;
 
         case 403:
           errorType = 'not permitted';
@@ -107,7 +109,7 @@ export default class HouseService extends Service {
             });
 
             // After the form renders, scroll to the first marked invalid field
-              this.scrollToElement('.is-invalid');
+            this.scrollToElement('.is-invalid');
           }
           break;
 
@@ -385,5 +387,25 @@ export default class HouseService extends Service {
 
   get canViewEmail() {
     return this.session.user && this.session.user.hasRole([Role.ADMIN, Role.VIEW_PII, Role.VIEW_EMAIL]);
+  }
+
+  /**
+   * Load an external script, and cache it
+   */
+
+  loadScript(url) {
+    if (this.cachedScripts[url]) {
+      return Promise.resolve();
+    }
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      document.body.append(script);
+      script.addEventListener('load', () => {
+        this.cachedScripts[url] = true;
+        resolve();
+      });
+      script.addEventListener('error', () => reject());
+      script.src = url; // Boom!
+    });
   }
 }

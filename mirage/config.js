@@ -265,6 +265,25 @@ export default function () {
     };
   });
 
+  this.get('/api/document/:id', (_, request) => {
+    const id = request.params.id;
+    if (id === 'tag-test') {
+      return {
+        document: {
+          id: 1,
+          tag: 'tag-test',
+          description: 'a description',
+          body: 'a body',
+          person_create_id: 1,
+          person_update_id: 1,
+        }
+      };
+    } else {
+      return new Response(404, {'Content-Type': 'application/json'}, {
+        errors: [{status: 404, title: 'Record does not exist.'}]
+      });
+    }
+  });
 
   /*
     Shorthand cheatsheet:

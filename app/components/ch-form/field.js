@@ -1,8 +1,11 @@
 import Component from '@glimmer/component';
 import {action, set, get} from '@ember/object';
 import {typeOf, isEmpty} from '@ember/utils';
+import { tracked } from '@glimmer/tracking';
 
 export default class ChFormFieldComponent extends Component {
+  @tracked editorFailed = false;
+
   constructor() {
     super(...arguments);
 
@@ -120,5 +123,10 @@ export default class ChFormFieldComponent extends Component {
     if (fieldChangeAction) {
       fieldChangeAction(this);
     }
+  }
+
+  @action
+  editorLoadFailed() {
+    this.editorFailed = true;
   }
 }

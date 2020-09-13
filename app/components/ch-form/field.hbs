@@ -31,7 +31,10 @@
       {{#if @label~}}
         <label class="form-check-label" for={{this.domId}}>{{@label}}</label>
       {{~/if~}}
-    {{else if (eq @type "textarea")}}
+    {{else if (or this.editorFailed (eq @type "textarea"))}}
+      {{#if this.editorFailed}}
+        <div class="text-danger">Editor failed to load. Falling back to plain text.</div>
+      {{/if}}
       <textarea
               name={{@name}}
               id={{this.domId}}
@@ -49,6 +52,8 @@
                       @maxlength={{@maxlength}}
                       @onChange={{this.update}} @placeholder={{@placeholder}} @value={{get @model @name}}
                       @dateOnly={{eq @type "date"}} @startDate={{@startDate}} />
+    {{else if (eq @type "editor")}}
+      <WysiwygEditor @text={{get @model @name}} @id={{this.domId}} @onChange={{this.update}} @onLoadError={{this.editorLoadFailed}} />
     {{else}}
       <input type={{@type}}
              value={{get @model @name}}
