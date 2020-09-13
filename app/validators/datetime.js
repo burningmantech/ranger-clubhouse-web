@@ -25,7 +25,6 @@ export default function validateDateTime(opts = {}) {
     const { before, after, if_set } = opts;
     let date;
 
-    console.log(`new=[${newValue}] old=[${oldValue}]`);
     if (if_set && !getProperty(changes, content, if_set)) {
       return true;
     }

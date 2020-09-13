@@ -22,5 +22,6 @@ export default class MeVehiclesRoute extends Route {
     controller.set('vehicles', model.vehicles);
     controller.set('personEvent', model.personEvent);
     controller.set('year', this.year);
+    controller.set('documentLoaded', false);
   }
 }

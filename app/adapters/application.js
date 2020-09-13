@@ -17,6 +17,7 @@ const SINGULAR_MODELS = [
   'asset-attachment',
   'asset-person',
   'bmid',
+  'document',
   'help',
   'motd',
   'person',

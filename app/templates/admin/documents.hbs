@@ -1,0 +1,70 @@
+{{#if this.editDocument}}
+  <h1>{{if this.editDocument.isNew "Create new" (concat "Edit " this.editDocument.tag)}} document</h1>
+  <ChForm @forId="document" @formFor={{this.editDocument}} @validator={{this.validations}} @onSubmit={{this.saveAction}}
+          @onCancel={{this.cancelAction}}
+          as |f|>
+    <div class="form-row">
+      <f.input @name="tag" @type="text" @label="Document Tag" @size={{30}} @maxlength={{80}} />
+      <f.input @name="description" @type="text" @label="One-line description" @size={{80}} @maxlength={{80}} />
+    </div>
+    <div class="form-row">
+      <f.input @name="body" @type="editor" @label="Document Text" @cols={{80}} @rows={{4}} />
+    </div>
+    <div class="mb-4">
+        <f.submit @disabled={{this.editDocument.isSaving}} />
+        <f.cancel @disabled={{this.editDocument.isSaving}} />
+      {{#if this.isSaving}}
+        <LoadingIndicator/>
+      {{/if}}
+
+      {{#unless this.editDocument.isNew}}
+        <div class="d-inline-block ml-4">
+          <button type="button" class="btn btn-danger" {{action this.deleteAction}}>{{fa-icon "trash"}} Delete</button>
+        </div>
+      {{/unless}}
+    </div>
+  </ChForm>
+{{else}}
+  <h1>Clubhouse Documents</h1>
+  <p>
+    Showing {{pluralize this.documents.length "document"}}
+    <span class="ml-4">
+    <button type="button" class="btn btn-primary" {{action this.newAction}}>{{fa-icon "plus"}} New Document</button>
+    </span>
+  </p>
+  <table class="table table-sm table-striped table-width-auto table-hover">
+    <thead>
+    <tr>
+      <th>Tag</th>
+      <th>Description</th>
+      <th>Created at / By</th>
+      <th>Updated at / By</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.documents as |doc|}}
+      <tr>
+        <td>{{doc.tag}}</td>
+        <td>{{doc.description}}</td>
+        <td>
+          {{doc.created_at}}<br>
+          <PersonLink @person={{doc.person_create}} />
+        </td>
+        <td>
+          {{doc.updated_at}}<br>
+          <PersonLink @person={{doc.person_update}} />
+        </td>
+        <td>
+          <button type="button" class="btn btn-sm btn-primary" {{action this.editAction doc}}>{{fa-icon "edit"}}Edit
+          </button>
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="5"><b class="text-danger">No documents were found.</b></td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+{{/if}}

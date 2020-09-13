@@ -5,6 +5,7 @@ import {tracked} from '@glimmer/tracking';
 export default class MotorpoolPolicyController extends Controller {
   @tracked isSubmitting;
   @tracked hasAgreed;
+  @tracked documentHasLoaded;
 
   @action
   agreeAction() {
@@ -16,5 +17,14 @@ export default class MotorpoolPolicyController extends Controller {
       this.toast.success('Agreement has been successfully recorded.');
     }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isSubmitting = false);
+  }
+
+  @action
+  loadedAction() {
+    this.documentHasLoaded = true;
+  }
+
+  get currentYear() {
+    return this.house.currentYear();
   }
 }

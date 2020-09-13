@@ -206,6 +206,9 @@
                           <LinkTo @route="admin.alerts" class="dropdown-item">RBS Alerts</LinkTo>
                           <LinkTo @route="admin.survey" class="dropdown-item">Surveys</LinkTo>
                         {{/if}}
+                        {{#if (has-role "admin" "megaphone")}}
+                          <LinkTo @route="admin.documents" class="dropdown-item">Documents</LinkTo>
+                        {{/if}}
                       </div>
                       {{#if (has-role "admin")}}
                         <div class="col-sm-12 col-lg-3">

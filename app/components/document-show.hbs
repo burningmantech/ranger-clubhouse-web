@@ -1,0 +1,5 @@
+{{#if this.isLoading}}
+  <LoadingIndicator @text="Loading the document" />
+{{else if this.documentBody}}
+  {{this.documentBody}}
+{{/if}}

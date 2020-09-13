@@ -3,7 +3,6 @@ import {action, set} from '@ember/object';
 import {typeOf, isEmpty} from '@ember/utils';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
-import Model from '@ember-data/model';
 import {tracked} from '@glimmer/tracking';
 import {inject as service} from '@ember/service';
 import {run} from '@ember/runloop';
@@ -56,10 +55,12 @@ export default class ChFormComponent extends Component {
      * build a new changeset object which has the most recent data.
      */
 
-    if (!this.watchingModel && formFor instanceof Model) {
-      set(formFor, 'onSaved', () => this._buildChangeSet());
-      this.watchingModel = formFor;
-    }
+      const origSave = this.changeSetModel.save;
+      this.changeSetModel.save = () => {
+        return origSave.call(this.changeSetModel).then(() => {
+          this._buildChangeSet();
+        });
+      };
   }
 
   /**
