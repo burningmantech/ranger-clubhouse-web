@@ -1,0 +1,41 @@
+/*
+  Autocomplete field styling (callsign search, search bar, etc.)
+ */
+
+.autocomplete-input-block {
+  position: relative;
+}
+
+.autocomplete-list {
+  max-height: 14em;
+  margin: 0;
+  padding: 0;
+}
+
+.autocomplete-list div {
+  list-style: none;
+  padding: 5px 10px;
+  margin: 2px 0;
+  font-size: 1.1em;
+}
+
+.autocomplete-list div:hover {
+  background-color: #ececec;
+}
+
+.autocomplete-results-box {
+  max-height: 14em;
+  position: absolute;
+  overflow-y: auto;
+  width: 100%;
+  z-index: 9500;
+  background-color: #fafafa;
+  padding: 5px 0;
+  border: 2px solid #ececec;
+  box-shadow: 5px #6c757d;
+}
+
+.autocomplete-option-selected {
+  background-color: #ececec;
+}
+

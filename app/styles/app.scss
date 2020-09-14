@@ -81,9 +81,11 @@ $sizes: (
 // Clubhouse styling
 @import "access-documents";
 @import "alpha-sheet";
+@import "autocomplete";
 @import "hq";
 @import "mail";
 @import "dashboard";
+@import "rollcall";
 @import "photo";
 @import "schedule";
 @import "sidebar";
@@ -217,8 +219,7 @@ dl {
 }
 
 .footer {
-  a,
-  a:visited {
+  a, a:visited {
     color: #000;
     font-weight: bold;
   }
@@ -578,44 +579,6 @@ caption {
   display: inline-block;
 }
 
-
-.autocomplete-input-block {
-  position: relative;
-}
-
-.autocomplete-list {
-  max-height: 14em;
-  margin: 0;
-  padding: 0;
-}
-
-.autocomplete-list div {
-  list-style: none;
-  padding: 5px 10px;
-  margin: 2px 0;
-  font-size: 1.1em;
-}
-
-.autocomplete-list div:hover {
-  background-color: #ececec;
-}
-
-.autocomplete-results-box {
-  max-height: 14em;
-  position: absolute;
-  overflow-y: auto;
-  width: 100%;
-  z-index: 9500;
-  background-color: #fafafa;
-  padding: 5px 0;
-  border: 2px solid #ececec;
-  box-shadow: 5px #6c757d;
-}
-
-.autocomplete-option-selected {
-  background-color: #ececec;
-}
-
 @include media-breakpoint-up(md) {
   .homepage-title {
     font-size: $h1-font-size;
@@ -647,3 +610,4 @@ caption {
 .max-width-900 {
   max-width: 900px;
 }
+

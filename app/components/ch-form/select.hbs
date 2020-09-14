@@ -1,19 +1,19 @@
 <select name={{@name}} class={{@controlClass}}
-        size={{@size}} multiple={{@multiple}} disabled={{@disabled}} {{on "change" this.changeEvent}}>
+        size={{@size}} multiple={{@multiple}}
+        disabled={{@disabled}} {{on "change" this.changeEvent}}>
   {{~#if @includeBlank~}}
     <option value="" selected={{is-empty @value}}>-</option>
   {{~/if~}}
-  {{#if this.isGrouped~}}
-    {{~#each this.selectGroupOptions as |group|~}}
-      <optgroup label={{group.groupName}}>
-        {{~#each group.options as |opt|~}}
-          <option value={{opt.value}} selected={{ch-form/contains @value opt.value}}>{{opt.label}}</option>
+  {{#each this.selectOptions as |opt|~}}
+    {{#if opt.groupName}}
+      <optgroup label={{opt.groupName}}>
+        {{~#each opt.options as |groupOpt|~}}
+          <option value={{groupOpt.value}}
+                  selected={{ch-form/contains @value groupOpt.value}}>{{groupOpt.label}}</option>
         {{~/each~}}
       </optgroup>
-    {{~/each~}}
     {{~else~}}
-    {{#each this.selectOptions as |opt|~}}
       <option value={{opt.value}} selected={{ch-form/contains @value opt.value}}>{{opt.label}}</option>
-    {{~/each~}}
-  {{/if~}}
+    {{~/if}}
+  {{~/each~}}
 </select>

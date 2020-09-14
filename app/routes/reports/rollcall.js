@@ -1,12 +1,10 @@
 import Route from '@ember/routing/route';
-import requestYear from 'clubhouse/utils/request-year';
 import _ from 'lodash';
+import {ART_CAR_WRANGLER, BURN_PERIMETER, SANDMAN} from 'clubhouse/constants/positions';
 
 export default class ReportsRollcallRoute extends Route {
-  model(params) {
-    const year = requestYear(params);
-    this.year = year;
-    return this.ajax.request('slot', { data: { year } });
+  model() {
+    return this.ajax.request('slot', {data: {for_rollcall: 1}});
   }
 
   setupController(controller, model) {
@@ -20,9 +18,32 @@ export default class ReportsRollcallRoute extends Route {
       };
     }), 'title');
 
-    controller.set('year', this.year);
     controller.set('positions', positions);
-    controller.set('positionId', 0);
     controller.set('people', null);
+
+    const options = positions.map((p) => [p.title, p.id]);
+    const burnPositions = [];
+    [SANDMAN, BURN_PERIMETER, ART_CAR_WRANGLER].forEach((burnPosition) => {
+      const found = options.find((p) => p[1] == burnPosition);
+      if (found) {
+        burnPositions.unshift(found);
+        options.removeObject(found);
+      }
+    });
+    //burnPositions.unshift([ 'Select Position', 0])
+
+    controller.set('positionOptions', [
+      [ 'Select Position', 0],
+      {
+        groupName: 'Burn Positions',
+        options: burnPositions
+      },
+      {
+        groupName: 'Everything Else',
+        options
+      }
+    ]);
+
+    controller.set('positionId', 0);
   }
 }

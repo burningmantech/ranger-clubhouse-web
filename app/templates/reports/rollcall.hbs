@@ -5,54 +5,77 @@
   before being deployed.
 </p>
 
-<p>
-  Click a callsign to sign in the person in. A person may be signed out by clicking on
-  their callsign again.
-</p>
-<p>
-  <span class="text-success">{{fa-icon "check"}}</span> = the person was successfully signed in.
-  <span class="text-danger">{{fa-icon "exclamation"}}</span> = the person is already on duty, or indicate some other
-  problem.
-</p>
 
-<div class="form-row mb-1">
-  <div class="col-auto">
-    <label class="col-form-label">Position</label>
+{{#if this.positions}}
+
+  <div class="row form-group">
+    <label class="col-form-label col-sm-12 col-lg-auto">Position</label>
+    <div class="col-auto">
+      <ChForm::Select @name="positionId" @value={{this.positionId}} @options={{this.positionOptions}}
+                      @onChange={{action this.selectPosition}} @controlClass="form-control"/>
+    </div>
+    <label class="col-form-label col-sm-12 col-lg-auto">Shift</label>
+    <div class="col-auto">
+      <ChForm::Select @name="slotId" @value={{this.slotId}}
+                      @options={{this.slotOptions}}
+                      @onChange={{action this.selectSlot}}
+                      @disabled={{eq this.positionId 0}} @controlClass="form-control"/>
+    </div>
   </div>
-  <div class="col-md-3 mb-2">
-    <ChForm::Select @name="positionId" @value={{this.positionId}} @options={{positionOptions}} @onChange={{action this.selectPosition}} @controlClass="form-control" />
+{{else}}
+  <div class="my-2">
+    <b class="text-danger">No shifts found starting within the next 4 hours.</b>
   </div>
-  <div class="col-auto">
-    <label class="col-form-label">Shift</label>
-  </div>
-  <div class="col-md-3 mb-2">
-    <ChForm::Select @name="slotId" @value={{this.slotId}} @options={{slotOptions}} @onChange={{action this.selectSlot}} @disabled={{eq this.positionId 0}} @controlClass="form-control" />
-  </div>
-</div>
+{{/if}}
 
 {{#if this.slot}}
-  <h3>{{this.position.title}} - {{this.slot.description}} - {{shift-format this.slot.begins}}</h3>
+  <div class="row">
+    <div class="h4 col-auto">{{this.position.title}}</div>
+    <div class="h4 col-auto">{{this.slot.description}}</div>
+    <div class="h4 col-auto">{{shift-format this.slot.begins}}</div>
+  </div>
 {{/if}}
 {{#if this.isRetrievingPeople}}
-  <LoadingDialog @item="the sign ups" />
+  <LoadingDialog @item="the sign ups"/>
 {{else if this.people}}
-  {{pluralize this.people.length "sign up"}}
-  <div class="form-row">
+  <p>
+    {{pluralize this.people.length "sign up"}}. Click the box to sign the person in OR out.
+  </p>
+
+  <div class="rollcall-grid">
     {{#each this.people as |person|}}
-      <a href class="d-block bg-light-gray col-sm-6 col-md-3 col-lg-2 border rounded mx-2 my-2 p-2 {{if person.signedIn "border-success" (if person.on_duty "border-danger")}}" {{action this.clickPerson person}} disabled={{person.isSubmitting}}>
-        {{~#if person.on_duty~}}
-        <h4 class="text-light-red">{{fa-icon "exclamation"}} {{person.callsign}}</h4>
-        {{~else if person.signedIn~}}
-        <h4 class="text-success"> {{fa-icon "check"}} {{person.callsign}}</h4>
-        {{~else~}}
-        <h4>{{person.callsign}}</h4>
-        {{~/if~}}
-        {{~#if person.isSubmitting~}}
-        <LoadingIndicator />
-        {{~else if person.on_duty}}
-        <span class="text-danger"><small>Already on duty<br>{{person.on_duty.position.title}}<br>{{shift-format person.on_duty.on_duty}}</small></span>
-        {{~/if}}<br>
-      </a>
+      <div class="rollcall-person {{if person.on_duty "rollcall-problem" (if person.signedIn "rollcall-success")}}"
+           disabled={{person.isSubmitting}}
+           role="link" {{action this.clickPerson person}}>
+        <div class="rollcall-photo">
+          {{#if person.photo_url}}
+            <img src={{person.photo_url}} alt={{person.callsign}} loading="lazy"/>
+          {{else}}
+            {{fa-icon "user"}}
+          {{/if}}
+        </div>
+        <div class="rollcall-indicator">
+          {{#if person.isSubmitting}}
+            {{fa-icon "spinner" spin=true}}
+          {{else if person.on_duty}}
+            {{fa-icon "exclamation" color="danger"}}
+          {{else if person.signedIn}}
+            {{fa-icon "check" color="success"}}
+          {{/if}}
+        </div>
+        <div class="rollcall-name">
+          {{person.callsign}}
+        </div>
+        <div class="rollcall-info">
+          {{#if person.on_duty}}
+            <b>Already on duty</b><br>
+            {{person.on_duty.position.title}}<br>
+            {{shift-format person.on_duty.on_duty}}
+          {{else if person.signedIn}}
+            Signed in.
+          {{/if}}
+        </div>
+      </div>
     {{/each}}
   </div>
 {{else if (gt this.slotId 0)}}
