@@ -12,8 +12,6 @@ export default class ChFormSelectComponent extends Component {
     super(...arguments);
     const {options} = this.args;
     assert(`select options for field "${this.args.name}" is not an array`, typeOf(options) === 'array');
-    const item = options[0];
-    this.isGrouped = (typeOf(item) === 'object' && ('groupName' in item));
   }
 
   // select change
@@ -46,45 +44,46 @@ export default class ChFormSelectComponent extends Component {
       return value;
     }
   }
+  _buildSingleOption(opt) {
+    const type = typeOf(opt);
+    let label, value;
 
-  _buildOptions(options) {
+    switch (type) {
+      case 'object':
+        // { id: value, title: 'label' }
+        label = opt.title;
+        value = opt.id;
+        break;
+
+      case 'array':
+        // Simple [ 'label', value ]
+        [label, value] = opt;
+        break;
+
+      default:
+        label = value = opt;
+        break;
+    }
+
+    return {label, value};
+  }
+
+  @computed('args.options.[]')
+  get selectOptions() {
+    const { options } = this.args;
     if (!options) {
       return [];
     }
 
     return options.map((opt) => {
-      const type = typeOf(opt);
-      let label, value;
-
-      switch (type) {
-        case 'object':
-          // { id: value, title: 'label' }
-          label = opt.title;
-          value = opt.id;
-          break;
-
-        case 'array':
-          // Simple [ 'label', value ]
-          [label, value] = opt;
-          break;
-        default:
-          label = value = opt;
-          break;
+      if (typeof (opt) === 'object' && ('groupName' in opt)) {
+        return {
+          groupName: opt.groupName,
+          options: opt.options.map((groupOpt) => this._buildSingleOption(groupOpt))
+        };
+      } else {
+        return this._buildSingleOption(opt);
       }
-
-      return {label, value};
-    });
-  }
-
-  @computed('args.options.[]')
-  get selectOptions() {
-    return this._buildOptions(this.args.options);
-  }
-
-  @computed('args.options.[]')
-  get selectGroupOptions() {
-    return this.args.options.map((opt) => {
-      return {groupName: opt.groupName, options: this._buildOptions(opt.options)};
     });
   }
 }

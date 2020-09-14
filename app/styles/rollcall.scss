@@ -1,0 +1,74 @@
+
+.rollcall-grid {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: repeat(auto-fill, 300px);
+  grid-gap: 5px;
+}
+
+.rollcall-person {
+  display: grid;
+  grid-template-rows: auto;
+  grid-auto-rows: 1fr;
+
+  grid-template-columns: 85px 170px 35px;
+  grid-template-areas:
+    "rollcall-photo rollcall-name rollcall-indicator"
+    "rollcall-photo rollcall-info rollcall-info";
+
+  border: 1px solid #c0c0c0;
+  border-radius: 5px;
+  background-color: #f6f6f6;
+  padding: 5px;
+}
+
+.rollcall-photo {
+  grid-area: rollcall-photo;
+  text-align: center;
+  width: 85px;
+
+  img {
+    display: block;
+    margin: 0 auto;
+    max-width: 75px;
+  }
+
+  // missing photo
+  i {
+    margin-top: 10px;
+    font-size: 4rem;
+  }
+}
+
+.rollcall-indicator {
+  grid-area: rollcall-indicator;
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.4rem;
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+.rollcall-name {
+  grid-area: rollcall-name;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-left: 10px;
+}
+
+.rollcall-success {
+  border-color: green !important;
+  background-color: #d8fbd8 !important;
+}
+
+.rollcall-problem {
+  border-color: red !important;
+  background-color: #f8d7da !important;
+}
+
+.rollcall-info {
+  grid-area: rollcall-info;
+  font-size: 0.9rem;
+  vertical-align: top;
+  margin-left: 10px;
+}
