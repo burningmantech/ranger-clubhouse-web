@@ -44,10 +44,6 @@ export default class ChFormSelectComponent extends Component {
       return value;
     }
   }
-
-  _buildOptions(options) {
-  }
-
   _buildSingleOption(opt) {
     const type = typeOf(opt);
     let label, value;
