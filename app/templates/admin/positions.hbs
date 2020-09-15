@@ -23,7 +23,6 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
     <th class="text-center">New User Eligible</th>
     <th class="text-center">All Rangers</th>
     <th class="text-center">Count Hrs</th>
-    <th class="text-center">Auto Signout</th>
     <th class="text-center">On SL report</th>
     <th>Prevent Multi. Enrollments</th>
     <th>Training / Contact Email</th>
@@ -44,7 +43,6 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
       <td class="text-center">{{yesno position.new_user_eligible}}</td>
       <td class="text-center">{{yesno position.all_rangers}}</td>
       <td class="text-center">{{yesno position.count_hours}}</td>
-      <td class="text-center">{{yesno position.auto_signout}}</td>
       <td class="text-center">{{yesno position.on_sl_report}}</td>
       <td>{{if position.prevent_multiple_enrollments "Y" "-"}}</td>
       <td>
@@ -95,13 +93,12 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
           <legend>Flags</legend>
           <div class="form-row mb-2">
             <f.input @name="all_rangers" @type="checkbox" @label="All Rangers" @inline=true/>
-              <f.input @name="new_user_eligible" @type="checkbox" @label="New user eligible" @inline=true/>
-                <f.input @name="count_hours" @type="checkbox" @label="Hours count towards appreciations" @inline=true/>
-                  <f.input @name="auto_signout" @type="checkbox" @label="Can be auto-signed out" @inline=true/>
-                    <f.input @name="on_sl_report" @type="checkbox" @label="On Shift Lead report" @inline=true/>
-                      <f.input @name="prevent_multiple_enrollments" @type="checkbox"
-                               @label="Prevent Multiple Enrollments"
-                               @inline=true/>
+            <f.input @name="new_user_eligible" @type="checkbox" @label="New user eligible" @inline=true/>
+            <f.input @name="count_hours" @type="checkbox" @label="Hours count towards appreciations" @inline=true/>
+            <f.input @name="on_sl_report" @type="checkbox" @label="On Shift Lead report" @inline=true/>
+            <f.input @name="prevent_multiple_enrollments" @type="checkbox"
+              @label="Prevent Multiple Enrollments"
+              @inline=true/>
           </div>
         </fieldset>
 
