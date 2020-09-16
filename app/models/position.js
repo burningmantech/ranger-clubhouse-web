@@ -7,7 +7,6 @@ export default class PositionModel extends Model {
   @attr('boolean') count_hours;
   @attr('number') min;
   @attr('number') max;
-  @attr('boolean') auto_signout;
   @attr('boolean') on_sl_report;
   @attr('string') short_title;
   @attr('string') type;
