@@ -19,13 +19,29 @@ export default class PositionController extends Controller {
     return types;
   }
 
-  @computed('positions.@each.title', 'typeFilter')
+  activeFilter = 'all';
+  activeOptions = [
+    {id: 'all', title: 'All'},
+    {id: 'active', title: 'Active'},
+    {id: 'inactive', title: 'Inactive'},
+  ];
+
+  @computed('positions.@each.title', 'typeFilter', 'activeFilter')
   get viewPositions() {
-    const typeFilter = this.typeFilter;
     let positions = this.positions;
+    const typeFilter = this.typeFilter;
+    const activeFilter = this.activeFilter;
 
     if (typeFilter != 'All') {
       positions = positions.filterBy('type', typeFilter);
+    }
+
+    if (activeFilter) {
+      if (activeFilter == 'active') {
+        positions = positions.filterBy('active', true);
+      } else if (activeFilter == 'inactive') {
+        positions = positions.filterBy('active', false);
+      }
     }
 
     return positions.sortBy('title');

@@ -6,6 +6,11 @@
     <ChForm::Select @name="typeFilter" @value={{typeFilter}} @options={{typeOptions}} @onChange={{action
             (mut typeFilter)}} @controlClass="form-control"/>
   </div>
+  <label class="col-form-label">Active Filter</label>
+  <div class="col-auto">
+    <ChForm::Select @name="activeFilter" @value={{this.activeFilter}} @options={{this.activeOptions}}
+                    @onChange={{action (mut activeFilter)}} @controlClass="form-control"/>
+  </div>
   <div class="col-auto">
     <button type="button" class="btn btn-primary" {{on "click"  this.newAction}}>New Position</button>
   </div>
