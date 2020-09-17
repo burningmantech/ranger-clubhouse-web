@@ -20,6 +20,7 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
     <th>Short Title</th>
     <th>Type</th>
     <th>Min / Max</th>
+    <th class="text-center">Active</th>
     <th class="text-center">New User Eligible</th>
     <th class="text-center">All Rangers</th>
     <th class="text-center">Count Hrs</th>
@@ -40,6 +41,13 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
       </td>
       <td>{{position.type}}</td>
       <td class="text-center">{{position.min}} / {{position.max}}</td>
+      <td class="text-center">
+        {{#if position.active}}
+          {{fa-icon "check"}}
+        {{else}}
+          <span class="text-danger">{{fa-icon "times"}}</span>
+        {{/if}}
+      </td>
       <td class="text-center">{{yesno position.new_user_eligible}}</td>
       <td class="text-center">{{yesno position.all_rangers}}</td>
       <td class="text-center">{{yesno position.count_hours}}</td>
@@ -92,6 +100,7 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
         <fieldset>
           <legend>Flags</legend>
           <div class="form-row mb-2">
+            <f.input @name="active" @type="checkbox" @label="Active" @inline=true/>
             <f.input @name="all_rangers" @type="checkbox" @label="All Rangers" @inline=true/>
             <f.input @name="new_user_eligible" @type="checkbox" @label="New user eligible" @inline=true/>
             <f.input @name="count_hours" @type="checkbox" @label="Hours count towards appreciations" @inline=true/>

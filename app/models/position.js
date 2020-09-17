@@ -13,4 +13,5 @@ export default class PositionModel extends Model {
   @attr('number') training_position_id;
   @attr('boolean') prevent_multiple_enrollments;
   @attr('string') contact_email;
+  @attr('boolean', { defaultValue: true}) active;
 }
