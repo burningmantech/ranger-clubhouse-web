@@ -23,44 +23,49 @@ export default class AccessDocumentModel extends Model {
 
   @computed('type')
   get isTicket() {
-      return (this.type == 'staff_credential'
-        || this.type == 'reduced_price_ticket'
-        || this.type == 'gift_ticket');
+      return (this.type === 'staff_credential'
+        || this.type === 'reduced_price_ticket'
+        || this.type === 'gift_ticket');
   }
 
   @computed('type')
   get isStaffCredential() {
-    return this.type == 'staff_credential';
+    return this.type === 'staff_credential';
   }
 
   @computed('type')
   get isReducedPriceTicket() {
-    return this.type == 'reduced_price_ticket';
+    return this.type === 'reduced_price_ticket';
   }
 
   @computed('type')
   get isGiftTicket() {
-    return this.type == 'gift_ticket';
+    return this.type === 'gift_ticket';
+  }
+
+  @computed('type')
+  get hasAccessDate() {
+    return (this.type === 'staff_credential' || this.type === 'work_access_pass' || this.type === 'work_acess_pass_so');
   }
 
   @computed('status')
 	get isQualified() {
-    return this.status == 'qualified';
+    return this.status === 'qualified';
   }
 
   @computed('status')
 	get isClaimed() {
-    return this.status == 'claimed';
+    return this.status === 'claimed';
   }
 
   @computed('status')
 	get isBanked() {
-    return this.status == 'banked';
+    return this.status === 'banked';
   }
 
   @computed('status')
 	get isSubmitted() {
-    return this.status == 'submitted';
+    return this.status === 'submitted';
   }
 
   @computed('status')
@@ -70,12 +75,12 @@ export default class AccessDocumentModel extends Model {
 
   @computed('status')
 	get isCancelled() {
-    return this.status == 'cancelled';
+    return this.status === 'cancelled';
   }
 
   @computed('status')
 	get isExpired() {
-    return this.status == 'expired';
+    return this.status === 'expired';
   }
 
   @computed('type')
@@ -106,7 +111,7 @@ export default class AccessDocumentModel extends Model {
   }
 
   set admission_date(value) {
-    if (value == 'any') {
+    if (value === 'any') {
       this.set('access_any_time', true);
       this.set('access_date', null);
     } else {

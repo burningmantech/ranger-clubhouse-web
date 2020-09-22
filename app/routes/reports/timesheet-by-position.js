@@ -15,7 +15,6 @@ export default class ReportsTimesheetByPositionRoute extends Route {
   setupController(controller, model) {
     controller.set('positions', model.positions);
     controller.set('year', this.year);
-    controller.set('isExpanding', false);
   }
 
   resetController(controller, isExiting) {

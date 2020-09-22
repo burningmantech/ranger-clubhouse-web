@@ -80,6 +80,7 @@ $sizes: (
 
 // Clubhouse styling
 @import "access-documents";
+@import "accordion";
 @import "alpha-sheet";
 @import "autocomplete";
 @import "hq";
@@ -270,6 +271,10 @@ ul.nav-pills li {
   }
 }
 
+.card-hover:hover {
+  background-color: #dee2e6 !important;
+}
+
 .form-text-invalid {
   font-size: 0.9em;
   color: #dc3545;
@@ -279,11 +284,6 @@ legend {
   border-bottom: 1px solid #dcdcdc;
   font-size: 1rem;
   font-weight: bold;
-}
-
-.form-group,
-.form-row {
-  //padding-left: 10px;
 }
 
 .form-check-label:hover {
@@ -588,6 +588,7 @@ caption {
 @include media-breakpoint-down(md) {
   .homepage-title {
     font-size: 4vw;
+    text-align: center;
   }
 }
 
@@ -607,7 +608,26 @@ caption {
   border-bottom: 1px solid #e0e0e0;
 }
 
+.max-width-700 {
+  max-width: 700px;
+}
+
 .max-width-900 {
   max-width: 900px;
+}
+
+.callsign-list {
+  display: flex;
+  flex-wrap: wrap;
+
+  > div {
+    width: 120px;
+    padding: 5px;
+    overflow-wrap: break-word;
+  }
+
+  > div:hover {
+    background-color: #ececec;
+  }
 }
 

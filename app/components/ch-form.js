@@ -5,7 +5,7 @@ import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
 import {tracked} from '@glimmer/tracking';
 import {inject as service} from '@ember/service';
-import {run} from '@ember/runloop';
+import {schedule} from '@ember/runloop';
 
 export default class ChFormComponent extends Component {
   @service house;
@@ -55,12 +55,12 @@ export default class ChFormComponent extends Component {
      * build a new changeset object which has the most recent data.
      */
 
-      const origSave = this.changeSetModel.save;
-      this.changeSetModel.save = () => {
-        return origSave.call(this.changeSetModel).then(() => {
-          this._buildChangeSet();
-        });
-      };
+    const origSave = this.changeSetModel.save;
+    this.changeSetModel.save = () => {
+      return origSave.call(this.changeSetModel).then(() => {
+        this._buildChangeSet();
+      });
+    };
   }
 
   /**
@@ -74,11 +74,7 @@ export default class ChFormComponent extends Component {
   insertedFormElement(element) {
     const field = element.querySelector(`[autofocus]`);
     if (field) {
-      setTimeout(() => {
-        run('afterRender', () => {
-          field.focus();
-        })
-      }, 100);
+      schedule('afterRender', () => field.focus());
     }
   }
 

@@ -1,10 +1,25 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 export default class ReportsFreakingYearsController extends Controller {
   queryParams = [ 'showAll' ];
 
-  showAll = 0;
+  @tracked showAll = 0;
+  @tracked expandAll = false;
+
+
+  get totalPeople() {
+    let total = 0;
+    this.freaking.forEach((freaks) => total += freaks.people.length);
+    return total;
+  }
+
+  @action
+  toggleExpandAll() {
+    this.expandAll = !this.expandAll;
+    this.house.toggleAllAccordions(this.expandAll);
+  }
 
   @action
   exportToCsv() {
@@ -37,7 +52,7 @@ export default class ReportsFreakingYearsController extends Controller {
     people.sort((a,b) => {
       const lastCmp = a.last_name.localeCompare(b.last_name);
 
-      if (lastCmp == 0) {
+      if (!lastCmp) {
         return a.first_name.localeCompare(b.first_name);
       } else {
         return lastCmp;

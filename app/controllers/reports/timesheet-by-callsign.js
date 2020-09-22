@@ -1,31 +1,10 @@
 import Controller from '@ember/controller';
-import { action, computed, set } from '@ember/object';
-import { run, later } from '@ember/runloop';
+import { action, computed } from '@ember/object';
 
 export default class ReportsTimesheetByCallsignController extends Controller {
   queryParams = ['year'];
 
-  @action
-  togglePerson(person) {
-    set(person, 'showing', !person.showing);
-  }
-
-  @action
-  toggleExpandAll() {
-    this.set('isExpanding', true);
-    later(() => {
-      run.schedule('afterRender', () => {
-        this.set('expandAll', !this.expandAll);
-        this.people.forEach((p) => set(p, 'showing', this.expandAll));
-        run.schedule('afterRender', () => {
-          this.set('isExpanding', false);
-        });
-      });
-    }, 10);
-
-  }
-
-  @action
+   @action
   scrollToCallsign(id) {
     this.house.scrollToElement(`#person-${id}`, false);
   }

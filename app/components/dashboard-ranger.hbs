@@ -1,8 +1,8 @@
 <h2 class="homepage-title">Welcome to the Secret Clubhouse</h2>
 {{#if (eq @photo.photo_status "missing")}}
-  <ChBox @title="Your Photo Is Needed" @type="warning">
+  <ChBox @title="Photo Is Needed" @type="warning" @icon="exclamation-triangle">
     <p>
-      {{fa-icon "exclamation-triangle" size="2x"}} You need to upload a photo
+      You need to upload a photo
       {{#if @person.isNonRanger}}
         to schedule shifts in Clubhouse.
       {{else}}
@@ -10,13 +10,15 @@
       {{/if}}
     </p>
     <p>
-      Note that you will <span class="text-danger">not be able to sign up for shifts</span>
+      Note that you will <b class="text-danger">not be able to sign up for shifts</b>
       until you have an approved Clubhouse photo. Usually photos are approved within 2 to 3 days.
     </p>
   </ChBox>
 {{else if (eq @photo.photo_status "rejected")}}
-  <ChAlert @type="danger">
-    {{fa-icon "times" size="2x"}} <strong>Your photo has been rejected.</strong> A new one will need to be submitted.
+  <ChBox @type="danger" @title="Photo rejected" @icon="times">
+    <p>
+      Your photo has been rejected. A new one will need to be submitted.
+    </p>
     <p>
       The following reason(s) are why the photo was rejected:
     </p>
@@ -31,14 +33,16 @@
         {{@photo.reject_message}}
       </p>
     {{/if}}
-    For a full list of photo requirements, please see <a target="_blank" rel="noopener noreferrer"
+    For a full list of photo requirements, please see
+    <a target="_blank" rel="noopener noreferrer"
                                                          href="https://docs.google.com/document/d/1hUqrJwdMG6XB5nk7Eh8nY2GH4uvAFTppmCKCmfidIvQ/edit?usp=sharing">this
     helpful document.</a>.
-  </ChAlert>
+  </ChBox>
 {{/if}}
 
 
-<PersonPhoto @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}} @containerClass="ml-2 float-lg-right" />
+<PersonPhoto @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}}
+             @containerClass="ml-2 float-lg-right"/>
 
 <div class="mt-1 mb-1">
   {{#if (lte @person.years.length 1)}}
@@ -54,7 +58,8 @@
 
 {{#if @milestones.surveys.sessions}}
   <ChBox @title="Your feedback on Ranger training is requested">
-    {{fa-icon "comment-dots" type="far" size="2x"}} Please take a few moments and provide feedback on the {{pluralize @milestones.surveys.sessions.length "training"}}
+    {{fa-icon "comment-dots" type="far" size="2x"}} Please take a few moments and provide feedback on the {{pluralize
+          @milestones.surveys.sessions.length "training"}}
     you attended:
     {{#each @milestones.surveys.sessions as |slot|}}
       <p class="my-1">
@@ -140,7 +145,8 @@
       Rangers must complete the Rangers Radio Checkout Form
       before being issued a radio. Radio forms are available at Ranger HQ or
       the form can be printed and filled out in advance. The form is located here:
-      <a href="{{config "RadioCheckoutFormUrl"}}" target="_blank" rel="noopener noreferrer">Rangers Radio Checkout Form</a>
+      <a href="{{config "RadioCheckoutFormUrl"}}" target="_blank" rel="noopener noreferrer">Rangers Radio Checkout
+        Form</a>
     </dd>
 
     {{#if (config "MotorpoolPolicyEnable")}}
@@ -166,13 +172,15 @@
 
     <dt>Ranger Policies</dt>
     <dd>Peruse our
-      <a href="{{config "RangerPoliciesUrl"}}" target="_blank" rel="noopener noreferrer">Ranger policies</a> (opens in a new
+      <a href="{{config "RangerPoliciesUrl"}}" target="_blank" rel="noopener noreferrer">Ranger policies</a> (opens in a
+      new
       window)
     </dd>
 
     <dt>Get Involved More With Special Groups</dt>
     <dd>
-      Learn how to <a href="{{config "JoiningRangerSpecialTeamsUrl"}}" target="_blank" rel="noopener noreferrer">join Ranger
+      Learn how to <a href="{{config "JoiningRangerSpecialTeamsUrl"}}" target="_blank" rel="noopener noreferrer">join
+      Ranger
       special teams</a> (opens in a new window)
     </dd>
   {{/if}}

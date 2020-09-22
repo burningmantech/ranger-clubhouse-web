@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {action, computed} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {run} from '@ember/runloop';
+import {schedule} from '@ember/runloop';
 
 export default class AutocompleteInputComponent extends Component {
   /**
@@ -188,7 +188,7 @@ export default class AutocompleteInputComponent extends Component {
       return;
     }
     setTimeout(() => {
-      run('afterRender', () => {
+      schedule('afterRender', () => {
         this.isFocused = false;
       })
     }, 100);
@@ -276,7 +276,7 @@ export default class AutocompleteInputComponent extends Component {
   resutsBoxInsertedEvent(element) {
     this.resultsElement = element;
 
-    run('afterRender', () => {
+    schedule('afterRender', () => {
       element.style.left = `${this.inputElement.offsetLeft}px`;
       element.style.width = `${this.inputElement.offsetWidth}px`;
     });

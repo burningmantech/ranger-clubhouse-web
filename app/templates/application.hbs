@@ -10,9 +10,9 @@
     {{/if}}
     </button>
     <LinkTo @route="me.overview" class="navbar-brand">
-      {{#if (eq (config "DeploymentEnvironment") "Staging")}}
+      {{#if this.session.isStaging}}
         <span class="text-danger">Staging Server</span>
-      {{else if (eq (config "DeploymentEnvironment") "Training")}}
+      {{else if this.session.isTraining}}
         <span class="text-danger">Training Server</span>
       {{else}}
         Clubhouse
@@ -396,7 +396,7 @@
     <div class="h4 alert alert-light-red text-center p-2 m-0">
       Training Server - Simulated Time {{moment-format this.groundHogDayTime "dddd, MMMM Do YYYY @ HH:mm"}}
     </div>
-  {{else if (and (not this.isDevelopment) (eq (config "DeploymentEnvironment") "Staging"))}}
+  {{else if this.session.isStaging}}
     <div class="h4 alert alert-light-red text-center p-2 m-0 d-print-none">
       You are on the Staging Server used for testing. This is not the production server.
     </div>

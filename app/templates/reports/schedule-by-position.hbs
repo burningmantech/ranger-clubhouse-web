@@ -2,30 +2,26 @@
 
 {{#if this.positions}}
   <p>
-    Jump to a position:
-  </p>
-  <p>
-    {{#each this.positions as |position|}}
-      <a href {{on "click" (fn this.scrollToPosition position)}}
-         class="d-inline-block border p-2 mr-2 mb-2">{{position.title}}</a>
+    Jump to a position starting with the letter:
+    {{#each this.letterOptions as |letter|}}
+      <a href {{on "click" (fn this.scrollToPosition letter.id)}}
+         class="d-inline-block border p-2 mr-2 mb-2">{{letter.letter}}</a>
     {{/each}}
   </p>
   <p>
-    <button type="button" class="btn btn-primary " {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>
+    Showing {{pluralize this.positions.length "position"}} for the year {{this.year}}.
+    <button type="button" class="btn btn-primary ml-4" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>
       {{if this.expandAll "Hide" "Expand"}} All
     </button>
-    {{#if this.isExpanding}}
-      <LoadingIndicator @text="Working"/>
-    {{/if}}
+
   </p>
+
   {{#each this.positions as |position|}}
-    <div class="border mb-2" id="position-{{position.id}}">
-      <div class="p-2 bg-light-gray">
-        <h4><a href {{on "click" (fn this.togglePosition position)}}>
-          {{fa-icon (if position.showing "caret-down" "caret-right")}} {{position.title}} </a>
-          ({{pluralize position.slots.length "shift"}})</h4>
-      </div>
-      {{#if position.showing}}
+    <ChAccordion id="position-{{position.id}}" @isOpen={{mut (get this.showingPositions position.id)}} as |accordion|>
+      <accordion.title>
+        {{position.title}} ({{pluralize position.slots.length "shift"}})
+      </accordion.title>
+      <accordion.body>
         <table class="table table-sm table-hover table-striped">
           <thead>
           <tr>
@@ -37,13 +33,14 @@
             <th class="w-45">Callsigns</th>
           </tr>
           </thead>
-
           <tbody>
           {{#each position.slots as |slot|}}
             <tr>
               <td class="w-15">{{shift-format slot.begins}}</td>
               <td class="w-15">{{shift-format slot.ends}}</td>
-              <td class="w-15"><PresentOrNot @value={{slot.description}} @empty="-"/></td>
+              <td class="w-15">
+                <PresentOrNot @value={{slot.description}} @empty="-"/>
+              </td>
               <td class="w-5 text-right">{{slot.sign_ups.length}}</td>
               <td class="w-5 text-right">{{slot.max}}</td>
               <td class="w-45">
@@ -58,8 +55,8 @@
           {{/each}}
           </tbody>
         </table>
-      {{/if}}
-    </div>
+      </accordion.body>
+    </ChAccordion>
   {{/each}}
 {{else}}
   <b class="text-danger">No {{this.year}} shifts were found.</b>

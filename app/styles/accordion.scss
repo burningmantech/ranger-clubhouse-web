@@ -1,0 +1,23 @@
+.accordion-container {
+  margin-bottom: 5px;
+  border: 1px solid #ced4da;
+}
+
+.accordion-title {
+  padding: 10px;
+  background-color: #e9ecef;
+  font-size: 1rem;
+
+  &:hover {
+    background-color: #dee2e6 !important;
+
+  }
+}
+
+.accordion-title-icon {
+  margin-right: 5px;
+}
+
+.accordion-body {
+  padding: 5px;
+}

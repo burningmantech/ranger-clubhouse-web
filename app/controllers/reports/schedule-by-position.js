@@ -1,39 +1,36 @@
 import Controller from '@ember/controller';
-import { action, set } from '@ember/object';
-import { run, later } from '@ember/runloop';
-import { tracked } from '@glimmer/tracking';
+import {action, computed} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 
 export default class ReportsScheduleByPositionController extends Controller {
   queryParams = ['year'];
 
-  @tracked isExpanding = false;
   @tracked expandAll = false;
 
   @action
-  togglePosition(position, event) {
-    event.preventDefault();
-    set(position, 'showing', !position.showing);
-  }
-
-  @action
   toggleExpandAll() {
-    this.isExpanding = true;
-    later(() => {
-      run.schedule('afterRender', () => {
-        this.expandAll = !this.expandAll;
-        this.positions.forEach((p) => set(p, 'showing', this.expandAll));
-        run.schedule('afterRender', () => {
-          this.isExpanding = false;
-        });
-      });
-    }, 10);
-
+    this.expandAll = !this.expandAll;
+    this.house.toggleAllAccordions(this.expandAll);
   }
 
   @action
-  scrollToPosition(position, event) {
+  scrollToPosition(id, event) {
     event.preventDefault();
-    set(position, 'showing', true);
-    this.house.scrollToElement(`#position-${position.id}`, false);
+    this.house.scrollToElement(`#position-${id}`, true);
+  }
+
+  @computed('positions')
+  get letterOptions() {
+    let letters = {};
+    this.positions.forEach((p) => {
+      const letter = p.title.charAt(0).toUpperCase();
+      if (!letters[letter]) {
+        letters[letter] = p.id;
+      }
+    });
+
+    return Object.keys(letters).sort().map((letter) => {
+      return { id: letters[letter], letter };
+    });
   }
 }

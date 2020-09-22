@@ -2,7 +2,7 @@
 
 <div class="form-row my-3 no-gutters">
   <label class="col-form-label">Day Filter</label>
-   <div class="col-auto">
+  <div class="col-auto">
     <ChForm::Select @name="dayFilter" @value={{this.dayFilter}} @options={{this.dayOptions}} @onChange={{action
             (mut this.dayFilter)}}  @controlClass="form-control"/>
   </div>
@@ -30,24 +30,17 @@
 {{/if}}
 
 {{#each this.creditGroups as |group|}}
-  <div class="border mb-2">
-    <div class="bg-light-gray p-2">
-      <a href {{on "click" (fn this.toggleShowing group)}} class="h4">
-        {{fa-icon (if (get this.showingGroups group.position_id) "caret-down" "caret-right")}} {{group.title}} ({{group.credits.length}})
-      </a>
-      {{#if (get this.showingGroups group.position_id)}}
-        <button type="button" {{on "click" (fn this.startCopy group.position_id)}}
-                class="btn btn-secondary btn-sm ml-2">
-          Bulk Copy
-        </button>
-      {{/if}}
-    </div>
-    {{! template-lint-disable table-groups}}
-    {{#if (get this.showingGroups group.position_id)}}
+  <ChAccordion as |accordion|>
+    <accordion.title>
+      {{group.title}} ({{group.credits.length}})
+    </accordion.title>
+    <accordion.body>
+      <p>
+      <button type="button" {{on "click" (fn this.startCopy group.position_id)}} class="btn btn-secondary btn-sm">
+        Bulk Copy
+      </button>
+      </p>
       <table class="table table-sm table-hover table-striped">
-        <caption>
-          {{group.title}}
-        </caption>
         <thead>
         <tr>
           <th class="w-5">ID</th>
@@ -78,8 +71,8 @@
         {{/each}}
         </tbody>
       </table>
-    {{/if}}
-  </div>
+    </accordion.body>
+  </ChAccordion>
 {{/each}}
 
 {{#if this.credit}}

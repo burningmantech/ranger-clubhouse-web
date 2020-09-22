@@ -15,7 +15,6 @@ export default class ReportsTimesheetByCallsignRoute extends Route {
   setupController(controller, model) {
     controller.set('people', model.people);
     controller.set('year', this.year);
-    controller.set('isExpanding', false);
   }
 
   resetController(controller, isExiting) {

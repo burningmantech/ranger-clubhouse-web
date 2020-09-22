@@ -5,11 +5,11 @@
 </p>
 {{#unless this.isCurrentYear}}
   <ChAlert @type="warning">
-    Warning: You are viewing a past schedule ({{this.year}}).
+    Warning: You are viewing a past schedule ({{@year}}).
   </ChAlert>
 {{/unless}}
 {{#if (and this.noPermissionToSignUp (not this.requirementsOverride))}}
-  <ChBox @title="Sign ups for training and/or shifts is not allowed" @type="warning" @icon="exclamation-circle">
+  <ChBox @title="Sign ups for training and/or shifts is not allowed" @type="danger" @icon="exclamation-circle">
     {{#if (eq this.permission.photo_status "error")}}
       <h3 class="mt-2">Oops! There was a problem communicating with our photo server.</h3>
       <p>
@@ -57,12 +57,10 @@
                                       @url={{this.permission.online_training_url}} />
                 to take the Online Training Ranger course. The course will take 1 to 2 hours to complete.
               {{else}}
-                <b class="text-danger">{{@person.callsign}} will need to login and complete Online
-                  Training.</b>
+                <b>{{@person.callsign}} will need to login and complete Online Training.</b>
               {{/if}}
             {{else}}
-              {{fa-icon "hourglass-half"}} <b class="text-danger">Unfortunately, the Online Training course is still
-              being worked on.</b><br>
+              Unfortunately, the Online Training course is still being worked on.
               Please check back later.
             {{/if}}
           </li>
@@ -90,9 +88,10 @@
     {{/if}}
 
     {{#if this.isAdmin}}
-      <p class="text-danger mt-2">
-        As a Clubhouse Admin, you may override the requirement(s) to gain access to the schedule. You better know what
-        you are doing! YOUR ACTIONS WILL BE LOGGED.
+      <p class="mt-2">
+        As a Clubhouse Admin, you may override the requirement(s) to gain access to the schedule.
+        <b class="text-danger">ALL ACTIONS WILL BE LOGGED.</b>
+
       </p>
       <p>
         <button type="button" class="btn btn-danger" {{on "click" this.setRequirementsOverride}}>
@@ -104,11 +103,9 @@
 {{/if}}
 {{#if (or this.requirementsOverride (not this.noPermissionToSignUp))}}
   {{#if this.requirementsOverride}}
-    <ChAlert @type="danger">
-      {{fa-icon "exclamation-triangle"}}
-      The scheduling requirements override is enabled. You better know what you are doing! Remember, the Clubhouse
-      logs all scheduling actions.
-    </ChAlert>
+    <ChBox @type="danger" @icon="exclamation-triangle">
+      The scheduling requirements override is enabled. <b class="text-danger">All scheduling actions are logged.</b>
+    </ChBox>
   {{/if}}
   {{#if (and @person.isRanger this.permission.recommend_burn_weekend_shift)}}
     <div class="border p-2 border-danger mb-2 d-print-none">
@@ -176,90 +173,14 @@
       </div>
 
       <p>Showing {{this.viewSlots.length}} of {{this.availableSlots.length}}</p>
-
-      {{#each this.slotGroups as |group|}}
-        <div class="schedule-table schedule-signup-sheet">
-          <div class="schedule-title">
-            {{if group.show (fa-icon "caret-down") (fa-icon "caret-right")}}
-            <a href {{on "click" (fn this.toggleGroup group)}}>{{group.title}} ({{group.slots.length}})</a>
-          </div>
-          {{#if group.show}}
-            <div class="schedule-row schedule-header">
-              <div class="schedule-time">From</div>
-              <div class="schedule-time">To</div>
-              <div class="schedule-credits">Credits</div>
-              <div class="schedule-description">Description</div>
-              <div class="schedule-signups">Sign Ups</div>
-              <div class="schedule-actions">Actions</div>
-            </div>
-            {{#each group.slots as |slot|}}
-              <div class="schedule-row {{if slot.person_assigned "table-success"}}">
-                <div class="schedule-time">
-                  {{#if slot.person_assigned}}
-                    {{fa-icon "check" title="You are signed up for this shift."}}
-                  {{else if (not slot.slot_active)}}
-                    {{fa-icon "exclamation-triangle" title="Shift is inactive and may not be signed up for"}}
-                  {{/if}}
-                  {{shift-format slot.slot_begins}}
-                </div>
-                <div class="schedule-time">{{shift-format slot.slot_ends}}</div>
-                <div class="schedule-credits">
-                  <span class="schedule-sm-label">Credits:</span> {{credits-format slot.credits}}
-                </div>
-                <div class="schedule-description">
-                  <span class="schedule-sm-label">{{group.title}} - </span>
-                  <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
-                </div>
-                <div class="schedule-signups">{{slot-full-indicator slot.slot_signed_up slot.slot_max}}</div>
-                <div class="schedule-actions">
-                  <button type="button" {{on "click" (fn this.showPeople slot)}} class="btn btn-secondary btn-sm"
-                          title="View people signed up"
-                          disabled={{slot.is_retrieving_people}}>
-                    {{#if slot.is_retrieving_people}}
-                      {{fa-icon "spinner" spin="true"}}
-                    {{else}}
-                      {{fa-icon "users" type="fas"}}
-                    {{/if}}
-                    Sign Ups
-                  </button>
-                  {{#if slot.person_assigned}}
-                    {{#if (or this.isAdmin (not slot.has_started))}}
-                    {{! Only allow admins to remove a sign up that has started}}
-                      <button type="button" {{on "click" (fn this.leaveSlot slot)}} class="btn btn-light-red btn-sm"
-                              title="Remove from schedule" disabled={{slot.is_submitting}}>
-                        {{#if slot.is_submitting}}
-                          {{fa-icon "spinner" spin=true}}
-                        {{else}}
-                          {{fa-icon "trash-alt" type="fas"}}
-                        {{/if}}
-                        Remove
-                      </button>
-                    {{/if}}
-                  {{else}}
-                  {{! Only show action buttons for the current year}}
-                    {{#if this.isCurrentYear}}
-                      {{#if slot.slot_active}}
-                        {{#if (or this.isAdmin (and (not slot.isFull) (not slot.has_started)))}}
-                          <button type="button" {{on "click" (fn this.joinSlot slot)}} class="btn btn-primary btn-sm"
-                                  title="Sign up for the shift" disabled={{slot.is_submitting}}>
-                            {{#if slot.is_submitting}}
-                              {{fa-icon "spinner" spin=true}}
-                            {{else}}
-                              {{fa-icon "user-plus" type="fas"}}
-                            {{/if}}
-                            Add
-                          </button>
-                        {{/if}}
-                      {{else}}
-                        <small class="text-danger">Inactive</small>
-                      {{/if}}
-                    {{/if}}
-                  {{/if}}
-                </div>
-              </div>
-            {{/each}}
-          {{/if}}
-        </div>
+      {{#each this.positions as |position|}}
+        <SchedulePositionList @position={{position}}
+                              @showPeople={{this.showPeople}}
+                              @joinSlot={{this.joinSlot}}
+                              @leaveSlot={{this.leaveSlot}}
+                              @isAdmin={{this.isAdmin}}
+                              @isCurrentYear={{this.isCurrentYear}}
+        />
       {{else}}
         <div class="text-danger">There are no shifts which match.</div>
       {{/each}}

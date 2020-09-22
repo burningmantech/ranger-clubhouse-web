@@ -2,7 +2,7 @@
 
 {{#if this.letterOptions}}
   <p>
-    Jump to callsigns starting with the letter:
+    Jump to the callsigns starting with the letter:
   </p>
   <p>
     {{#each this.letterOptions as |letter|}}
@@ -10,34 +10,25 @@
          class="d-inline-block border p-2 mr-2 mb-2">{{letter.letter}}</a>
     {{/each}}
   </p>
-  <p>
-    <button type="button" class="btn btn-primary " {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>
-      {{if this.expandAll "Hide" "Expand"}} All
-    </button>
-    {{#if this.isExpanding}}
-      <LoadingIndicator @text="Working"/>
-    {{/if}}
-  </p>
 {{/if}}
-
-{{#each this.people as |person|}}
-  <div class="border mb-2" id="person-{{person.id}}">
-    <div class="bg-light-gray p-2">
-      <a href class="h4" {{on "click" (fn this.togglePerson person)}}>
-        {{fa-icon (if person.showing "caret-down" "caret-right")}} {{person.callsign}}
-      </a>
-    </div>
-    {{#if person.showing}}
-      <div class="p-2">
-        <div class="ml-1">
-          <LinkTo @route="person.index" @model={{person.id}} class="btn btn-secondary btn-sm">
+<p>
+  Showing {{pluralize this.people.length "person"}}
+</p>
+<div class="max-width-700">
+  {{#each this.people as |person|}}
+    <ChAccordion id="person-{{person.id}}" as |accordion|>
+      <accordion.title>{{person.callsign}} </accordion.title>
+      <accordion.body>
+        <p>
+          <LinkTo @route="person.index" @model={{person.id}}>
             View {{person.callsign}}
           </LinkTo>
-          <LinkTo @route="person.timesheet" @model={{person.id}} class="btn btn-secondary btn-sm" @year={{this.year}}>
+          |
+          <LinkTo @route="person.timesheet" @model={{person.id}} @year={{this.year}}>
             View {{this.year}} Timesheet
           </LinkTo>
-        </div>
-        <table class="table table-striped table-hover table-width-auto mt-2">
+        </p>
+        <table class="table table-striped table-hover table-width-auto">
           <thead>
           <tr>
             <th>From</th>
@@ -46,7 +37,6 @@
             <th>Position</th>
           </tr>
           </thead>
-
           <tbody>
           {{#each person.slots as |slot|}}
             <tr>
@@ -60,11 +50,11 @@
           {{/each}}
           </tbody>
         </table>
-      </div>
-    {{/if}}
-  </div>
-{{else}}
-  <p>
-    <b class="text-danger">No {{this.year}} schedules were found.</b>
-  </p>
-{{/each}}
+      </accordion.body>
+    </ChAccordion>
+  {{else}}
+    <p>
+      <b class="text-danger">No {{this.year}} schedules were found.</b>
+    </p>
+  {{/each}}
+</div>

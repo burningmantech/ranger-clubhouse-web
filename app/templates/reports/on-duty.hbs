@@ -11,12 +11,12 @@
 {{#unless this.over_hours}}
   <ChForm @formId="date-form" @formFor={{this.dateForm}} @validator={{this.dateValidations}}
           @onSubmit={{this.submitForm}} as |f|>
-    <div class="form-row mt-4">
+    <div class="form-row m2-4">
       <div class="col-auto">
         <label class="col-form-label">Date &amp; time to view:</label>
       </div>
       <div class="col-auto">
-        <f.input @name="date" @type="datetime" />
+        <f.input @name="date" @type="datetime"/>
       </div>
       <div class="col-auto">
         <f.submit @label="Submit"/>
@@ -28,12 +28,19 @@
 
 <p>
   Showing {{pluralize this.timesheet.length "person"}} on duty in {{pluralize this.positions.length "position"}}.
+  <button type="button" class="btn btn-secondary ml-2" {{action this.toggleExpandAll}}>
+    {{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}
+  </button>
+
 </p>
 {{#each this.positions as |position|}}
-  <div class="row">
-    <div class="col-sm-12 col-md-8 col-lg-6">
-      <table class="table table-sm table-striped table-hover ">
-        <caption>{{position.title}} - {{pluralize position.timesheets.length "person"}}</caption>
+  <div class="max-width-700">
+  <ChAccordion as |accordion|>
+    <accordion.title>
+      {{position.title}} - {{pluralize position.timesheets.length "person"}}
+    </accordion.title>
+    <accordion.body>
+      <table class="table table-sm table-striped table-hover table-width-auto">
         <thead>
         <tr>
           <th class="w-25">Callsign</th>
@@ -68,7 +75,8 @@
         {{/each}}
         </tbody>
       </table>
-    </div>
+    </accordion.body>
+  </ChAccordion>
   </div>
 {{else}}
   <p>

@@ -1,23 +1,13 @@
 import Controller from '@ember/controller';
-import { action, computed, set } from '@ember/object';
+import { action, computed } from '@ember/object';
 import { CountryLabels } from 'clubhouse/constants/countries';
-import { run, later } from '@ember/runloop';
 import _ from 'lodash';
 
 export default class ReportsPeopleByLocationController extends Controller {
   @action
   toggleExpandAll() {
-    this.set('isExpanding', true);
-    later(() => {
-      run.schedule('afterRender', () => {
-        this.set('expandAll', !this.expandAll);
-        this.countries.forEach((p) => set(p, 'showing', this.expandAll));
-        run.schedule('afterRender', () => {
-          this.set('isExpanding', false);
-        });
-      });
-    }, 10);
-
+    this.expandAll = !this.expandAll;
+    this.house.toggleAllAccordions(this.expandAll);
   }
 
   @computed('year')
@@ -33,20 +23,17 @@ export default class ReportsPeopleByLocationController extends Controller {
     ];
   }
 
-  @action
-  toggleCountry(country) {
-    set(country, 'showing', !country.showing);
-  }
-
   @computed('viewPeople')
   get countries() {
-    return _.map(_.groupBy(this.viewPeople, 'country'), (people, country) => {
+    const list =  _.map(_.groupBy(this.viewPeople, 'country'), (people, country) => {
       return {
         country,
         full_name: CountryLabels[country] || country,
         people
       }
     });
+    list.sort((a,b) => a.full_name.localeCompare(b.full_name));
+    return list;
   }
 
   @computed('people', 'filter')

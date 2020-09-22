@@ -81,23 +81,21 @@ export default class AdminCreditsController extends Controller {
   @tracked isCreditSubmitting = false;
   @tracked credit = null;
 
-  @tracked showingGroups;
-
   @computed('credits[]', 'credits.@each.{position_id,start_time}', 'dayFilter', 'positionFilter')
   get viewCredits() {
     let credits = this.credits;
     const dayFilter = this.dayFilter;
     const positionFilter = this.positionFilter;
 
-    if (positionFilter != 'all') {
+    if (positionFilter !== 'all') {
       credits = credits.filter((p) => p.position_id == positionFilter);
     }
 
-    if (dayFilter != 'all') {
+    if (dayFilter !== 'all') {
       if (dayFilter == 'upcoming') {
-        credits = credits.filter((p) => p.has_started == false);
+        credits = credits.filter((p) => !p.has_started);
       } else {
-        credits = credits.filter((p) => p.creditDay == dayFilter);
+        credits = credits.filter((p) => p.creditDay === dayFilter);
       }
     }
 
@@ -231,12 +229,6 @@ export default class AdminCreditsController extends Controller {
     this.modal.confirm('Unsaved Changes', 'The changes have not been saved. Are you sure you wish to leave this form without saving first?', () => {
       this.set('credit', null);
     })
-  }
-
-  @action
-  toggleShowing(group, event) {
-    event.preventDefault();
-    this.showingGroups = { ...this.showingGroups, [group.position_id]: !this.showingGroups[group.position_id] };
   }
 
   @action
