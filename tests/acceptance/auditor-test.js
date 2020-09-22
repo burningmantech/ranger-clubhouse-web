@@ -76,7 +76,6 @@ module('Acceptance | auditor', function (hooks) {
     await visit('/me/schedule');
 
     assert.dom('.schedule-itinerary').exists();
-    assert.dom('.schedule-signup-sheet').exists({count: 2});
   });
 
   test('Auditor should be able to visit the Personal Info page', async function (assert) {

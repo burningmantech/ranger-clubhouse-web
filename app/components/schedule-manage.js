@@ -117,21 +117,21 @@ export default class ScheduleManageComponent extends Component {
   }
 
   @computed('viewSlots')
-  get slotGroups() {
+  get positions() {
     const slots = this.viewSlots;
-    let groups = A();
+    const groups = {};
     slots.forEach((slot) => {
-      const title = slot.position_title;
-      let group = groups.findBy('title', title);
+      const position_id = slot.position_id;
+      const group = groups[position_id];
 
       if (group) {
         group.slots.push(slot);
       } else {
-        groups.pushObject({title, position_id: slot.position_id, slots: [slot]});
+        groups[position_id] = {title: slot.position_title, position_id, slots: [slot]};
       }
     });
 
-    return groups.sortBy('title');
+    return Object.values(groups).sort((a,b) => a.title.localeCompare(b.title));
   }
 
   @computed('availableSlots', 'slots', 'isCurrentYear')

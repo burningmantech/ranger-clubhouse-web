@@ -48,87 +48,85 @@
 {{/if}}
 
 {{#each this.slotGroups as |group|}}
-  <div class="schedule-title mt-2">
-    {{#if (get this.showingGroups group.position_id)}}
-      <div class="float-right mr-4">
-        <button type="button" class="btn btn-secondary btn-sm" {{action this.startCopy group.position_id}}>Bulk Copy</button>
-        <button type="button" class="btn btn-primary btn-sm" {{action this.activate group}}>Activate All</button>
-        <button type="button" class="btn btn-primary btn-sm" {{action this.deactivate group}}>Deactivate All</button>
-      </div>
-    {{/if}}
-    <a href {{on "click" (fn this.toggleShowing group)}}>
-      {{fa-icon (if (get this.showingGroups group.position_id) "caret-down" "caret-right")}} {{group.title}}
-      ({{group.slots.length}}
+  <ChAccordion as |box|>
+    <box.title>
+      {{group.title}} ({{group.slots.length}}
       {{~#if group.inactive}}
         / <span class="text-danger">{{group.inactive}} inactive</span>
       {{~/if}})
-    </a>
-  </div>
-  {{! template-lint-disable table-groups}}
-  {{#if (get this.showingGroups group.position_id)}}
-    <table class="table table-sm table-hover">
-      <thead>
-      <tr>
-        <th>ID</th>
-        <th>From</th>
-        <th>To</th>
-        <th class="text-right">Max</th>
-        <th class="text-right">Count</th>
-        <th class="text-right">Credits</th>
-        <th>Description</th>
-        <th>Active</th>
-        <th>Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each group.slots as |slot|}}
-        <tr id="slot-{{slot.id}}">
-          <td>{{slot.id}}</td>
-          <td>{{shift-format slot.begins}}</td>
-          <td>{{shift-format slot.ends}}</td>
-          <td class="text-right">{{slot.max}}</td>
-          <td class="text-right">{{slot.signed_up}}</td>
-          <td class="text-right">{{credits-format slot.credits}}</td>
-          <td>
-            <SlotInfoLink @description={{slot.description}} @info={{slot.url}} />
-          </td>
-          <td clas="text-center">
-            {{#if slot.active}}
-              {{fa-icon "check"}}
-            {{else}}
-              <span class="text-danger">{{fa-icon "times"}}</span>
-            {{/if}}
-          </td>
-          <td>
-            <button type="button" {{action this.repeatSlot slot}} class="btn btn-secondary btn-sm">
-              {{fa-icon "clone"}} Repeat
-            </button>
-            <button type="button" {{action this.repeatSlotAdd24Hours slot}} class="btn btn-secondary btn-sm">
-              {{fa-icon "clone"}} Repeat+24
-            </button>
-            <button type="button" {{action this.deleteSlot slot}} class="btn btn-danger btn-sm">
-              {{fa-icon "trash-alt"type="fas"}} Delete
-            </button>
-            <button type="button" {{action editSlot slot}} class="btn btn-primary btn-sm">
-              {{fa-icon "edit"}} Edit
-            </button>
-          </td>
+    </box.title>
+    <box.body>
+      <p>
+        <button type="button" class="btn btn-primary btn-sm" {{action this.activate group}}>Activate All</button>
+        <button type="button" class="btn btn-primary btn-sm" {{action this.deactivate group}}>Deactivate All</button>
+        <button type="button" class="btn btn-secondary btn-sm" {{action this.startCopy group.position_id}}>
+          Bulk Copy
+        </button>
+      </p>
+      <table class="table table-sm table-hover">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>From</th>
+          <th>To</th>
+          <th class="text-right">Max</th>
+          <th class="text-right">Count</th>
+          <th class="text-right">Credits</th>
+          <th>Description</th>
+          <th>Active</th>
+          <th>Actions</th>
         </tr>
-        {{#if slot.trainer_slot}}
-          <tr class="{{if slot.trainer_slot "tr-no-border"}}">
-            <td colspan="8">
-              Multiplier slot:
-              <a href="#slot-{{slot.trainer_slot.id}}">
-                #{{slot.trainer_slot.id}} {{slot.trainer_slot_title}} {{slot.trainer_slot.description}} {{shift-format
-                      slot.trainer_slot.begins}}
-              </a>
+        </thead>
+        <tbody>
+        {{#each group.slots as |slot|}}
+          <tr id="slot-{{slot.id}}">
+            <td>{{slot.id}}</td>
+            <td>{{shift-format slot.begins}}</td>
+            <td>{{shift-format slot.ends}}</td>
+            <td class="text-right">{{slot.max}}</td>
+            <td class="text-right">{{slot.signed_up}}</td>
+            <td class="text-right">{{credits-format slot.credits}}</td>
+            <td>
+              <SlotInfoLink @description={{slot.description}} @info={{slot.url}} />
+            </td>
+            <td clas="text-center">
+              {{#if slot.active}}
+                {{fa-icon "check" color="success"}}
+              {{else}}
+                {{fa-icon "times" color="danger"}}
+              {{/if}}
+            </td>
+            <td>
+              <button type="button" {{action this.repeatSlot slot}} class="btn btn-secondary btn-sm">
+                {{fa-icon "clone"}} Repeat
+              </button>
+              <button type="button" {{action this.repeatSlotAdd24Hours slot}} class="btn btn-secondary btn-sm">
+                {{fa-icon "clone"}} Repeat+24
+              </button>
+              <button type="button" {{action this.deleteSlot slot}} class="btn btn-danger btn-sm">
+                {{fa-icon "trash-alt"type="fas"}} Delete
+              </button>
+              <button type="button" {{action editSlot slot}} class="btn btn-primary btn-sm">
+                {{fa-icon "edit"}} Edit
+              </button>
             </td>
           </tr>
-        {{/if}}
-      {{/each}}
-      </tbody>
-    </table>
-  {{/if}}
+          {{#if slot.trainer_slot}}
+            <tr class="{{if slot.trainer_slot "tr-no-border"}}">
+              <td colspan="8">
+                Multiplier slot:
+                <a href="#slot-{{slot.trainer_slot.id}}">
+                  #{{slot.trainer_slot.id}} {{slot.trainer_slot_title}} {{slot.trainer_slot.description}} {{shift-format
+                        slot.trainer_slot.begins}}
+                </a>
+              </td>
+            </tr>
+          {{/if}}
+        {{/each}}
+        </tbody>
+      </table>
+    </box.body>
+  </ChAccordion>
 {{/each}}
 
 {{#if this.slot}}

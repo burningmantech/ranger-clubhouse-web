@@ -9,7 +9,7 @@ module('Integration | Component | ch box', function(hooks) {
   test('it renders', async function(assert) {
      await render(hbs`<ChBox @title="box title">box body</ChBox>`);
 
-    assert.dom('.card-header').hasText('box title');
-    assert.dom('.card-body').hasText('box body');
+    assert.dom('h4').exists().hasText('box title');
+    assert.dom('.box-text').hasText('box body');
   });
 });

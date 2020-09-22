@@ -15,6 +15,7 @@ export default class ReportsFlakesRoute extends Route {
     controller.set('positions', model.positions);
     controller.set('date', model.date);
     controller.set('dateForm', { date: model.date });
+    controller.set('expandAll', false);
   }
 
   resetController(controller, isExiting) {

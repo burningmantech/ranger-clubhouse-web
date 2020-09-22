@@ -9,6 +9,7 @@ import currentYear from 'clubhouse/utils/current-year';
 import {Role} from 'clubhouse/constants/roles';
 import {isChangeset} from 'validated-changeset';
 import {InvalidError, ServerError, TimeoutError, AbortError, NotFoundError} from '@ember-data/adapter/error'
+import $ from 'jquery';
 
 export default class HouseService extends Service {
   @service toast;
@@ -407,5 +408,18 @@ export default class HouseService extends Service {
       script.addEventListener('error', () => reject());
       script.src = url; // Boom!
     });
+  }
+
+  /**
+   * Toggle all accordions on the page
+   */
+
+  toggleAllAccordions(show) {
+    $('.accordion-body').collapse(show ? 'show' : 'hide');
+  }
+
+  toggleSingleAccordion(containerId, show) {
+    $(`${containerId} .accordion-body`).collapse(show ? 'show' : 'hide');
+    this.scrollToElement(containerId, true);
   }
 }

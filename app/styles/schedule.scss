@@ -1,17 +1,8 @@
 .schedule-table {
-  border: (2 * $table-border-width) solid $table-border-color;
+  border: 2px solid $table-border-color;
   margin-bottom: 10px;
   font-size: 0.95em;
-  max-width: 1100px;
-}
-
-.schedule-title {
-  font-size: 1.2em;
-  font-weight: $display1-weight;
-  color: $headings-color;
-  font-weight: $headings-font-weight;
-  padding: 10px;
-  background-color: #ececec;
+  max-width: 1000px;
 }
 
 .schedule-header {
@@ -29,18 +20,13 @@
   display: flex;
   flex-wrap: wrap;
 
-  font-size: 0.95em;
-  padding: 5px;
+  font-size: 0.9em;
   border-top: 1px solid #ddd;
+  padding: 0 5px 10px 5px;
   width: 100%;
   > div {
     display: inline-block;
-    padding: 5px;
-  }
-
-  .schedule-line {
-    display: block !important;
-    flex: 0 1 100%;
+    margin-top: 5px;
   }
 }
 
@@ -58,27 +44,26 @@
   }
 }
 
-@media print, (min-width: 801px) {
+@media print, (min-width: map-get($grid-breakpoints, "lg")) {
+  .schedule-row > div {
+    padding-right: 5px;
+  }
   .schedule-time {
     width: 15%;
   }
 
   .schedule-duration {
-    width: 6%;
+    width: 5%;
     text-align: right;
   }
 
   .schedule-credits {
-    width: 8%;
+    width: 6%;
     text-align: right;
   }
 
   .schedule-description {
-    width: 25%;
-  }
-
-  .schedule-long-description {
-    width: 30%;
+    width: 24%;
   }
 
   .schedule-signups {
@@ -86,8 +71,20 @@
     text-align: center;
   }
 
-  .schedule-actions {
-    width: 20%;
+
+  @media not print {
+    .schedule-long-description {
+      width: 30%;
+    }
+    .schedule-actions {
+      width: 20%;
+    }
+  }
+
+  @media print {
+    .schedule-long-description {
+      width: 50%;
+    }
   }
 
   .schedule-total {
@@ -98,54 +95,56 @@
   }
 }
 
-@media only screen and (max-width: 800px) {
-  .schedule-table {
-    font-size: 1rem;
-  }
+@media not print {
+  @media (max-width: map-get($grid-breakpoints, "md")) {
+    .schedule-table {
+      font-size: 1rem;
+    }
 
-  .schedule-header {
-    display: none !important;
-  }
+    .schedule-header {
+      display: none !important;
+    }
 
-  .schedule-time {
-    width: 49%;
-  }
+    .schedule-time {
+      width: 49%;
+    }
 
-  .schedule-duration {
-    width: 49%;
-  }
+    .schedule-duration {
+      width: 49%;
+    }
 
-  .schedule-credits {
-    width: 100%;
-  }
+    .schedule-credits {
+      width: 100%;
+    }
 
-  .schedule-description {
-    width: 100%;
-  }
+    .schedule-description {
+      width: 100%;
+    }
 
-  .schedule-long-description {
-    width: 100%;
-  }
+    .schedule-long-description {
+      width: 100%;
+    }
 
-  .schedule-signups {
-    width: 100%;
-  }
+    .schedule-signups {
+      width: 100%;
+    }
 
-  .schedule-total {
-    width: 100%;
-  }
+    .schedule-total {
+      width: 100%;
+    }
 
-  .schedule-actions {
-    width: 100%;
-  }
+    .schedule-actions {
+      width: 100%;
+    }
 
-  .schedule-row button {
-    display: inline-block;
-    width: 49%;
-  }
+    .schedule-row button {
+      display: inline-block;
+      width: 49%;
+    }
 
-  .schedule-sm-label {
-    display: inline-block;
-    margin-right: 5px;
+    .schedule-sm-label {
+      display: inline-block;
+      margin-right: 5px;
+    }
   }
 }

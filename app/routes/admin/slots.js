@@ -25,7 +25,6 @@ export default class AdminSlotsRoute extends Route {
   setupController(controller, model) {
     controller.set('slot', null);
     controller.setProperties(model)
-    controller.set('showingGroups', {});
     controller.set('dayFilter', 'all');
     controller.set('activeFilter', 'all');
   }

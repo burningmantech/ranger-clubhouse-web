@@ -1,17 +1,14 @@
 <h1>People by Position</h1>
 
 <div class="form-row">
-  <label class="col-form-label col-1">Options</label>
+  <label class="col-form-label col-auto">Options</label>
   <div class="form-check form-check-inline">
     <Input @type="checkbox" id="on-playa" class="form-check-input" @checked={{onPlaya}} />
     <label for="on-playa" class="form-check-label">
       On playa only
     </label>
   </div>
-</div>
-
-<div class="form-row">
-  <label class="col-form-label col-1">Position types</label>
+  <label class="col-form-label col-auto">Position types</label>
   {{#each this.positionTypes as |type|}}
     <div class="form-check form-check-inline">
       <label class="form-check-label">
@@ -23,7 +20,7 @@
 </div>
 
 <div class="form-row mb-2">
-  <label class="col-form-label col-1">Statuses</label>
+  <label class="col-form-label col-auto">Statuses</label>
   {{#each this.statuses as |status idx|}}
     <div class="form-check form-check-inline">
       <Input @type="checkbox" @id="status-{{idx}}" class="form-check-input" @checked={{status.selected}} />
@@ -39,13 +36,9 @@
 </p>
 
 {{#each this.visiblePositions as |position|}}
-  <div class="border mb-2">
-    <div class="bg-light-gray p-2">
-      <a href class="h4" {{action toggleExpanded position}}>
-        {{fa-icon (if position.expanded "caret-down" "caret-right")}}
-        {{position.title}}
-      </a>
-
+  <ChAccordion as |accordion|>
+    <accordion.title>
+      {{position.title}}
       {{#if position.allRangers}}
         &ndash; all rangers
       {{/if}}
@@ -54,48 +47,36 @@
       {{/if}}
       &ndash; {{pluralize position.totalPeople "person"}}
       ({{position.onPlayaCount}} on playa)
-      {{#if (not-eq position.visiblePeople.length position.people.length)}}
-        {{pluralize position.visiblePeople.length "person"}} shown
-      {{/if}}
-      {{#if (or position.allRangers position.allPeople)}}
-        &ndash; {{pluralize position.missingPeople.length "unassigned person"}}
+      {{position.visiblePeople.length}} of {{pluralize position.people.length  "person"}} shown
+      {{#if (and position.missingPeople.length (or position.allRangers position.allPeople))}}
+        &ndash; <span class="text-danger">{{pluralize position.missingPeople.length "unassigned person"}}</span>
         ({{position.missingOnPlayaCount}} on playa)
       {{/if}}
       &ndash; {{position.type}}
-    </div>
-    {{#if position.expanded}}
-      <div class="p-2">
+    </accordion.title>
+    <accordion.body>
+      {{#if accordion.isOpen}}
         {{#if position.people}}
           {{#if (and position.allRangers position.visiblePeople.length)}}
-            <br>Note: {{position.title}} is granted to all active and inactive rangers.
-            The following list is just people who aren't active/inactive.
+            <p>
+              Note: {{position.title}} is granted to all active and inactive rangers.
+              The following list is just people who aren't active/inactive.
+            </p>
           {{/if}}
-          <table class="table table-hover table-width-auto">
-            <thead>
-            <tr>
-              <th>Callsign</th>
-              <th>Status</th>
-              <th>On playa</th>
-            </tr>
-            </thead>
-            <tbody>
+          <div class="callsign-list">
             {{#each position.visiblePeople as |person|}}
-              <tr>
-                <td>
-                  <PersonLink @person={{person}} />
-                </td>
-                <td>{{person.status}}</td>
-                <td>{{#if person.on_site}}{{fa-icon "check"}}{{/if}}</td>
-              </tr>
+              <div>
+                <PersonLink @person={{person}} /> {{#if person.on_site}}{{fa-icon "check" color="success"}}{{/if}}<br>
+                &lt;{{person.status}}&gt;
+              </div>
             {{/each}}
-            </tbody>
-          </table>
+          </div>
         {{/if}}
         {{#if (and position.missingPeople position.missingPeople.length)}}
-          <table class="table table-md table-hover table-width-auto">
+          <table class="table table-sm table-striped table-hover table-width-auto">
             <thead>
             <tr>
-              <td><span class="text-danger">{{fa-icon "exclamation-triangle"}}</span></td>
+              <th>&nbsp;</th>
               <th>Callsign</th>
               <th>Status</th>
               <th>On playa</th>
@@ -105,22 +86,24 @@
             <tbody>
             {{#each position.missingPeople as |person|}}
               <tr>
-                <td><span class="text-danger">{{fa-icon "exclamation-triangle"}}</span></td>
+                <td>{{fa-icon "exclamation-triangle" color="danger"}}</td>
                 <td>
                   <PersonLink @person={{person}} />
                 </td>
                 <td>{{person.status}}</td>
-                <td>{{#if person.on_site}}{{fa-icon "check" title="On playa"}}{{/if}}</td>
-                <td>{{position.title}} not assigned</td>
+                <td>{{#if person.on_site}}{{fa-icon "check" color="green"}}{{/if}}</td>
+                <td>{{position.title}}</td>
               </tr>
             {{/each}}
             </tbody>
           </table>
         {{/if}}
-        <a href {{action this.toggleExpanded position}}>
-          Close {{position.title}}
-        </a>
-      </div>
-    {{/if}}
-  </div>
+        <div class="mt-2">
+          <button type="button" class="btn btn-secondary btn-sm" {{action accordion.closeAction}}>
+            Close {{position.title}}
+          </button>
+        </div>
+      {{/if}}
+    </accordion.body>
+  </ChAccordion>
 {{/each}}

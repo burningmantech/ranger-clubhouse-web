@@ -1,10 +1,8 @@
 <h3>Access Documents</h3>
-Showing {{pluralize this.documents.length "access document"}}
-({{if this.isShowingAll "all - current/used/etc." "current"}})
-{{#if this.isLoading}}
-  <LoadingIndicator @text="Loading all documents" />
-{{/if}}
-<table class="table table-sm table-hover table-width-auto">
+<div class="mb-2">
+  Showing {{pluralize this.documents.length (if this.isShowingAll "all access document" "current access document")}}
+</div>
+<table class="table  table-striped table-hover table-width-auto">
   <thead>
   <tr>
     <th>ID</th>
@@ -13,10 +11,9 @@ Showing {{pluralize this.documents.length "access document"}}
     <th>Access Date</th>
     <th>Source Year</th>
     <th>Expires in</th>
-    <th>Other Details</th>
+    <th>WAP SO Name</th>
   </tr>
   </thead>
-
   <tbody>
   {{#each this.documents as |document|}}
     <tr>
@@ -53,7 +50,6 @@ Showing {{pluralize this.documents.length "access document"}}
   {{/each}}
   </tbody>
 </table>
-
 <p>
   Delivery Method:
   {{#if this.delivery}}
@@ -69,23 +65,29 @@ Showing {{pluralize this.documents.length "access document"}}
 </p>
 
 <p>
-  <button type="button" class="btn btn-primary btn-sm" {{action this.newAccessDocument}}>New Access Document</button>
-  <button type="button" class="btn btn-secondary btn-sm" {{action this.editDelivery}}>Edit Delivery Method</button>
-  <button type="button" class="btn btn-secondary btn-sm" {{action this.showAllAction}} disabled={{this.isLoading}}>
+  <button type="button" class="btn btn-primary" {{action this.newAccessDocument}}>{{fa-icon "plus"}} New Access
+    Document
+  </button>
+  <button type="button" class="btn btn-secondary" {{action this.editDelivery}}>{{fa-icon "edit"}} Edit Delivery
+    Method
+  </button>
+  <button type="button" class="btn btn-secondary" {{action this.showAction}}
+          disabled={{this.isLoading}}>
     {{#if this.isLoading}}
-      <LoadingIndicator @text="Retrieving"/>
+      <LoadingIndicator @text="Loading"/>
     {{else}}
-      Show All Documents
+      Show {{if this.isShowingAll "Current" "All"}} Documents
     {{/if}}
   </button>
-  <LinkTo @route="person.tickets">View Tickets &amp; Stuff</LinkTo>
 </p>
-
+<p>
+  <LinkTo @route="person.tickets" class="ml-2">View {{this.person.callsign}}'s Tickets &amp; Stuff page</LinkTo>
+</p>
 {{#if this.entry}}
   <ModalDialog @title={{concat (if entry.isNew "Create A New" "Edit ") " Access Document For " person.callsign}}
                as |Modal|>
-    <ChForm @formId="entry" @formFor={{this.entry}}
-            @onSubmit={{this.saveAccessDocument}} @onCancel={{this.cancelAccessDocument}} as |f|>
+    <ChForm @formId="entry" @formFor={{this.entry}} @onSubmit={{this.saveAccessDocument}}
+            @onCancel={{this.cancelAccessDocument}} as |f|>
       <Modal.body>
         <div class="form-row">
           <f.input @name="type" @type="select" @options={{this.typeOptions}} @label="Type" @grid="col-auto"/>
@@ -93,13 +95,15 @@ Showing {{pluralize this.documents.length "access document"}}
           <f.input @name="source_year" @type="select" @options={{this.yearOptions}} @label="Source Year"/>
           <f.input @name="expiry_year" @type="select" @options={{this.yearOptions}} @label="Good Through"/>
 
-          {{#if (and (not-eq f.model.type "reduced_price_ticket") (not-eq f.model.type "gift_ticket") (not-eq f.model.type "vehicle_pass"))}}
-            <f.input @name="admission_date" @label="Access Date" @type="select" @options={{this.admissionDateOptions}}
-                     @grid="col-auto"/>
-          {{/if}}
+          <f.input @name="admission_date" @label="Access Date" @type="select" @options={{this.admissionDateOptions}}
+                   @disabled={{or (eq f.model.type "reduced_price_ticket") (eq f.model.type "gift_ticket")
+                                  (eq f.model.type "vehicle_pass")}}
+                   @grid="col-auto"/>
         </div>
-
-        <f.input @name="name" @label="Name" @type="text" @size=40 @grid="col-auto"/>
+        <div class="form-row">
+          <f.input @name="name" @label="WAP SO Name" @type="text" @size=40 @grid="col-auto" @disabled={{not-eq
+                  f.model.type "work_access_pass_so"}}/>
+        </div>
         {{#unless entry.isNew}}
           <div class="form-row">
             <label class="col-form-label">Last Modified:</label>
@@ -119,9 +123,10 @@ Showing {{pluralize this.documents.length "access document"}}
             </div>
           </div>
         {{/unless}}
-
-        <f.input @name="additional_comments" @label="Additional Comments" @type="textarea" @rows=4 @cols=60
-                 @hint="(Your callsign and date will be automatically added to any additional comments you provide.)"/>
+        <div class="form-row">
+          <f.input @name="additional_comments" @label="Additional Comments" @type="textarea" @rows=2 @cols=60
+                   @hint="(Your callsign and date will be automatically added to any additional comments you provide.)"/>
+        </div>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if entry.isNew "Create" "Update"}}  @disabled={{this.entry.isSaving}} />
@@ -130,9 +135,9 @@ Showing {{pluralize this.documents.length "access document"}}
           <LoadingIndicator/>
         {{/if}}
         {{#unless entry.isNew}}
-          <button type="button" class="btn btn-danger float-right"
+          <button type="button" class="btn btn-danger ml-auto"
             {{action this.deleteAccessDocument entry}} disabled={{this.entry.isSaving}}>
-            Delete (Cancel) Document
+            Delete
           </button>
         {{/unless}}
       </Modal.footer>

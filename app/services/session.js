@@ -1,29 +1,31 @@
 import {inject as service} from "@ember/service";
-import { action } from '@ember/object';
+import {action} from '@ember/object';
 import SessionService from "ember-simple-auth/services/session";
 import User from "clubhouse/models/user";
 import MobileDetect from 'mobile-detect';
 import {debounce} from '@ember/runloop';
-
+import ENV from 'clubhouse/config/environment';
+import {config} from 'clubhouse/utils/config';
 
 const MOBILE_MAX_WIDTH = 719;
 const RESIZE_DEBOUNCE_DELY = 250;
 
-export default SessionService.extend({
-  store: service(),
+export default class extends SessionService {
+  @service store;
 
-  user: null,
+  user = null;
 
-  isMobileDevice: false,
-  isMobileScreen: false,
-  isTabletDevice: false,
+  isMobileDevice = false;
+  isMobileScreen = false;
+  isTabletDevice = false;
 
   get userId() {
     return (this.isAuthenticated && this.user) ? this.user.id : null;
-  },
+  }
 
-  init() {
-    this._super(...arguments);
+  constructor() {
+    super(...arguments);
+    //this._super(...arguments);
 
     const md = new MobileDetect(navigator.userAgent);
 
@@ -36,16 +38,16 @@ export default SessionService.extend({
 
     window.addEventListener('resize', this._bounceResizeEvent, false);
     this._windowResized();
-  },
+  }
 
   @action
   _bounceResizeEvent() {
     debounce(this, this._windowResized, RESIZE_DEBOUNCE_DELY);
-  },
+  }
 
   _windowResized() {
     this.set('isMobileScreen', (document.documentElement.clientWidth <= MOBILE_MAX_WIDTH));
-  },
+  }
 
   loadUser() {
     if (!this.isAuthenticated) {
@@ -75,4 +77,17 @@ export default SessionService.extend({
         });
       });
   }
-});
+
+  get isDevelopment() {
+    return ENV.environment === 'development';
+  }
+
+  get isStaging() {
+    return config('DeploymentEnvironment') === 'Staging' && !this.isDevelopment;
+  }
+
+  get isTraining() {
+    return config('DeploymentEnvironment') === 'Training';
+  }
+}
+

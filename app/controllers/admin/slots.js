@@ -73,8 +73,6 @@ export default class SlotsController extends Controller {
     {id: 'inactive', title: 'Inactive'},
   ];
 
-  @tracked showingGroups = {};
-
   @tracked isCopyingSlots = false;
   @tracked activatingSlot = null;
 
@@ -84,16 +82,16 @@ export default class SlotsController extends Controller {
     const dayFilter = this.dayFilter;
     const activeFilter = this.activeFilter;
 
-    if (activeFilter == 'active') {
+    if (activeFilter === 'active') {
       slots = slots.filterBy('active', true);
-    } else if (activeFilter == 'inactive') {
+    } else if (activeFilter === 'inactive') {
       slots = slots.filterBy('active', false);
     }
 
     if (dayFilter) {
-      if (dayFilter == 'upcoming') {
+      if (dayFilter === 'upcoming') {
         slots = slots.filterBy('has_started', false);
-      } else if (dayFilter != 'all') {
+      } else if (dayFilter !== 'all') {
         slots = slots.filterBy('slotDay', dayFilter);
       }
     }
@@ -287,12 +285,6 @@ export default class SlotsController extends Controller {
     this.modal.confirm('Unsaved Changes', 'The changes have not been saved. Are you sure you wish to leave this form without saving first?', () => {
       this.set('slot', null);
     })
-  }
-
-  @action
-  toggleShowing(group, event) {
-    event.preventDefault();
-    this.showingGroups = { ...this.showingGroups, [group.position_id]: !this.showingGroups[group.position_id] };
   }
 
   @action

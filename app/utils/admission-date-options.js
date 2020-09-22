@@ -1,13 +1,22 @@
 import moment from 'moment';
 
-export default function admissionDateOptions(year, wapDateRange) {
+const DATE_FORMAT = 'ddd, MM/DD/YY';
+
+export default function admissionDateOptions(year, wapDateRange, originalDate = null) {
   const options = [
-    [ 'Unspecified', '']
+    ['Unspecified', '']
   ];
+
+  if (originalDate) {
+    const origMoment = moment(originalDate);
+    if (origMoment.year() != year) {
+      options.push([origMoment.format(DATE_FORMAT), originalDate]);
+    }
+  }
 
   let low = 5, high = 26;
   if (wapDateRange != null) {
-    [low, high] = wapDateRange.replace(/\s/,'').split('-');
+    [low, high] = wapDateRange.replace(/\s/, '').split('-');
     low = parseInt(low);
     high = parseInt(high);
 
@@ -22,8 +31,8 @@ export default function admissionDateOptions(year, wapDateRange) {
 
 
   for (let day = high; day >= low; day--) {
-    const date = `${year}-08-${day < 10 ? '0'+day : day}`;
-    options.push([moment(date).format('ddd, MM/DD/YY'), date]);
+    const date = `${year}-08-${day < 10 ? '0' + day : day}`;
+    options.push([moment(date).format(DATE_FORMAT), date]);
   }
 
   options.push(['Any', 'any']);

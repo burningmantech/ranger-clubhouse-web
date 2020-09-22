@@ -6,88 +6,82 @@
   </p>
   <p>
     {{#each this.letterOptions as |letter|}}
-      <a href {{action this.scrollToCallsign letter.id}} class="d-inline-block border p-2 mr-2 mb-2">{{letter.letter}}</a>
+      <a href {{action this.scrollToCallsign letter.id}}
+         class="d-inline-block border p-2 mr-2 mb-2">{{letter.letter}}</a>
     {{/each}}
   </p>
 {{/if}}
 <p>
   <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
-  <button type="button" class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>
-    {{if this.expandAll "Hide" "Expand"}} All
-  </button>
-  {{#if this.isExpanding}}
-    <LoadingIndicator @text="Working"/>
-  {{/if}}
-</p>
+ </p>
 <p>
   [hh:mm] = Time does not count towards appreciations.
 </p>
 {{#each this.people as |person|}}
-  <div class="border mb-2" id="person-{{person.id}}">
-    <div class="bg-light-gray p-2">
-      <a href {{action this.togglePerson person}} class="h4">
-        {{fa-icon (if person.showing "caret-down" "caret-right")}} {{person.callsign}}
-      </a>
-    </div>
-    {{#if person.showing}}
-      <div class="p-2">
-        <p>
-          Go to {{person.callsign}}:
-          <LinkTo @route="person.index" @model={{person.id}}>
-            View/Manage Account
-          </LinkTo> |
-          <LinkTo @route="person.timesheet" @model={{person.id}} @query={{hash year=this.year}}>
-            Manage {{this.year}} Timesheets
-          </LinkTo> |
-          <LinkTo @route="person.schedule" @model={{person.id}} @query={{hash year=this.year}}>
-            View {{this.year}} Schedule
-          </LinkTo>
-        </p>
-        <table class="table table-hover table-striped table-width-auto">
-          <thead>
-          <tr>
-            <th>From</th>
-            <th>To</th>
-            <th>Position</th>
-            <th class="text-right">Duration</th>
-            <th class="text-right">Credits</th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#each person.timesheet as |entry|}}
+  <div class="max-width-700">
+    <ChAccordion id="person-{{person.id}}" as |accordion|>
+      <accordion.title>{{person.callsign}}</accordion.title>
+      <accordion.body>
+        {{#if accordion.isOpen}}
+          <p>
+            Go to {{person.callsign}}:
+            <LinkTo @route="person.index" @model={{person.id}}>
+              Account
+            </LinkTo>
+            |
+            <LinkTo @route="person.timesheet" @model={{person.id}} @query={{hash year=this.year}}>
+              {{this.year}} Timesheets
+            </LinkTo>
+            |
+            <LinkTo @route="person.schedule" @model={{person.id}} @query={{hash year=this.year}}>
+              {{this.year}} Schedule
+            </LinkTo>
+          </p>
+          <table class="table table-sm table-hover table-striped table-width-auto">
+            <thead>
             <tr>
-              <td>{{shift-format entry.on_duty}}</td>
-              <td>{{shift-format entry.off_duty}}</td>
-              <td>{{entry.position.title}}</td>
-              <td class="text-right">
-                {{#if entry.position.count_hours}}
-                  {{hour-minute-format entry.duration}}
-                {{else}}
-                  [{{hour-minute-format entry.duration}}]
-                {{/if}}
-              </td>
-              <td class="text-right">{{credits-format entry.credits}}</td>
+              <th>From</th>
+              <th>To</th>
+              <th>Position</th>
+              <th class="text-right">Duration</th>
+              <th class="text-right">Credits</th>
             </tr>
-          {{/each}}
-          <tr>
-            <td colspan="2" class="text-right"><b>Totals:</b></td>
-            <td class="text-right">
-              {{hour-minute-format person.total_duration}}
-            </td>
-            <td class="text-right">{{credits-format person.total_credits}}</td>
-            <td>&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="2" class="text-right"><b>Total Appreciated Hours:</b></td>
-            <td class="text-right">
-              {{hour-minute-format person.total_appreciation_duration}}
-            </td>
-            <td colspan="2">&nbsp;</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    {{/if}}
+            </thead>
+            <tbody>
+            {{#each person.timesheet as |entry|}}
+              <tr>
+                <td>{{shift-format entry.on_duty}}</td>
+                <td>{{#if entry.off_duty}}{{shift-format entry.off_duty}}{{else}}<i>still on duty</i>{{/if}}</td>
+                <td>{{entry.position.title}}</td>
+                <td class="text-right">
+                  {{#if entry.position.count_hours}}
+                    {{hour-minute-format entry.duration}}
+                  {{else}}
+                    [{{hour-minute-format entry.duration}}]
+                  {{/if}}
+                </td>
+                <td class="text-right">{{credits-format entry.credits}}</td>
+              </tr>
+            {{/each}}
+            <tr>
+              <td colspan="3" class="text-right"><b>Totals:</b></td>
+              <td class="text-right">
+                {{hour-minute-format person.total_duration}}
+              </td>
+              <td class="text-right">{{credits-format person.total_credits}}</td>
+            </tr>
+            <tr>
+              <td colspan="3" class="text-right"><b>Total Appreciated Hours:</b></td>
+              <td class="text-right">
+                {{hour-minute-format person.total_appreciation_duration}}
+              </td>
+              <td>&nbsp;</td>
+            </tr>
+            </tbody>
+          </table>
+        {{/if}}
+      </accordion.body>
+    </ChAccordion>
   </div>
 {{else}}
   <p>

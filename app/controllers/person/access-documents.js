@@ -4,10 +4,8 @@ import {tracked} from '@glimmer/tracking';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import {StateOptions} from 'clubhouse/constants/countries';
 
-
 export default class PersonAccessDocumentsController extends Controller {
   @tracked isSubmitting = false;
-  @tracked isLoadingLog = false;
   @tracked isShowingAll = false;
 
   @tracked documents = null;
@@ -52,7 +50,7 @@ export default class PersonAccessDocumentsController extends Controller {
   }
 
   get admissionDateOptions() {
-    return admissionDateOptions(this.house.currentYear(), this.ticketingInfo.wap_date_range);
+    return admissionDateOptions(this.house.currentYear(), this.ticketingInfo.wap_date_range, this.entry.admission_date);
   }
 
   @action
@@ -154,15 +152,17 @@ export default class PersonAccessDocumentsController extends Controller {
   }
 
   @action
-  async showAllAction() {
+  showAction() {
     this.isLoading = true;
-    try {
-      this.documents = await this.store.query('access-document', {person_id: this.person.id, status: 'all'});
-      this.isShowingAll = true;
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isLoading = false;
+
+    const data = {person_id: this.person.id};
+    if (!this.isShowingAll) {
+      data.status = 'all';
     }
+    this.store.query('access-document', data).then((documents) => {
+      this.documents = documents;
+      this.isShowingAll = !this.isShowingAll;
+    }).catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.isLoading = false);
   }
 }

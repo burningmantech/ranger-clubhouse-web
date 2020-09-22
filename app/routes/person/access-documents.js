@@ -31,12 +31,6 @@ export default class PersonAccessDocumentsRoute extends Route {
   setupController(controller, model) {
     controller.set('person', this.modelFor('person'));
     controller.setProperties(model);
-  }
-
-  resetController(controller, isExiting) {
-    if (isExiting) {
-      controller.set('year', null);
-      controller.set('isShowingAll', false);
-    }
+    controller.set('isShowingAll', false);
   }
 }

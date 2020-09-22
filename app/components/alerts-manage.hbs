@@ -1,8 +1,11 @@
 {{#if this.isStopped}}
-  <ChBox @title="One or more phone numbers are STOPPED">
-    <b class="text-danger">{{fa-icon "exclamation-triangle"}} WARNING: Someone, most likely you, texted the STOP command
-      from one of the following numbers.</b> That phone number will not be able to receive alerts until the START
-    command is texted from the same number.
+  <ChBox @title="One or more phone numbers are STOPPED" @icon="exclamation-triangle">
+    <p>
+      <b class="text-danger">WARNING: Someone, most likely you, texted the STOP command
+        from one of the following numbers.</b>
+    </p>
+    <p>That phone number will not be able to receive alerts until the START
+      command is texted from the same number.</p>
     <ul>
       {{#if this.numbers.on_playa.is_stopped}}
         <li>The number {{this.numbers.on_playa.phone}} is stopped</li>
@@ -16,14 +19,11 @@
 {{/if}}
 
 {{#if this.notVerified}}
-  <ChAlert @type="danger">
-    <div class="float-left mt-2 mr-3">
-      {{fa-icon "exclamation-triangle" size="2x"}}
-    </div>
-    Please verify your SMS number(s). You will not be able receive Clubhouse alert messages
-    until you do so. (Data rates may apply.)
-  </ChAlert>
-  <ChBox @title="Verify Your Phone Number(s)">
+  <ChBox @title="Verify Your Phone Number(s)" @icon="exclamation-triangle">
+    <p>
+      Please verify your SMS number(s). You will not be able receive Clubhouse alert messages
+      until you do so. (Data rates may apply.)
+    </p>
     <p>
       <strong>A verification code has been sent to {{this.unverifiedPhones}}</strong>
     </p>
@@ -46,7 +46,7 @@
       {{#if (and (not this.numbers.is_same) this.numbers.on_playa.phone (not this.numbers.on_playa.is_verified))}}
         <div class="form-row">
           <f.input @name="on_playa" @label={{concat "Enter verification code for " this.numbers.on_playa.phone}}
-                   @type="text"  @inputmode="decimal" @size=5 @maxlength=5 @grid="col-auto"/>
+                   @type="text" @inputmode="decimal" @size=5 @maxlength=5 @grid="col-auto"/>
         </div>
         <div class="form-row">
           <button type="button" class="btn btn-primary" disabled={{this.isSubmitting}}
@@ -74,12 +74,6 @@
 
 <h3>Pre-Event &amp; On Playa SMS Numbers</h3>
 <p>
-  {{#if (not-eq @person.country "US")}}
-    <ChAlert @type="warning">
-      Your home address is listed as outside the USA. In case you have a non-USA phone number, be sure to include the
-      country code when entering your phone number(s).
-    </ChAlert>
-  {{/if}}
   <b>For non-USA phone numbers:</b> Include your country code when entering a phone number.<br>
   Australia: +61, Canada: +1, France: +33, Mexico: +52, New Zealand: +64, UK: +44.
 </p>
@@ -90,17 +84,17 @@
     <f.input @name="off_playa"
              @label={{if f.model.is_same "Pre-Event & On Playa phone number:" "Pre-Event phone number:"}}
              @type="text" @inputmode="tel" @size=30 @grid="col-auto"/>
+    <div class="col-sm-12 col-lg-auto">
+      <label class="col-form-label d-sm-none d-lg-block">&nbsp;</label>
+      <f.input @name="is_same" @label="On playa number is the same as the pre-event number" @type="checkbox"/>
+    </div>
   </div>
-  <div class="form-row">
-    <f.input @name="is_same" @label="On playa number is the same as the pre-event number" @type="checkbox"/>
-  </div>
-  <div class="form-row mt-2 {{if f.model.is_same "d-none"}}">
+  <div class="row form-group mt-2 {{if f.model.is_same "d-none"}}">
     <f.input @name="on_playa" @label="On Playa phone number:" @type="text" @inputmode="tel" @size=30 @grid="col-auto"/>
   </div>
 
   <div class="mt-2">
-    <f.submit @label={{if this.isUpdatingNumbers "Updating" "Update SMS Numbers"}}
-              @disabled={{this.isUpdatingNumbers}} />
+    <f.submit @label="Update SMS Numbers" @disabled={{this.isUpdatingNumbers}} />
     {{#if this.isUpdatingNumbers}}
       <LoadingIndicator/>
     {{/if}}

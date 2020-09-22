@@ -16,78 +16,98 @@
 
 
 <ChForm @formId="dateform" @formFor={{this.dateForm}} @onSubmit={{this.submitForm}} as |f|>
-  <div class="row form-group mt-4">
-      <label class="col-form-label">Shift date &amp; time to view:</label>
-      <f.input @name="date" @type="datetime" @wrapClass="col-auto" />
+  <div class="form-row">
+    <label class="col-form-label">Shift date &amp; time to view:</label>
+    <f.input @name="date" @type="datetime" @grid="col-auto"/>
     <div class="col-auto">
-      <f.submit @label="Submit" />
+      <f.submit @label="Submit"/>
       <button type="button" class="btn btn-secondary" {{action this.viewCurrentPeriod}}>View Current Period</button>
     </div>
   </div>
 </ChForm>
 
+<p>
+  Showing {{pluralize this.positions.length "position"}}.
+  <button type="button" class="btn btn-secondary ml-2" {{action this.toggleExpandAll}}>
+    {{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}
+  </button>
+</p>
+
+
 {{#each this.positions as |position|}}
-  <table class="table table-sm border mt-2">
-    <caption>{{position.title}}</caption>
-    <thead>
-      <tr>
-        <th>From</th>
-        <th>To</th>
-        <th>Description</th>
-        <th class="text-right">Signed Up</th>
-        <th class="text-right">Max</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each position.slots as |slot|}}
+  <div class="max-width-700">
+  <ChAccordion as |accordion|>
+    <accordion.title>{{position.title}}</accordion.title>
+    <accordion.body>
+      <table class="table table-sm">
+        <thead>
         <tr>
-          <td>{{shift-format slot.begins}}</td>
-          <td>{{shift-format slot.ends}}</td>
-          <td>{{slot.description}}</td>
-          <td class="text-right">{{slot.signed_up}}</td>
-          <td class="text-right">{{slot.max}}</td>
+          <th>From</th>
+          <th>To</th>
+          <th>Description</th>
+          <th class="text-right">Signed Up</th>
+          <th class="text-right">Max</th>
         </tr>
-        <tr class="tr-no-border">
-          <td colspan="5">
-            {{#if slot.checked_in}}
-              <b>Signed up &amp; in ({{slot.checked_in.length}}):</b>
-              {{#each slot.checked_in as |person idx|}}
-                {{~if idx ", "}}<span class="d-inline-block"><PersonLink @person={{person}} /> ({{time-format person.timesheet.on_duty}})</span>
-              {{/each}}
-            {{else if slot.signed_up}}
-              <b class="text-danger">No scheduled sign ups on shift.</b>
-            {{else}}
-              <b class="text-danger">No shift sign ups.</b>
-            {{/if}}
-            <br>
-            {{#if slot.different_shift}}
-              <b>Went on different shift ({{slot.different_shift.length}}):</b>
-              {{#each slot.different_shift as |person idx|}}
-                {{~if idx ", "}}<span class="d-inline-block"><PersonLink @person={{person}} /> ({{person.timesheet.position_title}} @ {{time-format person.timesheet.on_duty}})</span>
-              {{/each}}
+        </thead>
+        <tbody>
+        {{#each position.slots as |slot|}}
+          <tr>
+            <td>{{shift-format slot.begins}}</td>
+            <td>{{shift-format slot.ends}}</td>
+            <td>{{slot.description}}</td>
+            <td class="text-right">{{slot.signed_up}}</td>
+            <td class="text-right">{{slot.max}}</td>
+          </tr>
+          <tr class="tr-no-border">
+            <td colspan="5">
+              {{#if slot.checked_in}}
+                <b>Signed up &amp; in ({{slot.checked_in.length}}):</b>
+                {{#each slot.checked_in as |person idx|}}
+                  {{~if idx ", "}}<span class="d-inline-block"><PersonLink @person={{person}} /> ({{time-format
+                        person.timesheet.on_duty}})</span>
+                {{/each}}
+              {{else if slot.signed_up}}
+                <b class="text-danger">No scheduled sign ups on shift.</b>
+              {{else}}
+                <b class="text-danger">No shift sign ups.</b>
+              {{/if}}
               <br>
-            {{/if}}
-            {{#if slot.rogues}}
-              <b>Rogues / Overlaps ({{slot.rogues.length}}):</b>
-              {{#each slot.rogues as |person idx|}}
-                {{~if idx ", "}}<span class="d-inline-block"><PersonLink @person={{person}} /> ({{moment-format person.on_duty "ddd DD @ HH:MM"}} - {{if person.off_duty (moment-format person.off_duty "ddd DD @ HH:MM") "now"}})</span>
+              {{#if slot.different_shift}}
+                <b>Went on different shift ({{slot.different_shift.length}}):</b>
+                {{#each slot.different_shift as |person idx|}}
+                  {{~if idx ", "}}<span class="d-inline-block"><PersonLink
+                        @person={{person}} /> ({{person.timesheet.position_title}} @ {{time-format
+                        person.timesheet.on_duty}})</span>
+                {{/each}}
+                <br>
+              {{/if}}
+              {{#if slot.rogues}}
+                <b>Rogues / Overlaps ({{slot.rogues.length}}):</b>
+                {{#each slot.rogues as |person idx|}}
+                  {{~if idx ", "}}<span class="d-inline-block"><PersonLink @person={{person}} /> ({{moment-format
+                        person.on_duty "ddd DD @ HH:MM"}} -
+                  {{if person.off_duty (moment-format person.off_duty "ddd DD @ HH:MM") "now"}})</span>
                 {{~/each}}
                 <br>
-            {{/if}}
-            {{#if slot.not_present}}
-              <b>Flakes ({{slot.not_present.length}}):</b>
-              {{#each slot.not_present as |person idx|}}
-                {{~if idx ", "}}<PersonLink @person={{person}} />
-              {{/each}}
-            {{else if slot.signed_up}}
-              <b class="text-success">No flakes.</b>
-            {{/if}}
-            <br>
-          </td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
+              {{/if}}
+              {{#if slot.not_present}}
+                <b>Flakes ({{slot.not_present.length}}):</b>
+                {{#each slot.not_present as |person idx|}}
+                  {{~if idx ", "}}
+                  <PersonLink @person={{person}} />
+                {{/each}}
+              {{else if slot.signed_up}}
+                <b class="text-success">No flakes.</b>
+              {{/if}}
+              <br>
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </accordion.body>
+  </ChAccordion>
+  </div>
 {{else}}
   <p class="mt-2">
     <b class="text-danger">No shifts were found for the date &amp; time given.</b>

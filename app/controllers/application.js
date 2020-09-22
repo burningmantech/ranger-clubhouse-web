@@ -78,8 +78,4 @@ export default class ApplicationController extends Controller {
   get buildTimestamp() {
     return ENV.APP.buildTimestamp;
   }
-
-  get isDevelopment() {
-    return ENV.environment === 'development';
-  }
 }

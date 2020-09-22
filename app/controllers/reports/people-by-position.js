@@ -1,5 +1,4 @@
 import Controller from '@ember/controller';
-import {later} from '@ember/runloop';
 import EmberObject from '@ember/object';
 import {action, computed} from '@ember/object';
 import _ from 'lodash';
@@ -64,24 +63,11 @@ export default class PeopleByPositionController extends Controller {
   @computed('people')
   get statuses() {
     return _.map(_.uniq(_.map(_.values(this.people), 'status')).sort(),
-      (status) =>{ return {name: status, selected: true} });
+      (status) =>{ return {name: status, selected: (status !== 'deceased' && status !== 'auditor' && status !== 'past prospective')} });
   }
 
   @action
-  toggleExpanded(position) {
-    position.expanded = !position.expanded;
-  }
-
-  @action
-  expandAllPositions(expanded) {
-    // Expand or collapse all iteratively asynchronously because rendering the contents takes awhile
-    const positions = this.viewPositions;
-    const advance = (i) => (() => {
-      if (i < positions.length) {
-        positions[i].expanded = expanded;
-        later(advance(i + 1), 1);
-      }
-    });
-    later(advance(0), 1);
+  expandAllPositions(show) {
+    this.house.toggleAllAccordions(show);
   }
 }
