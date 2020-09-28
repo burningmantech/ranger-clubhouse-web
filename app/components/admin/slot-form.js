@@ -29,7 +29,13 @@ export default class SlotFormComponent extends Component {
   };
 
   get positionOptions() {
-    return this.args.positions.map((p) => [p.title, p.id]);
+    let activePositions = this.args.positions.filter(p => p.active).map(p => [p.title, p.id]);
+    let inactivePositions = this.args.positions.filter(p => !p.active).map(p => [p.title, p.id]);
+
+    return [
+      { groupName: 'Active', options: activePositions },
+      { groupName: 'Inactive', options: inactivePositions },
+    ];
   }
 
   get formTitle() {
