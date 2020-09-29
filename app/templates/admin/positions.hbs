@@ -6,6 +6,11 @@
     <ChForm::Select @name="typeFilter" @value={{typeFilter}} @options={{typeOptions}} @onChange={{action
             (mut typeFilter)}} @controlClass="form-control"/>
   </div>
+  <label class="col-form-label">Active Filter</label>
+  <div class="col-auto">
+    <ChForm::Select @name="activeFilter" @value={{this.activeFilter}} @options={{this.activeOptions}}
+                    @onChange={{action (mut activeFilter)}} @controlClass="form-control"/>
+  </div>
   <div class="col-auto">
     <button type="button" class="btn btn-primary" {{on "click"  this.newAction}}>New Position</button>
   </div>
@@ -20,6 +25,7 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
     <th>Short Title</th>
     <th>Type</th>
     <th>Min / Max</th>
+    <th class="text-center">Active</th>
     <th class="text-center">New User Eligible</th>
     <th class="text-center">All Rangers</th>
     <th class="text-center">Count Hrs</th>
@@ -40,11 +46,24 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
       </td>
       <td>{{position.type}}</td>
       <td class="text-center">{{position.min}} / {{position.max}}</td>
-      <td class="text-center">{{yesno position.new_user_eligible}}</td>
-      <td class="text-center">{{yesno position.all_rangers}}</td>
-      <td class="text-center">{{yesno position.count_hours}}</td>
-      <td class="text-center">{{yesno position.on_sl_report}}</td>
-      <td>{{if position.prevent_multiple_enrollments "Y" "-"}}</td>
+      <td class="text-center">
+        <BooleanIcon @value={{position.active}} @falseIcon="times" @falseClass="text-danger"/>
+      </td>
+      <td class="text-center">
+        <BooleanIcon @value={{position.new_user_eligible}} @trueIcon="user"/>
+      </td>
+      <td class="text-center">
+        <BooleanIcon @value={{position.all_rangers}} @trueIcon="users"/>
+      </td>
+      <td class="text-center">
+        <BooleanIcon @value={{position.count_hours}} @trueIcon="clock"/>
+      </td>
+      <td class="text-center">
+        <BooleanIcon @value={{position.on_sl_report}} @trueIcon="list"/>
+      </td>
+      <td class="text-center">
+        <BooleanIcon @value={{position.prevent_multiple_enrollments}} @trueIcon="ban"/>
+      </td>
       <td>
         {{#if position.training_position_id}}
           {{pluck position.training_position_id positions "title" "-"}}<br>
@@ -92,8 +111,9 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
         <fieldset>
           <legend>Flags</legend>
           <div class="form-row mb-2">
-            <f.input @name="all_rangers" @type="checkbox" @label="All Rangers" @inline=true/>
+            <f.input @name="active" @type="checkbox" @label="Active" @inline=true/>
             <f.input @name="new_user_eligible" @type="checkbox" @label="New user eligible" @inline=true/>
+            <f.input @name="all_rangers" @type="checkbox" @label="All Rangers" @inline=true/>
             <f.input @name="count_hours" @type="checkbox" @label="Hours count towards appreciations" @inline=true/>
             <f.input @name="on_sl_report" @type="checkbox" @label="On Shift Lead report" @inline=true/>
             <f.input @name="prevent_multiple_enrollments" @type="checkbox"

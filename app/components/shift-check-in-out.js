@@ -32,7 +32,7 @@ export default class ShiftCheckInOutComponent extends Component {
     const slots = this.args.imminentSlots;
     if (slots) {
       slots.forEach((slot) => {
-        const position = this.args.positions.find((p) => slot.position_id == p.id);
+        const position = this.activePositions.find((p) => slot.position_id == p.id);
         if (position) {
           if (position.is_untrained) {
             set(slot, 'is_untrained', true);
@@ -46,7 +46,7 @@ export default class ShiftCheckInOutComponent extends Component {
       });
     }
 
-    const signins = this.args.positions.map((pos) => {
+    const signins = this.activePositions.map((pos) => {
       let title = pos.title;
       let disqualified = null;
 
@@ -85,6 +85,10 @@ export default class ShiftCheckInOutComponent extends Component {
     this.signinPositionId = this.signinPositions.firstObject.id;
   }
 
+  get activePositions() {
+    return this.args.positions.filter(position => position.active)
+  }
+
   // Has the person gone through dirt training?
 
   get isPersonDirtTrained() {
@@ -102,7 +106,7 @@ export default class ShiftCheckInOutComponent extends Component {
   }
 
   _startShift(positionId, slotId = null) {
-    const position = this.args.positions.find((p) => p.id == positionId);
+    const position = this.activePositions.find((p) => p.id == positionId);
     const person = this.args.person;
 
     const data = {

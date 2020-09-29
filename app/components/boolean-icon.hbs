@@ -1,0 +1,5 @@
+{{#if @value}}
+  <span class="{{@trueClass}}">{{if @trueIcon (fa-icon @trueIcon) (fa-icon "check") }}</span>
+{{else}}
+  <span class="{{@falseClass}}">{{if @falseIcon (fa-icon @falseIcon) "-"}}</span>
+{{/if}}
