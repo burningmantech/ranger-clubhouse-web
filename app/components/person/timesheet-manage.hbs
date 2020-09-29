@@ -1,5 +1,8 @@
 <div class="border rounded p-2 mt-2 mb-2">
   <h3>Timesheet Entries</h3>
+  <p>
+  <LinkTo @route="person.timesheet-log" @query={{hash year=@year}}>View {{@year}} Timesheet Log</LinkTo>
+  </p>
   <span class="d-inline-block">{{fa-icon "question"}} = unverified.</span>
   <span class="d-inline-block">{{fa-icon "check"}} = verified.</span>
   <span class="d-inline-block">{{fa-icon "exclamation-triangle"}} = needs review.</span>
@@ -101,21 +104,19 @@
             @onCancel={{this.cancelEntryAction}} as |f|>
       <Modal.body>
         {{#if this.editEntry.isPendingReview}}
-          <ChAlert @type="danger">
-            Entry has a correction request and needs to be reviewed.
-          </ChAlert>
+          <ChNotice @type="danger" @icon="exclamation" @iconSize="1x">
+            <b class="text-danger">Entry has a correction request and needs to be reviewed.</b>
+          </ChNotice>
         {{else if this.editEntry.isUnverified}}
-          <ChAlert @type="warning">
-            Entry needs to be verified by the person. No review action is needed at this time.
-          </ChAlert>
+          <ChNotice @type="danger" @icon="hourglass" @iconSize="1x">
+            Entry needs to be verified by the person. No review action required at this time.
+          </ChNotice>
         {{else if this.editEntry.verified}}
-          <ChAlert @type="success">
-            <b class="text-success">
-              Entry was verified on {{shift-format this.editEntry.verified_at}}
+          <ChNotice @type="success" @icon="check" @iconSize="1x">
+              <b>Entry was verified on {{shift-format this.editEntry.verified_at}}
               by {{this.editEntry.verified_person.callsign}}.
-              Review is not needed at this time.
-            </b>
-          </ChAlert>
+                Review is not needed at this time.</b>
+          </ChNotice>
         {{/if}}
 
         <fieldset>

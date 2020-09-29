@@ -2,7 +2,8 @@
 
 {{#if timesheetInfo.correction_enabled}}
   {{#if timesheetInfo.timesheet_confirmed}}
-    <h3 class="text-success">{{fa-icon "thumbs-up" type="far"}} Congratulations! You're done with the Timesheet Review & Confirmation.</h3>
+    <h3 class="text-success">{{fa-icon "thumbs-up" type="far"}} Congratulations! You're done with the Timesheet Review &
+      Confirmation.</h3>
     <p>
       All your timesheet entries have been reviewed, there are no outstanding correction requests,
       and you have stated you have no further correction requests. Nothing else needs to be done.
@@ -12,11 +13,14 @@
     </p>
     {{#unless this.showReviewSteps}}
       <p>
-        In case you need to submit another correction, you can go through the Timesheet Review process again by clicking on the button below. Note: You will need to re-confirm
+        In case you need to submit another correction, you can go through the Timesheet Review process again by clicking
+        on the button below. Note: You will need to re-confirm
         your entire timesheet is accurate if you do submit another request.
       </p>
       <p>
-        <button type="button" class="btn btn-secondary" {{action this.showReviewAction}}>Show the Timesheet Review Steps</button>
+        <button type="button" class="btn btn-secondary" {{action this.showReviewAction}}>Show the Timesheet Review
+          Steps
+        </button>
       </p>
     {{/unless}}
   {{/if}}
@@ -27,27 +31,27 @@
           You need to review {{pluralize unverifiedCount "timesheet entry"}}.<br>
         {{/if}}
         {{#if correctionPendingReviewCount}}
-          {{pluralize correctionPendingReviewCount "timesheet entry"}} {{if (eq correctionPendingReviewCount 1) "is" "are"}} pending review.<br>
+          {{pluralize correctionPendingReviewCount "timesheet entry"}} {{if (eq correctionPendingReviewCount 1) "is"
+                                                                            "are"}} pending review.<br>
         {{/if}}
 
         {{#if missingPendingReviewCount}}
-          {{pluralize missingPendingReviewCount "missing timesheet entry request"}} {{if (eq missingPendingReviewCount 1) "is" "are"}} pending review.<br>
+          {{pluralize missingPendingReviewCount "missing timesheet entry request"}} {{if
+                (eq missingPendingReviewCount 1) "is" "are"}} pending review.<br>
         {{/if}}
       </p>
     {{else if (not timesheetInfo.timesheet_confirmed)}}
-      <ChAlert @type="warning">
+      <ChNotice @type="danger" @icon="hand-point-right">
         It appears all of your timesheet entries have been reviewed and there are no outstanding
         correction requests. Let us know you are finished submitting corrections.
-        Go to <LinkTo @route="me.timesheet-corrections.confirm">Final Confirmation</LinkTo>
+        Go to
+        <LinkTo @route="me.timesheet-corrections.confirm">Final Confirmation</LinkTo>
         to do this.
-      </ChAlert>
+      </ChNotice>
     {{/if}}
     {{outlet}}
   {{/if}}
 {{else}}
-  <p class="text-danger">
-    Timesheet corrections are not permitted at this time.
-    Contact {{general-support-email}} if you have
-    concerns or questions about your timesheet.
-  </p>
+  <p class="text-danger"><b>Timesheet corrections are not permitted at this time.</b></p>
+    Contact {{general-support-email}} if you have questions or concerns about your timesheet.
 {{/if}}

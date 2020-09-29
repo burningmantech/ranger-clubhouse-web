@@ -7,15 +7,16 @@
       </h3>
     {{/unless}}
     {{#if (eq this.step "source")}}
-      <h4>Your BMID photo is an ID photo. <span class="d-inline-block">Think “passport” or driver's license.</span></h4>
+      <h4>Your BMID photo is an ID photo. Think “passport” or driver's license.</h4>
       The photo must meet the following criteria:
-      <ul>
+      <ul class="no-indent">
+        <li><b class="text-danger">NO sunglasses, goggles, facepaint, or masks.</b></li>
+        <li>
+          <b class="text-danger">Nothing covering your head - no hats, horns, wreaths, etc.</b>
+          (Religious attire is OK.)
+        </li>
         <li>Face the camera directly with full face in view.</li>
         <li>Your face is evenly lit with no shadows.</li>
-        <li><b class="text-danger">NO sunglasses, goggles, facepaint, or masks.</b></li>
-        <li><b class="text-danger">NO hats, horns, wreaths, etc. Nothing covering your head.</b> (Religious attire is
-          OK.)
-        </li>
         <li>Color ONLY. No black & white photos.</li>
         <li>No other people in the photo.</li>
       </ul>

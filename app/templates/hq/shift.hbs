@@ -1,45 +1,37 @@
 {{#if this.isShinyPenny}}
-  <ChAlert @type="success">
-    <b>{{this.person.callsign}} is newly minted Shiny Penny. Share some Ranger love and welcome them to the family.
-      {{fa-icon "smile-beam" type="far"}}</b>
-  </ChAlert>
+  <ChNotice @type="success" @icon="smile-beam" @iconType="far">
+    {{this.person.callsign}} is newly minted Shiny Penny. Share some Ranger love and welcome them to the family.
+  </ChNotice>
 {{/if}}
 
 {{#unless person.on_site}}
-  <ChAlert @type="danger">
-    <h4>{{this.person.callsign}} is marked as OFF SITE.</h4>
-    Follow the procedures on the Site Check In page before signing the person into a shift.
-    <div class="mt-2">
-      <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-primary">Site Check In</LinkTo>
-    </div>
-  </ChAlert>
+  <ChNotice @type="danger" @icon="hand-point-right" @title="{{this.person.callsign}} is marked as OFF SITE">
+    <p>
+      Follow the procedures on the Site Check In page before signing the person into a shift.
+    </p>
+    <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-primary">Site Check In</LinkTo>
+  </ChNotice>
 {{/unless}}
 
 {{#if (gt person.unread_message_count 0)}}
-  <ChAlert @type="warning" @bold={{true}}>
-    {{fa-icon "envelope"}} {{pluralize person.unread_message_count "unread Clubhouse message"}}.
+  <ChNotice @type="success" @icon="envelope">
+    {{pluralize person.unread_message_count "unread Clubhouse message"}}.
     <LinkTo @route="hq.messages" class="btn btn-success">Read Now</LinkTo>
-  </ChAlert>
+  </ChNotice>
 {{/if}}
 
-{{#if scheduleRecommendations.burn_weekend_shift}}
-  <ChAlert @type="warning">
-    <div class="d-flex">
-      <div class="mr-2">
-        {{fa-icon "exclamation-circle" size="2x"}}
-      </div>
-      <div class="mt-1">
-        <h5> {{this.person.callsign}} is not signed up for a Burn Weekend shift</h5>
-        Ask {{this.person.callsign}} if they are interested in signing up for a weekend shift.
-      </div>
-    </div>
-  </ChAlert>
-{{/if}}
+{{#unless scheduleRecommendations.burn_weekend_shift}}
+  <ChNotice @title="Suggest Working A Burn Weekend Shift" @icon="walking" @type="info">
+    {{this.person.callsign}} is not signed up for a Burn Weekend shift. Ask if they are interested in signing up for
+    one.
+  </ChNotice>
+{{/unless}}
 
 <p class="my-2 hours-credits-header">
   <b>Earned Credits:</b> {{credits-format timesheetSummary.total_credits}}
   <b>Worked Hours:</b> {{hour-minute-format timesheetSummary.counted_duration}}
-  <button type="button" class="btn btn-secondary btn-sm ml-2 align-middle" {{action this.toggleHoursCreditBreakdown}}>View Credits &amp; Hours
+  <button type="button" class="btn btn-secondary btn-sm ml-2 align-middle" {{action this.toggleHoursCreditBreakdown}}>
+    View Credits &amp; Hours
     Breakdown
   </button>
 </p>
@@ -48,7 +40,8 @@
 
 <h3>
   Timesheet Verification
-  - {{#if this.unverifiedTimesheets }}{{pluralize this.unverifiedTimesheets.length "entry" }}{{else}}No Action Needed{{/if}}
+  - {{#if this.unverifiedTimesheets }}{{pluralize this.unverifiedTimesheets.length "entry" }}{{else}}
+  No Action Needed{{/if}}
   <HelpPopover @slug="hq-timesheet-verification"/>
 </h3>
 
@@ -109,10 +102,14 @@
       </tbody>
     </table>
     <div class="mt-2">
-      <button type="button" class="btn btn-success py-2 px-4 mr-3" {{action this.markEntryCorrect}} disabled={{this.isSubmitting}}>YES</button>
-      <button type="button" class="btn btn-danger  py-2 px-4 p-2 mr-3" {{action this.markEntryIncorrect}} disabled={{this.isSubmitting}}>NO
+      <button type="button" class="btn btn-success py-2 px-4 mr-3" {{action this.markEntryCorrect}}
+              disabled={{this.isSubmitting}}>YES
       </button>
-      <button type="button" class="btn btn-gray  py-2 px-4" {{action this.toggleIgnoreVerification}} disabled={{this.isSubmitting}}>IGNORE
+      <button type="button" class="btn btn-danger  py-2 px-4 p-2 mr-3" {{action this.markEntryIncorrect}}
+              disabled={{this.isSubmitting}}>NO
+      </button>
+      <button type="button" class="btn btn-gray  py-2 px-4" {{action this.toggleIgnoreVerification}}
+              disabled={{this.isSubmitting}}>IGNORE
       </button>
       {{#if this.isSubmitting}}
         <LoadingIndicator/>{{/if}}
@@ -126,7 +123,8 @@
 <h3>Shift Management
   <HelpPopover @slug="hq-shift-management"/>
 </h3>
-<ShiftCheckInOut @positions={{this.positions}} @timesheets={{this.timesheets}} @person={{this.person}} @imminentSlots={{this.imminentSlots}}
+<ShiftCheckInOut @positions={{this.positions}} @timesheets={{this.timesheets}} @person={{this.person}}
+                 @imminentSlots={{this.imminentSlots}}
                  @hasUnverifiedTimesheet={{and this.unverifiedTimesheets (not this.ignoreTimesheetVerification)}}
                  @endShiftNotify={{action this.refreshTimesheetSummary}} @eventInfo={{this.eventInfo}} />
 
@@ -159,7 +157,8 @@
             <li><b>Who was their shift partner(s)?</b></li>
           </ul>
         </div>
-        <f.input @name="notes" @label="Timesheet entry correction note:" @type="textarea" @autofocus={{true}} @cols={{80}}
+        <f.input @name="notes" @label="Timesheet entry correction note:" @type="textarea" @autofocus={{true}}
+                 @cols={{80}}
                  @rows={{3}}/>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
@@ -177,9 +176,9 @@
   <HelpPopover @slug="hq-assets"/>
 </h3>
 {{#unless this.eventInfo.radio_info_available}}
-  <ChAlert @type="danger">
-    Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
-  </ChAlert>
+  <ChNotice @type="warning" @icon="exclamation">
+    Event radio information has not been posted yet. Radio eligibility cannot be determined.
+  </ChNotice>
 {{/unless}}
 {{#if this.radioCount}}
   {{#if this.shiftRadios}}
@@ -195,14 +194,16 @@
   {{#if this.eventInfo.radio_eligible}}
     authorized for {{pluralize this.eventInfo.radio_max "event radio"}}.
   {{else}}
-    only authorized for shift radios.
+    only authorized for SHIFT RADIOS.
   {{/if}}
 </div>
 
 {{#if this.personEvent.asset_authorized}}
-  <AssetCheckoutForm @person={{this.person}} @assets={{this.assets}} @attachments={{this.attachments}} @eventInfo={{this.eventInfo}} />
+  <AssetCheckoutForm @person={{this.person}} @assets={{this.assets}} @attachments={{this.attachments}}
+                     @eventInfo={{this.eventInfo}} />
 {{else}}
-  <p class="text-danger"><b>{{this.person.callsign}} is not asset authorized and may not check out equipment at this time.
+  <p class="text-danger"><b>{{this.person.callsign}} is not asset authorized and may not check out equipment at this
+    time.
     Have the person sign the Radio Checkout form, then to go Site Check In and mark the person having signed the
     document.</b></p>
   <p>
@@ -239,7 +240,9 @@
       </td>
       <td class="align-middle">{{shift-format ap.checked_out}}</td>
       <td class="align-middle">
-        <button type="button" class="btn btn-primary" {{action this.assetCheckInAction ap}} disabled={{ap.isSubmitting}}>Check In</button>
+        <button type="button" class="btn btn-primary" {{action this.assetCheckInAction ap}}
+                disabled={{ap.isSubmitting}}>Check In
+        </button>
         {{#if ap.isSubmitting}}
           {{fa-icon "spinner" spin=true}}
         {{/if}}

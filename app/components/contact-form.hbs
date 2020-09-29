@@ -6,11 +6,10 @@
           @onCancel={{action this.cancelAction}} as |f|>
     <Modal.body>
       {{#if @isInactive}}
-        <ChAlert @type="warning">
-          WARNING: This Ranger's status is inactive. While they are still a Ranger,
-          they have not worked as a Ranger for three years or more. Their email address
+        <ChNotice @type="danger" @icon="exclamation" @title="{{@callsign}} is inactive">
+          The person has not worked as a Ranger for three or more years. Their email address
           registered with the Clubhouse might be out of date.
-        </ChAlert>
+        </ChNotice>
       {{/if}}
 
       Please note the following:

@@ -95,10 +95,10 @@
 
 
   {{#if this.person.message}}
-    <ChBox @title="Important Account Message">
+    <ChNotice @title="Important Account Note" @icon="exclamation">
       {{nl2br this.person.message}}
       <div class="mt-2 text-muted">Posted {{shift-format this.person.message_updated_at}}</div>
-    </ChBox>
+    </ChNotice>
   {{/if}}
 
   <div class="row d-lg-none mb-2 max-width-900">

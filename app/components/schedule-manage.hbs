@@ -1,15 +1,11 @@
-<p class="d-print-none text-muted mb-2">
-  Use your browser's print command to send this page to the printer. Don't
-  worry, the navigation bar, website footer, and this message will not appear
-  on the paper.
-</p>
+<PrintInstruction />
 {{#unless this.isCurrentYear}}
-  <ChAlert @type="warning">
+  <ChNotice @type="warning" @icon="hand-point-right">
     Warning: You are viewing a past schedule ({{@year}}).
-  </ChAlert>
+  </ChNotice>
 {{/unless}}
 {{#if (and this.noPermissionToSignUp (not this.requirementsOverride))}}
-  <ChBox @title="Sign ups for training and/or shifts is not allowed" @type="danger" @icon="exclamation-circle">
+  <ChNotice @title="Sign ups for training and/or shifts is not allowed" @type="danger" @icon="exclamation-circle">
     {{#if (eq this.permission.photo_status "error")}}
       <h3 class="mt-2">Oops! There was a problem communicating with our photo server.</h3>
       <p>
@@ -99,13 +95,13 @@
         </button>
       </p>
     {{/if}}
-  </ChBox>
+  </ChNotice>
 {{/if}}
 {{#if (or this.requirementsOverride (not this.noPermissionToSignUp))}}
   {{#if this.requirementsOverride}}
-    <ChBox @type="danger" @icon="exclamation-triangle">
-      The scheduling requirements override is enabled. <b class="text-danger">All scheduling actions are logged.</b>
-    </ChBox>
+    <ChNotice @type="danger" @icon="exclamation" @title="Schedule requirements overridden">
+      <b>All actions are logged and subject to review.</b>
+    </ChNotice>
   {{/if}}
   {{#if (and @person.isRanger this.permission.recommend_burn_weekend_shift)}}
     <div class="border p-2 border-danger mb-2 d-print-none">
@@ -146,11 +142,13 @@
                           (concat "Past " @year " Shifts")}}</h3>
     {{#if this.availableSlots}}
       {{#if this.inactiveSlots}}
-        <ChAlert @type="warning">
+        <ChNotice @type="info" @title="Schedule listing has inactive shifts" @icon="hand-point-right">
+          <p>
           Because you have the Edit Slots, Grant Positions, Trainer, VC, and/or Admin role, the shift listing
-          may contain inactive shifts.
-          Sign ups are disabled for inactive shifts until the shift has been activated.
-        </ChAlert>
+          will contain inactive shifts.
+          </p>
+          Sign ups are disabled until the shift has been activated through the Edit Slots page.
+        </ChNotice>
       {{/if}}
 
       <div class="row mb-1">

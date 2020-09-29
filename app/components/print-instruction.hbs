@@ -1,8 +1,9 @@
-<div class="d-print-none">
-  <a href {{action @backAction}}>{{@backLabel}}</a>
-  <div class="text-muted mt-1">
-    Use the browser's print command to send this page to the printer. Don't
-    worry, the navigation bar, footer, and this message will not appear on the
+<div class="d-print-none my-1">
+  {{#if @backLabel}}
+    <p><a href {{action @backAction}}>{{@backLabel}}</a></p>
+  {{/if}}
+  <div class="text-muted">
+    Use the browser's print command to send this page to the printer. The navigation bar, footer, and this message will not appear on the
     page.
   </div>
 </div>

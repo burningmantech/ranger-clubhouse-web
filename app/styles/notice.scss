@@ -1,0 +1,42 @@
+.notice-box {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 5px;
+  border: 1px solid;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.notice-icon {
+  margin: 5px 15px 0 5px;
+}
+
+.notice-body {
+  align-self: center;
+}
+
+.notice-header {
+  font-size: $h4-font-size;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.notice-success {
+  border-color: #28a745;
+  background-color: #c3e6cb;
+}
+
+.notice-warning {
+  border-color: #d2b48c;
+  background-color: #ffff99;
+}
+
+.notice-danger {
+  border-color: #721c24;
+  background-color: #f8d7da;
+
+  .notice-header {
+    color: #9c0010;
+  }
+}
+

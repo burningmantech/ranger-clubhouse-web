@@ -104,9 +104,9 @@
   <BroadcastCandidatesTable @people={{this.people}} />
 {{else}}
   {{#if this.noPeople}}
-    <ChAlert @type="danger">
-      Nobody was found matching the criteria.
-    </ChAlert>
+    <ChNotice @type="danger" @icon="exclamation">
+      No accounts were found matching the criteria.
+    </ChNotice>
   {{/if}}
   <ChForm @formId="broadcastForm" @formFor={{this.broadcastForm}}
           @validator={{this.broadcastValidations}}

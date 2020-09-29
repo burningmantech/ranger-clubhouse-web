@@ -2,7 +2,7 @@
             @subheader=true/>
 
   {{#each this.trainingSessions as |session|}}
-    <ChBox @title={{concat (shift-format session.slot.begins) " " session.slot.description}}>
+    <ChCard @header={{concat (shift-format session.slot.begins) " " session.slot.description}}>
       {{#unless session.slot.active}}
         <p class="text-danger font-weight-bold">
           Training session has not been activated. Sign ups are disabled until the session (aka slot) has been
@@ -41,7 +41,7 @@
           Manage
         </LinkTo>
       </div>
-    </ChBox>
+    </ChCard>
   {{else}}
     <div class="text-danger mt-2"><b>No {{this.year}} {{this.training.title}} sessions were found.</b></div>
   {{/each}}

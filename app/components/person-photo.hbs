@@ -1,6 +1,6 @@
 <div class="mugshot {{@containerClass}}">
   {{#if (and (not-eq @photo.photo_status "missing") @photo.photo_url)}}
-    <img src="{{@photo.photo_url}}" class="mx-auto d-block" alt="profile">
+    <img src="{{@photo.photo_url}}" alt="profile">
     {{#if (eq @photo.photo_status "approved")}}
       <span class="text-success">{{fa-icon "check"}} Approved</span>
     {{else if (eq @photo.photo_status "submitted")}}
@@ -20,7 +20,6 @@
     <div class="mt-1">
       <button type="button" class="btn btn-primary" {{action @uploadAction}}>Upload new photo</button>
     </div>
-  {{else}}
-    <small><b>Photo uploading is disabled</b></small>
   {{/if}}
 </div>
+

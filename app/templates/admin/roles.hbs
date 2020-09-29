@@ -1,23 +1,24 @@
 <h1>System Roles</h1>
 
-<ChAlert @type="warning">
-  <p>
-    A <b>role</b> is the permission to use certain parts of this website. It is
-    different from a position, which is part of the schedule. Some roles are
-    essential to the system and cannot be removed or renamed. New roles can be
-    created and edited to restrict access to extended information.
-  </p>
+<ChNotice @type="danger" @icon="exclamation-triangle">
+  <b>DO NOT add/change/delete roles unless instructed to do so by the Tech Team.</b>
+</ChNotice>
+<p>
+  A <b>role</b> is the permission to use certain parts of this website. It is
+  different from a position, which is part of the schedule. Some roles are
+  essential to the system and cannot be removed or renamed. New roles can be
+  created and edited to restrict access to extended information.
+</p>
 
-  <p>
-    When a new user creates an account, he or she is automatically authorized for
-    any role with the "New User?" box checked.
-  </p>
+<p>
+  When a new user creates an account, they are automatically authorized for
+  any role with the "New User?" box checked.
+</p>
 
-  <strong>DO NOT add/change/delete roles unless instructed to do so by the Tech Team.</strong>
-</ChAlert>
 
-<button type="button" {{action this.newRole}} class="btn btn-primary">New Role</button>
-
+<p>
+  <button type="button" {{action this.newRole}} class="btn btn-primary">New Role</button>
+</p>
 <table class="table table-sm table-hover table-striped table-width-auto">
   <thead>
   <tr>
@@ -30,19 +31,16 @@
   <tbody>
   {{#each this.roles as |role|}}
     <tr>
-      <td>{{role.id}}</td>
+      <td class="text-right">{{role.id}}</td>
       <td>{{role.title}}</td>
-      <td>
+      <td class="text-center">
         {{#if role.new_user_eligible}}
-          Y
+          {{fa-icon "check"}}
         {{else}}
           &nbsp;
         {{/if}}
       </td>
       <td>
-        <button {{action this.removeRole role}} type="button" class="btn btn-danger btn-sm">
-          {{fa-icon "trash-alt" type="fas"}} Delete
-        </button>
         <button {{action this.editRole role}} type="button" class="btn btn-primary btn-sm">
           {{fa-icon "edit"}} Edit
         </button>
@@ -58,18 +56,26 @@
             @validator={{this.roleValidations}} @onSubmit={{this.saveRole}} @onCancel={{this.cancelRole}} as |f|>
       <Modal.body>
         <div class="form-row">
-          <f.input @name="title" @type="text" @label="Role Title:" @maxlength=25 @size=25 />
+          <f.input @name="title" @type="text" @label="Role Title:" @maxlength=25 @size=25/>
         </div>
         <div class="form-row">
-          <f.input @name="new_user_eligible" @type="checkbox" @label="New User Eligible?" @options={{this.newUserOptions}} />
+          <div class="col-auto">
+          <f.input @name="new_user_eligible" @type="checkbox" @label="New User Eligible?"
+                   @options={{this.newUserOptions}} />
+          </div>
         </div>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
         <f.cancel @disabled={{this.entry.isSaving}} />
         {{#if this.entry.isSaving}}
-          <LoadingIndicator />
+          <LoadingIndicator/>
         {{/if}}
+        <div class="ml-auto">
+          <button {{action this.removeRole}} type="button" class="btn btn-danger btn-sm">
+            {{fa-icon "trash-alt" type="fas"}} Delete
+          </button>
+        </div>
       </Modal.footer>
     </ChForm>
   </ModalDialog>

@@ -1,5 +1,5 @@
 {{#if this.isStopped}}
-  <ChBox @title="One or more phone numbers are STOPPED" @icon="exclamation-triangle">
+  <ChNotice @title="One or more phone numbers are STOPPED" @icon="exclamation-triangle">
     <p>
       <b class="text-danger">WARNING: Someone, most likely you, texted the STOP command
         from one of the following numbers.</b>
@@ -15,11 +15,11 @@
       {{/if}}
     </ul>
     Contact {{general-support-email}} for help.
-  </ChBox>
+  </ChNotice>
 {{/if}}
 
 {{#if this.notVerified}}
-  <ChBox @title="Verify Your Phone Number(s)" @icon="exclamation-triangle">
+  <ChNotice @title="Verify Your Phone Number(s)" @icon="arrow-right">
     <p>
       Please verify your SMS number(s). You will not be able receive Clubhouse alert messages
       until you do so. (Data rates may apply.)
@@ -69,7 +69,7 @@
         </div>
       </div>
     </ChForm>
-  </ChBox>
+  </ChNotice>
 {{/if}}
 
 <h3>Pre-Event &amp; On Playa SMS Numbers</h3>

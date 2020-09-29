@@ -367,11 +367,16 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
               {{#if this.session.user.unread_message_count}}
-                <span class="badge badge-pill badge-success">{{fa-icon
-                        "envelope"}} {{this.session.user.unread_message_count}}</span>
+                <span class="badge badge-pill badge-success">
+                  {{fa-icon "envelope"}} {{this.session.user.unread_message_count}}
+                </span>
               {{/if}}
               {{session.user.callsign}}
+              {{#if this.session.user.onduty_position}}
+              ({{this.session.user.onduty_position.title}})
+              {{/if}}
             </a>
+
             <div class="dropdown-menu">
               {{#if this.session.user.isRanger}}
                 <LinkTo @route="me.messages" class="dropdown-item">

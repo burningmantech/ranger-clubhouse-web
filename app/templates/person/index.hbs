@@ -13,24 +13,24 @@
   <div class="col-sm-12 col-lg-9">
     {{#if (has-role "admin" "mentor" "vc")}}
       <Person::FullForm @person={{this.person}}
-                            @savePersonAction={{this.savePersonAction}}
-                            @callsignApprovedOptions={{this.callsignApprovedOptions}}
-                            @statusOptions={{this.statusOptions}}
-                            @onSiteOptions={{this.onSiteOptions}}
+                        @savePersonAction={{this.savePersonAction}}
+                        @callsignApprovedOptions={{this.callsignApprovedOptions}}
+                        @statusOptions={{this.statusOptions}}
+                        @onSiteOptions={{this.onSiteOptions}}
 
-                            @personRoles={{this.personRoles}}
-                            @toggleRoles={{this.toggleRoles}}
-                            @showRoles={{this.showRoles}}
-                            @editRolesAction={{this.editRolesAction}}
+                        @personRoles={{this.personRoles}}
+                        @toggleRoles={{this.toggleRoles}}
+                        @showRoles={{this.showRoles}}
+                        @editRolesAction={{this.editRolesAction}}
 
-                            @personPositions={{this.personPositions}}
-                            @togglePositions={{this.togglePositions}}
-                            @showPositions={{this.showPositions}}
-                            @editPositionsAction={{this.editPositionsAction}}
+                        @personPositions={{this.personPositions}}
+                        @togglePositions={{this.togglePositions}}
+                        @showPositions={{this.showPositions}}
+                        @editPositionsAction={{this.editPositionsAction}}
 
-                            @editNote={{this.editNote}}
-                            @confirmNoteOrMessage={{this.confirmNoteOrMessage}}
-                            @removePersonAction={{this.removePersonAction}}
+                        @editNote={{this.editNote}}
+                        @confirmNoteOrMessage={{this.confirmNoteOrMessage}}
+                        @removePersonAction={{this.removePersonAction}}
       />
     {{else}}
       <Person::SimpleForm @person={{this.person}}
@@ -65,7 +65,9 @@
 
 {{#if this.showUploadDialog}}
   <PhotoUpload @person={{this.person}} @refreshPhoto={{this.refreshPhoto}}
-               @closeAction={{this.closeUploadDialogAction}} />
+               @closeAction={{this.closeUploadDialogAction}}
+               @photo={{this.photo}}
+  />
 {{/if}}
 
 {{#if this.showConfirmNoteOrMessage}}
@@ -78,7 +80,8 @@
       Would you rather send a Clubhouse Message?
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <button type="button" class="btn btn-primary mr-3" {{action this.sendClubhouseMessage}}>Send Clubhouse Message</button>
+      <button type="button" class="btn btn-primary mr-3" {{action this.sendClubhouseMessage}}>Send Clubhouse Message
+      </button>
       <button type="button" class="btn btn-primary mr-3" {{action this.editNote}}>Add Note</button>
       <button type="button" class="btn btn-secondary" {{action this.closeConfirmNoteOrMessage}}>Cancel</button>
     </Modal.footer>

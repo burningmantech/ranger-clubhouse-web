@@ -1,98 +1,88 @@
 <LoginSidebar/>
 <main class="col">
   {{#if this.session.isStaging}}
-    <ChAlert @type="danger">
-      <p>
-        <b>WARNING: This is the Clubhouse Staging Server used for testing and verification. Here be dragons.</b>
-      </p>
-      <p>
-        The real production server can be found
-        here:
-      </p>
-      <a href="https://ranger-clubhouse.burningman.org">https://ranger-clubhouse.burningman.org</a>
-    </ChAlert>
+    <ChNotice @type="danger" @icon="exclamation"
+           @title="This is the Clubhouse Staging Server used for testing and verification">
+      <p>Here be dragons.</p>
+      The real production server can be found here:<br>
+      <a href="https://ranger-clubhouse.burningman.org">ranger-clubhouse.burningman.org</a>
+    </ChNotice>
   {{/if}}
-  {{#if this.session.isAuthenticated}}
-    <LoadingDialog @text="Please wait. Your account is being loaded."/>
-  {{else}}
-    <h2>Welcome To The Ranger Secret Clubhouse!</h2>
-    {{#if this.loginError}}
-      <ChAlert @type="danger">
-        {{fa-icon "exclamation-triangle"}}
-        {{#if (eq this.loginError "invalid-credentials")}}
-          The email and/or password is incorrect.
-        {{else if (eq this.loginError "account-disabled")}}
-          The account has been permanently disabled.
-          <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more
-            information.</p>
-        {{else if (eq this.loginError "login-disabled")}}
-          Login has been disabled for this account.
-          <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more
-            information.</p>
-        {{else if (eq this.loginError "account-suspended")}}
-          The account has been suspended.
-          <p>Please email the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more
-            information.</p>
-        {{else}}
-          An unknown server response was received. status=[{{this.loginError}}]
-        {{/if}}
-      </ChAlert>
+  <h2>Welcome To The Ranger Secret Clubhouse!</h2>
+  {{#if this.loginError}}
+    {{#if (eq this.loginError "invalid-credentials")}}
+      <ChNotice @title=" The email and/or password is incorrect." @type="danger" @icon="exclamation-triangle"/>
+    {{else}}
+      <ChNotice @type="danger" @icon="ban" @title="Login has been disabled for this account.">
+        Contact the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more
+        information.
+      </ChNotice>
     {{/if}}
-    <div class="d-flex flex-column flex-lg-row align-items-stretch mt-lg-4">
-      <div class="mr-lg-4">
-        <ChForm @formId="auth" @formFor={{this.authForm}} @validator={{this.loginValidations}}
-                @autocomplete="on" @onSubmit={{this.submit}} as |f|>
-          <div class="form-row">
-            <f.input @name="identification" @label="Email" @type="text" @inputmode="email" @autocomplete="username"
-                     @autofocus={{true}} @noSpaces={{true}} @grid="col-sm-12 col-lg-auto" @size={{30}} />
-          </div>
-          <div class="form-row">
-            <f.input @name="password" @label="Password" @type="password" @autocomplete="current-password"
-                     @grid="col-sm-12 col-lg-auto" @size={{30}}/>
-          </div>
-          <div class="form-row">
-            <div class="col-sm-12 col-lg-4">
-              <f.submit @label="Login" @disabled={{this.isSubmitting}}
-                        @submitClass="btn-lg btn-responsive login-submit mb-4"/>
-              {{#if this.isSubmitting}}
-                <LoadingIndicator/>{{/if}}
-            </div>
-            <div class="col-sm-12 col-lg-8 mt-2 mb-4 text-right">
-              <LinkTo @route="reset-password" class="d-block">Forgot your password?</LinkTo>
-            </div>
-          </div>
-        </ChForm>
-      </div>
-      <div class="mt-4">
-        <ChBox @title="Volunteer with the Rangers">
-          <p>
-            Visit <a href="https://rangers.burningman.org/ranger-application-process/" target="_blank"
-                     rel="noopener noreferrer">Becoming
-            a Ranger</a> to read about our requirements and how to apply.
-          </p>
-          All past prospective Rangers must reapply each year.
-        </ChBox>
-        <ChBox @title="Attend Ranger training as a guest/auditor">
-          <p>
-            First visit <a href="https://rangers.burningman.org/training/auditing/" rel="noopener noreferrer">
-            Auditing a Ranger Training</a> to read about auditor requirements and restrictions.
-          </p>
-          <p>
-            Then
-            <LinkTo @route="register">click here to create</LinkTo>
-            an auditor Clubhouse account.
-          </p>
-          Note: Auditing is not a path to becoming a Ranger.
-        </ChBox>
-      </div>
-    </div>
-
-    <hr>
-    <p>
-      Email {{general-support-email}} if you have a general question about the Rangers.
-    </p>
-    <p>
-      For help logging in or registering, email the Rangers Tech Ninjas at {{admin-email}}
-    </p>
   {{/if}}
+  <div class="d-flex flex-column flex-lg-row align-items-stretch mt-lg-4">
+    <div class="mr-lg-4">
+      <ChForm @formId="auth" @formFor={{this.authForm}} @validator={{this.loginValidations}}
+              @autocomplete="on" @onSubmit={{this.submit}} as |f|>
+        <div class="form-row">
+          <f.input @name="identification" @label="Email" @type="text" @inputmode="email" @autocomplete="username"
+                   @autofocus={{true}} @noSpaces={{true}} @grid="col-sm-12 col-lg-auto" @size={{30}} />
+        </div>
+        <div class="form-row">
+          <f.input @name="password" @label="Password" @type="password" @autocomplete="current-password"
+                   @grid="col-sm-12 col-lg-auto" @size={{30}}/>
+        </div>
+        <div class="form-row">
+          <div class="col-sm-12 col-lg-4">
+            <f.submit @label="Login" @disabled={{this.isSubmitting}}
+                      @submitClass="btn-lg btn-responsive login-submit mb-4"/>
+            {{#if this.isSubmitting}}
+              <LoadingIndicator/>{{/if}}
+          </div>
+          <div class="col-sm-12 col-lg-8 mt-2 mb-4 text-right">
+            <LinkTo @route="reset-password" class="d-block">Forgot your password?</LinkTo>
+          </div>
+        </div>
+      </ChForm>
+    </div>
+    <div class="mt-4">
+      <ChCard @header="Volunteer with the Rangers">
+        <p>
+          Visit
+          <a href="https://rangers.burningman.org/ranger-application-process/"
+             target="_blank" rel="noopener noreferrer">
+          Becoming a Ranger
+          </a> to read about our requirements and how to apply.
+        </p>
+        All past prospective Rangers must reapply each year.
+      </ChCard>
+      <ChCard @header="Attend Ranger training as a guest/auditor">
+        <p>
+          First visit <a href="https://rangers.burningman.org/training/auditing/" rel="noopener noreferrer">
+          Auditing a Ranger Training</a> to read about auditor requirements and restrictions.
+        </p>
+        <p>
+          Then
+          <LinkTo @route="register">click here to create</LinkTo>
+          an auditor Clubhouse account.
+        </p>
+        Note: Auditing is not a path to becoming a Ranger.
+      </ChCard>
+    </div>
+  </div>
+
+  <hr>
+  <p>
+    Email {{general-support-email}} if you have a general question about the Rangers.
+  </p>
+  <p>
+    For help logging in or registering, email the Rangers Tech Ninjas at {{admin-email}}
+  </p>
 </main>
+{{#if this.session.isAuthenticated}}
+  <ModalDialog as |Dialog|>
+    <Dialog.body>
+      <LoadingIndicator @text="Login successful! Please wait while your account loaded."/>
+    </Dialog.body>
+  </ModalDialog>
+{{/if}}
+

@@ -1,6 +1,6 @@
 <h2 class="homepage-title">Welcome to the Secret Clubhouse</h2>
 {{#if (eq @photo.photo_status "missing")}}
-  <ChBox @title="Photo Is Needed" @type="warning" @icon="exclamation-triangle">
+  <ChNotice @title="Photo Is Needed" @type="warning" @icon="exclamation-triangle">
     <p>
       You need to upload a photo
       {{#if @person.isNonRanger}}
@@ -13,9 +13,9 @@
       Note that you will <b class="text-danger">not be able to sign up for shifts</b>
       until you have an approved Clubhouse photo. Usually photos are approved within 2 to 3 days.
     </p>
-  </ChBox>
+  </ChNotice>
 {{else if (eq @photo.photo_status "rejected")}}
-  <ChBox @type="danger" @title="Photo rejected" @icon="times">
+  <ChNotice @type="danger" @title="Photo rejected" @icon="times">
     <p>
       Your photo has been rejected. A new one will need to be submitted.
     </p>
@@ -37,7 +37,7 @@
     <a target="_blank" rel="noopener noreferrer"
                                                          href="https://docs.google.com/document/d/1hUqrJwdMG6XB5nk7Eh8nY2GH4uvAFTppmCKCmfidIvQ/edit?usp=sharing">this
     helpful document.</a>.
-  </ChBox>
+  </ChNotice>
 {{/if}}
 
 
@@ -57,7 +57,7 @@
 {{/if}}
 
 {{#if @milestones.surveys.sessions}}
-  <ChBox @title="Your feedback on Ranger training is requested">
+  <ChNotice @title="Your feedback on Ranger training is requested">
     {{fa-icon "comment-dots" type="far" size="2x"}} Please take a few moments and provide feedback on the {{pluralize
           @milestones.surveys.sessions.length "training"}}
     you attended:
@@ -68,11 +68,11 @@
         </LinkTo>
       </p>
     {{/each}}
-  </ChBox>
+  </ChNotice>
 {{/if}}
 
 {{#if @milestones.surveys.trainers}}
-  <ChBox @title="Provide feedback for your fellow trainers">
+  <ChNotice @title="Provide feedback for your fellow trainers">
     Thank you for teaching. Take a few minutes to provide feedback on your fellow trainers:
     {{#each @milestones.surveys.trainers as |slot|}}
       <p class="my-1">
@@ -84,7 +84,7 @@
         {{~/each}}
       </p>
     {{/each}}
-  </ChBox>
+  </ChNotice>
 {{/if}}
 
 <div class="mt-1 mb-2">Thank for stopping by. There are a few things to do here:</div>
