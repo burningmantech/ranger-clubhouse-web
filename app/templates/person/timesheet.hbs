@@ -1,14 +1,19 @@
-<div class="float-right mt-1">
-  <LinkTo @route="person.timesheet-log" @query={{hash year=year}} class="btn btn-primary">Timesheet Log</LinkTo>
-</div>
-<YearSelect @title="Timesheet" @year={{this.year}} @years={{person.all_years}} @onChange={{action (mut this.year)}} @subheader={{true}} />
-<div class="border rounded p-2 mt-3 mb-2">
-  <h3>Shift Manage</h3>
-  {{#if (is-current-year this.year)}}
-    <ShiftCheckInOut @positions={{this.positions}} @timesheets={{this.timesheets}} @person={{this.person}} @eventInfo={{this.eventInfo}} />
-  {{else}}
-    Select the current year to start or end a shift
-  {{/if}}
-</div>
-<Person::TimesheetManage @timesheets={{this.timesheets}} @person={{this.person}} @year={{this.year}} @positions={{positions}} @onChange={{this.updateTimesheetSummary}} @timesheetSummary={{this.timesheetSummary}} />
-<Person::TimesheetMissing @timesheetMissing={{this.timesheetMissing}} @timesheets={{this.timesheets}} @person={{this.person}} @year={{this.year}} @positions={{this.positions}} @onChange={{this.updateTimesheetSummary}} />
+<YearSelect @title="Timesheet" @year={{this.year}} @years={{this.person.all_years}}
+            @onChange={{action (mut this.year)}} @subheader={{true}} />
+<ChAccordion @title="Shift Manage" as |Accordion|>
+  <Accordion.title>Shift Manage</Accordion.title>
+  <Accordion.body>
+    {{#if (is-current-year this.year)}}
+      <ShiftCheckInOut @positions={{this.positions}} @timesheets={{this.timesheets}} @person={{this.person}}
+                       @eventInfo={{this.eventInfo}} />
+    {{else}}
+      Select the current year to start or end a shift
+    {{/if}}
+  </Accordion.body>
+</ChAccordion>
+<Person::TimesheetManage @timesheets={{this.timesheets}} @person={{this.person}} @year={{this.year}}
+                         @positions={{positions}} @onChange={{this.updateTimesheetSummary}}
+                         @timesheetSummary={{this.timesheetSummary}} />
+<Person::TimesheetMissing @timesheetMissing={{this.timesheetMissing}} @timesheets={{this.timesheets}}
+                          @person={{this.person}} @year={{this.year}} @positions={{this.positions}}
+                          @onChange={{this.updateTimesheetSummary}} />

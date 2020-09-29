@@ -1,9 +1,9 @@
 <main class="col">
   <h1>Clubhouse 1 Log</h1>
 
-  <ChAlert @type="warning">
-    The Clubhouse 1 Log has been deprecated. Entries range from July 16, 2008 to late October 2019.
-  </ChAlert>
+  <ChNotice @type="danger" @title="Clubhouse 1 Log Deprecated" @icon="exclamation-triangle">
+   Entries range from July 16, 2008 to late October 2019.
+  </ChNotice>
 
   {{#if this.error}}
     <p class="text-danger">

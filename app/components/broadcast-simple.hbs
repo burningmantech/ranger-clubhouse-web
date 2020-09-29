@@ -15,11 +15,9 @@
   <BroadcastCandidatesTable @people={{this.people}} />
 {{else}}
   {{#unless @config.is_during_event}}
-    <ChAlert @type="warning">
-      <h4>{{fa-icon "exclamation-triangle"}} Event has not started yet</h4>
-      HEY! The event hasn't started yet. This broadcast may not be appropriate
-      to send out right now. You might want to check out the General Broadcast Actions.
-    </ChAlert>
+    <ChNotice @type="danger" @title="Event has not started yet" @icon="exclamation">
+      This broadcast may not be appropriate to send out right now. Check out the General Broadcast Actions
+    </ChNotice>
   {{/unless}}
 
 

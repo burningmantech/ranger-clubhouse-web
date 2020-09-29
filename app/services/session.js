@@ -6,6 +6,7 @@ import MobileDetect from 'mobile-detect';
 import {debounce} from '@ember/runloop';
 import ENV from 'clubhouse/config/environment';
 import {config} from 'clubhouse/utils/config';
+import { tracked } from '@glimmer/tracking';
 
 const MOBILE_MAX_WIDTH = 719;
 const RESIZE_DEBOUNCE_DELY = 250;
@@ -13,11 +14,13 @@ const RESIZE_DEBOUNCE_DELY = 250;
 export default class extends SessionService {
   @service store;
 
-  user = null;
+  @tracked user = null;
 
   isMobileDevice = false;
-  isMobileScreen = false;
   isTabletDevice = false;
+
+  // Screen size may change due to window resize or device orientation.
+  @tracked isMobileScreen = false;
 
   get userId() {
     return (this.isAuthenticated && this.user) ? this.user.id : null;
@@ -25,10 +28,8 @@ export default class extends SessionService {
 
   constructor() {
     super(...arguments);
-    //this._super(...arguments);
 
     const md = new MobileDetect(navigator.userAgent);
-
     this.isMobileDevice = md.mobile();
     this.isTabletDevice = md.tablet();
 
@@ -36,8 +37,10 @@ export default class extends SessionService {
      * Notify when the screen resizes so the layout can adjust accordingly.
       */
 
-    window.addEventListener('resize', this._bounceResizeEvent, false);
     this._windowResized();
+    window.addEventListener('resize', this._bounceResizeEvent, false);
+
+    this.isDevelopment = ENV.environment === 'development';
   }
 
   @action
@@ -46,7 +49,7 @@ export default class extends SessionService {
   }
 
   _windowResized() {
-    this.set('isMobileScreen', (document.documentElement.clientWidth <= MOBILE_MAX_WIDTH));
+    this.isMobileScreen = (document.documentElement.clientWidth <= MOBILE_MAX_WIDTH);
   }
 
   loadUser() {
@@ -59,7 +62,7 @@ export default class extends SessionService {
     return this.store.findRecord('person', person_id, {reload: true})
       .then((person) => {
         return person.loadUserInfo().then(() => {
-          const user = User.create({
+          this.user = User.create({
             id: person.id,
             callsign: person.callsign,
             callsign_approved: person.callsign_approved,
@@ -67,19 +70,13 @@ export default class extends SessionService {
             status: person.status,
             teacher: person.teacher,
             has_hq_window: person.has_hq_window,
-            is_on_duty_at_hq: person.is_on_duty_at_hq,
+            onduty_position: person.onduty_position,
             unread_message_count: person.unread_message_count,
             bpguid: person.bpguid, // PNV or Actives must have a BPGUID to sign up.
             may_request_stickers: person.may_request_stickers,
           });
-
-          this.set('user', user);
         });
       });
-  }
-
-  get isDevelopment() {
-    return ENV.environment === 'development';
   }
 
   get isStaging() {

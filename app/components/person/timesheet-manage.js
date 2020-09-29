@@ -85,6 +85,9 @@ export default class PersonTimesheetManageComponent extends Component {
         const person = this.args.person;
         this.timesheets.update();
         this.args.onChange();
+        if (this.person.id == this.session.userId) {
+          this.session.loadUser();
+        }
         switch (result.status) {
           case 'success':
             this.toast.success(`${person.callsign} has been successfully signed off. Enjoy your rest.`);

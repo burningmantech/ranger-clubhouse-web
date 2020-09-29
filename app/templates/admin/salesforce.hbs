@@ -29,7 +29,7 @@
 
 
 {{#if this.showHelp}}
-  <ChBox @title="TL;DR Guide For Safe Testing">
+  <ChNotice @title="TL;DR Guide For Safe Testing">
     <p>
       When the Submit button is clicked the first time without setting any options,
       you should see three test records
@@ -72,7 +72,7 @@
       import again. This is useful for testing. (Note that it does not remove
       these accounts from the Clubhouse, you'll have to do that manually.)
     </p>
-  </ChBox>
+  </ChNotice>
 {{/if}}
 
 {{#if (eq this.importStatus "error")}}

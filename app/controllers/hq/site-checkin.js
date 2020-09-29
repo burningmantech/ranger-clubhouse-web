@@ -7,6 +7,7 @@ export default class HqSiteCheckinController extends Controller {
   @tracked isSubmitting = false;
   @tracked isContactSaved = false;
   @tracked isOnSite = false;
+  @tracked showAlphaWarning = false;
 
   @computed('assets.@each.checked_in')
   get activeAssets() {
@@ -20,13 +21,13 @@ export default class HqSiteCheckinController extends Controller {
 
   @computed('dirtTraining', 'eventInfo.training.@each.position_id', 'person.status')
   get isPersonDirtTrained() {
-    if (this.person.status == 'non ranger') {
+    if (this.person.status === 'non ranger') {
       return true;
     }
 
     const training = this.dirtTraining;
 
-    return (training && training.status == 'pass');
+    return (training && training.status === 'pass');
   }
 
   @action
@@ -65,5 +66,10 @@ export default class HqSiteCheckinController extends Controller {
         model.rollbackAttributes();
     })
     .finally(() => this.isSubmitting = false);
+  }
+
+  @action
+  closeAlphaWarning() {
+    this.showAlphaWarning = false;
   }
 }

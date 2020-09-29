@@ -29,11 +29,10 @@
     {{shift-format this.eventDate.pre_event_slot_end}}
   </p>
 {{else}}
-  <ChAlert @type="danger">
-    WARNING: {{this.year}} pre-event slot dates are not set. Pre-Event slots may not be properly vetted. Visit
-    <LinkTo @route="admin.event-dates">Admin &gt; Edit Event Dates</LinkTo>
-    to set the dates.
-  </ChAlert>
+  <ChNotice @title="{{this.year}} pre-event slot dates are not set" @type="danger">
+    Pre-Event slots may not be properly vetted. Visit
+    <LinkTo @route="admin.event-dates">Admin &gt; Edit Event Dates</LinkTo> to set the dates.
+  </ChNotice>
 {{/if}}
 
 {{#if this.slots.length}}

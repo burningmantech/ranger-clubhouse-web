@@ -28,10 +28,8 @@
   <ChForm @formId="search" @formFor={{this.searchForm}} @changeSet={{false}} @onFormChange={{this.searchOnChange}}
           as |f|>
     <div class="form-row">
-      <div class="col-auto">
         <f.input @name="callsign" @label="Start typing the callsign of Ranger you wish to contact:" @type="text"
-                 @size=30 @autofocus={{true}} />
-      </div>
+                 @size=30 @autofocus={{true}} @grid="col-auto" />
     </div>
     <div class="form-row">
       {{#if this.isSubmitting}}

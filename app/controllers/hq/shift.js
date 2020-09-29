@@ -59,7 +59,7 @@ export default class HqShiftController extends Controller {
 
   @computed('assetsCheckedOut')
   get radioCount() {
-    return this.assetsCheckedOut.filter((a) => a.asset.description == 'Radio').length;
+    return this.assetsCheckedOut.filter((a) => a.asset.description === 'Radio').length;
   }
 
   @computed('eventInfo', 'radioCount')
@@ -96,7 +96,7 @@ export default class HqShiftController extends Controller {
 
   @computed('timesheets.@each.stillOnDuty')
   get isOffDuty() {
-    return this.timesheets.find((t) => t.stillOnDuty) == undefined;
+    return this.timesheets.find((t) => t.stillOnDuty) === undefined;
   }
 
   @action

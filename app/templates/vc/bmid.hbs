@@ -64,6 +64,7 @@
   <table class="table table-sm table-striped table-hover">
     <thead>
     <tr>
+      <th>&nbsp;</th>
       <th>{{#if (eq this.sortColumn "callsign")}}[Callsign]{{else}}
         <a href {{action sortBmidsAction "callsign"}}>Callsign</a>{{/if}}</th>
       {{#unless this.editMode}}
@@ -105,6 +106,8 @@
               {{~#unless bmid.has_signups~}}
                 {{fa-icon "exclamation-circle"}}
               {{~/unless}}
+            </td>
+            <td>
               {{~#if bmid.person~}}
                 <PersonLink @person={{bmid.person}} />
                 {{~else~}}
@@ -168,6 +171,8 @@
               {{#unless bmid.has_signups}}
                 {{fa-icon "exclamation-circle"}}
               {{/unless}}
+            </td>
+            <td>
               {{#if bmid.person}}
                 <PersonLink @person={{bmid.person}} />
               {{else}}
@@ -220,8 +225,10 @@
 {{#if this.entry}}
   <ModalDialog @title={{if this.entry.id (concat "Edit BMID #" this.entry.id) "New BMID"}} as |Modal|>
     <Modal.body>
-      <h3>{{this.year}} {{this.entry.person.callsign}} &lt;{{this.entry.person.status}}
-        ,{{this.entry.person.first_name}} {{this.entry.person.last_name}}&gt;</h3>
+      <h3>
+        {{this.year}} {{this.entry.person.callsign}}
+        &lt;{{this.entry.person.status}}, {{this.entry.person.first_name}} {{this.entry.person.last_name}}&gt;
+      </h3>
       <BmidEdit @entry={{this.entry}} @year={{this.year}} @admissionDateOptions={{this.admissionDateOptions}}
                 @onSave={{this.saveBmid}} @onCancel={{this.cancelBmid}} />
     </Modal.body>

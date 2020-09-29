@@ -16,10 +16,11 @@ export default class AdminRolesController extends Controller {
   }
 
   @action
-  removeRole(role) {
-    this.modal.confirm('Delete Role', `Are you sure you wish to delete "${role.title}"? This operation cannot be undone.`, () => {
-      role.destroyRecord().then(() => {
+  removeRole() {
+    this.modal.confirm('Delete Role', `Are you sure you wish to delete "${this.entry.title}"? This operation cannot be undone.`, () => {
+      this.entry.destroyRecord().then(() => {
         this.toast.success('The role has been deleted.');
+        this.entry = null;
       }).catch((response) => this.house.handleErrorResponse(response));
     })
   }

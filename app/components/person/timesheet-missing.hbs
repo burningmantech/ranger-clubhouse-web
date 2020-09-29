@@ -100,13 +100,13 @@
             @onCancel={{this.cancelEntryAction}} as |f|>
       <Modal.body>
         {{#if (eq editEntry.review_status "approved")}}
-          <ChAlert @type="success">
+          <ChNotice @type="success" @icon="check">
             Request has been approved. Review may not be needed at this time.
-          </ChAlert>
+          </ChNotice>
         {{else if (eq editEntry.review_status "rejected")}}
-          <ChAlert @type="danger">
+          <ChNotice @type="danger" @icon="times">
             Request was rejected. Review may not be needed at this time.
-          </ChAlert>
+          </ChNotice>
         {{/if}}
         <dl class="form-row">
           <dt class="col-2">Position:</dt>

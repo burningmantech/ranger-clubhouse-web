@@ -1,15 +1,12 @@
 <h2>Unified Flagging</h2>
 
 {{#if this.history.personnel_issue}}
-  <ChAlert @type="danger">
-    <h4>A PERSONNEL FLAG HAS BEEN RAISED FOR {{this.person.callsign}}</h4>
+  <ChNotice @type="danger" @icon="flag" @title="Personnel Flag Raised For {{this.person.callsign}}">
     <p>
       All training and mentor activity should be suspended and no further actions taken until the situation is resolved.
     </p>
-    <p>
       Contact the Personnel Manager for more information.
-    </p>
-  </ChAlert>
+  </ChNotice>
 {{/if}}
 <p>
   Known Rangers & PNV are usually imported from Salesforce as part of the VolQ. The fields will be populated on various
@@ -17,13 +14,13 @@
 </p>
 {{#if (has-role "admin" "vc" "intake")}}
   <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.savePersonAction}} as |f|>
-    <div class="form-group row">
+    <div class="form-row">
       <label class="col-form-label col-sm-12 col-md-2">Known Rangers</label>
-      <f.input @name="known_rangers" @type="text" @size=50 @maxlength=150 @wrapClass="col-auto"/>
+      <f.input @name="known_rangers" @type="text" @size=50 @maxlength=150 @controlClass="form-control form-control-sm" @wrapClass="col-auto"/>
     </div>
-    <div class="form-group row">
+    <div class="form-row">
       <label class="col-form-label col-sm-12 col-md-2">Known PNVs</label>
-      <f.input @name="known_pnvs" @type="text" @size=50 @maxlength=150 @wrapClass="col-auto"/>
+      <f.input @name="known_pnvs" @type="text" @size=50 @maxlength=150  @controlClass="form-control form-control-sm" @wrapClass="col-auto"/>
     </div>
     <div class="form-group row">
       <label class="col-form-label col-sm-12 col-md-2">&nbsp;</label>

@@ -33,18 +33,7 @@ export default class SearchItemBarComponent extends Component {
   @controller('hq') hqController;
 
   // Call from setCurrentUser in route after user has been authenticated
-  searchForm = EmberObject.create({
-    query: '',
-    name: true,
-    callsign: true,
-    email: true,
-    formerly_known_as: true,
-
-    auditor: false,
-    past_prospective: false,
-
-    mode: (this.session.user.is_on_duty_at_hq) ? 'hq' : 'account',
-  });
+  @tracked searchForm = null;
 
   @tracked showSearchOptions = false;
   @tracked searchText = '';
@@ -53,11 +42,27 @@ export default class SearchItemBarComponent extends Component {
 
   constructor() {
     super(...arguments);
+
+    const onduty = this.session.user.onduty_position;
+    this.searchForm = EmberObject.create({
+      query: '',
+      name: true,
+      callsign: true,
+      email: true,
+      formerly_known_as: true,
+
+      auditor: false,
+      past_prospective: false,
+
+      mode: (onduty && (onduty.subtype === 'hq' || onduty.subtype === 'mentor')) ? 'hq' : 'account',
+    });
+
     const searchPrefs = this.house.getKey('person-search-prefs');
     if (searchPrefs) {
       this.searchForm.setProperties(searchPrefs);
     }
-  }
+
+   }
 
   /**
    * Save the search prefs when changed. The local store is used so the prefs persist in case the user
@@ -80,7 +85,6 @@ export default class SearchItemBarComponent extends Component {
    * @returns {[{id: search-mode, title: search label}]}
    */
 
-  @computed('session.user.{is_on_duty_at_hq,has_hq_window}')
   get modeOptions() {
     const user = this.session.user;
     const options = [{value: 'account', label: 'Person Manage'}];
@@ -113,7 +117,7 @@ export default class SearchItemBarComponent extends Component {
     this.searchForm.set('mode', mode);
     const route = this.router.currentRouteName;
 
-    this.showSearchOptions = (this.searchForm.mode != 'hq');
+    this.showSearchOptions = (this.searchForm.mode !== 'hq');
 
     if (!route.startsWith('person.') && !route.startsWith('hq.')) {
       return;
@@ -136,7 +140,7 @@ export default class SearchItemBarComponent extends Component {
    */
 
   _showItem(item) {
-    if (this.searchType == 'asset') {
+    if (this.searchType === 'asset') {
       this.router.transitionTo('search.assets', {queryParams: {barcode: item.barcode, year: this.searchYear}});
     } else {
       this.router.transitionTo((MODE_ROUTES[this.searchForm.mode] || 'person.index'), item.id);
@@ -247,7 +251,7 @@ export default class SearchItemBarComponent extends Component {
       query
     };
 
-    if (form.mode == 'hq') {
+    if (form.mode === 'hq') {
       // restrict search to callsign and a handful of active-like statuses
       params.search_fields = 'callsign';
       params.statuses = 'active,alpha,prospective,retired,non ranger,inactive,inactive extension';
@@ -299,7 +303,7 @@ export default class SearchItemBarComponent extends Component {
   searchFocusAction() {
     this.searchResults = [];
     this.searchYear = null;
-    this.showSearchOptions = (this.searchForm.mode != 'hq');
+    this.showSearchOptions = (this.searchForm.mode !== 'hq');
   }
 
   @action
@@ -313,7 +317,7 @@ export default class SearchItemBarComponent extends Component {
 
     const fields = [];
 
-    if (form.mode == 'hq') {
+    if (form.mode === 'hq') {
       fields.push('callsign');
     } else {
       if (form.callsign) {

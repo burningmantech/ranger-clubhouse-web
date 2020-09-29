@@ -1,19 +1,12 @@
 <YearSelect @title="Assets (Radios, Gear, Vehicles)" @year={{this.year}} @onChange={{action (mut this.year)}} />
-
-{{#unless this.isCurrentYear}}
-  <ChAlert @type="warning">
-    A previous year is selected. Select the current year to add new assets.
-  </ChAlert>
-{{/unless}}
-
 <div class="form-row mb-1">
-    <label class="col-form-label">Description Filter</label>
+  <label class="col-form-label">Description Filter</label>
   <div class="col-auto">
     <ChForm::Select @name="descriptionFilter" @value={{this.descriptionFilter}} @options={{this.descriptionOptions}}
                     @onChange={{action (mut this.descriptionFilter)}} @controlClass="form-control"/>
   </div>
 
-    <label class="col-form-label">Temp ID Filter</label>
+  <label class="col-form-label">Temp ID Filter</label>
   <div class="col-auto">
     <ChForm::Select @name="tempIdFilter" @value={{this.tempIdFilter}} @options={{this.tempIdOptions}}
                     @onChange={{action (mut this.tempIdFilter)}} @controlClass="form-control"/>
@@ -42,12 +35,17 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
     <tr>
       <td>{{asset.barcode}}</td>
       <td>{{asset.description}}</td>
-      <td><PresentOrNot @value={{asset.temp_id}} @empty="-" /></td>
+      <td>
+        <PresentOrNot @value={{asset.temp_id}} @empty="-"/>
+      </td>
       <td>{{if asset.perm_assign "Perm" "Temp"}}</td>
       <td>
         <button type="button" class="btn btn-secondary btn-sm" {{action this.assetHistoryAction asset}}>History</button>
-        <button type="button" class="btn btn-danger btn-sm" {{action this.deleteAsset asset}}>{{fa-icon "trash"}} Delete</button>
-        <button type="button" class="btn btn-primary btn-sm" {{action this.editAsset asset}}>{{fa-icon "edit"}} Edit</button>
+        <button type="button" class="btn btn-danger btn-sm" {{action this.deleteAsset asset}}>{{fa-icon "trash"}}
+          Delete
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" {{action this.editAsset asset}}>{{fa-icon "edit"}}Edit
+        </button>
       </td>
     </tr>
   {{else if assets}}
@@ -84,7 +82,7 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
         {{#if entry.isNew}}
           <div class="form-row">
             <label class="col-12">Copies (including the first) - Leave blank if only creating one</label>
-             <f.input @name="copies" @type="text" @size=4 @maxlength=4 @controlClass="form-control" @grid="col-auto"/>
+            <f.input @name="copies" @type="text" @size=4 @maxlength=4 @controlClass="form-control" @grid="col-auto"/>
           </div>
         {{/if}}
         <fieldset>

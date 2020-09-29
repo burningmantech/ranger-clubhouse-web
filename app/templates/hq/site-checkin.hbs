@@ -1,26 +1,27 @@
-{{#unless isPersonDirtTrained}}
-  <ChAlert @type="danger">
-    <h3>{{this.person.callsign}} is not eligible for site check in.</h3>
+{{#unless this.isPersonDirtTrained}}
+  <ChNotice @title="{{this.person.callsign}} may not be eligible for check in" @type="danger" @icon="exclamation">
     <p>
-      <b>DO NOT HAND OVER THEIR BMID AND/OR CHECKOUT RADIOS AT THIS TIME.</b>
-    </p>
-    <p>
-      {{#if (eq dirtTraining.status "pending")}}
-        {{this.person.callsign}} is signed up training on {{mdy-format dirtTraining.date full=true}} @ {{time-format dirtTraining.date}}
-        at {{dirtTraining.location}}. This training has not happened yet.
+      <b>
+      {{#if (eq this.dirtTraining.status "pending")}}
+        Person is signed up training for {{shift-format this.dirtTraining.date}}
+        at {{this.dirtTraining.location}}. Training HAS NOT HAPPENED YET.
       {{else if (eq dirtTraining.status "fail")}}
-        {{this.person.callsign}} did not pass training held {{mdy-format dirtTraining.date full=true}} at {{dirtTraining.location}}.
+        Training was not passed on {{mdy-format dirtTraining.date full=true}}
+        at {{dirtTraining.location}}.
       {{else if (eq dirtTraining.status "no-shift")}}
-        No training sign up was found for {{this.person.callsign}}.
+        No training sign up was found.
       {{else}}
-        Uh oh, I did not understand the status [{{dirtTraining.status}}]. This is a bug. Please report this to the tech team.
+        Uh oh, I did not understand the status [{{dirtTraining.status}}]. This is a bug. Please report this to the tech
+        team.
       {{/if}}
+      </b>
     </p>
-    <p class="mt-2">
-      {{this.person.callsign}} may only be issued their BMID, be allowed to check out radios,
-      and work a shift AFTER they have attended &amp; passed training.
+    <p>
+      Consult with the HQ Lead or Supervisor to see if this is an error.
     </p>
-  </ChAlert>
+    Normally a person has to have atttend &amp; passed training before they are issued their BMID, be allowed to check out radios,
+    and work a shift.
+  </ChNotice>
 {{/unless}}
 {{#if this.isOnSite}}
   <p>
@@ -31,15 +32,18 @@
 <ul>
   <li>Verify the camp name, location, and the emergency contacts</li>
   <li>Check to see if the person has signed the Radio Authorization form and Motorpool Policy Agreement.</li>
-  <li>{{#if this.eventInfo.radio_eligible}}Check out an Event Radio if person would like one now{{else}}Person is only authorized for shift radios.{{/if}}</li>
+  <li>{{#if this.eventInfo.radio_eligible}}
+    Check out an Event Radio if person would like one now{{else}}Person is only authorized for shift radios.{{/if}}</li>
   <li>After you hand the person their Ranger laminate and field guide, mark the person as on site.</li>
 </ul>
 
-<h4>Update Contact Information <HelpPopover @slug="hq-site-checkin-contact-info" /></h4>
+<h4>Update Contact Information
+  <HelpPopover @slug="hq-site-checkin-contact-info"/>
+</h4>
 
 <ChForm @formId="contact" @formFor={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
   <div class="form-row">
-    <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @autofocus={{true}} @rows=2 @cols=80 />
+    <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @autofocus={{true}} @rows=2 @cols=80/>
   </div>
   <p class="ml-2">
     <strong>Off-Playa:</strong>
@@ -49,30 +53,34 @@
     Their playa name, real world name, relationship, camp location &amp; description.<br>
   </p>
   <div class="form-row">
-    <f.input @name="emergency_contact" @type="textarea" @label="Emergency Contact Information:" @rows=4 @cols=80 />
+    <f.input @name="emergency_contact" @type="textarea" @label="Emergency Contact Information:" @rows=4 @cols=80/>
   </div>
   <f.submit @label="Update Camp & Emergency Contact Info" @disabled={{this.isSubmitting}} />
   {{#if this.isContactSaved}}
     <span class="text-success">{{fa-icon "check"}}</span>
   {{/if}}
   {{#if this.isSubmitting}}
-    <LoadingIndicator />
+    <LoadingIndicator/>
   {{/if}}
 </ChForm>
 
 <hr class="my-3">
-<h4>Agreements <HelpPopover @slug="hq-site-checkin-agreements" /></h4>
+<h4>Agreements
+  <HelpPopover @slug="hq-site-checkin-agreements"/>
+</h4>
 
 <p>
-  {{#if this.personEvent.asset_authorized}}
+{{#if this.personEvent.asset_authorized}}
     Radio checkout form has been <strong class="text-success">SIGNED</strong>.
-  {{else}}
-    <div class="text-danger">Radio checkout form has NOT BEEN SIGNED.</div>
-    <button type="button" class="btn btn-primary" {{action this.markAssetAuthorized}} disabled={{this.personEvent.isSaving}}>Mark Form As Signed</button>
-    {{#if this.personEvent.isSaving}}
-      <LoadingIndicator />
-    {{/if}}
+{{else}}
+  <div class="text-danger">Radio checkout form has NOT BEEN SIGNED.</div>
+  <button type="button" class="btn btn-primary" {{action this.markAssetAuthorized}}
+          disabled={{this.personEvent.isSaving}}>Mark Form As Signed
+  </button>
+  {{#if this.personEvent.isSaving}}
+    <LoadingIndicator/>
   {{/if}}
+{{/if}}
 </p>
 <p>
   {{#if this.personEvent.signed_motorpool_agreement}}
@@ -89,48 +97,55 @@
 </div>
 
 {{#unless this.eventInfo.radio_info_available}}
-  <ChAlert @type="danger">
+  <ChNotice @type="danger">
     Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
-  </ChAlert>
+  </ChNotice>
 {{/unless}}
 
 {{#if this.eventInfo.radio_eligible}}
-  <h4>Event Radio Checkout <HelpPopover @slug="hq-site-checkin-radios" /></h4>
+  <h4>Event Radio Checkout
+    <HelpPopover @slug="hq-site-checkin-radios"/>
+  </h4>
   <p class="text-success"><b>Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}</b></p>
   <p>
     The radio may be checked out now, or at the start of their first shift.
   </p>
-  <AssetCheckoutForm @person={{this.person}} @assets={{this.assets}} @attachments={{this.attachments}} @eventInfo={{this.eventInfo}} />
+  <AssetCheckoutForm @person={{this.person}} @assets={{this.assets}} @attachments={{this.attachments}}
+                     @eventInfo={{this.eventInfo}} />
   {{#if this.activeAssets}}
     {{pluralize this.activeAssets.length "asset"}} checked out.
     <table class="table table-striped table-sm">
       <thead>
-        <tr>
-          <th>Barcode</th>
-          <th>Type</th>
-          <th>Assigned</th>
-          <th>Attachment</th>
-          <th>Out</th>
-        </tr>
+      <tr>
+        <th>Barcode</th>
+        <th>Type</th>
+        <th>Assigned</th>
+        <th>Attachment</th>
+        <th>Out</th>
+      </tr>
       </thead>
       <tbody>
-        {{#each this.activeAssets as |ap|}}
-          <tr>
-            <td>{{ap.asset.barcode}}</td>
-            <td>{{ap.asset.description}}</td>
-            <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
-            <td><PresentOrNot @value={{ap.attachment.description}} @empty="-" /></td>
-            <td>{{shift-format ap.checked_out}}</td>
-          </tr>
-        {{/each}}
+      {{#each this.activeAssets as |ap|}}
+        <tr>
+          <td>{{ap.asset.barcode}}</td>
+          <td>{{ap.asset.description}}</td>
+          <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
+          <td>
+            <PresentOrNot @value={{ap.attachment.description}} @empty="-"/>
+          </td>
+          <td>{{shift-format ap.checked_out}}</td>
+        </tr>
+      {{/each}}
       </tbody>
     </table>
   {{/if}}
   {{#if this.assets.isUpdating}}
-    <LoadingIndicator @text="Refreshing assets" />
+    <LoadingIndicator @text="Refreshing assets"/>
   {{/if}}
 {{else}}
-  <h4><span class="text-danger">{{this.person.callsign}} is only authorized for a shift radio.</span> <HelpPopover @slug="hq-site-checkin-radios" /></h4>
+  <h4><span class="text-danger">{{this.person.callsign}} is only authorized for a shift radio.</span>
+    <HelpPopover @slug="hq-site-checkin-radios"/>
+  </h4>
   A radio will need be to checked out for each shift, and then returned at the end of the shift.
 {{/if}}
 
@@ -141,9 +156,35 @@
     </p>
     <LinkTo @route="hq.shift" class="btn btn-success">Start Shift Checkin</LinkTo>
   {{else}}
-    <button type="button" class="btn btn-primary" {{action this.markOnSite}} disabled={{this.isSubmitting}}>Mark As On Site</button>
+    <button type="button" class="btn btn-primary" {{action this.markOnSite}} disabled={{this.isSubmitting}}>Mark As On
+      Site
+    </button>
     {{#if this.isSubmitting}}
-      <LoadingIndicator />
+      <LoadingIndicator/>
     {{/if}}
   {{/if}}
 </div>
+
+{{#if this.showAlphaWarning}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      <div class="d-flex">
+        <div class="mt-2 mx-3">
+          {{fa-icon "exclamation-triangle" color="danger" size="3x"}}
+        </div>
+        <div>
+          <h3>
+            DO NOT CHECK IN &mdash; DIRECT PERSON TO THE HAT RACK.
+          </h3>
+          <h3>
+            {{this.person.callsign}} is {{if this.person.isAlpha "an Alpha" "a Prospective"}} and will be handled by
+            the Mentors.
+          </h3>
+        </div>
+      </div>
+    </Modal.body>
+    <Modal.footer>
+      <Modal.button @label="Close" @action={{this.closeAlphaWarning}} @type="primary"/>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}

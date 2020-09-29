@@ -16,7 +16,7 @@
 
 .mugshot {
   background: #fcfcfc;
-  padding: 5px;
+  padding: 10px;
   border: 1px solid #dee2e6;
   border-radius: $border-radius-lg;
   text-align: center;
@@ -26,7 +26,8 @@
   img {
     display: block;
     width: 140px;
-    margin-bottom:5px;
+    margin: 0 auto 5px auto;
+
   }
 }
 
