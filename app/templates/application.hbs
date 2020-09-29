@@ -270,7 +270,7 @@
                       <LinkTo @route="reports.shift-signups" class="dropdown-item">Shift Signups</LinkTo>
                       <LinkTo @route="reports.hq-forecast" class="dropdown-item">HQ Checkin/Out Forecast</LinkTo>
                     </div>
-                    <div class="col-sm-12 col-md-3">
+                    <div class="col-sm-12 col-lg-3">
                       <div class="navbar-text">People</div>
                       <LinkTo @route="reports.people-by-position" class="dropdown-item">People by Position</LinkTo>
                       <LinkTo @route="reports.people-by-role" class="dropdown-item">People by Role</LinkTo>
@@ -377,7 +377,7 @@
               {{/if}}
             </a>
 
-            <div class="dropdown-menu">
+            <div class="dropdown-menu dropdown-menu-right">
               {{#if this.session.user.isRanger}}
                 <LinkTo @route="me.messages" class="dropdown-item">
                   {{pluralize this.session.user.unread_message_count "message"}}
