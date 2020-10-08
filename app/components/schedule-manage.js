@@ -43,10 +43,6 @@ export default class ScheduleManageComponent extends Component {
     const person = this.args.person;
     const permission = this.args.permission;
 
-    if (!this.isCurrentYear) {
-      this.filterDay = 'all';
-    }
-
     this.scheduleSummary = this.args.scheduleSummary;
     this._sortAndMarkSignups();
 
@@ -71,6 +67,11 @@ export default class ScheduleManageComponent extends Component {
 
     this.inactiveSlots = this.availableSlots.filter((slot) => !slot.slot_active);
     this.isCurrentYear = (this.args.year == this.house.currentYear());
+    if (!this.isCurrentYear) {
+      this.filterDay = 'all';
+    }
+
+
     this.isMe = (this.session.userId == person.id);
     this.isAdmin = this.session.user.isAdmin;
     this.permission = permission;
