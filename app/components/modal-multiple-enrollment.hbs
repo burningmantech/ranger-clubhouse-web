@@ -1,7 +1,8 @@
 <ModalDialog @title="Already Signed Up" as |modal|>
   <modal.body>
     <p>
-      {{this.youAreOrCallsignIs}} already enrolled in
+      <YouOrCallsign @person={{this.person}} @youLabel="You are" @callsignVerb="is"/>
+      already enrolled in
       {{pluralize this.enrolledSlots.length (if this.isAlpha "Alpha shift" (concat this.trainingType " session")) }}:
     </p>
     <p>
@@ -23,7 +24,9 @@
     </p>
     {{#if this.data.person.isRanger}}
       <p>
-        NOTE: {{this.youAreOrCallsignIs}} allowed to sign up for a single  Training session and different
+        NOTE:
+        <YouOrCallsign @person={{this.person}} @youLabel="you are" @callsignVerb="is"/>
+        allowed to sign up for a single Training session and different
         ART Training sessions.
       </p>
     {{/if}}

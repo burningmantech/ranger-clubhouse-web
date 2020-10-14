@@ -70,6 +70,10 @@
                       {{#if (and (config "MotorpoolPolicyEnable") (or session.user.isRanger session.user.isAlpha))}}
                         <LinkTo @route="me.motorpool-policy" class="dropdown-item">Motorpool Policy</LinkTo>
                       {{/if}}
+                      {{#if (and (config "RadioCheckoutAgreementEnabled") (or session.user.isRanger session.user.isAlpha session.user.isNonRanger))}}
+                        <LinkTo @route="me.radio-checkout" class="dropdown-item">Radio Agreement</LinkTo>
+                      {{/if}}
+
                       {{#if this.session.user.may_request_stickers}}
                         <LinkTo @route="me.vehicles" class="dropdown-item">Vehicle Requests</LinkTo>
                       {{/if}}

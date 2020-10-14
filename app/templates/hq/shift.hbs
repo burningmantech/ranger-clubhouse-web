@@ -45,76 +45,67 @@
   <HelpPopover @slug="hq-timesheet-verification"/>
 </h3>
 
-{{#if this.unverifiedTimesheetEntry}}
-  {{#if this.ignoreTimesheetVerification}}
-    <button type="button" class="btn btn-secondary" {{action this.toggleIgnoreVerification}}>Show Verfication</button>
-  {{else}}
-    <p>Ask {{this.person.callsign}} if the following timesheet entry is correct:</p>
-    <table class="table table-width-auto">
-      <thead>
+{{#if this.unverifiedTimesheets}}
+  <p>Ask {{this.person.callsign}} if the following timesheet entries are correct:</p>
+  <table class="table table-width-auto table-striped table-hover table-sm">
+    <thead>
+    <tr>
+      <th>Position</th>
+      <th>From</th>
+      <th>To</th>
+      <th class="text-right">Duration</th>
+      <th class="text-right">Credits</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.unverifiedTimesheets as |entry|}}
       <tr>
-        <th>Position</th>
-        <th>From</th>
-        <th>To</th>
-        <th class="text-right">Duration</th>
-        <th class="text-right">Credits</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>
-          <AnimatedContainer>
-            {{#animated-value unverifiedTimesheetEntry.position.title use=this.fade
-                              duration=this.fadeDuration as |value|}}
-              <span>{{value}}</span>
-            {{/animated-value}}
-          </AnimatedContainer>
+        <td class="align-middle">
+          {{entry.position.title}}
         </td>
-        <td>
-          <AnimatedContainer>
-            {{#animated-value unverifiedTimesheetEntry.on_duty use=this.fade duration=this.fadeDuration as |value|}}
-              <span>{{shift-format value}}</span>
-            {{/animated-value}}
-          </AnimatedContainer>
+        <td class="align-middle">
+          {{shift-format entry.on_duty}}
         </td>
-        <td>
-          <AnimatedContainer>
-            {{#animated-value unverifiedTimesheetEntry.off_duty use=this.fade duration=this.fadeDuration as |value|}}
-              <span>{{shift-format value}}</span>
-            {{/animated-value}}
-          </AnimatedContainer>
+        <td class="align-middle">
+          {{shift-format entry.off_duty}}
         </td>
-        <td class="text-right">
-          <AnimatedContainer>
-            {{#animated-value unverifiedTimesheetEntry.duration use=this.fade duration=this.fadeDuration as |value|}}
-              <span>{{hour-minute-format value}}</span>
-            {{/animated-value}}
-          </AnimatedContainer>
+        <td class="text-right align-middle">
+          {{hour-minute-format entry.duration}}
         </td>
-        <td class="text-right">
-          <AnimatedContainer>
-            {{#animated-value unverifiedTimesheetEntry.credits use=this.fade duration=this.fadeDuration as |value|}}
-              <span>{{credits-format value}}</span>
-            {{/animated-value}}
-          </AnimatedContainer>
+        <td class="text-right align-middle">
+          {{credits-format entry.credits}}
+        </td>
+        <td class="align-middle">
+          <button type="button" class="btn btn-success btn-timesheet " {{action this.markEntryCorrect entry}}
+                  disabled={{entry.isSaving}}>
+            YES
+            {{#if entry.verified}}
+              {{fa-icon "check"}}
+            {{/if}}
+          </button>
+          <button type="button" class="btn btn-danger btn-timesheet" {{action this.markEntryIncorrect entry}}
+                  disabled={{entry.isSaving}}>
+            NO
+            {{#if entry.isPendingReview}}
+              {{fa-icon "check"}}
+            {{/if}}
+          </button>
+          <button type="button" class="btn btn-gray btn-timesheet" {{action this.ignoreEntry entry}}
+                  disabled={{or entry.isSaving entry.verified entry.isPendingReview}}>
+            IGNORE
+            {{#if entry.isIgnoring}}
+              {{fa-icon "check"}}
+            {{/if}}
+          </button>
+          {{#if entry.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
         </td>
       </tr>
-      </tbody>
-    </table>
-    <div class="mt-2">
-      <button type="button" class="btn btn-success py-2 px-4 mr-3" {{action this.markEntryCorrect}}
-              disabled={{this.isSubmitting}}>YES
-      </button>
-      <button type="button" class="btn btn-danger  py-2 px-4 p-2 mr-3" {{action this.markEntryIncorrect}}
-              disabled={{this.isSubmitting}}>NO
-      </button>
-      <button type="button" class="btn btn-gray  py-2 px-4" {{action this.toggleIgnoreVerification}}
-              disabled={{this.isSubmitting}}>IGNORE
-      </button>
-      {{#if this.isSubmitting}}
-        <LoadingIndicator/>{{/if}}
-    </div>
-  {{/if}}
+    {{/each}}
+    </tbody>
+  </table>
 {{else}}
   No timesheet entries need review at this time.
 {{/if}}
@@ -125,7 +116,7 @@
 </h3>
 <ShiftCheckInOut @positions={{this.positions}} @timesheets={{this.timesheets}} @person={{this.person}}
                  @imminentSlots={{this.imminentSlots}}
-                 @hasUnverifiedTimesheet={{and this.unverifiedTimesheets (not this.ignoreTimesheetVerification)}}
+                 @hasUnverifiedTimesheet={{this.hasUnverifiedTimesheets}}
                  @endShiftNotify={{action this.refreshTimesheetSummary}} @eventInfo={{this.eventInfo}} />
 
 
@@ -202,12 +193,10 @@
   <AssetCheckoutForm @person={{this.person}} @assets={{this.assets}} @attachments={{this.attachments}}
                      @eventInfo={{this.eventInfo}} />
 {{else}}
-  <p class="text-danger"><b>{{this.person.callsign}} is not asset authorized and may not check out equipment at this
-    time.
-    Have the person sign the Radio Checkout form, then to go Site Check In and mark the person having signed the
-    document.</b></p>
+  <h3 class="text-danger">Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE RADIOS</h3>
   <p>
-    <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-primary">Site Check In</LinkTo>
+    Direct {{this.person.callsign}} to the kiosk shack so they can login into the Clubhouse, review and sign
+    the agreement.
   </p>
 {{/if}}
 
@@ -327,7 +316,7 @@
               <td class="text-right">{{credits-format timesheetSummary.total_credits}}</td>
             </tr>
             <tr>
-              <td colspan="2">
+              <td colspan="2" class="pb-3">
                 How many credits have been earned (worked) so far that count towards reduced-price tickets and staff
                 credentials.
               </td>
@@ -337,7 +326,7 @@
               <td class="text-right">{{credits-format creditsExpected}}</td>
             </tr>
             <tr>
-              <td colspan="2">
+              <td colspan="2" class="pb-3">
                 Calculated total credits that might be received based on the credits earned so far
                 and what upcoming shifts the person is signed up for.
               </td>
@@ -347,21 +336,24 @@
               <td class="text-right">{{credits-format timesheetSummary.pre_event_credits}}</td>
             </tr>
             <tr>
-              <td colspan="2">How many credits have been earned in the pre-event period (before gate open).</td>
+              <td colspan="2" class="pb-3">How many credits have been earned in the pre-event period (before gate
+                open).
+              </td>
             </tr>
             <tr>
               <th>Earned Event Week Credits</th>
               <td class="text-right">{{credits-format timesheetSummary.event_credits}}</td>
             </tr>
             <tr>
-              <td colspan="2">Credits have been earned during the event week (gate open thru Labor Day)</td>
+              <td colspan="2" class="pb-3">Credits have been earned during the event week (gate open thru Labor Day)
+              </td>
             </tr>
             <tr>
               <th>Earned Post-Event Credits</th>
               <td class="text-right">{{credits-format timesheetSummary.post_event_credits}}</td>
             </tr>
             <tr>
-              <td colspan="2">Credits have been earned during the post-event week (after Labor Day)</td>
+              <td colspan="2" class="pb-3">Credits have been earned during the post-event week (after Labor Day)</td>
             </tr>
             </tbody>
           </table>
@@ -375,7 +367,7 @@
               <td class="text-right">{{hour-minute-format timesheetSummary.counted_duration}}</td>
             </tr>
             <tr>
-              <td colspan="2">
+              <td colspan="2" class="pb-3">
                 The total number of hours which count towards appreciations such as t-shirts, all-you-eat
                 passes, and shower pogs.
               </td>
@@ -385,7 +377,7 @@
               <td class="text-right">{{hour-minute-format this.countedDurationExpected}}</td>
             </tr>
             <tr>
-              <td colspan="2">
+              <td colspan="2" class="pb-3">
                 Calculated total hours which count towards appreciations that might be received based on
                 the hours worked so far and what upcoming shifts the person is signed up for.
               </td>
@@ -395,7 +387,7 @@
               <td class="text-right">{{hour-minute-format timesheetSummary.total_duration}}</td>
             </tr>
             <tr>
-              <td colspan="2">
+              <td colspan="2" class="pb-3">
                 The total number of hours worked so far that include appreciated and non-appreciated hours.
               </td>
             </tr>
@@ -406,28 +398,29 @@
               </td>
             </tr>
             <tr>
-              <td colspan="2">How many hours have been worked in the pre-event period (before gate open).</td>
+              <td colspan="2" class="pb-3">How many hours have been worked in the pre-event period (before gate open).
+              </td>
             </tr>
             <tr>
               <th>Event Week Hours</th>
               <td class="text-right">{{hour-minute-format timesheetSummary.event_duration}}</td>
             </tr>
             <tr>
-              <td colspan="2">Credits have been earned during the event week (gate open thru Labor Day)</td>
+              <td colspan="2" class="pb-3">The hours worked during the event week (Gate Open thru Labor Day)</td>
             </tr>
             <tr>
               <th>Post-Event Hours</th>
               <td class="text-right">{{hour-minute-format timesheetSummary.post_event_duration}}</td>
             </tr>
             <tr>
-              <td colspan="2">The hours have been earned during the post-event week (after Labor Day)</td>
+              <td colspan="2" class="pb-3">The hours have been earned during the post-event week (after Labor Day)</td>
             </tr>
             <tr>
               <th>Hours not counted towards appreciations</th>
               <td class="text-right">{{hour-minute-format timesheetSummary.other_duration}}</td>
             </tr>
             <tr>
-              <td colspan="2">
+              <td colspan="2" class="pb-3">
                 Some shifts (trainings, certain on-call positions, etc) have hours which are not counted
                 towards appreciations.
               </td>

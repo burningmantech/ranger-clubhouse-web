@@ -1,0 +1,10 @@
+<p>
+  Before <YouOrCallsign @person={{@person}} @youLabel="you are" @callsignVerb="is" /> allowed to sign up
+  {{if @isTraining "a training shift" "any shifts"}}, the following issue(s)
+  must be fixed first:
+</p>
+<ul>
+  {{#each this.requirementsList as |req|}}
+    <li><b>{{req}}</b></li>
+  {{/each}}
+</ul>

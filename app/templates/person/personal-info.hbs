@@ -1,11 +1,12 @@
-<h3>Update Personal Information</h3>
+<h3>Personal Information for {{this.person.callsign}}</h3>
 <p>
-Last reviewed by {{this.person.callsign}} on
-{{#if this.person.reviewed_pi_at}}
-  {{moment-format this.person.reviewed_pi_at "MMM DD, YYYY @ HH:mm"}}
-{{else}}
-  <i>unknown</i>
-{{/if}}
+  {{this.person.callsign}}
+  {{#if this.person.reviewed_pi_at}}
+    last reviewed their information on
+    {{moment-format this.person.reviewed_pi_at "MMM DD, YYYY @ HH:mm"}}
+  {{else}}
+    has not reviewed their Personal Information.
+  {{/if}}
 </p>
 
 {{#if this.canEditPersonalInfo}}
@@ -20,14 +21,14 @@ Last reviewed by {{this.person.callsign}} on
         <f.input @name="last_name" @type="text" @label="Last Name" @maxlength=25 @grid="col-sm-4 col-md-auto"/>
       </div>
       <div class="form-row">
-        <f.input @name="email" @label="Email" @type="text" @inputmode="email" @size=25 @maxlength=50 @grid="col-sm-12 col-md-auto"
+        <f.input @name="email" @label="Email" @type="text" @inputmode="email" @size=25 @maxlength=50
+                 @grid="col-sm-12 col-lg-auto"
                  @noSpaces={{true}} />
-      </div>
-      <div class="form-row">
-        <f.input @name="home_phone" @type="text" @inputmode="tel" @label="Primary Phone" @grid="col-sm-4 col-md-auto"
+        <f.input @name="home_phone" @type="text" @inputmode="tel" @label="Primary Phone" @grid="col-sm-4 col-lg-auto"
                  @maxlength=25/>
-          <f.input @name="alt_phone" @type="text" @inputmode="tel" @label="Alternative Phone" @grid="col-sm-4 col-md-auto"
-                  @maxlength=25/>
+          <f.input @name="alt_phone" @type="text" @inputmode="tel" @label="Alternative Phone"
+                   @grid="col-sm-4 col-lg-auto"
+                   @maxlength={{25}}/>
       </div>
 
       <div class="form-row">
@@ -36,14 +37,15 @@ Last reviewed by {{this.person.callsign}} on
       </div>
 
       <div class="form-row">
-        <f.input @name="callsign_pronounce" @type="text" @label="Callsign Pronounciation" @size=32 @maxlength=32 @grid="col-sm-12 col-md-auto"/>
+        <f.input @name="callsign_pronounce" @type="text" @label="Callsign Pronounciation" @size=32 @maxlength=32
+                 @grid="col-sm-12 col-md-auto"/>
       </div>
 
       <div class="form-row">
         <f.input @name="languages" @label="Languages Spoken"
                  @hint="List the English names of languages you are comfortable speaking separated by a comma. Ex: english, french, japanese"/>
       </div>
-      <div class="form-row col-auto">
+      <div class="form-row">
         <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @cols=50 @rows=4 @maxlength=200
                  @hint={{concat (if f.model.camp_location f.model.camp_location.length "0") " of 200 characters"}} />
       </div>

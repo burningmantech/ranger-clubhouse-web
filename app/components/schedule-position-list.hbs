@@ -2,8 +2,9 @@
   <Accordion.title>{{@position.title}} ({{@position.slots.length}})</Accordion.title>
   <Accordion.body>
     <div class="schedule-row schedule-header">
-      <div class="schedule-time">From</div>
-      <div class="schedule-time">To</div>
+      <div class="schedule-icon">&nbsp;</div>
+      <div class="schedule-time">Time</div>
+      <div class="schedule-duration">Duration</div>
       <div class="schedule-credits">Credits</div>
       <div class="schedule-description">Description</div>
       <div class="schedule-signups">Sign Ups</div>
@@ -11,15 +12,25 @@
     </div>
     {{#each @position.slots as |slot|}}
       <div class="schedule-row {{if slot.person_assigned "table-success"}}" id="slot-{{slot.id}}">
-        <div class="schedule-time">
+        <div class="schedule-icon">
           {{#if slot.person_assigned}}
             {{fa-icon "check" title="You are signed up for this shift."}}
           {{else if (not slot.slot_active)}}
-            {{fa-icon "exclamation-triangle" title="Shift is inactive and may not be signed up for"}}
+            {{fa-icon "times" title="Shift is inactive and may not be signed up for" color="danger"}}
+          {{else}}
+            &nbsp;
           {{/if}}
-          {{shift-format slot.slot_begins}}
         </div>
-        <div class="schedule-time">{{shift-format slot.slot_ends}}</div>
+        <div class="schedule-time">
+           {{shift-format slot.slot_begins slot.slot_ends}}
+        </div>
+        <div class="schedule-duration">
+          <span class="schedule-sm-label">Duration:</span>
+          {{#unless slot.position_count_hours}}
+            {{fa-icon "minus-square" color="danger" type="far"}}
+          {{/unless~}}
+          {{hour-minute-format slot.slot_duration}}
+        </div>
         <div class="schedule-credits">
           <span class="schedule-sm-label">Credits:</span> {{credits-format slot.credits}}
         </div>
@@ -40,7 +51,7 @@
             Sign Ups
           </button>
           {{#if slot.person_assigned}}
-            {{#if (or @isAdmin (not slot.has_started))}}
+            {{#if (or @isAdmin (not slot.has_started))}} {{!template-lint-disable "no-negated-condition"}}
             {{! Only allow admins to remove a sign up that has started}}
               <button type="button" {{on "click" (fn @leaveSlot slot)}} class="btn btn-light-red btn-sm"
                       title="Remove from schedule" disabled={{slot.is_submitting}}>

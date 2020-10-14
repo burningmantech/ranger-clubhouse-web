@@ -39,7 +39,7 @@ export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
 
     const person = this.session.user;
 
-    if (!model.permission.signup_allowed && (person.isAuditor || person.isProspective || person.isAlpha)) {
+    if ((person.isAuditor || person.isProspective || person.isAlpha) && !model.permission.all_signups_allowed) {
       this.toast.error('You need to complete one or more items in the checklist before being allowed to sign up.');
       this.transitionTo('me.overview');
     }

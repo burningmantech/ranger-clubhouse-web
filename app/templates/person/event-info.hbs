@@ -3,14 +3,12 @@
 
 <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.saveEvent}} as |f|>
   <dl>
-    <dt>Years Active</dt>
+    <dt>Years Worked ({{this.person.years.length}})</dt>
     <dd>
-      {{#if person.years}}
-        {{#each person.years as |y|}}
-          {{y}}
-        {{/each}} ({{person.years.length}})
+      {{#if this.person.years}}
+        {{year-range this.person.years}}
       {{else}}
-        None yet.
+        <i>Has not worked yet</i>
       {{/if}}
     </dd>
 
@@ -57,16 +55,23 @@
         Radio eligibility for this year is not yet available.
       {{/if}}
       <div class="mt-2">
-      <f.input @name="asset_authorized" @label="Assets Authorized (i.e. signed Radio Authorization form)"
-               @type="checkbox"
-               @inline={{true}}  />
+        {{#if (has-role "admin")}}
+          <f.input @name="asset_authorized" @label="Radio Checkout Agreement"  @type="checkbox"  @inline={{true}}  />
+        {{else}}
+          {{#if this.personEvent.asset_authorized}}
+            <b class="text-success"> {{fa-icon "check"}} Signed</b>
+          {{else}}
+            <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+          {{/if}}
+          the Radio Checkout Agreement.
+        {{/if}}
       </div>
     </dd>
 
     <dt>{{this.year}} Driving</dt>
     <dd>
       {{#if this.person.vehicle_blacklisted}}
-        {{badge "danger" "Blacklisted"}} Vehicle is blacklisted. May not drive gators, cars, or trucks on playa for
+        <b class="text-danger">{{fa-icon "ban"}} Vehicle is blacklisted.</b> May not drive gators, cars, or trucks on playa for
         Ranger business.
       {{else}}
         {{#if (has-role "admin" "vc")}}
@@ -77,24 +82,24 @@
                    @type="checkbox" @inline={{true}} />
         {{else}}
           {{#if this.personEvent.signed_motorpool_agreement}}
-            {{badge "success" "Agreed"}}
+            <b class="text-success"> {{fa-icon "check"}} Signed</b>
           {{else}}
-            {{badge "warning" "NOT AGREED"}}
+            <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
           {{/if}}
-          to drive golf carts &amp; gators (UTVs) on playa for Ranger business.<br>
+          the {{this.year}} Motorpool Agreement policy.<br>
           {{#if this.personEvent.org_vehicle_insurance}}
-            {{badge "success" "Authorized" }}
+            <b class="text-success"> {{fa-icon "check"}} Authorized</b>
           {{else}}
-            {{badge "warning" "Not Authorized" }}
+            <b class="text-danger">{{fa-icon "times"}} NOT AUTHORIZED</b>
           {{/if}}
-          to drive cars and trucks (including own personal vehicle) on playa for Ranger business.
+          for the {{this.year}} event to drive Ranger vehicles (including own personal vehicle) on playa for Ranger business.
           Vehicle must have a valid Burning Man driving sticker.
         {{/if}}
       {{/if}}
     </dd>
     <dt>{{this.year}} Personal Vehicle Use</dt>
     <dd>
-      {{#if (has-role "admin" "vc")}}
+      {{#if (has-role "admin")}}
         <f.input @name="may_request_stickers" @label="Personal Vehicle Use Requests Allowed"
                  @type="checkbox" @inline={{true}} />
         <br>
@@ -102,18 +107,18 @@
         <f.input @name="signed_personal_vehicle_agreement" @label="Personal Vehicle Policy Agreement"
                  @type="checkbox" @inline={{true}} />
       {{else}}
-        {{#if this.personEvent.signed_personal_vehicle_agreement}}
-          {{badge "success" "Allowed"}}
+        {{#if this.personEvent.may_request_stickers}}
+          <b class="text-success">{{fa-icon "check"}} Allowed</b>
         {{else}}
-          {{badge "warning" "NOT ALLOWED"}}
+          <b class="text-danger">{{fa-icon "times"}} NOT ALLOWED</b>
         {{/if}}
         to submit Personal Vehicle Requests.<br>
         {{#if this.personEvent.signed_personal_vehicle_agreement}}
-          {{badge "success" "Agreed"}}
+          <b class="text-success"> {{fa-icon "check"}} Signed</b>
         {{else}}
-          {{badge "warning" "NOT AGREED"}}
+          <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
         {{/if}}
-        to the Personal Vehicle Agreement.
+        the {{this.year}} Personal Vehicle Agreement.
       {{/if}}
     </dd>
 
@@ -122,7 +127,13 @@
       {{#if (has-role "admin" "vc")}}
         <f.input @name="sandman_affidavit" @label="Sandman Affidavit" @type="checkbox" @inline={{true}} />
       {{else}}
-        {{this.year}} Sandman Affidavit {{if this.personEvent.sandman_affidavit "signed" "NOT SIGNED"}}
+        {{#if this.personEvent.sandman_affidavit}}
+          <b class="text-success"> {{fa-icon "check"}} Signed</b>
+        {{else}}
+          <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+        {{/if}}
+
+        the {{this.year}} Sandman Affidavit
       {{/if}}
     </dd>
   </dl>

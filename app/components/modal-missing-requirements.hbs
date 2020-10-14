@@ -1,0 +1,10 @@
+<ModalDialog @title="Sign Up Requirements Not Met" as |Modal|>
+  <Modal.body>
+    <ScheduleRequirements @requirements={{this.data.requirements}}
+                          @person={{this.data.person}}
+                          @isTraining={{this.isTraining}} />
+  </Modal.body>
+  <Modal.footer>
+    <Modal.button @label="Close" @action={{@onClose}} @type="primary"/>
+  </Modal.footer>
+</ModalDialog>

@@ -24,34 +24,36 @@ export default class TimesheetModel extends Model {
   @attr('', { readOnly: true}) position;
   @attr('', { readOnly: true}) slot;
 
+  isIgnoring = false; // Used the HQ window interface
+
   @computed('verified', 'notes', 'review_status')
   get isPendingReview() {
-    return (!this.verified && !isEmpty(this.notes) && this.review_status == 'pending');
+    return (!this.verified && !isEmpty(this.notes) && this.review_status === 'pending');
   }
 
   @computed('review_status')
   get isApproved() {
-    return this.review_status == 'approved';
+    return this.review_status === 'approved';
   }
 
   @computed('review_status')
   get isRejected() {
-    return this.review_status == 'rejected';
+    return this.review_status === 'rejected';
   }
 
   @computed('review_status')
   get isPending() {
-    return this.review_status == 'pending';
+    return this.review_status === 'pending';
   }
 
-  @computed('verified', 'notes', 'review_status', 'off_duty')
+  @computed('verified', 'notes', 'review_status', 'off_duty', 'isIgnoring')
   get isUnverified() {
-    return !this.verified && isEmpty(this.notes) && this.review_status == 'pending' && this.off_duty;
+    return (this.off_duty && !this.isIgnoring && !this.verified && isEmpty(this.notes) && this.review_status === 'pending');
   }
 
   @computed('review_status', 'reviewer_notes', 'status')
   get haveReviewerResponse() {
-    return this.review_status != 'pending' && !isEmpty(this.reviewer_notes);
+    return this.review_status !== 'pending' && !isEmpty(this.reviewer_notes);
   }
 
   @computed('off_duty')

@@ -19,8 +19,7 @@
 .schedule-row {
   display: flex;
   flex-wrap: wrap;
-
-  font-size: 0.9em;
+//  font-size: 0.9em;
   border-top: 1px solid #ddd;
   padding: 0 5px 10px 5px;
   width: 100%;
@@ -28,6 +27,7 @@
     display: inline-block;
     margin-top: 5px;
   }
+
 }
 
 .schedule-row:hover {
@@ -48,43 +48,38 @@
   .schedule-row > div {
     padding-right: 5px;
   }
+  .schedule-icon {
+    width: 20px;
+    text-align: center;
+  }
   .schedule-time {
-    width: 15%;
+    width: 22%;
   }
 
   .schedule-duration {
-    width: 5%;
+    width: 8%;
     text-align: right;
   }
 
   .schedule-credits {
-    width: 6%;
+    width: 8%;
     text-align: right;
   }
 
   .schedule-description {
-    width: 24%;
-  }
-
-  .schedule-signups {
-    width: 15%;
-    text-align: center;
-  }
-
-
-  @media not print {
-    .schedule-long-description {
-      width: 30%;
-    }
-    .schedule-actions {
-      width: 20%;
-    }
+    width: 25%;
+    margin-left: 10px;
   }
 
   @media print {
-    .schedule-long-description {
+    .schedule-description {
       width: 50%;
     }
+  }
+
+  .schedule-signups {
+    width: 10%;
+    text-align: center;
   }
 
   .schedule-total {
@@ -93,10 +88,14 @@
   .schedule-sm-label {
     display: none;
   }
+
+  .schedule-actions {
+    margin-left: 10px;
+  }
 }
 
 @media not print {
-  @media (max-width: map-get($grid-breakpoints, "md")) {
+  @media (max-width: map-get($grid-breakpoints, "lg")) {
     .schedule-table {
       font-size: 1rem;
     }
@@ -105,35 +104,45 @@
       display: none !important;
     }
 
+    .schedule-icon {
+      order: 2;
+     }
+
     .schedule-time {
-      width: 49%;
+      order: 1;
+      width: 90%;
     }
 
     .schedule-duration {
-      width: 49%;
+      order: 3;
+      width: 50%;
     }
 
     .schedule-credits {
-      width: 100%;
+      order: 4;
+      width: 50%;
+      text-align: right;
     }
 
     .schedule-description {
-      width: 100%;
-    }
-
-    .schedule-long-description {
+      order: 5;
       width: 100%;
     }
 
     .schedule-signups {
+      order: 6;
       width: 100%;
+      margin-top: 15px !important;
+      margin-bottom: 10px !important;
     }
 
     .schedule-total {
+      order: 7;
       width: 100%;
     }
 
     .schedule-actions {
+      order: 8;
       width: 100%;
     }
 

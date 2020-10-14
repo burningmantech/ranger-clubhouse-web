@@ -3,12 +3,11 @@ import moment from 'moment';
 
 const MONTH_DAY_TIME = 'ddd MMM DD [@] HH:mm';
 const MONTH_DAY_TIME_YEAR = 'ddd MMM DD [@] HH:mm YY';
-const DAY_TIME = 'ddd [@] HH:mm';
+//const DAY_TIME = 'ddd [@] HH:mm';
 const HOUR_MINS = 'HH:mm';
 
-export function shiftFormat([shiftDate], hash) {
+export function shiftFormat([shiftDate, toDate], hash) {
   let datetime;
-  const fromDate = hash.fromDate;
 
   if (!shiftDate) {
     return '';
@@ -19,20 +18,18 @@ export function shiftFormat([shiftDate], hash) {
     return shiftDate;
   }
 
-  if (!fromDate) {
+  if (!toDate) {
     return datetime.format(hash.year ? MONTH_DAY_TIME_YEAR : MONTH_DAY_TIME);
   }
 
-  const fromDt = moment(fromDate);
-  if (!fromDt.isValid()) {
+  const toDt = moment(toDate);
+  if (!toDt.isValid()) {
     return datetime.format(MONTH_DAY_TIME);
 
   }
-  if (datetime.day() !== fromDt.day()) {
-    return datetime.format(DAY_TIME);
-  }
 
-  return datetime.format(HOUR_MINS);
+
+  return  datetime.format(hash.year ? MONTH_DAY_TIME_YEAR : MONTH_DAY_TIME) + ' to ' + toDt.format(hash.year ? MONTH_DAY_TIME_YEAR : HOUR_MINS);
 }
 
 export default helper(shiftFormat);

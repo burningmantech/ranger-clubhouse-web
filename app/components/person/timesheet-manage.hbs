@@ -1,7 +1,7 @@
 <div class="border rounded p-2 mt-2 mb-2">
   <h3>Timesheet Entries</h3>
   <p>
-  <LinkTo @route="person.timesheet-log" @query={{hash year=@year}}>View {{@year}} Timesheet Log</LinkTo>
+    <LinkTo @route="person.timesheet-log" @query={{hash year=@year}}>View {{@year}} Timesheet Log</LinkTo>
   </p>
   <span class="d-inline-block">{{fa-icon "question"}} = unverified.</span>
   <span class="d-inline-block">{{fa-icon "check"}} = verified.</span>
@@ -9,7 +9,7 @@
   <span class="d-inline-block">{{fa-icon "thumbs-down" type="far"}} = requested correction rejected.</span>
   <span class="d-inline-block">{{fa-icon "thumbs-up" type="far"}} = correction approved, awaiting verify.</span>
   <span class="d-inline-block">{{fa-icon "question-circle" type="far"}} = correction needs more info.</span>
-  <span class="d-inline-block">[hh:mm] = time in brackets indicates the time does not count towards appreciations.</span>
+  <span class="d-inline-block">{{fa-icon "minus-square" color="danger" type="far"}} = hours do not count towards appreciations.</span>
 
   <table class="table table-hover table-striped table-sm table-width-auto">
     <thead>
@@ -28,7 +28,7 @@
       <tr class="{{if ts.isPendingReview "bg-warning"}}">
         <td>
           {{#if (is-empty ts.off_duty)}}
-            -
+            &nbsp;
           {{else if ts.verified}}
             {{fa-icon "check"}}
           {{else if ts.isPendingReview}}
@@ -52,11 +52,10 @@
           {{/if}}
         </td>
         <td class="text-right">
-          {{#if ts.position.count_hours}}
-            {{hour-minute-format ts.duration}}
-          {{else}}
-            [{{hour-minute-format ts.duration}}]
-          {{/if}}
+          {{#unless ts.position.count_hours}}
+            {{fa-icon "minus-square" color="danger" type="far"}}
+          {{/unless}}
+          {{hour-minute-format ts.duration}}
         </td>
         <td class="text-right">
           {{credits-format ts.credits}}
@@ -113,9 +112,9 @@
           </ChNotice>
         {{else if this.editEntry.verified}}
           <ChNotice @type="success" @icon="check" @iconSize="1x">
-              <b>Entry was verified on {{shift-format this.editEntry.verified_at}}
+            <b>Entry was verified on {{shift-format this.editEntry.verified_at}}
               by {{this.editEntry.verified_person.callsign}}.
-                Review is not needed at this time.</b>
+              Review is not needed at this time.</b>
           </ChNotice>
         {{/if}}
 
@@ -143,7 +142,9 @@
                   Edit Verification Flag &amp; Note
                 </button>
               </div>
-              <div class="mb-3 col-12"><PresentOrNot @value={{this.editEntry.notes}} /></div>
+              <div class="mb-3 col-12">
+                <PresentOrNot @value={{this.editEntry.notes}} />
+              </div>
             </div>
           {{/if}}
         </fieldset>

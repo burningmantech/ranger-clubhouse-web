@@ -2,54 +2,31 @@ import Controller from '@ember/controller';
 import {action, computed} from '@ember/object';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import {set} from '@ember/object';
-import * as Position from 'clubhouse/constants/positions';
-import {fadeIn, fadeOut} from "ember-animated/motions/opacity";
-import {wait} from "ember-animated";
+import { ALPHA } from 'clubhouse/constants/positions';
+import { tracked } from '@glimmer/tracking';
 
 export default class HqShiftController extends Controller {
-  ignoreTimesheetVerification = false;
-  showCorrectionForm = false;
+  @tracked showCorrectionForm = false;
+  @tracked showSiteLeaveDialog = false;
+  @tracked entry = null;
+  @tracked isMarkingOffSite = false;
+  @tracked showHoursCreditsBreakdown = false;
+  @tracked unverifiedTimesheets = [];
 
   correctionValidations = {
     notes:[ validatePresence(true)]
   };
 
-  /*
-   * The timesheet verification section uses fade in/out animation
-   * to transition between entries to give a visual clue when multiple
-   * entries are being verified. Some HQ Window Workers did not catch
-   * the entries' dates were changing when a bulk of same positions
-   * were being presented. (e.g., five SITE Setup entries being presented one
-   * right after the other)
-   */
-
-  fadeDuration = 500;  // Time in ms to fade in/out text
-
-  * fade({duration, insertedSprites, removedSprites}) {
-    removedSprites.forEach(sprite => {
-      fadeOut(sprite, {duration: duration / 2});
-    });
-
-    yield wait(duration / 2);
-
-    insertedSprites.forEach(sprite => {
-      fadeIn(sprite, {duration: duration / 2});
-    });
-  }
-
   @computed('person.isActive', 'timesheets.@each.position_id')
   get isShinyPenny() {
-    return this.timesheets.find((t) => t.position_id == Position.ALPHA) && this.person.isActive;
+    return this.timesheets.find((t) => t.position_id == ALPHA) && this.person.isActive;
   }
 
-  @computed('timesheets.@each.isUnverified')
-  get unverifiedTimesheets() {
-    return this.timesheets.filter((ts) => ts.isUnverified);
-  }
-
-  @computed('unverifiedTimesheets.firstObject')
-  get unverifiedTimesheetEntry() {
-    return this.unverifiedTimesheets.firstObject;
+  @computed('unverifiedTimesheets.@each.isUnverified')
+  get hasUnverifiedTimesheets() {
+    const r =  !!this.unverifiedTimesheets.find((t) => t.isUnverified);
+    console.log("Have unverified?",r);
+    return r;
   }
 
   @computed('assets.@each.checked_in')
@@ -106,36 +83,30 @@ export default class HqShiftController extends Controller {
   }
 
   @action
-  toggleIgnoreVerification() {
-    this.set('ignoreTimesheetVerification', !this.ignoreTimesheetVerification);
+  ignoreEntry(entry) {
+    entry.set('isIgnoring', true);
   }
 
   @action
-  markEntryCorrect() {
-    const entry = this.unverifiedTimesheetEntry;
-
-    this.toast.clear();
-
-    this.set('isSubmitting', true);
+  markEntryCorrect(entry) {
+    entry.set('isIgnoring', false);
     entry.set('verified', true);
     entry.save().then(() => {
       this.toast.success('Timesheet was successfully marked correct.');
-      this.set('entry', null);
     })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isSubmitting', false));
+      .catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
-  markEntryIncorrect() {
-    this.set('entry', this.unverifiedTimesheetEntry);
-    this.set('showCorrectionForm', true);
+  markEntryIncorrect(entry) {
+    this.entry = entry;
+    this.showCorrectionForm =  true;
   }
 
   @action
   cancelEntryCorrection() {
-    this.set('entry', null);
-    this.set('showCorrectionForm', false);
+    this.entry = null;
+    this.showCorrectionForm = false;
   }
 
   @action
@@ -146,12 +117,11 @@ export default class HqShiftController extends Controller {
 
     this.toast.clear();
 
-    this.set('isCorrectionSubmitting', true);
+    this.entry.set('isIgnoring', false);
     model.save().then(() => {
-      this.set('showCorrectionForm', false);
+      this.showCorrectionForm = false;
       this.toast.success('Correction request was successfully submitted.');
     }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isCorrectionSubmitting', false));
   }
 
   @action
@@ -166,19 +136,19 @@ export default class HqShiftController extends Controller {
   }
 
   _updateOnSite(on_site) {
-    this.set('isMarkingOffSite', true);
+    this.isMarkingOffSite = true;
     this.person.set('on_site', on_site);
     this.person.save().then(() => {
       this.toast.success(`${this.person.callsign} has been successfully marked ${on_site ? 'ON' : 'OFF'} SITE.`);
     })
       .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isMarkingOffSite', false));
+      .finally(() => this.isMarkingOffSite = false);
   }
 
   @action
   markOffSite() {
     if (this.pendingItems > 0) {
-      this.set('showSiteLeaveDialog', true);
+      this.showSiteLeaveDialog = true;
     } else {
       this.modal.confirm('Confirm Marking Person Off Site',
         `Are you sure you wish to mark ${this.person.callsign} as OFF SITE?`,
@@ -208,13 +178,13 @@ export default class HqShiftController extends Controller {
 
   @action
   cancelSiteLeaveDialog() {
-    this.set('showSiteLeaveDialog', false);
+    this.showSiteLeaveDialog = false;
   }
 
   @action
   forceMarkOffSite() {
     this._updateOnSite(false);
-    this.set('showSiteLeaveDialog', false);
+    this.showSiteLeaveDialog = false;
   }
 
   @action
@@ -239,6 +209,6 @@ export default class HqShiftController extends Controller {
 
   @action
   toggleHoursCreditBreakdown() {
-    this.set('showHoursCreditsBreakdown', !this.showHoursCreditsBreakdown);
+    this.showHoursCreditsBreakdown =  !this.showHoursCreditsBreakdown;
   }
 }
