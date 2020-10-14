@@ -19,7 +19,7 @@
     <p>
       Consult with the HQ Lead or Supervisor to see if this is an error.
     </p>
-    Normally a person has to have atttend &amp; passed training before they are issued their BMID, be allowed to check out radios,
+    Normally a person has to have attend &amp; passed training before they are issued their BMID, be allowed to check out radios,
     and work a shift.
   </ChNotice>
 {{/unless}}
@@ -73,21 +73,18 @@
 {{#if this.personEvent.asset_authorized}}
     Radio checkout form has been <strong class="text-success">SIGNED</strong>.
 {{else}}
-  <div class="text-danger">Radio checkout form has NOT BEEN SIGNED.</div>
-  <button type="button" class="btn btn-primary" {{action this.markAssetAuthorized}}
-          disabled={{this.personEvent.isSaving}}>Mark Form As Signed
-  </button>
-  {{#if this.personEvent.isSaving}}
-    <LoadingIndicator/>
-  {{/if}}
+  <h4 class="text-danger">Radio Checkout Agreement NOT BEEN SIGNED - DO NOT ISSUE RADIOS.</h4>
+   Direct {{this.person.callsign}} to a kiosk and have them agree to the Radio Checkout Agreement. Only after the
+    agreement is signed may they be given a radio.
 {{/if}}
 </p>
 <p>
   {{#if this.personEvent.signed_motorpool_agreement}}
-    {{this.person.callsign}} has signed the Motorpool Policy and is authorized to drive golf carts and gators.
+   {{fa-icon "check" color="success"}} The Motorpool Policy has been signed.
   {{else}}
-    <span class="text-danger">{{this.person.callsign}} has NOT signed the Motorpool Policy. Direct the person to a
-      kiosk and have them agree to the Motorpool Policy if they would like to drive golf carts &amp; UTVs on playa for Ranger business.</span>
+    <h4 class="text-danger">Motorpool Agreement NOT SIGNED - Not authorized to drive Ranger gators, UTVs, or golf carts.</h4>
+    If {{this.person.callsign}} is comfortable driving Ranger gators, UTVs, or golf carts while on duty, direct the person to a
+      kiosk and have them agree to the Motorpool Policy.
   {{/if}}
 </p>
 

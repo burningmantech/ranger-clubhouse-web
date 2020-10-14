@@ -25,7 +25,7 @@ export default class ScheduleManageComponent extends Component {
   @tracked filterActive = 'active';
   @tracked scheduleSummary;
   @tracked requirementsOverride = false;
-  @tracked showBehaviorAgreement = false;
+  @tracked showScheduleBlocker = false;
   @tracked permission;
 
   @tracked availableSlots;
@@ -40,14 +40,13 @@ export default class ScheduleManageComponent extends Component {
   constructor() {
     super(...arguments);
 
-    const person = this.args.person;
-    const permission = this.args.permission;
+    const {person,permission,year,slots,signedUpSlots} = this.args
 
     this.scheduleSummary = this.args.scheduleSummary;
     this._sortAndMarkSignups();
 
-    this.args.signedUpSlots.forEach((signedUp) => {
-      const slot = this.args.slots.find((slot) => signedUp.id == slot.id);
+    signedUpSlots.forEach((signedUp) => {
+      const slot = slots.find((slot) => signedUp.id == slot.id);
       if (slot) {
         slot.set('person_assigned', true);
       }
@@ -58,27 +57,33 @@ export default class ScheduleManageComponent extends Component {
      * TODO Revisit whether everyone should be able to see inactive slots if they choose.
      */
 
-    if (this.args.person.hasRole(
+    if (person.hasRole(
       [Role.ADMIN, Role.EDIT_SLOTS, Role.GRANT_POSITION, Role.VC, Role.TRAINER, Role.ART_TRAINER])) {
-      this.availableSlots = this.args.slots;
+      this.availableSlots = slots;
     } else {
-      this.availableSlots = this.args.slots.filter((slot) => slot.slot_active);
+      this.availableSlots = slots.filter((slot) => slot.slot_active);
     }
 
     this.inactiveSlots = this.availableSlots.filter((slot) => !slot.slot_active);
-    this.isCurrentYear = (this.args.year == this.house.currentYear());
+    this.isCurrentYear = (year == this.house.currentYear());
     if (!this.isCurrentYear) {
       this.filterDay = 'all';
     }
-
-
     this.isMe = (this.session.userId == person.id);
     this.isAdmin = this.session.user.isAdmin;
+
+    if (this.isCurrentYear) {
+      if (!permission.all_signups_allowed) {
+        this.showScheduleBlocker = true;
+      } else {
+        this.showScheduleBlocker = this.hasTrainingBlocker = !permission.training_signups_allowed;
+      }
+    }
+
     this.permission = permission;
 
-    this.noPermissionToSignUp = (this.isCurrentYear && !permission.signup_allowed);
     const photoStatus = permission.photo_status;
-    this.hasApprovedPhoto = (photoStatus == 'approved' || photoStatus == 'not-required')
+    this.hasApprovedPhoto = (photoStatus === 'approved' || photoStatus === 'not-required')
   }
 
   _sortAndMarkSignups() {
@@ -160,8 +165,11 @@ export default class ScheduleManageComponent extends Component {
   }
 
   @action
-  setRequirementsOverride() {
-    this.requirementsOverride = true;
+  overrideAction() {
+    if (!this.hasTrainingBlocker) {
+      this.requirementsOverride = true;
+    }
+    this.showScheduleBlocker = false;
   }
 
   @action

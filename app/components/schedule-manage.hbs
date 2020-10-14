@@ -1,199 +1,86 @@
-<PrintInstruction />
-{{#unless this.isCurrentYear}}
-  <ChNotice @type="warning" @icon="hand-point-right">
-    Warning: You are viewing a past schedule ({{@year}}).
-  </ChNotice>
-{{/unless}}
-{{#if (and this.noPermissionToSignUp (not this.requirementsOverride))}}
-  <ChNotice @title="Sign ups for training and/or shifts is not allowed" @type="danger" @icon="exclamation-circle">
-    {{#if (eq this.permission.photo_status "error")}}
-      <h3 class="mt-2">Oops! There was a problem communicating with our photo server.</h3>
-      <p>
-        We cannot determine if {{if this.isMe "you have" (concat @person.callsign " has")}} uploaded a photo,
-        or if it has been approved. Please check back in a few minutes to see if the problem has resolved.
-        If this problems persists, please contact {{admin-email}} for help.
-      </p>
-      <p>
-        We are sorry if this is an inconvenience for you.
-      </p>
-    {{else}}
-      {{if this.isMe "You have" (concat @person.callsign " has")}} not met all the requirements to sign up for
-      training and/or shifts. The following item(s) need to be done:
-      <ul class="mt-2">
-        {{#unless this.hasApprovedPhoto}}
-          {{#if (eq this.permission.photo_status "missing")}}
-            <li>
-              <b>Upload a photo</b>:<br>
-              Please upload a BMID photo. Note that photos can take 2-3 days to be approved.
-              A new photo may be uploaded on the
-              <LinkTo @route="me.overview">Home Page</LinkTo>
-              .
-            </li>
-          {{else if (eq this.permission.photo_status "rejected")}}
-            <li>
-              <b>Submitted photo was rejected</b><br>
-              The photo was rejected. Please upload a new photo that conforms to the guidelines.
-              A new photo may be uploaded on the
-              <LinkTo @route="me.overview">Home Page</LinkTo>
-              .
-            </li>
-          {{else}}
-            <li>
-              <b>Photo pending approval</b><br>
-              The photo has been submitted and may take up to 2 to 3 days to review. Please check back then.
-            </li>
-          {{/if}}
-        {{/unless}}
+<PrintInstruction/>
 
-        {{#if this.permission.online_training_allowed}}
-          <li><b>Complete Online Training</b><br>
-            {{#if this.permission.online_training_url}}
-              {{#if this.isMe}}
-                <OnlineTrainingLaunch @text="Click Here" @person={{@person}}
-                                      @url={{this.permission.online_training_url}} />
-                to take the Online Training Ranger course. The course will take 1 to 2 hours to complete.
-              {{else}}
-                <b>{{@person.callsign}} will need to login and complete Online Training.</b>
-              {{/if}}
-            {{else}}
-              Unfortunately, the Online Training course is still being worked on.
-              Please check back later.
-            {{/if}}
-          </li>
-        {{else if (and (not this.hasApprovedPhoto) (not this.permission.online_training_passed))}}
-          <li>
-            <b>Upload Photo &amp; Complete Part 1 of Training (online)</b><br>
-            You will need to upload a photo and have it approved before being allowed to take Part 1 of Training
-            (online).
-          </li>
-        {{/if}}
-      </ul>
-    {{/if}}
-
-    {{#if (and (not @person.callsign_approved) (not @person.isAuditor) (not @person.isNonRanger))}}
-      <p>
-        Please email {{vc-email}} if {{if this.isMe "you are" (concat @person.callsign " is")}} interested in
-        volunteering with us or if you think you have received this message in error.
-      </p>
-    {{else}}
-      {{#if this.permission.missing_bpguid}}
-        <h3 class="mt-2">Missing Burner Profile ID</h3>
-        <PersonMissingBpguid/>
-      {{/if}}
-
-    {{/if}}
-
-    {{#if this.isAdmin}}
-      <p class="mt-2">
-        As a Clubhouse Admin, you may override the requirement(s) to gain access to the schedule.
-        <b class="text-danger">ALL ACTIONS WILL BE LOGGED.</b>
-
-      </p>
-      <p>
-        <button type="button" class="btn btn-danger" {{on "click" this.setRequirementsOverride}}>
-          Click To Override
-        </button>
-      </p>
-    {{/if}}
-  </ChNotice>
-{{/if}}
-{{#if (or this.requirementsOverride (not this.noPermissionToSignUp))}}
-  {{#if this.requirementsOverride}}
-    <ChNotice @type="danger" @icon="exclamation" @title="Schedule requirements overridden">
-      <b>All actions are logged and subject to review.</b>
+<div class="max-width-1000">
+  {{#unless this.isCurrentYear}}
+    <ChNotice @type="warning">
+      Warning: You are viewing a past schedule ({{@year}}).
     </ChNotice>
-  {{/if}}
-  {{#if (and @person.isRanger this.permission.recommend_burn_weekend_shift)}}
-    <div class="border p-2 border-danger mb-2 d-print-none">
-      <h4 class="text-danger">We need help! The Burn Weekend shifts are understaffed.</h4>
-      The Burn Weekend &mdash; Friday night through Sunday night &mdash; is our busiest time.
-      We strongly urge people to sign up for a weekend shift, especially a Burn Perimeter shift, to help fill in the
-      gaps.
-      This message will stick around until you sign up for one.
-    </div>
-  {{/if}}
-  {{#if this.permission.missing_behavioral_agreement}}
-    <div class="border rounded p-2 my-2">
-      <b>Starting in 2019, Burning Man requests you sign the optional Burning Man's Behavioral Standards Agreement.</b>
-      <div class="mt-2">
-        {{#if this.isMe}}
-          <button type="button" class="btn btn-primary" {{on "click" this.showBehaviorAgreementAction}}>
-            Click here
-          </button>
-          to read about the Behavioral Standards, and be given a chance to agree.
-        {{else}}
-          {{@person.callsign}} has not signed the agreement.
-        {{/if}}
-      </div>
-    </div>
-  {{/if}}
+  {{/unless}}
 
-  <p>
-    The <i class="fas fa-info-circle info-icon"></i> icon on a shift description means additional information is
-    available. Click on the icon and/or text.
-  </p>
+  {{#if this.showScheduleBlocker}}
+    <ScheduleBlocked @requirements={{@permission.requirements}} @person={{@person}}
+                     @overrideAction={{this.overrideAction}} @canOverride={{this.canOverride}}
+                     @isMe={{this.isMe}} @isAdmin={{this.isAdmin}}
+                     @hasTrainingBlocker={{this.hasTrainingBlocker}}
+    />
+  {{else}}
+    {{#if this.requirementsOverride}}
+      <ChNotice @type="danger" @icon="exclamation" @title="Schedule requirements overridden">
+        <b>All actions are logged and subject to review.</b>
+      </ChNotice>
+    {{/if}}
 
-  <ScheduleTable @slots={{@signedUpSlots}} @person={{@person}} @year={{@year}}
-                 @creditsEarned={{@creditsEarned}}
-                 @scheduleSummary={{@scheduleSummary}} @leaveSlot={{this.leaveSlot}}
-                 @showPeople={{this.showPeople}} />
-  <div class="d-print-none">
-    <h3 class="mt-2">{{if this.isCurrentYear (concat "Available " @year " Shifts")
-                          (concat "Past " @year " Shifts")}}</h3>
-    {{#if this.availableSlots}}
-      {{#if this.inactiveSlots}}
-        <ChNotice @type="info" @title="Schedule listing has inactive shifts" @icon="hand-point-right">
-          <p>
-          Because you have the Edit Slots, Grant Positions, Trainer, VC, and/or Admin role, the shift listing
-          will contain inactive shifts.
-          </p>
-          Sign ups are disabled until the shift has been activated through the Edit Slots page.
-        </ChNotice>
-      {{/if}}
+    <p>
+      The <i class="fas fa-info-circle info-icon"></i> icon on a shift description means additional information is
+      available. Click on the icon and/or text.
+    </p>
 
-      <div class="row mb-1">
-        <div class="col-sm-5 col-md-auto mb-2">
-          <ChForm::Select @name="filterDay"
-                          @value={{this.filterDay}}
-                          @options={{this.dayOptions}}
-                          @onChange={{action (mut this.filterDay)}}
-                          @controlClass="form-control"/>
-        </div>
+    <ScheduleTable @slots={{@signedUpSlots}} @person={{@person}} @isMe={{this.isMe}} @isAdmin={{this.isAdmin}} @year={{@year}}
+                   @creditsEarned={{@creditsEarned}}
+                   @scheduleSummary={{@scheduleSummary}} @leaveSlot={{this.leaveSlot}}
+                   @showPeople={{this.showPeople}} />
+    <div class="d-print-none">
+      <h3 class="mt-2">{{if this.isCurrentYear "Available" "Past"}} {{@year}} Shifts</h3>
+      {{#if this.availableSlots}}
         {{#if this.inactiveSlots}}
+          <ChNotice @type="info" @title="Schedule listing has inactive shifts" @icon="hand-point-right">
+            <p>
+              Because you have the Edit Slots, Grant Positions, Trainer, VC, and/or Admin role, the shift listing
+              will contain inactive shifts.
+            </p>
+            Sign ups are disabled until the shift has been activated through the Edit Slots page.
+          </ChNotice>
+        {{/if}}
+
+        <div class="row mb-1">
           <div class="col-sm-5 col-md-auto mb-2">
-            <ChForm::Select @name="filterActive"
-                            @value={{this.filterActive}}
-                            @options={{this.activeOptions}}
-                            @onChange={{action (mut this.filterActive)}}
+            <ChForm::Select @name="filterDay"
+                            @value={{this.filterDay}}
+                            @options={{this.dayOptions}}
+                            @onChange={{action (mut this.filterDay)}}
                             @controlClass="form-control"/>
           </div>
-        {{/if}}
-      </div>
+          {{#if this.inactiveSlots}}
+            <div class="col-sm-5 col-md-auto mb-2">
+              <ChForm::Select @name="filterActive"
+                              @value={{this.filterActive}}
+                              @options={{this.activeOptions}}
+                              @onChange={{action (mut this.filterActive)}}
+                              @controlClass="form-control"/>
+            </div>
+          {{/if}}
+        </div>
 
-      <p>Showing {{this.viewSlots.length}} of {{this.availableSlots.length}}</p>
-      {{#each this.positions as |position|}}
-        <SchedulePositionList @position={{position}}
-                              @showPeople={{this.showPeople}}
-                              @joinSlot={{this.joinSlot}}
-                              @leaveSlot={{this.leaveSlot}}
-                              @isAdmin={{this.isAdmin}}
-                              @isCurrentYear={{this.isCurrentYear}}
-        />
+        <p>Showing {{this.viewSlots.length}} of {{this.availableSlots.length}}</p>
+        {{#each this.positions as |position|}}
+          <SchedulePositionList @position={{position}}
+                                @showPeople={{this.showPeople}}
+                                @joinSlot={{this.joinSlot}}
+                                @leaveSlot={{this.leaveSlot}}
+                                @isAdmin={{this.isAdmin}}
+                                @isCurrentYear={{this.isCurrentYear}}
+          />
+        {{else}}
+          <div class="text-danger">There are no shifts which match.</div>
+        {{/each}}
+        <div class="mt-2"><b>Note:</b>
+          <ul>
+            <li>A shift may not be added to or removed from your schedule if the shift has already started.</li>
+          </ul>
+        </div>
       {{else}}
-        <div class="text-danger">There are no shifts which match.</div>
-      {{/each}}
-      <div class="mt-2"><b>Note:</b>
-        <ul>
-          <li>A shift may not be added to or removed from your schedule if the shift has already started.</li>
-        </ul>
-      </div>
-    {{else}}
-      <p><b class="text-danger">There are no shifts available.</b></p>
-    {{/if}}
-  </div>
-
-{{/if}}
-
-{{#if this.showBehaviorAgreement}}
-  <BehavioralAgreementModal @closeAgreement={{this.closeAgreement}} @signAgreement={{this.signAgreement}} />
-{{/if}}
+        <p><b class="text-danger">There are no shifts available.</b></p>
+      {{/if}}
+    </div>
+  {{/if}}
+</div>

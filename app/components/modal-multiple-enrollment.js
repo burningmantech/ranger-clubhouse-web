@@ -7,6 +7,7 @@ export default class ModalMultipleEnrollmentComponent extends Component {
   @service session;
 
   @alias('args.dialog.data') data;
+  @alias('data.person') person;
 
   @alias('data.enrolledSlots') enrolledSlots;
 
@@ -14,14 +15,10 @@ export default class ModalMultipleEnrollmentComponent extends Component {
   @alias('data.slot.position_title') trainingType;
 
   get isMe() {
-    return this.session.userId == this.data.person.id;
+    return this.session.userId == this.person.id;
   }
 
   get isAlpha() {
     return this.slot.position_id == Position.ALPHA;
-  }
-
-  get youAreOrCallsignIs() {
-    return this.isMe ? 'You are' : `${this.data.person.callsign} is`;
   }
 }

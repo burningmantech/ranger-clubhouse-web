@@ -7,7 +7,7 @@ export function slotSignup(controller, slot, person, callback = null, force = fa
     data: {slot_id: slot.id, force: (force ? 1 : 0)}
   }).then((result) => {
     set(slot, 'is_submitting', false);
-    if (result.status == 'success') {
+    if (result.status === 'success') {
       const toast = controller.toast;
       const isMe = controller.session.userId == person.id;
       const name = isMe ? "You are" : person.callsign + " is";
@@ -29,7 +29,7 @@ export function slotSignup(controller, slot, person, callback = null, force = fa
 
       if (forcedReasons.length > 0) {
         let sentence;
-        if (forcedReasons.length == 1) {
+        if (forcedReasons.length === 1) {
           sentence = forcedReasons[0];
         } else {
           sentence = forcedReasons.slice(0, forcedReasons.length - 1).join(', ') + ", and " + forcedReasons.slice(-1)
@@ -92,6 +92,18 @@ function handleSignupError(controller, result, slot, person, callback) {
         );
 
         return;
+
+      case 'missing-requirements':
+        modal.open(
+          'modal-confirm-missing-requirements', {
+            requirements: result.requirements,
+            person
+          },
+          () => {
+            slotSignup(controller, slot, person, callback, true);
+          }
+        );
+      return;
     }
   }
 
@@ -119,8 +131,17 @@ function handleSignupError(controller, result, slot, person, callback) {
     case 'multiple-enrollment':
       modal.open(
         'modal-multiple-enrollment', {
-          title: 'Multiple Enrollments Not Allowed',
           enrolledSlots: result.slots,
+          person,
+          slot
+        });
+      break;
+
+
+    case 'missing-requirements':
+      modal.open(
+        'modal-missing-requirements', {
+          requirements: result.requirements,
           person,
           slot
         });

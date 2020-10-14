@@ -39,6 +39,7 @@ Router.map(function () {
     });
     this.route('vehicles');
     this.route('announcements');
+    this.route('radio-checkout');
   });
 
   this.route('search', function () {

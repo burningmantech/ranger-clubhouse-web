@@ -24,8 +24,6 @@ export default function () {
       MealInfoAvailable: false,
       MealDates: 'Pre Event is Tue 8/8 (dinner) - Sun 8/27; During Event is Mon 8/28 - Mon 9/4; Post Event is Tue 9/5 - Sat 9/9 (lunch)',
 
-      RadioCheckoutFormUrl: 'https://drive.google.com/open?id=1p4EerIDN6ZRxcWkI7tDFGuMf6SgL1LTQ',
-
       SiteNotice: 'Copyright 2008-2018 Black Rock City, LLC. All information contained within this website is strictly confidential.',
 
       SiteTitle: 'Black Rock Rangers Secret Clubhouse',
@@ -178,15 +176,10 @@ export default function () {
 
     return {
       permission: {
-        signup_allowed: true,
-        callsign_approved: true,
-        photo_status: true,
-        // is the online training link allowed to be shown (if link is enabled)
-        online_training_allowed: true,
-        // was online training taken/passed?
-        online_training_passed: true,
-        // online training page link - if enabled
-        online_training_url: 'https://learning-foo.example.com',
+        all_signups_allowed: true,
+        training_signups_allowed: true,
+        requirements: [],
+        recommend_burn_weekend_shift: false
       }
     };
 

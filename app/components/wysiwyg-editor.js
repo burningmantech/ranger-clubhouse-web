@@ -39,9 +39,9 @@ export default class WysiwygEditorComponent extends Component {
           this.editor = editor;
           editor.on('Change', () => this.args.onChange(editor.getContent()));
         },
-        plugins: 'print preview paste casechange  searchreplace autolink  visualblocks visualchars fullscreen link media mediaembed table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern help  pageembed charmap  emoticons advtable',
+        plugins: 'print preview paste  searchreplace autolink  visualblocks visualchars fullscreen link media table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount textpattern help charmap emoticons',
         menubar: 'edit view insert format tools table tc help',
-        toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment',
+        toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment',
         image_advtab: true,
         height: 600,
       //  image_caption: true,

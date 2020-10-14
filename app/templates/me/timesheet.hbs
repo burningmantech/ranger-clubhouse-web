@@ -1,5 +1,6 @@
-<YearSelect @title="Timesheet For {{session.user.callsign}}" @year={{this.year}} @years={{this.person.all_years}} @onChange={{action (mut this.year)}} />
-<BackToHome />
+<YearSelect @title="Timesheet For {{session.user.callsign}}" @year={{this.year}} @years={{this.person.all_years}}
+            @onChange={{action (mut this.year)}} />
+<BackToHome/>
 
 {{#if this.timesheets}}
   {{#if (and this.isCurrentYear this.timesheetInfo.correction_enabled)}}
@@ -12,21 +13,22 @@
       {{#if this.timesheetInfo.timesheet_confirmed}}
         <b>Thank you for confirming your timesheet is accurate.</b>
       {{else}}
-        <b class="text-danger">It appears you have not confirmed your timesheet as accurate.</b> Please to go the <LinkTo @route="me.timesheet-corrections">Timesheet Corrections</LinkTo> page,
-        review your timesheet entries, submit any missing timesheet entries requests, and confirm your {{year}} timesheet as accurate.
+        <b class="text-danger">It appears you have not confirmed your timesheet as accurate.</b> Please to go the
+        <LinkTo @route="me.timesheet-corrections">Timesheet Corrections</LinkTo>
+        page,
+        review your timesheet entries, submit any missing timesheet entries requests, and confirm your {{year}}
+        timesheet as accurate.
       {{/if}}
     </p>
   {{/if}}
-  <div class="row my-2">
-    <div class="col-auto">
-      [hh:mm] = time in brackets indicates the time does not count towards appreciations.
-    </div>
+  <div class="m-2">
+    {{fa-icon "minus-square" color="danger" type="far"}} = the shift hours do not count towards appreciations.
   </div>
   <div class="timesheet-table">
     <div class="timesheet-row timesheet-header">
       <div class="timesheet-time">From</div>
       <div class="timesheet-time">To</div>
-      <div class="timesheet-duration">Time</div>
+      <div class="timesheet-duration">Duration</div>
       <div class="timesheet-credits">Credits</div>
       <div class="timesheet-position">Position</div>
     </div>
@@ -42,12 +44,11 @@
             {{/if}}
           </div>
           <div class="timesheet-duration">
-            <span class="timesheet-sm-label">Time:</span>
-            {{#if ts.position.count_hours}}
-              {{hour-minute-format ts.duration}}
-            {{else}}
-              [{{hour-minute-format ts.duration}}]
-            {{/if}}
+            <span class="timesheet-sm-label">Duration:</span>
+            {{#unless ts.position.count_hours}}
+              {{fa-icon "minus-square" color="danger" type="far"}}
+            {{/unless}}
+            {{hour-minute-format ts.duration}}
           </div>
           <div class="timesheet-credits">
             <span class="timesheet-sm-label">Credits:</span>

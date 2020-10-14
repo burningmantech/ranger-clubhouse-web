@@ -39,14 +39,6 @@ export default class HqSiteCheckinController extends Controller {
   }
 
   @action
-  markAssetAuthorized() {
-    this.personEvent.asset_authorized = true;
-    this.personEvent.save()
-      .then(() => this.toast.success('Person successfully save.'))
-      .catch((response) => this.house.handleErrorResponse(response));
-  }
-
-  @action
   markOnSite() {
     this.person.on_site = true;
     this._savePerson(this.person,  'Person has been successfully marked as ON SITE.', () => {

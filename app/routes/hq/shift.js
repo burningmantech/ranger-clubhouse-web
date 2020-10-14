@@ -16,8 +16,8 @@ export default class HqShiftRoute extends Route {
     super.setupController(...arguments);
     controller.setProperties(model);
     controller.setProperties(this.modelFor('hq'));
-    controller.set('ignoreTimesheetVerification', false);
     controller.set('showCorrectionForm', false);
     controller.set('showSiteLeaveDialog', false);
+    controller.set('unverifiedTimesheets', controller.timesheets.filter((ts) => ts.isUnverified))
   }
 }

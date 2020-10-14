@@ -26,6 +26,9 @@
       {{#if (and (config "MotorpoolPolicyEnable") (or user.isRanger user.isAlpha user.isNonRanger))}}
         <s.link @route="me.motorpool-policy" @title="Motorpool Policy" @icon="car" @iconType="s"/>
       {{/if}}
+      {{#if (and (config "RadioCheckoutAgreementEnabled") (or user.isRanger user.isAlpha user.isNonRanger))}}
+        <s.link @route="me.radio-checkout" @title="Radio Agreement" @icon="broadcast-tower" @iconType="s"/>
+      {{/if}}
       {{#if user.may_request_stickers}}
         <s.link @route="me.vehicles" @title="Vehicle Requests" @icon="truck-monster" @iconType="s"/>
       {{/if}}

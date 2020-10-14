@@ -1,55 +1,63 @@
 <div class="mb-2 d-print-none">
-  <div class="form-check form-check-inline">
-    <RadioButton @value="upcoming" @groupValue={{this.viewSchedule}} @radioId="view-upcoming"
-                 @radioClass="form-check-input"/>
-    <label for="view-upcoming" class="form-check-label">Upcoming Shifts ({{this.upcomingCount}})</label>
-  </div>
-  <div class="form-check form-check-inline">
-    <RadioButton @value="all" @groupValue={{this.viewSchedule}} @radioId="view-all" @classNames="form-check-label"
-                 @radioClass="form-check-input"/>
-    <label for="view-all" class="form-check-label">All Shifts ({{@slots.length}})</label>
+  <div class="form-row">
+    <div class="form-check form-check-inline col-auto">
+      <RadioButton @value="upcoming" @groupValue={{this.viewSchedule}} @radioId="view-upcoming"
+                   @radioClass="form-check-input"/>
+      <label for="view-upcoming" class="form-check-label">Upcoming Shifts ({{this.upcomingCount}})</label>
+    </div>
+    <div class="form-check form-check-inline col-auto">
+      <RadioButton @value="all" @groupValue={{this.viewSchedule}} @radioId="view-all" @classNames="form-check-label"
+                   @radioClass="form-check-input"/>
+      <label for="view-all" class="form-check-label">All Shifts ({{@slots.length}})</label>
+    </div>
   </div>
 </div>
 
 {{#if this.hasOverlapping}}
-  <p>
-  <div class="text-danger">
-    You are signed up for overlapping shifts, marked with a
-    {{fa-icon "exclamation-triangle"}}.
-  </div>
-  You only get credit for the time you work, and won't receive double credit for the overlapping time.
-  </p>
+  <ChNotice @icon="flag" @title="Overlapping shifts">
+    <p>
+      <YouOrCallsign @person={{@person}} @youLabel="You have" @callsignVerb="has"/>
+      overlapping shifts, marked with a
+      {{fa-icon "flag" color="danger"}}.
+      You only get credit for the time you work.
+    </p>
+  </ChNotice>
 {{/if}}
 
-[hh:mm] = time in brackets indicates the time does not count towards appreciations.
+<div class="m-2">
+  {{fa-icon "minus-square" color="danger" type="far"}} = the shift hours do not count towards appreciations.
+</div>
 <div class="schedule-table schedule-itinerary">
   <div class="schedule-row schedule-header">
-    <div class="schedule-time">From</div>
-    <div class="schedule-time">To</div>
-    <div class="schedule-duration">Time</div>
+    <div class="schedule-icon">&nbsp;</div>
+    <div class="schedule-time">Time</div>
+    <div class="schedule-duration">Duration</div>
     <div class="schedule-credits">Credits</div>
-    <div class="schedule-long-description">Position / Description</div>
+    <div class="schedule-description">Position / Description</div>
     <div class="schedule-actions d-print-none">Actions</div>
   </div>
 
   {{#each this.viewSlots as |slot| }}
     <div class="schedule-row {{if slot.is_overlapping "schedule-overlapping"}}">
-      <div class="schedule-time">
+      <div class="schedule-icon">
         {{#if slot.is_overlapping}}
-          <span class="text-danger">{{fa-icon "exclamation-triangle"}}</span>
-        {{/if}}
-        {{shift-format slot.slot_begins}}
-      </div>
-      <div class="schedule-time">{{shift-format slot.slot_ends}}</div>
-      <div class="schedule-duration"><span class="schedule-sm-label">Duration:</span>
-        {{#if slot.position_count_hours}}
-          {{hour-minute-format slot.slot_duration}}
+          {{fa-icon "flag" color="danger"}}
         {{else}}
-          [{{hour-minute-format slot.slot_duration}}]
+          &nbsp;
         {{/if}}
+      </div>
+      <div class="schedule-time">
+        {{shift-format slot.slot_begins slot.slot_ends}}
+      </div>
+      <div class="schedule-duration">
+        <span class="schedule-sm-label">Duration:</span>
+        {{#unless slot.position_count_hours}}
+          {{fa-icon "minus-square" color="danger" type="far"}}
+        {{/unless~}}
+        {{hour-minute-format slot.slot_duration}}
       </div>
       <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}</div>
-      <div class="schedule-long-description">
+      <div class="schedule-description">
         {{slot.position_title}}<br>
         <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
       </div>
@@ -63,7 +71,7 @@
           {{/if}}
           Sign Ups
         </button>
-        {{#if (or (not slot.has_started) (has-role "admin"))}}
+        {{#if (or (not slot.has_started) @isAdmin)}}
         {{! Note: magic here -  by not using onclick, no event argument will be passed to leaveSlot. That tells the method to allow the page to scroll.}}
           <button type="button" {{on "click" (fn @leaveSlot slot)}} class="btn btn-light-red btn-sm"
                   title="Remove shift from schedule" disabled={{slot.is_submitting}}>
@@ -74,17 +82,23 @@
             {{/if}}
             Remove
           </button>
+          {{#if slot.slot_url}}
+
+          {{/if}}
         {{/if}}
       </div>
     </div>
   {{else}}
     <div class="schedule-row">
+      <div class="schedule-icon">
+        {{fa-icon "exclamation"}}
+      </div>
       <div>
-        {{#if slots}}
-          <b class="text-danger">No upcoming shifts were found.</b>
-          <a href {{action (mut this.viewSchedule) "all"}}>View All Shifts</a>
+        {{#if @slots}}
+          <b>No upcoming shifts were found.</b>
+          <a href {{action (mut this.viewSchedule) "all"}}>View Previous Shifts</a>
         {{else}}
-          <b>No scheduled {{@year}} shifts were found.</b>
+          <b class="text-danger">No {{@year}} shifts were found.</b>
         {{/if}}
       </div>
     </div>

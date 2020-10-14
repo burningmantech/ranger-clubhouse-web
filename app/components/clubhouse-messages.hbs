@@ -1,6 +1,6 @@
 <div class="mail-container">
   <div class="row mb-2">
-    <div class="col-md-12 col-lg-auto mt-2">
+    <div class="col-sm-12 col-lg-auto mt-2">
       {{#if @messages}}
         {{pluralize @messages.length "message"}}
         {{#if this.unreadCount}}
@@ -9,10 +9,10 @@
           (no unread)
         {{/if}}
       {{else}}
-        <b>{{if @isMe "You have" "There are"}} no messages.</b>
+        <b>There are no messages.</b>
       {{/if}}
     </div>
-    <div class="col-md-12 col-lg-auto">
+    <div class="col-sm-12 col-lg-auto">
     {{#if this.canSendMessages}}
       <button type="button" class="btn btn-primary ml-md-auto btn-responsive" {{on "click" this.newMessageAction}}>{{fa-icon "plus"}}
         New Message
