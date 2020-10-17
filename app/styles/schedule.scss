@@ -66,13 +66,19 @@
     text-align: right;
   }
 
-  .schedule-description {
-    width: 25%;
+
+  .schedule-signup-description {
+    width: 28%;
+    margin-left: 10px;
+  }
+
+  .schedule-table-description {
+    width: 35%;
     margin-left: 10px;
   }
 
   @media print {
-    .schedule-description {
+    .schedule-table-description {
       width: 50%;
     }
   }

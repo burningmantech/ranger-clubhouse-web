@@ -1,26 +1,16 @@
 .notice-box {
-  display: flex;
-  flex-direction: row;
   margin-bottom: 5px;
   border: 1px solid;
   border-radius: 5px;
-  padding: 5px;
+  padding: 5px 10px;
 }
 
-.notice-icon {
-  margin: 5px 15px 0 5px;
-}
-
-.notice-body {
-  align-self: center;
-}
 
 .notice-header {
-  font-size: $h4-font-size;
+  font-size: $h3-font-size;
   font-weight: 500;
   margin-bottom: 5px;
 }
-
 .notice-success {
   border-color: #28a745;
   background-color: #c3e6cb;

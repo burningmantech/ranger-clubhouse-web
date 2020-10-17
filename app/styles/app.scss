@@ -192,12 +192,21 @@ dl {
   position: static;
 }
 
-.dropdown-menu-large {
-  width: 90%;
-  left: 0;
-  right: 0;
-  /*  height of nav-item  */
-  top: 45px;
+.dropdown-menu-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: stretch;
+}
+
+@include media-breakpoint-up(lg) {
+  .dropdown-menu-container {
+    flex-direction: row;
+  }
+}
+
+.dropdown-menu-section {
+  width: 190px;
 }
 
 .dropdown-menu .navbar-text {
@@ -207,7 +216,7 @@ dl {
   color: #222;
 }
 
-@media only screen and (max-width: 799px) {
+@include media-breakpoint-down(lg) {
   .navbar-brand {
     margin-right: 0;
   }

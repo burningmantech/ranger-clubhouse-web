@@ -30,82 +30,81 @@
         </div>
         {{#if this.session.user.unread_message_count}}
           <div class="navbar-item d-lg-none h4 text-black mt-2">
-            <LinkTo @route="me.messages" class="btn btn-success btn-block text-white">Read {{pluralize
-                    this.session.user.unread_message_count "Message"}}</LinkTo>
+            <LinkTo @route="me.messages" class="btn btn-success btn-block text-white">
+              Read {{pluralize this.session.user.unread_message_count "message"}}
+            </LinkTo>
           </div>
         {{/if}}
       {{/if}}
 
       <ul class="navbar-nav mr-auto">
         {{#if session.isAuthenticated}}
-          <li class="nav-item dropdown  dropdown-large">
+          <li class="nav-item dropdown dropdown-large">
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Me</a>
-            <div class="dropdown-menu dropdown-menu-large">
-              <div class="container">
-                <div class="row">
-                  {{#unless (or session.user.isPastProspective session.user.isProspectiveWaitlist)}}
-                    <div class="col-sm-12 col-lg-3">
-                      <div class="navbar-text">Rangering</div>
-                      <LinkTo @route="me.schedule" class="dropdown-item">Schedule / Sign Up</LinkTo>
-                      {{#if (or session.user.isAlpha session.user.isRanger)}}
-                        <LinkTo @route="me.timesheet-corrections.index" class="dropdown-item">Timesheet Corrections
-                        </LinkTo>
-                        <LinkTo @route="me.timesheet" class="dropdown-item">Timesheets</LinkTo>
-                      {{/if}}
-                      {{#unless session.user.isAuditor}}
-                        <LinkTo @route="me.event-info" class="dropdown-item">Event Info</LinkTo>
-                      {{/unless}}
-                    </div>
-                  {{/unless}}
+            <div class="dropdown-menu">
+              <div class="dropdown-menu-container">
+                {{#unless (or session.user.isPastProspective session.user.isProspectiveWaitlist)}}
+                  <div class="dropdown-menu-section">
+                    <div class="navbar-text">Rangering</div>
+                    <LinkTo @route="me.schedule" class="dropdown-item">Schedule / Sign Up</LinkTo>
+                    {{#if (or session.user.isAlpha session.user.isRanger)}}
+                      <LinkTo @route="me.timesheet-corrections.index" class="dropdown-item">Timesheet Corrections
+                      </LinkTo>
+                      <LinkTo @route="me.timesheet" class="dropdown-item">Timesheets</LinkTo>
+                    {{/if}}
+                    {{#unless session.user.isAuditor}}
+                      <LinkTo @route="me.event-info" class="dropdown-item">Event Info</LinkTo>
+                    {{/unless}}
+                  </div>
+                {{/unless}}
 
-                  {{#if (or session.user.isRanger session.user.isPNV)}}
-                    <div class="col-sm-12 col-lg-3">
-                      <div class="navbar-text">Pre-Event</div>
-                      {{#if (or session.user.isPNV)}}
-                        <LinkTo @route="me.tickets" class="dropdown-item">Work Access Pass</LinkTo>
-                      {{else}}
-                        <LinkTo @route="me.tickets" class="dropdown-item">Tickets &amp; Stuff</LinkTo>
-                      {{/if}}
+                {{#if (or session.user.isRanger session.user.isPNV)}}
+                  <div class="dropdown-menu-section">
+                    <div class="navbar-text">Pre-Event</div>
+                    {{#if (or session.user.isPNV)}}
+                      <LinkTo @route="me.tickets" class="dropdown-item">Work Access Pass</LinkTo>
+                    {{else}}
+                      <LinkTo @route="me.tickets" class="dropdown-item">Tickets &amp; Stuff</LinkTo>
+                    {{/if}}
 
-                      {{#if (and (config "MotorpoolPolicyEnable") (or session.user.isRanger session.user.isAlpha))}}
-                        <LinkTo @route="me.motorpool-policy" class="dropdown-item">Motorpool Policy</LinkTo>
-                      {{/if}}
-                      {{#if (and (config "RadioCheckoutAgreementEnabled") (or session.user.isRanger session.user.isAlpha session.user.isNonRanger))}}
-                        <LinkTo @route="me.radio-checkout" class="dropdown-item">Radio Agreement</LinkTo>
-                      {{/if}}
+                    {{#if (and (config "MotorpoolPolicyEnable") (or session.user.isRanger session.user.isAlpha))}}
+                      <LinkTo @route="me.motorpool-policy" class="dropdown-item">Motorpool Policy</LinkTo>
+                    {{/if}}
+                    {{#if (and (config "RadioCheckoutAgreementEnabled") (or session.user.isRanger session.user.isAlpha session.user.isNonRanger))}}
+                      <LinkTo @route="me.radio-checkout" class="dropdown-item">Radio Agreement</LinkTo>
+                    {{/if}}
 
-                      {{#if this.session.user.may_request_stickers}}
-                        <LinkTo @route="me.vehicles" class="dropdown-item">Vehicle Requests</LinkTo>
-                      {{/if}}
-                    </div>
+                    {{#if this.session.user.may_request_stickers}}
+                      <LinkTo @route="me.vehicles" class="dropdown-item">Vehicle Requests</LinkTo>
+                    {{/if}}
+                  </div>
 
+                {{/if}}
+                <div class="dropdown-menu-section">
+                  <div class="navbar-text">Communication</div>
+                  <LinkTo @route="me.alerts" class="dropdown-item">Alert Preferences</LinkTo>
+                  {{#if (or session.user.isRanger session.user.isPNV session.user.isAuditor)}}
+                    <LinkTo @route="me.announcements" class="dropdown-item">Announcements</LinkTo>
                   {{/if}}
-                  <div class="col-sm-12 col-lg-3">
-                    <div class="navbar-text">Communication</div>
-                    <LinkTo @route="me.alerts" class="dropdown-item">Alert Preferences</LinkTo>
-                    {{#if (or session.user.isRanger session.user.isPNV session.user.isAuditor)}}
-                      <LinkTo @route="me.announcements" class="dropdown-item">Announcements</LinkTo>
-                    {{/if}}
-                    {{#if session.user.isRanger}}
-                      <LinkTo @route="me.messages" class="dropdown-item">Messages</LinkTo>
-                      <LinkTo @route="me.contact" class="dropdown-item">Contact Ranger</LinkTo>
-                    {{/if}}
-                    {{#if session.user.teacher.have_mentored}}
-                      <LinkTo @route="me.mentees" class="dropdown-item">My Mentees</LinkTo>
-                    {{/if}}
-                    {{#if session.user.teacher.have_feedback}}
-                      <LinkTo @route="me.trainer-feedback" class="dropdown-item">Trainer Feedback</LinkTo>
-                    {{/if}}
-                  </div>
+                  {{#if session.user.isRanger}}
+                    <LinkTo @route="me.messages" class="dropdown-item">Messages</LinkTo>
+                    <LinkTo @route="me.contact" class="dropdown-item">Contact Ranger</LinkTo>
+                  {{/if}}
+                  {{#if session.user.teacher.have_mentored}}
+                    <LinkTo @route="me.mentees" class="dropdown-item">My Mentees</LinkTo>
+                  {{/if}}
+                  {{#if session.user.teacher.have_feedback}}
+                    <LinkTo @route="me.trainer-feedback" class="dropdown-item">Trainer Feedback</LinkTo>
+                  {{/if}}
+                </div>
 
-                  <div class="col-sm-12 col-lg-3">
-                    <div class="navbar-text">My Account</div>
-                    <LinkTo @route="me.personal-info" class="dropdown-item">Personal Info</LinkTo>
-                    {{#if (or session.user.isPNV session.user.isRanger)}}
-                      <LinkTo @route="me.emergency-contact" class="dropdown-item">Emergency Contact</LinkTo>
-                    {{/if}}
-                    <LinkTo @route="me.password" class="dropdown-item">Change Password</LinkTo>
-                  </div>
+                <div class="dropdown-menu-section">
+                  <div class="navbar-text">My Account</div>
+                  <LinkTo @route="me.personal-info" class="dropdown-item">Personal Info</LinkTo>
+                  {{#if (or session.user.isPNV session.user.isRanger)}}
+                    <LinkTo @route="me.emergency-contact" class="dropdown-item">Emergency Contact</LinkTo>
+                  {{/if}}
+                  <LinkTo @route="me.password" class="dropdown-item">Change Password</LinkTo>
                 </div>
               </div>
             </div>
@@ -188,72 +187,74 @@
           {{#if (has-role "admin" "edit-slots" "megaphone")}}
             <li class="nav-item dropdown dropdown-large">
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Admin</a>
-              <div class="dropdown-menu dropdown-menu-large">
-                <div class="container">
-                  <div class="row">
-                    {{#if (has-role "admin" "edit-slots" "megaphone")}}
-                      <div class="col-sm-12 col-lg-3">
-                        <div class="navbar-text">Edit Records</div>
-                        <LinkTo @route="admin.slots" class="dropdown-item">Schedule Slots</LinkTo>
-                        {{#if (has-role "admin")}}
-                          <LinkTo @route="admin.credits" class="dropdown-item">Schedule Credits</LinkTo>
-                          <LinkTo @route="admin.assets" class="dropdown-item">Assets</LinkTo>
-                          <LinkTo @route="admin.event-dates" class="dropdown-item">Event Dates</LinkTo>
-                        {{/if}}
-                        {{#if (has-role "admin" "megaphone")}}
-                          <LinkTo @route="admin.motd" class="dropdown-item">MOTD</LinkTo>
-                        {{/if}}
-                        {{#if (has-role "admin")}}
-                          <LinkTo @route="admin.positions" class="dropdown-item">Positions</LinkTo>
-                          <LinkTo @route="admin.roles" class="dropdown-item">(System) Roles</LinkTo>
-                          <LinkTo @route="admin.help" class="dropdown-item">Help Documents</LinkTo>
-                          <LinkTo @route="admin.alerts" class="dropdown-item">RBS Alerts</LinkTo>
-                          <LinkTo @route="admin.survey" class="dropdown-item">Surveys</LinkTo>
-                        {{/if}}
-                        {{#if (has-role "admin" "megaphone")}}
-                          <LinkTo @route="admin.documents" class="dropdown-item">Documents</LinkTo>
-                        {{/if}}
-                      </div>
+              <div class="dropdown-menu">
+                <div class="dropdown-menu-container">
+                  {{#if (has-role "admin" "edit-slots" "megaphone")}}
+                    <div class="dropdown-menu-section">
+                      <div class="navbar-text">Edit Records</div>
+                      <LinkTo @route="admin.slots" class="dropdown-item">Schedule Slots</LinkTo>
                       {{#if (has-role "admin")}}
-                        <div class="col-sm-12 col-lg-3">
-                          <div class="navbar-text">Site Administration</div>
-                          <LinkTo @route="admin.settings" class="dropdown-item">Settings</LinkTo>
-                          <LinkTo @route="admin.maintenance" class="dropdown-item">Maintenance</LinkTo>
-                          <LinkTo @route="admin.clubhouse1-log" class="dropdown-item">Clubhouse 1 Log</LinkTo>
-                          <LinkTo @route="admin.error-log" class="dropdown-item">Error Log</LinkTo>
-                          <LinkTo @route="admin.action-log" class="dropdown-item">Action Log</LinkTo>
-                        </div>
-                        <div class="col-sm-12 col-lg-3">
-                          <div class="navbar-text">Pre-Event</div>
-                          <LinkTo @route="admin.salesforce" class="dropdown-item">Salesforce Import</LinkTo>
-                          <LinkTo @route="admin.radio-eligibility" class="dropdown-item">Radio Eligibility</LinkTo>
-                          <LinkTo @route="admin.online-training.index" class="dropdown-item">Online Training Admin
-                          </LinkTo>
-                          <div class="navbar-text">Bulk Operations</div>
-                          <LinkTo @route="admin.bulk-upload" class="dropdown-item">Bulk Upload</LinkTo>
-                          <LinkTo @route="admin.bulk-sign-in-out" class="dropdown-item">Bulk Sign In/Out</LinkTo>
-                          <LinkTo @route="admin.bulk-signout" class="dropdown-item">Bulk Signout</LinkTo>
-                        </div>
+                        <LinkTo @route="admin.credits" class="dropdown-item">Schedule Credits</LinkTo>
+                        <LinkTo @route="admin.assets" class="dropdown-item">Assets</LinkTo>
+                        <LinkTo @route="admin.event-dates" class="dropdown-item">Event Dates</LinkTo>
                       {{/if}}
-                    {{/if}}
-
-                    {{#if (has-role "admin" "megaphone" "edit-slots")}}
-                      <div class="col-sm-12 col-lg-3">
-                        {{#if (has-role "admin")}}
-                          <div class="navbar-text">Post Event</div>
-                          <LinkTo @route="admin.thank-you-cards" class="dropdown-item">Thank-You Cards</LinkTo>
-                          <LinkTo @route="admin.timesheet-sanity-checker" class="dropdown-item">Timesheet Sanity
-                            Checker
-                          </LinkTo>
-                          <LinkTo @route="admin.hours-credits" class="dropdown-item">Hours/Credits</LinkTo>
-                          <LinkTo @route="admin.people-by-status-change" class="dropdown-item">People By Status Change
-                          </LinkTo>
-                        {{/if}}
-                        <div class="navbar-text">Communications</div>
-                        <LinkTo @route="admin.rbs" class="dropdown-item">Ranger Broadcast</LinkTo>
+                       {{#if (has-role "admin")}}
+                        <LinkTo @route="admin.positions" class="dropdown-item">Positions</LinkTo>
+                        <LinkTo @route="admin.roles" class="dropdown-item">(System) Roles</LinkTo>
+                        <LinkTo @route="admin.help" class="dropdown-item">Help Documents</LinkTo>
+                        <LinkTo @route="admin.alerts" class="dropdown-item">RBS Alerts</LinkTo>
+                        <LinkTo @route="admin.survey" class="dropdown-item">Surveys</LinkTo>
+                      {{/if}}
+                      {{#if (has-role "admin" "megaphone")}}
+                        <LinkTo @route="admin.documents" class="dropdown-item">Documents</LinkTo>
+                      {{/if}}
+                    </div>
+                    {{#if (has-role "admin")}}
+                      <div class="dropdown-menu-section">
+                        <div class="navbar-text">Site Admin</div>
+                        <LinkTo @route="admin.settings" class="dropdown-item">Settings</LinkTo>
+                        <LinkTo @route="admin.maintenance" class="dropdown-item">Maintenance</LinkTo>
+                        <LinkTo @route="admin.clubhouse1-log" class="dropdown-item">Clubhouse 1 Log</LinkTo>
+                        <LinkTo @route="admin.error-log" class="dropdown-item">Error Log</LinkTo>
+                        <LinkTo @route="admin.action-log" class="dropdown-item">Action Log</LinkTo>
+                      </div>
+                      <div class="dropdown-menu-section">
+                        <div class="navbar-text">Pre-Event</div>
+                        <LinkTo @route="admin.salesforce" class="dropdown-item">Salesforce Import</LinkTo>
+                        <LinkTo @route="admin.radio-eligibility" class="dropdown-item">Radio Eligibility</LinkTo>
+                        <LinkTo @route="admin.online-training.index" class="dropdown-item">Online Training Admin
+                        </LinkTo>
+                      </div>
+                      <div class="dropdown-menu-section">
+                        <div class="navbar-text">Bulk Operations</div>
+                        <LinkTo @route="admin.bulk-upload" class="dropdown-item">Bulk Upload</LinkTo>
+                        <LinkTo @route="admin.bulk-sign-in-out" class="dropdown-item">Bulk Sign In/Out</LinkTo>
+                        <LinkTo @route="admin.bulk-signout" class="dropdown-item">Bulk Signout</LinkTo>
                       </div>
                     {{/if}}
-                  </div>
+                  {{/if}}
+
+                  {{#if (has-role "admin" "megaphone" "edit-slots")}}
+                    <div class="dropdown-menu-section">
+                      {{#if (has-role "admin")}}
+                        <div class="navbar-text">Post Event</div>
+                        <LinkTo @route="admin.thank-you-cards" class="dropdown-item">Thank-You Cards</LinkTo>
+                        <LinkTo @route="admin.timesheet-sanity-checker" class="dropdown-item">Timesheet Sanity
+                          Checker
+                        </LinkTo>
+                        <LinkTo @route="admin.hours-credits" class="dropdown-item">Hours/Credits</LinkTo>
+                        <LinkTo @route="admin.people-by-status-change" class="dropdown-item">People By Status Change
+                        </LinkTo>
+                      {{/if}}
+                    </div>
+                  {{/if}}
+                  {{#if (has-role "admin" "megaphone")}}
+                    <div class="dropdown-menu-section">
+                      <div class="navbar-text">Communications</div>
+                        <LinkTo @route="admin.motd" class="dropdown-item">Announcements</LinkTo>
+                      <LinkTo @route="admin.rbs" class="dropdown-item">Ranger Broadcast</LinkTo>
+                    </div>
+                  {{/if}}
                 </div>
               </div>
             </li>
@@ -262,73 +263,71 @@
           {{#if (has-role "admin" "manage")}}
             <li class="nav-item dropdown dropdown-large">
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Reports</a>
-              <div class="dropdown-menu dropdown-menu-large">
-                <div class="container">
-                  <div class="row">
-                    <div class="col-sm-12 col-lg-3">
-                      <div class="navbar-text">Schedule</div>
-                      <LinkTo @route="reports.shift-lead" class="dropdown-item">Shift Lead Report</LinkTo>
-                      <LinkTo @route="reports.schedule-by-callsign" class="dropdown-item">Schedule by Callsign</LinkTo>
-                      <LinkTo @route="reports.schedule-by-position" class="dropdown-item">Schedule by Position</LinkTo>
-                      <LinkTo @route="reports.shift-coverage" class="dropdown-item">Coverage Report</LinkTo>
-                      <LinkTo @route="reports.shift-signups" class="dropdown-item">Shift Signups</LinkTo>
-                      <LinkTo @route="reports.hq-forecast" class="dropdown-item">HQ Checkin/Out Forecast</LinkTo>
-                    </div>
-                    <div class="col-sm-12 col-lg-3">
-                      <div class="navbar-text">People</div>
-                      <LinkTo @route="reports.people-by-position" class="dropdown-item">People by Position</LinkTo>
-                      <LinkTo @route="reports.people-by-role" class="dropdown-item">People by Role</LinkTo>
-                      <LinkTo @route="reports.people-by-status" class="dropdown-item">People By Status</LinkTo>
-                      <LinkTo @route="reports.people-by-location" class="dropdown-item">People by Location</LinkTo>
-                      <LinkTo @route="reports.special-teams" class="dropdown-item">People By Special Team</LinkTo>
-                    </div>
-                    <div class="col-sm-12 col-lg-3">
-                      <div class="navbar-text">Timesheets</div>
-                      <LinkTo @route="reports.on-duty" @query={{hash over_hours=null}} class="dropdown-item">People On
-                        Duty
-                      </LinkTo>
-                      <LinkTo @route="reports.on-duty" @query={{hash over_hours=6}} class="dropdown-item">... Over 6
-                        Hours
-                      </LinkTo>
-                      <LinkTo @route="reports.flakes" class="dropdown-item">Flake Report</LinkTo>
-                      <LinkTo @route="reports.timesheet-totals" class="dropdown-item">Timesheet Totals</LinkTo>
-                      <LinkTo @route="reports.timesheet-by-callsign" class="dropdown-item">Timesheet By Callsign
-                      </LinkTo>
-                      <LinkTo @route="reports.timesheet-by-position" class="dropdown-item">Timesheet By Position
-                      </LinkTo>
-                      <LinkTo @route="reports.timesheet-correction-requests" class="dropdown-item">Corrections
-                        Requests
-                      </LinkTo>
-                      <LinkTo @route="reports.timesheet-unconfirmed" class="dropdown-item">Timesheet Unconfirmed
-                      </LinkTo>
-                    </div>
-                    <div class="col-sm-12 col-lg-3">
-                      <div class="navbar-text">Assets</div>
-                      <LinkTo @route="reports.asset-history" class="dropdown-item">Non-Radio Asset History</LinkTo>
-                      <LinkTo @route="reports.assets-outstanding" class="dropdown-item">Assets Outstanding</LinkTo>
-                      <LinkTo @route="reports.radio-assets" class="dropdown-item">Radio Assets</LinkTo>
-                      <LinkTo @route="reports.radio-checkout" class="dropdown-item">Radio Checkout Report</LinkTo>
-                    </div>
-                    <div class="col-sm-12 col-lg-3">
-                      <div class="navbar-text">Quartermaster</div>
-                      <LinkTo @route="reports.freaking-years" class="dropdown-item">Freaking Years</LinkTo>
-                      <LinkTo @route="reports.potential-shirts" class="dropdown-item">Potential Earned Shirts</LinkTo>
-                      <LinkTo @route="reports.alpha-shirts" class="dropdown-item">Alpha Shirts</LinkTo>
-                    </div>
-                    <div class="col-sm-12 col-lg-3">
-                      <div class="navbar-text">Vehicles</div>
-                      <LinkTo @route="reports.vehicle-paperwork" class="dropdown-item">Vehicle Paperwork</LinkTo>
-                      <LinkTo @route="reports.vehicle-registry" class="dropdown-item">Vehicle Registry</LinkTo>
-                    </div>
+              <div class="dropdown-menu">
+                <div class="dropdown-menu-container">
+                  <div class="dropdown-menu-section">
+                    <div class="navbar-text">Schedule</div>
+                    <LinkTo @route="reports.shift-lead" class="dropdown-item">Shift Lead Report</LinkTo>
+                    <LinkTo @route="reports.schedule-by-callsign" class="dropdown-item">Schedule by Callsign</LinkTo>
+                    <LinkTo @route="reports.schedule-by-position" class="dropdown-item">Schedule by Position</LinkTo>
+                    <LinkTo @route="reports.shift-coverage" class="dropdown-item">Coverage Report</LinkTo>
+                    <LinkTo @route="reports.shift-signups" class="dropdown-item">Shift Signups</LinkTo>
+                    <LinkTo @route="reports.hq-forecast" class="dropdown-item">HQ Checkin/Out Forecast</LinkTo>
+                  </div>
+                  <div class="dropdown-menu-section">
+                    <div class="navbar-text">People</div>
+                    <LinkTo @route="reports.people-by-position" class="dropdown-item">People by Position</LinkTo>
+                    <LinkTo @route="reports.people-by-role" class="dropdown-item">People by Role</LinkTo>
+                    <LinkTo @route="reports.people-by-status" class="dropdown-item">People By Status</LinkTo>
+                    <LinkTo @route="reports.people-by-location" class="dropdown-item">People by Location</LinkTo>
+                    <LinkTo @route="reports.special-teams" class="dropdown-item">People By Special Team</LinkTo>
+                  </div>
+                  <div class="dropdown-menu-section">
+                    <div class="navbar-text">Timesheets</div>
+                    <LinkTo @route="reports.on-duty" @query={{hash over_hours=null}} class="dropdown-item">People On
+                      Duty
+                    </LinkTo>
+                    <LinkTo @route="reports.on-duty" @query={{hash over_hours=6}} class="dropdown-item">... Over 6
+                      Hours
+                    </LinkTo>
+                    <LinkTo @route="reports.flakes" class="dropdown-item">Flake Report</LinkTo>
+                    <LinkTo @route="reports.timesheet-totals" class="dropdown-item">Timesheet Totals</LinkTo>
+                    <LinkTo @route="reports.timesheet-by-callsign" class="dropdown-item">Timesheet By Callsign
+                    </LinkTo>
+                    <LinkTo @route="reports.timesheet-by-position" class="dropdown-item">Timesheet By Position
+                    </LinkTo>
+                    <LinkTo @route="reports.timesheet-correction-requests" class="dropdown-item">Corrections
+                      Requests
+                    </LinkTo>
+                    <LinkTo @route="reports.timesheet-unconfirmed" class="dropdown-item">Timesheet Unconfirmed
+                    </LinkTo>
+                  </div>
+                  <div class="dropdown-menu-section">
+                    <div class="navbar-text">Assets</div>
+                    <LinkTo @route="reports.asset-history" class="dropdown-item">Non-Radio Asset History</LinkTo>
+                    <LinkTo @route="reports.assets-outstanding" class="dropdown-item">Assets Outstanding</LinkTo>
+                    <LinkTo @route="reports.radio-assets" class="dropdown-item">Radio Assets</LinkTo>
+                    <LinkTo @route="reports.radio-checkout" class="dropdown-item">Radio Checkout Report</LinkTo>
+                  </div>
+                  <div class="dropdown-menu-section">
+                    <div class="navbar-text">Quartermaster</div>
+                    <LinkTo @route="reports.freaking-years" class="dropdown-item">Freaking Years</LinkTo>
+                    <LinkTo @route="reports.potential-shirts" class="dropdown-item">Potential Earned Shirts</LinkTo>
+                    <LinkTo @route="reports.alpha-shirts" class="dropdown-item">Alpha Shirts</LinkTo>
+                  </div>
+                  <div class="dropdown-menu-section">
+                    <div class="navbar-text">Vehicles</div>
+                    <LinkTo @route="reports.vehicle-paperwork" class="dropdown-item">Vehicle Paperwork</LinkTo>
+                    <LinkTo @route="reports.vehicle-registry" class="dropdown-item">Vehicle Registry</LinkTo>
+                  </div>
 
-                    <div class="col-sm-12 col-lg-3">
-                      <div class="navbar-text">Other</div>
-                      <LinkTo @route="reports.position-sanity-checker" class="dropdown-item">Position Sanity Check
-                      </LinkTo>
-                      <LinkTo @route="reports.languages" class="dropdown-item">Languages</LinkTo>
-                      <LinkTo @route="reports.sandman-qualified" class="dropdown-item">Sandman Qualified</LinkTo>
-                      <LinkTo @route="reports.rollcall" class="dropdown-item">Rollcall</LinkTo>
-                    </div>
+                  <div class="dropdown-menu-section">
+                    <div class="navbar-text">Other</div>
+                    <LinkTo @route="reports.position-sanity-checker" class="dropdown-item">Position Sanity Check
+                    </LinkTo>
+                    <LinkTo @route="reports.languages" class="dropdown-item">Languages</LinkTo>
+                    <LinkTo @route="reports.sandman-qualified" class="dropdown-item">Sandman Qualified</LinkTo>
+                    <LinkTo @route="reports.rollcall" class="dropdown-item">Rollcall</LinkTo>
                   </div>
                 </div>
               </div>
@@ -377,7 +376,7 @@
               {{/if}}
               {{session.user.callsign}}
               {{#if this.session.user.onduty_position}}
-              ({{this.session.user.onduty_position.title}})
+                ({{this.session.user.onduty_position.title}})
               {{/if}}
             </a>
 
@@ -422,7 +421,7 @@
       <button type="button" onclick={{action reload}} class="btn btn-danger">Reload</button>
     </div>
   </NewVersionNotifier>
- {{/if}}
+{{/if}}
 
 <div class="row" id="body-row">
   {{outlet}}

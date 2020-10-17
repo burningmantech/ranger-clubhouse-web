@@ -1,15 +1,11 @@
 <div class="notice-box {{this.boxColor}}">
-  {{#if @icon}}
-    <div class="notice-icon">
-      {{fa-icon @icon size=this.iconSize type=@iconType color=@type}}
+    <div class="notice-header">
+      <span class="notice-icon">
+        {{#if @icon}}
+          {{fa-icon @icon type=@iconType color=@type}}
+        {{/if}}
+      </span>
+      {{@title}}
     </div>
-  {{/if}}
-  <div class="notice-body">
-    {{#if @title}}
-      <div class="notice-header">{{@title}}</div>
-    {{/if}}
-    <div class="notice-text">
-      {{yield}}
-    </div>
-  </div>
+  <div class="notice-body">{{yield}}</div>
 </div>

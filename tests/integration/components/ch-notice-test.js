@@ -10,6 +10,6 @@ module('Integration | Component | ch notice', function(hooks) {
      await render(hbs`<ChNotice @title="box title">box body</ChNotice>`);
 
     assert.dom('.notice-header').exists().hasText('box title');
-    assert.dom('.notice-text').hasText('box body');
+    assert.dom('.notice-body').hasText('box body');
   });
 });
