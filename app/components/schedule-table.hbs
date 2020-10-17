@@ -15,12 +15,9 @@
 
 {{#if this.hasOverlapping}}
   <ChNotice @icon="flag" @title="Overlapping shifts">
-    <p>
-      <YouOrCallsign @person={{@person}} @youLabel="You have" @callsignVerb="has"/>
-      overlapping shifts, marked with a
-      {{fa-icon "flag" color="danger"}}.
-      You only get credit for the time you work.
-    </p>
+    <YouOrCallsign @person={{@person}} @youLabel="You have" @callsignVerb="has"/>
+    overlapping shifts, marked with a {{fa-icon "flag" color="danger"}}.
+    You only get credit for the time you work.
   </ChNotice>
 {{/if}}
 
@@ -33,7 +30,7 @@
     <div class="schedule-time">Time</div>
     <div class="schedule-duration">Duration</div>
     <div class="schedule-credits">Credits</div>
-    <div class="schedule-description">Position / Description</div>
+    <div class="schedule-table-description">Position / Description</div>
     <div class="schedule-actions d-print-none">Actions</div>
   </div>
 
@@ -57,7 +54,7 @@
         {{hour-minute-format slot.slot_duration}}
       </div>
       <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}</div>
-      <div class="schedule-description">
+      <div class="schedule-table-description">
         {{slot.position_title}}<br>
         <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
       </div>
@@ -82,9 +79,9 @@
             {{/if}}
             Remove
           </button>
-          {{#if slot.slot_url}}
+         {{/if}}
+        {{#if slot.slot_url}}
 
-          {{/if}}
         {{/if}}
       </div>
     </div>

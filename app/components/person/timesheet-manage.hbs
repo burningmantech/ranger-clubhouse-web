@@ -103,18 +103,18 @@
             @onCancel={{this.cancelEntryAction}} as |f|>
       <Modal.body>
         {{#if this.editEntry.isPendingReview}}
-          <ChNotice @type="danger" @icon="exclamation" @iconSize="1x">
+          <ChNotice @type="danger" @icon="exclamation">
             <b class="text-danger">Entry has a correction request and needs to be reviewed.</b>
           </ChNotice>
         {{else if this.editEntry.isUnverified}}
-          <ChNotice @type="danger" @icon="hourglass" @iconSize="1x">
+          <ChNotice @type="danger" @title="Review not needed" @icon="hourglass">
             Entry needs to be verified by the person. No review action required at this time.
           </ChNotice>
         {{else if this.editEntry.verified}}
-          <ChNotice @type="success" @icon="check" @iconSize="1x">
-            <b>Entry was verified on {{shift-format this.editEntry.verified_at}}
+          <ChNotice @type="success" @icon="check" @title="Entry Verified - No Review Required">
+            Entry was verified on {{shift-format this.editEntry.verified_at}}
               by {{this.editEntry.verified_person.callsign}}.
-              Review is not needed at this time.</b>
+              Review is not needed at this time.
           </ChNotice>
         {{/if}}
 

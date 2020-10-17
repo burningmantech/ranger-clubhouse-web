@@ -1,7 +1,7 @@
-<h1>Messages Of The Day (MOTD)</h1>
+<h1>Clubhouse Announcements / Messages Of The Day (MOTD)</h1>
 
 <p>
-  Any messages entered here will be shown on the home page when the user logins in.
+  Announces are shown on the user's homepage and can be targeted to active Rangers, Prospectives and/or Auditors.
 </p>
 
 <ChForm @formId="query" @formFor={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
@@ -24,7 +24,9 @@
 </ChForm>
 
 
-Page {{this.currentPage}} of {{this.total_pages}} ({{this.total}} matching of {{pluralize this.table_count "message"}})
+<div class="my-2">
+  Page {{this.currentPage}} of {{this.total_pages}} ({{this.total}} matching of {{pluralize this.table_count "message"}})
+</div>
 <table class="table table-striped table-sm table-width-auto">
   <thead>
   <tr>
@@ -71,7 +73,8 @@ Page {{this.currentPage}} of {{this.total_pages}} ({{this.total}} matching of {{
         {{motd.subject}}
       </td>
       <td>
-        <button type="button" class="btn btn-primary btn-sm" {{action this.editEntry motd}}>{{fa-icon "edit"}} Edit</button>
+        <button type="button" class="btn btn-primary btn-sm" {{action this.editEntry motd}}>{{fa-icon "edit"}}Edit
+        </button>
       </td>
     </tr>
   {{else}}
@@ -93,12 +96,14 @@ Page {{this.currentPage}} of {{this.total_pages}} ({{this.total}} matching of {{
 
 {{#if this.entry}}
   <ModalDialog @title={{if this.entry.isNew "New Message" "Edit Message"}} as |Modal|>
-    <ChForm @formId="entry" @formFor={{this.entry}} @onSubmit={{action this.saveEntry}}
+    <ChForm @formId="entry" @formFor={{this.entry}}
+            @validator={{this.motdValidations}}
+            @onSubmit={{action this.saveEntry}}
             @onCancel={{action this.cancelEntry}} as |f|>
       <Modal.body>
-        <div class="form-row">
+        <div class="form-row mb-2">
           <label class="col-form-label col-2">Audience</label>
-          <div class="form-check-inline col-9">
+          <div class="form-check-inline">
             <f.input @name="for_rangers" @label="Rangers" @type="checkbox"/>
             <f.input @name="for_pnvs" @label="Prospectives + Alphas" @type="checkbox"/>
             <f.input @name="for_auditors" @label="Auditors" @type="checkbox"/>
@@ -109,10 +114,10 @@ Page {{this.currentPage}} of {{this.total_pages}} ({{this.total}} matching of {{
           <f.input @name="expires_at" @type="datetime"/>
         </div>
 
-        <div class="row form-group">
-          <f.input @name="subject" @label="Subject" @type="text" @size={{80}}/>
+        <div class="form-row">
+          <f.input @name="subject" @label="Subject" @type="text" @size={{80}} @grid="col-auto"/>
         </div>
-        <div class="row form-group">
+        <div class="form-row">
           <f.input @name="message" @label="Message Body" @type="textarea" @rows={{10}} @cols={{80}}/>
         </div>
       </Modal.body>
@@ -124,7 +129,8 @@ Page {{this.currentPage}} of {{this.total_pages}} ({{this.total}} matching of {{
         {{/if}}
         {{#unless this.entry.isNew}}
           <div class="ml-auto">
-            <button type="button" class="btn btn-danger" {{action this.deleteEntry motd}}>{{fa-icon "trash"}} Delete</button>
+            <button type="button" class="btn btn-danger" {{action this.deleteEntry motd}}>{{fa-icon "trash"}}Delete
+            </button>
           </div>
         {{/unless}}
       </Modal.footer>

@@ -1,6 +1,8 @@
 import Controller from '@ember/controller';
 import EmberObject, {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
+import {validatePresence} from 'ember-changeset-validations/validators';
+
 
 export default class AdminMotdController extends Controller {
   @tracked entry;
@@ -9,9 +11,9 @@ export default class AdminMotdController extends Controller {
   queryParams = ['audience', 'type', 'sort', 'page', 'page_size'];
 
   typeOptions = [
-    [ 'All', 'all' ] ,
-    [ 'Expired', 'expired' ],
-    [ 'Active', 'active' ],
+    ['All', 'all'],
+    ['Expired', 'expired'],
+    ['Active', 'active'],
   ];
 
   sortOptions = [
@@ -22,9 +24,16 @@ export default class AdminMotdController extends Controller {
   audienceOptions = [
     'all',
     'rangers',
-    [ 'prospectives/alphas', 'pnvs' ],
+    ['prospectives/alphas', 'pnvs'],
     'auditors'
   ];
+
+  motdValidations = {
+    expires_at: [validatePresence(true)],
+    subject: [validatePresence(true)],
+    message: [validatePresence(true)],
+  };
+
 
   @action
   newEntry() {
@@ -48,10 +57,11 @@ export default class AdminMotdController extends Controller {
     }
     const isNew = this.entry.isNew;
 
-    if (!model.get('for_pnvs') && !model.get('for_auditors') && !model.get('for_rangers')) {
+    if (!model.for_pnvs && !model.for_auditors && !model.for_rangers) {
       this.modal.info(null, 'Check one or more audiences to show the message to.');
       return;
     }
+
 
     model.save().then(() => {
       this.toast.success(`MOTD was successfully ${isNew ? 'created' : 'updated'}.`);
@@ -63,18 +73,16 @@ export default class AdminMotdController extends Controller {
   @action
   deleteEntry() {
     this.modal.confirm('Delete MOTD entry', 'Are you sure?', () => {
-      this.entry.destroyRecord()
-        .then(() => {
-          this.toast.success('MOTD has been removed.');
-          this.entry = null;
-        })
-        .catch((response) => this.house.handleErrorResponse(response));
+      this.entry.destroyRecord().then(() => {
+        this.toast.success('MOTD has been removed.');
+        this.entry = null;
+      }).catch((response) => this.house.handleErrorResponse(response));
     })
   }
 
   @action
   resetFilters() {
-    this.query = EmberObject.create({ sort: 'desc', audience: 'pnvs', type: 'all' });
+    this.query = EmberObject.create({sort: 'desc', audience: 'pnvs', type: 'all'});
   }
 
   @action
