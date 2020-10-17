@@ -1,4 +1,4 @@
-<ChNotice @type="danger" @icon="exclamation-circle">
+<ChNotice @type="danger" @icon="exclamation-circle" @title={{if @hasTrainingBlocker "Training Sign Up Warning" "Sign Ups Blocked"}}>
   <ScheduleRequirements @requirements={{@requirements}} @person={{@person}} @isTraining={{@hasTrainingBlocker}} />
   {{#if @hasTrainingBlocker}}
     <p>
