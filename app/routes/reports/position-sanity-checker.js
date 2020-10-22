@@ -18,6 +18,7 @@ export default class ReportsPositionSanityCheckerRoute extends Route {
     controller.set('shiny_penny_year', model.shiny_penny_year)
     controller.set('green_dot', this.greenDots(model.green_dot))
     controller.set('management_role', this.managers(model.management_role))
+    controller.set('deactivated_positions', this.deactivated_positions(model.deactivated_positions))
   }
 
   shinyPennies(shiny_pennies) {
@@ -56,6 +57,11 @@ export default class ReportsPositionSanityCheckerRoute extends Route {
     ]
 
     return managers;
+  }
+
+  deactivated_positions(positions) {
+    positions.forEach((p) => this._setChecked(p.people));
+    return positions;
   }
 
   _setChecked(rows) {
