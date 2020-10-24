@@ -1,4 +1,22 @@
-<!-- TODO Add Documentation for attributes here -->
+{{!
+    @title         : Used for the section header and the submit button
+    @caption       : Displayed under the section header
+    @sucessMessage : The message displayd when no issues are found
+    @people        : A collection of persons that have issues
+    @repairAction  : The repair action to perform
+    @repairType    : Passed to the API as the type of the repair to perform
+    @canRepair     : Callback that validates the user's authorization to perform repairs
+
+    @columns :
+      The table always displays a check, ranger name that links their profile,
+      and a status column.  If you want to add more columns to the table pass
+      a hash with the the following keys:
+
+        label    : Column label
+        property : The property to display for that column
+        class    : Custom CSS class for that column
+}}
+
 <Admin::PositionSanityCheckHeader @title={{@title}}>
   {{yield}}
 </Admin::PositionSanityCheckHeader>
