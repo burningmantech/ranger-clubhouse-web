@@ -59,15 +59,18 @@
 </Admin::PositionSanityCheckHeader>
 
 {{#each this.deactivated_positions as |position|}}
-  <Admin::PositionSanityCheck
-      @title={{position.title}}
-      @caption="{{pluralize position.people.length "person"}} assigned to the deactivated position : {{position.title}}"
-      @sucessMessage="Congratulations! No Rangers are assinged to this position."
-      @columns=[]
-      @people={{position.people}}
-      @repairAction={{action this.repairPeople}}
-      @repairType="management_role"
-      @canRepair={{this.userCanRepair}}
-  />
+  {{#let (hash positionId=position.id) as |params| }}
+    <Admin::PositionSanityCheckTable
+        @title={{position.title}}
+        @caption="{{position.title}} - {{pluralize position.people.length "person"}} assigned"
+        @sucessMessage="Congratulations! No Rangers are assinged to this position."
+        @columns=[]
+        @people={{position.people}}
+        @repairAction={{action this.repairPeople}}
+        @repairParams={{params}}
+        @repairType="deactivated_positions"
+        @canRepair={{this.userCanRepair}}
+    />
+  {{/let}}
 
 {{/each}}

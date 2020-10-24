@@ -54,7 +54,7 @@
       </table>
 
       {{#if @canRepair}}
-        <button type="button" class="btn btn-primary" {{action @repairAction @repairType @people}} disabled={{this.isSubmitting}}>
+        <button type="button" class="btn btn-primary" {{action @repairAction @repairType @people @repairParams}} disabled={{this.isSubmitting}}>
           Fix {{@title}}
         </button>
         {{#if this.isSubmitting}}
