@@ -20,6 +20,7 @@
     @repairAction={{action this.repairPeople}}
     @repairType="shiny_pennies"
     @canRepair={{this.userCanRepair}}
+    @isSubmitting={{this.isSubmitting}}
 >
   All first-year Rangers (minted in {{this.shiny_penny_year}}) should have the
   "Dirt - Shiny Penny" position and no one else should.
@@ -34,6 +35,7 @@
     @repairAction={{action this.repairPeople}}
     @repairType="green_dot"
     @canRepair={{this.userCanRepair}}
+    @isSubmitting={{this.isSubmitting}}
 >
   All Green Dots should have the "Dirt - Green Dot", "Gerlach Patrol - Green Dot", and "Sanctuary" positions.
 </Admin::PositionSanityCheck>
@@ -47,6 +49,7 @@
     @repairAction={{action this.repairPeople}}
     @repairType="management_role"
     @canRepair={{this.userCanRepair}}
+    @isSubmitting={{this.isSubmitting}}
 >
   Rangers whose role requires significant Clubhouse access should have the "Login (Management Mode)" role.
   <br>
@@ -70,6 +73,7 @@
         @repairParams={{params}}
         @repairType="deactivated_positions"
         @canRepair={{this.userCanRepair}}
+        @isSubmitting={{this.isSubmitting}}
     />
   {{/let}}
 

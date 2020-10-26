@@ -1,8 +1,11 @@
 import Controller from '@ember/controller';
 import { action, set } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
+import { tracked } from '@glimmer/tracking';
 
 export default class ReportsPositionSanityCheckerController extends Controller {
+  @tracked isSubmitting = false;
+
   get userCanRepair() {
     return this.session.user.hasRole([ Role.ADMIN, Role.GRANT_POSITION ]);
   }
@@ -18,7 +21,7 @@ export default class ReportsPositionSanityCheckerController extends Controller {
 
     const people_ids = fixPeople.map((p) => p.id);
 
-    this.set('isSubmitting', true);
+    this.isSubmitting = true;
     this.ajax.request('position/repair', { method: 'POST', data: { repair: thing, people_ids, repair_params }}).then((results) => {
       let haveErrors = false;
 
@@ -44,6 +47,6 @@ export default class ReportsPositionSanityCheckerController extends Controller {
 
       this.house.scrollToElement(`#${thing}-table`);
     }).catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('isSubmitting', false));
+    .finally(() => this.isSubmitting = false);
   }
 }
