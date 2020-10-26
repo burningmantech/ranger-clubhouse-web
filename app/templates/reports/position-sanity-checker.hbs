@@ -6,208 +6,71 @@
 
 {{#unless this.userCanRepair}}
   <p>
-    <b class="text-danger">You don't have the "Grant/Revoke Position" or Admin role.</b> You can see issues but can't fix them. Sorry.
+    <b class="text-danger">You don't have the "Grant/Revoke Position" or Admin role.</b>
+    You can see issues but can't fix them. Sorry.
   </p>
 {{/unless}}
 
-<h2 class="mt-2">Shiny Pennies</h2>
-<p>
-  All first-year Rangers (minted in {{this.shiny_penny_year}}) should have the "Dirt - Shiny Penny" position and no one else should.
-</p>
+<Admin::PositionSanityCheck
+    @title="Shiny Pennies"
+    @caption="{{pluralize this.shiny_pennies.length "person"}} with Shiny Penny issues"
+    @sucessMessage="Congratulations! All shiny pennies have the position and no crusty rangers have it."
+    @columns={{this.shiny_pennies.columns}}
+    @people={{this.shiny_pennies}}
+    @repairAction={{action this.repairPeople}}
+    @repairType="shiny_pennies"
+    @canRepair={{this.userCanRepair}}
+>
+  All first-year Rangers (minted in {{this.shiny_penny_year}}) should have the
+  "Dirt - Shiny Penny" position and no one else should.
+</Admin::PositionSanityCheck>
 
-{{#if this.shiny_pennies}}
-  <table id="shiny-penny-table" class="table table-striped table-hover table-sm table-width-auto">
-    <caption>{{pluralize this.shiny_pennies.length "person"}} with Shiny Penny issues</caption>
-    <thead>
-      <tr>
-        <th>Fix?</th>
-        <th>Callsign</th>
-        <th>Status</th>
-        <th>Mentor Year</th>
-        <th>Has Position?</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {{#each this.shiny_pennies as |person|}}
-        <tr>
-          <td>
-            {{#if person.errors}}
-              {{fa-icon "exclamation-triangle"}}
-            {{else if person.fixed}}
-              {{fa-icon "check"}}
-            {{else}}
-              <Input @type="checkbox" @checked={{person.checked}} />
-            {{/if}}
-          </td>
-          <td>
-            <PersonLink @person={{person}} />
-          </td>
-          <td>{{person.status}}</td>
-          <td>{{person.year}}</td>
-          <td class="text-center">{{yesno person.has_shiny_penny}}</td>
-        </tr>
-        {{#if (or person.messages person.errors)}}
-          <tr class="tr-no-border">
-            <td colspan="5">
-              {{#each person.errors as |error|}}
-                <span class="text-danger">ERROR: {{error}}</span><br>
-              {{/each}}
-              {{#each person.messages as |message|}}
-                <span class="text-success">{{message}}</span><br>
-              {{/each}}
-            </td>
-          </tr>
-        {{/if}}
-      {{/each}}
-    </tbody>
-  </table>
-  {{#if this.userCanRepair}}
-    <button type="button" class="btn btn-primary" {{action this.repairPeople "shiny-penny" this.shiny_pennies}} disabled={{this.isSubmitting}}>Fix Shiny Pennies</button>
-    {{#if this.isSubmitting}}
-      <LoadingIndicator />
-    {{/if}}
-  {{/if}}
-{{else}}
-  <p class="text-success"><b>Congratulations! All shiny pennies have the position and no crusty rangers have it.</b></p>
-{{/if}}
-
-<h2 class="mt-2">Green Dots</h2>
-<p>
+<Admin::PositionSanityCheck
+    @title="Green Dots"
+    @caption="{{pluralize this.green_dot.length "person"}} with Green Dot issues"
+    @sucessMessage="Congratulations! All Green Dots have all three positions."
+    @columns={{this.green_dot.columns}}
+    @people={{this.green_dot}}
+    @repairAction={{action this.repairPeople}}
+    @repairType="green_dot"
+    @canRepair={{this.userCanRepair}}
+>
   All Green Dots should have the "Dirt - Green Dot", "Gerlach Patrol - Green Dot", and "Sanctuary" positions.
-</p>
+</Admin::PositionSanityCheck>
 
-{{#if this.green_dot}}
-  <table id="green-dot-table" class="table table-striped table-hover table-sm table-width-auto">
-    <caption>{{pluralize this.green_dot.length "person"}} with Green Dot issues</caption>
-    <thead>
-      <tr>
-        <th>Fix?</th>
-        <th>Callsign</th>
-        <th>Status</th>
-        <th>Has Dirt - Green Dot?</th>
-        <th>Has Sanctuary?</th>
-        <th>Has Gerlach Patrol - Green Dot?</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {{#each this.green_dot as |person|}}
-        <tr>
-          <td>
-            {{#if person.errors}}
-              {{fa-icon "exclamation-triangle"}}
-            {{else if person.fixed}}
-              {{fa-icon "check"}}
-            {{else}}
-              <Input @type="checkbox" @checked={{person.checked}} />
-            {{/if}}
-          </td>
-          <td>
-            <PersonLink @person={{person}} />
-          </td>
-          <td>{{person.status}}</td>
-          <td class="text-center">{{yesno person.has_dirt_green_dot}}</td>
-          <td class="text-center">{{yesno person.has_sanctuary}}</td>
-          <td class="text-center">{{yesno person.has_gp_gd}}</td>
-        </tr>
-        {{#if (or person.messages person.errors)}}
-          <tr class="tr-no-border">
-            <td colspan="6">
-              {{#each person.errors as |error|}}
-                <span class="text-danger">ERROR: {{error}}</span><br>
-              {{/each}}
-              {{#each person.messages as |message|}}
-                <span class="text-success">{{message}}</span><br>
-              {{/each}}
-            </td>
-          </tr>
-        {{/if}}
-      {{/each}}
-    </tbody>
-  </table>
-
-  {{#if this.userCanRepair}}
-    <button type="button" class="btn btn-primary" {{action this.repairPeople "green-dot" this.green_dot}} disabled={{this.isSubmitting}}>Fix Green Dots</button>
-    {{#if this.isSubmitting}}
-      <LoadingIndicator />
-    {{/if}}
-  {{/if}}
-{{else}}
-  <p class="text-success">
-    <b>Congratulations! All Green Dots have all three positions.</b>
-  </p>
-{{/if}}
-
-<h2 class="mt-2">Management Role</h2>
-<p>
+<Admin::PositionSanityCheck
+    @title="Management Roles"
+    @caption="{{pluralize this.management_role.length "person"}} missing the Login Management role."
+    @sucessMessage="Congratulations! Everyone with the those positions has the management role."
+    @columns={{this.management_role.columns}}
+    @people={{this.management_role}}
+    @repairAction={{action this.repairPeople}}
+    @repairType="management_role"
+    @canRepair={{this.userCanRepair}}
+>
   Rangers whose role requires significant Clubhouse access should have the "Login (Management Mode)" role.
-</p>
+  <br>
+  <strong>Note:</strong> pay attention to any Shiny Penny who appears below.
+  They may have been accidential granted a position that is not appropriate for a first year Ranger.
+</Admin::PositionSanityCheck>
 
-{{#if this.management_role}}
-  <p>
-    Note: pay attention to any Shiny Penny who appears below. They may have been accidential granted a position that is not appropriate
-    for a first year Ranger.
-  </p>
+<Admin::PositionSanityCheckHeader @title="Deactivated Position Assignments">
+  All deactivated positions that have Rangers assigned to them.
+</Admin::PositionSanityCheckHeader>
 
-  <table id="management-role-table" class="table table-striped table-hover table-sm table-width-auto">
-    <caption>{{pluralize this.management_role.length "person"}} missing the Login Management role</caption>
-    <thead>
-      <tr>
-        <th>Fix?</th>
-        <th>Callsign</th>
-        <th>Status</th>
-        <th>Position(s)</th>
-        <th>Is Shiny Penny?</th>
-      </tr>
-    </thead>
+{{#each this.deactivated_positions as |position|}}
+  {{#let (hash positionId=position.id) as |params| }}
+    <Admin::PositionSanityCheckTable
+        @title={{position.title}}
+        @caption="{{position.title}} - {{pluralize position.people.length "person"}} assigned"
+        @sucessMessage="Congratulations! No Rangers are assinged to this position."
+        @columns=[]
+        @people={{position.people}}
+        @repairAction={{action this.repairPeople}}
+        @repairParams={{params}}
+        @repairType="deactivated_positions"
+        @canRepair={{this.userCanRepair}}
+    />
+  {{/let}}
 
-    <tbody>
-      {{#each this.management_role as |person|}}
-        <tr>
-          <td>
-            {{#if person.errors}}
-              {{fa-icon "exclamation-triangle"}}
-            {{else if person.fixed}}
-              {{fa-icon "check"}}
-            {{else}}
-              <Input @type="checkbox" @checked={{person.checked}} />
-            {{/if}}
-          </td>
-          <td>
-            <PersonLink @person={{person}} />
-          </td>
-          <td>{{person.status}}</td>
-          <td>
-            {{#each person.positions as |position|}}
-              {{position.title}}<br>
-            {{/each}}
-          </td>
-          <td class="text-center">{{yesno person.is_shiny_penny}}</td>
-        </tr>
-        {{#if (or person.messages person.errors)}}
-          <tr class="tr-no-border">
-            <td colspan="5">
-              {{#each person.errors as |error|}}
-                <span class="text-danger">ERROR: {{error}}</span><br>
-              {{/each}}
-              {{#each person.messages as |message|}}
-                <span class="text-success">{{message}}</span><br>
-              {{/each}}
-            </td>
-          </tr>
-        {{/if}}
-      {{/each}}
-    </tbody>
-  </table>
-  {{#if this.userCanRepair}}
-    <button type="button" class="btn btn-primary" {{action this.repairPeople "management-role" this.management_role}} disabled={{this.isSubmitting}}>Fix Management Mode role</button>
-    {{#if this.isSubmitting}}
-      <LoadingIndicator />
-    {{/if}}
-  {{/if}}
-{{else}}
-  <p class="text-success">
-    <b>Congratulations! Everyone with the those positions has the management role.</b>
-  </p>
-{{/if}}
+{{/each}}

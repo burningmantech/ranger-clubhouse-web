@@ -8,7 +8,7 @@ export default class ReportsPositionSanityCheckerController extends Controller {
   }
 
   @action
-  repairPeople(thing, people) {
+  repairPeople(thing, people, repair_params) {
     const fixPeople = people.filter((p) => p.checked );
 
     if (fixPeople.length == 0) {
@@ -19,7 +19,7 @@ export default class ReportsPositionSanityCheckerController extends Controller {
     const people_ids = fixPeople.map((p) => p.id);
 
     this.set('isSubmitting', true);
-    this.ajax.request('position/repair', { method: 'POST', data: { repair: thing, people_ids }}).then((results) => {
+    this.ajax.request('position/repair', { method: 'POST', data: { repair: thing, people_ids, repair_params }}).then((results) => {
       let haveErrors = false;
 
       results.forEach((result) => {
