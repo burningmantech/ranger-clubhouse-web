@@ -52,7 +52,7 @@
               <tr>
                 <td>{{shift-format entry.on_duty}}</td>
                 <td>{{#if entry.off_duty}}{{shift-format entry.off_duty}}{{else}}<i>still on duty</i>{{/if}}</td>
-                <td>{{entry.position.title}}</td>
+                <td>{{position-label entry.position}}</td>
                 <td class="text-right">
                   {{#if entry.position.count_hours}}
                     {{hour-minute-format entry.duration}}
