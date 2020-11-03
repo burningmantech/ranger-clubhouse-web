@@ -35,6 +35,7 @@ export default class PeopleByPositionController extends Controller {
       ViewPosition.create({
         id: position.id,
         title: position.title,
+        active: position.active,
         type: position.type,
         allRangers: position.all_rangers,
         allPeople: position.new_user_eligible,

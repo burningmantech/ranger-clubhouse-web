@@ -38,7 +38,7 @@
 {{#each this.visiblePositions as |position|}}
   <ChAccordion as |accordion|>
     <accordion.title>
-      {{position.title}}
+      {{position-label position}}
       {{#if position.allRangers}}
         &ndash; all rangers
       {{/if}}
