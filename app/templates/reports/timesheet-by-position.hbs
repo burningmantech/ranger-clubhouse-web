@@ -5,7 +5,7 @@
 {{#each this.positions as |position|}}
   <div class="max-width-700">
     <ChAccordion as |accordion|>
-      <accordion.title>{{position.title}} ({{pluralize position.timesheets.length "entry"}})</accordion.title>
+      <accordion.title>{{position-label position}} ({{pluralize position.timesheets.length "entry"}})</accordion.title>
       <accordion.body>
         {{#if accordion.isOpen}}
           <p>

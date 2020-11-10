@@ -19,7 +19,7 @@
   {{#each this.positions as |position|}}
     <ChAccordion id="position-{{position.id}}" @isOpen={{mut (get this.showingPositions position.id)}} as |accordion|>
       <accordion.title>
-        {{position.title}} ({{pluralize position.slots.length "shift"}})
+        {{position-label position}} ({{pluralize position.slots.length "shift"}})
       </accordion.title>
       <accordion.body>
         <table class="table table-sm table-hover table-striped">

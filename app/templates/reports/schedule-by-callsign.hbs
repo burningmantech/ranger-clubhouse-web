@@ -14,7 +14,7 @@
 <p>
   Showing {{pluralize this.people.length "person"}}
 </p>
-<div class="max-width-700">
+<div class="max-width-900">
   {{#each this.people as |person|}}
     <ChAccordion id="person-{{person.id}}" as |accordion|>
       <accordion.title>{{person.callsign}} </accordion.title>
@@ -45,7 +45,7 @@
               <td>
                 <PresentOrNot @value={{slot.description}} @empty="-"/>
               </td>
-              <td>{{slot.position.title}}</td>
+              <td>{{position-label slot.position}}</td>
             </tr>
           {{/each}}
           </tbody>
