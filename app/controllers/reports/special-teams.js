@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { positionLabel } from 'clubhouse/helpers/position-label';
 
 export default class ReportsSpecialTeamsController extends Controller {
   @tracked isSubmitting = false;
@@ -13,7 +14,7 @@ export default class ReportsSpecialTeamsController extends Controller {
   @tracked people;
 
   get positionOptions() {
-    return this.positions.map((p) => [p.title, p.id]);
+    return this.positions.map((p) =>  [positionLabel([p,true]), p.id]);
   }
 
   get yearOptions() {
