@@ -8,7 +8,7 @@
   </div>
 </div>
 
-Showing {{this.viewGroupCorrections.length}} of {{this.requests.length}}
+Showing {{this.viewGroupCorrections.length}} of {{pluralize this.requests.length "correction request"}}
 <table class="table table-hover table-width-auto">
   <thead>
   <tr>
@@ -22,12 +22,12 @@ Showing {{this.viewGroupCorrections.length}} of {{this.requests.length}}
   </tr>
   </thead>
   <tbody>
-  {{#each viewGroupCorrections as |person|}}
+  {{#each this.viewGroupCorrections as |person|}}
     {{#each person.requests as |request idx|}}
       <tr class="{{if idx "no-border"}}">
         <td>
           {{#unless idx}}
-            <PersonLink @person={{request.person}} @page="timesheet" @year={{year}} />
+            <PersonLink @person={{request.person}} @page="timesheet" @year={{this.year}} />
           {{else}}
             &nbsp;
           {{/unless}}
@@ -43,7 +43,7 @@ Showing {{this.viewGroupCorrections.length}} of {{this.requests.length}}
   {{else}}
     <tr>
       <td colspan="7">
-        <b class="text-success">Congratulations! There are no outstanding timesheet corrections or missing timesheet requests.</b>
+        <b class="text-success">Congratulations! There are no outstanding timesheet corrections or missing timesheet requests at this time.</b>
       </td>
     </tr>
   {{/each}}

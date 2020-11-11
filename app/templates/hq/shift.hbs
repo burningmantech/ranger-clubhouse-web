@@ -40,14 +40,20 @@
 
 <h3>
   Timesheet Verification
-  - {{#if this.unverifiedTimesheets }}{{pluralize this.unverifiedTimesheets.length "entry" }}{{else}}
-  No Action Needed{{/if}}
+  -
+  {{#if this.hasUnverifiedTimesheet}}
+    <span class="text-danger">{{pluralize this.unverifiedTimesheets.length "entry" }}</span>
+  {{else}}
+    <span class="text-success">No Action Needed</span>
+  {{/if}}
   <HelpPopover @slug="hq-timesheet-verification"/>
 </h3>
 
 {{#if this.unverifiedTimesheets}}
-  <p>Ask {{this.person.callsign}} if the following timesheet entries are correct:</p>
-  <table class="table table-width-auto table-striped table-hover table-sm">
+  <p>
+    Ask {{this.person.callsign}} if the following is correct:
+  </p>
+  <table class="table table-width-auto table-striped table-hover">
     <thead>
     <tr>
       <th>Position</th>
@@ -55,7 +61,7 @@
       <th>To</th>
       <th class="text-right">Duration</th>
       <th class="text-right">Credits</th>
-      <th>Actions</th>
+      <th>Correct?</th>
     </tr>
     </thead>
     <tbody>
@@ -80,19 +86,19 @@
           <button type="button" class="btn btn-success btn-timesheet " {{action this.markEntryCorrect entry}}
                   disabled={{entry.isSaving}}>
             YES
-            {{#if entry.verified}}
+            {{#if entry.isVerified}}
               {{fa-icon "check"}}
             {{/if}}
           </button>
-          <button type="button" class="btn btn-danger btn-timesheet" {{action this.markEntryIncorrect entry}}
+          <button type="button" class="btn btn-light-red btn-timesheet" {{action this.markEntryIncorrect entry}}
                   disabled={{entry.isSaving}}>
             NO
-            {{#if entry.isPendingReview}}
+            {{#if entry.isPending}}
               {{fa-icon "check"}}
             {{/if}}
           </button>
           <button type="button" class="btn btn-gray btn-timesheet" {{action this.ignoreEntry entry}}
-                  disabled={{or entry.isSaving entry.verified entry.isPendingReview}}>
+                  disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
             IGNORE
             {{#if entry.isIgnoring}}
               {{fa-icon "check"}}
@@ -116,11 +122,11 @@
 </h3>
 <ShiftCheckInOut @positions={{this.positions}} @timesheets={{this.timesheets}} @person={{this.person}}
                  @imminentSlots={{this.imminentSlots}}
-                 @hasUnverifiedTimesheet={{this.hasUnverifiedTimesheets}}
-                 @endShiftNotify={{action this.refreshTimesheetSummary}} @eventInfo={{this.eventInfo}} />
+                 @hasUnverifiedTimesheet={{this.hasUnverifiedTimesheet}}
+                 @endShiftNotify={{action this.endShiftAction}} @eventInfo={{this.eventInfo}} />
 
 
-{{#if showCorrectionForm}}
+{{#if this.showCorrectionForm}}
   <ModalDialog @title="Timesheet Entry Correction" as |Modal|>
     <ChForm @formId="correction" @formFor={{this.entry}}
             @validator={{this.correctionValidations}}
@@ -148,7 +154,7 @@
             <li><b>Who was their shift partner(s)?</b></li>
           </ul>
         </div>
-        <f.input @name="notes" @label="Timesheet entry correction note:" @type="textarea" @autofocus={{true}}
+        <f.input @name="additional_notes" @label="Timesheet entry correction note:" @type="textarea" @autofocus={{true}}
                  @cols={{80}}
                  @rows={{3}}/>
       </Modal.body>

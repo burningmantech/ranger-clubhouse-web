@@ -1,18 +1,19 @@
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
-import { validatePresence } from 'ember-changeset-validations/validators';
+import {action} from '@ember/object';
+import {validatePresence} from 'ember-changeset-validations/validators';
+import {tracked} from '@glimmer/tracking';
 
 export default class MeTimesheetCorrectionsReviewController extends Controller {
-  entry = null; // Incorrect entry
+  @tracked entry = null; // Incorrect entry
 
   correctionValidations = {
-    notes: [ validatePresence({ presence: true}) ]
+    additional_notes: [validatePresence({presence: true})]
   };
 
   // Mark an entry as correct
   @action
   markCorrectAction(timesheet) {
-    timesheet.set('verified', 1);
+    timesheet.review_status = 'verified';
     this.toast.clear();
     timesheet.save().then(() => {
       this.toast.success('The entry has been marked as correct.');
@@ -22,7 +23,7 @@ export default class MeTimesheetCorrectionsReviewController extends Controller {
   // Setup to mark an entry as incorrect - i.e. display the form
   @action
   markIncorrectAction(timesheet) {
-    this.set('entry', timesheet);
+    this.entry = timesheet;
   }
 
   // Save correction notes
@@ -33,9 +34,9 @@ export default class MeTimesheetCorrectionsReviewController extends Controller {
     }
 
     this.toast.clear();
-    model.set('verified', 0);
+    model.review_status = 'unverified';
     model.save().then(() => {
-      this.set('entry', null);
+      this.entry = null;
       this.set('timesheetInfo.timesheet_confirmed', 0);
       this.toast.success('Your correction note has been submitted.');
     }).catch((response) => this.house.handleErrorResponse(response));
@@ -44,6 +45,6 @@ export default class MeTimesheetCorrectionsReviewController extends Controller {
   // Cancel out the correction request - i.e. hide the form
   @action
   cancelCorrectionAction() {
-    this.set('entry', null);
+    this.entry = null;
   }
 }

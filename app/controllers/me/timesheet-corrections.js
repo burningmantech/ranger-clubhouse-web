@@ -1,17 +1,18 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 export default class MeTimesheetCorrectionsController extends Controller {
-  showReviewSteps = false;
+  @tracked showReviewSteps = false;
 
   @computed('timesheets.@each.isUnverified')
   get unverifiedCount() {
     return this.timesheets.reduce((total, ts) => total + (ts.isUnverified ? 1 : 0), 0);
   }
 
-  @computed('timesheets.@each.isPendingReview')
+  @computed('timesheets.@each.isPending')
   get correctionPendingReviewCount() {
-    return this.timesheets.reduce((total, ts) => total + (ts.isPendingReview ? 1 : 0), 0);
+    return this.timesheets.reduce((total, ts) => total + (ts.isPending ? 1 : 0), 0);
   }
 
   @computed('timesheetsMissing.@each.isPending')
@@ -21,7 +22,6 @@ export default class MeTimesheetCorrectionsController extends Controller {
 
   @action
   showReviewAction() {
-    this.set('showReviewSteps', true);
+    this.showReviewSteps = true;
   }
-
 }

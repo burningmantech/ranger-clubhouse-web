@@ -11,17 +11,21 @@ export default class MeTimesheetReviewCommonComponent extends Component {
   @tracked entry = null; // Incorrect entry
 
   correctionValidations = {
-    notes: [validatePresence({ presence: true })]
+    additional_notes: [validatePresence({ presence: true })]
   };
 
   get isMe() {
     return this.session.userId == this.args.person.id;
   }
 
-  // Mark an entry as correct
+  /**
+   * Mark a timesheet as correct.
+   *
+   * @param timesheet
+   */
   @action
   markCorrectAction(timesheet) {
-    timesheet.verified = 1;
+    timesheet.review_status = 'verified';
     timesheet.save().then(() => {
       this.toast.success('The entry has been marked as correct.');
     }).catch((response) => {
@@ -30,7 +34,12 @@ export default class MeTimesheetReviewCommonComponent extends Component {
     });
   }
 
-  // Setup to mark an entry as incorrect - i.e. display the form
+  /**
+   * Setup to mark an entry as incorrect. Reload the entry to get the most recent version
+   * and then show the incorrect form dialog.
+   *
+   * @param timesheet
+   */
   @action
   markIncorrectAction(timesheet) {
     timesheet.reload().then(() => {
@@ -38,21 +47,22 @@ export default class MeTimesheetReviewCommonComponent extends Component {
     }).catch((response) => this.house.handleErrorResponse(response, timesheet))
   }
 
-  // Save correction notes
+  /**
+   * Mark an entry as incorrect, record the note, and dismiss the dialog.
+   * @param model
+   * @param {boolean} isValid
+   */
+
   @action
   saveCorrectionAction(model, isValid) {
     if (!isValid) {
       return;
     }
 
-    if (!model.isDirty) {
-      this.modal.info('Enter More Information', 'You did not add to the correction note.');
-      return;
-    }
-
-    model.verified = 0;
+    model.review_status = 'pending';
 
     model.save().then(() => {
+      this.entry.additional_notes = ''; // pseudo-field, clear out by hand.
       this.entry = null;
       if (this.timesheetInfo) {
         this.timesheetInfo.timesheet_confirmed =  0;
@@ -61,7 +71,10 @@ export default class MeTimesheetReviewCommonComponent extends Component {
     }).catch((response) => this.house.handleErrorResponse(response, model));
   }
 
-  // Cancel out the correction request - i.e. hide the form
+  /**
+   * Dismiss the incorrect dialog.
+   */
+
   @action
   cancelCorrectionAction() {
     this.entry = null;

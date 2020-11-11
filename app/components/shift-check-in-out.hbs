@@ -1,36 +1,37 @@
 {{#if this.isReloadingTimesheets}}
-  <LoadingIndicator @text="Reloading Timesheets" />
+  <LoadingIndicator @text="Reloading Timesheets"/>
 {{else if this.onDutyEntry}}
   <div class="text-success font-weight-bold mb-2">{{@person.callsign}} is on duty.</div>
   <table class="table mt-1 mb-0 table-width-auto">
     <thead>
-      <tr>
-        <th>Position</th>
-        <th>On Duty</th>
-        <th class="text-right">Duration</th>
-        <th class="text-right">Credits</th>
-        <th>Action</th>
-      </tr>
+    <tr>
+      <th>Position</th>
+      <th>On Duty</th>
+      <th class="text-right">Duration</th>
+      <th class="text-right">Credits</th>
+      <th>Action</th>
+    </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>{{this.onDutyEntry.position.title}}</td>
-        <td>{{shift-format this.onDutyEntry.on_duty}}</td>
-        <td class="text-right">
-          {{#if this.onDutyEntry.position.count_hours}}
-            {{hour-minute-format this.onDutyEntry.duration}}
-          {{else}}
-            [{{hour-minute-format this.onDutyEntry.duration}}]
-          {{/if}}
-        </td>
-        <td class="text-right">{{credits-format this.onDutyEntry.credits}}</td>
-        <td>
-          <button type="button" class="btn btn-danger" {{action this.endShiftAction}} disabled={{this.isSubmitting}}>End Shift</button>
-          {{#if this.isSubmitting}}
-            <LoadingIndicator />
-          {{/if}}
-        </td>
-      </tr>
+    <tr>
+      <td>{{this.onDutyEntry.position.title}}</td>
+      <td>{{shift-format this.onDutyEntry.on_duty}}</td>
+      <td class="text-right">
+        {{#if this.onDutyEntry.position.count_hours}}
+          <NoAppreciateIcon />
+        {{/if}}
+        {{hour-minute-format this.onDutyEntry.duration}}
+      </td>
+      <td class="text-right">{{credits-format this.onDutyEntry.credits}}</td>
+      <td>
+        <button type="button" class="btn btn-danger" {{action this.endShiftAction}} disabled={{this.isSubmitting}}>
+          End Shift
+        </button>
+        {{#if this.isSubmitting}}
+          <LoadingIndicator/>
+        {{/if}}
+      </td>
+    </tr>
     </tbody>
   </table>
   {{#unless this.onDutyEntry.position.count_hours}}
@@ -38,7 +39,8 @@
   {{/unless}}
 {{else}}
   {{#if (not @person.canStartShift)}}
-    <strong class="text-danger">{{@person.callsign}} cannot start a shift because their status does not allow them to work shifts</strong>
+    <b class="text-danger">{{@person.callsign}} cannot start a shift because their status does not allow them to work
+      shifts</b>
   {{else if @hasUnverifiedTimesheet}}
     One or more timesheet entries has to be verified before a shift can be started.
   {{else}}
@@ -60,37 +62,42 @@
       </p>
       <table class="table table-hover table-striped table-sm m-0">
         <thead>
-          <tr>
-            <th>Position</th>
-            <th class="w-25">Description</th>
-            <th>Starts</th>
-            <th>Ends</th>
-            <th>Action</th>
-          </tr>
+        <tr>
+          <th>Position</th>
+          <th class="w-25">Description</th>
+          <th>Starts</th>
+          <th>Ends</th>
+          <th>Action</th>
+        </tr>
         </thead>
 
         <tbody>
-          {{#each @imminentSlots as |slot|}}
-            <tr>
-              <td class="align-middle">{{slot.position_title}}</td>
-              <td class="w-25 align-middle">{{slot.slot_description}}</td>
-              <td class="align-middle">{{shift-format slot.slot_begins}}</td>
-              <td class="align-middle">{{shift-format slot.slot_ends}}</td>
-              <td class="align-middle">
-                {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
-                  <button type="button" class="btn btn-primary" {{action this.signinShiftAction slot}} disabled={{this.isSubmitting}}>Start Shift</button>
-                {{else}}
-                  <div class="text-danger">{{if slot.is_untrained "Not Trained"}} {{if slot.is_unqualified slot.unqualified_reason}}</div>
-                  {{#if (has-role "admin" "timesheet-management")}}
-                    <button type="button" class="btn btn-warning" {{action this.signinShiftAction slot}} disabled={{this.isSubmitting}}>Force Start Shift</button>
-                  {{/if}}
+        {{#each @imminentSlots as |slot|}}
+          <tr>
+            <td class="align-middle">{{slot.position_title}}</td>
+            <td class="w-25 align-middle">{{slot.slot_description}}</td>
+            <td class="align-middle">{{shift-format slot.slot_begins}}</td>
+            <td class="align-middle">{{shift-format slot.slot_ends}}</td>
+            <td class="align-middle">
+              {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
+                <button type="button" class="btn btn-primary" {{action this.signinShiftAction slot}}
+                        disabled={{this.isSubmitting}}>Start Shift
+                </button>
+              {{else}}
+                <div class="text-danger">{{if slot.is_untrained "Not Trained"}} {{if slot.is_unqualified
+                                                                                     slot.unqualified_message}}</div>
+                {{#if (has-role "admin" "timesheet-management")}}
+                  <button type="button" class="btn btn-warning" {{action this.signinShiftAction slot}}
+                          disabled={{this.isSubmitting}}>Force Start Shift
+                  </button>
                 {{/if}}
-                {{#if this.isSubmitting}}
-                  <LoadingIndicator />
-                {{/if}}
-              </td>
-            </tr>
-          {{/each}}
+              {{/if}}
+              {{#if this.isSubmitting}}
+                <LoadingIndicator/>
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
         </tbody>
       </table>
 
@@ -99,18 +106,23 @@
 
     <div class="form-row">
       <div class="col-auto">
-        <ChForm::Select @name="signin_position_id" @controlClass="form-control" @value={{signinPositionId}} @options={{this.signinPositions}} @onChange={{this.updateShiftPosition}} />
+        <ChForm::Select @name="signin_position_id" @controlClass="form-control" @value={{signinPositionId}}
+                        @options={{this.signinPositions}} @onChange={{this.updateShiftPosition}} />
       </div>
       <div class="col-auto">
         {{#if this.isPersonDirtTrained}}
-          <button type="button" class="btn btn-primary" {{action this.startShiftAction}} disabled={{this.isSubmitting}}>Start Shift</button>
+          <button type="button" class="btn btn-primary" {{action this.startShiftAction}} disabled={{this.isSubmitting}}>
+            Start Shift
+          </button>
         {{else if (has-role "admin" "timesheet-management")}}
-          <button type="button" class="btn btn-warning" {{action this.startShiftAction}} disabled={{this.isSubmitting}}>Force Shift Start</button>
+          <button type="button" class="btn btn-warning" {{action this.startShiftAction}} disabled={{this.isSubmitting}}>
+            Force Shift Start
+          </button>
         {{else}}
           <div class="text-danger mt-1">NOT DIRT TRAINED - SHIFT START IS NOT ALLOWED</div>
         {{/if}}
         {{#if this.isSubmitting}}
-          <LoadingIndicator />
+          <LoadingIndicator/>
         {{/if}}
       </div>
     </div>

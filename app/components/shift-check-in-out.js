@@ -6,15 +6,6 @@ import * as Position from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 
 export default class ShiftCheckInOutComponent extends Component {
-  person = null; // Person we're dealing with
-  timesheets = null; // The timesheets
-  positions = null; // And possible positions person can sign into.
-  eventInfo = null; // Used to determine if person has been dirt trained
-
-  imminentSlots = null; // (optional) slots that might be starting
-  hasUnverifiedTimesheet = null; // (optional) true if entries are unverified
-  endShiftNotify = null; // (optional) callback when a shift was successfully ended.
-
   @service ajax;
   @service house;
   @service modal;
@@ -29,7 +20,9 @@ export default class ShiftCheckInOutComponent extends Component {
   constructor() {
     super(...arguments);
 
-    // Mark immeninate slots as trained or not.
+    this.activePositions = this.args.positions.filter(position => position.active);
+
+    // Mark imminent slots as trained or not.
     const slots = this.args.imminentSlots;
     if (slots) {
       slots.forEach((slot) => {
@@ -42,6 +35,7 @@ export default class ShiftCheckInOutComponent extends Component {
           if (position.is_unqualified) {
             set(slot, 'is_unqualified', true);
             set(slot, 'unqualified_reason', position.unqualified_reason);
+            set(slot, 'unqualified_message', position.unqualified_message);
           }
         }
       });
@@ -54,11 +48,11 @@ export default class ShiftCheckInOutComponent extends Component {
       if (pos.is_untrained) {
         disqualified = 'UNTRAINED';
       } else if (pos.is_unqualified) {
-        disqualified = pos.unqualified_reason;
+        disqualified = pos.unqualified_message;
       }
 
       if (disqualified) {
-        title = `${title} (${disqualified.toUpperCase()})`;
+        title = `${title} (${disqualified})`;
       }
 
       return {id: pos.id, title};
@@ -84,27 +78,31 @@ export default class ShiftCheckInOutComponent extends Component {
 
     // Set the position options to the first item
     this.signinPositionId = this.signinPositions.firstObject.id;
-  }
 
-  get activePositions() {
-    return this.args.positions.filter(position => position.active)
-  }
-
-  // Has the person gone through dirt training?
-
-  get isPersonDirtTrained() {
+    // Has the person gone through dirt training?
     if (this.args.person.status === 'non ranger') {
-      return true;
+      this.isPersonDirtTrained = true;
+    } else {
+      this.isPersonDirtTrained =!!this.args.eventInfo.trainings.find((training) => (training.position_id == Position.TRAINING && training.status === 'pass'));
     }
-
-    return !!this.args.eventInfo.trainings.find((training) => (training.position_id == Position.TRAINING && training.status === 'pass'));
   }
 
-  // Find the on duty shift
+  /**
+   * Find the on duty/shift timesheet entry
+   * @returns {TimesheetModel}
+   */
   @computed('args.timesheets.@each.off_duty')
   get onDutyEntry() {
     return this.args.timesheets.findBy('off_duty', null);
   }
+
+  /**
+   * Start a shift.
+   *
+   * @param {number} positionId
+   * @param {number} slotId
+   * @private
+   */
 
   _startShift(positionId, slotId = null) {
     const position = this.activePositions.find((p) => p.id == positionId);
@@ -127,11 +125,12 @@ export default class ShiftCheckInOutComponent extends Component {
         switch (result.status) {
           case 'success':
             if (result.forced) {
+              // Shift start was forced, let the user know what was overridden.
               let reason;
-              if (result.unqualified_reason) {
-                reason = `is unqualified ('${result.unqualified_reason}')`;
-              } else {
+              if (result.unqualified_reason === 'untrained') {
                 reason = `has not completed '${result.required_training}'`;
+              } else {
+                reason = `is unqualified ('${result.unqualified_message}')`;
               }
               this.modal.info('Sign In Forced', `WARNING: The person ${reason}. Because you are an admin or have the timesheet management role, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
             } else {
@@ -143,6 +142,7 @@ export default class ShiftCheckInOutComponent extends Component {
               .catch((response) => this.house.handleErrorResponse(response))
               .finally(() => this.isReloadingTimesheets = false);
             if (this.args.person.id == this.session.userId) {
+              // Ensure the navigation bar is updated with the signed into position
               this.session.loadUser();
             }
             break;
@@ -160,7 +160,7 @@ export default class ShiftCheckInOutComponent extends Component {
             break;
 
           case 'not-qualified':
-            this.modal.info('Not Qualified', `${callsign} has not meet one or more of the qualifiers needed to sign into the shift.<br>Reason: ${result.unqualified_reason}`);
+            this.modal.info('Not Qualified', `${callsign} has not meet one or more of the qualifiers needed to sign into the shift.<br>Reason: ${result.unqualified_message}`);
             break;
 
           default:
@@ -171,19 +171,27 @@ export default class ShiftCheckInOutComponent extends Component {
       .finally(() => this.isSubmitting = false);
   }
 
-  // Attempt to sign in the person to the selected position
+  /**
+   * Start a shift with the selected position
+   */
   @action
   startShiftAction() {
     this._startShift(this.signinPositionId);
   }
 
-  // Attempt sign in the person for a predictive shift position
+  /**
+   * Start a shift based on a scheduled sign up.
+   * @param slot
+   */
   @action
   signinShiftAction(slot) {
     this._startShift(slot.position_id, slot.slot_id);
   }
 
-  // End a person's shift.
+  /**
+   * End a shift.
+   */
+
   @action
   endShiftAction() {
     const shift = this.onDutyEntry;
@@ -201,6 +209,7 @@ export default class ShiftCheckInOutComponent extends Component {
           case 'success':
             this.toast.success(`${callsign} has been successfully signed off. Enjoy your rest.`);
             if (this.args.person.id == this.session.userId) {
+              // Update the user's navigation bar to remove the signed in position.
               this.session.loadUser();
             }
             break;
@@ -216,7 +225,10 @@ export default class ShiftCheckInOutComponent extends Component {
       .finally(() => this.isSubmitting = false);
   }
 
-  // Update the position signin
+  /**
+   * Update the selected sign in position
+   * @param value
+   */
   @action
   updateShiftPosition(value) {
     this.signinPositionId = value;

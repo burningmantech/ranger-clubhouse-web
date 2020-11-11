@@ -10,4 +10,12 @@ export default class PersonTimesheetController extends Controller {
       this.set('timesheetSummary', result.summary);
     });
   }
+
+  get timesheetPendingCount() {
+    return this.timesheets.filter((t) => t.isPending).length;
+  }
+
+  get missingRequestPendingCount() {
+    return this.timesheetMissing.filter((t) => t.isPending).length;
+  }
 }

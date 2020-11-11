@@ -27,7 +27,7 @@
         <div class="schedule-duration">
           <span class="schedule-sm-label">Duration:</span>
           {{#unless slot.position_count_hours}}
-            {{fa-icon "minus-square" color="danger" type="far"}}
+            <NoAppreciateIcon />
           {{/unless~}}
           {{hour-minute-format slot.slot_duration}}
         </div>

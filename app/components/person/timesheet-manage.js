@@ -17,14 +17,11 @@ export default class PersonTimesheetManageComponent extends Component {
   @tracked editVerification = false;
 
   reviewOptions = [
-    'approved',
-    'rejected',
-    'pending'
-  ];
-
-  verifyOptions = [
-    ['Is verified', true],
-    ['is NOT verified', false]
+    ['Correction approved', 'approved'],
+    ['Correction rejected', 'rejected'],
+    ['Review requested', 'pending'],
+    ['Entry verified', 'verified'],
+    ['Entry unverified', 'unverified']
   ];
 
   timesheetValidations = {
@@ -32,23 +29,23 @@ export default class PersonTimesheetManageComponent extends Component {
     off_duty: [validateDateTime({after: 'on_duty'})],
   };
 
-  // Build a position list the person can be in.
-  get positionOptions() {
-    return this.args.positions.map((p) => [p.title, p.id]);
-  }
-
-  // Is the user allowed to manage timesheets (edit, delete, review)
-  get canManageTimesheets() {
+  constructor() {
+    super(...arguments);
     const user = this.session.user;
-    return user.hasRole(Role.TIMESHEET_MANAGEMENT) || (user.hasRole(Role.ADMIN) && user.hasRole(Role.MANAGE));
+
+    // The positions the person can be part of
+    this.positionOptions = this.args.positions.map((p) => [p.title, p.id]);
+    // Can the user manage this person's timesheet entries?
+    this.canManageTimesheets = user.hasRole(Role.TIMESHEET_MANAGEMENT) || (user.hasRole(Role.ADMIN) && user.hasRole(Role.MANAGE));
+    // Can the user mark an entry as verified?
+    this.canVerifyTimesheets = user.hasRole(Role.MANAGE);
   }
 
-  // Can the user verify the person's timesheet?
-  get canVerifyTimesheets() {
-    return this.session.user.hasRole(Role.MANAGE);
-  }
+  /**
+   * Setup to edit an entry by reloading the entry, and then showing the form dialog.
+   * @param timesheet
+   */
 
-  // Edit a timesheet - i.e. display the form
   @action
   editEntryAction(timesheet) {
     timesheet.reload().then(() => {
@@ -57,13 +54,20 @@ export default class PersonTimesheetManageComponent extends Component {
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
-  // Cancel editing - i.e. hide the form
+  /**
+   * Cancel an entry edit - i.e. hide the form dialog
+   */
   @action
   cancelEntryAction() {
     this.editEntry = null;
   }
 
-  // Save the timesheet entry being edited
+  /**
+   * Save an entry
+   *
+   * @param model
+   * @param {boolean} isValid
+   */
   @action
   saveEntryAction(model, isValid) {
     if (!isValid) {
@@ -72,20 +76,28 @@ export default class PersonTimesheetManageComponent extends Component {
 
     this.house.saveModel(model, 'The timesheet entry has been successfully updated.',
       () => {
+        // clear out the pseudo fields.
+        this.editEntry.additional_notes = '';
+        this.editEntry.additional_reviewer_notes = '';
         this.editEntry = null;
         this.args.onChange();
       });
   }
 
-  // Signoff the person from a shift.
+  /**
+   * Sign off / end a shift
+   *
+   * @param timesheet
+   */
   @action
   signoffAction(timesheet) {
     this.ajax.request(`timesheet/${timesheet.id}/signoff`, {method: 'POST'})
       .then((result) => {
-        const person = this.args.person;
-        this.timesheets.update();
-        this.args.onChange();
-        if (this.person.id == this.session.userId) {
+        const {onChange, person, timesheets} = this.args;
+        timesheets.update();
+        onChange();
+        if (person.id == this.session.userId) {
+          // Clear out the position title in user's navigation bar.
           this.session.loadUser();
         }
         switch (result.status) {
@@ -104,22 +116,20 @@ export default class PersonTimesheetManageComponent extends Component {
       });
   }
 
-  // Delete the entry.
+  /**
+   * Delete the entry
+   */
   @action
-  removeEntryAction(timesheet) {
+  removeEntryAction() {
+    const ts = this.editEntry;
     this.modal.confirm('Remove Timesheet',
-      `Position: ${timesheet.position.title}<br>Time: ${timesheet.on_duty} to ${timesheet.off_duty}<br> Are you sure you wish to remove this timesheet?`,
+      `Position: ${ts.position.title}<br>Time: ${ts.on_duty} to ${ts.off_duty}<br> Are you sure you wish to remove this timesheet?`,
       () => {
-        timesheet.destroyRecord().then(() => {
+        ts.destroyRecord().then(() => {
+          this.editEntry = null;
           this.toast.success('The entry has been deleted.');
           this.args.onChange();
         }).catch((response) => this.house.handleErrorResponse(response));
       });
-  }
-
-  // Display the verification fields.
-  @action
-  editVerificationAction() {
-    this.editVerification = true;
   }
 }

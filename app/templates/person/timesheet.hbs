@@ -1,5 +1,11 @@
 <YearSelect @title="Timesheet" @year={{this.year}} @years={{this.person.all_years}}
             @onChange={{action (mut this.year)}} @subheader={{true}} />
+{{#if this.timesheetPendingCount}}
+  <h3 class="text-danger">{{pluralize this.timesheetPendingCount "entry"}} requires correction review.</h3>
+{{/if}}
+{{#if this.missingRequestPendingCount}}
+  <h3 class="text-danger">{{pluralize this.missingRequestPendingCount "missing entry request"}} requires attention.</h3>
+{{/if}}
 <ChAccordion @title="Shift Manage" as |Accordion|>
   <Accordion.title>Shift Manage</Accordion.title>
   <Accordion.body>
