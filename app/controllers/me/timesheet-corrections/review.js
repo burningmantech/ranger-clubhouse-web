@@ -34,7 +34,7 @@ export default class MeTimesheetCorrectionsReviewController extends Controller {
     }
 
     this.toast.clear();
-    model.review_status = 'unverified';
+    model.review_status = 'pending';
     model.save().then(() => {
       this.entry = null;
       this.set('timesheetInfo.timesheet_confirmed', 0);
