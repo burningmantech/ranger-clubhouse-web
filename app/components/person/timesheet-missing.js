@@ -1,20 +1,25 @@
-import Component from '@ember/component';
-import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
-
-
-import { validatePresence } from 'ember-changeset-validations/validators';
+import Component from '@glimmer/component';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
+import {inject as service} from '@ember/service';
+import {validatePresence} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 
 export default class PersonTimesheetMissingComponent extends Component {
-  timesheetMissing = null; // Missing Timesheet Requests
-  timesheets = null;       // The timesheets
-  person = null;           // The person we're dealing with
-  positions = null;        // The possible positions a person can be in.
-  year = null;             // The year being viewed
-  onChange = null;         // callback when a new timesheet is created
+  @tracked newEntry = null;
+  @tracked editEntry = null;
+  @tracked nextEntry = null;
 
+  @tracked havePartnerTimesheet = false;
+  @tracked partnerCallsign = null;
+  @tracked partnerInfo = null;
+  @tracked partnerTimesheet = null;
+
+  @service ajax;
+  @service house;
+  @service modal;
   @service store;
+  @service toast;
 
   reviewOptions = [
     'approved',
@@ -23,29 +28,51 @@ export default class PersonTimesheetMissingComponent extends Component {
   ];
 
   timesheetValidations = {
-    new_on_duty:  [ validateDateTime({ before: 'new_off_duty', if_set: 'create_entry'}), validatePresence({ presence: true })],
-    new_off_duty:  [ validateDateTime({ after: 'new_on_duty', if_set: 'create_entry'}), validatePresence({ presence: true }) ],
+    new_on_duty: [
+      validateDateTime({
+        before: 'new_off_duty',
+        if_set: 'create_entry'
+      }),
+      validatePresence({presence: true})
+    ],
+    new_off_duty: [
+      validateDateTime({
+        after: 'new_on_duty',
+        if_set: 'create_entry'
+      }),
+      validatePresence({presence: true})
+    ],
   };
 
   newEntryValidations = {
-    on_duty:  [ validateDateTime({ before: 'off_duty'}), validatePresence({ presence: true })],
-    off_duty:  [ validateDateTime({ after: 'on_duty'}), validatePresence({ presence: true }) ],
-    notes:  [ validatePresence({ presence: true }) ],
+    on_duty: [validateDateTime({before: 'off_duty'}), validatePresence({presence: true})],
+    off_duty: [validateDateTime({after: 'on_duty'}), validatePresence({presence: true})],
+    additional_notes: [validatePresence({presence: true})],
   };
 
-  // Setup to edit a requets
+  /**
+   * Setup to edit a Missing Timesheet request.
+   * - Find the position of the entry in the Missing Timesheet list
+   * - Find the next entry that needs attention after this one.
+   * - Reload the entry so the most recent version is edited.
+   * @param {TimesheetMissingModel} timesheet
+   * @private
+   */
+
   _setupEdit(timesheet) {
-    let idx = this.timesheetMissing.indexOf(timesheet);
+    const {timesheetMissing} = this.args;
+
+    let idx = timesheetMissing.indexOf(timesheet);
     let nextEntry;
 
     // Find the next entry that may need managing.
     if (idx >= 0) {
       idx++;
-      while (idx < this.timesheetMissing.length) {
-        const entry = this.timesheetMissing.objectAt(idx);
+      while (idx < timesheetMissing.length) {
+        const entry = timesheetMissing.objectAt(idx);
         if (entry.isPending) {
-            nextEntry = entry;
-            break;
+          nextEntry = entry;
+          break;
         }
 
         idx++;
@@ -58,115 +85,173 @@ export default class PersonTimesheetMissingComponent extends Component {
       timesheet.set('new_position_id', timesheet.position_id);
       timesheet.set('create_entry', 0);
 
-      this.set('nextEntry', nextEntry);
-      this.set('editEntry', timesheet);
-      this.set('partnerInfo', timesheet.partner_info);
-      this.set('havePartnerTimesheet', false);
+      this.nextEntry = nextEntry;
+      this.editEntry = timesheet;
+      this.partnerInfo = timesheet.partner_info;
+      this.havePartnerTimesheet = false;
     }).catch((response) => {
       this.house.handleErrorResponse(response);
-      this.set('editEntry', null);
+      this.editEntry = null;
     });
   }
 
+  /**
+   * Edit a missing timesheet entry
+   * @param {TimesheetMissingModel} timesheet
+   */
   @action
   editEntryAction(timesheet) {
     this._setupEdit(timesheet);
   }
 
+  /**
+   * Cancel editing an entry
+   */
+
   @action
   cancelEntryAction() {
-    this.set('editEntry', null);
+    this.editEntry = null;
   }
+
+  /**
+   * Save an entry
+   * @param model
+   * @param {boolean} isValid
+   * @param {TimesheetMissingModel} nextEntry
+   * @private
+   */
 
   _saveEntry(model, isValid, nextEntry) {
     if (!isValid) {
       return;
     }
 
-    const createEntry = model.get('create_entry');
+    const createEntry = model.create_entry;
     this.toast.clear();
     this.house.saveModel(model, 'Missing timesheet entry has been successfully updated.', () => {
-      this.set('editEntry', null);
-      this.set('nextEntry', null);
-      this.set('havePartnerTimesheet', null);
+      this.editEntry = null;
+      this.nextEntry = null;
+      this.havePartnerTimesheet = null;
 
+      const {timesheets, onChange} = this.args;
       // Refresh the timesheet entries if a new one was created
-      if (createEntry && this.timesheets) {
-        this.timesheets.update();
+      if (createEntry && timesheets) {
+        timesheets.update();
       }
 
       if (nextEntry) {
         this._setupEdit(nextEntry);
       }
 
-      this.onChange();
+      onChange();
     });
   }
 
+  /**
+   * Save an entry
+   * @param model
+   * @param isValid
+   */
   @action
   saveEntryAction(model, isValid) {
     this._saveEntry(model, isValid);
   }
 
+  /**
+   * Save an entry and then edit the next entry for review
+   *
+   * @param model
+   * @param {boolean} isValid
+   */
   @action
   saveAndManageNextEntryAction(model, isValid) {
     this._saveEntry(model, isValid, this.nextEntry);
   }
 
+  /**
+   * Delete a missing timesheet request. Confirm with the user they actually want to do this.
+   */
+
   @action
-  removeEntryAction(timesheet) {
-    this.modal.confirm('Remove Missing Timesheet', `Position: ${timesheet.position.title}<br>Time: ${timesheet.on_duty} to ${timesheet.off_duty}<br> Are you sure you wish to remove this timesheet?`, () => {
-      timesheet.destroyRecord().then(() => {
-        this.toast.success('The entry has been deleted.');
-      }).catch((response) => this.house.handleErrorResponse(response));
-    });
+  deleteEntryAction() {
+    const ts = this.editEntry;
+    this.modal.confirm('Delete Missing Timesheet',
+      `Position: ${ts.position.title}<br>Time: ${ts.on_duty} to ${ts.off_duty}<br> Are you sure you wish to delete this timesheet?`,
+      () => {
+        ts.destroyRecord().then(() => {
+          this.toast.success('The entry has been deleted.');
+          this.editEntry = null;
+        }).catch((response) => this.house.handleErrorResponse(response));
+      });
   }
 
-  // View the partner's timesheet entries for a given year.
+  /**
+   * View a partner's timesheet
+   *
+   * @param {Object} partner
+   */
+
   @action
   viewPartnerTimesheetAction(partner) {
-    this.ajax.request('timesheet', { data: { year: this.year, person_id: partner.person_id }}).then((result) => {
-      this.set('havePartnerTimesheet', true);
-      this.set('partnerTimesheet', result.timesheet);
-      this.set('partnerCallsign', partner.callsign);
-    }).catch((response) => this.house.handleErrorResponse(response));
+    this.ajax.request('timesheet', {data: {year: this.args.year, person_id: partner.person_id}})
+      .then((result) => {
+        this.havePartnerTimesheet = true;
+        this.partnerTimesheet = result.timesheet;
+        this.partnerCallsign = partner.callsign;
+      }).catch((response) => this.house.handleErrorResponse(response));
   }
 
-  // If the review status changed to approved, go ahead
-  // and mark the create a new entry flag
+  /**
+   * Called when user chooses a new review status. If approving a request, show the
+   * timesheet entry fields for the new entry.
+   *
+   * @param {string} field
+   * @param {string} value
+   */
+
   @action
   statusChangeAction(field, value) {
-    if (value == 'approved') {
+    if (value === 'approved') {
       this.editEntry.set('create_entry', 1);
     }
   }
 
-  // Create a new missing timesheet request
+  /**
+   * Setup to show a new missing timesheet request dialog
+   */
   @action
   newEntryAction() {
-    this.set('newEntry', this.store.createRecord('timesheet-missing', {
-      person_id: this.person.id,
-      position_id: this.positions.firstObject.id
-    }));
+    const {person, positions} = this.args;
+    this.newEntry = this.store.createRecord('timesheet-missing', {
+      person_id: person.id,
+      position_id: positions.firstObject.id
+    });
   }
 
-  // Cancel out creating a new entry
+  /**
+   * Cancel a new missing timesheet request
+   */
   @action
   cancelNewEntryAction() {
-    this.set('newEntry', null);
+    this.newEntry = null;
   }
 
-  // Save/create a new entry
+  /**
+   * Create a new missing timesheet request
+   *
+   * @param model
+   * @param {boolean} isValid
+   */
   @action
   createEntryAction(model, isValid) {
     if (!isValid) {
       return;
     }
 
-    this.house.saveModel(model, 'A new missing timesheet request has been successfully created.', () => {
-      this.set('newEntry', null);
-      this.timesheetMissing.update();
-    });
-
+    this.house.saveModel(model, 'A new missing timesheet request has been successfully created.',
+      () => {
+        this.newEntry = null;
+        this.args.timesheetMissing.update();
+      });
   }
 }

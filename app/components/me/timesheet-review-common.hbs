@@ -20,11 +20,10 @@
           </div>
           <div class="timesheet-duration">
             <span class="timesheet-sm-label">Time:</span>
-            {{#if ts.position.count_hours}}
-              {{hour-minute-format ts.duration}}
-            {{else}}
-              [{{hour-minute-format ts.duration}}]
-            {{/if}}
+            {{#unless ts.position.count_hours}}
+              <NoAppreciateIcon/>
+            {{/unless}}
+            {{hour-minute-format ts.duration}}
           </div>
           <div class="timesheet-credits">
             <span class="timesheet-sm-label">Credits:</span>
@@ -35,55 +34,55 @@
 
         <div class="timesheet-row d-print-none">
           <div>
-            {{#if ts.off_duty}}
-              {{#if ts.verified}}
-                <span class="text-success">
-                  {{fa-icon "check"}} Entry was marked correct on {{shift-formatts.verified_at}}
-                </span>
-              {{else if ts.isApproved}}
-                The correction request has been APPROVED. The timesheet has been updated.
-              {{else if ts.isRejected}}
-                The correction request has been denied.
-              {{else if ts.isPendingReview }}
-                <b class="text-info ">The correction request is pending review.</b>
-              {{else if ts.isUnverified}}
-                <b>This entry has not been verified.</b>
-              {{else}}
-                Unknown state?
-              {{/if}}
-
-              {{#if (and ts.haveReviewerResponse (not ts.verified))}}
-                <p><b>Response from the timesheet review team:</b></p>
-                <p>{{ts.reviewer_notes}}</p>
-              {{/if}}
-            {{else}}
+            {{#if ts.stillOnDuty}}
               <b>You are still on duty. You may submit a correction after the shift has ended.</b>
+            {{else if ts.isVerified}}
+              <span class="text-success">
+                {{fa-icon "check"}} Entry was marked correct on {{shift-format ts.verified_at}}
+              </span>
+            {{else if ts.isUnverified}}
+              <b>{{fa-icon "arrow-right"}} This entry has not been verified.</b>
+            {{else if ts.isApproved}}
+              <b>{{fa-icon "arrow-right"}} The correction request has been approved. Verify this entry is correct.</b>
+            {{else if ts.isRejected}}
+              <b class="text-danger">{{fa-icon "times"}} The correction request has been denied.</b>
+            {{else if ts.isPending}}
+              <b class="text-info">{{fa-icon "hourglass-half"}} The correction request is pending review.</b>
+            {{else}}
+              Unknown state?
+            {{/if}}
+
+            {{#if ts.haveReviewerResponse}}
+              <p><b>Response from the timesheet review team:</b></p>
+              <p>{{nl2br ts.reviewer_notes}}</p>
             {{/if}}
           </div>
         </div>
 
         <div class="timesheet-row timesheet-actions d-print-none">
           {{#if ts.off_duty}}
-            {{#unless ts.verified}}
-              <button type="button" class="btn btn-success" {{action markCorrectAction ts}} disabled={{ts.isSaving}}>
-                Mark Entry Correct
+            {{#unless ts.isVerified}}
+              <button type="button" class="btn btn-success" {{action this.markCorrectAction ts}}
+                      disabled={{ts.isSaving}}>
+                Entry Correct
               </button>
             {{/unless}}
-            <button type="button" class="btn btn-secondary" {{action markIncorrectAction ts}} disabled={{ts.isLoading}}>
-              {{#if ts.isPendingReview}}
-                Edit Correction Note
-              {{else if (and ts.isRejected (not ts.verified))}}
+            <button type="button" class="btn btn-secondary" {{action this.markIncorrectAction ts}}
+                    disabled={{ts.isLoading}}>
+              {{#if ts.isPending}}
+                Add More Info
+              {{else if ts.isRejected}}
                 Submit Appeal
               {{else}}
-                Mark Entry Incorrect
+                Entry Incorrect
               {{/if}}
             </button>
             {{#if ts.isReloading}}
-              <LoadingIndicator />
+              <LoadingIndicator/>
             {{/if}}
           {{/if}}
           {{#if ts.isSaving}}
-            <LoadingIndicator />
+            <LoadingIndicator/>
           {{/if}}
         </div>
       </div>
@@ -106,48 +105,47 @@
             @onSubmit={{this.saveCorrectionAction}}
             @onCancel={{this.cancelCorrectionAction}} as |f|>
       <Modal.body>
-        <dl class="form-row">
-          <dt class="col-sm-2">Position:</dt>
-          <dd class="col-sm-10">{{this.entry.position.title}}</dd>
+        <dl class="row">
+          <dt class="col-2">Position:</dt>
+          <dd class="col-10">{{this.entry.position.title}}</dd>
 
-          <dt class="col-sm-2">Time:</dt>
-          <dd class="col-sm-10">{{shift-format this.entry.on_duty}} to {{shift-format this.entry.off_duty}}</dd>
+          <dt class="col-2">Time:</dt>
+          <dd class="col-10">{{shift-format this.entry.on_duty}} to {{shift-format this.entry.off_duty}}</dd>
 
-          <dt class="col-sm-2">Duration:</dt>
-          <dd class="col-sm-10">{{hour-minute-format this.entry.duration}}</dd>
+          <dt class="col-2">Duration:</dt>
+          <dd class="col-10">{{hour-minute-format this.entry.duration}}</dd>
 
-          <dt class="col-sm-2">Credits:</dt>
-          <dd class="col-sm-10">{{credits-format this.entry.credits}}</dd>
+          <dt class="col-2">Credits:</dt>
+          <dd class="col-10">{{credits-format this.entry.credits}}</dd>
         </dl>
 
         <div class="form-row">
-          Use the following area to explain why this entry is incorrect. Provide as
-          much information as possible to help us understand why this entry should be fixed.
+          Provide as much information as possible to help us understand why this entry should be fixed.
           <ul>
-            {{#if this.isMe}}
-              <li><b>State the correct times</b> if the starting and/or ending time is wrong.</li>
-              <li><b>If the position is wrong,</b> tell us what is the correct position.</li>
-              <li><b>Provide an explanation</b> on why you think the entry is wrong.</li>
-              <li><b>Who was your partner for the shift?</b></li>
-            {{else}}
-              <li><b>Why does {{@person.callsign}} think the entry is wrong?</b></li>
-              <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
-              <li><b>Is the position "{{this.entry.position.title}}" wrong?</b> State the correct position</li>
-              <li><b>Who was their shift partner(s)?</b></li>
-            {{/if}}
+            <li><b>Provide an explanation</b> in one to three sentences what needs to be corrected.</li>
+            <li><b>State the correct times</b> if the starting and/or ending time is wrong.</li>
+            <li><b>If the position "{{this.entry.position.title}}" is wrong,</b> tell us what is the correct position.
+            </li>
+            <li><b>Who was the partner for the shift?</b></li>
           </ul>
         </div>
         {{#if this.entry.isRejected}}
-          <b class="text-danger">The correction request has been rejected.</b>
-          <div class="card mb-4">
-            <div class="card-header">The timesheet correction team has left you a note:</div>
-            <div class="card-body">
-              {{this.entry.reviewer_notes}}
-            </div>
-          </div>
+          <ChNotice @type="danger" @icon="times" @title="Correction request has been denied">
+            The response from the timesheet review team:<br>
+            {{nl2br this.entry.reviewer_notes}}
+          </ChNotice>
         {{/if}}
-        <f.input @name="notes" @label={{if this.entry.isRejected "Supply additional information for an apeal:"
-                                           "Your correction note:"}} @type="textarea" @cols=80 @rows=3/>
+
+        {{#if this.entry.notes}}
+          Your previous message to the timesheet review team:<br>
+          {{nl2br this.entry.notes}}
+        {{/if}}
+        <div class="form-row">
+          <f.input @name="additional_notes"
+                   @label={{if this.entry.isRejected "Supply additional information for an apeal:"
+                               "Your message to the timesheet review team:"}}
+                   @type="textarea" @cols={{80}} @rows={{3}}/>
+        </div>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Submit Correction Request" @disabled={{this.entry.isSaving}} />

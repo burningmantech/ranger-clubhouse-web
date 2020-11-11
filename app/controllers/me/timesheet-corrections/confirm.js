@@ -15,9 +15,9 @@ export default class MeTimesheetCorrectionsConfirmController extends Controller 
     return this.timesheets.reduce((total, ts) => total+(ts.isUnverified ? 1 : 0), 0);
   }
 
-  @computed('timesheets.@each.isPendingReview')
+  @computed('timesheets.@each.isPending')
   get correctionPendingReviewCount() {
-    return this.timesheets.reduce((total, ts) => total+(ts.isPendingReview ? 1 : 0), 0);
+    return this.timesheets.reduce((total, ts) => total+(ts.isPending ? 1 : 0), 0);
   }
 
   @computed('timesheetsMissing.@each.isPending')

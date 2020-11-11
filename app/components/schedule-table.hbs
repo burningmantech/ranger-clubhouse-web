@@ -22,7 +22,7 @@
 {{/if}}
 
 <div class="m-2">
-  {{fa-icon "minus-square" color="danger" type="far"}} = the shift hours do not count towards appreciations.
+  <NoAppreciateIcon /> = the shift hours do not count towards appreciations.
 </div>
 <div class="schedule-table schedule-itinerary">
   <div class="schedule-row schedule-header">
@@ -49,7 +49,7 @@
       <div class="schedule-duration">
         <span class="schedule-sm-label">Duration:</span>
         {{#unless slot.position_count_hours}}
-          {{fa-icon "minus-square" color="danger" type="far"}}
+          <NoAppreciateIcon />
         {{/unless~}}
         {{hour-minute-format slot.slot_duration}}
       </div>

@@ -1,16 +1,18 @@
 import Model, { attr } from '@ember-data/model';
-import { computed } from '@ember/object';
 
 export default class TimesheetMissingModel extends Model {
   @attr('number') person_id;
   @attr('number') position_id;
   @attr('shiftdate') off_duty;
   @attr('shiftdate') on_duty;
-  @attr('string') notes;
+  @attr('string', { readOnly: true}) notes;
+  @attr('string') additional_notes;
+
   @attr('string') partner;
 
   @attr('string') review_status;
-  @attr('string') reviewer_notes;
+  @attr('string', { readOnly: true }) reviewer_notes;
+  @attr('string') additional_reviewer_notes;
 
   @attr('number', { readOnly: true }) duration;
   @attr('', { readOnly: true}) position;
@@ -24,19 +26,15 @@ export default class TimesheetMissingModel extends Model {
   @attr('shiftdate') new_off_duty;
   @attr('number') new_position_id;
 
-  @computed('review_status')
   get isPending() {
-    return this.review_status == 'pending';
+    return this.review_status === 'pending';
   }
 
-  @computed('review_status')
   get isApproved() {
-    return this.review_status == 'approved';
+    return this.review_status === 'approved';
   }
 
-  @computed('review_status')
   get isRejected() {
-    return this.review_status == 'rejected';
+    return this.review_status === 'rejected';
   }
-
 }

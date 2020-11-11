@@ -22,7 +22,7 @@
     </p>
   {{/if}}
   <div class="m-2">
-    {{fa-icon "minus-square" color="danger" type="far"}} = the shift hours do not count towards appreciations.
+    <NoAppreciateIcon /> = the shift hours do not count towards appreciations.
   </div>
   <div class="timesheet-table">
     <div class="timesheet-row timesheet-header">
@@ -46,7 +46,7 @@
           <div class="timesheet-duration">
             <span class="timesheet-sm-label">Duration:</span>
             {{#unless ts.position.count_hours}}
-              {{fa-icon "minus-square" color="danger" type="far"}}
+              <NoAppreciateIcon />
             {{/unless}}
             {{hour-minute-format ts.duration}}
           </div>

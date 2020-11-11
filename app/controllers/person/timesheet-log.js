@@ -1,11 +1,17 @@
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
 
 export default class PersonTimesheetLogController extends Controller {
   queryParams = [ 'year' ];
 
-  @action
-  changeYearAction(year) {
-    this.set('year', year);
-  }
+  actionLabels = {
+    'signon': 'Shift started',
+    'signoff': 'Shift ended',
+    'update': 'Updated',
+    'delete': 'Deleted',
+    'confirmed': 'Entire timesheet confirmed',
+    'unconfirmed': 'Entire timesheet unconfirmed',
+    'unverified': 'Unverified',
+    'verify': 'Verified',
+    'created': 'Created'
+  };
 }

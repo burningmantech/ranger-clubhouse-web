@@ -104,10 +104,10 @@ export default class ReportsRollcallController extends Controller {
         case 'success':
           if (result.forced) {
             let reason;
-            if (result.unqualified_reason) {
-              reason = `is unqualified ('${result.unqualified_reason}')`;
-            } else {
+            if (result.unqualified_reason === 'untrained') {
               reason = `has not completed '${result.required_training}'`;
+            } else {
+              reason = `is unqualified ('${result.unqualified_message}')`;
             }
             this.modal.info('Sign In Forced', `WARNING: The person ${reason}. Because you are an admin or have the timesheet management role, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
           }
@@ -129,7 +129,7 @@ export default class ReportsRollcallController extends Controller {
           break;
 
         case 'not-qualified':
-          this.modal.info('Not Qualified', `${callsign} has not meet one or more of the qualifiers needed to sign into the shift.<br>Reason: ${result.unqualified_reason}`);
+          this.modal.info('Not Qualified', `${callsign} has not meet one or more of the qualifiers needed to sign into the shift.<br>Reason: ${result.unqualified_message}`);
           break;
 
         default:
