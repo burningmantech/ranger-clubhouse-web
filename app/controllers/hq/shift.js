@@ -218,7 +218,7 @@ export default class HqShiftController extends Controller {
     this.isMarkingOffSite = true;
     this.person.set('on_site', isOnSite);
     this.person.save().then(() => {
-      this.toast.success(`${this.person.callsign} has been successfully marked ${on_site ? 'ON' : 'OFF'} SITE.`);
+      this.toast.success(`${this.person.callsign} has been successfully marked ${isOnSite ? 'ON' : 'OFF'} SITE.`);
     })
       .catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isMarkingOffSite = false);
