@@ -112,9 +112,7 @@ $sizes: (
     page-break-before: always;
   }
 
-  #body-row,
-  main,
-  main.col {
+  main {
     margin: 0 !important;
     padding: 0 !important;
   }
@@ -126,6 +124,16 @@ $sizes: (
 
 }
 
+#body-row {
+  display: flex;
+  flex-direction: row;
+}
+
+main {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 10px;
+}
 
 .table-fixed {
   table-layout: fixed;
@@ -171,17 +179,13 @@ button:disabled {
   cursor: not-allowed !important;
 }
 
-main {
-  margin: 10px 0;
-}
-
 dl {
   margin-bottom: 0;
 }
 
 .min-width-500 {
   min-width: 500px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .min-width-1000 {
@@ -658,4 +662,8 @@ ul.no-indent {
     padding-left: 0;
     padding-right: 0;
   }
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
 }

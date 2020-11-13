@@ -7,12 +7,8 @@
   margin-right: 5px;
 }
 
-#body-row {
-  margin-left: 0;
-  margin-right: 0;
-}
-
 #sidebar-container {
+  flex: 0 1 auto;
   position: relative;
   min-height: 100vh;
   padding: 0;

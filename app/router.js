@@ -140,6 +140,7 @@ Router.map(function () {
     this.route('status-history');
     this.route('unified-flagging');
     this.route('external-ids');
+    this.route('work-history');
   });
 
   this.route('logout');

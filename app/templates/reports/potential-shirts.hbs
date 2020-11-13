@@ -18,7 +18,7 @@
 </div>
 
 Showing  {{pluralize this.people.length "person"}}
-<table class="table table-hover table-striped table-sm">
+<table class="table table-width-auto table-hover table-striped table-sm">
   <thead>
   <tr>
     <th>Callsign</th>
@@ -54,7 +54,7 @@ Showing  {{pluralize this.people.length "person"}}
     </tr>
   {{else}}
     <tr>
-      <td colspan="5"><b class="text-danger">No one was found to have qualified for clothing in {{this.year}}</b></td>
+      <td colspan="6"><b class="text-danger">No one was found to have qualified for clothing in {{this.year}}</b></td>
     </tr>
   {{/each}}
   </tbody>
