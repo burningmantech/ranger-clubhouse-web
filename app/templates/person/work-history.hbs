@@ -1,0 +1,128 @@
+<h3>Work History For {{this.person.callsign}}</h3>
+<p>
+  Alpha and Training entries are filtered out.
+</p>
+{{#if this.hasPriorTo2010}}
+  <p>
+    <b class="text-danger">NOTE: {{this.person.callsign}} has timesheet entries prior to 2010 which may be
+      inaccurate.</b>
+  </p>
+{{/if}}
+{{#if this.years}}
+  <div class="overflow-y-auto">
+    {{pluralize this.years.length "year"}} worked. {{pluralize this.positions.length "position"}}.
+    <table class="table table-width-auto table-striped table-hover">
+      <thead>
+      <tr>
+        <th>Position</th>
+        <th>Total Hours</th>
+        {{#each this.years as |year|}}
+          <th>{{year}}</th>
+        {{/each}}
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.positions as |position|}}
+        <tr>
+          <td>{{position.title}}</td>
+          <td class="text-right">
+            <a href {{action this.showPositionAllEntriesAction position.id}}>{{hour-format position.duration}}</a>
+          </td>
+          {{#each this.years as |year|}}
+            {{#let (get (get this.positionsByYear year) position.id) as |work|}}
+              {{#if work}}
+                <td class="text-right">
+                  <a href {{action this.showPositionYearSummaryAction position.id year}}>
+                    {{hour-format work.duration}}
+                  </a>
+                </td>
+              {{else}}
+                <td class="text-center">
+                  -
+                </td>
+              {{/if}}
+            {{/let}}
+          {{/each}}
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </div>
+{{else}}
+  <p>
+    <b class="text-danger">No timesheet entries were found.</b>
+  </p>
+{{/if}}
+
+{{#if this.showPositionYearEntries}}
+  <ModalDialog @title="{{this.showYear}} {{this.position.title}}" as |Modal|>
+    <Modal.body>
+      {{pluralize this.entries.length "entry"}}
+      <table class="table table-width-auto table-striped table-hover">
+        <thead>
+        <tr>
+          <th>Time</th>
+          <th>Duration</th>
+          <th>Credits</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.entries as |entry|}}
+          <tr>
+            <td>
+              {{shift-format entry.on_duty entry.off_duty}}
+            </td>
+            <td class="text-right">
+              {{hour-format entry.duration}}
+            </td>
+            <td class="text-right">
+              {{credits-format entry.credits}}
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </Modal.body>
+    <Modal.footer>
+      <button type="button" class="btn btn-primary" {{action this.closePositionYearSummaryAction}}>Close</button>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
+
+{{#if this.showPositionAllEntries}}
+  <ModalDialog @title={{this.position.title}} as |Modal|>
+    <Modal.body>
+      {{#each-in this.position.years as |year info|}}
+        <table class="table table-width-auto table-striped table-hover">
+          <caption>Year {{year}} ({{pluralize info.entries.length "entry"}})</caption>
+          <thead>
+          <tr>
+            <th>Time</th>
+            <th>Duration</th>
+            <th>Credits</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each info.entries as |entry|}}
+            <tr>
+              <td>
+                {{shift-format entry.on_duty entry.off_duty}}
+              </td>
+              <td class="text-right">
+                {{hour-format entry.duration}}
+              </td>
+              <td class="text-right">
+                {{credits-format entry.credits}}
+              </td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{/each-in}}
+    </Modal.body>
+    <Modal.footer>
+      <button type="button" class="btn btn-primary" {{action this.closePositionAllEntriesAction}}>Close</button>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}

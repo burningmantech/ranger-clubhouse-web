@@ -4,6 +4,7 @@
     <s.link @route="person.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
     <s.link @route="person.event-info" @title="Event/Training Info" @icon="user" @iconType="s"/>
     <s.link @route="person.timesheet" @title="Timesheets" @icon="clock"/>
+    <s.link @route="person.work-history" @title="Work History" @icon="history" @iconType="s"/>
     <s.link @route="person.assets" @title="Assets" @icon="broadcast-tower" @iconType="s"/>
     <s.link @route="person.messages" @title="Messages" @icon="envelope"
             @badgeText={{this.person.unread_message_count}} />
@@ -62,7 +63,7 @@
   {{/if}}
 </ChSidebar>
 
-<main class="col ">
+<main>
   <div class="person-manage-header">
     <h2 class="homepage-title col-sm-12 col-lg-auto">
       <PersonLink @person={{this.person}} />
@@ -117,6 +118,7 @@
           <LinkTo @route="person.schedule" @model={{this.person.id}} class="dropdown-item">Schedule / Sign Up</LinkTo>
           <LinkTo @route="person.event-info" @model={{this.person.id}} class="dropdown-item">Event Info</LinkTo>
           <LinkTo @route="person.timesheet" @model={{this.person.id}} class="dropdown-item">Timesheet</LinkTo>
+          <LinkTo @route="person.work-history" @model={{this.person.id}} class="dropdown-item">Timesheet</LinkTo>
           <LinkTo @route="person.assets" @model={{this.person.id}} class="dropdown-item">Assets</LinkTo>
           <LinkTo @route="person.messages" @model={{this.person.id}} class="dropdown-item">Messages</LinkTo>
           {{#if (has-role "admin" "manage+view-pii")}}
