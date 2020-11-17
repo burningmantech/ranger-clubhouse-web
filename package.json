@@ -29,7 +29,7 @@
     "jquery-datetimepicker": "^2.5.21",
     "jscodeshift": "^0.11.0",
     "json-formatter-js": "^2.3.4",
-    "libphonenumber-js": "^1.9.3",
+    "libphonenumber-js": "^1.9.4",
     "lodash": "^4.17.20",
     "mobile-detect": "^1.4.4",
     "validated-changeset": "0.10.0"
@@ -76,7 +76,7 @@
     "ember-resolver": "^8.0.2",
     "ember-simple-auth": "^3.0",
     "ember-simple-auth-token": "^5.2.0",
-    "ember-source": "~3.22.1",
+    "ember-source": "~3.23.0",
     "ember-template-lint": "^2.14.0",
     "ember-test-friendly-error-handler": "^2.1.1",
     "ember-toastr": "^3.0.0",
