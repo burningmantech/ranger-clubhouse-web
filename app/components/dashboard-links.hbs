@@ -6,20 +6,65 @@
     <div class="dashboard-step-row">
       <div class="dashboard-step">
         <div class="dashboard-step-description">
-        <p><a href={{config "RangerManualUrl"}}>Ranger Manual (online)</a></p>
-        {{#unless @isPNV}}
-          <p><a href={{config "RangerFeedbackFormUrl"}} rel="noopener noreferrer" target="_blank">Ranger Feedback Form</a></p>
-          <p>
-            <a href={{config "JoiningRangerSpecialTeamsUrl"}} rel="noopener noreferrer" target="_blank">
-              How To Join Ranger Special Teams
-            </a>
+          <p><a href={{config "RangerManualUrl"}}  rel="noopener noreferrer" target="_blank">Ranger Manual (online)</a>
           </p>
-          <p>
-            <a href={{config "RangerPoliciesUrl"}} rel="noopener noreferrer" target="_blank">Ranger Polices Folder</a>
-          </p>
-         {{/unless}}
+          {{#unless @isPNV}}
+            <p>
+              <a href={{config "RangerFeedbackFormUrl"}} rel="noopener noreferrer" target="_blank">
+                Ranger Feedback Form
+              </a>
+            </p>
+            <p>
+              <a href={{config "JoiningRangerSpecialTeamsUrl"}} rel="noopener noreferrer" target="_blank">
+                How To Join Ranger Special Teams
+              </a>
+            </p>
+            <p>
+              <a href={{config "RangerPoliciesUrl"}} rel="noopener noreferrer" target="_blank">Ranger Policies
+                Folder</a>
+            </p>
+          {{/unless}}
+          <a href {{action this.toggleIconLegend}}>Dashboard/Checklist icon legend</a>
+          <div class="border bg-white rounded mt-3 p-3 collapse"
+            {{did-insert this.legendInserted}}
+            {{will-destroy this.willDestroyLegend}}
+          >
+            <p>
+              <a href {{action this.toggleIconLegend}}>Hide Legend</a>
+            </p>
+            <p>
+              <DashboardIcon @result="action-needed"/>
+              The step has a task for you to complete.
+            </p>
+            <p>
+              <DashboardIcon @result="completed"/>
+              You have completed the step.
+            </p>
+            <p>
+              <DashboardIcon @result="waiting"/>
+              The step is either waiting for approval, or is not yet available. You will need to come back later to
+              complete the step.
+            </p>
+            <p>
+              <DashboardIcon @result="not-available"/>
+              You may need to complete other steps first before being allowed to complete this step.
+            </p>
+            <p>
+              <DashboardIcon @result="urgent"/>
+              The step requires your immediate attention. Other steps may be blocked until the step is resolved.
+            </p>
+            <p>
+              <DashboardIcon @result="optional"/>
+              The step is an optional task which may require a digital signature.
+            </p>
+            <p>
+              <DashboardIcon @result="blocked"/>
+              The dashboard is entirely blocked - No further steps may be acted upon.
+            </p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+

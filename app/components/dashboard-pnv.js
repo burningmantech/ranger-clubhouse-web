@@ -15,7 +15,6 @@ import {
 } from "clubhouse/constants/dashboard";
 import * as DashboardStep from 'clubhouse/constants/dashboard-steps';
 
-
 const SETUP_ACCOUNT_STEPS = [
   DashboardStep.VERIFY_PERSONAL_INFO,
   DashboardStep.SIGN_BEHAVIORAL_AGREEMENT,
@@ -33,7 +32,7 @@ const TRAINING_STEPS = [
 
 const ALPHA_STEPS = [{
   name: 'Sign up for an Alpha shift',
-  check({milestones,person}) {
+  check({milestones, person}) {
     if (person.status === 'bonked') {
       return {result: SKIP};
     }
@@ -62,7 +61,7 @@ const ALPHA_STEPS = [{
 
   {
     name: 'Walk your Alpha shift',
-    check({milestones,person}) {
+    check({milestones, person}) {
       if (person.status === 'bonked') {
         return {
           result: BLOCKED,

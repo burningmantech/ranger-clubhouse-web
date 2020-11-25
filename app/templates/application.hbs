@@ -9,7 +9,7 @@
               "envelope"}} {{this.session.user.unread_message_count}}</span>
     {{/if}}
     </button>
-    <LinkTo @route="me.overview" class="navbar-brand">
+    <LinkTo @route="me.homepage" class="navbar-brand">
       {{#if this.session.isStaging}}
         <span class="text-danger">Staging Server</span>
       {{else if this.session.isTraining}}

@@ -20,13 +20,13 @@ export default class MePersonalInfoEditController extends Controller {
 
     this.person.has_reviewed_pi = true;
     this.house.saveModel(model, 'Your personal information was successfully updated.', () => {
-         this.transitionToRoute('me.overview');
+         this.transitionToRoute('me.homepage');
     })
   }
 
   @action
   onCancel() {
     this.toast.warning('Editing your personal information was cancelled. No changes were saved.');
-    this.transitionToRoute('me.overview');
+    this.transitionToRoute('me.homepage');
   }
 }

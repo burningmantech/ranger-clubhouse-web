@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import * as Dashboard from 'clubhouse/constants/dashboard';
 
 const ICONS = {
-  [Dashboard.COMPLETED]: {name: 'check-circle'},
+  [Dashboard.COMPLETED]: {name: 'check-circle', type: 'far'},
   [Dashboard.WAITING]: {name: 'hourglass-half'},
   [Dashboard.ACTION_NEEDED]: {name: 'arrow-right', color: 'success'},
   [Dashboard.NOT_AVAILABLE]: {name: 'circle', type: 'far'},

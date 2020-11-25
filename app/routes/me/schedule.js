@@ -12,7 +12,7 @@ export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
     const user = this.session.user;
     if (user.isPastProspective || user.isBonked) {
       this.toast.error('You are not permitted sign up for trainings or shifts at this time.');
-      this.transitionTo('me.overview');
+      this.transitionTo('me.homepage');
     }
   }
 
@@ -41,7 +41,7 @@ export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
 
     if ((person.isAuditor || person.isProspective || person.isAlpha) && !model.permission.all_signups_allowed) {
       this.toast.error('You need to complete one or more items in the checklist before being allowed to sign up.');
-      this.transitionTo('me.overview');
+      this.transitionTo('me.homepage');
     }
   }
 

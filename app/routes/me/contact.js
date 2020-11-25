@@ -11,7 +11,7 @@ export default class MeContactRoute extends Route.extend(MeRouteMixin) {
   beforeModel() {
     if (!this.session.user.isRanger) {
       this.toast.error('Sorry, you are not an active Ranger and may not send contact messages.');
-      this.transitionTo('me.overview');
+      this.transitionTo('me.homepage');
     }
   }
 

@@ -9,7 +9,7 @@ then let them know what's up.
 {{else if this.person.isProspectiveWaitlist}}
   <DashboardProspectiveWaitlist/>
 {{else}}
-  {{#if this.isDevelopmentEnv}}
+  {{#if false}}
     <DashboardDebug @milestones={{this.milestones}} @person={{this.person}} @photo={{this.photo}}
                     @update={{this.debugUpdateAction}} />
   {{/if}}
@@ -43,17 +43,11 @@ then let them know what's up.
 
 <h5>Need Help?</h5>
 <p>
-  For general questions &amp; support:
-  <span class="d-inline-block">
-    {{#if (or this.person.isProspective this.person.isAlpha this.person.isBonked this.person.isAuditor)}}
-      {{vc-email}}
-    {{else}}
-      {{general-support-email}}
-    {{/if}}
-  </span>
+  For general questions &amp; support: {{vc-email}}
 </p>
 
-<p>For technical support: <span class="d-inline-block">{{admin-email}}</span></p>
+
+<p>For technical support: {{admin-email}}</p>
 
 {{#if this.showUploadDialog}}
   <PhotoUpload @person={{this.person}} @photo={{this.photo}} @refreshPhoto={{this.refreshPhoto}}

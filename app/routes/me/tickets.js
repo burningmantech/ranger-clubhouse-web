@@ -7,7 +7,7 @@ export default class MeTicketsRoute extends Route.extend(MeRouteMixin) {
     const user = this.session.user;
     if (user.isAuditor || user.isPastProspective || user.isProspectiveWaitlist) {
       this.toast.error('Auditors, past prospectives, and prospective waitlisted do not have access to this page.');
-      this.transitionTo('me.overview');
+      this.transitionTo('me.homepage');
     }
   }
 

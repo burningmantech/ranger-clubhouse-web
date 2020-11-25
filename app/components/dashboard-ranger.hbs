@@ -1,178 +1,45 @@
-<h2 class="homepage-title">Welcome to the Secret Clubhouse</h2>
-{{#if (eq @photo.photo_status "missing")}}
-  <ChNotice @title="Photo Is Needed" @type="warning" @icon="exclamation-triangle">
-    <p>
-      You need to upload a photo
-      {{#if @person.isNonRanger}}
-        to schedule shifts in Clubhouse.
-      {{else}}
-        for your Burning Man ID badge.
-      {{/if}}
-    </p>
-    <p>
-      Note that you will <b class="text-danger">not be able to sign up for shifts</b>
-      until you have an approved Clubhouse photo. Usually photos are approved within 2 to 3 days.
-    </p>
-  </ChNotice>
-{{else if (eq @photo.photo_status "rejected")}}
-  <ChNotice @type="danger" @title="Photo rejected" @icon="times">
-    <p>
-      Your photo has been rejected. A new one will need to be submitted.
-    </p>
-    <p>
-      The following reason(s) are why the photo was rejected:
-    </p>
-    <ul>
-      {{#each @photo.rejections as |reason|}}
-        <li>{{reason}}</li>
-      {{/each}}
-    </ul>
-    {{#if @photo.reject_message}}
-      <p>
-        The photo reviewer left you an additional message:<br>
-        {{@photo.reject_message}}
-      </p>
-    {{/if}}
-    For a full list of photo requirements, please see
-    <a target="_blank" rel="noopener noreferrer"
-                                                         href="https://docs.google.com/document/d/1hUqrJwdMG6XB5nk7Eh8nY2GH4uvAFTppmCKCmfidIvQ/edit?usp=sharing">this
-    helpful document.</a>.
-  </ChNotice>
+<div class="homepage-title">Clubhouse Ranger Dashboard</div>
+{{#if @person.unread_message_count}}
+  <p>
+    <LinkTo @route="me.messages">
+      {{fa-icon "envelope" color="success"}} You have {{pluralize @person.unread_message_count "unread message"}}.
+    </LinkTo>
+  </p>
 {{/if}}
 
-
-<PersonPhoto @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}}
-             @containerClass="ml-2 float-lg-right"/>
-
-<div class="mt-1 mb-1">
-  {{#if (lte @person.years.length 1)}}
-    Hello Shiny Penny! Congratulations on becoming a Ranger.
+<p>
+  {{#if @person.isNonRanger}}
+    Hello Volunteer {{@person.callsign}}. Thank you for helping the Rangers.
   {{else}}
-    Hello {{#if @person.vintage}}Vintage{{/if}} Ranger! You have Rangered at {{pluralize @person.years.length "burn"}}.
-  {{/if}}
-</div>
-
-{{#if @motds}}
-  <DashboardMotd @motds={{@motds}} @hasBottomArrow={{false}} />
-{{/if}}
-
-{{#if @milestones.surveys.sessions}}
-  <ChNotice @title="Your feedback on Ranger training is requested">
-    {{fa-icon "comment-dots" type="far" size="2x"}} Please take a few moments and provide feedback on the {{pluralize
-          @milestones.surveys.sessions.length "training"}}
-    you attended:
-    {{#each @milestones.surveys.sessions as |slot|}}
-      <p class="my-1">
-        <LinkTo @route="me.survey" @query={{hash slot_id=slot.id type="training"}} >
-          {{slot.position_title}} - {{slot.description}} {{shift-format slot.begins}}
-        </LinkTo>
-      </p>
-    {{/each}}
-  </ChNotice>
-{{/if}}
-
-{{#if @milestones.surveys.trainers}}
-  <ChNotice @title="Provide feedback for your fellow trainers">
-    Thank you for teaching. Take a few minutes to provide feedback on your fellow trainers:
-    {{#each @milestones.surveys.trainers as |slot|}}
-      <p class="my-1">
-        <LinkTo @route="me.survey" @query={{hash slot_id=slot.id type="trainer"}} >
-          {{slot.position_title}} - {{slot.description}} {{shift-format slot.begins}}
-        </LinkTo>
-        {{#each slot.trainers as |trainer idx|}}
-          {{~if idx ", "}}{{trainer.callsign}}
-        {{~/each}}
-      </p>
-    {{/each}}
-  </ChNotice>
-{{/if}}
-
-<div class="mt-1 mb-2">Thank for stopping by. There are a few things to do here:</div>
-<dl>
-  <dt>Verify Your Personal Info</dt>
-  <dd>
-    Look in the Me menu in the top navigation bar or sidebar menu for
-    <LinkTo @route="me.personal-info">Personal Info</LinkTo>
-    to edit your address, email address, phone numbers, etc.
-    <p class="mt-2">
-      We'd really appreciate it if you'd make sure your phone numbers,
-      emergency contacts, languages, and shirt size info are all up to date!
-    </p>
-  </dd>
-
-  <dt>Current Schedule & Shift Signups</dt>
-  <dd>
-    {{#if @person.isRanger}}
-      Signup for training and shifts:
+    Hello Ranger {{@person.callsign}}, thank you for
+    {{#if @person.years.length}}
+      rangering {{pluralize @person.years.length "burn"}}.
     {{else}}
-      Signup for shifts:
+      stopping by.
     {{/if}}
-
-    <LinkTo @route="me.schedule">Schedule / Sign Up</LinkTo>
-
-    <ul class="mt-2">
-      {{#unless @person.isNonRanger}}
-        <li>Training shifts start getting posted in April.</li>
-      {{/unless}}
-
-      {{#if (and (not @person.isNonRanger) @person.canSignupForShifts)}}
-        <li>
-          Ranger shifts start getting posted in June. You <strong>do not</strong> have to be
-          trained to sign up for shifts, but you <strong>must</strong> be trained before
-          actually working shifts on playa.
-        </li>
-      {{/if}}
-    </ul>
-  </dd>
-
-  {{#if @person.isRanger}}
-    <dt>Tickets, Staff Credientals, Vehicle &amp; Work Passes</dt>
-    <dd>
-      <LinkTo @route="me.tickets">Tickets &amp; Stuff</LinkTo>
-      is the place
-      to claim staff credentials, reduced-price tickets, vehicle passes,
-      and work access passes.
-    </dd>
-
-    <dt>Timesheets</dt>
-    <dd>
-      Check that your timesheet is accurate: your timesheet is located in
-      <LinkTo @route="me.timesheet">Timesheets</LinkTo>
-    </dd>
-
-    {{#if (config "MotorpoolPolicyEnable")}}
-      <dt>Motorpool Agreement</dt>
-      <dd>
-        Complete your Ranger Motorpool Policy acknowledgement. Any Ranger operating
-        any type of vehicle for Ranger business at Burning Man must agree to the
-        Ranger Motorpool Policy by reading and filling out the acknowledgment form
-        located here:
-        <LinkTo @route="me.motorpool-policy">Motorpool Policy</LinkTo>
-      </dd>
-    {{/if}}
-
-    {{#if (config "RangerFeedbackFormUrl")}}
-      <dt>Ranger Feedback</dt>
-      <dd>
-        Did you have a (positive or negative) interaction on- or off-playa with a fellow Ranger?
-        Let us know by filling out the Ranger Feedback Form located here:
-        <a href="{{config "RangerFeedbackFormUrl"}}" target="_blank" rel="noopener noreferrer">Ranger Feedback Form</a>
-        (opens in a new window)
-      </dd>
-    {{/if}}
-
-    <dt>Ranger Policies</dt>
-    <dd>Peruse our
-      <a href="{{config "RangerPoliciesUrl"}}" target="_blank" rel="noopener noreferrer">Ranger policies</a> (opens in a
-      new
-      window)
-    </dd>
-
-    <dt>Get Involved More With Special Groups</dt>
-    <dd>
-      Learn how to <a href="{{config "JoiningRangerSpecialTeamsUrl"}}" target="_blank" rel="noopener noreferrer">join
-      Ranger
-      special teams</a> (opens in a new window)
-    </dd>
   {{/if}}
-</dl>
+</p>
+
+<div class="dashboard-box">
+  {{#if @motds}}
+    <DashboardMotd @motds={{@motds}} />
+  {{/if}}
+  {{#each this.stepGroups as |group idx|}}
+    <DashboardGroup @title={{group.title}}
+                    @isActive={{eq idx 0}}
+                    @hasTopArrow={{or @motds idx}}
+                    @hasBottomArrow={{not group.isLast}}
+                    @includeSidePhoto={{eq idx 0}}
+                    @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}}
+    >
+      {{#each group.steps as |step|}}
+        <DashboardStep @step={{step}} @isActive={{step.isActive}} @isNotUser={{this.isNotUser}}
+                       @showBehaviorAgreementAction={{@showBehaviorAgreementAction}}
+                       @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}}
+                       @milestones={{@milestones}}
+        />
+      {{/each}}
+    </DashboardGroup>
+  {{/each}}
+  <DashboardLinks/>
+</div>

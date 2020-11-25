@@ -6,6 +6,6 @@ export default class MeSurveyController extends Controller {
 
   @action
   surveyDoneAction() {
-    this.transitionToRoute('me.overview');
+    this.transitionToRoute('me.homepage');
   }
 }

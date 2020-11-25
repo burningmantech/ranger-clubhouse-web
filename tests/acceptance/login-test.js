@@ -25,7 +25,7 @@ module('Acceptance | login', function(hooks) {
     await fillIn('input[name="password"]', person.password);
     await click('button.login-submit');
     assert.equal(currentURL(), '/me');
-    assert.equal(document.title, 'Overview | Me | Ranger Clubhouse');
+    assert.equal(document.title, 'Homepage | Me | Ranger Clubhouse');
   });
 
   test('invalid login', async function(assert) {

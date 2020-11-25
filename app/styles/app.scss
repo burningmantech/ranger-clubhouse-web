@@ -593,7 +593,11 @@ caption {
   display: inline-block;
 }
 
-@include media-breakpoint-up(md) {
+.homepage-title {
+  font-weight: 500;
+}
+
+@include media-breakpoint-up(lg) {
   .homepage-title {
     font-size: $h1-font-size;
   }
@@ -601,8 +605,7 @@ caption {
 
 @include media-breakpoint-down(md) {
   .homepage-title {
-    font-size: 4vw;
-    text-align: center;
+    font-size: $h2-font-size;
   }
 }
 

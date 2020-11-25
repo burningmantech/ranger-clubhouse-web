@@ -1,4 +1,4 @@
-<h2 class="homepage-title">Clubhouse Onboarding Checklist</h2>
+<div class="homepage-title">Clubhouse Onboarding Checklist</div>
 <p>
   {{#if (eq @person.status "bonked")}}
     Hello {{@person.callsign}}.
@@ -50,6 +50,6 @@
       {{/each}}
     </DashboardGroup>
   {{/each}}
+  <DashboardLinks @isPNV={{true}} />
 </div>
 
-<DashboardLinks @isPNV={{true}} />

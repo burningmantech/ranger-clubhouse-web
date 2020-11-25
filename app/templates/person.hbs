@@ -65,7 +65,7 @@
 
 <main>
   <div class="person-manage-header">
-    <h2 class="homepage-title col-sm-12 col-lg-auto">
+    <div class="homepage-title col-sm-12 col-lg-auto">
       <PersonLink @person={{this.person}} />
       <span class="d-inline-block">
         &lt;{{this.person.status}}{{if this.person.vintage "/vintage"}}
@@ -74,7 +74,7 @@
       {{#if this.person.callsign_pronounce}}
         <br><i>"{{this.person.callsign_pronounce}}"</i>
       {{/if}}
-    </h2>
+    </div>
     <div class="col-sm-12 col-lg-auto ml-lg-auto">
       <LinkTo @route="hq.index" @model={{this.person.id}}>Switch to HQ Window</LinkTo>
     </div>
