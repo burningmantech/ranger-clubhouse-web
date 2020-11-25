@@ -106,7 +106,10 @@ export const UPLOAD_PHOTO = {
       case 'approved':
         return {result: isPNV ? COMPLETED : SKIP, isPhotoStep: (photo.photo_status === 'approved')};
       default:
-        return { result: NOT_AVAILABLE, message: `Sorry, the server return the status [${photo.photo_status}]. I don't know what that is. This is a bug. `}
+        return {
+          result: NOT_AVAILABLE,
+          message: `Sorry, the server return the status [${photo.photo_status}]. I don't know what that is. This is a bug. `
+        }
     }
   }
 };
@@ -129,7 +132,8 @@ export const PHOTO_APPROVAL = {
             result: NOT_AVAILABLE, message: 'A photo must be uploaded.'
           }
         }
-        // fall-thru
+        // Photo upload step will handle a missing photo for active Rangers.
+        return {result: SKIP};
       default:
         return {result: SKIP};
     }
@@ -406,12 +410,14 @@ export const SIGN_UP_FOR_SHIFTS = {
     const {shift_signups} = milestones;
 
     if (shift_signups.slot_count) {
-      const totalHours = shift_signups.total_duration ? (+shift_signups.total_duration / 3600.0).toFixed(2) : '0.00';
-      // const countedHours = shift_signups.counted_duration ? (+shift_signups.counted_duration / 3600.0).toFixed(2) : '0.00';
-      /* let notedHours = '';
-       if (shift_signups.total_duration !== shift_signups.counted_duration){
+      /*
+        const totalHours = shift_signups.total_duration ? (+shift_signups.total_duration / 3600.0).toFixed(2) : '0.00';
+        const countedHours = shift_signups.counted_duration ? (+shift_signups.counted_duration / 3600.0).toFixed(2) : '0.00';
+        let notedHours = '';
+        if (shift_signups.total_duration !== shift_signups.counted_duration) {
          notedHours = ` (${totalHours} total hours)`
-       }*/
+        }
+      */
       return {
         result: COMPLETED,
         sticky: true, // keep sorted close to the top
