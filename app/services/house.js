@@ -201,7 +201,7 @@ export default class HouseService extends Service {
     }
 
     this.toast.error('You are not authorized for that action');
-    this.router.transitionTo('me.overview');
+    this.router.transitionTo('me.homepage');
     return false;
   }
 

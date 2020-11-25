@@ -5,6 +5,14 @@ import {action} from '@ember/object';
 export default class PopoverComponent extends Component {
   @tracked isShowing = false;
 
+  constructor() {
+    super(...arguments);
+
+    const {placement} = this.args;
+
+    this.placement = (placement ? `popover-${placement}` : '');
+  }
+
   @action
   showAction(element) {
     element.preventDefault();
@@ -25,7 +33,7 @@ export default class PopoverComponent extends Component {
 
   @action
   _keyEvent(event) {
-    if (event.key != 'Escape') {
+    if (event.key !== 'Escape') {
       return;
     }
 

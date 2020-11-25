@@ -8,7 +8,7 @@ import ENV from 'clubhouse/config/environment';
 import {config} from 'clubhouse/utils/config';
 import { tracked } from '@glimmer/tracking';
 
-const MOBILE_MAX_WIDTH = 719;
+const MOBILE_MAX_WIDTH = 834;
 const RESIZE_DEBOUNCE_DELY = 250;
 
 export default class extends SessionService {

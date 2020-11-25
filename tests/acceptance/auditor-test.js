@@ -85,13 +85,13 @@ module('Acceptance | auditor', function (hooks) {
 
   test('Auditor should not be able to visit the Emergency Contact page', async function (assert) {
     await visit('/me/emergency-contact');
-    // should bounce back to overview.
+    // should bounce back to homepage.
     assert.equal(currentURL(), '/me');
   });
 
   test('Auditor should not be able to visit the Tickets & Stuff page', async function (assert) {
     await visit('/me/tickets');
-    // should bounce back to overview.
+    // should bounce back to homepage.
     assert.equal(currentURL(), '/me');
   });
 

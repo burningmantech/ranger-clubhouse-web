@@ -14,11 +14,11 @@
 
 <main>
   <div class="person-manage-header">
-    <h2 class="homepage-title col-sm-12 col-lg-auto">
+    <div class="homepage-title col-sm-12 col-lg-auto">
       <LinkTo @route="hq.index" @model={{this.person.id}}>{{this.person.callsign}}</LinkTo>
       &lt;{{this.person.first_name}} {{this.person.last_name}}, {{this.person.status}}&gt;
       {{#unless this.person.on_site}} <span class="text-danger">OFF SITE</span>{{/unless}}
-    </h2>
+    </div>
     <div class="col-sm-12 col-lg-auto ml-lg-auto">
       <LinkTo @route="person.index" @model={{this.person.id}}>Switch to Person Manage</LinkTo>
     </div>

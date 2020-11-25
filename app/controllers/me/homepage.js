@@ -3,7 +3,7 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import fade from 'ember-animated/transitions/fade';
 
-export default class MeOverviewController extends Controller {
+export default class MeHomepageController extends Controller {
   @tracked remainingOffPageMotds = 0;
   @tracked isLoadingMotds = false;
 

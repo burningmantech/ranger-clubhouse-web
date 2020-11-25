@@ -25,7 +25,7 @@ const RANGER_INTEREST_STEP =   {
 
 const AUDITOR_STEPS = [
   DashboardStep.VERIFY_PERSONAL_INFO,
-  DashboardStep.SIGN_BEHAVIORAL_AGREEMENT,
+//  DashboardStep.SIGN_BEHAVIORAL_AGREEMENT, TODO: revisit after Council decision.
   DashboardStep.ONLINE_TRAINING,
   DashboardStep.SIGN_UP_FOR_TRAINING,
   DashboardStep.ATTEND_TRAINING,
@@ -44,12 +44,21 @@ export default class DashboardAuditorComponent extends Component {
     return this.args.milestones.period === 'after-event';
   }
 
+  /**
+   * The Auditor dashboard is similar to the PNV dashboard - all prior steps must be completed
+   * before the current step is allowed.
+   *
+   * One exception is "Interested in being a Black Rock Ranger?" step shown at the bottom and always allowed.
+   *
+   * @returns {[]}
+   */
+
   get steps() {
     const {milestones, person} = this.args;
     const steps = [];
     let prevCompleted = true;
 
-    const periodSteps = (milestones.period === 'after-event' ? OFFSEASON_STEPS : AUDITOR_STEPS);
+    const periodSteps = (this.isOffSeason ? OFFSEASON_STEPS : AUDITOR_STEPS);
 
     periodSteps.forEach((step) => {
       const check = step.check({milestones, prevCompleted, person, isAuditor: true});

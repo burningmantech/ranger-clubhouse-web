@@ -3,7 +3,7 @@
  */
 
 .dashboard-box {
-  max-width: 900px;
+  max-width: 1000px;
 }
 
 .dashboard-group {
@@ -58,32 +58,51 @@
 
 
 .dashboard-step-title {
-  margin: 0px 5px 7px 5px;
+  margin: 0 5px 7px 5px;
   vertical-align: center;
-  font-weight: 400;
+  font-weight: 600;
   color: #495057;
 }
 
 .dashboard-step-description {
+  font-weight: 400;
   color: #6c757d;
+  max-width: min(600px, 100%);
 }
 
 .dashboard-step-active {
   .dashboard-step-title {
-    font-weight: 600;
     color: #000 !important;
   }
 
   .dashboard-step-description {
-    font-weight: 400;
     color: #000 !important;
   }
 }
 
-table.dashboard-art-table {
-  // min-width: 500px;
+.dashboard-art-table {
+  margin: 10px 0 15px 0;
   background-color: #ffffff;
+ // box-shadow: 5px 5px 5px #888888;
+  //box-shadow: 0 0 5px 5px #dcdcdc;
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
 }
+
+.dashboard-art-row {
+  padding: 5px;
+  border-bottom: 1px solid #ced4da;
+}
+
+.dashboard-art-icon {
+  min-width: 20px;
+}
+
+.dashboard-art-header {
+  font-weight: 500;
+  background-color: #e9ecef;
+}
+
+
 
 
 /*
@@ -137,6 +156,27 @@ table.dashboard-art-table {
   .dashboard-button {
     width: 100%;
   }
+
+  .dashboard-art-icon {
+    display: inline-block;
+    text-align: center;
+  }
+
+  .dashboard-art-position {
+    display: inline-block;
+    width: 60%;
+  }
+
+  .dashboard-art-status {
+    display: inline-block;
+    width: 25%;
+  }
+
+  .dashboard-art-location {
+    display: inline-block;
+    width: 100%;
+    padding-left: 25px;
+  }
 }
 
 /*
@@ -157,22 +197,17 @@ table.dashboard-art-table {
     text-align: center;
   }
 
+  .dashboard-step-row {
+    margin-right: 10px;
+  }
+
   .dashboard-icon {
     width: 40px;
-    font-size: 1rem;
+    font-size: 1.4rem;
   }
 
   .dashboard-step-title {
-    font-size: 0.95rem;
-  }
-
-  .dashboard-step-active {
-    .dashboard-icon {
-      font-size: 1.4rem;
-    }
-    .dashboard-step-title {
-      font-size: 1rem;
-    }
+    font-size: 1rem;
   }
 
   .dashboard-step-description {
@@ -210,5 +245,25 @@ table.dashboard-art-table {
     .dashboard-group-bottom-arrow:after {
       border-top-color: $kakhi;
     }
+  }
+
+  .dashboard-art-row {
+    display: flex;
+    flex-direction: row;
+    max-width: 600px;
+  }
+
+
+  .dashboard-art-position {
+   min-width: 150px;
+  }
+
+  .dashboard-art-status {
+    min-width: 100px;
+  }
+
+  .dashboard-art-location {
+    min-width: 125px;
+    margin-left: 5px;
   }
 }

@@ -17,17 +17,26 @@ module('Integration | Component | dashboard-ranger', function(hooks) {
   hooks.beforeEach(function () {
     this.owner.register('service:session', sessionStub);
   });
-
   test('it renders', async function(assert) {
     const person = server.create('person', { roles: [  ]});
 
     this.sessionService = this.owner.lookup('service:session');
     this.set('sessionService.userId', person.id);
     this.set('person', person);
-    this.set('milestones', { training: { status: 'pending' }, alpha_shift: { status: 'pending' }});
+    this.set('milestones', { period: 'after-event', training: { status: 'pending' }, alpha_shift: { status: 'pending' }});
     this.set('photo', { });
-    await render(hbs`<DashboardRanger @milestones={{this.milestones}} @person={{this.person}} @photo={{this.photo}} />`);
+    this.set('motds', [])
+    this.set('noop', () => { });
+    await render(hbs`<DashboardRanger
+                    @milestones={{this.milestones}}
+                    @person={{this.person}}
+                    @photo={{this.photo}}
+                    @motds={{this.motds}}
+                    @debugUpdateAction={{this.noop}}
+                    @uploadAction={{this.noop}}
+                    @showBehaviorAgreementAction={{this.noop}}
+                    />`);
 
-    assert.dom('.mugshot').exists();
+    assert.dom('div.dashboard-box').exists();
   });
 });

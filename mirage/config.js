@@ -220,6 +220,13 @@ export default function () {
         behavioral_agreement: true,
         has_reviewed_pi: true,
         photo_upload_enabled: true,
+        art_trainings: [],
+        shift_signups: {
+          total_duration: 0,
+          counted_duration: 0,
+          credits: 0.0,
+          slot_count: 0
+        },
         surveys: {
           sessions: [],
           trainers: []

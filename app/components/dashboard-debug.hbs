@@ -116,14 +116,12 @@
       </div>
     </div>
     <div class="form-row mt-2">
-      <label class="col-form-label col-auto">Motorpool Agreement</label>
+      <label class="col-form-label col-auto">Agreements</label>
       <div class="col-auto mt-2">
-        <f.input @name="motorpool_agreement_available" @label="Available" @type="checkbox" @inline={{true}}/>
-        <f.input @name="motorpool_agreement_signed" @label="Signed" @type="checkbox" @inline={{true}}/>
-      </div>
-      <label class="col-form-label col-auto">Vehicle Requests</label>
-      <div class="col-auto mt-2">
-        <f.input @name="vehicle_requests_allowed" @label="Allowed" @type="checkbox" @inline={{true}}
+        <f.input @name="motorpool_agreement_available" @label="Motorpool Available" @type="checkbox" @inline={{true}}/>
+        <f.input @name="motorpool_agreement_signed" @label="Motorpool Signed" @type="checkbox" @inline={{true}}/>
+        <f.input @name="asset_authorized" @label="Radio Checkout Agreement" @type="checkbox" @inline={{true}}/>
+        <f.input @name="vehicle_requests_allowed" @label="Vehicle Requests Allowed" @type="checkbox" @inline={{true}}
                  @onChange={{this.updateVehicleRequests}}/>
       </div>
       <div class="col-auto">

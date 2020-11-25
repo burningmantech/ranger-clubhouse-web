@@ -1,18 +1,21 @@
 {{#if (and @includePhoto (eq @photoPosition "above"))}}
-  <PersonPhoto @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}} @containerClass="ml-2 float-lg-right" />
+  <PersonPhoto @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}}
+               @containerClass="ml-2 float-lg-right"/>
 {{/if}}
 <div class="dashboard-step-row {{if @isActive "dashboard-step-active"}}">
   <div class="dashboard-step-title">
     <div class="dashboard-icon">
       <DashboardIcon @result={{@step.result}} />
     </div>
-    {{#if (and @step.isBehavioralAgreement (not-eq @step.result "completed"))}}
-      <a href {{on "click" @showBehaviorAgreementAction}} disabled={{@isNotUser}}>{{@step.name}}</a>
-    {{else if (or @step.route @step.linkedMessage.route)}}
-      <LinkTo @route={{or @step.route @step.linkedMessage.route}} disabled={{@isNotUser}}>
-        {{@step.name}}
+    {{!
+    [[#if (and @step.isBehavioralAgreement (not-eq @step.result "completed"))]]
+  <a href [[on "click" @showBehaviorAgreementAction]]>[@step.name]</a>
+    else if (or @step.route @step.linkedMessage.route)
+      <LinkTo @route=[[or @step.route @step.linkedMessage.route]] disabled=[[@isNotUser]]>
+        [[@step.name]]
       </LinkTo>
-    {{else if (or (eq @step.result "blocked") (eq @step.result "urgent"))}}
+      }}
+    {{#if (or (eq @step.result "blocked") (eq @step.result "urgent"))}}
       <span class="text-danger">{{@step.name}}</span>
     {{else}}
       {{@step.name}}
@@ -31,21 +34,24 @@
       {{@step.linkedMessage.suffix}}
     {{/if}}
     {{#if @step.isOnlineTraining}}
-      <OnlineTrainingLaunch @text="Launch online training"
-                            @person={{@person}}
-                            @url={{@milestones.online_training_url}} />
+      <p>
+        <OnlineTrainingLaunch @text="Launch online training"
+                              @person={{@person}}
+                              @url={{@milestones.online_training_url}} />
+      </p>
     {{/if}}
     {{#if (and @step.isBehavioralAgreement (not-eq @step.result "completed"))}}
       <p>
-        <a href {{on "click" @showBehaviorAgreementAction}} disabled={{@isNotUser}}>Click here to review &amp; sign the document.</a>
+        <a href {{on "click" @showBehaviorAgreementAction}}>Click here to review &amp; sign the
+          document.</a>
       </p>
     {{/if}}
     {{#if @step.isPhotoStep}}
       {{#if @photo.upload_enabled}}
-        <a href {{on "click" @uploadAction}} disabled={{@isNotUser}}>Submit a headshot</a>
+        <a href {{on "click" @uploadAction}}>Submit a headshot</a>
         to use on a BMID.
       {{else}}
-        Unfortunately, photo upload is currently disabled.
+        Unfortunately, photo uploading is currently disabled.
       {{/if}}
     {{/if}}
 
@@ -69,8 +75,7 @@
       {{else}}
         {{#each @milestones.surveys.trainers as |slot|}}
           <p class="my-1">
-            <LinkTo @route="me.survey" @query={{hash slot_id=slot.id type="trainer"}}
-                    disabled={{@isNotUser}}>
+            <LinkTo @route="me.survey" @query={{hash slot_id=slot.id type="trainer"}} disabled={{@isNotUser}}>
               {{slot.position_title}} - {{slot.description}} {{shift-format slot.begins}}
             </LinkTo>
             {{#each slot.trainers as |trainer idx|}}
@@ -117,20 +122,23 @@
             {{/each}}
           </ul>
         {{else}}
-          <p class="text-danger">
-            No items have been claimed.
-          </p>
+          <b class="text-danger">
+            {{#if @step.isTicketingClosed}}
+              No items were claimed.
+            {{else}}
+              No items have been claimed.
+            {{/if}}
+          </b>
         {{/if}}
       </div>
 
       {{#if @step.tickets.banked}}
-        <div>
+        <div class="mt-1">
           You have banked:
           <ul>
             {{#each @step.tickets.banked as |ticket|}}
               <li>
-                A {{ticket-type-human ticket.type}} expires after the
-                {{moment-format ticket.expiry_date "YYYY"}} event.
+                A {{ticket-type-human ticket.type}} expires after the {{moment-format ticket.expiry_date "YYYY"}} event.
               </li>
             {{/each}}
           </ul>

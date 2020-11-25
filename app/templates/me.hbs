@@ -1,7 +1,7 @@
 {{! Besure to keep application.hbs in sync with the links}}
 <ChSidebar as |s|>
   <s.group @title="ME MENU">
-    <s.link @route="me.overview" @title="Home" @icon="home" @iconType="s"/>
+    <s.link @route="me.homepage" @title="Home" @icon="home" @iconType="s"/>
     {{#unless (or user.isPastProspective user.isProspectiveWaitlist)}}
       <s.link @route="me.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
       {{#if (or user.isNonRanger user.isRanger)}}

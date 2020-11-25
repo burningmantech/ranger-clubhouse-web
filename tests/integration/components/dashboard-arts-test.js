@@ -3,12 +3,12 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-module('Integration | Component | sidebar/link-text', function(hooks) {
+module('Integration | Component | dashboard-arts', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    await render(hbs`<Sidebar::LinkText @route="me.homepage" @title="heya"/>`);
-
-    assert.dom('span.menu-collapsed').exists().hasText('heya');
+    this.set('step', {  });
+    await render(hbs`<DashboardArts @step={{this.step}}/>`);
+    assert.dom('div.dashboard-art-table').exists();
   });
 });

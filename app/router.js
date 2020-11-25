@@ -11,7 +11,7 @@ Router.map(function () {
   this.route('offline');
   this.route('reset-password');
   this.route('me', function () {
-    this.route('overview', {path: '/'});
+    this.route('homepage', {path: '/'});
     this.route('alerts');
     this.route('contact');
     this.route('emergency-contact');

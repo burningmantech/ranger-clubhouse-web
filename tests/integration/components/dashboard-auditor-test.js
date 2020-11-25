@@ -23,6 +23,6 @@ module('Integration | Component | dashboard-auditor', function (hooks) {
                     @debugUpdateAction={{this.debugUpdateAction}}
                     />`);
 
-    assert.dom('#homepage-title').exists();
+    assert.dom('div.homepage-title').exists();
   });
 });

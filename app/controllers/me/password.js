@@ -23,13 +23,13 @@ export default class MePasswordController extends Controller {
     this.isSubmitting = true;
     return this.ajax.request(`person/${person.id}/password`, { method: 'PATCH', data: passwords }).then(() => {
       this.toast.success('Password has been changed.');
-      this.transitionToRoute('me.overview');
+      this.transitionToRoute('me.homepage');
     }).catch((response) => { this.house.handleErrorResponse(response) })
     .finally(() => this.isSubmitting = false);
   }
 
   @action
   cancelAction() {
-    this.transitionToRoute('me.overview');
+    this.transitionToRoute('me.homepage');
   }
 }
