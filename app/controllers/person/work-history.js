@@ -5,6 +5,10 @@ import { tracked } from '@glimmer/tracking';
 export default class PersonWorkHistoryController extends Controller {
   @tracked showPositionYearEntries = false;
   @tracked showPositionAllEntries = false;
+  @tracked showYear = false;
+
+  @tracked showEntireYear = false;
+  @tracked yearEntries = [];
 
   @action
   showPositionYearSummaryAction(positionId, year) {
@@ -29,4 +33,16 @@ export default class PersonWorkHistoryController extends Controller {
   closePositionAllEntriesAction() {
     this.showPositionAllEntries = false;
   }
+
+  @action
+  showEntireYearAction(year){
+    this.showEntireYear = year;
+    this.yearEntries = this.yearTotals[year].entries;
+  }
+
+  @action
+  closeEntireYearAction() {
+    this.showEntireYear = null;
+  }
+
 }

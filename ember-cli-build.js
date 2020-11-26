@@ -10,7 +10,7 @@ module.exports = function (defaults) {
 
     'ember-cli-uglify': {
       uglify: {
-        mangle: false
+        mangle: true
       }
     },
 
