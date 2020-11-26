@@ -62,6 +62,9 @@ export default class SearchItemBarComponent extends Component {
       this.searchForm.setProperties(searchPrefs);
     }
 
+    this.router.on('routeWillChange', () => {
+      this.showSearchOptions = false; // close up the box on route change.
+    });
    }
 
   /**
@@ -82,7 +85,7 @@ export default class SearchItemBarComponent extends Component {
    * timesheet - redirect to the person timesheet management page
    * hq - redirect to the HQ Window interface
    *
-   * @returns {[{id: search-mode, title: search label}]}
+   * @returns {[{id: string, title: string}]}
    */
 
   get modeOptions() {
@@ -108,7 +111,7 @@ export default class SearchItemBarComponent extends Component {
    * HQ Window workers were viewing a person in the wrong mode, and wanting to use options to
    * change the view instead of using the 'Switch to {HQ Window,Person}' link -- because
    * playa brain is a thing and interfaces get used in ways you never intended.
-
+   *
    * @param {string} mode
    */
 
@@ -135,7 +138,7 @@ export default class SearchItemBarComponent extends Component {
   /**
    * Transition to the selected person/asset. Clear the query and results.
    *
-   * @param item
+   * @param {string} item
    * @private
    */
 
@@ -199,7 +202,7 @@ export default class SearchItemBarComponent extends Component {
 
     this.searchType = type;
 
-    if (type == 'asset') {
+    if (type === 'asset') {
       this._searchAsset(query, resolve, reject);
     } else {
       this._searchPerson(query, resolve, reject);
@@ -212,7 +215,7 @@ export default class SearchItemBarComponent extends Component {
     query = query.replace('#', '').replace(/ /g, '');
     if (query.includes(':')) {
       [barcode, year] = query.split(':');
-      if (year.length != 4) {
+      if (year.length !== 4) {
         return resolve([]);
       }
     } else {
@@ -224,7 +227,7 @@ export default class SearchItemBarComponent extends Component {
 
     this.ajax.request('asset', {data: {barcode, year}})
       .then((results) => {
-        if (results.asset.length == 0) {
+        if (!results.asset.length) {
           return resolve([]);
         }
 

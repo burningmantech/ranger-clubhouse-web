@@ -13,6 +13,9 @@ export default class PersonWorkHistoryRoute extends Route {
     const positionsByYear = {};
     const positionsById = {};
 
+    const yearTotals = {};
+    let totalDuration = 0;
+
     timesheet = timesheet.filter((t) => t.position_id !== ALPHA && t.position_id !== DEEP_FREEZE && !t.position.title.includes('Training'));
 
     timesheet.forEach((t) => {
@@ -32,18 +35,25 @@ export default class PersonWorkHistoryRoute extends Route {
       positionById.duration += t.duration;
       positionById.entries.push(t);
 
-      const positionByYearId = (positionById.years[t.year] ||= {duration: 0, entries: []});
+      const positionByYearId = (positionById.years[t.year] ||= {id: t.position_id, duration: 0, entries: []});
       positionByYearId.entries.push(t);
       positionByYearId.duration += t.duration;
+
+      yearTotals[t.year] ||= { duration: 0, entries: []};
+      yearTotals[t.year].duration += t.duration;
+      yearTotals[t.year].entries.push(t);
+      totalDuration += t.duration;
     });
 
     let positions = _.sortBy(_.values(positionsById), 'title');
 
     controller.set('years', _.uniqBy(timesheet, 'year').map((t) => t.year));
+    controller.set('yearTotals', yearTotals);
+    controller.set('totalDuration', totalDuration);
     controller.set('positionsByYear', positionsByYear);
     controller.set('positionsById', positionsById);
     controller.set('positions', positions);
-    controller.set('hasPriorTo2010', !!timesheet.find((t) => t.year < 2010))
+    controller.set('hasInaccurateTimesheets', !!timesheet.find((t) => t.year < 2008))
 
     controller.set('person', this.modelFor('person'));
   }

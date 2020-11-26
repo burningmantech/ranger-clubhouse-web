@@ -27,7 +27,7 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
         return;
       }
 
-      if (!transition || !transition.to || transition.to.name == 'admin.action-log') {
+      if (!transition || !transition.to || transition.to.name === 'admin.action-log') {
         return;
       }
 
@@ -65,7 +65,7 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
 
   beforeModel(transition) {
     // If heading to the offline target, simply return
-    if (transition.targetName == 'offline') {
+    if (transition.targetName === 'offline') {
       return;
     }
 
