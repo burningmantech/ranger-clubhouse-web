@@ -11,6 +11,7 @@
   font-weight: 500;
   margin-bottom: 5px;
 }
+
 .notice-success {
   border-color: #28a745;
   background-color: #c3e6cb;
@@ -28,5 +29,9 @@
   .notice-header {
     color: #9c0010;
   }
+}
+
+.notice-body {
+  margin-bottom: 5px;
 }
 

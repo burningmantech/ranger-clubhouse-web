@@ -20,15 +20,11 @@
       </ChNotice>
     {{/if}}
 
-    <p>
-      The <i class="fas fa-question-circle info-icon"></i> icon on a shift description means additional information is
-      available. Click on the icon and/or text.
-    </p>
-
     <ScheduleTable @slots={{@signedUpSlots}} @person={{@person}} @isMe={{this.isMe}} @isAdmin={{this.isAdmin}} @year={{@year}}
                    @creditsEarned={{@creditsEarned}}
                    @scheduleSummary={{@scheduleSummary}} @leaveSlot={{this.leaveSlot}}
                    @showPeople={{this.showPeople}} />
+
     <div class="d-print-none">
       <h3 class="mt-2">{{if this.isCurrentYear "Available" "Past"}} {{@year}} Shifts</h3>
       {{#if this.availableSlots}}

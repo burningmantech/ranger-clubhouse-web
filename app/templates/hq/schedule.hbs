@@ -1,3 +1,11 @@
 <h3 class="d-print-none">Schedule &amp; Sign Ups</h3>
-<h1 class="d-none d-print-block">{{year}} Schedule for {{person.callsign}}</h1>
-<ScheduleManage @person={{person}} @slots={{slots}} @creditsEarned={{creditsEarned}} @scheduleSummary={{scheduleSummary}} @signedUpSlots={{signedUpSlots}} @year={{year}} @permission={{permission}} />
+<h1 class="d-none d-print-block">{{this.year}} Schedule for {{this.person.callsign}}</h1>
+<Person::ScheduleLog @year={{this.year}} @person={{this.person}} />
+
+<ScheduleManage @person={{this.person}}
+                @slots={{slots}}
+                @year={{this.year}}
+                @creditsEarned={{this.creditsEarned}}
+                @scheduleSummary={{this.scheduleSummary}}
+                @signedUpSlots={{this.signedUpSlots}}
+                @permission={{this.permission}} />
