@@ -2,6 +2,7 @@
             @subheader={{true}}
             @onChange={{action (mut this.year)}} />
 
+<Person::ScheduleLog @year={{this.year}} @person={{this.person}} />
 <ScheduleManage @person={{this.person}} @slots={{this.slots}} @signedUpSlots={{this.signedUpSlots}}
                 @scheduleSummary={{this.scheduleSummary}} @creditsEarned={{this.creditsEarned}} @year={{this.year}}
                 @permission={{this.permission}} />

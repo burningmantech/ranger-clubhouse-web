@@ -23,7 +23,7 @@ export default class extends SessionService {
   @tracked isMobileScreen = false;
 
   get userId() {
-    return (this.isAuthenticated && this.user) ? this.user.id : null;
+    return (this.isAuthenticated && this.user) ? +this.user.id : null;
   }
 
   constructor() {
