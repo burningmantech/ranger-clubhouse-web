@@ -9,7 +9,9 @@ export default class PersonWorkHistoryController extends Controller {
 
   @tracked showEntireYear = false;
   @tracked yearEntries = [];
-
+  @tracked position = [];
+  @tracked entries = [];
+  
   @action
   showPositionYearSummaryAction(positionId, year) {
     this.showPositionYearEntries = true;
