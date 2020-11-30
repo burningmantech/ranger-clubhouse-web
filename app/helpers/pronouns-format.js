@@ -1,17 +1,23 @@
 import { helper } from '@ember/component/helper';
 import { pronounLabels } from 'clubhouse/constants/pronouns';
 
-export default helper(function pronounsFormat(params/*, hash*/) {
+export default helper(function pronounsFormat(params, hash) {
   const person = params[0];
-  const { pronouns, pronouns_custom} = person;
+  const { pronouns } = person;
+
+  let value;
 
   if (pronouns === 'custom') {
-    return `(${pronouns_custom})`;
+    value = person.pronouns_custom;
+  } else if (pronouns === '') {
+    value = '';
+  } else {
+    value = pronounLabels[pronouns];
   }
 
-  if (pronouns === '') {
+  if (value === '') {
     return '';
   }
 
-  return `(${pronounLabels[pronouns]})`;
+  return hash.noParens ? value : `(${value})`;
 });
