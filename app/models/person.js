@@ -43,6 +43,10 @@ export default class PersonModel extends Model.extend(PersonMixin) {
   @attr('string') alt_phone;
 
   @attr('string') camp_location;
+
+  @attr('string') pronouns;
+  @attr('string') pronouns_custom;
+
   @attr('string') gender;
 
   @attr('string') longsleeveshirt_size_style;

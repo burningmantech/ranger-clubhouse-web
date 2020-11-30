@@ -3,11 +3,13 @@ import { action } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import PersonInfoValidations from 'clubhouse/validations/person-info';
 import { ShortSleeve, LongSleeve } from 'clubhouse/constants/shirts';
+import { pronounOptions } from 'clubhouse/constants/pronouns';
 
 export default class PersonPersonalInfoController extends Controller {
   personInfoValidations = PersonInfoValidations;
   shortSleeveOptions = ShortSleeve;
   longSleeveOptions = LongSleeve;
+  pronounOptions = pronounOptions;
 
   get canEditPersonalInfo() {
     return this.session.user.hasRole(Role.ADMIN);

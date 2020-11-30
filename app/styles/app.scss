@@ -617,14 +617,15 @@ caption {
 }
 
 .person-manage-header {
-  display:flex;
   background-color: #f4f4f4 !important;
-  margin: -10px -20px;  // Pull the header back so no gaps appear
-  margin-bottom: 15px;
+  margin: -10px -20px 15px -20px;  // Pull the header back so no gaps appear
   padding: 10px 20px;  // Realign text with body
   border-bottom: 1px solid #e0e0e0;
-  align-items: center;
+}
 
+.person-manage-header-title {
+  display: flex;
+  align-items: center;
 }
 
 .person-manage-callsign {
@@ -633,8 +634,12 @@ caption {
   font-weight: 500;
 }
 
+.person-manage-info {
+  width: 100%;
+}
+
 @include media-breakpoint-down(md) {
-  .person-manage-header {
+  .person-manage-header-title {
     flex-direction: column;
     align-items: normal;
   }

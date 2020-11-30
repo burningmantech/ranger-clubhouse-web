@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import PersonInfoValidations from 'clubhouse/validations/person-info';
+import { pronounOptions } from 'clubhouse/constants/pronouns';
 
 import {
   ShortSleeve as ShortSleeveOptions,
@@ -11,6 +12,7 @@ export default class MePersonalInfoEditController extends Controller {
   personInfoValidations = PersonInfoValidations;
   shortSleeveOptions = ShortSleeveOptions;
   longSleeveOptions = LongSleeveOptions;
+  pronounOptions = pronounOptions;
 
   @action
   onSubmit(model, isValid) {

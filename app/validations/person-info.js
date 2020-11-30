@@ -2,6 +2,7 @@ import {
   validatePresence,  validateFormat
 } from 'ember-changeset-validations/validators';
 import validateState from 'clubhouse/validators/state';
+import validatePronouns from 'clubhouse/validators/pronouns';
 
 export default {
   first_name: [
@@ -39,5 +40,9 @@ export default {
   home_phone: [
     validatePresence(true),
     validateFormat({ min: 9 })
+  ],
+
+  pronouns_custom: [
+    validatePronouns()
   ]
 };
