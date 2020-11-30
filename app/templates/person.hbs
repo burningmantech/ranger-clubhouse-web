@@ -65,21 +65,25 @@
 
 <main>
   <div class="person-manage-header">
-    <div class="person-manage-callsign">
-      <PersonLink @person={{this.person}} />
-      <span class="d-inline-block">
-        &lt;{{this.person.status}}{{if this.person.vintage "/vintage"}}
-        , {{this.person.first_name}} {{this.person.last_name}}&gt;
-      </span>
-      {{#if this.person.callsign_pronounce}}
-        <br><i>"{{this.person.callsign_pronounce}}"</i>
-      {{/if}}
-    </div>
-    <div class="person-manage-switch">
-      <LinkTo @route="hq.index" @model={{this.person.id}}>Switch to HQ Window</LinkTo>
+    <div class="person-manage-header-title">
+      <div class="person-manage-callsign">
+        <PersonLink @person={{this.person}} />
+        <span class="d-inline-block">
+          &lt;{{this.person.status}}{{if this.person.vintage "/vintage"}}
+          , {{this.person.first_name}} {{this.person.last_name}}&gt;
+        </span>
+        <br>
+        {{#if this.person.callsign_pronounce}}
+          <i>"{{this.person.callsign_pronounce}}"</i>
+        {{/if}}
+        {{pronouns-format this.person}}
+      </div>
+      <div class="person-manage-switch">
+        <LinkTo @route="hq.index" @model={{this.person.id}}>Switch to HQ Window</LinkTo>
+      </div>
     </div>
     {{#if (or this.person.isSuspended this.person.isResigned this.person.isDeceased this.person.isUberBonked this.person.isDismissed)}}
-      <div class="col-12 mb-2">
+      <div class="person-manage-info">
         <h5 class="text-danger">
           {{fa-icon "exclamation-triangle"}} The account has the status "{{this.person.status}}" and may not be logged
           into.
@@ -87,11 +91,10 @@
         For more information, contact the Personnel Manager: {{mail-to (config "PersonnelEmail")}}
       </div>
     {{else if this.person.needsBpguid}}
-      <div class="h4 col-12 text-danger">
+      <div class="h4 person-manage-info text-danger">
         Account does not have a Burner Profile ID on file. Signups and ticketing are disabled.
       </div>
     {{/if}}
-
   </div>
 
 

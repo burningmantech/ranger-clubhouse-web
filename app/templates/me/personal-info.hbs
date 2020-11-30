@@ -33,10 +33,28 @@
 
     <div class="form-row">
       <f.input @name="gender"
+               @type="text"
                @label="Gender"
                @hint="Examples: female, male, non-binary, gender fluid, etc."
                @grid="col-auto"
                @maxlength=32/>
+    </div>
+    <div class="form-row">
+      <f.input @name="pronouns"
+               @type="select"
+               @label="Pronouns"
+               @grid="col-auto"
+               @options={{this.pronounOptions}} />
+      {{#if (eq f.model.pronouns "custom")}}
+          <f.input
+                  @name="pronouns_custom"
+                  @type="text" @label="Tell us your pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
+                  @size={{30}}
+                  @maxlength={{30}}
+                  @grid="col-auto"
+          />
+      {{/if}}
+
     </div>
 
     {{#unless this.person.isAuditor}}

@@ -14,13 +14,19 @@
 
 <main>
   <div class="person-manage-header">
-    <div class="person-manage-callsign">
-      <LinkTo @route="hq.index" @model={{this.person.id}}>{{this.person.callsign}}</LinkTo>
-      &lt;{{this.person.first_name}} {{this.person.last_name}}, {{this.person.status}}&gt;
-      {{#unless this.person.on_site}} <span class="text-danger">OFF SITE</span>{{/unless}}
-    </div>
-    <div class="person-manage-switch">
-      <LinkTo @route="person.index" @model={{this.person.id}}>Switch to Person Manage</LinkTo>
+    <div class="person-manage-header-title">
+      <div class="person-manage-callsign">
+        <LinkTo @route="hq.index" @model={{this.person.id}}>{{this.person.callsign}}</LinkTo>
+        <span class="d-inline-block">
+       &lt;{{this.person.first_name}} {{this.person.last_name}}, {{this.person.status}}&gt;
+      </span>
+        {{#unless this.person.on_site}} <span class="text-danger">OFF SITE</span>{{/unless}}
+        <br>
+        {{pronouns-format this.person}}
+      </div>
+      <div class="person-manage-switch">
+        <LinkTo @route="person.index" @model={{this.person.id}}>Switch to Person Manage</LinkTo>
+      </div>
     </div>
   </div>
 
@@ -46,7 +52,8 @@
         </ChNotice>
       {{else if (and this.person.isPNV (not this.userIsMentor))}}
         <ChNotice @type="danger" @icon="exclamation" @title="Direct to the Hat Rack.">
-          {{this.person.callsign}} is an Alpha. Do not check in this person unless you are acting on the Mentors' behalf.
+          {{this.person.callsign}} is an Alpha. Do not check in this person unless you are acting on the Mentors'
+          behalf.
         </ChNotice>
       {{/if}}
 
