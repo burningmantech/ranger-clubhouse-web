@@ -72,11 +72,12 @@
           &lt;{{this.person.status}}{{if this.person.vintage "/vintage"}}
           , {{this.person.first_name}} {{this.person.last_name}}&gt;
         </span>
-        <br>
-        {{#if this.person.callsign_pronounce}}
-          <i>"{{this.person.callsign_pronounce}}"</i>
-        {{/if}}
-        {{pronouns-format this.person}}
+        <div class="person-manage-identity">
+          {{#if this.person.callsign_pronounce}}
+            <i>"{{this.person.callsign_pronounce}}"</i>
+          {{/if}}
+          {{pronouns-format this.person}}
+        </div>
       </div>
       <div class="person-manage-switch">
         <LinkTo @route="hq.index" @model={{this.person.id}}>Switch to HQ Window</LinkTo>

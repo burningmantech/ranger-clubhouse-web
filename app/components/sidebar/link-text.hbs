@@ -1,6 +1,6 @@
 {{#if @iconUrl}}
-  <img src="{{@iconUrl}}" alt="icon" class="sidebar-icon">
+  <img src={{@iconUrl}} alt="icon" class="sidebar-icon">
 {{else}}
   <span class="fa{{@iconType}} fa-{{@icon}} fa-fw mr-1"></span>
 {{/if}}
-<span class="menu-collapsed">{{@title}}{{#if @badgeText}} <span class="badge badge-pill badge-success ml-1">{{@badgeText}}</span>{{/if}}</span>
+<span class="sidebar-link-text">{{@title}}{{#if @badgeText}} <span class="badge badge-pill badge-success ml-1">{{@badgeText}}</span>{{/if}}</span>

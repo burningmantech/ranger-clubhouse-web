@@ -1,23 +1,26 @@
 {{#if this.isUrl}}
-  <a href="{{@route}}" class="sidebar-link list-group-item list-group-item-action">
-    <Sidebar::LinkText @iconUrl={{@iconUrl}} @icon={{@icon}} @iconType={{this.iconType}} @title={{@title}}
-                          @badgeText={{@badgeText}} />
+  <a href={{@route}} class="sidebar-link">
+    <Sidebar::LinkText @iconUrl={{@iconUrl}}
+                       @icon={{@icon}}
+                       @iconType={{this.iconType}}
+                       @title={{@title}}
+                       @badgeText={{@badgeText}} />
   </a>
 {{else}}
-{{! ARG.. link-to cannot accept an empty dynamic segment}}
   {{#if @routeArg}}
     <LinkTo @route={{@route}} @model={{@routeArg}} @query={{@query}}
-            class="sidebar-link list-group-item list-group-item-action"
+            class="sidebar-link"
             @activeClass="sidebar-active">
-      <Sidebar::LinkText  @iconUrl={{@iconUrl}} @icon={{@icon}} @iconType={{this.iconType}} @title={{@title}}
-                            @badgeText={{@badgeText}} />
+      <Sidebar::LinkText @iconUrl={{@iconUrl}} @icon={{@icon}} @iconType={{this.iconType}} @title={{@title}}
+                         @badgeText={{@badgeText}} />
     </LinkTo>
   {{else}}
+  {{! ARG.. link-to @model cannot deal with undefined and do the right thing}}
     <LinkTo @route={{@route}}  @query={{@query}}
-            class="sidebar-link list-group-item list-group-item-action"
+            class="sidebar-link"
             @activeClass="sidebar-active">
-      <Sidebar::LinkText  @iconUrl={{@iconUrl}} @icon={{@icon}} @iconType={{this.iconType}} @title={{@title}}
-                            @badgeText={{@badgeText}} />
+      <Sidebar::LinkText @iconUrl={{@iconUrl}} @icon={{@icon}} @iconType={{this.iconType}} @title={{@title}}
+                         @badgeText={{@badgeText}} />
     </LinkTo>
   {{/if}}
 {{/if}}

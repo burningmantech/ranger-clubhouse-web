@@ -1,8 +1,4 @@
-{{#if @title}}
-  <li class="list-group-item sidebar-separator-title sidebar-group-title d-flex align-items-center menu-collapsed">
+<div class="sidebar-group-title">
     {{uppercase @title}}
-  </li>
-{{else}}
-  <li class="list-group-item sidebar-separator menu-collapsed"></li>
-{{/if}}
+</div>
 {{yield}}
