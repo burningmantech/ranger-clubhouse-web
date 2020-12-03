@@ -201,6 +201,7 @@ dl {
   flex-direction: column;
   flex-wrap: wrap;
   align-content: stretch;
+  min-width: 230px;
 }
 
 @include media-breakpoint-up(lg) {
@@ -210,7 +211,7 @@ dl {
 }
 
 .dropdown-menu-section {
-  width: 190px;
+  min-width: 200px;
 }
 
 .dropdown-menu .navbar-text {
@@ -231,9 +232,7 @@ dl {
   padding: 15px 0;
   color: #000;
   background-color: $kakhi;
-}
 
-.footer {
   a, a:visited {
     color: #000;
     font-weight: bold;

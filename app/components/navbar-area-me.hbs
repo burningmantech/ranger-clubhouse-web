@@ -1,0 +1,58 @@
+<NavbarMenu @title="Me">
+  {{#unless (or @user.isPastProspective @user.isProspectiveWaitlist)}}
+    <NavbarMenuSection @section="Rangering">
+      <NavbarMenuItem @route="me.schedule" @item="Schedule / Sign Up"/>
+      {{#if (or @user.isAlpha @user.isRanger)}}
+        <NavbarMenuItem @route="me.timesheet-corrections.index" @item="Timesheet Corrections"/>
+        <NavbarMenuItem @route="me.timesheet" @item="Timesheets"/>
+      {{/if}}
+      {{#unless @user.isAuditor}}
+        <NavbarMenuItem @route="me.event-info" @item="Event Info"/>
+      {{/unless}}
+    </NavbarMenuSection>
+  {{/unless}}
+
+  {{#if (or @user.isRanger @user.isPNV)}}
+    <NavbarMenuSection @section="Pre-Event">
+      {{#if (or @user.isPNV)}}
+        <NavbarMenuItem @route="me.tickets" @item="Work Access Pass"/>
+      {{else}}
+        <NavbarMenuItem @route="me.tickets" @item="Tickets &amp; Stuff"/>
+      {{/if}}
+
+      {{#if (and (config "MotorpoolPolicyEnable") (or @user.isRanger @user.isAlpha))}}
+        <NavbarMenuItem @route="me.motorpool-policy" @item="Motorpool Policy"/>
+      {{/if}}
+      {{#if (and (config "RadioCheckoutAgreementEnabled") (or @user.isRanger @user.isAlpha @user.isNonRanger))}}
+        <NavbarMenuItem @route="me.radio-checkout" @item="Radio Agreement"/>
+      {{/if}}
+
+      {{#if @user.may_request_stickers}}
+        <NavbarMenuItem @route="me.vehicles" @item="Vehicle Requests"/>
+      {{/if}}
+    </NavbarMenuSection>
+  {{/if}}
+  <NavbarMenuSection @section="Communication">
+    <NavbarMenuItem @route="me.alerts" @item="Alert Preferences"/>
+    {{#if (or @user.isRanger @user.isPNV @user.isAuditor)}}
+      <NavbarMenuItem @route="me.announcements" @item="Announcements"/>
+    {{/if}}
+    {{#if @user.isRanger}}
+      <NavbarMenuItem @route="me.messages" @item="Messages"/>
+      <NavbarMenuItem @route="me.contact" @item="Contact Ranger"/>
+    {{/if}}
+    {{#if @user.teacher.have_mentored}}
+      <NavbarMenuItem @route="me.mentees" @item="My Mentees"/>
+    {{/if}}
+    {{#if @user.teacher.have_feedback}}
+      <NavbarMenuItem @route="me.trainer-feedback" @item="Trainer Feedback"/>
+    {{/if}}
+  </NavbarMenuSection>
+  <NavbarMenuSection @section="My Account">
+    <NavbarMenuItem @route="me.personal-info" @item="Personal Info"/>
+    {{#if (or @user.isPNV @user.isRanger)}}
+      <NavbarMenuItem @route="me.emergency-contact" @item="Emergency Contact"/>
+    {{/if}}
+    <NavbarMenuItem @route="me.password" @item="Change Password"/>
+  </NavbarMenuSection>
+</NavbarMenu>

@@ -1,0 +1,101 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-khaki">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+          data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+          aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    Menu
+    {{#if this.user.unread_message_count}}
+      <span class="badge badge-pill badge-success">{{fa-icon "envelope"}} {{this.user.unread_message_count}}</span>
+    {{/if}}
+  </button>
+  <LinkTo @route="me.homepage" class="navbar-brand">
+    {{#if this.session.isStaging}}
+      <span class="text-danger">Staging Server</span>
+    {{else if this.session.isTraining}}
+      <span class="text-danger">Training Server</span>
+    {{else}}
+      Clubhouse
+    {{/if}}
+  </LinkTo>
+
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    {{#if this.session.isAuthenticated}}
+    {{! Show callsign and logout button on small screens with collapsed navbar}}
+      <div class="navbar-text d-lg-none float-right">
+        <LinkTo @route="logout" class="btn btn-secondary text-white">Logout</LinkTo>
+      </div>
+      <div class="navbar-text d-lg-none h4 text-black mt-2">
+        {{this.user.callsign}}
+      </div>
+      {{#if this.user.unread_message_count}}
+        <div class="navbar-item d-lg-none h4 text-black mt-2">
+          <LinkTo @route="me.messages" class="btn btn-success btn-block text-white">
+            Read {{pluralize this.user.unread_message_count "message"}}
+          </LinkTo>
+        </div>
+      {{/if}}
+    {{/if}}
+
+    <ul class="navbar-nav mr-auto">
+      {{#if this.session.isAuthenticated}}
+        <NavbarAreaMe @user={{this.user}} />
+        {{#if this.user.teacher.is_trainer}}
+          <NavbarAreaTraining />
+         {{/if}}
+
+        {{#if this.user.teacher.is_art_trainer}}
+          <NavbarAreaArts @user={{this.user}} />
+        {{/if}}
+
+        {{#if (has-role "mentor")}}
+          <NavbarAreaMentoring />
+        {{/if}}
+
+        {{#if (has-role "vc")}}
+          <NavbarAreaVolCoords />
+        {{/if}}
+
+        {{#if (has-role "admin" "edit-slots" "megaphone")}}
+          <NavbarAreaAdmin />
+        {{/if}}
+
+        {{#if (has-role "admin" "manage")}}
+          <NavbarAreaReports />
+        {{/if}}
+        {{#if (has-role "admin" "manage")}}
+          <NavbarAreaSearch />
+        {{/if}}
+      {{else}}
+      {{! User not logged in}}
+        <NavbarAreaLogin />
+      {{/if}}
+    </ul>
+    {{#if this.session.isAuthenticated}}
+      <ul class="navbar-nav d-none d-lg-inline">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href>
+            {{#if this.user.unread_message_count}}
+              <span class="badge badge-pill badge-success">
+                  {{fa-icon "envelope"}} {{this.user.unread_message_count}}
+                </span>
+            {{/if}}
+            {{this.user.callsign}}
+            {{#if this.user.onduty_position}}
+              ({{this.user.onduty_position.title}})
+            {{/if}}
+          </a>
+
+          <div class="dropdown-menu dropdown-menu-right">
+            {{#if this.user.isRanger}}
+              <LinkTo @route="me.messages" class="dropdown-item">
+                {{pluralize this.user.unread_message_count "message"}}
+              </LinkTo>
+              <div class="dropdown-divider"></div>
+            {{/if}}
+            <NavbarMenuItem @route="logout" @item="Logout" />
+          </div>
+        </li>
+      </ul>
+    {{/if}}
+  </div>
+</nav>

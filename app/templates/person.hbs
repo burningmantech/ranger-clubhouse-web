@@ -141,33 +141,33 @@
           {{#if (has-role "admin" "vc" "intake")}}
             <div class="dropdown-header">Vol Coords</div>
             {{#if (has-role "intake")}}
-              <LinkTo @route="person.unified-flagging" class="dropdown-item">Unified Flagging</LinkTo>
+              <NavbarMenuItem @route="person.unified-flagging" @item="Unified Flagging" />
             {{/if}}
             {{#if (has-role "admin" "vc")}}
-              <LinkTo @route="person.dashboard" class="dropdown-item">Dashboard</LinkTo>
+              <NavbarMenuItem @route="person.dashboard" @item="Dashboard" />
             {{/if}}
             {{#if (has-role "admin")}}
-              <LinkTo @route="person.external-ids" class="dropdown-item">External IDs</LinkTo>
+              <NavbarMenuItem @route="person.external-ids" @item="External IDs" />
             {{/if}}
           {{/if}}
 
           {{#if  (has-role "edit-bmids" "edit-access-docs")}}
             <div class="dropdown-header">Pre-Playa</div>
             {{#if (has-role "edit-bmids")}}
-              <LinkTo @route="person.bmid" class="dropdown-item">BMID</LinkTo>
+              <NavbarMenuItem @route="person.bmid" @item="BMID" />
             {{/if}}
             {{#if (has-role "edit-access-docs")}}
-              <LinkTo @route="person.access-documents" class="dropdown-item">Access Documents</LinkTo>
+              <NavbarMenuItem @route="person.access-documents" @item="Access Documents" />
             {{/if}}
           {{/if}}
 
           {{#if (has-role "admin" "vc")}}
             <div class="dropdown-header">Logs</div>
-            <LinkTo @route="person.photos" class="dropdown-item">Photo History</LinkTo>
-            <LinkTo @route="person.status-history" class="dropdown-item">Status History</LinkTo>
+            <NavbarMenuItem @route="person.photos" @item="Photo History" />
+            <NavbarMenuItem @route="person.status-history" @item="Status History" />
             {{#if (has-role "admin")}}
-              <LinkTo @route="person.contact-log" class="dropdown-item">Contact Log</LinkTo>
-              <LinkTo @route="person.broadcast-log" class="dropdown-item">Broadcast Log</LinkTo>
+              <NavbarMenuItem @route="person.contact-log" @item="Contact Log" />
+              <NavbarMenuItem @route="person.broadcast-log" @item="Broadcast Log" />
               <LinkTo @route="admin.action-log" @query={{hash person=person.callsign}} class="dropdown-item">
                 Action Log
               </LinkTo>
