@@ -1,20 +1,18 @@
 <div id="sidebar-container"
      class="sidebar-theme-{{this.themeClass}} sidebar-expanded d-none d-lg-block d-print-none"
   {{did-insert this.sidebarInserted}}>
-  <ul class="list-group">
+  <div class="sidebar-content">
     {{yield (hash group=(component "sidebar/group" theme=@theme title=title)
                     link=(component "sidebar/link" theme=@theme
                             route=route title=title icon=icon iconType=iconType iconUrl=iconUrl badgeText=badgeText)
             )}}
-    <li class="list-group-item sidebar-separator menu-collapsed"></li>
-    <a href class="list-group-item list-group-item-action d-flex align-items-center" {{action this.sidebarToggle}}>
-      <div class="d-flex w-100 justify-content-start align-items-center">
-        <span id="collapse-icon" class="fas fa-lg mr-3"></span>
-        <span id="collapse-text" class="menu-collapsed">Collapse</span>
-      </div>
+    <div class="sidebar-separator"></div>
+    <a href class="sidebar-link" {{action this.sidebarToggle}}>
+        <span id="collapse-icon" class="fas fa-lg fa-angle-double-left"></span>
+        <span class="sidebar-link-text">Collapse</span>
     </a>
-    <div class="sidebar-ranger-logo menu-collapsed">
+    <div class="sidebar-ranger-logo">
       <img src={{root-url "assets/images/ranger-logo.png"}} alt="Ranger Icon">
     </div>
-  </ul>
+  </div>
 </div>

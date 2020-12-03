@@ -9,79 +9,12 @@
 
 #sidebar-container {
   flex: 0 1 auto;
-  position: relative;
+  flex-direction: column;
   min-height: 100vh;
   padding: 0;
-  font-size: 0.85rem;
-
-  a.list-group-item {
-    background-color: #333;
-    padding: 0.70rem;
-    border-top: 1px solid #181818;
-  }
+  font-size: 0.9rem;
+  background-color: #000000;
 }
-
-.sidebar-theme-person {
-  background-color: #00051d;
-
-  .sidebar-link {
-    background-color: #1a2c46 !important;
-  }
-
-  .sidebar-active {
-    background-color: #507da9 !important;
-  }
-
-  .sidebar-separator {
-    background-color: #000 !important;
-  }
-
-  .sidebar-group-title {
-    background-color: #00051d;
-    color: #ececec;
-  }
-}
-
-.sidebar-theme-hq {
-  background-color: #000;
-
-  .sidebar-link {
-    background-color: #524737 !important;
-  }
-
-  .sidebar-active {
-    //background-color: #a79170 !important;
-    background-color: #8f7c60 !important;
-    color: #ffffff !important;
-  }
-
-  .sidebar-separator {
-    background-color: #000 !important;
-  }
-
-  .sidebar-group-title {
-    background-color: #00051d;
-    color: #ececec;
-  }
-}
-
-.sidebar-theme-default {
-  background-color: #333;
-
-  .sidebar-link {
-    background-color: #3e4348 !important;
-  }
-
-  .sidebar-active {
-    color: #ffffff !important;
-    background-color: #425f7c !important;
-  }
-
-  .sidebar-group-title {
-    color: #ececec;
-  }
-}
-
 
 /* Sidebar sizes when expanded and expanded */
 
@@ -89,80 +22,69 @@
   width: 210px;
 }
 
-.sidebar-offset-expanded {
-  padding-left: 210px;
-}
-
-.sidebar-offset-collapsed {
-  padding-left: 60px;
-}
-
 .sidebar-collapsed {
   width: 45px;
 }
 
-/* Menu item*/
-
-#sidebar-container .list-group a {
+a.sidebar-link {
+  display: block;
+  padding: 10px;
+  border-top: 1px solid #101010;
   height: 45px;
-  color: white;
 }
-
-/* Submenu item*/
-
-#sidebar-container .list-group .sidebar-submenu a {
-  height: 45px;
-  padding-left: 30px;
-}
-
-/*
- .sidebar-submenu {
-
-  font-size: 0.9rem;
-}
-*/
-
 
 .sidebar-group-title {
   overflow: hidden;
   text-overflow: ellipsis !important;
-  color: $text-muted;
-  padding-left: 1rem;
   font-size: 0.85rem;
-}
-
-/* Separators */
-
-.sidebar-separator-title {
-  background-color: #333;
-  height: 35px;
+  padding-left: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .sidebar-separator {
-  background-color: #333;
-  height: 25px;
+  height: 20px;
 }
 
-/* Closed submenu icon */
-
-#sidebar-container .list-group .list-group-item[aria-expanded="false"] .submenu-icon::after {
-  content: " \f0d7";
-  font-family: FontAwesome;
-  display: inline;
-  text-align: right;
-  padding-left: 10px;
+.sidebar-active {
+  color: #ffc107 !important;
 }
 
-/* Opened submenu icon */
+.sidebar-theme-person {
+  .sidebar-link {
+    color: #fcfcfc;
+    background-color: #00051d;
+    border-top: 1px solid #495057;
+  }
 
-#sidebar-container .list-group .list-group-item[aria-expanded="true"] .submenu-icon::after {
-  content: " \f0da";
-  font-family: FontAwesome;
-  display: inline;
-  text-align: right;
-  padding-left: 10px;
+  .sidebar-group-title {
+    background-color: #0a3954;
+    color: #ffffff;
+  }
 }
 
+.sidebar-theme-hq {
+  .sidebar-link {
+    color: #ffffff;
+    background-color: #524737;
+  }
+
+  .sidebar-group-title {
+    color: #ffffff;
+    background-color: #3d2503;
+  }
+}
+
+.sidebar-theme-default {
+  .sidebar-link {
+    background-color: #3e4348;
+    color: #ffffff;
+  }
+
+  .sidebar-group-title {
+    color: #f0f0f0;
+  }
+}
 
 .sidebar-ranger-logo {
   text-align: center;
