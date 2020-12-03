@@ -1,0 +1,53 @@
+<NavbarMenu @title="Admin" @isLarge={{true}}>
+  <NavbarMenuSection @section="Edit Records">
+    {{#if (has-role "admin" "edit-slots")}}
+      <NavbarMenuItem @route="admin.slots" @item="Schedule Slots" />
+    {{/if}}
+    {{#if (has-role "admin")}}
+      <NavbarMenuItem @route="admin.credits" @item="Schedule Credits" />
+      <NavbarMenuItem @route="admin.assets" @item="Assets" />
+      <NavbarMenuItem @route="admin.event-dates" @item="Event Dates" />
+      <NavbarMenuItem @route="admin.positions" @item="Positions" />
+      <NavbarMenuItem @route="admin.roles" @item="(System) Roles" />
+      <NavbarMenuItem @route="admin.help" @item="Help Documents" />
+      <NavbarMenuItem @route="admin.alerts" @item="RBS Alerts" />
+      <NavbarMenuItem @route="admin.survey" @item="Surveys" />
+    {{/if}}
+    {{#if (has-role "admin" "megaphone")}}
+      <NavbarMenuItem @route="admin.documents" @item="Documents" />
+    {{/if}}
+  </NavbarMenuSection>
+  {{#if (has-role "admin")}}
+    <NavbarMenuSection @section="Site Admin">
+      <NavbarMenuItem @route="admin.settings" @item="Settings" />
+      <NavbarMenuItem @route="admin.maintenance" @item="Maintenance" />
+      <NavbarMenuItem @route="admin.clubhouse1-log" @item="Clubhouse 1 Log" />
+      <NavbarMenuItem @route="admin.error-log" @item="Error Log" />
+      <NavbarMenuItem @route="admin.action-log" @item="Action Log" />
+    </NavbarMenuSection>
+    <NavbarMenuSection @section="Pre-Event">
+      <NavbarMenuItem @route="admin.salesforce" @item="Salesforce Import" />
+      <NavbarMenuItem @route="admin.radio-eligibility" @item="Radio Eligibility" />
+      <NavbarMenuItem @route="admin.online-training.index" @item="Online Training Admin" />
+    </NavbarMenuSection>
+    <NavbarMenuSection @section="Bulk Operations">
+      <NavbarMenuItem @route="admin.bulk-upload" @item="Bulk Upload" />
+      <NavbarMenuItem @route="admin.bulk-sign-in-out" @item="Bulk Sign In/Out" />
+      <NavbarMenuItem @route="admin.bulk-signout" @item="Bulk Signout" />
+    </NavbarMenuSection>
+  {{/if}}
+  {{#if (has-role "admin")}}
+    <NavbarMenuSection @section="Post-Event">
+      <NavbarMenuItem @route="admin.thank-you-cards" @item="Thank-You Cards" />
+      <NavbarMenuItem @route="admin.timesheet-sanity-checker" @item="Timesheet Sanity Checker" />
+      <NavbarMenuItem @route="admin.hours-credits" @item="Hours/Credits" />
+      <NavbarMenuItem @route="admin.people-by-status-change" @item="People By Status Change" />
+    </NavbarMenuSection>
+  {{/if}}
+  {{#if (has-role "admin" "megaphone")}}
+    <NavbarMenuSection @section="Communications">
+      <NavbarMenuItem @route="admin.motd" @item="Announcements" />
+      <NavbarMenuItem @route="admin.rbs" @item="Ranger Broadcast" />
+    </NavbarMenuSection>
+  {{/if}}
+</NavbarMenu>

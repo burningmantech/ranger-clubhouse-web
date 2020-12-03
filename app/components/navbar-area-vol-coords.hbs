@@ -1,0 +1,15 @@
+<NavbarMenu @title="Vol Coord">
+  <NavbarMenuItem @route="vc.handle-checker" @item="Check Callsigns" />
+  <NavbarMenuItem @route="vc.photo-review" @item="Photo Review" />
+  <NavbarMenuItem @route="vc.photos" @item="Photos" />
+  <NavbarMenuItem @route="vc.spigot" @item="Spigot Flow" />
+  {{#if (has-role "edit-access-docs")}}
+    <NavbarMenuItem @route="vc.access-documents" @item="Manage Access Docs" />
+  {{/if}}
+  {{#if (has-role "edit-bmids")}}
+    <NavbarMenuItem @route="vc.bmid" @item="Manage BMIDs" />
+  {{/if}}
+  {{#if (has-role "intake")}}
+    <NavbarMenuItem @route="vc.unified-flagging" @item="Unified Flagging" />
+  {{/if}}
+</NavbarMenu>
