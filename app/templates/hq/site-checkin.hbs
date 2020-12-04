@@ -1,28 +1,3 @@
-{{#unless this.isPersonDirtTrained}}
-  <ChNotice @title="{{this.person.callsign}} may not be eligible for check in" @type="danger" @icon="exclamation">
-    <p>
-      <b>
-      {{#if (eq this.dirtTraining.status "pending")}}
-        Person is signed up training for {{shift-format this.dirtTraining.date}}
-        at {{this.dirtTraining.location}}. Training HAS NOT HAPPENED YET.
-      {{else if (eq dirtTraining.status "fail")}}
-        Training was not passed on {{mdy-format dirtTraining.date full=true}}
-        at {{dirtTraining.location}}.
-      {{else if (eq dirtTraining.status "no-shift")}}
-        No training sign up was found.
-      {{else}}
-        Uh oh, I did not understand the status [{{dirtTraining.status}}]. This is a bug. Please report this to the tech
-        team.
-      {{/if}}
-      </b>
-    </p>
-    <p>
-      Consult with the HQ Lead or Supervisor to see if this is an error.
-    </p>
-    Normally a person has to have attend &amp; passed training before they are issued their BMID, be allowed to check out radios,
-    and work a shift.
-  </ChNotice>
-{{/unless}}
 {{#if this.isOnSite}}
   <p>
     <strong class="text-success">{{this.person.callsign}} is marked as ON SITE.</strong>
@@ -32,12 +7,18 @@
 <ul>
   <li>Verify the camp name, location, and the emergency contacts</li>
   <li>Check to see if the person has signed the Radio Authorization form and Motorpool Policy Agreement.</li>
-  <li>{{#if this.eventInfo.radio_eligible}}
-    Check out an Event Radio if person would like one now{{else}}Person is only authorized for shift radios.{{/if}}</li>
+  <li>
+    {{#if this.eventInfo.radio_eligible}}
+      Check out an Event Radio if person would like one now.
+    {{else}}
+      Person is only authorized for shift radios.
+    {{/if}}
+  </li>
   <li>After you hand the person their Ranger laminate and field guide, mark the person as on site.</li>
 </ul>
 
-<h4>Update Contact Information
+<h4>
+  Update Contact Information
   <HelpPopover @slug="hq-site-checkin-contact-info"/>
 </h4>
 
@@ -69,24 +50,30 @@
   <HelpPopover @slug="hq-site-checkin-agreements"/>
 </h4>
 
-<p>
 {{#if this.personEvent.asset_authorized}}
-    Radio checkout form has been <strong class="text-success">SIGNED</strong>.
+  <p class="text-success">
+    {{fa-icon "check"}} Radio checkout form has been SIGNED.
+  </p>
 {{else}}
   <h4 class="text-danger">Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE RADIOS.</h4>
-   Direct {{this.person.callsign}} to a kiosk and have them agree to the Radio Checkout Agreement. Only after the
+  <p>
+    Direct {{this.person.callsign}} to a kiosk and have them agree to the Radio Checkout Agreement. Only after the
     agreement is signed may they be given a radio.
+  </p>
 {{/if}}
-</p>
-<p>
-  {{#if this.personEvent.signed_motorpool_agreement}}
-   {{fa-icon "check" color="success"}} The Motorpool Policy has been signed.
-  {{else}}
-    <h4 class="text-danger">Motorpool Agreement NOT SIGNED - Not authorized to drive Ranger gators, UTVs, or golf carts.</h4>
-    If {{this.person.callsign}} is comfortable driving Ranger gators, UTVs, or golf carts while on duty, direct the person to a
-      kiosk and have them agree to the Motorpool Policy.
-  {{/if}}
-</p>
+{{#if this.personEvent.signed_motorpool_agreement}}
+  <p class="text-success">
+    {{fa-icon "check"}} The Motorpool Policy has been signed.
+  </p>
+{{else}}
+  <h4 class="text-danger">
+    Motorpool Agreement NOT SIGNED - Not authorized to drive Ranger gators, UTVs, or golf carts.
+  </h4>
+  <p>
+    If {{this.person.callsign}} is comfortable driving Ranger gators, UTVs, or golf carts while on duty, direct the
+    person to a kiosk and have them agree to the Motorpool Policy.
+  </p>
+{{/if}}
 
 <hr class="my-3">
 
