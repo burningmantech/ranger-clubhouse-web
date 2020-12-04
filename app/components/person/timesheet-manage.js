@@ -16,6 +16,8 @@ export default class PersonTimesheetManageComponent extends Component {
   @tracked editEntry = null;
   @tracked editVerification = false;
 
+  @tracked positionOptions = [];
+
   reviewOptions = [
     ['Correction approved', 'approved'],
     ['Correction rejected', 'rejected'],
@@ -33,8 +35,6 @@ export default class PersonTimesheetManageComponent extends Component {
     super(...arguments);
     const user = this.session.user;
 
-    // The positions the person can be part of
-    this.positionOptions = this.args.positions.map((p) => [p.title, p.id]);
     // Can the user manage this person's timesheet entries?
     this.canManageTimesheets = user.hasRole(Role.TIMESHEET_MANAGEMENT) || (user.hasRole(Role.ADMIN) && user.hasRole(Role.MANAGE));
     // Can the user mark an entry as verified?
@@ -48,6 +48,15 @@ export default class PersonTimesheetManageComponent extends Component {
 
   @action
   editEntryAction(timesheet) {
+    const {positions} = this.args;
+    // The positions the person can be part of
+    this.positionOptions = positions.map((p) => [p.title, p.id]);
+    if (!positions.find((p) => p.id === timesheet.position_id)) {
+      // Might be something like a mentee shift and the person no longer has the position grant, yet
+      // still need to include the option because the person did work/walk.
+      this.positionOptions.unshift([timesheet.position.title, timesheet.position_id]);
+    }
+
     timesheet.reload().then(() => {
       this.editVerification = false;
       this.editEntry = timesheet;
