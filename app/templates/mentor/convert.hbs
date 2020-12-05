@@ -3,6 +3,15 @@
   Use this page to convert Alphas - who have been marked as mentor pass, bonked, or self-bonked - to active Rangers or
   to the bonked status.
 </p>
+
+{{#if this.isSubmitting}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      Please wait, converting Alphas . . .
+    </Modal.body>
+  </ModalDialog>
+{{/if}}
+
 <table class="table table-sm table-hover mb-4">
   <caption>{{pluralize this.passed.length "Shiny Penny candidate"}}</caption>
   <thead>

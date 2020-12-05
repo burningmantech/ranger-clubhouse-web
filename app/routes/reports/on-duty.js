@@ -13,7 +13,7 @@ export default class ReportsOnDutyRoute extends Route {
     if (duty_date) {
       data.duty_date = duty_date;
     } else {
-      data.on_duty = 1;
+      data.is_on_duty = 1;
     }
 
     this.duty_date = duty_date;

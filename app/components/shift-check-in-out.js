@@ -77,7 +77,7 @@ export default class ShiftCheckInOutComponent extends Component {
     this.signinPositions = signins;
 
     // Set the position options to the first item
-    this.signinPositionId = this.signinPositions.firstObject.id;
+    this.signinPositionId = this.signinPositions.length ? this.signinPositions.firstObject.id : null;
 
     // Has the person gone through dirt training?
     if (this.args.person.status === 'non ranger') {
