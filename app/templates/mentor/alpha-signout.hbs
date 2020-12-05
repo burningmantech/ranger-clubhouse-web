@@ -1,0 +1,109 @@
+<h1>Alpha Mass Sign Out</h1>
+<p>
+  Preform a mass sign out of selected Alphas on their Alpha shift. An Alpha will be selected if they started the shift
+  one hour before til one after the chosen shift time.
+</p>
+
+{{#if this.slots}}
+  <div class="form-row mb-2">
+    <div class="col-auto">
+      <label class="col-form-label">Select shift:</label>
+    </div>
+    <div class="col-auto">
+      <ChForm::Select @name="slot"
+                      @value={{this.selectedSlot}}
+                      @options={{this.slotOptions}}
+                      @onChange={{this.changeSlot}}
+                      @controlClass="form-control"/>
+    </div>
+  </div>
+{{else}}
+  <p>
+    <b class="text-danger">No Alpha {{this.year}} shifts were found.</b>
+  </p>
+{{/if}}
+
+{{#if this.isLoading}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      Loading Alphas on shift . . .
+    </Modal.body>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.alphaSignout}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      Signing off Alpha {{this.alphaSignout.callsign}} ({{this.alphaSignoutIndex}} of {{this.alphaSignoutCount}}). . .
+    </Modal.body>
+  </ModalDialog>
+{{/if}}
+{{#if this.shiftDate}}
+  {{pluralize this.alphas.length "Alpha"}} found for
+  {{#if (eq this.shiftDate "all")}}
+    all {{this.year}} shifts.
+  {{else}}
+    {{shift-format this.shiftDate}}.
+  {{/if}}
+  <table class="table table-striped table-hover table-width-auto">
+    <thead>
+    <tr>
+      <th>
+        <Input @type="checkbox" @checked={{this.selectAll}}
+               @change={{action this.toggleAll value="target.checked"}} />
+      </th>
+      <th>Callsign</th>
+      <th>Status</th>
+      <th>On Duty</th>
+      <th>Off Duty</th>
+      <th>Duration</th>
+      <th>Error?</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.alphas as |alpha|}}
+      <tr class={{if alpha.error "bg-highlight"}}>
+        <td>
+          {{#if alpha.off_duty}}
+            {{fa-icon "check" color="success"}}
+          {{else}}
+            <Input @type="checkbox" @checked={{alpha.selected}} />
+          {{/if}}
+        </td>
+        <td>{{person-link person=alpha}}</td>
+        <td>{{alpha.status}}</td>
+        <td>{{shift-format alpha.on_duty}}</td>
+        <td>
+          {{#if alpha.off_duty}}
+            {{shift-format alpha.off_duty}}
+          {{else}}
+            -
+          {{/if}}
+        </td>
+        <td class="text-right">
+          {{hour-minute-format alpha.duration}}
+        </td>
+        <td>
+          {{alpha.error}}
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="7">
+          <b class="text-success">
+            Congratulations, no on shift Alpha were found for the
+            {{#if (eq this.shiftDate "all")}}
+              year!
+            {{else}}
+              {{shift-format this.shiftDate}} shift.
+            {{/if}}
+          </b>
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+  <button type="button" class="btn btn-primary" {{action this.signoutAction}}>
+    Sign out selected Alphas
+  </button>
+{{/if}}

@@ -1,22 +1,29 @@
 <h2>Dashboard for {{this.person.callsign}}</h2>
-{{#if (or this.person.isProspective this.person.isAlpha this.person.isBonked)}}
+{{#if this.person.isPastProspective}}
+  <DashboardPastProspective/>
+{{else if this.person.isProspectiveWaitlist}}
+  <DashboardProspectiveWaitlist/>
+{{else if (or this.person.isProspective this.person.isAlpha this.person.isBonked)}}
   <DashboardPnv @milestones={{this.milestones}}
                 @person={{this.person}}
                 @photo={{this.photo}}
                 @uploadAction={{this.noButtonAction}}
                 @showBehaviorAgreementAction={{this.noButtonAction}}
+                @debugUpdateAction={{this.noButtonAction}}
   />
 {{else if this.person.isAuditor}}
   <DashboardAuditor @milestones={{this.milestones}}
                     @person={{this.person}}
                     @showBehaviorAgreementAction={{this.noButtonAction}}
+                    @debugUpdateAction={{this.noButtonAction}}
   />
 {{else}}
   <DashboardRanger @milestones={{this.milestones}}
                    @person={{this.person}}
                    @photo={{this.photo}}
-                   @uploadAction={{this.noUploadAction}}
+                   @uploadAction={{this.noButtonAction}}
                    @showBehaviorAgreementAction={{this.noButtonAction}}
+                   @debugUpdateAction={{this.noButtonAction}}
   />
 {{/if}}
 

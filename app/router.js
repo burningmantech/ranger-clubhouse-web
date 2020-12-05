@@ -114,6 +114,7 @@ Router.map(function () {
     this.route('post-season-summary');
     this.route('potentials');
     this.route('schedule');
+    this.route('alpha-signout');
   });
 
 

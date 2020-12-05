@@ -9,7 +9,7 @@ module('Integration | Component | sidebar/link', function(hooks) {
   test('it renders', async function(assert) {
     await render(hbs`<Sidebar::Link @route="me.homepage" @title="Back to home"/>`);
 
-    assert.dom('a').exists();
-    assert.dom('a span.menu-collapsed').exists().hasText(/Back to home/);
+    assert.dom('a.sidebar-link').exists();
+    assert.dom('a span.sidebar-link-text').exists().hasText(/Back to home/);
   });
 });

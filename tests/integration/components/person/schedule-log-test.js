@@ -10,6 +10,6 @@ module('Integration | Component | person/schedule-log', function(hooks) {
     this.set('person', { id: 1, callsign: 'hubcap'});
     await render(hbs`<Person::ScheduleLog @year={{2019}} @person={{this.person}} />`);
 
-    assert.dom('a').exists().hasText('View Scheduling Log');
+    assert.dom('a').exists().hasText('View 2019 Scheduling Log');
   });
 });

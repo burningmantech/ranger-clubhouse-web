@@ -1,6 +1,6 @@
 <p>
   {{#if (gte @year 2019)}}
-    <a href {{action this.showLogAction}}>View Scheduling Log</a>
+    <a href {{action this.showLogAction}}>View {{@year}} Scheduling Log</a>
     {{#if this.isLoading}}
       <LoadingIndicator/>
     {{/if}}
@@ -12,12 +12,12 @@
 {{#if this.showLog}}
   <ModalDialog @title="{{this.args.year}} Scheduling Log for {{this.args.person.callsign}}" @size="xl" as |Modal|>
     <Modal.body>
-
+      {{fa-icon "times" color="danger"}} = Person is no longer signed up for the shift.
       <table class="table table-sm table-width-auto table-striped table-hover">
         <thead>
         <tr>
           <th>&nbsp;</th>
-          <th>Start Time</th>
+          <th>Start</th>
           <th>Position</th>
           <th>Description</th>
           <th>Added</th>
@@ -30,7 +30,7 @@
         {{#each this.logs as |entry|}}
           <tr>
             <td>
-              {{#if entry.removed_at}}
+              {{#if entry.no_signup}}
                 {{fa-icon "times" color="danger"}}
               {{else}}
                 &nbsp;
@@ -41,38 +41,49 @@
             </td>
             <td>{{entry.position_title}}</td>
             <td>{{entry.slot_description}}</td>
-            {{#if entry.added_at}}
-              <td>{{shift-format entry.added_at}}</td>
-              <td>
-                {{#if (eq this.personId entry.person_added.id)}}
+            <td>
+              {{#each entry.added as |event|}}
+                {{shift-format event.date}}<br>
+              {{else}}
+                -
+              {{/each}}
+            </td>
+            <td>
+              {{#each entry.added as |event|}}
+                {{#if (eq this.personId event.person.id)}}
                   <i>self</i>
                 {{else}}
-                  <PersonLink @person={{entry.person_added}} />
+                  <PersonLink @person={{event.person}} />
                 {{/if}}
-              </td>
-            {{else}}
-              <td>-</td>
-              <td>-</td>
-            {{/if}}
-            {{#if entry.removed_at}}
-              <td>{{shift-format entry.removed_at}}</td>
-              <td>
-                {{#if (eq this.personId entry.person_removed.id)}}
+                <br>
+              {{else}}
+                -
+              {{/each}}
+            </td>
+            <td>
+              {{#each entry.removed as |event|}}
+                {{shift-format event.date}}<br>
+              {{else}}
+                -
+              {{/each}}
+            </td>
+            <td>
+              {{#each entry.removed as |event|}}
+                {{#if (eq this.personId event.person.id)}}
                   <i>self</i>
                 {{else}}
-                  <PersonLink @person={{entry.person_removed}} />
-                {{/if}}
-              </td>
-            {{else}}
-              <td>-</td>
-              <td>-</td>
-            {{/if}}
+                  <PersonLink @person={{event.person}} />
+                {{/if}}<br>
+              {{else}}
+                -
+              {{/each}}
+            </td>
           </tr>
         {{else}}
-        <tr>
-          <td>&nbsp;</td>
-          <td colspan="7"><b class="text-danger">No {{@year}} scheduling logs found for {{@person.callsign}}</b></td>
-        </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td colspan="7"><b class="text-danger">No {{@year}} scheduling logs found for {{@person.callsign}}</b></td>
+          </tr>
         {{/each}}
         </tbody>
       </table>
