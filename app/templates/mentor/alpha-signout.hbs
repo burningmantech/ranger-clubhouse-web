@@ -53,7 +53,6 @@
                @change={{action this.toggleAll value="target.checked"}} />
       </th>
       <th>Callsign</th>
-      <th>Status</th>
       <th>On Duty</th>
       <th>Off Duty</th>
       <th>Duration</th>
@@ -64,14 +63,15 @@
     {{#each this.alphas as |alpha|}}
       <tr class={{if alpha.error "bg-highlight"}}>
         <td>
-          {{#if alpha.off_duty}}
+          {{#if alpha.error}}
+            {{fa-icon "times" color="danger"}}
+          {{else if alpha.off_duty}}
             {{fa-icon "check" color="success"}}
           {{else}}
             <Input @type="checkbox" @checked={{alpha.selected}} />
           {{/if}}
         </td>
         <td>{{person-link person=alpha}}</td>
-        <td>{{alpha.status}}</td>
         <td>{{shift-format alpha.on_duty}}</td>
         <td>
           {{#if alpha.off_duty}}
