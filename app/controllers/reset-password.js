@@ -5,6 +5,7 @@ import { tracked } from '@glimmer/tracking';
 
 export default class ResetPasswordController extends Controller {
   @tracked isSubmitting = false;
+  @tracked resetTokenError = null;
 
   resetPasswordValidations = ResetPasswordValidations;
 
@@ -17,6 +18,7 @@ export default class ResetPasswordController extends Controller {
 
     let identification = model.identification;
 
+    this.resetTokenError = null;
     this.isSubmitting = true;
     return this.ajax.request('/auth/reset-password', {
       method: 'POST',
