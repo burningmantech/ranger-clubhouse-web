@@ -1,8 +1,7 @@
 import Route from '@ember/routing/route';
 import RSVP from 'rsvp';
-import MeRouteMixin from 'clubhouse/mixins/route/me';
 
-export default class MeTicketsRoute extends Route.extend(MeRouteMixin) {
+export default class MeTicketsRoute extends Route {
   beforeModel() {
     const user = this.session.user;
     if (user.isAuditor || user.isPastProspective || user.isProspectiveWaitlist) {
@@ -21,7 +20,6 @@ export default class MeTicketsRoute extends Route.extend(MeRouteMixin) {
   }
 
   setupController(controller, model) {
-    super.setupController(...arguments);
     controller.setProperties(model);
   }
 }

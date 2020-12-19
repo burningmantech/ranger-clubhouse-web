@@ -1,14 +1,11 @@
 import Route from '@ember/routing/route';
-import MeRouteMixin from 'clubhouse/mixins/route/me';
 
-export default class MeMenteesRoute extends Route.extend(MeRouteMixin) {
+export default class MeMenteesRoute extends Route {
   model() {
     return this.ajax.request(`person/${this.session.userId}/mentees`).then((result) => result.mentees);
   }
 
   setupController(controller, model) {
-    super.setupController(...arguments);
-
     const menteeList = model;
     controller.set('menteeList', menteeList);
 
@@ -19,7 +16,7 @@ export default class MeMenteesRoute extends Route.extend(MeRouteMixin) {
 
     menteeList.forEach((year) => {
       year.mentees.forEach((mentee) => {
-        if (mentee.mentor_status == 'pass') {
+        if (mentee.mentor_status === 'pass') {
           totalPassed += 1;
         } else {
           totalBonked += 1;

@@ -2,8 +2,11 @@ import Component from '@glimmer/component';
 import {action, computed} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {schedule} from '@ember/runloop';
+import { inject as service } from '@ember/service';
 
 export default class AutocompleteInputComponent extends Component {
+  @service house;
+
   /**
    * Is a search running?
    * @type {boolean}
@@ -129,7 +132,7 @@ export default class AutocompleteInputComponent extends Component {
     const oldSelection = this.selectionIdx;
     switch (key) {
       case 'ArrowUp':
-        if (this.selectionIdx == -1) {
+        if (this.selectionIdx === -1) {
           // No selection yet.
           this.selectionIdx = 0;
         } else if (this.selectionIdx >= 1) {
@@ -152,9 +155,9 @@ export default class AutocompleteInputComponent extends Component {
         if (this.isSearching) {
           this.enterPressed = true;
         } else if (this.options) {
-          if (this.options.length == 1) {
+          if (this.options.length === 1) {
             this._selectOption(this.options[0]);
-          } else if (this.selectionIdx != -1) {
+          } else if (this.selectionIdx !== -1) {
             this._selectOption(this.options[this.selectionIdx]);
           }
         }

@@ -1,7 +1,7 @@
 /* eslint-env node */
 'use strict';
 
-module.exports = function(environment) {
+module.exports = function (environment) {
   let ENV = {
     modulePrefix: 'clubhouse',
     environment,
@@ -19,27 +19,26 @@ module.exports = function(environment) {
     },
 
     APP: {
-      buildTimestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles', hour12: false, dateStyle: 'long', timeStyle: 'long' }),
+      buildTimestamp: new Date().toISOString()
     },
 
     'ember-simple-auth': {
       authorizer: 'authorizer:token',
-      routeAfterAuthentication: '/'
+      routeAfterAuthentication: 'me.homepage',
     },
 
     'ember-simple-auth-token': {
       // NOTE: setting refreshAccessTokens true will hang the tests since
       // there is an outstanding timeout
-      refreshAccessTokens      : false,
-      identificationField      : 'identification',
-      passwordField            : 'password',
-      tokenPropertyName        : 'token',
-      refreshTokenPropertyName : 'token',
-    //  tokenExpireName          : 'expires_in',
+      refreshAccessTokens: false,
+      identificationField: 'identification',
+      passwordField: 'password',
+      tokenPropertyName: 'token',
+      refreshTokenPropertyName: 'token',
 
-      authorizationPrefix      : 'JWT ',
-      authorizationHeaderName  : 'Authorization',
-      headers                  : {}
+      authorizationPrefix: 'JWT ',
+      authorizationHeaderName: 'Authorization',
+      headers: {},
     },
 
     showAjaxErrors: true,
@@ -81,8 +80,8 @@ module.exports = function(environment) {
 
     ENV['api-server'] = 'http://localhost:8000';
 
-    ENV['ember-simple-auth-token'].serverTokenEndpoint = ENV['api-server']+'/auth/login';
-    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = ENV['api-server']+'/auth/refresh';
+    ENV['ember-simple-auth-token'].serverTokenEndpoint = ENV['api-server'] + '/auth/login';
+    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = ENV['api-server'] + '/auth/refresh';
 
     ENV['ember-cli-mirage'] = {
       enabled: false,
@@ -90,7 +89,7 @@ module.exports = function(environment) {
 
     };
 
-    ENV.newVersion = { enabled: false };
+    ENV.newVersion = {enabled: false};
   }
 
   if (environment === 'test') {
@@ -101,12 +100,12 @@ module.exports = function(environment) {
      * The ember-simple-auth-token addon will fire up a timer when the JWT has an expiration property.
      * Tests will not 'settle' because of the outstanding timer. Prevent the timer from being created.
      */
-     ENV['ember-simple-auth-token'] = {
-       refreshAccessTokens: false,
-       tokenExpirationInvalidateSession: false,
-       serverTokenEndpoint: 'http://localhost:8000/api/auth/login',
-       serverTokenRefreshEndpoint: 'http://localhost:8000/api/auth/refresh'
-     };
+    ENV['ember-simple-auth-token'] = {
+      refreshAccessTokens: false,
+      tokenExpirationInvalidateSession: false,
+      serverTokenEndpoint: 'http://localhost:8000/api/auth/login',
+      serverTokenRefreshEndpoint: 'http://localhost:8000/api/auth/refresh'
+    };
 
     // Mirage will intercept the request and handle it.
     ENV['api-server'] = 'http://localhost:8000/api'
@@ -136,8 +135,8 @@ module.exports = function(environment) {
     ENV.logRoutes = true;
 
     ENV['api-server'] = (process.env.RANGER_CLUBHOUSE_API_URL || '/api');
-    ENV['ember-simple-auth-token'].serverTokenEndpoint = ENV['api-server']+'/auth/login';
-    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = ENV['api-server']+'/auth/refresh';
+    ENV['ember-simple-auth-token'].serverTokenEndpoint = ENV['api-server'] + '/auth/login';
+    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = ENV['api-server'] + '/auth/refresh';
   }
 
   return ENV;

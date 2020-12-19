@@ -12,9 +12,9 @@ const MOBILE_MAX_WIDTH = 834;
 const RESIZE_DEBOUNCE_DELY = 250;
 
 export default class extends SessionService {
-  @service store;
-
+  @service ajax;
   @tracked user = null;
+  @tracked unreadMessageCount = 0;
 
   isMobileDevice = false;
   isTabletDevice = false;
@@ -57,25 +57,11 @@ export default class extends SessionService {
       return Promise.resolve();
     }
 
-    const person_id = this.session.get('authenticated.person_id');
-
-    return this.store.findRecord('person', person_id, {reload: true})
-      .then((person) => {
-        return person.loadUserInfo().then(() => {
-          this.user = User.create({
-            id: person.id,
-            callsign: person.callsign,
-            callsign_approved: person.callsign_approved,
-            roles: person.roles,
-            status: person.status,
-            teacher: person.teacher,
-            has_hq_window: person.has_hq_window,
-            onduty_position: person.onduty_position,
-            unread_message_count: person.unread_message_count,
-            bpguid: person.bpguid, // PNV or Actives must have a BPGUID to sign up.
-            may_request_stickers: person.may_request_stickers,
-          });
-        });
+    const person_id = this.data.authenticated.tokenData.sub;
+    return this.ajax.request(`person/${person_id}/user-info`)
+      .then(({ user_info }) => {
+        this.user = new User(user_info);
+        this.unreadMessageCount = user_info.unread_message_count;
       });
   }
 

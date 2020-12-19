@@ -1,7 +1,6 @@
 import Route from '@ember/routing/route';
-import MeRouteMixin from 'clubhouse/mixins/route/me';
 
-export default class MeContactRoute extends Route.extend(MeRouteMixin) {
+export default class MeContactRoute extends Route {
   queryParams = {
     // No refresh model needed - provided so external documents can
     // link to the contact page and have the callsign prefilled.

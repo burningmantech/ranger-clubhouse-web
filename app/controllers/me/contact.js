@@ -20,7 +20,7 @@ export default class MeContactController extends Controller {
   _performSearch(model, fromRoute=false) {
     const callsign = model.callsign.trim();
 
-    if (callsign == '' || callsign.length < 2) {
+    if (callsign.length < 2) {
       return;
     }
 
@@ -29,7 +29,7 @@ export default class MeContactController extends Controller {
     this.isSearchingParam = fromRoute;
     this.ajax.request('callsigns', { data: { query: callsign, type: 'contact', limit: 10 }}).then((results) => {
       this.foundCallsigns =  results.callsigns;
-      if (this.foundCallsigns.length == 0) {
+      if (!this.foundCallsigns.length) {
         this.noMatch = callsign;
       } else if (fromRoute) {
         // When the search was initiated from the route because the 'callsign' parameter

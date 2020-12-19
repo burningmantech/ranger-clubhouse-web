@@ -50,7 +50,7 @@
   {{#if (has-role "admin" "vc")}}
     <s.group @title="Logs">
       {{#if (has-role "admin")}}
-        <s.link @route="admin.action-log" @title="Action Log" @query={{hash person=person.callsign}} @icon="arrows-alt"
+        <s.link @route="admin.action-log" @title="Action Log" @query={{hash person=this.person.callsign}} @icon="arrows-alt"
                 @iconType="s"/>
         <s.link @route="person.contact-log" @title="Contact Log" @icon="paper-plane"/>
         <s.link @route="person.broadcast-log" @title="Broadcast Log" @icon="volume-up" @iconType="s"/>

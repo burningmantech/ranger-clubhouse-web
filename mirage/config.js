@@ -61,19 +61,22 @@ export default function () {
       return new Response(401, {'Content-Type': 'application/json'}, {status: 'invalid-credentials'});
     }
 
-    if (person.status == 'suspended') {
+    if (person.status === 'suspended') {
       return new Response(401, {'Content-Type': 'application/json'}, {status: 'account-disabled'})
     }
 
-    let data = {
-      // ember-simple-auth only cares about the middle token
-      token: btoa("dummy") + "." + btoa(JSON.stringify({exp: (Math.ceil(Date.now() / 1000) + 1000)})) + "." + btoa("dummy"),
-      token_type: 'bearer',
-      expires_in: 1000,
-      person_id: person.id,
+    const payload = {
+      exp: (Math.ceil(Date.now() / 1000) + 1000),
+      sub: person.id,
     };
 
-    return data;
+
+    return {
+      // ember-simple-auth only cares about the middle value
+      token: `${btoa('header')}.${btoa(JSON.stringify(payload))}.${btoa('signature')}`,
+      token_type: 'bearer',
+      expires_in: 1000,
+    };
   });
 
   this.get('/api/person/:id', ({people}, request) => { // eslint-disable-line no-unused-vars
@@ -105,17 +108,34 @@ export default function () {
   });
 
   this.get('/api/person/:id/user-info', ({people}, request) => { // eslint-disable-line no-unused-vars
-    return {
-      unread_message_count: 2,
-      years: [2017, 2018],
-      teacher: {
-        is_trainer: false,
-        is_art_trainer: false,
-        is_mentor: false,
-        have_mentored: false
+      const person = people.find(request.params.id);
+      if (!person) {
+        return new Response(404, {'Content-Type': 'application/json'}, {
+          errors: [{status: 404, title: 'Record does not exist.'}]
+        });
       }
-    };
-  });
+
+      return {
+        user_info: {
+          id: person.id,
+          callsign: person.callsign,
+          callsign_approved: true,
+          status: person.status,
+          unread_message_count: 2,
+          years: [2017, 2018],
+          all_years: [2017, 2018],
+          roles: person.roles,
+          teacher: {
+            is_trainer: false,
+            is_art_trainer: false,
+            is_mentor: false,
+            have_mentored: false
+          }
+        }
+      }
+    }
+  )
+
 
   this.get('/api/person/:id/years', ({people}, request) => { // eslint-disable-line no-unused-vars
     return {years: [2017, 2018]};
@@ -206,9 +226,11 @@ export default function () {
   });
 
   this.get('/api/motd/bulletin', () => {
-    return {motd: [], meta: {
-      total: 0, page: 1, page_size: 100
-      }};
+    return {
+      motd: [], meta: {
+        total: 0, page: 1, page_size: 100
+      }
+    };
   });
 
   this.get('/api/person/:id/milestones', () => {
@@ -235,7 +257,7 @@ export default function () {
     };
   });
 
-  this.get('/api/person-event/:id', ()=> {
+  this.get('/api/person-event/:id', () => {
     return {
       person_event: {
         id: '1-2020',
@@ -260,7 +282,7 @@ export default function () {
         vehicle_color: 'khaki',
         vehicle_year: 2019,
         person_id: 1,
-        person: { callsign: 'hubcap' },
+        person: {callsign: 'hubcap'},
       }
     };
   });

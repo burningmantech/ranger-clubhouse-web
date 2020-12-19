@@ -1,4 +1,4 @@
-<h1>{{this.person.callsign}}'s Mentees</h1>
+<h1>{{this.session.user.callsign}}'s Mentees</h1>
 <BackToHome/>
 
 <p>
@@ -52,7 +52,7 @@
         </td>
         <td>
           {{#if (eq mentee.contact_status "allow")}}
-            <button type="button" class="btn btn-primary btn-sm" {{action "contactAction" mentee}}>Contact</button>
+            <button type="button" class="btn btn-primary btn-sm" {{action this.contactAction mentee}}>Contact</button>
           {{else if (eq mentee.contact_status "block")}}
             <span class="text-muted">No Contact</span>
           {{else}}
@@ -65,7 +65,9 @@
   </table>
 {{/each}}
 {{#if this.contactMentee}}
-  <ContactForm @callsign={{this.contactMentee.callsign}} @isInactive={{eq this.contactMentee.status "not active"}}
-               @recipientId={{this.contactMentee.person_id}} @contactType="mentor" @onDone={{action this.doneAction}} />
+  <ContactForm @callsign={{this.contactMentee.callsign}}
+               @isInactive={{eq this.contactMentee.status "not active"}}
+               @recipientId={{this.contactMentee.person_id}}
+               @contactType="mentor" @onDone={{action this.doneAction}} />
 {{/if}}
 

@@ -1,9 +1,8 @@
 import Route from '@ember/routing/route';
-import MeRouteMixin from 'clubhouse/mixins/route/me';
 import RSVP from 'rsvp';
 import requestYear from 'clubhouse/utils/request-year';
 
-export default class MeTimesheetRoute extends Route.extend(MeRouteMixin) {
+export default class MeTimesheetRoute extends Route {
   queryParams = {
     year: { refreshModel: true }
   };
@@ -30,7 +29,6 @@ export default class MeTimesheetRoute extends Route.extend(MeRouteMixin) {
   }
 
   setupController(controller, model) {
-    super.setupController(...arguments);
     controller.setProperties(model);
   }
 

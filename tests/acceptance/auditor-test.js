@@ -1,8 +1,7 @@
 import {module, test} from 'qunit';
 import {visit, currentURL} from '@ember/test-helpers';
 import {setupApplicationTest} from 'ember-qunit';
-import {authenticateSession} from 'ember-simple-auth/test-support';
-import {Role} from 'clubhouse/constants/roles';
+import {authenticateUser} from '../helpers/authenticate-user';
 
 module('Acceptance | auditor', function (hooks) {
   setupApplicationTest(hooks);
@@ -10,12 +9,10 @@ module('Acceptance | auditor', function (hooks) {
 
   hooks.beforeEach(function () {
     this.person = server.create('person', {
+      callsign: 'hubcap',
       status: 'auditor',
-      roles: [Role.LOGIN]
     });
-    authenticateSession({
-      person_id: this.person.id
-    });
+    authenticateUser(this.person.id);
   });
 
   test('Auditor sidebar view', async function (assert) {

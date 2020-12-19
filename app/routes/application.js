@@ -13,8 +13,15 @@ import $ from 'jquery';
 export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin) {
   @service router;
 
+  routeAfterAuthentication = 'me.homepage';
+
   constructor() {
     super(...arguments);
+
+    if (!ENV.logRoutes) {
+      // don't bother setting up recording route transitions if not enabled.
+      return;
+    }
 
     // Record route transitions
     this.router.on('routeDidChange', (transition) => {
@@ -22,10 +29,6 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
       run.schedule('afterRender', () => {
         window.scrollTo(0, 0);
       });
-
-      if (!ENV.logRoutes) {
-        return;
-      }
 
       if (!transition || !transition.to || transition.to.name === 'admin.action-log') {
         return;
@@ -50,14 +53,24 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
 
         analytics.append('data', JSON.stringify(data));
         if (this.session.isAuthenticated) {
-          const person_id = this.session.userId;
+          const person_id = +this.session.userId;
 
           if (person_id) {
             analytics.append('person_id', person_id);
           }
+
+          const toName = transition.to.name;
+
+          if (toName.startsWith('person.') || toName.startsWith('hq.')) {
+            const targetId = +this.router.currentRoute.parent.params.person_id;
+            if (!isNaN(targetId)) {
+              analytics.append('target_person_id', targetId);
+            }
+          }
         }
         navigator.sendBeacon(ENV['api-server'] + '/action-log/record', analytics);
       } catch (e) {
+        console.log("EXCEPTION ", e);
         // ignore any exceptions.
       }
     });
@@ -96,7 +109,7 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
   async sessionAuthenticated() {
     await this.setCurrentUser();
     if (this.session.resetPasswordToken) {
-      this.transitionTo('me.password', { queryParams: { token: this.session.resetPasswordToken }});
+      this.transitionTo('me.password', {queryParams: {token: this.session.resetPasswordToken}});
       this.session.resetPasswordToken = null;
     } else {
       super.sessionAuthenticated(...arguments);

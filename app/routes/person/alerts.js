@@ -1,8 +1,7 @@
 import Route from '@ember/routing/route';
-import MeRouteMixin from 'clubhouse/mixins/route/me';
 import RSVP from 'rsvp';
 
-export default class PersonAlertsRoute extends Route.extend(MeRouteMixin) {
+export default class PersonAlertsRoute extends Route {
   model() {
     const personId = this.modelFor('person').id;
 

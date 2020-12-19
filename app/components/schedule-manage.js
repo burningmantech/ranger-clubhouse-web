@@ -253,7 +253,7 @@ export default class ScheduleManageComponent extends Component {
     set(slot, 'is_retrieving_people', true);
     this.ajax.request('slot/' + slot.id + '/people').then((result) => {
       let callsigns = result.people.map((person) => person.callsign);
-      if (callsigns.length == 0) {
+      if (!callsigns.length) {
         callsigns = "No one is signed up for this shift. Be the first!";
       } else {
         callsigns = callsigns.join(', ');
@@ -268,31 +268,5 @@ export default class ScheduleManageComponent extends Component {
   toggleGroup(group, event) {
     event.preventDefault();
     set(group, 'show', !group.show);
-  }
-
-  @action
-  showBehaviorAgreementAction() {
-    this.showBehaviorAgreement = true;
-  }
-
-  @action
-  closeAgreement() {
-    this.showBehaviorAgreement = false;
-  }
-
-  @action
-  signAgreement() {
-    const person = this.args.person;
-
-    person.behavioral_agreement = true;
-    person.save().then(() => {
-      this.toast.success('Your agreement has been successfully recorded.');
-      // Reload the permissions.
-      this.ajax.request(`person/${person.id}/schedule/permission`, {data: {year: this.args.year}})
-        .then((results) => {
-          this.permission = results.permission;
-          this.showBehaviorAgreement = false;
-        });
-    }).catch((response) => this.house.handleErrorResponse(response));
   }
 }

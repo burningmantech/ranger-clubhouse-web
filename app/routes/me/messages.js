@@ -1,7 +1,6 @@
 import Route from '@ember/routing/route';
-import MeRouteMixin from 'clubhouse/mixins/route/me';
 
-export default class MeMessagesRoute extends Route.extend(MeRouteMixin) {
+export default class MeMessagesRoute extends Route {
   model() {
     this.store.unloadAll('person-message');
 
@@ -9,10 +8,8 @@ export default class MeMessagesRoute extends Route.extend(MeRouteMixin) {
   }
 
   setupController(controller, model) {
-    super.setupController(...arguments);
-
+    const user = this.session.user;
+    user.set('unread_message_count', model.reduce((total, msg) => ((msg.delivered ? 0 : 1)+total), 0));
     controller.set('messages', model);
-    controller.user.set('unread_message_count', model.reduce((total, msg) => ((msg.delivered ? 0 : 1)+total), 0));
-    controller.person.set('unread_message_count', this.session.user.unread_message_count);
   }
 }

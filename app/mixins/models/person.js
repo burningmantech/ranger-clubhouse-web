@@ -1,117 +1,103 @@
+import {Role} from 'clubhouse/constants/roles';
+import {typeOf, isEmpty} from '@ember/utils';
 import Mixin from '@ember/object/mixin';
 import {
-  computed
-} from '@ember/object';
-import * as PersonStatus from 'clubhouse/constants/person_status';
-import {
-  Role,
-  roleName
-} from 'clubhouse/constants/roles';
-import {
-  typeOf, isEmpty
-} from '@ember/utils';
+  ACTIVE, ALPHA, AUDITOR, BONKED, DECEASED, DISMISSED, INACTIVE_EXTENSION, INACTIVE, NON_RANGER,
+  PAST_PROSPECTIVE, PROSPECTIVE, PROSPECTIVE_WAITLIST, RESIGNED, RETIRED, SUSPENDED, UBERBONKED
+} from 'clubhouse/constants/person_status';
 
-export default Mixin.create({ // eslint-disable-line ember/no-new-mixins
-  // Computed methods
-  isActive: computed('status', function () {
-    return (this.status == PersonStatus.ACTIVE);
-  }),
+// eslint-disable-next-line ember/no-new-mixins
+const PersonMixin = Mixin.create({
+  get isActive() {
+    return this.status === ACTIVE;
+  },
 
-  isAlpha: computed('status', function () {
-    return (this.status == PersonStatus.ALPHA)
-  }),
+  get isAlpha() {
+    return this.status === ALPHA;
+  },
 
-  isAuditor: computed('status', function () {
-    return this.status == PersonStatus.AUDITOR;
-  }),
+  get isAuditor() {
+    return this.status === AUDITOR;
+  },
 
-  isDeceased: computed('status', function () {
-    return this.status == PersonStatus.DECEASED;
-  }),
+  get isDeceased() {
+    return this.status === DECEASED;
+  },
 
-  isDismissed: computed('status', function () {
-    return this.status == PersonStatus.DISMISSED;
+  get isDismissed() {
+    return this.status === DISMISSED;
+  },
 
-  }),
+  get isSuspended() {
+    return this.status === SUSPENDED;
+  },
 
-  isSuspended: computed('status', function() {
-    return this.status == PersonStatus.SUSPENDED;
-  }),
+  get isNonRanger() {
+    return this.status === NON_RANGER;
+  },
 
-  isNonRanger: computed('status', function () {
-    return this.status == PersonStatus.NON_RANGER;
-  }),
+  get isProspective() {
+    return this.status === PROSPECTIVE;
+  },
 
-  isProspective: computed('status', function () {
-    return this.status == PersonStatus.PROSPECTIVE;
-  }),
+  get isPastProspective() {
+    return this.status === PAST_PROSPECTIVE;
+  },
 
-  isPastProspective: computed('status', function () {
-    return (this.status == PersonStatus.PAST_PROSPECTIVE);
-  }),
+  get isProspectiveWaitlist() {
+    return (this.status === PROSPECTIVE_WAITLIST);
+  },
 
-  isProspectiveWaitlist: computed('status', function () {
-    return (this.status == PersonStatus.PROSPECTIVE_WAITLIST);
-  }),
+  get isPNV() {
+    return (this.status === PROSPECTIVE || this.status === ALPHA);
+  },
 
-  isPNV: computed('status', function () {
-    return (this.status == PersonStatus.PROSPECTIVE || this.status == PersonStatus.ALPHA);
-  }),
+  get isResigned() {
+    return (this.status === RESIGNED);
+  },
 
-  isResigned: computed('status', function () {
-    return (this.status == PersonStatus.RESIGNED);
-  }),
+  get isUberBonked() {
+    return (this.status === UBERBONKED);
+  },
 
-  isUberBonked: computed('status', function () {
-    return (this.status == PersonStatus.UBERBONKED);
-  }),
+  get isBonked() {
+    return (this.status === BONKED);
+  },
 
-  isBonked: computed('status', function () {
-    return (this.status == PersonStatus.BONKED);
-  }),
-
-  isAuditorOrPastProspective: computed('status', function () {
-    return (status == PersonStatus.AUDITOR || status == PersonStatus.PAST_PROSPECTIVE);
-  }),
-
-  isNotRanger: computed('status', function () {
+  get isNotRanger() {
     const status = this.status;
 
-    return (status == PersonStatus.AUDITOR ||
-      status == PersonStatus.ALPHA ||
-      status == PersonStatus.BONKED ||
-      status == PersonStatus.PROSPECTIVE ||
-      status == PersonStatus.PAST_PROSPECTIVE ||
-      status == PersonStatus.PROSPECTIVE_WAITLIST);
-  }),
+    return (status === AUDITOR ||
+      status === ALPHA ||
+      status === BONKED ||
+      status === PROSPECTIVE ||
+      status === PAST_PROSPECTIVE ||
+      status === PROSPECTIVE_WAITLIST);
+  },
 
-  isRanger: computed('isNotRanger', 'status', function () {
-    return (!this.isNotRanger && this.status != 'non ranger');
-  }),
+  get isRanger() {
+    return (!this.isNotRanger && this.status !== NON_RANGER);
+  },
 
-  canSignupForShifts: computed('isNotARanger', 'status', function () {
-    return (!this.isNotARanger && this.status != PersonStatus.PAST_PROSPECTIVE);
-  }),
-
-  canStartShift: computed('status', function () {
-    return !(
-      this.status == PersonStatus.AUDITOR ||
-      this.status == PersonStatus.DECEASED ||
-      this.status == PersonStatus.DISMISSED ||
-      this.status == PersonStatus.PAST_PROSPECTIVE ||
-      this.status == PersonStatus.PROSPECTIVE ||
-      this.status == PersonStatus.SUSPENDED ||
-      this.status == PersonStatus.UBERBONKED
+  get canStartShift() {
+    const status = this.status;
+    return (
+      status === ACTIVE ||
+      status === ALPHA ||
+      status === INACTIVE ||
+      status === INACTIVE_EXTENSION ||
+      status === RETIRED ||
+      status === NON_RANGER
     );
-  }),
+  },
 
-  needsBpguid: computed('bpguid', 'isAuditor', 'isNonRanger', function() {
+  get needsBpguid() {
     return (!this.isAuditor && !this.isNonRanger && isEmpty(this.bpguid));
-  }),
+  },
 
   get isCheetahCub() {
     const status = this.status;
-    return status === PersonStatus.INACTIVE_EXTENSION || status === PersonStatus.RETIRED || status === PersonStatus.RESIGNED;
+    return status === INACTIVE_EXTENSION || status === RETIRED;
   },
 
   hasRole(roles) {
@@ -121,7 +107,7 @@ export default Mixin.create({ // eslint-disable-line ember/no-new-mixins
       return false;
     }
 
-    if (typeOf(roles) != 'array') {
+    if (typeOf(roles) !== 'array') {
       roles = [roles];
     }
 
@@ -129,7 +115,7 @@ export default Mixin.create({ // eslint-disable-line ember/no-new-mixins
 
     roles.forEach((role) => {
       const type = typeOf(role);
-      if (type == 'array' || type == 'object') {
+      if (type === 'array' || type === 'object') {
         let haveAll = true;
 
         // Sub array means ALL the roles have to be present.
@@ -166,42 +152,28 @@ export default Mixin.create({ // eslint-disable-line ember/no-new-mixins
       return false;
     }
 
-    if (typeOf(roles) != 'array') {
+    if (typeOf(roles) !== 'array') {
       roles = [roles];
     }
 
     const found = roles.filter((r) => personRoles.includes(r));
 
-    return (found.length == roles.length);
+    return (found.length === roles.length);
   },
 
-  roleNames: computed('roles', function () {
-    let personRoles = this.roles;
-
-    if (!personRoles) {
-      return 'none';
-    }
-
-    let names = [];
-
-    personRoles.forEach((role) => {
-      names.push(roleName(role))
-    });
-
-    return names.join(',');
-  }),
-
   // Roles
-  isAdmin: computed('roles', function () {
+  get isAdmin() {
     return this.hasRole(Role.ADMIN);
-  }),
+  },
 
-  isVC: computed('roles', function () {
+  get isVC() {
     return this.hasRole(Role.VC);
-  }),
+  },
 
-  canViewEmail: computed('roles', function () {
-    return this.hasRole([ Role.ADMIN, Role.VIEW_EMAIL, Role.VIEW_PII ]);
-  })
+  canViewEmail() {
+    return this.hasRole([Role.ADMIN, Role.VIEW_EMAIL, Role.VIEW_PII]);
+  }
 
 });
+
+export default PersonMixin;
