@@ -1,6 +1,7 @@
 <h1>{{this.year}} Schedule / Shift Sign Up</h1>
 <BackToHome />
-<ScheduleManage @person={{this.person}} @slots={{this.slots}}
+<ScheduleManage @person={{this.session.user}}
+                @slots={{this.slots}}
                 @signedUpSlots={{this.signedUpSlots}}
                 @scheduleSummary={{this.scheduleSummary}} @creditsEarned={{this.creditsEarned}} @year={{this.year}}
                 @permission={{this.permission}} />

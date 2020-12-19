@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { visit, fillIn, click } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
-import { authenticateSession } from 'ember-simple-auth/test-support';
+import { authenticateUser } from '../../helpers/authenticate-user';
 import faker from 'faker';
 
 module('Acceptance | me/emergency contact', function (hooks) {
@@ -12,7 +12,7 @@ module('Acceptance | me/emergency contact', function (hooks) {
       emergency_contact: faker.random.alphaNumeric(100)
     });
 
-    await authenticateSession({ person_id: person.id });
+    await authenticateUser(person.id);
 
     await visit('/me/emergency-contact');
 
@@ -23,7 +23,7 @@ module('Acceptance | me/emergency contact', function (hooks) {
   test('update /me/emergency-contact', async function (assert) {
     const person = server.create('person', { emergency_contact: '' });
 
-    await authenticateSession({ person_id: person.id });
+    await authenticateUser(person.id);
 
     await visit('/me/emergency-contact');
 

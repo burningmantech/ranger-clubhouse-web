@@ -1,8 +1,7 @@
 import Route from '@ember/routing/route';
-import MeRouteMixin from 'clubhouse/mixins/route/me';
 import RSVP from 'rsvp';
 
-export default class MeTimesheetCorrectionsRoute extends Route.extend(MeRouteMixin) {
+export default class MeTimesheetCorrectionsRoute extends Route {
   async model() {
     const person_id = this.session.userId;
 
@@ -44,7 +43,6 @@ export default class MeTimesheetCorrectionsRoute extends Route.extend(MeRouteMix
   }
 
   setupController(controller, model) {
-    super.setupController(...arguments);
     controller.setProperties(model);
     controller.set('showReviewSteps', false);
   }

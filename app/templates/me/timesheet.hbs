@@ -1,4 +1,6 @@
-<YearSelect @title="Timesheet For {{session.user.callsign}}" @year={{this.year}} @years={{this.person.all_years}}
+<YearSelect @title="Timesheet For {{this.session.user.callsign}}"
+            @year={{this.year}}
+            @years={{this.session.user.all_years}}
             @onChange={{action (mut this.year)}} />
 <BackToHome/>
 

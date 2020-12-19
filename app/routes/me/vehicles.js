@@ -4,7 +4,7 @@ import RSVP from 'rsvp';
 export default class MeVehiclesRoute extends Route {
   beforeModel() {
     if (!this.session.user.may_request_stickers) {
-      this.toast.error('Sorry, you are not approved to request vehicle stickers and other tiems.');
+      this.toast.error('Sorry, you are not approved to request vehicle stickers and other items.');
       this.transitionTo('me.homepage');
     }
   }

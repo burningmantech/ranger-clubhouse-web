@@ -1,10 +1,8 @@
 import { module, test } from 'qunit';
 import { visit, currentURL, fillIn, click } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
-import {
-  authenticateSession,
-  currentSession
-} from 'ember-simple-auth/test-support';
+import {currentSession} from 'ember-simple-auth/test-support';
+import { authenticateUser } from "../helpers/authenticate-user";
 
 module('Acceptance | login', function(hooks) {
   setupApplicationTest(hooks);
@@ -42,7 +40,7 @@ module('Acceptance | login', function(hooks) {
 
   test('successful logout', async function(assert) {
     const person = server.create('person');
-    await authenticateSession({ person_id: person.id });
+    await authenticateUser(person.id);
     await visit('/logout');
     assert.equal(currentSession().isAuthenticated, false);
     assert.equal(document.title, 'Login | Ranger Clubhouse');

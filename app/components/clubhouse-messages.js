@@ -60,9 +60,9 @@ export default class ClubhouseMessagesComponent extends Component {
   _updateUnreadCount() {
     const unreadCount = this.unreadCount;
     const person = this.args.person;
-    person.set('unread_message_count', this.unreadCount);
+    person.set('unread_message_count', unreadCount);
     if (this.session.userId == person.id) {
-      this.session.user.set('unread_message_count', unreadCount);
+      this.session.unreadMessageCount = unreadCount;
     }
   }
 

@@ -1,9 +1,8 @@
 import Route from '@ember/routing/route';
-import MeRouteMixin from 'clubhouse/mixins/route/me';
 import requestYear from 'clubhouse/utils/request-year';
 import RSVP from 'rsvp';
 
-export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
+export default class MeScheduleRoute extends Route {
   queryParams = {
     year: { refreshModel: true }
   };
@@ -11,7 +10,7 @@ export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
   beforeModel() {
     const user = this.session.user;
     if (user.isPastProspective || user.isBonked) {
-      this.toast.error('You are not permitted sign up for trainings or shifts at this time.');
+      this.toast.error('You are not permitted to sign up for trainings or shifts at this time.');
       this.transitionTo('me.homepage');
     }
   }
@@ -35,11 +34,9 @@ export default class MeScheduleRoute extends Route.extend(MeRouteMixin) {
   }
 
   setupController(controller, model) {
-    super.setupController(...arguments);
+    const user = this.session.user;
 
-    const person = this.session.user;
-
-    if ((person.isAuditor || person.isProspective || person.isAlpha) && !model.permission.all_signups_allowed) {
+    if ((user.isAuditor || user.isProspective || user.isAlpha) && !model.permission.all_signups_allowed) {
       this.toast.error('You need to complete one or more items in the checklist before being allowed to sign up.');
       this.transitionTo('me.homepage');
     }

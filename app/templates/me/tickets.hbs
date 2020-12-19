@@ -1,4 +1,4 @@
-<h1>Tickets &amp; Stuff For <span class="d-inline-block">{{person.callsign}}</span></h1>
+<h1>Tickets &amp; Stuff For <span class="d-inline-block">{{this.session.user.callsign}}</span></h1>
 <BackToHome />
 
-<TicketingLanding @person={{person}} @ticketingInfo={{ticketingInfo}} @ticketPackage={{ticketPackage}} />
+<TicketingLanding @person={{this.session.user}} @ticketingInfo={{ticketingInfo}} @ticketPackage={{ticketPackage}} />

@@ -35,7 +35,7 @@ export default class MePasswordController extends Controller {
       return;
     }
 
-    const person = this.person;
+    const personId = this.session.userId;
     const passwords = {
       password: model.password,
       password_confirmation: model.password_confirmation
@@ -48,7 +48,7 @@ export default class MePasswordController extends Controller {
     }
 
     this.isSubmitting = true;
-    return this.ajax.request(`person/${person.id}/password`, {method: 'PATCH', data: passwords}).then(() => {
+    return this.ajax.request(`person/${personId}/password`, {method: 'PATCH', data: passwords}).then(() => {
       this.toast.success('Password has been successfully changed.');
       this.transitionToRoute('me.homepage');
     }).catch((response) => {

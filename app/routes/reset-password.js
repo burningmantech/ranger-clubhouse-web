@@ -4,6 +4,8 @@ import Login from 'clubhouse/models/login';
 import ENV from 'clubhouse/config/environment';
 
 export default class ResetPasswordRoute extends Route.extend(UnauthenticatedRouteMixin) {
+  routeIfAlreadyAuthenticated = 'me.homepage';
+
   queryParams = {
     token: { refreshModel: true}
   };

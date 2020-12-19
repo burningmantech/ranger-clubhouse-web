@@ -1,14 +1,14 @@
 import { module, test } from 'qunit';
 import { visit, fillIn, click } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
-import { authenticateSession } from 'ember-simple-auth/test-support';
+import { authenticateUser } from '../../helpers/authenticate-user';
 
 module('Acceptance | me/personal info', function(hooks) {
   setupApplicationTest(hooks);
 
   test('rendered /me/personal-info', async function(assert) {
     const person = server.create('person');
-    await authenticateSession({ person_id: person.id });
+    await authenticateUser(person.id)
     await visit('/me/personal-info');
     assert.equal(document.title, 'Personal info | Me | Ranger Clubhouse');
 
@@ -28,7 +28,7 @@ module('Acceptance | me/personal info', function(hooks) {
 
   test('update /me/personal-info', async function(assert) {
     const person = server.create('person');
-    await authenticateSession({ person_id: person.id });
+    await authenticateUser(person.id);
 
     const newEmail = 'another@example.com';
     await visit('/me/personal-info');
@@ -43,7 +43,7 @@ module('Acceptance | me/personal info', function(hooks) {
 
   test('prevent space from being enter in email', async function(assert) {
     const person = server.create('person');
-    await authenticateSession({ person_id: person.id });
+    await authenticateUser(person.id);
 
     const newEmail = 'another@example.com';
     await visit('/me/personal-info');

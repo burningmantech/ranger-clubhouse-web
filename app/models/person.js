@@ -1,5 +1,5 @@
-import Model, { attr } from '@ember-data/model';
-import { inject as service } from '@ember/service';
+import Model, {attr} from '@ember-data/model';
+import {inject as service} from '@ember/service';
 import PersonMixin from 'clubhouse/mixins/models/person';
 
 export default class PersonModel extends Model.extend(PersonMixin) {
@@ -17,19 +17,19 @@ export default class PersonModel extends Model.extend(PersonMixin) {
   @attr('string') known_pnvs;
   @attr('string') status;
   @attr('boolean') vintage;
-  @attr('string', { readOnly: true }) status_date;
-  @attr('string', { readOnly: true }) date_verified;
-  @attr('string', { readOnly: true }) create_date;
+  @attr('string', {readOnly: true}) status_date;
+  @attr('string', {readOnly: true}) date_verified;
+  @attr('string', {readOnly: true}) create_date;
   @attr('boolean') active_next_event;
   @attr('boolean') on_site;
   @attr('boolean') has_reviewed_pi;   // pseudo field, write only
   @attr('string') reviewed_pi_at;
-  @attr('string', { readOnly: true }) logged_in_at;
-  @attr('string', { readOnly: true }) last_seen_at;
+  @attr('string', {readOnly: true}) logged_in_at;
+  @attr('string', {readOnly: true}) last_seen_at;
 
-  @attr('number', { readOnly: true}) person_photo_id;
+  @attr('number', {readOnly: true}) person_photo_id;
 
-  @attr('', { readOnly: true}) roles;
+  @attr('', {readOnly: true}) roles;
 
   // Personal Information
   @attr('string') street1;
@@ -74,7 +74,7 @@ export default class PersonModel extends Model.extend(PersonMixin) {
 
   @attr('boolean') has_note_on_file;
 
-  @attr('string', { readOnly: true }) timestamp;
+  @attr('string', {readOnly: true}) timestamp;
 
   // a separate table the database and not
   // filled in when retrieving the person
@@ -87,13 +87,5 @@ export default class PersonModel extends Model.extend(PersonMixin) {
   @attr('boolean') sms_off_playa_verified;
   @attr('boolean') sms_on_playa_stopped;
   @attr('boolean') sms_off_playa_stopped;
-
-  /*
-   * retrieve years rangered, unread message count, and teacher info, everything
-   * needed to show the user home page.
-   */
-
-  loadUserInfo() {
-    return this.ajax.request(`person/${this.id}/user-info`).then(({ user_info }) => this.setProperties(user_info));
-  }
 }
+

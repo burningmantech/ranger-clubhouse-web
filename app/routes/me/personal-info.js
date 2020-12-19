@@ -1,9 +1,8 @@
 import Route from '@ember/routing/route';
-import MeRouteMixin from 'clubhouse/mixins/route/me';
 
-export default class MePersonInfoRoute extends Route.extend(MeRouteMixin) {
+export default class MePersonInfoRoute extends Route {
   setupController(controller) {
-    super.setupController(...arguments);
+    controller.set('person', this.modelFor('me'));
     controller.set('isSaved', false);
   }
 }

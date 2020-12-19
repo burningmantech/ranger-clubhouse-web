@@ -4,8 +4,8 @@
           aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
     Menu
-    {{#if this.user.unread_message_count}}
-      <span class="badge badge-pill badge-success">{{fa-icon "envelope"}} {{this.user.unread_message_count}}</span>
+    {{#if this.session.unreadMessageCount}}
+      <span class="badge badge-pill badge-success">{{fa-icon "envelope"}} {{this.session.unreadMessageCount}}</span>
     {{/if}}
   </button>
   <LinkTo @route="me.homepage" class="navbar-brand">
@@ -27,10 +27,10 @@
       <div class="navbar-text d-lg-none h4 text-black mt-2">
         {{this.user.callsign}}
       </div>
-      {{#if this.user.unread_message_count}}
+      {{#if this.session.unreadMessageCount}}
         <div class="navbar-item d-lg-none h4 text-black mt-2">
           <LinkTo @route="me.messages" class="btn btn-success btn-block text-white">
-            Read {{pluralize this.user.unread_message_count "message"}}
+            Read {{pluralize this.session.unreadMessageCount "message"}}
           </LinkTo>
         </div>
       {{/if}}
@@ -74,9 +74,9 @@
       <ul class="navbar-nav d-none d-lg-inline">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href>
-            {{#if this.user.unread_message_count}}
+            {{#if this.session.unreadMessageCount}}
               <span class="badge badge-pill badge-success">
-                  {{fa-icon "envelope"}} {{this.user.unread_message_count}}
+                  {{fa-icon "envelope"}} {{this.session.unreadMessageCount}}
                 </span>
             {{/if}}
             {{this.user.callsign}}
@@ -88,7 +88,7 @@
           <div class="dropdown-menu dropdown-menu-right">
             {{#if this.user.isRanger}}
               <LinkTo @route="me.messages" class="dropdown-item">
-                {{pluralize this.user.unread_message_count "message"}}
+                {{pluralize this.session.unreadMessageCount "message"}}
               </LinkTo>
               <div class="dropdown-divider"></div>
             {{/if}}

@@ -1,10 +1,11 @@
 import Route from '@ember/routing/route';
-import UnauthenticatedRouteMixin from 'ember-simple-auth/mixins/unauthenticated-route-mixin';
 import Login from 'clubhouse/models/login';
+import UnauthenticatedRouteMixin from 'ember-simple-auth/mixins/unauthenticated-route-mixin';
 
 export default class LoginRoute extends Route.extend(UnauthenticatedRouteMixin) {
+  routeIfAlreadyAuthenticated = 'me.homepage';
+
   setupController(controller) {
-    super.setupController(...arguments);
     controller.set('authForm', Login.create());
     this.house.clearStorage();
   }
