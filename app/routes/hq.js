@@ -73,11 +73,4 @@ export default class HqRoute extends Route {
       return true;
     }
   }
-
-  @action
-  refreshHQSidebar() {
-    this.ajax.request(`person/${this.modelFor('hq').person.id}/timesheet-summary`, { data: { year: this.house.currentYear() }}).then((result) => {
-      this.controllerFor('hq').set('timesheetSummary', result.summary);
-    }).catch((response) => this.house.handleErrorResponse(response));
-  }
 }

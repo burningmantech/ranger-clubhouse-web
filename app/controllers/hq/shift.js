@@ -113,13 +113,11 @@ export default class HqShiftController extends Controller {
   }
 
   /**
-   * Called when the worker has ended a shift. Refresh the worked hours & earn credits counts,
-   * and update the unverified timesheet list.
+   * Called when the worker has ended a shift. Update the unverified timesheet list.
    */
 
   @action
   endShiftAction() {
-    this.send('refreshHQSidebar');
     this.unverifiedTimesheets = this.timesheets.filter((t) => t.isUnverified);
   }
 
