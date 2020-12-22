@@ -1,7 +1,8 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import {debounce} from '@ember/runloop';
-import {action, computed} from '@ember/object';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 import {slotSignup} from 'clubhouse/utils/slot-signup';
 import _ from 'lodash';
 import moment from 'moment';
@@ -39,10 +40,21 @@ export default class TrainingSlotController extends Controller {
     ['No', 0]
   ];
 
-  showEmails = false;
+  @tracked students;
+  @tracked trainers;
+
+  @tracked showEmails = false;
+  @tracked isSubmitting = false;
+
+  @tracked editStudent;
+  @tracked studentForm;
+
+  @tracked foundPeople = null;
+  @tracked noSearchMatch = null;
+  @tracked addPersonForm = null;
+
 
   // How many people have passed
-  @computed('students.[]')
   get passedCount() {
     let passed = 0;
     this.students.forEach((student) => {
@@ -71,7 +83,6 @@ export default class TrainingSlotController extends Controller {
 
   // How many Dirt Vets (2 or more rangering years) OR
   // ART vets (if not a ART prospective)
-  @computed('students.[]', 'training.is_art')
   get vetCount() {
     let vets = 0;
     const is_art = this.training.is_art;
@@ -90,7 +101,6 @@ export default class TrainingSlotController extends Controller {
   }
 
   // How many dirt PNV or ART prospectives
-  @computed('students.[]', 'training.is_art')
   get prospectiveCount() {
     const is_art = this.training.is_art;
     let prospective = 0;
@@ -100,7 +110,7 @@ export default class TrainingSlotController extends Controller {
         if (student.is_art_prospective) {
           prospective++;
         }
-      } else if (student.status == 'prospective') {
+      } else if (student.status === 'prospective') {
         prospective++;
       }
     });
@@ -110,12 +120,11 @@ export default class TrainingSlotController extends Controller {
 
   // How many dirt PNV or ART prospectives
 
-  @computed('students.[]')
   get auditorCount() {
     let auditors = 0;
 
     this.students.forEach((student) => {
-      if (student.status == 'auditor') {
+      if (student.status === 'auditor') {
         auditors++;
       }
     });
@@ -123,12 +132,11 @@ export default class TrainingSlotController extends Controller {
     return auditors;
   }
 
-  @computed('students.[]')
   get firstYearCount() {
     let firstYear = 0;
 
     this.students.forEach((student) => {
-      if (student.years == 1) {
+      if (student.years === 1) {
         firstYear++;
       }
     });
@@ -144,18 +152,18 @@ export default class TrainingSlotController extends Controller {
 
   @action
   editStudentAction(student) {
-    this.set('editStudent', student);
-    this.set('studentForm', {
+    this.editStudent = student;
+    this.studentForm = {
       rank: student.rank,
       note: '',
       passed: student.passed ? 1 : 0,
       feedback_delivered: student.feedback_delivered ? 1 : 0
-    });
+    };
   }
 
   @action
   cancelStudentAction() {
-    this.set('editStudent', null);
+    this.editStudent = null;
   }
 
   // Save the student scores in bulk.
@@ -185,19 +193,15 @@ export default class TrainingSlotController extends Controller {
       score.feedback_delivered = model.feedback_delivered ? 1 : 0;
     }
 
-    this.set('isSubmitting', true);
+    this.isSubmitting = true;
 
-    this.ajax.post(`training-session/${this.slot.id}/score-student`, {
-      data: score
-    }).then((results) => {
-      this.set('editStudent', null);
-      this.set('students', results.students);
-      this.toast.success(`${student.callsign} was successfully saved.`);
-    })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => {
-        this.set('isSubmitting', false);
-      });
+    this.ajax.post(`training-session/${this.slot.id}/score-student`, {data: score})
+      .then((results) => {
+        this.editStudent = null;
+        this.students = results.students;
+        this.toast.success(`${student.callsign} was successfully saved.`);
+      }).catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.isSubmitting = false);
   }
 
   // Save the student scores in bulk.
@@ -216,25 +220,21 @@ export default class TrainingSlotController extends Controller {
     });
 
     this.toast.clear();
-    this.set('isSubmitting', true);
-    this.ajax.post(`training-session/${this.slot.id}/trainer-status`, {
-      data: {trainers}
-    }).then((results) => {
-      this.set('trainers', results.trainers);
-      this.toast.success('Trainer attendance was successfully updated.');
-    })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isSubmitting', false));
+    this.isSubmitting = true;
+    this.ajax.post(`training-session/${this.slot.id}/trainer-status`, {data: {trainers}})
+      .then((results) => {
+        this.trainers = results.trainers;
+        this.toast.success('Trainer attendance was successfully updated.');
+      }).catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.isSubmitting = false);
   }
 
   // Show the dialog to add a person
   @action
   showAddPersonAction() {
-    this.set('foundPeople', null);
-    this.set('noSearchMatch', null);
-    this.set('addPersonForm', EmberObject.create({
-      name: ''
-    }));
+    this.foundPeople = null;
+    this.noSearchMatch = null;
+    this.addPersonForm = EmberObject.create({name: ''});
   }
 
   @action
@@ -243,9 +243,9 @@ export default class TrainingSlotController extends Controller {
   }
 
   _performSearch(model) {
-    const query = model.get('name');
+    const query = model.name.trim();
 
-    if (query == '' || query.length < 2) {
+    if (query.length < 2) {
       return;
     }
 
@@ -258,31 +258,29 @@ export default class TrainingSlotController extends Controller {
         limit: 10
       }
     }).then((results) => {
-      this.set('foundPeople', results.person);
-      if (results.person.length == 0) {
-        this.set('noSearchMatch', query);
+      this.foundPeople = results.person;
+      if (!results.person.length) {
+        this.noSearchMatch = query;
       }
-    }).catch((response) => {
-      this.house.handleErrorResponse(response);
-    })
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
   cancelSearchAction() {
-    this.set('addPersonForm', null);
+    this.addPersonForm = null;
   }
 
   @action
   addPersonAction(person, event) {
     event.preventDefault();
     slotSignup(this, this.slot, person, () => {
-      this.set('addPersonForm', null);
+      this.addPersonForm = null;
       // Refresh the list
       this.ajax.request(`training-session/${this.slot.id}`).then((results) => {
         const student = results.students.find((s) => s.id == person.id);
         if (student) {
           this.students.push(student);
-          this.set('students', _.orderBy(this.students, [(s) => s.callsign.toLowerCase()], ['asc']));
+          this.students = _.orderBy(this.students, [(s) => s.callsign.toLowerCase()], ['asc']);
         }
       }).catch((response) => this.house.handleErrorResponse(response))
     });
@@ -294,25 +292,28 @@ export default class TrainingSlotController extends Controller {
     const student = this.editStudent;
 
     this.modal.confirm('Confirm Student Removal', `Are you really sure you want to remove ${student.callsign} from this session?`, () => {
-      this.set('iSubmitting', true);
+      this.iSubmitting = true;
       this.ajax.delete(`person/${student.id}/schedule/${this.slot.id}`)
         .then((results) => {
-          if (results.status == 'success') {
+          if (results.status === 'success') {
             this.students.removeObject(student);
             this.toast.success(`${student.callsign} was successfully removed from this training session.`);
-            this.set('editStudent', null);
+            this.editStudent = null;
           } else {
             this.toast.error(`The server responded with an unknown status code [${results.status}]`);
           }
         })
         .catch((response) => this.house.handleErrorResponse(response))
-        .finally(() => this.set('isSubmitting', false));
+        .finally(() => this.isSubmitting = false);
     });
   }
 
   // Toggle the email list
   @action
   toggleEmailListAction() {
-    this.set('showEmails', !this.showEmails);
+    this.showEmails = !this.showEmails;
+    if (this.showEmails) {
+      this.house.scrollToElement('#email-list');
+    }
   }
 }

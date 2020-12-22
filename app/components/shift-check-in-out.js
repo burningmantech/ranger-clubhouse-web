@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
 import {set} from '@ember/object';
-import {action, computed} from '@ember/object';
+import {action} from '@ember/object';
 import {inject as service} from '@ember/service';
 import * as Position from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
@@ -16,11 +16,13 @@ export default class ShiftCheckInOutComponent extends Component {
   @tracked signinPositionId = null;
   @tracked isSubmitting = false;
   @tracked isReloadingTimesheets = false;
+  @tracked onDutyEntry = null;
 
   constructor() {
     super(...arguments);
 
     this.activePositions = this.args.positions.filter(position => position.active);
+    this._findOnDutyEntry();
 
     // Mark imminent slots as trained or not.
     const slots = this.args.imminentSlots;
@@ -85,15 +87,15 @@ export default class ShiftCheckInOutComponent extends Component {
     } else {
       this.isPersonDirtTrained =!!this.args.eventInfo.trainings.find((training) => (training.position_id == Position.TRAINING && training.status === 'pass'));
     }
+
   }
 
   /**
    * Find the on duty/shift timesheet entry
-   * @returns {TimesheetModel}
    */
-  @computed('args.timesheets.@each.off_duty')
-  get onDutyEntry() {
-    return this.args.timesheets.findBy('off_duty', null);
+
+  _findOnDutyEntry() {
+    this.onDutyEntry = this.args.timesheets.findBy('off_duty', null);
   }
 
   /**
@@ -139,9 +141,10 @@ export default class ShiftCheckInOutComponent extends Component {
             this.isReloadingTimesheets = true;
             // Refresh the timesheets
             this.args.timesheets.update()
+              .then(() => this._findOnDutyEntry())
               .catch((response) => this.house.handleErrorResponse(response))
               .finally(() => this.isReloadingTimesheets = false);
-            if (this.args.person.id == this.session.userId) {
+            if (person.id == this.session.userId) {
               // Ensure the navigation bar is updated with the signed into position
               this.session.loadUser();
             }
@@ -212,6 +215,7 @@ export default class ShiftCheckInOutComponent extends Component {
               // Update the user's navigation bar to remove the signed in position.
               this.session.loadUser();
             }
+            this.onDutyEntry = null;
             break;
           case 'already-signed-off':
             this.toast.error(`${callsign} was already signed off.`);

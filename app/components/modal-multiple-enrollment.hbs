@@ -1,9 +1,9 @@
 <ModalDialog @title="Already Signed Up" as |modal|>
   <modal.body>
     <p>
+      Only one {{#if this.isAlpha}}Alpha shift{{else}}{{this.trainingType}} session{{/if}} may be signed up for.
       <YouOrCallsign @person={{this.person}} @youLabel="You are" @callsignVerb="is"/>
-      already enrolled in
-      {{pluralize this.enrolledSlots.length (if this.isAlpha "Alpha shift" (concat this.trainingType " session")) }}:
+      already signed up for the following:
     </p>
     <p>
       {{#each this.enrolledSlots as |slot|}}
@@ -11,25 +11,16 @@
       {{/each}}
     </p>
     <p>
-      Only one {{#if this.isAlpha}}Alpha shift{{else}}{{this.trainingType}} session{{/if}} may be signed up for.
-      You may remove yourself from the other session, if it has not past, and sign up for a new one.
+      If the above {{this.shiftType}} has not started, the sign up may be removed, and the new {{this.shiftType}} added.
     </p>
     <p>
-      To arrange another sign up or if you have questions, email
+      To arrange another sign up (if the previous one cannot be removed) or if you have questions, email
       {{#if this.slot.contact_email}}
         {{mail-to this.slot.contact_email}}
       {{else}}
         {{vc-email}}
       {{/if}}
     </p>
-    {{#if this.data.person.isRanger}}
-      <p>
-        NOTE:
-        <YouOrCallsign @person={{this.person}} @youLabel="you are" @callsignVerb="is"/>
-        allowed to sign up for a single Training session and different
-        ART Training sessions.
-      </p>
-    {{/if}}
   </modal.body>
   <modal.footer>
     <modal.button @label="Close" @action={{@onClose}} @type="primary"/>

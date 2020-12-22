@@ -4,7 +4,9 @@ import {validatePresence} from 'ember-changeset-validations/validators';
 import {set} from '@ember/object';
 import { ALPHA } from 'clubhouse/constants/positions';
 import { tracked } from '@glimmer/tracking';
+import classic from 'ember-classic-decorator';
 
+@classic
 export default class HqShiftController extends Controller {
   @tracked showCorrectionForm = false;
   @tracked showSiteLeaveDialog = false;
@@ -23,7 +25,7 @@ export default class HqShiftController extends Controller {
    *
    * @returns {boolean}
    */
-  @computed('person.isActive', 'timesheets.@each.position_id')
+
   get isShinyPenny() {
     return this.timesheets.find((t) => t.position_id == ALPHA) && this.person.isActive;
   }
@@ -42,7 +44,7 @@ export default class HqShiftController extends Controller {
    * Find all checked out assets
    * @returns {[]}
    */
-  @computed('assets.@each.checked_in')
+//  @computed('assets.@each.checked_in')
   get assetsCheckedOut() {
     return this.assets.filter((a) => !a.checked_in);
   }

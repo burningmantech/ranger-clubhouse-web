@@ -1,11 +1,10 @@
 import Helper from '@ember/component/helper';
 import { inject as service } from '@ember/service';
 import { StringToRole } from 'clubhouse/constants/roles';
-import { observer } from '@ember/object'; // eslint-disable-line ember/no-observers
 import { assert } from '@ember/debug';
 
-export default Helper.extend({
-  session: service(),
+export default class HasRole extends Helper {
+  @service session;
 
   compute(params) {
     const user = this.session.user;
@@ -57,9 +56,5 @@ export default Helper.extend({
     }
 
     return false;
-  },
-
-  rolesChanged: observer('session.user.roles', function() { // eslint-disable-line ember/no-observers
-    this.recompute();
-  })
-});
+  }
+}

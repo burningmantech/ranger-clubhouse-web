@@ -10,9 +10,11 @@ export default class MentorAcceptanceSheetsRoute extends Route {
 
     alphas.forEach((a) => a.selected = true);
     controller.set('alphas', alphas);
-    controller.set('filter', ['all']);
+    controller.set('filter', 'all');
     controller.set('selectAll', true);
     controller.set('year', this.house.currentYear());
     controller.set('isPrinting', false);
+    controller._buildViewAlphas();
+    controller._buildPrintAlphas();
   }
 }

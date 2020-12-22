@@ -1,26 +1,23 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { action,set } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+
 /*
  * Confirm a person's entire timesheet correct/incorrect.
  */
 
 export default class MeTimesheetCorrectionsConfirmController extends Controller {
   @tracked isSubmitting = false;
+  @tracked confirmForm = null; // setup in the route
 
-  confirmForm = null; // setup in the route
-
-  @computed('timesheets.@each.isUnverified')
   get unverifiedCount() {
     return this.timesheets.reduce((total, ts) => total+(ts.isUnverified ? 1 : 0), 0);
   }
 
-  @computed('timesheets.@each.isPending')
   get correctionPendingReviewCount() {
     return this.timesheets.reduce((total, ts) => total+(ts.isPending ? 1 : 0), 0);
   }
 
-  @computed('timesheetsMissing.@each.isPending')
   get missingPendingReviewCount() {
     return this.timesheetsMissing.reduce((total, ts) => total+(ts.isPending ? 1 : 0), 0);
   }
@@ -43,8 +40,8 @@ export default class MeTimesheetCorrectionsConfirmController extends Controller 
     }).then((result) => {
       const ci = result.confirm_info;
       // Update the confirmed results
-      this.set('timesheetInfo.timesheet_confirmed', ci.timesheet_confirmed);
-      this.set('timesheetInfo.timesheet_confirmed_at', ci.timesheet_confirmed_at);
+      set(this, 'timesheetInfo.timesheet_confirmed', ci.timesheet_confirmed);
+      set(this, 'timesheetInfo.timesheet_confirmed_at', ci.timesheet_confirmed_at);
       this.toast.success(`Your timesheet has been marked as ${ci.timesheet_confirmed ? 'CONFIRMED' : 'UNCONFIRMED'}.`);
       this.transitionToRoute('me.timesheet-corrections.index');
     }).catch((response) => this.house.handleErrorResponse(response))

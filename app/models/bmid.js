@@ -1,8 +1,7 @@
-import Model, { attr } from '@ember-data/model';
-import { computed } from '@ember/object';
-import { isEmpty } from '@ember/utils';
-import { ticketTypeLabel } from 'clubhouse/constants/ticket-types';
-import { BmidStatusLabels, MealLabels } from 'clubhouse/constants/bmid';
+import Model, {attr} from '@ember-data/model';
+import {isEmpty} from '@ember/utils';
+import {ticketTypeLabel} from 'clubhouse/constants/ticket-types';
+import {BmidStatusLabels, MealLabels} from 'clubhouse/constants/bmid';
 import moment from 'moment';
 
 export default class BmidModel extends Model {
@@ -18,19 +17,18 @@ export default class BmidModel extends Model {
   @attr('string') batch;
   @attr('string') team;
   @attr('string') notes;
-  @attr('string', { readOnly: true }) create_datetime;
-  @attr('string', { readOnly: true }) modified_datetime;
+  @attr('string', {readOnly: true}) create_datetime;
+  @attr('string', {readOnly: true}) modified_datetime;
 
   @attr('string') access_date;
   @attr('boolean') access_any_time;
 
-  @attr('', { readOnly: true }) person;
-  @attr('number', { readOnly: true }) wap_id;
-  @attr('string', { readOnly: true }) wap_status;
-  @attr('string', { readOnly: true }) wap_type;
-  @attr('boolean', { readOnly: true }) has_signups;
+  @attr('', {readOnly: true}) person;
+  @attr('number', {readOnly: true}) wap_id;
+  @attr('string', {readOnly: true}) wap_status;
+  @attr('string', {readOnly: true}) wap_type;
+  @attr('boolean', {readOnly: true}) has_signups;
 
-  @computed('access_date', 'access_any_time')
   get admission_date() {
     if (this.access_any_time) {
       return 'any';
@@ -43,7 +41,6 @@ export default class BmidModel extends Model {
     }
   }
 
-  @computed('access_date', 'access_any_time')
   get admissionDateShort() {
     if (this.access_any_time) {
       return 'any';
@@ -56,19 +53,16 @@ export default class BmidModel extends Model {
     }
   }
 
-
-
   set admission_date(value) {
-    if (value == 'any') {
-      this.set('access_any_time', true);
-      this.set('access_date', null);
+    if (value === 'any') {
+      this.access_any_time = true;
+      this.access_date = null;
     } else {
-      this.set('access_any_time', false);
-      this.set('access_date', value);
+      this.access_any_time = false;
+      this.access_date = value;
     }
   }
 
-  @computed('access_any_time', 'access_date', 'wapMissing')
   get access_date_sortable() {
     if (this.wapMissing) {
       return 0;
@@ -85,32 +79,26 @@ export default class BmidModel extends Model {
     return moment(this.access_date).valueOf();
   }
 
-  @computed('wap_status', 'wap_id')
   get wapDisabled() {
-    return !this.wap_id || this.wap_status == 'submitted';
+    return !this.wap_id || this.wap_status === 'submitted';
   }
 
-  @computed('wap_status', 'wap_id')
   get wapMissing() {
     return !this.wap_id;
   }
 
-  @computed('wap_status')
   get wapSubmitted() {
-    return this.wap_status == 'submitted';
+    return this.wap_status === 'submitted';
   }
 
-  @computed('wap_type')
   get wapTypeHuman() {
     return ticketTypeLabel[this.wap_type] || this.wap_type;
   }
 
-  @computed('meals')
   get mealsHuman() {
     return (isEmpty(this.meals) ? 'None' : (MealLabels[this.meals] || this.meals));
   }
 
-  @computed('status')
   get statusHuman() {
     return (BmidStatusLabels[this.status] || `Unknown status ${this.status}`);
   }

@@ -14,7 +14,7 @@ export default class AdminHoursCreditsRoute extends Route {
 
   model(params) {
     const year = requestYear(params);
-    this.set('year', year);
+    this.year = year;
     return this.ajax.request('timesheet/hours-credits', { data: { year }});
   }
 

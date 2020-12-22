@@ -32,7 +32,6 @@ export default class ReportsRadioCheckoutRoute extends Route {
   }
 
   setupController(controller, model) {
-    super.setupController(...arguments);
     controller.setProperties(model);
   }
 

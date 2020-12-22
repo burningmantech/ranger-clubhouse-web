@@ -1,8 +1,6 @@
 import Component from '@glimmer/component';
-import { computed } from '@ember/object';
 
 export default class TimesheetPositionSummaryComponent extends Component {
-  @computed('args.timesheets.@each.{credits,duration,position}')
   get workedPositions() {
     let positionGroups = {};
     const timesheets = this.args.timesheets;

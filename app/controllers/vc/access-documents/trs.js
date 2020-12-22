@@ -1,7 +1,8 @@
 import Controller from '@ember/controller';
-import { action, computed, set } from '@ember/object';
+import { action, set } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import moment from 'moment';
+import { tracked  } from '@glimmer/tracking';
 
 const SHORT_TYPES = {
   gift_ticket: 'GIFT',
@@ -102,7 +103,12 @@ const UNPAID_EXPORT_FORMAT = [
 ];
 
 export default class VcAccessDocumentsTrsController extends Controller {
-  filter = 'all';
+  @tracked filter = 'all';
+  @tracked accessDocuments = [];
+  @tracked selectAll = false;
+  @tracked isSubmitting = false;
+  @tracked viewRecords;
+  @tracked selectedCount = 0;
 
   MAX_BATCH_SIZE = 2000;
 
@@ -120,12 +126,25 @@ export default class VcAccessDocumentsTrsController extends Controller {
     ['Gift Tickets+VP', 'gift_ticket_vp']
   ];
 
-  @computed('viewRecords.@each.selected')
-  get selectedCount() {
-    return this.viewRecords.reduce((total, r) => (r.selected ? 1 : 0) + total, 0);
+  @action
+  changeFilter(value) {
+    this.filter = value;
+    this.selectAll = false;
+    this.accessDocuments.forEach((r) => set(r, 'selected', false));
+    this._buildViewRecords();
+    this.selectedCount = 0;
   }
 
-  @computed('filter', 'people')
+  @action
+  toggleRecord(rec) {
+    set(rec, 'selected', !rec.selected);
+    this._buildSelectedCount();
+  }
+
+  _buildSelectedCount() {
+    this.selectedCount = this.viewRecords.reduce((total, r) => (r.selected ? 1 : 0) + total, 0);
+  }
+
   get badRecords() {
     const records = [];
 
@@ -174,11 +193,11 @@ export default class VcAccessDocumentsTrsController extends Controller {
         // Internal notes gets document numbers
         let note = `${shortType}${dateInfo} - RAD-${doc.id}`;
 
-        if (doc.type == "work_access_pass_so") {
+        if (doc.type === "work_access_pass_so") {
           note += ` - for ${doc.name}`;
         }
 
-        doc.selected = false;
+        set(doc, 'selected', false); // want to track
         doc.submitted = false;
         doc.trsNote = note;
         doc.trsColumn = trsColumn;
@@ -194,27 +213,29 @@ export default class VcAccessDocumentsTrsController extends Controller {
       human.documentTypes = documentTypes;
     });
 
-    this.set('accessDocuments', records);
+    this.accessDocuments = records;
+    this._buildViewRecords();
+    this.selectedCount = 0;
   }
 
-  @computed('accessDocuments', 'filter', 'people')
-  get viewRecords() {
+  _buildViewRecords() {
+    this.viewRecords = this._filterRecords();
+  }
+
+  _filterRecords() {
     const filter = this.filter;
 
-    this.accessDocuments.forEach((r) => set(r, 'selected', false) ); // eslint-disable-line ember/no-side-effects
-    this.set('selectAll', false); // eslint-disable-line ember/no-side-effects
-
-    if (filter == 'work_access_pass_pnv') {
-      return this.accessDocuments.filter((r) =>  r.type == 'work_access_pass' && (r.person.status == 'alpha' || r.person.status == 'prospective'));
-    } else if (filter == 'work_access_pass_ranger') {
-      return this.accessDocuments.filter((r) =>  r.type == 'work_access_pass' && r.person.status != 'alpha' && r.person.status != 'prospective');
-    } else if (filter == 'work_access_pass_all') {
-      return this.accessDocuments.filter((r) =>  r.type == 'work_access_pass' || r.type == 'work_access_pass_so');
-
-    } else if (filter == 'staff_credential_vp'
-      || filter == 'gift_ticket_vp') {
+    if (filter === 'all') {
+      return this.accessDocuments;
+    } else if (filter === 'work_access_pass_pnv') {
+      return this.accessDocuments.filter((r) =>  r.type === 'work_access_pass' && (r.person.status === 'alpha' || r.person.status === 'prospective'));
+    } else if (filter === 'work_access_pass_ranger') {
+      return this.accessDocuments.filter((r) =>  r.type === 'work_access_pass' && r.person.status !== 'alpha' && r.person.status !== 'prospective');
+    } else if (filter === 'work_access_pass_all') {
+      return this.accessDocuments.filter((r) =>  r.type === 'work_access_pass' || r.type === 'work_access_pass_so');
+    } else if (filter === 'staff_credential_vp' || filter === 'gift_ticket_vp') {
       const rows = [];
-      const isSC = (filter == 'staff_credential_vp');
+      const isSC = (filter === 'staff_credential_vp');
 
       this.people.forEach((person) => {
         let tickets = person.documentTypes[(isSC ? 'staff_credential' : 'gift_ticket')] || [];
@@ -243,13 +264,14 @@ export default class VcAccessDocumentsTrsController extends Controller {
       return rows;
     }
 
-    return this.accessDocuments.filter((r) => (filter == 'all' || r.type == filter));
+    return this.accessDocuments.filter((r) => (r.type === filter));
   }
 
   @action
   toggleAll(selected) {
-    this.set('selectAll', selected);
+    this.selectAll = selected;
     this.viewRecords.forEach((r) => set(r, 'selected', selected));
+    this.selectedCount = selected ? this.viewRecords.length : 0;
   }
 
   _fillAddress(person, row) {
@@ -275,21 +297,21 @@ export default class VcAccessDocumentsTrsController extends Controller {
   @action
   exportSelectedAction() {
     const records = this.viewRecords.filter((r) => r.selected);
-    const isRPT = (this.filter == 'reduced_price_ticket');
+    const isRPT = (this.filter === 'reduced_price_ticket');
     let rows;
 
-    if (this.filter == 'staff_credential_vp'
-    || this.filter == 'gift_ticket_vp') {
+    if (this.filter === 'staff_credential_vp'
+    || this.filter === 'gift_ticket_vp') {
       rows = [];
       records.forEach((rec) => {
         const person = rec.person;
         const documents = rec.documents;
         let delivery_method;
 
-        if (this.filter == 'staff_credential_vp') {
+        if (this.filter === 'staff_credential_vp') {
           delivery_method = 'Credential Pick Up';
         } else {
-          delivery_method = (documents[0].delivery_type == 'mail' ? 'USPS' : 'Credential Pick Up' /*'Will Call'*/);
+          delivery_method = (documents[0].delivery_type === 'mail' ? 'USPS' : 'Credential Pick Up' /*'Will Call'*/);
         }
 
         const row = {
@@ -329,14 +351,14 @@ export default class VcAccessDocumentsTrsController extends Controller {
         switch (doc.type) {
         case 'reduced_price_ticket':
         case 'gift_ticket':
-          row.delivery_method = doc.delivery_type == 'mail' ? 'USPS' : 'Will Call';
+          row.delivery_method = doc.delivery_type === 'mail' ? 'USPS' : 'Will Call';
           break;
 
         case 'vehicle_pass':
           if (doc.has_staff_credential) {
             row.delivery_method = 'Credential Pick Up';
           } else {
-            row.delivery_method = (doc.delivery_type == 'mail') ? 'USPS' : 'Credential Pick Up';
+            row.delivery_method = (doc.delivery_type === 'mail') ? 'USPS' : 'Credential Pick Up';
           }
           break;
 
@@ -352,7 +374,7 @@ export default class VcAccessDocumentsTrsController extends Controller {
 
         row[doc.trsColumn] = 1;
 
-        if ((doc.type == 'gift_ticket' || doc.type == 'vehicle_pass') && doc.delivery_type == 'mail') {
+        if ((doc.type === 'gift_ticket' || doc.type === 'vehicle_pass') && doc.delivery_type === 'mail') {
           const address = doc.delivery_address;
           row.address1 = address.street;
           row.city = address.city;
@@ -399,10 +421,10 @@ export default class VcAccessDocumentsTrsController extends Controller {
 
 
     this.modal.confirm('Confirm mask as submitted', `Are you sure you want to mark the ${itemCount} item(s) as submitted?`, () => {
-      this.set('isSubmitting', true);
+      this.isSubmitting = true;
       this.ajax.request('access-document/mark-submitted', { method: 'POST', data: { ids } }).then(() => {
         this.toast.success('Access documents have been successfully marked as submitted.');
-        this.set('isSubmitting', false);
+        this.isSubmitting = false;
         this.viewRecords.forEach((rec) => {
           if (!rec.selected)
             return;
@@ -414,7 +436,7 @@ export default class VcAccessDocumentsTrsController extends Controller {
             rec.documents.forEach((doc) => set(doc, 'submitted', true));
           }
         });
-      }).finally(() => this.set('isSubmitting', false));
+      }).finally(() => this.isSubmitting = false);
     });
   }
 }

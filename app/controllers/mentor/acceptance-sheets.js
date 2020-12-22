@@ -1,63 +1,82 @@
 import Controller from '@ember/controller';
-import { action, computed, set } from '@ember/object';
+import {action, set} from '@ember/object';
 import moment from 'moment';
+import {tracked} from '@glimmer/tracking';
 
 export default class MentorAcceptanceSheetsController extends Controller {
+  @tracked filter;
+  @tracked alphas;
+  @tracked viewAlphas;
+  @tracked printAlphas;
+  @tracked isPrinting;
+  @tracked selectAll;
+
   @action
   toggleAll(value) {
     this.alphas.forEach((alpha) => set(alpha, 'selected', value));
+    this._buildPrintAlphas();
   }
 
-  @computed('alphas.@each.selected', 'filter')
-  get viewAlphas() {
+  @action
+  toggleAlpha(alpha) {
+    set(alpha, 'selected', !alpha.selected);
+    this.selectAll = false;
+    this._buildPrintAlphas();
+  }
+
+  @action
+  changeFilter(value) {
+    this.filter = value;
+    this._buildViewAlphas();
+  }
+
+  _buildViewAlphas() {
     const filter = this.filter;
-    if (filter == 'all') {
-      return this.alphas;
+    if (filter === 'all') {
+      this.viewAlphas = this.alphas;
+    } else if (filter === 'no-signup') {
+      this.viewAlphas = this.alphas.filter((a) => !a.alpha_slot);
+    } else {
+      this.viewAlphas = this.alphas.filter((a) => (a.alpha_slot && this.filter === a.alpha_slot.begins));
     }
 
-    if (filter == 'no-signup') {
-      return this.alphas.filter((a) => !a.alpha_slot);
-    }
-
-    return this.alphas.filter((a) => (a.alpha_slot && this.filter == a.alpha_slot.begins));
+    this._buildPrintAlphas()
   }
 
-  @computed('alphas')
   get filterOptions() {
     const dates = this.alphas.filter((a) => a.alpha_slot != null)
-          .uniqBy('alpha_slot.begins')
-          .mapBy('alpha_slot.begins')
-          .sort();
+      .uniqBy('alpha_slot.begins')
+      .mapBy('alpha_slot.begins')
+      .sort();
 
     const options = dates.map((date) => {
-      return [ moment(date).format('ddd MMM DD [@] HH:mm'), date ];
+      return [moment(date).format('ddd MMM DD [@] HH:mm'), date];
     });
 
-    options.unshift([ 'No Mentor Shift', 'no-signup']);
-    options.unshift([ 'All', 'all']);
+    options.unshift(['No Mentor Shift', 'no-signup']);
+    options.unshift(['All', 'all']);
 
     return options;
   }
 
-  @computed('viewAlphas.@each.selected')
-  get printAlphas() {
-    return this.viewAlphas.filter((a) => a.selected);
+  _buildPrintAlphas() {
+    this.printAlphas = this.viewAlphas.filter((a) => a.selected);
   }
 
   @action
   printAction() {
     const alphas = this.printAlphas;
 
-    if (alphas.length == 0) {
+    if (!alphas.length) {
       this.modal.info(null, 'No alphas were selected.');
       return;
     }
 
-    this.set('isPrinting', true);
+    this.isPrinting = true;
   }
 
   @action
   showAlphasAction() {
-    this.set('isPrinting', false);
+    this.isPrinting = false;
   }
 }

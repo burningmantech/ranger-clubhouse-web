@@ -1,16 +1,15 @@
 <YearSelect @title="Schedule By Callsign" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
-{{#if this.letterOptions}}
   <p>
     Jump to the callsigns starting with the letter:
   </p>
   <p>
     {{#each this.letterOptions as |letter|}}
-      <a href {{on "click" (fn this.scrollToCallsign letter.id)}}
-         class="d-inline-block border p-2 mr-2 mb-2">{{letter.letter}}</a>
+      <a href {{on "click" (fn this.scrollToCallsign letter.id)}}class="d-inline-block border p-2 mr-2 mb-2">
+        {{letter.letter}}
+      </a>
     {{/each}}
   </p>
-{{/if}}
 <p>
   Showing {{pluralize this.people.length "person"}}
 </p>

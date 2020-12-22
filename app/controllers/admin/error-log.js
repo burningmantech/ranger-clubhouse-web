@@ -1,15 +1,13 @@
 import Controller from '@ember/controller';
 import { set } from '@ember/object';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
 
 export default class AdminErrorLogController extends Controller {
 
-  @computed('page')
   get previousPage() {
     return this.page - 1;
   }
 
-  @computed('page')
   get nextPage() {
     return this.page + 1;
   }

@@ -3,12 +3,24 @@ import { action, computed } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { validatePresence } from 'ember-changeset-validations/validators';
 import _ from 'lodash';
+import { tracked } from '@glimmer/tracking';
+import classic from 'ember-classic-decorator';
 
+@classic
 export default class AdminAssetsController extends Controller {
   queryParams = ['year'];
 
-  tempIdFilter = 'All';
-  descriptionFilter = 'All';
+  @tracked tempIdFilter = 'All';
+  @tracked descriptionFilter = 'All';
+  @tracked assets;
+
+  @tracked assetForHistory;
+  @tracked assetHistory;
+  @tracked isLoadingHistory = false;
+  @tracked entry = null;
+
+  @tracked isSubmitting = false;
+  @tracked creatingBarcode = null;
 
   assetDescriptionOptions = [
     'Radio',
@@ -31,24 +43,22 @@ export default class AdminAssetsController extends Controller {
 
   assetValidations = { barcode: [ validatePresence(true) ] };
 
-  @computed('house', 'year')
   get isCurrentYear() {
     return this.house.currentYear() == this.year;
   }
 
-  @computed('assets.[]', 'assets.@each.{barcode,description,temp_id}', 'tempIdFilter', 'descriptionFilter')
   get viewAssets() {
     let assets = this.assets;
 
-    if (this.descriptionFilter != 'All') {
-      assets = assets.filter((asset) => asset.description == this.descriptionFilter);
+    if (this.descriptionFilter !== 'All') {
+      assets = assets.filter((asset) => asset.description === this.descriptionFilter);
     }
 
-    if (this.tempIdFilter != 'All') {
-      if (this.tempIdFilter == 'Blank') {
+    if (this.tempIdFilter !== 'All') {
+      if (this.tempIdFilter === 'Blank') {
         assets = assets.filter((asset) => isEmpty(asset.temp_id));
       } else {
-        assets = assets.filter((asset) => asset.temp_id == this.tempIdFilter);
+        assets = assets.filter((asset) => asset.temp_id === this.tempIdFilter);
       }
     }
 
@@ -79,41 +89,40 @@ export default class AdminAssetsController extends Controller {
 
   @action
   assetHistoryAction(asset) {
-    this.set('assetForHistory', asset);
-    this.set('isLoadingHistory', true);
+    this.assetForHistory = asset;
+    this.isLoadingHistory = true;
 
     this.ajax.request(`asset/${asset.id}/history`)
-      .then((results) => this.set('assetHistory', results.asset_history))
+      .then((results) => this.assetHistory = results.asset_history)
       .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isLoadingHistory', false));
+      .finally(() => this.isLoadingHistory = false);
   }
 
   @action
   closeAssetHistory() {
-    this.set('assetForHistory', null);
-    this.set('assetHistory', null);
+    this.assetForHistory = null;
   }
 
   @action
   newAsset() {
-    this.set('entry', this.store.createRecord('asset', {
+    this.entry = this.store.createRecord('asset', {
       category: 'Operations',
       description: 'Radio',
       perm_assign: false,
-    }));
+    });
   }
 
   @action
   editAsset(asset) {
-    this.set('entry', asset);
+    this.entry = asset;
   }
 
   async _createCopies(model, copies, baseNum, numLen, prefix, suffix) {
-    this.set('isSubmitting', true);
+    this.isSubmitting = true;
 
     for (let i = 0; i < copies; i++) {
       const barcode = prefix+(baseNum+i).toString().padStart(numLen, '0')+suffix;
-      this.set('creatingBarcode', barcode);
+      this.creatingBarcode = barcode;
       const record = this.store.createRecord('asset', {
         barcode,
         description: model.get('description'),
@@ -131,16 +140,16 @@ export default class AdminAssetsController extends Controller {
         this.assets.pushObject(record);
       } catch (response) {
         this.house.handleErrorResponse(response);
-        this.set('isSubmitting', false);
-        this.set('creatingBarcode', null);
+        this.isSubmitting = false;
+        this.creatingBarcode = null;
         return;
       }
     }
 
 
-    this.set('isSubmitting', false);
-    this.set('entry', null);
-    this.set('creatingBarcode', null);
+    this.isSubmitting = false;
+    this.creatingBarcode = null;
+    this.entry = null;
     this.toast.success(`${copies} assets were successfully created`);
   }
 
@@ -175,22 +184,22 @@ export default class AdminAssetsController extends Controller {
       return;
     }
 
-    this.set('isSubmitting', true);
+    this.isSubmitting = true;
     model.save().then(() => {
       if (isNew) {
         this.assets.pushObject(this.entry);
       }
       this.toast.success(`The asset was successfully ${isNew ? 'created' : 'updated'}`);
-      this.set('entry', null);
+      this.entry = null;
     }).catch((response) => {
       this.entry.rollbackAttributes();
       this.house.handleErrorResponse(response);
-    }).finally(() => this.set('isSubmitting', false));
+    }).finally(() => this.isSubmitting = false);
   }
 
   @action
   cancelAsset() {
-    this.set('entry', null);
+    this.entry = null;
   }
 
   @action

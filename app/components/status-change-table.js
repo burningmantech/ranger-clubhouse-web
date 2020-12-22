@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import {action, computed, set} from '@ember/object';
+import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {inject as service} from '@ember/service';
 
@@ -9,6 +9,7 @@ export default class StatusChangeTableComponent extends Component {
   @service toast;
 
   @tracked isSubmitting = false;
+  @tracked selectedCount = 0;
 
   constructor() {
     super(...arguments);
@@ -18,9 +19,8 @@ export default class StatusChangeTableComponent extends Component {
     this.isPastProspective = (newStatus == 'past prospective');
   }
 
-  @computed('args.people.@each.selected')
-  get selectedCount() {
-    return this.args.people.reduce((total, p) => (p.selected ? 1 : 0) + total, 0);
+  _buildSelectedCount() {
+    this.selectedCount = this.args.people.reduce((total, p) => (p.selected ? 1 : 0) + total, 0);
   }
 
   @action
@@ -51,7 +51,7 @@ export default class StatusChangeTableComponent extends Component {
         const person = people.find((p) => r.id == p.id);
 
         if (person) {
-          if (r.status == 'success') {
+          if (r.status === 'success') {
             set(person, 'converted', true);
             set(person, 'selected', false);
             set(person, 'error', false);
@@ -62,11 +62,12 @@ export default class StatusChangeTableComponent extends Component {
         }
       });
 
-      if (failures == 0) {
+      if (!failures) {
         this.toast.success('Congratulations! The status change was successful.');
       } else {
         this.toast.error(`${failures} status changes were not successful.`);
       }
+      this._buildSelectedCount();
     }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isSubmitting = false);
   }
@@ -76,5 +77,13 @@ export default class StatusChangeTableComponent extends Component {
     this.args.people.forEach((person) => {
       set(person, 'selected', checked);
     });
+    this._buildSelectedCount();
   }
+
+  @action
+  togglePerson(person) {
+    set(person, 'selected', !person.selected);
+    this._buildSelectedCount();
+  }
+
 }

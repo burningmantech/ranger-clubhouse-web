@@ -114,12 +114,12 @@ export default class PersonAccessDocumentsController extends Controller {
       delivery = {method: 'will_call'};
     }
 
-    this.set('deliveryEntry', delivery);
+    this.deliveryEntry = delivery;
   }
 
   @action
   cancelDelivery() {
-    this.set('deliveryEntry', null);
+    this.deliveryEntry = null;
   }
 
   @action

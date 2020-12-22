@@ -15,7 +15,7 @@ export default class AdminActionLogRoute extends Route {
     // Take the query parameters, and build up the action log search parameters
     const searchParams = Object.keys(this.queryParams).reduce((hash, key) => {
       if (params[key]) {
-        if (key == 'events') {
+        if (key === 'events') {
           // action log api expects a json array for events, while we
           // want a comma separated field on the url
           hash[key] = params[key].split(',');
@@ -26,7 +26,7 @@ export default class AdminActionLogRoute extends Route {
       return hash;
     }, {});
 
-    this.set('searchParams', searchParams);
+    this.searchParams = searchParams;
     return this.ajax.request('action-log', {data: searchParams});
   }
 
@@ -48,5 +48,4 @@ export default class AdminActionLogRoute extends Route {
       controller.set('logs', null);
     }
   }
-
 }

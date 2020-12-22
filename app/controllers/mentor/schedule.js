@@ -1,14 +1,24 @@
 import Controller from '@ember/controller';
-import EmberObject, { action, computed } from '@ember/object';
+import EmberObject, { action } from '@ember/object';
 import { debounce } from '@ember/runloop';
 import { slotSignup } from 'clubhouse/utils/slot-signup';
+import { tracked } from '@glimmer/tracking';
 
 const SEARCH_RATE_MS = 300;
 
 export default class MentorScheduleController extends Controller {
+  @tracked slot;
+  @tracked foundPeople;
+  @tracked noSearchMatch;
+  @tracked addPersonForm;
+  @tracked removePersonForm;
+  @tracked isSearching;
+  @tracked isSubmitting;
+  @tracked signedInSlot;
+  @tracked apparelSlot;
+
   queryParams = [ 'year' ];
 
-  @computed('slot.people')
   get removeStudentOptions() {
     const options = [
       [ '-', null ]
@@ -25,10 +35,10 @@ export default class MentorScheduleController extends Controller {
   // Show the dialog to add a person
   @action
   showAddPersonAction(slot) {
-    this.set('slot', slot);
-    this.set('foundPeople', null);
-    this.set('noSearchMatch', null);
-    this.set('addPersonForm', EmberObject.create({ name: '' }));
+    this.slot = slot;
+    this.foundPeople = null;
+    this.noSearchMatch = null;
+    this.addPersonForm = EmberObject.create({ name: '' });
   }
 
   @action
@@ -37,13 +47,13 @@ export default class MentorScheduleController extends Controller {
   }
 
   _performSearch(model) {
-    const query = model.get('name');
+    const query = model.name.trim();
 
-    if (query == '' || query.length < 2) {
+    if (query.length < 2) {
       return;
     }
 
-    this.set('isSearching', true);
+    this.isSearching = true;
     this.ajax.request('person', {
       data: {
         query,
@@ -53,25 +63,25 @@ export default class MentorScheduleController extends Controller {
         limit: 10
       }
     }).then((results) => {
-      this.set('foundPeople', results.person);
-      if (results.person.length == 0) {
-        this.set('noSearchMatch', query);
+      this.foundPeople = results.person;
+      if (!results.person) {
+        this.noSearchMatch = query;
       }
     }).catch((response) => {
       this.house.handleErrorResponse(response);
-    }).finally(() => { this.set('isSearching', false); })
+    }).finally(() => { this.isSearching = false; })
   }
 
 
   @action
   cancelSearchAction() {
-    this.set('addPersonForm', null);
+    this.addPersonForm = null;
   }
 
   @action
   addPersonAction(person, slot) {
     slotSignup(this, slot, person, () => {
-      this.set('addPersonForm', null);
+      this.addPersonForm = null;
       this.send('refreshRoute');
     });
   }
@@ -79,47 +89,47 @@ export default class MentorScheduleController extends Controller {
   // Remove a student from the session
   @action
   removePersonAction(model) {
-    const personId = model.get('person_id');
+    const personId = model.person_id;
     const person = this.slot.people.find((student) => student.id == personId );
 
-    this.set('isSubmitting', true);
+    this.isSubmitting = true;
 
     this.ajax.delete(`person/${personId}/schedule/${this.slot.id}`)
       .then((results) => {
-        if (results.status == 'success') {
+        if (results.status === 'success') {
           this.slot.people.removeObject(person);
           this.toast.success(`${person.callsign} was successfully removed from this training session.`);
         } else {
           this.toast.error(`The server responded with an unknown status code [${results.status}]`);
         }
-        this.set('removePersonForm', null);
+        this.removePersonForm = null;
       })
       .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isSubmitting', false));
+      .finally(() => this.isSubmitting = false);
   }
 
   // Show the remove student dialog
   @action
   showRemovePersonAction(slot) {
-    this.set('slot', slot);
-    this.set('removePersonForm', EmberObject.create({ person_id: null }));
+    this.slot = slot;
+    this.removePersonForm = EmberObject.create({ person_id: null });
   }
 
   // Cancel/close the student detail dialog
   @action
   cancelRemovePersonAction() {
-    this.set('removePersonForm', null);
+    this.removePersonForm = null;
   }
 
   // Show the signup sheet page
   @action
   showSignupSheet(slot) {
-    this.set('signupSheetSlot', slot);
+    this.signupSheetSlot = slot;
   }
 
   @action
   clearSignupSheet() {
-    this.set('signupSheetSlot', null);
+    this.signupSheetSlot = null;
   }
 
   // Show the Alpha Info / Signed In sheet page
@@ -130,13 +140,13 @@ export default class MentorScheduleController extends Controller {
     if (!someone) {
       this.modal.info(null, 'No Alphas were found to be signed in for this shift.');
     } else {
-      this.set('signedInSlot', slot);
+      this.signedInSlot = slot;
     }
   }
 
   @action
   clearSignedInSheet() {
-    this.set('signedInSlot', null);
+    this.signedInSlot = null;
   }
 
   // Show the shirts goodie page
@@ -147,12 +157,12 @@ export default class MentorScheduleController extends Controller {
     if (!someone) {
       this.modal.info(null, 'No Alphas were found to be signed in for this shift.');
     } else {
-      this.set('apparelSlot', slot);
+      this.apparelSlot = slot;
     }
   }
 
   @action
   clearAlphaApparel() {
-    this.set('apparelSlot', null);
+    this.apparelSlot = null;
   }
 }

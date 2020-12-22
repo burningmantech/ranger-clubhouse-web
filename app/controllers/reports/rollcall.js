@@ -1,9 +1,19 @@
 import Controller from '@ember/controller';
-import {action, computed, set} from '@ember/object';
+import {action, set} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 import moment from 'moment';
 
 export default class ReportsRollcallController extends Controller {
-  @computed('positionId', 'positions')
+  @tracked positionId;
+  @tracked slotId;
+  @tracked slot;
+  @tracked people;
+  @tracked positions;
+  @tracked position;
+
+  @tracked isRetrievingPeople = false;
+  @tracked isSubmitting = false;
+
   get slotOptions() {
     const position = this.positions.find((p) => p.id == this.positionId);
     if (position == null) {
@@ -21,11 +31,11 @@ export default class ReportsRollcallController extends Controller {
 
   @action
   selectPosition(positionId) {
-    this.set('positionId', positionId);
-    this.set('slotId', 0);
-    this.set('slot', null);
-    this.set('people', []);
-    this.set('position', this.positions.find((p) => p.id == positionId));
+    this.positionId = positionId;
+    this.slotId = 0;
+    this.slot = null;
+    this.people = [];
+    this.position = this.positions.find((p) => p.id == positionId);
   }
 
   /*
@@ -34,18 +44,18 @@ export default class ReportsRollcallController extends Controller {
 
   @action
   selectSlot(slotId) {
-    this.set('slotId', slotId);
+    this.slotId = slotId;
     if (!slotId) {
       return;
     }
 
-    this.set('slot', this.position.slots.find((s) => s.id == slotId));
+    this.slot = this.position.slots.find((s) => s.id == slotId);
 
-    this.set('isRetrievingPeople', true);
+    this.isRetrievingPeople = true;
     this.ajax.request(`slot/${slotId}/people`, {data: {is_onduty: 1, include_photo: 1}})
-      .then((result) => this.set('people', result.people))
+      .then((result) => this.people = result.people)
       .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isRetrievingPeople', false));
+      .finally(() => this.isRetrievingPeople = false);
   }
 
   /*

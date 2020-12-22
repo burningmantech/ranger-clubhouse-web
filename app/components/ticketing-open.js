@@ -1,16 +1,21 @@
+// eslint-disable-next-line ember/no-classic-components
 import Component from '@ember/component';
+import classic from 'ember-classic-decorator';
 import { set } from '@ember/object';
 import { action, computed } from '@ember/object';
 
 import { later } from '@ember/runloop';
 
+@classic
 export default class TicketingOpenComponent extends Component {
+  tagName = '';
   person = null;
   ticketingInfo = null;
   ticketPackage = null;
 
   showing = { };
 
+  // eslint-disable-next-line ember/no-component-lifecycle-hooks
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
     const person = this.person;
@@ -56,7 +61,6 @@ export default class TicketingOpenComponent extends Component {
   nextSection(card) {
     this.set('showing', { [card]: true });
     later(() => { this.house.scrollToElement(`#ticket-${card}`); }, 500);
-
   }
 
   @action

@@ -1,10 +1,13 @@
 import Controller from '@ember/controller';
 import {action, computed, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
+import classic from 'ember-classic-decorator';
 
+@classic
 export default class AdminBulkSignoutController extends Controller {
   @tracked isSubmitting = false;
   @tracked signOffTimesheet = null;
+  @tracked selectAll = false;
 
   @computed('timesheets.@each.selected')
   get selectedCount() {
@@ -18,7 +21,7 @@ export default class AdminBulkSignoutController extends Controller {
 
   @action
   toggleAll(selected) {
-    this.set('selectAll', selected);
+    this.selectAll = selected;
     this.timesheets.forEach((ts) => set(ts, 'selected', selected));
   }
 

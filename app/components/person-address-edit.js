@@ -1,19 +1,31 @@
 import Component from '@glimmer/component';
-import {computed} from '@ember/object';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 import {CountryOptions, StateOptions, StateLabels} from 'clubhouse/constants/countries';
 
 export default class PersonAddressEditComponent extends Component {
+  @tracked stateOptions = null;
+  @tracked stateLabel = null;
+
   countryOptions = CountryOptions;
 
-  @computed('args.f.model.country')
-  get stateOptions() {
-    const country = this.args.f.model.country;
+  constructor() {
+    super(...arguments);
 
-    return StateOptions[country];
+    this._buildOptions(this.args.f.model.country);
   }
 
-  @computed('args.f.model.country')
-  get stateLabel() {
-    return StateLabels[this.args.f.model.country] || 'State/Territory (not required)';
+  @action
+  countryChange(field, country) {
+    this._buildOptions(country);
+  }
+
+  _buildOptions(country) {
+    this.stateOptions = StateOptions[country];
+    if (country) {
+      this.stateLabel = this.stateOptions ? StateLabels[country] : 'State/Territory (not required)';
+    } else {
+      this.stateLabel = '--';
+    }
   }
 }

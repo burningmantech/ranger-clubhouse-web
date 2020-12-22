@@ -1,19 +1,16 @@
 <YearSelect @title="Timesheet By Callsign" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
-{{#if this.letterOptions}}
-  <p>
-    Jump to callsigns starting with the letter:
-  </p>
-  <p>
-    {{#each this.letterOptions as |letter|}}
-      <a href {{action this.scrollToCallsign letter.id}}
-         class="d-inline-block border p-2 mr-2 mb-2">{{letter.letter}}</a>
-    {{/each}}
-  </p>
-{{/if}}
+<p>
+  Jump to callsigns starting with the letter:<br>
+  {{#each this.letterOptions as |letter|}}
+    <a href {{action this.scrollToCallsign letter.id}} class="d-inline-block border p-2 mr-2 mb-2">
+      {{letter.letter}}
+    </a>
+  {{/each}}
+</p>
 <p>
   <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
- </p>
+</p>
 <p>
   [hh:mm] = Time does not count towards appreciations.
 </p>

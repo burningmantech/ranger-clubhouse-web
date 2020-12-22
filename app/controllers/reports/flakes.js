@@ -4,6 +4,7 @@ import { tracked } from '@glimmer/tracking';
 
 export default class ReportsFlakesController extends Controller {
   @tracked expandAll = false;
+  @tracked date;
 
   queryParams = [ 'date' ];
 
@@ -13,12 +14,12 @@ export default class ReportsFlakesController extends Controller {
       return;
     }
 
-    this.set('date', model.get('date'));
+    this.date =  model.date;
   }
 
   @action
   viewCurrentPeriod() {
-    this.set('date', null);
+    this.date = null;
   }
 
   @action

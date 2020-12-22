@@ -14,6 +14,6 @@ export default class MeAlertsRoute extends Route {
   }
 
   setupController(controller, model) {
-    controller.setProperties({ alerts: model.alerts, numbers: model.numbers, user: this.session.user });
+    controller.setProperties({ alerts: model.alerts, numbers: model.numbers, person: this.modelFor('me') });
   }
 }

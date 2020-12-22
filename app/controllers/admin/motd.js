@@ -1,8 +1,7 @@
 import Controller from '@ember/controller';
-import EmberObject, {action} from '@ember/object';
+import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {validatePresence} from 'ember-changeset-validations/validators';
-
 
 export default class AdminMotdController extends Controller {
   @tracked entry;
@@ -62,7 +61,6 @@ export default class AdminMotdController extends Controller {
       return;
     }
 
-
     model.save().then(() => {
       this.toast.success(`MOTD was successfully ${isNew ? 'created' : 'updated'}.`);
       this.motds.update();
@@ -82,23 +80,23 @@ export default class AdminMotdController extends Controller {
 
   @action
   resetFilters() {
-    this.query = EmberObject.create({sort: 'desc', audience: 'pnvs', type: 'all'});
+    this.query = {sort: 'desc', audience: 'pnvs', type: 'all'};
   }
 
   @action
   searchAction() {
     this.queryParams.forEach((param) => {
-      this.set(param, this.query[param] ?? null);
+      set(this, param, this.query[param] ?? null);
     });
   }
 
   @action
   goNextPage() {
-    this.set('page', +this.currentPage + 1);
+    set(this, 'page', +this.currentPage + 1);
   }
 
   @action
   goPrevPage() {
-    this.set('page', +this.currentPage - 1);
+    set(this, 'page', +this.currentPage - 1);
   }
 }

@@ -1,10 +1,10 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 
 export default class MeTimesheetController extends Controller {
-  queryParams = [ 'year' ];
+  queryParams = ['year'];
+  @tracked year;
 
-  @computed('house', 'year')
   get isCurrentYear() {
     return this.house.currentYear() == this.year;
   }

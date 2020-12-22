@@ -1,24 +1,19 @@
 import Component from '@glimmer/component';
-import { alias } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import * as Position from 'clubhouse/constants/positions';
+import { ALPHA } from 'clubhouse/constants/positions';
 
 export default class ModalMultipleEnrollmentComponent extends Component {
   @service session;
 
-  @alias('args.dialog.data') data;
-  @alias('data.person') person;
+  constructor() {
+    super(...arguments);
 
-  @alias('data.enrolledSlots') enrolledSlots;
-
-  @alias('data.slot') slot;
-  @alias('data.slot.position_title') trainingType;
-
-  get isMe() {
-    return this.session.userId == this.person.id;
-  }
-
-  get isAlpha() {
-    return this.slot.position_id == Position.ALPHA;
+    this.data = this.args.dialog.data;
+    this.person = this.data.person;
+    this.enrolledSlots = this.data.enrolledSlots;
+    this.slot = this.data.slot;
+    this.isMe = (this.session.userId === +this.person.id);
+    this.isAlpha = (+this.slot.position_id === ALPHA);
+    this.traininType = this.data.slot.position_title;
   }
 }

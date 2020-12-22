@@ -1,81 +1,90 @@
-{{#if this.isVintage}}
-  <h3>Mark Callsign As Vintage: {{pluralize @people.length "person"}}</h3>
-{{else}}
-  <h3>Convert to {{@newStatus}}: {{pluralize @people.length "person"}}</h3>
-{{/if}}
-
-<table class="table table-hover table-striped table-sm table-width-auto mt-2">
-  <thead>
-    <tr>
-      <th>
-        <Input @type="checkbox" @checked={{this.selectAll}} @change={{action toggleAll value="target.checked"}} />
-      </th>
-      <th>Callsign</th>
-      <th>Current Status</th>
-      {{#unless this.isVintage}}
-        <th>Proposed Status</th>
-      {{/unless}}
-      {{#unless this.isPastProspective}}
-        <th>Last year worked</th>
-        <th>Total years</th>
-      {{/unless}}
-      <th>Email</th>
-      {{#unless this.isVintage}}
-        <th>Vintage?</th>
-      {{/unless}}
-    </tr>
-  </thead>
-  <tbody>
-    {{#each @people as |person|}}
-      <tr class="{{if person.error "bg-danger"}}">
-        <td>
-          {{#if person.converted}}
-            {{fa-icon "check"}}
-          {{else}}
-            {{#if person.error}}
-              {{fa-icon "excalamation-triangle"}}
-            {{/if}}
-            <Input @type="checkbox" @checked={{person.selected}} />
-          {{/if}}
-        </td>
-        <td>
-          <PersonLink @person={{person}} />
-        </td>
-        <td>{{person.status}}</td>
+<ChAccordion as |Accordion|>
+  <Accordion.title>
+    {{#if this.isVintage}}
+      Mark Callsign As Vintage:
+    {{else}}
+      Convert to {{@newStatus}}:
+    {{/if}}
+    {{pluralize @people.length "person"}}
+  </Accordion.title>
+  <Accordion.body>
+    <table class="table table-hover table-striped table-sm table-width-auto mt-2">
+      <thead>
+      <tr>
+        <th>
+          <Input @type="checkbox" @checked={{this.selectAll}}
+                 @change={{action this.toggleAll value="target.checked"}} />
+        </th>
+        <th>Callsign</th>
+        <th>Current Status</th>
         {{#unless this.isVintage}}
-          <td>{{@newStatus}}</td>
+          <th>Proposed Status</th>
         {{/unless}}
         {{#unless this.isPastProspective}}
-          <td class="text-right">{{person.last_year}}</td>
-          <td class="text-right">{{person.years}}</td>
+          <th>Last year worked</th>
+          <th>Total years</th>
         {{/unless}}
-        <td>{{mail-to person.email}}</td>
+        <th>Email</th>
         {{#unless this.isVintage}}
-          <td class="text-center">{{if person.vintage "Y" "-"}}</td>
+          <th>Vintage?</th>
         {{/unless}}
       </tr>
-      {{#if person.error}}
-        <tr class="tr-no-border">
-          <td colspan="5">{{person.error_message}}</td>
+      </thead>
+      <tbody>
+      {{#each @people as |person|}}
+        <tr class="{{if person.error "bg-danger"}}">
+          <td>
+            {{#if person.converted}}
+              {{fa-icon "check"}}
+            {{else}}
+              {{#if person.error}}
+                {{fa-icon "excalamation-triangle"}}
+              {{/if}}
+              <Input @type="checkbox" @checked={{person.selected}}  @change={{action this.togglePerson person}} />
+            {{/if}}
+          </td>
+          <td>
+            <PersonLink @person={{person}} />
+          </td>
+          <td>{{person.status}}</td>
+          {{#unless this.isVintage}}
+            <td>{{@newStatus}}</td>
+          {{/unless}}
+          {{#unless this.isPastProspective}}
+            <td class="text-right">{{person.last_year}}</td>
+            <td class="text-right">{{person.years}}</td>
+          {{/unless}}
+          <td>{{mail-to person.email}}</td>
+          {{#unless this.isVintage}}
+            <td class="text-center">{{if person.vintage "Y" "-"}}</td>
+          {{/unless}}
         </tr>
-      {{/if}}
-    {{else}}
-      <tr>
-        <td colspan="{{if (or this.isVintage this.isPastProspective) 6 8}}" class="text-danger">No accounts found</td>
-      </tr>
-    {{/each}}
-  </tbody>
-</table>
+        {{#if person.error}}
+          <tr class="tr-no-border">
+            <td colspan="5">{{person.error_message}}</td>
+          </tr>
+        {{/if}}
+      {{else}}
+        <tr>
+          <td colspan="{{if (or this.isVintage this.isPastProspective) 6 8}}" class="text-danger">No accounts found</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
 
-<p class="mb-4">
-  <button type="button" class="btn btn-primary" disabled={{or this.isSubmitting (not this.selectedCount)}} {{action this.submit}}>
-    {{#if this.isVintage}}
-      Mark as Vintage ({{this.selectedCount}})
-    {{else}}
-      Convert to {{@newStatus}} ({{this.selectedCount}})
-    {{/if}}
-  </button>
-  {{#if this.isSubmitting}}
-    <LoadingIndicator />
-  {{/if}}
-</p>
+    <p class="mb-4">
+      <button type="button" class="btn btn-primary"
+              disabled={{or this.isSubmitting (not this.selectedCount)}}
+            {{action this.submit}}>
+        {{#if this.isVintage}}
+          Mark as Vintage ({{this.selectedCount}})
+        {{else}}
+          Convert to {{@newStatus}} ({{this.selectedCount}})
+        {{/if}}
+      </button>
+      {{#if this.isSubmitting}}
+        <LoadingIndicator/>
+      {{/if}}
+    </p>
+  </Accordion.body>
+</ChAccordion>

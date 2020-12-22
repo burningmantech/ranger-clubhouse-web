@@ -1,10 +1,13 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
 import { validatePresence } from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
+import { tracked } from '@glimmer/tracking';
 
 export default class MeTimesheetCorrectionsMissingController extends Controller {
-  entry = null;
+  @tracked entry = null;
+  @tracked positions;
+  @tracked isSubmitting = false;
 
   timesheetValidations = {
     on_duty:  [ validateDateTime({ before: 'off_duty' }), validatePresence(true) ],
@@ -13,14 +16,12 @@ export default class MeTimesheetCorrectionsMissingController extends Controller 
   };
 
   // Create a list of positions options to check
-  @computed('positions')
   get positionOptions() {
       return this.positions.map((p) => [ p.title, p.id ]);
   }
 
   // Suggest a starting date for the datetime picker when creating
   // a new request.
-  @computed('entry', 'timesheetInfo.correction_year')
   get startDateForEntry() {
     const entry = this.entry;
 
@@ -34,22 +35,22 @@ export default class MeTimesheetCorrectionsMissingController extends Controller 
   // Start a new timesheet missing request
   @action
   newRequestAction() {
-    this.set('entry', this.store.createRecord('timesheet-missing', {
+    this.entry = this.store.createRecord('timesheet-missing', {
       person_id: this.session.userId,
       position_id: this.positions.firstObject.id,
-     }));
+     });
   }
 
   // Edit an existing request
   @action
   editAction(timesheetMissing) {
-    this.set('entry', timesheetMissing);
+    this.entry =  timesheetMissing;
   }
 
   // Cancel the form
   @action
   cancelAction() {
-    this.set('entry', null);
+    this.entry = null;
   }
 
   // Save a timesheet missing request
@@ -61,15 +62,15 @@ export default class MeTimesheetCorrectionsMissingController extends Controller 
 
     this.toast.clear();
 
-    const isNew = model.get('isNew');
-    this.set('isSubmitting', true);
+    const isNew = model.isNew;
+    this.isSubmitting = true;
 
     model.save().then(() => {
       this.toast.success(`Your request has been successfully ${isNew ? 'submitted' : 'updated'}.`);
       this.timesheetsMissing.pushObject(this.entry);
-      this.set('entry', null);
+      this.entry = null;
     }).catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('isSubmitting', false));
+    .finally(() => this.isSubmitting = false);
   }
 
   // Delete a request - confirm first before proceeding.

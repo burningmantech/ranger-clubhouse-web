@@ -131,7 +131,7 @@
       <div class="border rounded p-2 mb-2">
         <div class="form-row">
           <f.input @name="slotPositionId" @label="Select on the team to show available shifts" @type="select"
-                   @options={{this.slotPositionOptions}} @grid="col-auto" @onChange={{this.slotPositionChange}} />
+                   @options={{this.slotPositionOptions}} @grid="col-auto" @onChange={{this.positionChange}} />
           {{#if f.model.slotPositionId}}
             <f.input @name="slot_id" @label="Shift to broadcast to:" @type="select" @options={{this.slotOptions}} />
           {{/if}}

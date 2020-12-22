@@ -1,6 +1,5 @@
-import Model, { attr } from '@ember-data/model'
-import { computed } from '@ember/object';
-import { ticketTypeLabel } from 'clubhouse/constants/ticket-types';
+import Model, {attr} from '@ember-data/model'
+import {ticketTypeLabel} from 'clubhouse/constants/ticket-types';
 import moment from 'moment';
 
 export default class AccessDocumentModel extends Model {
@@ -11,89 +10,74 @@ export default class AccessDocumentModel extends Model {
   @attr('string') access_date;
   @attr('boolean') access_any_time;
   @attr('string') name;
-  @attr('string', { readOnly: true }) comments;
-  // write-only, backend will appeand to comments
+  @attr('string', {readOnly: true}) comments;
+  // write-only, backend will append to comments
   @attr('string') additional_comments;
   @attr('string') expiry_date;
-  @attr('string', { readOnly: true }) create_date;
-  @attr('string', { readOnly: true }) modified_date;
+  @attr('string', {readOnly: true}) create_date;
+  @attr('string', {readOnly: true}) modified_date;
 
   // Only returned when requesting items available for delivery
-  @attr('boolean', { readOnly: true }) has_staff_credential;
+  @attr('boolean', {readOnly: true}) has_staff_credential;
 
-  @computed('type')
   get isTicket() {
-      return (this.type === 'staff_credential'
-        || this.type === 'reduced_price_ticket'
-        || this.type === 'gift_ticket');
+    return (this.type === 'staff_credential'
+      || this.type === 'reduced_price_ticket'
+      || this.type === 'gift_ticket');
   }
 
-  @computed('type')
   get isStaffCredential() {
     return this.type === 'staff_credential';
   }
 
-  @computed('type')
   get isReducedPriceTicket() {
     return this.type === 'reduced_price_ticket';
   }
 
-  @computed('type')
   get isGiftTicket() {
     return this.type === 'gift_ticket';
   }
 
-  @computed('type')
   get hasAccessDate() {
-    return (this.type === 'staff_credential' || this.type === 'work_access_pass' || this.type === 'work_acess_pass_so');
+    return (this.type === 'staff_credential' || this.type === 'work_access_pass' || this.type === 'work_access_pass_so');
   }
 
-  @computed('status')
-	get isQualified() {
+  get isQualified() {
     return this.status === 'qualified';
   }
 
-  @computed('status')
-	get isClaimed() {
+  get isClaimed() {
     return this.status === 'claimed';
   }
 
-  @computed('status')
-	get isBanked() {
+  get isBanked() {
     return this.status === 'banked';
   }
 
-  @computed('status')
-	get isSubmitted() {
+  get isSubmitted() {
     return this.status === 'submitted';
   }
 
-  @computed('status')
-	get isUsed() {
-    return this.status == 'used';
+  get isUsed() {
+    return this.status === 'used';
   }
 
-  @computed('status')
-	get isCancelled() {
+  get isCancelled() {
     return this.status === 'cancelled';
   }
 
-  @computed('status')
-	get isExpired() {
+  get isExpired() {
     return this.status === 'expired';
   }
 
-  @computed('type')
   get typeHuman() {
     return ticketTypeLabel[this.type];
   }
 
-  @computed('expiry_date')
   get expiryYear() {
     return moment(this.expiry_date).format('YYYY');
   }
 
-  @computed('access_date')
   get accessDateFormatted() {
     return moment(this.access_date).format('dddd MMMM Do, YYYY');
   }
@@ -112,11 +96,11 @@ export default class AccessDocumentModel extends Model {
 
   set admission_date(value) {
     if (value === 'any') {
-      this.set('access_any_time', true);
-      this.set('access_date', null);
+      this.access_any_time = true;
+      this.access_date = null;
     } else {
-      this.set('access_any_time', false);
-      this.set('access_date', value);
+      this.access_any_time = false;
+      this.access_date = value;
     }
   }
 
@@ -125,7 +109,6 @@ export default class AccessDocumentModel extends Model {
   }
 
   set expiry_year(year) {
-    this.set('expiry_date', `${year}-09-15`);
+    this.expiry_date = `${year}-09-15`;
   }
-
 }

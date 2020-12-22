@@ -6,16 +6,16 @@ import Service from '@ember/service';
 
 // Stub out session
 
-const sessionStub = Service.extend({
-  user: {isAdmin: true, isVC: true}, // eslint-disable-line ember/avoid-leaking-state-in-ember-objects
-  userId: 0
-});
+class ServiceStub extends Service {
+  user = {isAdmin: true, isVC: true};
+  userId = 0
+}
 
 module('Integration | Component | dashboard-pnv', function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.owner.register('service:session', sessionStub);
+    this.owner.register('service:session', ServiceStub);
   });
 
   test('it renders', async function (assert) {

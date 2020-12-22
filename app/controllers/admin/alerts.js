@@ -1,20 +1,23 @@
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 
 export default class AdminAlertsController extends Controller {
+  @tracked entry = null;
+
   @action
   newAlert() {
-    this.set('entry', this.store.createRecord('alert'));
+    this.entry = this.store.createRecord('alert');
   }
 
   @action
   editAlert(alert) {
-    this.set('entry', alert);
+    this.entry = alert;
   }
 
   @action
   cancelAlert() {
-    this.set('entry', null);
+    this.entry = null;
   }
 
   @action
@@ -22,7 +25,7 @@ export default class AdminAlertsController extends Controller {
     if (!isValid)
       return;
 
-    const isNew = model.get('isNew');
+    const isNew = model.isNew;
 
     model.save().then((record) => {
       if (isNew) {
@@ -30,7 +33,7 @@ export default class AdminAlertsController extends Controller {
       }
 
       this.toast.success(`Alert was successfully ${isNew ? 'created' : 'updated'}.`);
-      this.set('entry', null);
+      this.entry = null;
     }).catch((response) => {
       this.house.handleErrorResponse(response);
       this.entry.rollbackAttributes();
@@ -44,7 +47,7 @@ export default class AdminAlertsController extends Controller {
         alert.destroyRecord().then(() => {
           this.alerts.removeObject(alert);
           this.toast.success(`Alert was successfully deleted.`);
-      })
+        })
       });
   }
 }

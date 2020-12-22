@@ -1,15 +1,14 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import {action} from '@ember/object';
 
 export default class ReportsTimesheetByCallsignController extends Controller {
   queryParams = ['year'];
 
-   @action
+  @action
   scrollToCallsign(id) {
     this.house.scrollToElement(`#person-${id}`, false);
   }
 
-  @computed('people')
   get letterOptions() {
     let letters = {};
     this.people.forEach((person) => {
@@ -20,21 +19,21 @@ export default class ReportsTimesheetByCallsignController extends Controller {
     });
 
     return Object.keys(letters).sort().map((letter) => {
-      return { id: letters[letter], letter };
+      return {id: letters[letter], letter};
     });
   }
 
   @action
   exportToCSV() {
     const CSV_COLUMNS = [
-      { title: 'Callsign', key: 'callsign' },
-      { title: 'Status', key: 'status' },
-      { title: 'From', key: 'on_duty' },
-      { title: 'To', key: 'off_duty' },
-      { title: 'Hours', key: 'hours' },
-      { title: 'Credits', key: 'credits' },
-      { title: 'Position', key: 'position' },
-      { title: 'Count Hours', key: 'count_hours' }
+      {title: 'Callsign', key: 'callsign'},
+      {title: 'Status', key: 'status'},
+      {title: 'From', key: 'on_duty'},
+      {title: 'To', key: 'off_duty'},
+      {title: 'Hours', key: 'hours'},
+      {title: 'Credits', key: 'credits'},
+      {title: 'Position', key: 'position'},
+      {title: 'Count Hours', key: 'count_hours'}
     ];
 
     const rows = [];

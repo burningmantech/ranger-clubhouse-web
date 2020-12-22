@@ -4,15 +4,17 @@
     <label class="col-form-label">Filter</label>
   </div>
   <div class="col-auto">
-    <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}} @onChange={{action
-            (mut this.filter)}} @controlClass="form-control"/>
+    <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}}
+                    @onChange={{action (mut this.filter)}} @controlClass="form-control"/>
   </div>
   <div class="col-auto">
-    <button type="button" class="btn btn-primary" disabled={{if this.viewPeople false true}} {{action
-            this.exportAllToCSV}}>Export {{pluralize this.viewPeople.length "person"}} to CSV
+    <button type="button" class="btn btn-primary" disabled={{if this.viewPeople false true}}
+      {{action this.exportAllToCSV}}>
+      Export {{pluralize this.viewPeople.length "person"}} to CSV
     </button>
-    <button type="button" class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>{{#if
-            this.expandAll}}Hide All{{else}}Expand All{{/if}}</button>
+    <button type="button" class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>
+      {{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}
+    </button>
   </div>
 </div>
 

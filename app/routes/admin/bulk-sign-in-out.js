@@ -13,5 +13,6 @@ export default class AdminBulkSignInOutRoute extends Route {
     controller.set('haveError', false);
     controller.set('entries', []);
     controller.set('isSubmitting', false);
+    controller.set('errorCount', 0);
   }
 }

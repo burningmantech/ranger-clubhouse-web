@@ -1,5 +1,5 @@
 <YearSelect @title={{concat training.title " Sessions"}} @year={{this.year}} @onChange={{action (mut this.year)}}
-            @subheader=true/>
+            @subheader={{true}}/>
 
   {{#each this.trainingSessions as |session|}}
     <ChCard @header={{concat (shift-format session.slot.begins) " " session.slot.description}}>

@@ -1,24 +1,28 @@
 import Controller from '@ember/controller';
 import {action} from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 export default class VcPhotosController extends Controller {
+  @tracked photo;
+  @tracked page;
+
   @action
   showPhotoAction(photo) {
-    this.set('showPhoto', photo);
+    this.showPhoto = photo;
   }
 
   @action
   closePhotoAction() {
-    this.set('showPhoto', null);
+    this.showPhoto = null;
   }
 
   @action
   goNextPage() {
-    this.set('page', +this.currentPage + 1);
+    this.page = +this.currentPage + 1;
   }
 
   @action
   goPrevPage() {
-    this.set('page', +this.currentPage - 1);
+    this.page = +this.currentPage - 1;
   }
 }

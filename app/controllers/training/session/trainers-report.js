@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
-import { set } from '@ember/object';
+import {set} from '@ember/object';
 import * as Position from 'clubhouse/constants/positions';
+import {tracked} from '@glimmer/tracking';
 
 const TITLE_MAP = {
   [Position.CHEETAH]: 'Mnt',
@@ -48,6 +49,11 @@ const TITLE_MAP = {
 };
 
 export default class TrainingSessionTrainersReportController extends Controller {
+  @tracked vetCount;
+  @tracked passed;
+  @tracked firstYearCount;
+  @tracked alphaCount;
+  @tracked studentGroups;
 
   // Called from the route in setupController()
   computeStudentCounts() {
@@ -107,12 +113,12 @@ export default class TrainingSessionTrainersReportController extends Controller 
     vetStudents = this._sortByYearCallsign(vetStudents);
     binaryStudents = this._sortByYearCallsign(binaryStudents);
 
-    this.set('vetCount', vetCount);
-    this.set('passed', passed);
-    this.set('firstYearCount', firstYearCount);
-    this.set('alphaCount', alphaCount);
+    this.vetCount = vetCount;
+    this.passed = passed;
+    this.firstYearCount = firstYearCount;
+    this.alphaCount = alphaCount;
 
-    this.set('studentGroups', [
+    this.studentGroups = [
       {
         groupName: 'Veterans',
         students: vetStudents
@@ -121,7 +127,7 @@ export default class TrainingSessionTrainersReportController extends Controller 
         groupName: (this.training.is_art ? 'ART Prospectives' : 'Binaries'),
         students: binaryStudents
       },
-    ]);
+    ];
   }
 
   // Sort people by year, callsign

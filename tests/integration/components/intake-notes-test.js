@@ -4,15 +4,15 @@ import {render} from '@ember/test-helpers';
 import {hbs} from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 
-const sessionStub = Service.extend({
-  user: { hasRole() { return true} }, // eslint-disable-line ember/avoid-leaking-state-in-ember-objects
-});
+class ServiceStub extends Service{
+  user = { hasRole() { return true } }
+}
 
 module('Integration | Component | intake-notes', function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.owner.register('service:session', sessionStub);
+    this.owner.register('service:session', ServiceStub);
   });
 
   test('it renders', async function (assert) {

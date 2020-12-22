@@ -12,7 +12,7 @@
  */
 
 import Component from '@glimmer/component';
-import EmberObject, {action, computed, set} from '@ember/object';
+import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {isEmpty} from '@ember/utils';
 import {inject as service} from '@ember/service';
@@ -38,6 +38,8 @@ export default class BroadcastComplexComponent extends Component {
   @tracked people = null;
   @tracked noPeople = false;
   @tracked result = null;
+
+  @tracked slotOptions = [];
 
   statusOptions = [
     'active',
@@ -70,7 +72,7 @@ export default class BroadcastComplexComponent extends Component {
     const message = defaults.message;
     const subject = defaults.subject;
 
-    this.broadcastForm = EmberObject.create({
+    this.broadcastForm ={
       alert_id: '',
       attending: true,
       message: isEmpty(message) ? '' : message,
@@ -85,7 +87,7 @@ export default class BroadcastComplexComponent extends Component {
       statuses: ['active'],
       subject: isEmpty(subject) ? '' : subject,
       training: 'any',
-    });
+    };
   }
 
   // Build up a validation object based on the broadcast type
@@ -151,13 +153,12 @@ export default class BroadcastComplexComponent extends Component {
     return positions;
   }
 
-  // Build the slot options based on the position selected
-  @computed('args.broadcast.slots', 'broadcastForm.slotPositionId')
-  get slotOptions() {
-    const id = this.broadcastForm.slotPositionId;
 
-    if (id == null) {
-      return [];
+  @action
+  positionChange(name, id, model) {
+     model.slotPositionId = id;
+    if (!id) {
+      this.slotOptions = [];
     }
 
     const position = this.args.broadcast.slots[parseInt(id)];
@@ -167,14 +168,7 @@ export default class BroadcastComplexComponent extends Component {
     });
     slots.unshift({id: '', title: '----'});
 
-    return slots;
-  }
-
-  @action
-  slotPositionChange(name, value) {
-    // Hackary: when the user selects the position from the available slots,
-    // need to cause slotOptions to recomputed to only build for that positions.
-    set(this.broadcastForm, 'slotPositionId', value);
+    this.slotOptions = slots;
   }
 
   // Build up the API params for the candidates or transmit request
@@ -233,7 +227,7 @@ export default class BroadcastComplexComponent extends Component {
       .then((result) => {
         this.people = result.people;
 
-        if (this.people.length == 0) {
+        if (!this.people.length) {
           this.isReviewing = false;
           this.noPeople = true;
         }

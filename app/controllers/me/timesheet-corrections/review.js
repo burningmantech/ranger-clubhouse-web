@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import {action} from '@ember/object';
+import {action, set} from '@ember/object';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import {tracked} from '@glimmer/tracking';
 
@@ -37,7 +37,7 @@ export default class MeTimesheetCorrectionsReviewController extends Controller {
     model.review_status = 'pending';
     model.save().then(() => {
       this.entry = null;
-      this.set('timesheetInfo.timesheet_confirmed', 0);
+      set(this, 'timesheetInfo.timesheet_confirmed', 0);
       this.toast.success('Your correction note has been submitted.');
     }).catch((response) => this.house.handleErrorResponse(response));
   }

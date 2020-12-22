@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import EmberObject, {action, computed} from '@ember/object';
+import EmberObject, {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {Role} from 'clubhouse/constants/roles';
 import {debounce} from '@ember/runloop';
@@ -39,6 +39,7 @@ export default class SearchItemBarComponent extends Component {
   @tracked searchText = '';
   @tracked searchResults = [];
   @tracked searchType = 'person';
+  @tracked searchPlaceholder = '';
 
   constructor() {
     super(...arguments);
@@ -65,6 +66,8 @@ export default class SearchItemBarComponent extends Component {
     this.router.on('routeWillChange', () => {
       this.showSearchOptions = false; // close up the box on route change.
     });
+
+    this._buildPlaceholder();
    }
 
   /**
@@ -75,6 +78,7 @@ export default class SearchItemBarComponent extends Component {
   @action
   searchFormChange() {
     this.house.setKey('person-search-prefs', this.searchForm);
+    this._buildPlaceholder();
   }
 
 
@@ -314,8 +318,7 @@ export default class SearchItemBarComponent extends Component {
     this.showSearchOptions = false;
   }
 
-  @computed('searchForm.{name,callsign,email,formerly_known_as,mode}')
-  get searchPlaceholder() {
+  _buildPlaceholder() {
     const form = this.searchForm;
 
     const fields = [];
@@ -344,7 +347,6 @@ export default class SearchItemBarComponent extends Component {
 
     const arrayToSentence = (a, conjunction) => [a.slice(0, -1).join(', '), a.pop()].filter(w => w !== '').join(` ${conjunction} `);
 
-    return `Enter a ${arrayToSentence(fields, 'or')} to search`;
+    this.searchPlaceholder = arrayToSentence(fields, 'or');
   }
-
 }

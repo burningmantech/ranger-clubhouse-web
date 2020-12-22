@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
-import EmberObject, { set } from '@ember/object';
-import { action } from '@ember/object';
-import { debounce } from '@ember/runloop';
+import EmberObject, {set, setProperties} from '@ember/object';
+import {action} from '@ember/object';
+import {debounce} from '@ember/runloop';
 import RSVP from 'rsvp';
 
 const EventOptions = [
@@ -37,12 +37,12 @@ export default class AdminActionLogController extends Controller {
 
   @action
   goNextPage() {
-    this.set('page', +this.currentPage + 1);
+    set(this, 'page', +this.currentPage + 1);
   }
 
   @action
   goPrevPage() {
-    this.set('page', +this.currentPage - 1);
+    set(this, 'page', +this.currentPage - 1);
   }
 
   _performSearch(query, resolve, reject) {
@@ -50,10 +50,7 @@ export default class AdminActionLogController extends Controller {
       return resolve([query]);
     }
 
-    return this.ajax
-      .request('callsigns', {
-        data: { query, type: 'all', limit: 20 }
-      })
+    return this.ajax.request('callsigns', {data: {query, type: 'all', limit: 20}})
       .then((result) => {
         if (result.callsigns.length > 0) {
           return resolve(result.callsigns.map((c) => c.callsign));
@@ -71,7 +68,7 @@ export default class AdminActionLogController extends Controller {
 
   @action
   resetFilters() {
-    this.set('query', EmberObject.create({ sort: 'desc' }));
+    set(this, 'query', EmberObject.create({sort: 'desc'}));
   }
 
   @action
@@ -80,7 +77,7 @@ export default class AdminActionLogController extends Controller {
 
     this.queryParams.forEach((param) => {
       if (this.query[param]) {
-        if (params == 'events') {
+        if (params === 'events') {
           params[param] = this.query.events.join(',');
         } else {
           params[param] = this.query[param];
@@ -90,7 +87,7 @@ export default class AdminActionLogController extends Controller {
       }
     });
     params.page = null;
-    this.setProperties(params);
+    setProperties(this, params);
     this.toast.clear();
   }
 }

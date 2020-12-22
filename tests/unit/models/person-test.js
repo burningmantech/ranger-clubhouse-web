@@ -17,20 +17,4 @@ module('Unit | Model | person', function(hooks) {
     assert.equal(model.isNotRanger, false);
   });
 
-  test('hasRole works', function(assert) {
-    let store = this.owner.lookup('service:store');
-    let model = run(() => store.createRecord('person', { roles: [ 1, 2 ] }));
-
-    assert.equal(model.hasRole(1), true);
-    assert.equal(model.hasRole(3), false);
-  });
-
-  test('hasAllRoles works', function(assert) {
-    let store = this.owner.lookup('service:store');
-    let model = run(() => store.createRecord('person', { roles: [ 1, 2 ] }));
-
-    assert.equal(model.hasAllRoles([1,2]), true);
-    assert.equal(model.hasAllRoles([1,2,3]), false);
-  });
-
 });

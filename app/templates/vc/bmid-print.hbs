@@ -55,7 +55,7 @@
     </span>
   </p>
 
-  {{#if doNotPrint}}
+  {{#if this.doNotPrint}}
     <div class="border p-2">
       Do Not Print:
       {{#each doNotPrint as |bmid idx|~}}
@@ -65,28 +65,28 @@
     </div>
   {{/if}}
 
-  {{#if issues}}
+  {{#if this.issues}}
     <div class="border p-2">
       Issues:
-      {{#each issues as |bmid idx|~}}
+      {{#each this.issues as |bmid idx|~}}
         {{~if idx ","}}
         <PersonLink @person={{bmid.person}} />
       {{/each}}
     </div>
   {{/if}}
 
-  {{#if unusualStatus}}
+  {{#if this.unusualStatus}}
     <div class="border p-2">
       Unusual Status:
-      {{#each unusualStatus as |bmid idx|~}}
+      {{#each this.unusualStatus as |bmid idx|~}}
         {{~if idx ","}}<span class="d-inline-block"><PersonLink @person={{bmid.person}} /> ({{bmid.person.status}}
         )</span>
       {{/each}}
     </div>
   {{/if}}
 
-  Showing {{this.viewBmids.length}} of {{this.bmids.length}} ({{bmidsSelectedCount}} selected)
-  {{#if textFilter}}
+  Showing {{this.viewBmids.length}} of {{this.bmids.length}} ({{this.bmidsSelectedCount}} selected)
+  {{#if this.textFilter}}
     <span class="ml-2 font-weight-bold">Text filtering by "{{this.textFilter}}"</span>
   {{/if}}
   <table class="table table-sm table-striped">
@@ -110,7 +110,7 @@
     <tbody>
     {{#each this.viewBmids as |bmid|}}
       <tr class="{{if (eq bmid.status "failed") "bg-danger"}}">
-        <td><Input @type="checkbox" @checked={{bmid.selected}} /></td>
+        <td><Input @type="checkbox" @checked={{bmid.selected}} @change={{action this.toggleBmid bmid}}/></td>
         <td>{{bmid.statusHuman}}</td>
         <td>{{bmid.person.callsign}}</td>
         <td>{{bmid.person.first_name}} {{bmid.person.last_name}}</td>
@@ -137,7 +137,7 @@
 
   <ChForm @formId="batch" @formFor={{this.batchForm}} @onSubmit={{this.sendToLambase}} as |f|>
     <div class="form-row">
-      <f.input @name="batchInfo" @label="Batch Information" @size=32 @maxlength=32 @grid="col-auto"
+      <f.input @name="batchInfo" @label="Batch Information" @size={{32}} @maxlength={{32}} @grid="col-auto"
                @hint="Example batch info might be 'Batch #1, specials' or 'Batch #2, special stragglers', or 'Batch #3, alphas', etc. The Clubhouse will automatically add
 your name and the date and time you submitted to Lambase."
       />

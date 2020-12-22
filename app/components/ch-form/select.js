@@ -1,7 +1,6 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {typeOf} from '@ember/utils';
-import {computed} from '@ember/object';
 import {assert} from '@ember/debug';
 import {tracked} from '@glimmer/tracking';
 
@@ -68,7 +67,6 @@ export default class ChFormSelectComponent extends Component {
     return {label, value};
   }
 
-  @computed('args.options.[]')
   get selectOptions() {
     const { options } = this.args;
     if (!options) {

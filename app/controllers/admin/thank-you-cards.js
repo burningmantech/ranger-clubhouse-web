@@ -2,9 +2,14 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { CountryLabels } from 'clubhouse/constants/countries';
+import { tracked } from '@glimmer/tracking';
 
 export default class AdminThankYouCardsController extends Controller {
   queryParams = [ 'year' ];
+
+  @tracked isSubmitting = false;
+  @tracked passwordOkay = false;
+  @tracked people = null;
 
   @action
   submit() {
@@ -13,17 +18,17 @@ export default class AdminThankYouCardsController extends Controller {
       return;
     }
 
-    this.set('isSubmitting', true);
+    this.isSubmitting = true;
     this.ajax.request('timesheet/thank-you', { data: { password: this.password, year: this.year }}).then((result) => {
-      this.set('people', result.people);
-      this.set('passwordOkay', true);
+      this.people = result.people;
+      this.passwordOkay = true;
     }).catch((response) => {
       if (response.status == 403) {
         this.modal.info(null, 'Sorry, the password is incorrect.');
       } else {
         this.house.handleErrorResponse(response);
       }
-    }).finally(() => this.set('isSubmitting', false));
+    }).finally(() => this.isSubmitting = false);
   }
 
   @action

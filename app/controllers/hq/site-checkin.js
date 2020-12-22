@@ -1,8 +1,11 @@
 import Controller from '@ember/controller';
 import { action, computed } from '@ember/object';
-import * as Position from 'clubhouse/constants/positions';
+import { TRAINING } from 'clubhouse/constants/positions';
 import { tracked } from '@glimmer/tracking';
+import { NON_RANGER } from 'clubhouse/constants/person_status';
+import classic from 'ember-classic-decorator';
 
+@classic
 export default class HqSiteCheckinController extends Controller {
   @tracked isSubmitting = false;
   @tracked isContactSaved = false;
@@ -14,19 +17,12 @@ export default class HqSiteCheckinController extends Controller {
     return this.assets.filter((asset) => !asset.checked_in);
   }
 
-  @computed('eventInfo.trainings')
-  get dirtTraining() {
-    return this.eventInfo.trainings.find((training) => training.position_id == Position.TRAINING);
-  }
-
-  @computed('dirtTraining', 'eventInfo.training.@each.position_id', 'person.status')
   get isPersonDirtTrained() {
-    if (this.person.status === 'non ranger') {
+    if (this.person.status === NON_RANGER) {
       return true;
     }
 
-    const training = this.dirtTraining;
-
+    const training = this.eventInfo.trainings.find((training) => training.position_id === TRAINING);
     return (training && training.status === 'pass');
   }
 

@@ -57,7 +57,10 @@ export default class LoginController extends Controller {
       return;
 
     this.loginError = null;
-    let credentials = model.getProperties('identification', 'password');
+    const credentials = {
+      identification: model.identification,
+      password: model.password
+    };
 
     // For analytics
     credentials.screen_size = {

@@ -1,31 +1,25 @@
 import Controller from '@ember/controller';
-import { action, computed, set } from '@ember/object';
+import { action, set } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 export default class MentorConvertController extends Controller {
+  @tracked alphas;
+  @tracked passAll = false;
+  @tracked bonkAll = false;
+  @tracked isSubmitting = false;
 
-  @computed('alphas')
-  get passed() {
-    return this.alphas.filter((a) => a.mentor_status == 'pass');
-  }
 
-  @computed('alphas')
-  get bonked() {
-    return this.alphas.filter((a) => (a.mentor_status == 'bonk' || a.mentor_status == 'self-bonk'));
-  }
-
-  @computed('bonked.@each.selected')
   get bonkCount() {
     return this.bonked.reduce((total, a) => (a.selected ? 1 : 0) + total, 0);
   }
 
-  @computed('passed.@each.selected')
   get passCount() {
     return this.passed.reduce((total, a) => (a.selected ? 1 : 0) + total, 0);
   }
 
   @action
   togglePassAll(checked) {
-    this.set('passAll', checked);
+    this.passAll = checked;
     this.passed.forEach((p) => {
       if (!p.converted) {
         set(p, 'selected', checked)
@@ -35,7 +29,7 @@ export default class MentorConvertController extends Controller {
 
   @action
   toggleBonkAll(checked) {
-    this.set('bonkAll', checked);
+    this.bonkAll = checked;
     this.bonked.forEach((p) => {
       if (!p.converted) {
         set(p, 'selected', checked);
@@ -47,7 +41,7 @@ export default class MentorConvertController extends Controller {
   convertAction(people, status) {
     const selected = people.filter((a) => a.selected);
 
-    if (selected.length == 0) {
+    if (!selected) {
       this.modal.info(null, 'No alphas were selected.');
       return;
     }
@@ -56,7 +50,7 @@ export default class MentorConvertController extends Controller {
       return { id: s.id, status };
     });
 
-    this.set('isSubmitting', true);
+    this.isSubmitting = true;
     this.ajax.request('mentor/convert', { method: 'POST', data: { alphas } }).then((result) => {
       const converted = result.alphas;
 
@@ -73,6 +67,6 @@ export default class MentorConvertController extends Controller {
       });
 
       this.toast.success(`${converted.length} Alpha(s) have been converted`);
-    }).finally(() => this.set('isSubmitting', false));
+    }).finally(() => this.isSubmitting = false);
   }
 }

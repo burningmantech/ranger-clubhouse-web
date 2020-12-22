@@ -1,7 +1,10 @@
+// eslint-disable-next-line ember/no-classic-components
 import Component from '@ember/component';
+import classic from 'ember-classic-decorator';
 import { computed } from '@ember/object';
 import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
 
+@classic
 export default class TicketWapInfoComponent extends Component {
   tagName = '';
 
@@ -19,14 +22,14 @@ export default class TicketWapInfoComponent extends Component {
   get isStaffCredentialBanked() {
     const ticket = this.ticket;
 
-    return (ticket && ticket.type == 'staff_credential' && ticket.status == 'banked');
+    return (ticket && ticket.type === 'staff_credential' && ticket.status === 'banked');
   }
 
   @computed('ticket.{type,status}')
   get usingStaffCredential() {
     const ticket = this.ticket;
 
-    return (ticket && ticket.type == 'staff_credential' && (ticket.status == 'claimed' || ticket.status == 'submitted'));
+    return (ticket && ticket.type === 'staff_credential' && (ticket.status === 'claimed' || ticket.status === 'submitted'));
   }
 
   * transition({ insertedSprites, removedSprites }) { // eslint-disable-line require-yield

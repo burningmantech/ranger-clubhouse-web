@@ -1,5 +1,4 @@
 import Model, { attr } from '@ember-data/model';
-import { computed } from '@ember/object';
 
 export default class PersonMessageModel extends Model {
   @attr('number') person_id;
@@ -23,7 +22,6 @@ export default class PersonMessageModel extends Model {
   @attr('boolean', { readOnly: true }) delivered;
   @attr('boolean', { readOnly: true }) is_rbs;
 
-  @computed('creator_person_id', 'sender_person_id')
   get isDictacted() {
       return (this.creator_person_id != this.sender_person_id);
   }

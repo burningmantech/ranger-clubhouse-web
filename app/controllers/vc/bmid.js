@@ -6,6 +6,7 @@ import { tracked } from '@glimmer/tracking';
 import {MealOptions, BmidStatusOptions, ShowerOptions} from 'clubhouse/constants/bmid';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import Changeset from 'ember-changeset';
+import classic from 'ember-classic-decorator';
 
 /*
  * BMID management controller
@@ -37,6 +38,7 @@ const TEXT_FILTER_FIELDS = [
   'notes'
 ];
 
+@classic
 export default class VcBmidController extends Controller {
   queryParams = ['year', 'filter'];
 
@@ -83,11 +85,13 @@ export default class VcBmidController extends Controller {
 
 
 
-  constructor() {
-    super(...arguments);
+  init() {
+    super.init(...arguments);
 
-    this.addObserver('viewBmids', this.startRenderBmids);  // eslint-disable-line ember/no-observers
-    this.addObserver('bmids', this.startRenderBmids);  // eslint-disable-line ember/no-observers
+    // eslint-disable-next-line ember/no-observers
+    this.addObserver('viewBmids', this.startRenderBmids);
+    // eslint-disable-next-line ember/no-observers
+    this.addObserver('bmids', this.startRenderBmids);
   }
 
   /*

@@ -1,16 +1,18 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
 import { CountryLabels } from 'clubhouse/constants/countries';
+import { tracked } from '@glimmer/tracking';
 import _ from 'lodash';
 
 export default class ReportsPeopleByLocationController extends Controller {
+  @tracked filter;
+
   @action
   toggleExpandAll() {
     this.expandAll = !this.expandAll;
     this.house.toggleAllAccordions(this.expandAll);
   }
 
-  @computed('year')
   get filterOptions() {
     const year = this.year;
 
@@ -23,7 +25,6 @@ export default class ReportsPeopleByLocationController extends Controller {
     ];
   }
 
-  @computed('viewPeople')
   get countries() {
     const list =  _.map(_.groupBy(this.viewPeople, 'country'), (people, country) => {
       return {
@@ -36,7 +37,6 @@ export default class ReportsPeopleByLocationController extends Controller {
     return list;
   }
 
-  @computed('people', 'filter')
   get viewPeople() {
     const filter = this.filter;
     const people = this.people;

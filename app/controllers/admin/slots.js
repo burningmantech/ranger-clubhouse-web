@@ -7,11 +7,13 @@ import laborDay from 'clubhouse/utils/labor-day';
 import moment from 'moment';
 import _ from 'lodash';
 import { tracked } from '@glimmer/tracking';
+import classic from 'ember-classic-decorator';
 
 const allDays = {id: 'all', title: 'All'};
 
 const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
+@classic
 class CopyParams extends EmberObject {
   deltaDays = 0;
   deltaHours = 0;
@@ -24,6 +26,7 @@ class CopyParams extends EmberObject {
   url = null;
 }
 
+@classic
 class CopySourcePosition extends EmberObject {
   // create with {controller: this, id: â¦, title: â¦, slots: [â¦]}
   expanded = false;
@@ -36,6 +39,7 @@ class CopySourcePosition extends EmberObject {
   @filterBy('slots', 'selected', true) selectedSlots;
 }
 
+@classic
 class CopySourceSlot extends EmberObject {
   // create with {controller: this, source: slot}
   selected = false;
@@ -60,6 +64,7 @@ class CopySourceSlot extends EmberObject {
   }
 }
 
+@classic
 export default class SlotsController extends Controller {
   queryParams = ['year'];
 

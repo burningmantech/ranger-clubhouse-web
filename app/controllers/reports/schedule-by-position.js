@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import {action, computed} from '@ember/object';
+import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 
 export default class ReportsScheduleByPositionController extends Controller {
@@ -19,7 +19,6 @@ export default class ReportsScheduleByPositionController extends Controller {
     this.house.scrollToElement(`#position-${id}`, true);
   }
 
-  @computed('positions')
   get letterOptions() {
     let letters = {};
     this.positions.forEach((p) => {

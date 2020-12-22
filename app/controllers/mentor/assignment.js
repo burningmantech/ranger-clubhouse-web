@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action, computed, set } from '@ember/object';
+import { action, set } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { tracked } from '@glimmer/tracking';
 import { run } from '@ember/runloop';
@@ -7,6 +7,7 @@ import { run } from '@ember/runloop';
 export default class MentorAssignmentController extends Controller {
   @tracked isPrinting = false;
   @tracked isSubmitting = false;
+  @tracked filter = 'all';
 
   statusOptions = [
     'pending',
@@ -23,7 +24,6 @@ export default class MentorAssignmentController extends Controller {
     ['Bonked', 'bonked']
   ];
 
-  @computed('mentors')
   get mentorOptions() {
     const options = this.mentors.map((mentor) => [mentor.callsign, mentor.id]);
     options.unshift(['-', '']);
@@ -31,7 +31,6 @@ export default class MentorAssignmentController extends Controller {
     return options;
   }
 
-  @computed('alphas', 'filter')
   get viewAlphas() {
     const alphas = this.alphas,
       filter = this.filter;
@@ -41,13 +40,13 @@ export default class MentorAssignmentController extends Controller {
       return alphas.filter((a) => a.on_alpha_shift);
 
     case 'pending':
-      return alphas.filter((a) => (a.mentor_status == 'pending' && a.mentors[0].mentor_id > 0));
+      return alphas.filter((a) => (a.mentor_status === 'pending' && a.mentors[0].mentor_id > 0));
 
     case 'passed':
-      return alphas.filter((a) => (a.mentor_status == 'pass'));
+      return alphas.filter((a) => (a.mentor_status === 'pass'));
 
     case 'bonked':
-      return alphas.filter((a) => (a.mentor_status == 'bonked' || a.mentor_status == 'self-bonk'));
+      return alphas.filter((a) => (a.mentor_status === 'bonked' || a.mentor_status === 'self-bonk'));
 
     default:
       return alphas;

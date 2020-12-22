@@ -1,20 +1,22 @@
 import Controller from '@ember/controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import fade from 'ember-animated/transitions/fade';
 
 export default class MeHomepageController extends Controller {
   @tracked remainingOffPageMotds = 0;
   @tracked isLoadingMotds = false;
 
-  fadeMotdEffect = fade;
+  @tracked photo;
+  @tracked milestones;
+  @tracked showUploadDialog = false;
+  @tracked showBehaviorAgreement = false;
 
   @action
   refreshPhoto() {
     this.ajax.request(`person/${this.person.id}/photo`)
-      .then((result) => this.set('photo', result.photo));
+      .then((result) => this.photo = result.photo);
     // Need to refresh the milestones to pick up the new photo submitted status.
-    this.ajax.request(`person/${this.person.id}/milestones`).then((result) => this.set('milestones', result.milestones));
+    this.ajax.request(`person/${this.person.id}/milestones`).then((result) => this.milestones = result.milestones);
   }
 
   @action
@@ -22,12 +24,12 @@ export default class MeHomepageController extends Controller {
     if (event) {
       event.preventDefault();
     }
-    this.set('showUploadDialog', true);
+    this.showUploadDialog =  true;
   }
 
   @action
   closeUploadDialogAction() {
-    this.set('showUploadDialog', false);
+    this.showUploadDialog =  false;
   }
 
   @action
@@ -35,13 +37,13 @@ export default class MeHomepageController extends Controller {
     if (event) {
       event.preventDefault();
     }
-    this.set('showBehaviorAgreement', true);
+    this.showBehaviorAgreement = true;
   }
 
   @action
   closeAgreementAction() {
     if (this.showBehaviorAgreement) {
-      this.set('showBehaviorAgreement', false);
+      this.showBehaviorAgreement = false;
     }
   }
 
@@ -52,16 +54,16 @@ export default class MeHomepageController extends Controller {
     person.set('behavioral_agreement', true);
     person.save().then(() => {
       this.toast.success('Your agreement has been successfully recorded.');
-      this.set('showBehaviorAgreement', false);
-      this.set('milestones', { ...this.milestones, behavioral_agreement: true });
+      this.showBehaviorAgreement = false;
+      this.milestones = { ...this.milestones, behavioral_agreement: true };
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
 
   @action
   debugUpdateAction() {
-    this.set('milestones', {...this.milestones});
-    this.set('photo', {...this.photo});
+    this.milestones = {...this.milestones};
+    this.photo =  {...this.photo};
 
   }
 

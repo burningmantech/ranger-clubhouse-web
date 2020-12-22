@@ -2,14 +2,18 @@
  * Shared by me/timesheet and hq/timesheet
  */
 
+// eslint-disable-next-line ember/no-classic-components
 import Component from '@ember/component';
 import { action, computed, set } from '@ember/object';
 import { validatePresence } from 'ember-changeset-validations/validators';
 import { inject as service } from '@ember/service';
 import * as Position from 'clubhouse/constants/positions';
 import validateDateTime from 'clubhouse/validators/datetime';
+import classic from 'ember-classic-decorator';
 
+@classic
 export default class MeTimesheetMissingCommonComponent extends Component {
+  tagName = '';
   positions = null;
   timesheetsMissing = null;
   person = null;

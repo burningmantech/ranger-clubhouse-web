@@ -18,17 +18,18 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
   constructor() {
     super(...arguments);
 
-    if (!ENV.logRoutes) {
-      // don't bother setting up recording route transitions if not enabled.
-      return;
-    }
 
-    // Record route transitions
+    // Scroll the window and record route transitions
     this.router.on('routeDidChange', (transition) => {
       // Move the window back to the top when heading to a new route
       run.schedule('afterRender', () => {
         window.scrollTo(0, 0);
       });
+
+      if (!ENV.logRoutes) {
+        // don't bother setting up recording route transitions if not enabled.
+        return;
+      }
 
       if (!transition || !transition.to || transition.to.name === 'admin.action-log') {
         return;

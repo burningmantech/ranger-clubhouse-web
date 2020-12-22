@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import {action, computed} from '@ember/object';
+import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {States, CanadianProvinces} from 'clubhouse/constants/countries';
 import {debounce} from '@ember/runloop';
@@ -123,7 +123,6 @@ export default class ReportsPersonVehiclesController extends Controller {
     [ 'Fleet Vehicle', 'fleet' ],
   ];
 
-  @computed('person_vehicle.{[],@each.team_assignment}', 'numberFilter', 'filter', 'typeFilter')
   get viewVehicles() {
     let vehicles = this.person_vehicle;
 
