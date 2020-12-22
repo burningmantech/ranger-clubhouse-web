@@ -10,7 +10,7 @@
 </p>
 
 {{#if this.showLog}}
-  <ModalDialog @title="{@year}} Scheduling Log for {{@person.callsign}}" @size="xl" as |Modal|>
+  <ModalDialog @title="{{@year}} Scheduling Log for {{@person.callsign}}" @size="xl" as |Modal|>
     <Modal.body>
       {{fa-icon "times" color="danger"}} = Person is no longer signed up for the shift.
       <table class="table table-sm table-width-auto table-striped table-hover">
