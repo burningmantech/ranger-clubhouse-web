@@ -2,13 +2,13 @@
 <div class="form-row">
   <div class="col-auto">
     <label>
-      <input type="checkbox" checked={{include_qualified}} onclick={{action this.toggleIncludeQualified}}>
+      <Input @type="checkbox" @checked={{this.include_qualified}} />
       Include Event Radio Eligible
     </label>
   </div>
   <div class="col-auto">
     <label>
-      <input type="checkbox" checked={{this.event_summary}} onclick={{action this.toggleEventSummary}}>
+      <Input @type="checkbox" @checked={{this.event_summary}} />
       Report as Event Summary
     </label>
   </div>

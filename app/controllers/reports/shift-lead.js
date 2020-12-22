@@ -1,28 +1,46 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { action, setProperties } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import moment from 'moment';
 
 export default class ReportsShiftLeadController extends Controller {
   queryParams = ['year'];
 
+  @tracked shiftSelect;
+  @tracked shiftStart;
+  @tracked isLoading;
+
+  // Positions and head counts - set via api result
+  @tracked incoming_positions;
+  @tracked below_min_positions;
+
+  // People signed up - set via api result
+  @tracked non_dirt_signups;
+  @tracked command_staff_signups;
+  @tracked dirt_signups;
+
+  // Green Dot head counts - set via api result
+  @tracked green_dot_total;
+  @tracked green_dot_females;
+
+
   @action
   changeShift(option) {
-    this.set('shiftSelect', option);
+    this.shiftSelect = option;
     if (option == '') {
       return;
     }
 
     const [shift_start, shift_duration] = option.split('#');
-    this.set('shiftStart', shift_start);
+    this.shiftStart = shift_start;
 
-    this.set('isLoading', true);
+    this.isLoading = true;
     this.ajax.request('slot/shift-lead-report', { data: { shift_start, shift_duration } })
-      .then((result) => this.setProperties(result))
+      .then((result) => setProperties(this, result))
       .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.set('isLoading', false));
+      .finally(() => this.isLoading = false);
   }
 
-  @computed('dirtShiftTimes')
   get shiftOptions() {
     const options = [
       { id: '', title: 'Select a shift' }

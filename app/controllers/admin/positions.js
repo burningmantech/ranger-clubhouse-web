@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import {action, computed} from '@ember/object';
+import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import PositionTypes from 'clubhouse/constants/position-types';
 import PositionValidations from 'clubhouse/validations/position';
@@ -11,50 +11,38 @@ export default class PositionController extends Controller {
   positionValidations = PositionValidations;
 
   @tracked typeFilter = 'All';
+  @tracked activeFilter = 'all';
 
-  get typeOptions() {
-    const types = PositionTypes.slice();
-
-    types.unshift('All');
-    return types;
-  }
-
-  activeFilter = 'all';
   activeOptions = [
     {id: 'all', title: 'All'},
     {id: 'active', title: 'Active'},
     {id: 'inactive', title: 'Inactive'},
   ];
 
-  @computed('positions.@each.title', 'typeFilter', 'activeFilter')
+  constructor() {
+    super(...arguments);
+
+    const types = PositionTypes.slice();
+    types.unshift('All');
+    this.typeOptions = types;
+  }
+
   get viewPositions() {
     let positions = this.positions;
     const typeFilter = this.typeFilter;
     const activeFilter = this.activeFilter;
 
-    if (typeFilter != 'All') {
+    if (typeFilter !== 'All') {
       positions = positions.filterBy('type', typeFilter);
     }
 
     if (activeFilter) {
-      if (activeFilter == 'active') {
+      if (activeFilter === 'active') {
         positions = positions.filterBy('active', true);
-      } else if (activeFilter == 'inactive') {
+      } else if (activeFilter === 'inactive') {
         positions = positions.filterBy('active', false);
       }
     }
-
-    return positions.sortBy('title');
-  }
-
-  @computed('positions.@each.type')
-  get trainingPositions() {
-    const positions = [];
-    this.positions.forEach((position) => {
-      if (position.type == 'Training' && !position.title.match(/trainer/i)) {
-        positions.pushObject(position);
-      }
-    });
 
     return positions;
   }
@@ -64,8 +52,10 @@ export default class PositionController extends Controller {
       ['-', '']
     ];
 
-    this.trainingPositions.forEach((position) => {
-      options.pushObject([position.title, position.id]);
+    this.positions.forEach((position) => {
+      if (position.type === 'Training' && !position.title.match(/\btrainer\b/i)) {
+        options.pushObject([position.title, position.id]);
+      }
     });
 
     return options;
@@ -96,7 +86,7 @@ export default class PositionController extends Controller {
 
   @action
   saveAction(model, isValid) {
-    const isNew = model.get('isNew');
+    const isNew = model.isNew;
 
     if (!isValid) {
       return;

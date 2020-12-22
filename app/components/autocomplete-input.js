@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import {action, computed} from '@ember/object';
+import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {schedule} from '@ember/runloop';
 import { inject as service } from '@ember/service';
@@ -81,16 +81,16 @@ export default class AutocompleteInputComponent extends Component {
       this.selectionIdx = -1;
 
       // Choose the item if the enter key was pressed before the search completed.
-      if (this.enterPressed && options.length == 1) {
+      if (this.enterPressed && options.length === 1) {
         this._selectOption(options[0]);
       }
 
-      if (options.length == 0) {
+      if (!options.length) {
         this.noResultsFound = true;
       }
     }).catch((response) => {
       // An undefined response means no search was done
-      if (response != undefined) {
+      if (response !== undefined) {
         this.house.handleErrorResponse(response);
       }
     })
@@ -262,7 +262,6 @@ export default class AutocompleteInputComponent extends Component {
    * @returns {string}
    */
 
-  @computed('args.{mode,modeOptions}')
   get modeText() {
     const mode = this.args.mode;
     const opt = this.args.modeOptions.find((o) => o.value == mode);

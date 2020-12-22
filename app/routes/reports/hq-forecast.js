@@ -11,8 +11,8 @@ export default class ReportsHqForecastRoute extends Route {
     const year = requestYear(params);
     const interval = params.interval || 60;
 
-    this.set('year', year);
-    this.set('interval', interval);
+    this.year = year;
+    this.interval = interval;
 
     return this.ajax.request('slot/hq-forecast-report', { data: { year, interval }});
   }

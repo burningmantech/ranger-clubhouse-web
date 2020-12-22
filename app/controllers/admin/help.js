@@ -1,28 +1,28 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 export default class AdminHelpController extends Controller {
-  queryParams = [ 'createSlug', 'editSlug' ];
+  @tracked entry;
+  @tracked createSlug;
+  @tracked documents;
+  @tracked viewDocuments;
 
-  // eslint-disable-next-line ember/use-brace-expansion
-  @computed('documents.[]', 'documents.@each.slug')
-  get viewDocuments() {
-    return this.documents.sortBy('slug');
-  }
+  queryParams = [ 'createSlug', 'editSlug' ];
 
   @action
   newHelp() {
-    this.set('entry', this.store.createRecord('help'));
+    this.entry = this.store.createRecord('help');
   }
 
   @action
   editHelp(help) {
-    this.set('entry', help);
+    this.entry = help;
   }
 
   @action
   cancelHelp() {
-    this.set('entry', null);
+    this.entry = null;
   }
 
   @action
@@ -30,15 +30,12 @@ export default class AdminHelpController extends Controller {
     if (!isValid)
       return;
 
-    const isNew = model.get('isNew');
+    const isNew = model.isNew;
 
-    model.save().then((record) => {
-      if (isNew) {
-        this.documents.pushObject(record);
-      }
-
+    model.save().then(() => {
       this.toast.success(`Help document was successfully ${isNew ? 'created' : 'updated'}.`);
-      this.set('entry', null);
+      this.entry = null;
+      this.documents.update().then(() => this._sortDocuments());
     }).catch((response) => {
       this.house.handleErrorResponse(response);
       this.entry.rollbackAttributes();
@@ -46,13 +43,17 @@ export default class AdminHelpController extends Controller {
   }
 
   @action
-  deleteHelp(help) {
-    this.modal.confirm(`Confirm help document deletion`, `Are you sure you want to delete "${help.slug}?"`,
+  deleteHelp() {
+    this.modal.confirm(`Confirm help document deletion`, `Are you sure you want to delete "${this.entry.slug}?"`,
       () => {
-        help.destroyRecord().then(() => {
-          this.documents.removeObject(help);
+        this.entry.destroyRecord().then(() => {
+          this.entry = null;
           this.toast.success(`Help document was successfully deleted.`);
         }).catch((response) => this.house.handleErrorResponse(response));
       });
+  }
+
+  _sortDocuments() {
+    this.viewDocuments = this.documents.toArray().sortBy('slug');
   }
 }

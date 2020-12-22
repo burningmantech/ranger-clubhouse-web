@@ -1,5 +1,5 @@
 import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import { ADMIN } from 'clubhouse/constants/roles';
 
 export default class AdminPeopleByStatusChangeRoute extends Route {
   queryParams = {
@@ -8,7 +8,7 @@ export default class AdminPeopleByStatusChangeRoute extends Route {
 
   beforeModel() {
     super.beforeModel(...arguments);
-    this.house.roleCheck(Role.ADMIN);
+    this.house.roleCheck(ADMIN);
   }
 
   model({ period }) {
@@ -19,16 +19,16 @@ export default class AdminPeopleByStatusChangeRoute extends Route {
 
     if (!period) {
       period = 'current-date';
-    } else if (period == 'next-event') {
+    } else if (period === 'next-event') {
       year++;
     }
 
-    if ((month == 8 && day >= 15) || month > 8) {
+    if ((month === 8 && day >= 15) || month > 8) {
       year++;
     }
 
-    this.set('year', year);
-    this.set('period', period);
+    this.year = year;
+    this.period = period;
     return this.ajax.request('person/by-status-change', { data: { year } });
   }
 

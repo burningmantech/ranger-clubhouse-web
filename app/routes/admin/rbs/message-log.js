@@ -15,7 +15,7 @@ export default class AdminRbsMessageLog extends Route {
     const year = requestYear(params);
     const page = params.page || 1;
 
-    this.set('year', year);
+    this.year = year;
 
     const data = { year, page };
 
@@ -27,8 +27,8 @@ export default class AdminRbsMessageLog extends Route {
       data.direction = params.direction;
     }
 
-    this.set('direction', params.direction);
-    this.set('status', params.status);
+    this.direction = params.direction;
+    this.status = params.status;
 
     return this.ajax.request('broadcast/messages', { data });
   }

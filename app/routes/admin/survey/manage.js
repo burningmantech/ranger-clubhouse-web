@@ -24,6 +24,7 @@ export default class AdminSurveyManageRoute extends Route {
     controller.set('surveyQuestions', model.surveyQuestions);
     controller.set('positions', model.positions);
     controller._assignQuestions();
+    controller._buildOrderedGroups();
   }
 
   @action

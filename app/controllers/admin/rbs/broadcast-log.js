@@ -3,9 +3,15 @@
  */
 
 import Controller from '@ember/controller';
-import { action, set } from '@ember/object';
+import {action, set} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
+
 export default class AdminRbsBroadcastLogController extends Controller {
-  queryParams = [ 'year', 'failed' ];
+  @tracked confirmRetry = null;
+  @tracked retryingBroadcast = null;
+  @tracked retryResult = null;
+
+  queryParams = ['year', 'failed'];
 
   // Show the actual message for a broadcast
   @action
@@ -22,22 +28,22 @@ export default class AdminRbsBroadcastLogController extends Controller {
   // Ask the user to confirm the retry attempt
   @action
   retryAction(log) {
-    this.set('confirmRetry', log);
+    this.confirmRetry = log;
   }
 
   // Try the retry
   @action
   attemptRetry() {
     const broadcast = this.confirmRetry;
-    this.set('retryingBroadcast', broadcast);
-    this.set('confirmRetry', null);
-    this.set('retryResult', null);
+    this.retryingBroadcast = broadcast;
+    this.confirmRetry = null;
+    this.retryResult = null;
 
     // Okay, server -- go annoy more peoples
-    this.ajax.request('rbs/retry', { method: 'POST', data: { broadcast_id: broadcast.id }}).then((result) => {
-      this.set('retryResult', result);
-    }).catch((response) => this.house.handleErrorResponse(response))
-    .finally(() => this.set('retryingBroadcast', null));
+    this.ajax.request('rbs/retry', {method: 'POST', data: {broadcast_id: broadcast.id}})
+      .then((result) => this.retryResult = result)
+      .catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.retryingBroadcast = null);
   }
 
   // Close out a retry attempt
@@ -47,8 +53,8 @@ export default class AdminRbsBroadcastLogController extends Controller {
       // Did the retry complete? go refresh the list.
       this.send('refreshRoute');
     }
-    this.set('confirmRetry', null);
-    this.set('retryingBroadcast', null);
-    this.set('retryResult', null);
+    this.retryingBroadcast = null;
+    this.confirmRetry = null;
+    this.retryResult = null;
   }
 }

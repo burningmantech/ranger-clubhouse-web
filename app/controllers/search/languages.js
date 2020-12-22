@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import {debounce} from '@ember/runloop';
-import EmberObject, {action, computed} from '@ember/object';
+import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 
 const SEARCH_RATE_MS = 350;
@@ -34,22 +34,16 @@ export default class SearchLanguagesController extends Controller {
   @tracked offDuty = [];
   @tracked hasRadio = [];
 
-  searchForm = EmberObject.create({
-    language: '',
-    offSite: false
-  });
+  @tracked searchForm = null;
 
-  @computed('onDuty')
   get onDutyGroup() {
     return groupBy(this.onDuty, 'language_name')
   }
 
-  @computed('offDuty')
   get offDutyGroup() {
     return groupBy(this.offDuty, 'language_name');
   }
 
-  @computed('hasRadio')
   get hasRadioGroup() {
     return groupBy(this.hasRadio, 'language_name');
   }
@@ -59,7 +53,7 @@ export default class SearchLanguagesController extends Controller {
     const language = this.searchForm.language.trim();
 
     // bail out if query is empty
-    if (language == '') {
+    if (language === '') {
       return;
     }
 
@@ -87,7 +81,7 @@ export default class SearchLanguagesController extends Controller {
 
   @action
   searchOnChange(field, model) {
-    if (field.name == 'language') {
+    if (field.name === 'language') {
       // Delay the search if a name if being typed
       debounce(this, this._performSearch, model, SEARCH_RATE_MS);
     } else {
@@ -98,7 +92,7 @@ export default class SearchLanguagesController extends Controller {
 
   @action
   setLanguage(language) {
-    this.searchForm.set('language', language);
+    set(this.searchForm, 'language',language);
     this._performSearch();
   }
 }

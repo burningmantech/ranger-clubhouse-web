@@ -14,11 +14,11 @@ export default class AdminHelpRoute extends Route {
   }
 
   model({ createSlug, editSlug }) {
-    this.store.unloadAll('help');
-    this.set('createSlug', createSlug);
-    this.set('editSlug', editSlug);
+    this.createSlug = createSlug;
+    this.editSlug = editSlug;
 
-    return this.store.query(`help`, { }).then((result) => result.toArray());
+    this.store.unloadAll('help');
+    return this.store.query(`help`, {});
   }
 
   setupController(controller, model) {
@@ -30,16 +30,11 @@ export default class AdminHelpRoute extends Route {
       controller.set('createSlug', null);
     } else if (this.editSlug) {
       const slug = this.editSlug;
-      const entry = model.find((h) => h.slug == slug);
+      const entry = model.find((h) => h.slug === slug);
       controller.set('entry', entry);
       controller.set('editSlug', null);
     }
-  }
 
-  resetController(controller, isExiting) {
-    if (isExiting) {
-      this.set('createTag', null);
-      this.set('entry', null);
-    }
+    controller._sortDocuments();
   }
 }

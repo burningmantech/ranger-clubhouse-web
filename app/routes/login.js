@@ -6,7 +6,7 @@ export default class LoginRoute extends Route.extend(UnauthenticatedRouteMixin) 
   routeIfAlreadyAuthenticated = 'me.homepage';
 
   setupController(controller) {
-    controller.set('authForm', Login.create());
+    controller.set('authForm', new Login);
     this.house.clearStorage();
   }
 }

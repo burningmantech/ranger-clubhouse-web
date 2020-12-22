@@ -1,10 +1,10 @@
 import Component from '@glimmer/component';
 import {tracked} from '@glimmer/tracking';
-import EmberObject, {action, computed} from '@ember/object';
+import {action} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {Broadcasts} from 'clubhouse/constants/broadcast';
 import {validatePresence} from 'ember-changeset-validations/validators';
-import { inject as service } from '@ember/service';
+import {inject as service} from '@ember/service';
 
 export default class BroadcastSimpleComponent extends Component {
   @tracked isReviewing = false;
@@ -22,11 +22,18 @@ export default class BroadcastSimpleComponent extends Component {
     super(...arguments);
     const message = Broadcasts[this.args.type].message;
 
-    this.broadcastForm = EmberObject.create({message: !isEmpty(message) ? message : ''});
-  }
+    this.broadcastForm = {message: !isEmpty(message) ? message : ''};
 
-  @computed('args.broadcast.muster_positions')
-  get positionOptions() {
+    this.broadcastValidations = {
+      message: [validatePresence({presence: true, message: 'Enter a message.'})],
+    };
+
+    if (!this.args.broadcast.has_muster_position) {
+      return;
+    }
+
+    this.broadcastValidations.position_id = validatePresence({presence: true, message: 'Select a team'});
+
     const positions = this.args.broadcast.muster_positions;
     const frequent = positions.frequent.slice();
 
@@ -49,20 +56,7 @@ export default class BroadcastSimpleComponent extends Component {
       });
     }
 
-    return groupOptions;
-  }
-
-  @computed('args.broadcast.has_muster_position')
-  get broadcastValidations() {
-    const validations = {
-      message: [validatePresence({presence: true, message: 'Enter a message.'})],
-    };
-
-    if (this.args.broadcast.has_muster_position) {
-      validations.position_id = validatePresence({presence: true, message: 'Select a team'});
-    }
-
-    return validations;
+    this.positionOptions = groupOptions;
   }
 
   @action
@@ -88,7 +82,7 @@ export default class BroadcastSimpleComponent extends Component {
       .then((result) => {
         this.people = result.people;
 
-        if (this.people.length == 0) {
+        if (!this.people.length) {
           this.isReviewing = false;
           this.modal.info(null, 'No qualifying people were found.');
         }

@@ -11,7 +11,7 @@ export default class AdminRbsBroadcastLog extends Route {
   model(params) {
     const year = requestYear(params);
     const data = { year };
-    this.set('year', year);
+    this.year = year;
 
     if (params.failed) {
       data.failed = 1;

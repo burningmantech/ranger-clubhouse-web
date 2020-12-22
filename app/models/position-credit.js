@@ -1,5 +1,4 @@
 import Model, { attr } from '@ember-data/model';
-import { computed } from '@ember/object';
 import moment from 'moment';
 
 export default class PositionCreditModel extends Model {
@@ -11,12 +10,10 @@ export default class PositionCreditModel extends Model {
 
   @attr('', { readOnly: true}) position;
 
-  @computed('position.title', 'position_id')
   get positionTitle() {
     return this.position ? this.position.title : `Position #${this.position_id}`;
   }
 
-  @computed('start_time')
   get creditDay() {
     const begins = this.start_time;
     let date;

@@ -76,6 +76,7 @@ export default class VcBmidPrintRoute extends Route {
     controller.set('textFilterInput', '');
     controller.set('textFilter', '');
     controller.set('textFilterError', '');
+    controller._buildViewBmids();
   }
 
   resetController(controller, isExiting) {

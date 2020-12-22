@@ -9,10 +9,12 @@ import laborDay from 'clubhouse/utils/labor-day';
 import validateDateTime from 'clubhouse/validators/datetime';
 import moment from 'moment';
 import _ from 'lodash';
+import classic from 'ember-classic-decorator';
 
 const allDays = {id: 'all', title: 'All Days'};
 const allPositions = {id: 'all', title: 'All Positions'};
 
+@classic
 class CopyParams extends EmberObject {
   deltaDays = 0;
   deltaHours = 0;
@@ -20,6 +22,7 @@ class CopyParams extends EmberObject {
   newPositionId = 0;
 }
 
+@classic
 class CopySourcePosition extends EmberObject {
   // create with {controller: this, id: â¦, title: â¦, credits: [â¦]}
   expanded = false;
@@ -32,6 +35,7 @@ class CopySourcePosition extends EmberObject {
   @filterBy('credits', 'selected', true) selectedCredits;
 }
 
+@classic
 class CopySourceCredit extends EmberObject {
   // create with {controller: this, source: creditModel}
   selected = true;
@@ -56,6 +60,8 @@ class CopySourceCredit extends EmberObject {
   }
 }
 
+
+@classic
 export default class AdminCreditsController extends Controller {
   queryParams = ['year'];
 

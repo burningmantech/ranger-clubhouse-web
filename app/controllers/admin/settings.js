@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { isEmpty } from '@ember/utils';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 export default class AdminSettingsController extends Controller {
@@ -22,7 +22,6 @@ export default class AdminSettingsController extends Controller {
     }
   }
 
-  @computed('settings.[]', 'filterByName')
   get viewSettings() {
     let name = this.filterByName;
     if (name) {
@@ -35,7 +34,6 @@ export default class AdminSettingsController extends Controller {
     return this.settings.filter((s) => RegExp(name, 'i').test(s.name) );
   }
 
-  @computed('editSetting.options')
   get editOptions() {
     if (!this.editSetting.options) {
       return null;
@@ -54,7 +52,7 @@ export default class AdminSettingsController extends Controller {
     if (!isValid)
       return;
 
-    if (model.type == 'json' && !this._isValidJson(model.value)) {
+    if (model.type === 'json' && !this._isValidJson(model.value)) {
       this.toast.error('The JSON blob does not appear to be valid. Sorry.');
       return;
     }

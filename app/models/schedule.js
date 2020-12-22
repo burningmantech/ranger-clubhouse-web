@@ -1,5 +1,4 @@
 import Model, { attr } from '@ember-data/model';
-import { computed } from '@ember/object';
 import moment from 'moment';
 
 export default class ScheduleModel extends Model {
@@ -51,12 +50,10 @@ export default class ScheduleModel extends Model {
   // contact email
   @attr('string', { readOnly: true }) contact_email;
 
-  @computed('slot_signed_up', 'slot_max')
   get isFull() {
     return (this.slot_signed_up >= this.slot_max);
   }
 
-  @computed('slot_begins')
   get slotDay() {
     const begins = this.slot_begins;
     let date;
@@ -70,7 +67,6 @@ export default class ScheduleModel extends Model {
   }
 
   // Check to see if the url is just a url and nothing else
-  @computed('slot_url')
   get infoIsUrl() {
     const url = this.slot_url;
 
@@ -78,15 +74,10 @@ export default class ScheduleModel extends Model {
       return false;
     }
 
-    if (/^(https?:\/\/[^\s]+)$/.exec(url)) {
-      return true;
-    }
-
-    return false;
+    return !!/^(https?:\/\/[^\s]+)$/.exec(url);
   }
 
-  @computed('position_type')
   get isTraining() {
-    return (this.position_type == 'Training');
+    return (this.position_type === 'Training');
   }
 }

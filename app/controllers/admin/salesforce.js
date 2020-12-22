@@ -1,20 +1,21 @@
 import Controller from '@ember/controller';
-import { tracked } from '@glimmer/tracking';
-import { action, set } from '@ember/object';
+import {tracked} from '@glimmer/tracking';
+import {action, set} from '@ember/object';
 import groupBy from 'clubhouse/utils/group-by';
 
 export default class AdminSalesforceController extends Controller {
-  commit = false;
-  updateSalesforce = false;
-  nonTestAccounts = false;
-  showAll = false;
-  resetTestAccounts = false;
+  @tracked commit = false;
+  @tracked updateSalesforce = false;
+  @tracked nonTestAccounts = false;
+  @tracked showAll = false;
+  @tracked resetTestAccounts = false;
 
   @tracked accounts = [];
   @tracked importMessage;
   @tracked importStatus;
   @tracked sfConfig;
   @tracked isSubmitting = false;
+  @tracked showHelp = false;
 
   statusLabels = {
     'succeeded': 'Successfully imported into Clubhouse',
@@ -29,11 +30,11 @@ export default class AdminSalesforceController extends Controller {
   };
 
   resetFlags() {
-    this.set('createAccounts', false);
-    this.set('updateSalesforce', false);
-    this.set('nonTestAccounts', false);
-    this.set('showAll', false);
-    this.set('resetTestAccounts', false);
+    this.createAccounts = false;
+    this.updateSalesforce = false;
+    this.nonTestAccounts = false;
+    this.showAll = false;
+    this.resetTestAccounts = false;
   }
 
   _orderStatus(groups, status) {
@@ -47,11 +48,11 @@ export default class AdminSalesforceController extends Controller {
   get accountGroups() {
     const groups = groupBy(this.accounts, 'status');
 
-    this._orderStatus(groups,'imported');
-    this._orderStatus(groups,'existing-bad-status');
-    this._orderStatus(groups,'existing');
-    this._orderStatus(groups,'ready');
-    this._orderStatus(groups,'succeeded');
+    this._orderStatus(groups, 'imported');
+    this._orderStatus(groups, 'existing-bad-status');
+    this._orderStatus(groups, 'existing');
+    this._orderStatus(groups, 'ready');
+    this._orderStatus(groups, 'succeeded');
 
     groups.forEach((g) => {
       g.statusLabel = this.statusLabels[g.status] || `Unknown status [${g.status}]`;
@@ -100,8 +101,8 @@ export default class AdminSalesforceController extends Controller {
       options.create_accounts = 1;
     }
 
-    this.ajax.request('salesforce/import', { data: options })
-       .then((result) => {
+    this.ajax.request('salesforce/import', {data: options})
+      .then((result) => {
         this.importStatus = result.status;
         this.importMessage = result.message;
         this.accounts = result.accounts;
@@ -130,6 +131,6 @@ export default class AdminSalesforceController extends Controller {
 
   @action
   toggleHelp() {
-    this.set('showHelp', !this.showHelp);
+    this.showHelp = !this.showHelp;
   }
 }

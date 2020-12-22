@@ -3,14 +3,37 @@
  */
 
 import Component from '@glimmer/component';
-import EmberObject, {action, computed} from '@ember/object';
-import {filterBy} from '@ember/object/computed';
+import {action} from '@ember/object';
 import {validateFormat} from 'ember-changeset-validations/validators';
 import {isEmpty} from '@ember/utils';
 import {tracked} from '@glimmer/tracking';
 import {inject as service} from '@ember/service';
 
 const PHONE_REGEXP = /^(?=(?:\D*\d){10,15}\D*$)\+?[0-9]{1,3}[\s-]?(?:\(0?[0-9]{1,5}\)|[0-9]{1,5})[-\s]?[0-9][\d\s-]{5,7}\s?(?:x[\d-]{0,4})?$/;
+
+class Phone {
+  @tracked phone;
+  @tracked is_stopped;
+  @tracked is_verified;
+
+  constructor(info) {
+    this.phone  = info.phone;
+    this.is_stopped = info.is_stopped;
+    this.is_verified = info.is_verified;
+  }
+}
+
+class PhoneNumbers {
+  @tracked is_same;
+  @tracked off_playa;
+  @tracked on_playa;
+
+  constructor(sms) {
+    this.is_same = sms.is_same;
+    this.off_playa = new Phone(sms.off_playa);
+    this.on_playa = new Phone(sms.on_playa);
+  }
+}
 
 export default class AlertsManageComponent extends Component {
   @service toast;
@@ -27,40 +50,37 @@ export default class AlertsManageComponent extends Component {
   // Phone numbers to use
 
   // Verification form - user enters verification codes here.
-  verifyForm = EmberObject.create({
+  verifyForm = {
     on_playa: '',
     off_playa: '',
     is_same: false,
-  });
+  };
 
   numberValidations = {
     on_playa: [validateFormat({regex: PHONE_REGEXP, allowBlank: true})],
     off_playa: [validateFormat({regex: PHONE_REGEXP, allowBlank: true})],
   }
 
-  // Sort alert prefs into on playa and off playa groups for display.
-  @filterBy('args.alerts', 'on_playa', true) onPlayaAlerts;
-  @filterBy('args.alerts', 'on_playa', false) offPlayaAlerts;
-
   constructor() {
     super(...arguments);
-    const numbers = this.args.numbers;
+    const {numbers, alerts} = this.args;
 
-    this.phoneForm = EmberObject.create({
+    this.phoneForm = {
       on_playa: numbers.on_playa.phone,
       off_playa: numbers.off_playa.phone,
       is_same: numbers.is_same
-    });
+    };
 
-    this.numbers = numbers;
+    this.isMe = (this.args.person.id == this.session.userId);
+
+    this.onPlayaAlerts = alerts.filter((a) => a.on_playa);
+    this.offPlayaAlerts = alerts.filter((a) => !a.on_playa);
+
+    this.numbers = new PhoneNumbers(numbers);
   }
 
-  get isMe() {
-    return this.args.person.id == this.session.userId;
-  }
 
   // Are one or both numbers stopped?
-  @computed('numbers.{off_playa,on_playa}.is_stopped')
   get isStopped() {
     const numbers = this.numbers;
 
@@ -68,7 +88,6 @@ export default class AlertsManageComponent extends Component {
   }
 
   // One or both numbers not verified?
-  @computed('numbers.{off_playa,on_playa}.is_verified')
   get notVerified() {
     const numbers = this.numbers;
 
@@ -77,7 +96,6 @@ export default class AlertsManageComponent extends Component {
   }
 
   // List which numbers are not verified.
-  @computed('numbers.{off_playa,on_playa}.is_verified')
   get unverifiedPhones() {
     const phones = [];
     const numbers = this.numbers;
@@ -125,7 +143,7 @@ export default class AlertsManageComponent extends Component {
 
     let code, type, phone;
 
-    if (which == 'off-playa') {
+    if (which === 'off-playa') {
       code = model.off_playa;
       type = 'off-playa';
       phone = numbers.off_playa.phone;
@@ -147,7 +165,7 @@ export default class AlertsManageComponent extends Component {
       switch (result.status) {
         case 'confirmed':
           this.toast.success(`Phone number has been been confirmed. Thank you.`);
-          this.numbers = result.numbers;
+          this.numbers = new PhoneNumbers(result.numbers);
           break;
 
         case 'already-verified':
@@ -195,9 +213,9 @@ export default class AlertsManageComponent extends Component {
       model.off_playa = numbers.off_playa.phone;
       model.on_playa = numbers.on_playa.phone;
       model.is_same = numbers.is_same;
-      this.numbers = numbers;
+      this.numbers = new PhoneNumbers(numbers);
 
-      if (numbers.on_playa.code_status == 'sent-fail' || numbers.off_playa.code_status == 'sent-fail') {
+      if (numbers.on_playa.code_status === 'sent-fail' || numbers.off_playa.code_status === 'sent-fail') {
         this.toast.error(`The phone number(s) were updated except a verification code could not be sent at this time.`);
       } else {
         this.toast.success('The phone number(s) have been successfully updated.');

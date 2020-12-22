@@ -1,10 +1,14 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import _ from 'lodash';
 import moment from 'moment';
 
 export default class ReportsHqForecastController extends Controller {
   queryParams = [ 'year', 'interval' ];
+
+  @tracked dayFilter = 'all';
+  @tracked staffFilter = 'all';
 
   intervalOptions = [
     ['15 mins', 15],
@@ -19,23 +23,21 @@ export default class ReportsHqForecastController extends Controller {
     [ 'No Staffing', 'none' ]
   ];
 
-  @computed('visits', 'dayFilter', 'staffFilter')
   get viewVisits() {
     const dayFilter = this.dayFilter, staffFilter = this.staffFilter;
     let visits = this.visits;
 
-    if (dayFilter != 'all') {
+    if (dayFilter !== 'all') {
       visits = visits.filter((v) => moment(v.period).isSame(dayFilter, 'day'));
     }
 
-    if (staffFilter != 'all') {
+    if (staffFilter !== 'all') {
       visits = visits.filter((v) => (!v.windows && !v.shorts && !v.leads));
     }
 
     return visits;
   }
 
-  @computed('visits')
   get dayOptions() {
     const days = _.uniq(this.visits.map((v) => moment(v.period).format('YYYY-MM-DD'))).sort();
     const options = days.map((d) => [ moment(d).format('ddd MMM DD'), d ]);

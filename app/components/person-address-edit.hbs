@@ -1,5 +1,7 @@
 <div class="form-row">
-  <@f.input @name="country" @label="Country" @type="select" @options={{this.countryOptions}} @autocomplete="country"
+  <@f.input @name="country" @label="Country" @type="select" @options={{this.countryOptions}}
+  @onChange={{action this.countryChange}}
+  @autocomplete="country"
   @grid="col-auto" />
 </div>
 <div class="form-row">
@@ -21,6 +23,7 @@
     <@f.input @name="state" @label={{this.stateLabel}} @maxlength=128 @disabled={{if @f.model.country false true}}
     @autocomplete="address-level1" @grid="col-sm-12 col-md-6 col-lg-auto" />
   {{/if}}
-  <@f.input @name="zip" @label={{if (eq @f.model.country "US") "Zip code" "Postal Code"}} @maxlength=10
+
+  <@f.input @name="zip" @label={{if (eq @f.model.country "US") "Zipcode" "Postal Code"}} @maxlength=10
   @autocomplete="postal-code" @grid="col-sm-12 col-md-auto" />
 </div>

@@ -1,4 +1,3 @@
-import {computed} from '@ember/object';
 import RESTAdapter from '@ember-data/adapter/rest';
 import Inflector from 'ember-inflector';
 import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
@@ -40,7 +39,6 @@ const SINGULAR_MODELS = [
 export default class ApplicationAdapter extends RESTAdapter.extend(DataAdapterMixin) {
   host = ENV['api-server'];
 
-  @computed('session.{isAuthenticated,data.authenticated.token}')
   get headers() {
     let headers = {};
     if (this.session.isAuthenticated) {

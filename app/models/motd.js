@@ -1,5 +1,4 @@
 import Model, { attr } from '@ember-data/model';
-import { computed } from '@ember/object';
 
 export default class MotdModel extends Model {
   @attr('number') person_id;
@@ -15,9 +14,4 @@ export default class MotdModel extends Model {
   @attr('', { readOnly: true }) person;
   @attr('boolean', { readOnly: true}) has_read;
   @attr('boolean', { readOnly: true}) has_expired;
-
-  @computed('created_at', 'updated_at')
-  get isModified() {
-    return this.created_at != this.updated_at;
-  }
 }

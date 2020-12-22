@@ -9,11 +9,12 @@
       <ChForm::Select @name="filter"
                       @value={{this.filter}}
                       @options={{this.filterOptions}}
-                      @onChange={{action (mut filter)}}
+                      @onChange={action this.changeFilter}}
                       @controlClass="form-control"/>
     </div>
     <div class="col-auto">
-      <button type="button" class="btn btn-primary" {{action this.printAction}}>Print Selected ({{this.printAlphas.length}})
+      <button type="button" class="btn btn-primary" {{action this.printAction}}>
+        Print Selected ({{this.printAlphas.length}})
       </button>
     </div>
   </div>
@@ -33,7 +34,7 @@
     <tbody>
     {{#each this.viewAlphas as |alpha|}}
       <tr>
-        <td><Input @type="checkbox" @checked={{alpha.selected}} /></td>
+        <td><Input @type="checkbox" @checked={{alpha.selected}} @change={{action this.toggleAlpha alpha}} /></td>
         <td>
           <PersonLink @person={{alpha}} />
         </td>

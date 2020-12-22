@@ -53,14 +53,14 @@
     <label class="col-form-label">Export Filter</label>
   </div>
   <div class="col-auto">
-    <ChForm::Select @name="selectTypes" @value={{this.filter}} @options={{this.filterOptions}} @onChange={{action (mut this.filter)}} @controlClass="form-control" />
+    <ChForm::Select @name="selectTypes" @value={{this.filter}} @options={{this.filterOptions}} @onChange={{this.changeFilter}} @controlClass="form-control" />
   </div>
   <div class="col-auto">
     <label class="col-form-label">Export is limited to {{this.MAX_BATCH_SIZE}} items</label>
   </div>
-
 </div>
-<table class="table table-sm table-hover">
+
+<table class="table table-sm table-hover table-striped table-width-auto">
   <caption>
     Showing {{pluralize this.viewRecords.length "item"}} of type "{{this.filter}}". Selected {{pluralize this.selectedCount "item"}}.
   </caption>
@@ -82,10 +82,10 @@
         <td>
           {{#if rec.submitted}}
             <span class="text-success">{{fa-icon "check"}}</span>
-          {{else if (eq filter "all")}}
+          {{else if (eq this.filter "all")}}
             &nbsp;
           {{else}}
-            <Input @type="checkbox" @checked={{rec.selected}} @disabled={{eq filter "all"}} />
+            <Input @type="checkbox" @checked={{rec.selected}} @change={{action this.toggleRecord rec}} />
           {{/if}}
         </td>
         <td><PersonLink @person={{rec.person}} @page="access-documents" /></td>
@@ -99,14 +99,14 @@
   </tbody>
 </table>
 
-<button type="button" class="btn btn-primary" {{action this.exportSelectedAction}} disabled={{or isSubmitting (gt this.selectedCount MAX_BATCH_SIZE) (eq this.selectedCount 0) (eq this.filter "all")}}>
+<button type="button" class="btn btn-primary" {{action this.exportSelectedAction}} disabled={{or this.isSubmitting (gt this.selectedCount MAX_BATCH_SIZE) (eq this.selectedCount 0) (eq this.filter "all")}}>
   {{#if (eq this.filter "all")}}
     Export Disabled For "All" View
   {{else}}
     Export {{pluralize this.selectedCount "Selected Document"}}
   {{/if}}
 </button>
-<button type="button" class="btn btn-secondary" {{action this.markSubmitted}} disabled={{or isSubmitting (eq this.selectedCount 0) (eq this.filter "all")}}>
+<button type="button" class="btn btn-secondary" {{action this.markSubmitted}} disabled={{or this.isSubmitting (eq this.selectedCount 0) (eq this.filter "all")}}>
   {{#if isSubmitting}}
     Marking as Submitted. {{fa-icon "spinner" spin=true}}
   {{else}}

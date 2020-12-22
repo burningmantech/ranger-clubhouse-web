@@ -8,7 +8,7 @@ import { isNone } from '@ember/utils';
  *
  */
 
-export default Transform.extend({
+export default class BooleanTransformer extends Transform {
   deserialize(serialized, options) {
     if (isNone(serialized) && options.allowNull === true) {
       return null;
@@ -24,7 +24,7 @@ export default Transform.extend({
     } else {
       return false;
     }
-  },
+  }
 
   serialize(deserialized, options) {
     if (typeof deserialized === "string") {
@@ -37,4 +37,5 @@ export default Transform.extend({
 
     return Boolean(deserialized);
   }
-});
+}
+

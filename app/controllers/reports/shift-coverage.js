@@ -1,10 +1,12 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import _ from 'lodash';
 import moment from 'moment';
 
 export default class ReportsShiftCoveragController extends Controller {
   queryParams = [ 'year', 'type' ];
+
+  @tracked dayFilter;
 
   typeOptions = [
     [ 'Burn Perimeter', 'perimeter' ],
@@ -19,21 +21,19 @@ export default class ReportsShiftCoveragController extends Controller {
     [ 'RSCI Mentor/Mentee', 'rsci-mentor' ],
   ];
 
-  @computed('periods', 'dayFilter')
   get dayGroups() {
     const dayFilter = this.dayFilter;
     const groups = _.map(_.groupBy(this.periods, 'date'), (periods, date) => {
       return { date, periods }
     });
 
-    if (dayFilter == 'all') {
+    if (dayFilter === 'all') {
       return groups;
     }
 
-    return groups.filter((g) => g.date == dayFilter);
+    return groups.filter((g) => g.date === dayFilter);
   }
 
-  @computed('periods.@each.date')
   get dayOptions() {
     const days = _.uniqBy(this.periods, 'date');
     const options = days.map((p) => [ moment(p.date).format('ddd M/DD'), p.date ]);

@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { set } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 export default class MeMenteesController extends Controller {
   menteeList = [];
@@ -9,19 +10,19 @@ export default class MeMenteesController extends Controller {
   firstYear = 0;
   lastYear = 0;
 
-  contactMentee = null;
-  message = '';
+  @tracked contactMentee = null;
+  @tracked message = '';
 
   @action
   contactAction(mentee) {
-    this.set('message', '');
-    this.set('contactMentee', mentee);
+    this.message = '';
+    this.contactMentee =  mentee;
   }
 
   @action
   doneAction(messageSent) {
     const mentee = this.contactMentee;
-    this.set('contactMentee', null);
+    this.contactMentee = null;
     if (!messageSent) {
       return;
     }

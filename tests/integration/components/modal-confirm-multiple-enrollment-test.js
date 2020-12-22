@@ -10,7 +10,12 @@ module('Integration | Component | modal-confirm-multiple-enrollment', function (
     this.set('dialog', {
       data: {
         person: {id: 1, callsign: 'hubcap'},
-        slots: []
+        slots: [{
+          id: 1,
+          description: 'hello',
+          begins: '2020-01-01 12:00:00',
+          position: { id: 2, title: 'a position'}
+        }]
       }
     });
     this.set('onClose', () => {});

@@ -1,20 +1,20 @@
-const ADMIN = 1; // Super user! Change anything
-const VIEW_PII = 2; // See email, address, phone
-const VIEW_EMAIL = 3; // See email
-const GRANT_POSITION = 4; // Grand/Revoke Positions
-const EDIT_ACCESS_DOCS = 5; // Edit Access Documents
-const EDIT_BMIDS = 6; // Edit BMIDs
-const EDIT_SLOTS = 7; // Edit Slots
-const LOGIN = 11; // Person allowed to login
-const MANAGE = 12; // Ranger HQ: access other schedule, asset checkin/out, send messages
-const INTAKE = 13; // Intake Management
-const MENTOR = 101; // Mentor - access mentor section
-const TRAINER = 102; // Trainer
-const VC = 103; // Volunteer Coordinator
-const ART_TRAINER = 104; // ART Trainer
-const MEGAPHONE = 105; // RBS access
-const TIMESHEET_MANAGEMENT = 106;
-const SURVEY_MANAGEMENT = 107;
+export const ADMIN = 1; // Super user! Change anything
+export const VIEW_PII = 2; // See email, address, phone
+export const VIEW_EMAIL = 3; // See email
+export const GRANT_POSITION = 4; // Grand/Revoke Positions
+export const EDIT_ACCESS_DOCS = 5; // Edit Access Documents
+export const EDIT_BMIDS = 6; // Edit BMIDs
+export const EDIT_SLOTS = 7; // Edit Slots
+export const LOGIN = 11; // Person allowed to login
+export const MANAGE = 12; // Ranger HQ: access other schedule, asset checkin/out, send messages
+export const INTAKE = 13; // Intake Management
+export const MENTOR = 101; // Mentor - access mentor section
+export const TRAINER = 102; // Trainer
+export const VC = 103; // Volunteer Coordinator
+export const ART_TRAINER = 104; // ART Trainer
+export const MEGAPHONE = 105; // RBS access
+export const TIMESHEET_MANAGEMENT = 106;
+export const SURVEY_MANAGEMENT = 107;
 
 const Role = {
   ADMIN,

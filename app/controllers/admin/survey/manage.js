@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import {action, computed, set} from '@ember/object';
+import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 
 export default class AdminSurveyManageController extends Controller {
@@ -11,6 +11,8 @@ export default class AdminSurveyManageController extends Controller {
   @tracked surveyQuestions;
 
   @tracked surveyEdit;
+
+  @tracked orderedGroups;
 
   typeOptions = [
     {id: 'rank', title: 'Rating 1 to 7'},
@@ -79,9 +81,8 @@ export default class AdminSurveyManageController extends Controller {
     }
   ];
 
-  @computed('surveyGroups.@each.sort_index')
-  get orderedGroups() {
-    return this.surveyGroups.sortBy('sort_index');
+  _buildOrderedGroups() {
+    this.orderedGroups = this.surveyGroups.sortBy('sort_index');
   }
 
   @action
@@ -117,7 +118,7 @@ export default class AdminSurveyManageController extends Controller {
       this.toast.success(`The survey group was successfully ${isNew ? 'created' : 'updated'}.`);
       this.groupEntry = null;
       if (isNew) {
-        this.surveyGroups.update();
+        this.surveyGroups.update().then(() => this._buildOrderedGroups());
       }
     }).catch((response) => this.house.handleErrorResponse(response, model));
   }
@@ -131,6 +132,7 @@ export default class AdminSurveyManageController extends Controller {
           await this.surveyGroups.update();
           await this.surveyQuestions.update();
           this._assignQuestions();
+          this._buildOrderedGroups()
         })
       });
   }
@@ -143,7 +145,7 @@ export default class AdminSurveyManageController extends Controller {
     groups.removeObject(group);
 
     if (direction < 0) {
-      if (idx == 1) {
+      if (idx === 1) {
         groups.unshift(group);
       } else if (idx > 0) {
         groups.splice(idx - 1, 0, group);
@@ -159,7 +161,7 @@ export default class AdminSurveyManageController extends Controller {
     for (let idx = 0; idx < groups.length; idx++) {
       const g = groups[idx];
       const sortIdx = idx + 1;
-      if (sortIdx != g.sort_index) {
+      if (sortIdx !== g.sort_index) {
         g.sort_index = sortIdx;
         try {
           await g.save();
@@ -168,7 +170,7 @@ export default class AdminSurveyManageController extends Controller {
         }
       }
     }
-
+    this._buildOrderedGroups();
     this.toast.success('Group order successfully updated.');
   }
 

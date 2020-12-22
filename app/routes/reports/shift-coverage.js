@@ -11,8 +11,8 @@ export default class ReportsShiftCoverageRoute extends Route {
     const year = requestYear(params);
     const type = params.type || 'command';
 
-    this.set('year', year);
-    this.set('type', type);
+    this.year = year;
+    this.type = type;
     return this.ajax.request('slot/shift-coverage-report', { data: { year, type }});
   }
 

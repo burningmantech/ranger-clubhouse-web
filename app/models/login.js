@@ -1,6 +1,4 @@
-import EmberObject from '@ember/object';
-
-export default class LoginModel extends EmberObject {
+export default class LoginModel {
   identification = null;
    password = null;
 }

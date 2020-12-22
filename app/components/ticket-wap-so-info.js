@@ -1,4 +1,6 @@
+// eslint-disable-next-line ember/no-classic-components
 import Component from '@ember/component';
+import classic from 'ember-classic-decorator';
 import { set } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { action, computed } from '@ember/object';
@@ -7,6 +9,7 @@ import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
 
 import moment from 'moment';
 
+@classic
 export default class TicketWapSoInfoComponent extends Component {
   tagName = '';
 
@@ -19,10 +22,6 @@ export default class TicketWapSoInfoComponent extends Component {
   showing = null;
 
   isSaved = false;
-
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments)
-  }
 
   @computed('ticketPackage.wapso.length', 'wapSOList.@each.name')
   get wapSOCount() {

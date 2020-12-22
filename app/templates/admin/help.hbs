@@ -1,36 +1,40 @@
-<h1>Help Documents</h1>
+<h1>Help / Tooltip Documents</h1>
 
 <p class="text-muted mb-4">
   {{fa-icon "music"}} Help me if you can, I'm feeling down. And I do appreciate you being 'round {{fa-icon "music"}}
 </p>
 <p>
+  Primary used by the HQ Window interface to provide tooltips on various page elements.
+</p>
+<p>
   <button type="button" class="btn btn-primary" {{on "click" this.newHelp}}>New Help Doc</button>
 </p>
-<table class="table table-sm table-hover table-striped">
+<table class="table table-sm table-hover table-striped table-width-auto">
   <caption>
-    Showing {{pluralize this.documents.length "help document"}}
+    Showing {{pluralize this.viewDocuments.length "help document"}}
   </caption>
   <thead>
   <tr>
-    <th class="w-15">Slug</th>
-    <th class="w-45">Title / Body</th>
-    <th class="w-15">Tags</th>
-    <th class="w-25">Action</th>
+    <th>Slug</th>
+    <th>Title / Body</th>
+    <th>Tags</th>
+    <th>Action</th>
   </tr>
   </thead>
 
   <tbody>
   {{#each this.viewDocuments as |document|}}
     <tr>
-      <td class="w-15">{{document.slug}}</td>
-      <td class="w-45">
-        <strong>{{document.title}}</strong><br>
+      <td>{{document.slug}}</td>
+      <td>
+        <b>{{document.title}}</b><br>
         <ReadMore @text={{document.body}} />
       </td>
-      <td class="w-20">{{document.tags}}</td>
-      <td class="w-25">
-        <button type="button" class="btn btn-secondary btn-sm" {{action this.editHelp document}}>{{fa-icon "edit"}} Edit</button>
-        <button type="button" class="btn btn-danger btn-sm" {{action this.deleteHelp document}}>{{fa-icon "trash"}} Delete</button>
+      <td>{{document.tags}}</td>
+      <td>
+        <button type="button" class="btn btn-secondary btn-sm" {{action this.editHelp document}}>
+          {{fa-icon "edit"}} Edit
+        </button>
       </td>
     </tr>
   {{/each}}
@@ -45,16 +49,19 @@
             @onCancel={{action this.cancelHelp}} as |f|>
       <Modal.body>
         <f.input @name="slug" @label="Slug / Help Identifier" @type="text" @size=20 @maxlength=255/>
-        <f.input @name="tags" @label="Tags (separated by comma)" @size=20 @maxlength=255/>
-        <f.input @name="title" @label="Help Title" @type="text" @size=20 @maxlength=255/>
-        <f.input @name="body" @label="Help Body" @type="textarea" @rows=10 @cols=80/>
+          <f.input @name="tags" @label="Tags (separated by comma)" @size=20 @maxlength=255/>
+            <f.input @name="title" @label="Help Title" @type="text" @size=20 @maxlength=255/>
+              <f.input @name="body" @label="Help Body" @type="textarea" @rows=10 @cols=80/>
       </Modal.body>
-      <Modal.footer @noAlign=true>
+      <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
-        <f.cancel  @disabled={{this.entry.isSaving}} />
+        <f.cancel @disabled={{this.entry.isSaving}} />
         {{#if this.entry.isSaving}}
-          <LoadingIndicator />
+          <LoadingIndicator/>
         {{/if}}
+        <div class="ml-auto">
+          <button type="button" class="btn btn-danger" {{action this.deleteHelp}}>{{fa-icon "trash"}} Delete</button>
+        </div>
       </Modal.footer>
     </ChForm>
   </ModalDialog>

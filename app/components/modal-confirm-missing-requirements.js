@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
-import { alias } from '@ember/object/computed';
 
 export default class ModalConfirmMissingRequirementsComponent extends Component {
-  @alias('args.dialog.data') data;
-
+  get data() {
+    return this.args.dialog.data;
+  }
 }

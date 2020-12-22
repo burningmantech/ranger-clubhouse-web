@@ -9,7 +9,7 @@ export default class ReportsScheduleByPositionRoute extends Route {
   model(params) {
     const year = requestYear(params);
 
-    this.set('year', year);
+    this.year = year;
     return this.ajax.request('slot/position-schedule-report', { data: { year }});
   }
 

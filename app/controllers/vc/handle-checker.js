@@ -1,4 +1,6 @@
 import Controller from '@ember/controller';
+import classic from 'ember-classic-decorator';
+import { dasherize } from '@ember/string';
 import EmberObject from '@ember/object';
 import { later } from '@ember/runloop';
 import { action, computed } from '@ember/object';
@@ -17,6 +19,7 @@ import {
 
 let nextCheckId = 1;
 
+@classic
 class CheckedHandle extends EmberObject {
   // Lint suggests invalid change https://github.com/ember-cli/eslint-plugin-ember/issues/105
   // eslint-disable-next-line ember/use-brace-expansion
@@ -42,14 +45,15 @@ class CheckedHandle extends EmberObject {
   }
 }
 
+@classic
 export default class VcHandlerCheckerController extends Controller {
   currentName = '';
   includeVintage = true; // Check vintage even if status isn't checked
   checkedHandles = []; // Array of {id string, name string, conflicts HandleConflict[]}
   allHandles = []; // Same Handle objects as model
 
-  constructor() {
-    super(...arguments);
+  init() {
+    super.init(...arguments);
     this.addObserver('model', this.incrementallyBuildAllHandles); // eslint-disable-line ember/no-observers
   }
 
@@ -100,7 +104,7 @@ export default class VcHandlerCheckerController extends Controller {
     // By default, alphas can choose the handle of a non-vintage retired Ranger
     const disabledByDefault = new Set(['retired ranger', 'non ranger ranger']);
     return this.model.mapBy('entityType').uniq().sort(comparator).map((type) => EmberObject.create({
-      id: type.dasherize(),
+      id: dasherize(type),
       name: type,
       enabled: !disabledByDefault.has(type),
     }));

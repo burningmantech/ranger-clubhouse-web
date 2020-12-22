@@ -3,7 +3,9 @@ import EmberObject from '@ember/object';
 import {action, computed} from '@ember/object';
 import _ from 'lodash';
 import {tracked} from '@glimmer/tracking';
+import classic from 'ember-classic-decorator';
 
+@classic
 class ViewPosition extends EmberObject {
   @tracked expanded = false;
 
@@ -23,6 +25,7 @@ class ViewPosition extends EmberObject {
   }
 }
 
+@classic
 export default class PeopleByPositionController extends Controller {
   queryParams = ['onPlaya'];
   onPlaya = false;

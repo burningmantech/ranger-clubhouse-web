@@ -1,5 +1,4 @@
-import {Role} from 'clubhouse/constants/roles';
-import {typeOf, isEmpty} from '@ember/utils';
+import {isEmpty} from '@ember/utils';
 import Mixin from '@ember/object/mixin';
 import {
   ACTIVE, ALPHA, AUDITOR, BONKED, DECEASED, DISMISSED, INACTIVE_EXTENSION, INACTIVE, NON_RANGER,
@@ -98,82 +97,7 @@ const PersonMixin = Mixin.create({
   get isCheetahCub() {
     const status = this.status;
     return status === INACTIVE_EXTENSION || status === RETIRED;
-  },
-
-  hasRole(roles) {
-    let personRoles = this.roles;
-
-    if (!personRoles) {
-      return false;
-    }
-
-    if (typeOf(roles) !== 'array') {
-      roles = [roles];
-    }
-
-    let haveIt = false;
-
-    roles.forEach((role) => {
-      const type = typeOf(role);
-      if (type === 'array' || type === 'object') {
-        let haveAll = true;
-
-        // Sub array means ALL the roles have to be present.
-        role.forEach((r) => {
-          if (!role) {
-            throw new Error('hasRole: Unknown role - is the name spelled correctly?');
-          }
-
-          if (!personRoles.includes(r)) {
-            haveAll = false;
-          }
-        });
-
-        if (haveAll) {
-          haveIt = true;
-        }
-      } else {
-        if (!role) {
-          throw new Error('hasRole: Unknown role - is the name spelled correctly?');
-        }
-        if (personRoles.includes(role)) {
-          haveIt = true;
-        }
-      }
-    })
-
-    return haveIt;
-  },
-
-  hasAllRoles(roles) {
-    let personRoles = this.roles;
-
-    if (!personRoles) {
-      return false;
-    }
-
-    if (typeOf(roles) !== 'array') {
-      roles = [roles];
-    }
-
-    const found = roles.filter((r) => personRoles.includes(r));
-
-    return (found.length === roles.length);
-  },
-
-  // Roles
-  get isAdmin() {
-    return this.hasRole(Role.ADMIN);
-  },
-
-  get isVC() {
-    return this.hasRole(Role.VC);
-  },
-
-  canViewEmail() {
-    return this.hasRole([Role.ADMIN, Role.VIEW_EMAIL, Role.VIEW_PII]);
   }
-
 });
 
 export default PersonMixin;

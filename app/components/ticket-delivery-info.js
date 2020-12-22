@@ -1,3 +1,4 @@
+// eslint-disable-next-line ember/no-classic-components
 import Component from '@ember/component';
 import { set } from '@ember/object';
 import { isEmpty } from '@ember/utils';
@@ -6,7 +7,9 @@ import TicketDeliveryValidations from 'clubhouse/validations/ticket-delivery';
 import { StateOptions } from 'clubhouse/constants/countries';
 import { fadeOut, fadeIn } from 'ember-animated/motions/opacity';
 import { tracked } from '@glimmer/tracking';
+import classic from 'ember-classic-decorator';
 
+@classic
 export default class TicketDeliverInfoComponent extends Component {
   tagName = '';
   ticketingInfo = null;
@@ -26,6 +29,7 @@ export default class TicketDeliverInfoComponent extends Component {
 
   stateOptions = StateOptions['US'];
 
+  // eslint-disable-next-line ember/no-component-lifecycle-hooks
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
     this.set('deliveryMethod', this.ticketPackage.delivery.method);

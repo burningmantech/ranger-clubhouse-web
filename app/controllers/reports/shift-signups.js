@@ -1,25 +1,19 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
-import _ from 'lodash';
+import {action} from '@ember/object';
 
 export default class ReportsShiftSignupsController extends Controller {
   queryParams = ['year'];
-
-  @computed('positions')
-  get emptyPositions() {
-    return _.orderBy(this.positions.filter((p) => p.total_empty > 0), ['total_empty'], ['desc']);
-  }
 
   @action
   exportToCSV() {
     const rows = [];
     const CSV_COLUMNS = [
-      { title: `${this.year} Position`, key: 'title' },
-      { title: 'Begins', key: 'begins' },
-      { title: 'Ends', key: 'ends' },
-      { title: 'Description', key: 'description' },
-      { title: 'Signed Up', key: 'signed_up' },
-      { title: 'Max', key: 'max' }
+      {title: `${this.year} Position`, key: 'title'},
+      {title: 'Begins', key: 'begins'},
+      {title: 'Ends', key: 'ends'},
+      {title: 'Description', key: 'description'},
+      {title: 'Signed Up', key: 'signed_up'},
+      {title: 'Max', key: 'max'}
     ];
 
     this.positions.forEach((position) => {

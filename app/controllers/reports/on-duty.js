@@ -5,6 +5,7 @@ import validateDateTime from 'clubhouse/validators/datetime';
 
 export default class ReportsOnDutyController extends Controller {
   @tracked expandAll = false;
+  @tracked duty_date;
 
   queryParams = ['over_hours', 'duty_date' ];
 
@@ -17,12 +18,12 @@ export default class ReportsOnDutyController extends Controller {
     if (!isValid) {
       return;
     }
-    this.set('duty_date', model.get('date'));
+    this.duty_date = model.date;
   }
 
   @action
   viewCurrentTime() {
-    this.set('duty_date', null);
+    this.duty_date = null;
   }
 
   @action

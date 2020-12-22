@@ -1,7 +1,10 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 export default class MentorAlphaStatusController extends Controller {
+  @tracked filter = 'all';
+  @tracked mentees;
+
   filterOptions = [
     [ 'All', 'all' ],
     [ 'Status eligible', 'status' ],
@@ -11,7 +14,6 @@ export default class MentorAlphaStatusController extends Controller {
     [' Mentor Flagged', 'mentor-flag' ]
   ];
 
-  @computed('filter', 'mentees')
   get viewPotentials() {
     const mentees = this.mentees;
 
@@ -34,17 +36,14 @@ export default class MentorAlphaStatusController extends Controller {
     }
   }
 
-  @computed('mentees')
   get statusEligibleCount() {
     return this.mentees.reduce((total,p) => (p.status_eligible ? 1 : 0)+total, 0);
   }
 
-  @computed('mentees')
   get positionEligibleCount() {
     return this.mentees.reduce((total,p) => (p.position_eligible ? 1 : 0)+total, 0);
   }
 
-  @computed('mentees')
   get alphaCount() {
     return this.mentees.reduce((total,p) => (p.status == 'alpha' ? 1 : 0)+total, 0);
   }

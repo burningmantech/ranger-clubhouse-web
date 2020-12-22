@@ -1,10 +1,12 @@
 import Controller from '@ember/controller';
-import { computed } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 export default class ReportsTimesheetCorrectionRequestsController extends Controller {
   queryParams = [ 'year' ];
 
-  @computed('requests')
+  @tracked requests;
+  @tracked callsignFilter = '';
+
   get groupedCorrections() {
     const groups = [];
 
@@ -26,7 +28,6 @@ export default class ReportsTimesheetCorrectionRequestsController extends Contro
     return groups;
   }
 
-  @computed('groupedCorrections')
   get letterOptions() {
     let letters = {};
     this.groupedCorrections.forEach((group) => {
@@ -39,15 +40,14 @@ export default class ReportsTimesheetCorrectionRequestsController extends Contro
     return letters;
   }
 
-  @computed('groupedCorrections', 'callsignFilter')
   get viewGroupCorrections() {
     const requests = this.groupedCorrections;
     const filter = this.callsignFilter;
 
-    if (filter == 'All') {
+    if (filter === 'All') {
       return requests;
     }
 
-    return requests.filter((group) => (group.callsign.charAt(0).toUpperCase() == filter));
+    return requests.filter((group) => (group.callsign.charAt(0).toUpperCase() === filter));
   }
 }

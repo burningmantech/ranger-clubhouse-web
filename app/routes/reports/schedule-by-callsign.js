@@ -9,7 +9,7 @@ export default class ReportsScheduleByCallsignRoute extends Route {
   model(params) {
     const year = requestYear(params);
 
-    this.set('year', year);
+    this.year = year;
     return this.ajax.request('slot/callsign-schedule-report', { data: { year }});
   }
 

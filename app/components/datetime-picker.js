@@ -38,7 +38,7 @@ export default class DatetimePickerComponent extends Component {
     $(this.element).datetimepicker(options);
   }
 
-  willDestroyElement() {
+  willDestroy() {
     $(this.element).datetimepicker('destroy');
     this.element = null;
   }

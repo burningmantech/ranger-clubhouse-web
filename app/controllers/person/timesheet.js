@@ -1,14 +1,15 @@
 import Controller from '@ember/controller';
-import { action } from '@ember/object';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 
 export default class PersonTimesheetController extends Controller {
-  queryParams = [ 'year' ];
+  queryParams = ['year'];
+  @tracked timesheetSummary;
 
   @action
   updateTimesheetSummary() {
-    this.ajax.request(`person/${this.person.id}/timesheet-summary`, { data: { year: this.year }}).then((result) => {
-      this.set('timesheetSummary', result.summary);
-    });
+    this.ajax.request(`person/${this.person.id}/timesheet-summary`, {data: {year: this.year}})
+      .then((result) => this.timesheetSummary = result.summary);
   }
 
   get timesheetPendingCount() {

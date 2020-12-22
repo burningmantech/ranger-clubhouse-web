@@ -1,6 +1,6 @@
 import Helper from '@ember/component/helper';
 
-export default Helper.extend({
+export default class Pluck extends Helper {
   compute([id, records, column, defaultValue]) {
     const record = records.find((r) => r.id == id);
 
@@ -10,4 +10,5 @@ export default Helper.extend({
 
     return record[column];
   }
-});
+}
+

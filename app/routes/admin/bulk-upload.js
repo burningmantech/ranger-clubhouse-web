@@ -14,6 +14,9 @@ export default class AdminBulkUploadRoute extends Route {
       commit: false,
       results: null,
       records: '',
+      resultsCommitted: false,
+      resultSuccesses: [],
+      resultFailures: []
     });
   }
 }

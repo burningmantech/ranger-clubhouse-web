@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { action, computed, set } from '@ember/object';
+import { action, set } from '@ember/object';
 import { run, later } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
 
@@ -36,7 +36,6 @@ export default class ReportsScheduleByCallsignController extends Controller {
     this.house.scrollToElement(`#person-${id}`, false);
   }
 
-  @computed('people')
   get letterOptions() {
     let letters = {};
     this.people.forEach((person) => {

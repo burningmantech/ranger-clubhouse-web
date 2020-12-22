@@ -10,7 +10,7 @@ export default class ReportsPotentialShirtsRoute extends Route {
   model(params) {
     const year = requestYear(params);
 
-    this.set('year', year);
+    this.year = year;
     return this.ajax.request(`timesheet/potential-shirts-earned`, {
       data: { year }
     });

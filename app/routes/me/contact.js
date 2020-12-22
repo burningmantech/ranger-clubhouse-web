@@ -15,7 +15,7 @@ export default class MeContactRoute extends Route {
   }
 
   model({ callsign }) {
-    this.set('callsign', callsign);
+    this.callsign = callsign;
   }
 
   setupController(controller) {

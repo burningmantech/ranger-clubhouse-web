@@ -1,6 +1,5 @@
 import Component from '@glimmer/component';
-import {action, computed} from '@ember/object';
-import {A} from '@ember/array';
+import {action} from '@ember/object';
 import {set} from '@ember/object';
 import {Role} from 'clubhouse/constants/roles';
 import markSlotsOverlap from 'clubhouse/utils/mark-slots-overlap';
@@ -57,7 +56,7 @@ export default class ScheduleManageComponent extends Component {
      * TODO Revisit whether everyone should be able to see inactive slots if they choose.
      */
 
-    if (person.hasRole(
+    if (this.session.user.hasRole(
       [Role.ADMIN, Role.EDIT_SLOTS, Role.GRANT_POSITION, Role.VC, Role.TRAINER, Role.ART_TRAINER])) {
       this.availableSlots = slots;
     } else {
@@ -103,15 +102,14 @@ export default class ScheduleManageComponent extends Component {
       .catch((result) => this.house.handleErrorResponse(result));
   }
 
-  @computed('availableSlots', 'filterDay', 'filterActive')
   get viewSlots() {
     let slots = this.availableSlots;
     const filterDay = this.filterDay;
 
     if (filterDay) {
-      if (filterDay == 'upcoming') {
+      if (filterDay === 'upcoming') {
         slots = slots.filterBy('has_started', false);
-      } else if (filterDay != 'all') {
+      } else if (filterDay !== 'all') {
         slots = slots.filterBy('slotDay', filterDay);
       }
     }
@@ -122,7 +120,6 @@ export default class ScheduleManageComponent extends Component {
     return slots;
   }
 
-  @computed('viewSlots')
   get positions() {
     const slots = this.viewSlots;
     const groups = {};
@@ -140,10 +137,9 @@ export default class ScheduleManageComponent extends Component {
     return Object.values(groups).sort((a,b) => a.title.localeCompare(b.title));
   }
 
-  @computed('availableSlots', 'slots', 'isCurrentYear')
   get dayOptions() {
     const unique = this.availableSlots.uniqBy('slotDay').mapBy('slotDay');
-    const days = A();
+    const days = [];
 
     unique.sort((a, b) => {
       if (a < b) return -1;
@@ -152,13 +148,13 @@ export default class ScheduleManageComponent extends Component {
     });
 
     if (this.isCurrentYear) {
-      days.pushObject(upcomingShifts);
+      days.push(upcomingShifts);
     }
 
-    days.pushObject(allDays);
+    days.push(allDays);
 
     unique.forEach(function (day) {
-      days.pushObject([moment(day).format('ddd MMM DD'), day])
+      days.push([moment(day).format('ddd MMM DD'), day])
     });
 
     return days;

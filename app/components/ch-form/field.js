@@ -117,7 +117,7 @@ export default class ChFormFieldComponent extends Component {
     set(model, name, value);
 
     if (onChange) {
-      onChange(name, value);
+      onChange(name, value, model);
     }
 
     if (fieldChangeAction) {
