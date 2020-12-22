@@ -67,29 +67,13 @@ jobs:
       - name: Save Docker image
         run: |
           mkdir images;
-          docker image save ranger-clubhouse-web:dev          | gzip -9 > images/web.tgz;
+          docker image save ranger-clubhouse-web:dev | gzip -6 > images/web.tgz;
 
       - name: Upload Docker image artifact
         uses: actions/upload-artifact@v1
         with:
           name: images
           path: images
-
-
-  lint:
-
-    name: Run linter
-
-    needs: [docker]
-
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    steps:
-
-      - name: Checkout source code
-        uses: actions/checkout@v2
-
 
 
   test-docker:
