@@ -6,35 +6,12 @@
 
 . "$(dirname "$0")/.common.sh";
 
-stages="";
-
-
-#
-# Build a stage and tag it
-#
-build() {
-    local stage="${1}"; shift;
-    local  name="${1}"; shift;
-
-    cache_flags() {
-        for stage in ${stages}; do
-            echo "--cache-from=${stage}";
-        done;
-    }
-
-    docker build             \
-        --target="${stage}"  \
-        --tag="${name}"      \
-        $(cache_flags)       \
-        "${wd}";
-
-    stages="${stages} ${name}";
-}
-
-
 #
 # Build and tag each stage
 #
-build development "${dev_image_name}";
-build build       "${build_image_name}";
-build application "${app_image_name}";
+
+docker build \
+   --target=development --tag="${dev_image_name}" \
+   --target=build --tag="${build_image_name}" \
+   --target=application --tag="${app_image_name}" \
+        "${wd}";
