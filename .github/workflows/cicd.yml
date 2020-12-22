@@ -14,7 +14,7 @@ jobs:
   info:
 
     name: Workflow information
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
     timeout-minutes: 1
 
     steps:
@@ -67,7 +67,6 @@ jobs:
       - name: Save Docker image
         run: |
           mkdir images;
-          docker image save ranger-clubhouse-web_build:latest | gzip -9 > images/build.tgz;
           docker image save ranger-clubhouse-web:dev          | gzip -9 > images/web.tgz;
 
       - name: Upload Docker image artifact
@@ -91,23 +90,13 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
 
-      - name: Download Docker image artifact
-        uses: actions/download-artifact@v1
-        with:
-          name: images
-
-      - name: Load Docker image
-        run: gzip --uncompress --stdout images/build.tgz | docker image load;
-
-      - name: Run linter
-        run: ./bin/test_lint;
 
 
   test-docker:
 
     name: Test Docker image
 
-    needs: [docker, lint]
+    needs: [docker]
 
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -132,7 +121,7 @@ jobs:
   deploy-staging:
     name: Deploy code from master branch to the staging environment
 
-    needs: [docker, lint, test-docker]
+    needs: [docker, test-docker]
     if: github.ref == 'refs/heads/master'
 
     runs-on: ubuntu-latest
