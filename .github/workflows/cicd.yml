@@ -80,7 +80,7 @@ jobs:
 
     name: Test Docker image
 
-    needs: [docker, lint]
+    needs: [docker]
 
     runs-on: ubuntu-latest
     timeout-minutes: 10
