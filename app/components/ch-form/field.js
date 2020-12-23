@@ -129,4 +129,14 @@ export default class ChFormFieldComponent extends Component {
   editorLoadFailed() {
     this.editorFailed = true;
   }
+
+  get errorMessages() {
+    const error = get(this.args.model, `error.${this.args.name}.validation`);
+
+    if (!error) {
+      return null;
+    }
+
+    return (typeof error === 'string') ? [ error ] : error;
+  }
 }

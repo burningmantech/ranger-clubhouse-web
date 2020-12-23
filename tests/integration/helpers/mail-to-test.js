@@ -9,10 +9,13 @@ module('helper:mail-to', function(hooks) {
 
   // Replace this with your real tests.
   test('it renders', async function(assert) {
-    this.set('email', 'dangerranger@ranger.bm');
+    const email = 'dangerranger@ranger.bm';
+    this.set('email',email);
 
     await render(hbs`{{mail-to email}}`);
 
-    assert.equal(this.element.innerHTML, '<a href="mailto:dangerranger@ranger.bm">dangerranger@ranger.bm</a>');
+    assert.dom('a').exists()
+      .hasAttribute('href', `mailto:${email}`)
+      .hasText(email);
   });
 });
