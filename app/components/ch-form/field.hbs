@@ -38,7 +38,7 @@
       <textarea
               name={{@name}}
               id={{this.domId}}
-              class={{concat this.controlClass " " (if (get @model.error @name) "is-invalid")}}
+              class="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
               placeholder={{@placeholder}}
               disabled={{@disabled}}
               autofocus={{@autofocus}}
@@ -53,13 +53,14 @@
                       @onChange={{this.update}} @placeholder={{@placeholder}} @value={{get @model @name}}
                       @dateOnly={{eq @type "date"}} @startDate={{@startDate}} />
     {{else if (eq @type "editor")}}
-      <WysiwygEditor @text={{get @model @name}} @id={{this.domId}} @onChange={{this.update}} @onLoadError={{this.editorLoadFailed}} />
+      <WysiwygEditor @text={{get @model @name}} @id={{this.domId}} @onChange={{this.update}}
+                     @onLoadError={{this.editorLoadFailed}} />
     {{else}}
       <input type={{@type}}
              value={{get @model @name}}
              name={{@name}}
              id={{this.domId}}
-             class="{{this.controlClass}} {{if (get @model.error @name) "is-invalid"}}"
+             class="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
              placeholder={{@placeholder}}
              disabled={{@disabled}}
              autofocus={{@autofocus}}
@@ -76,11 +77,9 @@
       <small class="form-text text-muted {{if (eq @type "textarea") "ml-2"}}">{{nl2br @hint}}</small>
     {{~/if~}}
 
-    {{#if (get @model.error @name)~}}
-      {{#each (get (get @model.error @name) "validation") as |msg|~}}
-        <div class="text-danger">&bullet; {{msg}}</div>
-      {{~/each~}}
-    {{/if~}}
+    {{#each this.errorMessages as |msg|~}}
+      <div class="text-danger">&bullet; {{msg}}</div>
+    {{~/each~}}
   </div>
 {{else}}
   {{#if @label~}}
@@ -111,7 +110,7 @@
                        @onFocus={{@onFocus}}
                        @disabled={{@disabled}}
                        @autofocus={{@autofocus}}
-                       @inputClass="{{this.controlClass}} {{if (get @model.error @name) "is-invalid"}}"
+                       @inputClass="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
                        @text={{get @model @name}} as |item|>
       {{item}}
     </AutocompleteInput>
@@ -123,9 +122,7 @@
     <small class="form-text text-muted">{{nl2br @hint}}</small>
   {{~/if~}}
 
-  {{#if (get @model.error @name)~}}
-    {{#each (get (get @model.error @name) "validation") as |msg|~}}
-      <div class="text-danger">&bullet; {{msg}}</div>
-    {{~/each~}}
-  {{/if~}}
+  {{#each this.errorMessages as |msg|~}}
+    <div class="text-danger">&bullet; {{msg}}</div>
+  {{~/each~}}
 {{/if}}
