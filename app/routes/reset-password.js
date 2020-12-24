@@ -46,6 +46,6 @@ export default class ResetPasswordRoute extends Route.extend(UnauthenticatedRout
 
   setupController(controller, model) {
     controller.set('resetTokenError', model);
-    controller.set('auth', Login.create());
+    controller.set('auth', new Login);
   }
 }
