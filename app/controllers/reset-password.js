@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import EmberObject, {action} from '@ember/object';
+import {action} from '@ember/object';
 import ResetPasswordValidations from '../validations/reset-password';
 import {tracked} from '@glimmer/tracking';
 
@@ -8,7 +8,6 @@ export default class ResetPasswordController extends Controller {
   @tracked authForm = {};
 
   resetPasswordValidations = ResetPasswordValidations;
-
 
   @action
   submit(model, isValid) {
