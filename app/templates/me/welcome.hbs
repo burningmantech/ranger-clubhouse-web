@@ -1,0 +1,50 @@
+{{#if this.showSuccessDialog}}
+  <ModalDialog @title="Password successfully set" as |Modal|>
+    <Modal.body>
+      <p>
+        {{fa-icon "check" color="success"}}
+        You have successfully set a password for your Clubhouse account. Please remember your password.
+      </p>
+      <p>
+        To visit the Clubhouse in the future, bookmark the following URL:
+      </p>
+      <p>
+        <a href="https://ranger-clubhouse.burningman.org">ranger-clubhouse.burningman.org</a>
+      </p>
+      <p>
+        Next, you'll be taken to the Clubhouse Onboarding Checklist which has most but not all the tasks you have
+        to complete in order to become a Ranger.
+      </p>
+    </Modal.body>
+    <Modal.footer>
+      <button type="button" class="btn btn-primary btn-responsive" {{action this.closeAction}}>Close</button>
+    </Modal.footer>
+  </ModalDialog>
+{{else}}
+  <ModalDialog @title="Welcome to the Ranger Secret Clubhouse" as |Modal|>
+    <Modal.body>
+      <p>
+        The first step is to set a password for your Clubhouse account.
+      </p>
+      <ChForm @formId="password" @formFor={{this.password}} @validator={{this.passwordValidations}}
+              @onSubmit={{this.submitAction}} @onCancel={{this.cancelAction}} as |f|>
+        <div class="form-row">
+          <f.input @name="password" @type="password"
+                   @label="New Password" @size={{20}} @maxlength={{30}} @grid="col-auto"/>
+        </div>
+        <div class="form-row">
+          <f.input @name="password_confirmation" @type="password"
+                   @label="Confirm New Password" @size={{20}} @maxlength={{30}} @grid="col-auto"/>
+        </div>
+        <div class="mt-3">
+          <f.submit @submitClass="btn-responsive"
+                    @label={{if this.isSubmitting "Setting Password" "Set Password"}}
+                    @disabled={{this.isSubmitting}} />
+          {{#if this.isSubmitting}}
+            <LoadingIndicator/>
+          {{/if}}
+        </div>
+      </ChForm>
+    </Modal.body>
+  </ModalDialog>
+{{/if}}

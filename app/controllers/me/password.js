@@ -4,9 +4,8 @@ import {tracked} from '@glimmer/tracking';
 import {validatePresence, validateLength, validateConfirmation} from 'ember-changeset-validations/validators';
 
 export default class MePasswordController extends Controller {
-  queryParams = ['token'];
-
   @tracked isSubmitting = false;
+  @tracked token = null;
 
   get passwordValidations() {
     const validations = {
@@ -19,7 +18,7 @@ export default class MePasswordController extends Controller {
       ]
     };
 
-    if (!this.token) {
+    if (!this.isPasswordReset) {
       // Only ask for an old password if no reset password token was given.
       validations.password_old = [
         validatePresence({presence: true, message: 'Enter your old password.'}),
@@ -41,14 +40,16 @@ export default class MePasswordController extends Controller {
       password_confirmation: model.password_confirmation
     };
 
-    if (this.token) {
-      passwords.reset_token = this.token;
+    if (this.isPasswordReset) {
+      passwords.temp_token = this.session.tempLoginToken;
     } else {
       passwords.password_old = model.password_old;
     }
 
     this.isSubmitting = true;
     return this.ajax.request(`person/${personId}/password`, {method: 'PATCH', data: passwords}).then(() => {
+      this.session.tempLoginToken = null;
+      this.session.isWelcome = false;
       this.toast.success('Password has been successfully changed.');
       this.transitionToRoute('me.homepage');
     }).catch((response) => {

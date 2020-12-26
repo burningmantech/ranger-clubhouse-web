@@ -5,10 +5,13 @@ import {tracked} from '@glimmer/tracking';
 import ENV from 'clubhouse/config/environment';
 
 export default class LoginController extends Controller {
+  queryParams = [ 'token', 'welcome'];
+
   loginValidations = LoginValidations;
 
   @tracked isSubmitting = false;
   @tracked loginError = null;
+  @tracked tokenError = null;
 
   /*
 
@@ -57,6 +60,7 @@ export default class LoginController extends Controller {
       return;
 
     this.loginError = null;
+    this.tokenError = null;
     const credentials = {
       identification: model.identification,
       password: model.password

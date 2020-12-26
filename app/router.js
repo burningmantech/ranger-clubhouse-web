@@ -18,6 +18,8 @@ Router.map(function () {
   this.route('authenticated', {path: ''}, function () {
     this.route('me', {resetNamespace: true}, function () {
       this.route('homepage', {path: '/'});
+
+      this.route('announcements');
       this.route('alerts');
       this.route('contact');
       this.route('emergency-contact');
@@ -28,8 +30,10 @@ Router.map(function () {
       this.route('motorpool-policy');
       this.route('password');
       this.route('personal-info');
+      this.route('radio-checkout');
       this.route('tickets');
       this.route('timesheet');
+      this.route('survey');
       this.route('schedule', function () {
         this.route('index', {path: '/'});
       });
@@ -38,14 +42,12 @@ Router.map(function () {
         this.route('missing');
         this.route('confirm');
       });
-      this.route('survey');
       this.route('trainer-feedback', function () {
         this.route('index', {path: '/'});
         this.route('view', {path: '/:year'});
       });
       this.route('vehicles');
-      this.route('announcements');
-      this.route('radio-checkout');
+      this.route('welcome');
     });
 
     this.route('search', {resetNamespace: true}, function () {
@@ -221,4 +223,5 @@ Router.map(function () {
 
   // Catch all for unrecognized urls
   this.route('not-found', {path: '/*path'});
+
 });

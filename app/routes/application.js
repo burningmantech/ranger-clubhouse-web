@@ -109,9 +109,8 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
 
   async sessionAuthenticated() {
     await this.setCurrentUser();
-    if (this.session.resetPasswordToken) {
-      this.transitionTo('me.password', {queryParams: {token: this.session.resetPasswordToken}});
-      this.session.resetPasswordToken = null;
+    if (this.session.tempLoginToken) {
+      this.transitionTo(this.session.isWelcome ? 'me.welcome' : 'me.password');
     } else {
       super.sessionAuthenticated(...arguments);
     }
