@@ -2,13 +2,34 @@
 <main>
   {{#if this.session.isStaging}}
     <ChNotice @type="danger" @icon="exclamation"
-           @title="This is the Clubhouse Staging Server used for testing and verification">
+              @title="This is the Clubhouse Staging Server used for testing and verification">
       <p>Here be dragons.</p>
       The real production server can be found here:<br>
       <a href="https://ranger-clubhouse.burningman.org">ranger-clubhouse.burningman.org</a>
     </ChNotice>
   {{/if}}
   <h2>Welcome To The Ranger Secret Clubhouse!</h2>
+  {{#if this.tokenError}}
+    <ChAlert @type="danger">
+      {{#if this.welcome}}
+        <p>
+          Sorry, the invitation link has expired or was entered incorrectly.
+        </p>
+        <p>
+          If you already setup your Clubhouse account, use your email and password to login.
+        </p>
+        <p>
+          You can use the "Forgot Your Password" link below if you cannot remember your password.
+        </p>
+        <p>
+          Contact the Volunteer Coordinators at {{vc-email}} if you continue to have problems.
+        </p>
+      {{else}}
+        Sorry, the reset password link has either expired or was entered incorrectly. You can try resetting
+        your password again.
+      {{/if}}
+    </ChAlert>
+  {{/if}}
   {{#if this.loginError}}
     {{#if (eq this.loginError "invalid-credentials")}}
       <ChNotice @title=" The email and/or password is incorrect." @type="danger" @icon="exclamation-triangle"/>
@@ -50,7 +71,7 @@
           Visit
           <a href="https://rangers.burningman.org/ranger-application-process/"
              target="_blank" rel="noopener noreferrer">
-          Becoming a Ranger
+            Becoming a Ranger
           </a> to read about our requirements and how to apply.
         </p>
         All past prospective Rangers must reapply each year.

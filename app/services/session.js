@@ -16,6 +16,13 @@ export default class extends SessionService {
   @tracked user = null;
   @tracked unreadMessageCount = 0;
 
+  // Temporary login token used to login & change or set the password
+  // token becomes invalid once the password has changed.
+  tempLoginToken = null;
+
+  // Is this a PNV welcome?
+  isWelcome = null;
+
   isMobileDevice = false;
   isTabletDevice = false;
 

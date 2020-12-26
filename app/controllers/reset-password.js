@@ -1,30 +1,26 @@
 import Controller from '@ember/controller';
-import EmberObject, {action} from '@ember/object';
+import {action} from '@ember/object';
 import ResetPasswordValidations from '../validations/reset-password';
-import { tracked } from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
 
 export default class ResetPasswordController extends Controller {
   @tracked isSubmitting = false;
-  @tracked resetTokenError = null;
+  @tracked authForm = {};
 
   resetPasswordValidations = ResetPasswordValidations;
-
-  authForm = EmberObject.create({});
 
   @action
   submit(model, isValid) {
     if (!isValid)
       return;
 
-    let identification = model.identification;
+    const {identification} = model;
 
-    this.resetTokenError = null;
+    this.tokenError = null;
     this.isSubmitting = true;
     return this.ajax.request('/auth/reset-password', {
       method: 'POST',
-      data: {
-        identification
-      }
+      data: {identification}
     }).then(() => {
       this.modal.info('Reset password instructions sent.',
         `Instructions to reset your password will be sent to you shortly. Please check your email '${identification}'.`);
