@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
-import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
+import {schedule} from '@ember/runloop';
 import $ from 'jquery';
 
 export default class ChAccordionComponent extends Component {
@@ -13,20 +14,42 @@ export default class ChAccordionComponent extends Component {
       return; // unlikely, but ya never know..
     }
 
-    $(this.bodyElement).collapse('toggle');
+    if (this.isOpen) {
+      // hidden event will deal with things
+      $(this.bodyElement).collapse('hide');
+      return;
+    }
+
+    this.isOpen = true;
+    if (this.args.onClick) {
+      this.args.onClick(true);
+    }
+
+    // Reveal body after it's rendered
+    schedule('afterRender', () => {
+      $(this.bodyElement).collapse('show');
+    });
   }
 
   @action
   onInsertAction(element) {
     this.bodyElement = element;
-    $(element).on('shown.bs.collapse', () => {
-      this.isOpen = true;
-    }).on('hidden.bs.collapse', () => {
+    $(element).on('hidden.bs.collapse', () => {
       this.isOpen = false;
+      if (this.args.onClick) {
+        this.args.onClick(false);
+      }
     });
+
+    if (this.args.isInitOpen) {
+      this.isOpen = true;
+    }
   }
 
-  @action onDestroyAction(element) {
-    $(element).collapse('dispose');
+  @action
+  onDestroyAction() {
+    if (this.bodyElement) {
+      $(this.bodyElement).collapse('dispose');
+    }
   }
 }

@@ -1,5 +1,6 @@
 import Model, { attr } from '@ember-data/model';
 import moment from 'moment';
+import { tracked } from '@glimmer/tracking';
 
 export default class ScheduleModel extends Model {
   // the position row id
@@ -49,6 +50,8 @@ export default class ScheduleModel extends Model {
 
   // contact email
   @attr('string', { readOnly: true }) contact_email;
+
+  @tracked person_assigned;
 
   get isFull() {
     return (this.slot_signed_up >= this.slot_max);

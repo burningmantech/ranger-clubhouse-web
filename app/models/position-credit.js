@@ -1,4 +1,5 @@
 import Model, { attr } from '@ember-data/model';
+import { tracked } from '@glimmer/tracking';
 import moment from 'moment';
 
 export default class PositionCreditModel extends Model {
@@ -9,6 +10,8 @@ export default class PositionCreditModel extends Model {
   @attr('number') credits_per_hour;
 
   @attr('', { readOnly: true}) position;
+
+  @tracked selected;  // used to duplicate credits in admin/credits
 
   get positionTitle() {
     return this.position ? this.position.title : `Position #${this.position_id}`;

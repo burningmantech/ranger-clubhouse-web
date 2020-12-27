@@ -1,51 +1,61 @@
 import Controller from '@ember/controller';
-import EmberObject from '@ember/object';
-import {action, computed } from '@ember/object';
+import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {filterBy} from '@ember/object/computed';
 import {validateNumber, validatePresence} from 'ember-changeset-validations/validators';
 import currentYear from 'clubhouse/utils/current-year';
 import laborDay from 'clubhouse/utils/labor-day';
 import validateDateTime from 'clubhouse/validators/datetime';
 import moment from 'moment';
 import _ from 'lodash';
-import classic from 'ember-classic-decorator';
 
-const allDays = {id: 'all', title: 'All Days'};
-const allPositions = {id: 'all', title: 'All Positions'};
+const ALL_DAYS = {id: 'all', title: 'All Days'};
 
-@classic
-class CopyParams extends EmberObject {
-  deltaDays = 0;
-  deltaHours = 0;
-  deltaMinutes = 0;
-  newPositionId = 0;
+class CopyParams {
+  @tracked deltaDays = 0;
+  @tracked deltaHours = 0;
+  @tracked deltaMinutes = 0;
+  @tracked newPositionId = 0;
+
+  constructor(obj) {
+    Object.assign(this, obj);
+  }
 }
 
-@classic
-class CopySourcePosition extends EmberObject {
+class CopySourcePosition {
   // create with {controller: this, id: â¦, title: â¦, credits: [â¦]}
-  expanded = false;
+  @tracked credits;
 
-  @computed('credits.@each.selected')
+  constructor(obj) {
+    Object.assign(this, obj);
+  }
+
   get allSelected() {
     return this.credits.every((c) => c.selected);
   }
 
-  @filterBy('credits', 'selected', true) selectedCredits;
+  get selectedCredits() {
+    return this.credits.filter((c) => c.selected);
+  }
 }
 
-@classic
-class CopySourceCredit extends EmberObject {
+class CopySourceCredit {
   // create with {controller: this, source: creditModel}
-  selected = true;
+  @tracked selected = true;
+  @tracked source;
+  @tracked controller;
 
-  @computed('controller.copyParams.{deltaDays,deltaHours,deltaMinutes}', 'source.start_time')
+  constructor(obj) {
+    Object.assign(this, obj);
+  }
+
+  get checkboxId() {
+    return `copy-credit-${this.source.id}`;
+  }
+
   get start_time() {
     return this.adjustTime(this.source.start_time);
   }
 
-  @computed('controller.copyParams.{deltaDays,deltaHours,deltaMinutes}', 'source.end_time')
   get end_time() {
     return this.adjustTime(this.source.end_time);
   }
@@ -60,26 +70,23 @@ class CopySourceCredit extends EmberObject {
   }
 }
 
-
-@classic
 export default class AdminCreditsController extends Controller {
   queryParams = ['year'];
 
-  dayFilter = 'all';
-  positionFilter = 'all';
+  @tracked dayFilter = 'all';
 
   creditValidations = {
-    start_time: [ validateDateTime({presence: true, before: 'end_time'}) ],
-    end_time: [ validateDateTime({presence: true, after: 'start_time'}) ],
-    description: [ validatePresence({presence: true}) ],
-    position_id: [ validatePresence({presence: true}) ],
-    credits_per_hour: [ validatePresence({presence: true}) ],
+    start_time: [validateDateTime({presence: true, before: 'end_time'})],
+    end_time: [validateDateTime({presence: true, after: 'start_time'})],
+    description: [validatePresence({presence: true})],
+    position_id: [validatePresence({presence: true})],
+    credits_per_hour: [validatePresence({presence: true})],
   };
 
   copyValidations = {
-    deltaDays: [ validateNumber({integer: true}) ],
-    deltaHours: [ validateNumber({integer: true}) ],
-    deltaMinutes: [ validateNumber({integer: true}) ],
+    deltaDays: [validateNumber({integer: true})],
+    deltaHours: [validateNumber({integer: true})],
+    deltaMinutes: [validateNumber({integer: true})],
   };
 
   @tracked isCopying = false;
@@ -87,75 +94,77 @@ export default class AdminCreditsController extends Controller {
   @tracked isCreditSubmitting = false;
   @tracked credit = null;
 
-  @computed('credits[]', 'credits.@each.{position_id,start_time}', 'dayFilter', 'positionFilter')
-  get viewCredits() {
-    let credits = this.credits;
-    const dayFilter = this.dayFilter;
-    const positionFilter = this.positionFilter;
+  @tracked viewCredits = [];
+  @tracked positionCredits = [];
+  @tracked positionsOpened = {};
 
-    if (positionFilter !== 'all') {
-      credits = credits.filter((p) => p.position_id == positionFilter);
-    }
+  // Copy credits
+  @tracked presentYear;
+  @tracked selectedYearLaborDay;
+  @tracked presentYearLaborDay;
+  @tracked laborDayDiff;
+  @tracked copyParams;
+  @tracked copySourcePositions;
+  @tracked badCredits;
 
-    if (dayFilter !== 'all') {
-      if (dayFilter == 'upcoming') {
-        credits = credits.filter((p) => !p.has_started);
-      } else {
-        credits = credits.filter((p) => p.creditDay === dayFilter);
-      }
-    }
-
-    return credits.sortBy('start_time');
+  _buildDisplay() {
+    this._buildViewCredits();
+    this._buildPositionCredits();
   }
 
-  @computed('credits.@each.start_time')
+  _buildViewCredits() {
+    let credits = this.credits;
+    const dayFilter = this.dayFilter;
+
+    if (dayFilter !== 'all') {
+      credits = credits.filter((p) => p.creditDay === dayFilter);
+    }
+
+    this.viewCredits = credits.sortBy('start_time');
+  }
+
   get dayOptions() {
     const unique = this.credits.uniqBy('creditDay').mapBy('creditDay');
-    const days = [allDays];
-
-    unique.forEach((day) => days.pushObject({id: day, title: moment(day).format('ddd MMM DD')}));
-
+    const days = unique.map((day) => ({id: day, title: moment(day).format('ddd MMM DD')}));
+    days.unshift(ALL_DAYS);
     return days;
   }
 
-  @computed('viewCredits', 'dayFilter', 'positionFilter')
-  get creditGroups() {
-    let credits = this.viewCredits;
-    let groups = [];
+  @action
+  changeDayFilter(value) {
+    this.dayFilter = value;
+    this._buildDisplay();
+  }
 
-    credits.forEach(function (credit) {
-      const title = credit.position ? credit.positionTitle : `Position #${credit.position_id}`;
-      let group = groups.findBy('title', title);
+  @action
+  positionClicked(position, opened) {
+    this.positionsOpened[position.position_id] = opened;
+  }
 
+  _buildPositionCredits() {
+    const groups = [];
+
+    this.viewCredits.forEach((credit) => {
+      const group = groups.find((g) => g.position_id === credit.position_id);
       if (group) {
         group.credits.push(credit);
       } else {
-        groups.push({title, position_id: credit.position_id, credits: [credit]});
+        groups.push({
+          title: credit.position ? credit.positionTitle : `Position #${credit.position_id}`,
+          isNonExistent: !credit.position,
+          position_id: credit.position_id,
+          credits: [credit]
+        });
       }
     });
 
-    return groups.sortBy('title');
+    this.positionCredits = _.sortBy(groups, 'title');
   }
 
-  @computed('credits.@each.position_id')
-  get filterPositionOptions() {
-    const unique = this.credits.uniqBy('positionTitle');
-
-    let options = unique.map((credit) => {
-      return {id: credit.position_id, title: credit.positionTitle};
-    });
-
-    options = options.sortBy('title');
-    options.unshift(allPositions);
-    return options;
-  }
-
-  @computed('positions')
   get positionOptions() {
     return this.positions.map((p) => [p.title, p.id]);
   }
 
-  @computed('positions')
   get positionOptionsForCopy() {
     return [['(same position)', 0], ...this.positions.map((p) => [p.title, p.id])];
   }
@@ -198,15 +207,21 @@ export default class AdminCreditsController extends Controller {
         }
       }
 
-      this.credits.update().then(() => {
-        this.credit = null;
-      }).catch((response) => this.house.handleErrorResponse(response))
+      this._updateCredits()
+        .then(() => this.credit = null)
         .finally(() => this.isCreditSubmitting = false);
     } else {
       this.house.saveModel(model, 'The position credit has been successfully updated.', () => {
         this.credit = null;
+        this._buildDisplay();
       });
     }
+  }
+
+  _updateCredits() {
+    return this.credits.update()
+      .then(() => this._buildDisplay())
+      .catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
@@ -218,6 +233,7 @@ export default class AdminCreditsController extends Controller {
         credit.destroyRecord()
           .then(() => {
             this.credits.removeObject(credit);
+            this._buildDisplay();
             this.toast.success('Credit has been deleted.')
           })
           .catch((response) => this.house.handleErrorResponse(response))
@@ -227,61 +243,61 @@ export default class AdminCreditsController extends Controller {
 
   @action
   cancelCredit(model) {
-    if (!model.get('isDirty')) {
-      this.set('credit', null);
+    if (!model.isDirty) {
+      this.credit = null;
       return;
     }
 
     this.modal.confirm('Unsaved Changes', 'The changes have not been saved. Are you sure you wish to leave this form without saving first?', () => {
-      this.set('credit', null);
+      this.credit = null;
     })
   }
 
   @action
   startCopy(selectedPositionId = 0) {
-    this.set('presentYear', currentYear());
+    selectedPositionId = +selectedPositionId;
+    this.presentYear = currentYear();
     const selectedLaborDay = laborDay(this.year);
     const presentLaborDay = laborDay(this.presentYear);
-    this.set('selectedYearLaborDay', selectedLaborDay.format('MMMM Do'));
-    this.set('presentYearLaborDay', presentLaborDay.format('MMMM Do'));
-    this.set('laborDayDiff', presentLaborDay.diff(selectedLaborDay, 'days'));
+    this.selectedYearLaborDay = selectedLaborDay.format('MMMM Do');
+    this.presentYearLaborDay = presentLaborDay.format('MMMM Do');
+    this.laborDayDiff = presentLaborDay.diff(selectedLaborDay, 'days');
     let sourceCredits = this.viewCredits;
+
     if (selectedPositionId > 0) {
-      sourceCredits = sourceCredits.filter((p) => p.position_id == selectedPositionId);
+      sourceCredits = sourceCredits.filter((p) => p.position_id === selectedPositionId);
     }
+
+    // Filter out credits with no backing position
+    this.badCredits = sourceCredits.filter((p) => !p.position);
+    sourceCredits = sourceCredits.filter((p) => p.position);
 
     let copyPositions = [];
     _.forOwn(_.groupBy(sourceCredits, 'position_id'),
       (credits, positionId) => {
-        copyPositions.push(CopySourcePosition.create({
+        copyPositions.push(new CopySourcePosition({
           id: positionId,
           title: credits[0].positionTitle,
           controller: this,
-          credits: credits.map((c) => CopySourceCredit.create({
-            controller: this,
-            source: c,
-          })),
+          credits: credits.map((c) => new CopySourceCredit({controller: this, source: c}))
         }))
       });
     copyPositions = copyPositions.sortBy('title');
     if (copyPositions.length === 1) {
-      copyPositions[0].set('expanded', true);
+      copyPositions[0].expanded = true;
     }
-    this.set('copyParams', CopyParams.create({
-      deltaDays: this.laborDayDiff,
-    }));
-    this.set('copySourcePositions', copyPositions);
+    this.copyParams = new CopyParams({deltaDays: this.laborDayDiff});
+    this.copySourcePositions = copyPositions;
   }
 
-  @computed('copySourcePositions.@each.selectedCredits')
   get copySelectedCreditCount() {
     return _.sumBy(this.copySourcePositions, (p) => p.selectedCredits.length);
   }
 
   @action
   cancelCopy() {
-    this.set('copySourcePositions', null);
-    this.set('copyParams', null);
+    this.copySourcePositions = null;
+    this.copyParams = null;
   }
 
   @action
@@ -306,43 +322,34 @@ export default class AdminCreditsController extends Controller {
       }
     });
     this.isCopying = true;
-    this.ajax.request(`position-credit/copy`, {
-      method: 'POST',
-      data: data,
-    }).then((result) => {
-      if (result.position_credit.length) {
+    this.ajax.request(`position-credit/copy`, {method: 'POST', data: data})
+      .then((result) => {
+        if (!result.position_credit.length) {
+          this.toast.error('No credits copied');
+          return;
+        }
         this.toast.success(`Copied ${result.position_credit.length} credits`);
-      } else if (result.message === 'success') {
-        this.toast.success('No credits copied');
-      } else {
-        this.house.handleErrorResponse(result);
-      }
-      // refresh the list
-      this.credits.update()
-        .catch((response) => this.house.handleErrorResponse(response))
-        .finally(() => {
-          this.isCopying = false
-          this.set('copySourcePositions', null);
-          this.set('copyParams', null);
+        // refresh the list
+        this._updateCredits()
+          .finally(() => {
+            this.isCopying = false
+            this.copySourcePositions = null;
+            this.copyParams = null;
 
-        });
-    }).catch((response) => {
+          });
+      }).catch((response) => {
       this.house.handleErrorResponse(response);
       this.isCopying = false;
-      this.set('copySourcePositions', null);
-      this.set('copyParams', null);
+      this.copySourcePositions = null;
+      this.copyParams = null;
     });
   }
 
   @action
-  copyToggleExpanded(position) {
-    position.toggleProperty('expanded');
-  }
-
-  @action
-  copyPositionSelectAll(position) {
+  copyPositionSelectAll(position, event) {
+    event.stopPropagation();
     // if all are selected, deselect all; otherwise select all
-    const value = !position.get('allSelected');
-    position.get('credits').forEach((c) => c.set('selected', value));
+    const value = !position.allSelected;
+    position.credits.forEach((c) => c.selected = value);
   }
 }

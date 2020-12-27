@@ -1,5 +1,6 @@
 import Model, {attr} from '@ember-data/model';
 import moment from 'moment';
+import {tracked} from '@glimmer/tracking';
 
 export default class SlotModel extends Model {
   @attr('shiftdate') begins;
@@ -20,6 +21,7 @@ export default class SlotModel extends Model {
   @attr('', {readOnly: true}) position;
   @attr('', {readOnly: true}) trainer_slot;
 
+  @tracked selected; // Used to administer slots
 
   get slotDay() {
     const begins = this.begins;

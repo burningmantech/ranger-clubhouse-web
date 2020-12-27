@@ -27,5 +27,7 @@ export default class AdminSlotsRoute extends Route {
     controller.setProperties(model)
     controller.set('dayFilter', 'all');
     controller.set('activeFilter', 'all');
+    controller.set('positionsOpened', {});
+    controller._buildDisplay();
   }
 }
