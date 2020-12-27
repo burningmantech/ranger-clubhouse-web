@@ -5,13 +5,13 @@
   <label class="col-form-label">Day Filter</label>
   <div class="col-auto">
     <ChForm::Select @name="dayFilter" @value={{this.dayFilter}} @options={{this.dayOptions}}
-                    @onChange={{action (mut this.dayFilter)}} @controlClass="form-control"/>
+                    @onChange={{this.changeDayFilter}} @controlClass="form-control"/>
   </div>
 
   <label class="col-form-label">Active Filter</label>
   <div class="col-auto">
     <ChForm::Select @name="activeFilter" @value={{this.activeFilter}} @options={{this.activeOptions}}
-                    @onChange={{action (mut activeFilter)}} @controlClass="form-control"/>
+                    @onChange={{this.changeActiveFilter}} @controlClass="form-control"/>
   </div>
   <label class="col-form-label">Actions</label>
 
@@ -31,7 +31,8 @@
 {{else}}
   <ChNotice @title="{{this.year}} pre-event slot dates are not set" @type="danger">
     Pre-Event slots may not be properly vetted. Visit
-    <LinkTo @route="admin.event-dates">Admin &gt; Edit Event Dates</LinkTo> to set the dates.
+    <LinkTo @route="admin.event-dates">Admin &gt; Edit Event Dates</LinkTo>
+    to set the dates.
   </ChNotice>
 {{/if}}
 
@@ -46,84 +47,88 @@
   No slots were found for {{this.year}}?
 {{/if}}
 
-{{#each this.slotGroups as |group|}}
-  <ChAccordion as |box|>
+{{#each this.positionSlots as |position|}}
+  <ChAccordion @isInitOpen={{get this.positionsOpened position.position_id}}
+               @onClick={{action this.positionClicked position}} as |box|>
     <box.title>
-      {{group.title}} ({{group.slots.length}}
-      {{~#if group.inactive}}
-        / <span class="text-danger">{{group.inactive}} inactive</span>
+      {{position.title}} ({{position.slots.length}}
+      {{~#if position.inactive}}
+        / <span class="text-danger">{{position.inactive}} inactive</span>
       {{~/if}})
     </box.title>
     <box.body>
-      <p>
-        <button type="button" class="btn btn-primary btn-sm" {{action this.activate group}}>Activate All</button>
-        <button type="button" class="btn btn-primary btn-sm" {{action this.deactivate group}}>Deactivate All</button>
-        <button type="button" class="btn btn-secondary btn-sm" {{action this.startCopy group.position_id}}>
-          Bulk Copy
-        </button>
-      </p>
-      <table class="table table-sm table-hover">
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>From</th>
-          <th>To</th>
-          <th class="text-right">Max</th>
-          <th class="text-right">Count</th>
-          <th class="text-right">Credits</th>
-          <th>Description</th>
-          <th>Active</th>
-          <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each group.slots as |slot|}}
-          <tr id="slot-{{slot.id}}">
-            <td>{{slot.id}}</td>
-            <td>{{shift-format slot.begins}}</td>
-            <td>{{shift-format slot.ends}}</td>
-            <td class="text-right">{{slot.max}}</td>
-            <td class="text-right">{{slot.signed_up}}</td>
-            <td class="text-right">{{credits-format slot.credits}}</td>
-            <td>
-              <SlotInfoLink @description={{slot.description}} @info={{slot.url}} />
-            </td>
-            <td clas="text-center">
-              {{#if slot.active}}
-                {{fa-icon "check" color="success"}}
-              {{else}}
-                {{fa-icon "times" color="danger"}}
-              {{/if}}
-            </td>
-            <td>
-              <button type="button" {{action this.repeatSlot slot}} class="btn btn-secondary btn-sm">
-                {{fa-icon "clone"}} Repeat
-              </button>
-              <button type="button" {{action this.repeatSlotAdd24Hours slot}} class="btn btn-secondary btn-sm">
-                {{fa-icon "clone"}} Repeat+24
-              </button>
-              <button type="button" {{action this.deleteSlot slot}} class="btn btn-danger btn-sm">
-                {{fa-icon "trash-alt"type="fas"}} Delete
-              </button>
-              <button type="button" {{action editSlot slot}} class="btn btn-primary btn-sm">
-                {{fa-icon "edit"}} Edit
-              </button>
-            </td>
+      {{#if box.isOpen}}
+        <p>
+          <button type="button" class="btn btn-primary btn-sm" {{action this.activate position}}>Activate All</button>
+          <button type="button" class="btn btn-primary btn-sm" {{action this.deactivate position}}>Deactivate All
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" {{action this.startCopy position.position_id}}>
+            Bulk Copy
+          </button>
+        </p>
+        <table class="table table-sm table-hover">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>From</th>
+            <th>To</th>
+            <th class="text-right">Max</th>
+            <th class="text-right">Count</th>
+            <th class="text-right">Credits</th>
+            <th>Description</th>
+            <th>Active</th>
+            <th>Actions</th>
           </tr>
-          {{#if slot.trainer_slot}}
-            <tr class="{{if slot.trainer_slot "tr-no-border"}}">
-              <td colspan="8">
-                Multiplier slot:
-                <a href="#slot-{{slot.trainer_slot.id}}">
-                  #{{slot.trainer_slot.id}} {{slot.trainer_slot_title}} {{slot.trainer_slot.description}} {{shift-format
-                        slot.trainer_slot.begins}}
-                </a>
+          </thead>
+          <tbody>
+          {{#each position.slots as |slot|}}
+            <tr id="slot-{{slot.id}}">
+              <td>{{slot.id}}</td>
+              <td>{{shift-format slot.begins}}</td>
+              <td>{{shift-format slot.ends}}</td>
+              <td class="text-right">{{slot.max}}</td>
+              <td class="text-right">{{slot.signed_up}}</td>
+              <td class="text-right">{{credits-format slot.credits}}</td>
+              <td>
+                <SlotInfoLink @description={{slot.description}} @info={{slot.url}} />
+              </td>
+              <td class="text-center">
+                {{#if slot.active}}
+                  {{fa-icon "check" color="success"}}
+                {{else}}
+                  {{fa-icon "times" color="danger"}}
+                {{/if}}
+              </td>
+              <td>
+                <button type="button" {{action this.repeatSlot slot}} class="btn btn-secondary btn-sm">
+                  {{fa-icon "clone"}} Repeat
+                </button>
+                <button type="button" {{action this.repeatSlotAdd24Hours slot}} class="btn btn-secondary btn-sm">
+                  {{fa-icon "clone"}} Repeat+24
+                </button>
+                <button type="button" {{action this.deleteSlot slot}} class="btn btn-danger btn-sm">
+                  {{fa-icon "trash-alt"type="fas"}} Delete
+                </button>
+                <button type="button" {{action editSlot slot}} class="btn btn-primary btn-sm">
+                  {{fa-icon "edit"}} Edit
+                </button>
               </td>
             </tr>
-          {{/if}}
-        {{/each}}
-        </tbody>
-      </table>
+            {{#if slot.trainer_slot}}
+              <tr class="{{if slot.trainer_slot "tr-no-border"}}">
+                <td colspan="8">
+                  Multiplier slot:
+                  <a href="#slot-{{slot.trainer_slot.id}}">
+                    #{{slot.trainer_slot.id}} {{slot.trainer_slot_title}} {{slot.trainer_slot.description}}
+                    {{shift-format slot.trainer_slot.begins}}
+                  </a>
+                </td>
+              </tr>
+            {{/if}}
+          {{/each}}
+          </tbody>
+        </table>
+      {{/if}}
     </box.body>
   </ChAccordion>
 {{/each}}
@@ -142,16 +147,18 @@
         <fieldset>
           <legend>Add/Subtract Time to New Slots</legend>
           <div class="form-row">
-            <f.input @name="deltaDays" @label="Days" @type="number" @maxlength=5 @size=5 @grid="col-auto"/>
-            <f.input @name="deltaHours" @label="Hours" @type="number" @maxlength=5 @size=5 @grid="col-auto"/>
-            <f.input @name="deltaMinutes" @label="Minutes" @type="number" @maxlength=5 @size=5 @grid="col-auto"/>
+            <f.input @name="deltaDays" @label="Days" @type="number" @maxlength={{5}} @size={{5}} @grid="col-auto"/>
+            <f.input @name="deltaHours" @label="Hours" @type="number" @maxlength={{5}} @size={{5}} @grid="col-auto"/>
+            <f.input @name="deltaMinutes" @label="Minutes" @type="number" @maxlength={{5}} @size={{5}}
+                     @grid="col-auto"/>
           </div>
           <legend>Set New Slot Attributes</legend>
           <div class="form-row">
             <f.input @name="newPositionId" @label="Position" @type="select" @options={{this.positionOptionsForCopy}}
                      @grid="col-auto"/>
-            <f.input @name="description" @label="Description" @type="text" @maxlength=40 @size=40 @grid="col-auto"/>
-            <f.input @name="max" @label="Max" @type="number" @maxlength=3 @size=3 @grid="col-2"/>
+            <f.input @name="description" @label="Description" @type="text" @maxlength={{40}} @size={{40}}
+                     @grid="col-auto"/>
+            <f.input @name="max" @label="Max" @type="number" @maxlength={{3}} @size=3 @grid="col-2"/>
           </div>
           <div class="form-row">
             <f.input @name="url" @label="Information" @type="textarea" @rows=3 @cols=80 @maxlength=512
@@ -165,61 +172,62 @@
           <br>
           Note: training and mentor/mentee slots cannot be copied yet.
         </fieldset>
-        <p>
+        <div class="my-4">
           <f.submit @label={{concat "Copy " this.copySelectedSlotCount " selected slots"}}
                     @disabled={{this.isCopyingSlots}} />
           <f.cancel @disabled={{this.isCopyingSlots}} />
           {{#if this.isCopyingSlots}}
             <LoadingIndicator/>
           {{/if}}
-        </p>
+        </div>
         {{#each this.copySourcePositions as |position|}}
-          <table class="table table-sm table-box table-hover">
-            <caption>
-              {{position.selectedSlots.length}} / {{position.slots.length}} <strong>{{position.title}}</strong> slots to
-              copy
-              <button type="button" {{action "copyToggleExpanded" position}}>
-                {{#if position.expanded}}collapse{{else}}expand{{/if}}
-              </button>
-              <button type="button" {{action "copyPositionSelectAll" position}}>
+          <ChAccordion as |Accordion|>
+            <Accordion.title>
+              {{position.selectedSlots.length}} / {{position.slots.length}}
+              <b>{{position.title}}</b> slots to copy
+              <button type="button" {{on "click" (fn this.copyPositionSelectAll position)}}>
                 {{#if position.allSelected}}deselect{{else}}select{{/if}} all
               </button>
-            </caption>
-            <thead>
-            <tr>
-              <th>Copy</th>
-              <th>Start time</th>
-              <th>End time</th>
-              <th class="text-right">Max</th>
-              <th>Description</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{#if position.expanded}}
-              {{#each position.slots as |slot|}}
-                <tr>
-                  {{#let (concat "copy-slot-" slot.source.id) as |checkid|}}
-                    <td><Input @type="checkbox" @checked={{slot.selected}} @id={{checkid}} /></td>
-                    <td>
-                      <label for={{checkid}}>
-                        {{shift-format slot.source.begins}} &rarr;
-                        <br>{{slot.begins}}
-                      </label>
-                    </td>
-                    <td>
-                      <label for={{checkid}}>
-                        {{shift-format slot.source.ends}} &rarr;<br>
-                        {{slot.ends}}
-                      </label>
-                    </td>
-                    <td class="text-right"><label for={{checkid}}>{{slot.source.max}}</label></td>
-                    <td><label for={{checkid}}>{{slot.source.description}}</label></td>
-                  {{/let}}
-                </tr>
-              {{/each}}
-            {{/if}}
-            </tbody>
-          </table>
+            </Accordion.title>
+            <Accordion.body>
+              {{#if Accordion.isOpen}}
+                <table class="table table-sm table-box table-hover">
+                  <thead>
+                  <tr>
+                    <th>Copy</th>
+                    <th>Start time</th>
+                    <th>End time</th>
+                    <th class="text-right">Max</th>
+                    <th>Description</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {{#each position.slots as |slot|}}
+                    <tr>
+                      {{#let (concat "copy-slot-" slot.source.id) as |checkid|}}
+                        <td><Input @type="checkbox" @checked={{slot.selected}} @id={{checkid}} /></td>
+                        <td>
+                          <label for={{checkid}}>
+                            {{shift-format slot.source.begins}} &rarr;
+                            <br>{{slot.begins}}
+                          </label>
+                        </td>
+                        <td>
+                          <label for={{checkid}}>
+                            {{shift-format slot.source.ends}} &rarr;<br>
+                            {{slot.ends}}
+                          </label>
+                        </td>
+                        <td class="text-right"><label for={{checkid}}>{{slot.source.max}}</label></td>
+                        <td><label for={{checkid}}>{{slot.source.description}}</label></td>
+                      {{/let}}
+                    </tr>
+                  {{/each}}
+                  </tbody>
+                </table>
+              {{/if}}
+            </Accordion.body>
+          </ChAccordion>
         {{/each}}
       </Modal.body>
     </ChForm>
@@ -229,9 +237,17 @@
 {{#if this.activatingSlot}}
   <ModalDialog @title="Activating Slots" as |Modal|>
     <Modal.body>
-      Saving slot id #{{this.activatingSlot.id}} - {{this.activatingSlot.begins}}
+      Updating slot id #{{this.activatingSlot.id}} - {{this.activatingSlot.begins}}
       - {{this.this.activatingSlot.description}}
       <LoadingIndicator/>
+    </Modal.body>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.slots.isUpdating}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      Updating slots lists
     </Modal.body>
   </ModalDialog>
 {{/if}}

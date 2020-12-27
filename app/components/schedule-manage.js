@@ -45,9 +45,9 @@ export default class ScheduleManageComponent extends Component {
     this._sortAndMarkSignups();
 
     signedUpSlots.forEach((signedUp) => {
-      const slot = slots.find((slot) => signedUp.id == slot.id);
+      const slot = slots.find((slot) => signedUp.id === slot.id);
       if (slot) {
-        slot.set('person_assigned', true);
+        slot.person_assigned = true;
       }
     });
 
@@ -177,7 +177,7 @@ export default class ScheduleManageComponent extends Component {
       // Record the original row position on the page
 
       this.args.signedUpSlots.pushObject(slot);
-      slot.set('person_assigned', true);
+      slot.person_assigned = true;
       this.permission = {...this.permission, recommend_burn_weekend_shift: result.recommend_burn_weekend_shift};
       this._sortAndMarkSignups();
       this._retrieveScheduleSummary();
@@ -214,7 +214,6 @@ export default class ScheduleManageComponent extends Component {
         this.ajax.request(`person/${this.args.person.id}/schedule/${slot.id}`, {
           method: 'DELETE',
         }).then((result) => {
-          set(slot, 'is_submitting', false);
           const signedUp = this.args.signedUpSlots.find((s) => s.id == slot.id);
 
           if (row) {
@@ -231,15 +230,13 @@ export default class ScheduleManageComponent extends Component {
             this._sortAndMarkSignups();
           }
 
-          slot.set('person_assigned', false);
-          slot.set('slot_signed_up', result.signed_up);
+          slot.person_assigned = false;
+          slot.slot_signed_up = result.signed_up;
           set(this.permission, 'recommend_burn_weekend_shift', result.recommend_burn_weekend_shift);
           this._retrieveScheduleSummary();
           this.toast.success('The shift has been removed from the schedule.');
-        }).catch((response) => {
-          set(slot, 'is_submitting', false);
-          this.house.handleErrorResponse(response);
-        });
+        }).catch((response) => this.house.handleErrorResponse(response))
+          .finally(() => set(slot, 'is_submitting', false));
       }
     );
   }
