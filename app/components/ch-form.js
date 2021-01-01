@@ -83,6 +83,8 @@ export default class ChFormComponent extends Component {
    */
 
   willDestroy() {
+    super.willDestroy(...arguments);
+
     // Remove the event handler for the record update
     if (this.watchingModel) {
       set(this.watchingModel, 'onSaved', null);

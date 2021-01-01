@@ -15,6 +15,8 @@ export const ART_TRAINER = 104; // ART Trainer
 export const MEGAPHONE = 105; // RBS access
 export const TIMESHEET_MANAGEMENT = 106;
 export const SURVEY_MANAGEMENT = 107;
+export const MANAGE_ON_PLAYA = 108;
+export const TECH_NINJA = 1000;
 
 const Role = {
   ADMIN,
@@ -26,9 +28,11 @@ const Role = {
   INTAKE,
   LOGIN,
   MANAGE,
+  MANAGE_ON_PLAYA,
   MEGAPHONE,
   MENTOR,
   SURVEY_MANAGEMENT,
+  TECH_NINJA,
   TIMESHEET_MANAGEMENT,
   TRAINER,
   VC,
@@ -46,8 +50,10 @@ const RoleToString = {
   [INTAKE]: 'intake',
   [LOGIN]: 'login',
   [MANAGE]: 'manage',
+  [MANAGE_ON_PLAYA]: 'mange-on-playa',
   [MEGAPHONE]: 'megaphone',
   [MENTOR]: 'mentor',
+  [TECH_NINJA]: 'tech-ninja',
   [TIMESHEET_MANAGEMENT]: 'timesheet-management',
   [TRAINER]: 'trainer',
   [SURVEY_MANAGEMENT]: 'survey-management',

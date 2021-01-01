@@ -60,6 +60,8 @@ export default class WysiwygEditorComponent extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
+
     if (this.editor) {
       this.editor.remove('#' + this.elementId);
     }

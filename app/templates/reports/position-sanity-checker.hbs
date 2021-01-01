@@ -41,9 +41,9 @@
 </Admin::PositionSanityCheck>
 
 <Admin::PositionSanityCheck
-    @title="Management Roles"
-    @caption="{{pluralize this.management_role.length "person"}} missing the Login Management role."
-    @sucessMessage="Congratulations! Everyone with the those positions has the management role."
+    @title="Login Management Year Round Role"
+    @caption="{{pluralize this.management_role.length "person"}} missing the Login Management (year round) role."
+    @sucessMessage="Congratulations! Everyone with the those positions has the Login Management (year round) role."
     @columns={{this.management_role.columns}}
     @people={{this.management_role}}
     @repairAction={{action this.repairPeople}}
@@ -51,10 +51,28 @@
     @canRepair={{this.userCanRepair}}
     @isSubmitting={{this.isSubmitting}}
 >
-  Rangers whose role requires significant Clubhouse access should have the "Login (Management Mode)" role.
+  Rangers whose role requires significant YEAR ROUND Clubhouse access should have the "Login (Management Mode)" role.
   <br>
-  <strong>Note:</strong> pay attention to any Shiny Penny who appears below.
-  They may have been accidential granted a position that is not appropriate for a first year Ranger.
+  <b>Note:</b> pay attention to any Shiny Penny who appears below.
+  They may have been accidental granted a position that is not appropriate for a first year Ranger.
+</Admin::PositionSanityCheck>
+
+<Admin::PositionSanityCheck
+        @title="Login Management On Playa Only Role"
+        @caption="{{pluralize this.management_onplaya_role.length "person"}} missing the Login Management On Playa ONLY role."
+        @sucessMessage="Congratulations! Everyone with the those positions has the Login Management On Playa ONLY role."
+        @columns={{this.management_onplaya_role.columns}}
+        @people={{this.management_onplaya_role}}
+        @repairAction={{action this.repairPeople}}
+        @repairType="management_onplaya_role"
+        @canRepair={{this.userCanRepair}}
+        @isSubmitting={{this.isSubmitting}}
+>
+  Rangers whose role requires significant ON PLAYA ONLY Clubhouse access should have the "Login (Management On Playa Mode)" role
+  AND do not already have the Login Management Year Round role.
+  <br>
+  <b>Note:</b> pay attention to any Shiny Penny who appears below.
+  They may have been accidental granted a position that is not appropriate for a first year Ranger.
 </Admin::PositionSanityCheck>
 
 <Admin::PositionSanityCheckHeader @title="Deactivated Position Assignments">

@@ -18,6 +18,7 @@ export default class ReportsPositionSanityCheckerRoute extends Route {
     controller.set('shiny_penny_year', model.shiny_penny_year)
     controller.set('green_dot', this.greenDots(model.green_dot))
     controller.set('management_role', this.managers(model.management_role))
+    controller.set('management_onplaya_role', this.managers(model.management_onplaya_role))
     controller.set('deactivated_positions', this.deactivated_positions(model.deactivated_positions))
   }
 

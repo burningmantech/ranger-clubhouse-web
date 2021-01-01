@@ -20,6 +20,7 @@ export default class PhotoEditComponent extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     // Clean up CropperJS
     if (this.cropper) {
       this.cropper.destroy();

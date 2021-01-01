@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import { action } from '@ember/object';
+import {action} from '@ember/object';
 import Ember from 'ember';
 import $ from 'jquery';
 
@@ -10,8 +10,8 @@ export default class ModalDialogComponent extends Component {
   // #modal-render lives in application.hbs
   // during testing the use ember-testing instead since modal-render does not exist.
   get destinationElement() {
-     // eslint-disable-line ember/no-ember-testing-in-module-scope
-      return document.querySelector(Ember.testing ? '#ember-testing' : '#modal-render');
+    // eslint-disable-line ember/no-ember-testing-in-module-scope
+    return document.querySelector(Ember.testing ? '#ember-testing' : '#modal-render');
   }
 
   @action
@@ -35,6 +35,8 @@ export default class ModalDialogComponent extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
+
     if (!this.dialogBox) {
       return;
     }

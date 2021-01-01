@@ -1,30 +1,32 @@
 import Component from '@glimmer/component';
-import EmberObject, { action } from '@ember/object';
-import {Role} from 'clubhouse/constants/roles';
+import {action} from '@ember/object';
+import {TECH_NINJA, ADMIN, VIEW_PII} from 'clubhouse/constants/roles';
+import {inject as service} from '@ember/service';
 
 export default class PersonRoleFormComponent extends Component {
-  roleForm = EmberObject.create({roleIds: this.args.roleIds});
+  @service session;
+  roleForm = {roleIds: this.args.roleIds};
+  isTechNinja = this.session.user.hasRole(TECH_NINJA);
 
   // Create a list of roles options to check
   get roleOptions() {
-    const roles = this.args.roles;
+    const {roles} = this.args;
+    const isTechNinja = this.isTechNinja;
 
     if (!roles) {
       return [];
     }
 
-    return roles.map((role) => {
-      return [role.title, role.id];
-    });
+    return roles.map((role) => ({title: role.title, id: role.id, disabled: (role.id === TECH_NINJA && !isTechNinja)}));
   }
 
   @action
   save(model, isValid) {
+    const {onSave} = this.args;
     const originalIds = this.args.roleIds;
     const updatedIds = model.roleIds;
-    const wantAdmin = (!originalIds.includes(Role.ADMIN) && updatedIds.includes(Role.ADMIN));
-    const wantPII = (!originalIds.includes(Role.VIEW_PII) && updatedIds.includes(Role.VIEW_PII));
-    const onSave = this.args.onSave;
+    const wantAdmin = (!originalIds.includes(ADMIN) && updatedIds.includes(ADMIN));
+    const wantPII = (!originalIds.includes(VIEW_PII) && updatedIds.includes(VIEW_PII));
 
     if (wantAdmin || wantPII) {
       let abilities;
