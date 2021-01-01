@@ -11,11 +11,6 @@ export default class AdminRolesController extends Controller {
   }
 
   @action
-  newRole() {
-    this.entry = this.store.createRecord('role');
-  }
-
-  @action
   removeRole() {
     this.modal.confirm('Delete Role', `Are you sure you wish to delete "${this.entry.title}"? This operation cannot be undone.`, () => {
       this.entry.destroyRecord().then(() => {

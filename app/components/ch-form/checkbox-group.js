@@ -38,13 +38,16 @@ export default class ChFormCheckboxGroupComponent extends Component {
     this.checkboxColumns = columns.map((column) => {
       return column.map((opt) => {
         const type = typeOf(opt);
-        let label, value;
+        let label, value, disabled=false;
 
         switch (type) {
           case 'object':
             // { label: 'text', value: X }
             label = opt.title;
             value = opt.id;
+            if ('disabled' in opt) {
+              disabled = opt.disabled;
+            }
             break;
 
           case 'array':
@@ -58,7 +61,7 @@ export default class ChFormCheckboxGroupComponent extends Component {
             break;
 
         }
-        const field = new ChFormCheckboxField({label, value, isChecked: values.includes(value), index });
+        const field = new ChFormCheckboxField({label, value, isChecked: values.includes(value), index, disabled });
         index++;
         this.checkboxes.push(field);
         return field;

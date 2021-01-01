@@ -28,6 +28,7 @@ export default class PopoverComponent extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     this._removeKeyListener();
   }
 

@@ -29,8 +29,6 @@ export default class PersonModel extends Model.extend(PersonMixin) {
 
   @attr('number', {readOnly: true}) person_photo_id;
 
-  @attr('', {readOnly: true}) roles;
-
   // Personal Information
   @attr('string') street1;
   @attr('string') street2;
