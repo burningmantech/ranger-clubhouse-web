@@ -2,6 +2,14 @@ import Controller from '@ember/controller';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 
+class TimesheetOption {
+  @tracked selected = false;
+
+  constructor(obj) {
+    Object.assign(this,obj);
+  }
+}
+
 export default class AdminBulkSignoutController extends Controller {
   @tracked isSubmitting = false;
   @tracked signOffTimesheet = null;

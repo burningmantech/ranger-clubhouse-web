@@ -147,7 +147,7 @@ export default class TicketDeliverInfoComponent extends Component {
         set(delivery, 'method', 'mail');
         this.deliveryMethod = 'mail';
         this.isSaved = true;
-        this.haveAddress = tue;
+        this.haveAddress = true;
       }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isSaving = false);
   }
