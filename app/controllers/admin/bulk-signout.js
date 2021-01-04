@@ -1,20 +1,28 @@
 import Controller from '@ember/controller';
-import {action, computed, set} from '@ember/object';
+import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import classic from 'ember-classic-decorator';
 
-@classic
+class TimesheetOption {
+  @tracked selected = false;
+
+  constructor(obj) {
+    Object.assign(this,obj);
+  }
+}
+
 export default class AdminBulkSignoutController extends Controller {
   @tracked isSubmitting = false;
   @tracked signOffTimesheet = null;
   @tracked selectAll = false;
 
-  @computed('timesheets.@each.selected')
+  buildTimesheets(timesheets) {
+    this.timesheets = timesheets.map((t) => new TimesheetOption(t));
+  }
+
   get selectedCount() {
     return this.timesheets.reduce((total, ts) => (ts.selected ? 1 : 0) + total, 0);
   }
 
-  @computed('timesheets.@each.off_duty')
   get onDutyCount() {
     return this.timesheets.reduce((total, ts) => (ts.off_duty ? 0 : 1) + total, 0);
   }
@@ -22,7 +30,7 @@ export default class AdminBulkSignoutController extends Controller {
   @action
   toggleAll(selected) {
     this.selectAll = selected;
-    this.timesheets.forEach((ts) => set(ts, 'selected', selected));
+    this.timesheets.forEach((ts) => ts.selected = selected);
   }
 
   @action

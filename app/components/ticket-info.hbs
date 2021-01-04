@@ -1,7 +1,7 @@
 <div class="card card-ticket" id="ticket-ticket">
   <div class="card-header p-0">
     <button type="button" class="btn btn-link m-0" {{on "click" (fn @toggleCard "ticket")}}>
-      {{fa-icon (if @showing.ticket "caret-down" "caret-right")}}
+      {{fa-icon (if @showing.ticket "minus" "plus")}}
       {{#if @ticket}}
         {{this.ticketType}}
         <span class="d-inline-block">
@@ -55,7 +55,7 @@
                 <b>You have claimed your {{this.ticketType}}.</b> If your plans have changed,
                 you may bank the ticket. Note: the ticket will expire on {{mdy-format @ticket.expiry_date full=true}}.
               </p>
-              <button type="button" class="btn btn-primary btn-lg mb-4" {{action @setTicketStatus @ticket "banked"}}>Bank
+              <button type="button" class="btn btn-primary btn-responsive btn-lg mb-4" {{action @setTicketStatus @ticket "banked"}}>Bank
                 Ticket
               </button>
             {{else if (eq @ticket.status "banked")}}
@@ -66,7 +66,7 @@
                 If your plans have changed, you may claim the ticket.
                 Note: the ticket will expire on {{mdy-format @ticket.expiry_date full=true}}.
               </p>
-              <button type="button" class="btn btn-primary btn-lg mb-4" {{action @setTicketStatus @ticket "claimed"}}>
+              <button type="button" class="btn btn-primary btn-responsive btn-lg mb-4" {{action @setTicketStatus @ticket "claimed"}}>
                 Claim Ticket
               </button>
             {{else if (eq @ticket.status "qualified")}}
@@ -108,8 +108,8 @@
           </p>
         {{/if}}
         {{#if (not-eq @ticket.status "qualified")}}
-          <div class="float-right">
-            <button type="button" class="btn btn-success btn-lg" {{action @nextSection}}>
+          <div class="float-lg-right">
+            <button type="button" class="btn btn-success btn-lg btn-responsive" {{action @nextSection}}>
               Next {{fa-icon "arrow-right"}}
             </button>
           </div>

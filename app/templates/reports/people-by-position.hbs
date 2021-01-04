@@ -3,7 +3,7 @@
 <div class="form-row">
   <label class="col-form-label col-auto">Options</label>
   <div class="form-check form-check-inline">
-    <Input @type="checkbox" id="on-playa" class="form-check-input" @checked={{onPlaya}} />
+    <Input @type="checkbox" id="on-playa" class="form-check-input" @checked={{this.onPlaya}} />
     <label for="on-playa" class="form-check-label">
       On playa only
     </label>
@@ -106,4 +106,6 @@
       {{/if}}
     </accordion.body>
   </ChAccordion>
+{{else}}
+  <b class="text-danger">No positions matched.</b>
 {{/each}}

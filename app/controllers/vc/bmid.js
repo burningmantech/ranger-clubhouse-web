@@ -1,19 +1,18 @@
 import Controller from '@ember/controller';
-import {action, computed, get} from '@ember/object';
+import {action, get, set} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {schedule, later} from '@ember/runloop';
-import { tracked } from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
 import {MealOptions, BmidStatusOptions, ShowerOptions} from 'clubhouse/constants/bmid';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import Changeset from 'ember-changeset';
-import classic from 'ember-classic-decorator';
 
 /*
  * BMID management controller
  */
 
 // How many elements to render at a time
-const BMID_RENDER_SLICE = 100;
+const BMID_RENDER_SLICE = 200;
 
 const CSV_COLUMNS = [
   'callsign',
@@ -38,7 +37,6 @@ const TEXT_FILTER_FIELDS = [
   'notes'
 ];
 
-@classic
 export default class VcBmidController extends Controller {
   queryParams = ['year', 'filter'];
 
@@ -67,6 +65,8 @@ export default class VcBmidController extends Controller {
   @tracked renderBmids = [];
   @tracked editableBmids = [];
 
+  @tracked editMode = false;
+
   @tracked entry = null;
 
   sortOptions = [
@@ -84,22 +84,11 @@ export default class VcBmidController extends Controller {
   ];
 
 
-
-  init() {
-    super.init(...arguments);
-
-    // eslint-disable-next-line ember/no-observers
-    this.addObserver('viewBmids', this.startRenderBmids);
-    // eslint-disable-next-line ember/no-observers
-    this.addObserver('bmids', this.startRenderBmids);
-  }
-
   /*
    * Return the BMIDs to view which is filtered, and sorted
    */
 
-  @computed('bmids.[]', 'teamFilter', 'textFilter', 'titleFilter', 'sortColumn')
-  get viewBmids() {
+  _buildViewBmids() {
     let bmids = this.bmids;
     const titleFilter = this.titleFilter;
     let key;
@@ -197,7 +186,8 @@ export default class VcBmidController extends Controller {
         break;
     }
 
-    return bmids;
+    this.viewBmids = bmids;
+    this.startRenderBmids();
   }
 
   /*
@@ -230,7 +220,6 @@ export default class VcBmidController extends Controller {
    * Kick off building up over time the BMIDs to be shown
    */
 
-  //@observes('viewBmids', 'bmids', 'editMode') // eslint-disable-line ember/no-observers
   startRenderBmids() {
     if (this.isRendering) {
       return;
@@ -247,16 +236,13 @@ export default class VcBmidController extends Controller {
     this.isRendering = true;
     this.renderBmids = [];
     this.editableBmids = [];
-    later(() => {
-      this._setRenderBmidsSlice(0)
-    }, 1);
+    later(() => this._setRenderBmidsSlice(0), 1);
   }
 
   /*
    * How many BMIDs have not been saved.
    */
 
-  @computed('editableBmids.@each.isDirty')
   get unsaveRows() {
     return this.editableBmids.reduce((total, row) => (row.isDirty ? 1 : 0) + total, 0);
   }
@@ -265,7 +251,6 @@ export default class VcBmidController extends Controller {
    * Build the title filter options
    */
 
-  @computed('bmids.[]', 'bmids.@each.{title1,title2,title3}')
   get titleFilterOptions() {
     const titles = {};
 
@@ -292,7 +277,6 @@ export default class VcBmidController extends Controller {
    * '+' or '/' is in the field. (e.g., Pre/Post becomes two teams [Pre, Post],)
    */
 
-  @computed('bmids.{[],@each.team}')
   get teamFilterOptions() {
     const teams = {};
 
@@ -315,14 +299,13 @@ export default class VcBmidController extends Controller {
    * Build the access dates allowed for the current year
    */
 
-  @computed('ticketingInfo.wap_date_range', 'year')
   get admissionDateOptions() {
     return admissionDateOptions(this.year, this.ticketingInfo.wap_date_range);
   }
 
   @action
   toggleEditMode() {
-    this.toggleProperty('editMode');
+    this.editMode = !this.editMode;
     this.startRenderBmids();
   }
 
@@ -382,6 +365,7 @@ export default class VcBmidController extends Controller {
     try {
       RegExp(filter);
       this.textFilter = filter;
+      this._buildViewBmids();
     } catch (e) {
       this.textFilterError = e.toString();
     }
@@ -392,6 +376,14 @@ export default class VcBmidController extends Controller {
     this.textFilter = '';
     this.textFilterInput = '';
     this.textFilterError = '';
+    this._buildViewBmids();
+  }
+
+  @action
+  changeFilter(name, value) {
+    console.log('Changing value ', name, value);
+    set(this, name, value);
+    this._buildViewBmids();
   }
 
   /*

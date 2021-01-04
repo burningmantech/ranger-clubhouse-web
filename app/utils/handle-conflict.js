@@ -1,5 +1,8 @@
 /** Data object encapsulating a potential problem identified by a handle rule. */
+import { tracked } from '@glimmer/tracking';
 export class HandleConflict {
+  @tracked enabled = true;
+
   static comparator(a, b) {
     if (a.priority != b.priority){
       return HandleConflict.numericPriority(a.priority) - HandleConflict.numericPriority(b.priority);

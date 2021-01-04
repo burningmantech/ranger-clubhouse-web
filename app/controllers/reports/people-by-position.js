@@ -1,15 +1,16 @@
 import Controller from '@ember/controller';
-import EmberObject from '@ember/object';
-import {action, computed} from '@ember/object';
+import {action} from '@ember/object';
 import _ from 'lodash';
 import {tracked} from '@glimmer/tracking';
-import classic from 'ember-classic-decorator';
+import {DECEASED, AUDITOR, PAST_PROSPECTIVE, SUSPENDED} from "clubhouse/constants/person_status";
 
-@classic
-class ViewPosition extends EmberObject {
+class ViewPosition {
   @tracked expanded = false;
 
-  @computed('statuses.@each.selected', 'people')
+  constructor(obj) {
+    Object.assign(this, obj);
+  }
+
   get visiblePeople() {
     const statuses = this.statuses;
     const visibleStatuses = new Set(statuses.filterBy('selected').mapBy('name'));
@@ -19,23 +20,35 @@ class ViewPosition extends EmberObject {
     return this.people.filter((p) => visibleStatuses.has(p.status));
   }
 
-  @computed('missingPeople')
   get missingOnPlayaCount() {
-    return this.missingPeople.filterBy('on_site').length;
+    return this.missingPeople.reduce((total, p) => total + (p.on_site ? 1 : 0), 0);
   }
 }
 
-@classic
+class SelectChoice {
+  @tracked selected;
+
+  constructor(name, selected) {
+    this.name = name;
+    this.selected = selected;
+  }
+}
+
 export default class PeopleByPositionController extends Controller {
   queryParams = ['onPlaya'];
   onPlaya = false;
 
-  @computed('people', 'positions', 'statuses')
-  get viewPositions() {
+  get visiblePositions() {
+    const selected = new Set(this.positionTypes.filterBy('selected').mapBy('name'));
+    const positions = this.viewPositions;
+    return positions.filter((p) => selected.has(p.type));
+  }
+
+  buildViewPositions() {
     const people = this.people;
     const lookupPeople = (ids) => ids ? ids.map((id) => people[id]).sortBy('callsign') : [];
-    return this.positions.map((position) =>
-      ViewPosition.create({
+    this.viewPositions = this.positions.map((position) =>
+      new ViewPosition({
         id: position.id,
         title: position.title,
         active: position.active,
@@ -51,23 +64,14 @@ export default class PeopleByPositionController extends Controller {
       .sortBy('title');
   }
 
-  @computed('positions')
-  get positionTypes() {
-    return this.positions.mapBy('type').uniq().sort()
-      .map((type) => EmberObject.create({name: type, selected: true}));
+  buildPositionTypes() {
+    this.positionTypes = this.positions.mapBy('type').uniq().sort()
+      .map((type) => new SelectChoice(type, true));
   }
 
-  @computed('viewPositions', 'positionTypes.@each.selected')
-  get visiblePositions() {
-    const selected = new Set(this.positionTypes.filterBy('selected').mapBy('name'));
-    const positions = this.viewPositions;
-    return selected.size === 0 ? positions : positions.filter((p) => selected.has(p.type));
-  }
-
-  @computed('people')
-  get statuses() {
-    return _.map(_.uniq(_.map(_.values(this.people), 'status')).sort(),
-      (status) =>{ return {name: status, selected: (status !== 'deceased' && status !== 'auditor' && status !== 'past prospective')} });
+  buildStatuses() {
+    this.statuses = _.map(_.uniq(_.map(_.values(this.people), 'status')).sort(),
+      (status) => new SelectChoice(status, status !== DECEASED && status !== AUDITOR && status !== PAST_PROSPECTIVE && status !== SUSPENDED));
   }
 
   @action

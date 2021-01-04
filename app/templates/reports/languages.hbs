@@ -10,7 +10,7 @@
 {{#each languages as |language|}}
   <div class="border mb-2">
     <div class="bg-light-gray p-2">
-      <a href class="h4" {{action this.toggleLanguage language}}>{{fa-icon (if language.showing "caret-down" "caret-right")}} {{language.language}}</a> ({{pluralize language.people.length "person"}})
+      <a href class="h4" {{action this.toggleLanguage language}}>{{fa-icon (if language.showing "minus" "plus")}} {{language.language}}</a> ({{pluralize language.people.length "person"}})
     </div>
 
     <div class="row p-2 {{unless language.showing "d-none"}}">

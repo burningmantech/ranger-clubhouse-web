@@ -1,6 +1,6 @@
 <NoAppreciateIcon /> = the shift hours do not count towards appreciations.
 
-{{#if timesheetsMissing}}
+{{#if @timesheetsMissing}}
   <div class="timesheet-table">
     <div class="timesheet-row timesheet-header">
       <div class="timesheet-time">From</div>
@@ -8,7 +8,7 @@
       <div class="timesheet-duration">Time</div>
       <div class="timesheet-position">Position</div>
     </div>
-    {{#each timesheetsMissing as |tsm|}}
+    {{#each @timesheetsMissing as |tsm|}}
       <div class="timesheet-entry">
         <div class="timesheet-row">
           <div class="timesheet-time">{{shift-format tsm.on_duty}}</div>
@@ -38,8 +38,8 @@
         </div>
         <div class="timesheet-row timesheet-actions">
           {{#if (or tsm.isPending tsm.isRejected)}}
-            <button type="button" class="btn btn-primary" {{action "editAction" tsm}} disabled={{or tsm.isReloading
-                                                                                                    tsm.isSaving}}>
+            <button type="button" class="btn btn-primary" {{action this.editAction sm}}
+                    disabled={{or tsm.isReloading tsm.isSaving}}>
               {{#if tsm.isRejected}}
                 Submit Appeal
               {{else if tsm.isReloading}}
@@ -49,8 +49,8 @@
               {{/if}}
             </button>
             {{#if tsm.isPending}}
-              <button type="button" class="btn btn-danger" {{action "deleteAction" tsm}} disabled={{or tsm.isReloading
-                                                                                                       tsm.isSaving}}>
+              <button type="button" class="btn btn-danger" {{action this.deleteAction tsm}}
+                      disabled={{or tsm.isReloading tsm.isSaving}}>
                 {{#if tsm.isSaving}}
                   Deleting {{fa-icon "spinner" spin=true}}
                 {{else}}
@@ -89,14 +89,14 @@
                    @grid="col-auto"/>
         </div>
         <div class="form-row">
-          <f.input @name="on_duty" @label="What was the START date & time of the shift?" @type="datetime" @size=15
+          <f.input @name="on_duty" @label="What was the START date & time of the shift?" @type="datetime" @size={{15}}
                    @grid="col-auto" @startDate={{this.startDateForEntry}} />
-          <f.input @name="off_duty" @label="What was the END date & time of the shift?" @type="datetime" @size=15
+          <f.input @name="off_duty" @label="What was the END date & time of the shift?" @type="datetime" @size={{15}}
                    @grid="col-auto"
                    @startDate={{this.startDateForEntry}} />
         </div>
         <div class="form-row">
-          <f.input @name="partner" @label="Who was your partner (if any) for the shift?" @type="text" @size=20 />
+          <f.input @name="partner" @label="Who was your partner (if any) for the shift?" @type="text" @size={{20}} />
         </div>
         <div class="form-row">
           <p>
@@ -119,9 +119,9 @@
             </div>
           </div>
         {{/if}}
-        <f.input @name="notes"
+        <f.input @name="additional_notes"
                  @label={{if entry.isRejected "Supply additional information for an appeal:" "Why is this new entry needed?"}}
-                 @type="textarea" @cols=80 @rows=4 />
+                 @type="textarea" @cols={{80}} @rows={{4}} />
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if f.model.isNew "Submit New Request" "Update Request"}} @disabled={{this.isSubmitting}} />

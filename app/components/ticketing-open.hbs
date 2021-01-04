@@ -1,57 +1,70 @@
-{{#if person.needsBpguid}}
+{{#if @person.needsBpguid}}
   <ChNotice @title="Missing Burner Profile ID" @type="warning">
-    <PersonMissingBpguid />
+    <PersonMissingBpguid/>
   </ChNotice>
-{{else if (or person.isProspective person.isAlpha)}}
+{{else if (or this.isPNV)}}
   <p>
-    Alphas and Prospective Rangers who have signed up for or completed
-    training and intend to walk an Alpha shift on playa are eligible for a
-    Work Access Pass (WAP) that allows them to enter the event on or after
-    {{mdy-format ticketingInfo.wap_alpha_default_date full=true}}
+    <b class="text-danger">A Work Access Pass (WAP) is good for YOU (the Alpha/Prospective) ONLY AND IS NOT AN EVENT
+      TICKET</b>.
+    The WAP does not extend to significant others or traveling companions.
+  </p>
+  <p>
+    <b class="text-danger">All Alphas &amp; Prospectives must provide their own event ticket.</b>
+  </p>
+  <p>
+    Alphas and Prospective Rangers who have signed up for or completed training and intend to walk an Alpha shift
+    on playa are eligible for a WAP that allows them to enter the event on or after
+    {{mdy-format @ticketingInfo.wap_alpha_default_date full=true}}
     at 00:01 (one minute after midnight).
   </p>
-  <p><b>The WAP is good for the Alpha/Prospective only</b>, and does not extend to significant others or
-    traveling companions. 
-  </p>
   <p>
-    <b>Look for an email with your WAP from Burning Man Ticketing between
-      July 21st and August 8th.</b>
-  </p>
-  <p class="text-danger">
-    The WAP is <b>not an event ticket</b>. All Alphas &amp; Prospectives must provide their own event ticket.
+    <b>Look for an email with your WAP from Burning Man Ticketing between July 21st and August 8th.</b>
   </p>
 {{else}}
   <h2>Ticketing Is Open!</h2>
   <p>
-    You may request, claim, or bank any items you've qualified
-    for, such as a Staff Credential, Reduced-Price Ticket, Vehicle Pass,
-    Work Access Pass, or Work Access Passes for your significant
-    others/critical campmates.
+    You may request, claim, or bank any items you've qualified for, such as a Staff Credential, Reduced-Price Ticket,
+    Vehicle Pass, Work Access Pass, or Work Access Passes for your significant others/critical camp mates.
   </p>
   <p>
-    You have <b>until {{full-datetime-format ticketingInfo.submit_date}} Pacific Time
-      to make your selection(s)</b> below. After that, we'll start
-    uploading everyone's requests into the Burning Man Ticket Request System.
+    You have <b>until {{full-datetime-format @ticketingInfo.submit_date}} Pacific Time to make your selection(s)</b>
+    below. After that, we'll start uploading everyone's requests into the Burning Man Ticket Request System.
   </p>
   <p>
-    <b>It may not be possible to fulfill any requests made after the {{moment-format ticketingInfo.submit_date "dddd, MMMM Do"}} deadline.</b>
+    <b>It may not be possible to fulfill any requests made after the
+      {{moment-format @ticketingInfo.submit_date "dddd, MMMM Do"}} deadline.</b>
   </p>
-  {{#if hasFullPackage}}
+  {{#if this.hasFullPackage}}
     <p>
-      <button type="button" class="btn btn-success btn-lg" {{action nextSection "ticket"}}>Begin Ticketing</button>
+      <button type="button" class="btn btn-success btn-lg" {{action this.nextSection "ticket"}}>Begin Ticketing</button>
     </p>
   {{/if}}
-  <div class="accordion">
-    {{#if hasFullPackage}}
-      <TicketInfo @person={{person}} @ticketPackage={{ticketPackage}} @ticketingInfo={{ticketingInfo}} @ticket={{ticket}} @setTicketStatus={{setTicketStatus}} @showing={{showing}} @toggleCard={{toggleCard}} @nextSection={{action nextSection "vp"}} />
-      <TicketVpInfo @person={{person}} @ticketPackage={{ticketPackage}} @ticketingInfo={{ticketingInfo}} @ticket={{ticket}} @vehiclePass={{vehiclePass}} @setTicketStatus={{setTicketStatus}} @showing={{showing}} @toggleCard={{toggleCard}} @nextSection={{action nextSection "wap"}} />
+  <div class="accordion max-width-700">
+    {{#if this.hasFullPackage}}
+      <TicketInfo @person={{@person}} @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}}
+                  @ticket={{this.accessPackage.ticket}} @setTicketStatus={{this.setTicketStatus}}
+                  @showing={{this.showing}}
+                  @toggleCard={{this.toggleCard}} @nextSection={{action this.nextSection "vp"}} />
+      <TicketVpInfo @person={{@person}} @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}}
+                    @ticket={{this.accessPackage.ticket}} @vehiclePass={{this.accessPackage.vehiclePass}}
+                    @setTicketStatus={{this.setTicketStatus}}
+                    @showing={{this.showing}} @toggleCard={{this.toggleCard}}
+                    @nextSection={{action this.nextSection "wap"}} />
     {{/if}}
 
-    <TicketWapInfo @person={{person}} @ticketPackage={{ticketPackage}} @ticketingInfo={{ticketingInfo}} @ticket={{ticket}} @wap={{wap}} @setTicketStatus={{setTicketStatus}} @showing={{showing}} @toggleCard={{toggleCard}} @nextSection={{if hasFullPackage (action nextSection "wapso") false}} />
+    <TicketWapInfo @person={{@person}} @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}}
+                   @ticket={{this.accessPackage.ticket}} @wap={{this.accessPackage.wap}} @setTicketStatus={{this.setTicketStatus}}
+                   @showing={{this.showing}} @toggleCard={{this.toggleCard}}
+                   @nextSection={{if this.hasFullPackage (action this.nextSection "wapso") false}} />
 
-    {{#if hasFullPackage}}
-      <TicketWapSoInfo @person={{person}} @ticketPackage={{ticketPackage}} @ticketingInfo={{ticketingInfo}} @ticket={{ticket}} @showing={{showing}} @toggleCard={{toggleCard}} @nextSection={{action nextSection "delivery"}} />
-      <TicketDeliveryInfo @person={{person}} @ticketPackage={{ticketPackage}} @ticketingInfo={{ticketingInfo}} @ticket={{ticket}} @vehiclePass={{vehiclePass}} @showing={{showing}} @toggleCard={{toggleCard}} />
+    {{#if this.hasFullPackage}}
+      <TicketWapSoInfo @person={{@person}} @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}}
+                       @ticket={{this.accessPackage.ticket}} @showing={{this.showing}} @toggleCard={{this.toggleCard}}
+                       @nextSection={{action this.nextSection "delivery"}} />
+      <TicketDeliveryInfo @person={{@person}} @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}}
+                          @ticket={{this.accessPackage.ticket}} @vehiclePass={{this.accessPackage.vehiclePass}}
+                          @showing={{this.showing}}
+                          @toggleCard={{this.toggleCard}} />
     {{/if}}
   </div>
 {{/if}}

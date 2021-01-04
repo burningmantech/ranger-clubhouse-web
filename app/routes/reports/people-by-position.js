@@ -13,5 +13,8 @@ export default class PeopleByPositionRoute extends Route {
   setupController(controller, model) {
     controller.set('positions', model.positions);
     controller.set('people', _.keyBy(model.people, 'id'));
+    controller.buildPositionTypes();
+    controller.buildStatuses();
+    controller.buildViewPositions();
   }
 }

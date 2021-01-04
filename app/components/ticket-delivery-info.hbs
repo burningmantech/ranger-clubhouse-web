@@ -1,47 +1,47 @@
 <div class="card card-ticket" id="ticket-delivery">
   <div class="card-header p-0">
-    <button class="btn btn-link m-0" type="button" {{action toggleCard "delivery"}}>
-      {{fa-icon (if showing.delivery "caret-down" "caret-right")}} Ticket Delivery
-      {{#if (eq ticketingInfo.delivery_status "none")}}
+    <button class="btn btn-link m-0" type="button" {{action @toggleCard "delivery"}}>
+      {{fa-icon (if @showing.delivery "minus" "plus")}} Ticket Delivery
+      {{#if (eq @ticketingInfo.delivery_status "none")}}
         <span class="text-black-50">- To Be Announced</span>
       {{else if (not-eq ticket.status "qualified")}}
-        {{#if itemsToMail}}
-          {{#if (eq deliveryMethod "mail")}}
-            {{#if (or (not itemsNeedAddress) haveAddress)}}
+        {{#if this.itemsToMail}}
+          {{#if (eq this.deliveryMethod "mail")}}
+            {{#if (or (not this.itemsNeedAddress) this.haveAddress)}}
               <span class="text-success d-inline-block">- US Mail {{fa-icon "check"}}</span>
             {{else}}
               <span class="text-danger d-inline-block">- Need Address {{fa-icon "exclamation-circle"}}</span>
             {{/if}}
-          {{else if (eq deliveryMethod "will_call")}}
+          {{else if (eq this.deliveryMethod "will_call")}}
             <span class="text-success d-inline-block">- Pickup at Will Call {{fa-icon "check"}}</span>
           {{else}}
             <span class="text-danger d-inline-block">- Need Answer {{fa-icon "exclamation-circle"}}</span>
           {{/if}}
-        {{else if (eq ticketingInfo.wap_status "frozen")}}
+        {{else if (eq @ticketingInfo.wap_status "frozen")}}
           <span class="text-danger">- Frozen</span>
         {{/if}}
 
-        {{#if (and usingStaffCredential (not needAnswer))}}
+        {{#if (and this.usingStaffCredential (not this.needAnswer))}}
           <span class="text-success d-inline-block">- Pick up at Staff Credentialing {{fa-icon "check"}}</span>
         {{/if}}
       {{/if}}
     </button>
   </div>
   <AnimatedContainer>
-    {{#animated-if showing.delivery use=transition}}
+    {{#animated-if @showing.delivery use=this.transition}}
       <div class="card-body">
-        {{#if (eq ticketingInfo.delivery_status "none")}}
+        {{#if (eq @ticketingInfo.delivery_status "none")}}
           Information about ticket delivery is not yet available in the Clubhouse, please check back soon.
-        {{else if (eq ticketingInfo.delivery_status "frozen")}}
+        {{else if (eq @ticketingInfo.delivery_status "frozen")}}
           <p class="text-danger">The deadline has passed for being able to change your delivery option.</p>
-          {{#if itemsToMail}}
-            You have the following {{pluralize itemsToMail.length "item"}}:
+          {{#if this.itemsToMail}}
+            You have the following {{pluralize this.itemsToMail.length "item"}}:
             <ul>
-              {{#each itemsToMail as |item|}}
+              {{#each this.itemsToMail as |item|}}
                 <li>A {{ticket-type-human item.type}}</li>
               {{/each}}
             </ul>
-            {{#if (eq deliveryMethod "mail")}}
+            {{#if (eq this.deliveryMethod "mail")}}
               <p>The item(s) will be mail to you at:</p>
               {{delivery.street}}<br>
               {{delivery.city}} {{delivery.state}} {{delivery.postal_code}} {{delivery.country}}<br>
@@ -51,22 +51,22 @@
           {{else}}
             Huh, it doesn't appear you have any items needing to be mailed or picked up.
           {{/if}}
-        {{else if usingStaffCredential}}
+        {{else if this.usingStaffCredential}}
           <p>
-            <b>Your Staff Credential {{if (eq vehiclePass.status "claimed") "and Vehicle Pass"}} will be held at Staff
-              Credentialing under your name "{{person.first_name}} {{person.last_name}}".</b>
+            <b>Your Staff Credential {{if (eq @vehiclePass.status "claimed") "and Vehicle Pass"}} will be held at Staff
+              Credentialing under your name "{{@person.first_name}} {{@person.last_name}}".</b>
           </p>
           <p>
             Sorry, Staff Credentials cannot be mailed due to Burning Man organization policies.
           </p>
         <p>
-          {{#if ticket.access_any_time}}
+          {{#if @ticket.access_any_time}}
             Your Staff Credential allows you to enter the event at any time, and may be picked up on or after the early
             arrival date on the credential at the following locations on the given dates:
-          {{else if ticket.access_date}}
+          {{else if @ticket.access_date}}
             <p>
               You may pick up the Staff Credential on or after the day you are
-              allowed to enter the event - {{mdy-format ticket.access_date full=true}}.
+              allowed to enter the event - {{mdy-format @ticket.access_date full=true}}.
               Early pickups are not allowed unless you have a separate Work Access Pass good for
               entry on a date earlier than that of your staff credential.
             </p>
@@ -79,7 +79,7 @@
               You may pick up the Staff Credential on or after the day you are allowed to enter the
               event. <b class="text-danger">However, we
               forgot to set the entry date on your ticket. Please contact
-              Ranger Ticketing at {{mail-to ticketingInfo.ranger_ticketing_email}} to get this sorted
+              Ranger Ticketing at {{mail-to @ticketingInfo.ranger_ticketing_email}} to get this sorted
               out.</b>
             </p>
             <p>
@@ -89,41 +89,41 @@
           {{/if}}
           </p>
           <p>
-            {{#if ticketingInfo.pickup_locations}}
-              {{nl2br ticketingInfo.pickup_locations}}
+            {{#if @ticketingInfo.pickup_locations}}
+              {{nl2br @ticketingInfo.pickup_locations}}
             {{else}}
               <b class="text-danger">Oops! We haven't set the pickup locations yet! Email the ticketing team and let us
-                know about this problem - {{mail-to ticketingInfo.ranger_ticketing_email}}</b>
+                know about this problem - {{mail-to @ticketingInfo.ranger_ticketing_email}}</b>
             {{/if}}
           </p>
 
-        {{else if (eq ticket.status "qualified")}}
+        {{else if (eq @ticket.status "qualified")}}
           <b>You will need to claim or bank your event ticket first.</b>
-        {{else if (or (eq ticket.status "claimed") (eq vehiclePass.status "claimed"))}}
+        {{else if (or (eq @ticket.status "claimed") (eq @vehiclePass.status "claimed"))}}
           <p>
             <b>
-              The following {{if (eq itemsToMail.length 1) "item" (pluralize itemsToMail.length "item")}}
-              {{#if (eq deliveryMethod "none")}}
+              The following {{if (eq this.itemsToMail.length 1) "item" (pluralize this.itemsToMail.length "item")}}
+              {{#if (eq this.deliveryMethod "none")}}
                 can be mailed to you or held at Will Call for you to pick up:
-              {{else if (eq deliveryMethod "mail")}}
+              {{else if (eq this.deliveryMethod "mail")}}
                 will be mailed to you:
               {{else}}
                 will be at Will Call for you to pickup:
               {{/if}}
             </b>
           <ul>
-            {{#each itemsToMail as |item|}}
+            {{#each this.itemsToMail as |item|}}
               <li>A {{ticket-type-human item.type}}</li>
             {{/each}}
           </ul>
           </p>
 
-          {{#if (and  (eq deliveryMethod "mail") (eq ticket.type "reduced_price_ticket"))}}
+          {{#if (and  (eq this.deliveryMethod "mail") (eq @ticket.type "reduced_price_ticket"))}}
             <p class="mt-2">
               <b>Note about your Reduced-Price Ticket:</b>
               When your ticket is uploaded the Burning Man Ticketing website, you will need to enter in your credit card
               and mailing address there.
-              {{#if (eq vehiclePass.status "claimed")}}
+              {{#if (eq @vehiclePass.status "claimed")}}
                 You will also need to enter your mailing address below if you are claiming a Vehicle Pass.
                 <b>This means you will need to enter your mailing address TWICE, once here, and once when you pay for
                   your Reduced-Price ticket. Each address will be used for the corresponding item.</b>
@@ -131,39 +131,49 @@
             </p>
           {{/if}}
 
-          {{#if (eq deliveryMethod "none")}}
-            <div class="font-weight-bold">How do you want your {{pluralize itemsToMail.length "item"}} delivered?</div>
-            <button type="button" class="btn btn-primary btn-lg" {{action this.setDeliveryMethod "mail"}}
-                    disabled={{this.isSaving}}>
-              {{fa-icon "envelope"}} Deliver By US Mail
-            </button>
-            <span class="ml-3 mr-3">OR</span>
-            <button type="button" class="btn btn-primary btn-lg" {{action this.setDeliveryMethod "will_call"}}
-                    disabled={{this.isSaving}}>
-              {{fa-icon "building" type="far"}} Pickup At Will Call
-            </button>
-          {{else if (eq deliveryMethod "mail")}}
+          {{#if (eq this.deliveryMethod "none")}}
+            <p>
+              <b>How do you want your {{pluralize this.itemsToMail.length "item"}} delivered?</b>
+            </p>
+            <div class="d-flex  flex-column flex-lg-row justify-lg-content-between align-self-center">
+              <div>
+                <button type="button" class="btn btn-primary  btn-responsive btn-lg"
+                  {{action this.setDeliveryMethod "mail"}} disabled={{this.isSaving}}>
+                  {{fa-icon "envelope"}} Deliver By US Mail
+                </button>
+              </div>
+              <div class="mx-auto mx-lg-3 my-2">OR</div>
+              <div>
+                <button type="button" class="btn btn-primary  btn-responsive  btn-lg"
+                  {{action this.setDeliveryMethod "will_call"}} disabled={{this.isSaving}}>
+                  {{fa-icon "user" type="far"}} Pickup At Will Call
+                </button>
+              </div>
+            </div>
+          {{else if (eq this.deliveryMethod "mail")}}
             <div class="font-weight-bold">Would you rather use Will Call?</div>
-            <button type="button" class="btn btn-primary btn-lg" {{action this.setDeliveryMethod "will_call"}}
+            <button type="button" class="btn btn-primary btn-responsive  btn-lg" {{action this.setDeliveryMethod
+                                                                                          "will_call"}}
                     disabled={{this.isSaving}}>
-              {{fa-icon "building" type="far"}} Pickup at Will Call
+              {{fa-icon "user" type="far"}} Pickup at Will Call
             </button>
-          {{else if (eq deliveryMethod "will_call")}}
+          {{else if (eq this.deliveryMethod "will_call")}}
             <div class="font-weight-bold">Do you want delivery by mail instead?</div>
-            <button type="button" class="btn btn-primary btn-lg" {{action this.setDeliveryMethod "mail"}}
+            <button type="button" class="btn btn-primary btn-responsive  btn-lg" {{action this.setDeliveryMethod
+                                                                                          "mail"}}
                     disabled={{this.isSaving}}>
               {{fa-icon "envelope"}} Deliver By US Mail
             </button>
           {{else}}
-            Uh oh, I don't understand what the method [{{deliveryMethod}}] is. This is a bug!
+            Uh oh, I don't understand what the method [{{this.deliveryMethod}}] is. This is a bug!
           {{/if}}
 
           {{#if this.isSaving}}
             <LoadingIndicator/>
           {{/if}}
 
-          {{#if (eq deliveryMethod "mail")}}
-            {{#if itemsNeedAddress}}
+          {{#if (eq this.deliveryMethod "mail")}}
+            {{#if this.itemsNeedAddress}}
               <div class="mt-4">Please note:</div>
               <ul>
                 <li><b class="text-danger">ITEMS MAY ONLY BE MAILED TO AN UNITED STATES ADDRESS VIA USPS.</b> Sorry,
@@ -175,7 +185,7 @@
                   safest to have
                   them held at Will Call.
                 </li>
-                {{#if (eq ticket.type "reduced_price_ticket")}}
+                {{#if (eq @ticket.type "reduced_price_ticket")}}
                   <li>
                     <b class="text-danger">The address entered below will NOT be used for your event ticket.</b>
                     The Burning Man Ticketing website will ask again for the address which will be used
@@ -197,7 +207,7 @@
                            @grid="col-sm-5 col-md-4"/>
                   <f.input @name="postal_code" @type="text" @label="Zip Code" @grid="col-sm-5 col-md-4"/>
                 </div>
-                <f.submit @label="Save Address" @submitClass="btn-lg" @disabled={{this.isSaving}} />
+                <f.submit @label="Save Address" @submitClass="btn-lg btn-responsive" @disabled={{this.isSaving}} />
                 {{#if this.isSaving}}
                   <LoadingIndicator/>
                 {{else if f.model.isDirty}}
@@ -208,10 +218,10 @@
               </ChForm>
             {{/if}}
           {{/if}}
-        {{else if (eq ticket.status "banked")}}
-          <b>You have chosen to bank your event ticket{{if (eq vehiclePass.status "qualified")
-                                                           " and not claimed your vehicle pass"}}. No action is
-            need.</b>
+        {{else if (eq @ticket.status "banked")}}
+          <b>You have chosen to bank your event ticket
+            {{if (eq @vehiclePass.status "qualified") "and not claimed your vehicle pass"}}.
+            No action is need.</b>
         {{else}}
           <b>You have no items which can be mailed or held at Will Call.</b>
         {{/if}}

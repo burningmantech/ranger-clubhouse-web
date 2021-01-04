@@ -1,13 +1,13 @@
 <div class="card card-ticket" id="ticket-vp">
   <div class="card-header p-0">
-    <button type="button" class="btn btn-link m-0" {{action toggleCard "vp"}}>
-      {{fa-icon (if showing.vp "caret-down" "caret-right")}} Vehicle Pass
-      {{#if (eq ticketingInfo.vp_status "none")}}
+    <button type="button" class="btn btn-link m-0" {{action @toggleCard "vp"}}>
+      {{fa-icon (if @showing.vp "minus" "plus")}} Vehicle Pass
+      {{#if (eq @ticketingInfo.vp_status "none")}}
         <span class="text-black-50">- To Be Announced</span>
-      {{else if vehiclePass}}
+      {{else if @vehiclePass}}
         <span class="d-inline-block">
-          - {{ticket-status vehiclePass.status}}
-          {{#if (eq vehiclePass.status "claimed")}}
+          - {{ticket-status @vehiclePass.status}}
+          {{#if (eq @vehiclePass.status "claimed")}}
             <span class="text-success">{{fa-icon "check"}}</span>
           {{/if}}
         </span>
@@ -17,33 +17,33 @@
     </button>
   </div>
   <AnimatedContainer>
-    {{#animated-if showing.vp use=transition}}
+    {{#animated-if @showing.vp use=this.transition}}
       <div class="card-body">
-        {{#if (eq ticketingInfo.vp_status "none")}}
+        {{#if (eq @ticketingInfo.vp_status "none")}}
           Vehicle Pass information is not yet available. Please check back later.
-        {{else if vehiclePass}}
-          {{#if (eq ticket.status "qualified")}}
+        {{else if @vehiclePass}}
+          {{#if (eq @ticket.status "qualified")}}
             <p><b>Claim your event ticket first before claiming your Vehicle Pass.</b></p>
-          {{else if (eq vehiclePass.status "submitted")}}
+          {{else if (eq @vehiclePass.status "submitted")}}
             Your Vehicle Pass has been submitted to the Burning Man Ticket Request System.
-            You should have received an email from {{ticketingInfo.ticket_vendor_name}} informing you about it.
+            You should have received an email from {{@ticketingInfo.ticket_vendor_name}} informing you about it.
             You cannot request changes to it via the Secret Clubhouse at this time.
             If you urgently need to make a change, please email {{mail-to ticketingInfo.ranger_ticketing_email}}
             and they may be able to help.
-          {{else if (eq ticketingInfo.vp_status "view")}}
+          {{else if (eq @ticketingInfo.vp_status "view")}}
             Information about how to claim your Vehicle Pass will be available in June or early July.
-          {{else if (eq ticketingInfo.vp_status "accept")}}
-            {{#if (eq vehiclePass.status "qualified")}}
+          {{else if (eq @ticketingInfo.vp_status "accept")}}
+            {{#if (eq @vehiclePass.status "qualified")}}
               <p><b>You qualify for a Vehicle Pass for this year's event.</b></p>
 
               <div class="mt-2 mb-2">Do you want to claim your Vehicle Pass?</div>
-              <button type="button" class="btn btn-primary btn-lg" {{action setTicketStatus vehiclePass "claimed"}}>
+              <button type="button" class="btn btn-primary  btn-responsive  btn-lg" {{action @setTicketStatus @vehiclePass "claimed"}}>
                 Claim Vehicle Pass
               </button>
-            {{else if (eq vehiclePass.status "claimed")}}
+            {{else if (eq @vehiclePass.status "claimed")}}
               <p><b>You will be using the Vehicle Pass.</b></p>
               <div class="mt-2 mb-2"> Do you no longer need a Vehicle Pass?</div>
-              <button type="button" class="btn btn-primary btn-lg" {{action setTicketStatus vehiclePass "qualified"}}>
+              <button type="button" class="btn btn-primary btn-responsive btn-lg" {{action @setTicketStatus @vehiclePass "qualified"}}>
                 Release Vehicle Pass
               </button>
             {{/if}}
@@ -56,11 +56,13 @@
           </p>
         {{/if}}
 
-        {{#if (eq ticketingInfo.vp_status "frozen")}}
-          <TicketFrozen @item="Vehicle Pass" @ticketingInfo={{ticketingInfo}} />
+        {{#if (eq @ticketingInfo.vp_status "frozen")}}
+          <TicketFrozen @item="Vehicle Pass" @ticketingInfo={{@ticketingInfo}} />
         {{/if}}
-        <div class="float-right">
-          <button type="button" class="btn btn-success btn-lg mb-4" {{action nextSection}}>Next {{fa-icon "arrow-right"}}</button>
+        <div class="float-lg-right mt-4">
+          <button type="button" class="btn btn-success btn-lg  btn-responsive mb-2" {{action @nextSection}}>
+            Next {{fa-icon "arrow-right"}}
+          </button>
         </div>
 
       </div>

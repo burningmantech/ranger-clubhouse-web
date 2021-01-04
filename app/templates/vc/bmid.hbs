@@ -3,18 +3,18 @@
   <div class="form-group row">
     <div class="col-auto">
       <label>Filter:</label>
-      <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}} @onChange={{action
-              (mut this.filter)}} @controlClass="form-control-sm"/>
+      <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}}
+                      @onChange={{action this.changeFilter 'filter'}} @controlClass="form-control form-control-sm"/>
     </div>
     <div class="col-auto">
       <label>Title Filter:</label>
       <ChForm::Select @name="titleFilter" @value={{this.titleFilter}} @options={{this.titleFilterOptions}}
-                      @onChange={{action (mut this.titleFilter)}} @controlClass="form-control-sm"/>
+                      @onChange={{action this.changeFilter 'titleFilter'}} @controlClass="form-control form-control-sm"/>
     </div>
     <div class="col-auto">
       <label>Team Filter:</label>
       <ChForm::Select @name="teamFilter" @value={{this.teamFilter}} @options={{this.teamFilterOptions}}
-                      @onChange={{action (mut this.teamFilter)}} @controlClass="form-control-sm"/>
+                      @onChange={{action this.changeFilter 'teamFilter'}} @controlClass="form-control form-control-sm"/>
 
     </div>
   </div>
@@ -22,9 +22,10 @@
     <div class="col-auto">
       <div class="input-group">
         <label>Callsign, title, team, notes filter:</label>
-        <Input @type="text" @value={{this.textFilterInput}} class="form-control-sm ml-2" @enter={{action
-                this.textFilterAction}}  />
-        <button type="button" class="btn btn-primary btn-sm ml-1" {{action this.textFilterAction}}>Filter
+        <Input @type="text" @value={{this.textFilterInput}} class="form-control-sm ml-2"
+               @enter={{action this.textFilterAction}}  />
+        <button type="button" class="btn btn-primary btn-sm ml-1" {{action this.textFilterAction}}>
+          Filter
         </button>
         <button type="button" class="btn btn-secondary btn-sm ml-1" {{action this.clearTextFilterAction}}>
           Clear

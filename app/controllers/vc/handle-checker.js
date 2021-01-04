@@ -1,10 +1,9 @@
 import Controller from '@ember/controller';
-import classic from 'ember-classic-decorator';
-import { dasherize } from '@ember/string';
-import EmberObject from '@ember/object';
-import { later } from '@ember/runloop';
-import { action, computed } from '@ember/object';
-import { HandleConflict } from 'clubhouse/utils/handle-conflict';
+import {dasherize} from '@ember/string';
+import {later} from '@ember/runloop';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
+import {HandleConflict} from 'clubhouse/utils/handle-conflict';
 import {
   AmericanSoundexRule,
   DoubleMetaphoneRule,
@@ -19,11 +18,11 @@ import {
 
 let nextCheckId = 1;
 
-@classic
-class CheckedHandle extends EmberObject {
-  // Lint suggests invalid change https://github.com/ember-cli/eslint-plugin-ember/issues/105
-  // eslint-disable-next-line ember/use-brace-expansion
-  @computed('allConflicts', 'controller.includeVintage', 'controller.{handleRules,entityTypes}.@each.enabled')
+class CheckedHandle {
+  constructor(obj) {
+    Object.assign(this, obj);
+  }
+
   get conflicts() {
     const enabledRules = new Set(this.controller.handleRules.filterBy('enabled').mapBy('id'));
     const enabledEntities = new Set(this.controller.entityTypes.filterBy('enabled').mapBy('name'));
@@ -45,24 +44,34 @@ class CheckedHandle extends EmberObject {
   }
 }
 
-@classic
-export default class VcHandlerCheckerController extends Controller {
-  currentName = '';
-  includeVintage = true; // Check vintage even if status isn't checked
-  checkedHandles = []; // Array of {id string, name string, conflicts HandleConflict[]}
-  allHandles = []; // Same Handle objects as model
+class Rule {
+  @tracked enabled;
 
-  init() {
-    super.init(...arguments);
-    this.addObserver('model', this.incrementallyBuildAllHandles); // eslint-disable-line ember/no-observers
+  constructor(obj) {
+    Object.assign(this, obj);
   }
+}
+
+class EntityType {
+  @tracked enabled;
+
+  constructor(obj) {
+    Object.assign(this, obj);
+  }
+}
+
+export default class VcHandlerCheckerController extends Controller {
+  @tracked currentName = '';
+  @tracked includeVintage = true; // Check vintage even if status isn't checked
+  @tracked checkedHandles = []; // Array of {id string, name string, conflicts HandleConflict[]}
+  @tracked allHandles = []; // Same Handle objects as model
+
 
   /** Maps rule ID to {name string, rule object, enabled boolean} */
-  @computed('model')
-  get handleRules() {
+  buildHandleRules() {
     const handles = this.model.toArray();
     const rules = [];
-    const addRule = (rule, name, enabled=true) => rules.pushObject(EmberObject.create({
+    const addRule = (rule, name, enabled = true) => rules.push(new Rule({
       id: rule.id,
       name: name,
       rule: rule,
@@ -79,19 +88,16 @@ export default class VcHandlerCheckerController extends Controller {
     addRule(new DoubleMetaphoneRule(handles), 'Double Metaphone');
     addRule(new EyeRhymeRule(handles), 'Eye rhymes');
     addRule(new ExperimentalEyeRhymeRule(handles), 'Experimental eye rhymes', false);
-    return rules;
-  }
 
-  @computed('handleRules')
-  get ruleNames() {
-    return this.handleRules.reduce((names, rule) => {
+    this.handleRules = rules;
+
+    this.ruleNames = this.handleRules.reduce((names, rule) => {
       names[rule.id] = rule.name;
       return names;
     }, {});
   }
 
-  @computed('model')
-  get entityTypes() {
+  buildEntityTypes() {
     const comparator = (entity1, entity2) => {
       // group all "$status ranger" statuses together
       const isRanger1 = entity1.indexOf('ranger') >= 0;
@@ -103,14 +109,13 @@ export default class VcHandlerCheckerController extends Controller {
     }
     // By default, alphas can choose the handle of a non-vintage retired Ranger
     const disabledByDefault = new Set(['retired ranger', 'non ranger ranger']);
-    return this.model.mapBy('entityType').uniq().sort(comparator).map((type) => EmberObject.create({
+    this.entityTypes = this.model.mapBy('entityType').uniq().sort(comparator).map((type) => new EntityType({
       id: dasherize(type),
       name: type,
       enabled: !disabledByDefault.has(type),
     }));
   }
 
-  @computed('allHandles', 'entityTypes.@each.enabled', 'includeVintage')
   get allEnabledHandles() {
     const enabled = new Set(this.entityTypes.filterBy('enabled').mapBy('name'));
     const vintage = this.includeVintage;
@@ -120,9 +125,11 @@ export default class VcHandlerCheckerController extends Controller {
 
   _setAllHandlesBySlice(nextSize) {
     const model = this.model;
-    this.set('allHandles', model.slice(0, nextSize));
+    this.allHandles = model.slice(0, nextSize);
     if (this.allHandles.length < model.length) {
-      later(() => { this._setAllHandlesBySlice(nextSize + 200) }, 1);
+      later(() => {
+        this._setAllHandlesBySlice(nextSize + 200)
+      }, 1);
     }
   }
 
@@ -130,31 +137,36 @@ export default class VcHandlerCheckerController extends Controller {
     // Rendering 2500 handles takes a long time, so don't prevent interactivity.
     // Copy 100 handles at a time into allHandles and let the template
     // incrementally render them.
-    later(() => { this._setAllHandlesBySlice(200) }, 1);
+    later(() => {
+      this._setAllHandlesBySlice(200)
+    }, 1);
   }
 
   /** Checks the currently-entered name against each rule and updates checkedHandles with the results. */
   @action
   checkCurrentName() {
-    const name = this.currentName;
+    const name = this.currentName.trim();
+    if (name === '') {
+      return;
+    }
     const conflicts = [];
     const rules = Object.values(this.handleRules).map((obj) => obj.rule);
     const id = nextCheckId++;
     rules.map((rule) => conflicts.push(...rule.check(name)));
     conflicts.sort(HandleConflict.comparator);
-    this.checkedHandles.unshiftObject(CheckedHandle.create({
+    this.checkedHandles.unshiftObject(new CheckedHandle({
       controller: this,
       id: id,
       name: name,
       allConflicts: conflicts,
     }));
-    this.set('currentName', '');
+    this.currentName = '';
   }
 
   /** Resets the list of checked handles. */
   @action
   clearCheckedHandles() {
-    this.set('checkedHandles', []);
+    this.checkedHandles = [];
   }
 
   @action

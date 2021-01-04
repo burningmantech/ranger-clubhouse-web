@@ -27,7 +27,7 @@ export default class MeTimesheetCorrectionsRoute extends Route {
       this.store.unloadAll('timesheet-missing');
 
       data.timesheets = this.store.query('timesheet', queryParams);
-      data.timesheetsMissing = this.store.query('timesheet-missing', queryParams).then((result) => result.toArray());
+      data.timesheetsMissing = this.store.query('timesheet-missing', queryParams);
       data.positions =  this.ajax.request(`person/${person_id}/positions`, { data: { include_mentee: 1 }}).then((result) => result.positions);
       data.timesheetSummary = this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }}).then((result) => result.summary);
 

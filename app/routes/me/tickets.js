@@ -21,5 +21,6 @@ export default class MeTicketsRoute extends Route {
 
   setupController(controller, model) {
     controller.setProperties(model);
+    controller.set('person', this.modelFor('me'));
   }
 }

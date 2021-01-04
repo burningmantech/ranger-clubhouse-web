@@ -13,5 +13,6 @@ export default class MeTimesheetCorrectionsMissingRoute extends Route {
   setupController(controller) {
     super.setupController(...arguments);
     controller.setProperties(this.modelFor('me.timesheet-corrections'));
+    controller.set('positionOptions', controller.positions.map((p) => [ p.title, p.id ]));
   }
 }

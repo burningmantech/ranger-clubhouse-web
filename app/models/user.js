@@ -1,12 +1,11 @@
-import EmberObject, {setProperties} from '@ember/object';
 import PersonMixin from 'clubhouse/mixins/models/person';
 import {ADMIN, VC, VIEW_EMAIL, VIEW_PII} from 'clubhouse/constants/roles';
 import { typeOf } from '@ember/utils';
 
-class UserModel extends EmberObject.extend(PersonMixin) {
+export default class UserModel extends PersonMixin(Object) {
   constructor(userInfo) {
     super();
-    setProperties(this, userInfo);
+    Object.assign(this, userInfo);
   }
 
   // Roles
@@ -84,5 +83,3 @@ class UserModel extends EmberObject.extend(PersonMixin) {
     return (found.length === roles.length);
   }
 }
-
-export default UserModel;
