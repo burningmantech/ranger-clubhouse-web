@@ -1,48 +1,63 @@
-// eslint-disable-next-line ember/no-classic-components
-import Component from '@ember/component';
-import classic from 'ember-classic-decorator';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
 import { set } from '@ember/object';
-import { action, computed } from '@ember/object';
-
+import { action } from '@ember/object';
 import { later } from '@ember/runloop';
+import { inject as service } from '@ember/service';
 
-@classic
-export default class TicketingOpenComponent extends Component {
-  tagName = '';
-  person = null;
-  ticketingInfo = null;
-  ticketPackage = null;
+class TicketItem {
+  @tracked status;
 
-  showing = { };
+  constructor(obj) {
+    Object.assign(this, obj);
+  }
+}
 
-  // eslint-disable-next-line ember/no-component-lifecycle-hooks
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-    const person = this.person;
+class AccessPackage {
+  @tracked ticket;
+  @tracked wap;
+  @tracked vehiclePass;
 
-    if (person.isAlpha || person.isProspective) {
-      this.set('showing', { wap: true });
+  constructor(pkg) {
+    const ticket = pkg.tickets.find((ticket) => ticket.selected);
+    if (ticket) {
+      this.ticket = new TicketItem(ticket);
+    }
+    if (pkg.wap) {
+      this.wap = new TicketItem(pkg.wap);
+    }
+    if (pkg.vehicle_pass) {
+      this.vehiclePass = new TicketItem(pkg.vehicle_pass);
     }
   }
+}
 
-  @computed('person.{isAlpha,isProspective,status}')
-  get hasFullPackage() {
-    return (!this.person.isAlpha && !this.person.isProspective);
-  }
+// TODO: Remove ticket, vp, and wap component arguments and use this.accessPackage.
 
-  @computed('ticketPackage.tickets')
-  get ticket() {
-    return this.ticketPackage.tickets.find((ticket) => ticket.selected);
-  }
+export default class TicketingOpenComponent extends Component {
+  @tracked showing = { };
+  @tracked hasFullPackage = false;
+  @tracked isPNV = false;
+  @tracked accessPackage;
 
-  @computed('ticketPackage.wap')
-  get wap() {
-    return this.ticketPackage.wap;
-  }
+  @service ajax;
+  @service house;
+  @service store;
+  @service toast;
 
-  @computed('ticketPackage.vehicle_pass')
-  get vehiclePass() {
-    return this.ticketPackage.vehicle_pass;
+
+  constructor() {
+    super(...arguments);
+    const {person, ticketPackage} = this.args;
+
+    if (person.isAlpha || person.isProspective) {
+      this.showing = { wap: true};
+      this.isPNV = true;
+    } else {
+      this.hasFullPackage = true;
+    }
+
+    this.accessPackage = new AccessPackage(ticketPackage);
   }
 
   @action
@@ -59,12 +74,12 @@ export default class TicketingOpenComponent extends Component {
 
   @action
   nextSection(card) {
-    this.set('showing', { [card]: true });
+    this.showing = { [card]: true };
     later(() => { this.house.scrollToElement(`#ticket-${card}`); }, 500);
   }
 
   @action
   toggleCard(card) {
-    this.set('showing', { [card]: !this.showing[card] });
+    this.showing =  { [card]: !this.showing[card] };
   }
 }

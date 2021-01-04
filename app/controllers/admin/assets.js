@@ -1,12 +1,10 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { validatePresence } from 'ember-changeset-validations/validators';
 import _ from 'lodash';
 import { tracked } from '@glimmer/tracking';
-import classic from 'ember-classic-decorator';
 
-@classic
 export default class AdminAssetsController extends Controller {
   queryParams = ['year'];
 
@@ -67,7 +65,6 @@ export default class AdminAssetsController extends Controller {
     return assets;
   }
 
-  @computed('assets.@each.description')
   get tempIdOptions() {
     let options = _.uniqBy(this.assets, 'temp_id').map((a) => a.temp_id);
 
@@ -79,7 +76,6 @@ export default class AdminAssetsController extends Controller {
     return options;
   }
 
-  @computed('assets.@each.type')
   get descriptionOptions() {
     const options = _.uniqBy(this.assets, 'description').map((a) => a.description);
     options.sort((a, b) => a.localeCompare(b));

@@ -6,9 +6,9 @@ export default class AdminBulkSignoutRoute extends Route {
   }
 
   setupController(controller, model) {
-    const timesheets = model.timesheet;
-    controller.set('timesheets', timesheets);
+    const {timesheet} = model;
     controller.set('selectAll', true);
-    timesheets.forEach((ts) => ts.selected = true);
+    controller.set('timesheets', timesheet);
+    timesheet.forEach((t) => t.selected = true);
   }
 }

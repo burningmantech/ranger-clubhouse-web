@@ -54,6 +54,7 @@ export default class VcBmidRoute extends Route {
     controller.set('textFilterError', '');
 
     controller.set('editMode', false);
+    controller._buildViewBmids();
   }
 
   resetController(controller) {

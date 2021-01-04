@@ -27,6 +27,7 @@ export default class TimesheetModel extends Model {
   @attr('', { readOnly: true}) slot;
 
   @tracked isIgnoring = false; // Used by the HQ window interface
+  @tracked selected = false;
 
   // All good
   get isVerified() {

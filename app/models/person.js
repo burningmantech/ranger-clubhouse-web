@@ -2,7 +2,7 @@ import Model, {attr} from '@ember-data/model';
 import {inject as service} from '@ember/service';
 import PersonMixin from 'clubhouse/mixins/models/person';
 
-export default class PersonModel extends Model.extend(PersonMixin) {
+export default class PersonModel extends PersonMixin(Model) {
   @service ajax;
 
   @attr('string') first_name;
@@ -86,4 +86,5 @@ export default class PersonModel extends Model.extend(PersonMixin) {
   @attr('boolean') sms_on_playa_stopped;
   @attr('boolean') sms_off_playa_stopped;
 }
+
 

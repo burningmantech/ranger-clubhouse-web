@@ -21,7 +21,7 @@
       <tr>
         <td>
           {{#if ts.off_duty}}
-            &nbsp;
+            {{fa-icon "check" color="success"}}
           {{else}}
             <Input @type="checkbox" @checked={{ts.selected}} />
           {{/if}}

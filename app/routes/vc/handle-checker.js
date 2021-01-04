@@ -6,4 +6,11 @@ export default class VcHandleCheckerRoute extends Route {
     return this.ajax.request('handles')
         .then((result) => _.sortBy(result.data, [(h) => h.name.toLowerCase(), 'entityType']));
   }
+
+  setupController(controller, model) {
+    controller.set('model', model);
+    controller.buildHandleRules();
+    controller.buildEntityTypes();
+    controller.incrementallyBuildAllHandles();
+  }
 }
