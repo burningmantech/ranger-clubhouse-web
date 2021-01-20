@@ -4,7 +4,6 @@ import { Role } from 'clubhouse/constants/roles';
 import RSVP from 'rsvp';
 import { NotFoundError } from '@ember-data/adapter/error'
 
-
 export default class HqRoute extends Route {
   beforeModel() {
     super.beforeModel(...arguments);

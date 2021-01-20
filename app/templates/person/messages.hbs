@@ -1,2 +1,8 @@
 <h3>Clubhouse Messages</h3>
-<ClubhouseMessages @person={{person}} @messages={{messages}} />
+{{#if this.canAccessMessages}}
+  <ClubhouseMessages @person={{this.person}} @messages={{this.messages}} />
+{{else}}
+  <p>
+    <b class="text-danger">You may only view another person's Clubhouse Messages while the event is happening.</b>
+  </p>
+{{/if}}

@@ -1,2 +1,9 @@
 <h3>Clubhouse Messages</h3>
-<ClubhouseMessages @person={{person}} @messages={{messages}} />
+{{#if this.session.isLMOPEnabled}}
+  <ClubhouseMessages @person={{person}} @messages={{messages}} />
+{{else}}
+  <p>
+    <b class="text-danger">You only have privileges to access another person's Clubhouse Messages while the event is
+      happening.</b>
+  </p>
+{{/if}}

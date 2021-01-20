@@ -1,2 +1,14 @@
 <h3>Emergency Contact Information</h3>
-<Person::EmergencyContact @person={{this.person}} @onCancel={{this.cancelAction}} />
+{{#if this.canAccessEmergencyContact}}
+  <Person::EmergencyContact @person={{this.person}} @onCancel={{this.cancelAction}} />
+{{else}}
+  <p>
+    <b class="text-danger">
+      Sorry, you only have privileges to view/update another person's Emergency Contact information while the event is happening.
+    </b>
+  </p>
+  <p>
+    If this is truly an emergency, email {{mail-to "ranger-council-list@burningman.org"}} and let us know and
+    somebody can look something up for you.
+  </p>
+{{/if}}

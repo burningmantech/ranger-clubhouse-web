@@ -7,6 +7,7 @@ import {debounce} from '@ember/runloop';
 import ENV from 'clubhouse/config/environment';
 import {config} from 'clubhouse/utils/config';
 import { tracked } from '@glimmer/tracking';
+import {Role} from 'clubhouse/constants/roles';
 
 const MOBILE_MAX_WIDTH = 834;
 const RESIZE_DEBOUNCE_DELY = 250;
@@ -48,6 +49,14 @@ export default class extends SessionService {
     window.addEventListener('resize', this._bounceResizeEvent, false);
 
     this.isDevelopment = ENV.environment === 'development';
+  }
+
+  /**
+   * Checks to see if the user has the Login Management role OR
+   * @returns {boolean}
+   */
+  get isLMOPEnabled() {
+    return (this.user.hasRole(Role.MANAGE) && !!config('LoginManageOnPlayaEnabled'));
   }
 
   @action

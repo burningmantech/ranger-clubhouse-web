@@ -9,7 +9,7 @@ export default class MeMessagesRoute extends Route {
 
   setupController(controller, model) {
     const user = this.session.user;
-    user.set('unread_message_count', model.reduce((total, msg) => ((msg.delivered ? 0 : 1)+total), 0));
+    user.unread_message_count = model.reduce((total, msg) => ((msg.delivered ? 0 : 1)+total), 0);
     controller.set('messages', model);
   }
 }

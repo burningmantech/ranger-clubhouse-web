@@ -1,16 +1,12 @@
-<main>
-  <div class="float-right">
-      <LinkTo @route="vc.bmid-print" class="btn btn-secondary">Print via Lambase</LinkTo>
-      <LinkTo @route="vc.bmid" class="btn btn-secondary">Manage BMIDs</LinkTo>
-  </div>
-  <h1>Sanity Check {{year}} BMIDs</h1>
+<main class="max-width-1000">
+  <h1>Sanity Check {{this.year}} BMIDs</h1>
+  <p>
+    <LinkTo @route="vc.bmid-print">Print via Lambase</LinkTo> | <LinkTo @route="vc.bmid">Manage BMIDs</LinkTo>
+  </p>
 
-  {{#each bmidMadHouse as |asylum|}}
-    <h3>
-    </h3>
-
-    <table class="table table-striped table-sm">
-      <caption>
+  {{#each this.bmidMadHouse as |asylum|}}
+    <ChAccordion as |Accordion|>
+      <Accordion.title>
         {{#if (eq asylum.type "shifts-before-access-date")}}
           Signed Up For Shifts Earlier Than WAP Access Date
         {{else if (eq asylum.type "shifts-no-wap")}}
@@ -20,45 +16,50 @@
         {{else}}
           Unknown insanity type ({{asylum.type}})
         {{/if}} ({{asylum.people.length}})
-      </caption>
-
-      <thead>
-        <tr>
-          <th class="w-15">Callsign</th>
-          <th class="w-10">Name</th>
-          <th class="w-10">Status</th>
-          <th class="w-20">Email</th>
-          <th class="w-20">Action</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {{#each asylum.people as |person|}}
+      </Accordion.title>
+      <Accordion.body>
+        <table class="table table-striped table-sm table-width-auto">
+          <thead>
           <tr>
-            <td class="w-15">
-              <PersonLink @person={{person}} />
-            </td>
-            <td class="w-10">
-              {{person.first_name}} {{person.last_name}}
-            </td>
-            <td class="w-10">
-              {{person.status}}
-            </td>
-            <td class="w-20">
-              {{mail-to person.email}}
-            </td>
-            <td class="w-20">
-              <LinkTo @route="person.index" @model={{person.id}} class="btn btn-primary btn-sm">View</LinkTo>
-              <LinkTo @route="person.schedule" @model={{person.id}} class="btn btn-primary btn-sm">Schedule</LinkTo>
-              <LinkTo @route="person.access-documents" @model={{person.id}} class="btn btn-primary btn-sm">Access Docs</LinkTo>
-            </td>
+            <th class="w-15">Callsign</th>
+            <th class="w-10">Name</th>
+            <th class="w-10">Status</th>
+            <th class="w-20">Email</th>
+            <th class="w-20">Action</th>
           </tr>
-        {{else}}
-          <tr>
-            <td colspan="5" class="text-success">Congratulations! Nobody was found with this diagnosis.</td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
+          </thead>
+
+          <tbody>
+          {{#each asylum.people as |person|}}
+            <tr>
+              <td class="w-15">
+                <PersonLink @person={{person}} />
+              </td>
+              <td class="w-10">
+                {{person.first_name}} {{person.last_name}}
+              </td>
+              <td class="w-10">
+                {{person.status}}
+              </td>
+              <td class="w-20">
+                {{mail-to person.email}}
+              </td>
+              <td class="w-20">
+                <LinkTo @route="person.index" @model={{person.id}} class="btn btn-primary btn-sm">View</LinkTo>
+                <LinkTo @route="person.schedule" @model={{person.id}} class="btn btn-primary btn-sm">Schedule</LinkTo>
+                <LinkTo @route="person.access-documents" @model={{person.id}} class="btn btn-primary btn-sm">Access
+                  Docs
+                </LinkTo>
+              </td>
+            </tr>
+          {{else}}
+            <tr>
+              <td colspan="5" class="text-success">Congratulations! Nobody was found with this diagnosis.</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </Accordion.body>
+    </ChAccordion>
   {{/each}}
 </main>
