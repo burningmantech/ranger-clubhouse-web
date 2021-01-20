@@ -24,19 +24,25 @@
 
 <ChForm @formId="contact" @formFor={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
   <div class="form-row">
-    <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @autofocus={{true}} @rows=2 @cols=80/>
+    <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @autofocus={{true}} @rows={{2}} @cols={{80}}/>
   </div>
-  <p class="ml-2">
-    <strong>Off-Playa:</strong>
-    Real world name, relationship (partner, friend, sibling, parent), phone number, &amp; email.<br>
+  {{#if this.session.isLMOPEnabled}}
+    <p class="ml-2">
+      <strong>Off-Playa:</strong>
+      Real world name, relationship (partner, friend, sibling, parent), phone number, &amp; email.<br>
 
-    <strong>On-Playa:</strong>
-    Their playa name, real world name, relationship, camp location &amp; description.<br>
-  </p>
-  <div class="form-row">
-    <f.input @name="emergency_contact" @type="textarea" @label="Emergency Contact Information:" @rows=4 @cols=80/>
-  </div>
-  <f.submit @label="Update Camp & Emergency Contact Info" @disabled={{this.isSubmitting}} />
+      <strong>On-Playa:</strong>
+      Their playa name, real world name, relationship, camp location &amp; description.<br>
+    </p>
+    <div class="form-row">
+      <f.input @name="emergency_contact" @type="textarea" @label="Emergency Contact Information:" @rows={{4}} @cols={{80}}/>
+    </div>
+    <f.submit @label="Update Camp & Emergency Contact Info" @disabled={{this.isSubmitting}} />
+  {{else}}
+    <p class="ml-2">
+      <b class="text-danger">Sorry, you only have privileges to view and/or update the Emergency Contact information while the event is happening.</b>
+    </p>
+  {{/if}}
   {{#if this.isContactSaved}}
     <span class="text-success">{{fa-icon "check"}}</span>
   {{/if}}

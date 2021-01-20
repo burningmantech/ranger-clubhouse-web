@@ -1,8 +1,11 @@
 import PersonMixin from 'clubhouse/mixins/models/person';
 import {ADMIN, VC, VIEW_EMAIL, VIEW_PII} from 'clubhouse/constants/roles';
 import { typeOf } from '@ember/utils';
+import { tracked } from '@glimmer/tracking';
 
 export default class UserModel extends PersonMixin(Object) {
+  @tracked unread_message_count = 0;
+
   constructor(userInfo) {
     super();
     Object.assign(this, userInfo);

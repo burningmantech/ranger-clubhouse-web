@@ -5,7 +5,11 @@ export default class HqMessagesRoute extends Route {
     const person_id = this.modelFor('hq').person.id;
 
     this.store.unloadAll('person-message');
-    return this.store.query('person-message', { person_id })
+    if (this.session.isLMOPEnabled) {
+      return this.store.query('person-message', {person_id})
+    } else {
+      return [];
+    }
 
   }
   setupController(controller, model) {

@@ -3,7 +3,7 @@ import { action } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import RSVP from 'rsvp';
 import { NotFoundError } from '@ember-data/adapter/error'
-
+import {config} from 'clubhouse/utils/config';
 
 export default class HqRoute extends Route {
   beforeModel() {
