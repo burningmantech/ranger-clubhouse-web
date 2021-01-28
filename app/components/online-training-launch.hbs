@@ -28,23 +28,17 @@
 {{#if this.showExodusDialog}}
   <ModalDialog as |Modal|>
     <Modal.body>
-      <h3>You are about to leave the Clubhouse and will be heading to the Burning Man Online Training
-        website.</h3>
-      <p>
-        <b class="text-danger">You have until {{moment-format this.expiryDate "dddd, MMMM Do YYYY"}} to complete
-          Part 1 of Training (online).</b>
-      </p>
+      <h3>You are about to leave the Clubhouse and head to the Ranger Training website.</h3>
       {{#if this.alreadyExists}}
         <p>
           Your Online Training account has already been setup.
         </p>
       {{else}}
         <p>
-          A Burning Man Online Training website account has been setup and you have been enrolled in the Ranger online
-          training course.
+          A Ranger Online Training website account has been setup and you have been enrolled in the course.
         </p>
         <p>
-          <b class="text-danger">WRITE DOWN the following Online Training website credentials. The username
+          <b class="text-danger">WRITE DOWN the following Online Training website account info. The username
             and password will be needed to log into the Online Training website:</b>
         </p>
         <p>

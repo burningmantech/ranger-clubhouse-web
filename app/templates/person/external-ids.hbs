@@ -1,7 +1,7 @@
 <h2>External Account Identifiers</h2>
 <p>
   This page shows the identifiers used to associate this Clubhouse account with external websites
-  such as Burner Profiles, the Docedo Learning Management System, etc.
+  such as Burner Profiles, the Moodle Learning Management System, etc.
 </p>
 <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{action this.saveAction}} as |f|>
   <div class="form-row mb-2">
@@ -10,7 +10,7 @@
   </div>
 
   <div class="form-row mb-2">
-    <f.input @name="lms_id" @label="Docebo Account ID (aka lms.burningman.org)" @type="text" @size=40 @maxlength=200 @grid="col-auto"/>
+    <f.input @name="lms_id" @label="LMS Account ID" @type="text" @size=40 @maxlength=200 @grid="col-auto"/>
   </div>
 
   <div class="form-row">
