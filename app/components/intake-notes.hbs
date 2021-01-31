@@ -9,6 +9,12 @@
         {{#unless note.is_log}}
           <div class="mb-1">
             &mdash; {{note.note}}
+            {{#if (eq note.person_source_id this.session.userId)}}
+              <p>
+                <button {{action this.updateNoteAction note}}>Update</button>
+                <button {{action this.deleteNoteAction note}}>Delete</button>
+              </p>
+            {{/if}}
           </div>
         {{/unless}}
       {{/each}}
@@ -19,7 +25,7 @@
 {{else}}
   No {{uppercase @type}} notes
 {{/each}}
-<div class="mt-1">
+<div class="mt-2">
   <button type="button" class="btn btn-secondary btn-sm" {{on "click" this.addNoteAction}}>
     {{if this.canAddNote "Add" "View"}} {{uppercase @type}} note / rank
   </button>
@@ -30,4 +36,7 @@
                   @onSubmit={{@onSubmit}} @closeNoteAction={{this.closeNoteAction}}
                   @canAddNote={{this.canAddNote}}
   />
+{{/if}}
+{{#if this.updateNote}}
+  <IntakeNoteUpdate @note={{this.updateNote}} @closeAction={{this.closeUpdateNote}} />
 {{/if}}

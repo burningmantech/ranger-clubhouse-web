@@ -4,7 +4,7 @@ import { htmlSafe } from '@ember/string';
 
 export function generalSupportEmail() {
   const email = config('AdminEmail');
-  return htmlSafe(`<a href="mailto:${email}">${email}</a>`);
+  return htmlSafe(`<a href="mailto:${email}" class="d-inline-block">${email}</a>`);
 }
 
 export default helper(generalSupportEmail);
