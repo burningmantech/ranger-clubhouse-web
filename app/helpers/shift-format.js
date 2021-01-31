@@ -2,7 +2,7 @@ import {helper} from '@ember/component/helper';
 import moment from 'moment';
 
 const MONTH_DAY_TIME = 'ddd MMM DD [@] HH:mm';
-const MONTH_DAY_TIME_YEAR = 'ddd MMM DD [@] HH:mm YY';
+const MONTH_DAY_TIME_YEAR = 'ddd MMM DD [@] HH:mm YYYY';
 //const DAY_TIME = 'ddd [@] HH:mm';
 const HOUR_MINS = 'HH:mm';
 
