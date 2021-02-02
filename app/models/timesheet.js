@@ -26,6 +26,9 @@ export default class TimesheetModel extends Model {
   @attr('', { readOnly: true}) position;
   @attr('', { readOnly: true}) slot;
 
+  // Volunteer doing work on behalf of the Rangers, yet is not a Ranger. May earn (some) perks.
+  @attr('boolean') is_non_ranger;
+
   @tracked isIgnoring = false; // Used by the HQ window interface
   @tracked selected = false;
 

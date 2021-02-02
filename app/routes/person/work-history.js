@@ -53,8 +53,8 @@ export default class PersonWorkHistoryRoute extends Route {
     controller.set('positionsByYear', positionsByYear);
     controller.set('positionsById', positionsById);
     controller.set('positions', positions);
-    controller.set('hasInaccurateTimesheets', !!timesheet.find((t) => t.year < 2008))
-
+    controller.set('hasInaccurateTimesheets', !!timesheet.find((t) => t.year < 2008));
+    controller.set('hasNonRangerWork', !!timesheet.find((t) => t.is_non_ranger));
     controller.set('person', this.modelFor('person'));
   }
 }

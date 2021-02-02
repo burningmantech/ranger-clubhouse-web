@@ -26,8 +26,17 @@
   {{/if}}
   <dt class="col-sm-12 col-lg-3">Years ({{@person.years.length}})</dt>
   <dd class="col-sm-12 col-lg-9">
-    {{#if @person.years}}
-      {{year-range @person.years}}
+    {{#if @person.non_ranger_years}}
+      Non Ranger volunteer work:
+      {{pluralize @person.non_ranger_years.length 'year'}} [{{year-range @person.non_ranger_years}}]<br>
+      Ranger work:
+      {{#if @person.rangered_years}}
+        {{pluralize @person.rangered_years.length 'year'}} [{{year-range @person.rangered_years}}]
+      {{else}}
+        <i>none</i>
+      {{/if}}
+    {{else if @person.years}}
+      {{pluralize @person.years.length 'year'}} worked [{{year-range @person.years}}]
     {{else}}
       Has not worked yet
     {{/if}}
