@@ -49,7 +49,16 @@ Everyone else will see person/simple-form
 {{/if}}
 <div class="row mb-3">
   <div class="col-auto">
-    {{#if @person.years}}
+    {{#if @person.non_ranger_years}}
+      Non Ranger volunteer work:
+      {{pluralize @person.non_ranger_years.length 'year'}} [{{year-range @person.non_ranger_years}}]<br>
+      Ranger work:
+      {{#if @person.rangered_years}}
+        {{pluralize @person.rangered_years.length 'year'}} [{{year-range @person.rangered_years}}]
+      {{else}}
+        <i>none</i>
+      {{/if}}
+    {{else if @person.years}}
       {{pluralize @person.years.length 'year'}} worked [{{year-range @person.years}}]
     {{else}}
       Has not worked yet

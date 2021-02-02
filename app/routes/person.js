@@ -20,8 +20,7 @@ export default class PersonRoute extends Route {
       years: this.ajax.request(`person/${person_id}/years`)
     });
 
-    person.years = years.timesheet_years;
-    person.all_years = years.all_years;
+    Object.assign(person, years);
 
     return person;
   }

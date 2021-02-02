@@ -11,6 +11,11 @@
   </p>
 {{/if}}
 {{#if this.years}}
+  {{#if this.hasNonRangerWork}}
+    <p>
+      <b class="text-danger">{{this.person.callsign}} has Non Ranger volunteer timesheet entries.</b>
+    </p>
+  {{/if}}
   <div class="overflow-y-auto">
     {{pluralize this.years.length "year"}} worked. {{pluralize this.positions.length "position"}}.
     <table class="table table-width-auto table-striped table-hover">
@@ -81,6 +86,9 @@
           <tr>
             <td>
               {{shift-format entry.on_duty entry.off_duty}}
+              {{#if entry.is_non_ranger}}
+                <br>(as non ranger)
+              {{/if}}
             </td>
             <td class="text-right">
               {{hour-format entry.duration}}
@@ -118,6 +126,9 @@
             <tr>
               <td>
                 {{shift-format entry.on_duty entry.off_duty}}
+                {{#if entry.is_non_ranger}}
+                  <br>(as non ranger)
+                {{/if}}
               </td>
               <td class="text-right">
                 {{hour-format entry.duration}}
@@ -154,6 +165,9 @@
           <tr>
             <td>
               {{entry.position.title}}
+              {{#if entry.is_non_ranger}}
+                <br>(as non ranger)
+              {{/if}}
             </td>
             <td>
               {{shift-format entry.on_duty entry.off_duty}}

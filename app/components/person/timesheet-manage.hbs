@@ -2,7 +2,8 @@
   <h3>{{@year}} Timesheet Entries</h3>
   <div class="d-flex">
     <div>
-      <NoAppreciateIcon /> = the shift hours do not count towards appreciations.
+      <NoAppreciateIcon/>
+      = the shift hours do not count towards appreciations.
     </div>
     <div class="ml-4">
       <LinkTo @route="person.timesheet-log" @query={{hash year=@year}}>View {{@year}} Timesheet Log</LinkTo>
@@ -31,14 +32,20 @@
         </td>
         <td class="text-right">
           {{#unless ts.position.count_hours}}
-            <NoAppreciateIcon />
+            <NoAppreciateIcon/>
           {{/unless}}
           {{hour-minute-format ts.duration}}
         </td>
         <td class="text-right">
           {{credits-format ts.credits}}
         </td>
-        <td data-title="Position">{{ts.position.title}}</td>
+        <td>
+          {{ts.position.title}}
+          {{#if ts.is_non_ranger}}
+            <br>(as non ranger volun.)
+          {{/if}}
+
+        </td>
         <td>
           {{#if (is-empty ts.off_duty)}}
             -
@@ -60,15 +67,19 @@
           {{#if (is-empty ts.off_duty)}}
             <button type="button" class="btn btn-danger btn-sm" {{action this.signoffAction ts}}>End Shift</button>
           {{else }}
-            <button type="button" class="btn {{if ts.isPending "btn-danger" "btn-primary"}} btn-sm"
-              {{action this.editEntryAction ts}}
-                    disabled={{ts.isReloading}}>
+            <button type="button"
+                    class="btn {{if ts.isPending "btn-danger" "btn-primary"}} btn-sm"
+              {{action this.editEntryAction ts}} disabled={{ts.isReloading}}>
               {{#if ts.isReloading}}
                 {{fa-icon "spinner" spin=true}}
               {{else}}
                 {{fa-icon "edit"}}
               {{/if}}
-              {{if ts.isPending "Correct" "Edit"}}
+              {{#if this.canManageTimesheets}}
+                {{if ts.isPending "Correct" "Edit"}}
+              {{else}}
+                View
+              {{/if}}
             </button>
           {{/if}}
         </td>
@@ -86,7 +97,7 @@
 </div>
 
 {{#if this.editEntry}}
-  <ModalDialog @title={{concat "Edit Timesheet #" this.editEntry.id}} as |Modal|>
+  <ModalDialog @title="{{if this.canManageTimesheets "Edit" "View"}} Timesheet #{{this.editEntry.id}}" as |Modal|>
     <ChForm @formId="entry" @formFor={{this.editEntry}}
             @validator={{this.timesheetValidations}}
             @onSubmit={{this.saveEntryAction}}
@@ -103,32 +114,43 @@
         {{else if this.editEntry.isVerified}}
           <ChNotice @type="success" @icon="check" @title="Entry Verified - No Review Required">
             Entry was verified on {{shift-format this.editEntry.verified_at}}
-            by {{this.editEntry.verified_person.callsign}}.
-            Review is not needed at this time.
+            by {{this.editEntry.verified_person.callsign}}. Review is not needed at this time.
           </ChNotice>
         {{/if}}
 
         <fieldset>
           <legend>Message(s) from {{@person.callsign}}:</legend>
-          {{#if this.editEntry.notes}}
-            {{nl2br this.editEntry.notes}}
-          {{else}}
-            <i>No notes were given.</i>
-          {{/if}}
+          <p>
+            {{#if this.editEntry.notes}}
+              {{nl2br this.editEntry.notes}}
+            {{else}}
+              <i>No notes were given.</i>
+            {{/if}}
+          </p>
         </fieldset>
         <fieldset>
           <legend>Time &amp; Position</legend>
           {{#if this.canManageTimesheets}}
             <div class="form-row">
-              <f.input @name="on_duty" @label="On Duty" @type="datetime" @size=20 @grid="col-auto"/>
-              <f.input @name="off_duty" @label="Off Duty" @type="datetime" @size=20 @grid="col-auto"/>
+              <f.input @name="on_duty" @label="On Duty" @type="datetime" @size={{20}} @grid="col-auto"/>
+              <f.input @name="off_duty" @label="Off Duty" @type="datetime" @size={{20}} @grid="col-auto"/>
               <f.input @name="position_id" @label="Position" @type="select" @options={{this.positionOptions}}
                        @grid="col-auto"/>
             </div>
+            <div class="form-row ml-1 mb-2">
+              <f.input @name="is_non_ranger" @type="checkbox"
+                       @label="Non Ranger work entry (don't check if you don't know what this means)"/>
+            </div>
+
           {{else}}
             <dl class="form-row">
               <dt class="col-sm-2">Position:</dt>
-              <dd class="col-sm-10">{{this.editEntry.position.title}}</dd>
+              <dd class="col-sm-10">
+                {{this.editEntry.position.title}}
+                {{#if this.editEntry.is_non_ranger}}
+                  (as non ranger volunteer)
+                {{/if}}
+              </dd>
 
               <dt class="col-sm-2">Time:</dt>
               <dd class="col-sm-10">
@@ -154,16 +176,15 @@
           </p>
           {{#if this.canManageTimesheets}}
             <div class="form-row">
-              <f.input @name="additional_reviewer_notes" @label={{concat "Reviewer message to " @person.callsign ":"}}
+              <f.input @name="additional_reviewer_notes"
+                       @label="Reviewer message to {{@person.callsign}}:"
                        @type="textarea" @cols=80 @rows=2
               />
             </div>
             <div class="form-row">
               <label class="col-form-label">Review status:</label>
               <div class="col-auto">
-                <f.input @name="review_status" @type="radioGroup"
-                         @options={{this.reviewOptions}}
-                         @inline={{true}} />
+                <f.input @name="review_status" @type="radioGroup" @options={{this.reviewOptions}} @inline={{true}} />
               </div>
             </div>
           {{else}}
@@ -179,18 +200,20 @@
         </fieldset>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
-        <f.submit @label="Update" @disabled={{this.editEntry.isSaving}} />
-        <f.cancel @disabled={{this.editEntry.isSaving}} />
-        {{#if this.editEntry.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
         {{#if this.canManageTimesheets}}
+          <f.submit @label="Update" @disabled={{this.editEntry.isSaving}} />
+          <f.cancel @disabled={{this.editEntry.isSaving}} />
+          {{#if this.editEntry.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
           <div class="ml-auto">
             <button type="button" class="btn btn-danger" {{action this.removeEntryAction}}
                     title="Delete timesheet entry" disabled={{ts.editEntry.isSaving}}>
               {{fa-icon "trash"}} Delete Entry
             </button>
           </div>
+        {{else}}
+          <button type="button" class="btn btn-secondary" {{action this.cancelEntryAction}}>Close</button>
         {{/if}}
       </Modal.footer>
     </ChForm>
