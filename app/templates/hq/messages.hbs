@@ -2,8 +2,7 @@
 {{#if this.session.isLMOPEnabled}}
   <ClubhouseMessages @person={{person}} @messages={{messages}} />
 {{else}}
-  <p>
-    <b class="text-danger">You only have privileges to access another person's Clubhouse Messages while the event is
-      happening.</b>
-  </p>
+  <ChNotice @type="danger" @icon="exclamation" @title="Access Not Allowed During Off Season">
+    You may only view another person's Clubhouse Messages while the event is happening.
+  </ChNotice>
 {{/if}}

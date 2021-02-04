@@ -39,9 +39,9 @@
     </div>
     <f.submit @label="Update Camp & Emergency Contact Info" @disabled={{this.isSubmitting}} />
   {{else}}
-    <p class="ml-2">
-      <b class="text-danger">Sorry, you only have privileges to view and/or update the Emergency Contact information while the event is happening.</b>
-    </p>
+    <ChNotice @type="danger" @title="Emergency Contact Info access during the off season not allowed" @icon="exclamation">
+      Sorry, you only have privileges to view and update the Emergency Contact information while the event is happening.
+    </ChNotice>
   {{/if}}
   {{#if this.isContactSaved}}
     <span class="text-success">{{fa-icon "check"}}</span>
