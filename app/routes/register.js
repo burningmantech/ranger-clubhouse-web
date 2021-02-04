@@ -1,8 +1,9 @@
 import Route from '@ember/routing/route';
-import UnauthenticatedRouteMixin from 'ember-simple-auth/mixins/unauthenticated-route-mixin';
 
-export default class RegisterRoute extends Route.extend(UnauthenticatedRouteMixin) {
-  routeIfAlreadyAuthenticated = 'me.homepage';
+export default class RegisterRoute extends Route {
+  beforeModel() {
+    this.session.prohibitAuthentication('me.homepage');
+  }
 
   setupController(controller) {
     super.setupController(...arguments);

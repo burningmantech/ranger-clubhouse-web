@@ -1,13 +1,16 @@
-import { module, test } from 'qunit';
-import { visit, currentURL, fillIn, click } from '@ember/test-helpers';
-import { setupApplicationTest } from 'ember-qunit';
+import {module, test} from 'qunit';
+import {visit, currentURL, fillIn, click} from '@ember/test-helpers';
+import {setupApplicationTest} from 'ember-qunit';
 import {currentSession} from 'ember-simple-auth/test-support';
-import { authenticateUser } from "../helpers/authenticate-user";
+import {authenticateUser} from "../helpers/authenticate-user";
 
-module('Acceptance | login', function(hooks) {
+const TOKEN = 'deadbeef';
+const PNV_TOKEN = 'beeff00d';
+
+module('Acceptance | login', function (hooks) {
   setupApplicationTest(hooks);
 
-  test('visiting / redirect to /login', async function(assert) {
+  test('visiting / redirect to /login', async function (assert) {
     // make sure / redirects to /login
     await visit('/');
 
@@ -15,7 +18,7 @@ module('Acceptance | login', function(hooks) {
     assert.equal(document.title, 'Login | Ranger Clubhouse');
   });
 
-  test('successful login', async function(assert) {
+  test('successful login', async function (assert) {
     const person = server.create('person');
 
     await visit('/login');
@@ -26,7 +29,7 @@ module('Acceptance | login', function(hooks) {
     assert.equal(document.title, 'Homepage | Me | Ranger Clubhouse');
   });
 
-  test('invalid login', async function(assert) {
+  test('invalid login', async function (assert) {
     await visit('/login');
     await fillIn('input[name="identification"]', 'thevoid@example.com');
     await fillIn('input[name="password"]', 'ineedashower!');
@@ -38,7 +41,7 @@ module('Acceptance | login', function(hooks) {
     assert.equal(document.title, 'Login | Ranger Clubhouse');
   });
 
-  test('successful logout', async function(assert) {
+  test('successful logout', async function (assert) {
     const person = server.create('person');
     await authenticateUser(person.id);
     await visit('/logout');
@@ -46,8 +49,8 @@ module('Acceptance | login', function(hooks) {
     assert.equal(document.title, 'Login | Ranger Clubhouse');
   });
 
-  test('person not authorized', async function(assert) {
-    const person = server.create('person', { status: 'suspended'});
+  test('person not authorized', async function (assert) {
+    const person = server.create('person', {status: 'suspended'});
     await visit('/login');
     await fillIn('input[name="identification"]', person.email);
     await fillIn('input[name="password"]', person.password);
@@ -63,7 +66,28 @@ module('Acceptance | login', function(hooks) {
   test('prevent space for being entered in email field', async function (assert) {
     const person = server.create('person');
     await visit('/login');
-    await fillIn('input[name="identification"]', person.email+' ');
+    await fillIn('input[name="identification"]', person.email + ' ');
     assert.dom('input[name="identification"]').hasValue(person.email);
   });
+
+  test('Test password reset with login token', async function (assert) {
+    const person = server.create('person', {tpassword: TOKEN});
+
+    await visit(`/login?token=${TOKEN}`);
+
+    assert.equal(currentURL(), '/me/password');
+    assert.equal(currentSession().isAuthenticated, true);
+    assert.equal(currentSession().userId, person.id);
+  });
+
+  test('Test welcome with login token', async function (assert) {
+    const person = server.create('person', {tpassword: PNV_TOKEN});
+
+    await visit(`/login?token=${PNV_TOKEN}&welcome=1`);
+
+    assert.equal(currentURL(), '/me/welcome');
+    assert.equal(currentSession().isAuthenticated, true);
+    assert.equal(currentSession().userId, person.id);
+  });
+
 });

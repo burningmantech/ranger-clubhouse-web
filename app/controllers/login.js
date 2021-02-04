@@ -77,7 +77,7 @@ export default class LoginController extends Controller {
     this.isSubmitting = true;
     return this.session.authenticate('authenticator:jwt', credentials)
       .catch((response) => {
-        if (response.status == 401) {
+        if (response.status === 401) {
           const data = response.json ? response.json : response.payload;
           this.loginError = (data ? data.status : `Unknown error ${JSON.stringify(data)}`);
           model.password = '';

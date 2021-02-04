@@ -1,6 +1,6 @@
 import RESTAdapter from '@ember-data/adapter/rest';
+import { inject as service } from '@ember/service';
 import Inflector from 'ember-inflector';
-import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
 import ENV from 'clubhouse/config/environment';
 
 /*
@@ -36,7 +36,9 @@ const SINGULAR_MODELS = [
   'vehicle',
 ];
 
-export default class ApplicationAdapter extends RESTAdapter.extend(DataAdapterMixin) {
+export default class ApplicationAdapter extends RESTAdapter {
+  @service session;
+
   host = ENV['api-server'];
 
   get headers() {

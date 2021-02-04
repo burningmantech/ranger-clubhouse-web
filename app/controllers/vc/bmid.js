@@ -381,7 +381,6 @@ export default class VcBmidController extends Controller {
 
   @action
   changeFilter(name, value) {
-    console.log('Changing value ', name, value);
     set(this, name, value);
     this._buildViewBmids();
   }

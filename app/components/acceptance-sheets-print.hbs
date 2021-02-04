@@ -1,7 +1,7 @@
 <PrintInstruction @backAction={{@backAction}} @backLabel="Back to Alpha selection"/>
 {{#each @alphas as |alpha alphaIdx|}}
   <div class="d-flex mx-2 mt-4 mb-2 {{if alphaIdx "d-print-page-break"}}">
-    <img src={{root-url "assets/images/ranger-logo-bw.png"}} class="alpha-sheet-logo" alt="ranger">
+    <img src="{{rootURL}}assets/images/ranger-logo-bw.png" class="alpha-sheet-logo" alt="ranger">
     <div class="alpha-sheet-header align-middle">
       {{this.year}} Alpha To Dirt Ranger Acceptance Form ({{add alphaIdx 1}} / {{printAlphas.length}})
     </div>

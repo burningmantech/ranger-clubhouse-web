@@ -1,15 +1,16 @@
 import Route from '@ember/routing/route';
 import Login from 'clubhouse/models/login';
-import UnauthenticatedRouteMixin from 'ember-simple-auth/mixins/unauthenticated-route-mixin';
 import ENV from 'clubhouse/config/environment';
 
-export default class LoginRoute extends Route.extend(UnauthenticatedRouteMixin) {
+export default class LoginRoute extends Route {
   queryParams = {
     token: { refreshModel: true },
     welcome: { refreshModel: true}
   }
 
-  routeIfAlreadyAuthenticated = 'me.homepage';
+  beforeModel() {
+    this.session.prohibitAuthentication('me.homepage');
+  }
 
   // Either render the login page, or attempt to login using a temporary login token.
   model({token, welcome}) {
@@ -37,7 +38,7 @@ export default class LoginRoute extends Route.extend(UnauthenticatedRouteMixin) 
       the login page will render.
      */
     return this.session.authenticate('authenticator:jwt', credentials)
-      .catch((response) => {
+       .catch((response) => {
         this.session.tempLoginToken = null;
         if (response.status == 401) {
           const data = response.json ? response.json : response.payload;
