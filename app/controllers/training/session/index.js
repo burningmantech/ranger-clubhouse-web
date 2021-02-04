@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 import EmberObject from '@ember/object';
 import {debounce} from '@ember/runloop';
-import {action} from '@ember/object';
+import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {slotSignup} from 'clubhouse/utils/slot-signup';
 import _ from 'lodash';
@@ -48,6 +48,7 @@ export default class TrainingSlotController extends Controller {
 
   @tracked editStudent;
   @tracked studentForm;
+  @tracked editNote;
 
   @tracked foundPeople = null;
   @tracked noSearchMatch = null;
@@ -316,4 +317,41 @@ export default class TrainingSlotController extends Controller {
       this.house.scrollToElement('#email-list');
     }
   }
+
+
+  @action
+  editNoteAction(note) {
+    this.editNote = note;
+
+  }
+  @action
+  cancelNoteAction() {
+    this.editNote = null;
+  }
+
+  @action
+  updateNoteAction(model) {
+    this.ajax.request(`training-session/${model.id}/update-note`, {
+      method: 'POST',
+      data: {
+        note: model.note
+      }
+    }).then(() => {
+      set(this.editNote, 'note', model.note);
+      this.toast.success('The note was successfully updated.');
+      this.editNote = null;
+    }).catch((response) => this.house.handleErrorResponse(response))
+  }
+
+  @action
+  deleteNoteAction(note) {
+    this.modal.confirm('Confirm Deletion', 'Are you really sure you want to delete this note?', () => {
+      this.ajax.request(`training-session/${note.id}/delete-note`, { method: 'DELETE'})
+        .then(() => {
+          set(this.editStudent, 'notes', this.editStudent.notes.filter((n) => n.id !== note.id));
+          this.toast.success('The note was successfully deleted.');
+        }).catch((response) => this.house.handleErrorResponse(response));
+    });
+  }
+
 }

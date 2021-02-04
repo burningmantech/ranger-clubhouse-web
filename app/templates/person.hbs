@@ -50,7 +50,8 @@
   {{#if (has-role "admin" "vc")}}
     <s.group @title="Logs">
       {{#if (has-role "admin")}}
-        <s.link @route="admin.action-log" @title="Action Log" @query={{hash person=this.person.callsign}} @icon="arrows-alt"
+        <s.link @route="admin.action-log" @title="Action Log" @query={{hash person=this.person.callsign}}
+                @icon="arrows-alt"
                 @iconType="s"/>
         <s.link @route="person.contact-log" @title="Contact Log" @icon="paper-plane"/>
         <s.link @route="person.broadcast-log" @title="Broadcast Log" @icon="volume-up" @iconType="s"/>
@@ -100,7 +101,7 @@
 
 
   {{#if this.person.message}}
-    <ChNotice @title="Important Account Note" @icon="exclamation">
+    <ChNotice @title="Important Account Note" @icon="hand-point-right">
       {{nl2br this.person.message}}
       <div class="mt-2 text-muted">Posted {{shift-format this.person.message_updated_at}}</div>
     </ChNotice>
@@ -141,33 +142,33 @@
           {{#if (has-role "admin" "vc" "intake")}}
             <div class="dropdown-header">Vol Coords</div>
             {{#if (has-role "intake")}}
-              <NavbarMenuItem @route="person.unified-flagging" @item="Unified Flagging" />
+              <NavbarMenuItem @route="person.unified-flagging" @item="Unified Flagging"/>
             {{/if}}
             {{#if (has-role "admin" "vc")}}
-              <NavbarMenuItem @route="person.dashboard" @item="Dashboard" />
+              <NavbarMenuItem @route="person.dashboard" @item="Dashboard"/>
             {{/if}}
             {{#if (has-role "admin")}}
-              <NavbarMenuItem @route="person.external-ids" @item="External IDs" />
+              <NavbarMenuItem @route="person.external-ids" @item="External IDs"/>
             {{/if}}
           {{/if}}
 
           {{#if  (has-role "edit-bmids" "edit-access-docs")}}
             <div class="dropdown-header">Pre-Playa</div>
-            {{#if (has-role "edit-bmids")}}
-              <NavbarMenuItem @route="person.bmid" @item="BMID" />
-            {{/if}}
             {{#if (has-role "edit-access-docs")}}
-              <NavbarMenuItem @route="person.access-documents" @item="Access Documents" />
+              <NavbarMenuItem @route="person.access-documents" @item="Access Documents"/>
+            {{/if}}
+            {{#if (has-role "edit-bmids")}}
+              <NavbarMenuItem @route="person.bmid" @item="BMID"/>
             {{/if}}
           {{/if}}
 
           {{#if (has-role "admin" "vc")}}
             <div class="dropdown-header">Logs</div>
-            <NavbarMenuItem @route="person.photos" @item="Photo History" />
-            <NavbarMenuItem @route="person.status-history" @item="Status History" />
+            <NavbarMenuItem @route="person.photos" @item="Photo History"/>
+            <NavbarMenuItem @route="person.status-history" @item="Status History"/>
             {{#if (has-role "admin")}}
-              <NavbarMenuItem @route="person.contact-log" @item="Contact Log" />
-              <NavbarMenuItem @route="person.broadcast-log" @item="Broadcast Log" />
+              <NavbarMenuItem @route="person.contact-log" @item="Contact Log"/>
+              <NavbarMenuItem @route="person.broadcast-log" @item="Broadcast Log"/>
               <LinkTo @route="admin.action-log" @query={{hash person=person.callsign}} class="dropdown-item">
                 Action Log
               </LinkTo>

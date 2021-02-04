@@ -6,25 +6,26 @@
   </LinkTo>
 </p>
 {{#unless this.trainers}}
-  <div class="border p-2 rounded mb-2">
-    <h4 class="text-danger">{{fa-icon "exclamation-triangle"}} No trainer slots were found.</h4>
+  <ChNotice @type="danger" @title="No trainer slots were found">
     In order to correctly record how many trainers are signed up to teach this session, a trainer's slot needs to exists
     where the slot's description matches this session's description exactly and where the start time within one hour of
     this session.
-  </div>
-{{/unless}}
-
-{{#unless this.slot.active}}
-  <p class="text-danger font-weight-bold">
-    Training session has not been activated. Sign ups are disabled until the session (aka slot) has been activated.
-  </p>
+  </ChNotice>
 {{/unless}}
 
 {{#unless this.havePrimaryTrainers}}
-  <p>
-    <b class="text-danger">No {{if this.training.is_art "trainers" "trainers or Uber trainers"}} are signed up to teach
-      this session.</b>
-  </p>
+  <ChNotice @type="danger" @title="No trainer sign ups">
+    No trainers are signed up to teach this session.
+  </ChNotice>
+{{/unless}}
+
+{{#unless this.slot.active}}
+  <ChNotice @type="danger" @title="Training session not activated">
+    Sign ups are disabled until the session (aka slot) has been activated.
+    Use the
+    <LinkTo @route="admin.slots">Admin &gt; Edit Records &gt; Slots</LinkTo>
+    page to mark the session as active.
+  </ChNotice>
 {{/unless}}
 
 <div class="row no-gutter">
@@ -92,7 +93,8 @@
             class="btn btn-secondary">
       {{fa-icon "clipboard-check"}} Sign up Sheet
     </LinkTo>
-    <button type="button" class="btn btn-secondary" {{action "toggleEmailListAction"}} disabled={{is-empty this.students}}>
+    <button type="button" class="btn btn-secondary" {{action "toggleEmailListAction"}} disabled={{is-empty
+            this.students}}>
       {{fa-icon "envelope"}} {{if this.showEmails "Hide Emails" "List Emails"}}
     </button>
     {{#if this.canAddStudent}}
@@ -271,9 +273,14 @@
 
       <Modal.body>
         {{#if this.editStudent.personnel_issue}}
-          <h3 class="text-danger">Personnel Flag raised on {{this.editStudent.callsign}}. TAKE NO ACTIONS UNTIL
-            RESOLVED.</h3>
+          <h3 class="text-danger">
+            Personnel Flag raised on {{this.editStudent.callsign}}. TAKE NO ACTIONS UNTIL RESOLVED.
+          </h3>
         {{/if}}
+        <p>
+          A note may only be edited or deleted by the trainer who wrote it.<br>
+          Timestamps are in the Pacific Timezone (UTC-7).
+        </p>
         <table class="table table-sm table-hover table-striped">
           <thead>
           <tr>
@@ -292,9 +299,22 @@
                 {{else}}
                   * imported *
                 {{/if}}
-              </td>
+               </td>
               <td class="w-65">
+                {{#if note.is_log}}
+                  <i>{{note.note}}</i>
+                {{else}}
                 {{nl2br note.note}}
+                {{#if (eq note.person_source_id this.session.userId)}}
+                  <br>
+                  <button type="button" class="btn btn-secondary btn-sm" {{action this.editNoteAction note}}>
+                    Edit
+                  </button>
+                  <button type="button" class="btn btn-danger btn-sm" {{action this.deleteNoteAction note}}>
+                    Delete
+                  </button>
+                {{/if}}
+                {{/if}}
               </td>
             </tr>
           {{else}}
@@ -319,14 +339,14 @@
             <f.input @name="note" @label="Enter the training notes about {{studentName}}:"
                      @type="textarea"
                      @hint="Your note will be timestamped and appended to any existing notes."
-                     @rows=3 @cols=80/>
+                     @rows={{3}} @cols={{80}}/>
           </div>
           {{#unless this.training.is_art}}
             <div class="form-row mt-2">
               <label>Was feedback delivered to {{studentName}}?</label>
               <div class="col-12">
                 <f.input @name="feedback_delivered" @type="radioGroup" @options={{this.feedbackDeliveredOptions}}
-                         @inline=true/>
+                         @inline={{true}}/>
               </div>
             </div>
 
@@ -393,3 +413,24 @@
   </ModalDialog>
 {{/if}}
 
+{{#if this.editNote}}
+  <ModalDialog @title="Edit Note for {{this.editStudent.callsign}}" as |Modal|>
+    <ChForm @formId="note-update" @formFor={{this.editNote}}
+            @onSubmit={{this.updateNoteAction}} @onCancel={{this.cancelNoteAction}} as |f|>
+      <Modal.body>
+        <div class="form-row">
+           <p>
+            Note created on {{shift-format @note.created_at year=true}}
+          </p>
+        </div>
+        <div class="form-row">
+          <f.input @type="textarea" @name="note" @label="Edit Your Note" @rows={{4}} @cols={{80}} @autofocus={{true}}/>
+        </div>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit/>
+        <f.cancel/>
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}

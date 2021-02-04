@@ -1,12 +1,12 @@
 import Component from '@glimmer/component';
 
 export default class ChNoticeComponent extends Component {
-  get iconSize() {
-    return this.args.iconSize ?? "2x";
-  }
+  constructor() {
+    super(...arguments);
+    const {type, icon, iconSize}  = this.args;
 
-  get boxColor() {
-    const {type}  = this.args;
-    return type ? `notice-${type}` : '';
+    this.boxColor = type ? `notice-${type}` : '';
+    this.icon = icon ?? 'exclamation';
+    this.iconSize = iconSize ?? "2x";
   }
 }
