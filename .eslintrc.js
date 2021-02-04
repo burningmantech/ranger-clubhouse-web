@@ -1,9 +1,8 @@
+'use strict';
+
 module.exports = {
-  globals: {
-    server: true,
-  },
-  parser: 'babel-eslint',
   root: true,
+  parser: 'babel-eslint',
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
@@ -22,14 +21,15 @@ module.exports = {
     browser: true
   },
   rules: {
-    'no-console': 'off',
-    'ember/no-mixins': 'off',
-    'ember/no-jquery': 'off'
+    'ember/no-jquery': 'off',
+    'ember/no-mixins': 'off'
+  },
+  globals: {
+    server: true
   },
   overrides: [
     // node files
     {
-      parser: 'babel-eslint',
       files: [
         '.eslintrc.js',
         '.template-lintrc.js',
@@ -38,7 +38,7 @@ module.exports = {
         'blueprints/*/index.js',
         'config/**/*.js',
         'lib/*/index.js',
-        '.eslintrc.js'
+        'server/**/*.js'
       ],
       parserOptions: {
         sourceType: 'script'
@@ -53,7 +53,7 @@ module.exports = {
 
         // this can be removed once the following is fixed
         // https://github.com/mysticatea/eslint-plugin-node/issues/77
-        'node/no-unpublished-require': 'off'
+        'node/no-unpublished-require': 'off',
       })
     }
   ]

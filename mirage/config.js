@@ -41,22 +41,28 @@ export default function () {
 
   this.post('/api/auth/login', function (schema, request) {
     let params = JSON.parse(request.requestBody);
+    let person;
 
-    if (!params.identification || !params.password) {
-      const errors = [];
+    if (params.temp_token) {
+       person = schema.db.people.findBy({tpassword: params.temp_token});
+    } else {
+      if (!params.identification || !params.password) {
+        const errors = [];
 
-      if (!params.identification) {
-        errors.push({status: 422, title: 'Email cannot be blank'});
+        if (!params.identification) {
+          errors.push({status: 422, title: 'Email cannot be blank'});
+        }
+
+        if (!params.password) {
+          errors.push({status: 422, title: 'Password cannot be blank'});
+        }
+
+        return new Response(422, {'Content-Type': 'application/json'}, {errors});
       }
 
-      if (!params.password) {
-        errors.push({status: 422, title: 'Password cannot be blank'});
-      }
-
-      return new Response(422, {'Content-Type': 'application/json'}, {errors});
+      person = schema.db.people.findBy({email: params.identification});
     }
 
-    const person = schema.db.people.findBy({email: params.identification});
     if (!person) {
       return new Response(401, {'Content-Type': 'application/json'}, {status: 'invalid-credentials'});
     }

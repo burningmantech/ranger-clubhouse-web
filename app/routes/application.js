@@ -5,19 +5,16 @@ import {inject as service} from '@ember/service';
 import {config} from 'clubhouse/utils/config';
 import {UnauthorizedError} from '@ember-data/adapter/error';
 import {run} from '@ember/runloop';
-import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import ENV from 'clubhouse/config/environment';
-
 import $ from 'jquery';
+import moment from 'moment';
+import RSVP from 'rsvp';
 
-export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin) {
+export default class ApplicationRoute extends Route {
   @service router;
-
-  routeAfterAuthentication = 'me.homepage';
 
   constructor() {
     super(...arguments);
-
 
     // Scroll the window and record route transitions
     this.router.on('routeDidChange', (transition) => {
@@ -77,58 +74,42 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
     });
   }
 
-  beforeModel(transition) {
+  async beforeModel(transition) {
     // If heading to the offline target, simply return
     if (transition.targetName === 'offline') {
       return;
     }
 
-    // Has the app configuration been loaded?
-    if (ENV['clientConfig']) {
-      return this.setCurrentUser();
-    }
-
-    // Fetch the configuration
-    return this.ajax.request('config').then((result) => {
-      ENV['clientConfig'] = result;
-      return this.setCurrentUser();
-    }).catch((response) => {
+    try {
+      /*
+         Load up the  configuration, and grab the user info
+         if the user was already authenticated and the app is being reloaded such
+         as from a page refresh. Otherwise the user info is grabbed by session.handleAuthenticated()
+         after the login token is successfully retrieved in {route,controller}/login.js
+       */
+      const results = await RSVP.hash({
+        config: this.ajax.request('config'),
+        user: this.session.loadUser() // loadUser will return a resolved promise if the user is not authenticated
+      });
+      ENV['clientConfig'] = results.config;
+    } catch (response) {
       this.house.handleErrorResponse(response);
       // Can't retrieve the configuration. Consider the application
       // offline for the moment.
       transition.abort();
       this.transitionTo("offline");
-    });
-  }
-
-  // Logout button or ember-simple-auth trigger
-  invalidateSession() {
-    this.house.clearStorage();
-    this.session.invalidate();
-  }
-
-  async sessionAuthenticated() {
-    await this.setCurrentUser();
-    if (this.session.tempLoginToken) {
-      this.transitionTo(this.session.isWelcome ? 'me.welcome' : 'me.password');
-    } else {
-      super.sessionAuthenticated(...arguments);
     }
   }
 
-  setCurrentUser() {
-    if (!this.session.isAuthenticated) {
-      return Promise.resolve();
+  setupController(controller) {
+    const ghd = config('GroundhogDayTime');
+    if (ghd) {
+      controller.set('groundHogDayTime', moment(ghd));
     }
-
-    return this.session.loadUser().then(() => {
-      this.controllerFor('application').setup();
-    }).catch(() => this.session.invalidate());
   }
 
   @action
   logout() {
-    this.house.clearStorage();
     this.session.invalidate();
   }
 
@@ -142,11 +123,12 @@ export default class ApplicationRoute extends Route.extend(ApplicationRouteMixin
 
   @action
   error(error) {
-    if (error instanceof UnauthorizedError || error.status == 401) {
+    if (error instanceof UnauthorizedError || error.status === 401) {
       // 401 error - not logged in, or JWT expired.
       if (this.session.isAuthenicated) {
-        this.toast.warn('Your session has timed out. Please login again.')
-        this.session.invalidate();
+        this.modal.info(null, 'Your session has timed out. Please login again', () => {
+          this.session.invalidate();
+        });
       } else {
         this.transitionTo('login');
       }
