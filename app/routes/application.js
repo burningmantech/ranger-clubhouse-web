@@ -16,7 +16,16 @@ export default class ApplicationRoute extends Route {
   constructor() {
     super(...arguments);
 
-    // Scroll the window and record route transitions
+    // Kill "The Clubhouse is loading" message in index.html
+    const loading = document.querySelector('#app-loading');
+    if (loading) {
+      loading.remove();
+    }
+
+    /*
+      When a route (page) transition occurs, scroll the window back to the top,
+      and try to record the transition
+     */
     this.router.on('routeDidChange', (transition) => {
       // Move the window back to the top when heading to a new route
       run.schedule('afterRender', () => {
@@ -74,6 +83,14 @@ export default class ApplicationRoute extends Route {
     });
   }
 
+  /**
+   * Retrieve the Clubhouse configuration, and if the user was previously
+   * authenticated, load the user's info.
+   *
+   * beforeModel will be called only once.
+   *
+   * @param {Transition} transition
+   */
   async beforeModel(transition) {
     // If heading to the offline target, simply return
     if (transition.targetName === 'offline') {

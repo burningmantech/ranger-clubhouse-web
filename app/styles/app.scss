@@ -284,6 +284,10 @@ ul.nav-pills li {
   }
 }
 
+.progress-h25 {
+  height: 25px;
+}
+
 .card-hover:hover {
   background-color: #dee2e6 !important;
 }
@@ -624,16 +628,20 @@ caption {
 
 .person-manage-header-title {
   display: flex;
-  align-items: center;
 }
 
 .person-manage-callsign {
   flex: 1;
-  font-size: $h2-font-size;
+  font-size: $h3-font-size;
   font-weight: 500;
 }
 
-.person-manage-identity {
+.person-manage-pronounce {
+  font-size: $h4-font-size;
+}
+
+.person-manage-pronouns {
+  display: inline-block;
   font-size: $h4-font-size;
 }
 

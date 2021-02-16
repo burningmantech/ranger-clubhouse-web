@@ -8,10 +8,8 @@ module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     tests: IS_TEST, // Don't even generate test files unless a test build
 
-    'ember-cli-uglify': {
-      uglify: {
-        mangle: true
-      }
+    'ember-cli-terser': {
+      enabled: IS_PROD,
     },
 
     'ember-cli-babel': {

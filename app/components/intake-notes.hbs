@@ -11,8 +11,8 @@
             &mdash; {{note.note}}
             {{#if (eq note.person_source_id this.session.userId)}}
               <p>
-                <button {{action this.updateNoteAction note}}>Update</button>
-                <button {{action this.deleteNoteAction note}}>Delete</button>
+                <button type="button" {{action this.updateNoteAction note}}>Update</button>
+                <button type="button" {{action this.deleteNoteAction note}}>Delete</button>
               </p>
             {{/if}}
           </div>

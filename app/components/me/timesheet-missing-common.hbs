@@ -1,4 +1,4 @@
-<NoAppreciateIcon /> = the shift hours do not count towards appreciations.
+<NoAppreciateIcon/> = the shift hours do not count towards appreciations.
 
 {{#if @timesheetsMissing}}
   <div class="timesheet-table">
@@ -29,10 +29,12 @@
               {{else}}
                 The request has been rejected.
               {{/if}}
-              <p class="mt-2">
-                <strong>Response from the reviewer:</strong><br>
-                {{nl2br tsm.reviewer_notes}}
-              </p>
+              {{#if tsm.reviewer_notes}}
+                <div class="mt-2">
+                  <strong>Response from the reviewer:</strong><br>
+                  {{nl2br tsm.reviewer_notes}}
+                </div>
+              {{/if}}
             {{/if}}
           </div>
         </div>
@@ -120,7 +122,8 @@
           </div>
         {{/if}}
         <f.input @name="additional_notes"
-                 @label={{if entry.isRejected "Supply additional information for an appeal:" "Why is this new entry needed?"}}
+                 @label={{if entry.isRejected "Supply additional information for an appeal:"
+                             "Why is this new entry needed?"}}
                  @type="textarea" @cols={{80}} @rows={{4}} />
       </Modal.body>
       <Modal.footer @noAlign={{true}}>

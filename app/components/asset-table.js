@@ -1,9 +1,14 @@
 import Component from '@glimmer/component';
 import { action, set } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
 
 export default class AssetTableComponent extends Component {
   @tracked assetForHistory = null;
+
+  @service ajax;
+  @service house;
+  @service toast;
 
   @action
   checkInAsset(asset, row) {

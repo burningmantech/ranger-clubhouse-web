@@ -1,0 +1,28 @@
+<tr>
+  <td>
+    {{#if @item.earned}}
+      <span class="text-success">{{fa-icon "check"}} {{@name}} Earned</span>
+    {{else}}
+      {{@name}}
+    {{/if}}
+    {{#if @subtext}}
+      <br>{{@subtext}}
+    {{/if}}
+  </td>
+  <td class="text-right">
+    {{@item.threshold}} {{@item.type}}
+  </td>
+  <td class="text-right">
+    {{@item.value}} {{@item.type}}
+  </td>
+  <td class="text-right">
+    {{#if @item.earned}}
+      -
+    {{else}}
+      {{@item.needs}} {{@item.type}}
+    {{/if}}
+  </td>
+  <td>
+    <ProgressBar @width={{@item.width}} @text="{{@item.width}}%" @type="success"/>
+  </td>
+</tr>
