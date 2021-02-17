@@ -57,6 +57,7 @@
           {{#each checked.conflicts as |conflict index|}}
             <div class="card">
               <div class="card-header conflict-priority-{{conflict.priority}} conflict-rule-{{conflict.ruleId}}">
+                {{! template-lint-disable no-nested-interactive}}
                 <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
                         data-target="#conflict-detail-{{checked.id}}-{{index}}">
                   {{conflict.description}}

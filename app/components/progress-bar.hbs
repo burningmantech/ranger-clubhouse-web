@@ -1,0 +1,5 @@
+{{! template-lint-disable no-inline-styles}}
+<div class="progress" style="height: 25px;">
+  {{! template-lint-disable no-inline-styles  style-concatenation}}
+  <div class="progress-bar text-black bg-{{@type}} text-center" role="progressbar" style="width: {{@width}}%">{{@text}}</div>
+</div>

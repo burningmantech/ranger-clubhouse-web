@@ -1,18 +1,15 @@
 import Controller from '@ember/controller';
-import { action, computed } from '@ember/object';
+import { action } from '@ember/object';
 import { TRAINING } from 'clubhouse/constants/positions';
 import { tracked } from '@glimmer/tracking';
 import { NON_RANGER } from 'clubhouse/constants/person_status';
-import classic from 'ember-classic-decorator';
 
-@classic
 export default class HqSiteCheckinController extends Controller {
   @tracked isSubmitting = false;
   @tracked isContactSaved = false;
   @tracked isOnSite = false;
   @tracked showAlphaWarning = false;
 
-  @computed('assets.@each.checked_in')
   get activeAssets() {
     return this.assets.filter((asset) => !asset.checked_in);
   }

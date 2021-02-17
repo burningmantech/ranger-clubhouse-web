@@ -22,13 +22,11 @@ export default class HqRoute extends Route {
       eventInfo: this.ajax.request(`person/${person_id}/event-info`, { data: { year } })
                   .then((result) => result.event_info),
 
-      personEvent: this.store.findRecord('person-event', `${this.session.userId}-${this.house.currentYear()}`, { reload: true }),
+      personEvent: this.store.findRecord('person-event', `${person_id}-${year}`, { reload: true }),
 
       positions: this.ajax.request(`person/${person_id}/positions`,{
                   data: { include_training: 1, year }
                 }).then((results) => results.positions),
-
-      timesheets: this.store.query('timesheet', { person_id, year }),
 
       unread_message_count: this.ajax.request(`person/${person_id}/unread-message-count`)
           .then((result) => result.unread_message_count),
@@ -37,9 +35,6 @@ export default class HqRoute extends Route {
 
       attachments: this.store.findAll('asset-attachment', { reload: true }),
 
-      expected: this.ajax.request(`person/${person_id}/schedule/expected`),
-
-      timesheetSummary: this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }}).then((result) => result.summary),
     });
   }
 

@@ -7,6 +7,7 @@ export default class HqScheduleRoute extends Route {
     const year = this.house.currentYear();
 
     this.store.unloadAll('schedule');
+    this.store.unloadAll('timesheet');
 
     return RSVP.hash({
       signedUpSlots: this.store.query('schedule', { person_id, year }).then((result) => result.toArray()),
@@ -14,6 +15,7 @@ export default class HqScheduleRoute extends Route {
       scheduleSummary: this.ajax.request(`person/${person_id}/schedule/summary`, { data: { year }}).then((result) => result.summary),
       permission: this.ajax.request(`person/${person_id}/schedule/permission`, {data: { year }})
                   .then((results) => results.permission ),
+      timesheets: this.store.query('timesheet', { person_id, year }),
     });
   }
 
@@ -23,7 +25,6 @@ export default class HqScheduleRoute extends Route {
 
     controller.setProperties(model);
     controller.set('person', hq.person);
-    controller.set('timesheets', hq.timesheets);
     controller.set('year', this.house.currentYear());
   }
 }

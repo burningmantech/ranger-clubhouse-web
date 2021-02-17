@@ -15,6 +15,9 @@ export default class HqTimesheetRoute extends Route {
       }).then((result) => result.info),
       timesheetsMissing: this.store.query('timesheet-missing', { person_id, year }),
       correctionPositions: this.ajax.request(`person/${person_id}/positions`,{ data: { include_mentee: 1 } }).then((results) => results.positions),
+      timesheetSummary: this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }})
+        .then((result) => result.summary),
+      timesheets: this.store.query('timesheet', { person_id, year }),
     });
   }
 

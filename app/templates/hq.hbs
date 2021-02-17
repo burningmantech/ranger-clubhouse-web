@@ -20,9 +20,10 @@
         <span class="d-inline-block">
        &lt;{{this.person.first_name}} {{this.person.last_name}}, {{this.person.status}}&gt;
       </span>
-        {{#unless this.person.on_site}} <span class="text-danger">OFF SITE</span>{{/unless}}
-        <br>
-        {{pronouns-format this.person}}
+        <span class="d-inline-block">
+          {{pronouns-format this.person}}
+        </span>
+        {{#unless this.person.on_site}}<br><span class="text-danger">OFF SITE</span>{{/unless}}
       </div>
       <div class="person-manage-switch">
         <LinkTo @route="person.index" @model={{this.person.id}}>Switch to Person Manage</LinkTo>
@@ -60,7 +61,7 @@
       {{outlet}}
     </div>
 
-    <div class="mt-4 ml-auto d-print-none">
+    <div class="mt-4 ml-auto d-print-none pl-2">
       <div class="mugshot">
         {{#if this.photo}}
           {{#if this.photo.photo_url}}

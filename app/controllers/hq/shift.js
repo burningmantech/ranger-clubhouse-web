@@ -1,22 +1,27 @@
 import Controller from '@ember/controller';
-import {action, computed} from '@ember/object';
+import {action} from '@ember/object';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import {set} from '@ember/object';
-import { ALPHA } from 'clubhouse/constants/positions';
-import { tracked } from '@glimmer/tracking';
-import classic from 'ember-classic-decorator';
+import {ALPHA} from 'clubhouse/constants/positions';
+import {tracked} from '@glimmer/tracking';
 
-@classic
 export default class HqShiftController extends Controller {
   @tracked showCorrectionForm = false;
   @tracked showSiteLeaveDialog = false;
+  @tracked showHoursCreditsBreakdown = false;
+  @tracked showAppreciationsProgress = false;
+
   @tracked entry = null;
   @tracked isMarkingOffSite = false;
-  @tracked showHoursCreditsBreakdown = false;
+
+  @tracked timesheets;
   @tracked unverifiedTimesheets = [];
+  @tracked timesheetSummary;
+  @tracked assets;
+  @tracked eventInfo;
 
   correctionValidations = {
-    additional_notes:[ validatePresence(true)]
+    additional_notes: [validatePresence(true)]
   };
 
   /**
@@ -27,7 +32,7 @@ export default class HqShiftController extends Controller {
    */
 
   get isShinyPenny() {
-    return this.timesheets.find((t) => t.position_id == ALPHA) && this.person.isActive;
+    return this.timesheets.find((t) => t.position_id === ALPHA) && this.person.isActive;
   }
 
   /**
@@ -37,14 +42,14 @@ export default class HqShiftController extends Controller {
    * @returns {boolean}
    */
   get hasUnverifiedTimesheet() {
-    return !!this.timesheets.find((t) => (t.isUnverified && !t.isIgnoring));
+    return !!this.unverifiedTimesheets.find((t) => (t.isUnverified && !t.isIgnoring));
   }
 
   /**
    * Find all checked out assets
    * @returns {[]}
    */
-//  @computed('assets.@each.checked_in')
+
   get assetsCheckedOut() {
     return this.assets.filter((a) => !a.checked_in);
   }
@@ -54,7 +59,7 @@ export default class HqShiftController extends Controller {
    *
    * @returns {number}
    */
-  @computed('assetsCheckedOut')
+
   get radioCount() {
     return this.assetsCheckedOut.filter((a) => a.asset.description === 'Radio').length;
   }
@@ -65,7 +70,7 @@ export default class HqShiftController extends Controller {
    *
    * @returns {number}
    */
-  @computed('eventInfo', 'radioCount')
+
   get shiftRadios() {
     const radioCount = this.radioCount;
     const eventInfo = this.eventInfo;
@@ -88,7 +93,6 @@ export default class HqShiftController extends Controller {
    * @returns {number}
    */
 
-  @computed('eventInfo', 'radioCount')
   get eventRadios() {
     const radioCount = this.radioCount;
     const eventInfo = this.eventInfo;
@@ -109,24 +113,37 @@ export default class HqShiftController extends Controller {
    *
    * @returns {boolean}
    */
-  @computed('timesheets.@each.stillOnDuty')
+
   get isOffDuty() {
-    return this.timesheets.find((t) => t.stillOnDuty) === undefined;
+    return !this.timesheets.find((t) => t.stillOnDuty);
   }
 
   /**
-   * Called when the worker has ended a shift. Update the unverified timesheet list.
+   * Called when the worker has ended a shift.
+   * - Update the unverified timesheet list.
+   * - Reload timesheet summary info
+   * - Reload the expected hours worked.
    */
 
   @action
   endShiftAction() {
+    const personId = this.person.id;
     this.unverifiedTimesheets = this.timesheets.filter((t) => t.isUnverified);
+
+    this.ajax.request(`person/${personId}/timesheet-summary`, {data: {year: this.house.currentYear()}})
+      .then((result) => this.timesheetSummary = result.summary)
+      .catch((response) => this.house.handleErrorResponse(response));
+
+    this.ajax.request(`person/${personId}/schedule/expected`)
+      .then((result) => this.expected = result)
+      .catch((response) => this.house.handleErrorResponse(response));
   }
 
   /**
    * Mark a timesheet entry as ignoring review for the moment. Typically used during burn perimeter check in
    * to send a Ranger quickly on their way without timesheet verification.
-   * @param entry
+   *
+   * @param {Timesheet} entry
    */
 
   @action
@@ -137,21 +154,22 @@ export default class HqShiftController extends Controller {
   /**
    * Mark a timesheet entry as correct/verified.
    *
-   * @param entry
+   * @param {Timesheet} entry
    */
+
   @action
   markEntryCorrect(entry) {
     entry.set('isIgnoring', false);
     entry.set('review_status', 'verified');
-    entry.save().then(() => {
-      this.toast.success('Timesheet was successfully marked correct.');
-    })
+    entry.save()
+      .then(() => this.toast.success('Timesheet was successfully marked correct.'))
       .catch((response) => this.house.handleErrorResponse(response));
   }
 
   /**
    * Show the incorrect entry form dialog.
-   * @param entry
+   *
+   * @param {Timesheet} entry
    */
   @action
   markEntryIncorrect(entry) {
@@ -172,7 +190,7 @@ export default class HqShiftController extends Controller {
   /**
    * Mark an entry as incorrect with a note.
    *
-   * @param model
+   * @param {Timesheet} model
    * @param {boolean} isValid
    */
 
@@ -195,8 +213,9 @@ export default class HqShiftController extends Controller {
   /**
    * Check in a checked out asset
    *
-   * @param ap
+   * @param {Asset} ap
    */
+
   @action
   assetCheckInAction(ap) {
     set(ap, 'isSubmitting', true);
@@ -238,9 +257,8 @@ export default class HqShiftController extends Controller {
       // No outstanding items -- confirm just to be sure.
       this.modal.confirm('Confirm Marking Person Off Site',
         `Are you sure you wish to mark ${this.person.callsign} as OFF SITE?`,
-        () => {
-          this._updateOnSite(false)
-        });
+        () => this._updateOnSite(false)
+      );
     }
   }
 
@@ -304,17 +322,17 @@ export default class HqShiftController extends Controller {
    *
    * @returns {number}
    */
-  @computed('creditsEarned', 'expected.credits', 'timesheetSummary.total_credits')
+
   get creditsExpected() {
     return this.timesheetSummary.total_credits + this.expected.credits;
   }
 
   /**
    * How many seconds counted towards appreciations the person might work. (worked seconds + scheduled seconds)
+   *
    * @returns {number}
    */
 
-  @computed('timesheetSummary.counted_duration', 'expected.duration')
   get countedDurationExpected() {
     return this.timesheetSummary.counted_duration + this.expected.duration;
   }
@@ -325,7 +343,6 @@ export default class HqShiftController extends Controller {
    * @returns {number}
    */
 
-  @computed('timesheetSummary.total_duration', 'expected.duration')
   get totalDurationExpected() {
     return this.timesheetSummary.total_duration + this.expected.duration;
   }
@@ -336,6 +353,15 @@ export default class HqShiftController extends Controller {
 
   @action
   toggleHoursCreditBreakdown() {
-    this.showHoursCreditsBreakdown =  !this.showHoursCreditsBreakdown;
+    this.showHoursCreditsBreakdown = !this.showHoursCreditsBreakdown;
+  }
+
+  /**
+   * Toggle the hours & credits breakdown dialog
+   */
+
+  @action
+  toggleAppreciationsProgress() {
+    this.showAppreciationsProgress = !this.showAppreciationsProgress;
   }
 }
