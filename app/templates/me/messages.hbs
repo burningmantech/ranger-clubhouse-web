@@ -1,9 +1,16 @@
 <h1>Messages for <span class="d-inline-block">{{this.session.user.callsign}}</span></h1>
 <BackToHome/>
 
-<ClubhouseMessages @person={{this.session.user}} @messages={{this.messages}} @isMe={{true}} />
-
 <p>
   Clubhouse messages are way for various Ranger departments to communicate with Rangers
   while the event is happening.
 </p>
+
+{{#if this.shouldUseContactRanger}}
+  <p>
+    Use the <LinkTo @route="me.contact">Me &gt; Contact Ranger</LinkTo> feature to send a message to another
+    Ranger.
+  </p>
+{{/if}}
+
+<ClubhouseMessages @person={{this.session.user}} @messages={{this.messages}} @isMe={{true}} />

@@ -8,6 +8,8 @@ module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     tests: IS_TEST, // Don't even generate test files unless a test build
 
+    storeConfigInMeta: false, // Don't store configuration in meta tag
+
     'ember-cli-terser': {
       enabled: IS_PROD,
     },
