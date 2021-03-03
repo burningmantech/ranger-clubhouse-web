@@ -9,74 +9,81 @@
           (no unread)
         {{/if}}
       {{else}}
-        <b>There are no messages.</b>
+        <b>
+          {{#if @isMe}}
+            You have no messages
+          {{else}}
+            {{@person.callsign}} has no messages.
+          {{/if}}
+        </b>
       {{/if}}
     </div>
-    <div class="col-sm-12 col-lg-auto">
     {{#if this.canSendMessages}}
-      <button type="button" class="btn btn-primary ml-md-auto btn-responsive" {{on "click" this.newMessageAction}}>{{fa-icon "plus"}}
-        New Message
-      </button>
+      <div class="col-sm-12 col-lg-auto">
+        <button type="button" class="btn btn-primary ml-md-auto btn-responsive" {{on "click" this.newMessageAction}}>
+          {{fa-icon "plus"}} New Message
+        </button>
+      </div>
     {{/if}}
-    </div>
   </div>
 
   {{#each @messages as |message|}}
     <div class="mail {{unless message.delivered "mail-unread"}}">
-        <div class="mail-photo">
-          {{#if message.is_rbs}}
-            {{fa-icon "bullhorn"}}
-          {{else if message.sender_photo_url}}
-            <img src={{message.sender_photo_url}} loading="lazy"  alt="{{message.message_from}}" />
+      <div class="mail-photo">
+        {{#if message.is_rbs}}
+          {{fa-icon "bullhorn"}}
+        {{else if message.sender_photo_url}}
+          <img src={{message.sender_photo_url}} loading="lazy" alt="{{message.message_from}}"/>
+        {{else}}
+          {{fa-icon "user"}}
+        {{/if}}
+      </div>
+      <div class="mail-header {{if message.showing "mail-showing"}}" {{on "click" (fn this.toggleMessage message)}}
+           role="button">
+        <div class="mail-indicator">
+          {{#if message.delivered}}
+            {{fa-icon "check-circle" type="far"}}
           {{else}}
-            {{fa-icon "user"}}
+            {{fa-icon "arrow-right" color="success"}}
           {{/if}}
         </div>
-        <div class="mail-header {{if message.showing "mail-showing"}}" {{on "click" (fn this.toggleMessage message)}} role="button">
-          <div class="mail-indicator">
-            {{#if message.delivered}}
-              {{fa-icon "check-circle" type="far"}}
-            {{else}}
-              {{fa-icon "arrow-right" color="success"}}
-            {{/if}}
-          </div>
-          <div class="mail-from">
-            {{message.message_from}}
-          </div>
-          <div class="mail-date">
-            {{shift-format message.sent_at}}
-          </div>
-          <div class="mail-subject">
-            {{message.subject}}
-          </div>
+        <div class="mail-from">
+          {{message.message_from}}
         </div>
-        <div class="mail-body collapse" id="message-text-{{message.id}}">
-          {{#if message.isDictacted}}
-            <div class="mail-written-by">{{fa-icon "pen-alt"}} written by {{message.creator_callsign}}
-              for {{message.message_from}}</div>
-          {{/if}}
+        <div class="mail-date">
+          {{shift-format message.sent_at}}
+        </div>
+        <div class="mail-subject">
+          {{message.subject}}
+        </div>
+      </div>
+      <div class="mail-body collapse" id="message-text-{{message.id}}">
+        {{#if message.isDictacted}}
+          <div class="mail-written-by">{{fa-icon "pen-alt"}} written by {{message.creator_callsign}}
+            for {{message.message_from}}</div>
+        {{/if}}
 
-          {{message.body}}
-          <div class="mail-actions">
-            {{#if message.delivered}}
-              <button {{on "click" (fn this.markUnreadAction message)}}
-                      type="button" class="btn btn-secondary btn-responsive" disabled={{message.isSubmitting}}>
-                Mark Unread
-                {{#if message.isSubmitting}}
-                  {{fa-icon "spinner" spin=true}}
-                {{/if}}
-              </button>
-            {{else}}
-              <button {{on "click" (fn this.markReadAction message)}}
-                      type="button" class="btn btn-primary btn-responsive" disabled={{message.isSubmitting}}>
-                Mark Read
-                {{#if message.isSubmitting}}
-                  {{fa-icon "spinner" spin=true}}
-                {{/if}}
-              </button>
-            {{/if}}
-          </div>
+        {{message.body}}
+        <div class="mail-actions">
+          {{#if message.delivered}}
+            <button {{on "click" (fn this.markUnreadAction message)}}
+                    type="button" class="btn btn-secondary btn-responsive" disabled={{message.isSubmitting}}>
+              Mark Unread
+              {{#if message.isSubmitting}}
+                {{fa-icon "spinner" spin=true}}
+              {{/if}}
+            </button>
+          {{else}}
+            <button {{on "click" (fn this.markReadAction message)}}
+                    type="button" class="btn btn-primary btn-responsive" disabled={{message.isSubmitting}}>
+              Mark Read
+              {{#if message.isSubmitting}}
+                {{fa-icon "spinner" spin=true}}
+              {{/if}}
+            </button>
+          {{/if}}
         </div>
+      </div>
     </div>
   {{/each}}
 </div>

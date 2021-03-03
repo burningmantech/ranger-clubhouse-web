@@ -11,35 +11,14 @@ export default class ClubhouseMessagesComponent extends Component {
   @service session;
   @service ajax;
 
-//  @tracked filterMessages = 'all';
-//  @tracked sortBy = 'desc';
-
   @tracked isSubmitting = false;
   @tracked newMessage = null;
 
-  /*
-   get viewMessages() {
-     let messages = this.args.messages;
+  constructor() {
+    super(...arguments);
 
-     switch (this.filterMessages) {
-     case 'read':
-       messages = messages.filterBy('delivered', true);
-       break;
-      case 'unread':
-       messages = messages.filterBy('delivered', false);
-       break;
-    }
-
-    if (this.sortBy === 'asc') {
-      messages.sortBy('sent_at', 'asc');
-    } else {
-      messages.sortBy('sent_at', 'desc');
-    }
-
-     return messages;
-   }
-
-   */
+    this.canSendMessages = this.session.user.hasRole([Role.ADMIN, Role.MANAGE]);
+  }
 
   get unreadCount() {
     return this.args.messages.reduce(function (total, msg) {
@@ -53,14 +32,13 @@ export default class ClubhouseMessagesComponent extends Component {
     }, 0);
   }
 
-  get canSendMessages() {
-    return this.session.user.hasRole([Role.ADMIN, Role.MANAGE, Role.TRAINER, Role.VC]);
-  }
-
   _updateUnreadCount() {
     const unreadCount = this.unreadCount;
     const person = this.args.person;
-    person.set('unread_message_count', unreadCount);
+    if (person) {
+      set(person, 'unread_message_count', unreadCount);
+    }
+
     if (this.session.userId == person.id) {
       this.session.unreadMessageCount = unreadCount;
     }
@@ -86,7 +64,7 @@ export default class ClubhouseMessagesComponent extends Component {
   }
 
   _markMessage(message, delivered) {
-    message.set('isSubmitting', true);
+    set(message, 'isSubmitting', true);
     this.ajax.request(`messages/${message.id}/markread`, {
       method: 'PATCH',
       data: {delivered}

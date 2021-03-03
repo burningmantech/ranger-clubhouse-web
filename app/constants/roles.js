@@ -50,7 +50,7 @@ const RoleToString = {
   [INTAKE]: 'intake',
   [LOGIN]: 'login',
   [MANAGE]: 'manage',
-  [MANAGE_ON_PLAYA]: 'mange-on-playa',
+  [MANAGE_ON_PLAYA]: 'manage-on-playa',
   [MEGAPHONE]: 'megaphone',
   [MENTOR]: 'mentor',
   [TECH_NINJA]: 'tech-ninja',
