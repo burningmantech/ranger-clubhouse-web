@@ -11,13 +11,13 @@ module('Integration | Component | loading-dialog', function(hooks) {
     await render(hbs`<LoadingDialog @item={{message}} />`);
 
     assert.dom('div.loading-pane').exists();
-    assert.dom('div.loading-message').includesText("First, do nothing. We're loading stuff");
+    assert.dom('div.loading-text').includesText("First, do nothing. We're loading stuff");
 
     const text = 'Loading all up in your grill!';
     this.set('custom', text)
     await render(hbs`<LoadingDialog @text={{custom}} />`);
 
     assert.dom('div.loading-pane').exists();
-    assert.dom('div.loading-message').includesText(text);
+    assert.dom('div.loading-text').includesText(text);
   });
 });

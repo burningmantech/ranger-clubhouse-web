@@ -9,13 +9,25 @@
     <div class="col-auto">
       <label>Title Filter:</label>
       <ChForm::Select @name="titleFilter" @value={{this.titleFilter}} @options={{this.titleFilterOptions}}
-                      @onChange={{action this.changeFilter 'titleFilter'}} @controlClass="form-control form-control-sm"/>
+                      @onChange={{action this.changeFilter 'titleFilter'}}
+                      @controlClass="form-control form-control-sm"/>
     </div>
     <div class="col-auto">
       <label>Team Filter:</label>
       <ChForm::Select @name="teamFilter" @value={{this.teamFilter}} @options={{this.teamFilterOptions}}
                       @onChange={{action this.changeFilter 'teamFilter'}} @controlClass="form-control form-control-sm"/>
 
+    </div>
+    <div class="col-text">
+      <label>Pages:</label>
+      <nav class="nav">
+        <LinkTo @route="vc.bmid-sanity-check" class="nav-link">
+          {{fa-icon "user-check"}} Sanity Check
+        </LinkTo>
+        <LinkTo @route="vc.bmid-print" class="nav-link">
+          {{fa-icon "print" }} Print via Lambase
+        </LinkTo>
+      </nav>
     </div>
   </div>
   <div class="form-group row">
@@ -39,15 +51,11 @@
 
     <div class="col-auto">
       <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleEditMode}}>
-        {{#if editMode}}Table View{{else}}Edit Mode{{/if}}
+        {{#if this.editMode}}{{fa-icon "table"}} Table View{{else}}{{fa-icon "edit"}} Edit Mode{{/if}}
       </button>
-      <button type="button" class="btn btn-secondary btn-sm" {{action this.exportCSV}}>Export CSV</button>
-      <LinkTo @route="vc.bmid-sanity-check" class="btn btn-secondary btn-sm">
-        Sanity Check
-      </LinkTo>
-      <LinkTo @route="vc.bmid-print" class="btn btn-secondary btn-sm">
-        Print via Lambase
-      </LinkTo>
+      <button type="button" class="btn btn-secondary btn-sm" {{action this.exportCSV}}>
+        {{fa-icon "file-export"}} Export CSV
+      </button>
     </div>
   </div>
 
@@ -67,7 +75,7 @@
     <tr>
       <th>&nbsp;</th>
       <th>{{#if (eq this.sortColumn "callsign")}}[Callsign]{{else}}
-        <a href {{action sortBmidsAction "callsign"}}>Callsign</a>{{/if}}</th>
+        <a href {{action this.sortBmidsAction "callsign"}}>Callsign</a>{{/if}}</th>
       {{#unless this.editMode}}
         <th>Action</th>
       {{/unless}}
@@ -156,8 +164,7 @@
               {{/if}}
             </td>
             <td><input value={{bmid.team}} onblur={{action this.updateColumn bmid "team"}} size="10"></td>
-            <td><textarea cols="40" rows="1"
-                          onfocus={{action this.focusNote}}
+            <td><textarea cols="40" rows="1" onfocus={{action this.focusNote}}
                           onblur={{action this.blurNote bmid}}>{{bmid.notes}}</textarea>
             </td>
             <td>
@@ -239,7 +246,8 @@
 {{#if this.isRendering}}
   <ModalDialog as |Modal|>
     <Modal.body>
-      Hang Tight - Rendering {{this.renderBmids.length}} of {{this.viewBmids.length}} {{fa-icon "spinner" spin=true}}
+      Hang Tight - Rendering {{this.renderBmids.length}} of {{this.viewBmids.length}}
+      <SpinIcon/>
     </Modal.body>
   </ModalDialog>
 {{/if}}

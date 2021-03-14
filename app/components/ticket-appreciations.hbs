@@ -1,0 +1,81 @@
+<TicketSection @id="appreciations"
+               @nextAction={{@nextSection}}
+               @nextDisabled={{this.needAnswer}}
+               @toggleCard={{@toggleCard}}
+               @showing={{@showing}}>
+  <:title>
+    Appreciations
+    <div class="d-inline-block">- {{this.titleCounts}}</div>
+  </:title>
+  <:body>
+    <p>
+      Please CLAIM or BANK/RELEASE {{pluralize this.items.length "appreciation"}}:
+    </p>
+    {{#each this.items as |item|}}
+      <div class="mt-2">
+        <div class="font-weight-bold">
+          {{item.typeHuman}}
+          {{#if item.isEventRadio}}
+            (count {{item.item_count}})
+          {{/if}}
+          {{#if item.isQualified}}
+            <span class="text-success"> - Available</span>
+          {{else if item.isBanked}}
+            <span class="text-muted"> - Banked</span>
+          {{else if item.isClaimed}}
+            <span class="text-success"> - Claimed {{fa-icon "check"}}</span>
+          {{else if item.isSubmitted}}
+            <span class="text-muted"> - Submitted</span>
+          {{/if}}
+        </div>
+        Expires {{mdy-format item.expiry_date}}<br>
+        {{#if item.isSubmitted}}
+          This item has been submitted and may not be claimed or banked thru the Clubhouse. Please contact the Ranger
+          Ticketing Team
+          if you need help.
+        {{else if item.isEventRadio}}
+          If you decide not to use your Event Radio(s), you will be given a Shift Radio at the beginning of your shift,
+          and is returned at the end of the shift.
+        {{else if item.isAllYouCanEat}}
+          If you decide to bank your pass, you will be given a meal pog for every 6 hour shift worked.
+        {{/if}}
+      </div>
+      <div class="mt-2">
+        {{#if item.isSubmitted}}
+          <b class="text-danger">Item has been submitted, and can no longer be adjusted through the Clubhouse.</b>
+        {{else}}
+          {{#if (or item.isBanked item.isQualified)}}
+            <button type="button" class="btn btn-primary btn-responsive"
+              {{action @setDocumentStatus item "claimed"}} disabled={{@isSavingDocumentStatus}}>
+              Claim {{item.typeHuman}}
+              {{#if @isSavingDocumentStatus}}
+                <SpinIcon/>{{/if}}
+            </button>
+          {{/if}}
+          {{#if item.isEventRadio}}
+            {{#if item.isClaimed}}
+              <button type="button" class="btn btn-primary btn-responsive"
+                {{action @setDocumentStatus item "qualified"}} disabled={{@isSavingDocumentStatus}}>
+                Release Event Radio
+                {{#if @isSavingDocumentStatus}}
+                  <SpinIcon/>{{/if}}
+              </button>
+            {{/if}}
+          {{else}}
+            {{#if item.isQualified}}
+              <div class="mx-2 my-2 h4 text-center d-sm-block d-lg-inline-block">OR</div>
+            {{/if}}
+            {{#if (or item.isClaimed item.isQualified)}}
+              <button type="button" class="btn btn-primary btn-responsive"
+                {{action @setDocumentStatus item "banked"}} disabled={{@isSavingDocumentStatus}}>
+                Bank {{item.typeHuman}}
+                {{#if @isSavingDocumentStatus}}
+                  <SpinIcon/>{{/if}}
+              </button>
+            {{/if}}
+          {{/if}}
+        {{/if}}
+      </div>
+    {{/each}}
+  </:body>
+</TicketSection>

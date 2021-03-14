@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,23 +15,36 @@
 
   {{content-for "head-footer"}}
   <style>
-    #app-loading {
-      margin: 50px auto;
+    .loading-pane {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
+
       font-weight: 500;
-      font-size: 1.5em;
+      font-size: 2em;
     }
-    #app-loading-spinner {
+
+    #app-loading {
+      min-height: 100vh;
+    }
+
+    .loading-text {
+      margin-bottom: 30px;
+    }
+
+    .loading-spinner {
       margin: 50px auto;
       border: 16px solid #f3f3f3;
       border-top: 16px solid #d2b48c;
       border-radius: 50%;
       width: 120px;
       height: 120px;
-      animation: app-spin-loading 2s linear infinite;
+      animation: loading-spin 2s linear infinite;
     }
 
-    @keyframes app-spin-loading {
+    @keyframes loading-spin {
       0% {
         transform: rotate(0deg);
       }
@@ -43,10 +56,11 @@
 
 </head>
 <body>
-<div id="app-loading">
-  The Ranger Secret Clubhouse is loading. <br>
-  Please wait.
-  <div id="app-loading-spinner"></div>
+<div id="app-loading" class="loading-pane">
+  <div class="loading-text">
+    The Ranger Secret Clubhouse is loading.
+  </div>
+  <div class="loading-spinner"></div>
 </div>
 {{content-for "body"}}
 

@@ -7,15 +7,15 @@
     {{mdy-format @ticketingInfo.wap_alpha_default_date full=true}}
     at 00:01 (one minute after midnight).
   </p>
-  <p><b>The WAP is good for the Alpha/Prospective only</b>, and does not extend to significant others or
-    traveling companions. 
+  <p class="text-danger">
+    <b>The WAP is NOT an event ticket or a vehicle pass.</b> You must provide your own Burning Man ticket.
   </p>
   <p>
-    <b>Look for an email with your WAP from Burning Man Ticketing between
-      July 21st and August 8th.</b>
+    <b>The WAP is good for YOU ONLY</b>, and does not extend to significant others or
+    traveling companions.
   </p>
-  <p class="text-danger">
-    <b>The WAP is not an event ticket. All Alphas &amp; Prospectives must provide their own event ticket.</b>
+  <p>
+    <b>Look for an email with your WAP from Burning Man Ticketing between July 21st and August 8th.</b>
   </p>
 {{else}}
   <h2>Ticketing is closed.</h2>
@@ -32,15 +32,9 @@
     {{#if this.hasFullPackage}}
       <li>
         {{#if this.ticket}}
-          {{#if (eq this.ticket.status "banked")}}
-            <b>A {{ticket-type-human ticket.type}} has been banked for this year.</b><br>
-           It will expire on {{mdy-format this.ticket.expiry_date full=true}}.
-          {{else if (eq this.ticket.status "qualified")}}
-            <b class="text-danger">A {{ticket-type-human this.ticket.type}} has NOT BEEN CLAIMED for this year.</b><br>
-            The ticket will automatically be banked and will expire on {{mdy-format this.ticket.expiry_date full=true}}.
-          {{else if (or (eq this.ticket.type "staff_credential") (eq this.ticketPackage.delivery.method "will_call"))}}
+          {{#if (or this.ticket.isStaffCredenital this.usingWillCall)}}
             <b class="text-success">A {{ticket-type-human this.ticket.type}} will be held at
-              {{if (eq this.ticket.type "staff_credential") "Staff Credentialing" "Will Call"}}.</b><br>
+              {{if this.usingStaffCredential "Staff Credentialing" "Will Call"}}.</b><br>
             The ticket will be under your name "{{@person.first_name}} {{@person.last_name}}".<br>
             {{#if this.usingStaffCredential}}
               Your Staff Credential acts as your WAP.<br>
@@ -64,10 +58,23 @@
               mailing address when paying for your ticket.
             </p>
           {{/if}}
+        {{else if this.ticketNotClaimed}}
+          <b class="text-danger">A ticket has NOT BEEN CLAIMED for this year.</b><br>
+          The ticket(s) will automatically be banked.
         {{else}}
           <b>No qualifying, submitted, or banked tickets for this year were found.</b>
         {{/if}}
       </li>
+      {{#if this.bankedItems}}
+        <li class="mt-2">
+          {{pluralize this.bankedItems.length "item"}} will be banked:
+          <ul>
+          {{#each this.bankedItems as |item|}}
+            <li>{{item.typeHuman}} expires after {{mdy-format item.expiry_date}}</li>
+          {{/each}}
+          </ul>
+        </li>
+      {{/if}}
 
       <li class="mt-2">
         {{#if this.usingStaffCredential}}
@@ -82,10 +89,10 @@
             <b class="text-success">A Vehicle Pass will be mailed to:</b><br>
             <p class="mt-2 ml-3">
               {{@person.first_name}} {{@person.last_name}}<br>
-              {{this.delivery.street}}<br>
-              {{this.delivery.city}} {{this.delivery.state}} {{this.delivery.postal_code}} {{this.delivery.country}}
+              {{this.address.street}}<br>
+              {{this.address.city}} {{this.address.state}} {{this.address.postal_code}} {{this.address.country}}
             </p>
-            {{#if (and this.ticket  (eq this.ticket.type "reduced_price_ticket") (not-eq this.ticket.status "banked"))}}
+            {{#if ticket.isReducedPriceTicket}}
               <p>
                 <span class="text-danger">The address above will NOT be used for your event ticket.</span>
                 The Burning Man Ticketing website will ask again for the address which will be used
@@ -100,7 +107,7 @@
             Please contact {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.
           {{/if}}
         {{else if this.haveVP}}
-          <span class="text-muted">The Vehicle Pass was not claimed.</span>
+          {{fa-icon "times" color="danger"}} The Vehicle Pass was not claimed.
         {{else}}
           <span class="text-muted">No Vehicle Pass was qualified for.</span>
         {{/if}}
@@ -120,7 +127,7 @@
           <br>
           An email will be sent out in the coming weeks which contains your WAP.
         {{else}}
-          <span class="text-muted">No Work Access Pass was claimed.</span>
+          {{fa-icon "times" color="danger"}} No Work Access Pass was claimed.
         {{/if}}
       </li>
     {{/unless}}
@@ -154,8 +161,8 @@
       </p>
     {{else if this.ticket.access_date}}
       <p>
-        You may pick up the Staff Credential on or after the day you are allowed to <b>enter the event - {{mdy-format
-              this.ticket.access_date full=true}} @ 00:01.</b>
+        You may pick up the Staff Credential on or after the day you are allowed to
+        <b>enter the event - {{mdy-format this.ticket.access_date full=true}} @ 00:01.</b>
       </p>
       <p>
         <b class="text-danger">Early pickups are not allowed</b> unless you have a separate Work Access Pass good for
@@ -167,10 +174,10 @@
       </p>
     {{else}}
       <p>
-        You may pick up the Staff Credential on or after the day you are allowed to enter the event. <b
-              class="text-danger">However, we forgot to set the entry date on your ticket. Please contact Ranger
-        Ticketing at {{mail-to @ticketingInfo.ranger_ticketing_email}}
-        to get this sorted out.</b>
+        You may pick up the Staff Credential on or after the day you are allowed to enter the event.
+        <b class="text-danger">However, we forgot to set the entry date on your ticket. Please contact Ranger
+          Ticketing at {{mail-to @ticketingInfo.ranger_ticketing_email}}
+          to get this sorted out.</b>
       </p>
       <p>
         Once the date is fixed, your Staff Credential will be available for pickup at the following locations on the
@@ -185,6 +192,5 @@
           about this problem - {{mail-to @ticketingInfo.ranger_ticketing_email}}</b>
       {{/if}}
     </p>
-
   {{/if}}
 {{/if}}

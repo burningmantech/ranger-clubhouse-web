@@ -23,7 +23,7 @@
 
 
 {{#if this.badRecords}}
-  <table class="table table-sm table-hover table-box">
+  <table class="table table-width-auto table-sm table-hover table-striped table-box">
     <caption class="text-danger">{{pluralize this.badRecords.length "item"}} with errors</caption>
     <thead>
       <tr>
@@ -93,7 +93,12 @@
         <td>{{rec.person.last_name}}</td>
         <td>{{mail-to rec.person.email}}</td>
         <td>{{rec.delivery_type}}</td>
-        <td>{{rec.trsNote}}</td>
+        <td>
+          {{rec.trsNote}}
+          {{#if rec.has_error}}
+            <div class="text-danger">{{rec.error}}</div>
+          {{/if}}
+        </td>
       </tr>
     {{/each}}
   </tbody>

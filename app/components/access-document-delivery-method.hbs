@@ -1,0 +1,14 @@
+<b>{{@year}} Delivery</b>
+{{#if @delivery.isNew}}
+  <b class="text-danger">NONE</b> - No method has been given by the user or set by ticketing administrators.
+{{else if @delivery.isDeliveryMail}}
+  <b>US MAIL</b>
+  {{#if @delivery.haveAddress}}
+    {{@delivery.street}}, {{@delivery.city}},
+    {{@delivery.state}} {{@delivery.postal_code}} {{@delivery.country}}
+  {{else}}
+    <b class="text-danger">No mailing address has been entered.</b>
+  {{/if}}
+{{else if @delivery.isDeliveryWillCall}}
+  <b>Will-Call</b>
+{{/if}}

@@ -1,6 +1,6 @@
-<h3>Access Documents</h3>
+<h3>Items (aka Access Documents &amp; Stuff)</h3>
 <div class="mb-2">
-  Showing {{pluralize this.documents.length (if this.isShowingAll "all access document" "current access document")}}
+  Showing {{pluralize this.documents.length (if this.isShowingAll "ALL items" "current items")}}
 </div>
 <table class="table  table-striped table-hover table-width-auto">
   <thead>
@@ -8,18 +8,27 @@
     <th>ID</th>
     <th>Type</th>
     <th>Status</th>
+    <th>Delivery</th>
     <th>Access Date</th>
     <th>Source Year</th>
     <th>Expires in</th>
-    <th>WAP SO Name</th>
   </tr>
   </thead>
   <tbody>
   {{#each this.documents as |document|}}
     <tr>
       <td><a href {{action this.editAccessDocument document}}>RAD-{{document.id}}</a></td>
-      <td>{{document.typeHuman}}</td>
+      <td>
+        {{document.typeHuman}}
+        {{#if document.isEventRadio}}
+          (count {{document.item_count}})
+        {{else if document.isWAPSO}}
+          <br>
+          for {{if document.name document.name "not given"}}
+        {{/if}}
+      </td>
       <td>{{document.status}}</td>
+      <td>{{document.delivery_method}}</td>
       <td>
         {{#if document.access_any_time}}
           Any
@@ -35,13 +44,6 @@
       <td class="text-right">
         {{document.expiryYear}}
       </td>
-      <td>
-        {{#if document.name}}
-          {{document.name}}
-        {{else}}
-          -
-        {{/if}}
-      </td>
     </tr>
   {{else}}
     <tr>
@@ -51,40 +53,34 @@
   </tbody>
 </table>
 <p>
-  Delivery Method:
-  {{#if this.delivery}}
-    {{#if (eq this.delivery.method "will_call")}}
-      Will Call
-    {{else}}
-      By mail - {{this.delivery.street}}, {{this.delivery.city}}, {{this.delivery.state}}
-      , {{this.delivery.postal_code}} {{this.delivery.country}}
-    {{/if}}
-  {{else}}
-    No method supplied, defaulting to Will Call.
-  {{/if}}
+  <AccessDocumentDeliveryMethod @year={{this.year}} @delivery={{this.delivery}} />
 </p>
-
 <p>
-  <button type="button" class="btn btn-primary" {{action this.newAccessDocument}}>{{fa-icon "plus"}} New Access
-    Document
+  <button type="button" class="btn btn-primary" {{action this.newAccessDocument}}>
+    {{fa-icon "plus"}} New Item
   </button>
-  <button type="button" class="btn btn-secondary" {{action this.editDelivery}}>{{fa-icon "edit"}} Edit Delivery
-    Method
+
+  <button type="button" class="btn btn-secondary" {{action this.editDelivery}} disabled={{this.delivery.isReloading}}>
+    {{#if this.delivery.isReloading}}
+      <LoadingIndicator @text="Loading"/>
+    {{else}}
+      Edit Delivery Method
+    {{/if}}
   </button>
-  <button type="button" class="btn btn-secondary" {{action this.showAction}}
-          disabled={{this.isLoading}}>
+  <button type="button" class="btn btn-secondary ml-4" {{action this.showAction}} disabled={{this.isLoading}}>
     {{#if this.isLoading}}
       <LoadingIndicator @text="Loading"/>
     {{else}}
-      Show {{if this.isShowingAll "Current" "All"}} Documents
+      Show {{if this.isShowingAll "Current" "All"}} Items
     {{/if}}
   </button>
+
 </p>
 <p>
   <LinkTo @route="person.tickets" class="ml-2">View {{this.person.callsign}}'s Tickets &amp; Stuff page</LinkTo>
 </p>
 {{#if this.entry}}
-  <ModalDialog @title={{concat (if entry.isNew "Create A New" "Edit ") " Access Document For " person.callsign}}
+  <ModalDialog @title="{{if entry.isNew "Create A New" "Edit"}} Item For {{this.person.callsign}}"
                as |Modal|>
     <ChForm @formId="entry" @formFor={{this.entry}} @onSubmit={{this.saveAccessDocument}}
             @onCancel={{this.cancelAccessDocument}} as |f|>
@@ -95,26 +91,28 @@
           <f.input @name="source_year" @type="select" @options={{this.yearOptions}} @label="Source Year"/>
           <f.input @name="expiry_year" @type="select" @options={{this.yearOptions}} @label="Good Through"/>
 
-          <f.input @name="admission_date" @label="Access Date" @type="select" @options={{this.admissionDateOptions}}
-                   @disabled={{or (eq f.model.type "reduced_price_ticket") (eq f.model.type "gift_ticket")
-                                  (eq f.model.type "vehicle_pass")}}
-                   @grid="col-auto"/>
+          {{# if (eq f.model.type "event_radio")}}
+            <f.input @name="item_count" @label="Radio Count" @type="text" @size={{5}} @grid="col-auto"/>
+          {{else if (or (eq f.model.type "work_access_pass") (eq f.model.type "work_access_pass_so") (eq f.model.type "staff_credential"))}}
+            <f.input @name="admission_date" @label="Access Date" @type="select"
+                     @options={{this.admissionDateOptions}} @grid="col-auto"/>
+          {{/if}}
         </div>
-        <div class="form-row">
-          <f.input @name="name" @label="WAP SO Name" @type="text" @size=40 @grid="col-auto" @disabled={{not-eq
-                  f.model.type "work_access_pass_so"}}/>
-        </div>
+        {{#if (or
+                      (eq f.model.type "reduced_price_ticket")
+                      (eq f.model.type "vehicle_pass")
+                      (eq f.model.type "gift_ticket")
+              )}}
+          <p>
+            Current delivery method: (might be overridden by claimed/submitted Staff Credential)<br>
+            <AccessDocumentDeliveryMethod @year={{this.year}} @delivery={{this.delivery}} />
+          </p>
+        {{/if}}
         {{#unless entry.isNew}}
-          <div class="form-row">
-            <label class="col-form-label">Last Modified:</label>
-            <div class="mt-2 col-auto">
-              {{entry.modified_date}}
-            </div>
-            <label class="col-form-label">Created:</label>
-            <div class="mt-2 col-auto">
-              {{entry.create_date}}
-            </div>
-          </div>
+          <p>
+            Last Modified: {{this.entry.modified_date}}
+            Created: {{this.entry.create_date}}
+          </p>
 
           <div class="form-row mb-4">
             <label class="col-form-label">Comments:</label>
@@ -145,38 +143,41 @@
   </ModalDialog>
 {{/if}}
 
-{{#if this.deliveryEntry}}
-  <ModalDialog @title={{concat "Edit Delivery Method for " person.callsign}} as |Modal|>
-    <ChForm @formId="delivery" @formFor={{this.deliveryEntry}}
+
+{{#if this.isEditingDelivery}}
+  <ModalDialog @title="Edit Delivery Method for {{this.person.callsign}}" as |Modal|>
+    <ChForm @formId="delivery" @formFor={{this.delivery}}
             @onSubmit={{this.saveDelivery}}
             @onCancel={{this.cancelDelivery}} as |f|>
       <Modal.body>
+        <p>
+          When the access documents are exported, the delivery method and mailing address will be attached at that time.
+        </p>
         <div class="form-row">
-          <f.input @name="method" @type="select" @options={{this.methodOptions}} @label="Type" @grid="col-auto"/>
+          <f.input @name="method" @label="Method" @type="select" @options={{this.deliveryMethodOptions}}
+                   @grid="col-auto"/>
         </div>
 
-        <div class="form-row mb-2">
-          <div class="col">
-            Note: the mailing address will be retain but not used if the method is set to Will Call.
+        {{#if (eq f.model.method "mail")}}
+          <div class="form-row">
+            <f.input @name="street" @label="Street" @size={{45}} @maxlength={{100}} @grid="col-lg-auto col-sm-6"/>
           </div>
-        </div>
-        <div class="form-row">
-          <f.input @name="street" @label="Street" @grid="col-lg-auto col-sm-6"/>
-        </div>
-        <div class="form-row">
-          <f.input @name="city" @label="City" @grid="col-sm-5 col-lg-4"/>
-          <f.input @name="state" @label="State" @type="select" @options={{this.stateOptions}}
-                   @grid="col-sm-5 col-lg-auto"/>
-          <f.input @name="postal_code" @label="Zip Code" @grid="col-sm-5 col-lg-auto"/>
-        </div>
+          <div class="form-row">
+            <f.input @name="city" @label="City" @size={{25}} @maxlength={{100}} @grid="col-sm-5 col-lg-4"/>
+            <f.input @name="state" @label="State" @type="select" @options={{this.stateOptions}}
+                     @grid="col-sm-5 col-lg-auto"/>
+            <f.input @name="postal_code" @label="Zip Code" @size={{10}} @grid="col-sm-5 col-lg-auto"/>
+          </div>
+        {{/if}}
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
-        <f.submit @label="Update" @disabled={{this.isSubmitting}} />
-        <f.cancel @disabled={{this.isSubmitting}} />
-        {{#if this.isSubmitting}}
+        <f.submit @label="Update" @disabled={{this.delivery.isSaving}} />
+        <f.cancel @disabled={{this.delivery.isSaving}} />
+        {{#if this.delivery.isSaving}}
           <LoadingIndicator/>
         {{/if}}
       </Modal.footer>
     </ChForm>
   </ModalDialog>
 {{/if}}
+

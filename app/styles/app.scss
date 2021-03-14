@@ -135,6 +135,13 @@ main {
   padding: 10px 20px;
 }
 
+@include media-breakpoint-down(md) {
+  // Reduce padding on small screens.
+  main {
+    padding: 5px 10px;
+  }
+}
+
 .table-fixed {
   table-layout: fixed;
 }
@@ -277,10 +284,16 @@ ul.nav-pills li {
 }
 
 .card-header {
-  font-weight: bold;
+  font-weight: 500;
 
-  button {
+  button, a {
     text-align: left !important;
+  }
+
+  a {
+    display: block;
+    margin: 10px;
+    font-size: 1.2rem;
   }
 }
 
@@ -317,32 +330,6 @@ legend {
 
 .year-select {
   font-size: 1.4em;
-}
-
-.loading-pane {
-  margin: 25px auto;
-}
-
-.loading-message {
-  text-align: center;
-  font-size: 1.5em;
-  font-weight: bold;
-}
-
-.loading-spinner {
-  height: 64px;
-  width: 64px;
-  margin: 0 auto;
-  background-image: url("images/spinner.gif");
-  background-size: cover;
-}
-
-.loading-spinner-inline {
-  display: inline-block;
-  height: 14px;
-  width: 14px;
-  background-image: url("images/spinner.gif");
-  background-size: cover;
 }
 
 /*
@@ -621,8 +608,8 @@ caption {
 
 .person-manage-header {
   background-color: #f4f4f4 !important;
-  margin: -10px -20px 15px -20px;  // Pull the header back so no gaps appear
-  padding: 10px 20px;  // Realign text with body
+  margin: -10px -20px 15px -20px; // Pull the header back so no gaps appear
+  padding: 10px 20px; // Realign text with body
   border-bottom: 1px solid #e0e0e0;
 }
 
@@ -683,7 +670,7 @@ caption {
   }
 }
 
-ul.no-indent {
+ul.no-indent, ol.no-indent {
   margin-left: 0;
   margin-right: 0;
   padding-left: 20px;
@@ -700,4 +687,8 @@ ul.no-indent {
 
 .overflow-y-auto {
   overflow-y: auto;
+}
+
+.nav-text {
+  padding: $nav-link-padding-y 0;
 }

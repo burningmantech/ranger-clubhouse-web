@@ -7,7 +7,7 @@ export default class PersonTicketsRoute extends Route {
     return RSVP.hash({
       ticketingInfo: this.ajax.request('ticketing/info')
                 .then((results) => results.ticketing_info ),
-      ticketPackage: this.ajax.request(`ticketing/${person.id}/package`)
+      ticketingPackage: this.ajax.request(`ticketing/${person.id}/package`)
                 .then((results) => results.package)
     });
   }

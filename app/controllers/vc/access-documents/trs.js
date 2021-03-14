@@ -1,25 +1,27 @@
 import Controller from '@ember/controller';
-import { action, set } from '@ember/object';
-import { isBlank } from '@ember/utils';
+import {action, set} from '@ember/object';
+import {isBlank, isEmpty} from '@ember/utils';
 import moment from 'moment';
-import { tracked  } from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
+import {GIFT_TICKET, STAFF_CREDENTIAL, RPT, WAP, WAPSO, VEHICLE_PASS} from 'clubhouse/models/access-document';
+import {ALPHA, PROSPECTIVE} from 'clubhouse/constants/person_status';
 
 const SHORT_TYPES = {
-  gift_ticket: 'GIFT',
-  reduced_price_ticket: 'RPT',
-  staff_credential: 'SC',
-  vehicle_pass: 'VP',
-  work_access_pass_so: 'SOWAP',
-  work_access_pass: 'WAP'
+  [GIFT_TICKET]: 'GIFT',
+  [RPT]: 'RPT',
+  [STAFF_CREDENTIAL]: 'SC',
+  [VEHICLE_PASS]: 'VP',
+  [WAPSO]: 'SOWAP',
+  [WAP]: 'WAP',
 };
 
 const TRS_COLUMN = {
-  'staff_credential': 'sc',
-  'reduced_price_ticket': 'rpt',
-  'gift_ticket': 'gift_ticket',
-  'vehicle_pass': 'vp',
-  'work_access_pass': 'wap',
-  'work_access_pass_so': 'wap'
+  [STAFF_CREDENTIAL]: 'sc',
+  [RPT]: 'rpt',
+  [GIFT_TICKET]: GIFT_TICKET,
+  [VEHICLE_PASS]: 'vp',
+  [WAP]: 'wap',
+  [WAPSO]: 'wap'
 };
 
 const PAID_EXPORT_FORMAT = [
@@ -102,6 +104,14 @@ const UNPAID_EXPORT_FORMAT = [
   ['Request: Transferrable Gift Vehicle Pass', 'xfer_vehicle_pass']
 ];
 
+// Filter Options
+const STAFF_CREDENTIAL_VP = 'staff_credential_vp';
+const GIFT_TICKET_VP = 'gift_ticket_vp';
+
+const WAP_RANGER = 'work_access_pass_ranger';
+const WAP_PNV = 'work_access_pass_pnv';
+const WAP_ALL = 'work_access_pass_all';
+
 export default class VcAccessDocumentsTrsController extends Controller {
   @tracked filter = 'all';
   @tracked accessDocuments = [];
@@ -114,16 +124,16 @@ export default class VcAccessDocumentsTrsController extends Controller {
 
   filterOptions = [
     ['All', 'all'],
-    ['Staff Credentials', 'staff_credential'],
-    ['Staff Credentials+VP', 'staff_credential_vp'],
-    ['Reduced-Price Tickets', 'reduced_price_ticket'],
-    ['Vehicle Passes', 'vehicle_pass'],
-    ['Work Access Passes Ranger', 'work_access_pass_ranger'],
-    ['Work Access Passes SO', 'work_access_pass_so'],
-    ['Work Access Passes PNV', 'work_access_pass_pnv'],
-    ['Work Access Passes All', 'work_access_pass_all'],
-    ['Gift Tickets', 'gift_ticket'],
-    ['Gift Tickets+VP', 'gift_ticket_vp']
+    ['Staff Credentials', STAFF_CREDENTIAL],
+    ['Staff Credentials+VP', STAFF_CREDENTIAL_VP],
+    ['Reduced-Price Tickets', RPT],
+    ['Vehicle Passes', VEHICLE_PASS],
+    ['Work Access Passes Ranger', WAP_RANGER],
+    ['Work Access Passes SO', WAPSO],
+    ['Work Access Passes PNV', WAP_PNV],
+    ['Work Access Passes All', WAP_ALL],
+    ['Gift Tickets', GIFT_TICKET],
+    ['Gift Tickets+VP', GIFT_TICKET_VP]
   ];
 
   @action
@@ -151,7 +161,7 @@ export default class VcAccessDocumentsTrsController extends Controller {
     this.people.forEach((human) => {
       human.documents.forEach((document) => {
         if (document.has_error) {
-          records.push({ person: human.person, document });
+          records.push({person: human.person, document});
         }
       })
     });
@@ -172,28 +182,28 @@ export default class VcAccessDocumentsTrsController extends Controller {
         let trsColumn = '', dateInfo = '';
 
         switch (doc.type) {
-        case 'staff_credential':
-        case 'work_access_pass':
-        case 'work_access_pass_so':
-          if (doc.access_any_time || doc.access_date == null) {
-            dateInfo = ' Anytime';
-            trsColumn = 'anytime';
-          } else {
-            dateInfo = moment(doc.access_date).format(' ddd MM/D');
-            trsColumn = moment(doc.access_date).format('MMDD');
-          }
-          trsColumn = TRS_COLUMN[doc.type] + '_' + trsColumn;
-          break;
+          case STAFF_CREDENTIAL:
+          case WAP:
+          case WAPSO:
+            if (doc.access_any_time || isEmpty(doc.access_date)) {
+              dateInfo = ' Anytime';
+              trsColumn = 'anytime';
+            } else {
+              dateInfo = moment(doc.access_date).format(' ddd MM/D');
+              trsColumn = moment(doc.access_date).format('MMDD');
+            }
+            trsColumn = TRS_COLUMN[doc.type] + '_' + trsColumn;
+            break;
 
-        default:
-          trsColumn = TRS_COLUMN[doc.type];
-          break;
+          default:
+            trsColumn = TRS_COLUMN[doc.type];
+            break;
         }
 
         // Internal notes gets document numbers
         let note = `${shortType}${dateInfo} - RAD-${doc.id}`;
 
-        if (doc.type === "work_access_pass_so") {
+        if (doc.type === WAPSO) {
           note += ` - for ${doc.name}`;
         }
 
@@ -227,31 +237,33 @@ export default class VcAccessDocumentsTrsController extends Controller {
 
     if (filter === 'all') {
       return this.accessDocuments;
-    } else if (filter === 'work_access_pass_pnv') {
-      return this.accessDocuments.filter((r) =>  r.type === 'work_access_pass' && (r.person.status === 'alpha' || r.person.status === 'prospective'));
-    } else if (filter === 'work_access_pass_ranger') {
-      return this.accessDocuments.filter((r) =>  r.type === 'work_access_pass' && r.person.status !== 'alpha' && r.person.status !== 'prospective');
-    } else if (filter === 'work_access_pass_all') {
-      return this.accessDocuments.filter((r) =>  r.type === 'work_access_pass' || r.type === 'work_access_pass_so');
-    } else if (filter === 'staff_credential_vp' || filter === 'gift_ticket_vp') {
+    } else if (filter === WAP_PNV) {
+      return this.accessDocuments.filter((r) => r.type === WAP && (r.person.status === ALPHA || r.person.status === PROSPECTIVE));
+    } else if (filter === WAP_RANGER) {
+      return this.accessDocuments.filter((r) => r.type === WAP && r.person.status !== ALPHA && r.person.status !== PROSPECTIVE);
+    } else if (filter === WAP_ALL) {
+      return this.accessDocuments.filter((r) => r.type === WAP || r.type === WAPSO);
+    } else if (filter === STAFF_CREDENTIAL_VP || filter === GIFT_TICKET_VP) {
       const rows = [];
-      const isSC = (filter === 'staff_credential_vp');
+      const isSC = (filter === STAFF_CREDENTIAL_VP);
 
       this.people.forEach((person) => {
-        let tickets = person.documentTypes[(isSC ? 'staff_credential' : 'gift_ticket')] || [];
-        let vp = person.documentTypes['vehicle_pass'] || [];
+        let tickets = person.documentTypes[(isSC ? STAFF_CREDENTIAL : GIFT_TICKET)] || [];
+        let vp = person.documentTypes[VEHICLE_PASS] || [];
 
         tickets = tickets.filter((s) => !s.submitted);
-        if (tickets.length == 0) {
+        if (!tickets.length) {
           return;
         }
         vp = vp.filter((v) => !v.submitted);
-        if (vp.length == 0) {
+        if (!vp.length) {
           return;
         }
 
-        const documents = tickets.concat(vp), notes = [ ];
-        documents.forEach((row) => { notes.push(row.trsNote) });
+        const documents = tickets.concat(vp), notes = [];
+        documents.forEach((row) => {
+          notes.push(row.trsNote)
+        });
 
         rows.push({
           person: person.person,
@@ -290,7 +302,7 @@ export default class VcAccessDocumentsTrsController extends Controller {
     row.first_name = person.first_name;
     row.last_name = person.last_name;
     row.full_name = `${person.first_name} ${person.last_name}`;
-    row.email =  person.email;
+    row.email = person.email;
     row.project_name = `Ranger ${person.callsign}`;
   }
 
@@ -300,15 +312,15 @@ export default class VcAccessDocumentsTrsController extends Controller {
     const isRPT = (this.filter === 'reduced_price_ticket');
     let rows;
 
-    if (this.filter === 'staff_credential_vp'
-    || this.filter === 'gift_ticket_vp') {
+    if (this.filter === STAFF_CREDENTIAL_VP
+      || this.filter === GIFT_TICKET_VP) {
       rows = [];
       records.forEach((rec) => {
         const person = rec.person;
         const documents = rec.documents;
         let delivery_method;
 
-        if (this.filter === 'staff_credential_vp') {
+        if (this.filter === STAFF_CREDENTIAL_VP) {
           delivery_method = 'Credential Pick Up';
         } else {
           delivery_method = (documents[0].delivery_type === 'mail' ? 'USPS' : 'Credential Pick Up' /*'Will Call'*/);
@@ -342,39 +354,39 @@ export default class VcAccessDocumentsTrsController extends Controller {
         }
       });
     } else {
-       rows = records.map((doc) => {
+      rows = records.map((doc) => {
         const person = doc.person;
-        const row = { note: doc.trsNote };
+        const row = {note: doc.trsNote};
 
         this._fillName(person, row);
 
         switch (doc.type) {
-        case 'reduced_price_ticket':
-        case 'gift_ticket':
-          row.delivery_method = doc.delivery_type === 'mail' ? 'USPS' : 'Will Call';
-          break;
+          case RPT:
+          case GIFT_TICKET:
+            row.delivery_method = doc.delivery_type === 'mail' ? 'USPS' : 'Will Call';
+            break;
 
-        case 'vehicle_pass':
-          if (doc.has_staff_credential) {
+          case VEHICLE_PASS:
+            if (doc.has_staff_credential) {
+              row.delivery_method = 'Credential Pick Up';
+            } else {
+              row.delivery_method = (doc.delivery_type === 'mail') ? 'USPS' : 'Credential Pick Up';
+            }
+            break;
+
+          case STAFF_CREDENTIAL:
             row.delivery_method = 'Credential Pick Up';
-          } else {
-            row.delivery_method = (doc.delivery_type === 'mail') ? 'USPS' : 'Credential Pick Up';
-          }
-          break;
+            break;
 
-        case 'staff_credential':
-          row.delivery_method = 'Credential Pick Up';
-          break;
-
-        case 'work_access_pass':
-        case 'work_access_pass_so':
-          row.delivery_method = 'Print At Home';
-          break;
+          case WAP:
+          case WAPSO:
+            row.delivery_method = 'Print At Home';
+            break;
         }
 
         row[doc.trsColumn] = 1;
 
-        if ((doc.type === 'gift_ticket' || doc.type === 'vehicle_pass') && doc.delivery_type === 'mail') {
+        if ((doc.type === GIFT_TICKET || doc.type === VEHICLE_PASS) && doc.delivery_type === 'mail') {
           const address = doc.delivery_address;
           row.address1 = address.street;
           row.city = address.city;
@@ -394,12 +406,12 @@ export default class VcAccessDocumentsTrsController extends Controller {
     const format = isRPT ? PAID_EXPORT_FORMAT : UNPAID_EXPORT_FORMAT;
 
     const columns = format.map((r) => {
-      return { title: r[0], key: r[1] };
+      return {title: r[0], key: r[1]};
     });
 
     const date = moment().format('YYYY-MM-DD-HH-mm');
 
-    this.house.downloadCsv(`trs-${this.filter.replace(/_/g,'-')}-${date}.csv`, columns, rows);
+    this.house.downloadCsv(`trs-${this.filter.replace(/_/g, '-')}-${date}.csv`, columns, rows);
   }
 
   @action
@@ -422,7 +434,7 @@ export default class VcAccessDocumentsTrsController extends Controller {
 
     this.modal.confirm('Confirm mask as submitted', `Are you sure you want to mark the ${itemCount} item(s) as submitted?`, () => {
       this.isSubmitting = true;
-      this.ajax.request('access-document/mark-submitted', { method: 'POST', data: { ids } }).then(() => {
+      this.ajax.request('access-document/mark-submitted', {method: 'POST', data: {ids}}).then(() => {
         this.toast.success('Access documents have been successfully marked as submitted.');
         this.isSubmitting = false;
         this.viewRecords.forEach((rec) => {

@@ -1,11 +1,11 @@
 {{#if (eq @ticketingInfo.period "announce")}}
-  <TicketingAnnounce @ticketingInfo={{@ticketingInfo}} @ticketPackage={{@ticketPackage}} @person={{@person}} />
+  <TicketingAnnounce @ticketingInfo={{@ticketingInfo}} @ticketPackage={{this.ticketPackage}} @person={{@person}} />
 {{else if (eq @ticketingInfo.period "open")}}
-  <TicketingOpen @ticketingInfo={{@ticketingInfo}} @ticketPackage={{@ticketPackage}} @person={{@person}} />
+  <TicketingOpen @ticketingInfo={{@ticketingInfo}} @ticketPackage={{this.ticketPackage}} @person={{@person}} />
 {{else if (eq @ticketingInfo.period "closed")}}
-  <TicketingClosed @ticketingInfo={{@ticketingInfo}} @ticketPackage={{@ticketPackage}} @person={{@person}} />
+  <TicketingClosed @ticketingInfo={{@ticketingInfo}} @ticketPackage={{this.ticketPackage}} @person={{@person}} />
 {{else if (eq @ticketingInfo.period "offseason")}}
-  <TicketingOffseason @ticketingInfo={{@ticketingInfo}} @ticketPackage={{@ticketPackage}} @person={{@person}} />
+  <TicketingOffseason @ticketingInfo={{@ticketingInfo}} @ticketPackage={{this.ticketPackage}} @person={{@person}} />
 {{else}}
   Uh oh, I do not understand the ticketing period status [{{@ticketingInfo.period}}]
 {{/if}}

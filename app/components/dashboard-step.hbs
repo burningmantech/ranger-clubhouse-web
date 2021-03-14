@@ -90,60 +90,7 @@
       <PersonMissingBpguid/>
     {{/if}}
     {{#if @step.isTicketing}}
-      {{#if @step.ticketingOpen }}
-        Visit
-        <LinkTo @route="me.tickets" disabled={{@isNotUser}}>Me &gt; Tickets &amp; Stuff</LinkTo>
-        to claim or adjust your item(s).
-      {{else}}
-        Visit
-        <LinkTo @route="me.tickets">Me &gt; Tickets &amp; Stuff</LinkTo>
-        if you have questions or concerns.
-      {{/if}}
-      <div class="mt-1">
-        {{#if @step.tickets.claimed}}
-          You have claimed:
-          <ul>
-            {{#each @step.tickets.claimed as |ticket|}}
-              <li>
-                {{#if (eq ticket.type "work_access_pass_so")}}
-                  Significant Other WAP(s) for {{pluralize ticket.count "person"}}:
-                  {{#each ticket.names as |name idx|}}
-                    {{~if idx ", "}}{{name}}
-                  {{~/each}}
-                {{else if (eq ticket.type "work_access_pass")}}
-                  A Work Access Pass for yourself
-                {{else}}
-                  A {{ticket-type-human ticket.type}}
-                  {{#if (eq ticket.type "staff_credential")}}
-                    which is also your Work Access Pass.
-                  {{/if}}
-                {{/if}}
-              </li>
-            {{/each}}
-          </ul>
-        {{else}}
-          <b class="text-danger">
-            {{#if @step.isTicketingClosed}}
-              No items were claimed.
-            {{else}}
-              No items have been claimed.
-            {{/if}}
-          </b>
-        {{/if}}
-      </div>
-
-      {{#if @step.tickets.banked}}
-        <div class="mt-1">
-          You have banked:
-          <ul>
-            {{#each @step.tickets.banked as |ticket|}}
-              <li>
-                A {{ticket-type-human ticket.type}} expires after the {{moment-format ticket.expiry_date "YYYY"}} event.
-              </li>
-            {{/each}}
-          </ul>
-        </div>
-      {{/if}}
+      <DashboardStepTicketing @step={{@step}} @isNotUser={{@isNotUser}} />
     {{/if}}
   </div>
   {{#if (and @includePhoto (eq @photoPosition "inside"))}}
