@@ -21,14 +21,25 @@
       <s.link @route="person.password" @title="Change Password" @icon="key" @iconType="s"/>
     {{/if}}
   </s.group>
+  {{#if  (has-role "edit-bmids" "edit-access-docs")}}
+    <s.group @title="PRE-PLAYA">
+      {{#if (has-role "edit-access-docs")}}
+        <s.link @route="person.access-documents" @title="Items" @icon="ticket-alt" @iconType="s"/>
+      {{/if}}
+      {{#if (has-role "edit-bmids")}}
+        <s.link @route="person.bmid" @title="BMID" @icon="id-badge" @iconType="s"/>
+      {{/if}}
+    </s.group>
+  {{/if}}
+
 
   {{#if (has-role "admin" "vc" "intake")}}
     <s.group @title="Vol Coords">
-      {{#if (has-role "intake")}}
-        <s.link @route="person.unified-flagging" @title="Unified Flagging" @icon="flag"/>
-      {{/if}}
       {{#if (has-role "admin" "vc")}}
         <s.link @route="person.dashboard" @title="Dashboard" @icon="columns" @iconType="s"/>
+      {{/if}}
+      {{#if (has-role "intake")}}
+        <s.link @route="person.unified-flagging" @title="Unified Flagging" @icon="flag"/>
       {{/if}}
       {{#if (has-role "admin")}}
         <s.link @route="person.external-ids" @title="External IDs" @icon="external-link-alt" @iconType="s"/>
@@ -36,16 +47,6 @@
     </s.group>
   {{/if}}
 
-  {{#if  (has-role "edit-bmids" "edit-access-docs")}}
-    <s.group @title="PRE-PLAYA">
-      {{#if (has-role "edit-bmids")}}
-        <s.link @route="person.bmid" @title="BMID" @icon="id-badge" @iconType="s"/>
-      {{/if}}
-      {{#if (has-role "edit-access-docs")}}
-        <s.link @route="person.access-documents" @title="Access Documents" @icon="ticket-alt" @iconType="s"/>
-      {{/if}}
-    </s.group>
-  {{/if}}
 
   {{#if (has-role "admin" "vc")}}
     <s.group @title="Logs">

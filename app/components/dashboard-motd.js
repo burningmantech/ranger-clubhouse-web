@@ -1,6 +1,5 @@
 import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
-import fade from 'ember-animated/transitions/fade';
 import {inject as service} from '@ember/service';
 import $ from 'jquery';
 
@@ -8,8 +7,6 @@ export default class DashboardMotdComponent extends Component {
   @service ajax;
   @service toast;
   @service house;
-
-  fadeMotdEffect = fade;
 
   constructor() {
     super(...arguments);

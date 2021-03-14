@@ -14,13 +14,14 @@ export default class MeTicketsRoute extends Route {
     return RSVP.hash({
       ticketingInfo: this.ajax.request('ticketing/info')
                 .then((results) => results.ticketing_info ),
-      ticketPackage: this.ajax.request(`ticketing/${this.session.userId}/package`)
+      ticketingPackage: this.ajax.request(`ticketing/${this.session.userId}/package`)
                 .then((results) => results.package)
     });
   }
 
   setupController(controller, model) {
-    controller.setProperties(model);
     controller.set('person', this.modelFor('me'));
+    controller.set('ticketingInfo', model.ticketingInfo);
+    controller.set('ticketingPackage', model.ticketingPackage);
   }
 }

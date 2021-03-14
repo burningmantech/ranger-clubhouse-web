@@ -1,61 +1,51 @@
 import Component from '@glimmer/component';
+import {DELIVERY_NONE} from 'clubhouse/models/access-document';
 
 export default class TicketingClosedComponent extends Component {
-   get ticket() {
-    return this.args.ticketPackage.tickets.find((ticket) => ticket.selected);
-  }
+  constructor() {
+    super(...arguments);
+    const {ticketPackage, person} = this.args;
+    const ticket = ticketPackage.tickets.find((ticket) => ticket.isUsing);
 
-  get delivery() {
-    return this.args.ticketPackage.delivery;
-  }
+    this.ticket = ticket;
+    this.usingStaffCredential = (ticket && ticket.isStaffCredential && ticket.isUsing);
+    this.usingRPT = (ticket && ticket.isReducedPriceTicket && ticket.isUsing);
 
-  get wap() {
-    return this.args.ticketPackage.wap;
-  }
+    this.bankedItems = ticketPackage.tickets.filter((t) => (t.isBanked || t.isQualified))
+      .concat(ticketPackage.appreciations.filter((t) => (t.isBanked || t.isQualified)));
 
-  get usingStaffCredential() {
-    const ticket = this.ticket;
-    return (ticket && ticket.type == 'staff_credential' && (ticket.status == 'claimed' || ticket.status == 'submitted'));
-  }
+    this.hasFullPackage = (!person.isAlpha && !person.isProspective);
 
-  get usingRPT() {
-    const ticket = this.ticket;
-    return (ticket && ticket.type == 'reduced_price_ticket' && (ticket.status == 'claimed' || ticket.status == 'submitted'));
-  }
+    this.ticketNotClaimed = !ticket && !!ticketPackage.tickets.find((t) => t.isQualified);
 
-  get usingVehiclePass() {
-    const pass = this.args.ticketPackage.vehicle_pass;
-    return (pass && (pass.status == 'claimed' || pass.status == 'submitted'));
-  }
+    const wap = ticketPackage.wap;
+    this.wap = ticketPackage.wap;
+    this.usingWAP = (wap && wap.isUsing);
 
-  get haveVP() {
-    const pass = this.args.ticketPackage.vehicle_pass;
-    return (pass && (pass.status == 'qualified' || pass.status == 'claimed' || pass.status == 'submitted'));
-  }
+    const pass = ticketPackage.vehicle_pass;
+    this.usingVehiclePass = (pass && pass.isUsing);
+    this.haveVP = (pass && (pass.isUsing || pass.isQualified));
 
-  get usingWAP() {
-    const wap = this.args.ticketPackage.wap;
-    return (wap && (wap.status == 'claimed' || wap.status == 'submitted'));
-  }
+    // Delivery method
+    let item;
+    if (ticket && ticket.isUsing) {
+      item = ticket;
+    } else if (pass && pass.isUsing) {
+      item = pass;
+    }
 
-  get hasFullPackage() {
-     const person = this.args.person;
-    return (!person.isAlpha && !person.isProspective);
-  }
+    if (item) {
+      this.usingMail = item.isDeliveryMail;
+      this.usingWillCall = item.isDeliveryWillCall;
+      this.address = item;
+      this.deliveryMethod = item.delivery_method;
+    } else {
+      this.usingMail = false;
+      this.usingWillCall = false;
+      this.address = null;
+      this.deliveryMethod = DELIVERY_NONE;
+    }
 
-  get usingMail() {
-    const delivery = this.args.ticketPackage.delivery;
-
-    return (delivery && delivery.method == 'mail');
-  }
-
-  get usingWillCall() {
-    const delivery = this.args.ticketPackage.delivery;
-    return (!delivery || delivery.method != 'mail');
-  }
-
-  // Return a list of WAP SO names
-  get wapSOList() {
-    return this.args.ticketPackage.wapso;
+    this.wapSOList = ticketPackage.wapso;
   }
 }

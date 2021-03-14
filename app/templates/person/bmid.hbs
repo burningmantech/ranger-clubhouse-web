@@ -1,6 +1,11 @@
-<h3>{{this.year}} BMID</h3>
-<p>
-  <LinkTo @route="person.access-documents" @model={{this.person.id}} class="btn btn-secondary">Access Documents</LinkTo>
-  <LinkTo @route="vc.bmid" class="btn btn-secondary">Manage BMIDs</LinkTo>
-</p>
-<BmidEdit @entry={{this.bmid}} @year={{this.year}} @admissionDateOptions={{this.admissionDateOptions}} @onSave={{this.save}} />
+<h3>{{this.year}} BMID for {{this.person.callsign}}</h3>
+<nav class="nav">
+  <div class="nav-text">Navigation:</div>
+  <LinkTo @route="person.access-documents" @model={{this.person.id}} class="nav-link">Access Documents</LinkTo>
+  <LinkTo @route="vc.bmid" class="nav-link">Manage BMIDs</LinkTo>
+</nav>
+
+<BmidEdit @entry={{this.bmid}}
+          @year={{this.year}}
+          @admissionDateOptions={{this.admissionDateOptions}}
+          @onSave={{this.save}} />

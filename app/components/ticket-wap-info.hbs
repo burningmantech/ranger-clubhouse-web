@@ -1,124 +1,100 @@
-<div class="card card-ticket" id="ticket-wap">
-  <div class="card-header p-0">
-    <button type="button" class="btn btn-link m-0" {{action @toggleCard "wap"}}>
-      {{fa-icon (if @showing.wap "minus" "plus")}} Work Access Pass For Myself
-      {{#if (eq @ticketingInfo.wap_status "none")}}
-        <span class="text-black-50">- To Be Announced</span>
-      {{else if this.usingStaffCredential}}
-        <span class="text-success d-inline-block">- Part of Staff Credential {{fa-icon "check"}}</span>
-      {{else if @wap}}
-        <span class="d-inline-block">
-          - {{ticket-status @wap.status}}
-          {{#if (eq @wap.status "claimed")}}
-            <span class="text-success">{{fa-icon "check"}}</span>
+<TicketSection @id="wap"
+               @nextAction={{@nextSection}}
+               @toggleCard={{@toggleCard}}
+               @showing={{@showing}}>
+  <:title>
+    Work Access Pass For Myself
+    {{#if this.usingStaffCredential}}
+      <TicketSectionStatus @status="claimed" @text="Part of Staff Credential"/>
+    {{else if this.wap}}
+      <TicketSectionStatus @status={{this.wap.status}} />
+    {{else if this.isStaffCredentialBanked}}
+      <TicketSectionStatus @status="none" @text="None (Staff Credential Banked)"/>
+    {{else}}
+      <TicketSectionStatus @status="none"/>
+    {{/if}}
+  </:title>
+  <:body>
+    {{#if this.wap}}
+      <p>
+        <b>
+          You {{if this.wap.isClaimed "have claimed your" "qualified for a"}} Work Access Pass which allows you
+          to enter the event
+          {{#if this.wap.access_any_time}}
+            at any time!
+          {{else}}
+            on or after {{mdy-format this.wap.access_date full=true}} @ 00:01.
           {{/if}}
-        </span>
-      {{else if this.isStaffCredentialBanked}}
-        <span class="text-black-50 d-inline-block">- None (Staff Credential Banked)</span>
-      {{else if (eq @ticket.type "staff_credential")}}
-        <span class="text-muted d-inline-block">- Part of Staff Credential</span>
+        </b>
+      </p>
+      <p>
+        All Work Access Passes are sent by email.
+      </p>
+      {{#if this.wap.isSubmitted}}
+        <p>The Work Access Pass has been submitted to the Burning Man Ticket Request System.</p>
+      {{else if this.wap.isQualified}}
+        <p>
+          Do you wish to use your Work Access Pass?
+        </p>
+        <button type="button" class="btn btn-primary btn-responsive"
+          {{action @setDocumentStatus this.wap "claimed"}} disabled={{@isSavingDocumentStatus}}>
+          Claim Work Access Pass
+          {{#if @isSavingDocumentStatus}}<SpinIcon />{{/if}}
+        </button>
       {{else}}
-        <span class="text-black-50">- None</span>
+        <p>Do you no longer need the Work Access Pass?</p>
+        <button type="button" class="btn btn-primary btn-responsive"
+          {{action @setDocumentStatus this.wap "qualified"}}  disabled={{@isSavingDocumentStatus}}>
+          Release Work Access Pass
+          {{#if @isSavingDocumentStatus}}<SpinIcon />{{/if}}
+        </button>
       {{/if}}
-    </button>
-  </div>
-  <AnimatedContainer>
-    {{#animated-if @showing.wap use=this.transition}}
-      <div class="card-body">
-        {{#if (eq @ticketingInfo.wap_status "none")}}
-          <p>Information about Work Access Passes is not yet available in the Clubhouse, please check back soon.</p>
-        {{else if @wap}}
+    {{! End of if wap }}
+    {{else if (and @ticket.isStaffCredential @ticket.isBanked (not this.wap))}}
+      <p>
+        <b class="text-danger">
+          You do not have a Work Access Pass because you have banked your Staff Credential.
+        </b>
+      </p>
+      <p>
+        If you need a separate Work Access Pass, please contact {{mail-to @ticketingInfo.ranger_ticketing_email}}
+      </p>
+    {{else if @ticket.isStaffCredential}}
+      <p>
+        <b>Your Staff Credential acts as your Work Access Pass.</b>
+      </p>
+      {{#if @ticket.isClaimed}}
+        {{#if @ticket.access_any_time}}
+          <p><b>You may enter the event at any time!</b></p>
+        {{else if @ticket.access_date}}
           <p>
-            {{#if (and (eq @ticketingInfo.wap_status "frozen") (eq @wap.status "qualified"))}}
-              You did qualify for a Work Access Pass however it was not claimed.
-            {{else}}
-              <strong>
-                You
-                {{if (eq @wap.status "claimed") "have claimed your" "qualified for a"}}
-                Work Access Pass which allows you to enter the event
-                {{#if @wap.access_any_time}}
-                  at any time!
-                {{else}}
-                  on or after {{mdy-format @wap.access_date full=true}} @ 00:01.
-                {{/if}}
-              </strong>
-            {{/if}}
+            <b>You may enter the event on or after {{mdy-format @ticket.access_date full=true}} @ 00:01.</b>
+            If you have an operational need to be on playa earlier than this date,
+            please contact your Cadre or Manager.
           </p>
-          <p>
-            All Work Access Passes are sent by email.
-          </p>
-
-          {{#if (eq @wap.status "submitted")}}
-            <p>The Work Access Pass has been submitted to the Burning Man Ticket Request System.</p>
-          {{else if (eq @ticketingInfo.wap_status "view")}}
-            <p>Information about how to claim your Work Access Pass will be available in June or early July.</p>
-          {{else if (eq @ticketingInfo.wap_status "accept")}}
-            {{#if (eq @wap.status "qualified")}}
-              <div>
-                Do you wish to use your Work Access Pass?
-              </div>
-              <button type="button" class="btn btn-primary btn-responsive btn-lg" {{action @setTicketStatus @wap "claimed"}}>
-                Claim Work Access Pass
-              </button>
-            {{else if (eq @wap.status "claimed")}}
-              <div>Do you no longer need the Work Access Pass?</div>
-              <button type="button" class="btn btn-primary btn-responsive  btn-lg" {{action @setTicketStatus @wap "qualified"}}>Release
-                Work Access Pass
-              </button>
-            {{/if}}
-          {{/if}}
-        {{! End of if wap }}
-        {{else if (and (eq @ticket.type "staff_credential") (eq @ticket.status "banked") (not @wap))}}
-          <p><strong class="text-danger">You do not have a Work Access Pass because you have banked your Staff
-            Credential.</strong>
-            If you need a separate Work Access Pass, please contact {{mail-to @ticketingInfo.ranger_ticketing_email}}
-          </p>
-        {{else if (eq @ticket.type "staff_credential")}}
-          <p>
-            <b>Your Staff Credential acts as your Work Access Pass.</b>
-          </p>
-          {{#if (eq @ticket.status "claimed")}}
-            {{#if @ticket.access_any_time}}
-              <p><b>You may enter the event at any time!</b></p>
-            {{else if @ticket.access_date}}
-              <p><strong>You may enter the event on or after {{mdy-format @ticket.access_date full=true}} @
-                00:01.</strong>
-                If you have an operational need to be on playa earlier than this date,
-                please contact your Cadre or Manager.</p>
-            {{else}}
-              <p class="text-danger">
-                <b>Oops! We forgot to write down when you may enter the event! Please
-                  contact {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.</b>
-              </p>
-            {{/if}}
-          {{else}}
-            <p>
-              You have not claimed your Staff Credential yet. Once that happens, we can tell when you will be able to
-              enter the event.
-            </p>
-          {{/if}}
         {{else}}
-        {{! No WAP or Staff Credential}}
-          <b class="text-danger">Uh oh, you do not have a Work Access Pass. This is probably a mistake.</b>
-          {{#if (or @person.isAlpha @person.isProspective)}}
-            All Alphas qualify for a Work Access Pass for arrival on Friday @ 00:01.
-          {{else}}
-            All returning Rangers in good standing qualify for a Work Access Pass for arrival on Thursday @ 00:01
-          {{/if}}
-          Contact {{mail-to @ticketingInfo.ranger_ticketing_email}} and let us know something is wrong.
+          <p class="text-danger">
+            <b>Oops! We forgot to write down when you may enter the event! Please contact
+              {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.</b>
+          </p>
         {{/if}}
-
-        {{#if (eq @ticketingInfo.wap_status "frozen")}}
-          <TicketFrozen @item="Work Accesss Pass" @ticketingInfo={{@ticketingInfo}} />
-        {{/if}}
-        {{#if @nextSection}}
-          <div class="float-lg-right mt-4">
-            <button type="button" class="btn btn-success btn-responsive btn-lg mb-2" {{action @nextSection}}>
-              Next {{fa-icon "arrow-right"}}
-            </button>
-          </div>
-        {{/if}}
-      </div>
-    {{/animated-if}}
-  </AnimatedContainer>
-</div>
+      {{else}}
+        <p>
+          You have not claimed your Staff Credential yet. Once that happens, we can tell when you will be able to
+          enter the event.
+        </p>
+      {{/if}}
+    {{else}}
+    {{! No WAP or Staff Credential}}
+      <p class="text-danger">
+        <b>Uh oh, you do not have a Work Access Pass. Mostly likely this is a mistake.</b>
+      </p>
+      {{#if (or @person.isAlpha @person.isProspective)}}
+        All Alphas qualify for a Work Access Pass for arrival on Friday @ 00:01.
+      {{else}}
+        All returning Rangers in good standing qualify for a Work Access Pass for arrival on Thursday @ 00:01
+      {{/if}}
+      Contact {{mail-to @ticketingInfo.ranger_ticketing_email}} and let us know something is wrong.
+    {{/if}}
+  </:body>
+</TicketSection>

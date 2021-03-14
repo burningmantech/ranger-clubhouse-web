@@ -3,38 +3,75 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import {StateOptions} from 'clubhouse/constants/countries';
+import {
+  STAFF_CREDENTIAL,
+  RPT,
+  GIFT_TICKET,
+  VEHICLE_PASS,
+  WAP,
+  WAPSO,
+  ALL_YOU_CAN_EAT,
+  EVENT_RADIO,
+  WET_SPOT,
+  // Statuses
+  BANKED,
+  CANCELLED,
+  CLAIMED,
+  EXPIRED,
+  QUALIFIED,
+  SUBMITTED,
+  USED,
+} from 'clubhouse/models/access-document';
+import {DELIVERY_WILL_CALL, DELIVERY_MAIL} from "clubhouse/models/access-document-delivery";
 
 export default class PersonAccessDocumentsController extends Controller {
   @tracked isSubmitting = false;
   @tracked isShowingAll = false;
+  @tracked isEditingDelivery = false;
 
   @tracked documents = null;
   @tracked entry = null;
-  @tracked delivery;
-  @tracked deliveryEntry = null;
 
   typeOptions = [
-    ["Staff Credential", "staff_credential"],
-    ["Reduced-Price Ticket", "reduced_price_ticket"],
-    ["Gift Ticket", "gift_ticket"],
-    ["Work Access Pass", "work_access_pass"],
-    ["Work Access Pass (SO)", "work_access_pass_so"],
-    ["Vehicle Pass", "vehicle_pass"],
+    {
+      groupName: 'Tickets/VP',
+      options: [
+        ["Staff Credential", STAFF_CREDENTIAL],
+        ["Reduced-Price Ticket", RPT],
+        ["Gift Ticket", GIFT_TICKET],
+        ["Vehicle Pass", VEHICLE_PASS],
+      ],
+    },
+    {
+      groupName: 'Work Access Passes',
+      options: [
+        ["Work Access Pass", WAP],
+        ["Work Access Pass (SO)", WAPSO],
+      ],
+    },
+    {
+      groupName: 'Appreciations',
+      options: [
+        ['All-You-Can-Eat Pass', ALL_YOU_CAN_EAT],
+        ['Event Radio', EVENT_RADIO],
+        ['Shower Access', WET_SPOT],
+      ]
+    }
   ];
 
   statusOptions = [
-    ["Qualified", "qualified"],
-    ["Claimed", "claimed"],
-    ["Banked", "banked"],
-    ["Submitted", "submitted"],
-    ["Used", "used"],
-    ["Cancelled", "cancelled"],
-    ["Expired", "expired"]
+    ["Qualified", QUALIFIED],
+    ["Claimed", CLAIMED],
+    ["Banked", BANKED],
+    ["Submitted", SUBMITTED],
+    ["Used", USED],
+    ["Cancelled", CANCELLED],
+    ["Expired", EXPIRED]
   ];
 
-  methodOptions = [
-    ["Will Call", 'will_call'],
-    ["US Mail", 'mail']
+  deliveryMethodOptions = [
+    ['US Mail', DELIVERY_MAIL],
+    ['Will Call', DELIVERY_WILL_CALL],
   ];
 
   stateOptions = StateOptions['US'];
@@ -69,8 +106,10 @@ export default class PersonAccessDocumentsController extends Controller {
 
   @action
   editAccessDocument(document) {
-    this.entry = document;
-    document.set('additional_comments', '');
+    document.reload().then(() => {
+      this.entry = document;
+      document.set('additional_comments', '');
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
@@ -92,8 +131,7 @@ export default class PersonAccessDocumentsController extends Controller {
       if (isNew) {
         this.documents.update();
       }
-    })
-      .catch((response) => this.house.handleErrorResponse(response, model));
+    }).catch((response) => this.house.handleErrorResponse(response, model));
   }
 
   @action
@@ -104,51 +142,6 @@ export default class PersonAccessDocumentsController extends Controller {
         this.toast.success('The document was successfully deleted.');
       }).catch((response) => this.house.handleErrorResponse(response));
     });
-  }
-
-  @action
-  editDelivery() {
-    let delivery = this.delivery;
-
-    if (!delivery) {
-      delivery = {method: 'will_call'};
-    }
-
-    this.deliveryEntry = delivery;
-  }
-
-  @action
-  cancelDelivery() {
-    this.deliveryEntry = null;
-  }
-
-  @action
-  saveDelivery(model, isValid) {
-    if (!isValid)
-      return;
-
-    this.isSubmitting = true;
-    this.toast.clear();
-    const delivery = {
-      method: model.method,
-      street: model.street,
-      city: model.city,
-      state: model.state,
-      postal_code: model.postal_code,
-      //  country: model.get('country'),
-      country: 'United States'
-    };
-
-    this.ajax.request(`ticketing/${this.person.id}/delivery`, {
-      method: 'POST',
-      data: delivery
-    })
-      .then(() => {
-        this.toast.success('The delivery method and/or address was successfully saved.');
-        this.delivery = delivery;
-        this.deliveryEntry = null;
-      }).catch((response) => this.house.handleErrorResponse(response, model))
-      .finally(() => this.isSubmitting = false);
   }
 
   @action
@@ -164,5 +157,35 @@ export default class PersonAccessDocumentsController extends Controller {
       this.isShowingAll = !this.isShowingAll;
     }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isLoading = false);
+  }
+
+  @action
+  editDelivery() {
+    if (this.delivery.isNew) {
+      this.isEditingDelivery = true;
+    } else {
+      this.delivery.reload()
+        .then(() => this.isEditingDelivery = true)
+        .catch((response) => this.house.handleErrorResponse(response));
+    }
+  }
+
+  @action
+  cancelDelivery() {
+    this.isEditingDelivery = false;
+  }
+
+  @action
+  saveDelivery(model, isValid) {
+    if (!isValid) {
+      return;
+    }
+
+    const isNew = model.isNew;
+
+    model.save().then(() => {
+      this.isEditingDelivery = false;
+      this.toast.success(`The delivery record was successfully ${isNew ? 'created' : 'updated'}.`);
+    }).catch((response) => this.house.handleErrorResponse(response, model));
   }
 }

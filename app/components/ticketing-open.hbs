@@ -27,44 +27,78 @@
     Vehicle Pass, Work Access Pass, or Work Access Passes for your significant others/critical camp mates.
   </p>
   <p>
-    You have <b>until {{full-datetime-format @ticketingInfo.submit_date}} Pacific Time to make your selection(s)</b>
-    below. After that, we'll start uploading everyone's requests into the Burning Man Ticket Request System.
+    <b>The ticketing deadline is {{full-datetime-format @ticketingInfo.submit_date}} Pacific Time.</b>
+    Once the deadline has passed, it may not be possible to make changes.
   </p>
-  <p>
-    <b>It may not be possible to fulfill any requests made after the
-      {{moment-format @ticketingInfo.submit_date "dddd, MMMM Do"}} deadline.</b>
-  </p>
-  {{#if this.hasFullPackage}}
-    <p>
-      <button type="button" class="btn btn-success btn-lg" {{action this.nextSection "ticket"}}>Begin Ticketing</button>
-    </p>
-  {{/if}}
   <div class="accordion max-width-700">
-    {{#if this.hasFullPackage}}
-      <TicketInfo @person={{@person}} @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}}
-                  @ticket={{this.accessPackage.ticket}} @setTicketStatus={{this.setTicketStatus}}
+    <p>
+      <button type="button" class="btn btn-success btn-block" {{action this.nextSection "ticket"}}>
+        Begin Ticketing {{fa-icon "arrow-right"}}
+      </button>
+    </p>
+    <TicketInfo @person={{@person}}
+                @ticketPackage={{@ticketPackage}}
+                @ticketingInfo={{@ticketingInfo}}
+                @ticket={{this.ticket}}
+                @setDocumentStatus={{this.setDocumentStatus}}
+                @isSavingDocumentStatus={{this.isSavingDocumentStatus}}
+                @showing={{this.showing}}
+                @toggleCard={{this.toggleCard}}
+                @nextSection={{action this.nextSection "vp"}}
+    />
+
+    <TicketVpInfo @person={{@person}}
+                  @ticketPackage={{@ticketPackage}}
+                  @ticketingInfo={{@ticketingInfo}}
+                  @ticket={{this.ticket}}
+                  @setDocumentStatus={{this.setDocumentStatus}}
+                  @isSavingDocumentStatus={{this.isSavingDocumentStatus}}
                   @showing={{this.showing}}
-                  @toggleCard={{this.toggleCard}} @nextSection={{action this.nextSection "vp"}} />
-      <TicketVpInfo @person={{@person}} @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}}
-                    @ticket={{this.accessPackage.ticket}} @vehiclePass={{this.accessPackage.vehiclePass}}
-                    @setTicketStatus={{this.setTicketStatus}}
-                    @showing={{this.showing}} @toggleCard={{this.toggleCard}}
-                    @nextSection={{action this.nextSection "wap"}} />
+                  @toggleCard={{this.toggleCard}}
+                  @nextSection={{action this.nextSection (if  @ticketPackage.appreciations "appreciations" "wap")}}
+
+    />
+    {{#if @ticketPackage.appreciations}}
+      <TicketAppreciations @person={{@person}}
+                           @ticketPackage={{@ticketPackage}}
+                           @ticketingInfo={{@ticketingInfo}}
+                           @setDocumentStatus={{this.setDocumentStatus}}
+                           @isSavingDocumentStatus={{this.isSavingDocumentStatus}}
+                           @showing={{this.showing}}
+                           @toggleCard={{this.toggleCard}}
+                           @nextSection={{action this.nextSection "wap"}} />
+
     {{/if}}
 
-    <TicketWapInfo @person={{@person}} @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}}
-                   @ticket={{this.accessPackage.ticket}} @wap={{this.accessPackage.wap}} @setTicketStatus={{this.setTicketStatus}}
-                   @showing={{this.showing}} @toggleCard={{this.toggleCard}}
+    <TicketWapInfo @person={{@person}}
+                   @ticketPackage={{@ticketPackage}}
+                   @ticketingInfo={{@ticketingInfo}}
+                   @ticket={{this.ticket}}
+                   @setDocumentStatus={{this.setDocumentStatus}}
+                   @isSavingDocumentStatus={{this.isSavingDocumentStatus}}
+                   @showing={{this.showing}}
+                   @toggleCard={{this.toggleCard}}
                    @nextSection={{if this.hasFullPackage (action this.nextSection "wapso") false}} />
 
-    {{#if this.hasFullPackage}}
-      <TicketWapSoInfo @person={{@person}} @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}}
-                       @ticket={{this.accessPackage.ticket}} @showing={{this.showing}} @toggleCard={{this.toggleCard}}
-                       @nextSection={{action this.nextSection "delivery"}} />
-      <TicketDeliveryInfo @person={{@person}} @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}}
-                          @ticket={{this.accessPackage.ticket}} @vehiclePass={{this.accessPackage.vehiclePass}}
-                          @showing={{this.showing}}
-                          @toggleCard={{this.toggleCard}} />
-    {{/if}}
+    <TicketWapSoInfo @person={{@person}}
+                     @ticketPackage={{@ticketPackage}}
+                     @ticketingInfo={{@ticketingInfo}}
+                     @ticket={{this.ticket}}
+                     @showing={{this.showing}}
+                     @toggleCard={{this.toggleCard}}
+                     @nextSection={{action this.nextSection "delivery"}} />
+    <TicketDeliveryInfo @person={{@person}}
+                        @ticketPackage={{@ticketPackage}}
+                        @ticketingInfo={{@ticketingInfo}}
+                        @ticket={{this.ticket}}
+                        @showing={{this.showing}}
+                        @toggleCard={{this.toggleCard}}
+                        @nextSection={{action this.nextSection "summary"}} />
+    <TicketSummary @person={{@person}}
+                   @ticketPackage={{@ticketPackage}}
+                   @ticketingInfo={{@ticketingInfo}}
+                   @ticket={{this.ticket}}
+                   @showing={{this.showing}}
+                   @toggleCard={{this.toggleCard}} />
   </div>
 {{/if}}

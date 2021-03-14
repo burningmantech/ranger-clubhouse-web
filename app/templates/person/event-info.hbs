@@ -14,8 +14,8 @@
 
     <dt>{{this.year}} Online Training</dt>
     <dd>
-      {{#if eventInfo.online_training_passed}}
-        {{shift-format eventInfo.online_training_date}}
+      {{#if this.eventInfo.online_training_passed}}
+        {{shift-format this.eventInfo.online_training_date}}
       {{else}}
         not passed
       {{/if}}
@@ -26,17 +26,17 @@
       {{#if this.person.isNonRanger}}
         <p>Non Rangers are not required to pass training.</p>
       {{/if}}
-      <TrainingInfo @trainings={{eventInfo.trainings}} />
+      <TrainingInfo @trainings={{this.eventInfo.trainings}} />
     </dd>
 
     <dt>{{this.year}} Meals</dt>
     <dd>
-      <MealInfo @meals={{eventInfo.meals}} />
+      <MealInfo @eventInfo={{this.eventInfo}} />
     </dd>
 
     <dt>{{this.year}} Showers</dt>
     <dd>
-      {{#if eventInfo.showers}}
+      {{#if this.eventInfo.showers}}
         {{badge "secondary" "Wet Spot"}} BMID allows access to the Wet Spot.
       {{else}}
         {{badge "secondary" "Shower Pogs"}} Wet Spot shower pog granted for every 40 hours worked.
@@ -45,9 +45,9 @@
 
     <dt>{{this.year}} Radios</dt>
     <dd>
-      {{#if eventInfo.radio_info_available}}
-        {{#if eventInfo.radio_eligible}}
-          Up to {{pluralize eventInfo.radio_max "Event Radio"}} may be checked out.
+      {{#if this.eventInfo.radio_info_available}}
+        {{#if this.eventInfo.radio_eligible}}
+          Up to {{pluralize this.eventInfo.radio_max "Event Radio"}} may be checked out.
         {{else}}
           Shift Radio only
         {{/if}}
@@ -132,7 +132,6 @@
         {{else}}
           <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
         {{/if}}
-
         the {{this.year}} Sandman Affidavit
       {{/if}}
     </dd>

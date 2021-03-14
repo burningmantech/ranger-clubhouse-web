@@ -1,4 +1,5 @@
 import Component from '@glimmer/component';
+import { isEmpty} from '@ember/utils';
 
 const MEALS = {
   'all': {
@@ -37,32 +38,30 @@ const MEALS = {
   'no-info': {
     title: 'Pending',
     description: 'Meal information is not yet available.'
-  }
+  },
 };
 
 export default class MealInfoComponent extends Component {
-  get title() {
-    const mealInfo = this._mealInfo();
+  constructor() {
+    super(...arguments);
+    const {eventInfo} = this.args;
 
-    if (mealInfo) {
-      return mealInfo.title;
+    let {meals} = eventInfo;
+    if (isEmpty(meals)) {
+      meals = 'pogs';
     }
 
-    return `Unknown`;
-  }
-
-  get description() {
-    const mealInfo = this._mealInfo();
+    const mealInfo = MEALS[meals];
 
     if (mealInfo) {
-      return mealInfo.description;
+      this.title = mealInfo.title;
+      this.description = mealInfo.description;
+      this.isBanked = eventInfo.meals_status === 'banked';
+      console.log('event info', eventInfo);
+      this.isAllYouCanEat = (meals === 'all');
+    } else {
+      this.title = 'Unknown';
+      this.description = `Unknown meal type ${this.args.meals}. This is a bug.`;
     }
-
-    return `Unknown meal type ${this.args.meals}. This is a bug.`;
-  }
-
-  _mealInfo() {
-    const meals = this.args.meals;
-    return meals ? MEALS[meals] : MEALS['pogs'];
   }
 }

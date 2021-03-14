@@ -17,6 +17,7 @@ import {
   WAITING
 } from "clubhouse/constants/dashboard";
 import * as DashboardStep from 'clubhouse/constants/dashboard-steps';
+import TicketPackage from 'clubhouse/utils/ticket-package';
 
 const RESULT_PRIORITIES = {
   [URGENT]: 1,
@@ -31,7 +32,7 @@ const RESULT_PRIORITIES = {
 // See dashboard-steps.js for the definition of a step.
 
 function usingTicket(t) {
-  return (t && (t.status === 'claimed' || t.status === 'submitted'));
+  return (t && (t.isClaimed || t.isSubmitted));
 }
 
 class StepGroup {
@@ -46,40 +47,34 @@ class StepGroup {
   }
 }
 
-function buildTickets({ticketing_package, ticketing_period}) {
-  const pkg = ticketing_package;
-  const isClosed = ticketing_period === 'closed';
-  const claimed = [], banked = [];
+function buildTickets(milestones, personId, house) {
+  const claimed = [];
+
+  const pkg = new TicketPackage(milestones.ticketing_package, personId, house);
 
   pkg.tickets.forEach((t) => {
-    if (usingTicket(t)) {
-      claimed.push({type: t.type});
-    } else if (t.status === 'banked' || (isClosed && t.status === 'qualified')) {
-      banked.push({type: t.type, expiry_date: t.expiry_date})
+    if (t.isClaimed || t.isSubmitted) {
+      claimed.push(t);
     }
   });
 
-  if (usingTicket(pkg.vehicle_pass)) {
-    claimed.push({type: pkg.vehicle_pass.type});
+  if (usingTicket(pkg.vehiclePass)) {
+    claimed.push(pkg.vehiclePass);
   }
 
   if (usingTicket(pkg.wap)) {
-    claimed.push({type: pkg.wap.type});
+    claimed.push(pkg.wap);
   }
 
-  if (pkg.wapso.length) {
-    const names = [];
-    pkg.wapso.forEach((t) => {
-      if (usingTicket(t)) {
-        names.push(t.name);
-      }
-    });
-    if (names.length) {
-      claimed.push({type: 'work_access_pass_so', count: names.length, names})
-    }
-  }
+  pkg.wapso.forEach((so) => claimed.push(so));
 
-  return {claimed, banked};
+  return {
+    claimed,
+    bankedCount: pkg.accessDocuments.filter((ad) => ad.isBanked).length,
+    qualifiedCount: pkg.accessDocuments.filter((ad) => (ad.isQualified && !(ad.isWAP || ad.isVehiclePass || ad.isEventRadio))).length,
+    notCriticalCount: pkg.accessDocuments.filter((ad) => (ad.isQualified && (ad.isWAP || ad.isVehiclePass || ad.isEventRadio))).length,
+    noAddress: !pkg.haveAddress,
+  };
 }
 
 const STEPS = [
@@ -90,33 +85,36 @@ const STEPS = [
   {
     name: 'Claim Tickets, Vehicle Passes, and Work Access Passes',
     skipPeriod: AFTER_EVENT,
-    check({milestones}) {
+    check({milestones, person, house}) {
       const period = milestones.ticketing_period;
 
       if (period !== 'open' || !milestones.ticketing_package) {
         return {result: SKIP};
       }
 
-      const tickets = buildTickets(milestones);
+      const tickets = buildTickets(milestones, person.id, house);
 
-      if (tickets.claimed.length || tickets.banked.length) {
-        // stuff has been claimed..
-        return {
-          result: COMPLETED,
+      if (tickets.qualifiedCount
+        || tickets.noAddress
+        || tickets.notCriticalCount) {
+         return {
+          result: ACTION_NEEDED,
           route: 'me.tickets',
+          immediate: (tickets.qualifiedCount || tickets.noAddress),
           isTicketing: true,
           ticketingOpen: true,
-          tickets,
-          immediate: false, // move it down
+          tickets
         };
       }
+
+      // stuff has been claimed..
       return {
-        result: ACTION_NEEDED,
+        result: COMPLETED,
         route: 'me.tickets',
-        immediate: true,
         isTicketing: true,
         ticketingOpen: true,
-        tickets
+        tickets,
+        immediate: false, // move it down
       };
     }
   },
@@ -299,7 +297,7 @@ const STEPS = [
   {
     name: 'Ticketing has closed',
     period: BEFORE_EVENT,
-    check({milestones}) {
+    check({milestones, house, person}) {
       if (milestones.ticketing_period !== 'closed' || !milestones.ticketing_package) {
         return {result: SKIP};
       }
@@ -308,7 +306,7 @@ const STEPS = [
         result: NOT_AVAILABLE,
         isTicketing: true,
         isTicketingClosed: true,
-        tickets: buildTickets(milestones),
+        tickets: buildTickets(milestones, person.id, house),
       };
     }
   },
@@ -403,6 +401,7 @@ const BEFORE_EVENT_NO_MORE_THINGS_STEP = {
 
 export default class DashboardRangerComponent extends Component {
   @service session;
+  @service house;
 
   get stepGroups() {
     const groups = [];
@@ -414,7 +413,7 @@ export default class DashboardRangerComponent extends Component {
     }
 
     if (!steps.length) {
-        steps.push(isAfterEvent ? AFTER_EVENT_NO_MORE_THINGS_STEP : BEFORE_EVENT_NO_MORE_THINGS_STEP);
+      steps.push(isAfterEvent ? AFTER_EVENT_NO_MORE_THINGS_STEP : BEFORE_EVENT_NO_MORE_THINGS_STEP);
     }
 
     groups.push(new StepGroup(isAfterEvent ? 'After Event Action Items' : 'Preparation For Playa', steps,
@@ -440,7 +439,7 @@ export default class DashboardRangerComponent extends Component {
         return;
       }
 
-      const check = step.check({milestones, photo, person});
+      const check = step.check({milestones, photo, person, house: this.house});
       if (check.result === SKIP) {
         return;
       }

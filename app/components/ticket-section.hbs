@@ -1,0 +1,17 @@
+<div class="card card-ticket" id="ticket-{{@id}}">
+  <div class="card-header p-0">
+    <a href {{action @toggleCard @id}}>
+      {{fa-icon (if (get @showing @id) "minus" "plus")}}
+      {{yield to="title"}}
+    </a>
+  </div>
+  <div class="card-body collapse">
+    {{yield to="body"}}
+    {{#if @nextAction}}
+      <button type="button" class="btn btn-success btn-block mt-4"
+              disabled={{@nextDisabled}} {{action @nextAction}}>
+        Next {{fa-icon "arrow-right"}}
+      </button>
+    {{/if}}
+  </div>
+</div>

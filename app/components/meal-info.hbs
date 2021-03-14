@@ -1,4 +1,9 @@
 <span class="badge badge-secondary">{{this.title}}</span> {{this.description}}
-{{#if (and this.meals (eq this.meals "all"))}}
+{{#if this.isBanked}}
+  <p>
+    <b>Note: You have chosen to bank your All-You-Can-Eat pass this event.</b>
+  </p>
+{{/if}}
+{{#if this.isAllYouCanEat}}
   <p class="my-2">Helpful date info: {{config "MealDates"}}</p>
 {{/if}}

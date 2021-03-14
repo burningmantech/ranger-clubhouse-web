@@ -1,120 +1,121 @@
-<div class="card card-ticket" id="ticket-ticket">
-  <div class="card-header p-0">
-    <button type="button" class="btn btn-link m-0" {{on "click" (fn @toggleCard "ticket")}}>
-      {{fa-icon (if @showing.ticket "minus" "plus")}}
-      {{#if @ticket}}
-        {{this.ticketType}}
-        <span class="d-inline-block">
-          - {{ticket-status @ticket.status}}
-          {{#if (eq @ticket.status "claimed")}}
-            <span class="text-success">{{fa-icon "check"}}</span>
+<TicketSection @id="ticket"
+               @nextAction={{@nextSection}}
+               @nextDisabled={{this.nextDisabled}}
+               @toggleCard={{@toggleCard}}
+               @showing={{@showing}}>
+  <:title>
+    {{#if @ticket}}
+      {{@ticket.typeHuman}}
+    {{else}}
+      Event Tickets
+    {{/if}}
+    {{#if this.allTicketsBanked}}
+      <TicketSectionStatus @status="banked"/>
+    {{else if @ticket}}
+      <TicketSectionStatus @status={{@ticket.status}} />
+    {{else if (gt @ticketPackage.tickets.length 1)}}
+      <TicketSectionStatus @status="qualified"/>
+    {{else}}
+      <TicketSectionStatus @status="none"/>
+    {{/if}}
+  </:title>
+  <:body>
+    {{#if @ticket.isSubmitted}}
+      <p>
+        Your ticket has been uploaded to the Burning Man ticketing system. Changes to your ticket cannot be done
+        through the Clubhouse at this time.
+      </p>
+    {{else if (gt @ticketPackage.tickets.length 1)}}
+      <p>
+        Please select which ticket you wish to use:
+      </p>
+      {{#each @ticketPackage.tickets as |item|}}
+        <label class="d-block">
+          <input type="radio" onclick={{action this.chooseTicketAction item}} checked={{item.isClaimed}}>
+          {{item.typeHuman}} earned in {{item.source_year}} and expires after {{mdy-format item.expiry_date}}
+          {{#if item.isClaimed}}
+            <span class="text-success">{{fa-icon "check"}} Claimed</span>
           {{/if}}
-        </span>
-      {{else}}
-        Event Ticket <span class="text-muted">- None</span>
-      {{/if}}
-    </button>
-  </div>
-  <AnimatedContainer>
-    {{#animated-if @showing.ticket use=this.transition}}
-      <div class="card-body">
-        {{#if @ticket}}
-          {{#if (gt @ticketPackage.tickets.length 1)}}
-            <p>
-              You're a rare one: you have more than one ticket available.
-              We've automatically chosen the oldest of these for you to use below.
-              If you want to use one of your other banked tickets,
-              please email {{mail-to @ticketingInfo.ranger_ticketing_email}}
-              and let us know and we can make that happen!
-            </p>
-            <p>
-              For reference the following tickets are on file:
-            <ul>
-              {{#each @ticketPackage.tickets as |onfile|}}
-                <li>
-                  A {{ticket-type-human onfile.type}} qualified in {{onfile.source_year}} and will expire
-                  on {{mdy-format onfile.expiry_date full=true}}
-                  {{#if onfile.selected}}
-                    <span class="text-danger">(SELECTED)</span>
-                  {{/if}}
-                </li>
-              {{/each}}
-            </ul>
-            </p>
-          {{/if}}
-
-          {{#if (eq @ticket.status "submitted")}}
-            Your {{this.ticketType}} has been submitted to the Burning Man Ticket Request System.
-            You should have received an email from {{@ticketingInfo.ticket_vendor_name}} informing you about it.
-            You cannot request changes to it via the Secret Clubhouse at this time.
-            If you urgently need to make a change, please email {{mail-to @ticketingInfo.ranger_ticketing_email}}
-            and they may be able to help.
-          {{else if (eq @ticketingInfo.ticket_status "accept")}}
-            {{#if (eq @ticket.status "claimed")}}
-              <p>
-                <b>You have claimed your {{this.ticketType}}.</b> If your plans have changed,
-                you may bank the ticket. Note: the ticket will expire on {{mdy-format @ticket.expiry_date full=true}}.
-              </p>
-              <button type="button" class="btn btn-primary btn-responsive btn-lg mb-4" {{action @setTicketStatus @ticket "banked"}}>Bank
-                Ticket
-              </button>
-            {{else if (eq @ticket.status "banked")}}
-              <p>
-                <b>You have banked your {{this.ticketType}} this year.</b>
-              </p>
-              <p>
-                If your plans have changed, you may claim the ticket.
-                Note: the ticket will expire on {{mdy-format @ticket.expiry_date full=true}}.
-              </p>
-              <button type="button" class="btn btn-primary btn-responsive btn-lg mb-4" {{action @setTicketStatus @ticket "claimed"}}>
-                Claim Ticket
-              </button>
-            {{else if (eq @ticket.status "qualified")}}
-              <h4>You qualified for a {{this.ticketType}} in {{@ticket.source_year}}!</h4>
-
-              <p>
-                You may <b>Claim</b> your ticket for this year's event, or <b>Bank</b> it for a future event.
-                Note: your {{this.ticketType}} will expire on {{mdy-format @ticket.expiry_date full=true}}.
-              </p>
-
-              <div class="my-2"><b>What do you want to do with your {{this.ticketType}}?</b></div>
-              <button type="button" class="btn btn-primary btn-lg" {{action @setTicketStatus @ticket "claimed"}}>Claim
-                Ticket
-              </button>
-              <span class="mx-2 h5">OR</span>
-              <button type="button" class="btn btn-primary btn-lg" {{action @setTicketStatus @ticket "banked"}}>Bank
-                Ticket
-              </button>
-            {{/if}}
-          {{else if (eq @ticketingInfo.ticket_status "frozen")}}
-            {{#if (eq @ticket.status "qualified")}}
-              <b>You did not claim nor bank your {{this.ticketType}}. The item will be automatically banked and will
-                expire on {{mdy-format ticket.expiry_date}}.</b>
-            {{else if (eq @ticket.status "banked")}}
-              <b>Your {{this.ticketType}} has been banked, and will expire on {{mdy-format ticket.expiry_date}}.</b>
-            {{else if (eq @ticket.status "claimed")}}
-              <b>Your {{this.ticketType}} will be used for the event.</b>
-            {{/if}}
-            <TicketFrozen @item="ticket" @ticketingInfo={{@ticketingInfo}} />
-          {{else}}
-            You qualified for a {{this.ticketType}}! Ticketing is not yet open. Please check back later.
-          {{/if}}
-        {{else}}
-          <b>Sorry, it doesn't look like you qualified for a Reduced-Price Ticket or Staff Credential.</b>
-          <p>
-            You earned {{credits-format @ticketPackage.credits_earned}} last event. The minimum credits needed to earn
-            a Reduced-Price Ticket was {{credits-format @ticketingInfo.rpt_credits}}, and a Staff Credential was
-            {{credits-format @ticketingInfo.sc_credits}}.
-          </p>
+        </label>
+      {{/each}}
+      <label class="d-block">
+        <input type="radio" onclick={{action this.chooseTicketAction 'none'}} checked={{this.allTicketsBanked}}>
+        Bank all tickets
+        {{#if this.allTicketsBanked}}
+          {{fa-icon "check" color="success"}}
         {{/if}}
-        {{#if (not-eq @ticket.status "qualified")}}
-          <div class="float-lg-right">
-            <button type="button" class="btn btn-success btn-lg btn-responsive" {{action @nextSection}}>
-              Next {{fa-icon "arrow-right"}}
-            </button>
-          </div>
+      </label>
+      <div class="my-3">
+        {{#if @ticket}}
+          <b>You have claimed a {{@ticket.typeHuman}} earned in {{@ticket.source_year}}.</b>
+        {{else if this.allTicketsBanked}}
+          <b>You have BANKED all your tickets.</b>
+        {{else}}
+          &nbsp;
         {{/if}}
       </div>
-    {{/animated-if}}
-  </AnimatedContainer>
-</div>
+    {{else if @ticket}}
+      {{#if @ticket.isClaimed}}
+        <p>
+          <b>You have claimed your {{@ticket.typeHuman}}.</b> If your plans have changed,
+          you may bank the ticket. Note: the ticket will expire on {{mdy-format @ticket.expiry_date full=true}}.
+        </p>
+        <button type="button" class="btn btn-primary btn-responsive"
+          {{action @setDocumentStatus @ticket "banked"}} disabled={{@isSavingDocumentStatus}}>
+          Bank Ticket
+          {{#if @isSavingDocumentStatus}}<SpinIcon />{{/if}}
+        </button>
+      {{else if @ticket.isBanked}}
+        <p>
+          <b>You have banked your {{@ticket.typeHuman}} this year.</b>
+        </p>
+        <p>
+          If your plans have changed, you may claim the ticket.
+          Note: the ticket will expire on {{mdy-format @ticket.expiry_date full=true}}.
+        </p>
+        <button type="button" class="btn btn-primary btn-responsive"
+          {{action @setDocumentStatus @ticket "claimed"}} disabled={{@isSavingDocumentStatus}}>
+          Claim Ticket
+          {{#if @isSavingDocumentStatus}}<SpinIcon />{{/if}}
+        </button>
+      {{else if @ticket.isQualified}}
+        <h4>You qualified for a {{@ticket.typeHuman}} in {{@ticket.source_year}}!</h4>
+
+        <p>
+          You may <b>Claim</b> your ticket for this year's event, or <b>Bank</b> it for a future event.<br>
+          Note: your {{@ticket.humanType}} will expire on {{mdy-format @ticket.expiry_date full=true}}.
+        </p>
+
+        <div class="my-2"><b>What do you want to do with your {{@ticket.typeHuman}}?</b></div>
+        <button type="button" class="btn btn-primary"
+          {{action @setDocumentStatus @ticket "claimed"}} disabled={{@isSavingDocumentStatus}}>
+          Claim Ticket
+          {{#if @isSavingDocumentStatus}}<SpinIcon />{{/if}}
+        </button>
+        <span class="mx-2 h5">OR</span>
+        <button type="button" class="btn btn-primary"
+          {{action @setDocumentStatus @ticket "banked"}} disabled={{@isSavingDocumentStatus}}>
+          Bank Ticket
+          {{#if @isSavingDocumentStatus}}<SpinIcon />{{/if}}
+        </button>
+      {{else}}
+        Uh oh, I don't know the state of your ticket [{{@ticket.status}}].
+      {{/if}}
+    {{else}}
+      <b>Sorry, it doesn't look like you qualified for a Reduced-Price Ticket or Staff Credential.</b>
+      <p>
+        You earned {{credits-format @ticketPackage.credits_earned}} last event. The minimum credits needed to earn
+        a Reduced-Price Ticket was {{credits-format @ticketingInfo.rpt_credits}}, and a Staff Credential was
+        {{credits-format @ticketingInfo.sc_credits}}.
+      </p>
+    {{/if}}
+  </:body>
+</TicketSection>
+
+{{#if this.isSubmitting}}
+  <ModalDialog as |Dialog|>
+    <Dialog.body>
+      Please wait, saving your ticketing preferences.
+    </Dialog.body>
+  </ModalDialog>
+{{/if}}

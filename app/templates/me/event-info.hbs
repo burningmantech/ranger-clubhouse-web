@@ -71,7 +71,7 @@ trainings you may attend. You have
 
 {{#if (or this.person.isActive this.person.isAlpha this.person.isNonRanger)}}
   <h3 class="mt-4">{{fa-icon "utensils"}} Meals</h3>
-  <MealInfo @meals={{this.eventInfo.meals}} />
+  <MealInfo @eventInfo={{this.eventInfo}} />
 
   <h3 class="mt-4">{{fa-icon "shower"}} Showers</h3>
   {{#if this.eventInfo.showers}}

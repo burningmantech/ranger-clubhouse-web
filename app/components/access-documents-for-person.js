@@ -36,7 +36,7 @@ export default class AccessDocumentsForPersonComponent extends Component {
       return 'any';
     } else if (!doc.access_date) {
       return 'missing';
-    } else if (doc.access_date == 'any') {
+    } else if (doc.access_date === 'any') {
       return 'any';
     } else {
       return moment(doc.access_date).format('ddd MM/DD/YY');

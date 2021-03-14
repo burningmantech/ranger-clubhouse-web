@@ -299,23 +299,10 @@ export default class HouseService extends Service {
         return;
       }
 
-      element.scrollIntoView({behavior: scroll ? 'smooth' : 'auto'});
+      const {top, bottom} = element.getBoundingClientRect();
 
-      // Only scroll if the element is not in view
-      const rect = element.getBoundingClientRect();
-      if (!(
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-      )) {
-        // Get the y axis, and leave a little space for the header.
-        const y = rect.top + window.scrollY - 80;
-        window.scroll({
-          top: y,
-          left: 0,
-          behavior: scroll ? 'smooth' : 'auto'
-        });
+      if (bottom > window.innerHeight || top < 0) {
+        element.scrollIntoView({behavior: scroll ? 'smooth' : 'auto'});
       }
     });
   }

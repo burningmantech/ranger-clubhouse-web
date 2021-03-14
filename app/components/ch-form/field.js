@@ -54,7 +54,7 @@ export default class ChFormFieldComponent extends Component {
   }
 
   get controlClass() {
-    const {controlClass, type} = this.args;
+    const {controlClass, type, fieldSize} = this.args;
 
     if (typeOf(controlClass) === 'string') {
       return controlClass;
@@ -67,7 +67,11 @@ export default class ChFormFieldComponent extends Component {
       case 'radioGroup':
         return 'form-check-input';
       default:
-        return 'form-control';
+        if (fieldSize) {
+          return `form-control form-control-${fieldSize}`;
+        } else {
+          return 'form-control';
+        }
     }
   }
 
