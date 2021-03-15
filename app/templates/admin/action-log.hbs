@@ -9,12 +9,12 @@
 
   <ChForm @formId="query" @formFor={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
     <div class="form-row">
-      <f.input @name="person" @label="Person" @type="text" @size=30 @grid="col-sm-12 col-md-2"
+      <f.input @name="person" @label="Person" @type="text" @size={{30}} @grid="col-sm-12 col-md-2"
                @controlClass="form-control form-control-sm" @hint="Callsign or person id" />
       <f.input @name="start_time" @label="Start time" @controlClass="form-control form-control-sm" @type="datetime"
-               @size=30 @grid="col-sm-12 col-md-2"/>
-      <f.input @name="end_time" @label="End time" @controlClass="form-control form-control-sm" @type="datetime" @size=30
-               @grid="col-sm-12 col-md-2"/>
+               @size={{30}} @grid="col-sm-12 col-md-2"/>
+      <f.input @name="end_time" @label="End time" @controlClass="form-control form-control-sm" @type="datetime"
+               @size={{30}} @grid="col-sm-12 col-md-2"/>
     </div>
     <div class="form-group row mb-2">
       <label class="col-1">Events</label>
@@ -23,7 +23,7 @@
     <div class="form-row mb-2">
       <label class="col-1">Sort</label>
       <div class="col-auto">
-        <f.input @name="sort" @type="radioGroup" @options={{this.sortOptions}} @label="Sort" @inline=true/>
+        <f.input @name="sort" @type="radioGroup" @options={{this.sortOptions}} @label="Sort" @inline={{true}}/>
       </div>
     </div>
     <f.submit @label="Search" />
@@ -80,9 +80,9 @@
           </td>
           <td class="w-5">
             {{#if log.data}}
-              <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleLog log}}>{{if log.showing
-                                                                                                        "Hide"
-                                                                                                        "Show"}}</button>
+              <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleLog log}}>
+                {{if log.showing "Hide" "Show"}}
+              </button>
             {{else}}
               -
             {{/if}}
@@ -109,14 +109,14 @@
               {{/if}}
 
               {{#if log.slot}}
-                Slot #{{log.slot.id}} {{log.slot.position.title}} - {{log.slot.description}} {{shift-format
-                      log.slot.begins}}<br>
+                Slot #{{log.slot.id}} {{log.slot.position.title}} - {{log.slot.description}}
+                {{shift-format log.slot.begins}}<br>
               {{/if}}
 
               {{#if log.enrolled_slots}}
                 {{#each log.enrolled_slots as |slot|}}
-                  Previously Enrolled #{{slot.id}} {{slot.position.title}} - {{slot.description}} {{shift-format
-                        slot.begins}}<br>
+                  Previously Enrolled #{{slot.id}} {{slot.position.title}} - {{slot.description}}
+                  {{shift-format slot.begins}}<br>
                 {{/each}}
               {{/if}}
             </td>
@@ -133,12 +133,12 @@
       {{/each}}
       </tbody>
     </table>
-    <button type="button" class="btn btn-secondary" {{action this.goPrevPage}} disabled={{eq this.currentPage 1}}>Prev
-      Page
+    <button type="button" class="btn btn-secondary" {{action this.goPrevPage}} disabled={{eq this.currentPage 1}}>
+      Prev Page
     </button>
-    <button type="button" class="btn btn-secondary" {{action this.goNextPage}} disabled={{eq this.currentPage
-                                                                                             this.total_pages}}>Next
-      Page
+    <button type="button" class="btn btn-secondary" {{action this.goNextPage}}
+            disabled={{eq this.currentPage this.total_pages}}>
+      Next Page
     </button>
   {{else}}
     <p class="text-danger font-weight-bold mt-4">No Action Logs matched the criteria.</p>
