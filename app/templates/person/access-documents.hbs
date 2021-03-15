@@ -80,7 +80,7 @@
   <LinkTo @route="person.tickets" class="ml-2">View {{this.person.callsign}}'s Tickets &amp; Stuff page</LinkTo>
 </p>
 {{#if this.entry}}
-  <ModalDialog @title="{{if entry.isNew "Create A New" "Edit"}} Item For {{this.person.callsign}}"
+  <ModalDialog @title="{{if this.entry.isNew "Create A New" "Edit"}} Item For {{this.person.callsign}}"
                as |Modal|>
     <ChForm @formId="entry" @formFor={{this.entry}} @onSubmit={{this.saveAccessDocument}}
             @onCancel={{this.cancelAccessDocument}} as |f|>
@@ -108,7 +108,7 @@
             <AccessDocumentDeliveryMethod @year={{this.year}} @delivery={{this.delivery}} />
           </p>
         {{/if}}
-        {{#unless entry.isNew}}
+        {{#unless this.entry.isNew}}
           <p>
             Last Modified: {{this.entry.modified_date}}
             Created: {{this.entry.create_date}}
@@ -117,7 +117,7 @@
           <div class="form-row mb-4">
             <label class="col-form-label">Comments:</label>
             <div class="mt-2 col-auto">
-              {{nl2br entry.comments}}
+              {{nl2br this.entry.comments}}
             </div>
           </div>
         {{/unless}}
@@ -127,14 +127,14 @@
         </div>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
-        <f.submit @label={{if entry.isNew "Create" "Update"}}  @disabled={{this.entry.isSaving}} />
+        <f.submit @label={{if this.entry.isNew "Create" "Update"}}  @disabled={{this.entry.isSaving}} />
         <f.cancel @disabled={{this.entry.isSaving}} />
         {{#if this.entry.isSaving}}
           <LoadingIndicator/>
         {{/if}}
-        {{#unless entry.isNew}}
+        {{#unless this.entry.isNew}}
           <button type="button" class="btn btn-danger ml-auto"
-            {{action this.deleteAccessDocument entry}} disabled={{this.entry.isSaving}}>
+            {{action this.deleteAccessDocument this.entry}} disabled={{this.entry.isSaving}}>
             Delete
           </button>
         {{/unless}}

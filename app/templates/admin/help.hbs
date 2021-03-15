@@ -54,7 +54,7 @@
               <f.input @name="body" @label="Help Body" @type="textarea" @rows=10 @cols=80/>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
-        <f.submit @label={{if entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
+        <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
         <f.cancel @disabled={{this.entry.isSaving}} />
         {{#if this.entry.isSaving}}
           <LoadingIndicator/>

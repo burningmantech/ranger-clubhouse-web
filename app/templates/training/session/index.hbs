@@ -35,7 +35,7 @@
       <b class="text-danger"> (FULL)</b>
     {{/if}}
   </div>
-  {{#if training.is_art}}
+  {{#if this.training.is_art}}
     <div class="col-auto">
       ART Vets: {{this.vetCount}}
     </div>
@@ -122,7 +122,7 @@
         </LinkTo>
         <div class="dropdown-divider"></div>
         <a href class="dropdown-item" {{action "toggleEmailListAction"}} disabled={{is-empty this.students}}>
-          {{if showEmails "Hide Emails" "List Emails"}}
+          {{if this.showEmails "Hide" "List"}} Emails
         </a>
         {{#if this.canAddStudent}}
           <div class="dropdown-divider"></div>
@@ -235,8 +235,8 @@
               </td>
               <td>{{trainerType.position_title}}</td>
               <td>
-                <ChForm::Select @name={{concat "trainer" trainer.id}} @value={{trainer.status}} @onChange={{action
-                        (mut trainer.status)}} @options={{trainerStatusOptions}} />
+                <ChForm::Select @name={{concat "trainer" trainer.id}} @value={{trainer.status}}
+                                @onChange={{action (mut trainer.status)}} @options={{this.trainerStatusOptions}} />
               </td>
             </tr>
           {{/each}}

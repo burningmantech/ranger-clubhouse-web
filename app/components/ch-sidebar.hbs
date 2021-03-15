@@ -1,18 +1,61 @@
-<div id="sidebar-container"
-     class="sidebar-theme-{{this.themeClass}} sidebar-expanded d-none d-lg-block d-print-none"
-  {{did-insert this.sidebarInserted}}>
-  <div class="sidebar-content">
-    {{yield (hash group=(component "sidebar/group" theme=@theme title=title)
-                    link=(component "sidebar/link" theme=@theme
-                            route=route title=title icon=icon iconType=iconType iconUrl=iconUrl badgeText=badgeText)
-            )}}
-    <div class="sidebar-separator"></div>
-    <a href class="sidebar-link" {{action this.sidebarToggle}}>
-        <span id="collapse-icon" class="fas fa-lg fa-angle-double-left"></span>
-        <span class="sidebar-link-text">Collapse</span>
-    </a>
-    <div class="sidebar-ranger-logo">
-      <img src="{{rootURL}}assets/images/ranger-logo.png" alt="Ranger Icon">
+{{#if this.renderAsDropdown}}
+  <div class="sidebar-small-screen-container">
+    <div class="btn-group">
+      <button type="button" class="btn-secondary btn-lg dropdown-toggle"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{@smallTitle}}
+      </button>
+      <div class="dropdown-menu">
+        {{yield (hash
+                        group=(component "sidebar/group"
+                                renderAsDropdown=true
+                                theme=@theme
+                                title=@title
+                        )
+
+                        link=(component "sidebar/link"
+                                renderAsDropdown=true
+                                theme=@theme
+                                route=@route
+                                title=@title
+                                icon=@icon
+                                iconType=@iconType
+                                iconUrl=@iconUrl
+                                badgeText=@badgeText
+                        )
+                )}}
+      </div>
     </div>
   </div>
-</div>
+{{else}}
+  <div id="sidebar-container"
+       class="sidebar-theme-{{this.themeClass}} sidebar-expanded d-none d-lg-block d-print-none"
+    {{did-insert this.sidebarInserted}}>
+    <div class="sidebar-content">
+      {{yield (hash
+                      group=(component "sidebar/group"
+                              theme=@theme
+                              title=@title
+                      )
+
+                      link=(component "sidebar/link"
+                              theme=@theme
+                              route=@route
+                              title=@title
+                              icon=@icon
+                              iconType=@iconType
+                              iconUrl=@iconUrl
+                              badgeText=@badgeText
+                      )
+              )}}
+      <div class="sidebar-separator"></div>
+      <a href class="sidebar-link" {{action this.sidebarToggle}}>
+        <span id="collapse-icon" class="fas fa-lg fa-angle-double-left"></span>
+        <span class="sidebar-link-text">Collapse</span>
+      </a>
+      <div class="sidebar-ranger-logo">
+        <img src="{{rootURL}}assets/images/ranger-logo.png" alt="Ranger Icon">
+      </div>
+    </div>
+  </div>
+{{/if}}

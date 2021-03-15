@@ -5,10 +5,10 @@ module.exports = {
   rules: {
     'attribute-indentation': false,
     'block-indentation': false,
-    'simple-unless': false,
-    'no-implicit-this': false,
     'no-action': false,
     'no-quoteless-attributes': false,
-    'no-curly-component-invocation': false,
+    'require-input-label': false,
+    'no-curly-component-invocation': { allow: ['general-support-email', 'vc-email', 'admin-email'] },
+    'no-implicit-this': { allow: [ 'general-support-email', 'vc-email', 'admin-email' ] }
   },
 };

@@ -13,8 +13,8 @@
       <input type="radio"
              class={{this.controlClass}}
              id={{this.domId}}
-             onclick={{action this.update value}}
-             checked={{eq (get @model @name) value}}
+             onclick={{action this.update @value}}
+             checked={{eq (get @model @name) @value}}
              disabled={{@disabled}}
       >
       {{#if @label}}

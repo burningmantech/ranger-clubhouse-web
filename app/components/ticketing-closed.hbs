@@ -92,7 +92,7 @@
               {{this.address.street}}<br>
               {{this.address.city}} {{this.address.state}} {{this.address.postal_code}} {{this.address.country}}
             </p>
-            {{#if ticket.isReducedPriceTicket}}
+            {{#if this.usingRPT}}
               <p>
                 <span class="text-danger">The address above will NOT be used for your event ticket.</span>
                 The Burning Man Ticketing website will ask again for the address which will be used

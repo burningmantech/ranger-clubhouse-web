@@ -1,4 +1,4 @@
-<h1>Personal Information For <span class="d-inline-block">{{person.callsign}}</span></h1>
+<h1>Personal Information For <span class="d-inline-block">{{this.person.callsign}}</span></h1>
 <BackToHome/>
 
 <ChForm @formId="person" @formFor={{this.person}} @autocomplete="on" @validator={{this.personInfoValidations}}
@@ -11,9 +11,9 @@
       <f.input @name="last_name" @label="Last Name" @maxlength=25 @grid="col-sm-12 col-md-6 col-lg-2"/>
     </div>
     <div class="form-row">
-      <f.input @name="email" @label="Email" @type="text" @inputmode="email" @maxlength=50
+      <f.input @name="email" @label="Email" @type="text" @inputmode="email" @maxlength={{50}}
                @grid="col-sm-6 col-md-4 col-xl-3" @noSpaces={{true}} />
-      <div class="form-group ">
+      <div class="form-group">
         <strong>Note:</strong> Updating your email address here WILL NOT update the email address used for various
         Ranger mailing lists. Contact {{general-support-email}} to update your email address for the forums.
       </div>
@@ -25,10 +25,10 @@
     </div>
     <div class="form-row">
       <f.input @name="home_phone" @label="Primary Phone" @type="text" @inputmode="tel"
-               @grid="col-sm-4 col-md-auto " @maxlength=25/>
+               @grid="col-sm-4 col-md-auto " @maxlength={{25}}/>
         <f.input @name="alt_phone" @label="Alternative Phone" @type="text" @inputmode="tel"
                  @grid="col-sm-4 col-md-auto"
-                 @maxlength=25/>
+                 @maxlength={{25}}/>
     </div>
 
     <div class="form-row">
@@ -37,7 +37,7 @@
                @label="Gender"
                @hint="Examples: female, male, non-binary, gender fluid, etc."
                @grid="col-auto"
-               @maxlength=32/>
+               @maxlength={{32}}/>
     </div>
     <div class="form-row">
       <f.input @name="pronouns"
@@ -66,7 +66,7 @@
       </div>
 
       <div class="form-row">
-        <f.input @name="callsign_pronounce" @label="Callsign Pronounciation" @size=20 @maxlength=20  @grid="col-auto" />
+        <f.input @name="callsign_pronounce" @label="Callsign Pronounciation" @size={{20}} @maxlength={{20}}  @grid="col-auto" />
       </div>
 
       <div class="form-group">
@@ -80,10 +80,11 @@
         BAD: "French - I taught in Paris and can only write in Italian. Took 1 year of high school spanish"<br>
       </div>
       <div class="form-row">
-        <f.input @name="languages" @label="Languages Spoken" @type="text" @size=80 @grid="col-sm-12 col-md-auto"/>
+        <f.input @name="languages" @label="Languages Spoken" @type="text" @size={{80}} @grid="col-sm-12 col-md-auto"/>
       </div>
       <div class="form-row">
-        <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @cols=80 @rows=3 @maxlength=200
+        <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @cols={{80}} @rows={{3}}
+                 @maxlength={{200}}
                  @grid="col-auto"
                  @hint={{concat (if f.model.camp_location f.model.camp_location.length "0") " of 200 characters"}} />
       </div>

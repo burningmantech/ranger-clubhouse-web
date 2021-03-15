@@ -127,7 +127,7 @@ export default class AutocompleteInputComponent extends Component {
    */
 
   @action
-  keyDownEvent(event) {
+  keyUpEvent(event) {
     const key = event.key;
     const oldSelection = this.selectionIdx;
     switch (key) {

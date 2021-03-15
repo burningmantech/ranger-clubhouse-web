@@ -1,4 +1,6 @@
-<div class="sidebar-group-title">
-    {{uppercase @title}}
-</div>
+{{#if @renderAsDropdown}}
+  <div class="dropdown-header">{{uppercase @title}}</div>
+{{else}}
+  <div class="sidebar-group-title">{{uppercase @title}}</div>
+{{/if}}
 {{yield}}

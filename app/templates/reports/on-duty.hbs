@@ -1,8 +1,8 @@
 <h1>
   {{#if this.over_hours}}
-    Currently On Duty Over {{over_hours}} Hours
+    Currently On Duty Over {{this.over_hours}} Hours
   {{else if this.duty_date}}
-    On Duty at {{full-datetime-format duty_date}}
+    On Duty at {{full-datetime-format this.duty_date}}
   {{else}}
     Currently On Duty
   {{/if}}
@@ -80,7 +80,8 @@
   </div>
 {{else}}
   <p>
-    <strong class="text-success">Congratulations! No one is on duty {{#if over_hours}}
-      for more than {{over_hours}} hours{{/if}}.</strong>
+    <strong class="text-success">Congratulations! No one is on duty
+      {{#if this.over_hours}} for more than {{this.over_hours}} hours{{/if}}.
+    </strong>
   </p>
 {{/each}}

@@ -16,7 +16,11 @@ export default class AdminBulkSignoutController extends Controller {
   @tracked selectAll = false;
 
   buildTimesheets(timesheets) {
-    this.timesheets = timesheets.map((t) => new TimesheetOption(t));
+    this.timesheets = timesheets.map((t) => {
+      const ts = new TimesheetOption(t);
+      ts.selected = true;
+      return ts;
+    });
   }
 
   get selectedCount() {
@@ -28,7 +32,8 @@ export default class AdminBulkSignoutController extends Controller {
   }
 
   @action
-  toggleAll(selected) {
+  toggleAll(event) {
+    const selected = event.target.checked;
     this.selectAll = selected;
     this.timesheets.forEach((ts) => ts.selected = selected);
   }

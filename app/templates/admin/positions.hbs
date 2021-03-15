@@ -67,7 +67,7 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
         </td>
         <td>
           {{#if position.training_position_id}}
-            {{pluck position.training_position_id positions "title" "-"}}<br>
+            {{pluck position.training_position_id this.positions "title" "-"}}<br>
           {{/if}}
           {{#if position.contact_email}}
             {{mail-to position.contact_email}}
@@ -144,7 +144,7 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
       </Modal.body>
 
       <Modal.footer @noAlign=true>
-        <f.submit @label={{if position.isNew "Create" "Update"}} @disabled={{this.position.isSaving}} />
+        <f.submit @label={{if this.position.isNew "Create" "Update"}} @disabled={{this.position.isSaving}} />
         <f.cancel @disabled={{this.position.isSaving}} />
         {{#if this.position.isSaving}}
           <LoadingIndicator/>

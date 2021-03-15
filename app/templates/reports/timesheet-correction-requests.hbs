@@ -4,7 +4,7 @@
   <label class="col-form-label">Filter requests by callsigns starting with</label>
   <div class="col-auto">
     <ChForm::Select @name="callsignFilter" @value={{this.callsignFilter}} @options={{this.letterOptions}}
-                    @onChange={{action (mut callsignFilter)}} @controlClass="form-control"/>
+                    @onChange={{action (mut this.callsignFilter)}} @controlClass="form-control"/>
   </div>
 </div>
 
@@ -26,11 +26,11 @@ Showing {{this.viewGroupCorrections.length}} of {{pluralize this.requests.length
     {{#each person.requests as |request idx|}}
       <tr class="{{if idx "no-border"}}">
         <td>
-          {{#unless idx}}
-            <PersonLink @person={{request.person}} @page="timesheet" @year={{this.year}} />
-          {{else}}
+          {{#if idx}}
             &nbsp;
-          {{/unless}}
+          {{else}}
+            <PersonLink @person={{request.person}} @page="timesheet" @year={{this.year}} />
+          {{/if}}
         </td>
         <td>{{if request.is_missing "Missing Entry" "Correction"}}</td>
         <td>{{request.position.title}}</td>

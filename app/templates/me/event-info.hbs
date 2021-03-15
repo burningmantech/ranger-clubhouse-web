@@ -17,28 +17,28 @@
 {{#if this.person.isNonRanger}}
   <p>Non Rangers are not required to pass training.</p>
 {{/if}}
-{{#if (and dirtTraining (not-eq dirtTraining.status "no-shift"))}}
-  {{#if (eq dirtTraining.status "pending")}}
-    Signed up for training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}.
-  {{else if (eq dirtTraining.status "pass")}}
-    Passed training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}
+{{#if (and this.dirtTraining (not-eq this.dirtTraining.status "no-shift"))}}
+  {{#if (eq this.dirtTraining.status "pending")}}
+    Signed up for training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}.
+  {{else if (eq this.dirtTraining.status "pass")}}
+    Passed training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
     {{#if this.person.isAlpha}}
       <br>
       You still need to walk your Alpha shift on playa in order to become a Ranger.
     {{/if}}
-  {{else if (eq dirtTraining.status "no-show")}}
-    Did not attend training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}
-  {{else if (eq dirtTraining.status "fail")}}
-    Did not pass training on {{mdy-format dirtTraining.date}} at {{dirtTraining.location}}
-  {{else if (eq dirtTraining.status "no-shift")}}
+  {{else if (eq this.dirtTraining.status "no-show")}}
+    Did not attend training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
+  {{else if (eq this.dirtTraining.status "fail")}}
+    Did not pass training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
+  {{else if (eq this.dirtTraining.status "no-shift")}}
   {{else}}
-    Uh oh, I did not understand the status [{{dirtTraining.status}}]
+    Uh oh, I did not understand the status [{{this.dirtTraining.status}}]
   {{/if}}
 {{else}}
   <p>
-    <b class="text-danger">No training sign ups were found for {{year}}.</b>
+    <b class="text-danger">No training sign ups were found for {{this.year}}.</b>
   </p>
-  {{#if (is-current-year year)}}
+  {{#if (is-current-year this.year)}}
     {{#if this.person.isActive}}
       You do not have to be trained to sign up for shifts, but you must be trained before actually working shifts on playa.
     {{else if this.person.isProspective}}
@@ -54,9 +54,8 @@
 {{/if}}
 
 <h3 class="mt-4">{{fa-icon "list"}} Positions</h3>
-Positions indicate which shifts you are allowed to sign up for and what ART
-trainings you may attend. You have
-{{pluralize this.personPositions.length "position"}} granted:
+Positions indicate which shifts you are allowed to sign up for and what ART trainings you may attend.
+You have {{pluralize this.personPositions.length "position"}} granted:
 <div class="form-row mt-2">
   {{#each this.personPositions as |position| }}
     <div class="col-sm-6 col-md-3">

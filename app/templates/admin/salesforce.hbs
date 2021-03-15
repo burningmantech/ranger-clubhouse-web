@@ -86,8 +86,9 @@
     <strong>Import options</strong>
     <p>
       <label><Input @type="checkbox" @checked={{this.createAccounts}} /> Create accounts</label><br>
-      <label><Input @type="checkbox" @checked={{this.updateSalesforce}} @disabled={{not createAccounts}} /><span
-              class="{{unless createAccounts "text-muted"}}"> Update Salesforce (create account only, cauton!)</span></label><br>
+      <label><Input @type="checkbox" @checked={{this.updateSalesforce}} disabled={{not this.createAccounts}} />
+        <span class="{{unless this.createAccounts "text-muted"}}"> Update Salesforce (create account only, caution!)</span>
+      </label><br>
       <label><Input @type="checkbox" @checked={{this.nonTestAccounts}} /> Use non-test accounts (caution!)</label><br>
     </p>
   </div>
@@ -152,7 +153,7 @@
             </td>
             <td>{{account.vc_status}}</td>
             <td>
-              <button type="button" class="btn btn-secondary btn-sm" {{action toggleAccount account}}>
+              <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleAccount account}}>
                 {{if account.showing "Hide" "Show"}}
               </button>
             </td>
@@ -171,7 +172,7 @@
             <td>{{account.applicant_type}}</td>
             <td>{{account.vc_status}}</td>
             <td>
-              <button type="button" class="btn btn-secondary btn-sm" {{action toggleAccount account}}>
+              <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleAccount account}}>
                 {{if account.showing "Hide" "Show"}}
               </button>
             </td>

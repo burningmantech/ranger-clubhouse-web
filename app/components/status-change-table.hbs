@@ -12,8 +12,7 @@
       <thead>
       <tr>
         <th>
-          <Input @type="checkbox" @checked={{this.selectAll}}
-                 @change={{action this.toggleAll value="target.checked"}} />
+          <Input @type="checkbox" @checked={{this.selectAll}} {{on "change" this.toggleAll}} />
         </th>
         <th>Callsign</th>
         <th>Current Status</th>
@@ -40,7 +39,8 @@
               {{#if person.error}}
                 {{fa-icon "excalamation-triangle"}}
               {{/if}}
-              <Input @type="checkbox" @checked={{person.selected}}  @change={{action this.togglePerson person}} />
+              <Input @type="checkbox" @checked={{person.selected}}
+                     {{on "change" (fn this.togglePerson person)}} />
             {{/if}}
           </td>
           <td>

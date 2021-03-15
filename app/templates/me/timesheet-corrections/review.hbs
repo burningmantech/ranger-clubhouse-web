@@ -1,30 +1,35 @@
 <h3>Timesheet Entry Review</h3>
 
-{{#if timesheets}}
+{{#if this.timesheets}}
   <p>
-    Review your {{timesheetInfo.correction_year}} timesheet entries below and mark each
+    Review your {{this.timesheetInfo.correction_year}} timesheet entries below and mark each
     as correct or incorrect. When you mark an entry as incorrect, a dialog box will appear
     where you may give an explanation on how the entry should be corrected.
   </p>
   <p>
     <b>Is the timesheet missing a shift that you worked?</b>
-    Use the <LinkTo @route="me.timesheet-corrections.missing">Missing Entries Requests</LinkTo>
+    Use the
+    <LinkTo @route="me.timesheet-corrections.missing">Missing Entries Requests</LinkTo>
     page to ask for a missing shift to be recorded.
   </p>
-  <Me::TimesheetReviewCommon @timesheets={{timesheets}} @timesheetSummary={{timesheetSummary}} @timesheetInfo={{timesheetInfo}} @person={{person}} />
+  <Me::TimesheetReviewCommon @timesheets={{this.timesheets}} @timesheetSummary={{this.timesheetSummary}}
+                             @timesheetInfo={{this.timesheetInfo}} @person={{this.person}} />
 {{else}}
   <p class="lead mt-3 text-danger">
-    No timesheet entries were found for {{timesheetInfo.correction_year}}.
+    No timesheet entries were found for {{this.timesheetInfo.correction_year}}.
   </p>
 {{/if}}
 
 <div class="mt-4">
   <div class="row">
     <div class="col-6 mb-2">
-      <LinkTo @route="me.timesheet-corrections.index" class="btn btn-success">{{fa-icon "arrow-left"}} Correction Instructions</LinkTo>
+      <LinkTo @route="me.timesheet-corrections.index" class="btn btn-success">{{fa-icon "arrow-left"}} Correction
+        Instructions
+      </LinkTo>
     </div>
     <div class="col-6 text-right">
-      <LinkTo @route="me.timesheet-corrections.missing" class="btn btn-success">Missing Entries Requests {{fa-icon "arrow-right"}}</LinkTo>
+      <LinkTo @route="me.timesheet-corrections.missing" class="btn btn-success">Missing Entries Requests {{fa-icon
+              "arrow-right"}}</LinkTo>
     </div>
   </div>
 </div>

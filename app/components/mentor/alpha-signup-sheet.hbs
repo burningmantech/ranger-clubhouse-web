@@ -92,14 +92,10 @@
 
     <table class="signup-table">
       <tbody>
-        <NumberOfTimes @times={{alphasPerPage}}>
+        <NumberOfTimes @times={{this.alphasPerPage}}>
           <tr>
             <td class="w-5 text-center">
-              {{#if person.have_mentor_flags}}
-                {{fa-icon "check"}}
-              {{else}}
                 &nbsp;
-              {{/if}}
             </td>
             <td class="w-25">
               <div class="signup-label">Ranger Handle (if known)</div>

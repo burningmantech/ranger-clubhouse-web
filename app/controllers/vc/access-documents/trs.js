@@ -280,7 +280,9 @@ export default class VcAccessDocumentsTrsController extends Controller {
   }
 
   @action
-  toggleAll(selected) {
+  toggleAll(event) {
+    const selected = event.target.checked;
+
     this.selectAll = selected;
     this.viewRecords.forEach((r) => set(r, 'selected', selected));
     this.selectedCount = selected ? this.viewRecords.length : 0;

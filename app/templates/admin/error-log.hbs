@@ -1,10 +1,9 @@
 <main>
   <h1>Error Log</h1>
 
-
   {{#if this.error_logs}}
     <p>
-      <button type="button" class="btn btn-danger" {{action purgeLog}}>Purge Log</button>
+      <button type="button" class="btn btn-danger" {{action this.purgeLog}}>Purge Log</button>
     </p>
     <p>
       Showing {{this.page}} of {{this.total_pages}} pages. Total {{pluralize this.total "found row"}}
@@ -42,8 +41,9 @@
             {{log.url}}
           </td>
           <td>
-            <button type="button" class="btn btn-secondary btn-sm" {{action toggleLog log}}>{{if log.showing "Hide"
-                                                                                                 "Show"}}</button>
+            <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleLog log}}>
+              {{if log.showing "Hide" "Show"}}
+            </button>
           </td>
         </tr>
 
@@ -60,15 +60,15 @@
     </table>
     <div class="row">
       <div class="col-sm-12 col-md-6">
-        {{#if (not-eq page 1)}}
-          <LinkTo @route="admin.error-log" @query={{hash page=previousPage}} class="btn btn-primary">Prev Page</LinkTo>
+        {{#if (not-eq this.page 1)}}
+          <LinkTo @route="admin.error-log" @query={{hash page=this.previousPage}} class="btn btn-primary">Prev Page</LinkTo>
         {{else}}
           &nbsp;
         {{/if}}
       </div>
       <div class="col-sm-12 col-md-6">
-        {{#if (not-eq page total_pages)}}
-          <LinkTo @route="admin.error-log" @query={{hash page=nextPage}} class="btn btn-primary">Next Page</LinkTo>
+        {{#if (not-eq this.page this.total_pages)}}
+          <LinkTo @route="admin.error-log" @query={{hash page=this.nextPage}} class="btn btn-primary">Next Page</LinkTo>
         {{else}}
           &nbsp;
         {{/if}}

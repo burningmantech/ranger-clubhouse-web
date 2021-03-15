@@ -38,7 +38,7 @@ Showing {{this.totalPeople}} people over {{this.freaking.length}} years.
             <th class="w-10">Status</th>
             <th>First Year</th>
             <th>Last Year</th>
-            <th>Signed Up {{signed_up_year}}</th>
+            <th>Signed Up {{this.signed_up_year}}</th>
           </tr>
           </thead>
           <tbody>
@@ -53,7 +53,6 @@ Showing {{this.totalPeople}} people over {{this.freaking.length}} years.
               <td>{{person.last_year}}</td>
               <td class="text-center">{{yesno person.signed_up}}</td>
             </tr>
-
           {{/each}}
           </tbody>
         </table>

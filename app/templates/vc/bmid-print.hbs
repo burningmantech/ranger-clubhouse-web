@@ -1,11 +1,12 @@
 <main>
-  <h1>Submit {{year}} BMIDS To Lambase</h1>
+  <h1>Submit {{this.year}} BMIDS To Lambase</h1>
 
   <div class="form-group row">
     <div class="col-auto">
       <label>Filter:</label>
-      <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}} @onChange={{action
-              (mut this.filter)}} @controlClass="form-control-sm" @disabled={{this.isRendering}} />
+      <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}}
+                      @onChange={{action (mut this.filter)}} @controlClass="form-control-sm"
+                      @disabled={{this.isRendering}} />
     </div>
     <div class="col-auto ml-4">
       <LinkTo @route="vc.bmid" class="btn btn-secondary btn-sm">Manage BMIDs</LinkTo>
@@ -18,15 +19,16 @@
     <div class="col-auto">
       <div class="input-group">
         <label>Callsign, title, team, notes filter:</label>
-        <Input @type="text" @value={{this.textFilterInput}} class="form-control-sm ml-2" @enter={{action
-                textFilterAction}} @disabled={{this.isRendering}} />
-        <button type="button" class="btn btn-primary btn-sm ml-1" {{action textFilterAction}} disabled={{this.isRendering}}>Filter
+        <Input @type="text" @value={{this.textFilterInput}} class="form-control-sm ml-2"
+               @enter={{action this.textFilterAction}} disabled={{this.isRendering}} />
+        <button type="button" class="btn btn-primary btn-sm ml-1" {{action this.textFilterAction}} disabled={{this.isRendering}}>
+          Filter
         </button>
-        <button type="button" class="btn btn-secondary btn-sm ml-1" {{action clearTextFilterAction}} disabled={{this.isRendering}}>
+        <button type="button" class="btn btn-secondary btn-sm ml-1" {{action this.clearTextFilterAction}} disabled={{this.isRendering}}>
           Clear
         </button>
       </div>
-      {{#if textFilterError}}
+      {{#if this.textFilterError}}
         <div class="text-danger">{{this.textFilterError}}</div>
       {{/if}}
       <div class="text-muted small">Regular Expression allowed</div>
@@ -36,29 +38,29 @@
 
   <p>
     <span class="d-inline">
-      Total BMIDs: {{totalBmids}}
+      Total BMIDs: {{this.totalBmids}}
     </span>
-    <span class="d-inline {{if doNotPrint "text-danger"}}">
-      Do Not Print: {{doNotPrint.length}}
+    <span class="d-inline {{if this.doNotPrint "text-danger"}}">
+      Do Not Print: {{this.doNotPrint.length}}
     </span>
-    <span class="d-inline {{if issues "text-danger"}}">
-      Issues: {{issues.length}}
+    <span class="d-inline {{if this.issues "text-danger"}}">
+      Issues: {{this.issues.length}}
     </span>
-    <span class="d-inline {{if unusualStatus "text-danger"}}">
-      Unusual Person Status: {{unusualStatus.length}}
-    </span>
-    <span class="d-inline">
-      Printed: {{printed.length}}
+    <span class="d-inline {{if this.unusualStatus "text-danger"}}">
+      Unusual Person Status: {{this.unusualStatus.length}}
     </span>
     <span class="d-inline">
-      Submitted: {{submitted.length}}
+      Printed: {{this.printed.length}}
+    </span>
+    <span class="d-inline">
+      Submitted: {{this.submitted.length}}
     </span>
   </p>
 
   {{#if this.doNotPrint}}
     <div class="border p-2">
       Do Not Print:
-      {{#each doNotPrint as |bmid idx|~}}
+      {{#each this.doNotPrint as |bmid idx|~}}
         {{~if idx ","}}
         <PersonLink @person={{bmid.person}} />
       {{/each}}
@@ -79,8 +81,8 @@
     <div class="border p-2">
       Unusual Status:
       {{#each this.unusualStatus as |bmid idx|~}}
-        {{~if idx ","}}<span class="d-inline-block"><PersonLink @person={{bmid.person}} /> ({{bmid.person.status}}
-        )</span>
+        {{~if idx ","}}<span class="d-inline-block"><PersonLink @person={{bmid.person}} />
+        ({{bmid.person.status}})</span>
       {{/each}}
     </div>
   {{/if}}
@@ -110,7 +112,7 @@
     <tbody>
     {{#each this.viewBmids as |bmid|}}
       <tr class="{{if (eq bmid.status "failed") "bg-danger"}}">
-        <td><Input @type="checkbox" @checked={{bmid.selected}} @change={{action this.toggleBmid bmid}}/></td>
+        <td><Input @type="checkbox" @checked={{bmid.selected}} {{on "change" (fn this.toggleBmid bmid)}}/></td>
         <td>{{bmid.statusHuman}}</td>
         <td>{{bmid.person.callsign}}</td>
         <td>{{bmid.person.first_name}} {{bmid.person.last_name}}</td>

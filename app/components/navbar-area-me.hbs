@@ -1,5 +1,5 @@
 <NavbarMenu @title="Me">
-  {{#unless (or @user.isPastProspective @user.isProspectiveWaitlist)}}
+  {{#if (not (or @user.isPastProspective @user.isProspectiveWaitlist))}}
     <NavbarMenuSection @section="Rangering">
       <NavbarMenuItem @route="me.schedule" @item="Schedule / Sign Up"/>
       {{#if (or @user.isAlpha @user.isRanger)}}
@@ -10,7 +10,7 @@
         <NavbarMenuItem @route="me.event-info" @item="Event Info"/>
       {{/unless}}
     </NavbarMenuSection>
-  {{/unless}}
+  {{/if}}
 
   {{#if (or @user.isRanger @user.isPNV)}}
     <NavbarMenuSection @section="Pre-Event">

@@ -18,7 +18,7 @@
   </Accordion.body>
 </ChAccordion>
 <Person::TimesheetManage @timesheets={{this.timesheets}} @person={{this.person}} @year={{this.year}}
-                         @positions={{positions}} @onChange={{this.updateTimesheetSummary}}
+                         @positions={{this.positions}} @onChange={{this.updateTimesheetSummary}}
                          @timesheetSummary={{this.timesheetSummary}} />
 <Person::TimesheetMissing @timesheetMissing={{this.timesheetMissing}} @timesheets={{this.timesheets}}
                           @person={{this.person}} @year={{this.year}} @positions={{this.positions}}

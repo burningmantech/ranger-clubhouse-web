@@ -129,7 +129,8 @@
         {{/if}}
         {{#unless this.entry.isNew}}
           <div class="ml-auto">
-            <button type="button" class="btn btn-danger" {{action this.deleteEntry motd}}>{{fa-icon "trash"}}Delete
+            <button type="button" class="btn btn-danger" {{action this.deleteEntry this.entry}}>
+              {{fa-icon "trash"}}Delete
             </button>
           </div>
         {{/unless}}

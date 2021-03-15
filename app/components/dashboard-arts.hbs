@@ -1,6 +1,6 @@
-{{#unless (eq @step.result "completed")}}
+{{#if (not-eq @step.result "completed")}}
   In order to work certain Ranger special team shifts you have to sign up for and attend the corresponding ART(s).
-{{/unless}}
+{{/if}}
 
 <div class="dashboard-art-table">
   <div class="dashboard-art-row dashboard-art-header">
@@ -51,6 +51,6 @@
   {{/each}}
 </div>
 
-{{#unless (eq @step.result "completed")}}
+{{#if (not-eq @step.result "completed")}}
   Visit <LinkTo @route="me.schedule">Me &gt; Schedule / Sign Up</LinkTo> to sign up the ART(s).
-{{/unless}}
+{{/if}}

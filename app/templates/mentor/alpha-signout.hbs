@@ -50,7 +50,7 @@
     <tr>
       <th>
         <Input @type="checkbox" @checked={{this.selectAll}}
-               @change={{action this.toggleAll value="target.checked"}} />
+               {{on "change" this.toggleAll}} />
       </th>
       <th>Callsign</th>
       <th>On Duty</th>
@@ -71,7 +71,7 @@
             <Input @type="checkbox" @checked={{alpha.selected}} />
           {{/if}}
         </td>
-        <td>{{person-link person=alpha}}</td>
+        <td><PersonLink @person={{alpha}} /></td>
         <td>{{shift-format alpha.on_duty}}</td>
         <td>
           {{#if alpha.off_duty}}

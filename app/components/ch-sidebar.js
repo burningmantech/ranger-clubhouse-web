@@ -7,9 +7,14 @@ const COLLAPSED_PREF = 'sidebarCollapsed';
 
 export default class ChSidebarComponent extends Component {
   @service house;
+  @service session;
 
   get themeClass() {
     return isEmpty(this.args.theme) ? 'default' : this.args.theme;
+  }
+
+  get renderAsDropdown() {
+    return (this.session.isSmallScreen && !this.args.noSmallScreen);
   }
 
   @action

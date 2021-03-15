@@ -1,9 +1,9 @@
 <p>
-  Period: {{ticketingInfo.period}}
-  {{#if (eq ticketingInfo.period "open")}}
-    Tickets: {{ticketingInfo.ticket_status}} TAS_VP: {{ticketingInfo.vp_status}}
-    WAP: {{ticketingInfo.wap_status}}, TAS_WAPSO: {{ticketingInfo.wap_so_status}}
-    Delivery: {{ticketingInfo.delivery_status}}
+  Period: {{this.ticketingInfo.period}}
+  {{#if (eq this.ticketingInfo.period "open")}}
+    Tickets: {{this.ticketingInfo.ticket_status}} TAS_VP: {{this.ticketingInfo.vp_status}}
+    WAP: {{this.ticketingInfo.wap_status}}, TAS_WAPSO: {{this.ticketingInfo.wap_so_status}}
+    Delivery: {{this.ticketingInfo.delivery_status}}
   {{/if}}
 </p>
 <hr>

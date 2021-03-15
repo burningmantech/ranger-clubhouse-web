@@ -3,7 +3,7 @@
   <div class="d-flex mx-2 mt-4 mb-2 {{if alphaIdx "d-print-page-break"}}">
     <img src="{{rootURL}}assets/images/ranger-logo-bw.png" class="alpha-sheet-logo" alt="ranger">
     <div class="alpha-sheet-header align-middle">
-      {{this.year}} Alpha To Dirt Ranger Acceptance Form ({{add alphaIdx 1}} / {{printAlphas.length}})
+      {{this.year}} Alpha To Dirt Ranger Acceptance Form ({{add alphaIdx 1}} / {{this.printAlphas.length}})
     </div>
   </div>
 
@@ -130,7 +130,7 @@
         <thead>
         <tr>
           <th>&nbsp;</th>
-          <th class="w-35">{{year}} MENTOR NAME</th>
+          <th class="w-35">{{this.year}} MENTOR NAME</th>
           <th class="w-20">ACCEPT</th>
           <th class="w-20">ACCEPT W/RESERV.</th>
           <th class="w-20">REJECT</th>

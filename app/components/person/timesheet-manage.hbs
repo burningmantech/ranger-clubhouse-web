@@ -208,7 +208,7 @@
           {{/if}}
           <div class="ml-auto">
             <button type="button" class="btn btn-danger" {{action this.removeEntryAction}}
-                    title="Delete timesheet entry" disabled={{ts.editEntry.isSaving}}>
+                    title="Delete timesheet entry" disabled={{this.editEntry.isSaving}}>
               {{fa-icon "trash"}} Delete Entry
             </button>
           </div>

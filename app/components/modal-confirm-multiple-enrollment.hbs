@@ -2,7 +2,7 @@
   <modal.body>
     <p>
       {{if this.isMe "You are " (concat this.data.person.callsign "is")}} already enrolled in
-      {{pluralize this.data.slots.length (if data.isAlpha "Alpha shift" (concat this.trainingType " session"))}}:
+      {{pluralize this.data.slots.length (if this.data.isAlpha "Alpha shift" (concat this.trainingType " session"))}}:
     </p>
     <p>
       {{#each this.data.slots as |slot|}}

@@ -6,7 +6,7 @@
   The report shows which numbers have not been verified. The stopped table are those phone numbers which a stop command was issued by the owner.
 </p>
 <table class="table table-sm table-striped">
-  <caption>{{pluralize unverified.length "unverified phone"}}</caption>
+  <caption>{{pluralize this.unverified.length "unverified phone"}}</caption>
   <thead>
     <tr>
       <th>Callsign</th>
@@ -16,7 +16,7 @@
     </tr>
   </thead>
   <tbody>
-    {{#each unverified as |person|}}
+    {{#each this.unverified as |person|}}
       <tr>
         <td><PersonLink @person={{person}} /></td>
         <td>{{person.status}}</td>
@@ -40,7 +40,7 @@
 </table>
 
 <table class="table table-sm table-striped mt-2">
-  <caption>{{pluralize stopped.length "stopped phone"}}</caption>
+  <caption>{{pluralize this.stopped.length "stopped phone"}}</caption>
   <thead>
     <tr>
       <th>Callsign</th>
@@ -50,7 +50,7 @@
     </tr>
   </thead>
   <tbody>
-    {{#each stopped as |person|}}
+    {{#each this.stopped as |person|}}
       <tr>
         <td><PersonLink @person={{person}} /></td>
         <td>{{person.status}}</td>

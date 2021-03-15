@@ -1,7 +1,7 @@
 {{#if this.showForThisYear}}
   <p>
     To qualify for a ticket to the {{this.ticketYear}} event you need {{credits-format this.rpThreshold}} credits
-    for a reduced-price ticket and {{credits-format scThreshold}} credits for a staff credential.
+    for a reduced-price ticket and {{credits-format this.scThreshold}} credits for a staff credential.
   </p>
   {{#if this.reachedSCThreshold}}
     <p>
@@ -32,10 +32,9 @@
     </p>
   {{else if this.almostRPTicket}}
     <p>
-      <strong class="text-danger">Almost there!</strong> You're signed up for
-      {{credits-format credits}} credits worth of shifts,
-      and you need {{credits-format this.rpThreshold}} to qualify for a
-      {{this.ticketYear}} reduced-price ticket.
+      <strong class="text-danger">Almost there!</strong> You're signed up for {{credits-format @credits}} credits
+      worth of shifts, and you need {{credits-format this.rpThreshold}} to qualify for a {{this.ticketYear}}
+      reduced-price ticket.
     </p>
   {{/if}}
 

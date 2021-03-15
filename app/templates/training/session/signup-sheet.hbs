@@ -1,71 +1,35 @@
 <div class="d-print-none mb-4">
   <LinkTo @route="training.session">Back to Training Session</LinkTo>
   <p class="text-muted">
-    Use your browser's print command to send this page to the printer. Don't worry, the navigation bar, website footer, and this message will
+    Use your browser's print command to send this page to the printer. Don't worry, the navigation bar, website footer,
+    and this message will
     not appear on the paper.
   </p>
 </div>
 
 <div class="signup-page">
-  {{#each studentPages as |studentPage idx|}}
-    <h1 class="{{if idx "d-print-page-break"}}">{{year-format slot.begins}} {{slot.description}} - {{shift-format slot.begins}}
-      <div class="float-right small">Page {{add idx 1}} of {{add studentPages.length 1}}</div>
+  {{#each this.studentPages as |studentPage idx|}}
+    <h1 class="{{if idx "d-print-page-break"}}">
+      {{year-format this.slot.begins}} {{this.slot.description}} - {{shift-format this.slot.begins}}
+      <div class="float-right small">Page {{add idx 1}} of {{add this.studentPages.length 1}}</div>
     </h1>
 
     <table class="signup-table">
       <tbody>
-        {{#each studentPage as |student|}}
-          <tr>
-            <td class="w-25">
-              <div class="signup-label">Handle</div>
-              {{student.callsign}}
-            </td>
-            <td class="w-25">
-              <div class="signup-label">Real Name</div>
-              {{student.first_name}} {{student.last_name}}
-            </td>
-
-            <td class="w-50">
-              <div class="signup-label">Sign Here</div>
-              &nbsp;
-            </td>
-          </tr>
-          <tr>
-            <td class="w-100" colspan="3">
-              <div class="signup-label">Notes</div>
-            </td>
-          </tr>
-          <tr class="signup-separator">
-            <td colspan="3">&nbsp;</td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  {{/each}}
-
-  <h1 class="d-print-page-break">{{year-format slot.begins}} {{slot.description}} - {{shift-format slot.begins}} Walk-Ins <div class="float-right small">Page {{add studentPages.length 1}} of {{add studentPages.length 1}}</div>
-  </h1>
-  <table class="signup-table">
-    <tbody>
-      <NumberOfTimes @times={{8}}>
+      {{#each studentPage as |student|}}
         <tr>
           <td class="w-25">
-            <div class="signup-label">Handle (if known)</div>
+            <div class="signup-label">Handle</div>
+            {{student.callsign}}
           </td>
           <td class="w-25">
             <div class="signup-label">Real Name</div>
+            {{student.first_name}} {{student.last_name}}
           </td>
 
           <td class="w-50">
             <div class="signup-label">Sign Here</div>
-          </td>
-        </tr>
-        <tr>
-          <td class="w-50" colspan="2">
-            <div class="signup-label">Email Address</div>
-          </td>
-          <td class="w-50" >
-            <div class="signup-label">Phone Number</div>
+            &nbsp;
           </td>
         </tr>
         <tr>
@@ -73,11 +37,51 @@
             <div class="signup-label">Notes</div>
           </td>
         </tr>
-
         <tr class="signup-separator">
           <td colspan="3">&nbsp;</td>
         </tr>
-      </NumberOfTimes>
+      {{/each}}
+      </tbody>
+    </table>
+  {{/each}}
+
+  <h1 class="d-print-page-break">
+    {{year-format this.slot.begins}} {{this.slot.description}} - {{shift-format this.slot.begins}} Walk-Ins
+    <div class="float-right small">Page {{add this.studentPages.length 1}} of {{add this.studentPages.length 1}}</div>
+  </h1>
+  <table class="signup-table">
+    <tbody>
+    <NumberOfTimes @times={{8}}>
+      <tr>
+        <td class="w-25">
+          <div class="signup-label">Handle (if known)</div>
+        </td>
+        <td class="w-25">
+          <div class="signup-label">Real Name</div>
+        </td>
+
+        <td class="w-50">
+          <div class="signup-label">Sign Here</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="w-50" colspan="2">
+          <div class="signup-label">Email Address</div>
+        </td>
+        <td class="w-50">
+          <div class="signup-label">Phone Number</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="w-100" colspan="3">
+          <div class="signup-label">Notes</div>
+        </td>
+      </tr>
+
+      <tr class="signup-separator">
+        <td colspan="3">&nbsp;</td>
+      </tr>
+    </NumberOfTimes>
     </tbody>
   </table>
 </div>

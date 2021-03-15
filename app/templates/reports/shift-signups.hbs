@@ -1,4 +1,4 @@
-<YearSelect @title="Shift Signups Report" year=this.year @onChange={{action (mut this.year)}}  />
+<YearSelect @title="Shift Signups Report" year={{this.year}} @onChange={{action (mut this.year)}}  />
 <p>
   The report shows all shifts available in the Clubhouse for a given year. A shift will be highlighted
   in red if no one has signed up, or highlighted in yellow if the shift is less than 20% full.
@@ -7,7 +7,7 @@
   <a href="#summary">Jump to Empty Shifts summary</a>
 </p>
 
-<button type="button" class="btn btn-primary" {{action exportToCSV}}>Export to CSV</button>
+<button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export to CSV</button>
 {{! template-lint-disable table-groups}}
 <table class="table table-sm table-hover table-width-auto mt-2">
   {{#each this.positions as |position|}}

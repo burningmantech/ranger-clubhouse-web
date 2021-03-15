@@ -1,39 +1,51 @@
 <h1>Sandmen Qualification Report</h1>
 <p>
-  This report will show who holds the Sandman position, if they are trained for the current year, have signed the affidavit, have worked any Burn Perimeter-like shift in {{cutoff_year}} or later, and if they are signed up for a {{year}} Sandman shift.
+  This report will show who holds the Sandman position, if they are trained for the current year, have signed the
+  affidavit, have worked any Burn Perimeter-like shift in {{this.cutoff_year}} or later, and if they are signed up for
+  a {{this.year}} Sandman shift.
 </p>
 <div class="form-row mb-1">
   <div class="col-auto">
     <label class="col-form-label">Filter:</label>
   </div>
   <div class="col-auto mb-2">
-    <ChForm::Select @name="filter" @value={{filter}} @options={{filterOptions}} @onChange={{action (mut filter)}} @controlClass="form-control" />
+    <ChForm::Select @name="filter"
+                    @value={{this.filter}}
+                    @options={{this.filterOptions}}
+                    @onChange={{action (mut this.filter)}}
+                    @controlClass="form-control"/>
   </div>
   <div class="col-auto">
-    <button type="button" class="btn btn-secondary" {{action exportToCSV}}>Export all to CSV</button>
-</div>
+    <button type="button" class="btn btn-secondary" {{action this.exportToCSV}}>Export all to CSV</button>
+  </div>
 </div>
 
 <table class="table table-striped table-sm table-width-auto">
-  <caption>Showing {{viewPeople.length}} of {{sandpeople.length}}, {{pluralize qualifiedSignedUpCount "qualified sign up"}}, {{pluralize  unqualifiedSignedUpCount "unqualified sign up"}}</caption>
+  <caption>
+    Showing {{this.viewPeople.length}} of {{this.sandpeople.length}},
+    {{pluralize this.qualifiedSignedUpCount "qualified sign up"}},
+    {{pluralize this.unqualifiedSignedUpCount "unqualified sign up"}}
+  </caption>
   <thead>
-    <tr>
-      <th>Callsign</th>
-      <th>{{year}} Trained</th>
-      <th>Affidavit </th>
-      <th>Experience (&gt;= {{cutoff_year}})</th>
-      <th>{{year}} Signed Up</th>
-    </tr>
+  <tr>
+    <th>Callsign</th>
+    <th>{{this.year}} Trained</th>
+    <th>Affidavit</th>
+    <th>Experience (&gt;= {{this.cutoff_year}})</th>
+    <th>{{this.year}} Signed Up</th>
+  </tr>
   </thead>
   <tbody>
-    {{#each viewPeople as |person|}}
-      <tr>
-        <td><PersonLink @person={{person}} /></td>
-        <td class="text-center">{{yesno person.is_trained}}</td>
-        <td class="text-center">{{yesno person.sandman_affidavit}}</td>
-        <td class="text-center">{{yesno person.has_experience}}</td>
-        <td class="text-center">{{yesno person.is_signed_up}}</td>
-      </tr>
-    {{/each}}
+  {{#each this.viewPeople as |person|}}
+    <tr>
+      <td>
+        <PersonLink @person={{person}} />
+      </td>
+      <td class="text-center">{{yesno person.is_trained}}</td>
+      <td class="text-center">{{yesno person.sandman_affidavit}}</td>
+      <td class="text-center">{{yesno person.has_experience}}</td>
+      <td class="text-center">{{yesno person.is_signed_up}}</td>
+    </tr>
+  {{/each}}
   </tbody>
 </table>

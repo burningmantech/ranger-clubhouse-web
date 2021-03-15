@@ -54,8 +54,9 @@
 </div>
 
 {{#if this.editPositions}}
-  <Person::PositionForm @positions={{positions}} @positionIds={{positionIds}} @onSave={{action this.savePositions}}
-                        @onCancel={{action cancelPositions}} />
+  <Person::PositionForm @positions={{this.positions}} @positionIds={{this.positionIds}}
+                        @onSave={{action this.savePositions}}
+                        @onCancel={{action this.cancelPositions}} />
 {{/if}}
 
 {{#if this.editRoles}}
@@ -87,7 +88,7 @@
     </Modal.footer>
   </ModalDialog>
 {{else if this.showEditNote}}
-  <ModalDialog @title={{if person.messsage "Add Account Note" "Update Account Note"}} as |Modal|>
+  <ModalDialog @title={{if this.person.messsage "Add Account Note" "Update Account Note"}} as |Modal|>
     <ChForm @formId="person-note" @formFor={{this.personNote}} @changeSet={{false}}
             @onSubmit={{this.saveNote}} @onCancel={{this.closeNote}} as |f|>
       <Modal.body>

@@ -183,7 +183,7 @@
                   <tbody>
                   {{#each position.credits as |credit|}}
                     <tr>
-                      <td><Input @type="checkbox" @checked={{credit.selected}} @id={{credit.checkboxId}} /></td>
+                      <td><Input @type="checkbox" @checked={{credit.selected}} id={{credit.checkboxId}} /></td>
                       <td>
                         <label for={{credit.checkboxId}}>
                           {{shift-format credit.source.start_time}} &rarr;

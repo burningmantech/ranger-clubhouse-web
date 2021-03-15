@@ -23,7 +23,7 @@
             View {{person.callsign}}
           </LinkTo>
           |
-          <LinkTo @route="person.timesheet" @model={{person.id}} @year={{this.year}}>
+          <LinkTo @route="person.timesheet" @model={{person.id}} @query={{hash year=this.year}}>
             View {{this.year}} Timesheet
           </LinkTo>
         </p>
