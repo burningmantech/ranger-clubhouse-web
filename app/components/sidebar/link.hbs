@@ -1,5 +1,5 @@
 {{#if this.isUrl}}
-  <a href={{@route}} class="sidebar-link">
+  <a href={{@route}} class="{{this.linkClass}}">
     <Sidebar::LinkText @iconUrl={{@iconUrl}}
                        @icon={{@icon}}
                        @iconType={{this.iconType}}
@@ -9,17 +9,24 @@
 {{else}}
   {{#if @routeArg}}
     <LinkTo @route={{@route}} @model={{@routeArg}} @query={{@query}}
-            class="sidebar-link"
-            @activeClass="sidebar-active">
-      <Sidebar::LinkText @iconUrl={{@iconUrl}} @icon={{@icon}} @iconType={{this.iconType}} @title={{@title}}
+            class="{{this.linkClass}}"
+            @activeClass="{{this.activeClass}}">
+      <Sidebar::LinkText @iconUrl={{@iconUrl}}
+                         @icon={{@icon}}
+                         @iconType={{this.iconType}}
+                         @title={{@title}}
                          @badgeText={{@badgeText}} />
     </LinkTo>
   {{else}}
   {{! ARG.. link-to @model cannot deal with undefined and do the right thing}}
-    <LinkTo @route={{@route}}  @query={{@query}}
-            class="sidebar-link"
-            @activeClass="sidebar-active">
-      <Sidebar::LinkText @iconUrl={{@iconUrl}} @icon={{@icon}} @iconType={{this.iconType}} @title={{@title}}
+    <LinkTo @route={{@route}}
+            @query={{@query}}
+            class="{{this.linkClass}}"
+            @activeClass="{{this.activeClass}}">
+      <Sidebar::LinkText @iconUrl={{@iconUrl}}
+                         @icon={{@icon}}
+                         @iconType={{this.iconType}}
+                         @title={{@title}}
                          @badgeText={{@badgeText}} />
     </LinkTo>
   {{/if}}

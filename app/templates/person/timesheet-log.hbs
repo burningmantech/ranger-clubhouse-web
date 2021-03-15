@@ -1,4 +1,4 @@
-<YearSelect @title="Timesheet Logs" @year={{this.year}} @years={{this.person.all_years}}
+'<YearSelect @title="Timesheet Logs" @year={{this.year}} @years={{this.person.all_years}}
             @subheader={{true}} @onChange={{action (mut this.year)}} />
 <p>
   <LinkTo @route="person.timesheet" @query={{hash year=this.year}}>Back To {{this.year}} Timesheet Entries</LinkTo>
@@ -132,20 +132,20 @@
       </td>
       <td class="timesheetlog-message">
         <b>{{get this.actionLabels log.action}}
-          {{#if data.via}}
+          {{#if log.data.via}}
             via
-            {{#if (eq data.via "bulk-upload")}}
+            {{#if (eq log.data.via "bulk-upload")}}
               bulk uploader
-            {{else if (eq data.via "missing-entry")}}
+            {{else if (eq log.data.via "missing-entry")}}
               missing entry request
             {{else}}
-              {{data.via}}
+              {{log.data.via}}
             {{/if}}
           {{/if}}
         </b>
         <br>
-        {{#if data.message}}
-          {{data.message}}<br>
+        {{#if log.data.message}}
+          {{log.data.message}}<br>
         {{/if}}
       </td>
     </tr>

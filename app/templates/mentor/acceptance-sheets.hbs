@@ -9,7 +9,7 @@
       <ChForm::Select @name="filter"
                       @value={{this.filter}}
                       @options={{this.filterOptions}}
-                      @onChange={action this.changeFilter}}
+                      @onChange={{this.changeFilter}}
                       @controlClass="form-control"/>
     </div>
     <div class="col-auto">
@@ -22,7 +22,7 @@
   <table class="table table-striped table-sm table-hover table-width-auto">
     <thead>
     <tr>
-      <th><Input @type="checkbox" @checked={{this.selectAll}} @change={{action this.toggleAll value="target.checked"}} /></th>
+      <th><Input @type="checkbox" @checked={{this.selectAll}} {{on "change" this.toggleAll}} /></th>
       <th>Callsign</th>
       <th>Name</th>
       <th>Training</th>
@@ -34,7 +34,7 @@
     <tbody>
     {{#each this.viewAlphas as |alpha|}}
       <tr>
-        <td><Input @type="checkbox" @checked={{alpha.selected}} @change={{action this.toggleAlpha alpha}} /></td>
+        <td><Input @type="checkbox" @checked={{alpha.selected}} {{on "change" (fn this.toggleAlpha alpha)}} /></td>
         <td>
           <PersonLink @person={{alpha}} />
         </td>

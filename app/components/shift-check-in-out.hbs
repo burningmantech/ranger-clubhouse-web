@@ -106,7 +106,7 @@
 
     <div class="form-row">
       <div class="col-auto">
-        <ChForm::Select @name="signin_position_id" @controlClass="form-control" @value={{signinPositionId}}
+        <ChForm::Select @name="signin_position_id" @controlClass="form-control" @value={{this.signinPositionId}}
                         @options={{this.signinPositions}} @onChange={{this.updateShiftPosition}} />
       </div>
       <div class="col-auto">

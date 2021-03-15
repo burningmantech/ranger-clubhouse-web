@@ -17,7 +17,7 @@
   <thead>
   <tr>
     <th class="w-5">
-      <Input @type="checkbox" @checked={{this.passAll}} @change={{action this.togglePassAll value="target.checked"}} />
+      <Input @type="checkbox" @checked={{this.passAll}} {{on "change" this.togglePassAll}} />
     </th>
     <th class="w-15">Callsign</th>
     <th class="w-20">Name</th>
@@ -50,7 +50,7 @@
   {{/each}}
   </tbody>
 </table>
-<button type="button" class="btn btn-success" {{action this.convertAction passed "active"}} disabled={{or (not this.passCount) this.isSubmitting}}>
+<button type="button" class="btn btn-success" {{action this.convertAction this.passed "active"}} disabled={{or (not this.passCount) this.isSubmitting}}>
   Mint Selected Shiny Pennies ({{this.passCount}})
 </button>
 {{#if this.isSubmitting}}
@@ -62,7 +62,7 @@
   <thead>
   <tr>
     <th class="w-5">
-      <Input @type="checkbox" @checked={{this.bonkAll}} @change={{action this.toggleBonkAll value="target.checked"}} />
+      <Input @type="checkbox" @checked={{this.bonkAll}} {{on "change" this.toggleBonkAll}} />
     </th>
     <th class="w-15">Callsign</th>
     <th class="w-20">Name</th>
@@ -95,7 +95,7 @@
   {{/each}}
   </tbody>
 </table>
-<button type="button" class="btn btn-danger" disabled={{or (not this.bonkCount) this.isSubmitting}} {{action this.convertAction bonked "bonked"}}>
+<button type="button" class="btn btn-danger" disabled={{or (not this.bonkCount) this.isSubmitting}} {{action this.convertAction this.bonked "bonked"}}>
   Bonk Selected Alphas ({{this.bonkCount}})
 </button>
 {{#if this.isSubmitting}}

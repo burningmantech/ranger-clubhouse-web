@@ -1,34 +1,38 @@
 <div class="d-print-none mb-4">
   <LinkTo @route="training.session">Back to Training Session</LinkTo>
   <p class="text-muted">
-    Use your browser's print command to send this page to the printer. Don't worry, the navigation bar, website footer, and this message will
-    not appear on the paper.
+    Use your browser's print command to send this page to the printer. Don't worry, the navigation bar, website footer,
+    and this message will not appear on the paper.
   </p>
 </div>
 
 <div class="trainers-sheet d-print-block">
-<h1>{{year-format slot.begins}} Trainer's Report &mdash; {{training.title}}: {{slot.description}} {{shift-format slot.begins}}</h1>
+  <h1>
+    {{year-format this.slot.begins}} Trainer's Report &mdash; {{this.training.title}}:
+    {{this.slot.description}} {{shift-format this.slot.begins}}
+  </h1>
 
-{{#if trainers}}
-<dl class="mb-2">
-  {{#each trainers as |group|}}
-  <dt>{{group.position_title}} ({{group.trainers.length}}):</dt>
-  <dd>
-    {{#each group.trainers as |trainer idx|}}
-      {{if idx ", "}}{{trainer.callsign}} ({{trainer.first_name}} {{trainer.last_name}})
-    {{else}}
-      <i>No trainers were found.</i>
-    {{/each}}
-  </dd>
-  {{/each}}
-</dl>
-{{else}}
-  <strong>No trainer slots were found. Verify the trainer slot's description matches exactly this slot's description.</strong>
-{{/if}}
+  {{#if this.trainers}}
+    <dl class="mb-2">
+      {{#each this.trainers as |group|}}
+        <dt>{{group.position_title}} ({{group.trainers.length}}):</dt>
+        <dd>
+          {{#each group.trainers as |trainer idx|}}
+            {{if idx ", "}}{{trainer.callsign}} ({{trainer.first_name}} {{trainer.last_name}})
+          {{else}}
+            <i>No trainers were found.</i>
+          {{/each}}
+        </dd>
+      {{/each}}
+    </dl>
+  {{else}}
+    <strong>No trainer slots were found. Verify the trainer slot's description matches exactly this slot's
+      description.</strong>
+  {{/if}}
 
-<table class="trainers-report">
-  <caption>Trainees</caption>
-  <thead>
+  <table class="trainers-report">
+    <caption>Trainees</caption>
+    <thead>
     <tr>
       <th>Callsign</th>
       <th class="text-center">Status</th>
@@ -38,9 +42,9 @@
       <th>Name</th>
       <th>Email</th>
     </tr>
-  </thead>
-  <tbody>
-    {{#each studentGroups as |group groupIdx|}}
+    </thead>
+    <tbody>
+    {{#each this.studentGroups as |group groupIdx|}}
       {{#if groupIdx}}
         <tr class="student-group-separator">
           <td colspan="7">
@@ -54,7 +58,7 @@
           <td class="text-center">
             {{student.status}}
             {{#if student.is_art_prospective}}
-            <br><small>ART Prospective</small>
+              <br><small>ART Prospective</small>
             {{/if}}
           </td>
           <td class="text-center">
@@ -90,22 +94,22 @@
         </tr>
       {{/each}}
     {{/each}}
-  </tbody>
-</table>
+    </tbody>
+  </table>
 
-<p>
-  Teams: Ech = Echelon, Env = RSC Envoy, Int = Intercept, Log = Logistics,
-  Mnt = Mentor, Op = Operator, SL = Shift Lead, Snd = Sandman, Tech = Tech Team,
-  Trg = Training
-</p>
-<p>
-  A '-' in the passed column usually indicates the training session has not
-  happened yet and/or no pass information has been recorded.
-</p>
-<p>
-  Trainers: please remember that inactive and retired Rangers need to take the
-  full day training; please email your inactive and retired trainees in advance
-  so they aren't surprised by this.  Thanks!
-</p>
+  <p>
+    Teams: Ech = Echelon, Env = RSC Envoy, Int = Intercept, Log = Logistics,
+    Mnt = Mentor, Op = Operator, SL = Shift Lead, Snd = Sandman, Tech = Tech Team,
+    Trg = Training
+  </p>
+  <p>
+    A '-' in the passed column usually indicates the training session has not
+    happened yet and/or no pass information has been recorded.
+  </p>
+  <p>
+    Trainers: please remember that inactive and retired Rangers need to take the
+    full day training; please email your inactive and retired trainees in advance
+    so they aren't surprised by this. Thanks!
+  </p>
 
 </div>

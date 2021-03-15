@@ -4,7 +4,7 @@
   <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
 </p>
 
-Showing {{pluralize assets.length "non-radio asset entry"}}
+Showing {{pluralize this.assets.length "non-radio asset entry"}}
 <table class="table table-striped table-sm table-width-auto">
   <thead>
   <tr>
@@ -41,7 +41,7 @@ Showing {{pluralize assets.length "non-radio asset entry"}}
   {{else}}
     <tr>
       <td colspan="7">
-        <b class="text-danger">No non-radio assets found for {{year}}</b>
+        <b class="text-danger">No non-radio assets found for {{this.year}}</b>
       </td>
     </tr>
   {{/each}}

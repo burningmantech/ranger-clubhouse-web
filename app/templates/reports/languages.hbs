@@ -7,7 +7,7 @@
   Use the <LinkTo @route="search.languages">Search Languages</LinkTo> page to search for people who speak a specific language and whom may or may not be on site, have a radio, etc.
 </p>
 
-{{#each languages as |language|}}
+{{#each this.languages as |language|}}
   <div class="border mb-2">
     <div class="bg-light-gray p-2">
       <a href class="h4" {{action this.toggleLanguage language}}>{{fa-icon (if language.showing "minus" "plus")}} {{language.language}}</a> ({{pluralize language.people.length "person"}})

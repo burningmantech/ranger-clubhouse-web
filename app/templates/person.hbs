@@ -1,4 +1,4 @@
-<ChSidebar @theme="person" as |s|>
+<ChSidebar @theme="person" @smallTitle="Person Manage" as |s|>
   <s.group @title="PERSON MANAGE">
     <s.link @route="person.index" @title="Account Info" @icon="info" @iconType="s"/>
     <s.link @route="person.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
@@ -32,7 +32,6 @@
     </s.group>
   {{/if}}
 
-
   {{#if (has-role "admin" "vc" "intake")}}
     <s.group @title="Vol Coords">
       {{#if (has-role "admin" "vc")}}
@@ -46,7 +45,6 @@
       {{/if}}
     </s.group>
   {{/if}}
-
 
   {{#if (has-role "admin" "vc")}}
     <s.group @title="Logs">
@@ -102,84 +100,11 @@
     {{/if}}
   </div>
 
-
   {{#if this.person.message}}
     <ChNotice @title="Important Account Note" @icon="hand-point-right">
       {{nl2br this.person.message}}
       <div class="mt-2 text-muted">Posted {{shift-format this.person.message_updated_at}}</div>
     </ChNotice>
   {{/if}}
-
-  <div class="row d-lg-none mb-2 max-width-900">
-    {{!
-      The drop down menu only appear on mobile/small screen devices
-      When adding new areas, be sure to add the link to person-sidebar.hbs
-    }}
-    <div class="col-sm-12">
-      <div class="btn-group btn-block">
-        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-          Person Manage Pages
-        </button>
-        <div class="dropdown-menu w-100">
-          <LinkTo @route="person.index" @model={{this.person.id}} class="dropdown-item">Account Info</LinkTo>
-          <LinkTo @route="person.schedule" @model={{this.person.id}} class="dropdown-item">Schedule / Sign Up</LinkTo>
-          <LinkTo @route="person.event-info" @model={{this.person.id}} class="dropdown-item">Event Info</LinkTo>
-          <LinkTo @route="person.timesheet" @model={{this.person.id}} class="dropdown-item">Timesheet</LinkTo>
-          <LinkTo @route="person.work-history" @model={{this.person.id}} class="dropdown-item">Timesheet</LinkTo>
-          <LinkTo @route="person.assets" @model={{this.person.id}} class="dropdown-item">Assets</LinkTo>
-          <LinkTo @route="person.messages" @model={{this.person.id}} class="dropdown-item">Messages</LinkTo>
-          {{#if (has-role "admin" "manage+view-pii")}}
-            <LinkTo @route="person.personal-info" @model={{this.person.id}} class="dropdown-item">Personal Info</LinkTo>
-          {{/if}}
-          {{#if (has-role "admin" "manage")}}
-            <LinkTo @route="person.emergency-contact" @model={{this.person.id}} class="dropdown-item">Emergency Contact
-            </LinkTo>
-          {{/if}}
-          {{#if (has-role "admin" "vc" "mentor")}}
-            <LinkTo @route="person.mentors" @model={{this.person.id}} class="dropdown-item">Mentors</LinkTo>
-          {{/if}}
-          {{#if (has-role "admin")}}
-            <LinkTo @route="person.password" @model={{this.person.id}} class="dropdown-item">Change Password</LinkTo>
-          {{/if}}
-          {{#if (has-role "admin" "vc" "intake")}}
-            <div class="dropdown-header">Vol Coords</div>
-            {{#if (has-role "intake")}}
-              <NavbarMenuItem @route="person.unified-flagging" @item="Unified Flagging"/>
-            {{/if}}
-            {{#if (has-role "admin" "vc")}}
-              <NavbarMenuItem @route="person.dashboard" @item="Dashboard"/>
-            {{/if}}
-            {{#if (has-role "admin")}}
-              <NavbarMenuItem @route="person.external-ids" @item="External IDs"/>
-            {{/if}}
-          {{/if}}
-
-          {{#if  (has-role "edit-bmids" "edit-access-docs")}}
-            <div class="dropdown-header">Pre-Playa</div>
-            {{#if (has-role "edit-access-docs")}}
-              <NavbarMenuItem @route="person.access-documents" @item="Access Documents"/>
-            {{/if}}
-            {{#if (has-role "edit-bmids")}}
-              <NavbarMenuItem @route="person.bmid" @item="BMID"/>
-            {{/if}}
-          {{/if}}
-
-          {{#if (has-role "admin" "vc")}}
-            <div class="dropdown-header">Logs</div>
-            <NavbarMenuItem @route="person.photos" @item="Photo History"/>
-            <NavbarMenuItem @route="person.status-history" @item="Status History"/>
-            {{#if (has-role "admin")}}
-              <NavbarMenuItem @route="person.contact-log" @item="Contact Log"/>
-              <NavbarMenuItem @route="person.broadcast-log" @item="Broadcast Log"/>
-              <LinkTo @route="admin.action-log" @query={{hash person=person.callsign}} class="dropdown-item">
-                Action Log
-              </LinkTo>
-            {{/if}}
-          {{/if}}
-        </div>
-      </div>
-    </div>
-  </div>
   {{outlet}}
 </main>

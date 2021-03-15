@@ -38,13 +38,13 @@ Showing {{pluralize this.alerts.length "alert"}}
 </table>
 
 {{#if this.entry}}
-  <ModalDialog @title={{if entry.isNew "New Alert" "Edit Alert"}} as |Modal|>
+  <ModalDialog @title={{if this.entry.isNew "New Alert" "Edit Alert"}} as |Modal|>
     <ChForm @formId="alert" @formFor={{this.entry}}
             @onSubmit={{action this.saveAlert}} @onCancel={{action this.cancelAlert}} as |f|>
       <Modal.body>
       <div class="form-row">
-        <f.input @name="title" @label="Title" @type="text" @size=30 @maxlength=255 />
-        <f.input @name="description" @label="Alert Description" @type="textarea" @rows=10 @cols=80 />
+        <f.input @name="title" @label="Title" @type="text" @size={{30}} @maxlength={{255}} />
+        <f.input @name="description" @label="Alert Description" @type="textarea" @rows={{10}} @cols={{80}} />
         <f.input @name="on_playa" @type="checkbox" @label="Is alert related to a broadcast that will happen on playa?" />
       </div>
       </Modal.body>

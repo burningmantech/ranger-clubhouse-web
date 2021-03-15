@@ -50,7 +50,7 @@
 <hr>
 <h3 class="mt-2">Signed up for shifts &amp; have not (yet) passed training</h3>
 {{pluralize this.not_passed.length "individual"}} signed up for a shift who
-{{if (eq not_passed.length 1) "has" "have"}} not passed training.
+{{if (eq this.not_passed.length 1) "has" "have"}} not passed training.
 (This could be because their training hasn’t happened yet.)
 <table class="table table-sm table-hover mt-2 table-width-auto">
   <thead>

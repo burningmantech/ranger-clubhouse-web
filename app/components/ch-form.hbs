@@ -4,7 +4,7 @@
   {{on "submit" this.submitEvent}}
   {{did-insert this.insertedFormElement}}
 >
-  {{yield (hash model=model
+  {{yield (hash model=this.model
                   input=(component "ch-form/field"
                           model=this.model
                           formId=@formId

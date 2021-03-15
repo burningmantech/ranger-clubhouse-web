@@ -31,7 +31,7 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
   </thead>
 
   <tbody>
-  {{#each viewAssets as |asset|}}
+  {{#each this.viewAssets as |asset|}}
     <tr>
       <td>{{asset.barcode}}</td>
       <td>{{asset.description}}</td>
@@ -48,7 +48,7 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
         </button>
       </td>
     </tr>
-  {{else if assets}}
+  {{else if this.assets}}
     <tr>
       <td colspan="5" class="text-danger">No assets matched.</td>
     </tr>
@@ -67,10 +67,10 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
           <f.input @name="description" @label="Description/Type" @type="select"
                    @options={{this.assetDescriptionOptions}}
                    @grid="col-auto"/>
-          <f.input @name="barcode" @label="Barcode" @size=25 @grid="col-auto"/>
+          <f.input @name="barcode" @label="Barcode" @size={{25}} @grid="col-auto"/>
 
-          <f.input @name="temp_id" @label="Temp ID (aka secondary description)" @type="text" @size=25 @grid="col-auto"/>
-          <f.input @name="notes" @type="textarea" @label="Notes" @rows=2 @cols=80/>
+          <f.input @name="temp_id" @label="Temp ID (aka secondary description)" @type="text" @size={{25}} @grid="col-auto"/>
+          <f.input @name="notes" @type="textarea" @label="Notes" @rows={{2}} @cols={{80}}/>
         </div>
         <div class="form-row">
           <label class="col-auto">Assignment</label>
@@ -79,10 +79,10 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
           </div>
         </div>
 
-        {{#if entry.isNew}}
+        {{#if this.entry.isNew}}
           <div class="form-row">
             <label class="col-12">Copies (including the first) - Leave blank if only creating one</label>
-            <f.input @name="copies" @type="text" @size=4 @maxlength=4 @controlClass="form-control" @grid="col-auto"/>
+            <f.input @name="copies" @type="text" @size={{4}} @maxlength={{4}} @controlClass="form-control" @grid="col-auto"/>
           </div>
         {{/if}}
         <fieldset>
@@ -90,9 +90,9 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
           <div class="form-row">
             <f.input @name="category" @type="select" @label="Category" @options={{this.categoryOptions}}
                      @grid="col-auto"/>
-            <f.input @name="subtype" @type="text" @label="Type" @size=25 @grid="col-auto"/>
-            <f.input @name="color" @type="text" @label="Color" @size=25 @grid="col-auto"/>
-            <f.input @name="style" @type="text" @label="Style" @size=25 @grid="col-auto"/>
+            <f.input @name="subtype" @type="text" @label="Type" @size={{25}} @grid="col-auto"/>
+            <f.input @name="color" @type="text" @label="Color" @size={{25}} @grid="col-auto"/>
+            <f.input @name="style" @type="text" @label="Style" @size={{25}} @grid="col-auto"/>
           </div>
         </fieldset>
       </Modal.body>

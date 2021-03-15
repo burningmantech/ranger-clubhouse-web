@@ -1,4 +1,4 @@
-<YearSelect @title={{concat training.title " Sessions"}} @year={{this.year}} @onChange={{action (mut this.year)}}
+<YearSelect @title={{concat this.training.title " Sessions"}} @year={{this.year}} @onChange={{action (mut this.year)}}
             @subheader={{true}}/>
 
   {{#each this.trainingSessions as |session|}}
@@ -11,8 +11,7 @@
       {{/unless}}
       {{#unless session.havePrimaryTrainers}}
         <p>
-          <b class="text-danger">No {{if training.is_art "trainers" "trainers or Uber trainers"}} are signed up to teach
-            this session.</b>
+          <b class="text-danger">No trainers are signed up to teach this session.</b>
         </p>
       {{/unless}}
 

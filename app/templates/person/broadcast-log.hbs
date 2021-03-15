@@ -11,7 +11,7 @@
       </tr>
   </thead>
   <tbody>
-  {{#each messages as |msg|}}
+  {{#each this.messages as |msg|}}
       <tr>
           <td>{{msg.created_at}}</td>
           <td><PresentOrNot @value={{msg.broadcast_id}} @empty="-" /></td>
@@ -26,7 +26,7 @@
       {{/if}}
   {{else}}
     <tr>
-      <td colspan="5" class="text-danger">No broadcast messages found for {{year}}</td>
+      <td colspan="5" class="text-danger">No broadcast messages found for {{this.year}}</td>
     </tr>
   {{/each}}
   </tbody>

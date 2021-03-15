@@ -1,7 +1,7 @@
 <h3>Training Information <HelpPopover @slug="hq-training-info" /></h3>
 
-{{#if person.isNonRanger}}
+{{#if this.person.isNonRanger}}
   <p>Non Rangers are not required to pass training.</p>
 {{/if}}
 
-<TrainingInfo @trainings={{eventInfo.trainings}} />
+<TrainingInfo @trainings={{this.eventInfo.trainings}} />

@@ -23,7 +23,7 @@
   <label class="col-form-label col-auto">Statuses</label>
   {{#each this.statuses as |status idx|}}
     <div class="form-check form-check-inline">
-      <Input @type="checkbox" @id="status-{{idx}}" class="form-check-input" @checked={{status.selected}} />
+      <Input @type="checkbox" id="status-{{idx}}" class="form-check-input" @checked={{status.selected}} />
       <label for="status-{{idx}}" class="form-check-label">
         {{status.name}}
       </label>

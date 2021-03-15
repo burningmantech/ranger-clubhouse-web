@@ -8,8 +8,8 @@
           </div>
         {{/if}}
         {{yield (hash body=(component "modal/body")
-                        footer=(component "modal/footer" align=align)
-                        button=(component "modal/button" action=action label=label type=type disabled=disabled))
+                        footer=(component "modal/footer" align=@align)
+                        button=(component "modal/button" action=@action label=@label type=@type disabled=@disabled))
         }}
       </div>
     </div>

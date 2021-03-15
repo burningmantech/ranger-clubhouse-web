@@ -26,24 +26,26 @@
   <table class="table table-width-auto table-sm table-hover table-striped table-box">
     <caption class="text-danger">{{pluralize this.badRecords.length "item"}} with errors</caption>
     <thead>
-      <tr>
-        <td>Callsign</td>
-        <td>ID</td>
-        <td>Type</td>
-        <td>Access Date</td>
-        <td>Error</td>
-      </tr>
+    <tr>
+      <td>Callsign</td>
+      <td>ID</td>
+      <td>Type</td>
+      <td>Access Date</td>
+      <td>Error</td>
+    </tr>
     </thead>
     <tbody>
-      {{#each this.badRecords as |rec|}}
-        <tr>
-          <td><PersonLink @person={{rec.person}} @page="access-documents" /></td>
-          <td>RAD-{{rec.document.id}}</td>
-          <td>{{rec.document.type}}</td>
-          <td>{{rec.document.access_date}}</td>
-          <td>{{rec.document.error}}</td>
-        </tr>
-      {{/each}}
+    {{#each this.badRecords as |rec|}}
+      <tr>
+        <td>
+          <PersonLink @person={{rec.person}} @page="access-documents"/>
+        </td>
+        <td>RAD-{{rec.document.id}}</td>
+        <td>{{rec.document.type}}</td>
+        <td>{{rec.document.access_date}}</td>
+        <td>{{rec.document.error}}</td>
+      </tr>
+    {{/each}}
     </tbody>
   </table>
 {{/if}}
@@ -53,7 +55,8 @@
     <label class="col-form-label">Export Filter</label>
   </div>
   <div class="col-auto">
-    <ChForm::Select @name="selectTypes" @value={{this.filter}} @options={{this.filterOptions}} @onChange={{this.changeFilter}} @controlClass="form-control" />
+    <ChForm::Select @name="selectTypes" @value={{this.filter}} @options={{this.filterOptions}}
+                    @onChange={{this.changeFilter}} @controlClass="form-control"/>
   </div>
   <div class="col-auto">
     <label class="col-form-label">Export is limited to {{this.MAX_BATCH_SIZE}} items</label>
@@ -62,62 +65,72 @@
 
 <table class="table table-sm table-hover table-striped table-width-auto">
   <caption>
-    Showing {{pluralize this.viewRecords.length "item"}} of type "{{this.filter}}". Selected {{pluralize this.selectedCount "item"}}.
+    Showing {{pluralize this.viewRecords.length "item"}} of type "{{this.filter}}". Selected {{pluralize
+          this.selectedCount "item"}}.
   </caption>
   <thead>
-    <tr>
-      <th><Input @type="checkbox" @checked={{selectAll}} @change={{action toggleAll value="target.checked"}} @disabled={{eq filter "all"}} /></th>
-      <th>Callsign</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Email</th>
-      <th>Delivery</th>
-      <th>Note</th>
-    </tr>
+  <tr>
+    <th><Input @type="checkbox" @checked={{this.selectAll}}
+      {{on "change" this.toggleAll}} disabled={{eq this.filter "all"}} /></th>
+    <th>Callsign</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Email</th>
+    <th>Delivery</th>
+    <th>Note</th>
+  </tr>
   </thead>
 
   <tbody>
-    {{#each this.viewRecords as |rec|}}
-      <tr>
-        <td>
-          {{#if rec.submitted}}
-            <span class="text-success">{{fa-icon "check"}}</span>
-          {{else if (eq this.filter "all")}}
-            &nbsp;
-          {{else}}
-            <Input @type="checkbox" @checked={{rec.selected}} @change={{action this.toggleRecord rec}} />
-          {{/if}}
-        </td>
-        <td><PersonLink @person={{rec.person}} @page="access-documents" /></td>
-        <td>{{rec.person.first_name}}</td>
-        <td>{{rec.person.last_name}}</td>
-        <td>{{mail-to rec.person.email}}</td>
-        <td>{{rec.delivery_type}}</td>
-        <td>
-          {{rec.trsNote}}
-          {{#if rec.has_error}}
-            <div class="text-danger">{{rec.error}}</div>
-          {{/if}}
-        </td>
-      </tr>
-    {{/each}}
+  {{#each this.viewRecords as |rec|}}
+    <tr>
+      <td>
+        {{#if rec.submitted}}
+          <span class="text-success">{{fa-icon "check"}}</span>
+        {{else if (eq this.filter "all")}}
+          &nbsp;
+        {{else}}
+          <Input @type="checkbox" @checked={{rec.selected}} {{on "change" (fn this.toggleRecord rec)}} />
+        {{/if}}
+      </td>
+      <td>
+        <PersonLink @person={{rec.person}} @page="access-documents"/>
+      </td>
+      <td>{{rec.person.first_name}}</td>
+      <td>{{rec.person.last_name}}</td>
+      <td>{{mail-to rec.person.email}}</td>
+      <td>{{rec.delivery_type}}</td>
+      <td>
+        {{rec.trsNote}}
+        {{#if rec.has_error}}
+          <div class="text-danger">{{rec.error}}</div>
+        {{/if}}
+      </td>
+    </tr>
+  {{/each}}
   </tbody>
 </table>
 
-<button type="button" class="btn btn-primary" {{action this.exportSelectedAction}} disabled={{or this.isSubmitting (gt this.selectedCount MAX_BATCH_SIZE) (eq this.selectedCount 0) (eq this.filter "all")}}>
+<button type="button" class="btn btn-primary" {{action this.exportSelectedAction}}
+        disabled={{or this.isSubmitting
+                      (gt this.selectedCount this.MAX_BATCH_SIZE)
+                      (eq this.selectedCount 0)
+                      (eq this.filter "all")}}>
   {{#if (eq this.filter "all")}}
     Export Disabled For "All" View
   {{else}}
     Export {{pluralize this.selectedCount "Selected Document"}}
   {{/if}}
 </button>
-<button type="button" class="btn btn-secondary" {{action this.markSubmitted}} disabled={{or this.isSubmitting (eq this.selectedCount 0) (eq this.filter "all")}}>
-  {{#if isSubmitting}}
+<button type="button" class="btn btn-secondary" {{action this.markSubmitted}}
+        disabled={{or this.isSubmitting (eq this.selectedCount 0) (eq this.filter "all")}}>
+  {{#if this.isSubmitting}}
     Marking as Submitted. {{fa-icon "spinner" spin=true}}
   {{else}}
     Mark Selected As Submitted
   {{/if}}
 </button>
 {{#if (gt this.selectedCount this.MAX_BATCH_SIZE)}}
-  <div class="text-danger"><b>{{this.selectedCount}} items has been selected which exceeds the max. TRS batch size of {{this.MAX_BATCH_SIZE}} items. Reduce the number selected.</b></div>
+  <div class="text-danger"><b>{{this.selectedCount}} items has been selected which exceeds the max. TRS batch size
+    of {{this.MAX_BATCH_SIZE}} items. Reduce the number selected.</b></div>
 {{/if}}

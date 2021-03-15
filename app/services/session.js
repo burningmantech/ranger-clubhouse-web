@@ -9,7 +9,7 @@ import {config} from 'clubhouse/utils/config';
 import {tracked} from '@glimmer/tracking';
 import {MANAGE} from 'clubhouse/constants/roles';
 
-const MOBILE_MAX_WIDTH = 834;
+const MOBILE_MAX_WIDTH = 991;
 const RESIZE_DEBOUNCE_DELY = 250;
 
 export default class extends SessionService {
@@ -33,7 +33,7 @@ export default class extends SessionService {
   isTabletDevice = false;
 
   // True if the mobile screen size is less than MOBILE_MAX_WIDTH
-  @tracked isMobileScreen = false;
+  @tracked isSmallScreen = false;
 
   get userId() {
     return (this.isAuthenticated && this.user) ? +this.user.id : null;
@@ -70,7 +70,7 @@ export default class extends SessionService {
   }
 
   _windowResized() {
-    this.isMobileScreen = (document.documentElement.clientWidth <= MOBILE_MAX_WIDTH);
+    this.isSmallScreen = (document.documentElement.clientWidth <= MOBILE_MAX_WIDTH);
   }
 
   /**

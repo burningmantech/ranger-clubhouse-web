@@ -26,7 +26,7 @@ Showing {{this.viewPeople.length}} of {{this.people.length}}.
     </accordion.title>
     <accordion.body>
       <p>
-        <button type="button" class="btn btn-sm btn-secondary" {{action exportCountryToCSV country}}>
+        <button type="button" class="btn btn-sm btn-secondary" {{action this.exportCountryToCSV country}}>
           Export {{country.full_name}} to CSV
         </button>
       </p>

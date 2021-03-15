@@ -1,18 +1,18 @@
 <main>
 <dl>
   <dt>EmberJS:</dt>
-  <dd>{{emberVersion}}</dd>
+  <dd>{{this.emberVersion}}</dd>
 
   <dt>Ember Data:</dt>
-  <dd>{{emberDataVersion}}</dd>
+  <dd>{{this.emberDataVersion}}</dd>
 
   <dt>Browser:</dt>
-  <dd>{{browserVendor}}: {{browser}}</dd>
+  <dd>{{this.browserVendor}}: {{this.browser}}</dd>
 
   <dt>API End Point:</dt>
-  <dd>{{get env "api-server"}}</dd>
+  <dd>{{get this.env "api-server"}}</dd>
 
   <dt>Viewport Size:</dt>
-  <dd>{{viewport.width}} x {{viewport.height}}</dd>
+  <dd>{{this.viewport.width}} x {{this.viewport.height}}</dd>
 </dl>
 </main>

@@ -5,7 +5,7 @@
   Work Access Passes that person has. "Weird Stuff" should be anything that looks
   odd about this person's collection of Access Documents.</p>
 
-Showing {{pluralize documents.people.length "person"}}
+Showing {{pluralize this.documents.people.length "person"}}
 <table class="table table-hover table-sm table-width-auto">
   <thead>
     <tr>
@@ -20,7 +20,7 @@ Showing {{pluralize documents.people.length "person"}}
   </thead>
 
   <tbody>
-    {{#each documents.people as |person|}}
+    {{#each this.documents.people as |person|}}
       <AccessDocumentsForPerson @person={{person.person}} @documents={{person.documents}} />
     {{else}}
       <tr>

@@ -15,9 +15,9 @@
 <p class="h3">Have a ticketing question? Is something not right?</p>
 The ticketing FAQs can answer most of your questions. Click one of the following topics to open the FAQ in a new window:
 <ul>
-  {{#unless (or @person.isAlpha @person.isProspective)}}
+  {{#if (not (or @person.isAlpha @person.isProspective))}}
     <li><TicketFaq @topic="ticketing" @ticketingInfo={{@ticketingInfo}} /></li>
     <li><TicketFaq @topic="vp" @ticketingInfo={{@ticketingInfo}} /></li>
-  {{/unless}}
+  {{/if}}
   <li><TicketFaq @topic={{if (or @person.isAlpha @person.isProspective) "alpha" "wap"}} @ticketingInfo={{@ticketingInfo}} /></li>
 </ul>

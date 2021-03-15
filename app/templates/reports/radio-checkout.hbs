@@ -36,7 +36,7 @@ Showing {{pluralize this.radios.length "entry"}}
       </td>
       <td>{{radio.barcode}}</td>
       <td>{{shift-format radio.checked_out}}</td>
-      {{#if (or event_summary include_eligible)}}
+      {{#if (or this.event_summary this.include_eligible)}}
         <td>
           {{#if radio.checked_in}}
             {{shift-format radio.checked_in}}

@@ -40,7 +40,7 @@
         </div>
         <div class="timesheet-row timesheet-actions">
           {{#if (or tsm.isPending tsm.isRejected)}}
-            <button type="button" class="btn btn-primary" {{action this.editAction sm}}
+            <button type="button" class="btn btn-primary" {{action this.editAction tsm}}
                     disabled={{or tsm.isReloading tsm.isSaving}}>
               {{#if tsm.isRejected}}
                 Submit Appeal
@@ -122,7 +122,7 @@
           </div>
         {{/if}}
         <f.input @name="additional_notes"
-                 @label={{if entry.isRejected "Supply additional information for an appeal:"
+                 @label={{if this.entry.isRejected "Supply additional information for an appeal:"
                              "Why is this new entry needed?"}}
                  @type="textarea" @cols={{80}} @rows={{4}} />
       </Modal.body>

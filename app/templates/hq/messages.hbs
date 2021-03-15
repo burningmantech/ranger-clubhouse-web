@@ -1,6 +1,6 @@
 <h3>Clubhouse Messages</h3>
 {{#if this.session.isLMOPEnabled}}
-  <ClubhouseMessages @person={{person}} @messages={{messages}} />
+  <ClubhouseMessages @person={{this.person}} @messages={{this.messages}} />
 {{else}}
   <ChNotice @type="danger" @icon="exclamation" @title="Access Not Allowed During Off Season">
     You may only view another person's Clubhouse Messages while the event is happening.

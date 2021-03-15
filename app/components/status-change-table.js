@@ -73,7 +73,8 @@ export default class StatusChangeTableComponent extends Component {
   }
 
   @action
-  toggleAll(checked) {
+  toggleAll(event) {
+    const checked = event.target.checked;
     this.args.people.forEach((person) => {
       set(person, 'selected', checked);
     });

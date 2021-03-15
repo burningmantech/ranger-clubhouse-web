@@ -12,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-    {{#each sent_logs as |log|}}
+    {{#each this.sent_logs as |log|}}
       <tr class="separated">
           <td><PersonLink @person={{log.recipient_person}} /></td>
           <td>{{log.recipient_address}}</td>
@@ -36,7 +36,7 @@
       {{/if}}
     {{else}}
     <tr>
-      <td colspan="5 text-danger">No sent contact messages were found for {{year}}</td>
+      <td colspan="5 text-danger">No sent contact messages were found for {{this.year}}</td>
     </tr>
     {{/each}}
   </tbody>
@@ -54,7 +54,7 @@
     </tr>
   </thead>
   <tbody>
-    {{#each received_logs as |log|}}
+    {{#each this.received_logs as |log|}}
       <tr class="separated">
           <td><PersonLink @person={{log.sender_person}} /></td>
           <td>{{log.recipient_address}}</td>
@@ -78,7 +78,7 @@
       {{/if}}
     {{else}}
     <tr>
-      <td colspan="5 text-danger">No sent contact messages were found for {{year}}</td>
+      <td colspan="5 text-danger">No sent contact messages were found for {{this.year}}</td>
     </tr>
     {{/each}}
   </tbody>

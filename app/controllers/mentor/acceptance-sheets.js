@@ -12,8 +12,9 @@ export default class MentorAcceptanceSheetsController extends Controller {
   @tracked selectAll;
 
   @action
-  toggleAll(value) {
-    this.alphas.forEach((alpha) => set(alpha, 'selected', value));
+  toggleAll(event) {
+    const selected = event.target.checked;
+    this.alphas.forEach((alpha) => set(alpha, 'selected', selected));
     this._buildPrintAlphas();
   }
 

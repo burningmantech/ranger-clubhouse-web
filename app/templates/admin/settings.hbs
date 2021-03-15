@@ -6,7 +6,7 @@
 <div class="form-row mb-2">
   <label class="col-form-label">Filter name:</label>
   <div class="col-auto">
-    <Input @type="text" @value={{this.filterByName}} @size={{20}} class="form-control"/>
+    <Input @type="text" @value={{this.filterByName}} size="20" class="form-control"/>
   </div>
   <div class="col-auto">
     <button type="button" class="btn btn-primary" {{action this.clearFilter}}>Clear</button>
@@ -62,17 +62,17 @@ Showing {{this.viewSettings.length}} of {{this.settings.length}}
         <div class="form-group row">
           {{#if (eq this.editSetting.type "bool")}}
             <div class="col-auto">
-              <f.input @name="value" @type="radioGroup" @options={{this.booleanOptions}} @inline=true/>
+              <f.input @name="value" @type="radioGroup" @options={{this.booleanOptions}} @inline={{true}}/>
             </div>
-          {{else if (eq editSetting.type "integer")}}
+          {{else if (eq this.editSetting.type "integer")}}
             <div class="col-auto">
-              <f.input @name="value" @label="Integer value" @type="text" @size=10/>
+              <f.input @name="value" @label="Integer value" @type="text" @size={{10}}/>
             </div>
           {{else if this.editSetting.options}}
             <f.input @name="value" @label="Option value" @type="select" @options={{this.editOptions}} />
           {{else}}
             <f.input @name="value" @label={{concat "Enter a " this.editSetting.type " value"}}
-                     @type="textarea" @rows=10 @cols=80/>
+                     @type="textarea" @rows={{10}} @cols={{80}}/>
           {{/if}}
         </div>
       </Modal.body>

@@ -43,7 +43,7 @@
           Clear
         </button>
       </div>
-      {{#if textFilterError}}
+      {{#if this.textFilterError}}
         <div class="text-danger">{{this.textFilterError}}</div>
       {{/if}}
       <div class="text-muted small">Regular Expression allowed</div>
@@ -87,7 +87,7 @@
         <a href {{action this.sortBmidsAction "title2"}}>Title 2</a>{{/if}}</th>
       <th class="w-10">{{#if (eq this.sortColumn "title3")}}[Title 3]{{else}}
         <a href {{action this.sortBmidsAction "title3"}}>Title 3</a>{{/if}}</th>
-      <th>{{#if (eq this.sortColumn "mvr")}}[MVR]{{else}}<a href {{action sortBmidsAction "mvr"}}>MVR</a>{{/if}}</th>
+      <th>{{#if (eq this.sortColumn "mvr")}}[MVR]{{else}}<a href {{action this.sortBmidsAction "mvr"}}>MVR</a>{{/if}}</th>
       <th>{{#if (eq this.sortColumn "showers")}}[Showers]{{else}}
         <a href {{action this.sortBmidsAction "showers"}}>Showers</a>{{/if}}</th>
       <th>{{#if (eq this.sortColumn "meals")}}[Meals]{{else}}

@@ -50,10 +50,11 @@ export default class MentorAlphaSignoutController extends Controller {
   }
 
   @action
-  toggleAll(value) {
+  toggleAll(event) {
+    const selected = event.target.checked;
     this.alphas.forEach((alpha) => {
       if (!alpha.off_duty) {
-        set(alpha, 'selected', value);
+        set(alpha, 'selected', selected);
       }
     });
   }

@@ -18,7 +18,8 @@ export default class MentorConvertController extends Controller {
   }
 
   @action
-  togglePassAll(checked) {
+  togglePassAll(event) {
+    const checked = event.target.checked;
     this.passAll = checked;
     this.passed.forEach((p) => {
       if (!p.converted) {
@@ -28,7 +29,8 @@ export default class MentorConvertController extends Controller {
   }
 
   @action
-  toggleBonkAll(checked) {
+  toggleBonkAll(event) {
+    const checked = event.target.checked;
     this.bonkAll = checked;
     this.bonked.forEach((p) => {
       if (!p.converted) {

@@ -4,7 +4,8 @@
   <div class="form-row align-items-left">
     <label class="col-form-label">Proposed handle</label>
     <div class="col-auto">
-      <Input @type="text" @value={{this.currentName}} @id="currentName" @enter={{action this.checkCurrentName}}
+      <Input @type="text" @value={{this.currentName}} id="currentName"
+             @enter={{action this.checkCurrentName}}
              class="form-control" size={{20}} {{did-insert this.focusElement}} />
     </div>
     <div class="col-auto">
@@ -21,7 +22,7 @@
       {{#each this.handleRules as |rule|}}
         <div class="form-check form-check-inline">
           {{#let (concat "handle-rule-checkbox-" rule.id) as |checkid|}}
-            <Input @type="checkbox" @checked={{rule.enabled}} class="form-check-input" @id={{checkid}} />
+            <Input @type="checkbox" @checked={{rule.enabled}} class="form-check-input" id={{checkid}} />
             <label class="form-check-label" for="{{checkid}}">{{rule.name}}</label>
           {{/let}}
         </div>
@@ -33,14 +34,14 @@
   <div class="form-group row">
     <div class="col">
       <div class="form-check form-check-inline">
-        <Input @type="checkbox" @checked={{this.includeVintage}} class="form-check-input" @id="include-vintage"/>
+        <Input @type="checkbox" @checked={{this.includeVintage}} class="form-check-input" id="include-vintage"/>
         <label class="form-check-label" for="include-vintage">Include all vintage handles</label>
       </div>
       {{#each this.entityTypes as |type|}}
         <div class="form-check form-check-inline">
-          {{#let (concat "entity-type-checkbox-" type.id) as |checkid|}}
-            <Input @type="checkbox" @checked={{type.enabled}} class="form-check-input" @id={{checkid}} />
-            <label class="form-check-label" for="{{checkid}}">{{type.name}}</label>
+          {{#let (concat "entity-type-checkbox-" type.id) as |entityId|}}
+            <Input @type="checkbox" @checked={{type.enabled}} class="form-check-input" id={{entityId}} />
+            <label class="form-check-label" for="{{entityId}}">{{type.name}}</label>
           {{/let}}
         </div>
       {{/each}}
@@ -65,12 +66,12 @@
               </div>
               <div id="conflict-detail-{{checked.id}}-{{index}}" class="collapse">
                 <div class="card-body">
-                  {{get ruleNames conflict.ruleId}}, {{conflict.priority}} priority
+                  {{get this.ruleNames conflict.ruleId}}, {{conflict.priority}} priority
                   {{#if conflict.conflictingHandle}}
                     {{#with conflict.conflictingHandle as |handle|}}
                       {{#if handle.personId}}
-                        <LinkTo @route="person.index" @model={{handle.personId}} @target="_blank"
-                                @rel="noopener noreferrer">
+                        <LinkTo @route="person.index" @model={{handle.personId}}
+                                target="_blank" rel="noopener noreferrer">
                           {{handle.entityType}} {{handle.name}}
                         </LinkTo>
                       {{else}}
@@ -103,11 +104,12 @@
           </tr>
           </thead>
           <tbody>
-          {{#each allEnabledHandles as |handle|}}
+          {{#each this.allEnabledHandles as |handle|}}
             <tr>
               <td>
                 {{#if handle.personId}}
-                  <LinkTo @route="person.index" @model={{handle.personId}} @target="_blank" @rel="noopener noreferrer">
+                  <LinkTo @route="person.index" @model={{handle.personId}}
+                          target="_blank" rel="noopener noreferrer">
                     {{handle.name}}
                   </LinkTo>
                 {{else}}

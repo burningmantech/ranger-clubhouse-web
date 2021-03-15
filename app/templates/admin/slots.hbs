@@ -38,7 +38,7 @@
 
 {{#if this.slots.length}}
   Showing {{this.viewSlots.length}} of {{pluralize this.slots.length "slot"}}
-  {{#unless viewSlots}}
+  {{#unless this.viewSlots}}
     <p class="text-danger">
       No slots matched the filter criteria.
     </p>
@@ -109,7 +109,7 @@
                 <button type="button" {{action this.deleteSlot slot}} class="btn btn-danger btn-sm">
                   {{fa-icon "trash-alt"type="fas"}} Delete
                 </button>
-                <button type="button" {{action editSlot slot}} class="btn btn-primary btn-sm">
+                <button type="button" {{action this.editSlot slot}} class="btn btn-primary btn-sm">
                   {{fa-icon "edit"}} Edit
                 </button>
               </td>
@@ -205,7 +205,7 @@
                   {{#each position.slots as |slot|}}
                     <tr>
                       {{#let (concat "copy-slot-" slot.source.id) as |checkid|}}
-                        <td><Input @type="checkbox" @checked={{slot.selected}} @id={{checkid}} /></td>
+                        <td><Input @type="checkbox" @checked={{slot.selected}} id={{checkid}} /></td>
                         <td>
                           <label for={{checkid}}>
                             {{shift-format slot.source.begins}} &rarr;

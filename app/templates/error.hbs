@@ -1,21 +1,22 @@
 <main>
-  {{#if isOffline}}
+  {{#if this.isOffline}}
     <p class="text-danger">
-      Uh oh, the request to the Clubhouse server could not be completed. The server might be offline or the Internet connection is spotty.
+      Uh oh, the request to the Clubhouse server could not be completed. The server might be offline or the Internet
+      connection is spotty.
     </p>
-    <button type="button" class="btn btn-primary" {{action reload}}>Reload the page</button>
-  {{else if notAuthorized}}
+    <button type="button" class="btn btn-primary" {{action this.reload}}>Reload the page</button>
+  {{else if this.notAuthorized}}
     <h1>You are not authorized.</h1>
     <p>
       It appears you do not have the appropriate Clubhouse privilieges to perform that action.
     </p>
     <p>
-      Error message from the server: {{error.message}}
+      Error message from the server: {{this.error.message}}
     </p>
     <p>
       Please contact the Tech Team Ninjas at {{admin-email}} if you believe this is a mistake.
     </p>
-    {{#if session.user}}
+    {{#if this.session.user}}
       <p>
         <LinkTo @route="me.homepage">Back To The Home Page</LinkTo>
       </p>
@@ -29,43 +30,43 @@
 
     <dl>
       <dt>Version</dt>
-      <dd>{{config.APP.version}} / {{config.APP.buildTimestamp}}</dd>
+      <dd>{{this.config.APP.version}} / {{this.config.APP.buildTimestamp}}</dd>
 
       <dt>Error Message:</dt>
-      <dd>{{error.message}}</dd>
-      {{#if error.payload.errors}}
+      <dd>{{this.error.message}}</dd>
+      {{#if this.error.payload.errors}}
         <dt>Response from server:</dt>
         <dd>
-          {{#each error.payload.errors as |message|}}
+          {{#each this.error.payload.errors as |message|}}
             {{message.title}}<br>
           {{/each}}
         </dd>
       {{/if}}
 
-      {{#if error.isAdapterError}}
+      {{#if this.error.isAdapterError}}
         <dt>Description:</dt>
-        <dd>{{error.description}}</dd>
+        <dd>{{this.error.description}}</dd>
 
         <dt>Filename / Line:</dt>
-        <dd>{{error.fileName}}:{{error.lineNumber}}</dd>
+        <dd>{{this.error.fileName}}:{{this.error.lineNumber}}</dd>
 
         <dt>Name:</dt>
-        <dd>{{error.name}}</dd>
+        <dd>{{this.error.name}}</dd>
 
         <dt>Number / Code:</dt>
-        <dd>{{error.number}} / {{error.code}}</dd>
+        <dd>{{this.error.number}} / {{this.error.code}}</dd>
       {{/if}}
 
       <dt>Stack:</dt>
       <dd>
-        <pre>{{error.stack}}</pre>
+        <pre>{{this.error.stack}}</pre>
       </dd>
     </dl>
 
     <p>
       Its recommended at this time that you do not attempt the request again until you hear from the tech ninjas.
     </p>
-    {{#if session.user}}
+    {{#if this.session.user}}
       <p>
         <LinkTo @route="me.homepage">Back To The Home Page</LinkTo>
       </p>

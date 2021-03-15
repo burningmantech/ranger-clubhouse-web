@@ -15,20 +15,19 @@
            placeholder={{@placeholder}}
            @value={{@text}}
            class={{this.inputClass}}
-            disabled={{@disabled}}
-      {{on "keydown" this.keyDownEvent}}
+           disabled={{@disabled}}
+      {{on "keyup" this.keyUpEvent}}
       {{on "focus" this.focusEvent}}
       {{on "blur" this.blurEvent}}
       {{on "input" this.inputEvent}}
       {{did-insert this.inputInsertElement}}
-            autofocus={{@autofocus}}
-           @inputClass="{{this.controlClass}} autocomplete-input {{if (get @model.error @name) "is-invalid"}}"
+           autofocus={{@autofocus}}
     />
 
     {{#if @appendSearchIcon}}
-    <div class="input-group-append">
-      <span class="input-group-text">{{fa-icon "search"}}</span>
-    </div>
+      <div class="input-group-append">
+        <span class="input-group-text">{{fa-icon "search"}}</span>
+      </div>
     {{/if}}
   </div>
   {{#if (and this.isFocused (or this.isSearching this.noResultsFound this.options))}}
@@ -44,10 +43,10 @@
         {{/if}}
         {{#each this.options as |opt idx|}}
           <div class="{{if (eq idx this.selectionIdx) "autocomplete-option-selected"}}"
-              data-result-id={{idx}}
+               data-result-id={{idx}}
                role="link"
             {{on "click" (fn this.clickSelection opt)}}
-            {{on "mousedown" (fn this.clickSelection opt)}}
+            {{on "mouseup" (fn this.clickSelection opt)}}
           >
             {{yield opt}}
           </div>

@@ -1,7 +1,7 @@
 <h1>Timesheet Corrections for <span class="d-inline-block">{{this.session.user.callsign}}</span></h1>
 
 {{#if this.timesheetInfo.correction_enabled}}
-  {{#if timesheetInfo.timesheet_confirmed}}
+  {{#if this.timesheetInfo.timesheet_confirmed}}
     <h3 class="text-success">
       {{fa-icon "thumbs-up" type="far"}} Congratulations! You're done with the Timesheet Review & Confirmation.
     </h3>
@@ -32,8 +32,8 @@
           You need to review {{pluralize this.unverifiedCount "timesheet entry"}}.<br>
         {{/if}}
         {{#if this.correctionPendingReviewCount}}
-          {{pluralize correctionPendingReviewCount "timesheet entry"}}
-          {{if (eq correctionPendingReviewCount 1) "is" "are"}} pending review.<br>
+          {{pluralize this.correctionPendingReviewCount "timesheet entry"}}
+          {{if (eq this.correctionPendingReviewCount 1) "is" "are"}} pending review.<br>
         {{/if}}
 
         {{#if this.missingPendingReviewCount}}

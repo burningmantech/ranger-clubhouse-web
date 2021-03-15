@@ -44,7 +44,7 @@
           <li>The entries are correct.</li>
           <li>There are no outstanding corrections or missing entry requests waiting for HQ review.</li>
           <li>You do not plan to submit any additional corrections and/or missing entry requests for
-            your {{timesheetInfo.correction_year}} timesheet.
+            your {{this.timesheetInfo.correction_year}} timesheet.
           </li>
         </ul>
         <label class="col-form-label">
@@ -64,8 +64,8 @@
 
   <div class="row mt-4">
     <div class="col-sm-12">
-      <LinkTo @route="me.timesheet-corrections.missing" class="btn btn-success">{{fa-icon "arrow-left"}} Missing Entries
-        Requests
+      <LinkTo @route="me.timesheet-corrections.missing" class="btn btn-success">
+        {{fa-icon "arrow-left"}} Missing Entries Requests
       </LinkTo>
     </div>
   </div>

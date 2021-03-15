@@ -2,7 +2,7 @@
 
 <p>Below are unclaimed tickets that will expire at the end of the coming event.</p>
 
-Showing {{pluralize expiring.length "person"}}
+Showing {{pluralize this.expiring.length "person"}}
 <table class="table table-hover">
   <thead>
     <tr>
@@ -17,7 +17,7 @@ Showing {{pluralize expiring.length "person"}}
   </thead>
 
   <tbody>
-    {{#each expiring as |person|}}
+    {{#each this.expiring as |person|}}
       <tr>
         <td><PersonLink @person={{person.person}} @page="access-documents" /></td>
         <td>{{person.person.status}}</td>
@@ -39,4 +39,4 @@ Showing {{pluralize expiring.length "person"}}
   </tbody>
 </table>
 
-<EmailList @people={{emailList}} />
+<EmailList @people={{this.emailList}} />
