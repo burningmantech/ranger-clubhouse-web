@@ -144,11 +144,14 @@ export default class ChFormComponent extends Component {
         if (!isValid) {
           this._scrollToError();
         }
-        submitAction(model, isValid, formFor);
+        if (submitAction) {
+          submitAction(model, isValid, formFor);
+        }
       });
-    } else {
+    } else if (submitAction) {
       submitAction(model, undefined, formFor);
     }
+
   }
 
   /**
