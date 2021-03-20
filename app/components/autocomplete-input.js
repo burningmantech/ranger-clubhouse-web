@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {schedule} from '@ember/runloop';
-import { inject as service } from '@ember/service';
+import {inject as service} from '@ember/service';
 
 export default class AutocompleteInputComponent extends Component {
   @service house;
@@ -171,12 +171,15 @@ export default class AutocompleteInputComponent extends Component {
     }
 
     // Scroll selected item into view
-    if (oldSelection != this.selectionIdx) {
-      this.resultsElement.querySelector(`[data-result-id="${this.selectionIdx}"]`).scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'start'
-      });
+    if (oldSelection != this.selectionIdx && this.resultsElement) {
+      const item = this.resultsElement.querySelector(`[data-result-id="${this.selectionIdx}"]`);
+      if (item) {
+        item.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'start'
+        });
+      }
     }
   }
 
