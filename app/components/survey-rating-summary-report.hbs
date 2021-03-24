@@ -1,0 +1,49 @@
+<i><b>{{@summary.description}}</b></i>
+<table class="table table-width-auto table-sm table-striped table-hover">
+  <thead>
+  <tr>
+    {{#if this.isNormal}}
+      <th>Venue</th>
+      <th>Time</th>
+    {{else}}
+      <th>Trainer</th>
+    {{/if}}
+    <th>Avg. Rating</th>
+    <th>&nbsp;</th>
+    <th>Std. Dev.</th>
+    <th>Count</th>
+    <th>Distribution</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.ratings as |rating|}}
+    <tr>
+      <td>
+        {{#if this.isNormal}}
+          <LinkTo @route="training.session.index" @models={{array @trainingId rating.slot_id}}>
+            {{rating.slot_description}}
+          </LinkTo>
+        {{else}}
+          <a href="#trainer-{{rating.trainer_id}}">{{rating.callsign}}</a>
+        {{/if}}
+      </td>
+      {{#if this.isNormal}}
+        <td>{{shift-format rating.slot_begins}}</td>
+      {{/if}}
+      <td class="text-right">
+        {{rating.mean}}
+      </td>
+      <td>
+        <progress max="100" value="{{mult (div rating.mean 7) 100}}"/>
+      </td>
+      <td class="text-right">{{rating.variance}}</td>
+      <td class="text-right">{{rating.rating_count}}</td>
+      <td>
+        {{#each-in rating.distribution as |rank count|}}
+          {{rank}}x{{count}}
+        {{/each-in}}
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>

@@ -1,17 +1,15 @@
 import Controller from '@ember/controller';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
+import {TYPE_NORMAL, TYPE_TRAINER, TYPE_SEPARATE, TYPE_SUMMARY} from 'clubhouse/models/survey-group';
 
 export default class AdminSurveyManageController extends Controller {
   @tracked groupEntry = null;
   @tracked questionEntry = null;
-
   @tracked survey;
   @tracked surveyGroups;
   @tracked surveyQuestions;
-
   @tracked surveyEdit;
-
   @tracked orderedGroups;
 
   typeOptions = [
@@ -20,66 +18,16 @@ export default class AdminSurveyManageController extends Controller {
     {id: 'options', title: 'Options'}
   ];
 
-  codeOptions = [
+  groupTypeOptions = [
+    {id: TYPE_NORMAL, title: 'Normal: Group questions are on the main report'},
     {
-      groupName: "Student Survey",
-      options: [
-        {id: '', title: 'select a code'},
-        {id: 'art', title: 'art: ART feedback (text)'},
-        {id: 'manual_comments', title: 'manual_comments: Feedback about the Ranger Manual (text)'},
-        {id: 'manual_rating', title: 'manual_rating: Ranger Manual Rating (rating)'},
-        {id: 'manual_use', title: 'manual_use: How was the Ranger Manual used in training? (text)'},
-        {id: 'other', title: 'other: Any other comments about training (text)'},
-        {id: 'suggestion', title: 'suggestion: Comments to better Ranger training (text)'},
-        {id: 'training_best', title: 'training_best: Comments on training best parts (text)'},
-        {id: 'training_less', title: 'training_less: Comments on want to see less of (text)'},
-        {id: 'training_more', title: 'training_more: Comments on what to see more of (text)'},
-        {id: 'training_rating', title: 'training_rating: Overall training rating'},
-        {id: 'training_worst', title: 'training_worst: Comments on worst parts (text)'},
-        {id: 'venue_comments', title: 'venue_comments: Venue comments (text)'},
-        {id: 'venue_rating', title: 'venue_rating: Overall Venue rating'},
-      ]
+      id: TYPE_TRAINER,
+      title: 'Trainer: Group questions are repeated for each trainer who taught. Responses are collated on the Trainers\' Report'
     },
-    {
-      groupName: "Student Survey Trainer Subsection",
-      options: [
-        {id: 'trainer_comment', title: 'trainer_comment: Student comments for Trainer (text)'},
-        {id: 'trainer_rating', title: 'trainer_rating: Trainer overall rating'},
-      ]
-    },
+    {id: TYPE_SEPARATE, title: 'Separate: Group is a separate report with session breakdown (report title req.)'},
+    {id: TYPE_SUMMARY, title: 'Summary: Group is a separate reporte with NO session breakdown (report title req.)'},
+  ]
 
-    {
-      groupName: "Trainer-for-Trainer Survey",
-      options: [
-        {id: 'bad', title: 'bad: Concerns about trainer (text)'},
-        {id: 'good', title: 'good: What trainer did well (text)',},
-        {id: 'gavefb', title: 'gavefb: Was feedback delivered to trainer (option)'},
-        {id: 'didntgivefb_why', title: 'didntgivefb_why: Reason why feedback was not delivered (text)'},
-        {
-          id: 'followcurriculum_rating',
-          title: 'followcurriculum_rating: Trainer\'s ability to follow the curriculum (text)'
-        },
-        {id: 'nam_rating', title: 'nam_rating: How well did the trainer not make it about themselves (rating)'},
-        {id: 'ontime_rating', title: 'ontime_rating: Trainer stayed on time (rating)'},
-        {
-          id: 'confidential_comments',
-          title: 'confidential_comments: Parting thoughts about Trainer (text, T.A. only see answers)'
-        },
-        {id: 'overall_rating', title: 'overall_raing: Overall effectiveness on training delivery (rating)'},
-        {id: 'preparedness_rating', title: 'preparedness_rating: Trainer preparations (rating)'},
-        {id: 'suggestions', title: 'suggestions: Trainer improvement suggestions (text)'},
-        {id: 'tit_demonstrate', title: 'tit_demonstrate: Assoc. Trainer improvement comments (text)'},
-        {id: 'tit_graduate', title: 'tit_graduate: Is Assoc. Trainer ready to graduate (options)'},
-      ]
-    },
-    {
-      groupName: "Deprecated codes",
-      options: [
-        {id: 'rude_comments', title: 'rude_comments:  RUdE (Refresh, Update, Enhance) comments (text)'},
-        {id: 'rude_rating', title: 'rude_rating: RuDE overall effectiveness (rating)'},
-      ]
-    }
-  ];
 
   _buildOrderedGroups() {
     this.orderedGroups = this.surveyGroups.sortBy('sort_index');
@@ -92,7 +40,7 @@ export default class AdminSurveyManageController extends Controller {
     this.groupEntry = this.store.createRecord('survey-group', {
       survey_id: this.survey.id,
       sort_index: lastGroup ? lastGroup.sort_index + 1 : 1,
-      is_trainer_group: false
+      type: TYPE_NORMAL
     });
   }
 
@@ -124,16 +72,18 @@ export default class AdminSurveyManageController extends Controller {
   }
 
   @action
-  deleteGroupAction(group) {
-    this.modal.confirm('Confirm Question Delete', 'By deleting this question, all respondent answers will be lost. Are you sure want to delete this question?',
+  deleteGroupAction() {
+    this.modal.confirm('Confirm Group Delete',
+      'By deleting this group, all respondent answers will be lost. Are you sure want to delete this question?',
       () => {
-        group.destroyRecord().then(async () => {
-          this.toast.success('The question has been deleted.');
+        this.groupEntry.destroyRecord().then(async () => {
+          this.toast.success('The group has been deleted.');
+          this.groupEntry = null;
           await this.surveyGroups.update();
           await this.surveyQuestions.update();
           this._assignQuestions();
           this._buildOrderedGroups()
-        })
+        }).catch((response) => this.house.handleErrorResponse(response));
       });
   }
 
@@ -199,11 +149,12 @@ export default class AdminSurveyManageController extends Controller {
   }
 
   @action
-  deleteQuestionAction(question) {
+  deleteQuestionAction() {
     this.modal.confirm('Confirm Question Delete', 'By deleting this question, all respondent answers will be lost. Are you sure want to delete this question?',
       () => {
-        question.destroyRecord().then(() => {
+        this.questionEntry.destroyRecord().then(() => {
           this.toast.success('The question has been deleted.');
+          this.questionEntry = null;
           this.surveyQuestions.update().then(() => {
             this._assignQuestions();
           })
@@ -239,7 +190,7 @@ export default class AdminSurveyManageController extends Controller {
     let questions = group.surveyQuestions.toArray().filter((q) => q.id != question.id);
 
     if (direction < 0) {
-      if (idx == 1) {
+      if (idx === 1) {
         questions.unshift(question);
       } else if (idx > 0) {
         questions.splice(idx - 1, 0, question);
@@ -255,7 +206,7 @@ export default class AdminSurveyManageController extends Controller {
     for (let i = 0; i < questions.length; i++) {
       const sortIdx = i + 1;
       const q = questions[i];
-      if (q.sort_index != sortIdx) {
+      if (q.sort_index !== sortIdx) {
         q.sort_index = sortIdx;
         try {
           await q.save();
@@ -271,7 +222,9 @@ export default class AdminSurveyManageController extends Controller {
 
   _assignQuestions() {
     this.surveyGroups.forEach((group) => {
-      set(group, 'surveyQuestions', this.surveyQuestions.filter((q) => (q.survey_group_id == group.id)).sort((a, b) => a.sort_index - b.sort_index));
+      set(group, 'surveyQuestions',
+        this.surveyQuestions.filter((q) => (q.survey_group_id == group.id))
+          .sort((a, b) => a.sort_index - b.sort_index));
     });
   }
 

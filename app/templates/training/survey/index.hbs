@@ -1,51 +1,34 @@
-<YearSelect @title="Training Surveys" @year={{this.year}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="Training Surveys" @year={{this.year}} @minYear={{2012}} @onChange={{action (mut this.year)}} />
 
 <table class="table table-striped table-hover table-width-auto mt-2">
   <thead>
   <tr>
-    <th>
-      ID
-    </th>
-    <th>
-      Type
-    </th>
+    <th>ID</th>
+    <th>Type</th>
     <th>Title</th>
-    <th>
-      Has Responses?
-    </th>
-    <th>
-      Feedback
-    </th>
+    <th>Reports</th>
   </tr>
   </thead>
   <tbody>
   {{#each this.surveys as |survey|}}
     <tr>
+      <td>{{survey.id}}</td>
+      <td>{{survey.type}}</td>
+      <td>{{survey.title}}</td>
       <td>
-        {{survey.id}}
+        {{#each survey.reports as |report|}}
+          <LinkTo @route="training.survey.report"
+                  @models={{array this.training.id survey.id}}
+                  @query={{hash type=report.type report_id=report.id}}>
+            {{report.title}}
+          </LinkTo>
+          <br>
+        {{/each}}
       </td>
-      <td>
-        {{survey.type}}
-      </td>
-      <td>
-        {{survey.title}}
-      </td>
-      <td>
-        {{yesno survey.has_responses}}
-      </td>
-      <th>
-        {{#if (eq survey.type "training")}}
-          <LinkTo @route="training.survey.report" @models={{array this.training.id survey.id}} @query={{hash type="trainings"}}>Venue Feedback</LinkTo> |
-          <LinkTo @route="training.survey.report" @models={{array this.training.id survey.id}} @query={{hash type="trainers"}}>Student-for-Trainer Feedback</LinkTo> |
-          <LinkTo @route="training.survey.report" @models={{array this.training.id survey.id}} @query={{hash type="manual"}}>Ranger Manual Feedback</LinkTo>
-        {{else}}
-          <LinkTo @route="training.survey.report" @models={{array this.training.id survey.id}} @query={{hash type="tot"}}>Trainer-for-Trainer Feedback</LinkTo>
-        {{/if}}
-      </th>
     </tr>
   {{else}}
     <tr>
-      <td colspan="5"><b class="text-danger">No surveys found for {{this.year}}</b></td>
+      <td colspan="4"><b class="text-danger">No surveys found for {{this.year}}</b></td>
     </tr>
   {{/each}}
   </tbody>

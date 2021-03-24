@@ -34,7 +34,7 @@ export default class SurveyQuestionnaireComponent extends Component {
     const survey = this.args.survey;
     const trainers = this.args.trainers;
     const groups = [];
-    this.isTrainerSurvey = (survey.type == 'trainer');
+    this.isTrainerSurvey = (survey.type === 'trainer');
 
     if (this.isTrainerSurvey) {
       // A trainer survey will loop through each trainer
@@ -47,7 +47,7 @@ export default class SurveyQuestionnaireComponent extends Component {
 
         survey.survey_groups.forEach((group, idx) => {
           const trainerGroup = _.cloneDeep(group);
-          trainerGroup.showTrainerPhoto = idx == 0;
+          trainerGroup.showTrainerPhoto = !idx;
           this._setupGroup(trainerGroup, trainer);
           groups.push(trainerGroup);
         });
@@ -92,7 +92,7 @@ export default class SurveyQuestionnaireComponent extends Component {
         this.validations[q.formName] = validatePresence({presence: true, message: 'Please answer the question.'});
       }
 
-      if (q.type == 'options') {
+      if (q.type === 'options') {
         q.formOptions = q.options.trim().split("\n").map((opt, idx) => {
           return {id: idx + 1, title: opt};
         });

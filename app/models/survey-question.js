@@ -10,6 +10,7 @@ export default class SurveyQuestionModel extends Model {
   @attr('string') options;
   @attr('boolean') is_required;
   @attr('string') code;
+  @attr('boolean') summarize_rating;
 
   @attr('string', {readOnly: true}) created_at;
   @attr('string', {readOnly: true}) updated_at;
