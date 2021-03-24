@@ -24,7 +24,12 @@
   {{/each}}
 {{else}}
   {{#each this.report.summarized_ratings as |summary|}}
-    <SurveyRatingSummaryReport @report={{this.report}} @summary={{summary}} />
+    <ChAccordion as |Accordion|>
+      <Accordion.title>{{summary.description}}</Accordion.title>
+      <Accordion.body>
+        <SurveyRatingSummaryReport @noHeader={{true}} @report={{this.report}} @summary={{summary}} />
+      </Accordion.body>
+    </ChAccordion>
   {{/each}}
 
   {{#if (eq this.report.type "trainer")}}
@@ -46,11 +51,16 @@
     {{/each}}
   {{else}}
     {{#each this.report.questions as |question|}}
-      <div class="border p-2 mb-2">
-        <SurveyQuestionReport @report={{this.report}}
-                              @question={{question}}
-                              @trainingId={{this.training.id}} />
-      </div>
+      <ChAccordion as |Accordion|>
+        <Accordion.title>{{question.description}}</Accordion.title>
+        <Accordion.body>
+          <SurveyQuestionReport @noHeader={{true}}
+                                @report={{this.report}}
+                                @question={{question}}
+                                @trainingId={{this.training.id}} />
+        </Accordion.body>
+
+      </ChAccordion>
     {{/each}}
   {{/if}}
 {{/if}}

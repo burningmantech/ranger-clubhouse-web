@@ -1,6 +1,8 @@
-<div class="font-italic mb-1">
-  <b>{{#if @trainer}}Trainer {{@trainer.callsign}}: {{/if}}{{@question.description}}</b>
-</div>
+{{#unless @noheader}}
+  <div class="font-italic mb-1">
+    <b>{{#if @trainer}}Trainer {{@trainer.callsign}}: {{/if}}{{@question.description}}</b>
+  </div>
+{{/unless}}
 <div class="ml-2">
   {{#if (eq @question.type "rating")}}
     <table class="table table-width-auto table-sm">

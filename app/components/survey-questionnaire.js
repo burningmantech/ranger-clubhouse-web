@@ -54,7 +54,7 @@ export default class SurveyQuestionnaireComponent extends Component {
       });
     } else {
       survey.survey_groups.forEach((group) => {
-        if (group.is_trainer_group) {
+        if (group.type === 'trainer') {
           trainers.forEach((trainer) => {
             const trainerGroup = _.cloneDeep(group);
             trainerGroup.showTrainerPhoto = true;
@@ -93,9 +93,7 @@ export default class SurveyQuestionnaireComponent extends Component {
       }
 
       if (q.type === 'options') {
-        q.formOptions = q.options.trim().split("\n").map((opt, idx) => {
-          return {id: idx + 1, title: opt};
-        });
+        q.formOptions = q.options.trim().split("\n");
         this.surveyForm[formName] = '';
       }
     });

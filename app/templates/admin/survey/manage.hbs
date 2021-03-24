@@ -74,7 +74,7 @@
     {{#each group.surveyQuestions as |question idx|}}
       <tr>
         <td class="w-5">{{question.id}}</td>
-        <td class="w-50">{{question.description}}</td>
+        <td class="w-55">{{question.description}}</td>
         <td class="w-5">{{question.type}}</td>
         <td class="w-5 text-center">{{yesno question.is_required}}</td>
         <td class="w-10">
@@ -95,7 +95,6 @@
               {{fa-icon "arrow-down"}} Move Down
             </button>
           {{/if}}
-
         </td>
       </tr>
     {{else}}
