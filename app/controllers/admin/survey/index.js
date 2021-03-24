@@ -40,7 +40,8 @@ export default class AdminSurveyIndexController extends Controller {
   duplicateSurveyAction(survey) {
     const year = this.house.currentYear();
 
-    this.modal.confirm('Duplicate Survey', `Are you sure you want to duplicate "${survey.title}"? The survey will be duplicated as a ${year} survey.`,
+    this.modal.confirm('Duplicate Survey',
+      `Are you sure you want to duplicate "${survey.title}"? The survey will be duplicated as a ${year} survey.`,
       () => {
         this.isDuplicating = true;
         this.ajax.request(`survey/${survey.id}/duplicate`, { method: 'POST' })

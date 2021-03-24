@@ -7,10 +7,11 @@ export default class YearSelectComponent extends Component {
   get yearOptions() {
     const currentYear = this.house.currentYear();
     let years = this.args.years;
+    const minYear = this.args.minYear ?? 1998;
 
     if (!years) {
       years = [];
-      for (let y = 1998; y <= currentYear; y++) {
+      for (let y = minYear; y <= currentYear; y++) {
         years.push(y);
       }
     } else {

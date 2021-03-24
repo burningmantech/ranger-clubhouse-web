@@ -26,10 +26,11 @@
              id={{this.domId}}
              name={{@name}}
              checked={{get @model @name}}
+             disabled={{@disabled}}
              onclick={{action this.update value="target.checked"}}
       >
       {{#if @label~}}
-        <label class="form-check-label" for={{this.domId}}>{{@label}}</label>
+        <label class="form-check-label {{if @disabled "text-muted"}}" for={{this.domId}}>{{@label}}</label>
       {{~/if~}}
     {{else if (or this.editorFailed (eq @type "textarea"))}}
       {{#if this.editorFailed}}

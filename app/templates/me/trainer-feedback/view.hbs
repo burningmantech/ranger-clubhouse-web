@@ -1,58 +1,26 @@
 <LinkTo @route="me.trainer-feedback.index">Back to Trainer Surveys</LinkTo>
+
 {{#each this.surveys as |survey|}}
-  <h1 class="mt-2">{{survey.position_title}}: {{survey.title}}</h1>
-  {{#if (eq survey.type "trainer")}}
-    <div class="border p-2 mb-2">
-      <h3>Trainer-on-Trainer Ratings About You</h3>
-      <p>
-        Effectiveness: How would you rate this person in terms of their ability to effectively cover the training
-        material
-        in an engaging manner?
-      </p>
+  <ChAccordion as |Accordion|>
+    <Accordion.title>{{survey.title}}</Accordion.title>
+    <Accordion.body>
+      {{#each survey.reports as |report|}}
+        {{#each report.summarized_ratings as |summary|}}
+          <SurveyRatingSummaryReport @report={{report}} @summary={{summary}} />
+        {{/each}}
 
-      <p>
-        Not about me: How would you rate this person in terms of their ability to display a not-about-me attitude?
-      </p>
-
-      <p>
-        Stayed On Time: How would you rate this person in terms of their ability to stay on time during training?
-      </p>
-
-      <p>
-        Follow curriculum: How would you rate this person in terms of their ability to stick to the curriculum?
-      </p>
-
-      <p>
-        Preparedness: How would you rate this person in terms of their preparedness to teach at this training?
-      </p>
-
-      <table class="table table-hover table-width-auto">
-        <thead>
-        <tr>
-          <th>&nbsp;</th>
-          <th>Average Rating</th>
-          <th>Std. Dev.</th>
-          <th>Count</th>
-        </tr>
-        </thead>
-        <tbody>
-        <SurveyTrainerRatingLine @title="Effectiveness" @code="overall_rating" @responses={{survey.responses}} />
-        <SurveyTrainerRatingLine @title="Not about me" @code="nam_rating" @responses={{survey.responses}} />
-        <SurveyTrainerRatingLine @title="Stayed On Time" @code="ontime_rating" @responses={{survey.responses}} />
-        <SurveyTrainerRatingLine @title="Follow curriculum" @code="followcurriculum_rating"
-                                 @responses={{survey.responses}} />
-        <SurveyTrainerRatingLine @title="Preparedness" @code="preparedness_rating" @responses={{survey.responses}} />
-        </tbody>
-      </table>
-    </div>
-
-    <SurveyQuestionTrainer @code="good" @responses={{survey.responses}} @isToTFeedback=true/>
-    <SurveyQuestionTrainer @code="bad" @responses={{survey.responses}}  @isToTFeedback=true/>
-    <SurveyQuestionTrainer @code="suggestions" @responses={{survey.responses}} @isToTFeedback=true/>
-  {{else if (eq survey.type "training")}}
-      <SurveyQuestionTrainer @code="trainer_rating" @responses={{survey.responses}} />
-      <SurveyQuestionTrainer @code="trainer_comment" @responses={{survey.responses}} />
-  {{else}}
-      Uh oh, I'm not sure what survey type [{{survey.type}}] is. This is a bug.
-  {{/if}}
+        {{#if (eq report.type "trainer")}}
+          {{#each report.trainers as |trainer|}}
+            {{#each trainer.questions as |question|}}
+              <SurveyQuestionReport @report={{report}} @trainer={{trainer}} @question={{question}} />
+            {{/each}}
+          {{/each}}
+        {{else}}
+          {{#each report.questions as |question|}}
+            <SurveyQuestionReport @report={{report}} @question={{question}} />
+          {{/each}}
+        {{/if}}
+      {{/each}}
+    </Accordion.body>
+  </ChAccordion>
 {{/each}}

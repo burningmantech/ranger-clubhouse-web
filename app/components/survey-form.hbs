@@ -11,13 +11,15 @@
         <f.input @name="position_id" @type="select" @label="Position" @options={{this.positionOptions}} />
       </div>
       <div class="form-row">
-        <f.input @name="title" @type="text" @label="Title" @size=80 @maxlength=190/>
+        <f.input @name="title" @type="text" @label="Title" @size={{80}} @maxlength={{190}}/>
       </div>
       <div class="form-row">
-        <f.input @name="prologue" @label="Survey prologue text" @type="textarea" @cols=80 @rows=4/>
+        <f.input @name="prologue" @label="Prologue text to show at the very beginning of the survey (HTML allowed):"
+                 @type="textarea" @cols={{80}} @rows={{4}}/>
       </div>
       <div class="form-row">
-        <f.input @name="epilogue" @label="Survey epilogue text" @type="textarea" @cols=80 @rows=4/>
+        <f.input @name="epilogue" @label="Epilogue text to shown at the very end of the survey (HTML allowed):"
+                 @type="textarea" @cols={{80}} @rows={{4}}/>
       </div>
     </Modal.body>
     <Modal.footer @noAlign=true>

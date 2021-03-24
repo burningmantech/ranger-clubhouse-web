@@ -4,150 +4,63 @@
     Back to {{this.survey.year}} Surveys
   </LinkTo>
 </p>
-
-{{#if (eq this.type "trainings")}}
-  <p class="sticky-top my-3 p-2 bg-white border">
-    Quick navigation: <a href="#top">Top</a> |
-    Training [<a href="#question-training_rating">Overall</a>,
-    <a href="#question-training_best">Best</a>,
-    <a href="#question-training_worst">Worst</a>,
-    <a href="#question-training_more">More Of</a>,
-    <a href="#question-training_less">Less Of</a>] |
-    <a href="#question-art">ARTs</a> |
-    <a href="#question-suggestion">Suggestions</a> |
-    <a href="#question-other">Parting Comments</a>
-
-    {{#if (get this.venue_responses "rude_rating")}}
-      | <a href="#question-rude_rating">RUdE Rating</a> |
-      <a href="#question-rude_comments">RUdE Comments</a>
-    {{/if}}
-  </p>
-
-  <SurveyQuestionReport @code="training_rating" @responses={{this.venue_responses}} @trainingId={{this.training.id}}
-                        @isSlotRating={{true}}/>
-  <SurveyQuestionReport @code="training_best" @responses={{this.venue_responses}} @trainingId={{this.training.id}} />
-  <SurveyQuestionReport @code="training_worst" @responses={{this.venue_responses}} @trainingId={{this.training.id}} />
-  <SurveyQuestionReport @code="training_more" @responses={{this.venue_responses}} @trainingId={{this.training.id}} />
-  <SurveyQuestionReport @code="training_less" @responses={{this.venue_responses}} @trainingId={{this.training.id}} />
-  <SurveyQuestionReport @code="art" @responses={{this.venue_responses}} @trainingId={{this.training.id}} />
-  <SurveyQuestionReport @code="suggestion" @responses={{this.venue_responses}} @trainingId={{this.training.id}} />
-  <SurveyQuestionReport @code="other" @responses={{this.venue_responses}} @trainingId={{this.training.id}} />
-  {{#if (get this.venue_responses "rude_rating")}}
-    <SurveyQuestionReport @code="rude_rating" @responses={{this.venue_responses}} @trainingId={{this.training.id}} />
-    <SurveyQuestionReport @code="rude_comments" @responses={{this.venue_responses}}
-                          @trainingId={{this.training.id}} />
-  {{/if}}
-{{else if (eq this.type "trainers")}}
-  <div class="sticky-top my-3 p-2 bg-white border">
-    Quick Navigation: <a href="#top">Top</a> | <a href="#trainer-ranking">Trainer Ranking</a>
-  </div>
-  <div class="p-2">
-    Trainer navigation:
-    {{#each this.trainer_responses as |trainer idx|}}
-      {{~if idx " | "}}<a href="#trainer-{{trainer.id}}-trainer_comment">{{trainer.callsign}}</a>
-    {{~/each}}
-  </div>
-
-  <div class="border p-2 mb-2">
-    <h3 id="trainer-ranking">Trainer Ranking</h3>
-    <table class="table table-width-auto table-striped table-hover table-sm">
-      <thead>
-      <tr>
-        <th>Trainer</th>
-        <th>Average Rating</th>
-        <th>Std. Dev.</th>
-        <th>Count</th>
-        <th>Distribution</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each this.trainerRatings as |trainer|}}
-        <tr>
-          <td>
-            <a href="#trainer-{{trainer.id}}-trainer_comment">{{trainer.callsign}}</a>
-          </td>
-          <td>
-            <progress max="100" value="{{mult (div trainer.mean 7) 100}}"/> {{trainer.mean}}
-          </td>
-          <td class="text-right">{{trainer.variance}}</td>
-          <td class="text-right">{{trainer.rating_count}}</td>
-          <td>
-            {{#each-in trainer.distribution as |rank count|}}
-              {{rank}}x{{count}}
-            {{/each-in}}
-          </td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  </div>
-  {{#each this.trainer_responses as |trainer|}}
-    <SurveyQuestionReport @code="trainer_comment" @responses={{trainer.responses}} @trainingId={{this.training.id}}
-                          @trainer={{trainer}} />
-  {{/each}}
-{{else if (eq this.type "manual")}}
-  <SurveyQuestionReport @code="manual_rating" @responses={{this.venue_responses}} @trainingId={{this.training.id}} />
-  <SurveyQuestionReport @code="manual_comments" @responses={{this.venue_responses}}
-                        @trainingId={{this.training.id}} />
-{{else if (eq this.type "tot")}}
-  <p class="sticky-top my-3 p-2 bg-white border">
-    Quick navigation: <a href="#top">Top</a>
-  </p>
-  <div class="p-2">
-    Trainer navigation:
-    {{#each this.trainers_report as |trainer idx|}}
-      {{~if idx " | "}}<a href="#trainer-{{trainer.id}}">{{trainer.callsign}}</a>
-    {{~/each}}
-  </div>
-
-  {{#each this.trainers_report as |trainer|}}
-    <div class="border p-2 mb-2">
-      <h3 id="trainer-{{trainer.id}}">Trainer:
-        <PersonLink @person={{trainer}} />
-      </h3>
-      {{#if trainer.photo_url}}
-        <div class="mugshot">
-          <img src="{{trainer.photo_url}}" alt="trainer {{trainer.callsign}}">
-        </div>
-      {{else}}
-        <div class="my-2">
-          <i class="far fa-user fa-4x"></i><br>
-          Uh oh, {{trainer.callsign}} does not have a photo on file. Sorry!
-        </div>
-      {{/if}}
-
-      <table class="table table-hover table-width-auto">
-        <thead>
-        <tr>
-          <th>&nbsp;</th>
-          <th>Average Rating</th>
-          <th>Std. Dev.</th>
-          <th>Count</th>
-        </tr>
-        </thead>
-        <tbody>
-        <SurveyTrainerRatingLine @title="Effectiveness" @code="overall_rating" @responses={{trainer.responses}} />
-        <SurveyTrainerRatingLine @title="Not about me" @code="nam_rating" @responses={{trainer.responses}} />
-        <SurveyTrainerRatingLine @title="Stayed On Time" @code="ontime_rating" @responses={{trainer.responses}} />
-        <SurveyTrainerRatingLine @title="Follow curriculum" @code="followcurriculum_rating"
-                                 @responses={{trainer.responses}} />
-        <SurveyTrainerRatingLine @title="Preparedness" @code="preparedness_rating"
-                                 @responses={{trainer.responses}} />
-        </tbody>
-      </table>
-    </div>
-
-    <SurveyQuestionTrainer @code="good" @responses={{trainer.responses}} @isToTFeedback={{true}}
-                           @trainer={{trainer}} />
-    <SurveyQuestionTrainer @code="bad" @responses={{trainer.responses}}  @isToTFeedback={{true}}
-                           @trainer={{trainer}} />
-    <SurveyQuestionTrainer @code="suggestions" @responses={{trainer.responses}} @isToTFeedback={{true}}
-                           @trainer={{trainer}}/>
-
-    <SurveyQuestionTrainer @code="confidential_comments" @responses={{trainer.responses}} @isToTFeedback={{true}}
-                           @trainer={{trainer}}/>
-
+{{#if (eq this.survey.type "trainer")}}
+  {{#each this.trainers as |trainer|}}
+    <ChAccordion id="trainer-{{trainer.trainer_id}}" as |Accordion|>
+      <Accordion.title>
+        Trainer {{trainer.callsign}}
+      </Accordion.title>
+      <Accordion.body>
+        {{#each trainer.report.summarized_ratings as |summary|}}
+          <SurveyRatingSummaryReport @report={{trainer.report}} @summary={{summary}} />
+        {{/each}}
+        {{#each trainer.report.questions as |question|}}
+          <SurveyQuestionReport @report={{trainer.report}} @question={{question}} />
+        {{/each}}
+      </Accordion.body>
+    </ChAccordion>
+  {{else}}
+    <b class="text-danger">No Trainer-on-Trainer feedback has been given yet.</b>
   {{/each}}
 {{else}}
-  Unknown type [{{this.type}}]
+  {{#each this.report.summarized_ratings as |summary|}}
+    <ChAccordion as |Accordion|>
+      <Accordion.title>{{summary.description}}</Accordion.title>
+      <Accordion.body>
+        <SurveyRatingSummaryReport @noHeader={{true}} @report={{this.report}} @summary={{summary}} />
+      </Accordion.body>
+    </ChAccordion>
+  {{/each}}
+
+  {{#if (eq this.report.type "trainer")}}
+    {{#each this.report.trainers as |trainer|}}
+      <ChAccordion id="trainer-{{trainer.trainer_id}}" as |Accordion|>
+        <Accordion.title>
+          Trainer {{trainer.callsign}}
+        </Accordion.title>
+        <Accordion.body>
+          <img src="{{trainer.photo_url}}" alt="{{trainer.callsign}} headshot" class="d-block"/>
+          {{#each trainer.questions as |question|}}
+            <SurveyQuestionReport @report={{this.report}}
+                                  @trainer={{trainer}}
+                                  @question={{question}}
+                                  @trainingId={{this.training.id}} />
+          {{/each}}
+        </Accordion.body>
+      </ChAccordion>
+    {{/each}}
+  {{else}}
+    {{#each this.report.questions as |question|}}
+      <ChAccordion as |Accordion|>
+        <Accordion.title>{{question.description}}</Accordion.title>
+        <Accordion.body>
+          <SurveyQuestionReport @noHeader={{true}}
+                                @report={{this.report}}
+                                @question={{question}}
+                                @trainingId={{this.training.id}} />
+        </Accordion.body>
+
+      </ChAccordion>
+    {{/each}}
+  {{/if}}
 {{/if}}

@@ -17,7 +17,7 @@ module('Integration | Component | survey-questionnaire', function(hooks) {
             id: 10,
             title: 'A Group',
             description: 'This is group',
-            is_trainer_group: false,
+            type: 'trainer',
             survey_questions: [
               {
                 id: 12,

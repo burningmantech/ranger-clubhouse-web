@@ -1,4 +1,4 @@
-<YearSelect @title="Survey Administration" @year={{this.year}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="Survey Administration" @year={{this.year}} @minYear={{2012}} @onChange={{action (mut this.year)}} />
 <p>
   <button type="button" class="btn btn-primary" {{on "click" this.newSurveyAction}}>New Survey</button>
 </p>
@@ -20,7 +20,7 @@ Showing {{pluralize this.surveys.length "survey"}}
       <td>{{survey.type}}</td>
       <td>
         {{#if survey.position_id}}
-          <PresentOrNot @value={{get this.positionsById survey.position_id}} @empty={{concat "Unknown #" survey.position_id}} />
+          <PresentOrNot @value={{get this.positionsById survey.position_id}} @empty="Unknown #{{survey.position_id}}" />
         {{else}}
           -
         {{/if}}
@@ -33,8 +33,8 @@ Showing {{pluralize this.surveys.length "survey"}}
         <button type="button" class="btn btn-secondary btn-sm" {{on "click" (fn this.duplicateSurveyAction survey)}}>
           Duplicate
         </button>
-        <button type="button" class="btn btn-danger btn-sm" {{on "click" (fn this.deleteSurveyAction survey)}}>{{fa-icon
-                "trash"}} Delete
+        <button type="button" class="btn btn-danger btn-sm" {{on "click" (fn this.deleteSurveyAction survey)}}>
+          {{fa-icon "trash"}} Delete
         </button>
       </td>
     </tr>
@@ -47,7 +47,9 @@ Showing {{pluralize this.surveys.length "survey"}}
 </table>
 
 {{#if this.surveyEntry}}
-  <SurveyForm @survey={{this.surveyEntry}} @positions={{this.positions}} @onCancel={{this.cancelSurveyAction}}
+  <SurveyForm @survey={{this.surveyEntry}}
+              @positions={{this.positions}}
+              @onCancel={{this.cancelSurveyAction}}
               @onSave={{this.saveSurveyAction}} />
 {{/if}}
 

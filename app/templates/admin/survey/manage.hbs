@@ -19,16 +19,20 @@
   <button type="button" class="btn btn-secondary" {{on "click" this.editSurveyAction}}>
     {{fa-icon "edit"}} Edit Survey
   </button>
-  <LinkTo @route="admin.survey.preview" @model={{this.survey.id}} class="btn btn-secondary">
-    {{fa-icon "eye"}} Preview Survey
-  </LinkTo>
 </p>
 
 {{#each this.orderedGroups as |group idx|}}
   <table class="table table-sm table-striped table-hover">
     <caption>
       <div class="d-flex">
-        ID #{{group.id}} {{group.title}} {{#if group.is_trainer_group}}<i>(Trainer Group)</i>{{/if}}
+        <div>
+          ID #{{group.id}} {{group.title}}
+          {{#if (eq group.type "trainer")}}
+            <br><i>(Is trainer group)</i>
+          {{else if group.report_title}}
+            <br>(In separate report as: "{{group.report_title}}")
+          {{/if}}
+        </div>
         <div class="ml-2 mr-auto">
           <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.newQuestionAction group)}}
                   disabled={{group.isSaving}}>
@@ -37,10 +41,6 @@
           <button type="button" class="btn btn-secondary btn-sm" {{on "click" (fn this.editGroupAction group)}}
                   disabled={{group.isSaving}}>
             {{fa-icon "edit"}} Edit Group
-          </button>
-          <button type="button" class="btn btn-danger btn-sm" {{on "click" (fn this.deleteGroupAction group)}}
-                  disabled={{group.isSaving}}>
-            {{fa-icon "trash"}} Delete Group
           </button>
         </div>
         <div class="ml-auto">
@@ -65,9 +65,9 @@
       <th class="w-5">ID</th>
       <th class="w-55">Description</th>
       <th class="w-5">Type</th>
-      <th class="w-5">Req?</th>
-      <th class="w-15">Action</th>
-      <th class="w-15 text-right">Move Position</th>
+      <th class="w-5 text-center">Req?</th>
+      <th class="w-10">Action</th>
+      <th class="w-25 text-right">Move Position</th>
     </tr>
     </thead>
     <tbody>
@@ -76,16 +76,13 @@
         <td class="w-5">{{question.id}}</td>
         <td class="w-55">{{question.description}}</td>
         <td class="w-5">{{question.type}}</td>
-        <td class="w-5">{{yesno question.is_required}}</td>
-        <td class="w-15">
+        <td class="w-5 text-center">{{yesno question.is_required}}</td>
+        <td class="w-10">
           <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.editQuestionAction question)}}>
             {{fa-icon "edit"}} Edit
           </button>
-          <button type="button" class="btn btn-danger btn-sm" {{on "click" (fn this.deleteQuestionAction question)}}>
-            {{fa-icon "trash"}} Delete
-          </button>
         </td>
-        <td class="w-15 text-right">
+        <td class="w-25 text-right">
           {{#if (not-eq idx 0)}}
             <button type="button" class="btn btn-secondary btn-sm"
               {{on "click" (fn this.moveQuestionAction group question -1)}} disabled={{question.isSaving}}>
@@ -98,7 +95,6 @@
               {{fa-icon "arrow-down"}} Move Down
             </button>
           {{/if}}
-
         </td>
       </tr>
     {{else}}
@@ -121,24 +117,42 @@
     <ChForm @formId="survey-group" @formFor={{this.groupEntry}} @onSubmit={{this.saveGroupAction}}
             @onCancel={{this.cancelGroupAction}} as |f|>
       <Modal.body>
-        <div class="form-row mb-2">
-          <div class="col-auto">
-            <f.input @name="is_trainer_group" @label="Is trainer group" @type="checkbox" @inline=true/>
-          </div>
+        <div class="row mb-2 ml-2">
+          <f.input @name="type"
+                   @label="What group type is this?"
+                   @type="radioGroup"
+                   @options={{this.groupTypeOptions}}
+                   @wrapClass="col-12"
+          />
+        </div>
+        <div class="form-row mt-2">
+          <f.input @name="report_title"
+                   @label="Report Title (used for separate reporting)"
+                   @type="text"
+                   @size={{40}}
+                   @disabled={{and (not-eq f.model.type "separate-slot") (not-eq f.model.type "separate-summary")}}
+          />
         </div>
         <div class="form-row">
-          <f.input @name="title" @type="text" @label="Group Title" @size=80 @maxlength=170/>
+          <f.input @name="title" @type="text" @label="Group Title (shown to user)" @size={{80}} @maxlength={{170}}/>
         </div>
         <div class="form-row">
-          <f.input @name="description" @type="textarea" @label="Group Description" @rows=4 @cols=80/>
+          <f.input @name="description" @type="textarea" @label="Group Description (shown to user)" @rows={{4}}
+                   @cols={{80}}/>
         </div>
       </Modal.body>
-      <Modal.footer @noAlign=true>
+      <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.groupEntry.isNew "Create" "Save"}} @disabled={{this.groupEntry.isSaving}} />
         <f.cancel/>
         {{#if this.groupEntry.isSaving}}
           <LoadingIndicator/>
         {{/if}}
+        <div class="ml-auto">
+          <button type="button" class="btn btn-danger btn-sm" disabled={{this.groupEntry.isDeleting}}
+            {{action this.deleteGroupAction}} >
+            {{fa-icon "trash"}} Delete Group
+          </button>
+        </div>
       </Modal.footer>
     </ChForm>
   </ModalDialog>
@@ -150,39 +164,46 @@
     <ChForm @formId="survey-group" @formFor={{this.questionEntry}} @onSubmit={{this.saveQuestionAction}}
             @onCancel={{this.cancelQuestionAction}} as |f|>
       <Modal.body>
-        <div class="form-row mb-2">
-          <div class="col-auto">
-            <f.input @name="code" @label="Question code" @type="select" @options={{this.codeOptions}} />
-          </div>
-        </div>
         <div class="form-row">
-          <f.input @name="description" @type="textarea" @label="Question Description" @rows=4 @cols=80 />
-        </div>
-        <div class="form-row mb-2">
-          <div class="col-auto">
-            <f.input @name="is_required" @label="Question requires an answer" @type="checkbox" @inline=true />
-          </div>
-        </div>
-        <div class="form-row mb-2">
           <f.input @name="type" @type="select" @label="Question Type" @options={{this.typeOptions}} />
         </div>
+        {{#if (eq f.model.type "rating")}}
+          <div class="form-row ml-1 mb-2">
+            <f.input @name="summarize_rating"
+                     @type="checkbox"
+                     @label="Summarize this rating as a table with each row as a training session"/>
+          </div>
+        {{/if}}
         <div class="form-row">
-          <f.input @name="options" @type="textarea" @label="Options (one per line)" @rows=4 @cols=80 @disabled={{not-eq
-                  f.model.type "options"}} />
+          <f.input @name="description" @type="textarea" @label="Question" @rows={{4}} @cols={{80}} />
+        </div>
+        <div class="form-row mb-2">
+          <div class="col-auto">
+            <f.input @name="is_required" @label="Question requires an answer" @type="checkbox" @inline={{true}} />
+          </div>
+        </div>
+        <div class="form-row mt-2">
+          <f.input @name="options" @type="textarea" @label="Options (one per line)"
+                   @rows={{4}} @cols={{80}} @disabled={{not-eq f.model.type "options"}} />
         </div>
       </Modal.body>
-      <Modal.footer @noAlign=true>
+      <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.questionEntry.isNew "Create" "Save"}} @disabled={{this.questionEntry.isSaving}} />
-        <f.cancel  @disabled={{this.questionEntry.isSaving}} />
+        <f.cancel @disabled={{this.questionEntry.isSaving}} />
         {{#if this.questionEntry.isSaving}}
           <LoadingIndicator/>
         {{/if}}
+        <button type="button" class="btn btn-danger ml-auto" {{action this.deleteQuestionAction}}>
+          {{fa-icon "trash"}} Delete
+        </button>
       </Modal.footer>
     </ChForm>
   </ModalDialog>
 {{/if}}
 
 {{#if this.surveyEdit}}
-  <SurveyForm @survey={{this.surveyEdit}} @positions={{this.positions}} @onCancel={{this.cancelSurveyAction}}
+  <SurveyForm @survey={{this.surveyEdit}}
+              @positions={{this.positions}}
+              @onCancel={{this.cancelSurveyAction}}
               @onSave={{this.saveSurveyAction}} />
 {{/if}}

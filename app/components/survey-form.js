@@ -8,7 +8,7 @@ export default class SurveyFormComponent extends Component {
   @service toast;
 
   typeOptions = [
-    { id: 'training', title: 'Student Training Survey' },
+    { id: 'training', title: 'Trainee Training Survey' },
     { id: 'trainer', title: 'Trainer-for-Trainer Survey' },
     { id: 'slot', title: 'Shift Survey (not implemented)' }
   ];

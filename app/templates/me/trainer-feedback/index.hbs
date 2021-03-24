@@ -6,7 +6,7 @@
     <thead>
     <tr>
       <th>Year</th>
-      <th>Responses</th>
+      <th>Surveys</th>
     </tr>
     </thead>
     <tbody>
@@ -17,15 +17,7 @@
         </td>
         <td>
           {{#each surveyTypes as |survey|}}
-            <div>
-              {{#if (eq survey.type "training")}}
-                Student Feedback for Trainers
-              {{else if (eq survey.type "trainer")}}
-                Trainer Feedback for Trainers
-              {{else}}
-                {{survey.type}}
-              {{/if}}
-            </div>
+              {{survey.title}}<br>
           {{/each}}
         </td>
       </tr>
