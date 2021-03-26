@@ -8,7 +8,7 @@ module('Acceptance | me/emergency contact', function (hooks) {
   setupApplicationTest(hooks);
 
   test('rendered /me/emergency-contact', async function (assert) {
-    const person = server.create('person', {
+    const person = this.server.create('person', {
       emergency_contact: faker.random.alphaNumeric(100)
     });
 
@@ -21,7 +21,7 @@ module('Acceptance | me/emergency contact', function (hooks) {
   });
 
   test('update /me/emergency-contact', async function (assert) {
-    const person = server.create('person', { emergency_contact: '' });
+    const person = this.server.create('person', { emergency_contact: '' });
 
     await authenticateUser(person.id);
 

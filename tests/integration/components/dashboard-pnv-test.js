@@ -19,7 +19,7 @@ module('Integration | Component | dashboard-pnv', function (hooks) {
   });
 
   test('it renders', async function (assert) {
-    const person = server.create('person', {roles: []});
+    const person = this.server.create('person', {roles: []});
 
     this.sessionService = this.owner.lookup('service:session');
     this.set('sessionService.userId', person.id);

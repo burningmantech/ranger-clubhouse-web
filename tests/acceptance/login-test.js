@@ -19,7 +19,7 @@ module('Acceptance | login', function (hooks) {
   });
 
   test('successful login', async function (assert) {
-    const person = server.create('person');
+    const person = this.server.create('person');
 
     await visit('/login');
     await fillIn('input[name="identification"]', person.email);
@@ -42,7 +42,7 @@ module('Acceptance | login', function (hooks) {
   });
 
   test('successful logout', async function (assert) {
-    const person = server.create('person');
+    const person = this.server.create('person');
     await authenticateUser(person.id);
     await visit('/logout');
     assert.equal(currentSession().isAuthenticated, false);
@@ -50,7 +50,7 @@ module('Acceptance | login', function (hooks) {
   });
 
   test('person not authorized', async function (assert) {
-    const person = server.create('person', {status: 'suspended'});
+    const person = this.server.create('person', {status: 'suspended'});
     await visit('/login');
     await fillIn('input[name="identification"]', person.email);
     await fillIn('input[name="password"]', person.password);
@@ -64,14 +64,14 @@ module('Acceptance | login', function (hooks) {
   });
 
   test('prevent space for being entered in email field', async function (assert) {
-    const person = server.create('person');
+    const person = this.server.create('person');
     await visit('/login');
     await fillIn('input[name="identification"]', person.email + ' ');
     assert.dom('input[name="identification"]').hasValue(person.email);
   });
 
   test('Test password reset with login token', async function (assert) {
-    const person = server.create('person', {tpassword: TOKEN});
+    const person = this.server.create('person', {tpassword: TOKEN});
 
     await visit(`/login?token=${TOKEN}`);
 
@@ -81,7 +81,7 @@ module('Acceptance | login', function (hooks) {
   });
 
   test('Test welcome with login token', async function (assert) {
-    const person = server.create('person', {tpassword: PNV_TOKEN});
+    const person = this.server.create('person', {tpassword: PNV_TOKEN});
 
     await visit(`/login?token=${PNV_TOKEN}&welcome=1`);
 

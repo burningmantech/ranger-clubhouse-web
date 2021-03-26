@@ -7,9 +7,9 @@ module('Integration | Component | admin/slot-form', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    server.loadFixtures();
+    this.server.loadFixtures();
 
-    const slot = server.create('slot', {
+    const slot = this.server.create('slot', {
       begins: '2018-09-01 11:45:00',
       ends: '2018-09-01 18:15:00',
       position_id: 2,
