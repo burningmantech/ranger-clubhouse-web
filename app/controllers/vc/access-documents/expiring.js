@@ -1,6 +1,6 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 
-export default class VcAccessDocumentsExpiringController extends Controller {
+export default class VcAccessDocumentsExpiringController extends ClubhouseController {
   get emailList() {
     return this.expiring.map((person) => person.person);
   }

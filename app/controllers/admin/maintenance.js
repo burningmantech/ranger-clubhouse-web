@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
@@ -115,7 +115,7 @@ const TASK_GROUPS = [{
   }
 ];
 
-export default class AdminMaintenanceController extends Controller {
+export default class AdminMaintenanceController extends ClubhouseController {
   @tracked isSubmitting = false;
   @tracked task = null;
   @tracked taskAction = null;

@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, get, set} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {schedule, later} from '@ember/runloop';
@@ -37,7 +37,7 @@ const TEXT_FILTER_FIELDS = [
   'notes'
 ];
 
-export default class VcBmidController extends Controller {
+export default class VcBmidController extends ClubhouseController {
   queryParams = ['year', 'filter'];
 
   bmidStatusOptions = BmidStatusOptions;

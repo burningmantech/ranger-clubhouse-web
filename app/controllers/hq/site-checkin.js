@@ -1,10 +1,10 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { TRAINING } from 'clubhouse/constants/positions';
 import { tracked } from '@glimmer/tracking';
 import { NON_RANGER } from 'clubhouse/constants/person_status';
 
-export default class HqSiteCheckinController extends Controller {
+export default class HqSiteCheckinController extends ClubhouseController {
   @tracked isSubmitting = false;
   @tracked isContactSaved = false;
   @tracked isOnSite = false;

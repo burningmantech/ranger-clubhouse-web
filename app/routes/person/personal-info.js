@@ -1,12 +1,10 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import {ADMIN, MANAGE, VIEW_PII} from 'clubhouse/constants/roles';
 
-export default class PersonPersonalInfoRoute extends Route {
-  beforeModel() {
-    this.house.roleCheck([
-       Role.ADMIN, [ Role.MANAGE, Role.VIEW_PII ]
-    ]);
-  }
+export default class PersonPersonalInfoRoute extends ClubhouseRoute {
+  // User has to be an Admin or have Login Manage AND View Personal Info
+  roleRequired = [ADMIN, [MANAGE, VIEW_PII]];
+
   setupController(controller) {
     controller.set('person', this.modelFor('person'));
   }

@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 
@@ -10,7 +10,7 @@ class TimesheetOption {
   }
 }
 
-export default class AdminBulkSignoutController extends Controller {
+export default class AdminBulkSignoutController extends ClubhouseController {
   @tracked isSubmitting = false;
   @tracked signOffTimesheet = null;
   @tracked selectAll = false;

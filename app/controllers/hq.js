@@ -1,6 +1,6 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 
-export default class HqController extends Controller {
+export default class HqController extends ClubhouseController {
   get allowedCheckIn() {
     const status = this.person.status;
 

@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class TrainingSessionIndexRoute extends Route {
+export default class TrainingSessionIndexRoute extends ClubhouseRoute {
   setupController(controller) {
     const session = this.modelFor('training/session');
     controller.set('training', this.modelFor('training'));

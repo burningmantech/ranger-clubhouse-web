@@ -1,8 +1,8 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
-export default class PersonWorkHistoryController extends Controller {
+export default class PersonWorkHistoryController extends ClubhouseController {
   @tracked showPositionYearEntries = false;
   @tracked showPositionAllEntries = false;
   @tracked showYear = false;
@@ -11,7 +11,7 @@ export default class PersonWorkHistoryController extends Controller {
   @tracked yearEntries = [];
   @tracked position = [];
   @tracked entries = [];
-  
+
   @action
   showPositionYearSummaryAction(positionId, year) {
     this.showPositionYearEntries = true;

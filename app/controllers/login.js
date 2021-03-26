@@ -1,10 +1,10 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import LoginValidations from 'clubhouse/validations/login';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import ENV from 'clubhouse/config/environment';
 
-export default class LoginController extends Controller {
+export default class LoginController extends ClubhouseController {
   queryParams = [ 'token', 'welcome'];
 
   loginValidations = LoginValidations;

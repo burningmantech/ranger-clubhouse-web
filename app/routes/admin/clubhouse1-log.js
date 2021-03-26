@@ -1,4 +1,4 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import EmberObject from '@ember/object';
 
 const Clubhouse1Events = {
@@ -16,7 +16,7 @@ const Clubhouse1Events = {
   'request': '#REQ'
 };
 
-export default class AdminClubhouse1LogRoute extends Route {
+export default class AdminClubhouse1LogRoute extends ClubhouseRoute {
   queryParams = {
     person: {refreshModel: true},
     start_time: {refreshModel: true},

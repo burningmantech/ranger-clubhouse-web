@@ -10,17 +10,8 @@ module('Integration | Component | asset-checkout-form', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{asset-checkout-form}}`);
+    await render(hbs`<AssertCheckoutForm />`);
 
     assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      {{#asset-checkout-form}}
-        template block text
-      {{/asset-checkout-form}}
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
   });
 });

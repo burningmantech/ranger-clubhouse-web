@@ -2,11 +2,11 @@
  * Handle the RBS broadcast log.
  */
 
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 
-export default class AdminRbsBroadcastLogController extends Controller {
+export default class AdminRbsBroadcastLogController extends ClubhouseController {
   @tracked confirmRetry = null;
   @tracked retryingBroadcast = null;
   @tracked retryResult = null;

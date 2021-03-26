@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {set} from '@ember/object';
 import * as Position from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
@@ -48,7 +48,7 @@ const TITLE_MAP = {
   [Position.TRAINER]: 'Trg'
 };
 
-export default class TrainingSessionTrainersReportController extends Controller {
+export default class TrainingSessionTrainersReportController extends ClubhouseController {
   @tracked vetCount;
   @tracked passed;
   @tracked firstYearCount;

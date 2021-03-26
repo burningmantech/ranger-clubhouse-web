@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action,set } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
@@ -6,7 +6,7 @@ import { tracked } from '@glimmer/tracking';
  * Confirm a person's entire timesheet correct/incorrect.
  */
 
-export default class MeTimesheetCorrectionsConfirmController extends Controller {
+export default class MeTimesheetCorrectionsConfirmController extends ClubhouseController {
   @tracked isSubmitting = false;
   @tracked confirmForm = null; // setup in the route
 

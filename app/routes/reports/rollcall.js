@@ -1,8 +1,8 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import _ from 'lodash';
 import {ART_CAR_WRANGLER, BURN_PERIMETER, SANDMAN} from 'clubhouse/constants/positions';
 
-export default class ReportsRollcallRoute extends Route {
+export default class ReportsRollcallRoute extends ClubhouseRoute {
   model() {
     return this.ajax.request('slot', {data: {for_rollcall: 1}});
   }

@@ -7,20 +7,8 @@ module('Integration | Component | asset-table', function(hooks) {
   setupRenderingTest(hooks);
 
   skip('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
-
-    await render(hbs`{{asset-table}}`);
+     await render(hbs`<AssetTable />`);
 
     assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      {{#asset-table}}
-        template block text
-      {{/asset-table}}
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
   });
 });

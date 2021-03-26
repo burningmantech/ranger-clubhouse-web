@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class OnlineTrainingEnrollmentRoute extends Route {
+export default class OnlineTrainingEnrollmentRoute extends ClubhouseRoute {
   model() {
     return this.ajax.request('online-training/enrollment');
   }

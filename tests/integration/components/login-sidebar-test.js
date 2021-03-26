@@ -7,7 +7,7 @@ module('Integration | Component | login sidebar', function(hooks) {
   setupRenderingTest(hooks);
 
   skip('it renders the login sidebar', async function(assert) {
-    await render(hbs`{{login-sidebar}}`);
+    await render(hbs`<loginSidebar />`);
 
     assert.ok(find('*').textContent.trim().indexOf('Register') !== -1);
   });

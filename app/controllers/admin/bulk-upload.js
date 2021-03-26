@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {tracked} from '@glimmer/tracking';
 
-export default class AdminBulkUploadController extends Controller {
+export default class AdminBulkUploadController extends ClubhouseController {
   uploadOptions = [
     {
       groupName: 'Change Status',

@@ -10,7 +10,7 @@ module('Integration | Component | print-instruction', function(hooks) {
     this.set('backAction', () => { });
     this.set('backLabel', 'Baby Got Back');
 
-    await render(hbs`{{print-instruction backAction=backAction backLabel=backLabel}}`);
+    await render(hbs`<PrintInstruction @backAction={{this.backAction}} @backLabel={{this.backLabel}} />`);
     assert.dom('div').exists();
 
   });

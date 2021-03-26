@@ -13,6 +13,13 @@ export default class ScheduleTableComponent extends Component {
     this.isCurrentYear = (this.args.year == this.house.currentYear());
   }
 
+  get viewOptions() {
+    return [
+      { label: `Upcoming Shifts (${this.upcomingCount})`, value: 'upcoming' },
+      { label: `All Shifts (${this.args.slots.length})`, value: 'all'}
+    ];
+  }
+
   get viewSlots() {
     const slots = this.args.slots;
 

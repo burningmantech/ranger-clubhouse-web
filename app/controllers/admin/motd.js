@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {validatePresence} from 'ember-changeset-validations/validators';
 
-export default class AdminMotdController extends Controller {
+export default class AdminMotdController extends ClubhouseController {
   @tracked entry;
   @tracked query;
 

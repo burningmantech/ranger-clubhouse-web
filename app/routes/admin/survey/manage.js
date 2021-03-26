@@ -1,8 +1,8 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
 import {action} from '@ember/object';
 
-export default class AdminSurveyManageRoute extends Route {
+export default class AdminSurveyManageRoute extends ClubhouseRoute {
   model({survey_id}) {
     this.store.unloadAll('survey');
     this.store.unloadAll('survey-group');

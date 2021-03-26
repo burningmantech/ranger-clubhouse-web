@@ -1,26 +1,21 @@
-import { module, skip /* test */ } from 'qunit';
+import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 
 module('Integration | Component | number-of-times', function(hooks) {
   setupRenderingTest(hooks);
 
-  skip('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
-
-    await render(hbs`{{number-of-times}}`);
-
-    assert.dom(this.element).hasText('');
-
-    // Template block usage:
+  test('it renders', async function(assert) {
+      // Template block usage:
     await render(hbs`
-      {{#number-of-times}}
-        template block text
-      {{/number-of-times}}
+      <NumberOfTimes @times={{3}} as |idx|>
+        <div data-test-id="{{idx}}">text #{{idx}}</div>
+      </NumberOfTimes>
     `);
 
-    assert.dom(this.element).hasText('template block text');
+    assert.dom('[data-test-id="0"]').exists().hasText(/text #0/);
+    assert.dom('[data-test-id="1"]').exists().hasText(/text #1/);
+    assert.dom('[data-test-id="2"]').exists().hasText(/text #2/);
   });
 });

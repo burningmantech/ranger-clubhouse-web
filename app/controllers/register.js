@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {
   validatePresence,
   validateFormat,
@@ -11,7 +11,7 @@ import {tracked} from '@glimmer/tracking';
 
 const HUMAN_ANSWER = 35;
 
-export default class RegisterController extends Controller {
+export default class RegisterController extends ClubhouseController {
   @tracked isSaving = false;
   @tracked step;
 

@@ -1,20 +1,17 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import {ADMIN, VC} from 'clubhouse/constants/roles';
 import RSVP from 'rsvp';
 
-export default class VcPhotosRoute extends Route {
+export default class VcPhotosRoute extends ClubhouseRoute {
+  roleRequired = [ADMIN, VC];
   queryParams = {
     page: {refreshModel: true},
   };
 
-  beforeModel() {
-    super.beforeModel(...arguments);
-    this.house.roleCheck([Role.ADMIN, Role.VC]);
-  }
 
-  model({ page }) {
+  model({page}) {
     return RSVP.hash({
-      person_photo: this.ajax.request('person-photo', { method: 'GET', data: { page }}),
+      person_photo: this.ajax.request('person-photo', {method: 'GET', data: {page}}),
       review_config: this.ajax.request('person-photo/review-config').then((result) => result.review_config)
     });
   }

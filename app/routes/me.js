@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class MeRoute extends Route {
+export default class MeRoute extends ClubhouseRoute {
   model() {
     return this.store.findRecord('person', this.session.userId, { refresh: true});
   }

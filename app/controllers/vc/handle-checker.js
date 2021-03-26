@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {dasherize} from '@ember/string';
 import {later} from '@ember/runloop';
 import {action} from '@ember/object';
@@ -60,7 +60,7 @@ class EntityType {
   }
 }
 
-export default class VcHandlerCheckerController extends Controller {
+export default class VcHandlerCheckerController extends ClubhouseController {
   @tracked currentName = '';
   @tracked includeVintage = true; // Check vintage even if status isn't checked
   @tracked checkedHandles = []; // Array of {id string, name string, conflicts HandleConflict[]}

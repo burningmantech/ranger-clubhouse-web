@@ -8,7 +8,7 @@ module('Integration | Component | timesheet-summary', function(hooks) {
 
   test('it renders', async function(assert) {
     this.set('summary', {});
-    await render(hbs`<TimesheetSummary @summary={{summary}} />`);
+    await render(hbs`<TimesheetSummary @summary={{this.summary}} />`);
 
     assert.dom('table').exists();
   });

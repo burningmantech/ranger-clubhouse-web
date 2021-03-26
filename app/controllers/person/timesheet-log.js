@@ -1,6 +1,6 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 
-export default class PersonTimesheetLogController extends Controller {
+export default class PersonTimesheetLogController extends ClubhouseController {
   queryParams = [ 'year' ];
 
   actionLabels = {

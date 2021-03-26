@@ -1,8 +1,8 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 
-export default class MotorpoolPolicyController extends Controller {
+export default class MotorpoolPolicyController extends ClubhouseController {
   @tracked isSubmitting;
   @tracked hasAgreed;
   @tracked documentHasLoaded;

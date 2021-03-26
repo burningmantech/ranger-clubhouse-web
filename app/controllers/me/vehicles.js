@@ -1,11 +1,11 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { tracked} from '@glimmer/tracking';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import {States, CanadianProvinces} from 'clubhouse/constants/countries';
 import { VehicleClassOptions } from 'clubhouse/constants/vehicles';
 
-export default class MeVehiclesController extends Controller {
+export default class MeVehiclesController extends ClubhouseController {
   @tracked entry = null;
   @tracked documentLoaded = false;
 

@@ -1,4 +1,4 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class OfflineRoute extends Route {
+export default class OfflineRoute extends ClubhouseRoute {
 }

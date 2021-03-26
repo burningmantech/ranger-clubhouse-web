@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {States, CanadianProvinces} from 'clubhouse/constants/countries';
@@ -8,7 +8,7 @@ import { VehicleClassOptions } from 'clubhouse/constants/vehicles';
 import { isEmpty } from '@ember/utils';
 import RSVP from 'rsvp';
 
-export default class ReportsPersonVehiclesController extends Controller {
+export default class ReportsPersonVehiclesController extends ClubhouseController {
   queryParams = ['year'];
 
   @tracked entry;

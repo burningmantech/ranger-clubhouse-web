@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class SearchLanguagesRoute extends Route {
+export default class SearchLanguagesRoute extends ClubhouseRoute {
   setupController(controller) {
     controller.set('searchForm', {
       language: '',

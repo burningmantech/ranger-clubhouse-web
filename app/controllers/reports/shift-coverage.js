@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { tracked } from '@glimmer/tracking';
 import _ from 'lodash';
 import moment from 'moment';
 
-export default class ReportsShiftCoveragController extends Controller {
+export default class ReportsShiftCoveragController extends ClubhouseController {
   queryParams = [ 'year', 'type' ];
 
   @tracked dayFilter;

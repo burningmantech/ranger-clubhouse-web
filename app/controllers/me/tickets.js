@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 
-export default class MeTicketsController extends Controller {
+export default class MeTicketsController extends ClubhouseController {
 }

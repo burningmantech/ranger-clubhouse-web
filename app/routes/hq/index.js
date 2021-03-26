@@ -1,4 +1,4 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
 /*
  * A pure route-router
@@ -10,8 +10,10 @@ import Route from '@ember/routing/route';
  * If the person is not on shift, go to the shift start page.
  */
 
-export default class HqIndexRoute extends Route {
+export default class HqIndexRoute extends ClubhouseRoute {
   beforeModel() {
+    super.beforeModel(...arguments);
+
     const person = this.modelFor('hq').person;
     const personId = person.id;
 

@@ -1,26 +1,15 @@
-import { module, skip } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import {module, test} from 'qunit';
+import {setupRenderingTest} from 'ember-qunit';
+import {render} from '@ember/test-helpers';
+import {hbs} from 'ember-cli-htmlbars';
 
-module('Integration | Component | ticket-faq', function(hooks) {
+module('Integration | Component | ticket-faq', function (hooks) {
   setupRenderingTest(hooks);
 
-  skip('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
+  test('it renders', async function (assert) {
+    this.set('ticketingInfo', {faqs: {wap: 'https://example.com/wap.html'}});
+    await render(hbs`<TicketFaq @ticketingInfo={{this.ticketingInfo}}  @topic="wap"/>`);
 
-    await render(hbs`{{ticket-faq}}`);
-
-    assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      {{#ticket-faq}}
-        template block text
-      {{/ticket-faq}}
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.dom('a').hasProperty('href', 'https://example.com/wap.html').hasText(/Work Access Passes/);
   });
 });

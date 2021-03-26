@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class VcAccessDocumentsIndexRoute extends Route {
+export default class VcAccessDocumentsIndexRoute extends ClubhouseRoute {
   model() {
     return this.ajax.request(`access-document/current`);
   }

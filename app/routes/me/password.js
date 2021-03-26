@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class MePasswordRoute extends Route {
+export default class MePasswordRoute extends ClubhouseRoute {
   setupController(controller) {
     super.setupController(...arguments);
     controller.set('password', {

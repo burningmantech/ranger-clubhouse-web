@@ -1,10 +1,10 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import _ from 'lodash';
 import moment from 'moment';
 
-export default class ReportsHqForecastController extends Controller {
+export default class ReportsHqForecastController extends ClubhouseController {
   queryParams = [ 'year', 'interval' ];
 
   @tracked dayFilter = 'all';

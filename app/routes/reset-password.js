@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import Login from 'clubhouse/models/login';
 
-export default class ResetPasswordRoute extends Route {
+export default class ResetPasswordRoute extends ClubhouseRoute {
   beforeModel() {
     this.session.prohibitAuthentication('me.homepage');
   }

@@ -1,8 +1,8 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 import _ from "lodash";
 
-export default class ReportsShiftSignupsRoute extends Route {
+export default class ReportsShiftSignupsRoute extends ClubhouseRoute {
   queryParams = {
     year: {refreshModel: true}
   };

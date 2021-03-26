@@ -1,6 +1,6 @@
 import { module, skip /* test */ } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | present or not', function(hooks) {
@@ -19,6 +19,6 @@ module('Integration | Component | present or not', function(hooks) {
 
     await render(hbs`<PresentOrNot @value={{this.value}} />`);
 
-    assert.equal(find('*').innerHTML.trim(), '<i>not given</i>');
+    assert.dom('i').exists().hasText(/not given/);
   });
 });

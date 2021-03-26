@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class HqSiteCheckinRoute extends Route {
+export default class HqSiteCheckinRoute extends ClubhouseRoute {
   setupController(controller, model) {
     const {person} = model;
     const onduty = this.session.user.onduty_position;

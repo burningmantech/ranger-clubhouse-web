@@ -10,7 +10,7 @@ module('Integration | Component | online-training-launch', function(hooks) {
     this.set('person', { id: 1, callsign: 'hubcap' });
     this.set('url', 'https://example.com');
 
-    await render(hbs`<OnlineTrainingLaunch  @text="Click Here" @person={{@person}} @url={{@url}}/>`);
+    await render(hbs`<OnlineTrainingLaunch  @text="Click Here" @person={{this.person}} @url={{this.url}}/>`);
 
     assert.dom('a').hasText('Click Here');
   });

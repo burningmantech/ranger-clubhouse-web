@@ -1,10 +1,10 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { CountryLabels } from 'clubhouse/constants/countries';
 import { tracked } from '@glimmer/tracking';
 
-export default class AdminThankYouCardsController extends Controller {
+export default class AdminThankYouCardsController extends ClubhouseController {
   queryParams = [ 'year' ];
 
   @tracked isSubmitting = false;

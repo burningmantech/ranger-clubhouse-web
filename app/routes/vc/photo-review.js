@@ -1,16 +1,13 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import {ADMIN, VC} from 'clubhouse/constants/roles';
 import RSVP from 'rsvp';
 
-export default class VcPhotoReviewRoute extends Route {
-  beforeModel() {
-    super.beforeModel(...arguments);
-    this.house.roleCheck([ Role.ADMIN, Role.VC ]);
-  }
+export default class VcPhotoReviewRoute extends ClubhouseRoute {
+  roleRequired = [ADMIN, VC];
 
   model() {
     return RSVP.hash({
-      person_photo: this.store.query('person-photo', { status: 'submitted', include_rejects: 1 }),
+      person_photo: this.store.query('person-photo', {status: 'submitted', include_rejects: 1}),
       review_config: this.ajax.request('person-photo/review-config').then((result) => result.review_config)
     });
   }
@@ -35,7 +32,7 @@ export default class VcPhotoReviewRoute extends Route {
     controller.set('rejectionLabels', {});
     controller.set('rejectionOptions', model.review_config.rejections.map((r) => {
       controller.rejectionLabels[r.key] = r.label;
-      return [ r.label, r.key ];
+      return [r.label, r.key];
     }));
   }
 }

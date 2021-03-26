@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import _ from 'lodash';
 
-export default class PeopleByPositionRoute extends Route {
+export default class PeopleByPositionRoute extends ClubhouseRoute {
   queryParams = {
     onPlaya: { refreshModel: true }
   };

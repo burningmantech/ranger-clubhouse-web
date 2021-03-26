@@ -1,4 +1,4 @@
-import { module, skip /* test */ } from 'qunit';
+import { module,test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
@@ -6,21 +6,10 @@ import hbs from 'htmlbars-inline-precompile';
 module('Integration | Component | read-more', function(hooks) {
   setupRenderingTest(hooks);
 
-  skip('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
+  test('it renders', async function(assert) {
+    this.set('text', '012345678901234567890123456789')
+    await render(hbs`<ReadMore @text={{this.text}} />`);
 
-    await render(hbs`{{read-more}}`);
-
-    assert.dom(this.element).hasText('');
-
-    // Template block usage:
-    await render(hbs`
-      {{#read-more}}
-        template block text
-      {{/read-more}}
-    `);
-
-    assert.dom(this.element).hasText('template block text');
+    assert.dom('a').exists().hasText(/\[\+more]/);
   });
 });

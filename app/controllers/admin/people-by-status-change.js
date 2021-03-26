@@ -1,7 +1,7 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 
 
-export default class AdminPeopleByStatusChangeController extends Controller {
+export default class AdminPeopleByStatusChangeController extends ClubhouseController {
     queryParams = [ 'period' ];
 
     periodOptions = [

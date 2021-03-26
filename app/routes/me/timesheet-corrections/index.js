@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class MeTimesheetCorrectionsIndexRoute extends Route {
+export default class MeTimesheetCorrectionsIndexRoute extends ClubhouseRoute {
   setupController(controller) {
     controller.setProperties(this.modelFor('me/timesheet-corrections'));
   }

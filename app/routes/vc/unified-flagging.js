@@ -1,17 +1,14 @@
-import Route from '@ember/routing/route';
-import {Role} from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import {INTAKE} from 'clubhouse/constants/roles';
 import { A } from '@ember/array';
 import requestYear from 'clubhouse/utils/request-year';
 
-export default class VcUnifiedFlaggingRoute extends Route {
+export default class VcUnifiedFlaggingRoute extends ClubhouseRoute {
+  roleRequired = INTAKE;
+
   queryParams = {
     year: {refreshModel: true}
   };
-
-  beforeModel() {
-    super.beforeModel(...arguments);
-    this.house.roleCheck(Role.INTAKE);
-  }
 
   model(params) {
     const year = requestYear(params);

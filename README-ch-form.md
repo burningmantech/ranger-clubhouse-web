@@ -128,7 +128,7 @@ The controller file is:
 ```javascript
 import { validatePresence } from 'ember-changeset-validations/validators';
 
-export default class RoleController extends Controller {
+export default class RoleController extends ClubhouseController {
   roleValidations = {
     title: [
       validatePresence({ presence: true,  message: 'Enter a role name.' }),

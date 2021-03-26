@@ -1,13 +1,11 @@
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {NotFoundError} from '@ember-data/adapter/error';
-import Route from '@ember/routing/route';
-import {Role} from 'clubhouse/constants/roles';
+import {ADMIN, EDIT_ACCESS_DOCS} from 'clubhouse/constants/roles';
 import RSVP from 'rsvp';
-import { DELIVERY_WILL_CALL} from 'clubhouse/models/access-document-delivery';
+import {DELIVERY_WILL_CALL} from 'clubhouse/models/access-document-delivery';
 
-export default class PersonAccessDocumentsRoute extends Route {
-  beforeModel() {
-    this.house.roleCheck([Role.ADMIN, Role.EDIT_ACCESS_DOCS]);
-  }
+export default class PersonAccessDocumentsRoute extends ClubhouseRoute {
+  roleRequired = [ADMIN, EDIT_ACCESS_DOCS];
 
   model() {
     const person = this.modelFor('person');
@@ -23,7 +21,11 @@ export default class PersonAccessDocumentsRoute extends Route {
           if (!(response instanceof NotFoundError)) {
             this.house.handleErrorResponse(response);
           }
-          return this.store.createRecord('access-document-delivery', {person_id: person.id, year, method: DELIVERY_WILL_CALL });
+          return this.store.createRecord('access-document-delivery', {
+            person_id: person.id,
+            year,
+            method: DELIVERY_WILL_CALL
+          });
         }),
       ticketingInfo: this.ajax.request(`ticketing/info`).then((results) => results.ticketing_info)
     });

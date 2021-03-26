@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import EmberObject from '@ember/object';
 
-export default class AdminActionLogRoute extends Route {
+export default class AdminActionLogRoute extends ClubhouseRoute {
   queryParams = {
     person: {refreshModel: true},
     start_time: {refreshModel: true},

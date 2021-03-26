@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class ReportsSandmanQualified extends Route {
+export default class ReportsSandmanQualified extends ClubhouseRoute {
   model() {
     return this.ajax.request('position/sandman-qualified');
   }

@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 
@@ -13,7 +13,7 @@ const CSV_COLUMNS = [
   {title: 'Alpha Sign Up', key: 'alpha_signups'}
 ];
 
-export default class VcSpigotController extends Controller {
+export default class VcSpigotController extends ClubhouseController {
   @tracked showPeople = null;
 
   queryParams = ['year'];

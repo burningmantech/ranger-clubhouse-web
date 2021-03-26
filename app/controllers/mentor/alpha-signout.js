@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import moment from 'moment';
@@ -6,7 +6,7 @@ import {ALPHA} from 'clubhouse/constants/positions';
 
 const DT_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
-export default class MentorAlphaSignoutController extends Controller {
+export default class MentorAlphaSignoutController extends ClubhouseController {
   @tracked isLoading = false;
   @tracked alphaSignout = null;
   @tracked alphas = [];

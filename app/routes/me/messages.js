@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class MeMessagesRoute extends Route {
+export default class MeMessagesRoute extends ClubhouseRoute {
   model() {
     this.store.unloadAll('person-message');
 

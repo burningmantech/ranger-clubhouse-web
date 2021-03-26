@@ -8,7 +8,7 @@ module('Integration | Component | mentor/alpha-apparel-sheet', function(hooks) {
 
   test('it renders', async function(assert) {
     this.set('slot', { people: [] });
-    await render(hbs`{{mentor/alpha-apparel-sheet slot=slot}}`);
+    await render(hbs`<Mentor::AlphaApparelSheet @slot={{this.slot}} />`);
 
     assert.dom('table').exists();
   });

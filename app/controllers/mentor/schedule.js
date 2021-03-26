@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import EmberObject, { action } from '@ember/object';
 import { debounce } from '@ember/runloop';
 import { slotSignup } from 'clubhouse/utils/slot-signup';
@@ -6,7 +6,7 @@ import { tracked } from '@glimmer/tracking';
 
 const SEARCH_RATE_MS = 300;
 
-export default class MentorScheduleController extends Controller {
+export default class MentorScheduleController extends ClubhouseController {
   @tracked slot;
   @tracked foundPeople;
   @tracked noSearchMatch;

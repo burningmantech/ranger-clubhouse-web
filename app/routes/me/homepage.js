@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
 
-export default class MeHomepageRoute extends Route {
+export default class MeHomepageRoute extends ClubhouseRoute {
   model() {
     const user = this.session.user;
 

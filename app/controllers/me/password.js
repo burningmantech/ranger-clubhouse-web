@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {validatePresence, validateLength, validateConfirmation} from 'ember-changeset-validations/validators';
 
-export default class MePasswordController extends Controller {
+export default class MePasswordController extends ClubhouseController {
   @tracked isSubmitting = false;
   @tracked token = null;
 

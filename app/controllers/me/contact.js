@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import EmberObject from '@ember/object';
 import { action } from '@ember/object';
 import { debounce } from '@ember/runloop';
@@ -6,7 +6,7 @@ import { tracked } from '@glimmer/tracking';
 
 const SEARCH_RATE_MS = 300;
 
-export default class MeContactController extends Controller {
+export default class MeContactController extends ClubhouseController {
   queryParams = [ 'callsign' ];
 
   searchForm = EmberObject.create({ callsign: '' });

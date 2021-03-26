@@ -1,7 +1,7 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 
-export default class AdminRadioEligibilityController extends Controller {
+export default class AdminRadioEligibilityController extends ClubhouseController {
   queryParams = [ 'year' ];
 
   @action

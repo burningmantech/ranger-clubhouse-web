@@ -1,21 +1,19 @@
-import Route from '@ember/routing/route';
-import { action } from '@ember/object';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import {action} from '@ember/object';
 
-export default class AdminErrorLogRoute extends Route {
+export default class AdminErrorLogRoute extends ClubhouseRoute {
   queryParams = {
-    person_id: { refreshModel: true },
-    sort: { refreshModel: true },
-    starts_at: { refreshModel: true },
-    ends_at: { refreshModel: true },
-    component: { refreshModel: true },
-    page: { refreshModel: true },
-    page_size: { refreshModel: true }
+    person_id: {refreshModel: true},
+    sort: {refreshModel: true},
+    starts_at: {refreshModel: true},
+    ends_at: {refreshModel: true},
+    component: {refreshModel: true},
+    page: {refreshModel: true},
+    page_size: {refreshModel: true}
   };
 
   model(params) {
-    return this.ajax.request('error-log', {
-      data: params
-    });
+    return this.ajax.request('error-log', {data: params});
   }
 
   setupController(controller, model) {

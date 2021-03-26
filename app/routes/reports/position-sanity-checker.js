@@ -1,13 +1,9 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
-
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import { ADMIN, GRANT_POSITION, MANAGE } from 'clubhouse/constants/roles';
 import { yesno } from 'clubhouse/helpers/yesno';
 
-export default class ReportsPositionSanityCheckerRoute extends Route {
-  beforeModel() {
-    super.beforeModel(...arguments);
-    this.house.roleCheck([ Role.ADMIN, Role.GRANT_POSITION, Role.MANAGE ]);
-  }
+export default class ReportsPositionSanityCheckerRoute extends ClubhouseRoute {
+  roleRequired = [ADMIN, GRANT_POSITION, MANAGE];
 
   model() {
     return this.ajax.request('position/sanity-checker');

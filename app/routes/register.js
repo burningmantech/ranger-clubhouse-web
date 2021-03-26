@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class RegisterRoute extends Route {
+export default class RegisterRoute extends ClubhouseRoute {
   beforeModel() {
     this.session.prohibitAuthentication('me.homepage');
   }

@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class TrainingSurveyReportRoute extends Route {
+export default class TrainingSurveyReportRoute extends ClubhouseRoute {
   queryParams = {
     report_id: {refreshModel: true},
   };

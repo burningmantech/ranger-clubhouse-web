@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action, set } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import { tracked } from '@glimmer/tracking';
 
-export default class ReportsPositionSanityCheckerController extends Controller {
+export default class ReportsPositionSanityCheckerController extends ClubhouseController {
   @tracked isSubmitting = false;
 
   get userCanRepair() {

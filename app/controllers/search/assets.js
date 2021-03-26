@@ -1,10 +1,10 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { set } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { validatePresence } from 'ember-changeset-validations/validators';
 
-export default class SearchAssetsController extends Controller {
+export default class SearchAssetsController extends ClubhouseController {
   searchValidations = {
     barcode: [ validatePresence(true) ]
   };

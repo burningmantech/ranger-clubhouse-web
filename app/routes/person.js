@@ -1,18 +1,12 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {action} from '@ember/object';
 import {humanize} from 'ember-cli-string-helpers/helpers/humanize';
-import {inject as service} from '@ember/service';
-import {Role} from 'clubhouse/constants/roles';
+import {ADMIN, MANAGE, VC, MENTOR, TRAINER} from 'clubhouse/constants/roles';
 import {NotFoundError} from '@ember-data/adapter/error';
 import RSVP from 'rsvp';
 
-export default class PersonRoute extends Route {
-  @service router;
-
-  beforeModel() {
-    super.beforeModel(...arguments);
-    this.house.roleCheck([Role.ADMIN, Role.MANAGE, Role.VC, Role.MENTOR, Role.TRAINER]);
-  }
+export default class PersonRoute extends ClubhouseRoute {
+  roleRequired = [ ADMIN, MANAGE, VC, MENTOR, TRAINER ];
 
   async model({person_id}) {
     const {person, years} = await RSVP.hash({

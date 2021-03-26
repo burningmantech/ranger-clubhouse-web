@@ -1,8 +1,8 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import EmberObject from '@ember/object';
 import { isEmpty } from '@ember/utils';
 
-export default class AdminMotdRoute extends Route {
+export default class AdminMotdRoute extends ClubhouseRoute {
   queryParams = {
     audience: { refreshModel: true},
     type: { refreshModel: true },

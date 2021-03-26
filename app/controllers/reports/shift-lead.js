@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action, setProperties } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import moment from 'moment';
 
-export default class ReportsShiftLeadController extends Controller {
+export default class ReportsShiftLeadController extends ClubhouseController {
   queryParams = ['year'];
 
   @tracked shiftSelect;

@@ -1,13 +1,6 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import { ADMIN } from 'clubhouse/constants/roles';
 
-export default class AdminSurveyRoute extends Route {
-  queryParmas = {
-    year: { refreshModel: true }
-  };
-
-  beforeModel() {
-    super.beforeModel(...arguments);
-    this.house.roleCheck(Role.ADMIN);
-  }
+export default class AdminSurveyRoute extends ClubhouseRoute {
+  roleRequired = ADMIN;
 }

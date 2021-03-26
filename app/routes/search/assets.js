@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import { isEmpty } from '@ember/utils';
 
-export default class SearchAssetsRoute extends Route {
+export default class SearchAssetsRoute extends ClubhouseRoute {
   queryParams = {
     barcode: { refreshModel: true },
     year: { refreshModel: true }

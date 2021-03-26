@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class MeMenteesRoute extends Route {
+export default class MeMenteesRoute extends ClubhouseRoute {
   model() {
     return this.ajax.request(`person/${this.session.userId}/mentees`).then((result) => result.mentees);
   }

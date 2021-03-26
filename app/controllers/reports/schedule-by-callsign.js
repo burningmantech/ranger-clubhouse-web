@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action, set } from '@ember/object';
 import { run, later } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
 
-export default class ReportsScheduleByCallsignController extends Controller {
+export default class ReportsScheduleByCallsignController extends ClubhouseController {
   queryParams = ['year'];
 
   @tracked isExpanding = false;

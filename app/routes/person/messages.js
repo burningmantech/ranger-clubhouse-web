@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {Role} from 'clubhouse/constants/roles';
 
-export default class PersonMessagesRoute extends Route {
+export default class PersonMessagesRoute extends ClubhouseRoute {
   model() {
     const person_id = this.modelFor('person').id;
 

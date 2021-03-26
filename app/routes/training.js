@@ -1,4 +1,4 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import { Role } from 'clubhouse/constants/roles';
 
 /*
@@ -7,7 +7,7 @@ import { Role } from 'clubhouse/constants/roles';
  * Admins, Trainers, VC, and Mentors are allowed.
  */
 
-export default class TrainingRoute extends Route {
+export default class TrainingRoute extends ClubhouseRoute {
   beforeModel() {
     if (!this.session.user.hasRole([ Role.ADMIN, Role.TRAINER, Role.VC, Role.MENTOR, Role.ART_TRAINER])) {
       this.toast.error("Sorry, you need to be a trainer, mentor, VC or Admin to access this.");

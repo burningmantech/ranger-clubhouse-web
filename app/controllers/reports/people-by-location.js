@@ -1,10 +1,10 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { CountryLabels } from 'clubhouse/constants/countries';
 import { tracked } from '@glimmer/tracking';
 import _ from 'lodash';
 
-export default class ReportsPeopleByLocationController extends Controller {
+export default class ReportsPeopleByLocationController extends ClubhouseController {
   @tracked filter;
 
   @action

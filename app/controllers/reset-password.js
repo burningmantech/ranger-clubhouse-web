@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import ResetPasswordValidations from '../validations/reset-password';
 import {tracked} from '@glimmer/tracking';
 
-export default class ResetPasswordController extends Controller {
+export default class ResetPasswordController extends ClubhouseController {
   @tracked isSubmitting = false;
   @tracked authForm = {};
 

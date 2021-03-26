@@ -1,11 +1,11 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { Role } from 'clubhouse/constants/roles';
 import PersonInfoValidations from 'clubhouse/validations/person-info';
 import { ShortSleeve, LongSleeve } from 'clubhouse/constants/shirts';
 import { pronounOptions } from 'clubhouse/constants/pronouns';
 
-export default class PersonPersonalInfoController extends Controller {
+export default class PersonPersonalInfoController extends ClubhouseController {
   personInfoValidations = PersonInfoValidations;
   shortSleeveOptions = ShortSleeve;
   longSleeveOptions = LongSleeve;

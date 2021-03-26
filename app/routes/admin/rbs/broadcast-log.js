@@ -1,8 +1,8 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 import { action } from '@ember/object';
 
-export default class AdminRbsBroadcastLog extends Route {
+export default class AdminRbsBroadcastLog extends ClubhouseRoute {
   queryParams = {
     failed: { refreshModel: true },
     year: { refreshModel: true }

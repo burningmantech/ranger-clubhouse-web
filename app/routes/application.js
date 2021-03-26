@@ -1,7 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {action} from '@ember/object';
 import {humanize} from 'ember-cli-string-helpers/helpers/humanize';
-import {inject as service} from '@ember/service';
 import {config} from 'clubhouse/utils/config';
 import {UnauthorizedError} from '@ember-data/adapter/error';
 import {run} from '@ember/runloop';
@@ -10,9 +9,7 @@ import $ from 'jquery';
 import moment from 'moment';
 import RSVP from 'rsvp';
 
-export default class ApplicationRoute extends Route {
-  @service router;
-
+export default class ApplicationRoute extends ClubhouseRoute {
   constructor() {
     super(...arguments);
 

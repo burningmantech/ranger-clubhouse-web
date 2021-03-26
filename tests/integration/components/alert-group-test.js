@@ -21,7 +21,9 @@ module('Integration | Component | alert-group', function(hooks) {
     ]);
 
 
-    await render(hbs`{{alert-group group=group email=email numbers=numbers heading=heading description=description}}`);
+    await render(hbs`<AlertGroup @group={{this.group}}
+            @email={{this.email}} @numbers={{this.numbers}} @heading={{this.heading}}
+            @description={{this.description}} />`);
 
     const row = assert.dom('div.row');
     row.exists();
@@ -37,7 +39,9 @@ module('Integration | Component | alert-group', function(hooks) {
       { title: 'Title1', description: 'Description1', on_playa: false }
     ]);
 
-    await render(hbs`{{alert-group group=group email=email numbers=numbers heading=heading description=description}}`);
+    await render(hbs`<AlertGroup @group={{this.group}}
+            @email={{this.email}} @numbers={{this.numbers}} @heading={{this.heading}}
+            @description={{this.description}} />`);
 
     const row = assert.dom('div.row');
     row.exists();
@@ -51,7 +55,9 @@ module('Integration | Component | alert-group', function(hooks) {
       { title: 'Title1', description: 'Description1', on_playa: true, no_opt_out: true }
     ]);
 
-    await render(hbs`{{alert-group group=group email=email numbers=numbers heading=heading description=description}}`);
+    await render(hbs`<AlertGroup @group={{this.group}}
+            @email={{this.email}} @numbers={{this.numbers}} @heading={{this.heading}}
+            @description={{this.description}} />`);
 
     const row = assert.dom('div.row');
     row.exists();
@@ -67,7 +73,9 @@ module('Integration | Component | alert-group', function(hooks) {
       { title: 'Title1', description: 'Description1', email_only: true }
     ]);
 
-    await render(hbs`{{alert-group group=group email=email numbers=numbers heading=heading description=description}}`);
+    await render(hbs`<AlertGroup @group={{this.group}}
+            @email={{this.email}} @numbers={{this.numbers}} @heading={{this.heading}}
+            @description={{this.description}} />`);
 
     const row = assert.dom('div.row');
     row.exists();
@@ -81,7 +89,9 @@ module('Integration | Component | alert-group', function(hooks) {
       { title: 'Title1', description: 'Description1', sms_only: true }
     ]);
 
-    await render(hbs`{{alert-group group=group email=email numbers=numbers heading=heading description=description}}`);
+    await render(hbs`<AlertGroup @group={{this.group}}
+            @email={{this.email}} @numbers={{this.numbers}} @heading={{this.heading}}
+            @description={{this.description}} />`);
 
     const row = assert.dom('div.row');
     row.exists();

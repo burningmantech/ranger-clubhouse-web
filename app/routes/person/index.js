@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
 
-export default class PersonIndexRoute extends Route {
+export default class PersonIndexRoute extends ClubhouseRoute {
   model() {
     const person = this.modelFor('person');
     const personId = person.id;

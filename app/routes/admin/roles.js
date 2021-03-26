@@ -1,11 +1,8 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import { ADMIN } from 'clubhouse/constants/roles';
 
-export default class AdminRolesRoute extends Route {
-  beforeModel() {
-    super.beforeModel(...arguments);
-    this.house.roleCheck(Role.ADMIN);
-  }
+export default class AdminRolesRoute extends ClubhouseRoute {
+  roleRequired = ADMIN;
 
   model() {
     return this.store.findAll('role', { reload: true });

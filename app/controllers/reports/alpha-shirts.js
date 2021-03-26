@@ -1,7 +1,7 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 
-export default class ReportsAlphaShirtsController extends Controller {
+export default class ReportsAlphaShirtsController extends ClubhouseController {
   @action
   exportPeople() {
     const CSV_COLUMNS = [

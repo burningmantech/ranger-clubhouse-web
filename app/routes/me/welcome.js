@@ -1,15 +1,15 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
 /*
    Welcome page for PNVs. Force the user to set a password, and give additional instructions.
  */
 
-export default class MeWelcomeRoute extends Route {
+export default class MeWelcomeRoute extends ClubhouseRoute {
   beforeModel() {
-    super.beforeModel(...arguments);
-
     if (!this.session.isWelcome) {
       this.transitionTo('me.homepage');
+    } else {
+      super.beforeModel(...arguments);
     }
   }
 

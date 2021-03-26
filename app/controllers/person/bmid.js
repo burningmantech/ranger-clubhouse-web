@@ -1,8 +1,8 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 
-export default class PersonBmidController extends Controller {
+export default class PersonBmidController extends ClubhouseController {
   get admissionDateOptions() {
     return admissionDateOptions(this.year, this.ticketingInfo.wap_date_range);
   }

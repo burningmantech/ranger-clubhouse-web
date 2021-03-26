@@ -8,7 +8,7 @@ module('Integration | Component | ch-form/cancel', function(hooks) {
 
   test('it renders', async function(assert) {
     this.set('cancelAction', () => { });
-    await render(hbs`{{ch-form/cancel cancelAction=cancelAction}}`);
+    await render(hbs`<ChForm::Cancel @cancelAction={{this.cancelAction}} />`);
 
     assert.dom(this.element).hasText('Cancel');
   });
@@ -16,7 +16,7 @@ module('Integration | Component | ch-form/cancel', function(hooks) {
   test('it accepts a label', async function(assert) {
     this.set('label', 'Give up!');
     this.set('cancelAction', () => { });
-    await render(hbs`{{ch-form/cancel label=label cancelAction=cancelAction}}`);
+    await render(hbs`<ChForm::Cancel @label={{this.label}} @cancelAction={{this.cancelAction}} />`);
 
     assert.dom(this.element).hasText('Give up!');
   });
