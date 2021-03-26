@@ -4,7 +4,7 @@
 # Note we need a version of Node that is supported by ember-cli.
 # See: https://github.com/ember-cli/ember-cli/blob/master/docs/node-support.md
 #
-FROM node:15-alpine as development
+FROM node:14-alpine as development
 
 # Install Ember CLI
 # "unsafe-perm" step is a workaround for a bug.
