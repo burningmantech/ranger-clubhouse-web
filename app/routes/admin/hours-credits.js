@@ -1,16 +1,13 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import { ADMIN } from 'clubhouse/constants/roles';
 import requestYear from 'clubhouse/utils/request-year';
 
-export default class AdminHoursCreditsRoute extends Route {
+export default class AdminHoursCreditsRoute extends ClubhouseRoute {
+  roleRequired = ADMIN;
+
   queryParams = {
     year: { refreshModel: true }
   };
-
-  beforeModel() {
-    super.beforeModel(...arguments);
-    this.house.roleCheck(Role.ADMIN);
-  }
 
   model(params) {
     const year = requestYear(params);

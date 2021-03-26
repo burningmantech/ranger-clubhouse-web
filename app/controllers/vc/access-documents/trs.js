@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {isBlank, isEmpty} from '@ember/utils';
 import moment from 'moment';
@@ -112,7 +112,7 @@ const WAP_RANGER = 'work_access_pass_ranger';
 const WAP_PNV = 'work_access_pass_pnv';
 const WAP_ALL = 'work_access_pass_all';
 
-export default class VcAccessDocumentsTrsController extends Controller {
+export default class VcAccessDocumentsTrsController extends ClubhouseController {
   @tracked filter = 'all';
   @tracked accessDocuments = [];
   @tracked selectAll = false;

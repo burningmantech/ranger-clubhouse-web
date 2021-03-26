@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import EmberObject from '@ember/object';
 
-export default class MeTimesheetCorrectionsConfirmRoute extends Route {
+export default class MeTimesheetCorrectionsConfirmRoute extends ClubhouseRoute {
   beforeModel() {
     const timesheetInfo = this.modelFor('me.timesheet-corrections').timesheetInfo;
 

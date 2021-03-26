@@ -1,8 +1,8 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
-export default class MeTimesheetCorrectionsController extends Controller {
+export default class MeTimesheetCorrectionsController extends ClubhouseController {
   @tracked showReviewSteps = false;
 
   get unverifiedCount() {

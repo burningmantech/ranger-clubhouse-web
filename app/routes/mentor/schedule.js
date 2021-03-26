@@ -1,9 +1,9 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import { action } from '@ember/object';
 
 import requestYear from 'clubhouse/utils/request-year';
 
-export default class MentorScheduleRoute extends Route {
+export default class MentorScheduleRoute extends ClubhouseRoute {
   queryParams = {
     year: { refreshModel: true }
   };

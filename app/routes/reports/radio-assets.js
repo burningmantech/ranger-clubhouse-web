@@ -1,8 +1,8 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 import RSVP from 'rsvp';
 
-export default class ReportsRadioAssetsRoute extends Route {
+export default class ReportsRadioAssetsRoute extends ClubhouseRoute {
   queryParams = {
     year: {
       refreshModel: true

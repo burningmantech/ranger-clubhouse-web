@@ -7,7 +7,7 @@ module('Integration | Component | person-address-edit', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    const person = server.create('person');
+    const person = this.server.create('person');
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 

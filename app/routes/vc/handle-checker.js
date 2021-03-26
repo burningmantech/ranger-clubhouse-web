@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import _ from 'lodash';
 
-export default class VcHandleCheckerRoute extends Route {
+export default class VcHandleCheckerRoute extends ClubhouseRoute {
   model() {
     return this.ajax.request('handles')
         .then((result) => _.sortBy(result.data, [(h) => h.name.toLowerCase(), 'entityType']));

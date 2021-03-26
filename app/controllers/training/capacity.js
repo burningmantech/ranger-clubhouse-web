@@ -1,6 +1,6 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 
-export default class TrainingCapacityController extends Controller {
+export default class TrainingCapacityController extends ClubhouseController {
   queryParams = [ 'year' ];
 
   get notCurrentYear() {

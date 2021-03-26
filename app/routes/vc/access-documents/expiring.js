@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class VcAccessDocumentsExpiringRoute extends Route {
+export default class VcAccessDocumentsExpiringRoute extends ClubhouseRoute {
   model() {
     return this.ajax.request('access-document/expiring');
   }

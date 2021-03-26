@@ -1,8 +1,8 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import { ALPHA } from 'clubhouse/constants/positions';
 import moment from 'moment';
 
-export default class MentorAlphaSignoutRoute extends Route {
+export default class MentorAlphaSignoutRoute extends ClubhouseRoute {
   model() {
     return this.ajax.request('slot', { data: { position_id: ALPHA, year: this.house.currentYear() }});
   }

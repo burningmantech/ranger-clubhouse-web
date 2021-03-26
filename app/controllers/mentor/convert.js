@@ -1,8 +1,8 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action, set } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
-export default class MentorConvertController extends Controller {
+export default class MentorConvertController extends ClubhouseController {
   @tracked alphas;
   @tracked passAll = false;
   @tracked bonkAll = false;

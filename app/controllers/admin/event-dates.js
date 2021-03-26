@@ -1,11 +1,11 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 import moment from 'moment';
 
-export default class AdminEventDatesController extends Controller {
+export default class AdminEventDatesController extends ClubhouseController {
   eventDateValidations = {
     event_start: [validateDateTime({before: 'event_end'}), validatePresence(true)],
     event_end: [validateDateTime({after: 'event_start'}), validatePresence(true)],

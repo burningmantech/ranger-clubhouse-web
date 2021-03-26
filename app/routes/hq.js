@@ -1,14 +1,11 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import { action } from '@ember/object';
-import { Role } from 'clubhouse/constants/roles';
-import RSVP from 'rsvp';
 import { NotFoundError } from '@ember-data/adapter/error'
+import { ADMIN, MANAGE } from 'clubhouse/constants/roles';
+import RSVP from 'rsvp';
 
-export default class HqRoute extends Route {
-  beforeModel() {
-    super.beforeModel(...arguments);
-    this.house.roleCheck([ Role.ADMIN, Role.MANAGE ]);
-  }
+export default class HqRoute extends ClubhouseRoute {
+  roleRequired = [ADMIN, MANAGE];
 
   model({ person_id }) {
     const year = this.house.currentYear();

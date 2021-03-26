@@ -9,13 +9,13 @@ module('Integration | Helper | yesno', function(hooks) {
   test('it renders', async function(assert) {
     this.set('value', true);
 
-    await render(hbs`{{yesno value}}`);
+    await render(hbs`{{yesno this.value}}`);
 
     assert.dom(this.element).hasText('Y');
 
     this.set('value', false);
 
-    await render(hbs`{{yesno value}}`);
+    await render(hbs`{{yesno this.value}}`);
 
     assert.dom(this.element).hasText('N');
   });

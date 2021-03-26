@@ -1,8 +1,8 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 import RSVP from 'rsvp';
 
-export default class MeScheduleRoute extends Route {
+export default class MeScheduleRoute extends ClubhouseRoute {
   queryParams = {
     year: { refreshModel: true }
   };
@@ -12,6 +12,8 @@ export default class MeScheduleRoute extends Route {
     if (user.isPastProspective || user.isBonked) {
       this.toast.error('You are not permitted to sign up for trainings or shifts at this time.');
       this.transitionTo('me.homepage');
+    } else {
+      super.beforeModel(...arguments);
     }
   }
 

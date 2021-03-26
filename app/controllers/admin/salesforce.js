@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {tracked} from '@glimmer/tracking';
 import {action, set} from '@ember/object';
 import groupBy from 'clubhouse/utils/group-by';
 
-export default class AdminSalesforceController extends Controller {
+export default class AdminSalesforceController extends ClubhouseController {
   @tracked commit = false;
   @tracked updateSalesforce = false;
   @tracked nonTestAccounts = false;

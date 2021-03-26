@@ -1,8 +1,8 @@
 import { VERSION } from '@ember/version';
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import ENV from 'clubhouse/config/environment';
 
-export default class DebugRoute extends Route {
+export default class DebugRoute extends ClubhouseRoute {
   setupController(controller) {
     super.setupController(...arguments);
 

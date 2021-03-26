@@ -1,16 +1,9 @@
 <h1>Freaking Years Report</h1>
 
 <p>
-  <label>
-    <RadioButton @value={{0}} @groupValue={{this.showAll}} @radioId="showAllFalse"/>
-    Show only active status accounts
-  </label>
-
-  <label class="ml-2">
-    <RadioButton @value={{1}} @groupValue={{this.showAll}} @radioId="showAllTrue"/>
-    Show all accounts
-  </label>
+  <RadioGroup @options={{this.showOptions}} @onChange={{action (mut this.showAll)}} @value={{this.showAll}} />
 </p>
+
 <p>
   Report on people's service based on years rangered. The "Signed Up" column
   indicates if ANY shift sign up (training, dirt shift, etc) was found for the

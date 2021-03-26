@@ -1,21 +1,19 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
-import { Role } from 'clubhouse/constants/roles';
+import {ADMIN, TIMESHEET_MANAGEMENT} from 'clubhouse/constants/roles';
 
-export default class AdminTimesheetSanityCheckerRoute extends Route {
+export default class AdminTimesheetSanityCheckerRoute extends ClubhouseRoute {
+  roleRequired = [ADMIN, TIMESHEET_MANAGEMENT];
+
   queryParams = {
-    year: { refreshModel: true }
+    year: {refreshModel: true}
   };
 
-  beforeModel() {
-    super.beforeModel(...arguments);
-    this.house.roleCheck([ Role.ADMIN, Role.TIMESHEET_MANAGEMENT ]);
-  }
 
   model(params) {
     const year = requestYear(params);
 
-    return this.ajax.request('timesheet/sanity-checker', { data: { year } });
+    return this.ajax.request('timesheet/sanity-checker', {data: {year}});
   }
 
   setupController(controller, model) {
@@ -27,5 +25,4 @@ export default class AdminTimesheetSanityCheckerRoute extends Route {
       controller.set('year', null);
     }
   }
-
 }

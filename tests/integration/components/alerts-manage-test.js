@@ -10,17 +10,7 @@ module('Integration | Component | alerts-manage', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{alerts-manage}}`);
-
+    await render(hbs`<AlertsManage />`);
     assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      {{#alerts-manage}}
-        template block text
-      {{/alerts-manage}}
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
   });
 });

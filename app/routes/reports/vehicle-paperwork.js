@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class ReportsVehiclePaperworkRoute extends Route {
+export default class ReportsVehiclePaperworkRoute extends ClubhouseRoute {
   model() {
     return this.ajax.request(`vehicle/paperwork`);
   }

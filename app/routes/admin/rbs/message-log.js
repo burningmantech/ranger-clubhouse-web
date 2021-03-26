@@ -1,9 +1,9 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 import { isEmpty } from '@ember/utils';
 import EmberObject from '@ember/object';
 
-export default class AdminRbsMessageLog extends Route {
+export default class AdminRbsMessageLog extends ClubhouseRoute {
   queryParams = {
     year: { refreshModel: true },
     page: { refreshModel: true },

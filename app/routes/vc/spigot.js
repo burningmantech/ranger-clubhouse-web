@@ -1,16 +1,13 @@
-import Route from '@ember/routing/route';
-import {Role} from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import {ADMIN, VC} from 'clubhouse/constants/roles';
 import requestYear from 'clubhouse/utils/request-year';
 
-export default class VcSpigotRoute extends Route {
+export default class VcSpigotRoute extends ClubhouseRoute {
+  roleRequired = [ADMIN, VC];
+
   queryParams = {
     year: {refreshModel: true}
   };
-
-  beforeModel() {
-    super.beforeModel(...arguments);
-    this.house.roleCheck([Role.ADMIN, Role.VC]);
-  }
 
   model(params) {
     const year = requestYear(params);

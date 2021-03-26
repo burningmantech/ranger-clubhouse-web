@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { positionLabel } from 'clubhouse/helpers/position-label';
 
-export default class ReportsSpecialTeamsController extends Controller {
+export default class ReportsSpecialTeamsController extends ClubhouseController {
   @tracked isSubmitting = false;
   @tracked haveResults = false;
   @tracked startYear;

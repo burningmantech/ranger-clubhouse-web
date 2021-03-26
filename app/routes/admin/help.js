@@ -1,17 +1,13 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import { ADMIN } from 'clubhouse/constants/roles';
 
-export default class AdminHelpRoute extends Route {
+export default class AdminHelpRoute extends ClubhouseRoute {
+  roleRequired = ADMIN;
+
   queryParams = {
     editSlug: { replace: true },
     createSlug: { replace: true }
   };
-
-  beforeModel() {
-    super.beforeModel(...arguments);
-
-    this.house.roleCheck(Role.ADMIN);
-  }
 
   model({ createSlug, editSlug }) {
     this.createSlug = createSlug;

@@ -1,4 +1,4 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
 /*
  * SSO login route
@@ -9,7 +9,7 @@ import Route from '@ember/routing/route';
  *
  */
 
-export default class SsoRoute extends Route {
+export default class SsoRoute extends ClubhouseRoute {
   queryParams = {
     code: { refreshModel: true }
   };

@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
 
-export default class MeTimesheetCorrectionsRoute extends Route {
+export default class MeTimesheetCorrectionsRoute extends ClubhouseRoute {
   async model() {
     const person_id = this.session.userId;
 

@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
 
-export default class HqShiftRoute extends Route {
+export default class HqShiftRoute extends ClubhouseRoute {
   model() {
     const person_id = this.modelFor('hq').person.id;
     const year = this.house.currentYear();

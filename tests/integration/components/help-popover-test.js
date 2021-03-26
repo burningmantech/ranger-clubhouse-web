@@ -10,7 +10,7 @@ module('Integration | Component | help-popover', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{help-popover slug="test-slug"}}`);
+    await render(hbs`<HelpPopover @slug="test-slug" />`);
 
     assert.dom('a.popover-button').exists()
   });

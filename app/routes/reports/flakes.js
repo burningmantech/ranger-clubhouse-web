@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class ReportsFlakesRoute extends Route {
+export default class ReportsFlakesRoute extends ClubhouseRoute {
   queryParams = {
     date: { refreshModel: true }
   };

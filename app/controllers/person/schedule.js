@@ -1,6 +1,6 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 
-export default class PersonScheduleController extends Controller {
+export default class PersonScheduleController extends ClubhouseController {
   queryParams = [ 'year' ];
 
 }

@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class MeContactRoute extends Route {
+export default class MeContactRoute extends ClubhouseRoute {
   queryParams = {
     // No refresh model needed - provided so external documents can
     // link to the contact page and have the callsign prefilled.
@@ -8,6 +8,8 @@ export default class MeContactRoute extends Route {
   };
 
   beforeModel() {
+    super.beforeModel(...arguments);
+
     if (!this.session.user.isRanger) {
       this.toast.error('Sorry, you are not an active Ranger and may not send contact messages.');
       this.transitionTo('me.homepage');

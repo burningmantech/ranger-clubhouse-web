@@ -1,11 +1,9 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import { ADMIN, VC } from 'clubhouse/constants/roles';
 import _ from 'lodash';
 
-export default class ReportsAlphaShirtsRoute extends Route {
-  beforeModel() {
-    this.house.roleCheck([ Role.ADMIN, Role.VC ]);
-  }
+export default class ReportsAlphaShirtsRoute extends ClubhouseRoute {
+  roleRequired = [ ADMIN, VC];
 
   model() {
     return this.ajax.request(`person/alpha-shirts`).then((result) => result.alphas);

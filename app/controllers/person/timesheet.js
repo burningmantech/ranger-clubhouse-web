@@ -1,8 +1,8 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 
-export default class PersonTimesheetController extends Controller {
+export default class PersonTimesheetController extends ClubhouseController {
   queryParams = ['year'];
   @tracked timesheetSummary;
 

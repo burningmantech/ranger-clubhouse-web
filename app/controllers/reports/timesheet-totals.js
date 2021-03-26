@@ -1,7 +1,7 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 
-export default class ReportsTimesheetTotalsController extends Controller {
+export default class ReportsTimesheetTotalsController extends ClubhouseController {
   queryParams = ['year'];
 
   @action

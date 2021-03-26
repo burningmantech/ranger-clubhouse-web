@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import { Broadcasts } from 'clubhouse/constants/broadcast';
 
-export default class AdminRbsBroadcastRoute extends Route {
+export default class AdminRbsBroadcastRoute extends ClubhouseRoute {
   queryParams = {
     type: { refreshModel: true }
   };

@@ -9,6 +9,6 @@ module.exports = {
     'no-quoteless-attributes': false,
     'require-input-label': false,
     'no-curly-component-invocation': { allow: ['general-support-email', 'vc-email', 'admin-email'] },
-    'no-implicit-this': { allow: [ 'general-support-email', 'vc-email', 'admin-email' ] }
+    'no-implicit-this': { allow: [ 'general-support-email', 'vc-email', 'admin-email', 'rootURL' ] }
   },
 };

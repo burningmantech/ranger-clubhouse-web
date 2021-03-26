@@ -1,11 +1,11 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 
 const CSV_COLUMNS = [
   'callsign', 'first_name', 'last_name', 'email', 'home_phone', 'unverified_count'
 ];
 
-export default class ReportsTimesheetUnconfirmedController extends Controller {
+export default class ReportsTimesheetUnconfirmedController extends ClubhouseController {
   queryParmas = ['year'];
 
   @action downloadCsv() {

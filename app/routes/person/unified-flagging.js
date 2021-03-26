@@ -1,11 +1,8 @@
-import Route from '@ember/routing/route';
-import {Role} from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import {INTAKE} from 'clubhouse/constants/roles';
 
-export default class PersonUnifiedFlaggingRoute extends Route {
-  beforeModel() {
-    this.house.roleCheck(Role.INTAKE);
-
-  }
+export default class PersonUnifiedFlaggingRoute extends ClubhouseRoute {
+  roleRequired = INTAKE;
 
   model() {
     const year = this.house.currentYear();

@@ -1,7 +1,8 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class MeTimesheetCorrectionsReviewRoute extends Route {
+export default class MeTimesheetCorrectionsReviewRoute extends ClubhouseRoute {
   beforeModel() {
+    super.beforeModel(...arguments);
     const timesheetInfo = this.modelFor('me.timesheet-corrections').timesheetInfo;
 
     if (!timesheetInfo.correction_enabled) {

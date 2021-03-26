@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
@@ -24,7 +24,7 @@ import {
 } from 'clubhouse/models/access-document';
 import {DELIVERY_WILL_CALL, DELIVERY_MAIL} from "clubhouse/models/access-document-delivery";
 
-export default class PersonAccessDocumentsController extends Controller {
+export default class PersonAccessDocumentsController extends ClubhouseController {
   @tracked isSubmitting = false;
   @tracked isShowingAll = false;
   @tracked isEditingDelivery = false;

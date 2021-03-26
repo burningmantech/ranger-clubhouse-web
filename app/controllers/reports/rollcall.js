@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import moment from 'moment';
 
-export default class ReportsRollcallController extends Controller {
+export default class ReportsRollcallController extends ClubhouseController {
   @tracked positionId;
   @tracked slotId;
   @tracked slot;

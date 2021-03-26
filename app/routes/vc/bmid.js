@@ -1,17 +1,15 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import {ADMIN, EDIT_BMIDS} from 'clubhouse/constants/roles';
 import requestYear from 'clubhouse/utils/request-year';
 import RSVP from 'rsvp';
 
-export default class VcBmidRoute extends Route {
-  queryParams = {
-    year: { refreshModel: true },
-    filter: { refreshModel: true },
-  };
+export default class VcBmidRoute extends ClubhouseRoute {
+  roleRequired = [ADMIN, EDIT_BMIDS];
 
-  beforeModel() {
-    this.house.roleCheck([ Role.ADMIN, Role.EDIT_BMIDS ]);
-  }
+  queryParams = {
+    year: {refreshModel: true},
+    filter: {refreshModel: true},
+  };
 
   model(params) {
     const year = requestYear(params);
@@ -22,7 +20,7 @@ export default class VcBmidRoute extends Route {
     return RSVP.hash({
       year,
       filter,
-      bmids: this.ajax.request(`bmid/manage`, { data: { year, filter }}).then((result) => result.bmids),
+      bmids: this.ajax.request(`bmid/manage`, {data: {year, filter}}).then((result) => result.bmids),
       ticketingInfo: this.ajax.request('ticketing/info').then((result) => result.ticketing_info)
     });
   }
@@ -35,7 +33,7 @@ export default class VcBmidRoute extends Route {
         rec = this.house.pushPayload('bmid', bmid);
       } else {
         // Potential new BMID
-        rec =  this.store.createRecord('bmid', bmid);
+        rec = this.store.createRecord('bmid', bmid);
       }
 
       rec.sortCallsign = (bmid.person ? bmid.person.callsign.toLowerCase() : `Deleted #${bmid.person_id}`);

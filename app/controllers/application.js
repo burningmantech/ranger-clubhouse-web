@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {run} from '@ember/runloop';
 import ENV from 'clubhouse/config/environment';
 import {tracked} from '@glimmer/tracking';
 
-export default class ApplicationController extends Controller {
+export default class ApplicationController extends ClubhouseController {
   @tracked groundHogDayTime = null;
 
   applicationVersion = ENV.APP.version;

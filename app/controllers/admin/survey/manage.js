@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {TYPE_NORMAL, TYPE_TRAINER, TYPE_SEPARATE, TYPE_SUMMARY} from 'clubhouse/models/survey-group';
 
-export default class AdminSurveyManageController extends Controller {
+export default class AdminSurveyManageController extends ClubhouseController {
   @tracked groupEntry = null;
   @tracked questionEntry = null;
   @tracked survey;

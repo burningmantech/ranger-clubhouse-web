@@ -1,11 +1,11 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { validatePresence } from 'ember-changeset-validations/validators';
 import _ from 'lodash';
 import { tracked } from '@glimmer/tracking';
 
-export default class AdminAssetsController extends Controller {
+export default class AdminAssetsController extends ClubhouseController {
   queryParams = ['year'];
 
   @tracked tempIdFilter = 'All';

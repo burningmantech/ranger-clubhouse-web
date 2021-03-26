@@ -10,7 +10,7 @@ module('Integration | Component | broadcast-simple', function(hooks) {
     this.set('config', { });
     this.set('broadcast', { is_simple: 1 } );
     this.set('type', 'emergency');
-    await render(hbs`{{broadcast-simple config=config type=type broadcast=broadcast}}`);
+    await render(hbs`<BroadcastSimple @config={{this.config}} @type={{this.type}} @broadcast={{this.broadcast}} />`);
     assert.dom('form').exists();
   });
 });

@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import _ from 'lodash';
 
-export default class ReportsOnDutyRoute extends Route {
+export default class ReportsOnDutyRoute extends ClubhouseRoute {
   queryParams = {
     over_hours: {refreshModel: true},
     duty_date: {refreshModel: true}

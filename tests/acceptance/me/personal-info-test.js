@@ -7,7 +7,7 @@ module('Acceptance | me/personal info', function(hooks) {
   setupApplicationTest(hooks);
 
   test('rendered /me/personal-info', async function(assert) {
-    const person = server.create('person');
+    const person = this.server.create('person');
     await authenticateUser(person.id)
     await visit('/me/personal-info');
     assert.equal(document.title, 'Personal info | Me | Ranger Clubhouse');
@@ -27,7 +27,7 @@ module('Acceptance | me/personal info', function(hooks) {
   });
 
   test('update /me/personal-info', async function(assert) {
-    const person = server.create('person');
+    const person = this.server.create('person');
     await authenticateUser(person.id);
 
     const newEmail = 'another@example.com';
@@ -42,7 +42,7 @@ module('Acceptance | me/personal info', function(hooks) {
   });
 
   test('prevent space from being enter in email', async function(assert) {
-    const person = server.create('person');
+    const person = this.server.create('person');
     await authenticateUser(person.id);
 
     const newEmail = 'another@example.com';

@@ -1,8 +1,8 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { set } from '@ember/object';
 import { action } from '@ember/object';
 
-export default class AdminErrorLogController extends Controller {
+export default class AdminErrorLogController extends ClubhouseController {
 
   get previousPage() {
     return this.page - 1;

@@ -1,5 +1,5 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 
-export default class TrainingIndexController extends Controller {
+export default class TrainingIndexController extends ClubhouseController {
   queryParams = [ 'year' ];
 }

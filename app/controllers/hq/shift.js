@@ -1,11 +1,11 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import {set} from '@ember/object';
 import {ALPHA} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 
-export default class HqShiftController extends Controller {
+export default class HqShiftController extends ClubhouseController {
   @tracked showCorrectionForm = false;
   @tracked showSiteLeaveDialog = false;
   @tracked showHoursCreditsBreakdown = false;

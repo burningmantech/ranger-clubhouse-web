@@ -1,10 +1,10 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {Role} from 'clubhouse/constants/roles';
 import inGroups from 'clubhouse/utils/in-groups';
 import {tracked} from '@glimmer/tracking';
 
-export default class PersonIndexController extends Controller {
+export default class PersonIndexController extends ClubhouseController {
   person = null;
 
   callsignApprovedOptions = [

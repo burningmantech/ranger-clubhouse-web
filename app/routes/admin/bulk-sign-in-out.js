@@ -1,11 +1,9 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import { ADMIN } from 'clubhouse/constants/roles';
 import EmberObject from '@ember/object';
 
-export default class AdminBulkSignInOutRoute extends Route {
-  beforeModel() {
-    this.house.roleCheck(Role.ADMIN);
-  }
+export default class AdminBulkSignInOutRoute extends ClubhouseRoute {
+  roleRequired = ADMIN;
 
   setupController(controller) {
     controller.set('bulkForm', EmberObject.create({ commit: false, lines: ''}));

@@ -18,7 +18,7 @@ module('Integration | Component | dashboard-ranger', function(hooks) {
     this.owner.register('service:session', SessionStub);
   });
   test('it renders', async function(assert) {
-    const person = server.create('person', { roles: [  ]});
+    const person = this.server.create('person', { roles: [  ]});
 
     this.sessionService = this.owner.lookup('service:session');
     this.set('sessionService.userId', person.id);

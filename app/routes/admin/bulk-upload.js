@@ -1,10 +1,8 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import { ADMIN, EDIT_SLOTS } from 'clubhouse/constants/roles';
 
-export default class AdminBulkUploadRoute extends Route {
-  beforeModel() {
-    this.house.roleCheck([Role.EDIT_SLOTS, Role.ADMIN]);
-  }
+export default class AdminBulkUploadRoute extends ClubhouseRoute {
+  roleRequired = [ADMIN, EDIT_SLOTS];
 
   setupController(controller) {
     super.setupController(...arguments);

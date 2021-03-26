@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import EmberObject, {set, setProperties} from '@ember/object';
 import {action} from '@ember/object';
 import {debounce} from '@ember/runloop';
@@ -24,7 +24,7 @@ const SortOptions = [
   ['Ascending', 'asc']
 ];
 
-export default class AdminActionLogController extends Controller {
+export default class AdminActionLogController extends ClubhouseController {
   queryParams = ['person', 'start_time', 'end_time', 'events', 'sort', 'page', 'event_text'];
 
   eventOptions = EventOptions;

@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { isEmpty } from '@ember/utils';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
-export default class AdminSettingsController extends Controller {
+export default class AdminSettingsController extends ClubhouseController {
   booleanOptions = [ 'true', 'false' ];
 
   @tracked editSetting = null;

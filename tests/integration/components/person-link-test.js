@@ -7,20 +7,9 @@ module('Integration | Component | person-link', function(hooks) {
   setupRenderingTest(hooks);
 
   skip('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
+    this.set('person', { id: 1, callsign: 'hubcap'});
+    await render(hbs`<PersonLink @person={{this.person}} />`);
 
-    await render(hbs`{{person-link}}`);
-
-    assert.dom(this.element).hasText('');
-
-    // Template block usage:
-    await render(hbs`
-      {{#person-link}}
-        template block text
-      {{/person-link}}
-    `);
-
-    assert.dom(this.element).hasText('template block text');
+    assert.dom('a').exists().hasText(/hubcap/);
   });
 });

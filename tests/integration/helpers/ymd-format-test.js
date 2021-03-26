@@ -10,7 +10,7 @@ module('Integration | Helper | ymd-format', function(hooks) {
   test('it renders', async function(assert) {
     this.set('date', '2019-08-25 12:12:12');
 
-    await render(hbs`{{ymd-format date}}`);
+    await render(hbs`{{ymd-format this.date}}`);
 
     assert.equal(this.element.textContent.trim(), '2019-08-25');
   });

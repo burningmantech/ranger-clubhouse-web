@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import currentYear from 'clubhouse/utils/current-year';
 import laborDay from 'clubhouse/utils/labor-day';
@@ -70,7 +70,7 @@ class CopySourceSlot {
   }
 }
 
-export default class SlotsController extends Controller {
+export default class SlotsController extends ClubhouseController {
   queryParams = ['year'];
 
   @tracked dayFilter = 'all';

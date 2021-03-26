@@ -1,7 +1,7 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 
-export default class ReportsVehiclePaperworkController extends  Controller {
+export default class ReportsVehiclePaperworkController extends ClubhouseController {
     @action
     exportToCsv() {
       const year = this.house.currentYear();

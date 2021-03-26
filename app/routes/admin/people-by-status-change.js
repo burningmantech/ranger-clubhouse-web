@@ -1,15 +1,12 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import { ADMIN } from 'clubhouse/constants/roles';
 
-export default class AdminPeopleByStatusChangeRoute extends Route {
+export default class AdminPeopleByStatusChangeRoute extends ClubhouseRoute {
+  roleRequired = ADMIN;
+
   queryParams = {
     period: { refreshModel: true }
   };
-
-  beforeModel() {
-    super.beforeModel(...arguments);
-    this.house.roleCheck(ADMIN);
-  }
 
   model({ period }) {
     const date = new Date();

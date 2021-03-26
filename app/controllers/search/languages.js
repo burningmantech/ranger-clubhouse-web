@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {debounce} from '@ember/runloop';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
@@ -26,7 +26,7 @@ const groupBy = function (items, key) {
   return groups;
 }
 
-export default class SearchLanguagesController extends Controller {
+export default class SearchLanguagesController extends ClubhouseController {
   @tracked notFound = '';
   @tracked searchLanguage = '';
 

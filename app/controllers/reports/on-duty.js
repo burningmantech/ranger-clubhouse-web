@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import validateDateTime from 'clubhouse/validators/datetime';
 
-export default class ReportsOnDutyController extends Controller {
+export default class ReportsOnDutyController extends ClubhouseController {
   @tracked expandAll = false;
   @tracked duty_date;
 

@@ -1,9 +1,9 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
 import requestYear from 'clubhouse/utils/request-year';
 
 
-export default class PersonAssetsRoute extends Route {
+export default class PersonAssetsRoute extends ClubhouseRoute {
   queryParams = {
     year: {refreshModel: true}
   };

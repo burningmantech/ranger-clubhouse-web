@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class AdminRbsUnverifiedStoppedRoute extends Route {
+export default class AdminRbsUnverifiedStoppedRoute extends ClubhouseRoute {
   model() {
     return this.ajax.request('rbs/unverified-stopped');
   }

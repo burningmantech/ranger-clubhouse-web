@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class MeMotorpoolPolicyRoute extends Route {
+export default class MeMotorpoolPolicyRoute extends ClubhouseRoute {
   model() {
     return this.store.findRecord('person-event', `${this.session.userId}-${this.house.currentYear()}`, { reload: true });
   }

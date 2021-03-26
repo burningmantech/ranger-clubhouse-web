@@ -1,7 +1,7 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 
-export default class PersonExternalIdsController extends Controller {
+export default class PersonExternalIdsController extends ClubhouseController {
   @action
   saveAction(model) {
     model.save().then(() => {

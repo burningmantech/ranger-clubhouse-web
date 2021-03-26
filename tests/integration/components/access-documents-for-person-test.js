@@ -10,17 +10,8 @@ module('Integration | Component | access-documents-for-person', function(hooks) 
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{access-documents-for-person}}`);
+    await render(hbs`<AccessDocumentsForPerson />`);
 
     assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      {{#access-documents-for-person}}
-        template block text
-      {{/access-documents-for-person}}
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
   });
 });

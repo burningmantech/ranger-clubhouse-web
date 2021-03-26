@@ -1,4 +1,4 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import { tracked }from '@glimmer/tracking';
 
 class Alpha {
@@ -8,7 +8,7 @@ class Alpha {
   @tracked selected = false;
 }
 
-export default class MentorConvertRoute extends Route {
+export default class MentorConvertRoute extends ClubhouseRoute {
   model() {
     return this.ajax.request('mentor/verdicts');
   }

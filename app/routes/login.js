@@ -1,14 +1,17 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import Login from 'clubhouse/models/login';
 import ENV from 'clubhouse/config/environment';
 
-export default class LoginRoute extends Route {
+export default class LoginRoute extends ClubhouseRoute {
+  authRequired = false;
+
   queryParams = {
     token: { refreshModel: true },
     welcome: { refreshModel: true}
   }
 
   beforeModel() {
+    super.beforeModel(...arguments);
     this.session.prohibitAuthentication('me.homepage');
   }
 

@@ -1,0 +1,6 @@
+{{#each this.options as |opt|}}
+  <label>
+    <input type="radio" checked={{opt.isSelected}} {{on "click" (fn this.changeEvent opt)}} />
+    {{opt.label}}
+  </label>
+{{/each}}

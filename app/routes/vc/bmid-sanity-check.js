@@ -1,12 +1,10 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import { ADMIN, EDIT_BMIDS } from 'clubhouse/constants/roles';
 import requestYear from 'clubhouse/utils/request-year';
 import RSVP from 'rsvp';
 
-export default class VcBmidSanityCheckRoute extends Route {
-  beforeModel() {
-    this.house.roleCheck([ Role.ADMIN, Role.EDIT_BMIDS ]);
-  }
+export default class VcBmidSanityCheckRoute extends ClubhouseRoute {
+  roleRequired = [ ADMIN, EDIT_BMIDS];
 
   model(params) {
     const year = requestYear(params);

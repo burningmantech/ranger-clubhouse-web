@@ -7,7 +7,7 @@ module('Integration | Component | hq-visits-table', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    await render(hbs`{{hq-visits-table}}`);
+    await render(hbs`<HqVisitsTable />`);
 
     assert.dom('table').exists();
   });

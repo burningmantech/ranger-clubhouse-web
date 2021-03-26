@@ -1,9 +1,9 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
 
 const MENTOR_COUNT = 3;
 
-export default class MentorAssignmentRoute extends Route {
+export default class MentorAssignmentRoute extends ClubhouseRoute {
   model() {
     return RSVP.hash({
       alphas: this.ajax.request('mentor/alphas').then((result) => result.alphas),

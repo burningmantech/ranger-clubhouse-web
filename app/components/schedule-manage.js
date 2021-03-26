@@ -39,7 +39,7 @@ export default class ScheduleManageComponent extends Component {
   constructor() {
     super(...arguments);
 
-    const {person,permission,year,slots,signedUpSlots} = this.args
+    const {person,permission,year,slots,signedUpSlots} = this.args;
 
     this.scheduleSummary = this.args.scheduleSummary;
     this._sortAndMarkSignups();

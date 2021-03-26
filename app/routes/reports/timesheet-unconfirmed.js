@@ -1,20 +1,18 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
-import { Role } from 'clubhouse/constants/roles';
+import {ADMIN, TIMESHEET_MANAGEMENT, VIEW_PII} from 'clubhouse/constants/roles';
 
-export default class ReportsTimesheetUnconfirmedRoute extends Route {
+export default class ReportsTimesheetUnconfirmedRoute extends ClubhouseRoute {
+  roleRequired = [ADMIN, TIMESHEET_MANAGEMENT, VIEW_PII];
+
   queryParams = {
-    year: { refreshModel: true }
+    year: {refreshModel: true}
   };
-
-  beforeModel() {
-    this.house.roleCheck([ Role.ADMIN, Role.TIMESHEET_MANAGEMENT, Role.VIEW_PII ]);
-  }
 
   model(params) {
     const year = requestYear(params);
     return this.ajax.request('timesheet/unconfirmed-people', {
-      data: { year }
+      data: {year}
     });
   }
 

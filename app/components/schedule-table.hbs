@@ -1,16 +1,5 @@
 <div class="mb-2 d-print-none">
-  <div class="form-row">
-    <div class="form-check form-check-inline col-auto">
-      <RadioButton @value="upcoming" @groupValue={{this.viewSchedule}} @radioId="view-upcoming"
-                   @radioClass="form-check-input"/>
-      <label for="view-upcoming" class="form-check-label">Upcoming Shifts ({{this.upcomingCount}})</label>
-    </div>
-    <div class="form-check form-check-inline col-auto">
-      <RadioButton @value="all" @groupValue={{this.viewSchedule}} @radioId="view-all" @classNames="form-check-label"
-                   @radioClass="form-check-input"/>
-      <label for="view-all" class="form-check-label">All Shifts ({{@slots.length}})</label>
-    </div>
-  </div>
+  <RadioGroup @options={{this.viewOptions}} @value={{this.viewSchedule}} @onChange={{action (mut this.viewSchedule)}} />
 </div>
 
 {{#if this.hasOverlapping}}

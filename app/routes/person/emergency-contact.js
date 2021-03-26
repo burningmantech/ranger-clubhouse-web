@@ -1,10 +1,8 @@
-import Route from '@ember/routing/route';
-import {Role} from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import {ADMIN, MANAGE} from 'clubhouse/constants/roles';
 
-export default class PersonEmergencyContactRoute extends Route {
-  beforeModel() {
-    this.house.roleCheck([Role.ADMIN, Role.MANAGE]);
-  }
+export default class PersonEmergencyContactRoute extends ClubhouseRoute {
+  roleRequired = [ ADMIN, MANAGE];
 
   setupController(controller) {
     const person = this.modelFor('person');

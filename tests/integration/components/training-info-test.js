@@ -10,17 +10,8 @@ module('Integration | Component | training-info', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{training-info}}`);
+    await render(hbs`<TrainingInfo />`);
 
     assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      {{#training-info}}
-        template block text
-      {{/training-info}}
-    `);
-
-    assert.equal(this.element.textContent.trim(), 'template block text');
   });
 });

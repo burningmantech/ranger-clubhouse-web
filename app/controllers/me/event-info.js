@@ -1,7 +1,7 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { TRAINING } from 'clubhouse/constants/positions';
 
-export default class MeRangerInfoShowController extends Controller {
+export default class MeRangerInfoShowController extends ClubhouseController {
   queryParams = ['year'];
 
   get dirtTraining() {

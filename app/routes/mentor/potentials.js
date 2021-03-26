@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class MentorPotentialsRoute extends Route {
+export default class MentorPotentialsRoute extends ClubhouseRoute {
   model() {
     return this.ajax.request('mentor/mentees', { data: { have_training: 1 }});
   }

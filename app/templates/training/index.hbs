@@ -1,4 +1,7 @@
-<YearSelect @title={{concat this.training.title " Sessions"}} @year={{this.year}} @onChange={{action (mut this.year)}}
+<YearSelect @title="{{this.training.title}} Sessions"
+            @year={{this.year}}
+            @minYear={{2008}}
+            @onChange={{action (mut this.year)}}
             @subheader={{true}}/>
 
   {{#each this.trainingSessions as |session|}}

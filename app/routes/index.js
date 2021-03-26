@@ -1,6 +1,6 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class IndexRoute extends Route {
+export default class IndexRoute extends ClubhouseRoute {
   beforeModel() {
     if (this.session.isAuthenticated) {
       this.transitionTo('me.homepage');

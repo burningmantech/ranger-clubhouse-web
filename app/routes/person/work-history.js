@@ -1,9 +1,9 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import _ from 'lodash';
 import moment from 'moment';
 import {ALPHA, DEEP_FREEZE} from "../../constants/positions";
 
-export default class PersonWorkHistoryRoute extends Route {
+export default class PersonWorkHistoryRoute extends ClubhouseRoute {
   model() {
     return this.ajax.request('timesheet', {data: {person_id: this.modelFor('person').id}})
   }

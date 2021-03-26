@@ -1,10 +1,10 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import PositionTypes from 'clubhouse/constants/position-types';
 import PositionValidations from 'clubhouse/validations/position';
 
-export default class PositionController extends Controller {
+export default class PositionController extends ClubhouseController {
   @tracked position = null;
 
   positionTypes = PositionTypes;

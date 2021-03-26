@@ -13,7 +13,7 @@ module('Acceptance | admin/positions', function(hooks) {
   setupApplicationTest(hooks);
 
   test('visiting /admin/positions', async function(assert) {
-    const person = server.create('person', { roles: [ Role.ADMIN ]});
+    const person = this.server.create('person', { roles: [ Role.ADMIN ]});
     await authenticateUser(person.id);
     await visit('/admin/positions');
     const numPositions = this.server.schema.positions.all().length;

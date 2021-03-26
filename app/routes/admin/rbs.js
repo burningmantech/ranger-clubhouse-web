@@ -1,10 +1,8 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import { ADMIN, MEGAPHONE, EDIT_SLOTS } from 'clubhouse/constants/roles';
 
-export default class AdminRbsRoute extends Route {
-  beforeModel() {
-    this.house.roleCheck([ Role.ADMIN, Role.MEGAPHONE, Role.EDIT_SLOTS ]);
-  }
+export default class AdminRbsRoute extends ClubhouseRoute {
+  roleRequired = [ ADMIN, MEGAPHONE, EDIT_SLOTS ];
 
   model() {
     // Pull in the configuration so users know what to expect.

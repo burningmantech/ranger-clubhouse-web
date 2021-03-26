@@ -1,17 +1,14 @@
-import Route from '@ember/routing/route';
-import { Role } from 'clubhouse/constants/roles';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import {ADMIN, TIMESHEET_MANAGEMENT} from 'clubhouse/constants/roles';
 
-export default class AdminThankYouCardsRoute extends Route {
+export default class AdminThankYouCardsRoute extends ClubhouseRoute {
+  roleRequired = [ADMIN, TIMESHEET_MANAGEMENT];
+
   queryParams = {
-    year: { refreshModel: true }
+    year: {refreshModel: true}
   };
 
-  beforeModel() {
-    super.beforeModel(...arguments);
-    this.house.roleCheck([Role.ADMIN, Role.TIMESHEET_MANAGEMENT]);
-  }
-
-  model({ year }) {
+  model({year}) {
     return year; // route will only refresh if the model value changes
   }
 

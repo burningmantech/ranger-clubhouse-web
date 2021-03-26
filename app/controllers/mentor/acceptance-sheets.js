@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import moment from 'moment';
 import {tracked} from '@glimmer/tracking';
 
-export default class MentorAcceptanceSheetsController extends Controller {
+export default class MentorAcceptanceSheetsController extends ClubhouseController {
   @tracked filter;
   @tracked alphas;
   @tracked viewAlphas;

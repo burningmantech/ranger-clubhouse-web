@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {validatePresence, validateLength, validateConfirmation} from 'ember-changeset-validations/validators';
@@ -7,7 +7,7 @@ import {validatePresence, validateLength, validateConfirmation} from 'ember-chan
    Welcome page for PNVs. The user is forced to set a password. After the password is set, a modal dialog tells
 
  */
-export default class MeWelcomeController extends Controller {
+export default class MeWelcomeController extends ClubhouseController {
   @tracked isSubmitting = false;
   @tracked showSuccessDialog = false;
 

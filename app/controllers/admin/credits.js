@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {validateNumber, validatePresence} from 'ember-changeset-validations/validators';
@@ -70,7 +70,7 @@ class CopySourceCredit {
   }
 }
 
-export default class AdminCreditsController extends Controller {
+export default class AdminCreditsController extends ClubhouseController {
   queryParams = ['year'];
 
   @tracked dayFilter = 'all';

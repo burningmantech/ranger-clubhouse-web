@@ -1,22 +1,19 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import { set } from '@ember/object';
-import { Role } from 'clubhouse/constants/roles';
+import RSVP from 'rsvp';
+import { ADMIN, EDIT_BMIDS } from 'clubhouse/constants/roles';
+import { ACTIVE, INACTIVE, INACTIVE_EXTENSION, RETIRED, ALPHA, PROSPECTIVE } from 'clubhouse/constants/person_status';
 import requestYear from 'clubhouse/utils/request-year';
 
-import RSVP from 'rsvp';
-
 const ALLOWED_STATUSES = [
-  'active', 'inactive', 'inactive extension', 'retired', 'alpha', 'prospective'
+  ACTIVE, INACTIVE, INACTIVE_EXTENSION, RETIRED, ALPHA, PROSPECTIVE
 ];
 
-export default class VcBmidPrintRoute extends Route {
+export default class VcBmidPrintRoute extends ClubhouseRoute {
+  roleRequired = [ ADMIN, EDIT_BMIDS];
   queryParams = {
     filter: { refreshModel: true },
   };
-
-  beforeModel() {
-    this.house.roleCheck([ Role.ADMIN, Role.EDIT_BMIDS ]);
-  }
 
   model(params) {
     const year = requestYear(params);

@@ -14,7 +14,6 @@ import $ from 'jquery';
 export default class HouseService extends Service {
   @service toast;
   @service session;
-  @service router;
   @service store;
 
   cachedScripts = {};
@@ -36,7 +35,7 @@ export default class HouseService extends Service {
       console.error(response);
     }
 
-    if (response.status == 401 && this.session.isAuthenticated) {
+    if (+response.status === 401 && this.session.isAuthenticated) {
       this.toast.warn('Your session has timed out. Please login again.')
       this.session.invalidate();
       return;
@@ -131,11 +130,11 @@ export default class HouseService extends Service {
         responseErrors = [responseErrors];
       }
 
-      const plural = responseErrors.length == 1 ?
+      const plural = responseErrors.length === 1 ?
         ' was' :
         's were';
       message = `The following ${errorType} error${plural} encountered:`;
-      if (responseErrors.length == 1) {
+      if (responseErrors.length === 1) {
         message += `<p>${responseErrors[0]}</p>`;
       } else {
         const errorList = responseErrors.map((error) => `<li>${error}</li>`);
@@ -151,13 +150,13 @@ export default class HouseService extends Service {
   /**
    * Save an Ember Data record or Change Set object
    *
-   * @param {DS.Model|Changeset} model
+   * @param {*} model
    * @param {string} successMessage A toast message to show on success
    * @param {string|function} routeOrCallback Route to transition to or callback function
-   * @returns {Promise<unknown>}
+   * @returns {Promise<*>}
    */
 
-  saveModel(model, successMessage, routeOrCallback) {
+  saveModel(model, successMessage, routeOrCallback = null) {
     this.toast.clear();
 
     const isCallback = typeof (routeOrCallback) == 'function';
@@ -189,21 +188,6 @@ export default class HouseService extends Service {
     });
   }
 
-  /**
-   * Check to see if the user has one or more roles assigned
-   *
-   * @param {number[]} roles
-   * @returns {boolean} true if the user has permission, otherwise return false and transition to the home page.
-   */
-  roleCheck(roles) {
-    if (this.session.user.hasRole(roles)) {
-      return true;
-    }
-
-    this.toast.error('You are not authorized for that action');
-    this.router.transitionTo('me.homepage');
-    return false;
-  }
 
   /**
    * Download an array as a CSV file.

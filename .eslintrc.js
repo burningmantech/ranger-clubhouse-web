@@ -15,17 +15,15 @@ module.exports = {
   ],
   extends: [
     'eslint:recommended',
-    'plugin:ember/recommended'
+    'plugin:ember/recommended',
   ],
   env: {
     browser: true
   },
   rules: {
+   'ember/no-mixins': 'off',
+    'ember/jquery-ember-run': 'off',
     'ember/no-jquery': 'off',
-    'ember/no-mixins': 'off'
-  },
-  globals: {
-    server: true
   },
   overrides: [
     // node files
@@ -45,16 +43,14 @@ module.exports = {
       },
       env: {
         browser: false,
-        node: true
+        node: true,
       },
       plugins: ['node'],
-      rules: Object.assign({}, require('eslint-plugin-node').configs.recommended.rules, {
-        // add your custom rules and overrides for node files here
-
+      rules: {
         // this can be removed once the following is fixed
         // https://github.com/mysticatea/eslint-plugin-node/issues/77
         'node/no-unpublished-require': 'off',
-      })
+      },
     }
   ]
 };

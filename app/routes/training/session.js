@@ -1,7 +1,7 @@
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import { action } from '@ember/object';
 
-export default class TrainingSessionRoute extends Route {
+export default class TrainingSessionRoute extends ClubhouseRoute {
   model(params) {
     return this.ajax.request(`training-session/${params.slot_id}`);
   }

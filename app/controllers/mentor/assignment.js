@@ -1,10 +1,10 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action, set } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { tracked } from '@glimmer/tracking';
 import { run } from '@ember/runloop';
 
-export default class MentorAssignmentController extends Controller {
+export default class MentorAssignmentController extends ClubhouseController {
   @tracked isPrinting = false;
   @tracked isSubmitting = false;
   @tracked filter = 'all';

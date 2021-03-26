@@ -1,4 +1,4 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import _ from 'lodash';
 import {tracked} from '@glimmer/tracking';
@@ -34,7 +34,7 @@ class SelectChoice {
   }
 }
 
-export default class PeopleByPositionController extends Controller {
+export default class PeopleByPositionController extends ClubhouseController {
   queryParams = ['onPlaya'];
   onPlaya = false;
 

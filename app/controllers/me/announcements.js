@@ -1,8 +1,8 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import $ from 'jquery';
 
-export default class MeAnnouncementsController extends Controller {
+export default class MeAnnouncementsController extends ClubhouseController {
   @action
   toggleMotd(motd) {
     this.motds.forEach((m) => {

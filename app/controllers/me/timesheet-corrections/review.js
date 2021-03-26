@@ -1,9 +1,9 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import {tracked} from '@glimmer/tracking';
 
-export default class MeTimesheetCorrectionsReviewController extends Controller {
+export default class MeTimesheetCorrectionsReviewController extends ClubhouseController {
   @tracked entry = null; // Incorrect entry
 
   correctionValidations = {

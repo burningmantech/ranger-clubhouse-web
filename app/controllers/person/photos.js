@@ -1,7 +1,7 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 
-export default class PersonPhotosController extends Controller {
+export default class PersonPhotosController extends ClubhouseController {
   @action
   deletePhotoAction(photo) {
     this.modal.confirm('Confirm photo deletion', 'Are you really sure you want to delete the photo?', () => {

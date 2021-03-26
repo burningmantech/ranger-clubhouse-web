@@ -1,7 +1,7 @@
-import { module, skip /* test */ } from 'qunit';
+import { module, skip } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { hbs } from 'ember-cli-htmlbars';
 
 module('Integration | Component | contact-form', function(hooks) {
   setupRenderingTest(hooks);
@@ -10,17 +10,8 @@ module('Integration | Component | contact-form', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{contact-form}}`);
+    await render(hbs`<ContactForm />`);
 
-    assert.dom(this.element).hasText('');
-
-    // Template block usage:
-    await render(hbs`
-      {{#contact-form}}
-        template block text
-      {{/contact-form}}
-    `);
-
-    assert.dom(this.element).hasText('template block text');
+    assert.equal(this.element.textContent.trim(), '');
   });
 });

@@ -1,8 +1,8 @@
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import EmberObject, { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
-export default class VcPhotoReviewController extends Controller {
+export default class VcPhotoReviewController extends ClubhouseController {
   @tracked reviewPhoto = null;
   @tracked reviewForm = null;
   @tracked isSubmitting = false;
