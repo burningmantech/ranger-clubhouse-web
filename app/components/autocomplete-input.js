@@ -132,6 +132,7 @@ export default class AutocompleteInputComponent extends Component {
     const oldSelection = this.selectionIdx;
     switch (key) {
       case 'ArrowUp':
+        event.preventDefault();
         if (this.selectionIdx === -1) {
           // No selection yet.
           this.selectionIdx = 0;
@@ -141,7 +142,8 @@ export default class AutocompleteInputComponent extends Component {
         break;
 
       case 'ArrowDown':
-        if (this.selectionIdx == -1) {
+        event.preventDefault();
+        if (this.selectionIdx === -1) {
           // No selection yet.
           this.selectionIdx = 0;
         } else if (this.selectionIdx < (this.options.length - 1)) {
@@ -151,7 +153,6 @@ export default class AutocompleteInputComponent extends Component {
 
       case 'Enter':
         event.preventDefault();
-
         if (this.isSearching) {
           this.enterPressed = true;
         } else if (this.options) {
