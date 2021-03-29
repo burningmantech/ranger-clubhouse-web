@@ -205,11 +205,14 @@ export default class AutocompleteInputComponent extends Component {
    * Handle either a mousedown or click event on a result item.
    *
    * @param {object} option
+   * @param {Event} event
    */
 
   @action
-  clickSelection(option) {
+  clickSelection(option, event) {
+    event.stopImmediatePropagation();
     this._selectOption(option);
+    return false;
   }
 
   /**
