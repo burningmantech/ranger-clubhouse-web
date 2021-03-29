@@ -10,7 +10,7 @@ module('helper:credits-format', function(hooks) {
   test('it renders', async function(assert) {
     this.set('credits', 12);
 
-    await render(hbs`{{credits-format credits}}`);
+    await render(hbs`{{credits-format this.credits}}`);
 
     assert.equal(this.element.textContent.trim(), '12.00');
   });

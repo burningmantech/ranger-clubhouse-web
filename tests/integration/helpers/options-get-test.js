@@ -15,11 +15,11 @@ module('Integration | Helper | options-get', function(hooks) {
 
     this.set('options', options);
 
-    await render(hbs`{{options-get options 2}}`);
+    await render(hbs`{{options-get this.options 2}}`);
 
     assert.equal(this.element.textContent.trim(), 'Bye');
 
-    await render(hbs`{{options-get options 33}}`);
+    await render(hbs`{{options-get this.options 33}}`);
     assert.equal(this.element.textContent.trim(), '33');
   });
 });

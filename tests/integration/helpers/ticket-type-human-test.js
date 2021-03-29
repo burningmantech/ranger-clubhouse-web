@@ -1,17 +1,19 @@
-import { module, skip } from 'qunit';
+import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import { STAFF_CREDENTIAL} from 'clubhouse/models/access-document';
 
 module('Integration | Helper | ticket-type-human', function(hooks) {
   setupRenderingTest(hooks);
 
-  // Replace this with your real tests.
-  skip('it renders', async function(assert) {
-    this.set('inputValue', '1234');
+  test('it renders', async function(assert) {
+    this.set('type', STAFF_CREDENTIAL);
+    await render(hbs`{{ticket-type-human this.type}}`);
 
-    await render(hbs`{{ticket-type-human inputValue}}`);
+    assert.dom(this.element).hasText(/Staff Credential/);
 
-    assert.equal(this.element.textContent.trim(), '1234');
+    await render(hbs`{{ticket-type-human 'blah'}}`);
+    assert.dom(this.element).hasText(/blah/);
   });
 });

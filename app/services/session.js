@@ -1,13 +1,14 @@
 import {inject as service} from "@ember/service";
 import {action} from '@ember/object';
+import {typeOf} from '@ember/utils';
+import {debounce} from '@ember/runloop';
+import {tracked} from '@glimmer/tracking';
 import SessionService from "ember-simple-auth/services/session";
 import User from "clubhouse/models/user";
-import MobileDetect from 'mobile-detect';
-import {debounce} from '@ember/runloop';
 import ENV from 'clubhouse/config/environment';
 import {config} from 'clubhouse/utils/config';
-import {tracked} from '@glimmer/tracking';
-import {MANAGE} from 'clubhouse/constants/roles';
+import {ADMIN, MANAGE, VC, VIEW_PII, VIEW_EMAIL} from 'clubhouse/constants/roles';
+import MobileDetect from 'mobile-detect';
 
 const MOBILE_MAX_WIDTH = 991;
 const RESIZE_DEBOUNCE_DELY = 250;
@@ -35,10 +36,6 @@ export default class extends SessionService {
   // True if the mobile screen size is less than MOBILE_MAX_WIDTH
   @tracked isSmallScreen = false;
 
-  get userId() {
-    return (this.isAuthenticated && this.user) ? +this.user.id : null;
-  }
-
   constructor() {
     super(...arguments);
 
@@ -60,14 +57,28 @@ export default class extends SessionService {
    * Checks to see if the user has the Login Management role OR
    * @returns {boolean}
    */
+
   get isLMOPEnabled() {
-    return (this.user.hasRole(MANAGE) && !!config('LoginManageOnPlayaEnabled'));
+    return (this.hasRole(MANAGE) && !!config('LoginManageOnPlayaEnabled'));
   }
+
+  /**
+   * Debounce the window resized event. Prevents excessive re-renderings when the
+   * user is resizing the window or rotating the device's orientation.
+   *
+   * @private
+   */
 
   @action
   _bounceResizeEvent() {
     debounce(this, this._windowResized, RESIZE_DEBOUNCE_DELY);
   }
+
+  /**
+   * Check to see if the new screen size matches a small screen width.
+   *
+   * @private
+   */
 
   _windowResized() {
     this.isSmallScreen = (document.documentElement.clientWidth <= MOBILE_MAX_WIDTH);
@@ -133,12 +144,118 @@ export default class extends SessionService {
       });
   }
 
+  /**
+   *
+   * @returns {number|null}
+   */
+  get userId() {
+    return (this.isAuthenticated && this.user) ? +this.user.id : null;
+  }
+
+
+  /**
+   * Is this the staging (aka test) server?
+   * @returns {boolean}
+   */
+
   get isStaging() {
     return config('DeploymentEnvironment') === 'Staging' && !this.isDevelopment;
   }
 
+  /**
+   * Is this the training server? (most likely running in Ground Hog Day mode as well.)
+   *
+   * @returns {boolean}
+   */
+
   get isTraining() {
     return config('DeploymentEnvironment') === 'Training';
   }
+
+  /**
+   * Can the user view another person's email address?
+   *
+   * @returns {boolean}
+   */
+
+  get canViewEmail() {
+    return this.hasRole([ADMIN, VIEW_PII, VIEW_EMAIL]);
+  }
+
+  /**
+   * Is the user an Admin?
+   * @returns {boolean}
+   */
+
+  get isAdmin() {
+    return this.hasRole(ADMIN);
+  }
+
+  /**
+   * Is the user a VC?
+   *
+   * @returns {boolean}
+   */
+
+  get isVC() {
+    return this.hasRole(VC);
+  }
+
+  /**
+   * Does the user hold the given role(s)?
+   * @param {number|number[]} roles
+   * @returns {boolean}
+   */
+
+  hasRole(roles) {
+    if (!this.user) {
+      // User not logged in
+      return false;
+    }
+
+    const personRoles = this.user.roles;
+
+    if (!personRoles) {
+      return false;
+    }
+
+    if (typeOf(roles) !== 'array') {
+      roles = [roles];
+    }
+
+    let haveIt = false;
+
+    roles.forEach((role) => {
+      const type = typeOf(role);
+      if (type === 'array' || type === 'object') {
+        let haveAll = true;
+
+        // Sub array means ALL the roles have to be present.
+        role.forEach((r) => {
+          if (!role) {
+            throw new Error('hasRole: Unknown role - is the name spelled correctly?');
+          }
+
+          if (!personRoles.includes(r)) {
+            haveAll = false;
+          }
+        });
+
+        if (haveAll) {
+          haveIt = true;
+        }
+      } else {
+        if (!role) {
+          throw new Error('hasRole: Unknown role - is the name spelled correctly?');
+        }
+        if (personRoles.includes(role)) {
+          haveIt = true;
+        }
+      }
+    })
+
+    return haveIt;
+  }
+
 }
 

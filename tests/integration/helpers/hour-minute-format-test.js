@@ -10,7 +10,7 @@ module('helper:hour-minute-format', function(hooks) {
   test('it renders', async function(assert) {
     this.set('duration', 7300);
 
-    await render(hbs`{{hour-minute-format duration}}`);
+    await render(hbs`{{hour-minute-format this.duration}}`);
 
     assert.equal(this.element.textContent.trim(), '2:01');
   });

@@ -12,7 +12,7 @@ export default class PersonPersonalInfoController extends ClubhouseController {
   pronounOptions = pronounOptions;
 
   get canEditPersonalInfo() {
-    return this.session.user.hasRole(Role.ADMIN);
+    return this.session.hasRole(Role.ADMIN);
   }
 
   @action

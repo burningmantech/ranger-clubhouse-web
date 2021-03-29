@@ -8,10 +8,9 @@ module('Integration | Helper | nl2br', function(hooks) {
 
   // Replace this with your real tests.
   test('it renders', async function(assert) {
-    this.set('inputValue', '1234');
+    this.set('inputValue', "Hello handsome!\nGoodbye");
 
-    await render(hbs`{{nl2br inputValue}}`);
-
-    assert.dom(this.element).hasText('1234');
+    await render(hbs`{{nl2br this.inputValue}}`);
+    assert.dom('br').exists();
   });
 });

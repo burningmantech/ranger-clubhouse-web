@@ -10,7 +10,7 @@ module('Integration | Helper | has-alert-phone', function(hooks) {
   skip('it renders', async function(assert) {
     this.set('inputValue', '1234');
 
-    await render(hbs`{{has-alert-phone inputValue}}`);
+    await render(hbs`{{has-alert-phone this.inputValue}}`);
 
     assert.dom(this.element).hasText('1234');
   });

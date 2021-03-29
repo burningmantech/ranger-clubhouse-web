@@ -7,7 +7,7 @@ export function sumColumn([ rows, column ]/*, hash*/) {
   }
 
   return rows.reduce(function(total, row) {
-    if (typeOf(row) == 'object') {
+    if (typeOf(row) === 'object') {
       return row[column] + total;
     } else {
       return row.get(column) + total;

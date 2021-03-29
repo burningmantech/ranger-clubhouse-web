@@ -6,9 +6,12 @@ export default class PersonPhotoComponent extends Component {
 
   get canShowUploadButton() {
     const { person, photo } = this.args;
-    const user = this.session.user;
+    const session = this.session;
 
-    return ((photo.upload_enabled && person.id == user.id) ||
-      user.isAdmin || user.isVC);
+    return (
+      (photo.upload_enabled && +person.id === session.userId)
+      || session.isAdmin
+      || session.isVC
+    );
   }
 }

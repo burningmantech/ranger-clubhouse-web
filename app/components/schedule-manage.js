@@ -56,7 +56,7 @@ export default class ScheduleManageComponent extends Component {
      * TODO Revisit whether everyone should be able to see inactive slots if they choose.
      */
 
-    if (this.session.user.hasRole(
+    if (this.session.hasRole(
       [Role.ADMIN, Role.EDIT_SLOTS, Role.GRANT_POSITION, Role.VC, Role.TRAINER, Role.ART_TRAINER])) {
       this.availableSlots = slots;
     } else {
@@ -64,12 +64,12 @@ export default class ScheduleManageComponent extends Component {
     }
 
     this.inactiveSlots = this.availableSlots.filter((slot) => !slot.slot_active);
-    this.isCurrentYear = (year == this.house.currentYear());
+    this.isCurrentYear = (+year === this.house.currentYear());
     if (!this.isCurrentYear) {
       this.filterDay = 'all';
     }
-    this.isMe = (this.session.userId == person.id);
-    this.isAdmin = this.session.user.isAdmin;
+    this.isMe = (this.session.userId === +person.id);
+    this.isAdmin = this.session.isAdmin;
 
     if (this.isCurrentYear) {
       if (!permission.all_signups_allowed) {

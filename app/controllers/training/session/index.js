@@ -79,7 +79,7 @@ export default class TrainingSlotController extends ClubhouseController {
    */
 
   get canAddStudent() {
-    return this.training.is_art || this.session.user.isAdmin;
+    return this.training.is_art || this.session.isAdmin;
   }
 
   // How many Dirt Vets (2 or more rangering years) OR

@@ -5,7 +5,7 @@ export default class PersonMessagesRoute extends ClubhouseRoute {
   model() {
     const person_id = this.modelFor('person').id;
 
-    if (this.session.user.hasRole([Role.ADMIN, Role.VC])
+    if (this.session.hasRole([Role.ADMIN, Role.VC])
       || person_id == this.session.userId
       || this.session.isLMOPEnabled) {
       this.canAccessMessages = true;

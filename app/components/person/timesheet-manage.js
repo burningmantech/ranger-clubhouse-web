@@ -33,12 +33,12 @@ export default class PersonTimesheetManageComponent extends Component {
 
   constructor() {
     super(...arguments);
-    const user = this.session.user;
+    const session = this.session;
 
     // Can the user manage this person's timesheet entries?
-    this.canManageTimesheets = user.hasRole(Role.TIMESHEET_MANAGEMENT) || (user.hasRole(Role.ADMIN) && user.hasRole(Role.MANAGE));
+    this.canManageTimesheets = session.hasRole(Role.TIMESHEET_MANAGEMENT) || (session.hasRole(Role.ADMIN) && session.hasRole(Role.MANAGE));
     // Can the user mark an entry as verified?
-    this.canVerifyTimesheets = user.hasRole(Role.MANAGE);
+    this.canVerifyTimesheets = session.hasRole(Role.MANAGE);
   }
 
   /**

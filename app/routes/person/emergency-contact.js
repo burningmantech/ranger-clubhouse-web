@@ -2,7 +2,7 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {ADMIN, MANAGE} from 'clubhouse/constants/roles';
 
 export default class PersonEmergencyContactRoute extends ClubhouseRoute {
-  roleRequired = [ ADMIN, MANAGE];
+  roleRequired = [ADMIN, MANAGE];
 
   setupController(controller) {
     const person = this.modelFor('person');
@@ -14,8 +14,6 @@ export default class PersonEmergencyContactRoute extends ClubhouseRoute {
      - the person has LM and LoginManageOnPlayaEnabled is on.
      */
     controller.set('canAccessEmergencyContact',
-      (person.id == this.session.userId)
-      || this.session.user.isAdmin
-      || this.session.isLMOPEnabled);
+      (+person.id === this.session.userId) || this.session.isAdmin || this.session.isLMOPEnabled);
   }
 }

@@ -100,7 +100,7 @@ export default class SearchItemBarComponent extends Component {
       options.push({value: 'hq', label: 'HQ Window'});
     }
 
-    if (user.hasRole([Role.ADMIN, Role.TIMESHEET_MANAGEMENT])) {
+    if (this.session.hasRole([Role.ADMIN, Role.TIMESHEET_MANAGEMENT])) {
       options.push({value: 'timesheet', label: 'Timesheet Manage'});
     }
 

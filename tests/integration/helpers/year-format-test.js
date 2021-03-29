@@ -10,7 +10,7 @@ module('Integration | Helper | year-format', function(hooks) {
   test('it renders', async function(assert) {
     this.set('date', '2018-09-01 10:12:00');
 
-    await render(hbs`{{year-format date}}`);
+    await render(hbs`{{year-format this.date}}`);
 
     assert.dom(this.element).hasText('2018');
   });

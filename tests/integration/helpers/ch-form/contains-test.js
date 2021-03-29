@@ -11,7 +11,7 @@ module('Integration | Helper | ch-form/contains', function(hooks) {
     this.set('inputValue', '1234');
     this.set('expectedValue', '1234');
 
-    await render(hbs`{{ch-form/contains expectedValue inputValue}}`);
+    await render(hbs`{{ch-form/contains this.expectedValue this.inputValue}}`);
 
     assert.dom(this.element).hasText('true');
   });
@@ -20,7 +20,7 @@ module('Integration | Helper | ch-form/contains', function(hooks) {
     this.set('inputValue', 'foo');
     this.set('expectedValue', 'bar');
 
-    await render(hbs`{{ch-form/contains expectedValue inputValue}}`);
+    await render(hbs`{{ch-form/contains this.expectedValue this.inputValue}}`);
 
     assert.dom(this.element).hasText('false');
   });
@@ -29,13 +29,13 @@ module('Integration | Helper | ch-form/contains', function(hooks) {
     this.set('inputValue', 'foo');
     this.set('expectedValue', ['bar', 'baz', 'foo']);
 
-    await render(hbs`{{ch-form/contains expectedValue inputValue}}`);
+    await render(hbs`{{ch-form/contains this.expectedValue this.inputValue}}`);
 
     assert.dom(this.element).hasText('true');
 
     this.set('inputValue', 'qux');
 
-    await render(hbs`{{ch-form/contains expectedValue inputValue}}`);
+    await render(hbs`{{ch-form/contains this.expectedValue this.inputValue}}`);
 
     assert.dom(this.element).hasText('false');
   });

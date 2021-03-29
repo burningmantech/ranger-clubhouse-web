@@ -57,36 +57,36 @@ export default class PersonIndexController extends ClubhouseController {
   @tracked photo = null;
 
   get isAdmin() {
-    return this.session.user.hasRole(Role.ADMIN);
+    return this.session.isAdmin;
   }
 
   get isPhotoManager() {
-    return this.session.user.hasRole([Role.ADMIN, Role.VC]);
+    return this.session.hasRole([Role.ADMIN, Role.VC]);
   }
 
   get canEditBMIT() {
-    return this.session.user.hasRole(Role.EDIT_BMIDS);
+    return this.session.hasRole(Role.EDIT_BMIDS);
   }
 
   get canEditAccessDocs() {
-    return this.session.user.hasRole(Role.EDIT_ACCESS_DOCS);
+    return this.session.hasRole(Role.EDIT_ACCESS_DOCS);
   }
 
   get isAdminTrainerMentorOrVC() {
-    return this.session.user.hasRole([Role.ADMIN, Role.TRAINER, Role.MENTOR, Role.VC]);
+    return this.session.hasRole([Role.ADMIN, Role.TRAINER, Role.MENTOR, Role.VC]);
   }
 
   get isAdminMentorOrVC() {
-    return this.session.user.hasRole([Role.ADMIN, Role.MENTOR, Role.VC]);
+    return this.session.hasRole([Role.ADMIN, Role.MENTOR, Role.VC]);
   }
 
   get isAdminOrVC() {
-    return this.session.user.hasRole([Role.ADMIN, Role.VC]);
+    return this.session.hasRole([Role.ADMIN, Role.VC]);
   }
 
   get isManageAndGrantPosition() {
-    const user = this.session.user;
-    return user.hasRole(Role.MANAGE) && user.hasRole(Role.GRANT_POSITION);
+    const session = this.session;
+    return session.hasRole(Role.MANAGE) && session.hasRole(Role.GRANT_POSITION);
   }
 
   get positionIds() {
@@ -115,7 +115,7 @@ export default class PersonIndexController extends ClubhouseController {
       this.toast.success('The information was successfully updated.');
 
       // Reload the current user.
-      if (model.id == this.session.userId) {
+      if (+model.id === this.session.userId) {
         this.session.loadUser();
       }
 
@@ -180,7 +180,7 @@ export default class PersonIndexController extends ClubhouseController {
     this.toast.clear();
     // check to see if callsign has been disapproved..
     // (note: callsign_approved might be a string or boolean)
-    if (model._changes['callsign_approved'] && `${model.callsign_approved}` == "false") {
+    if (model._changes['callsign_approved'] && `${model.callsign_approved}` === "false") {
       // Person is disapproving callsign, confirm that action.
 
       this.modal.confirm(
@@ -237,7 +237,7 @@ export default class PersonIndexController extends ClubhouseController {
       this.toast.success('The positions have been successfully updated.');
       this.personPositions = results.positions;
       this.editPositions = false;
-      if (this.session.userId == this.person.id) {
+      if (this.session.userId === +this.person.id) {
         // Reload the user.
         this.session.loadUser();
       }
@@ -273,7 +273,7 @@ export default class PersonIndexController extends ClubhouseController {
       this.toast.success('The roles have been successfully updated.');
       this.personRoles = results.roles;
       this.editRoles = false;
-      if (this.session.userId == this.person.id) {
+      if (this.session.userId === +this.person.id) {
         // Reload the user.
         this.session.loadUser();
       }

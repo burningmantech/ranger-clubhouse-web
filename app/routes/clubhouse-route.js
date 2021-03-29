@@ -4,8 +4,9 @@ import { inject as service } from '@ember/service';
 /**
  * Base Clubhouse Route
  *
- * Provide heavily used services. Check
+ * Provides heavily used services and permission gating.
  */
+
 export default class ClubhouseRoute extends Route {
   @service ajax;
   @service house;
@@ -44,7 +45,7 @@ export default class ClubhouseRoute extends Route {
       return false;
     }
 
-    if (!this.roleRequired || this.session.user.hasRole(this.roleRequired)) {
+    if (!this.roleRequired || this.session.hasRole(this.roleRequired)) {
       // User cleared -- proceed to route
       return super.beforeModel(...arguments);
     }

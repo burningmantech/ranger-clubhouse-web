@@ -6,7 +6,7 @@ import {inject as service} from '@ember/service';
 export default class PersonRoleFormComponent extends Component {
   @service session;
   roleForm = {roleIds: this.args.roleIds};
-  isTechNinja = this.session.user.hasRole(TECH_NINJA);
+  isTechNinja = this.session.hasRole(TECH_NINJA);
 
   // Create a list of roles options to check
   get roleOptions() {
