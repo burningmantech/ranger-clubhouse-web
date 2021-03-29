@@ -7,11 +7,12 @@ export default class HasRole extends Helper {
   @service session;
 
   compute(params) {
-    const user = this.session.user;
+    const session = this.session;
 
     assert('has-role was not passed a role(s). Perhaps you forgot the ()\'s around the helper?', params.length > 0);
 
-    if (!user) {
+    if (!session.user) {
+      // No user logged in.
       return false;
     }
 
@@ -30,7 +31,7 @@ export default class HasRole extends Helper {
           const roleValue = StringToRole[comboName];
 
           if (roleValue) {
-            if (!user.hasRole(roleValue)) {
+            if (!session.hasRole(roleValue)) {
               hasAll = false;
               break;
             }
@@ -46,7 +47,7 @@ export default class HasRole extends Helper {
         const roleValue = StringToRole[name];
 
         if (roleValue) {
-          if (user.hasRole(roleValue)) {
+          if (session.hasRole(roleValue)) {
             return true;
           }
         } else {

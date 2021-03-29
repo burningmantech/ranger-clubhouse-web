@@ -7,7 +7,7 @@ export default class ReportsPositionSanityCheckerController extends ClubhouseCon
   @tracked isSubmitting = false;
 
   get userCanRepair() {
-    return this.session.user.hasRole([ Role.ADMIN, Role.GRANT_POSITION ]);
+    return this.session.hasRole([ Role.ADMIN, Role.GRANT_POSITION ]);
   }
 
   @action

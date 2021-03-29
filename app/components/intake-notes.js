@@ -39,7 +39,7 @@ export default class IntakeNotesComponent extends Component {
         break;
     }
 
-    return this.session.user.hasRole(role);
+    return this.session.hasRole(role);
   }
 
   @action

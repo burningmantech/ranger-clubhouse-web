@@ -10,15 +10,15 @@ module('Integration | Helper | pronouns-format', function(hooks) {
   test('it renders', async function(assert) {
     this.set('person', { pronouns: '', pronouns_custom: 'blah'});
 
-    await render(hbs`{{pronouns-format person}}`);
+    await render(hbs`{{pronouns-format this.person}}`);
     assert.equal(this.element.textContent.trim(), '');
 
     this.set('person', {  pronouns: 'female', pronouns_custom: 'blah'});
-    await render(hbs`{{pronouns-format person}}`);
+    await render(hbs`{{pronouns-format this.person}}`);
     assert.equal(this.element.textContent.trim(), '('+Pronouns.FEMALE_LABEL+')');
 
     this.set('person', {  pronouns: 'custom', pronouns_custom: 'abc/def/123'});
-    await render(hbs`{{pronouns-format person}}`);
+    await render(hbs`{{pronouns-format this.person}}`);
     assert.equal(this.element.textContent.trim(),'(abc/def/123)');
   });
 });

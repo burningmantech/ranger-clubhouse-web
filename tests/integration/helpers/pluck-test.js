@@ -20,7 +20,7 @@ module('Integration | Helper | pluck', function(hooks) {
       defaultValue: 'nothing'
     });
 
-    await render(hbs`{{pluck pluckId records column defaultValue}}`);
+    await render(hbs`{{pluck this.pluckId this.records this.column this.defaultValue}}`);
 
     assert.dom(this.element).hasText('row 1');
   });
@@ -33,7 +33,7 @@ module('Integration | Helper | pluck', function(hooks) {
       defaultValue: 'nothing'
     });
 
-    await render(hbs`{{pluck pluckId records column defaultValue}}`);
+    await render(hbs`{{pluck this.pluckId this.records this.column this.defaultValue}}`);
 
     assert.dom(this.element).hasText('nothing');
   });

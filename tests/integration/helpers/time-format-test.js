@@ -9,7 +9,7 @@ module('Integration | Helper | time-format', function(hooks) {
   test('it renders', async function(assert) {
     this.set('time', '2018-08-08 12:34:56');
 
-    await render(hbs`{{time-format time}}`);
+    await render(hbs`{{time-format this.time}}`);
 
     assert.equal(this.element.textContent.trim(), '12:34');
   });

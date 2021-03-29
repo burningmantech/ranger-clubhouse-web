@@ -13,7 +13,7 @@ export default class ReportsTimesheetByPositionController extends ClubhouseContr
       {title: 'Callsign', key: 'callsign'},
     ];
 
-    if (this.house.canViewEmail) {
+    if (this.session.canViewEmail) {
       CSV_COLUMNS.push({title: 'Email', key: 'email'});
     }
 
@@ -25,7 +25,7 @@ export default class ReportsTimesheetByPositionController extends ClubhouseContr
         hours: (entry.duration / 3600.0).toFixed(2),
       };
 
-      if (this.house.canViewEmail) {
+      if (this.session.canViewEmail) {
         row.email = entry.person.email;
       }
 

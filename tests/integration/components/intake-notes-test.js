@@ -5,7 +5,7 @@ import {hbs} from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 
 class ServiceStub extends Service{
-  user = { hasRole() { return true } }
+  hasRole() { return true }
 }
 
 module('Integration | Component | intake-notes', function (hooks) {

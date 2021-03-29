@@ -8,10 +8,10 @@ module('Integration | Helper | mentor-short-status', function(hooks) {
 
   // Replace this with your real tests.
   test('it renders', async function(assert) {
-    this.set('inputValue', '1234');
+    this.set('inputValue', 'bonked');
 
-    await render(hbs`{{mentor-short-status inputValue}}`);
+    await render(hbs`{{mentor-short-status this.inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), '1234');
+    assert.equal(this.element.textContent.trim(), 'B');
   });
 });

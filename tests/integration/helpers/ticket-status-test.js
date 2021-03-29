@@ -6,12 +6,12 @@ import hbs from 'htmlbars-inline-precompile';
 module('Integration | Helper | ticket-status', function(hooks) {
   setupRenderingTest(hooks);
 
-  // Replace this with your real tests.
   skip('it renders', async function(assert) {
-    this.set('inputValue', '1234');
 
-    await render(hbs`{{ticket-status inputValue}}`);
+    await render(hbs`{{ticket-status 'expired'}}`);
+    assert.dom('span').hasClass('class', 'text-danger').hasText(/Expired/);
 
-    assert.equal(this.element.textContent.trim(), '1234');
+    await render(hbs`{{ticket-status 'blahblah'}}`);
+    assert.dom('*').hasText(/blahblah/);
   });
 });

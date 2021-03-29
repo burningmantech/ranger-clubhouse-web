@@ -18,7 +18,7 @@
               <th>To</th>
               <th class="text-right">Hours</th>
               <th>Callsign</th>
-              {{#if this.house.canViewEmail}}
+              {{#if this.session.canViewEmail}}
                 <th>Email</th>
               {{/if}}
             </tr>
@@ -38,7 +38,7 @@
                 <td>
                   <PersonLink @person={{entry.person}} />
                 </td>
-                {{#if this.house.canViewEmail}}
+                {{#if this.session.canViewEmail}}
                   <td>
                     {{#if entry.person.email}}
                       {{mail-to entry.person.email}}

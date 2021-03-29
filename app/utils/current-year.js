@@ -6,5 +6,5 @@ import moment from 'moment';
 
 export default function currentYear() {
   const ghd = config('GroundhogDayTime');
-  return (ghd ? moment(ghd).year() :  (new Date()).getFullYear());
+  return +(ghd ? moment(ghd).year() :  (new Date()).getFullYear());
 }

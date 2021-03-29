@@ -16,11 +16,11 @@ export default class MentorPostSeasonSummaryController extends ClubhouseControll
   ];
 
   get bonkedCount() {
-    return this.mentees.filter((m) => (m.mentor_status == 'bonk' || m.mentor_status == 'self-bonk' || m.status == 'uberbonked')).length;
+    return this.mentees.filter((m) => (m.mentor_status === 'bonk' || m.mentor_status === 'self-bonk' || m.status === 'uberbonked')).length;
   }
 
   get passedCount() {
-    return this.mentees.filter(({mentor_status}) => mentor_status == 'pass').length;
+    return this.mentees.filter(({mentor_status}) => mentor_status === 'pass').length;
   }
 
   get viewMentees() {
@@ -28,12 +28,12 @@ export default class MentorPostSeasonSummaryController extends ClubhouseControll
 
     switch (this.filter) {
       case 'pass':
-        return mentees.filter(({mentor_status}) => mentor_status == 'pass');
+        return mentees.filter(({mentor_status}) => mentor_status === 'pass');
       case 'bonked':
         // Filter on mentor bonk, self-bonk, or uberbonk (person status, not mentor status)
-        return mentees.filter((m) => (m.mentor_status == 'bonk' || m.mentor_status == 'self-bonk' || m.status == 'uberbonked'));
+        return mentees.filter((m) => (m.mentor_status === 'bonk' || m.mentor_status === 'self-bonk' || m.status === 'uberbonked'));
       case 'no-walk':
-        return mentees.filter((m) => (m.mentor_status == 'pending' && !m.alpha_shift));
+        return mentees.filter((m) => (m.mentor_status === 'pending' && !m.alpha_shift));
       default:
         return mentees;
     }
@@ -41,7 +41,7 @@ export default class MentorPostSeasonSummaryController extends ClubhouseControll
 
   @action
   exportToCSV() {
-    const canViewEmail = this.house.canViewEmail;
+    const canViewEmail = this.session.canViewEmail;
 
     const CSV_COLUMNS = [
       {title: `Callsign (${this.filter})`, key: 'callsign'},

@@ -12,7 +12,7 @@ module('helper:mail-to', function(hooks) {
     const email = 'dangerranger@ranger.bm';
     this.set('email',email);
 
-    await render(hbs`{{mail-to email}}`);
+    await render(hbs`{{mail-to this.email}}`);
 
     assert.dom('a').exists()
       .hasAttribute('href', `mailto:${email}`)

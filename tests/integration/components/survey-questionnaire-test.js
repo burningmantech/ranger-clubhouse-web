@@ -40,7 +40,7 @@ module('Integration | Component | survey-questionnaire', function(hooks) {
     this.set('surveyDoneAction', () => { });
 
     await render(hbs`<SurveyQuestionnaire @survey={{this.survey}}
-                     @person={{thisuser}}
+                     @person={{this.user}}
                      @trainers={{this.trainers}}
                      @slot={{this.slot}}
                      @onDone={{this.surveyDoneAction}}  />`);

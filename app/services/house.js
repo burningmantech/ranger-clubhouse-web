@@ -6,7 +6,6 @@ import {isArray} from '@ember/array';
 import {run} from '@ember/runloop';
 import {isEmpty} from '@ember/utils';
 import currentYear from 'clubhouse/utils/current-year';
-import {Role} from 'clubhouse/constants/roles';
 import {isChangeset} from 'validated-changeset';
 import {InvalidError, ServerError, TimeoutError, AbortError, NotFoundError} from '@ember-data/adapter/error'
 import $ from 'jquery';
@@ -355,10 +354,6 @@ export default class HouseService extends Service {
 
   pushPayload(modelName, rawPayload) {
     return this.store.push(this.store.normalize(modelName, rawPayload));
-  }
-
-  get canViewEmail() {
-    return this.session.user && this.session.user.hasRole([Role.ADMIN, Role.VIEW_PII, Role.VIEW_EMAIL]);
   }
 
   /**
