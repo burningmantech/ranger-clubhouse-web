@@ -73,7 +73,7 @@
              inputmode={{@inputmode}}
       >
     {{/if~}}
-    {{#if hasBlock}}
+    {{#if (has-block)}}
       {{yield}}
     {{/if}}
     {{#if @hint~}}
@@ -120,7 +120,7 @@
   {{else}}
     Unknown field type [{{@type}}]
   {{/if}}
-  {{#if hasBlock}}
+  {{#if (has-block)}}
     {{yield}}
   {{/if}}
 

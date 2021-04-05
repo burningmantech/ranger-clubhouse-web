@@ -1,6 +1,5 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
-import {isEmpty} from '@ember/utils';
 import {tracked} from '@glimmer/tracking';
 import moment from 'moment';
 

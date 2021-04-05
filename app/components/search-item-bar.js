@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import EmberObject, {action} from '@ember/object';
+import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {Role} from 'clubhouse/constants/roles';
 import {debounce} from '@ember/runloop';
