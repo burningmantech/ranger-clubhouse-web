@@ -1,8 +1,8 @@
 import { helper } from '@ember/component/helper';
-import { ticketTypeLabel } from 'clubhouse/constants/ticket-types';
+import { TypeLabels } from 'clubhouse/models/access-document';
 
-export function ticketTypeHuman([ type ]/*, hash*/) {
-  return ticketTypeLabel[type] || `Unknown Type ${type}`;
+export function ticketTypeHuman([ type ]) {
+  return TypeLabels[type] || `Unknown Type ${type}`;
 }
 
 export default helper(ticketTypeHuman);

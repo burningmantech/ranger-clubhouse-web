@@ -73,7 +73,9 @@
              inputmode={{@inputmode}}
       >
     {{/if~}}
-
+    {{#if (has-block)}}
+      {{yield}}
+    {{/if}}
     {{#if @hint~}}
       <small class="form-text text-muted {{if (eq @type "textarea") "ml-2"}}">{{nl2br @hint}}</small>
     {{~/if~}}
@@ -117,6 +119,9 @@
     </AutocompleteInput>
   {{else}}
     Unknown field type [{{@type}}]
+  {{/if}}
+  {{#if (has-block)}}
+    {{yield}}
   {{/if}}
 
   {{#if @hint~}}

@@ -44,7 +44,7 @@ export default class ApplicationAdapter extends RESTAdapter {
   get headers() {
     let headers = {};
     if (this.session.isAuthenticated) {
-      headers['Authorization'] = `Bearer ${this.session.data.authenticated.token}`;
+      headers['Authorization'] = `Bearer ${this.session.jwt}`;
     }
 
     return headers;

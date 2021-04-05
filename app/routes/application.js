@@ -132,7 +132,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
     // Close up the navbar when clicking on a menu item and
     // the navigation bar is not expanded - i.e. when showning
     // on a cellphone.
-    $('.navbar-collapse').collapse('hide');
+    run.schedule('afterRender', () => $('.navbar-collapse').collapse('hide'));
   }
 
   @action

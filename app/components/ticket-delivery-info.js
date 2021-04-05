@@ -73,6 +73,11 @@ export default class TicketDeliverInfoComponent extends Component {
     return items;
   }
 
+  @cached
+  get namesToDeliver() {
+    return this.itemsToDeliver.map((i) => i.typeHuman).join(' + ');
+  }
+
   /**
    * Has a ticket been claimed or banked?
    *

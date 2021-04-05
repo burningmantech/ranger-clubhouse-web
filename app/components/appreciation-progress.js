@@ -20,8 +20,8 @@ export default class AppreciationProgressComponent extends Component {
 
       this.calculateItem('reducedPriceTicket', credits, thresholds.RpTicketThreshold, 'credits');
       this.calculateItem('staffCredential', credits, thresholds.ScTicketThreshold, 'credits');
-      this.calculateItem('eatEventPeriod', hours, thresholds.AllYouCanEatEventPeriodThreshold, 'hours');
-      this.calculateItem('eatEventWeek', timesheetSummary.event_duration, thresholds.AllYouCanEatEventWeekThreshold, 'hours');
+      this.calculateItem('allEatPass', hours, thresholds.AllYouCanEatEventPeriodThreshold, 'hours');
+      this.calculateItem('eventWeekEatPass', timesheetSummary.event_duration, thresholds.AllYouCanEatEventWeekThreshold, 'hours');
       this.calculateItem('showerAccess', hours, thresholds.ShowerAccessThreshold, 'hours');
       this.calculateItem('showerPog', hours, thresholds.ShowerPogThreshold, 'hours');
 
@@ -47,7 +47,7 @@ export default class AppreciationProgressComponent extends Component {
       item.needs = (value >= threshold) ? 0 : this.hourMinute(threshold - value);
     } else {
       item.value = value.toFixed(2);
-      item.threshold = threshold.toFixed(2);
+      item.threshold = Math.floor(threshold);
       item.needs = (threshold - value).toFixed(2);
     }
 

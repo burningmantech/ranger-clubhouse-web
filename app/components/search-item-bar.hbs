@@ -17,7 +17,7 @@
                        @modeOptions={{this.modeOptions}}
                        @onModeChange={{action this.modeChange}}
                        @mode={{this.searchForm.mode}}
-                       @appendSearchIcon=true
+                       @appendSearchIcon={{true}}
                        as |item|>
       {{#if (eq this.searchType "asset")}}
         {{this.searchYear}} #{{item.barcode}} {{item.description}} {{item.type}}

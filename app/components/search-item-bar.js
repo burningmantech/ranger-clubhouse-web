@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import EmberObject, {action} from '@ember/object';
+import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {Role} from 'clubhouse/constants/roles';
 import {debounce} from '@ember/runloop';
@@ -23,6 +23,21 @@ const MODE_ROUTES = {
   'timesheet': 'person.timesheet'
 };
 
+class SearchForm {
+  @tracked query = '';
+  @tracked name = true;
+  @tracked callsign = true;
+  @tracked email = true;
+  @tracked formerly_known_as = true
+  @tracked audit = false;
+  @tracked past_prospective = false;
+  @tracked mode = '';
+
+  constructor(obj) {
+    Object.assign(this, obj);
+  }
+}
+
 export default class SearchItemBarComponent extends Component {
   @service router;
   @service session;
@@ -45,16 +60,7 @@ export default class SearchItemBarComponent extends Component {
     super(...arguments);
 
     const onduty = this.session.user.onduty_position;
-    this.searchForm = EmberObject.create({
-      query: '',
-      name: true,
-      callsign: true,
-      email: true,
-      formerly_known_as: true,
-
-      auditor: false,
-      past_prospective: false,
-
+    this.searchForm = new SearchForm({
       mode: (onduty && (onduty.subtype === 'hq' || onduty.subtype === 'mentor')) ? 'hq' : 'account',
     });
 
@@ -121,8 +127,10 @@ export default class SearchItemBarComponent extends Component {
 
   @action
   modeChange(mode) {
-    this.searchForm.set('mode', mode);
+    this.searchForm.mode =  mode;
     const route = this.router.currentRouteName;
+
+    this._buildPlaceholder();
 
     this.showSearchOptions = (this.searchForm.mode !== 'hq');
 

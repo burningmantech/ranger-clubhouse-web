@@ -57,7 +57,7 @@ export default class MealInfoComponent extends Component {
       this.title = mealInfo.title;
       this.description = mealInfo.description;
       this.isBanked = eventInfo.meals_status === 'banked';
-      this.isAllYouCanEat = (meals === 'all');
+      this.isMealPass = (meals === 'all');
     } else {
       this.title = 'Unknown';
       this.description = `Unknown meal type ${this.args.meals}. This is a bug.`;

@@ -26,15 +26,20 @@
           </li>
           <li>
             If you are happy with your selections, sit back, check the Clubhouse often, watch your inbox, and
-            keep an eye on the Allcom mailing list for further instructions.
+            keep an eye on the Announce mailing list for further instructions.
           </li>
         {{/if}}
       </ol>
+      {{#if (and @ticketPackage.tickets (not @ticket.isClaimed))}}
+        <p>
+          <h4 class="text-danger">No ticket has been claimed.</h4>
+        </p>
+      {{/if}}
       {{#if this.claimedItems}}
         <div class="h4">
           {{pluralize this.claimedItems.length "item"}}
           {{if (eq this.claimedItems.length 1) "has" "have"}} been CLAIMED:
-        </div>
+        </div>`
         {{#each this.claimedItems as |item|}}
           <div class="mt-1">{{fa-icon "check" color="success"}} {{item}}</div>
         {{/each}}

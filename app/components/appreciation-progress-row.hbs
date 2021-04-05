@@ -1,7 +1,7 @@
 <tr>
   <td>
     {{#if @item.earned}}
-      <span class="text-success">{{fa-icon "check"}} {{@name}} Earned</span>
+      <span class="text-success">{{fa-icon "check"}} {{@name}}</span>
     {{else}}
       {{@name}}
     {{/if}}
@@ -23,6 +23,10 @@
     {{/if}}
   </td>
   <td>
-    <ProgressBar @width={{@item.width}} @text="{{@item.width}}%" @type="success"/>
+    {{#if @item.earned}}
+      <b class="text-success">EARNED</b>
+    {{else}}
+      <ProgressBar @width={{@item.width}} @text="{{@item.width}}%" @type="success"/>
+    {{/if}}
   </td>
 </tr>

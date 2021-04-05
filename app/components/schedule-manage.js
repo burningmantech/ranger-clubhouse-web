@@ -8,7 +8,6 @@ import {slotSignup} from 'clubhouse/utils/slot-signup';
 import {run} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
 import {inject as service} from '@ember/service';
-import $ from 'jquery';
 
 const allDays = ['All Days', 'all'];
 const upcomingShifts = ['Upcoming Shifts', 'upcoming'];
@@ -170,8 +169,8 @@ export default class ScheduleManageComponent extends Component {
 
   @action
   joinSlot(slot, event) {
-    const row = $(event.target).closest('.schedule-row');
-    const currentOffset = row.offset().top - $(document).scrollTop();
+    const row = event.target.closest('.schedule-row');
+    const currentOffset = row.getBoundingClientRect().top - window.pageYOffset;
 
     slotSignup(this, slot, this.args.person, (result) => {
       // Record the original row position on the page
@@ -184,9 +183,9 @@ export default class ScheduleManageComponent extends Component {
 
       // And reposition the page so things appear not to move when the sign up is added
       // to the schedule.
-      run.schedule('afterRender', () => {
-        $(document).scrollTop(row.offset().top - currentOffset);
-      });
+      run.schedule('afterRender', () =>
+        window.scrollTo(window.pageXOffset, row.getBoundingClientRect().top - currentOffset)
+      );
     });
   }
 
@@ -195,8 +194,8 @@ export default class ScheduleManageComponent extends Component {
     let message, row = null, currentOffset = 0;
 
     if (event) {
-      row = $(event.target).closest('.schedule-row');
-      currentOffset = row.offset().top - $(document).scrollTop();
+      row = event.target.closest('.schedule-row');
+      currentOffset = row.getBoundingClientRect().top - window.pageYOffset;
     }
 
     if (slot.has_started && this.isAdmin) {
@@ -221,7 +220,10 @@ export default class ScheduleManageComponent extends Component {
             // from the schedule, the row deleted, and the browser may want
             // to reposition the page.
             run.schedule('afterRender', () => {
-              $(document).scrollTop(row.offset().top - currentOffset);
+              // The sign up may have been removed via the scheduled table and the row no longer exists.
+              if (document.body.contains(row)) {
+                window.scrollTo(window.pageXOffset, row.getBoundingClientRect().top - currentOffset);
+              }
             });
           }
 

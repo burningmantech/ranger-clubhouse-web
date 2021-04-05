@@ -32,10 +32,19 @@ export default class ReportsRollcallController extends ClubhouseController {
   @action
   selectPosition(positionId) {
     this.positionId = positionId;
-    this.slotId = 0;
-    this.slot = null;
+    positionId = +positionId;
     this.people = [];
-    this.position = this.positions.find((p) => p.id == positionId);
+    this.position = this.positions.find((p) => p.id === positionId);
+    if (this.position && this.position.slots.length === 1) {
+      const slot = this.position.slots[0];
+      // Go ahead and preselect the only slot.
+      this.slotId = slot.id;
+      this.slot = slot;
+      this._retrievePeople();
+    } else {
+      this.slotId = 0;
+      this.slot = null;
+    }
   }
 
   /*
@@ -44,15 +53,19 @@ export default class ReportsRollcallController extends ClubhouseController {
 
   @action
   selectSlot(slotId) {
+    slotId = +slotId;
     this.slotId = slotId;
     if (!slotId) {
       return;
     }
 
-    this.slot = this.position.slots.find((s) => s.id == slotId);
+    this.slot = this.position.slots.find((s) => s.id === slotId);
+    this._retrievePeople();
+  }
 
+  _retrievePeople() {
     this.isRetrievingPeople = true;
-    this.ajax.request(`slot/${slotId}/people`, {data: {is_onduty: 1, include_photo: 1}})
+    this.ajax.request(`slot/${this.slot.id}/people`, {data: {is_onduty: 1, include_photo: 1}})
       .then((result) => this.people = result.people)
       .catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isRetrievingPeople = false);

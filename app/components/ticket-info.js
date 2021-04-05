@@ -1,8 +1,8 @@
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { action } from '@ember/object';
-import { CLAIMED, BANKED } from "clubhouse/models/access-document";
-import { inject as service } from '@ember/service';
+import {tracked} from '@glimmer/tracking';
+import {action} from '@ember/object';
+import {CLAIMED, BANKED} from "clubhouse/models/access-document";
+import {inject as service} from '@ember/service';
 
 export default class TicketInfoComponent extends Component {
   @service ajax;
@@ -13,27 +13,41 @@ export default class TicketInfoComponent extends Component {
 
   @action
   async chooseTicketAction(item) {
-    const {tickets} = this.args.ticketPackage;
+    const {tickets, vehiclePass} = this.args.ticketPackage;
 
     this.isSubmitting = true;
     let haveErrors = false;
-    for (const ticket of tickets) {
-      try {
-        let status;
-        if (item === 'none') {
-          status = BANKED;
-        } else {
-          status = (ticket.id === item.id) ? CLAIMED : BANKED;
-        }
 
-        const result = await this.ajax.request(`access-document/${ticket.id}/status`, {
-          method: 'PATCH',
-          data: {status}
-        });
-        this.house.pushPayload('access-document', result.access_document);
+    const statuses = [];
+    for (const ticket of tickets) {
+      let status;
+      if (item === 'none') {
+        status = BANKED;
+      } else {
+        status = (ticket.id === item.id) ? CLAIMED : BANKED;
+      }
+      statuses.push({id: ticket.id, status});
+    }
+
+    try {
+      const result = await this.ajax.request(`access-document/statuses`, {
+        method: 'PATCH',
+        data: {statuses}
+      });
+      this.house.pushPayload('access-document', result.access_document);
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+      haveErrors = true;
+    }
+
+    if (vehiclePass) {
+      try {
+        // vehicle pass may have been released if all tickets were banked -- the backend will
+        // attempt to prevent a person from trying to game the system by banking all tickets
+        // and claim the VP.
+        await vehiclePass.reload();
       } catch (response) {
         this.house.handleErrorResponse(response);
-        haveErrors = true;
       }
     }
 

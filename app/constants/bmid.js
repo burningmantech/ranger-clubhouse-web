@@ -1,46 +1,55 @@
+import {
+  IN_PREP,  DO_NOT_PRINT,
+  READY_TO_PRINT, READY_TO_REPRINT_CHANGE, READY_TO_REPRINT_LOST,
+  ISSUES, SUBMITTED,
+  MEALS_ALL,
+  MEALS_PRE, MEALS_PRE_PLUS_EVENT, MEALS_PRE_PLUS_POST,
+  MEALS_EVENT, MEALS_EVENT_PLUS_POST,
+  MEALS_POST
+} from 'clubhouse/models/bmid';
 
 export const BmidStatusLabels = {
-  in_prep: 'Prep',
-  do_not_print: 'Do Not Print',
-  ready_to_print: 'Ready To Print',
-  ready_to_reprint_lost: 'Ready To Reprint (Lost)',
-  ready_to_reprint_changed: 'Ready To Reprint (Changed)',
-  issues: 'Issues',
-  submitted: 'Submitted',
+  [IN_PREP]: 'Prep',
+  [DO_NOT_PRINT]: 'Do Not Print',
+  [READY_TO_PRINT]: 'Ready To Print',
+  [READY_TO_REPRINT_LOST]: 'Ready To Reprint (Lost)',
+  [READY_TO_REPRINT_CHANGE]: 'Ready To Reprint (Changed)',
+  [ISSUES]: 'Issues',
+  [SUBMITTED]: 'Submitted',
 };
 
 export const BmidStatusOptions = [
-  ['Prep', 'in_prep'],
-  ['Do Not Print', 'do_not_print'],
-  ['Ready To Print', 'ready_to_print'],
-  ['Ready To Reprint (Lost)', 'ready_to_reprint_lost'],
-  ['Ready To Reprint (Changed)', 'ready_to_reprint_changed'],
-  ['Issues', 'issues'],
-  ['Submitted', 'submitted']
+  ['Prep', IN_PREP],
+  ['Do Not Print', DO_NOT_PRINT],
+  ['Ready To Print', READY_TO_PRINT],
+  ['Ready To Reprint (Lost)', READY_TO_REPRINT_LOST],
+  ['Ready To Reprint (Changed)', READY_TO_REPRINT_CHANGE],
+  ['Issues', ISSUES],
+  ['Submitted', SUBMITTED]
 ];
 
 export const MealLabels = {
-  pre: 'Pre',
-  post: 'Post',
-  event: 'Event',
-  all: 'All',
-  'pre+post': 'Pre+Post',
-  'pre+event': 'Pre+Event',
-  'event+post': 'Event+Post',
+  [MEALS_PRE]: 'Pre',
+  [MEALS_POST]: 'Post',
+  [MEALS_EVENT]: 'Event',
+  [MEALS_ALL]: 'All',
+  [MEALS_PRE_PLUS_POST]: 'Pre+Post',
+  [MEALS_PRE_PLUS_EVENT]: 'Pre+Event',
+  [MEALS_EVENT_PLUS_POST]: 'Event+Post',
 };
 
 export const MealOptions = [
   ['None', ''],
-  ['Pre', 'pre'],
-  ['Post', 'post'],
-  ['Event', 'event'],
-  ['All', 'all'],
-  ['Pre+Post', 'pre+post'],
-  ['Pre+Event', 'pre+event'],
-  ['Event+Post', 'event+post']
+  ['Pre', MEALS_PRE],
+  ['Post', MEALS_POST],
+  ['Event', MEALS_EVENT],
+  ['All', MEALS_ALL],
+  ['Pre+Post', MEALS_PRE_PLUS_POST],
+  ['Pre+Event', MEALS_PRE_PLUS_EVENT],
+  ['Event+Post', MEALS_EVENT_PLUS_POST]
 ];
 
 export const ShowerOptions = [
-  [ 'No', false ],
-  [ 'Yes', true ],
+  ['No', false],
+  ['Yes', true],
 ];

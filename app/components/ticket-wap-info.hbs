@@ -16,20 +16,31 @@
   </:title>
   <:body>
     {{#if this.wap}}
-      <p>
-        <b>
-          You {{if this.wap.isClaimed "have claimed your" "qualified for a"}} Work Access Pass which allows you
-          to enter the event
-          {{#if this.wap.access_any_time}}
-            at any time!
-          {{else}}
-            on or after {{mdy-format this.wap.access_date full=true}} @ 00:01.
-          {{/if}}
-        </b>
-      </p>
-      <p>
-        All Work Access Passes are sent by email.
-      </p>
+      {{#if (or this.wap.isClaimed this.wap.isSubmitted)}}
+        <p>
+          <b>
+            You have claimed your Work Access Pass which allows you to enter the event
+            {{#if this.wap.access_any_time}}
+              at any time!
+            {{else}}
+              {{#if this.wap.access_date}}
+                on or after {{mdy-format this.wap.access_date full=true}} @ 00:01.
+              {{else}}
+                .. uh, sometime.
+                <span class="text-danger">Oops! We forgot to write down when you may enter the event! Please contact
+                  {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.</span>
+              {{/if}}
+            {{/if}}
+          </b>
+        </p>
+        <p>
+          The Work Access Pass will be emailed to: {{@person.email}}
+        </p>
+      {{else}}
+        <p>
+          <b>You qualified for a Work Access Pass.</b>
+        </p>
+      {{/if}}
       {{#if this.wap.isSubmitted}}
         <p>The Work Access Pass has been submitted to the Burning Man Ticket Request System.</p>
       {{else if this.wap.isQualified}}
@@ -39,14 +50,16 @@
         <button type="button" class="btn btn-primary btn-responsive"
           {{action @setDocumentStatus this.wap "claimed"}} disabled={{@isSavingDocumentStatus}}>
           Claim Work Access Pass
-          {{#if @isSavingDocumentStatus}}<SpinIcon />{{/if}}
+          {{#if @isSavingDocumentStatus}}
+            <SpinIcon/>{{/if}}
         </button>
       {{else}}
         <p>Do you no longer need the Work Access Pass?</p>
         <button type="button" class="btn btn-primary btn-responsive"
           {{action @setDocumentStatus this.wap "qualified"}}  disabled={{@isSavingDocumentStatus}}>
           Release Work Access Pass
-          {{#if @isSavingDocumentStatus}}<SpinIcon />{{/if}}
+          {{#if @isSavingDocumentStatus}}
+            <SpinIcon/>{{/if}}
         </button>
       {{/if}}
     {{! End of if wap }}

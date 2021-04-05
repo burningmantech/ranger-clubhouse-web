@@ -7,12 +7,10 @@
   <p>
     <b>Stay tuned to the Ranger Announce mailing list for updates.</b>
   </p>
-
-  <p>
-  {{#if this.bankedTickets}}
-      You have {{pluralize this.bankedTickets.length "ticket"}}:
+  {{#if this.tickets}}
+    You have {{pluralize this.tickets.length "ticket"}}:
     <ul>
-      {{#each this.bankedTickets as |ticket|}}
+      {{#each this.tickets as |ticket|}}
         <li>
           A {{ticket-type-human ticket.type}} earned in {{ticket.source_year}} and will expire
           after {{mdy-format ticket.expiry_date full=true}}
@@ -22,5 +20,18 @@
   {{else}}
     You have no tickets currently.
   {{/if}}
-  </p>
+  {{#if this.appreciations}}
+    You have the following {{pluralize this.appreciations.length "provision"}}:
+    <ul>
+      {{#each this.appreciations as |item|}}
+        <li>
+          {{item.typeHuman}}
+          {{#if item.isEventRadio}}
+            (count {{item.item_count}})
+          {{/if}}
+         expiring after {{mdy-format item.expiry_date full=true}}
+        </li>
+      {{/each}}
+    </ul>
+  {{/if}}
 {{/if}}

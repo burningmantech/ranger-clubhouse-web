@@ -1,8 +1,8 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import { set } from '@ember/object';
+import {set} from '@ember/object';
 import RSVP from 'rsvp';
-import { ADMIN, EDIT_BMIDS } from 'clubhouse/constants/roles';
-import { ACTIVE, INACTIVE, INACTIVE_EXTENSION, RETIRED, ALPHA, PROSPECTIVE } from 'clubhouse/constants/person_status';
+import {ADMIN, EDIT_BMIDS} from 'clubhouse/constants/roles';
+import {ACTIVE, INACTIVE, INACTIVE_EXTENSION, RETIRED, ALPHA, PROSPECTIVE} from 'clubhouse/constants/person_status';
 import requestYear from 'clubhouse/utils/request-year';
 
 const ALLOWED_STATUSES = [
@@ -10,9 +10,9 @@ const ALLOWED_STATUSES = [
 ];
 
 export default class VcBmidPrintRoute extends ClubhouseRoute {
-  roleRequired = [ ADMIN, EDIT_BMIDS];
+  roleRequired = [ADMIN, EDIT_BMIDS];
   queryParams = {
-    filter: { refreshModel: true },
+    filter: {refreshModel: true},
   };
 
   model(params) {
@@ -22,21 +22,24 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
     return RSVP.hash({
       year,
       filter,
-      bmids: this.ajax.request(`bmid/manage`, { data: { year, filter }}).then((result) => result.bmids),
+      bmids: this.ajax.request(`bmid/manage`, {data: {year, filter}}).then((result) => result.bmids),
+      exportList: this.ajax.request('bmid/exports', {data: {year}}).then((result) => result.exports)
     });
   }
 
   setupController(controller, model) {
     const bmids = [], doNotPrint = [], issues = [],
-        printed = [], submitted = [], unusualStatus = [];
+      printed = [], submitted = [], unusualStatus = [];
 
     controller.set('year', model.year);
     controller.set('filter', model.filter);
+    controller.set('exportList', model.exportList);
     controller.set('batchForm', {});
 
     this.store.unloadAll('bmid');
 
-    model.bmids.forEach((bmid) =>{
+    model.bmids.forEach((bmid) => {
+      bmid = this.house.pushPayload('bmid', bmid);
       switch (bmid.status) {
         case 'do_not_print':
           doNotPrint.push(bmid);
@@ -61,7 +64,7 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
       }
 
       set(bmid, 'selected', 1)
-      bmids.push(this.store.createRecord('bmid', bmid));
+      bmids.push(bmid);
     });
 
     controller.setProperties({
