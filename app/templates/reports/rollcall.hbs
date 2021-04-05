@@ -10,12 +10,12 @@
 
   <div class="row form-group">
     <label class="col-form-label col-sm-12 col-lg-auto">Position</label>
-    <div class="col-auto">
+    <div class="col-sm-12 col-lg-auto">
       <ChForm::Select @name="positionId" @value={{this.positionId}} @options={{this.positionOptions}}
                       @onChange={{action this.selectPosition}} @controlClass="form-control"/>
     </div>
     <label class="col-form-label col-sm-12 col-lg-auto">Shift</label>
-    <div class="col-auto">
+    <div class="col-sm-12 col-lg-auto">
       <ChForm::Select @name="slotId" @value={{this.slotId}}
                       @options={{this.slotOptions}}
                       @onChange={{action this.selectSlot}}
@@ -44,9 +44,8 @@
 
   <div class="rollcall-grid">
     {{#each this.people as |person|}}
-      <div class="rollcall-person {{if person.on_duty "rollcall-problem" (if person.signedIn "rollcall-success")}}"
-           disabled={{person.isSubmitting}}
-           role="link" {{action this.clickPerson person}}>
+      <a href class="rollcall-person {{if person.on_duty "rollcall-problem" (if person.signedIn "rollcall-success")}}"
+          {{action this.clickPerson person}}>
         <div class="rollcall-photo">
           {{#if person.photo_url}}
             <img src={{person.photo_url}} alt={{person.callsign}} loading="lazy"/>
@@ -75,7 +74,7 @@
             Signed in.
           {{/if}}
         </div>
-      </div>
+      </a>
     {{/each}}
   </div>
 {{else if (gt this.slotId 0)}}

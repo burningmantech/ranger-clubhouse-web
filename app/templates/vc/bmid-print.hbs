@@ -1,30 +1,35 @@
 <main>
-  <h1>Submit {{this.year}} BMIDS To Lambase</h1>
-
-  <div class="form-group row">
+  <h1>Export {{this.year}} BMIDs To Marcato</h1>
+  <div class="mt-2">
+    Navigation:
+    <LinkTo @route="vc.bmid-sanity-check" class="ml-2">
+      {{fa-icon "user-check"}} Sanity Check
+    </LinkTo>
+    <LinkTo @route="vc.bmid" class="ml-2">
+      {{fa-icon "edit"}} Manage BMIDs
+    </LinkTo>
+    <a href="#export-list" class="ml-2">Jump to export list</a>
+  </div>
+  <div class="form-row mt-3">
+    <label class="col-form-label col-auto">Filter:</label>
     <div class="col-auto">
-      <label>Filter:</label>
-      <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}}
-                      @onChange={{action (mut this.filter)}} @controlClass="form-control-sm"
+      <ChForm::Select @name="filter" @value={{this.filter}}
+                      @options={{this.filterOptions}}
+                      @onChange={{action (mut this.filter)}}
+                      @controlClass="form-control form-control-sm"
                       @disabled={{this.isRendering}} />
     </div>
-    <div class="col-auto ml-4">
-      <LinkTo @route="vc.bmid" class="btn btn-secondary btn-sm">Manage BMIDs</LinkTo>
-      <LinkTo @route="vc.bmid-sanity-check" class="btn btn-secondary btn-sm" @disabled={{this.isRendering}}>Sanity
-        Check
-      </LinkTo>
-    </div>
-  </div>
-  <div class="form-group row">
     <div class="col-auto">
       <div class="input-group">
         <label>Callsign, title, team, notes filter:</label>
-        <Input @type="text" @value={{this.textFilterInput}} class="form-control-sm ml-2"
+        <Input @type="text" @value={{this.textFilterInput}} class="form-control form-control-sm ml-2"
                @enter={{action this.textFilterAction}} disabled={{this.isRendering}} />
-        <button type="button" class="btn btn-primary btn-sm ml-1" {{action this.textFilterAction}} disabled={{this.isRendering}}>
+        <button type="button" class="btn btn-primary btn-sm ml-1" {{action this.textFilterAction}}
+                disabled={{this.isRendering}}>
           Filter
         </button>
-        <button type="button" class="btn btn-secondary btn-sm ml-1" {{action this.clearTextFilterAction}} disabled={{this.isRendering}}>
+        <button type="button" class="btn btn-secondary btn-sm ml-1" {{action this.clearTextFilterAction}}
+                disabled={{this.isRendering}}>
           Clear
         </button>
       </div>
@@ -35,8 +40,7 @@
     </div>
   </div>
 
-
-  <p>
+  <p class="mt-4">
     <span class="d-inline">
       Total BMIDs: {{this.totalBmids}}
     </span>
@@ -68,7 +72,7 @@
   {{/if}}
 
   {{#if this.issues}}
-    <div class="border p-2">
+    <div class="border p-2 my-2">
       Issues:
       {{#each this.issues as |bmid idx|~}}
         {{~if idx ","}}
@@ -78,7 +82,7 @@
   {{/if}}
 
   {{#if this.unusualStatus}}
-    <div class="border p-2">
+    <div class="border p-2 my-2">
       Unusual Status:
       {{#each this.unusualStatus as |bmid idx|~}}
         {{~if idx ","}}<span class="d-inline-block"><PersonLink @person={{bmid.person}} />
@@ -87,17 +91,18 @@
     </div>
   {{/if}}
 
-  Showing {{this.viewBmids.length}} of {{this.bmids.length}} ({{this.bmidsSelectedCount}} selected)
-  {{#if this.textFilter}}
-    <span class="ml-2 font-weight-bold">Text filtering by "{{this.textFilter}}"</span>
-  {{/if}}
+  <div class="mt-2">
+    Showing {{this.viewBmids.length}} of {{this.bmids.length}} ({{this.bmidsSelectedCount}} selected)
+    {{#if this.textFilter}}
+      <span class="ml-2 font-weight-bold">Text filtering by "{{this.textFilter}}"</span>
+    {{/if}}
+  </div>
   <table class="table table-sm table-striped">
     <thead>
     <tr>
       <th>{{fa-icon "check"}}</th>
       <th>Status</th>
-      <th>Callsign</th>
-      <th>Name</th>
+      <th>Callsign / Name</th>
       <th>Title 1</th>
       <th>Title 2</th>
       <th>Title 3</th>
@@ -113,15 +118,33 @@
     {{#each this.viewBmids as |bmid|}}
       <tr class="{{if (eq bmid.status "failed") "bg-danger"}}">
         <td><Input @type="checkbox" @checked={{bmid.selected}} {{on "change" (fn this.toggleBmid bmid)}}/></td>
-        <td>{{bmid.statusHuman}}</td>
-        <td>{{bmid.person.callsign}}</td>
-        <td>{{bmid.person.first_name}} {{bmid.person.last_name}}</td>
-        <td><PresentOrNot @value={{bmid.title1}} @empty="-" /></td>
-        <td><PresentOrNot @value={{bmid.title2}} @empty="-" /></td>
-        <td><PresentOrNot @value={{bmid.title3}} @empty="-" /></td>
-        <td>{{yesno bmid.org_vehicle_insurance}}</td>
-        <td>{{yesno bmid.showers}}</td>
-        <td>{{bmid.mealsHuman}}</td>
+        <td class="no-wrap">{{bmid.statusHuman}}</td>
+        <td class="no-wrap">
+          {{bmid.person.callsign}}<br>
+          {{bmid.person.first_name}} {{bmid.person.last_name}}
+        </td>
+        <td class="no-wrap">
+          <PresentOrNot @value={{bmid.title1}} @empty="-"/>
+        </td>
+        <td class="no-wrap">
+          <PresentOrNot @value={{bmid.title2}} @empty="-"/>
+        </td>
+        <td class="no-wrap">
+          <PresentOrNot @value={{bmid.title3}} @empty="-"/>
+        </td>
+        <td class="text-center">{{if bmid.org_vehicle_insurance "M" "-"}}</td>
+        <td class="text-center">
+          {{if bmid.showers "S" "-"}}
+          {{#if bmid.want_showers}}
+            <div class="text-success align-middle">{{fa-icon "plus-circle"}} S</div>
+          {{/if}}
+        </td>
+        <td>
+          {{bmid.mealsHuman}}
+          {{#if bmid.want_meals}}
+            <div class="text-success">{{fa-icon "plus-circle"}} {{bmid.want_meals}}</div>
+          {{/if}}
+        </td>
         <td class="w-10">
           {{#if bmid.wapMissing}}
             <strong class="text-danger">missing</strong>
@@ -135,9 +158,9 @@
     </tbody>
   </table>
 
-  <h3>Submit Selected BMIDs To Lambase</h3>
+  <h3>Export Selected BMIDs</h3>
 
-  <ChForm @formId="batch" @formFor={{this.batchForm}} @onSubmit={{this.sendToLambase}} as |f|>
+  <ChForm @formId="batch" @formFor={{this.batchForm}} @onSubmit={{this.exportAction}} as |f|>
     <div class="form-row">
       <f.input @name="batchInfo" @label="Batch Information" @size={{32}} @maxlength={{32}} @grid="col-auto"
                @hint="Example batch info might be 'Batch #1, specials' or 'Batch #2, special stragglers', or 'Batch #3, alphas', etc. The Clubhouse will automatically add
@@ -149,9 +172,49 @@ your name and the date and time you submitted to Lambase."
         You will be asked to confirm the operation after clicking below.
       </div>
     </div>
-    <f.submit @label="Submit To Lambase" @disabled={{or this.isSubmitting (not this.bmidsSelectedCount)}} />
-    {{#if this.isSubmitting}}
-      <LoadingIndicator/>
-    {{/if}}
+    <f.submit @label="Download Export & Mark As Submitted" @disabled={{or this.isSubmitting
+                                                                          (not this.bmidsSelectedCount)}} />
   </ChForm>
+
+  <table id="export-list" class="table table-striped table-hover table-width-auto mt-2">
+    <caption>Previous exports</caption>
+    <thead>
+    <tr>
+      <th>Zip Archive</th>
+      <th>Batch Info</th>
+      <th>BMID Count</th>
+      <th>Exported By</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.exportList as |export|}}
+      <tr>
+        <td>
+          <a href="{{export.filename_url}}" download>{{export.filename}}</a>
+        </td>
+        <td>
+          <PresentOrNot @value={{export.batch_info}} @empty="-"/>
+        </td>
+        <td class="text-right">
+          {{export.person_ids.length}}
+        </td>
+        <td>
+          {{export.person.callsign}}
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
 </main>
+
+{{#if this.isExporting}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      <p>
+        Please wait while the backend creates a Zip file of {{this.bmidsSelectedCount}} BMID records and photos.
+        <SpinIcon/>
+      </p>
+      This may take a while . . .
+    </Modal.body>
+  </ModalDialog>
+{{/if}}

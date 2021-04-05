@@ -45,7 +45,11 @@
           {{fa-icon "check" color="success"}}
         {{/if}}
       </label>
-      <div class="my-3">
+      <p>
+        While you have multiple tickets to choose from, only ONE ticket may be used in any given year.
+        The rest will be banked, and cannot be transferred to other people.
+      </p>
+      <p>
         {{#if @ticket}}
           <b>You have claimed a {{@ticket.typeHuman}} earned in {{@ticket.source_year}}.</b>
         {{else if this.allTicketsBanked}}
@@ -53,7 +57,7 @@
         {{else}}
           &nbsp;
         {{/if}}
-      </div>
+      </p>
     {{else if @ticket}}
       {{#if @ticket.isClaimed}}
         <p>
@@ -63,7 +67,8 @@
         <button type="button" class="btn btn-primary btn-responsive"
           {{action @setDocumentStatus @ticket "banked"}} disabled={{@isSavingDocumentStatus}}>
           Bank Ticket
-          {{#if @isSavingDocumentStatus}}<SpinIcon />{{/if}}
+          {{#if @isSavingDocumentStatus}}
+            <SpinIcon/>{{/if}}
         </button>
       {{else if @ticket.isBanked}}
         <p>
@@ -76,11 +81,11 @@
         <button type="button" class="btn btn-primary btn-responsive"
           {{action @setDocumentStatus @ticket "claimed"}} disabled={{@isSavingDocumentStatus}}>
           Claim Ticket
-          {{#if @isSavingDocumentStatus}}<SpinIcon />{{/if}}
+          {{#if @isSavingDocumentStatus}}
+            <SpinIcon/>{{/if}}
         </button>
       {{else if @ticket.isQualified}}
         <h4>You qualified for a {{@ticket.typeHuman}} in {{@ticket.source_year}}!</h4>
-
         <p>
           You may <b>Claim</b> your ticket for this year's event, or <b>Bank</b> it for a future event.<br>
           Note: your {{@ticket.humanType}} will expire on {{mdy-format @ticket.expiry_date full=true}}.
@@ -90,13 +95,15 @@
         <button type="button" class="btn btn-primary"
           {{action @setDocumentStatus @ticket "claimed"}} disabled={{@isSavingDocumentStatus}}>
           Claim Ticket
-          {{#if @isSavingDocumentStatus}}<SpinIcon />{{/if}}
+          {{#if @isSavingDocumentStatus}}
+            <SpinIcon/>{{/if}}
         </button>
         <span class="mx-2 h5">OR</span>
         <button type="button" class="btn btn-primary"
           {{action @setDocumentStatus @ticket "banked"}} disabled={{@isSavingDocumentStatus}}>
           Bank Ticket
-          {{#if @isSavingDocumentStatus}}<SpinIcon />{{/if}}
+          {{#if @isSavingDocumentStatus}}
+            <SpinIcon/>{{/if}}
         </button>
       {{else}}
         Uh oh, I don't know the state of your ticket [{{@ticket.status}}].

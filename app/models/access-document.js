@@ -1,5 +1,4 @@
 import Model, {attr} from '@ember-data/model'
-import {ticketTypeLabel} from 'clubhouse/constants/ticket-types';
 import moment from 'moment';
 
 export const STAFF_CREDENTIAL = 'staff_credential';
@@ -9,7 +8,8 @@ export const VEHICLE_PASS = 'vehicle_pass';
 export const WAP = 'work_access_pass';
 export const WAPSO = 'work_access_pass_so';
 
-export const ALL_YOU_CAN_EAT = 'all_you_can_eat';
+export const ALL_EAT_PASS = 'all_eat_pass';
+export const EVENT_EAT_PASS = 'event_eat_pass';
 export const WET_SPOT = 'wet_spot';
 export const WET_SPOT_POG = 'wet_spot_pog'; // unused currently
 export const EVENT_RADIO = 'event_radio';
@@ -21,6 +21,20 @@ export const USED = 'used';
 export const CANCELLED = 'cancelled';
 export const EXPIRED = 'expired';
 export const SUBMITTED = 'submitted';
+
+export const TypeLabels = {
+  [STAFF_CREDENTIAL]: 'Staff Credential',
+  [RPT]: 'Reduced-Price Ticket',
+  [GIFT_TICKET]: 'Gift Ticket',
+  [WAP]: 'Work Access Pass',
+  [WAPSO]: 'Work Access Pass (SO)',
+  [VEHICLE_PASS]: 'Vehicle Pass',
+  [EVENT_RADIO]: 'Event Radio',
+  [ALL_EAT_PASS]: 'All Eat Meal Pass',
+  [EVENT_EAT_PASS]: 'Event Week Meal Pass',
+  [WET_SPOT]: 'Wet Spot Access (Org Showers)',
+  [WET_SPOT_POG]: 'Wet Spot Pog (Org Showers)'
+};
 
 export default class AccessDocumentModel extends Model {
   @attr('number') person_id;
@@ -75,14 +89,14 @@ export default class AccessDocumentModel extends Model {
     return this.type === EVENT_RADIO;
   }
 
-  get isAllYouCanEat() {
-    return this.type === ALL_YOU_CAN_EAT;
+  get isMealPass() {
+    return this.type === ALL_EAT_PASS || this.type === EVENT_EAT_PASS;
   }
 
-  get isAppreciation() {
+  get isProvision() {
     const {type} = this;
 
-    return (type === ALL_YOU_CAN_EAT || type === EVENT_RADIO || type === WET_SPOT);
+    return (this.isMealPass || type === EVENT_RADIO || type === WET_SPOT);
   }
 
   get hasAccessDate() {
@@ -122,7 +136,7 @@ export default class AccessDocumentModel extends Model {
   }
 
   get typeHuman() {
-    return ticketTypeLabel[this.type];
+    return TypeLabels[this.type];
   }
 
   get expiryYear() {

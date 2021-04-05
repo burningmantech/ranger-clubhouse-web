@@ -257,5 +257,13 @@ export default class extends SessionService {
     return haveIt;
   }
 
+  /**
+   * Obtain the JWT token
+   * @returns {string|null}
+   */
+
+  get jwt() {
+    return this.isAuthenticated ? this.data.authenticated.token : null;
+  }
 }
 

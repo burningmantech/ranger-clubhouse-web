@@ -4,12 +4,12 @@
                @toggleCard={{@toggleCard}}
                @showing={{@showing}}>
   <:title>
-    Appreciations
+    Provisions
     <div class="d-inline-block">- {{this.titleCounts}}</div>
   </:title>
   <:body>
     <p>
-      Please CLAIM or BANK/RELEASE {{pluralize this.items.length "appreciation"}}:
+      Please CLAIM or BANK/RELEASE {{pluralize this.items.length "provision"}}:
     </p>
     {{#each this.items as |item|}}
       <div class="mt-2">
@@ -31,13 +31,12 @@
         Expires {{mdy-format item.expiry_date}}<br>
         {{#if item.isSubmitted}}
           This item has been submitted and may not be claimed or banked thru the Clubhouse. Please contact the Ranger
-          Ticketing Team
-          if you need help.
+          Ticketing Team if you need help.
         {{else if item.isEventRadio}}
           If you decide not to use your Event Radio(s), you will be given a Shift Radio at the beginning of your shift,
           and is returned at the end of the shift.
-        {{else if item.isAllYouCanEat}}
-          If you decide to bank your pass, you will be given a meal pog for every 6 hour shift worked.
+        {{else if item.isMealPass}}
+          If you decide to bank your meal pass, you will be given a meal pog for every 6 hour shift worked.
         {{/if}}
       </div>
       <div class="mt-2">

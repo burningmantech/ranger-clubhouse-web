@@ -10,12 +10,23 @@
       <b class="text-danger">WAP could not be located - WAP Date cannot be changed.</b>
     {{/if}}
   </p>
+  <p>
+    {{fa-icon "plus-circle" color="success"}} = if present, person has claimed provision (showers, meals).
+  </p>
   <div class="form-row">
     <f.input @name="status" @label="BMID Status" @type="select" @options={{this.bmidStatusOptions}}  @fieldSize="sm"/>
     <f.input @name="meals" @label="Meals" @type="select" @options={{this.mealOptions}} @grid="col-auto"
-             @fieldSize="sm"/>
+             @fieldSize="sm">
+      {{#if @entry.want_meals}}
+        <div class="text-success">{{fa-icon "plus-circle"}} {{@entry.want_meals}}</div>
+      {{/if}}
+    </f.input>
     <f.input @name="showers" @label="Showers" @type="select" @options={{this.showerOptions}} @grid="col-auto"
-             @fieldSize="sm"/>
+             @fieldSize="sm">
+      {{#if @entry.want_showers}}
+        <div class="text-success">{{fa-icon "plus-circle"}} showers</div>
+      {{/if}}
+    </f.input>
     <f.input @name="admission_date" @label="WAP Date" @type="select" @disabled={{@entry.wapDisabled}}
              @options={{@admissionDateOptions}}  @fieldSize="sm"/>
   </div>
@@ -39,7 +50,7 @@
   </div>
   <div class="form-row">
     <label class="col-form-label col-form-label-fixed">Notes</label>
-    <f.input @name="notes" @type="textarea" @rows={{4}} @cols={{80}} @wrapClass="col-auto"  @fieldSize="sm"/>
+    <f.input @name="notes" @type="textarea" @rows={{4}} @cols={{80}} @wrapClass="col-auto" @fieldSize="sm"/>
   </div>
   <div class="form-group row mt-1">
     <div class="col-auto">

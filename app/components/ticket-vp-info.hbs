@@ -8,7 +8,7 @@
   </:title>
   <:body>
     {{#if this.vehiclePass}}
-      {{#if @ticket.isQualified}}
+      {{#if (or (not @ticket) @ticket.isQualified)}}
         <p>
           <b>Claim your event ticket first before claiming your Vehicle Pass.</b>
         </p>
@@ -18,7 +18,9 @@
         <button type="button" class="btn btn-primary btn-responsive"
           {{action @setDocumentStatus this.vehiclePass "claimed"}} disabled={{@isSavingDocumentStatus}}>
           Claim Vehicle Pass
-          {{#if @isSavingDocumentStatus}}<SpinIcon />{{/if}}
+          {{#if @isSavingDocumentStatus}}
+            <SpinIcon/>
+          {{/if}}
         </button>
       {{else}}
         <p>
@@ -28,9 +30,17 @@
         <button type="button" class="btn btn-primary btn-responsive"
           {{action @setDocumentStatus this.vehiclePass "qualified"}} disabled={{@isSavingDocumentStatus}}>
           Release Vehicle Pass
-          {{#if @isSavingDocumentStatus}}<SpinIcon />{{/if}}
+          {{#if @isSavingDocumentStatus}}
+            <SpinIcon/>{{/if}}
         </button>
       {{/if}}
+    {{else if @ticketPackage.tickets.length}}
+      <p>
+        You should have qualified for a free Vehicle Pass, however, we do not have one on file.
+      </p>
+      <p>
+        Contact {{mail-to @ticketingInfo.ranger_ticketing_email}} and let us know something is wrong.
+      </p>
     {{else}}
       <p>
         <b>Sorry, but it doesn't look like you qualified for a free Vehicle Pass.</b>

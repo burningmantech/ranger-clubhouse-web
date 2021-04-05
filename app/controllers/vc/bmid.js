@@ -20,7 +20,9 @@ const CSV_COLUMNS = [
   'title2',
   'title3',
   'meals',
+  {title: 'req. meals', key: 'want_meals' },
   'showers',
+  {title: 'req. showers', key: 'want_showers' },
   'mvr',
   'team',
   'notes',
@@ -60,10 +62,12 @@ export default class VcBmidController extends ClubhouseController {
   @tracked textFilter = '';
   @tracked textFilterInput = '';
   @tracked textFilterError = null;
+  @tracked wantFilter = '';
 
   @tracked isRendering = false;
   @tracked renderBmids = [];
   @tracked editableBmids = [];
+  @tracked viewBmids = [];
 
   @tracked editMode = false;
 
@@ -83,6 +87,14 @@ export default class VcBmidController extends ClubhouseController {
     'notes'
   ];
 
+  wantFilterOptions = [
+    ['', ''],
+    ['All Eat', 'all_eat'],
+    ['Event Week Eat', 'event_week'],
+    ['Any Eats', 'any_eat'],
+    ['Showers', 'showers']
+  ];
+
 
   /*
    * Return the BMIDs to view which is filtered, and sorted
@@ -90,15 +102,30 @@ export default class VcBmidController extends ClubhouseController {
 
   _buildViewBmids() {
     let bmids = this.bmids;
-    const titleFilter = this.titleFilter;
+    const {titleFilter, teamFilter, wantFilter} = this;
     let key;
 
-    if (this.titleFilter !== 'All') {
+    if (titleFilter !== 'All') {
       bmids = bmids.filter((bmid) => (bmid.title1 === titleFilter || bmid.title2 === titleFilter || bmid.title3 === titleFilter));
     }
 
-    if (this.teamFilter !== 'All') {
-      bmids = bmids.filter((bmid) => (!isEmpty(bmid.team) && bmid.team.indexOf(this.teamFilter) !== -1));
+    if (teamFilter !== 'All') {
+      bmids = bmids.filter((bmid) => (!isEmpty(bmid.team) && bmid.team.indexOf(teamFilter) !== -1));
+    }
+
+    switch (wantFilter) {
+      case 'all_eat':
+        bmids = bmids.filter((bmid) => bmid.want_meals === 'all');
+        break;
+      case 'event_week':
+        bmids = bmids.filter((bmid) => bmid.want_meals === 'event');
+        break;
+      case 'any_eat':
+        bmids = bmids.filter((bmid) => (bmid.want_meals === 'all' || bmid.want_meals === 'event'));
+        break;
+      case 'showers':
+        bmids = bmids.filter((bmid) => bmid.want_showers);
+        break;
     }
 
     if (!isEmpty(this.textFilter)) {
@@ -442,7 +469,9 @@ export default class VcBmidController extends ClubhouseController {
         title2: bmid.title2,
         title3: bmid.title3,
         meals: bmid.meals,
+        want_meals: bmid.want_meals,
         showers: bmid.showers ? 'Y' : 'N',
+        want_showers: bmid.want_showers ? 'Y' : 'N',
         mvr: bmid.org_vehicle_insurance ? 'Y' : 'N',
         team: bmid.team,
         notes: bmid.notes,

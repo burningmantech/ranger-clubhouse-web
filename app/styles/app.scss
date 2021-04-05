@@ -385,6 +385,9 @@ table.table-box {
   border-color: $table-border-color;
 }
 
+.no-wrap {
+  white-space: nowrap;
+}
 /*
  * Remove border on a row
  */

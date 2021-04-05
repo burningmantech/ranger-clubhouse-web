@@ -10,7 +10,8 @@ import {
   VEHICLE_PASS,
   WAP,
   WAPSO,
-  ALL_YOU_CAN_EAT,
+  ALL_EAT_PASS,
+  EVENT_EAT_PASS,
   EVENT_RADIO,
   WET_SPOT,
   // Statuses
@@ -33,6 +34,7 @@ export default class PersonAccessDocumentsController extends ClubhouseController
   @tracked entry = null;
 
   typeOptions = [
+    [ 'Select Type', '' ],
     {
       groupName: 'Tickets/VP',
       options: [
@@ -50,11 +52,12 @@ export default class PersonAccessDocumentsController extends ClubhouseController
       ],
     },
     {
-      groupName: 'Appreciations',
+      groupName: 'Provisions',
       options: [
-        ['All-You-Can-Eat Pass', ALL_YOU_CAN_EAT],
+        ['All Eat Meal Pass', ALL_EAT_PASS],
+        ['Event Week Meal Pass', EVENT_EAT_PASS],
         ['Event Radio', EVENT_RADIO],
-        ['Shower Access', WET_SPOT],
+        ['Wet Spot Access', WET_SPOT],
       ]
     }
   ];

@@ -17,7 +17,7 @@ export default class TicketPackage {
     }
     this.wap = docs.find((d) => d.isWAP);
     this.wapso = docs.filter((d) => d.isWAPSO);
-    this.appreciations = docs.filter((d) => d.isAppreciation).sort((a, b) => a.typeHuman.localeCompare(b.typeHuman));
+    this.appreciations = docs.filter((d) => d.isProvision).sort((a, b) => a.typeHuman.localeCompare(b.typeHuman));
 
     this.year_earned = pkg.year_earned;
     this.credits_earned = pkg.credits_earned;

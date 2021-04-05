@@ -47,7 +47,7 @@ export default class TicketSummaryComponent extends Component {
   @cached
   get claimedItems() {
     const pkg = this.args.ticketPackage;
-    const ticket = this.args.ticket;
+    const {ticket, person} = this.args;
     const vp = pkg.vehicle_pass;
     const claimed = [];
 
@@ -63,11 +63,11 @@ export default class TicketSummaryComponent extends Component {
     if (this.hasStaffCredential || (wap && wap.isClaimed)) {
       let text = 'A Work Access Pass for yourself<ul>';
       if (this.hasStaffCredential) {
-        text += '<li>Part of your Staff Credential</li>';
+        text += '<li>Part of your Staff Credential - no additional document needed.</li>';
       }
 
       if (!this.hasStaffCredential) {
-        text += '<li>sent via email</li>';
+        text += `<li>sent via email to ${person.email}</li>`;
       }
       const accessItem = this.hasStaffCredential ? ticket : wap;
       if (accessItem.access_any_time) {
@@ -82,7 +82,8 @@ export default class TicketSummaryComponent extends Component {
     const {wapso} = pkg;
     if (wapso && wapso.find((w) => w.isClaimed)) {
       const names = wapso.filter((w) => w.isClaimed).map((w) => w.name).join(', ');
-      let text = `${wapso.length} Work Access Pass${wapso.length > 1 ? 'es' : ''} for Significant Others sent via email<ul>`;
+      let text = `${wapso.length} Work Access Pass${wapso.length > 1 ? 'es' : ''} for Significant Others<ul>`;
+      text += `<li>sent via email to ${person.email}</li>`;
       text += `<li>Allows entry on ${moment(wapso[0].access_date).format('ddd MMM D')} @ 00:01</li>`;
       text += `<li>for ${names}</li></ul>`;
       claimed.push(htmlSafe(text));
@@ -110,13 +111,13 @@ export default class TicketSummaryComponent extends Component {
       }
       const {delivery} = this.args.ticketPackage;
       if (!item.isStaffCredential && delivery.isDeliveryMail) {
-        return htmlSafe(`<ul>${invoice}<li>Mailed to:<br>${delivery.street}<br>${delivery.city}, ${delivery.state} ${delivery.postal_code} ${delivery.country}</li></ul>`);
+        return `<ul>${invoice}<li>Mailed to:<br>${delivery.street}<br>${delivery.city}, ${delivery.state} ${delivery.postal_code} ${delivery.country}</li></ul>`;
       }
-      return htmlSafe(`<ul>${invoice}<li>held at ${item.isStaffCredential ? 'Staff Credentialing' : 'Will-Call'} under your name <span class="d-inline-block">"${person.first_name} ${person.last_name}"</span>`);
+      return `<ul>${invoice}<li>held at ${item.isStaffCredential ? 'Staff Credentialing' : 'Will-Call'} under your name <span class="d-inline-block">"${person.first_name} ${person.last_name}"</span>`;
     }
 
     if (item.isWAP || item.isWAPSO) {
-      return htmlSafe('<ul><li>sent via email</li></ul>');
+      return `<ul><li>sent via email to ${person.email}</li></ul>`;
     }
 
     return '';
@@ -144,7 +145,7 @@ export default class TicketSummaryComponent extends Component {
 
     const radio = pkg.appreciations.find((a) => a.isEventRadio && a.isQualified);
     if (radio) {
-      unclaimed.push('An Event Radio(s)');
+      unclaimed.push('Event Radio');
     }
 
     return unclaimed;

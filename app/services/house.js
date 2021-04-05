@@ -245,20 +245,28 @@ export default class HouseService extends Service {
    */
 
   downloadFile(filename, contents, type) {
-    let {
-      document,
-      URL
-    } = window;
-    let anchor = document.createElement('a');
+    run('afterRender', () => {
+      const {document, URL} = window;
+      const anchor = document.createElement('a');
 
-    anchor.download = filename;
-    anchor.href = URL.createObjectURL(new Blob([contents], {
-      type
-    }));
+      anchor.download = filename;
+      anchor.href = URL.createObjectURL(new Blob([contents], {type}));
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+    })
+  }
 
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
+  downloadUrl(url) {
+    run('afterRender', () => {
+      const {document} = window;
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = true;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+    });
   }
 
   /*
@@ -266,9 +274,7 @@ export default class HouseService extends Service {
    */
 
   scrollToTop() {
-    run.schedule('afterRender', () => {
-      window.scrollTo(0, 0);
-    });
+    run('afterRender', () => window.scrollTo(0, 0));
   }
 
   /*
@@ -276,7 +282,7 @@ export default class HouseService extends Service {
    */
 
   scrollToElement(selector, scroll = true) {
-    run.schedule('afterRender', () => {
+    run('afterRender', () => {
       const element = document.querySelector(selector);
       if (!element) {
         return;
@@ -349,11 +355,14 @@ export default class HouseService extends Service {
   /*
    * Avoids common pitfalls and the weird undocumented special-sauce format that must be used with the built in pushPayload
    *
-   * From https://gist.github.com/runspired/96618af26fb1c687a74eb30bf15e58b6/
    */
 
   pushPayload(modelName, rawPayload) {
-    return this.store.push(this.store.normalize(modelName, rawPayload));
+    if (isArray(rawPayload)) {
+      return rawPayload.map((payload) => this.store.push(this.store.normalize(modelName, payload)));
+    } else {
+      return this.store.push(this.store.normalize(modelName, rawPayload));
+    }
   }
 
   /**
@@ -381,11 +390,19 @@ export default class HouseService extends Service {
    */
 
   toggleAllAccordions(show) {
-    $('.accordion-body').collapse(show ? 'show' : 'hide');
+    run('afterRender', ()=> {
+      $('.accordion-body').collapse(show ? 'show' : 'hide');
+    });
   }
 
   toggleSingleAccordion(containerId, show) {
-    $(`${containerId} .accordion-body`).collapse(show ? 'show' : 'hide');
-    this.scrollToElement(containerId, true);
+    run('afterRender', ()=> {
+      $(`${containerId} .accordion-body`).collapse(show ? 'show' : 'hide');
+      this.scrollToElement(containerId, true);
+    });
+  }
+
+  collapse(element, action) {
+    run('afterRender', () => $(element).collapse(action));
   }
 }

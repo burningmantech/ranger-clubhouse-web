@@ -2,17 +2,11 @@ import Component from '@glimmer/component';
 import eventYear from 'clubhouse/utils/event-year';
 
 export default class TicketingOffseasonComponent extends Component {
-  get bankedTickets() {
-    return this.args.ticketPackage.tickets.filter((ticket) => (ticket.status == 'banked' || ticket.status == 'qualified'));
-  }
-
-  get eventYear() {
-    const year = eventYear();
-    
-    if (year == 2020) {
-      return 2021;
-    }
-
-    return year;
+  constructor() {
+    super(...arguments);
+    const {ticketPackage} = this.args;
+    this.tickets = ticketPackage.tickets.filter((ticket) => (ticket.isBanked || ticket.isQualified));
+    this.appreciations = ticketPackage.appreciations.filter((ticket) => (ticket.isBanked || ticket.isQualified))
+    this.eventYear = eventYear();
   }
 }

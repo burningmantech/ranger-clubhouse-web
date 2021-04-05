@@ -14,7 +14,8 @@ export default class AdminBulkUploadRoute extends ClubhouseRoute {
       records: '',
       resultsCommitted: false,
       resultSuccesses: [],
-      resultFailures: []
+      resultFailures: [],
+      resultWarnings: []
     });
   }
 }

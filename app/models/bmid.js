@@ -4,6 +4,29 @@ import {ticketTypeLabel} from 'clubhouse/constants/ticket-types';
 import {BmidStatusLabels, MealLabels} from 'clubhouse/constants/bmid';
 import moment from 'moment';
 
+export const MEALS_ALL = 'all';
+export const MEALS_EVENT = 'event';
+export const MEALS_EVENT_PLUS_POST = 'event+post';
+export const MEALS_POST = 'post';
+export const MEALS_PRE = 'pre';
+export const MEALS_PRE_PLUS_EVENT = 'pre+event';
+export const MEALS_PRE_PLUS_POST = 'pre+post';
+
+// BMID is being prepped (may or may not exist in the database)
+export const IN_PREP = 'in_prep';
+// Ready to be sent off to be printed
+export const READY_TO_PRINT = 'ready_to_print';
+// BMID was changed (name, photos, titles, etc.) and needs to be reprinted
+export const READY_TO_REPRINT_CHANGE = 'ready_to_reprint_changed';
+// BMID was lost and a new one issued
+export const READY_TO_REPRINT_LOST = 'ready_to_reprint_lost';
+// BMID has issues, do not print.
+export const ISSUES = 'issues';
+// Person is not rangering this year (common) or another reason.
+export const DO_NOT_PRINT = 'do_not_print';
+// BMID was submitted
+export const SUBMITTED = 'submitted';
+
 export default class BmidModel extends Model {
   @attr('number') person_id;
   @attr('string') status;
@@ -20,14 +43,21 @@ export default class BmidModel extends Model {
   @attr('string', {readOnly: true}) create_datetime;
   @attr('string', {readOnly: true}) modified_datetime;
 
+  @attr('', {readOnly: true}) person;
+
+  // Retrieved and updated from the Staff Credential or WAP
   @attr('string') access_date;
   @attr('boolean') access_any_time;
-
-  @attr('', {readOnly: true}) person;
   @attr('number', {readOnly: true}) wap_id;
   @attr('string', {readOnly: true}) wap_status;
   @attr('string', {readOnly: true}) wap_type;
+
+  // True if the person is signed up for shifts
   @attr('boolean', {readOnly: true}) has_signups;
+
+  // Pulled from claimed or submitted provisions
+  @attr('string', {readOnly: true}) want_meals;
+  @attr('boolean', {readOnly: true}) want_showers;
 
   get admission_date() {
     if (this.access_any_time) {

@@ -1,6 +1,5 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
-import {set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {isEmpty} from '@ember/utils';
 
@@ -35,6 +34,8 @@ export default class VcBmidPrintController extends ClubhouseController {
   @tracked bmidsSelectedCount = 0;
   @tracked viewBmids;
 
+  @tracked isExporting = false;
+  @tracked exportList = [];
 
   _buildViewBmids() {
     let bmids = this.bmids;
@@ -102,35 +103,30 @@ export default class VcBmidPrintController extends ClubhouseController {
     this._buildViewBmids();
   }
 
-
   @action
-  sendToLambase(model) {
-    const batch_info = model.batchInfo;
+  exportAction(model) {
+    const person_ids = this.viewBmids.reduce((ids, bmid) => {
+      if (bmid.selected) {
+        ids.push(bmid.person_id);
+      }
+      return ids;
+    }, []);
 
-    this.modal.confirm('Confirm Submitting To Lambase',
-      `${this.bmidsSelectedCount} BMID(s) have been selected to print. Are you sure you want to do this?`,
+    this.modal.confirm('Confirm Export',
+      `${person_ids.length} BMID(s) have been selected to download and marked as SUBMITTED. Are you sure you want to do this?`,
       () => {
-        const person_ids = this.viewBmids.reduce((ids, bmid) => {
-          if (bmid.selected) {
-            ids.push(bmid.person_id);
-          }
-          return ids;
-        }, []);
-
-        this.isSubmitting = true;
-        this.ajax.request(`bmid/lambase`, {method: 'POST', data: {year: this.year, person_ids, batch_info}})
-          .then((result) => {
-            result.bmids.forEach((bmid) => {
-              const found = this.bmids.find((needle) => needle.person_id == bmid.person_id);
-
-              if (found) {
-                set(found, 'status', bmid.status);
-              }
-            });
-
-            this.toast.success('BMID(s) send to Lambase.');
-          }).catch((response) => this.house.handleErrorResponse(response))
-          .finally(() => this.isSubmitting = false);
+        this.isExporting = true;
+        this.ajax.request('bmid/export', {
+          method: 'POST',
+          data: {year: this.year, person_ids, batch_info: model.batchInfo}
+        }).then(({export_url, bmids}) => {
+          this.isExporting = false;
+          this.house.pushPayload('bmid', bmids);
+          this.ajax.request('bmid/exports', {data: {year: this.year}})
+            .then((result) => this.exportList = result.exports);
+          this.house.downloadUrl(export_url);
+        }).catch((response) => this.house.handleErrorResponse(response))
+          .finally(() => this.isExporting = false);
       }
     );
   }

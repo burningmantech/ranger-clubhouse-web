@@ -11,7 +11,7 @@
       <TicketSectionStatus @status="claimed" @text="Pickup at Staff Credentialing"/>
     {{else if this.itemsToDeliver}}
       {{#if this.isDeliveryMail}}
-        <TicketSectionStatus @status="claimed" @text="US Mail"/>
+        <TicketSectionStatus @status="claimed" @text="US Mail for {{this.namesToDeliver}}"/>
       {{else if this.isDeliveryWillCall}}
         <TicketSectionStatus @status="claimed" @text="Pickup at Will Call"/>
       {{/if}}
@@ -21,7 +21,7 @@
     {{#if this.hasQualifiedTickets}}
       <b>You will need to claim or bank your event ticket(s) first.</b>
     {{else if this.unclaimedAppreciationsCount}}
-      <b>You will need to claim or bank your {{pluralize this.unclaimedAppreciationsCount "appreciation"}}
+      <b>You will need to claim or bank your {{pluralize this.unclaimedAppreciationsCount "provision"}}
         first.</b>
     {{else if this.usingStaffCredential}}
       <p>
@@ -145,11 +145,9 @@
             <li><b class="text-danger">ITEMS MAY ONLY BE MAILED TO AN UNITED STATES ADDRESS VIA USPS.</b> Sorry,
               Canada, Australia, and the rest of the world - you will have to use Will Call instead.
             </li>
-            <li><b class="text-danger">We cannot guarantee delivery times of mailed items NOR provide tracking
-              information.</b>
+            <li><b class="text-danger">Delivery times of mailed items are NOT GUARANTEED and tracking is NOT AVAILABLE.</b>
               If you are worried that your items might get lost in the mail or not be delivered in time, it is
-              safest to have
-              them held at Will Call.
+              safest to have them held at Will Call.
             </li>
             {{#if @ticket.isReducedPriceTicket}}
               <li>

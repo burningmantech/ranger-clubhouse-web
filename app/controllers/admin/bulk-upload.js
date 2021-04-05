@@ -22,7 +22,15 @@ export default class AdminBulkUploadController extends ClubhouseController {
         {id: 'meals', title: 'Set meals'},
         {id: 'showers', title: 'Set showers'},
         {id: 'bmidsubmitted', title: 'Mark BMID as submitted'},
-        {id: 'eventradio', title: 'Event radio eligibility'}
+      ]
+    },
+    {
+      groupName: 'Provision Actions',
+      options: [
+        {id: 'all_eat_pass', title: 'Award All Eat pass'},
+        {id: 'event_eat_pass', title: 'Award Event Eat pass'},
+        {id: 'wet_spot', title: 'Award Wet Spot'},
+        {id: 'event_radio', title: 'Event Radio eligibility'}
       ]
     },
     {
@@ -64,6 +72,7 @@ export default class AdminBulkUploadController extends ClubhouseController {
   @tracked resultsCommitted = false;
 
   @tracked resultSuccesses = null;
+  @tracked resultWarnings = null;
   @tracked resultFailures = null;
 
   get disableSubmit() {
@@ -88,7 +97,8 @@ export default class AdminBulkUploadController extends ClubhouseController {
       this.resultsCommitted = results.commit;
       this.commit = false;
       this.resultSuccesses = this.actionResults.filter((r) => (r.status === 'success'));
-      this.resultFailures = this.actionResults.filter((r) => (r.status !== 'success'));
+      this.resultFailures = this.actionResults.filter((r) => (r.status !== 'success' && r.status !== 'warning'));
+      this.resultWarnings = this.actionResults.filter((r) => (r.status === 'warning'));
 
       // Clear out the textarea if commited and was successful
       // otherwise leave it in place so editing can be done.
