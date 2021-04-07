@@ -664,14 +664,18 @@ caption {
   display: flex;
   flex-wrap: wrap;
 
-  > div {
-    width: 120px;
+  > a {
+    display: block;
+  }
+
+  > div, > a {
+    width: 130px;
     padding: 5px;
     overflow-wrap: break-word;
   }
 
-  > div:hover {
-    background-color: #ececec;
+  > div:hover, > a:hover {
+    background-color: #d8fbd8;
   }
 }
 

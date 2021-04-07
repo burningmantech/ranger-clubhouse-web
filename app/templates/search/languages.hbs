@@ -1,10 +1,10 @@
 <h1>Language Search</h1>
 
 <ChForm @formId="search" @formFor={{this.searchForm}} @changeSet={{false}}
-        @onFormChange={{this.searchOnChange}} as |f|>
+        @onSubmit={{this.submit}} as |f|>
   <div class="form-group row">
     <div class="col-auto">
-      <label class="">Quick Search:</label>
+      <label>Quick Search:</label>
       <a href="#" class="mr-2" {{action this.setLanguage "spanish"}}>Spanish</a>
       <a href="#" class="mr-2" {{action this.setLanguage "chinese"}}>Chinese</a>
       <a href="#" class="mr-2" {{action this.setLanguage "dutch"}}>Dutch</a>
@@ -16,69 +16,40 @@
     </div>
   </div>
   <div class="form-group row">
-    <f.input @name="language" @type="text" @size=50 @maxlength=50 @placeholder="Enter a language to search for:"
-             @autofocus={{true}} @wrapClass="col-auto"/>
-    <div class="col-auto my-1">
-      <f.input @name="offSite" @type="checkbox" @value=1 @label="Include off site" @wrapClass="form-check"
+    <f.input @label="Enter a language to search for:"
+             @name="language" @type="text" @size={{50}} @maxlength={{50}}
+             @autofocus={{true}} @wrapClass="col-auto"
+             @onChange={{this.languageUpdate}}
+    />
+    <div class="col-auto">
+      <label class="col-form-label">&nbsp;</label>
+      <f.input @name="offSite"
+               @type="checkbox"
+               @value={{1}}
+               @label="Include off site"
+               @onChange={{this.onSiteUpdate}}
+               @wrapClass="form-check"
                @controlClass="form-check-input"/>
     </div>
   </div>
 </ChForm>
 <hr>
 {{#if this.isLoading}}
-  <LoadingDialog @item="languages" />
+  <LoadingDialog @item="languages"/>
 {{else}}
-  <h3 class="mt-4">On Duty Rangers ({{this.onDuty.length}})</h3>
-  {{#if this.onDutyGroup}}
-    <dl>
-      {{#each this.onDutyGroup as |group|}}
-        <dt>{{group.language_name}}</dt>
-        <dd>
-          {{#each group.items as |person idx|}}
-            {{~if idx ", "}}
-            <LinkTo @route="person.index" @model={{person.person_id}}
-                    class="d-inline-block">{{person.callsign}}</LinkTo>
-          {{/each}}
-        </dd>
-      {{/each}}
-    </dl>
-  {{else if this.searchLanguage}}
-    No on duty rangers found who speaks "{{this.searchLanguage}}".
-  {{/if}}
-
-  <h3 class="mt-4">Rangers With Radios ({{this.hasRadio.length}})</h3>
-  {{#if this.hasRadioGroup}}
-    <dl>
-      {{#each this.hasRadioGroup as |group|}}
-        <dt>{{group.language_name}}</dt>
-        <dd>
-          {{#each group.items as |person idx|~}}
-            {{~if idx ", "}}
-            <LinkTo @route="person.index" @model={{person.person_id}}
-                    class="d-inline-block">{{person.callsign}}</LinkTo>
-          {{/each}}
-        </dd>
-      {{/each}}
-    </dl>
-  {{else if this.searchLanguage}}
-    No off duty rangers found who speaks "{{this.searchLanguage}}".
-  {{/if}}
-
-  <h3 class="mt-4">Off Duty Rangers ({{this.offDuty.length}})</h3>
-  {{#if this.offDutyGroup}}
-    <dl>
-      {{#each this.offDutyGroup as |group|}}
-        <dt>{{group.language_name}}</dt>
-        <dd>
-          {{#each group.items as |person idx|}}
-            {{~if idx ", "}}
-            <LinkTo @route="person.index" @model={{person.person_id}}
-                    class="d-inline-block">{{person.callsign}}</LinkTo>
-          {{/each}}
-        </dd>
-      {{/each}}
-    </dl>
-  {{else if this.searchLanguage}}
-    No rangers with radios found who speaks "{{this.searchLanguage}}".
-  {{/if}}
+  <LanguageSpeakerTable @name="On Duty Rangers"
+                        @speakers={{this.onDuty.length}}
+                        @group={{this.onDutyGroup}}
+                        @searchLanguage={{this.searchLanguage}}
+  />
+  <LanguageSpeakerTable @name="Rangers With Radios"
+                        @speakers={{this.hasRadio.length}}
+                        @group={{this.hasRadioGroup}}
+                        @searchLanguage={{this.searchLanguage}}
+  />
+  <LanguageSpeakerTable @name="Off Duty Rangers"
+                        @speakers={{this.offDuty.length}}
+                        @group={{this.offDutyGroup}}
+                        @searchLanguage={{this.searchLanguage}}
+  />
 {{/if}}
