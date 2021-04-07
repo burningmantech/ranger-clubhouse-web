@@ -67,7 +67,9 @@ export default class DashboardAuditorComponent extends Component {
         return;
       }
 
-      check.name = step.name;
+      if (!check.name) {
+        check.name = step.name;
+      }
 
       if (check.email) {
         check.email = config(check.email);

@@ -18,7 +18,7 @@
       <td>{{shift-format this.onDutyEntry.on_duty}}</td>
       <td class="text-right">
         {{#if this.onDutyEntry.position.count_hours}}
-          <NoAppreciateIcon />
+          <NoAppreciateIcon/>
         {{/if}}
         {{hour-minute-format this.onDutyEntry.duration}}
       </td>
@@ -49,7 +49,12 @@
         <div class="d-flex">
           <div class="my-auto mr-2 d-inline-block">{{fa-icon "exclamation-circle" size="2x"}}</div>
           <div class="my-auto d-inline-block">
-            This person cannot start a shift because they have not been trained.
+              This person cannot start a shift because they have not completed
+              {{#if this.otOnly}}
+                the Online Training course.
+              {{else}}
+                Face-to-Face training.
+              {{/if}}
             If this is an error, check with the HQ Lead.
           </div>
         </div>
