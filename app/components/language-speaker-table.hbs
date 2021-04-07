@@ -1,0 +1,29 @@
+<table class="table table-striped mt-2">
+  <caption>{{@name}} ({{@speakers}})</caption>
+  <thead>
+  <tr>
+    <th class="w-10">Language</th>
+    <th>Speakers</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each @group as |group|}}
+    <tr>
+      <td class="w-10">{{group.language_name}}</td>
+      <td class="callsign-list">
+        {{#each group.items as |person idx|}}
+          <LinkTo @route="person.index" @model={{person.person_id}}>
+            {{person.callsign}}
+          </LinkTo>
+        {{/each}}
+      </td>
+    </tr>
+  {{else}}
+    {{#if @searchLanguage}}
+      <tr>
+        <td colspan="2">No {{@name}} who speak "{{@searchLanguage}}"</td>
+      </tr>
+    {{/if}}
+  {{/each}}
+  </tbody>
+</table>

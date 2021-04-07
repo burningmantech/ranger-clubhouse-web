@@ -3,7 +3,7 @@ import {debounce} from '@ember/runloop';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 
-const SEARCH_RATE_MS = 350;
+const SEARCH_RATE_MS = 500;
 
 const groupBy = function (items, key) {
   const groups = [];
@@ -36,6 +36,8 @@ export default class SearchLanguagesController extends ClubhouseController {
 
   @tracked searchForm = null;
 
+  @tracked isLoading = false;
+
   get onDutyGroup() {
     return groupBy(this.onDuty, 'language_name')
   }
@@ -50,6 +52,10 @@ export default class SearchLanguagesController extends ClubhouseController {
 
   // Build up a request and fire off a search
   _performSearch() {
+    if (this.isLoading) {
+      return; // in progress
+    }
+
     const language = this.searchForm.language.trim();
 
     // bail out if query is empty
@@ -71,28 +77,33 @@ export default class SearchLanguagesController extends ClubhouseController {
         this.offDuty = results.off_duty;
         this.hasRadio = results.has_radio;
       }).catch((response) => {
-      if (response.status == 404) {
+      if (response.status === 404) {
         this.notFound = language;
       } else {
         this.house.handleErrorResponse(response);
       }
-    }).finally(() => this.isSubmitting = false);
+    }).finally(() => this.isLoading = false);
   }
 
   @action
-  searchOnChange(field, model) {
-    if (field.name === 'language') {
-      // Delay the search if a name if being typed
-      debounce(this, this._performSearch, model, SEARCH_RATE_MS);
-    } else {
-      // Otherwise, run the search immediately.
-      this._performSearch(model);
-    }
+  languageUpdate(field, model) {
+    // Delay the search if a name if being typed
+    debounce(this, this._performSearch, model, SEARCH_RATE_MS);
+  }
+
+  @action
+  onSiteUpdate(field, model) {
+    this._performSearch(model);
+  }
+
+  @action
+  submit(model) {
+    this._performSearch(model);
   }
 
   @action
   setLanguage(language) {
-    set(this.searchForm, 'language',language);
+    set(this.searchForm, 'language', language);
     this._performSearch();
   }
 }

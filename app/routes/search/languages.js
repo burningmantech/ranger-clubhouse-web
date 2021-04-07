@@ -6,5 +6,6 @@ export default class SearchLanguagesRoute extends ClubhouseRoute {
       language: '',
       offSite: false
     });
+    controller.set('isLoading', false);
   }
 }
