@@ -32,6 +32,10 @@ function indefiniteArticle(noun) {
   return (noun.match(/^[aeiou]/i) ? `an ${noun}` : `a ${noun}`);
 }
 
+function otName(milestones) {
+  return milestones.online_training_only ? 'Online Training' : 'Part 1 of Training (online)';
+}
+
 /*
  * Step definition:
  *
@@ -210,24 +214,30 @@ export const VERIFY_PERSONAL_INFO = {
 };
 
 export const ONLINE_TRAINING = {
-  name: 'Read the Ranger Manual & Complete Part 1 of Training (online)',
+  //name: 'Read the Ranger Manual & Complete Part 1 of Training (online)',
   skipPeriod: AFTER_EVENT,
   check({milestones, isPNV, isAuditor, person, prevCompleted}) {
+    const name = `Read the Ranger Manual & Complete ${otName(milestones)}`;
     if (milestones.online_training_passed) {
-      return {result: (isPNV || isAuditor) ? COMPLETED : SKIP};
+      return {
+        result: (isPNV || isAuditor) ? COMPLETED : SKIP,
+        name
+      };
     }
 
     if (!milestones.online_training_enabled) {
       return {
         result: WAITING,
-        message: 'Part 1 of Training (online) is not quite ready yet. Check back later.'
+        message: `${otName(milestones)} is not quite ready yet. Check back later.`,
+        name
       }
     }
 
     if (isPNV && !prevCompleted) {
       return {
         result: NOT_AVAILABLE,
-        message: 'You must complete the previous steps before being allowed to take Online Training.'
+        message: 'You must complete the previous steps before being allowed to take Online Training.',
+        name
       };
     }
 
@@ -238,6 +248,7 @@ export const ONLINE_TRAINING = {
       message: htmlSafe('<p>The Ranger Manual can be found at <a href="' + config('RangerManualUrl') + '" rel="noopener noreferrer" target="_blank">rangers.burningman.org</a>.</p>' +
         `<p>The online training will take ${duration} to complete. </p> <p>Note: it may take up to 15 mins or more for the Clubhouse to record your course completion.</p>`),
       isOnlineTraining: true,
+      name
     };
   }
 };
@@ -246,6 +257,10 @@ export const SIGN_UP_FOR_TRAINING = {
   name: 'Sign up for Part 2 of Training (face-to-face)',
   skipPeriod: AFTER_EVENT,
   check({milestones, isPNV, isAuditor}) {
+    if (milestones.online_training_only) {
+      return { result: SKIP };
+    }
+
     if (milestones.training.status !== 'no-shift') {
       return {result: (isAuditor || isPNV) ? COMPLETED : SKIP};
     }
@@ -289,6 +304,10 @@ export const ATTEND_TRAINING = {
   name: 'Attend Part 2 of Training (face-to-face)',
   skipPeriod: AFTER_EVENT,
   check({milestones, person, isPNV, isAuditor}) {
+    if (milestones.online_training_only) {
+      return { result: SKIP };
+    }
+
     if (!milestones.online_training_passed || milestones.training.status === 'no-shift') {
       if (isPNV || isAuditor) {
         return {
@@ -396,7 +415,7 @@ export const SIGN_UP_FOR_SHIFTS = {
     if (!milestones.online_training_passed && (isAuditor || isPNV)) {
       return {
         result: NOT_AVAILABLE,
-        message: 'You need to complete Part 1 of Training (online) first before being allowed to sign up shifts.'
+        message: `You need to complete ${otName(milestones)} first before being allowed to sign up shifts.`
       };
     }
 

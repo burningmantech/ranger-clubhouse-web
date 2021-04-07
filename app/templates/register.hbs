@@ -1,6 +1,11 @@
 <LoginSidebar/>
 <main>
-  {{#if (eq this.step "ask-intent")}}
+  {{#if (config 'AuditorRegistrationDisabled')}}
+    <h3 class="text-danger">Auditor registration disabled.</h3>
+    <p>
+      We're sorry, Auditor registration is disabled at this time.
+    </p>
+  {{else if (eq this.step "ask-intent")}}
     <h3>Hello Auditor or Potential Ranger!</h3>
     <p>
       Thank you for visiting the Black Rock Ranger Secret Clubhouse.
@@ -16,7 +21,8 @@
         </button>
       </div>
       <div class="col-sm-6 col-lg-4">
-        <button type="button" class="btn btn-block btn-lg btn-primary" {{on "click" (fn this.stepAction "audit")}}>To audit
+        <button type="button" class="btn btn-block btn-lg btn-primary" {{on "click" (fn this.stepAction "audit")}}>To
+          audit
           Ranger Training
         </button>
       </div>

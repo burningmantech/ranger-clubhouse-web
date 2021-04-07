@@ -1,5 +1,5 @@
 <h1>{{this.year}} Event Info For <span class="d-inline-block">{{this.person.callsign}}</span></h1>
-<BackToHome />
+<BackToHome/>
 
 {{#if (or this.person.isActive this.person.isAlpha)}}
   This page contains information about your training and various bits (meals, showers, radios, vehicles, etc.)
@@ -17,7 +17,20 @@
 {{#if this.person.isNonRanger}}
   <p>Non Rangers are not required to pass training.</p>
 {{/if}}
-{{#if (and this.dirtTraining (not-eq this.dirtTraining.status "no-shift"))}}
+{{#if this.eventInfo.online_training_only}}
+  <p>
+    For this event, you are only required to complete Online Training in order to work a shift.
+  </p>
+  {{#if this.eventInfo.online_training_passed}}
+    <p>
+      Online Training was completed on {{mdy-format this.dirtTraining.online_training_date full=true}}.
+    </p>
+  {{else}}
+    <p class="text-danger">
+      You have not completed Online Training yet.
+    </p>
+  {{/if}}
+{{else if (and this.dirtTraining (not-eq this.dirtTraining.status "no-shift"))}}
   {{#if (eq this.dirtTraining.status "pending")}}
     Signed up for training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}.
   {{else if (eq this.dirtTraining.status "pass")}}

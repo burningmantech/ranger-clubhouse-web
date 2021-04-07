@@ -18,6 +18,8 @@ export default class ShiftCheckInOutComponent extends Component {
   @tracked isReloadingTimesheets = false;
   @tracked onDutyEntry = null;
 
+  @tracked otOnly = false;
+
   constructor() {
     super(...arguments);
 
@@ -63,14 +65,14 @@ export default class ShiftCheckInOutComponent extends Component {
     // hack for operator convenience - Dirt is the most common
     // shift, so put that at top.
 
-    const dirt = signins.find((p) => p.id == Position.DIRT);
+    const dirt = signins.find((p) => p.id === Position.DIRT);
     if (dirt) {
       signins.removeObject(dirt);
       signins.unshift(dirt);
     }
 
     // .. and Shiny Penny shift should also be on top
-    const sp = signins.find((p) => p.id == Position.DIRT_SHINY_PENNY);
+    const sp = signins.find((p) => p.id === Position.DIRT_SHINY_PENNY);
     if (sp) {
       signins.removeObject(sp);
       signins.unshift(sp);
@@ -85,7 +87,13 @@ export default class ShiftCheckInOutComponent extends Component {
     if (this.args.person.status === 'non ranger') {
       this.isPersonDirtTrained = true;
     } else {
-      this.isPersonDirtTrained =!!this.args.eventInfo.trainings.find((training) => (training.position_id == Position.TRAINING && training.status === 'pass'));
+      const {eventInfo} = this.args;
+      if (eventInfo.online_training_only) {
+        this.otOnly = true;
+        this.isPersonDirtTrained = eventInfo.online_training_passed;
+      } else {
+        this.isPersonDirtTrained = !!eventInfo.trainings.find((training) => (training.position_id === Position.TRAINING && training.status === 'pass'));
+      }
     }
 
   }
