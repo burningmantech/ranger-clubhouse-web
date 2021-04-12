@@ -1,9 +1,11 @@
-import doubleMetaphone from 'double-metaphone';
-import { HandleConflict } from './handle-conflict';
+import {doubleMetaphone} from 'double-metaphone';
+import {HandleConflict} from './handle-conflict';
 
 /** Warns about handles that are really short words, though initials like JC are allowed. */
 export class MinLengthRule {
-  get id() { return 'min-length'; }
+  get id() {
+    return 'min-length';
+  }
 
   check(name) {
     const result = [];
@@ -38,7 +40,9 @@ export class FccRule {
     };
   }
 
-  get id() { return 'fcc'; }
+  get id() {
+    return 'fcc';
+  }
 
   check(name) {
     const result = [];
@@ -60,7 +64,9 @@ export class PhoneticAlphabetRule {
     this.phoneticRegex = new RegExp(`^(${words.join('|')})+$`, 'i');
   }
 
-  get id() { return 'phonetic-alphabet'; }
+  get id() {
+    return 'phonetic-alphabet';
+  }
 
   check(name) {
     if (name.trim().length === 0) {
@@ -88,7 +94,9 @@ export class SubstringRule {
     }
   }
 
-  get id() { return 'substring'; }
+  get id() {
+    return 'substring';
+  }
 
   check(rawName) {
     const result = [];
@@ -135,7 +143,9 @@ export class EditDistanceRule {
     }
   }
 
-  get id() { return 'edit-distance'; }
+  get id() {
+    return 'edit-distance';
+  }
 
   check(rawName) {
     const result = [];
@@ -145,7 +155,7 @@ export class EditDistanceRule {
     }
     for (const [targetName, handle] of Object.entries(this.normalizedHandles)) {
       if (this.withinEditDistance(name, targetName, this.maxDistance)
-          && rawName.toLowerCase() !== handle.name.toLowerCase()) {
+        && rawName.toLowerCase() !== handle.name.toLowerCase()) {
         result.push(new HandleConflict(rawName, `is spelled like ${handle.name}`, 'medium', this.id, handle));
       }
     }
@@ -209,7 +219,9 @@ export class AmericanSoundexRule {
     }
   }
 
-  get id() { return 'american-soundex'; }
+  get id() {
+    return 'american-soundex';
+  }
 
   check(name) {
     const result = [];
@@ -266,14 +278,30 @@ export class AmericanSoundexRule {
   }
 
   numericValue(letter) {
-    if (letter.match(/^[AEIOUY]/)) { return -1; }
-    if (letter.match(/^[HW]/)) { return -2; }
-    if (letter.match(/^[BFPV]/)) { return 1; }
-    if (letter.match(/^[CGJKQSXZ]/)) { return 2; }
-    if (letter.match(/^[DT]/)) { return 3; }
-    if (letter.match(/^[L]/)) { return 4; }
-    if (letter.match(/^[MN]/)) { return 5; }
-    if (letter.match(/^[R]/)) { return 6; }
+    if (letter.match(/^[AEIOUY]/)) {
+      return -1;
+    }
+    if (letter.match(/^[HW]/)) {
+      return -2;
+    }
+    if (letter.match(/^[BFPV]/)) {
+      return 1;
+    }
+    if (letter.match(/^[CGJKQSXZ]/)) {
+      return 2;
+    }
+    if (letter.match(/^[DT]/)) {
+      return 3;
+    }
+    if (letter.match(/^[L]/)) {
+      return 4;
+    }
+    if (letter.match(/^[MN]/)) {
+      return 5;
+    }
+    if (letter.match(/^[R]/)) {
+      return 6;
+    }
   }
 }
 
@@ -292,7 +320,9 @@ export class DoubleMetaphoneRule {
     }
   }
 
-  get id() { return 'double-metaphone'; }
+  get id() {
+    return 'double-metaphone';
+  }
 
   check(name) {
     const result = [];
@@ -340,7 +370,9 @@ class Syllable {
     this.silentEnding = silentEnding;
   }
 
-  get rime() { return this.nucleus + this.coda + this.silentEnding; }
+  get rime() {
+    return this.nucleus + this.coda + this.silentEnding;
+  }
 }
 
 /**
@@ -482,7 +514,9 @@ class EyeRhymeBase {
     return [s.substring(0, splitPoint), s.substring(splitPoint)];
   }
 
-  vowelsOnly(s) { return !!s.match(/^[aeiouy]+$/); }
+  vowelsOnly(s) {
+    return !!s.match(/^[aeiouy]+$/);
+  }
 
   collapseDoubles(s) {
     for (let i = 1; i < s.length; ++i) {
@@ -499,7 +533,9 @@ export class EyeRhymeRule extends EyeRhymeBase {
     super(handles, 0.0);
   }
 
-  get id() { return 'eye-rhyme'; }
+  get id() {
+    return 'eye-rhyme';
+  }
 }
 
 export class ExperimentalEyeRhymeRule extends EyeRhymeBase {
@@ -507,7 +543,9 @@ export class ExperimentalEyeRhymeRule extends EyeRhymeBase {
     super(handles, 0.5);
   }
 
-  get id() { return 'experimental-eye-rhyme'; }
+  get id() {
+    return 'experimental-eye-rhyme';
+  }
 }
 
 export const ALL_RULE_CLASSES = [

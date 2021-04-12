@@ -8,7 +8,7 @@ module('Integration | Component | ch form/submit', function(hooks) {
 
   test('it renders', async function(assert) {
     this.set('onSubmit', () => { });
-    await render(hbs`{{ch-form/submit onSubmit=onSubmit}}`);
+    await render(hbs`<ChForm::Submit @onSubmit={{this.onSubmit}} />`);
     assert.dom('button').exists();
     assert.dom('button').hasAttribute('type', 'submit');
     assert.dom('button').hasText('Save');
@@ -16,7 +16,7 @@ module('Integration | Component | ch form/submit', function(hooks) {
 
   test('it renders with label', async function(assert) {
     this.set('onSubmit', () => { });
-    await render(hbs`{{ch-form/submit label="I'm a pickle" onSubmit=onSubmit}}`);
+    await render(hbs`<ChForm::Submit @onSubmit={{this.onSubmit}} @label="I'm a pickle" />`);
     assert.dom('button').exists();
     assert.dom('button').hasAttribute('type', 'submit');
     assert.dom('button').hasText("I'm a pickle");

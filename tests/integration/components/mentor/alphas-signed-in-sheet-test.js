@@ -8,7 +8,7 @@ module('Integration | Component | mentor/alphas-signed-in-sheet', function(hooks
 
   test('it renders', async function(assert) {
     this.set('slot', { people: []});
-    await render(hbs`{{mentor/alphas-signed-in-sheet slot=slot}}`);
+    await render(hbs`<Mentor::AlphasSignedInSheet @slot={{this.slot}} />`);
 
     assert.dom('div').exists();
   });

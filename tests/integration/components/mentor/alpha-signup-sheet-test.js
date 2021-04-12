@@ -8,7 +8,7 @@ module('Integration | Component | mentor/alpha-signup-sheet', function(hooks) {
 
   test('it renders', async function(assert) {
     this.set('slot', { people: [ ] });
-    await render(hbs`{{mentor/alpha-signup-sheet slot=slot}}`);
+    await render(hbs`<Mentor::AlphaSignupSheet @slot={{this.slot}} />`);
 
     assert.dom('div').exists();
   });
