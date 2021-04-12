@@ -10,17 +10,9 @@ module('Integration | Component | me/timesheet-missing-common', function(hooks) 
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{me/timesheet-missing-common}}`);
+    await render(hbs`<Me::TimesheetMissingCommon />`);
 
     assert.equal(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      {{#me/timesheet-missing-common}}
-        template block text
-      {{/me/timesheet-missing-common}}
-    `);
-
     assert.equal(this.element.textContent.trim(), 'template block text');
   });
 });

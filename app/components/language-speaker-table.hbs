@@ -11,7 +11,7 @@
     <tr>
       <td class="w-10">{{group.language_name}}</td>
       <td class="callsign-list">
-        {{#each group.items as |person idx|}}
+        {{#each group.items as |person|}}
           <LinkTo @route="person.index" @model={{person.person_id}}>
             {{person.callsign}}
           </LinkTo>

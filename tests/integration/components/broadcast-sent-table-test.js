@@ -11,7 +11,7 @@ module('Integration | Component | broadcast-sent-table', function(hooks) {
     // Handle any actions with this.set('myAction', function(val) { ... });
     this.set('result', { people: [] });
 
-    await render(hbs`{{broadcast-sent-table result=result}}`);
+    await render(hbs`<BroadcastSentTable result={{this.result}} />`);
 
     assert.dom('table').exists();
   });
