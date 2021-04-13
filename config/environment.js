@@ -41,6 +41,10 @@ module.exports = function (environment) {
       headers: {},
     },
 
+    'ember-cli-page-progress': {
+      includeCss: false
+    },
+
     showAjaxErrors: true,
 
     logRoutes: false, // Send each route transition to the backend for analytic reporting
