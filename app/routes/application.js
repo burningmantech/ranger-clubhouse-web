@@ -1,5 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {action} from '@ember/object';
+import { inject as service } from '@ember/service';
 import {humanize} from 'ember-cli-string-helpers/helpers/humanize';
 import {config} from 'clubhouse/utils/config';
 import {UnauthorizedError} from '@ember-data/adapter/error';
@@ -10,6 +11,8 @@ import moment from 'moment';
 import RSVP from 'rsvp';
 
 export default class ApplicationRoute extends ClubhouseRoute {
+  @service pageProgress;
+
   constructor() {
     super(...arguments);
 
@@ -135,6 +138,20 @@ export default class ApplicationRoute extends ClubhouseRoute {
     run.schedule('afterRender', () => $('.navbar-collapse').collapse('hide'));
   }
 
+  /**
+   * Provide a progress bar on top when transitioning between pages.
+   *
+   * @param transition
+   * @returns {Promise<boolean>}
+   */
+  @action
+  loading(transition) {
+    const {pageProgress} = this;
+    pageProgress.start(transition.targetName);
+    transition.promise.finally(() => pageProgress.done());
+    return true;
+  }
+
   @action
   error(error) {
     if (error instanceof UnauthorizedError || error.status === 401) {
@@ -151,6 +168,8 @@ export default class ApplicationRoute extends ClubhouseRoute {
     // allow the error to transition to ErrorRoute
     return true;
   }
+
+
 
   // Dynamic page title: https://github.com/mike-north/ember-cli-document-title-northm
   // Routes can customize their portion of the name with a titleToken property or function,
