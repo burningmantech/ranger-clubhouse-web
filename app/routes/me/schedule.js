@@ -38,6 +38,12 @@ export default class MeScheduleRoute extends ClubhouseRoute {
   setupController(controller, model) {
     const user = this.session.user;
 
+    if (user.isAuditor && model.permission.online_training_only) {
+      this.toast.error('Sorry, auditors are only allowed to take Online Training this year.');
+      this.transitionTo('me.homepage');
+      return;
+    }
+
     if ((user.isAuditor || user.isProspective || user.isAlpha) && !model.permission.all_signups_allowed) {
       this.toast.error('You need to complete one or more items in the checklist before being allowed to sign up.');
       this.transitionTo('me.homepage');
