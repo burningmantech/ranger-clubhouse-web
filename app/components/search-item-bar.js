@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import {action} from '@ember/object';
+import {action, setProperties} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {Role} from 'clubhouse/constants/roles';
 import {debounce} from '@ember/runloop';
@@ -66,7 +66,7 @@ export default class SearchItemBarComponent extends Component {
 
     const searchPrefs = this.house.getKey('person-search-prefs');
     if (searchPrefs) {
-      this.searchForm.setProperties(searchPrefs);
+      setProperties(this.searchForm, searchPrefs);
     }
 
     this.router.on('routeWillChange', () => {
