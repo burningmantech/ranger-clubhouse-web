@@ -46,7 +46,7 @@
     "ember-ajax": "^5.0.0",
     "ember-auto-import": "^1.11.2",
     "ember-cached-decorator-polyfill": "^0.1.1",
-    "ember-changeset": "3.13.2",
+    "ember-changeset": "3.13.3",
     "ember-changeset-validations": "3.14.2",
     "ember-cli": "~3.26.0",
     "ember-cli-app-version": "^5.0.0",
