@@ -1,40 +1,58 @@
 import Component from '@glimmer/component';
-import { htmlSafe } from '@ember/string';
+import { action } from '@ember/object';
+import {BANKED, CLAIMED} from 'clubhouse/models/access-document';
+import { inject as service } from '@ember/service';
 
 export default class TicketAppreciationsComponent extends Component {
+  @service ajax;
+  @service house
+  @service toast;
+
   constructor() {
     super(...arguments);
 
     this.items = this.args.ticketPackage.appreciations;
   }
 
-  get titleCounts() {
-    const titles = [];
-
-    if (this.qualifiedCount) {
-      titles.push(`<span class="text-success">${this.qualifiedCount} Available</span>`);
-    }
-
-    if (this.bankedCount) {
-      titles.push(`<span class="text-muted">${this.bankedCount} Banked</span>`);
-    }
-
-    if (this.claimedCount) {
-      titles.push(`<span class="text-success">${this.claimedCount} Claimed <i class="fas fa-check"></i>`);
-    }
-
-    return htmlSafe(titles.join(', '));
+  get availableItems() {
+    return this.items.filter((i) => (i.isQualified || i.isClaimed));
   }
 
-  get qualifiedCount() {
-    return this.items.filter((i) => i.isQualified).length;
+  get bankedItems() {
+    return this.items.filter((i) => i.isBanked);
   }
 
-  get claimedCount() {
-    return this.items.filter((i) => i.isClaimed).length;
+  get submittedItems() {
+    return this.items.filter((i) => i.isSubmitted);
   }
 
-  get bankedCount() {
-    return this.items.filter((i) => i.isBanked).length;
+  @action
+  async updateItems(desire) {
+    let provisions, status;
+    this.isSubmitting = true;
+
+    if (desire === 'bank') {
+      status = BANKED;
+      provisions = this.availableItems;
+    } else {
+      status = CLAIMED;
+      provisions = this.bankedItems;
+    }
+
+    const statuses = provisions.map((p) => ({ id: p.id, status }));
+
+    try {
+      const result = await this.ajax.request(`access-document/statuses`, {
+        method: 'PATCH',
+        data: {statuses}
+      });
+      this.house.pushPayload('access-document', result.access_document);
+      this.toast.success('Your choice has been successfully saved.');
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+
+    }
   }
 }

@@ -39,7 +39,7 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
     this.store.unloadAll('bmid');
 
     model.bmids.forEach((bmid) => {
-      bmid = this.house.pushPayload('bmid', bmid);
+      bmid = bmid.id ? this.house.pushPayload('bmid', bmid) : this.store.createRecord('bmid', bmid);
       switch (bmid.status) {
         case 'do_not_print':
           doNotPrint.push(bmid);

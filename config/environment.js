@@ -45,6 +45,8 @@ module.exports = function (environment) {
       includeCss: false
     },
 
+    exportApplicationGlobal: true,  // Setup 'window.Clubhouse' so error logging can grab the current user's id.
+
     showAjaxErrors: true,
 
     logRoutes: false, // Send each route transition to the backend for analytic reporting

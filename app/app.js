@@ -6,8 +6,6 @@ import config from 'clubhouse/config/environment';
 import LinkComponent from '@ember/routing/link-component';
 import RSVP from 'rsvp';
 import buildErrorHandler from 'ember-test-friendly-error-handler';
-import {isAbortError, isTimeoutError, isForbiddenError, isUnauthorizedError} from 'ember-ajax/errors';
-import {TimeoutError, AbortError, ForbiddenError, UnauthorizedError} from '@ember-data/adapter/error';
 import logError from 'clubhouse/utils/log-error';
 
 RSVP.on('error', function (error) {
@@ -35,18 +33,6 @@ Ember.onerror = buildErrorHandler('Ember.onerror', (error) => {
   }
 
   console.error(error);
-
-  if (error instanceof TimeoutError
-    || error instanceof AbortError
-    || error instanceof ForbiddenError
-    || isAbortError(error)
-    || isTimeoutError(error)
-    || isForbiddenError(error)
-    || isUnauthorizedError(error)
-    || error instanceof UnauthorizedError) {
-    // Don't bother with offline, timeouts, or unauthorized
-    return;
-  }
 
   logError(error, 'ember-onerror');
 

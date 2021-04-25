@@ -87,8 +87,10 @@
       {{else if @ticket.isQualified}}
         <h4>You qualified for a {{@ticket.typeHuman}} in {{@ticket.source_year}}!</h4>
         <p>
-          You may <b>Claim</b> your ticket for this year's event, or <b>Bank</b> it for a future event.<br>
-          Note: your {{@ticket.humanType}} will expire on {{mdy-format @ticket.expiry_date full=true}}.
+          You may <b>Claim</b> your ticket for this year's event, or <b>Bank</b> it for a future event.
+        </p>
+        <p>
+          Note: the {{@ticket.typeHuman}} will expire on {{mdy-format @ticket.expiry_date full=true}}.
         </p>
 
         <div class="my-2"><b>What do you want to do with your {{@ticket.typeHuman}}?</b></div>
@@ -96,7 +98,8 @@
           {{action @setDocumentStatus @ticket "claimed"}} disabled={{@isSavingDocumentStatus}}>
           Claim Ticket
           {{#if @isSavingDocumentStatus}}
-            <SpinIcon/>{{/if}}
+            <SpinIcon/>
+          {{/if}}
         </button>
         <span class="mx-2 h5">OR</span>
         <button type="button" class="btn btn-primary"

@@ -20,7 +20,8 @@ export default function logError(error, type) {
     || isTimeoutError(error)
     || isForbiddenError(error)
     || isUnauthorizedError(error)
-    || error.status == 403) {
+    || error.name === 'NetworkError'
+    || +error.status === 403) {
     // Don't record timeouts, unauthorized requests (aka expired authorization tokens), or offline errors.
     return;
   }
