@@ -65,7 +65,7 @@
 
   <p>
     {{fa-icon "exclamation-circle"}} = indicates person has not signed up for any shifts.
-    {{fa-icon "plus-circle" color="success"}} = person has claimed provision (showers, meals).
+    {{fa-icon "plus-circle" color="success"}} = person has a qualified provision (showers, meals).
   </p>
 
   Showing {{this.viewBmids.length}} of {{this.bmids.length}}
@@ -169,7 +169,7 @@
                               @controlClass="form-control-sm" @disabled={{bmid.wapDisabled}} />
               {{#if bmid.wapDisabled}}
                 {{#if bmid.wapMissing}}
-                  <strong class="text-danger">WAP misssing</strong>
+                  <strong class="text-danger">WAP missing</strong>
                 {{else}}
                   <strong class="text-danger">WAP submitted</strong>
                 {{/if}}
@@ -220,7 +220,7 @@
             <td>
               {{bmid.mealsHuman}}
               {{#if bmid.want_meals}}
-                <div class="text-success">{{fa-icon "plus-circle"}} {{bmid.want_meals}}</div>
+                <div class="text-success no-wrap">{{fa-icon "plus-circle"}} {{bmid.want_meals}}</div>
               {{/if}}
             </td>
             <td class="w-10">
