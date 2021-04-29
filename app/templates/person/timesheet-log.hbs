@@ -56,11 +56,11 @@
             {{#if data.message}}
               {{data.message}}<br>
             {{/if}}
+            {{#if data.forced}}
+              <span class="text-danger">Forced - unqualified "{{data.forced.message}}"</span><br>
+            {{/if}}
             {{#if (eq log.action "update")}}
-              {{#if log.forced}}
-                <span class="text-danger">Forced unqualified {{log.forced.unqualified_message}}</span><br>
-              {{/if}}
-              {{#if data.review_status}}
+               {{#if data.review_status}}
                 Status {{get data.review_status 0}} &rarr; {{get data.review_status 1}}<br>
               {{/if}}
               {{#if data.position_id}}

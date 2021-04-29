@@ -4,6 +4,7 @@ import {action} from '@ember/object';
 import {inject as service} from '@ember/service';
 import * as Position from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
+import { NON_RANGER } from 'clubhouse/constants/person_status';
 
 export default class ShiftCheckInOutComponent extends Component {
   @service ajax;
@@ -16,15 +17,16 @@ export default class ShiftCheckInOutComponent extends Component {
   @tracked signinPositionId = null;
   @tracked isSubmitting = false;
   @tracked isReloadingTimesheets = false;
-  @tracked onDutyEntry = null;
 
   @tracked otOnly = false;
+
+  @tracked showPositionDialog = false;
+  @tracked changePositionError = null;
 
   constructor() {
     super(...arguments);
 
     this.activePositions = this.args.positions.filter(position => position.active);
-    this._findOnDutyEntry();
 
     // Mark imminent slots as trained or not.
     const slots = this.args.imminentSlots;
@@ -84,7 +86,7 @@ export default class ShiftCheckInOutComponent extends Component {
     this.signinPositionId = this.signinPositions.length ? this.signinPositions.firstObject.id : null;
 
     // Has the person gone through dirt training?
-    if (this.args.person.status === 'non ranger') {
+    if (this.args.person.status === NON_RANGER) {
       this.isPersonDirtTrained = true;
     } else {
       const {eventInfo} = this.args;
@@ -99,14 +101,6 @@ export default class ShiftCheckInOutComponent extends Component {
   }
 
   /**
-   * Find the on duty/shift timesheet entry
-   */
-
-  _findOnDutyEntry() {
-    this.onDutyEntry = this.args.timesheets.findBy('off_duty', null);
-  }
-
-  /**
    * Start a shift.
    *
    * @param {number} positionId
@@ -115,7 +109,7 @@ export default class ShiftCheckInOutComponent extends Component {
    */
 
   _startShift(positionId, slotId = null) {
-    const position = this.activePositions.find((p) => p.id == positionId);
+    const position = this.activePositions.find((p) => +p.id === +positionId);
     const person = this.args.person;
 
     const data = {
@@ -146,13 +140,11 @@ export default class ShiftCheckInOutComponent extends Component {
             } else {
               this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
             }
-            this.isReloadingTimesheets = true;
-            // Refresh the timesheets
-            this.args.timesheets.update()
-              .then(() => this._findOnDutyEntry())
-              .catch((response) => this.house.handleErrorResponse(response))
-              .finally(() => this.isReloadingTimesheets = false);
-            if (person.id == this.session.userId) {
+
+            if (this.args.startShiftNotify) {
+              this.args.startShiftNotify();
+            }
+            if (+person.id === this.session.userId) {
               // Ensure the navigation bar is updated with the signed into position
               this.session.loadUser();
             }
@@ -205,12 +197,11 @@ export default class ShiftCheckInOutComponent extends Component {
 
   @action
   endShiftAction() {
-    const shift = this.onDutyEntry;
-    const endShiftNotify = this.args.endShiftNotify;
+    const {onDutyEntry, endShiftNotify} = this.args;
     const callsign = this.args.person.callsign;
 
     this.isSubmitting = true;
-    this.ajax.request(`timesheet/${shift.id}/signoff`, {method: 'POST'})
+    this.ajax.request(`timesheet/${onDutyEntry.id}/signoff`, {method: 'POST'})
       .then((result) => {
         this.store.pushPayload(result);
         if (endShiftNotify) {
@@ -219,11 +210,10 @@ export default class ShiftCheckInOutComponent extends Component {
         switch (result.status) {
           case 'success':
             this.toast.success(`${callsign} has been successfully signed off. Enjoy your rest.`);
-            if (this.args.person.id == this.session.userId) {
+            if (+this.args.person.id === this.session.userId) {
               // Update the user's navigation bar to remove the signed in position.
               this.session.loadUser();
             }
-            this.onDutyEntry = null;
             break;
           case 'already-signed-off':
             this.toast.error(`${callsign} was already signed off.`);
@@ -244,5 +234,65 @@ export default class ShiftCheckInOutComponent extends Component {
   @action
   updateShiftPosition(value) {
     this.signinPositionId = value;
+  }
+
+  @action
+  changePositionAction() {
+    this.showPositionDialog = true;
+    this.newPositionId = this.args.onDutyEntry.position_id;
+    this.changePositionError = null;
+  }
+
+  @action
+  updatePositionAction() {
+    const {onDutyEntry} = this.args;
+    this.isSubmitting = true;
+    this.changePositionError = null;
+
+    this.ajax.request(`timesheet/${onDutyEntry.id}/update-position`, {
+      method: 'PATCH',
+      data: {
+        position_id: this.newPositionId
+      }
+    }).then((result) => {
+      switch (result.status) {
+        case 'success':
+          onDutyEntry.reload().finally(() => this.showPositionDialog = false);
+          if (result.forced) {
+            // Shift start was forced, let the user know what was overridden.
+            let reason;
+            if (result.unqualified_reason === 'untrained') {
+              reason = `has not completed '${result.required_training}'`;
+            } else {
+              reason = `is unqualified ('${result.unqualified_message}')`;
+            }
+            this.modal.info('Shift Position Update Forced', `WARNING: The person ${reason}. Because you are an admin or have the timesheet management role,the position has been updated anyways.`);
+          } else {
+            this.toast.success('Position has been successfully updated.');
+          }
+          return;
+
+        case 'position-not-held':
+          this.changePositionError = 'Person does not hold the position. Timesheet entry cannot be updated.';
+          break;
+
+        case 'not-trained':
+          this.changePositionError = 'Person has not been trained for the position..';
+          break;
+
+        case 'not-qualified':
+          this.changePositionError = `Person has not meet one or more qualifiers to work the position trained for the position. Reason: ${result.unqualified_message}`;
+          break;
+        default:
+          this.changePositionError = `Cannot update the timesheet - unknown status [${result.status}]`;
+          break;
+      }
+    }).catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.isSubmitting = false);
+  }
+
+  @action
+  cancelUpdatePosition() {
+    this.showPositionDialog = false;
   }
 }

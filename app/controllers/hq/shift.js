@@ -17,6 +17,8 @@ export default class HqShiftController extends ClubhouseController {
   @tracked timesheets;
   @tracked unverifiedTimesheets = [];
   @tracked timesheetSummary;
+  @tracked onDutyEntry;
+
   @tracked assets;
   @tracked eventInfo;
 
@@ -119,6 +121,15 @@ export default class HqShiftController extends ClubhouseController {
   }
 
   /**
+   * Called when a shift was started.
+   */
+
+  @action
+  startShiftNotify() {
+    this.timesheets.update().then(() => this._findOnDuty());
+  }
+
+  /**
    * Called when the worker has ended a shift.
    * - Update the unverified timesheet list.
    * - Reload timesheet summary info
@@ -126,9 +137,13 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   @action
-  endShiftAction() {
+  endShiftNotify() {
     const personId = this.person.id;
-    this.unverifiedTimesheets = this.timesheets.filter((t) => t.isUnverified);
+
+    this.timesheets.update().then(() => {
+      this.unverifiedTimesheets = this.timesheets.filter((t) => t.isUnverified);
+      this._findOnDuty()
+    }).catch((response) => this.house.handleErrorResponse(response));
 
     this.ajax.request(`person/${personId}/timesheet-summary`, {data: {year: this.house.currentYear()}})
       .then((result) => this.timesheetSummary = result.summary)
@@ -143,7 +158,7 @@ export default class HqShiftController extends ClubhouseController {
    * Mark a timesheet entry as ignoring review for the moment. Typically used during burn perimeter check in
    * to send a Ranger quickly on their way without timesheet verification.
    *
-   * @param {Timesheet} entry
+   * @param {TimesheetModel} entry
    */
 
   @action
@@ -154,7 +169,7 @@ export default class HqShiftController extends ClubhouseController {
   /**
    * Mark a timesheet entry as correct/verified.
    *
-   * @param {Timesheet} entry
+   * @param {TimesheetModel} entry
    */
 
   @action
@@ -169,7 +184,7 @@ export default class HqShiftController extends ClubhouseController {
   /**
    * Show the incorrect entry form dialog.
    *
-   * @param {Timesheet} entry
+   * @param {TimesheetModel} entry
    */
   @action
   markEntryIncorrect(entry) {
@@ -190,7 +205,7 @@ export default class HqShiftController extends ClubhouseController {
   /**
    * Mark an entry as incorrect with a note.
    *
-   * @param {Timesheet} model
+   * @param {TimesheetModel} model
    * @param {boolean} isValid
    */
 
@@ -213,7 +228,7 @@ export default class HqShiftController extends ClubhouseController {
   /**
    * Check in a checked out asset
    *
-   * @param {Asset} ap
+   * @param {AssetModel} ap
    */
 
   @action
@@ -363,5 +378,15 @@ export default class HqShiftController extends ClubhouseController {
   @action
   toggleAppreciationsProgress() {
     this.showAppreciationsProgress = !this.showAppreciationsProgress;
+  }
+
+  /**
+   * Find the on duty entry
+   *
+   * @private
+   */
+
+  _findOnDuty() {
+    this.onDutyEntry = this.timesheets.findBy('off_duty', null);
   }
 }

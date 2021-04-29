@@ -17,6 +17,7 @@ export default class AppreciationProgressComponent extends Component {
       const thresholds = result.thresholds;
       const credits = timesheetSummary.total_credits;
       const hours = timesheetSummary.counted_duration;
+      const preEventAndEventHours = timesheetSummary.pre_event_duration + timesheetSummary.event_duration;
 
       this.calculateItem('reducedPriceTicket', credits, thresholds.RpTicketThreshold, 'credits');
       this.calculateItem('staffCredential', credits, thresholds.ScTicketThreshold, 'credits');
@@ -25,8 +26,8 @@ export default class AppreciationProgressComponent extends Component {
       this.calculateItem('showerAccess', hours, thresholds.ShowerAccessThreshold, 'hours');
       this.calculateItem('showerPog', hours, thresholds.ShowerPogThreshold, 'hours');
 
-      this.calculateItem('tshirt', hours, thresholds.ShirtShortSleeveHoursThreshold, 'hours');
-      this.calculateItem('shirtLong', hours, thresholds.ShirtLongSleeveHoursThreshold, 'hours');
+      this.calculateItem('tshirt', preEventAndEventHours, thresholds.ShirtShortSleeveHoursThreshold, 'hours');
+      this.calculateItem('shirtLong', preEventAndEventHours, thresholds.ShirtLongSleeveHoursThreshold, 'hours');
 
       if (timesheetSummary.other_duration) {
         this.otherHours = Math.floor(timesheetSummary.other_duration / 3600.0).toFixed(2);

@@ -10,16 +10,29 @@
   <Accordion.title>Shift Manage</Accordion.title>
   <Accordion.body>
     {{#if (is-current-year this.year)}}
-      <ShiftCheckInOut @positions={{this.positions}} @timesheets={{this.timesheets}} @person={{this.person}}
-                       @eventInfo={{this.eventInfo}} />
+      <ShiftCheckInOut @positions={{this.positions}}
+                       @timesheets={{this.timesheets}}
+                       @person={{this.person}}
+                       @eventInfo={{this.eventInfo}}
+                       @onDutyEntry={{this.onDutyEntry}}
+                       @startShiftNotify={{this.startShiftNotify}}
+                       @endShiftNotify={{this.endShiftNotify}}
+      />
     {{else}}
       Select the current year to start or end a shift
     {{/if}}
   </Accordion.body>
 </ChAccordion>
-<Person::TimesheetManage @timesheets={{this.timesheets}} @person={{this.person}} @year={{this.year}}
-                         @positions={{this.positions}} @onChange={{this.updateTimesheetSummary}}
-                         @timesheetSummary={{this.timesheetSummary}} />
+<Person::TimesheetManage @timesheets={{this.timesheets}}
+                         @person={{this.person}}
+                         @year={{this.year}}
+                         @positions={{this.positions}}
+                         @timesheetSummary={{this.timesheetSummary}}
+                         @startShiftNotify={{this.startShiftNotify}}
+                         @endShiftNotify={{this.endShiftNotify}}
+                         @onChange={{this.onTimesheetChange}}
+
+/>
 <Person::TimesheetMissing @timesheetMissing={{this.timesheetMissing}} @timesheets={{this.timesheets}}
                           @person={{this.person}} @year={{this.year}} @positions={{this.positions}}
-                          @onChange={{this.updateTimesheetSummary}} />
+                          @onChange={{this.onTimesheetChange}} />
