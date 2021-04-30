@@ -1,5 +1,5 @@
 <tr>
-  <td>
+  <td class="w-40">
     {{#if @item.earned}}
       <span class="text-success">{{fa-icon "check"}} {{@name}}</span>
     {{else}}
@@ -9,20 +9,20 @@
       <br>{{@subtext}}
     {{/if}}
   </td>
-  <td class="text-right">
+  <td class="w-15 text-right">
     {{@item.threshold}} {{@item.type}}
   </td>
-  <td class="text-right">
+  <td class="w-15 text-right">
     {{@item.value}} {{@item.type}}
   </td>
-  <td class="text-right">
+  <td class="w-15 text-right">
     {{#if @item.earned}}
       -
     {{else}}
       {{@item.needs}} {{@item.type}}
     {{/if}}
   </td>
-  <td>
+  <td class="w-15">
     {{#if @item.earned}}
       <b class="text-success">EARNED</b>
     {{else}}

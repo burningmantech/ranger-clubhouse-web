@@ -4,10 +4,16 @@ import {tracked} from '@glimmer/tracking';
 
 export default class PersonTimesheetController extends ClubhouseController {
   queryParams = ['year'];
+
   @tracked timesheetSummary;
+  @tracked onDutyEntry;
 
   @action
-  updateTimesheetSummary() {
+  onTimesheetChange() {
+    this._updateTimesheetSummary();
+  }
+
+  _updateTimesheetSummary() {
     this.ajax.request(`person/${this.person.id}/timesheet-summary`, {data: {year: this.year}})
       .then((result) => this.timesheetSummary = result.summary);
   }
@@ -18,5 +24,20 @@ export default class PersonTimesheetController extends ClubhouseController {
 
   get missingRequestPendingCount() {
     return this.timesheetMissing.filter((t) => t.isPending).length;
+  }
+
+  @action
+  startShiftNotify() {
+    this.timesheets.update().then(() => this._findOnDuty());
+  }
+
+  @action
+  endShiftNotify() {
+    this.timesheets.update().then(() => this._findOnDuty());
+    this._updateTimesheetSummary();
+  }
+
+  _findOnDuty() {
+    this.onDutyEntry = this.timesheets.findBy('off_duty', null);
   }
 }

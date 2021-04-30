@@ -24,5 +24,6 @@ export default class HqShiftRoute extends ClubhouseRoute {
     controller.set('showCorrectionForm', false);
     controller.set('showSiteLeaveDialog', false);
     controller.set('unverifiedTimesheets', controller.timesheets.filter((ts) => ts.isUnverified));
+    controller._findOnDuty();
   }
 }

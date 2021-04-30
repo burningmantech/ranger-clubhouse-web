@@ -55,7 +55,7 @@
 </h3>
 
 {{#if this.unverifiedTimesheets}}
-    Ask {{this.person.callsign}} if the following is correct:
+  Ask {{this.person.callsign}} if the following is correct:
   <table class="table table-width-auto table-striped table-hover">
     <thead>
     <tr>
@@ -128,10 +128,16 @@
 <h3>Shift Management
   <HelpPopover @slug="hq-shift-management"/>
 </h3>
-<ShiftCheckInOut @positions={{this.positions}} @timesheets={{this.timesheets}} @person={{this.person}}
+<ShiftCheckInOut @positions={{this.positions}}
+                 @timesheets={{this.timesheets}}
+                 @person={{this.person}}
                  @imminentSlots={{this.imminentSlots}}
                  @hasUnverifiedTimesheet={{this.hasUnverifiedTimesheet}}
-                 @endShiftNotify={{action this.endShiftAction}} @eventInfo={{this.eventInfo}} />
+                 @startShiftNotify={{this.startShiftNotify}}
+                 @endShiftNotify={{this.endShiftNotify}}
+                 @onDutyEntry={{this.onDutyEntry}}
+                 @eventInfo={{this.eventInfo}}
+/>
 
 
 {{#if this.showCorrectionForm}}
@@ -244,7 +250,8 @@
       </td>
       <td class="align-middle">{{shift-format ap.checked_out}}</td>
       <td class="align-middle">
-        <button type="button" class="btn btn-primary" {{action this.assetCheckInAction ap}} disabled={{ap.isSubmitting}}>
+        <button type="button" class="btn btn-primary" {{action this.assetCheckInAction ap}}
+                disabled={{ap.isSubmitting}}>
           Check In
         </button>
       </td>

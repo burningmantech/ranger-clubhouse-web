@@ -102,16 +102,18 @@ export default class PersonTimesheetManageComponent extends Component {
   signoffAction(timesheet) {
     this.ajax.request(`timesheet/${timesheet.id}/signoff`, {method: 'POST'})
       .then((result) => {
-        const {onChange, person, timesheets} = this.args;
-        timesheets.update();
+        const {onChange, person, endShiftNotify} = this.args;
         onChange();
-        if (person.id == this.session.userId) {
+        if (+person.id === +this.session.userId) {
           // Clear out the position title in user's navigation bar.
           this.session.loadUser();
         }
         switch (result.status) {
           case 'success':
-            this.toast.success(`${person.callsign} has been successfully signed off. Enjoy your rest.`);
+            this.toast.success(`${person.callsign} has been successfully signed off.`);
+            if (endShiftNotify) {
+              endShiftNotify();
+            }
             break;
 
           case 'already-signed-off':
