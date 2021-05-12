@@ -17,7 +17,7 @@ export default class TicketPackage {
     }
     this.wap = docs.find((d) => d.isWAP);
     this.wapso = docs.filter((d) => d.isWAPSO);
-    this.appreciations = docs.filter((d) => d.isProvision).sort((a, b) => a.typeHuman.localeCompare(b.typeHuman));
+    this.appreciations = docs.filter((d) => d.isProvision).sort((a, b) => a.typeLabel.localeCompare(b.typeLabel));
 
     this.year_earned = pkg.year_earned;
     this.credits_earned = pkg.credits_earned;
@@ -61,16 +61,16 @@ export default class TicketPackage {
    */
 
   get haveAddress() {
-    const {ticket, vehiclePass, delivery} = this;
+    const {ticket, vehiclePass} = this;
 
     // Staff Credentials are Will-Call items and do not require an address
-    if (ticket && ticket.isClaimed && ticket.isStaffCredential) {
+    if (ticket && ticket.isStaffCredential && ticket.isClaimed) {
       return true;
     }
 
     const item = ticket ?? vehiclePass;
     if (item && item.isClaimed) {
-      return delivery.isDeliveryWillCall || (delivery.isDeliveryMail && delivery.haveAddress);
+      return item.isDeliveryWillCall || (item.isDeliveryPostal && item.haveAddress);
     }
 
     // Nothing claimed yet, or not needing address

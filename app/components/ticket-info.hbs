@@ -5,7 +5,7 @@
                @showing={{@showing}}>
   <:title>
     {{#if @ticket}}
-      {{@ticket.typeHuman}}
+      {{@ticket.typeLabel}}
     {{else}}
       Event Tickets
     {{/if}}
@@ -32,7 +32,7 @@
       {{#each @ticketPackage.tickets as |item|}}
         <label class="d-block">
           <input type="radio" onclick={{action this.chooseTicketAction item}} checked={{item.isClaimed}}>
-          {{item.typeHuman}} earned in {{item.source_year}} and expires after {{mdy-format item.expiry_date}}
+          {{item.typeLabel}} earned in {{item.source_year}} and expires after {{mdy-format item.expiry_date}}
           {{#if item.isClaimed}}
             <span class="text-success">{{fa-icon "check"}} Claimed</span>
           {{/if}}
@@ -51,7 +51,7 @@
       </p>
       <p>
         {{#if @ticket}}
-          <b>You have claimed a {{@ticket.typeHuman}} earned in {{@ticket.source_year}}.</b>
+          <b>You have claimed a {{@ticket.typeLabel}} earned in {{@ticket.source_year}}.</b>
         {{else if this.allTicketsBanked}}
           <b>You have BANKED all your tickets.</b>
         {{else}}
@@ -61,7 +61,7 @@
     {{else if @ticket}}
       {{#if @ticket.isClaimed}}
         <p>
-          <b>You have claimed your {{@ticket.typeHuman}}.</b> If your plans have changed,
+          <b>You have claimed your {{@ticket.typeLabel}}.</b> If your plans have changed,
           you may bank the ticket. Note: the ticket will expire on {{mdy-format @ticket.expiry_date full=true}}.
         </p>
         <button type="button" class="btn btn-primary btn-responsive"
@@ -72,7 +72,7 @@
         </button>
       {{else if @ticket.isBanked}}
         <p>
-          <b>You have banked your {{@ticket.typeHuman}} this year.</b>
+          <b>You have banked your {{@ticket.typeLabel}} this year.</b>
         </p>
         <p>
           If your plans have changed, you may claim the ticket.
@@ -85,15 +85,15 @@
             <SpinIcon/>{{/if}}
         </button>
       {{else if @ticket.isQualified}}
-        <h4>You qualified for a {{@ticket.typeHuman}} in {{@ticket.source_year}}!</h4>
+        <h4>You qualified for a {{@ticket.typeLabel}} in {{@ticket.source_year}}!</h4>
         <p>
           You may <b>Claim</b> your ticket for this year's event, or <b>Bank</b> it for a future event.
         </p>
         <p>
-          Note: the {{@ticket.typeHuman}} will expire on {{mdy-format @ticket.expiry_date full=true}}.
+          Note: the {{@ticket.typeLabel}} will expire on {{mdy-format @ticket.expiry_date full=true}}.
         </p>
 
-        <div class="my-2"><b>What do you want to do with your {{@ticket.typeHuman}}?</b></div>
+        <div class="my-2"><b>What do you want to do with your {{@ticket.typeLabel}}?</b></div>
         <button type="button" class="btn btn-primary"
           {{action @setDocumentStatus @ticket "claimed"}} disabled={{@isSavingDocumentStatus}}>
           Claim Ticket

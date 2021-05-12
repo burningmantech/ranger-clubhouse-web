@@ -20,7 +20,7 @@
       </p>
       <ul>
         {{#each this.availableItems as |item|}}
-          <li>{{item.typeHuman}}</li>
+          <li>{{item.typeLabel}}</li>
         {{/each}}
       </ul>
       <p>
@@ -41,7 +41,7 @@
       </p>
       <ul>
         {{#each this.bankedItems as |item|}}
-          <li>{{item.typeHuman}} expiring after {{mdy-format item.expiry_date full=true}}</li>
+          <li>{{item.typeLabel}} expiring after {{mdy-format item.expiry_date full=true}}</li>
         {{/each}}
       </ul>
       <button type="button" class="btn btn-primary btn-responsive"
@@ -58,7 +58,7 @@
       </p>
       <ul>
         {{#each this.submittedItems as |item|}}
-          <li>{{item.typeHuman}} - SUBMITTED</li>
+          <li>{{item.typeLabel}} - SUBMITTED</li>
         {{/each}}
       </ul>
       <p>

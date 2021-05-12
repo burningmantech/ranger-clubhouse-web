@@ -36,19 +36,19 @@
         </p>
       {{/if}}
       {{#if this.claimedItems}}
-        <div class="h4">
+        <b>
           {{pluralize this.claimedItems.length "item"}}
           {{if (eq this.claimedItems.length 1) "has" "have"}} been CLAIMED:
-        </div>`
+        </b>`
         {{#each this.claimedItems as |item|}}
-          <div class="mt-1">{{fa-icon "check" color="success"}} {{item}}</div>
+          <div class="mb-1">{{fa-icon "check" color="success"}} {{item}}</div>
         {{/each}}
       {{else}}
         <b class="text-danger">You have NOT claimed any items for this event.</b>
       {{/if}}
       <hr>
       {{#if this.bankedItems}}
-        <div class="h4 mt-2">{{pluralize this.bankedItems.length "item"}} will be BANKED:</div>
+        <b>{{pluralize this.bankedItems.length "item"}} will be BANKED:</b>
         {{#each this.bankedItems as |item|}}
           <div class="mt-1">{{item}}</div>
         {{/each}}
@@ -59,11 +59,11 @@
       {{/if}}
       {{#if this.unclaimedItems}}
         <hr>
-        <div class="h4 text-danger mt-2">
+        <b class="text-danger">
           {{pluralize this.unclaimedItems.length "item"}}
           {{if (eq this.unclaimedItems.length 1) "is" "are"}}
           unclaimed
-        </div>
+        </b>
         Not claiming the item(s) may or may effect your ability to Ranger on playa:
         {{#each this.unclaimedItems as |item|}}
           <div class="mt-1">{{fa-icon "exclamation" color="danger"}} {{item}}</div>

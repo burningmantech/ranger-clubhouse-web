@@ -24,7 +24,7 @@
       <ul>
         {{#each @ticketPackage.appreciations as |item|}}
           <li>
-            {{item.typeHuman}}
+            {{item.typeLabel}}
             {{#if item.isEventRadio}}
               (count {{item.item_count}})
             {{/if}}

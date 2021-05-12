@@ -4,18 +4,17 @@ import TicketDeliveryValidations from 'clubhouse/validations/ticket-delivery';
 import {StateOptions} from 'clubhouse/constants/countries';
 import {tracked, cached} from '@glimmer/tracking';
 import {inject as service} from '@ember/service';
-import {DELIVERY_MAIL, DELIVERY_WILL_CALL} from 'clubhouse/models/access-document-delivery';
+import {DELIVERY_POSTAL, DELIVERY_WILL_CALL} from 'clubhouse/models/access-document';
 
 export default class TicketDeliverInfoComponent extends Component {
-  @tracked currentDeliveryMethod;
   @tracked isSaved = false;
+  @tracked isSaving = false;
 
   @service ajax;
   @service house;
   @service store;
   @service toast;
 
-  countryOptions = ['United States', 'Canada'];
   stateOptions = StateOptions['US'];
 
   ticketDeliveryValidations = TicketDeliveryValidations;
@@ -24,9 +23,23 @@ export default class TicketDeliverInfoComponent extends Component {
     super(...arguments);
 
     this.vehiclePass = this.args.ticketPackage.vehiclePass;
-    this.delivery = this.args.ticketPackage.delivery;
+  }
 
-    this.currentDeliveryMethod =  this.delivery.method;
+  @cached
+  get delivery() {
+    const item = this.itemToDeliver;
+    if (item) {
+      return {
+        street1: item.street1,
+        street2: item.street2,
+        city: item.city,
+        state: item.state,
+        postal_code: item.postal_code,
+        country: item.country,
+      }
+    } else {
+      return {county: 'US'};
+    }
   }
 
   /**
@@ -75,7 +88,7 @@ export default class TicketDeliverInfoComponent extends Component {
 
   @cached
   get namesToDeliver() {
-    return this.itemsToDeliver.map((i) => i.typeHuman).join(' + ');
+    return this.itemsToDeliver.map((i) => i.typeLabel).join(' + ');
   }
 
   /**
@@ -89,23 +102,28 @@ export default class TicketDeliverInfoComponent extends Component {
     return !!(ticket && ticket.isUsing);
   }
 
-  /**
-   * Count how many unclaimed appreciations are there
-   *
-   * @returns {number}
-   */
+  get itemToDeliver() {
+    const {ticket} = this.args;
+    const {vehiclePass} = this;
 
-  get unclaimedAppreciationsCount() {
-    return this.args.ticketPackage.appreciations.filter((a) => (a.isQualified && !a.isEventRadio)).length;
+    const item = ticket ?? vehiclePass;
+
+    if (item && item.isUsing) {
+      return ticket;
+    }
+
+    return null;
   }
+
 
   /**
    * Is the delivery method postal?
    *
    * @returns {boolean}
    */
-  get isDeliveryMail() {
-    return this.delivery.isDeliveryMail;
+
+  get isDeliveryPostal() {
+    return this.itemToDeliver && this.itemToDeliver.isDeliveryPostal;
   }
 
   /**
@@ -114,7 +132,7 @@ export default class TicketDeliverInfoComponent extends Component {
    */
 
   get isDeliveryWillCall() {
-    return this.delivery.isDeliveryWillCall;
+    return this.itemToDeliver && this.itemToDeliver.isDeliveryWillCall;
   }
 
   /**
@@ -124,13 +142,13 @@ export default class TicketDeliverInfoComponent extends Component {
    */
 
   get isDeliveryNone() {
-    return this.delivery.isDeliveryNone;
+    return this.itemToDeliver && this.itemToDeliver.isDeliveryNone;
   }
 
   /**
    * Find all the items needing an address.
    *
-   * @returns {AccessDocumentModel[]|[]}
+   * @returns {AccessDocumentModel[]}
    */
 
   @cached
@@ -170,19 +188,17 @@ export default class TicketDeliverInfoComponent extends Component {
    */
 
   get needAnswer() {
-    if (this.unclaimedAppreciationsCount) {
-      return true;
-    }
+    const item = this.itemToDeliver;
 
-    if (!this.itemsToDeliver.length) {
+    if (!item) {
       return false;
     }
 
-    switch (this.currentDeliveryMethod) {
+    switch (item.delivery_method) {
       case DELIVERY_WILL_CALL:
         return false;
-      case DELIVERY_MAIL:
-        return !this.delivery.haveAddress;
+      case DELIVERY_POSTAL:
+        return !item.haveAddress;
       default:
         return true;
     }
@@ -208,18 +224,7 @@ export default class TicketDeliverInfoComponent extends Component {
 
   @action
   setDeliveryMethod(method) {
-    this.delivery.method = method;
-    if (method === DELIVERY_WILL_CALL) {
-      this.delivery.save()
-        .then(() => {
-          this.currentDeliveryMethod = DELIVERY_WILL_CALL;
-          this.toast.success(`Your choice has been recorded.`);
-        })
-        .catch((response) => {
-          this.delivery.rollbackAttributes();
-          this.house.handleErrorResponse(response);
-        });
-    }
+    this._saveDeliveryCommon({delivery_method: method}, 'Delivery choice successfully saved.');
   }
 
   @action
@@ -227,13 +232,20 @@ export default class TicketDeliverInfoComponent extends Component {
     if (!isValid)
       return;
 
-    this.isSaved = false;
+    model.save();
 
-    model.method = DELIVERY_MAIL;
-    model.save().then(() => {
-        this.toast.success('The mailing address was successfully saved.');
-        this.isSaved = true;
-        this.currentDeliveryMethod = DELIVERY_MAIL;
-      }).catch((response) => this.house.handleErrorResponse(response));
+    this._saveDeliveryCommon({...model, delivery_method: DELIVERY_POSTAL}, 'Delivery address successfully saved.');
+  }
+
+  _saveDeliveryCommon(data, message) {
+    this.isSaving = true;
+
+    this.ajax.request(`ticketing/${this.args.person.id}/delivery`, {method: 'POST', data})
+      .then(({access_document}) => {
+        this.house.pushPayload('access-document', access_document);
+        this.toast.success(message);
+      })
+      .catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.isSaving = false);
   }
 }

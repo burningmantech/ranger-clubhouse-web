@@ -10,19 +10,16 @@
     {{else if this.usingStaffCredential}}
       <TicketSectionStatus @status="claimed" @text="Pickup at Staff Credentialing"/>
     {{else if this.itemsToDeliver}}
-      {{#if this.isDeliveryMail}}
+      {{#if this.isDeliveryPostal}}
         <TicketSectionStatus @status="claimed" @text="US Mail for {{this.namesToDeliver}}"/>
       {{else if this.isDeliveryWillCall}}
-        <TicketSectionStatus @status="claimed" @text="Pickup at Will Call"/>
+        <TicketSectionStatus @status="claimed" @text="Pickup at Will Call for {{this.namesToDeliver}}"/>
       {{/if}}
     {{/if}}
   </:title>
   <:body>
     {{#if this.hasQualifiedTickets}}
       <b>You will need to claim or bank your event ticket(s) first.</b>
-    {{else if this.unclaimedAppreciationsCount}}
-      <b>You will need to claim or bank your {{pluralize this.unclaimedAppreciationsCount "provision"}}
-        first.</b>
     {{else if this.usingStaffCredential}}
       <p>
         Your <b>Staff Credential {{if this.vehiclePass.isClaimed "and Vehicle Pass"}}</b> will be held at Staff
@@ -78,7 +75,7 @@
         The following {{if (eq this.itemsToDeliver.length 1) "item" (pluralize this.itemsToDeliver.length "item")}}
         {{#if this.isDeliveryNone}}
           can be mailed to you or held at Will Call for you to pick up:
-        {{else if this.isDeliveryMail}}
+        {{else if this.isDeliveryPostal}}
           will be mailed to you:
         {{else}}
           will be at Will Call for you to pickup:
@@ -98,54 +95,63 @@
         <div class="d-flex  flex-column flex-lg-row justify-lg-content-between align-self-center">
           <div>
             <button type="button" class="btn btn-primary  btn-responsive"
-              {{action this.setDeliveryMethod "mail"}} disabled={{this.delivery.isSaving}}>
+              {{action this.setDeliveryMethod "postal"}} disabled={{this.isSaving}}>
               {{fa-icon "envelope"}} Deliver By US Mail
-              {{#if this.delivery.isSaving}}<SpinIcon />{{/if}}
+              {{#if this.isSaving}}
+                <SpinIcon/>{{/if}}
             </button>
           </div>
           <div class="mx-auto mx-lg-3 my-2">OR</div>
           <div>
-            <button type="button" class="btn btn-primary  btn-responsive "
-              {{action this.setDeliveryMethod "will_call"}} disabled={{this.delivery.isSaving}}>
+            <button type="button" class="btn btn-primary  btn-responsive"
+              {{action this.setDeliveryMethod "will_call"}} disabled={{this.isSaving}}>
               {{fa-icon "user" type="far"}} Pickup At Will Call
-              {{#if this.delivery.isSaving}}<SpinIcon />{{/if}}
+              {{#if this.isSaving}}
+                <SpinIcon/>
+              {{/if}}
             </button>
           </div>
         </div>
-      {{else if this.isDeliveryMail}}
+      {{else if this.isDeliveryPostal}}
         <p>
           <b>Would you rather use Will Call?</b>
         </p>
         <button type="button" class="btn btn-primary btn-responsive"
-          {{action this.setDeliveryMethod "will_call"}} disabled={{this.delivery.isSaving}}>
+          {{action this.setDeliveryMethod "will_call"}} disabled={{this.isSaving}}>
           {{fa-icon "user" type="far"}} Pickup at Will Call
-          {{#if this.delivery.isSaving}}<SpinIcon />{{/if}}
+          {{#if this.isSaving}}
+            <SpinIcon/>
+          {{/if}}
         </button>
       {{else if this.isDeliveryWillCall}}
         <p>
           <b>Do you want delivery by mail instead?</b>
         </p>
         <button type="button" class="btn btn-primary btn-responsive"
-          {{action this.setDeliveryMethod "mail"}} disabled={{this.delivery.isSaving}}>
+          {{action this.setDeliveryMethod "postal"}} disabled={{this.isSaving}}>
           {{fa-icon "envelope"}} Deliver By US Mail
-          {{#if this.delivery.isSaving}}<SpinIcon />{{/if}}
+          {{#if this.isSaving}}
+            <SpinIcon/>
+          {{/if}}
         </button>
       {{else}}
-        Uh oh, I don't understand what the method [{{this.deliveryMethod}}] is. This is a bug!
+        Uh oh, I don't understand what the method [{{this.itemToDeliver.delivery_method}}] is. This is a bug!
       {{/if}}
 
       {{#if this.isSaving}}
         <LoadingIndicator/>
       {{/if}}
 
-      {{#if this.delivery.isDeliveryMail}}
+      {{#if this.isDeliveryPostal}}
         {{#if this.itemsNeedAddress}}
           <div class="mt-4">Please note:</div>
           <ul>
             <li><b class="text-danger">ITEMS MAY ONLY BE MAILED TO AN UNITED STATES ADDRESS VIA USPS.</b> Sorry,
               Canada, Australia, and the rest of the world - you will have to use Will Call instead.
             </li>
-            <li><b class="text-danger">Delivery times of mailed items are NOT GUARANTEED and tracking is NOT AVAILABLE.</b>
+            <li>
+              <b class="text-danger">Delivery times of mailed items are NOT GUARANTEED and tracking is NOT
+                AVAILABLE.</b>
               If you are worried that your items might get lost in the mail or not be delivered in time, it is
               safest to have them held at Will Call.
             </li>
@@ -157,22 +163,36 @@
               </li>
             {{/if}}
           </ul>
-          <ChForm @name="delivery" @formFor={{this.delivery}} @validator={{this.ticketDeliveryValidations}}
+          <ChForm @name="delivery"
+                  @formFor={{this.itemToDeliver}}
+                  @validator={{this.ticketDeliveryValidations}}
                   @onSubmit={{this.saveDeliveryAddress}} as |f|>
             <legend>
               Enter your mailing address:
             </legend>
             <div class="form-row">
-              <f.input @name="street" @type="text" @label="Street" @grid="col-md-8 col-sm-6"/>
+              <f.input @name="street1"
+                       @type="text"
+                       @label="Street"
+                       @grid="col-md-8 col-sm-6"/>
             </div>
             <div class="form-row">
-              <f.input @name="city" @type="text" @label="City" @grid="col-sm-5 col-md-4"/>
-              <f.input @name="state" @type="select" @label="State" @options={{this.stateOptions}}
+              <f.input @name="city"
+                       @type="text"
+                       @label="City"
                        @grid="col-sm-5 col-md-4"/>
-              <f.input @name="postal_code" @type="text" @label="Zip Code" @grid="col-sm-5 col-md-4"/>
+              <f.input @name="state"
+                       @type="select"
+                       @label="State"
+                       @options={{this.stateOptions}}
+                       @grid="col-sm-5 col-md-4"/>
+              <f.input @name="postal_code"
+                       @type="text"
+                       @label="Zip Code"
+                        @grid="col-sm-5 col-md-4"/>
             </div>
-            <f.submit @label="Save Address" @submitClass="btn-responsive" @disabled={{this.delivery.isSaving}} />
-            {{#if this.delivery.isSaving}}
+            <f.submit @label="Save Address" @submitClass="btn-responsive" @disabled={{this.isSaving}} />
+            {{#if this.isSaving}}
               <LoadingIndicator/>
             {{else if f.model.isDirty}}
               <span class="text-danger">Changes will not be saved until you click on 'Save Address'</span>

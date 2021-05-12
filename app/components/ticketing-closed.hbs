@@ -70,7 +70,7 @@
           {{pluralize this.bankedItems.length "item"}} will be banked:
           <ul>
           {{#each this.bankedItems as |item|}}
-            <li>{{item.typeHuman}} expires after {{mdy-format item.expiry_date}}</li>
+            <li>{{item.typeLabel}} expires after {{mdy-format item.expiry_date}}</li>
           {{/each}}
           </ul>
         </li>

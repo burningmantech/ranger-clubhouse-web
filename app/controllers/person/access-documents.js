@@ -22,13 +22,14 @@ import {
   QUALIFIED,
   SUBMITTED,
   USED,
+  DELIVERY_NONE,
+  DELIVERY_POSTAL,
+  DELIVERY_WILL_CALL
 } from 'clubhouse/models/access-document';
-import {DELIVERY_WILL_CALL, DELIVERY_MAIL} from "clubhouse/models/access-document-delivery";
 
 export default class PersonAccessDocumentsController extends ClubhouseController {
   @tracked isSubmitting = false;
   @tracked isShowingAll = false;
-  @tracked isEditingDelivery = false;
 
   @tracked documents = null;
   @tracked entry = null;
@@ -73,7 +74,8 @@ export default class PersonAccessDocumentsController extends ClubhouseController
   ];
 
   deliveryMethodOptions = [
-    ['US Mail', DELIVERY_MAIL],
+    ['None', DELIVERY_NONE],
+    ['US Mail', DELIVERY_POSTAL],
     ['Will Call', DELIVERY_WILL_CALL],
   ];
 
@@ -99,11 +101,12 @@ export default class PersonAccessDocumentsController extends ClubhouseController
 
     this.entry = this.store.createRecord('access-document', {
       person_id: this.person.id,
-      type: 'staff_credential',
-      status: 'qualified',
+      type: RPT,
+      status: QUALIFIED,
       source_year: currentYear,
       expiry_year: currentYear + 3,
       admission_date: null,
+      delivery_method: DELIVERY_NONE,
     });
   }
 
@@ -162,33 +165,7 @@ export default class PersonAccessDocumentsController extends ClubhouseController
       .finally(() => this.isLoading = false);
   }
 
-  @action
-  editDelivery() {
-    if (this.delivery.isNew) {
-      this.isEditingDelivery = true;
-    } else {
-      this.delivery.reload()
-        .then(() => this.isEditingDelivery = true)
-        .catch((response) => this.house.handleErrorResponse(response));
-    }
-  }
-
-  @action
-  cancelDelivery() {
-    this.isEditingDelivery = false;
-  }
-
-  @action
-  saveDelivery(model, isValid) {
-    if (!isValid) {
-      return;
-    }
-
-    const isNew = model.isNew;
-
-    model.save().then(() => {
-      this.isEditingDelivery = false;
-      this.toast.success(`The delivery record was successfully ${isNew ? 'created' : 'updated'}.`);
-    }).catch((response) => this.house.handleErrorResponse(response, model));
+  get isTicketingOpen() {
+    return this.ticketingInfo.period === 'open';
   }
 }
