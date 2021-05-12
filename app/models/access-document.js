@@ -1,4 +1,5 @@
-import Model, {attr} from '@ember-data/model'
+import Model, {attr} from '@ember-data/model';
+import { isEmpty } from '@ember/utils';
 import moment from 'moment';
 
 export const STAFF_CREDENTIAL = 'staff_credential';
@@ -22,6 +23,11 @@ export const CANCELLED = 'cancelled';
 export const EXPIRED = 'expired';
 export const SUBMITTED = 'submitted';
 
+export const DELIVERY_POSTAL = 'postal';
+export const DELIVERY_WILL_CALL = 'will_call';
+export const DELIVERY_NONE = 'none';
+export const DELIVERY_EMAIL = 'email';
+
 export const TypeLabels = {
   [STAFF_CREDENTIAL]: 'Staff Credential',
   [RPT]: 'Reduced-Price Ticket',
@@ -34,6 +40,13 @@ export const TypeLabels = {
   [EVENT_EAT_PASS]: 'Event Week Meal Pass',
   [WET_SPOT]: 'Wet Spot Access (Org Showers)',
   [WET_SPOT_POG]: 'Wet Spot Pog (Org Showers)'
+};
+
+export const DeliveryMethodLabels = {
+  [DELIVERY_EMAIL]: 'Email',
+  [DELIVERY_POSTAL]: 'US Mail',
+  [DELIVERY_WILL_CALL]: 'Will Call',
+  [DELIVERY_NONE]: 'None'
 };
 
 export default class AccessDocumentModel extends Model {
@@ -54,6 +67,16 @@ export default class AccessDocumentModel extends Model {
 
   // Only returned when requesting items available for delivery
   @attr('boolean', {readOnly: true}) has_staff_credential;
+
+  @attr('string', { defaultValue: DELIVERY_NONE}) delivery_method;
+
+  @attr('string') street1;
+  @attr('string') street2;
+  @attr('string') city;
+  @attr('string') state;
+  @attr('string', { defaultValue: 'US'}) country;
+  @attr('string') postal_code;
+
 
   get isTicket() {
     return (this.type === STAFF_CREDENTIAL
@@ -135,8 +158,47 @@ export default class AccessDocumentModel extends Model {
     return this.isClaimed || this.isSubmitted;
   }
 
-  get typeHuman() {
-    return TypeLabels[this.type];
+  get isDeliveryEmail() {
+    return this.delivery_method === DELIVERY_EMAIL;
+  }
+
+  get isDeliveryPostal() {
+    return this.delivery_method === DELIVERY_POSTAL;
+  }
+
+  get isDeliveryWillCall() {
+    return this.delivery_method === DELIVERY_WILL_CALL;
+  }
+
+  get isDeliveryNone() {
+    return this.delivery_method === DELIVERY_NONE || isEmpty(this.delivery_method);
+  }
+
+  get haveAddress() {
+    if (this.delivery_method === DELIVERY_WILL_CALL) {
+      return true;
+    }
+
+    if (this.delivery_method === DELIVERY_NONE || isEmpty(this.delivery_method)) {
+      return false;
+    }
+
+    for (const name of [ 'street1', 'city', 'state', 'postal_code']) {
+      if (isEmpty(this[name])) {
+        return false
+      }
+    }
+
+    return true;
+  }
+
+
+  get typeLabel() {
+    return TypeLabels[this.type] ?? this.type;
+  }
+
+  get deliveryMethodLabel() {
+    return DeliveryMethodLabels[this.delivery_method] ?? this.delivery_method;
   }
 
   get expiryYear() {

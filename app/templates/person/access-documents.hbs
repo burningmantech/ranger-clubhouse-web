@@ -19,7 +19,7 @@
     <tr>
       <td><a href {{action this.editAccessDocument document}}>RAD-{{document.id}}</a></td>
       <td>
-        {{document.typeHuman}}
+        {{document.typeLabel}}
         {{#if document.isEventRadio}}
           (count {{document.item_count}})
         {{else if document.isWAPSO}}
@@ -28,7 +28,7 @@
         {{/if}}
       </td>
       <td>{{document.status}}</td>
-      <td>{{document.delivery_method}}</td>
+      <td>{{document.deliveryMethodLabel}}</td>
       <td>
         {{#if document.access_any_time}}
           Any
@@ -53,20 +53,10 @@
   </tbody>
 </table>
 <p>
-  <AccessDocumentDeliveryMethod @year={{this.year}} @delivery={{this.delivery}} />
-</p>
-<p>
   <button type="button" class="btn btn-primary" {{action this.newAccessDocument}}>
     {{fa-icon "plus"}} New Item
   </button>
 
-  <button type="button" class="btn btn-secondary" {{action this.editDelivery}} disabled={{this.delivery.isReloading}}>
-    {{#if this.delivery.isReloading}}
-      <LoadingIndicator @text="Loading"/>
-    {{else}}
-      Edit Delivery Method
-    {{/if}}
-  </button>
   <button type="button" class="btn btn-secondary ml-4" {{action this.showAction}} disabled={{this.isLoading}}>
     {{#if this.isLoading}}
       <LoadingIndicator @text="Loading"/>
@@ -103,10 +93,35 @@
                       (eq f.model.type "vehicle_pass")
                       (eq f.model.type "gift_ticket")
               )}}
-          <p>
-            Current delivery method: (might be overridden by claimed/submitted Staff Credential)<br>
-            <AccessDocumentDeliveryMethod @year={{this.year}} @delivery={{this.delivery}} />
-          </p>
+          {{#if this.isTicketingOpen}}
+            <div class="form-row mb-2">
+              <div class="col-auto text-danger">
+                NOTE: Ticketing is still open. The delivery method and/or address might be overridden
+                by the end user for all un-submitted deliverable items.
+              </div>
+            </div>
+          {{/if}}
+
+          <div class="form-row">
+            <f.input @name="delivery_method" @type="select" @options={{this.deliveryMethodOptions}}
+                     @label="Delivery Method" @grid="col-auto"/>
+          </div>
+
+          {{#if (eq f.model.delivery_method "postal")}}
+            <div class="form-row">
+              <f.input @name="street1" @label="Street" @size={{45}} @maxlength={{100}} @grid="col-lg-auto col-sm-6"/>
+            </div>
+            <div class="form-row">
+              <f.input @name="city" @label="City" @size={{25}} @maxlength={{100}} @grid="col-sm-5 col-lg-4"/>
+              <f.input @name="state"
+                       @label="State"
+                       @type="select"
+                       @options={{this.stateOptions}}
+                       @grid="col-sm-5 col-lg-auto"/>
+              <f.input @name="postal_code" @label="Zip Code" @size={{10}} @grid="col-sm-5 col-lg-auto"/>
+            </div>
+          {{/if}}
+
         {{/if}}
         {{#unless this.entry.isNew}}
           <p>
@@ -122,8 +137,12 @@
           </div>
         {{/unless}}
         <div class="form-row">
-          <f.input @name="additional_comments" @label="Additional Comments" @type="textarea" @rows=2 @cols=60
-                   @hint="(Your callsign and date will be automatically added to any additional comments you provide.)"/>
+          <f.input @name="additional_comments"
+                   @label="Additional Comments"
+                   @type="textarea"
+                   @rows={{4}}
+                   @cols={{80}}
+                   @hint="(Your callsign and today's date will be automatically added to any additional comments provided.)"/>
         </div>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
@@ -142,42 +161,3 @@
     </ChForm>
   </ModalDialog>
 {{/if}}
-
-
-{{#if this.isEditingDelivery}}
-  <ModalDialog @title="Edit Delivery Method for {{this.person.callsign}}" as |Modal|>
-    <ChForm @formId="delivery" @formFor={{this.delivery}}
-            @onSubmit={{this.saveDelivery}}
-            @onCancel={{this.cancelDelivery}} as |f|>
-      <Modal.body>
-        <p>
-          When the access documents are exported, the delivery method and mailing address will be attached at that time.
-        </p>
-        <div class="form-row">
-          <f.input @name="method" @label="Method" @type="select" @options={{this.deliveryMethodOptions}}
-                   @grid="col-auto"/>
-        </div>
-
-        {{#if (eq f.model.method "mail")}}
-          <div class="form-row">
-            <f.input @name="street" @label="Street" @size={{45}} @maxlength={{100}} @grid="col-lg-auto col-sm-6"/>
-          </div>
-          <div class="form-row">
-            <f.input @name="city" @label="City" @size={{25}} @maxlength={{100}} @grid="col-sm-5 col-lg-4"/>
-            <f.input @name="state" @label="State" @type="select" @options={{this.stateOptions}}
-                     @grid="col-sm-5 col-lg-auto"/>
-            <f.input @name="postal_code" @label="Zip Code" @size={{10}} @grid="col-sm-5 col-lg-auto"/>
-          </div>
-        {{/if}}
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label="Update" @disabled={{this.delivery.isSaving}} />
-        <f.cancel @disabled={{this.delivery.isSaving}} />
-        {{#if this.delivery.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
-{{/if}}
-

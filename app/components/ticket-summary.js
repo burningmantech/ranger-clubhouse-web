@@ -34,11 +34,11 @@ export default class TicketSummaryComponent extends Component {
     const pkg = this.args.ticketPackage;
 
     pkg.tickets.filter((t) => t.isBanked).forEach((t) => {
-      banked.push(`A ${t.typeHuman} (expires ${moment(t.expiry_date).format('YYYY-MM-DD')})`);
+      banked.push(`A ${t.typeLabel} (expires ${moment(t.expiry_date).format('YYYY-MM-DD')})`);
     });
 
     pkg.appreciations.filter((t) => t.isBanked).forEach((t) => {
-      banked.push(`${t.typeHuman} (expires ${moment(t.expiry_date).format('YYYY-MM-DD')})`);
+      banked.push(`${t.typeLabel} (expires ${moment(t.expiry_date).format('YYYY-MM-DD')})`);
     });
 
     return banked;
@@ -52,11 +52,11 @@ export default class TicketSummaryComponent extends Component {
     const claimed = [];
 
     if (ticket && ticket.isClaimed) {
-      claimed.push(htmlSafe(`A ${ticket.typeHuman}${this.itemDeliveryMethod(ticket)}`));
+      claimed.push(htmlSafe(`A ${ticket.typeLabel}${this.itemDeliveryMethod(ticket)}`));
     }
 
     if (vp && vp.isClaimed) {
-      claimed.push(htmlSafe(`A ${vp.typeHuman} ${this.itemDeliveryMethod(vp)}`));
+      claimed.push(htmlSafe(`A ${vp.typeLabel} ${this.itemDeliveryMethod(vp)}`));
     }
 
     const wap = pkg.wap;
@@ -90,7 +90,7 @@ export default class TicketSummaryComponent extends Component {
     }
 
     pkg.appreciations.filter((t) => t.isClaimed).forEach((t) => {
-      claimed.push(t.typeHuman);
+      claimed.push(t.typeLabel);
     });
 
     return claimed;
@@ -110,7 +110,7 @@ export default class TicketSummaryComponent extends Component {
         invoice = '<li>Ticket must be paid for - an invoice will be sent</li>'
       }
       const {delivery} = this.args.ticketPackage;
-      if (!item.isStaffCredential && delivery.isDeliveryMail) {
+      if (!item.isStaffCredential && delivery.isDeliveryPostal) {
         return `<ul>${invoice}<li>Mailed to:<br>${delivery.street}<br>${delivery.city}, ${delivery.state} ${delivery.postal_code} ${delivery.country}</li></ul>`;
       }
       return `<ul>${invoice}<li>held at ${item.isStaffCredential ? 'Staff Credentialing' : 'Will-Call'} under your name <span class="d-inline-block">"${person.first_name} ${person.last_name}"</span>`;

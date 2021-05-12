@@ -3,7 +3,7 @@ import {action, set} from '@ember/object';
 import {isBlank, isEmpty} from '@ember/utils';
 import moment from 'moment';
 import {tracked} from '@glimmer/tracking';
-import {GIFT_TICKET, STAFF_CREDENTIAL, RPT, WAP, WAPSO, VEHICLE_PASS} from 'clubhouse/models/access-document';
+import {GIFT_TICKET, STAFF_CREDENTIAL, RPT, WAP, WAPSO, VEHICLE_PASS, DELIVERY_POSTAL} from 'clubhouse/models/access-document';
 import {ALPHA, PROSPECTIVE} from 'clubhouse/constants/person_status';
 
 const SHORT_TYPES = {
@@ -18,7 +18,7 @@ const SHORT_TYPES = {
 const TRS_COLUMN = {
   [STAFF_CREDENTIAL]: 'sc',
   [RPT]: 'rpt',
-  [GIFT_TICKET]: GIFT_TICKET,
+  [GIFT_TICKET]: 'gift_ticket',
   [VEHICLE_PASS]: 'vp',
   [WAP]: 'wap',
   [WAPSO]: 'wap'
@@ -28,7 +28,7 @@ const PAID_EXPORT_FORMAT = [
   ['First Name', 'first_name'],
   ['Last Name', 'last_name'],
   ['Email', 'email'],
-  ['Question: Method Of Delivery', 'delivery_method'],
+  ['Question: Method Of Delivery', 'delivery_type'],
   ['Question: Nickname/Project:', 'project_name'],
   ['Question: Notes:', 'note'],
   ['Request: $210 Ticket', 'rpt'],
@@ -41,7 +41,7 @@ const UNPAID_EXPORT_FORMAT = [
   ['First Name', 'first_name'],
   ['Last Name', 'last_name'],
   ['Email', 'email'],
-  ['Question: Method of Delivery', 'delivery_method'],
+  ['Question: Method of Delivery', 'delivery_type'],
   ['Question: Nickname/Project', 'project_name'],
   ['Question: Notes', 'note'],
   ['Shipping Address (Required if Mail Delivery type selected): Country', 'country'],
@@ -136,6 +136,20 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     ['Gift Tickets+VP', GIFT_TICKET_VP]
   ];
 
+  get badRecords() {
+    const records = [];
+
+    this.people.forEach((human) => {
+      human.documents.forEach((document) => {
+        if (document.has_error) {
+          records.push({person: human.person, document});
+        }
+      })
+    });
+
+    return records;
+  }
+
   @action
   changeFilter(value) {
     this.filter = value;
@@ -153,20 +167,6 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
   _buildSelectedCount() {
     this.selectedCount = this.viewRecords.reduce((total, r) => (r.selected ? 1 : 0) + total, 0);
-  }
-
-  get badRecords() {
-    const records = [];
-
-    this.people.forEach((human) => {
-      human.documents.forEach((document) => {
-        if (document.has_error) {
-          records.push({person: human.person, document});
-        }
-      })
-    });
-
-    return records;
   }
 
   _setupRecords() {
@@ -235,48 +235,56 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
   _filterRecords() {
     const filter = this.filter;
 
-    if (filter === 'all') {
-      return this.accessDocuments;
-    } else if (filter === WAP_PNV) {
-      return this.accessDocuments.filter((r) => r.type === WAP && (r.person.status === ALPHA || r.person.status === PROSPECTIVE));
-    } else if (filter === WAP_RANGER) {
-      return this.accessDocuments.filter((r) => r.type === WAP && r.person.status !== ALPHA && r.person.status !== PROSPECTIVE);
-    } else if (filter === WAP_ALL) {
-      return this.accessDocuments.filter((r) => r.type === WAP || r.type === WAPSO);
-    } else if (filter === STAFF_CREDENTIAL_VP || filter === GIFT_TICKET_VP) {
-      const rows = [];
-      const isSC = (filter === STAFF_CREDENTIAL_VP);
+    switch (filter) {
+      case 'all':
+        return this.accessDocuments;
 
-      this.people.forEach((person) => {
-        let tickets = person.documentTypes[(isSC ? STAFF_CREDENTIAL : GIFT_TICKET)] || [];
-        let vp = person.documentTypes[VEHICLE_PASS] || [];
+      case WAP_PNV:
+        return this.accessDocuments.filter((r) => r.type === WAP && (r.person.status === ALPHA || r.person.status === PROSPECTIVE));
 
-        tickets = tickets.filter((s) => !s.submitted);
-        if (!tickets.length) {
-          return;
-        }
-        vp = vp.filter((v) => !v.submitted);
-        if (!vp.length) {
-          return;
-        }
+      case WAP_RANGER:
+        return this.accessDocuments.filter((r) => r.type === WAP && r.person.status !== ALPHA && r.person.status !== PROSPECTIVE);
 
-        const documents = tickets.concat(vp), notes = [];
-        documents.forEach((row) => {
-          notes.push(row.trsNote)
+      case WAP_ALL:
+        return this.accessDocuments.filter((r) => r.type === WAP || r.type === WAPSO);
+
+      case STAFF_CREDENTIAL_VP:
+      case GIFT_TICKET_VP: {
+        const rows = [];
+        const isSC = (filter === STAFF_CREDENTIAL_VP);
+
+        this.people.forEach((person) => {
+          let tickets = person.documentTypes[(isSC ? STAFF_CREDENTIAL : GIFT_TICKET)] || [];
+          let vp = person.documentTypes[VEHICLE_PASS] || [];
+
+          tickets = tickets.filter((s) => !s.submitted);
+          if (!tickets.length) {
+            return;
+          }
+          vp = vp.filter((v) => !v.submitted);
+          if (!vp.length) {
+            return;
+          }
+
+          const documents = tickets.concat(vp), notes = [];
+          documents.forEach((row) => {
+            notes.push(row.trsNote)
+          });
+
+          rows.push({
+            person: person.person,
+            delivery_type: (isSC ? 'staff_credentialing' : tickets[0].delivery_method),
+            documents,
+            trsNote: notes.join('+'),
+          });
         });
 
-        rows.push({
-          person: person.person,
-          delivery_type: (isSC ? 'staff_credentialing' : tickets[0].delivery_type),
-          documents,
-          trsNote: notes.join('+'),
-        });
-      });
+        return rows;
+      }
 
-      return rows;
+      default:
+        return this.accessDocuments.filter((r) => (r.type === filter));
     }
-
-    return this.accessDocuments.filter((r) => (r.type === filter));
   }
 
   @action
@@ -311,25 +319,24 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
   @action
   exportSelectedAction() {
     const records = this.viewRecords.filter((r) => r.selected);
-    const isRPT = (this.filter === 'reduced_price_ticket');
+    const isRPT = (this.filter === RPT);
     let rows;
 
     if (this.filter === STAFF_CREDENTIAL_VP
       || this.filter === GIFT_TICKET_VP) {
       rows = [];
       records.forEach((rec) => {
-        const person = rec.person;
-        const documents = rec.documents;
-        let delivery_method;
+        const {person, documents} = rec;
+        let delivery_type;
 
         if (this.filter === STAFF_CREDENTIAL_VP) {
-          delivery_method = 'Credential Pick Up';
+          delivery_type = 'Credential Pick Up';
         } else {
-          delivery_method = (documents[0].delivery_type === 'mail' ? 'USPS' : 'Credential Pick Up' /*'Will Call'*/);
+          delivery_type = (documents[0].delivery_method === DELIVERY_POSTAL ? 'USPS' : 'Credential Pick Up' /*'Will Call'*/);
         }
 
         const row = {
-          delivery_method,
+          delivery_type,
           note: rec.trsNote
         };
 
@@ -362,39 +369,40 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
         this._fillName(person, row);
 
+        const isPostal = (doc.delivery_method === DELIVERY_POSTAL);
+
         switch (doc.type) {
           case RPT:
           case GIFT_TICKET:
-            row.delivery_method = doc.delivery_type === 'mail' ? 'USPS' : 'Will Call';
+            row.delivery_type = isPostal ? 'USPS' : 'Will Call';
             break;
 
           case VEHICLE_PASS:
             if (doc.has_staff_credential) {
-              row.delivery_method = 'Credential Pick Up';
+              row.delivery_type = 'Credential Pick Up';
             } else {
-              row.delivery_method = (doc.delivery_type === 'mail') ? 'USPS' : 'Credential Pick Up';
+              row.delivery_type = isPostal ? 'USPS' : 'Credential Pick Up';
             }
             break;
 
           case STAFF_CREDENTIAL:
-            row.delivery_method = 'Credential Pick Up';
+            row.delivery_type = 'Credential Pick Up';
             break;
 
           case WAP:
           case WAPSO:
-            row.delivery_method = 'Print At Home';
+            row.delivery_type = 'Print At Home';
             break;
         }
 
         row[doc.trsColumn] = 1;
 
-        if ((doc.type === GIFT_TICKET || doc.type === VEHICLE_PASS) && doc.delivery_type === 'mail') {
-          const address = doc.delivery_address;
-          row.address1 = address.street;
-          row.city = address.city;
-          row.state = address.state;
-          row.zip = address.postal_code;
-          row.phone = isBlank(address.phone) ? '415-555-1212' : address.phone;
+        if ((doc.type === GIFT_TICKET || doc.type === VEHICLE_PASS) && isPostal) {
+          row.address1 = doc.street1;
+          row.city = doc.city;
+          row.state = doc.state;
+          row.zip = doc.postal_code;
+          row.phone = isBlank(doc.phone) ? '' : doc.phone;
           row.country = 'US';
         } else {
           this._fillAddress(person, row);

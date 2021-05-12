@@ -1,7 +1,7 @@
 import { validatePresence } from 'ember-changeset-validations/validators';
 
 export default {
-  street: [
+  street1: [
     validatePresence({
       presence: true,
       message: "Enter a street address."

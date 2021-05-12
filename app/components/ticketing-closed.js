@@ -35,7 +35,7 @@ export default class TicketingClosedComponent extends Component {
     }
 
     if (item) {
-      this.usingMail = item.isDeliveryMail;
+      this.usingMail = item.isDeliveryPostal;
       this.usingWillCall = item.isDeliveryWillCall;
       this.address = item;
       this.deliveryMethod = item.delivery_method;

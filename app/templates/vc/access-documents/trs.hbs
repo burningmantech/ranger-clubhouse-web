@@ -42,7 +42,9 @@
         </td>
         <td>RAD-{{rec.document.id}}</td>
         <td>{{rec.document.type}}</td>
-        <td>{{rec.document.access_date}}</td>
+        <td>
+          {{or rec.document.access_date "-"}}
+        </td>
         <td>{{rec.document.error}}</td>
       </tr>
     {{/each}}

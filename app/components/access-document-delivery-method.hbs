@@ -1,7 +1,7 @@
 <b>{{@year}} Delivery</b>
 {{#if @delivery.isNew}}
   <b class="text-danger">NONE</b> - No method has been given by the user or set by ticketing administrators.
-{{else if @delivery.isDeliveryMail}}
+{{else if @delivery.isDeliveryPostal}}
   <b>US MAIL</b>
   {{#if @delivery.haveAddress}}
     {{@delivery.street}}, {{@delivery.city}},

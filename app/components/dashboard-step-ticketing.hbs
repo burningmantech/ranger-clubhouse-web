@@ -13,7 +13,7 @@
           {{else if ticket.isWAP}}
             A Work Access Pass for yourself
           {{else}}
-            A {{ticket.typeHuman}} {{if ticket.isStaffCredential "which is also your WAP"}}
+            A {{ticket.typeLabel}} {{if ticket.isStaffCredential "which is also your WAP"}}
           {{/if}}
         </li>
       {{/each}}
