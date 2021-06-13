@@ -240,8 +240,12 @@ export default class HouseService extends Service {
     this.downloadFile(filename, contents, 'text/csv');
   }
 
-  /*
+  /**
    * Download a file
+   *
+   * @param {string} filename download as name
+   * @param {string} contents
+   * @param {string} type MIME type (e.g., text/csv, text/html, etc.)
    */
 
   downloadFile(filename, contents, type) {
@@ -257,6 +261,12 @@ export default class HouseService extends Service {
     })
   }
 
+  /**
+   * Download a URL
+   *
+   * @param {string} url
+   */
+
   downloadUrl(url) {
     run('afterRender', () => {
       const {document} = window;
@@ -269,7 +279,7 @@ export default class HouseService extends Service {
     });
   }
 
-  /*
+  /**
    * Scroll to top
    */
 
@@ -277,8 +287,11 @@ export default class HouseService extends Service {
     run('afterRender', () => window.scrollTo(0, 0));
   }
 
-  /*
+  /**
    * Scroll to element
+   *
+   * @param {string} selector Element ID to scroll to
+   * @param {boolean} scroll [scroll=true] Use smooth scrolling (true) or jump scroll (false)
    */
 
   scrollToElement(selector, scroll = true) {
@@ -296,8 +309,9 @@ export default class HouseService extends Service {
     });
   }
 
-  /*
+  /**
    * Obtain the current year
+   *
    */
 
   currentYear() {
