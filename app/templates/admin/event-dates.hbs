@@ -25,7 +25,7 @@
   <tbody>
   {{#each this.eventDates as |ed|}}
     <tr>
-      <td>{{moment-format ed.event_start "YYYY"}}</td>
+      <td>{{dayjs-format ed.event_start outputFormat="YYYY"}}</td>
       <td>{{shift-format ed.event_start}}</td>
       <td>{{shift-format ed.event_end}}</td>
       <td>{{shift-format ed.pre_event_start}}</td>

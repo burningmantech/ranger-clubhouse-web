@@ -19,7 +19,7 @@ import {inject as service} from '@ember/service';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import validatePresenceIf from 'clubhouse/validators/presence-if';
 import {Broadcasts} from 'clubhouse/constants/broadcast';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default class BroadcastComplexComponent extends Component {
   @service ajax;
@@ -163,7 +163,7 @@ export default class BroadcastComplexComponent extends Component {
 
     const position = this.args.broadcast.slots[parseInt(id)];
     const slots = position.slots.map((slot) => {
-      const date = moment(slot.begins).format('ddd MMM DD [@] HH:mm');
+      const date = dayjs(slot.begins).format('ddd MMM DD [@] HH:mm');
       return {id: slot.id, title: `${date} ${slot.description} (${slot.signed_up} sign up)`};
     });
     slots.unshift({id: '', title: '----'});

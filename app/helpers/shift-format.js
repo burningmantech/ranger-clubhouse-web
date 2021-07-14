@@ -1,5 +1,5 @@
 import {helper} from '@ember/component/helper';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const MONTH_DAY_TIME = 'ddd MMM DD [@] HH:mm';
 const MONTH_DAY_TIME_YEAR = 'ddd MMM DD [@] HH:mm YYYY';
@@ -13,7 +13,7 @@ export function shiftFormat([shiftDate, toDate], hash) {
     return '';
   }
 
-  datetime = moment(shiftDate);
+  datetime = dayjs(shiftDate);
   if (!datetime.isValid()) {
     return shiftDate;
   }
@@ -22,7 +22,7 @@ export function shiftFormat([shiftDate, toDate], hash) {
     return datetime.format(hash.year ? MONTH_DAY_TIME_YEAR : MONTH_DAY_TIME);
   }
 
-  const toDt = moment(toDate);
+  const toDt = dayjs(toDate);
   if (!toDt.isValid()) {
     return datetime.format(MONTH_DAY_TIME);
 

@@ -9,12 +9,12 @@ module('Unit | Model | person', function(hooks) {
     let store = this.owner.lookup('service:store');
 
     let model = run(() => store.createRecord('person', { status: 'bonked' }));
-    assert.equal(model.isRanger, false);
-    assert.equal(model.isNotRanger, true);
+    assert.false(model.isRanger);
+    assert.true(model.isNotRanger);
 
     run(() => model.set('status', 'active'));
-    assert.equal(model.isRanger, true);
-    assert.equal(model.isNotRanger, false);
+    assert.true(model.isRanger);
+    assert.false(model.isNotRanger);
   });
 
 });

@@ -2,7 +2,7 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import currentYear from 'clubhouse/utils/current-year';
 import laborDay from 'clubhouse/utils/labor-day';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import _ from 'lodash';
 import {tracked} from '@glimmer/tracking';
 
@@ -62,7 +62,7 @@ class CopySourceSlot {
 
   adjustTime(sourceDate) {
     const delta = this.controller.copyParams;
-    return moment(sourceDate).add({
+    return dayjs(sourceDate).add({
       days: delta.deltaDays,
       hours: delta.deltaHours,
       minutes: delta.deltaMinutes
@@ -147,7 +147,7 @@ export default class SlotsController extends ClubhouseController {
       return 0;
     });
 
-    unique.forEach((day) => days.pushObject({id: day, title: moment(day).format('ddd MMM DD')}));
+    unique.forEach((day) => days.pushObject({id: day, title: dayjs(day).format('ddd MMM DD')}));
 
     return days;
   }
@@ -274,8 +274,8 @@ export default class SlotsController extends ClubhouseController {
   repeatSlotAdd24Hours(slot) {
     const duplicate = this._duplicateSlot(slot);
 
-    duplicate.begins = moment(slot.begins).add(24, 'hours').format(DATETIME_FORMAT);
-    duplicate.ends = moment(slot.ends).add(24, 'hours').format(DATETIME_FORMAT);
+    duplicate.begins = dayjs(slot.begins).add(24, 'hours').format(DATETIME_FORMAT);
+    duplicate.ends = dayjs(slot.ends).add(24, 'hours').format(DATETIME_FORMAT);
 
     duplicate.save().then(() => {
       this._updateSlots();

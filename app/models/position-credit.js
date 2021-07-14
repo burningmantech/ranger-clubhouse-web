@@ -1,6 +1,6 @@
 import Model, { attr } from '@ember-data/model';
 import { tracked } from '@glimmer/tracking';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default class PositionCreditModel extends Model {
   @attr('shiftdate') start_time;
@@ -21,7 +21,7 @@ export default class PositionCreditModel extends Model {
     const begins = this.start_time;
     let date;
     try {
-      date = moment(begins).format('YYYY-MM-DD');
+      date = dayjs(begins).format('YYYY-MM-DD');
     } catch (error) {
       return begins + ' '+error;
     }

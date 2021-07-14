@@ -1,6 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import { ALPHA } from 'clubhouse/constants/positions';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default class MentorAlphaSignoutRoute extends ClubhouseRoute {
   model() {
@@ -10,7 +10,7 @@ export default class MentorAlphaSignoutRoute extends ClubhouseRoute {
   setupController(controller, model) {
     const year = this.house.currentYear();
     const slotOptions = model.slot.map((s) => ([
-      moment(s.begins).format('ddd MMM DD [@] HH:mm'), s.begins
+      dayjs(s.begins).format('ddd MMM DD [@] HH:mm'), s.begins
     ]));
     slotOptions.unshift([ 'Select Shift', '']);
     slotOptions.push([ `All Alphas on shift`, 'all']);

@@ -1,5 +1,5 @@
 import { helper } from '@ember/component/helper';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export function fullDatetimeFormat([ date ]/*, hash*/) {
   if (!date) {
@@ -7,7 +7,7 @@ export function fullDatetimeFormat([ date ]/*, hash*/) {
   }
 
   try {
-    return moment(date).format('dddd, MMMM Do YYYY @ HH:mm');
+    return dayjs(date).format('dddd, MMMM Do YYYY @ HH:mm');
   } catch (exception) {
     return `invalid date [${date}]`;
   }

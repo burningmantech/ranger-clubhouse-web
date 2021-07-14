@@ -2,7 +2,7 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import _ from 'lodash';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default class ReportsHqForecastController extends ClubhouseController {
   queryParams = [ 'year', 'interval' ];
@@ -28,7 +28,7 @@ export default class ReportsHqForecastController extends ClubhouseController {
     let visits = this.visits;
 
     if (dayFilter !== 'all') {
-      visits = visits.filter((v) => moment(v.period).isSame(dayFilter, 'day'));
+      visits = visits.filter((v) => dayjs(v.period).isSame(dayFilter, 'day'));
     }
 
     if (staffFilter !== 'all') {
@@ -39,8 +39,8 @@ export default class ReportsHqForecastController extends ClubhouseController {
   }
 
   get dayOptions() {
-    const days = _.uniq(this.visits.map((v) => moment(v.period).format('YYYY-MM-DD'))).sort();
-    const options = days.map((d) => [ moment(d).format('ddd MMM DD'), d ]);
+    const days = _.uniq(this.visits.map((v) => dayjs(v.period).format('YYYY-MM-DD'))).sort();
+    const options = days.map((d) => [ dayjs(d).format('ddd MMM DD'), d ]);
 
     options.unshift([ 'All', 'all' ]);
 

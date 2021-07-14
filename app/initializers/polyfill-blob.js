@@ -1,4 +1,9 @@
+import AdvancedFormat from 'dayjs/plugin/advancedFormat';
+import dayjs from 'dayjs';
+
 export function initialize(/* application */) {
+  dayjs.extend(AdvancedFormat);
+
   if ('toBlob' in HTMLCanvasElement.prototype) {
     return;
   }

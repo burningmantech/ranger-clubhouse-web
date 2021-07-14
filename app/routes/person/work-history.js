@@ -1,6 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import _ from 'lodash';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {ALPHA, DEEP_FREEZE} from "../../constants/positions";
 
 export default class PersonWorkHistoryRoute extends ClubhouseRoute {
@@ -19,7 +19,7 @@ export default class PersonWorkHistoryRoute extends ClubhouseRoute {
     timesheet = timesheet.filter((t) => t.position_id !== ALPHA && t.position_id !== DEEP_FREEZE && !t.position.title.includes('Training'));
 
     timesheet.forEach((t) => {
-      t.year = moment(t.on_duty).year();
+      t.year = dayjs(t.on_duty).year();
       const position = positionsByYear[t.year] ||= {};
       const positionByYear = (position[t.position_id] ||= {entries: [], duration: 0});
       positionByYear.entries.push(t);

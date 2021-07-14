@@ -5,7 +5,7 @@ import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {slotSignup} from 'clubhouse/utils/slot-signup';
 import _ from 'lodash';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const SEARCH_RATE_MS = 300;
 
@@ -68,7 +68,7 @@ export default class TrainingSlotController extends ClubhouseController {
   }
 
   get year() {
-    return moment(this.slot.begins).year();
+    return dayjs(this.slot.begins).year();
   }
 
   /**

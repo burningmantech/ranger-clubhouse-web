@@ -109,7 +109,7 @@
                 <div class="col-auto">
                   <div class="mugshot-icon" role="link" {{on "click" (fn this.showPhotoInfoAction reject)}}>
                     <img src={{reject.image_url}} alt="rejected"/>
-                    {{moment-format reject.uploaded_at "YYYY-MM-DD"}}
+                    {{dayjs-format reject.uploaded_at outputFormat="YYYY-MM-DD"}}
                   </div>
                 </div>
               {{/each}}

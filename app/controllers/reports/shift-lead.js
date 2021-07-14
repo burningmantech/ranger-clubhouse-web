@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action, setProperties } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default class ReportsShiftLeadController extends ClubhouseController {
   queryParams = ['year'];
@@ -47,7 +47,7 @@ export default class ReportsShiftLeadController extends ClubhouseController {
     ];
 
     this.dirtShiftTimes.forEach((shift) => {
-      options.push({ id: `${shift.shift_start}#${shift.duration}`, title: moment(shift.shift_start).format("ddd MMM D @ HH:mm") });
+      options.push({ id: `${shift.shift_start}#${shift.duration}`, title: dayjs(shift.shift_start).format("ddd MMM D @ HH:mm") });
     });
 
     return options;

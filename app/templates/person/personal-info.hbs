@@ -3,7 +3,7 @@
   {{this.person.callsign}}
   {{#if this.person.reviewed_pi_at}}
     last reviewed their information on
-    {{moment-format this.person.reviewed_pi_at "MMM DD, YYYY @ HH:mm"}}
+    {{dayjs-format this.person.reviewed_pi_at outputFormat="MMM DD, YYYY @ HH:mm"}}
   {{else}}
     has not reviewed their Personal Information.
   {{/if}}

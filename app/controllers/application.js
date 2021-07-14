@@ -1,5 +1,5 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import {run} from '@ember/runloop';
+import {schedule} from '@ember/runloop';
 import ENV from 'clubhouse/config/environment';
 import {tracked} from '@glimmer/tracking';
 
@@ -22,7 +22,7 @@ export default class ApplicationController extends ClubhouseController {
 
       event.preventDefault(); // eslint-disable-line ember/jquery-ember-run
 
-      run.schedule('afterRender', () => {
+      schedule('afterRender', () => {
         document.querySelector('#search-bar-form .autocomplete-input').focus();
       });
 

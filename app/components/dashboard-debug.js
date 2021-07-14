@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import {action, set} from '@ember/object';
 import * as Position from 'clubhouse/constants/positions';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default class DashboardDebugComponent extends Component {
   @tracked show = false;
@@ -206,7 +206,7 @@ export default class DashboardDebugComponent extends Component {
   }
 
   _getDate(monthDay) {
-    return moment().format(`YYYY-${monthDay} 09:00:00`)
+    return dayjs().format(`YYYY-${monthDay} 09:00:00`)
   }
 
   @action

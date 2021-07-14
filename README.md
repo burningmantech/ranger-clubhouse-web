@@ -57,9 +57,6 @@ Make use of the many generators for code, try `ember help generate` for more det
 Ember uses [QUnit](https://api.qunitjs.com/) for tests.
 [qunit-dom](http://qunit-dom.com/) is included in the testing framework to provide higher level assertions for QUnit.
 
-ember-cli-custom-assertions](https://github.com/dockyard/ember-cli-custom-assertions) has been included by the Ranger Tech Team so custom assertions can be used.
-Look at the [tests/assertions] directory to see what custom assertions are available.
-
 ### Linting
 
 * `npm run lint:hbs`

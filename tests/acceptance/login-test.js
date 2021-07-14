@@ -45,7 +45,7 @@ module('Acceptance | login', function (hooks) {
     const person = this.server.create('person');
     await authenticateUser(person.id);
     await visit('/logout');
-    assert.equal(currentSession().isAuthenticated, false);
+    assert.false(currentSession().isAuthenticated);
     assert.equal(document.title, 'Login | Ranger Clubhouse');
   });
 
@@ -76,7 +76,7 @@ module('Acceptance | login', function (hooks) {
     await visit(`/login?token=${TOKEN}`);
 
     assert.equal(currentURL(), '/me/password');
-    assert.equal(currentSession().isAuthenticated, true);
+    assert.true(currentSession().isAuthenticated);
     assert.equal(currentSession().userId, person.id);
   });
 
@@ -86,7 +86,7 @@ module('Acceptance | login', function (hooks) {
     await visit(`/login?token=${PNV_TOKEN}&welcome=1`);
 
     assert.equal(currentURL(), '/me/welcome');
-    assert.equal(currentSession().isAuthenticated, true);
+    assert.true(currentSession().isAuthenticated);
     assert.equal(currentSession().userId, person.id);
   });
 

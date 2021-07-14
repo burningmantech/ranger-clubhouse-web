@@ -1,6 +1,6 @@
 import Model, {attr} from '@ember-data/model';
 import { isEmpty } from '@ember/utils';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export const STAFF_CREDENTIAL = 'staff_credential';
 export const RPT = 'reduced_price_ticket';
@@ -202,11 +202,11 @@ export default class AccessDocumentModel extends Model {
   }
 
   get expiryYear() {
-    return moment(this.expiry_date).format('YYYY');
+    return dayjs(this.expiry_date).format('YYYY');
   }
 
   get accessDateFormatted() {
-    return moment(this.access_date).format('dddd MMMM Do, YYYY');
+    return dayjs(this.access_date).format('dddd MMMM Do, YYYY');
   }
 
   get admission_date() {
@@ -214,7 +214,7 @@ export default class AccessDocumentModel extends Model {
       return 'any';
     } else {
       if (this.access_date) {
-        return moment(this.access_date).format('YYYY-MM-DD');
+        return dayjs(this.access_date).format('YYYY-MM-DD');
       } else {
         return null;
       }
@@ -232,7 +232,7 @@ export default class AccessDocumentModel extends Model {
   }
 
   get expiry_year() {
-    return moment(this.expiry_date).format('YYYY');
+    return dayjs(this.expiry_date).format('YYYY');
   }
 
   set expiry_year(year) {

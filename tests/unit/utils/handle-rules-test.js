@@ -11,12 +11,10 @@ import {
   SubstringRule,
 } from 'clubhouse/utils/handle-rules';
 import { module, test } from 'qunit';
-import setupCustomAssertions from 'ember-cli-custom-assertions/test-support';
 import { setupTest } from 'ember-qunit';
 
 module('Unit | Utility | handle-rules', function(hooks) {
   setupTest(hooks);
-  setupCustomAssertions(hooks);
 
   const natoHandles = [
     {name: 'Alfa', entityType: 'phonetic-alphabet'},
@@ -49,17 +47,17 @@ module('Unit | Utility | handle-rules', function(hooks) {
 
   const noConflicts = (assert, rule, name) => {
     let conflicts = rule.check(name);
-    assert.empty(conflicts, `Conflicts for ${rule.id}.check(${name}): ${conflicts.map(c => c.description)}`);
+    assert.equal(conflicts.length, 0, `Conflicts for ${rule.id}.check(${name}): ${conflicts.map(c => c.description)}`);
   };
 
   const conflictsWithExisting = (assert, rule, name, existing, descriptionPattern) => {
     let conflicts = rule.check(name);
-    assert.notEmpty(conflicts, `Conflicts for ${name}`);
+    assert.notEqual(conflicts.length, 0, `Conflicts for ${name}`);
     conflicts.forEach((x) => assert.equal(x.ruleId, rule.id));
     let found = conflicts.find((x) => x.conflictingHandle.name === existing);
     assert.ok(found, `${existing} in ${JSON.stringify(conflicts)}`);
     assert.equal(found.candidateName, name);
-    assert.matches(found.description, descriptionPattern);
+    assert.ok(found.description.match(descriptionPattern));
   };
 
   test('ALL_RULE_CLASSES contains all rules', function(assert) {
@@ -77,6 +75,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
     ]);
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('all rules ignore empty string', function(assert) {
     const handles = [{name: 'Foo Bar', entityType: 'jargon'}];
     for (let ruleClass of ALL_RULE_CLASSES) {
@@ -89,6 +88,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
   });
 
   // === MinLengthRule tests ===
+  // eslint-disable-next-line qunit/require-expect
   test('min-length allows three letters', function(assert) {
     const rule = new MinLengthRule();
     noConflicts(assert, rule, 'Bob');
@@ -100,7 +100,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
     let conflicts = rule.check('X');
     assert.equal(conflicts.length, 1);
     assert.equal(conflicts[0].candidateName, 'X');
-    assert.matches(conflicts[0].description, 'too short');
+    assert.ok(conflicts[0].description.match(/too short/));
   });
 
   test('min-length rejects two letters', function(assert) {
@@ -108,14 +108,16 @@ module('Unit | Utility | handle-rules', function(hooks) {
     let conflicts = rule.check('Ed');
     assert.equal(conflicts.length, 1);
     assert.equal(conflicts[0].candidateName, 'Ed');
-    assert.matches(conflicts[0].description, 'too short');
+    assert.ok(conflicts[0].description.match(/too short/));
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('min-length rejects two capital letters', function(assert) {
     const rule = new MinLengthRule();
     noConflicts(assert, rule, 'LK');
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('min-length allows numbers with at least one letter', function(assert) {
     const rule = new MinLengthRule();
     noConflicts(assert, rule, 'Go2Girl');
@@ -124,6 +126,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
   });
 
 
+  // eslint-disable-next-line qunit/require-expect
   test('min-length rejects non-alphabetic', function(assert) {
     const rule = new MinLengthRule();
     const checkit = (name) => {
@@ -140,19 +143,21 @@ module('Unit | Utility | handle-rules', function(hooks) {
   });
 
   // === FccRule tests ===
+  // eslint-disable-next-line qunit/require-expect
   test('fcc accepts non-swear words', function(assert) {
     const rule = new FccRule();
     noConflicts(assert, rule, 'Puppy');
     noConflicts(assert, rule, 'Mike Hawk'); // rquires human detection
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('fcc rejects the Carlin 7', function(assert) {
     const rule = new FccRule();
     let checkit = (name) => {
       let conflicts = rule.check(name);
       assert.equal(conflicts.length, 1, `${JSON.stringify(conflicts.length)} conflicts for ${name}`);
       assert.equal(conflicts[0].candidateName, name);
-      assert.matches(conflicts[0].description, 'FCC');
+      assert.ok(conflicts[0].description.match(/FCC/));
     };
     checkit('Hot shit handle');
     checkit('Piss-ant');
@@ -164,6 +169,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
   });
 
   // === PhoneticAlphabetRule tests ===
+  // eslint-disable-next-line qunit/require-expect
   test('phonetic-alphabet rejects names with just NATO letters', function(assert) {
     const rule = new PhoneticAlphabetRule(natoHandles);
     let checkit = (name) => {
@@ -181,6 +187,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
     checkit('Quebec2Lima');
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('phonetic-alphabet accepts names with more than NATO letters', function(assert) {
     const rule = new PhoneticAlphabetRule(natoHandles);
     noConflicts(assert, rule, 'Baker');
@@ -192,6 +199,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
   });
 
   // === SubstringRule tests ===
+  // eslint-disable-next-line qunit/require-expect
   test('substring rejects exact matches', function(assert) {
     const rule = new SubstringRule(natoHandles);
     let checkit = (name, existing) =>
@@ -202,6 +210,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
     checkit('wHiSkEy', 'Whiskey');
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('substring rejects partial matches', function(assert) {
     const rule = new SubstringRule(natoHandles);
     let checkit = (name, existing) =>
@@ -215,6 +224,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
     checkit('ot', 'Foxtrot');
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('substring rejects names that contain another name', function(assert) {
     const rule = new SubstringRule(natoHandles);
     let checkit = (name, existing) =>
@@ -227,6 +237,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
     checkit('CzEcHoSlOvAkIa', 'Echo');
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('substring accepts non-substring names', function(assert) {
     const rule = new SubstringRule(natoHandles);
     noConflicts(assert, rule, 'Danger');
@@ -237,6 +248,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
   });
 
   // === EditDistanceRule tests ===
+  // eslint-disable-next-line qunit/require-expect
   test('edit-distance rejects one character different', function(assert) {
     const rule = new EditDistanceRule(natoHandles);
     let checkit = (name, existing) =>
@@ -253,6 +265,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
     checkit('Rome', 'Romeo'); // remove
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('edit-distance accepts 2+ characters different', function(assert) {
     const rule = new EditDistanceRule(natoHandles);
     noConflicts(assert, rule, 'Alpha');
@@ -267,6 +280,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
   });
 
   // === AmericanSoundexRule tests ===
+  // eslint-disable-next-line qunit/require-expect
   test('american-soundex rejects when soundex matches', function(assert) {
     const rule = new AmericanSoundexRule(natoHandles);
     let checkit = (name, existing) =>
@@ -284,6 +298,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
     checkit('Wishco', 'Whiskey');
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('american-soundex accepts when soundex does not match', function(assert) {
     const rule = new AmericanSoundexRule(natoHandles);
     noConflicts(assert, rule, 'Elfa');
@@ -299,6 +314,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
   });
 
   // === DoubleMetaphoneRule tests ===
+  // eslint-disable-next-line qunit/require-expect
   test('double-metaphone rejects when metaphone matches', function(assert) {
     const rule = new DoubleMetaphoneRule(natoHandles);
     let checkit = (name, existing) =>
@@ -317,6 +333,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
     checkit('Victoria', 'Victor');
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('double-metaphone accepts when metaphone does not match', function(assert) {
     const rule = new DoubleMetaphoneRule(natoHandles);
     noConflicts(assert, rule, 'Foxrot');
@@ -332,6 +349,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
   });
 
   // === EyeRhymeRule tests ===
+  // eslint-disable-next-line qunit/require-expect
   test('eye-rhyme rejects when one syllable is spelled like another', function(assert) {
     const rule = new EyeRhymeRule(natoHandles);
     let checkit = (name, existing, multiple = false) =>
@@ -378,6 +396,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
     checkit('I <3 U', 'Zulu', true); // not a good match
   });
 
+  // eslint-disable-next-line qunit/require-expect
   test('eye-rhyme accepts when no syllables rhyme', function(assert) {
     const rule = new EyeRhymeRule(natoHandles);
     // Some of these should have a conflict.  If the algorithm is improved, remove the check.

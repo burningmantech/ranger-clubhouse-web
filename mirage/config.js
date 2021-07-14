@@ -1,5 +1,5 @@
 import Response from 'ember-cli-mirage/response';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default function () {
   this.urlPrefix = 'http://localhost:8000';
@@ -44,7 +44,7 @@ export default function () {
     let person;
 
     if (params.temp_token) {
-       person = schema.db.people.findBy({tpassword: params.temp_token});
+      person = schema.db.people.findBy({tpassword: params.temp_token});
     } else {
       if (!params.identification || !params.password) {
         const errors = [];
@@ -130,6 +130,8 @@ export default function () {
           unread_message_count: 2,
           years: [2017, 2018],
           all_years: [2017, 2018],
+          rangered_years: [2018],
+          non_ranger_years: [2020],
           roles: person.roles,
           teacher: {
             is_trainer: false,
@@ -144,7 +146,12 @@ export default function () {
 
 
   this.get('/api/person/:id/years', ({people}, request) => { // eslint-disable-line no-unused-vars
-    return {years: [2017, 2018]};
+    return {
+      years: [2017, 2018],
+      all_years: [2017, 2018],
+      rangered_years: [2018],
+      non_ranger_years: [2020],
+    };
   });
 
   this.get('/api/person/:id/unread-message-count', ({people}, request) => { // eslint-disable-line no-unused-vars
@@ -185,7 +192,7 @@ export default function () {
           position_title: 'Training',
           position_id: 13,
           location: 'Trainlandia',
-          date: moment().format('YYYY-MM-DD hh:mm:ss'),
+          date: dayjs().format('YYYY-MM-DD hh:mm:ss'),
           status: 'pass'
         }],
         radio_eligible: 1,

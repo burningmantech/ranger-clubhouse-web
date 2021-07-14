@@ -27,9 +27,11 @@ module('Integration | Component | dashboard-ranger', function(hooks) {
     this.set('photo', { });
     this.set('motds', [])
     this.set('noop', () => { });
+    this.set('years', { non_ranger_years: [ 2020], rangered_years: [ 2018, 2019 ]});
     await render(hbs`<DashboardRanger
                     @milestones={{this.milestones}}
                     @person={{this.person}}
+                    @years={{this.years}}
                     @photo={{this.photo}}
                     @motds={{this.motds}}
                     @debugUpdateAction={{this.noop}}

@@ -2,7 +2,7 @@ import Model, {attr} from '@ember-data/model';
 import {isEmpty} from '@ember/utils';
 import {ticketTypeLabel} from 'clubhouse/constants/ticket-types';
 import {BmidStatusLabels, MealLabels} from 'clubhouse/constants/bmid';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export const MEALS_ALL = 'all';
 export const MEALS_EVENT = 'event';
@@ -64,7 +64,7 @@ export default class BmidModel extends Model {
       return 'any';
     } else {
       if (this.access_date) {
-        return moment(this.access_date).format('YYYY-MM-DD');
+        return dayjs(this.access_date).format('YYYY-MM-DD');
       } else {
         return null;
       }
@@ -76,7 +76,7 @@ export default class BmidModel extends Model {
       return 'any';
     } else {
       if (this.access_date) {
-        return moment(this.access_date).format('ddd, M/DD');
+        return dayjs(this.access_date).format('ddd, M/DD');
       } else {
         return '(no date)';
       }
@@ -106,7 +106,7 @@ export default class BmidModel extends Model {
       return -1;
     }
 
-    return moment(this.access_date).valueOf();
+    return dayjs(this.access_date).valueOf();
   }
 
   get wapDisabled() {
