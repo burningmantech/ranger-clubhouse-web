@@ -17,9 +17,9 @@ module('Integration | Component | ch-form/select', function(hooks) {
     assert.dom('select').hasClass('myselect');
     assert.dom('select').hasAttribute('name', 'test');
     assert.dom('option').exists({ count: 4 }, 'should render 4 options');
-    assert.equal(this.element.querySelector('select option[value="Apple"]').selected, false);
+    assert.false(this.element.querySelector('select option[value="Apple"]').selected);
     assert.dom('select option[value="Apple"]').hasText('Apple');
-    assert.equal(this.element.querySelector('select option[value="Banana"]').selected, true);
+    assert.true(this.element.querySelector('select option[value="Banana"]').selected);
     assert.dom('select option[value="Banana"]').hasText('Banana');
   });
 
@@ -35,9 +35,9 @@ module('Integration | Component | ch-form/select', function(hooks) {
     assert.dom('select').hasAttribute('name', 'test');
     assert.dom('option').exists({ count: 3 }, 'should render 3 options');
     assert.dom('select option[value="b"]').hasText('Berlin');
-    assert.equal(this.element.querySelector('select option[value="b"]').selected, false);
+    assert.false(this.element.querySelector('select option[value="b"]').selected);
     assert.dom('select option[value="m"]').hasText('Moscow');
-    assert.equal(this.element.querySelector('select option[value="m"]').selected, true);
+    assert.true(this.element.querySelector('select option[value="m"]').selected);
     assert.dom('select option[value="t"]').hasText('Tokyo');
     assert.dom('select option[value="t"]').doesNotHaveAttribute('selected');
   });
@@ -49,9 +49,9 @@ module('Integration | Component | ch-form/select', function(hooks) {
     await render(hbs`<ChForm::Select @name="test" @value={{this.value}} @options={{this.options}} @includeBlank={{true}} />`);
 
     assert.dom('select option').exists({ count: 5 }, 'should render 5 options');
-    assert.equal(this.element.querySelector('option[value=""]').selected, true);
+    assert.true(this.element.querySelector('option[value=""]').selected);
     assert.dom('option').hasText('-');
-    assert.equal(this.element.querySelector('option[value="Banana"]').selected, false);
+    assert.false(this.element.querySelector('option[value="Banana"]').selected);
     assert.dom('option[value="Banana"]').hasText('Banana');
   });
 
@@ -66,13 +66,13 @@ module('Integration | Component | ch-form/select', function(hooks) {
     assert.dom('select').hasAttribute('multiple');
     assert.dom('select option').exists({ count: 4 }, 'should render 4 options');
     assert.dom('select option[value="Apple"]').hasText('Apple');
-    assert.equal(this.element.querySelector('select option[value="Apple"]').selected, true, 'Apple should be selected');
+    assert.true(this.element.querySelector('select option[value="Apple"]').selected, 'Apple should be selected');
     assert.dom('select option[value="Banana"]').hasText('Banana');
-    assert.equal(this.element.querySelector('select option[value="Banana"]').selected, false, 'Banana should not be selected');
+    assert.false(this.element.querySelector('select option[value="Banana"]').selected,  'Banana should not be selected');
     assert.dom('select option[value="Cherry"]').hasText('Cherry');
-    assert.equal(this.element.querySelector('select option[value="Cherry"]').selected, false, 'Cherry should not be selected');
+    assert.false(this.element.querySelector('select option[value="Cherry"]').selected, 'Cherry should not be selected');
     assert.dom('select option[value="Durian"]').hasText('Durian');
-    assert.equal(this.element.querySelector('select option[value="Durian"]').selected, true, 'Durian should be selected');
+    assert.true(this.element.querySelector('select option[value="Durian"]').selected, 'Durian should be selected');
   });
 
 });

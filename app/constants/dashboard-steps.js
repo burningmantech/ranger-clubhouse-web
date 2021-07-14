@@ -15,7 +15,7 @@
 
 import {htmlSafe} from '@ember/string';
 import {config} from 'clubhouse/utils/config';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {
   ACTION_NEEDED,
   AFTER_EVENT,
@@ -340,14 +340,14 @@ export const ATTEND_TRAINING = {
       case 'no-show': // trainer failed to show up
         return {
           result: URGENT,
-          message: `You did not attend as a trainer to teach the training on ${moment(training.date).format('dddd, MMMM Do YYYY')} located at ${training.location}. You must either attend and pass training as a trainee OR teach a session in order to work on playa.`,
+          message: `You did not attend as a trainer to teach the training on ${dayjs(training.date).format('dddd, MMMM Do YYYY')} located at ${training.location}. You must either attend and pass training as a trainee OR teach a session in order to work on playa.`,
           immediate: true
         };
 
       case 'fail':
         return {
           result: URGENT,
-          message: `You did not attend or failed to complete training on ${moment(training.date).format('dddd, MMMM Do YYYY')} located at ${training.location}. Email the Training Academy to sign up for another session.`,
+          message: `You did not attend or failed to complete training on ${dayjs(training.date).format('dddd, MMMM Do YYYY')} located at ${training.location}. Email the Training Academy to sign up for another session.`,
           email: 'TrainingAcademyEmail',
           immediate: true
         };
@@ -376,7 +376,7 @@ export const ATTEND_TRAINING = {
           prefix = "You'll only need to attend the half day training portion";
           dt = 'ddd MMM DD';
         }
-        prefix += `:<div class="my-2">${moment(training.date).format(dt)}  - ${training.location}.</div>Visit`;
+        prefix += `:<div class="my-2">${dayjs(training.date).format(dt)}  - ${training.location}.</div>Visit`;
         return {
           result: ACTION_NEEDED,
           linkedMessage: {

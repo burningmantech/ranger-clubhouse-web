@@ -9,14 +9,14 @@
 
 <p>
   {{#if @person.isNonRanger}}
-    Hello Volunteer {{@person.callsign}}. Thank you for helping the Rangers.
-  {{else}}
-    Hello Ranger {{@person.callsign}}, thank you for
-    {{#if @person.years.length}}
-      rangering {{pluralize @person.years.length "burn"}}.
+    Hello Volunteer {{@person.callsign}}.
+    {{#if @years.non_ranger_years}}
+      Thank you for volunteering with the Rangers for {{pluralize @years.non_ranger_years.length "year"}}.
     {{else}}
-      stopping by.
+      Thank you for helping the Rangers.
     {{/if}}
+  {{else}}
+    Hello Ranger {{@person.callsign}}, thank you for {{this.serviceInfo}}.
   {{/if}}
 </p>
 
@@ -30,7 +30,9 @@
                     @hasTopArrow={{or @motds idx}}
                     @hasBottomArrow={{not group.isLast}}
                     @includeSidePhoto={{eq idx 0}}
-                    @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}}
+                    @photo={{@photo}}
+                    @person={{@person}}
+                    @uploadAction={{@uploadAction}}
     >
       {{#each group.steps as |step|}}
         <DashboardStep @step={{step}} @isActive={{step.isActive}} @isNotUser={{this.isNotUser}}

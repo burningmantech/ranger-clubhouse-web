@@ -38,7 +38,7 @@ module('Acceptance | me/personal info', function(hooks) {
 
     person.reload();
     assert.equal(person.email, newEmail);
-    assert.equal(person.has_reviewed_pi, true);
+    assert.true(person.has_reviewed_pi);
   });
 
   test('prevent space from being enter in email', async function(assert) {

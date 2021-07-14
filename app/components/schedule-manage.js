@@ -3,9 +3,9 @@ import {action} from '@ember/object';
 import {set} from '@ember/object';
 import {Role} from 'clubhouse/constants/roles';
 import markSlotsOverlap from 'clubhouse/utils/mark-slots-overlap';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {slotSignup} from 'clubhouse/utils/slot-signup';
-import {run} from '@ember/runloop';
+import {schedule} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
 import {inject as service} from '@ember/service';
 
@@ -153,7 +153,7 @@ export default class ScheduleManageComponent extends Component {
     days.push(allDays);
 
     unique.forEach(function (day) {
-      days.push([moment(day).format('ddd MMM DD'), day])
+      days.push([dayjs(day).format('ddd MMM DD'), day])
     });
 
     return days;
@@ -183,7 +183,7 @@ export default class ScheduleManageComponent extends Component {
 
       // And reposition the page so things appear not to move when the sign up is added
       // to the schedule.
-      run.schedule('afterRender', () =>
+      schedule('afterRender', () =>
         window.scrollTo(window.pageXOffset, row.getBoundingClientRect().top - currentOffset)
       );
     });
@@ -219,7 +219,7 @@ export default class ScheduleManageComponent extends Component {
             // Try to keep the page position static. The sign up will be removed
             // from the schedule, the row deleted, and the browser may want
             // to reposition the page.
-            run.schedule('afterRender', () => {
+            schedule('afterRender', () => {
               // The sign up may have been removed via the scheduled table and the row no longer exists.
               if (document.body.contains(row)) {
                 window.scrollTo(window.pageXOffset, row.getBoundingClientRect().top - currentOffset);

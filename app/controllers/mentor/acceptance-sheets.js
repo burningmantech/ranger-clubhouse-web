@@ -1,6 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {tracked} from '@glimmer/tracking';
 
 export default class MentorAcceptanceSheetsController extends ClubhouseController {
@@ -51,7 +51,7 @@ export default class MentorAcceptanceSheetsController extends ClubhouseControlle
       .sort();
 
     const options = dates.map((date) => {
-      return [moment(date).format('ddd MMM DD [@] HH:mm'), date];
+      return [dayjs(date).format('ddd MMM DD [@] HH:mm'), date];
     });
 
     options.unshift(['No Mentor Shift', 'no-signup']);

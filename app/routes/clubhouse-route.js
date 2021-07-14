@@ -9,6 +9,7 @@ import { inject as service } from '@ember/service';
 
 export default class ClubhouseRoute extends Route {
   @service ajax;
+  @service dayjs;
   @service house;
   @service session;
   @service store;

@@ -43,29 +43,6 @@ module('Acceptance | auditor', function (hooks) {
     });
   });
 
-  /*
-    test('Auditor home page', async function (assert) {
-      await visit('/me');
-
-      const links = [
-        ['/me/schedule', true, 'Schedule'],
-        ['/me/timesheet', false, 'Timesheet'],
-        ['/me/tickets', false, 'Tickets and Stuff'],
-        ['/me/motorpool-policy', false, 'Motorpool Policy'],
-        ['/me/personal-info', true, 'Personal Info'],
-      ];
-
-      links.forEach((link) => {
-        const dom = assert.dom(`main a[href="${link[0]}"]`);
-        if (link[1]) {
-          dom.exists(`${link[2]} overview link exists`);
-        } else {
-          dom.doesNotExist(`${link[2]} overview link does not exist`);
-        }
-      });
-    });
-    */
-
   test('Auditor see the schedule page', async function (assert) {
     const signedup = this.server.create('schedule', {person_assigned: true}); // eslint-disable-line no-unused-vars
     const available = this.server.create('schedule', {person_assigned: false}); // eslint-disable-line no-unused-vars

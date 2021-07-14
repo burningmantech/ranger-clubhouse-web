@@ -1,6 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action, set } from '@ember/object';
-import { run, later } from '@ember/runloop';
+import { schedule, later } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
 
 export default class ReportsScheduleByCallsignController extends ClubhouseController {
@@ -19,10 +19,10 @@ export default class ReportsScheduleByCallsignController extends ClubhouseContro
   toggleExpandAll() {
     this.isExpanding = true;
     later(() => {
-      run.schedule('afterRender', () => {
+      schedule('afterRender', () => {
         this.expandAll = !this.expandAll;
         this.people.forEach((p) => set(p, 'showing', this.expandAll));
-        run.schedule('afterRender', () => {
+        schedule('afterRender', () => {
           this.isExpanding = false;
         });
       });

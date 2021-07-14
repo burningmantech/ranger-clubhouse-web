@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { get } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 
@@ -14,7 +14,7 @@ function getDateProperty(changes, content, name) {
   }
 
   try {
-    return moment(value);
+    return dayjs(value);
   } catch (error) {
     return '';
   }
@@ -40,7 +40,7 @@ export default function validateDateTime(opts = {}) {
       return 'Not in YYYY-MM-DD HH:MM format';
     }
 
-    date = moment(newValue);
+    date = dayjs(newValue);
 
     if (!date.isValid()) {
       return 'Not a valid date';

@@ -1,6 +1,6 @@
 import { Factory } from 'ember-cli-mirage';
 import faker from 'faker';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default Factory.extend({
   credits: 0,
@@ -11,12 +11,12 @@ export default Factory.extend({
   position_title() { return faker.random.alphaNumeric(10); },
   position_type: "Training",
   slot_active: 1,
-  slot_begins() { return moment().add(1, 'day').format('YYYY-MM-DD hh:mm:ss');},
-  slot_begins_time() { return moment().add(1, 'day').unix(); },
+  slot_begins() { return dayjs().add(1, 'day').format('YYYY-MM-DD hh:mm:ss');},
+  slot_begins_time() { return dayjs().add(1, 'day').unix(); },
   slot_description() { return faker.random.alphaNumeric(10) },
   slot_duration: 3600,
-  slot_ends() { return moment().add(25, 'hour').format('YYYY-MM-DD hh:mm:ss'); },
-  slot_ends_time() { return moment().add(25, 'hour').unix() },
+  slot_ends() { return dayjs().add(25, 'hour').format('YYYY-MM-DD hh:mm:ss'); },
+  slot_ends_time() { return dayjs().add(25, 'hour').unix() },
   slot_max: 10,
   slot_signed_up: 1,
   slot_url: "",

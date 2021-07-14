@@ -84,9 +84,9 @@
               {{#if slot.rogues}}
                 <b>Rogues / Overlaps ({{slot.rogues.length}}):</b>
                 {{#each slot.rogues as |person idx|}}
-                  {{~if idx ", "}}<span class="d-inline-block"><PersonLink @person={{person}} /> ({{moment-format
+                  {{~if idx ", "}}<span class="d-inline-block"><PersonLink @person={{person}} /> ({{dayjs
                         person.on_duty "ddd DD @ HH:MM"}} -
-                  {{if person.off_duty (moment-format person.off_duty "ddd DD @ HH:MM") "now"}})</span>
+                  {{if person.off_duty (dayjs person.off_duty "ddd DD @ HH:MM") "now"}})</span>
                 {{~/each}}
                 <br>
               {{/if}}

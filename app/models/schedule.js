@@ -1,5 +1,5 @@
 import Model, { attr } from '@ember-data/model';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { tracked } from '@glimmer/tracking';
 
 export default class ScheduleModel extends Model {
@@ -61,7 +61,7 @@ export default class ScheduleModel extends Model {
     const begins = this.slot_begins;
     let date;
     try {
-      date = moment(begins).format('YYYY-MM-DD');
+      date = dayjs(begins).format('YYYY-MM-DD');
     } catch (error) {
       return begins + ' '+error;
     }

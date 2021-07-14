@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default class ReportsRollcallController extends ClubhouseController {
   @tracked positionId;
@@ -20,7 +20,7 @@ export default class ReportsRollcallController extends ClubhouseController {
       return [];
     }
 
-    const options = position.slots.map((s) => [`${moment(s.begins).format('ddd MMM DD [@] HH:mm')} (${s.description})`, s.id]);
+    const options = position.slots.map((s) => [`${dayjs(s.begins).format('ddd MMM DD [@] HH:mm')} (${s.description})`, s.id]);
     options.unshift(['Select Shift', 0]);
     return options;
   }

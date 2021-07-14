@@ -3,7 +3,7 @@ import {tracked} from "@glimmer/tracking";
 import {inject as service} from '@ember/service';
 import {htmlSafe} from '@ember/string';
 import {config} from 'clubhouse/utils/config';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {
   ACTION_NEEDED,
   AFTER_EVENT,
@@ -163,7 +163,7 @@ const STEPS = [
         result: WAITING,
         linkedMessage: {
           route: 'me.schedule',
-          prefix: htmlSafe(`You are signed up for a Green Dot Mentee shift starting ${moment(gd.mentee_slot.begins).format('ddd MMM DD [@] HH:mm')}.<br><br>Visit`),
+          prefix: htmlSafe(`You are signed up for a Green Dot Mentee shift starting ${dayjs(gd.mentee_slot.begins).format('ddd MMM DD [@] HH:mm')}.<br><br>Visit`),
           text: 'Me > Schedule / Sign Up',
           suffix: 'to remove your sign-up from the schedule if you cannot make it.'
         }
@@ -284,7 +284,7 @@ const STEPS = [
       if (signup && signup.status === 'pending') {
         return {
           result: ACTION_NEEDED,
-          message: htmlSafe(`<b>ARRIVE 15 MINUTES EARLY. Late arrivals will NOT be allowed to walk.</b><div class="my-2">Your Cheetah Cub shift starts at ${moment(signup.begins).format('ddd MMM DD [@] HH:mm')}.</div>If you know you won't be able to make your Cheetah shift please email the Mentor Cadre or stop by the Mentor Shack at Ranger HQ.`),
+          message: htmlSafe(`<b>ARRIVE 15 MINUTES EARLY. Late arrivals will NOT be allowed to walk.</b><div class="my-2">Your Cheetah Cub shift starts at ${dayjs(signup.begins).format('ddd MMM DD [@] HH:mm')}.</div>If you know you won't be able to make your Cheetah shift please email the Mentor Cadre or stop by the Mentor Shack at Ranger HQ.`),
           email: 'MentorEmail'
         };
       }
@@ -402,6 +402,26 @@ const BEFORE_EVENT_NO_MORE_THINGS_STEP = {
 export default class DashboardRangerComponent extends Component {
   @service session;
   @service house;
+
+  get serviceInfo() {
+    const { non_ranger_years, rangered_years} = this.args.years;
+    const rangerYears = rangered_years.length, nonRangerYears = non_ranger_years.length;
+
+    if (!rangerYears  && !nonRangerYears) {
+      return 'stopping by';
+    }
+
+    const info =[];
+    if (rangerYears) {
+      info.push(`rangering ${rangerYears} burn${rangerYears !== 1? 's' : ''}`);
+    }
+
+    if (nonRangerYears) {
+      info.push(`volunteering ${nonRangerYears} year${nonRangerYears !== 1? 's' : ''}`);
+    }
+
+    return info.join(' and for ');
+  }
 
   get stepGroups() {
     const groups = [];

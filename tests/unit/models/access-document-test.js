@@ -12,29 +12,29 @@ module('Unit | Model | access document', function(hooks) {
     assert.ok(model);
 
     model.set('status', 'qualified');
-    assert.equal(model.isQualified, true);
+    assert.true(model.isQualified);
 
     model.set('status', 'claimed');
-    assert.equal(model.isClaimed, true);
+    assert.true(model.isClaimed);
 
 
     model.set('status', 'banked');
-    assert.equal(model.isBanked, true);
+    assert.true(model.isBanked);
 
 
     model.set('status', 'submitted');
-    assert.equal(model.isSubmitted, true);
+    assert.true(model.isSubmitted);
 
 
     model.set('status', 'used');
-    assert.equal(model.isUsed, true);
+    assert.true(model.isUsed);
 
 
     model.set('status', 'cancelled');
-    assert.equal(model.isCancelled, true);
+    assert.true(model.isCancelled);
 
 
     model.set('status', 'expired');
-    assert.equal(model.isExpired, true);
+    assert.true(model.isExpired);
   });
 });

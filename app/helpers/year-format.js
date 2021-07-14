@@ -1,5 +1,5 @@
 import { helper } from '@ember/component/helper';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 /*
  * Take datetime (yyyy-mm-dd hh:mm:ss) and return just the year
@@ -13,7 +13,7 @@ export function yearFormat([ date ]/*, hash*/) {
   }
 
   try {
-    year = moment(date).format('YYYY');
+    year = dayjs(date).format('YYYY');
   } catch (exception) {
     return 'err '+exception;
   }

@@ -1,8 +1,8 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default function laborDay(year) {
   for (let i = 1; i <= 7; i++) {
-    let day = moment([year, 8, i]);
+    let day = dayjs({ year, month: 8, day: i});
     if (day.day() === 1) { // first Monday of September
       return day;
     }

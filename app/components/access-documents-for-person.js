@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 /*
  * Build a row showing the person's current documents.
@@ -39,7 +39,7 @@ export default class AccessDocumentsForPersonComponent extends Component {
     } else if (doc.access_date === 'any') {
       return 'any';
     } else {
-      return moment(doc.access_date).format('ddd MM/DD/YY');
+      return dayjs(doc.access_date).format('ddd MM/DD/YY');
     }
   }
 

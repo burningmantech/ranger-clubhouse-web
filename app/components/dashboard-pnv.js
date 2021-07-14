@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import {inject as service} from '@ember/service';
 import {config} from 'clubhouse/utils/config';
 import {htmlSafe} from '@ember/string';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {
   ACTION_NEEDED,
   BLOCKED,
@@ -73,7 +73,7 @@ const ALPHA_STEPS = [{
         if (milestones.alpha_shift.status === 'pending') {
           return {
             result: ACTION_NEEDED,
-            message: htmlSafe(`Please read "<a href="${milestones.alpha_shift_prep_link}" target="_blank" rel="noopener noreferrer">Becoming a Ranger: On-playa Alpha Shifts</a>" in the Ranger Manual.<br>Your Alpha shift starts ${moment(milestones.alpha_shift.begins).format('ddd MMM DD [@] HH:mm')}.<br><b>ARRIVE 15 MINUTES EARLY. Late arrivals will NOT be allowed to walk.</b><br>If you know you won't be able to make your Alpha shift please email the Mentor Cadre or stop by Ranger HQ on playa.`),
+            message: htmlSafe(`Please read "<a href="${milestones.alpha_shift_prep_link}" target="_blank" rel="noopener noreferrer">Becoming a Ranger: On-playa Alpha Shifts</a>" in the Ranger Manual.<br>Your Alpha shift starts ${dayjs(milestones.alpha_shift.begins).format('ddd MMM DD [@] HH:mm')}.<br><b>ARRIVE 15 MINUTES EARLY. Late arrivals will NOT be allowed to walk.</b><br>If you know you won't be able to make your Alpha shift please email the Mentor Cadre or stop by Ranger HQ on playa.`),
             email: 'MentorEmail'
           };
         } else {

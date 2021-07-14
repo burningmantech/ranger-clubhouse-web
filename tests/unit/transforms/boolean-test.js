@@ -8,10 +8,10 @@ module('Unit | Transform | boolean', function(hooks) {
     let transform = this.owner.lookup('transform:boolean');
     assert.ok(transform);
 
-    assert.equal(transform.serialize("false"), false);
-    assert.equal(transform.serialize(false), false);
+    assert.false(transform.serialize("false"));
+    assert.false(transform.serialize(false));
 
-    assert.equal(transform.serialize("true"), true);
-    assert.equal(transform.serialize(true), true);
+    assert.true(transform.serialize("true"));
+    assert.true(transform.serialize(true));
   });
 });

@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {cached} from '@glimmer/tracking';
 import {htmlSafe} from '@ember/string';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default class TicketSummaryComponent extends Component {
   @cached
@@ -34,11 +34,11 @@ export default class TicketSummaryComponent extends Component {
     const pkg = this.args.ticketPackage;
 
     pkg.tickets.filter((t) => t.isBanked).forEach((t) => {
-      banked.push(`A ${t.typeLabel} (expires ${moment(t.expiry_date).format('YYYY-MM-DD')})`);
+      banked.push(`A ${t.typeLabel} (expires ${dayjs(t.expiry_date).format('YYYY-MM-DD')})`);
     });
 
     pkg.appreciations.filter((t) => t.isBanked).forEach((t) => {
-      banked.push(`${t.typeLabel} (expires ${moment(t.expiry_date).format('YYYY-MM-DD')})`);
+      banked.push(`${t.typeLabel} (expires ${dayjs(t.expiry_date).format('YYYY-MM-DD')})`);
     });
 
     return banked;
@@ -73,7 +73,7 @@ export default class TicketSummaryComponent extends Component {
       if (accessItem.access_any_time) {
         text += '<li>Allows entry any time</li>';
       } else {
-        text += `<li>Allows entry on ${moment(accessItem.access_date).format('ddd MMM D')} @ 00:01</li>`;
+        text += `<li>Allows entry on ${dayjs(accessItem.access_date).format('ddd MMM D')} @ 00:01</li>`;
       }
       text += '</ul>';
       claimed.push(htmlSafe(text));
@@ -84,7 +84,7 @@ export default class TicketSummaryComponent extends Component {
       const names = wapso.filter((w) => w.isClaimed).map((w) => w.name).join(', ');
       let text = `${wapso.length} Work Access Pass${wapso.length > 1 ? 'es' : ''} for Significant Others<ul>`;
       text += `<li>sent via email to ${person.email}</li>`;
-      text += `<li>Allows entry on ${moment(wapso[0].access_date).format('ddd MMM D')} @ 00:01</li>`;
+      text += `<li>Allows entry on ${dayjs(wapso[0].access_date).format('ddd MMM D')} @ 00:01</li>`;
       text += `<li>for ${names}</li></ul>`;
       claimed.push(htmlSafe(text));
     }

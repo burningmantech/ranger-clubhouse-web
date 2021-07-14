@@ -3,7 +3,7 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default class AdminEventDatesController extends ClubhouseController {
   eventDateValidations = {
@@ -24,13 +24,13 @@ export default class AdminEventDatesController extends ClubhouseController {
     if (!isValid)
       return;
 
-    const eventYear = moment(model.event_start).year();
+    const eventYear = dayjs(model.event_start).year();
     const mismatches = [];
 
     // Verify all years match
     ['event_end', 'post_event_end', 'pre_event_slot_end', 'pre_event_slot_start', 'pre_event_start'].forEach((column) => {
       const value = model[column];
-      if (value && moment(value).year() != eventYear) {
+      if (value && dayjs(value).year() != eventYear) {
         mismatches.push(column);
       }
     });
