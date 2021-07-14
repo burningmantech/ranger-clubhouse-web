@@ -125,7 +125,7 @@ jobs:
         run: gzip --uncompress --stdout images/web.tgz | docker image load;
 
       - name: Install Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2.2.2
         with:
           python-version: '3.7'
 
