@@ -5,7 +5,7 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import Changeset from 'ember-changeset';
 import {inject as service} from '@ember/service';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default class TicketWapSoInfoComponent extends Component {
   @service ajax;
@@ -20,7 +20,7 @@ export default class TicketWapSoInfoComponent extends Component {
   constructor() {
     super(...arguments);
 
-    this.defaultDate = moment(this.args.ticketingInfo.wap_so_default_date).toString();
+    this.defaultDate = dayjs(this.args.ticketingInfo.wap_so_default_date).toString();
     this.buildWAPSOList();
   }
 

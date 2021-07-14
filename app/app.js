@@ -5,7 +5,6 @@ import loadInitializers from 'ember-load-initializers';
 import config from 'clubhouse/config/environment';
 import LinkComponent from '@ember/routing/link-component';
 import RSVP from 'rsvp';
-import buildErrorHandler from 'ember-test-friendly-error-handler';
 import logError from 'clubhouse/utils/log-error';
 
 RSVP.on('error', function (error) {
@@ -25,7 +24,7 @@ RSVP.on('error', function (error) {
  * after the browser window is closed.
  */
 
-Ember.onerror = buildErrorHandler('Ember.onerror', (error) => {
+Ember.onerror = (error) => {
   var didAlertError = false;
 
   if (Ember.testing) { // eslint-disable-line ember/no-ember-testing-in-module-scope
@@ -51,7 +50,7 @@ Ember.onerror = buildErrorHandler('Ember.onerror', (error) => {
   if (isDev) {
     debugger;  // eslint-disable-line no-debugger
   }
-});
+}
 
 LinkComponent.reopen({
   activeClass: 'is_active'

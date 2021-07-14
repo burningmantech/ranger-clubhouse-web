@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {ALPHA} from 'clubhouse/constants/positions';
 
 const DT_FORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -30,8 +30,8 @@ export default class MentorAlphaSignoutController extends ClubhouseController {
     };
 
     if (this.shiftDate !== 'all') {
-      data.on_duty_start = moment(value).subtract(1, 'hours').format(DT_FORMAT);
-      data.on_duty_end = moment(value).add(1, 'hours').format(DT_FORMAT);
+      data.on_duty_start = dayjs(value).subtract(1, 'hours').format(DT_FORMAT);
+      data.on_duty_end = dayjs(value).add(1, 'hours').format(DT_FORMAT);
     }
 
     this.ajax.request('timesheet', {data})

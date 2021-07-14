@@ -1,5 +1,5 @@
 import Model, {attr} from '@ember-data/model';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {tracked} from '@glimmer/tracking';
 
 export default class SlotModel extends Model {
@@ -27,7 +27,7 @@ export default class SlotModel extends Model {
     const begins = this.begins;
     let date;
     try {
-      date = moment(begins).format('YYYY-MM-DD');
+      date = dayjs(begins).format('YYYY-MM-DD');
     } catch (error) {
       return begins + ' ' + error;
     }
@@ -36,7 +36,7 @@ export default class SlotModel extends Model {
   }
 
   get begins_format() {
-    return moment(this.begins).format('ddd MMM DD [@] HH:mm');
+    return dayjs(this.begins).format('ddd MMM DD [@] HH:mm');
   }
 
   get position_title() {

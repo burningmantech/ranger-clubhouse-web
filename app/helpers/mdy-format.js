@@ -1,8 +1,8 @@
 import { helper } from '@ember/component/helper';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export function mdyFormat([ date ], params) {
-  return moment(date).format(params.full ? 'dddd, MMMM Do YYYY' : 'MMM DD, YYYY');
+  return dayjs(date).format(params.full ? 'dddd, MMMM Do YYYY' : 'MMM DD, YYYY');
 }
 
 export default helper(mdyFormat);

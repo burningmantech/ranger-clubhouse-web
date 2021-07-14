@@ -16,7 +16,7 @@
         {{/if}}
       </div>
       <div class="dashboard-step-description collapse" id="motd-text-{{motd.id}}">
-        <p class="text-muted">Posted {{moment-format motd.created_at "dddd, MMMM Do YYYY"}}</p>
+        <p class="text-muted">Posted {{dayjs-format motd.created_at outputFormat="dddd, MMMM Do YYYY"}}</p>
         {{nl2br motd.message allowHtml=true}}
         {{#unless motd.has_read}}
           <div class="mt-2">

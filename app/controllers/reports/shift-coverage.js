@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { tracked } from '@glimmer/tracking';
 import _ from 'lodash';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default class ReportsShiftCoveragController extends ClubhouseController {
   queryParams = [ 'year', 'type' ];
@@ -36,7 +36,7 @@ export default class ReportsShiftCoveragController extends ClubhouseController {
 
   get dayOptions() {
     const days = _.uniqBy(this.periods, 'date');
-    const options = days.map((p) => [ moment(p.date).format('ddd M/DD'), p.date ]);
+    const options = days.map((p) => [ dayjs(p.date).format('ddd M/DD'), p.date ]);
     options.unshift([ 'All', 'all' ]);
     return options;
   }

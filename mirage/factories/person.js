@@ -1,6 +1,6 @@
 import { Factory } from 'ember-cli-mirage';
 import faker from 'faker';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export default Factory.extend({
   status: 'active',
@@ -19,7 +19,7 @@ export default Factory.extend({
   zip() { return faker.address.zipCode(); },
   home_phone() { return faker.phone.phoneNumberFormat(); },
   alt_phone() { return faker.phone.phoneNumberFormat(); },
-  create_date() { return moment().format('YYYY-MM-DD hh:mm:ss'); },
+  create_date() { return dayjs().format('YYYY-MM-DD hh:mm:ss'); },
   password: 'ineedashower!',
   camp_location() { return faker.address.latitude() + faker.address.longitude(); },
   teeshirt_size_style: 'Mens Crew S',

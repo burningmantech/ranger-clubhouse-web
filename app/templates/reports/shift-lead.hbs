@@ -22,7 +22,7 @@
 {{#if this.isLoading}}
   <LoadingDialog @item="Shift Lead Report"/>
 {{else if this.shiftSelect}}
-  <h1>Shift Lead Report for {{moment-format this.shiftStart "dddd, MMMM Do YYYY @ HH:mm"}}</h1>
+  <h1>Shift Lead Report for {{dayjs-format this.shiftStart outputFormat="dddd, MMMM Do YYYY @ HH:mm"}}</h1>
 
   <div class="row">
     <div class="col-sm-12 col-md-6">

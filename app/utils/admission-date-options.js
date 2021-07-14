@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const DATE_FORMAT = 'ddd, MM/DD/YY';
 
@@ -8,7 +8,7 @@ export default function admissionDateOptions(year, wapDateRange, originalDate = 
   ];
 
   if (originalDate) {
-    const origMoment = moment(originalDate);
+    const origMoment = dayjs(originalDate);
     if (origMoment.year() != year) {
       options.push([origMoment.format(DATE_FORMAT), originalDate]);
     }
@@ -32,7 +32,7 @@ export default function admissionDateOptions(year, wapDateRange, originalDate = 
 
   for (let day = high; day >= low; day--) {
     const date = `${year}-08-${day < 10 ? '0' + day : day}`;
-    options.push([moment(date).format(DATE_FORMAT), date]);
+    options.push([dayjs(date).format(DATE_FORMAT), date]);
   }
 
   options.push(['Any', 'any']);

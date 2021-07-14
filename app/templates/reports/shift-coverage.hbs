@@ -34,8 +34,8 @@
       {{#each day.periods as |period|}}
         <tr>
           <td>
-            <span class="d-inline-block">{{moment-format period.begins "ddd M/DD HH:mm"}}</span>
-            <span class="d-inline-block">- {{moment-format period.ends "HH:mm"}}</span>
+            <span class="d-inline-block">{{dayjs-format period.begins outputFormat="ddd M/DD HH:mm"}}</span>
+            <span class="d-inline-block">- {{dayjs-format period.ends outputFormat="HH:mm"}}</span>
           </td>
           {{#each period.positions as |position|}}
             <td>
@@ -45,7 +45,7 @@
                 {{#each position.shifts as |shift shiftidx|}}
                   <div class="{{if shiftidx "mt-1"}}">
                     {{#if (gt position.shifts.length 1)}}
-                      <small class="d-inline-block">{{moment-format shift.begins "HH:mm"}} - {{moment-format shift.ends "HH:mm"}}</small><br>
+                      <small class="d-inline-block">{{dayjs-format shift.begins outputFormat="HH:mm"}} - {{dayjs-format shift.ends outputFormat="HH:mm"}}</small><br>
                     {{/if}}
                     {{#each shift.people as |person|~}}
                       <PersonLink @person={{person}} />

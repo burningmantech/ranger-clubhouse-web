@@ -5,7 +5,7 @@ import {validateNumber, validatePresence} from 'ember-changeset-validations/vali
 import currentYear from 'clubhouse/utils/current-year';
 import laborDay from 'clubhouse/utils/labor-day';
 import validateDateTime from 'clubhouse/validators/datetime';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import _ from 'lodash';
 
 const ALL_DAYS = {id: 'all', title: 'All Days'};
@@ -62,7 +62,7 @@ class CopySourceCredit {
 
   adjustTime(sourceDate) {
     const delta = this.controller.copyParams;
-    return moment(sourceDate).add({
+    return dayjs(sourceDate).add({
       days: delta.deltaDays,
       hours: delta.deltaHours,
       minutes: delta.deltaMinutes
@@ -125,7 +125,7 @@ export default class AdminCreditsController extends ClubhouseController {
 
   get dayOptions() {
     const unique = this.credits.uniqBy('creditDay').mapBy('creditDay');
-    const days = unique.map((day) => ({id: day, title: moment(day).format('ddd MMM DD')}));
+    const days = unique.map((day) => ({id: day, title: dayjs(day).format('ddd MMM DD')}));
     days.unshift(ALL_DAYS);
     return days;
   }

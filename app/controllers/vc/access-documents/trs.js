@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {isBlank, isEmpty} from '@ember/utils';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {tracked} from '@glimmer/tracking';
 import {GIFT_TICKET, STAFF_CREDENTIAL, RPT, WAP, WAPSO, VEHICLE_PASS, DELIVERY_POSTAL} from 'clubhouse/models/access-document';
 import {ALPHA, PROSPECTIVE} from 'clubhouse/constants/person_status';
@@ -189,8 +189,8 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
               dateInfo = ' Anytime';
               trsColumn = 'anytime';
             } else {
-              dateInfo = moment(doc.access_date).format(' ddd MM/D');
-              trsColumn = moment(doc.access_date).format('MMDD');
+              dateInfo = dayjs(doc.access_date).format(' ddd MM/D');
+              trsColumn = dayjs(doc.access_date).format('MMDD');
             }
             trsColumn = TRS_COLUMN[doc.type] + '_' + trsColumn;
             break;
@@ -419,7 +419,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
       return {title: r[0], key: r[1]};
     });
 
-    const date = moment().format('YYYY-MM-DD-HH-mm');
+    const date = dayjs().format('YYYY-MM-DD-HH-mm');
 
     this.house.downloadCsv(`trs-${this.filter.replace(/_/g, '-')}-${date}.csv`, columns, rows);
   }

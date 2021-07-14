@@ -1,8 +1,8 @@
 import { helper } from '@ember/component/helper';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 export function timeFormat([ date ]/*, hash*/) {
-  return moment(date).format('HH:mm');
+  return dayjs(date).format('HH:mm');
 }
 
 export default helper(timeFormat);

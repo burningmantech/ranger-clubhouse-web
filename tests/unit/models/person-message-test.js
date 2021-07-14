@@ -18,7 +18,7 @@ module('Unit | Model | person message', function(hooks) {
       model.set('sender_person_id', 2);
     });
 
-    assert.equal(model.isDictacted, true);
+    assert.true(model.isDictacted);
 
     // Test isDictated is flse for the creator
     // and sender are the same
@@ -27,7 +27,7 @@ module('Unit | Model | person message', function(hooks) {
       model.set('creator_person_id', 1);
       model.set('sender_person_id', 1);
     });
-    assert.equal(model.isDictacted, false);
+    assert.false(model.isDictacted);
 
   });
 });

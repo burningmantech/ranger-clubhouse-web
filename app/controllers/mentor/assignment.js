@@ -2,7 +2,7 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action, set } from '@ember/object';
 import { isEmpty } from '@ember/utils';
 import { tracked } from '@glimmer/tracking';
-import { run } from '@ember/runloop';
+import { schedule } from '@ember/runloop';
 
 export default class MentorAssignmentController extends ClubhouseController {
   @tracked isPrinting = false;
@@ -87,7 +87,7 @@ export default class MentorAssignmentController extends ClubhouseController {
 
     if (haveErrors) {
       this.toast.error("One or more errors occurred.");
-      run.schedule('afterRender', () => {
+      schedule('afterRender', () => {
         this.house.scrollToElement('.is-invalid');
       });
 
