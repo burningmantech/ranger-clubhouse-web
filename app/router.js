@@ -99,6 +99,7 @@ Router.map(function () {
     this.route('timesheet-sanity-checker');
     this.route('documents');
     this.route('bulk-lookup');
+    this.route('bulk-positions');
   });
 
   this.route('hq', {path: '/hq/:person_id'}, function () {
