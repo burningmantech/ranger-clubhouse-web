@@ -5,6 +5,9 @@
   </Accordion.title>
   <Accordion.body>
     {{#if Accordion.isOpen}}
+      {{#if this.haveNoAppreciationSlots}}
+      <NoAppreciateIcon /> = the shift hours will not count towards appreciations.
+      {{/if}}
       <div class="schedule-row schedule-header">
         <div class="schedule-icon">&nbsp;</div>
         <div class="schedule-time">Time</div>

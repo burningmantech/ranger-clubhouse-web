@@ -153,19 +153,28 @@
                      @grid="col-auto"/>
           </div>
           <legend>Set New Slot Attributes</legend>
+          <p>
+            The new slots will be cloned as-is (except with the new times used above) from slots being copied.
+          </p>
+          <p>
+            Use the fields below if a different position, description, max (sign up count), information, and/or active
+            field is desired for the new slots. Leaving the fields blank will cause the original slot values to be used.
+          </p>
           <div class="form-row">
             <f.input @name="newPositionId" @label="Position" @type="select" @options={{this.positionOptionsForCopy}}
                      @grid="col-auto"/>
             <f.input @name="description" @label="Description" @type="text" @maxlength={{40}} @size={{40}}
                      @grid="col-auto"/>
-            <f.input @name="max" @label="Max" @type="number" @maxlength={{3}} @size=3 @grid="col-2"/>
+            <f.input @name="max" @label="Max" @type="number" @maxlength={{3}} @size={{3}} @grid="col-2"/>
           </div>
           <div class="form-row">
-            <f.input @name="url" @label="Information" @type="textarea" @rows=3 @cols=80 @maxlength=512
+            <f.input @name="url" @label="Information" @type="textarea" @rows={{3}} @cols={{80}} @maxlength={{512}}
                      @wrapClass="col-12"/>
           </div>
-          <div class="form-row">
+          <div class="form-row my-2">
+            <div class="col-auto">
             <f.input @name="activate" @label="Activate new slots" @type="checkbox"/>
+            </div>
           </div>
           Labor Day of {{this.year}} is {{this.selectedYearLaborDay}}.
           Labor Day of {{this.presentYear}} is {{this.presentYearLaborDay}}, {{this.laborDayDiff}} days later.
