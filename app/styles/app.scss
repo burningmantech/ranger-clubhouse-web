@@ -661,17 +661,17 @@ caption {
 }
 
 .callsign-list {
-  display: flex;
-  flex-wrap: wrap;
+  column-count: auto;
+  column-width: 140px;
 
   > a {
     display: block;
   }
 
   > div, > a {
-    width: 130px;
-    padding: 5px;
     overflow-wrap: break-word;
+    padding: 0 5px;
+    margin-bottom: 5px;
   }
 
   > div:hover, > a:hover {

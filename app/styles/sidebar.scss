@@ -33,6 +33,17 @@ a.sidebar-link {
   height: 45px;
 }
 
+// The sidebar link includes an icon, and unfortunately the icon is not underlined when the cursor hovers.
+// This results is the space between the icon and text being underlined as well, and looks bad.
+// The solution is just to underline the actual text.
+.sidebar-link:hover {
+  text-decoration: none;
+}
+
+.sidebar-link-text:hover {
+  text-decoration: underline;
+}
+
 .sidebar-group-title {
   overflow: hidden;
   text-overflow: ellipsis !important;

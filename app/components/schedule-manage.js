@@ -8,6 +8,7 @@ import {slotSignup} from 'clubhouse/utils/slot-signup';
 import {schedule} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
 import {inject as service} from '@ember/service';
+import {htmlSafe} from '@ember/string';
 
 const allDays = ['All Days', 'all'];
 const upcomingShifts = ['Upcoming Shifts', 'upcoming'];
@@ -38,7 +39,7 @@ export default class ScheduleManageComponent extends Component {
   constructor() {
     super(...arguments);
 
-    const {person,permission,year,slots,signedUpSlots} = this.args;
+    const {person, permission, year, slots, signedUpSlots} = this.args;
 
     this.scheduleSummary = this.args.scheduleSummary;
     this._sortAndMarkSignups();
@@ -84,23 +85,6 @@ export default class ScheduleManageComponent extends Component {
     this.hasApprovedPhoto = (photoStatus === 'approved' || photoStatus === 'not-required')
   }
 
-  _sortAndMarkSignups() {
-    const slots = this.args.signedUpSlots;
-
-    slots.sort((a, b) => a.slot_begins_time - b.slot_begins_time);
-    slots.forEach((slot) => {
-      slot.set('is_overlapping', false);
-      slot.set('is_training_overlap', false);
-    });
-    markSlotsOverlap(slots);
-  }
-
-  _retrieveScheduleSummary() {
-    this.ajax.request(`person/${this.args.person.id}/schedule/summary`, {data: {year: this.args.year}})
-      .then((result) => this.scheduleSummary = result.summary)
-      .catch((result) => this.house.handleErrorResponse(result));
-  }
-
   get viewSlots() {
     let slots = this.availableSlots;
     const filterDay = this.filterDay;
@@ -133,7 +117,7 @@ export default class ScheduleManageComponent extends Component {
       }
     });
 
-    return Object.values(groups).sort((a,b) => a.title.localeCompare(b.title));
+    return Object.values(groups).sort((a, b) => a.title.localeCompare(b.title));
   }
 
   get dayOptions() {
@@ -157,6 +141,23 @@ export default class ScheduleManageComponent extends Component {
     });
 
     return days;
+  }
+
+  _sortAndMarkSignups() {
+    const slots = this.args.signedUpSlots;
+
+    slots.sort((a, b) => a.slot_begins_time - b.slot_begins_time);
+    slots.forEach((slot) => {
+      slot.set('is_overlapping', false);
+      slot.set('is_training_overlap', false);
+    });
+    markSlotsOverlap(slots);
+  }
+
+  _retrieveScheduleSummary() {
+    this.ajax.request(`person/${this.args.person.id}/schedule/summary`, {data: {year: this.args.year}})
+      .then((result) => this.scheduleSummary = result.summary)
+      .catch((result) => this.house.handleErrorResponse(result));
   }
 
   @action
@@ -251,7 +252,8 @@ export default class ScheduleManageComponent extends Component {
       if (!callsigns.length) {
         callsigns = "No one is signed up for this shift. Be the first!";
       } else {
-        callsigns = callsigns.join(', ');
+        const list = callsigns.map((c) => `<div>${c}</div>`).join('');
+        callsigns = htmlSafe(`<div class="callsign-list">${list}</div>`);
       }
       this.modal.info('Scheduled (Callsigns) for ' + slot.slot_description, callsigns);
     })

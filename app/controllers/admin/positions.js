@@ -63,7 +63,7 @@ export default class PositionController extends ClubhouseController {
 
   @action
   newAction() {
-    this.position = this.store.createRecord('position');
+    this.position = this.store.createRecord('position', { type: 'Frontline' });
   }
 
   @action
