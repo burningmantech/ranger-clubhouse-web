@@ -10,16 +10,20 @@ export default class ReportsScheduleByPositionRoute extends ClubhouseRoute {
     const year = requestYear(params);
 
     this.year = year;
-    return this.ajax.request('slot/position-schedule-report', { data: { year }});
+    return this.ajax.request('slot/position-schedule-report', { data: { year }}).then(({positions}) => positions);
   }
 
   setupController(controller, model) {
-    controller.set('year', this.year);
-    super.setupController(...arguments);
+    model.forEach((p) => {
+      p.activeCount = p.slots.filter((s) => s.active).length;
+      p.inactiveCount = p.slots.length - p.activeCount;
+    });
 
-    controller.set('positions', model.positions);
+    controller.set('year', this.year);
+    controller.set('positions', model);
     controller.set('isExpanding', false);
     controller.set('expandAll', false);
+    controller.set('activeFilter', 'active');
   }
 
   resetController(controller, isExiting) {
