@@ -32,7 +32,7 @@ Everyone else will see person/simple-form
     <div class="col-sm-6 col-lg-auto">
       Last seen
       {{#if @person.last_seen_at}}
-        {{dayjs-format @person.last_seen_at outputFormat="MMM DD, YYYY @ HH:mm"}}
+        {{dayjs-format @person.last_seen_at "MMM DD, YYYY @ HH:mm"}}
       {{else}}
         <i>never</i>
       {{/if}}
@@ -40,7 +40,7 @@ Everyone else will see person/simple-form
     <div class="col-sm-6 col-lg-auto">
       Created
       {{#if @person.create_date}}
-        {{dayjs-format @person.create_date outputFormat="MMM DD, YYYY @ HH:mm"}}
+        {{dayjs-format @person.create_date "MMM DD, YYYY @ HH:mm"}}
       {{else}}
         <i>prior to 2010</i>
       {{/if}}

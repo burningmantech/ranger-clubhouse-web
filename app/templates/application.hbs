@@ -3,7 +3,7 @@
    {{#if (has-role "admin" "manage" "vc" "mentor")}}<SearchItemBar/>{{/if}}
   {{#if this.groundHogDayTime}}
     <div class="h4 alert alert-light-red text-center p-2 m-0">
-      Training Server - Simulated Time {{dayjs-format this.groundHogDayTime outputFormat="dddd, MMMM Do YYYY @ HH:mm"}}
+      Training Server - Simulated Time {{dayjs-format this.groundHogDayTime "dddd, MMMM Do YYYY @ HH:mm"}}
     </div>
   {{else if this.session.isStaging}}
     <div class="h4 alert alert-light-red text-center p-2 m-0">
@@ -29,7 +29,7 @@
 
 <footer class="footer d-print-none">
   <div class="container text-center">
-    &copy; 2008-{{dayjs-format (now) outputFormat="YYYY"}} Black Rock City, LLC.
+    &copy; 2008-{{dayjs-format "" "YYYY"}} Black Rock City, LLC.
     <span class="d-inline-block">
       All information contained within this website is strictly confidential.
     </span>
