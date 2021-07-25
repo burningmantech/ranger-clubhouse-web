@@ -33,7 +33,7 @@
         {{#if document.access_any_time}}
           Any
         {{else if document.access_date}}
-          {{dayjs-format document.access_date outputFormat="ddd MM/DD/YY"}}
+          {{dayjs-format document.access_date "ddd MM/DD/YY"}}
         {{else}}
           -
         {{/if}}

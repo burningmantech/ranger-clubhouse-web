@@ -19,7 +19,7 @@
         </a>
       </div>
       <div class="card-body collapse" id="motd-text-{{motd.id}}">
-        <div class="text-muted mb-2">Posted {{dayjs-format motd.created_at outputFormat="dddd, MMMM Do YYYY"}}</div>
+        <div class="text-muted mb-2">Posted {{dayjs-format motd.created_at "dddd, MMMM Do YYYY"}}</div>
         {{nl2br motd.message allowHtml=true}}
         <div class="mt-2">
           {{#if motd.has_read}}

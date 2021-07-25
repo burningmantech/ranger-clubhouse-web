@@ -10,7 +10,6 @@ import { inject as service } from '@ember/service';
 
 export default class ClubhouseController extends Controller {
   @service ajax;
-  @service dayjs;
   @service house;
   @service modal;
   @service session;
