@@ -404,9 +404,7 @@ export default class HouseService extends Service {
    */
 
   toggleAllAccordions(show) {
-    run('afterRender', ()=> {
-      $('.accordion-body').collapse(show ? 'show' : 'hide');
-    });
+    run('afterRender', () =>  $('.accordion-body').collapse(show ? 'show' : 'hide'));
   }
 
   toggleSingleAccordion(containerId, show) {

@@ -99,9 +99,14 @@
     <div class="col-auto">
       <f.submit @label="Verify Callsign(s)"
                 @disabled={{or (is-empty f.model.positionId) (is-empty f.model.callsigns) this.isSubmitting}} />
-      {{#if this.isSubmitting}}
-        <LoadingIndicator/>
-      {{/if}}
-    </div>
+     </div>
   </div>
 </ChForm>
+
+{{#if this.isSubmitting}}
+  <ModalDialog as |modal|>
+    <modal.body>
+      <LoadingIndicator @text="Processing Request" />
+    </modal.body>
+  </ModalDialog>
+{{/if}}

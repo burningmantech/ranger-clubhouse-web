@@ -9,6 +9,7 @@ export default class AdminBulkPositionsRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
+    controller.set('isSubmitting', false);
     controller.setProperties({
       positions: model,
       committed: false,

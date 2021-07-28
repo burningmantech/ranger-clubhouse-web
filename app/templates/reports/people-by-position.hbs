@@ -30,12 +30,8 @@
     </div>
   {{/each}}
 </div>
-<p>
-  <button type="button" class="btn btn-secondary" {{action this.expandAllPositions true}}>Expand all</button>
-  <button type="button" class="btn btn-secondary" {{action this.expandAllPositions false}}>Collapse all</button>
-</p>
 
-{{#each this.visiblePositions as |position|}}
+{{#each this.visiblePositions key="id" as |position|}}
   <ChAccordion as |accordion|>
     <accordion.title>
       {{position-label position}}
@@ -84,7 +80,7 @@
             </tr>
             </thead>
             <tbody>
-            {{#each position.missingPeople as |person|}}
+            {{#each position.missingPeople key="id" as |person|}}
               <tr>
                 <td>{{fa-icon "exclamation-triangle" color="danger"}}</td>
                 <td>

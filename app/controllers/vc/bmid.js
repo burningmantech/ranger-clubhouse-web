@@ -12,7 +12,7 @@ import Changeset from 'ember-changeset';
  */
 
 // How many elements to render at a time
-const BMID_RENDER_SLICE = 200;
+const BMID_RENDER_SLICE = 100;
 
 const CSV_COLUMNS = [
   'callsign',

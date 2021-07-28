@@ -1,8 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {dasherize} from '@ember/string';
-import {later} from '@ember/runloop';
 import {action} from '@ember/object';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import {HandleConflict} from 'clubhouse/utils/handle-conflict';
 import {
   AmericanSoundexRule,
@@ -66,10 +65,9 @@ export default class VcHandlerCheckerController extends ClubhouseController {
   @tracked checkedHandles = []; // Array of {id string, name string, conflicts HandleConflict[]}
   @tracked allHandles = []; // Same Handle objects as model
 
-
   /** Maps rule ID to {name string, rule object, enabled boolean} */
   buildHandleRules() {
-    const handles = this.model.toArray();
+    const handles = this.allHandles.toArray();
     const rules = [];
     const addRule = (rule, name, enabled = true) => rules.push(new Rule({
       id: rule.id,
@@ -109,37 +107,19 @@ export default class VcHandlerCheckerController extends ClubhouseController {
     }
     // By default, alphas can choose the handle of a non-vintage retired Ranger
     const disabledByDefault = new Set(['retired ranger', 'non ranger ranger']);
-    this.entityTypes = this.model.mapBy('entityType').uniq().sort(comparator).map((type) => new EntityType({
+    this.entityTypes = this.allHandles.mapBy('entityType').uniq().sort(comparator).map((type) => new EntityType({
       id: dasherize(type),
       name: type,
       enabled: !disabledByDefault.has(type),
     }));
   }
 
+  @cached
   get allEnabledHandles() {
     const enabled = new Set(this.entityTypes.filterBy('enabled').mapBy('name'));
     const vintage = this.includeVintage;
     return this.allHandles
       .filter((handle) => (vintage && handle.personVintage) || enabled.has(handle.entityType));
-  }
-
-  _setAllHandlesBySlice(nextSize) {
-    const model = this.model;
-    this.allHandles = model.slice(0, nextSize);
-    if (this.allHandles.length < model.length) {
-      later(() => {
-        this._setAllHandlesBySlice(nextSize + 200)
-      }, 1);
-    }
-  }
-
-  incrementallyBuildAllHandles() {
-    // Rendering 2500 handles takes a long time, so don't prevent interactivity.
-    // Copy 100 handles at a time into allHandles and let the template
-    // incrementally render them.
-    later(() => {
-      this._setAllHandlesBySlice(200)
-    }, 1);
   }
 
   /** Checks the currently-entered name against each rule and updates checkedHandles with the results. */

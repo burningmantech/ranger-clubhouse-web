@@ -41,6 +41,13 @@ export default class ChAccordionComponent extends Component {
       }
     });
 
+    $(element).on('shown.bs.collapse', () => {
+      if (this.isOpen) {
+        return;
+      }
+      schedule('afterRender', () => this.isOpen = true);
+    });
+
     if (this.args.isInitOpen) {
       this.isOpen = true;
     }

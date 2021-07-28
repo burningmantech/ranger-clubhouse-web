@@ -8,9 +8,10 @@ export default class VcHandleCheckerRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    controller.set('model', model);
+    // help rendering performance by giving a key hint.
+    model.forEach((h,idx) => h.keyIdx = idx);
+    controller.set('allHandles', model);
     controller.buildHandleRules();
     controller.buildEntityTypes();
-    controller.incrementallyBuildAllHandles();
   }
 }
