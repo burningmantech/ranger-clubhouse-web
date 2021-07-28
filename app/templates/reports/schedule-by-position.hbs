@@ -52,7 +52,7 @@
           </tr>
           </thead>
           <tbody>
-          {{#each position.slots as |slot|}}
+          {{#each position.slots key="id" as |slot|}}
             <tr>
               <td class="w-10">{{shift-format slot.begins}}</td>
               <td class="w-10">{{shift-format slot.ends}}</td>

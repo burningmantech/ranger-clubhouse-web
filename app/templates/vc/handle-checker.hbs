@@ -89,46 +89,33 @@
     {{/each}}
   </div>
 
+  <hr>
 
-  <div class="container">
-    <hr>
-    <div class="row align-items-center">
-      <div class="col">
-        <h3>All {{this.allEnabledHandles.length}} Handles</h3>
-        <table class="table table-sm table-striped table-hover">
-          <thead>
-          <tr>
-            <th>Handle</th>
-            <th>Entity type</th>
-            <th>Vintage</th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#each this.allEnabledHandles as |handle|}}
-            <tr>
-              <td>
-                {{#if handle.personId}}
-                  <LinkTo @route="person.index" @model={{handle.personId}}
-                          target="_blank" rel="noopener noreferrer">
-                    {{handle.name}}
-                  </LinkTo>
-                {{else}}
-                  {{handle.name}}
-                {{/if}}
-              </td>
-              <td>
-                {{handle.entityType}}
-              </td>
-              <td>
-                {{#if handle.personVintage}}
-                  vintage
-                {{/if}}
-              </td>
-            </tr>
-          {{/each}}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+    <h3>All {{this.allEnabledHandles.length}} Handles</h3>
+    <table class="table table-sm table-striped table-hover table-width-auto">
+      <thead>
+      <tr>
+        <th>Handle</th>
+        <th>Entity type</th>
+        <th>Vintage</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.allEnabledHandles key="keyIdx" as |handle|}}
+        <tr>
+          <td>
+            {{#if handle.personId}}
+              <LinkTo @route="person.index" @model={{handle.personId}} target="_blank" rel="noopener noreferrer">
+                {{handle.name}}
+              </LinkTo>
+            {{else}}
+              {{handle.name}}
+            {{/if}}
+          </td>
+          <td>{{handle.entityType}}</td>
+          <td>{{if handle.personVintage "vintage"}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
 </main>

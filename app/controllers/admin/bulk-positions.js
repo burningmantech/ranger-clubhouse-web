@@ -9,6 +9,7 @@ export default class AdminBulkPositionsController extends ClubhouseController {
   @tracked positionTitle = '';
   @tracked successCount = 0;
   @tracked errorCount = 0;
+  @tracked isSubmitting = false;
 
   grantRevokeOptions = [
     ['Grant Position', true],

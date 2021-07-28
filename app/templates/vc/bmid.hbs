@@ -115,7 +115,7 @@
     <tbody>
     {{#if this.viewBmids}}
       {{#if this.editMode}}
-        {{#each this.editableBmids as |bmid|}}
+        {{#each this.editableBmids key="person_id" as |bmid|}}
           <tr class="{{if bmid.isDirty "bg-warning"}}">
             <td>
               {{~#unless bmid.has_signups~}}
@@ -179,13 +179,11 @@
             <td><textarea cols="40" rows="1" onfocus={{action this.focusNote}}
                           onblur={{action this.blurNote bmid}}>{{bmid.notes}}</textarea>
             </td>
-            <td>
-              <button type="button" {{action this.saveInlineBmid bmid}}>Save</button>
-            </td>
+            <td><button type="button" {{action this.saveInlineBmid bmid}}>Save</button></td>
           </tr>
         {{/each}}
       {{else}}
-        {{#each this.renderBmids as |bmid|}}
+        {{#each this.renderBmids key="person_id" as |bmid|}}
           <tr>
             <td>
               {{#unless bmid.has_signups}}

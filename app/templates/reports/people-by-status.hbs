@@ -7,7 +7,7 @@
     </accordion.title>
     <accordion.body>
       <div class="callsign-list">
-        {{#each status.people as |person|}}
+        {{#each status.people key="id" as |person|}}
           <div>
             <PersonLink @person={{person}} />
           </div>

@@ -1,6 +1,6 @@
-<YearSelect @title="Shift Signups Report" year={{this.year}} @onChange={{action (mut this.year)}}  />
+<YearSelect @title="Shift Signups Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 <p>
-  The report shows all shifts available in the Clubhouse for a given year. A shift will be highlighted
+  The report shows all active shifts available in the Clubhouse for a given year. A shift will be highlighted
   in red if no one has signed up, or highlighted in yellow if the shift is less than 20% full.
 </p>
 <p class="my-3">
@@ -25,7 +25,7 @@
     </thead>
 
     <tbody>
-    {{#each position.shifts as |shift|}}
+    {{#each position.shifts key="id" as |shift|}}
       <tr class="{{if (eq shift.full_percentage 0) "bg-light-red" (if (lt shift.full_percentage 20) "bg-warning")}}">
         <td>{{position.title}}</td>
         <td>{{shift-format shift.begins}}</td>
@@ -68,7 +68,7 @@
   </thead>
 
   <tbody>
-  {{#each this.emptyPositions as |position|}}
+  {{#each this.emptyPositions key="id" as |position|}}
     <tr>
       <td>{{position.title}}</td>
       <td class="text-right">{{position.total_empty}}</td>
