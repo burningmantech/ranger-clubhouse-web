@@ -40,6 +40,16 @@
         {{else if (eq this.activeFtiler "inactive")}}
           <p class="text-danger">{{pluralize position.activeCount "active shift"}} are not shown.</p>
         {{/if}}
+        <p>
+          <button type="button" class="btn btn-primary mr-2" {{action this.exportByShift position}}>
+            Export by Shift
+          </button>
+          {{#if this.session.canViewEmail}}
+            <button type="button" class="btn btn-primary" {{action this.exportByCallsign position}}>
+              Export Callsigns w/Emails
+            </button>
+          {{/if}}
+        </p>
         <table class="table table-sm table-hover table-striped">
           <thead>
           <tr>
@@ -47,7 +57,7 @@
             <th class="w-10">To</th>
             <th class="w-15">Description</th>
             <th class="w-5">Active</th>
-            <th class="w-10 text-center">Sign Ups / Max</th>
+            <th class="w-10 text-center">Sign-Ups / Max</th>
             <th class="w-50">Callsigns</th>
           </tr>
           </thead>

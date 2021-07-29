@@ -35,7 +35,7 @@ export default class AdminBulkLookupController extends Controller {
       .filter((l) => l !== '');
 
     this.isSubmitting = true;
-    this.ajax.request('person/bulk-lookup', {data: {people}})
+    this.ajax.request('person/bulk-lookup', {method: 'POST', data: {people}})
       .then(({people}) => {
         this.people = people;
         this.peopleFound = people.filter((p) => p.result === 'success');
