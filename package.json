@@ -91,7 +91,7 @@
     "qunit-dom": "^1.6.0",
     "sass": "^1.36.0",
     "toastr": "^2.1.4",
-    "webpack": "^5.46.0"
+    "webpack": "^5.47.1"
   },
   "engines": {
     "node": "10.* || >= 12"
