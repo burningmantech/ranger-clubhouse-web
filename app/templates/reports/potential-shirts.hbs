@@ -31,7 +31,7 @@ Showing  {{pluralize this.people.length "person"}}
   </thead>
 
   <tbody>
-  {{#each this.people as |person|}}
+  {{#each this.people key="id" as |person|}}
     <tr>
       <td>
         <PersonLink @person={{person}} />

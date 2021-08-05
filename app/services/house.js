@@ -64,8 +64,10 @@ export default class HouseService extends Service {
     } else if (response instanceof TimeoutError ||
       response instanceof AbortError ||
       isAbortError(response) ||
-      isTimeoutError(response)) {
-      // Ajax Error
+      isTimeoutError(response) ||
+      (response.name === 'NetworkError' || response.message?.match(/NetworkError/))
+    ) {
+      // Offline errors.
       responseErrors = 'The request to the Clubhouse server could not be completed. The server might be offline or the Internet connection is spotty.';
       errorType = 'server';
     } else if (response instanceof NotFoundError) {

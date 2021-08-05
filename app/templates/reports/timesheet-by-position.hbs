@@ -2,7 +2,7 @@
 <p>
   Showing {{pluralize this.positions.length "position"}}
 </p>
-{{#each this.positions as |position|}}
+{{#each this.positions key="id" as |position|}}
   <div class="max-width-700">
     <ChAccordion as |accordion|>
       <accordion.title>{{position-label position}} ({{pluralize position.timesheets.length "entry"}})</accordion.title>
@@ -24,7 +24,7 @@
             </tr>
             </thead>
             <tbody>
-            {{#each position.timesheets as |entry|}}
+            {{#each position.timesheets key="id" as |entry|}}
               <tr>
                 <td>{{shift-format entry.on_duty}}</td>
                 <td>

@@ -59,7 +59,7 @@
           </tr>
           </thead>
           <tbody>
-          {{#each position.credits as |credit|}}
+          {{#each position.credits key="id" as |credit|}}
             <tr id="credit-{{credit.id}}">
               <td class="w-5">{{credit.id}}</td>
               <td class="w-15">{{shift-format credit.start_time}}</td>

@@ -30,7 +30,7 @@
       </tr>
       </thead>
       <tbody>
-      {{#each @people as |person|}}
+      {{#each @people key="id" as |person|}}
         <tr class="{{if person.error "bg-danger"}}">
           <td>
             {{#if person.converted}}

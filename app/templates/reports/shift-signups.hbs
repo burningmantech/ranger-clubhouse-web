@@ -10,7 +10,7 @@
 <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export to CSV</button>
 {{! template-lint-disable table-groups}}
 <table class="table table-sm table-hover table-width-auto mt-2">
-  {{#each this.positions as |position|}}
+  {{#each this.positions key="id" as |position|}}
     <thead>
     <tr>
       <th>Position</th>

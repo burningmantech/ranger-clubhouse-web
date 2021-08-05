@@ -12,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-    {{#each @visits as |visit|}}
+    {{#each @visits key="period" as |visit|}}
       <tr class="{{if (and (not visit.windows) (not visit.shorts) (not visit.leads)) "bg-highlight"}}">
         <td>
           {{if (and (not visit.windows) (not visit.shorts) (not visit.leads)) (fa-icon "exclamation-triangle")}}

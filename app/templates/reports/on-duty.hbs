@@ -33,50 +33,52 @@
   </button>
 
 </p>
-{{#each this.positions as |position|}}
+{{#each this.positions key="id" as |position|}}
   <div class="max-width-700">
-  <ChAccordion as |accordion|>
-    <accordion.title>
-      {{position.title}} - {{pluralize position.timesheets.length "person"}}
-    </accordion.title>
-    <accordion.body>
-      <table class="table table-sm table-striped table-hover table-width-auto">
-        <thead>
-        <tr>
-          <th class="w-25">Callsign</th>
-          {{#if this.duty_date}}
-            <th class="w-30">On Duty</th>
-            <th class="w-30">Off Duty</th>
-          {{else}}
-            <th class="w-60">On Duty Since</th>
-          {{/if}}
-          <th class="text-right w-15">Duration</th>
-        </tr>
-        </thead>
+    <ChAccordion as |accordion|>
+      <accordion.title>
+        {{position.title}} - {{pluralize position.timesheets.length "person"}}
+      </accordion.title>
+      <accordion.body>
+        {{#if accordion.isOpen}}
+          <table class="table table-sm table-striped table-hover table-width-auto">
+            <thead>
+            <tr>
+              <th class="w-25">Callsign</th>
+              {{#if this.duty_date}}
+                <th class="w-30">On Duty</th>
+                <th class="w-30">Off Duty</th>
+              {{else}}
+                <th class="w-60">On Duty Since</th>
+              {{/if}}
+              <th class="text-right w-15">Duration</th>
+            </tr>
+            </thead>
 
-        <tbody>
-        {{#each position.timesheets as |ts|}}
-          <tr>
-            <td class="w-25">
-              <PersonLink @person={{ts.person}} />
-            </td>
-            <td class={{if this.duty_date "w-30" "w-60"}}>{{shift-format ts.on_duty}}</td>
-            {{#if this.duty_date}}
-              <td class="w-30">
-                {{#if ts.off_duty}}
-                  {{shift-format ts.off_duty}}
-                {{else}}
-                  <i>On Duty</i>
+            <tbody>
+            {{#each position.timesheets key="id" as |ts|}}
+              <tr>
+                <td class="w-25">
+                  <PersonLink @person={{ts.person}} />
+                </td>
+                <td class={{if this.duty_date "w-30" "w-60"}}>{{shift-format ts.on_duty}}</td>
+                {{#if this.duty_date}}
+                  <td class="w-30">
+                    {{#if ts.off_duty}}
+                      {{shift-format ts.off_duty}}
+                    {{else}}
+                      <i>On Duty</i>
+                    {{/if}}
+                  </td>
                 {{/if}}
-              </td>
-            {{/if}}
-            <td class="w-15 text-right">{{hour-minute-format ts.duration}}</td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
-    </accordion.body>
-  </ChAccordion>
+                <td class="w-15 text-right">{{hour-minute-format ts.duration}}</td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </table>
+        {{/if}}
+      </accordion.body>
+    </ChAccordion>
   </div>
 {{else}}
   <p>

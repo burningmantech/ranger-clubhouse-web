@@ -5,7 +5,7 @@
   </div>
   <div class="col-auto">
     <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}}
-                    @onChange={{action (mut this.filter)}} @controlClass="form-control"/>
+                    @onChange={{action this.updateFilter}} @controlClass="form-control"/>
   </div>
   <div class="col-auto">
     <button type="button" class="btn btn-primary" disabled={{if this.viewPeople false true}}
@@ -19,7 +19,7 @@
 </div>
 
 Showing {{this.viewPeople.length}} of {{this.people.length}}.
-{{#each this.countries as |country idx|}}
+{{#each this.countries key="country" as |country idx|}}
   <ChAccordion id="country-{{idx}}" as |accordion|>
     <accordion.title>
       {{country.full_name}} ({{pluralize country.people.length "person"}})
@@ -45,7 +45,7 @@ Showing {{this.viewPeople.length}} of {{this.people.length}}.
         </tr>
         </thead>
         <tbody>
-        {{#each country.people as |person|}}
+        {{#each country.people key="id" as |person|}}
           <tr>
             <td>
               <PersonLink @person={{person}} />
@@ -73,3 +73,12 @@ Showing {{this.viewPeople.length}} of {{this.people.length}}.
     </accordion.body>
   </ChAccordion>
 {{/each}}
+
+{{#if this.isRendering}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      Hang Tight - Filtering the list
+      <SpinIcon/>
+    </Modal.body>
+  </ModalDialog>
+{{/if}}

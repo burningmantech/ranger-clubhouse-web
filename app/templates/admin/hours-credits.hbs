@@ -28,7 +28,7 @@
     </thead>
 
     <tbody>
-      {{#each this.people as |person|}}
+      {{#each this.people key="id" as |person|}}
         <tr>
           <td><PersonLink @person={{person}} /></td>
           <td>{{mail-to person.email}}</td>

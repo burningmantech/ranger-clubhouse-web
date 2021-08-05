@@ -58,7 +58,7 @@
         </div>
 
         <p>Showing {{this.viewSlots.length}} of {{this.availableSlots.length}}</p>
-        {{#each this.positions as |position|}}
+        {{#each this.positions key="position_id" as |position|}}
           <SchedulePositionList @position={{position}}
                                 @showPeople={{this.showPeople}}
                                 @joinSlot={{this.joinSlot}}

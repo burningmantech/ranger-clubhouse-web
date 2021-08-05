@@ -14,7 +14,7 @@
 <p>
   [hh:mm] = Time does not count towards appreciations.
 </p>
-{{#each this.people as |person|}}
+{{#each this.people key="id" as |person|}}
   <div class="max-width-700">
     <ChAccordion id="person-{{person.id}}" as |accordion|>
       <accordion.title>{{person.callsign}}</accordion.title>

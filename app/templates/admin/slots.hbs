@@ -81,7 +81,7 @@
           </tr>
           </thead>
           <tbody>
-          {{#each position.slots as |slot|}}
+          {{#each position.slots key="id" as |slot|}}
             <tr id="slot-{{slot.id}}">
               <td>{{slot.id}}</td>
               <td>{{shift-format slot.begins}}</td>

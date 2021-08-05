@@ -1,11 +1,15 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { CountryLabels } from 'clubhouse/constants/countries';
-import { tracked } from '@glimmer/tracking';
+import { cached, tracked } from '@glimmer/tracking';
+import { later, schedule } from '@ember/runloop';
+
 import _ from 'lodash';
 
 export default class ReportsPeopleByLocationController extends ClubhouseController {
   @tracked filter;
+  @tracked people;
+  @tracked isRendering;
 
   @action
   toggleExpandAll() {
@@ -25,6 +29,7 @@ export default class ReportsPeopleByLocationController extends ClubhouseControll
     ];
   }
 
+  @cached
   get countries() {
     const list =  _.map(_.groupBy(this.viewPeople, 'country'), (people, country) => {
       return {
@@ -37,6 +42,7 @@ export default class ReportsPeopleByLocationController extends ClubhouseControll
     return list;
   }
 
+  @cached
   get viewPeople() {
     const filter = this.filter;
     const people = this.people;
@@ -88,5 +94,14 @@ export default class ReportsPeopleByLocationController extends ClubhouseControll
     });
 
     return this.house.downloadCsv(`${year}-people-location-${suffix.replace(/ /g,'-')}`, CSV_COLUMNS, people);
+  }
+
+  @action
+  updateFilter(value) {
+    this.isRendering = true;
+    later(this, () => {
+      this.filter = value;
+      schedule('afterRender', () => this.isRendering = false);
+    }, 1);
   }
 }

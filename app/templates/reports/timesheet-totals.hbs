@@ -16,8 +16,8 @@ Showing {{pluralize this.people.length "person"}}
     </tr>
   </thead>
   <tbody>
-    {{#each this.people as |person|}}
-      {{#each person.positions as |pos idx|}}
+    {{#each this.people key="id" as |person|}}
+      {{#each person.positions key="id" as |pos idx|}}
         <tr>
           {{#unless idx}}
             <td rowspan="{{add person.positions.length 1}}">

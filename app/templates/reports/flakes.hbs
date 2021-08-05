@@ -36,77 +36,87 @@
 
 {{#each this.positions as |position|}}
   <div class="max-width-700">
-  <ChAccordion as |accordion|>
-    <accordion.title>{{position.title}}</accordion.title>
-    <accordion.body>
-      <table class="table table-sm">
-        <thead>
-        <tr>
-          <th>From</th>
-          <th>To</th>
-          <th>Description</th>
-          <th class="text-right">Signed Up</th>
-          <th class="text-right">Max</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each position.slots as |slot|}}
-          <tr>
-            <td>{{shift-format slot.begins}}</td>
-            <td>{{shift-format slot.ends}}</td>
-            <td>{{slot.description}}</td>
-            <td class="text-right">{{slot.signed_up}}</td>
-            <td class="text-right">{{slot.max}}</td>
-          </tr>
-          <tr class="tr-no-border">
-            <td colspan="5">
+    <ChAccordion as |accordion|>
+      <accordion.title>{{position.title}}</accordion.title>
+      <accordion.body>
+        {{#if accordion.isOpen}}
+          {{#each position.slots key="id" as |slot idx|}}
+            <table class="table table-sm">
+              <thead>
+              <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Description</th>
+                <th class="text-right">Signed Up</th>
+                <th class="text-right">Max</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>{{shift-format slot.begins}}</td>
+                <td>{{shift-format slot.ends}}</td>
+                <td>{{slot.description}}</td>
+                <td class="text-right">{{slot.signed_up}}</td>
+                <td class="text-right">{{slot.max}}</td>
+              </tr>
+              </tbody>
+            </table>
+            <div class="ml-1 {{unless idx "mb-2"}}">
               {{#if slot.checked_in}}
-                <b>Signed up &amp; in ({{slot.checked_in.length}}):</b>
-                {{#each slot.checked_in as |person idx|}}
-                  {{~if idx ", "}}<span class="d-inline-block"><PersonLink @person={{person}} /> ({{time-format
-                        person.timesheet.on_duty}})</span>
-                {{/each}}
+                <h6>Signed up &amp; in ({{slot.checked_in.length}})</h6>
+                <div class="callsign-list">
+                  {{#each slot.checked_in key="id" as |person|}}
+                    <div>
+                      <PersonLink @person={{person}} /><br>
+                      ({{time-format person.timesheet.on_duty}})
+                    </div>
+                  {{/each}}
+                </div>
               {{else if slot.signed_up}}
-                <b class="text-danger">No scheduled sign ups on shift.</b>
+                <div class="text-danger mb-1">No scheduled sign ups on shift.</div>
               {{else}}
-                <b class="text-danger">No shift sign ups.</b>
+                <div class="text-danger mb-1">No shift sign ups.</div>
               {{/if}}
-              <br>
               {{#if slot.different_shift}}
-                <b>Went on different shift ({{slot.different_shift.length}}):</b>
-                {{#each slot.different_shift as |person idx|}}
-                  {{~if idx ", "}}<span class="d-inline-block"><PersonLink
-                        @person={{person}} /> ({{person.timesheet.position_title}} @ {{time-format
-                        person.timesheet.on_duty}})</span>
-                {{/each}}
-                <br>
+                <h6>Went on different shift ({{slot.different_shift.length}}):</h6>
+                <div class="row mb-1">
+                  {{#each slot.different_shift key="id" as |person|~}}
+                    <div class="col-auto">
+                      <PersonLink @person={{person}} />
+                      <br>
+                      ({{person.timesheet.position_title}} @ {{time-format person.timesheet.on_duty}})
+                    </div>
+                  {{~/each}}
+                </div>
               {{/if}}
               {{#if slot.rogues}}
-                <b>Rogues / Overlaps ({{slot.rogues.length}}):</b>
-                {{#each slot.rogues as |person idx|}}
-                  {{~if idx ", "}}<span class="d-inline-block"><PersonLink @person={{person}} /> ({{dayjs
-                        person.on_duty "ddd DD @ HH:MM"}} -
-                  {{if person.off_duty (dayjs person.off_duty "ddd DD @ HH:MM") "now"}})</span>
-                {{~/each}}
-                <br>
+                <h6>Rogues / Overlaps ({{slot.rogues.length}}):</h6>
+                <div class="row mb-1">
+                  {{#each slot.rogues key="id" as |person|}}
+                    <div class="col-auto">
+                      <PersonLink @person={{person}} />
+                      <br>
+                      ({{dayjs-format person.on_duty "ddd DD @ HH:MM"}} -
+                      {{if person.off_duty (dayjs-format person.off_duty "ddd DD @ HH:MM") "now"}})
+                    </div>
+                  {{~/each}}
+                </div>
               {{/if}}
               {{#if slot.not_present}}
-                <b>Flakes ({{slot.not_present.length}}):</b>
-                {{#each slot.not_present as |person idx|}}
-                  {{~if idx ", "}}
-                  <PersonLink @person={{person}} />
-                {{/each}}
+                <h6>Flakes ({{slot.not_present.length}}):</h6>
+                <div class="callsign-list">
+                  {{#each slot.not_present key="id" as |person|}}
+                    <PersonLink @person={{person}} />
+                  {{/each}}
+                </div>
               {{else if slot.signed_up}}
                 <b class="text-success">No flakes.</b>
               {{/if}}
-              <br>
-            </td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
-    </accordion.body>
-  </ChAccordion>
+            </div>
+          {{/each}}
+        {{/if}}
+      </accordion.body>
+    </ChAccordion>
   </div>
 {{else}}
   <p class="mt-2">

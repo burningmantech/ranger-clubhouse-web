@@ -17,7 +17,7 @@
   </tr>
   </thead>
   <tbody>
-  {{#each (if this.summary this.radioSummaries this.assets) as |asset|}}
+  {{#each (if this.summary this.radioSummaries this.assets) key="id" as |asset|}}
     <tr>
       <td>{{asset.barcode}}</td>
       {{#if this.summary}}

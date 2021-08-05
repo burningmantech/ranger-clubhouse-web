@@ -14,10 +14,19 @@ export default class ReportsScheduleByCallsignRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    controller.set('year', this.year);
-    super.setupController(...arguments);
+    const { people, positions, slots} = model;
 
-    controller.set('people', model.people);
+    Object.keys(slots).forEach( (slotId) => {
+      const slot = slots[slotId];
+        slot.position = positions[slot.position_id];
+    });
+
+    people.forEach((person) => {
+      person.slots = person.slot_ids.map((slotId) => slots[slotId]);
+    });
+
+    controller.set('year', this.year);
+    controller.set('people', people);
     controller.set('isExpanding', false);
     controller.set('expandAll', false);
   }

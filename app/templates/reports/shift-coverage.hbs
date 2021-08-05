@@ -47,7 +47,7 @@
                     {{#if (gt position.shifts.length 1)}}
                       <small class="d-inline-block">{{dayjs-format shift.begins "HH:mm"}} - {{dayjs-format shift.ends "HH:mm"}}</small><br>
                     {{/if}}
-                    {{#each shift.people as |person|~}}
+                    {{#each shift.people key="id" as |person|~}}
                       <PersonLink @person={{person}} />
                       {{~#if person.parenthetical}} ({{person.parenthetical}}){{/if~}}
                       <br>

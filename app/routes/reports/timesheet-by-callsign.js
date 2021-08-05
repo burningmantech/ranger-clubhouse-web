@@ -13,7 +13,13 @@ export default class ReportsTimesheetByCallsignRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    controller.set('people', model.people);
+    const { people, positions } = model;
+
+    people.forEach((person) => {
+      person.timesheet.forEach((t) => t.position = positions[t.position_id])
+    });
+
+    controller.set('people', people);
     controller.set('year', this.year);
   }
 
