@@ -13,6 +13,7 @@ export default class ReportsPeopleByLocationRoute extends ClubhouseRoute {
     }
 
     setupController(controller, model) {
+      controller.set('isRendering', false);
       controller.set('year', this.year);
       controller.set('people', model.people);
       controller.set('filter', 'all');

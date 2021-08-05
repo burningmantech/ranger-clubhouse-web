@@ -17,7 +17,7 @@
         <div class="schedule-signups">Sign Ups</div>
         <div class="schedule-actions">Actions</div>
       </div>
-      {{#each @position.slots as |slot|}}
+      {{#each @position.slots key="id" as |slot|}}
         <div class="schedule-row {{if slot.person_assigned "table-success"}}" id="slot-{{slot.id}}">
           <div class="schedule-icon">
             {{#if slot.person_assigned}}

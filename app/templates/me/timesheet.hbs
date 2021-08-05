@@ -34,7 +34,7 @@
       <div class="timesheet-credits">Credits</div>
       <div class="timesheet-position">Position</div>
     </div>
-    {{#each this.timesheets as |ts|}}
+    {{#each this.timesheets key="id" as |ts|}}
       <div class="timesheet-entry">
         <div class="timesheet-row">
           <div class="timesheet-time">{{shift-format ts.on_duty}}</div>

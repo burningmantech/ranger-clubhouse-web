@@ -27,8 +27,8 @@ export default class ReportsOnDutyRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    const positions = _.sortBy(_.map(_.groupBy(model.timesheet, (ts) => ts.position.title), (timesheets, title) => {
-      return {title, timesheets};
+    const positions = _.sortBy(_.map(_.groupBy(model.timesheet, (ts) => ts.position_id), (timesheets, position_id) => {
+      return {id: position_id, title: timesheets[0].position.title, timesheets};
     }), ['title']);
 
     controller.set('positions', positions);

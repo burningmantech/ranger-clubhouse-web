@@ -38,7 +38,7 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
     </thead>
 
     <tbody>
-    {{#each this.viewPositions as |position|}}
+    {{#each this.viewPositions key="id" as |position|}}
       <tr>
         <td class="text-right">{{position.id}}</td>
         <td>{{position.title}}</td>

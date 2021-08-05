@@ -25,7 +25,7 @@
     </thead>
 
     <tbody>
-      {{#each this.alphas as |person|}}
+      {{#each this.alphas key="id" as |person|}}
         <tr>
           <td><PersonLink @person={{person}} /></td>
           <td>{{person.status}}</td>

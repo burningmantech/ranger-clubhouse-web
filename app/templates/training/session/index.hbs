@@ -148,7 +148,7 @@
     </thead>
 
     <tbody>
-    {{#each this.students as |student|}}
+    {{#each this.students key="id" as |student|}}
       <tr class="{{if (or student.is_retired student.is_inactive) "bg-highlight"}}">
         <td class="w-15">
           {{#if (or student.is_retired student.is_inactive)}}

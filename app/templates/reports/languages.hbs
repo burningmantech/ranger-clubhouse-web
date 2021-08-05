@@ -4,25 +4,29 @@
   This page will show all languages spoken by people marked as on site.
 </p>
 <p>
-  Use the <LinkTo @route="search.languages">Search Languages</LinkTo> page to search for people who speak a specific language and whom may or may not be on site, have a radio, etc.
+  Use the
+  <LinkTo @route="search.languages">Search Languages</LinkTo>
+  page to search for people who speak a specific language and whom may or may not be on site, have a radio, etc.
 </p>
 
 {{#each this.languages as |language|}}
-  <div class="border mb-2">
-    <div class="bg-light-gray p-2">
-      <a href class="h4" {{action this.toggleLanguage language}}>{{fa-icon (if language.showing "minus" "plus")}} {{language.language}}</a> ({{pluralize language.people.length "person"}})
-    </div>
-
-    <div class="row p-2 {{unless language.showing "d-none"}}">
-      {{#each language.people as |person|}}
-        <div class="col-sm-6 col-md-3 col-lg-2">
+  <ChAccordion as |Accordion|>
+    <Accordion.title>{{language.language}} ({{language.people.length}})</Accordion.title>
+    <Accordion.body>
+      <div class="callsign-list">
+        {{#each language.people key="id" as |person|}}
           <PersonLink @person={{person}} />
-        </div>
-      {{/each}}
-    </div>
-  </div>
+        {{/each}}
+      </div>
+    </Accordion.body>
+  </ChAccordion>
 {{else}}
   <p class="text-danger">
-    <b>It appears there are no people marked as on site. Try using the <LinkTo @route="search.languages">Search Languages</LinkTo> to find the language.</b>
+    <b>
+      It appears there are no people marked as on site.
+      Try using the
+      <LinkTo @route="search.languages">Search Languages</LinkTo>
+      to find the language.
+    </b>
   </p>
 {{/each}}

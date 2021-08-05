@@ -14,9 +14,9 @@
   Showing {{pluralize this.people.length "person"}}
 </p>
 <div class="max-width-900">
-  {{#each this.people as |person|}}
+  {{#each this.people key="id" as |person|}}
     <ChAccordion id="person-{{person.id}}" as |accordion|>
-      <accordion.title>{{person.callsign}} </accordion.title>
+      <accordion.title>{{person.callsign}} &lt;{{person.status}}&gt; </accordion.title>
       <accordion.body>
         <p>
           <LinkTo @route="person.index" @model={{person.id}}>
@@ -37,7 +37,7 @@
           </tr>
           </thead>
           <tbody>
-          {{#each person.slots as |slot|}}
+          {{#each person.slots key="id" as |slot|}}
             <tr>
               <td>{{shift-format slot.begins}}</td>
               <td>{{shift-format slot.ends}}</td>

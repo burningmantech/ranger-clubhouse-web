@@ -21,7 +21,7 @@
     </tr>
     </thead>
     <tbody>
-    {{#each @timesheets as |ts|}}
+    {{#each @timesheets key="id" as |ts|}}
       <tr>
         <td>
           {{#if ts.off_duty}}

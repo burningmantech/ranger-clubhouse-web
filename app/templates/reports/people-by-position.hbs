@@ -60,7 +60,7 @@
             </p>
           {{/if}}
           <div class="callsign-list">
-            {{#each position.visiblePeople as |person|}}
+            {{#each position.visiblePeople key="id" as |person|}}
               <div>
                 <PersonLink @person={{person}} /> {{#if person.on_site}}{{fa-icon "check" color="success"}}{{/if}}<br>
                 &lt;{{person.status}}&gt;
