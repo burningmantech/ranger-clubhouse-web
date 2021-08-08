@@ -21,7 +21,7 @@
     </tr>
     </thead>
     <tbody>
-    {{#each this.people as |person|}}
+    {{#each this.people key="id" as |person|}}
       {{#if person.personnel_issue}}
         <tr class="table-danger">
           <td colspan="7" class="text-center h3">{{fa-icon "ban"}} PERSONNEL FLAG RAISED ON {{person.callsign}} -
