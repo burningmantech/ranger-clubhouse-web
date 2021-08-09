@@ -55,6 +55,9 @@ module.exports = function (defaults) {
 
   app.import('vendor/bootstrap/bootstrap-4.3.bundle.js');
 
+  app.import('node_modules/dayjs/plugin/advancedFormat.js');
+  app.import('node_modules/dayjs/plugin/objectSupport.js');
+
   // app.import('nod_modules/@okta/okta-signin-widget/dist/css/okta-sign-in.min.css');
 
   // If you need to use different assets in different
