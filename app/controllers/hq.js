@@ -1,6 +1,10 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 export default class HqController extends ClubhouseController {
+  @tracked showAlphaWarning = false;
+
   get allowedCheckIn() {
     const status = this.person.status;
 
@@ -44,4 +48,9 @@ export default class HqController extends ClubhouseController {
     }
   }
 
+
+  @action
+  closeAlphaWarning() {
+    this.showAlphaWarning = false;
+  }
 }

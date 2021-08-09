@@ -7,6 +7,7 @@
 <ul>
   <li>Verify the camp name, location, and the emergency contacts</li>
   <li>Check to see if the person has signed the Radio Authorization form and Motorpool Policy Agreement.</li>
+  <li>After you hand the person their Ranger laminate and field guide, mark the person as on site.</li>
   <li>
     {{#if this.eventInfo.radio_eligible}}
       Check out an Event Radio if person would like one now.
@@ -14,7 +15,6 @@
       Person is only authorized for shift radios.
     {{/if}}
   </li>
-  <li>After you hand the person their Ranger laminate and field guide, mark the person as on site.</li>
 </ul>
 
 <h4>
@@ -151,27 +151,3 @@
     {{/if}}
   {{/if}}
 </div>
-
-{{#if this.showAlphaWarning}}
-  <ModalDialog as |Modal|>
-    <Modal.body>
-      <div class="d-flex">
-        <div class="mt-2 mx-3">
-          {{fa-icon "exclamation-triangle" color="danger" size="3x"}}
-        </div>
-        <div>
-          <h3>
-            DO NOT CHECK IN &mdash; DIRECT PERSON TO THE HAT RACK.
-          </h3>
-          <h3>
-            {{this.person.callsign}} is {{if this.person.isAlpha "an Alpha" "a Prospective"}} and will be handled by
-            the Mentors.
-          </h3>
-        </div>
-      </div>
-    </Modal.body>
-    <Modal.footer>
-      <Modal.button @label="Close" @action={{this.closeAlphaWarning}} @type="primary"/>
-    </Modal.footer>
-  </ModalDialog>
-{{/if}}

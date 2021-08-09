@@ -15,7 +15,7 @@
     </tr>
   </thead>
   <tbody>
-    {{#each @people as |person|}}
+    {{#each @people key="person_id" as |person|}}
       <tr>
         <td class="w-10 {{if person.is_greendot_shift "bg-shift-lead-greendot"}}">
           {{if person.short_title person.short_title person.position_title}}
@@ -34,7 +34,7 @@
         <td class="w-5 text-right">{{person.years}}</td>
         <td class="w-5 text-center">
           {{#if person.vehicle_blacklisted}}
-            -BL-
+            <b class="text-danger">-BL-</b>
           {{else if person.signed_motorpool_agreement}}
             GTR
           {{else}}
@@ -43,7 +43,7 @@
         </td>
         <td class="w-5 text-center">
           {{#if person.vehicle_blacklisted}}
-            -BL-
+            <b class="text-danger">-BL-</b>
           {{else if person.org_vehicle_insurance}}
             VEH
           {{else}}
