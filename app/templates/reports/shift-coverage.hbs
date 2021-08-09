@@ -20,7 +20,7 @@
 {{/unless}}
 
 {{! template-lint-disable table-groups}}
-<table class="table table-sm table-hover table-striped table-width-auto">
+<table class="table table-sm table-hover table-width-auto">
   {{#each this.dayGroups as |day|}}
     <thead>
       <tr>
@@ -31,7 +31,7 @@
       </tr>
     </thead>
     <tbody>
-      {{#each day.periods as |period|}}
+      {{#each day.periods key="begins" as |period|}}
         <tr>
           <td>
             <span class="d-inline-block">{{dayjs-format period.begins "ddd M/DD HH:mm"}}</span>

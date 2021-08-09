@@ -1,14 +1,13 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
-import { TRAINING } from 'clubhouse/constants/positions';
 import { tracked } from '@glimmer/tracking';
 import { NON_RANGER } from 'clubhouse/constants/person_status';
+import { TRAINING } from 'clubhouse/constants/positions';
 
 export default class HqSiteCheckinController extends ClubhouseController {
   @tracked isSubmitting = false;
   @tracked isContactSaved = false;
   @tracked isOnSite = false;
-  @tracked showAlphaWarning = false;
 
   get activeAssets() {
     return this.assets.filter((asset) => !asset.checked_in);
@@ -51,10 +50,5 @@ export default class HqSiteCheckinController extends ClubhouseController {
         model.rollbackAttributes();
     })
     .finally(() => this.isSubmitting = false);
-  }
-
-  @action
-  closeAlphaWarning() {
-    this.showAlphaWarning = false;
   }
 }

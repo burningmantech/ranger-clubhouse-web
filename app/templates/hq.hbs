@@ -139,3 +139,28 @@
     </div>
   </div>
 </main>
+
+
+{{#if this.showAlphaWarning}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      <div class="d-flex">
+        <div class="mt-2 mx-3">
+          {{fa-icon "exclamation-triangle" color="danger" size="3x"}}
+        </div>
+        <div>
+          <h3>
+            DO NOT CHECK IN &mdash; DIRECT PERSON TO THE HAT RACK.
+          </h3>
+          <h3>
+            {{this.person.callsign}} is {{if this.person.isAlpha "an Alpha" "a Prospective"}} and will be handled by
+            the Mentors.
+          </h3>
+        </div>
+      </div>
+    </Modal.body>
+    <Modal.footer>
+      <Modal.button @label="Close" @action={{this.closeAlphaWarning}} @type="primary"/>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}

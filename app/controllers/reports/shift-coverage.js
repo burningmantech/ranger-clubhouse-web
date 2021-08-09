@@ -19,6 +19,7 @@ export default class ReportsShiftCoveragController extends ClubhouseController {
     [ 'Mentors', 'mentor' ],
     [ 'Pre-event', 'pre-event' ],
     [ 'RSCI Mentor/Mentee', 'rsci-mentor' ],
+    [ 'O.N.E.', 'one']
   ];
 
   get dayGroups() {
@@ -36,7 +37,7 @@ export default class ReportsShiftCoveragController extends ClubhouseController {
 
   get dayOptions() {
     const days = _.uniqBy(this.periods, 'date');
-    const options = days.map((p) => [ dayjs(p.date).format('ddd M/DD'), p.date ]);
+    const options = days.map((p) => [ dayjs(p.date).format('ddd M/DD @ HH:mm'), p.date ]);
     options.unshift([ 'All', 'all' ]);
     return options;
   }
