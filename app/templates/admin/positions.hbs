@@ -1,6 +1,10 @@
 <h1>Clubhouse Positions</h1>
-
-<div class="row mb-3">
+<ChNotice
+        @title="DO NOT add/change/delete positions unless instructed to do so by the Tech Team or the Scheduling Gnome(s)"
+        @type="danger">
+  Position creation or alteration requires prior approval.
+</ChNotice>
+<div class="row my-3">
   <label class="col-form-label col-auto">Type filter</label>
   <div class="col-auto">
     <ChForm::Select @name="typeFilter" @value={{this.typeFilter}} @options={{this.typeOptions}}
@@ -93,9 +97,9 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
         <fieldset>
           <legend>Description</legend>
           <div class="form-row">
-            <f.input @name="title" @label="Title" @maxlength=40 @size=40 @grid="col-auto"
+            <f.input @name="title" @label="Title" @maxlength={{40}} @size={{40}} @grid="col-auto"
                      @hint={{concat (if f.model.title f.model.title.length "0") " of 40 characters."}} />
-            <f.input @name="short_title" @label="Short Title" @maxlength=6 @grid="col-auto"
+            <f.input @name="short_title" @label="Short Title" @maxlength={{6}} @grid="col-auto"
                      @hint={{concat (if f.model.short_title f.model.title.short_title "0") " of 6 characters."}} />
             <f.input @name="type" @type="select" @label="Type" @options={{this.positionTypes}} @grid="col-auto"/>
           </div>
@@ -104,38 +108,75 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
         <fieldset>
           <legend>Suggested Ranger Counts Per Slot</legend>
           <div class="form-row">
-            <f.input @name="min" @label="Min" @size=3 @maxlength=3 @grid="col-auto"/>
-            <f.input @name="max" @label="Max" @size=3 @maxlength=3 @grid="col-auto"/>
+            <f.input @name="min" @label="Min" @size={{3}} @maxlength={{3}} @grid="col-auto"/>
+            <f.input @name="max" @label="Max" @size={{3}} @maxlength={{3}} @grid="col-auto"/>
           </div>
         </fieldset>
 
         <fieldset>
-          <legend>Flags</legend>
+          <legend>Active &amp; Grant Flags</legend>
           <div class="form-row mb-2">
-            <f.input @name="active" @type="checkbox" @label="Active" @inline={{true}}/>
-            <f.input @name="new_user_eligible" @type="checkbox" @label="New user eligible" @inline={{true}}/>
-            <f.input @name="all_rangers" @type="checkbox" @label="All Rangers" @inline={{true}}/>
-            <f.input @name="count_hours" @type="checkbox" @label="Hours count towards appreciations"
-                     @inline={{true}}/>
-            <f.input @name="on_sl_report" @type="checkbox" @label="On Shift Lead report" @inline={{true}}/>
-            <f.input @name="prevent_multiple_enrollments" @type="checkbox"
-                     @label="Prevent Multiple Enrollments"
-                     @inline={{true}}/>
+            <div class="col-12 text-danger">
+              The "Position Sanity Checker" needs be run after deactivating a position in order to revoke the position
+              from all accounts. Revocation is not automatic.
+            </div>
+            <div class="col-12 mt-2">
+              <f.input @name="active" @type="checkbox" @label="Active" @inline={{true}}/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-12 text-danger mb-1">
+              After setting the <i>"All Rangers"</i> and/or <i>"Grant to new Prospective accounts"</i> flags,
+              the maintenance "Set Ranger Positions" function has to be run to grant the position to existing accounts.
+            </div>
+            <div class="col-12 mt-2">
+              <f.input @name="all_rangers" @type="checkbox"
+                       @label="All Rangers (status active / inactive / inactive extension / retired)"/>
+            </div>
+            <div class="col-12">
+              <f.input @name="new_user_eligible" @type="checkbox"
+                       @label="Grant to new Prospective accounts"/>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="mt-2">
+          <legend>Misc. Flags</legend>
+          <div class="form-row mb-2">
+            <div class="col-12">
+              <f.input @name="count_hours"
+                       @type="checkbox"
+                       @label="Hours count towards appreciations (Ranger clothing, meal plans, etc.)"
+              />
+              <f.input @name="prevent_multiple_enrollments" @type="checkbox"
+                       @label="Prevent Multiple Enrollments (usually for Training positions)"
+              />
+              <f.input @name="on_sl_report"
+                       @type="checkbox"
+                       @label="For the Shift Lead Report: indicates the person holds this position of interest"
+              />
+            </div>
           </div>
         </fieldset>
 
         {{#if (eq f.model.type "Training")}}
           <fieldset>
             <legend>Training</legend>
-            <p class="form-row">
-              This section is relevant when type is "Training". The Training Position is the position that
-              the person have passed in the given the year in order to work this position.
-            </p>
+            <div class="form-row mb-2">
+              <div class="col-12">
+                This section is relevant when type is "Training". The Training Position is the position
+                the person has to have passed in the current year to be allowed to work this position during the event.
+              </div>
+            </div>
             <div class="form-row">
-              <f.input @name=training_position_id" @label="Training Position" @type="select"
+              <f.input @name=training_position_id"
+                       @label="Training Position"
+                       @type="select"
                        @options={{this.trainingOptions}}
                        @grid="col-auto"/>
-              <f.input @name="contact_email" @label="Contact Email (shift full notification, etc)" @type="text" @size={{40}}
+              <f.input @name="contact_email"
+                       @label="Contact Email (shift full notification, etc)"
+                       @type="text"
+                       @size={{40}}
                        @maxlength={{200}}
                        @grid="col-auto"/>
             </div>

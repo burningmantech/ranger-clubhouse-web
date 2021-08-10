@@ -1,12 +1,11 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import { tracked } from '@glimmer/tracking';
-import _ from 'lodash';
-import dayjs from 'dayjs';
+import { cached, tracked } from '@glimmer/tracking';
 
 export default class ReportsShiftCoveragController extends ClubhouseController {
   queryParams = [ 'year', 'type' ];
 
-  @tracked dayFilter;
+  @tracked dayFilter = null;
+  @tracked dayPeriods = null;
 
   typeOptions = [
     [ 'Burn Perimeter', 'perimeter' ],
@@ -22,23 +21,14 @@ export default class ReportsShiftCoveragController extends ClubhouseController {
     [ 'O.N.E.', 'one']
   ];
 
+  @cached
   get dayGroups() {
-    const dayFilter = this.dayFilter;
-    const groups = _.map(_.groupBy(this.periods, 'date'), (periods, date) => {
-      return { date, periods }
-    });
+    const {dayFilter, dayPeriods} = this;
 
     if (dayFilter === 'all') {
-      return groups;
+      return dayPeriods;
     }
 
-    return groups.filter((g) => g.date === dayFilter);
-  }
-
-  get dayOptions() {
-    const days = _.uniqBy(this.periods, 'date');
-    const options = days.map((p) => [ dayjs(p.date).format('ddd M/DD @ HH:mm'), p.date ]);
-    options.unshift([ 'All', 'all' ]);
-    return options;
+    return dayPeriods.filter((g) => g.monthDay === dayFilter);
   }
 }

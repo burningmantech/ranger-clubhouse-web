@@ -1,7 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action, setProperties } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
-import dayjs from 'dayjs';
+import { cached, tracked } from '@glimmer/tracking';
 
 export default class ReportsShiftLeadController extends ClubhouseController {
   queryParams = ['year'];
@@ -27,11 +26,10 @@ export default class ReportsShiftLeadController extends ClubhouseController {
   @action
   changeShift(option) {
     this.shiftSelect = option;
-    if (option == '') {
-      return;
-    }
 
-    const [shift_start, shift_duration] = option.split('#');
+    const { shift } = option;
+    const shift_start = shift.shift_start, shift_duration = shift.duration;
+
     this.shiftStart = shift_start;
 
     this.isLoading = true;
@@ -41,15 +39,8 @@ export default class ReportsShiftLeadController extends ClubhouseController {
       .finally(() => this.isLoading = false);
   }
 
+  @cached
   get shiftOptions() {
-    const options = [
-      { id: '', title: 'Select a shift' }
-    ];
-
-    this.dirtShiftTimes.forEach((shift) => {
-      options.push({ id: `${shift.shift_start}#${shift.duration}`, title: dayjs(shift.shift_start).format("ddd MMM D @ HH:mm") });
-    });
-
-    return options;
+     return this.dirtShiftTimes.map((shift) => ({ shift, datetime: shift.shift_start }));
   }
 }
