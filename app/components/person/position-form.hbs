@@ -3,7 +3,7 @@
           @onCancel={{@onCancel}} as |f|>
     <Modal.body>
       <div class="form-row">
-        <f.input @name="positionIds" @type="checkboxGroup" @wrapClass="form-row" @cols=5 @options={{this.positionOptions}} />
+        <f.input @name="positionIds" @type="checkboxGroup" @wrapClass="form-row" @cols={{4}} @options={{this.positionOptions}} />
       </div>
     </Modal.body>
     <Modal.footer @noAlign=true>

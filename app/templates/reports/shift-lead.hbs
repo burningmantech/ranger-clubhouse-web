@@ -2,17 +2,18 @@
   <YearSelect @title="Shift Lead Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 </div>
 {{#if this.dirtShiftTimes}}
-  <div class="form-row d-print-none mb-3">
-    <div class="col-auto">
-      <label class="col-form-label">Select Shift</label>
-    </div>
-    <div class="col-auto">
-      <ChForm::Select @name="shiftSelect" @value={{this.shiftSelect}} @options={{this.shiftOptions}}
-                      @onChange={{this.changeShift}} @disabled={{this.isLoading}} @controlClass="form-control"/>
-    </div>
+  <div class="form-row d-print-none mb-2">
     <div class="col-12 text-muted">
       Use the browser's print command to send this page to the printer. The navigation header, footer, and this message
       will not appear on the page.
+    </div>
+    <div class="col-12 mt-2">
+      <PeriodSelect
+              @label="Select a shift"
+              @title="Select a shift to report on"
+              @periods={{this.shiftOptions}}
+              @onSelect={{this.changeShift}}
+              @selected={{this.shiftSelect}} />
     </div>
   </div>
 {{else}}
@@ -22,7 +23,7 @@
 {{#if this.isLoading}}
   <LoadingDialog @item="Shift Lead Report"/>
 {{else if this.shiftSelect}}
-  <h1>Shift Lead Report for {{dayjs-format this.shiftStart "dddd, MMMM Do YYYY @ HH:mm"}}</h1>
+  <h1 class="mt-2">{{dayjs-format this.shiftStart "dddd, MMMM Do YYYY @ HH:mm"}}</h1>
 
   <div class="row">
     <div class="col-sm-12 col-md-6">
