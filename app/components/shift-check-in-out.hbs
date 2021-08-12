@@ -17,9 +17,9 @@
       <td>{{@onDutyEntry.position.title}}</td>
       <td>{{shift-format @onDutyEntry.on_duty}}</td>
       <td class="text-right">
-        {{#if @onDutyEntry.position.count_hours}}
+        {{#unless @onDutyEntry.position.count_hours}}
           <NoAppreciateIcon/>
-        {{/if}}
+        {{/unless}}
         {{hour-minute-format @onDutyEntry.duration}}
       </td>
       <td class="text-right">{{credits-format @onDutyEntry.credits}}</td>

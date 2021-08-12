@@ -42,7 +42,7 @@
       {{#if (not this.allowedCheckIn)}}
         <ChNotice @title="Account is disabled" @type="danger" @icon="ban">
           <p>
-            {{this.person.callsign}} has the status "{{this.person.status}}" which prevents the person from logging in.
+            {{this.person.callsign}} has the status "{{this.person.status}}" which prevents the person from working a shift.
             The HQ Window Interface cannot be used.
           </p>
           Contact the HQ Lead, HQ Supervisor or the Personnel Manager {{mail-to (config "PersonnelEmail")}}.

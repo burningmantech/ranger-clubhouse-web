@@ -40,13 +40,13 @@
     "@ember/jquery": "^2.0.0",
     "@ember/optional-features": "^2.0.0",
     "@ember/render-modifiers": "^1.0.2",
-    "@ember/test-helpers": "^2.3.0",
+    "@ember/test-helpers": "^2.4.0",
     "@glimmer/component": "^1.0.4",
     "@glimmer/tracking": "^1.0.4",
     "babel-eslint": "^10.1.0",
     "broccoli-asset-rev": "^3.0.0",
     "ember-ajax": "^5.0.0",
-    "ember-auto-import": "^2.0.2",
+    "ember-auto-import": "^2.1.0",
     "ember-cached-decorator-polyfill": "^0.1.4",
     "ember-changeset": "3.14.1",
     "ember-changeset-validations": "3.15.2",
@@ -91,7 +91,7 @@
     "qunit-dom": "^1.6.0",
     "sass": "^1.37.5",
     "toastr": "^2.1.4",
-    "webpack": "^5.49.0"
+    "webpack": "^5.50.0"
   },
   "engines": {
     "node": "10.* || >= 12"
