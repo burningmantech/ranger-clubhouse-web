@@ -5,6 +5,7 @@ import { cached, tracked } from '@glimmer/tracking';
 export default class ReportsShiftLeadController extends ClubhouseController {
   queryParams = ['year'];
 
+  @tracked dirtShiftTimes;
   @tracked shiftSelect;
   @tracked shiftStart;
   @tracked isLoading;
