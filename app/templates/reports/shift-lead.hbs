@@ -9,8 +9,8 @@
     </div>
     <div class="col-12 mt-2">
       <PeriodSelect
-              @label="Select a shift"
-              @title="Select a shift to report on"
+              @label="Select a {{this.year}} shift period"
+              @title="Select a shift period to report on"
               @periods={{this.shiftOptions}}
               @onSelect={{this.changeShift}}
               @selected={{this.shiftSelect}} />
@@ -64,7 +64,7 @@
         </tr>
         </thead>
         <tbody>
-        {{#each this.below_min_positions as |position|}}
+        {{#each this.belowMinPositions as |position|}}
           <tr>
             <td>{{position.title}}</td>
             <td>{{time-format position.slot_begins}} - {{time-format position.slot_ends }}</td>
