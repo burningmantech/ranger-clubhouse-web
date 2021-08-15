@@ -10,6 +10,14 @@
                     @onChange={{action (mut this.activeFilter)}}
                     @controlClass="form-control"/>
   </div>
+  {{#if this.session.canViewEmail}}
+    <div class="col-auto">
+      <button type="button" class="btn btn-primary"
+              disabled={{not this.positions.length}} {{action this.exportBulkPositions}}>
+        Export combined callsigns w/emails
+      </button>
+    </div>
+  {{/if}}
 </div>
 
 <p>
@@ -95,3 +103,26 @@
 {{else}}
   <b class="text-danger">No {{this.year}} shifts were found.</b>
 {{/each}}
+
+{{#if this.showBulkPositionDialog}}
+  <ModalDialog @title="Select the positions to export the signed up callsigns w/emails:" as |Modal|>
+    <ChForm @formId="positionIds"
+            @formFor={{this.positionIdsForm}}
+            @changeSet={{false}}
+            @onSubmit={{this.exportSelectedPositions}}
+            @onCancel={{this.cancelExport}}
+            as |f|>
+      <Modal.body>
+        <div class="form-row">
+          <f.input @name="positionIds" @type="checkboxGroup" @wrapClass="form-row" @cols={{2}}
+                   @options={{this.positionOptions}} />
+        </div>
+      </Modal.body>
+      <Modal.footer @noAlign=true>
+        <f.submit @label="Export {{pluralize f.model.positionIds.length "position"}}" @disabled={{not
+          f.model.positionIds.length}}/>
+        <f.cancel/>
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
