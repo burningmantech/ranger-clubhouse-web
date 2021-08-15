@@ -26,6 +26,8 @@ export default class ReportsScheduleByPositionController extends ClubhouseContro
   @tracked expandAll = false;
   @tracked positions = [];
   @tracked activeFilter = 'active';
+  @tracked showBulkPositionDialog = false;
+  @tracked positionIdsForm = {};
 
   activeOptions = [
     ['Active', 'active'],
@@ -78,6 +80,11 @@ export default class ReportsScheduleByPositionController extends ClubhouseContro
     });
   }
 
+  @cached
+  get positionOptions() {
+    return this.viewPositions.map((p) => ({id: p.id, title: p.title}));
+  }
+
   @action
   toggleExpandAll() {
     this.expandAll = !this.expandAll;
@@ -126,4 +133,43 @@ export default class ReportsScheduleByPositionController extends ClubhouseContro
     this.house.downloadCsv(`${this.year}-${position.title}-callsign-signups.csv`, CALLSIGN_SIGNUP_COLUMNS, rows);
   }
 
+  @action
+  exportBulkPositions() {
+    this.showBulkPositionDialog = true;
+    this.positionIdsForm = {positionIds: []};
+  }
+
+  @action
+  cancelExport() {
+    this.showBulkPositionDialog = false;
+  }
+
+  @action
+  exportSelectedPositions() {
+    const {positionIds} = this.positionIdsForm;
+    if (!positionIds.length) {
+      this.modal.info(null, 'Please select one or more positions.');
+      return;
+    }
+
+    const callsigns = {};
+    positionIds.forEach((pid) => {
+      const position = this.positions.find((pos) => pos.id === pid);
+      position.slots.forEach((slot) => {
+        slot.sign_ups.forEach((person) => {
+          if (!callsigns[person.id]) {
+            callsigns[person.id] = person;
+          }
+        });
+      });
+    });
+
+    const rows = [];
+    for (const personId in callsigns) {
+      rows.push(callsigns[personId]);
+    }
+    rows.sort((a, b) => a.callsign.localeCompare(b.callsign));
+    this.house.downloadCsv(`${this.year}-callsign-signups.csv`, CALLSIGN_SIGNUP_COLUMNS, rows);
+    this.showBulkPositionDialog = false;
+  }
 }

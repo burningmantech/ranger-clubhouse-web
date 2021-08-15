@@ -30,6 +30,7 @@ export default class ReportsScheduleByPositionRoute extends ClubhouseRoute {
     controller.set('isExpanding', false);
     controller.set('expandAll', false);
     controller.set('activeFilter', 'active');
+    controller.set('showBulkPositionDialog', false);
   }
 
   resetController(controller, isExiting) {
