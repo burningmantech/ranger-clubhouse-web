@@ -98,6 +98,8 @@ export default class SlotsController extends ClubhouseController {
   @tracked copyParams;
   @tracked copySourcePositions;
 
+  @tracked showBulkEditDialog = false;
+
   @action
   changeActiveFilter(value) {
     this.activeFilter = value;
@@ -428,5 +430,22 @@ export default class SlotsController extends ClubhouseController {
     // if all are selected, deselect all; otherwise select all
     const value = !position.allSelected;
     position.slots.forEach((s) => set(s, 'selected', value));
+  }
+
+  @action
+  bulkEditOpenAction(position) {
+    this.bulkEditPosition = position;
+    this.showBulkEditDialog = true;
+  }
+
+  @action
+  bulkEditCloseAction(){
+    this.showBulkEditDialog = false;
+  }
+
+  @action
+  bulkEditPositionUpdatedAction() {
+    this._buildPositionSlots();
+    this.showBulkEditDialog = false;
   }
 }

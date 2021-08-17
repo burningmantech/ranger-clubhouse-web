@@ -16,10 +16,10 @@
       <div class="form-row">
         <f.input @name="description" @label="Description" @type="text" @size=40 @maxlength=40 @grid="col-md-auto"
                  @hint={{concat (if f.model.description f.model.description.length "0") " of 40 characters."}} />
-        <f.input @name="begins" @label="Begining Time" @type="datetime" @maxlength=25 @grid="col-md-auto col-sm-12"/>
-        <f.input @name="ends" @label="Ending Time" @type="datetime" @maxlength=20 @grid="col-md-auto col-sm-12"/>
-        <f.input @name="max" @label={{if f.model.trainer_slot_id "Multiplier" "Max Sign Ups"}} @type="number" @size=3
-                 @maxlength=3
+        <f.input @name="begins" @label="Beginning Time" @type="datetime" @maxlength={{25}} @grid="col-md-auto col-sm-12"/>
+        <f.input @name="ends" @label="Ending Time" @type="datetime" @maxlength={{20}} @grid="col-md-auto col-sm-12"/>
+        <f.input @name="max" @label={{if f.model.trainer_slot_id "Multiplier" "Max Sign Ups"}} @type="number" @size={{3}}
+                 @maxlength={{3}}
                  @grid="col-md-2 col-sm-12"/>
         {{#if f.model.trainer_slot_id}}
           <div class="col-md-9 col-sm-12">
@@ -41,10 +41,10 @@
       </div>
 
       <div class="form-row">
-        <f.input @name="url" @label="Information" @type="textarea" @rows=3 @cols=80 @maxlength=512 @wrapClass="col-12"
-                 @hint={{concat (if f.model.url f.model.url.length "0") " of 512 characters.
+        <f.input @name="url" @label="Information" @type="textarea" @rows={{3}} @cols={{80}} @maxlength={{512}} @wrapClass="col-12"
+                 @hint="{{if f.model.url f.model.url.length "0"}}  of 512 characters.
 Additional information may be given about the shift in the above area.
-e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.khaki/meetup or email women@khaki.rangers"}} />
+e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.khaki/meetup or email women@khaki.rangers" />
       </div>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
