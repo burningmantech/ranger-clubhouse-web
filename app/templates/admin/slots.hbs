@@ -65,6 +65,9 @@
           <button type="button" class="btn btn-secondary btn-sm" {{action this.startCopy position.position_id}}>
             Bulk Copy
           </button>
+          <button type="button" class="btn btn-secondary btn-sm" {{action this.bulkEditOpenAction position}}>
+            Bulk Edit
+          </button>
         </p>
         <table class="table table-sm table-hover">
           <thead>
@@ -137,6 +140,14 @@
   <Admin::SlotForm @slot={{this.slot}} @positions={{this.positions}} @trainerSlots={{this.trainerSlots}}
                    @onSave={{this.saveSlot}} @onCancel={{this.cancel}} @onClone={{this.cloneSlot}} />
 {{/if}}
+
+{{#if this.showBulkEditDialog}}
+  <Admin::SlotBulkEdit @positions={{this.positions}}
+                       @position={{this.bulkEditPosition}}
+                       @onPositionUpdate={{this.bulkEditPositionUpdatedAction}}
+                       @onClose={{this.bulkEditCloseAction}}
+  />
+ {{/if}}
 
 {{#if this.copyParams}}
   <ModalDialog @title="Copy Slots" as |Modal|>
