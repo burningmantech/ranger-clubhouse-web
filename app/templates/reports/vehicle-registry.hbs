@@ -304,7 +304,7 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
         <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
         <f.cancel @disabled={{this.entry.isSaving}} />
         {{#if (and (has-role "admin") (not this.entry.isNew))}}
-          <button type="button" class="btn btn-danger" {{on 'click' (fn this.deleteAction this.entry)}}>
+          <button type="button" class="btn btn-danger ml-auto" {{on 'click' (fn this.deleteAction this.entry)}}>
             {{fa-icon "trash"}} Delete
           </button>
         {{/if}}

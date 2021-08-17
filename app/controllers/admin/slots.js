@@ -99,6 +99,7 @@ export default class SlotsController extends ClubhouseController {
   @tracked copySourcePositions;
 
   @tracked showBulkEditDialog = false;
+  @tracked bulkEditPosition;
 
   @action
   changeActiveFilter(value) {

@@ -19,9 +19,17 @@
             <f.input @name="url" @label="Information" @type="textarea" @rows={{3}} @cols={{80}} @maxlength={{512}}
                      @hint="{{if f.model.url f.model.url.length "0"}}  of 512 characters."/>
           </div>
+          <div class="form-row">
+            <div class="col-auto">
+              <f.submit @label="Update"/>
+            </div>
+            <div class="col-auto">
+              <f.cancel/>
+            </div>
+          </div>
         </fieldset>
 
-        <fieldset>
+        <fieldset class="mt-2">
           <legend>Select slots to update</legend>
           <table class="table table-sm table-striped table-hover table-width-auto">
             <thead>
@@ -64,12 +72,7 @@
             </tbody>
           </table>
         </fieldset>
-
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label="Update"/>
-        <f.cancel/>
-      </Modal.footer>
     </ChForm>
   </ModalDialog>
 {{/unless}}
