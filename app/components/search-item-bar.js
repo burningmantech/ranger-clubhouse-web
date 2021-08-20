@@ -5,6 +5,7 @@ import {Role} from 'clubhouse/constants/roles';
 import {debounce} from '@ember/runloop';
 import {inject as service} from '@ember/service';
 import {inject as controller} from '@ember/controller';
+import {config} from 'clubhouse/utils/config';
 
 import RSVP from 'rsvp';
 
@@ -102,11 +103,11 @@ export default class SearchItemBarComponent extends Component {
     const user = this.session.user;
     const options = [{value: 'account', label: 'Person Manage'}];
 
-    if (user.has_hq_window) {
+    if (user.has_hq_window && config('HQWindowInterfaceEnabled')) {
       options.push({value: 'hq', label: 'HQ Window'});
     }
 
-    if (this.session.hasRole([Role.ADMIN, Role.TIMESHEET_MANAGEMENT])) {
+    if (this.session.hasRole([Role.ADMIN, Role.TIMESHEET_MANAGEMENT]) || user.has_hq_window) {
       options.push({value: 'timesheet', label: 'Timesheet Manage'});
     }
 

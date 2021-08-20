@@ -1,9 +1,7 @@
 <h1>Clubhouse Positions</h1>
-<ChNotice
-        @title="DO NOT add/change/delete positions unless instructed to do so by the Tech Team or the Scheduling Gnome(s)"
-        @type="danger">
-  Position creation or alteration requires prior approval.
-</ChNotice>
+<p>
+  <b class="text-danger">Contact the Scheduling Gnome or Tech Team about position creation and/or adjustments.</b>
+</p>
 <div class="row my-3">
   <label class="col-form-label col-auto">Type filter</label>
   <div class="col-auto">
@@ -15,9 +13,11 @@
     <ChForm::Select @name="activeFilter" @value={{this.activeFilter}} @options={{this.activeOptions}}
                     @onChange={{action (mut this.activeFilter)}} @controlClass="form-control"/>
   </div>
-  <div class="col-auto">
-    <button type="button" class="btn btn-primary" {{on "click"  this.newAction}}>New Position</button>
-  </div>
+  {{#if this.canManagePositions}}
+    <div class="col-auto">
+      <button type="button" class="btn btn-primary" {{on "click"  this.newAction}}>New Position</button>
+    </div>
+  {{/if}}
 </div>
 
 Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
@@ -37,7 +37,9 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
       <th class="text-center">On SL report</th>
       <th>Prevent Multi. Enrollments</th>
       <th>Training / Contact Email</th>
-      <th>Action</th>
+      {{#if this.canManagePositions}}
+        <th>Action</th>
+      {{/if}}
     </tr>
     </thead>
 
@@ -77,11 +79,13 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
             {{mail-to position.contact_email}}
           {{/if}}
         </td>
-        <td class="actions">
-          <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.editAction position)}}
-                  title="Edit position">{{fa-icon "edit"}} Edit
-          </button>
-        </td>
+        {{#if this.canManagePositions}}
+          <td class="actions">
+            <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.editAction position)}}
+                    title="Edit position">{{fa-icon "edit"}} Edit
+            </button>
+          </td>
+        {{/if}}
       </tr>
     {{/each}}
     </tbody>

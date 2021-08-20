@@ -1,9 +1,14 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import {TECH_NINJA} from 'clubhouse/constants/roles';
 
 export default class AdminRolesController extends ClubhouseController {
   @tracked entry = null;
+
+  get canManageRoles() {
+    return this.session.hasRole(TECH_NINJA);
+  }
 
   @action
   editRole(role) {

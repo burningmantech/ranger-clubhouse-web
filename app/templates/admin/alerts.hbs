@@ -1,16 +1,20 @@
-<h1>RBS Alerts</h1>
-<p>
-  <button type="button" class="btn btn-primary" {{action this.newAlert}}>New Alert</button>
-</p>
+<h1>Ranger Broadcast Service Alerts</h1>
+{{#if this.canManagePositions}}
+  <p>
+    <button type="button" class="btn btn-primary" {{action this.newAlert}}>New Alert</button>
+  </p>
+{{/if}}
 
 Showing {{pluralize this.alerts.length "alert"}}
-<table class="table table-sm table-hover">
+<table class="table table-sm table-hover table-width-auto">
   <thead>
   <tr>
     <th class="w-10">ID</th>
     <th class="w-65">Title / Description</th>
     <th class="w-5">On Playa?</th>
-    <th class="w-20">Action</th>
+    {{#if this.canManageAlerts}}
+      <th class="w-20">Action</th>
+    {{/if}}
   </tr>
   </thead>
 
@@ -20,14 +24,16 @@ Showing {{pluralize this.alerts.length "alert"}}
       <td class="w-10">{{alert.id}}</td>
       <td class="w-65">{{alert.title}}<br>{{alert.description}}</td>
       <td class="w-5">{{yesno alert.on_playa}}</td>
-      <td class="w-20">
-        <button type="button" class="btn btn-danger btn-sm" {{action this.deleteAlert alert}}>
-          {{fa-icon "trash"}} Delete
-        </button>
-        <button type="button" class="btn btn-primary btn-sm" {{action this.editAlert alert}}>
-          {{fa-icon "edit"}} Edit
-        </button>
-      </td>
+      {{#if this.canManageAlerts}}
+        <td class="w-20">
+          <button type="button" class="btn btn-danger btn-sm" {{action this.deleteAlert alert}}>
+            {{fa-icon "trash"}} Delete
+          </button>
+          <button type="button" class="btn btn-primary btn-sm" {{action this.editAlert alert}}>
+            {{fa-icon "edit"}} Edit
+          </button>
+        </td>
+      {{/if}}
     </tr>
   {{else}}
     <tr>
@@ -42,11 +48,12 @@ Showing {{pluralize this.alerts.length "alert"}}
     <ChForm @formId="alert" @formFor={{this.entry}}
             @onSubmit={{action this.saveAlert}} @onCancel={{action this.cancelAlert}} as |f|>
       <Modal.body>
-      <div class="form-row">
-        <f.input @name="title" @label="Title" @type="text" @size={{30}} @maxlength={{255}} />
-        <f.input @name="description" @label="Alert Description" @type="textarea" @rows={{10}} @cols={{80}} />
-        <f.input @name="on_playa" @type="checkbox" @label="Is alert related to a broadcast that will happen on playa?" />
-      </div>
+        <div class="form-row">
+          <f.input @name="title" @label="Title" @type="text" @size={{30}} @maxlength={{255}} />
+          <f.input @name="description" @label="Alert Description" @type="textarea" @rows={{10}} @cols={{80}} />
+          <f.input @name="on_playa" @type="checkbox"
+                   @label="Is alert related to a broadcast that will happen on playa?"/>
+        </div>
       </Modal.body>
       <Modal.footer @noAlign=true>
         <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
