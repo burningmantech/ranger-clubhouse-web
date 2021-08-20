@@ -1,18 +1,8 @@
 <h1>System Roles</h1>
 
-<ChNotice @type="danger">
-  <b>DO NOT add/change/delete roles unless instructed to do so by the Tech Team.</b>
-</ChNotice>
 <p>
-  A <b>role</b> is the permission to use certain parts of this website. It is
-  different from a position, which is part of the schedule. Some roles are
-  essential to the system and cannot be removed or renamed. New roles can be
-  created and edited to restrict access to extended information.
-</p>
-
-<p>
-  When a new user creates an account, they are automatically authorized for
-  any role with the "New User?" box checked.
+  A <b>role</b> is a permission to use certain parts of this website. It is
+  different from a position, which is part of the schedule.
 </p>
 
 <table class="table table-sm table-hover table-striped table-width-auto">
@@ -21,7 +11,9 @@
     <th>ID</th>
     <th>Title</th>
     <th>New User?</th>
-    <th>Action</th>
+    {{#if this.canManageRoles}}
+      <th>Action</th>
+    {{/if}}
   </tr>
   </thead>
   <tbody>
@@ -36,11 +28,13 @@
           &nbsp;
         {{/if}}
       </td>
-      <td>
-        <button {{action this.editRole role}} type="button" class="btn btn-primary btn-sm">
-          {{fa-icon "edit"}} Edit
-        </button>
-      </td>
+      {{#if this.canManageRoles}}
+        <td>
+          <button {{action this.editRole role}} type="button" class="btn btn-primary btn-sm">
+            {{fa-icon "edit"}} Edit
+          </button>
+        </td>
+      {{/if}}
     </tr>
   {{/each}}
   </tbody>
@@ -56,8 +50,8 @@
         </div>
         <div class="form-row">
           <div class="col-auto">
-          <f.input @name="new_user_eligible" @type="checkbox" @label="New User Eligible?"
-                   @options={{this.newUserOptions}} />
+            <f.input @name="new_user_eligible" @type="checkbox" @label="New User Eligible?"
+                     @options={{this.newUserOptions}} />
           </div>
         </div>
       </Modal.body>

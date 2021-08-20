@@ -38,7 +38,7 @@
     </tbody>
   </table>
   {{#unless @onDutyEntry.position.count_hours}}
-    Note: {{@onDutyEntry.position.title}} hours do not count towards appreciations.
+    Note: <NoAppreciateIcon/> = {{@onDutyEntry.position.title}} hours do not count towards appreciations.
   {{/unless}}
 {{else}}
   {{#if (not @person.canStartShift)}}

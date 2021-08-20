@@ -3,6 +3,7 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import PositionTypes from 'clubhouse/constants/position-types';
 import PositionValidations from 'clubhouse/validations/position';
+import {TECH_NINJA} from 'clubhouse/constants/roles';
 
 export default class PositionController extends ClubhouseController {
   @tracked position = null;
@@ -25,6 +26,10 @@ export default class PositionController extends ClubhouseController {
     const types = PositionTypes.slice();
     types.unshift('All');
     this.typeOptions = types;
+  }
+
+  get canManagePositions() {
+    return this.session.hasRole(TECH_NINJA)
   }
 
   get viewPositions() {

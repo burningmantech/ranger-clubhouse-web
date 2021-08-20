@@ -104,3 +104,28 @@ export const TROUBLESHOOTER = 91;
 export const TROUBLESHOOTER_TRAINING = 94;
 export const VEHICLE_MAINTENANCE = 74;
 export const VOLUNTEER_COORDINATOR = 112;
+
+/*
+  * 2021 Operation Non-Event (O.N.E.) positions
+  */
+
+export const ONE_SHIFT_LEAD = 132;
+export const ONE_TROUBLESHOOTER = 133;
+export const ONE_GREEN_DOT = 134;
+export const ONE_GERLACH_PATROL_DIRT = 135;
+export const ONE_RSCI = 136;
+export const ONE_HQ_WINDOW = 137;
+export const ONE_HQ_ON_CALL = 138;
+export const ONE_HQ_LEADERS = 139;
+
+// TODO: REMOVE After ONE spins down
+export const ONE_POSITIONS = [
+  ONE_SHIFT_LEAD,
+  ONE_TROUBLESHOOTER,
+  ONE_GREEN_DOT,
+  ONE_GERLACH_PATROL_DIRT,
+  ONE_RSCI,
+  ONE_HQ_WINDOW,
+  ONE_HQ_ON_CALL,
+  ONE_HQ_LEADERS
+];
