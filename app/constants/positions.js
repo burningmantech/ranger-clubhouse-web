@@ -115,8 +115,6 @@ export const ONE_GREEN_DOT = 134;
 export const ONE_GERLACH_PATROL_DIRT = 135;
 export const ONE_RSCI = 136;
 export const ONE_HQ_WINDOW = 137;
-export const ONE_HQ_ON_CALL = 138;
-export const ONE_HQ_LEADERS = 139;
 
 // TODO: REMOVE After ONE spins down
 export const ONE_POSITIONS = [
@@ -126,6 +124,4 @@ export const ONE_POSITIONS = [
   ONE_GERLACH_PATROL_DIRT,
   ONE_RSCI,
   ONE_HQ_WINDOW,
-  ONE_HQ_ON_CALL,
-  ONE_HQ_LEADERS
-];
+ ];
