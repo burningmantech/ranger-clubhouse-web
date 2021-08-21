@@ -6,9 +6,8 @@
 {{#if this.missingRequestPendingCount}}
   <h3 class="text-danger">{{pluralize this.missingRequestPendingCount "missing entry request"}} requires attention.</h3>
 {{/if}}
-<ChAccordion @title="Shift Manage" as |Accordion|>
-  <Accordion.title>Shift Manage</Accordion.title>
-  <Accordion.body>
+<div class="border rounded p-2 mt-2 mb-2">
+  <h3>Shift Check In / Out</h3>
     {{#if (is-current-year this.year)}}
       <ShiftCheckInOut @positions={{this.positions}}
                        @timesheets={{this.timesheets}}
@@ -22,8 +21,8 @@
     {{else}}
       Select the current year to start or end a shift
     {{/if}}
-  </Accordion.body>
-</ChAccordion>
+</div>
+
 <Person::TimesheetManage @timesheets={{this.timesheets}}
                          @person={{this.person}}
                          @year={{this.year}}
