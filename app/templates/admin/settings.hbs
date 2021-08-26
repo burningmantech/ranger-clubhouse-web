@@ -2,6 +2,9 @@
 <p class="text-danger">
   <b>DO NOT TOUCH ANY SETTINGS UNLESS INSTRUCTED TO DO SO BY THE TECH TEAM</b>
 </p>
+<p>
+  {{fa-icon "key"}} = setting is a credential and may only be viewed and updated by the Tech Team.
+</p>
 
 <div class="form-row mb-2">
   <label class="col-form-label">Filter name:</label>
@@ -13,12 +16,11 @@
   </div>
 </div>
 
-Showing {{this.viewSettings.length}} of {{this.settings.length}}
+Showing {{this.viewSettings.length}} of {{this.settings.length}}.
 <table class="table table-striped table-sm table-hover table-width-auto">
   <thead>
   <tr>
     <th>Setting</th>
-    <th>Type</th>
     <th>Value</th>
     <th>Action</th>
   </tr>
@@ -28,10 +30,14 @@ Showing {{this.viewSettings.length}} of {{this.settings.length}}
     <tr>
       <td>
         {{setting.name}}
+        {{#if setting.is_credential}}
+          {{fa-icon "key"}}
+        {{/if}}
       </td>
-      <td>{{setting.type}}</td>
       <td>
-        {{#if setting.value}}
+        {{#if (and setting.is_credential (not this.isTechNinja))}}
+          <i>- redacted -</i>
+        {{else if setting.value}}
           <code class="text-black">
             <ReadMore @text={{setting.value}} @limit={{60}} />
           </code>
@@ -40,9 +46,12 @@ Showing {{this.viewSettings.length}} of {{this.settings.length}}
         {{/if}}
       </td>
       <td>
-        <button type="button" class="btn btn-sm btn-secondary" {{action this.edit setting}}>
-          {{fa-icon "edit"}} Edit
-        </button>
+          <button type="button"
+                  class="btn btn-sm btn-secondary"
+                  disabled={{and setting.is_credential (not this.isTechNinja)}}
+            {{action this.edit setting}}>
+            {{fa-icon "edit"}} Edit
+          </button>
       </td>
     </tr>
   {{/each}}

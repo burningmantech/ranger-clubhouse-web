@@ -1,34 +1,35 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import EmberObject, { set, setProperties } from '@ember/object';
-import { action } from '@ember/object';
-import { debounce } from '@ember/runloop';
+import EmberObject, {set, setProperties} from '@ember/object';
+import {action} from '@ember/object';
+import {debounce} from '@ember/runloop';
 import RSVP from 'rsvp';
 
 const EventOptions = [
-    [ 'BMID Changes', 'bmid-%' ],
-    [ 'Client Routing', 'client-route' ],
-    [ 'Login Failures', 'auth-failed' ],
-    [ 'Logins', 'auth-login' ],
-    [ 'Password Resets', 'auth-password-%' ],
-    [ 'Person Creation Fails', 'person-create-fail' ],
-    [ 'Person Creation', 'person-create' ],
-    [ 'Person Update', 'person-update' ],
-    [ 'Position Changes', 'position-%' ],
-    [ 'Position Grant/Revokes', 'person-position-%' ],
-    [ 'Role Changes', 'person-role-%' ],
-    [ 'Schedule Updates', 'person-slot-%' ],
-    [ 'Slot Changes', 'slot-%' ],
-    [ 'Status Changes', 'person-status-change' ],
-    [ 'Ticketing Changes', 'access-document-%' ]
+  ['BMID Changes', 'bmid-%'],
+  ['Client Routing', 'client-route'],
+  ['Login Failures', 'auth-failed'],
+  ['Logins', 'auth-login'],
+  ['Password Resets', 'auth-password-%'],
+  ['Person Creation', 'person-create'],
+  ['Person Update', 'person-update'],
+  // Can't use position-% because it will match the position-credit-* events
+  ['Position Changes', 'position-create,position-update,position-delete'],
+  ['Position Grant/Revokes', 'person-position-%'],
+  ['Role Grant/Revokes', 'person-role-%'],
+  ['Schedule Updates', 'person-slot-%'],
+  ['Setting Changes', 'setting-%'],
+  ['Slot Changes', 'slot-%'],
+  ['Status Changes', 'person-status-change'],
+  ['Ticketing Changes', 'access-document-%']
 ];
 
 const SortOptions = [
-  [ 'Descending', 'desc' ],
-  [ 'Ascending', 'asc' ]
+  ['Descending', 'desc'],
+  ['Ascending', 'asc']
 ];
 
 export default class AdminActionLogController extends ClubhouseController {
-  queryParams = [ 'person', 'start_time', 'end_time', 'events', 'sort', 'page' ];
+  queryParams = ['person', 'start_time', 'end_time', 'events', 'sort', 'page'];
 
   eventOptions = EventOptions;
   sortOptions = SortOptions;
@@ -50,12 +51,12 @@ export default class AdminActionLogController extends ClubhouseController {
 
   _performSearch(query, resolve, reject) {
     if (query.match(/^\d+/)) {
-      return resolve([ query ]);
+      return resolve([query]);
     }
 
     return this.ajax
       .request('callsigns', {
-        data: { query, type: 'all', limit: 20 }
+        data: {query, type: 'all', limit: 20}
       })
       .then((result) => {
         if (result.callsigns.length > 0) {
@@ -74,7 +75,7 @@ export default class AdminActionLogController extends ClubhouseController {
 
   @action
   resetFilters() {
-    set(this, 'query', EmberObject.create({ sort: 'desc' }));
+    set(this, 'query', EmberObject.create({sort: 'desc'}));
   }
 
   @action

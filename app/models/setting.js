@@ -8,5 +8,5 @@ export default class SettingModel extends Model {
   @attr('string', { readOnly: true} ) type;
   // options is an array
   @attr('', { readOnly: true} ) options;
-  @attr('boolean', { readOnly: true} ) is_encrypted;
+  @attr('boolean', { readOnly: true} ) is_credential;
 }
