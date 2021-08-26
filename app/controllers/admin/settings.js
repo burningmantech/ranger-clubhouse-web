@@ -3,12 +3,17 @@ import { isEmpty } from '@ember/utils';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import ENV from 'clubhouse/config/environment';
+import {TECH_NINJA} from 'clubhouse/constants/roles';
 
 export default class AdminSettingsController extends ClubhouseController {
   booleanOptions = [ 'true', 'false' ];
 
   @tracked editSetting = null;
   @tracked filterByName = '';
+
+  get isTechNinja() {
+    return this.session.hasRole(TECH_NINJA);
+  }
 
   _isValidJson(value) {
     if (isEmpty(value)) {
@@ -32,7 +37,8 @@ export default class AdminSettingsController extends ClubhouseController {
     if (isEmpty(name)) {
       return this.settings;
     }
-    return this.settings.filter((s) => RegExp(name, 'i').test(s.name) );
+    const match = RegExp(name, 'i');
+    return this.settings.filter((s) => match.test(s.name) );
   }
 
   get editOptions() {

@@ -11,9 +11,9 @@
     <div class="form-row">
       <f.input @name="person" @label="Person" @type="text" @size={{30}} @grid="col-sm-12 col-md-2"
                @controlClass="form-control form-control-sm" @hint="Callsign or person id" />
-      <f.input @name="start_time" @label="Start time" @controlClass="form-control form-control-sm" @type="datetime"
+      <f.input @name="start_time" @label="Start time (UTC-7)" @controlClass="form-control form-control-sm" @type="datetime"
                @size={{30}} @grid="col-sm-12 col-md-2"/>
-      <f.input @name="end_time" @label="End time" @controlClass="form-control form-control-sm" @type="datetime"
+      <f.input @name="end_time" @label="End time (UTC-7)" @controlClass="form-control form-control-sm" @type="datetime"
                @size={{30}} @grid="col-sm-12 col-md-2"/>
     </div>
     <div class="form-group row mb-2">
@@ -23,7 +23,7 @@
     <div class="form-row mb-2">
       <label class="col-1">Sort</label>
       <div class="col-auto">
-        <f.input @name="sort" @type="radioGroup" @options={{this.sortOptions}} @label="Sort" @inline={{true}}/>
+        <f.input @name="sort" @type="radioGroup" @options={{this.sortOptions}} @inline={{true}}/>
       </div>
     </div>
     <f.submit @label="Search" />
@@ -37,8 +37,8 @@
     <table class="table table-striped table-hover table-sm ">
       <thead>
       <tr>
-        <th class="w-15">Timestamp</th>
-        <th class="w-15">Person</th>
+        <th class="w-15">Timestamp (UTC-7)</th>
+        <th class="w-15">User</th>
         <th class="w-15">Target</th>
         <th class="w-15">Event</th>
         <th class="w-30">Message / Reason</th>
