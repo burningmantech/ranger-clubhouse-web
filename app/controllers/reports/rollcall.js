@@ -15,7 +15,7 @@ export default class ReportsRollcallController extends ClubhouseController {
   @tracked isSubmitting = false;
 
   get slotOptions() {
-    const position = this.positions.find((p) => p.id == this.positionId);
+    const position = this.positions.find((p) => +p.id === this.positionId);
     if (position == null) {
       return [];
     }
@@ -31,10 +31,10 @@ export default class ReportsRollcallController extends ClubhouseController {
 
   @action
   selectPosition(positionId) {
-    this.positionId = positionId;
     positionId = +positionId;
+    this.positionId = positionId;
     this.people = [];
-    this.position = this.positions.find((p) => p.id === positionId);
+    this.position = this.positions.find((p) => +p.id === positionId);
     if (this.position && this.position.slots.length === 1) {
       const slot = this.position.slots[0];
       // Go ahead and preselect the only slot.

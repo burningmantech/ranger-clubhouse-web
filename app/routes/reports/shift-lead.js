@@ -17,6 +17,7 @@ export default class ReportsShiftLeadRoute extends ClubhouseRoute {
     controller.set('dirtShiftTimes', model.shifts);
     controller.set('year', this.year);
     controller.set('shiftSelect', null);
+    controller.set('isOnDuty', false);
   }
 
   resetController(controller, isExiting) {
