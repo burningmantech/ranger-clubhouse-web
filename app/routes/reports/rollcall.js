@@ -20,6 +20,8 @@ export default class ReportsRollcallRoute extends ClubhouseRoute {
 
     controller.set('positions', positions);
     controller.set('people', null);
+    controller.set('isSignOut', false);
+    controller.set('askForInOrOut', true);
 
     const options = positions.map((p) => [p.title, p.id]);
     const burnPositions = [];

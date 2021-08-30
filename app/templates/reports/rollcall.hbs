@@ -1,84 +1,102 @@
 <h1>{{this.year}} Roll Call Interface</h1>
-<p>
-  Use this page to sign people into a shift they have signed up for. The interface
-  is intended for Burn Perimeter checkins were people do not need gear
-  before being deployed.
-</p>
-
-
-{{#if this.positions}}
-
-  <div class="row form-group">
-    <label class="col-form-label col-sm-12 col-lg-auto">Position</label>
-    <div class="col-sm-12 col-lg-auto">
-      <ChForm::Select @name="positionId" @value={{this.positionId}} @options={{this.positionOptions}}
-                      @onChange={{action this.selectPosition}} @controlClass="form-control"/>
-    </div>
-    <label class="col-form-label col-sm-12 col-lg-auto">Shift</label>
-    <div class="col-sm-12 col-lg-auto">
-      <ChForm::Select @name="slotId" @value={{this.slotId}}
-                      @options={{this.slotOptions}}
-                      @onChange={{action this.selectSlot}}
-                      @disabled={{eq this.positionId 0}} @controlClass="form-control"/>
-    </div>
-  </div>
-{{else}}
-  <div class="my-2">
-    <b class="text-danger">No shifts found starting within the next 4 hours.</b>
-  </div>
-{{/if}}
-
-{{#if this.slot}}
-  <div class="row">
-    <div class="h4 col-auto">{{this.position.title}}</div>
-    <div class="h4 col-auto">{{this.slot.description}}</div>
-    <div class="h4 col-auto">{{shift-format this.slot.begins}}</div>
-  </div>
-{{/if}}
-{{#if this.isRetrievingPeople}}
-  <LoadingDialog @item="the sign ups"/>
-{{else if this.people}}
+{{#if this.askForInOrOut}}
   <p>
-    {{pluralize this.people.length "sign up"}}. Click the box to sign the person in OR out.
+    Use this page to sign people into a shift they have signed up for OR sign out. The interface
+    is intended for Burn Perimeter checkins were people do not need gear
+    before being deployed or who are returning from the burn.
   </p>
+  <p>
+    <button class="btn btn-primary btn-responsive mb-4" type="button" {{action this.chooseInOrOut false}}>
+      Sign IN People {{fa-icon "walking"}}
+    </button>
+    <button class="btn btn-primary btn-responsive mb-4" type="button" {{action this.chooseInOrOut true}}>
+      Sign OUT People {{fa-icon "bed"}}
+    </button>
+  </p>
+{{else}}
+  <p>
+    <a href {{action this.askAgain}}>Back to choose between sign out and in</a>
+  </p>
+  {{#if this.isSignOut}}
+    <RollcallSignOut/>
+  {{else}}
+    <h3>Sign People IN {{fa-icon "walking"}}</h3>
 
-  <div class="rollcall-grid">
-    {{#each this.people as |person|}}
-      <a href class="rollcall-person {{if person.on_duty "rollcall-problem" (if person.signedIn "rollcall-success")}}"
-          {{action this.clickPerson person}}>
-        <div class="rollcall-photo">
-          {{#if person.photo_url}}
-            <img src={{person.photo_url}} alt={{person.callsign}} loading="lazy"/>
-          {{else}}
-            {{fa-icon "user"}}
-          {{/if}}
+    {{#if this.positions}}
+      <div class="row form-group">
+        <label class="col-form-label col-sm-12 col-lg-auto">Position</label>
+        <div class="col-sm-12 col-lg-auto">
+          <ChForm::Select @name="positionId" @value={{this.positionId}} @options={{this.positionOptions}}
+                          @onChange={{action this.selectPosition}} @controlClass="form-control"/>
         </div>
-        <div class="rollcall-indicator">
-          {{#if person.isSubmitting}}
-            {{fa-icon "spinner" spin=true}}
-          {{else if person.on_duty}}
-            {{fa-icon "exclamation" color="danger"}}
-          {{else if person.signedIn}}
-            {{fa-icon "check" color="success"}}
-          {{/if}}
+        <label class="col-form-label col-sm-12 col-lg-auto">Shift</label>
+        <div class="col-sm-12 col-lg-auto">
+          <ChForm::Select @name="slotId" @value={{this.slotId}}
+                          @options={{this.slotOptions}}
+                          @onChange={{action this.selectSlot}}
+                          @disabled={{eq this.positionId 0}} @controlClass="form-control"/>
         </div>
-        <div class="rollcall-name">
-          {{person.callsign}}
-        </div>
-        <div class="rollcall-info">
-          {{#if person.on_duty}}
-            <b>Already on duty</b><br>
-            {{person.on_duty.position.title}}<br>
-            {{shift-format person.on_duty.on_duty}}
-          {{else if person.signedIn}}
-            Signed in.
-          {{/if}}
-        </div>
-      </a>
-    {{/each}}
-  </div>
-{{else if (gt this.slotId 0)}}
-  <p class="text-danger">
-    <b>No sign ups found for the shift.</b>
-  </p>
+      </div>
+    {{else}}
+      <div class="my-2">
+        <b class="text-danger">No shifts found starting within the next 4 hours.</b>
+      </div>
+    {{/if}}
+
+    {{#if this.slot}}
+      <div class="row">
+        <div class="h4 col-auto">{{this.position.title}}</div>
+        <div class="h4 col-auto">{{this.slot.description}}</div>
+        <div class="h4 col-auto">{{shift-format this.slot.begins}}</div>
+      </div>
+    {{/if}}
+    {{#if this.isRetrievingPeople}}
+      <LoadingDialog @item="the sign ups"/>
+    {{else if this.people}}
+      <p>
+        {{pluralize this.people.length "sign up"}}. Click the box to sign the person in OR out.
+      </p>
+
+      <div class="rollcall-grid">
+        {{#each this.people as |person|}}
+          <a href
+             class="rollcall-person {{if person.on_duty "rollcall-problem" (if person.signedIn "rollcall-success")}}"
+            {{action this.clickPerson person}}>
+            <div class="rollcall-photo">
+              {{#if person.photo_url}}
+                <img src={{person.photo_url}} alt={{person.callsign}} loading="lazy"/>
+              {{else}}
+                {{fa-icon "user"}}
+              {{/if}}
+            </div>
+            <div class="rollcall-indicator">
+              {{#if person.isSubmitting}}
+                {{fa-icon "spinner" spin=true}}
+              {{else if person.on_duty}}
+                {{fa-icon "walking" color="danger"}}
+              {{else if person.signedIn}}
+                {{fa-icon "walking" color="success"}}
+              {{/if}}
+            </div>
+            <div class="rollcall-name">
+              {{person.callsign}}
+            </div>
+            <div class="rollcall-info">
+              {{#if person.on_duty}}
+                <b>Already on duty</b><br>
+                {{person.on_duty.position.title}}<br>
+                {{shift-format person.on_duty.on_duty}}
+              {{else if person.signedIn}}
+                Signed in.
+              {{/if}}
+            </div>
+          </a>
+        {{/each}}
+      </div>
+    {{else if (gt this.slotId 0)}}
+      <p class="text-danger">
+        <b>No sign ups found for the shift.</b>
+      </p>
+    {{/if}}
+  {{/if}}
 {{/if}}

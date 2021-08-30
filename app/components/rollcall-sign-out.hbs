@@ -1,0 +1,62 @@
+<h3>Sign People OUT {{fa-icon "bed"}}</h3>
+{{#if this.isLoading}}
+  <LoadingIndicator/>
+{{else}}
+  {{#each this.positions as |position|}}
+    <ChAccordion as |Accordion|>
+      <Accordion.title>{{position.title}}</Accordion.title>
+      <Accordion.body>
+        <p>
+          Click on the person to sign them out. Click again to resume their shift if they were accidentally signed out.
+        </p>
+        <p>
+          {{fa-icon "walking"}} = person is on shift. {{fa-icon "bed"}} = person has been signed off.
+        </p>
+        <div class="rollcall-grid">
+          {{#each position.people as |person|}}
+            <a href class="rollcall-person {{unless person.isSignedIn "text-muted"}}"
+              {{action this.clickPerson person}}>
+              <div class="rollcall-photo">
+                {{#if person.photo_url}}
+                  <img src={{person.photo_url}} alt={{person.callsign}} loading="lazy"/>
+                {{else}}
+                  {{fa-icon "user"}}
+                {{/if}}
+              </div>
+              <div class="rollcall-indicator">
+                {{#if person.isSubmitting}}
+                  {{fa-icon "spinner" spin=true}}
+                {{else if person.hasProblem}}
+                  {{fa-icon "exclamation" color="danger"}}
+                {{else if person.isSignedIn}}
+                  {{fa-icon "walking"}}
+                {{else}}
+                  {{fa-icon "bed" color="success"}}
+                {{/if}}
+              </div>
+              <div class="rollcall-name">
+                {{person.callsign}}
+              </div>
+              <div class="rollcall-info">
+                {{#if person.isSignedIn}}
+                  {{#if person.backOnShift}}
+                    <b class="text-danger">RESUMED SHIFT</b>
+                  {{else}}
+                    <b>ON DUTY</b>
+                  {{/if}}<br>
+                {{else}}
+                  <b class="text-success">Off Duty</b><br>
+                {{/if}}
+                {{position.title}}<br>
+                {{#if person.isSignedIn}}
+                  {{shift-format person.on_duty}}<br>
+                {{/if}}
+                Duration {{hour-minute-format person.duration}}
+              </div>
+            </a>
+          {{/each}}
+        </div>
+      </Accordion.body>
+    </ChAccordion>
+  {{/each}}
+{{/if}}
