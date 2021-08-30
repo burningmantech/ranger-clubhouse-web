@@ -14,6 +14,20 @@ export default class ReportsRollcallController extends ClubhouseController {
   @tracked isRetrievingPeople = false;
   @tracked isSubmitting = false;
 
+  @tracked isSignOut = false;
+  @tracked askForInOrOut = true;
+
+  @action
+  chooseInOrOut(signOut) {
+    this.askForInOrOut = false;
+    this.isSignOut = signOut;
+  }
+
+  @action
+  askAgain() {
+    this.askForInOrOut = true;
+  }
+
   get slotOptions() {
     const position = this.positions.find((p) => +p.id === this.positionId);
     if (position == null) {
