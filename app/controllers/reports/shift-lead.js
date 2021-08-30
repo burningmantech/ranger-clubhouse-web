@@ -9,7 +9,9 @@ export default class ReportsShiftLeadController extends ClubhouseController {
   @tracked dirtShiftTimes;
   @tracked shiftSelect;
   @tracked shiftStart;
+  @tracked now;
   @tracked isLoading;
+  @tracked isOnDuty = false;
 
   // Positions and head counts - set via api result
   @tracked incoming_positions;
@@ -48,12 +50,27 @@ export default class ReportsShiftLeadController extends ClubhouseController {
     const shift_start = shift.shift_start, shift_duration = shift.duration;
 
     this.shiftStart = shift_start;
-
+    this.isOnDuty = false;
     this.isLoading = true;
     this.ajax.request('slot/shift-lead-report', {data: {shift_start, shift_duration}})
       .then((result) => {
         setProperties(this, result);
         this._rehydrateResults();
+      })
+      .catch((response) => this.house.handleErrorResponse(response))
+      .finally(() => this.isLoading = false);
+  }
+
+  @action
+  onDutyAction() {
+    this.shiftSelect = 'now';
+    this.shiftStart = this.now;
+    this.isOnDuty = true;
+    this.isLoading = true;
+    this.ajax.request('timesheet/on-duty-shift-lead-report')
+      .then((result) => {
+        setProperties(this, result);
+        this._rehydrateOnDutyResults(true);
       })
       .catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isLoading = false);
@@ -131,4 +148,56 @@ export default class ReportsShiftLeadController extends ClubhouseController {
       return -(a.years - b.years);
     });
   }
+
+  /**
+   * Rehydrate the various slot and positions references.
+   *
+   * @private
+   */
+
+  _rehydrateOnDutyResults() {
+    const {positions, below_min_positions} = this;
+
+    below_min_positions.forEach((row) => {
+      const position = positions[row.position_id];
+      row.title = position.title ?? `Position #${row.position_id}`;
+    });
+
+    this.belowMinPositions = below_min_positions;
+    this.belowMinPositions.sort((a, b) => a.title.localeCompare(b.title));
+
+    this._rehydrateOnDutyPeople(this.non_dirt_signups);
+    this._rehydrateOnDutyPeople(this.command_staff_signups);
+    this._rehydrateOnDutyPeople(this.dirt_signups);
+  }
+
+  /**
+   * Rehydrate the callsign rows with the slot & positions. Sort by position title, shift start, and years rangered.
+   *
+   * @param {[]} people
+   * @private
+   */
+
+  _rehydrateOnDutyPeople(people) {
+    const {positions} = this;
+    people.forEach((person) => person.position = positions[person.position_id]);
+
+    /*
+      Sort priority is
+      1) Position title search in descending order, placing shiny pennies at the very end
+      2) Years rangered in descending order.
+     */
+
+    people.sort((a, b) => {
+      const titleA = a.position_id === DIRT_SHINY_PENNY ? '1111' : a.position.title;
+      const titleB = b.position_id === DIRT_SHINY_PENNY ? '1111' : b.position.title;
+
+      const titleCompare = -titleA.localeCompare(titleB);
+      if (titleCompare) {
+        return titleCompare;
+      }
+      return -(a.years - b.years);
+    });
+  }
+
 }

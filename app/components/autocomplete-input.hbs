@@ -11,7 +11,7 @@
         </div>
       </div>
     {{/if}}
-    <Input @type="text"
+    <Input @type="search"
            placeholder={{@placeholder}}
            @value={{@text}}
            class={{this.inputClass}}
@@ -23,6 +23,7 @@
       {{did-insert this.inputInsertElement}}
            autofocus={{@autofocus}}
            autocomplete="off"
+           spellcheck="false"
     />
 
     {{#if @appendSearchIcon}}

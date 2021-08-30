@@ -11,9 +11,6 @@
 <p>
   <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
 </p>
-<p>
-  [hh:mm] = Time does not count towards appreciations.
-</p>
 {{#each this.people key="id" as |person|}}
   <div class="max-width-700">
     <ChAccordion id="person-{{person.id}}" as |accordion|>
@@ -34,6 +31,7 @@
               {{this.year}} Schedule
             </LinkTo>
           </p>
+            <NoAppreciateIcon/> = Time does not count towards appreciations.
           <table class="table table-sm table-hover table-striped table-width-auto">
             <thead>
             <tr>
@@ -51,11 +49,10 @@
                 <td>{{#if entry.off_duty}}{{shift-format entry.off_duty}}{{else}}<i>still on duty</i>{{/if}}</td>
                 <td>{{position-label entry.position}}</td>
                 <td class="text-right">
-                  {{#if entry.position.count_hours}}
-                    {{hour-minute-format entry.duration}}
-                  {{else}}
-                    [{{hour-minute-format entry.duration}}]
-                  {{/if}}
+                  {{#unless entry.position.count_hours}}
+                    <NoAppreciateIcon/>
+                  {{/unless}}
+                  {{hour-minute-format entry.duration}}
                 </td>
                 <td class="text-right">{{credits-format entry.credits}}</td>
               </tr>

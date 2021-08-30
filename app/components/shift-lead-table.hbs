@@ -1,69 +1,94 @@
 <table class="table table-sm table-striped table-box table-hover">
-  <caption>{{@title}} - {{if @people (pluralize @people.length "Ranger") "NONE"}}</caption>
+  <caption>
+    {{@title}}
+    {{if @isOnDuty "ON DUTY" "Scheduled"}} - {{if @people (pluralize @people.length "Ranger") "NONE"}}
+  </caption>
   <thead>
-    <tr>
-      <th class="w-10">Position</th>
-      <th class="w-15">Callsign</th>
-      <th class="w-5">Pronouns</th>
-      <th class="w-5">Gender</th>
-      <th class="w-5 text-right">Yrs</th>
-      <th class="w-5 text-center">GTR?</th>
-      <th class="w-5 text-center">Veh?</th>
-      <th class="w-30">Positions</th>
+  <tr>
+    <th class="w-10">Position</th>
+    <th class="w-15">Callsign</th>
+    <th class="w-5">Pronouns</th>
+    <th class="w-5">Gender</th>
+    <th class="w-5 text-right">Yrs</th>
+    <th class="w-5 text-center">GTR?</th>
+    <th class="w-5 text-center">Veh?</th>
+    <th class="w-30">Positions</th>
+    {{#if @isOnDuty}}
+      <th class="w-10 text-right">On Duty</th>
+      <th class="w-10 text-right">Duration</th>
+
+    {{else}}
       <th class="w-10 text-right">Shift Start</th>
       <th class="w-10 text-right">Shift Ends</th>
-    </tr>
+    {{/if}}
+  </tr>
   </thead>
   <tbody>
-    {{#each @people key="id" as |person|}}
-      <tr>
-        <td class="w-10 {{if person.is_greendot_shift "bg-shift-lead-greendot"}}">
-          {{if person.position.short_title person.position.short_title person.position.title}}
-        </td>
-        <td class="w-15">
-          <PersonLink @person={{person}} />
-        </td>
-        <td class="w-5">
-          {{#if person.pronouns}}
-            {{pronouns-format person noParens=true}}
-          {{else}}
-            -
-          {{/if}}
-        </td>
-        <td class="w-5"><PresentOrNot @value={{person.gender}} @empty="-" /></td>
-        <td class="w-5 text-right">{{person.years}}</td>
-        <td class="w-5 text-center">
-          {{#if person.vehicle_blacklisted}}
-            <b class="text-danger">-BL-</b>
-          {{else if person.signed_motorpool_agreement}}
-            GTR
-          {{else}}
-            -
-          {{/if}}
-        </td>
-        <td class="w-5 text-center">
-          {{#if person.vehicle_blacklisted}}
-            <b class="text-danger">-BL-</b>
-          {{else if person.org_vehicle_insurance}}
-            VEH
-          {{else}}
-            -
-          {{/if}}
-        </td>
-        <td class="w-30 {{if person.is_greendot "bg-shift-lead-greendot" (if (and person.is_troubleshooter (not (or person.is_rsl person.is_ood) ) ) "bg-shift-lead-troubleshooter")}}">
-          {{#each person.positions as |p idx|~}}
-            {{~if idx ", "}}{{p~}}
-          {{~else}}
-            -
-          {{/each}}
-        </td>
+  {{#each @people key="id" as |person|}}
+    <tr>
+      <td class="w-10 {{if person.is_greendot_shift "bg-shift-lead-greendot"}}">
+        {{if person.position.short_title person.position.short_title person.position.title}}
+      </td>
+      <td class="w-15">
+        <PersonLink @person={{person}} />
+      </td>
+      <td class="w-5">
+        {{#if person.pronouns}}
+          {{pronouns-format person noParens=true}}
+        {{else}}
+          -
+        {{/if}}
+      </td>
+      <td class="w-5">
+        <PresentOrNot @value={{person.gender}} @empty="-"/>
+      </td>
+      <td class="w-5 text-right">{{person.years}}</td>
+      <td class="w-5 text-center">
+        {{#if person.vehicle_blacklisted}}
+          <b class="text-danger">-BL-</b>
+        {{else if person.signed_motorpool_agreement}}
+          GTR
+        {{else}}
+          -
+        {{/if}}
+      </td>
+      <td class="w-5 text-center">
+        {{#if person.vehicle_blacklisted}}
+          <b class="text-danger">-BL-</b>
+        {{else if person.org_vehicle_insurance}}
+          VEH
+        {{else}}
+          -
+        {{/if}}
+      </td>
+      <td class="w-30 {{if person.is_greendot "bg-shift-lead-greendot"
+                           (if (and person.is_troubleshooter (not (or person.is_rsl person.is_ood) ) ) "bg-shift-lead-troubleshooter")}}">
+        {{#each person.positions as |p idx|~}}
+          {{~if idx ", "}}{{p~}}
+        {{~else}}
+          -
+        {{/each}}
+      </td>
+      {{#if @isOnDuty}}
+        <td class="w-10 text-right">{{time-format person.on_duty}}</td>
+        <td class="w-10 text-right">{{hour-minute-format person.duration}}</td>
+      {{else}}
         <td class="w-10 text-right">{{if person.slot.begins_day_before "<"}}{{time-format person.slot.begins}}</td>
         <td class="w-10 text-right">{{time-format person.slot.ends}}{{if person.slot.ends_day_after ">"}}</td>
-      </tr>
-    {{else}}
-      <tr>
-        <td colspan="10"><b class="text-danger">No sign ups found</b></td>
-      </tr>
-    {{/each}}
+      {{/if}}
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="10">
+        <b class="text-danger">
+          {{#if @isOnDuty}}
+            No on duty personnel found.
+          {{else}}
+            No sign ups found.
+          {{/if}}
+        </b>
+      </td>
+    </tr>
+  {{/each}}
   </tbody>
 </table>

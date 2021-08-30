@@ -7,13 +7,18 @@
       Use the browser's print command to send this page to the printer. The navigation header, footer, and this message
       will not appear on the page.
     </div>
-    <div class="col-12 mt-2">
+  </div>
+  <div class="form-row mt-2">
+    <div class="col-auto">
       <PeriodSelect
-              @label="Select a {{this.year}} shift period"
-              @title="Select a shift period to report on"
-              @periods={{this.shiftOptions}}
-              @onSelect={{this.changeShift}}
-              @selected={{this.shiftSelect}} />
+        @label="Select a {{this.year}} shift period"
+        @title="Select a shift period to report on"
+        @periods={{this.shiftOptions}}
+        @onSelect={{this.changeShift}}
+        @selected={{this.shiftSelect}} />
+    </div>
+    <div class="col-auto">
+      <button type="button" class="btn btn-primary" {{action this.onDutyAction}}>Currently On Duty</button>
     </div>
   </div>
 {{else}}
@@ -23,7 +28,14 @@
 {{#if this.isLoading}}
   <LoadingDialog @item="Shift Lead Report"/>
 {{else if this.shiftSelect}}
-  <h1 class="mt-2">{{dayjs-format this.shiftStart "dddd, MMMM Do YYYY @ HH:mm"}}</h1>
+  <h1 class="mt-2">
+    {{#if this.isOnDuty}}
+      <span class="text-danger">ON DUTY</span> at
+    {{else}}
+      <span class="text-success">SCHEDULED</span> for
+    {{/if}}
+    {{dayjs-format this.shiftStart "dddd, MMMM Do YYYY @ HH:mm"}}
+  </h1>
 
   <div class="row">
     <div class="col-sm-12 col-md-6">
@@ -60,7 +72,7 @@
           <th>Position</th>
           <th>Shift</th>
           <th class="text-center">Need</th>
-          <th class="text-right">Signed Up</th>
+          <th class="text-right">{{if this.isOnDuty "On Duty" "Signed Up"}}</th>
         </tr>
         </thead>
         <tbody>
@@ -68,13 +80,20 @@
           <tr>
             <td>{{position.title}}</td>
             <td>{{time-format position.slot_begins}} - {{time-format position.slot_ends }}</td>
-            <td class="text-center">{{#if (eq position.min position.max)}}
-              {{position.min}}
-            {{else}}
-              {{position.min}} - {{position.max}}
-            {{/if}}
+            <td class="text-center">
+              {{#if (eq position.min position.max)}}
+                {{position.min}}
+              {{else}}
+                {{position.min}} - {{position.max}}
+              {{/if}}
             </td>
-            <td class="text-right">{{if position.signed_up position.signed_up "NONE"}}</td>
+            <td class="text-right">
+              {{#if @isOnDuty}}
+                {{if position.on_duty position.on_duty "NONE"}}
+              {{else}}
+                {{if position.signed_up position.signed_up "NONE"}}
+              {{/if}}
+            </td>
           </tr>
         {{else}}
           <tr>
@@ -92,9 +111,9 @@
     GTR? = Indicates person signed the Motorpool Vehicle Agreement<br>
     Veh? = Indicates person has BM Org insurance<br>
   </p>
-  <ShiftLeadTable @title="DIRT/GREEN DOTS Scheduled" @people={{this.dirt_signups}} />
-  <ShiftLeadTable @title="COMMAND STAFF Scheduled" @people={{this.command_staff_signups}} />
-  <ShiftLeadTable @title="SPECIAL TEAMS Scheduled" @people={{this.non_dirt_signups}} />
+  <ShiftLeadTable @title="DIRT/GREEN DOTS" @people={{this.dirt_signups}} @isOnDuty={{this.isOnDuty}}/>
+  <ShiftLeadTable @title="COMMAND STAFF" @people={{this.command_staff_signups}} @isOnDuty={{this.isOnDuty}}/>
+  <ShiftLeadTable @title="SPECIAL TEAMS" @people={{this.non_dirt_signups}} @isOnDuty={{this.isOnDuty}}/>
   <p>
     <b>Secret decoder ring:</b>
     Dspch = Dispatcher,
