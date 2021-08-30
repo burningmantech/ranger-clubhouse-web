@@ -79,7 +79,15 @@
     </tr>
   {{else}}
     <tr>
-      <td colspan="10"><b class="text-danger">No sign ups found</b></td>
+      <td colspan="10">
+        <b class="text-danger">
+          {{#if @isOnDuty}}
+            No on duty personnel found.
+          {{else}}
+            No sign ups found.
+          {{/if}}
+        </b>
+      </td>
     </tr>
   {{/each}}
   </tbody>
