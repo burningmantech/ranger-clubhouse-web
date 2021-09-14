@@ -1,6 +1,8 @@
 'use strict';
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
+const writeFile = require('broccoli-file-creator');
+
 const env = EmberApp.env();
 const IS_PROD = env === 'production', IS_TEST = env === 'test';
 
@@ -38,12 +40,6 @@ module.exports = function (defaults) {
       ]
 
     },
-
-    // Create a /VERSION.txt to check new versions with
-    newVersion: {
-      enabled: true,
-      useAppVersion: true,
-    }
   });
 
   // Use `app.import` to add additional libraries to the generated
@@ -70,5 +66,17 @@ module.exports = function (defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
-  return app.toTree();
+  const tree =  app.toTree();
+
+  if (!IS_PROD) {
+    return tree;
+  }
+
+  const config = app.project.config();
+  const fileName = config.newVersion.fileName;
+  const buildTimestamp = config.APP.buildTimestamp;
+  console.log(`Created ${fileName} with ${buildTimestamp}`);
+  writeFile(fileName, buildTimestamp);
+
+  return tree;
 };
