@@ -63,8 +63,9 @@ module.exports = function (environment) {
 
         positionClass: 'toast-top-right'
       }
-    }
+    },
 
+    newVersion: {pollSeconds: 5, fileName: 'VERSION.txt'}
   };
 
   if (environment === 'development') {
@@ -95,7 +96,6 @@ module.exports = function (environment) {
 
     };
 
-    ENV.newVersion = {enabled: false};
   }
 
   if (environment === 'test') {
