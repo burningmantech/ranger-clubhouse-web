@@ -2,7 +2,6 @@
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const writeFile = require('broccoli-file-creator');
-const mergeTrees = require('broccoli-merge-trees');
 
 const env = EmberApp.env();
 const IS_PROD = env === 'production', IS_TEST = env === 'test';
