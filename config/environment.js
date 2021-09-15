@@ -65,7 +65,7 @@ module.exports = function (environment) {
       }
     },
 
-    newVersion: {pollSeconds: 5, fileName: 'VERSION.txt'}
+    newVersion: {pollSeconds: 60, fileName: 'VERSION.txt'}
   };
 
   if (environment === 'development') {

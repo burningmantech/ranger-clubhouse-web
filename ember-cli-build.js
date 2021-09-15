@@ -2,6 +2,7 @@
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const writeFile = require('broccoli-file-creator');
+const mergeTrees = require('broccoli-merge-trees');
 
 const env = EmberApp.env();
 const IS_PROD = env === 'production', IS_TEST = env === 'test';
@@ -66,17 +67,15 @@ module.exports = function (defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
-  const tree =  app.toTree();
-
   if (!IS_PROD) {
-    return tree;
+    return app.toTree();
   }
 
   const config = app.project.config();
   const fileName = config.newVersion.fileName;
   const buildTimestamp = config.APP.buildTimestamp;
+  const buildStampFile = writeFile(fileName, buildTimestamp);
   console.log(`Created ${fileName} with ${buildTimestamp}`);
-  writeFile(fileName, buildTimestamp);
 
-  return tree;
+  return app.toTree(buildStampFile);
 };
