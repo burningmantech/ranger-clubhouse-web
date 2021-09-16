@@ -28,9 +28,4 @@ export default class MentorScheduleRoute extends ClubhouseRoute {
       controller.set('year', null);
     }
   }
-
-  @action
-  refreshRoute() {
-    this.refresh();
-  }
 }

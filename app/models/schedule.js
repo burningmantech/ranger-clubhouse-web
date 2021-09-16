@@ -51,7 +51,8 @@ export default class ScheduleModel extends Model {
   // contact email
   @attr('string', { readOnly: true }) contact_email;
 
-  @tracked person_assigned;
+  @attr('boolean', { defaultValue: false }) person_assigned;
+
 
   get isFull() {
     return (this.slot_signed_up >= this.slot_max);
@@ -82,5 +83,22 @@ export default class ScheduleModel extends Model {
 
   get isTraining() {
     return (this.position_type === 'Training');
+  }
+
+  static hydratePositions(slots) {
+    const positions = slots.meta.positions.reduce((hash, row) => {
+      hash[row.id] = row;
+      return hash;
+    }, {});
+
+    slots.forEach((slot) => {
+      const position = positions[slot.position_id];
+      if (!position) {
+        return;
+      }
+      slot.position_title = position.title;
+      slot.position_count_hours = position.count_hours;
+      slot.position_type = position.type;
+    });
   }
 }

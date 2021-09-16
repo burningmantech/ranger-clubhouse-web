@@ -16,7 +16,7 @@
   {{else}}
     {{#if this.requirementsOverride}}
       <ChNotice @type="danger" @icon="exclamation" @title="Schedule requirements overridden">
-        <b>All actions are logged and subject to review.</b>
+        <b>All OVERRIDDEN scheduling actions are logged and subject to review.</b>
       </ChNotice>
     {{/if}}
 
@@ -31,10 +31,10 @@
         {{#if this.inactiveSlots}}
           <ChNotice @type="info" @title="Schedule listing has inactive shifts" @icon="hand-point-right">
             <p>
-              Because you have the Edit Slots, Grant Positions, Trainer, VC, and/or Admin role, the shift listing
+              Because you have the Edit Slots, Grant Positions, Trainer, VC, and/or Admin roles, the shift listing
               will contain inactive shifts.
             </p>
-            Sign ups are disabled until the shift has been activated through the Edit Slots page.
+            Sign ups are disabled until the shift has been activated through the Admin &gt; Edit Slots page.
           </ChNotice>
         {{/if}}
 

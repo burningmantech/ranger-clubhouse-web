@@ -1,6 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 import RSVP from 'rsvp';
+import ScheduleModel from 'clubhouse/models/schedule';
 
 export default class PersonScheduleRoute extends ClubhouseRoute {
   queryParams = {
@@ -15,33 +16,31 @@ export default class PersonScheduleRoute extends ClubhouseRoute {
     const scheduleParams = {
       person_id,
       year,
-      shifts_available: 1,
+      credits_earned: 1,
+      schedule_summary: 1,
     };
-
-    this.store.unloadAll('schedule');
-
-    const records = {
-      signedUpSlots: this.store.query('schedule', { person_id, year }).then((result) => result.toArray()),
-      slots: this.store.query('schedule', scheduleParams),
-      scheduleSummary: this.ajax.request(`person/${person_id}/schedule/summary`, { data: { year }}).then((result) => result.summary),
-      creditsEarned: this.ajax.request(`person/${person_id}/credits`, {data: { year }})
-                  .then((result) => result.credits),
-      year,
-    }
 
     // Only bother with permissions for the current year
     if (year == this.house.currentYear()) {
-      records.permission = this.ajax.request(`person/${person_id}/schedule/permission`, {data: { year }})
-                  .then((results) => results.permission );
-    } else {
-      records.permission = {};
+      scheduleParams.signup_permission = 1;
     }
 
-    return RSVP.hash(records);
+    this.store.unloadAll('schedule');
+
+    return RSVP.hash({
+      slots: this.store.query('schedule', scheduleParams),
+      year,
+    });
   }
 
   setupController(controller, model) {
     super.setupController(...arguments);
+    ScheduleModel.hydratePositions(model.slots);
+    model.signedUpSlots = model.slots.filter((slot) => slot.person_assigned);
+    const meta = model.slots.meta;
+    model.creditsEarned = meta.credits_earned;
+    model.scheduleSummary = meta.schedule_summary;
+    model.permission = meta.signup_permission || {};
     controller.set('person', this.modelFor('person'));
     controller.setProperties(model);
   }
