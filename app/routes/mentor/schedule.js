@@ -1,5 +1,4 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import { action } from '@ember/object';
 
 import requestYear from 'clubhouse/utils/request-year';
 

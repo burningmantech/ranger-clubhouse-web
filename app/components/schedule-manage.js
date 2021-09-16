@@ -7,6 +7,7 @@ import {schedule} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
 import {inject as service} from '@ember/service';
 import {htmlSafe} from '@ember/string';
+import {TRAINING} from 'clubhouse/constants/positions';
 
 const allDays = ['All Days', 'all'];
 const upcomingShifts = ['Upcoming Shifts', 'upcoming'];
@@ -179,15 +180,14 @@ export default class ScheduleManageComponent extends Component {
 
     let prevEndTime = 0, prevSlot = null;
 
-    slots.forEach(function(slot) {
+    slots.forEach(function (slot) {
       if (slot.slot_begins_time < prevEndTime) {
         if (slot.isTraining && prevSlot.isTraining
           && (
-            (slot.position_id === Position.TRAINING && prevSlot.position_id !== Position.TRAINING)
-            || (slot.position_id !== Position.TRAINING && prevSlot.position_id === Position.TRAINING)
+            (slot.position_id === TRAINING && prevSlot.position_id !== TRAINING)
+            || (slot.position_id !== TRAINING && prevSlot.position_id === TRAINING)
           )
-        )
-        {
+        ) {
           // Might be dirt training and ART training.. which is okay. Common scenario is attending Green Dot
           // training in the morning and then Dirt Training in the afternoon. However, most Dirt Trainings are
           // scheduled to start in the morning even tho veterans only have to attend the afternoon portion.

@@ -1,6 +1,5 @@
 import Model, { attr } from '@ember-data/model';
 import dayjs from 'dayjs';
-import { tracked } from '@glimmer/tracking';
 
 export default class ScheduleModel extends Model {
   // the position row id
