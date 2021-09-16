@@ -1,5 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
+import ScheduleModel from 'clubhouse/models/schedule';
 
 export default class HqScheduleRoute extends ClubhouseRoute {
   model() {
@@ -10,11 +11,7 @@ export default class HqScheduleRoute extends ClubhouseRoute {
     this.store.unloadAll('timesheet');
 
     return RSVP.hash({
-      signedUpSlots: this.store.query('schedule', { person_id, year }).then((result) => result.toArray()),
-      slots: this.store.query('schedule',  { person_id, year, shifts_available: 1 }),
-      scheduleSummary: this.ajax.request(`person/${person_id}/schedule/summary`, { data: { year }}).then((result) => result.summary),
-      permission: this.ajax.request(`person/${person_id}/schedule/permission`, {data: { year }})
-                  .then((results) => results.permission ),
+      slots: this.store.query('schedule',  { person_id, year, schedule_summary: 1, signup_permission: 1 }),
       timesheets: this.store.query('timesheet', { person_id, year }),
     });
   }
@@ -23,6 +20,11 @@ export default class HqScheduleRoute extends ClubhouseRoute {
     const hq = this.modelFor('hq');
     super.setupController(...arguments);
 
+    const meta = model.slots.meta;
+    ScheduleModel.hydratePositions(model.slots);
+    model.signedUpSlots = model.slots.filter((slot) => slot.person_assigned);
+    model.permission = meta.signup_permission;
+    model.scheduleSummary = meta.schedule_summary;
     controller.setProperties(model);
     controller.set('person', hq.person);
     controller.set('year', this.house.currentYear());

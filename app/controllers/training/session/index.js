@@ -3,13 +3,14 @@ import EmberObject from '@ember/object';
 import {debounce} from '@ember/runloop';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {slotSignup} from 'clubhouse/utils/slot-signup';
+import {inject as service} from '@ember/service';
 import _ from 'lodash';
-import dayjs from 'dayjs';
 
 const SEARCH_RATE_MS = 300;
 
 export default class TrainingSlotController extends ClubhouseController {
+  @service shiftManage;
+
   dirtRankOptions = [
     ["No Rank", ''],
     ["1 - Above Average (Note Required)", 1],
@@ -65,10 +66,6 @@ export default class TrainingSlotController extends ClubhouseController {
     });
 
     return passed;
-  }
-
-  get year() {
-    return dayjs(this.slot.begins).year();
   }
 
   /**
@@ -274,7 +271,7 @@ export default class TrainingSlotController extends ClubhouseController {
   @action
   addPersonAction(person, event) {
     event.preventDefault();
-    slotSignup(this, this.slot, person, () => {
+    this.shiftManage.slotSignup(this.slot, person, () => {
       this.addPersonForm = null;
       // Refresh the list
       this.ajax.request(`training-session/${this.slot.id}`).then((results) => {

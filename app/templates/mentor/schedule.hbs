@@ -7,82 +7,93 @@
 {{else if this.apparelSlot}}
   <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{action this.clearAlphaApparel}} />
   <Mentor::AlphaApparelSheet @slot={{this.apparelSlot}} />
-{{else}}
-  <div class="d-print-none">
-    <YearSelect @title="Alpha Scheduled Shift" @year={{this.year}} @onChange={{action (mut this.year)}} />
-  </div>
-  {{#each this.slots as |slot|}}
-    <div class="my-3">
-      <table class="table table-sm table-striped table-hover">
-        <caption>
-          {{shift-format slot.begins}} - {{slot.description}} - {{pluralize slot.people.length "Alpha"}}
-        </caption>
-        <thead>
-        <tr>
-          <td colspan="6">
-            <button type="button" class="btn btn-secondary btn-sm" {{action this.showSignupSheet slot}}>Alpha Sign-In Sheet</button>
-            <button type="button" class="btn btn-secondary btn-sm" {{action this.showSignedInSheet slot}}>Alpha Info Sheet</button>
-            <button type="button" class="btn btn-secondary btn-sm" {{action this.showAlphaApparel slot}}>Alpha Apparel Distribution
-            </button>
-          </td>
-          <td>
-            <button type="button" class="btn btn-secondary btn-sm" {{action this.showAddPersonAction slot}}>Add Person</button>
-            <button type="button" class="btn btn-secondary btn-sm" {{action this.showRemovePersonAction slot}}>Remove Person</button>
-          </td>
-        </tr>
-        <tr>
-          <th class="w-15">Callsign</th>
-          <th class="w-15">Name</th>
-          <th class="w-5 text-center">Gender</th>
-          <th class="w-5 text-center">Signed In</th>
-          <th class="w-10">Flag</th>
-          <th class="w-20">Training Location</th>
-          <th class="w-25">Home</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each slot.people as |person|}}
+{{/if}}
+<div class="d-print-none">
+  <YearSelect @title="Alpha Scheduled Shift" @year={{this.year}} @onChange={{action (mut this.year)}} />
+</div>
+<div class="mt-4 {{if this.hideShiftSchedule "d-none"}}">
+  {{#each this.slots key="id" as |slot|}}
+    <ChAccordion as |Accordion|>
+      <Accordion.title>
+        {{shift-format slot.begins}} - {{pluralize slot.people.length "Alpha"}}
+      </Accordion.title>
+      <Accordion.body>
+        <div class="mt-2 mb-3">
+          <button type="button" class="btn btn-secondary btn-sm" {{action this.showSignupSheet slot}}>
+            {{fa-icon "clipboard-list"}} Sign-In Sheet
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" {{action this.showSignedInSheet slot}}>
+            {{fa-icon "info-circle"}} Info Sheet
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" {{action this.showAlphaApparel slot}}>
+            {{fa-icon "tshirt"}} Apparel Distribution
+          </button>
+          <button type="button" class="ml-4 btn btn-secondary btn-sm" {{action this.showAddPersonAction slot}}>
+            {{fa-icon "plus"}} Add Person
+          </button>
+        </div>
+        <table class="table table-sm table-striped table-hover">
+          <thead>
           <tr>
-            <td class="w-15">
-              <PersonLink @person={{person}} />
-            </td>
-            <td class="w-15">{{person.first_name}} {{person.last_name}}</td>
-            <td class="w-5 text-center">{{person.gender}}</td>
-            <td class="w-5 text-center">{{yesno person.on_alpha_shift}}</td>
-            <td class="w-10">
-              {{#if person.have_mentor_flags}}
-                {{#each person.mentor_team as |info|}}
-                  {{#if (gte info.rank 3)}}
-                    {{info.year}}
-                    <IntakeRanking @type="mentor" @rank={{info.rank}} />
-                    <br>
-                  {{/if}}
+            <th class="w-15">Callsign</th>
+            <th class="w-15">Name</th>
+            <th class="w-5 text-center">Gender</th>
+            <th class="w-5 text-center">Signed In</th>
+            <th class="w-10">Flag</th>
+            <th class="w-20">Training Location</th>
+            <th class="w-20">Home</th>
+            <th class="w-5">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each slot.people key="id" as |person|}}
+            <tr>
+              <td class="w-15">
+                <PersonLink @person={{person}} />
+              </td>
+              <td class="w-15">{{person.first_name}} {{person.last_name}}</td>
+              <td class="w-5 text-center">{{person.gender}}</td>
+              <td class="w-5 text-center">{{yesno person.on_alpha_shift}}</td>
+              <td class="w-10">
+                {{#if person.have_mentor_flags}}
+                  {{#each person.mentor_team as |info|}}
+                    {{#if (gte info.rank 3)}}
+                      {{info.year}}
+                      <IntakeRanking @type="mentor" @rank={{info.rank}} />
+                      <br>
+                    {{/if}}
+                  {{/each}}
+                {{else}}
+                  -
+                {{/if}}
+              </td>
+              <td class="w-20">
+                {{#each person.trainings as |training|}}
+                  {{ymd-format training.slot_begins}} {{training.slot_description}}<br>
                 {{/each}}
-              {{else}}
-                -
-              {{/if}}
-            </td>
-            <td class="w-20">
-              {{#each person.trainings as |training|}}
-                {{ymd-format training.slot_begins}} {{training.slot_description}}<br>
-              {{/each}}
-            </td>
-            <td class="w-25">
-              {{person.city}} {{person.state}} {{person.country}}
-            </td>
-          </tr>
-        {{else}}
-          <tr>
-            <td colspan="7" class="text-danger"><b>No sign ups found for this shift</b></td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
-    </div>
+              </td>
+              <td class="w-25">
+                {{person.city}} {{person.state}} {{person.country}}
+              </td>
+              <td class="w-5">
+                <button type="button" class="btn btn-secondary btn-sm" {{action this.removePersonAction slot person}}>
+                  Remove
+                </button>
+              </td>
+            </tr>
+          {{else}}
+            <tr>
+              <td colspan="8" class="text-danger"><b>No sign ups found for this mentee shift</b></td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </Accordion.body>
+    </ChAccordion>
   {{else}}
     <b class="text-danger">No {{this.year}} Alpha shifts found.</b>
   {{/each}}
-{{/if}}
+</div>
 
 
 {{! Add Person dialog box}}
@@ -96,7 +107,7 @@
                    @type="text" @size=30 @autofocus=true @disabled={{this.slot.is_submitting}} />
         </div>
         <div class="form-row">
-          <f.cancel  @disabled={{this.slot.is_submitting}} />
+          <f.cancel @disabled={{this.slot.is_submitting}} />
           {{#if this.slot.is_submitting}}
             <LoadingIndicator @text="Adding"/>
           {{else if this.isSearching}}
@@ -114,10 +125,10 @@
             </tr>
             </thead>
             <tbody>
-            {{#each this.foundPeople as |person|}}
+            {{#each this.foundPeople key="id" as |person|}}
               <tr>
                 <td class="w-25">
-                  <a href {{action this.addPersonAction person this.slot}} disabled={{this.slot.is_submitting}}>
+                  <a href {{action this.addPersonAction person this.slot}}>
                     {{person.callsign}}
                   </a>
                 </td>
@@ -135,24 +146,6 @@
   </ModalDialog>
 {{/if}}
 
-{{! Remove person dialog box}}
-{{#if this.removePersonForm}}
-  <ModalDialog @title="Remove Person From Session" as |Modal|>
-    <ChForm @formId="removePerson" @formFor={{this.removePersonForm}} @changeSet={{false}}
-            @onSubmit={{this.removePersonAction}} @onCancel={{this.cancelRemovePersonAction}} as |f|>
-      <Modal.body>
-        <div class="form-row">
-          <f.input @name="person_id" @label="Select the person to remove" @type="select"
-                   @options={{this.removeStudentOptions}} />
-        </div>
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label="Remove Person" @disabled={{or this.isSubmitting (not f.model.person_id)}} />
-        <f.cancel @disabled={{this.isSubmitting}} />
-        {{#if this.isSubmitting}}
-          <LoadingIndicator/>
-        {{/if}}
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
+{{#if this.isSubmitting}}
+  <LoadingDialog @text="refreshing the sign up list"/>
 {{/if}}

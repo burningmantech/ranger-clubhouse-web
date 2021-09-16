@@ -44,8 +44,8 @@ module('Acceptance | auditor', function (hooks) {
   });
 
   test('Auditor see the schedule page', async function (assert) {
-    const signedup = this.server.create('schedule', {person_assigned: true}); // eslint-disable-line no-unused-vars
-    const available = this.server.create('schedule', {person_assigned: false}); // eslint-disable-line no-unused-vars
+    this.server.create('schedule', {person_assigned: true});
+    this.server.create('schedule', {person_assigned: false});
 
     await visit('/me/schedule');
 

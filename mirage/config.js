@@ -1,43 +1,13 @@
 import Response from 'ember-cli-mirage/response';
 import dayjs from 'dayjs';
+import configMock from './api-mocks/config-mock';
+import scheduleMock from './api-mocks/schedule-mock';
 
 export default function () {
   this.urlPrefix = 'http://localhost:8000';
 
-  this.get('/api/config', function () {
-    return {
-      VCSRevision: 'DEVELOPMENT',
-
-      // when the system is taken on-site, set OnPlaya = TRUE on the server that will
-      // be in Black Rock City and set ReadOnly = TRUE on the system that remains
-      // available to the internet so folks can check their schedules
-      OnPlaya: false,
-      ReadOnly: false,
-
-      // Ranger Policies Link
-      RangerPoliciesUrl: 'https://drive.google.com/drive/u/1/folders/0B9mqynALmDHDQ2VvaFB3SnVvMTg?ogsrc=32',
-
-      // How to join Ranger special teams
-      JoiningRangerSpecialTeamsUrl: 'https://docs.google.com/document/d/1xEVnm1SdcyvLnsUYwL5v_WxO1zy3yhMkAmbXIU_0yqc',
-
-      // Meal date info (needs to change every year)
-      MealInfoAvailable: false,
-      MealDates: 'Pre Event is Tue 8/8 (dinner) - Sun 8/27; During Event is Mon 8/28 - Mon 9/4; Post Event is Tue 9/5 - Sat 9/9 (lunch)',
-
-      SiteNotice: 'Copyright 2008-2018 Black Rock City, LLC. All information contained within this website is strictly confidential.',
-
-      SiteTitle: 'Black Rock Rangers Secret Clubhouse',
-      AdminEmail: 'ranger-tech-ninjas@burningman.org',
-      GeneralSupportEmail: 'rangers@burningman.org',
-      VCEmail: 'ranger-vc-list@burningman.org',
-      SignupUrl: 'http://jousting-at-windmills.org/clubhouse/',
-
-      // Optional ticket credit warning messages.
-      // If any are not set, no message will be displayed
-      RpTicketThreshold: 19, // Ticket threshold for Reduced-Price
-      ScTicketThreshold: 38, // Ticket threshold for staff credential
-    };
-  });
+  configMock(this);
+  scheduleMock(this);
 
   this.post('/api/auth/login', function (schema, request) {
     let params = JSON.parse(request.requestBody);
@@ -177,10 +147,6 @@ export default function () {
     };
   });
 
-  this.get('/api/person/:id/schedule', (schema, request) => { // eslint-disable-line no-unused-vars
-    const person = schema.people.find(request.params.id); // eslint-disable-line no-unused-vars
-    return schema.schedules.all();
-  });
 
   this.get('/api/person/:id/event-info', ({people}, request) => {
     const person = people.find(request.params.id); // eslint-disable-line no-unused-vars
@@ -202,20 +168,6 @@ export default function () {
         radio_info_available: false,
       }
     };
-  });
-
-  this.get('/api/person/:id/schedule/permission', ({people}, request) => {
-    const person = people.find(request.params.id); // eslint-disable-line no-unused-vars
-
-    return {
-      permission: {
-        all_signups_allowed: true,
-        training_signups_allowed: true,
-        requirements: [],
-        recommend_burn_weekend_shift: false
-      }
-    };
-
   });
 
   this.get('/api/person/:id/credits', ({people}, request) => {

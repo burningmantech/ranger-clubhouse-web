@@ -1,10 +1,11 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 import RSVP from 'rsvp';
+import ScheduleModel from 'clubhouse/models/schedule';
 
 export default class MeScheduleRoute extends ClubhouseRoute {
   queryParams = {
-    year: { refreshModel: true }
+    year: {refreshModel: true}
   };
 
   beforeModel() {
@@ -24,19 +25,22 @@ export default class MeScheduleRoute extends ClubhouseRoute {
     this.store.unloadAll('schedule');
 
     return RSVP.hash({
-      signedUpSlots: this.store.query('schedule', { person_id, year }).then((result) => result.toArray()),
-      slots: this.store.query('schedule', { person_id, year, shifts_available: 1 }),
-      scheduleSummary: this.ajax.request(`person/${person_id}/schedule/summary`, { data: { year } }).then((result) => result.summary),
-      permission: this.ajax.request(`person/${person_id}/schedule/permission`, { data: { year } })
-        .then((results) => results.permission),
-      creditsEarned: this.ajax.request(`person/${person_id}/credits`, { data: { year } })
-        .then((result) => result.credits),
+      slots: this.store.query('schedule', {
+        person_id,
+        year,
+        credits_earned: 1,
+        schedule_summary: 1,
+        signup_permission: 1
+      }),
       year
     });
   }
 
   setupController(controller, model) {
     const user = this.session.user;
+
+    const meta = model.slots.meta;
+    model.permission = meta.signup_permission;
 
     if (user.isAuditor && model.permission.online_training_only) {
       this.toast.error('Sorry, auditors are only allowed to take Online Training this year.');
@@ -47,7 +51,13 @@ export default class MeScheduleRoute extends ClubhouseRoute {
     if ((user.isAuditor || user.isProspective || user.isAlpha) && !model.permission.all_signups_allowed) {
       this.toast.error('You need to complete one or more items in the checklist before being allowed to sign up.');
       this.transitionTo('me.homepage');
+      return;
     }
+
+    ScheduleModel.hydratePositions(model.slots);
+    model.signedUpSlots = model.slots.filter((slot) => slot.person_assigned);
+    model.creditsEarned = meta.credits_earned;
+    model.scheduleSummary = meta.schedule_summary;
   }
 
   resetController(controller, isExiting) {

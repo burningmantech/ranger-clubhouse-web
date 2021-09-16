@@ -1,4 +1,4 @@
-<h1>{{year-format this.slot.begins}} {{this.training.title}} - {{shift-format this.slot.begins}}
+<h1>{{this.year}} {{this.training.title}} - {{shift-format this.slot.begins}}
   - {{this.slot.description}}</h1>
 <p>
   <LinkTo @route="training.index" @model={{this.training.id}} @query={{hash year=this.year}}>

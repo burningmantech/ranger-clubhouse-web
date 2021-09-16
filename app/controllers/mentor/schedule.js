@@ -1,36 +1,33 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import EmberObject, { action } from '@ember/object';
-import { debounce } from '@ember/runloop';
-import { slotSignup } from 'clubhouse/utils/slot-signup';
-import { tracked } from '@glimmer/tracking';
+import EmberObject, {action} from '@ember/object';
+import {debounce} from '@ember/runloop';
+import {tracked} from '@glimmer/tracking';
+import {inject as service} from '@ember/service';
 
 const SEARCH_RATE_MS = 300;
 
 export default class MentorScheduleController extends ClubhouseController {
+  @service shiftManage;
+
   @tracked slot;
+  @tracked slots;
+
   @tracked foundPeople;
   @tracked noSearchMatch;
   @tracked addPersonForm;
   @tracked removePersonForm;
   @tracked isSearching;
   @tracked isSubmitting;
+
   @tracked signedInSlot;
   @tracked apparelSlot;
+  @tracked signupSheetSlot;
 
-  queryParams = [ 'year' ];
+  queryParams = ['year'];
 
-  get removeStudentOptions() {
-    const options = [
-      [ '-', null ]
-    ];
-
-    this.slot.people.forEach((alpha) => {
-      options.push([ `${alpha.callsign} (${alpha.first_name} ${alpha.last_name})`, alpha.id]);
-    });
-
-    return options;
+  get hideShiftSchedule() {
+    return !!(this.signedInSlot || this.apparelSlot || this.signupSheetSlot);
   }
-
 
   // Show the dialog to add a person
   @action
@@ -38,7 +35,7 @@ export default class MentorScheduleController extends ClubhouseController {
     this.slot = slot;
     this.foundPeople = null;
     this.noSearchMatch = null;
-    this.addPersonForm = EmberObject.create({ name: '' });
+    this.addPersonForm = EmberObject.create({name: ''});
   }
 
   @action
@@ -69,7 +66,9 @@ export default class MentorScheduleController extends ClubhouseController {
       }
     }).catch((response) => {
       this.house.handleErrorResponse(response);
-    }).finally(() => { this.isSearching = false; })
+    }).finally(() => {
+      this.isSearching = false;
+    })
   }
 
 
@@ -80,45 +79,38 @@ export default class MentorScheduleController extends ClubhouseController {
 
   @action
   addPersonAction(person, slot) {
-    slotSignup(this, slot, person, () => {
+    this.shiftManage.slotSignup(slot, person, () => {
       this.addPersonForm = null;
-      this.send('refreshRoute');
+      this.isSubmitting = true;
+      this.ajax.request('mentor/alpha-schedule', {data: {year: this.year}}).then((result) => {
+        this.slots = result.slots;
+      }).catch((response) => this.house.handleErrorResponse(response))
+        .finally(() => this.isSubmitting = false)
     });
   }
 
   // Remove a student from the session
   @action
-  removePersonAction(model) {
-    const personId = model.person_id;
-    const person = this.slot.people.find((student) => student.id == personId );
+  removePersonAction(slot, person) {
+    const personId = +person.id;
 
-    this.isSubmitting = true;
-
-    this.ajax.delete(`person/${personId}/schedule/${this.slot.id}`)
-      .then((results) => {
-        if (results.status === 'success') {
-          this.slot.people.removeObject(person);
-          this.toast.success(`${person.callsign} was successfully removed from this training session.`);
-        } else {
-          this.toast.error(`The server responded with an unknown status code [${results.status}]`);
-        }
-        this.removePersonForm = null;
-      })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
-  }
-
-  // Show the remove student dialog
-  @action
-  showRemovePersonAction(slot) {
-    this.slot = slot;
-    this.removePersonForm = EmberObject.create({ person_id: null });
-  }
-
-  // Cancel/close the student detail dialog
-  @action
-  cancelRemovePersonAction() {
-    this.removePersonForm = null;
+    this.modal.confirm(
+      'Remove Sign Up',
+      `Are you sure you want to remove ${person.callsign} from the mentee shift?`,
+      () => {
+        this.isSubmitting = true;
+        this.ajax.delete(`person/${personId}/schedule/${slot.id}`)
+          .then((results) => {
+            if (results.status === 'success') {
+              slot.people.removeObject(person);
+              this.toast.success(`${person.callsign} was successfully removed from the mentee shift.`);
+            } else {
+              this.toast.error(`The server responded with an unknown status code [${results.status}]`);
+            }
+          })
+          .catch((response) => this.house.handleErrorResponse(response))
+          .finally(() => this.isSubmitting = false);
+      });
   }
 
   // Show the signup sheet page
@@ -138,7 +130,7 @@ export default class MentorScheduleController extends ClubhouseController {
     const someone = slot.people.find((p) => p.on_alpha_shift);
 
     if (!someone) {
-      this.modal.info(null, 'No Alphas were found to be signed in for this shift.');
+      this.modal.info('No Alphas Found', 'No Alphas are signed into this mentee shift.');
     } else {
       this.signedInSlot = slot;
     }
@@ -149,13 +141,13 @@ export default class MentorScheduleController extends ClubhouseController {
     this.signedInSlot = null;
   }
 
-  // Show the shirts goodie page
+  // Show the shirts goodies page
   @action
   showAlphaApparel(slot) {
     const someone = slot.people.find((p) => p.on_alpha_shift);
 
     if (!someone) {
-      this.modal.info(null, 'No Alphas were found to be signed in for this shift.');
+      this.modal.info('No Alphas Found', 'No Alphas are signed into this mentee shift.');
     } else {
       this.apparelSlot = slot;
     }

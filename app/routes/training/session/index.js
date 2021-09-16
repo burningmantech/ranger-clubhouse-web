@@ -1,4 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import dayjs from 'dayjs';
 
 export default class TrainingSessionIndexRoute extends ClubhouseRoute {
   setupController(controller) {
@@ -9,6 +10,7 @@ export default class TrainingSessionIndexRoute extends ClubhouseRoute {
     controller.set('showEmails', false);
     controller.set('searchForm', null);
     controller.set('editStudent', null);
+    controller.set('year', dayjs(session.slot.begins).year());
 
     let havePrimaryTrainers = false;
     session.trainers.forEach((group) => {
