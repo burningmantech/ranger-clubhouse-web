@@ -49,16 +49,11 @@ module.exports = function (defaults) {
   // Use `app.import` to add additional libraries to the generated
   // output files.
 
- // app.import('node_modules/jquery-datetimepicker/jquery.datetimepicker.css');
-  //app.import('node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js');
-  //app.import('node_modules/blueimp-load-image/js/load-image.all.min.js')
-
+  app.import('node_modules/jquery-datetimepicker/jquery.datetimepicker.css');
+  app.import('node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js');
   app.import('vendor/bootstrap/bootstrap-4.3.bundle.js');
 
-  //app.import('node_modules/dayjs/plugin/advancedFormat.js');
-  //app.import('node_modules/dayjs/plugin/objectSupport.js');
-
-  // app.import('nod_modules/@okta/okta-signin-widget/dist/css/okta-sign-in.min.css');
+  // app.import('node_modules/@okta/okta-signin-widget/dist/css/okta-sign-in.min.css');
 
   // If you need to use different assets in different
   // environments, specify an object as the first parameter. That
