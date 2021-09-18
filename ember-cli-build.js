@@ -2,12 +2,17 @@
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const writeFile = require('broccoli-file-creator');
+const MergeTrees = require("broccoli-merge-trees");
 
 const env = EmberApp.env();
 const IS_PROD = env === 'production', IS_TEST = env === 'test';
 
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
+    babel: {
+      plugins: [require.resolve('ember-auto-import/babel-plugin')],
+    },
+
     tests: IS_TEST, // Don't even generate test files unless a test build
 
     storeConfigInMeta: false, // Don't store configuration in meta tag
@@ -19,7 +24,6 @@ module.exports = function (defaults) {
     'ember-cli-babel': {
       includePolyfill: IS_PROD,
     },
-
 
     autoprefixer: {
       sourcemap: false // Was never helpful
@@ -45,14 +49,14 @@ module.exports = function (defaults) {
   // Use `app.import` to add additional libraries to the generated
   // output files.
 
-  app.import('node_modules/jquery-datetimepicker/jquery.datetimepicker.css');
-  app.import('node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js');
-  app.import('node_modules/blueimp-load-image/js/load-image.all.min.js')
+ // app.import('node_modules/jquery-datetimepicker/jquery.datetimepicker.css');
+  //app.import('node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js');
+  //app.import('node_modules/blueimp-load-image/js/load-image.all.min.js')
 
   app.import('vendor/bootstrap/bootstrap-4.3.bundle.js');
 
-  app.import('node_modules/dayjs/plugin/advancedFormat.js');
-  app.import('node_modules/dayjs/plugin/objectSupport.js');
+  //app.import('node_modules/dayjs/plugin/advancedFormat.js');
+  //app.import('node_modules/dayjs/plugin/objectSupport.js');
 
   // app.import('nod_modules/@okta/okta-signin-widget/dist/css/okta-sign-in.min.css');
 
@@ -70,11 +74,11 @@ module.exports = function (defaults) {
     return app.toTree();
   }
 
+  // Create a buildstamp file to be used by <NewVersionNotify /> in production.
   const config = app.project.config();
   const fileName = config.newVersion.fileName;
   const buildTimestamp = config.APP.buildTimestamp;
   const buildStampFile = writeFile(fileName, buildTimestamp);
-  console.log(`Created ${fileName} with ${buildTimestamp}`);
 
-  return app.toTree(buildStampFile);
+  return new MergeTrees([app.toTree(), buildStampFile]);
 };
