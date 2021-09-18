@@ -42,7 +42,8 @@
       {{#if (not this.allowedCheckIn)}}
         <ChNotice @title="Account is disabled" @type="danger" @icon="ban">
           <p>
-            {{this.person.callsign}} has the status "{{this.person.status}}" which prevents the person from working a shift.
+            {{this.person.callsign}} has the status "{{this.person.status}}" which prevents the person from working a
+            shift.
             The HQ Window Interface cannot be used.
           </p>
           Contact the HQ Lead, HQ Supervisor or the Personnel Manager {{mail-to (config "PersonnelEmail")}}.
@@ -140,8 +141,17 @@
   </div>
 </main>
 
-
-{{#if this.showAlphaWarning}}
+{{#if this.showSignInWarning}}
+  <ModalDialog @title="Sign Into A Shift" as |Modal|>
+    <Modal.body>
+      <b class="text-danger">WARNING:</b>
+      You are not signed into any shift. You can use the HQ Interface however we ask you sign into a shift first.
+    </Modal.body>
+    <Modal.footer>
+      <Modal.button @label="Close" @action={{this.closeSignInWarning}} @type="primary"/>
+    </Modal.footer>
+  </ModalDialog>
+{{else if this.showAlphaWarning}}
   <ModalDialog as |Modal|>
     <Modal.body>
       <div class="d-flex">

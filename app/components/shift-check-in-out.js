@@ -24,6 +24,9 @@ export default class ShiftCheckInOutComponent extends Component {
   @tracked showPositionDialog = false;
   @tracked changePositionError = null;
 
+  @tracked showEarlyShiftConfirm = false;
+  @tracked earlySlot = null;
+
   constructor() {
     super(...arguments);
 
@@ -199,7 +202,12 @@ export default class ShiftCheckInOutComponent extends Component {
    */
   @action
   signinShiftAction(slot) {
-    this._startShift(slot.position_id, slot.slot_id);
+    if (slot.is_within_start_time) {
+      this._startShift(slot.position_id, slot.slot_id);
+    } else {
+      this.showEarlyShiftConfirm = true;
+      this.earlySlot = slot;
+    }
   }
 
   /**
@@ -305,5 +313,18 @@ export default class ShiftCheckInOutComponent extends Component {
   @action
   cancelUpdatePosition() {
     this.showPositionDialog = false;
+    this.earlySlot = null;
+  }
+
+  @action
+  closeEarlyShiftAction() {
+    this.showEarlyShiftConfirm = false;
+  }
+
+  @action
+  confirmEarlyShiftAction() {
+    this.showEarlyShiftConfirm = false;
+    this._startShift(this.earlySlot.position_id, this.earlySlot.slot_id);
+    this.earlySlot = null;
   }
 }

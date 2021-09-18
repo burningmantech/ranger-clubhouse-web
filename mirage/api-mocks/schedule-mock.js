@@ -39,13 +39,11 @@ export default function scheduleMock(server) {
     });
 
     return {
-      schedules: this.serialize(schedules).schedules,
-      meta: {
-        positions,
-        credits_earned: 10.0,
-        schedule_summary: scheduleSummary,
-        signup_permission: signupPermission
-      }
+      slots: this.serialize(schedules).schedules,
+      positions,
+      credits_earned: 10.0,
+      schedule_summary: scheduleSummary,
+      signup_permission: signupPermission
     }
   });
 

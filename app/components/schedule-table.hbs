@@ -106,7 +106,7 @@
 <table class="table table-sm table-width-auto">
   <thead>
   <tr>
-    <th>Scheduled</th>
+    <th>&nbsp;</th>
     <th class="text-right">Total</th>
     <th>Pre-Event</th>
     <th>Event</th>
@@ -116,9 +116,9 @@
   </thead>
   <tbody>
   <tr>
-    <td>Hours</td>
+    <td>Scheduled Hours</td>
     <td class="text-right">
-      {{hour-minute-format @scheduleSummary.counted_duration}} (counted)<br>
+       {{hour-minute-format @scheduleSummary.counted_duration}} (counted)<br>
       {{hour-minute-format @scheduleSummary.total_duration}} (total)
     </td>
     <td class="text-right">{{hour-minute-format @scheduleSummary.pre_event_duration}}</td>
@@ -127,7 +127,7 @@
     <td class="text-right">{{hour-minute-format @scheduleSummary.other_duration}}</td>
   </tr>
   <tr>
-    <td>Credits</td>
+    <td>Scheduled Credits</td>
     <td class="text-right">{{credits-format @scheduleSummary.total_credits}}</td>
     <td class="text-right">{{credits-format @scheduleSummary.pre_event_credits}}</td>
     <td class="text-right">{{credits-format @scheduleSummary.event_credits}}</td>
