@@ -275,7 +275,7 @@ export default class TrainingSlotController extends ClubhouseController {
       this.addPersonForm = null;
       // Refresh the list
       this.ajax.request(`training-session/${this.slot.id}`).then((results) => {
-        const student = results.students.find((s) => s.id == person.id);
+        const student = results.students.find((s) => +s.id === +person.id);
         if (student) {
           this.students.push(student);
           this.students = _.orderBy(this.students, [(s) => s.callsign.toLowerCase()], ['asc']);

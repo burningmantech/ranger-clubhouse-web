@@ -4,6 +4,7 @@ import { tracked } from '@glimmer/tracking';
 
 export default class HqController extends ClubhouseController {
   @tracked showAlphaWarning = false;
+  @tracked showSignInWarning = false;
 
   get allowedCheckIn() {
     const status = this.person.status;
@@ -52,5 +53,10 @@ export default class HqController extends ClubhouseController {
   @action
   closeAlphaWarning() {
     this.showAlphaWarning = false;
+  }
+
+  @action
+  closeSignInWarning() {
+    this.showSignInWarning = false;
   }
 }

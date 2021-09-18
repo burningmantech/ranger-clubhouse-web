@@ -97,14 +97,15 @@ export default class ScheduleManageComponent extends Component {
 
     if (filterDay) {
       if (filterDay === 'upcoming') {
-        slots = slots.filterBy('has_started', false);
+        slots = slots.filter((slot) => !slot.has_started);
       } else if (filterDay !== 'all') {
-        slots = slots.filterBy('slotDay', filterDay);
+        slots = slots.filter((slot) => slot.slotDay === filterDay);
       }
     }
 
     if (this.filterActive !== 'all') {
-      slots = slots.filterBy('slot_active', this.filterActive === 'active');
+      const isActive = (this.filterActive === 'active');
+      slots = slots.filter((slot) => slot.slot_active == isActive);
     }
 
     return slots;
@@ -174,8 +175,8 @@ export default class ScheduleManageComponent extends Component {
     slots.sort((a, b) => a.slot_begins_time - b.slot_begins_time);
     // Clear out overlapping flags
     slots.forEach((slot) => {
-      slot.set('is_overlapping', false);
-      slot.set('is_training_overlap', false);
+      slot.is_overlapping = false;
+      slot.is_training_overlap = false;
     });
 
     let prevEndTime = 0, prevSlot = null;
@@ -191,15 +192,15 @@ export default class ScheduleManageComponent extends Component {
           // Might be dirt training and ART training.. which is okay. Common scenario is attending Green Dot
           // training in the morning and then Dirt Training in the afternoon. However, most Dirt Trainings are
           // scheduled to start in the morning even tho veterans only have to attend the afternoon portion.
-          slot.set('is_training_overlap', true);
-          prevSlot.set('is_training_overlap', true);
+          slot.is_training_overlap = true;
+          prevSlot.is_training_overlap =  true;
         } else {
-          slot.set('is_overlapping', true);
-          prevSlot.set('is_overlapping', true);
+          slot.is_overlapping = true;
+          prevSlot.is_overlapping = true;
         }
       } else {
-        slot.set('is_overlapping', false);
-        slot.set('is_training_overlap', false);
+        slot.is_overlapping = false
+        slot.is_training_overlap = false;
       }
       prevEndTime = slot.slot_ends_time;
       prevSlot = slot;

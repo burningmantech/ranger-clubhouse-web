@@ -28,34 +28,15 @@
     <div class="d-print-none">
       <h3 class="mt-2">{{if this.isCurrentYear "Available" "Past"}} {{@year}} Shifts</h3>
       {{#if this.availableSlots}}
-        {{#if this.inactiveSlots}}
-          <ChNotice @type="info" @title="Schedule listing has inactive shifts" @icon="hand-point-right">
-            <p>
-              Because you have the Edit Slots, Grant Positions, Trainer, VC, and/or Admin roles, the shift listing
-              will contain inactive shifts.
-            </p>
-            Sign ups are disabled until the shift has been activated through the Admin &gt; Edit Slots page.
-          </ChNotice>
-        {{/if}}
-
         <div class="row mb-1">
-          <div class="col-sm-5 col-md-auto mb-2">
+          <div class="col-sm-12 col-lg-auto mb-2">
             <ChForm::Select @name="filterDay"
                             @value={{this.filterDay}}
                             @options={{this.dayOptions}}
                             @onChange={{action (mut this.filterDay)}}
                             @controlClass="form-control"/>
           </div>
-          {{#if this.inactiveSlots}}
-            <div class="col-sm-5 col-md-auto mb-2">
-              <ChForm::Select @name="filterActive"
-                              @value={{this.filterActive}}
-                              @options={{this.activeOptions}}
-                              @onChange={{action (mut this.filterActive)}}
-                              @controlClass="form-control"/>
-            </div>
-          {{/if}}
-        </div>
+         </div>
 
         <p>Showing {{this.viewSlots.length}} of {{this.availableSlots.length}}</p>
         {{#each this.positions key="position_id" as |position|}}

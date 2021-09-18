@@ -56,8 +56,11 @@ export default class HqRoute extends ClubhouseRoute {
     controller.set('photo', null);
     controller.set('meals', model.eventInfo.meals);
     controller.set('userIsMentor', (onduty && onduty.subtype === 'mentor'));
+
     // Show a warning if the person is a PNV and the user is NOT a mentor.
     controller.set('showAlphaWarning', (person.isPNV && (!onduty || onduty.subtype !== 'mentor')));
+
+    controller.set('showSignInWarning',!onduty);
 
     // Allow the photo to lazy load.
     this.ajax.request(`person/${person.id}/photo`)

@@ -88,8 +88,9 @@
             <td class="align-middle">{{shift-format slot.slot_ends}}</td>
             <td class="align-middle">
               {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
-                <button type="button" class="btn btn-primary" {{action this.signinShiftAction slot}}
-                        disabled={{this.isSubmitting}}>Start Shift
+                <button type="button" class="btn {{if slot.is_within_start_time "btn-primary" "btn-warning"}}" {{action this.signinShiftAction slot}}
+                        disabled={{this.isSubmitting}}>
+                  {{if slot.is_within_start_time "Start Shift" "Start Shift Early"}}
                 </button>
               {{else}}
                 <div class="text-danger">
@@ -98,7 +99,8 @@
                   </div>
                 {{#if (has-role "admin" "timesheet-management")}}
                   <button type="button" class="btn btn-warning" {{action this.signinShiftAction slot}}
-                          disabled={{this.isSubmitting}}>Force Start Shift
+                          disabled={{this.isSubmitting}}>
+                    Force Start Shift
                   </button>
                 {{/if}}
               {{/if}}
@@ -107,6 +109,14 @@
               {{/if}}
             </td>
           </tr>
+            {{#unless slot.is_within_start_time}}
+              <tr>
+                <td colspan="5" class="text-danger">
+                  <b>WARNING: Most shifts may only be signed into within 15 minutes of the actual start time.
+                    The shift above can be signed into {{pluralize slot.can_start_in "minute"}} from now.</b>
+                </td>
+              </tr>
+            {{/unless}}
         {{/each}}
         </tbody>
       </table>
@@ -166,6 +176,31 @@
       <button type="button" class="btn btn-secondary" {{action this.cancelUpdatePosition}}
               disabled={{this.isSubmitting}}>
         Cancel
+      </button>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.showEarlyShiftConfirm}}
+  <ModalDialog @title="Confirm Early Shift Sign In" as |Modal|>
+    <Modal.body>
+      <p>
+        <b class="text-danger">WARNING: Most shifts may only be signed into within 15 minutes of the actual start time.</b>
+      </p>
+      <p>
+        The "{{this.earlySlot.position_title}}" shift starts at {{shift-format this.earlySlot.slot_begins}}
+        and can be <b>signed into {{pluralize this.earlySlot.can_start_in "minute"}} from now</b>.
+      </p>
+      <p>
+        Are you absolutely sure you want to sign in this person at this time? Check with the HQ Lead or Short if in doubt.
+      </p>
+    </Modal.body>
+    <Modal.footer @noAlign={{true}}>
+      <button type="button" class="btn btn-primary"{{action this.closeEarlyShiftAction}}>
+        Cancel
+      </button>
+      <button type="button" class="btn btn-warning" {{action this.confirmEarlyShiftAction}}>
+        Confirm Early Shift Start
       </button>
     </Modal.footer>
   </ModalDialog>
