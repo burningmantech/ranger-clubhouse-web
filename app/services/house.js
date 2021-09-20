@@ -294,11 +294,12 @@ export default class HouseService extends Service {
    *
    * @param {string} selector Element ID to scroll to
    * @param {boolean} scroll [scroll=true] Use smooth scrolling (true) or jump scroll (false)
+   * @param {boolean} scrollToTop Scroll the element to top regardless if element is in view.
    */
 
-  scrollToElement(selector, scroll = true) {
+  scrollToElement(selector, scroll = true, scrollToTop = false) {
     run('afterRender', () => {
-      const element = document.querySelector(selector);
+      const element = (selector instanceof Element) ? selector : document.querySelector(selector);
       if (!element) {
         return;
       }
@@ -307,6 +308,9 @@ export default class HouseService extends Service {
 
       if (bottom > window.innerHeight || top < 0) {
         element.scrollIntoView({behavior: scroll ? 'smooth' : 'auto'});
+      } else if (scrollToTop) {
+        // Element is already in view, scroll element mostly to the top.
+        window.scroll({ top: top + window.scrollY - 100, behavior: scroll ? 'smooth' : 'auto'});
       }
     });
   }

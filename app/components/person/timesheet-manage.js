@@ -5,7 +5,6 @@ import {validatePresence} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 import {tracked} from '@glimmer/tracking';
 import {inject as service} from '@ember/service';
-import {ONE_POSITIONS} from 'clubhouse/constants/positions';
 
 export default class PersonTimesheetManageComponent extends Component {
   @service ajax;
@@ -49,15 +48,10 @@ export default class PersonTimesheetManageComponent extends Component {
 
   @action
   editEntryAction(timesheet) {
-    const {positions, year} = this.args;
+    const {positions} = this.args;
 
-    if (+year === 2021) {
-      // TODO: Remove post ONE
-      this.positionOptions = positions.filter(p => ONE_POSITIONS.includes(+p.id)).map((p) => [p.title, p.id]);
-    } else {
-      // The positions the person can be part of
-      this.positionOptions = positions.map((p) => [p.title, p.id]);
-    }
+    // The positions the person can be part of
+    this.positionOptions = positions.map((p) => [p.title, p.id]);
 
     if (!positions.find((p) => p.id === timesheet.position_id)) {
       // Might be something like a mentee shift and the person no longer has the position grant, yet

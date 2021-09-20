@@ -19,23 +19,22 @@
                        @mode={{this.searchForm.mode}}
                        @appendSearchIcon={{true}}
                        as |item|>
-      {{#if (eq this.searchType "asset")}}
+      {{~#if (eq this.searchType "asset")~}}
         {{this.searchYear}} #{{item.barcode}} {{item.description}} {{item.type}}
-      {{else}}
-        {{#if (eq this.searchType "person-id")}}
+      {{~else~}}
+        {{~#if (eq this.searchType "person-id")~}}
           ID #{{item.id}} -
-        {{/if}}
-        <strong>{{item.callsign}}</strong>
-        &lt;{{item.first_name}} {{item.last_name}}, {{item.status}}&gt;
-        {{#if item.fka_match}}
-          <b>(FKA: {{item.fka_match}})</b>
-        {{/if}}
-        {{#if (eq item.email_match "full")}}
-          - email exact match
-        {{else if (eq item.email_match "partial")}}
-          - email partial match
-        {{/if}}
-      {{/if}}
+        {{~/if~}}
+        <b>{{item.callsign}}</b> &lt;{{item.first_name}} {{item.last_name}}, {{item.status}}&gt;
+        {{~#if item.fka_match~}}
+          <span class="ml-4 d-block">- FKA: {{item.fka_match}}</span>
+        {{~/if~}}
+        {{~#if (eq item.email_match "full")~}}
+          <span class="ml-4 d-block">- email exact match</span>
+        {{~else if (eq item.email_match "partial")~}}
+          <span class="ml-4 d-block">- email partial match</span>
+        {{~/if~}}
+      {{~/if~}}
     </AutocompleteInput>
     {{#if this.showSearchOptions}}
       <div class="bg-white p-2">

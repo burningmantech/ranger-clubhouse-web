@@ -24,7 +24,7 @@
 
 <ChForm @formId="contact" @formFor={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
   <div class="form-row">
-    <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @autofocus={{true}} @rows={{2}} @cols={{80}}/>
+    <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @autofocus={{true}} @rows={{4}} @cols={{80}}/>
   </div>
   {{#if this.session.isLMOPEnabled}}
     <p class="ml-2">

@@ -68,11 +68,10 @@
       <p>
         {{pluralize @imminentSlots.length "upcoming shift"}} found.
       </p>
-      <table class="table table-hover table-striped table-sm m-0">
+      <table class="table table-width-auto table-hover table-striped m-0">
         <thead>
         <tr>
-          <th>Position</th>
-          <th class="w-25">Description</th>
+          <th>Shift</th>
           <th>Starts</th>
           <th>Ends</th>
           <th>Action</th>
@@ -82,8 +81,7 @@
         <tbody>
         {{#each @imminentSlots as |slot|}}
           <tr>
-            <td class="align-middle">{{slot.position_title}}</td>
-            <td class="w-25 align-middle">{{slot.slot_description}}</td>
+            <td class="align-middle">{{slot.position_title}}{{#if slot.slot_description}} - {{slot.slot_description}}{{/if}}</td>
             <td class="align-middle">{{shift-format slot.slot_begins}}</td>
             <td class="align-middle">{{shift-format slot.slot_ends}}</td>
             <td class="align-middle">
@@ -112,8 +110,8 @@
             {{#unless slot.is_within_start_time}}
               <tr>
                 <td colspan="5" class="text-danger">
-                  <b>WARNING: Most shifts may only be signed into within 15 minutes of the actual start time.
-                    The shift above can be signed into {{pluralize slot.can_start_in "minute"}} from now.</b>
+                  <b>WARNING: Most shifts may only be signed into within 15 minutes of the actual start time.<br>
+                    Suggest to {{@person.callsign}} they come back in {{pluralize slot.can_start_in "minute"}} to start their shift.</b>
                 </td>
               </tr>
             {{/unless}}
@@ -152,7 +150,7 @@
 {{#if this.showPositionDialog}}
   <ModalDialog @title="Update shift position" as |Modal|>
     <Modal.body>
-      Select the new position the on duty timesheet
+      Select the new position the shift should be updated to:
       <div class="form-row">
         <div class="col-auto">
           <ChForm::Select @name="newPositionId" @controlClass="form-control" @value={{this.newPositionId}}

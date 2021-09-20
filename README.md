@@ -1,6 +1,10 @@
-# Clubhouse 2.0 - A Single Page Application (SPA) frontend
+# The Black Rock Rangers Clubhouse 2.0 - A Single Page Application (SPA) frontend
 
 [![Build Status](https://github.com/burningmantech/ranger-clubhouse-web/workflows/CI%2fCD/badge.svg)](https://github.com/burningmantech/ranger-clubhouse-web/actions)
+
+The Clubhouse is a volunteer coordination website to help manage the Burning Man Project's Black Rock Rangers department.
+
+Want to know more about the Rangers? [Visit the Rangers' website](https://rangers.burningman.org) for more information.
 
 This README outlines the details of collaborating on this Ember application.
 A short introduction of this app could easily go here.

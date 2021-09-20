@@ -8,10 +8,10 @@ import {config} from 'clubhouse/utils/config';
 export default class HqRoute extends ClubhouseRoute {
   roleRequired = [ADMIN, MANAGE];
 
-  beforeModel(transition) {
+  beforeModel() {
     if (!config('HQWindowInterfaceEnabled')) {
       this.toast.error('The HQ Window Interface is only enabled during a normal event period.');
-      transition.abort();
+      this.router.transitionTo('me.homepage');
       return false;
     }
 
@@ -43,7 +43,8 @@ export default class HqRoute extends ClubhouseRoute {
       assets: this.store.query('asset-person', {person_id, year}),
 
       attachments: this.store.findAll('asset-attachment', {reload: true}),
-
+      timesheetSummary: this.ajax.request(`person/${person_id}/timesheet-summary`, {data: {year}})
+        .then((result) => result.summary),
     });
   }
 
@@ -54,13 +55,11 @@ export default class HqRoute extends ClubhouseRoute {
     person.set('unread_message_count', model.unread_message_count);
     controller.setProperties(model);
     controller.set('photo', null);
-    controller.set('meals', model.eventInfo.meals);
     controller.set('userIsMentor', (onduty && onduty.subtype === 'mentor'));
 
     // Show a warning if the person is a PNV and the user is NOT a mentor.
     controller.set('showAlphaWarning', (person.isPNV && (!onduty || onduty.subtype !== 'mentor')));
-
-    controller.set('showSignInWarning',!onduty);
+    controller.set('showSignInWarning', !onduty);
 
     // Allow the photo to lazy load.
     this.ajax.request(`person/${person.id}/photo`)
@@ -68,6 +67,15 @@ export default class HqRoute extends ClubhouseRoute {
       .catch(() => {
         controller.set('photo', {status: 'error', message: 'There was a server error.'});
       })
+  }
+
+  @action
+  async updateShiftSummaries() {
+    const {controller} = this;
+    const personId = controller.person.id;
+    this.ajax.request(`person/${personId}/timesheet-summary`, {data: {year: this.house.currentYear()}})
+      .then((result) => this.controller.set('timesheetSummary', result.summary))
+      .catch((response) => this.house.handleErrorResponse(response))
   }
 
   @action

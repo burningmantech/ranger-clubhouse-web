@@ -94,7 +94,7 @@ export default class ReportsScheduleByPositionController extends ClubhouseContro
   @action
   scrollToPosition(id, event) {
     event.preventDefault();
-    this.house.scrollToElement(`#position-${id}`, true);
+    this.house.scrollToElement(`#position-${id}`, true, true);
   }
 
   @action

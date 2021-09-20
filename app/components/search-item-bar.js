@@ -24,6 +24,8 @@ const MODE_ROUTES = {
   'timesheet': 'person.timesheet'
 };
 
+const SEARCH_MODE_KEY = 'search-mode';
+
 class SearchForm {
   @tracked query = '';
   @tracked name = true;
@@ -61,9 +63,20 @@ export default class SearchItemBarComponent extends Component {
     super(...arguments);
 
     const onduty = this.session.user.onduty_position;
-    this.searchForm = new SearchForm({
-      mode: (onduty && (onduty.subtype === 'hq' || onduty.subtype === 'mentor')) ? 'hq' : 'account',
-    });
+
+    const savedMode = this.house.getKey(SEARCH_MODE_KEY);
+    const options = this.modeOptions;
+
+    let mode = '';
+    if (options.find((opt) => opt.value === savedMode)) {
+      mode = savedMode;
+    } else {
+      mode = (onduty && (onduty.subtype === 'hq' || onduty.subtype === 'mentor')) ? 'hq' : 'account';
+    }
+
+    this.house.setKey(SEARCH_MODE_KEY, mode);
+
+    this.searchForm = new SearchForm({mode});
 
     const searchPrefs = this.house.getKey('person-search-prefs');
     if (searchPrefs) {
@@ -75,6 +88,7 @@ export default class SearchItemBarComponent extends Component {
     });
 
     this._buildPlaceholder();
+
    }
 
   /**
@@ -134,6 +148,7 @@ export default class SearchItemBarComponent extends Component {
     this._buildPlaceholder();
 
     this.showSearchOptions = (this.searchForm.mode !== 'hq');
+    this.house.setKey(SEARCH_MODE_KEY, mode);
 
     if (!route.startsWith('person.') && !route.startsWith('hq.')) {
       return;

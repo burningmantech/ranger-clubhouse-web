@@ -25,12 +25,11 @@
            autocomplete="off"
            spellcheck="false"
     />
-
-    {{#if @appendSearchIcon}}
+    {{~#if @appendSearchIcon~}}
       <div class="input-group-append">
         <span class="input-group-text">{{fa-icon "search"}}</span>
       </div>
-    {{/if}}
+    {{~/if~}}
   </div>
   {{#if (and this.isFocused (or this.isSearching this.noResultsFound this.options))}}
     <div class="autocomplete-results-box mt-1 border rounded"
@@ -38,12 +37,12 @@
       {{will-destroy this.resultsBoxDestroy}}
     >
       <div class="autocomplete-list">
-        {{#if this.noResultsFound}}
+        {{~#if this.noResultsFound~}}
           <div>No results found</div>
-        {{else if this.isSearching}}
+        {{~else if this.isSearching~}}
           <div class="text-muted">Searching {{fa-icon "spinner" spin=true}}</div>
-        {{/if}}
-        {{#each this.options as |opt idx|}}
+        {{~/if~}}
+        {{~#each this.options as |opt idx|~}}
           <div class="{{if (eq idx this.selectionIdx) "autocomplete-option-selected"}}"
                data-result-id={{idx}}
                role="link"
@@ -51,9 +50,9 @@
             {{!template-lint-disable no-down-event-binding}}
             {{on "mousedown" (fn this.clickSelection opt)}}
           >
-            {{yield opt}}
+            {{~yield opt~}}
           </div>
-        {{else}}
+        {{~else~}}
           {{#if (and (not this.noResultsFound) (not this.isSearching))}}
             <div class="text-muted">Start typing to search</div>
           {{/if}}

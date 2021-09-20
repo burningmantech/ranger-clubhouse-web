@@ -5,6 +5,15 @@ import { tracked } from '@glimmer/tracking';
 export default class HqController extends ClubhouseController {
   @tracked showAlphaWarning = false;
   @tracked showSignInWarning = false;
+  @tracked userIsMentor = false;
+  @tracked person;
+  @tracked photo;
+  @tracked timesheetSummary;
+  @tracked expected;
+  @tracked showHoursCreditsBreakdown = false;
+  @tracked showAppreciationsProgress = false;
+  @tracked isLoadingBreakdown = false;
+
 
   get allowedCheckIn() {
     const status = this.person.status;
@@ -22,33 +31,6 @@ export default class HqController extends ClubhouseController {
     return false;
   }
 
-  get mealInfo() {
-    switch (this.eventInfo.meals) {
-      case 'all':
-        return 'NO POG - has Eat It All BMID';
-      case 'pre':
-        return "NO POG PRE-EVENT";
-      case 'post':
-        return 'NO POG POST-EVENT';
-      case 'event':
-        return 'NO POG PRE OR POST-EVENT';
-      case 'pre+event':
-        return 'NO POG PRE & EVENT WEEK';
-      case 'event+post':
-        return 'NO POG EVENT & POST EVENT';
-      case 'pre+post':
-        return 'NO POG DURING EVENT';
-
-      case 'pogs':
-        return 'Every shift worked';
-      default:
-        if (!this.eventInfo.meals) {
-          return 'Every shift worked';
-        }
-        return `Unknown ${this.eventInfo.meals}`;
-    }
-  }
-
 
   @action
   closeAlphaWarning() {
@@ -58,5 +40,64 @@ export default class HqController extends ClubhouseController {
   @action
   closeSignInWarning() {
     this.showSignInWarning = false;
+  }
+
+  /**
+   * How many expected credits the person might earn. (earned credits + scheduled credits)
+   *
+   * @returns {number}
+   */
+
+  get creditsExpected() {
+    return this.timesheetSummary.total_credits + this.expected.credits;
+  }
+
+  /**
+   * How many seconds counted towards appreciations the person might work. (worked seconds + scheduled seconds)
+   *
+   * @returns {number}
+   */
+
+  get countedDurationExpected() {
+    return this.timesheetSummary.counted_duration + this.expected.duration;
+  }
+
+  /**
+   * How many total seconds (counted towards appreciation plus everything else) the person might
+   * work.
+   * @returns {number}
+   */
+
+  get totalDurationExpected() {
+    return this.timesheetSummary.total_duration + this.expected.duration;
+  }
+
+  /**
+   * Toggle the hours & credits breakdown dialog
+   */
+
+  @action
+  toggleHoursCreditBreakdown() {
+    if (!this.showHoursCreditsBreakdown) {
+      this.isLoadingBreakdown = true;
+      this.ajax.request(`person/${this.person.id}/schedule/expected`)
+        .then((result) => {
+          this.expected = result;
+          this.showHoursCreditsBreakdown = true;
+        })
+        .catch((response) => this.house.handleErrorResponse(response))
+        .finally(() => this.isLoadingBreakdown = false);
+    } else {
+      this.showHoursCreditsBreakdown = false;
+    }
+  }
+
+  /**
+   * Toggle the hours & credits breakdown dialog
+   */
+
+  @action
+  toggleAppreciationsProgress() {
+    this.showAppreciationsProgress = !this.showAppreciationsProgress;
   }
 }

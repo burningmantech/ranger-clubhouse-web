@@ -33,7 +33,7 @@ export default class ReportsScheduleByCallsignController extends ClubhouseContro
   @action
   scrollToCallsign(id, event) {
     event.preventDefault();
-    this.house.scrollToElement(`#person-${id}`, false);
+    this.house.scrollToElement(`#person-${id}`, false, true);
   }
 
   get letterOptions() {

@@ -105,11 +105,34 @@ export default class ChFormComponent extends Component {
       return;
     }
 
-    const field = `${this.args.formId}-${errors[0].key}`;
-    const label = `label[for="${field}"]`;
+    let scrollToElement = null, top = 0;
+    const {formId} = this.args;
 
-    // Scroll the label into view if it exists, otherwise the form element
-    this.house.scrollToElement(document.querySelector(label) ? label : `[name="${field}"]`);
+    // Loop thru the errors and find the field most on top of the page
+    errors.forEach((error) => {
+      const fieldId = `#${formId}-${error.key}`;
+      const labelId = `label[for="${formId}-${error.key}"]`;
+      // Favor the label over the field itself.
+      const element = document.querySelector(labelId) ?? document.querySelector(fieldId);
+      if (!element) {
+        return;
+      }
+
+      if (!scrollToElement) {
+        scrollToElement = element;
+        top = element.getBoundingClientRect().top;
+      } else {
+        const fieldTop = element.getBoundingClientRect().top;
+        if (fieldTop < top) {
+          scrollToElement = element;
+          top = fieldTop;
+        }
+      }
+    });
+
+    if (scrollToElement) {
+      this.house.scrollToElement(scrollToElement);
+    }
   }
 
   /**
@@ -142,7 +165,7 @@ export default class ChFormComponent extends Component {
       model.validate().then(() => {
         const isValid = this._isValid();
         if (!isValid) {
-          this._scrollToError();
+          schedule('afterRender', () => this._scrollToError());
         }
         if (submitAction) {
           submitAction(model, isValid, formFor);
