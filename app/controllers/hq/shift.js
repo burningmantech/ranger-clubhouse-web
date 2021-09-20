@@ -8,15 +8,12 @@ import {tracked} from '@glimmer/tracking';
 export default class HqShiftController extends ClubhouseController {
   @tracked showCorrectionForm = false;
   @tracked showSiteLeaveDialog = false;
-  @tracked showHoursCreditsBreakdown = false;
-  @tracked showAppreciationsProgress = false;
 
   @tracked entry = null;
   @tracked isMarkingOffSite = false;
 
   @tracked timesheets;
   @tracked unverifiedTimesheets = [];
-  @tracked timesheetSummary;
   @tracked onDutyEntry;
 
   @tracked assets;
@@ -132,26 +129,17 @@ export default class HqShiftController extends ClubhouseController {
   /**
    * Called when the worker has ended a shift.
    * - Update the unverified timesheet list.
-   * - Reload timesheet summary info
-   * - Reload the expected hours worked.
-   */
+   * - Tell top level hq route to update the schedule summaries for the sidebar.
+    */
 
   @action
   endShiftNotify() {
-    const personId = this.person.id;
-
     this.timesheets.update().then(() => {
       this.unverifiedTimesheets = this.timesheets.filter((t) => t.isUnverified);
       this._findOnDuty()
     }).catch((response) => this.house.handleErrorResponse(response));
 
-    this.ajax.request(`person/${personId}/timesheet-summary`, {data: {year: this.house.currentYear()}})
-      .then((result) => this.timesheetSummary = result.summary)
-      .catch((response) => this.house.handleErrorResponse(response));
-
-    this.ajax.request(`person/${personId}/schedule/expected`)
-      .then((result) => this.expected = result)
-      .catch((response) => this.house.handleErrorResponse(response));
+    this.send('updateShiftSummaries');
   }
 
   /**
@@ -330,54 +318,6 @@ export default class HqShiftController extends ClubhouseController {
   @action
   markOnSite() {
     this._updateOnSite(true);
-  }
-
-  /**
-   * How many expected credits the person might earn. (earned credits + scheduled credits)
-   *
-   * @returns {number}
-   */
-
-  get creditsExpected() {
-    return this.timesheetSummary.total_credits + this.expected.credits;
-  }
-
-  /**
-   * How many seconds counted towards appreciations the person might work. (worked seconds + scheduled seconds)
-   *
-   * @returns {number}
-   */
-
-  get countedDurationExpected() {
-    return this.timesheetSummary.counted_duration + this.expected.duration;
-  }
-
-  /**
-   * How many total seconds (counted towards appreciation plus everything else) the person might
-   * work.
-   * @returns {number}
-   */
-
-  get totalDurationExpected() {
-    return this.timesheetSummary.total_duration + this.expected.duration;
-  }
-
-  /**
-   * Toggle the hours & credits breakdown dialog
-   */
-
-  @action
-  toggleHoursCreditBreakdown() {
-    this.showHoursCreditsBreakdown = !this.showHoursCreditsBreakdown;
-  }
-
-  /**
-   * Toggle the hours & credits breakdown dialog
-   */
-
-  @action
-  toggleAppreciationsProgress() {
-    this.showAppreciationsProgress = !this.showAppreciationsProgress;
   }
 
   /**

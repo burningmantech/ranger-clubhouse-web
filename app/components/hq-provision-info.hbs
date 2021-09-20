@@ -1,0 +1,28 @@
+<dl class="row">
+  <dt class="col-auto">Meals</dt>
+  <dd class="col-auto">
+      {{#if this.hasEatItAll}}
+        <b class="text-danger">{{fa-icon "ban"}} NO MEAL POGS</b><br>
+        Has Eat-It-All BMID
+        {{else if this.onlyPogs}}
+        <b class="text-success">{{fa-icon "check"}} Pogs for every shift</b>
+      {{else}}
+        <span class="text-danger">{{fa-icon "ban"}} NO POGS FOR {{this.mealPogInfo.exclude}}</span><br>
+        <b class="text-success">{{fa-icon "check"}} Pogs for {{this.mealPogInfo.issue}} ONLY</b>
+      {{/if}}
+      {{#unless this.hasEatItAll}}
+        <br>
+        Full Pog: 6 or more hours<br>
+        Half Pog: less than 6 hours
+      {{/unless}}
+    </dd>
+  <dt class="col-auto">Showers</dt>
+    <dd class="col-auto">
+      {{#if @eventInfo.showers}}
+        <b class="text-danger">{{fa-icon "ban"}} NO SHOWER POGS</b><br>
+        Has Wet Spot Access BMID
+      {{else}}
+        Every 40 hours worked
+      {{/if}}
+    </dd>
+</dl>

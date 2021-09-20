@@ -62,7 +62,7 @@
       {{outlet}}
     </div>
 
-    <div class="mt-4 ml-auto d-print-none pl-2">
+    <div class=" ml-auto d-print-none pl-4">
       <div class="mugshot">
         {{#if this.photo}}
           {{#if this.photo.photo_url}}
@@ -87,59 +87,56 @@
         {{/if}}
       </div>
       <dl>
-        <dt>Meal Pogs</dt>
+        <dt>Earned Credits</dt>
+        <dd>{{credits-format this.timesheetSummary.total_credits}}</dd>
+
+        <dt>Worked Hours</dt>
         <dd>
-          {{#if (eq this.meals "all")}}
-            <b class="text-danger">{{fa-icon "ban"}} NO POGS</b><br>
-            Has Eat-It-All BMID
-          {{else if (eq this.meals "pre")}}
-            <b class="text-danger">{{fa-icon "ban"}} NO POGS FOR PRE-EVENT</b><br>
-            Pogs for Event &amp; Post-Event
-          {{else if (eq this.meals "post")}}
-            <b class="text-danger">{{fa-icon "ban"}} NO POGS FOR POST-EVENT</b><br>
-            Pogs for Pre-Event &amp; Event Week
-          {{else if (eq this.meals "event")}}
-            <b class="text-danger">{{fa-icon "ban"}} NO POGS FOR EVENT WEEK</b><br>
-            Pogs for Pre- &amp; Post-Event
-          {{else if (eq this.meals "pre+event")}}
-            <b class="text-danger">{{fa-icon "ban"}} NO POGS FOR PRE- &amp; EVENT WEEK</b><br>
-            Pogs for Post-Event
-          {{else if (eq this.meals "event+post")}}
-            <b class="text-danger">{{fa-icon "ban"}} NO POGS FOR EVENT WEEK & POST-EVENT</b><br>
-            Pogs for Pre-Event
-          {{else if (eq this.meals "pre+post")}}
-            <b class="text-danger">{{fa-icon "ban"}} NO POGS FOR PRE- &AMP; POST-EVENT</b><br>
-            Pogs for Event Week
-          {{else}}
-            <span class="text-success">{{fa-icon "check"}} Pogs for every shift</span>
-          {{/if}}
-          {{#if (not-eq this.meals "all")}}
-            <br>
-            Full Pog: 6 or more hours<br>
-            &frac12; Pog: less than 6 hours
-          {{/if}}
+          {{hour-minute-format this.timesheetSummary.counted_duration}}
         </dd>
-        <dt>Shower Pogs</dt>
         <dd>
-          {{#if this.eventInfo.showers}}
-            <div class="text-danger">{{fa-icon "ban"}} NO POG</div>
-            Has Wet Spot BMID
-          {{else}}
-            Every 40 hrs
-          {{/if}}
-        </dd>
-        <dt>Motorpool Policy</dt>
-        <dd>
-          {{#if this.personEvent.signed_motorpool_agreement}}
-            {{fa-icon "check"}} Signed
-          {{else}}
-            <span class="text-danger">NOT SIGNED</span>
-          {{/if}}
+          <button type="button" class="btn btn-secondary btn-sm btn-block mb-2"
+            {{action this.toggleAppreciationsProgress}}>
+            Ticket &amp; Provisions Progress
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm btn-block" {{action this.toggleHoursCreditBreakdown}}
+                  disabled={{this.isLoadingBreakdown}}>
+            {{#if this.isLoadingBreakdown}}
+              {{fa-icon "spinner" spin=true}}
+            {{/if}}
+            Credits &amp; Hours Breakdown
+          </button>
         </dd>
       </dl>
     </div>
   </div>
 </main>
+
+
+{{#if this.showAppreciationsProgress}}
+  <ModalDialog @title="Appreciations Progress"  as |Modal|>
+    <Modal.body>
+      <AppreciationProgress @timesheetSummary={{this.timesheetSummary}} @isShinyPenny={{this.isShinyPenny}} />
+    </Modal.body>
+    <Modal.footer>
+      <Modal.button @label="Close" @action={{this.toggleAppreciationsProgress}} @type="primary"/>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.showHoursCreditsBreakdown}}
+  <ModalDialog @title="Hours And Credits Breakdown" as |Modal|>
+    <Modal.body>
+      <HoursCreditsBreakdown @timesheetSummary={{this.timesheetSummary}}
+                             @countedDurationExpected={{this.countedDurationExpected}}
+                             @creditsExpected={{this.creditsExpected}} />
+    </Modal.body>
+    <Modal.footer>
+      <Modal.button @label="Close" @action={{this.toggleHoursCreditBreakdown}} @type="primary"/>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
 
 {{#if this.showSignInWarning}}
   <ModalDialog @title="Sign Into A Shift" as |Modal|>

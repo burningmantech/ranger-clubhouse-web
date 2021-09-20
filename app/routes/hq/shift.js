@@ -7,13 +7,9 @@ export default class HqShiftRoute extends ClubhouseRoute {
     const year = this.house.currentYear();
 
     return RSVP.hash({
-      imminentSlots: this.ajax.request(`person/${person_id}/schedule/imminent`)
-        .then((result) => result.slots),
+      imminentSlots: this.ajax.request(`person/${person_id}/schedule/imminent`).then((result) => result.slots),
       scheduleRecommendations: this.ajax.request(`person/${person_id}/schedule/recommendations`),
-      timesheetSummary: this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }})
-        .then((result) => result.summary),
       timesheets: this.store.query('timesheet', { person_id, year }),
-      expected: this.ajax.request(`person/${person_id}/schedule/expected`),
     });
   }
 

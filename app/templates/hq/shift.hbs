@@ -9,7 +9,7 @@
     <p>
       Follow the procedures on the Site Check In page before signing the person into a shift.
     </p>
-    <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-danger">Site Check In</LinkTo>
+    <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-danger">Begin Site Check In</LinkTo>
   </ChNotice>
 {{/unless}}
 
@@ -27,25 +27,8 @@
   </ChNotice>
 {{/if}}
 
-<div class="my-2">
-  <div class="d-inline-block align-middle">
-    <b>Earned Credits:</b> {{credits-format this.timesheetSummary.total_credits}}
-    <b>Worked Hours:</b> {{hour-minute-format this.timesheetSummary.counted_duration}}
-  </div>
-  <div class="ml-2 d-inline-block">
-    <button type="button" class="btn btn-sm btn-secondary align-middle" {{action this.toggleAppreciationsProgress}}>
-      Ticket &amp; Provisions Progress
-    </button>
-    <button type="button" class="btn btn-sm btn-secondary ml-2 align-middle" {{action this.toggleHoursCreditBreakdown}}>
-      Credits &amp; Hours Breakdown
-    </button>
-  </div>
-</div>
-
-<hr>
-
 <h3>
-  Timesheet Verification -
+  Timesheet Entry Verification -
   {{#if this.hasUnverifiedTimesheet}}
     <span class="text-danger">{{pluralize this.unverifiedTimesheets.length "entry" }}</span>
   {{else}}
@@ -124,8 +107,9 @@
   No timesheet entries need review at this time.
 {{/if}}
 
-<hr class="my-3">
-<h3>Shift Management
+<hr class="my-2">
+<h3 class="mb-2">
+  Shift Check In/Out
   <HelpPopover @slug="hq-shift-management"/>
 </h3>
 <ShiftCheckInOut @positions={{this.positions}}
@@ -140,7 +124,9 @@
                  @year={{this.session.currentYear}}
 />
 
+<hr>
 
+<HqProvisionInfo @eventInfo={{this.eventInfo}} />
 {{#if this.showCorrectionForm}}
   <ModalDialog @title="Timesheet Entry Correction" as |Modal|>
     <ChForm @formId="correction" @formFor={{this.entry}}
@@ -185,9 +171,18 @@
   </ModalDialog>
 {{/if}}
 <hr>
-<h3 class="mb-2">Radio &amp; Assets
+<h3 class="mb-4">
+  Radios, Sandman Gear, &amp; Other Assets
   <HelpPopover @slug="hq-assets"/>
 </h3>
+{{#unless this.personEvent.asset_authorized}}
+  <h4 class="text-danger">{{fa-icon "exclamation-triangle"}} Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE RADIOS</h4>
+  <p>
+    Direct {{this.person.callsign}} to the kiosk shack so they can login into the Clubhouse, review and sign
+    the agreement.
+  </p>
+
+{{/unless}}
 {{#unless this.eventInfo.radio_info_available}}
   <ChNotice @type="warning" @icon="exclamation">
     Event radio information has not been posted yet. Radio eligibility cannot be determined.
@@ -212,14 +207,10 @@
 </div>
 
 {{#if this.personEvent.asset_authorized}}
-  <AssetCheckoutForm @person={{this.person}} @assets={{this.assets}} @attachments={{this.attachments}}
+  <AssetCheckoutForm @person={{this.person}}
+                     @assets={{this.assets}}
+                     @attachments={{this.attachments}}
                      @eventInfo={{this.eventInfo}} />
-{{else}}
-  <h3 class="text-danger">Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE RADIOS</h3>
-  <p>
-    Direct {{this.person.callsign}} to the kiosk shack so they can login into the Clubhouse, review and sign
-    the agreement.
-  </p>
 {{/if}}
 
 <table class="table table-striped table-width-auto">
@@ -277,15 +268,15 @@
   {{/if}}
 </div>
 
+
 {{#if (or this.person.on_site this.isMarkingOffSite)}}
-  <div class="mt-4">
-    <button type="button" class="btn btn-secondary" {{action this.markOffSite}} disabled={{this.isMarkingOffSite}}>
-      Mark As Off Site
-    </button>
-    {{#if this.isMarkingOffSite}}
-      <SpinIcon/>
-    {{/if}}
-  </div>
+  <hr>
+  <button type="button" class="btn btn-secondary" {{action this.markOffSite}} disabled={{this.isMarkingOffSite}}>
+    Mark As Off Site
+  </button>
+  {{#if this.isMarkingOffSite}}
+    <SpinIcon/>
+  {{/if}}
 {{/if}}
 
 {{#if this.showSiteLeaveDialog}}
@@ -322,30 +313,6 @@
     <Modal.footer>
       <Modal.button @label="Mark As Off Site" @action={{this.forceMarkOffSite}} @type="secondary"/>
       <Modal.button @label="Deal With Items" @action={{this.cancelSiteLeaveDialog}} @type="primary"/>
-    </Modal.footer>
-  </ModalDialog>
-{{/if}}
-
-{{#if this.showAppreciationsProgress}}
-  <ModalDialog @title="Appreciations Progress" as |Modal|>
-    <Modal.body>
-      <AppreciationProgress @timesheetSummary={{this.timesheetSummary}} @isShinyPenny={{this.isShinyPenny}} />
-    </Modal.body>
-    <Modal.footer>
-      <Modal.button @label="Close" @action={{this.toggleAppreciationsProgress}} @type="primary"/>
-    </Modal.footer>
-  </ModalDialog>
-{{/if}}
-
-{{#if this.showHoursCreditsBreakdown}}
-  <ModalDialog @title="Hours And Credits Breakdown" as |Modal|>
-    <Modal.body>
-      <HoursCreditsBreakdown @timesheetSummary={{this.timesheetSummary}}
-                             @countedDurationExpected={{this.countedDurationExpected}}
-                             @creditsExpected={{this.creditsExpected}} />
-    </Modal.body>
-    <Modal.footer>
-      <Modal.button @label="Close" @action={{this.toggleHoursCreditBreakdown}} @type="primary"/>
     </Modal.footer>
   </ModalDialog>
 {{/if}}

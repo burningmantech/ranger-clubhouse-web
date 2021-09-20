@@ -2,10 +2,9 @@ import Component from '@glimmer/component';
 import {set} from '@ember/object';
 import {action} from '@ember/object';
 import {inject as service} from '@ember/service';
-import * as Position from 'clubhouse/constants/positions';
+import {DIRT, DIRT_SHINY_PENNY, TRAINING} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 import {NON_RANGER} from 'clubhouse/constants/person_status';
-
 
 export default class ShiftCheckInOutComponent extends Component {
   @service ajax;
@@ -30,20 +29,14 @@ export default class ShiftCheckInOutComponent extends Component {
   constructor() {
     super(...arguments);
 
-    const isONEYear = (+this.args.year === 2021);
-
-    if (isONEYear) {
-      // TODO: REMOVE After ONE spins down
-      this.activePositions = this.args.positions.filter(position => (position.active && Position.ONE_POSITIONS.includes(+position.id)));
-    } else {
-      this.activePositions = this.args.positions.filter(position => position.active);
-    }
+    this.activePositions = this.args.positions.filter(position => position.active);
 
     // Mark imminent slots as trained or not.
     const slots = this.args.imminentSlots;
     if (slots) {
       slots.forEach((slot) => {
-        const position = this.activePositions.find((p) => slot.position_id == p.id);
+        const slotPid = +slot.position_id;
+        const position = this.activePositions.find((p) => slotPid === +p.id);
         if (position) {
           if (position.is_untrained) {
             set(slot, 'is_untrained', true);
@@ -78,14 +71,14 @@ export default class ShiftCheckInOutComponent extends Component {
     // hack for operator convenience - Dirt is the most common
     // shift, so put that at top.
 
-    const dirt = signins.find((p) => p.id === Position.DIRT);
+    const dirt = signins.find((p) => p.id === DIRT);
     if (dirt) {
       signins.removeObject(dirt);
       signins.unshift(dirt);
     }
 
     // .. and Shiny Penny shift should also be on top
-    const sp = signins.find((p) => p.id === Position.DIRT_SHINY_PENNY);
+    const sp = signins.find((p) => p.id === DIRT_SHINY_PENNY);
     if (sp) {
       signins.removeObject(sp);
       signins.unshift(sp);
@@ -97,10 +90,7 @@ export default class ShiftCheckInOutComponent extends Component {
     this.signinPositionId = this.signinPositions.length ? this.signinPositions.firstObject.id : null;
 
     // Has the person gone through dirt training?
-    if (isONEYear) {
-      // TODO: Remove post ONE
-      this.isPersonDirtTrained = true;
-    } else if (this.args.person.status === NON_RANGER) {
+    if (this.args.person.status === NON_RANGER) {
       this.isPersonDirtTrained = true;
     } else {
       const {eventInfo} = this.args;
@@ -108,7 +98,7 @@ export default class ShiftCheckInOutComponent extends Component {
         this.otOnly = true;
         this.isPersonDirtTrained = eventInfo.online_training_passed;
       } else {
-        this.isPersonDirtTrained = !!eventInfo.trainings.find((training) => (training.position_id === Position.TRAINING && training.status === 'pass'));
+        this.isPersonDirtTrained = !!eventInfo.trainings.find((training) => (training.position_id === TRAINING && training.status === 'pass'));
       }
     }
 
@@ -296,12 +286,13 @@ export default class ShiftCheckInOutComponent extends Component {
           break;
 
         case 'not-trained':
-          this.changePositionError = 'Person has not been trained for the position..';
+          this.changePositionError = 'Person has not been trained for the position.';
           break;
 
         case 'not-qualified':
-          this.changePositionError = `Person has not meet one or more qualifiers to work the position trained for the position. Reason: ${result.unqualified_message}`;
+          this.changePositionError = `Person has not meet all the requirements in order to work the position. Reason: ${result.unqualified_message}`;
           break;
+
         default:
           this.changePositionError = `Cannot update the timesheet - unknown status [${result.status}]`;
           break;

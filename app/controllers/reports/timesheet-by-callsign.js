@@ -6,7 +6,7 @@ export default class ReportsTimesheetByCallsignController extends ClubhouseContr
 
   @action
   scrollToCallsign(id) {
-    this.house.scrollToElement(`#person-${id}`, false);
+    this.house.scrollToElement(`#person-${id}`, false, true);
   }
 
   get letterOptions() {
