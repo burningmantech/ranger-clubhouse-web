@@ -77,6 +77,7 @@ Router.map(function () {
     this.route('people-by-status-change');
     this.route('positions');
     this.route('radio-eligibility');
+    this.route('ranger-retention');
     this.route('rbs', function () {
       this.route('broadcast');
       this.route('broadcast-log');
