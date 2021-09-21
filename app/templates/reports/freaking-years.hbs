@@ -35,7 +35,7 @@ Showing {{this.totalPeople}} people over {{this.freaking.length}} years.
           </tr>
           </thead>
           <tbody>
-          {{#each freaks.people as |person| }}
+          {{#each freaks.people key="id" as |person| }}
             <tr>
               <td class="w-20">
                 <PersonLink @person={{person}} />
