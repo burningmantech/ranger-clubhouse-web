@@ -11,7 +11,7 @@ export default class ReportsShiftCoverageRoute extends ClubhouseRoute {
 
   model(params) {
     const year = requestYear(params);
-    const type = params.type || ((this.house.currentYear() === 2021) ? 'one' : 'command');
+    const type = params.type || 'command';
 
     this.year = year;
     this.type = type;
