@@ -28,7 +28,7 @@ export default class ChFormFieldComponent extends Component {
         break;
     }
 
-    this.wrapField = (type !== 'radioGroup' && type !== 'checkboxGroup' && type != 'search');
+    this.wrapField = !!(type !== 'radioGroup' && type !== 'checkboxGroup' && type !== 'search');
   }
 
   get wrapClass() {

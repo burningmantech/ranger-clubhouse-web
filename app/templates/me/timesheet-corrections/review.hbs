@@ -1,23 +1,35 @@
-<h3>Timesheet Entry Review</h3>
-
 {{#if this.timesheets}}
-  <p>
-    Review your {{this.timesheetInfo.correction_year}} timesheet entries below and mark each
-    as correct or incorrect. When you mark an entry as incorrect, a dialog box will appear
-    where you may give an explanation on how the entry should be corrected.
-  </p>
-  <p>
-    <b>Is the timesheet missing a shift that you worked?</b>
-    Use the
-    <LinkTo @route="me.timesheet-corrections.missing">Missing Entries Requests</LinkTo>
-    page to ask for a missing shift to be recorded.
-  </p>
+  <UiSection>
+    <:title>Timesheet Entry Review</:title>
+    <:body>
+      <p>
+        Review your {{this.timesheetInfo.correction_year}} timesheet entries below and mark each
+        as correct or incorrect. When you mark an entry as incorrect, a dialog box will appear
+        where you may give an explanation on how the entry should be corrected.
+      </p>
+        <b>Is the timesheet missing a shift that you worked?</b>
+        Use the
+        <LinkTo @route="me.timesheet-corrections.missing">Missing Entries Requests</LinkTo>
+        page to ask for a missing shift to be recorded.
+    </:body>
+  </UiSection>
   <Me::TimesheetReviewCommon @timesheets={{this.timesheets}} @timesheetSummary={{this.timesheetSummary}}
                              @timesheetInfo={{this.timesheetInfo}} @person={{this.person}} />
+
 {{else}}
-  <p class="lead mt-3 text-danger">
-    No timesheet entries were found for {{this.timesheetInfo.correction_year}}.
-  </p>
+  <UiSection>
+    <:title>No Timesheet Entries found</:title>
+    <:body>
+      <p>
+        Did you happen work the {{this.timesheetInfo.correction_year}}?
+      </p>
+      <p>
+        Use the
+        <LinkTo @route="me.timesheet-corrections.missing">Missing Entries Requests</LinkTo>
+        page to ask for a missing shift to be recorded.
+      </p>
+    </:body>
+  </UiSection>
 {{/if}}
 
 <div class="mt-4">
@@ -29,7 +41,7 @@
     </div>
     <div class="col-6 text-right">
       <LinkTo @route="me.timesheet-corrections.missing" class="btn btn-success">Missing Entries Requests {{fa-icon
-              "arrow-right"}}</LinkTo>
+        "arrow-right"}}</LinkTo>
     </div>
   </div>
 </div>

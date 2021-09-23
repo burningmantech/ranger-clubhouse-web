@@ -2,130 +2,149 @@
             @subheader={{true}} @onChange={{action (mut this.year)}} />
 
 <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.saveEvent}} as |f|>
-  <dl>
-    <dt>Years Worked ({{this.person.years.length}})</dt>
-    <dd>
-      {{#if this.person.years}}
-        {{year-range this.person.years}}
-      {{else}}
-        <i>Has not worked yet</i>
-      {{/if}}
-    </dd>
-
-    <dt>{{this.year}} Online Training</dt>
-    <dd>
-      {{#if this.eventInfo.online_training_passed}}
-        {{shift-format this.eventInfo.online_training_date}}
-      {{else}}
-        not passed
-      {{/if}}
-    </dd>
-
-    <dt>{{this.year}} Face-to-Face Training</dt>
-    <dd>
-      {{#if this.person.isNonRanger}}
-        <p>Non Rangers are not required to pass training.</p>
-      {{/if}}
-      <TrainingInfo @trainings={{this.eventInfo.trainings}} />
-    </dd>
-
-    <dt>{{this.year}} Meals</dt>
-    <dd>
-      <MealInfo @eventInfo={{this.eventInfo}} />
-    </dd>
-
-    <dt>{{this.year}} Showers</dt>
-    <dd>
-      {{#if this.eventInfo.showers}}
-        {{badge "secondary" "Wet Spot"}} BMID allows access to the Wet Spot.
-      {{else}}
-        {{badge "secondary" "Shower Pogs"}} Wet Spot shower pog granted for every 40 hours worked.
-      {{/if}}
-    </dd>
-
-    <dt>{{this.year}} Radios</dt>
-    <dd>
-      {{#if this.eventInfo.radio_info_available}}
-        {{#if this.eventInfo.radio_eligible}}
-          Up to {{pluralize this.eventInfo.radio_max "Event Radio"}} may be checked out.
-        {{else}}
-          Shift Radio only
-        {{/if}}
-      {{else}}
-        Radio eligibility for this year is not yet available.
-      {{/if}}
-      <div class="mt-2">
-        {{#if (has-role "admin")}}
-          <f.input @name="asset_authorized" @label="Radio Checkout Agreement"  @type="checkbox"  @inline={{true}}  />
-        {{else}}
-          {{#if this.personEvent.asset_authorized}}
-            <b class="text-success"> {{fa-icon "check"}} Signed</b>
+  <UiSection>
+    <:title>{{this.year}} Training</:title>
+    <:body>
+      <dl>
+        <dt>Online Training</dt>
+        <dd>
+          {{#if this.eventInfo.online_training_passed}}
+            {{shift-format this.eventInfo.online_training_date}}
           {{else}}
-            <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+            not passed
           {{/if}}
-          the Radio Checkout Agreement.
-        {{/if}}
-      </div>
-    </dd>
+        </dd>
 
-    <dt>{{this.year}} Driving</dt>
-    <dd>
-      {{#if this.person.vehicle_blacklisted}}
-        <b class="text-danger">{{fa-icon "ban"}} Vehicle is blacklisted.</b> May not drive gators, cars, or trucks on playa for
-        Ranger business.
-      {{else}}
-        {{#if (has-role "admin" "vc")}}
-          <f.input @name="signed_motorpool_agreement" @label="Motorpool Policy Agreement" @type="checkbox"
-                   @inline={{true}} />
-          <br>
-          <f.input @name="org_vehicle_insurance" @label="Motor Vehicle Record (MVR)"
-                   @type="checkbox" @inline={{true}} />
-        {{else}}
-          {{#if this.personEvent.signed_motorpool_agreement}}
-            <b class="text-success"> {{fa-icon "check"}} Signed</b>
+        <dt>Face-to-Face Trainings</dt>
+        <dd>
+          {{#if this.person.isNonRanger}}
+            <p>Non Rangers are not required to pass training.</p>
+          {{/if}}
+          <TrainingInfo @trainings={{this.eventInfo.trainings}} />
+        </dd>
+      </dl>
+    </:body>
+  </UiSection>
+  <UiSection>
+    <:title>{{this.year}} Provisions</:title>
+    <:body>
+      <dl>
+        <dt>Meals</dt>
+        <dd>
+          <MealInfo @eventInfo={{this.eventInfo}} />
+        </dd>
+
+        <dt>Showers</dt>
+        <dd>
+          {{#if this.eventInfo.showers}}
+            {{badge "secondary" "Wet Spot"}} BMID allows access to the Wet Spot.
           {{else}}
-            <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+            {{badge "secondary" "Shower Pogs"}} Wet Spot shower pog granted for every 40 hours worked.
           {{/if}}
-          the {{this.year}} Motorpool Agreement policy.<br>
-          {{#if this.personEvent.org_vehicle_insurance}}
-            <b class="text-success"> {{fa-icon "check"}} Authorized</b>
+        </dd>
+
+        <dt>Radios</dt>
+        <dd>
+          {{#if this.eventInfo.radio_info_available}}
+            {{#if this.eventInfo.radio_eligible}}
+              Up to {{pluralize this.eventInfo.radio_max "Event Radio"}} may be checked out.
+            {{else}}
+              Shift Radio only
+            {{/if}}
           {{else}}
-            <b class="text-danger">{{fa-icon "times"}} NOT AUTHORIZED</b>
+            <b class="text-danger">{{this.year}} Radio eligibility is not yet available.</b>
           {{/if}}
-          for the {{this.year}} event to drive Ranger vehicles (including own personal vehicle) on playa for Ranger business.
-          Vehicle must have a valid Burning Man driving sticker.
-        {{/if}}
-      {{/if}}
-    </dd>
-    <dt>{{this.year}} Personal Vehicle Use</dt>
-    <dd>
-      {{#if (has-role "admin")}}
-        <f.input @name="may_request_stickers" @label="Personal Vehicle Use Requests Allowed"
-                 @type="checkbox" @inline={{true}} />
-        <br>
+          <div class="mt-2">
+            {{#if (has-role "admin")}}
+              <f.input @name="asset_authorized" @label="Signed Radio Checkout Agreement" @type="checkbox"
+                       @inline={{true}}  />
+            {{else}}
+              {{#if this.personEvent.asset_authorized}}
+                <b class="text-success"> {{fa-icon "check"}} Signed</b>
+              {{else}}
+                <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+              {{/if}}
+              the Radio Checkout Agreement.
+            {{/if}}
+          </div>
+        </dd>
+      </dl>
+    </:body>
+  </UiSection>
+  <UiSection>
+    <:title>{{this.year}} Driving</:title>
+    <:body>
+      <dl>
+        <dt>Motorpool Policy</dt>
+        <dd>
+          {{#if this.person.vehicle_blacklisted}}
+            <b class="text-danger">{{fa-icon "ban"}} Vehicle is blacklisted.</b>
+            May not drive gators, cars, or trucks on playa for Ranger business.
+          {{else}}
+            {{#if (has-role "admin" "vc")}}
+              <f.input @name="org_vehicle_insurance"
+                       @label="Has Motor Vehicle Record (MVR)"
+                       @type="checkbox"
+                       @inline={{true}} />
+              <br>
+              <f.input @name="signed_motorpool_agreement"
+                       @label="Signed Motorpool Policy Agreement"
+                       @type="checkbox"
+                       @inline={{true}} />
+            {{else}}
+              {{#if this.personEvent.signed_motorpool_agreement}}
+                <b class="text-success"> {{fa-icon "check"}} Signed</b>
+              {{else}}
+                <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+              {{/if}}
+              the {{this.year}} Motorpool Agreement policy.<br>
+              {{#if this.personEvent.org_vehicle_insurance}}
+                <b class="text-success"> {{fa-icon "check"}} Authorized</b>
+              {{else}}
+                <b class="text-danger">{{fa-icon "times"}} NOT AUTHORIZED</b>
+              {{/if}}
+              for the {{this.year}} event to drive Ranger vehicles (including own personal vehicle) on playa for Ranger
+              business.
+              Vehicle must have a valid Burning Man driving sticker.
+            {{/if}}
+          {{/if}}
+        </dd>
+        <dt>{{this.year}} Personal Vehicle Use</dt>
+        <dd>
+          {{#if (has-role "admin")}}
+            <f.input @name="may_request_stickers"
+                     @label="Personal Vehicle Use Requests Allowed"
+                     @type="checkbox"
+                     @inline={{true}} />
+            <br>
 
-        <f.input @name="signed_personal_vehicle_agreement" @label="Personal Vehicle Policy Agreement"
-                 @type="checkbox" @inline={{true}} />
-      {{else}}
-        {{#if this.personEvent.may_request_stickers}}
-          <b class="text-success">{{fa-icon "check"}} Allowed</b>
-        {{else}}
-          <b class="text-danger">{{fa-icon "times"}} NOT ALLOWED</b>
-        {{/if}}
-        to submit Personal Vehicle Requests.<br>
-        {{#if this.personEvent.signed_personal_vehicle_agreement}}
-          <b class="text-success"> {{fa-icon "check"}} Signed</b>
-        {{else}}
-          <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
-        {{/if}}
-        the {{this.year}} Personal Vehicle Agreement.
-      {{/if}}
-    </dd>
-
-    <dt>{{this.year}} Agreements</dt>
-    <dd>
+            <f.input @name="signed_personal_vehicle_agreement"
+                     @label="Signed Personal Vehicle Policy Agreement"
+                     @type="checkbox"
+                     @inline={{true}} />
+          {{else}}
+            {{#if this.personEvent.may_request_stickers}}
+              <b class="text-success">{{fa-icon "check"}} Allowed</b>
+            {{else}}
+              <b class="text-danger">{{fa-icon "times"}} NOT ALLOWED</b>
+            {{/if}}
+            to submit Personal Vehicle Requests.<br>
+            {{#if this.personEvent.signed_personal_vehicle_agreement}}
+              <b class="text-success"> {{fa-icon "check"}} Signed</b>
+            {{else}}
+              <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+            {{/if}}
+            the {{this.year}} Personal Vehicle Agreement.
+          {{/if}}
+        </dd>
+      </dl>
+    </:body>
+  </UiSection>
+  <UiSection>
+    <:title>{{this.year}} Agreements</:title>
+    <:body>
       {{#if (has-role "admin" "vc")}}
-        <f.input @name="sandman_affidavit" @label="Sandman Affidavit" @type="checkbox" @inline={{true}} />
+        <f.input @name="sandman_affidavit" @label="Signed Sandman Affidavit" @type="checkbox" @inline={{true}} />
       {{else}}
         {{#if this.personEvent.sandman_affidavit}}
           <b class="text-success"> {{fa-icon "check"}} Signed</b>
@@ -134,12 +153,10 @@
         {{/if}}
         the {{this.year}} Sandman Affidavit
       {{/if}}
-    </dd>
-  </dl>
-  <p>
-    <f.submit @disabled={{this.personEvent.isSaving}} />
-    {{#if this.personEvent.isSaving}}
-      <LoadingIndicator/>
-    {{/if}}
-  </p>
+    </:body>
+  </UiSection>
+  <f.submit @disabled={{this.personEvent.isSaving}} />
+  {{#if this.personEvent.isSaving}}
+    <LoadingIndicator/>
+  {{/if}}
 </ChForm>

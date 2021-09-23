@@ -45,11 +45,13 @@ export default class RollcallSignOutComponent extends Component {
         this.timesheets = result.timesheet;
         this.positions = _.map(
           _.groupBy(this.timesheets, 'position_id'),
-          (entries) => ({
+          (entries, positionId) => ({
+            id: positionId,
             title: entries[0].position.title,
             people: entries.map((entry) => new PersonShift(entry))
           })
         );
+        this.positions.sort((a,b) => a.title.localeCompare(b.title));
       }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isLoading = false);
   }

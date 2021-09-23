@@ -1,32 +1,42 @@
 <h1>Salesforce Import</h1>
 
-<p>
-  <b>This code uses the Salesforce production system!
-    Please use caution when testing.</b>
-</p>
-<p>
-  Salesforce writebacks are
-  {{#if this.sfConfig.SFEnableWritebacks}}
-    <strong class="text-danger">ENABLED</strong>
-  {{else}}
-    <strong class="text-danger">DISABLED.</strong> Edit the SFEnableWritebacks setting (Admin > Edit Settings) if you
-    want them turned on for testing.
-  {{/if}}
-</p>
-<p>
-  Welcome emails will be
-  {{#if this.sfConfig.SendWelcomeEmail}}
-    <strong class="text-success">SENT</strong>
-  {{else}}
-    <strong class="text-danger">NOT SENT</strong>
-  {{/if}}
-</p>
-<p>
-  <button type="button" class="btn btn-success btn-sm" {{action this.toggleHelp}}>
-    {{if this.showHelp "Hide" "Show"}} Help
-  </button>
-</p>
+{{#if (eq this.importStatus "error")}}
+  <UiSection>
+    <:title><span class="text-danger">Processing Error</span></:title>
+    <:body>
+      {{this.importMessage}}
+    </:body>
+  </UiSection>
+{{/if}}
 
+<UiSection>
+  <:title>Import Configuration</:title>
+  <:body>
+    <p class="text-danger">
+      This code uses the Salesforce production system! Please use caution when testing.
+    </p>
+    <p>
+      Mark Salesforce records as imported once accounts are created:
+      {{#if this.sfConfig.SFEnableWritebacks}}
+        <b class="text-danger">ENABLED</b>
+      {{else}}
+        <b class="text-danger">DISABLED.</b> Edit the SFEnableWritebacks setting (Admin > Edit Settings) if you
+        want them turned on for testing.
+      {{/if}}
+    </p>
+    <p>
+      Welcome emails will be
+      {{#if this.sfConfig.SendWelcomeEmail}}
+        <strong class="text-success">SENT</strong>
+      {{else}}
+        <strong class="text-danger">NOT SENT</strong>
+      {{/if}}
+    </p>
+    <button type="button" class="btn btn-success btn-sm" {{action this.toggleHelp}}>
+      {{if this.showHelp "Hide" "Show"}} Help
+    </button>
+  </:body>
+</UiSection>
 
 {{#if this.showHelp}}
   <ChNotice @title="TL;DR Guide For Safe Testing">
@@ -75,164 +85,178 @@
   </ChNotice>
 {{/if}}
 
-{{#if (eq this.importStatus "error")}}
-  <p class="text-danger">
-    ERROR: {{this.importMessage}}
-  </p>
-{{/if}}
 
-<div class="row">
-  <div class="col-auto">
-    <strong>Import options</strong>
-    <p>
-      <label><Input @type="checkbox" @checked={{this.createAccounts}} /> Create accounts</label><br>
-      <label><Input @type="checkbox" @checked={{this.updateSalesforce}} disabled={{not this.createAccounts}} />
-        <span class="{{unless this.createAccounts "text-muted"}}"> Update Salesforce (create account only, caution!)</span>
-      </label><br>
-      <label><Input @type="checkbox" @checked={{this.nonTestAccounts}} /> Use non-test accounts (caution!)</label><br>
-    </p>
-  </div>
-  <div class="col-auto">
-    <strong>Debugging options</strong>
-    <p>
-      <label><Input @type="checkbox" @checked={{this.showAll}} /> Show all records (first 1,000 records, create & reset
-        account disabled)</label><br>
-      <label><Input @type="checkbox" @checked={{this.resetTestAccounts}} /> Reset test accounts in
-        Salesforce</label><br>
-    </p>
-  </div>
-</div>
+<UiSection>
+  <:title>Import Action</:title>
+  <:body>
+    <div class="row">
+      <div class="col-auto">
+        <strong>Import options</strong>
+        <p>
+          <label><Input @type="checkbox" @checked={{this.createAccounts}} /> Create Clubhouse accounts</label><br>
+          <label><Input @type="checkbox" @checked={{this.updateSalesforce}} disabled={{not this.createAccounts}} />
+            <span class="{{unless this.createAccounts "text-muted"}}"> Update Salesforce records (create account only, caution!)</span>
+          </label><br>
+          <label><Input @type="checkbox" @checked={{this.nonTestAccounts}} /> Use non-test accounts
+            (caution!)</label><br>
+        </p>
+      </div>
+      <div class="col-auto">
+        <strong>Debugging options</strong>
+        <p>
+          <label><Input @type="checkbox" @checked={{this.showAll}} /> Show all records (first 1,000 records, create &
+            reset
+            account disabled)</label><br>
+          <label><Input @type="checkbox" @checked={{this.resetTestAccounts}} /> Reset test accounts in
+            Salesforce</label><br>
+        </p>
+      </div>
+    </div>
 
-<p>
-  <button type="button" class="btn btn-primary" {{action this.import}} disabled={{this.isSubmitting}}>{{#if this.isSubmitting}}
-    Please Wait{{else}}Submit{{/if}}</button>
-  <br>
-</p>
+    <p>
+      <button type="button" class="btn btn-primary" {{action this.import}} disabled={{this.isSubmitting}}>
+        {{#if this.isSubmitting}}
+          Please Wait
+        {{else}}
+          Submit
+        {{/if}}
+      </button>
+      <br>
+    </p>
+  </:body>
+</UiSection>
 
 {{#if this.isSubmitting}}
-  <LoadingDialog @item="Salesforce Accounts" />
+  <LoadingDialog @item="Salesforce Accounts"/>
 {{else if this.accounts}}
-  <p>
-    Showing {{pluralize this.accounts.length "record"}}
-  </p>
-  {{#each this.accountGroups as |group|}}
-    <div class="float-right">
-      <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleAll group}}>{{#if group.expandedAll}}
-        Hide All{{else}}Expand All{{/if}}</button>
-    </div>
-    <h3>{{group.statusLabel}} ({{pluralize group.items.length "record"}})</h3>
-    <table class="table table-sm table-hover table-striped">
-      <thead>
-      <tr>
-        <th>Callsign</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Type</th>
-        <th>VC Status</th>
-        <th>Actions</th>
-      </tr>
-      </thead>
-
-      <tbody>
-      {{#each group.items as |account|}}
-        {{#if (eq account.status "existing")}}
+  <UiSection>
+    <:title>Import Results</:title>
+    <:body>
+      <p>
+        Showing {{pluralize this.accounts.length "record"}}
+      </p>
+      {{#each this.accountGroups as |group|}}
+        <div class="float-right">
+          <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleAll group}}>{{#if
+            group.expandedAll}}
+            Hide All{{else}}Expand All{{/if}}</button>
+        </div>
+        <h3>{{group.statusLabel}} ({{pluralize group.items.length "record"}})</h3>
+        <table class="table table-sm table-hover table-striped">
+          <thead>
           <tr>
-            <td>
-              {{account.existing_person.callsign}} &rarr;<br>{{account.callsign}}
-            </td>
-            <td>
-              {{account.existing_person.first_name}} {{account.existing_person.last_name}}
-              &rarr;<br>
-              {{account.first_name}} {{account.last_name}}
-            </td>
-            <td>
-              {{account.existing_person.email}} &rarr;<br> {{account.email}}
-            </td>
-            <td>
-              {{account.applicant_type}}
-            </td>
-            <td>{{account.vc_status}}</td>
-            <td>
-              <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleAccount account}}>
-                {{if account.showing "Hide" "Show"}}
-              </button>
-            </td>
+            <th>Callsign</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Type</th>
+            <th>VC Status</th>
+            <th>Actions</th>
           </tr>
-        {{else}}
-          <tr>
-            <td>
-              {{#if (and (eq account.status "succeeded") account.chuid)}}
-                <PersonLink @personId={{account.chuid}} @callsign={{account.callsign}} />
-              {{else}}
-                {{account.callsign}}
-              {{/if}}
-            </td>
-            <td>{{account.first_name}} {{account.last_name}}</td>
-            <td>{{mail-to account.email}}</td>
-            <td>{{account.applicant_type}}</td>
-            <td>{{account.vc_status}}</td>
-            <td>
-              <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleAccount account}}>
-                {{if account.showing "Hide" "Show"}}
-              </button>
-            </td>
-          </tr>
+          </thead>
 
-        {{/if}}
-        {{#if account.message}}
-          <tr class="tr-no-border">
-            <td colspan="8">
-              <span class="text-danger font-weight-bold">{{account.message}}</span>
-              {{#if account.existing_person}}
-                <PersonLink @person={{account.existing_person}} />
-                - {{account.existing_person.status}}
-                - {{account.existing_person.first_name}} {{account.existing_person.last_name}}
-              {{/if}}
-            </td>
-          </tr>
-        {{/if}}
-        {{#if account.showing}}
-          <tr class="tr-no-border">
-            <td colspan="8">
-              {{#if account.existing_person}}
-                <b>Existing Person:</b>
-                <PersonLink @person={{account.existing_person}} />
-                &lt;{{account.existing_person.status}}&gt;<br>
-              {{/if}}
-              <b>Ranger Obj. Name:</b> {{account.salesforce_ranger_object_name}}<br>
-              <b>BPGUID:</b>{{account.bpguid}}<br>
-              {{#if (eq account.status "existing")}}
-                <b>Street:</b> {{account.existing_person.street1}} &rarr; {{account.street1}}<br>
-                <b>State:</b> {{account.existing_person.state}} &rarr; {{account.state}}<br>
-                <b>Zip:</b> {{account.existing_person.zip}} &rarr; {{account.zip}}<br>
-                <b>Country:</b> {{account.existing_person.country}} &rarr; {{account.country}}<br>
-                <b>Phone:</b> {{account.existing_person.home_phone}} &rarr; {{account.phone}}<br>
-                <b>Emergency Contact:</b> {{account.existing_person.emergency_contact}}
-                &rarr; {{account.emergency_contact}}<br>
-                <b>Known Ranger Names:</b> {{account.existing_person.known_rangers}}
-                &rarr; {{account.known_ranger_names}}<br>
-                <b>Known PNV Names:</b> {{account.existing_person.known_pnvs}} &rarr; {{account.known_pnv_names}}<br>
-                <b>T-Shirt Info:</b> {{account.existing_person.teeshirt_size_style}}
-                &rarr; {{account.teeshirt_size_style}}<br>
-                <b>LS Shirt Info:</b> {{account.existing_person.longsleeveshirt_size_style}}
-                &rarr; {{account.longsleeveshirt_size_style}}<br>
-              {{else}}
-                <b>Street:</b> {{account.street1}}<br>
-                <b>State:</b> {{account.state}}<br>
-                <b>Zip:</b> {{account.zip}}<br>
-                <b>Country:</b> {{account.country}}<br>
-                <b>Phone:</b> {{account.phone}}<br>
-                <b>Emergency Contact:</b> {{account.emergency_contact}}<br>
-                <b>Known Ranger Names:</b> {{account.known_ranger_names}}<br>
-                <b>Known PNV Names:</b> {{account.known_pnv_names}}<br>
-                <b>T-Shirt Info:</b> {{account.teeshirt_size_style}}<br>
-                <b>LS Shirt Info:</b> {{account.longsleeveshirt_size_style}}<br>
-              {{/if}}
-            </td>
-          </tr>
-        {{/if}}
+          <tbody>
+          {{#each group.items as |account|}}
+            {{#if (eq account.status "existing")}}
+              <tr>
+                <td>
+                  {{account.existing_person.callsign}} &rarr;<br>{{account.callsign}}
+                </td>
+                <td>
+                  {{account.existing_person.first_name}} {{account.existing_person.last_name}}
+                  &rarr;<br>
+                  {{account.first_name}} {{account.last_name}}
+                </td>
+                <td>
+                  {{account.existing_person.email}} &rarr;<br> {{account.email}}
+                </td>
+                <td>
+                  {{account.applicant_type}}
+                </td>
+                <td>{{account.vc_status}}</td>
+                <td>
+                  <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleAccount account}}>
+                    {{if account.showing "Hide" "Show"}}
+                  </button>
+                </td>
+              </tr>
+            {{else}}
+              <tr>
+                <td>
+                  {{#if (and (eq account.status "succeeded") account.chuid)}}
+                    <PersonLink @personId={{account.chuid}} @callsign={{account.callsign}} />
+                  {{else}}
+                    {{account.callsign}}
+                  {{/if}}
+                </td>
+                <td>{{account.first_name}} {{account.last_name}}</td>
+                <td>{{mail-to account.email}}</td>
+                <td>{{account.applicant_type}}</td>
+                <td>{{account.vc_status}}</td>
+                <td>
+                  <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleAccount account}}>
+                    {{if account.showing "Hide" "Show"}}
+                  </button>
+                </td>
+              </tr>
+
+            {{/if}}
+            {{#if account.message}}
+              <tr class="tr-no-border">
+                <td colspan="8">
+                  <span class="text-danger font-weight-bold">{{account.message}}</span>
+                  {{#if account.existing_person}}
+                    <PersonLink @person={{account.existing_person}} />
+                    - {{account.existing_person.status}}
+                    - {{account.existing_person.first_name}} {{account.existing_person.last_name}}
+                  {{/if}}
+                </td>
+              </tr>
+            {{/if}}
+            {{#if account.showing}}
+              <tr class="tr-no-border">
+                <td colspan="8">
+                  {{#if account.existing_person}}
+                    <b>Existing Person:</b>
+                    <PersonLink @person={{account.existing_person}} />
+                    &lt;{{account.existing_person.status}}&gt;<br>
+                  {{/if}}
+                  <b>Ranger Obj. Name:</b> {{account.salesforce_ranger_object_name}}<br>
+                  <b>BPGUID:</b>{{account.bpguid}}<br>
+                  {{#if (eq account.status "existing")}}
+                    <b>Street:</b> {{account.existing_person.street1}} &rarr; {{account.street1}}<br>
+                    <b>State:</b> {{account.existing_person.state}} &rarr; {{account.state}}<br>
+                    <b>Zip:</b> {{account.existing_person.zip}} &rarr; {{account.zip}}<br>
+                    <b>Country:</b> {{account.existing_person.country}} &rarr; {{account.country}}<br>
+                    <b>Phone:</b> {{account.existing_person.home_phone}} &rarr; {{account.phone}}<br>
+                    <b>Emergency Contact:</b> {{account.existing_person.emergency_contact}}
+                    &rarr; {{account.emergency_contact}}<br>
+                    <b>Known Ranger Names:</b> {{account.existing_person.known_rangers}}
+                    &rarr; {{account.known_ranger_names}}<br>
+                    <b>Known PNV Names:</b> {{account.existing_person.known_pnvs}} &rarr; {{account.known_pnv_names}}
+                    <br>
+                    <b>T-Shirt Info:</b> {{account.existing_person.teeshirt_size_style}}
+                    &rarr; {{account.teeshirt_size_style}}<br>
+                    <b>LS Shirt Info:</b> {{account.existing_person.longsleeveshirt_size_style}}
+                    &rarr; {{account.longsleeveshirt_size_style}}<br>
+                  {{else}}
+                    <b>Street:</b> {{account.street1}}<br>
+                    <b>State:</b> {{account.state}}<br>
+                    <b>Zip:</b> {{account.zip}}<br>
+                    <b>Country:</b> {{account.country}}<br>
+                    <b>Phone:</b> {{account.phone}}<br>
+                    <b>Emergency Contact:</b> {{account.emergency_contact}}<br>
+                    <b>Known Ranger Names:</b> {{account.known_ranger_names}}<br>
+                    <b>Known PNV Names:</b> {{account.known_pnv_names}}<br>
+                    <b>T-Shirt Info:</b> {{account.teeshirt_size_style}}<br>
+                    <b>LS Shirt Info:</b> {{account.longsleeveshirt_size_style}}<br>
+                  {{/if}}
+                </td>
+              </tr>
+            {{/if}}
+          {{/each}}
+          </tbody>
+        </table>
       {{/each}}
-      </tbody>
-    </table>
-  {{/each}}
+    </:body>
+  </UiSection>
 {{/if}}

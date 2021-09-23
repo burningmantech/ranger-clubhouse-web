@@ -351,32 +351,36 @@
   {{/if}}
 {{else}}
   {{#each this.taskGroups as |group|}}
-    <h3>{{group.group_title}}</h3>
-    <table class="table table-striped">
-      <tbody>
-      {{#each group.tasks as |task|}}
-        <tr>
-          <td class="w-30">
-            {{#if task.param}}
-              <button type="button" class="btn btn-primary btn-block" {{on "click" (fn this.askParamAction task)}}>
-                {{task.title}}
-              </button>
-            {{else}}
-              <button type="button" class="btn btn-primary btn-block" {{on "click" (fn this.executeTask task)}}>
-                {{task.title}}
-              </button>
-            {{/if}}
-          </td>
-          <td class="w-70">
-            {{task.description}}
-            {{#if (eq task.action "set-staff-credentials-access-date")}}
-              <br>The default access date is {{this.ticketingInfo.wap_default_date}}.
-            {{/if}}
-          </td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
+    <UiSection>
+      <:title>{{group.group_title}}</:title>
+      <:body>
+        <table class="table table-striped">
+          <tbody>
+          {{#each group.tasks as |task|}}
+            <tr>
+              <td class="w-30">
+                {{#if task.param}}
+                  <button type="button" class="btn btn-primary btn-block" {{on "click" (fn this.askParamAction task)}}>
+                    {{task.title}}
+                  </button>
+                {{else}}
+                  <button type="button" class="btn btn-primary btn-block" {{on "click" (fn this.executeTask task)}}>
+                    {{task.title}}
+                  </button>
+                {{/if}}
+              </td>
+              <td class="w-70">
+                {{task.description}}
+                {{#if (eq task.action "set-staff-credentials-access-date")}}
+                  <br>The default access date is {{this.ticketingInfo.wap_default_date}}.
+                {{/if}}
+              </td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </:body>
+    </UiSection>
   {{/each}}
 {{/if}}
 

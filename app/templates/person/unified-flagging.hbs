@@ -1,133 +1,151 @@
-<h2>Unified Flagging</h2>
+<h2>Unified Flagging for {{this.person.callsign}}</h2>
 
 {{#if this.history.personnel_issue}}
   <ChNotice @type="danger" @icon="flag" @title="Personnel Flag Raised For {{this.person.callsign}}">
     <p>
       All training and mentor activity should be suspended and no further actions taken until the situation is resolved.
     </p>
-      Contact the Personnel Manager for more information.
+    Contact the Personnel Manager for more information.
   </ChNotice>
 {{/if}}
-<p>
-  Known Rangers & PNV are usually imported from Salesforce as part of the VolQ. The fields will be populated on various
-  Mentor pages and reports.
-</p>
-{{#if (has-role "admin" "vc" "intake")}}
-  <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.savePersonAction}} as |f|>
-    <div class="form-row">
-      <label class="col-form-label col-sm-12 col-md-2">Known Rangers</label>
-      <f.input @name="known_rangers" @type="text" @size=50 @maxlength=150 @controlClass="form-control form-control-sm" @wrapClass="col-auto"/>
-    </div>
-    <div class="form-row">
-      <label class="col-form-label col-sm-12 col-md-2">Known PNVs</label>
-      <f.input @name="known_pnvs" @type="text" @size=50 @maxlength=150  @controlClass="form-control form-control-sm" @wrapClass="col-auto"/>
-    </div>
-    <div class="form-group row">
-      <label class="col-form-label col-sm-12 col-md-2">&nbsp;</label>
-      <div class="col-auto">
-        <f.submit @label="Save" @disabled={{f.model.isSaving}} />
-        {{#if f.model.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
-      </div>
-    </div>
-  </ChForm>
-{{else}}
-  <dl class="row">
-    <dt class="col-1">Known Rangers:</dt>
-    <dd class="col-11">
-      <PresentOrNot @value={{this.person.known_rangers}} @empty="none" />
-    </dd>
-    <dt class="col-1">Known PNVs:</dt>
-    <dd class="col-11">
-      <PresentOrNot @value={{this.person.known_pnvs}} @empty="none" />
-    </dd>
-  </dl>
-{{/if}}
+<UiSection>
+  <:title>Known Rangers & PNVs</:title>
+  <:body>
+    <p>
+      Known Rangers & PNV are usually imported from Salesforce as part of the VolQ.
+      The fields will be populated on various Mentor pages and reports.
+    </p>
+    {{#if (has-role "admin" "vc" "intake")}}
+      <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.savePersonAction}} as |f|>
+        <div class="form-row">
+          <label class="col-form-label col-sm-12 col-md-2">Known Rangers</label>
+          <f.input @name="known_rangers" @type="text" @size=50 @maxlength=150
+                   @controlClass="form-control form-control-sm" @wrapClass="col-auto"/>
+        </div>
+        <div class="form-row">
+          <label class="col-form-label col-sm-12 col-md-2">Known PNVs</label>
+          <f.input @name="known_pnvs" @type="text" @size=50 @maxlength=150 @controlClass="form-control form-control-sm"
+                   @wrapClass="col-auto"/>
+        </div>
+        <div class="form-group row">
+          <label class="col-form-label col-sm-12 col-md-2">&nbsp;</label>
+          <div class="col-auto">
+            <f.submit @label="Save" @disabled={{f.model.isSaving}} />
+            {{#if f.model.isSaving}}
+              <LoadingIndicator/>
+            {{/if}}
+          </div>
+        </div>
+      </ChForm>
+    {{else}}
+      <dl class="row">
+        <dt class="col-1">Known Rangers:</dt>
+        <dd class="col-11">
+          <PresentOrNot @value={{this.person.known_rangers}} @empty="none"/>
+        </dd>
+        <dt class="col-1">Known PNVs:</dt>
+        <dd class="col-11">
+          <PresentOrNot @value={{this.person.known_pnvs}} @empty="none"/>
+        </dd>
+      </dl>
+    {{/if}}
+  </:body>
+</UiSection>
 
-<table class="table table-sm table-striped table-hover table-width-auto  my-4">
-  <caption>PNV History</caption>
-  <thead>
-  <tr>
-    <th>Year</th>
-    <th>Training</th>
-    <th>Mentor</th>
-  </tr>
-  </thead>
-  <tbody>
-  {{#each-in this.history.pnv_history as |pnvYear info|}}
-    <tr>
-      <td>{{pnvYear}}</td>
-      <td>
-        {{#if (is-empty info.training_status)}}
-          NONE
-        {{else}}
-          {{info.training_status}}
-        {{/if}}
-      </td>
-      <td>
-        {{#if info.was_auditor}}
-          Auditor
-        {{else if (not-eq info.mentor_status 'none')}}
-          {{info.mentor_status}}
-        {{else if info.have_alpha_shift}}
-          Walked w/No Mentors?
-        {{else}}
-          No Alpha shift
-        {{/if}}
-      </td>
-    </tr>
-  {{/each-in}}
-  </tbody>
-</table>
-<table class="table table-striped table-hover table-sm mt-2">
-  <caption>Team Notes &amp; Rank/Flags</caption>
-  <thead>
-  <tr>
-    <th class="w-10">Team</th>
-    <th>Notes & Flags</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td class="w-10">
-      Personnel
-    </td>
-    <td>
-      <IntakeNotes @type="personnel" @person={{this.history}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
-    </td>
-  </tr>
-  <tr>
-    <td class="w-10">
-      RRN
-    </td>
-    <td>
-      <IntakeNotes @type="rrn" @person={{this.history}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
-    </td>
-  </tr>
-  <tr>
-    <td class="w-10">
-      VC
-    </td>
-    <td>
-      <IntakeNotes @type="vc" @person={{this.history}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
-    </td>
-  </tr>
-  <tr>
-    <td class="w-10">
-      Training
-    </td>
-    <td>
-      <IntakeTraining @trainings={{this.history.trainings}} @person={{this.person}} />
-    </td>
-  </tr>
-  <tr>
-    <td class="w-10">
-      MENTOR
-    </td>
-    <td>
-      <IntakeNotes @type="mentor" @person={{this.history}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
-    </td>
-  </tr>
-  </tbody>
-</table>
+<UiSection>
+  <:title>PNV Training &amp; Alpha Shift History</:title>
+  <:body>
+    <table class="table table-sm table-striped table-hover table-width-auto">
+      <thead>
+      <tr>
+        <th>Year</th>
+        <th>Training</th>
+        <th>Mentor</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each-in this.history.pnv_history as |pnvYear info|}}
+        <tr>
+          <td>{{pnvYear}}</td>
+          <td>
+            {{#if (is-empty info.training_status)}}
+              NONE
+            {{else}}
+              {{info.training_status}}
+            {{/if}}
+          </td>
+          <td>
+            {{#if info.was_auditor}}
+              Auditor
+            {{else if (not-eq info.mentor_status 'none')}}
+              {{info.mentor_status}}
+            {{else if info.have_alpha_shift}}
+              Walked w/No Mentors?
+            {{else}}
+              No Alpha shift
+            {{/if}}
+          </td>
+        </tr>
+      {{/each-in}}
+      </tbody>
+    </table>
+  </:body>
+</UiSection>
+
+<UiSection>
+  <:title>Team Notes &amp; Rank/Flags</:title>
+  <:body>
+    <table class="table table-striped table-hover table-sm">
+      <thead>
+      <tr>
+        <th class="w-10">Team</th>
+        <th>Notes & Flags</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="w-10">
+          Personnel
+        </td>
+        <td>
+          <IntakeNotes @type="personnel" @person={{this.history}} @viewYear={{this.year}}
+                       @onSubmit={{this.noteSubmitted}} />
+        </td>
+      </tr>
+      <tr>
+        <td class="w-10">
+          RRN
+        </td>
+        <td>
+          <IntakeNotes @type="rrn" @person={{this.history}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
+        </td>
+      </tr>
+      <tr>
+        <td class="w-10">
+          VC
+        </td>
+        <td>
+          <IntakeNotes @type="vc" @person={{this.history}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
+        </td>
+      </tr>
+      <tr>
+        <td class="w-10">
+          Training
+        </td>
+        <td>
+          <IntakeTraining @trainings={{this.history.trainings}} @person={{this.person}} />
+        </td>
+      </tr>
+      <tr>
+        <td class="w-10">
+          MENTOR
+        </td>
+        <td>
+          <IntakeNotes @type="mentor" @person={{this.history}} @viewYear={{this.year}}
+                       @onSubmit={{this.noteSubmitted}} />
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </:body>
+</UiSection>

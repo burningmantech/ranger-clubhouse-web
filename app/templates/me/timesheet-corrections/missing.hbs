@@ -1,25 +1,36 @@
-<h3>Missing Timesheet Entry/Shift Requests</h3>
+<UiSection>
+  <:title>Missing Timesheet Entry/Shift Requests</:title>
+  <:body>
+    <p>
+      <b>Did you work a shift, and is there no timesheet entry for it?</b> Use
+      the "New Missing Timesheet Request" button at the bottom to submit a request.
+      You may submit more than one request.
+    </p>
+    <p>
+      <b>Is a timesheet entry wrong?</b> Do not use the Missing Timesheet Request form,
+      instead go back to the
+      <LinkTo @route="me.timesheet-corrections.review">Timesheet Review</LinkTo>
+      page
+      and mark the entry as incorrect.
+    </p>
 
-<p class="mt-2">
-  <b>Did you work a shift, and is there no timesheet entry for it?</b> Use
-  the "New Missing Timesheet Request" button at the bottom to submit a request.
-  You may submit more than one request.
-</p>
-<p>
-  <b>Is a timesheet entry wrong?</b> Do not use the Missing Timesheet Request form,
-  instead go back to the <LinkTo @route="me.timesheet-corrections.review">Timesheet Review</LinkTo> page
-  and mark the entry as incorrect.
-</p>
-
-<Me::TimesheetMissingCommon @person={{this.person}} @timesheetsMissing={{this.timesheetsMissing}} @timesheetInfo={{this.timesheetInfo}} @positions={{this.positions}} />
-
+    <Me::TimesheetMissingCommon @person={{this.person}}
+                                @timesheetsMissing={{this.timesheetsMissing}}
+                                @timesheetInfo={{this.timesheetInfo}}
+                                @positions={{this.positions}} />
+  </:body>
+</UiSection>
 <div class="mt-4">
   <div class="row">
     <div class="col-6 mb-2">
-      <LinkTo @route="me.timesheet-corrections.review" class="btn btn-success">{{fa-icon "arrow-left"}} Timesheet Review</LinkTo>
+      <LinkTo @route="me.timesheet-corrections.review" class="btn btn-success">
+        {{fa-icon "arrow-left"}} Timesheet Review
+      </LinkTo>
     </div>
     <div class="col-6 text-md-right">
-      <LinkTo @route="me.timesheet-corrections.confirm" class="btn btn-success">Final Confirmation {{fa-icon "arrow-right"}}</LinkTo>
+      <LinkTo @route="me.timesheet-corrections.confirm" class="btn btn-success">
+        Final Confirmation {{fa-icon "arrow-right"}}
+      </LinkTo>
     </div>
   </div>
 </div>

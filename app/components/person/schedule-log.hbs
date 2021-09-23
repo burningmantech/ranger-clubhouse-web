@@ -1,8 +1,9 @@
-<p>
+<p class="d-print-none">
   {{#if (gte @year 2019)}}
-    <a href {{action this.showLogAction}}>View {{@year}} Scheduling Log</a>
     {{#if this.isLoading}}
-      <LoadingIndicator/>
+      <LoadingIndicator @text="Retrieving log"/>
+    {{else}}
+      <a href {{action this.showLogAction}}>View {{@year}} Scheduling Log</a>
     {{/if}}
   {{else}}
     Sorry, the scheduling log is only available for 2019 and later.

@@ -17,71 +17,80 @@
   </li>
 </ul>
 
-<h4>
-  Update Contact Information
-  <HelpPopover @slug="hq-site-checkin-contact-info"/>
-</h4>
+<UiSection>
+  <:title>Verify Camp &amp; Emergency Contact Info
+    <HelpPopover @slug="hq-site-checkin-contact-info"/>
+  </:title>
+  <:body>
+    <ChForm @formId="contact" @formFor={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
+      <div class="form-row">
+        <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @autofocus={{true}} @rows={{4}}
+                 @cols={{80}}/>
+      </div>
 
-<ChForm @formId="contact" @formFor={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
-  <div class="form-row">
-    <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @autofocus={{true}} @rows={{4}} @cols={{80}}/>
-  </div>
-  {{#if this.session.isLMOPEnabled}}
-    <p class="ml-2">
-      <strong>Off-Playa:</strong>
-      Real world name, relationship (partner, friend, sibling, parent), phone number, &amp; email.<br>
+      {{#if this.session.isLMOPEnabled}}
+        <p class="ml-2">
+          <strong>Off-Playa:</strong>
+          Real world name, relationship (partner, friend, sibling, parent), phone number, &amp; email.<br>
 
-      <strong>On-Playa:</strong>
-      Their playa name, real world name, relationship, camp location &amp; description.<br>
-    </p>
-    <div class="form-row">
-      <f.input @name="emergency_contact" @type="textarea" @label="Emergency Contact Information:" @rows={{4}} @cols={{80}}/>
-    </div>
-    <f.submit @label="Update Camp & Emergency Contact Info" @disabled={{this.isSubmitting}} />
-  {{else}}
-    <ChNotice @type="danger" @title="Emergency Contact Info access during the off season not allowed" @icon="exclamation">
-      Sorry, you only have privileges to view and update the Emergency Contact information while the event is happening.
-    </ChNotice>
-  {{/if}}
-  {{#if this.isContactSaved}}
-    <span class="text-success">{{fa-icon "check"}}</span>
-  {{/if}}
-  {{#if this.isSubmitting}}
-    <LoadingIndicator/>
-  {{/if}}
-</ChForm>
+          <strong>On-Playa:</strong>
+          Their playa name, real world name, relationship, camp location &amp; description.<br>
+        </p>
+        <div class="form-row">
+          <f.input @name="emergency_contact" @type="textarea" @label="Emergency Contact Information:" @rows={{4}}
+                   @cols={{80}}/>
+        </div>
+        <f.submit @label="Update Camp & Emergency Contact Info" @disabled={{this.isSubmitting}} />
+      {{else}}
+        <ChNotice @type="danger" @title="Emergency Contact Info access during the off season not allowed"
+                  @icon="exclamation">
+          Sorry, you only have privileges to view and update the Emergency Contact information while the event is
+          happening.
+        </ChNotice>
+      {{/if}}
+      {{#if this.isContactSaved}}
+        <span class="text-success">{{fa-icon "check"}}</span>
+      {{/if}}
+      {{#if this.isSubmitting}}
+        <LoadingIndicator/>
+      {{/if}}
+    </ChForm>
+  </:body>
+</UiSection>
 
-<hr class="my-3">
-<h4>Agreements
-  <HelpPopover @slug="hq-site-checkin-agreements"/>
-</h4>
+<UiSection>
+  <:title>
+    Agreements
+    <HelpPopover @slug="hq-site-checkin-agreements"/>
+  </:title>
+  <:body>
 
-{{#if this.personEvent.asset_authorized}}
-  <p class="text-success">
-    {{fa-icon "check"}} Radio checkout form has been SIGNED.
-  </p>
-{{else}}
-  <h4 class="text-danger">Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE RADIOS.</h4>
-  <p>
-    Direct {{this.person.callsign}} to a kiosk and have them agree to the Radio Checkout Agreement. Only after the
-    agreement is signed may they be given a radio.
-  </p>
-{{/if}}
-{{#if this.personEvent.signed_motorpool_agreement}}
-  <p class="text-success">
-    {{fa-icon "check"}} The Motorpool Policy has been signed.
-  </p>
-{{else}}
-  <h4 class="text-danger">
-    Motorpool Agreement NOT SIGNED - Not authorized to drive Ranger gators, UTVs, or golf carts.
-  </h4>
-  <p>
-    If {{this.person.callsign}} is comfortable driving Ranger gators, UTVs, or golf carts while on duty, direct the
-    person to a kiosk and have them agree to the Motorpool Policy.
-  </p>
-{{/if}}
-
-<hr class="my-3">
+    {{#if this.personEvent.asset_authorized}}
+      <p class="text-success">
+        {{fa-icon "check"}} Radio checkout form has been SIGNED.
+      </p>
+    {{else}}
+      <h4 class="text-danger">Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE RADIOS.</h4>
+      <p>
+        Direct {{this.person.callsign}} to a kiosk and have them agree to the Radio Checkout Agreement. Only after the
+        agreement is signed may they be given a radio.
+      </p>
+    {{/if}}
+    {{#if this.personEvent.signed_motorpool_agreement}}
+      <p class="text-success">
+        {{fa-icon "check"}} The Motorpool Policy has been signed.
+      </p>
+    {{else}}
+      <h4 class="text-danger">
+        Motorpool Agreement NOT SIGNED - Not authorized to drive Ranger gators, UTVs, or golf carts.
+      </h4>
+      <p>
+        If {{this.person.callsign}} is comfortable driving Ranger gators, UTVs, or golf carts while on duty, direct the
+        person to a kiosk and have them agree to the Motorpool Policy.
+      </p>
+    {{/if}}
+  </:body>
+</UiSection>
 
 {{#unless this.eventInfo.radio_info_available}}
   <ChNotice @type="danger">
@@ -90,50 +99,61 @@
 {{/unless}}
 
 {{#if this.eventInfo.radio_eligible}}
-  <h4>Event Radio Checkout
-    <HelpPopover @slug="hq-site-checkin-radios"/>
-  </h4>
-  <p class="text-success"><b>Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}</b></p>
-  <p>
-    The radio may be checked out now, or at the start of their first shift.
-  </p>
-  <AssetCheckoutForm @person={{this.person}} @assets={{this.assets}} @attachments={{this.attachments}}
-                     @eventInfo={{this.eventInfo}} />
-  {{#if this.activeAssets}}
-    {{pluralize this.activeAssets.length "asset"}} checked out.
-    <table class="table table-striped table-sm">
-      <thead>
-      <tr>
-        <th>Barcode</th>
-        <th>Type</th>
-        <th>Assigned</th>
-        <th>Attachment</th>
-        <th>Out</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each this.activeAssets as |ap|}}
-        <tr>
-          <td>{{ap.asset.barcode}}</td>
-          <td>{{ap.asset.description}}</td>
-          <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
-          <td>
-            <PresentOrNot @value={{ap.attachment.description}} @empty="-"/>
-          </td>
-          <td>{{shift-format ap.checked_out}}</td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  {{/if}}
-  {{#if this.assets.isUpdating}}
-    <LoadingIndicator @text="Refreshing assets"/>
-  {{/if}}
+  <UiSection>
+    <:title>
+      Event Radio Checkout
+      <HelpPopover @slug="hq-site-checkin-radios"/>
+    </:title>
+    <:body>
+      <p class="text-success"><b>Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}</b></p>
+      <p>
+        The radio may be checked out now, or at the start of their first shift.
+      </p>
+      <AssetCheckoutForm @person={{this.person}} @assets={{this.assets}} @attachments={{this.attachments}}
+                         @eventInfo={{this.eventInfo}} />
+      {{#if this.activeAssets}}
+        {{pluralize this.activeAssets.length "asset"}} checked out.
+        <table class="table table-striped table-sm">
+          <thead>
+          <tr>
+            <th>Barcode</th>
+            <th>Type</th>
+            <th>Assigned</th>
+            <th>Attachment</th>
+            <th>Out</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.activeAssets as |ap|}}
+            <tr>
+              <td>{{ap.asset.barcode}}</td>
+              <td>{{ap.asset.description}}</td>
+              <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
+              <td>
+                <PresentOrNot @value={{ap.attachment.description}} @empty="-"/>
+              </td>
+              <td>{{shift-format ap.checked_out}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{/if}}
+      {{#if this.assets.isUpdating}}
+        <LoadingIndicator @text="Refreshing assets"/>
+      {{/if}}
+    </:body>
+  </UiSection>
 {{else}}
-  <h4><span class="text-danger">{{this.person.callsign}} is only authorized for a shift radio.</span>
-    <HelpPopover @slug="hq-site-checkin-radios"/>
-  </h4>
-  A radio will need be to checked out for each shift, and then returned at the end of the shift.
+  <UiSection>
+    <:title>
+      <span class="text-danger">Shift Radios Only</span>
+      <HelpPopover @slug="hq-site-checkin-radios"/>
+    </:title>
+    <:body>
+      {{this.person.callsign}} is only authorized for a shift radio.
+      A radio will need be to checked out for each shift, and then returned at the end of the shift.
+    </:body>
+  </UiSection>
 {{/if}}
 
 <div class="mt-4">

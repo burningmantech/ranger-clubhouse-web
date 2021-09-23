@@ -9,6 +9,8 @@
 .dashboard-group {
   display: flex;
   margin-bottom: 10px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  background-color: #fcfcfc;
 
   .mugshot {
     margin-left: 10px;
@@ -25,7 +27,7 @@
 
 .dashboard-steps {
   flex: 1;
-  background-color: #efefef;
+  background-color: #fcfcfc;
   padding-top: 10px;
 }
 

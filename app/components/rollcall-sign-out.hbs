@@ -2,9 +2,9 @@
 {{#if this.isLoading}}
   <LoadingIndicator/>
 {{else}}
-  {{#each this.positions as |position|}}
+  {{#each this.positions key="id" as |position|}}
     <ChAccordion as |Accordion|>
-      <Accordion.title>{{position.title}}</Accordion.title>
+      <Accordion.title>{{position.title}} [{{pluralize position.people.length "person"}}]</Accordion.title>
       <Accordion.body>
         <p>
           Click on the person to sign them out. Click again to resume their shift if they were accidentally signed out.
@@ -13,7 +13,7 @@
           {{fa-icon "walking"}} = person is on shift. {{fa-icon "bed"}} = person has been signed off.
         </p>
         <div class="rollcall-grid">
-          {{#each position.people as |person|}}
+          {{#each position.people key="id" as |person|}}
             <a href class="rollcall-person {{unless person.isSignedIn "text-muted"}}"
               {{action this.clickPerson person}}>
               <div class="rollcall-photo">

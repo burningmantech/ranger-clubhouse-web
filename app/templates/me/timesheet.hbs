@@ -5,67 +5,73 @@
 <BackToHome/>
 
 {{#if this.timesheets}}
-  {{#if (and this.isCurrentYear this.timesheetInfo.correction_enabled)}}
-    <p class="d-print-none">
-      Is an entry incorrect, or is there a missing shift that was not recorded?
-      <LinkTo @route="me.timesheet-corrections.index">Submit a correction request.</LinkTo>
-    </p>
+  <UiSection>
+    <:title>{{this.year}} Timesheet Entries</:title>
+    <:body>
+      {{#if (and this.isCurrentYear this.timesheetInfo.correction_enabled)}}
+        <p class="d-print-none">
+          Is an entry incorrect, or is there a missing shift that was not recorded?
+          <LinkTo @route="me.timesheet-corrections.index">Submit a correction request.</LinkTo>
+        </p>
 
-    <p class="d-print-none">
-      {{#if this.timesheetInfo.timesheet_confirmed}}
-        <b>Thank you for confirming your timesheet is accurate.</b>
-      {{else}}
-        <b class="text-danger">It appears you have not confirmed your timesheet as accurate.</b> Please to go the
-        <LinkTo @route="me.timesheet-corrections">Timesheet Corrections</LinkTo>
-        page,
-        review your timesheet entries, submit any missing timesheet entries requests, and confirm your {{this.year}}
-        timesheet as accurate.
+        <p class="d-print-none">
+          {{#if this.timesheetInfo.timesheet_confirmed}}
+            <b>Thank you for confirming your timesheet is accurate.</b>
+          {{else}}
+            <b class="text-danger">It appears you have not confirmed your timesheet as accurate.</b> Please to go the
+            <LinkTo @route="me.timesheet-corrections">Timesheet Corrections</LinkTo>
+            page,
+            review your timesheet entries, submit any missing timesheet entries requests, and confirm your {{this.year}}
+            timesheet as accurate.
+          {{/if}}
+        </p>
       {{/if}}
-    </p>
-  {{/if}}
-  <div class="m-2">
-    <NoAppreciateIcon /> = the shift hours do not count towards appreciations.
-  </div>
-  <div class="timesheet-table">
-    <div class="timesheet-row timesheet-header">
-      <div class="timesheet-time">From</div>
-      <div class="timesheet-time">To</div>
-      <div class="timesheet-duration">Duration</div>
-      <div class="timesheet-credits">Credits</div>
-      <div class="timesheet-position">Position</div>
-    </div>
-    {{#each this.timesheets key="id" as |ts|}}
-      <div class="timesheet-entry">
-        <div class="timesheet-row">
-          <div class="timesheet-time">{{shift-format ts.on_duty}}</div>
-          <div class="timesheet-time">
-            {{#if ts.off_duty}}
-              {{shift-format ts.off_duty}}
-            {{else}}
-              <i>On Duty</i>
-            {{/if}}
-          </div>
-          <div class="timesheet-duration">
-            <span class="timesheet-sm-label">Duration:</span>
-            {{#unless ts.position.count_hours}}
-              <NoAppreciateIcon />
-            {{/unless}}
-            {{hour-minute-format ts.duration}}
-          </div>
-          <div class="timesheet-credits">
-            <span class="timesheet-sm-label">Credits:</span>
-            {{credits-format ts.credits}}
-          </div>
-          <div class="timesheet-position">{{ts.position.title}}</div>
+      <NoAppreciateIcon/>
+      = the shift hours do not count towards appreciations.
+      <div class="timesheet-table">
+        <div class="timesheet-row timesheet-header">
+          <div class="timesheet-time">From</div>
+          <div class="timesheet-time">To</div>
+          <div class="timesheet-duration">Duration</div>
+          <div class="timesheet-credits">Credits</div>
+          <div class="timesheet-position">Position</div>
         </div>
+        {{#each this.timesheets key="id" as |ts|}}
+          <div class="timesheet-entry">
+            <div class="timesheet-row">
+              <div class="timesheet-time">{{shift-format ts.on_duty}}</div>
+              <div class="timesheet-time">
+                {{#if ts.off_duty}}
+                  {{shift-format ts.off_duty}}
+                {{else}}
+                  <i>On Duty</i>
+                {{/if}}
+              </div>
+              <div class="timesheet-duration">
+                <span class="timesheet-sm-label">Duration:</span>
+                {{#unless ts.position.count_hours}}
+                  <NoAppreciateIcon/>
+                {{/unless}}
+                {{hour-minute-format ts.duration}}
+              </div>
+              <div class="timesheet-credits">
+                <span class="timesheet-sm-label">Credits:</span>
+                {{credits-format ts.credits}}
+              </div>
+              <div class="timesheet-position">{{ts.position.title}}</div>
+            </div>
+          </div>
+        {{/each}}
       </div>
-    {{/each}}
-  </div>
+    </:body>
+  </UiSection>
 
   <TimesheetSummary @summary={{this.timesheetSummary}} />
   <TimesheetPositionSummary @timesheets={{this.timesheets}} />
 {{else}}
-  <p class="mt-3">
-    <b class="text-danger">No timesheet entries were found for {{this.year}}.</b>
-  </p>
+  <UiSection>
+    <p class="mt-3">
+      <b class="text-danger">No timesheet entries were found for {{this.year}}.</b>
+    </p>
+  </UiSection>
 {{/if}}

@@ -3,73 +3,80 @@
 
 <ChForm @formId="person" @formFor={{this.person}} @autocomplete="on" @validator={{this.personInfoValidations}}
         @onSubmit={{action this.onSubmit}} @onCancel={{action this.onCancel}} as |f|>
-  <fieldset>
-    <legend>General Information</legend>
-    <div class="form-row">
-      <f.input @name="first_name" @label="First Name" @maxlength=25 @grid="col-sm-4 col-md-4 col-lg-2"/>
-      <f.input @name="mi" @label="M.I." @maxlength=10 @grid="col-sm-1"/>
-      <f.input @name="last_name" @label="Last Name" @maxlength=25 @grid="col-sm-12 col-md-6 col-lg-2"/>
-    </div>
-    <div class="form-row">
-      <f.input @name="email" @label="Email" @type="text" @inputmode="email" @maxlength={{50}}
-               @grid="col-sm-6 col-md-4 col-xl-3" @noSpaces={{true}} />
-      <div class="form-group">
-        <strong>Note:</strong> Updating your email address here WILL NOT update the email address used for various
-        Ranger mailing lists. Contact {{general-support-email}} to update your email address for the forums.
+  <UiSection>
+    <:title>General Information</:title>
+    <:body>
+      <div class="form-row">
+        <f.input @name="first_name" @label="First Name" @maxlength=25 @grid="col-sm-4 col-md-4 col-lg-2"/>
+        <f.input @name="mi" @label="M.I." @maxlength=10 @grid="col-sm-1"/>
+        <f.input @name="last_name" @label="Last Name" @maxlength=25 @grid="col-sm-12 col-md-6 col-lg-2"/>
       </div>
-      <div class="form-group">
+      <div class="form-row">
+        <f.input @name="gender"
+                 @type="text"
+                 @label="Gender"
+                 @hint="Examples: female, male, non-binary, gender fluid, etc."
+                 @grid="col-auto"
+                 @maxlength={{32}}/>
+      </div>
+      <div class="form-row">
+        <f.input @name="pronouns"
+                 @type="select"
+                 @label="Pronouns"
+                 @grid="col-auto"
+                 @options={{this.pronounOptions}} />
+        {{#if (eq f.model.pronouns "custom")}}
+          <f.input
+            @name="pronouns_custom"
+            @type="text" @label="Tell us your pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
+            @size={{30}}
+            @maxlength={{30}}
+            @grid="col-auto"
+          />
+        {{/if}}
+
+      </div>
+    </:body>
+  </UiSection>
+  <UiSection>
+    <:title>Contact Information</:title>
+    <:body>
+      <p>
+        <b>Note:</b> Updating your email address here WILL NOT update the email address used for various
+        Ranger mailing lists. Contact {{general-support-email}} to update your email address for the forums.
+      </p>
+      <p>
         Ranger teams and leads may use your email address to send important messages to you regarding scheduling and
         operations.
         Keep your email address up to date.
-      </div>
-    </div>
-    <div class="form-row">
-      <f.input @name="home_phone" @label="Primary Phone" @type="text" @inputmode="tel"
-               @grid="col-sm-4 col-md-auto " @maxlength={{25}}/>
-        <f.input @name="alt_phone" @label="Alternative Phone" @type="text" @inputmode="tel"
-                 @grid="col-sm-4 col-md-auto"
-                 @maxlength={{25}}/>
-    </div>
-
-    <div class="form-row">
-      <f.input @name="gender"
-               @type="text"
-               @label="Gender"
-               @hint="Examples: female, male, non-binary, gender fluid, etc."
-               @grid="col-auto"
-               @maxlength={{32}}/>
-    </div>
-    <div class="form-row">
-      <f.input @name="pronouns"
-               @type="select"
-               @label="Pronouns"
-               @grid="col-auto"
-               @options={{this.pronounOptions}} />
-      {{#if (eq f.model.pronouns "custom")}}
-          <f.input
-                  @name="pronouns_custom"
-                  @type="text" @label="Tell us your pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
-                  @size={{30}}
-                  @maxlength={{30}}
-                  @grid="col-auto"
-          />
-      {{/if}}
-
-    </div>
-
-    {{#unless this.person.isAuditor}}
-      <div class="form-group">
-        Do you have a difficult to pronounce callsign? Enter the phonetic spelling below.
-        <span class="d-inline-block">
-        (e.g., 3pio -&gt; "Three-Pee-Oh", Jschool -> "JAY-school", etc)
-        </span>
-      </div>
-
+      </p>
       <div class="form-row">
-        <f.input @name="callsign_pronounce" @label="Callsign Pronounciation" @size={{20}} @maxlength={{20}}  @grid="col-auto" />
+        <f.input @name="email" @label="Email" @type="text" @inputmode="email" @maxlength={{50}}
+                 @grid="col-sm-12 col-md-4 col-xl-3" @noSpaces={{true}} />
+        <f.input @name="home_phone" @label="Primary Phone" @type="text" @inputmode="tel"
+                 @grid="col-sm-12 col-md-auto " @maxlength={{25}}/>
+        <f.input @name="alt_phone" @label="Alternative Phone" @type="text" @inputmode="tel"
+                 @grid="col-sm-12 col-md-auto"
+                 @maxlength={{25}}/>
       </div>
-
-      <div class="form-group">
+    </:body>
+  </UiSection>
+  <UiSection>
+    <:title>Camp Name &amp; Location</:title>
+    <:body>
+      <div class="form-row">
+        <f.input @name="camp_location" @type="textarea" @label="Enter your camp's name, and location (e.g. 9 & C)"
+                 @cols={{80}} @rows={{3}}
+                 @maxlength={{200}}
+                 @grid="col-auto"
+                 @hint={{concat (if f.model.camp_location f.model.camp_location.length "0") " of 200 characters"}} />
+      </div>
+    </:body>
+  </UiSection>
+  {{#unless this.person.isAuditor}}
+    <UiSection>
+      <:title>Languages</:title>
+      <:body>
         List the English names of the languages you are comfortable speaking with the level of fluency in parenthesis,
         each separated by a comma.<br>
         <div class="mt-2 mb-2">
@@ -78,35 +85,47 @@
         Keep the list simple:<br>
         GOOD: "french (fluent), italian (written only), spanish (basic)"<br>
         BAD: "French - I taught in Paris and can only write in Italian. Took 1 year of high school spanish"<br>
-      </div>
-      <div class="form-row">
-        <f.input @name="languages" @label="Languages Spoken" @type="text" @size={{80}} @grid="col-sm-12 col-md-auto"/>
-      </div>
-      <div class="form-row">
-        <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @cols={{80}} @rows={{3}}
-                 @maxlength={{200}}
-                 @grid="col-auto"
-                 @hint={{concat (if f.model.camp_location f.model.camp_location.length "0") " of 200 characters"}} />
-      </div>
-    {{/unless}}
-  </fieldset>
 
-  <fieldset>
-    <legend>Home Address</legend>
-    <PersonAddressEdit @f={{f}} />
-  </fieldset>
-
-  {{#unless this.person.isAuditor}}
-    <fieldset>
-      <legend>Ranger Clothing</legend>
-      <div class="form-row">
-        <f.input @name="teeshirt_size_style" @type="select" @label="T-Shirt Size" @options={{this.shortSleeveOptions}}
-                 @grid="col-sm-12 col-md-auto"/>
-        <f.input @name="longsleeveshirt_size_style" @type="select" @label="Long Sleeve Shirt Size"
-                 @options={{this.longSleeveOptions}} @grid="col-sm-12 col-md-auto"/>
-      </div>
-    </fieldset>
+        <div class="form-row">
+          <f.input @name="languages" @label="Languages Spoken" @type="text" @size={{80}} @grid="col-sm-12 col-md-auto"/>
+        </div>
+      </:body>
+    </UiSection>
+    <UiSection>
+      <:title>Callsign Pronunciation</:title>
+      <:body>
+        <p>
+          Do you have a difficult to pronounce callsign? Enter the phonetic spelling below.
+          <span class="d-inline-block">
+        (e.g., if your callsign is 3pio enter as "Three-Pee-Oh", for Jschool enter as "JAY-school", etc)
+        </span>
+        </p>
+        <div class="form-row">
+          <f.input @name="callsign_pronounce" @label="Callsign Pronunciation" @size={{20}} @maxlength={{20}}
+                   @grid="col-auto"/>
+        </div>
+      </:body>
+    </UiSection>
+    <UiSection>
+      <:title>Ranger Clothing</:title>
+      <:body>
+        <div class="form-row">
+          <f.input @name="teeshirt_size_style" @type="select" @label="T-Shirt Size" @options={{this.shortSleeveOptions}}
+                   @grid="col-sm-12 col-md-auto"/>
+          <f.input @name="longsleeveshirt_size_style" @type="select" @label="Long Sleeve Shirt Size"
+                   @options={{this.longSleeveOptions}} @grid="col-sm-12 col-md-auto"/>
+        </div>
+      </:body>
+    </UiSection>
   {{/unless}}
+
+  <UiSection>
+    <:title>Home Address</:title>
+    <:body>
+      <PersonAddressEdit @f={{f}} />
+    </:body>
+  </UiSection>
+
 
   <f.submit @label="Update" @disabled={{this.person.isSaving}} />
   <f.cancel @disabled={{this.person.isSaving}} />

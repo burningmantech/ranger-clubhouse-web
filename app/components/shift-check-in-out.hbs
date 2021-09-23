@@ -38,7 +38,8 @@
     </tbody>
   </table>
   {{#unless @onDutyEntry.position.count_hours}}
-    Note: <NoAppreciateIcon/> = {{@onDutyEntry.position.title}} hours do not count towards appreciations.
+    Note:
+    <NoAppreciateIcon/> = {{@onDutyEntry.position.title}} hours do not count towards appreciations.
   {{/unless}}
 {{else}}
   {{#if (not @person.canStartShift)}}
@@ -81,12 +82,14 @@
         <tbody>
         {{#each @imminentSlots as |slot|}}
           <tr>
-            <td class="align-middle">{{slot.position_title}}{{#if slot.slot_description}} - {{slot.slot_description}}{{/if}}</td>
+            <td class="align-middle">{{slot.position_title}}{{#if slot.slot_description}}
+              - {{slot.slot_description}}{{/if}}</td>
             <td class="align-middle">{{shift-format slot.slot_begins}}</td>
             <td class="align-middle">{{shift-format slot.slot_ends}}</td>
             <td class="align-middle">
               {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
-                <button type="button" class="btn {{if slot.is_within_start_time "btn-primary" "btn-warning"}}" {{action this.signinShiftAction slot}}
+                <button type="button" class="btn {{if slot.is_within_start_time "btn-primary" "btn-warning"}}" {{action
+                  this.signinShiftAction slot}}
                         disabled={{this.isSubmitting}}>
                   {{if slot.is_within_start_time "Start Shift" "Start Shift Early"}}
                 </button>
@@ -94,7 +97,7 @@
                 <div class="text-danger">
                   {{if slot.is_untrained "Not Trained"}}
                   {{if slot.is_unqualified slot.unqualified_message}}
-                  </div>
+                </div>
                 {{#if (has-role "admin" "timesheet-management")}}
                   <button type="button" class="btn btn-warning" {{action this.signinShiftAction slot}}
                           disabled={{this.isSubmitting}}>
@@ -107,14 +110,15 @@
               {{/if}}
             </td>
           </tr>
-            {{#unless slot.is_within_start_time}}
-              <tr>
-                <td colspan="5" class="text-danger">
-                  <b>WARNING: Most shifts may only be signed into within 15 minutes of the actual start time.<br>
-                    Suggest to {{@person.callsign}} they come back in {{pluralize slot.can_start_in "minute"}} to start their shift.</b>
-                </td>
-              </tr>
-            {{/unless}}
+          {{#unless slot.is_within_start_time}}
+            <tr>
+              <td colspan="5" class="text-danger">
+                <b>WARNING: Most shifts may only be signed into within 15 minutes of the actual start time.<br>
+                  Suggest to {{@person.callsign}} they come back in {{pluralize slot.can_start_in "minute"}} to start
+                  their shift.</b>
+              </td>
+            </tr>
+          {{/unless}}
         {{/each}}
         </tbody>
       </table>
@@ -132,7 +136,7 @@
           <button type="button" class="btn btn-primary" {{action this.startShiftAction}} disabled={{this.isSubmitting}}>
             Start Shift
           </button>
-        {{else if (has-role "admin" "timesheet-management")}}
+        {{else if this.userCanForceCheckIn}}
           <button type="button" class="btn btn-warning" {{action this.startShiftAction}} disabled={{this.isSubmitting}}>
             Force Shift Start
           </button>
@@ -183,14 +187,16 @@
   <ModalDialog @title="Confirm Early Shift Sign In" as |Modal|>
     <Modal.body>
       <p>
-        <b class="text-danger">WARNING: Most shifts may only be signed into within 15 minutes of the actual start time.</b>
+        <b class="text-danger">WARNING: Most shifts may only be signed into within 15 minutes of the actual start
+          time.</b>
       </p>
       <p>
         The "{{this.earlySlot.position_title}}" shift starts at {{shift-format this.earlySlot.slot_begins}}
         and can be <b>signed into {{pluralize this.earlySlot.can_start_in "minute"}} from now</b>.
       </p>
       <p>
-        Are you absolutely sure you want to sign in this person at this time? Check with the HQ Lead or Short if in doubt.
+        Are you absolutely sure you want to sign in this person at this time? Check with the HQ Lead or Short if in
+        doubt.
       </p>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
@@ -199,6 +205,46 @@
       </button>
       <button type="button" class="btn btn-warning" {{action this.confirmEarlyShiftAction}}>
         Confirm Early Shift Start
+      </button>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.showForceStartConfirm}}
+  <ModalDialog @title="Confirm Forced Shift Check In" as |Modal|>
+    <Modal.body>
+      <p>
+        <b class="text-danger">WARNING: {{@person.callsign}} has not meet all the qualifications to start
+          a {{this.forcePosition.title}} shift</b>
+      </p>
+      <ul>
+        {{#unless this.isPersonDirtTrained}}
+          <li>Dirt Training has not been completed</li>
+        {{/unless}}
+        {{#if this.forcePosition.is_untrained}}
+          <li>{{this.forcePosition.training_title}} has not been completed</li>
+        {{/if}}
+        {{#if this.forcePosition.is_unqualified}}
+          <li>{{this.forcePosition.unqualified_message}}</li>
+        {{/if}}
+      </ul>
+      <p>
+        Since you either have the Admin, or Timesheet Management role, you can force a shift check in.
+      </p>
+      <p>
+        <b class="text-danger">A forced shift start will be logged and subject to review.</b>
+      </p>
+      <p>
+        Are you absolutely sure you want to sign in this person at this time? Check with the HQ Lead or Short if in
+        doubt.
+      </p>
+    </Modal.body>
+    <Modal.footer @noAlign={{true}}>
+      <button type="button" class="btn btn-primary"{{action this.closeForceStartConfirm}}>
+        Cancel
+      </button>
+      <button type="button" class="btn btn-warning" {{action this.confirmForceStart}}>
+        Confirm Force Shift Start
       </button>
     </Modal.footer>
   </ModalDialog>

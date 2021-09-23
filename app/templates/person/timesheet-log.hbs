@@ -1,4 +1,4 @@
-'<YearSelect @title="Timesheet Logs" @year={{this.year}} @years={{this.person.all_years}}
+<YearSelect @title="Timesheet Logs" @year={{this.year}} @years={{this.person.all_years}}
             @subheader={{true}} @onChange={{action (mut this.year)}} />
 <p>
   <LinkTo @route="person.timesheet" @query={{hash year=this.year}}>Back To {{this.year}} Timesheet Entries</LinkTo>

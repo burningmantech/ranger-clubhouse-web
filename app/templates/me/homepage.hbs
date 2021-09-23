@@ -1,57 +1,60 @@
-{{!
+  {{!
 
-If the person is a past prospective
-OR if the callsign is not approved and they are not an Auditor or Non Ranger.
-then let them know what's up.
-}}
-{{#if this.person.isPastProspective}}
-  <DashboardPastProspective/>
-{{else if this.person.isProspectiveWaitlist}}
-  <DashboardProspectiveWaitlist/>
-{{else}}
-  {{#if false}}
-    <DashboardDebug @milestones={{this.milestones}} @person={{this.person}} @photo={{this.photo}}
-                    @update={{this.debugUpdateAction}} />
-  {{/if}}
-
-  {{#if (or this.person.isProspective this.person.isAlpha this.person.isBonked)}}
-    <DashboardPnv @milestones={{this.milestones}}
-                  @person={{this.person}}
-                  @photo={{this.photo}}
-                  @motds={{this.motds}}
-                  @uploadAction={{this.showUploadDialogAction}}
-                  @showBehaviorAgreementAction={{this.showBehaviorAgreementAction}}
-                  @debugUpdateAction={{this.debugUpdateAction}} />
-  {{else if this.person.isAuditor}}
-    <DashboardAuditor @milestones={{this.milestones}}
-                      @person={{this.person}}
-                      @motds={{this.motds}}
-                      @showBehaviorAgreementAction={{this.showBehaviorAgreementAction}}
-                      @debugUpdateAction={{this.debugUpdateAction}} />
+  If the person is a past prospective
+  OR if the callsign is not approved and they are not an Auditor or Non Ranger.
+  then let them know what's up.
+  }}
+  {{#if this.person.isPastProspective}}
+    <DashboardPastProspective/>
+  {{else if this.person.isProspectiveWaitlist}}
+    <DashboardProspectiveWaitlist/>
   {{else}}
-    <DashboardRanger @milestones={{this.milestones}}
-                     @person={{this.person}}
-                     @years={{this.years}}
-                     @motds={{this.motds}}
-                     @photo={{this.photo}}
-                     @uploadAction={{this.showUploadDialogAction}}
-                     @showBehaviorAgreementAction={{this.showBehaviorAgreementAction}}
-                     @debugUpdateAction={{this.debugUpdateAction}} />
+    {{#if false}}
+      <DashboardDebug @milestones={{this.milestones}} @person={{this.person}} @photo={{this.photo}}
+                      @update={{this.debugUpdateAction}} />
+    {{/if}}
+
+    {{#if (or this.person.isProspective this.person.isAlpha this.person.isBonked)}}
+      <DashboardPnv @milestones={{this.milestones}}
+                    @person={{this.person}}
+                    @photo={{this.photo}}
+                    @motds={{this.motds}}
+                    @uploadAction={{this.showUploadDialogAction}}
+                    @showBehaviorAgreementAction={{this.showBehaviorAgreementAction}}
+                    @debugUpdateAction={{this.debugUpdateAction}} />
+    {{else if this.person.isAuditor}}
+      <DashboardAuditor @milestones={{this.milestones}}
+                        @person={{this.person}}
+                        @motds={{this.motds}}
+                        @showBehaviorAgreementAction={{this.showBehaviorAgreementAction}}
+                        @debugUpdateAction={{this.debugUpdateAction}} />
+    {{else}}
+      <DashboardRanger @milestones={{this.milestones}}
+                       @person={{this.person}}
+                       @years={{this.years}}
+                       @motds={{this.motds}}
+                       @photo={{this.photo}}
+                       @uploadAction={{this.showUploadDialogAction}}
+                       @showBehaviorAgreementAction={{this.showBehaviorAgreementAction}}
+                       @debugUpdateAction={{this.debugUpdateAction}} />
+    {{/if}}
   {{/if}}
-{{/if}}
+<UiSection>
+  <:title>Need Help?</:title>
+  <:body>
+    <p>
+      For general questions &amp; support: {{vc-email}}
+    </p>
 
-<h5>Need Help?</h5>
-<p>
-  For general questions &amp; support: {{vc-email}}
-</p>
 
+    <p>For technical support: {{admin-email}}</p>
 
-<p>For technical support: {{admin-email}}</p>
-
-{{#if this.showUploadDialog}}
-  <PhotoUpload @person={{this.person}} @photo={{this.photo}} @refreshPhoto={{this.refreshPhoto}}
-               @closeAction={{this.closeUploadDialogAction}} />
-{{/if}}
+    {{#if this.showUploadDialog}}
+      <PhotoUpload @person={{this.person}} @photo={{this.photo}} @refreshPhoto={{this.refreshPhoto}}
+                   @closeAction={{this.closeUploadDialogAction}} />
+    {{/if}}
+  </:body>
+</UiSection>
 
 {{#if this.showBehaviorAgreement}}
   <BehavioralAgreementModal @closeAgreement={{this.closeAgreementAction}} @signAgreement={{this.signAgreementAction}} />
