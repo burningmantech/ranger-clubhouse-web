@@ -72,54 +72,62 @@
   </ChNotice>
 {{/if}}
 
-<h3>Pre-Event &amp; On Playa SMS Numbers</h3>
-<p>
-  <b>For non-USA phone numbers:</b> Include your country code when entering a phone number.<br>
-  Australia: +61, Canada: +1, France: +33, Mexico: +52, New Zealand: +64, UK: +44.
-</p>
+<UiSection>
+  <:title>Pre-Event &amp; On Playa SMS Numbers</:title>
+  <:body>
+    <p>
+      <b>For non-USA phone numbers:</b> Include your country code when entering a phone number.<br>
+      Australia: +61, Canada: +1, France: +33, Mexico: +52, New Zealand: +64, UK: +44.
+    </p>
 
-<ChForm @formId="numbers" @formFor={{this.phoneForm}} @validator={{this.numberValidations}}
-        @onSubmit={{this.saveNumbersAction}} as |f|>
-  <div class="form-row">
-    <f.input @name="off_playa"
-             @label={{if f.model.is_same "Pre-Event & On Playa phone number:" "Pre-Event phone number:"}}
-             @type="text" @inputmode="tel" @size=30 @grid="col-auto"/>
-    <div class="col-sm-12 col-lg-auto">
-      <label class="col-form-label d-sm-none d-lg-block">&nbsp;</label>
-      <f.input @name="is_same" @label="On playa number is the same as the pre-event number" @type="checkbox"/>
-    </div>
-  </div>
-  <div class="row form-group mt-2 {{if f.model.is_same "d-none"}}">
-    <f.input @name="on_playa" @label="On Playa phone number:" @type="text" @inputmode="tel" @size=30 @grid="col-auto"/>
-  </div>
+    <ChForm @formId="numbers" @formFor={{this.phoneForm}} @validator={{this.numberValidations}}
+            @onSubmit={{this.saveNumbersAction}} as |f|>
+      <div class="form-row">
+        <f.input @name="off_playa"
+                 @label={{if f.model.is_same "Pre-Event & On Playa phone number:" "Pre-Event phone number:"}}
+                 @type="text" @inputmode="tel" @size=30 @grid="col-auto"/>
+        <div class="col-sm-12 col-lg-auto">
+          <label class="col-form-label d-sm-none d-lg-block">&nbsp;</label>
+          <f.input @name="is_same" @label="On playa number is the same as the pre-event number" @type="checkbox"/>
+        </div>
+      </div>
+      <div class="row form-group mt-2 {{if f.model.is_same "d-none"}}">
+        <f.input @name="on_playa" @label="On Playa phone number:" @type="text" @inputmode="tel" @size=30
+                 @grid="col-auto"/>
+      </div>
 
-  <div class="mt-2">
-    <f.submit @label="Update SMS Numbers" @disabled={{this.isUpdatingNumbers}} />
-    {{#if this.isUpdatingNumbers}}
+      <div class="mt-2">
+        <f.submit @label="Update SMS Numbers" @disabled={{this.isUpdatingNumbers}} />
+        {{#if this.isUpdatingNumbers}}
+          <LoadingIndicator/>
+        {{/if}}
+      </div>
+    </ChForm>
+  </:body>
+</UiSection>
+
+<UiSection>
+  <:title>Alert Preference Options</:title>
+  <:body>
+    {{#if this.isMe}}
+      <p class="ml-2">
+        To change your email visit
+        <LinkTo @route="me.personal-info">Personal Info</LinkTo>
+      </p>
+    {{/if}}
+
+    <AlertGroup @numbers={{this.numbers}} @email={{@person.email}} @group={{this.offPlayaAlerts}}
+                @heading="Pre & Post Event Alerts"
+                @description="These alerts may be sent to you before or after the event."/>
+    <AlertGroup @numbers={{this.numbers}} @email={{@person.email}} @group={{this.onPlayaAlerts}}
+                @heading="On Playa Alerts"
+                @description="These alerts may be sent to you while the event is happening."/>
+
+    <button type="button" class="btn btn-primary" {{action this.updatePrefsAction}} disabled={{this.isSubmitting}}>
+      Update Preferences
+    </button>
+    {{#if this.isSubmitting}}
       <LoadingIndicator/>
     {{/if}}
-  </div>
-</ChForm>
-<hr>
-
-<h3>Alert Preference Options</h3>
-{{#if this.isMe}}
-  <p class="ml-2">
-    To change your email visit
-    <LinkTo @route="me.personal-info">Personal Info</LinkTo>
-  </p>
-{{/if}}
-
-<AlertGroup @numbers={{this.numbers}} @email={{@person.email}} @group={{this.offPlayaAlerts}}
-            @heading="Pre & Post Event Alerts"
-            @description="These alerts may be sent to you before or after the event."/>
-<AlertGroup @numbers={{this.numbers}} @email={{@person.email}} @group={{this.onPlayaAlerts}}
-            @heading="On Playa Alerts"
-            @description="These alerts may be sent to you while the event is happening."/>
-
-<button type="button" class="btn btn-primary" {{action this.updatePrefsAction}} disabled={{this.isSubmitting}}>
-  Update Preferences
-</button>
-{{#if this.isSubmitting}}
-  <LoadingIndicator/>
-{{/if}}
+  </:body>
+</UiSection>

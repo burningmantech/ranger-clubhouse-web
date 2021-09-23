@@ -1,98 +1,108 @@
 {{#if @timesheets}}
-  <div class="timesheet-table">
-    <div class="timesheet-row timesheet-header">
-      <div class="timesheet-time">From</div>
-      <div class="timesheet-time">To</div>
-      <div class="timesheet-duration">Time</div>
-      <div class="timesheet-credits">Credits</div>
-      <div class="timesheet-position">Position</div>
-    </div>
-    {{#each @timesheets as |ts|}}
-      <div class="timesheet-entry">
-        <div class="timesheet-row">
-          <div class="timesheet-time">{{shift-format ts.on_duty}}</div>
-          <div class="timesheet-time">
-            {{#if ts.off_duty}}
-              {{shift-format ts.off_duty}}
-            {{else}}
-              <i>On Duty</i>
-            {{/if}}
-          </div>
-          <div class="timesheet-duration">
-            <span class="timesheet-sm-label">Time:</span>
-            {{#unless ts.position.count_hours}}
-              <NoAppreciateIcon/>
-            {{/unless}}
-            {{hour-minute-format ts.duration}}
-          </div>
-          <div class="timesheet-credits">
-            <span class="timesheet-sm-label">Credits:</span>
-            {{credits-format ts.credits}}
-          </div>
-          <div class="timesheet-position">{{ts.position.title}}</div>
+  <UiSection>
+    <:title>Timesheet Entries</:title>
+    <:body>
+      <div class="timesheet-table">
+        <div class="timesheet-row timesheet-header">
+          <div class="timesheet-time">From</div>
+          <div class="timesheet-time">To</div>
+          <div class="timesheet-duration">Time</div>
+          <div class="timesheet-credits">Credits</div>
+          <div class="timesheet-position">Position</div>
         </div>
+        {{#each @timesheets as |ts|}}
+          <div class="timesheet-entry">
+            <div class="timesheet-row">
+              <div class="timesheet-time">{{shift-format ts.on_duty}}</div>
+              <div class="timesheet-time">
+                {{#if ts.off_duty}}
+                  {{shift-format ts.off_duty}}
+                {{else}}
+                  <i>On Duty</i>
+                {{/if}}
+              </div>
+              <div class="timesheet-duration">
+                <span class="timesheet-sm-label">Time:</span>
+                {{#unless ts.position.count_hours}}
+                  <NoAppreciateIcon/>
+                {{/unless}}
+                {{hour-minute-format ts.duration}}
+              </div>
+              <div class="timesheet-credits">
+                <span class="timesheet-sm-label">Credits:</span>
+                {{credits-format ts.credits}}
+              </div>
+              <div class="timesheet-position">{{ts.position.title}}</div>
+            </div>
 
-        <div class="timesheet-row d-print-none">
-          <div>
-            {{#if ts.stillOnDuty}}
-              <b>You are still on duty. You may submit a correction after the shift has ended.</b>
-            {{else if ts.isVerified}}
-              <span class="text-success">
+            <div class="timesheet-row d-print-none">
+              <div>
+                {{#if ts.stillOnDuty}}
+                  <b>You are still on duty. You may submit a correction after the shift has ended.</b>
+                {{else if ts.isVerified}}
+                  <span class="text-success">
                 {{fa-icon "check"}} Entry was marked correct on {{shift-format ts.verified_at}}
               </span>
-            {{else if ts.isUnverified}}
-              <b>{{fa-icon "arrow-right"}} This entry has not been verified.</b>
-            {{else if ts.isApproved}}
-              <b>{{fa-icon "arrow-right"}} The correction request has been approved. Verify this entry is correct.</b>
-            {{else if ts.isRejected}}
-              <b class="text-danger">{{fa-icon "times"}} The correction request has been denied.</b>
-            {{else if ts.isPending}}
-              <b class="text-info">{{fa-icon "hourglass-half"}} The correction request is pending review.</b>
-            {{else}}
-              Unknown state?
-            {{/if}}
+                {{else if ts.isUnverified}}
+                  <b>{{fa-icon "arrow-right"}} This entry has not been verified.</b>
+                {{else if ts.isApproved}}
+                  <b>{{fa-icon "arrow-right"}} The correction request has been approved. Verify this entry is
+                    correct.</b>
+                {{else if ts.isRejected}}
+                  <b class="text-danger">{{fa-icon "times"}} The correction request has been denied.</b>
+                {{else if ts.isPending}}
+                  <b class="text-info">{{fa-icon "hourglass-half"}} The correction request is pending review.</b>
+                {{else}}
+                  Unknown state?
+                {{/if}}
 
-            {{#if ts.haveReviewerResponse}}
-              <p><b>Response from the timesheet review team:</b></p>
-              <p>{{nl2br ts.reviewer_notes}}</p>
-            {{/if}}
-          </div>
-        </div>
+                {{#if ts.haveReviewerResponse}}
+                  <p><b>Response from the timesheet review team:</b></p>
+                  <p>{{nl2br ts.reviewer_notes}}</p>
+                {{/if}}
+              </div>
+            </div>
 
-        <div class="timesheet-row timesheet-actions d-print-none">
-          {{#if ts.off_duty}}
-            {{#unless ts.isVerified}}
-              <button type="button" class="btn btn-success" {{action this.markCorrectAction ts}}
-                      disabled={{ts.isSaving}}>
-                Entry Correct
-              </button>
-            {{/unless}}
-            <button type="button" class="btn btn-secondary" {{action this.markIncorrectAction ts}}
-                    disabled={{ts.isLoading}}>
-              {{#if ts.isPending}}
-                Add More Info
-              {{else if ts.isRejected}}
-                Submit Appeal
-              {{else}}
-                Entry Incorrect
+            <div class="timesheet-row timesheet-actions d-print-none">
+              {{#if ts.off_duty}}
+                {{#unless ts.isVerified}}
+                  <button type="button" class="btn btn-success" {{action this.markCorrectAction ts}}
+                          disabled={{ts.isSaving}}>
+                    Entry Correct
+                  </button>
+                {{/unless}}
+                <button type="button" class="btn btn-secondary" {{action this.markIncorrectAction ts}}
+                        disabled={{ts.isLoading}}>
+                  {{#if ts.isPending}}
+                    Add More Info
+                  {{else if ts.isRejected}}
+                    Submit Appeal
+                  {{else}}
+                    Entry Incorrect
+                  {{/if}}
+                </button>
+                {{#if ts.isReloading}}
+                  <LoadingIndicator/>
+                {{/if}}
               {{/if}}
-            </button>
-            {{#if ts.isReloading}}
-              <LoadingIndicator/>
-            {{/if}}
-          {{/if}}
-          {{#if ts.isSaving}}
-            <LoadingIndicator/>
-          {{/if}}
-        </div>
+              {{#if ts.isSaving}}
+                <LoadingIndicator/>
+              {{/if}}
+            </div>
+          </div>
+        {{/each}}
       </div>
-    {{/each}}
-  </div>
-
+    </:body>
+  </UiSection>
   <TimesheetSummary @summary={{@timesheetSummary}} />
   <TimesheetPositionSummary @timesheets={{@timesheets}} />
 {{else}}
-  <p class="text-danger font-weight-bold">No timesheet entries were found.</p>
+  <UiSection>
+    <:title>No timesheet entries</:title>
+    <:body>
+      <b class="text-danger">No timesheet entries were found.</b>
+    </:body>
+  </UiSection>
 {{/if}}
 
 

@@ -20,44 +20,55 @@
       </ChNotice>
     {{/if}}
 
-    <ScheduleTable @slots={{@signedUpSlots}} @person={{@person}} @isMe={{this.isMe}} @isAdmin={{this.isAdmin}} @year={{@year}}
+    <ScheduleTable @slots={{@signedUpSlots}}
+                   @person={{@person}}
+                   @isMe={{this.isMe}}
+                   @isAdmin={{this.isAdmin}}
+                   @year={{@year}}
                    @creditsEarned={{@creditsEarned}}
-                   @scheduleSummary={{@scheduleSummary}} @leaveSlot={{this.leaveSlot}}
-                   @showPeople={{this.showPeople}} />
+                   @scheduleSummary={{@scheduleSummary}}
+                   @leaveSlot={{this.leaveSlot}}
+                   @showPeople={{this.showPeople}}
+                   @includeLog={{@includeLog}}
+    />
 
     <div class="d-print-none">
-      <h3 class="mt-2">{{if this.isCurrentYear "Available" "Past"}} {{@year}} Shifts</h3>
-      {{#if this.availableSlots}}
-        <div class="row mb-1">
-          <div class="col-sm-12 col-lg-auto mb-2">
-            <ChForm::Select @name="filterDay"
-                            @value={{this.filterDay}}
-                            @options={{this.dayOptions}}
-                            @onChange={{action (mut this.filterDay)}}
-                            @controlClass="form-control"/>
-          </div>
-         </div>
+      <UiSection>
+        <:title>{{if this.isCurrentYear "Available" "Past"}} {{@year}} Shifts</:title>
+        <:body>
+          {{#if this.availableSlots}}
+            <div class="row mb-1">
+              <div class="col-sm-12 col-lg-auto mb-2">
+                <ChForm::Select @name="filterDay"
+                                @value={{this.filterDay}}
+                                @options={{this.dayOptions}}
+                                @onChange={{action (mut this.filterDay)}}
+                                @controlClass="form-control"/>
+              </div>
+            </div>
 
-        <p>Showing {{this.viewSlots.length}} of {{this.availableSlots.length}}</p>
-        {{#each this.positions key="position_id" as |position|}}
-          <SchedulePositionList @position={{position}}
-                                @showPeople={{this.showPeople}}
-                                @joinSlot={{this.joinSlot}}
-                                @leaveSlot={{this.leaveSlot}}
-                                @isAdmin={{this.isAdmin}}
-                                @isCurrentYear={{this.isCurrentYear}}
-          />
-        {{else}}
-          <div class="text-danger">There are no shifts which match.</div>
-        {{/each}}
-        <div class="mt-2"><b>Note:</b>
-          <ul>
-            <li>A shift may not be added to or removed from your schedule if the shift has already started.</li>
-          </ul>
-        </div>
-      {{else}}
-        <p><b class="text-danger">There are no shifts available.</b></p>
-      {{/if}}
+            <p>Showing {{this.viewSlots.length}} of {{this.availableSlots.length}}</p>
+            {{#each this.positions key="position_id" as |position|}}
+              <SchedulePositionList @position={{position}}
+                                    @showPeople={{this.showPeople}}
+                                    @joinSlot={{this.joinSlot}}
+                                    @leaveSlot={{this.leaveSlot}}
+                                    @isAdmin={{this.isAdmin}}
+                                    @isCurrentYear={{this.isCurrentYear}}
+              />
+            {{else}}
+              <div class="text-danger">There are no shifts which match.</div>
+            {{/each}}
+            <div class="mt-2"><b>Note:</b>
+              <ul>
+                <li>A shift may not be added to or removed from your schedule if the shift has already started.</li>
+              </ul>
+            </div>
+          {{else}}
+            <p><b class="text-danger">There are no shifts available.</b></p>
+          {{/if}}
+        </:body>
+      </UiSection>
     </div>
   {{/if}}
 </div>

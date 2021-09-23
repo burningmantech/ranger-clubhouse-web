@@ -1,99 +1,102 @@
-<div class="border rounded p-2 mt-2 mb-2">
-  <h3>{{@year}} Timesheet Entries</h3>
-  <div class="d-flex">
-    <div>
-      <NoAppreciateIcon/>
-      = the shift hours do not count towards appreciations.
+<UiSection>
+  <:title>{{@year}} Timesheet Entries</:title>
+  <:body>
+    <div class="d-flex">
+      <div>
+        <NoAppreciateIcon/>
+        = the shift hours do not count towards appreciations.
+      </div>
+      <div class="ml-4">
+        <LinkTo @route="person.timesheet-log" @query={{hash year=@year}}>View {{@year}} Timesheet Log</LinkTo>
+      </div>
     </div>
-    <div class="ml-4">
-      <LinkTo @route="person.timesheet-log" @query={{hash year=@year}}>View {{@year}} Timesheet Log</LinkTo>
-    </div>
-  </div>
-  <table class="table table-hover table-striped table-width-auto">
-    <thead>
-    <tr>
-      <th>Time</th>
-      <th class="text-right">Duration</th>
-      <th class="text-right">Credits</th>
-      <th>Position</th>
-      <th>Status</th>
-      <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each @timesheets key="id" as |ts|}}
+    <table class="table table-hover table-striped table-width-auto">
+      <thead>
       <tr>
-        <td>
-          {{#if ts.off_duty}}
-            {{shift-format ts.on_duty ts.off_duty}}
-          {{else}}
-            {{shift-format ts.on_duty}} to <i>still on duty</i>
-          {{/if}}
-        </td>
-        <td class="text-right">
-          {{#unless ts.position.count_hours}}
-            <NoAppreciateIcon/>
-          {{/unless}}
-          {{hour-minute-format ts.duration}}
-        </td>
-        <td class="text-right">
-          {{credits-format ts.credits}}
-        </td>
-        <td>
-          {{ts.position.title}}
-          {{#if ts.is_non_ranger}}
-            <br><i>(as non ranger volunteer)</i>
-          {{/if}}
-        </td>
-        <td>
-          {{#if (is-empty ts.off_duty)}}
-            -
-          {{else if ts.isVerified}}
-            <span class="text-success">{{fa-icon "check"}} Verified</span>
-          {{else if ts.isUnverified}}
-            {{fa-icon "question"}} Unverified
-          {{else if ts.isPending}}
-            <b class="text-danger">{{fa-icon "arrow-right"}} Correction Request</b>
-          {{else if ts.isRejected}}
-            {{fa-icon "times"}} Correction Rejected
-          {{else if ts.isApproved}}
-            {{fa-icon "thumbs-up" type="far"}} Correction Approved
-          {{else}}
-            &nbsp;
-          {{/if}}
-        </td>
-        <td>
-          {{#if (is-empty ts.off_duty)}}
-            <button type="button" class="btn btn-danger btn-sm" {{action this.signoffAction ts}}>End Shift</button>
-          {{else }}
-            <button type="button"
-                    class="btn {{if ts.isPending "btn-danger" "btn-primary"}} btn-sm"
-              {{action this.editEntryAction ts}} disabled={{ts.isReloading}}>
-              {{#if ts.isReloading}}
-                {{fa-icon "spinner" spin=true}}
-              {{else}}
-                {{fa-icon "edit"}}
-              {{/if}}
-              {{#if this.canManageTimesheets}}
-                {{if ts.isPending "Correct" "Edit"}}
-              {{else}}
-                View
-              {{/if}}
-            </button>
-          {{/if}}
-        </td>
+        <th>Time</th>
+        <th class="text-right">Duration</th>
+        <th class="text-right">Credits</th>
+        <th>Position</th>
+        <th>Status</th>
+        <th>Action</th>
       </tr>
-    {{else}}
-      <tr>
-        <td>&nbsp;</td>
-        <td colspan="6"><b class="mt-2 text-danger">No timesheet entries found for {{@year}}</b></td>
-      </tr>
-    {{/each}}
-    </tbody>
-  </table>
-  <TimesheetSummary @summary={{@timesheetSummary}} />
-  <TimesheetPositionSummary @timesheets={{@timesheets}} />
-</div>
+      </thead>
+      <tbody>
+      {{#each @timesheets key="id" as |ts|}}
+        <tr>
+          <td>
+            {{#if ts.off_duty}}
+              {{shift-format ts.on_duty ts.off_duty}}
+            {{else}}
+              {{shift-format ts.on_duty}} to <i>still on duty</i>
+            {{/if}}
+          </td>
+          <td class="text-right">
+            {{#unless ts.position.count_hours}}
+              <NoAppreciateIcon/>
+            {{/unless}}
+            {{hour-minute-format ts.duration}}
+          </td>
+          <td class="text-right">
+            {{credits-format ts.credits}}
+          </td>
+          <td>
+            {{ts.position.title}}
+            {{#if ts.is_non_ranger}}
+              <br><i>(as non ranger volunteer)</i>
+            {{/if}}
+          </td>
+          <td>
+            {{#if (is-empty ts.off_duty)}}
+              -
+            {{else if ts.isVerified}}
+              <span class="text-success">{{fa-icon "check"}} Verified</span>
+            {{else if ts.isUnverified}}
+              {{fa-icon "question"}} Unverified
+            {{else if ts.isPending}}
+              <b class="text-danger">{{fa-icon "arrow-right"}} Correction Request</b>
+            {{else if ts.isRejected}}
+              {{fa-icon "times"}} Correction Rejected
+            {{else if ts.isApproved}}
+              {{fa-icon "thumbs-up" type="far"}} Correction Approved
+            {{else}}
+              &nbsp;
+            {{/if}}
+          </td>
+          <td>
+            {{#if (is-empty ts.off_duty)}}
+              <button type="button" class="btn btn-danger btn-sm" {{action this.signoffAction ts}}>End Shift</button>
+            {{else }}
+              <button type="button"
+                      class="btn {{if ts.isPending "btn-danger" "btn-primary"}} btn-sm"
+                {{action this.editEntryAction ts}} disabled={{ts.isReloading}}>
+                {{#if ts.isReloading}}
+                  {{fa-icon "spinner" spin=true}}
+                {{else}}
+                  {{fa-icon "edit"}}
+                {{/if}}
+                {{#if this.canManageTimesheets}}
+                  {{if ts.isPending "Correct" "Edit"}}
+                {{else}}
+                  View
+                {{/if}}
+              </button>
+            {{/if}}
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td>&nbsp;</td>
+          <td colspan="6"><b class="mt-2 text-danger">No timesheet entries found for {{@year}}</b></td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </:body>
+</UiSection>
+
+<TimesheetSummary @summary={{@timesheetSummary}} />
+<TimesheetPositionSummary @timesheets={{@timesheets}} />
 
 {{#if this.editEntry}}
   <ModalDialog @title="{{if this.canManageTimesheets "Edit" "View"}} Timesheet #{{this.editEntry.id}}" as |Modal|>

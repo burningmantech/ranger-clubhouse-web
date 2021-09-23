@@ -1,22 +1,21 @@
 <YearSelect @title="Schedule By Callsign" @year={{this.year}} @onChange={{action (mut this.year)}}  />
-
-  <p>
-    Jump to the callsigns starting with the letter:
-  </p>
-  <p>
-    {{#each this.letterOptions as |letter|}}
-      <a href {{on "click" (fn this.scrollToCallsign letter.id)}}class="d-inline-block border p-2 mr-2 mb-2">
-        {{letter.letter}}
-      </a>
-    {{/each}}
-  </p>
+<p>
+  Jump to the callsigns starting with the letter:
+</p>
+<p>
+  {{#each this.letterOptions as |letter|}}
+    <a href {{on "click" (fn this.scrollToCallsign letter.id)}}class="d-inline-block border p-2 mr-2 mb-2">
+      {{letter.letter}}
+    </a>
+  {{/each}}
+</p>
 <p>
   Showing {{pluralize this.people.length "person"}}
 </p>
 <div class="max-width-900">
   {{#each this.people key="id" as |person|}}
     <ChAccordion id="person-{{person.id}}" as |accordion|>
-      <accordion.title>{{person.callsign}} &lt;{{person.status}}&gt; </accordion.title>
+      <accordion.title>{{person.callsign}} &lt;{{person.status}}&gt;</accordion.title>
       <accordion.body>
         <p>
           <LinkTo @route="person.index" @model={{person.id}}>
@@ -57,3 +56,4 @@
     </p>
   {{/each}}
 </div>
+

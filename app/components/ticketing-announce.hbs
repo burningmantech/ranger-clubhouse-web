@@ -1,58 +1,63 @@
 {{#if (or @person.isAlpha @person.isProspective)}}
-  Information about Work Access Passes will be made available in June or July. Please check back at that time.
+  <UiSection>
+    Information about Work Access Passes will be made available in June or July. Please check back at that time.
+  </UiSection>
 {{else}}
   {{#if @ticketPackage.tickets}}
-    <h4 class="text-success">
-      Hooray! You have
-      {{#if (eq @ticketPackage.tickets.length 1)}}
-        a ticket
-      {{else}}
-        {{@ticketPackage.tickets.length}} tickets
-      {{/if}}
-      available:
-    </h4>
-    <ul>
-      {{#each @ticketPackage.tickets as |ticket|}}
-        <li>
-          A {{ticket-type-human ticket.type}} earned in {{ticket.source_year}} and will expire after
-          {{mdy-format ticket.expiry_date full=true}}
-        </li>
-      {{/each}}
-    </ul>
-    {{#if @ticketPackage.appreciations}}
-      The following provisions have been awarded to you:
-      <ul>
-        {{#each @ticketPackage.appreciations as |item|}}
-          <li>
-            {{item.typeLabel}}
-            {{#if item.isEventRadio}}
-              (count {{item.item_count}})
-            {{/if}}
-            expiring after  {{mdy-format item.expiry_date full=true}}
-          </li>
-        {{/each}}
-      </ul>
-    {{/if}}
-    <strong>What happens next?</strong>
-    <p>
-      You'll need to come back later to claim or bank your ticket once the
-      ticketing window has opened. Information about how to claim or bank your goodies
-      will be available in the Clubhouse in June or early July. If you are not
-      planning on attending the event this year, you may bank the ticket(s).
-    </p>
+    <UiSection>
+      <:title> Hooray! You have {{pluralize @ticketPackage.tickets.length "ticket"}} available:</:title>
+      <:body>
+        <ul>
+          {{#each @ticketPackage.tickets as |ticket|}}
+            <li>
+              A {{ticket-type-human ticket.type}} earned in {{ticket.source_year}} and will expire after
+              {{mdy-format ticket.expiry_date full=true}}
+            </li>
+          {{/each}}
+        </ul>
+        {{#if @ticketPackage.appreciations}}
+          The following provisions have been awarded to you:
+          <ul>
+            {{#each @ticketPackage.appreciations as |item|}}
+              <li>
+                {{item.typeLabel}}
+                {{#if item.isEventRadio}}
+                  (count {{item.item_count}})
+                {{/if}}
+                expiring after  {{mdy-format item.expiry_date full=true}}
+              </li>
+            {{/each}}
+          </ul>
+        {{/if}}
+      </:body>
+    </UiSection>
+    <UiSection>
+      <:title>What happens next?</:title>
+      <:body>
+        You'll need to come back later to claim or bank your ticket once the
+        ticketing window has opened. Information about how to claim or bank your goodies
+        will be available in the Clubhouse in June or early July. If you are not
+        planning on attending the event this year, you may bank the ticket(s).
+      </:body>
+    </UiSection>
   {{else}}
-    <strong>Sorry, it doesn't appear you qualified for a Reduced-Price Ticket or Staff Credential.</strong>
-    <p>
-      You earned {{credits-format @ticketPackage.credits_earned}} last event. The minimum credits needed to earn
-      a Reduced-Price Ticket was {{credits-format @ticketingInfo.rpt_credits}}, and a Staff Credential was
-      {{credits-format @ticketingInfo.sc_credits}}.
-    </p>
+    <UiSection>
+      <:title>Sorry, it doesn't appear you qualified for a ticket.</:title>
+      <:body>
+        <p>
+          You earned {{credits-format @ticketPackage.credits_earned}} last event. The minimum credits needed to earn
+          a Reduced-Price Ticket was {{credits-format @ticketingInfo.rpt_credits}}, and a Staff Credential was
+          {{credits-format @ticketingInfo.sc_credits}}.
+        </p>
+      </:body>
+    </UiSection>
   {{/if}}
-
-  <strong>Where are the Vehicle and Work Access Passes?</strong>
-  <p>
-    Don't worry, vehicle passes &amp; WAPs will be made available in the coming months.
-    An announcement will be made in June or July on when you will be able to claim
-    the passes.
-  </p>
+  <UiSection>
+    <:title>Where are the Vehicle and Work Access Passes?</:title>
+    <:body>
+      Don't worry, vehicle passes &amp; WAPs will be made available in the coming months.
+      An announcement will be made in June or July on when you will be able to claim
+      the passes.
+    </:body>
+  </UiSection>
 {{/if}}

@@ -5,6 +5,7 @@ import {inject as service} from '@ember/service';
 import {DIRT, DIRT_SHINY_PENNY, TRAINING} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 import {NON_RANGER} from 'clubhouse/constants/person_status';
+import {ADMIN, TIMESHEET_MANAGEMENT} from 'clubhouse/constants/roles';
 
 export default class ShiftCheckInOutComponent extends Component {
   @service ajax;
@@ -25,6 +26,9 @@ export default class ShiftCheckInOutComponent extends Component {
 
   @tracked showEarlyShiftConfirm = false;
   @tracked earlySlot = null;
+
+  @tracked showForceStartConfirm = false;
+  @tracked forcePosition = null;
 
   constructor() {
     super(...arguments);
@@ -102,10 +106,12 @@ export default class ShiftCheckInOutComponent extends Component {
       }
     }
 
+    this.userCanForceCheckIn = this.session.hasRole([ADMIN, TIMESHEET_MANAGEMENT]);
+
   }
 
   /**
-   * Start a shift.
+   * Start a shift, check to see if the position can be started and if not, confirm a force start.
    *
    * @param {number} positionId
    * @param {number} slotId
@@ -114,6 +120,31 @@ export default class ShiftCheckInOutComponent extends Component {
 
   _startShift(positionId, slotId = null) {
     const position = this.activePositions.find((p) => +p.id === +positionId);
+
+    if (this.isPersonDirtTrained && !position.is_unqualified && !position.is_untrained) {
+      this._signInPerson(position, slotId);
+      return;
+    }
+
+    this.forcePosition = position;
+    this.forceSlotId = slotId;
+    this.showForceStartConfirm = true;
+  }
+
+  @action
+  confirmForceStart() {
+    this.showForceStartConfirm = false;
+    this._signInPerson(this.forcePosition, this.forceSlotId);
+  }
+
+  @action
+  closeForceStartConfirm() {
+    this.showForceStartConfirm = false;
+    this.forcePosition = null;
+    this.forceSlotId = null;
+  }
+
+  _signInPerson(position, slotId) {
     const person = this.args.person;
 
     const data = {
@@ -124,7 +155,6 @@ export default class ShiftCheckInOutComponent extends Component {
     if (slotId) {
       data.slot_id = slotId;
     }
-
     this.toast.clear();
     this.isSubmitting = true;
     this.ajax.request('timesheet/signin', {method: 'POST', data})

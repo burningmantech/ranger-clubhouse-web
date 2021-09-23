@@ -2,13 +2,8 @@
   <YearSelect @title="Shift Lead Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 </div>
 {{#if this.dirtShiftTimes}}
-  <div class="form-row d-print-none mb-2">
-    <div class="col-12 text-muted">
-      Use the browser's print command to send this page to the printer. The navigation header, footer, and this message
-      will not appear on the page.
-    </div>
-  </div>
-  <div class="form-row mt-2">
+  <PrintInstruction />
+  <div class="form-row mt-2 d-print-none">
     <div class="col-auto">
       <PeriodSelect
         @label="Select a {{this.year}} shift period"
@@ -37,9 +32,8 @@
     {{dayjs-format this.shiftStart "dddd, MMMM Do YYYY @ HH:mm"}}
   </h1>
 
-  <div class="row">
-    <div class="col-sm-12 col-md-6">
-      <div class="border rounded p-2 mb-2">
+  <div class="d-flex">
+    <section class="d-flex-equal mr-2">
         <h3>{{pluralize this.dirt_signups.length "Dirt Ranger"}},
           {{#if this.green_dot_total}}
             including {{pluralize this.green_dot_total "Green Dot"}}
@@ -59,15 +53,11 @@
         <h3>{{pluralize this.command_staff_signups.length "Command Staff Ranger"}}</h3>
         <h3>{{pluralize this.non_dirt_signups.length "Special Team Ranger"}}</h3>
 
-      </div>
-    </div>
-
-    <div class="col-sm-12 col-md-6">
-      <table class="table table-sm table-box table-striped">
-        <caption>
-          {{pluralize this.below_min_positions.length "position"}} BELOW MIN. STAFFING
-        </caption>
-        <thead>
+    </section>
+    <section class="d-flex-equal">
+      <h3>{{pluralize this.below_min_positions.length "position"}} BELOW MIN. STAFFING</h3>
+      <table class="table table-sm table-striped">
+         <thead>
         <tr>
           <th>Position</th>
           <th>Shift</th>
@@ -104,7 +94,7 @@
         {{/each}}
         </tbody>
       </table>
-    </div>
+    </section>
   </div>
   <p>
     Gender = F: Female, M: Male, NB: Non-binary, Q: Queer (unspecified), GF: Gender Fluid, - (dash): not stated<br>

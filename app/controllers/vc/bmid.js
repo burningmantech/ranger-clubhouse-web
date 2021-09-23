@@ -1,5 +1,5 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import {action, get, set} from '@ember/object';
+import {action, set} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {schedule, later} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
@@ -160,7 +160,7 @@ export default class VcBmidController extends ClubhouseController {
       case 'notes':
         key = this.sortColumn;
         bmids.sort((a, b) => {
-          const aCol = get(a, key), bCol = get(b, key);
+          const aCol = a[key], bCol = b[key];
 
           // Have empty values appear at the end
           if (isEmpty(aCol)) {
@@ -490,6 +490,7 @@ export default class VcBmidController extends ClubhouseController {
   @action
   sortBmidsAction(column) {
     this.sortColumn = column;
+    this._buildViewBmids();
     this.startRenderBmids();
   }
 }

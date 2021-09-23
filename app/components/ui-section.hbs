@@ -1,0 +1,10 @@
+<section>
+  {{#if (has-block "title")}}
+    <h3>{{yield to="title"}}</h3>
+  {{/if}}
+  {{#if (has-block "body")}}
+    {{yield to="body"}}
+  {{else}}
+    {{yield}}
+  {{/if}}
+</section>
