@@ -73,8 +73,7 @@
         <thead>
         <tr>
           <th>Shift</th>
-          <th>Starts</th>
-          <th>Ends</th>
+          <th>Time</th>
           <th>Action</th>
         </tr>
         </thead>
@@ -84,8 +83,7 @@
           <tr>
             <td class="align-middle">{{slot.position_title}}{{#if slot.slot_description}}
               - {{slot.slot_description}}{{/if}}</td>
-            <td class="align-middle">{{shift-format slot.slot_begins}}</td>
-            <td class="align-middle">{{shift-format slot.slot_ends}}</td>
+            <td class="align-middle">{{shift-format slot.slot_begins slot.slot_ends}}</td>
             <td class="align-middle">
               {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
                 <button type="button" class="btn {{if slot.is_within_start_time "btn-primary" "btn-warning"}}" {{action

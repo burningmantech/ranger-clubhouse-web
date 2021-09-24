@@ -106,7 +106,7 @@
         <label class={{this.labelClass}} for={{concat this.domId idx}}>{{option.label}}</label>
       </div>
     {{/each}}
-  {{else if (eq @type "search")}}
+  {{~else if (eq @type "search")~}}
     <AutocompleteInput @placeholder={{@placeholder}}
                        @onSearch={{@onSearch}}
                        @onSelect={{this.update}}
@@ -115,20 +115,20 @@
                        @autofocus={{@autofocus}}
                        @inputClass="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
                        @text={{get @model @name}} as |item|>
-      {{item}}
+      {{~item~}}
     </AutocompleteInput>
-  {{else}}
+  {{~else~}}
     Unknown field type [{{@type}}]
-  {{/if}}
-  {{#if (has-block)}}
+  {{~/if~}}
+  {{~#if (has-block)~}}
     {{yield}}
-  {{/if}}
+  {{~/if~}}
 
-  {{#if @hint~}}
+  {{~#if @hint~}}
     <small class="form-text text-muted">{{nl2br @hint}}</small>
   {{~/if~}}
 
-  {{#each this.errorMessages as |msg|~}}
+  {{~#each this.errorMessages as |msg|~}}
     <div class="text-danger is-invalid">&bullet; {{msg}}</div>
   {{~/each~}}
 {{/if}}

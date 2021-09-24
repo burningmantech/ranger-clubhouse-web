@@ -144,12 +144,16 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
               <f.input @name="type" @type="radioGroup" @options={{this.typeOptions}} @inline={{true}}
                        @wrapClass="col-auto mt-2"/>
               <label class="col-form-label col-auto">Event Year</label>
-              <f.input @name="event_year" @type="text" @size=4 @wrapClass="col-auto mt-1"
+              <f.input @name="event_year"
+                       @type="text"
+                       @size={{4}}
+                       @wrapClass="col-auto mt-1"
                        @controlClass="form-control form-control-sm"/>
               {{#if (eq f.model.type "personal")}}
                 <label class="col-form-label">Personal Vehicle Owner</label>
                 <div class="col-auto mt-1">
-                  <f.input @name="callsign" @type="search"
+                  <f.input @name="callsign"
+                           @type="search"
                            @controlClass="form-control form-control-sm autocomplete-input"
                            @onSearch={{this.searchCallsignAction}}
                   />
@@ -157,7 +161,11 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
               {{else}}
                 <label class="col-form-label">Team Assignment</label>
                 <div class="col-auto mt-1">
-                  <f.input @name="team_assignment" @type="text" @size="10" @controlClass="form-control form-control-sm"/>
+                  <f.input
+                    @name="team_assignment"
+                    @type="text"
+                    @size={{10}}
+                    @controlClass="form-control form-control-sm"/>
                 </div>
               {{/if}}
             </div>
@@ -167,17 +175,24 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
             <div class="row form-group">
               <f.input @name="vehicle_class" @label="Class" @type="select" @options={{this.vehicleClassOptions}}
                        @wrapClass="col-auto" @controlClass="form-control form-control-sm"/>
-              <f.input @name="vehicle_year" @label="Year" @type="text" @size="4"
-                       @maxlength="4"
+              <f.input @name="vehicle_year"
+                       @label="Year"
+                       @type="text"
+                       @size={{4}}
+                       @maxlength={{4}}
                        @wrapClass="col-auto" @controlClass="form-control form-control-sm"/>
-              <f.input @name="vehicle_make" @label="Make" @type="text" @size="15"
+              <f.input @name="vehicle_make"
+                       @label="Make"
+                       @type="text"
+                       @size={{15}}
                        @hint="e.g., Ford, GMC, Toyota, etc."
-                       @wrapClass="col-auto" @controlClass="form-control form-control-sm"/>
+                       @wrapClass="col-auto"
+                       @controlClass="form-control form-control-sm"/>
               <f.input @name="vehicle_model" @label="Model"
                        @hint="e.g., F-350, Tacoma, etc."
-                       @type="text" @size="15"
+                       @type="text" @size={{15}}
                        @wrapClass="col-auto" @controlClass="form-control form-control-sm"/>
-              <f.input @name="vehicle_color" @label="Color" @type="text" @size="15"
+              <f.input @name="vehicle_color" @label="Color" @type="text" @size={{15}}
                        @wrapClass="col-auto" @controlClass="form-control form-control-sm"/>
             </div>
             <div class="row form-group">
@@ -186,14 +201,14 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
                        @controlClass="form-control form-control-sm"
                        @disabled={{eq f.model.type "personal"}}
               />
-              <f.input @name="sticker_number" @label="Driving Sticker #" @type="text" @size="10"
+              <f.input @name="sticker_number" @label="Driving Sticker #" @type="text" @size={{10}}
                        @wrapClass="col-auto"
                        @controlClass="form-control form-control-sm"
               />
               <f.input @name="license_state" @label="License State/Province" @type="select"
                        @options={{this.stateOptions}}
                        @wrapClass="col-auto" @controlClass="form-control form-control-sm"/>
-              <f.input @name="license_number" @label="License Plate #" @type="text" @size="10" @wrapClass="col-auto"
+              <f.input @name="license_number" @label="License Plate #" @type="text" @size={{10}} @wrapClass="col-auto"
                        @controlClass="form-control form-control-sm"/>
             </div>
           </fieldset>
@@ -201,7 +216,9 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
             <legend>Personal Vehicle Use Items (Stickers &amp; Other Items)</legend>
             <div class="form-row">
               <label class="col-form-label col-form-label-fixed ">Driving Sticker</label>
-              <f.input @name="driving_sticker" @type="radioGroup" @options={{this.drivingStickerOptions}}
+              <f.input @name="driving_sticker"
+                       @type="radioGroup"
+                       @options={{this.drivingStickerOptions}}
                        @inline={{true}} />
             </div>
             <div class="form-row">
@@ -220,16 +237,16 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
           <fieldset class="mt-2">
             <legend>Notes &amp; Status</legend>
             <div class="form-row">
-              <f.input @name="notes" @label="Private Notes" @type="textarea" @rows="2" @cols="80"
+              <f.input @name="notes" @label="Private Notes" @type="textarea" @rows={{2}} @cols={{80}}
                        @wrapClass="col-auto"/>
             </div>
             <div class="form-row mt-3">
-              <f.input @name="request_comment" @label="Comment from person (only used for personal vehicles)" @type="textarea" @rows="2" @cols="80"
+              <f.input @name="request_comment" @label="Comment from person (only used for personal vehicles)" @type="textarea" @rows={{2}} @cols={{80}}
                        @wrapClass="col-auto" @disabled={{not-eq f.model.type "personal"}}/>
             </div>
             <div class="form-row mt-3">
               <f.input @name="response" @label="Response to person (only used for personal vehicles)" @type="textarea"
-                       @rows="2" @cols="80" @wrapClass="col-auto" @disabled={{not-eq f.model.type "personal"}}
+                       @rows={{2}} @cols={{80}} @wrapClass="col-auto" @disabled={{not-eq f.model.type "personal"}}
               />
             </div>
             <div class="row form-group">
@@ -294,7 +311,7 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
           {{#if (and this.entry.isApproved (not-eq this.entry.driving_sticker "none"))}}
             <div class="form-row mt-2">
               <f.input @name="sticker_number" @label="Enter Driving Sticker #"
-                       @type="text" @size="10" @wrapClass="col-auto" @autofocus={{true}} />
+                       @type="text" @size={{10}} @wrapClass="col-auto" @autofocus={{true}} />
             </div>
           {{/if}}
         {{/if}}
