@@ -1,0 +1,87 @@
+{{#if this.isLoading}}
+  <LoadingDialog @items="loading shifts"/>
+{{else}}
+  <UiSection>
+    <:title>Sign In People {{fa-icon "walking"}}</:title>
+    <:body>
+      {{#if this.positions}}
+        <div class="row form-group">
+          <label class="col-form-label col-sm-12 col-lg-auto">Position</label>
+          <div class="col-sm-12 col-lg-auto">
+            <ChForm::Select @name="positionId" @value={{this.positionId}} @options={{this.positionOptions}}
+                            @onChange={{action this.selectPosition}} @controlClass="form-control"/>
+          </div>
+          <label class="col-form-label col-sm-12 col-lg-auto">Shift</label>
+          <div class="col-sm-12 col-lg-auto">
+            <ChForm::Select @name="slotId" @value={{this.slotId}}
+                            @options={{this.slotOptions}}
+                            @onChange={{action this.selectSlot}}
+                            @disabled={{eq this.positionId 0}} @controlClass="form-control"/>
+          </div>
+        </div>
+      {{else}}
+        <div class="my-2">
+          <b class="text-danger">No shifts found starting within the next 4 hours.</b>
+        </div>
+      {{/if}}
+
+      {{#if this.slot}}
+        <div class="row">
+          <div class="h4 col-auto">{{this.position.title}}</div>
+          <div class="h4 col-auto">{{this.slot.description}}</div>
+          <div class="h4 col-auto">{{shift-format this.slot.begins}}</div>
+        </div>
+      {{/if}}
+      {{#if this.isRetrievingPeople}}
+        <LoadingDialog @item="the signups"/>
+      {{else if this.people}}
+        <p>
+          {{pluralize this.people.length "sign up"}}. Click the box to sign the person in OR out.
+        </p>
+
+        <div class="rollcall-grid">
+          {{#each this.people as |person|}}
+            <a href
+               class="rollcall-person {{if person.on_duty "rollcall-problem" (if person.signedIn "rollcall-success")}}"
+              {{action this.clickPerson person}}>
+              <div class="rollcall-photo">
+                {{#if person.photo_url}}
+                  <img src={{person.photo_url}} alt={{person.callsign}} loading="lazy"/>
+                {{else}}
+                  {{fa-icon "user"}}
+                {{/if}}
+              </div>
+              <div class="rollcall-indicator">
+                {{#if person.isSubmitting}}
+                  {{fa-icon "spinner" spin=true}}
+                {{else if person.on_duty}}
+                  {{fa-icon "walking" color="danger"}}
+                {{else if person.signedIn}}
+                  {{fa-icon "walking" color="success"}}
+                {{/if}}
+              </div>
+              <div class="rollcall-name">
+                {{person.callsign}}
+              </div>
+              <div class="rollcall-info">
+                {{#if person.on_duty}}
+                  <b>Already on duty</b><br>
+                  {{person.on_duty.position.title}}<br>
+                  {{shift-format person.on_duty.on_duty}}
+                {{else if person.signedIn}}
+                  <b>ON DUTY</b><br>
+                  {{this.position.title}}<br>
+                  {{shift-format person.startTime}}
+                {{/if}}
+              </div>
+            </a>
+          {{/each}}
+        </div>
+      {{else if (gt this.slotId 0)}}
+        <p class="text-danger">
+          <b>No sign ups found for the shift.</b>
+        </p>
+      {{/if}}
+    </:body>
+  </UiSection>
+{{/if}}

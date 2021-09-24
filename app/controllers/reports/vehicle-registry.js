@@ -257,11 +257,6 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
   }
 
   @action
-  selectCallsignAction(model, option) {
-    model.callsign = option;
-  }
-
-  @action
   exportToCSV(event) {
     event.preventDefault();
 

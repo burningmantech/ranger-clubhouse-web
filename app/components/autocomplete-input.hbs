@@ -11,9 +11,9 @@
         </div>
       </div>
     {{/if}}
-    <Input @type="search"
+    <input type="search"
            placeholder={{@placeholder}}
-           @value={{@text}}
+           value={{@text}}
            class={{this.inputClass}}
            disabled={{@disabled}}
       {{on "keyup" this.keyUpEvent}}

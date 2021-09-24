@@ -44,8 +44,7 @@
         <thead>
         <tr>
           <th>Position</th>
-          <th>From</th>
-          <th>To</th>
+          <th>Time</th>
           <th class="text-right">Duration</th>
           <th class="text-right">Credits</th>
           <th>Correct?</th>
@@ -59,10 +58,7 @@
               {{entry.position.title}}
             </td>
             <td class="align-middle">
-              {{shift-format entry.on_duty}}
-            </td>
-            <td class="align-middle">
-              {{shift-format entry.off_duty}}
+              {{shift-format entry.on_duty entry.off_duty}}
             </td>
             <td class="text-right align-middle">
               {{hour-minute-format entry.duration}}
@@ -153,12 +149,12 @@
         </dl>
         <p>
           Provide as much information as possible to help the reviewer understand why this entry should be fixed.
-          <ul>
-            <li>Why does {{this.person.callsign}} think the entry is wrong?</li>
-            <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
-            <li><b>Is the position "{{this.entry.position.title}}" wrong?</b> State the correct position</li>
-            <li><b>Who was their shift partner(s)?</b></li>
-          </ul>
+        <ul>
+          <li>Why does {{this.person.callsign}} think the entry is wrong?</li>
+          <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
+          <li><b>Is the position "{{this.entry.position.title}}" wrong?</b> State the correct position</li>
+          <li><b>Who was their shift partner(s)?</b></li>
+        </ul>
         </p>
         <f.input @name="additional_notes" @label="Timesheet entry correction note:" @type="textarea"
                  @autofocus={{true}}

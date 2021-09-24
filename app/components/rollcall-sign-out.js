@@ -1,8 +1,9 @@
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
-import { action } from '@ember/object';
-import  _ from 'lodash';
+import {tracked} from '@glimmer/tracking';
+import {inject as service} from '@ember/service';
+import {action} from '@ember/object';
+import _ from 'lodash';
+import {ART_CAR_WRANGLER, BURN_PERIMETER, SANDMAN} from 'clubhouse/constants/positions';
 
 class PersonShift {
   @tracked isSubmitting = false;
@@ -31,16 +32,24 @@ export default class RollcallSignOutComponent extends Component {
 
   @tracked positions = [];
   @tracked timesheets = [];
+  @tracked positionId = 0;
+  @tracked position = null;
 
   constructor() {
     super(...arguments);
 
     this._loadTimesheets();
-   }
+  }
+
+  /**
+   * Retrieve everyone who is on duty, and build up the positions options.
+   *
+   * @private
+   */
 
   _loadTimesheets() {
     this.isLoading = true;
-    this.ajax.request('timesheet', { data: { is_on_duty: 1, include_photo: 1 }})
+    this.ajax.request('timesheet', {data: {is_on_duty: 1, include_photo: 1}})
       .then((result) => {
         this.timesheets = result.timesheet;
         this.positions = _.map(
@@ -51,34 +60,74 @@ export default class RollcallSignOutComponent extends Component {
             people: entries.map((entry) => new PersonShift(entry))
           })
         );
-        this.positions.sort((a,b) => a.title.localeCompare(b.title));
+        this.positions.sort((a, b) => a.title.localeCompare(b.title));
+        const options = this.positions.map((p) => [p.title, +p.id]);
+        const burnPositions = [];
+        [SANDMAN, BURN_PERIMETER, ART_CAR_WRANGLER].forEach((burnPosition) => {
+          const found = options.find((p) => p[1] === burnPosition);
+          if (found) {
+            burnPositions.unshift(found);
+            options.removeObject(found);
+          }
+        });
+
+        this.positionOptions = [
+          ['Select Position', 0],
+          {
+            groupName: 'Burn Positions',
+            options: burnPositions
+          },
+          {
+            groupName: 'Everything Else',
+            options
+          }
+        ];
       }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isLoading = false);
   }
 
+  /**
+   * Select the position to show
+   *
+   * @param positionId
+   */
+
   @action
-  refreshPage() {
-    this._loadTimesheets();
+  selectPosition(positionId) {
+    this.position = this.positions.find((p) => p.id === positionId);
   }
+
+  /**
+   * Sign out, or re-sign-in the person
+   *
+   * @param {PersonShift} person
+   */
 
   @action
   clickPerson(person) {
     if (person.isSubmitting) {
+      // Double click?
       return;
     }
 
     if (person.isSignedIn) {
-      this.signOutPerson(person);
+      this._signOutPerson(person);
     } else {
-      this.signInPerson(person);
+      this._signInPerson(person);
     }
   }
 
-  signOutPerson(person) {
+  /**
+   * Try to sign out the person
+   *
+   * @param {PersonShift} person
+   */
+
+  _signOutPerson(person) {
     person.isSubmitting = true;
     this.ajax.request(`timesheet/${person.timesheetId}/signoff`, {method: 'POST'})
       .then((result) => {
-        const {timesheet}= result;
+        const {timesheet} = result;
         person.isSignedIn = false;
         person.duration = timesheet.duration;
         switch (result.status) {
@@ -99,11 +148,16 @@ export default class RollcallSignOutComponent extends Component {
       .finally(() => person.isSubmitting = false)
   }
 
-  signInPerson(person) {
+  /**
+   *
+   * @param {PersonShift} person
+   */
+
+  _signInPerson(person) {
     person.isSubmitting = true;
-    this.ajax.request(`timesheet/${person.timesheetId}/resignin`, {method: 'POST', data: { person_id: person.person_id }})
+    this.ajax.request(`timesheet/${person.timesheetId}/resignin`, {method: 'POST', data: {person_id: person.person_id}})
       .then((result) => {
-        const {timesheet,status}= result;
+        const {timesheet, status} = result;
         switch (status) {
           case 'success':
             person.isSignedIn = true;
