@@ -7,13 +7,13 @@ export default class ReportsRollcallController extends ClubhouseController {
   @tracked isSignIn = false;
 
   @action
-  chooseSignIn(event) {
+  chooseSignIn() {
     this.isSignOut = false;
     this.isSignIn = true;
   }
 
   @action
-  chooseSignOut(event) {
+  chooseSignOut() {
     this.isSignOut = true;
     this.isSignIn = false;
   }
