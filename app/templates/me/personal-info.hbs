@@ -42,13 +42,8 @@
     <:title>Contact Information</:title>
     <:body>
       <p>
-        <b>Note:</b> Updating your email address here WILL NOT update the email address used for various
-        Ranger mailing lists. Contact {{general-support-email}} to update your email address for the forums.
-      </p>
-      <p>
         Ranger teams and leads may use your email address to send important messages to you regarding scheduling and
-        operations.
-        Keep your email address up to date.
+        operations. Please keep your email address up to date.
       </p>
       <div class="form-row">
         <f.input @name="email" @label="Email" @type="text" @inputmode="email" @maxlength={{50}}
@@ -133,3 +128,30 @@
     <LoadingIndicator/>
   {{/if}}
 </ChForm>
+
+{{#if this.showUpdateMailingListsDialog}}
+  <ModalDialog @title="Update Ranger Mailing Lists Subscriptions?" as |Modal|>
+    <Modal.body>
+      <p>
+        Your email address has been successfully updated in the Clubhouse to {{this.person.email}}.
+      </p>
+      <p>
+        The Ranger mailing lists (Announce, Allcom, etc.) <b class="text-danger">subscriptions have NOT been
+        updated.</b>
+        You can request the lists to be updated to your new address, or continue to use the old email address.
+      </p>
+      <p>
+        A human will process your request and respond to you within a week at your new email address.
+      </p>
+      What do you want to do?
+    </Modal.body>
+    <Modal.footer @noAlign={{true}}>
+      <button type="button" class="btn btn-primary" {{action this.sendMailingListUpdateRequest}}>
+        Request The Lists Be Updated
+      </button>
+      <button type="button" class="btn btn-secondary" {{action this.cancelMailingListDialog}}>
+        Don't Touch The Lists
+      </button>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
