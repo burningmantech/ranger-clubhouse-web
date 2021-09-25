@@ -7,7 +7,7 @@
       Certain shifts such as Training sessions and On Call positions fall into this category.
     </ChNotice>
   {{/if}}
-  <table class="table table-hover">
+  <table class="table table-sm table-hover">
     <thead>
     <tr>
       <th class="w-40">Tickets</th>
@@ -24,7 +24,7 @@
     <AppreciationProgressRow @item={{this.staffCredential}} @name="Staff Credential"/>
     </tbody>
   </table>
-  <table class="table table-hover">
+  <table class="table table-sm table-hover">
     <thead>
     <tr>
       <th class="w-40">Meal Passes</th>
@@ -37,13 +37,13 @@
     <tbody>
     {{#unless this.allEatPass.earned}}
       <AppreciationProgressRow @item={{this.eventWeekEatPass}} @name="Event Week Eat Pass"
-                               @subtext="(event week hours)"/>
+                               @subtext="(Event week hours only)"/>
     {{/unless}}
     <AppreciationProgressRow @item={{this.allEatPass}} @name="All Eat Meal Pass"
-                             @subtext="(pre/event/post-week hours)"/>
+                             @subtext="(Pre/Event/Post-week hours)"/>
     </tbody>
   </table>
-  <table class="table table-hover">
+  <table class="table table-sm table-hover">
     <thead>
     <tr>
       <th class="w-40">Org Shower Access</th>
@@ -58,7 +58,7 @@
     <AppreciationProgressRow @item={{this.showerAccess}} @name="Wet Spot Access for NEXT event"/>
     </tbody>
   </table>
-  <table class="table table-hover">
+  <table class="table table-sm table-hover">
     <thead>
     <tr>
       <th class="w-40">Ranger Clothing</th>
@@ -74,8 +74,12 @@
         <td colspan="5">Person is a Shiny Penny and NOT eligible to earn additional Ranger clothing this year.</td>
       </tr>
     {{else}}
-      <AppreciationProgressRow @item={{this.tshirt}} @name="Ranger T-Shirt"/>
-      <AppreciationProgressRow @item={{this.shirtLong}} @name="Ranger Long Sleeve Shirt"/>
+      <AppreciationProgressRow @item={{this.tshirt}}
+                               @name="Ranger T-Shirt"
+                               @subtext="(Pre-event & Event week hours only)"/>
+      <AppreciationProgressRow @item={{this.shirtLong}}
+                               @name="Ranger Long Sleeve Shirt"
+                               @subtext="(Pre-event & Event week hours only)" />
     {{/if}}
     </tbody>
   </table>
