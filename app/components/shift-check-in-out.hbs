@@ -150,7 +150,7 @@
 {{/if}}
 
 {{#if this.showPositionDialog}}
-  <ModalDialog @title="Update shift position" as |Modal|>
+  <ModalDialog @title="Update shift position" @onEscape={{this.cancelUpdatePosition}} as |Modal|>
     <Modal.body>
       Select the new position the shift should be updated to:
       <div class="form-row">
@@ -173,16 +173,13 @@
       <button type="button" class="btn btn-primary"{{action this.updatePositionAction}} disabled={{this.isSubmitting}}>
         Update Position
       </button>
-      <button type="button" class="btn btn-secondary" {{action this.cancelUpdatePosition}}
-              disabled={{this.isSubmitting}}>
-        Cancel
-      </button>
+      <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelUpdatePosition}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}
 
 {{#if this.showEarlyShiftConfirm}}
-  <ModalDialog @title="Confirm Early Shift Sign In" as |Modal|>
+  <ModalDialog @title="Confirm Early Shift Sign In" @onEscape={{this.closeEarlyShiftAction}} as |Modal|>
     <Modal.body>
       <p>
         <b class="text-danger">WARNING: Most shifts may only be signed into within 15 minutes of the actual start
@@ -198,7 +195,7 @@
       </p>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <button type="button" class="btn btn-primary"{{action this.closeEarlyShiftAction}}>
+      <button type="button" class="btn btn-primary" {{action this.closeEarlyShiftAction}}>
         Cancel
       </button>
       <button type="button" class="btn btn-warning" {{action this.confirmEarlyShiftAction}}>
@@ -209,7 +206,7 @@
 {{/if}}
 
 {{#if this.showForceStartConfirm}}
-  <ModalDialog @title="Confirm Forced Shift Check In" as |Modal|>
+  <ModalDialog @title="Confirm Forced Shift Check In" @onEscape={{this.closeForceStartConfirm}} as |Modal|>
     <Modal.body>
       <p>
         <b class="text-danger">WARNING: {{@person.callsign}} has not meet all the qualifications to start

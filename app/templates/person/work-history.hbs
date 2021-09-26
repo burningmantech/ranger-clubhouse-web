@@ -70,7 +70,8 @@
 {{/if}}
 
 {{#if this.showPositionYearEntries}}
-  <ModalDialog @title="{{this.showYear}} {{this.position.title}}" as |Modal|>
+  <ModalDialog @title="{{this.showYear}} {{this.position.title}}"
+               @onEscape={{this.closePositionYearSummaryAction}} as |Modal|>
     <Modal.body>
       {{pluralize this.entries.length "entry"}}
       <table class="table table-width-auto table-striped table-hover">
@@ -109,7 +110,7 @@
 
 
 {{#if this.showPositionAllEntries}}
-  <ModalDialog @title={{this.position.title}} as |Modal|>
+  <ModalDialog @title={{this.position.title}} @onEscape={{this.closePositionAllEntriesAction}} as |Modal|>
     <Modal.body>
       {{#each-in this.position.years as |year info|}}
         <table class="table table-width-auto table-striped table-hover">
@@ -149,7 +150,7 @@
 {{/if}}
 
 {{#if this.showEntireYear}}
-  <ModalDialog @title="Year {{this.showEntireYear}}" as |Modal|>
+  <ModalDialog @title="Year {{this.showEntireYear}}" @onEscape={{this.closeEntireYearAction}} as |Modal|>
     <Modal.body>
       <table class="table table-width-auto table-striped table-hover">
         <thead>

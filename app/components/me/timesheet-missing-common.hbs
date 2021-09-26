@@ -76,9 +76,9 @@
 </button>
 
 {{#if this.entry}}
-  <ModalDialog @title="Missing Timesheet Request" as |Modal|>
+  <ModalDialog @title="Missing Timesheet Request" @onEscape={{this.cancelAction}} as |Modal|>
     <ChForm @formId="tm" @formFor={{this.entry}}  @validator={{this.timesheetValidations}}
-            @onSubmit={{this.saveAction}} @onCancel={{this.cancelAction}} as |f|>
+            @onSubmit={{this.saveAction}} as |f|>
       <Modal.body>
         <div class="form-group mb-4">
           Use this form for <b>MISSING TIMESHEET ENTRIES ONLY</b>. If you have
@@ -128,7 +128,7 @@
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if f.model.isNew "Submit New Request" "Update Request"}} @disabled={{this.isSubmitting}} />
-        <f.cancel @disabled={{this.isSubmitting}} />
+        <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelAction}} />
         {{#if this.isSubmitting}}
           <LoadingIndicator/>
         {{/if}}

@@ -36,7 +36,7 @@
     <b>Click on the callsign below to send a message:</b>
     <table class="table table-striped table-bordered table-width-auto">
       <tbody>
-      {{#each this.foundCallsigns as |ranger|}}
+      {{#each this.foundCallsigns key="id" as |ranger|}}
         <tr>
           <td>
             {{#if ranger.allow_contact}}
@@ -55,7 +55,10 @@
 {{/if}}
 
 {{#if this.ranger}}
-  <ContactForm @callsign={{this.ranger.callsign}} @recipientId={{this.ranger.id}}
-               @isInactive={{this.ranger.is_inactive}} @contactType="ranger" @onDone={{action this.doneAction}} />
+  <ContactForm @callsign={{this.ranger.callsign}}
+               @recipientId={{this.ranger.id}}
+               @isInactive={{this.ranger.is_inactive}}
+               @contactType="ranger"
+               @onDone={{action this.doneAction}} />
 {{/if}}
 

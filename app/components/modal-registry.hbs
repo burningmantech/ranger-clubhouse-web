@@ -1,4 +1,11 @@
 {{#each this.modal.dialogs as |dialog|}}
-  {{component dialog.component dialog=dialog onClose=this.modal.closeAction onConfirm=this.modal.confirmAction}}
+  {{#if dialog.isInline}}
+    {{component dialog.component
+                dialog=dialog
+                onClose=this.modal.closeAction
+                onConfirm=this.modal.confirmAction
+                isInline=true
+    }}
+  {{/if}}
 {{/each}}
 <div id="modal-render"></div>

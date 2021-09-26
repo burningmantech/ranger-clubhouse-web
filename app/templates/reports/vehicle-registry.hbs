@@ -132,9 +132,12 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
 </table>
 
 {{#if this.entry}}
-  <ModalDialog @title="{{if this.entry.isNew "Create" "Update"}} Personal Vehicle" as |Modal|>
-    <ChForm @formId="vehicle" @formFor={{this.entry}} @validator={{this.vehicleValidations}}
-            @onSubmit={{this.saveAction}} @onCancel={{this.cancelAction}} as |f|>
+  <ModalDialog @title="{{if this.entry.isNew "Create" "Update"}} Personal Vehicle"
+               @onEscape={{this.cancelAction}} as |Modal|>
+    <ChForm @formId="vehicle"
+            @formFor={{this.entry}}
+            @validator={{this.vehicleValidations}}
+            @onSubmit={{this.saveAction}} as |f|>
       <Modal.body>
         {{#if (has-role "admin")}}
           <fieldset class="mt-2">
@@ -319,7 +322,7 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
-        <f.cancel @disabled={{this.entry.isSaving}} />
+        <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelAction}} />
         {{#if (and (has-role "admin") (not this.entry.isNew))}}
           <button type="button" class="btn btn-danger ml-auto" {{on 'click' (fn this.deleteAction this.entry)}}>
             {{fa-icon "trash"}} Delete

@@ -71,9 +71,10 @@
 </p>
 {{#if this.entry}}
   <ModalDialog @title="{{if this.entry.isNew "Create A New" "Edit"}} Item For {{this.person.callsign}}"
-               as |Modal|>
-    <ChForm @formId="entry" @formFor={{this.entry}} @onSubmit={{this.saveAccessDocument}}
-            @onCancel={{this.cancelAccessDocument}} as |f|>
+               @onEscape={{this.cancelAccessDocument}} as |Modal|>
+    <ChForm @formId="entry"
+            @formFor={{this.entry}}
+            @onSubmit={{this.saveAccessDocument}} as |f|>
       <Modal.body>
         <div class="form-row">
           <f.input @name="type" @type="select" @options={{this.typeOptions}} @label="Type" @grid="col-auto"/>
@@ -147,7 +148,7 @@
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.entry.isNew "Create" "Update"}}  @disabled={{this.entry.isSaving}} />
-        <f.cancel @disabled={{this.entry.isSaving}} />
+        <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelAccessDocument}} />
         {{#if this.entry.isSaving}}
           <LoadingIndicator/>
         {{/if}}

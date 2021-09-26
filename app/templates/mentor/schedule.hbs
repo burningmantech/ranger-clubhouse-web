@@ -98,16 +98,19 @@
 
 {{! Add Person dialog box}}
 {{#if this.addPersonForm}}
-  <ModalDialog @title={{concat "Add Person To " (shift-format this.slot.begins)}} as |Modal|>
-    <ChForm @formId="search" @formFor={{this.addPersonForm}}
-            @changeSet={{false}} @onFormChange={{this.searchPeopleAction}} @onCancel={{this.cancelSearchAction}} as |f|>
+  <ModalDialog @title="Add Person To {{shift-format this.slot.begins}}"
+               @onEscape={{this.cancelSearchAction}} as |Modal|>
+    <ChForm @formId="search"
+            @formFor={{this.addPersonForm}}
+            @changeSet={{false}}
+            @onFormChange={{this.searchPeopleAction}} as |f|>
       <Modal.body>
         <div class="form-row">
           <f.input @name="name" @label="Enter the callsign, real name, or email of the person to add:"
                    @type="text" @size=30 @autofocus=true @disabled={{this.slot.is_submitting}} />
         </div>
         <div class="form-row">
-          <f.cancel @disabled={{this.slot.is_submitting}} />
+          <UiCancelButton @disabled={{this.slot.is_submitting}} @onClick={{this.cancelSearchAction}} />
           {{#if this.slot.is_submitting}}
             <LoadingIndicator @text="Adding"/>
           {{else if this.isSearching}}

@@ -84,9 +84,11 @@
 {{/each}}
 
 {{#if this.credit}}
-  <ModalDialog @title={{if this.credit.isNew "New Position Credit"  "Edit Position Credit"}} as |Modal|>
-    <ChForm @formId="credit-form" @formFor={{this.credit}} @validator={{this.creditValidations}}
-            @onSubmit={{this.saveCredit}} @onCancel={{this.cancelCredit}} as |f|>
+  <ModalDialog @title="{{if this.credit.isNew "New" "Edit"}} Position Credit" @onEscape={{this.cancelCredit}} as |Modal|>
+    <ChForm @formId="credit-form"
+            @formFor={{this.credit}}
+            @validator={{this.creditValidations}}
+            @onSubmit={{this.saveCredit}}  as |f|>
       <Modal.body>
         <div class="row">
           <div class="col-5">
@@ -112,7 +114,7 @@
       <Modal.footer @noAlign=true>
         <f.submit @label={{if this.credit.isNew "Create" "Update"}}
                   @disabled={{or this.credit.isSaving this.isCreditSubmitting}} />
-        <f.cancel @disabled={{or this.credit.isSaving this.isCreditSubmitting}} />
+        <UiCancelButton @disabled={{or this.credit.isSaving this.isCreditSubmitting}} @onClick={{this.cancelCredit}} />
         {{#if (or this.credit.isSaving this.isCreditSubmitting)}}
           <LoadingIndicator/>
         {{/if}}
@@ -123,10 +125,12 @@
 
 
 {{#if this.copyParams}}
-  <ModalDialog @title="Copy Credits" as |Modal|>
-    <ChForm @formId="copyCredits" @formFor={{this.copyParams}} @changeSet={{false}}
-            @validator={{this.copyValidations}} @onSubmit={{this.performCopy}}
-            @onCancel={{this.cancelCopy}} as |f|>
+  <ModalDialog @title="Copy Credits" @onEscape={{this.cancelCopy}} as |Modal|>
+    <ChForm @formId="copyCredits"
+            @formFor={{this.copyParams}}
+            @changeSet={{false}}
+            @validator={{this.copyValidations}}
+            @onSubmit={{this.performCopy}} as |f|>
       <Modal.body>
         <fieldset>
           <legend>Add/Subtract Time to New Credits</legend>
@@ -155,7 +159,7 @@
         <div class="mb-2">
           <f.submit @label={{concat "Copy " this.copySelectedCreditCount " selected credits"}}
                     @disabled={{this.isCopying}} />
-          <f.cancel @disabled={{this.isCopying}} />
+          <UiCancelButton @disabled={{this.isCopying}} @onClick={{this.cancelCopy}} />
           {{#if this.isCopying}}
             <LoadingIndicator/>
           {{/if}}
@@ -207,7 +211,6 @@
               {{/if}}
             </Accordion.body>
           </ChAccordion>
-
         {{/each}}
       </Modal.body>
     </ChForm>

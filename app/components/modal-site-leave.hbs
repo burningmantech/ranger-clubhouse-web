@@ -1,4 +1,4 @@
-<ModalDialog @title="Outstanding Item(s)" as |modal|>
+<ModalDialog @title="Outstanding Item(s)" @onEscape={{@onClose}} as |modal|>
   <modal.body>
     <strong class="text-danger">{{pluralize this.pendingItems "item"}} still needs to be dealt with before marking this
       person off site:</strong>

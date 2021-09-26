@@ -72,7 +72,7 @@
 {{/if}}
 
 {{#if this.showConfirmNoteOrMessage}}
-  <ModalDialog @title="Add Account Note" as |Modal|>
+  <ModalDialog @title="Add Account Note" @onEscape={{this.closeConfirmNoteOrMessage}} as |Modal|>
     <Modal.body>
       <h4 class="text-danger">A NOTE WILL NOT BE SHOWN TO {{this.person.callsign}}</h4>
       <p>
@@ -84,13 +84,16 @@
       <button type="button" class="btn btn-primary mr-3" {{action this.sendClubhouseMessage}}>Send Clubhouse Message
       </button>
       <button type="button" class="btn btn-primary mr-3" {{action this.editNote}}>Add Note</button>
-      <button type="button" class="btn btn-secondary" {{action this.closeConfirmNoteOrMessage}}>Cancel</button>
+      <UiCancelButton @onClick={{this.closeConfirmNoteOrMessage}} />
     </Modal.footer>
   </ModalDialog>
 {{else if this.showEditNote}}
-  <ModalDialog @title={{if this.person.messsage "Add Account Note" "Update Account Note"}} as |Modal|>
-    <ChForm @formId="person-note" @formFor={{this.personNote}} @changeSet={{false}}
-            @onSubmit={{this.saveNote}} @onCancel={{this.closeNote}} as |f|>
+  <ModalDialog @title="{{if this.person.messsage "Add" "Update"}} Account Note"
+               @onEscape={{this.closeNote}} as |Modal|>
+    <ChForm @formId="person-note"
+            @formFor={{this.personNote}}
+            @changeSet={{false}}
+            @onSubmit={{this.saveNote}} as |f|>
       <Modal.body>
         <p>
           The note will be shown to all Volunteer Coordinators, HQ Window Workers, and other Login Management role
@@ -104,12 +107,13 @@
         <p>
           The note will automatically timestamped when saved or updated.
         </p>
-
-        <f.input @name="message" @type="textarea" @label="Enter the note to be shown:" @cols=80 @rows=6/>
+        <div class="form-row">
+          <f.input @name="message" @type="textarea" @label="Enter the note to be shown:" @cols={{80}} @rows={{6}} />
+        </div>
       </Modal.body>
-      <Modal.footer>
+      <Modal.footer @noAlign={{true}}>
         <f.submit @label="Save Note"/>
-        <f.cancel/>
+        <UiCancelButton @onClick={{this.closeNote}} />
       </Modal.footer>
     </ChForm>
   </ModalDialog>

@@ -328,15 +328,8 @@ export default class SlotsController extends ClubhouseController {
   }
 
   @action
-  cancel(model) {
-    if (!model.isDirty) {
+  cancel() {
       this.slot = null;
-      return;
-    }
-
-    this.modal.confirm('Unsaved Changes', 'The changes have not been saved. Are you sure you wish to leave this form without saving first?', () => {
-      this.slot = null;
-    })
   }
 
   @action

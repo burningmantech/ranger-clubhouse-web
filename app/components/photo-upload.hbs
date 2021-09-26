@@ -1,4 +1,4 @@
-<ModalDialog @title="Upload A New BMID Photo" as |modal|>
+<ModalDialog @title="Upload A New BMID Photo" @onEscape={{@closeAction}} as |modal|>
   <modal.body>
     {{#unless @photo.upload_enabled}}
       <h3 class="text-danger border border-danger p-2">
@@ -63,6 +63,6 @@
     {{/if}}
   </modal.body>
   <modal.footer>
-    <modal.button @label="Cancel" @action={{@closeAction}} @type="primary"/>
+    <UiCancelButton @onClick={{@closeAction}} />
   </modal.footer>
 </ModalDialog>

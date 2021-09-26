@@ -99,11 +99,14 @@
 <TimesheetPositionSummary @timesheets={{@timesheets}} />
 
 {{#if this.editEntry}}
-  <ModalDialog @title="{{if this.canManageTimesheets "Edit" "View"}} Timesheet #{{this.editEntry.id}}" as |Modal|>
+  <ModalDialog
+    @title="{{if this.canManageTimesheets "Edit" "View"}} Timesheet #{{this.editEntry.id}}"
+    @onEscape={{this.cancelEntryAction}}
+    as |Modal|>
     <ChForm @formId="entry" @formFor={{this.editEntry}}
             @validator={{this.timesheetValidations}}
             @onSubmit={{this.saveEntryAction}}
-            @onCancel={{this.cancelEntryAction}} as |f|>
+             as |f|>
       <Modal.body>
         {{#if this.editEntry.isPending}}
           <ChNotice @type="danger" @icon="arrow-right" @title="Correction Request Review Required">
@@ -204,7 +207,7 @@
       <Modal.footer @noAlign={{true}}>
         {{#if this.canManageTimesheets}}
           <f.submit @label="Update" @disabled={{this.editEntry.isSaving}} />
-          <f.cancel @disabled={{this.editEntry.isSaving}} />
+          <UiCancelButton @disabled={{this.editEntry.isSaving}} @onClick={{this.cancelEntryAction}} />
           {{#if this.editEntry.isSaving}}
             <LoadingIndicator/>
           {{/if}}

@@ -105,23 +105,22 @@
 {{/each}}
 
 {{#if this.showBulkPositionDialog}}
-  <ModalDialog @title="Select the positions to export the signed up callsigns w/emails:" as |Modal|>
+  <ModalDialog @title="Select the positions to export the signed up callsigns w/emails:"
+               @onEscape={{this.cancelExport}} as |Modal|>
     <ChForm @formId="positionIds"
             @formFor={{this.positionIdsForm}}
             @changeSet={{false}}
-            @onSubmit={{this.exportSelectedPositions}}
-            @onCancel={{this.cancelExport}}
-            as |f|>
+            @onSubmit={{this.exportSelectedPositions}} as |f|>
       <Modal.body>
         <div class="form-row">
           <f.input @name="positionIds" @type="checkboxGroup" @wrapClass="form-row" @cols={{2}}
                    @options={{this.positionOptions}} />
         </div>
       </Modal.body>
-      <Modal.footer @noAlign=true>
-        <f.submit @label="Export {{pluralize f.model.positionIds.length "position"}}" @disabled={{not
-          f.model.positionIds.length}}/>
-        <f.cancel/>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Export {{pluralize f.model.positionIds.length "position"}}"
+                  @disabled={{not f.model.positionIds.length}} />
+        <UiCancelButton @onClick={{this.cancelExport}} />
       </Modal.footer>
     </ChForm>
   </ModalDialog>

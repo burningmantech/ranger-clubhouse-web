@@ -242,15 +242,8 @@ export default class AdminCreditsController extends ClubhouseController {
   }
 
   @action
-  cancelCredit(model) {
-    if (!model.isDirty) {
+  cancelCredit() {
       this.credit = null;
-      return;
-    }
-
-    this.modal.confirm('Unsaved Changes', 'The changes have not been saved. Are you sure you wish to leave this form without saving first?', () => {
-      this.credit = null;
-    })
   }
 
   @action

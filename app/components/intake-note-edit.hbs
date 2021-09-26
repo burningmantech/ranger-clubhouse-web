@@ -1,4 +1,4 @@
-<ModalDialog @title={{concat @person.callsign " add note"}} @size="xl" as |Modal|>
+<ModalDialog @title="Add note for {{@person.callsign}}" @size="xl" @onEscape={{@closeNoteAction}} as |Modal|>
   <Modal.body>
     {{#each @teamNotes as |intake|}}
       <table class="table table-striped table-sm">
@@ -39,8 +39,7 @@
     {{/each}}
 
     {{#if @canAddNote}}
-      <ChForm @formId="person-note" @formFor={{this.noteForm}}
-              @onSubmit={{this.submitNoteAction}}  @onCancel={{@closeNoteAction}} as |f|>
+      <ChForm @formId="person-note" @formFor={{this.noteForm}} @onSubmit={{this.submitNoteAction}} as |f|>
         <b>Your note will be timestamped, and appended to any existing notes.</b>
         <div class="row mt-2">
           <div class="col-auto">
@@ -61,7 +60,7 @@
         <div class="row mt-2">
           <div class="col-auto">
             <f.submit @label="Save Note" disabled={{or this.isSubmitting (is-empty f.model.note)}} />
-            <f.cancel/>
+            <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{@closeNoteAction}} />
             {{#if this.isSubmitting}}
               <LoadingIndicator/>
             {{/if}}

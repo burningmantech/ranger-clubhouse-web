@@ -37,7 +37,7 @@
 {{/if}}
 
 {{#if this.showHistory}}
-  <ModalDialog @title={{concat @person.callsign " Training History"}} @size="xl" as |Modal|>
+  <ModalDialog @title="{{@person.callsign}} Training History" @size="xl" @onEscape={{this.closeHistoryAction}} as |Modal|>
     <Modal.body>
       <table class="table table-sm table-striped table-hover">
         <thead>

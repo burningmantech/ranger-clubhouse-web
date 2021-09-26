@@ -1,5 +1,5 @@
 {{#unless this.isUpdating}}
-  <ModalDialog @title="Bulk Edit {{@position.title}}" @size="xl" as |Modal|>
+  <ModalDialog @title="Bulk Edit {{@position.title}}" @size="xl" @onEscape={{@onClose}} as |Modal|>
     <ChForm @formId="bulkEdit"
             @formFor={{this.editForm}}
             @changeSet={{false}}
@@ -24,7 +24,7 @@
               <f.submit @label="Update"/>
             </div>
             <div class="col-auto">
-              <f.cancel/>
+              <button type="button" class="btn btn-secondary" {{action @onClose}}>Cancel</button>
             </div>
           </div>
         </fieldset>
