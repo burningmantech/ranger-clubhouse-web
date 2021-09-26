@@ -42,11 +42,12 @@
 </table>
 
 {{#if this.entry}}
-  <ModalDialog @title={{if this.entry.isNew "Create Event Data Record" "Edit Event Date Record"}} as |Modal|>
+  <ModalDialog @title="{{if this.entry.isNew "Create" "Edit"}} Event Data Record"
+               @onEscape={{this.cancel}} as |Modal|>
     <ChForm @formId="event_date"
             @formFor={{this.entry}}
             @validator={{this.eventDateValidations}}
-            @onSubmit={{this.save}} @onCancel={{this.cancel}} as |f|>
+            @onSubmit={{this.save}} as |f|>
       <Modal.body>
         <div class="form-row">
           <f.input @name="event_start" @label="Event Start / Gate Open" @type="datetime" @grid="col-auto" @size=25/>
@@ -76,7 +77,7 @@
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if f.model.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
-        <f.cancel @disabled={{this.entry.isSaving}} />
+        <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancel}} />
         {{#if this.entry.isSaving}}
           <LoadingIndicator/>
         {{/if}}

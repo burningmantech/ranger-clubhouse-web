@@ -143,10 +143,13 @@
 </main>
 
 {{#if this.reviewPhoto}}
-  <ModalDialog @title={{concat "Reject Photo for " this.reviewPhoto.person.callsign}} as |modal|>
+  <ModalDialog @title="Reject Photo for {{this.reviewPhoto.person.callsign}}"
+               @onEscape={{this.onClose}} as |modal|>
     <modal.body>
-      <ChForm @formId="photo" @formFor={{this.reviewForm}} @changeSet={{false}} @onSubmit={{this.onRejectSubmit}}
-              @onCancel={{this.onClose}} as |f|>
+      <ChForm @formId="photo"
+              @formFor={{this.reviewForm}}
+              @changeSet={{false}}
+              @onSubmit={{this.onRejectSubmit}} as |f|>
         <div class="form-row">
           <div class="col-3">
             <img src={{this.reviewPhoto.image_url}} alt="{{this.reviewPhoto.person.callsign}}" class="mugshot"/>
@@ -159,12 +162,14 @@
           </div>
         </div>
         <div class="form-row mt-2">
-          <f.input @name="message" @label="Custom message to include in the rejection email:" @type="textarea" @rows=5
-                   @cols=80 @hint="All email addresses and links in the message will be hyperlinked."/>
+          <f.input @name="message" @label="Custom message to include in the rejection email:"
+                   @type="textarea"
+                   @rows={{5}} @cols={{80}}
+                   @hint="All email addresses and links in the message will be hyperlinked."/>
         </div>
         <div class="form-group mt-2">
           <f.submit @label="Reject Photo" @submitClass="btn-danger" disabled={{this.reviewPhoto.isSaving}} />
-          <f.cancel disabled={{this.reviewPhoto.isSaving}} />
+          <UiCancelButton @disabled={{this.reviewPhoto.isSaving}} @onClick={{this.onClose}} />
           <button type="button" class="btn btn-secondary" {{action this.rejectPreviewAction}}>Preview Email</button>
           {{#if this.reviewPhoto.isSaving}}
             <LoadingIndicator/>
@@ -176,7 +181,7 @@
 {{/if}}
 
 {{#if this.rejectMail}}
-  <ModalDialog @title="Rejection Email Preview" as |modal|>
+  <ModalDialog @title="Rejection Email Preview" @onEscape={{this.closeRejectMail}} as |modal|>
     <modal.body>
       <div class="border">
         <iframe {{on "load" this.insertRejectMail}} class="photo-reject-preview-box" title="rejection message preview">
@@ -191,19 +196,23 @@
 {{/if}}
 
 {{#if this.editPhoto}}
-  <ModalDialog @title={{concat "Edit Photo for " this.editPhoto.person.callsign}} as |modal|>
+  <ModalDialog @title="Edit Photo for {{this.editPhoto.person.callsign}}"
+               @onEscape={{this.closeEditPhotoAction}} as |modal|>
     <modal.body>
-      <PhotoEdit @imageDataUrl={{this.editPhoto.orig_url}} @submitAction={{this.submitEditedPhotoAction}}
-                 @width={{this.width}} @height={{this.height}} />
+      <PhotoEdit @imageDataUrl={{this.editPhoto.orig_url}}
+                 @submitAction={{this.submitEditedPhotoAction}}
+                 @width={{this.width}}
+                 @height={{this.height}} />
     </modal.body>
     <modal.footer>
-      <modal.button @label="Cancel" @action={{this.closeEditPhotoAction}} @type="secondary"/>
+      <UiCancelButton @onClick={{this.closeEditPhotoAction}} />
     </modal.footer>
   </ModalDialog>
 {{/if}}
 
 
 {{#if this.showPhoto}}
-  <PhotoInfo @photo={{this.showPhoto}} @closeAction={{this.closePhotoInfoAction}}
+  <PhotoInfo @photo={{this.showPhoto}}
+             @closeAction={{this.closePhotoInfoAction}}
              @rejectionLabels={{this.rejectionLabels}} />
 {{/if}}

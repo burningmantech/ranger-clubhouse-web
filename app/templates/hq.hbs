@@ -114,7 +114,7 @@
 
 
 {{#if this.showAppreciationsProgress}}
-  <ModalDialog @title="Appreciations Progress"  as |Modal|>
+  <ModalDialog @title="Appreciations Progress"  @onEscape={{this.toggleAppreciationsProgress}} as |Modal|>
     <Modal.body>
       <AppreciationProgress @timesheetSummary={{this.timesheetSummary}} @isShinyPenny={{this.isShinyPenny}} />
     </Modal.body>
@@ -125,7 +125,7 @@
 {{/if}}
 
 {{#if this.showHoursCreditsBreakdown}}
-  <ModalDialog @title="Hours And Credits Breakdown" as |Modal|>
+  <ModalDialog @title="Hours And Credits Breakdown" @onEscape={{this.toggleHoursCreditBreakdown}} as |Modal|>
     <Modal.body>
       <HoursCreditsBreakdown @timesheetSummary={{this.timesheetSummary}}
                              @countedDurationExpected={{this.countedDurationExpected}}
@@ -139,7 +139,7 @@
 
 
 {{#if this.showSignInWarning}}
-  <ModalDialog @title="Sign Into A Shift" as |Modal|>
+  <ModalDialog @title="Sign Into A Shift" @onEscape={{this.closeSignInWarning}} as |Modal|>
     <Modal.body>
       <b class="text-danger">WARNING:</b>
       You are not signed into any shift. You can use the HQ Interface however we ask you sign into a shift first.
@@ -149,7 +149,7 @@
     </Modal.footer>
   </ModalDialog>
 {{else if this.showAlphaWarning}}
-  <ModalDialog as |Modal|>
+  <ModalDialog @onEscape={{this.closeAlphaWarning}} as |Modal|>
     <Modal.body>
       <div class="d-flex">
         <div class="mt-2 mx-3">

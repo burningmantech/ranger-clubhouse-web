@@ -1,5 +1,5 @@
-<ModalDialog @title="Edit Roles" as |Modal|>
-  <ChForm @formId="roles" @formFor={{this.roleForm}} @onSubmit={{this.save}} @onCancel={{@onCancel}} as |f|>
+<ModalDialog @title="Edit Roles" @onEscape={{@onCancel}} as  |Modal|>
+  <ChForm @formId="roles" @formFor={{this.roleForm}} @onSubmit={{this.save}} as |f|>
     <Modal.body>
       <div class="form-row">
         <f.input @name="roleIds" @type="checkboxGroup" @wrapClass="form-row" @options={{this.roleOptions}} />
@@ -7,7 +7,7 @@
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
       <f.submit @label="Update" @disabled={{@isSaving}} />
-      <f.cancel @disabled={{@isSaving}} />
+      <UiCancelButton @disabled={{@isSaving}} @onClick={{@onCancel}} />
       {{#if @isSaving}}
         <LoadingIndicator/>
       {{/if}}

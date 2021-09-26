@@ -266,11 +266,11 @@
 {{/if}}
 
 {{#if this.editStudent}}
-  <ModalDialog @title={{concat "Add a note and/or set rank for " this.editStudent.callsign}} as |Modal|>
-    <ChForm @formId="student-form" @formFor={{this.studentForm}}
-            @onSubmit={{this.saveStudentAction}}
-            @onCancel={{this.cancelStudentAction}} as |f|>
-
+  <ModalDialog @title="Add a note and/or set rank for {{this.editStudent.callsign}}"
+               @onEscape={{this.cancelStudentAction}} as |Modal|>
+    <ChForm @formId="student-form"
+            @formFor={{this.studentForm}}
+            @onSubmit={{this.saveStudentAction}} as |f|>
       <Modal.body>
         {{#if this.editStudent.personnel_issue}}
           <h3 class="text-danger">
@@ -355,7 +355,7 @@
       </Modal.body>
       <Modal.footer @noAlign=true>
         <f.submit @label="Save {{this.editStudent.callsign}} info" @disabled={{this.isSubmitting}} />
-        <f.cancel @disabled={{this.isSubmitting}}/>
+        <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelStudentAction}} />
         {{#if this.isSubmitting}}
           <LoadingIndicator/>
         {{/if}}
@@ -365,23 +365,25 @@
         </div>
 
       </Modal.footer>
-
     </ChForm>
   </ModalDialog>
 {{/if}}
 
 {{! Add Person dialog box}}
 {{#if this.addPersonForm}}
-  <ModalDialog @title="Add Student To Session" as |Modal|>
-    <ChForm @formId="search" @formFor={{this.addPersonForm}} @changeSet={{false}}
-            @onFormChange={{action this.searchPeopleAction}} @onCancel={{action this.cancelSearchAction}} as |f|>
+  <ModalDialog @title="Add Student To Session"
+               @onEscape={{this.cancelSearchAction}} as |Modal|>
+    <ChForm @formId="search"
+            @formFor={{this.addPersonForm}}
+            @changeSet={{false}}
+            @onFormChange={{action this.searchPeopleAction}} as |f|>
       <Modal.body>
         <div class="form-row">
           <f.input @name="name" @label="Enter the callsign, real name, or email of the person to add:"
                    @type="text" @size=30 @autofocus={{true}} />
         </div>
         <div class="form-row">
-          <f.cancel/>
+          <UiCancelButton @onClick={{this.cancelSearchAction}} />
         </div>
         {{#if this.foundPeople}}
           Click on the callsign to add the person.
@@ -414,22 +416,22 @@
 {{/if}}
 
 {{#if this.editNote}}
-  <ModalDialog @title="Edit Note for {{this.editStudent.callsign}}" as |Modal|>
-    <ChForm @formId="note-update" @formFor={{this.editNote}}
-            @onSubmit={{this.updateNoteAction}} @onCancel={{this.cancelNoteAction}} as |f|>
+  <ModalDialog @title="Edit Note for {{this.editStudent.callsign}}"
+               @onEscape={{this.cancelNoteAction}} as |Modal|>
+    <ChForm @formId="note-update"
+            @formFor={{this.editNote}}
+            @onSubmit={{this.updateNoteAction}} as |f|>
       <Modal.body>
-        <div class="form-row">
-           <p>
-            Note created on {{shift-format @note.created_at year=true}}
-          </p>
-        </div>
+        <p>
+            Note created on {{shift-format this.editNote.created_at year=true}}
+        </p>
         <div class="form-row">
           <f.input @type="textarea" @name="note" @label="Edit Your Note" @rows={{4}} @cols={{80}} @autofocus={{true}}/>
         </div>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit/>
-        <f.cancel/>
+        <UiCancelButton @onClick={{this.cancelNoteAction}} />
       </Modal.footer>
     </ChForm>
   </ModalDialog>

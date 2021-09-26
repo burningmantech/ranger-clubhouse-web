@@ -1,5 +1,5 @@
-<ModalDialog as |Modal|>
-  <ChForm @formId="note-update" @formFor={{@note}} @onSubmit={{this.updateNote}} @onCancel={{@closeAction}} as |f|>
+<ModalDialog @onEscape={{@closeAction}} as |Modal|>
+  <ChForm @formId="note-update" @formFor={{@note}} @onSubmit={{this.updateNote}} as |f|>
     <Modal.body>
       <div class="form-row">
         <p>
@@ -16,7 +16,7 @@
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
       <f.submit/>
-      <f.cancel/>
+      <UiCancelButton @onClick={{@closeAction}} />
     </Modal.footer>
   </ChForm>
 </ModalDialog>

@@ -385,7 +385,7 @@
 {{/if}}
 
 {{#if this.taskParam}}
-  <ModalDialog as |Modal|>
+  <ModalDialog @onEscape={{this.cancelParamAction}} as |Modal|>
     <Modal.body>
       <div class="form-row">
         <label class="col-form-label">
@@ -398,9 +398,9 @@
         </div>
       </div>
     </Modal.body>
-    <Modal.footer>
-      <button type="button" class="btn btn-secondary" {{on "click" this.cancelParamAction}}>Cancel</button>
+    <Modal.footer @noAlign={{true}}>
       <button type="button" class="btn btn-primary" {{on "click" (fn this.executeTask this.taskParam)}}>Submit</button>
+      <UiCancelButton @onClick={{this.cancelParamAction}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}

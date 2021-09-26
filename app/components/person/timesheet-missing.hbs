@@ -59,12 +59,11 @@
 </UiSection>
 
 {{#if this.newEntry}}
-  <ModalDialog @title="Create New Missing Timesheet Request" as |Modal|>
+  <ModalDialog @title="Create New Missing Timesheet Request" @onEscape={{this.cancelNewEntryAction}} as |Modal|>
     <ChForm @formId="entry"
             @formFor={{this.newEntry}}
             @validator={{this.newEntryValidations}}
-            @onSubmit={{this.createEntryAction}}
-            @onCancel={{this.cancelNewEntryAction}} as |f|>
+            @onSubmit={{this.createEntryAction}} as |f|>
       <Modal.body>
         <div class="form-row">
           <f.input @name="on_duty" @type="datetime" @label="On Duty"/>
@@ -82,7 +81,7 @@
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Create" @disabled={{this.newEntry.isSaving}} />
-        <f.cancel @disabled={{this.newEntry.isSaving}} />
+        <UiCancelButton @disabled={{this.newEntry.isSaving}} @onClick={{this.cancelNewEntryAction}} />
         {{#if this.newEntry.isSaving}}
           <LoadingIndicator/>
         {{/if}}
@@ -92,12 +91,13 @@
 {{/if}}
 
 {{#if this.editEntry}}
-  <ModalDialog @title={{concat "Manage Missing Timesheet Request ID #" this.editEntry.id}} as |Modal|>
+  <ModalDialog @title={{concat "Manage Missing Timesheet Request ID #" this.editEntry.id}}
+               @onEscape={{this.cancelEntryAction}} as |Modal|>
     <ChForm @formId="entry"
             @formFor={{this.editEntry}}
             @validator={{this.timesheetValidations}}
             @onSubmit={{this.saveEntryAction}}
-            @onCancel={{this.cancelEntryAction}} as |f|>
+             as |f|>
       <Modal.body>
         {{#if (eq this.editEntry.review_status "approved")}}
           <ChNotice @type="success" @icon="check" @title="Request approved">
@@ -253,7 +253,7 @@
                     disabled={{this.editEntry.isSaving}}/>
         {{/if}}
         <f.submit @label="Update" @disabled={{this.editEntry.isSaving}} />
-        <f.cancel/>
+        <UiCancelButton @disabled={{this.editEntry.isSaving}} @onClick={{this.cancelEntryAction}} />
         {{#if this.editEntry.isSaving}}
           <LoadingIndicator/>
         {{/if}}

@@ -251,14 +251,18 @@
 </main>
 
 {{#if this.entry}}
-  <ModalDialog @title={{if this.entry.id (concat "Edit BMID #" this.entry.id) "New BMID"}} as |Modal|>
+  <ModalDialog @title={{if this.entry.id (concat "Edit BMID #" this.entry.id) "New BMID"}}
+               @onEscape={{this.cancelBmid}} as |Modal|>
     <Modal.body>
       <h3>
         {{this.year}} {{this.entry.person.callsign}}
         &lt;{{this.entry.person.status}}, {{this.entry.person.first_name}} {{this.entry.person.last_name}}&gt;
       </h3>
-      <BmidEdit @entry={{this.entry}} @year={{this.year}} @admissionDateOptions={{this.admissionDateOptions}}
-                @onSave={{this.saveBmid}} @onCancel={{this.cancelBmid}} />
+      <BmidEdit @entry={{this.entry}}
+                @year={{this.year}}
+                @admissionDateOptions={{this.admissionDateOptions}}
+                @onSave={{this.saveBmid}}
+                @onCancel={{this.cancelBmid}} />
     </Modal.body>
   </ModalDialog>
 {{/if}}

@@ -3,7 +3,7 @@
 </button>
 
 {{#if this.showDialog}}
-  <ModalDialog @size="xl" @title={{@title}} as |dialog|>
+  <ModalDialog @size="xl" @title={{@title}} @onEscape={{this.cancelAction}} as |dialog|>
     <dialog.body>
       <div class="masonry-container masonry-col-5">
         {{#each this.dayOptions as |day dayIdx|}}

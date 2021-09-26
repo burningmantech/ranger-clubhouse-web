@@ -1,4 +1,4 @@
-<ModalDialog @title="Sign up requirements have not been met" as |Modal|>
+<ModalDialog @title="Sign up requirements have not been met" @isInline={{@isInline}} as |Modal|>
   <Modal.body>
     <ScheduleRequirements @requirements={{this.data.requirements}} @person={{this.data.person}} />
     <p>

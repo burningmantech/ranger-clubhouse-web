@@ -129,10 +129,10 @@
 
 <HqProvisionInfo @eventInfo={{this.eventInfo}} />
 {{#if this.showCorrectionForm}}
-  <ModalDialog @title="Timesheet Entry Correction" as |Modal|>
+  <ModalDialog @title="Timesheet Entry Correction" @onEscape={{this.cancelEntryCorrection}} as |Modal|>
     <ChForm @formId="correction" @formFor={{this.entry}}
             @validator={{this.correctionValidations}}
-            @onSubmit={{this.saveEntryCorrection}} @onCancel={{this.cancelEntryCorrection}} as |f|>
+            @onSubmit={{this.saveEntryCorrection}} as |f|>
       <Modal.body>
         <dl class="form-row">
           <dt class="col-sm-2">Position:</dt>
@@ -163,7 +163,7 @@
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Submit Correction" @disabled={{this.isCorrectionSubmitting}} />
-        <f.cancel @disabled={{this.isCorrectionSubmitting}} />
+        <UiCancelButton @disabled={{this.isCorrectionSubmitting}} @onClick={{this.cancelEntryCorrection}} />
         {{#if this.isCorrectionSubmitting}}
           <SpinIcon/>
         {{/if}}
@@ -283,7 +283,7 @@
 {{/if}}
 
 {{#if this.showSiteLeaveDialog}}
-  <ModalDialog @title="Outstanding Item(s)" as |Modal|>
+  <ModalDialog @title="Outstanding Item(s)" @onEscape={{this.cancelSiteLeaveDialog}} as |Modal|>
     <Modal.body>
       <b class="text-danger">
         {{pluralize this.pendingItems "item"}} still needs to be dealt with before marking

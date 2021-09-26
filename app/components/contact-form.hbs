@@ -1,9 +1,9 @@
-<ModalDialog @title={{this.title}} as |Modal|>
+<ModalDialog @title={{this.title}} @onEscape={{this.cancelAction}} as |Modal|>
   <ChForm @formId="contact"
           @formFor={{this.contactForm}}
           @validator={{this.contactValidation}}
           @onSubmit={{action this.sendAction}}
-          @onCancel={{action this.cancelAction}} as |f|>
+           as |f|>
     <Modal.body>
       {{#if @isInactive}}
         <ChNotice @type="danger" @icon="exclamation" @title="{{@callsign}} is inactive">
@@ -30,13 +30,16 @@
       </ol>
 
       <div class="form-row">
-        <f.input @name="message" @label={{concat "Enter your contact message to " @callsign ":"}} @type="textarea" @rows=10 @cols=80
-                  @wrapClass="col-12" />
+        <f.input @name="message"
+                 @label="Enter your contact message to {{@callsign}}:"
+                 @type="textarea"
+                 @rows={{10}} @cols={{80}}
+        />
       </div>
     </Modal.body>
     <Modal.footer @noAlign=true>
       <f.submit @label={{if this.isSending "Sending" "Send Message"}} @disabled={{this.isSending}} />
-      <f.cancel/>
+      <UiCancelButton @disabled={{this.isSending}} @onClick={{this.cancelAction}}/>
       {{#if this.isSending}}
         <LoadingIndicator/>
       {{/if}}

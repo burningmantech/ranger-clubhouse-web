@@ -174,9 +174,12 @@
 {{/if}}
 
 {{#if this.entry}}
-  <ModalDialog @title="{{if this.entry.isNew "Submit" "Update"}} Vehicle Request" as |Modal|>
-    <ChForm @formId="vehicle" @formFor={{this.entry}} @validator={{this.vehicleValidations}}
-            @onSubmit={{this.saveAction}} @onCancel={{this.cancelAction}} as |f|>
+  <ModalDialog @title="{{if this.entry.isNew "Submit" "Update"}} Vehicle Request"
+               @onEscape={{this.cancelAction}} as |Modal|>
+    <ChForm @formId="vehicle"
+            @formFor={{this.entry}}
+            @validator={{this.vehicleValidations}}
+            @onSubmit={{this.saveAction}}  as |f|>
       <Modal.body>
         <div class="form-row">
           <div class="text-danger col-12">All fields are required.</div>
@@ -248,7 +251,7 @@
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="{{if this.entry.isNew "Submit" "Update"}} Request" @disabled={{this.entry.isSaving}} />
-        <f.cancel @disabled={{this.entry.isSaving}} />
+        <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelAction}} />
         {{#if this.entry.isSaving}}
           <LoadingIndicator/>
         {{/if}}

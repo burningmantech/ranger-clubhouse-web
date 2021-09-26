@@ -104,8 +104,7 @@ export default class PersonAccessDocumentsController extends ClubhouseController
       type: RPT,
       status: QUALIFIED,
       source_year: currentYear,
-      expiry_year: currentYear + 3,
-      admission_date: null,
+      expiry_date: `${currentYear + 3}-09-15`,
       delivery_method: DELIVERY_NONE,
     });
   }

@@ -1,6 +1,6 @@
-<ModalDialog @title={{this.formTitle}} as |Modal|>
+<ModalDialog @title={{this.formTitle}} @onEscape={{@onCancel}} as |Modal|>
   <ChForm @formId="slot" @formFor={{@slot}} @validator={{this.slotValidations}}
-          @onSubmit={{@onSave}} @onCancel={{@onCancel}} as |f|>
+          @onSubmit={{@onSave}} as |f|>
     <Modal.body>
       <div class="form-row">
         <f.input @name="position_id" @label="Position" @type="select" @options={{this.positionOptions}}
@@ -52,7 +52,7 @@ e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.
       {{#unless @slot.isNew}}
         <f.submit @label="Create New Slot" @onSubmit={{@onClone}} />
       {{/unless}}
-      <f.cancel @disabled={{@slot.isSaving}} />
+      <button type="button" class="btn btn-secondary" disabled={{@slot.isSaving}} {{action @onCancel}}>Cancel</button>
       {{#if @slot.isSaving}}
         <LoadingIndicator/>
       {{/if}}

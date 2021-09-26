@@ -1,8 +1,7 @@
-<ModalDialog @title={{concat (if @surveyEntry.isNew "Create" "Edit") " Survey"}} as |Modal|>
+<ModalDialog @title="{{if @surveyEntry.isNew "Create" "Edit"}} Survey" @onEscape={{this.cancelSurveyAction}} as |Modal|>
   <ChForm @formId="survey" @formFor={{@survey}}
           @validator={{this.surveyValidations}}
-          @onSubmit={{this.saveSurveyAction}}
-          @onCancel={{this.cancelSurveyAction}} as |f|>
+          @onSubmit={{this.saveSurveyAction}} as |f|>
     <Modal.body>
       <div class="form-row">
         <f.input @name="type" @type="select" @label="Type" @options={{this.typeOptions}} />
@@ -24,7 +23,7 @@
     </Modal.body>
     <Modal.footer @noAlign=true>
       <f.submit @label={{if @survey.isNew "Create" "Save"}} @disabled={{@survey.isSaving}} />
-      <f.cancel/>
+      <UiCancelButton @disabled={{@survey.isSaving}} @onClick={{this.cancelSurveyAction}} />
       {{#if @survey.isSaving}}
         <LoadingIndicator/>
       {{/if}}
