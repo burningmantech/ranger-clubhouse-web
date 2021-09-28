@@ -1,19 +1,24 @@
-<ModalDialog @title="Send A New Clubhouse Message" as |Modal|>
+<ModalDialog @title="Send A New Clubhouse Message" @onEscape={{@onCancel}} as |Modal|>
   <ChForm @formId="message-form"
           @formFor={{@message}}
           @validator={{this.personMessageValidations}}
-          @onSubmit={{@onSubmit}}
-          @onCancel={{@onCancel}} as |f|>
+          @onSubmit={{@onSubmit}} as |f|>
     <Modal.body>
-      <p class="ml-2">
-        Messages <b class="text-danger">are NOT private</b> (will be seen by HQ staff &amp; Tech Team), for official
-        Ranger business only, and archived each year.
+      <p>
+        <span class="text-danger"> Messages are NOT private (will be seen by HQ staff &amp; Tech Team), for official
+        Ranger business only, and archived each year.</span>
+      </p>
+      <p>
         Burning Man and the Rangers have a zero-tolerance policy for behavior that is non-consensual,
         abusive, harassing, or harmful to others.
       </p>
       <div class="form-row mb-2">
         {{#unless @isMe}}
-          <f.input @name="message_from" @label="From" @type="text" @size=30 @maxlength=120 @autofocus=true
+          <f.input @name="message_from"
+                   @label="From"
+                   @type="text"
+                   @size={{30}} @maxlength={120}
+                   @autofocus={{not this.isFromMessage}}
                    @gridClass="col-sm-12 col-md-6"/>
         {{/unless}}
         <div class="col-sm-12 col-md-6">
@@ -23,21 +28,27 @@
                    @type="search"
                    @size={{30}}
                    @onSearch={{this.searchCallsignAction}}
-                   @autofocus={{@isMe}}
+                   @autofocus={{this.isFromMessage}}
           />
         </div>
       </div>
       <div class="form-row">
-        <f.input @name="subject" @label="Subject" @size={{80}} @maxlength={{80}} @gridClass="col-auto"/>
+        <f.input @name="subject"
+                 @label="Subject"
+                 @size={{80}}
+                 @maxlength={{80}}
+                 @gridClass="col-auto"/>
       </div>
       <div class="form-row">
         <f.input @name="body" @label="The message (be civil, courteous, polite, & professional)"
-                 @type="textarea" @rows={{4}} @cols={{80}} @gridClass="col-auto"/>
+                 @type="textarea"
+                 @rows={{4}} @cols={{80}}
+                 @gridClass="col-auto"/>
       </div>
     </Modal.body>
-    <Modal.footer @noAlign=true>
+    <Modal.footer @noAlign={{true}}>
       <f.submit @label="Send" @disabled={{@isSubmitting}} />
-      <f.cancel @disabled={{@isSubmitting}} />
+      <UiCancelButton  @disabled={{@isSubmitting}} @onClick={{@onCancel}} />
       {{#if @isSubmitting}}
         <LoadingIndicator @text="Sending Message"/>
       {{/if}}

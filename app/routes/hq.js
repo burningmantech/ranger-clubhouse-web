@@ -27,11 +27,9 @@ export default class HqRoute extends ClubhouseRoute {
 
     return RSVP.hash({
       person: this.store.findRecord('person', person_id, {reload: true}),
-
+      personEvent: this.store.findRecord('person-event', `${person_id}-${year}`, {reload: true}),
       eventInfo: this.ajax.request(`person/${person_id}/event-info`, {data: {year}})
         .then((result) => result.event_info),
-
-      personEvent: this.store.findRecord('person-event', `${person_id}-${year}`, {reload: true}),
 
       positions: this.ajax.request(`person/${person_id}/positions`, {
         data: {include_training: 1, year}

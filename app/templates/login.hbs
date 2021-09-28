@@ -42,19 +42,34 @@
   {{/if}}
   <div class="d-flex flex-column flex-lg-row align-items-stretch mt-lg-4">
     <div class="mr-lg-4">
-      <ChForm @formId="auth" @formFor={{this.authForm}} @validator={{this.loginValidations}}
-              @autocomplete="on" @onSubmit={{this.submit}} as |f|>
+      <ChForm @formId="auth"
+              @formFor={{this.authForm}}
+              @validator={{this.loginValidations}}
+              @autocomplete="on"
+              @onSubmit={{this.submit}} as |f|>
         <div class="form-row">
-          <f.input @name="identification" @label="Email" @type="text" @inputmode="email" @autocomplete="username"
-                   @autofocus={{true}} @noSpaces={{true}} @grid="col-sm-12 col-lg-auto" @size={{30}} />
+          <f.input @name="identification"
+                   @label="Email"
+                   @type="text"
+                   @inputmode="email"
+                   @autocomplete="username"
+                   @autofocus={{true}}
+                   @noSpaces={{true}}
+                   @autofocus={{true}}
+                   @grid="col-sm-12 col-lg-auto" @size={{30}} />
         </div>
         <div class="form-row">
-          <f.input @name="password" @label="Password" @type="password" @autocomplete="current-password"
-                   @grid="col-sm-12 col-lg-auto" @size={{30}}/>
+          <f.input @name="password"
+                   @label="Password"
+                   @type="password"
+                   @autocomplete="current-password"
+                   @grid="col-sm-12 col-lg-auto"
+                   @size={{30}}/>
         </div>
         <div class="form-row">
           <div class="col-sm-12 col-lg-4">
-            <f.submit @label="Login" @disabled={{this.isSubmitting}}
+            <f.submit @label="Login"
+                      @disabled={{this.isSubmitting}}
                       @submitClass="btn-lg btn-responsive login-submit mb-4"/>
             {{#if this.isSubmitting}}
               <LoadingIndicator/>{{/if}}
@@ -66,34 +81,40 @@
       </ChForm>
     </div>
     <div class="mt-4">
-      <ChCard @header="Volunteer with the Rangers">
-        <p>
-          Visit
-          <a href="https://rangers.burningman.org/ranger-application-process/"
-             target="_blank" rel="noopener noreferrer">
-            Becoming a Ranger
-          </a> to read about our requirements and how to apply.
-        </p>
-        All past prospective Rangers must reapply each year.
-      </ChCard>
-      <ChCard @header="Attend Ranger training as a guest/auditor">
-        <p>
-          First visit <a href="https://rangers.burningman.org/training/auditing/" rel="noopener noreferrer">
-          Auditing a Ranger Training</a> to read about auditor requirements and restrictions.
-        </p>
-        <p>
-          Then
-          <LinkTo @route="register">click here to create</LinkTo>
-          an auditor Clubhouse account.
-        </p>
-        Note: Auditing is not a path to becoming a Ranger.
-      </ChCard>
+      <UiSection>
+        <:title>Volunteer with the Rangers</:title>
+        <:body>
+          <p>
+            Visit
+            <a href="https://rangers.burningman.org/ranger-application-process/"
+               target="_blank" rel="noopener noreferrer">
+              Becoming a Ranger
+            </a> to read about our requirements and how to apply.
+          </p>
+          All past prospective Rangers must reapply each year.
+        </:body>
+      </UiSection>
+      <UiSection>
+        <:title>Attend Ranger training as a guest/auditor</:title>
+        <:body>
+          <p>
+            First visit <a href="https://rangers.burningman.org/training/auditing/" rel="noopener noreferrer">
+            Auditing a Ranger Training</a> to read about auditor requirements and restrictions.
+          </p>
+          <p>
+            Then
+            <LinkTo @route="register">click here to create</LinkTo>
+            an auditor Clubhouse account.
+          </p>
+          Note: Auditing is not a path to becoming a Ranger.
+        </:body>
+      </UiSection>
     </div>
   </div>
 
   <hr>
   <p>
-    Email {{general-support-email}} if you have a general question about the Rangers.
+    <b>Questions? </b> Email the Ranger Volunteer Coordinators at {{vc-email}}
   </p>
   <p>
     For help logging in or registering, email the Rangers Tech Ninjas at {{admin-email}}

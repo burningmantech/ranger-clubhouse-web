@@ -1,31 +1,38 @@
 <div class="mail-container">
-  <div class="row mb-2">
-    <div class="col-sm-12 col-lg-auto mt-2">
-      {{#if @messages}}
-        {{pluralize @messages.length "message"}}
-        {{#if this.unreadCount}}
-          <b>({{this.unreadCount}} unread)</b>
-        {{else}}
-          (no unread)
-        {{/if}}
+  <p>
+    {{#if @messages}}
+      {{pluralize @messages.length "message"}}
+      {{#if this.unreadCount}}
+        <b>({{this.unreadCount}} unread)</b>
       {{else}}
-        <b>
-          {{#if @isMe}}
-            You have no messages
-          {{else}}
-            {{@person.callsign}} has no messages.
-          {{/if}}
-        </b>
+        (no unread)
       {{/if}}
-    </div>
-    {{#if this.canSendMessages}}
-      <div class="col-sm-12 col-lg-auto">
-        <button type="button" class="btn btn-primary ml-md-auto btn-responsive" {{on "click" this.newMessageAction}}>
+    {{else}}
+      <b>
+        {{#if @isMe}}
+          You have no messages
+        {{else}}
+          {{@person.callsign}} has no messages.
+        {{/if}}
+      </b>
+    {{/if}}
+  </p>
+  {{#if this.canSendMessages}}
+    <p>
+      {{#if @isWorkerInterface}}
+        <button type="button" class="btn btn-primary btn-responsive" {{action this.newMessageToAction}}>
+          New Message TO {{@person.callsign}}
+        </button>
+        <button type="button" class="btn btn-secondary ml-lg-2 btn-responsive" {{action this.newMessageFromAction}}>
+          New Message FROM {{@person.callsign}}
+        </button>
+      {{else}}
+        <button type="button" class="btn btn-primary btn-responsive" {{on "click" this.newMessageFromAction}}>
           {{fa-icon "plus"}} New Message
         </button>
-      </div>
-    {{/if}}
-  </div>
+      {{/if}}
+    </p>
+  {{/if}}
 
   {{#each @messages as |message|}}
     <div class="mail {{unless message.delivered "mail-unread"}}">
@@ -67,7 +74,7 @@
         <div class="mail-actions">
           {{#if message.delivered}}
             <button {{on "click" (fn this.markUnreadAction message)}}
-                    type="button" class="btn btn-secondary btn-responsive" disabled={{message.isSubmitting}}>
+              type="button" class="btn btn-secondary btn-responsive" disabled={{message.isSubmitting}}>
               Mark Unread
               {{#if message.isSubmitting}}
                 {{fa-icon "spinner" spin=true}}
@@ -75,7 +82,7 @@
             </button>
           {{else}}
             <button {{on "click" (fn this.markReadAction message)}}
-                    type="button" class="btn btn-primary btn-responsive" disabled={{message.isSubmitting}}>
+              type="button" class="btn btn-primary btn-responsive" disabled={{message.isSubmitting}}>
               Mark Read
               {{#if message.isSubmitting}}
                 {{fa-icon "spinner" spin=true}}
@@ -90,8 +97,11 @@
 
 
 {{#if this.newMessage}}
-  <MessageNew @message={{this.newMessage}} @onSubmit={{this.submitAction}} @onCancel={{this.cancelAction}}
+  <MessageNew @message={{this.newMessage}}
+              @onSubmit={{this.submitAction}}
+              @onCancel={{this.cancelAction}}
               @isMe={{@isMe}}
-              @isSubmitting={{this.isSubmitting}} />
+              @isSubmitting={{this.isSubmitting}}
+  />
 {{/if}}
 
