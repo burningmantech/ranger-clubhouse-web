@@ -39,7 +39,7 @@ export default class ClubhouseMessagesComponent extends Component {
       set(person, 'unread_message_count', unreadCount);
     }
 
-    if (this.session.userId == person.id) {
+    if (+this.session.userId === +person.id) {
       this.session.unreadMessageCount = unreadCount;
     }
   }
@@ -75,15 +75,24 @@ export default class ClubhouseMessagesComponent extends Component {
       .finally(() => message.set('isSubmitting', false));
   }
 
-  @action
-  newMessageAction(event) {
-    event.preventDefault();
+  _newMessageSetup(fields) {
     this.newMessage = this.store.createRecord('person-message', {
       recipient_callsign: '',
-      message_from: this.args.person.callsign,
+      message_from: '',
       subject: '',
-      body: ''
+      body: '',
+      ...fields
     });
+  }
+
+  @action
+  newMessageToAction() {
+    this._newMessageSetup({recipient_callsign: this.args.person.callsign});
+  }
+
+  @action
+  newMessageFromAction() {
+    this._newMessageSetup({message_from: this.args.person.callsign});
   }
 
   @action

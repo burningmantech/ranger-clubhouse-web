@@ -15,5 +15,7 @@ export default class HqMessagesRoute extends ClubhouseRoute {
   setupController(controller, model) {
     controller.setProperties(this.modelFor('hq'));
     controller.set('messages', model);
+    // Inject session - route has no controller
+    controller.set('session', this.session);
   }
 }

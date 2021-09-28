@@ -40,34 +40,32 @@
       {{#if this.session.isAuthenticated}}
         <NavbarAreaMe @user={{this.user}} />
         {{#if this.user.teacher.is_trainer}}
-          <NavbarAreaTraining />
-         {{/if}}
+          <NavbarAreaTraining/>
+        {{/if}}
 
         {{#if this.user.teacher.is_art_trainer}}
           <NavbarAreaArts @user={{this.user}} />
         {{/if}}
 
         {{#if (has-role "mentor")}}
-          <NavbarAreaMentoring />
+          <NavbarAreaMentoring/>
         {{/if}}
 
         {{#if (has-role "vc")}}
-          <NavbarAreaVolCoords />
+          <NavbarAreaVolCoords/>
         {{/if}}
 
         {{#if (has-role "admin" "edit-slots" "megaphone")}}
-          <NavbarAreaAdmin />
+          <NavbarAreaAdmin/>
         {{/if}}
 
         {{#if (has-role "admin" "manage")}}
-          <NavbarAreaReports />
-        {{/if}}
-        {{#if (has-role "admin" "manage")}}
-          <NavbarAreaSearch />
+          <NavbarAreaReports/>
+          <NavbarAreaSearch/>
         {{/if}}
       {{else}}
       {{! User not logged in}}
-        <NavbarAreaLogin />
+        <NavbarAreaLogin/>
       {{/if}}
     </ul>
     {{#if this.session.isAuthenticated}}
@@ -92,7 +90,7 @@
               </LinkTo>
               <div class="dropdown-divider"></div>
             {{/if}}
-            <NavbarMenuItem @route="logout" @item="Logout" />
+            <NavbarMenuItem @route="logout" @item="Logout"/>
           </div>
         </li>
       </ul>

@@ -4,11 +4,19 @@ import { action } from '@ember/object';
 import RSVP from 'rsvp';
 import PersonMessageValidations from 'clubhouse/validations/person-message';
 import { inject as service } from '@ember/service';
+import { isEmpty } from '@ember/utils';
 
 export default class MessageNewComponent extends Component {
   @service ajax;
 
   personMessageValidations = PersonMessageValidations;
+
+  constructor() {
+    super(...arguments);
+
+    const {message} = this.args;
+    this.isFromMessage = !isEmpty(message.message_from);
+  }
 
   _performSearch(callsign, resolve, reject) {
     callsign = callsign.trim();

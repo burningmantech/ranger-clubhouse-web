@@ -3,8 +3,18 @@
   {{#if (config 'AuditorRegistrationDisabled')}}
     <h3 class="text-danger">Auditor registration disabled.</h3>
     <p>
-      We're sorry, Auditor registration is disabled at this time.
+      Auditor registration is usually open between January and late August. The Black Rock Rangers hold trainings
+      between late April/early May and late August. Training registration will prioritize Prospective Rangers
+      over Auditors. <b>No walks-in are allowed.</b>
     </p>
+  <p>
+    <b class="text-danger">Just attending training as an auditor is not a path to becoming a Ranger.</b> You must
+    apply for and be accepted into the Prospective Ranger program in order to become a Ranger.
+  </p>
+  <p>
+    While you are waiting, please feel free to browse the Ranger manual located on the main Ranger website:
+    <a href="https://rangers.burningman.org">rangers.burningman.org</a>
+  </p>
   {{else if (eq this.step "ask-intent")}}
     <h3>Hello Auditor or Potential Ranger!</h3>
     <p>
@@ -16,20 +26,19 @@
     <h4>Why are you here today?</h4>
     <div class="row">
       <div class="col-sm-6 col-lg-4 mb-3">
-        <button type="button" class="btn btn-block  btn-lg btn-primary" {{on "click" (fn this.stepAction "ranger")}}>To
-          volunteer with the Rangers
+        <button type="button" class="btn btn-block  btn-lg btn-primary" {{on "click" (fn this.stepAction "ranger")}}>
+          To  volunteer with the Rangers
         </button>
       </div>
       <div class="col-sm-6 col-lg-4">
-        <button type="button" class="btn btn-block btn-lg btn-primary" {{on "click" (fn this.stepAction "audit")}}>To
-          audit
-          Ranger Training
+        <button type="button" class="btn btn-block btn-lg btn-primary" {{on "click" (fn this.stepAction "audit")}}>
+          To audit Ranger Training
         </button>
       </div>
     </div>
   {{else if (eq this.step "ranger")}}
     <h1>
-      You're in the wrong place to become a Ranger.
+      You're in the wrong place to become a Ranger!
     </h1>
     <p>
       <b>All potential Black Rock Rangers need to submit an application first.</b>
