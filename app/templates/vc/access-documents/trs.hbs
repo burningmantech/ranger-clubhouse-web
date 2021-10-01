@@ -68,7 +68,7 @@
 <table class="table table-sm table-hover table-striped table-width-auto">
   <caption>
     Showing {{pluralize this.viewRecords.length "item"}} of type "{{this.filter}}". Selected {{pluralize
-          this.selectedCount "item"}}.
+    this.selectedCount "item"}}.
   </caption>
   <thead>
   <tr>
@@ -113,26 +113,30 @@
   </tbody>
 </table>
 
-<button type="button" class="btn btn-primary" {{action this.exportSelectedAction}}
-        disabled={{or this.isSubmitting
-                      (gt this.selectedCount this.MAX_BATCH_SIZE)
-                      (eq this.selectedCount 0)
-                      (eq this.filter "all")}}>
+<UiButton @onClick={{this.exportSelectedAction}}
+          @disabled={{or this.isSubmitting
+                         (gt this.selectedCount this.MAX_BATCH_SIZE)
+                         (eq this.selectedCount 0)
+                         (eq this.filter "all")}}>
   {{#if (eq this.filter "all")}}
     Export Disabled For "All" View
   {{else}}
     Export {{pluralize this.selectedCount "Selected Document"}}
   {{/if}}
-</button>
-<button type="button" class="btn btn-secondary" {{action this.markSubmitted}}
-        disabled={{or this.isSubmitting (eq this.selectedCount 0) (eq this.filter "all")}}>
-  {{#if this.isSubmitting}}
-    Marking as Submitted. {{fa-icon "spinner" spin=true}}
-  {{else}}
-    Mark Selected As Submitted
-  {{/if}}
-</button>
+</UiButton>
+<UiButton @type="secondary" @onClick={{this.markSubmitted}}
+          @disabled={{or this.isSubmitting (eq this.selectedCount 0) (eq this.filter "all")}}>
+  Mark Selected As Submitted
+</UiButton>
 {{#if (gt this.selectedCount this.MAX_BATCH_SIZE)}}
-  <div class="text-danger"><b>{{this.selectedCount}} items has been selected which exceeds the max. TRS batch size
-    of {{this.MAX_BATCH_SIZE}} items. Reduce the number selected.</b></div>
+  <div class="text-danger">
+    <b>{{this.selectedCount}} items has been selected which exceeds the max. TRS batch size
+    of {{this.MAX_BATCH_SIZE}} items. Reduce the number selected.</b>
+  </div>
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Marking as submitted.
+  </LoadingDialog>
 {{/if}}

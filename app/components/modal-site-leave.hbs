@@ -27,8 +27,9 @@
   </modal.body>
 
   <modal.footer>
-    <modal.button @label="Mark Person As Off Site" @action={{@onConfirm}} @type="secondary"/>
-    <modal.button @label="Deal With Items" @action={{@onClose}} @type="primary"/>
+    <UiButton @type="warning" @onClick={{@onConfirm}}>
+      Mark Person As Off Site
+    </UiButton>
+    <UiButton @onClick={{@onClose}}>Deal With Items</UiButton>
   </modal.footer>
-
 </ModalDialog>

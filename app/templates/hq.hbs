@@ -95,17 +95,17 @@
           {{hour-minute-format this.timesheetSummary.counted_duration}}
         </dd>
         <dd>
-          <button type="button" class="btn btn-secondary btn-sm btn-block mb-2"
-            {{action this.toggleAppreciationsProgress}}>
+          <UiButton @type="secondary" @size="sm" @class="btn-block mb-2"
+                    @onClick={{this.toggleAppreciationsProgress}}>
             Ticket &amp; Provisions Progress
-          </button>
-          <button type="button" class="btn btn-secondary btn-sm btn-block" {{action this.toggleHoursCreditBreakdown}}
-                  disabled={{this.isLoadingBreakdown}}>
+          </UiButton>
+          <UiButton @type="secondary" @size="sm" @class="btn-block" @onClick={{this.toggleHoursCreditBreakdown}}
+                    @disabled={{this.isLoadingBreakdown}}>
             {{#if this.isLoadingBreakdown}}
-              {{fa-icon "spinner" spin=true}}
+              <SpinIcon/>
             {{/if}}
             Credits &amp; Hours Breakdown
-          </button>
+          </UiButton>
         </dd>
       </dl>
     </div>
@@ -114,12 +114,12 @@
 
 
 {{#if this.showAppreciationsProgress}}
-  <ModalDialog @title="Appreciations Progress"  @onEscape={{this.toggleAppreciationsProgress}} as |Modal|>
+  <ModalDialog @title="Appreciations Progress" @onEscape={{this.toggleAppreciationsProgress}} as |Modal|>
     <Modal.body>
       <AppreciationProgress @timesheetSummary={{this.timesheetSummary}} @isShinyPenny={{this.isShinyPenny}} />
     </Modal.body>
     <Modal.footer>
-      <Modal.button @label="Close" @action={{this.toggleAppreciationsProgress}} @type="primary"/>
+      <UiCloseButton @onClick={{this.toggleAppreciationsProgress}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}
@@ -132,7 +132,7 @@
                              @creditsExpected={{this.creditsExpected}} />
     </Modal.body>
     <Modal.footer>
-      <Modal.button @label="Close" @action={{this.toggleHoursCreditBreakdown}} @type="primary"/>
+      <UiCloseButton @onClick={{this.toggleHoursCreditBreakdown}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}
@@ -145,7 +145,7 @@
       You are not signed into any shift. You can use the HQ Interface however we ask you sign into a shift first.
     </Modal.body>
     <Modal.footer>
-      <Modal.button @label="Close" @action={{this.closeSignInWarning}} @type="primary"/>
+      <UiCloseButton @onClick={{this.closeSignInWarning}} />
     </Modal.footer>
   </ModalDialog>
 {{else if this.showAlphaWarning}}
@@ -167,7 +167,7 @@
       </div>
     </Modal.body>
     <Modal.footer>
-      <Modal.button @label="Close" @action={{this.closeAlphaWarning}} @type="primary"/>
+      <UiCloseButton @onClick={{this.closeAlphaWarning}}/>
     </Modal.footer>
   </ModalDialog>
 {{/if}}

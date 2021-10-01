@@ -81,9 +81,8 @@
       Would you rather send a Clubhouse Message?
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <button type="button" class="btn btn-primary mr-3" {{action this.sendClubhouseMessage}}>Send Clubhouse Message
-      </button>
-      <button type="button" class="btn btn-primary mr-3" {{action this.editNote}}>Add Note</button>
+      <UiButton @onClick={{this.sendClubhouseMessage}}>Send Clubhouse Message</UiButton>
+      <UiButton @class="mx-3" @onClick={{this.editNote}}>Add Note</UiButton>
       <UiCancelButton @onClick={{this.closeConfirmNoteOrMessage}} />
     </Modal.footer>
   </ModalDialog>

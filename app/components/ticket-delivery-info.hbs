@@ -94,46 +94,43 @@
         </p>
         <div class="d-flex  flex-column flex-lg-row justify-lg-content-between align-self-center">
           <div>
-            <button type="button" class="btn btn-primary  btn-responsive"
-              {{action this.setDeliveryMethod "postal"}} disabled={{this.isSaving}}>
+            <UiButton @class="responsive" @onClick={{fn this.setDeliveryMethod "postal"}} @disabled={{this.isSaving}}>
               {{fa-icon "envelope"}} Deliver By US Mail
               {{#if this.isSaving}}
                 <SpinIcon/>{{/if}}
-            </button>
+            </UiButton>
           </div>
           <div class="mx-auto mx-lg-3 my-2">OR</div>
           <div>
-            <button type="button" class="btn btn-primary  btn-responsive"
-              {{action this.setDeliveryMethod "will_call"}} disabled={{this.isSaving}}>
+            <UiButton @class="responsive" @onClick={{fn this.setDeliveryMethod "will_call"}}
+                      @disabled={{this.isSaving}}>
               {{fa-icon "user" type="far"}} Pickup At Will Call
               {{#if this.isSaving}}
                 <SpinIcon/>
               {{/if}}
-            </button>
+            </UiButton>
           </div>
         </div>
       {{else if this.isDeliveryPostal}}
         <p>
           <b>Would you rather use Will Call?</b>
         </p>
-        <button type="button" class="btn btn-primary btn-responsive"
-          {{action this.setDeliveryMethod "will_call"}} disabled={{this.isSaving}}>
+        <UiButton @class="responsive" @onClick={{fn  this.setDeliveryMethod "will_call"}} @disabled={{this.isSaving}}>
           {{fa-icon "user" type="far"}} Pickup at Will Call
           {{#if this.isSaving}}
             <SpinIcon/>
           {{/if}}
-        </button>
+        </UiButton>
       {{else if this.isDeliveryWillCall}}
         <p>
           <b>Do you want delivery by mail instead?</b>
         </p>
-        <button type="button" class="btn btn-primary btn-responsive"
-          {{action this.setDeliveryMethod "postal"}} disabled={{this.isSaving}}>
+        <UiButton @class="responsive" @onClick={{fn  this.setDeliveryMethod "postal"}} @disabled={{this.isSaving}}>
           {{fa-icon "envelope"}} Deliver By US Mail
           {{#if this.isSaving}}
             <SpinIcon/>
           {{/if}}
-        </button>
+        </UiButton>
       {{else}}
         Uh oh, I don't understand what the method [{{this.itemToDeliver.delivery_method}}] is. This is a bug!
       {{/if}}
@@ -174,13 +171,13 @@
               <f.input @name="street1"
                        @type="text"
                        @label="Street"
-                       @grid="col-md-8 col-sm-6"/>
+                       @grid="col-lg-8 col-sm-6"/>
             </div>
             <div class="form-row">
               <f.input @name="city"
                        @type="text"
                        @label="City"
-                       @grid="col-sm-5 col-md-4"/>
+                       @grid="col-sm-5 col-lg-4"/>
               <f.input @name="state"
                        @type="select"
                        @label="State"
@@ -189,7 +186,7 @@
               <f.input @name="postal_code"
                        @type="text"
                        @label="Zip Code"
-                        @grid="col-sm-5 col-md-4"/>
+                       @grid="col-sm-5 col-lg-4"/>
             </div>
             <f.submit @label="Save Address" @submitClass="btn-responsive" @disabled={{this.isSaving}} />
             {{#if this.isSaving}}

@@ -184,8 +184,7 @@ export default class AdminSurveyManageController extends ClubhouseController {
   }
 
   @action
-  async moveQuestionAction(group, question, direction, event) {
-    event.preventDefault();
+  async moveQuestionAction(group, question, direction) {
     const idx = group.surveyQuestions.findIndex((q) => q.id == question.id);
     let questions = group.surveyQuestions.toArray().filter((q) => q.id != question.id);
 

@@ -1,7 +1,7 @@
 <YearSelect @title="Timesheet Totals" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
 <p>
-  <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export to CSV</button>
+  <UiButton @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
 </p>
 
 Showing {{pluralize this.people.length "person"}}

@@ -20,7 +20,9 @@
       on {{shift-format this.barcodeCheckedOut.checked_out}}
     </p>
     <p>
-      <button type="button" class="btn btn-secondary btn-sm" {{action this.showHistoryAction}}>Show Asset History</button>
+      <UiButton @type="secondary" @size="sm" @onClick={{this.showHistoryAction}}>
+        Show Asset History
+      </UiButton>
     </p>
   {{/if}}
 </ChForm>

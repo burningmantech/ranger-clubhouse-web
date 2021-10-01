@@ -30,9 +30,9 @@
       </td>
       {{#if this.canManageRoles}}
         <td>
-          <button {{action this.editRole role}} type="button" class="btn btn-primary btn-sm">
+          <UiButton @size="sm" @onClick={{fn this.editRole role}}>
             {{fa-icon "edit"}} Edit
-          </button>
+          </UiButton>
         </td>
       {{/if}}
     </tr>
@@ -41,9 +41,11 @@
 </table>
 
 {{#if this.entry}}
-  <ModalDialog @title={{if this.entry.isNew "New Role"  "Edit Role"}} as |Modal|>
-    <ChForm @formId="role" @formFor={{this.entry}}
-            @validator={{this.roleValidations}} @onSubmit={{this.saveRole}} @onCancel={{this.cancelRole}} as |f|>
+  <ModalDialog @title={{if this.entry.isNew "New Role"  "Edit Role"}} @onEscape={{this.cancelRole}} as |Modal|>
+    <ChForm @formId="role"
+            @formFor={{this.entry}}
+            @validator={{this.roleValidations}}
+            @onSubmit={{this.saveRole}} as |f|>
       <Modal.body>
         <div class="form-row">
           <f.input @name="title" @type="text" @label="Role Title:" @maxlength={{25}} @size={{25}}/>
@@ -57,14 +59,14 @@
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
-        <f.cancel @disabled={{this.entry.isSaving}} />
+        <UiCancelButton @onClick={{this.cancelRole}} @disabled={{this.entry.isSaving}} />
         {{#if this.entry.isSaving}}
           <LoadingIndicator/>
         {{/if}}
         <div class="ml-auto">
-          <button {{action this.removeRole}} type="button" class="btn btn-danger btn-sm">
+          <UiButton @onClick={{this.removeRole}} @type="danger" @size="sm">
             {{fa-icon "trash-alt" type="fas"}} Delete
-          </button>
+          </UiButton>
         </div>
       </Modal.footer>
     </ChForm>

@@ -15,7 +15,7 @@
   </div>
   {{#if this.canManagePositions}}
     <div class="col-auto">
-      <button type="button" class="btn btn-primary" {{on "click"  this.newAction}}>New Position</button>
+      <UiButton @onClick={{this.newAction}}>New Position</UiButton>
     </div>
   {{/if}}
 </div>
@@ -81,9 +81,9 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
         </td>
         {{#if this.canManagePositions}}
           <td class="actions">
-            <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.editAction position)}}
-                    title="Edit position">{{fa-icon "edit"}} Edit
-            </button>
+            <UiButton @size="sm" @onClick={{fn this.editAction position}}>
+              {{fa-icon "edit"}} Edit
+            </UiButton>
           </td>
         {{/if}}
       </tr>
@@ -93,10 +93,12 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
 </div>
 {{#if this.position}}
   <ModalDialog @title={{if this.position.isNew "Create Position"
-                           (concat "Edit Position ID #" this.position.id " - " this.position.title)}} as |Modal|>
-    <ChForm @formId="position-form" @formFor={{this.position}}
-            @validator={{this.positionValidations}} @onSubmit={{this.saveAction}}
-            @onCancel={{this.cancelAction}} as |f|>
+                           (concat "Edit Position ID #" this.position.id " - " this.position.title)}}
+               @onEscape={{this.cancelAction}} as |Modal|>
+    <ChForm @formId="position-form"
+            @formFor={{this.position}}
+            @validator={{this.positionValidations}}
+            @onSubmit={{this.saveAction}} as |f|>
       <Modal.body>
         <fieldset>
           <legend>Description</legend>
@@ -190,15 +192,17 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
 
       <Modal.footer @noAlign=true>
         <f.submit @label={{if this.position.isNew "Create" "Update"}} @disabled={{this.position.isSaving}} />
-        <f.cancel @disabled={{this.position.isSaving}} />
+        <UiCancelButton @onClick={{this.cancelAction}} @disabled={{this.position.isSaving}} />
         {{#if this.position.isSaving}}
           <LoadingIndicator/>
         {{/if}}
-        <div class="ml-auto">
-          <button type="button" class="btn btn-danger" {{on "click" this.deleteAction}}>
-            {{fa-icon "trash"}} Delete Position
-          </button>
-        </div>
+        {{#unless this.position.isNew}}
+          <div class="ml-auto">
+            <UiButton @type="danger" @onClick={{this.deleteAction}}>
+              {{fa-icon "trash"}} Delete Position
+            </UiButton>
+          </div>
+        {{/unless}}
       </Modal.footer>
     </ChForm>
   </ModalDialog>

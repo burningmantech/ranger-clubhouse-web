@@ -4,7 +4,7 @@
   hours should be included and used to restrict slot creation in the pre-event period.
 </p>
 <p>
-  <button type="button" class="btn btn-primary" {{action this.newRecord}}>New Event Date</button>
+  <UiButton @onClick={{this.newRecord}}>New Event Date</UiButton>
 </p>
 
 {{pluralize this.eventDates.length "event date"}}
@@ -33,8 +33,9 @@
       <td>{{shift-format ed.pre_event_slot_start}}</td>
       <td>{{shift-format ed.pre_event_slot_end}}</td>
       <td>
-        <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.edit ed)}}>{{fa-icon "edit"}}Edit
-        </button>
+        <UiButton @size="sm" @onClick={{fn this.edit ed}}>
+          {{fa-icon "edit"}}Edit
+        </UiButton>
       </td>
     </tr>
   {{/each}}
@@ -50,8 +51,8 @@
             @onSubmit={{this.save}} as |f|>
       <Modal.body>
         <div class="form-row">
-          <f.input @name="event_start" @label="Event Start / Gate Open" @type="datetime" @grid="col-auto" @size=25/>
-          <f.input @name="event_end" @label="Event End" @type="datetime" @grid="col-auto" @size=25/>
+          <f.input @name="event_start" @label="Event Start / Gate Open" @type="datetime" @grid="col-auto" @size={{25}}/>
+          <f.input @name="event_end" @label="Event End" @type="datetime" @grid="col-auto" @size={{25}}/>
         </div>
         <div class="form-row mb-2">
           <div class="col">
@@ -60,8 +61,8 @@
           </div>
         </div>
         <div class="form-row">
-          <f.input @name="pre_event_start" @label="Pre-Event Start" @type="datetime" @grid="col-auto" @size=25/>
-          <f.input @name="post_event_end" @label="Post Event End" @type="datetime" @grid="col-auto" @size=25/>
+          <f.input @name="pre_event_start" @label="Pre-Event Start" @type="datetime" @grid="col-auto" @size={{25}}/>
+          <f.input @name="post_event_end" @label="Post Event End" @type="datetime" @grid="col-auto" @size={{25}}/>
         </div>
         <div class="form-row mb-2">
           <div class="col">
@@ -71,8 +72,8 @@
         </div>
         <div class="form-row">
           <f.input @name="pre_event_slot_start" @label="Pre-Event Slot Start" @type="datetime" @grid="col-auto"
-                   @size=25/>
-          <f.input @name="pre_event_slot_end" @label="Pre-Event Slot End" @type="datetime" @grid="col-auto" @size=25/>
+                   @size={{25}}/>
+          <f.input @name="pre_event_slot_end" @label="Pre-Event Slot End" @type="datetime" @grid="col-auto" @size={{25}}/>
         </div>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>

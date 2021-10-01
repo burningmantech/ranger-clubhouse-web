@@ -20,7 +20,7 @@
       </div>
       <div class="col-auto">
         <f.submit @label="Submit"/>
-        <button type="button" class="btn btn-secondary" {{on "click" this.viewCurrentTime}}>View Current Time</button>
+        <UiButton @type="secondary" @onClick={{this.viewCurrentTime}}>View Current Time</UiButton>
       </div>
     </div>
   </ChForm>
@@ -28,9 +28,9 @@
 
 <p>
   Showing {{pluralize this.timesheet.length "person"}} on duty in {{pluralize this.positions.length "position"}}.
-  <button type="button" class="btn btn-secondary ml-2" {{action this.toggleExpandAll}}>
+  <UiButton @type="secondary" @class="ml-2" @onClick={{this.toggleExpandAll}}>
     {{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}
-  </button>
+  </UiButton>
 
 </p>
 {{#each this.positions key="id" as |position|}}

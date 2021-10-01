@@ -18,7 +18,7 @@
 
   {{#if (and @uploadAction this.canShowUploadButton)}}
     <div class="mt-1">
-      <button type="button" class="btn btn-primary" {{action @uploadAction}}>Upload new photo</button>
+      <UiButton @onClick={{@uploadAction}}>Upload new photo</UiButton>
     </div>
   {{/if}}
 </div>

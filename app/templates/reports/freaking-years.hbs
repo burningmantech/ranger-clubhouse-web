@@ -11,10 +11,10 @@
 </p>
 
 <p>
-  <button type="button" class="btn btn-primary" {{action this.exportToCsv}}>Export To CSV</button>
-  <button type="button" class="btn btn-secondary" {{action this.toggleExpandAll}}>
+  <UiButton @onClick={{this.exportToCsv}}>Export To CSV</UiButton>
+  <UiButton @type="secondary" @onClick={{this.toggleExpandAll}}>
     {{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}
-  </button>
+  </UiButton>
 </p>
 
 Showing {{this.totalPeople}} people over {{this.freaking.length}} years.

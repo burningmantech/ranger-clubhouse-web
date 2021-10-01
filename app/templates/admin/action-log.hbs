@@ -10,8 +10,9 @@
   <ChForm @formId="query" @formFor={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
     <div class="form-row">
       <f.input @name="person" @label="Person" @type="text" @size={{30}} @grid="col-sm-12 col-md-2"
-               @controlClass="form-control form-control-sm" @hint="Callsign or person id" />
-      <f.input @name="start_time" @label="Start time (UTC-7)" @controlClass="form-control form-control-sm" @type="datetime"
+               @controlClass="form-control form-control-sm" @hint="Callsign or person id"/>
+      <f.input @name="start_time" @label="Start time (UTC-7)" @controlClass="form-control form-control-sm"
+               @type="datetime"
                @size={{30}} @grid="col-sm-12 col-md-2"/>
       <f.input @name="end_time" @label="End time (UTC-7)" @controlClass="form-control form-control-sm" @type="datetime"
                @size={{30}} @grid="col-sm-12 col-md-2"/>
@@ -26,8 +27,8 @@
         <f.input @name="sort" @type="radioGroup" @options={{this.sortOptions}} @inline={{true}}/>
       </div>
     </div>
-    <f.submit @label="Search" />
-    <button type="button" class="btn btn-secondary" {{action this.resetFilters f.model}}>Reset</button>
+    <f.submit @label="Search"/>
+    <UiButton @type="secondary" @onClick={{fn this.resetFilters f.model}}>Reset</UiButton>
   </ChForm>
 
   {{#if this.logs}}
@@ -80,9 +81,9 @@
           </td>
           <td class="w-5">
             {{#if log.data}}
-              <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleLog log}}>
+              <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleLog log}}>
                 {{if log.showing "Hide" "Show"}}
-              </button>
+              </UiButton>
             {{else}}
               -
             {{/if}}
@@ -133,13 +134,12 @@
       {{/each}}
       </tbody>
     </table>
-    <button type="button" class="btn btn-secondary" {{action this.goPrevPage}} disabled={{eq this.currentPage 1}}>
+    <UiButton @type="secondary" @onClick={{this.goPrevPage}} @disabled={{eq this.currentPage 1}}>
       Prev Page
-    </button>
-    <button type="button" class="btn btn-secondary" {{action this.goNextPage}}
-            disabled={{eq this.currentPage this.total_pages}}>
+    </UiButton>
+    <UiButton @type="secondary" @onClick={{this.goNextPage}} @disabled={{eq this.currentPage this.total_pages}}>
       Next Page
-    </button>
+    </UiButton>
   {{else}}
     <p class="text-danger font-weight-bold mt-4">No Action Logs matched the criteria.</p>
   {{/if}}

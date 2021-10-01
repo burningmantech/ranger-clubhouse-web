@@ -47,20 +47,22 @@
         <p>
           Do you wish to use your Work Access Pass?
         </p>
-        <button type="button" class="btn btn-primary btn-responsive"
-          {{action @setDocumentStatus this.wap "claimed"}} disabled={{@isSavingDocumentStatus}}>
+        <UiButton @type="primary" @class="btn-responsive"
+          @onClick={{fn @setDocumentStatus this.wap "claimed"}} @disabled={{@isSavingDocumentStatus}}>
           Claim Work Access Pass
           {{#if @isSavingDocumentStatus}}
-            <SpinIcon/>{{/if}}
-        </button>
+            <SpinIcon/>
+          {{/if}}
+        </UiButton>
       {{else}}
         <p>Do you no longer need the Work Access Pass?</p>
-        <button type="button" class="btn btn-primary btn-responsive"
-          {{action @setDocumentStatus this.wap "qualified"}}  disabled={{@isSavingDocumentStatus}}>
+        <UiButton @type="primary" @class="btn-responsive"
+                  @onClick={{fn  @setDocumentStatus this.wap "qualified"}}  @disabled={{@isSavingDocumentStatus}}>
           Release Work Access Pass
           {{#if @isSavingDocumentStatus}}
-            <SpinIcon/>{{/if}}
-        </button>
+            <SpinIcon/>
+          {{/if}}
+        </UiButton>
       {{/if}}
     {{! End of if wap }}
     {{else if (and @ticket.isStaffCredential @ticket.isBanked (not this.wap))}}

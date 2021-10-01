@@ -12,10 +12,9 @@
   </div>
   {{#if this.session.canViewEmail}}
     <div class="col-auto">
-      <button type="button" class="btn btn-primary"
-              disabled={{not this.positions.length}} {{action this.exportBulkPositions}}>
+      <UiButton @onClick={{this.exportBulkPositions}} @disabled={{not this.positions.length}} >
         Export combined callsigns w/emails
-      </button>
+      </UiButton>
     </div>
   {{/if}}
 </div>
@@ -49,13 +48,13 @@
           <p class="text-danger">{{pluralize position.activeCount "active shift"}} are not shown.</p>
         {{/if}}
         <p>
-          <button type="button" class="btn btn-primary mr-2" {{action this.exportByShift position}}>
+          <UiButton @onClick={{fn this.exportByShift position}}>
             Export by Shift
-          </button>
+          </UiButton>
           {{#if this.session.canViewEmail}}
-            <button type="button" class="btn btn-primary" {{action this.exportByCallsign position}}>
+            <UiButton @onClick={{fn this.exportByCallsign position}}>
               Export Callsigns w/Emails
-            </button>
+            </UiButton>
           {{/if}}
         </p>
         <table class="table table-sm table-hover table-striped">

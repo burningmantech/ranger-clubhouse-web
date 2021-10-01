@@ -45,11 +45,10 @@
       {{/each}}
     </div>
 
-    <button type="button" class="btn btn-primary btn-responsive"
-      {{action this.saveSONamesAction}} disabled={{this.isSaving}}>
+    <UiButton @class="btn-responsive" @onClick={{this.saveSONamesAction}} @disabled={{this.isSaving}}>
       Save Names
       {{#if this.isSaving}}<SpinIcon />{{/if}}
-    </button>
+    </UiButton>
     {{#if this.isSOListDirty}}
       <b class="text-danger">Changes will not be saved until you click on 'Save Names'</b>
     {{else if this.isSaved}}

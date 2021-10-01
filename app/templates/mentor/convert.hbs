@@ -5,99 +5,104 @@
 </p>
 
 {{#if this.isSubmitting}}
-  <ModalDialog as |Modal|>
-    <Modal.body>
-      Converting Alphas. This may take upwards to a minute.
-    </Modal.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Converting Alphas. This may take upwards to a minute.
+  </LoadingDialog>
 {{/if}}
 
-<table class="table table-sm table-hover mb-4">
-  <caption>{{pluralize this.passed.length "Shiny Penny candidate"}}</caption>
-  <thead>
-  <tr>
-    <th class="w-5">
-      <Input @type="checkbox" @checked={{this.passAll}} {{on "change" this.togglePassAll}} />
-    </th>
-    <th class="w-15">Callsign</th>
-    <th class="w-20">Name</th>
-    <th class="w-5">Status</th>
-    <th>Mentor Result</th>
-  </tr>
-  </thead>
+<UiSection>
+  <:title>{{pluralize this.passed.length "Shiny Penny candidate"}}</:title>
+  <:body>
+    <table class="table table-sm table-hover">
+      <thead>
+      <tr>
+        <th class="w-5">
+          <Input @type="checkbox" @checked={{this.passAll}} {{on "change" this.togglePassAll}} />
+        </th>
+        <th class="w-15">Callsign</th>
+        <th class="w-20">Name</th>
+        <th class="w-5">Status</th>
+        <th>Mentor Result</th>
+      </tr>
+      </thead>
 
-  <tbody>
-  {{#each this.passed as |person|}}
-    <tr class="{{if person.selected "bg-highlight"}}">
-      <td class="w-5">
-        {{#if person.converted}}
-          {{fa-icon "check"}}
-        {{else}}
-          <Input @type="checkbox" @checked={{person.selected}} />
-        {{/if}}
-      </td>
-      <td class="w-15">
-        <PersonLink @person={{person}} />
-      </td>
-      <td class="w-20">{{person.first_name}} {{person.last_name}}</td>
-      <td class="w-5">{{person.status}}</td>
-      <td>{{person.mentor_status}}</td>
-    </tr>
-  {{else}}
-    <tr>
-      <td colspan="5"><strong class="text-danger">No passed Alphas were found</strong></td>
-    </tr>
-  {{/each}}
-  </tbody>
-</table>
-<button type="button" class="btn btn-success" {{action this.convertAction this.passed "active"}} disabled={{or (not this.passCount) this.isSubmitting}}>
-  Mint Selected Shiny Pennies ({{this.passCount}})
-</button>
-{{#if this.isSubmitting}}
-  <LoadingIndicator />
-{{/if}}
+      <tbody>
+      {{#each this.passed key="id" as |person|}}
+        <tr class="{{if person.selected "bg-highlight"}}">
+          <td class="w-5">
+            {{#if person.converted}}
+              {{fa-icon "check"}}
+            {{else}}
+              <Input @type="checkbox" @checked={{person.selected}} />
+            {{/if}}
+          </td>
+          <td class="w-15">
+            <PersonLink @person={{person}} />
+          </td>
+          <td class="w-20">{{person.first_name}} {{person.last_name}}</td>
+          <td class="w-5">{{person.status}}</td>
+          <td>{{person.mentor_status}}</td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="5"><strong class="text-danger">No passed Alphas were found</strong></td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+    <UiButton @type="success"
+              @onClick={{fn this.convertAction this.passed "active"}}
+              @disabled={{or (not this.passCount) this.isSubmitting}}>
+      Mint Selected Shiny Pennies ({{this.passCount}})
+    </UiButton>
+  </:body>
+</UiSection>
 
-<table class="table table-sm table-hover mt-4 mb-2">
-  <caption>{{pluralize this.bonked.length "Bonked Alpha"}}</caption>
-  <thead>
-  <tr>
-    <th class="w-5">
-      <Input @type="checkbox" @checked={{this.bonkAll}} {{on "change" this.toggleBonkAll}} />
-    </th>
-    <th class="w-15">Callsign</th>
-    <th class="w-20">Name</th>
-    <th class="w-5">Status</th>
-    <th>Mentor Result</th>
-  </tr>
-  </thead>
+<UiSection>
+  <:title>{{pluralize this.bonked.length "Bonked Alpha"}}</:title>
+  <:body>
+    <table class="table table-sm table-hover">
+      <thead>
+      <tr>
+        <th class="w-5">
+          <Input @type="checkbox" @checked={{this.bonkAll}} {{on "change" this.toggleBonkAll}} />
+        </th>
+        <th class="w-15">Callsign</th>
+        <th class="w-20">Name</th>
+        <th class="w-5">Status</th>
+        <th>Mentor Result</th>
+      </tr>
+      </thead>
 
-  <tbody>
-  {{#each this.bonked as |person|}}
-    <tr class="{{if person.selected "bg-highlight"}}">
-      <td class="w-5">
-        {{#if person.converted}}
-          {{fa-icon "check"}}
-        {{else}}
-          <Input @type="checkbox" @checked={{person.selected}} />
-        {{/if}}
-      </td>
-      <td class="w-15">
-        <PersonLink @person={{person}} />
-      </td>
-      <td class="w-20">{{person.first_name}} {{person.last_name}}</td>
-      <td class="w-5">{{person.status}}</td>
-      <td>{{person.mentor_status}}</td>
-    </tr>
-  {{else}}
-    <tr>
-      <td colspan="5"><b class="text-danger">No bonked Alphas were found</b></td>
-    </tr>
-  {{/each}}
-  </tbody>
-</table>
-<button type="button" class="btn btn-danger" disabled={{or (not this.bonkCount) this.isSubmitting}} {{action this.convertAction this.bonked "bonked"}}>
-  Bonk Selected Alphas ({{this.bonkCount}})
-</button>
-{{#if this.isSubmitting}}
-  <LoadingIndicator />
-{{/if}}
+      <tbody>
+      {{#each this.bonked as |person|}}
+        <tr class="{{if person.selected "bg-highlight"}}">
+          <td class="w-5">
+            {{#if person.converted}}
+              {{fa-icon "check"}}
+            {{else}}
+              <Input @type="checkbox" @checked={{person.selected}} />
+            {{/if}}
+          </td>
+          <td class="w-15">
+            <PersonLink @person={{person}} />
+          </td>
+          <td class="w-20">{{person.first_name}} {{person.last_name}}</td>
+          <td class="w-5">{{person.status}}</td>
+          <td>{{person.mentor_status}}</td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="5"><b class="text-danger">No bonked Alphas were found</b></td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+    <UiButton @type="danger"
+              @disabled={{or (not this.bonkCount) this.isSubmitting}}
+              @onClick={{fn this.convertAction this.bonked "bonked"}}>
+      Bonk Selected Alphas ({{this.bonkCount}})
+    </UiButton>
+  </:body>
+</UiSection>
+

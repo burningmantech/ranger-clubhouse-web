@@ -104,8 +104,7 @@ export default class RegisterController extends ClubhouseController {
   }
 
   @action
-  stepAction(step, event) {
-    event.preventDefault();
+  stepAction(step) {
     this.step = step;
   }
 }

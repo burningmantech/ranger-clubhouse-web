@@ -24,7 +24,7 @@
               <f.submit @label="Update"/>
             </div>
             <div class="col-auto">
-              <button type="button" class="btn btn-secondary" {{action @onClose}}>Cancel</button>
+              <UiCancelButton @type="secondary" @onClick={{@onClose}} />
             </div>
           </div>
         </fieldset>
@@ -77,9 +77,7 @@
   </ModalDialog>
 {{/unless}}
 {{#if this.slotUpdating}}
-  <ModalDialog as |Modal|>
-    <Modal.body>
-      Updating slot ID #{{this.slotUpdating.id}}
-    </Modal.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Updating slot ID #{{this.slotUpdating.id}}
+  </LoadingDialog>
 {{/if}}

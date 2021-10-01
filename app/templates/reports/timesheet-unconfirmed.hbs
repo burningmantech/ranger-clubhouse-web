@@ -5,14 +5,10 @@
 </p>
 
 {{#if this.unconfirmed_people}}
-  <div class="row mb-2">
-    <div class="col-auto">
-      <button type="button" class="btn btn-secondary" {{action "downloadCsv"}}>Export as CSV</button>
-    </div>
-    <div class="col-auto mt-2">
-      <a href="#email-list">Jump to the email list</a>
-    </div>
-  </div>
+  <p>
+    <UiButton @onClick={{this.downloadCsv}} @class="ml-2">Export as CSV</UiButton>
+    <a href="#email-list-link">Jump to the email list</a>
+  </p>
 {{/if}}
 <p>
   count = How many timesheet entries are not verified

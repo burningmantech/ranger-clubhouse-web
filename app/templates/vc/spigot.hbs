@@ -12,7 +12,7 @@
     Dropped = converted to Past Prospective
   </p>
   <p>
-    <button type="button" class="btn btn-primary" {{on "click" this.exportToCSV}}>Export to CSV</button>
+    <UiButton @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
   </p>
   Showing {{pluralize @model.days.length "day"}}.
   <table class="table table-width-auto table-striped table-hover">

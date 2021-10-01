@@ -1,79 +1,82 @@
 <LoginSidebar/>
 <main>
   {{#if (config 'AuditorRegistrationDisabled')}}
-    <h3 class="text-danger">Auditor registration disabled.</h3>
-    <p>
-      Auditor registration is usually open between January and late August. The Black Rock Rangers hold trainings
-      between late April/early May and late August. Training registration will prioritize Prospective Rangers
-      over Auditors. <b>No walks-in are allowed.</b>
-    </p>
-  <p>
-    <b class="text-danger">Just attending training as an auditor is not a path to becoming a Ranger.</b> You must
-    apply for and be accepted into the Prospective Ranger program in order to become a Ranger.
-  </p>
-  <p>
-    While you are waiting, please feel free to browse the Ranger manual located on the main Ranger website:
-    <a href="https://rangers.burningman.org">rangers.burningman.org</a>
-  </p>
+    <UiSection>
+      <:title><span class="text-danger">Auditor registration disabled.</span></:title>
+      <:body>
+        <p>
+          Auditor registration is usually open between January and late August. The Black Rock Rangers only offer trainings
+          between late April/early May and late August. Training registration will prioritize Prospective Rangers
+          over Auditors. <b>No walks-in are allowed.</b>
+        </p>
+        <p>
+          <b class="text-danger">Just attending training as an auditor is not a path to becoming a Ranger.</b> You must
+          apply for and be accepted into the Prospective Ranger program in order to become a Ranger.
+        </p>
+        While you are waiting, please feel free to browse the Ranger manual located on the main Ranger website:
+        <a href="https://rangers.burningman.org">rangers.burningman.org</a>
+      </:body>
+    </UiSection>
   {{else if (eq this.step "ask-intent")}}
-    <h3>Hello Auditor or Potential Ranger!</h3>
-    <p>
-      Thank you for visiting the Black Rock Ranger Secret Clubhouse.
-    </p>
-    <p>
-      <b class="text-danger">Ranger trainings are only available April through August in any given year.</b>
-    </p>
-    <h4>Why are you here today?</h4>
-    <div class="row">
-      <div class="col-sm-6 col-lg-4 mb-3">
-        <button type="button" class="btn btn-block  btn-lg btn-primary" {{on "click" (fn this.stepAction "ranger")}}>
-          To  volunteer with the Rangers
-        </button>
-      </div>
-      <div class="col-sm-6 col-lg-4">
-        <button type="button" class="btn btn-block btn-lg btn-primary" {{on "click" (fn this.stepAction "audit")}}>
-          To audit Ranger Training
-        </button>
-      </div>
-    </div>
+    <UiSection>
+      <:title>Hello Auditor or Potential Ranger!</:title>
+      <:body>
+        <p>
+          Thank you for visiting the Black Rock Ranger Secret Clubhouse.
+        </p>
+        <p>
+          <b class="text-danger">Ranger trainings are only offered late-April through August.</b>
+        </p>
+        <p>
+          Why are you here today?
+        </p>
+        <UiButton @class="btn-responsive" @onClick={{fn this.stepAction "ranger"}}>
+          To Volunteer With The Rangers
+        </UiButton>
+        <UiButton type="button" @class="btn-responsive" @onClick={{fn this.stepAction "audit"}}>
+          To Audit Ranger Training
+        </UiButton>
+      </:body>
+    </UiSection>
   {{else if (eq this.step "ranger")}}
-    <h1>
-      You're in the wrong place to become a Ranger!
-    </h1>
-    <p>
-      <b>All potential Black Rock Rangers need to submit an application first.</b>
-    </p>
-    <p>
-      <b class="text-danger">You do not register in the Clubhouse.</b>
-    </p>
-    <p>
-      Visit <a href="https://rangers.burningman.org/becoming-a-ranger/" rel="noopener noreferrer">Becoming a Ranger</a>
-      to read about the Ranger volunteer requirements, qualifications, and how to submit a volunteer application.
-    </p>
-    <p>
-      Did you mean to <a href {{on "click" (fn this.stepAction "audit")}}>audit Ranger training</a> instead?
-    </p>
+    <UiSection>
+      <:title>You're in the wrong place to become a Ranger!</:title>
+      <:body>
+        <p>
+          <b>All potential Black Rock Rangers need to submit an application first.</b>
+        </p>
+        <p>
+          <b class="text-danger">You do not register in the Clubhouse.</b>
+        </p>
+        <p>
+          Visit
+          <a href="https://rangers.burningman.org/becoming-a-ranger/" rel="noopener noreferrer">
+            Becoming a Ranger
+          </a>
+          to read about the Ranger volunteer requirements, qualifications, and how to submit a volunteer application.
+        </p>
+        Did you mean to <a href {{action this.stepAction "audit"}}>audit Ranger training</a> instead?
+      </:body>
+    </UiSection>
   {{else if (eq this.step "audit")}}
-    <h1>Register to audit Ranger training</h1>
-    <p>
-      Before registering as an Auditor, take note of the following:
-    </p>
-    <p>
-      <b class="text-danger">Auditing is NOT a path to becoming a Black Rock Ranger.</b>
-    </p>
-    <p>
-      Did you mean become a Ranger instead? Visit <a href="https://rangers.burningman.org/becoming-a-ranger/"
-                                                     rel="noopener noreferrer">Becoming a Ranger</a>
-      to find out how to submit a volunteer application.
-    </p>
-    <div class="row mb-4">
-      <div class="col-sm-12 col-md-9 col-lg-6">
-        <button type="button" class="btn btn-block btn-primary" {{on "click" (fn this.stepAction "register")}}>
+    <UiSection>
+      <:title>Register to audit Ranger training</:title>
+      <:body>
+        <p>
+          <b class="text-danger">Auditing is NOT a path to becoming a Black Rock Ranger.</b>
+        </p>
+        <p>
+          Did you mean become a Ranger instead? Visit
+          <a href="https://rangers.burningman.org/becoming-a-ranger/" rel="noopener noreferrer">
+            Becoming a Ranger
+          </a>
+          to find out how to submit a volunteer application.
+        </p>
+        <UiButton @class="btn-responsive" @onClick={{fn this.stepAction "register"}}>
           I understand auditing is not a path to becoming a Ranger
-        </button>
-      </div>
-    </div>
-
+        </UiButton>
+      </:body>
+    </UiSection>
   {{else if (eq this.step "register")}}
     <h1>Register to audit Ranger training</h1>
     <p>
@@ -128,11 +131,11 @@
       Uh oh, I don't understand what the step [{{this.step}}] is. This is a bug and should be reported to the tech team.
     </p>
     <p>
-      <button type="button" class="btn btn-primary" {{on "click" (fn this.stepAction "ask-intent")}}>Back</button>
+      <UiButton @onClick={{fn this.stepAction "ask-intent"}}>Back</UiButton>
     </p>
   {{/if}}
   <p class="mt-2">
-    <strong>Questions?</strong> Contact the Ranger Volunteer Coordinators at
+    <b>Questions?</b> Contact the Ranger Volunteer Coordinators at
     <span class="d-inline-block">{{vc-email}}</span>.
   </p>
 </main>

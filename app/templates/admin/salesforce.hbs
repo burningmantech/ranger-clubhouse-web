@@ -32,9 +32,9 @@
         <strong class="text-danger">NOT SENT</strong>
       {{/if}}
     </p>
-    <button type="button" class="btn btn-success btn-sm" {{action this.toggleHelp}}>
+    <UiButton @type="success" @size="sm" @onClick={{this.toggleHelp}}>
       {{if this.showHelp "Hide" "Show"}} Help
-    </button>
+    </UiButton>
   </:body>
 </UiSection>
 
@@ -91,44 +91,51 @@
   <:body>
     <div class="row">
       <div class="col-auto">
-        <strong>Import options</strong>
-        <p>
-          <label><Input @type="checkbox" @checked={{this.createAccounts}} /> Create Clubhouse accounts</label><br>
-          <label><Input @type="checkbox" @checked={{this.updateSalesforce}} disabled={{not this.createAccounts}} />
-            <span class="{{unless this.createAccounts "text-muted"}}"> Update Salesforce records (create account only, caution!)</span>
-          </label><br>
-          <label><Input @type="checkbox" @checked={{this.nonTestAccounts}} /> Use non-test accounts
-            (caution!)</label><br>
-        </p>
+        <p><b>Import options</b></p>
+        <label>
+          <Input @type="checkbox" @checked={{this.createAccounts}} />
+          Create Clubhouse accounts
+        </label><br>
+        <label>
+          <Input @type="checkbox" @checked={{this.updateSalesforce}} disabled={{not this.createAccounts}} />
+          <span class="{{unless this.createAccounts "text-muted"}}">
+              Update Salesforce records (create account only, caution!)
+            </span>
+        </label><br>
+        <label>
+          <Input @type="checkbox" @checked={{this.nonTestAccounts}} />
+          Use non-test accounts (caution!)
+        </label>
       </div>
       <div class="col-auto">
-        <strong>Debugging options</strong>
         <p>
-          <label><Input @type="checkbox" @checked={{this.showAll}} /> Show all records (first 1,000 records, create &
-            reset
-            account disabled)</label><br>
-          <label><Input @type="checkbox" @checked={{this.resetTestAccounts}} /> Reset test accounts in
-            Salesforce</label><br>
+          <b>Debugging options</b>
         </p>
+        <label>
+          <Input @type="checkbox" @checked={{this.showAll}} />
+          Show all records (first 1,000 records, create & reset
+          account disabled)
+        </label><br>
+        <label>
+          <Input @type="checkbox" @checked={{this.resetTestAccounts}} />
+          Reset test accounts in Salesforce
+        </label>
       </div>
     </div>
 
-    <p>
-      <button type="button" class="btn btn-primary" {{action this.import}} disabled={{this.isSubmitting}}>
-        {{#if this.isSubmitting}}
-          Please Wait
-        {{else}}
-          Submit
-        {{/if}}
-      </button>
-      <br>
-    </p>
+    <UiButton @onClick={{this.import}} @disabled={{this.isSubmitting}}>
+      Submit
+    </UiButton>
   </:body>
 </UiSection>
 
 {{#if this.isSubmitting}}
-  <LoadingDialog @item="Salesforce Accounts"/>
-{{else if this.accounts}}
+  <LoadingDialog>
+    Submitting request
+  </LoadingDialog>
+{{/if}}
+
+{{#if this.accounts}}
   <UiSection>
     <:title>Import Results</:title>
     <:body>
@@ -137,9 +144,13 @@
       </p>
       {{#each this.accountGroups as |group|}}
         <div class="float-right">
-          <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleAll group}}>{{#if
-            group.expandedAll}}
-            Hide All{{else}}Expand All{{/if}}</button>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleAll group}}>
+            {{#if group.expandedAll}}
+              Hide All
+            {{else}}
+              Expand All
+            {{/if}}
+          </UiButton>
         </div>
         <h3>{{group.statusLabel}} ({{pluralize group.items.length "record"}})</h3>
         <table class="table table-sm table-hover table-striped">
@@ -174,9 +185,9 @@
                 </td>
                 <td>{{account.vc_status}}</td>
                 <td>
-                  <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleAccount account}}>
+                  <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleAccount account}}>
                     {{if account.showing "Hide" "Show"}}
-                  </button>
+                  </UiButton>
                 </td>
               </tr>
             {{else}}
@@ -193,9 +204,9 @@
                 <td>{{account.applicant_type}}</td>
                 <td>{{account.vc_status}}</td>
                 <td>
-                  <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleAccount account}}>
+                  <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleAccount account}}>
                     {{if account.showing "Hide" "Show"}}
-                  </button>
+                  </UiButton>
                 </td>
               </tr>
 

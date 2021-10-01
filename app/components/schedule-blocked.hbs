@@ -12,9 +12,9 @@
       <b>A Training shift MUST BE ATTENDED &amp; PASSED before being allowed to work on playa.</b>
     </p>
     <p>
-      <button type="button" class="btn btn-primary" {{on "click" @overrideAction}}>
+      <UiButton @onClick={{@overrideAction}}>
         View Schedule &amp; Sign Ups
-      </button>
+      </UiButton>
     </p>
     <BackToHome/>
   {{else}}
@@ -23,9 +23,9 @@
         As a Clubhouse Admin, you may override the requirement(s) to gain access to the schedule.<br>
         <b class="text-danger">ALL ACTIONS WILL BE LOGGED.</b>
       </p>
-      <button type="button" class="btn btn-danger" {{on "click" @overrideAction}}>
+      <UiButton @type="danger" @onClick={{@overrideAction}}>
         Override Requirements
-      </button>
+      </UiButton>
     {{else if @isMe}}
       <p>
         The home page has instructions on how to resolve the issue(s) above.

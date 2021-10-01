@@ -40,9 +40,9 @@
       </p>
       <div class="accordion max-width-700">
         <p>
-          <button type="button" class="btn btn-success btn-block" {{action this.nextSection "ticket"}}>
+          <UiButton @type="success" @class="btn-block" @onClick={{fn this.nextSection "ticket"}}>
             Begin Ticketing {{fa-icon "arrow-right"}}
-          </button>
+          </UiButton>
         </p>
         <TicketInfo @person={{@person}}
                     @ticketPackage={{@ticketPackage}}

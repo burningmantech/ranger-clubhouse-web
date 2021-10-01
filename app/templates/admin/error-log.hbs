@@ -3,7 +3,7 @@
 
   {{#if this.error_logs}}
     <p>
-      <button type="button" class="btn btn-danger" {{action this.purgeLog}}>Purge Log</button>
+      <UiButton @type="danger" @onClick={{this.purgeLog}}>Purge Log</UiButton>
     </p>
     <p>
       Showing {{this.page}} of {{this.total_pages}} pages. Total {{pluralize this.total "found row"}}
@@ -41,9 +41,9 @@
             {{log.url}}
           </td>
           <td>
-            <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleLog log}}>
+            <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleLog log}}>
               {{if log.showing "Hide" "Show"}}
-            </button>
+            </UiButton>
           </td>
         </tr>
 

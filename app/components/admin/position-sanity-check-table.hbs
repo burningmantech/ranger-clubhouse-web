@@ -56,9 +56,9 @@
       </table>
 
       {{#if @canRepair}}
-        <button type="button" class="btn btn-primary" {{action @repairAction @repairType @people @repairParams}} disabled={{@isSubmitting}}>
+        <UiButton @onClick={{fn @repairAction @repairType @people @repairParams}} @disabled={{@isSubmitting}}>
           Fix {{@title}}
-        </button>
+        </UiButton>
         {{#if @isSubmitting}}
           <LoadingIndicator />
         {{/if}}

@@ -1,7 +1,7 @@
 <h1>Ranger Broadcast Service Alerts</h1>
-{{#if this.canManagePositions}}
+{{#if this.canManageAlerts}}
   <p>
-    <button type="button" class="btn btn-primary" {{action this.newAlert}}>New Alert</button>
+    <UiButton @onClick={{this.newAlert}}>New Alert</UiButton>
   </p>
 {{/if}}
 
@@ -26,12 +26,12 @@ Showing {{pluralize this.alerts.length "alert"}}
       <td class="w-5">{{yesno alert.on_playa}}</td>
       {{#if this.canManageAlerts}}
         <td class="w-20">
-          <button type="button" class="btn btn-danger btn-sm" {{action this.deleteAlert alert}}>
+          <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteAlert alert}}>
             {{fa-icon "trash"}} Delete
-          </button>
-          <button type="button" class="btn btn-primary btn-sm" {{action this.editAlert alert}}>
+          </UiButton>
+          <UiButton @size="sm" @onClick={{fn this.editAlert alert}}>
             {{fa-icon "edit"}} Edit
-          </button>
+          </UiButton>
         </td>
       {{/if}}
     </tr>

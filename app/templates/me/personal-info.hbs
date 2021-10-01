@@ -154,12 +154,12 @@
       What do you want to do?
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <button type="button" class="btn btn-primary" {{action this.sendMailingListUpdateRequest}}>
+      <UiButton @onClick={{this.sendMailingListUpdateRequest}}>
         Request The Lists Be Updated
-      </button>
-      <button type="button" class="btn btn-secondary" {{action this.cancelMailingListDialog}}>
+      </UiButton>
+      <UiButton @type="secondary" @onClick={{this.cancelMailingListDialog}}>
         Don't Touch The Lists
-      </button>
+      </UiButton>
     </Modal.footer>
   </ModalDialog>
 {{/if}}

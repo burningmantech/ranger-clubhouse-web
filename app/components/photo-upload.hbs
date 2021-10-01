@@ -33,8 +33,9 @@
             <h4>- OR -</h4>
           </div>
           <div class="col-sm-12 col-md-auto text-center">
-            <button type="button" class="btn btn-primary" {{action this.takeSelfieAction}}>Use Camera / Take Selfie
-            </button>
+            <UiButton @onClick={{this.takeSelfieAction}}>
+              Use Camera / Take Selfie
+            </UiButton>
           </div>
         {{/if}}
       </div>

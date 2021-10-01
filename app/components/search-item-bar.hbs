@@ -59,9 +59,9 @@
             <small>Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.</small>
           </div>
           <div class="col-auto ml-auto mr-2">
-            <button type="button" class="btn btn-sm btn-secondary" {{on "click" this.hideSearchBoxAction}}>
+            <UiButton @type="secondary" @size="sm" @onClick={{this.hideSearchBoxAction}}>
               Hide Options
-            </button>
+            </UiButton>
           </div>
         </div>
       </div>

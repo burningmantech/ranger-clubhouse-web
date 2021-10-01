@@ -28,9 +28,9 @@
   {{/each}}
 
   <div class="mt-1">
-    <button type="button" class="btn btn-secondary btn-sm" {{on "click" this.showHistoryAction}}>
+    <UiButton @type="secondary" @size="sm" @onClick={{this.showHistoryAction}}>
       View Training
-    </button>
+    </UiButton>
   </div>
 {{else}}
   <i>No training signups</i>
@@ -65,8 +65,8 @@
                 {{#if row.training_notes}}
                   {{#each row.training_notes as |note|}}
                     <div class="mb-2">
-                      Timestamp {{note.created_at}} by {{if note.person_source_id note.person_source.callsign
-                                                            "* imported *"}}:<br>
+                      Timestamp {{note.created_at}} by
+                      {{if note.person_source_id note.person_source.callsign "* imported *"}}:<br>
                       {{nl2br note.note}}
                     </div>
                   {{/each}}
@@ -90,7 +90,7 @@
       </table>
     </Modal.body>
     <Modal.footer>
-      <Modal.button @label="Close" @action={{this.closeHistoryAction}} @type="primary"/>
+      <UiCloseButton @onClick={{this.closeHistoryAction}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}

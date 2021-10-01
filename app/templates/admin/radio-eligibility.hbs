@@ -9,7 +9,7 @@
   "Signed Up" indicates if the person has signed up for a shift beginning August 15, {{this.year}} or later.
 </p>
 <p>
-  <button type="button" class="btn btn-primary" {{action this.exportToCsv}}>Export To CSV</button>
+  <UiButton @onClick={{this.exportToCsv}}>Export To CSV</UiButton>
 </p>
 Showing {{pluralize this.people.length "person"}}
 <table class="table table-sm table-striped table-hover table-width-auto">

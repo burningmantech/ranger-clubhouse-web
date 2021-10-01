@@ -27,13 +27,12 @@
         You may bank the provision(s) to use in a future event if you are taking
         this year off or are planning to have a "light" Ranger schedule.
       </p>
-      <button type="button" class="btn btn-primary btn-responsive"
-        {{action this.updateItems "bank"}} disabled={{@isSubmitting}}>
+      <UiButton @class="btn-responsive" @onClick={{fn this.updateItems "bank"}} @disabled={{@isSubmitting}}>
         Bank the provision(s)
         {{#if @isSavingDocumentStatus}}
           <SpinIcon/>
         {{/if}}
-      </button>
+      </UiButton>
     {{/if}}
     {{#if this.bankedItems}}
       <p>
@@ -44,13 +43,12 @@
           <li>{{item.typeLabel}} expiring after {{mdy-format item.expiry_date full=true}}</li>
         {{/each}}
       </ul>
-      <button type="button" class="btn btn-primary btn-responsive"
-        {{action this.updateItems "claim"}} disabled={{@isSubmitting}}>
+      <UiButton @class="btn-responsive" @onClick={{fn this.updateItems "claim"}} @disabled={{@isSubmitting}}>
         Use the provision(s) for this event
         {{#if @isSavingDocumentStatus}}
           <SpinIcon/>
         {{/if}}
-      </button>
+      </UiButton>
     {{/if}}
     {{#if this.submittedItems}}
       <p class="mt-2">

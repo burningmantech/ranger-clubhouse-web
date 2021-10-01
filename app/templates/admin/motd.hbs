@@ -14,18 +14,18 @@
     <f.input @name="sort" @type="select" @options={{this.sortOptions}} @wrapClass="col-auto"/>
     <div class="col-auto">
       <f.submit @label="Search"/>
-      <button type="button" class="btn btn-secondary" {{action this.resetFilters f.model}}>Reset</button>
+      <UiButton @type="secondary" @onClick={{fn this.resetFilters f.model}}>Reset</UiButton>
     </div>
     <label class="col-form-label col-auto">Actions</label>
     <div class="col-auto">
-      <button type="button" class="btn btn-primary" {{action this.newEntry}}>New Message</button>
+      <UiButton @onClick={{this.newEntry}}>New Message</UiButton>
     </div>
   </div>
 </ChForm>
 
 
 <div class="my-2">
-  Page {{this.currentPage}} of {{this.total_pages}} ({{this.total}} matching of {{pluralize this.table_count "message"}})
+  Showing {{this.total}} of {{pluralize this.table_count "message"}}. Page {{this.currentPage}} of {{this.total_pages}}
 </div>
 <table class="table table-striped table-sm table-width-auto">
   <thead>
@@ -73,8 +73,9 @@
         {{motd.subject}}
       </td>
       <td>
-        <button type="button" class="btn btn-primary btn-sm" {{action this.editEntry motd}}>{{fa-icon "edit"}}Edit
-        </button>
+        <UiButton @size="sm" @onClick={{fn this.editEntry motd}}>
+          {{fa-icon "edit"}}Edit
+        </UiButton>
       </td>
     </tr>
   {{else}}
@@ -85,21 +86,18 @@
   </tbody>
 </table>
 
-<button type="button" class="btn btn-secondary" {{action this.goPrevPage}}
-        disabled={{eq this.currentPage 1}}>
+<UiButton @type="secondary" @onClick={{this.goPrevPage}} @disabled={{eq this.currentPage 1}}>
   Prev Page
-</button>
-<button type="button" class="btn btn-secondary" {{action this.goNextPage}}
-        disabled={{eq this.currentPage this.total_pages}}>
+</UiButton>
+<UiButton @type="secondary" @onClick={{this.goNextPage}} @disabled={{eq this.currentPage this.total_pages}}>
   Next Page
-</button>
+</UiButton>
 
 {{#if this.entry}}
-  <ModalDialog @title={{if this.entry.isNew "New Message" "Edit Message"}} as |Modal|>
+  <ModalDialog @title={{if this.entry.isNew "New Message" "Edit Message"}} @onEscape={{this.cancelEntry}}  as |Modal|>
     <ChForm @formId="entry" @formFor={{this.entry}}
             @validator={{this.motdValidations}}
-            @onSubmit={{action this.saveEntry}}
-            @onCancel={{action this.cancelEntry}} as |f|>
+            @onSubmit={{action this.saveEntry}} as |f|>
       <Modal.body>
         <div class="form-row mb-2">
           <label class="col-form-label col-2">Audience</label>
@@ -123,15 +121,15 @@
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @disabled={{this.entry.isSaving }}/>
-        <f.cancel @disabled={{this.entry.isSaving }}/>
+        <UiCancelButton @onClick={{this.cancelEntry}} @disabled={{this.entry.isSaving }}/>
         {{#if this.entry.isSaving}}
           <LoadingIndicator/>
         {{/if}}
         {{#unless this.entry.isNew}}
           <div class="ml-auto">
-            <button type="button" class="btn btn-danger" {{action this.deleteEntry this.entry}}>
+            <UiButton @type="danger" @onClick={{fn this.deleteEntry this.entry}}>
               {{fa-icon "trash"}}Delete
-            </button>
+            </UiButton>
           </div>
         {{/unless}}
       </Modal.footer>

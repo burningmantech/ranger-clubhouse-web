@@ -64,13 +64,13 @@ export default class ReportsShiftLeadController extends ClubhouseController {
   @action
   onDutyAction() {
     this.shiftSelect = 'now';
-    this.shiftStart = this.now;
     this.isOnDuty = true;
     this.isLoading = true;
     this.ajax.request('timesheet/on-duty-shift-lead-report')
       .then((result) => {
         setProperties(this, result);
         this._rehydrateOnDutyResults(true);
+        this.shiftStart = this.now;
       })
       .catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isLoading = false);

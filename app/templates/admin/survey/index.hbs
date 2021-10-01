@@ -1,6 +1,6 @@
 <YearSelect @title="Survey Administration" @year={{this.year}} @minYear={{2012}} @onChange={{action (mut this.year)}} />
 <p>
-  <button type="button" class="btn btn-primary" {{on "click" this.newSurveyAction}}>New Survey</button>
+  <UiButton @onClick={{this.newSurveyAction}}>New Survey</UiButton>
 </p>
 Showing {{pluralize this.surveys.length "survey"}}
 <table class="table table-width-auto table-striped table-hover">
@@ -30,12 +30,12 @@ Showing {{pluralize this.surveys.length "survey"}}
       </td>
       <td>
         <LinkTo @route="admin.survey.manage" @model={{survey.id}} class="btn btn-primary btn-sm">Manage</LinkTo>
-        <button type="button" class="btn btn-secondary btn-sm" {{on "click" (fn this.duplicateSurveyAction survey)}}>
+        <UiButton @type="secondary" @size="sm" @onClick={{fn this.duplicateSurveyAction survey}}>
           Duplicate
-        </button>
-        <button type="button" class="btn btn-danger btn-sm" {{on "click" (fn this.deleteSurveyAction survey)}}>
+        </UiButton>
+        <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteSurveyAction survey}}>
           {{fa-icon "trash"}} Delete
-        </button>
+        </UiButton>
       </td>
     </tr>
   {{else}}
@@ -54,10 +54,7 @@ Showing {{pluralize this.surveys.length "survey"}}
 {{/if}}
 
 {{#if this.isDuplicating}}
-  <ModalDialog as |Modal|>
-    <Modal.body>
-      Duplicating Survey
-      <LoadingIndicator/>
-    </Modal.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Duplicating Survey
+  </LoadingDialog>
 {{/if}}

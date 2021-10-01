@@ -17,7 +17,9 @@
       <label class="col-form-label"> to </label>
       <f.input @name="endYear" @type="select" @options={{this.yearOptions}} />
       <div class="col-auto mt-2">
-        <f.input @name="showInactives" @label="Include people who hold the position(s) but may not have worked in the year range" @type="checkbox" @inline={{true}} />
+        <f.input @name="showInactives"
+                 @label="Include people who hold the position(s) but may not have worked in the year range"
+                 @type="checkbox" @inline={{true}} />
       </div>
     </div>
     <div class="form-row">
@@ -36,60 +38,65 @@
 </div>
 
 {{#if (and this.haveResults this.people)}}
-  <p>
-    <button type="button" class="btn btn-secondary" {{action this.exportToCSV}}>Export to CSV</button>
-  </p>
-  <table class="table table-sm table-striped table-width-auto">
-    <caption>Found {{pluralize this.people.length "person"}} for
+  <UiSection>
+    <:title>
+      Found {{pluralize this.people.length "person"}} for
       {{#each this.positionsUsed as |position idx|~}}
         {{if idx ", "~}}{{position.title~}}
       {{/each}}
-    </caption>
-    <thead>
-    <tr>
-      <th>Callsign</th>
-      <th>Name</th>
-      <th>Status</th>
-      {{#if this.session.user.canViewEmail}}
-        <th>Email</th>
-      {{/if}}
-      {{#each this.yearList as |year|}}
-        <th class="text-right">{{year}} Hours</th>
-      {{/each}}
-      <th class="text-right">Total</th>
-    </tr>
-    </thead>
+    </:title>
+    <:body>
+      <p>
+        <UiButton @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
+      </p>
+      <table class="table table-sm table-striped table-width-auto">
+         <thead>
+        <tr>
+          <th>Callsign</th>
+          <th>Name</th>
+          <th>Status</th>
+          {{#if this.session.canViewEmail}}
+            <th>Email</th>
+          {{/if}}
+          {{#each this.yearList as |year|}}
+            <th class="text-right">{{year}} Hours</th>
+          {{/each}}
+          <th class="text-right">Total</th>
+        </tr>
+        </thead>
 
-    <tbody>
-    {{#each this.people as |person|}}
-      <tr>
-        <td>
-          <PersonLink @person={{person}} />
-        </td>
-        <td>{{person.first_name}} {{person.last_name}}</td>
-        <td>{{person.status}}</td>
-        {{#if this.session.user.canViewEmail}}
-          <td>
-            {{#if person.email}}
-              {{mail-to person.email}}
-            {{else}}
-              -
+        <tbody>
+        {{#each this.people as |person|}}
+          <tr>
+            <td>
+              <PersonLink @person={{person}} />
+            </td>
+            <td>{{person.first_name}} {{person.last_name}}</td>
+            <td>{{person.status}}</td>
+            {{#if this.session.canViewEmail}}
+              <td>
+                {{#if person.email}}
+                  {{mail-to person.email}}
+                {{else}}
+                  -
+                {{/if}}
+              </td>
             {{/if}}
-          </td>
-        {{/if}}
-        {{#each person.years as |duration|}}
-          <td class="text-right">{{hour-format duration}}</td>
+            {{#each person.years as |duration|}}
+              <td class="text-right">{{hour-format duration}}</td>
+            {{/each}}
+            <td class="text-right">{{hour-format person.total_duration}}</td>
+          </tr>
         {{/each}}
-        <td class="text-right">{{hour-format person.total_duration}}</td>
-      </tr>
-    {{/each}}
-    <tr>
-      <td colspan="4" class="text-right">Totals</td>
-      {{#each this.totalsList as |total|}}
-        <td class="text-right">{{hour-format total}}</td>
-      {{/each}}
-      <td class="text-right">{{hour-format this.grandTotal}}</td>
-    </tr>
-    </tbody>
-  </table>
+        <tr>
+          <td colspan="{{if this.session.canViewEmail 4 3}}" class="text-right"><b>Totals</b></td>
+          {{#each this.totalsList as |total|}}
+            <td class="text-right">{{hour-format total}}</td>
+          {{/each}}
+          <td class="text-right">{{hour-format this.grandTotal}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </:body>
+  </UiSection>
 {{/if}}

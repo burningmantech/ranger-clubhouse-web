@@ -1,7 +1,9 @@
 {{#if this.editDocument}}
   <h1>{{if this.editDocument.isNew "Create new" (concat "Edit " this.editDocument.tag)}} document</h1>
-  <ChForm @forId="document" @formFor={{this.editDocument}} @validator={{this.validations}} @onSubmit={{this.saveAction}}
-          @onCancel={{this.cancelAction}}
+  <ChForm @forId="document"
+          @formFor={{this.editDocument}}
+          @validator={{this.validations}}
+          @onSubmit={{this.saveAction}}
           as |f|>
     <div class="form-row">
       <f.input @name="tag" @type="text" @label="Document Tag" @size={{30}} @maxlength={{80}} />
@@ -12,14 +14,14 @@
     </div>
     <div class="mb-4">
         <f.submit @disabled={{this.editDocument.isSaving}} />
-        <f.cancel @disabled={{this.editDocument.isSaving}} />
+      <UiCancelButton @onClick={{this.cancelAction}} @disabled={{this.editDocument.isSaving}} />
       {{#if this.isSaving}}
         <LoadingIndicator/>
       {{/if}}
 
       {{#unless this.editDocument.isNew}}
         <div class="d-inline-block ml-4">
-          <button type="button" class="btn btn-danger" {{action this.deleteAction}}>{{fa-icon "trash"}} Delete</button>
+          <UiButton @type="danger" @onClick={{this.deleteAction}}>{{fa-icon "trash"}} Delete</UiButton>
         </div>
       {{/unless}}
     </div>
@@ -29,7 +31,7 @@
   <p>
     Showing {{pluralize this.documents.length "document"}}
     <span class="ml-4">
-    <button type="button" class="btn btn-primary" {{action this.newAction}}>{{fa-icon "plus"}} New Document</button>
+    <UiButton @onClick={{this.newAction}}>{{fa-icon "plus"}} New Document</UiButton>
     </span>
   </p>
   <table class="table table-sm table-striped table-width-auto table-hover">
@@ -56,8 +58,9 @@
           <PersonLink @person={{doc.person_update}} />
         </td>
         <td>
-          <button type="button" class="btn btn-sm btn-primary" {{action this.editAction doc}}>{{fa-icon "edit"}}Edit
-          </button>
+          <UiButton @size="sm" @onClick={{fn this.editAction doc}}>
+            {{fa-icon "edit"}}Edit
+          </UiButton>
         </td>
       </tr>
     {{else}}

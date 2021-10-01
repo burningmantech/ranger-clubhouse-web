@@ -53,17 +53,17 @@
   </tbody>
 </table>
 <p>
-  <button type="button" class="btn btn-primary" {{action this.newAccessDocument}}>
+  <UiButton @onClick={{this.newAccessDocument}}>
     {{fa-icon "plus"}} New Item
-  </button>
+  </UiButton>
 
-  <button type="button" class="btn btn-secondary ml-4" {{action this.showAction}} disabled={{this.isLoading}}>
+  <UiButton @type="secondary" @onClick={{this.showAction}} disabled={{@this.isLoading}}>
     {{#if this.isLoading}}
       <LoadingIndicator @text="Loading"/>
     {{else}}
       Show {{if this.isShowingAll "Current" "All"}} Items
     {{/if}}
-  </button>
+  </UiButton>
 
 </p>
 <p>
@@ -153,10 +153,10 @@
           <LoadingIndicator/>
         {{/if}}
         {{#unless this.entry.isNew}}
-          <button type="button" class="btn btn-danger ml-auto"
-            {{action this.deleteAccessDocument this.entry}} disabled={{this.entry.isSaving}}>
+          <UiButton @type="danger" @class="ml-auto" @onClick={{fn this.deleteAccessDocument this.entry}}
+                    @disabled={{this.entry.isSaving}}>
             Delete
-          </button>
+          </UiButton>
         {{/unless}}
       </Modal.footer>
     </ChForm>

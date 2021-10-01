@@ -66,13 +66,11 @@
             <div class="timesheet-row timesheet-actions d-print-none">
               {{#if ts.off_duty}}
                 {{#unless ts.isVerified}}
-                  <button type="button" class="btn btn-success" {{action this.markCorrectAction ts}}
-                          disabled={{ts.isSaving}}>
+                  <UiButton @type="success" @onClick={{fn this.markCorrectAction ts}} @disabled={{ts.isSaving}}>
                     Entry Correct
-                  </button>
+                  </UiButton>
                 {{/unless}}
-                <button type="button" class="btn btn-secondary" {{action this.markIncorrectAction ts}}
-                        disabled={{ts.isLoading}}>
+                <UiButton @type="secondary" @onClick={{fn this.markIncorrectAction ts}} @disabled={{ts.isLoading}}>
                   {{#if ts.isPending}}
                     Add More Info
                   {{else if ts.isRejected}}
@@ -80,7 +78,7 @@
                   {{else}}
                     Entry Incorrect
                   {{/if}}
-                </button>
+                </UiButton>
                 {{#if ts.isReloading}}
                   <LoadingIndicator/>
                 {{/if}}

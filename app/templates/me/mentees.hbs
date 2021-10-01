@@ -18,56 +18,63 @@
 </p>
 
 {{#each this.menteeList as |year| }}
-  <h3>{{year.year}} Mentees <small>({{year.mentees.length}} alphas, {{year.passed}} passed, {{year.bonked}}
-    bonked)</small></h3>
-  <table class="table table-hover">
-    <thead>
-    <tr>
-      <th>Callsign</th>
-      <th>Status</th>
-      <th>Mentors</th>
-      <th>Passed</th>
-      <th>Last Contact</th>
-      <th>Contact</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each year.mentees as |mentee|}}
-      <tr>
-        <td>
-          <LinkTo @route="person.index" @model={{mentee.person_id}}>{{mentee.callsign}}</LinkTo>
-          {{#if mentee.formerly_known_as}}
-            <div>(FKA: {{mentee.formerly_known_as}})</div>
-          {{/if}}
-        </td>
-        <td>{{mentee.status}}</td>
-        <td>
-          {{#each mentee.mentors as |mentor|}}
-            {{mentor.callsign}}<br>
-          {{/each}}
-        </td>
-        <td>{{mentee.mentor_status}}</td>
-        <td>
-          <PresentOrNot @value={{mentee.last_contact}} @empty="-"/>
-        </td>
-        <td>
-          {{#if (eq mentee.contact_status "allow")}}
-            <button type="button" class="btn btn-primary btn-sm" {{action this.contactAction mentee}}>Contact</button>
-          {{else if (eq mentee.contact_status "block")}}
-            <span class="text-muted">No Contact</span>
-          {{else}}
-            -
-          {{/if}}
-        </td>
-      </tr>
-    {{/each}}
-    </tbody>
-  </table>
+  <UiSection>
+    <:title>
+      {{year.year}} Mentees
+      <small>({{year.mentees.length}} alphas, {{year.passed}} passed, {{year.bonked}} bonked)</small>
+    </:title>
+    <:body>
+      <table class="table table-striped table-hover table-hover">
+        <thead>
+        <tr>
+          <th>Callsign</th>
+          <th>Status</th>
+          <th>Mentors</th>
+          <th>Passed</th>
+          <th>Last Contact</th>
+          <th>Contact</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each year.mentees key="person_id" as |mentee|}}
+          <tr>
+            <td>
+              <LinkTo @route="person.index" @model={{mentee.person_id}}>{{mentee.callsign}}</LinkTo>
+              {{#if mentee.formerly_known_as}}
+                <div>(FKA: {{mentee.formerly_known_as}})</div>
+              {{/if}}
+            </td>
+            <td>{{mentee.status}}</td>
+            <td>
+              {{#each mentee.mentors as |mentor|}}
+                {{mentor.callsign}}<br>
+              {{/each}}
+            </td>
+            <td>{{mentee.mentor_status}}</td>
+            <td>
+              <PresentOrNot @value={{mentee.last_contact}} @empty="-"/>
+            </td>
+            <td>
+              {{#if (eq mentee.contact_status "allow")}}
+                <UiButton @size="sm" @onClick={{fn this.contactAction mentee}}>Contact</UiButton>
+              {{else if (eq mentee.contact_status "block")}}
+                <span class="text-muted">No Contact</span>
+              {{else}}
+                -
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </:body>
+  </UiSection>
 {{/each}}
 {{#if this.contactMentee}}
   <ContactForm @callsign={{this.contactMentee.callsign}}
                @isInactive={{eq this.contactMentee.status "not active"}}
                @recipientId={{this.contactMentee.person_id}}
-               @contactType="mentor" @onDone={{action this.doneAction}} />
+               @contactType="mentor"
+               @onDone={{action this.doneAction}} />
 {{/if}}
 

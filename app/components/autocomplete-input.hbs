@@ -40,7 +40,7 @@
         {{~#if this.noResultsFound~}}
           <div>No results found</div>
         {{~else if this.isSearching~}}
-          <div class="text-muted">Searching {{fa-icon "spinner" spin=true}}</div>
+          <div class="text-muted">Searching <SpinIcon /></div>
         {{~/if~}}
         {{~#each this.options as |opt idx|~}}
           <div class="{{if (eq idx this.selectionIdx) "autocomplete-option-selected"}}"

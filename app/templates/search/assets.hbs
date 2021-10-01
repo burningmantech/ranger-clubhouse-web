@@ -1,13 +1,16 @@
 <YearSelect @title="Asset Search" @year={{this.year}} @onChange={{action (mut this.year)}} />
 
-<ChForm @formId="search-form" @formFor={{this.assetForm}} @validator={{this.searchValidations}}
-        @onSubmit={{this.searchAction}} @formClass="mt-2"
+<ChForm @formId="search-form"
+        @formFor={{this.assetForm}}
+        @validator={{this.searchValidations}}
+        @onSubmit={{this.searchAction}}
+        @formClass="mt-2"
         as |f|>
   <div class="form-row">
     <label class="col-form-label col-auto">
       Enter the asset barcode:
     </label>
-    <f.input @name="barcode" @type="text" @grid="col-auto" @size=30/>
+    <f.input @name="barcode" @type="text" @grid="col-auto" @size={{30}}/>
     <div class="col-auto">
       <f.submit @label="Search"/>
     </div>
@@ -30,60 +33,71 @@
     ({{if this.asset.perm_assign "permanent" "temporary"}})
     {{this.asset.description}} {{this.asset.temp_id}}
   </h3>
-  <table class="table table-striped table-hover mt-4 table-width-auto">
-    <caption>Checkout History</caption>
-    <thead>
-    <tr>
-      <th>Person</th>
-      <th>Attachment</th>
-      <th>Out</th>
-      <th>In</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each this.asset.asset_history as |row|}}
-      <tr>
-        <td>
-          <LinkTo @route="person.assets" @model={{row.person.id}}>{{row.person.callsign}}</LinkTo>
-        </td>
-        <td><PresentOrNot @value={{row.attachment.description}} @empty="-" /></td>
-        <td>{{shift-format row.checked_out}}</td>
-        <td>
-          {{#if row.checked_in}}
-            {{shift-format row.checked_in}}
-          {{else}}
-            <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.checkIn row)}}
-                    disabled={{row.isSaving}}>
-              Check In
-            </button>
-            {{#if row.isSaving}}
-              <LoadingIndicator/>
-            {{/if}}
-          {{/if}}
-        </td>
-      </tr>
-    {{/each}}
-    </tbody>
-  </table>
-
-  <table class="table  mt-4 table-width-auto">
-    <caption>Detailed Asset Information</caption>
-    <thead>
-    <tr>
-      <th>Created</th>
-      <th>Category</th>
-      <th>Model</th>
-      <th>Notes</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-      <td>{{this.asset.create_date}}</td>
-      <td><PresentOrNot @value={{this.asset.category}} @empty="-" /></td>
-      <td>{{this.asset.subtype}} {{this.asset.model}} {{this.asset.color}} {{this.asset.style}}</td>
-      <td><PresentOrNot @value={{this.asset.notes}} @empty="-" /></td>
-    </tr>
-    </tbody>
-  </table>
-
+  <UiSection>
+    <:title>Checkout History</:title>
+    <:body>
+      <table class="table table-striped table-hover mt-4 table-width-auto">
+        <thead>
+        <tr>
+          <th>Person</th>
+          <th>Attachment</th>
+          <th>Out</th>
+          <th>In</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.asset.asset_history as |row|}}
+          <tr>
+            <td>
+              <LinkTo @route="person.assets" @model={{row.person.id}}>{{row.person.callsign}}</LinkTo>
+            </td>
+            <td>
+              <PresentOrNot @value={{row.attachment.description}} @empty="-"/>
+            </td>
+            <td>{{shift-format row.checked_out}}</td>
+            <td>
+              {{#if row.checked_in}}
+                {{shift-format row.checked_in}}
+              {{else}}
+                <UiButton @type="primary" @size="sm" @onClick={{fn this.checkIn row}} @disabled={{row.isSaving}}>
+                  Check In
+                </UiButton>
+                {{#if row.isSaving}}
+                  <LoadingIndicator/>
+                {{/if}}
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </:body>
+  </UiSection>
+  <UiSection>
+    <:title>Detailed Asset Information</:title>
+    <:body>
+      <table class="table  mt-4 table-width-auto">
+        <thead>
+        <tr>
+          <th>Created</th>
+          <th>Category</th>
+          <th>Model</th>
+          <th>Notes</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>{{this.asset.create_date}}</td>
+          <td>
+            <PresentOrNot @value={{this.asset.category}} @empty="-"/>
+          </td>
+          <td>{{this.asset.subtype}} {{this.asset.model}} {{this.asset.color}} {{this.asset.style}}</td>
+          <td>
+            <PresentOrNot @value={{this.asset.notes}} @empty="-"/>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </:body>
+  </UiSection>
 {{/if}}

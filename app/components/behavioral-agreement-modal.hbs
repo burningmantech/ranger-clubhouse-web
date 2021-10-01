@@ -3,7 +3,11 @@
     <DocumentShow @tag="behavioral-standards-agreement" @onLoad={{this.documentLoadedAction}} />
   </modal.body>
   <modal.footer>
-    <modal.button @label="I do not agree" @action={{@closeAgreement}} @type="secondary"/>
-    <modal.button @label="I Agree" @action={{@signAgreement}} @type="primary" @disabled={{not this.documentLoaded}} />
+    <UiButton @onClick={{@closeAgreement}} @type="secondary" @disabled={{not this.documentLoaded}}>
+      I Do Not Agree
+    </UiButton>
+    <UiButton @onClick={{@signAgreement}}  @disabled={{not this.documentLoaded}}>
+      I Agree
+    </UiButton>
   </modal.footer>
 </ModalDialog>

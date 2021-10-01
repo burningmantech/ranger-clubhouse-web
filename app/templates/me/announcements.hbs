@@ -9,12 +9,12 @@
   {{#each this.motds as |motd|}}
     <div class="card card-announce mb-2" id="motd-{{motd.id}}">
       <div class="card-header p-2 h5 {{if motd.has_read "text-muted"}}">
-        {{#if motd.has_read}}
-          {{fa-icon "check-circle"}}
-        {{else}}
-          {{fa-icon "arrow-right" color="success"}}
-        {{/if}}
         <a href {{action this.toggleMotd motd}}>
+          {{#if motd.has_read}}
+            {{fa-icon "check-circle"}}
+          {{else}}
+            {{fa-icon "arrow-right" color="success"}}
+          {{/if}}
           {{motd.subject}}
         </a>
       </div>
@@ -25,10 +25,9 @@
           {{#if motd.has_read}}
             <i class="text-muted">You have read this announcement.</i>
           {{else}}
-            <button type="button" class="btn btn-secondary" {{action this.markMotdAsRead motd}}
-                    disabled={{motd.isMarking}}>
+            <UiButton @type="secondary" @disabled={{motd.isMarking}} @onClick={{fn this.markMotdAsRead motd}}>
               Mark As Read
-            </button>
+            </UiButton>
             {{#if motd.isMarking}}
               <LoadingIndicator @text="marking ..."/>
             {{/if}}

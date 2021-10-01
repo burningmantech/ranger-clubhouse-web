@@ -1,7 +1,7 @@
 <h1>Maintenace Tasks {{#if this.task}}- {{this.task.title}}{{/if}}</h1>
 
 {{#if this.isSubmitting}}
-  <LoadingDialog @text={{concat "The task '" this.task.title "' is being performed. Hang tight!"}} />
+  <LoadingPane @text={{concat "The task '" this.task.title "' is being performed. Hang tight!"}} />
 {{else if this.task}}
   <p>
     <a href {{action this.showIndex}}>{{fa-icon "angle-double-left"}} Back to Maintenance Tasks</a>
@@ -360,13 +360,13 @@
             <tr>
               <td class="w-30">
                 {{#if task.param}}
-                  <button type="button" class="btn btn-primary btn-block" {{on "click" (fn this.askParamAction task)}}>
+                  <UiButton @class="btn-block" @onClick={{fn this.askParamAction task}}>
                     {{task.title}}
-                  </button>
+                  </UiButton>
                 {{else}}
-                  <button type="button" class="btn btn-primary btn-block" {{on "click" (fn this.executeTask task)}}>
+                  <UiButton @class="btn-block" @onClick={{fn this.executeTask task}}>
                     {{task.title}}
-                  </button>
+                  </UiButton>
                 {{/if}}
               </td>
               <td class="w-70">
@@ -399,7 +399,7 @@
       </div>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <button type="button" class="btn btn-primary" {{on "click" (fn this.executeTask this.taskParam)}}>Submit</button>
+      <UiButton @onClick={{fn this.executeTask this.taskParam}}>Submit</UiButton>
       <UiCancelButton @onClick={{this.cancelParamAction}} />
     </Modal.footer>
   </ModalDialog>

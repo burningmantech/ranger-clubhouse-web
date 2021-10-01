@@ -40,12 +40,12 @@
         <label>Callsign, title, team, notes filter:</label>
         <Input @type="text" @value={{this.textFilterInput}} class="form-control-sm ml-2"
                @enter={{action this.textFilterAction}}  />
-        <button type="button" class="btn btn-primary btn-sm ml-1" {{action this.textFilterAction}}>
+        <UiButton @size="sm" @class="ml-1" @onClick={{this.textFilterAction}}>
           Filter
-        </button>
-        <button type="button" class="btn btn-secondary btn-sm ml-1" {{action this.clearTextFilterAction}}>
+        </UiButton>
+        <UiButton @type="secondary" @size="sm" @class="ml-1" @onClick={{this.clearTextFilterAction}}>
           Clear
-        </button>
+        </UiButton>
       </div>
       {{#if this.textFilterError}}
         <div class="text-danger">{{this.textFilterError}}</div>
@@ -54,12 +54,12 @@
     </div>
 
     <div class="col-auto">
-      <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleEditMode}}>
+      <UiButton  @type="secondary" @size="sm" @onClick={{this.toggleEditMode}}>
         {{#if this.editMode}}{{fa-icon "table"}} Table View{{else}}{{fa-icon "edit"}} Edit Mode{{/if}}
-      </button>
-      <button type="button" class="btn btn-secondary btn-sm" {{action this.exportCSV}}>
+      </UiButton>
+      <UiButton @type="secondary" @size="sm" @onClick={{this.exportCSV}}>
         {{fa-icon "file-export"}} Export CSV
-      </button>
+      </UiButton>
     </div>
   </div>
 
@@ -236,13 +236,13 @@
     {{else}}
       <tr>
         <td colspan="12">
-          <strong class="text-danger">
+          <b class="text-danger">
             {{#if this.bmids}}
               No BMIDs match the filter criteria.
             {{else}}
               No BMIDs were found for {{this.year}}.
             {{/if}}
-          </strong>
+          </b>
         </td>
       </tr>
     {{/if}}
@@ -268,10 +268,7 @@
 {{/if}}
 
 {{#if this.isRendering}}
-  <ModalDialog as |Modal|>
-    <Modal.body>
-      Hang Tight - Rendering {{this.renderBmids.length}} of {{this.viewBmids.length}}
-      <SpinIcon/>
-    </Modal.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Hang Tight - Rendering {{this.renderBmids.length}} of {{this.viewBmids.length}}
+  </LoadingDialog>
 {{/if}}

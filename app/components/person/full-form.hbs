@@ -113,22 +113,22 @@ Everyone else will see person/simple-form
     <label for="person_position" class="col-form-label col-form-label-fixed">Positions</label>
     <div class="col-sm-12 col-lg-9">
       <div class="row col-12 mt-1 mb-1">
-        <button type="button" {{action @togglePositions}} class="btn btn-secondary btn-sm mr-2">
+        <UiButton @type="secondary" @size="sm" @class="mr-2" @onClick={{@togglePositions}}>
           {{if @showPositions "Hide" "Show"}} Positions
-        </button>
+        </UiButton>
         {{#if (has-role "admin" "grant-position")}}
-          <button type="button" {{action @editPositionsAction}} class="btn btn-secondary btn-sm">
+          <UiButton @type="secondary" @onClick={{@editPositionsAction}} @size="sm">
             Edit Positions
-          </button>
+          </UiButton>
         {{/if}}
       </div>
       {{#unless @personPositions}}
         <b class="text-danger">No positions granted</b>
       {{/unless}}
       {{#if @showPositions}}
-        <div class="row">
+        <div class="masonry-container">
           {{#each @personPositions as |position| }}
-            <div class="col-sm-6 col-xl-4">
+            <div class="masonry-item">
               {{position-label position}}
             </div>
           {{/each}}
@@ -141,20 +141,20 @@ Everyone else will see person/simple-form
     <label class="col-form-label col-form-label-fixed">Roles</label>
     <div class="col-sm-12 col-lg-9">
       <div class="row col-12 mt-1 mb-1">
-        <button type="button" {{action @toggleRoles}} class="btn btn-secondary btn-sm mr-2">
+        <UiButton @type="secondary" @onClick={{@toggleRoles}} @size="sm">
           {{if @showRoles "Hide" "Show"}} Roles
-        </button>
+        </UiButton>
         {{#if (has-role "admin")}}
-          <button type="button" {{action @editRolesAction}} class="btn btn-secondary btn-sm">Edit Roles</button>
+          <UiButton @type="secondary" @onClick={{@editRolesAction}} @class="ml-2">Edit Roles</UiButton>
         {{/if}}
       </div>
       {{#unless @personRoles}}
         <b class="text-danger">No roles granted</b>
       {{/unless}}
       {{#if @showRoles}}
-        <div class="row">
+        <div class="masonry-container">
           {{#each @personRoles as |role| }}
-            <div class="col-sm-6 col-xl-4">
+            <div class="masonry-item">
               {{role.title}}
             </div>
           {{/each}}
@@ -220,13 +220,13 @@ Everyone else will see person/simple-form
     <div class="col-sm-12 col-lg-auto mb-4">
       {{#if (has-role "admin")}}
         {{#if @person.message}}
-          <button type="button" class="btn btn-secondary btn-responsive" {{action @editNote}}>
+          <UiButton @type="secondary" @class="btn-responsive" @onClick={{@editNote}}>
             Update Note
-          </button>
+          </UiButton>
         {{else}}
-          <button type="button" class="btn btn-secondary btn-responsive" {{action @confirmNoteOrMessage}}>
+          <UiButton @type="secondary" @class="btn-responsive" @onClick={{@confirmNoteOrMessage}}>
             Add Note
-          </button>
+          </UiButton>
         {{/if}}
       {{/if}}
       {{#if @person.isSaving}}
@@ -237,7 +237,7 @@ Everyone else will see person/simple-form
     </div>
     {{#if (has-role "admin")}}
       <div class="col-sm-12 col-lg-auto ml-auto mt-1">
-        <button type="button" class="btn btn-secondary btn-sm" {{action @removePersonAction}}>Remove</button>
+        <UiButton @type="secondary" @size="sm" @onClick={{@removePersonAction}}>Remove</UiButton>
       </div>
     {{/if}}
   </div>

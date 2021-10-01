@@ -6,61 +6,61 @@
 <table class="table table-sm table-hover table-striped table-width-auto">
   <caption>{{pluralize this.onDutyCount "person"}} still on duty</caption>
   <thead>
-    <tr>
-      <th><Input @type="checkbox" @checked={{this.selectAll}} {{on "change" this.toggleAll}} /></th>
-      <th>Callsign</th>
-      <th>From</th>
-      <th>To</th>
-      <th class="text-right">Time</th>
-      <th class="text-right">Credits</th>
-      <th>Position</th>
-    </tr>
+  <tr>
+    <th><Input @type="checkbox" @checked={{this.selectAll}} {{on "change" this.toggleAll}} /></th>
+    <th>Callsign</th>
+    <th>From</th>
+    <th>To</th>
+    <th class="text-right">Time</th>
+    <th class="text-right">Credits</th>
+    <th>Position</th>
+  </tr>
   </thead>
   <tbody>
-    {{#each this.timesheets as |ts|}}
-      <tr>
-        <td>
-          {{#if ts.off_duty}}
-            {{fa-icon "check" color="success"}}
-          {{else}}
-            <Input @type="checkbox" @checked={{ts.selected}} />
-          {{/if}}
-        </td>
-        <td><PersonLink @person={{ts.person}} /></td>
-        <td>{{shift-format ts.on_duty}}</td>
-        <td>
-          {{#if ts.off_duty}}
-            {{shift-format ts.off_duty}}
-          {{else}}
-            <i>On Duty</i>
-          {{/if}}
-        </td>
-        <td class="text-right">
-          {{hour-minute-format ts.duration}}
-        </td>
-        <td class="text-right">
-          {{credits-format ts.credits}}
-        </td>
-        <td>
-          {{ts.position.title}}
-        </td>
-      </tr>
-    {{else}}
-      <tr>
-        <td colspan="7"><b class="text-success">Congratulations! No one is on duty.</b></td>
-      </tr>
-    {{/each}}
+  {{#each this.timesheets as |ts|}}
+    <tr>
+      <td>
+        {{#if ts.off_duty}}
+          {{fa-icon "check" color="success"}}
+        {{else}}
+          <Input @type="checkbox" @checked={{ts.selected}} />
+        {{/if}}
+      </td>
+      <td>
+        <PersonLink @person={{ts.person}} />
+      </td>
+      <td>{{shift-format ts.on_duty}}</td>
+      <td>
+        {{#if ts.off_duty}}
+          {{shift-format ts.off_duty}}
+        {{else}}
+          <i>On Duty</i>
+        {{/if}}
+      </td>
+      <td class="text-right">
+        {{hour-minute-format ts.duration}}
+      </td>
+      <td class="text-right">
+        {{credits-format ts.credits}}
+      </td>
+      <td>
+        {{ts.position.title}}
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="7"><b class="text-success">Congratulations! No one is on duty.</b></td>
+    </tr>
+  {{/each}}
   </tbody>
 </table>
 
-<button type="button" class="btn btn-primary" disabled={{not this.selectedCount}} {{on "click" this.signoffAction}}>
+<UiButton @onClick={{this.signoffAction}}>
   Sign out selected entries ({{this.selectedCount}})
-</button>
+</UiButton>
 
 {{#if this.isSubmitting}}
-  <ModalDialog as |Modal|>
-    <Modal.body>
-      Signing out {{this.signOffTimesheet.person.callsign}} <LoadingIndicator />
-    </Modal.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Signing out {{this.signOffTimesheet.person.callsign}}
+  </LoadingDialog>
 {{/if}}

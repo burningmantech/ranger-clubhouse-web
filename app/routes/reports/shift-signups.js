@@ -8,12 +8,14 @@ export default class ReportsShiftSignupsRoute extends ClubhouseRoute {
   };
 
   model(params) {
-    return this.ajax.request('slot/shift-signups-report', {data: {year: requestYear(params)}});
+    this.year = requestYear(params);
+    return this.ajax.request('slot/shift-signups-report', {data: {year: this.year}});
   }
 
   setupController(controller, model) {
     const {positions} = model;
     controller.set('positions', positions);
+    controller.set('year', this.year);
     controller.set('emptyPositions', _.orderBy(positions.filter((p) => p.total_empty > 0),
       ['total_empty'], ['desc']));
   }

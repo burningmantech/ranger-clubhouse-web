@@ -40,7 +40,7 @@
                 {{fa-icon "excalamation-triangle"}}
               {{/if}}
               <Input @type="checkbox" @checked={{person.selected}}
-                     {{on "change" (fn this.togglePerson person)}} />
+                {{on "change" (fn this.togglePerson person)}} />
             {{/if}}
           </td>
           <td>
@@ -72,19 +72,15 @@
       </tbody>
     </table>
 
-    <p class="mb-4">
-      <button type="button" class="btn btn-primary"
-              disabled={{or this.isSubmitting (not this.selectedCount)}}
-            {{action this.submit}}>
-        {{#if this.isVintage}}
-          Mark as Vintage ({{this.selectedCount}})
-        {{else}}
-          Convert to {{@newStatus}} ({{this.selectedCount}})
-        {{/if}}
-      </button>
-      {{#if this.isSubmitting}}
-        <LoadingIndicator/>
+    <UiButton @onClick={{action this.submit}} @disabled={{or this.isSubmitting (not this.selectedCount)}}>
+      {{#if this.isVintage}}
+        Mark as Vintage ({{this.selectedCount}})
+      {{else}}
+        Convert to {{@newStatus}} ({{this.selectedCount}})
       {{/if}}
-    </p>
+    </UiButton>
+    {{#if this.isSubmitting}}
+      <LoadingIndicator/>
+    {{/if}}
   </Accordion.body>
 </ChAccordion>

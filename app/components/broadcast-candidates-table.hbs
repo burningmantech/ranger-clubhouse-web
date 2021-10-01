@@ -1,35 +1,39 @@
-<table class="table table-striped table-width-auto mt-4">
-  <caption>Sending to {{pluralize @people.length "person"}}</caption>
-  <thead>
-    <tr>
-      <th>Callsign</th>
-      <th>Status</th>
-      <th>Name</th>
-      <th colspan="2">Deliver Via</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    {{#each @people as |person|}}
+<UiSection>
+  <:title>Sending to {{pluralize @people.length "person"}}</:title>
+  <:body>
+    <table class="table table-striped table-width-auto mt-4">
+      <thead>
       <tr>
-        <td>{{person.callsign}}</td>
-        <td>{{person.status}}</td>
-        <td>{{person.first_name}} {{person.last_name}}</td>
-        <td>
-          {{#if person.use_sms}}
-            text
-          {{else}}
-            &nbsp;
-          {{/if}}
-        </td>
-        <td>
-          {{#if person.use_email}}
-            email
-          {{else}}
-            &nbsp;
-          {{/if}}
-        </td>
+        <th>Callsign</th>
+        <th>Status</th>
+        <th>Name</th>
+        <th colspan="2">Deliver Via</th>
       </tr>
-    {{/each}}
-  </tbody>
-</table>
+      </thead>
+
+      <tbody>
+      {{#each @people key="id" as |person|}}
+        <tr>
+          <td>{{person.callsign}}</td>
+          <td>{{person.status}}</td>
+          <td>{{person.first_name}} {{person.last_name}}</td>
+          <td>
+            {{#if person.use_sms}}
+              text
+            {{else}}
+              &nbsp;
+            {{/if}}
+          </td>
+          <td>
+            {{#if person.use_email}}
+              email
+            {{else}}
+              &nbsp;
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </:body>
+</UiSection>

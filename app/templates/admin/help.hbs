@@ -7,7 +7,7 @@
   Primary used by the HQ Window interface to provide tooltips on various page elements.
 </p>
 <p>
-  <button type="button" class="btn btn-primary" {{on "click" this.newHelp}}>New Help Doc</button>
+  <UiButton @onClick={{this.newHelp}}>New Help Doc</UiButton>
 </p>
 <table class="table table-sm table-hover table-striped table-width-auto">
   <caption>
@@ -32,9 +32,9 @@
       </td>
       <td>{{document.tags}}</td>
       <td>
-        <button type="button" class="btn btn-secondary btn-sm" {{action this.editHelp document}}>
+        <UiButton @type="secondary" @size="sm" @onClick={{fn this.editHelp document}}>
           {{fa-icon "edit"}} Edit
-        </button>
+        </UiButton>
       </td>
     </tr>
   {{/each}}
@@ -60,7 +60,7 @@
           <LoadingIndicator/>
         {{/if}}
         <div class="ml-auto">
-          <button type="button" class="btn btn-danger" {{action this.deleteHelp}}>{{fa-icon "trash"}} Delete</button>
+          <UiButton @type="danger" @onClick={{this.deleteHelp}}>{{fa-icon "trash"}} Delete</UiButton>
         </div>
       </Modal.footer>
     </ChForm>

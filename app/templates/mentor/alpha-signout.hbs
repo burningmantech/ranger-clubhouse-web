@@ -24,20 +24,17 @@
 {{/if}}
 
 {{#if this.isLoading}}
-  <ModalDialog as |Modal|>
-    <Modal.body>
-      Loading Alphas on shift . . .
-    </Modal.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Loading Alphas on shift . . .
+  </LoadingDialog>
 {{/if}}
 
 {{#if this.alphaSignout}}
-  <ModalDialog as |Modal|>
-    <Modal.body>
-      Signing off Alpha {{this.alphaSignout.callsign}} ({{this.alphaSignoutIndex}} of {{this.alphaSignoutCount}}). . .
-    </Modal.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Signing off Alpha {{this.alphaSignout.callsign}} ({{this.alphaSignoutIndex}} of {{this.alphaSignoutCount}}). . .
+  </LoadingDialog>
 {{/if}}
+
 {{#if this.shiftDate}}
   {{pluralize this.alphas.length "Alpha"}} found for
   {{#if (eq this.shiftDate "all")}}
@@ -60,7 +57,7 @@
     </tr>
     </thead>
     <tbody>
-    {{#each this.alphas as |alpha|}}
+    {{#each this.alphas key="id" as |alpha|}}
       <tr class={{if alpha.error "bg-highlight"}}>
         <td>
           {{#if alpha.error}}
@@ -103,7 +100,7 @@
     {{/each}}
     </tbody>
   </table>
-  <button type="button" class="btn btn-primary" {{action this.signoutAction}}>
+  <UiButton @onClick={{this.signoutAction}}>
     Sign out selected Alphas
-  </button>
+  </UiButton>
 {{/if}}

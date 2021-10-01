@@ -31,10 +31,10 @@
         {{#if log.sent_clubhouse}}CH{{/if}}
       </td>
       <td>
-        <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleMessage log}}>Message</button>
-        <button type="button" class="btn btn-secondary btn-sm" {{action this.toggleRecipients log}}>Recipients</button>
+        <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleMessage log}}>Message</UiButton>
+        <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleRecipients log}}>Recipients</UiButton>
         {{#if (or log.sms_failed log.email_failed)}}
-          <button type="button" class="btn btn-danger btn-sm" {{action this.retryAction log}}>Retry</button>
+          <UiButton @type="danger" @size="sm" @onClick={{fn this.retryAction log}}>Retry</UiButton>
         {{/if}}
       </td>
     </tr>
@@ -124,7 +124,7 @@
 </table>
 
 {{#if this.confirmRetry}}
-  <ModalDialog @title="Retry Broadcast" as |modal|>
+  <ModalDialog @title="Retry Broadcast" @onEscape={{this.closeRetry}} as |modal|>
     <modal.body>
       <p>
         <b>ID:</b> #{{this.confirmRetry.id}}<br>
@@ -140,26 +140,21 @@
       </p>
     </modal.body>
     <modal.footer>
-      <modal.button @label="Cancel" @action={{this.closeRetry}}  @type="secondary"/>
-      <modal.button @label="Confirm Retry" @action={{this.attemptRetry}}  @type="primary"/>
+      <UiCancelButton @onClick={{this.closeRetry}} />
+      <UiButton @onClick={{this.attemptRetry}}>Confirm Retry</UiButton>
     </modal.footer>
   </ModalDialog>
 {{else if this.retryingBroadcast}}
-  <ModalDialog @title="Retying Broadcast" as |modal|>
-    <modal.body>
-      <LoadingIndicator @text="Retrying Broadcast"/>
-    </modal.body>
-    <modal.footer>
-      <modal.button @label="Close" @action={{this.closeRetry}} @type="primary"/>
-    </modal.footer>
-  </ModalDialog>
+  <LoadingDialog>
+    Retrying broadcast
+  </LoadingDialog>
 {{else if this.retryResult}}
-  <ModalDialog @title="Retry Results" as |modal|>
+  <ModalDialog @title="Retry Results" @onEscape={{this.closeRetry}} as |modal|>
     <modal.body>
       <BroadcastSentTable @result={{this.retryResult}} />
     </modal.body>
     <modal.footer>
-      <modal.button @label="Close" @action={{this.closeRetry}} @type="primary"/>
+      <UiCloseButton @onClick={{this.closeRetry}} />
     </modal.footer>
   </ModalDialog>
 {{/if}}
