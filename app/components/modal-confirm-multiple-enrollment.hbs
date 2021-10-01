@@ -18,7 +18,9 @@
     </p>
   </modal.body>
   <modal.footer>
-    <modal.button @label="Cancel" @action={{@onClose}} @type="primary"/>
-    <modal.button @label="Confirm Sign Up" @action={{@onConfirm}} @type="danger"/>
+    <UiCancelButton @onClick={{@onClose}} />
+    <UiButton @type="warning" @onClick={{@onConfirm}}>
+      Confirm Sign Up
+    </UiButton>
   </modal.footer>
 </ModalDialog>

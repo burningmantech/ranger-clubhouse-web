@@ -8,9 +8,12 @@
   {{/unless}}
 
   {{#if this.showScheduleBlocker}}
-    <ScheduleBlocked @requirements={{@permission.requirements}} @person={{@person}}
-                     @overrideAction={{this.overrideAction}} @canOverride={{this.canOverride}}
-                     @isMe={{this.isMe}} @isAdmin={{this.isAdmin}}
+    <ScheduleBlocked @requirements={{@permission.requirements}}
+                     @person={{@person}}
+                     @overrideAction={{this.overrideAction}}
+                     @canOverride={{this.canOverride}}
+                     @isMe={{this.isMe}}
+                     @isAdmin={{this.isAdmin}}
                      @hasTrainingBlocker={{this.hasTrainingBlocker}}
     />
   {{else}}

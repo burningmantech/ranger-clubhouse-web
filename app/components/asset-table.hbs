@@ -2,7 +2,7 @@
   <:title>Asset Checkout / In History</:title>
   <:body>
     {{pluralize @assets.length "asset"}} found
-    <table class="table table-striped table-sm">
+    <table class="table table-width-auto table-striped table-sm">
       <thead>
       <tr>
         <th>Type</th>
@@ -32,23 +32,24 @@
             {{#if ap.checked_in}}
               {{shift-format ap.checked_in}}
             {{else}}
-              <button type="button" class="btn btn-primary btn-sm" {{action this.checkInAsset ap.asset ap}}
-                      disabled={{ap.asset.isSubmitting}}>Check In
-              </button>
+              <UiButton @size="sm" @onClick={{fn this.checkInAsset ap.asset ap}} @disabled={{ap.asset.isSubmitting}}>
+                Check In
+              </UiButton>
               {{#if ap.asset.isSubmitting}}
-                {{fa-icon "spinner" spin=true}}
+                <SpinIcon />
               {{/if}}
             {{/if}}
           </td>
           <td>
-            <button type="button" class="btn btn-secondary btn-sm" {{action this.showHistoryAction ap.asset}}>History
-            </button>
+            <UiButton @type="secondary" @size="sm" @onClick={{fn this.showHistoryAction ap.asset}}>
+              History
+            </UiButton>
           </td>
         </tr>
       {{else}}
         <tr>
           <td colspan="8">
-            <strong class="text-danger">No assets were found for {{@year}}</strong>
+            <b class="text-danger">No assets were found for {{@year}}</b>
           </td>
         </tr>
       {{/each}}

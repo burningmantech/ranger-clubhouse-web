@@ -1,16 +1,18 @@
 {{#if this.isSubmitting}}
-  <LoadingDialog @item="broadcasts"/>
+  <LoadingPane @item="broadcasts"/>
 {{else if this.didTransmit}}
   <BroadcastSentTable @result={{this.result}} />
 {{else if this.isReviewing}}
-  <div class="border rounded p-2 mb-2">
-    <h2>Review your message to be sent:</h2>
-    <p class="h4 mb-2">
-      {{this.broadcastForm.message}}
-    </p>
-  </div>
-  <button type="button" class="btn btn-success btn-lg" {{action this.transmitAction}}>SEND MESSAGE</button>
-  <button type="button" class="btn btn-secondary btn-lg" {{action this.editMessageAction}}>EDIT</button>
+  <UiSection>
+    <:title>Review your message to be sent:</:title>
+    <:body>
+      <p class="h4 mb-2">
+        {{this.broadcastForm.message}}
+      </p>
+      <UiButton @size="lg" @onClick={{this.transmitAction}}>SEND MESSAGE</UiButton>
+      <UiButton @size="lg" @type="secondary" @onClick={{this.editMessageAction}}>EDIT</UiButton>
+    </:body>
+  </UiSection>
 
   <BroadcastCandidatesTable @people={{this.people}} />
 {{else}}
@@ -22,9 +24,9 @@
 
 
   {{#if (eq @type "emergency")}}
-    <h3 class="text-danger">SEND TO ALL ON-PLAYA RANGERS</h3>
+    <h3 class="text-danger">SEND TO ALL ON-PLAYA RANGERS, NOT ALREADY ON DUTY</h3>
     This will send a text and email message to
-    <b>ALL {{@broadcast.receivers}} ON-PLAYA Rangers</b>.<br>
+    <b>ALL {{@broadcast.receivers}} ON-PLAYA Rangers who are not already on duty</b>.<br>
     It should ONLY be used in emergencies (mass mobilization for fire, fatality, plane crash, etc.).<br>
     <br>
     <b class="text-danger">Please be brief and choose your words carefully as they may end up on the front page of the
@@ -45,23 +47,22 @@
     <span class="text-danger">If you need to send an emergency message to EVERYONE, you're in the wrong place.</span>
   {{/if}}
 
-  <hr>
   <ChForm @formId="broadcast-form" @formFor={{this.broadcastForm}}
           @validator={{this.broadcastValidations}} @onSubmit={{this.reviewAction}} as |f|>
     {{#if @broadcast.has_muster_position}}
       <h3>Special Team That Needs More Rangers</h3>
       <div class="form-group row">
-          <f.input @name="position_id" @type="select" @options={{this.positionOptions}} />
+        <f.input @name="position_id" @type="select" @options={{this.positionOptions}} />
       </div>
     {{/if}}
     <h3>Message to send (limited to {{@config.sms_limit}} characters)</h3>
     <div class="form-group row">
-        <f.input @name="message"
-                 @type="textarea" @maxlength={{@config.sms_limit}} @autofocus={{true}}
-                 @rows={{2}} @cols={{80}}
-                 @hint={{concat (if f.model.message f.model.message.length "0") " of " @config.sms_limit " characters"}}
-                 @controlClass="form-control form-control-lg"
-        />
+      <f.input @name="message"
+               @type="textarea" @maxlength={{@config.sms_limit}} @autofocus={{true}}
+               @rows={{2}} @cols={{80}}
+               @hint={{concat (if f.model.message f.model.message.length "0") " of " @config.sms_limit " characters"}}
+               @controlClass="form-control form-control-lg"
+      />
     </div>
     <f.submit @label="REVIEW MESSAGE & RECIPIENTS" @submitClass="btn-lg"/>
     <p>Don’t worry, you’ll have a chance to confirm the message and exactly who it is being sent to before it is

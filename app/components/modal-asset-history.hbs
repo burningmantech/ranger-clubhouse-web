@@ -28,7 +28,7 @@
               {{#if row.checked_in}}
                 {{shift-format row.checked_in}}
               {{else}}
-                <button type="button" class="btn btn-primary btn-sm" {{action this.checkin row}}>Check In</button>
+                <UiButton @size="sm" @onClick={{fn this.checkin row}}>Check In</UiButton>
               {{/if}}
             </td>
           </tr>
@@ -44,6 +44,6 @@
     </table>
   </modal.body>
   <modal.footer>
-    <modal.button @type="primary" @label="Close" @action={{@onClose}} />
+    <UiCloseButton @onClick={{@onClose}} />
   </modal.footer>
 </ModalDialog>

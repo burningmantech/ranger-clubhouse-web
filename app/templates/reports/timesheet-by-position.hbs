@@ -9,7 +9,7 @@
       <accordion.body>
         {{#if accordion.isOpen}}
           <p>
-            <button type="button" class="btn btn-primary" {{action this.exportToCSV position}}>Export To CSV</button>
+            <UiButton @onClick={{fn this.exportToCSV position}}>Export To CSV</UiButton>
           </p>
           <table class="table table-sm table-hover table-striped table-width-auto">
             <thead>

@@ -9,7 +9,7 @@
   {{/each}}
 </p>
 <p>
-  <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
+  <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
 </p>
 {{#each this.people key="id" as |person|}}
   <div class="max-width-700">

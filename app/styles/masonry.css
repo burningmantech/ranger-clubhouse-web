@@ -4,11 +4,14 @@
 }
 
 .masonry-item {
-  display:inline-block;
-  margin: 0 0 5px;
-  padding: 7px;
+  display: inline-block;
   width: 100%;
+}
+
+.masonry-border .masonry-item {
   border: 1px solid #c0c0c0;
+  padding: 7px;
+  margin: 0 0 5px;
 }
 
 
@@ -21,14 +24,14 @@
 
 @media only screen and (min-width: 1024px) {
   .masonry-col-2 {
-    column-count: 2  !important;
+    column-count: 2 !important;
   }
 }
 
 /* Masonry on small screens */
 @media only screen and (max-width: 1023px) {
   .masonry-container {
-    column-count: 1  !important;
+    column-count: 1 !important;
   }
 }
 

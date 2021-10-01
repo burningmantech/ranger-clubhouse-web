@@ -67,27 +67,27 @@
               {{credits-format entry.credits}}
             </td>
             <td class="align-middle">
-              <button type="button" class="btn btn-success btn-timesheet " {{action this.markEntryCorrect entry}}
-                      disabled={{entry.isSaving}}>
+              <UiButton @type="success" @class="btn-timesheet" @onClick={{fn this.markEntryCorrect entry}}
+                      @disabled={{entry.isSaving}}>
                 YES
                 {{#if entry.isVerified}}
                   {{fa-icon "check"}}
                 {{/if}}
-              </button>
-              <button type="button" class="btn btn-light-red btn-timesheet" {{action this.markEntryIncorrect entry}}
-                      disabled={{entry.isSaving}}>
+              </UiButton>
+              <UiButton @type="light-red" @class="btn-timesheet" @onClick={{fn this.markEntryIncorrect entry}}
+                      @disabled={{entry.isSaving}}>
                 NO
                 {{#if entry.isPending}}
                   {{fa-icon "check"}}
                 {{/if}}
-              </button>
-              <button type="button" class="btn btn-dark-gray btn-timesheet" {{action this.ignoreEntry entry}}
-                      disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
+              </UiButton>
+              <UiButton @type="dark-gray" @class="btn-timesheet" @onClick={{fn this.ignoreEntry entry}}
+                      @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
                 IGNORE
                 {{#if entry.isIgnoring}}
                   {{fa-icon "check"}}
                 {{/if}}
-              </button>
+              </UiButton>
             </td>
             <td class="w-5">
               {{#if entry.isSaving}}
@@ -245,10 +245,9 @@
           </td>
           <td class="align-middle">{{shift-format ap.checked_out}}</td>
           <td class="align-middle">
-            <button type="button" class="btn btn-primary" {{action this.assetCheckInAction ap}}
-                    disabled={{ap.isSubmitting}}>
+            <UiButton @onClick={{fn this.assetCheckInAction ap}} @disabled={{ap.isSubmitting}}>
               Check In
-            </button>
+            </UiButton>
           </td>
           <td class="w-5">
             {{#if ap.isSubmitting}}
@@ -274,9 +273,9 @@
 </UiSection>
 
 {{#if (or this.person.on_site this.isMarkingOffSite)}}
-  <button type="button" class="btn btn-secondary" {{action this.markOffSite}} disabled={{this.isMarkingOffSite}}>
+  <UiButton @type="secondary" @onClick={{this.markOffSite}} @disabled={{this.isMarkingOffSite}}>
     Mark As Off Site
-  </button>
+  </UiButton>
   {{#if this.isMarkingOffSite}}
     <SpinIcon/>
   {{/if}}
@@ -309,8 +308,12 @@
       </p>
     </Modal.body>
     <Modal.footer>
-      <Modal.button @label="Mark As Off Site" @action={{this.forceMarkOffSite}} @type="secondary"/>
-      <Modal.button @label="Deal With Items" @action={{this.cancelSiteLeaveDialog}} @type="primary"/>
+      <UiButton @onClick={{this.forceMarkOffSite}} @type="secondary">
+        Mark As Off Site
+      </UiButton>
+      <UiButton @onClick={{this.cancelSiteLeaveDialog}} @type="primary">
+        Deal With Item
+      </UiButton>
     </Modal.footer>
   </ModalDialog>
 {{/if}}

@@ -13,7 +13,7 @@
         @selected={{this.shiftSelect}} />
     </div>
     <div class="col-auto">
-      <button type="button" class="btn btn-primary" {{action this.onDutyAction}}>Currently On Duty</button>
+      <UiButton @onClick={{this.onDutyAction}}>Currently On Duty</UiButton>
     </div>
   </div>
 {{else}}
@@ -21,7 +21,7 @@
 {{/if}}
 
 {{#if this.isLoading}}
-  <LoadingDialog @item="Shift Lead Report"/>
+  <LoadingPane @item="Shift Lead Report"/>
 {{else if this.shiftSelect}}
   <h1 class="mt-2">
     {{#if this.isOnDuty}}

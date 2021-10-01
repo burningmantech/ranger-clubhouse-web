@@ -4,7 +4,7 @@
       Uh oh, the request to the Clubhouse server could not be completed. The server might be offline or the Internet
       connection is spotty.
     </p>
-    <button type="button" class="btn btn-primary" {{action this.reload}}>Reload the page</button>
+    <UiButton @type="danger" @onClick={{this.reload}}>Reload the page</UiButton>
   {{else if this.notAuthorized}}
     <h1>You are not authorized.</h1>
     <p>

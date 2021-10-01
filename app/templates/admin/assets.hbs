@@ -13,8 +13,7 @@
   </div>
   <label class="col-form-label">Action</label>
   <div class="col-auto">
-    <button type="button" class="btn btn-primary" {{action this.newAsset}}>New Asset</button>
-
+    <UiButton @onClick={{this.newAsset}}>New Asset</UiButton>
   </div>
 </div>
 
@@ -31,7 +30,7 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
   </thead>
 
   <tbody>
-  {{#each this.viewAssets as |asset|}}
+  {{#each this.viewAssets key="id" as |asset|}}
     <tr>
       <td>{{asset.barcode}}</td>
       <td>{{asset.description}}</td>
@@ -40,12 +39,15 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
       </td>
       <td>{{if asset.perm_assign "Perm" "Temp"}}</td>
       <td>
-        <button type="button" class="btn btn-secondary btn-sm" {{action this.assetHistoryAction asset}}>History</button>
-        <button type="button" class="btn btn-danger btn-sm" {{action this.deleteAsset asset}}>{{fa-icon "trash"}}
-          Delete
-        </button>
-        <button type="button" class="btn btn-primary btn-sm" {{action this.editAsset asset}}>{{fa-icon "edit"}}Edit
-        </button>
+        <UiButton @type="secondary" @size="sm" @onClick={{fn this.assetHistoryAction asset}}>
+          History
+        </UiButton>
+        <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteAsset asset}}>
+          {{fa-icon "trash"}} Delete
+        </UiButton>
+        <UiButton @size="sm" @onClick={{fn this.editAsset asset}}>
+          {{fa-icon "edit"}}Edit
+        </UiButton>
       </td>
     </tr>
   {{else if this.assets}}
@@ -71,7 +73,8 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
                    @grid="col-auto"/>
           <f.input @name="barcode" @label="Barcode" @size={{25}} @grid="col-auto"/>
 
-          <f.input @name="temp_id" @label="Temp ID (aka secondary description)" @type="text" @size={{25}} @grid="col-auto"/>
+          <f.input @name="temp_id" @label="Temp ID (aka secondary description)" @type="text" @size={{25}}
+                   @grid="col-auto"/>
           <f.input @name="notes" @type="textarea" @label="Notes" @rows={{2}} @cols={{80}}/>
         </div>
         <div class="form-row">
@@ -84,7 +87,8 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
         {{#if this.entry.isNew}}
           <div class="form-row">
             <label class="col-12">Copies (including the first) - Leave blank if only creating one</label>
-            <f.input @name="copies" @type="text" @size={{4}} @maxlength={{4}} @controlClass="form-control" @grid="col-auto"/>
+            <f.input @name="copies" @type="text" @size={{4}} @maxlength={{4}} @controlClass="form-control"
+                     @grid="col-auto"/>
           </div>
         {{/if}}
         <fieldset>
@@ -102,15 +106,16 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
         <f.submit @label={{if f.model.isNew "Create" "Update"}} @disabled={{this.isSubmitting}} />
         <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelAsset}} />
         {{#if this.isSubmitting}}
-          {{#if this.creatingBarcode}}
-            <LoadingIndicator @text={{concat "Creating " this.creatingBarcode}} />
-          {{else}}
-            <LoadingIndicator/>
-          {{/if}}
+          <LoadingIndicator/>
         {{/if}}
       </Modal.footer>
     </ChForm>
   </ModalDialog>
+{{/if}}
+{{#if (and this.isSubmitting this.creatingBarcode)}}
+  <LoadingDialog>
+    Creating barcode #{{this.creatingBarcode}}
+  </LoadingDialog>
 {{/if}}
 {{#if this.assetForHistory}}
   <ModalAssetHistory @assetId={{this.assetForHistory.id}} @onClose={{action this.closeAssetHistory}} />

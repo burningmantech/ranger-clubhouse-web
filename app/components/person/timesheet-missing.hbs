@@ -2,7 +2,7 @@
   <:title>Missing Timesheet Requests</:title>
   <:body>
     <p>
-      <button type="button" class="btn btn-secondary" {{on "click" this.newEntryAction}}>New Request</button>
+      <UiButton @type="secondary" @onClick={{this.newEntryAction}}>New Request</UiButton>
     </p>
     {{pluralize @timesheetMissing.length "missing entry request"}}
     {{#if @timesheetMissing}}
@@ -38,15 +38,15 @@
               {{/if}}
             </td>
             <td>
-              <button type="button" class="btn btn-primary btn-sm {{if tm.isPending "btn-danger"}}"
-                {{action this.editEntryAction tm}} disabled={{tm.isReloading}}>
+              <UiButton @size="sm" @type={{if tm.isPending "danger" "primary"}}
+                        @onClick={{fn this.editEntryAction tm}} @disabled={{tm.isReloading}}>
                 {{#if tm.isReloading}}
-                  {{fa-icon "spinner" spin=true}}
+                  <SpinIcon />
                 {{else}}
                   {{fa-icon "edit"}}
                 {{/if}}
                 {{if tm.isPending "Review" "Edit"}}
-              </button>
+              </UiButton>
             </td>
           </tr>
         {{/each}}
@@ -150,10 +150,9 @@
                     {{/if}}
                     {{#if pi.person_id}}
                       <td>
-                        <button type="button" class="btn btn-secondary btn-sm"
-                          {{action this.viewPartnerTimesheetAction pi}}>
+                        <UiButton @type="secondary" @size="sm" @onClick={{fn this.viewPartnerTimesheetAction pi}}>
                           View Timesheet
-                        </button>
+                        </UiButton>
                       </td>
                     {{/if}}
                   </tr>
@@ -258,10 +257,9 @@
           <LoadingIndicator/>
         {{/if}}
         <div class="ml-auto">
-          <button type="button" class="btn btn-danger" {{action this.deleteEntryAction}}
-                  disabled={{this.editEntry.isSaving}}>
+          <UiButton @type="danger" @onClick={{this.deleteEntryAction}} @disabled={{this.editEntry.isSaving}}>
             {{fa-icon "trash"}} Delete
-          </button>
+          </UiButton>
         </div>
       </Modal.footer>
     </ChForm>

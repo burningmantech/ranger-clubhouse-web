@@ -1,5 +1,5 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import EmberObject, {set, setProperties} from '@ember/object';
+import {set, setProperties} from '@ember/object';
 import {action} from '@ember/object';
 import {debounce} from '@ember/runloop';
 import RSVP from 'rsvp';
@@ -64,11 +64,6 @@ export default class AdminActionLogController extends ClubhouseController {
     return new RSVP.Promise((resolve, reject) => {
       debounce(this, this._performSearch, callsign, resolve, reject, 350);
     });
-  }
-
-  @action
-  resetFilters() {
-    set(this, 'query', EmberObject.create({sort: 'desc'}));
   }
 
   @action

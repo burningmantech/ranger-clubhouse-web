@@ -20,11 +20,8 @@
   {{#each @photos as |photo|}}
     <tr>
       <td>
-        <img id={{concat "photo-" photo.id}} src={{photo.image_url}}
-             class="photo-icon"
-             role="button"
-          {{on "click" (fn this.showPhotoAction photo)}}
-                alt={{photo.person.callsign}}
+        <img id="photo-{{photo.id}}" src={{photo.image_url}} class="photo-icon" role="button"
+          {{on "click" (fn this.showPhotoAction photo)}} alt={{photo.person.callsign}}
         />
       </td>
       {{#unless @person}}
@@ -87,13 +84,13 @@
       </td>
       {{#if @deletePhotoAction}}
         <td>
-          <button type="button" class="btn btn-light-red" {{action @deletePhotoAction photo}}
-                  disabled={{photo.isSaving}}>{{fa-icon "trash"}} Delete
-          </button>
+          <UiButton @type="light-red" @size="sm" @onClick={{fn @deletePhotoAction photo}} @disabled={{photo.isSaving}}>
+            {{fa-icon "trash"}} Delete
+          </UiButton>
           {{#unless photo.is_active}}
-            <button type="button" class="btn btn-secondary" {{action @activatePhotoAction photo}}>{{fa-icon "star"}}
-              Activate
-            </button>
+            <UiButton @type="secondary" @size="sm" @onClick={{fn @activatePhotoAction photo}}>
+              {{fa-icon "star"}} Activate
+            </UiButton>
           {{/unless}}
         </td>
       {{/if}}

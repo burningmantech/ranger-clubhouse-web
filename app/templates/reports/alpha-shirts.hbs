@@ -6,14 +6,14 @@
 
 {{#if this.alphas}}
   <p class="d-print-none">
-    <a href="#shirt-totals" class="btn btn-secondary">Jump to shirt totals</a>
-    <button type="button" class="btn btn-secondary" {{action this.exportPeople}}>
+    <UiButton @onClick={{this.exportPeople}}>
       Export as CSV
-    </button>
+    </UiButton>
+    <a href="#shirt-totals" class="ml-2">Jump to shirt totals</a>
   </p>
 
   {{pluralize this.alphas.length "alpha"}} found
-  <table class="table table-hover table-striped table-sm">
+  <table class="table table-hover table-striped table-sm table-width-auto">
     <thead>
       <tr>
         <th>Callsign</th>
@@ -48,7 +48,11 @@
         <table class="table table-sm table-box">
           <caption>
             {{shirts.name}} Totals
-            <span class="d-inline-block float-right"><button type="button" class="btn btn-secondary btn-sm" {{action this.exportCounts shirts}}>Export</button></span>
+              <UiButton @type="secondary"
+                        @size="sm" @class="d-inline-block float-right"
+                        @onClick={{fn this.exportCounts shirts}}>
+                Export
+              </UiButton>
           </caption>
           <thead>
             <tr>

@@ -68,9 +68,11 @@ export default class MentorPostSeasonSummaryController extends ClubhouseControll
         mentor_status: mentee.mentor_status
       };
 
-      mentee.mentors.forEach((mentor, idx) => {
-        person['mentor' + (idx + 1)] = mentor.callsign;
-      });
+      if (mentee.mentors) {
+        mentee.mentors.forEach((mentor, idx) => {
+          person['mentor' + (idx + 1)] = mentor.callsign;
+        });
+      }
 
       if (canViewEmail) {
         person.email = mentee.email;

@@ -7,7 +7,7 @@
           {{yield}}
         </div>
         <div class="popover-footer">
-          <button type="button" class="btn btn-primary" {{on "click" this.closeAction}}>Close</button>
+          <UiCloseButton @onClick={{this.closeAction}} />
         </div>
       </div>
   {{/if~}}

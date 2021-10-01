@@ -9,10 +9,10 @@
              class="form-control" size={{20}} {{did-insert this.focusElement}} />
     </div>
     <div class="col-auto">
-      <button type="button" class="btn btn-primary" {{action this.checkCurrentName}}>Check handle</button>
+      <UiButton @onClick={{this.checkCurrentName}}>Check handle</UiButton>
     </div>
     <div class="col-auto">
-      <button type="button" class="btn btn-secondary" {{action this.clearCheckedHandles}}>Clear history</button>
+      <UiButton @type="secondary" @onClick={{this.clearCheckedHandles}}>Clear history</UiButton>
     </div>
   </div>
 

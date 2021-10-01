@@ -14,14 +14,16 @@
     <div class="input-group">
       <label class="col-form-label">Filter by rental, driving, or license #:</label>
       <Input @type="text" @value={{this.numberFilter}} size="5" class="form-control ml-2"/>
-      <button type="button" class="btn btn-secondary btn-sm ml-1" {{action this.clearNumberFilterAction}}>Clear</button>
+      <UiButton @type="secondary" @size="sm" @class="ml-1" @onClick={{this.clearNumberFilterAction}}>
+        Clear
+      </UiButton>
     </div>
   </div>
   {{#if (has-role "admin")}}
     <label class="col-form-label">Actions</label>
     <div class="col-auto">
-      <button type="button" class="btn btn-primary" {{on "click" this.newAction}}>New Vehicle</button>
-      <button type="button" class="btn btn-secondary" {{on "click" this.exportToCSV}}>Export to CSV</button>
+      <UiButton @onClick={{this.newAction}}>New Vehicle</UiButton>
+      <UiButton @type="secondary" @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
     </div>
   {{/if}}
 </div>
@@ -110,9 +112,9 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
       <td class="text-center">{{if vehicle.org_vehicle_insurance "MVR" "-"}}</td>
       <td class="text-center">{{if vehicle.signed_motorpool_agreement "Motorpool" "-"}}</td>
       <td>
-        <button type="button" class="btn btn-secondary btn-sm" {{on 'click' (fn this.editAction vehicle)}}>
+        <UiButton @type="secondary" @size="sm" @onClick={{fn this.editAction vehicle}}>
           {{fa-icon "edit"}} Edit
-        </button>
+        </UiButton>
       </td>
     </tr>
   {{else}}
@@ -324,9 +326,9 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
         <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
         <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelAction}} />
         {{#if (and (has-role "admin") (not this.entry.isNew))}}
-          <button type="button" class="btn btn-danger ml-auto" {{on 'click' (fn this.deleteAction this.entry)}}>
+          <UiButton @type="danger" @class="ml-auto" @onClick={{fn this.deleteAction this.entry}}>
             {{fa-icon "trash"}} Delete
-          </button>
+          </UiButton>
         {{/if}}
         {{#if this.entry.isSaving}}
           <LoadingIndicator/>

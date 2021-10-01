@@ -14,6 +14,22 @@
   }
 }
 
+.photo-medium {
+  background: #fcfcfc;
+  border: 1px solid #999;
+  border-radius: $border-radius-lg;
+  text-align: center;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+  width: 100px;
+  img {
+    padding: 2px;
+    display: block;
+    margin: 0 auto;
+    max-width: 95px;
+  }
+}
+
 .mugshot {
   background: #fcfcfc;
   padding: 10px;

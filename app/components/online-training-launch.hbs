@@ -1,16 +1,11 @@
 <a href {{on "click" this.setupAccountAction}}>{{@text}}</a>
 {{#if this.showCreationDialog}}
-  <ModalDialog as |Modal|>
-    <Modal.body>
-      <div class="text-center">
-        Setting up your Online Training account. Please wait.<br>
-        <LoadingIndicator @text="Working"/>
-      </div>
-    </Modal.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Setting up your Online Training account. Please wait.
+  </LoadingDialog>
 {{/if}}
 {{#if this.showErrorDialog}}
-  <ModalDialog as |Modal|>
+  <ModalDialog @onEscape={{this.closeAction}} as |Modal|>
     <Modal.body>
       <h3 class="text-danger">An unexpected error occurred.</h3>
       <p>
@@ -21,7 +16,7 @@
       </p>
     </Modal.body>
     <Modal.footer>
-      <Modal.button @label="Close" @action={{this.closeAction}} @type="primary"/>
+      <UiCloseButton @onClick={{this.closeAction}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}
@@ -51,10 +46,9 @@
       {{/if}}
     </Modal.body>
     <Modal.footer>
-      <Modal.button @label="Go To Online Training"
-                    @action={{this.launchTrainingAction}}
-                    @type="primary"
-                    @disabled={{this.isSubmitting}} />
+      <UiButton @onClick={{this.launchTrainingAction}} @disabled={{this.isSubmitting}}>
+        Go To Online Training
+      </UiButton>
       {{#if this.isSubmitting}}
         <LoadingIndicator @text="Working"/>
       {{/if}}

@@ -1,85 +1,100 @@
-<YearSelect @title="Contact Log" @year={{this.year}} @years={{this.person.all_years}} @subheader={{true}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="Contact Log"
+            @year={{this.year}}
+            @years={{this.person.all_years}}
+            @subheader={{true}}
+            @onChange={{action (mut this.year)}} />
 
-<table class="table table-striped">
-  <caption>Sent Contact Messages</caption>
-  <thead>
-    <tr>
+<UiSection>
+  <:title>Sent Contact Messages</:title>
+  <:body>
+    <table class="table table-striped">
+      <thead>
+      <tr>
         <th>Recipient</th>
         <th>Delivery Email</th>
         <th>Timestamp</th>
         <th>Action</th>
         <th>&nbsp;</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each this.sent_logs as |log|}}
-      <tr class="separated">
-          <td><PersonLink @person={{log.recipient_person}} /></td>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.sent_logs as |log|}}
+        <tr class="separated">
+          <td>
+            <PersonLink @person={{log.recipient_person}} />
+          </td>
           <td>{{log.recipient_address}}</td>
           <td>{{shift-format log.sent_at}}</td>
           <td>{{log.action}}</td>
           <td>
-            <button type="button" class="btn btn-sm btn-secondary" {{action "showMessageAction" log}}  title="show message">
+            <UiButton @type="secondary" @size="sm" @onClick={{fn this.showMessageAction log}}>
               {{fa-icon (if log.showMessage "envelope-open" "envelope") type="fas"}}
-            </button>
+            </UiButton>
           </td>
-      </tr>
-      {{#if log.showMessage}}
-        <tr>
-            <td colspan="5">
-                Subject: {{log.subject}}
-                  <div>
-                    {{nl2br log.message}}
-                  </div>
-            </td>
         </tr>
-      {{/if}}
-    {{else}}
-    <tr>
-      <td colspan="5 text-danger">No sent contact messages were found for {{this.year}}</td>
-    </tr>
-    {{/each}}
-  </tbody>
-</table>
-
-<table class="table table-striped">
-  <caption>Received Contact Messages</caption>
-  <thead>
-    <tr>
+        {{#if log.showMessage}}
+          <tr>
+            <td colspan="5">
+              Subject: {{log.subject}}
+              <div>
+                {{nl2br log.message}}
+              </div>
+            </td>
+          </tr>
+        {{/if}}
+      {{else}}
+        <tr>
+          <td colspan="5 text-danger">No sent contact messages were found for {{this.year}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </:body>
+</UiSection>
+<UiSection>
+  <:title>Received Contact Messages</:title>
+  <:body>
+    <table class="table table-striped">
+      <thead>
+      <tr>
         <th>Sender</th>
         <th>Delivery Email</th>
         <th>Timestamp</th>
         <th>Action</th>
         <th>&nbsp;</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each this.received_logs as |log|}}
-      <tr class="separated">
-          <td><PersonLink @person={{log.sender_person}} /></td>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.received_logs as |log|}}
+        <tr class="separated">
+          <td>
+            <PersonLink @person={{log.sender_person}} />
+          </td>
           <td>{{log.recipient_address}}</td>
           <td>{{shift-format log.sent_at}}</td>
           <td>{{log.action}}</td>
           <td>
-            <button type="button" class="btn btn-sm btn-secondary" {{action "showMessageAction" log}} title="show message">
+            <UiButton @type="secondary" @size="sm" @onClick={{fn this.showMessageAction log}}>
               {{fa-icon (if log.showMessage "envelope-open" "envelope") type="fas"}}
-            </button>
+            </UiButton>
           </td>
-      </tr>
-      {{#if log.showMessage}}
-        <tr>
-            <td colspan="5">
-                Subject: {{log.subject}}
-                  <div>
-                    {{nl2br log.message}}
-                  </div>
-            </td>
         </tr>
-      {{/if}}
-    {{else}}
-    <tr>
-      <td colspan="5 text-danger">No sent contact messages were found for {{this.year}}</td>
-    </tr>
-    {{/each}}
-  </tbody>
-</table>
+        {{#if log.showMessage}}
+          <tr>
+            <td colspan="5">
+              Subject: {{log.subject}}
+              <div>
+                {{nl2br log.message}}
+              </div>
+            </td>
+          </tr>
+        {{/if}}
+      {{else}}
+        <tr>
+          <td colspan="5 text-danger">No sent contact messages were found for {{this.year}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </:body>
+</UiSection>

@@ -39,7 +39,9 @@
           Trainer {{trainer.callsign}}
         </Accordion.title>
         <Accordion.body>
-          <img src="{{trainer.photo_url}}" alt="{{trainer.callsign}} headshot" class="d-block"/>
+          <div class="photo-medium">
+            <img src={{trainer.photo_url}} alt="{{trainer.callsign}} headshot"/>
+          </div>
           {{#each trainer.questions as |question|}}
             <SurveyQuestionReport @report={{this.report}}
                                   @trainer={{trainer}}

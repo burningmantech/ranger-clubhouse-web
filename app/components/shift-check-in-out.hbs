@@ -24,12 +24,12 @@
       </td>
       <td class="text-right">{{credits-format @onDutyEntry.credits}}</td>
       <td>
-        <button type="button" class="btn btn-secondary mr-2" {{action this.changePositionAction}}>
+        <UiButton @type="secondary" @class="mr-2" @onClick={{this.changePositionAction}} @disabled={{this.isSubmitting}}>
           Change Position
-        </button>
-        <button type="button" class="btn btn-danger" {{action this.endShiftAction}} disabled={{this.isSubmitting}}>
+        </UiButton>
+        <UiButton @type="danger" @onClick={{this.endShiftAction}} @disabled={{this.isSubmitting}}>
           End Shift
-        </button>
+        </UiButton>
         {{#if this.isSubmitting}}
           <LoadingIndicator/>
         {{/if}}
@@ -81,26 +81,25 @@
         <tbody>
         {{#each @imminentSlots as |slot|}}
           <tr>
-            <td class="align-middle">{{slot.position_title}}{{#if slot.slot_description}}
-              - {{slot.slot_description}}{{/if}}</td>
+            <td class="align-middle">
+              {{slot.position_title}}{{#if slot.slot_description}} - {{slot.slot_description}}{{/if}}
+            </td>
             <td class="align-middle">{{shift-format slot.slot_begins slot.slot_ends}}</td>
             <td class="align-middle">
               {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
-                <button type="button" class="btn {{if slot.is_within_start_time "btn-primary" "btn-warning"}}" {{action
-                  this.signinShiftAction slot}}
-                        disabled={{this.isSubmitting}}>
+                <UiButton @type={{if slot.is_within_start_time "primary" "warning"}}
+                  @onClick={{fn this.signinShiftAction slot}} @disabled={{this.isSubmitting}}>
                   {{if slot.is_within_start_time "Start Shift" "Start Shift Early"}}
-                </button>
+                </UiButton>
               {{else}}
                 <div class="text-danger">
                   {{if slot.is_untrained "Not Trained"}}
                   {{if slot.is_unqualified slot.unqualified_message}}
                 </div>
                 {{#if (has-role "admin" "timesheet-management")}}
-                  <button type="button" class="btn btn-warning" {{action this.signinShiftAction slot}}
-                          disabled={{this.isSubmitting}}>
+                  <UiButton @type="warning" @onClick={{fn this.signinShiftAction slot}} disabled={{this.isSubmitting}}>
                     Force Start Shift
-                  </button>
+                  </UiButton>
                 {{/if}}
               {{/if}}
               {{#if this.isSubmitting}}
@@ -131,13 +130,13 @@
       </div>
       <div class="col-auto">
         {{#if this.isPersonDirtTrained}}
-          <button type="button" class="btn btn-primary" {{action this.startShiftAction}} disabled={{this.isSubmitting}}>
+          <UiButton @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
             Start Shift
-          </button>
+          </UiButton>
         {{else if this.userCanForceCheckIn}}
-          <button type="button" class="btn btn-warning" {{action this.startShiftAction}} disabled={{this.isSubmitting}}>
+          <UiButton @type="warning" @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
             Force Shift Start
-          </button>
+          </UiButton>
         {{else}}
           <div class="text-danger mt-1">NOT DIRT TRAINED - SHIFT START IS NOT ALLOWED</div>
         {{/if}}
@@ -170,9 +169,9 @@
       </div>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <button type="button" class="btn btn-primary"{{action this.updatePositionAction}} disabled={{this.isSubmitting}}>
+      <UiButton @onClick={{this.updatePositionAction}} @disabled={{this.isSubmitting}}>
         Update Position
-      </button>
+      </UiButton>
       <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelUpdatePosition}} />
     </Modal.footer>
   </ModalDialog>
@@ -195,12 +194,10 @@
       </p>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <button type="button" class="btn btn-primary" {{action this.closeEarlyShiftAction}}>
-        Cancel
-      </button>
-      <button type="button" class="btn btn-warning" {{action this.confirmEarlyShiftAction}}>
+      <UiCancelButton @onClick={{this.closeEarlyShiftAction}} />
+      <UiButton @type="warning" @onClick={{this.confirmEarlyShiftAction}}>
         Confirm Early Shift Start
-      </button>
+      </UiButton>
     </Modal.footer>
   </ModalDialog>
 {{/if}}
@@ -235,12 +232,10 @@
       </p>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <button type="button" class="btn btn-primary"{{action this.closeForceStartConfirm}}>
-        Cancel
-      </button>
-      <button type="button" class="btn btn-warning" {{action this.confirmForceStart}}>
+      <UiCancelButton @onClick={{this.closeForceStartConfirm}} />
+      <UiButton @type="warning" @onClick={{this.confirmForceStart}}>
         Confirm Force Shift Start
-      </button>
+      </UiButton>
     </Modal.footer>
   </ModalDialog>
 {{/if}}

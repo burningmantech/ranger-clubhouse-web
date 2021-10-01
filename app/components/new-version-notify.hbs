@@ -5,6 +5,6 @@
       A new version of the Clubhouse is available.<br>
       Click "Reload" to update to the latest version.
     </p>
-    <button type="button" onclick={{action this.reload}} class="btn btn-danger">Reload</button>
+    <UiButton @type="danger" @onClick={{this.reload}}>Reload</UiButton>
   </div>
 {{/if}}

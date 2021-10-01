@@ -20,53 +20,57 @@
 
 {{#if this.people}}
   {{#if this.peopleNotFound}}
-    <div class="border rounded p-2 mt-2 mb-2">
-      <h3 class="text-danger">{{pluralize this.peopleNotFound.length "person"}} not found</h3>
-      <div class="callsign-list mb-2">
-        {{#each this.peopleNotFound as |name|}}
-          <div>{{name}}</div>
-        {{/each}}
-      </div>
-      <button type="button" class="btn btn-secondary" {{action this.exportNotFoundToCSV}}>
-        Export Not Found to CSV
-      </button>
-    </div>
+    <UiSection>
+      <:title><span class="text-danger">{{pluralize this.peopleNotFound.length "person"}} not found1</span></:title>
+      <:body>
+        <div class="callsign-list mb-2">
+          {{#each this.peopleNotFound as |name|}}
+            <div>{{name}}</div>
+          {{/each}}
+        </div>
+        <UiButton @type="secondary" @onClick={{this.exportNotFoundToCSV}}>
+          Export Not Found to CSV
+        </UiButton>
+      </:body>
+    </UiSection>
   {{/if}}
 
-  <h3 class="mt-2 text-success">
-    {{pluralize this.peopleFound.length "person"}} found
-  </h3>
-  {{#if this.peopleFound}}
-    <table class="table table-width-auto table-striped table-hover">
-      <thead>
-      <tr>
-        <th>Callsign</th>
-        <th>Status</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Last worked</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each this.peopleFound as |person|}}
-        <tr>
-          <td>
-            <PersonLink @person={{person}} />
-          </td>
-          <td>{{person.status}}</td>
-          <td>{{person.first_name}} {{person.last_name}}</td>
-          <td>{{mail-to person.email}}</td>
-          <td>
-            {{#if person.last_worked}}
-              {{person.last_worked}}
-            {{else}}
-              <i>never</i>
-            {{/if}}
-          </td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-    <button type="button" class="btn btn-primary" {{action this.exportFoundToCSV}}>Export Found To CSV</button>
-  {{/if}}
+  <UiSection>
+    <:title><span class="text-success">{{pluralize this.peopleFound.length "person"}} found</span></:title>
+    <:body>
+      {{#if this.peopleFound}}
+        <table class="table table-width-auto table-striped table-hover">
+          <thead>
+          <tr>
+            <th>Callsign</th>
+            <th>Status</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Last worked</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.peopleFound as |person|}}
+            <tr>
+              <td>
+                <PersonLink @person={{person}} />
+              </td>
+              <td>{{person.status}}</td>
+              <td>{{person.first_name}} {{person.last_name}}</td>
+              <td>{{mail-to person.email}}</td>
+              <td>
+                {{#if person.last_worked}}
+                  {{person.last_worked}}
+                {{else}}
+                  <i>never</i>
+                {{/if}}
+              </td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+        <UiButton @onClick={{this.exportFoundToCSV}}>Export Found To CSV</UiButton>
+      {{/if}}
+    </:body>
+  </UiSection>
 {{/if}}

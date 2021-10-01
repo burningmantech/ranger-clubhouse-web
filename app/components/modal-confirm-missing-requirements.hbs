@@ -6,7 +6,7 @@
     </p>
   </Modal.body>
   <Modal.footer>
-    <Modal.button @label="Cancel" @action={{@onClose}} @type="primary"/>
-    <Modal.button @label="Force Sign Up" @action={{@onConfirm}} @type="danger"/>
+    <UiCancelButton @onClick={{@onClose}} />
+    <UiButton @type="warning" @onClick={{@onConfirm}}>Force Sign Up</UiButton>
   </Modal.footer>
 </ModalDialog>

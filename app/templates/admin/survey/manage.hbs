@@ -15,10 +15,10 @@
   </dd>
 </dl>
 <p>
-  <button type="button" class="btn btn-primary" {{on "click" this.newGroupAction}}>{{fa-icon "plus"}} Add Group</button>
-  <button type="button" class="btn btn-secondary" {{on "click" this.editSurveyAction}}>
+  <UiButton @onClick={{this.newGroupAction}}>{{fa-icon "plus"}} Add Group</UiButton>
+  <UiButton @type="secondary" @onClick={{this.editSurveyAction}}>
     {{fa-icon "edit"}} Edit Survey
-  </button>
+  </UiButton>
 </p>
 
 {{#each this.orderedGroups as |group idx|}}
@@ -34,27 +34,25 @@
           {{/if}}
         </div>
         <div class="ml-2 mr-auto">
-          <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.newQuestionAction group)}}
-                  disabled={{group.isSaving}}>
+          <UiButton @size="sm" @onClick={{fn this.newQuestionAction group}} @disabled={{group.isSaving}}>
             {{fa-icon "plus"}} Add Question
-          </button>
-          <button type="button" class="btn btn-secondary btn-sm" {{on "click" (fn this.editGroupAction group)}}
-                  disabled={{group.isSaving}}>
+          </UiButton>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn this.editGroupAction group}} @disabled={{group.isSaving}}>
             {{fa-icon "edit"}} Edit Group
-          </button>
+          </UiButton>
         </div>
         <div class="ml-auto">
           {{#if (not-eq idx 0)}}
-            <button type="button" class="btn btn-secondary btn-sm" {{on "click" (fn this.moveGroupAction group -1)}}
-                    disabled={{group.isSaving}}>
+            <UiButton @type="secondary" @size="sm" @onClick={{fn this.moveGroupAction group -1}}
+                      @disabled={{group.isSaving}}>
               {{fa-icon "arrow-up"}} Move Group Up
-            </button>
+            </UiButton>
           {{/if}}
           {{#if (not-eq group this.orderedGroups.lastObject)}}
-            <button type="button" class="btn btn-secondary btn-sm" {{on "click" (fn this.moveGroupAction group 1)}}
-                    disabled={{group.isSaving}}>
+            <UiButton @type="secondary" @size="sm" @onClick={{fn this.moveGroupAction group 1}}
+                      @disabled={{group.isSaving}}>
               {{fa-icon "arrow-down"}} Move Group Down
-            </button>
+            </UiButton>
           {{/if}}
 
         </div>
@@ -78,22 +76,22 @@
         <td class="w-5">{{question.type}}</td>
         <td class="w-5 text-center">{{yesno question.is_required}}</td>
         <td class="w-10">
-          <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.editQuestionAction question)}}>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn this.editQuestionAction question}}>
             {{fa-icon "edit"}} Edit
-          </button>
+          </UiButton>
         </td>
         <td class="w-25 text-right">
           {{#if (not-eq idx 0)}}
-            <button type="button" class="btn btn-secondary btn-sm"
-              {{on "click" (fn this.moveQuestionAction group question -1)}} disabled={{question.isSaving}}>
+            <UiButton @type="secondary" @size="sm" @onClick={{fn this.moveQuestionAction group question -1}}
+                      @disabled={{question.isSaving}}>
               {{fa-icon "arrow-up"}} Move Up
-            </button>
+            </UiButton>
           {{/if}}
           {{#if (not-eq question group.surveyQuestions.lastObject)}}
-            <button type="button" class="btn btn-secondary btn-sm"
-              {{on "click" (fn this.moveQuestionAction group question 1)}} disabled={{question.isSaving}}>
+            <UiButton @type="secondary" @size="sm" @onClick={{fn this.moveQuestionAction group question 1}}
+                      @disabled={{question.isSaving}}>
               {{fa-icon "arrow-down"}} Move Down
-            </button>
+            </UiButton>
           {{/if}}
         </td>
       </tr>
@@ -112,10 +110,9 @@
 {{/each}}
 
 {{#if this.groupEntry}}
-  <ModalDialog @title={{if this.groupEntry.isNew "Create New Group" (concat "Edit Group ID #" this.groupEntry.id)}} as
-               |Modal|>
-    <ChForm @formId="survey-group" @formFor={{this.groupEntry}} @onSubmit={{this.saveGroupAction}}
-            @onCancel={{this.cancelGroupAction}} as |f|>
+  <ModalDialog @title={{if this.groupEntry.isNew "Create New Group" (concat "Edit Group ID #" this.groupEntry.id)}}
+               @onEscape={{this.cancelGroupAction}} as  |Modal|>
+    <ChForm @formId="survey-group" @formFor={{this.groupEntry}} @onSubmit={{this.saveGroupAction}} as |f|>
       <Modal.body>
         <div class="row mb-2 ml-2">
           <f.input @name="type"
@@ -143,15 +140,14 @@
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.groupEntry.isNew "Create" "Save"}} @disabled={{this.groupEntry.isSaving}} />
-        <f.cancel/>
+        <UiCancelButton @onClick={{this.cancelGroupAction}} />
         {{#if this.groupEntry.isSaving}}
           <LoadingIndicator/>
         {{/if}}
         <div class="ml-auto">
-          <button type="button" class="btn btn-danger btn-sm" disabled={{this.groupEntry.isDeleting}}
-            {{action this.deleteGroupAction}} >
+          <UiButton @type="light-red" @onClick={{this.deleteGroupAction}} @disabled={{this.groupEntry.isDeleting}}>
             {{fa-icon "trash"}} Delete Group
-          </button>
+          </UiButton>
         </div>
       </Modal.footer>
     </ChForm>
@@ -160,9 +156,8 @@
 
 {{#if this.questionEntry}}
   <ModalDialog @title={{if this.questionEntry.isNew "Add Question" (concat "Edit Question ID #" this.questionEntry.id)}}
-               as |Modal|>
-    <ChForm @formId="survey-group" @formFor={{this.questionEntry}} @onSubmit={{this.saveQuestionAction}}
-            @onCancel={{this.cancelQuestionAction}} as |f|>
+               @onEscape={{this.cancelQuestionAction}} as |Modal|>
+    <ChForm @formId="survey-group" @formFor={{this.questionEntry}} @onSubmit={{this.saveQuestionAction}} as |f|>
       <Modal.body>
         <div class="form-row">
           <f.input @name="type" @type="select" @label="Question Type" @options={{this.typeOptions}} />
@@ -189,13 +184,13 @@
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.questionEntry.isNew "Create" "Save"}} @disabled={{this.questionEntry.isSaving}} />
-        <f.cancel @disabled={{this.questionEntry.isSaving}} />
+        <UiCancelButon @onClick={{this.cancelQuestionAction}} @disabled={{this.questionEntry.isSaving}} />
         {{#if this.questionEntry.isSaving}}
           <LoadingIndicator/>
         {{/if}}
-        <button type="button" class="btn btn-danger ml-auto" {{action this.deleteQuestionAction}}>
+        <UiButton @type="light-red" @class="ml-auto" @onClick={{this.deleteQuestionAction}}>
           {{fa-icon "trash"}} Delete
-        </button>
+        </UiButton>
       </Modal.footer>
     </ChForm>
   </ModalDialog>

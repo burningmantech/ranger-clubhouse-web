@@ -65,10 +65,10 @@
 
     {{#if (and (not this.errorCount) (not this.committed))}}
       <div class="mt-2 mb-2">
-        <button type="button" class="btn btn-success" disabled={{this.isSubmitting}} {{action this.commitAction}}>
+        <UiButton @disabled={{this.isSubmitting}} @onClick={{this.commitAction}}>
           {{if this.granted "Grant" "Revoke"}} "{{this.positionTitle}}" {{if this.granted "to" "from"}}
           {{pluralize this.people.length "person"}}
-        </button>
+        </UiButton>
         {{#if this.isSubmitting}}
           <LoadingIndicator/>
         {{/if}}
@@ -104,9 +104,7 @@
 </ChForm>
 
 {{#if this.isSubmitting}}
-  <ModalDialog as |modal|>
-    <modal.body>
-      <LoadingIndicator @text="Processing Request" />
-    </modal.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Performing bulk operations. This may take a minute.
+  </LoadingDialog>
 {{/if}}

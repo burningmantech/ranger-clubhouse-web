@@ -55,7 +55,6 @@
                    @autocomplete="username"
                    @autofocus={{true}}
                    @noSpaces={{true}}
-                   @autofocus={{true}}
                    @grid="col-sm-12 col-lg-auto" @size={{30}} />
         </div>
         <div class="form-row">
@@ -121,10 +120,8 @@
   </p>
 </main>
 {{#if this.session.isAuthenticated}}
-  <ModalDialog as |Dialog|>
-    <Dialog.body>
-      <LoadingIndicator @text="Login successful! Please wait while your account is loaded."/>
-    </Dialog.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Login successful! Please wait while your account is loaded.
+  </LoadingDialog>
 {{/if}}
 

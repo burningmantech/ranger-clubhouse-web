@@ -64,12 +64,13 @@
           <b>You have claimed your {{@ticket.typeLabel}}.</b> If your plans have changed,
           you may bank the ticket. Note: the ticket will expire on {{mdy-format @ticket.expiry_date full=true}}.
         </p>
-        <button type="button" class="btn btn-primary btn-responsive"
-          {{action @setDocumentStatus @ticket "banked"}} disabled={{@isSavingDocumentStatus}}>
+        <UiButton @class="btn-responsive" @onClick={{fn @setDocumentStatus @ticket "banked"}}
+                  @disabled={{@isSavingDocumentStatus}}>
           Bank Ticket
           {{#if @isSavingDocumentStatus}}
-            <SpinIcon/>{{/if}}
-        </button>
+            <SpinIcon/>
+          {{/if}}
+        </UiButton>
       {{else if @ticket.isBanked}}
         <p>
           <b>You have banked your {{@ticket.typeLabel}} this year.</b>
@@ -78,12 +79,13 @@
           If your plans have changed, you may claim the ticket.
           Note: the ticket will expire on {{mdy-format @ticket.expiry_date full=true}}.
         </p>
-        <button type="button" class="btn btn-primary btn-responsive"
-          {{action @setDocumentStatus @ticket "claimed"}} disabled={{@isSavingDocumentStatus}}>
+        <UiButton @class="btn-responsive" @onClick={{fn @setDocumentStatus @ticket "claimed"}}
+                  @disabled={{@isSavingDocumentStatus}}>
           Claim Ticket
           {{#if @isSavingDocumentStatus}}
-            <SpinIcon/>{{/if}}
-        </button>
+            <SpinIcon/>
+          {{/if}}
+        </UiButton>
       {{else if @ticket.isQualified}}
         <h4>You qualified for a {{@ticket.typeLabel}} in {{@ticket.source_year}}!</h4>
         <p>
@@ -94,20 +96,20 @@
         </p>
 
         <div class="my-2"><b>What do you want to do with your {{@ticket.typeLabel}}?</b></div>
-        <button type="button" class="btn btn-primary"
-          {{action @setDocumentStatus @ticket "claimed"}} disabled={{@isSavingDocumentStatus}}>
+        <UiButton @class="btn-responsive" @onClick={{fn @setDocumentStatus @ticket "claimed"}}
+                  @disabled={{@isSavingDocumentStatus}}>
           Claim Ticket
           {{#if @isSavingDocumentStatus}}
             <SpinIcon/>
           {{/if}}
-        </button>
+        </UiButton>
         <span class="mx-2 h5">OR</span>
-        <button type="button" class="btn btn-primary"
-          {{action @setDocumentStatus @ticket "banked"}} disabled={{@isSavingDocumentStatus}}>
+        <UiButton @onClick={{fn @setDocumentStatus @ticket "banked"}} @disabled={{@isSavingDocumentStatus}}>
           Bank Ticket
           {{#if @isSavingDocumentStatus}}
-            <SpinIcon/>{{/if}}
-        </button>
+            <SpinIcon/>
+          {{/if}}
+        </UiButton>
       {{else}}
         Uh oh, I don't know the state of your ticket [{{@ticket.status}}].
       {{/if}}
@@ -123,9 +125,7 @@
 </TicketSection>
 
 {{#if this.isSubmitting}}
-  <ModalDialog as |Dialog|>
-    <Dialog.body>
-      Please wait, saving your ticketing preferences.
-    </Dialog.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Please wait, saving your ticketing choices.
+  </LoadingDialog>
 {{/if}}

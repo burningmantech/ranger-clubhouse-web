@@ -15,9 +15,9 @@
       the terms and conditions of using Ranger radios.
     </p>
   {{else if this.documentHasLoaded}}
-    <button type="submit" {{action this.agreeAction}} class="btn btn-primary" disabled={{this.isSubmitting}}>
+    <UiButton @onClick={{this.agreeAction}} @disabled={{this.isSubmitting}}>
       Yes, I agree to the Radio Checkout Agreement.
-    </button>
+    </UiButton>
     {{#if this.isSubmitting}}
       <LoadingIndicator/>
     {{/if}}

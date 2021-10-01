@@ -65,13 +65,14 @@
           </td>
           <td>
             {{#if (is-empty ts.off_duty)}}
-              <button type="button" class="btn btn-danger btn-sm" {{action this.signoffAction ts}}>End Shift</button>
-            {{else }}
-              <button type="button"
-                      class="btn {{if ts.isPending "btn-danger" "btn-primary"}} btn-sm"
-                {{action this.editEntryAction ts}} disabled={{ts.isReloading}}>
+              <UiButton @type="danger" @size="sm" @onClick={{fn this.signoffAction ts}}>
+                End Shift
+              </UiButton>
+            {{else}}
+              <UiButton @type={{if ts.isPending "danger" "primary"}} @size="sm"
+                @onClick={{fn this.editEntryAction ts}} @disabled={{ts.isReloading}}>
                 {{#if ts.isReloading}}
-                  {{fa-icon "spinner" spin=true}}
+                  <SpinIcon />
                 {{else}}
                   {{fa-icon "edit"}}
                 {{/if}}
@@ -80,7 +81,7 @@
                 {{else}}
                   View
                 {{/if}}
-              </button>
+              </UiButton>
             {{/if}}
           </td>
         </tr>
@@ -183,7 +184,7 @@
             <div class="form-row">
               <f.input @name="additional_reviewer_notes"
                        @label="Reviewer message to {{@person.callsign}}:"
-                       @type="textarea" @cols=80 @rows=2
+                       @type="textarea" @cols={{80}} @rows={{2}}
               />
             </div>
             <div class="form-row">
@@ -212,13 +213,12 @@
             <LoadingIndicator/>
           {{/if}}
           <div class="ml-auto">
-            <button type="button" class="btn btn-danger" {{action this.removeEntryAction}}
-                    title="Delete timesheet entry" disabled={{this.editEntry.isSaving}}>
-              {{fa-icon "trash"}} Delete Entry
-            </button>
+            <UiButton @type="danger" @onClick={{this.removeEntryAction}} @disabled={{this.editEntry.isSaving}}>
+              {{fa-icon "trash"}} Delete
+            </UiButton>
           </div>
         {{else}}
-          <button type="button" class="btn btn-secondary" {{action this.cancelEntryAction}}>Close</button>
+          <UiCloseButton @onClick={{this.cancelEntryAction}} />
         {{/if}}
       </Modal.footer>
     </ChForm>

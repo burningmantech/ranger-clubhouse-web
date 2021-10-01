@@ -4,11 +4,11 @@
   The report shows Rangers show the total hours (counted positions only) and credits worked for a given year. Alpha, Auditors, Bonked, Prospective, and Past Prospectives are not included.
 </p>
 <p>
-  <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
+  <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
 </p>
 {{#if this.eventStart}}
+  Showing {{pluralize this.people.length "person"}}. {{this.year}} Event week: {{shift-format this.eventStart}} - {{shift-format this.eventEnd}}
   <table class="table table-sm table-striped table-hover">
-    <caption>Showing {{pluralize this.people.length "person"}}. {{this.year}} Event week: {{shift-format this.eventStart}} - {{shift-format this.eventEnd}}</caption>
     <thead>
       <tr>
         <th>Callsign</th>

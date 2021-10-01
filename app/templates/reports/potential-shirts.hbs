@@ -7,9 +7,9 @@
     <a href="#shirt-totals">Jump to shirt totals</a>
   </p>
   <p>
-    <button type="button" class="btn btn-secondary" {{action this.exportPeople}}>
+    <UiButton @onClick={{this.exportPeople}}>
       Export as CSV
-    </button>
+    </UiButton>
   </p>
 </div>
 
@@ -69,7 +69,7 @@ Showing  {{pluralize this.people.length "person"}}
           <caption>
             {{shirts.name}} Totals
             <span class="d-inline-block float-right">
-            <button type="button" class="btn btn-secondary btn-sm" {{action this.exportCounts shirts}}>Export</button>
+            <UiButton @type="secondary" @size="sm" @onClick={{fn this.exportCounts shirts}}>Export</UiButton>
           </span>
           </caption>
           <thead>

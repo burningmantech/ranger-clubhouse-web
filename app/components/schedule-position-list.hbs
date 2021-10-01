@@ -51,7 +51,7 @@
                     title="View people signed up"
                     disabled={{slot.is_retrieving_people}}>
               {{#if slot.is_retrieving_people}}
-                {{fa-icon "spinner" spin="true"}}
+                <SpinIcon />
               {{else}}
                 {{fa-icon "users" type="fas"}}
               {{/if}}
@@ -63,7 +63,7 @@
                 <button type="button" {{on "click" (fn @leaveSlot slot)}} class="btn btn-light-red btn-sm"
                         title="Remove from schedule" disabled={{slot.is_submitting}}>
                   {{#if slot.is_submitting}}
-                    {{fa-icon "spinner" spin=true}}
+                    <SpinIcon />
                   {{else}}
                     {{fa-icon "trash-alt" type="fas"}}
                   {{/if}}
@@ -77,7 +77,7 @@
                   <button type="button" {{on "click" (fn @joinSlot slot)}} class="btn btn-primary btn-sm"
                           title="Sign up for the shift" disabled={{slot.is_submitting}}>
                     {{#if slot.is_submitting}}
-                      {{fa-icon "spinner" spin=true}}
+                      <SpinIcon />
                     {{else}}
                       {{fa-icon "user-plus" type="fas"}}
                     {{/if}}

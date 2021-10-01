@@ -26,13 +26,13 @@
     <ChForm::Select @name="staffFilter" @value={{this.staffFilter}} @options={{this.staffOptions}}
                     @onChange={{action (mut this.staffFilter)}} @controlClass="form-control"/>
   </div>
-  <div class="col-auto ml-auto">
-    <button type="button" class="btn btn-secondary" {{action this.exportToCsv}}>Export to CSV</button>
-  </div>
 </div>
 
 <p class="mt-2">
   Highlighted rows indicate no HQ staff (window, short, or lead) is available for the given period.
+</p>
+<p>
+  <UiButton @onClick={{this.exportToCsv}}>Export to CSV</UiButton>
 </p>
 {{#if this.viewVisits}}
   <HqVisitsTable @visits={{this.viewVisits}}

@@ -2,7 +2,7 @@
   <h1>Clubhouse 1 Log</h1>
 
   <ChNotice @type="danger" @title="Clubhouse 1 Log Deprecated" @icon="exclamation-triangle">
-   Entries range from July 16, 2008 to late October 2019.
+    Entries range from July 16, 2008 to late October 2019.
   </ChNotice>
 
   {{#if this.error}}
@@ -36,7 +36,6 @@
       </div>
     </div>
     <f.submit @label="Search"/>
-    <button type="button" class="btn btn-secondary" {{action this.resetFilters f.model}}>Reset</button>
   </ChForm>
 
   {{#if this.logs}}
@@ -83,13 +82,12 @@
       {{/each}}
       </tbody>
     </table>
-    <button type="button" class="btn btn-secondary" {{action this.goPrevPage}} disabled={{eq this.currentPage 1}}>Prev
-      Page
-    </button>
-    <button type="button" class="btn btn-secondary" {{action this.goNextPage}} disabled={{eq this.currentPage
-                                                                                             this.total_pages}}>Next
-      Page
-    </button>
+    <UiButton @type="secondary" @onClick={{this.goPrevPage}} @disabled={{eq this.currentPage 1}}>
+      Prev Page
+    </UiButton>
+    <UiButton @type="secondary" @onClick={{this.goNextPage}} @disabled={{eq this.currentPage this.total_pages}}>
+      Next Page
+    </UiButton>
   {{else}}
     <p class="text-danger font-weight-bold mt-4">No Action Logs matched the criteria.</p>
   {{/if}}

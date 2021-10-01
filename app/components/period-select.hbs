@@ -1,11 +1,11 @@
-<button type="button" class="btn btn-primary" {{action this.openDialogAction}}>
+<UiButton @onClick={{this.openDialogAction}}>
   {{this.label}}
-</button>
+</UiButton>
 
 {{#if this.showDialog}}
   <ModalDialog @size="xl" @title={{@title}} @onEscape={{this.cancelAction}} as |dialog|>
     <dialog.body>
-      <div class="masonry-container masonry-col-5">
+      <div class="masonry-container masonry-col-5 masonry-border">
         {{#each this.dayOptions as |day dayIdx|}}
           <div class="masonry-item">
             <h4 class="mx-n1 mt-n1 p-1 bg-light-gray">{{day.label}}</h4>
@@ -28,7 +28,7 @@
       </div>
     </dialog.body>
     <dialog.footer>
-      <button type="button" class="btn btn-primary" {{action this.cancelAction}}>Cancel</button>
+      <UiCancelButton @onClick={{this.cancelAction}} />
     </dialog.footer>
   </ModalDialog>
 {{/if}}

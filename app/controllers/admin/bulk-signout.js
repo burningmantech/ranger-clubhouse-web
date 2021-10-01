@@ -39,9 +39,7 @@ export default class AdminBulkSignoutController extends ClubhouseController {
   }
 
   @action
-  async signoffAction(event) {
-    event.preventDefault();
-
+  async signoffAction() {
     this.isSubmitting = true;
     const selected = this.timesheets.filter((ts) => ts.selected);
 

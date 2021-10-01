@@ -13,9 +13,9 @@
                       @controlClass="form-control"/>
     </div>
     <div class="col-auto">
-      <button type="button" class="btn btn-primary" {{action this.printAction}}>
+      <UiButton @onClick={{this.printAction}}>
         Print Selected ({{this.printAlphas.length}})
-      </button>
+      </UiButton>
     </div>
   </div>
   Showing {{this.viewAlphas.length}} of {{pluralize this.alphas.length "Alpha"}}
@@ -73,5 +73,5 @@
     {{/each}}
     </tbody>
   </table>
-  <button type="button" class="btn btn-primary" {{action this.printAction}}>Print Selected ({{this.printAlphas.length}})</button>
+  <UiButton @onClick={{this.printAction}}>Print Selected ({{this.printAlphas.length}})</UiButton>
 {{/if}}

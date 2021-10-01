@@ -92,7 +92,7 @@
       </table>
     </Modal.body>
     <Modal.footer>
-      <button type="button" class="btn btn-primary" {{action this.closeAction}}>Close</button>
+      <UiCloseButton @onClick={{this.closeAction}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}

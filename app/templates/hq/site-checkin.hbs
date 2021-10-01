@@ -163,9 +163,9 @@
     </p>
     <LinkTo @route="hq.shift" class="btn btn-success">Start Shift Checkin</LinkTo>
   {{else}}
-    <button type="button" class="btn btn-primary" {{action this.markOnSite}} disabled={{this.isSubmitting}}>Mark As On
-      Site
-    </button>
+    <UiButton @onClick={{this.markOnSite}} @disabled={{this.isSubmitting}}>
+      Mark As On Site
+    </UiButton>
     {{#if this.isSubmitting}}
       <LoadingIndicator/>
     {{/if}}

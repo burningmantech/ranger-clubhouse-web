@@ -419,8 +419,7 @@ export default class SlotsController extends ClubhouseController {
   }
 
   @action
-  copyPositionSelectAll(position, event) {
-    event.stopPropagation();
+  copyPositionSelectAll(position) {
     // if all are selected, deselect all; otherwise select all
     const value = !position.allSelected;
     position.slots.forEach((s) => set(s, 'selected', value));

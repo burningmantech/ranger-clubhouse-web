@@ -1,6 +1,6 @@
 <dl class="row">
   {{#if (has-role "view-pii" "view-email")}}
-    <dt class="col-sm-12 col-lg-3">Contact</dt>
+    <dt class="col-sm-12 col-lg-2">Contact</dt>
     <dd class="col-sm-12 col-lg-9">
       {{#if @person.email}}
         email {{mail-to @person.email}}
@@ -24,7 +24,7 @@
       {{/if}}
     </dd>
   {{/if}}
-  <dt class="col-sm-12 col-lg-3">Years ({{@person.years.length}})</dt>
+  <dt class="col-sm-12 col-lg-2">Years ({{@person.years.length}})</dt>
   <dd class="col-sm-12 col-lg-9">
     {{#if @person.non_ranger_years}}
       Non Ranger volunteer work:
@@ -41,7 +41,7 @@
       Has not worked yet
     {{/if}}
   </dd>
-  <dt class="col-sm-12 col-lg-3">Callsign</dt>
+  <dt class="col-sm-12 col-lg-2">Callsign</dt>
   <dd class="col-sm-12 col-lg-9">
     {{#if @person.callsign_approved}}
       <span class="text-success">{{fa-icon "check"}} Approved</span>
@@ -49,18 +49,18 @@
       <span class="text-danger">{{fa-icon "times"}} Not approved</span>
     {{/if}}
   </dd>
-  <dt class="col-sm-12 col-lg-3">FKAs</dt>
+  <dt class="col-sm-12 col-lg-2">FKAs</dt>
   <dd class="col-sm-12 col-lg-9">
     <PresentOrNot @value={{@person.formerly_known_as}} @empty="no previous callsigns"/>
   </dd>
   {{#if @person.has_note_on_file}}
-    <dt class="col-sm-12 col-lg-3">Personnel Note</dt>
+    <dt class="col-sm-12 col-lg-2">Personnel Note</dt>
     <dd class="col-sm-12 col-lg-9">
       <b class="text-danger">Has note on file</b>. Contact the Personnel Manager for more information:
       {{mail-to (config "PersonnelEmail")}}
     </dd>
   {{/if}}
-  <dt class="col-sm-12 col-lg-3">On Site</dt>
+  <dt class="col-sm-12 col-lg-2">On Site</dt>
   <dd class="col-sm-12 col-lg-9">
     <ChForm @formId="person" @formFor={{@person}} @onSubmit={{@savePersonAction}} as |f|>
       <f.input @name="on_site" @type="radioGroup" @options={{@onSiteOptions}} @inline={{true}} />
@@ -70,52 +70,52 @@
       {{/if}}
     </ChForm>
   </dd>
-  <dt class="col-sm-12 col-lg-3">Positions</dt>
+  <dt class="col-sm-12 col-lg-2">Positions</dt>
   <dd class="col-sm-12 col-lg-9">
     <div>
-      <button type="button" {{action @togglePositions}} class="btn btn-secondary btn-sm mr-2">
+      <UiButton @onClick={{@togglePositions}} @type="secondary" @size="sm">
         {{if @showPositions "Hide" "Show"}} Positions
-      </button>
+      </UiButton>
       {{#if (has-role "grant-position")}}
-        <button type="button" {{action @editPositionsAction}} class="btn btn-secondary btn-sm">
+        <UiButton @onClick={{@editPositionsAction}} @type="secondary" @size="sm" @class="ml-2">
           Edit Positions
-        </button>
+        </UiButton>
       {{/if}}
     </div>
     {{#unless @personPositions}}
       <b class="text-danger">No positions granted</b>
     {{/unless}}
     {{#if @showPositions}}
-      <div class="row">
+      <div class="masonry-container">
         {{#each @personPositions as |position| }}
-          <div class="col-sm-6 col-xl-4">
+          <div class="masonry-item">
             {{position-label position}}
           </div>
         {{/each}}
       </div>
     {{/if}}
   </dd>
-  <dt class="col-sm-12 col-lg-3">Roles</dt>
+  <dt class="col-sm-12 col-lg-2">Roles</dt>
   <dd class="col-sm-12 col-lg-9">
     <div>
-      <button type="button" {{action @toggleRoles}} class="btn btn-secondary btn-sm mr-2">
+      <UiButton @onClick={{@toggleRoles}} @type="secondary" @size="sm">
         {{if @showRoles "Hide" "Show"}} Roles
-      </button>
+      </UiButton>
     </div>
     {{#unless @personRoles}}
       <b class="text-danger">No roles granted</b>
     {{/unless}}
     {{#if @showRoles}}
-      <div class="row">
+      <div class="masonry-container">
         {{#each @personRoles as |role| }}
-          <div class="col-sm-6 col-xl-4">
+          <div class="masonry-item">
             {{role.title}}
           </div>
         {{/each}}
       </div>
     {{/if}}
   </dd>
-  <dt class="col-sm-12 col-lg-3">Certifications</dt>
+  <dt class="col-sm-12 col-lg-2">Certifications</dt>
   <dd class="col-sm-12 col-lg-9">
     {{#if (or @person.osha10 @person.osha30)}}
       {{#if @person.osha10}}OSHA-10{{/if}}
@@ -124,7 +124,7 @@
       No OSHA certifications
     {{/if}}
   </dd>
-  <dt class="col-sm-12 col-lg-3">&nbsp;</dt>
+  <dt class="col-sm-12 col-lg-2">&nbsp;</dt>
   <dd class="col-sm-12 col-lg-9">
     <LinkTo @route="person.event-info">Person &gt; Event/Training Info</LinkTo>
     has additional agreements, affidavits, and vehicles flags.

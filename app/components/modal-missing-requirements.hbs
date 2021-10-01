@@ -5,6 +5,6 @@
                           @isTraining={{this.isTraining}} />
   </Modal.body>
   <Modal.footer>
-    <Modal.button @label="Close" @action={{@onClose}} @type="primary"/>
+    <UiCloseButton @onClick={{@onClose}} />
   </Modal.footer>
 </ModalDialog>

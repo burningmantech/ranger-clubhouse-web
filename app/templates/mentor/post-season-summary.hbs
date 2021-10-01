@@ -8,7 +8,7 @@
             (mut this.filter)}} @controlClass="form-control"/>
   </div>
   <div class="col-auto">
-    <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export to CSV</button>
+    <UiButton @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
   </div>
 </div>
 
@@ -26,7 +26,7 @@ Showing {{this.viewMentees.length}} of {{this.mentees.length}}. {{this.passedCou
   </tr>
   </thead>
   <tbody>
-  {{#each this.viewMentees as |mentee|}}
+  {{#each this.viewMentees key="id" as |mentee|}}
     <tr>
       <td class="w-10">
         <PersonLink @person={{mentee}} /><br>

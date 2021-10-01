@@ -19,18 +19,18 @@
       </Accordion.title>
       <Accordion.body>
         <div class="mt-2 mb-3">
-          <button type="button" class="btn btn-secondary btn-sm" {{action this.showSignupSheet slot}}>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn this.showSignupSheet slot}}>
             {{fa-icon "clipboard-list"}} Sign-In Sheet
-          </button>
-          <button type="button" class="btn btn-secondary btn-sm" {{action this.showSignedInSheet slot}}>
+          </UiButton>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn this.showSignedInSheet slot}}>
             {{fa-icon "info-circle"}} Info Sheet
-          </button>
-          <button type="button" class="btn btn-secondary btn-sm" {{action this.showAlphaApparel slot}}>
+          </UiButton>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn this.showAlphaApparel slot}}>
             {{fa-icon "tshirt"}} Apparel Distribution
-          </button>
-          <button type="button" class="ml-4 btn btn-secondary btn-sm" {{action this.showAddPersonAction slot}}>
+          </UiButton>
+          <UiButton @type="secondary" @size="sm" @class="ml-2" @onClick={{fn this.showAddPersonAction slot}}>
             {{fa-icon "plus"}} Add Person
-          </button>
+          </UiButton>
         </div>
         <table class="table table-sm table-striped table-hover">
           <thead>
@@ -76,9 +76,9 @@
                 {{person.city}} {{person.state}} {{person.country}}
               </td>
               <td class="w-5">
-                <button type="button" class="btn btn-secondary btn-sm" {{action this.removePersonAction slot person}}>
+                <UiButton @type="secondary" @size="sm" @onClick={{fn this.removePersonAction slot person}}>
                   Remove
-                </button>
+                </UiButton>
               </td>
             </tr>
           {{else}}
@@ -150,5 +150,5 @@
 {{/if}}
 
 {{#if this.isSubmitting}}
-  <LoadingDialog @text="refreshing the sign up list"/>
+  <LoadingPane @text="refreshing the sign up list"/>
 {{/if}}

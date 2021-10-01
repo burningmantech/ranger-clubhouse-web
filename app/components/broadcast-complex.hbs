@@ -1,9 +1,7 @@
 {{#if this.isSubmitting}}
-  <ModalDialog as |Modal|>
-    <Modal.body>
-      <LoadingDialog @item="broadcasts"/>
-    </Modal.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Processing the request. Please wait.
+  </LoadingDialog>
 {{else if this.didTransmit}}
   <BroadcastSentTable @result={{this.result}} />
 {{else if this.isReviewing}}
@@ -98,8 +96,8 @@
     </tbody>
   </table>
 
-  <button type="button" class="btn btn-success btn-lg" {{on "click" this.transmitAction}}>SEND MESSAGE</button>
-  <button type="button" class="btn btn-secondary btn-lg" {{on "click" this.editMessageAction}}>EDIT</button>
+  <UButton @type="success" @size="lg" @onClick={{this.transmitAction}}>SEND MESSAGE</UButton>
+  <UiButton @type="secondary" @size="lg" @onClick={{this.editMessageAction}}>EDIT</UiButton>
 
   <BroadcastCandidatesTable @people={{this.people}} />
 {{else}}
@@ -177,37 +175,40 @@
     <div class="border rounded p-2">
       <div class="form-row">
         <div class="col-12 ml-2 mb-2">
-          <f.input @name="send_sms" @type="checkbox" @label="Send Text/SMS message" @inline=true />
+          <f.input @name="send_sms" @type="checkbox" @label="Send Text/SMS message" @inline={{true}}/>
         </div>
         <div class="col-auto">
           <f.input @name="sms_message"
-                   @label={{concat "Text/SMS to send (limited to " @config.sms_limit " characters)"}}
-                   @type="textarea" @maxlength={{@config.sms_limit}} @rows=2 @cols=100
-                   @controlClass="form-control form-control-sm" @wrapClass="col-auto"
+                   @label="Text/SMS to send (limited to {{@config.sms_limit}} characters)"
+                   @type="textarea"
+                   @maxlength={{@config.sms_limit}}
+                   @rows={{2}}
+                   @cols={{80}}
+                   @wrapClass="col-auto"
+                   @controlClass="form-control form-control-sm"
                    @disabled={{not f.model.send_sms}}
-                   @hint={{concat (if f.model.sms_message f.model.sms_message.length "0")
-                                  " of " @config.sms_limit " characters"}} />
+                   @hint="{{if f.model.sms_message f.model.sms_message.length "0"}} of {{@config.sms_limit}} characters" />
         </div>
       </div>
 
       <div class="form-row mt-2">
         <div class="col-12 ml-2">
-          <f.input @name="send_email" @type="checkbox" @label="Send email message" @inline=true />
-            <f.input @name="send_clubhouse" @type="checkbox" @label="Send Clubhouse message" @inline=true />
+          <f.input @name="send_email" @type="checkbox" @label="Send email message" @inline={{true}}/>
+          <f.input @name="send_clubhouse" @type="checkbox" @label="Send Clubhouse message" @inline={{true}}/>
         </div>
       </div>
       <div class="form-row mt-2">
         <div class="col-auto">
-          <f.input @name="subject" @type="text" @label="Subject for message:" @size=80 @maxlength=80
-                   @controlClass="form-control form-control-sm" @wrapClass="col-auto" />
+          <f.input @name="subject" @type="text" @label="Subject for message:" @size={{80}} @maxlength={{80}}
+                   @controlClass="form-control form-control-sm" @wrapClass="col-auto"/>
         </div>
       </div>
       <div class="form-row">
         <div class="col-auto">
           <f.input @name="message" @type="textarea" @label="Message to send to email and/or Clubhouse Message"
-                   @rows=10 @cols=100 @wrapClass="col-auto"
+                   @rows={{10}} @cols={{100}} @wrapClass="col-auto"
                    @disabled={{not (or f.model.send_email f.model.send_clubhouse)}}
-                   @controlClass="form-control form-control-sm" />
+                   @controlClass="form-control form-control-sm"/>
         </div>
       </div>
     </div>

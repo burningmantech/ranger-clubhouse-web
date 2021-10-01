@@ -7,7 +7,7 @@
   <a href="#summary">Jump to Empty Shifts summary</a>
 </p>
 
-<button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export to CSV</button>
+<UiButton @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
 {{! template-lint-disable table-groups}}
 <table class="table table-sm table-hover table-width-auto mt-2">
   {{#each this.positions key="id" as |position|}}
@@ -79,11 +79,11 @@
       </td>
     </tr>
   {{else}}
-  <tr>
-    <td colspan="6">
-      <b class="text-success">Congratulations (or WTF?)! No empty shifts were found for {{this.year}}</b>
-    </td>
-  </tr>
+    <tr>
+      <td colspan="6">
+        <b class="text-success">Congratulations (or WTF?)! No empty shifts were found for {{this.year}}</b>
+      </td>
+    </tr>
   {{/each}}
   </tbody>
 </table>

@@ -12,7 +12,7 @@
 </p>
 
 {{#if this.isSubmitting}}
-  <LoadingDialog @text={{if this.isCommitting "Submitting the upload." "Verifying the request."}} />
+  <LoadingPane @text={{if this.isCommitting "Submitting the upload." "Verifying the request."}} />
 {{else if this.actionResults}}
   <div class="border rounded p-2 mt-2 mb-2">
     {{#if this.resultFailures}}
@@ -91,9 +91,9 @@
     {{/if}}
 
     {{#if (and (or this.resultSuccesses this.resultWarnings) (not this.resultFailures) (not this.resultsCommitted))}}
-      <button type="button" class="btn btn-success" {{action this.commitAction}} disabled={{this.isSubmitting}}>
+      <UiButton @type="success" @onClick={{this.commitAction}} @disabled={{this.isSubmitting}}>
         Commit Upload
-      </button>
+      </UiButton>
     {{/if}}
   </div>
 {{/if}}
@@ -117,14 +117,15 @@
 
 <div class="form-group row">
   <div class="col-auto">
-    <button type="button" class="btn btn-primary" disabled={{or this.isSubmitting this.disableSubmit}} {{action
-            this.submitAction}}>{{if this.isSubmitting "Submitting" "Verify Upload"}}</button>
+    <UiButton @disabled={{or this.isSubmitting this.disableSubmit}} @onClick={{this.submitAction}}>
+      {{if this.isSubmitting "Submitting" "Verify Upload"}}
+    </UiButton>
     {{#if this.isSubmitting}}
       <LoadingIndicator/>
     {{/if}}
-
   </div>
 </div>
+
 <p>
   After the actions have been verified, you'll be able to commit the upload.
 </p>

@@ -54,7 +54,7 @@
             {{/if}}
           </td>
           <td>
-            <PresentOrNot @value={{entry.position}} @empty="-" />
+            <PresentOrNot @value={{entry.position}} @empty="-"/>
           </td>
           <td>
             {{#if entry.signin}}
@@ -88,9 +88,9 @@
 
     {{#if (and (not this.haveError) (not this.committed))}}
       <div class="mt-2 mb-2">
-        <button type="button" class="btn btn-success" disabled={{this.isSubmitting}} {{action this.commitAction}}>Submit
-          Sign In/Outs
-        </button>
+        <UiButton @type="success" @disabled={{this.isSubmitting}} @onClick={{this.commitAction}}>
+          Submit Sign In/Outs
+        </UiButton>
         {{#if this.isSubmitting}}
           <LoadingIndicator/>
         {{/if}}
@@ -101,19 +101,17 @@
 
 <ChForm @formId="bulkForm" @formFor={{this.bulkForm}} @changeSet={{false}} @onSubmit={{this.verifyAction}} as |f|>
   <div class="form-row">
-    <div class="col-auto">
       <f.input @name="lines"
                @label="Enter a list of callsigns with times and optional positions to bulk sign in and/or out:"
-               @type="textarea" @cols=40 @rows=10 />
-    </div>
+               @type="textarea" @cols={{40}} @rows={{10}} />
   </div>
-  <p class="ml-4">
+  <p>
     Don't worry, you'll have a chance to review the sign ins & outs before actually creating them.
   </p>
   <div class="form-row">
     <div class="col-auto">
-      <f.submit @label="Verify & Review Bulk Sign Ins/Outs" @disabled={{or (is-empty f.model.lines)
-                                                                           this.isSubmitting}} />
+      <f.submit @label="Verify & Review Bulk Sign Ins/Outs"
+                @disabled={{or (is-empty f.model.lines) this.isSubmitting}} />
       {{#if this.isSubmitting}}
         <LoadingIndicator/>
       {{/if}}
@@ -127,39 +125,44 @@
 </ChForm>
 
 {{#if this.showHelp}}
-  <div class="mt-3 mb-3 border rounded p-2">
-    <h4>Supported formats for Bulk Sign In / Out</h4>
-    time may be HHMM or HH:MM, date may be MM/DD or MM/DD/YY.<br>
-    <strong>For Sign Ins:</strong>
-    <ul>
-      <li>callsign,position (sign in starting now)</li>
-      <li>callsign,position,time (sign in position starting today at time)</li>
-      <li>callsign,position,date,time (sign in position starting at date and time)</li>
-    </ul>
-    <strong>For Sign Outs (people who are currently on shift):</strong>
-    <ul>
-      <li>callsign,time (sign out at time)</li>
-      <li>callsign,date,time (sign out at date & time)</li>
-    </ul>
-    <strong>For Sign In &amp; Outs:</strong>
-    <ul>
-      <li>callsign,position,time,time (sign in and out of position, starting at time ending at time)</li>
-      <li>callsign,position,date,time,time (sign in &amp; out of position starting at date time and ending the same day
-        at time)
-      </li>
-      <li>callsign,position,date,time,date,time (sign in &amp out of position starting at date time and ending at date
-        time)
-      </li>
-    </ul>
-    <strong>Examples:</strong>
-    <ul>
-      <li>tool,0730 - sign out today at 07:30</li>
-      <li>safety phil,site setup - sign in for Site Setup starting now</li>
-      <li>crow,site setup,0845 - sign in for Site Setup at 08:45 today</li>
-      <li>hubcap,intercept,08/15,2345,0630 - sign in/out for Intercept starting Aug 15th at 23:45 ending Aug 16th @
-        06:30
-      </li>
-      <li>kermit,dirt,08/18,0845,1650 - sign in &amp; out for Dirt starting Aug 18th at 08:45 ending at 16:50</li>
-    </ul>
-  </div>
+  <UiSection>
+    <:title>Supported formats for Bulk Sign In / Out</:title>
+    <:body>
+      <p>
+        time may be HHMM or HH:MM, date may be MM/DD or MM/DD/YY.
+      </p>
+      <b>For Sign Ins:</b>
+      <ul>
+        <li>callsign,position (sign in starting now)</li>
+        <li>callsign,position,time (sign in position starting today at time)</li>
+        <li>callsign,position,date,time (sign in position starting at date and time)</li>
+      </ul>
+      <strong>For Sign Outs (people who are currently on shift):</strong>
+      <ul>
+        <li>callsign,time (sign out at time)</li>
+        <li>callsign,date,time (sign out at date & time)</li>
+      </ul>
+      <b>For Sign In &amp; Outs:</b>
+      <ul>
+        <li>callsign,position,time,time (sign in and out of position, starting at time ending at time)</li>
+        <li>callsign,position,date,time,time (sign in &amp; out of position starting at date time and ending the same
+          day
+          at time)
+        </li>
+        <li>callsign,position,date,time,date,time (sign in &amp; out of position starting at date time and ending at date
+          time)
+        </li>
+      </ul>
+      <b>Examples:</b>
+      <ul>
+        <li>tool,0730 - sign out today at 07:30</li>
+        <li>safety phil,site setup - sign in for Site Setup starting now</li>
+        <li>crow,site setup,0845 - sign in for Site Setup at 08:45 today</li>
+        <li>hubcap,intercept,08/15,2345,0630 - sign in/out for Intercept starting Aug 15th at 23:45 ending Aug 16th @
+          06:30
+        </li>
+        <li>kermit,dirt,08/18,0845,1650 - sign in &amp; out for Dirt starting Aug 18th at 08:45 ending at 16:50</li>
+      </ul>
+    </:body>
+  </UiSection>
 {{/if}}

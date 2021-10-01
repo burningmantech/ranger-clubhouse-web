@@ -34,13 +34,13 @@
                    @type="text" @inputmode="decimal" @size=5 @maxlength=5 @grid="col-auto"/>
         </div>
         <div class="form-row">
-          <button type="button" class="btn btn-primary" disabled={{this.isSubmitting}}
-            {{action this.confirmCodeAction f.model "off-playa"}}>
+          <UiButton @disabled={{this.isSubmitting}} @onClick={{fn this.confirmCodeAction f.model "off-playa"}}>
             Verify
-          </button>
-          <button type="button" class="btn btn-secondary ml-2" {{action this.sendNewCodeAction "off-playa"}}
-                  disabled={{this.isSubmitting}}>Resend verification code
-          </button>
+          </UiButton>
+          <UiButton @type="secondary" @class="ml-2" @onClick={{fn this.sendNewCodeAction "off-playa"}}
+                  @disabled={{this.isSubmitting}}>
+            Resend verification code
+          </UiButton>
         </div>
       {{/if}}
       {{#if (and (not this.numbers.is_same) this.numbers.on_playa.phone (not this.numbers.on_playa.is_verified))}}
@@ -49,14 +49,13 @@
                    @type="text" @inputmode="decimal" @size=5 @maxlength=5 @grid="col-auto"/>
         </div>
         <div class="form-row">
-          <button type="button" class="btn btn-primary" disabled={{this.isSubmitting}}
-            {{action this.confirmCodeAction f.model "on-playa"}}>
+          <UiButton @disabled={{this.isSubmitting}} @onClick={{fn this.confirmCodeAction f.model "on-playa"}}>
             Verify
-          </button>
-          <button type="button" class="btn btn-secondary ml-2" {{action this.sendNewCodeAction "on-playa"}}
-                  disabled={{this.isSubmitting}}>
+          </UiButton>
+          <UiButton @type="secondary" @class="ml-2" @onClick={{fn this.sendNewCodeAction "on-playa"}}
+                  @disabled={{this.isSubmitting}}>
             Resend verification code
-          </button>
+          </UiButton>
         </div>
       {{/if}}
       <div class="form-row">
@@ -85,14 +84,14 @@
       <div class="form-row">
         <f.input @name="off_playa"
                  @label={{if f.model.is_same "Pre-Event & On Playa phone number:" "Pre-Event phone number:"}}
-                 @type="text" @inputmode="tel" @size=30 @grid="col-auto"/>
+                 @type="text" @inputmode="tel" @size={{30}} @grid="col-auto"/>
         <div class="col-sm-12 col-lg-auto">
           <label class="col-form-label d-sm-none d-lg-block">&nbsp;</label>
           <f.input @name="is_same" @label="On playa number is the same as the pre-event number" @type="checkbox"/>
         </div>
       </div>
       <div class="row form-group mt-2 {{if f.model.is_same "d-none"}}">
-        <f.input @name="on_playa" @label="On Playa phone number:" @type="text" @inputmode="tel" @size=30
+        <f.input @name="on_playa" @label="On Playa phone number:" @type="text" @inputmode="tel" @size={{30}}
                  @grid="col-auto"/>
       </div>
 
@@ -123,9 +122,9 @@
                 @heading="On Playa Alerts"
                 @description="These alerts may be sent to you while the event is happening."/>
 
-    <button type="button" class="btn btn-primary" {{action this.updatePrefsAction}} disabled={{this.isSubmitting}}>
+    <UiButton @onClick={{this.updatePrefsAction}} @disabled={{this.isSubmitting}}>
       Update Preferences
-    </button>
+    </UiButton>
     {{#if this.isSubmitting}}
       <LoadingIndicator/>
     {{/if}}

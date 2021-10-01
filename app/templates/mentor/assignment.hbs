@@ -67,12 +67,16 @@
   <div class="form-row mb-2 d-print-none">
     <label class="col-form-label col-auto">Filter</label>
     <div class="col-auto">
-      <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}} @onChange={{action
-              (mut this.filter)}} @controlClass="form-control"/>
+      <ChForm::Select @name="filter"
+                      @value={{this.filter}}
+                      @options={{this.filterOptions}}
+                      @onChange={{action (mut this.filter)}}
+                      @controlClass="form-control"/>
     </div>
     <div class="col-auto">
-      <button type="button" class="btn btn-secondary mb-2" {{action this.togglePrinting}}>Print Mentor Assignments
-      </button>
+      <UiButton @type="secondary" @class="mb-2" @onClick={{this.togglePrinting}}>
+        Print Mentor Assignments
+      </UiButton>
     </div>
   </div>
 <p>
@@ -93,7 +97,7 @@
     </tr>
     </thead>
     <tbody>
-    {{#each this.viewAlphas as |person|}}
+    {{#each this.viewAlphas key="id" as |person|}}
       <tr id="person-{{person.id}}" class="{{if person.error "is-invalid"}}">
         <td>
           <PersonLink @person={{person}} />
@@ -150,9 +154,9 @@
     {{/each}}
     </tbody>
   </table>
-  <button type="button" class="btn btn-primary" disabled={{this.isSubmitting}} {{action this.saveAlphas}}>Save
-    Assignments &amp; Results
-  </button>
+  <UiButton @disabled={{this.isSubmitting}} @onClick={{this.saveAlphas}}>
+    Save Assignments &amp; Results
+  </UiButton>
   {{#if this.isSubmitting}}
     <LoadingIndicator/>
   {{/if}}

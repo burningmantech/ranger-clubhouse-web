@@ -40,25 +40,24 @@
         </div>
         <div class="timesheet-row timesheet-actions">
           {{#if (or tsm.isPending tsm.isRejected)}}
-            <button type="button" class="btn btn-primary" {{action this.editAction tsm}}
-                    disabled={{or tsm.isReloading tsm.isSaving}}>
-              {{#if tsm.isRejected}}
+            <UiButton @onClick={{fn this.editAction tsm}} @disabled={{or tsm.isReloading tsm.isSaving}}>
+              {{#if tsm.isReloading}}
+                <SpinIcon/>
+              {{else if tsm.isRejected}}
                 Submit Appeal
-              {{else if tsm.isReloading}}
-                {{fa-icon "spinner" spin=true}}
               {{else}}
                 Edit
               {{/if}}
-            </button>
+            </UiButton>
             {{#if tsm.isPending}}
-              <button type="button" class="btn btn-danger" {{action this.deleteAction tsm}}
-                      disabled={{or tsm.isReloading tsm.isSaving}}>
+              <UiButton @type="danger" @onClick={{fn this.deleteAction tsm}}
+                        @disabled={{or tsm.isReloading tsm.isSaving}}>
                 {{#if tsm.isSaving}}
-                  Deleting {{fa-icon "spinner" spin=true}}
+                  Deleting <SpinIcon />
                 {{else}}
                   Delete
                 {{/if}}
-              </button>
+              </UiButton>
             {{/if}}
           {{/if}}
         </div>
@@ -71,13 +70,15 @@
   </p>
 {{/if}}
 
-<button type="button" class="btn btn-primary" {{on "click" this.newRequestAction}}>
+<UiButton @onClick={{this.newRequestAction}}>
   New Missing Timesheet Request
-</button>
+</UiButton>
 
 {{#if this.entry}}
   <ModalDialog @title="Missing Timesheet Request" @onEscape={{this.cancelAction}} as |Modal|>
-    <ChForm @formId="tm" @formFor={{this.entry}}  @validator={{this.timesheetValidations}}
+    <ChForm @formId="tm"
+            @formFor={{this.entry}}
+            @validator={{this.timesheetValidations}}
             @onSubmit={{this.saveAction}} as |f|>
       <Modal.body>
         <div class="form-group mb-4">

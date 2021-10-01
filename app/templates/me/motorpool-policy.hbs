@@ -17,9 +17,9 @@
       the terms and conditions of driving a vehicle for Ranger business.
     </p>
   {{else if this.documentHasLoaded}}
-    <button type="submit" {{action this.agreeAction}} class="btn btn-primary" disabled={{this.isSubmitting}}>
+    <UiButton @onClick={{this.agreeAction}} disabled={{this.isSubmitting}}>
       Yes, I agree to the Motorpool Policy.
-    </button>
+    </UiButton>
     {{#if this.isSubmitting}}
       <LoadingIndicator/>
     {{/if}}

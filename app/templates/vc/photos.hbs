@@ -7,12 +7,12 @@
   Showing page {{this.currentPage}} of {{this.total_pages}}
   <PhotoTable @photos={{this.person_photo}} @rejectionLabels={{this.rejectionLabels}} />
   {{#if this.total}}
-    <button type="button" class="btn btn-secondary" {{action this.goPrevPage}} disabled={{eq this.currentPage 1}}>
+    <UiButton @type="secondary" @onClick={{this.goPrevPage}} disabled={{eq this.currentPage 1}}>
       Prev Page
-    </button>
-    <button type="button" class="btn btn-secondary" {{action this.goNextPage}} disabled={{eq this.currentPage this.total_pages}}>
+    </UiButton>
+    <UiButton @type="secondary" @onClick={{this.goNextPage}} disabled={{eq this.currentPage this.total_pages}}>
       Next Page
-    </button>
+    </UiButton>
   {{/if}}
 </main>
 

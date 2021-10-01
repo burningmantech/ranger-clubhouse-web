@@ -174,9 +174,7 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
   }
 
   @action
-  newAction(event) {
-    event.preventDefault();
-
+  newAction() {
     this.entry = this.store.createRecord('vehicle', {
       type: 'fleet',
       event_year: this.year,
@@ -191,9 +189,7 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
   }
 
   @action
-  editAction(entry, event) {
-    event.preventDefault();
-
+  editAction(entry) {
     entry.reload().then(() => {
       this.entry = entry;
       entry.callsign = entry.person ? entry.person.callsign : '';
@@ -217,8 +213,7 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
   }
 
   @action
-  deleteAction(entry, event) {
-    event.preventDefault();
+  deleteAction(entry) {
     this.modal.confirm('Delete Entry', 'Are you sure you want to delete this entry?', () => {
       entry.destroyRecord().then(() => {
         this.entry = null;
@@ -257,9 +252,7 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
   }
 
   @action
-  exportToCSV(event) {
-    event.preventDefault();
-
+  exportToCSV() {
     const COLUMNS = [
       {key: 'callsign_team', title: 'Person/Team'},
       {key: 'status', title: 'Status'},

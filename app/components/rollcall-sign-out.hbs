@@ -2,7 +2,7 @@
   <:title>Sign OUT People {{fa-icon "bed"}}</:title>
   <:body>
     {{#if this.isLoading}}
-      <LoadingDialog @item="positions"/>
+      <LoadingPane @item="positions"/>
     {{else if this.positions}}
       <div class="row form-group">
         <label class="col-form-label col-sm-12 col-lg-auto">Position</label>
@@ -39,7 +39,7 @@
               </div>
               <div class="rollcall-indicator">
                 {{#if person.isSubmitting}}
-                  {{fa-icon "spinner" spin=true}}
+                  <SpinIcon/>
                 {{else if person.hasProblem}}
                   {{fa-icon "exclamation" color="danger"}}
                 {{else if person.isSignedIn}}

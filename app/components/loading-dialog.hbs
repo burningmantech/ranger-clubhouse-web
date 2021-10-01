@@ -1,10 +1,7 @@
-<div class="loading-pane">
-  <div class="loading-text">
-    {{#if @text}}
-      {{@text}}
-    {{else}}
-      First, do nothing. We're loading {{this.item}}.
-    {{/if}}
-  </div>
-  <div class="loading-spinner"></div>
-</div>
+<ModalDialog as |Modal|>
+  <Modal.body>
+    <div class="text-center">
+      {{yield}} <SpinIcon />
+    </div>
+  </Modal.body>
+</ModalDialog>

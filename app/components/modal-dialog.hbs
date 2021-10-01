@@ -1,6 +1,6 @@
 {{#in-element this.destinationElement insertBefore=null}}
   <div class="modal" tabindex="-1" role="dialog" {{did-insert this.boxInserted}}>
-    <div class="modal-dialog modal-dialog-centered modal-{{or @size "lg"}}" role="document">
+    <div class="modal-dialog {{this.modalLocation}} modal-{{or @size "lg"}}" role="document">
       <div class="modal-content">
         {{#if @title}}
           <div class="modal-header">

@@ -34,7 +34,7 @@
               </LinkTo>
             {{/if}}
           {{/if}}
-          <button type="button" class="btn btn-primary" {{on "click" this.closeHelp}}>Close</button>
+          <UiCloseButton @onClick={{this.closeHelp}} />
         </div>
       {{/unless}}
     </div>

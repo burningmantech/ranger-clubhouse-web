@@ -8,10 +8,9 @@
   <div class="card-body collapse">
     {{yield to="body"}}
     {{#if @nextAction}}
-      <button type="button" class="btn btn-success btn-block mt-4"
-              disabled={{@nextDisabled}} {{action @nextAction}}>
+      <UiButton @type="success" @class="btn-block mt-4" @disabled={{@nextDisabled}} @onClick={{@nextAction}}>
         Next {{fa-icon "arrow-right"}}
-      </button>
+      </UiButton>
     {{/if}}
   </div>
 </div>

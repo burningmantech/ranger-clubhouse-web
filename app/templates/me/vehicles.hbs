@@ -9,137 +9,138 @@
 
 {{#if (and this.personEvent.signed_personal_vehicle_agreement this.personEvent.signed_motorpool_agreement)}}
   <p>
-    <button type="button" class="btn btn-primary" {{action this.newAction}}>New Vehicle Request</button>
+    <UiButton @onClick={{this.newAction}}>New Vehicle Request</UiButton>
   </p>
 
-  {{#if this.vehicles}}
-    {{#each this.vehicles as |vehicle|}}
-      <hr>
-      <h4>
+  {{#each this.vehicles as |vehicle|}}
+    <UiSection>
+      <:title>
         {{vehicle.vehicle_year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}} {{vehicle.vehicle_color}}
         {{#if vehicle.license_number}}
           (#{{vehicle.license_state}}-{{vehicle.license_number}})
         {{/if}}
-      </h4>
-      {{#if vehicle.isPending}}
-        <p>
-          <b>{{fa-icon "hourglass-half"}} The request is awaiting review.</b>
-        </p>
-        <p>
-          <button type="button" class="btn btn-secondary" {{action this.editAction vehicle}}>
-            {{fa-icon "edit"}} Edit Request
-          </button>
-          <button type="button" class="btn btn-light-red" {{action this.deleteAction vehicle}}>
-            {{fa-icon "trash"}} Delete Request
-          </button>
-        </p>
-      {{else if vehicle.isApproved}}
-        <p>
-          <b class="text-success">{{fa-icon "check"}} Your request has been approved for the following item(s):</b>
-        </p>
-      {{else if vehicle.isRejected}}
-        <p>
-          <b class="text-light-red">
-            {{fa-icon "exclamation"}}  The request has been denied. Your vehicle is not authorized to be driven on
-            playa
-          </b></p>
-      {{else}}
-        The status [{{vehicle.status}}] is not understood. This is a bug!
-      {{/if}}
-      <dl>
-        {{#if vehicle.response}}
-          <dt>Response from Approver</dt>
-          <dd>
-            {{vehicle.response}}
-          </dd>
+      </:title>
+      <:body>
+        {{#if vehicle.isPending}}
+          <p>
+            <b>{{fa-icon "hourglass-half"}} The request is awaiting review.</b>
+          </p>
+          <p>
+            <UiButton @onClick={{fn this.editAction vehicle}}>
+              {{fa-icon "edit"}} Edit Request
+            </UiButton>
+            <UiButton @type="light-red" @onClick={{fn this.deleteAction vehicle}}>
+              {{fa-icon "trash"}} Delete Request
+            </UiButton>
+          </p>
+        {{else if vehicle.isApproved}}
+          <p>
+            <b class="text-success">{{fa-icon "check"}} Your request has been approved for the following item(s):</b>
+          </p>
+        {{else if vehicle.isRejected}}
+          <p>
+            <b class="text-light-red">
+              {{fa-icon "exclamation"}}  The request has been denied. Your vehicle is not authorized to be driven on
+              playa
+            </b></p>
+        {{else}}
+          The status [{{vehicle.status}}] is not understood. This is a bug!
         {{/if}}
-        <dt>Driving Sticker</dt>
-        <dd>
-          {{#if (eq vehicle.driving_sticker "none")}}
-            None
-          {{else if vehicle.isRejected}}
-            Denied
-          {{else if (or (eq vehicle.driving_sticker "prepost") (eq vehicle.driving_sticker "staff"))}}
-            {{if vehicle.isApproved "Approved" "Awaiting approval"}}
-            for a {{if (eq vehicle.driving_sticker "prepost") "Pre/Post" "Staff"}} sticker.
-          {{else}}
-            Other
-            <p>
-              {{vehicle.driving_other}}
-            </p>
+        <dl>
+          {{#if vehicle.response}}
+            <dt>Response from Approver</dt>
+            <dd>
+              {{vehicle.response}}
+            </dd>
           {{/if}}
-        </dd>
-        <dt>Ranger Logo Decal</dt>
-        <dd>
-          {{#if (eq vehicle.ranger_logo "none")}}
-            None
-          {{else if vehicle.isRejected}}
-            Denied
-          {{else if (or (eq vehicle.ranger_logo "permanent-new") (eq vehicle.ranger_logo "permanent-existing") (eq vehicle.ranger_logo "event"))}}
-            {{#if vehicle.isApproved}}
-              Approved to use
-              {{#if (eq vehicle.ranger_logo "permanent-new")}}
-                a new permanent Ranger logo decal.
-              {{else if (eq vehicle.ranger_logo "permanent-existing")}}
-                your existing permanent Ranger logo decal.
-              {{else if (eq vehicle.ranger_logo "event")}}
-                an event only Ranger logo decal.
-              {{/if}}
+          <dt>Driving Sticker</dt>
+          <dd>
+            {{#if (eq vehicle.driving_sticker "none")}}
+              None
+            {{else if vehicle.isRejected}}
+              Denied
+            {{else if (or (eq vehicle.driving_sticker "prepost") (eq vehicle.driving_sticker "staff"))}}
+              {{if vehicle.isApproved "Approved" "Awaiting approval"}}
+              for a {{if (eq vehicle.driving_sticker "prepost") "Pre/Post" "Staff"}} sticker.
             {{else}}
-              Awaiting approval to use a Ranger logo decal.
+              Other
+              <p>
+                {{vehicle.driving_other}}
+              </p>
             {{/if}}
-          {{else}}
-            Uh oh, unknown logo type [{{vehicle.ranger_logo}}]
-          {{/if}}
-        </dd>
-        <dt>Fuel Chit</dt>
-        <dd>
-          {{#if (eq vehicle.fuel_chit "none")}}
-            None
-          {{else if vehicle.isRejected}}
-            Denied
-          {{else if (eq vehicle.fuel_chit "event")}}
-            {{#if vehicle.isApproved}}
-              Approved for an event fuel chit.
-            {{else}}
-              Awaiting approval for an event fuel chit.
-            {{/if}}
-          {{else if (eq vehicle.fuel_chit "single-use")}}
-            {{#if vehicle.isApproved}}
-              Approved for a single-use fuel chit.
-            {{else}}
-              Awaiting approval for a single-use fuel chit.
-            {{/if}}
-          {{/if}}
-        </dd>
-        <dt>Amber Light</dt>
-        <dd>
-          {{#if (eq vehicle.amber_light "none")}}
-            None
-          {{else if vehicle.isRejected}}
-            Denied
-          {{else if (or (eq vehicle.amber_light "department") (eq vehicle.amber_light "already-has"))}}
-            {{#if vehicle.isApproved}}
-              Approved to use
-              {{#if (eq vehicle.ranger_logo "department")}}
-                an amber light supplied by the Ranger department.
+          </dd>
+          <dt>Ranger Logo Decal</dt>
+          <dd>
+            {{#if (eq vehicle.ranger_logo "none")}}
+              None
+            {{else if vehicle.isRejected}}
+              Denied
+            {{else if (or (eq vehicle.ranger_logo "permanent-new") (eq vehicle.ranger_logo "permanent-existing") (eq vehicle.ranger_logo "event"))}}
+              {{#if vehicle.isApproved}}
+                Approved to use
+                {{#if (eq vehicle.ranger_logo "permanent-new")}}
+                  a new permanent Ranger logo decal.
+                {{else if (eq vehicle.ranger_logo "permanent-existing")}}
+                  your existing permanent Ranger logo decal.
+                {{else if (eq vehicle.ranger_logo "event")}}
+                  an event only Ranger logo decal.
+                {{/if}}
               {{else}}
-                your personal amber light.
+                Awaiting approval to use a Ranger logo decal.
               {{/if}}
             {{else}}
-              Awaiting approval to use an amber light.
+              Uh oh, unknown logo type [{{vehicle.ranger_logo}}]
             {{/if}}
-          {{else}}
-            Uh oh, unknown amber light type [{{vehicle.amber_light}}]
-          {{/if}}
-        </dd>
-      </dl>
-    {{/each}}
+          </dd>
+          <dt>Fuel Chit</dt>
+          <dd>
+            {{#if (eq vehicle.fuel_chit "none")}}
+              None
+            {{else if vehicle.isRejected}}
+              Denied
+            {{else if (eq vehicle.fuel_chit "event")}}
+              {{#if vehicle.isApproved}}
+                Approved for an event fuel chit.
+              {{else}}
+                Awaiting approval for an event fuel chit.
+              {{/if}}
+            {{else if (eq vehicle.fuel_chit "single-use")}}
+              {{#if vehicle.isApproved}}
+                Approved for a single-use fuel chit.
+              {{else}}
+                Awaiting approval for a single-use fuel chit.
+              {{/if}}
+            {{/if}}
+          </dd>
+          <dt>Amber Light</dt>
+          <dd>
+            {{#if (eq vehicle.amber_light "none")}}
+              None
+            {{else if vehicle.isRejected}}
+              Denied
+            {{else if (or (eq vehicle.amber_light "department") (eq vehicle.amber_light "already-has"))}}
+              {{#if vehicle.isApproved}}
+                Approved to use
+                {{#if (eq vehicle.ranger_logo "department")}}
+                  an amber light supplied by the Ranger department.
+                {{else}}
+                  your personal amber light.
+                {{/if}}
+              {{else}}
+                Awaiting approval to use an amber light.
+              {{/if}}
+            {{else}}
+              Uh oh, unknown amber light type [{{vehicle.amber_light}}]
+            {{/if}}
+          </dd>
+        </dl>
+      </:body>
+    </UiSection>
   {{else}}
     <p>
       No vehicle requests have been submitted.
     </p>
-  {{/if}}
+  {{/each}}
 {{else}}
   <p>
     You must agree to both the Motorpool Policy Agreement and the Personal Vehicle Agreement before you may submit
@@ -155,21 +156,20 @@
     {{/if}}
   </p>
   <p>
-    {{#if this.personEvent.signed_personal_vehicle_agreement}}
+  {{#if this.personEvent.signed_personal_vehicle_agreement}}
       You have already agreed to the Personal Vehicle Agreement.
-    {{else}}
-      <h2>{{this.year}} Personal Vehicle Agreement Policy</h2>
-      <DocumentShow @tag="personal-vehicle-agreement" @onLoad={{this.documentLoadedAction}}/>
-      {{#if this.documentLoaded}}
-        <button type="button" class="btn btn-primary" {{action this.signPersonVehicleAgreementAction}}
-                disabled={{this.personEvent.isSaving}}>
-          I Agree To The Personal Vehicle Agreement
-        </button>
-        {{#if this.personEvent.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
+  {{else}}
+    <h2>{{this.year}} Personal Vehicle Agreement Policy</h2>
+    <DocumentShow @tag="personal-vehicle-agreement" @onLoad={{this.documentLoadedAction}}/>
+    {{#if this.documentLoaded}}
+      <UiButton @onClick={{this.signPersonVehicleAgreementAction}} @disabled={{this.personEvent.isSaving}}>
+        I Agree To The Personal Vehicle Agreement
+      </UiButton>
+      {{#if this.personEvent.isSaving}}
+        <LoadingIndicator/>
       {{/if}}
     {{/if}}
+  {{/if}}
   </p>
 {{/if}}
 
@@ -181,9 +181,9 @@
             @validator={{this.vehicleValidations}}
             @onSubmit={{this.saveAction}}  as |f|>
       <Modal.body>
-        <div class="form-row">
-          <div class="text-danger col-12">All fields are required.</div>
-        </div>
+        <p>
+          <b class="text-danger">All fields are required.</b>
+        </p>
         <fieldset>
           <legend>Vehicle Description</legend>
           <div class="row form-group">
@@ -191,24 +191,40 @@
                      @wrapClass="col-auto"/>
           </div>
           <div class="row form-group">
-            <f.input @name="vehicle_year" @label="Vehicle Year" @type="text" @size="4"
-                     @maxlength="4"
+            <f.input @name="vehicle_year" @label="Vehicle Year"
+                     @type="text"
+                     @size={{4}}
+                     @maxlength={{4}}
                      @wrapClass="col-12 col-md-auto"/>
-            <f.input @name="vehicle_make" @label="Make" @type="text" @size="15"
+            <f.input @name="vehicle_make"
+                     @label="Make"
+                     @type="text"
+                     @size={{15}}
                      @wrapClass="col-12 col-md-auto"
                      @hint="e.g., Ford, GMC, etc."/>
-            <f.input @name="vehicle_model" @label="Model" @type="text" @size="15"
+            <f.input @name="vehicle_model"
+                     @label="Model"
+                     @type="text"
+                     @size={{15}}
                      @wrapClass="col-12 col-md-auto"
                      @hint="e.g., F-350, Tacoma, etc."
             />
-            <f.input @name="vehicle_color" @label="Color" @type="text" @size="15"
+            <f.input @name="vehicle_color"
+                     @label="Color"
+                     @type="text"
+                     @size={{15}}
                      @wrapClass="col-12 col-md-auto"/>
           </div>
           <div class="row form-group">
-            <f.input @name="license_state" @label="Vehicle License State or Province" @type="select"
+            <f.input @name="license_state"
+                     @label="Vehicle License State or Province"
+                     @type="select"
                      @options={{this.stateOptions}}
                      @wrapClass="col-12 col-md-auto"/>
-            <f.input @name="license_number" @label="Vehicle License Number" @type="text" @size="10"
+            <f.input @name="license_number"
+                     @label="Vehicle License Number"
+                     @type="text"
+                     @size={{10}}
                      @wrapClass="col-12 col-md-auto"/>
           </div>
         </fieldset>
@@ -219,32 +235,46 @@
               Request a Driving Sticker if needed to drive your personal vehicle for Ranger business
             </label>
             <div class="col-12">
-              <f.input @name="driving_sticker" @type="radioGroup" @options={{this.drivingStickerOptions}}
+              <f.input @name="driving_sticker"
+                       @type="radioGroup"
+                       @options={{this.drivingStickerOptions}}
                        @inline={{true}} />
             </div>
           </div>
           <div class="form-row">
             <label class="col-form-label">Ranger Logo Decal</label>
             <div class="col-12">
-              <f.input @name="ranger_logo" @type="radioGroup" @options={{this.rangerLogoOptions}} @inline={{true}} />
+              <f.input @name="ranger_logo"
+                       @type="radioGroup"
+                       @options={{this.rangerLogoOptions}}
+                       @inline={{true}} />
             </div>
           </div>
           <div class="form-row">
             <label class="col-form-label">Fuel Chit Requests</label>
             <div class="col-12">
-              <f.input @name="fuel_chit" @type="radioGroup" @options={{this.fuelChitOptions}} @inline={{true}} />
+              <f.input @name="fuel_chit"
+                       @type="radioGroup"
+                       @options={{this.fuelChitOptions}}
+                       @inline={{true}} />
             </div>
           </div>
           <div class="form-row">
             <label class="col-form-label">Amber Light</label>
             <div class="col-12">
-              <f.input @name="amber_light" @type="radioGroup" @options={{this.amberLightOptions}} @inline={{true}} />
+              <f.input @name="amber_light"
+                       @type="radioGroup"
+                       @options={{this.amberLightOptions}}
+                       @inline={{true}} />
             </div>
           </div>
           <div class="form-row">
             <label class="col-form-label">Comments for the Approver</label>
             <div class="col-12 no-gutters">
-              <f.input @name="request_comment" @type="textarea" @rows="2" @cols="80"/>
+              <f.input @name="request_comment"
+                       @type="textarea"
+                       @rows={{2}}
+                       @cols={{80}} />
             </div>
           </div>
         </fieldset>

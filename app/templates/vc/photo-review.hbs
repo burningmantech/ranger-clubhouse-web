@@ -83,19 +83,20 @@
           </table>
           </p>
           <p>
-            <button type="button" class="btn btn-secondary mr-1" disabled={{photo.isSaving}} {{on "click"
-                                                                                                  (fn this.editPhotoAction photo)}}>{{fa-icon
-                    "edit"}} Edit
-            </button>
+            <UiButton @type="secondary" @class="mr-1" @disabled={{photo.isSaving}}
+                      @onClick={{fn this.editPhotoAction photo}}>
+              {{fa-icon "edit"}} Edit
+            </UiButton>
             {{#if (not-eq photo.status "rejected")}}
-              <button type="button" class="btn btn-danger mr-1" {{on "click" (fn this.showReviewPhoto photo)}}
-                      disabled={{photo.isSaving}}>{{fa-icon "times"}} Reject
-              </button>
+              <UiButton @type="danger" @class="mr-1" @onClick={{fn this.showReviewPhoto photo}}
+                        @disabled={{photo.isSaving}}>
+                {{fa-icon "times"}} Reject
+              </UiButton>
             {{/if}}
             {{#if (not-eq photo.status "approved")}}
-              <button type="button" class="btn btn-success mr-1" {{on "click" (fn this.approveAction photo)}}
-                      disabled={{photo.isSaving}}>{{fa-icon "check"}} Approve
-              </button>
+              <UiButton @type="success" @onClick={{fn this.approveAction photo}} @disabled={{photo.isSaving}}>
+                {{fa-icon "check"}} Approve
+              </UiButton>
             {{/if}}
             {{#if photo.isSaving}}
               <LoadingIndicator/>
@@ -170,7 +171,7 @@
         <div class="form-group mt-2">
           <f.submit @label="Reject Photo" @submitClass="btn-danger" disabled={{this.reviewPhoto.isSaving}} />
           <UiCancelButton @disabled={{this.reviewPhoto.isSaving}} @onClick={{this.onClose}} />
-          <button type="button" class="btn btn-secondary" {{action this.rejectPreviewAction}}>Preview Email</button>
+          <UiButton @type="secondary" @onClick={{this.rejectPreviewAction}}>Preview Email</UiButton>
           {{#if this.reviewPhoto.isSaving}}
             <LoadingIndicator/>
           {{/if}}
@@ -189,10 +190,9 @@
       </div>
     </modal.body>
     <modal.footer>
-      <modal.button @type="primary" @label="Close" @action={{this.closeRejectMail}} />
+      <UiCloseButton @onClick={{this.closeRejectMail}} />
     </modal.footer>
   </ModalDialog>
-
 {{/if}}
 
 {{#if this.editPhoto}}

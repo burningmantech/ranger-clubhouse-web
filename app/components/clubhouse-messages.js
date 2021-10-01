@@ -45,21 +45,18 @@ export default class ClubhouseMessagesComponent extends Component {
   }
 
   @action
-  toggleMessage(message, event) {
-    event.preventDefault();
+  toggleMessage(message) {
     set(message, 'showing', !message.showing);
     $(`#message-text-${message.id}`).collapse('toggle');
   }
 
   @action
-  markReadAction(message, event) {
-    event.preventDefault();
+  markReadAction(message) {
     this._markMessage(message, true);
   }
 
   @action
-  markUnreadAction(message, event) {
-    event.preventDefault();
+  markUnreadAction(message) {
     this._markMessage(message, false);
   }
 

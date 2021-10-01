@@ -35,7 +35,7 @@
 </ChForm>
 <hr>
 {{#if this.isLoading}}
-  <LoadingDialog @item="languages"/>
+  <LoadingPane @item="languages"/>
 {{else}}
   <LanguageSpeakerTable @name="On Duty Rangers"
                         @speakers={{this.onDuty.length}}

@@ -69,7 +69,7 @@
       </ChForm>
     {{else}}
        <p>
-        <button type="button" class="btn btn-primary" {{action @closeNoteAction}}>Close</button>
+         <UiCloseButton @onClick={{@closeNoteAction}} />
       </p>
     {{/if}}
   </Modal.body>

@@ -1,5 +1,5 @@
 {{#if this.isLoading}}
-  <LoadingDialog @items="loading shifts"/>
+  <LoadingPane @items="loading shifts"/>
 {{else}}
   <UiSection>
     <:title>Sign In People {{fa-icon "walking"}}</:title>
@@ -33,7 +33,7 @@
         </div>
       {{/if}}
       {{#if this.isRetrievingPeople}}
-        <LoadingDialog @item="the signups"/>
+        <LoadingPane @item="the signups"/>
       {{else if this.people}}
         <p>
           {{pluralize this.people.length "sign up"}}. Click the box to sign the person in OR out.
@@ -53,7 +53,7 @@
               </div>
               <div class="rollcall-indicator">
                 {{#if person.isSubmitting}}
-                  {{fa-icon "spinner" spin=true}}
+                  <SpinIcon />
                 {{else if person.on_duty}}
                   {{fa-icon "walking" color="danger"}}
                 {{else if person.signedIn}}

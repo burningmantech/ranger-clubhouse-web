@@ -93,14 +93,13 @@
             class="btn btn-secondary">
       {{fa-icon "clipboard-check"}} Sign up Sheet
     </LinkTo>
-    <button type="button" class="btn btn-secondary" {{action "toggleEmailListAction"}} disabled={{is-empty
-            this.students}}>
+    <UiButton @type="secondary" @onClick={{this.toggleEmailListAction}} @disabled={{is-empty this.students}}>
       {{fa-icon "envelope"}} {{if this.showEmails "Hide Emails" "List Emails"}}
-    </button>
+    </UiButton>
     {{#if this.canAddStudent}}
-      <button type="button" class="btn btn-secondary" {{action this.showAddPersonAction}}>
+      <UiButton @type="secondary" @onClick={{this.showAddPersonAction}}>
         {{fa-icon "plus-square"}} Add Person
-      </button>
+      </UiButton>
     {{/if}}
   </div>
 
@@ -121,12 +120,12 @@
           Sign up Sheet
         </LinkTo>
         <div class="dropdown-divider"></div>
-        <a href class="dropdown-item" {{action "toggleEmailListAction"}} disabled={{is-empty this.students}}>
+        <a href class="dropdown-item" {{action this.toggleEmailListAction}} disabled={{is-empty this.students}}>
           {{if this.showEmails "Hide" "List"}} Emails
         </a>
         {{#if this.canAddStudent}}
           <div class="dropdown-divider"></div>
-          <a href class="dropdown-item" {{action "showAddPersonAction"}}>Add Person</a>
+          <a href class="dropdown-item" {{action this.showAddPersonAction}}>Add Person</a>
         {{/if}}
       </div>
     </div>
@@ -201,9 +200,9 @@
 
         </td>
         <td class="w-10">
-          <button type="button" class="btn btn-primary btn-sm" {{on "click" (fn this.editStudentAction student)}}>
+          <UiButton @size="sm" @onClick={{fn this.editStudentAction student}}>
             {{fa-icon "edit"}} Edit
-          </button>
+          </UiButton>
         </td>
       </tr>
     {{else}}
@@ -250,9 +249,9 @@
     </table>
     {{#if this.trainerCount}}
       <p>
-        <button type="button" class="btn btn-primary" {{action this.saveTrainers}} disabled={{this.isSubmitting}}>
+        <UiButton @onClick={{this.saveTrainers}} @disabled={{this.isSubmitting}}>
           Save Trainers
-        </button>
+        </UiButton>
         {{#if this.isSubmitting}}
           <LoadingIndicator/>
         {{/if}}
@@ -307,12 +306,12 @@
                 {{nl2br note.note}}
                 {{#if (eq note.person_source_id this.session.userId)}}
                   <br>
-                  <button type="button" class="btn btn-secondary btn-sm" {{action this.editNoteAction note}}>
+                  <UiButton @type="secondary" @size="sm" @onClick={{fn this.editNoteAction note}}>
                     Edit
-                  </button>
-                  <button type="button" class="btn btn-danger btn-sm" {{action this.deleteNoteAction note}}>
+                  </UiButton>
+                  <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteNoteAction note}}>
                     Delete
-                  </button>
+                  </UiButton>
                 {{/if}}
                 {{/if}}
               </td>
@@ -360,8 +359,9 @@
           <LoadingIndicator/>
         {{/if}}
         <div class="ml-auto">
-          <button type="button" class="btn btn-light-red" {{on "click" this.removeStudentAction}}>Remove From Training
-          </button>
+          <UiButton @type="light-red" @onClick={{this.removeStudentAction}}>
+            Remove From Training
+          </UiButton>
         </div>
 
       </Modal.footer>

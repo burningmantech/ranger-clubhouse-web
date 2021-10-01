@@ -9,7 +9,7 @@
       <Input @type="password" class="form-control" name="password" size="10" @value={{this.password}} />
     </div>
     <div class="col-auto">
-      <button type="button" class="btn btn-primary" {{action this.submit}} disabled={{this.isSubmitting}}>Submit</button>
+      <UiButton @onClick={{this.submit}} @disabled={{this.isSubmitting}}>Submit</UiButton>
       {{#if this.isSubmitting}}
         <LoadingIndicator />
       {{/if}}
@@ -19,7 +19,7 @@
 
 {{#if this.passwordOkay}}
   <p>
-    <button type="button" class="btn btn-primary" {{action this.exportToCSV}}>Export To CSV</button>
+    <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
   </p>
   {{pluralize this.people.length "person"}} to send {{this.year}} Thank You cards to.
   <table class="table table-sm table-hover table-striped table-width-auto">

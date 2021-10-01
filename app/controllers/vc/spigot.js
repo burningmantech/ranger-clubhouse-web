@@ -19,9 +19,7 @@ export default class VcSpigotController extends ClubhouseController {
   queryParams = ['year'];
 
   @action
-  exportToCSV(element) {
-    element.preventDefault();
-
+  exportToCSV() {
     // Run thru each row and build up the counts
     const data = this.model.days.map((row) => {
       const info = {};

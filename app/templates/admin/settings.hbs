@@ -12,7 +12,7 @@
     <Input @type="text" @value={{this.filterByName}} size="20" class="form-control"/>
   </div>
   <div class="col-auto">
-    <button type="button" class="btn btn-primary" {{action this.clearFilter}}>Clear</button>
+    <UiButton @onClick={{this.clearFilter}}>Clear</UiButton>
   </div>
 </div>
 
@@ -46,12 +46,12 @@ Showing {{this.viewSettings.length}} of {{this.settings.length}}.
         {{/if}}
       </td>
       <td>
-          <button type="button"
-                  class="btn btn-sm btn-secondary"
-                  disabled={{and setting.is_credential (not this.isTechNinja)}}
-            {{action this.edit setting}}>
+          <UiButton @type="secondary"
+                    @size="sm"
+                    @disabled={{and setting.is_credential (not this.isTechNinja)}}
+                    @onClick={{fn this.edit setting}}>
             {{fa-icon "edit"}} Edit
-          </button>
+          </UiButton>
       </td>
     </tr>
   {{/each}}
@@ -59,9 +59,10 @@ Showing {{this.viewSettings.length}} of {{this.settings.length}}.
 </table>
 
 {{#if this.editSetting}}
-  <ModalDialog @title={{concat  "Edit Setting " this.editSetting.name}} as |Modal|>
-    <ChForm @formId="setting" @formFor={{this.editSetting}}
-            @onSubmit={{this.save}} @onCancel={{this.cancel}} as |f|>
+  <ModalDialog @title="Edit Setting {{this.editSetting.name}}" @onEscape={{this.cancel}} as |Modal|>
+    <ChForm @formId="setting"
+            @formFor={{this.editSetting}}
+            @onSubmit={{this.save}}  as |f|>
       <Modal.body>
         {{#if this.editSetting.description}}
           <p>
@@ -87,12 +88,11 @@ Showing {{this.viewSettings.length}} of {{this.settings.length}}.
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Update Setting" @disabled={{this.editSetting.isSaving}} />
-        <f.cancel @disabled={{this.editSetting.isSaving}} />
+        <UiCancelButton @disabled={{this.editSetting.isSaving}} @onClick={{this.cancel}} />
         {{#if this.editSetting.isSaving}}
           <LoadingIndicator/>
         {{/if}}
       </Modal.footer>
     </ChForm>
   </ModalDialog>
-
 {{/if}}

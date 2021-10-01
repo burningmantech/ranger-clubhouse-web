@@ -20,6 +20,8 @@ export default class ModalDialogComponent extends Component {
       this.dialogRegistry.onEscape = this.args.onEscape;
       this.modal.addDialog(this.dialogRegistry);
     }
+
+    this.modalLocation = !this.args.top ? 'modal-dialog-centered' : '';
   }
   // #modal-render lives in application.hbs
   // during testing the use ember-testing instead since modal-render does not exist.

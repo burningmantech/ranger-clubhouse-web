@@ -20,13 +20,13 @@
         {{nl2br motd.message allowHtml=true}}
         {{#unless motd.has_read}}
           <div class="mt-2">
-            <button type="button" class="btn btn-secondary btn-responsive" {{action this.markMotdAsRead motd}} disabled={{motd.isMarking}}>
+            <UiButton @type="secondary" @class="btn-responsive" @onClick={{fn this.markMotdAsRead motd}} @disabled={{motd.isMarking}}>
               {{#if motd.isMarking}}
                 <LoadingIndicator @text="Marking read"/>
               {{else}}
                 Mark As Read
               {{/if}}
-            </button>
+            </UiButton>
           </div>
         {{/unless}}
       </div>

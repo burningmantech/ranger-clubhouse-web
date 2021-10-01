@@ -8,13 +8,12 @@
                     @onChange={{action this.updateFilter}} @controlClass="form-control"/>
   </div>
   <div class="col-auto">
-    <button type="button" class="btn btn-primary" disabled={{if this.viewPeople false true}}
-      {{action this.exportAllToCSV}}>
+    <UiButton @onClick={{this.exportAllToCSV}} @disabled={{if this.viewPeople false true}}>
       Export {{pluralize this.viewPeople.length "person"}} to CSV
-    </button>
-    <button type="button" class="btn btn-secondary" {{action this.toggleExpandAll}} disabled={{this.isExpanding}}>
+    </UiButton>
+    <UiButton @type="secondary" @onClick={{this.toggleExpandAll}} @disabled={{this.isExpanding}}>
       {{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}
-    </button>
+    </UiButton>
   </div>
 </div>
 
@@ -26,9 +25,9 @@ Showing {{this.viewPeople.length}} of {{this.people.length}}.
     </accordion.title>
     <accordion.body>
       <p>
-        <button type="button" class="btn btn-sm btn-secondary" {{action this.exportCountryToCSV country}}>
+        <UiButton @type="secondary" @onClick={{fn this.exportCountryToCSV country}}>
           Export {{country.full_name}} to CSV
-        </button>
+        </UiButton>
       </p>
       <table class="table table-striped table-hover table-sm">
         <thead>
@@ -75,10 +74,7 @@ Showing {{this.viewPeople.length}} of {{this.people.length}}.
 {{/each}}
 
 {{#if this.isRendering}}
-  <ModalDialog as |Modal|>
-    <Modal.body>
-      Hang Tight - Filtering the list
-      <SpinIcon/>
-    </Modal.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Hang Tight - Filtering the list
+  </LoadingDialog>
 {{/if}}

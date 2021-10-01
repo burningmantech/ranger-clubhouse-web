@@ -16,9 +16,9 @@
   <label class="col-form-label">Actions</label>
 
   <div class="pl-4 col-auto">
-    <button type="button" {{action this.newSlot}} class="btn btn-primary">New Slot</button>
+    <UiButton @onClick={{this.newSlot}}>New Slot</UiButton>
     {{#if this.slots.length}}
-      <button type="button" {{action this.startCopy}} class="btn btn-secondary">Copy Slots</button>
+      <UiButton @onClick={{this.startCopy}} @type="secondary">Copy Slots</UiButton>
     {{/if}}
   </div>
 </div>
@@ -59,15 +59,14 @@
     <box.body>
       {{#if box.isOpen}}
         <p>
-          <button type="button" class="btn btn-primary btn-sm" {{action this.activate position}}>Activate All</button>
-          <button type="button" class="btn btn-primary btn-sm" {{action this.deactivate position}}>Deactivate All
-          </button>
-          <button type="button" class="btn btn-secondary btn-sm" {{action this.startCopy position.position_id}}>
+          <UiButton @size="sm" @onClick={{fn this.activate position}}>Activate All</UiButton>
+          <UiButton  @size="sm" @onClick={{fn this.deactivate position}}>Deactivate All</UiButton>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn this.startCopy position.position_id}}>
             Bulk Copy
-          </button>
-          <button type="button" class="btn btn-secondary btn-sm" {{action this.bulkEditOpenAction position}}>
+          </UiButton>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn this.bulkEditOpenAction position}}>
             Bulk Edit
-          </button>
+          </UiButton>
         </p>
         <table class="table table-sm table-hover">
           <thead>
@@ -103,18 +102,18 @@
                 {{/if}}
               </td>
               <td>
-                <button type="button" {{action this.repeatSlot slot}} class="btn btn-secondary btn-sm">
+                <UiButton @type="secondary" @size="sm" @onClick={{fn this.repeatSlot slot}}>
                   {{fa-icon "clone"}} Repeat
-                </button>
-                <button type="button" {{action this.repeatSlotAdd24Hours slot}} class="btn btn-secondary btn-sm">
+                </UiButton>
+                <UiButton @type="secondary" @size="sm" @onClick={{fn this.repeatSlotAdd24Hours slot}}>
                   {{fa-icon "clone"}} Repeat+24
-                </button>
-                <button type="button" {{action this.deleteSlot slot}} class="btn btn-danger btn-sm">
+                </UiButton>
+                <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteSlot slot}}>
                   {{fa-icon "trash-alt"type="fas"}} Delete
-                </button>
-                <button type="button" {{action this.editSlot slot}} class="btn btn-primary btn-sm">
+                </UiButton>
+                <UiButton @onClick={{fn this.editSlot slot}} @size="sm">
                   {{fa-icon "edit"}} Edit
-                </button>
+                </UiButton>
               </td>
             </tr>
             {{#if slot.trainer_slot}}
@@ -147,13 +146,13 @@
                        @onPositionUpdate={{this.bulkEditPositionUpdatedAction}}
                        @onClose={{this.bulkEditCloseAction}}
   />
- {{/if}}
+{{/if}}
 
 {{#if this.copyParams}}
-  <ModalDialog @title="Copy Slots" as |Modal|>
+  <ModalDialog @title="Copy Slots" @onEscape={{this.cancelCopy}} as |Modal|>
     <ChForm @formId="copySlots" @formFor={{this.copyParams}}
             @changeSet={{false}} @validator={{this.copyValidations}}
-            @onSubmit={{this.performCopy}} @onCancel={{this.cancelCopy}} as |f|>
+            @onSubmit={{this.performCopy}} as |f|>
       <Modal.body>
         <fieldset>
           <legend>Add/Subtract Time to New Slots</legend>
@@ -184,7 +183,7 @@
           </div>
           <div class="form-row my-2">
             <div class="col-auto">
-            <f.input @name="activate" @label="Activate new slots" @type="checkbox"/>
+              <f.input @name="activate" @label="Activate new slots" @type="checkbox"/>
             </div>
           </div>
           Labor Day of {{this.year}} is {{this.selectedYearLaborDay}}.
@@ -195,7 +194,7 @@
         <div class="my-4">
           <f.submit @label={{concat "Copy " this.copySelectedSlotCount " selected slots"}}
                     @disabled={{this.isCopyingSlots}} />
-          <f.cancel @disabled={{this.isCopyingSlots}} />
+          <UiCancelButton @onClick={{this.cancelCopy}} @disabled={{this.isCopyingSlots}} />
           {{#if this.isCopyingSlots}}
             <LoadingIndicator/>
           {{/if}}
@@ -205,9 +204,9 @@
             <Accordion.title>
               {{position.selectedSlots.length}} / {{position.slots.length}}
               <b>{{position.title}}</b> slots to copy
-              <button type="button" {{on "click" (fn this.copyPositionSelectAll position)}}>
+              <UiButton @onClick={{fn this.copyPositionSelectAll position}} @size="sm">
                 {{#if position.allSelected}}deselect{{else}}select{{/if}} all
-              </button>
+              </UiButton>
             </Accordion.title>
             <Accordion.body>
               {{#if Accordion.isOpen}}
@@ -255,19 +254,13 @@
 {{/if}}
 
 {{#if this.activatingSlot}}
-  <ModalDialog @title="Activating Slots" as |Modal|>
-    <Modal.body>
-      Updating slot id #{{this.activatingSlot.id}} - {{this.activatingSlot.begins}}
-      - {{this.this.activatingSlot.description}}
-      <LoadingIndicator/>
-    </Modal.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Activating slot #{{this.activatingSlot.id}} - {{this.activatingSlot.begins}}- {{this.this.activatingSlot.description}}
+  </LoadingDialog>
 {{/if}}
 
 {{#if this.slots.isUpdating}}
-  <ModalDialog as |Modal|>
-    <Modal.body>
-      Updating slots lists
-    </Modal.body>
-  </ModalDialog>
+  <LoadingDialog>
+    Updating slots lists
+  </LoadingDialog>
 {{/if}}

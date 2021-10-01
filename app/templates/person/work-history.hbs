@@ -103,7 +103,7 @@
       </table>
     </Modal.body>
     <Modal.footer>
-      <button type="button" class="btn btn-primary" {{action this.closePositionYearSummaryAction}}>Close</button>
+      <UiCloseButton @onClick={{this.closePositionYearSummaryAction}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}
@@ -144,7 +144,7 @@
       {{/each-in}}
     </Modal.body>
     <Modal.footer>
-      <button type="button" class="btn btn-primary" {{action this.closePositionAllEntriesAction}}>Close</button>
+      <UiCloseButton @onClick={{this.closePositionAllEntriesAction}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}
@@ -185,7 +185,7 @@
       </table>
     </Modal.body>
     <Modal.footer>
-      <button type="button" class="btn btn-primary" {{action this.closeEntireYearAction}}>Close</button>
+      <UiCloseButton @onClick={{this.closeEntireYearAction}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}

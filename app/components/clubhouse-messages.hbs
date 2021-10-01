@@ -20,16 +20,16 @@
   {{#if this.canSendMessages}}
     <p>
       {{#if @isWorkerInterface}}
-        <button type="button" class="btn btn-primary btn-responsive" {{action this.newMessageToAction}}>
+        <UiButton @class="btn-responsive" @onClick={{this.newMessageToAction}}>
           New Message TO {{@person.callsign}}
-        </button>
-        <button type="button" class="btn btn-secondary ml-lg-2 btn-responsive" {{action this.newMessageFromAction}}>
+        </UiButton>
+        <UiButton @type="secondary" @class="ml-lg-2 btn-responsive" @onClick={{this.newMessageFromAction}}>
           New Message FROM {{@person.callsign}}
-        </button>
+        </UiButton>
       {{else}}
-        <button type="button" class="btn btn-primary btn-responsive" {{on "click" this.newMessageFromAction}}>
+        <UiButton @type="primary" @class="btn-responsive" @onClick={{this.newMessageFromAction}}>
           {{fa-icon "plus"}} New Message
-        </button>
+        </UiButton>
       {{/if}}
     </p>
   {{/if}}
@@ -73,21 +73,20 @@
         {{message.body}}
         <div class="mail-actions">
           {{#if message.delivered}}
-            <button {{on "click" (fn this.markUnreadAction message)}}
-              type="button" class="btn btn-secondary btn-responsive" disabled={{message.isSubmitting}}>
+            <UiButton @onClick={{fn this.markUnreadAction message}}
+              @type="secondary" @class="responsive" @disabled={{message.isSubmitting}}>
               Mark Unread
               {{#if message.isSubmitting}}
-                {{fa-icon "spinner" spin=true}}
+                <SpinIcon />
               {{/if}}
-            </button>
+            </UiButton>
           {{else}}
-            <button {{on "click" (fn this.markReadAction message)}}
-              type="button" class="btn btn-primary btn-responsive" disabled={{message.isSubmitting}}>
+            <UiButton @class="btn-responsive" @onClick={{fn this.markReadAction message}} @disabled={{message.isSubmitting}}>
               Mark Read
               {{#if message.isSubmitting}}
-                {{fa-icon "spinner" spin=true}}
+                <SpinIcon />
               {{/if}}
-            </button>
+            </UiButton>
           {{/if}}
         </div>
       </div>
