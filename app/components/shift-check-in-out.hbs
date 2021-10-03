@@ -1,8 +1,8 @@
 {{#if this.isReloadingTimesheets}}
   <LoadingIndicator @text="Reloading Timesheets"/>
 {{else if @onDutyEntry}}
-  <div class="text-success font-weight-bold mb-2">{{@person.callsign}} is on duty.</div>
-  <table class="table mt-1 mb-0 table-width-auto">
+  <b class="text-success">{{@person.callsign}} is on duty.</b>
+  <table class="table table-width-auto">
     <thead>
     <tr>
       <th>Position</th>
@@ -14,7 +14,14 @@
     </thead>
     <tbody>
     <tr>
-      <td>{{@onDutyEntry.position.title}}</td>
+      <td>
+        {{@onDutyEntry.position.title}}<br>
+        <UiButton @type="secondary" @onClick={{this.changePositionAction}} @class="mt-1" @size="sm"
+                  @disabled={{this.isSubmitting}}>
+          Change Position
+        </UiButton>
+
+      </td>
       <td>{{shift-format @onDutyEntry.on_duty}}</td>
       <td class="text-right">
         {{#unless @onDutyEntry.position.count_hours}}
@@ -24,9 +31,6 @@
       </td>
       <td class="text-right">{{credits-format @onDutyEntry.credits}}</td>
       <td>
-        <UiButton @type="secondary" @class="mr-2" @onClick={{this.changePositionAction}} @disabled={{this.isSubmitting}}>
-          Change Position
-        </UiButton>
         <UiButton @type="danger" @onClick={{this.endShiftAction}} @disabled={{this.isSubmitting}}>
           End Shift
         </UiButton>
@@ -43,8 +47,9 @@
   {{/unless}}
 {{else}}
   {{#if (not @person.canStartShift)}}
-    <b class="text-danger">{{@person.callsign}} cannot start a shift because their status does not allow them to work
-      shifts</b>
+    <b class="text-danger">
+      {{@person.callsign}} cannot start a shift because their status does not allow them to work shifts.
+    </b>
   {{else if @hasUnverifiedTimesheet}}
     One or more timesheet entries has to be verified before a shift can be started.
   {{else}}
@@ -53,7 +58,7 @@
         <div class="d-flex">
           <div class="my-auto mr-2 d-inline-block">{{fa-icon "exclamation-circle" size="2x"}}</div>
           <div class="my-auto d-inline-block">
-            This person cannot start a shift because they have not completed
+            {{@person.callsign}} cannot start a shift because they have not completed
             {{#if this.otOnly}}
               the Online Training course.
             {{else}}
@@ -88,7 +93,7 @@
             <td class="align-middle">
               {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
                 <UiButton @type={{if slot.is_within_start_time "primary" "warning"}}
-                  @onClick={{fn this.signinShiftAction slot}} @disabled={{this.isSubmitting}}>
+                          @onClick={{fn this.signinShiftAction slot}} @disabled={{this.isSubmitting}}>
                   {{if slot.is_within_start_time "Start Shift" "Start Shift Early"}}
                 </UiButton>
               {{else}}
@@ -96,8 +101,8 @@
                   {{if slot.is_untrained "Not Trained"}}
                   {{if slot.is_unqualified slot.unqualified_message}}
                 </div>
-                {{#if (has-role "admin" "timesheet-management")}}
-                  <UiButton @type="warning" @onClick={{fn this.signinShiftAction slot}} disabled={{this.isSubmitting}}>
+                {{#if this.userCanForceCheckIn}}
+                  <UiButton @type="warning" @onClick={{fn this.signinShiftAction slot}} @disabled={{this.isSubmitting}}>
                     Force Start Shift
                   </UiButton>
                 {{/if}}
@@ -158,15 +163,9 @@
                           @options={{this.signinPositions}} @onChange={{action (mut this.newPositionId)}} />
         </div>
       </div>
-      <div class="form-row">
-        <div class="col-12">
-          {{#if this.changePositionError}}
-            <b class="text-danger">{{this.changePositionError}}</b>
-          {{else}}
-            <br/>
-          {{/if}}
-        </div>
-      </div>
+      {{#if this.changePositionError}}
+        <b class="text-danger">{{this.changePositionError}}</b>
+      {{/if}}
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
       <UiButton @onClick={{this.updatePositionAction}} @disabled={{this.isSubmitting}}>

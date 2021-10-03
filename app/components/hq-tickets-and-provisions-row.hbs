@@ -1,0 +1,34 @@
+<tr>
+  <td class="w-55">
+    {{#if @item.has_earned}}
+      <b class="text-success">{{fa-icon "check"}} {{@name}} - EARNED</b>
+    {{else}}
+      <b>{{@name}}</b>
+      {{#if @subtext}}
+        <span class="text-muted">{{@subtext}}</span>
+      {{/if}}
+    {{/if}}
+    {{#unless @item.has_earned}}
+      <br>
+      {{#if @item.expected_to_earn}}
+        {{fa-icon "thumbs-up" color="success"}} Has enough scheduled sign ups.
+      {{else}}
+        {{fa-icon "times" color="danger"}} Needs {{@item.needs_to_schedule}} {{@item.measure}} more in sign ups.
+      {{/if}}
+      {{#if @item.needs_to_work}}
+        <br>
+        Required to {{if (eq @item.measure "hours") "work" "earn"}} an
+        additional {{@item.needs_to_work}} {{@item.measure}}.
+      {{/if}}
+    {{/unless}}
+  </td>
+  <td class="w-15 text-right">
+    {{@item.threshold}} {{@item.measure}}
+  </td>
+  <td class="w-15 text-right">
+    {{@item.value}} {{@item.measure}}
+  </td>
+  <td class="w-15 text-right">
+    {{@item.expected_total}} {{@item.measure}}
+  </td>
+</tr>

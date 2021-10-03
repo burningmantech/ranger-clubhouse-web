@@ -1,8 +1,16 @@
 import {isEmpty} from '@ember/utils';
 import {
   ACTIVE, ALPHA, AUDITOR, BONKED, DECEASED, DISMISSED, INACTIVE_EXTENSION, INACTIVE, NON_RANGER,
-  PAST_PROSPECTIVE, PROSPECTIVE, PROSPECTIVE_WAITLIST, RESIGNED, RETIRED, SUSPENDED, UBERBONKED
+  PAST_PROSPECTIVE, PROSPECTIVE, PROSPECTIVE_WAITLIST, RESIGNED, RETIRED, SUSPENDED, UBERBONKED,
+  ALLOWED_TO_WORK
 } from 'clubhouse/constants/person_status';
+
+const RANGER_STATUSES = [
+  ACTIVE,
+  INACTIVE,
+  INACTIVE_EXTENSION,
+  RETIRED
+];
 
 const PersonMixin = (superclass) => class extends superclass {
   get isActive() {
@@ -61,31 +69,12 @@ const PersonMixin = (superclass) => class extends superclass {
     return (this.status === BONKED);
   }
 
-  get isNotRanger() {
-    const status = this.status;
-
-    return (status === AUDITOR ||
-      status === ALPHA ||
-      status === BONKED ||
-      status === PROSPECTIVE ||
-      status === PAST_PROSPECTIVE ||
-      status === PROSPECTIVE_WAITLIST);
-  }
-
   get isRanger() {
-    return (!this.isNotRanger && this.status !== NON_RANGER);
+    return RANGER_STATUSES.includes(this.status);
   }
 
   get canStartShift() {
-    const status = this.status;
-    return (
-      status === ACTIVE ||
-      status === ALPHA ||
-      status === INACTIVE ||
-      status === INACTIVE_EXTENSION ||
-      status === RETIRED ||
-      status === NON_RANGER
-    );
+    return ALLOWED_TO_WORK.includes(this.status);
   }
 
   get needsBpguid() {

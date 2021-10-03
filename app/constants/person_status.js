@@ -14,3 +14,15 @@ export const RESIGNED = 'resigned';
 export const RETIRED = 'retired';
 export const SUSPENDED = 'suspended';
 export const UBERBONKED = 'uberbonked';
+
+// Statuses allowed to work / check in
+
+export const ALLOWED_TO_WORK = [
+  ACTIVE,
+  ALPHA,
+  INACTIVE,
+  INACTIVE_EXTENSION,
+  NON_RANGER,
+  PROSPECTIVE,    // Mentor will need to convert Alpha
+  RETIRED,
+];

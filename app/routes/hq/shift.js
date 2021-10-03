@@ -14,9 +14,10 @@ export default class HqShiftRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
+    const hqModel = this.modelFor('hq');
     super.setupController(...arguments);
     controller.setProperties(model);
-    controller.setProperties(this.modelFor('hq'));
+    controller.setProperties(hqModel);
     controller.set('showCorrectionForm', false);
     controller.set('showSiteLeaveDialog', false);
     controller.set('unverifiedTimesheets', controller.timesheets.filter((ts) => ts.isUnverified));

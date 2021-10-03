@@ -39,12 +39,11 @@
   {{/if}}
   <div class="d-flex flex-column flex-lg-row ">
     <div class="flex-lg-grow-1">
-      {{#if (not this.allowedCheckIn)}}
+      {{#if (not this.person.canStartShift)}}
         <ChNotice @title="Account is disabled" @type="danger" @icon="ban">
           <p>
-            {{this.person.callsign}} has the status "{{this.person.status}}" which prevents the person from working a
-            shift.
-            The HQ Window Interface cannot be used.
+            {{this.person.callsign}} has the status "{{this.person.status}}" which prevents the person
+            from working a shift. The HQ Window Interface cannot be used.
           </p>
           Contact the HQ Lead, HQ Supervisor or the Personnel Manager {{mail-to (config "PersonnelEmail")}}.
         </ChNotice>
@@ -58,7 +57,6 @@
           behalf.
         </ChNotice>
       {{/if}}
-
       {{outlet}}
     </div>
 
@@ -82,8 +80,7 @@
             <div class="text-danger">ERROR: {{this.photo.message}}</div>
           {{/if}}
         {{else}}
-          Loading photo
-          <LoadingIndicator/>
+          <LoadingIndicator @text="Loading photo"/>
         {{/if}}
       </div>
       <dl>
@@ -96,15 +93,9 @@
         </dd>
         <dd>
           <UiButton @type="secondary" @size="sm" @class="btn-block mb-2"
-                    @onClick={{this.toggleAppreciationsProgress}}>
-            Ticket &amp; Provisions Progress
-          </UiButton>
-          <UiButton @type="secondary" @size="sm" @class="btn-block" @onClick={{this.toggleHoursCreditBreakdown}}
-                    @disabled={{this.isLoadingBreakdown}}>
-            {{#if this.isLoadingBreakdown}}
-              <SpinIcon/>
-            {{/if}}
-            Credits &amp; Hours Breakdown
+                    @onClick={{this.toggleTicketsAndProvisionsProgress}}>
+            Ticket &amp; Provisions<br>
+            Progress
           </UiButton>
         </dd>
       </dl>
@@ -113,30 +104,16 @@
 </main>
 
 
-{{#if this.showAppreciationsProgress}}
-  <ModalDialog @title="Appreciations Progress" @onEscape={{this.toggleAppreciationsProgress}} as |Modal|>
+{{#if this.showTicketsAndProvisions}}
+  <ModalDialog @title="Tickets and Provisions Progress" @onEscape={{this.toggleTicketsAndProvisionsProgress}} as |Modal|>
     <Modal.body>
-      <AppreciationProgress @timesheetSummary={{this.timesheetSummary}} @isShinyPenny={{this.isShinyPenny}} />
+      <HqTicketsAndProvisions @person={{this.person}} />
     </Modal.body>
     <Modal.footer>
-      <UiCloseButton @onClick={{this.toggleAppreciationsProgress}} />
+      <UiCloseButton @onClick={{this.toggleTicketsAndProvisionsProgress}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}
-
-{{#if this.showHoursCreditsBreakdown}}
-  <ModalDialog @title="Hours And Credits Breakdown" @onEscape={{this.toggleHoursCreditBreakdown}} as |Modal|>
-    <Modal.body>
-      <HoursCreditsBreakdown @timesheetSummary={{this.timesheetSummary}}
-                             @countedDurationExpected={{this.countedDurationExpected}}
-                             @creditsExpected={{this.creditsExpected}} />
-    </Modal.body>
-    <Modal.footer>
-      <UiCloseButton @onClick={{this.toggleHoursCreditBreakdown}} />
-    </Modal.footer>
-  </ModalDialog>
-{{/if}}
-
 
 {{#if this.showSignInWarning}}
   <ModalDialog @title="Sign Into A Shift" @onEscape={{this.closeSignInWarning}} as |Modal|>
@@ -168,6 +145,21 @@
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeAlphaWarning}}/>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.showNotAllowedToWork}}
+  <ModalDialog @title="Person may not work" @onEscape={{this.closeNotAllowedToWork}} as |Modal|>
+    <Modal.body>
+      <p>
+        <b class="text-danger"> {{this.person.callsign}} has the status "{{this.person.status}}" may not be given a BMID,
+          radios, and is NOT ALLOWED TO WORK.</b>
+      </p>
+      The HQ Window Interface cannot be for this person. Contact the HQ Lead, HQ Supervisor or the Personnel Manager.
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closeNotAllowedToWork}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}

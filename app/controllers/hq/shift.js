@@ -1,7 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {validatePresence} from 'ember-changeset-validations/validators';
-import {set} from '@ember/object';
 import {ALPHA} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 
@@ -139,7 +138,7 @@ export default class HqShiftController extends ClubhouseController {
       this._findOnDuty()
     }).catch((response) => this.house.handleErrorResponse(response));
 
-    this.send('updateShiftSummaries');
+    this.send('updateTimesheetSummaries');
   }
 
   /**
@@ -213,22 +212,6 @@ export default class HqShiftController extends ClubhouseController {
     }).catch((response) => this.house.handleErrorResponse(response))
   }
 
-  /**
-   * Check in a checked out asset
-   *
-   * @param {AssetModel} ap
-   */
-
-  @action
-  assetCheckInAction(ap) {
-    set(ap, 'isSubmitting', true);
-    this.ajax.request(`asset/${ap.asset.id}/checkin`, {method: 'POST'})
-      .then((result) => {
-        set(ap, 'checked_in', result.checked_in);
-        this.toast.success('Asset has been successfully checked in.');
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => set(ap, 'isSubmitting', false));
-  }
 
   /**
    * Mark a person on or off site.

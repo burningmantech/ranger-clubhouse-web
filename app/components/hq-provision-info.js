@@ -1,5 +1,24 @@
 import Component from '@glimmer/component';
 import {isEmpty} from '@ember/utils';
+import {
+  MENTOR,
+  MENTOR_APPRENTICE,
+  MENTOR_KHAKI,
+  MENTOR_MITTEN,
+  MENTOR_LEAD,
+  MENTOR_SHORT
+} from 'clubhouse/constants/positions';
+
+
+// Who is allowed to receive two pogs during their shift
+const TWO_POGS_POSITIONS = [
+  MENTOR,
+  MENTOR_APPRENTICE,
+  MENTOR_MITTEN,
+  MENTOR_LEAD,
+  MENTOR_KHAKI,
+  MENTOR_SHORT,
+];
 
 const MEAL_POGS = {
   'pre': {
@@ -38,7 +57,14 @@ export default class HqProvisionInfoComponent extends Component {
   }
 
   get mealPogInfo() {
-    console.log('MEALS POGS', this.args.eventInfo)
     return MEAL_POGS[this.args.eventInfo.meals];
+  }
+
+  get mayRequestTwoMealPogs() {
+    const {onDutyEntry, eventInfo} = this.args;
+    if (this.hasEatItAll || eventInfo.meals?.match(/event/)) {
+      return false;
+    }
+    return !!(onDutyEntry && TWO_POGS_POSITIONS.includes(onDutyEntry.position_id));
   }
 }

@@ -10,7 +10,7 @@ export default class HqRoute extends ClubhouseRoute {
 
   beforeModel() {
     if (!config('HQWindowInterfaceEnabled')) {
-      this.toast.error('The HQ Window Interface is only enabled during a normal event period.');
+      this.toast.error('The HQ Window Interface is only enabled while the event is going.');
       this.router.transitionTo('me.homepage');
       return false;
     }
@@ -48,8 +48,8 @@ export default class HqRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     const onduty = this.session.user.onduty_position;
-
     const person = model.person;
+
     person.set('unread_message_count', model.unread_message_count);
     controller.setProperties(model);
     controller.set('photo', null);
@@ -57,7 +57,11 @@ export default class HqRoute extends ClubhouseRoute {
 
     // Show a warning if the person is a PNV and the user is NOT a mentor.
     controller.set('showAlphaWarning', (person.isPNV && (!onduty || onduty.subtype !== 'mentor')));
+
+    // User should be signed into a shift
     controller.set('showSignInWarning', !onduty);
+
+    controller.set('showNotAllowedToWork', !person.canStartShift);
 
     // Allow the photo to lazy load.
     this.ajax.request(`person/${person.id}/photo`)
@@ -68,7 +72,7 @@ export default class HqRoute extends ClubhouseRoute {
   }
 
   @action
-  async updateShiftSummaries() {
+  updateTimesheetSummaries() {
     const {controller} = this;
     const personId = controller.person.id;
     this.ajax.request(`person/${personId}/timesheet-summary`, {data: {year: this.house.currentYear()}})
