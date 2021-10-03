@@ -4,15 +4,21 @@ import {inject as service} from '@ember/service';
 
 export default class HqTicketsAndProvisionsComponent extends Component {
   @tracked isLoading = false;
+  @tracked isNotRanger = false;
   @service ajax;
   @service house;
 
   constructor() {
     super(...arguments);
 
+    if (!this.args.person.isRanger) {
+      this.isNotRanger = true;
+      return; // Nope!
+    }
+
     this.isLoading = true;
 
-    this.ajax.request(`person/${this.args.person.id}/appreciation-progress`).then(({progress}) => {
+    this.ajax.request(`person/${this.args.person.id}/tickets-provisions-progress`).then(({progress}) => {
       this.items = progress.items.reduce((items, item) => {
         this._formatItem(item);
         items[item.name] = item;

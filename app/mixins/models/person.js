@@ -5,6 +5,13 @@ import {
   ALLOWED_TO_WORK
 } from 'clubhouse/constants/person_status';
 
+const RANGER_STATUSES = [
+  ACTIVE,
+  INACTIVE,
+  INACTIVE_EXTENSION,
+  RETIRED
+];
+
 const PersonMixin = (superclass) => class extends superclass {
   get isActive() {
     return this.status === ACTIVE;
@@ -62,19 +69,8 @@ const PersonMixin = (superclass) => class extends superclass {
     return (this.status === BONKED);
   }
 
-  get isNotRanger() {
-    const status = this.status;
-
-    return (status === AUDITOR ||
-      status === ALPHA ||
-      status === BONKED ||
-      status === PROSPECTIVE ||
-      status === PAST_PROSPECTIVE ||
-      status === PROSPECTIVE_WAITLIST);
-  }
-
   get isRanger() {
-    return (!this.isNotRanger && this.status !== NON_RANGER);
+    return RANGER_STATUSES.includes(this.status);
   }
 
   get canStartShift() {

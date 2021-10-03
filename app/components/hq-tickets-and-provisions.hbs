@@ -1,4 +1,6 @@
-{{#if this.isLoading}}
+{{#if this.isNotRanger}}
+  <b class="text-danger">{{@person.callsign}} has the status "{{@person.status}}" is not eligible to earn tickets and provisions.</b>
+{{else if this.isLoading}}
   <LoadingIndicator/>
 {{else}}
   {{#if this.otherHours}}
@@ -16,10 +18,25 @@
   <HqTicketsAndProvisionsTable @items="Meal Passes">
     {{#unless this.items.all_eats.has_earned}}
       <HqTicketsAndProvisionsRow @item={{this.items.event_week_eats}} @name="Event Week Eat Pass"
-                               @subtext="(Event week hours only)"/>
+                                 @subtext="(Event week hours only)"/>
     {{/unless}}
     <HqTicketsAndProvisionsRow @item={{this.items.all_eats}} @name="All Eat Meal Pass"
-                             @subtext="(Pre/Event/Post-week hours)"/>
+                               @subtext="(Pre/Event/Post-week hours)"/>
+  </HqTicketsAndProvisionsTable>
+
+  <HqTicketsAndProvisionsTable @items="Ranger Clothing">
+    {{#if this.isShinyPenny}}
+      <tr>
+        <td colspan="5">{{@person.callsign}} is a Shiny Penny and NOT eligible to earn additional Ranger clothing this
+          year.
+        </td>
+      </tr>
+    {{else}}
+      <HqTicketsAndProvisionsRow @item={{this.items.t_shirt}} @name="Ranger T-Shirt"
+                                 @subtext="(Pre-event & Event week hours only)"/>
+      <HqTicketsAndProvisionsRow @item={{this.items.long_sleeve_shirt}} @name="Ranger Long Sleeve Shirt"
+                                 @subtext="(Pre-event & Event week hours only)"/>
+    {{/if}}
   </HqTicketsAndProvisionsTable>
 
   <HqTicketsAndProvisionsTable @items="Wet Spot (aka Burning Man Org Showers)">
@@ -27,16 +44,4 @@
     <HqTicketsAndProvisionsRow @item={{this.items.shower_access}} @name="Wet Spot Access for NEXT event"/>
   </HqTicketsAndProvisionsTable>
 
-  <HqTicketsAndProvisionsTable @items="Ranger Clothing">
-    {{#if this.isShinyPenny}}
-      <tr>
-        <td colspan="5">{{@person.callsign}} is a Shiny Penny and NOT eligible to earn additional Ranger clothing this year.</td>
-      </tr>
-    {{else}}
-      <HqTicketsAndProvisionsRow @item={{this.items.t_shirt}} @name="Ranger T-Shirt"
-                               @subtext="(Pre-event & Event week hours only)"/>
-      <HqTicketsAndProvisionsRow @item={{this.items.long_sleeve_shirt}} @name="Ranger Long Sleeve Shirt"
-                               @subtext="(Pre-event & Event week hours only)"/>
-    {{/if}}
-  </HqTicketsAndProvisionsTable>
 {{/if}}

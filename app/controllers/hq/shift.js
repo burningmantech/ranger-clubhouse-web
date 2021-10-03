@@ -1,7 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {validatePresence} from 'ember-changeset-validations/validators';
-import {set} from '@ember/object';
 import {ALPHA} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 

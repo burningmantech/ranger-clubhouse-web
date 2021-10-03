@@ -10,11 +10,9 @@ module('Unit | Model | person', function(hooks) {
 
     let model = run(() => store.createRecord('person', { status: 'bonked' }));
     assert.false(model.isRanger);
-    assert.true(model.isNotRanger);
 
     run(() => model.set('status', 'active'));
     assert.true(model.isRanger);
-    assert.false(model.isNotRanger);
   });
 
 });

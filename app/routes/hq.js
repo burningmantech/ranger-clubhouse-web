@@ -4,14 +4,13 @@ import {NotFoundError} from '@ember-data/adapter/error'
 import {ADMIN, MANAGE} from 'clubhouse/constants/roles';
 import RSVP from 'rsvp';
 import {config} from 'clubhouse/utils/config';
-import {ALLOWED_TO_WORK} from 'clubhouse/constants/person_status';
 
 export default class HqRoute extends ClubhouseRoute {
   roleRequired = [ADMIN, MANAGE];
 
   beforeModel() {
     if (!config('HQWindowInterfaceEnabled')) {
-      this.toast.error('The HQ Window Interface is only enabled during a normal event period.');
+      this.toast.error('The HQ Window Interface is only enabled while the event is going.');
       this.router.transitionTo('me.homepage');
       return false;
     }
