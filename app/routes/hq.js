@@ -4,6 +4,7 @@ import {NotFoundError} from '@ember-data/adapter/error'
 import {ADMIN, MANAGE} from 'clubhouse/constants/roles';
 import RSVP from 'rsvp';
 import {config} from 'clubhouse/utils/config';
+import {ALLOWED_TO_WORK} from 'clubhouse/constants/person_status';
 
 export default class HqRoute extends ClubhouseRoute {
   roleRequired = [ADMIN, MANAGE];
@@ -48,8 +49,8 @@ export default class HqRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     const onduty = this.session.user.onduty_position;
-
     const person = model.person;
+
     person.set('unread_message_count', model.unread_message_count);
     controller.setProperties(model);
     controller.set('photo', null);
@@ -57,7 +58,11 @@ export default class HqRoute extends ClubhouseRoute {
 
     // Show a warning if the person is a PNV and the user is NOT a mentor.
     controller.set('showAlphaWarning', (person.isPNV && (!onduty || onduty.subtype !== 'mentor')));
+
+    // User should be signed into a shift
     controller.set('showSignInWarning', !onduty);
+
+    controller.set('showNotAllowedToWork', !person.canStartShift);
 
     // Allow the photo to lazy load.
     this.ajax.request(`person/${person.id}/photo`)
@@ -68,7 +73,7 @@ export default class HqRoute extends ClubhouseRoute {
   }
 
   @action
-  async updateShiftSummaries() {
+  updateTimesheetSummaries() {
     const {controller} = this;
     const personId = controller.person.id;
     this.ajax.request(`person/${personId}/timesheet-summary`, {data: {year: this.house.currentYear()}})

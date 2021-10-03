@@ -1,7 +1,8 @@
 import {isEmpty} from '@ember/utils';
 import {
   ACTIVE, ALPHA, AUDITOR, BONKED, DECEASED, DISMISSED, INACTIVE_EXTENSION, INACTIVE, NON_RANGER,
-  PAST_PROSPECTIVE, PROSPECTIVE, PROSPECTIVE_WAITLIST, RESIGNED, RETIRED, SUSPENDED, UBERBONKED
+  PAST_PROSPECTIVE, PROSPECTIVE, PROSPECTIVE_WAITLIST, RESIGNED, RETIRED, SUSPENDED, UBERBONKED,
+  ALLOWED_TO_WORK
 } from 'clubhouse/constants/person_status';
 
 const PersonMixin = (superclass) => class extends superclass {
@@ -77,15 +78,7 @@ const PersonMixin = (superclass) => class extends superclass {
   }
 
   get canStartShift() {
-    const status = this.status;
-    return (
-      status === ACTIVE ||
-      status === ALPHA ||
-      status === INACTIVE ||
-      status === INACTIVE_EXTENSION ||
-      status === RETIRED ||
-      status === NON_RANGER
-    );
+    return ALLOWED_TO_WORK.includes(this.status);
   }
 
   get needsBpguid() {

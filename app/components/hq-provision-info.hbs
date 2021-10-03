@@ -1,31 +1,37 @@
 <UiSection>
-  <dl class="row">
-    <dt class="col-auto">Meals</dt>
-    <dd class="col-auto">
-      {{#if this.hasEatItAll}}
-        <b class="text-danger">{{fa-icon "ban"}} NO MEAL POGS</b><br>
-        Has Eat-It-All BMID
-      {{else if this.onlyPogs}}
-        <span class="text-success">{{fa-icon "check"}} Pogs for every shift</span>
-      {{else}}
-        <b class="text-danger">{{fa-icon "ban"}} NO POGS FOR {{this.mealPogInfo.exclude}}</b><br>
-        <span class="text-success">{{fa-icon "check"}} Pogs for {{this.mealPogInfo.issue}} ONLY</span>
-      {{/if}}
-      {{#unless this.hasEatItAll}}
-        <br>
-        Full Pog: 6 or more hours<br>
-        Half Pog: less than 6 hours
-      {{/unless}}
-    </dd>
-    <dt class="col-auto">Showers</dt>
-    <dd class="col-auto">
-      {{#if @eventInfo.showers}}
-        <b class="text-danger">{{fa-icon "ban"}} NO SHOWER POGS</b><br>
-        Has Wet Spot Access BMID
-      {{else}}
-        <b class="text-success">{{fa-icon "check"}} Shower Pog</b><br>
-        Every 40 hours worked
-      {{/if}}
-    </dd>
-  </dl>
+  <:body>
+    {{#if this.mayRequestTwoMealPogs}}
+      <div class="h3 text-danger">
+        {{fa-icon "hand-point-right"}} {{@person.callsign}} is on a Mentor shift and may be eligible for
+        TWO meal pogs.
+      </div>
+    {{/if}}
+    <dl class="row">
+      <dt class="col-auto">Meals</dt>
+      <dd class="col-auto">
+        {{#if this.hasEatItAll}}
+          <b class="text-danger">{{fa-icon "ban"}} NO MEAL POGS</b><br>
+          Has Eat-It-All BMID
+        {{else if this.onlyPogs}}
+          <span class="text-success">Pog for 6+ hour shift</span>
+        {{else}}
+          <b class="text-danger">{{fa-icon "ban"}} NO POGS FOR {{this.mealPogInfo.exclude}}</b><br>
+          <span class="text-success">Pogs for {{this.mealPogInfo.issue}} ONLY</span>
+        {{/if}}
+        {{#unless this.hasEatItAll}}
+          <br>
+          Half pog for less than 6 hours
+        {{/unless}}
+      </dd>
+      <dt class="col-auto">Showers</dt>
+      <dd class="col-auto">
+        {{#if @eventInfo.showers}}
+          <b class="text-danger">{{fa-icon "ban"}} NO SHOWER POGS</b><br>
+          Has Wet Spot Access BMID
+        {{else}}
+          <span class="text-success">Pog for every 40 hours worked</span>
+        {{/if}}
+      </dd>
+    </dl>
+  </:body>
 </UiSection>
