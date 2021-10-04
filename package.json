@@ -30,7 +30,7 @@
     "@glimmer/component": "^1.0.4",
     "@glimmer/tracking": "^1.0.4",
     "babel-eslint": "^10.1.0",
-    "blueimp-load-image": "^5.14.0",
+    "blueimp-load-image": "^5.15.0",
     "broccoli-asset-rev": "^3.0.0",
     "cropperjs": "^1.5.12",
     "dayjs": "^1.10.7",
@@ -67,7 +67,7 @@
     "ember-simple-auth": "^4.0",
     "ember-simple-auth-token": "^5.2.2",
     "ember-source": "~3.28.1",
-    "ember-template-lint": "^3.7.0",
+    "ember-template-lint": "^3.8.0",
     "ember-toastr": "^3.0.0",
     "ember-truth-helpers": "^3.0.0",
     "eslint": "^7.32.0",
@@ -79,16 +79,16 @@
     "jquery-datetimepicker": "^2.5.21",
     "jscodeshift": "^0.13.0",
     "json-formatter-js": "^2.3.4",
-    "libphonenumber-js": "^1.9.34",
+    "libphonenumber-js": "^1.9.35",
     "loader.js": "^4.7.0",
     "lodash": "^4.17.21",
     "mobile-detect": "^1.4.5",
     "npm-run-all": "^4.1.5",
     "qunit": "^2.17.2",
     "qunit-dom": "^2.0.0",
-    "sass": "^1.42.0",
+    "sass": "^1.42.1",
     "toastr": "^2.1.4",
-    "webpack": "^5.53.0"
+    "webpack": "^5.56.1"
   },
   "engines": {
     "node": "10.* || >= 12"
