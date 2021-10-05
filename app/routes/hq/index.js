@@ -18,9 +18,9 @@ export default class HqIndexRoute extends ClubhouseRoute {
     const personId = person.id;
 
     if (!person.on_site) {
-      this.transitionTo('hq.site-checkin', personId);
+      this.router.transitionTo('hq.site-checkin', personId);
     } else {
-      this.transitionTo('hq.shift', personId);
+      this.router.transitionTo('hq.shift', personId);
     }
   }
 }

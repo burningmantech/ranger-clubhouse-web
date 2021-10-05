@@ -12,7 +12,7 @@ export default class MeContactRoute extends ClubhouseRoute {
 
     if (!this.session.user.isRanger) {
       this.toast.error('Sorry, you are not an active Ranger and may not send contact messages.');
-      this.transitionTo('me.homepage');
+      this.router.transitionTo('me.homepage');
     }
   }
 

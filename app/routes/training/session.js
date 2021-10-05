@@ -9,7 +9,7 @@ export default class TrainingSessionRoute extends ClubhouseRoute {
   error(response) {
     if (response.status == 404) {
       this.toast.error('The training session was not found.');
-      this.transitionTo('me');
+      this.router.transitionTo('me');
       return false;
     } else {
       return true;

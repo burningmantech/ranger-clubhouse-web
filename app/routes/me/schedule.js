@@ -12,7 +12,7 @@ export default class MeScheduleRoute extends ClubhouseRoute {
     const user = this.session.user;
     if (user.isPastProspective || user.isBonked) {
       this.toast.error('You are not permitted to sign up for trainings or shifts at this time.');
-      this.transitionTo('me.homepage');
+      this.router.transitionTo('me.homepage');
     } else {
       super.beforeModel(...arguments);
     }
@@ -43,13 +43,13 @@ export default class MeScheduleRoute extends ClubhouseRoute {
 
     if (user.isAuditor && schedule.signup_permission.online_training_only) {
       this.toast.error('Sorry, auditors are only allowed to take Online Training this year.');
-      this.transitionTo('me.homepage');
+      this.router.transitionTo('me.homepage');
       return;
     }
 
     if ((user.isAuditor || user.isProspective || user.isAlpha) && !schedule.signup_permission.all_signups_allowed) {
       this.toast.error('You need to complete one or more items in the checklist before being allowed to sign up.');
-      this.transitionTo('me.homepage');
+      this.router.transitionTo('me.homepage');
       return;
     }
 

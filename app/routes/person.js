@@ -27,7 +27,7 @@ export default class PersonRoute extends ClubhouseRoute {
   error(response) {
     if (response instanceof NotFoundError) {
       this.toast.error('The person record was not found.');
-      this.transitionTo('me');
+      this.router.transitionTo('me');
       return false;
     } else {
       this.house.handleErrorResponse(response);

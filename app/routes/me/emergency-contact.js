@@ -5,7 +5,7 @@ export default class MeEmergencyContactRoute extends ClubhouseRoute {
     const {user} = this.session;
     if (user.isAuditor || user.isPastProspective || user.isProspectiveWaitlist) {
       this.toast.error('Auditors and past prospectives do not have access to this page.');
-      this.transitionTo('me.homepage');
+      this.router.transitionTo('me.homepage');
     } else {
       super.beforeModel(...arguments);
     }

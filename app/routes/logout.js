@@ -8,6 +8,6 @@ export default class LogoutRoute extends ClubhouseRoute {
 
     // Bu-bye!
     this.session.invalidate();
-    this.transitionTo('login');
+    this.router.transitionTo('login');
   }
 }
