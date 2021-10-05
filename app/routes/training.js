@@ -11,7 +11,7 @@ export default class TrainingRoute extends ClubhouseRoute {
   beforeModel() {
     if (!this.session.hasRole([ Role.ADMIN, Role.TRAINER, Role.VC, Role.MENTOR, Role.ART_TRAINER])) {
       this.toast.error("Sorry, you need to be a trainer, mentor, VC or Admin to access this.");
-      this.transitionTo('me.homepage');
+      this.router.transitionTo('me.homepage');
     }
   }
 

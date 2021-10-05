@@ -112,7 +112,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
       // Can't retrieve the configuration. Consider the application
       // offline for the moment.
       transition.abort();
-      this.transitionTo("offline");
+      this.router.transitionTo("offline");
     }
   }
 
@@ -159,7 +159,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
           this.session.invalidate();
         });
       } else {
-        this.transitionTo('login');
+        this.router.transitionTo('login');
       }
       return false;
     }

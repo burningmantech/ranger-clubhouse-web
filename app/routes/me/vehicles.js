@@ -5,7 +5,7 @@ export default class MeVehiclesRoute extends ClubhouseRoute {
   beforeModel() {
     if (!this.session.user.may_request_stickers) {
       this.toast.error('Sorry, you are not approved to request vehicle stickers and other items.');
-      this.transitionTo('me.homepage');
+      this.router.transitionTo('me.homepage');
     } else {
       super.beforeModel(...arguments);
     }

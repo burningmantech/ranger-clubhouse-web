@@ -7,7 +7,7 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 export default class MeWelcomeRoute extends ClubhouseRoute {
   beforeModel() {
     if (!this.session.isWelcome) {
-      this.transitionTo('me.homepage');
+      this.router.transitionTo('me.homepage');
     } else {
       super.beforeModel(...arguments);
     }

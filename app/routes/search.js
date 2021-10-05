@@ -6,7 +6,7 @@ export default class SearchRoute extends ClubhouseRoute {
 
   beforeModel(transition) {
     if (transition.targetName === 'search.index') {
-      this.transitionTo('search.assets');
+      this.router.transitionTo('search.assets');
     }
   }
 }

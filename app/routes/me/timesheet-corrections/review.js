@@ -7,7 +7,7 @@ export default class MeTimesheetCorrectionsReviewRoute extends ClubhouseRoute {
 
     if (!timesheetInfo.correction_enabled) {
       // Corrections are not enabled at this time, to go the landing page.
-      this.transitionTo('me.timesheet-corrections.index');
+      this.router.transitionTo('me.timesheet-corrections.index');
     }
   }
 
