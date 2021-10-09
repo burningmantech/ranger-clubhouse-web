@@ -1,11 +1,11 @@
 <YearSelect @title="People By Location" @year={{this.year}} @onChange={{action (mut this.year)}}  />
-<div class="form-row mb-2">
+<FormRow @class="mt-2">
+  <FormLabel @auto={{true}}>Filter</FormLabel>
   <div class="col-auto">
-    <label class="col-form-label">Filter</label>
-  </div>
-  <div class="col-auto">
-    <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}}
-                    @onChange={{action this.updateFilter}} @controlClass="form-control"/>
+    <ChForm::Select @name="filter"
+                    @value={{this.filter}}
+                    @options={{this.filterOptions}}
+                    @onChange={{action this.updateFilter}} />
   </div>
   <div class="col-auto">
     <UiButton @onClick={{this.exportAllToCSV}} @disabled={{if this.viewPeople false true}}>
@@ -15,8 +15,7 @@
       {{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}
     </UiButton>
   </div>
-</div>
-
+</FormRow>
 Showing {{this.viewPeople.length}} of {{this.people.length}}.
 {{#each this.countries key="country" as |country idx|}}
   <ChAccordion id="country-{{idx}}" as |accordion|>

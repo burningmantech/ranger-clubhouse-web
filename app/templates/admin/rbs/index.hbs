@@ -3,9 +3,9 @@
   <i>&ldquo;We interrupt our regularly scheduled program to bring you this important message . . . &rdquo;</i>
 </p>
 
-<div class="d-lg-flex">
+<div class="d-lg-flex justify-content-between">
   {{#if (has-role "admin" "megaphone")}}
-    <section class="mr-lg-4">
+    <section class="me-lg-4">
       <h3>On Playa Broadcast Actions</h3>
       <div class="border rounded p-2 mb-2 text-center">
         <LinkTo @route="admin.rbs.broadcast" @query={{hash type="recruit-dirt"}}

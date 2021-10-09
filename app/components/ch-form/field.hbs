@@ -53,10 +53,21 @@
                       @maxlength={{@maxlength}}
                       @onChange={{this.update}} @placeholder={{@placeholder}} @value={{get @model @name}}
                       @dateOnly={{eq @type "date"}} @startDate={{@startDate}} />
-    {{else if (eq @type "editor")}}
+    {{~else if (eq @type "editor")~}}
       <WysiwygEditor @text={{get @model @name}} @id={{this.domId}} @onChange={{this.update}}
                      @onLoadError={{this.editorLoadFailed}} />
-    {{else}}
+    {{~else if (eq @type "search")~}}
+      <AutocompleteInput @placeholder={{@placeholder}}
+                         @onSearch={{@onSearch}}
+                         @onSelect={{this.update}}
+                         @onFocus={{@onFocus}}
+                         @disabled={{@disabled}}
+                         @autofocus={{@autofocus}}
+                         @inputClass="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
+                         @text={{get @model @name}} as |item|>
+        {{~item~}}
+      </AutocompleteInput>
+    {{~else~}}
       <input type={{@type}}
              value={{get @model @name}}
              name={{@name}}
@@ -106,17 +117,6 @@
         <label class={{this.labelClass}} for={{concat this.domId idx}}>{{option.label}}</label>
       </div>
     {{/each}}
-  {{~else if (eq @type "search")~}}
-    <AutocompleteInput @placeholder={{@placeholder}}
-                       @onSearch={{@onSearch}}
-                       @onSelect={{this.update}}
-                       @onFocus={{@onFocus}}
-                       @disabled={{@disabled}}
-                       @autofocus={{@autofocus}}
-                       @inputClass="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
-                       @text={{get @model @name}} as |item|>
-      {{~item~}}
-    </AutocompleteInput>
   {{~else~}}
     Unknown field type [{{@type}}]
   {{~/if~}}

@@ -15,20 +15,20 @@ export default class ChFormFieldComponent extends Component {
 
     switch (type) {
       case 'checkbox':
-      case 'checkboxGroup':
       case 'radio':
+      case 'checkboxGroup':
       case 'radioGroup':
-        this.emitTopLabel = false;
         this.labelClass = labelClass ?? 'form-check-label';
+        this.emitTopLabel = false;
         break;
 
       default:
         this.emitTopLabel = true;
-        this.labelClass = labelClass ?? '';
+        this.labelClass = labelClass ?? 'col-form-label';
         break;
     }
 
-    this.wrapField = !!(type !== 'radioGroup' && type !== 'checkboxGroup' && type !== 'search');
+    this.wrapField = !!(type !== 'radioGroup' && type !== 'checkboxGroup');
   }
 
   get wrapClass() {
@@ -43,13 +43,13 @@ export default class ChFormFieldComponent extends Component {
       case 'radio':
       case 'radioGroup':
       case 'checkboxGroup':
-        return (this.args.inline ? 'form-check form-check-inline' : 'form-check');
+        return (this.args.inlineCheckbox ? 'form-check form-check-inline' : 'form-check');
 
-      case 'search':
-        return '';
+//      case 'search':
+  //      return '';
 
       default:
-        return `form-group ${(typeOf(grid) === 'string') ? grid : 'col-auto'}`;
+        return `${(typeOf(grid) === 'string') ? grid : 'col-auto'}`;
     }
   }
 
@@ -66,6 +66,14 @@ export default class ChFormFieldComponent extends Component {
       case 'radio':
       case 'radioGroup':
         return 'form-check-input';
+
+      case 'select':
+        if (fieldSize) {
+          return `form-select form-select-${fieldSize}`;
+        } else {
+          return 'form-select';
+        }
+
       default:
         if (fieldSize) {
           return `form-control form-control-${fieldSize}`;

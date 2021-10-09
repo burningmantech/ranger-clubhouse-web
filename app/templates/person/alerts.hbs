@@ -8,38 +8,37 @@
 
 <AlertsManage @person={{this.person}} @numbers={{this.numbers}} @alerts={{this.alerts}} />
 
-{{#if (has-role "admin")}}
-  <div class="mt-3">
-    <h3>SMS Administration Flags</h3>
-    <ChNotice @type="danger" @icon="exclamation-triangle">
-      <p>
-        Because you are an Admin, you may adjust the SMS Administration flags.
-      </p>
-      <b>Do not touch the following unless instructed to do so by the Tech Team.</b>
-    </ChNotice>
-  <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.savePerson}} as |f|>
-    <div class="form-row mb-2">
-      <label class="col-form-label col-2">On Playa Flags</label>
-      <div class="col-auto mt-2">
-        <f.input @name="sms_on_playa_verified" @label="Verified" @type="checkbox"/>
-      </div>
-      <div class="col-auto mt-2">
-        <f.input @name="sms_on_playa_stopped" @label="Stopped" @type="checkbox"/>
-      </div>
-    </div>
-    <div class="form-row">
-      <label class="col-form-label col-2">Off Playa Flags</label>
-      <div class="col-auto mt-2">
-        <f.input @name="sms_off_playa_verified" @label="Verified" @type="checkbox"/>
-      </div>
-      <div class="col-auto mt-2">
-        <f.input @name="sms_off_playa_stopped" @label="Stopped" @type="checkbox"/>
-      </div>
-    </div>
-    <f.submit @label="Update Flags" @disabled={{this.person.isSaving}} />
-    {{#if this.person.isSaving}}
-      <LoadingIndicator/>
-    {{/if}}
-  </ChForm>
-  </div>
+{{#if this.canManageAlerts}}
+  <UiSection>
+    <:title>SMS Administration Flags</:title>
+    <:body>
+        <p>
+          Because you are a Tech Ninja, you may adjust the SMS Administration flags.
+        </p>
+      <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.savePerson}} as |f|>
+        <FormRow>
+          <FormLabel>On Playa Flags</FormLabel>
+          <div class="col-auto">
+            <f.input @name="sms_on_playa_verified" @label="Verified" @type="checkbox"/>
+          </div>
+          <div class="col-auto">
+            <f.input @name="sms_on_playa_stopped" @label="Stopped" @type="checkbox"/>
+          </div>
+        </FormRow>
+        <FormRow>
+          <FormLabel>Off Playa Flags</FormLabel>
+          <div class="col-auto">
+            <f.input @name="sms_off_playa_verified" @label="Verified" @type="checkbox"/>
+          </div>
+          <div class="col-auto">
+            <f.input @name="sms_off_playa_stopped" @label="Stopped" @type="checkbox"/>
+          </div>
+        </FormRow>
+        <f.submit @label="Update Flags" @disabled={{this.person.isSaving}} />
+        {{#if this.person.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+      </ChForm>
+    </:body>
+  </UiSection>
 {{/if}}

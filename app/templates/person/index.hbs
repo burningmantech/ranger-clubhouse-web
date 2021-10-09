@@ -106,9 +106,9 @@
         <p>
           The note will automatically timestamped when saved or updated.
         </p>
-        <div class="form-row">
-          <f.input @name="message" @type="textarea" @label="Enter the note to be shown:" @cols={{80}} @rows={{6}} />
-        </div>
+        <FormRow>
+          <f.input @name="message" @type="textarea" @label="Enter the note to be shown:" @cols={{80}} @rows={{6}}/>
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Save Note"/>

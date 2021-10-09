@@ -100,29 +100,24 @@
 {{/if}}
 
 <ChForm @formId="bulkForm" @formFor={{this.bulkForm}} @changeSet={{false}} @onSubmit={{this.verifyAction}} as |f|>
-  <div class="form-row">
-      <f.input @name="lines"
-               @label="Enter a list of callsigns with times and optional positions to bulk sign in and/or out:"
-               @type="textarea" @cols={{40}} @rows={{10}} />
-  </div>
+  <FormRow>
+    <f.input @name="lines"
+             @label="Enter a list of callsigns with times and optional positions to bulk sign in and/or out:"
+             @type="textarea" @cols={{40}}
+             @rows={{10}}/>
+  </FormRow>
   <p>
     Don't worry, you'll have a chance to review the sign ins & outs before actually creating them.
   </p>
-  <div class="form-row">
-    <div class="col-auto">
-      <f.submit @label="Verify & Review Bulk Sign Ins/Outs"
-                @disabled={{or (is-empty f.model.lines) this.isSubmitting}} />
-      {{#if this.isSubmitting}}
-        <LoadingIndicator/>
-      {{/if}}
-    </div>
-    <div class="col-auto mt-2">
-      <p>
-        <a href {{action this.toggleHelp}}>{{if this.showHelp "Hide" "Show"}} supported formats</a>
-      </p>
-    </div>
-  </div>
+  <f.submit @label="Verify & Review Bulk Sign Ins/Outs"
+            @disabled={{or (is-empty f.model.lines) this.isSubmitting}}/>
+  {{#if this.isSubmitting}}
+    <LoadingIndicator/>
+  {{/if}}
 </ChForm>
+<div class="mt-4">
+<UiButton @onClick={{action this.toggleHelp}} @type="success">{{if this.showHelp "Hide" "Show"}} supported formats</UiButton>
+</div>
 
 {{#if this.showHelp}}
   <UiSection>
@@ -149,7 +144,8 @@
           day
           at time)
         </li>
-        <li>callsign,position,date,time,date,time (sign in &amp; out of position starting at date time and ending at date
+        <li>callsign,position,date,time,date,time (sign in &amp; out of position starting at date time and ending at
+          date
           time)
         </li>
       </ul>

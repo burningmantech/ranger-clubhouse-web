@@ -57,107 +57,120 @@
     </tbody>
   </table>
 {{else}}
-  <p class="d-print-none">
-    Use this page to assign mentors to Alphas (anyone with the Alpha position).
-    Passing or bonking an Alpha here will <b>NOT change the account status</b>. Use the
-    <LinkTo @route="mentor.convert">Alpha Conversion</LinkTo>
-    page to mint Shiny Pennies, and/or bonk Alphas.
-  </p>
+  <div class="d-print-none">
+    <p>
+      Use this page to assign mentors to Alphas (anyone with the Alpha position).
+      Passing or bonking an Alpha here will <b>NOT change the account status</b>. Use the
+      <LinkTo @route="mentor.convert">Alpha Conversion</LinkTo>
+      page to mint Shiny Pennies, and/or bonk Alphas.
+    </p>
 
-  <div class="form-row mb-2 d-print-none">
-    <label class="col-form-label col-auto">Filter</label>
-    <div class="col-auto">
-      <ChForm::Select @name="filter"
-                      @value={{this.filter}}
-                      @options={{this.filterOptions}}
-                      @onChange={{action (mut this.filter)}}
-                      @controlClass="form-control"/>
-    </div>
-    <div class="col-auto">
-      <UiButton @type="secondary" @class="mb-2" @onClick={{this.togglePrinting}}>
-        Print Mentor Assignments
-      </UiButton>
-    </div>
+    <FormRow>
+      <FormLabel @auto={{true}}>Filter</FormLabel>
+      <div class="col-auto">
+        <ChForm::Select @name="filter"
+                        @value={{this.filter}}
+                        @options={{this.filterOptions}}
+                        @onChange={{action (mut this.filter)}} />
+      </div>
+      <div class="col-auto">
+        <UiButton @type="secondary" @class="mb-2" @onClick={{this.togglePrinting}}>
+          Print Mentor Assignments
+        </UiButton>
+      </div>
+    </FormRow>
   </div>
-<p>
-  Legend: Mentor shift = Shift Alpha is signed up for. On Shift = Is the Alpha currently signed into an Alpha shift?
-</p>
-  Showing {{this.viewAlphas.length}} of {{pluralize this.alphas.length "Alpha"}}
-  <table class="table table-hover table-sm">
-    <thead>
-    <tr>
-      <th>Callsign</th>
-      <th>Name</th>
-      <th>Mentor Shift</th>
-      <th>On Shift</th>
-      <th>Mentor 1</th>
-      <th>Mentor 2</th>
-      <th>Mentor 3</th>
-      <th>Result</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each this.viewAlphas key="id" as |person|}}
-      <tr id="person-{{person.id}}" class="{{if person.error "is-invalid"}}">
-        <td>
-          <PersonLink @person={{person}} />
-        </td>
-        <td>{{person.first_name}} {{person.last_name}}</td>
-        <td>
-          {{#if person.alpha_slot}}
-            {{shift-format person.alpha_slot.begins}}
-          {{else}}
-            -
+  <p>
+    Legend: Mentor shift = Shift Alpha is signed up for. On Shift = Is the Alpha currently signed into an Alpha shift?
+  </p>
+  <UiSection>
+    <:title>Showing {{this.viewAlphas.length}} of {{pluralize this.alphas.length "Alpha"}}</:title>
+    <:body>
+      <table class="table table-hover table-sm">
+        <thead>
+        <tr>
+          <th>Callsign</th>
+          <th>Name</th>
+          <th>Mentor Shift</th>
+          <th>On Shift</th>
+          <th>Mentor 1</th>
+          <th>Mentor 2</th>
+          <th>Mentor 3</th>
+          <th>Result</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.viewAlphas key="id" as |person|}}
+          <tr id="person-{{person.id}}" class="{{if person.error "is-invalid"}}">
+            <td>
+              <PersonLink @person={{person}} />
+            </td>
+            <td>{{person.first_name}} {{person.last_name}}</td>
+            <td>
+              {{#if person.alpha_slot}}
+                {{shift-format person.alpha_slot.begins}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            <td>
+              {{yesno person.on_alpha_shift}}
+            </td>
+            <td>
+              <ChForm::Select @name="mentor1_{{person.id}}"
+                              @value={{person.mentors.0.mentor_id}}
+                              @onChange={{action (mut person.mentors.0.mentor_id)}}
+                              @options={{this.mentorOptions}} />
+            </td>
+            <td>
+              <ChForm::Select @name="mentor2_{{person.id}}"
+                              @value={{person.mentors.1.mentor_id}}
+                              @onChange={{action (mut person.mentors.1.mentor_id)}}
+                              @options={{this.mentorOptions}} />
+            </td>
+            <td>
+              <ChForm::Select @name="mentor3_{{person.id}}"
+                              @value={{person.mentors.2.mentor_id}}
+                              @onChange={{action (mut person.mentors.2.mentor_id)}}
+                              @options={{this.mentorOptions}} />
+            </td>
+            <td>
+              <ChForm::Select @name="status_{{person.id}}"
+                              @value={{person.mentor_status}}
+                              @onChange={{action (mut person.mentor_status)}}
+                              @options={{this.statusOptions}} />
+            </td>
+          </tr>
+          {{#if person.mentor_history}}
+            <tr class="no-border">
+              <td colspan="8">
+                Prior Mentors:
+                {{#each person.mentor_history as |history|}}
+                  [{{history.year}} ({{history.status}}):
+                  {{#each history.mentors as |mentor mentor_idx|}}
+                    {{if mentor_idx " / "}}
+                    <PersonLink @person={{mentor}} />
+                  {{/each}}]
+                {{/each}}
+              </td>
+            </tr>
           {{/if}}
-        </td>
-        <td>
-          {{yesno person.on_alpha_shift}}
-        </td>
-        <td>
-          <ChForm::Select @name="mentor1_{{person.id}}" @value={{person.mentors.0.mentor_id}}
-                          @onChange={{action (mut person.mentors.0.mentor_id)}} @options={{this.mentorOptions}} />
-        </td>
-        <td>
-          <ChForm::Select @name="mentor2_{{person.id}}" @value={{person.mentors.1.mentor_id}}
-                          @onChange={{action (mut person.mentors.1.mentor_id)}} @options={{this.mentorOptions}} />
-        </td>
-        <td>
-          <ChForm::Select @name="mentor3_{{person.id}}" @value={{person.mentors.2.mentor_id}}
-                          @onChange={{action (mut person.mentors.2.mentor_id)}} @options={{this.mentorOptions}} />
-        </td>
-        <td>
-          <ChForm::Select @name="status_{{person.id}}" @value={{person.mentor_status}}
-                          @onChange={{action (mut person.mentor_status)}} @options={{this.statusOptions}} />
-        </td>
-      </tr>
-      {{#if person.mentor_history}}
-        <tr class="no-border">
-          <td colspan="8">
-            Prior Mentors:
-            {{#each person.mentor_history as |history|}}
-              [{{history.year}} ({{history.status}}):
-              {{#each history.mentors as |mentor mentor_idx|}}
-                {{if mentor_idx " / "}}
-                <PersonLink @person={{mentor}} />
-              {{/each}}]
-            {{/each}}
-          </td>
-        </tr>
+          {{#if person.error}}
+            <tr class="no-border">
+              <td colspan="8">
+                <b class="text-danger">{{person.error}}</b>
+              </td>
+            </tr>
+          {{/if}}
+        {{/each}}
+        </tbody>
+      </table>
+      <UiButton @disabled={{this.isSubmitting}} @onClick={{this.saveAlphas}}>
+        Save Assignments &amp; Results
+      </UiButton>
+      {{#if this.isSubmitting}}
+        <LoadingIndicator/>
       {{/if}}
-      {{#if person.error}}
-        <tr class="no-border">
-          <td colspan="8">
-            <b class="text-danger">{{person.error}}</b>
-          </td>
-        </tr>
-      {{/if}}
-    {{/each}}
-    </tbody>
-  </table>
-  <UiButton @disabled={{this.isSubmitting}} @onClick={{this.saveAlphas}}>
-    Save Assignments &amp; Results
-  </UiButton>
-  {{#if this.isSubmitting}}
-    <LoadingIndicator/>
-  {{/if}}
+    </:body>
+  </UiSection>
 {{/if}}

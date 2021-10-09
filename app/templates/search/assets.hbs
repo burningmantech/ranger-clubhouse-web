@@ -6,15 +6,15 @@
         @onSubmit={{this.searchAction}}
         @formClass="mt-2"
         as |f|>
-  <div class="form-row">
-    <label class="col-form-label col-auto">
-      Enter the asset barcode:
-    </label>
-    <f.input @name="barcode" @type="text" @grid="col-auto" @size={{30}}/>
-    <div class="col-auto">
-      <f.submit @label="Search"/>
-    </div>
-  </div>
+    <FormRow>
+        <FormLabel @auto={{true}}>
+            Enter the asset barcode:
+        </FormLabel>
+        <f.input @name="barcode" @type="text" @inline={{true}} @size={{30}}/>
+        <div class="col-auto">
+            <f.submit @label="Search"/>
+        </div>
+    </FormRow>
 </ChForm>
 
 {{#if this.barcodeNotFound}}

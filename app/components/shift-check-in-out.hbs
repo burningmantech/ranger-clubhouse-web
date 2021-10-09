@@ -128,28 +128,30 @@
       <p class="mt-2 mb-2">Use the upcoming shift to sign in <b>OR</b> a specific position can be signed into below:</p>
     {{/if}}
 
-    <div class="form-row">
+    <FormRow>
       <div class="col-auto">
-        <ChForm::Select @name="signin_position_id" @controlClass="form-control" @value={{this.signinPositionId}}
-                        @options={{this.signinPositions}} @onChange={{this.updateShiftPosition}} />
+        <ChForm::Select @name="signin_position_id"
+                        @value={{this.signinPositionId}}
+                        @options={{this.signinPositions}}
+                        @onChange={{this.updateShiftPosition}}/>
       </div>
       <div class="col-auto">
-        {{#if this.isPersonDirtTrained}}
+            {{#if this.isPersonDirtTrained}}
           <UiButton @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
             Start Shift
           </UiButton>
-        {{else if this.userCanForceCheckIn}}
+            {{else if this.userCanForceCheckIn}}
           <UiButton @type="warning" @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
             Force Shift Start
           </UiButton>
-        {{else}}
+            {{else}}
           <div class="text-danger mt-1">NOT DIRT TRAINED - SHIFT START IS NOT ALLOWED</div>
-        {{/if}}
-        {{#if this.isSubmitting}}
+            {{/if}}
+            {{#if this.isSubmitting}}
           <LoadingIndicator/>
-        {{/if}}
+            {{/if}}
       </div>
-    </div>
+    </FormRow>
   {{/if}}
 {{/if}}
 
@@ -157,12 +159,14 @@
   <ModalDialog @title="Update shift position" @onEscape={{this.cancelUpdatePosition}} as |Modal|>
     <Modal.body>
       Select the new position the shift should be updated to:
-      <div class="form-row">
+      <FormRow>
         <div class="col-auto">
-          <ChForm::Select @name="newPositionId" @controlClass="form-control" @value={{this.newPositionId}}
-                          @options={{this.signinPositions}} @onChange={{action (mut this.newPositionId)}} />
+          <ChForm::Select @name="newPositionId"
+                          @value={{this.newPositionId}}
+                          @options={{this.signinPositions}}
+                          @onChange={{action (mut this.newPositionId)}}/>
         </div>
-      </div>
+      </FormRow>
       {{#if this.changePositionError}}
         <b class="text-danger">{{this.changePositionError}}</b>
       {{/if}}

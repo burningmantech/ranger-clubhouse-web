@@ -9,24 +9,22 @@
       <Modal.body>
         <fieldset>
           <legend>Bulk edit columns (leave field blank to not update)</legend>
-          <div class="form-row">
+          <FormRow>
             <f.input @name="positionId" @type="select" @options={{this.positionOptions}} @label="Position"/>
-            <f.input @name="description" @label="Description" @type="text" @size={{40}} @maxlength={{40}}
+            <f.input @name="description"
+                     @label="Description"
+                     @type="text"
+                     @size={{40}}
+                     @maxlength={{40}}
                      @hint="{{if f.model.description f.model.description.length "0"}} of 40 characters."/>
             <f.input @name="max" @label="Max Signups" @type="text"/>
-          </div>
-          <div class="form-row">
+          </FormRow>
+          <FormRow>
             <f.input @name="url" @label="Information" @type="textarea" @rows={{3}} @cols={{80}} @maxlength={{512}}
-                     @hint="{{if f.model.url f.model.url.length "0"}}  of 512 characters."/>
-          </div>
-          <div class="form-row">
-            <div class="col-auto">
-              <f.submit @label="Update"/>
-            </div>
-            <div class="col-auto">
-              <UiCancelButton @type="secondary" @onClick={{@onClose}} />
-            </div>
-          </div>
+                     @hint="{{if f.model.url f.model.url.length "0"}} of 512 characters."/>
+          </FormRow>
+          <f.submit @label="Update"/>
+          <UiCancelButton @type="secondary" @onClick={{@onClose}}/>
         </fieldset>
 
         <fieldset class="mt-2">
@@ -50,7 +48,7 @@
             {{#each @position.slots key="id" as |slot|}}
               <tr id="slot-{{slot.id}}">
                 <td>
-                  <f.input @type="checkbox" @name="slot_{{slot.id}}" @inline={{true}} />
+                  <f.input @type="checkbox" @name="slot_{{slot.id}}" @inlineCheckbox={{true}} />
                 </td>
                 <td>{{slot.id}}</td>
                 <td>{{shift-format slot.begins}}</td>

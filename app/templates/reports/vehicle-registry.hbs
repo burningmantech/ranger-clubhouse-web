@@ -1,32 +1,36 @@
 <YearSelect @title="Vehicle Registry" @year={{this.year}} @onChange={{action (mut this.year)}} />
-<div class="form-row my-2">
-  <label class="col-form-label">Filter by Status</label>
+<div class="row row-cols-lg-auto g-3 align-items-center">
+  <FormLabel @auto={{true}}>Filter by Status</FormLabel>
   <div class="col-auto">
-    <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}}
-                    @onChange={{action (mut this.filter)}} @controlClass="form-control"/>
+    <ChForm::Select @name="filter"
+                    @value={{this.filter}}
+                    @options={{this.filterOptions}}
+                    @onChange={{action (mut this.filter)}} />
   </div>
-  <label class="col-form-label">Filter by type</label>
+  <FormLabel @auto={{true}}>Filter by type</FormLabel>
   <div class="col-auto">
-    <ChForm::Select @name="filter" @value={{this.typeFilter}} @options={{this.filterTypeOptions}}
-                    @onChange={{action (mut this.typeFilter)}} @controlClass="form-control"/>
+    <ChForm::Select @name="filter"
+                    @value={{this.typeFilter}}
+                    @options={{this.filterTypeOptions}}
+                    @onChange={{action (mut this.typeFilter)}} />
+  </div>
+  <FormLabel @auto={{true}}>Filter by rental, driving, or license #:</FormLabel>
+  <div class="col-auto">
+    <Input @type="text" @value={{this.numberFilter}} size="5" class="form-control ml-2"/>
   </div>
   <div class="col-auto">
-    <div class="input-group">
-      <label class="col-form-label">Filter by rental, driving, or license #:</label>
-      <Input @type="text" @value={{this.numberFilter}} size="5" class="form-control ml-2"/>
-      <UiButton @type="secondary" @size="sm" @class="ml-1" @onClick={{this.clearNumberFilterAction}}>
-        Clear
-      </UiButton>
-    </div>
+    <UiButton @type="secondary" @size="sm" @onClick={{this.clearNumberFilterAction}}>
+      Clear
+    </UiButton>
   </div>
-  {{#if (has-role "admin")}}
-    <label class="col-form-label">Actions</label>
-    <div class="col-auto">
-      <UiButton @onClick={{this.newAction}}>New Vehicle</UiButton>
-      <UiButton @type="secondary" @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
-    </div>
-  {{/if}}
 </div>
+
+{{#if (has-role "admin")}}
+  <div class="my-3">
+    <UiButton @onClick={{this.newAction}}>New Vehicle</UiButton>
+    <UiButton @type="secondary" @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
+  </div>
+{{/if}}
 Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "vehicle"}}
 <table class="table table-sm table-striped table-hover table-width-auto">
   <thead>
@@ -144,120 +148,163 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
         {{#if (has-role "admin")}}
           <fieldset class="mt-2">
             <legend>Vehicle Record Type &amp; Assignment</legend>
-            <div class="row form-group">
-              <label class="col-form-label col-auto">Type</label>
-              <f.input @name="type" @type="radioGroup" @options={{this.typeOptions}} @inline={{true}}
-                       @wrapClass="col-auto mt-2"/>
-              <label class="col-form-label col-auto">Event Year</label>
+            <FormRow>
+              <div class="col-auto">
+                <FormLabel>Type</FormLabel><br>
+                <f.input @name="type" @type="radioGroup" @options={{this.typeOptions}} @inlineCheckbox={{true}} />
+              </div>
               <f.input @name="event_year"
+                       @label="Event Year"
                        @type="text"
                        @size={{4}}
-                       @wrapClass="col-auto mt-1"
-                       @controlClass="form-control form-control-sm"/>
+                       @fieldSize="sm"/>
               {{#if (eq f.model.type "personal")}}
-                <label class="col-form-label">Personal Vehicle Owner</label>
-                <div class="col-auto mt-1">
-                  <f.input @name="callsign"
-                           @type="search"
-                           @controlClass="form-control form-control-sm autocomplete-input"
-                           @onSearch={{this.searchCallsignAction}}
-                  />
-                </div>
+                <f.input @name="callsign"
+                         @label="Personal Vehicle Owner"
+                         @type="search"
+                         @controlClass="form-control form-control-sm autocomplete-input"
+                         @onSearch={{this.searchCallsignAction}}
+                />
               {{else}}
-                <label class="col-form-label">Team Assignment</label>
-                <div class="col-auto mt-1">
-                  <f.input
-                    @name="team_assignment"
-                    @type="text"
-                    @size={{10}}
-                    @controlClass="form-control form-control-sm"/>
-                </div>
+                <f.input
+                  @name="team_assignment"
+                  @label="Team Assignment"
+                  @type="text"
+                  @size={{10}}
+                  @fieldSize="sm"/>
               {{/if}}
-            </div>
+            </FormRow>
           </fieldset>
           <fieldset>
             <legend>Vehicle Description &amp; Licensing</legend>
-            <div class="row form-group">
-              <f.input @name="vehicle_class" @label="Class" @type="select" @options={{this.vehicleClassOptions}}
-                       @wrapClass="col-auto" @controlClass="form-control form-control-sm"/>
+            <FormRow>
+              <f.input @name="vehicle_class"
+                       @label="Class"
+                       @type="select"
+                       @options={{this.vehicleClassOptions}}
+                       @fieldSize="sm"/>
               <f.input @name="vehicle_year"
                        @label="Year"
                        @type="text"
                        @size={{4}}
                        @maxlength={{4}}
-                       @wrapClass="col-auto" @controlClass="form-control form-control-sm"/>
+                       @fieldSize="sm"/>
               <f.input @name="vehicle_make"
                        @label="Make"
                        @type="text"
                        @size={{15}}
-                       @hint="e.g., Ford, GMC, Toyota, etc."
-                       @wrapClass="col-auto"
-                       @controlClass="form-control form-control-sm"/>
+                       @fieldSize="sm"
+                       @hint="e.g., Ford, GMC, Toyota, etc."/>
               <f.input @name="vehicle_model" @label="Model"
                        @hint="e.g., F-350, Tacoma, etc."
-                       @type="text" @size={{15}}
-                       @wrapClass="col-auto" @controlClass="form-control form-control-sm"/>
-              <f.input @name="vehicle_color" @label="Color" @type="text" @size={{15}}
-                       @wrapClass="col-auto" @controlClass="form-control form-control-sm"/>
-            </div>
-            <div class="row form-group">
+                       @type="text"
+                       @size={{15}}
+                       @fieldSize="sm"/>
+              <f.input @name="vehicle_color"
+                       @label="Color"
+                       @type="text"
+                       @size={{15}}
+                       @fieldSize="sm"/>
+            </FormRow>
+            <FormRow>
               <f.input @name="rental_number"
-                       @label="Rental #" @type="text" @size=5 @wrapClass="col-auto"
-                       @controlClass="form-control form-control-sm"
+                       @label="Rental #"
+                       @type="text"
+                       @size={{5}}
+                       @fieldSize="sm"
                        @disabled={{eq f.model.type "personal"}}
               />
-              <f.input @name="sticker_number" @label="Driving Sticker #" @type="text" @size={{10}}
-                       @wrapClass="col-auto"
-                       @controlClass="form-control form-control-sm"
+              <f.input @name="sticker_number"
+                       @label="Driving Sticker #"
+                       @type="text"
+                       @size={{10}}
+                       @fieldSize="sm"
               />
-              <f.input @name="license_state" @label="License State/Province" @type="select"
+              <f.input @name="license_state"
+                       @label="License State/Province"
+                       @type="select"
                        @options={{this.stateOptions}}
-                       @wrapClass="col-auto" @controlClass="form-control form-control-sm"/>
-              <f.input @name="license_number" @label="License Plate #" @type="text" @size={{10}} @wrapClass="col-auto"
-                       @controlClass="form-control form-control-sm"/>
-            </div>
+              />
+              <f.input @name="license_number"
+                       @label="License Plate #"
+                       @type="text"
+                       @size={{10}}
+                       @fieldSize="sm"/>
+            </FormRow>
           </fieldset>
           <fieldset>
             <legend>Personal Vehicle Use Items (Stickers &amp; Other Items)</legend>
-            <div class="form-row">
-              <label class="col-form-label col-form-label-fixed ">Driving Sticker</label>
-              <f.input @name="driving_sticker"
-                       @type="radioGroup"
-                       @options={{this.drivingStickerOptions}}
-                       @inline={{true}} />
-            </div>
-            <div class="form-row">
-              <label class="col-form-label col-form-label-fixed ">Ranger Logo</label>
-              <f.input @name="ranger_logo" @type="radioGroup" @options={{this.rangerLogoOptions}} @inline={{true}} />
-            </div>
-            <div class="form-row">
-              <label class="col-form-label col-form-label-fixed ">Fuel Chit</label>
-              <f.input @name="fuel_chit" @type="radioGroup" @options={{this.fuelChitOptions}} @inline={{true}} />
-            </div>
-            <div class="form-row">
-              <label class="col-form-label col-form-label-fixed ">Amber Light</label>
-              <f.input @name="amber_light" @type="radioGroup" @options={{this.amberLightOptions}} @inline={{true}} />
-            </div>
+            <FormRow>
+              <FormLabel @fixed={{true}}>Driving Sticker</FormLabel>
+              <div class="col-auto mt-1">
+                <f.input @name="driving_sticker"
+                         @type="radioGroup"
+                         @options={{this.drivingStickerOptions}}
+                         @inlineCheckbox={{true}}/>
+              </div>
+            </FormRow>
+            <FormRow>
+              <FormLabel @fixed={{true}}>Ranger Logo</FormLabel>
+              <div class="col-auto mt-1">
+                <f.input @name="ranger_logo"
+                         @type="radioGroup"
+                         @options={{this.rangerLogoOptions}}
+                         @inlineCheckbox={{true}}/>
+              </div>
+            </FormRow>
+            <FormRow>
+              <FormLabel @fixed={{true}}>Fuel Chit</FormLabel>
+              <div class="col-auto mt-1">
+                <f.input @name="fuel_chit"
+                         @type="radioGroup"
+                         @options={{this.fuelChitOptions}}
+                         @inlineCheckbox={{true}}/>
+              </div>
+            </FormRow>
+            <FormRow>
+              <FormLabel @fixed={{true}}>Amber Light</FormLabel>
+              <div class="col-auto mt-1">
+                <f.input @name="amber_light"
+                         @type="radioGroup"
+                         @options={{this.amberLightOptions}}
+                         @inlineCheckbox={{true}}/>
+              </div>
+            </FormRow>
           </fieldset>
           <fieldset class="mt-2">
             <legend>Notes &amp; Status</legend>
-            <div class="form-row">
-              <f.input @name="notes" @label="Private Notes" @type="textarea" @rows={{2}} @cols={{80}}
-                       @wrapClass="col-auto"/>
-            </div>
-            <div class="form-row mt-3">
-              <f.input @name="request_comment" @label="Comment from person (only used for personal vehicles)" @type="textarea" @rows={{2}} @cols={{80}}
-                       @wrapClass="col-auto" @disabled={{not-eq f.model.type "personal"}}/>
-            </div>
-            <div class="form-row mt-3">
-              <f.input @name="response" @label="Response to person (only used for personal vehicles)" @type="textarea"
-                       @rows={{2}} @cols={{80}} @wrapClass="col-auto" @disabled={{not-eq f.model.type "personal"}}
+            <FormRow>
+              <f.input @name="notes"
+                       @label="Private Notes"
+                       @type="textarea"
+                       @rows={{2}}
+                       @cols={{80}}
               />
-            </div>
-            <div class="row form-group">
-              <label class="col-form-label col-auto">Request Status</label>
-              <f.input @name="status" @type="radioGroup" @options={{this.statusOptions}} @inline={{true}} />
-            </div>
+            </FormRow>
+            <FormRow>
+              <f.input @name="request_comment"
+                       @label="Comment from person (only used for personal vehicles)"
+                       @type="textarea"
+                       @rows={{2}}
+                       @cols={{80}}
+
+                       @disabled={{not-eq f.model.type "personal"}}/>
+            </FormRow>
+            <FormRow>
+              <f.input @name="response"
+                       @label="Response to person (only used for personal vehicles)"
+                       @type="textarea"
+                       @rows={{2}}
+                       @cols={{80}}
+                       @disabled={{not-eq f.model.type "personal"}}
+              />
+            </FormRow>
+            <FormRow>
+              <FormLabel @auto={{true}}>Request Status</FormLabel>
+              <div class="col-auto mt-1">
+                <f.input @name="status" @type="radioGroup" @options={{this.statusOptions}} @inlineCheckbox={{true}} />
+              </div>
+            </FormRow>
           </fieldset>
         {{else}}
           <h3 class="ml-2">
@@ -314,10 +361,10 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
           {{/if}}
 
           {{#if (and this.entry.isApproved (not-eq this.entry.driving_sticker "none"))}}
-            <div class="form-row mt-2">
+            <FormRow>
               <f.input @name="sticker_number" @label="Enter Driving Sticker #"
-                       @type="text" @size={{10}} @wrapClass="col-auto" @autofocus={{true}} />
-            </div>
+                       @type="text" @size={{10}} @autofocus={{true}}/>
+            </FormRow>
           {{/if}}
         {{/if}}
 
@@ -326,7 +373,7 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
         <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
         <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelAction}} />
         {{#if (and (has-role "admin") (not this.entry.isNew))}}
-          <UiButton @type="danger" @class="ml-auto" @onClick={{fn this.deleteAction this.entry}}>
+          <UiButton @type="danger" @class="ms-auto" @onClick={{fn this.deleteAction this.entry}}>
             {{fa-icon "trash"}} Delete
           </UiButton>
         {{/if}}

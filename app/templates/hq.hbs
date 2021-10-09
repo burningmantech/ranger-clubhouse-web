@@ -37,7 +37,7 @@
       <div class="mt-2 text-muted">Added {{shift-format this.person.message_updated_at}}</div>
     </ChNotice>
   {{/if}}
-  <div class="d-flex flex-column flex-lg-row ">
+  <div class="d-flex flex-sm-column flex-lg-row">
     <div class="flex-lg-grow-1">
       {{#if (not this.person.canStartShift)}}
         <ChNotice @title="Account is disabled" @type="danger" @icon="ban">
@@ -60,7 +60,7 @@
       {{outlet}}
     </div>
 
-    <div class=" ml-auto d-print-none pl-4">
+    <div class="ml-auto p-4 wd-print-none">
       <div class="mugshot">
         {{#if this.photo}}
           {{#if this.photo.photo_url}}

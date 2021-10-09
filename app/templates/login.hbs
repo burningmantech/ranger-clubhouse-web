@@ -42,42 +42,43 @@
   {{/if}}
   <div class="d-flex flex-column flex-lg-row align-items-stretch mt-lg-4">
     <div class="mr-lg-4">
-      <ChForm @formId="auth"
-              @formFor={{this.authForm}}
-              @validator={{this.loginValidations}}
-              @autocomplete="on"
-              @onSubmit={{this.submit}} as |f|>
-        <div class="form-row">
-          <f.input @name="identification"
-                   @label="Email"
-                   @type="text"
-                   @inputmode="email"
-                   @autocomplete="username"
-                   @autofocus={{true}}
-                   @noSpaces={{true}}
-                   @grid="col-sm-12 col-lg-auto" @size={{30}} />
-        </div>
-        <div class="form-row">
-          <f.input @name="password"
-                   @label="Password"
-                   @type="password"
-                   @autocomplete="current-password"
-                   @grid="col-sm-12 col-lg-auto"
-                   @size={{30}}/>
-        </div>
-        <div class="form-row">
-          <div class="col-sm-12 col-lg-4">
-            <f.submit @label="Login"
-                      @disabled={{this.isSubmitting}}
-                      @submitClass="btn-lg btn-responsive login-submit mb-4"/>
-            {{#if this.isSubmitting}}
-              <LoadingIndicator/>{{/if}}
-          </div>
-          <div class="col-sm-12 col-lg-8 mt-2 mb-4 text-right">
-            <LinkTo @route="reset-password" class="d-block">Forgot your password?</LinkTo>
-          </div>
-        </div>
-      </ChForm>
+        <ChForm @formId="auth"
+                @formFor={{this.authForm}}
+                @validator={{this.loginValidations}}
+                @autocomplete="on"
+                @onSubmit={{this.submit}} as |f|>
+            <FormRow>
+                <f.input @name="identification"
+                         @label="Email"
+                         @type="text"
+                         @inputmode="email"
+                         @autocomplete="username"
+                         @autofocus={{true}}
+                         @noSpaces={{true}}
+                         @grid="col-sm-12 col-lg-auto" @size={{30}}/>
+            </FormRow>
+            <FormRow>
+                <f.input @name="password"
+                         @label="Password"
+                         @type="password"
+                         @autocomplete="current-password"
+                         @grid="col-sm-12 col-lg-auto"
+                         @size={{30}}/>
+            </FormRow>
+            <FormRow>
+                <div class="col-sm-12 col-lg-4">
+                    <f.submit @label="Login"
+                              @disabled={{this.isSubmitting}}
+                              @submitClass="btn-lg btn-responsive login-submit mb-4"/>
+                            {{#if this.isSubmitting}}
+                        <LoadingIndicator/>
+                            {{/if}}
+                </div>
+                <div class="col-sm-12 col-lg-8 mt-2 mb-4 text-right">
+                    <LinkTo @route="reset-password" class="d-block">Forgot your password?</LinkTo>
+                </div>
+            </FormRow>
+        </ChForm>
     </div>
     <div class="mt-4">
       <UiSection>

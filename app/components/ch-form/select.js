@@ -13,6 +13,11 @@ export default class ChFormSelectComponent extends Component {
     assert(`select options for field "${this.args.name}" is not an array`, typeOf(options) === 'array');
   }
 
+  get controlClass() {
+    const {fieldSize,controlClass} = this.args;
+    return controlClass ?? (fieldSize ? `form-select form-select-${fieldSize}` : `form-select`);
+  }
+
   // select change
   @action
   changeEvent(event) {

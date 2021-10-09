@@ -1,9 +1,12 @@
 <ModalDialog @title="Edit Positions" @size="xl" @onEscape={{@onCancel}} as |Modal|>
   <ChForm @formId="positions" @formFor={{this.positionForm}}  @onSubmit={{@onSave}} as |f|>
     <Modal.body>
-      <div class="form-row">
-        <f.input @name="positionIds" @type="checkboxGroup" @wrapClass="form-row" @cols={{4}} @options={{this.positionOptions}} />
-      </div>
+      <FormRow>
+        <f.input @name="positionIds"
+                 @type="checkboxGroup"
+                 @cols={{4}}
+                 @options={{this.positionOptions}}/>
+      </FormRow>
     </Modal.body>
     <Modal.footer @noAlign=true>
       <f.submit @label="Update"/>

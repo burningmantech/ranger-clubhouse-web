@@ -11,28 +11,18 @@
 {{#unless this.over_hours}}
   <ChForm @formId="date-form" @formFor={{this.dateForm}} @validator={{this.dateValidations}}
           @onSubmit={{this.submitForm}} as |f|>
-    <div class="form-row m2-4">
-      <div class="col-auto">
-        <label class="col-form-label">Date &amp; time to view:</label>
-      </div>
-      <div class="col-auto">
-        <f.input @name="date" @type="datetime"/>
-      </div>
+    <FormRow>
+      <FormLabel @auto={{true}}>Date &amp; time to view:</FormLabel>
+      <f.input @name="date" @type="datetime" @wrapClass="col-auto"/>
       <div class="col-auto">
         <f.submit @label="Submit"/>
         <UiButton @type="secondary" @onClick={{this.viewCurrentTime}}>View Current Time</UiButton>
       </div>
-    </div>
+    </FormRow>
   </ChForm>
 {{/unless}}
 
-<p>
-  Showing {{pluralize this.timesheet.length "person"}} on duty in {{pluralize this.positions.length "position"}}.
-  <UiButton @type="secondary" @class="ml-2" @onClick={{this.toggleExpandAll}}>
-    {{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}
-  </UiButton>
-
-</p>
+Showing {{pluralize this.timesheet.length "person"}} on duty in {{pluralize this.positions.length "position"}}.
 {{#each this.positions key="id" as |position|}}
   <div class="max-width-700">
     <ChAccordion as |accordion|>

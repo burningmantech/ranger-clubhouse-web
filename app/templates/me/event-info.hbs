@@ -77,21 +77,21 @@
 
 <UiSection>
   <:title>{{fa-icon "list"}} Positions</:title>
-  <:body>
-    Positions indicate which shifts you are allowed to sign up for and what ART trainings you may attend.
-    You have {{pluralize this.personPositions.length "position"}} granted:
-    <div class="form-row mt-2">
-      {{#each this.personPositions as |position| }}
-        <div class="col-sm-6 col-md-3">
-          {{position.title}}
-        </div>
-      {{else}}
-        <div class="col-auto">
-          You currently do not hold any positions.
-        </div>
-      {{/each}}
-    </div>
-  </:body>
+    <:body>
+        Positions indicate which shifts you are allowed to sign up for and what ART trainings you may attend.
+        You have {{pluralize this.personPositions.length "position"}} granted:
+        <FormRow>
+                    {{#each this.personPositions as |position| }}
+                <div class="col-sm-6 col-md-3">
+                            {{position.title}}
+                </div>
+                    {{else}}
+                <div class="col-auto">
+                    You currently do not hold any positions.
+                </div>
+                    {{/each}}
+        </FormRow>
+    </:body>
 </UiSection>
 {{#if (or this.person.isActive this.person.isAlpha this.person.isNonRanger)}}
   <UiSection>

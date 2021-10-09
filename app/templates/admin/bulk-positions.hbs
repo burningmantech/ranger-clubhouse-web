@@ -78,29 +78,27 @@
 {{/if}}
 
 <ChForm @formId="bulkForm" @formFor={{this.bulkForm}} @changeSet={{false}} @onSubmit={{this.verifyAction}} as |f|>
-  <div class="form-row">
-    <label class="col-form-label">Position</label>
-    <f.input @name="positionId" @type="select" @options={{this.positionOptions}} />
-    <div class="col-auto mt-2 ml-2">
-      <f.input @name="grant" @type="radioGroup" @options={{this.grantRevokeOptions}} @inline={{true}}/>
+  <FormRow>
+    <FormLabel>Position</FormLabel>
+    <f.input @name="positionId" @type="select" @options={{this.positionOptions}}/>
+  </FormRow>
+  <FormRow>
+    <div class="col-12 mt-2">
+      <f.input @name="grant" @type="radioGroup" @options={{this.grantRevokeOptions}} @inlineCheckbox={{true}}/>
     </div>
-  </div>
-  <div class="form-row">
+  </FormRow>
+  <FormRow>
     <f.input @name="callsigns"
              @label="Enter a list of callsigns to grant or revoke a position:"
              @type="textarea"
              @cols={{30}}
-             @rows={{10}} />
-  </div>
-  <p class="ml-1">
+             @rows={{10}}/>
+  </FormRow>
+  <p>
     Don't worry, you'll have a chance to review the callsigns and position before actually committing the changes.
   </p>
-  <div class="form-row">
-    <div class="col-auto">
-      <f.submit @label="Verify Callsign(s)"
-                @disabled={{or (is-empty f.model.positionId) (is-empty f.model.callsigns) this.isSubmitting}} />
-     </div>
-  </div>
+  <f.submit @label="Verify Callsign(s)"
+            @disabled={{or (is-empty f.model.positionId) (is-empty f.model.callsigns) this.isSubmitting}}/>
 </ChForm>
 
 {{#if this.isSubmitting}}

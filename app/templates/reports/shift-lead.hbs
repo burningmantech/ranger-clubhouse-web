@@ -2,8 +2,8 @@
   <YearSelect @title="Shift Lead Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 </div>
 {{#if this.dirtShiftTimes}}
-  <PrintInstruction />
-  <div class="form-row mt-2 d-print-none">
+  <PrintInstruction/>
+  <FormRow @class="d-print-none">
     <div class="col-auto">
       <PeriodSelect
         @label="Select a {{this.year}} shift period"
@@ -15,7 +15,7 @@
     <div class="col-auto">
       <UiButton @onClick={{this.onDutyAction}}>Currently On Duty</UiButton>
     </div>
-  </div>
+  </FormRow>
 {{else}}
   <b class="text-danger">No {{this.year}} shifts could be located.</b>
 {{/if}}
@@ -32,32 +32,33 @@
     {{dayjs-format this.shiftStart "dddd, MMMM Do YYYY @ HH:mm"}}
   </h1>
 
-  <div class="d-flex">
-    <section class="d-flex-equal mr-2">
-        <h3>{{pluralize this.dirt_signups.length "Dirt Ranger"}},
-          {{#if this.green_dot_total}}
-            including {{pluralize this.green_dot_total "Green Dot"}}
-          {{else}}
-            and no Green Dots
-          {{/if}}
-        </h3>
-        {{#if this.green_dot_total}}
-          <p>
-            {{#if this.green_dot_females}}
-              {{pluralize this.green_dot_females "female Green Dot"}}
-            {{else}}
-              No female green dots are signed up.
-            {{/if}}
-          </p>
-        {{/if}}
-        <h3>{{pluralize this.command_staff_signups.length "Command Staff Ranger"}}</h3>
-        <h3>{{pluralize this.non_dirt_signups.length "Special Team Ranger"}}</h3>
 
+  <div class="d-flex">
+    <section class="flex-fill ui-section">
+      <h3>{{pluralize this.dirt_signups.length "Dirt Ranger"}},
+        {{#if this.green_dot_total}}
+          including {{pluralize this.green_dot_total "Green Dot"}}
+        {{else}}
+          and no Green Dots
+        {{/if}}
+      </h3>
+      {{#if this.green_dot_total}}
+        <p>
+          {{#if this.green_dot_females}}
+            {{pluralize this.green_dot_females "female Green Dot"}}
+          {{else}}
+            No female green dots are signed up.
+          {{/if}}
+        </p>
+      {{/if}}
+      <h3>{{pluralize this.command_staff_signups.length "Command Staff Ranger"}}</h3>
+      <h3>{{pluralize this.non_dirt_signups.length "Special Team Ranger"}}</h3>
     </section>
-    <section class="d-flex-equal">
+
+    <section class="flex-fill ui-section">
       <h3>{{pluralize this.below_min_positions.length "position"}} BELOW MIN. STAFFING</h3>
       <table class="table table-sm table-striped">
-         <thead>
+        <thead>
         <tr>
           <th>Position</th>
           <th>Shift</th>
@@ -88,7 +89,8 @@
         {{else}}
           <tr>
             <td colspan="4">
-              <b class="text-success text-center">Well done! All positions are fully staffed for this shift period.</b>
+              <b class="text-success text-center">Well done! All positions are fully staffed for this shift
+                period.</b>
             </td>
           </tr>
         {{/each}}

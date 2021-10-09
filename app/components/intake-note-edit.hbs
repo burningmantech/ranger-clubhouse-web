@@ -41,35 +41,26 @@
     {{#if @canAddNote}}
       <ChForm @formId="person-note" @formFor={{this.noteForm}} @onSubmit={{this.submitNoteAction}} as |f|>
         <b>Your note will be timestamped, and appended to any existing notes.</b>
-        <div class="row mt-2">
-          <div class="col-auto">
-            <f.input @name="event_year" @label="Event Year" @type="select" @options={{this.yearOptions}} />
-          </div>
-          <div class="col-auto">
-            <f.input @name="ranking" @label={{concat (uppercase @type) " Ranking"}} @type="select"
-                     @options={{if (eq @type "personnel") this.personnelRankingOptions this.rankingOptions}} />
-          </div>
-        </div>
-        <div class="row mt-2">
-          <div class="col-auto">
-            <f.input @name="note" @label={{concat "Enter your " (uppercase @type) " notes:"}}
-                     @type="textarea"
-                     @rows=5 @cols=80/>
-          </div>
-        </div>
-        <div class="row mt-2">
-          <div class="col-auto">
-            <f.submit @label="Save Note" disabled={{or this.isSubmitting (is-empty f.model.note)}} />
-            <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{@closeNoteAction}} />
-            {{#if this.isSubmitting}}
-              <LoadingIndicator/>
-            {{/if}}
-          </div>
-        </div>
+        <FormRow>
+          <f.input @name="event_year" @label="Event Year" @type="select" @options={{this.yearOptions}} />
+          <f.input @name="ranking" @label={{concat (uppercase @type) " Ranking"}} @type="select"
+                   @options={{if (eq @type "personnel") this.personnelRankingOptions this.rankingOptions}} />
+        </FormRow>
+        <FormRow>
+          <f.input @name="note"
+                   @label="Enter your {{@type}}  notes:"
+                   @type="textarea"
+                   @rows={{5}} @cols={{80}}/>
+        </FormRow>
+        <f.submit @label="Save Note" disabled={{or this.isSubmitting (is-empty f.model.note)}} />
+        <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{@closeNoteAction}} />
+        {{#if this.isSubmitting}}
+          <LoadingIndicator/>
+        {{/if}}
       </ChForm>
     {{else}}
-       <p>
-         <UiCloseButton @onClick={{@closeNoteAction}} />
+      <p>
+        <UiCloseButton @onClick={{@closeNoteAction}} />
       </p>
     {{/if}}
   </Modal.body>

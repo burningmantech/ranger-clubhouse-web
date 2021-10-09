@@ -5,7 +5,7 @@
     <div class="timesheet-row timesheet-header">
       <div class="timesheet-time">From</div>
       <div class="timesheet-time">To</div>
-      <div class="timesheet-duration">Time</div>
+      <div class="timesheet-duration">Duration</div>
       <div class="timesheet-position">Position</div>
     </div>
     {{#each @timesheetsMissing as |tsm|}}
@@ -22,7 +22,7 @@
         <div class="timesheet-row">
           <div>
             {{#if tsm.isPending}}
-              <span class="text-info font-weight-bold">The request is pending review.</span>
+              <b class="text-info">The request is pending review.</b>
             {{else}}
               {{#if tsm.isApproved}}
                 <span class="text-success">{{fa-icon "check"}} The request has been APPROVED. Your timesheet has been updated with the missing shift.</span>
@@ -44,18 +44,20 @@
               {{#if tsm.isReloading}}
                 <SpinIcon/>
               {{else if tsm.isRejected}}
-                Submit Appeal
+                {{fa-icon "redo"}} Submit Appeal
               {{else}}
-                Edit
+                {{fa-icon "edit"}} Edit
               {{/if}}
             </UiButton>
             {{#if tsm.isPending}}
-              <UiButton @type="danger" @onClick={{fn this.deleteAction tsm}}
+              <UiButton @type="danger"
+                        @onClick={{fn this.deleteAction tsm}}
                         @disabled={{or tsm.isReloading tsm.isSaving}}>
                 {{#if tsm.isSaving}}
-                  Deleting <SpinIcon />
+                  Deleting
+                  <SpinIcon/>
                 {{else}}
-                  Delete
+                  {{fa-icon "trash"}} Delete
                 {{/if}}
               </UiButton>
             {{/if}}
@@ -64,6 +66,7 @@
       </div>
     {{/each}}
   </div>
+  <hr>
 {{else}}
   <p>
     No missing timesheet entry requests have been submitted yet.
@@ -81,42 +84,52 @@
             @validator={{this.timesheetValidations}}
             @onSubmit={{this.saveAction}} as |f|>
       <Modal.body>
-        <div class="form-group mb-4">
+        <p>
           Use this form for <b>MISSING TIMESHEET ENTRIES ONLY</b>. If you have
           an existing entry that needs correction, go back to the
           Timesheet Review page and submit a correction by clicking on 'Mark Entry Incorrect'.
-        </div>
-        <div class="form-row">
-          <f.input @name="position_id" @label="Which position was the shift for?" @type="select"
+        </p>
+        <FormRow>
+          <f.input @name="position_id"
+                   @label="Which position was the shift for?"
+                   @type="select"
                    @options={{this.positionOptions}}
-                   @grid="col-auto"/>
-        </div>
-        <div class="form-row">
-          <f.input @name="on_duty" @label="What was the START date & time of the shift?" @type="datetime" @size={{15}}
-                   @grid="col-auto" @startDate={{this.startDateForEntry}} />
-          <f.input @name="off_duty" @label="What was the END date & time of the shift?" @type="datetime" @size={{15}}
-                   @grid="col-auto"
-                   @startDate={{this.startDateForEntry}} />
-        </div>
-        <div class="form-row">
-          <f.input @name="partner" @label="Who was your partner (if any) for the shift?" @type="text" @size={{20}} />
-        </div>
-        <div class="form-row">
-          <p>
-            <b>Give as much supporting details on why a shift should be added to your timesheet.</b><br>
-            <span class="text-danger">Your request may be denied if not enough supporting details are provided.</span>
-          </p>
-        </div>
+                   @inline={{true}}/>
+        </FormRow>
+        <FormRow>
+          <f.input @name="on_duty" @label="What was the START date & time of the shift?"
+                   @type="datetime"
+                   @size={{15}}
+                   @inline={{true}}
+                   @startDate={{this.startDateForEntry}}/>
+          <f.input @name="off_duty"
+                   @label="What was the END date & time of the shift?"
+                   @type="datetime"
+                   @size={{15}}
+                   @inline={{true}}
+                   @startDate={{this.startDateForEntry}}/>
+        </FormRow>
+        <FormRow>
+          <f.input @name="partner"
+                   @label="Who was your partner (if any) for the shift?"
+                   @type="text"
+                   @size={{20}}/>
+        </FormRow>
+        <p>
+          <b>Give as much supporting details on why a shift should be added to your timesheet.</b><br>
+          <span class="text-danger">Your request may be denied if not enough supporting details are provided.</span>
+        </p>
         <ul>
           <li>If you had no partner for the shift, is there anyone who can verify your hours?</li>
           <li>Was another person responsible for checking you in, and why did they fail to do that?</li>
-          <li>If you called Ranger HQ on the radio to check you in for the shift, who was the Ranger on the other end?
+          <li>If you called Ranger HQ on the radio to check you in for the shift, who was the Ranger on the other
+            end?
           </li>
         </ul>
         {{#if this.entry.isRejected}}
-          <b class="text-danger">The correction request has been rejected.</b>
+          <b class="text-danger">Sorry, the correction request has been rejected.</b>
           <div class="card mb-4">
-            <div class="card-header">The timesheet correction team has left you a note:</div>
+            <div class="card-header">The Timesheet Correction Team has left you a note:</div>
             <div class="card-body">
               {{this.entry.reviewer_notes}}
             </div>
@@ -125,7 +138,9 @@
         <f.input @name="additional_notes"
                  @label={{if this.entry.isRejected "Supply additional information for an appeal:"
                              "Why is this new entry needed?"}}
-                 @type="textarea" @cols={{80}} @rows={{4}} />
+                 @type="textarea"
+                 @cols={{80}}
+                 @rows={{4}} />
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if f.model.isNew "Submit New Request" "Update Request"}} @disabled={{this.isSubmitting}} />

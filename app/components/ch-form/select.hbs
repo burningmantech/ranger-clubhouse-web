@@ -1,5 +1,4 @@
-<select name={{@name}} class={{@controlClass}}
-        size={{@size}} multiple={{@multiple}}
+<select name={{@name}} class={{this.controlClass}} size={{@size}} multiple={{@multiple}}
         disabled={{@disabled}} {{on "change" this.changeEvent}}>
   {{~#if @includeBlank~}}
     <option value="" selected={{is-empty @value}}>-</option>

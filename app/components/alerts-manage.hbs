@@ -29,36 +29,41 @@
     </p>
     <ChForm @formId="verify" @formFor={{this.verifyForm}} as |f|>
       {{#if (or this.numbers.is_same (and this.numbers.off_playa.phone (not this.numbers.off_playa.is_verified)))}}
-        <div class="form-row">
-          <f.input @name="off_playa" @label={{concat "Enter verification code for " this.numbers.off_playa.phone}}
-                   @type="text" @inputmode="decimal" @size=5 @maxlength=5 @grid="col-auto"/>
-        </div>
-        <div class="form-row">
-          <UiButton @disabled={{this.isSubmitting}} @onClick={{fn this.confirmCodeAction f.model "off-playa"}}>
+        <FormRow>
+          <f.input @name="off_playa" @label="Enter verification code for {{this.numbers.off_playa.phone}}"
+                   @type="text" @inputmode="decimal" @size={{5}} @maxlength={{5}} @inline={{true}}/>
+        </FormRow>
+        <FormRow>
+          <UiButton @disabled={{this.isSubmitting}}
+                    @onClick={{fn this.confirmCodeAction f.model "off-playa"}}>
             Verify
           </UiButton>
-          <UiButton @type="secondary" @class="ml-2" @onClick={{fn this.sendNewCodeAction "off-playa"}}
-                  @disabled={{this.isSubmitting}}>
+          <UiButton @type="secondary"
+                    @class="ml-2"
+                    @onClick={{fn this.sendNewCodeAction "off-playa"}} @disabled={{this.isSubmitting}}>
             Resend verification code
           </UiButton>
-        </div>
+        </FormRow>
       {{/if}}
       {{#if (and (not this.numbers.is_same) this.numbers.on_playa.phone (not this.numbers.on_playa.is_verified))}}
-        <div class="form-row">
+        <FormRow>
           <f.input @name="on_playa" @label={{concat "Enter verification code for " this.numbers.on_playa.phone}}
-                   @type="text" @inputmode="decimal" @size=5 @maxlength=5 @grid="col-auto"/>
-        </div>
-        <div class="form-row">
-          <UiButton @disabled={{this.isSubmitting}} @onClick={{fn this.confirmCodeAction f.model "on-playa"}}>
+                   @type="text" @inputmode="decimal" @size={{5}} @maxlength={{5}} @inline={{true}}/>
+        </FormRow>
+        <FormRow>
+          <UiButton @disabled={{this.isSubmitting}}
+                    @onClick={{fn this.confirmCodeAction f.model "on-playa"}}>
             Verify
           </UiButton>
-          <UiButton @type="secondary" @class="ml-2" @onClick={{fn this.sendNewCodeAction "on-playa"}}
-                  @disabled={{this.isSubmitting}}>
+          <UiButton @type="secondary"
+                    @class="ml-2"
+                    @onClick={{fn this.sendNewCodeAction "on-playa"}}
+                    @disabled={{this.isSubmitting}}>
             Resend verification code
           </UiButton>
-        </div>
+        </FormRow>
       {{/if}}
-      <div class="form-row">
+      <FormRow>
         <div class="col-auto">
           {{#if this.isSubmitting}}
             <LoadingIndicator/>
@@ -66,7 +71,7 @@
             &nbsp;
           {{/if}}
         </div>
-      </div>
+      </FormRow>
     </ChForm>
   </ChNotice>
 {{/if}}
@@ -81,22 +86,29 @@
 
     <ChForm @formId="numbers" @formFor={{this.phoneForm}} @validator={{this.numberValidations}}
             @onSubmit={{this.saveNumbersAction}} as |f|>
-      <div class="form-row">
+      <FormRow>
         <f.input @name="off_playa"
-                 @label={{if f.model.is_same "Pre-Event & On Playa phone number:" "Pre-Event phone number:"}}
-                 @type="text" @inputmode="tel" @size={{30}} @grid="col-auto"/>
-        <div class="col-sm-12 col-lg-auto">
-          <label class="col-form-label d-sm-none d-lg-block">&nbsp;</label>
+                 @label={{if f.model.is_same
+                             "Pre-Event & On Playa phone number:" "Pre-Event phone number:"}}
+                 @type="text" @inputmode="tel" @size={{30}} @inline={{true}}/>
+      </FormRow>
+      <FormRow>
+        <div class="col-12">
           <f.input @name="is_same" @label="On playa number is the same as the pre-event number" @type="checkbox"/>
         </div>
-      </div>
-      <div class="row form-group mt-2 {{if f.model.is_same "d-none"}}">
-        <f.input @name="on_playa" @label="On Playa phone number:" @type="text" @inputmode="tel" @size={{30}}
-                 @grid="col-auto"/>
-      </div>
+      </FormRow>
+      <FormRow @class={{if f.model.is_same "d-none"}}>
+        <f.input @name="on_playa"
+                 @label="On Playa phone number:"
+                 @type="text"
+                 @inputmode="tel"
+                 @size={{30}}
+                 @inline={{true}}/>
+      </FormRow>
 
-      <div class="mt-2">
-        <f.submit @label="Update SMS Numbers" @disabled={{this.isUpdatingNumbers}} />
+      <div class="mt-3">
+        <f.submit @label="Update Phone {{if f.model.is_same "Number" "Numbers"}}"
+                  @disabled={{this.isUpdatingNumbers}} />
         {{#if this.isUpdatingNumbers}}
           <LoadingIndicator/>
         {{/if}}

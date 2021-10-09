@@ -29,13 +29,13 @@
         </li>
       </ol>
 
-      <div class="form-row">
+      <FormRow>
         <f.input @name="message"
                  @label="Enter your contact message to {{@callsign}}:"
                  @type="textarea"
                  @rows={{10}} @cols={{80}}
         />
-      </div>
+      </FormRow>
     </Modal.body>
     <Modal.footer @noAlign=true>
       <f.submit @label={{if this.isSending "Sending" "Send Message"}} @disabled={{this.isSending}} />

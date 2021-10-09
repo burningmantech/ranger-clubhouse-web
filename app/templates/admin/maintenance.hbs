@@ -387,16 +387,14 @@
 {{#if this.taskParam}}
   <ModalDialog @onEscape={{this.cancelParamAction}} as |Modal|>
     <Modal.body>
-      <div class="form-row">
-        <label class="col-form-label">
-          {{this.taskParam.param.title}}
-        </label>
-      </div>
-      <div class="form-row">
+        <FormRow>
+            <FormLabel>{{this.taskParam.param.title}}</FormLabel>
+        </FormRow>
+      <FormRow>
         <div class="col-auto">
-          <Input @type="text" size="80" class="control-form" @value={{this.paramValue}} />
+          <Input @type="text" size="80" class="form-control" @value={{this.paramValue}}/>
         </div>
-      </div>
+      </FormRow>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
       <UiButton @onClick={{fn this.executeTask this.taskParam}}>Submit</UiButton>

@@ -1,8 +1,8 @@
 <main>
   <h1>Handle Checker</h1>
 
-  <div class="form-row align-items-left">
-    <label class="col-form-label">Proposed handle</label>
+  <FormRow>
+    <FormLabel @auto={{true}}>Proposed handle</FormLabel>
     <div class="col-auto">
       <Input @type="text" @value={{this.currentName}} id="currentName"
              @enter={{action this.checkCurrentName}}
@@ -14,10 +14,10 @@
     <div class="col-auto">
       <UiButton @type="secondary" @onClick={{this.clearCheckedHandles}}>Clear history</UiButton>
     </div>
-  </div>
+  </FormRow>
 
   <legend>Handle rules</legend>
-  <div class="form-group row">
+  <FormRow>
     <div class="col">
       {{#each this.handleRules as |rule|}}
         <div class="form-check form-check-inline">
@@ -28,10 +28,10 @@
         </div>
       {{/each}}
     </div>
-  </div>
+  </FormRow>
 
   <legend>Entity types</legend>
-  <div class="form-group row">
+  <FormRow>
     <div class="col">
       <div class="form-check form-check-inline">
         <Input @type="checkbox" @checked={{this.includeVintage}} class="form-check-input" id="include-vintage"/>
@@ -46,76 +46,88 @@
         </div>
       {{/each}}
     </div>
-  </div>
+  </FormRow>
 
-  <div class="row">
-    {{#each this.checkedHandles as |checked|}}
-      <div class="check-result-card card" id="check-result-{{checked.id}}">
-        <details open>
-          <summary class="card-header">
-            {{checked.name}} ({{checked.conflicts.length}})
-          </summary>
-          {{#each checked.conflicts as |conflict index|}}
-            <div class="card">
-              <div class="card-header conflict-priority-{{conflict.priority}} conflict-rule-{{conflict.ruleId}}">
-                {{! template-lint-disable no-nested-interactive}}
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-                        data-target="#conflict-detail-{{checked.id}}-{{index}}">
-                  {{conflict.description}}
-                </button>
-              </div>
-              <div id="conflict-detail-{{checked.id}}-{{index}}" class="collapse">
-                <div class="card-body">
-                  {{get this.ruleNames conflict.ruleId}}, {{conflict.priority}} priority
-                  {{#if conflict.conflictingHandle}}
-                    {{#with conflict.conflictingHandle as |handle|}}
-                      {{#if handle.personId}}
-                        <LinkTo @route="person.index" @model={{handle.personId}}
-                                target="_blank" rel="noopener noreferrer">
-                          {{handle.entityType}} {{handle.name}}
-                        </LinkTo>
-                      {{else}}
-                        {{handle.entityType}} {{handle.name}}
+  <UiSection>
+    <:title>Check Handle Results</:title>
+    <:body>
+      <FormRow>
+        {{#each this.checkedHandles as |checked|}}
+          <div class="check-result-card card" id="check-result-{{checked.id}}">
+            <details open>
+              <summary class="card-header">
+                {{checked.name}} ({{checked.conflicts.length}})
+              </summary>
+              {{#each checked.conflicts as |conflict index|}}
+                <div class="card">
+                  <div class="card-header conflict-priority-{{conflict.priority}} conflict-rule-{{conflict.ruleId}}">
+                    {{! template-lint-disable no-nested-interactive}}
+                    <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#conflict-detail-{{checked.id}}-{{index}}">
+                      {{conflict.description}}
+                    </button>
+                  </div>
+                  <div id="conflict-detail-{{checked.id}}-{{index}}" class="collapse">
+                    <div class="card-body">
+                      {{get this.ruleNames conflict.ruleId}}, {{conflict.priority}} priority
+                      {{#if conflict.conflictingHandle}}
+                        {{#with conflict.conflictingHandle as |handle|}}
+                          {{#if handle.personId}}
+                            <LinkTo @route="person.index" @model={{handle.personId}}
+                                    target="_blank" rel="noopener noreferrer">
+                              {{handle.entityType}} {{handle.name}}
+                            </LinkTo>
+                          {{else}}
+                            {{handle.entityType}} {{handle.name}}
+                          {{/if}}
+                          {{#if handle.personVintage}}(vintage){{/if}}
+                        {{/with}}
                       {{/if}}
-                      {{#if handle.personVintage}}(vintage){{/if}}
-                    {{/with}}
-                  {{/if}}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          {{/each}}
-        </details>
-      </div>
-    {{/each}}
-  </div>
+              {{/each}}
+            </details>
+          </div>
+        {{else}}
+          <div class="my-2">
+            No handles checked yet.
+          </div>
+        {{/each}}
+      </FormRow>
+    </:body>
+  </UiSection>
 
-  <hr>
 
-    <h3>All {{this.allEnabledHandles.length}} Handles</h3>
-    <table class="table table-sm table-striped table-hover table-width-auto">
-      <thead>
-      <tr>
-        <th>Handle</th>
-        <th>Entity type</th>
-        <th>Vintage</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each this.allEnabledHandles key="keyIdx" as |handle|}}
+  <UiSection>
+    <:title>All {{this.allEnabledHandles.length}} Handles</:title>
+    <:body>
+      <table class="table table-sm table-striped table-hover table-width-auto">
+        <thead>
         <tr>
-          <td>
-            {{#if handle.personId}}
-              <LinkTo @route="person.index" @model={{handle.personId}} target="_blank" rel="noopener noreferrer">
-                {{handle.name}}
-              </LinkTo>
-            {{else}}
-              {{handle.name}}
-            {{/if}}
-          </td>
-          <td>{{handle.entityType}}</td>
-          <td>{{if handle.personVintage "vintage"}}</td>
+          <th>Handle</th>
+          <th>Entity type</th>
+          <th>Vintage</th>
         </tr>
-      {{/each}}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+        {{#each this.allEnabledHandles key="keyIdx" as |handle|}}
+          <tr>
+            <td>
+              {{#if handle.personId}}
+                <LinkTo @route="person.index" @model={{handle.personId}} target="_blank" rel="noopener noreferrer">
+                  {{handle.name}}
+                </LinkTo>
+              {{else}}
+                {{handle.name}}
+              {{/if}}
+            </td>
+            <td>{{handle.entityType}}</td>
+            <td>{{if handle.personVintage "vintage"}}</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </:body>
+  </UiSection>
 </main>

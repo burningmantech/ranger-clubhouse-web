@@ -1,15 +1,17 @@
 <div class="autocomplete-input-block">
   <div class="input-group">
     {{#if @modeOptions}}
-      <div class="input-group-prepend">
-        <button class="btn btn-outline-secondary dropdown-toggle input-group-text" type="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">{{this.modeText}}</button>
-        <div class="dropdown-menu">
+        <button type="button"
+                class="btn btn-light-gray dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">{{this.modeText}}</button>
+        <ul class="dropdown-menu">
           {{#each @modeOptions as |opt|}}
-            <a class="dropdown-item" href="#" {{on "click" (fn this.selectModeEvent opt.value)}}>{{opt.label}}</a>
+            <li class="dropdown-item">
+              <a href="#" {{on "click" (fn this.selectModeEvent opt.value)}}>{{opt.label}}</a>
+            </li>
           {{/each}}
-        </div>
-      </div>
+        </ul>
     {{/if}}
     <input type="search"
            placeholder={{@placeholder}}
@@ -26,9 +28,7 @@
            spellcheck="false"
     />
     {{~#if @appendSearchIcon~}}
-      <div class="input-group-append">
         <span class="input-group-text">{{fa-icon "search"}}</span>
-      </div>
     {{~/if~}}
   </div>
   {{#if (and this.isFocused (or this.isSearching this.noResultsFound this.options))}}

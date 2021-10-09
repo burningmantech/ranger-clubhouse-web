@@ -7,25 +7,27 @@
 <div class="border border-dark p-4 mb-2">
   <ChForm @formId="teamsForm" @formFor={{this.teamsForm}} @changeSet={{false}}
           @onSubmit={{this.searchTeamsAction}} as |f|>
-    <div class="row form-group">
-      <label class="col-form-label-fixed">Teams:</label>
-      <f.input @name="positionIds" @type="checkboxGroup" @options={{this.positionOptions}} @cols=4/>
-    </div>
-    <div class="row form-group">
-      <label class="col-form-label col-form-label-fixed">Year range:</label>
+    <FormRow>
+      <FormLabel @fixed={{true}}>Teams:</FormLabel>
+      <f.input @name="positionIds"
+               @type="checkboxGroup"
+               @options={{this.positionOptions}}
+               @cols={{4}} />
+    </FormRow>
+    <FormRow>
+      <FormLabel @fixed={{true}}>Year start:</FormLabel>
       <f.input @name="startYear" @type="select" @options={{this.yearOptions}} />
-      <label class="col-form-label"> to </label>
-      <f.input @name="endYear" @type="select" @options={{this.yearOptions}} />
+      <f.input @name="endYear" @label="Year end:" @type="select" @options={{this.yearOptions}} />
       <div class="col-auto mt-2">
         <f.input @name="showInactives"
                  @label="Include people who hold the position(s) but may not have worked in the year range"
-                 @type="checkbox" @inline={{true}} />
+                 @type="checkbox" @inlineCheckbox={{true}} />
       </div>
-    </div>
-    <div class="form-row">
-      <label class="col-form-label col-form-label-fixed">&nbsp;</label>
+    </FormRow>
+    <FormRow>
+      <FormLabel @fixed={{true}}>&nbsp;</FormLabel>
       <div class="col-auto">
-        <f.submit @label="Submit" @disabled={{this.isSubmitting}} />
+        <f.submit @label="Submit" @disabled={{this.isSubmitting}}/>
         {{#if this.isSubmitting}}
           <LoadingIndicator/>
         {{/if}}
@@ -33,7 +35,7 @@
           <p class="text-danger">No people were found who matched the criteria.</p>
         {{/if}}
       </div>
-    </div>
+    </FormRow>
   </ChForm>
 </div>
 
@@ -50,7 +52,7 @@
         <UiButton @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
       </p>
       <table class="table table-sm table-striped table-width-auto">
-         <thead>
+        <thead>
         <tr>
           <th>Callsign</th>
           <th>Name</th>

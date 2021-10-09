@@ -47,15 +47,17 @@
             @validator={{this.roleValidations}}
             @onSubmit={{this.saveRole}} as |f|>
       <Modal.body>
-        <div class="form-row">
+        <FormRow>
           <f.input @name="title" @type="text" @label="Role Title:" @maxlength={{25}} @size={{25}}/>
-        </div>
-        <div class="form-row">
+        </FormRow>
+        <FormRow>
           <div class="col-auto">
-            <f.input @name="new_user_eligible" @type="checkbox" @label="New User Eligible?"
-                     @options={{this.newUserOptions}} />
+            <f.input @name="new_user_eligible"
+                     @type="checkbox"
+                     @label="New User Eligible?"
+                     @options={{this.newUserOptions}}/>
           </div>
-        </div>
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
@@ -63,7 +65,7 @@
         {{#if this.entry.isSaving}}
           <LoadingIndicator/>
         {{/if}}
-        <div class="ml-auto">
+        <div class="ms-auto">
           <UiButton @onClick={{this.removeRole}} @type="danger" @size="sm">
             {{fa-icon "trash-alt" type="fas"}} Delete
           </UiButton>

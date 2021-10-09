@@ -8,9 +8,11 @@
   <div class="card-body collapse">
     {{yield to="body"}}
     {{#if @nextAction}}
-      <UiButton @type="success" @class="btn-block mt-4" @disabled={{@nextDisabled}} @onClick={{@nextAction}}>
-        Next {{fa-icon "arrow-right"}}
-      </UiButton>
+      <div class="d-grid">
+        <UiButton @type="success" @class="mt-4" @disabled={{@nextDisabled}} @onClick={{@nextAction}}>
+          Next {{fa-icon "arrow-right"}}
+        </UiButton>
+      </div>
     {{/if}}
   </div>
 </div>

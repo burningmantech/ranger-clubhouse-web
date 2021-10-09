@@ -27,7 +27,7 @@ export default class HelpPopoverComponent extends Component {
       this.body = result.help.body;
     })
     .catch((response) => {
-      if (response.status == 404) {
+      if (+response.status === 404) {
         this.title = 'Help not found';
         this.body =  null;
       } else {
@@ -38,8 +38,7 @@ export default class HelpPopoverComponent extends Component {
   }
 
   @action
-  closeHelp(event) {
-    event.preventDefault();
+  closeHelp() {
     this.isShowing = false;
   }
 }

@@ -41,7 +41,7 @@
               <UiButton @size="sm" @type={{if tm.isPending "danger" "primary"}}
                         @onClick={{fn this.editEntryAction tm}} @disabled={{tm.isReloading}}>
                 {{#if tm.isReloading}}
-                  <SpinIcon />
+                  <SpinIcon/>
                 {{else}}
                   {{fa-icon "edit"}}
                 {{/if}}
@@ -65,19 +65,19 @@
             @validator={{this.newEntryValidations}}
             @onSubmit={{this.createEntryAction}} as |f|>
       <Modal.body>
-        <div class="form-row">
+        <FormRow>
           <f.input @name="on_duty" @type="datetime" @label="On Duty"/>
           <f.input @name="off_duty" @type="datetime" @label="Off Duty"/>
           <f.input @name="position_id" @type="select" @options={{@positions}} @label="Position"/>
-        </div>
-        <div class="form-row">
+        </FormRow>
+        <FormRow>
           <f.input @name="partner" @type="text" @label="Partner(s) for shift." @size={{40}} @maxlength={{60}}/>
-        </div>
-        <div class="form-row">
+        </FormRow>
+        <FormRow>
           <f.input @name="additional_notes" @type="textarea"
-                   @label={{concat "Correction message from " @person.callsign}}
-                   @cols={{80}} @rows={{4}} @options={{@positions}}  />
-        </div>
+                   @label="Correction message from {{@person.callsign}}"
+                   @cols={{80}} @rows={{4}} @options={{@positions}} />
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Create" @disabled={{this.newEntry.isSaving}} />
@@ -91,13 +91,12 @@
 {{/if}}
 
 {{#if this.editEntry}}
-  <ModalDialog @title={{concat "Manage Missing Timesheet Request ID #" this.editEntry.id}}
+  <ModalDialog @title="Manage Missing Timesheet Request ID #{{this.editEntry.id}}"
                @onEscape={{this.cancelEntryAction}} as |Modal|>
     <ChForm @formId="entry"
             @formFor={{this.editEntry}}
             @validator={{this.timesheetValidations}}
-            @onSubmit={{this.saveEntryAction}}
-             as |f|>
+            @onSubmit={{this.saveEntryAction}} as |f|>
       <Modal.body>
         {{#if (eq this.editEntry.review_status "approved")}}
           <ChNotice @type="success" @icon="check" @title="Request approved">
@@ -108,7 +107,7 @@
             Request was rejected. Review is not needed at this time.
           </ChNotice>
         {{/if}}
-        <dl class="form-row">
+        <dl class="row">
           <dt class="col-2">Position:</dt>
           <dd class="col-10">{{this.editEntry.position.title}}</dd>
 
@@ -175,42 +174,46 @@
         <fieldset>
           <legend>Submission Review</legend>
           {{#if this.editEntry.reviewed_at}}
-            <div class="form-row">
+            <FormRow>
               Last review on {{shift-format this.editEntry.reviewed_at}} by {{this.editEntry.reviewer_person.callsign}}
-            </div>
+            </FormRow>
           {{/if}}
-          <div class="form-row">
+          <FormRow>
             <f.input @name="additional_reviewer_notes"
                      @label="Enter your response to {{@person.callsign}} below. Be clear and concise."
-                     @type="textarea" @cols={{80}} @rows={{4}}/>
-          </div>
-          <div class="form-group row">
+                     @type="textarea"
+                     @cols={{80}} @rows={{4}}/>
+          </FormRow>
+          <FormRow>
             <div class="col-auto">
-              <f.input @name="review_status" @label="Correction Status:" @type="radioGroup"
+              <f.input @name="review_status"
+                       @label="Correction Status:"
+                       @type="radioGroup"
                        @options={{this.reviewOptions}}
-                       @inline={{true}} @onChange={{this.statusChangeAction}} />
+                       @inlineCheckbox={{true}}
+                       @onChange={{this.statusChangeAction}} />
             </div>
-          </div>
+          </FormRow>
         </fieldset>
         {{#if (eq f.model.review_status "approved")}}
           <fieldset>
             <legend>New Timesheet Entry</legend>
-            <div class="row form-group">
+            <FormRow>
               <div class="col-auto">
                 <f.input @name="create_entry" @type="checkbox" @label="Create new entry"/>
               </div>
-            </div>
-            <div class="form-row">
+            </FormRow>
+            <FormRow>
               <f.input @name="new_on_duty" @type="datetime" @label="On Duty"/>
               <f.input @name="new_off_duty" @type="datetime" @label="Off Duty"/>
-              <f.input @name="new_position_id" @label="Position" @type="select" @options={{@positions}} />
-            </div>
+              <f.input @name="new_position_id" @label="Position" @type="select" @options={{@positions}}/>
+            </FormRow>
           </fieldset>
         {{/if}}
 
         {{#if this.havePartnerTimesheet}}
           <hr>
-          <table class="table table-sm">
+          <table class="table table-width-auto table-sm">
             <caption>{{this.partnerCallsign}} {{@year}} Timesheet</caption>
             <thead>
             <tr>
@@ -248,15 +251,16 @@
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         {{#if this.nextEntry}}
-          <f.submit @label="Update & Review Next" @onSubmit={{this.saveAndManageNextEntryAction}}
-                    disabled={{this.editEntry.isSaving}}/>
+          <f.submit @label="Update & Review Next"
+                    @onSubmit={{this.saveAndManageNextEntryAction}}
+                    @disabled={{this.editEntry.isSaving}}/>
         {{/if}}
         <f.submit @label="Update" @disabled={{this.editEntry.isSaving}} />
         <UiCancelButton @disabled={{this.editEntry.isSaving}} @onClick={{this.cancelEntryAction}} />
         {{#if this.editEntry.isSaving}}
           <LoadingIndicator/>
         {{/if}}
-        <div class="ml-auto">
+        <div class="ms-auto">
           <UiButton @type="danger" @onClick={{this.deleteEntryAction}} @disabled={{this.editEntry.isSaving}}>
             {{fa-icon "trash"}} Delete
           </UiButton>

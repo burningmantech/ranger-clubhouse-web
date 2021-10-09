@@ -17,25 +17,31 @@
     </p>
     {{#if (has-role "admin" "vc" "intake")}}
       <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.savePersonAction}} as |f|>
-        <div class="form-row">
-          <label class="col-form-label col-sm-12 col-md-2">Known Rangers</label>
-          <f.input @name="known_rangers" @type="text" @size=50 @maxlength=150
-                   @controlClass="form-control form-control-sm" @wrapClass="col-auto"/>
-        </div>
-        <div class="form-row">
-          <label class="col-form-label col-sm-12 col-md-2">Known PNVs</label>
-          <f.input @name="known_pnvs" @type="text" @size=50 @maxlength=150 @controlClass="form-control form-control-sm"
-                   @wrapClass="col-auto"/>
-        </div>
-        <div class="form-group row">
-          <label class="col-form-label col-sm-12 col-md-2">&nbsp;</label>
+        <FormRow>
+          <FormLabel @fixed={{true}}>Rangers</FormLabel>
+          <f.input @name="known_rangers"
+                   @type="text"
+                   @size={{50}}
+                   @maxlength={{150}}
+                   @fieldSize="sm"/>
+        </FormRow>
+        <FormRow>
+          <FormLabel @fixed={{true}}>PNVs</FormLabel>
+          <f.input @name="known_pnvs"
+                   @type="text"
+                   @size={{50}}
+                   @maxlength={{150}}
+                   @fieldSize="sm"/>
+        </FormRow>
+        <FormRow>
+          <FormLabel @fixed={{true}}>&nbsp;</FormLabel>
           <div class="col-auto">
             <f.submit @label="Save" @disabled={{f.model.isSaving}} />
             {{#if f.model.isSaving}}
               <LoadingIndicator/>
             {{/if}}
           </div>
-        </div>
+        </FormRow>
       </ChForm>
     {{else}}
       <dl class="row">
@@ -99,21 +105,21 @@
       <thead>
       <tr>
         <th class="w-10">Team</th>
-        <th>Notes & Flags</th>
+        <th class="w-90">Notes & Flags</th>
       </tr>
       </thead>
       <tbody>
       <tr>
-        <td class="w-10">
+        <td class="w-5">
           Personnel
         </td>
-        <td>
+        <td class="w-90">
           <IntakeNotes @type="personnel" @person={{this.history}} @viewYear={{this.year}}
                        @onSubmit={{this.noteSubmitted}} />
         </td>
       </tr>
       <tr>
-        <td class="w-10">
+        <td class="w-5">
           RRN
         </td>
         <td>
@@ -121,15 +127,15 @@
         </td>
       </tr>
       <tr>
-        <td class="w-10">
-          VC
+        <td class="w-5">
+          VCs
         </td>
         <td>
           <IntakeNotes @type="vc" @person={{this.history}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
         </td>
       </tr>
       <tr>
-        <td class="w-10">
+        <td class="w-5">
           Training
         </td>
         <td>
@@ -137,8 +143,8 @@
         </td>
       </tr>
       <tr>
-        <td class="w-10">
-          MENTOR
+        <td class="w-5">
+          Mentors
         </td>
         <td>
           <IntakeNotes @type="mentor" @person={{this.history}} @viewYear={{this.year}}

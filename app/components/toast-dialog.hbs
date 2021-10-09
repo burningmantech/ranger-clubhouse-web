@@ -1,0 +1,13 @@
+<div class="toast-container position-fixed top-0 {{if this.session.isSmallScreen "start-50 translate-middle-x" "end-0"}} p-3">
+  <div class="toast show align-items-center text-white bg-{{@toast.type}} border-0"
+       role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        {{fa-icon this.iconName}} {{@toast.message}}
+      </div>
+      <button type="button"
+              class="btn-close btn-close-white me-2 m-auto" s{{action this.closeAction}}
+              aria-label="Close"></button>
+    </div>
+  </div>
+</div>

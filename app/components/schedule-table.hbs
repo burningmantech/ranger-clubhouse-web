@@ -71,7 +71,7 @@
             </button>
             {{#if (or (not slot.has_started) @isAdmin)}}
             {{! Note: magic here -  by not using onclick, no event argument will be passed to leaveSlot. That tells the method to allow the page to scroll.}}
-              <button type="button" {{on "click" (fn @leaveSlot slot)}} class="btn btn-light-red btn-sm"
+              <button type="button" {{on "click" (fn @leaveSlot slot)}} class="btn btn-danger btn-sm"
                       title="Remove shift from schedule" disabled={{slot.is_submitting}}>
                 {{#if slot.is_submitting}}
                   <SpinIcon />

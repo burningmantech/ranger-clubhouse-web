@@ -1,27 +1,29 @@
 <YearSelect @title="Clubhouse Slots" @year={{this.year}} @years={{this.yearList}}
             @onChange={{action (mut this.year)}} />
 
-<div class="form-row mb-1">
-  <label class="col-form-label">Day Filter</label>
+<FormRow>
+  <FormLabel @auto={{true}}>Day Filter</FormLabel>
   <div class="col-auto">
-    <ChForm::Select @name="dayFilter" @value={{this.dayFilter}} @options={{this.dayOptions}}
-                    @onChange={{this.changeDayFilter}} @controlClass="form-control"/>
+    <ChForm::Select @name="dayFilter"
+                    @value={{this.dayFilter}}
+                    @options={{this.dayOptions}}
+                    @onChange={{this.changeDayFilter}}/>
   </div>
-
-  <label class="col-form-label">Active Filter</label>
+  <FormLabel @auto={{true}}>Active Filter</FormLabel>
   <div class="col-auto">
-    <ChForm::Select @name="activeFilter" @value={{this.activeFilter}} @options={{this.activeOptions}}
-                    @onChange={{this.changeActiveFilter}} @controlClass="form-control"/>
+    <ChForm::Select @name="activeFilter"
+                    @value={{this.activeFilter}}
+                    @options={{this.activeOptions}}
+                    @onChange={{this.changeActiveFilter}} />
   </div>
-  <label class="col-form-label">Actions</label>
-
+  <FormLabel @auto={{true}}>Actions</FormLabel>
   <div class="pl-4 col-auto">
     <UiButton @onClick={{this.newSlot}}>New Slot</UiButton>
     {{#if this.slots.length}}
       <UiButton @onClick={{this.startCopy}} @type="secondary">Copy Slots</UiButton>
     {{/if}}
   </div>
-</div>
+</FormRow>
 
 {{#if (and this.eventDate.pre_event_slot_start this.eventDate.pre_event_slot_end)}}
   <p class="mt-2">
@@ -60,7 +62,7 @@
       {{#if box.isOpen}}
         <p>
           <UiButton @size="sm" @onClick={{fn this.activate position}}>Activate All</UiButton>
-          <UiButton  @size="sm" @onClick={{fn this.deactivate position}}>Deactivate All</UiButton>
+          <UiButton @size="sm" @onClick={{fn this.deactivate position}}>Deactivate All</UiButton>
           <UiButton @type="secondary" @size="sm" @onClick={{fn this.startCopy position.position_id}}>
             Bulk Copy
           </UiButton>
@@ -150,42 +152,59 @@
 
 {{#if this.copyParams}}
   <ModalDialog @title="Copy Slots" @onEscape={{this.cancelCopy}} as |Modal|>
-    <ChForm @formId="copySlots" @formFor={{this.copyParams}}
-            @changeSet={{false}} @validator={{this.copyValidations}}
+    <ChForm @formId="copySlots"
+            @formFor={{this.copyParams}}
+            @changeSet={{false}}
+            @validator={{this.copyValidations}}
             @onSubmit={{this.performCopy}} as |f|>
       <Modal.body>
         <fieldset>
           <legend>Add/Subtract Time to New Slots</legend>
-          <div class="form-row">
-            <f.input @name="deltaDays" @label="Days" @type="number" @maxlength={{5}} @size={{5}} @grid="col-auto"/>
-            <f.input @name="deltaHours" @label="Hours" @type="number" @maxlength={{5}} @size={{5}} @grid="col-auto"/>
+          <FormRow>
+            <f.input @name="deltaDays"
+                     @label="Days"
+                     @type="number"
+                     @maxlength={{5}}
+                     @size={{5}}
+                     @inline={{true}}/>
+            <f.input @name="deltaHours" @label="Hours" @type="number" @maxlength={{5}} @size={{5}}
+                     @inline={{true}}/>
             <f.input @name="deltaMinutes" @label="Minutes" @type="number" @maxlength={{5}} @size={{5}}
-                     @grid="col-auto"/>
-          </div>
+                     @inline={{true}}/>
+          </FormRow>
           <legend>Set New Slot Attributes</legend>
           <p>
             The new slots will be cloned as-is (except with the new times used above) from slots being copied.
           </p>
           <p>
-            Use the fields below if a different position, description, max (sign up count), information, and/or active
-            field is desired for the new slots. Leaving the fields blank will cause the original slot values to be used.
+            Use the fields below if a different position, description, max (sign up count), information, and/or
+            active
+            field is desired for the new slots. Leaving the fields blank will cause the original slot values to
+            be used.
           </p>
-          <div class="form-row">
-            <f.input @name="newPositionId" @label="Position" @type="select" @options={{this.positionOptionsForCopy}}
-                     @grid="col-auto"/>
+          <FormRow>
+            <f.input @name="newPositionId" @label="Position" @type="select"
+                     @options={{this.positionOptionsForCopy}}
+                     @inline={{true}}/>
             <f.input @name="description" @label="Description" @type="text" @maxlength={{40}} @size={{40}}
-                     @grid="col-auto"/>
+                     @inline={{true}}/>
             <f.input @name="max" @label="Max" @type="number" @maxlength={{3}} @size={{3}} @grid="col-2"/>
-          </div>
-          <div class="form-row">
-            <f.input @name="url" @label="Information" @type="textarea" @rows={{3}} @cols={{80}} @maxlength={{512}}
-                     @wrapClass="col-12"/>
-          </div>
-          <div class="form-row my-2">
+          </FormRow>
+          <FormRow>
+            <f.input @name="url"
+                     @label="Information"
+                     @type="textarea"
+                     @rows={{3}}
+                     @cols={{80}}
+                     @maxlength={{512}} />
+          </FormRow>
+          <FormRow>
             <div class="col-auto">
-              <f.input @name="activate" @label="Activate new slots" @type="checkbox"/>
+              <f.input @name="activate"
+                       @label="Activate new slots"
+                       @type="checkbox"/>
             </div>
-          </div>
+          </FormRow>
           Labor Day of {{this.year}} is {{this.selectedYearLaborDay}}.
           Labor Day of {{this.presentYear}} is {{this.presentYearLaborDay}}, {{this.laborDayDiff}} days later.
           <br>
@@ -255,7 +274,8 @@
 
 {{#if this.activatingSlot}}
   <LoadingDialog>
-    Activating slot #{{this.activatingSlot.id}} - {{this.activatingSlot.begins}}- {{this.this.activatingSlot.description}}
+    Activating slot #{{this.activatingSlot.id}}
+    - {{this.activatingSlot.begins}}- {{this.this.activatingSlot.description}}
   </LoadingDialog>
 {{/if}}
 

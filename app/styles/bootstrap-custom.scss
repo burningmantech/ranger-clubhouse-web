@@ -1,45 +1,100 @@
 //
-// Pull in the bootstrap files
+// Bootstrap customizations
 //
 
-// Required
-@import "bootstrap-4.3/functions";
-@import "bootstrap-4.3/variables";
+$enable-shadows: true;
+$enable-grid-classes: true;
 
-@import "bootstrap-4.3/mixins";
-@import "bootstrap-4.3/root";
-@import "bootstrap-4.3/reboot";
-@import "bootstrap-4.3/type";
+$link-decoration: none;
 
-// Everything below is optional
-@import "bootstrap-4.3/images";
-@import "bootstrap-4.3/code";
-@import "bootstrap-4.3/grid";
-@import "bootstrap-4.3/tables";
-@import "bootstrap-4.3/forms";
-@import "bootstrap-4.3/buttons";
-@import "bootstrap-4.3/transitions";
-@import "bootstrap-4.3/dropdown";
-@import "bootstrap-4.3/button-group";
-@import "bootstrap-4.3/input-group";
-@import "bootstrap-4.3/custom-forms";
-@import "bootstrap-4.3/nav";
-@import "bootstrap-4.3/navbar";
-@import "bootstrap-4.3/card";
-//@import "bootstrap-4.3/breadcrumb";
-@import "bootstrap-4.3/pagination";
-@import "bootstrap-4.3/badge";
-//@import "bootstrap-4.3/jumbotron";
-@import "bootstrap-4.3/alert";
-@import "bootstrap-4.3/progress";
-//@import "bootstrap-4.3/media";
-@import "bootstrap-4.3/list-group";
-@import "bootstrap-4.3/close";
-@import "bootstrap-4.3/modal";
-//@import "bootstrap-4.3/tooltip";
-//@import "bootstrap-4.3/tooltip";
-@import "bootstrap-4.3/popover";
-//@import "bootstrap-4.3/carousel";
-//@import "bootstrap-4.3/spinners";
-@import "bootstrap-4.3/utilities";
-@import "bootstrap-4.3/print";
+$kakhi: #d2b48c;
+$wheatfield: #ded7be;
+
+// bootstrap set the link-color to the primary color
+//$link-color: #007bff;
+
+$navbar-light-color: #28221b;
+$navbar-light-hover-color: #0139cc;
+
+// Do not enable rounded corners
+$btn-border-radius: 0;
+$btn-border-radius-lg: 0;
+$btn-border-radius-sm: 0;
+
+$card-spacer-y: 0.5rem !default;
+$card-spacer-x: 0.75rem !default;
+
+// Adjust h tags
+$font-size-base: 0.9rem;
+
+$h1-font-size: $font-size-base * 1.75;
+$h2-font-size: $font-size-base * 1.5;
+$h3-font-size: $font-size-base * 1.35;
+$h4-font-size: $font-size-base * 1.25;
+$h5-font-size: $font-size-base * 1.1;
+$h6-font-size: $font-size-base;
+
+$modal-header-padding: 0.75rem !important;
+$modal-sm: 99%;
+$modal-md: 90%;
+$modal-footer-border-width: 0;
+
+$popover-max-width: 450px;
+
+$toast-max-width: 500px;
+
+// Add additional w-XX width sizes beyond what bootstrap provides.
+$utilities: (
+  "width": (
+    property: width,
+    class: w,
+    values: (
+      5: 5%,
+      10: 10%,
+      15: 15%,
+      20: 20%,
+      25: 25%,
+      30: 30%,
+      35: 35%,
+      40: 40%,
+      45: 45%,
+      50: 50%,
+      55: 55%,
+      60: 60%,
+      65: 65%,
+      70: 70%,
+      75: 75%,
+      80: 80%,
+      85: 85%,
+      90: 90%,
+      95: 95%,
+      100: 100%,
+      auto: auto
+    )
+  )
+);
+
+
+$theme-colors: (
+  "primary": $kakhi,
+  "secondary": #6c757d,
+  "success": #198754,
+  "khaki": $kakhi,
+  "gray": #dcdcdc,
+  "orange": #ff8c00,
+  "light-gray": #f0f0f0,
+  "dark-gray": #808080,
+  "light-red": #ff6666,
+  "highlight": #ffff99,
+  "wheatfield": $wheatfield,
+  "info": #0dcaf0,
+  "warning": #ffc107,
+  "danger": #dc3545,
+  "light": #f8f9fa,
+  "dark": #212529,
+);
+// Carry overs from Bootstrap 4.3
+$table-head-color: #495057;
+$table-head-bg: #e9ecef;
+
+@import "bootstrap";

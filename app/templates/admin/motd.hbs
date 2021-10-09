@@ -5,28 +5,23 @@
 </p>
 
 <ChForm @formId="query" @formFor={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
-  <div class="form-row">
-    <label class="col-form-label col-auto">Filter by Type</label>
-    <f.input @name="type" @type="select" @options={{this.typeOptions}} @wrapClass="col-auto"/>
-    <label class="col-form-label col-auto">by Audience</label>
-    <f.input @name="audience" @type="select" @options={{this.audienceOptions}} @wrapClass="col-auto"/>
-    <label class="col-form-label col-auto">Sort</label>
-    <f.input @name="sort" @type="select" @options={{this.sortOptions}} @wrapClass="col-auto"/>
+  <FormRow>
+    <FormLabel @auto={{true}}>Filter by Type</FormLabel>
+    <f.input @name="type" @type="select" @options={{this.typeOptions}} />
+    <FormLabel @auto={{true}}>by Audience</FormLabel>
+    <f.input @name="audience" @type="select" @options={{this.audienceOptions}}/>
+    <FormLabel @auto={{true}}>Sort</FormLabel>
+    <f.input @name="sort" @type="select" @options={{this.sortOptions}} />
     <div class="col-auto">
       <f.submit @label="Search"/>
-      <UiButton @type="secondary" @onClick={{fn this.resetFilters f.model}}>Reset</UiButton>
     </div>
-    <label class="col-form-label col-auto">Actions</label>
-    <div class="col-auto">
-      <UiButton @onClick={{this.newEntry}}>New Message</UiButton>
-    </div>
-  </div>
+  </FormRow>
 </ChForm>
-
-
-<div class="my-2">
-  Showing {{this.total}} of {{pluralize this.table_count "message"}}. Page {{this.currentPage}} of {{this.total_pages}}
+<div class="my-4">
+  <UiButton @onClick={{this.newEntry}}>New Message</UiButton>
 </div>
+
+Showing {{this.total}} of {{pluralize this.table_count "message"}}. Page {{this.currentPage}} of {{this.total_pages}}
 <table class="table table-striped table-sm table-width-auto">
   <thead>
   <tr>
@@ -40,7 +35,7 @@
   </thead>
 
   <tbody>
-  {{#each this.motds as |motd|}}
+  {{#each this.motds key="id" as |motd|}}
     <tr>
       <td>
         {{#if motd.for_rangers}}
@@ -99,25 +94,27 @@
             @validator={{this.motdValidations}}
             @onSubmit={{action this.saveEntry}} as |f|>
       <Modal.body>
-        <div class="form-row mb-2">
-          <label class="col-form-label col-2">Audience</label>
-          <div class="form-check-inline">
-            <f.input @name="for_rangers" @label="Rangers" @type="checkbox"/>
-            <f.input @name="for_pnvs" @label="Prospectives + Alphas" @type="checkbox"/>
-            <f.input @name="for_auditors" @label="Auditors" @type="checkbox"/>
+        <FormRow>
+          <FormLabel @fixed={{true}}>Audience</FormLabel>
+          <div class="col-auto mt-2">
+            <div class="form-check-inline">
+              <f.input @name="for_rangers" @label="Rangers" @type="checkbox" @inlineCheckbox={{true}} />
+              <f.input @name="for_pnvs" @label="Prospectives + Alphas" @type="checkbox" @inlineCheckbox={{true}} />
+              <f.input @name="for_auditors" @label="Auditors" @type="checkbox" @inlineCheckbox={{true}} />
+            </div>
           </div>
-        </div>
-        <div class="form-row">
-          <label class="col-form-label col-2">Expires At</label>
+        </FormRow>
+        <FormRow>
+          <FormLabel @fixed={{true}}>Expires At</FormLabel>
           <f.input @name="expires_at" @type="datetime"/>
-        </div>
+        </FormRow>
 
-        <div class="form-row">
-          <f.input @name="subject" @label="Subject" @type="text" @size={{80}} @grid="col-auto"/>
-        </div>
-        <div class="form-row">
+        <FormRow>
+          <f.input @name="subject" @label="Subject / Heading" @type="text" @size={{80}} />
+        </FormRow>
+        <FormRow>
           <f.input @name="message" @label="Message Body" @type="textarea" @rows={{10}} @cols={{80}}/>
-        </div>
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @disabled={{this.entry.isSaving }}/>
@@ -126,9 +123,9 @@
           <LoadingIndicator/>
         {{/if}}
         {{#unless this.entry.isNew}}
-          <div class="ml-auto">
+          <div class="ms-auto">
             <UiButton @type="danger" @onClick={{fn this.deleteEntry this.entry}}>
-              {{fa-icon "trash"}}Delete
+              {{fa-icon "trash"}} Delete
             </UiButton>
           </div>
         {{/unless}}

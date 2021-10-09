@@ -1,4 +1,4 @@
-<ChForm @formId="bmid" @formFor={{@entry}} @onSubmit={{@onSave}} @onCancel={{@onCancel}} as |f|>
+<ChForm @formId="bmid" @formFor={{@entry}} @onSubmit={{@onSave}} as |f|>
   <p>
     {{#if @entry.wap_id}}
       WAP ID #{{@entry.wap_id}} - {{@entry.wapTypeHuman}} - {{@entry.wap_status}}
@@ -13,64 +13,63 @@
   <p>
     {{fa-icon "plus-circle" color="success"}} = if present, person has qualified provision (showers, meals).
   </p>
-  <div class="form-row">
-    <f.input @name="status" @label="BMID Status" @type="select" @options={{this.bmidStatusOptions}}  @fieldSize="sm"/>
-    <f.input @name="meals" @label="Meals" @type="select" @options={{this.mealOptions}} @grid="col-auto"
+  <FormRow>
+    <f.input @name="status" @label="BMID Status" @type="select" @options={{this.bmidStatusOptions}}
+             @fieldSize="sm"/>
+    <f.input @name="meals" @label="Meals" @type="select" @options={{this.mealOptions}} @inline={{true}}
              @fieldSize="sm">
       {{#if @entry.want_meals}}
         <div class="text-success">{{fa-icon "plus-circle"}} {{@entry.want_meals}}</div>
       {{/if}}
     </f.input>
-    <f.input @name="showers" @label="Showers" @type="select" @options={{this.showerOptions}} @grid="col-auto"
+    <f.input @name="showers" @label="Showers" @type="select" @options={{this.showerOptions}} @inline={{true}}
              @fieldSize="sm">
       {{#if @entry.want_showers}}
         <div class="text-success">{{fa-icon "plus-circle"}} showers</div>
       {{/if}}
     </f.input>
     <f.input @name="admission_date" @label="WAP Date" @type="select" @disabled={{@entry.wapDisabled}}
-             @options={{@admissionDateOptions}}  @fieldSize="sm"/>
-  </div>
+             @options={{@admissionDateOptions}} @fieldSize="sm"/>
+  </FormRow>
 
-  <div class="form-row">
-    <label class="col-form-label col-form-label-fixed">Title 1</label>
-    <f.input @name="title1" @type="text" @size={{30}} @maxLength={{64}} @wrapClass="col-auto" @fieldSize="sm"/>
-  </div>
-  <div class="form-row mt-1">
-    <label class="col-form-label col-form-label-fixed">Title 2</label>
-    <f.input @name="title2" @type="text" @size={{30}} @maxLength={{64}} @wrapClass="col-auto" @fieldSize="sm"/>
-  </div>
-  <div class="form-row mt-1">
-    <label class="col-form-label col-form-label-fixed">Title 3</label>
-    <f.input @name="title3" @type="text" @size={{30}} @maxLength={{64}} @wrapClass="col-auto" @fieldSize="sm"/>
-  </div>
+  <FormRow @margin="mt-4 mb-2">
+    <FormLabel @fixed={{true}}>Title 1</FormLabel>
+    <f.input @name="title1" @type="text" @size={{30}} @maxLength={{64}} @fieldSize="sm"/>
+  </FormRow>
+  <FormRow>
+    <FormLabel @fixed={{true}}>Title 2</FormLabel>
+    <f.input @name="title2" @type="text" @size={{30}} @maxLength={{64}} @fieldSize="sm"/>
+  </FormRow>
+  <FormRow>
+    <FormLabel @fixed={{true}}>Title 3</FormLabel>
+    <f.input @name="title3" @type="text" @size={{30}} @maxLength={{64}} @fieldSize="sm"/>
+  </FormRow>
 
-  <div class="form-row mt-1">
-    <label class="col-form-label col-form-label-fixed">Team</label>
-    <f.input @name="team" @type="text" @size={{30}} @maxLength={{64}} @wrapClass="col-auto" @fieldSize="sm"/>
-  </div>
-  <div class="form-row">
-    <label class="col-form-label col-form-label-fixed">Notes</label>
-    <f.input @name="notes" @type="textarea" @rows={{4}} @cols={{80}} @wrapClass="col-auto" @fieldSize="sm"/>
-  </div>
-  <div class="form-group row mt-1">
-    <div class="col-auto">
-      {{#if @entry.isNew}}
-        This is a new BMID record.
-      {{else}}
-        Created {{@entry.create_datetime}} Last modified {{@entry.modified_datetime}}
-      {{/if}}
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-auto">
-      <f.submit @label={{if @entry.isNew "Create" "Update"}} @disabled={{@entry.isSaving}} />
-      {{#if @onCancel}}
-        <f.cancel @disabled={{@entry.isSaving}} />
-      {{/if}}
-      {{#if @entry.isSaving}}
-        <LoadingIndicator/>
-      {{/if}}
-    </div>
-  </div>
+  <FormRow>
+    <FormLabel @fixed={{true}}>Team</FormLabel>
+    <f.input @name="team" @type="text" @size={{30}} @maxLength={{64}} @fieldSize="sm"/>
+  </FormRow>
+  <FormRow>
+    <FormLabel @fixed={{true}}>Notes</FormLabel>
+    <f.input @name="notes" @type="textarea" @rows={{4}} @cols={{80}} @fieldSize="sm"/>
+  </FormRow>
+  {{#if @entry.isNew}}
+    <p>
+      This is a new BMID record.
+    </p>
+  {{else}}
+    <dl class="row mb-2">
+      <dt class="col-auto">Created</dt>
+      <dd class="col-auto">{{@entry.create_datetime}}</dd>
+      <dt class="col-auto">Last Modified</dt>
+      <dd class="col-auto">{{@entry.modified_datetime}}</dd>
+    </dl>
+  {{/if}}
+  <f.submit @label={{if @entry.isNew "Create" "Update"}} @disabled={{@entry.isSaving}} />
+  {{#if @onCancel}}
+    <UiCancelButton @onClick={{@onCancel}} @disabled={{@entry.isSaving}} />
+  {{/if}}
+  {{#if @entry.isSaving}}
+    <LoadingIndicator/>
+  {{/if}}
 </ChForm>

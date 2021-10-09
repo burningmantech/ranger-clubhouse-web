@@ -63,7 +63,7 @@
   <dt class="col-sm-12 col-lg-2">On Site</dt>
   <dd class="col-sm-12 col-lg-9">
     <ChForm @formId="person" @formFor={{@person}} @onSubmit={{@savePersonAction}} as |f|>
-      <f.input @name="on_site" @type="radioGroup" @options={{@onSiteOptions}} @inline={{true}} />
+      <f.input @name="on_site" @type="radioGroup" @options={{@onSiteOptions}} @inlineCheckbox={{true}} />
       <f.submit @label="Update" @disabled={{@person.isSaving}} />
       {{#if @person.isSaving}}
         <LoadingIndicator/>

@@ -1,4 +1,4 @@
-<div class="bg-khaki row no-gutters">
+<div class="bg-khaki row g-0">
   {{! line up the search bar with main content}}
   <div class="d-none d-md-block sidebar-expanded">
     &nbsp;
@@ -21,7 +21,7 @@
                        as |item|>
       {{~#if (eq this.searchType "asset")~}}
         {{this.searchYear}} #{{item.barcode}} {{item.description}} {{item.type}}
-      {{~else~}}
+        {{~else~}}
         {{~#if (eq this.searchType "person-id")~}}
           ID #{{item.id}} -
         {{~/if~}}
@@ -38,32 +38,30 @@
     </AutocompleteInput>
     {{#if this.showSearchOptions}}
       <div class="bg-white p-2">
-        <div class="form-row">
-          <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Search By:</label>
+        <FormRow>
+          <FormLabel @fixed={{true}}>Search By:</FormLabel>
           <div class="col-sm-12 col-md-9 mt-2">
-            <f.input @name="callsign" @type="checkbox" @label="Callsign" @inline={{true}} />
-            <f.input @name="name" @type="checkbox" @label="Name" @inline={{true}} />
-            <f.input @name="email" @type="checkbox" @label="Email" @inline={{true}} />
-            <f.input @name="formerly_known_as" @type="checkbox" @label="Formerly Known As" @inline={{true}} />
+            <f.input @name="callsign" @type="checkbox" @label="Callsign" @inlineCheckbox={{true}}/>
+            <f.input @name="name" @type="checkbox" @label="Name" @inlineCheckbox={{true}}/>
+            <f.input @name="email" @type="checkbox" @label="Email" @inlineCheckbox={{true}}/>
+            <f.input @name="formerly_known_as" @type="checkbox" @label="Formerly Known As" @inlineCheckbox={{true}}/>
           </div>
-        </div>
-        <div class="form-row">
-          <label class="col-form-label col-form-label-fixed col-sm-12 col-md-2">Include:</label>
-          <div class="col-sm-12 col-md-9 mt-2">
-            <f.input @name="auditor" @type="checkbox" @label="Auditor" @inline={{true}} />
-            <f.input @name="past_prospective" @type="checkbox" @label="Past Prospective" @inline={{true}} />
+        </FormRow>
+        <FormRow>
+          <FormLabel @fixed={{true}}>Include:</FormLabel>
+          <div class="col-sm-12 col-lg-9 mt-2">
+            <f.input @name="auditor" @type="checkbox" @label="Auditor" @inlineCheckbox={{true}}/>
+            <f.input @name="past_prospective" @type="checkbox" @label="Past Prospective" @inlineCheckbox={{true}}/>
           </div>
-        </div>
-        <div class="form-row mb-2">
-          <div class="col-auto">
-            <small>Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.</small>
-          </div>
-          <div class="col-auto ml-auto mr-2">
+        </FormRow>
+        <FormRow>
+          <small>Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.</small>
+          <div class="col-auto ms-auto">
             <UiButton @type="secondary" @size="sm" @onClick={{this.hideSearchBoxAction}}>
               Hide Options
             </UiButton>
           </div>
-        </div>
+        </FormRow>
       </div>
     {{/if}}
   </ChForm>

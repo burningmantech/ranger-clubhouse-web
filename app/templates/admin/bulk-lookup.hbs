@@ -1,21 +1,17 @@
 <h1>Bulk Callsign and/or Email Lookup</h1>
 
 <ChForm @formId="bulkForm" @formFor={{this.bulkForm}} @changeSet={{false}} @onSubmit={{this.lookupAction}} as |f|>
-  <div class="form-row">
+  <FormRow>
     <f.input @name="lines"
              @label="Enter a list of callsigns and/or emails separated by a new line to lookup:"
              @type="textarea"
              @cols={{40}}
-             @rows={{10}} />
-  </div>
-  <div class="form-row">
-    <div class="col-auto">
-      <f.submit @label="Lookup" @disabled={{or (is-empty f.model.lines) this.isSubmitting}} />
-      {{#if this.isSubmitting}}
-        <LoadingIndicator/>
-      {{/if}}
-    </div>
-  </div>
+             @rows={{10}}/>
+  </FormRow>
+  <f.submit @label="Lookup" @disabled={{or (is-empty f.model.lines) this.isSubmitting}}/>
+  {{#if this.isSubmitting}}
+    <LoadingIndicator/>
+  {{/if}}
 </ChForm>
 
 {{#if this.people}}

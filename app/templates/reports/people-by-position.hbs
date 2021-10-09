@@ -1,35 +1,43 @@
 <h1>People by Position</h1>
 
-<div class="form-row">
-  <label class="col-form-label col-auto">Options</label>
-  <div class="form-check form-check-inline">
-    <Input @type="checkbox" id="on-playa" class="form-check-input" @checked={{this.onPlaya}} />
-    <label for="on-playa" class="form-check-label">
-      On playa only
-    </label>
+<FormRow>
+  <FormLabel @fixed={{true}}>Options</FormLabel>
+  <div class="col-auto mt-2">
+    <div class="form-check form-check-inline">
+      <Input @type="checkbox" id="on-playa" class="form-check-input" @checked={{this.onPlaya}}/>
+      <label for="on-playa" class="form-check-label">
+        On playa only
+      </label>
+    </div>
   </div>
-  <label class="col-form-label col-auto">Position types</label>
-  {{#each this.positionTypes as |type|}}
-    <div class="form-check form-check-inline">
-      <label class="form-check-label">
-        <Input @type="checkbox" class="form-check-input" @checked={{type.selected}} />
-        {{type.name}}
-      </label>
-    </div>
-  {{/each}}
-</div>
+</FormRow>
+<FormRow>
+  <FormLabel @fixed={{true}}>Position types</FormLabel>
+  <div class="col-sm-12 col-lg-auto mt-2">
+    {{#each this.positionTypes as |type|}}
+      <div class="form-check form-check-inline">
+        <label class="form-check-label">
+          <Input @type="checkbox" class="form-check-input" @checked={{type.selected}}/>
+          {{type.name}}
+        </label>
+      </div>
+    {{/each}}
+  </div>
+</FormRow>
 
-<div class="form-row mb-2">
-  <label class="col-form-label col-auto">Statuses</label>
-  {{#each this.statuses as |status idx|}}
-    <div class="form-check form-check-inline">
-      <Input @type="checkbox" id="status-{{idx}}" class="form-check-input" @checked={{status.selected}} />
-      <label for="status-{{idx}}" class="form-check-label">
-        {{status.name}}
-      </label>
-    </div>
-  {{/each}}
-</div>
+<FormRow>
+  <FormLabel @fixed={{true}}>Statuses</FormLabel>
+  <div class="col-sm-12 col-lg-auto mt-2">
+    {{#each this.statuses as |status idx|}}
+      <div class="form-check form-check-inline">
+        <Input @type="checkbox" id="status-{{idx}}" class="form-check-input" @checked={{status.selected}}/>
+        <label for="status-{{idx}}" class="form-check-label">
+          {{status.name}}
+        </label>
+      </div>
+    {{/each}}
+  </div>
+</FormRow>
 
 {{#each this.visiblePositions key="id" as |position|}}
   <ChAccordion as |accordion|>
@@ -62,7 +70,8 @@
           <div class="callsign-list">
             {{#each position.visiblePeople key="id" as |person|}}
               <div>
-                <PersonLink @person={{person}} /> {{#if person.on_site}}{{fa-icon "check" color="success"}}{{/if}}<br>
+                <PersonLink @person={{person}} />
+                {{#if person.on_site}}{{fa-icon "check" color="success"}}{{/if}}<br>
                 &lt;{{person.status}}&gt;
               </div>
             {{/each}}

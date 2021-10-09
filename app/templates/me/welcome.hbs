@@ -28,14 +28,14 @@
       </p>
       <ChForm @formId="password" @formFor={{this.password}} @validator={{this.passwordValidations}}
               @onSubmit={{this.submitAction}} @onCancel={{this.cancelAction}} as |f|>
-        <div class="form-row">
+        <FormRow>
           <f.input @name="password" @type="password"
-                   @label="New Password" @size={{20}} @maxlength={{30}} @grid="col-auto"/>
-        </div>
-        <div class="form-row">
+                   @label="New Password" @size={{20}} @maxlength={{30}} @inline={{true}}/>
+        </FormRow>
+        <FormRow>
           <f.input @name="password_confirmation" @type="password"
-                   @label="Confirm New Password" @size={{20}} @maxlength={{30}} @grid="col-auto"/>
-        </div>
+                   @label="Confirm New Password" @size={{20}} @maxlength={{30}} @inline={{true}}/>
+        </FormRow>
         <div class="mt-3">
           <f.submit @submitClass="btn-responsive"
                     @label={{if this.isSubmitting "Setting Password" "Set Password"}}

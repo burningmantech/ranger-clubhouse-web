@@ -4,28 +4,24 @@
   affidavit, have worked any Burn Perimeter-like shift in {{this.cutoff_year}} or later, and if they are signed up for
   a {{this.year}} Sandman shift.
 </p>
-<div class="form-row mb-1">
-  <div class="col-auto">
-    <label class="col-form-label">Filter:</label>
-  </div>
+<FormRow>
+  <FormLabel @auto={{true}}>Filter:</FormLabel>
   <div class="col-auto mb-2">
     <ChForm::Select @name="filter"
                     @value={{this.filter}}
                     @options={{this.filterOptions}}
-                    @onChange={{action (mut this.filter)}}
-                    @controlClass="form-control"/>
+                    @onChange={{action (mut this.filter)}}/>
   </div>
   <div class="col-auto">
     <UiButton @onClick={{this.exportToCSV}}>Export all to CSV</UiButton>
   </div>
-</div>
+</FormRow>
+
+Showing {{this.viewPeople.length}} of {{this.sandpeople.length}},
+{{pluralize this.qualifiedSignedUpCount "qualified sign up"}},
+{{pluralize this.unqualifiedSignedUpCount "unqualified sign up"}}
 
 <table class="table table-striped table-sm table-width-auto">
-  <caption>
-    Showing {{this.viewPeople.length}} of {{this.sandpeople.length}},
-    {{pluralize this.qualifiedSignedUpCount "qualified sign up"}},
-    {{pluralize this.unqualifiedSignedUpCount "unqualified sign up"}}
-  </caption>
   <thead>
   <tr>
     <th>Callsign</th>

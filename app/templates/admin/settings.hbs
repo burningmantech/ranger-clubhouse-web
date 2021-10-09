@@ -6,15 +6,15 @@
   {{fa-icon "key"}} = setting is a credential and may only be viewed and updated by the Tech Team.
 </p>
 
-<div class="form-row mb-2">
-  <label class="col-form-label">Filter name:</label>
-  <div class="col-auto">
-    <Input @type="text" @value={{this.filterByName}} size="20" class="form-control"/>
-  </div>
-  <div class="col-auto">
-    <UiButton @onClick={{this.clearFilter}}>Clear</UiButton>
-  </div>
-</div>
+<FormRow>
+    <FormLabel>Filter name:</FormLabel>
+    <div class="col-auto">
+        <Input @type="text" @value={{this.filterByName}} size="20" class="form-control"/>
+    </div>
+    <div class="col-auto">
+        <UiButton @onClick={{this.clearFilter}}>Clear</UiButton>
+    </div>
+</FormRow>
 
 Showing {{this.viewSettings.length}} of {{this.settings.length}}.
 <table class="table table-striped table-sm table-hover table-width-auto">
@@ -46,12 +46,12 @@ Showing {{this.viewSettings.length}} of {{this.settings.length}}.
         {{/if}}
       </td>
       <td>
-          <UiButton @type="secondary"
-                    @size="sm"
-                    @disabled={{and setting.is_credential (not this.isTechNinja)}}
-                    @onClick={{fn this.edit setting}}>
-            {{fa-icon "edit"}} Edit
-          </UiButton>
+        <UiButton @type="secondary"
+                  @size="sm"
+                  @disabled={{and setting.is_credential (not this.isTechNinja)}}
+                  @onClick={{fn this.edit setting}}>
+          {{fa-icon "edit"}} Edit
+        </UiButton>
       </td>
     </tr>
   {{/each}}
@@ -62,17 +62,17 @@ Showing {{this.viewSettings.length}} of {{this.settings.length}}.
   <ModalDialog @title="Edit Setting {{this.editSetting.name}}" @onEscape={{this.cancel}} as |Modal|>
     <ChForm @formId="setting"
             @formFor={{this.editSetting}}
-            @onSubmit={{this.save}}  as |f|>
+            @onSubmit={{this.save}} as |f|>
       <Modal.body>
         {{#if this.editSetting.description}}
           <p>
             {{nl2br this.editSetting.description}}
           </p>
         {{/if}}
-        <div class="form-group row">
+        <FormRow>
           {{#if (eq this.editSetting.type "bool")}}
             <div class="col-auto">
-              <f.input @name="value" @type="radioGroup" @options={{this.booleanOptions}} @inline={{true}}/>
+              <f.input @name="value" @type="radioGroup" @options={{this.booleanOptions}} @inlineCheckbox={{true}}/>
             </div>
           {{else if (eq this.editSetting.type "integer")}}
             <div class="col-auto">
@@ -84,7 +84,7 @@ Showing {{this.viewSettings.length}} of {{this.settings.length}}.
             <f.input @name="value" @label={{concat "Enter a " this.editSetting.type " value"}}
                      @type="textarea" @rows={{10}} @cols={{80}}/>
           {{/if}}
-        </div>
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Update Setting" @disabled={{this.editSetting.isSaving}} />

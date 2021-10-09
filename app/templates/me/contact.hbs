@@ -21,15 +21,15 @@
 
   <ChForm @formId="search" @formFor={{this.searchForm}} @changeSet={{false}} @onFormChange={{this.searchOnChange}}
           as |f|>
-    <div class="form-row">
+    <FormRow>
         <f.input @name="callsign" @label="Start typing the callsign of Ranger you wish to contact:" @type="text"
-                 @size=30 @autofocus={{true}} @grid="col-auto" />
-    </div>
-    <div class="form-row">
-      {{#if this.isSubmitting}}
-        <LoadingIndicator @text="Searching . . ."/>
-      {{/if}}
-    </div>
+                 @size={{30}} @autofocus={{true}} @inline={{true}}/>
+    </FormRow>
+    <FormRow>
+                {{#if this.isSubmitting}}
+            <LoadingIndicator @text="Searching . . ."/>
+                {{/if}}
+    </FormRow>
   </ChForm>
 
   {{#if this.foundCallsigns}}

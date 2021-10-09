@@ -116,7 +116,7 @@ The template file to edit the role is:
 <ChForm @formId="roles" @formFor={{this.roles}}
       @validator={{this.roleValidations}}
       @onSubmit={{this.saveAction}} as |f|>
-  <f.input @name="title" @label="Role Title:" @type="text" @size=20 />
+  <f.input @name="title" @label="Role Title:" @type="text" @size={{20}} />
   <f.input @name="new_user_eligible" @label="New User Eligible?" @type="checkbox" />
   <f.submit @disabled={{isSubmitting}} />
   <f.cancel @disabled={{this.isSubmitting}} />

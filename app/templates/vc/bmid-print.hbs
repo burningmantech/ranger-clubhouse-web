@@ -10,18 +10,18 @@
     </LinkTo>
     <a href="#export-list" class="ml-2">Jump to export list</a>
   </div>
-  <div class="form-row mt-3">
-    <label class="col-form-label col-auto">Filter:</label>
+  <FormRow>
+    <FormLabel @auto={{true}}>Filter:</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="filter" @value={{this.filter}}
                       @options={{this.filterOptions}}
                       @onChange={{action (mut this.filter)}}
-                      @controlClass="form-control form-control-sm"
+                      @fieldSize="sm"
                       @disabled={{this.isRendering}} />
     </div>
     <div class="col-auto">
       <div class="input-group">
-        <label>Callsign, title, team, notes filter:</label>
+        <label class="mr-1">Callsign, title, team, notes filter:</label>
         <Input @type="text" @value={{this.textFilterInput}} class="form-control form-control-sm ml-2"
                @enter={{action this.textFilterAction}} disabled={{this.isRendering}} />
         <UiButton @size="sm" @class="ml-1" @onClick={{this.textFilterAction}} @disabled={{this.isRendering}}>
@@ -37,7 +37,7 @@
       {{/if}}
       <div class="text-muted small">Regular Expression allowed</div>
     </div>
-  </div>
+  </FormRow>
 
   <p class="mt-4">
     <span class="d-inline">
@@ -160,16 +160,16 @@
   <h3>Export Selected BMIDs</h3>
 
   <ChForm @formId="batch" @formFor={{this.batchForm}} @onSubmit={{this.exportAction}} as |f|>
-    <div class="form-row">
+    <FormRow>
       <f.input @name="batchInfo"
                @label="Batch Information"
                @size={{32}}
                @maxlength={{32}}
-               @grid="col-auto"
+               @inline={{true}}
                @hint="Example batch info might be 'Batch #1, specials' or 'Batch #2, special stragglers', or 'Batch #3, alphas', etc. The Clubhouse will automatically add
 your name and the date and time you submitted to Lambase."
       />
-    </div>
+    </FormRow>
     <p>
       You will be asked to confirm the operation after clicking below.
     </p>

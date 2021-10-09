@@ -109,112 +109,127 @@
   <ChForm @formId="broadcastForm" @formFor={{this.broadcastForm}}
           @validator={{this.broadcastValidations}}
           @onSubmit={{this.reviewAction}} as |f|>
-    {{#if @broadcast.alerts}}
-      <div class="border rounded p-2 mb-2">
-        <div class="form-row">
-          <label class="col-form-label col-1">Alert type:</label>
-          <f.input @name="alert_id" @type="select" @options={{this.alertOptions}} @wrapClass="col-auto"/>
-        </div>
-      </div>
-    {{/if}}
-    {{#if @broadcast.has_status}}
-      <div class="border rounded p-2 mb-2">
-        <div class="form-row">
-          <label class="col-form-label col-form-label-fixed col-2">Status:</label>
-          <f.input @name="statuses" @type="checkboxGroup" @options={{this.statusOptions}}  />
-        </div>
-      </div>
-    {{/if}}
-    {{#if @broadcast.has_slot}}
-      <div class="border rounded p-2 mb-2">
-        <div class="form-row">
-          <f.input @name="slotPositionId" @label="Select on the team to show available shifts" @type="select"
-                   @options={{this.slotPositionOptions}} @grid="col-auto" @onChange={{this.positionChange}} />
-          {{#if f.model.slotPositionId}}
-            <f.input @name="slot_id" @label="Shift to broadcast to:" @type="select" @options={{this.slotOptions}} />
+    {{#if
+      (or @broadcast.alerts @broadcast.has_status @broadcast.has_slot @broadcast.has_position @broadcast.has_restrictions)}}
+      <UiSection>
+        <:title>Audience Filters</:title>
+        <:body>
+          {{#if @broadcast.alerts}}
+            <FormRow>
+              <FormLabel>Alert type:</FormLabel>
+              <f.input
+                @name="alert_id"
+                @type="select"
+                @options={{this.alertOptions}} />
+            </FormRow>
           {{/if}}
-        </div>
-      </div>
+          {{#if @broadcast.has_status}}
+            <FormRow>
+              <FormLabel>Ranger Status:</FormLabel>
+              <f.input @name="statuses" @type="checkboxGroup" @options={{this.statusOptions}}/>
+            </FormRow>
+          {{/if}}
+          {{#if @broadcast.has_slot}}
+            <FormRow>
+              <f.input @name="slotPositionId"
+                       @label="Select on the team to show available shifts"
+                       @type="select"
+                       @options={{this.slotPositionOptions}}
+                       @onChange={{this.positionChange}}/>
+            </FormRow>
+            {{#if f.model.slotPositionId}}
+              <FormRow>
+                <f.input @name="slot_id" @label="Shift to broadcast to:" @type="select" @options={{this.slotOptions}}/>
+              </FormRow>
+            {{/if}}
+          {{/if}}
+          {{#if @broadcast.has_position}}
+            <FormRow>
+              <FormLabel>Team:</FormLabel>
+              <f.input @name="position_id" @type="select" @options={{this.positionOptions}} />
+            </FormRow>
+            <FormRow>
+              <FormLabel>Team Shift Sign Ups</FormLabel>
+              <f.input @name="position_signed_up"
+                       @type="select"
+                       @options={{this.signedUpOptions}}/>
+            </FormRow>
+          {{/if}}
+          {{#if @broadcast.has_restrictions}}
+            <FormRow>
+              <FormLabel>Attendance:</FormLabel>
+              <div class="col-10 mt-1">
+                <f.input @name="on_site"
+                         @type="checkbox"
+                         @label="Who are signed up for any kind of shift during the event"/>
+                <f.input @name="attending"
+                         @type="checkbox"
+                         @label="Indicated they will attend"/>
+                <div class="mt-2">
+                  Checking both will search for people who are signed up for shifts during event OR indicated they will
+                  attend.
+                </div>
+              </div>
+            </FormRow>
+            <h4>-- AND --</h4>
+            <FormRow>
+              <FormLabel>Training:</FormLabel>
+              <div class="col-10">
+                <f.input @name="training" @type="radioGroup" @options={{this.trainingOptions}}/>
+              </div>
+            </FormRow>
+          {{/if}}
+        </:body>
+      </UiSection>
     {{/if}}
-    {{#if @broadcast.has_position}}
-      <div class="border rounded p-2 mb-2">
-        <div class="form-row">
-          <label class="col-form-label col-2">Team:</label>
-          <f.input @name="position_id" @type="select" @options={{this.positionOptions}} @wrapClass="col-auto"/>
-        </div>
-        <div class="form-row mt-2">
-          <label class="col-form-label col-2">Team Shift Sign Ups</label>
-          <f.input @name="position_signed_up" @type="select" @wrapClass="col-auto" @options={{this.signedUpOptions}} />
-        </div>
-      </div>
-    {{/if}}
-    {{#if @broadcast.has_restrictions}}
-      <div class="border rounded p-2 mb-2">
-        <div class="form-row">
-          <label class="col-form-label col-form-label-fixed col-2">Attendance:</label>
-          <div class="col-10 mt-2">
-            <f.input @name="on_site" @type="checkbox"
-                     @label="Who are signed up for any kind of shift during the event"/>
-            <f.input @name="attending" @type="checkbox" @label="Indicated they will attend"/>
-            <div class="mt-2">
-              Checking both will search for people who are signed up for shifts during event OR indicated they will
-              attend.
-            </div>
+    <UiSection>
+      <:title>Text/SMS Message</:title>
+      <:body>
+        <FormRow>
+          <div class="col-12 ml-2 mb-2">
+            <f.input @name="send_sms" @type="checkbox" @label="Send Text/SMS message" @inlineCheckbox={{true}}/>
           </div>
-        </div>
-        <div class="form-row">
-          <h3 class="col-12">AND</h3>
-          <label class="col-form-label col-form-label-fixed col-2">Training:</label>
-          <div class="col-10">
-            <f.input @name="training" @type="radioGroup" @options={{this.trainingOptions}}  />
-          </div>
-        </div>
-      </div>
-    {{/if}}
-
-    <div class="border rounded p-2">
-      <div class="form-row">
-        <div class="col-12 ml-2 mb-2">
-          <f.input @name="send_sms" @type="checkbox" @label="Send Text/SMS message" @inline={{true}}/>
-        </div>
-        <div class="col-auto">
+        </FormRow>
+        <FormRow>
           <f.input @name="sms_message"
                    @label="Text/SMS to send (limited to {{@config.sms_limit}} characters)"
                    @type="textarea"
                    @maxlength={{@config.sms_limit}}
                    @rows={{2}}
                    @cols={{80}}
-                   @wrapClass="col-auto"
-                   @controlClass="form-control form-control-sm"
                    @disabled={{not f.model.send_sms}}
-                   @hint="{{if f.model.sms_message f.model.sms_message.length "0"}} of {{@config.sms_limit}} characters" />
-        </div>
-      </div>
-
-      <div class="form-row mt-2">
-        <div class="col-12 ml-2">
-          <f.input @name="send_email" @type="checkbox" @label="Send email message" @inline={{true}}/>
-          <f.input @name="send_clubhouse" @type="checkbox" @label="Send Clubhouse message" @inline={{true}}/>
-        </div>
-      </div>
-      <div class="form-row mt-2">
-        <div class="col-auto">
-          <f.input @name="subject" @type="text" @label="Subject for message:" @size={{80}} @maxlength={{80}}
-                   @controlClass="form-control form-control-sm" @wrapClass="col-auto"/>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="col-auto">
-          <f.input @name="message" @type="textarea" @label="Message to send to email and/or Clubhouse Message"
-                   @rows={{10}} @cols={{100}} @wrapClass="col-auto"
+                   @hint="{{if f.model.sms_message f.model.sms_message.length "0"}} of {{@config.sms_limit}} characters"
+          />
+        </FormRow>
+      </:body>
+    </UiSection>
+    <UiSection>
+      <:title>Email and/or Clubhouse Message</:title>
+      <:body>
+        <FormRow>
+          <div class="col-12 ml-2">
+            <f.input @name="send_email" @type="checkbox" @label="Send email message" @inlineCheckbox={{true}}/>
+            <f.input @name="send_clubhouse" @type="checkbox" @label="Send Clubhouse message" @inlineCheckbox={{true}}/>
+          </div>
+        </FormRow>
+        <FormRow>
+          <f.input @name="subject" @type="text" @label="Subject for message:" @size={{80}} @maxlength={{80}} />
+        </FormRow>
+        <FormRow>
+          <f.input @name="message"
+                   @type="textarea"
+                   @label="Message to send to email and/or Clubhouse Message"
+                   @rows={{10}}
+                   @cols={{100}}
                    @disabled={{not (or f.model.send_email f.model.send_clubhouse)}}
-                   @controlClass="form-control form-control-sm"/>
-        </div>
-      </div>
-    </div>
-
-    <f.submit @label="REVIEW MESSAGE & RECIPIENTS" @submitClass="btn-lg"/>
-    <p>Don’t worry, you’ll have a chance to confirm the message and exactly who it is being sent to before it is
-      actually sent.</p>
+          />
+        </FormRow>
+      </:body>
+    </UiSection>
+    <p>
+      <f.submit @label="REVIEW MESSAGE & RECIPIENTS" @submitClass="btn-lg"/>
+    </p>
+    Don’t worry, you’ll have a chance to confirm the message and exactly who it is being sent to before it is
+    actually sent.
   </ChForm>
 {{/if}}

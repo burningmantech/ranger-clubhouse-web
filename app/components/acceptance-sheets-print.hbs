@@ -3,7 +3,7 @@
   <div class="d-flex mx-2 mt-4 mb-2 {{if alphaIdx "d-print-page-break"}}">
     <img src={{assets-url "images/ranger-logo-bw.png"}} class="alpha-sheet-logo" alt="ranger">
     <div class="alpha-sheet-header align-middle">
-      {{this.year}} Alpha To Dirt Ranger Acceptance Form ({{add alphaIdx 1}} / {{this.printAlphas.length}})
+      {{@year}} Alpha To Dirt Ranger Acceptance Form ({{add alphaIdx 1}} / {{@alphas.length}})
     </div>
   </div>
 
@@ -11,7 +11,7 @@
     Alpha Information
   </div>
 
-  <div class="row no-gutters">
+  <div class="row g-0">
     <div class="col-8">
       <div class="alpha-sheet-column">
         <div class="alpha-sheet-column-label">Ranger Handle:</div>
@@ -73,7 +73,7 @@
   <div class="alpha-sheet-section-header">
     Mentoring Information
   </div>
-  <div class="row no-gutters">
+  <div class="row g-0">
     <div class="col-6">
       <div class="alpha-sheet-column">
         <div class="alpha-sheet-column-label">Known Rangers:</div>
@@ -99,7 +99,7 @@
       </div>
     </div>
   </div>
-  <div class="row no-gutters">
+  <div class="row g-0">
     <div class="col-6">
       <div class="alpha-sheet-column">
         <div class="alpha-sheet-column-label align-top">Prior Mentors:</div>
@@ -125,12 +125,12 @@
   </div>
 
   <div class="row">
-    <div class="col-12 no-gutters">
+    <div class="col-12 g-0">
       <table class="alpha-sheet-table mt-4">
         <thead>
         <tr>
           <th>&nbsp;</th>
-          <th class="w-35">{{this.year}} MENTOR NAME</th>
+          <th class="w-35">{{@year}} MENTOR NAME</th>
           <th class="w-20">ACCEPT</th>
           <th class="w-20">ACCEPT W/RESERV.</th>
           <th class="w-20">REJECT</th>

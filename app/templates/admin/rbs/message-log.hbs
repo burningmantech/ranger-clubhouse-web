@@ -3,22 +3,18 @@
   <LinkTo @route="admin.rbs">Back to RBS</LinkTo>
 </p>
 
-<ChForm @formId="search" @formFor={{this.searchForm}} @changeSet={{false}} @onSubmit={{this.submitAction}} as |f|>
-  <div class="row form-group">
-    <label class="col-form-label">Message direction</label>
-    <f.input @name="direction" @type="select" @options={{this.directionOptions}} @wrapClass="col-auto"/>
-  </div>
-  <div class="row form-group">
-    <label class="col-auto">Status</label>
-    <f.input @name="status" @cols=4 @type="checkboxGroup" @options={{this.statusOptions}} @inline={{true}} />
-  </div>
-  <div class="form-row mt-2">
+<p>
+  <ChForm @formId="search" @formFor={{this.searchForm}} @changeSet={{false}} @onSubmit={{this.submitAction}} as |f|>
+    <FormRow>
+      <f.input @name="direction" @label="Message Direction" @type="select" @options={{this.directionOptions}}/>
+      <f.input @name="status" @label="Status" @cols={{4}} @type="checkboxGroup" @options={{this.statusOptions}} />
+    </FormRow>
     <f.submit @label="Search"/>
-  </div>
-</ChForm>
+  </ChForm>
+</p>
 
+Showing {{this.currentPage}} of {{this.total_pages}} pages. {{pluralize this.total "row"}}
 <table class="table table-sm table-striped mt-2">
-  <caption>Showing {{this.currentPage}} of {{this.total_pages}} pages. {{pluralize this.total "row"}}</caption>
   <thead>
   <tr>
     <th>Timestamp</th>

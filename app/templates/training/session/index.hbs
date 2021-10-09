@@ -28,7 +28,7 @@
   </ChNotice>
 {{/unless}}
 
-<div class="row no-gutter">
+<FormRow>
   <div class="col-auto">
     Signups: {{this.students.length}} of {{this.slot.max}}
     {{#if (gte this.students.length this.slot.max)}}
@@ -56,7 +56,7 @@
       Auditors: {{this.auditorCount}}
     </div>
   {{/if}}
-</div>
+</FormRow>
 
 {{#if this.trainers}}
   <p>
@@ -106,7 +106,7 @@
   {{! Cellphone/Tablet display }}
   <div class="d-block d-sm-none">
     <div class="btn-group">
-      <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+      <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
         Additional Actions
       </button>
@@ -298,21 +298,21 @@
                 {{else}}
                   * imported *
                 {{/if}}
-               </td>
+              </td>
               <td class="w-65">
                 {{#if note.is_log}}
                   <i>{{note.note}}</i>
                 {{else}}
-                {{nl2br note.note}}
-                {{#if (eq note.person_source_id this.session.userId)}}
-                  <br>
-                  <UiButton @type="secondary" @size="sm" @onClick={{fn this.editNoteAction note}}>
-                    Edit
-                  </UiButton>
-                  <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteNoteAction note}}>
-                    Delete
-                  </UiButton>
-                {{/if}}
+                  {{nl2br note.note}}
+                  {{#if (eq note.person_source_id this.session.userId)}}
+                    <br>
+                    <UiButton @type="secondary" @size="sm" @onClick={{fn this.editNoteAction note}}>
+                      Edit
+                    </UiButton>
+                    <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteNoteAction note}}>
+                      Delete
+                    </UiButton>
+                  {{/if}}
                 {{/if}}
               </td>
             </tr>
@@ -324,30 +324,28 @@
           </tbody>
         </table>
         {{#let (concat this.editStudent.callsign " <" this.editStudent.status ">") as |studentName|}}
-          <div class="form-row mt-2">
-            <label>Did {{studentName}} pass training?</label>
+          <FormRow><label>Did {{studentName}} pass training?</label>
             <div class="col-12">
               <f.input @name="passed" @type="radioGroup" @options={{this.passedOptions}} @inline={{this}}/>
             </div>
-          </div>
-          <div class="form-row mt-2">
+          </FormRow>
+          <FormRow>
             <f.input @name="rank" @label="Ranking for {{studentName}}"
-                     @type="select" @options={{if this.training.is_art this.artRankOptions this.dirtRankOptions}} />
-          </div>
-          <div class="form-row mt-2">
+                     @type="select" @options={{if this.training.is_art this.artRankOptions this.dirtRankOptions}}/>
+          </FormRow>
+          <FormRow>
             <f.input @name="note" @label="Enter the training notes about {{studentName}}:"
                      @type="textarea"
                      @hint="Your note will be timestamped and appended to any existing notes."
                      @rows={{3}} @cols={{80}}/>
-          </div>
+          </FormRow>
           {{#unless this.training.is_art}}
-            <div class="form-row mt-2">
-              <label>Was feedback delivered to {{studentName}}?</label>
+            <FormRow><label>Was feedback delivered to {{studentName}}?</label>
               <div class="col-12">
                 <f.input @name="feedback_delivered" @type="radioGroup" @options={{this.feedbackDeliveredOptions}}
-                         @inline={{true}}/>
+                         @inlineCheckbox={{true}}/>
               </div>
-            </div>
+            </FormRow>
 
           {{/unless}}
         {{/let}}
@@ -358,7 +356,7 @@
         {{#if this.isSubmitting}}
           <LoadingIndicator/>
         {{/if}}
-        <div class="ml-auto">
+        <div class="ms-auto">
           <UiButton @type="light-red" @onClick={{this.removeStudentAction}}>
             Remove From Training
           </UiButton>
@@ -378,16 +376,16 @@
             @changeSet={{false}}
             @onFormChange={{action this.searchPeopleAction}} as |f|>
       <Modal.body>
-        <div class="form-row">
+        <FormRow>
           <f.input @name="name" @label="Enter the callsign, real name, or email of the person to add:"
-                   @type="text" @size=30 @autofocus={{true}} />
-        </div>
-        <div class="form-row">
-          <UiCancelButton @onClick={{this.cancelSearchAction}} />
-        </div>
+                   @type="text" @size={{30}} @autofocus={{true}}/>
+        </FormRow>
+        <p>
+          <UiCancelButton @onClick={{this.cancelSearchAction}}/>
+        </p>
         {{#if this.foundPeople}}
           Click on the callsign to add the person.
-          <table class="table table-hover">
+          <table class="table table-striped table-hover">
             <thead>
             <tr>
               <th class="w-25">Callsign</th>
@@ -396,7 +394,7 @@
             </tr>
             </thead>
             <tbody>
-            {{#each this.foundPeople as |person|}}
+            {{#each this.foundPeople key="id" as |person|}}
               <tr>
                 <td class="w-25"><a href {{on "click" (fn this.addPersonAction person)}}>{{person.callsign}}</a></td>
                 <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
@@ -423,11 +421,11 @@
             @onSubmit={{this.updateNoteAction}} as |f|>
       <Modal.body>
         <p>
-            Note created on {{shift-format this.editNote.created_at year=true}}
+          Note created on {{shift-format this.editNote.created_at year=true}}
         </p>
-        <div class="form-row">
+        <FormRow>
           <f.input @type="textarea" @name="note" @label="Edit Your Note" @rows={{4}} @cols={{80}} @autofocus={{true}}/>
-        </div>
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit/>

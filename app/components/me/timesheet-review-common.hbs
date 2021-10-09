@@ -127,16 +127,15 @@
           <dd class="col-10">{{credits-format this.entry.credits}}</dd>
         </dl>
 
-        <div class="form-row">
-          Provide as much information as possible to help us understand why this entry should be fixed.
-          <ul>
-            <li><b>Provide an explanation</b> in one to three sentences what needs to be corrected.</li>
-            <li><b>State the correct times</b> if the starting and/or ending time is wrong.</li>
-            <li><b>If the position "{{this.entry.position.title}}" is wrong,</b> tell us what is the correct position.
-            </li>
-            <li><b>Who was the partner for the shift?</b></li>
-          </ul>
-        </div>
+        Provide as much information as possible to help us understand why this entry should be fixed.
+        <ul>
+          <li><b>Provide an explanation</b> in one to three sentences what needs to be corrected.</li>
+          <li><b>State the correct times</b> if the starting and/or ending time is wrong.</li>
+          <li><b>If the position "{{this.entry.position.title}}" is wrong,</b> tell us what is the correct
+            position.
+          </li>
+          <li><b>Who was the partner for the shift?</b></li>
+        </ul>
         {{#if this.entry.isRejected}}
           <ChNotice @type="danger" @icon="times" @title="Correction request has been denied">
             The response from the timesheet review team:<br>
@@ -148,12 +147,12 @@
           Your previous message to the timesheet review team:<br>
           {{nl2br this.entry.notes}}
         {{/if}}
-        <div class="form-row">
+        <FormRow>
           <f.input @name="additional_notes"
                    @label={{if this.entry.isRejected "Supply additional information for an apeal:"
                                "Your message to the timesheet review team:"}}
-                   @type="textarea" @cols={{80}} @rows={{3}}/>
-        </div>
+                   @type="textarea" @cols={{80}} @rows={{3}} />
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Submit Correction Request" @disabled={{this.entry.isSaving}} />

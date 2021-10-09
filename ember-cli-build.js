@@ -40,9 +40,9 @@ module.exports = function (defaults) {
     sassOptions: {
       onlyIncluded: true,
       includePaths: [
-        'node_modules/cropperjs/src/css'
+        'node_modules/cropperjs/src/css',
+        'node_modules/bootstrap/scss',
       ]
-
     },
   });
 
@@ -51,7 +51,14 @@ module.exports = function (defaults) {
 
   app.import('node_modules/jquery-datetimepicker/jquery.datetimepicker.css');
   app.import('node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js');
-  app.import('vendor/bootstrap/bootstrap-4.3.bundle.js');
+  // app.import('node_modules/@popperjs/core/dist/umd/popper.js', {
+  //  type: 'vendor',
+  // prepend: true
+  //});
+  //app.import('node_modules/bootstrap/dist/js/bootstrap.js', {
+  // type: 'vendor',
+  // prepend: true
+  //});
 
   // app.import('node_modules/@okta/okta-signin-widget/dist/css/okta-sign-in.min.css');
 

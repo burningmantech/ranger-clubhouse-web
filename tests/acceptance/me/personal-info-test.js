@@ -34,7 +34,7 @@ module('Acceptance | me/personal info', function(hooks) {
     await visit('/me/personal-info');
     await fillIn('[name="email"]', newEmail);
     await click('button.btn-submit');
-    assert.dom('#toast-container', document).includesText('Your personal information was successfully updated');
+    assert.dom('.toast-container', document).includesText('Your personal information was successfully updated');
 
     person.reload();
     assert.equal(person.email, newEmail);

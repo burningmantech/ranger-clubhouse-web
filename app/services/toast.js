@@ -1,14 +1,47 @@
-import ToastService from 'ember-toastr/services/toast';
-import ENV from 'clubhouse/config/environment';
+import Service from '@ember/service';
+import {A} from '@ember/array';
+import {tracked} from '@glimmer/tracking';
 
-export default class extends ToastService {
-  config =  ENV['ember-toastr'];
+const TIMEOUT = 5000;
 
-  error(title, message = '', options = {}) {
-    options.timeOut = 0;
-    options.extendedTimeOut = 0;
-    options.closeButton = true;
+export default class extends Service {
+  @tracked loaf = A();
 
-    return super.error(title, message, options);
+  success(message) {
+    this.addToast({message, type: 'success'});
+  }
+
+  warning(message) {
+    this.addToast({message, type: 'warning'});
+  }
+
+  error(message) {
+    this.addToast({message, type: 'error'});
+  }
+
+  addToast(toast) {
+    this.loaf.pushObject(toast);
+    if (toast.type !== 'error') {
+      toast.timerId = setTimeout(() => this.loaf.removeObject(toast), TIMEOUT);
+    }
+  }
+
+  removeToast(toast) {
+    if (toast.timerId) {
+      clearTimeout(toast.timerId);
+    }
+
+    this.loaf.removeObject(toast);
+  }
+
+  clear() {
+    this.loaf.forEach((toast) => {
+      if (toast.timerId) {
+        clearTimeout(toast.timerId);
+        toast.timerId = null;
+      }
+    });
+
+    this.loaf = A();
   }
 }

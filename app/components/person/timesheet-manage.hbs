@@ -70,9 +70,9 @@
               </UiButton>
             {{else}}
               <UiButton @type={{if ts.isPending "danger" "primary"}} @size="sm"
-                @onClick={{fn this.editEntryAction ts}} @disabled={{ts.isReloading}}>
+                        @onClick={{fn this.editEntryAction ts}} @disabled={{ts.isReloading}}>
                 {{#if ts.isReloading}}
-                  <SpinIcon />
+                  <SpinIcon/>
                 {{else}}
                   {{fa-icon "edit"}}
                 {{/if}}
@@ -107,7 +107,7 @@
     <ChForm @formId="entry" @formFor={{this.editEntry}}
             @validator={{this.timesheetValidations}}
             @onSubmit={{this.saveEntryAction}}
-             as |f|>
+            as |f|>
       <Modal.body>
         {{#if this.editEntry.isPending}}
           <ChNotice @type="danger" @icon="arrow-right" @title="Correction Request Review Required">
@@ -137,37 +137,45 @@
         <fieldset>
           <legend>Time &amp; Position</legend>
           {{#if this.canManageTimesheets}}
-            <div class="form-row">
-              <f.input @name="on_duty" @label="On Duty" @type="datetime" @size={{20}} @grid="col-auto"/>
-              <f.input @name="off_duty" @label="Off Duty" @type="datetime" @size={{20}} @grid="col-auto"/>
-              <f.input @name="position_id" @label="Position" @type="select" @options={{this.positionOptions}}
-                       @grid="col-auto"/>
-            </div>
-            <div class="form-row ml-1 mb-2">
-              <f.input @name="is_non_ranger" @type="checkbox"
-                       @label="Non Ranger work entry (don't check if you don't know what this means)"/>
-            </div>
-
+            <FormRow>
+              <f.input @name="on_duty"
+                       @label="On Duty"
+                       @type="datetime"
+                       @size={{20}}
+                       @inline={{true}}/>
+              <f.input @name="off_duty" @label="Off Duty" @type="datetime" @size={{20}} @inline={{true}}/>
+              <f.input @name="position_id"
+                       @label="Position"
+                       @type="select"
+                       @options={{this.positionOptions}}
+                       @inline={{true}}/>
+            </FormRow>
+            <FormRow>
+              <div class="col-auto">
+                <f.input @name="is_non_ranger" @type="checkbox"
+                         @label="Non Ranger work entry (don't check if you don't know what this means)"/>
+              </div>
+            </FormRow>
           {{else}}
-            <dl class="form-row">
-              <dt class="col-sm-2">Position:</dt>
-              <dd class="col-sm-10">
+            <dl class="row">
+              <dt class="col-2">Position:</dt>
+              <dd class="col-10">
                 {{this.editEntry.position.title}}
                 {{#if this.editEntry.is_non_ranger}}
                   (as non ranger volunteer)
                 {{/if}}
               </dd>
 
-              <dt class="col-sm-2">Time:</dt>
-              <dd class="col-sm-10">
+              <dt class="col-2">Time:</dt>
+              <dd class="col-10">
                 {{shift-format this.editEntry.on_duty}} to {{shift-format this.editEntry.off_duty}}
               </dd>
 
-              <dt class="col-sm-2">Duration:</dt>
-              <dd class="col-sm-10">{{hour-minute-format this.editEntry.duration}}</dd>
+              <dt class="col-2">Duration:</dt>
+              <dd class="col-10">{{hour-minute-format this.editEntry.duration}}</dd>
 
-              <dt class="col-sm-2">Credits:</dt>
-              <dd class="col-sm-10">{{credits-format this.editEntry.credits}}</dd>
+              <dt class="col-2">Credits:</dt>
+              <dd class="col-10">{{credits-format this.editEntry.credits}}</dd>
             </dl>
           {{/if}}
         </fieldset>
@@ -181,20 +189,21 @@
             {{/if}}
           </p>
           {{#if this.canManageTimesheets}}
-            <div class="form-row">
+            <FormRow>
               <f.input @name="additional_reviewer_notes"
                        @label="Reviewer message to {{@person.callsign}}:"
                        @type="textarea" @cols={{80}} @rows={{2}}
               />
-            </div>
-            <div class="form-row">
-              <label class="col-form-label">Review status:</label>
+            </FormRow>
+            <FormRow>
+              <FormLabel>Review status:</FormLabel>
               <div class="col-auto">
-                <f.input @name="review_status" @type="radioGroup" @options={{this.reviewOptions}} @inline={{true}} />
+                <f.input @name="review_status" @type="radioGroup" @options={{this.reviewOptions}}
+                         @inlineCheckbox={{true}}/>
               </div>
-            </div>
+            </FormRow>
           {{else}}
-            <dl class="form-row">
+            <dl class="row">
               <dt class="col-2">
                 Review Status:
               </dt>
@@ -212,7 +221,7 @@
           {{#if this.editEntry.isSaving}}
             <LoadingIndicator/>
           {{/if}}
-          <div class="ml-auto">
+          <div class="ms-auto">
             <UiButton @type="danger" @onClick={{this.removeEntryAction}} @disabled={{this.editEntry.isSaving}}>
               {{fa-icon "trash"}} Delete
             </UiButton>

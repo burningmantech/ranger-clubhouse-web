@@ -3,7 +3,7 @@
     {{#if @text}}
       {{@text}}
     {{else}}
-      First, do nothing. We're loading {{this.item}}.
+      First, do nothing. We're loading {{or @item "the information"}}.
     {{/if}}
   </div>
   <div class="loading-spinner"></div>
