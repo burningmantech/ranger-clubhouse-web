@@ -20,7 +20,6 @@ COPY ./config/            ./config/
 COPY ./mirage/            ./mirage/
 COPY ./public/            ./public/
 COPY ./tests/             ./tests/
-COPY ./vendor/            ./vendor/
 COPY ["./.ember-cli.js", "./.eslintignore", "./.eslintrc.js", "./ember-cli-build.js", "./package.json", "./package-lock.json", "./testem.js", "./"]
 
 
