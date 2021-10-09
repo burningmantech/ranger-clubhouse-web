@@ -112,7 +112,7 @@
  * to a row.
  */
 
-@include media-breakpoint-down(md) {
+@include media-breakpoint-down(lg) {
   .dashboard-sub-heading {
     font-size: 4vw;
   }

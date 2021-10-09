@@ -55,12 +55,12 @@
             @onSubmit={{this.submitAsset}} as |f|>
 
       <Modal.body>
-        <div class="form-row">
+        <FormRow>
           <f.input @name="attachment_id"
                    @type="select"
                    @label="Choose the new attachment"
-                   @options={{this.attachmentOptions}} />
-        </div>
+                   @options={{this.attachmentOptions}}/>
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Update" @disabled={{this.isSubmitting}} />

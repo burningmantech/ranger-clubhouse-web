@@ -76,43 +76,43 @@
             @formFor={{this.entry}}
             @onSubmit={{this.saveAccessDocument}} as |f|>
       <Modal.body>
-        <div class="form-row">
-          <f.input @name="type" @type="select" @options={{this.typeOptions}} @label="Type" @grid="col-auto"/>
-          <f.input @name="status" @type="select" @options={{this.statusOptions}} @label="Status" @grid="col-auto"/>
+        <FormRow>
+          <f.input @name="type" @type="select" @options={{this.typeOptions}} @label="Type" @inline={{true}}/>
+          <f.input @name="status" @type="select" @options={{this.statusOptions}} @label="Status"
+                   @inline={{true}}/>
           <f.input @name="source_year" @type="select" @options={{this.yearOptions}} @label="Source Year"/>
           <f.input @name="expiry_year" @type="select" @options={{this.yearOptions}} @label="Good Through"/>
 
           {{# if (eq f.model.type "event_radio")}}
-            <f.input @name="item_count" @label="Radio Count" @type="text" @size={{5}} @grid="col-auto"/>
-          {{else if (or (eq f.model.type "work_access_pass") (eq f.model.type "work_access_pass_so") (eq f.model.type "staff_credential"))}}
+            <f.input @name="item_count" @label="Radio Count" @type="text" @size={{5}} @inline={{true}}/>
+          {{else if (or (eq f.model.type "work_access_pass") (eq f.model.type "work_access_pass_so") (eq
+            f.model.type "staff_credential"))}}
             <f.input @name="admission_date" @label="Access Date" @type="select"
-                     @options={{this.admissionDateOptions}} @grid="col-auto"/>
+                     @options={{this.admissionDateOptions}} @inline={{true}}/>
           {{/if}}
-        </div>
+        </FormRow>
         {{#if (or
-                      (eq f.model.type "reduced_price_ticket")
-                      (eq f.model.type "vehicle_pass")
-                      (eq f.model.type "gift_ticket")
+                (eq f.model.type "reduced_price_ticket")
+                (eq f.model.type "vehicle_pass")
+                (eq f.model.type "gift_ticket")
               )}}
           {{#if this.isTicketingOpen}}
-            <div class="form-row mb-2">
-              <div class="col-auto text-danger">
+              <div class="text-danger">
                 NOTE: Ticketing is still open. The delivery method and/or address might be overridden
                 by the end user for all un-submitted deliverable items.
               </div>
-            </div>
           {{/if}}
 
-          <div class="form-row">
+          <FormRow>
             <f.input @name="delivery_method" @type="select" @options={{this.deliveryMethodOptions}}
-                     @label="Delivery Method" @grid="col-auto"/>
-          </div>
+                     @label="Delivery Method" @inline={{true}}/>
+          </FormRow>
 
           {{#if (eq f.model.delivery_method "postal")}}
-            <div class="form-row">
+            <FormRow>
               <f.input @name="street1" @label="Street" @size={{45}} @maxlength={{100}} @grid="col-lg-auto col-sm-6"/>
-            </div>
-            <div class="form-row">
+            </FormRow>
+            <FormRow>
               <f.input @name="city" @label="City" @size={{25}} @maxlength={{100}} @grid="col-sm-5 col-lg-4"/>
               <f.input @name="state"
                        @label="State"
@@ -120,7 +120,7 @@
                        @options={{this.stateOptions}}
                        @grid="col-sm-5 col-lg-auto"/>
               <f.input @name="postal_code" @label="Zip Code" @size={{10}} @grid="col-sm-5 col-lg-auto"/>
-            </div>
+            </FormRow>
           {{/if}}
 
         {{/if}}
@@ -130,21 +130,21 @@
             Created: {{this.entry.create_date}}
           </p>
 
-          <div class="form-row mb-4">
-            <label class="col-form-label">Comments:</label>
+          <FormRow>
+            <FormLabel>Comments:</FormLabel>
             <div class="mt-2 col-auto">
               {{nl2br this.entry.comments}}
             </div>
-          </div>
+          </FormRow>
         {{/unless}}
-        <div class="form-row">
+        <FormRow>
           <f.input @name="additional_comments"
                    @label="Additional Comments"
                    @type="textarea"
                    @rows={{4}}
                    @cols={{80}}
                    @hint="(Your callsign and today's date will be automatically added to any additional comments provided.)"/>
-        </div>
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.entry.isNew "Create" "Update"}}  @disabled={{this.entry.isSaving}} />
@@ -153,9 +153,9 @@
           <LoadingIndicator/>
         {{/if}}
         {{#unless this.entry.isNew}}
-          <UiButton @type="danger" @class="ml-auto" @onClick={{fn this.deleteAccessDocument this.entry}}
+          <UiButton @type="danger" @class="ms-auto" @onClick={{fn this.deleteAccessDocument this.entry}}
                     @disabled={{this.entry.isSaving}}>
-            Delete
+            {{fa-icon "trash"}} Delete
           </UiButton>
         {{/unless}}
       </Modal.footer>

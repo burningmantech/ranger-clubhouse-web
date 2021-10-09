@@ -1,23 +1,23 @@
 <h1 class="d-print-none">Alpha Acceptance Sheet</h1>
 
 {{#if this.isPrinting}}
-  <AcceptanceSheetsPrint @alphas={{this.printAlphas}} @backAction={{this.showAlphasAction}} />
+  <AcceptanceSheetsPrint @alphas={{this.printAlphas}} @backAction={{this.showAlphasAction}} @year={{this.year}} />
 {{else}}
-  <div class="form-row mb-2">
-    <label class="col-form-label">Mentor Shift Filter</label>
+  <FormRow>
+    <FormLabel>Mentor Shift Filter</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="filter"
                       @value={{this.filter}}
                       @options={{this.filterOptions}}
-                      @onChange={{this.changeFilter}}
-                      @controlClass="form-control"/>
+                      @onChange={{this.changeFilter}} />
     </div>
     <div class="col-auto">
       <UiButton @onClick={{this.printAction}}>
-        Print Selected ({{this.printAlphas.length}})
+        Print Selected ({{this.printAlphas.length}}
       </UiButton>
     </div>
-  </div>
+  </FormRow>
+
   Showing {{this.viewAlphas.length}} of {{pluralize this.alphas.length "Alpha"}}
   <table class="table table-striped table-sm table-hover table-width-auto">
     <thead>
@@ -58,15 +58,18 @@
           {{#if (and alpha.trainings alpha.trained alpha.alpha_slot)}}
             <span class="text-success">{{fa-icon "check"}} none</span>
           {{else}}
-            {{#unless alpha.trainings}}
-              <b class="text-danger">{{fa-icon "circle-dot"}} No training signups</b><br>
-            {{/unless}}
-            {{#unless alpha.trained}}
-              <b class="text-danger">{{fa-icon "times"}} Did not pass training</b><br>
-            {{/unless}}
-            {{#unless alpha.alpha_slot}}
-              <b class="text-danger">{{fa-icon "user-friends"}} No mentor shift</b>
-            {{/unless}}
+            <b class="text-danger">
+              {{fa-icon "ban"}} ISSUE:
+              {{#unless alpha.trainings}}
+                No training signups<br>
+              {{/unless}}
+              {{#unless alpha.trained}}
+                Did not pass training<br>
+              {{/unless}}
+              {{#unless alpha.alpha_slot}}
+                No mentor shift
+              {{/unless}}
+            </b>
           {{/if}}
         </td>
       </tr>

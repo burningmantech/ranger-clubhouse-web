@@ -12,15 +12,15 @@
         Burning Man and the Rangers have a zero-tolerance policy for behavior that is non-consensual,
         abusive, harassing, or harmful to others.
       </p>
-      <div class="form-row mb-2">
+      <FormRow>
         {{#unless @isMe}}
           <f.input @name="message_from"
                    @label="From"
                    @type="text"
                    @size={{30}} @maxlength={120}
-                   @autofocus={{not this.isFromMessage}}
+            @autofocus={{not this.isFromMessage}}
                    @gridClass="col-sm-12 col-md-6"/>
-        {{/unless}}
+            {{/unless}}
         <div class="col-sm-12 col-md-6">
           <f.input @name="recipient_callsign"
                    @placeholder="Enter a callsign"
@@ -31,20 +31,19 @@
                    @autofocus={{this.isFromMessage}}
           />
         </div>
-      </div>
-      <div class="form-row">
+      </FormRow>
+      <FormRow>
         <f.input @name="subject"
                  @label="Subject"
                  @size={{80}}
-                 @maxlength={{80}}
-                 @gridClass="col-auto"/>
-      </div>
-      <div class="form-row">
+                 @maxlength={{80}} />
+      </FormRow>
+      <FormRow>
         <f.input @name="body" @label="The message (be civil, courteous, polite, & professional)"
                  @type="textarea"
                  @rows={{4}} @cols={{80}}
                  @gridClass="col-auto"/>
-      </div>
+      </FormRow>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
       <f.submit @label="Send" @disabled={{@isSubmitting}} />

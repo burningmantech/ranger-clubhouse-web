@@ -20,25 +20,25 @@
         {{#if group.showTrainerPhoto}}
           {{#if group.trainer.photo_url}}
             <div class="photo-medium mb-3">
-              <img src="{{group.trainer.photo_url}}" alt="trainer {{group.trainer.callsign}}">
+              <img src={{group.trainer.photo_url}} alt="trainer {{group.trainer.callsign}}">
             </div>
           {{else}}
             <div class="my-2">
-              <i class="far fa-user fa-8x"></i><br>
+              <i class="far fa-user fa-4x"></i><br>
               Uh oh, {{group.trainer.callsign}} does not have a photo on file. Sorry!
             </div>
           {{/if}}
 
           {{#if this.isTrainerSurvey}}
-            <div class="form-row no-gutters mb-4">
-              <label class="col-form-label col-12">
+            <FormRow>
+              <FormLabel>
                 Share your name with {{group.trainer.callsign}} or leave anonymous comments?
-              </label>
+              </FormLabel>
               <f.input @name="share_name_{{group.trainer.id}}"
                        @type="radioGroup"
                        @options={{get this.shareNameOptionsForTrainer group.trainer.id}}
-                       @inline={{true}} />
-            </div>
+                       @inlineCheckbox={{true}} />
+            </FormRow>
           {{/if}}
         {{/if}}
         {{#if group.description}}
@@ -47,38 +47,36 @@
           </p>
         {{/if}}
         {{#each group.survey_questions as |question|}}
-          <div class="form-row no-gutters mt-2">
-            <div class="col-12 {{if (get f.model.error question.formName) "is-invalid"}}">
-              {{question.description}}
-              {{#if question.is_required}}
-                <i><b class="text-danger">(required)</b></i>
-              {{/if}}
-            </div>
+          <div class="{{if (get f.model.error question.formName) "is-invalid"}}">
+            {{question.description}}
+            {{#if question.is_required}}
+              <i><b class="text-danger">(required)</b></i>
+            {{/if}}
           </div>
-          <div class="form-row no-gutters">
+          <FormRow>
             {{#if (eq question.type "text")}}
               <f.input @name={{question.formName}} @type="textarea" @rows={{4}} @cols={{80}}/>
             {{else if (eq question.type "rating")}}
               <div class="col-auto form-check-inline-responsive">
                 <f.input @name={{question.formName}} @type="radioGroup" @options={{this.ratingOptions}}
-                         @inline={{true}} />
+                         @inlineCheckbox={{true}} />
               </div>
             {{else if (eq question.type "options")}}
               <div class="col-auto form-check-inline-responsive">
                 <f.input @name={{question.formName}} @type="radioGroup"
                          @options={{question.formOptions}}
-                         @inline={{true}} />
+                         @inlineCheckbox={{true}} />
               </div>
             {{else}}
               Uh oh, question #{{question.id}} has an unknown type "{{question.type}}".
               This is a bug, please report this to the tech team.
             {{/if}}
-          </div>
+          </FormRow>
         {{/each}}
       </:body>
     </UiSection>
   {{/each}}
-  <f.submit @label="Submit Feedback" @disabled={{this.isSubmitting}}/>
+  <f.submit @label="Submit Feedback" @submitClass="btn-responsive" @disabled={{this.isSubmitting}}/>
   {{#if this.isSubmitting}}
     <LoadingIndicator @text="Submitting"/>
   {{/if}}

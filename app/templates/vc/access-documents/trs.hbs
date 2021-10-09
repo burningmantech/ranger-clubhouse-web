@@ -52,28 +52,28 @@
   </table>
 {{/if}}
 
-<div class="form-row mb-2">
+<FormRow>
+  <FormLabel @auto={{true}}>Export Filter</FormLabel>
   <div class="col-auto">
-    <label class="col-form-label">Export Filter</label>
+    <ChForm::Select @name="selectTypes"
+                    @value={{this.filter}}
+                    @options={{this.filterOptions}}
+                    @onChange={{this.changeFilter}} />
   </div>
-  <div class="col-auto">
-    <ChForm::Select @name="selectTypes" @value={{this.filter}} @options={{this.filterOptions}}
-                    @onChange={{this.changeFilter}} @controlClass="form-control"/>
-  </div>
-  <div class="col-auto">
-    <label class="col-form-label">Export is limited to {{this.MAX_BATCH_SIZE}} items</label>
-  </div>
-</div>
+  <FormLabel @auto={{true}}>Export is limited to {{this.MAX_BATCH_SIZE}} items</FormLabel>
+</FormRow>
 
+Showing {{pluralize this.viewRecords.length "item"}} of type "{{this.filter}}". Selected {{pluralize
+  this.selectedCount "item"}}.
 <table class="table table-sm table-hover table-striped table-width-auto">
-  <caption>
-    Showing {{pluralize this.viewRecords.length "item"}} of type "{{this.filter}}". Selected {{pluralize
-    this.selectedCount "item"}}.
-  </caption>
   <thead>
   <tr>
-    <th><Input @type="checkbox" @checked={{this.selectAll}}
-      {{on "change" this.toggleAll}} disabled={{eq this.filter "all"}} /></th>
+    <th>
+      <Input @type="checkbox"
+             @checked={{this.selectAll}}
+        {{on "change" this.toggleAll}}
+             disabled={{eq this.filter "all"}} />
+    </th>
     <th>Callsign</th>
     <th>First Name</th>
     <th>Last Name</th>
@@ -131,7 +131,7 @@
 {{#if (gt this.selectedCount this.MAX_BATCH_SIZE)}}
   <div class="text-danger">
     <b>{{this.selectedCount}} items has been selected which exceeds the max. TRS batch size
-    of {{this.MAX_BATCH_SIZE}} items. Reduce the number selected.</b>
+      of {{this.MAX_BATCH_SIZE}} items. Reduce the number selected.</b>
   </div>
 {{/if}}
 

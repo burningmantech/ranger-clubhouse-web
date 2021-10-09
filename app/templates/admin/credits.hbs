@@ -1,31 +1,32 @@
 <YearSelect @title="Position Credits" @year={{this.year}} @onChange={{action (mut this.year)}} />
 
-<div class="form-row my-3 no-gutters">
-  <label class="col-form-label">Day Filter</label>
-  <div class="col-auto">
-    <ChForm::Select @name="dayFilter" @value={{this.dayFilter}} @options={{this.dayOptions}}
-                    @onChange={{this.changeDayFilter}}  @controlClass="form-control"/>
-  </div>
-  <label class="col-form-label">Actions</label>
-  <div class="col-auto">
-    <UiButton @onClick={{this.newCredit}}>New Position Credit</UiButton>
-    {{#if this.credits.length}}
-      <UiButton @onClick={{fn this.startCopy 0}} @type="secondary">
-        Copy Credits
-      </UiButton>
-    {{/if}}
-  </div>
-</div>
+<FormRow>
+    <FormLabel @auto={{true}}>Day Filter</FormLabel>
+    <div class="col-auto">
+        <ChForm::Select @name="dayFilter"
+                        @value={{this.dayFilter}}
+                        @options={{this.dayOptions}}
+                        @onChange={{this.changeDayFilter}}/>
+    </div>
+    <FormLabel @auto={{true}}>Actions</FormLabel>
+    <div class="col-auto">
+        <UiButton @onClick={{this.newCredit}}>New Position Credit</UiButton>
+        {{#if this.credits.length}}
+            <UiButton @onClick={{fn this.startCopy 0}} @type="secondary">
+                Copy Credits
+            </UiButton>
+        {{/if}}
+    </div>
+</FormRow>
 
 {{#if this.credits.length}}
-  <p>
+  {{#if this.viewCredits}}
     Showing {{this.viewCredits.length}} of {{pluralize this.credits.length "position credit"}}
-  </p>
-  {{#unless this.viewCredits}}
+  {{else}}
     <p class="text-danger">
       No credits matched the filter criteria.
     </p>
-  {{/unless}}
+  {{/if}}
 {{else}}
   <p class="text-danger">No position credits were found for {{this.year}}?</p>
   To copy credits from a previous year, select that year from the list above.
@@ -99,16 +100,18 @@
               <f.input @name="position_id" @label="Position" @type="select" @options={{this.positionOptions}} />
             {{/if}}
           </div>
-          <div class="col-7">
-            <div class="form-row">
-              <f.input @name="start_time" @label="Beginning Time" @type="datetime" @maxlength={{25}}
-                       @gridClass="col-auto"/>
-              <f.input @name="end_time" @label="Ending Time" @type="datetime" @maxlength={{20}} @gridClass="col-auto"/>
-              <f.input @name="credits_per_hour" @label="Credits Per Hour" @type="text" @maxlength={{20}}
-                       @gridClass="col-auto"/>
-              <f.input @name="description" @label="Description" @size={{25}} @maxlength={{25}} @gridClass="col-auto"/>
+            <div class="col-7">
+                <FormRow>
+                    <f.input @name="start_time" @label="Beginning Time" @type="datetime" @maxlength={{25}}
+                             @gridClass="col-auto"/>
+                    <f.input @name="end_time" @label="Ending Time" @type="datetime" @maxlength={{20}}
+                             @gridClass="col-auto"/>
+                    <f.input @name="credits_per_hour" @label="Credits Per Hour" @type="text" @maxlength={{20}}
+                             @gridClass="col-auto"/>
+                    <f.input @name="description" @label="Description" @size={{25}} @maxlength={{25}}
+                             @gridClass="col-auto"/>
+                </FormRow>
             </div>
-          </div>
         </div>
       </Modal.body>
       <Modal.footer @noAlign=true>
@@ -132,30 +135,32 @@
             @validator={{this.copyValidations}}
             @onSubmit={{this.performCopy}} as |f|>
       <Modal.body>
-        <fieldset>
-          <legend>Add/Subtract Time to New Credits</legend>
-          <div class="form-row">
-            <f.input @name="deltaDays" @label="Days" @type="number" @maxlength={{5}} @size={{5}} @gridClass="col-auto"/>
-            <f.input @name="deltaHours" @label="Hours" @type="number" @maxlength={{5}} @size={{5}}
-                     @gridClass="col-auto"/>
-            <f.input @name="deltaMinutes" @label="Minutes" @type="number" @maxlength={{5}} @size={{5}}
-                     @gridClass="col-auto"/>
-            <f.input @name="newPositionId" @label="Position" @type="select" @options={{this.positionOptionsForCopy}}
-                     @gridClass="col-auto"/>
-          </div>
-          <p>
-            Labor Day of {{this.year}} is {{this.selectedYearLaborDay}}.
-            Labor Day of {{this.presentYear}} is {{this.presentYearLaborDay}}, {{this.laborDayDiff}} days later.
-          </p>
-          {{#if this.badCredits}}
-            <p>
-              <b class="text-danger">
-                {{this.badCredits.length}} credit(s) have been filtered because the credits point to non-existent
-                positions.
-              </b>
-            </p>
-          {{/if}}
-        </fieldset>
+          <fieldset>
+              <legend>Add/Subtract Time to New Credits</legend>
+              <FormRow>
+                  <f.input @name="deltaDays" @label="Days" @type="number" @maxlength={{5}} @size={{5}}
+                           @gridClass="col-auto"/>
+                  <f.input @name="deltaHours" @label="Hours" @type="number" @maxlength={{5}} @size={{5}}
+                           @gridClass="col-auto"/>
+                  <f.input @name="deltaMinutes" @label="Minutes" @type="number" @maxlength={{5}} @size={{5}}
+                           @gridClass="col-auto"/>
+                  <f.input @name="newPositionId" @label="Position" @type="select"
+                           @options={{this.positionOptionsForCopy}}
+                           @gridClass="col-auto"/>
+              </FormRow>
+              <p>
+                  Labor Day of {{this.year}} is {{this.selectedYearLaborDay}}.
+                  Labor Day of {{this.presentYear}} is {{this.presentYearLaborDay}}, {{this.laborDayDiff}} days later.
+              </p>
+              {{#if this.badCredits}}
+                  <p>
+                      <b class="text-danger">
+                          {{this.badCredits.length}} credit(s) have been filtered because the credits point to non-existent
+                          positions.
+                      </b>
+                  </p>
+              {{/if}}
+          </fieldset>
         <div class="mb-2">
           <f.submit @label={{concat "Copy " this.copySelectedCreditCount " selected credits"}}
                     @disabled={{this.isCopying}} />

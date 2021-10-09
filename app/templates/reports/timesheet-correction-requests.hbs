@@ -1,12 +1,12 @@
 <YearSelect @title="Timesheet Corrections Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
-<div class="form-row mb-2">
-  <label class="col-form-label">Filter requests by callsigns starting with</label>
-  <div class="col-auto">
-    <ChForm::Select @name="callsignFilter" @value={{this.callsignFilter}} @options={{this.letterOptions}}
-                    @onChange={{action (mut this.callsignFilter)}} @controlClass="form-control"/>
-  </div>
-</div>
+<FormRow>
+    <FormLabel>Filter requests by callsigns starting with</FormLabel>
+    <div class="col-auto">
+        <ChForm::Select @name="callsignFilter" @value={{this.callsignFilter}} @options={{this.letterOptions}}
+                        @onChange={{action (mut this.callsignFilter)}} />
+    </div>
+</FormRow>
 
 Showing {{this.viewGroupCorrections.length}} of {{pluralize this.requests.length "correction request"}}
 <table class="table table-hover table-width-auto">
@@ -43,7 +43,8 @@ Showing {{this.viewGroupCorrections.length}} of {{pluralize this.requests.length
   {{else}}
     <tr>
       <td colspan="7">
-        <b class="text-success">Congratulations! There are no outstanding timesheet corrections or missing timesheet requests at this time.</b>
+        <b class="text-success">Congratulations! There are no outstanding timesheet corrections or missing timesheet
+          requests at this time.</b>
       </td>
     </tr>
   {{/each}}

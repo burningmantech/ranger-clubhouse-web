@@ -4,19 +4,28 @@
   such as Burner Profiles, the Moodle Learning Management System, etc.
 </p>
 <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{action this.saveAction}} as |f|>
-  <div class="form-row mb-2">
-    <f.input @name="bpguid" @label="Burner Profile Global UID (BPGUID)" @type="text" @size=40 @maxlength=200
-             @grid="col-auto"/>
-  </div>
+  <FormRow>
+    <f.input @name="bpguid"
+             @label="Burner Profile Global UID (BPGUID)"
+             @type="text"
+             @size={{40}}
+             @maxlength={{200}}
+             @inline={{true}}/>
+  </FormRow>
 
-  <div class="form-row mb-2">
-    <f.input @name="lms_id" @label="LMS Account ID" @type="text" @size=40 @maxlength=200 @grid="col-auto"/>
-  </div>
+  <FormRow>
+    <f.input @name="lms_id"
+             @label="LMS Account ID"
+             @type="text"
+             @size={{40}}
+             @maxlength={{200}}
+             @inline={{true}}/>
+  </FormRow>
 
-  <div class="form-row">
+  <FormRow>
     <f.submit @label="Update"/>
     {{#if this.person.isSaving}}
       <LoadingIndicator/>
     {{/if}}
-  </div>
+  </FormRow>
 </ChForm>

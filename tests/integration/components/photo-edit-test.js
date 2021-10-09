@@ -14,7 +14,7 @@ module('Integration | Component | photo-edit', function(hooks) {
     this.set('uploadAction', () => { });
     this.set('cancelAction', () => { });
 
-    await render(hbs`<PhotoEdit @imageDataUrl={{this.imageDatUrl}} @uploadAction={{this.uploadAction}} @cancelAction={{this.cancelAction}} @height=100 @width=100/>`);
+    await render(hbs`<PhotoEdit @imageDataUrl={{this.imageDatUrl}} @uploadAction={{this.uploadAction}} @cancelAction={{this.cancelAction}} @height={{100}} @width={{100}}/>`);
 
     assert.dom('#photo-edit-container').exists();
   });

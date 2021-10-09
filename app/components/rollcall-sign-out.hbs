@@ -4,19 +4,19 @@
     {{#if this.isLoading}}
       <LoadingPane @item="positions"/>
     {{else if this.positions}}
-      <div class="row form-group">
-        <label class="col-form-label col-sm-12 col-lg-auto">Position</label>
-        <div class="col-sm-12 col-lg-auto">
+      <FormRow>
+        <FormLabel>Position</FormLabel>
+        <div class="col-12 col-lg-auto">
           <ChForm::Select @name="positionId"
                           @value={{this.positionId}}
                           @options={{this.positionOptions}}
                           @onChange={{action this.selectPosition}}
-                          @controlClass="form-control"/>
+                          @controlClass="form-select"/>
         </div>
-      </div>
+      </FormRow>
 
       {{#if this.position}}
-        <h4>
+        <h4 class="mt-3">
           {{this.position.title}} - {{pluralize this.position.people.length "person"}}
         </h4>
         <p>

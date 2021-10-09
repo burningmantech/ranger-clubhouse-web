@@ -1,21 +1,22 @@
 <YearSelect @title="Assets (Radios, Gear, Vehicles)" @year={{this.year}} @onChange={{action (mut this.year)}} />
-<div class="form-row mb-1">
-  <label class="col-form-label">Description Filter</label>
+<FormRow>
+  <FormLabel @auto={{true}}>Description Filter</FormLabel>
   <div class="col-auto">
     <ChForm::Select @name="descriptionFilter" @value={{this.descriptionFilter}} @options={{this.descriptionOptions}}
-                    @onChange={{action (mut this.descriptionFilter)}} @controlClass="form-control"/>
+                    @onChange={{action (mut this.descriptionFilter)}}/>
   </div>
-
-  <label class="col-form-label">Temp ID Filter</label>
+  <FormLabel @auto={{true}}>Temp ID Filter</FormLabel>
   <div class="col-auto">
-    <ChForm::Select @name="tempIdFilter" @value={{this.tempIdFilter}} @options={{this.tempIdOptions}}
-                    @onChange={{action (mut this.tempIdFilter)}} @controlClass="form-control"/>
+    <ChForm::Select @name="tempIdFilter"
+                    @value={{this.tempIdFilter}}
+                    @options={{this.tempIdOptions}}
+                    @onChange={{action (mut this.tempIdFilter)}} />
   </div>
-  <label class="col-form-label">Action</label>
+  <FormLabel @auto={{true}}>Action</FormLabel>
   <div class="col-auto">
     <UiButton @onClick={{this.newAsset}}>New Asset</UiButton>
   </div>
-</div>
+</FormRow>
 
 Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
 <table class="table table-sm table-striped table-width-auto">
@@ -67,39 +68,43 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
             @validator={{this.assetValidations}}
             @onSubmit={{action this.saveAsset}} as |f|>
       <Modal.body>
-        <div class="form-row">
+        <FormRow>
           <f.input @name="description" @label="Description/Type" @type="select"
                    @options={{this.assetDescriptionOptions}}
-                   @grid="col-auto"/>
-          <f.input @name="barcode" @label="Barcode" @size={{25}} @grid="col-auto"/>
-
+                   @inline={{true}}/>
+          <f.input @name="barcode" @label="Barcode" @size={{25}} @inline={{true}}/>
           <f.input @name="temp_id" @label="Temp ID (aka secondary description)" @type="text" @size={{25}}
-                   @grid="col-auto"/>
+                   @inline={{true}}/>
           <f.input @name="notes" @type="textarea" @label="Notes" @rows={{2}} @cols={{80}}/>
-        </div>
-        <div class="form-row">
-          <label class="col-auto">Assignment</label>
-          <div class="col-auto">
-            <f.input @name="perm_assign" @type="radioGroup" @options={{this.permanentOptions}} @inline={{true}}/>
+        </FormRow>
+        <FormRow>
+          <FormLabel @auto={{true}}>Assignment</FormLabel>
+          <div class="col-auto mt-2">
+            <f.input @name="perm_assign"
+                     @type="radioGroup"
+                     @options={{this.permanentOptions}}
+                     @inlineCheckbox={{true}}/>
           </div>
-        </div>
+        </FormRow>
 
         {{#if this.entry.isNew}}
-          <div class="form-row">
-            <label class="col-12">Copies (including the first) - Leave blank if only creating one</label>
-            <f.input @name="copies" @type="text" @size={{4}} @maxlength={{4}} @controlClass="form-control"
-                     @grid="col-auto"/>
-          </div>
+          <FormRow>
+            <FormLabel>Copies (including the first) - Leave blank if only creating one</FormLabel>
+            <f.input @name="copies" @type="text" @size={{4}} @maxlength={{4}} @inline={{true}}/>
+          </FormRow>
         {{/if}}
         <fieldset>
           <legend>Vehichle Information</legend>
-          <div class="form-row">
-            <f.input @name="category" @type="select" @label="Category" @options={{this.categoryOptions}}
-                     @grid="col-auto"/>
-            <f.input @name="subtype" @type="text" @label="Type" @size={{25}} @grid="col-auto"/>
-            <f.input @name="color" @type="text" @label="Color" @size={{25}} @grid="col-auto"/>
-            <f.input @name="style" @type="text" @label="Style" @size={{25}} @grid="col-auto"/>
-          </div>
+          <FormRow>
+            <f.input @name="category"
+                     @type="select"
+                     @label="Category"
+                     @options={{this.categoryOptions}}
+                     @inline={{true}}/>
+            <f.input @name="subtype" @type="text" @label="Type" @size={{25}} @inline={{true}}/>
+            <f.input @name="color" @type="text" @label="Color" @size={{25}} @inline={{true}}/>
+            <f.input @name="style" @type="text" @label="Style" @size={{25}} @inline={{true}}/>
+          </FormRow>
         </fieldset>
       </Modal.body>
       <Modal.footer @noAlign=true>

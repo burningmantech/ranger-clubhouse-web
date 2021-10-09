@@ -1,19 +1,21 @@
 <YearSelect @title="Shift Coverage Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
-<div class="form-group row">
+<FormRow>
+  <FormLabel @auto={{true}}>Shift Type</FormLabel>
   <div class="col-auto">
-    <label class="col-form-label">Shift Type</label>
+    <ChForm::Select @name="type"
+                    @value={{this.type}}
+                    @options={{this.typeOptions}}
+                    @onChange={{action (mut this.type)}} />
   </div>
+  <FormLabel @auto={{true}}>Day Filter</FormLabel>
   <div class="col-auto">
-    <ChForm::Select @name="type" @value={{this.type}} @options={{this.typeOptions}} @onChange={{action (mut this.type)}} @controlClass="form-control" />
+    <ChForm::Select @name="type"
+                    @value={{this.dayFilter}}
+                    @options={{this.dayOptions}}
+                    @onChange={{action (mut this.dayFilter)}} />
   </div>
-  <div class="col-auto">
-    <label class="col-form-label">Day Filter</label>
-  </div>
-  <div class="col-auto">
-    <ChForm::Select @name="type" @value={{this.dayFilter}} @options={{this.dayOptions}} @onChange={{action (mut this.dayFilter)}} @controlClass="form-control" />
-  </div>
-</div>
+</FormRow>
 
 {{#unless this.periods}}
   <b class="text-danger">No {{this.year}} shifts were found</b>
@@ -23,44 +25,46 @@
 <table class="table table-sm table-hover table-width-auto">
   {{#each this.dayGroups as |day|}}
     <thead>
-      <tr>
-        <th>Period</th>
-        {{#each this.columns as |col|}}
-          <th>{{col.short_title}}</th>
-        {{/each}}
-      </tr>
+    <tr>
+      <th>Period</th>
+      {{#each this.columns as |col|}}
+        <th>{{col.short_title}}</th>
+      {{/each}}
+    </tr>
     </thead>
     <tbody>
-      {{#each day.periods key="begins" as |period|}}
-        <tr>
+    {{#each day.periods key="begins" as |period|}}
+      <tr>
+        <td>
+          <span class="d-inline-block">{{dayjs-format period.begins "ddd M/DD HH:mm"}}</span>
+          <span class="d-inline-block">- {{dayjs-format period.ends "HH:mm"}}</span>
+        </td>
+        {{#each period.positions as |position|}}
           <td>
-            <span class="d-inline-block">{{dayjs-format period.begins "ddd M/DD HH:mm"}}</span>
-            <span class="d-inline-block">- {{dayjs-format period.ends "HH:mm"}}</span>
-          </td>
-          {{#each period.positions as |position|}}
-            <td>
-              {{#if (eq position.type "count")}}
-                {{position.shifts}}
+            {{#if (eq position.type "count")}}
+              {{position.shifts}}
+            {{else}}
+              {{#each position.shifts as |shift shiftidx|}}
+                <div class="{{if shiftidx "mt-1"}}">
+                  {{#if (gt position.shifts.length 1)}}
+                    <small class="d-inline-block">
+                      {{dayjs-format shift.begins "HH:mm"}} - {{dayjs-format shift.ends "HH:mm"}}
+                    </small><br>
+                  {{/if}}
+                  {{#each shift.people key="id" as |person|~}}
+                    <PersonLink @person={{person}} />
+                    {{~#if person.parenthetical}} ({{person.parenthetical}}){{/if~}}
+                    <br>
+                  {{/each}}
+                </div>
               {{else}}
-                {{#each position.shifts as |shift shiftidx|}}
-                  <div class="{{if shiftidx "mt-1"}}">
-                    {{#if (gt position.shifts.length 1)}}
-                      <small class="d-inline-block">{{dayjs-format shift.begins "HH:mm"}} - {{dayjs-format shift.ends "HH:mm"}}</small><br>
-                    {{/if}}
-                    {{#each shift.people key="id" as |person|~}}
-                      <PersonLink @person={{person}} />
-                      {{~#if person.parenthetical}} ({{person.parenthetical}}){{/if~}}
-                      <br>
-                    {{/each}}
-                  </div>
-                {{else}}
-                  <div class="text-center">-</div>
-                {{/each}}
-              {{/if}}
-            </td>
-          {{/each}}
-        </tr>
-      {{/each}}
+                <div class="text-center">-</div>
+              {{/each}}
+            {{/if}}
+          </td>
+        {{/each}}
+      </tr>
+    {{/each}}
     </tbody>
   {{/each}}
 </table>

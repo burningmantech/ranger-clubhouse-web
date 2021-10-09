@@ -9,59 +9,70 @@
       {{fa-icon "print"}} Export To Marcato
     </LinkTo>
   </div>
-  <div class="form-group row">
+  <FormRow>
     <div class="col-auto">
       <label>Filter:</label>
       <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}}
-                      @onChange={{action this.changeFilter 'filter'}} @controlClass="form-control form-control-sm"/>
+                      @onChange={{action this.changeFilter 'filter'}} @fieldSize="sm"/>
     </div>
     <div class="col-auto">
       <label>Title Filter:</label>
-      <ChForm::Select @name="titleFilter" @value={{this.titleFilter}} @options={{this.titleFilterOptions}}
+      <ChForm::Select @name="titleFilter"
+                      @value={{this.titleFilter}}
+                      @options={{this.titleFilterOptions}}
                       @onChange={{action this.changeFilter 'titleFilter'}}
-                      @controlClass="form-control form-control-sm"/>
+                      @fieldSize="sm"/>
     </div>
     <div class="col-auto">
       <label>Team Filter:</label>
-      <ChForm::Select @name="teamFilter" @value={{this.teamFilter}} @options={{this.teamFilterOptions}}
-                      @onChange={{action this.changeFilter 'teamFilter'}} @controlClass="form-control form-control-sm"/>
+      <ChForm::Select @name="teamFilter"
+                      @value={{this.teamFilter}}
+                      @options={{this.teamFilterOptions}}
+                      @onChange={{action this.changeFilter 'teamFilter'}}
+                      @fieldSize="sm"/>
 
     </div>
     <div class="col-auto">
       <label>Want Filter:</label>
-      <ChForm::Select @name="wantFilter" @value={{this.wantsFilter}} @options={{this.wantFilterOptions}}
-                      @onChange={{action this.changeFilter 'wantFilter'}} @controlClass="form-control form-control-sm"/>
+      <ChForm::Select @name="wantFilter"
+                      @value={{this.wantsFilter}}
+                      @options={{this.wantFilterOptions}}
+                      @onChange={{action this.changeFilter 'wantFilter'}}
+                      @fieldSize="sm"/>
 
     </div>
-  </div>
-  <div class="form-group row">
+  </FormRow>
+  <FormRow>
+    <FormLabel @auto={{true}}>Callsign, title, team, notes filter:</FormLabel>
+
     <div class="col-auto">
-      <div class="input-group">
-        <label>Callsign, title, team, notes filter:</label>
-        <Input @type="text" @value={{this.textFilterInput}} class="form-control-sm ml-2"
-               @enter={{action this.textFilterAction}}  />
-        <UiButton @size="sm" @class="ml-1" @onClick={{this.textFilterAction}}>
-          Filter
-        </UiButton>
-        <UiButton @type="secondary" @size="sm" @class="ml-1" @onClick={{this.clearTextFilterAction}}>
-          Clear
-        </UiButton>
-      </div>
-      {{#if this.textFilterError}}
-        <div class="text-danger">{{this.textFilterError}}</div>
-      {{/if}}
+      <Input @type="text"
+             @value={{this.textFilterInput}}
+             class="form-control form-control-sm ml-2"
+             @enter={{action this.textFilterAction}}  />
       <div class="text-muted small">Regular Expression allowed</div>
     </div>
+    <div class="col-auto">
+      <UiButton @size="sm" @class="ml-1" @onClick={{this.textFilterAction}}>
+        Filter
+      </UiButton>
+      <UiButton @type="secondary" @size="sm" @class="ml-1" @onClick={{this.clearTextFilterAction}}>
+        Clear
+      </UiButton>
+    </div>
 
     <div class="col-auto">
-      <UiButton  @type="secondary" @size="sm" @onClick={{this.toggleEditMode}}>
+      <UiButton @type="secondary" @size="sm" @onClick={{this.toggleEditMode}}>
         {{#if this.editMode}}{{fa-icon "table"}} Table View{{else}}{{fa-icon "edit"}} Edit Mode{{/if}}
       </UiButton>
       <UiButton @type="secondary" @size="sm" @onClick={{this.exportCSV}}>
         {{fa-icon "file-export"}} Export CSV
       </UiButton>
     </div>
-  </div>
+    {{#if this.textFilterError}}
+      <div class="text-danger col-12">{{this.textFilterError}}</div>
+    {{/if}}
+  </FormRow>
 
   <p>
     {{fa-icon "exclamation-circle"}} = indicates person has not signed up for any shifts.
@@ -132,7 +143,7 @@
             <td>
               <ChForm::Select @name={{concat "status" bmid.person.id}} @value={{bmid.status}}
                               @options={{this.bmidStatusOptions}} @onChange={{action (mut bmid.status)}}
-                              @controlClass="form-control-sm"/>
+                              @controlClass=""/>
             </td>
             {{!
                 Performance optimization here - using ch-form to manage over 1,000+ rows is too much for
@@ -150,28 +161,33 @@
             <td>
               <ChForm::Select @name={{concat "showers" bmid.person.id}} @value={{bmid.showers}}
                               @options={{this.showerOptions}} @onChange={{action (mut bmid.showers)}}
-                              @controlClass="form-control-sm"/>
+                              @controlClass=""/>
               {{#if bmid.want_showers}}
                 <div class="text-success align-middle">{{fa-icon "plus-circle"}} <small>Showers</small></div>
               {{/if}}
             </td>
             <td>
-              <ChForm::Select @name={{concat "meals" bmid.person.id}} @value={{bmid.meals}}
+              <ChForm::Select @name={{concat "meals" bmid.person.id}}
+                              @value={{bmid.meals}}
                               @options={{this.mealOptions}}
-                              @onChange={{action (mut bmid.meals)}} @controlClass="form-control-sm"/>
+                              @onChange={{action (mut bmid.meals)}}
+                              @controlClass=""/>
               {{#if bmid.want_meals}}
                 <div class="text-success">{{fa-icon "plus-circle"}} {{bmid.want_meals}}</div>
               {{/if}}
             </td>
             <td>
-              <ChForm::Select @name={{concat "admission_date" bmid.person.id}} @value={{bmid.admission_date}}
-                              @options={{this.admissionDateOptions}} @onChange={{action (mut bmid.admission_date)}}
-                              @controlClass="form-control-sm" @disabled={{bmid.wapDisabled}} />
+              <ChForm::Select @name={{concat "admission_date" bmid.person.id}}
+                              @value={{bmid.admission_date}}
+                              @options={{this.admissionDateOptions}}
+                              @onChange={{action (mut bmid.admission_date)}}
+                              @controlClass=""
+                              @disabled={{bmid.wapDisabled}} />
               {{#if bmid.wapDisabled}}
                 {{#if bmid.wapMissing}}
-                  <strong class="text-danger">WAP missing</strong>
+                  <b class="text-danger">WAP missing</b>
                 {{else}}
-                  <strong class="text-danger">WAP submitted</strong>
+                  <b class="text-danger">WAP submitted</b>
                 {{/if}}
               {{/if}}
             </td>
@@ -179,7 +195,9 @@
             <td><textarea cols="40" rows="1" onfocus={{action this.focusNote}}
                           onblur={{action this.blurNote bmid}}>{{bmid.notes}}</textarea>
             </td>
-            <td><button type="button" {{action this.saveInlineBmid bmid}}>Save</button></td>
+            <td>
+              <button type="button" {{action this.saveInlineBmid bmid}}>Save</button>
+            </td>
           </tr>
         {{/each}}
       {{else}}

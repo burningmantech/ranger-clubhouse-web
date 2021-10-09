@@ -5,18 +5,15 @@
 </p>
 
 {{#if this.slots}}
-  <div class="form-row mb-2">
-    <div class="col-auto">
-      <label class="col-form-label">Select shift:</label>
-    </div>
+  <FormRow>
+    <FormLabel @auto={{true}}>Select shift:</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="slot"
                       @value={{this.selectedSlot}}
                       @options={{this.slotOptions}}
-                      @onChange={{this.changeSlot}}
-                      @controlClass="form-control"/>
+                      @onChange={{this.changeSlot}} />
     </div>
-  </div>
+  </FormRow>
 {{else}}
   <p>
     <b class="text-danger">No Alpha {{this.year}} shifts were found.</b>
@@ -68,7 +65,9 @@
             <Input @type="checkbox" @checked={{alpha.selected}} />
           {{/if}}
         </td>
-        <td><PersonLink @person={{alpha}} /></td>
+        <td>
+          <PersonLink @person={{alpha}} />
+        </td>
         <td>{{shift-format alpha.on_duty}}</td>
         <td>
           {{#if alpha.off_duty}}

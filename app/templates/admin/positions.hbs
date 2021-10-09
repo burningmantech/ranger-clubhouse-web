@@ -3,21 +3,25 @@
   <b class="text-danger">Contact the Scheduling Gnome or Tech Team about position creation and/or adjustments.</b>
 </p>
 <div class="row my-3">
-  <label class="col-form-label col-auto">Type filter</label>
-  <div class="col-auto">
-    <ChForm::Select @name="typeFilter" @value={{this.typeFilter}} @options={{this.typeOptions}}
-                    @onChange={{action (mut this.typeFilter)}} @controlClass="form-control"/>
-  </div>
-  <label class="col-form-label">Active Filter</label>
-  <div class="col-auto">
-    <ChForm::Select @name="activeFilter" @value={{this.activeFilter}} @options={{this.activeOptions}}
-                    @onChange={{action (mut this.activeFilter)}} @controlClass="form-control"/>
-  </div>
-  {{#if this.canManagePositions}}
+    <FormLabel @auto={{true}}>Type filter</FormLabel>
     <div class="col-auto">
-      <UiButton @onClick={{this.newAction}}>New Position</UiButton>
+        <ChForm::Select @name="typeFilter"
+                        @value={{this.typeFilter}}
+                        @options={{this.typeOptions}}
+                        @onChange={{action (mut this.typeFilter)}} />
     </div>
-  {{/if}}
+    <FormLabel>Active Filter</FormLabel>
+    <div class="col-auto">
+        <ChForm::Select @name="activeFilter"
+                        @value={{this.activeFilter}}
+                        @options={{this.activeOptions}}
+                        @onChange={{action (mut this.activeFilter)}} />
+    </div>
+    {{#if this.canManagePositions}}
+    <div class="col-auto">
+        <UiButton @onClick={{this.newAction}}>New Position</UiButton>
+    </div>
+    {{/if}}
 </div>
 
 Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
@@ -102,35 +106,37 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
       <Modal.body>
         <fieldset>
           <legend>Description</legend>
-          <div class="form-row">
-            <f.input @name="title" @label="Title" @maxlength={{40}} @size={{40}} @grid="col-auto"
-                     @hint={{concat (if f.model.title f.model.title.length "0") " of 40 characters."}} />
-            <f.input @name="short_title" @label="Short Title" @maxlength={{6}} @grid="col-auto"
-                     @hint={{concat (if f.model.short_title f.model.title.short_title "0") " of 6 characters."}} />
-            <f.input @name="type" @type="select" @label="Type" @options={{this.positionTypes}} @grid="col-auto"/>
-          </div>
+          <FormRow>
+          <f.input @name="title" @label="Title" @maxlength={{40}} @size={{40}} @inline={{true}}
+                     @hint={{concat (if f.model.title f.model.title.length
+                                      "0") " of 40 characters."}} />
+            <f.input @name="short_title" @label="Short Title" @maxlength={{6}} @inline={{true}}
+                     @hint={{concat (if f.model.short_title f.model.title.short_title
+                                      "0") " of 6 characters."}} />
+            <f.input @name="type" @type="select" @label="Type" @options={{this.positionTypes}} @inline={{true}}/>
+          </FormRow>
         </fieldset>
 
         <fieldset>
           <legend>Suggested Ranger Counts Per Slot</legend>
-          <div class="form-row">
-            <f.input @name="min" @label="Min" @size={{3}} @maxlength={{3}} @grid="col-auto"/>
-            <f.input @name="max" @label="Max" @size={{3}} @maxlength={{3}} @grid="col-auto"/>
-          </div>
+          <FormRow>
+            <f.input @name="min" @label="Min" @size={{3}} @maxlength={{3}} @inline={{true}}/>
+            <f.input @name="max" @label="Max" @size={{3}} @maxlength={{3}} @inline={{true}}/>
+          </FormRow>
         </fieldset>
 
         <fieldset>
           <legend>Active &amp; Grant Flags</legend>
-          <div class="form-row mb-2">
+          <FormRow>
             <div class="col-12 text-danger">
               The "Position Sanity Checker" needs be run after deactivating a position in order to revoke the position
               from all accounts. Revocation is not automatic.
             </div>
             <div class="col-12 mt-2">
-              <f.input @name="active" @type="checkbox" @label="Active" @inline={{true}}/>
+              <f.input @name="active" @type="checkbox" @label="Active" @inlineCheckbox={{true}}/>
             </div>
-          </div>
-          <div class="form-row">
+          </FormRow>
+          <FormRow>
             <div class="col-12 text-danger mb-1">
               After setting the <i>"All Rangers"</i> and/or <i>"Grant to new Prospective accounts"</i> flags,
               the maintenance "Set Ranger Positions" function has to be run to grant the position to existing accounts.
@@ -143,11 +149,11 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
               <f.input @name="new_user_eligible" @type="checkbox"
                        @label="Grant to new Prospective accounts"/>
             </div>
-          </div>
+          </FormRow>
         </fieldset>
         <fieldset class="mt-2">
           <legend>Misc. Flags</legend>
-          <div class="form-row mb-2">
+          <FormRow>
             <div class="col-12">
               <f.input @name="count_hours"
                        @type="checkbox"
@@ -161,31 +167,31 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
                        @label="For the Shift Lead Report: indicates the person holds this position of interest"
               />
             </div>
-          </div>
+          </FormRow>
         </fieldset>
 
         {{#if (eq f.model.type "Training")}}
           <fieldset>
             <legend>Training</legend>
-            <div class="form-row mb-2">
+            <FormRow>
               <div class="col-12">
                 This section is relevant when type is "Training". The Training Position is the position
                 the person has to have passed in the current year to be allowed to work this position during the event.
               </div>
-            </div>
-            <div class="form-row">
+            </FormRow>
+            <FormRow>
               <f.input @name=training_position_id"
                        @label="Training Position"
                        @type="select"
                        @options={{this.trainingOptions}}
-                       @grid="col-auto"/>
+                       @inline={{true}}/>
               <f.input @name="contact_email"
                        @label="Contact Email (shift full notification, etc)"
                        @type="text"
                        @size={{40}}
                        @maxlength={{200}}
-                       @grid="col-auto"/>
-            </div>
+                       @inline={{true}}/>
+            </FormRow>
           </fieldset>
         {{/if}}
       </Modal.body>

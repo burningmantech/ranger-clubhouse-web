@@ -1,0 +1,80 @@
+
+.table-fixed {
+  table-layout: fixed;
+}
+
+/*
+ * Add a box around a table
+ */
+
+table.table-box {
+  border: 1px solid #bebebe;
+
+  caption {
+    border: 1px solid #bebebe;
+    border-bottom: none;
+  }
+}
+
+
+caption {
+  caption-side: top;
+  color: #000;
+  background-color: #c8d2dc;
+  font-size: 1rem;
+  padding: 5px 10px;
+}
+
+.table-sm {
+  caption {
+    padding: 5px;
+  }
+}
+
+/*
+ * Default to thead-light setting for thead
+ */
+
+
+.table {
+  thead th {
+    color: $table-head-color;
+    background-color: $table-head-bg;
+    border-color: $table-border-color;
+  }
+
+  // override highlight border color between thead, tbody and tfoot.
+  > :not(:first-child) {
+    border-top: 2px solid #999999 !important;
+  }
+}
+
+/*
+ * Remove border on a row
+ */
+
+.no-border td {
+  border: none !important;
+}
+
+
+.table-width-auto {
+  width: auto !important;
+}
+
+.tr-no-border td {
+  border: 0 !important;
+}
+
+
+@media not print {
+  .table-sticky {
+    thead tr:nth-child(1) th {
+      background: $table-head-bg;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+  }
+}
+

@@ -37,7 +37,8 @@
           <UiButton @size="sm" @onClick={{fn this.newQuestionAction group}} @disabled={{group.isSaving}}>
             {{fa-icon "plus"}} Add Question
           </UiButton>
-          <UiButton @type="secondary" @size="sm" @onClick={{fn this.editGroupAction group}} @disabled={{group.isSaving}}>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn this.editGroupAction group}}
+                    @disabled={{group.isSaving}}>
             {{fa-icon "edit"}} Edit Group
           </UiButton>
         </div>
@@ -111,32 +112,37 @@
 
 {{#if this.groupEntry}}
   <ModalDialog @title={{if this.groupEntry.isNew "Create New Group" (concat "Edit Group ID #" this.groupEntry.id)}}
-               @onEscape={{this.cancelGroupAction}} as  |Modal|>
+               @onEscape={{this.cancelGroupAction}} as |Modal|>
     <ChForm @formId="survey-group" @formFor={{this.groupEntry}} @onSubmit={{this.saveGroupAction}} as |f|>
       <Modal.body>
-        <div class="row mb-2 ml-2">
+        <FormRow>
           <f.input @name="type"
                    @label="What group type is this?"
                    @type="radioGroup"
                    @options={{this.groupTypeOptions}}
                    @wrapClass="col-12"
           />
-        </div>
-        <div class="form-row mt-2">
+        </FormRow>
+        <FormRow>
           <f.input @name="report_title"
                    @label="Report Title (used for separate reporting)"
                    @type="text"
                    @size={{40}}
-                   @disabled={{and (not-eq f.model.type "separate-slot") (not-eq f.model.type "separate-summary")}}
+                   @disabled={{and (not-eq f.model.type
+                                     "separate-slot") (not-eq f.model.type "separate-summary")}}
           />
-        </div>
-        <div class="form-row">
-          <f.input @name="title" @type="text" @label="Group Title (shown to user)" @size={{80}} @maxlength={{170}}/>
-        </div>
-        <div class="form-row">
-          <f.input @name="description" @type="textarea" @label="Group Description (shown to user)" @rows={{4}}
+        </FormRow>
+        <FormRow>
+          <f.input @name="title" @type="text" @label="Group Title (shown to user)" @size={{80}}
+                   @maxlength={{170}}/>
+        </FormRow>
+        <FormRow>
+          <f.input @name="description"
+                   @type="textarea"
+                   @label="Group Description (shown to user)"
+                   @rows={{4}}
                    @cols={{80}}/>
-        </div>
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.groupEntry.isNew "Create" "Save"}} @disabled={{this.groupEntry.isSaving}} />
@@ -159,38 +165,47 @@
                @onEscape={{this.cancelQuestionAction}} as |Modal|>
     <ChForm @formId="survey-group" @formFor={{this.questionEntry}} @onSubmit={{this.saveQuestionAction}} as |f|>
       <Modal.body>
-        <div class="form-row">
-          <f.input @name="type" @type="select" @label="Question Type" @options={{this.typeOptions}} />
-        </div>
+        <FormRow>
+          <f.input @name="type" @type="select" @label="Question Type" @options={{this.typeOptions}}/>
+        </FormRow>
         {{#if (eq f.model.type "rating")}}
-          <div class="form-row ml-1 mb-2">
-            <f.input @name="summarize_rating"
-                     @type="checkbox"
-                     @label="Summarize this rating as a table with each row as a training session"/>
-          </div>
+          <FormRow>
+            <div class="col-auto">
+              <f.input @name="summarize_rating"
+                       @type="checkbox"
+                       @label="Summarize this rating as a table with each row as a training session"/>
+            </div>
+          </FormRow>
         {{/if}}
-        <div class="form-row">
-          <f.input @name="description" @type="textarea" @label="Question" @rows={{4}} @cols={{80}} />
-        </div>
-        <div class="form-row mb-2">
+        <FormRow>
+          <f.input @name="description" @type="textarea" @label="Question" @rows={{4}} @cols={{80}}/>
+        </FormRow>
+        <FormRow>
           <div class="col-auto">
-            <f.input @name="is_required" @label="Question requires an answer" @type="checkbox" @inline={{true}} />
+            <f.input @name="is_required" @label="Question requires an answer" @type="checkbox"
+                     @inlineCheckbox={{true}}/>
           </div>
-        </div>
-        <div class="form-row mt-2">
-          <f.input @name="options" @type="textarea" @label="Options (one per line)"
-                   @rows={{4}} @cols={{80}} @disabled={{not-eq f.model.type "options"}} />
-        </div>
+        </FormRow>
+        <FormRow>
+          <f.input @name="options"
+                   @type="textarea"
+                   @label="Options (one per line)"
+                   @rows={{4}}
+                   @cols={{80}}
+                   @disabled={{not-eq f.model.type "options"}} />
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.questionEntry.isNew "Create" "Save"}} @disabled={{this.questionEntry.isSaving}} />
-        <UiCancelButon @onClick={{this.cancelQuestionAction}} @disabled={{this.questionEntry.isSaving}} />
+        <UiCancelButton @onClick={{this.cancelQuestionAction}} @disabled={{this.questionEntry.isSaving}} />
         {{#if this.questionEntry.isSaving}}
           <LoadingIndicator/>
         {{/if}}
-        <UiButton @type="light-red" @class="ml-auto" @onClick={{this.deleteQuestionAction}}>
-          {{fa-icon "trash"}} Delete
-        </UiButton>
+        <div class="ms-auto">
+          <UiButton @type="light-red" @class="ml-auto" @onClick={{this.deleteQuestionAction}}>
+            {{fa-icon "trash"}} Delete
+          </UiButton>
+        </div>
       </Modal.footer>
     </ChForm>
   </ModalDialog>

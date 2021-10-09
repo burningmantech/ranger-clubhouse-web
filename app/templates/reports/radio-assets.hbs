@@ -1,8 +1,6 @@
 <YearSelect @title="Radio Assets Report" @year={{this.year}} @onChange={{action (mut this.year)}} />
 
-<div class="form-row">
-  <label><Input @type="checkbox" @checked={{this.summary}} /> Summarize report</label>
-</div>
+<FormRow><label><Input @type="checkbox" @checked={{this.summary}}/> Summarize report</label></FormRow>
 
 {{pluralize this.assets.length "radio"}}, {{this.permCount}} event, {{this.tempCount}} shift
 <table class="table table-striped table-sm table-width-auto">

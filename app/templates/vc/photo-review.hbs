@@ -151,24 +151,24 @@
               @formFor={{this.reviewForm}}
               @changeSet={{false}}
               @onSubmit={{this.onRejectSubmit}} as |f|>
-        <div class="form-row">
+        <FormRow>
           <div class="col-3">
             <img src={{this.reviewPhoto.image_url}} alt="{{this.reviewPhoto.person.callsign}}" class="mugshot"/>
           </div>
           <div class="col-8  ml-2">
             <label>Rejection Reasons:</label>
-            <div class="form-row">
-              <f.input @name="reasons" @type="checkboxGroup" @cols=2 @options={{this.rejectionOptions}} />
-            </div>
+            <FormRow>
+              <f.input @name="reasons" @type="checkboxGroup" @cols={{2}} @options={{this.rejectionOptions}}/>
+            </FormRow>
           </div>
-        </div>
-        <div class="form-row mt-2">
+        </FormRow>
+        <FormRow>
           <f.input @name="message" @label="Custom message to include in the rejection email:"
                    @type="textarea"
                    @rows={{5}} @cols={{80}}
                    @hint="All email addresses and links in the message will be hyperlinked."/>
-        </div>
-        <div class="form-group mt-2">
+        </FormRow>
+        <div class="mt-2">
           <f.submit @label="Reject Photo" @submitClass="btn-danger" disabled={{this.reviewPhoto.isSaving}} />
           <UiCancelButton @disabled={{this.reviewPhoto.isSaving}} @onClick={{this.onClose}} />
           <UiButton @type="secondary" @onClick={{this.rejectPreviewAction}}>Preview Email</UiButton>

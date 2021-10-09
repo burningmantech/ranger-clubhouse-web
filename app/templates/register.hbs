@@ -5,7 +5,8 @@
       <:title><span class="text-danger">Auditor registration disabled.</span></:title>
       <:body>
         <p>
-          Auditor registration is usually open between January and late August. The Black Rock Rangers only offer trainings
+          Auditor registration is usually open between January and late August. The Black Rock Rangers only offer
+          trainings
           between late April/early May and late August. Training registration will prioritize Prospective Rangers
           over Auditors. <b>No walks-in are allowed.</b>
         </p>
@@ -86,40 +87,36 @@
 
     <ChForm @formId="register" @formFor={{this.registerForm}} @autocomplete="on" @validator={{this.registerValidations}}
             @onSubmit={{this.createAccount}} as |f|>
-      <div class="form-row">
-        <f.input @name="human" @size=4 @maxlength=10 @grid="col-auto"
+      <FormRow>
+        <f.input @name="human" @size={{4}} @maxlength={{10}} @inline={{true}}
                  @label="First, prove you are human - What is 33 + 2?"/>
-      </div>
-      <div class="form-row">
-        <label class="col-form-label">Why are you creating a Clubhouse account?</label>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <f.input @name="intent" @type="radioGroup" @options={{this.intentOptions}} />
-        </div>
-      </div>
-      <div class="form-row">
-        <f.input @name="email" @label="Email Address" @type="text" @inputmode="email" @size=30/>
-      </div>
+      </FormRow>
+      <FormRow>
+        <FormLabel>Why are you creating a Clubhouse account?</FormLabel>
+        <f.input @name="intent" @type="radioGroup" @options={{this.intentOptions}}/>
+      </FormRow>
+      <FormRow>
+        <f.input @name="email" @label="Email Address" @type="text" @inputmode="email" @size={{30}}/>
+      </FormRow>
 
-      <div class="form-row">
-        <f.input @name="password" @type="password" @label="Password" @size=20 @maxlength=30 @grid="col-auto"/>
-        <f.input @name="password_confirmation" @type="password" @label="Confirm Password" @size=20 @maxlength=30
-                 @grid="col-auto"/>
-      </div>
+      <FormRow>
+        <f.input @name="password" @type="password" @label="Password" @size={{20}} @maxlength={{30}} @inline={{true}}/>
+        <f.input @name="password_confirmation" @type="password" @label="Confirm Password" @size={{20}} @maxlength={{30}}
+                 @inline={{true}}/>
+      </FormRow>
 
-      <div class="form-row">
-        <f.input @name="first_name" @label="First Name" @maxlength=25 @grid="col-sm-4"/>
-        <f.input @name="mi" @label="M.I." @maxlength=10 @grid="col-sm-1"/>
-        <f.input @name="last_name" @label="Last Name" @maxlength=25 @grid="col-sm-4"/>
-      </div>
+      <FormRow>
+        <f.input @name="first_name" @label="First Name" @maxlength={{25}} @grid="col-sm-4"/>
+        <f.input @name="mi" @label="M.I." @maxlength={{10}} @grid="col-sm-1"/>
+        <f.input @name="last_name" @label="Last Name" @maxlength={{25}} @grid="col-sm-4"/>
+      </FormRow>
 
       <PersonAddressEdit @f={{f}} />
 
-      <div class="form-row">
+      <FormRow>
         <f.input @name="home_phone" @label="Primary Phone" @type="text" @inputmode="tel" @grid="col-sm-4"/>
         <f.input @name="alt_phone" @label="Alternative Phone" @type="text" @inputmode="tel" @grid="col-sm-4"/>
-      </div>
+      </FormRow>
 
       <f.submit @label="Create My Auditor Account" disabled={{this.iSaving}} />
       {{#if this.isSaving}}

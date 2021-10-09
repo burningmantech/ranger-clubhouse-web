@@ -8,57 +8,66 @@
     has not reviewed their Personal Information.
   {{/if}}
 </p>
-
 {{#if this.canEditPersonalInfo}}
+  <p>
+    Jump to: <a href="#person-general">Name</a>
+    | <a href="#person-contact">Email/Phone</a>
+    | <a href="#person-callsign">Callsign</a>
+    | <a href="#person-clothing">Clothing</a>
+    | <a href="#person-address">Address</a>
+  </p>
   <ChForm @formId="person"
           @formFor={{this.person}}
           @validator={{this.personInfoValidations}}
           @onSubmit={{this.onSubmit}}
           @onCancel={{this.onCancel}} as |f|>
-    <UiSection>
+    <UiSection id="person-general">
       <:title>General Information</:title>
       <:body>
-        <div class="form-row">
-          <f.input @name="first_name" @type="text" @label="First Name" @maxlength={{25}} @grid="col-sm-4 col-md-auto"/>
-          <f.input @name="mi" @type="text" @label="M.I." @size={{2}} @maxlength={{10}} @grid="col-sm-1 col-md-auto"/>
-          <f.input @name="last_name" @type="text" @label="Last Name" @maxlength={{25}} @grid="col-sm-4 col-md-auto"/>
-        </div>
-        <div class="form-row">
+        <FormRow>
+          <f.input @name="first_name" @type="text" @label="First Name" @maxlength={{25}}
+                   @grid="col-sm-4 col-md-auto"/>
+          <f.input @name="mi" @type="text" @label="M.I." @size={{2}} @maxlength={{10}}
+                   @grid="col-sm-1 col-md-auto"/>
+          <f.input @name="last_name" @type="text" @label="Last Name" @maxlength={{25}}
+                   @grid="col-sm-4 col-md-auto"/>
+        </FormRow>
+        <FormRow>
           <f.input @name="gender"
                    @type="text"
                    @label="Gender"
                    @hint="female, male, non-binary, gender fluid, etc."
                    @maxlength={{32}}/>
-        </div>
-        <div class="form-row">
+        </FormRow>
+        <FormRow>
           <f.input @name="pronouns"
                    @type="select"
                    @label="Pronouns"
-                   @grid="col-auto"
-                   @options={{this.pronounOptions}} />
+                   @inline={{true}}
+                   @options={{this.pronounOptions}}/>
           {{#if (eq f.model.pronouns "custom")}}
             <f.input
               @name="pronouns_custom"
               @type="text" @label="Their pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
               @size={{30}}
               @maxlength={{30}}
-              @grid="col-auto"
+              @inline={{true}}
             />
           {{/if}}
-        </div>
+        </FormRow>
       </:body>
     </UiSection>
-    <UiSection>
+    <UiSection id="person-contact">
       <:title>Contact Information</:title>
       <:body>
-        <div class="form-row">
+        <FormRow>
           <f.input @name="email"
                    @label="Email"
                    @type="text"
                    @inputmode="email"
                    @size={{25}} @maxlength={{50}}
                    @grid="col-sm-12 col-lg-auto"
-                   @noSpaces={{true}} />
+                   @noSpaces={{true}}/>
           <f.input @name="home_phone"
                    @type="text"
                    @inputmode="tel"
@@ -70,35 +79,35 @@
                    @inputmode="tel"
                    @label="Alternative Phone"
                    @grid="col-sm-4 col-lg-auto"
-                   @maxlength={{25}} />
-        </div>
+                   @maxlength={{25}}/>
+        </FormRow>
       </:body>
     </UiSection>
-    <UiSection>
+    <UiSection class="person-camp">
       <:title>Camp Name &amp; Location</:title>
       <:body>
-        <div class="form-row">
+        <FormRow>
           <f.input @name="camp_location"
                    @type="textarea"
                    @label="Camp Name & Location"
                    @cols={{50}} @rows={{4}} @maxlength={{200}}
-                   @hint="{{if f.model.camp_location f.model.camp_location.length "0"}}  of 200 characters"/>
-        </div>
+                   @hint="{{if f.model.camp_location f.model.camp_location.length "0"}} of 200 characters"/>
+        </FormRow>
       </:body>
     </UiSection>
-    <UiSection>
+    <UiSection id="person-callsign">
       <:title>Callsign Pronunciation</:title>
       <:body>
-        <div class="form-row">
+        <FormRow>
           <f.input @name="callsign_pronounce"
                    @type="text"
                    @label="Callsign Pronounciation"
                    @size={{32}} @maxlength={{32}}
                    @grid="col-sm-12 col-lg-auto"/>
-        </div>
+        </FormRow>
       </:body>
     </UiSection>
-    <UiSection>
+    <UiSection id="person-languages">
       <:title>Languages</:title>
       <:body>
         List the English names of the languages you are comfortable speaking with the level of fluency in parenthesis,
@@ -107,24 +116,25 @@
           Example: "japanese (basic), spanish (fluent)"
         </div>
 
-        <div class="form-row">
+        <FormRow>
           <f.input @name="languages" @label="Languages Spoken" @type="text" @size={{80}} @grid="col-sm-12 col-lg-auto"/>
-        </div>
+        </FormRow>
 
       </:body>
     </UiSection>
-    <UiSection>
+    <UiSection id="person-clothing">
       <:title>Ranger Clothing</:title>
       <:body>
-        <div class="form-row">
-          <f.input @name="teeshirt_size_style" @type="select" @label="T-Shirt Size" @options={{this.shortSleeveOptions}}
+        <FormRow>
+          <f.input @name="teeshirt_size_style" @type="select" @label="T-Shirt Size"
+                   @options={{this.shortSleeveOptions}}
                    @grid="col-sm-12 col-lg-auto"/>
           <f.input @name="longsleeveshirt_size_style" @type="select" @label="Long Sleeve Shirt Size"
                    @options={{this.longSleeveOptions}} @grid="col-sm-12 col-lg-auto"/>
-        </div>
+        </FormRow>
       </:body>
     </UiSection>
-    <UiSection>
+    <UiSection id="person-address">
       <:title>Home Address</:title>
       <:body>
         <PersonAddressEdit @f={{f}} />

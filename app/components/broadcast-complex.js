@@ -139,6 +139,7 @@ export default class BroadcastComplexComponent extends Component {
       }
     });
 
+    options.sort((a,b) => a.title.localeCompare(b.title));
     options.unshift({id: '', title: '----'});
 
     return options;
@@ -147,7 +148,7 @@ export default class BroadcastComplexComponent extends Component {
   // Build up the basic position options
   get positionOptions() {
     const positions = this.args.broadcast.positions.slice();
-
+    positions.sort((a,b) => a.title.localeCompare(b.title));
     positions.unshift({id: '', title: '----'});
 
     return positions;

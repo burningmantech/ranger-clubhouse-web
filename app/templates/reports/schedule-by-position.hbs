@@ -1,23 +1,21 @@
 <YearSelect @title="Schedule By Position" @year={{this.year}} @onChange={{action (mut this.year)}}  />
-<div class="form-row mb-1">
-  <div class="col-auto">
-    <label class="col-form-label">Active Filter:</label>
-  </div>
+
+<FormRow>
+  <FormLabel @auto={{true}}>Active Filter:</FormLabel>
   <div class="col-auto mb-2">
     <ChForm::Select @name="activeFilter"
                     @value={{this.activeFilter}}
                     @options={{this.activeOptions}}
-                    @onChange={{action (mut this.activeFilter)}}
-                    @controlClass="form-control"/>
+                    @onChange={{action (mut this.activeFilter)}} />
   </div>
   {{#if this.session.canViewEmail}}
     <div class="col-auto">
-      <UiButton @onClick={{this.exportBulkPositions}} @disabled={{not this.positions.length}} >
+      <UiButton @onClick={{this.exportBulkPositions}} @disabled={{not this.positions.length}}>
         Export combined callsigns w/emails
       </UiButton>
     </div>
   {{/if}}
-</div>
+</FormRow>
 
 <p>
   Jump to a position starting with the letter:<br>
@@ -105,16 +103,19 @@
 
 {{#if this.showBulkPositionDialog}}
   <ModalDialog @title="Select the positions to export the signed up callsigns w/emails:"
+               @size="xl"
                @onEscape={{this.cancelExport}} as |Modal|>
     <ChForm @formId="positionIds"
             @formFor={{this.positionIdsForm}}
             @changeSet={{false}}
             @onSubmit={{this.exportSelectedPositions}} as |f|>
       <Modal.body>
-        <div class="form-row">
-          <f.input @name="positionIds" @type="checkboxGroup" @wrapClass="form-row" @cols={{2}}
-                   @options={{this.positionOptions}} />
-        </div>
+        <FormRow>
+          <f.input @name="positionIds"
+                   @type="checkboxGroup"
+                   @cols={{4}}
+                   @options={{this.positionOptions}}/>
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Export {{pluralize f.model.positionIds.length "position"}}"

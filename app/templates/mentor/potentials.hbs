@@ -1,33 +1,35 @@
 <h1>{{this.year}} Potential Alphas</h1>
 
-<div class="form-group row">
-  <label class="col-form-label col-auto">Filter By:</label>
-  <div class="form-check form-check-inline">
-    <Input @type="checkbox" @checked={{this.untrained}} id="untrained-flag" class="form-check-input"/>
-    <label for="untrained-flag" class="form-check-label">Untrained</label>
+<FormRow>
+  <FormLabel @auto={{true}}>Filter By:</FormLabel>
+  <div class="col-auto mt-2">
+    <div class="form-check form-check-inline">
+      <Input @type="checkbox" @checked={{this.untrained}} id="untrained-flag" class="form-check-input"/>
+      <label for="untrained-flag" class="form-check-label">Untrained</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <Input @type="checkbox" @checked={{this.rrnFlagged}} id="rrn-flag" class="form-check-input"/>
+      <label for="rrn-flag" class="form-check-label">RRN Flagged</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <Input @type="checkbox" @checked={{this.vcFlagged}} id="vc-flag" class="form-check-input"/>
+      <label for="vc-flag" class="form-check-label">VC Flagged</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <Input @type="checkbox" @checked={{this.trainingFlagged}} id="trained-flag" class="form-check-input"/>
+      <label for="trained-flag" class="form-check-label">Training Flagged</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <Input @type="checkbox" @checked={{this.mentorFlagged}} id="mentor-flag" class="form-check-input"/>
+      <label for="mentor-flag" class="form-check-label">Mentor Flagged</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <Input @type="checkbox" @checked={{this.personnelFlagged}} id="personnel-flag" class="form-check-input"/>
+      <label for="black-flag" class="form-check-label">Personnel Flagged</label>
+    </div>
   </div>
-  <div class="form-check form-check-inline">
-    <Input @type="checkbox" @checked={{this.rrnFlagged}} id="rrn-flag" class="form-check-input"/>
-    <label for="rrn-flag" class="form-check-label">RRN Flagged</label>
-  </div>
-  <div class="form-check form-check-inline">
-    <Input @type="checkbox" @checked={{this.vcFlagged}} id="vc-flag" class="form-check-input"/>
-    <label for="vc-flag" class="form-check-label">VC Flagged</label>
-  </div>
-  <div class="form-check form-check-inline">
-    <Input @type="checkbox" @checked={{this.trainingFlagged}} id="trained-flag" class="form-check-input"/>
-    <label for="trained-flag" class="form-check-label">Training Flagged</label>
-  </div>
-  <div class="form-check form-check-inline">
-    <Input @type="checkbox" @checked={{this.mentorFlagged}} id="mentor-flag" class="form-check-input"/>
-    <label for="mentor-flag" class="form-check-label">Mentor Flagged</label>
-  </div>
-  <div class="form-check form-check-inline">
-    <Input @type="checkbox" @checked={{this.personnelFlagged}} id="personnel-flag" class="form-check-input"/>
-    <label for="black-flag" class="form-check-label">Personnel Flagged</label>
-  </div>
+</FormRow>
 
-</div>
 <p>
   Any prospective or alpha who has signed up for training in the current year will be shown here.
 </p>
@@ -55,7 +57,7 @@ Showing {{this.viewPotentials.length}} of {{pluralize this.mentees.length "poten
         <PersonLink @person={{person}} />
         <br>
         {{person.first_name}} {{person.last_name}}<br>
-        <PresentOrNot @value={{person.gender}} @empty="no gender stated" />
+        <PresentOrNot @value={{person.gender}} @empty="no gender stated"/>
       </td>
       <td>{{person.status}}</td>
       <td>

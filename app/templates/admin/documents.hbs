@@ -5,23 +5,23 @@
           @validator={{this.validations}}
           @onSubmit={{this.saveAction}}
           as |f|>
-    <div class="form-row">
-      <f.input @name="tag" @type="text" @label="Document Tag" @size={{30}} @maxlength={{80}} />
-      <f.input @name="description" @type="text" @label="One-line description" @size={{80}} @maxlength={{80}} />
-    </div>
-    <div class="form-row">
-      <f.input @name="body" @type="editor" @label="Document Text" @cols={{80}} @rows={{4}} />
-    </div>
+    <FormRow>
+        <f.input @name="tag" @type="text" @label="Document Tag" @size={{30}} @maxlength={{80}}/>
+        <f.input @name="description" @type="text" @label="One-line description" @size={{80}} @maxlength={{80}}/>
+    </FormRow>
+    <FormRow>
+        <f.input @name="body" @type="editor" @label="Document Text" @cols={{80}} @rows={{4}}/>
+    </FormRow>
     <div class="mb-4">
         <f.submit @disabled={{this.editDocument.isSaving}} />
-      <UiCancelButton @onClick={{this.cancelAction}} @disabled={{this.editDocument.isSaving}} />
-      {{#if this.isSaving}}
+        <UiCancelButton @onClick={{this.cancelAction}} @disabled={{this.editDocument.isSaving}} />
+        {{#if this.isSaving}}
         <LoadingIndicator/>
-      {{/if}}
+        {{/if}}
 
       {{#unless this.editDocument.isNew}}
         <div class="d-inline-block ml-4">
-          <UiButton @type="danger" @onClick={{this.deleteAction}}>{{fa-icon "trash"}} Delete</UiButton>
+            <UiButton @type="danger" @onClick={{this.deleteAction}}>{{fa-icon "trash"}} Delete</UiButton>
         </div>
       {{/unless}}
     </div>

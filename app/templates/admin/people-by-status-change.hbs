@@ -1,31 +1,32 @@
 {{#if (eq this.period "current-date")}}
-  <h1>People By Status Change: Proposed Immediate Status Changes</h1>
+    <h1>People By Status Change: Proposed Immediate Status Changes</h1>
 {{else}}
-  <h1>People By Status Change: Proposed Changes</h1>
+    <h1>People By Status Change: Proposed Changes</h1>
 {{/if}}
 
-<div class="form-row">
-  <div class="col-auto">
-    <label class="col-form-label">Show proposed statuses as of:</label>
-  </div>
-  <div class="col-auto">
-    <ChForm::Select @name="period" @value={{this.period}} @options={{this.periodOptions}} @onChange={{action (mut this.period)}} @controlClass="form-control" />
-  </div>
-</div>
+<FormRow>
+    <FormLabel @auto={{true}}>Show proposed statuses as of:</FormLabel>
+    <div class="col-auto">
+        <ChForm::Select @name="period"
+                        @value={{this.period}}
+                        @options={{this.periodOptions}}
+                        @onChange={{action (mut this.period)}} />
+    </div>
+</FormRow>
 {{#if (eq this.period "current-date")}}
-  <p>
+    <p>
     The following proposed statuses are based on the person’s current work record
     and show what what we believe their status should be as of the current date
     (i.e., these are corrections that we think need to be made to the database):
-  </p>
+    </p>
 {{else}}
-  <p>
+    <p>
     The following proposed statuses assume the person doesn't work at the next event:
-  </p>
+    </p>
 {{/if}}
 
-<StatusChangeTable @people={{this.inactives}} @newStatus="inactive" />
-<StatusChangeTable @people={{this.retired}} @newStatus="retired" />
-<StatusChangeTable @people={{this.actives}} @newStatus="active" />
-<StatusChangeTable @people={{this.past_prospectives}} @newStatus="past prospective" />
-<StatusChangeTable @people={{this.vintage}} @newStatus="vintage" />
+<StatusChangeTable @people={{this.inactives}} @newStatus="inactive"/>
+<StatusChangeTable @people={{this.retired}} @newStatus="retired"/>
+<StatusChangeTable @people={{this.actives}} @newStatus="active"/>
+<StatusChangeTable @people={{this.past_prospectives}} @newStatus="past prospective"/>
+<StatusChangeTable @people={{this.vintage}} @newStatus="vintage"/>

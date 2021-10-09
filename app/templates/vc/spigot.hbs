@@ -37,7 +37,7 @@
         <td class="text-right">
           {{#if day.imported}}
             <Popover @text={{day.imported.length}} @title={{concat day.day " Imported"}}>
-              <div class="row no-gutters">
+              <div class="row g-0">
                 {{#each day.imported as |person|}}
                   <div class="col-6">
                     <PersonLink @person={{person}} />
@@ -52,7 +52,7 @@
         <td class="text-right">
           {{#if day.photo_approved}}
             <Popover @text={{day.photo_approved.length}} @title={{concat day.day " BMID Photo Approved"}}>
-              <div class="row no-gutters">
+              <div class="row g-0">
                 {{#each day.photo_approved as |person|}}
                   <div class="col-6">
                     <PersonLink @person={{person}} />
@@ -67,7 +67,7 @@
         <td class="text-right">
           {{#if day.online_trained}}
             <Popover @text={{day.online_trained.length}} @title={{concat day.day " Online Trained"}}>
-              <div class="row no-gutters">
+              <div class="row g-0">
               {{#each day.online_trained as |person|}}
                 <div class="col-6">
                   <PersonLink @person={{person}} />
@@ -82,7 +82,7 @@
         <td class="text-right">
           {{#if day.training_signups}}
             <Popover @text={{day.training_signups.length}} @title={{concat day.day " Training Signups"}}>
-              <div class="row no-gutters">
+              <div class="row g-0">
               {{#each day.training_signups as |person|}}
                 <div class="col-6">
                   <PersonLink @person={{person}} />
@@ -97,7 +97,7 @@
         <td class="text-right">
           {{#if day.training_passed}}
             <Popover @text={{day.training_passed.length}} @title={{concat day.day " Training Passed"}}>
-              <div class="row no-gutters">
+              <div class="row g-0">
               {{#each day.training_passed as |person|}}
                 <div class="col-6">
                   <PersonLink @person={{person}} />
@@ -112,7 +112,7 @@
         <td class="text-right">
           {{#if day.dropped}}
             <Popover @text={{day.dropped.length}} @title={{concat day.day " Dropped"}}>
-              <div class="row no-gutters">
+              <div class="row g-0">
               {{#each day.dropped as |person|}}
                 <div class="col-6">
                   <PersonLink @person={{person}} />
@@ -127,7 +127,7 @@
         <td class="text-right">
           {{#if day.alpha_signups}}
             <Popover @text={{day.alpha_signups.length}} @title={{concat day.day " Alpha Signups"}}>
-              <div class="row no-gutters">
+              <div class="row g-0">
                 {{#each day.alpha_signups as |person|}}
                   <div class="col-6">
                     <PersonLink @person={{person}} />

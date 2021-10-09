@@ -1,23 +1,26 @@
-<ChForm @formId="checkout" @formFor={{this.assetForm}} @validator={{this.assetValdiations}} @onSubmit={{this.checkoutAsset}} as |f|>
-  <div class="form-row">
-    <f.input @name="barcode" @placeholder="Enter Barcode" @type="text" @size=15 @grid="col-auto" />
-    <f.input @name="attachment_id" @type="select" @options={{this.attachmentOptions}} />
+<ChForm @formId="checkout" @formFor={{this.assetForm}} @validator={{this.assetValdiations}}
+        @onSubmit={{this.checkoutAsset}} as |f|>
+  <FormRow>
+    <f.input @name="barcode" @placeholder="Enter Barcode" @type="text" @size={{15}} @inline={{true}}/>
+    <f.input @name="attachment_id" @type="select" @options={{this.attachmentOptions}}/>
     <div class="col">
-      <f.submit @label="Checkout" @disabled={{or (is-empty f.model.barcode) this.isSubmitting}} />
+      <f.submit @label="Checkout" @disabled={{or (is-empty f.model.barcode) this.isSubmitting}}/>
       {{#if this.isSubmitting}}
-        <LoadingIndicator />
+        <LoadingIndicator/>
       {{/if}}
     </div>
-  </div>
+  </FormRow>
   {{#if this.barcodeNotFound}}
-    <div class="form-row text-danger">
-      Barcode "{{this.barcodeNotFound}}" was not found.
-    </div>
+    <p>
+      <b class="text-danger">Barcode "{{this.barcodeNotFound}}" was not found.</b>
+    </p>
   {{else if this.barcodeCheckedOut}}
-    <p class="text-danger">
-      Barcode {{this.barcodeCheckedOut.barcode}} still checked out by
-      <LinkTo @route="person.assets" @model={{this.barcodeCheckedOut.person_id}}>{{this.barcodeCheckedOut.callsign}}</LinkTo>
-      on {{shift-format this.barcodeCheckedOut.checked_out}}
+    <p>
+      <b class="text-danger">Barcode {{this.barcodeCheckedOut.barcode}} still checked out by
+        <LinkTo @route="person.assets"
+                @model={{this.barcodeCheckedOut.person_id}}>{{this.barcodeCheckedOut.callsign}}</LinkTo>
+        on {{shift-format this.barcodeCheckedOut.checked_out}}
+      </b>
     </p>
     <p>
       <UiButton @type="secondary" @size="sm" @onClick={{this.showHistoryAction}}>

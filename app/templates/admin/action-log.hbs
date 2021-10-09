@@ -8,25 +8,25 @@
   {{/if}}
 
   <ChForm @formId="query" @formFor={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
-    <div class="form-row">
-      <f.input @name="person" @label="Person" @type="text" @size={{30}} @grid="col-sm-12 col-md-2"
-               @controlClass="form-control form-control-sm" @hint="Callsign or person id"/>
-      <f.input @name="start_time" @label="Start time (UTC-7)" @controlClass="form-control form-control-sm"
+    <FormRow>
+      <f.input @name="person" @label="Person" @type="text" @size={{30}}
+               @fieldSize="sm" @hint="Callsign or person id"/>
+      <f.input @name="start_time" @label="Start time (UTC-7)" @fieldSize="sm"
                @type="datetime"
-               @size={{30}} @grid="col-sm-12 col-md-2"/>
-      <f.input @name="end_time" @label="End time (UTC-7)" @controlClass="form-control form-control-sm" @type="datetime"
-               @size={{30}} @grid="col-sm-12 col-md-2"/>
-    </div>
-    <div class="form-group row mb-2">
-      <label class="col-1">Events</label>
-      <f.input @name="events" @type="checkboxGroup" @cols=4 @options={{this.eventOptions}} />
-    </div>
-    <div class="form-row mb-2">
-      <label class="col-1">Sort</label>
+               @size={{30}} />
+      <f.input @name="end_time" @label="End time (UTC-7)" @fieldSize="sm" @type="datetime"
+               @size={{30}} />
+    </FormRow>
+    <FormRow>
+      <FormLabel @fixed={{true}}>Events</FormLabel>
+      <f.input @name="events" @type="checkboxGroup" @cols={{4}} @options={{this.eventOptions}} />
+    </FormRow>
+    <FormRow>
+      <<FormLabel @fixed={{true}}>Sort</FormLabel>
       <div class="col-auto">
-        <f.input @name="sort" @type="radioGroup" @options={{this.sortOptions}} @inline={{true}}/>
+        <f.input @name="sort" @type="radioGroup" @options={{this.sortOptions}} @inlineCheckbox={{true}}/>
       </div>
-    </div>
+    </FormRow>
     <f.submit @label="Search"/>
     <UiButton @type="secondary" @onClick={{fn this.resetFilters f.model}}>Reset</UiButton>
   </ChForm>

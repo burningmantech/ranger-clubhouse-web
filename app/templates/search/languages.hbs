@@ -2,36 +2,34 @@
 
 <ChForm @formId="search" @formFor={{this.searchForm}} @changeSet={{false}}
         @onSubmit={{this.submit}} as |f|>
-  <div class="form-group row">
-    <div class="col-auto">
-      <label>Quick Search:</label>
-      <a href="#" class="mr-2" {{action this.setLanguage "spanish"}}>Spanish</a>
-      <a href="#" class="mr-2" {{action this.setLanguage "chinese"}}>Chinese</a>
-      <a href="#" class="mr-2" {{action this.setLanguage "dutch"}}>Dutch</a>
-      <a href="#" class="mr-2" {{action this.setLanguage "french"}}>French</a>
-      <a href="#" class="mr-2" {{action this.setLanguage "german"}}>German</a>
-      <a href="#" class="mr-2" {{action this.setLanguage "hebrew"}}>Hebrew</a>
-      <a href="#" class="mr-2" {{action this.setLanguage "italian"}}>Italian</a>
-      <a href="#" class="mr-2" {{action this.setLanguage "russian"}}>Russian</a>
-    </div>
-  </div>
-  <div class="form-group row">
+  <FormRow>
+    <label class="col-auto">Quick Search:</label>
+    <a href class="col-auto" {{action this.setLanguage "spanish"}}>Spanish</a>
+    <a href class="col-auto" {{action this.setLanguage "chinese"}}>Chinese</a>
+    <a href class="col-auto" {{action this.setLanguage "dutch"}}>Dutch</a>
+    <a href class="col-auto" {{action this.setLanguage "french"}}>French</a>
+    <a href class="col-auto" {{action this.setLanguage "german"}}>German</a>
+    <a href class="col-auto" {{action this.setLanguage "hebrew"}}>Hebrew</a>
+    <a href class="col-auto" {{action this.setLanguage "italian"}}>Italian</a>
+    <a href class="col-auto" {{action this.setLanguage "russian"}}>Russian</a>
+  </FormRow>
+  <FormRow>
     <f.input @label="Enter a language to search for:"
              @name="language" @type="text" @size={{50}} @maxlength={{50}}
-             @autofocus={{true}} @wrapClass="col-auto"
+             @autofocus={{true}}
              @onChange={{this.languageUpdate}}
     />
+  </FormRow>
+  <FormRow>
     <div class="col-auto">
-      <label class="col-form-label">&nbsp;</label>
       <f.input @name="offSite"
                @type="checkbox"
                @value={{1}}
                @label="Include off site"
                @onChange={{this.onSiteUpdate}}
-               @wrapClass="form-check"
-               @controlClass="form-check-input"/>
+               @inlineCheckbox={{true}} />
     </div>
-  </div>
+  </FormRow>
 </ChForm>
 <hr>
 {{#if this.isLoading}}
