@@ -26,7 +26,7 @@ export default class MeAnnouncementsController extends ClubhouseController {
 
   _collapseMotd(motd, action) {
     const element = document.getElementById(`motd-text-${motd.id}`);
-    const collapse = bootstrap.Collapse.getInstance(element) ?? new bootstrap.Collapse(element);
+    const collapse = bootstrap.Collapse.getOrCreateInstance(element, { toggle: false});
 
     if (action === 'show') {
       collapse.show();
