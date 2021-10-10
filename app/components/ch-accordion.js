@@ -2,7 +2,8 @@ import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {schedule} from '@ember/runloop';
-import $ from 'jquery';
+import bootstrap from 'bootstrap';
+
 
 export default class ChAccordionComponent extends Component {
   @tracked isOpen = false;
@@ -16,7 +17,7 @@ export default class ChAccordionComponent extends Component {
 
     if (this.isOpen) {
       // hidden event will deal with things
-      $(this.bodyElement).collapse('hide');
+      this.bodyCollapse.hide();
       return;
     }
 
@@ -26,22 +27,22 @@ export default class ChAccordionComponent extends Component {
     }
 
     // Reveal body after it's rendered
-    schedule('afterRender', () => {
-      $(this.bodyElement).collapse('show');
-    });
+    schedule('afterRender', () => this.bodyCollapse.show());
   }
 
   @action
   onInsertAction(element) {
     this.bodyElement = element;
-    $(element).on('hidden.bs.collapse', () => {
+    this.bodyCollapse = new bootstrap.Collapse(element, { toggle: false });
+
+    element.addEventListener('hidden.bs.collapse', () => {
       this.isOpen = false;
       if (this.args.onClick) {
         this.args.onClick(false);
       }
     });
 
-    $(element).on('shown.bs.collapse', () => {
+    element.addEventListener('shown.bs.collapse', () => {
       if (this.isOpen) {
         return;
       }
@@ -56,7 +57,7 @@ export default class ChAccordionComponent extends Component {
   @action
   onDestroyAction() {
     if (this.bodyElement) {
-      $(this.bodyElement).collapse('dispose');
+      this.bodyCollapse.dispose();
     }
   }
 }

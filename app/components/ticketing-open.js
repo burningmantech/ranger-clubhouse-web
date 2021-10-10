@@ -3,7 +3,6 @@ import {tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
 import {later} from '@ember/runloop';
 import {inject as service} from '@ember/service';
-import $ from 'jquery';
 
 export default class TicketingOpenComponent extends Component {
   @tracked showing = {};
@@ -99,11 +98,11 @@ export default class TicketingOpenComponent extends Component {
     const opened = this.showing;
     Object.keys(opened).forEach((id) => {
       if (opened[id]) {
-        $(`#ticket-${id} .card-body`).collapse('hide');
+        this.house.collapse(`#ticket-${id} .card-body`, 'hide');
       }
     });
 
     this.showing = {[section]: reveal};
-    $(`#ticket-${section} .card-body`).collapse(reveal ? 'show' : 'hide');
+    this.house.collapse(`#ticket-${section} .card-body`, reveal ? 'show' : 'hide');
   }
 }

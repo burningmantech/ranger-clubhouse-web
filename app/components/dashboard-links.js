@@ -1,14 +1,16 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
-import $ from 'jquery';
+import { inject as service } from '@ember/service';
 
 export default class DashboardLinksComponent extends Component {
+  @service house;
+
   legendBox = null;
   didCollapse = false;
 
   @action
   toggleIconLegend() {
-    $(this.legendBox).collapse('toggle');
+    this.house.collapse(this.legendBox, 'toggle');
     this.didCollapse = true;
   }
 
@@ -18,11 +20,11 @@ export default class DashboardLinksComponent extends Component {
   }
 
   @action
-  willDestroyLegend(element) {
+  willDestroyLegend() {
     if (this.didCollapse) {
       // Bug with the Bootstrap collapse plugin, the plugin will crash if dispose was called
       // without collapse() being called
-      $(element).collapse('dispose');
+      this.house.collapse(this.legendBox, 'dispose');
     }
   }
 }

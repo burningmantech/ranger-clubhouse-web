@@ -3,7 +3,6 @@ import {action, set} from '@ember/object';
 import {inject as service} from '@ember/service';
 import {Role} from 'clubhouse/constants/roles';
 import {tracked} from '@glimmer/tracking';
-import $ from 'jquery';
 
 export default class ClubhouseMessagesComponent extends Component {
   @service store;
@@ -47,7 +46,7 @@ export default class ClubhouseMessagesComponent extends Component {
   @action
   toggleMessage(message) {
     set(message, 'showing', !message.showing);
-    $(`#message-text-${message.id}`).collapse('toggle');
+    this.house.collapse(`#message-text-${message.id}`, 'toggle')
   }
 
   @action

@@ -1,5 +1,7 @@
 import Route from '@ember/routing/route';
-import { inject as service } from '@ember/service';
+import {inject as service} from '@ember/service';
+import {isArray} from '@ember/array';
+import {action} from '@ember/object';
 
 /**
  * Base Clubhouse Route
@@ -54,5 +56,30 @@ export default class ClubhouseRoute extends Route {
     this.toast.error('You are not authorized for that action');
     this.router.transitionTo('me.homepage');
     return false;
+  }
+
+  @action
+  collectTitleTokens(tokens) {
+    let titleToken = this.titleToken;
+    if (typeof titleToken === 'function') {
+      titleToken = titleToken.call(this, this.currentModel);
+    }
+
+    if (isArray(titleToken)) {
+      tokens.unshift.apply(tokens, titleToken);
+    } else if (titleToken) {
+      tokens.unshift(titleToken);
+    }
+
+    // If `title` exists, it signals the end of the
+    // token-collection, and the title is decided right here.
+    let title = this.title;
+
+    if (title) {
+      document.title = (typeof title === 'function') ? title.call(this, tokens) : title;
+    } else {
+      // Continue bubbling.
+      return true;
+    }
   }
 }

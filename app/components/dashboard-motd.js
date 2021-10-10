@@ -1,7 +1,6 @@
 import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
 import {inject as service} from '@ember/service';
-import $ from 'jquery';
 
 export default class DashboardMotdComponent extends Component {
   @service ajax;
@@ -19,7 +18,7 @@ export default class DashboardMotdComponent extends Component {
   toggleMotd(motd) {
     this.args.motds.forEach((m) => {
       set(m, 'showing', (motd.id === m.id) ? !motd.showing : false);
-      $(`#motd-text-${motd.id}`).collapse(m.showing ? 'show' : 'hide');
+      this.house.collapse(`#motd-text-${motd.id}`, m.showing ? 'show' : 'hide');
     });
   }
 
@@ -34,7 +33,7 @@ export default class DashboardMotdComponent extends Component {
       .then(() => {
         set(motd, 'showing', false);
         set(motd, 'has_read', true);
-        $(`#motd-text-${motd.id}`).collapse('hide');
+        this.house.collapse(`#motd-text-${motd.id}`, 'hide');
         this.toast.success('Announcement marked as read.');
       }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => set(motd, 'isMarking', false));
