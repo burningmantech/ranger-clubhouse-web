@@ -60,7 +60,6 @@ export default class ClubhouseRoute extends Route {
 
   @action
   collectTitleTokens(tokens) {
-    console.log('TITLE TOKENS', tokens);
     let titleToken = this.titleToken;
     if (typeof titleToken === 'function') {
       titleToken = titleToken.call(this, this.currentModel);

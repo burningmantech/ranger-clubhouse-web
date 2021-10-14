@@ -36,7 +36,6 @@ export default class PersonRoute extends ClubhouseRoute {
   }
 
   titleToken(model) {
-    console.log('THIS ', this, this.router.currentRouteName);
     // Includes the full route path like ApplicationRoute, but replace "Person" with their callsign.
     return this.router.currentRouteName
       .split('.')
