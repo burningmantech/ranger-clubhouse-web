@@ -13,25 +13,38 @@
 
   <ChForm @formId="query" @formFor={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
     <FormRow>
-      <f.input @name="person" @label="Person" @type="text" @size={{30}} @grid="col-sm-12 col-md-2"
-               @fieldSize="sm" @hint="Callsign or person id"/>
-      <f.input @name="start_time" @label="Start time" @fieldSize="sm" @type="datetime"
-               @size={{30}} @grid="col-sm-12 col-md-2"/>
-      <f.input @name="end_time" @label="End time" @fieldSize="sm" @type="datetime" @size={{30}}
-               @grid="col-sm-12 col-md-2"/>
+      <f.text @name="person"
+              @label="Person"
+              @size={{30}}
+              @fieldSize="sm"
+              @hint="Callsign or person id"
+      />
+      <f.datetime @name="start_time"
+                  @label="Start time"
+                  @fieldSize="sm"
+                  @size={{30}} />
+      <f.datetime @name="end_time"
+                  @label="End time"
+                  @fieldSize="sm"
+                  @size={{30}}
+      />
     </FormRow>
     <FormRow>
       <FormLabel @fixed={{true}}>Events</FormLabel>
-      <f.input @name="events" @type="checkboxGroup" @cols={{4}} @options={{this.eventOptions}}/>
+      <f.checkboxGroup @name="events" @cols={{4}} @options={{this.eventOptions}}/>
     </FormRow>
     <FormRow>
       <FormLabel @fixed={{true}}>Event Contains</FormLabel>
-      <f.input @name="event_text" @type="text" @size={{40}} @fieldSize="sm"/>
+      <f.text @name="event_text"
+              @size={{40}}
+              @fieldSize="sm"/>
     </FormRow>
     <FormRow>
-      <FormLabel @fixed={{true}}>Sort</FormLabel>
+      <FormLabel @fixed={{true}} @class="pt-0">Sort</FormLabel>
       <div class="col-auto">
-        <f.input @name="sort" @type="radioGroup" @options={{this.sortOptions}} @inlineCheckbox={{true}}/>
+        <f.radioGroup @name="sort"
+                      @options={{this.sortOptions}}
+                      @inline={{true}}/>
       </div>
     </FormRow>
     <f.submit @label="Search"/>

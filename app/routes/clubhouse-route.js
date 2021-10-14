@@ -60,6 +60,7 @@ export default class ClubhouseRoute extends Route {
 
   @action
   collectTitleTokens(tokens) {
+    console.log('TITLE TOKENS', tokens);
     let titleToken = this.titleToken;
     if (typeof titleToken === 'function') {
       titleToken = titleToken.call(this, this.currentModel);
@@ -74,11 +75,10 @@ export default class ClubhouseRoute extends Route {
     // If `title` exists, it signals the end of the
     // token-collection, and the title is decided right here.
     let title = this.title;
-
     if (title) {
       document.title = (typeof title === 'function') ? title.call(this, tokens) : title;
+      return false;
     } else {
-      // Continue bubbling.
       return true;
     }
   }

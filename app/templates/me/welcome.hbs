@@ -26,15 +26,23 @@
       <p>
         The first step is to set a password for your Clubhouse account.
       </p>
-      <ChForm @formId="password" @formFor={{this.password}} @validator={{this.passwordValidations}}
-              @onSubmit={{this.submitAction}} @onCancel={{this.cancelAction}} as |f|>
+      <ChForm @formId="password"
+              @formFor={{this.password}}
+              @validator={{this.passwordValidations}}
+              @onSubmit={{this.submitAction}} as |f|>
         <FormRow>
-          <f.input @name="password" @type="password"
-                   @label="New Password" @size={{20}} @maxlength={{30}} @inline={{true}}/>
+          <f.password @name="password"
+                      @label="New Password"
+                      @size={{20}}
+                      @maxlength={{30}}
+          />
         </FormRow>
         <FormRow>
-          <f.input @name="password_confirmation" @type="password"
-                   @label="Confirm New Password" @size={{20}} @maxlength={{30}} @inline={{true}}/>
+          <f.password @name="password_confirmation"
+                      @label="Confirm New Password"
+                      @size={{20}}
+                      @maxlength={{30}}
+          />
         </FormRow>
         <div class="mt-3">
           <f.submit @submitClass="btn-responsive"

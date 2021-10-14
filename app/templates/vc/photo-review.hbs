@@ -145,6 +145,7 @@
 
 {{#if this.reviewPhoto}}
   <ModalDialog @title="Reject Photo for {{this.reviewPhoto.person.callsign}}"
+               @size="xl"
                @onEscape={{this.onClose}} as |modal|>
     <modal.body>
       <ChForm @formId="photo"
@@ -153,29 +154,30 @@
               @onSubmit={{this.onRejectSubmit}} as |f|>
         <FormRow>
           <div class="col-3">
-            <img src={{this.reviewPhoto.image_url}} alt="{{this.reviewPhoto.person.callsign}}" class="mugshot"/>
+            <div class="photo-large">
+              <img src={{this.reviewPhoto.image_url}} alt="{{this.reviewPhoto.person.callsign}}"/>
+            </div>
           </div>
-          <div class="col-8  ml-2">
-            <label>Rejection Reasons:</label>
-            <FormRow>
-              <f.input @name="reasons" @type="checkboxGroup" @cols={{2}} @options={{this.rejectionOptions}}/>
-            </FormRow>
-          </div>
+          <f.checkboxGroup @name="reasons"
+                           @label="Rejection Reasons:"
+                           @options={{this.rejectionOptions}}
+                           @cols={{4}}
+                           @wrapClass="col-9 ml-2"
+          />
         </FormRow>
         <FormRow>
-          <f.input @name="message" @label="Custom message to include in the rejection email:"
-                   @type="textarea"
-                   @rows={{5}} @cols={{80}}
-                   @hint="All email addresses and links in the message will be hyperlinked."/>
+          <f.textarea @name="message"
+                      @label="Custom message to include in the rejection email:"
+                      @rows={{5}}
+                      @cols={{80}}
+                      @hint="All email addresses and links in the message will be hyperlinked."/>
         </FormRow>
-        <div class="mt-2">
-          <f.submit @label="Reject Photo" @submitClass="btn-danger" disabled={{this.reviewPhoto.isSaving}} />
-          <UiCancelButton @disabled={{this.reviewPhoto.isSaving}} @onClick={{this.onClose}} />
-          <UiButton @type="secondary" @onClick={{this.rejectPreviewAction}}>Preview Email</UiButton>
-          {{#if this.reviewPhoto.isSaving}}
-            <LoadingIndicator/>
-          {{/if}}
-        </div>
+        <f.submit @label="Reject Photo" @submitClass="btn-danger" disabled={{this.reviewPhoto.isSaving}} />
+        <UiCancelButton @disabled={{this.reviewPhoto.isSaving}} @onClick={{this.onClose}} />
+        <UiButton @type="secondary" @onClick={{this.rejectPreviewAction}}>Preview Email</UiButton>
+        {{#if this.reviewPhoto.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
       </ChForm>
     </modal.body>
   </ModalDialog>

@@ -44,16 +44,28 @@ Showing {{pluralize this.alerts.length "alert"}}
 </table>
 
 {{#if this.entry}}
-  <ModalDialog @title="{{if this.entry.isNew "New" "Edit"}} Alert"  @onEscape={{this.cancelAlert}} as |Modal|>
+  <ModalDialog @title="{{if this.entry.isNew "New" "Edit"}} Alert" @onEscape={{this.cancelAlert}} as |Modal|>
     <ChForm @formId="alert" @formFor={{this.entry}} @onSubmit={{action this.saveAlert}} as |f|>
-        <Modal.body>
-            <FormRow>
-                <f.input @name="title" @label="Title" @type="text" @size={{30}} @maxlength={{255}}/>
-                <f.input @name="description" @label="Alert Description" @type="textarea" @rows={{10}} @cols={{80}}/>
-                <f.input @name="on_playa" @type="checkbox"
-                         @label="Is alert related to a broadcast that will happen on playa?"/>
-            </FormRow>
-        </Modal.body>
+      <Modal.body>
+        <FormRow>
+          <f.text @name="title"
+                  @label="Title"
+                  @size={{30}}
+                  @maxlength={{255}}/>
+        </FormRow>
+        <FormRow>
+          <f.textarea @name="description"
+                      @label="Alert Description"
+                      @rows={{10}}
+                      @cols={{80}}/>
+        </FormRow>
+        <FormRow>
+          <div class="col-auto">
+            <f.checkbox @name="on_playa"
+                        @label="Is alert related to a broadcast that will happen on playa?"/>
+          </div>
+        </FormRow>
+      </Modal.body>
       <Modal.footer @noAlign=true>
         <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
         <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelAlert}} />

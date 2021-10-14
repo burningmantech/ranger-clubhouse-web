@@ -2,9 +2,8 @@
 
 <ChForm @formId="bulkForm" @formFor={{this.bulkForm}} @changeSet={{false}} @onSubmit={{this.lookupAction}} as |f|>
   <FormRow>
-    <f.input @name="lines"
+    <f.textarea @name="lines"
              @label="Enter a list of callsigns and/or emails separated by a new line to lookup:"
-             @type="textarea"
              @cols={{40}}
              @rows={{10}}/>
   </FormRow>

@@ -48,10 +48,30 @@
             @formFor={{this.entry}}
             @onSubmit={{action this.saveHelp}} as |f|>
       <Modal.body>
-        <f.input @name="slug" @label="Slug / Help Identifier" @type="text" @size={{20}} @maxlength={{255}}/>
-        <f.input @name="tags" @label="Tags (separated by comma)" @size={{20}} @maxlength={{255}}/>
-        <f.input @name="title" @label="Help Title" @type="text" @size={{20}} @maxlength={{255}}/>
-        <f.input @name="body" @label="Help Body" @type="textarea" @rows={{10}} @cols={{80}}/>
+        <FormRow>
+          <f.text @name="slug"
+                  @label="Slug / Help Identifier"
+                  @size={{20}}
+                  @maxlength={{255}}/>
+        </FormRow>
+        <FormRow>
+          <f.text @name="tags"
+                  @label="Tags (separated by comma)"
+                  @size={{20}}
+                  @maxlength={{255}}/>
+        </FormRow>
+        <FormRow>
+          <f.text @name="title"
+                  @label="Help Title"
+                  @size={{20}}
+                  @maxlength={{255}}/>
+        </FormRow>
+        <FormRow>
+          <f.textarea @name="body"
+                      @label="Help Body"
+                      @rows={{10}}
+                      @cols={{80}}/>
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />

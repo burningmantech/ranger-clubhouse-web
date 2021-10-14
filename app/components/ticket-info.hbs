@@ -30,7 +30,7 @@
         Please select which ticket you wish to use:
       </p>
       {{#each @ticketPackage.tickets as |item|}}
-        <label class="d-block">
+        <label class="d-block mb-3">
           <input type="radio" onclick={{action this.chooseTicketAction item}} checked={{item.isClaimed}}>
           {{item.typeLabel}} earned in {{item.source_year}} and expires after {{mdy-format item.expiry_date}}
           {{#if item.isClaimed}}
@@ -38,7 +38,7 @@
           {{/if}}
         </label>
       {{/each}}
-      <label class="d-block">
+      <label class="d-block mb-4">
         <input type="radio" onclick={{action this.chooseTicketAction 'none'}} checked={{this.allTicketsBanked}}>
         Bank all tickets
         {{#if this.allTicketsBanked}}

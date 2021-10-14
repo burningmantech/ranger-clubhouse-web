@@ -11,7 +11,7 @@ module('helper:badge', function(hooks) {
   test('it renders type', async function(assert) {
     await render(hbs`{{badge "danger" "badge text" }}`);
 
-    assert.dom('span.badge.badge-danger').exists();
+    assert.dom('span.badge.bg-danger').exists();
     assert.dom('span.badge').hasText('badge text');
   });
 });

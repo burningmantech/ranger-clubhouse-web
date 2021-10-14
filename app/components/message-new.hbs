@@ -5,8 +5,8 @@
           @onSubmit={{@onSubmit}} as |f|>
     <Modal.body>
       <p>
-        <span class="text-danger"> Messages are NOT private (will be seen by HQ staff &amp; Tech Team), for official
-        Ranger business only, and archived each year.</span>
+        <b class="text-danger"> Messages are NOT private (will be seen by HQ staff &amp; Tech Team), for official
+        Ranger business only, and archived each year.</b>
       </p>
       <p>
         Burning Man and the Rangers have a zero-tolerance policy for behavior that is non-consensual,
@@ -14,40 +14,36 @@
       </p>
       <FormRow>
         {{#unless @isMe}}
-          <f.input @name="message_from"
-                   @label="From"
-                   @type="text"
-                   @size={{30}} @maxlength={120}
-            @autofocus={{not this.isFromMessage}}
-                   @gridClass="col-sm-12 col-md-6"/>
-            {{/unless}}
-        <div class="col-sm-12 col-md-6">
-          <f.input @name="recipient_callsign"
-                   @placeholder="Enter a callsign"
-                   @label="To"
-                   @type="search"
-                   @size={{30}}
-                   @onSearch={{this.searchCallsignAction}}
-                   @autofocus={{this.isFromMessage}}
-          />
-        </div>
+          <f.text @name="message_from"
+                  @label="From"
+                  @size={{30}}
+                  @maxlength={{60}}
+                  @autofocus={{not this.isFromMessage}} />
+        {{/unless}}
+        <f.search @name="recipient_callsign"
+                 @placeholder="Enter a callsign"
+                 @label="To"
+                 @size={{30}}
+                 @maxlength={{60}}
+                 @onSearch={{this.searchCallsignAction}}
+                 @autofocus={{this.isFromMessage}}/>
       </FormRow>
       <FormRow>
-        <f.input @name="subject"
-                 @label="Subject"
-                 @size={{80}}
-                 @maxlength={{80}} />
+        <f.text @name="subject"
+                @label="Subject"
+                @size={{80}}
+                @maxlength={{80}} />
       </FormRow>
       <FormRow>
-        <f.input @name="body" @label="The message (be civil, courteous, polite, & professional)"
-                 @type="textarea"
-                 @rows={{4}} @cols={{80}}
-                 @gridClass="col-auto"/>
+        <f.textarea @name="body"
+                   @label="The message (be civil, courteous, polite, & professional)"
+                   @rows={{4}}
+                   @cols={{80}} />
       </FormRow>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
       <f.submit @label="Send" @disabled={{@isSubmitting}} />
-      <UiCancelButton  @disabled={{@isSubmitting}} @onClick={{@onCancel}} />
+      <UiCancelButton @disabled={{@isSubmitting}} @onClick={{@onCancel}} />
       {{#if @isSubmitting}}
         <LoadingIndicator @text="Sending Message"/>
       {{/if}}

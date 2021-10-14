@@ -1,8 +1,13 @@
-<ModalDialog @title="Edit Roles" @onEscape={{@onCancel}} as  |Modal|>
+<ModalDialog @title="Edit Roles" @onEscape={{@onCancel}} as |Modal|>
   <ChForm @formId="roles" @formFor={{this.roleForm}} @onSubmit={{this.save}} as |f|>
     <Modal.body>
       <FormRow>
-        <f.input @name="roleIds" @type="checkboxGroup" @options={{this.roleOptions}}/>
+        <div class="col-auto">
+          <f.checkboxGroup
+            @name="roleIds"
+            @options={{this.roleOptions}}
+          />
+        </div>
       </FormRow>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>

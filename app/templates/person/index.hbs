@@ -107,7 +107,10 @@
           The note will automatically timestamped when saved or updated.
         </p>
         <FormRow>
-          <f.input @name="message" @type="textarea" @label="Enter the note to be shown:" @cols={{80}} @rows={{6}}/>
+          <f.textarea @name="message"
+                      @label="Enter the note to be shown:"
+                      @cols={{80}}
+                      @rows={{6}}/>
         </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>

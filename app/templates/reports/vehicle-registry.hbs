@@ -149,28 +149,31 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
           <fieldset class="mt-2">
             <legend>Vehicle Record Type &amp; Assignment</legend>
             <FormRow>
-              <div class="col-auto">
-                <FormLabel>Type</FormLabel><br>
-                <f.input @name="type" @type="radioGroup" @options={{this.typeOptions}} @inlineCheckbox={{true}} />
+              <FormLabel @auto={{true}}>Type</FormLabel>
+              <div class="col-auto mt-2">
+                <f.radioGroup @name="type"
+                              @options={{this.typeOptions}}
+                              @inline={{true}}/>
               </div>
-              <f.input @name="event_year"
-                       @label="Event Year"
-                       @type="text"
-                       @size={{4}}
-                       @fieldSize="sm"/>
+              <f.text @name="event_year"
+                      @label="Event Year"
+                      @size={{4}}
+                      @fieldSize="sm"
+                      @inline={{true}}
+              />
               {{#if (eq f.model.type "personal")}}
-                <f.input @name="callsign"
-                         @label="Personal Vehicle Owner"
-                         @type="search"
-                         @controlClass="form-control form-control-sm autocomplete-input"
-                         @onSearch={{this.searchCallsignAction}}
+                <f.search @name="callsign"
+                          @label="Personal Vehicle Owner"
+                          @controlClass="form-control form-control-sm autocomplete-input"
+                          @onSearch={{this.searchCallsignAction}}
+                          @inline={{true}}
                 />
               {{else}}
-                <f.input
+                <f.text
                   @name="team_assignment"
                   @label="Team Assignment"
-                  @type="text"
                   @size={{10}}
+                  @inline={{true}}
                   @fieldSize="sm"/>
               {{/if}}
             </FormRow>
@@ -178,131 +181,113 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
           <fieldset>
             <legend>Vehicle Description &amp; Licensing</legend>
             <FormRow>
-              <f.input @name="vehicle_class"
-                       @label="Class"
-                       @type="select"
-                       @options={{this.vehicleClassOptions}}
-                       @fieldSize="sm"/>
-              <f.input @name="vehicle_year"
-                       @label="Year"
-                       @type="text"
-                       @size={{4}}
-                       @maxlength={{4}}
-                       @fieldSize="sm"/>
-              <f.input @name="vehicle_make"
-                       @label="Make"
-                       @type="text"
-                       @size={{15}}
-                       @fieldSize="sm"
-                       @hint="e.g., Ford, GMC, Toyota, etc."/>
-              <f.input @name="vehicle_model" @label="Model"
-                       @hint="e.g., F-350, Tacoma, etc."
-                       @type="text"
-                       @size={{15}}
-                       @fieldSize="sm"/>
-              <f.input @name="vehicle_color"
-                       @label="Color"
-                       @type="text"
-                       @size={{15}}
-                       @fieldSize="sm"/>
+              <f.select @name="vehicle_class"
+                        @label="Class"
+                        @options={{this.vehicleClassOptions}}
+                        @fieldSize="sm"/>
             </FormRow>
             <FormRow>
-              <f.input @name="rental_number"
-                       @label="Rental #"
-                       @type="text"
-                       @size={{5}}
-                       @fieldSize="sm"
-                       @disabled={{eq f.model.type "personal"}}
+              <f.text @name="vehicle_year"
+                      @label="Year"
+                      @size={{4}}
+                      @maxlength={{4}}
+                      @fieldSize="sm"/>
+              <f.text @name="vehicle_make"
+                      @label="Make"
+                      @size={{15}}
+                      @fieldSize="sm"
+                      @hint="e.g., Ford, GMC, Toyota, etc."/>
+              <f.text @name="vehicle_model" @label="Model"
+                      @hint="e.g., F-350, Tacoma, etc."
+                      @size={{15}}
+                      @fieldSize="sm"/>
+              <f.text @name="vehicle_color"
+                      @label="Color"
+                      @size={{15}}
+                      @fieldSize="sm"/>
+            </FormRow>
+            <FormRow>
+              <f.text @name="rental_number"
+                      @label="Rental #"
+                      @fieldSize="sm"
+                      @disabled={{eq f.model.type "personal"}}
               />
-              <f.input @name="sticker_number"
-                       @label="Driving Sticker #"
-                       @type="text"
-                       @size={{10}}
-                       @fieldSize="sm"
+              <f.text @name="sticker_number"
+                      @label="Driving Sticker #"
+                      @size={{10}}
+                      @fieldSize="sm"
               />
-              <f.input @name="license_state"
-                       @label="License State/Province"
-                       @type="select"
-                       @options={{this.stateOptions}}
+              <f.select @name="license_state"
+                        @label="License State/Province"
+                        @options={{this.stateOptions}}
+                        @fieldSize="sm"
               />
-              <f.input @name="license_number"
-                       @label="License Plate #"
-                       @type="text"
-                       @size={{10}}
-                       @fieldSize="sm"/>
+              <f.text @name="license_number"
+                      @label="License Plate #"
+                      @size={{10}}
+                      @fieldSize="sm"/>
             </FormRow>
           </fieldset>
           <fieldset>
             <legend>Personal Vehicle Use Items (Stickers &amp; Other Items)</legend>
             <FormRow>
-              <FormLabel @fixed={{true}}>Driving Sticker</FormLabel>
-              <div class="col-auto mt-1">
-                <f.input @name="driving_sticker"
-                         @type="radioGroup"
-                         @options={{this.drivingStickerOptions}}
-                         @inlineCheckbox={{true}}/>
-              </div>
+              <f.radioGroup @name="driving_sticker"
+                            @label="Driving Sticker"
+                            @fixedLabel={{true}}
+                            @options={{this.drivingStickerOptions}}
+                            @inline={{true}}/>
             </FormRow>
             <FormRow>
-              <FormLabel @fixed={{true}}>Ranger Logo</FormLabel>
-              <div class="col-auto mt-1">
-                <f.input @name="ranger_logo"
-                         @type="radioGroup"
-                         @options={{this.rangerLogoOptions}}
-                         @inlineCheckbox={{true}}/>
-              </div>
+              <f.radioGroup @name="ranger_logo"
+                            @label="Ranger Logo"
+                            @fixedLabel={{true}}
+                            @options={{this.rangerLogoOptions}}
+                            @inline={{true}}/>
             </FormRow>
             <FormRow>
-              <FormLabel @fixed={{true}}>Fuel Chit</FormLabel>
-              <div class="col-auto mt-1">
-                <f.input @name="fuel_chit"
-                         @type="radioGroup"
-                         @options={{this.fuelChitOptions}}
-                         @inlineCheckbox={{true}}/>
-              </div>
+              <f.radioGroup @name="fuel_chit"
+                            @label="Fuel Chit"
+                            @fixedLabel={{true}}
+                            @options={{this.fuelChitOptions}}
+                            @inline={{true}}/>
             </FormRow>
             <FormRow>
-              <FormLabel @fixed={{true}}>Amber Light</FormLabel>
-              <div class="col-auto mt-1">
-                <f.input @name="amber_light"
-                         @type="radioGroup"
-                         @options={{this.amberLightOptions}}
-                         @inlineCheckbox={{true}}/>
-              </div>
+              <f.radioGroup @name="amber_light"
+                            @label="Amber Light"
+                            @fixedLabel={{true}}
+                            @options={{this.amberLightOptions}}
+                            @inline={{true}}/>
             </FormRow>
           </fieldset>
           <fieldset class="mt-2">
             <legend>Notes &amp; Status</legend>
             <FormRow>
-              <f.input @name="notes"
-                       @label="Private Notes"
-                       @type="textarea"
-                       @rows={{2}}
-                       @cols={{80}}
+              <f.textarea @name="notes"
+                          @label="Private Notes"
+                          @rows={{2}}
+                          @cols={{80}}
               />
             </FormRow>
             <FormRow>
-              <f.input @name="request_comment"
-                       @label="Comment from person (only used for personal vehicles)"
-                       @type="textarea"
-                       @rows={{2}}
-                       @cols={{80}}
-
-                       @disabled={{not-eq f.model.type "personal"}}/>
+              <f.textarea @name="request_comment"
+                          @label="Comment from person (only used for personal vehicles)"
+                          @rows={{2}}
+                          @cols={{80}}
+                          @disabled={{not-eq f.model.type "personal"}}/>
             </FormRow>
             <FormRow>
-              <f.input @name="response"
-                       @label="Response to person (only used for personal vehicles)"
-                       @type="textarea"
-                       @rows={{2}}
-                       @cols={{80}}
-                       @disabled={{not-eq f.model.type "personal"}}
-              />
+              <f.textarea @name="response"
+                          @label="Response to person (only used for personal vehicles)"
+                          @rows={{2}}
+                          @cols={{80}}
+                          @disabled={{not-eq f.model.type "personal"}}/>
             </FormRow>
             <FormRow>
               <FormLabel @auto={{true}}>Request Status</FormLabel>
               <div class="col-auto mt-1">
-                <f.input @name="status" @type="radioGroup" @options={{this.statusOptions}} @inlineCheckbox={{true}} />
+                <f.radioGroup @name="status"
+                              @options={{this.statusOptions}}
+                              @inline={{true}} />
               </div>
             </FormRow>
           </fieldset>
@@ -362,8 +347,10 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
 
           {{#if (and this.entry.isApproved (not-eq this.entry.driving_sticker "none"))}}
             <FormRow>
-              <f.input @name="sticker_number" @label="Enter Driving Sticker #"
-                       @type="text" @size={{10}} @autofocus={{true}}/>
+              <f.text @name="sticker_number"
+                      @label="Enter Driving Sticker #"
+                      @size={{10}}
+                      @autofocus={{true}}/>
             </FormRow>
           {{/if}}
         {{/if}}
@@ -372,13 +359,13 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
         <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelAction}} />
+        {{#if this.entry.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
         {{#if (and (has-role "admin") (not this.entry.isNew))}}
           <UiButton @type="danger" @class="ms-auto" @onClick={{fn this.deleteAction this.entry}}>
             {{fa-icon "trash"}} Delete
           </UiButton>
-        {{/if}}
-        {{#if this.entry.isSaving}}
-          <LoadingIndicator/>
         {{/if}}
       </Modal.footer>
     </ChForm>

@@ -4,24 +4,33 @@
           @onSubmit={{this.saveSurveyAction}} as |f|>
     <Modal.body>
       <FormRow>
-        <f.input @name="type" @type="select" @label="Type" @options={{this.typeOptions}}/>
+        <f.select @name="type"
+                  @label="Type"
+                  @options={{this.typeOptions}}/>
+        <f.select @name="position_id"
+                  @label="Position"
+                  @options={{this.positionOptions}}/>
       </FormRow>
       <FormRow>
-        <f.input @name="position_id" @type="select" @label="Position" @options={{this.positionOptions}}/>
+        <f.text @name="title"
+                @label="Title"
+                @size={{80}}
+                @maxlength={{190}}/>
       </FormRow>
       <FormRow>
-        <f.input @name="title" @type="text" @label="Title" @size={{80}} @maxlength={{190}}/>
+        <f.textarea @name="prologue"
+                    @label="Prologue text to show at the very beginning of the survey (HTML allowed):"
+                    @cols={{80}}
+                    @rows={{4}}/>
       </FormRow>
       <FormRow>
-        <f.input @name="prologue" @label="Prologue text to show at the very beginning of the survey (HTML allowed):"
-                 @type="textarea" @cols={{80}} @rows={{4}}/>
-      </FormRow>
-      <FormRow>
-        <f.input @name="epilogue" @label="Epilogue text to shown at the very end of the survey (HTML allowed):"
-                 @type="textarea" @cols={{80}} @rows={{4}}/>
+        <f.textarea @name="epilogue"
+                    @label="Epilogue text to shown at the very end of the survey (HTML allowed):"
+                    @cols={{80}}
+                    @rows={{4}}/>
       </FormRow>
     </Modal.body>
-    <Modal.footer @noAlign=true>
+    <Modal.footer @noAlign={{true}}>
       <f.submit @label={{if @survey.isNew "Create" "Save"}} @disabled={{@survey.isSaving}} />
       <UiCancelButton @disabled={{@survey.isSaving}} @onClick={{this.cancelSurveyAction}} />
       {{#if @survey.isSaving}}

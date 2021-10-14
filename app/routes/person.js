@@ -25,7 +25,7 @@ export default class PersonRoute extends ClubhouseRoute {
 
   @action
   error(response) {
-    if (response instanceof NotFoundError) {
+    if (response instanceof NotFoundError || +response.status === 404) {
       this.toast.error('The person record was not found.');
       this.router.transitionTo('me');
       return false;
@@ -36,10 +36,11 @@ export default class PersonRoute extends ClubhouseRoute {
   }
 
   titleToken(model) {
+    console.log('THIS ', this, this.router.currentRouteName);
     // Includes the full route path like ApplicationRoute, but replace "Person" with their callsign.
     return this.router.currentRouteName
       .split('.')
-      .filter((x) => x !== 'index')
+      .filter((x) => (x !== 'index' && x !== 'loading'))
       .map((x) => x === 'person' ? model.callsign : humanize([x]))
       .reverse()
       .join(' | ');

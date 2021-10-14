@@ -1,0 +1,19 @@
+<ChForm::WrapBlock @wrapClass={{this.wrapClass}}>
+  {{#if @label~}}
+    <label class={{this.labelClass}} for={{this.domId}}>{{@label}}</label>
+  {{~/if~}}
+  <ChForm::WrapBlock @wrapClass={{this.inputWrapClass}}>
+    <DatetimePicker @autofocus={{@autofocus}}
+                    @classNames="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
+                    @size={{@size}}
+                    @maxlength={{@maxlength}}
+                    @onChange={{this.update}}
+                    @placeholder={{@placeholder}}
+                    @value={{this.modelValue}}
+                    @startDate={{@startDate}} />
+    {{~#if @hint~}}
+      <ChForm::Hint @hint={{@hint}} />
+    {{~/if~}}
+    <ChForm::ErrorMessages @errorMessages={{this.errorMessages}} />
+  </ChForm::WrapBlock>
+</ChForm::WrapBlock>

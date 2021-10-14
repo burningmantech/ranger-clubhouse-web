@@ -69,41 +69,62 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
             @onSubmit={{action this.saveAsset}} as |f|>
       <Modal.body>
         <FormRow>
-          <f.input @name="description" @label="Description/Type" @type="select"
-                   @options={{this.assetDescriptionOptions}}
-                   @inline={{true}}/>
-          <f.input @name="barcode" @label="Barcode" @size={{25}} @inline={{true}}/>
-          <f.input @name="temp_id" @label="Temp ID (aka secondary description)" @type="text" @size={{25}}
-                   @inline={{true}}/>
-          <f.input @name="notes" @type="textarea" @label="Notes" @rows={{2}} @cols={{80}}/>
+          <f.select @name="description"
+                    @label="Description/Type"
+                    @options={{this.assetDescriptionOptions}}
+          />
+          <f.text @name="barcode"
+                  @label="Barcode"
+                  @size={{25}} />
+          <f.text @name="temp_id"
+                  @label="Temp ID (aka secondary description)"
+                  @size={{25}}
+          />
+        </FormRow>
+        <FormRow>
+          <f.textarea @name="notes"
+                      @label="Notes"
+                      @rows={{2}}
+                      @cols={{80}}/>
         </FormRow>
         <FormRow>
           <FormLabel @auto={{true}}>Assignment</FormLabel>
           <div class="col-auto mt-2">
-            <f.input @name="perm_assign"
-                     @type="radioGroup"
-                     @options={{this.permanentOptions}}
-                     @inlineCheckbox={{true}}/>
+            <f.radioGroup @name="perm_assign"
+                          @options={{this.permanentOptions}}
+                          @inline={{true}}/>
           </div>
         </FormRow>
 
         {{#if this.entry.isNew}}
           <FormRow>
             <FormLabel>Copies (including the first) - Leave blank if only creating one</FormLabel>
-            <f.input @name="copies" @type="text" @size={{4}} @maxlength={{4}} @inline={{true}}/>
+            <f.text @name="copies"
+                    @size={{4}}
+                    @maxlength={{4}}
+            />
           </FormRow>
         {{/if}}
         <fieldset>
-          <legend>Vehichle Information</legend>
+          <legend>Vehicle Information</legend>
           <FormRow>
-            <f.input @name="category"
-                     @type="select"
-                     @label="Category"
-                     @options={{this.categoryOptions}}
-                     @inline={{true}}/>
-            <f.input @name="subtype" @type="text" @label="Type" @size={{25}} @inline={{true}}/>
-            <f.input @name="color" @type="text" @label="Color" @size={{25}} @inline={{true}}/>
-            <f.input @name="style" @type="text" @label="Style" @size={{25}} @inline={{true}}/>
+            <f.select @name="category"
+                      @label="Category"
+                      @options={{this.categoryOptions}}
+            />
+          </FormRow>
+          <FormRow>
+            <f.text @name="subtype"
+                    @label="Type"
+                    @size={{25}}/>
+            <f.text @name="color"
+                    @label="Color"
+                    @size={{25}}
+            />
+            <f.text @name="style"
+                    @label="Style"
+                    @size={{25}}
+            />
           </FormRow>
         </fieldset>
       </Modal.body>

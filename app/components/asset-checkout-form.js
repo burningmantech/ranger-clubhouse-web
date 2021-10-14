@@ -16,7 +16,7 @@ export default class AssetCheckoutFormComponent extends Component {
 
   @tracked assetForm = EmberObject.create({ });
 
-  @tracked barcodeNotFound = false;
+  @tracked barcodeNotFound = null;
   @tracked barcodeCheckedOut = null;
   @tracked isSubmitting = false;
   @tracked showHistory = false;
@@ -60,6 +60,7 @@ export default class AssetCheckoutFormComponent extends Component {
 
         case 'checked-out':
           this.barcodeCheckedOut =  result;
+          this.barcodeCheckedOut.barcode = barcode;
           break;
       }
     }).catch((response) => this.house.handleErrorResponse(response))

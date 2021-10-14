@@ -24,40 +24,44 @@
 {{#each this.orderedGroups as |group idx|}}
   <table class="table table-sm table-striped table-hover">
     <caption>
-      <div class="d-flex">
-        <div>
-          ID #{{group.id}} {{group.title}}
-          {{#if (eq group.type "trainer")}}
-            <br><i>(Is trainer group)</i>
-          {{else if group.report_title}}
-            <br>(In separate report as: "{{group.report_title}}")
-          {{/if}}
-        </div>
-        <div class="ml-2 mr-auto">
+      <div class="d-inline-block">
+        ID #{{group.id}} {{group.title}}
+        {{#if (eq group.type "trainer")}}
+          <br><i>(Is trainer group)</i>
+        {{else if group.report_title}}
+          <br>(In separate report as: "{{group.report_title}}")
+        {{/if}}
+      </div>
+      <span class="ml-2">
           <UiButton @size="sm" @onClick={{fn this.newQuestionAction group}} @disabled={{group.isSaving}}>
             {{fa-icon "plus"}} Add Question
           </UiButton>
-          <UiButton @type="secondary" @size="sm" @onClick={{fn this.editGroupAction group}}
+          <UiButton @type="secondary"
+                    @size="sm"
+                    @onClick={{fn this.editGroupAction group}}
                     @disabled={{group.isSaving}}>
             {{fa-icon "edit"}} Edit Group
           </UiButton>
-        </div>
-        <div class="ml-auto">
+        </span>
+      <span class="ml-4">
           {{#if (not-eq idx 0)}}
-            <UiButton @type="secondary" @size="sm" @onClick={{fn this.moveGroupAction group -1}}
+            <UiButton @type="secondary"
+                      @size="sm"
+                      @onClick={{fn this.moveGroupAction group -1}}
                       @disabled={{group.isSaving}}>
               {{fa-icon "arrow-up"}} Move Group Up
             </UiButton>
           {{/if}}
-          {{#if (not-eq group this.orderedGroups.lastObject)}}
-            <UiButton @type="secondary" @size="sm" @onClick={{fn this.moveGroupAction group 1}}
-                      @disabled={{group.isSaving}}>
+        {{#if (not-eq group this.orderedGroups.lastObject)}}
+          <UiButton @type="secondary"
+                    @size="sm"
+                    @onClick={{fn this.moveGroupAction group 1}}
+                    @disabled={{group.isSaving}}>
               {{fa-icon "arrow-down"}} Move Group Down
             </UiButton>
-          {{/if}}
+        {{/if}}
 
-        </div>
-      </div>
+        </span>
     </caption>
     <thead>
     <tr>
@@ -116,32 +120,29 @@
     <ChForm @formId="survey-group" @formFor={{this.groupEntry}} @onSubmit={{this.saveGroupAction}} as |f|>
       <Modal.body>
         <FormRow>
-          <f.input @name="type"
-                   @label="What group type is this?"
-                   @type="radioGroup"
-                   @options={{this.groupTypeOptions}}
-                   @wrapClass="col-12"
+          <f.radioGroup @name="type"
+                        @label="What group type is this?"
+                        @options={{this.groupTypeOptions}}
           />
         </FormRow>
         <FormRow>
-          <f.input @name="report_title"
-                   @label="Report Title (used for separate reporting)"
-                   @type="text"
-                   @size={{40}}
-                   @disabled={{and (not-eq f.model.type
-                                     "separate-slot") (not-eq f.model.type "separate-summary")}}
+          <f.text @name="report_title"
+                  @label="Report Title (used for separate reporting)"
+                  @size={{40}}
+                  @disabled={{and (not-eq f.model.type "separate-slot") (not-eq f.model.type "separate-summary")}}
           />
         </FormRow>
         <FormRow>
-          <f.input @name="title" @type="text" @label="Group Title (shown to user)" @size={{80}}
-                   @maxlength={{170}}/>
+          <f.text @name="title"
+                  @label="Group Title (shown to user)"
+                  @size={{80}}
+                  @maxlength={{170}}/>
         </FormRow>
         <FormRow>
-          <f.input @name="description"
-                   @type="textarea"
-                   @label="Group Description (shown to user)"
-                   @rows={{4}}
-                   @cols={{80}}/>
+          <f.textarea @name="description"
+                      @label="Group Description (shown to user)"
+                      @rows={{4}}
+                      @cols={{80}}/>
         </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
@@ -150,7 +151,7 @@
         {{#if this.groupEntry.isSaving}}
           <LoadingIndicator/>
         {{/if}}
-        <div class="ml-auto">
+        <div class="ms-auto">
           <UiButton @type="light-red" @onClick={{this.deleteGroupAction}} @disabled={{this.groupEntry.isDeleting}}>
             {{fa-icon "trash"}} Delete Group
           </UiButton>
@@ -166,33 +167,36 @@
     <ChForm @formId="survey-group" @formFor={{this.questionEntry}} @onSubmit={{this.saveQuestionAction}} as |f|>
       <Modal.body>
         <FormRow>
-          <f.input @name="type" @type="select" @label="Question Type" @options={{this.typeOptions}}/>
+          <f.select @name="type"
+                    @label="Question Type"
+                    @options={{this.typeOptions}}/>
         </FormRow>
         {{#if (eq f.model.type "rating")}}
           <FormRow>
             <div class="col-auto">
-              <f.input @name="summarize_rating"
-                       @type="checkbox"
-                       @label="Summarize this rating as a table with each row as a training session"/>
+              <f.checkbox @name="summarize_rating"
+                          @label="Summarize this rating as a table with each row as a training session"/>
             </div>
           </FormRow>
         {{/if}}
         <FormRow>
-          <f.input @name="description" @type="textarea" @label="Question" @rows={{4}} @cols={{80}}/>
+          <f.textarea @name="description"
+                      @label="Question"
+                      @rows={{4}}
+                      @cols={{80}}/>
         </FormRow>
         <FormRow>
           <div class="col-auto">
-            <f.input @name="is_required" @label="Question requires an answer" @type="checkbox"
-                     @inlineCheckbox={{true}}/>
+            <f.checkbox @name="is_required"
+                        @label="Question requires an answer"/>
           </div>
         </FormRow>
         <FormRow>
-          <f.input @name="options"
-                   @type="textarea"
-                   @label="Options (one per line)"
-                   @rows={{4}}
-                   @cols={{80}}
-                   @disabled={{not-eq f.model.type "options"}} />
+          <f.textarea @name="options"
+                      @label="Options (one per line)"
+                      @rows={{4}}
+                      @cols={{80}}
+                      @disabled={{not-eq f.model.type "options"}} />
         </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>

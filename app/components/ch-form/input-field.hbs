@@ -1,0 +1,32 @@
+<ChForm::WrapBlock @wrapClass={{this.wrapClass}}>
+  {{#if @label~}}
+    <label class={{this.labelClass}} for={{this.domId}}>{{@label}}</label>
+  {{~/if~}}
+  <ChForm::WrapBlock @wrapClass={{this.inputWrapClass}}>
+    <input type={{this.type}}
+           value={{this.modelValue}}
+           name={{@name}}
+           id={{this.domId}}
+           class="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
+           placeholder={{@placeholder}}
+           disabled={{@disabled}}
+           autofocus={{@autofocus}}
+           oninput={{action this.update value="target.value"}}
+           maxlength={{@maxlength}}
+           size={{@size}}
+           autocomplete={{@autocomplete}}
+           onfocus={{@onFocus}}
+           inputmode={{@inputmode}}
+    >
+    {{#if (has-block)}}
+      {{yield}}
+    {{/if}}
+    {{~#if @hint~}}
+      <ChForm::Hint @hint={{@hint}} />
+    {{~/if~}}
+    {{#if @showCharCount}}
+      <ChForm::CharCount @count={{this.charCount}} @length={{@maxlength}} />
+    {{/if}}
+    <ChForm::ErrorMessages @errorMessages={{this.errorMessages}} />
+  </ChForm::WrapBlock>
+</ChForm::WrapBlock>

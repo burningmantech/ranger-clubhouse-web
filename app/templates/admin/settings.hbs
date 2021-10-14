@@ -7,13 +7,13 @@
 </p>
 
 <FormRow>
-    <FormLabel>Filter name:</FormLabel>
-    <div class="col-auto">
-        <Input @type="text" @value={{this.filterByName}} size="20" class="form-control"/>
-    </div>
-    <div class="col-auto">
-        <UiButton @onClick={{this.clearFilter}}>Clear</UiButton>
-    </div>
+  <FormLabel>Filter name:</FormLabel>
+  <div class="col-auto">
+    <Input @type="text" @value={{this.filterByName}} size="20" class="form-control"/>
+  </div>
+  <div class="col-auto">
+    <UiButton @onClick={{this.clearFilter}}>Clear</UiButton>
+  </div>
 </FormRow>
 
 Showing {{this.viewSettings.length}} of {{this.settings.length}}.
@@ -71,18 +71,22 @@ Showing {{this.viewSettings.length}} of {{this.settings.length}}.
         {{/if}}
         <FormRow>
           {{#if (eq this.editSetting.type "bool")}}
-            <div class="col-auto">
-              <f.input @name="value" @type="radioGroup" @options={{this.booleanOptions}} @inlineCheckbox={{true}}/>
-            </div>
+            <f.radioGroup @name="value"
+                          @options={{this.booleanOptions}}
+                          @inline={{true}}/>
           {{else if (eq this.editSetting.type "integer")}}
-            <div class="col-auto">
-              <f.input @name="value" @label="Integer value" @type="text" @size={{10}}/>
-            </div>
+            <f.text @name="value"
+                    @label="Integer value"
+                    @size={{10}}/>
           {{else if this.editSetting.options}}
-            <f.input @name="value" @label="Option value" @type="select" @options={{this.editOptions}} />
+            <f.select @name="value"
+                      @label="Option value"
+                      @options={{this.editOptions}} />
           {{else}}
-            <f.input @name="value" @label={{concat "Enter a " this.editSetting.type " value"}}
-                     @type="textarea" @rows={{10}} @cols={{80}}/>
+            <f.textarea @name="value"
+                        @label="Enter a {{this.editSetting.type}} value:"
+                        @rows={{10}}
+                        @cols={{80}}/>
           {{/if}}
         </FormRow>
       </Modal.body>

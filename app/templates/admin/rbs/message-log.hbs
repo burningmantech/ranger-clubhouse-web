@@ -6,8 +6,17 @@
 <p>
   <ChForm @formId="search" @formFor={{this.searchForm}} @changeSet={{false}} @onSubmit={{this.submitAction}} as |f|>
     <FormRow>
-      <f.input @name="direction" @label="Message Direction" @type="select" @options={{this.directionOptions}}/>
-      <f.input @name="status" @label="Status" @cols={{4}} @type="checkboxGroup" @options={{this.statusOptions}} />
+      <f.select @name="direction"
+                @label="Message Direction"
+                @options={{this.directionOptions}}
+      />
+    </FormRow>
+    <FormRow>
+      <f.checkboxGroup @name="status"
+                       @label="Statuses"
+                       @cols={{4}}
+                       @options={{this.statusOptions}}
+      />
     </FormRow>
     <f.submit @label="Search"/>
   </ChForm>

@@ -1,18 +1,21 @@
 <ModalDialog @onEscape={{@closeAction}} as |Modal|>
   <ChForm @formId="note-update" @formFor={{@note}} @onSubmit={{this.updateNote}} as |f|>
-      <Modal.body>
-          <FormRow><p>
-              This form is only intended to correct spelling mistakes and/or clarify the note's message.
-              If you have additional information from another day, <b>ADD A NEW NOTE.</b>
-          </p>
-              <p>
-                  Note created on {{shift-format @note.created_at year=true}}
-              </p></FormRow>
-          <FormRow>
-              <f.input @type="textarea" @name="note" @label="Edit Your Note" @rows={{4}} @cols={{80}}
-                       @autofocus={{true}}/>
-          </FormRow>
-      </Modal.body>
+    <Modal.body>
+      <p>
+        This form is only intended to correct spelling mistakes and/or clarify the note's message.
+        If you have additional information from another day, <b>ADD A NEW NOTE.</b>
+      </p>
+      <p>
+        Note created on {{shift-format @note.created_at year=true}}
+      </p>
+      <FormRow>
+        <f.textarea @name="note"
+                    @label="Edit Your Note"
+                    @rows={{4}}
+                    @cols={{80}}
+                    @autofocus={{true}}/>
+      </FormRow>
+    </Modal.body>
     <Modal.footer @noAlign={{true}}>
       <f.submit/>
       <UiCancelButton @onClick={{@closeAction}} />

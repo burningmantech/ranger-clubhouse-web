@@ -130,9 +130,9 @@ export default class AutocompleteInputComponent extends Component {
   keyUpEvent(event) {
     const key = event.key;
     const oldSelection = this.selectionIdx;
+
     switch (key) {
       case 'ArrowUp':
-        event.preventDefault();
         if (this.selectionIdx === -1) {
           // No selection yet.
           this.selectionIdx = 0;
@@ -142,7 +142,6 @@ export default class AutocompleteInputComponent extends Component {
         break;
 
       case 'ArrowDown':
-        event.preventDefault();
         if (this.selectionIdx === -1) {
           // No selection yet.
           this.selectionIdx = 0;
@@ -152,7 +151,6 @@ export default class AutocompleteInputComponent extends Component {
         break;
 
       case 'Enter':
-        event.preventDefault();
         if (this.isSearching) {
           this.enterPressed = true;
         } else if (this.options) {
@@ -163,13 +161,18 @@ export default class AutocompleteInputComponent extends Component {
           }
         }
         break;
+
       case 'Escape':
-        event.preventDefault();
         if (this.isFocused) {
           this.inputElement.blur();
         }
         break;
+
+      default:
+        return true;
     }
+
+    event.stopPropagation();
 
     // Scroll selected item into view
     if (oldSelection != this.selectionIdx && this.resultsElement) {
@@ -182,6 +185,8 @@ export default class AutocompleteInputComponent extends Component {
         });
       }
     }
+
+    return false;
   }
 
   /**

@@ -4,24 +4,33 @@
             @formFor={{this.editForm}}
             @changeSet={{false}}
             @onSubmit={{this.submitAction}}
-            @validator={{this.bulkEditValidations}}
-            @onCancel={{@onClose}} as |f|>
+            @validator={{this.bulkEditValidations}} as |f|>
       <Modal.body>
         <fieldset>
           <legend>Bulk edit columns (leave field blank to not update)</legend>
           <FormRow>
-            <f.input @name="positionId" @type="select" @options={{this.positionOptions}} @label="Position"/>
-            <f.input @name="description"
-                     @label="Description"
-                     @type="text"
-                     @size={{40}}
-                     @maxlength={{40}}
-                     @hint="{{if f.model.description f.model.description.length "0"}} of 40 characters."/>
-            <f.input @name="max" @label="Max Signups" @type="text"/>
+            <f.select @name="positionId"
+                      @label="Position"
+                      @options={{this.positionOptions}}
+            />
+            <f.text @name="description"
+                    @label="Description"
+                    @size={{40}}
+                    @maxlength={{40}}
+                    @showCharCount={{true}}
+            />
+            <f.text @name="max"
+                    @label="Max Signups"
+                    @size={{4}} />
           </FormRow>
           <FormRow>
-            <f.input @name="url" @label="Information" @type="textarea" @rows={{3}} @cols={{80}} @maxlength={{512}}
-                     @hint="{{if f.model.url f.model.url.length "0"}} of 512 characters."/>
+            <f.textarea @name="url"
+                        @label="Information"
+                        @rows={{3}}
+                        @cols={{80}}
+                        @maxlength={{512}}
+                        @showCharCount={{true}}
+            />
           </FormRow>
           <f.submit @label="Update"/>
           <UiCancelButton @type="secondary" @onClick={{@onClose}}/>
@@ -48,7 +57,7 @@
             {{#each @position.slots key="id" as |slot|}}
               <tr id="slot-{{slot.id}}">
                 <td>
-                  <f.input @type="checkbox" @name="slot_{{slot.id}}" @inlineCheckbox={{true}} />
+                  <f.checkbox @name="slot_{{slot.id}}" @inline={{true}} />
                 </td>
                 <td>{{slot.id}}</td>
                 <td>{{shift-format slot.begins}}</td>

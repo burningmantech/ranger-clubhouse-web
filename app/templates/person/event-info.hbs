@@ -56,8 +56,8 @@
           {{/if}}
           <div class="mt-2">
             {{#if (has-role "admin")}}
-              <f.input @name="asset_authorized" @label="Signed Radio Checkout Agreement" @type="checkbox"
-                       @inlineCheckbox={{true}}  />
+              <f.checkbox @name="asset_authorized"
+                          @label="Signed Radio Checkout Agreement"/>
             {{else}}
               {{#if this.personEvent.asset_authorized}}
                 <b class="text-success"> {{fa-icon "check"}} Signed</b>
@@ -82,15 +82,12 @@
             May not drive gators, cars, or trucks on playa for Ranger business.
           {{else}}
             {{#if (has-role "admin" "vc")}}
-              <f.input @name="org_vehicle_insurance"
-                       @label="Has Motor Vehicle Record (MVR)"
-                       @type="checkbox"
-                       @inlineCheckbox={{true}} />
-              <br>
-              <f.input @name="signed_motorpool_agreement"
-                       @label="Signed Motorpool Policy Agreement"
-                       @type="checkbox"
-                       @inlineCheckbox={{true}} />
+              <f.checkbox @name="org_vehicle_insurance"
+                          @label="Has Motor Vehicle Record (MVR)"
+              />
+              <f.checkbox @name="signed_motorpool_agreement"
+                          @label="Signed Motorpool Policy Agreement"
+              />
             {{else}}
               {{#if this.personEvent.signed_motorpool_agreement}}
                 <b class="text-success"> {{fa-icon "check"}} Signed</b>
@@ -112,16 +109,12 @@
         <dt>{{this.year}} Personal Vehicle Use</dt>
         <dd>
           {{#if (has-role "admin")}}
-            <f.input @name="may_request_stickers"
-                     @label="Personal Vehicle Use Requests Allowed"
-                     @type="checkbox"
-                     @inlineCheckbox={{true}} />
-            <br>
+            <f.checkbox @name="may_request_stickers"
+                        @label="Personal Vehicle Use Requests Allowed"
+            />
 
-            <f.input @name="signed_personal_vehicle_agreement"
-                     @label="Signed Personal Vehicle Policy Agreement"
-                     @type="checkbox"
-                     @inlineCheckbox={{true}} />
+            <f.checkbox @name="signed_personal_vehicle_agreement"
+                        @label="Signed Personal Vehicle Policy Agreement"/>
           {{else}}
             {{#if this.personEvent.may_request_stickers}}
               <b class="text-success">{{fa-icon "check"}} Allowed</b>
@@ -144,7 +137,9 @@
     <:title>{{this.year}} Agreements</:title>
     <:body>
       {{#if (has-role "admin" "vc")}}
-        <f.input @name="sandman_affidavit" @label="Signed Sandman Affidavit" @type="checkbox" @inlineCheckbox={{true}} />
+        <f.checkbox @name="sandman_affidavit"
+                    @label="Signed Sandman Affidavit"
+        />
       {{else}}
         {{#if this.personEvent.sandman_affidavit}}
           <b class="text-success"> {{fa-icon "check"}} Signed</b>

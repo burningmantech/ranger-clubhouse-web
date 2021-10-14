@@ -90,30 +90,24 @@
           Timesheet Review page and submit a correction by clicking on 'Mark Entry Incorrect'.
         </p>
         <FormRow>
-          <f.input @name="position_id"
-                   @label="Which position was the shift for?"
-                   @type="select"
-                   @options={{this.positionOptions}}
-                   @inline={{true}}/>
+          <f.select @name="position_id"
+                    @label="Which position was the shift for?"
+                    @options={{this.positionOptions}} />
         </FormRow>
         <FormRow>
-          <f.input @name="on_duty" @label="What was the START date & time of the shift?"
-                   @type="datetime"
-                   @size={{15}}
-                   @inline={{true}}
-                   @startDate={{this.startDateForEntry}}/>
-          <f.input @name="off_duty"
-                   @label="What was the END date & time of the shift?"
-                   @type="datetime"
-                   @size={{15}}
-                   @inline={{true}}
-                   @startDate={{this.startDateForEntry}}/>
+          <f.datetime @name="on_duty"
+                      @label="What was the START date & time of the shift?"
+                      @size={{15}}
+                      @startDate={{this.startDateForEntry}}/>
+          <f.datetime @name="off_duty"
+                      @label="What was the END date & time of the shift?"
+                      @size={{15}}
+                      @startDate={{this.startDateForEntry}}/>
         </FormRow>
         <FormRow>
-          <f.input @name="partner"
-                   @label="Who was your partner (if any) for the shift?"
-                   @type="text"
-                   @size={{20}}/>
+          <f.text @name="partner"
+                  @label="Who was your partner (if any) for the shift?"
+                  @size={{20}}/>
         </FormRow>
         <p>
           <b>Give as much supporting details on why a shift should be added to your timesheet.</b><br>
@@ -135,12 +129,11 @@
             </div>
           </div>
         {{/if}}
-        <f.input @name="additional_notes"
-                 @label={{if this.entry.isRejected "Supply additional information for an appeal:"
-                             "Why is this new entry needed?"}}
-                 @type="textarea"
-                 @cols={{80}}
-                 @rows={{4}} />
+        <f.textarea @name="additional_notes"
+                    @label={{if this.entry.isRejected "Supply additional information for an appeal:"
+                                "Why is this new entry needed?"}}
+                    @cols={{80}}
+                    @rows={{4}} />
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if f.model.isNew "Submit New Request" "Update Request"}} @disabled={{this.isSubmitting}} />

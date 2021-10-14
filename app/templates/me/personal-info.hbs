@@ -1,72 +1,83 @@
 <h1>Personal Information For <span class="d-inline-block">{{this.person.callsign}}</span></h1>
 <BackToHome/>
 
-<ChForm @formId="person" @formFor={{this.person}} @autocomplete="on" @validator={{this.personInfoValidations}}
-        @onSubmit={{action this.onSubmit}} @onCancel={{action this.onCancel}} as |f|>
+<ChForm @formId="person"
+        @formFor={{this.person}}
+        @autocomplete="on"
+        @validator={{this.personInfoValidations}}
+        @onSubmit={{this.onSubmit}} as |f|>
   <UiSection>
     <:title>General Information</:title>
-      <:body>
-          <FormRow>
-              <f.input @name="first_name" @label="First Name" @maxlength={{25}} @grid="col-sm-4 col-md-4 col-lg-2"/>
-              <f.input @name="mi" @label="M.I." @maxlength={{10}} @grid="col-sm-1"/>
-              <f.input @name="last_name" @label="Last Name" @maxlength={{25}} @grid="col-sm-12 col-md-6 col-lg-2"/>
-          </FormRow>
-          <FormRow>
-              <f.input @name="gender"
-                       @type="text"
-                       @label="Gender"
-                       @hint="Examples: female, male, non-binary, gender fluid, etc."
-                       @inline={{true}}
-                       @maxlength={{32}}/>
-          </FormRow>
-          <FormRow>
-              <f.input @name="pronouns"
-                       @type="select"
-                       @label="Pronouns"
-                       @inline={{true}}
-                       @options={{this.pronounOptions}}/>
-                      {{#if (eq f.model.pronouns "custom")}}
-                  <f.input
-                          @name="pronouns_custom"
-                          @type="text" @label="Tell us your pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
-                          @size={{30}}
-                          @maxlength={{30}}
-                          @inline={{true}}
-                  />
-                      {{/if}}
+    <:body>
+      <FormRow>
+        <f.text @name="first_name"
+                @label="First Name"
+                @maxlength={{25}}/>
+        <f.text @name="mi"
+                @label="M.I."
+                @maxlength={{10}}/>
+        <f.text @name="last_name"
+                @label="Last Name"
+                @maxlength={{25}}/>
+      </FormRow>
+      <FormRow>
+        <f.text @name="gender"
+                @label="Gender"
+                @hint="Examples: female, male, non-binary, gender fluid, etc."
+                @maxlength={{32}}/>
+      </FormRow>
+      <FormRow>
+        <f.select @name="pronouns"
+                  @label="Pronouns"
+                  @options={{this.pronounOptions}}/>
+        {{#if (eq f.model.pronouns "custom")}}
+          <f.text
+            @name="pronouns_custom"
+            @label="Tell us your pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
+            @size={{30}}
+            @maxlength={{30}}
+          />
+        {{/if}}
 
-          </FormRow>
-      </:body>
+      </FormRow>
+    </:body>
   </UiSection>
   <UiSection>
     <:title>Contact Information</:title>
-      <:body>
-          <p>
-              Ranger teams and leads may use your email address to send important messages to you regarding scheduling
-              and
-              operations. Please keep your email address up to date.
-          </p>
-          <FormRow>
-              <f.input @name="email" @label="Email" @type="text" @inputmode="email" @maxlength={{50}}
-                       @grid="col-sm-12 col-md-4 col-xl-3" @noSpaces={{true}}/>
-              <f.input @name="home_phone" @label="Primary Phone" @type="text" @inputmode="tel"
-                       @grid="col-sm-12 col-md-auto " @maxlength={{25}}/>
-                  <f.input @name="alt_phone" @label="Alternative Phone" @type="text" @inputmode="tel"
-                           @grid="col-sm-12 col-md-auto"
-                           @maxlength={{25}}/>
-          </FormRow>
-      </:body>
+    <:body>
+      <p>
+        Ranger teams and leads may use your email address to send important messages to you regarding scheduling
+        and operations. Please keep your email address up to date.
+      </p>
+      <FormRow>
+        <f.text @name="email" @label="Email"
+                @inputmode="email"
+                @size={{30}}
+                @maxlength={{50}}
+                @noSpaces={{true}}/>
+        <f.text @name="home_phone"
+                @label="Primary Phone"
+                @inputmode="tel"
+                @maxlength={{25}}/>
+        <f.text @name="alt_phone"
+                @label="Alternative Phone"
+                @inputmode="tel"
+                @maxlength={{25}}
+        />
+      </FormRow>
+    </:body>
   </UiSection>
   <UiSection>
     <:title>Camp Name &amp; Location</:title>
     <:body>
       <FormRow>
-      <f.input @name="camp_location" @type="textarea" @label="Enter your camp's name, and location (e.g. 9 & C)"
-                 @cols={{80}} @rows={{3}}
-                 @maxlength={{200}}
-                 @inline={{true}}
-                 @hint={{concat (if f.model.camp_location f.model.camp_location.length
-                                  "0") " of 200 characters"}} />
+        <f.textarea @name="camp_location"
+                    @label="Enter your camp's name, and location (e.g. 9 & C)"
+                    @cols={{80}}
+                    @rows={{3}}
+                    @maxlength={{200}}
+                    @showCharCount={{true}}
+        />
       </FormRow>
     </:body>
   </UiSection>
@@ -84,7 +95,9 @@
         BAD: "French - I taught in Paris and can only write in Italian. Took 1 year of high school spanish"<br>
 
         <FormRow>
-          <f.input @name="languages" @label="Languages Spoken" @type="text" @size={{80}} @grid="col-sm-12 col-md-auto"/>
+          <f.text @name="languages"
+                  @label="Languages Spoken"
+                  @size={{80}}/>
         </FormRow>
       </:body>
     </UiSection>
@@ -98,22 +111,25 @@
         </span>
         </p>
         <FormRow>
-          <f.input @name="callsign_pronounce" @label="Callsign Pronunciation" @size={{20}} @maxlength={{20}}
-                   @inline={{true}}/>
+          <f.text @name="callsign_pronounce"
+                  @label="Callsign Pronunciation"
+                  @size={{20}}
+                  @maxlength={{20}}/>
         </FormRow>
       </:body>
     </UiSection>
     <UiSection>
       <:title>Ranger Clothing</:title>
-        <:body>
-            <FormRow>
-                <f.input @name="teeshirt_size_style" @type="select" @label="T-Shirt Size"
-                         @options={{this.shortSleeveOptions}}
-                         @grid="col-sm-12 col-md-auto"/>
-                <f.input @name="longsleeveshirt_size_style" @type="select" @label="Long Sleeve Shirt Size"
-                         @options={{this.longSleeveOptions}} @grid="col-sm-12 col-md-auto"/>
-            </FormRow>
-        </:body>
+      <:body>
+        <FormRow>
+          <f.select @name="teeshirt_size_style"
+                    @label="T-Shirt Size"
+                    @options={{this.shortSleeveOptions}}/>
+          <f.select @name="longsleeveshirt_size_style"
+                    @label="Long Sleeve Shirt Size"
+                    @options={{this.longSleeveOptions}}/>
+        </FormRow>
+      </:body>
     </UiSection>
   {{/unless}}
 
@@ -124,9 +140,8 @@
     </:body>
   </UiSection>
 
-
   <f.submit @label="Update" @disabled={{this.person.isSaving}} />
-  <f.cancel @disabled={{this.person.isSaving}} />
+  <UiCancelButton @disabled={{this.person.isSaving}} @onClick={{this.onCancel}} />
   {{#if this.isSubmitting}}
     <LoadingIndicator/>
   {{/if}}
@@ -148,7 +163,7 @@
         to Allcom &amp; Announce:
       </p>
       <p>
-        <Textarea @value={{this.message}} cols=60  rows=4 maxlength=1500 class="form-control" />
+        <Textarea @value={{this.message}} cols=60 rows=4 maxlength=1500 class="form-control"/>
         <small class="text-muted">{{this.message.length}} of 1500 characters</small>
       </p>
       <p>

@@ -22,10 +22,10 @@
           <UiButton @type="secondary" @onClick={{fn this.showSignupSheet slot}}>
             {{fa-icon "clipboard-list"}} Sign-In Sheet
           </UiButton>
-          <UiButton @type="secondary"  @onClick={{fn this.showSignedInSheet slot}}>
+          <UiButton @type="secondary" @onClick={{fn this.showSignedInSheet slot}}>
             {{fa-icon "info-circle"}} Info Sheet
           </UiButton>
-          <UiButton @type="secondary"  @onClick={{fn this.showAlphaApparel slot}}>
+          <UiButton @type="secondary" @onClick={{fn this.showAlphaApparel slot}}>
             {{fa-icon "tshirt"}} Apparel Distribution
           </UiButton>
           <UiButton @type="secondary" @onClick={{fn this.showAddPersonAction slot}}>
@@ -104,47 +104,48 @@
             @formFor={{this.addPersonForm}}
             @changeSet={{false}}
             @onFormChange={{this.searchPeopleAction}} as |f|>
-        <Modal.body>
-            <FormRow>
-                <f.input @name="name" @label="Enter the callsign, real name, or email of the person to add:"
-                         @type="text" @size={{30}} @autofocus=true @disabled={{this.slot.is_submitting}}/>
-            </FormRow>
-            <FormRow>
-                <UiCancelButton @disabled={{this.slot.is_submitting}} @onClick={{this.cancelSearchAction}}/>
-                        {{#if this.slot.is_submitting}}
-                    <LoadingIndicator @text="Adding"/>
-                        {{else if this.isSearching}}
-                    <LoadingIndicator @text="Searching"/>
-                        {{/if}}
-            </FormRow>
-            {{#if this.foundPeople}}
-                Click on the callsign to add the person to the Alpha shift.
-                <table class="table table-hover mt-2">
-                    <thead>
-                    <tr>
-                        <th class="w-25">Callsign</th>
-                        <th class="w-25">Name</th>
-                        <th class="w-25">Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {{#each this.foundPeople key="id" as |person|}}
-                        <tr>
-                            <td class="w-25">
-                                <a href {{action this.addPersonAction person this.slot}}>
-                                    {{person.callsign}}
-                                </a>
-                            </td>
-                            <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
-                            <td class="w-25">{{person.status}}</td>
-                        </tr>
-                    {{/each}}
-                    </tbody>
-                </table>
-            {{else if this.noSearchMatch}}
-                <div class="text-danger">No person found matching "{{this.noSearchMatch}}"</div>
-            {{/if}}
-        </Modal.body>
+      <Modal.body>
+        <FormRow>
+          <f.text @name="name"
+                  @label="Enter the callsign, real name, or email of the person to add:"
+                  @size={{30}}
+                  @autofocus={{true}}
+                  @disabled={{this.slot.is_submitting}}/>
+        </FormRow>
+        <UiCancelButton @disabled={{this.slot.is_submitting}} @onClick={{this.cancelSearchAction}}/>
+        {{#if this.slot.is_submitting}}
+          <LoadingIndicator @text="Adding"/>
+        {{else if this.isSearching}}
+          <LoadingIndicator @text="Searching"/>
+        {{/if}}
+        {{#if this.foundPeople}}
+          Click on the callsign to add the person to the Alpha shift.
+          <table class="table table-hover mt-2">
+            <thead>
+            <tr>
+              <th class="w-25">Callsign</th>
+              <th class="w-25">Name</th>
+              <th class="w-25">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each this.foundPeople key="id" as |person|}}
+              <tr>
+                <td class="w-25">
+                  <a href {{action this.addPersonAction person this.slot}}>
+                    {{person.callsign}}
+                  </a>
+                </td>
+                <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
+                <td class="w-25">{{person.status}}</td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </table>
+        {{else if this.noSearchMatch}}
+          <div class="text-danger">No person found matching "{{this.noSearchMatch}}"</div>
+        {{/if}}
+      </Modal.body>
     </ChForm>
   </ModalDialog>
 {{/if}}

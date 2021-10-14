@@ -160,43 +160,36 @@
               </li>
             {{/if}}
           </ul>
-            <ChForm @name="delivery"
-                    @formFor={{this.itemToDeliver}}
-                    @validator={{this.ticketDeliveryValidations}}
-                    @onSubmit={{this.saveDeliveryAddress}} as |f|>
-                <legend>
+          <ChForm @name="delivery"
+                  @formFor={{this.itemToDeliver}}
+                  @validator={{this.ticketDeliveryValidations}}
+                  @onSubmit={{this.saveDeliveryAddress}} as |f|>
+            <legend>
               Enter your mailing address:
-                </legend>
-                <FormRow>
-              <f.input @name="street1"
-                       @type="text"
-                       @label="Street"
-                       @grid="col-lg-8 col-sm-6"/>
-                </FormRow>
-                <FormRow>
-                    <f.input @name="city"
-                       @type="text"
-                       @label="City"
-                       @grid="col-sm-5 col-lg-4"/>
-                    <f.input @name="state"
-                       @type="select"
-                       @label="State"
-                       @options={{this.stateOptions}}
-                       @grid="col-sm-5 col-md-4"/>
-                    <f.input @name="postal_code"
-                       @type="text"
-                       @label="Zip Code"
-                       @grid="col-sm-5 col-lg-4"/>
-                </FormRow>
-                <f.submit @label="Save Address" @submitClass="btn-responsive" @disabled={{this.isSaving}} />
-                {{#if this.isSaving}}
-                    <LoadingIndicator/>
-                {{else if f.model.isDirty}}
-                    <span class="text-danger">Changes will not be saved until you click on 'Save Address'</span>
-                {{else if this.isSaved}}
-                    <b class="text-success">{{fa-icon "check" size="2x"}}</b>
-                {{/if}}
-            </ChForm>
+            </legend>
+            <FormRow>
+              <f.text @name="street1"
+                      @label="Street"
+                      @size={{30}}/>
+            </FormRow>
+            <FormRow>
+              <f.text @name="city"
+                      @label="City"/>
+              <f.select @name="state"
+                        @label="State"
+                        @options={{this.stateOptions}}/>
+              <f.text @name="postal_code"
+                      @label="Zip Code"/>
+            </FormRow>
+            <f.submit @label="Save Address" @submitClass="btn-responsive" @disabled={{this.isSaving}} />
+            {{#if this.isSaving}}
+              <LoadingIndicator/>
+            {{else if f.model.isDirty}}
+              <span class="text-danger">Changes will not be saved until you click on 'Save Address'</span>
+            {{else if this.isSaved}}
+              <b class="text-success">{{fa-icon "check" size="2x"}}</b>
+            {{/if}}
+          </ChForm>
         {{/if}}
       {{/if}}
     {{else}}

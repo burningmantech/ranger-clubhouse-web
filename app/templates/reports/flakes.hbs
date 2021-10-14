@@ -16,14 +16,15 @@
 
 
 <ChForm @formId="dateform" @formFor={{this.dateForm}} @onSubmit={{this.submitForm}} as |f|>
-    <FormRow>
-        <FormLabel>Shift date &amp; time to view:</FormLabel>
-        <f.input @name="date" @type="datetime" @inline={{true}}/>
-        <div class="col-auto">
-            <f.submit @label="Submit"/>
-            <UiButton @type="secondary" @onClick={{this.viewCurrentPeriod}}>View Current Period</UiButton>
-        </div>
-    </FormRow>
+  <FormRow>
+    <f.datetime @name="date"
+                @label="Shift date &amp; time to view:"
+                @inline={{true}}/>
+    <div class="col-auto">
+      <f.submit @label="Submit"/>
+      <UiButton @type="secondary" @onClick={{this.viewCurrentPeriod}}>View Current Period</UiButton>
+    </div>
+  </FormRow>
 </ChForm>
 
 <p>
@@ -67,7 +68,8 @@
                 <div class="callsign-list">
                   {{#each slot.checked_in key="id" as |person|}}
                     <div>
-                      <PersonLink @person={{person}} /><br>
+                      <PersonLink @person={{person}} />
+                      <br>
                       ({{time-format person.timesheet.on_duty}})
                     </div>
                   {{/each}}

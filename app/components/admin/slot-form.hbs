@@ -5,31 +5,40 @@
           @onSubmit={{@onSave}} as |f|>
     <Modal.body>
       <FormRow>
-        <f.input @name="position_id" @label="Position" @type="select" @options={{this.positionOptions}}
-                 @inline={{true}}/>
+        <f.select @name="position_id"
+                  @label="Position"
+                  @options={{this.positionOptions}} />
       </FormRow>
       <FormRow>
-        <f.input @name="trainer_slot_id"
-                 @label="Sign Up Multiplier Trainer's Slot"
-                 @type="select"
-                 @options={{this.trainerSlotsOptions}}
-                 @includeBlank={{true}}
-                 @inline={{true}}/>
+        <f.select @name="trainer_slot_id"
+                  @label="Sign Up Multiplier Trainer's Slot"
+                  @options={{this.trainerSlotsOptions}}
+                  @includeBlank={{true}}
+        />
       </FormRow>
 
       <FormRow>
-        <f.input @name="description" @label="Description" @type="text" @size={{40}} @maxlength={{40}}
-                 @hint="{{if f.model.description f.model.description.length "0"}} of 40 characters."/>
+        <f.text @name="description"
+                @label="Description"
+                @size={{40}}
+                @maxlength={{40}}
+                @showCharCount={{true}}
+        />
       </FormRow>
       <FormRow>
-        <f.input @name="begins" @label="Beginning Time" @type="datetime" @maxlength={{25}} />
-        <f.input @name="ends" @label="Ending Time" @type="datetime" @maxlength={{20}} />
+        <f.datetime @name="begins"
+                    @label="Beginning Time"
+                    @maxlength={{25}} />
+        <f.datetime @name="ends"
+                    @label="Ending Time"
+                    @maxlength={{20}} />
       </FormRow>
       <FormRow>
-        <f.input @name="max"
-                 @type="number"
-                 @label={{if f.model.trainer_slot_id "Multiplier" "Max Sign Ups"}}
-                 @size={{3}} @maxlength={{3}} />
+        <f.number @name="max"
+                @label={{if f.model.trainer_slot_id "Multiplier" "Max Sign Ups"}}
+                @size={{4}}
+                @maxlength={{4}}
+        />
       </FormRow>
       {{#if f.model.trainer_slot_id}}
         <span class="text-danger">NOTE:</span>
@@ -43,14 +52,18 @@
 
       <FormRow>
         <div class="col-auto">
-          <f.input @name="active" @label="Active" @type="checkbox"/>
+          <f.checkbox @name="active" @label="Active"/>
         </div>
       </FormRow>
 
       <FormRow>
-        <f.input @name="url" @label="Information" @type="textarea" @rows={{3}} @cols={{80}} @maxlength={{512}}
-                 @hint="{{if f.model.url f.model.url.length "0"}} of 512 characters.
-        Additional information may be given about the shift in the above area.
+        <f.textarea @name="url"
+                    @label="Information"
+                    @rows={{3}}
+                    @cols={{80}}
+                    @maxlength={{512}}
+                    @showCharCount={{true}}
+                    @hint="Additional information may be given about the shift in the above area.
         e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.khaki/meetup or email
         women@khaki.rangers"/>
       </FormRow>

@@ -69,7 +69,7 @@
   <UiSection>
     <:title>{{fa-icon "university"}} Advanced Ranger Training (ART)</:title>
     <:body>
-      You are allowed to attend the following ART trainings.
+      You are allowed to attend the following ART(s).
       <TrainingInfo @trainings={{this.artTrainings}} />
     </:body>
   </UiSection>
@@ -77,21 +77,17 @@
 
 <UiSection>
   <:title>{{fa-icon "list"}} Positions</:title>
-    <:body>
-        Positions indicate which shifts you are allowed to sign up for and what ART trainings you may attend.
-        You have {{pluralize this.personPositions.length "position"}} granted:
-        <FormRow>
-                    {{#each this.personPositions as |position| }}
-                <div class="col-sm-6 col-md-3">
-                            {{position.title}}
-                </div>
-                    {{else}}
-                <div class="col-auto">
-                    You currently do not hold any positions.
-                </div>
-                    {{/each}}
-        </FormRow>
-    </:body>
+  <:body>
+    Positions indicate which shifts you are allowed to sign up for and what ART trainings you may attend.
+    You have {{pluralize this.personPositions.length "position"}} granted:
+    <div class="masonry-container mt-2">
+      {{#each this.personPositions as |position| }}
+        <div class="masonry-item">{{position.title}}</div>
+      {{else}}
+        <div>You currently do not hold any positions.</div>
+      {{/each}}
+    </div>
+  </:body>
 </UiSection>
 {{#if (or this.person.isActive this.person.isAlpha this.person.isNonRanger)}}
   <UiSection>

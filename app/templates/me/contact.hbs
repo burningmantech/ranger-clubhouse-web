@@ -1,5 +1,5 @@
 <h1>Contact An Active Ranger</h1>
-<BackToHome />
+<BackToHome/>
 
 <p>
   Use this page to send a contact message, via email, to a Ranger. Messages may only be
@@ -22,14 +22,14 @@
   <ChForm @formId="search" @formFor={{this.searchForm}} @changeSet={{false}} @onFormChange={{this.searchOnChange}}
           as |f|>
     <FormRow>
-        <f.input @name="callsign" @label="Start typing the callsign of Ranger you wish to contact:" @type="text"
-                 @size={{30}} @autofocus={{true}} @inline={{true}}/>
+      <f.text @name="callsign"
+              @label="Start typing the callsign of Ranger you wish to contact:"
+              @size={{30}}
+              @autofocus={{true}} />
     </FormRow>
-    <FormRow>
-                {{#if this.isSubmitting}}
-            <LoadingIndicator @text="Searching . . ."/>
-                {{/if}}
-    </FormRow>
+    {{#if this.isSubmitting}}
+      <LoadingIndicator @text="Searching . . ."/>
+    {{/if}}
   </ChForm>
 
   {{#if this.foundCallsigns}}

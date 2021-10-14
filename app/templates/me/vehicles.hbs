@@ -187,48 +187,39 @@
         <fieldset>
           <legend>Vehicle Description</legend>
           <FormRow>
-            <f.input @name="vehicle_class"
-                     @label="Vehicle Class"
-                     @type="select"
-                     @options={{this.vehicleClassOptions}}/>
+            <f.select @name="vehicle_class"
+                      @label="Vehicle Class"
+                      @options={{this.vehicleClassOptions}}/>
           </FormRow>
           <FormRow>
-            <f.input @name="vehicle_year" @label="Vehicle Year"
-                     @type="text"
-                     @size={{4}}
-                     @maxlength={{4}}
-                     @wrapClass="col-sm-12 col-lg-auto"/>
-            <f.input @name="vehicle_make"
-                     @label="Make"
-                     @type="text"
-                     @size={{15}}
-                     @wrapClass="col-sm-12 col-lg-auto"
-                     @hint="e.g., Ford, GMC, etc."/>
-            <f.input @name="vehicle_model"
-                     @label="Model"
-                     @type="text"
-                     @size={{15}}
-                     @wrapClass="col-sm-12 col-lg-auto"
-                     @hint="e.g., F-350, Tacoma, etc."
+            <f.text @name="vehicle_year"
+                    @label="Vehicle Year"
+                    @size={{4}}
+                    @maxlength={{4}}
             />
-            <f.input @name="vehicle_color"
-                     @label="Color"
-                     @type="text"
-                     @size={{15}}
-                     @wrapClass="col-sm-12 col-lg-auto"
+            <f.text @name="vehicle_make"
+                    @label="Make"
+                    @size={{15}}
+                    @hint="e.g., Ford, GMC, etc."/>
+            <f.text @name="vehicle_model"
+                    @label="Model"
+                    @size={{15}}
+                    @hint="e.g., F-350, Tacoma, etc."
+            />
+            <f.text @name="vehicle_color"
+                    @label="Color"
+                    @size={{15}}
             />
           </FormRow>
           <FormRow>
-            <f.input @name="license_state"
-                     @label="Vehicle License State or Province"
-                     @type="select"
-                     @options={{this.stateOptions}}
-                     @wrapClass="col-sm-12 col-lg-auto"/>
-            <f.input @name="license_number"
-                     @label="Vehicle License Number"
-                     @type="text"
-                     @size={{10}}
-                     @wrapClass="col-sm-12 col-lg-auto"/>
+            <f.select @name="license_state"
+                      @label="Vehicle License State or Province"
+                      @options={{this.stateOptions}}
+            />
+            <f.text @name="license_number"
+                    @label="Vehicle License Number"
+                    @size={{10}}
+            />
           </FormRow>
         </fieldset>
         <fieldset>
@@ -238,47 +229,44 @@
               Request a Driving Sticker if needed to drive your personal vehicle for Ranger business
             </FormLabel>
             <div class="col-12">
-              <f.input @name="driving_sticker"
-                       @type="radioGroup"
-                       @options={{this.drivingStickerOptions}}
-                       @inlineCheckbox={{true}}/>
+              <f.radioGroup @name="driving_sticker"
+                            @options={{this.drivingStickerOptions}}
+                            @inline={{true}}
+              />
             </div>
           </FormRow>
           <FormRow>
             <FormLabel>Ranger Logo Decal</FormLabel>
             <div class="col-12">
-              <f.input @name="ranger_logo"
-                       @type="radioGroup"
-                       @options={{this.rangerLogoOptions}}
-                       @inlineCheckbox={{true}}/>
+              <f.radioGroup @name="ranger_logo"
+                            @options={{this.rangerLogoOptions}}
+                            @inline={{true}}
+              />
             </div>
           </FormRow>
           <FormRow>
             <FormLabel>Fuel Chit Requests</FormLabel>
             <div class="col-12">
-              <f.input @name="fuel_chit"
-                       @type="radioGroup"
-                       @options={{this.fuelChitOptions}}
-                       @inlineCheckbox={{true}}/>
+              <f.radioGroup @name="fuel_chit"
+                            @options={{this.fuelChitOptions}}
+                            @inline={{true}}
+              />
             </div>
           </FormRow>
           <FormRow>
             <FormLabel>Amber Light</FormLabel>
             <div class="col-12">
-              <f.input @name="amber_light"
-                       @type="radioGroup"
-                       @options={{this.amberLightOptions}}
-                       @inlineCheckbox={{true}}/>
+              <f.radioGroup @name="amber_light"
+                            @options={{this.amberLightOptions}}
+                            @inline={{true}}
+              />
             </div>
           </FormRow>
           <FormRow>
-            <FormLabel>Comments for the Approver</FormLabel>
-            <div class="col-12 g-0">
-              <f.input @name="request_comment"
-                       @type="textarea"
-                       @rows={{2}}
-                       @cols={{80}}/>
-            </div>
+            <f.textarea @name="request_comment"
+                        @label="Comments for the Approver"
+                        @rows={{2}}
+                        @cols={{80}}/>
           </FormRow>
         </fieldset>
       </Modal.body>

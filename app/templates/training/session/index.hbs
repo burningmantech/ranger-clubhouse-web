@@ -324,29 +324,35 @@
           </tbody>
         </table>
         {{#let (concat this.editStudent.callsign " <" this.editStudent.status ">") as |studentName|}}
-          <FormRow><label>Did {{studentName}} pass training?</label>
+          <FormRow>
+            <FormLabel>Did {{studentName}} pass training?</FormLabel>
             <div class="col-12">
-              <f.input @name="passed" @type="radioGroup" @options={{this.passedOptions}} @inline={{this}}/>
+              <f.radioGroup @name="passed"
+                            @options={{this.passedOptions}}
+                            @inline={{true}}/>
             </div>
           </FormRow>
           <FormRow>
-            <f.input @name="rank" @label="Ranking for {{studentName}}"
-                     @type="select" @options={{if this.training.is_art this.artRankOptions this.dirtRankOptions}}/>
+            <f.select @name="rank"
+                      @label="Ranking for {{studentName}}"
+                      @options={{if this.training.is_art this.artRankOptions this.dirtRankOptions}}/>
           </FormRow>
           <FormRow>
-            <f.input @name="note" @label="Enter the training notes about {{studentName}}:"
-                     @type="textarea"
-                     @hint="Your note will be timestamped and appended to any existing notes."
-                     @rows={{3}} @cols={{80}}/>
+            <f.textarea @name="note"
+                        @label="Enter the training notes about {{studentName}}:"
+                        @hint="Your note will be timestamped and appended to any existing notes."
+                        @rows={{3}}
+                        @cols={{80}}/>
           </FormRow>
           {{#unless this.training.is_art}}
-            <FormRow><label>Was feedback delivered to {{studentName}}?</label>
-              <div class="col-12">
-                <f.input @name="feedback_delivered" @type="radioGroup" @options={{this.feedbackDeliveredOptions}}
-                         @inlineCheckbox={{true}}/>
+            <FormRow>
+              <FormLabel>Was feedback delivered to {{studentName}}?</FormLabel>
+              <div clas="col-12">
+                <f.radioGroup @name="feedback_delivered"
+                              @options={{this.feedbackDeliveredOptions}}
+                              @inline={{true}}/>
               </div>
             </FormRow>
-
           {{/unless}}
         {{/let}}
       </Modal.body>
@@ -377,12 +383,14 @@
             @onFormChange={{action this.searchPeopleAction}} as |f|>
       <Modal.body>
         <FormRow>
-          <f.input @name="name" @label="Enter the callsign, real name, or email of the person to add:"
-                   @type="text" @size={{30}} @autofocus={{true}}/>
+          <f.text @name="name"
+                  @label="Enter the callsign, real name, or email of the person to add:"
+                  @size={{30}}
+                  @autofocus={{true}}/>
         </FormRow>
-        <p>
+        <div class="my-4">
           <UiCancelButton @onClick={{this.cancelSearchAction}}/>
-        </p>
+        </div>
         {{#if this.foundPeople}}
           Click on the callsign to add the person.
           <table class="table table-striped table-hover">
@@ -424,7 +432,11 @@
           Note created on {{shift-format this.editNote.created_at year=true}}
         </p>
         <FormRow>
-          <f.input @type="textarea" @name="note" @label="Edit Your Note" @rows={{4}} @cols={{80}} @autofocus={{true}}/>
+          <f.textarea @name="note"
+                      @label="Edit Your Note"
+                      @rows={{4}}
+                      @cols={{80}}
+                      @autofocus={{true}}/>
         </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>

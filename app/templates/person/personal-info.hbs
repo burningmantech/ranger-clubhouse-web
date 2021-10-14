@@ -19,39 +19,39 @@
   <ChForm @formId="person"
           @formFor={{this.person}}
           @validator={{this.personInfoValidations}}
-          @onSubmit={{this.onSubmit}}
-          @onCancel={{this.onCancel}} as |f|>
+          @onSubmit={{this.onSubmit}} as |f|>
     <UiSection id="person-general">
       <:title>General Information</:title>
       <:body>
         <FormRow>
-          <f.input @name="first_name" @type="text" @label="First Name" @maxlength={{25}}
-                   @grid="col-sm-4 col-md-auto"/>
-          <f.input @name="mi" @type="text" @label="M.I." @size={{2}} @maxlength={{10}}
-                   @grid="col-sm-1 col-md-auto"/>
-          <f.input @name="last_name" @type="text" @label="Last Name" @maxlength={{25}}
-                   @grid="col-sm-4 col-md-auto"/>
+          <f.text @name="first_name"
+                  @label="First Name"
+                  @maxlength={{25}}/>
+          <f.text @name="mi"
+                  @label="M.I."
+                  @size={{2}}
+                  @maxlength={{10}}/>
+          <f.text @name="last_name"
+                  @label="Last Name"
+                  @maxlength={{25}}/>
         </FormRow>
         <FormRow>
-          <f.input @name="gender"
-                   @type="text"
-                   @label="Gender"
-                   @hint="female, male, non-binary, gender fluid, etc."
-                   @maxlength={{32}}/>
+          <f.text @name="gender"
+                  @label="Gender"
+                  @hint="female, male, non-binary, gender fluid, etc."
+                  @maxlength={{32}}
+          />
         </FormRow>
         <FormRow>
-          <f.input @name="pronouns"
-                   @type="select"
-                   @label="Pronouns"
-                   @inline={{true}}
-                   @options={{this.pronounOptions}}/>
+          <f.select @name="pronouns"
+                    @label="Pronouns"
+                    @options={{this.pronounOptions}}/>
           {{#if (eq f.model.pronouns "custom")}}
-            <f.input
+            <f.text
               @name="pronouns_custom"
-              @type="text" @label="Their pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
+              @label="Their pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
               @size={{30}}
               @maxlength={{30}}
-              @inline={{true}}
             />
           {{/if}}
         </FormRow>
@@ -61,25 +61,20 @@
       <:title>Contact Information</:title>
       <:body>
         <FormRow>
-          <f.input @name="email"
-                   @label="Email"
-                   @type="text"
-                   @inputmode="email"
-                   @size={{25}} @maxlength={{50}}
-                   @grid="col-sm-12 col-lg-auto"
-                   @noSpaces={{true}}/>
-          <f.input @name="home_phone"
-                   @type="text"
-                   @inputmode="tel"
-                   @label="Primary Phone"
-                   @grid="col-sm-4 col-lg-auto"
-                   @maxlength={{25}}/>
-          <f.input @name="alt_phone"
-                   @type="text"
-                   @inputmode="tel"
-                   @label="Alternative Phone"
-                   @grid="col-sm-4 col-lg-auto"
-                   @maxlength={{25}}/>
+          <f.text @name="email"
+                  @label="Email"
+                  @inputmode="email"
+                  @size={{25}}
+                  @maxlength={{50}}
+                  @noSpaces={{true}}/>
+          <f.text @name="home_phone"
+                  @inputmode="tel"
+                  @label="Primary Phone"
+                  @maxlength={{25}}/>
+          <f.text @name="alt_phone"
+                  @inputmode="tel"
+                  @label="Alternative Phone"
+                  @maxlength={{25}}/>
         </FormRow>
       </:body>
     </UiSection>
@@ -87,11 +82,12 @@
       <:title>Camp Name &amp; Location</:title>
       <:body>
         <FormRow>
-          <f.input @name="camp_location"
-                   @type="textarea"
-                   @label="Camp Name & Location"
-                   @cols={{50}} @rows={{4}} @maxlength={{200}}
-                   @hint="{{if f.model.camp_location f.model.camp_location.length "0"}} of 200 characters"/>
+          <f.textarea @name="camp_location"
+                      @label="Camp Name & Location"
+                      @cols={{50}}
+                      @rows={{4}}
+                      @maxlength={{200}}
+                      @showCharCount={{true}} />
         </FormRow>
       </:body>
     </UiSection>
@@ -99,38 +95,44 @@
       <:title>Callsign Pronunciation</:title>
       <:body>
         <FormRow>
-          <f.input @name="callsign_pronounce"
-                   @type="text"
-                   @label="Callsign Pronounciation"
-                   @size={{32}} @maxlength={{32}}
-                   @grid="col-sm-12 col-lg-auto"/>
+          <f.text @name="callsign_pronounce"
+                  @label="Callsign Pronounciation"
+                  @size={{32}}
+                  @maxlength={{32}}
+          />
         </FormRow>
       </:body>
     </UiSection>
     <UiSection id="person-languages">
       <:title>Languages</:title>
       <:body>
-        List the English names of the languages you are comfortable speaking with the level of fluency in parenthesis,
-        each separated by a comma.<br>
-        <div class="mt-2 mb-2">
+        <p>
+          List the English names of the languages they are comfortable speaking with the level of fluency in
+          parenthesis, each separated by a comma.
+        </p>
+        <p>
           Example: "japanese (basic), spanish (fluent)"
-        </div>
+        </p>
 
         <FormRow>
-          <f.input @name="languages" @label="Languages Spoken" @type="text" @size={{80}} @grid="col-sm-12 col-lg-auto"/>
+          <f.text @name="languages"
+                  @label="Languages Spoken"
+                  @size={{80}} />
         </FormRow>
-
       </:body>
     </UiSection>
     <UiSection id="person-clothing">
       <:title>Ranger Clothing</:title>
       <:body>
         <FormRow>
-          <f.input @name="teeshirt_size_style" @type="select" @label="T-Shirt Size"
-                   @options={{this.shortSleeveOptions}}
-                   @grid="col-sm-12 col-lg-auto"/>
-          <f.input @name="longsleeveshirt_size_style" @type="select" @label="Long Sleeve Shirt Size"
-                   @options={{this.longSleeveOptions}} @grid="col-sm-12 col-lg-auto"/>
+          <f.select @name="teeshirt_size_style"
+                    @label="T-Shirt Size"
+                    @options={{this.shortSleeveOptions}}
+          />
+          <f.select @name="longsleeveshirt_size_style"
+                    @label="Long Sleeve Shirt Size"
+                    @options={{this.longSleeveOptions}}
+          />
         </FormRow>
       </:body>
     </UiSection>
@@ -142,7 +144,7 @@
     </UiSection>
 
     <f.submit @label="Update" @disabled={{this.person.isSaving}} />
-    <f.cancel @disabled={{this.person.isSaving}} />
+    <UiCancelButton @disabled={{this.person.isSaving}} @onClick={{this.onCancel}} />
     {{#if this.person.isSaving}}
       <LoadingIndicator/>
     {{/if}}

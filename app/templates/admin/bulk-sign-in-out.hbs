@@ -101,10 +101,10 @@
 
 <ChForm @formId="bulkForm" @formFor={{this.bulkForm}} @changeSet={{false}} @onSubmit={{this.verifyAction}} as |f|>
   <FormRow>
-    <f.input @name="lines"
-             @label="Enter a list of callsigns with times and optional positions to bulk sign in and/or out:"
-             @type="textarea" @cols={{40}}
-             @rows={{10}}/>
+    <f.textarea @name="lines"
+                @label="Enter a list of callsigns with times and optional positions to bulk sign in and/or out:"
+                @cols={{40}}
+                @rows={{10}}/>
   </FormRow>
   <p>
     Don't worry, you'll have a chance to review the sign ins & outs before actually creating them.
@@ -116,7 +116,8 @@
   {{/if}}
 </ChForm>
 <div class="mt-4">
-<UiButton @onClick={{action this.toggleHelp}} @type="success">{{if this.showHelp "Hide" "Show"}} supported formats</UiButton>
+  <UiButton @onClick={{action this.toggleHelp}} @type="success">{{if this.showHelp "Hide" "Show"}} supported formats
+  </UiButton>
 </div>
 
 {{#if this.showHelp}}

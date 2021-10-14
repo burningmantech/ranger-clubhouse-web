@@ -161,16 +161,21 @@
         <fieldset>
           <legend>Add/Subtract Time to New Slots</legend>
           <FormRow>
-            <f.input @name="deltaDays"
-                     @label="Days"
-                     @type="number"
-                     @maxlength={{5}}
-                     @size={{5}}
-                     @inline={{true}}/>
-            <f.input @name="deltaHours" @label="Hours" @type="number" @maxlength={{5}} @size={{5}}
-                     @inline={{true}}/>
-            <f.input @name="deltaMinutes" @label="Minutes" @type="number" @maxlength={{5}} @size={{5}}
-                     @inline={{true}}/>
+            <f.number @name="deltaDays"
+                      @label="Days"
+                      @maxlength={{5}}
+                      @size={{5}}
+            />
+            <f.number @name="deltaHours"
+                      @label="Hours"
+                      @maxlength={{5}}
+                      @size={{5}}
+            />
+            <f.number @name="deltaMinutes"
+                      @label="Minutes"
+                      @maxlength={{5}}
+                      @size={{5}}
+            />
           </FormRow>
           <legend>Set New Slot Attributes</legend>
           <p>
@@ -183,26 +188,35 @@
             be used.
           </p>
           <FormRow>
-            <f.input @name="newPositionId" @label="Position" @type="select"
-                     @options={{this.positionOptionsForCopy}}
-                     @inline={{true}}/>
-            <f.input @name="description" @label="Description" @type="text" @maxlength={{40}} @size={{40}}
-                     @inline={{true}}/>
-            <f.input @name="max" @label="Max" @type="number" @maxlength={{3}} @size={{3}} @grid="col-2"/>
+            <f.select @name="newPositionId"
+                      @label="Position"
+                      @options={{this.positionOptionsForCopy}}
+            />
           </FormRow>
           <FormRow>
-            <f.input @name="url"
-                     @label="Information"
-                     @type="textarea"
-                     @rows={{3}}
-                     @cols={{80}}
-                     @maxlength={{512}} />
+            <f.text @name="description"
+                    @label="Description"
+                    @maxlength={{40}}
+                    @size={{40}}
+            />
+          </FormRow>
+          <FormRow>
+            <f.number @name="max"
+                      @label="Max"
+                      @maxlength={{3}}
+                      @size={{3}} />
+          </FormRow>
+          <FormRow>
+            <f.textarea @name="url"
+                        @label="Information"
+                        @rows={{3}}
+                        @cols={{80}}
+                        @maxlength={{512}} />
           </FormRow>
           <FormRow>
             <div class="col-auto">
-              <f.input @name="activate"
-                       @label="Activate new slots"
-                       @type="checkbox"/>
+              <f.checkbox @name="activate"
+                          @label="Activate new slots"/>
             </div>
           </FormRow>
           Labor Day of {{this.year}} is {{this.selectedYearLaborDay}}.

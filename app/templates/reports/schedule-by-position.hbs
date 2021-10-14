@@ -111,8 +111,7 @@
             @onSubmit={{this.exportSelectedPositions}} as |f|>
       <Modal.body>
         <FormRow>
-          <f.input @name="positionIds"
-                   @type="checkboxGroup"
+          <f.checkboxGroup @name="positionIds"
                    @cols={{4}}
                    @options={{this.positionOptions}}/>
         </FormRow>
