@@ -115,7 +115,7 @@ Everyone else will see person/simple-form
 
   <FormRow>
     <FormLabel @fixed={{true}}>Positions</FormLabel>
-    <div class="col-sm-12 col-lg-auto">
+    <div class="col-sm-12 col-lg-10">
       <UiButton @type="secondary" @size="sm" @class="mr-2" @onClick={{@togglePositions}}>
         {{if @showPositions "Hide" "Show"}} Positions
       </UiButton>
@@ -141,7 +141,7 @@ Everyone else will see person/simple-form
 
   <FormRow>
     <FormLabel @fixed={{true}}>Roles</FormLabel>
-    <div class="col-sm-12 col-lg-auto">
+    <div class="col-sm-12 col-lg-10">
       <UiButton @type="secondary" @onClick={{@toggleRoles}} @size="sm">
         {{if @showRoles "Hide" "Show"}} Roles
       </UiButton>

@@ -2,7 +2,7 @@ import Service from '@ember/service';
 import {A} from '@ember/array';
 import {tracked} from '@glimmer/tracking';
 
-const TIMEOUT = 5000;
+const TIMEOUT = 7000;
 
 export default class extends Service {
   @tracked loaf = A();
@@ -16,12 +16,12 @@ export default class extends Service {
   }
 
   error(message) {
-    this.addToast({message, type: 'error'});
+    this.addToast({message, type: 'danger'});
   }
 
   addToast(toast) {
     this.loaf.pushObject(toast);
-    if (toast.type !== 'error') {
+    if (toast.type !== 'danger') {
       toast.timerId = setTimeout(() => this.loaf.removeObject(toast), TIMEOUT);
     }
   }
