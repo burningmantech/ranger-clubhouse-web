@@ -24,8 +24,11 @@
   <:body>
     <ChForm @formId="contact" @formFor={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
       <FormRow>
-        <f.input @name="camp_location" @type="textarea" @label="Camp Name & Location" @autofocus={{true}} @rows={{4}}
-                 @cols={{80}}/>
+        <f.textarea @name="camp_location"
+                    @label="Camp Name & Location"
+                    @autofocus={{true}}
+                    @rows={{4}}
+                    @cols={{80}}/>
       </FormRow>
 
       {{#if this.session.isLMOPEnabled}}
@@ -37,8 +40,10 @@
           Their playa name, real world name, relationship, camp location &amp; description.<br>
         </p>
         <FormRow>
-          <f.input @name="emergency_contact" @type="textarea" @label="Emergency Contact Information:" @rows={{4}}
-                   @cols={{80}}/>
+          <f.textarea @name="emergency_contact"
+                      @label="Emergency Contact Information:"
+                      @rows={{4}}
+                      @cols={{80}}/>
         </FormRow>
         <f.submit @label="Update Camp & Emergency Contact Info" @disabled={{this.isSubmitting}} />
       {{else}}
@@ -49,7 +54,7 @@
         </ChNotice>
       {{/if}}
       {{#if this.isContactSaved}}
-        <span class="text-success">{{fa-icon "check"}}</span>
+        {{fa-icon "check" color="success"}}
       {{/if}}
       {{#if this.isSubmitting}}
         <LoadingIndicator/>
@@ -67,7 +72,7 @@
 
     {{#if this.personEvent.asset_authorized}}
       <p class="text-success">
-        {{fa-icon "check"}} Radio checkout form has been SIGNED.
+        {{fa-icon "check"}} Radio checkout form has been signed.
       </p>
     {{else}}
       <h4 class="text-danger">Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE RADIOS.</h4>

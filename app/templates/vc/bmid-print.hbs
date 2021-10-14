@@ -161,11 +161,10 @@
 
   <ChForm @formId="batch" @formFor={{this.batchForm}} @onSubmit={{this.exportAction}} as |f|>
     <FormRow>
-      <f.input @name="batchInfo"
+      <f.text @name="batchInfo"
                @label="Batch Information"
                @size={{32}}
                @maxlength={{32}}
-               @inline={{true}}
                @hint="Example batch info might be 'Batch #1, specials' or 'Batch #2, special stragglers', or 'Batch #3, alphas', etc. The Clubhouse will automatically add
 your name and the date and time you submitted to Lambase."
       />

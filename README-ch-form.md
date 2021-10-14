@@ -42,7 +42,9 @@ A single argument tells which model property is to be edited.
 The following example:
 ```htmlbars
 <ChForm @formId="role" @formFor={{this.roleRecord}} @onSubmit={{this.saveRole}} as |f| >
-  <f.input @name="title" @type="text" @label="Role Name:" />
+  <FormRow>
+      <f.text @name="title"  @label="Role Name:" />
+  </FormRow>
   <f.submit @disabled={{this.roleRecord.isSaving}} />
 </ChForm>
 ```
@@ -88,14 +90,6 @@ The arguments to the component are:
 * onSubmit: action to call when button is clicked. The onSubmit action given on
   the ch-form statement will called if action is not given here.
 
-## cancel: a Cancel button
-
-`cancel` is a block component which will generate a button element with the default text of 'Cancel' that calls the onCancel given in the ch-form argument list.
-
-The arguments to the component are:
-
-* label: The button text. The default text is 'Cancel'
-* disabled: if true, the button will be disabled.
 
 ## Basic Example
 
@@ -116,10 +110,14 @@ The template file to edit the role is:
 <ChForm @formId="roles" @formFor={{this.roles}}
       @validator={{this.roleValidations}}
       @onSubmit={{this.saveAction}} as |f|>
-  <f.input @name="title" @label="Role Title:" @type="text" @size={{20}} />
-  <f.input @name="new_user_eligible" @label="New User Eligible?" @type="checkbox" />
+  <FormRow>
+    <f.text @name="title" @label="Role Title:" @size={{20}} />
+  </FormRow>
+  <FormRow>
+    <f.checkbox @name="new_user_eligible" @label="New User Eligible?" />
+  </FormRow>
   <f.submit @disabled={{isSubmitting}} />
-  <f.cancel @disabled={{this.isSubmitting}} />
+  <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelAction}}/>
 </ChForm>
 ```
 

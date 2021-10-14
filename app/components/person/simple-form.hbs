@@ -63,11 +63,17 @@
   <dt class="col-sm-12 col-lg-2">On Site</dt>
   <dd class="col-sm-12 col-lg-9">
     <ChForm @formId="person" @formFor={{@person}} @onSubmit={{@savePersonAction}} as |f|>
-      <f.input @name="on_site" @type="radioGroup" @options={{@onSiteOptions}} @inlineCheckbox={{true}} />
-      <f.submit @label="Update" @disabled={{@person.isSaving}} />
-      {{#if @person.isSaving}}
-        <LoadingIndicator/>
-      {{/if}}
+      <FormRow>
+        <f.radioGroup @name="on_site"
+                      @options={{@onSiteOptions}}
+                      @inline={{true}} />
+        <div class="col-auto">
+          <f.submit @label="Update" @size="sm" @disabled={{@person.isSaving}} />
+          {{#if @person.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
+        </div>
+      </FormRow>
     </ChForm>
   </dd>
   <dt class="col-sm-12 col-lg-2">Positions</dt>

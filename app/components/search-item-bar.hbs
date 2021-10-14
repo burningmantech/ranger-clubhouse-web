@@ -38,20 +38,36 @@
     </AutocompleteInput>
     {{#if this.showSearchOptions}}
       <div class="bg-white p-2">
-        <FormRow>
-          <FormLabel @fixed={{true}}>Search By:</FormLabel>
-          <div class="col-sm-12 col-md-9 mt-2">
-            <f.input @name="callsign" @type="checkbox" @label="Callsign" @inlineCheckbox={{true}}/>
-            <f.input @name="name" @type="checkbox" @label="Name" @inlineCheckbox={{true}}/>
-            <f.input @name="email" @type="checkbox" @label="Email" @inlineCheckbox={{true}}/>
-            <f.input @name="formerly_known_as" @type="checkbox" @label="Formerly Known As" @inlineCheckbox={{true}}/>
+        <FormRow @class="mt-4">
+          <FormLabel @fixed={{true}} @class="pt-0">Search By:</FormLabel>
+          <div class="col-sm-12 col-lg-9">
+            <f.checkbox @name="callsign"
+                        @label="Callsign"
+                        @inline={{true}}
+            />
+            <f.checkbox @name="name"
+                        @label="Name"
+                        @inline={{true}}
+            />
+            <f.checkbox @name="email"
+                        @label="Email"
+                        @inline={{true}}
+            />
+            <f.checkbox @name="formerly_known_as"
+                        @label="Formerly Known As"
+                        @inline={{true}}
+            />
           </div>
         </FormRow>
         <FormRow>
-          <FormLabel @fixed={{true}}>Include:</FormLabel>
-          <div class="col-sm-12 col-lg-9 mt-2">
-            <f.input @name="auditor" @type="checkbox" @label="Auditor" @inlineCheckbox={{true}}/>
-            <f.input @name="past_prospective" @type="checkbox" @label="Past Prospective" @inlineCheckbox={{true}}/>
+          <FormLabel @fixed={{true}}  @class="pt-0">Include:</FormLabel>
+          <div class="col-sm-12 col-lg-9">
+            <f.checkbox @name="auditor"
+                        @label="Auditor"
+                        @inline={{true}}/>
+            <f.checkbox @name="past_prospective"
+                        @label="Past Prospective"
+                        @inline={{true}}/>
           </div>
         </FormRow>
         <FormRow>

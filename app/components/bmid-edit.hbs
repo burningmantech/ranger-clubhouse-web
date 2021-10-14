@@ -14,44 +14,68 @@
     {{fa-icon "plus-circle" color="success"}} = if present, person has qualified provision (showers, meals).
   </p>
   <FormRow>
-    <f.input @name="status" @label="BMID Status" @type="select" @options={{this.bmidStatusOptions}}
-             @fieldSize="sm"/>
-    <f.input @name="meals" @label="Meals" @type="select" @options={{this.mealOptions}} @inline={{true}}
-             @fieldSize="sm">
+    <f.select @name="status"
+              @label="BMID Status"
+              @options={{this.bmidStatusOptions}}
+              @fieldSize="sm"/>
+    <f.select @name="meals"
+              @label="Meals"
+              @options={{this.mealOptions}}
+              @fieldSize="sm">
       {{#if @entry.want_meals}}
         <div class="text-success">{{fa-icon "plus-circle"}} {{@entry.want_meals}}</div>
       {{/if}}
-    </f.input>
-    <f.input @name="showers" @label="Showers" @type="select" @options={{this.showerOptions}} @inline={{true}}
-             @fieldSize="sm">
+    </f.select>
+    <f.select @name="showers"
+              @label="Showers"
+              @options={{this.showerOptions}}
+              @fieldSize="sm">
       {{#if @entry.want_showers}}
         <div class="text-success">{{fa-icon "plus-circle"}} showers</div>
       {{/if}}
-    </f.input>
-    <f.input @name="admission_date" @label="WAP Date" @type="select" @disabled={{@entry.wapDisabled}}
-             @options={{@admissionDateOptions}} @fieldSize="sm"/>
+    </f.select>
+    <f.select @name="admission_date"
+              @label="WAP Date"
+              @disabled={{@entry.wapDisabled}}
+              @options={{@admissionDateOptions}}
+              @fieldSize="sm"/>
   </FormRow>
 
   <FormRow @margin="mt-4 mb-2">
     <FormLabel @fixed={{true}}>Title 1</FormLabel>
-    <f.input @name="title1" @type="text" @size={{30}} @maxLength={{64}} @fieldSize="sm"/>
+    <f.text @name="title1"
+            @size={{30}}
+            @maxlength={{64}}
+            @fieldSize="sm"/>
   </FormRow>
   <FormRow>
     <FormLabel @fixed={{true}}>Title 2</FormLabel>
-    <f.input @name="title2" @type="text" @size={{30}} @maxLength={{64}} @fieldSize="sm"/>
+    <f.text @name="title2"
+            @size={{30}}
+            @maxlength={{64}}
+            @fieldSize="sm"/>
   </FormRow>
   <FormRow>
     <FormLabel @fixed={{true}}>Title 3</FormLabel>
-    <f.input @name="title3" @type="text" @size={{30}} @maxLength={{64}} @fieldSize="sm"/>
+    <f.text @name="title3"
+            @size={{30}}
+            @maxlength={{64}}
+            @fieldSize="sm"/>
   </FormRow>
 
   <FormRow>
     <FormLabel @fixed={{true}}>Team</FormLabel>
-    <f.input @name="team" @type="text" @size={{30}} @maxLength={{64}} @fieldSize="sm"/>
+    <f.text @name="team"
+            @size={{30}}
+            @maxlength={{64}}
+            @fieldSize="sm"/>
   </FormRow>
   <FormRow>
     <FormLabel @fixed={{true}}>Notes</FormLabel>
-    <f.input @name="notes" @type="textarea" @rows={{4}} @cols={{80}} @fieldSize="sm"/>
+    <f.textarea @name="notes"
+                @rows={{4}}
+                @cols={{80}}
+                @fieldSize="sm"/>
   </FormRow>
   {{#if @entry.isNew}}
     <p>

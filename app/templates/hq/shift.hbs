@@ -68,21 +68,21 @@
             </td>
             <td class="align-middle">
               <UiButton @type="success" @class="btn-timesheet" @onClick={{fn this.markEntryCorrect entry}}
-                      @disabled={{entry.isSaving}}>
+                        @disabled={{entry.isSaving}}>
                 YES
                 {{#if entry.isVerified}}
                   {{fa-icon "check"}}
                 {{/if}}
               </UiButton>
               <UiButton @type="light-red" @class="btn-timesheet" @onClick={{fn this.markEntryIncorrect entry}}
-                      @disabled={{entry.isSaving}}>
+                        @disabled={{entry.isSaving}}>
                 NO
                 {{#if entry.isPending}}
                   {{fa-icon "check"}}
                 {{/if}}
               </UiButton>
               <UiButton @type="dark-gray" @class="btn-timesheet" @onClick={{fn this.ignoreEntry entry}}
-                      @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
+                        @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
                 IGNORE
                 {{#if entry.isIgnoring}}
                   {{fa-icon "check"}}
@@ -147,7 +147,6 @@
           <dt class="col-sm-2">Credits:</dt>
           <dd class="col-sm-10">{{credits-format this.entry.credits}}</dd>
         </dl>
-        <p>
           Provide as much information as possible to help the reviewer understand why this entry should be fixed.
         <ul>
           <li>Why does {{this.person.callsign}} think the entry is wrong?</li>
@@ -155,11 +154,14 @@
           <li><b>Is the position "{{this.entry.position.title}}" wrong?</b> State the correct position</li>
           <li><b>Who was their shift partner(s)?</b></li>
         </ul>
-        </p>
-        <f.input @name="additional_notes" @label="Timesheet entry correction note:" @type="textarea"
-                 @autofocus={{true}}
-                 @cols={{80}}
-                 @rows={{3}}/>
+
+        <FormRow>
+          <f.textarea @name="additional_notes"
+                      @label="Timesheet entry correction note:"
+                      @autofocus={{true}}
+                      @cols={{80}}
+                      @rows={{3}}/>
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Submit Correction" @disabled={{this.isCorrectionSubmitting}} />

@@ -1,0 +1,24 @@
+<ChForm::WrapBlock @wrapClass={{this.wrapClass}}>
+  {{#if @label~}}
+    <label class={{this.labelClass}} for={{this.domId}}>{{@label}}</label>
+  {{~/if~}}
+  <ChForm::WrapBlock @wrapClass={{this.inputWrapClass}}>
+    <AutocompleteInput @placeholder={{@placeholder}}
+                       @onSearch={{@onSearch}}
+                       @onSelect={{this.update}}
+                       @onFocus={{@onFocus}}
+                       @disabled={{@disabled}}
+                       @autofocus={{@autofocus}}
+                       @inputClass="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
+                       @text={{this.modelValue}} as |item|>
+      {{~item~}}
+    </AutocompleteInput>
+    {{~#if @hint~}}
+      <ChForm::Hint @hint={{@hint}} />
+    {{~/if~}}
+    {{#if @showCharCount}}
+      <ChForm::CharCount @count={{this.charCount}} @length={{@maxlength}} />
+    {{/if}}
+    <ChForm::ErrorMessages @errorMessages={{this.errorMessages}} />
+  </ChForm::WrapBlock>
+</ChForm::WrapBlock>

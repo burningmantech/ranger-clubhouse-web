@@ -1,0 +1,24 @@
+<ChForm::WrapBlock @wrapClass={{this.wrapClass}}>
+  {{#if @label~}}
+    <label class="{{this.labelClass}} {{if @disabled "text-muted"}}" for={{this.domId}}>{{@label}}</label>
+  {{~/if~}}
+  <ChForm::WrapBlock @wrapClass={{this.groupWrapClass}}>
+    {{#each this.checkedBoxes as |option|~}}
+      <ChForm::WrapBlock @wrapClass={{this.inputWrapClass}}>
+        <input type="checkbox"
+               id={{option.domId}}
+               class={{this.controlClass}}
+               checked={{option.isChecked}}
+               disabled={{or option.disabled @disabled}}
+          {{on "change" (fn this.onClickEvent option)}}
+        >
+        <label class="{{this.checkboxLabelClass}} {{if (or option.disabled @disabled) "text-muted"}}"
+               for={{option.domId}}>{{option.label}}</label>
+      </ChForm::WrapBlock>
+    {{/each}}
+    {{~#if @hint~}}
+      <ChForm::Hint @hint={{@hint}} />
+    {{~/if~}}
+    <ChForm::ErrorMessages @errorMessages={{this.errorMessages}} />
+  </ChForm::WrapBlock>
+</ChForm::WrapBlock>

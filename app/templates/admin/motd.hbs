@@ -6,12 +6,18 @@
 
 <ChForm @formId="query" @formFor={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
   <FormRow>
-    <FormLabel @auto={{true}}>Filter by Type</FormLabel>
-    <f.input @name="type" @type="select" @options={{this.typeOptions}} />
-    <FormLabel @auto={{true}}>by Audience</FormLabel>
-    <f.input @name="audience" @type="select" @options={{this.audienceOptions}}/>
-    <FormLabel @auto={{true}}>Sort</FormLabel>
-    <f.input @name="sort" @type="select" @options={{this.sortOptions}} />
+    <f.select @name="type"
+              @label="Filter by Type"
+              @inline={{true}}
+              @options={{this.typeOptions}} />
+    <f.select @name="audience"
+              @label="by Audience"
+              @inline={{true}}
+              @options={{this.audienceOptions}}/>
+    <f.select @name="sort"
+              @label="Sort"
+              @inline={{true}}
+              @options={{this.sortOptions}} />
     <div class="col-auto">
       <f.submit @label="Search"/>
     </div>
@@ -97,23 +103,32 @@ Showing {{this.total}} of {{pluralize this.table_count "message"}}. Page {{this.
         <FormRow>
           <FormLabel @fixed={{true}}>Audience</FormLabel>
           <div class="col-auto mt-2">
-            <div class="form-check-inline">
-              <f.input @name="for_rangers" @label="Rangers" @type="checkbox" @inlineCheckbox={{true}} />
-              <f.input @name="for_pnvs" @label="Prospectives + Alphas" @type="checkbox" @inlineCheckbox={{true}} />
-              <f.input @name="for_auditors" @label="Auditors" @type="checkbox" @inlineCheckbox={{true}} />
-            </div>
+              <f.checkbox @name="for_rangers"
+                          @label="Rangers"
+                          @inline={{true}} />
+              <f.checkbox @name="for_pnvs"
+                          @label="Prospectives + Alphas"
+                          @inline={{true}} />
+              <f.checkbox @name="for_auditors"
+                          @label="Auditors"
+                          @inline={{true}} />
           </div>
         </FormRow>
         <FormRow>
           <FormLabel @fixed={{true}}>Expires At</FormLabel>
-          <f.input @name="expires_at" @type="datetime"/>
+          <f.datetime @name="expires_at" />
         </FormRow>
 
         <FormRow>
-          <f.input @name="subject" @label="Subject / Heading" @type="text" @size={{80}} />
+          <f.text @name="subject"
+                  @label="Subject / Heading"
+                  @size={{80}} />
         </FormRow>
         <FormRow>
-          <f.input @name="message" @label="Message Body" @type="textarea" @rows={{10}} @cols={{80}}/>
+          <f.textarea @name="message"
+                      @label="Message Body"
+                      @rows={{10}}
+                      @cols={{80}}/>
         </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>

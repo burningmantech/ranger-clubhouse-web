@@ -79,20 +79,22 @@
 
 <ChForm @formId="bulkForm" @formFor={{this.bulkForm}} @changeSet={{false}} @onSubmit={{this.verifyAction}} as |f|>
   <FormRow>
-    <FormLabel>Position</FormLabel>
-    <f.input @name="positionId" @type="select" @options={{this.positionOptions}}/>
+    <f.select @name="positionId"
+              @label="Position"
+              @options={{this.positionOptions}}/>
   </FormRow>
   <FormRow>
     <div class="col-12 mt-2">
-      <f.input @name="grant" @type="radioGroup" @options={{this.grantRevokeOptions}} @inlineCheckbox={{true}}/>
+      <f.radioGroup @name="grant"
+                    @options={{this.grantRevokeOptions}}
+                    @inline={{true}}/>
     </div>
   </FormRow>
   <FormRow>
-    <f.input @name="callsigns"
-             @label="Enter a list of callsigns to grant or revoke a position:"
-             @type="textarea"
-             @cols={{30}}
-             @rows={{10}}/>
+    <f.textarea @name="callsigns"
+                @label="Enter a list of callsigns to grant or revoke a position:"
+                @cols={{30}}
+                @rows={{10}}/>
   </FormRow>
   <p>
     Don't worry, you'll have a chance to review the callsigns and position before actually committing the changes.

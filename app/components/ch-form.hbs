@@ -4,15 +4,20 @@
   {{on "submit" this.submitEvent}}
   {{did-insert this.insertedFormElement}}
 >
-  {{yield (hash model=this.model
-                  input=(component "ch-form/field"
-                          model=this.model
-                          formId=@formId
-                          fieldChangeAction=this.fieldChangeAction
-                          autocomplete=this.autocomplete
-                  )
-                  submit=(component "ch-form/submit" formSubmitAction=this.submitForm)
-                  cancel=(component "ch-form/cancel" cancelAction=this.cancelForm)
+  {{yield (hash
+            model=this.model
+            checkbox=(component "ch-form/checkbox-field" form=this)
+            checkboxGroup=(component "ch-form/checkbox-group-field" form=this)
+            datetime=(component "ch-form/datetime-field" form=this)
+            editor=(component "ch-form/editor-field" form=this)
+            number=(component "ch-form/number-field" form=this)
+            password=(component "ch-form/password-field" form=this)
+            radioGroup=(component "ch-form/radio-group-field" form=this)
+            search=(component "ch-form/search-field" form=this)
+            select=(component "ch-form/select-field" form=this)
+            submit=(component "ch-form/submit" formSubmitAction=this.submitForm)
+            text=(component "ch-form/text-field" form=this)
+            textarea=(component "ch-form/textarea-field" form=this)
           )
   }}
 </form>

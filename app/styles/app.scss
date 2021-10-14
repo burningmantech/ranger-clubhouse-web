@@ -31,10 +31,11 @@ main {
 
 .ui-section {
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 15px;
   background-color: #ffffff;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
+
 
 @media print {
   h1 {
@@ -563,4 +564,20 @@ ul.no-indent, ol.no-indent {
   height: 10px;
   box-shadow: 0 0 10px rgba(0, 13, 41, 0.8);
   transition: none;
+}
+
+.columns-container {
+  column-width: auto;
+}
+
+.columns-3 {
+  column-count: 3;
+}
+
+.columns-4 {
+  column-count: 4;
+}
+
+.columns-5 {
+  column-count: 5;
 }

@@ -49,39 +49,45 @@
             @formFor={{this.entry}}
             @validator={{this.eventDateValidations}}
             @onSubmit={{this.save}} as |f|>
-        <Modal.body>
-            <FormRow>
-                <f.input @name="event_start" @label="Event Start / Gate Open" @type="datetime" @inline={{true}}
-                         @size={{25}}/>
-                    <f.input @name="event_end" @label="Event End" @type="datetime" @inline={{true}} @size={{25}}/>
-            </FormRow>
-            <FormRow>
-                <div class="col">
-                    Pre-Event and Post Event are date &amp; times used by Hours &amp; Credits report to determine which
-                    credit
-                    hours should be included.
-                </div>
-            </FormRow>
-            <FormRow>
-                <f.input @name="pre_event_start" @label="Pre-Event Start" @type="datetime" @inline={{true}}
-                         @size={{25}}/>
-                    <f.input @name="post_event_end" @label="Post Event End" @type="datetime" @inline={{true}}
-                             @size={{25}}/>
-            </FormRow>
-            <FormRow>
-                <div class="col">
-                    When trying to create a slot during the pre-event period, the slot must be an approved pre-event
-                    position
-                    OR the user must be an admin.
-                </div>
-            </FormRow>
-            <FormRow>
-                <f.input @name="pre_event_slot_start" @label="Pre-Event Slot Start" @type="datetime" @inline={{true}}
-                         @size={{25}}/>
-                    <f.input @name="pre_event_slot_end" @label="Pre-Event Slot End" @type="datetime" @inline={{true}}
-                             @size={{25}}/>
-            </FormRow>
-        </Modal.body>
+      <Modal.body>
+        <FormRow>
+          <f.datetime @name="event_start"
+                      @label="Event Start / Gate Open"
+                      @size={{25}}/>
+          <f.datetime @name="event_end"
+                      @label="Event End"
+                      @type="datetime"
+                      @size={{25}}/>
+        </FormRow>
+        <p>
+          Pre-Event and Post Event are date &amp; times used by Hours &amp; Credits report to determine which
+          credit hours should be included.
+        </p>
+        <FormRow>
+          <f.datetime @name="pre_event_start"
+                      @label="Pre-Event Start"
+                      @type="datetime"
+
+                      @size={{25}}/>
+          <f.datetime @name="post_event_end"
+                      @label="Post Event End"
+                      @inline={{true}}
+                      @size={{25}}/>
+        </FormRow>
+        <p>
+          When trying to create a slot during the pre-event period, the slot must be an approved pre-event
+          position OR the user must be an admin.
+        </p>
+        <FormRow>
+          <f.datetime @name="pre_event_slot_start"
+                      @label="Pre-Event Slot Start"
+                      @size={{25}}/>
+          <f.datetime @name="pre_event_slot_end"
+                      @label="Pre-Event Slot End"
+
+                      @size={{25}}/>
+        </FormRow>
+      </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if f.model.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
         <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancel}} />

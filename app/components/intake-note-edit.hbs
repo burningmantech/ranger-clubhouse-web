@@ -40,17 +40,22 @@
 
     {{#if @canAddNote}}
       <ChForm @formId="person-note" @formFor={{this.noteForm}} @onSubmit={{this.submitNoteAction}} as |f|>
-        <b>Your note will be timestamped, and appended to any existing notes.</b>
+        <p>
+          <b>Your note will be timestamped, and appended to any existing notes.</b>
+        </p>
         <FormRow>
-          <f.input @name="event_year" @label="Event Year" @type="select" @options={{this.yearOptions}} />
-          <f.input @name="ranking" @label={{concat (uppercase @type) " Ranking"}} @type="select"
-                   @options={{if (eq @type "personnel") this.personnelRankingOptions this.rankingOptions}} />
+          <f.select @name="event_year"
+                    @label="Event Year"
+                    @options={{this.yearOptions}} />
+          <f.select @name="ranking"
+                    @label="{{uppercase @type}} Ranking"
+                    @options={{if (eq @type "personnel") this.personnelRankingOptions this.rankingOptions}} />
         </FormRow>
         <FormRow>
-          <f.input @name="note"
-                   @label="Enter your {{@type}}  notes:"
-                   @type="textarea"
-                   @rows={{5}} @cols={{80}}/>
+          <f.textarea @name="note"
+                      @label="Enter your {{@type}}  notes:"
+                      @rows={{5}}
+                      @cols={{80}}/>
         </FormRow>
         <f.submit @label="Save Note" disabled={{or this.isSubmitting (is-empty f.model.note)}} />
         <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{@closeNoteAction}} />

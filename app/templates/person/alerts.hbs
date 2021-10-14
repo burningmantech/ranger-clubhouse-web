@@ -12,26 +12,26 @@
   <UiSection>
     <:title>SMS Administration Flags</:title>
     <:body>
-        <p>
-          Because you are a Tech Ninja, you may adjust the SMS Administration flags.
-        </p>
+      <p>
+        Because you are a Tech Ninja, you may adjust the SMS Administration flags.
+      </p>
       <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.savePerson}} as |f|>
         <FormRow>
           <FormLabel>On Playa Flags</FormLabel>
           <div class="col-auto">
-            <f.input @name="sms_on_playa_verified" @label="Verified" @type="checkbox"/>
+            <f.checkbox @name="sms_on_playa_verified" @label="Verified"/>
           </div>
           <div class="col-auto">
-            <f.input @name="sms_on_playa_stopped" @label="Stopped" @type="checkbox"/>
+            <f.checkbox @name="sms_on_playa_stopped" @label="Stopped"/>
           </div>
         </FormRow>
         <FormRow>
           <FormLabel>Off Playa Flags</FormLabel>
           <div class="col-auto">
-            <f.input @name="sms_off_playa_verified" @label="Verified" @type="checkbox"/>
+            <f.checkbox @name="sms_off_playa_verified" @label="Verified"/>
           </div>
           <div class="col-auto">
-            <f.input @name="sms_off_playa_stopped" @label="Stopped" @type="checkbox"/>
+            <f.checkbox @name="sms_off_playa_stopped" @label="Stopped"/>
           </div>
         </FormRow>
         <f.submit @label="Update Flags" @disabled={{this.person.isSaving}} />

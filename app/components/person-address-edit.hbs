@@ -1,59 +1,51 @@
 <FormRow>
-  <@f.input @name="country"
+  <@f.select @name="country"
             @label="Country"
-            @type="select"
             @options={{this.countryOptions}}
             @onChange={{action this.countryChange}}
             @autocomplete="country"
-            @inline={{true}} />
+           />
 </FormRow>
 <FormRow>
-  <@f.input @name="street1"
-            @type="text"
+  <@f.text @name="street1"
             @label="Street"
+            @size={{30}}
             @maxlength={{128}}
-            @autocomplete="address-line1"
-            @grid="col-sm-6 col-lg-4" />
-  <@f.input @name="apt"
-            @type="text"
-            @label="Apt"
-            @maxlength={{10}}
-            @grid="col-lg-1 col-sm-4" />
+            @autocomplete="address-line1" />
+  <@f.text @name="apt"
+           @label="Apt"
+           @size={{5}}
+           @maxlength={{10}}/>
 </FormRow>
 
 <FormRow>
-  <@f.input @name="street2"
-            @type="text"
+  <@f.text @name="street2"
             @label="Street Line 2"
-            @maxlength={{128}}
-            @autocomplete="address-line2"
-            @grid="col-sm-12 col-lg-4" />
+           @size={{30}}
+           @maxlength={{128}}
+            @autocomplete="address-line2" />
 </FormRow>
 <FormRow>
-  <@f.input @name="city"
-            @type="text"
-            @label="City"
-            @autocomplete="address-level2"
-            @grid="col-sm-5 col-lg-4" />
+  <@f.text @name="city"
+           @label="City"
+           @size={{20}}
+           @autocomplete="address-level2" />
   {{#if this.stateOptions}}
-    <@f.input @name="state"
+    <@f.select @name="state"
               @label={{this.stateLabel}}
-              @type="select"
               @options={{this.stateOptions}}
-               @autocomplete="address-level1"
-              @grid="col-sm-12 col-lg-auto" />
+               @autocomplete="address-level1" />
   {{else}}
-    <@f.input @name="state"
+    <@f.text @name="state"
               @label={{this.stateLabel}}
               @maxlength={{128}}
               @disabled={{if @f.model.country false true}}
-              @autocomplete="address-level1"
-              @grid="col-sm-12 col-lg-auto" />
+              @autocomplete="address-level1" />
   {{/if}}
 
-  <@f.input @name="zip"
+  <@f.text @name="zip"
             @label={{if (eq @f.model.country "US") "Zipcode" "Postal Code"}}
+            @size={{10}}
             @maxlength={{10}}
-            @autocomplete="postal-code"
-            @grid="col-sm-12 col-lg-auto" />
+            @autocomplete="postal-code" />
 </FormRow>

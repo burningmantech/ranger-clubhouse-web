@@ -1,4 +1,6 @@
-<h3 class="d-print-none">Timesheet Entries <HelpPopover @slug="hq-timesheet-entries"/></h3>
+<h3 class="d-print-none">Timesheet Entries
+  <HelpPopover @slug="hq-timesheet-entries"/>
+</h3>
 
 <h1 class="d-none d-print-block">{{this.year}} Timesheet Entries For {{this.person.callsign}}</h1>
 
@@ -13,11 +15,15 @@
   </p>
 {{/if}}
 
-<hr class="mb-4">
-<h3>Missing Timesheet Entry Requests
-  <HelpPopover @slug="hq-missing-timesheets"/>
-</h3>
-<Me::TimesheetMissingCommon @person={{this.person}}
-                            @timesheetsMissing={{this.timesheetsMissing}}
-                            @timesheetInfo={{this.timesheetInfo}}
-                            @positions={{this.correctionPositions}} />
+<UiSection>
+  <:title>
+    Missing Timesheet Entry Requests
+    <HelpPopover @slug="hq-missing-timesheets"/>
+  </:title>
+  <:body>
+    <Me::TimesheetMissingCommon @person={{this.person}}
+                                @timesheetsMissing={{this.timesheetsMissing}}
+                                @timesheetInfo={{this.timesheetInfo}}
+                                @positions={{this.correctionPositions}} />
+  </:body>
+</UiSection>

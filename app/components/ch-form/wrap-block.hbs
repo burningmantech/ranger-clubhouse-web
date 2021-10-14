@@ -1,0 +1,7 @@
+{{#if (is-empty @wrapClass)}}
+  {{yield}}
+{{else}}
+  <div class={{@wrapClass}}>
+    {{yield}}
+  </div>
+{{/if}}

@@ -30,8 +30,12 @@
     <ChForm @formId="verify" @formFor={{this.verifyForm}} as |f|>
       {{#if (or this.numbers.is_same (and this.numbers.off_playa.phone (not this.numbers.off_playa.is_verified)))}}
         <FormRow>
-          <f.input @name="off_playa" @label="Enter verification code for {{this.numbers.off_playa.phone}}"
-                   @type="text" @inputmode="decimal" @size={{5}} @maxlength={{5}} @inline={{true}}/>
+          <f.text @name="off_playa"
+                  @label="Enter verification code for {{this.numbers.off_playa.phone}}"
+                  @inputmode="decimal"
+                  @size={{5}}
+                  @maxlength={{5}}
+          />
         </FormRow>
         <FormRow>
           <UiButton @disabled={{this.isSubmitting}}
@@ -47,31 +51,28 @@
       {{/if}}
       {{#if (and (not this.numbers.is_same) this.numbers.on_playa.phone (not this.numbers.on_playa.is_verified))}}
         <FormRow>
-          <f.input @name="on_playa" @label={{concat "Enter verification code for " this.numbers.on_playa.phone}}
-                   @type="text" @inputmode="decimal" @size={{5}} @maxlength={{5}} @inline={{true}}/>
+          <f.text @name="on_playa"
+                  @label="Enter verification code for {{this.numbers.on_playa.phone}}"
+                  @inputmode="decimal"
+                  @size={{5}}
+                  @maxlength={{5}}/>
         </FormRow>
-        <FormRow>
-          <UiButton @disabled={{this.isSubmitting}}
-                    @onClick={{fn this.confirmCodeAction f.model "on-playa"}}>
-            Verify
-          </UiButton>
-          <UiButton @type="secondary"
-                    @class="ml-2"
-                    @onClick={{fn this.sendNewCodeAction "on-playa"}}
-                    @disabled={{this.isSubmitting}}>
-            Resend verification code
-          </UiButton>
-        </FormRow>
+        <UiButton @disabled={{this.isSubmitting}}
+                  @onClick={{fn this.confirmCodeAction f.model "on-playa"}}>
+          Verify
+        </UiButton>
+        <UiButton @type="secondary"
+                  @class="ml-2"
+                  @onClick={{fn this.sendNewCodeAction "on-playa"}}
+                  @disabled={{this.isSubmitting}}>
+          Resend verification code
+        </UiButton>
       {{/if}}
-      <FormRow>
-        <div class="col-auto">
-          {{#if this.isSubmitting}}
-            <LoadingIndicator/>
-          {{else}}
-            &nbsp;
-          {{/if}}
-        </div>
-      </FormRow>
+      {{#if this.isSubmitting}}
+        <LoadingIndicator/>
+      {{else}}
+        &nbsp;
+      {{/if}}
     </ChForm>
   </ChNotice>
 {{/if}}
@@ -87,23 +88,24 @@
     <ChForm @formId="numbers" @formFor={{this.phoneForm}} @validator={{this.numberValidations}}
             @onSubmit={{this.saveNumbersAction}} as |f|>
       <FormRow>
-        <f.input @name="off_playa"
-                 @label={{if f.model.is_same
-                             "Pre-Event & On Playa phone number:" "Pre-Event phone number:"}}
-                 @type="text" @inputmode="tel" @size={{30}} @inline={{true}}/>
+        <f.text @name="off_playa"
+                @label={{if f.model.is_same
+                            "Pre-Event & On Playa phone number:" "Pre-Event phone number:"}}
+                @inputmode="tel"
+                size={{30}}
+        />
       </FormRow>
       <FormRow>
         <div class="col-12">
-          <f.input @name="is_same" @label="On playa number is the same as the pre-event number" @type="checkbox"/>
+          <f.checkbox @name="is_same" @label="On playa number is the same as the pre-event number"/>
         </div>
       </FormRow>
       <FormRow @class={{if f.model.is_same "d-none"}}>
-        <f.input @name="on_playa"
-                 @label="On Playa phone number:"
-                 @type="text"
-                 @inputmode="tel"
-                 @size={{30}}
-                 @inline={{true}}/>
+        <f.text @name="on_playa"
+                @label="On Playa phone number:"
+                @inputmode="tel"
+                @size={{30}}
+        />
       </FormRow>
 
       <div class="mt-3">

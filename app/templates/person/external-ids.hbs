@@ -5,21 +5,19 @@
 </p>
 <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{action this.saveAction}} as |f|>
   <FormRow>
-    <f.input @name="bpguid"
-             @label="Burner Profile Global UID (BPGUID)"
-             @type="text"
-             @size={{40}}
-             @maxlength={{200}}
-             @inline={{true}}/>
+    <f.text @name="bpguid"
+            @label="Burner Profile Global UID (BPGUID)"
+            @size={{40}}
+            @maxlength={{200}}
+    />
   </FormRow>
 
   <FormRow>
-    <f.input @name="lms_id"
-             @label="LMS Account ID"
-             @type="text"
-             @size={{40}}
-             @maxlength={{200}}
-             @inline={{true}}/>
+    <f.text @name="lms_id"
+            @label="LMS Account ID"
+            @size={{40}}
+            @maxlength={{200}}
+    />
   </FormRow>
 
   <FormRow>

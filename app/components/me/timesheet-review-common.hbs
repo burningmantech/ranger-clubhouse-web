@@ -110,8 +110,7 @@
     <ChForm @formId="correction"
             @formFor={{this.entry}}
             @validator={{this.correctionValidations}}
-            @onSubmit={{this.saveCorrectionAction}}
-            @onCancel={{this.cancelCorrectionAction}} as |f|>
+            @onSubmit={{this.saveCorrectionAction}} as |f|>
       <Modal.body>
         <dl class="row">
           <dt class="col-2">Position:</dt>
@@ -148,15 +147,16 @@
           {{nl2br this.entry.notes}}
         {{/if}}
         <FormRow>
-          <f.input @name="additional_notes"
+          <f.textarea @name="additional_notes"
                    @label={{if this.entry.isRejected "Supply additional information for an apeal:"
                                "Your message to the timesheet review team:"}}
-                   @type="textarea" @cols={{80}} @rows={{3}} />
+                   @cols={{80}}
+                   @rows={{3}} />
         </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Submit Correction Request" @disabled={{this.entry.isSaving}} />
-        <f.cancel @disabled={{this.entry.isSaving}} />
+        <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelCorrectionAction}} />
         {{#if this.entry.isSaving}}
           <LoadingIndicator/>
         {{/if}}

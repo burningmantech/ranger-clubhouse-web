@@ -9,6 +9,7 @@ import {tracked} from '@glimmer/tracking';
 export default class SurveyQuestionnaireComponent extends Component {
   @service house;
   @service ajax;
+  @service session;
   @service toast;
   @tracked isSubmitting;
 

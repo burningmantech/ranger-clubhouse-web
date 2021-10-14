@@ -1,0 +1,23 @@
+<ChForm::WrapBlock @wrapClass={{this.wrapClass}}>
+  {{#if @label~}}
+    <label class={{this.labelClass}} for={{this.domId}}>{{@label}}</label>
+  {{~/if~}}
+  <ChForm::WrapBlock @wrapClass={{this.inputWrapClass}}>
+    <ChForm::Select @name={{@name}}
+                    @controlClass={{this.controlClass}}
+                    @disabled={{@disabled}}
+                    @includeBlank={{@includeBlank}}
+                    @multiple={{@multiple}}
+                    @onChange={{this.update}}
+                    @options={{@options}}
+                    @size={{@size}}
+                    @value={{this.modelValue}} />
+    {{#if (has-block)}}
+      {{yield}}
+    {{/if}}
+    {{~#if @hint~}}
+      <ChForm::Hint @hint={{@hint}} />
+    {{~/if~}}
+    <ChForm::ErrorMessages @errorMessages={{this.errorMessages}} />
+  </ChForm::WrapBlock>
+</ChForm::WrapBlock>

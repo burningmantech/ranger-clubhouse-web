@@ -47,7 +47,6 @@ export default class BroadcastComplexComponent extends Component {
     'auditor',
     'inactive extension',
     'inactive',
-    'prospective waitlist',
     'prospective',
     'retired'
   ];

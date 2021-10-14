@@ -1,9 +1,14 @@
-<ChForm @formId="checkout" @formFor={{this.assetForm}} @validator={{this.assetValdiations}}
+<ChForm @formId="checkout"
+        @formFor={{this.assetForm}}
+        @validator={{this.assetValdiations}}
         @onSubmit={{this.checkoutAsset}} as |f|>
   <FormRow>
-    <f.input @name="barcode" @placeholder="Enter Barcode" @type="text" @size={{15}} @inline={{true}}/>
-    <f.input @name="attachment_id" @type="select" @options={{this.attachmentOptions}}/>
-    <div class="col">
+    <f.text @name="barcode"
+             @placeholder="Enter Barcode"
+             @size={{15}} />
+    <f.select @name="attachment_id"
+              @options={{this.attachmentOptions}}/>
+    <div class="col-auto">
       <f.submit @label="Checkout" @disabled={{or (is-empty f.model.barcode) this.isSubmitting}}/>
       {{#if this.isSubmitting}}
         <LoadingIndicator/>
@@ -16,14 +21,14 @@
     </p>
   {{else if this.barcodeCheckedOut}}
     <p>
-      <b class="text-danger">Barcode {{this.barcodeCheckedOut.barcode}} still checked out by
+      <b class="text-danger">Asset {{this.barcodeCheckedOut.barcode}} still checked out by
         <LinkTo @route="person.assets"
                 @model={{this.barcodeCheckedOut.person_id}}>{{this.barcodeCheckedOut.callsign}}</LinkTo>
         on {{shift-format this.barcodeCheckedOut.checked_out}}
       </b>
     </p>
     <p>
-      <UiButton @type="secondary" @size="sm" @onClick={{this.showHistoryAction}}>
+      <UiButton @type="secondary" @onClick={{this.showHistoryAction}}>
         Show Asset History
       </UiButton>
     </p>

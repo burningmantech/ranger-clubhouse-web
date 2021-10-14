@@ -3,7 +3,7 @@
           @formFor={{this.contactForm}}
           @validator={{this.contactValidation}}
           @onSubmit={{action this.sendAction}}
-           as |f|>
+          as |f|>
     <Modal.body>
       {{#if @isInactive}}
         <ChNotice @type="danger" @icon="exclamation" @title="{{@callsign}} is inactive">
@@ -30,10 +30,10 @@
       </ol>
 
       <FormRow>
-        <f.input @name="message"
-                 @label="Enter your contact message to {{@callsign}}:"
-                 @type="textarea"
-                 @rows={{10}} @cols={{80}}
+        <f.textarea @name="message"
+                    @label="Enter your contact message to {{@callsign}}:"
+                    @rows={{10}}
+                    @cols={{80}}
         />
       </FormRow>
     </Modal.body>

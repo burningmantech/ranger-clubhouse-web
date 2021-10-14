@@ -48,12 +48,14 @@
             @onSubmit={{this.saveRole}} as |f|>
       <Modal.body>
         <FormRow>
-          <f.input @name="title" @type="text" @label="Role Title:" @maxlength={{25}} @size={{25}}/>
+          <f.text @name="title"
+                  @label="Role Title:"
+                  @maxlength={{25}}
+                  @size={{25}}/>
         </FormRow>
         <FormRow>
           <div class="col-auto">
-            <f.input @name="new_user_eligible"
-                     @type="checkbox"
+            <f.checkbox @name="new_user_eligible"
                      @label="New User Eligible?"
                      @options={{this.newUserOptions}}/>
           </div>

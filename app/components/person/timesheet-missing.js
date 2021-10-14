@@ -96,6 +96,19 @@ export default class PersonTimesheetMissingComponent extends Component {
   }
 
   /**
+   * Suggest a starting date for the datetime picker when creating a new request.
+   * @returns {string|null}
+   */
+
+  get startDateForEntry() {
+    if (this.newEntry.isNew) {
+      return `${this.args.year}-08-15`;
+    }
+
+    return null;
+  }
+
+  /**
    * Edit a missing timesheet entry
    * @param {TimesheetMissingModel} timesheet
    */

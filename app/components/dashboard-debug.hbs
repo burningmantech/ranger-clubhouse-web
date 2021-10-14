@@ -7,7 +7,7 @@
     <FormRow>
       <FormLabel @auto={{true}}>Period</FormLabel>
       <div class="col-auto">
-        <f.input @name="period" @type="select" @options={{this.periodOpts}}/>
+        <f.select @name="period" @options={{this.periodOpts}}/>
       </div>
       <FormLabel @auto={{true}}>Photo</FormLabel>
       <div class="col-auto mt-2">
@@ -21,28 +21,28 @@
     <FormRow>
       <FormLabel @auto={{true}}>Online Training</FormLabel>
       <div class="col-auto mt-2">
-        <f.input @name="online_training_enabled" @label="Enabled" @type="checkbox" @inlineCheckbox={{true}}/>
-        <f.input @name="online_training_passed" @label="Passed" @type="checkbox" @inlineCheckbox={{true}}/>
+        <f.checkbox @name="online_training_enabled" @label="Enabled"/>
+        <f.checkbox @name="online_training_passed" @label="Passed"/>
       </div>
     </FormRow>
     <FormRow>
       <FormLabel @auto={{true}}>Training</FormLabel>
       <div class="col-auto mt-2">
-        <f.input @name="trainings_available" @label="Trainings available" @type="checkbox"/>
-        <f.input @name="is_trainer" @label="Is Trainer" @type="checkbox" @onChange={{this.setIsTrainer}}/>
+        <f.checkbox @name="trainings_available" @label="Trainings available"/>
+        <f.checkbox @name="is_trainer" @label="Is Trainer" @onChange={{this.setIsTrainer}}/>
       </div>
       <div class="col-auto">
-        <button type="button" {{action this.setTraining
-                                       "no-shift"}}>Missing
+        <button type="button" {{action this.setTraining "no-shift"}}>
+          Missing
         </button>
-        <button type="button" {{action this.setTraining
-                                               "pending"}}>Pending
+        <button type="button" {{action this.setTraining "pending"}}>
+          Pending
         </button>
-        <button type="button" {{action this.setTraining
-                                               "fail"}}>Failed
+        <button type="button" {{action this.setTraining "fail"}}>
+          Failed
         </button>
-        <button type="button" {{action this.setTraining
-                                               "pass"}}>Passed
+        <button type="button" {{action this.setTraining "pass"}}>
+          Passed
         </button>
       </div>
       <div class="col-auto">
@@ -53,20 +53,20 @@
     <FormRow>
       <FormLabel @auto={{true}}>ART</FormLabel>
       <div class="col-auto">
-        <button type="button" {{action this.setARTs
-                                       "none"}}>None
+        <button type="button" {{action this.setARTs "none"}}>
+          None
         </button>
-        <button type="button" {{action this.setARTs
-                                               "no-shift"}}>Missing
+        <button type="button" {{action this.setARTs "no-shift"}}>
+          Missing
         </button>
-        <button type="button" {{action this.setARTs
-                                               "pending"}}>Pending
+        <button type="button" {{action this.setARTs "pending"}}>
+          Pending
         </button>
-        <button type="button" {{action this.setARTs
-                                               "fail"}}>Failed
+        <button type="button" {{action this.setARTs "fail"}}>
+          Failed
         </button>
-        <button type="button" {{action this.setARTs
-                                               "pass"}}>Passed
+        <button type="button" {{action this.setARTs "pass"}}>
+          Passed
         </button>
       </div>
     </FormRow>
@@ -83,9 +83,9 @@
     <FormRow>
       <FormLabel @auto={{true}}>Shifts</FormLabel>
       <div class="col-auto mt-2">
-        <f.input @name="dirt_shifts_available" @label="Dirt Shifts Available" @type="checkbox" @inlineCheckbox={{true}}/>
-        <f.input @name="burn_weekend_available" @label="Burn Shifts Available" @type="checkbox" @inlineCheckbox={{true}}/>
-        <f.input @name="burn_weekend_signup" @label="Have Burn Shift Signup" @type="checkbox" @inlineCheckbox={{true}}/>
+        <f.checkbox @name="dirt_shifts_available" @label="Dirt Shifts Available"/>
+        <f.checkbox @name="burn_weekend_available" @label="Burn Shifts Available"/>
+        <f.checkbox @name="burn_weekend_signup" @label="Have Burn Shift Signup"/>
       </div>
       <FormLabel @auto={{true}}>Shift Sign Up Count</FormLabel>
       <div class="col-auto">
@@ -98,8 +98,7 @@
     <FormRow>
       <FormLabel @auto={{true}}>Cheetah Cub</FormLabel>
       <div class="col-auto">
-        <f.input @name="is_cheetah_cub" @label="Is Cub" @type="checkbox" @inlineCheckbox={{true}}
-                 @onChange={{this.setCheetahCub}}/>
+        <f.checkbox @name="is_cheetah_cub" @label="Is Cub" @onChange={{this.setCheetahCub}}/>
       </div>
       <FormLabel @auto={{true}}> Shift</FormLabel>
       <div class="col-auto">
@@ -109,25 +108,26 @@
     </FormRow>
     <FormRow>
       <FormLabel @auto={{true}}>Ticketing</FormLabel>
-      <f.input @name="ticketing_period" @type="select" @options={{this.ticketingPeriodOpts}}
-               @onChange={{this.updateTicketingPeriod}}/>
+      <f.select @name="ticketing_period"
+                @options={{this.ticketingPeriodOpts}}
+                @onChange={{this.updateTicketingPeriod}}/>
       <FormLabel @auto={{true}}>Packages</FormLabel>
       <div class="col-auto">
-        <button type="button" {{action this.setTicketPackage
-                                       "claimed"}}>Claimed
+        <button type="button" {{action this.setTicketPackage "claimed"}}>
+          Claimed
         </button>
-        <button type="button" {{action this.setTicketPackage
-                                               "qualified"}}>Qualified
+        <button type="button" {{action this.setTicketPackage "qualified"}}>
+          Qualified
         </button>
-        <button type="button" {{action this.setTicketPackage
-                                               "banked"}}>Banked
+        <button type="button" {{action this.setTicketPackage "banked"}}>
+          Banked
         </button>
       </div>
     </FormRow>
     <FormRow>
       <FormLabel @auto={{true}}>Timesheets</FormLabel>
       <div class="col-auto mt-2">
-        <f.input @name="did_work" @label="Did Work" @type="checkbox" @inlineCheckbox={{true}}/>
+        <f.checkbox @name="did_work" @label="Did Work"/>
       </div>
       <FormLabel @auto={{true}}>Unverified Timesheets</FormLabel>
       <div class="col-auto mt-2">
@@ -136,43 +136,43 @@
         <button type="button" {{action this.setUnverifiedTS 2}}>2</button>
       </div>
       <div class="col-auto mt-2">
-        <f.input @name="timesheet_confirmed" @label="Final Confirmation" @type="checkbox" @inlineCheckbox={{true}}/>
+        <f.checkbox @name="timesheet_confirmed" @label="Final Confirmation"/>
       </div>
     </FormRow>
     <FormRow>
       <FormLabel @auto={{true}}>Agreements</FormLabel>
       <div class="col-auto mt-2">
-        <f.input @name="motorpool_agreement_available" @label="Motorpool Available" @type="checkbox"
-                 @inlineCheckbox={{true}}/>
-        <f.input @name="motorpool_agreement_signed" @label="Motorpool Signed" @type="checkbox"
-                 @inlineCheckbox={{true}}/>
-        <f.input @name="asset_authorized" @label="Radio Checkout Agreement" @type="checkbox"
-                 @inlineCheckbox={{true}}/>
-        <f.input @name="vehicle_requests_allowed" @label="Vehicle Requests Allowed" @type="checkbox"
-                 @inlineCheckbox={{true}}
-                 @onChange={{this.updateVehicleRequests}}/>
+        <f.checkbox @name="motorpool_agreement_available" @label="Motorpool Available"
+        />
+        <f.checkbox @name="motorpool_agreement_signed" @label="Motorpool Signed"
+        />
+        <f.checkbox @name="asset_authorized" @label="Radio Checkout Agreement"
+        />
+        <f.checkbox @name="vehicle_requests_allowed" @label="Vehicle Requests Allowed"
+
+                    @onChange={{this.updateVehicleRequests}}/>
       </div>
       <div class="col-auto">
         <button type="button" {{action this.setVehicleRequests
                                        "missing"}}>Missing
         </button>
         <button type="button" {{action this.setVehicleRequests
-                                               "pending"}}>Submit
+                                       "pending"}}>Submit
         </button>
         <button type="button" {{action this.setVehicleRequests
-                                               "approved"}}>Approved
+                                       "approved"}}>Approved
         </button>
         <button type="button" {{action this.setVehicleRequests
-                                               "rejected"}}>Denied
+                                       "rejected"}}>Denied
         </button>
       </div>
     </FormRow>
     <FormRow>
       <FormLabel @auto={{true}}>Misc</FormLabel>
       <div class="col-auto mt-2">
-        <f.input @name="behavioral_agreement" @label="Behavioral agreement signed" @type="checkbox"
-                 @inlineCheckbox={{true}}/>
-        <f.input @name="missing_bpguid" @label="Missing BPGUID" @type="checkbox" @inlineCheckbox={{true}}/>
+        <f.checkbox @name="behavioral_agreement" @label="Behavioral agreement signed"
+        />
+        <f.checkbox @name="missing_bpguid" @label="Missing BPGUID"/>
       </div>
     </FormRow>
   </ChForm>

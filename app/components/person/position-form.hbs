@@ -2,13 +2,13 @@
   <ChForm @formId="positions" @formFor={{this.positionForm}}  @onSubmit={{@onSave}} as |f|>
     <Modal.body>
       <FormRow>
-        <f.input @name="positionIds"
-                 @type="checkboxGroup"
-                 @cols={{4}}
-                 @options={{this.positionOptions}}/>
+        <f.checkboxGroup
+          @name="positionIds"
+          @cols={{5}}
+          @options={{this.positionOptions}}/>
       </FormRow>
     </Modal.body>
-    <Modal.footer @noAlign=true>
+    <Modal.footer @noAlign={{true}}>
       <f.submit @label="Update"/>
       <UiCancelButton @onClick={{@onCancel}} />
     </Modal.footer>

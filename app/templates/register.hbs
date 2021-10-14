@@ -88,34 +88,58 @@
     <ChForm @formId="register" @formFor={{this.registerForm}} @autocomplete="on" @validator={{this.registerValidations}}
             @onSubmit={{this.createAccount}} as |f|>
       <FormRow>
-        <f.input @name="human" @size={{4}} @maxlength={{10}} @inline={{true}}
-                 @label="First, prove you are human - What is 33 + 2?"/>
+        <f.text @name="human"
+                @label="First, prove you are human - What is 33 + 2?"
+                @size={{4}}
+                @maxlength={{10}}
+        />
       </FormRow>
       <FormRow>
-        <FormLabel>Why are you creating a Clubhouse account?</FormLabel>
-        <f.input @name="intent" @type="radioGroup" @options={{this.intentOptions}}/>
+        <f.radioGroup @name="intent"
+                      @label="Why are you creating a Clubhouse account?"
+                      @options={{this.intentOptions}}/>
       </FormRow>
       <FormRow>
-        <f.input @name="email" @label="Email Address" @type="text" @inputmode="email" @size={{30}}/>
+        <f.text @name="email"
+                @label="Email Address"
+                @inputmode="email"
+                @size={{30}}/>
       </FormRow>
 
       <FormRow>
-        <f.input @name="password" @type="password" @label="Password" @size={{20}} @maxlength={{30}} @inline={{true}}/>
-        <f.input @name="password_confirmation" @type="password" @label="Confirm Password" @size={{20}} @maxlength={{30}}
-                 @inline={{true}}/>
+        <f.password @name="password"
+                    @label="Password"
+                    @size={{20}}
+                    @maxlength={{30}} />
+        <f.password @name="password_confirmation"
+                    @label="Confirm Password"
+                    @size={{20}}
+                    @maxlength={{30}}
+                />
       </FormRow>
 
       <FormRow>
-        <f.input @name="first_name" @label="First Name" @maxlength={{25}} @grid="col-sm-4"/>
-        <f.input @name="mi" @label="M.I." @maxlength={{10}} @grid="col-sm-1"/>
-        <f.input @name="last_name" @label="Last Name" @maxlength={{25}} @grid="col-sm-4"/>
+        <f.text @name="first_name"
+                @label="First Name"
+                @maxlength={{25}}/>
+        <f.text @name="mi"
+                @label="M.I."
+                @size={{2}}
+                @maxlength={{10}} />
+        <f.text @name="last_name"
+                @label="Last Name"
+                @maxlength={{25}}/>
       </FormRow>
 
       <PersonAddressEdit @f={{f}} />
 
       <FormRow>
-        <f.input @name="home_phone" @label="Primary Phone" @type="text" @inputmode="tel" @grid="col-sm-4"/>
-        <f.input @name="alt_phone" @label="Alternative Phone" @type="text" @inputmode="tel" @grid="col-sm-4"/>
+        <f.text @name="home_phone"
+                @label="Primary Phone"
+                @inputmode="tel"/>
+        <f.text @name="alt_phone"
+                @label="Alternative Phone"
+                @inputmode="tel"/>
       </FormRow>
 
       <f.submit @label="Create My Auditor Account" disabled={{this.iSaving}} />

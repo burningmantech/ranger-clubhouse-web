@@ -55,8 +55,8 @@ export default class ChFormSelectComponent extends Component {
     switch (type) {
       case 'object':
         // { id: value, title: 'label' }
-        label = opt.title;
-        value = opt.id;
+        label = opt.title ?? opt.label;
+        value = opt.id ?? opt.value;
         break;
 
       case 'array':

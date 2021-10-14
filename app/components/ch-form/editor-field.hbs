@@ -1,0 +1,19 @@
+<ChForm::WrapBlock @wrapClass={{this.wrapClass}}>
+  {{#if @label~}}
+    <label class={{this.labelClass}} for={{this.domId}}>{{@label}}</label>
+  {{~/if~}}
+  <ChForm::WrapBlock @wrapClass={{this.inputWrapClass}}>
+    <WysiwygEditor @text={{this.modelValue}}
+                   @id={{this.domId}}
+                   @onChange={{this.update}}
+                   @onLoadError={{this.editorFailedToLoad}} />
+
+    {{~#if @hint~}}
+      <ChForm::Hint @hint={{@hint}} />
+    {{~/if~}}
+    {{#if @showCharCount}}
+      <ChForm::CharCount @count={{this.charCount}} @length={{@maxlength}} />
+    {{/if}}
+    <ChForm::ErrorMessages @errorMessages={{this.errorMessages}} />
+  </ChForm::WrapBlock>
+</ChForm::WrapBlock>

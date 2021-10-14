@@ -66,17 +66,29 @@
             @onSubmit={{this.createEntryAction}} as |f|>
       <Modal.body>
         <FormRow>
-          <f.input @name="on_duty" @type="datetime" @label="On Duty"/>
-          <f.input @name="off_duty" @type="datetime" @label="Off Duty"/>
-          <f.input @name="position_id" @type="select" @options={{@positions}} @label="Position"/>
+          <f.datetime @name="on_duty"
+                      @label="On Duty"
+                      @startDate={{this.startDateForEntry}} />
+          <f.datetime @name="off_duty"
+                      @label="Off Duty"
+                      @startDate={{this.startDateForEntry}}
+          />
+          <f.select @name="position_id"
+                    @label="Position"
+                    @options={{@positions}}/>
         </FormRow>
         <FormRow>
-          <f.input @name="partner" @type="text" @label="Partner(s) for shift." @size={{40}} @maxlength={{60}}/>
+          <f.text @name="partner"
+                  @label="Partner(s) for shift."
+                  @size={{40}}
+                  @maxlength={{60}}/>
         </FormRow>
         <FormRow>
-          <f.input @name="additional_notes" @type="textarea"
-                   @label="Correction message from {{@person.callsign}}"
-                   @cols={{80}} @rows={{4}} @options={{@positions}} />
+          <f.textarea @name="additional_notes"
+                      @label="Correction message from {{@person.callsign}}"
+                      @cols={{80}}
+                      @rows={{4}}
+                      @options={{@positions}} />
         </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
@@ -179,20 +191,17 @@
             </FormRow>
           {{/if}}
           <FormRow>
-            <f.input @name="additional_reviewer_notes"
-                     @label="Enter your response to {{@person.callsign}} below. Be clear and concise."
-                     @type="textarea"
-                     @cols={{80}} @rows={{4}}/>
+            <f.textarea @name="additional_reviewer_notes"
+                        @label="Enter your response to {{@person.callsign}} below. Be clear and concise."
+                        @cols={{80}}
+                        @rows={{4}}/>
           </FormRow>
           <FormRow>
-            <div class="col-auto">
-              <f.input @name="review_status"
-                       @label="Correction Status:"
-                       @type="radioGroup"
-                       @options={{this.reviewOptions}}
-                       @inlineCheckbox={{true}}
-                       @onChange={{this.statusChangeAction}} />
-            </div>
+            <f.radioGroup @name="review_status"
+                          @label="Correction Status:"
+                          @options={{this.reviewOptions}}
+                          @inline={{true}}
+                          @onChange={{this.statusChangeAction}} />
           </FormRow>
         </fieldset>
         {{#if (eq f.model.review_status "approved")}}
@@ -200,13 +209,17 @@
             <legend>New Timesheet Entry</legend>
             <FormRow>
               <div class="col-auto">
-                <f.input @name="create_entry" @type="checkbox" @label="Create new entry"/>
+                <f.checkbox @name="create_entry" @label="Create new entry"/>
               </div>
             </FormRow>
             <FormRow>
-              <f.input @name="new_on_duty" @type="datetime" @label="On Duty"/>
-              <f.input @name="new_off_duty" @type="datetime" @label="Off Duty"/>
-              <f.input @name="new_position_id" @label="Position" @type="select" @options={{@positions}}/>
+              <f.datetime @name="new_on_duty"
+                          @label="On Duty"/>
+              <f.datetime @name="new_off_duty"
+                          @label="Off Duty"/>
+              <f.select @name="new_position_id"
+                        @label="Position"
+                        @options={{@positions}}/>
             </FormRow>
           </fieldset>
         {{/if}}

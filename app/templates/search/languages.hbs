@@ -14,20 +14,21 @@
     <a href class="col-auto" {{action this.setLanguage "russian"}}>Russian</a>
   </FormRow>
   <FormRow>
-    <f.input @label="Enter a language to search for:"
-             @name="language" @type="text" @size={{50}} @maxlength={{50}}
-             @autofocus={{true}}
-             @onChange={{this.languageUpdate}}
+    <f.text @label="Enter a language to search for:"
+            @name="language"
+            @size={{50}}
+            @maxlength={{50}}
+            @autofocus={{true}}
+            @onChange={{this.languageUpdate}}
     />
   </FormRow>
   <FormRow>
     <div class="col-auto">
-      <f.input @name="offSite"
-               @type="checkbox"
-               @value={{1}}
-               @label="Include off site"
-               @onChange={{this.onSiteUpdate}}
-               @inlineCheckbox={{true}} />
+      <f.checkbox @name="offSite"
+                  @value={{1}}
+                  @label="Include off site"
+                  @onChange={{this.onSiteUpdate}}
+      />
     </div>
   </FormRow>
 </ChForm>

@@ -116,55 +116,57 @@
         <:body>
           {{#if @broadcast.alerts}}
             <FormRow>
-              <FormLabel>Alert type:</FormLabel>
-              <f.input
+              <f.select
                 @name="alert_id"
-                @type="select"
+                @label="Alert type:"
                 @options={{this.alertOptions}} />
             </FormRow>
           {{/if}}
           {{#if @broadcast.has_status}}
             <FormRow>
-              <FormLabel>Ranger Status:</FormLabel>
-              <f.input @name="statuses" @type="checkboxGroup" @options={{this.statusOptions}}/>
+              <f.checkboxGroup @name="statuses"
+                               @label="Ranger Status:"
+                               @options={{this.statusOptions}}/>
             </FormRow>
           {{/if}}
           {{#if @broadcast.has_slot}}
             <FormRow>
-              <f.input @name="slotPositionId"
-                       @label="Select on the team to show available shifts"
-                       @type="select"
-                       @options={{this.slotPositionOptions}}
-                       @onChange={{this.positionChange}}/>
+              <f.select @name="slotPositionId"
+                        @label="Select on the team to show available shifts"
+                        @options={{this.slotPositionOptions}}
+                        @onChange={{this.positionChange}}/>
             </FormRow>
             {{#if f.model.slotPositionId}}
               <FormRow>
-                <f.input @name="slot_id" @label="Shift to broadcast to:" @type="select" @options={{this.slotOptions}}/>
+                <f.select @name="slot_id"
+                          @label="Shift to broadcast to:"
+                          @options={{this.slotOptions}}/>
               </FormRow>
             {{/if}}
           {{/if}}
           {{#if @broadcast.has_position}}
             <FormRow>
-              <FormLabel>Team:</FormLabel>
-              <f.input @name="position_id" @type="select" @options={{this.positionOptions}} />
+              <f.select @name="position_id"
+                        @label="Team:"
+                        @options={{this.positionOptions}} />
             </FormRow>
             <FormRow>
-              <FormLabel>Team Shift Sign Ups</FormLabel>
-              <f.input @name="position_signed_up"
-                       @type="select"
-                       @options={{this.signedUpOptions}}/>
+              <f.select @name="position_signed_up"
+                        @label="Team Shift Sign Ups"
+                        @options={{this.signedUpOptions}}/>
             </FormRow>
           {{/if}}
           {{#if @broadcast.has_restrictions}}
             <FormRow>
               <FormLabel>Attendance:</FormLabel>
-              <div class="col-10 mt-1">
-                <f.input @name="on_site"
-                         @type="checkbox"
-                         @label="Who are signed up for any kind of shift during the event"/>
-                <f.input @name="attending"
-                         @type="checkbox"
-                         @label="Indicated they will attend"/>
+              <div class="col-sm-12 col-lg-auto">
+                <f.checkbox @name="on_site"
+                            @label="Who are signed up for any kind of shift during the event"
+                />
+                <f.checkbox @name="attending"
+                            @label="Indicated they will attend"
+
+                />
                 <div class="mt-2">
                   Checking both will search for people who are signed up for shifts during event OR indicated they will
                   attend.
@@ -173,10 +175,9 @@
             </FormRow>
             <h4>-- AND --</h4>
             <FormRow>
-              <FormLabel>Training:</FormLabel>
-              <div class="col-10">
-                <f.input @name="training" @type="radioGroup" @options={{this.trainingOptions}}/>
-              </div>
+              <f.radioGroup @name="training"
+                            @label="Training:"
+                            @options={{this.trainingOptions}}/>
             </FormRow>
           {{/if}}
         </:body>
@@ -187,18 +188,17 @@
       <:body>
         <FormRow>
           <div class="col-12 ml-2 mb-2">
-            <f.input @name="send_sms" @type="checkbox" @label="Send Text/SMS message" @inlineCheckbox={{true}}/>
+            <f.checkbox @name="send_sms" @label="Send Text/SMS message" @inline={{true}}/>
           </div>
         </FormRow>
         <FormRow>
-          <f.input @name="sms_message"
-                   @label="Text/SMS to send (limited to {{@config.sms_limit}} characters)"
-                   @type="textarea"
-                   @maxlength={{@config.sms_limit}}
-                   @rows={{2}}
-                   @cols={{80}}
-                   @disabled={{not f.model.send_sms}}
-                   @hint="{{if f.model.sms_message f.model.sms_message.length "0"}} of {{@config.sms_limit}} characters"
+          <f.textarea @name="sms_message"
+                      @label="Text/SMS to send (limited to {{@config.sms_limit}} characters)"
+                      @maxlength={{@config.sms_limit}}
+                      @rows={{2}}
+                      @cols={{80}}
+                      @disabled={{not f.model.send_sms}}
+                      @showCharCount={{true}}
           />
         </FormRow>
       </:body>
@@ -208,16 +208,21 @@
       <:body>
         <FormRow>
           <div class="col-12 ml-2">
-            <f.input @name="send_email" @type="checkbox" @label="Send email message" @inlineCheckbox={{true}}/>
-            <f.input @name="send_clubhouse" @type="checkbox" @label="Send Clubhouse message" @inlineCheckbox={{true}}/>
+            <f.checkbox @name="send_email"
+                        @label="Send email message"
+                        @inline={{true}} />
+            <f.checkbox @name="send_clubhouse"
+                        @label="Send Clubhouse message" @inline={{true}}/>
           </div>
         </FormRow>
         <FormRow>
-          <f.input @name="subject" @type="text" @label="Subject for message:" @size={{80}} @maxlength={{80}} />
+          <f.text @name="subject"
+                  @label="Subject for message:"
+                  @size={{80}}
+                  @maxlength={{80}} />
         </FormRow>
         <FormRow>
-          <f.input @name="message"
-                   @type="textarea"
+          <f.textarea @name="message"
                    @label="Message to send to email and/or Clubhouse Message"
                    @rows={{10}}
                    @cols={{100}}

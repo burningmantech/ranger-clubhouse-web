@@ -1,0 +1,28 @@
+<ChForm::WrapBlock @wrapClass={{this.wrapClass}}>
+  {{#if @label~}}
+    <label class={{this.labelClass}} for={{this.domId}}>{{@label}}</label>
+  {{~/if~}}
+  <ChForm::WrapBlock @wrapClass={{this.inputWrapClass}}>
+    <textarea
+      name={{@name}}
+      id={{this.domId}}
+      class="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
+      placeholder={{@placeholder}}
+      disabled={{@disabled}}
+      autofocus={{@autofocus}}
+      rows={{@rows}}
+      cols={{@cols}}
+      maxlength={{@maxlength}}
+      onfocus={{@onFocus}}
+      oninput={{action this.update value="target.value"}}
+    >{{this._val}}</textarea>
+
+    {{~#if @hint~}}
+      <ChForm::Hint @hint={{@hint}} />
+    {{~/if~}}
+    {{#if @showCharCount}}
+      <ChForm::CharCount @count={{this.charCount}} @length={{@maxlength}} />
+    {{/if}}
+    <ChForm::ErrorMessages @errorMessages={{this.errorMessages}} />
+  </ChForm::WrapBlock>
+</ChForm::WrapBlock>

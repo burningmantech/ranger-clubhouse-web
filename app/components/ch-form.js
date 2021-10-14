@@ -21,6 +21,7 @@ export default class ChFormComponent extends Component {
 
     this.changeSet = changeSet ?? true;
     this.autocomplete = autocomplete ?? 'off';
+    this.formId = this.args.formId;
     this._buildChangeSet();
   }
 

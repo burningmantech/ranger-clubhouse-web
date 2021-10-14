@@ -6,7 +6,7 @@
       <span class="navbar-toggler-icon"></span>
       Menu
       {{#if this.session.unreadMessageCount}}
-        <span class="badge badge-pill badge-success">{{fa-icon "envelope"}} {{this.session.unreadMessageCount}}</span>
+        <span class="badge badge-pill bg-success">{{fa-icon "envelope"}} {{this.session.unreadMessageCount}}</span>
       {{/if}}
     </button>
     <LinkTo @route="me.homepage" class="navbar-brand">
@@ -76,7 +76,7 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href>
               {{#if this.session.unreadMessageCount}}
-                <span class="badge badge-pill badge-success">
+                <span class="badge badge-pill bg-success">
                   {{fa-icon "envelope"}} {{this.session.unreadMessageCount}}
                 </span>
               {{/if}}

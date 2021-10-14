@@ -31,13 +31,10 @@
 
           {{#if this.isTrainerSurvey}}
             <FormRow>
-              <FormLabel>
-                Share your name with {{group.trainer.callsign}} or leave anonymous comments?
-              </FormLabel>
-              <f.input @name="share_name_{{group.trainer.id}}"
-                       @type="radioGroup"
-                       @options={{get this.shareNameOptionsForTrainer group.trainer.id}}
-                       @inlineCheckbox={{true}} />
+              <f.radioGroup @name="share_name_{{group.trainer.id}}"
+                            @label="Share your name with {{group.trainer.callsign}} or leave anonymous comments?"
+                            @options={{get this.shareNameOptionsForTrainer group.trainer.id}}
+              />
             </FormRow>
           {{/if}}
         {{/if}}
@@ -55,18 +52,17 @@
           </div>
           <FormRow>
             {{#if (eq question.type "text")}}
-              <f.input @name={{question.formName}} @type="textarea" @rows={{4}} @cols={{80}}/>
+              <f.textarea @name={{question.formName}} @rows={{4}} @cols={{80}}/>
             {{else if (eq question.type "rating")}}
-              <div class="col-auto form-check-inline-responsive">
-                <f.input @name={{question.formName}} @type="radioGroup" @options={{this.ratingOptions}}
-                         @inlineCheckbox={{true}} />
-              </div>
+              <f.radioGroup @name={{question.formName}}
+                            @options={{this.ratingOptions}}
+                            @inline={{not this.session.isSmallScreen}}
+              />
             {{else if (eq question.type "options")}}
-              <div class="col-auto form-check-inline-responsive">
-                <f.input @name={{question.formName}} @type="radioGroup"
-                         @options={{question.formOptions}}
-                         @inlineCheckbox={{true}} />
-              </div>
+              <f.radioGroup @name={{question.formName}}
+                            @options={{question.formOptions}}
+                            @inline={{not this.session.isSmallScreen}}
+              />
             {{else}}
               Uh oh, question #{{question.id}} has an unknown type "{{question.type}}".
               This is a bug, please report this to the tech team.

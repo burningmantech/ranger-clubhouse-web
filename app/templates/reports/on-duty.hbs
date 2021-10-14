@@ -12,8 +12,11 @@
   <ChForm @formId="date-form" @formFor={{this.dateForm}} @validator={{this.dateValidations}}
           @onSubmit={{this.submitForm}} as |f|>
     <FormRow>
-      <FormLabel @auto={{true}}>Date &amp; time to view:</FormLabel>
-      <f.input @name="date" @type="datetime" @wrapClass="col-auto"/>
+      <f.datetime @name="date"
+                  @label="Date &amp; time to view:"
+                  @type="datetime"
+                  @inline={{true}}
+      />
       <div class="col-auto">
         <f.submit @label="Submit"/>
         <UiButton @type="secondary" @onClick={{this.viewCurrentTime}}>View Current Time</UiButton>
