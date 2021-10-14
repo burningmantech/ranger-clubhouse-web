@@ -39,11 +39,13 @@ export default class HouseService extends Service {
       return;
     }
 
+    const haveChangeset = (changeSet && 'pushErrors' in changeSet);
+
     // Ember Data request error
     if (response instanceof InvalidError) {
       responseErrors = response.errors.map((error) => error.title);
       errorType = 'validation';
-      if (changeSet && response.errors) {
+      if (haveChangeset && response.errors) {
         // Populate change set model with the validation errors
         response.errors.forEach(({title, source}) => {
           const attr = source.pointer.replace('/data/attributes/', '');
@@ -101,7 +103,7 @@ export default class HouseService extends Service {
 
         case 422:
           errorType = 'validation';
-          if (changeSet && response.payload && response.payload.errors) {
+          if (haveChangeset && response.payload && response.payload.errors) {
             // Populate change set model with the validation errors
             response.payload.errors.forEach(({title, source}) => {
               const attr = source.pointer.replace('/data/attributes/', '');
@@ -159,7 +161,7 @@ export default class HouseService extends Service {
   saveModel(model, successMessage, routeOrCallback = null) {
     this.toast.clear();
 
-    const isCallback = typeof (routeOrCallback) == 'function';
+    const isCallback = typeof (routeOrCallback) === 'function';
 
     /*
     if (!model.get('isDirty') && !model.get('isNew')) {
@@ -201,7 +203,7 @@ export default class HouseService extends Service {
 
   downloadCsv(filename, columns, data) {
     const headers = columns.map((column) => {
-      if (typeof column == 'string') {
+      if (typeof column === 'string') {
         return column;
       } else {
         return column.title;
