@@ -15,15 +15,15 @@
         <th>Email</th>
         <th>Full Name</th>
         <th>Status</th>
-        <th class="text-right">Total Hours</th>
-        <th class="text-right">Total Credits</th>
-        <th class="text-right">Pre-Event Hrs</th>
-        <th class="text-right">Pre-Event Crds.</th>
-        <th class="text-right">Event Hours</th>
-        <th class="text-right">Event Credits</th>
-        <th class="text-right">Post-Event Hrs</th>
-        <th class="text-right">Post-Event Crdt</th>
-        <th class="text-right">Years</th>
+        <th class="text-end">Total Hours</th>
+        <th class="text-end">Total Credits</th>
+        <th class="text-end">Pre-Event Hrs</th>
+        <th class="text-end">Pre-Event Crds.</th>
+        <th class="text-end">Event Hours</th>
+        <th class="text-end">Event Credits</th>
+        <th class="text-end">Post-Event Hrs</th>
+        <th class="text-end">Post-Event Crdt</th>
+        <th class="text-end">Years</th>
       </tr>
     </thead>
 
@@ -34,15 +34,15 @@
           <td>{{mail-to person.email}}</td>
           <td>{{person.first_name}} {{person.last_name}}</td>
           <td>{{person.status}}</td>
-          <td class="text-right">{{hour-format person.counted_duration}}</td>
-          <td class="text-right">{{credits-format person.total_credits}}</td>
-          <td class="text-right">{{hour-format person.pre_event_duration}}</td>
-          <td class="text-right">{{credits-format person.pre_event_credits}}</td>
-          <td class="text-right">{{hour-format person.event_duration}}</td>
-          <td class="text-right">{{credits-format person.event_credits}}</td>
-          <td class="text-right">{{hour-format person.post_event_duration}}</td>
-          <td class="text-right">{{credits-format person.post_event_credits}}</td>
-          <td class="text-right">{{person.years}}</td>
+          <td class="text-end">{{hour-format person.counted_duration}}</td>
+          <td class="text-end">{{credits-format person.total_credits}}</td>
+          <td class="text-end">{{hour-format person.pre_event_duration}}</td>
+          <td class="text-end">{{credits-format person.pre_event_credits}}</td>
+          <td class="text-end">{{hour-format person.event_duration}}</td>
+          <td class="text-end">{{credits-format person.event_credits}}</td>
+          <td class="text-end">{{hour-format person.post_event_duration}}</td>
+          <td class="text-end">{{credits-format person.post_event_credits}}</td>
+          <td class="text-end">{{person.years}}</td>
         </tr>
       {{else}}
         <tr>

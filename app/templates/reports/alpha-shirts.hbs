@@ -9,7 +9,7 @@
     <UiButton @onClick={{this.exportPeople}}>
       Export as CSV
     </UiButton>
-    <a href="#shirt-totals" class="ml-2">Jump to shirt totals</a>
+    <a href="#shirt-totals" class="ms-2">Jump to shirt totals</a>
   </p>
 
   {{pluralize this.alphas.length "alpha"}} found
@@ -49,7 +49,7 @@
           <caption>
             {{shirts.name}} Totals
               <UiButton @type="secondary"
-                        @size="sm" @class="d-inline-block float-right"
+                        @size="sm" @class="d-inline-block float-end"
                         @onClick={{fn this.exportCounts shirts}}>
                 Export
               </UiButton>
@@ -57,14 +57,14 @@
           <thead>
             <tr>
               <th>Shirt Type</th>
-              <th class="text-right">Count</th>
+              <th class="text-end">Count</th>
             </tr>
           </thead>
           <tbody>
             {{#each shirts.types as |shirt|}}
               <tr>
                 <td>{{shirt.type}}</td>
-                <td class="text-right">{{shirt.count}}</td>
+                <td class="text-end">{{shirt.count}}</td>
               </tr>
             {{/each}}
           </tbody>

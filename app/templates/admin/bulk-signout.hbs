@@ -11,8 +11,8 @@
     <th>Callsign</th>
     <th>From</th>
     <th>To</th>
-    <th class="text-right">Time</th>
-    <th class="text-right">Credits</th>
+    <th class="text-end">Time</th>
+    <th class="text-end">Credits</th>
     <th>Position</th>
   </tr>
   </thead>
@@ -37,10 +37,10 @@
           <i>On Duty</i>
         {{/if}}
       </td>
-      <td class="text-right">
+      <td class="text-end">
         {{hour-minute-format ts.duration}}
       </td>
-      <td class="text-right">
+      <td class="text-end">
         {{credits-format ts.credits}}
       </td>
       <td>

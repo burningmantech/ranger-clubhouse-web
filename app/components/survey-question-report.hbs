@@ -3,7 +3,7 @@
     <b>{{#if @trainer}}Trainer {{@trainer.callsign}}: {{/if}}{{@question.description}}</b>
   </div>
 {{/unless}}
-<div class="ml-2">
+<div class="ms-2">
   {{#if (eq @question.type "rating")}}
     <table class="table table-width-auto table-sm">
       <thead>
@@ -16,12 +16,12 @@
       </thead>
       <tbody>
       <tr>
-        <td class="text-right">{{@question.mean}}</td>
+        <td class="text-end">{{@question.mean}}</td>
         <td>
           <progress max="100" value="{{mult (div @question.mean 7) 100}}"/>
         </td>
-        <td class="text-right">{{@question.variance}}</td>
-        <td class="text-right">{{@question.rating_count}}</td>
+        <td class="text-end">{{@question.variance}}</td>
+        <td class="text-end">{{@question.rating_count}}</td>
         <td>
           {{#each-in @question.distribution as |rank count|}}
             {{rank}}x{{count}}
@@ -34,7 +34,7 @@
     {{#if @question.responses}}
       ({{pluralize @question.responses.length "response"}})
       {{#each @question.responses as |response|}}
-        <div class="mb-1 ml-2">
+        <div class="mb-1 ms-2">
           &mdash; {{response.answer}}
         </div>
       {{/each}}
@@ -54,7 +54,7 @@
         <div class="mt-2">
           {{#if slot.responses}}
             {{#each slot.responses as |response|}}
-              <div class="mb-1 ml-2">
+              <div class="mb-1 ms-2">
                 &mdash; {{response.answer}}
               </div>
             {{/each}}

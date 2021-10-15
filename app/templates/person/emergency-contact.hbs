@@ -1,10 +1,16 @@
-<h3>Emergency Contact Information</h3>
-{{#if this.canAccessEmergencyContact}}
-  <Person::EmergencyContact @person={{this.person}} @onCancel={{this.cancelAction}} />
-{{else}}
-  <ChNotice @type="danger" @title="Emergency Contact Info access during the off season not allowed" @icon="exclamation">
-    Sorry, you only have privileges to view and update the Emergency Contact information while the event is happening.
-    If this is truly an emergency, email {{mail-to "ranger-council-list@burningman.org"}} and let us know and
-    somebody can look something up for you.
-  </ChNotice>
- {{/if}}
+<UiSection>
+  <:title>Emergency Contact Information</:title>
+  <:body>
+    {{#if this.canAccessEmergencyContact}}
+      <Person::EmergencyContact @person={{this.person}} @onCancel={{this.cancelAction}} />
+    {{else}}
+      <ChNotice @type="danger" @title="Emergency Contact Info access during the off season not allowed"
+                @icon="exclamation">
+        Sorry, you only have privileges to view and update the Emergency Contact information while the event is
+        happening.
+        If this is truly an emergency, email {{mail-to "ranger-council-list@burningman.org"}} and let us know and
+        somebody can look something up for you.
+      </ChNotice>
+    {{/if}}
+  </:body>
+</UiSection>

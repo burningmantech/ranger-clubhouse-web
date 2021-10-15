@@ -34,7 +34,7 @@
         <td>
           <PresentOrNot @value={{day.day}} @empty="-" />
         </td>
-        <td class="text-right">
+        <td class="text-end">
           {{#if day.imported}}
             <Popover @text={{day.imported.length}} @title={{concat day.day " Imported"}}>
               <div class="row g-0">
@@ -49,7 +49,7 @@
             -
           {{/if}}
         </td>
-        <td class="text-right">
+        <td class="text-end">
           {{#if day.photo_approved}}
             <Popover @text={{day.photo_approved.length}} @title={{concat day.day " BMID Photo Approved"}}>
               <div class="row g-0">
@@ -64,7 +64,7 @@
             -
           {{/if}}
         </td>
-        <td class="text-right">
+        <td class="text-end">
           {{#if day.online_trained}}
             <Popover @text={{day.online_trained.length}} @title={{concat day.day " Online Trained"}}>
               <div class="row g-0">
@@ -79,7 +79,7 @@
             -
           {{/if}}
         </td>
-        <td class="text-right">
+        <td class="text-end">
           {{#if day.training_signups}}
             <Popover @text={{day.training_signups.length}} @title={{concat day.day " Training Signups"}}>
               <div class="row g-0">
@@ -94,7 +94,7 @@
             -
           {{/if}}
         </td>
-        <td class="text-right">
+        <td class="text-end">
           {{#if day.training_passed}}
             <Popover @text={{day.training_passed.length}} @title={{concat day.day " Training Passed"}}>
               <div class="row g-0">
@@ -109,7 +109,7 @@
             -
           {{/if}}
         </td>
-        <td class="text-right">
+        <td class="text-end">
           {{#if day.dropped}}
             <Popover @text={{day.dropped.length}} @title={{concat day.day " Dropped"}}>
               <div class="row g-0">
@@ -124,7 +124,7 @@
             -
           {{/if}}
         </td>
-        <td class="text-right">
+        <td class="text-end">
           {{#if day.alpha_signups}}
             <Popover @text={{day.alpha_signups.length}} @title={{concat day.day " Alpha Signups"}}>
               <div class="row g-0">

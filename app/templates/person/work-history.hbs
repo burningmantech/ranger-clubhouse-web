@@ -1,73 +1,77 @@
-<h3>Work History For {{this.person.callsign}}</h3>
-<p>
-  Alpha and Training entries are filtered out.
-</p>
-{{#if this.hasInaccurateTimesheets}}
-  <p>
-    <b class="text-danger">
-      NOTE: {{this.person.callsign}} has timesheet entries before 2008 which may be inaccurate.
-    </b>
-    Most timesheet entries prior to 2008 are placeholders.
-  </p>
-{{/if}}
-{{#if this.years}}
-  {{#if this.hasNonRangerWork}}
+<UiSection>
+  <:title>Work History For {{this.person.callsign}}</:title>
+  <:body>
     <p>
-      <b class="text-danger">{{this.person.callsign}} has Non Ranger volunteer timesheet entries.</b>
+      Alpha and Training entries are filtered out.
     </p>
-  {{/if}}
-  <div class="overflow-y-auto">
-    {{pluralize this.years.length "year"}} worked. {{pluralize this.positions.length "position"}}.
-    <table class="table table-width-auto table-striped table-hover">
-      <thead>
-      <tr>
-        <th>Position</th>
-        <th>Total Hours</th>
-        {{#each this.years as |year|}}
-          <th>{{year}}</th>
-        {{/each}}
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <th>All Positions</th>
-        <td class="text-right">{{hour-format this.totalDuration}}</td>
-        {{#each this.years as |year|}}
-          <td class="text-right"><a href {{action this.showEntireYearAction year}}>{{hour-format
-                  (get (get this.yearTotals year) "duration")}}</a></td>
-        {{/each}}
-      </tr>
-      {{#each this.positions as |position|}}
-        <tr>
-          <td>{{position.title}}</td>
-          <td class="text-right">
-            <a href {{action this.showPositionAllEntriesAction position.id}}>{{hour-format position.duration}}</a>
-          </td>
-          {{#each this.years as |year|}}
-            {{#let (get (get this.positionsByYear year) position.id) as |work|}}
-              {{#if work}}
-                <td class="text-right">
-                  <a href {{action this.showPositionYearSummaryAction position.id year}}>
-                    {{hour-format work.duration}}
-                  </a>
-                </td>
-              {{else}}
-                <td class="text-center">
-                  -
-                </td>
-              {{/if}}
-            {{/let}}
+    {{#if this.hasInaccurateTimesheets}}
+      <p>
+        <b class="text-danger">
+          NOTE: {{this.person.callsign}} has timesheet entries before 2008 which may be inaccurate.
+        </b>
+        Most timesheet entries prior to 2008 are placeholders.
+      </p>
+    {{/if}}
+    {{#if this.years}}
+      {{#if this.hasNonRangerWork}}
+        <p>
+          <b class="text-danger">{{this.person.callsign}} has Non Ranger volunteer timesheet entries.</b>
+        </p>
+      {{/if}}
+      <div class="overflow-y-auto">
+        {{pluralize this.years.length "year"}} worked. {{pluralize this.positions.length "position"}}.
+        <table class="table table-width-auto table-striped table-hover">
+          <thead>
+          <tr>
+            <th>Position</th>
+            <th>Total Hours</th>
+            {{#each this.years as |year|}}
+              <th>{{year}}</th>
+            {{/each}}
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th>All Positions</th>
+            <td class="text-end">{{hour-format this.totalDuration}}</td>
+            {{#each this.years as |year|}}
+              <td class="text-end"><a href {{action this.showEntireYearAction year}}>{{hour-format
+                (get (get this.yearTotals year) "duration")}}</a></td>
+            {{/each}}
+          </tr>
+          {{#each this.positions as |position|}}
+            <tr>
+              <td>{{position.title}}</td>
+              <td class="text-end">
+                <a href {{action this.showPositionAllEntriesAction position.id}}>{{hour-format position.duration}}</a>
+              </td>
+              {{#each this.years as |year|}}
+                {{#let (get (get this.positionsByYear year) position.id) as |work|}}
+                  {{#if work}}
+                    <td class="text-end">
+                      <a href {{action this.showPositionYearSummaryAction position.id year}}>
+                        {{hour-format work.duration}}
+                      </a>
+                    </td>
+                  {{else}}
+                    <td class="text-center">
+                      -
+                    </td>
+                  {{/if}}
+                {{/let}}
+              {{/each}}
+            </tr>
           {{/each}}
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  </div>
-{{else}}
-  <p>
-    <b class="text-danger">No timesheet entries were found.</b>
-  </p>
-{{/if}}
+          </tbody>
+        </table>
+      </div>
+    {{else}}
+      <p>
+        <b class="text-danger">No timesheet entries were found.</b>
+      </p>
+    {{/if}}
+  </:body>
+</UiSection>
 
 {{#if this.showPositionYearEntries}}
   <ModalDialog @title="{{this.showYear}} {{this.position.title}}"
@@ -91,10 +95,10 @@
                 <br>(as non ranger)
               {{/if}}
             </td>
-            <td class="text-right">
+            <td class="text-end">
               {{hour-format entry.duration}}
             </td>
-            <td class="text-right">
+            <td class="text-end">
               {{credits-format entry.credits}}
             </td>
           </tr>
@@ -131,10 +135,10 @@
                   <br>(as non ranger)
                 {{/if}}
               </td>
-              <td class="text-right">
+              <td class="text-end">
                 {{hour-format entry.duration}}
               </td>
-              <td class="text-right">
+              <td class="text-end">
                 {{credits-format entry.credits}}
               </td>
             </tr>
@@ -173,10 +177,10 @@
             <td>
               {{shift-format entry.on_duty entry.off_duty}}
             </td>
-            <td class="text-right">
+            <td class="text-end">
               {{hour-format entry.duration}}
             </td>
-            <td class="text-right">
+            <td class="text-end">
               {{credits-format entry.credits}}
             </td>
           </tr>

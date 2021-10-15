@@ -11,8 +11,8 @@ Showing {{pluralize this.people.length "person"}}
       <th>Callsign</th>
       <th>Status</th>
       <th>Position</th>
-      <th class="text-right">Hours</th>
-      <th class="text-right">Credits</th>
+      <th class="text-end">Hours</th>
+      <th class="text-end">Credits</th>
     </tr>
   </thead>
   <tbody>
@@ -28,14 +28,14 @@ Showing {{pluralize this.people.length "person"}}
             </td>
         {{/unless}}
           <td>{{pos.title}}</td>
-          <td class="text-right">{{hour-format pos.duration}}</td>
-          <td class="text-right">{{credits-format pos.credits}}</td>
+          <td class="text-end">{{hour-format pos.duration}}</td>
+          <td class="text-end">{{credits-format pos.credits}}</td>
         </tr>
       {{/each}}
       <tr>
-        <td class="text-right"><b>Total Hours / Credits</b></td>
-        <td class="text-right">{{hour-format person.total_duration}}</td>
-        <td class="text-right">{{credits-format person.total_credits}}</td>
+        <td class="text-end"><b>Total Hours / Credits</b></td>
+        <td class="text-end">{{hour-format person.total_duration}}</td>
+        <td class="text-end">{{credits-format person.total_credits}}</td>
       </tr>
     {{else}}
     <tr>

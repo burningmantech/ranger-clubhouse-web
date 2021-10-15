@@ -2,10 +2,10 @@
   <YearSelect @title="Manage BMIDs" @year={{this.year}} @onChange={{action (mut this.year)}} />
   <div class="my-2">
     Navigation:
-    <LinkTo @route="vc.bmid-sanity-check" class="ml-2">
+    <LinkTo @route="vc.bmid-sanity-check" class="ms-2">
       {{fa-icon "user-check"}} Sanity Check
     </LinkTo>
-    <LinkTo @route="vc.bmid-print" class="ml-2">
+    <LinkTo @route="vc.bmid-print" class="ms-2">
       {{fa-icon "print"}} Export To Marcato
     </LinkTo>
   </div>
@@ -48,15 +48,15 @@
     <div class="col-auto">
       <Input @type="text"
              @value={{this.textFilterInput}}
-             class="form-control form-control-sm ml-2"
+             class="form-control form-control-sm ms-2"
              @enter={{action this.textFilterAction}}  />
       <div class="text-muted small">Regular Expression allowed</div>
     </div>
     <div class="col-auto">
-      <UiButton @size="sm" @class="ml-1" @onClick={{this.textFilterAction}}>
+      <UiButton @size="sm" @class="ms-1" @onClick={{this.textFilterAction}}>
         Filter
       </UiButton>
-      <UiButton @type="secondary" @size="sm" @class="ml-1" @onClick={{this.clearTextFilterAction}}>
+      <UiButton @type="secondary" @size="sm" @class="ms-1" @onClick={{this.clearTextFilterAction}}>
         Clear
       </UiButton>
     </div>
@@ -82,9 +82,9 @@
   Showing {{this.viewBmids.length}} of {{this.bmids.length}}
   {{#unless this.isRendering}}
     {{#if this.textFilter}}
-      <span class="ml-2 font-weight-bold">Text filtering by "{{this.textFilter}}"</span>
+      <span class="ms-2 font-weight-bold">Text filtering by "{{this.textFilter}}"</span>
     {{/if}}
-    {{#if this.unsaveRows}}<span class="ml-4 text-danger">UNSAVED {{pluralize this.unsaveRows "record"}}</span>{{/if}}
+    {{#if this.unsaveRows}}<span class="ms-4 text-danger">UNSAVED {{pluralize this.unsaveRows "record"}}</span>{{/if}}
   {{/unless}}
   <table class="table table-sm table-striped table-hover">
     <thead>

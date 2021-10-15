@@ -14,7 +14,7 @@
       <thead>
       <tr>
         <th>&nbsp;</th>
-        <th class="text-right">Total</th>
+        <th class="text-end">Total</th>
         <th>Pre-Event</th>
         <th>Event</th>
         <th>Post-Event</th>
@@ -24,21 +24,21 @@
       <tbody>
       <tr>
         <td>Hours</td>
-        <td class="text-right">
+        <td class="text-end">
           {{hour-minute-format @summary.counted_duration}} (counted)<br>
           {{hour-minute-format @summary.total_duration}} (total)
         </td>
-        <td class="text-right">{{hour-minute-format @summary.pre_event_duration}}</td>
-        <td class="text-right">{{hour-minute-format @summary.event_duration}}</td>
-        <td class="text-right">{{hour-minute-format @summary.post_event_duration}}</td>
-        <td class="text-right">{{hour-minute-format @summary.other_duration}}</td>
+        <td class="text-end">{{hour-minute-format @summary.pre_event_duration}}</td>
+        <td class="text-end">{{hour-minute-format @summary.event_duration}}</td>
+        <td class="text-end">{{hour-minute-format @summary.post_event_duration}}</td>
+        <td class="text-end">{{hour-minute-format @summary.other_duration}}</td>
       </tr>
       <tr>
         <td>Credits</td>
-        <td class="text-right">{{credits-format @summary.total_credits}}</td>
-        <td class="text-right">{{credits-format @summary.pre_event_credits}}</td>
-        <td class="text-right">{{credits-format @summary.event_credits}}</td>
-        <td class="text-right">{{credits-format @summary.post_event_credits}}</td>
+        <td class="text-end">{{credits-format @summary.total_credits}}</td>
+        <td class="text-end">{{credits-format @summary.pre_event_credits}}</td>
+        <td class="text-end">{{credits-format @summary.event_credits}}</td>
+        <td class="text-end">{{credits-format @summary.post_event_credits}}</td>
         <td class="text-center">-</td>
       </tr>
       </tbody>

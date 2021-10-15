@@ -66,9 +66,9 @@
             <th>Email</th>
           {{/if}}
           {{#each this.yearList as |year|}}
-            <th class="text-right">{{year}} Hours</th>
+            <th class="text-end">{{year}} Hours</th>
           {{/each}}
-          <th class="text-right">Total</th>
+          <th class="text-end">Total</th>
         </tr>
         </thead>
 
@@ -90,17 +90,17 @@
               </td>
             {{/if}}
             {{#each person.years as |duration|}}
-              <td class="text-right">{{hour-format duration}}</td>
+              <td class="text-end">{{hour-format duration}}</td>
             {{/each}}
-            <td class="text-right">{{hour-format person.total_duration}}</td>
+            <td class="text-end">{{hour-format person.total_duration}}</td>
           </tr>
         {{/each}}
         <tr>
-          <td colspan="{{if this.session.canViewEmail 4 3}}" class="text-right"><b>Totals</b></td>
+          <td colspan="{{if this.session.canViewEmail 4 3}}" class="text-end"><b>Totals</b></td>
           {{#each this.totalsList as |total|}}
-            <td class="text-right">{{hour-format total}}</td>
+            <td class="text-end">{{hour-format total}}</td>
           {{/each}}
-          <td class="text-right">{{hour-format this.grandTotal}}</td>
+          <td class="text-end">{{hour-format this.grandTotal}}</td>
         </tr>
         </tbody>
       </table>

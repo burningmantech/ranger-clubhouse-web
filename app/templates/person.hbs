@@ -69,7 +69,7 @@
       <div class="person-manage-callsign">
         <PersonLink @person={{this.person}} />
         <span class="d-inline-block">
-          &lt;{{this.person.status}}{{if this.person.vintage "/vintage"}}
+          &lt;{{this.person.status}}{{if this.person.vintage "/vintage"~}}
           , {{this.person.first_name}} {{this.person.last_name}}&gt;
         </span>
         <div class="person-manage-pronouns">
@@ -87,7 +87,7 @@
     </div>
     {{#if (or this.person.isSuspended this.person.isResigned this.person.isDeceased this.person.isUberBonked this.person.isDismissed)}}
       <div class="person-manage-info">
-        <h5 class="text-danger">
+        <h5 class="text-danger mt-2">
           {{fa-icon "exclamation-triangle"}} The account has the status "{{this.person.status}}" and may not be logged
           into.
         </h5>

@@ -14,12 +14,12 @@
   <tr class="thead-light">
     <th>Training</th>
     <th>Date</th>
-    <th class="text-right">% Full</th>
-    <th class="text-right">Seats</th>
-    <th class="text-right">Signed Up</th>
-    <th class="text-right" title="Prospective / Alpha">PNV</th>
-    <th class="text-right" title="Returning Rangers, not in status 'auditor'">Returning</th>
-    <th class="text-right">Auditors</th>
+    <th class="text-end">% Full</th>
+    <th class="text-end">Seats</th>
+    <th class="text-end">Signed Up</th>
+    <th class="text-end" title="Prospective / Alpha">PNV</th>
+    <th class="text-end" title="Returning Rangers, not in status 'auditor'">Returning</th>
+    <th class="text-end">Auditors</th>
   </tr>
   </thead>
   <tbody>
@@ -27,12 +27,12 @@
     <tr class="{{if (gt slot.filled 90) "bg-light-red text-light" (if (gt slot.filled 75) "bg-warning") }}">
       <td>{{slot.description}}</td>
       <td>{{shift-format slot.date}}</td>
-      <td class="text-right">{{slot.filled}}%</td>
-      <td class="text-right">{{slot.max}}</td>
-      <td class="text-right">{{slot.signed_up}}</td>
-      <td class="text-right">{{slot.alpha_count}}</td>
-      <td class="text-right">{{slot.veteran_count}}</td>
-      <td class="text-right">{{slot.auditor_count}}</td>
+      <td class="text-end">{{slot.filled}}%</td>
+      <td class="text-end">{{slot.max}}</td>
+      <td class="text-end">{{slot.signed_up}}</td>
+      <td class="text-end">{{slot.alpha_count}}</td>
+      <td class="text-end">{{slot.veteran_count}}</td>
+      <td class="text-end">{{slot.auditor_count}}</td>
     </tr>
   {{else}}
     <tr>
@@ -41,13 +41,13 @@
   {{/each}}
   {{#if this.slots}}
     <tr>
-      <td colspan="2" class="text-right">Totals:</td>
-      <td class="text-right">{{this.totalFullPercentage}}%</td>
-      <td class="text-right">{{sum-column this.slots "max"}}</td>
-      <td class="text-right">{{sum-column this.slots "signed_up"}}</td>
-      <td class="text-right">{{sum-column this.slots "alpha_count"}}</td>
-      <td class="text-right">{{sum-column this.slots "veteran_count"}}</td>
-      <td class="text-right">{{sum-column this.slots "auditor_count"}}</td>
+      <td colspan="2" class="text-end">Totals:</td>
+      <td class="text-end">{{this.totalFullPercentage}}%</td>
+      <td class="text-end">{{sum-column this.slots "max"}}</td>
+      <td class="text-end">{{sum-column this.slots "signed_up"}}</td>
+      <td class="text-end">{{sum-column this.slots "alpha_count"}}</td>
+      <td class="text-end">{{sum-column this.slots "veteran_count"}}</td>
+      <td class="text-end">{{sum-column this.slots "auditor_count"}}</td>
     </tr>
   {{/if}}
   </tbody>

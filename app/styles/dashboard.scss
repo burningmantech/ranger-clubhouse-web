@@ -9,7 +9,8 @@
 .dashboard-group {
   display: flex;
   margin-bottom: 10px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  //box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  box-shadow: 0 1px 5px 0 rgb(50 50 50 / 50%);
   background-color: #fcfcfc;
 
   .mugshot {

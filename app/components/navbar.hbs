@@ -22,7 +22,7 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       {{#if this.session.isAuthenticated}}
       {{! Show callsign and logout button on small screens with collapsed navbar}}
-        <div class="navbar-text d-lg-none float-right">
+        <div class="navbar-text d-lg-none float-end">
           <LinkTo @route="logout" class="btn btn-secondary text-white">Logout</LinkTo>
         </div>
         <div class="navbar-text d-lg-none h4 text-black mt-2">

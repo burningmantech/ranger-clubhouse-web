@@ -3,12 +3,12 @@
   <thead>
     <tr>
       <th>Time ({{@interval}} min interval)</th>
-      <th class="text-right">Check In</th>
-      <th class="text-right">Check Out</th>
-      <th class="text-right">Windows</th>
-      <th class="text-right">Runners</th>
-      <th class="text-right">Shorts</th>
-      <th class="text-right">Leads</th>
+      <th class="text-end">Check In</th>
+      <th class="text-end">Check Out</th>
+      <th class="text-end">Windows</th>
+      <th class="text-end">Runners</th>
+      <th class="text-end">Shorts</th>
+      <th class="text-end">Leads</th>
     </tr>
   </thead>
   <tbody>
@@ -18,12 +18,12 @@
           {{if (and (not visit.windows) (not visit.shorts) (not visit.leads)) (fa-icon "exclamation-triangle")}}
           {{shift-format visit.period}}
         </td>
-        <td class="text-right">{{visit.checkin}}</td>
-        <td class="text-right">{{visit.checkout}}</td>
-        <td class="text-right">{{visit.windows}}</td>
-        <td class="text-right">{{visit.runners}}</td>
-        <td class="text-right">{{visit.shorts}}</td>
-        <td class="text-right">{{visit.leads}}</td>
+        <td class="text-end">{{visit.checkin}}</td>
+        <td class="text-end">{{visit.checkout}}</td>
+        <td class="text-end">{{visit.windows}}</td>
+        <td class="text-end">{{visit.runners}}</td>
+        <td class="text-end">{{visit.shorts}}</td>
+        <td class="text-end">{{visit.leads}}</td>
       </tr>
     {{/each}}
   </tbody>

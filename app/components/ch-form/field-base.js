@@ -44,6 +44,8 @@ export default class ChFormFieldBaseComponent extends Component {
    */
   labelInlineClassDefault = 'col-form-label col-auto';
 
+  labelFixedClassDefault = 'col-form-label col-form-label-fixed';
+
   /**
    * Wrapper class around the input tag. Tag is placed below the label.
    *
@@ -114,7 +116,7 @@ export default class ChFormFieldBaseComponent extends Component {
 
     let label;
     if (fixedLabel) {
-      label =  'col-form-label col-form-label-fixed';
+      label =  this.labelFixedClassDefault;
     } else {
       label = inline ? this.labelInlineClassDefault : this.labelClassDefault;
     }

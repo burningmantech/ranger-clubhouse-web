@@ -2,13 +2,13 @@
   <h1>Export {{this.year}} BMIDs To Marcato</h1>
   <div class="mt-2">
     Navigation:
-    <LinkTo @route="vc.bmid-sanity-check" class="ml-2">
+    <LinkTo @route="vc.bmid-sanity-check" class="ms-2">
       {{fa-icon "user-check"}} Sanity Check
     </LinkTo>
-    <LinkTo @route="vc.bmid" class="ml-2">
+    <LinkTo @route="vc.bmid" class="ms-2">
       {{fa-icon "edit"}} Manage BMIDs
     </LinkTo>
-    <a href="#export-list" class="ml-2">Jump to export list</a>
+    <a href="#export-list" class="ms-2">Jump to export list</a>
   </div>
   <FormRow>
     <FormLabel @auto={{true}}>Filter:</FormLabel>
@@ -22,12 +22,12 @@
     <div class="col-auto">
       <div class="input-group">
         <label class="mr-1">Callsign, title, team, notes filter:</label>
-        <Input @type="text" @value={{this.textFilterInput}} class="form-control form-control-sm ml-2"
+        <Input @type="text" @value={{this.textFilterInput}} class="form-control form-control-sm ms-2"
                @enter={{action this.textFilterAction}} disabled={{this.isRendering}} />
-        <UiButton @size="sm" @class="ml-1" @onClick={{this.textFilterAction}} @disabled={{this.isRendering}}>
+        <UiButton @size="sm" @class="ms-1" @onClick={{this.textFilterAction}} @disabled={{this.isRendering}}>
           Filter
         </UiButton>
-        <UiButton @type="secondary" @size="sm" @class="ml-1" @onClick={{this.clearTextFilterAction}}
+        <UiButton @type="secondary" @size="sm" @class="ms-1" @onClick={{this.clearTextFilterAction}}
                   @disabled={{this.isRendering}}>
           Clear
         </UiButton>
@@ -93,7 +93,7 @@
   <div class="mt-2">
     Showing {{this.viewBmids.length}} of {{this.bmids.length}} ({{this.bmidsSelectedCount}} selected)
     {{#if this.textFilter}}
-      <span class="ml-2 font-weight-bold">Text filtering by "{{this.textFilter}}"</span>
+      <span class="ms-2 font-weight-bold">Text filtering by "{{this.textFilter}}"</span>
     {{/if}}
   </div>
   <table class="table table-sm table-striped">
@@ -195,7 +195,7 @@ your name and the date and time you submitted to Lambase."
         <td>
           <PresentOrNot @value={{export.batch_info}} @empty="-"/>
         </td>
-        <td class="text-right">
+        <td class="text-end">
           {{export.person_ids.length}}
         </td>
         <td>

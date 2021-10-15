@@ -6,7 +6,7 @@
         <NoAppreciateIcon/>
         = the shift hours do not count towards appreciations.
       </div>
-      <div class="ml-4">
+      <div class="ms-4">
         <LinkTo @route="person.timesheet-log" @query={{hash year=@year}}>View {{@year}} Timesheet Log</LinkTo>
       </div>
     </div>
@@ -14,8 +14,8 @@
       <thead>
       <tr>
         <th>Time</th>
-        <th class="text-right">Duration</th>
-        <th class="text-right">Credits</th>
+        <th class="text-end">Duration</th>
+        <th class="text-end">Credits</th>
         <th>Position</th>
         <th>Status</th>
         <th>Action</th>
@@ -31,13 +31,13 @@
               {{shift-format ts.on_duty}} to <i>still on duty</i>
             {{/if}}
           </td>
-          <td class="text-right">
+          <td class="text-end">
             {{#unless ts.position.count_hours}}
               <NoAppreciateIcon/>
             {{/unless}}
             {{hour-minute-format ts.duration}}
           </td>
-          <td class="text-right">
+          <td class="text-end">
             {{credits-format ts.credits}}
           </td>
           <td>

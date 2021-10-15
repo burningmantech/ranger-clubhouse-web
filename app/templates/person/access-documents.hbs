@@ -38,10 +38,10 @@
           -
         {{/if}}
       </td>
-      <td class="text-right">
+      <td class="text-end">
         {{document.source_year}}
       </td>
-      <td class="text-right">
+      <td class="text-end">
         {{document.expiryYear}}
       </td>
     </tr>
@@ -67,7 +67,7 @@
 
 </p>
 <p>
-  <LinkTo @route="person.tickets" class="ml-2">View {{this.person.callsign}}'s Tickets &amp; Stuff page</LinkTo>
+  <LinkTo @route="person.tickets" class="ms-2">View {{this.person.callsign}}'s Tickets &amp; Stuff page</LinkTo>
 </p>
 {{#if this.entry}}
   <ModalDialog @title="{{if this.entry.isNew "Create A New" "Edit"}} Item For {{this.person.callsign}}"

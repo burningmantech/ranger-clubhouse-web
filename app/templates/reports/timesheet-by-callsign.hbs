@@ -38,8 +38,8 @@
               <th>From</th>
               <th>To</th>
               <th>Position</th>
-              <th class="text-right">Duration</th>
-              <th class="text-right">Credits</th>
+              <th class="text-end">Duration</th>
+              <th class="text-end">Credits</th>
             </tr>
             </thead>
             <tbody>
@@ -48,25 +48,25 @@
                 <td>{{shift-format entry.on_duty}}</td>
                 <td>{{#if entry.off_duty}}{{shift-format entry.off_duty}}{{else}}<i>still on duty</i>{{/if}}</td>
                 <td>{{position-label entry.position}}</td>
-                <td class="text-right">
+                <td class="text-end">
                   {{#unless entry.position.count_hours}}
                     <NoAppreciateIcon/>
                   {{/unless}}
                   {{hour-minute-format entry.duration}}
                 </td>
-                <td class="text-right">{{credits-format entry.credits}}</td>
+                <td class="text-end">{{credits-format entry.credits}}</td>
               </tr>
             {{/each}}
             <tr>
-              <td colspan="3" class="text-right"><b>Totals:</b></td>
-              <td class="text-right">
+              <td colspan="3" class="text-end"><b>Totals:</b></td>
+              <td class="text-end">
                 {{hour-minute-format person.total_duration}}
               </td>
-              <td class="text-right">{{credits-format person.total_credits}}</td>
+              <td class="text-end">{{credits-format person.total_credits}}</td>
             </tr>
             <tr>
-              <td colspan="3" class="text-right"><b>Total Appreciated Hours:</b></td>
-              <td class="text-right">
+              <td colspan="3" class="text-end"><b>Total Appreciated Hours:</b></td>
+              <td class="text-end">
                 {{hour-minute-format person.total_appreciation_duration}}
               </td>
               <td>&nbsp;</td>

@@ -11,28 +11,28 @@ Stop = number has requested stop.
   <thead>
     <tr>
       <th class="stats-status">Status</th>
-      <th class="text-right">OP = PE verified</th>
-      <th class="text-right">OP != PE verified</th>
-      <th class="text-right">OP Only</th>
-      <th class="text-right">OP Stop</th>
-      <th class="text-right">OP not verified</th>
-      <th class="text-right">PE Only</th>
-      <th class="text-right">PE Stop</th>
-      <th class="text-right">PE not verified</th>
+      <th class="text-end">OP = PE verified</th>
+      <th class="text-end">OP != PE verified</th>
+      <th class="text-end">OP Only</th>
+      <th class="text-end">OP Stop</th>
+      <th class="text-end">OP not verified</th>
+      <th class="text-end">PE Only</th>
+      <th class="text-end">PE Stop</th>
+      <th class="text-end">PE not verified</th>
     </tr>
   </thead>
   <tbody>
     {{#each this.stats as |stat|}}
       <tr class="separated">
         <td class="stats-status">{{stat.status}}</td>
-        <td class="text-right">{{stat.same_verified}}</td>
-        <td class="text-right">{{stat.diff_verified}}</td>
-        <td class="text-right">{{stat.on_playa_verified}}</td>
-        <td class="text-right">{{stat.on_playa_stopped}}</td>
-        <td class="text-right">{{stat.on_playa_unverified}}</td>
-        <td class="text-right">{{stat.off_playa_verified}}</td>
-        <td class="text-right">{{stat.off_playa_stopped}}</td>
-        <td class="text-right">{{stat.off_playa_unverified}}</td>
+        <td class="text-end">{{stat.same_verified}}</td>
+        <td class="text-end">{{stat.diff_verified}}</td>
+        <td class="text-end">{{stat.on_playa_verified}}</td>
+        <td class="text-end">{{stat.on_playa_stopped}}</td>
+        <td class="text-end">{{stat.on_playa_unverified}}</td>
+        <td class="text-end">{{stat.off_playa_verified}}</td>
+        <td class="text-end">{{stat.off_playa_stopped}}</td>
+        <td class="text-end">{{stat.off_playa_unverified}}</td>
       </tr>
     {{/each}}
   </tbody>

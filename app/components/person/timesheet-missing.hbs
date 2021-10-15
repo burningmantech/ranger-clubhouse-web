@@ -11,8 +11,8 @@
         <tr>
           <th>From</th>
           <th>To</th>
-          <th class="text-right">Time</th>
-          <th class="text-right">Credits</th>
+          <th class="text-end">Time</th>
+          <th class="text-end">Credits</th>
           <th>Position</th>
           <th>Status</th>
           <th>Action</th>
@@ -23,8 +23,8 @@
           <tr>
             <td>{{shift-format tm.on_duty}}</td>
             <td>{{shift-format tm.off_duty}}</td>
-            <td class="text-right">{{hour-minute-format tm.duration}}</td>
-            <td class="text-right">{{credits-format tm.credits}}</td>
+            <td class="text-end">{{hour-minute-format tm.duration}}</td>
+            <td class="text-end">{{credits-format tm.credits}}</td>
             <td>{{tm.position.title}}</td>
             <td>
               {{#if tm.isPending}}

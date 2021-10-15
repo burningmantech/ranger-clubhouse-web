@@ -16,9 +16,9 @@ Showing {{pluralize this.people.length "person"}}
   <thead>
   <tr>
     <th>Callsign</th>
-    <th class="text-right">{{this.year_last}} Hours</th>
-    <th class="text-right">{{this.year_prev}} Hours</th>
-    <th class="text-right">Eligibility Hours</th>
+    <th class="text-end">{{this.year_last}} Hours</th>
+    <th class="text-end">{{this.year_prev}} Hours</th>
+    <th class="text-end">Eligibility Hours</th>
     <th>Shift Lead</th>
     <th>{{this.year}} Signup</th>
   </tr>
@@ -30,9 +30,9 @@ Showing {{pluralize this.people.length "person"}}
       <td>
         <PersonLink @person={{person}} />
       </td>
-      <td class="text-right">{{person.hours_last_year}}</td>
-      <td class="text-right">{{person.hours_prev_year}}</td>
-      <td class="text-right">{{person.radio_hours}}</td>
+      <td class="text-end">{{person.hours_last_year}}</td>
+      <td class="text-end">{{person.hours_prev_year}}</td>
+      <td class="text-end">{{person.radio_hours}}</td>
       <td>{{yesno person.shift_lead}}</td>
       <td>{{yesno person.signed_up}}</td>
     </tr>

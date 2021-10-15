@@ -1,7 +1,10 @@
-<h3>Training Information <HelpPopover @slug="hq-training-info" /></h3>
+<UiSection>
+  <:title>Training Information</:title>
+  <:body>
+    {{#if this.person.isNonRanger}}
+      <p>Non Rangers are not required to pass training.</p>
+    {{/if}}
 
-{{#if this.person.isNonRanger}}
-  <p>Non Rangers are not required to pass training.</p>
-{{/if}}
-
-<TrainingInfo @trainings={{this.eventInfo.trainings}} />
+    <TrainingInfo @trainings={{this.eventInfo.trainings}} />
+  </:body>
+</UiSection>

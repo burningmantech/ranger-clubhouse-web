@@ -54,7 +54,7 @@
             <th class="w-5">ID</th>
             <th class="w-15">From</th>
             <th class="w-15">To</th>
-            <th class="w-10 text-right">Credits</th>
+            <th class="w-10 text-end">Credits</th>
             <th class="w-35">Description</th>
             <th class="w-20">Actions</th>
           </tr>
@@ -65,7 +65,7 @@
               <td class="w-5">{{credit.id}}</td>
               <td class="w-15">{{shift-format credit.start_time}}</td>
               <td class="w-15">{{shift-format credit.end_time}}</td>
-              <td class="w-10 text-right">{{credits-format credit.credits_per_hour}}</td>
+              <td class="w-10 text-end">{{credits-format credit.credits_per_hour}}</td>
               <td class="w-35">{{credit.description}}</td>
               <td class="w-20">
                 <UiButton @onClick={{fn this.deleteCredit credit}} @type="danger" @size="sm">
@@ -214,7 +214,7 @@
                     <th>Copy</th>
                     <th>Start time</th>
                     <th>End time</th>
-                    <th class="text-right">Credits</th>
+                    <th class="text-end">Credits</th>
                     <th>Description</th>
                   </tr>
                   </thead>
@@ -234,7 +234,7 @@
                           <br>{{credit.end_time}}
                         </label>
                       </td>
-                      <td class="text-right">
+                      <td class="text-end">
                         <label for={{credit.checkboxId}}>{{credits-format credit.source.credits_per_hour}}</label>
                       </td>
                       <td><label for={{credit.checkboxId}}>{{credit.source.description}}</label></td>

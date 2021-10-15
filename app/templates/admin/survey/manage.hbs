@@ -32,7 +32,7 @@
           <br>(In separate report as: "{{group.report_title}}")
         {{/if}}
       </div>
-      <span class="ml-2">
+      <span class="ms-2">
           <UiButton @size="sm" @onClick={{fn this.newQuestionAction group}} @disabled={{group.isSaving}}>
             {{fa-icon "plus"}} Add Question
           </UiButton>
@@ -43,7 +43,7 @@
             {{fa-icon "edit"}} Edit Group
           </UiButton>
         </span>
-      <span class="ml-4">
+      <span class="ms-4">
           {{#if (not-eq idx 0)}}
             <UiButton @type="secondary"
                       @size="sm"
@@ -70,7 +70,7 @@
       <th class="w-5">Type</th>
       <th class="w-5 text-center">Req?</th>
       <th class="w-10">Action</th>
-      <th class="w-25 text-right">Move Position</th>
+      <th class="w-25 text-end">Move Position</th>
     </tr>
     </thead>
     <tbody>
@@ -85,7 +85,7 @@
             {{fa-icon "edit"}} Edit
           </UiButton>
         </td>
-        <td class="w-25 text-right">
+        <td class="w-25 text-end">
           {{#if (not-eq idx 0)}}
             <UiButton @type="secondary" @size="sm" @onClick={{fn this.moveQuestionAction group question -1}}
                       @disabled={{question.isSaving}}>

@@ -17,9 +17,9 @@
       <th>Begins</th>
       <th>Ends</th>
       <th>Description</th>
-      <th class="text-right">Signed Up</th>
-      <th class="text-right">Max</th>
-      <th class="text-right">Percent</th>
+      <th class="text-end">Signed Up</th>
+      <th class="text-end">Max</th>
+      <th class="text-end">Percent</th>
       <th>&nbsp;</th>
     </tr>
     </thead>
@@ -31,9 +31,9 @@
         <td>{{shift-format shift.begins}}</td>
         <td>{{shift-format shift.ends}}</td>
         <td>{{shift.description}}</td>
-        <td class="text-right">{{shift.signed_up}}</td>
-        <td class="text-right">{{shift.max}}</td>
-        <td class="text-right">
+        <td class="text-end">{{shift.signed_up}}</td>
+        <td class="text-end">{{shift.max}}</td>
+        <td class="text-end">
           {{#if shift.max}}
             {{shift.full_percentage}}%
           {{else}}
@@ -59,9 +59,9 @@
   <thead>
   <tr>
     <th>Position</th>
-    <th class="text-right">Empty Shifts</th>
-    <th class="text-right">Signed Up</th>
-    <th class="text-right">Max</th>
+    <th class="text-end">Empty Shifts</th>
+    <th class="text-end">Signed Up</th>
+    <th class="text-end">Max</th>
     <th class="text-center">Total Signed Up</th>
     <th>&nbsp;</th>
   </tr>
@@ -71,9 +71,9 @@
   {{#each this.emptyPositions key="id" as |position|}}
     <tr>
       <td>{{position.title}}</td>
-      <td class="text-right">{{position.total_empty}}</td>
-      <td class="text-right">{{position.total_signed_up}}</td>
-      <td class="text-right">{{position.total_max}}</td>
+      <td class="text-end">{{position.total_empty}}</td>
+      <td class="text-end">{{position.total_signed_up}}</td>
+      <td class="text-end">{{position.total_max}}</td>
       <td>
         <progress value={{position.full_percentage}} max="100"></progress>
       </td>

@@ -51,8 +51,8 @@
             <td>{{@newStatus}}</td>
           {{/unless}}
           {{#unless this.isPastProspective}}
-            <td class="text-right">{{person.last_year}}</td>
-            <td class="text-right">{{person.years}}</td>
+            <td class="text-end">{{person.last_year}}</td>
+            <td class="text-end">{{person.years}}</td>
           {{/unless}}
           <td>{{mail-to person.email}}</td>
           {{#unless this.isVintage}}

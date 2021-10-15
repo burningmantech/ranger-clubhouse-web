@@ -119,7 +119,7 @@
       <thead>
       <tr>
         <th>&nbsp;</th>
-        <th class="text-right">Total</th>
+        <th class="text-end">Total</th>
         <th>Pre-Event</th>
         <th>Event</th>
         <th>Post-Event</th>
@@ -129,21 +129,21 @@
       <tbody>
       <tr>
         <td>Scheduled Hours</td>
-        <td class="text-right">
+        <td class="text-end">
           {{hour-minute-format @scheduleSummary.counted_duration}} (counted)<br>
           {{hour-minute-format @scheduleSummary.total_duration}} (total)
         </td>
-        <td class="text-right">{{hour-minute-format @scheduleSummary.pre_event_duration}}</td>
-        <td class="text-right">{{hour-minute-format @scheduleSummary.event_duration}}</td>
-        <td class="text-right">{{hour-minute-format @scheduleSummary.post_event_duration}}</td>
-        <td class="text-right">{{hour-minute-format @scheduleSummary.other_duration}}</td>
+        <td class="text-end">{{hour-minute-format @scheduleSummary.pre_event_duration}}</td>
+        <td class="text-end">{{hour-minute-format @scheduleSummary.event_duration}}</td>
+        <td class="text-end">{{hour-minute-format @scheduleSummary.post_event_duration}}</td>
+        <td class="text-end">{{hour-minute-format @scheduleSummary.other_duration}}</td>
       </tr>
       <tr>
         <td>Scheduled Credits</td>
-        <td class="text-right">{{credits-format @scheduleSummary.total_credits}}</td>
-        <td class="text-right">{{credits-format @scheduleSummary.pre_event_credits}}</td>
-        <td class="text-right">{{credits-format @scheduleSummary.event_credits}}</td>
-        <td class="text-right">{{credits-format @scheduleSummary.post_event_credits}}</td>
+        <td class="text-end">{{credits-format @scheduleSummary.total_credits}}</td>
+        <td class="text-end">{{credits-format @scheduleSummary.pre_event_credits}}</td>
+        <td class="text-end">{{credits-format @scheduleSummary.event_credits}}</td>
+        <td class="text-end">{{credits-format @scheduleSummary.post_event_credits}}</td>
         <td class="text-center">-</td>
       </tr>
       </tbody>
