@@ -2,7 +2,7 @@
   {{#each this.alphaPages as |alphaPage idx|}}
     <h1 class="{{if idx "d-print-page-break"}} mb-4">
       {{year-format @slot.begins}} {{@slot.description}} &mdash; {{shift-format @slot.begins}} &mdash; Alpha Shift Sign Ups
-      <div class="float-right small">Page {{add idx 1}} of {{this.alphaPages.length}}</div>
+      <div class="float-end small">Page {{add idx 1}} of {{this.alphaPages.length}}</div>
     </h1>
 
     <table class="signup-table">
@@ -83,7 +83,7 @@
   <NumberOfTimes @times={{2}} as |pageIdx|>
     <h1 class="d-print-page-break">
       {{year-format @slot.begins}} {{@slot.description}} &mdash; {{shift-format @slot.begins}} &mdash; Alpha Standby List
-      <div class="float-right small">Page {{add pageIdx 1}} of 2</div>
+      <div class="float-end small">Page {{add pageIdx 1}} of 2</div>
     </h1>
 
     <div class="text-center h3">

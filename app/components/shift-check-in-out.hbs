@@ -1,14 +1,16 @@
 {{#if this.isReloadingTimesheets}}
   <LoadingIndicator @text="Reloading Timesheets"/>
 {{else if @onDutyEntry}}
-  <b class="text-success">{{@person.callsign}} is on duty.</b>
+  <p>
+    <b class="text-success">{{@person.callsign}} is on duty.</b>
+  </p>
   <table class="table table-width-auto">
     <thead>
     <tr>
       <th>Position</th>
       <th>On Duty</th>
-      <th class="text-right">Duration</th>
-      <th class="text-right">Credits</th>
+      <th class="text-end">Duration</th>
+      <th class="text-end">Credits</th>
       <th>Action</th>
     </tr>
     </thead>
@@ -23,16 +25,16 @@
 
       </td>
       <td>{{shift-format @onDutyEntry.on_duty}}</td>
-      <td class="text-right">
+      <td class="text-end">
         {{#unless @onDutyEntry.position.count_hours}}
           <NoAppreciateIcon/>
         {{/unless}}
         {{hour-minute-format @onDutyEntry.duration}}
       </td>
-      <td class="text-right">{{credits-format @onDutyEntry.credits}}</td>
+      <td class="text-end">{{credits-format @onDutyEntry.credits}}</td>
       <td>
         <UiButton @type="danger" @onClick={{this.endShiftAction}} @disabled={{this.isSubmitting}}>
-          End Shift
+          {{fa-icon "bed"}} End Shift
         </UiButton>
         {{#if this.isSubmitting}}
           <LoadingIndicator/>
@@ -136,20 +138,20 @@
                         @onChange={{this.updateShiftPosition}}/>
       </div>
       <div class="col-auto">
-            {{#if this.isPersonDirtTrained}}
+        {{#if this.isPersonDirtTrained}}
           <UiButton @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
-            Start Shift
+            {{fa-icon "walking"}} Start Shift
           </UiButton>
-            {{else if this.userCanForceCheckIn}}
+        {{else if this.userCanForceCheckIn}}
           <UiButton @type="warning" @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
             Force Shift Start
           </UiButton>
-            {{else}}
+        {{else}}
           <div class="text-danger mt-1">NOT DIRT TRAINED - SHIFT START IS NOT ALLOWED</div>
-            {{/if}}
-            {{#if this.isSubmitting}}
+        {{/if}}
+        {{#if this.isSubmitting}}
           <LoadingIndicator/>
-            {{/if}}
+        {{/if}}
       </div>
     </FormRow>
   {{/if}}

@@ -45,8 +45,8 @@
         <tr>
           <th>Position</th>
           <th>Time</th>
-          <th class="text-right">Duration</th>
-          <th class="text-right">Credits</th>
+          <th class="text-end">Duration</th>
+          <th class="text-end">Credits</th>
           <th>Correct?</th>
           <th class="w-5">&nbsp;</th>
         </tr>
@@ -60,10 +60,10 @@
             <td class="align-middle">
               {{shift-format entry.on_duty entry.off_duty}}
             </td>
-            <td class="text-right align-middle">
+            <td class="text-end align-middle">
               {{hour-minute-format entry.duration}}
             </td>
-            <td class="text-right align-middle">
+            <td class="text-end align-middle">
               {{credits-format entry.credits}}
             </td>
             <td class="align-middle">
@@ -74,14 +74,14 @@
                   {{fa-icon "check"}}
                 {{/if}}
               </UiButton>
-              <UiButton @type="light-red" @class="btn-timesheet" @onClick={{fn this.markEntryIncorrect entry}}
+              <UiButton @type="danger" @class="btn-timesheet" @onClick={{fn this.markEntryIncorrect entry}}
                         @disabled={{entry.isSaving}}>
                 NO
                 {{#if entry.isPending}}
                   {{fa-icon "check"}}
                 {{/if}}
               </UiButton>
-              <UiButton @type="dark-gray" @class="btn-timesheet" @onClick={{fn this.ignoreEntry entry}}
+              <UiButton @type="dark" @class="btn-timesheet" @onClick={{fn this.ignoreEntry entry}}
                         @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
                 IGNORE
                 {{#if entry.isIgnoring}}
@@ -128,6 +128,7 @@
 </UiSection>
 
 <HqProvisionInfo @eventInfo={{this.eventInfo}} @person={{this.person}} @onDutyEntry={{this.onDutyEntry}} />
+
 {{#if this.showCorrectionForm}}
   <ModalDialog @title="Timesheet Entry Correction" @onEscape={{this.cancelEntryCorrection}} as |Modal|>
     <ChForm @formId="correction" @formFor={{this.entry}}

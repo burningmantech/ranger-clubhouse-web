@@ -25,7 +25,7 @@ Showing {{pluralize this.radios.length "entry"}}
     <th>Is Event Radio?</th>
     <th>Radio Qualified?</th>
     {{/if}}
-    <th class="text-right">Time Checked Out</th>
+    <th class="text-end">Time Checked Out</th>
     </thead>
 
     <tbody>
@@ -47,7 +47,7 @@ Showing {{pluralize this.radios.length "entry"}}
         <td>{{yesno radio.perm_assign}}</td>
         <td>{{yesno radio.eligible}}</td>
         {{/if}}
-        <td class="text-right">{{hour-minute-format radio.duration}}</td>
+        <td class="text-end">{{hour-minute-format radio.duration}}</td>
     </tr>
     {{else}}
     <tr>

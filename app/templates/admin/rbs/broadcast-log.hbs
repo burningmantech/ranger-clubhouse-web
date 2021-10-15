@@ -11,7 +11,7 @@
     <th>Timestamp</th>
     <th>Sender</th>
     <th>Alert</th>
-    <th class="text-right">People</th>
+    <th class="text-end">People</th>
     <th>Delivery</th>
     <th>Action</th>
   </tr>
@@ -24,7 +24,7 @@
       <td>{{log.created_at}}</td>
       <td><PersonLink @person={{log.sender}} /></td>
       <td>{{if log.alert.on_playa "On Playa" "Pre-Event"}}: {{log.alert.title}}</td>
-      <td class="text-right">{{log.people.length}}</td>
+      <td class="text-end">{{log.people.length}}</td>
       <td>
         {{#if log.sent_sms}}SMS{{else}}&nbsp;{{/if}}
         {{#if log.sent_email}}email{{else}}&nbsp;{{/if}}

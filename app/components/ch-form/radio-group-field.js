@@ -11,6 +11,8 @@ export default class ChFormRadioGroupFieldComponent extends ChFormFieldBaseCompo
   inputInlineWrapClassDefault = 'form-check form-check-inline';
   labelInlineClassDefault = 'col-form-label col-auto pt-0';
 
+  labelFixedClassDefault = 'col-form-label col-form-label-fixed pt-0';
+
   constructor() {
     super(...arguments);
 

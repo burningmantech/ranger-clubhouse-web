@@ -2,7 +2,7 @@
   {{#each this.alphaPages as |alphaPage idx|}}
     <h1 class="{{if idx "d-print-page-break"}} mb-4">
       {{year-format @slot.begins}} {{@slot.description}} &mdash; {{shift-format @slot.begins}} &mdash; Alpha Information
-      <div class="float-right small">Page {{add idx 1}} of {{this.alphaPages.length}}</div>
+      <div class="float-end small">Page {{add idx 1}} of {{this.alphaPages.length}}</div>
     </h1>
 
     <table class="signup-table">

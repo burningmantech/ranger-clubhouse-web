@@ -7,7 +7,7 @@
   <ChForm @formId="search-bar-form"
           @formFor={{this.searchForm}}
           @changeSet={{false}}
-          @formClass="col-sm-11 col-md-10 col-lg-8 col-xl-6 mb-2 mx-2"
+          @formClass="col-sm-11 col-lg-8 col-xl-6 mb-2 mx-2"
           @onFormChange={{action this.searchFormChange}} as |f|>
     <AutocompleteInput @placeholder={{this.searchPlaceholder}}
                        @onSearch={{action this.searchAction}}
@@ -27,12 +27,12 @@
         {{~/if~}}
         <b>{{item.callsign}}</b> &lt;{{item.first_name}} {{item.last_name}}, {{item.status}}&gt;
         {{~#if item.fka_match~}}
-          <span class="ml-4 d-block">- FKA: {{item.fka_match}}</span>
+          <span class="ms-4 d-block">- FKA: {{item.fka_match}}</span>
         {{~/if~}}
         {{~#if (eq item.email_match "full")~}}
-          <span class="ml-4 d-block">- email exact match</span>
+          <span class="ms-4 d-block">- email exact match</span>
         {{~else if (eq item.email_match "partial")~}}
-          <span class="ml-4 d-block">- email partial match</span>
+          <span class="ms-4 d-block">- email partial match</span>
         {{~/if~}}
       {{~/if~}}
     </AutocompleteInput>

@@ -16,7 +16,7 @@
             <tr>
               <th>From</th>
               <th>To</th>
-              <th class="text-right">Hours</th>
+              <th class="text-end">Hours</th>
               <th>Callsign</th>
               {{#if this.session.canViewEmail}}
                 <th>Email</th>
@@ -34,7 +34,7 @@
                     <i>still on duty</i>
                   {{/if}}
                 </td>
-                <td class="text-right">{{hour-format entry.duration}}</td>
+                <td class="text-end">{{hour-format entry.duration}}</td>
                 <td>
                   <PersonLink @person={{entry.person}} />
                 </td>

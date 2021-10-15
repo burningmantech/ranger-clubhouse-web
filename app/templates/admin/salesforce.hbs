@@ -143,7 +143,7 @@
         Showing {{pluralize this.accounts.length "record"}}
       </p>
       {{#each this.accountGroups as |group|}}
-        <div class="float-right">
+        <div class="float-end">
           <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleAll group}}>
             {{#if group.expandedAll}}
               Hide All

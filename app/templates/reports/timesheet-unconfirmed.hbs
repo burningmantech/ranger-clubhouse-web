@@ -6,7 +6,7 @@
 
 {{#if this.unconfirmed_people}}
   <p>
-    <UiButton @onClick={{this.downloadCsv}} @class="ml-2">Export as CSV</UiButton>
+    <UiButton @onClick={{this.downloadCsv}} @class="ms-2">Export as CSV</UiButton>
     <a href="#email-list-link">Jump to the email list</a>
   </p>
 {{/if}}
@@ -33,7 +33,7 @@ Showing {{pluralize this.unconfirmed_people.length "person"}}
       <td>{{person.first_name}} {{person.last_name}}</td>
       <td>{{mail-to person.email}}</td>
       <td>{{phone-link person.home_phone}}</td>
-      <td class="text-right">{{person.unverified_count}}</td>
+      <td class="text-end">{{person.unverified_count}}</td>
     </tr>
   {{else}}
     <tr>

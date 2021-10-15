@@ -11,17 +11,17 @@
         <th class="w-15">Callsign</th>
         <th class="w-5">Pronouns</th>
         <th class="w-5">Gender</th>
-        <th class="w-5 text-right">Yrs</th>
+        <th class="w-5 text-end">Yrs</th>
         <th class="w-5 text-center">GTR?</th>
         <th class="w-5 text-center">Veh?</th>
         <th class="w-30">Positions</th>
         {{#if @isOnDuty}}
-          <th class="w-10 text-right">On Duty</th>
-          <th class="w-10 text-right">Duration</th>
+          <th class="w-10 text-end">On Duty</th>
+          <th class="w-10 text-end">Duration</th>
 
         {{else}}
-          <th class="w-10 text-right">Shift Start</th>
-          <th class="w-10 text-right">Shift Ends</th>
+          <th class="w-10 text-end">Shift Start</th>
+          <th class="w-10 text-end">Shift Ends</th>
         {{/if}}
       </tr>
       </thead>
@@ -44,7 +44,7 @@
           <td class="w-5">
             <PresentOrNot @value={{person.gender}} @empty="-"/>
           </td>
-          <td class="w-5 text-right">{{person.years}}</td>
+          <td class="w-5 text-end">{{person.years}}</td>
           <td class="w-5 text-center">
             {{#if person.vehicle_blacklisted}}
               <b class="text-danger">-BL-</b>
@@ -72,11 +72,11 @@
             {{/each}}
           </td>
           {{#if @isOnDuty}}
-            <td class="w-10 text-right">{{time-format person.on_duty}}</td>
-            <td class="w-10 text-right">{{hour-minute-format person.duration}}</td>
+            <td class="w-10 text-end">{{time-format person.on_duty}}</td>
+            <td class="w-10 text-end">{{hour-minute-format person.duration}}</td>
           {{else}}
-            <td class="w-10 text-right">{{if person.slot.begins_day_before "<"}}{{time-format person.slot.begins}}</td>
-            <td class="w-10 text-right">{{time-format person.slot.ends}}{{if person.slot.ends_day_after ">"}}</td>
+            <td class="w-10 text-end">{{if person.slot.begins_day_before "<"}}{{time-format person.slot.begins}}</td>
+            <td class="w-10 text-end">{{time-format person.slot.ends}}{{if person.slot.ends_day_after ">"}}</td>
           {{/if}}
         </tr>
       {{else}}

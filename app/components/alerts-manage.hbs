@@ -43,7 +43,7 @@
             Verify
           </UiButton>
           <UiButton @type="secondary"
-                    @class="ml-2"
+                    @class="ms-2"
                     @onClick={{fn this.sendNewCodeAction "off-playa"}} @disabled={{this.isSubmitting}}>
             Resend verification code
           </UiButton>
@@ -62,7 +62,7 @@
           Verify
         </UiButton>
         <UiButton @type="secondary"
-                  @class="ml-2"
+                  @class="ms-2"
                   @onClick={{fn this.sendNewCodeAction "on-playa"}}
                   @disabled={{this.isSubmitting}}>
           Resend verification code
@@ -123,7 +123,7 @@
   <:title>Alert Preference Options</:title>
   <:body>
     {{#if this.isMe}}
-      <p class="ml-2">
+      <p class="ms-2">
         To change your email visit
         <LinkTo @route="me.personal-info">Personal Info</LinkTo>
       </p>

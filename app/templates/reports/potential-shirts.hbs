@@ -23,8 +23,8 @@ Showing  {{pluralize this.people.length "person"}}
   <tr>
     <th>Callsign</th>
     <th>Name</th>
-    <th class="text-right">Estimated Hours</th>
-    <th class="text-right">Actual Hours</th>
+    <th class="text-end">Estimated Hours</th>
+    <th class="text-end">Actual Hours</th>
     <th>Tee Shirt ({{this.threshold_ss}} hrs)</th>
     <th>Long Sleeve ({{this.threshold_ls}} hrs)</th>
   </tr>
@@ -37,8 +37,8 @@ Showing  {{pluralize this.people.length "person"}}
         <PersonLink @person={{person}} />
       </td>
       <td>{{person.first_name}} {{person.middle_name}} {{person.last_name}}</td>
-      <td class="text-right">{{person.estimated_hours}}</td>
-      <td class="text-right">{{person.actual_hours}}</td>
+      <td class="text-end">{{person.estimated_hours}}</td>
+      <td class="text-end">{{person.actual_hours}}</td>
       <td>
         {{#unless person.earned_ss}}
           not earned -
@@ -68,21 +68,21 @@ Showing  {{pluralize this.people.length "person"}}
         <table class="table table-sm table-box">
           <caption>
             {{shirts.name}} Totals
-            <span class="d-inline-block float-right">
+            <span class="d-inline-block float-end">
             <UiButton @type="secondary" @size="sm" @onClick={{fn this.exportCounts shirts}}>Export</UiButton>
           </span>
           </caption>
           <thead>
           <tr>
             <th>Shirt Type</th>
-            <th class="text-right">Count</th>
+            <th class="text-end">Count</th>
           </tr>
           </thead>
           <tbody>
           {{#each shirts.types as |shirt|}}
             <tr>
               <td>{{shirt.type}}</td>
-              <td class="text-right">{{shirt.count}}</td>
+              <td class="text-end">{{shirt.count}}</td>
             </tr>
           {{/each}}
           </tbody>

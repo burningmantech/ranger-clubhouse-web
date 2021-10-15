@@ -17,7 +17,7 @@
                     @onChange={{this.changeActiveFilter}} />
   </div>
   <FormLabel @auto={{true}}>Actions</FormLabel>
-  <div class="pl-4 col-auto">
+  <div class="col-auto">
     <UiButton @onClick={{this.newSlot}}>New Slot</UiButton>
     {{#if this.slots.length}}
       <UiButton @onClick={{this.startCopy}} @type="secondary">Copy Slots</UiButton>
@@ -76,9 +76,9 @@
             <th>ID</th>
             <th>From</th>
             <th>To</th>
-            <th class="text-right">Max</th>
-            <th class="text-right">Count</th>
-            <th class="text-right">Credits</th>
+            <th class="text-end">Max</th>
+            <th class="text-end">Count</th>
+            <th class="text-end">Credits</th>
             <th>Description</th>
             <th>Active</th>
             <th>Actions</th>
@@ -90,9 +90,9 @@
               <td>{{slot.id}}</td>
               <td>{{shift-format slot.begins}}</td>
               <td>{{shift-format slot.ends}}</td>
-              <td class="text-right">{{slot.max}}</td>
-              <td class="text-right">{{slot.signed_up}}</td>
-              <td class="text-right">{{credits-format slot.credits}}</td>
+              <td class="text-end">{{slot.max}}</td>
+              <td class="text-end">{{slot.signed_up}}</td>
+              <td class="text-end">{{credits-format slot.credits}}</td>
               <td>
                 <SlotInfoLink @description={{slot.description}} @info={{slot.url}} />
               </td>
@@ -199,9 +199,7 @@
                     @maxlength={{40}}
                     @size={{40}}
             />
-          </FormRow>
-          <FormRow>
-            <f.number @name="max"
+             <f.text @name="max"
                       @label="Max"
                       @maxlength={{3}}
                       @size={{3}} />
@@ -249,7 +247,7 @@
                     <th>Copy</th>
                     <th>Start time</th>
                     <th>End time</th>
-                    <th class="text-right">Max</th>
+                    <th class="text-end">Max</th>
                     <th>Description</th>
                   </tr>
                   </thead>
@@ -270,7 +268,7 @@
                             {{slot.ends}}
                           </label>
                         </td>
-                        <td class="text-right"><label for={{checkid}}>{{slot.source.max}}</label></td>
+                        <td class="text-end"><label for={{checkid}}>{{slot.source.max}}</label></td>
                         <td><label for={{checkid}}>{{slot.source.description}}</label></td>
                       {{/let}}
                     </tr>

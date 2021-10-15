@@ -29,7 +29,7 @@
 
 <p>
   Showing {{pluralize this.positions.length "position"}}.
-  <UiButton @type="secondary" @class="ml-2" @onClick={{this.toggleExpandAll}}>
+  <UiButton @type="secondary" @class="ms-2" @onClick={{this.toggleExpandAll}}>
     {{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}
   </UiButton>
 </p>
@@ -48,8 +48,8 @@
                 <th>From</th>
                 <th>To</th>
                 <th>Description</th>
-                <th class="text-right">Signed Up</th>
-                <th class="text-right">Max</th>
+                <th class="text-end">Signed Up</th>
+                <th class="text-end">Max</th>
               </tr>
               </thead>
               <tbody>
@@ -57,12 +57,12 @@
                 <td>{{shift-format slot.begins}}</td>
                 <td>{{shift-format slot.ends}}</td>
                 <td>{{slot.description}}</td>
-                <td class="text-right">{{slot.signed_up}}</td>
-                <td class="text-right">{{slot.max}}</td>
+                <td class="text-end">{{slot.signed_up}}</td>
+                <td class="text-end">{{slot.max}}</td>
               </tr>
               </tbody>
             </table>
-            <div class="ml-1 {{unless idx "mb-2"}}">
+            <div class="ms-1 {{unless idx "mb-2"}}">
               {{#if slot.checked_in}}
                 <h6>Signed up &amp; in ({{slot.checked_in.length}})</h6>
                 <div class="callsign-list">

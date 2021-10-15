@@ -63,7 +63,7 @@
           <th>Position</th>
           <th>Shift</th>
           <th class="text-center">Need</th>
-          <th class="text-right">{{if this.isOnDuty "On Duty" "Signed Up"}}</th>
+          <th class="text-end">{{if this.isOnDuty "On Duty" "Signed Up"}}</th>
         </tr>
         </thead>
         <tbody>
@@ -78,7 +78,7 @@
                 {{position.min}} - {{position.max}}
               {{/if}}
             </td>
-            <td class="text-right">
+            <td class="text-end">
               {{#if @isOnDuty}}
                 {{if position.on_duty position.on_duty "NONE"}}
               {{else}}

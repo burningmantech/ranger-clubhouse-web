@@ -32,17 +32,17 @@
       </FormRow>
 
       {{#if this.session.isLMOPEnabled}}
-        <p class="ml-2">
-          <strong>Off-Playa:</strong>
+        <p class="ms-2">
+          <b>Off-Playa:</b>
           Real world name, relationship (partner, friend, sibling, parent), phone number, &amp; email.<br>
 
-          <strong>On-Playa:</strong>
+          <b>On-Playa:</b>
           Their playa name, real world name, relationship, camp location &amp; description.<br>
         </p>
         <FormRow>
           <f.textarea @name="emergency_contact"
                       @label="Emergency Contact Information:"
-                      @rows={{4}}
+                      @rows={{6}}
                       @cols={{80}}/>
         </FormRow>
         <f.submit @label="Update Camp & Emergency Contact Info" @disabled={{this.isSubmitting}} />
@@ -63,16 +63,18 @@
   </:body>
 </UiSection>
 
+
+<HqProvisionInfo @eventInfo={{this.eventInfo}} @person={{this.person}} />
+
 <UiSection>
   <:title>
     Agreements
     <HelpPopover @slug="hq-site-checkin-agreements"/>
   </:title>
   <:body>
-
     {{#if this.personEvent.asset_authorized}}
-      <p class="text-success">
-        {{fa-icon "check"}} Radio checkout form has been signed.
+      <p class="text-success mt-3">
+        {{fa-icon "check"}} Radio Checkout Agreement has been signed.
       </p>
     {{else}}
       <h4 class="text-danger">Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE RADIOS.</h4>

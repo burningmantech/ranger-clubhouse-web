@@ -44,7 +44,7 @@ Showing {{pluralize this.timesheet.length "person"}} on duty in {{pluralize this
               {{else}}
                 <th class="w-60">On Duty Since</th>
               {{/if}}
-              <th class="text-right w-15">Duration</th>
+              <th class="text-end w-15">Duration</th>
             </tr>
             </thead>
 
@@ -64,7 +64,7 @@ Showing {{pluralize this.timesheet.length "person"}} on duty in {{pluralize this
                     {{/if}}
                   </td>
                 {{/if}}
-                <td class="w-15 text-right">{{hour-minute-format ts.duration}}</td>
+                <td class="w-15 text-end">{{hour-minute-format ts.duration}}</td>
               </tr>
             {{/each}}
             </tbody>

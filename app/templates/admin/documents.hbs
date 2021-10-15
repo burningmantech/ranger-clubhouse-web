@@ -30,7 +30,7 @@
     {{/if}}
 
     {{#unless this.editDocument.isNew}}
-      <div class="d-inline-block ml-4">
+      <div class="d-inline-block ms-4">
         <UiButton @type="danger" @onClick={{this.deleteAction}}>{{fa-icon "trash"}} Delete</UiButton>
       </div>
     {{/unless}}
@@ -39,7 +39,7 @@
   <h1>Clubhouse Documents</h1>
   <p>
     Showing {{pluralize this.documents.length "document"}}
-    <span class="ml-4">
+    <span class="ms-4">
     <UiButton @onClick={{this.newAction}}>{{fa-icon "plus"}} New Document</UiButton>
     </span>
   </p>

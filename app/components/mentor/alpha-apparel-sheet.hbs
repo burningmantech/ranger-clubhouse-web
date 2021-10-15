@@ -48,14 +48,14 @@
         <thead>
           <tr>
             <th>Shirt Type</th>
-            <th class="text-right">Count</th>
+            <th class="text-end">Count</th>
           </tr>
         </thead>
         <tbody>
           {{#each shirts.types as |shirt|}}
             <tr>
               <td>{{shirt.type}}</td>
-              <td class="text-right">{{shirt.count}}</td>
+              <td class="text-end">{{shirt.count}}</td>
             </tr>
           {{/each}}
         </tbody>

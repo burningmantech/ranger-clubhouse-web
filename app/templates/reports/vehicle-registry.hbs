@@ -16,7 +16,7 @@
   </div>
   <FormLabel @auto={{true}}>Filter by rental, driving, or license #:</FormLabel>
   <div class="col-auto">
-    <Input @type="text" @value={{this.numberFilter}} size="5" class="form-control ml-2"/>
+    <Input @type="text" @value={{this.numberFilter}} size="5" class="form-control ms-2"/>
   </div>
   <div class="col-auto">
     <UiButton @type="secondary" @size="sm" @onClick={{this.clearNumberFilterAction}}>
@@ -149,31 +149,30 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
           <fieldset class="mt-2">
             <legend>Vehicle Record Type &amp; Assignment</legend>
             <FormRow>
-              <FormLabel @auto={{true}}>Type</FormLabel>
-              <div class="col-auto mt-2">
-                <f.radioGroup @name="type"
-                              @options={{this.typeOptions}}
-                              @inline={{true}}/>
+              <div class="col-auto">
+                <FormLabel>Type</FormLabel>
+                <div class="mt-2">
+                  <f.radioGroup @name="type"
+                                @options={{this.typeOptions}}
+                                @inline={{true}}/>
+                </div>
               </div>
               <f.text @name="event_year"
                       @label="Event Year"
                       @size={{4}}
                       @fieldSize="sm"
-                      @inline={{true}}
               />
               {{#if (eq f.model.type "personal")}}
                 <f.search @name="callsign"
                           @label="Personal Vehicle Owner"
                           @controlClass="form-control form-control-sm autocomplete-input"
                           @onSearch={{this.searchCallsignAction}}
-                          @inline={{true}}
                 />
               {{else}}
                 <f.text
                   @name="team_assignment"
                   @label="Team Assignment"
                   @size={{10}}
-                  @inline={{true}}
                   @fieldSize="sm"/>
               {{/if}}
             </FormRow>
@@ -283,21 +282,19 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
                           @disabled={{not-eq f.model.type "personal"}}/>
             </FormRow>
             <FormRow>
-              <FormLabel @auto={{true}}>Request Status</FormLabel>
-              <div class="col-auto mt-1">
-                <f.radioGroup @name="status"
-                              @options={{this.statusOptions}}
-                              @inline={{true}} />
-              </div>
+              <f.radioGroup @name="status"
+                            @label="Request Status"
+                            @options={{this.statusOptions}}
+                            @inline={{true}} />
             </FormRow>
           </fieldset>
         {{else}}
-          <h3 class="ml-2">
+          <h3 class="ms-2">
             {{this.entry.person.callsign}}
             - {{this.entry.vehicle_year}} {{this.entry.vehicle_make}} {{this.entry.vehicle_model}} {{this.entry.vehicle_color}}
             Lic #{{this.entry.license_number}}
           </h3>
-          <p class="ml-2">
+          <p class="ms-2">
             {{#if this.entry.isApproved}}
               <b class="text-success"> {{fa-icon "check"}} Request has been approved for the following items:</b>
             {{else if this.entry.isRejected}}
@@ -309,7 +306,7 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
             {{/if}}
           </p>
           {{#unless this.entry.isRejected}}
-            <p class="ml-2">
+            <p class="ms-2">
               <b>Driving sticker:</b>
               {{#if (eq this.entry.ranger_logo "none")}}
                 <i>none</i>
@@ -339,7 +336,7 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
             </p>
           {{/unless}}
           {{#if this.entry.response}}
-            <div class="border p-1 ml-2">
+            <div class="border p-1 ms-2">
               <b>Response from Approver</b><br>
               {{this.entry.response}}
             </div>

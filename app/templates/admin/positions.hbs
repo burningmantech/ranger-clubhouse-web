@@ -49,7 +49,7 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
   <tbody>
   {{#each this.viewPositions key="id" as |position|}}
     <tr>
-      <td class="text-right">{{position.id}}</td>
+      <td class="text-end">{{position.id}}</td>
       <td>{{position.title}}</td>
       <td>
         <PresentOrNot @value={{position.short_title}} @empty="-"/>

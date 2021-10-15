@@ -24,7 +24,7 @@
       {{/if}}
     </dd>
   {{/if}}
-  <dt class="col-sm-12 col-lg-2">Years ({{@person.years.length}})</dt>
+  <dt class="col-sm-12 col-lg-2">Years</dt>
   <dd class="col-sm-12 col-lg-9">
     {{#if @person.non_ranger_years}}
       Non Ranger volunteer work:
@@ -64,26 +64,29 @@
   <dd class="col-sm-12 col-lg-9">
     <ChForm @formId="person" @formFor={{@person}} @onSubmit={{@savePersonAction}} as |f|>
       <FormRow>
-        <f.radioGroup @name="on_site"
-                      @options={{@onSiteOptions}}
-                      @inline={{true}} />
         <div class="col-auto">
-          <f.submit @label="Update" @size="sm" @disabled={{@person.isSaving}} />
-          {{#if @person.isSaving}}
-            <LoadingIndicator/>
-          {{/if}}
+          <f.radioGroup @name="on_site"
+                        @options={{@onSiteOptions}}
+                        @inline={{true}} />
         </div>
       </FormRow>
+      <f.submit @label="Update" @size="sm" @disabled={{@person.isSaving}} />
+      {{#if @person.isSaving}}
+        <LoadingIndicator/>
+      {{/if}}
     </ChForm>
   </dd>
-  <dt class="col-sm-12 col-lg-2">Positions</dt>
+  <dt class="col-sm-12 col-lg-2">Positions / Roles</dt>
   <dd class="col-sm-12 col-lg-9">
     <div>
       <UiButton @onClick={{@togglePositions}} @type="secondary" @size="sm">
         {{if @showPositions "Hide" "Show"}} Positions
       </UiButton>
+      <UiButton @onClick={{@toggleRoles}} @type="secondary" @size="sm">
+        {{if @showRoles "Hide" "Show"}} Roles
+      </UiButton>
       {{#if (has-role "grant-position")}}
-        <UiButton @onClick={{@editPositionsAction}} @type="secondary" @size="sm" @class="ml-2">
+        <UiButton @onClick={{@editPositionsAction}} @type="secondary" @size="sm" @class="ms-2">
           Edit Positions
         </UiButton>
       {{/if}}
@@ -92,6 +95,9 @@
       <b class="text-danger">No positions granted</b>
     {{/unless}}
     {{#if @showPositions}}
+      <div class="mt-1">
+        <b>{{pluralize @personPositions.length "position"}}:</b>
+      </div>
       <div class="masonry-container">
         {{#each @personPositions as |position| }}
           <div class="masonry-item">
@@ -100,18 +106,13 @@
         {{/each}}
       </div>
     {{/if}}
-  </dd>
-  <dt class="col-sm-12 col-lg-2">Roles</dt>
-  <dd class="col-sm-12 col-lg-9">
-    <div>
-      <UiButton @onClick={{@toggleRoles}} @type="secondary" @size="sm">
-        {{if @showRoles "Hide" "Show"}} Roles
-      </UiButton>
-    </div>
     {{#unless @personRoles}}
       <b class="text-danger">No roles granted</b>
     {{/unless}}
     {{#if @showRoles}}
+      <div class="mt-1">
+        <b>{{pluralize @personRoles.length "role"}}:</b>
+      </div>
       <div class="masonry-container">
         {{#each @personRoles as |role| }}
           <div class="masonry-item">
