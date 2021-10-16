@@ -27,7 +27,7 @@
         <f.textarea @name="camp_location"
                     @label="Camp Name & Location"
                     @autofocus={{true}}
-                    @rows={{4}}
+                    @rows={{2}}
                     @cols={{80}}/>
       </FormRow>
 
@@ -42,7 +42,7 @@
         <FormRow>
           <f.textarea @name="emergency_contact"
                       @label="Emergency Contact Information:"
-                      @rows={{6}}
+                      @rows={{4}}
                       @cols={{80}}/>
         </FormRow>
         <f.submit @label="Update Camp & Emergency Contact Info" @disabled={{this.isSubmitting}} />
