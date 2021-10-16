@@ -55,12 +55,13 @@
   text-align: center;
   margin-bottom: 10px;
   width: 170px;
-  height: 270px;
+  max-height: 270px;
+  min-height: 190px;
 
   img {
     display: block;
     width: 140px;
-    margin: 0 auto 5px auto;
+    margin: 0 auto 2px auto;
 
   }
 }

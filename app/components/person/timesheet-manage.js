@@ -126,7 +126,7 @@ export default class PersonTimesheetManageComponent extends Component {
             this.toast.error(`Unknown signoff response [${result.status}].`);
             break;
         }
-      });
+      }).catch((response) => this.house.handleErrorResponse(response))
   }
 
   /**

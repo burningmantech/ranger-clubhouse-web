@@ -7,8 +7,8 @@
                 aria-expanded="false">{{this.modeText}}</button>
         <ul class="dropdown-menu">
           {{#each @modeOptions as |opt|}}
-            <li class="dropdown-item">
-              <a href="#" {{on "click" (fn this.selectModeEvent opt.value)}}>{{opt.label}}</a>
+            <li >
+              <a class="dropdown-item" href="#" {{on "click" (fn this.selectModeEvent opt.value)}}>{{opt.label}}</a>
             </li>
           {{/each}}
         </ul>
