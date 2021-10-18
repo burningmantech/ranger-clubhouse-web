@@ -38,7 +38,7 @@
     "dayjs": "^1.10.7",
     "double-metaphone": "^2.0.0",
     "ember-ajax": "^5.0.0",
-    "ember-auto-import": "^2.2.2",
+    "ember-auto-import": "^2.2.3",
     "ember-cached-decorator-polyfill": "^0.1.4",
     "ember-changeset": "3.15.0",
     "ember-changeset-validations": "3.16.0",
