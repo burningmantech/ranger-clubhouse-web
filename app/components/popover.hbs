@@ -1,7 +1,7 @@
-<div class="popover-container">
-  <a href="#" {{on "click" this.showAction}}>{{@text}}</a>
+<div class="popover-container" {{did-insert this.containerInserted}}>
+  <a href {{on "click" this.showAction}}>{{@text}}</a>
   {{~#if this.isShowing}}
-      <div class="popover d-block {{this.placement}}">
+      <div class="popover d-block {{this.placement}}" {{did-insert this.blockInserted}}>
         <h3 class="popover-header">{{@title}}</h3>
         <div class="popover-body">
           {{yield}}
