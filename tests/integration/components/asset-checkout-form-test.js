@@ -12,6 +12,6 @@ module('Integration | Component | asset-checkout-form', function(hooks) {
 
     await render(hbs`<AssertCheckoutForm />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.strictEqual(this.element.textContent.trim(), '');
   });
 });

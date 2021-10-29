@@ -17,9 +17,9 @@ module('Integration | Helper | options-get', function(hooks) {
 
     await render(hbs`{{options-get this.options 2}}`);
 
-    assert.equal(this.element.textContent.trim(), 'Bye');
+    assert.strictEqual(this.element.textContent.trim(), 'Bye');
 
     await render(hbs`{{options-get this.options 33}}`);
-    assert.equal(this.element.textContent.trim(), '33');
+    assert.strictEqual(this.element.textContent.trim(), '33');
   });
 });

@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {inject as service} from '@ember/service';
 import {config} from 'clubhouse/utils/config';
-import {htmlSafe} from '@ember/string';
+import {htmlSafe} from '@ember/template';
 import dayjs from 'dayjs';
 import {
   ACTION_NEEDED,

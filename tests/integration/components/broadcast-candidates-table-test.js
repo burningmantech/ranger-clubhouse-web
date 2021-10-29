@@ -9,6 +9,6 @@ module('Integration | Component | broadcast-candidates-table', function(hooks) {
   skip('it renders', async function(assert) {
      await render(hbs`<BroadcastCandidatesTable />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.strictEqual(this.element.textContent.trim(), '');
   });
 });

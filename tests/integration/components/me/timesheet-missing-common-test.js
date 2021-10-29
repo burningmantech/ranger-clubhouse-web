@@ -12,7 +12,7 @@ module('Integration | Component | me/timesheet-missing-common', function(hooks) 
 
     await render(hbs`<Me::TimesheetMissingCommon />`);
 
-    assert.equal(this.element.textContent.trim(), '');
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.strictEqual(this.element.textContent.trim(), '');
+    assert.strictEqual(this.element.textContent.trim(), 'template block text');
   });
 });

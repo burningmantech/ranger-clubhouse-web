@@ -11,7 +11,7 @@ module('Integration | Helper | mdy-format', function(hooks) {
 
     await render(hbs`{{mdy-format this.date}}`);
 
-    assert.equal(this.element.textContent.trim(), 'Aug 31, 2018');
+    assert.strictEqual(this.element.textContent.trim(), 'Aug 31, 2018');
   });
 
   test('it renders full month day year', async function(assert) {
@@ -19,6 +19,6 @@ module('Integration | Helper | mdy-format', function(hooks) {
 
     await render(hbs`{{mdy-format this.date full=true}}`);
 
-    assert.equal(this.element.textContent.trim(), 'Friday, August 31st 2018');
+    assert.strictEqual(this.element.textContent.trim(), 'Friday, August 31st 2018');
   });
 });

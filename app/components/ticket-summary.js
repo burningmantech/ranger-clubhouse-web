@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
 import {cached} from '@glimmer/tracking';
-import {htmlSafe} from '@ember/string';
+import {htmlSafe} from '@ember/template';
 import dayjs from 'dayjs';
 
 export default class TicketSummaryComponent extends Component {

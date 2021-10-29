@@ -8,12 +8,12 @@ module('Integration | Component | document-show', function(hooks) {
 
   test('it renders', async function(assert) {
     await render(hbs`<DocumentShow @tag="tag-test"/>`);
-    assert.equal(this.element.textContent.trim(), 'a body');
+    assert.strictEqual(this.element.textContent.trim(), 'a body');
   });
 
   test('it did not find document', async function(assert) {
      await render(hbs`<DocumentShow @tag="does-not-exist"/>`);
-    assert.equal(this.element.textContent.trim(), 'Document tag [does-not-exist] not found.');
+    assert.strictEqual(this.element.textContent.trim(), 'Document tag [does-not-exist] not found.');
   });
 
 });

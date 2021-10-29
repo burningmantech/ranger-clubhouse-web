@@ -17,7 +17,7 @@ module('Acceptance | auditor', function (hooks) {
 
   test('Auditor sidebar view', async function (assert) {
     await visit('/me');
-    assert.equal(currentURL(), '/me');
+    assert.strictEqual(currentURL(), '/me');
 
     const links = [
       ['/me/schedule', true, 'Schedule'],
@@ -54,28 +54,28 @@ module('Acceptance | auditor', function (hooks) {
 
   test('Auditor should be able to visit the Personal Info page', async function (assert) {
     await visit('/me/personal-info');
-    assert.equal(currentURL(), '/me/personal-info');
+    assert.strictEqual(currentURL(), '/me/personal-info');
   });
 
   test('Auditor should not be able to visit the Emergency Contact page', async function (assert) {
     await visit('/me/emergency-contact');
     // should bounce back to homepage.
-    assert.equal(currentURL(), '/me');
+    assert.strictEqual(currentURL(), '/me');
   });
 
   test('Auditor should not be able to visit the Tickets & Stuff page', async function (assert) {
     await visit('/me/tickets');
     // should bounce back to homepage.
-    assert.equal(currentURL(), '/me');
+    assert.strictEqual(currentURL(), '/me');
   });
 
   test('Auditor should be able to visit the Event Info page', async function (assert) {
     await visit('/me/event-info');
-    assert.equal(currentURL(), '/me/event-info');
+    assert.strictEqual(currentURL(), '/me/event-info');
   });
 
   test('Auditor should not be able to visit the Contact Ranger page', async function (assert) {
     await visit('/me/contact');
-    assert.equal(currentURL(), '/me');
+    assert.strictEqual(currentURL(), '/me');
   });
 });

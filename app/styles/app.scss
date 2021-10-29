@@ -473,7 +473,7 @@ legend {
   width: 100%;
 }
 
-@include media-breakpoint-down(md) {
+@include media-breakpoint-down(lg) {
   .person-manage-header-title {
     flex-direction: column;
     align-items: normal;
@@ -532,24 +532,6 @@ ul.no-indent, ol.no-indent {
 
 .nav-text {
   padding: $nav-link-padding-y 0;
-}
-
-.page-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  pointer-events: none;
-}
-
-.page-progress .bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 10px;
-  box-shadow: 0 0 10px rgba(0, 13, 41, 0.8);
-  transition: none;
 }
 
 .columns-container {

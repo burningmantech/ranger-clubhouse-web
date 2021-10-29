@@ -12,6 +12,6 @@ module('Integration | Component | access-documents-for-person', function(hooks) 
 
     await render(hbs`<AccessDocumentsForPerson />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.strictEqual(this.element.textContent.trim(), '');
   });
 });

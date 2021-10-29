@@ -47,16 +47,16 @@ module('Unit | Utility | handle-rules', function(hooks) {
 
   const noConflicts = (assert, rule, name) => {
     let conflicts = rule.check(name);
-    assert.equal(conflicts.length, 0, `Conflicts for ${rule.id}.check(${name}): ${conflicts.map(c => c.description)}`);
+    assert.strictEqual(conflicts.length, 0, `Conflicts for ${rule.id}.check(${name}): ${conflicts.map(c => c.description)}`);
   };
 
   const conflictsWithExisting = (assert, rule, name, existing, descriptionPattern) => {
     let conflicts = rule.check(name);
     assert.notEqual(conflicts.length, 0, `Conflicts for ${name}`);
-    conflicts.forEach((x) => assert.equal(x.ruleId, rule.id));
+    conflicts.forEach((x) => assert.strictEqual(x.ruleId, rule.id));
     let found = conflicts.find((x) => x.conflictingHandle.name === existing);
     assert.ok(found, `${existing} in ${JSON.stringify(conflicts)}`);
-    assert.equal(found.candidateName, name);
+    assert.strictEqual(found.candidateName, name);
     assert.ok(found.description.match(descriptionPattern));
   };
 
@@ -98,16 +98,16 @@ module('Unit | Utility | handle-rules', function(hooks) {
   test('min-length rejects one letter', function(assert) {
     const rule = new MinLengthRule();
     let conflicts = rule.check('X');
-    assert.equal(conflicts.length, 1);
-    assert.equal(conflicts[0].candidateName, 'X');
+    assert.strictEqual(conflicts.length, 1);
+    assert.strictEqual(conflicts[0].candidateName, 'X');
     assert.ok(conflicts[0].description.match(/too short/));
   });
 
   test('min-length rejects two letters', function(assert) {
     const rule = new MinLengthRule();
     let conflicts = rule.check('Ed');
-    assert.equal(conflicts.length, 1);
-    assert.equal(conflicts[0].candidateName, 'Ed');
+    assert.strictEqual(conflicts.length, 1);
+    assert.strictEqual(conflicts[0].candidateName, 'Ed');
     assert.ok(conflicts[0].description.match(/too short/));
   });
 
@@ -131,9 +131,9 @@ module('Unit | Utility | handle-rules', function(hooks) {
     const rule = new MinLengthRule();
     const checkit = (name) => {
       let conflicts = rule.check(name);
-      assert.equal(conflicts.length, 1, `${JSON.stringify(conflicts)} conflicts for ${name}`);
-      assert.equal(conflicts[0].candidateName, name);
-      assert.equal(conflicts[0].description, 'should have letters');
+      assert.strictEqual(conflicts.length, 1, `${JSON.stringify(conflicts)} conflicts for ${name}`);
+      assert.strictEqual(conflicts[0].candidateName, name);
+      assert.strictEqual(conflicts[0].description, 'should have letters');
     };
     checkit('137');
     checkit('54 46');
@@ -155,8 +155,8 @@ module('Unit | Utility | handle-rules', function(hooks) {
     const rule = new FccRule();
     let checkit = (name) => {
       let conflicts = rule.check(name);
-      assert.equal(conflicts.length, 1, `${JSON.stringify(conflicts.length)} conflicts for ${name}`);
-      assert.equal(conflicts[0].candidateName, name);
+      assert.strictEqual(conflicts.length, 1, `${JSON.stringify(conflicts.length)} conflicts for ${name}`);
+      assert.strictEqual(conflicts[0].candidateName, name);
       assert.ok(conflicts[0].description.match(/FCC/));
     };
     checkit('Hot shit handle');
@@ -174,8 +174,8 @@ module('Unit | Utility | handle-rules', function(hooks) {
     const rule = new PhoneticAlphabetRule(natoHandles);
     let checkit = (name) => {
       let result = rule.check(name);
-      assert.equal(result.length, 1, `Got ${result.length} conflicts for ${name}`);
-      assert.equal(result[0].candidateName, name);
+      assert.strictEqual(result.length, 1, `Got ${result.length} conflicts for ${name}`);
+      assert.strictEqual(result[0].candidateName, name);
       assert.ok(result[0].description.match('phonetic alphabet'), `Check for ${name}`);
     };
     checkit('Fox Trot');

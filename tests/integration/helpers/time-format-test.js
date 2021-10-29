@@ -11,6 +11,6 @@ module('Integration | Helper | time-format', function(hooks) {
 
     await render(hbs`{{time-format this.time}}`);
 
-    assert.equal(this.element.textContent.trim(), '12:34');
+    assert.strictEqual(this.element.textContent.trim(), '12:34');
   });
 });

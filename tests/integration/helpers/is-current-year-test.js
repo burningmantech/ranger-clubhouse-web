@@ -11,11 +11,11 @@ module('Integration | Helper | is-current-year', function(hooks) {
 
     await render(hbs`{{is-current-year 1902}}`);
 
-    assert.equal(this.element.textContent.trim(), 'false');
+    assert.strictEqual(this.element.textContent.trim(), 'false');
 
     this.set('year', (new Date()).getFullYear());
     await render(hbs`{{is-current-year this.year}}`);
 
-    assert.equal(this.element.textContent.trim(), 'true');
+    assert.strictEqual(this.element.textContent.trim(), 'true');
   });
 });

@@ -12,6 +12,6 @@ module('Integration | Helper | mentor-short-status', function(hooks) {
 
     await render(hbs`{{mentor-short-status this.inputValue}}`);
 
-    assert.equal(this.element.textContent.trim(), 'B');
+    assert.strictEqual(this.element.textContent.trim(), 'B');
   });
 });

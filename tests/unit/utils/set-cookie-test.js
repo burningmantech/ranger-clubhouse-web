@@ -17,7 +17,7 @@ module('Unit | Utility | setCookie', function(/*hooks*/) {
     const cookie = makeCookieValue();
 
     setCookie('my-cookie', cookie, 1000);
-    assert.equal(document.cookie.split(';').filter((item) => item.includes('my-cookie='+cookie)).length, 1);
+    assert.strictEqual(document.cookie.split(';').filter((item) => item.includes('my-cookie='+cookie)).length, 1);
   });
 
   test('should delete a cookie', function(assert) {
@@ -26,7 +26,7 @@ module('Unit | Utility | setCookie', function(/*hooks*/) {
     setCookie('my-cookie', cookie, 1000);
     setCookie('my-cookie', '', 0);
 
-    assert.equal(document.cookie.split(';').filter((item) => item.includes('my-cookie')).length, 0);
+    assert.strictEqual(document.cookie.split(';').filter((item) => item.includes('my-cookie')).length, 0);
   });
 
 });

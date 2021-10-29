@@ -9,6 +9,6 @@ module('Integration | Component | asset-table', function(hooks) {
   skip('it renders', async function(assert) {
      await render(hbs`<AssetTable />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.strictEqual(this.element.textContent.trim(), '');
   });
 });

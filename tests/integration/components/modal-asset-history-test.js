@@ -12,6 +12,6 @@ module('Integration | Component | modal-asset-history', function(hooks) {
 
     await render(hbs`<ModalAssetHistory />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.strictEqual(this.element.textContent.trim(), '');
   });
 });

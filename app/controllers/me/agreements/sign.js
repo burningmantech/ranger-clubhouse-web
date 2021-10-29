@@ -1,5 +1,5 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import {htmlSafe} from '@ember/string';
+import {htmlSafe} from '@ember/template';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 

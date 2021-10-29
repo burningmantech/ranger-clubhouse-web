@@ -11,7 +11,7 @@ module('Integration | Component | meal-info', function(hooks) {
 
     await render(hbs`<MealInfo @eventInfo={{this.eventInfo}} />`);
 
-    assert.true(this.element.textContent.trim().indexOf('You qualify for three meals/day') !== -1, 'render pre+event');
+    assert.notStrictEqual(this.element.textContent.trim().indexOf('You qualify for three meals/day'), -1, 'render pre+event');
   });
 
   test('it renders meal info with empty value', async function(assert) {
@@ -19,7 +19,7 @@ module('Integration | Component | meal-info', function(hooks) {
 
     await render(hbs`<MealInfo @eventInfo={{this.eventInfo}} />`);
 
-    assert.true(this.element.textContent.trim().indexOf('Meal Pogs') !== -1, 'render meal pogs');
+    assert.notStrictEqual(this.element.textContent.trim().indexOf('Meal Pogs'), -1, 'render meal pogs');
   });
 
   test('it renders meal info with unknown value', async function(assert) {
@@ -27,6 +27,6 @@ module('Integration | Component | meal-info', function(hooks) {
 
     await render(hbs`<MealInfo @eventInfo={{this.eventInfo}} />`);
 
-    assert.true(this.element.textContent.trim().indexOf('Unknown meal type') !== -1, 'render unknown status');
+    assert.notStrictEqual(this.element.textContent.trim().indexOf('Unknown meal type'), -1, 'render unknown status');
   });
 });

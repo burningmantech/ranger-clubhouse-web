@@ -21,12 +21,12 @@ module('Unit | Controller | admin/positions', function (hooks) {
 
 
     let view = controller.viewPositions;
-    assert.equal(view.length, 4, 'All positions shown');
+    assert.strictEqual(view.length, 4, 'All positions shown');
 
     controller.set('typeFilter', 'A Type');
     view = controller.viewPositions;
-    assert.equal(view.length, 2, 'Only A Type shown');
-    assert.equal(view[0].id, 1);
-    assert.equal(view[1].id, 2);
+    assert.strictEqual(view.length, 2, 'Only A Type shown');
+    assert.strictEqual(view[0].id, 1);
+    assert.strictEqual(view[1].id, 2);
   });
 });
