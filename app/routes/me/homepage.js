@@ -13,7 +13,8 @@ export default class MeHomepageRoute extends ClubhouseRoute {
 
     // Auditors and past prospectives do no have photos
     if (!user.isPastProspective && !user.isAuditor) {
-      hash.photo = this.ajax.request(`person/${user.id}/photo`).then((result) => result.photo)
+      hash.photo = this.ajax.request(`person/${user.id}/photo`).then(({photo}) => photo)
+      hash.agreements = this.ajax.request(`agreements/${user.id}`).then(({agreements}) => agreements)
     }
 
     return RSVP.hash(hash);

@@ -14,24 +14,20 @@
 
   {{#if (or @user.isRanger @user.isPNV)}}
     <NavbarMenuSection @section="Pre-Event">
-      {{#if (or @user.isPNV)}}
-        <NavbarMenuItem @route="me.tickets" @item="Work Access Pass"/>
-      {{else}}
-        <NavbarMenuItem @route="me.tickets" @item="Tickets &amp; Stuff"/>
-      {{/if}}
-
-      {{#if (and (config "MotorpoolPolicyEnable") (or @user.isRanger @user.isAlpha))}}
-        <NavbarMenuItem @route="me.motorpool-policy" @item="Motorpool Policy"/>
-      {{/if}}
-      {{#if (and (config "RadioCheckoutAgreementEnabled") (or @user.isRanger @user.isAlpha @user.isNonRanger))}}
-        <NavbarMenuItem @route="me.radio-checkout" @item="Radio Agreement"/>
-      {{/if}}
-
+      {{#unless @user.isNonRanger}}
+        {{#if (or @user.isPNV)}}
+          <NavbarMenuItem @route="me.tickets" @item="Work Access Pass"/>
+        {{else}}
+          <NavbarMenuItem @route="me.tickets" @item="Tickets &amp; Stuff"/>
+        {{/if}}
+      {{/unless}}
+      <NavbarMenuItem @route="me.agreements.index" @item="Agreements"/>
       {{#if @user.may_request_stickers}}
         <NavbarMenuItem @route="me.vehicles" @item="Vehicle Requests"/>
       {{/if}}
     </NavbarMenuSection>
   {{/if}}
+
   <NavbarMenuSection @section="Communication">
     <NavbarMenuItem @route="me.alerts" @item="Alert Preferences"/>
     {{#if (or @user.isRanger @user.isPNV @user.isAuditor)}}

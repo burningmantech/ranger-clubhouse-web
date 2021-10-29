@@ -40,12 +40,7 @@
                               @url={{@milestones.online_training_url}} />
       </p>
     {{/if}}
-    {{#if (and @step.isBehavioralAgreement (not-eq @step.result "completed"))}}
-      <p>
-        <a href {{on "click" @showBehaviorAgreementAction}}>Click here to review &amp; sign the
-          document.</a>
-      </p>
-    {{/if}}
+
     {{#if @step.isPhotoStep}}
       {{#if @photo.upload_enabled}}
         <a href {{on "click" @uploadAction}}>Submit a headshot</a>

@@ -23,12 +23,7 @@
           <s.link @route="me.tickets" @title="Tickets & Stuff" @icon="ticket-alt" @iconType="s"/>
         {{/if}}
       {{/unless}}
-      {{#if (and (config "MotorpoolPolicyEnable") (or this.user.isRanger this.user.isAlpha this.user.isNonRanger))}}
-        <s.link @route="me.motorpool-policy" @title="Motorpool Policy" @icon="car" @iconType="s"/>
-      {{/if}}
-      {{#if (and (config "RadioCheckoutAgreementEnabled") (or this.user.isRanger this.user.isAlpha this.user.isNonRanger))}}
-        <s.link @route="me.radio-checkout" @title="Radio Agreement" @icon="broadcast-tower" @iconType="s"/>
-      {{/if}}
+      <s.link @route="me.agreements.index" @title="Agreements" @icon="file-signature" @iconType="s"/>
       {{#if this.user.may_request_stickers}}
         <s.link @route="me.vehicles" @title="Vehicle Requests" @icon="truck-monster" @iconType="s"/>
       {{/if}}

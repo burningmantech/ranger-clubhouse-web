@@ -9,14 +9,17 @@ export default class MeHomepageController extends ClubhouseController {
   @tracked photo;
   @tracked milestones;
   @tracked showUploadDialog = false;
-  @tracked showBehaviorAgreement = false;
+
+  get isDevelopmentEnv() {
+    return this.session.isStaging || this.session.isDevelopment;
+  }
 
   @action
   refreshPhoto() {
     this.ajax.request(`person/${this.person.id}/photo`)
-      .then((result) => this.photo = result.photo);
+      .then(({photo}) => this.photo = photo);
     // Need to refresh the milestones to pick up the new photo submitted status.
-    this.ajax.request(`person/${this.person.id}/milestones`).then((result) => this.milestones = result.milestones);
+    this.ajax.request(`person/${this.person.id}/milestones`).then(({milestones}) => this.milestones = milestones);
   }
 
   @action
@@ -24,50 +27,18 @@ export default class MeHomepageController extends ClubhouseController {
     if (event) {
       event.preventDefault();
     }
-    this.showUploadDialog =  true;
+    this.showUploadDialog = true;
   }
 
   @action
   closeUploadDialogAction() {
-    this.showUploadDialog =  false;
+    this.showUploadDialog = false;
   }
-
-  @action
-  showBehaviorAgreementAction(event) {
-    if (event) {
-      event.preventDefault();
-    }
-    this.showBehaviorAgreement = true;
-  }
-
-  @action
-  closeAgreementAction() {
-    if (this.showBehaviorAgreement) {
-      this.showBehaviorAgreement = false;
-    }
-  }
-
-  @action
-  signAgreementAction() {
-    const person = this.person;
-
-    person.set('behavioral_agreement', true);
-    person.save().then(() => {
-      this.toast.success('Your agreement has been successfully recorded.');
-      this.showBehaviorAgreement = false;
-      this.milestones = { ...this.milestones, behavioral_agreement: true };
-    }).catch((response) => this.house.handleErrorResponse(response));
-  }
-
 
   @action
   debugUpdateAction() {
     this.milestones = {...this.milestones};
-    this.photo =  {...this.photo};
+    this.photo = {...this.photo};
 
-  }
-
-  get isDevelopmentEnv() {
-    return this.session.isStaging || this.session.isDevelopment;
   }
 }

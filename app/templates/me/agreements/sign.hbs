@@ -1,0 +1,33 @@
+<h1>{{this.agreement.title}}</h1>
+<p>
+  <LinkTo @route="me.agreements.index">Back to the Agreements listing</LinkTo>
+</p>
+{{#if this.notAvailable}}
+  <p>
+    Please check back later, the document is not ready yet.
+  </p>
+{{else}}
+  <p>
+    {{#if this.didSign}}
+      <b class="text-success">{{fa-icon "check"}} You have agreed to this document. Thank you!</b>
+    {{else}}
+      Please read the following document and use the 'I Agree' button below to digitally sign the agreement.
+    {{/if}}
+  </p>
+  <p>
+    {{this.bodyText}}
+  </p>
+  {{#if this.didSign}}
+    <p>
+      <b class="text-success">{{fa-icon "check"}} You have agreed to this document. Thank you!</b>
+    </p>
+    <LinkTo @route="me.agreements.index">Back to the Agreements listing</LinkTo>
+  {{else}}
+    <UiButton @onClick={{this.signDocument}} @class="btn-responsive" @disabled={{this.isSubmitting}}>
+      I Agree
+    </UiButton>
+    {{#if this.isSubmitting}}
+      <LoadingIndicator/>
+    {{/if}}
+  {{/if}}
+{{/if}}

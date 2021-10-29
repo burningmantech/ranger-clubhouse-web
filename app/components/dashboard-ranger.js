@@ -447,7 +447,7 @@ export default class DashboardRangerComponent extends Component {
   }
 
   _processStepGroup(checks) {
-    const {milestones, photo, person} = this.args;
+    const {milestones, photo, person, agreements} = this.args;
     const period = milestones.period;
     let haveAction = false;
 
@@ -459,7 +459,7 @@ export default class DashboardRangerComponent extends Component {
         return;
       }
 
-      const check = step.check({milestones, photo, person, house: this.house});
+      const check = step.check({milestones, photo, person, house: this.house, agreements});
       if (check.result === SKIP) {
         return;
       }

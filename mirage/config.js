@@ -272,6 +272,10 @@ export default function () {
     }
   });
 
+  this.get('/api/agreements/:id', () => {
+    return { agreements: [] };
+  });
+
   /*
     Shorthand cheatsheet:
 

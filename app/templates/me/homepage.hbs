@@ -10,7 +10,9 @@
     <DashboardProspectiveWaitlist/>
   {{else}}
     {{#if false}}
-      <DashboardDebug @milestones={{this.milestones}} @person={{this.person}} @photo={{this.photo}}
+      <DashboardDebug @milestones={{this.milestones}}
+                      @person={{this.person}}
+                      @photo={{this.photo}}
                       @update={{this.debugUpdateAction}} />
     {{/if}}
 
@@ -20,13 +22,13 @@
                     @photo={{this.photo}}
                     @motds={{this.motds}}
                     @uploadAction={{this.showUploadDialogAction}}
-                    @showBehaviorAgreementAction={{this.showBehaviorAgreementAction}}
+                    @agreements={{this.agreements}}
                     @debugUpdateAction={{this.debugUpdateAction}} />
     {{else if this.person.isAuditor}}
       <DashboardAuditor @milestones={{this.milestones}}
                         @person={{this.person}}
                         @motds={{this.motds}}
-                        @showBehaviorAgreementAction={{this.showBehaviorAgreementAction}}
+                        @agreements={{this.agreements}}
                         @debugUpdateAction={{this.debugUpdateAction}} />
     {{else}}
       <DashboardRanger @milestones={{this.milestones}}
@@ -35,7 +37,7 @@
                        @motds={{this.motds}}
                        @photo={{this.photo}}
                        @uploadAction={{this.showUploadDialogAction}}
-                       @showBehaviorAgreementAction={{this.showBehaviorAgreementAction}}
+                       @agreements={{this.agreements}}
                        @debugUpdateAction={{this.debugUpdateAction}} />
     {{/if}}
   {{/if}}
@@ -50,12 +52,10 @@
     <p>For technical support: {{admin-email}}</p>
 
     {{#if this.showUploadDialog}}
-      <PhotoUpload @person={{this.person}} @photo={{this.photo}} @refreshPhoto={{this.refreshPhoto}}
+      <PhotoUpload @person={{this.person}}
+                   @photo={{this.photo}}
+                   @refreshPhoto={{this.refreshPhoto}}
                    @closeAction={{this.closeUploadDialogAction}} />
     {{/if}}
   </:body>
 </UiSection>
-
-{{#if this.showBehaviorAgreement}}
-  <BehavioralAgreementModal @closeAgreement={{this.closeAgreementAction}} @signAgreement={{this.signAgreementAction}} />
-{{/if}}

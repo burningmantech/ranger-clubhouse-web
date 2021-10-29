@@ -477,7 +477,13 @@ export const SIGN_BEHAVIORAL_AGREEMENT = {
     return {
       result: OPTIONAL,
       message: 'Optionally, sign the Behavioral Standards Agreement.',
-      isBehavioralAgreement: true
+      route: 'me.agreements.index',
+      linkedMessage: {
+        route: 'me.agreements.index',
+        prefix: 'Optionally, sign the Behavioral Standards Agreement. Visit',
+        text: 'Me > Agreements',
+        suffix: 'to review and agree to the standards agreement.'
+      },
     };
   }
 };
@@ -495,12 +501,12 @@ export const SIGN_MOTORPOOL_AGREEMENT = {
     }
     return {
       result: OPTIONAL,
-      route: 'me.motorpool-policy',
+      route: 'me.agreements.index',
       linkedMessage: {
-        route: 'me.motorpool-policy',
+        route: 'me.agreements.index',
         prefix: 'The Ranger motorpool is a relatively limited resource. Vehicles are assigned by Shift Command, according to the needs of that shift.\n' +
           'If needed, are you comfortable driving a Ranger gator, golf cart, or UTV while on shift? Visit',
-        text: 'Me > Motorpool Policy',
+        text: 'Me > Agreements',
         suffix: 'to review and agree to the Motorpool Policy.'
       },
     };
@@ -561,9 +567,9 @@ export const SIGN_RADIO_CHECKOUT_AGREEMENT = {
 
     return {
       result: ACTION_NEEDED,
-      route: 'me.radio-checkout',
+      route: 'me.agreements.index',
       linkedMessage: {
-        route: 'me.radio-checkout',
+        route: 'me.agreements.index',
         prefix: htmlSafe(`All ${adj} must sign the Ranger Radio Checkout Agreement prior to checking out a radio from the Rangers.<br><br>Visit`),
         text: 'Me > Radio Agreement',
         suffix: 'to review and agree to the Radio Checkout Agreement.'

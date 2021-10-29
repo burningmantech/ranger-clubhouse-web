@@ -7,7 +7,6 @@ import { VehicleClassOptions } from 'clubhouse/constants/vehicles';
 
 export default class MeVehiclesController extends ClubhouseController {
   @tracked entry = null;
-  @tracked documentLoaded = false;
 
   stateOptions = [
     {
@@ -107,18 +106,5 @@ export default class MeVehiclesController extends ClubhouseController {
         this.toast.success('Request was successfully deleted.');
       }).catch((response) => this.house.handleErrorResponse(response));
     });
-  }
-
-  @action
-  signPersonVehicleAgreementAction() {
-    this.personEvent.signed_personal_vehicle_agreement = true;
-    this.personEvent.save().then(() => {
-      this.toast.success('Agreement has been successfully recorded.');
-    }).catch((response) => this.house.handleErrorResponse(response));
-  }
-
-  @action
-  documentLoadedAction() {
-    this.documentLoaded = true;
   }
 }

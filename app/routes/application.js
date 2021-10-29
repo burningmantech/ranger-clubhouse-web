@@ -1,10 +1,9 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {action} from '@ember/object';
-import { inject as service } from '@ember/service';
+import {inject as service} from '@ember/service';
 import {humanize} from 'ember-cli-string-helpers/helpers/humanize';
 import {config} from 'clubhouse/utils/config';
 import {UnauthorizedError} from '@ember-data/adapter/error';
-import {schedule} from '@ember/runloop';
 import ENV from 'clubhouse/config/environment';
 import dayjs from 'dayjs';
 import RSVP from 'rsvp';
@@ -21,67 +20,70 @@ export default class ApplicationRoute extends ClubhouseRoute {
       loading.remove();
     }
 
-    /*
-      When a route (page) transition occurs, scroll the window back to the top,
-      and try to record the transition
-     */
-    this.router.on('routeDidChange', (transition) => {
-      // Move the window back to the top when heading to a new route
-      schedule('afterRender', () => window.scrollTo(0, 0));
+    this.router.on('routeDidChange', (transition) => this.routeChanged(transition));
+  }
 
-      if (!transition.isActive) {
-        this.send('collectTitleTokens', []);
+  /*
+   When a route (page) transition occurs, scroll the window back to the top,
+   and try to record the transition
+  */
+
+  routeChanged(transition) {
+    // Move the window back to the top when heading to a new route
+    window.scrollTo(0, 0);
+
+    if (!transition.isActive) {
+      this.send('collectTitleTokens', []);
+    }
+
+    if (!ENV.logRoutes) {
+      // don't bother setting up recording route transitions if not enabled.
+      return;
+    }
+
+    if (!transition || !transition.to || transition.to.name === 'admin.action-log') {
+      return;
+    }
+
+    try {
+      const analytics = new FormData;
+      let pathname = window.location.pathname;
+
+      if (window.location.search) {
+        pathname += window.location.search;
       }
 
-      if (!ENV.logRoutes) {
-        // don't bother setting up recording route transitions if not enabled.
-        return;
-      }
+      analytics.append('event', 'client-route');
+      analytics.append('message', pathname);
+      const data = {
+        build_timestamp: ENV.APP.buildTimestamp,
+        route_to: transition.to.name,
+        route_from: transition.from ? transition.from.name : 'unknown',
+        pathname,
+      };
 
-      if (!transition || !transition.to || transition.to.name === 'admin.action-log') {
-        return;
-      }
+      analytics.append('data', JSON.stringify(data));
+      if (this.session.isAuthenticated) {
+        const person_id = +this.session.userId;
 
-      try {
-        const analytics = new FormData;
-        let pathname = window.location.pathname;
-
-        if (window.location.search) {
-          pathname += window.location.search;
+        if (person_id) {
+          analytics.append('person_id', person_id);
         }
 
-        analytics.append('event', 'client-route');
-        analytics.append('message', pathname);
-        const data = {
-          build_timestamp: ENV.APP.buildTimestamp,
-          route_to: transition.to.name,
-          route_from: transition.from ? transition.from.name : 'unknown',
-          pathname,
-        };
+        const toName = transition.to.name;
 
-        analytics.append('data', JSON.stringify(data));
-        if (this.session.isAuthenticated) {
-          const person_id = +this.session.userId;
-
-          if (person_id) {
-            analytics.append('person_id', person_id);
-          }
-
-          const toName = transition.to.name;
-
-          if (toName.startsWith('person.') || toName.startsWith('hq.')) {
-            const targetId = +this.router.currentRoute.parent.params.person_id;
-            if (!isNaN(targetId)) {
-              analytics.append('target_person_id', targetId);
-            }
+        if (toName.startsWith('person.') || toName.startsWith('hq.')) {
+          const targetId = +this.router.currentRoute.parent.params.person_id;
+          if (!isNaN(targetId)) {
+            analytics.append('target_person_id', targetId);
           }
         }
-        navigator.sendBeacon(ENV['api-server'] + '/action-log/record', analytics);
-      } catch (e) {
-        console.log("EXCEPTION ", e);
-        // ignore any exceptions.
       }
-    });
+      navigator.sendBeacon(ENV['api-server'] + '/action-log/record', analytics);
+    } catch (e) {
+      console.log("EXCEPTION ", e);
+      // ignore any exceptions.
+    }
   }
 
   /**
