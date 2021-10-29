@@ -4,7 +4,6 @@ import {inject as service} from '@ember/service';
 import {humanize} from 'ember-cli-string-helpers/helpers/humanize';
 import {config} from 'clubhouse/utils/config';
 import {UnauthorizedError} from '@ember-data/adapter/error';
-import {schedule} from '@ember/runloop';
 import ENV from 'clubhouse/config/environment';
 import dayjs from 'dayjs';
 import RSVP from 'rsvp';
