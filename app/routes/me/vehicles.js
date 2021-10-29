@@ -16,14 +16,15 @@ export default class MeVehiclesRoute extends ClubhouseRoute {
     this.year = year;
     return RSVP.hash({
       vehicles: this.store.query('vehicle', { person_id: this.session.userId, event_year: year }),
-      personEvent: this.store.findRecord('person-event', `${this.session.userId}-${year}`, { reload: true })
+      agreements: this.ajax.request(`agreements/${this.session.userId}`).then(({agreements}) => agreements),
     });
   }
 
   setupController(controller, model) {
+    const {agreements} = model;
     controller.set('vehicles', model.vehicles);
-    controller.set('personEvent', model.personEvent);
     controller.set('year', this.year);
-    controller.set('documentLoaded', false);
+    controller.set('motorpoolPolicySigned', !!agreements.find((a) => a.tag === 'motorpool-policy' && a.signed));
+    controller.set('personalVehicleSigned', !!agreements.find((a) => a.tag === 'personal-vehicle-agreement' && a.signed));
   }
 }

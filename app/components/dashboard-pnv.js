@@ -108,7 +108,7 @@ export default class DashboardPNVComponent extends Component {
   }
 
   get stepGroups() {
-    const {milestones, photo, person} = this.args;
+    const {milestones, photo, person, agreements} = this.args;
     let haveActiveGroup = false;
     let prevCompleted = true;
 
@@ -117,12 +117,14 @@ export default class DashboardPNVComponent extends Component {
       const steps = [];
 
       group.steps.forEach((step) => {
-        const check = step.check({milestones, photo, person, isPNV: true, prevCompleted});
+        const check = step.check({milestones, photo, person, isPNV: true, prevCompleted, agreements});
         if (check.result === SKIP) {
           return;
         }
 
-        check.name = step.name;
+        if (!check.name) {
+          check.name = step.name;
+        }
 
         if (check.email) {
           check.email = config(check.email);

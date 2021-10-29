@@ -18,7 +18,7 @@ const CLASS_NAME_OPEN = 'modal-open';
 export default class ModalService extends Service {
   @tracked showBackdrop = false;
 
-  dialogs = A();
+  @tracked dialogs = A();
 
   constructor() {
     super(...arguments);

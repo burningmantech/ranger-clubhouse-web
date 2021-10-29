@@ -7,6 +7,8 @@
 .timesheet-table {
   margin-bottom: 10px;
   max-width: 850px;
+  font-family: $font-family-monospace;
+  font-size: 0.8rem;
 }
 
 .timesheet-header {
@@ -52,7 +54,7 @@
 
 @media print,  (min-width: map-get($grid-breakpoints, "lg")) {
   .timesheet-time {
-    width: 30%;
+    width: 35%;
   }
 
   .timesheet-duration {
@@ -66,7 +68,7 @@
   }
 
   .timesheet-position {
-    width: 25%;
+    width: 30%;
   }
 
   .timesheet-sm-label {

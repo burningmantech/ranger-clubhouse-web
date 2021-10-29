@@ -7,7 +7,7 @@
   must display/contain authorized Vehicle Use Items in order to be driven on playa.
 </p>
 
-{{#if (and this.personEvent.signed_personal_vehicle_agreement this.personEvent.signed_motorpool_agreement)}}
+{{#if (and this.motorpoolPolicySigned this.personalVehicleSigned)}}
   <p>
     <UiButton @onClick={{this.newAction}}>New Vehicle Request</UiButton>
   </p>
@@ -147,29 +147,22 @@
     requests for driving stickers.
   </p>
   <p>
-    {{#if this.personEvent.signed_motorpool_agreement}}
-      You have already agreed to Motorpool Policy
+    {{#if this.motorpoolPolicySigned}}
+      <span class="text-success">{{fa-icon "check"}} You have already agreed to Motorpool Policy. Thank you!</span>
     {{else}}
       Visit the
-      <LinkTo @route="me.motorpool-policy"> Ranger Vehicle Motorpool Policy</LinkTo>
+      <LinkTo @route="me.agreements.sign" @model="motorpool-policy">Ranger Vehicle Motorpool Policy</LinkTo>
       page to read and agree to the policy.
     {{/if}}
   </p>
   <p>
-  {{#if this.personEvent.signed_personal_vehicle_agreement}}
-      You have already agreed to the Personal Vehicle Agreement.
-  {{else}}
-    <h2>{{this.year}} Personal Vehicle Agreement Policy</h2>
-    <DocumentShow @tag="personal-vehicle-agreement" @onLoad={{this.documentLoadedAction}}/>
-    {{#if this.documentLoaded}}
-      <UiButton @onClick={{this.signPersonVehicleAgreementAction}} @disabled={{this.personEvent.isSaving}}>
-        I Agree To The Personal Vehicle Agreement
-      </UiButton>
-      {{#if this.personEvent.isSaving}}
-        <LoadingIndicator/>
-      {{/if}}
+    {{#if this.personalVehicleSigned}}
+      <span class="text-success">{{fa-icon "check"}} You have already agreed to the Personal Vehicle Agreement. Thank you!</span>
+    {{else}}
+      Visit the
+      <LinkTo @route="me.agreements.sign" @model="personal-vehicle-agreement">Ranger Personal Vehicle Agreement</LinkTo>
+      page to read and agree to the policy.
     {{/if}}
-  {{/if}}
   </p>
 {{/if}}
 

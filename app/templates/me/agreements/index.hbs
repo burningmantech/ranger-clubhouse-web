@@ -1,0 +1,32 @@
+<h1>BRC Ranger &amp; Burning Man Project Agreements</h1>
+<BackToHome/>
+
+<p>
+  The following agreements are available to view and optionally sign:
+</p>
+{{#each this.agreements as |agreement|}}
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">
+        {{#if agreement.available}}
+          <LinkTo @route="me.agreements.sign" @model={{agreement.tag}}>{{agreement.title}}</LinkTo>
+        {{else}}
+          {{agreement.title}}
+        {{/if}}
+      </h5>
+      <div class="card-text">
+        {{#if agreement.available}}
+          {{#if agreement.signed}}
+            <span class="text-success">{{fa-icon "check"}} You have agreed to this document.</span>
+          {{else}}
+            Please review and agree to the document.
+          {{/if}}
+        {{else}}
+          <span class="text-muted">Check back later, the document is not available to sign at the moment.</span>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+{{else}}
+  There are no agreements available to view or sign. Check back later.
+{{/each}}
