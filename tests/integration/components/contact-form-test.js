@@ -12,6 +12,6 @@ module('Integration | Component | contact-form', function(hooks) {
 
     await render(hbs`<ContactForm />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.strictEqual(this.element.textContent.trim(), '');
   });
 });

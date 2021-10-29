@@ -12,7 +12,7 @@ module('Integration | Component | ch-accordion', function(hooks) {
 
     await render(hbs`<ChAccordion />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.strictEqual(this.element.textContent.trim(), '');
 
     // Template block usage:
     await render(hbs`
@@ -21,6 +21,6 @@ module('Integration | Component | ch-accordion', function(hooks) {
       </ChAccordion>
     `);
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.strictEqual(this.element.textContent.trim(), 'template block text');
   });
 });

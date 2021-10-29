@@ -12,7 +12,7 @@ module('Integration | Component | ticketing-offseason', function(hooks) {
 
     await render(hbs`{{ticketing-offseason}}`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.strictEqual(this.element.textContent.trim(), '');
 
     // Template block usage:
     await render(hbs`
@@ -21,6 +21,6 @@ module('Integration | Component | ticketing-offseason', function(hooks) {
       {{/ticketing-offseason}}
     `);
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
+    assert.strictEqual(this.element.textContent.trim(), 'template block text');
   });
 });

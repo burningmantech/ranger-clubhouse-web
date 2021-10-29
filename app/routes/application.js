@@ -1,6 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {action} from '@ember/object';
-import {inject as service} from '@ember/service';
 import {humanize} from 'ember-cli-string-helpers/helpers/humanize';
 import {config} from 'clubhouse/utils/config';
 import {UnauthorizedError} from '@ember-data/adapter/error';
@@ -9,8 +8,6 @@ import dayjs from 'dayjs';
 import RSVP from 'rsvp';
 
 export default class ApplicationRoute extends ClubhouseRoute {
-  @service pageProgress;
-
   constructor() {
     super(...arguments);
 
@@ -23,10 +20,11 @@ export default class ApplicationRoute extends ClubhouseRoute {
     this.router.on('routeDidChange', (transition) => this.routeChanged(transition));
   }
 
-  /*
-   When a route (page) transition occurs, scroll the window back to the top,
-   and try to record the transition
-  */
+  /**
+   * When a route (page) transition occurs, scroll the window back to the top,
+   * and try to record the transition
+   * @param transition
+   */
 
   routeChanged(transition) {
     // Move the window back to the top when heading to a new route
@@ -139,20 +137,6 @@ export default class ApplicationRoute extends ClubhouseRoute {
     // the navigation bar is not expanded - i.e. when showning
     // on a cellphone.
     this.house.collapse('.navbar-collapse', 'hide');
-    return true;
-  }
-
-  /**
-   * Provide a progress bar on top when transitioning between pages.
-   *
-   * @param transition
-   * @returns {Promise<boolean>}
-   */
-  @action
-  loading(transition) {
-    const {pageProgress} = this;
-    pageProgress.start(transition.targetName);
-    transition.promise.finally(() => pageProgress.done());
     return true;
   }
 

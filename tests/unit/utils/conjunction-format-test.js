@@ -6,6 +6,6 @@ module('Unit | Utility | conjunction-format', function() {
   // Replace this with your real tests.
   test('it works', function(assert) {
     let result = conjunctionFormat([ 'a', 'b', 'c'], 'and');
-    assert.equal(result, 'a, b and c');
+    assert.strictEqual(result, 'a, b and c');
   });
 });

@@ -7,10 +7,10 @@ module('Unit | Utility | requestYear', function(/*hooks*/) {
   test('it works', function(assert) {
     let thisYear = new Date().getFullYear();
     let empty = requestYear({});
-    assert.equal(thisYear, empty);
+    assert.strictEqual(thisYear, empty);
     let specified = requestYear({foo: 'bar', year: '1992'});
-    assert.equal(specified, 1992);
+    assert.strictEqual(specified, 1992);
     let junk = requestYear({year: 'notanumber'});
-    assert.equal(thisYear, junk);
+    assert.strictEqual(thisYear, junk);
   });
 });

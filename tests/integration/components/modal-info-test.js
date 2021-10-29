@@ -12,6 +12,6 @@ module('Integration | Component | modal-info', function(hooks) {
 
     await render(hbs`<ModalInfo />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.strictEqual(this.element.textContent.trim(), '');
   });
 });

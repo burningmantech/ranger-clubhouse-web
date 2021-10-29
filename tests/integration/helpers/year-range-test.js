@@ -12,6 +12,6 @@ module('Integration | Helper | year-range', function(hooks) {
 
     await render(hbs`{{year-range this.years}}`);
 
-    assert.equal(this.element.textContent.trim(), '2011 - 2012, 2015, 2017 - 2020');
+    assert.strictEqual(this.element.textContent.trim(), '2011 - 2012, 2015, 2017 - 2020');
   });
 });

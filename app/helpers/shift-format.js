@@ -1,6 +1,6 @@
 import {helper} from '@ember/component/helper';
 import dayjs from 'dayjs';
-import { htmlSafe } from '@ember/string';
+import { htmlSafe } from '@ember/template';
 
 const MONTH_DAY_TIME = 'ddd MMM DD [@] HH:mm';
 const MONTH_DAY_TIME_YEAR = 'ddd MMM DD [@] HH:mm YYYY';

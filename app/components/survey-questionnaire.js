@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import EmberObject, {action} from '@ember/object';
-import {htmlSafe} from '@ember/string';
+import {htmlSafe} from '@ember/template';
 import _ from 'lodash';
 import {inject as service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';

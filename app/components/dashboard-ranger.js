@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {tracked} from "@glimmer/tracking";
 import {inject as service} from '@ember/service';
-import {htmlSafe} from '@ember/string';
+import {htmlSafe} from '@ember/template';
 import {config} from 'clubhouse/utils/config';
 import dayjs from 'dayjs';
 import {

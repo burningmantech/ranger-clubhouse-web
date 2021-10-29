@@ -13,13 +13,13 @@ module('helper:config', function(hooks) {
 
     await render(hbs`{{config 'parent'}}`);
 
-    assert.equal(this.element.textContent.trim(), 'rick');
+    assert.strictEqual(this.element.textContent.trim(), 'rick');
   });
 
   test('it should not find config', async function(assert) {
     ENV['clientConfig'] = {}
 
     await render(hbs`{{config 'parent'}}`);
-    assert.equal(this.element.textContent.trim(), '');
+    assert.strictEqual(this.element.textContent.trim(), '');
   });
 });

@@ -12,6 +12,6 @@ module('Integration | Helper | full-datetime-format', function(hooks) {
 
     await render(hbs`{{full-datetime-format this.date}}`);
 
-    assert.equal(this.element.textContent.trim(), 'Friday, August 31st 2018 @ 23:59');
+    assert.strictEqual(this.element.textContent.trim(), 'Friday, August 31st 2018 @ 23:59');
   });
 });

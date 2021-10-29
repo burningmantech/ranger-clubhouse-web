@@ -12,6 +12,6 @@ module('Integration | Component | clubhouse-messages', function(hooks) {
 
     await render(hbs`<ClubhouseMessages />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.strictEqual(this.element.textContent.trim(), '');
   });
 });

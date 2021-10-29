@@ -17,11 +17,11 @@ module('Integration | Component | you-or-callsign', function (hooks) {
     this.set('person', {id: 99, callsign: 'hubcap'})
     await render(hbs`<YouOrCallsign @person={{this.person}} @youLabel="you are" @callsignVerb="is" />`);
 
-    assert.equal(this.element.textContent.trim(), 'you are');
+    assert.strictEqual(this.element.textContent.trim(), 'you are');
 
     this.set('person', {id: 88, callsign: 'bucket'})
     await render(hbs`<YouOrCallsign @person={{this.person}} @youLabel="you are" @callsignVerb="is" />`);
 
-    assert.equal(this.element.textContent.trim(), 'bucket is');
+    assert.strictEqual(this.element.textContent.trim(), 'bucket is');
   });
 });

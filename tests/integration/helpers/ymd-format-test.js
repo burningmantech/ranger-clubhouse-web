@@ -12,6 +12,6 @@ module('Integration | Helper | ymd-format', function(hooks) {
 
     await render(hbs`{{ymd-format this.date}}`);
 
-    assert.equal(this.element.textContent.trim(), '2019-08-25');
+    assert.strictEqual(this.element.textContent.trim(), '2019-08-25');
   });
 });

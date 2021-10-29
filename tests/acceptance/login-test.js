@@ -14,8 +14,8 @@ module('Acceptance | login', function (hooks) {
     // make sure / redirects to /login
     await visit('/');
 
-    assert.equal(currentURL(), '/login');
-    assert.equal(document.title, 'Login | Ranger Clubhouse');
+    assert.strictEqual(currentURL(), '/login');
+    assert.strictEqual(document.title, 'Login | Ranger Clubhouse');
   });
 
   test('successful login', async function (assert) {
@@ -25,8 +25,8 @@ module('Acceptance | login', function (hooks) {
     await fillIn('input[name="identification"]', person.email);
     await fillIn('input[name="password"]', person.password);
     await click('button.login-submit');
-    assert.equal(currentURL(), '/me');
-    assert.equal(document.title, 'Homepage | Me | Ranger Clubhouse');
+    assert.strictEqual(currentURL(), '/me');
+    assert.strictEqual(document.title, 'Homepage | Me | Ranger Clubhouse');
   });
 
   test('invalid login', async function (assert) {
@@ -36,9 +36,9 @@ module('Acceptance | login', function (hooks) {
     await click('button.login-submit');
 
     // Should stay on the login page
-    assert.equal(currentURL(), '/login', 'stay on the login page');
+    assert.strictEqual(currentURL(), '/login', 'stay on the login page');
     assert.dom('.notice-danger').hasText(/The email and\/or password is incorrect/);
-    assert.equal(document.title, 'Login | Ranger Clubhouse');
+    assert.strictEqual(document.title, 'Login | Ranger Clubhouse');
   });
 
   test('successful logout', async function (assert) {
@@ -46,7 +46,7 @@ module('Acceptance | login', function (hooks) {
     await authenticateUser(person.id);
     await visit('/logout');
     assert.false(currentSession().isAuthenticated);
-    assert.equal(document.title, 'Login | Ranger Clubhouse');
+    assert.strictEqual(document.title, 'Login | Ranger Clubhouse');
   });
 
   test('person not authorized', async function (assert) {
@@ -57,10 +57,10 @@ module('Acceptance | login', function (hooks) {
     await click('button.login-submit');
 
     // Should stay on the login page
-    assert.equal(currentURL(), '/login', 'stay on the login page');
+    assert.strictEqual(currentURL(), '/login', 'stay on the login page');
     // And there should be a flash modal with login error
     assert.dom('.notice-danger').hasText(/Login has been disabled/);
-    assert.equal(document.title, 'Login | Ranger Clubhouse');
+    assert.strictEqual(document.title, 'Login | Ranger Clubhouse');
   });
 
   test('prevent space for being entered in email field', async function (assert) {
@@ -75,9 +75,9 @@ module('Acceptance | login', function (hooks) {
 
     await visit(`/login?token=${TOKEN}`);
 
-    assert.equal(currentURL(), '/me/password');
+    assert.strictEqual(currentURL(), '/me/password');
     assert.true(currentSession().isAuthenticated);
-    assert.equal(currentSession().userId, person.id);
+    assert.strictEqual(+currentSession().userId, +person.id);
   });
 
   test('Test welcome with login token', async function (assert) {
@@ -85,9 +85,9 @@ module('Acceptance | login', function (hooks) {
 
     await visit(`/login?token=${PNV_TOKEN}&welcome=1`);
 
-    assert.equal(currentURL(), '/me/welcome');
+    assert.strictEqual(currentURL(), '/me/welcome');
     assert.true(currentSession().isAuthenticated);
-    assert.equal(currentSession().userId, person.id);
+    assert.strictEqual(+currentSession().userId, +person.id);
   });
 
 });

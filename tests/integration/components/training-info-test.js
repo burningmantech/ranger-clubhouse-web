@@ -12,6 +12,6 @@ module('Integration | Component | training-info', function(hooks) {
 
     await render(hbs`<TrainingInfo />`);
 
-    assert.equal(this.element.textContent.trim(), '');
+    assert.strictEqual(this.element.textContent.trim(), '');
   });
 });

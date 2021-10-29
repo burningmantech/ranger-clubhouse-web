@@ -9,6 +9,6 @@ module('Unit | Utility | config', function(/*hooks*/) {
 
     let result = config('MyTest');
 
-    assert.equal(result, 'Dusty', 'Returned correct value');
+    assert.strictEqual(result, 'Dusty', 'Returned correct value');
   });
 });
