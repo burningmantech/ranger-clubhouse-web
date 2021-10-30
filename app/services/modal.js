@@ -13,11 +13,7 @@ import { tracked } from '@glimmer/tracking';
   (e.g., this.modal.info('Signed up!', 'You have signed up for the new shift.') );
  */
 
-const CLASS_NAME_OPEN = 'modal-open';
-
 export default class ModalService extends Service {
-  @tracked showBackdrop = false;
-
   @tracked dialogs = A();
 
   constructor() {
@@ -92,9 +88,6 @@ export default class ModalService extends Service {
     if (this.dialogs.length === 1) {
       // First dialog to show up, setup the keyboard listener
       window.addEventListener('keyup', this._checkForEscape);
-      document.body.classList.add(CLASS_NAME_OPEN);
-      this.showBackdrop = true;
-      document.body.style.overflow = 'hidden';
     }
   }
 
@@ -116,9 +109,6 @@ export default class ModalService extends Service {
     if (this.dialogs.length === 0) {
       // Remove the keyboard listener in case this was the last one.
       window.removeEventListener('keyup', this._checkForEscape);
-      document.body.classList.remove(CLASS_NAME_OPEN);
-      this.showBackdrop = false;
-      document.body.style.overflow = '';
     }
   }
 
