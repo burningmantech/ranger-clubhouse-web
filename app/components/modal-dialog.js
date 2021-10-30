@@ -1,12 +1,10 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {inject as service} from '@ember/service';
+import bootstrap from 'bootstrap';
 
 export default class ModalDialogComponent extends Component {
   @service modal;
-
-  isClosed = false;
-  dialogBox = null;
 
   dialogRegistry = {};
 
@@ -25,12 +23,16 @@ export default class ModalDialogComponent extends Component {
   @action
   boxInserted(element) {
     this._element = element;
-    this._element.style.display = 'block';
-    this._element.scrollTop = 0;
+    this.bootstrapModal = new bootstrap.Modal(this._element, {keyboard: false});
+    this.bootstrapModal.show();
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
+
+    if (this.bootstrapModal) {
+      this.bootstrapModal.hide();
+    }
 
     if (!this.args.isInline) {
       this.modal.removeDialog(this.dialogRegistry);

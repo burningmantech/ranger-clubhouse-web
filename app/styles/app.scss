@@ -53,6 +53,10 @@ main {
     padding: 0 !important;
   }
 
+  .ui-section {
+    box-shadow: none !important;
+  }
+
   .d-print-page-break {
     page-break-before: always;
   }
