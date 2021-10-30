@@ -44,7 +44,7 @@
           </p>
         {{/if}}
         {{#each group.survey_questions as |question|}}
-          <div class="{{if (get f.model.error question.formName) "is-invalid"}}">
+          <div class="mb-2 {{if (get f.model.error question.formName) "is-invalid"}}">
             {{question.description}}
             {{#if question.is_required}}
               <i><b class="text-danger">(required)</b></i>
@@ -54,15 +54,19 @@
             {{#if (eq question.type "text")}}
               <f.textarea @name={{question.formName}} @rows={{4}} @cols={{80}}/>
             {{else if (eq question.type "rating")}}
-              <f.radioGroup @name={{question.formName}}
-                            @options={{this.ratingOptions}}
-                            @inline={{not this.session.isSmallScreen}}
-              />
+              <div class="col-12">
+                <f.radioGroup @name={{question.formName}}
+                              @options={{this.ratingOptions}}
+                              @inline={{not this.session.isSmallScreen}}
+                />
+              </div>
             {{else if (eq question.type "options")}}
-              <f.radioGroup @name={{question.formName}}
-                            @options={{question.formOptions}}
-                            @inline={{not this.session.isSmallScreen}}
-              />
+              <div class="col-12">
+                <f.radioGroup @name={{question.formName}}
+                              @options={{question.formOptions}}
+                              @inline={{not this.session.isSmallScreen}}
+                />
+              </div>
             {{else}}
               Uh oh, question #{{question.id}} has an unknown type "{{question.type}}".
               This is a bug, please report this to the tech team.
