@@ -5,7 +5,6 @@ export const GRANT_POSITION = 4; // Grand/Revoke Positions
 export const EDIT_ACCESS_DOCS = 5; // Edit Access Documents
 export const EDIT_BMIDS = 6; // Edit BMIDs
 export const EDIT_SLOTS = 7; // Edit Slots
-export const LOGIN = 11; // Person allowed to login
 export const MANAGE = 12; // Ranger HQ: access other schedule, asset checkin/out, send messages
 export const INTAKE = 13; // Intake Management
 export const MENTOR = 101; // Mentor - access mentor section
@@ -26,7 +25,6 @@ const Role = {
   EDIT_SLOTS,
   GRANT_POSITION,
   INTAKE,
-  LOGIN,
   MANAGE,
   MANAGE_ON_PLAYA,
   MEGAPHONE,
@@ -40,7 +38,7 @@ const Role = {
   VIEW_PII,
 };
 
-const RoleToString = {
+  const RoleToString = {
   [ADMIN]: 'admin',
   [ART_TRAINER]: 'art-trainer',
   [EDIT_ACCESS_DOCS]: 'edit-access-docs',
@@ -48,7 +46,6 @@ const RoleToString = {
   [EDIT_SLOTS]: 'edit-slots',
   [GRANT_POSITION]: 'grant-position',
   [INTAKE]: 'intake',
-  [LOGIN]: 'login',
   [MANAGE]: 'manage',
   [MANAGE_ON_PLAYA]: 'manage-on-playa',
   [MEGAPHONE]: 'megaphone',
