@@ -78,7 +78,7 @@
     "jquery-datetimepicker": "^2.5.21",
     "jscodeshift": "^0.13.0",
     "json-formatter-js": "^2.3.4",
-    "libphonenumber-js": "^1.9.41",
+    "libphonenumber-js": "^1.9.42",
     "loader.js": "^4.7.0",
     "lodash": "^4.17.21",
     "mobile-detect": "^1.4.5",
