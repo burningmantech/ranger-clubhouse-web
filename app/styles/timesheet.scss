@@ -7,7 +7,7 @@
 .timesheet-table {
   margin-bottom: 10px;
   max-width: 850px;
-  font-family: $font-family-monospace;
+ // font-family: $font-family-monospace;
   font-size: 0.8rem;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .timesheet-entry:nth-child(odd) {
-  background-color: #f0f0f0;
+  background-color: $table-striped-bg;
 }
 
 .timesheet-entry:hover {

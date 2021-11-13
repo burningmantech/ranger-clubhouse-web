@@ -1,11 +1,11 @@
-<div class="card card-ticket" id="ticket-{{@id}}">
-  <div class="card-header p-0">
-    <a href {{action @toggleCard @id}}>
+<div class="accordion-container" id="ticket-{{@id}}">
+  <div class="accordion-title">
+    <a href class="d-block" {{action @toggleCard @id}}>
       {{fa-icon (if (get @showing @id) "minus" "plus")}}
       {{yield to="title"}}
     </a>
   </div>
-  <div class="card-body collapse">
+  <div class="accordion-body collapse">
     {{yield to="body"}}
     {{#if @nextAction}}
       <div class="d-grid">

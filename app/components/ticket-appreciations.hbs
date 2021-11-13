@@ -6,7 +6,7 @@
   <:title>
     Provisions
     {{#if this.availableItems}}
-      <TicketSectionStatus @status="claimed" @text="{{pluralize this.availableItems.length "item"}} claimed" />
+      <TicketSectionStatus @status="qualified" @text="{{pluralize this.availableItems.length "item"}} available" />
     {{/if}}
     {{#if this.bankedItems}}
       <TicketSectionStatus @status="banked" @text="{{pluralize this.bankedItems.length "item"}} banked"/>

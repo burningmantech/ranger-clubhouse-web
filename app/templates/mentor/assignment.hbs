@@ -101,7 +101,7 @@
         </thead>
         <tbody>
         {{#each this.viewAlphas key="id" as |person|}}
-          <tr id="person-{{person.id}}" class="{{if person.error "is-invalid"}}">
+          <tr id="person-{{person.id}}" class="{{if person.error "is-invalid"}} {{if person.mentor_history "no-border"}}">
             <td>
               <PersonLink @person={{person}} />
             </td>
@@ -142,7 +142,7 @@
             </td>
           </tr>
           {{#if person.mentor_history}}
-            <tr class="no-border">
+            <tr>
               <td colspan="8">
                 Prior Mentors:
                 {{#each person.mentor_history as |history|}}
