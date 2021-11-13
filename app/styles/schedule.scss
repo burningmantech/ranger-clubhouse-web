@@ -1,18 +1,23 @@
 .schedule-table {
   margin-bottom: 10px;
   font-size: 0.95em;
-  max-width: 1000px;
+  max-width: 1100px;
+}
+
+
+.schedule-row:nth-child(odd) {
+  background-color: $table-striped-bg;
 }
 
 .schedule-header {
   color: $table-head-color;
-  background-color: $table-head-bg;
+  background-color: $table-head-bg !important;
   border-color: $table-border-color;
   font-weight: bold;
 }
 
 .schedule-overlapping {
-  background-color: #fbd3d3;
+  background-color: #fbd3d3 !important;
 }
 
 .schedule-row {
@@ -28,7 +33,6 @@
   }
 
 }
-
 .schedule-row:hover {
   background-color: $table-hover-bg;
 }

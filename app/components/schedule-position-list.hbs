@@ -6,91 +6,94 @@
   <Accordion.body>
     {{#if Accordion.isOpen}}
       {{#if this.haveNoAppreciationSlots}}
-      <NoAppreciateIcon /> = the shift hours will not count towards appreciations.
+        <NoAppreciateIcon/>
+        = the shift hours will not count towards appreciations.
       {{/if}}
-      <div class="schedule-row schedule-header">
-        <div class="schedule-icon">&nbsp;</div>
-        <div class="schedule-time">Time</div>
-        <div class="schedule-duration">Duration</div>
-        <div class="schedule-credits">Credits</div>
-        <div class="schedule-signup-description">Description</div>
-        <div class="schedule-signups">Sign Ups</div>
-        <div class="schedule-actions">Actions</div>
-      </div>
-      {{#each @position.slots key="id" as |slot|}}
-        <div class="schedule-row {{if slot.person_assigned "table-success"}}" id="slot-{{slot.id}}">
-          <div class="schedule-icon">
-            {{#if slot.person_assigned}}
-              {{fa-icon "check" title="You are signed up for this shift."}}
-            {{else if (not slot.slot_active)}}
-              {{fa-icon "times" title="Shift is inactive and may not be signed up for" color="danger"}}
-            {{else}}
-              &nbsp;
-            {{/if}}
-          </div>
-          <div class="schedule-time">
-            {{shift-format slot.slot_begins slot.slot_ends}}
-          </div>
-          <div class="schedule-duration">
-            <span class="schedule-sm-label">Duration:</span>
-            {{#unless slot.position_count_hours}}
-              <NoAppreciateIcon/>
-            {{/unless~}}
-            {{hour-minute-format slot.slot_duration}}
-          </div>
-          <div class="schedule-credits">
-            <span class="schedule-sm-label">Credits:</span> {{credits-format slot.credits}}
-          </div>
-          <div class="schedule-signup-description">
-            <span class="schedule-sm-label">{{@position.title}}</span>
-            <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
-          </div>
-          <div class="schedule-signups">{{slot-full-indicator slot.slot_signed_up slot.slot_max}}</div>
-          <div class="schedule-actions">
-            <button type="button" {{on "click" (fn @showPeople slot)}} class="btn btn-secondary btn-sm"
-                    title="View people signed up"
-                    disabled={{slot.is_retrieving_people}}>
-              {{#if slot.is_retrieving_people}}
-                <SpinIcon />
+      <div class="schedule-table">
+        <div class="schedule-row schedule-header">
+          <div class="schedule-icon">&nbsp;</div>
+          <div class="schedule-time">Time</div>
+          <div class="schedule-duration">Duration</div>
+          <div class="schedule-credits">Credits</div>
+          <div class="schedule-signup-description">Description</div>
+          <div class="schedule-signups">Sign Ups</div>
+          <div class="schedule-actions">Actions</div>
+        </div>
+        {{#each @position.slots key="id" as |slot|}}
+          <div class="schedule-row {{if slot.person_assigned "table-success"}}" id="slot-{{slot.id}}">
+            <div class="schedule-icon">
+              {{#if slot.person_assigned}}
+                {{fa-icon "check" title="You are signed up for this shift."}}
+              {{else if (not slot.slot_active)}}
+                {{fa-icon "times" title="Shift is inactive and may not be signed up for" color="danger"}}
               {{else}}
-                {{fa-icon "users" type="fas"}}
+                &nbsp;
               {{/if}}
-              Sign Ups
-            </button>
-            {{#if slot.person_assigned}}
-              {{#if (or @isAdmin (not slot.has_started))}} {{!template-lint-disable "no-negated-condition"}}
-              {{! Only allow admins to remove a sign up that has started}}
-                <button type="button" {{on "click" (fn @leaveSlot slot)}} class="btn btn-danger btn-sm"
-                        title="Remove from schedule" disabled={{slot.is_submitting}}>
-                  {{#if slot.is_submitting}}
-                    <SpinIcon />
-                  {{else}}
-                    {{fa-icon "trash-alt" type="fas"}}
-                  {{/if}}
-                  Remove
-                </button>
-              {{/if}}
-            {{else if @isCurrentYear}}
-            {{! Only show action buttons for the current year}}
-              {{#if slot.slot_active}}
-                {{#if (or @isAdmin (and (not slot.isFull) (not slot.has_started)))}}
-                  <button type="button" {{on "click" (fn @joinSlot slot)}} class="btn btn-primary btn-sm"
-                          title="Sign up for the shift" disabled={{slot.is_submitting}}>
+            </div>
+            <div class="schedule-time">
+              {{shift-format slot.slot_begins slot.slot_ends}}
+            </div>
+            <div class="schedule-duration">
+              <span class="schedule-sm-label">Duration:</span>
+              {{#unless slot.position_count_hours}}
+                <NoAppreciateIcon/>
+              {{/unless~}}
+              {{hour-minute-format slot.slot_duration}}
+            </div>
+            <div class="schedule-credits">
+              <span class="schedule-sm-label">Credits:</span> {{credits-format slot.credits}}
+            </div>
+            <div class="schedule-signup-description">
+              <span class="schedule-sm-label">{{@position.title}}</span>
+              <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
+            </div>
+            <div class="schedule-signups">{{slot-full-indicator slot.slot_signed_up slot.slot_max}}</div>
+            <div class="schedule-actions">
+              <button type="button" {{on "click" (fn @showPeople slot)}} class="btn btn-secondary btn-sm"
+                      title="View people signed up"
+                      disabled={{slot.is_retrieving_people}}>
+                {{#if slot.is_retrieving_people}}
+                  <SpinIcon/>
+                {{else}}
+                  {{fa-icon "users" type="fas"}}
+                {{/if}}
+                Sign Ups
+              </button>
+              {{#if slot.person_assigned}}
+                {{#if (or @isAdmin (not slot.has_started))}} {{!template-lint-disable "no-negated-condition"}}
+                {{! Only allow admins to remove a sign up that has started}}
+                  <button type="button" {{on "click" (fn @leaveSlot slot)}} class="btn btn-danger btn-sm"
+                          title="Remove from schedule" disabled={{slot.is_submitting}}>
                     {{#if slot.is_submitting}}
-                      <SpinIcon />
+                      <SpinIcon/>
                     {{else}}
-                      {{fa-icon "user-plus" type="fas"}}
+                      {{fa-icon "trash-alt" type="fas"}}
                     {{/if}}
-                    Add
+                    Remove
                   </button>
                 {{/if}}
-              {{else}}
-                <small class="text-danger">inactive</small>
+              {{else if @isCurrentYear}}
+              {{! Only show action buttons for the current year}}
+                {{#if slot.slot_active}}
+                  {{#if (or @isAdmin (and (not slot.isFull) (not slot.has_started)))}}
+                    <button type="button" {{on "click" (fn @joinSlot slot)}} class="btn btn-primary btn-sm"
+                            title="Sign up for the shift" disabled={{slot.is_submitting}}>
+                      {{#if slot.is_submitting}}
+                        <SpinIcon/>
+                      {{else}}
+                        {{fa-icon "user-plus" type="fas"}}
+                      {{/if}}
+                      Add
+                    </button>
+                  {{/if}}
+                {{else}}
+                  <small class="text-danger">inactive</small>
+                {{/if}}
               {{/if}}
-            {{/if}}
+            </div>
           </div>
-        </div>
-      {{/each}}
+        {{/each}}
+      </div>
     {{/if}}
   </Accordion.body>
 </ChAccordion>
