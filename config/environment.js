@@ -25,12 +25,14 @@ module.exports = function (environment) {
     'ember-simple-auth': {
       authorizer: 'authorizer:token',
       routeAfterAuthentication: 'me.homepage',
+      useSessionSetupMethod: true,
     },
 
     'ember-simple-auth-token': {
       // NOTE: setting refreshAccessTokens true will hang the tests since
       // there is an outstanding timeout
       refreshAccessTokens: false,
+
       identificationField: 'identification',
       passwordField: 'password',
       tokenPropertyName: 'token',
