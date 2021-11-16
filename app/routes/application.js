@@ -93,7 +93,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
    * @param {Transition} transition
    */
   async beforeModel(transition) {
-    await this.session.setup();
+   // await this.session.setup();
 
     // If heading to the offline target, simply return
     if (transition.targetName === 'offline') {
