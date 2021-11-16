@@ -25,7 +25,7 @@ module.exports = function (environment) {
     'ember-simple-auth': {
       authorizer: 'authorizer:token',
       routeAfterAuthentication: 'me.homepage',
-      useSessionSetupMethod: true,
+    //  useSessionSetupMethod: true,
     },
 
     'ember-simple-auth-token': {
