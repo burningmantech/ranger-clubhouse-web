@@ -1,5 +1,5 @@
 {{#if @model}}
-  <LinkTo @route={{@route}} @model={{@model}} @query={{@query}} class="dropdown-item">{{@item}}</LinkTo>
+  <LinkTo @route={{@route}} @model={{@model}} @query={{or @query (hash)}} class="dropdown-item">{{@item}}</LinkTo>
 {{else}}
-  <LinkTo @route={{@route}} @query={{@query}} class="dropdown-item">{{@item}}</LinkTo>
+  <LinkTo @route={{@route}} @query={{or @query (hash)}} class="dropdown-item">{{@item}}</LinkTo>
 {{/if}}

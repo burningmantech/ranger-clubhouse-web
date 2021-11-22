@@ -1,6 +1,5 @@
 .masonry-container {
-  margin: 5px 0;
-  column-gap: 5px;
+  column-gap: 1em;
 }
 
 .masonry-item {
@@ -16,23 +15,21 @@
 
 
 /* Masonry on medium-sized screens */
-@media only screen and (min-width: 1024px) {
+@include media-breakpoint-up(lg) {
   .masonry-container {
     column-count: 3;
   }
 }
 
-@media only screen and (min-width: 1024px) {
-  .masonry-col-2 {
-    column-count: 2 !important;
-  }
-}
-
 /* Masonry on small screens */
-@media only screen and (max-width: 1023px) {
+@include media-breakpoint-down(lg) {
   .masonry-container {
     column-count: 1 !important;
   }
+}
+
+.masonry-col-2 {
+  column-count: 2;
 }
 
 .masonry-col-4 {

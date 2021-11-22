@@ -3,7 +3,7 @@ import Application from '@ember/application';
 import Resolver from 'ember-resolver';
 import loadInitializers from 'ember-load-initializers';
 import config from 'clubhouse/config/environment';
-import LinkComponent from '@ember/routing/link-component';
+//import LinkComponent from '@ember/routing/link-component';
 import RSVP from 'rsvp';
 import logError from 'clubhouse/utils/log-error';
 
@@ -52,9 +52,9 @@ Ember.onerror = (error) => {
   }
 }
 
-LinkComponent.reopen({
+/*LinkComponent.reopen({
   activeClass: 'is_active'
-});
+});*/
 
 export default class App extends Application {
   modulePrefix = config.modulePrefix;

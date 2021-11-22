@@ -287,29 +287,9 @@ legend {
   display: inline-block;
 
   .popover {
+    z-index: 100000;
     width: $popover-max-width;
     @include box-shadow($box-shadow);
-  }
-
-  .popover-top {
-    top: -300px;
-  }
-
-  .popover-bottom {
-    top: 25px;
-  }
-
-  .popover-left {
-    left: -($popover-max-width + 10px);
-  }
-
-  .popover-right {
-    left: 10px;
-  }
-
-  .popover-body {
-    overflow-y: auto;
-    max-height: 250px;
   }
 
   .popover-footer {

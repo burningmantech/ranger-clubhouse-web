@@ -8,7 +8,7 @@
   </a>
 {{else}}
   {{#if @routeArg}}
-    <LinkTo @route={{@route}} @model={{@routeArg}} @query={{@query}}
+    <LinkTo @route={{@route}} @model={{@routeArg}} @query={{or @query (hash)}}
             class="{{this.linkClass}}"
             @activeClass="{{this.activeClass}}">
       <Sidebar::LinkText @iconUrl={{@iconUrl}}
@@ -20,7 +20,7 @@
   {{else}}
   {{! ARG.. link-to @model cannot deal with undefined and do the right thing}}
     <LinkTo @route={{@route}}
-            @query={{@query}}
+            @query={{or @query (hash)}}
             class="{{this.linkClass}}"
             @activeClass="{{this.activeClass}}">
       <Sidebar::LinkText @iconUrl={{@iconUrl}}

@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
-import {createPopper} from '@popperjs/core';
+import bootstrap from 'bootstrap';
 
 export default class PopoverComponent extends Component {
   @tracked isShowing = false;
@@ -16,6 +16,7 @@ export default class PopoverComponent extends Component {
 
     const {placement} = this.args;
     this.placement = (placement ? `popover-${placement}` : '');
+    this.bodyElement = document.body;
   }
 
   @action
@@ -26,7 +27,8 @@ export default class PopoverComponent extends Component {
   @action
   blockInserted(element) {
     this.blockElement = element;
-    this.popper = createPopper(this.containerElement, this.blockElement);
+    //this.popper = createPopper(this.containerElement, this.blockElement);
+    this.popper = new bootstrap.Popover(element, {placement: this.args.placement ?? 'auto', trigger: 'manual'});
   }
 
   @action
@@ -52,7 +54,7 @@ export default class PopoverComponent extends Component {
       return true;
     }
 
-    event.stopPropagation();
+    event.preventDefault();
     this._cleanup();
     return false;
   }
@@ -64,8 +66,7 @@ export default class PopoverComponent extends Component {
 
     document.querySelector('body').removeEventListener('keyup', this._keyEvent);
     this.isShowing = false;
-    this.popper.destroy();
+    this.popper.dispose();
+    this.popper = null;
   }
-
-
 }
