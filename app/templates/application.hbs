@@ -1,8 +1,8 @@
-<ToastRegistry />
-<ModalRegistry/>
 <header class="d-print-none">
-  <Navbar />
-   {{#if (has-role "admin" "manage" "vc" "mentor")}}<SearchItemBar/>{{/if}}
+  <Navbar/>
+  {{#if (has-role "admin" "manage" "vc" "mentor")}}
+    <SearchItemBar/>
+  {{/if}}
   {{#if this.groundHogDayTime}}
     <div class="alert alert-success text-center p-2 m-0">
       <b>Training Server - Simulated Time {{dayjs-format this.groundHogDayTime "dddd, MMMM Do YYYY @ HH:mm"}}</b>
@@ -14,7 +14,7 @@
   {{/if}}
 
   {{#if this.session.isAuthenticated}}
-    <NewVersionNotify />
+    <NewVersionNotify/>
   {{/if}}
 </header>
 
@@ -29,3 +29,5 @@
     <div>Build: {{this.buildTimestamp}} <span class="d-inline-block">Tag: {{this.applicationVersion}}</span></div>
   </div>
 </footer>
+<ToastRegistry/>
+<ModalRegistry/>

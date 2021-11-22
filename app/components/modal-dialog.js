@@ -2,6 +2,8 @@ import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {inject as service} from '@ember/service';
 import bootstrap from 'bootstrap';
+import { schedule } from '@ember/runloop';
+import Ember from 'ember';
 
 export default class ModalDialogComponent extends Component {
   @service modal;
@@ -11,13 +13,20 @@ export default class ModalDialogComponent extends Component {
   constructor() {
     super(...arguments);
 
+    this.registryId = document.getElementById(Ember.testing ? 'ember-testing' : 'modal-container');
+
+    if (!this.registryId) {
+      throw new Error('Missing modal container');
+    }
+
     if (this.args.isInline) {
       // An inline modal has already been registered.
       return;
     }
 
     this.dialogRegistry.onEscape = this.args.onEscape;
-    this.modal.addDialog(this.dialogRegistry);
+
+    schedule('afterRender', () => this.modal.addDialog(this.dialogRegistry));
   }
 
   @action

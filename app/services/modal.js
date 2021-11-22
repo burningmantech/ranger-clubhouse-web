@@ -1,7 +1,7 @@
 import Service from '@ember/service';
 import {A} from '@ember/array';
 import {action} from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
 
 /*
   The modal service. Handles inline modals (aka this.modal.{info,confirm,open}) and
@@ -46,7 +46,7 @@ export default class ModalService extends Service {
    * @param {Function|null} closeCallback
    */
 
-  confirm(title, message, confirmCallback , closeCallback = null) {
+  confirm(title, message, confirmCallback, closeCallback = null) {
     this.addInlineDialog({
       component: 'modal-confirm', title, message, confirmCallback, closeCallback
     });
@@ -98,7 +98,7 @@ export default class ModalService extends Service {
    */
 
   removeDialog(dialog) {
-    if (this.isRemoved ) {
+    if (this.isRemoved) {
       // Don't re-remove a dialog already gotten rid of.
       return;
     }
@@ -129,7 +129,7 @@ export default class ModalService extends Service {
     const dialog = this.dialogs.lastObject;
 
     if (dialog.isInline || dialog.closeCallback || dialog.onEscape) {
-      event.stopPropagation(); // Don't allow the key to percolate upwards
+      event.preventDefault(); // Don't allow the key to percolate upwards
       this.removeDialog(dialog);
       if (dialog.closeCallback) {
         dialog.closeCallback();

@@ -37,7 +37,7 @@
     "cropperjs": "^1.5.12",
     "dayjs": "^1.10.7",
     "double-metaphone": "^2.0.0",
-    "ember-ajax": "^5.0.0",
+    "ember-ajax": "^5.1.1",
     "ember-auto-import": "^2.2.4",
     "ember-cached-decorator-polyfill": "^0.1.4",
     "ember-changeset": "3.15.0",
@@ -72,13 +72,13 @@
     "eslint": "^7.32.0",
     "eslint-plugin-ember": "^10.5.7",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-qunit": "^7.0.0",
+    "eslint-plugin-qunit": "^7.1.0",
     "faker": "^5.5.3",
     "global": "^4.4.0",
     "jquery-datetimepicker": "^2.5.21",
     "jscodeshift": "^0.13.0",
     "json-formatter-js": "^2.3.4",
-    "libphonenumber-js": "^1.9.42",
+    "libphonenumber-js": "^1.9.43",
     "loader.js": "^4.7.0",
     "lodash": "^4.17.21",
     "mobile-detect": "^1.4.5",
@@ -86,7 +86,7 @@
     "qunit": "^2.17.2",
     "qunit-dom": "^2.0.0",
     "sass": "^1.43.4",
-    "webpack": "^5.64.1"
+    "webpack": "^5.64.2"
   },
   "engines": {
     "node": "10.* || >= 12"
