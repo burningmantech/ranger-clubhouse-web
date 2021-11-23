@@ -1,3 +1,6 @@
+<div id="modal-container"></div>
+<ToastRegistry/>
+<ModalRegistry/>
 <header class="d-print-none">
   <Navbar/>
   {{#if (has-role "admin" "manage" "vc" "mentor")}}
@@ -29,5 +32,3 @@
     <div>Build: {{this.buildTimestamp}} <span class="d-inline-block">Tag: {{this.applicationVersion}}</span></div>
   </div>
 </footer>
-<ToastRegistry/>
-<ModalRegistry/>
