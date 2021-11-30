@@ -24,7 +24,7 @@ export default class ResetPasswordController extends ClubhouseController {
     }).then(() => {
       this.modal.info('Reset password instructions sent.',
         `Instructions to reset your password will be sent to you shortly. Please check your email '${identification}'.`);
-      this.transitionToRoute('login');
+      this.router.transitionTo('login');
     }).catch((response) => {
       switch (response.status) {
         case 400:

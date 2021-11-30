@@ -37,7 +37,7 @@ export default class PersonPasswordController extends ClubhouseController {
     return this.ajax.request(`person/${person.id}/password`, {method: 'PATCH', data: passwords})
       .then(() => {
         this.toast.success('Password has been changed.');
-        this.transitionToRoute('person.index', person.id);
+        this.router.transitionTo('person.index', person.id);
       }).catch((response) => {
         this.house.handleErrorResponse(response)
       })

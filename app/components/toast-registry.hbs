@@ -1,3 +1,7 @@
-{{#each this.toast.loaf as |toast|}}
-  <ToastDialog @toast={{toast}} />
-{{/each}}
+{{#if this.toast.loaf}}
+  <div class="toast-container position-fixed top-0 p-3 {{this.positionCss}}">
+    {{#each this.toast.loaf as |toast|}}
+      <ToastDialog @toast={{toast}} />
+    {{/each}}
+  </div>
+{{/if}}

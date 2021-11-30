@@ -6,6 +6,6 @@ export default class MeSurveyController extends ClubhouseController {
 
   @action
   surveyDoneAction() {
-    this.transitionToRoute('me.homepage');
+    this.router.transitionTo('me.homepage');
   }
 }

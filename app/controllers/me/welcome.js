@@ -45,6 +45,6 @@ export default class MeWelcomeController extends ClubhouseController {
 
   @action
   closeAction() {
-    this.transitionToRoute('me.homepage');
+    this.router.transitionTo('me.homepage');
   }
 }
