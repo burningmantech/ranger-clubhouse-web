@@ -141,7 +141,7 @@ export default class PersonIndexController extends ClubhouseController {
 
   @action
   sendClubhouseMessage() {
-    this.transitionToRoute('person.messages', this.person.id);
+    this.router.transitionTo('person.messages', this.person.id);
   }
 
   @action
@@ -209,7 +209,7 @@ export default class PersonIndexController extends ClubhouseController {
       () => {
         this.person.destroyRecord().then(() => {
           this.toast.success('The person was successfully removed from the Clubhouse.');
-          this.transitionToRoute('me.homepage');
+          this.router.transitionTo('me.homepage');
         }).catch((response) => this.house.handleErrorResponse(response));
       }
     )

@@ -34,7 +34,7 @@ export default class MePersonalInfoEditController extends ClubhouseController {
           this.showUpdateMailingListsDialog = true;
           this.oldEmail = oldEmail;
         } else {
-          this.transitionToRoute('me.homepage');
+          this.router.transitionTo('me.homepage');
         }
       })
   }
@@ -42,14 +42,14 @@ export default class MePersonalInfoEditController extends ClubhouseController {
   @action
   onCancel() {
     this.toast.warning('Editing your personal information was cancelled. No changes were saved.');
-    this.transitionToRoute('me.homepage');
+    this.router.transitionTo('me.homepage');
   }
 
   @action
   cancelMailingListDialog() {
     this.showUpdateMailingListsDialog = false;
     this.toast.warning('No request was sent to update the mailing lists.');
-    this.transitionToRoute('me.homepage');
+    this.router.transitionTo('me.homepage');
   }
 
   @action
@@ -59,7 +59,7 @@ export default class MePersonalInfoEditController extends ClubhouseController {
       .then(() => {
         this.showUpdateMailingListsDialog = false;
         this.toast.success('Request to update mailing lists successfully sent.');
-        this.transitionToRoute('me.homepage');
+        this.router.transitionTo('me.homepage');
       }).catch((response) => this.house.handleErrorResponse(response));
   }
 }

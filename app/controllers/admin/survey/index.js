@@ -33,7 +33,7 @@ export default class AdminSurveyIndexController extends ClubhouseController {
     const id = this.surveyEntry.id;
 
     this.surveyEntry = null;
-    this.transitionToRoute('admin.survey.manage', id);
+    this.router.transitionTo('admin.survey.manage', id);
   }
 
   @action
@@ -47,7 +47,7 @@ export default class AdminSurveyIndexController extends ClubhouseController {
         this.ajax.request(`survey/${survey.id}/duplicate`, { method: 'POST' })
           .then((result) => {
             this.toast.success('Survey was successfully duplicated.');
-            this.transitionToRoute('admin.survey.manage', result.survey_id);
+            this.router.transitionTo('admin.survey.manage', result.survey_id);
           })
           .catch((response) => this.house.handleErrorResponse(response))
           .finally(() => this.isDuplicating = false);

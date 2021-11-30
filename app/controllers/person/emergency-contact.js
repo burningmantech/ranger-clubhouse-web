@@ -6,6 +6,6 @@ export default class PersonEmergencyContactController extends ClubhouseControlle
   @action
   cancelAction() {
     this.toast.warning('Edit has been cancelled. No changes were saved.');
-    this.transitionToRoute('person.index');
+    this.router.transitionTo('person.index');
   }
 }

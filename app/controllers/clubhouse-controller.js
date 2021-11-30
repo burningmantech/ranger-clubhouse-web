@@ -12,6 +12,7 @@ export default class ClubhouseController extends Controller {
   @service ajax;
   @service house;
   @service modal;
+  @service router;
   @service session;
   @service store;
   @service toast;

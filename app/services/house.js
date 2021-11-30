@@ -10,6 +10,7 @@ import {AbortError, InvalidError, NotFoundError, ServerError, TimeoutError} from
 import bootstrap from 'bootstrap';
 
 export default class HouseService extends Service {
+  @service router;
   @service toast;
   @service session;
   @service store;
@@ -169,7 +170,7 @@ export default class HouseService extends Service {
       if (isCallback) {
         routeOrCallback(model);
       } else if (routeOrCallback){
-        this.transitionToRoute(routeOrCallback);
+        this.router.transitionTo(routeOrCallback);
       }
       return;
     }*/
@@ -179,7 +180,7 @@ export default class HouseService extends Service {
       if (isCallback) {
         routeOrCallback(model, result);
       } else if (routeOrCallback) {
-        this.transitionToRoute(routeOrCallback);
+        this.router.transitionTo(routeOrCallback);
       }
     }).catch((response) => {
       if (isChangeset(model)) {

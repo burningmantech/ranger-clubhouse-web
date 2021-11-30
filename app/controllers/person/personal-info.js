@@ -26,6 +26,6 @@ export default class PersonPersonalInfoController extends ClubhouseController {
   @action
   onCancel() {
     this.toast.warning('Personal information editing was cancelled. No changes were saved.');
-    this.transitionToRoute('person.index', this.person.id);
+    this.router.transitionTo('person.index', this.person.id);
   }
 }

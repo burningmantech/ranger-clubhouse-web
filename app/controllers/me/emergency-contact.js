@@ -4,6 +4,6 @@ import { action } from '@ember/object';
 export default class MeEmergencyContactController extends ClubhouseController {
   @action
   cancel() {
-    this.transitionToRoute('me.homepage');
+    this.router.transitionTo('me.homepage');
   }
 }

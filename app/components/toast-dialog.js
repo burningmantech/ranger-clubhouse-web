@@ -20,6 +20,10 @@ export default class ToastDialogComponent extends Component {
     this.message = htmlSafe(this.args.toast.message);
   }
 
+  get isDangerType() {
+    return this.args.toast.type === 'danger';
+  }
+
   @action
   closeAction() {
     this.toast.removeToast(this.args.toast);

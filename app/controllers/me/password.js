@@ -51,15 +51,13 @@ export default class MePasswordController extends ClubhouseController {
       this.session.tempLoginToken = null;
       this.session.isWelcome = false;
       this.toast.success('Password has been successfully changed.');
-      this.transitionToRoute('me.homepage');
-    }).catch((response) => {
-      this.house.handleErrorResponse(response)
-    })
+      this.router.transitionTo('me.homepage');
+    }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isSubmitting = false);
   }
 
   @action
   cancelAction() {
-    this.transitionToRoute('me.homepage');
+    this.router.transitionTo('me.homepage');
   }
 }

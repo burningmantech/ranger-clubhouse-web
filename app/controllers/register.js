@@ -91,7 +91,7 @@ export default class RegisterController extends ClubhouseController {
       switch (result.status) {
         case 'success':
           this.modal.info('Account Successfully Created', 'Congratulations Auditor! You have successfully created a Clubhouse account. After closing this dialog, you will be redirected the login. Go ahead and login.', () => {
-            this.transitionToRoute('login');
+            this.router.transitionTo('login');
           });
           break;
 
