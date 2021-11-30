@@ -83,12 +83,12 @@
           </table>
           </p>
           <p>
-            <UiButton @type="secondary" @class="mr-1" @disabled={{photo.isSaving}}
+            <UiButton @type="secondary" @class="me-1" @disabled={{photo.isSaving}}
                       @onClick={{fn this.editPhotoAction photo}}>
               {{fa-icon "edit"}} Edit
             </UiButton>
             {{#if (not-eq photo.status "rejected")}}
-              <UiButton @type="danger" @class="mr-1" @onClick={{fn this.showReviewPhoto photo}}
+              <UiButton @type="danger" @class="me-1" @onClick={{fn this.showReviewPhoto photo}}
                         @disabled={{photo.isSaving}}>
                 {{fa-icon "times"}} Reject
               </UiButton>

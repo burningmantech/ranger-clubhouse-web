@@ -20,7 +20,7 @@
 <p>
   Jump to a position starting with the letter:<br>
   {{#each this.letterOptions as |letter|}}
-    <a href {{on "click" (fn this.scrollToPosition letter.id)}} class="d-inline-block border p-2 mr-2 mb-2">
+    <a href {{on "click" (fn this.scrollToPosition letter.id)}} class="d-inline-block border p-2 me-2 mb-2">
       {{letter.letter}}
     </a>
   {{/each}}

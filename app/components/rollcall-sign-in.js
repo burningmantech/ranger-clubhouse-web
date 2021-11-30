@@ -240,7 +240,6 @@ export default class RollcallSignInComponent extends Component {
           person.signedIn = true;
           person.timesheet_id = result.timesheet_id;
           person.startTime = result.on_duty;
-          console.log('RESULT ', result);
           break;
 
         case 'position-not-held':

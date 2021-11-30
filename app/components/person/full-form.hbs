@@ -69,7 +69,7 @@ Everyone else will see person/simple-form
   <FormRow>
     <FormLabel @fixed={{true}}>Callsign</FormLabel>
     <f.text @name="callsign"
-            @size={{36}}
+            @size={{35}}
             @maxlength={{100}}/>
     <f.select @name="callsign_approved"
               @options={{@callsignApprovedOptions}}/>
@@ -115,8 +115,8 @@ Everyone else will see person/simple-form
 
   <FormRow>
     <FormLabel @fixed={{true}}>Positions</FormLabel>
-    <div class="col-sm-12 col-lg-10">
-      <UiButton @type="secondary" @size="sm" @class="mr-2" @onClick={{@togglePositions}}>
+    <div class="col-sm-12 col-xl-9">
+      <UiButton @type="secondary" @size="sm" @class="me-2" @onClick={{@togglePositions}}>
         {{if @showPositions "Hide" "Show"}} Positions
       </UiButton>
       {{#if (has-role "admin" "grant-position")}}
@@ -141,7 +141,7 @@ Everyone else will see person/simple-form
 
   <FormRow>
     <FormLabel @fixed={{true}}>Roles</FormLabel>
-    <div class="col-sm-12 col-lg-10">
+    <div class="col-sm-12 col-xl-9">
       <UiButton @type="secondary" @onClick={{@toggleRoles}} @size="sm">
         {{if @showRoles "Hide" "Show"}} Roles
       </UiButton>
@@ -167,7 +167,7 @@ Everyone else will see person/simple-form
 
   <FormRow>
     <FormLabel @fixed={{true}}>Vehicles</FormLabel>
-    <div class="col-sm-12 col-lg-auto mt-2">
+    <div class="col-sm-12 col-xl-auto mt-2">
       {{#if (has-role "admin")}}
         <f.checkbox @name="vehicle_blacklisted"
                     @label="Vehicle Blacklisted"/>
@@ -182,12 +182,16 @@ Everyone else will see person/simple-form
 
   <FormRow>
     <FormLabel @fixed={{true}}>Certifications</FormLabel>
-    <div class="col-sm-12 col-lg-auto mt-2">
+    <div class="col-sm-12 col-xl-auto mt-2">
       {{#if (has-role "admin" "vc")}}
         <f.checkbox @name="osha10"
-                    @label="OSHA-10"/>
+                    @label="OSHA-10"
+                    @inline={{true}}
+        />
         <f.checkbox @name="osha30"
-                    @label="OSHA-30"/>
+                    @label="OSHA-30"
+                    @inline={{true}}
+        />
       {{else if (or @person.osha10 @person.osha30)}}
         {{#if @person.osha10}}OSHA-10{{/if}}
         {{#if @person.osha30}}OSHA-30{{/if}}
@@ -199,7 +203,7 @@ Everyone else will see person/simple-form
 
   <FormRow>
     <FormLabel @fixed={{true}}>Agreements</FormLabel>
-    <div class="col-sm-12 col-lg-auto mt-2">
+    <div class="col-sm-12 col-xl-auto mt-2">
       {{#if (has-role "admin" "vc")}}
         <f.checkbox @name="behavioral_agreement"
                     @label="Burning Man's Behavioral Standards Agreement"/>
@@ -211,7 +215,7 @@ Everyone else will see person/simple-form
 
   <FormRow>
     <FormLabel @fixed={{true}}>More Flags</FormLabel>
-    <div class="col-sm-12 col-lg-10 mt-2">
+    <div class="col-sm-12 col-xl-10 mt-2">
       <LinkTo @route="person.event-info">Person &gt; Event/Training Info</LinkTo>
       has additional agreements, affidavits, and vehicles flags which are reset every year.
     </div>
@@ -219,10 +223,10 @@ Everyone else will see person/simple-form
 
   <FormRow>
     <FormLabel @fixed={{true}}>&nbsp;</FormLabel>
-    <div class="col-sm-12 col-lg-auto mb-4">
+    <div class="col-sm-12 col-xl-auto mb-4">
       <f.submit @label="Update" @disabled={{or @person.isSaving (not f.model.isDirty)}} @submitClass="btn-responsive"/>
     </div>
-    <div class="col-sm-12 col-lg-auto mb-4">
+    <div class="col-sm-12 col-xl-auto mb-4">
       {{#if (has-role "admin")}}
         {{#if @person.message}}
           <UiButton @type="secondary" @class="btn-responsive" @onClick={{@editNote}}>
@@ -241,7 +245,7 @@ Everyone else will see person/simple-form
       {{/if}}
     </div>
     {{#if (has-role "admin")}}
-      <div class="col-sm-12 col-lg-auto ms-auto mt-1">
+      <div class="col-sm-12 col-xl-auto ms-auto mt-1">
         <UiButton @type="secondary" @size="sm" @onClick={{@removePersonAction}}>Remove</UiButton>
       </div>
     {{/if}}
