@@ -15,23 +15,7 @@ export default class AdminBulkPositionsController extends ClubhouseController {
     ['Grant Position', true],
     ['Revoke Position', false]
   ];
-
-  get errorCount() {
-    if (!this.people) {
-      return 0;
-    }
-
-    return this.people.filter((p) => p.errors).length;
-  }
-
-  get successCount() {
-    if (!this.people) {
-      return 0;
-    }
-
-    return this.people.filter((p) => p.errors).length;
-  }
-
+  
   get positionOptions() {
     const options = this.positions.map((p) => [p.title, p.id]);
     options.unshift(['Select a position', null]);
