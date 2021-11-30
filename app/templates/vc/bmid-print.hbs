@@ -21,7 +21,7 @@
     </div>
     <div class="col-auto">
       <div class="input-group">
-        <label class="mr-1">Callsign, title, team, notes filter:</label>
+        <label class="me-1">Callsign, title, team, notes filter:</label>
         <Input @type="text" @value={{this.textFilterInput}} class="form-control form-control-sm ms-2"
                @enter={{action this.textFilterAction}} disabled={{this.isRendering}} />
         <UiButton @size="sm" @class="ms-1" @onClick={{this.textFilterAction}} @disabled={{this.isRendering}}>
