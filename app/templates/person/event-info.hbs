@@ -6,7 +6,7 @@
     <:title>{{this.year}} Training</:title>
     <:body>
       <dl>
-        <dt>Online Training</dt>
+        <dt>Online Course</dt>
         <dd>
           {{#if this.eventInfo.online_training_passed}}
             {{shift-format this.eventInfo.online_training_date}}
@@ -15,7 +15,7 @@
           {{/if}}
         </dd>
 
-        <dt>Face-to-Face Trainings</dt>
+        <dt>Trainings</dt>
         <dd>
           {{#if this.person.isNonRanger}}
             <p>Non Rangers are not required to pass training.</p>

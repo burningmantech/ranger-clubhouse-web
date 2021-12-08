@@ -33,7 +33,7 @@ function indefiniteArticle(noun) {
 }
 
 function otName(milestones) {
-  return milestones.online_training_only ? 'Online Training' : 'Part 1 of Training (online)';
+  return milestones.online_training_only ? 'Online Course' : 'Part 1 of Training (Online Course)';
 }
 
 /*
@@ -58,7 +58,7 @@ function otName(milestones) {
  *
  * @property {string} result - how the step is to be presented. See clubhouse/constants/dashboard.js for all results.
  * @property {boolean} [isPhotoStep] - true if the step is related to photo uploading. The Upload Photo link is to be shown.
- * @property {boolean} [isOnlineTraining] - true if the step is to include a link to Online Training
+ * @property {boolean} [isOnlineTraining] - true if the step is to include a link to the Online Course
  * @property {boolean} [isTicketing] - true if step is related to ticketing, show the claimed & banked tickets.
  * @property {boolean} [immediate] - show step in the immediate group (similar to step.immediate listed above)
  * @property {string} [message] - shown to the user. May need htmlSafe() if string contains HTML.
@@ -236,7 +236,7 @@ export const ONLINE_TRAINING = {
     if (isPNV && !prevCompleted) {
       return {
         result: NOT_AVAILABLE,
-        message: 'You must complete the previous steps before being allowed to take Online Training.',
+        message: 'You must complete the previous steps before being allowed to take the online course.',
         name
       };
     }
@@ -246,7 +246,7 @@ export const ONLINE_TRAINING = {
     return {
       result: ACTION_NEEDED,
       message: htmlSafe('<p>The Ranger Manual can be found at <a href="' + config('RangerManualUrl') + '" rel="noopener noreferrer" target="_blank">rangers.burningman.org</a>.</p>' +
-        `<p>The online training will take ${duration} to complete. </p> <p>Note: it may take up to 15 mins or more for the Clubhouse to record your course completion.</p>`),
+        `<p>The online course will take ${duration} to complete. </p> <p>Note: it may take up to 15 mins or more for the Clubhouse to record your course completion.</p>`),
       isOnlineTraining: true,
       name
     };
@@ -254,7 +254,7 @@ export const ONLINE_TRAINING = {
 };
 
 export const SIGN_UP_FOR_TRAINING = {
-  name: 'Sign up for Part 2 of Training (face-to-face)',
+  name: 'Sign up for Part 2 of Training (In Person)',
   skipPeriod: AFTER_EVENT,
   check({milestones, isPNV, isAuditor}) {
     if (milestones.online_training_only) {
@@ -268,18 +268,18 @@ export const SIGN_UP_FOR_TRAINING = {
     if (!milestones.online_training_passed) {
       return {
         result: NOT_AVAILABLE,
-        message: 'You need to complete Part 1 of Training (online) first before being allowed to sign up for Part 2 of Training (face-to-face).'
+        message: 'You need to complete Part 1 of Training (Online Course) first before being allowed to sign up for Part 2 of Training (In Person).'
       };
     }
 
     if (milestones.trainings_available) {
       let prefix;
       if (isPNV) {
-        prefix = 'You will need to sign up and pass Part 2 of Training (face-to-face) before being allowed to sign up for your Alpha shift.';
+        prefix = 'You will need to sign up and pass Part 2 of Training (In Person) before being allowed to sign up for your Alpha shift.';
       } else if (isAuditor) {
         prefix = ''; // nada.
       } else {
-        prefix = `You will to need sign up and pass Part 2 of Training (face-to-face) before being allowed to work on playa.`;
+        prefix = `You will to need sign up and pass Part 2 of Training (In Person) before being allowed to work on playa.`;
       }
       return {
         result: ACTION_NEEDED,
@@ -301,7 +301,7 @@ export const SIGN_UP_FOR_TRAINING = {
 };
 
 export const ATTEND_TRAINING = {
-  name: 'Attend Part 2 of Training (face-to-face)',
+  name: 'Attend Part 2 of Training (In Person)',
   skipPeriod: AFTER_EVENT,
   check({milestones, person, isPNV, isAuditor}) {
     if (milestones.online_training_only) {
@@ -312,7 +312,7 @@ export const ATTEND_TRAINING = {
       if (isPNV || isAuditor) {
         return {
           result: NOT_AVAILABLE,
-          message: 'Please sign up for a face-to-face Training.'
+          message: 'Please sign up for an In Person Training.'
         };
       }
       return {result: SKIP};
@@ -398,7 +398,7 @@ export const TAKE_STUDENT_SURVEY = {
     if (milestones.surveys.sessions.length > 0) {
       return {
         result: ACTION_NEEDED,
-        message: 'Please take a moment to provide feedback on your face-to-face training experience:',
+        message: 'Please take a moment to provide feedback on your in person training experience:',
         survey: 'student'
       };
 
@@ -541,7 +541,7 @@ export const SIGN_RADIO_CHECKOUT_AGREEMENT = {
     if (isPNV) {
       return {
         result: NOT_AVAILABLE,
-        message: 'You need to pass Part 2 of Training (face-to-face) first before you may sign the Radio Checkout Agreement.'
+        message: 'You need to pass Part 2 of Training (In Person) first before you may sign the Radio Checkout Agreement.'
       };
     }
 

@@ -10,8 +10,9 @@
 </p>
 {{#if this.canEditPersonalInfo}}
   <p>
-    Jump to: <a href="#person-general">Name</a>
-    | <a href="#person-contact">Email/Phone</a>
+    Jump to: <a href="#person-general">General Info</a>
+    | <a href="#person-contact">Contact Info</a>
+    | <a href="#person-camp">Camp Location</a>
     | <a href="#person-callsign">Callsign</a>
     | <a href="#person-clothing">Clothing</a>
     | <a href="#person-address">Address</a>
@@ -78,9 +79,15 @@
         </FormRow>
       </:body>
     </UiSection>
-    <UiSection class="person-camp">
+    <UiSection id="person-camp">
       <:title>Camp Name &amp; Location</:title>
       <:body>
+        <p>
+          Supply the camp's name, the street address, and street side (man-side, mountainside, plaza, etc.).
+        </p>
+        <p>
+          Example: <b><i>"Camp Specificity, 9:15 &amp; D, Mountainside."</i></b>
+        </p>
         <FormRow>
           <f.textarea @name="camp_location"
                       @label="Camp Name & Location"
@@ -94,6 +101,13 @@
     <UiSection id="person-callsign">
       <:title>Callsign Pronunciation</:title>
       <:body>
+        <p>
+          For a difficult to pronounce callsign, enter the phonetic spelling below.
+        </p>
+        <p>
+          Example: <b><i>if the callsign is 3pio enter as "Three-Pee-Oh", for Jschool enter as "JAY-school",
+          etc</i></b>
+        </p>
         <FormRow>
           <f.text @name="callsign_pronounce"
                   @label="Callsign Pronounciation"
@@ -108,10 +122,10 @@
       <:body>
         <p>
           List the English names of the languages they are comfortable speaking with the level of fluency in
-          parenthesis, each separated by a comma.
+          parentheses, each separated by a comma.
         </p>
         <p>
-          Example: "japanese (basic), spanish (fluent)"
+          Example: <b><i>"japanese (basic), spanish (fluent)"</i></b>
         </p>
 
         <FormRow>
