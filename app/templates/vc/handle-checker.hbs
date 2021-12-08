@@ -71,7 +71,7 @@
                     <div class="card-body">
                       {{get this.ruleNames conflict.ruleId}}, {{conflict.priority}} priority
                       {{#if conflict.conflictingHandle}}
-                        {{#with conflict.conflictingHandle as |handle|}}
+                        {{#let conflict.conflictingHandle as |handle|}}
                           {{#if handle.personId}}
                             <LinkTo @route="person.index" @model={{handle.personId}}
                                     target="_blank" rel="noopener noreferrer">
@@ -81,7 +81,7 @@
                             {{handle.entityType}} {{handle.name}}
                           {{/if}}
                           {{#if handle.personVintage}}(vintage){{/if}}
-                        {{/with}}
+                        {{/let}}
                       {{/if}}
                     </div>
                   </div>

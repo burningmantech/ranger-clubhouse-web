@@ -22,12 +22,12 @@ Showing {{pluralize this.expiring.length "person"}}
         <td><PersonLink @person={{person.person}} @page="access-documents" /></td>
         <td>{{person.person.status}}</td>
         <td>{{mail-to person.person.email}}</td>
-        {{#with person.tickets.firstObject as |ticket|}}
+        {{#let person.tickets.firstObject as |ticket|}}
           <td>RAD-{{ticket.id}}</td>
           <td>{{ticket.type}}</td>
           <td>{{ticket.status}}</td>
           <td>{{mdy-format ticket.expiry_date}}</td>
-        {{/with}}
+        {{/let}}
       </tr>
     {{else}}
       <tr>

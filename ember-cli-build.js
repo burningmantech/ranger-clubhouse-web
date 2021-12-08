@@ -38,7 +38,7 @@ module.exports = function (defaults) {
     },
 
     sassOptions: {
-      onlyIncluded: true,
+     // onlyIncluded: true,
       includePaths: [
         'node_modules/cropperjs/src/css',
         'node_modules/bootstrap/scss',
