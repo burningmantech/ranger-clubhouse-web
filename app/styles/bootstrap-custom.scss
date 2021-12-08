@@ -74,7 +74,6 @@ $utilities: (
   )
 );
 
-
 $theme-colors: (
   "primary": $kakhi,
   "secondary": #6c757d,
@@ -98,3 +97,16 @@ $table-head-color: #495057;
 $table-head-bg: #e9ecef;
 $table-striped-bg: #eff8fd;
 @import "bootstrap";
+
+// TODO: figure out how to prevent SASS from reordering selectors
+// The problem is bootstrap/_form-check.scss declares .form-check (display: block) and then later
+// .form-check-inline (.inline-block). In development, the files are served as-is. For production,
+// the stylesheets are "optimized" and .form-check-inline's display attribute is combined with
+// other selectors AND placed BEFORE .form-check resulting in specificity breaking. (i.e.
+// the "display: block" attribute incorrectly takes precedences over "inline-block".)
+// In CSS, the later declaration has a higher precedence.
+
+
+.form-check.form-check-inline {
+  display: inline-block !important;
+}
