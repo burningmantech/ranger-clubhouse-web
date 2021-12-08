@@ -1,7 +1,7 @@
 <a href {{on "click" this.setupAccountAction}}>{{@text}}</a>
 {{#if this.showCreationDialog}}
   <LoadingDialog>
-    Setting up your Online Training account. Please wait.
+    Setting up your Online Course account. Please wait.
   </LoadingDialog>
 {{/if}}
 {{#if this.showErrorDialog}}
@@ -9,7 +9,7 @@
     <Modal.body>
       <h3 class="text-danger">An unexpected error occurred.</h3>
       <p>
-        Sorry, there was an issue trying to launch the Online Training course. You can try again in a few minutes.
+        Sorry, there was an issue trying to launch the online course. You can try again in a few minutes.
       </p>
       <p>
         If the problem persists, please contact the Ranger Tech Team {{admin-email}} for help.
@@ -23,31 +23,31 @@
 {{#if this.showExodusDialog}}
   <ModalDialog as |Modal|>
     <Modal.body>
-      <h3>You are about to leave the Clubhouse and head to the Ranger Training website.</h3>
+      <h3>You are about to leave the Clubhouse and head to the Ranger Online Course website.</h3>
       {{#if this.alreadyExists}}
         <p>
-          Your Online Training account has already been setup.
+          Your online course account has already been set up.
         </p>
       {{else}}
         <p>
-          A Ranger Online Training website account has been setup and you have been enrolled in the course.
+          A Ranger online course website account has been set up, and you have been enrolled.
         </p>
         <p>
-          <b class="text-danger">WRITE DOWN the following Online Training website account info. The username
-            and password will be needed to log into the Online Training website:</b>
+          <b class="text-danger">WRITE DOWN the following online course website account info. The username
+            and password will be needed to log into the online course website:</b>
         </p>
         <p>
           <b>Username:</b> {{@person.email}}<br>
           <b>Password:</b> {{this.password}}<br>
         </p>
         <p>
-          <i>The above credentials are ONLY for the Online Training website and are SEPARATE from the Clubhouse.</i>
+          <i>The above credentials are ONLY for the online course website and are SEPARATE from the Clubhouse.</i>
         </p>
       {{/if}}
     </Modal.body>
     <Modal.footer>
       <UiButton @onClick={{this.launchTrainingAction}} @disabled={{this.isSubmitting}}>
-        Go To Online Training
+        Go To Online Course
       </UiButton>
       {{#if this.isSubmitting}}
         <LoadingIndicator @text="Working"/>

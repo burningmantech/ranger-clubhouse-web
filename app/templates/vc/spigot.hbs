@@ -2,12 +2,12 @@
   <YearSelect @title="Spigot Flow" @year={{this.year}} @onChange={{action (mut this.year)}} />
 
   <p>
-    The Spigot Flow report show the Prospective counts in a given year. Each date represents a day where one or more
-    Prospective completes a milestone. (e.g., signed up for training, completed online training, etc.)
+    The Spigot Flow report show the Prospective counts in a given year. Each date represents a day when one or more
+    Prospectives completes a milestone. (e.g., completed the online course, signed up for in-person training,etc.)
   </p>
   <p>
     Legend: Imported = imported from Salesforce or converted to Prospective.
-    Online Trained = completed online training.
+    Online Course = completed online course.
     Trained = passed training.
     Dropped = converted to Past Prospective
   </p>
@@ -20,8 +20,8 @@
     <tr>
       <th>Date</th>
       <th>Imported</th>
-      <th>BMID Photo Approved</th>
-      <th>Online Trained</th>
+      <th>Photo Approved</th>
+      <th>Online Course</th>
       <th>Signed Up for Training</th>
       <th>Trained</th>
       <th>Dropped</th>
@@ -32,7 +32,7 @@
     {{#each @model.days as |day|}}
       <tr>
         <td>
-          <PresentOrNot @value={{day.day}} @empty="-" />
+          <PresentOrNot @value={{day.day}} @empty="-"/>
         </td>
         <td class="text-end">
           {{#if day.imported}}
@@ -66,13 +66,13 @@
         </td>
         <td class="text-end">
           {{#if day.online_trained}}
-            <Popover @text={{day.online_trained.length}} @title={{concat day.day " Online Trained"}}>
+            <Popover @text={{day.online_trained.length}} @title={{concat day.day " Online Course"}}>
               <div class="row g-0">
-              {{#each day.online_trained as |person|}}
-                <div class="col-6">
-                  <PersonLink @person={{person}} />
-                </div>
-              {{/each}}
+                {{#each day.online_trained as |person|}}
+                  <div class="col-6">
+                    <PersonLink @person={{person}} />
+                  </div>
+                {{/each}}
               </div>
             </Popover>
           {{else}}
@@ -83,11 +83,11 @@
           {{#if day.training_signups}}
             <Popover @text={{day.training_signups.length}} @title={{concat day.day " Training Signups"}}>
               <div class="row g-0">
-              {{#each day.training_signups as |person|}}
-                <div class="col-6">
-                  <PersonLink @person={{person}} />
-                </div>
-              {{/each}}
+                {{#each day.training_signups as |person|}}
+                  <div class="col-6">
+                    <PersonLink @person={{person}} />
+                  </div>
+                {{/each}}
               </div>
             </Popover>
           {{else}}
@@ -98,11 +98,11 @@
           {{#if day.training_passed}}
             <Popover @text={{day.training_passed.length}} @title={{concat day.day " Training Passed"}}>
               <div class="row g-0">
-              {{#each day.training_passed as |person|}}
-                <div class="col-6">
-                  <PersonLink @person={{person}} />
-                </div>
-              {{/each}}
+                {{#each day.training_passed as |person|}}
+                  <div class="col-6">
+                    <PersonLink @person={{person}} />
+                  </div>
+                {{/each}}
               </div>
             </Popover>
           {{else}}
@@ -113,11 +113,11 @@
           {{#if day.dropped}}
             <Popover @text={{day.dropped.length}} @title={{concat day.day " Dropped"}}>
               <div class="row g-0">
-              {{#each day.dropped as |person|}}
-                <div class="col-6">
-                  <PersonLink @person={{person}} />
-                </div>
-              {{/each}}
+                {{#each day.dropped as |person|}}
+                  <div class="col-6">
+                    <PersonLink @person={{person}} />
+                  </div>
+                {{/each}}
               </div>
             </Popover>
           {{else}}

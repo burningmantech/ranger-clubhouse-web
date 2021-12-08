@@ -71,9 +71,11 @@ Showing {{this.viewSettings.length}} of {{this.settings.length}}.
         {{/if}}
         <FormRow>
           {{#if (eq this.editSetting.type "bool")}}
-            <f.radioGroup @name="value"
-                          @options={{this.booleanOptions}}
-                          @inline={{true}}/>
+            <div class="col-auto">
+              <f.radioGroup @name="value"
+                            @options={{this.booleanOptions}}
+                            @inline={{true}}/>
+            </div>
           {{else if (eq this.editSetting.type "integer")}}
             <f.text @name="value"
                     @label="Integer value"

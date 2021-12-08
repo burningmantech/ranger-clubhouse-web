@@ -21,15 +21,15 @@
     {{/if}}
     {{#if this.eventInfo.online_training_only}}
       <p>
-        For this event, you are only required to complete Online Training in order to work a shift.
+        For this event, you are only required to complete online course in order to work a shift.
       </p>
       {{#if this.eventInfo.online_training_passed}}
         <p>
-          Online Training was completed on {{mdy-format this.dirtTraining.online_training_date full=true}}.
+          The online course was completed on {{mdy-format this.dirtTraining.online_training_date full=true}}.
         </p>
       {{else}}
         <p class="text-danger">
-          You have not completed Online Training yet.
+          You have not completed the online course yet.
         </p>
       {{/if}}
     {{else if (and this.dirtTraining (not-eq this.dirtTraining.status "no-shift"))}}
@@ -39,13 +39,13 @@
         Passed training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
         {{#if this.person.isAlpha}}
           <br>
-          You still need to walk your Alpha shift on playa in order to become a Ranger.
+          <b class="text-danger">{{fa-icon "hand-point-right"}} You still need to walk your Alpha shift on playa in
+            order to become a Ranger.</b>
         {{/if}}
       {{else if (eq this.dirtTraining.status "no-show")}}
         Did not attend training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
       {{else if (eq this.dirtTraining.status "fail")}}
         Did not pass training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
-      {{else if (eq this.dirtTraining.status "no-shift")}}
       {{else}}
         Uh oh, I did not understand the status [{{this.dirtTraining.status}}]
       {{/if}}
@@ -55,8 +55,8 @@
       </p>
       {{#if (is-current-year this.year)}}
         {{#if this.person.isActive}}
-          You do not have to be trained to sign up for shifts, but you must be trained before actually working shifts on
-          playa.
+          You do not have to be trained to sign up for shifts, but you must be trained before actually
+          working shifts on playa.
         {{else if this.person.isProspective}}
           You will need to sign up for and pass a training session before becoming an Alpha.
         {{/if}}

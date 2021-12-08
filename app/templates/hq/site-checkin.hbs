@@ -23,9 +23,12 @@
   </:title>
   <:body>
     <ChForm @formId="contact" @formFor={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
+      <p>
+        Enter the camp's name, the street address, and street side (man-side, mountainside, plaza, etc.).
+      </p>
       <FormRow>
         <f.textarea @name="camp_location"
-                    @label="Camp Name & Location"
+                    @label="Camp Name & Location (e.g., Camp Specificity, 9:15 &amp; D, Mountainside.)"
                     @autofocus={{true}}
                     @rows={{2}}
                     @cols={{80}}/>
