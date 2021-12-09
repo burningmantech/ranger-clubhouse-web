@@ -15,6 +15,7 @@ export const MEGAPHONE = 105; // RBS access
 export const TIMESHEET_MANAGEMENT = 106;
 export const SURVEY_MANAGEMENT = 107;
 export const MANAGE_ON_PLAYA = 108;
+export const TRAINER_SEASONAL = 109;
 export const TECH_NINJA = 1000;
 
 const Role = {
@@ -33,12 +34,13 @@ const Role = {
   TECH_NINJA,
   TIMESHEET_MANAGEMENT,
   TRAINER,
+  TRAINER_SEASONAL,
   VC,
   VIEW_EMAIL,
   VIEW_PII,
 };
 
-  const RoleToString = {
+const RoleToString = {
   [ADMIN]: 'admin',
   [ART_TRAINER]: 'art-trainer',
   [EDIT_ACCESS_DOCS]: 'edit-access-docs',
@@ -53,6 +55,7 @@ const Role = {
   [TECH_NINJA]: 'tech-ninja',
   [TIMESHEET_MANAGEMENT]: 'timesheet-management',
   [TRAINER]: 'trainer',
+  [TRAINER_SEASONAL]: 'trainer-seasonal',
   [SURVEY_MANAGEMENT]: 'survey-management',
   [VC]: 'vc',
   [VIEW_EMAIL]: 'view-email',

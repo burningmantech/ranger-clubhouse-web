@@ -17,7 +17,10 @@ export default class extends SessionService {
   @service ajax;
   @service router;
 
+  // The logged-in user
   @tracked user = null;
+
+  // How many unread messages the user has
   @tracked unreadMessageCount = 0;
 
   // Temporary login token used to login & change or set the password.
