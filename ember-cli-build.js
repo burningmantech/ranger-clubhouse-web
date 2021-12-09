@@ -37,6 +37,10 @@ module.exports = function (defaults) {
       enabled: IS_PROD //Asset rewrite will takes more time and fingerprinting can be omitted in development
     },
 
+    minifyCSS: {
+      enabled: false, // minification causes the selectors to be reordered!!
+    },
+
     sassOptions: {
       onlyIncluded: true,
       includePaths: [
