@@ -1,23 +1,27 @@
 import Component from '@glimmer/component';
 import {action, setProperties} from '@ember/object';
-import {tracked} from '@glimmer/tracking';
-import {Role} from 'clubhouse/constants/roles';
+import {cached, tracked} from '@glimmer/tracking';
+import {Role, AUDITOR, PAST_PROSPECTIVE} from 'clubhouse/constants/roles';
 import {debounce} from '@ember/runloop';
 import {inject as service} from '@ember/service';
 import {inject as controller} from '@ember/controller';
 import {config} from 'clubhouse/utils/config';
-
 import RSVP from 'rsvp';
 
-// How often in milliseconds should a search be performed as
-// the user is typing.
+/*
+ The search bar lives on top of the page just below the top navigation bar.
+ */
+
+// How often in milliseconds should a search be performed as the user is typing.
 const SEARCH_RATE_MS = 300;
 
+// What fields to search on.
 const SearchFields = ['name', 'callsign', 'email', 'formerly_known_as'];
 
-// Statuses to automatically exclude, unless included
-const ExcludeStatus = ['auditor', 'past prospective'];
+// Statuses to automatically exclude, unless the user states otherwise
+const ExcludeStatus = [AUDITOR, PAST_PROSPECTIVE];
 
+// What page to route to based on the search mode selected
 const MODE_ROUTES = {
   'account': 'person.index',
   'hq': 'hq.index',
@@ -32,7 +36,7 @@ class SearchForm {
   @tracked callsign = true;
   @tracked email = true;
   @tracked formerly_known_as = true
-  @tracked audit = false;
+  @tracked auditor = false;
   @tracked past_prospective = false;
   @tracked mode = '';
 
@@ -62,7 +66,7 @@ export default class SearchItemBarComponent extends Component {
   constructor() {
     super(...arguments);
 
-    const onduty = this.session.user.onduty_position;
+    const onDutyPosition = this.session.user.onduty_position;
 
     const savedMode = this.house.getKey(SEARCH_MODE_KEY);
     const options = this.modeOptions;
@@ -71,7 +75,7 @@ export default class SearchItemBarComponent extends Component {
     if (options.find((opt) => opt.value === savedMode)) {
       mode = savedMode;
     } else {
-      mode = (onduty && (onduty.subtype === 'hq' || onduty.subtype === 'mentor')) ? 'hq' : 'account';
+      mode = (onDutyPosition && (onDutyPosition.subtype === 'hq' || onDutyPosition.subtype === 'mentor')) ? 'hq' : 'account';
     }
 
     this.house.setKey(SEARCH_MODE_KEY, mode);
@@ -89,19 +93,7 @@ export default class SearchItemBarComponent extends Component {
 
     this._buildPlaceholder();
 
-   }
-
-  /**
-   * Save the search prefs when changed. The local store is used so the prefs persist in case the user
-   * reloads the page.
-   */
-
-  @action
-  searchFormChange() {
-    this.house.setKey('person-search-prefs', this.searchForm);
-    this._buildPlaceholder();
   }
-
 
   /**
    * Build up the options for search type
@@ -110,9 +102,10 @@ export default class SearchItemBarComponent extends Component {
    * timesheet - redirect to the person timesheet management page
    * hq - redirect to the HQ Window interface
    *
-   * @returns {[{id: string, title: string}]}
+   * @returns {{label: string, value: string}[]}
    */
 
+  @cached
   get modeOptions() {
     const user = this.session.user;
     const options = [{value: 'account', label: 'Person Manage'}];
@@ -129,6 +122,17 @@ export default class SearchItemBarComponent extends Component {
   }
 
   /**
+   * Save the search prefs when changed. The local store is used so the prefs persist in case the user
+   * reloads the page.
+   */
+
+  @action
+  searchFormChange() {
+    this.house.setKey('person-search-prefs', this.searchForm);
+    this._buildPlaceholder();
+  }
+
+  /**
    * Called when the user changes the search mode.
    *
    * If the current route is a person or hq page, switch to the new view with displayed person.
@@ -142,7 +146,7 @@ export default class SearchItemBarComponent extends Component {
 
   @action
   modeChange(mode) {
-    this.searchForm.mode =  mode;
+    this.searchForm.mode = mode;
     const route = this.router.currentRouteName;
 
     this._buildPlaceholder();
@@ -182,8 +186,10 @@ export default class SearchItemBarComponent extends Component {
     this.searchResults = [];
   }
 
-  /*
+  /**
    * Show the person when the user clicks on an option.
+   *
+   * @param {string} item
    */
 
   @action
@@ -193,10 +199,11 @@ export default class SearchItemBarComponent extends Component {
     }
   }
 
-  /*
+  /**
    * As the user types, searchAction will be called. Queue up
    * the search once every SEARCH_RATE_MS milliseconds.
    *
+   * @param {string} query
    */
 
   @action
@@ -206,7 +213,7 @@ export default class SearchItemBarComponent extends Component {
     });
   }
 
-  /*
+  /**
    * Search for the person
    */
 
@@ -218,11 +225,12 @@ export default class SearchItemBarComponent extends Component {
       return reject();
     }
 
-    // Person id lookup
     let type;
     if (query.startsWith('#')) {
+      // Asset barcode lookup
       type = 'asset'
     } else if (query.startsWith('+')) {
+      // Person id lookup
       type = 'person-id';
     } else {
       type = 'person';
@@ -237,11 +245,24 @@ export default class SearchItemBarComponent extends Component {
     }
   }
 
+  /**
+   * Search for an asset
+   *
+   * @param {string} query
+   * @param resolve
+   * @param reject
+   * @returns {Promise<*>}
+   * @private
+   */
+
   _searchAsset(query, resolve, reject) {
     let year, barcode;
 
+    // Strip off '#'
     query = query.replace('#', '').replace(/ /g, '');
+
     if (query.includes(':')) {
+      // Asset search in a year
       [barcode, year] = query.split(':');
       if (year.length !== 4) {
         return resolve([]);
@@ -256,6 +277,7 @@ export default class SearchItemBarComponent extends Component {
     this.ajax.request('asset', {data: {barcode, year}})
       .then((results) => {
         if (!results.asset.length) {
+          // Nothing matched
           return resolve([]);
         }
 
@@ -273,6 +295,16 @@ export default class SearchItemBarComponent extends Component {
       return reject();
     });
   }
+
+  /**
+   * Search for a person
+   *
+   * @param {string} query
+   * @param resolve
+   * @param reject
+   * @returns {Promise<*>}
+   * @private
+   */
 
   _searchPerson(query, resolve, reject) {
     const form = this.searchForm;
@@ -299,17 +331,16 @@ export default class SearchItemBarComponent extends Component {
         params.search_fields = search_fields.join(',');
       }
 
-      // By default, certain status are exclude.
-      // The take status off the list if the user wants
-      // those included
+      // By default, certain status are excluded.
+      // The take a status off the list if the user wants those included
       const toExclude = ExcludeStatus.slice();
 
       if (form.auditor) {
-        toExclude.removeObject('auditor');
+        toExclude.removeObject(AUDITOR);
       }
 
       if (form.past_prospective) {
-        toExclude.removeObject('past prospective');
+        toExclude.removeObject(PAST_PROSPECTIVE);
       }
 
       if (toExclude.length > 0) {
@@ -330,17 +361,31 @@ export default class SearchItemBarComponent extends Component {
     });
   }
 
+  /**
+   * Called when search bar obtains focus. Determine if the options box should be shown.
+   */
+
   @action
   searchFocusAction() {
     this.searchResults = [];
     this.searchYear = null;
-    this.showSearchOptions = (this.searchForm.mode !== 'hq');
+    this.showSearchOptions = (this.session.isSmallScreen || this.searchForm.mode !== 'hq');
   }
+
+  /**
+   * Close up the options box
+   */
 
   @action
   hideSearchBoxAction() {
     this.showSearchOptions = false;
   }
+
+  /**
+   * Build up the placeholder text based on search mode and fields selected
+   *
+   * @private
+   */
 
   _buildPlaceholder() {
     const form = this.searchForm;
