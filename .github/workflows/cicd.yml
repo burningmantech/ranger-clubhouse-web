@@ -70,7 +70,7 @@ jobs:
           docker image save ranger-clubhouse-web:dev | gzip -6 > images/web.tgz;
 
       - name: Upload Docker image artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2.3.1
         with:
           name: images
           path: images
