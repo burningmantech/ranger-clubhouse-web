@@ -75,7 +75,7 @@
     "eslint": "^8.4.1",
     "eslint-plugin-ember": "^10.5.8",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-qunit": "^7.1.0",
+    "eslint-plugin-qunit": "^7.2.0",
     "faker": "^5.5.3",
     "global": "^4.4.0",
     "jquery-datetimepicker": "^2.5.21",
