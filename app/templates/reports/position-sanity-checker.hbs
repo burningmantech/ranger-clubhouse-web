@@ -84,8 +84,8 @@
     <Admin::PositionSanityCheckTable
         @title={{position.title}}
         @caption="{{position.title}} - {{pluralize position.people.length "person"}} assigned"
-        @sucessMessage="Congratulations! No Rangers are assinged to this position."
-        @columns=[]
+        @sucessMessage="Congratulations! No Rangers are assigned to this position."
+        @columns={{(array)}}
         @people={{position.people}}
         @repairAction={{action this.repairPeople}}
         @repairParams={{params}}

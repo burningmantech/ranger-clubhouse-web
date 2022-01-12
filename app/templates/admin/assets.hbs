@@ -128,7 +128,7 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
           </FormRow>
         </fieldset>
       </Modal.body>
-      <Modal.footer @noAlign=true>
+      <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if f.model.isNew "Create" "Update"}} @disabled={{this.isSubmitting}} />
         <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelAsset}} />
         {{#if this.isSubmitting}}

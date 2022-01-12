@@ -26,8 +26,7 @@ module.exports = {
     browser: true
   },
   rules: {
-    'ember/no-mixins': 'off',
-    'ember/jquery-ember-run': 'off',
+//    'ember/no-mixins': 'off',
     'ember/no-jquery': 'off',
   },
   overrides: [

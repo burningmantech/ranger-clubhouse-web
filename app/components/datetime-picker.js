@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import $ from 'jquery';
+import { schedule } from '@ember/runloop';
 
 /*
  * Datetime picker which is a wrapper for https://github.com/xdan/datetimepicker
@@ -36,6 +37,10 @@ export default class DatetimePickerComponent extends Component {
     }
 
     $(this.element).datetimepicker(options);
+
+    if (this.args.autofocus){
+      schedule('afterRender', () => element.focus());
+    }
   }
 
   willDestroy() {

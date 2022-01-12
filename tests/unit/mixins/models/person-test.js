@@ -1,4 +1,5 @@
 import EmberObject from '@ember/object';
+// eslint-disable-next-line ember/no-mixins
 import ModelsPersonMixin from 'clubhouse/mixins/models/person';
 import { module, skip /* test */ } from 'qunit';
 

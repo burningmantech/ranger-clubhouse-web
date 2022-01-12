@@ -251,6 +251,9 @@ export default class AutocompleteInputComponent extends Component {
   @action
   inputInsertElement(element) {
     this.inputElement = element;
+    if (this.args.autofocus) {
+      schedule('afterRender', () => element.focus());
+    }
   }
 
   /**
