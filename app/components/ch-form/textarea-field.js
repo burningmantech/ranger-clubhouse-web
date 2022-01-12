@@ -1,5 +1,7 @@
 import ChFormFieldBaseComponent from './field-base';
 import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
+import { schedule } from '@ember/runloop';
 
 export default class ChFormTextareaFieldComponent extends ChFormFieldBaseComponent {
   controlClassDefault = 'form-control';
@@ -16,5 +18,12 @@ export default class ChFormTextareaFieldComponent extends ChFormFieldBaseCompone
   constructor() {
     super(...arguments);
     this._val = this.args.value ?? this.modelValue;
+  }
+
+  @action
+  fieldInserted(element) {
+    if (this.args.autofocus) {
+      schedule('afterRender', () => element.focus());
+    }
   }
 }

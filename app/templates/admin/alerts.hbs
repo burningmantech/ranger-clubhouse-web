@@ -66,7 +66,7 @@ Showing {{pluralize this.alerts.length "alert"}}
           </div>
         </FormRow>
       </Modal.body>
-      <Modal.footer @noAlign=true>
+      <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
         <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelAlert}} />
         {{#if this.isSaving}}

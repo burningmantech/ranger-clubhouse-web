@@ -24,7 +24,7 @@ module('Integration | Component | person-address-edit', function(hooks) {
     ];
 
     fields.forEach((field) => {
-      assert.dom(`[name="${field}"]`).hasValue(person[field]);
+      assert.dom(`[name="${field}"]`).exists().hasValue(person[field]);
     });
   });
 });

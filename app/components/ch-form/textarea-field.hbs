@@ -9,12 +9,12 @@
       class="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
       placeholder={{@placeholder}}
       disabled={{@disabled}}
-      autofocus={{@autofocus}}
       rows={{@rows}}
       cols={{@cols}}
       maxlength={{@maxlength}}
       onfocus={{@onFocus}}
       oninput={{action this.update value="target.value"}}
+      {{did-insert this.fieldInserted}}
     >{{this._val}}</textarea>
 
     {{~#if @hint~}}

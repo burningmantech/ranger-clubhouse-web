@@ -1,3 +1,4 @@
+// eslint-disable-next-line ember/no-mixins
 import PersonMixin from 'clubhouse/mixins/models/person';
 import { tracked } from '@glimmer/tracking';
 

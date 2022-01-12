@@ -356,7 +356,7 @@
           {{/unless}}
         {{/let}}
       </Modal.body>
-      <Modal.footer @noAlign=true>
+      <Modal.footer @noAlign={{true}}>
         <f.submit @label="Save {{this.editStudent.callsign}} info" @disabled={{this.isSubmitting}} />
         <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelStudentAction}} />
         {{#if this.isSubmitting}}

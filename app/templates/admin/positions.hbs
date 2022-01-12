@@ -189,7 +189,7 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
               the person has to have passed in the current year to be allowed to work this position during the event.
             </p>
             <FormRow>
-              <f.select @name=training_position_id"
+              <f.select @name="training_position_id"
                         @label="Training Position"
                         @options={{this.trainingOptions}}
               />
@@ -204,7 +204,7 @@ Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
         {{/if}}
       </Modal.body>
 
-      <Modal.footer @noAlign=true>
+      <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.position.isNew "Create" "Update"}} @disabled={{this.position.isSaving}} />
         <UiCancelButton @onClick={{this.cancelAction}} @disabled={{this.position.isSaving}} />
         {{#if this.position.isSaving}}

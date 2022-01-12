@@ -10,13 +10,12 @@
            class="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
            placeholder={{@placeholder}}
            disabled={{@disabled}}
-           autofocus={{@autofocus}}
            oninput={{action this.update value="target.value"}}
            maxlength={{@maxlength}}
            size={{@size}}
-           autocomplete={{@autocomplete}}
            onfocus={{@onFocus}}
            inputmode={{@inputmode}}
+      {{did-insert this.inputInserted}}
     >
     {{#if (has-block)}}
       {{yield}}
