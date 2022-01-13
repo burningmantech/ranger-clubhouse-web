@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 
 export default class StatusChangeTableComponent extends Component {
   @service ajax;

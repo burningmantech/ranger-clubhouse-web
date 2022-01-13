@@ -2,6 +2,8 @@ import Service from '@ember/service';
 import {A} from '@ember/array';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
+import ModalInfoComponent from 'clubhouse/components/modal-info';
+import ModalConfirmComponent from 'clubhouse/components/modal-confirm';
 
 /*
   The modal service. Handles inline modals (aka this.modal.{info,confirm,open}) and
@@ -33,7 +35,7 @@ export default class ModalService extends Service {
 
   info(title, message, closeCallback = null) {
     this.addInlineDialog({
-      component: 'modal-info', title, message, closeCallback
+      component: ModalInfoComponent, title, message, closeCallback
     });
   }
 
@@ -48,14 +50,14 @@ export default class ModalService extends Service {
 
   confirm(title, message, confirmCallback, closeCallback = null) {
     this.addInlineDialog({
-      component: 'modal-confirm', title, message, confirmCallback, closeCallback
+      component: ModalConfirmComponent, title, message, confirmCallback, closeCallback
     });
   }
 
   /**
    * Opens a modal file (app/components/modal-*.hbs)
    *
-   * @param {string} component
+   * @param {Component} component
    * @param {*} data
    * @param {Function} confirmCallback
    * @param {Function|null} closeCallback

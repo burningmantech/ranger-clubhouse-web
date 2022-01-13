@@ -1,10 +1,4 @@
 <div class="accordion-title" role="button" {{action @onClick}}>
-  <span class="accordion-title-icon">
-    {{~#if @isOpen~}}
-      {{fa-icon "minus"}}
-      {{~else~}}
-      {{fa-icon "plus"}}
-    {{~/if~}}
-  </span>
+  <span class="accordion-title-icon">{{fa-icon (if @isOpen "times" "plus")}}</span>
   {{yield}}
 </div>

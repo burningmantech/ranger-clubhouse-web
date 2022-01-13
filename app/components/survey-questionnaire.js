@@ -3,7 +3,7 @@ import {validatePresence} from 'ember-changeset-validations/validators';
 import EmberObject, {action} from '@ember/object';
 import {htmlSafe} from '@ember/template';
 import _ from 'lodash';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';
 
 export default class SurveyQuestionnaireComponent extends Component {

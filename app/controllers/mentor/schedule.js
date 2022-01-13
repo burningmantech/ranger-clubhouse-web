@@ -2,7 +2,7 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import EmberObject, {action} from '@ember/object';
 import {debounce} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 
 const SEARCH_RATE_MS = 300;
 

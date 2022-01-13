@@ -4,7 +4,7 @@ import {typeOf, isEmpty} from '@ember/utils';
 import Changeset from 'ember-changeset';
 import lookupValidator from 'ember-changeset-validations';
 import {tracked} from '@glimmer/tracking';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 import {schedule} from '@ember/runloop';
 
 export default class ChFormComponent extends Component {

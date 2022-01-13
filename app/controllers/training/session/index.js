@@ -3,7 +3,7 @@ import EmberObject from '@ember/object';
 import {debounce} from '@ember/runloop';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 import _ from 'lodash';
 
 const SEARCH_RATE_MS = 300;

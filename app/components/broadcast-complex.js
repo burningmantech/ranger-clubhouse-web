@@ -15,7 +15,7 @@ import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {isEmpty} from '@ember/utils';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import validatePresenceIf from 'clubhouse/validators/presence-if';
 import {Broadcasts} from 'clubhouse/constants/broadcast';

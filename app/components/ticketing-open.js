@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import {tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
 import {later} from '@ember/runloop';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 
 export default class TicketingOpenComponent extends Component {
   @tracked showing = {};

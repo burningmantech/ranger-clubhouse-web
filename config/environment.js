@@ -6,7 +6,7 @@ module.exports = function (environment) {
     modulePrefix: 'clubhouse',
     environment,
     rootURL: '/',
-    locationType: 'auto',
+    locationType: 'history',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
@@ -25,7 +25,7 @@ module.exports = function (environment) {
     'ember-simple-auth': {
       authorizer: 'authorizer:token',
       routeAfterAuthentication: 'me.homepage',
-    //  useSessionSetupMethod: true,
+      useSessionSetupMethod: true,
     },
 
     'ember-simple-auth-token': {

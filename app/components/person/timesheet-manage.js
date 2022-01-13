@@ -4,7 +4,7 @@ import {Role} from 'clubhouse/constants/roles';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 import {tracked} from '@glimmer/tracking';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 
 export default class PersonTimesheetManageComponent extends Component {
   @service ajax;

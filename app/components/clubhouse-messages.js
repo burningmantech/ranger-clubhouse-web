@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 import {Role} from 'clubhouse/constants/roles';
 import {tracked} from '@glimmer/tracking';
 

@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
 import { REQUIREMENT_LABELS } from 'clubhouse/constants/signup-requirements';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class ScheduleBlockedComponent extends Component {
   @service session;

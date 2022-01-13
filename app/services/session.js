@@ -1,4 +1,4 @@
-import {inject as service} from "@ember/service";
+import {service} from "@ember/service";
 import {action} from '@ember/object';
 import {typeOf} from '@ember/utils';
 import {debounce} from '@ember/runloop';

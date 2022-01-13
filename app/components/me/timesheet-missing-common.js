@@ -5,7 +5,7 @@
 import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
 import {validatePresence} from 'ember-changeset-validations/validators';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 import {DIRT} from 'clubhouse/constants/positions';
 import validateDateTime from 'clubhouse/validators/datetime';
 import {tracked} from '@glimmer/tracking';

@@ -3,7 +3,7 @@ import {action} from '@ember/object';
 import TicketDeliveryValidations from 'clubhouse/validations/ticket-delivery';
 import {StateOptions} from 'clubhouse/constants/countries';
 import {tracked, cached} from '@glimmer/tracking';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 import {DELIVERY_POSTAL, DELIVERY_WILL_CALL} from 'clubhouse/models/access-document';
 
 export default class TicketDeliverInfoComponent extends Component {

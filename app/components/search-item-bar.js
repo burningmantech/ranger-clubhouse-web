@@ -3,7 +3,7 @@ import {action, setProperties} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
 import {Role, AUDITOR, PAST_PROSPECTIVE} from 'clubhouse/constants/roles';
 import {debounce} from '@ember/runloop';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 import {inject as controller} from '@ember/controller';
 import {config} from 'clubhouse/utils/config';
 import RSVP from 'rsvp';

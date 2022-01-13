@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {set} from '@ember/object';
 import _ from 'lodash';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 
 const ALPHAS_PER_PAGE = 28;
 export default class MentorAlphaAparelSheetComponent extends Component {

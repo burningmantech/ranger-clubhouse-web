@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {isEmpty} from '@ember/utils';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 
 const COLLAPSED_PREF = 'sidebarCollapsed';
 

@@ -1,6 +1,10 @@
 import Service from '@ember/service';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 import {set} from '@ember/object';
+import ModalMultipleEnrollmentComponent from 'clubhouse/components/modal-multiple-enrollment';
+import ModalMissingRequirementsComponent from 'clubhouse/components/modal-missing-requirements';
+import ModalConfirmMultipleEnrollmentComponent from 'clubhouse/components/modal-confirm-multiple-enrollment';
+import ModalConfirmMissingRequirementsComponent from 'clubhouse/components/modal-confirm-missing-requirements';
 
 export default class ShiftManageService extends Service {
   @service ajax;
@@ -70,6 +74,15 @@ export default class ShiftManageService extends Service {
     });
   }
 
+  /**
+   * Handle a signup error.
+   *
+   * @param {*} result
+   * @param {*} slot
+   * @param {PersonModel} person
+   * @param {null|Function}callback
+   */
+
   handleSignupError(result, slot, person, callback) {
     const status = result.status;
     const isMe = +this.session.userId === +person.id;
@@ -77,6 +90,7 @@ export default class ShiftManageService extends Service {
     set(slot, 'slot_signed_up', result.signed_up);
 
     if (result.may_force) {
+      // The signup may be forced by the user.
       this.mayForceSignup(result, slot, person, callback);
       return;
     }
@@ -119,17 +133,17 @@ export default class ShiftManageService extends Service {
 
       case 'multiple-enrollment':
         this.modal.open(
-          'modal-multiple-enrollment', {
+          ModalMultipleEnrollmentComponent,
+          {
             enrolledSlots: result.slots,
             person,
             slot
           });
         break;
 
-
       case 'missing-requirements':
         this.modal.open(
-          'modal-missing-requirements', {
+          ModalMissingRequirementsComponent, {
             requirements: result.requirements,
             person,
             slot
@@ -138,20 +152,31 @@ export default class ShiftManageService extends Service {
 
       default:
         this.modal.info(
-          'BUG: Unknown Satus Response',
+          'BUG: Unknown Status Response',
           `Sorry, I did not understand the status response of [${status}] from the server. This is a BUG and should be reported.`
         );
         break;
     }
   }
 
+  /**
+   * Alert the user the signup failed but may be forced.
+   *
+   * @param result
+   * @param slot
+   * @param person
+   * @param callback
+   */
+
   mayForceSignup(result, slot, person, callback) {
+    const signupCallback = () => this.slotSignup(slot, person, callback, true);
+
     switch (result.status) {
       case 'full':
         this.modal.confirm(
           'Shift is at capacity',
           'The shift is full, however you have the privileges to add this shift to the schedule. Please confirm you wish to force add the shift to the schedule.',
-          () => this.slotSignup(slot, person, callback, true)
+          signupCallback
         );
         return;
 
@@ -159,30 +184,31 @@ export default class ShiftManageService extends Service {
         this.modal.confirm(
           'Shift has started',
           'This shift has already started, however you have the privileges to add this shift to the schedule. Please confirm you wish to force add the shift to the schedule.',
-          () => this.slotSignup(slot, person, callback, true)
+          signupCallback
         );
         return;
 
       case 'multiple-enrollment':
         this.modal.open(
-          'modal-confirm-multiple-enrollment',
+          ModalConfirmMultipleEnrollmentComponent,
           {slots: result.slots, person},
-          () => this.slotSignup(slot, person, callback, true)
+          signupCallback
         );
 
         return;
 
       case 'missing-requirements':
         this.modal.open(
-          'modal-confirm-missing-requirements',
+          ModalConfirmMissingRequirementsComponent,
           {requirements: result.requirements, person},
-          () => this.slotSignup(slot, person, callback, true)
+          signupCallback
         );
         return;
+
       default:
         this.modal.info(
           'Unknown status response',
-          `Sorry, I did not understand the status response of [${status}] from the server. This is a BUG and should be reported.`
+          `Sorry, I did not understand the status response of [${result.status}] from the server. This is a BUG and should be reported.`
         );
         break;
     }

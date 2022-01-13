@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {Role} from 'clubhouse/constants/roles';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 
 export default class IntakeNotesComponent extends Component {
   @tracked addingNotes;

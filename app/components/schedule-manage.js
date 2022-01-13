@@ -5,7 +5,7 @@ import {Role} from 'clubhouse/constants/roles';
 import dayjs from 'dayjs';
 import {schedule} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 import {htmlSafe} from '@ember/template';
 import {TRAINING} from 'clubhouse/constants/positions';
 
