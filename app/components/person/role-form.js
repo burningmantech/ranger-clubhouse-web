@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {TECH_NINJA, ADMIN, VIEW_PII} from 'clubhouse/constants/roles';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 
 export default class PersonRoleFormComponent extends Component {
   @service session;

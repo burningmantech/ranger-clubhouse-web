@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import EmberObject from '@ember/object';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import containsEmail from 'clubhouse/utils/contains-email';
 import { validatePresence } from 'ember-changeset-validations/validators';

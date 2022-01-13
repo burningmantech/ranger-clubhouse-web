@@ -1,5 +1,5 @@
 import AjaxService from 'ember-ajax/services/ajax';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 import ENV from 'clubhouse/config/environment';
 
 /*

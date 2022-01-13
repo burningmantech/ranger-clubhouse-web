@@ -1,5 +1,5 @@
 import Helper from '@ember/component/helper';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { StringToRole } from 'clubhouse/constants/roles';
 import { assert } from '@ember/debug';
 

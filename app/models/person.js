@@ -1,5 +1,5 @@
 import Model, {attr} from '@ember-data/model';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 // eslint-disable-next-line ember/no-mixins
 import PersonMixin from 'clubhouse/mixins/models/person';
 

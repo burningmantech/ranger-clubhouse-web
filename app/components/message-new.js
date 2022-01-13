@@ -3,7 +3,7 @@ import { debounce } from '@ember/runloop';
 import { action } from '@ember/object';
 import RSVP from 'rsvp';
 import PersonMessageValidations from 'clubhouse/validations/person-message';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { isEmpty } from '@ember/utils';
 
 export default class MessageNewComponent extends Component {

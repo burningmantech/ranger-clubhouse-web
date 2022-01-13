@@ -1,5 +1,5 @@
 import RESTAdapter from '@ember-data/adapter/rest';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import Inflector from 'ember-inflector';
 import ENV from 'clubhouse/config/environment';
 

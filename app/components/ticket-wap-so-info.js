@@ -4,7 +4,7 @@ import {isEmpty} from '@ember/utils';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import Changeset from 'ember-changeset';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 import dayjs from 'dayjs';
 
 export default class TicketWapSoInfoComponent extends Component {

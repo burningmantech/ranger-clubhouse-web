@@ -3,7 +3,7 @@ import EmberObject from '@ember/object';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { validatePresence } from 'ember-changeset-validations/validators';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class AssetCheckoutFormComponent extends Component {
   @service ajax;

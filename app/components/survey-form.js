@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { validatePresence } from 'ember-changeset-validations/validators';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class SurveyFormComponent extends Component {
   @service house;

@@ -1,4 +1,4 @@
-import Service, {inject as service} from '@ember/service';
+import Service, {service} from '@ember/service';
 import ENV from 'clubhouse/config/environment';
 import {isAbortError, isTimeoutError} from 'ember-ajax/errors';
 import {isArray} from '@ember/array';

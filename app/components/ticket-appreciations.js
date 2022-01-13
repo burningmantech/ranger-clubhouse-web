@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import {BANKED, CLAIMED} from 'clubhouse/models/access-document';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 export default class TicketAppreciationsComponent extends Component {
   @service ajax;

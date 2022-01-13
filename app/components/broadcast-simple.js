@@ -4,7 +4,7 @@ import {action} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {Broadcasts} from 'clubhouse/constants/broadcast';
 import {validatePresence} from 'ember-changeset-validations/validators';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 
 export default class BroadcastSimpleComponent extends Component {
   @tracked isReviewing = false;

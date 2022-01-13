@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {validateNumber} from 'ember-changeset-validations/validators';
 import {action,set} from '@ember/object';
-import {inject as service} from '@ember/service';
+import {service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';
 import {isEmpty} from '@ember/utils';
 
