@@ -1,7 +1,8 @@
 import Component from '@glimmer/component';
 import {action, setProperties} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
-import {Role, AUDITOR, PAST_PROSPECTIVE} from 'clubhouse/constants/roles';
+import {Role} from 'clubhouse/constants/roles';
+import {AUDITOR, PAST_PROSPECTIVE} from 'clubhouse/constants/person_status';
 import {debounce} from '@ember/runloop';
 import {service} from '@ember/service';
 import {inject as controller} from '@ember/controller';

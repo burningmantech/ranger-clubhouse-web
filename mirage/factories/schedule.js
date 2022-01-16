@@ -1,5 +1,5 @@
 import { Factory } from 'ember-cli-mirage';
-import faker from 'community-faker';
+import faker from '@faker-js/faker';
 import dayjs from 'dayjs';
 
 export default Factory.extend({
