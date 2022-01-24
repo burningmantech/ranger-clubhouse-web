@@ -19,7 +19,7 @@
 @import "ticketing";
 @import "timesheet";
 @import "timesheet-log";
-@import "training-print";
+@import "training";
 
 
 main {
@@ -413,7 +413,7 @@ legend {
 
 .btn-block { width: 100%; display: block; }
 
-@include media-breakpoint-down(xl) {
+@include media-breakpoint-down(lg) {
   .btn-responsive {
     display: block;
     width: 100%;

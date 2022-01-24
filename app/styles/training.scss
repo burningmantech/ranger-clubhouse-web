@@ -1,0 +1,136 @@
+// Training CSS
+
+.trainee-row {
+  display: grid;
+  grid-template-rows: auto;
+  grid-auto-rows: 1fr;
+  grid-column-gap: 5px;
+  > div {
+    padding: 5px;
+  }
+}
+
+/* Trainee on medium-sized screens */
+@include media-breakpoint-up(lg) {
+  .trainee-row {
+    grid-template-columns: 150px 90px 90px 1fr;
+    grid-template-areas:
+    "trainee-callsign trainee-passed trainee-rank trainee-notes"
+  }
+}
+
+/* Trainee on small screens */
+@include media-breakpoint-down(lg) {
+  .trainee-row {
+    grid-template-columns: 50% 25% 25%;
+    grid-template-areas:
+         "trainee-callsign trainee-passed trainee-rank"
+          "trainee-notes trainee-notes trainee-notes";
+  }
+}
+
+
+.trainee-header {
+  background-color: $table-head-bg;
+  color: $table-head-color;
+  border-bottom: 2px solid #00051d;
+  font-weight: 500;
+  font-size: 1.1em;
+}
+
+.trainee-body {
+  .trainee-row:nth-child(even) {
+    background-color: $table-striped-bg;
+  }
+
+  .trainee-row:not(:last-child) {
+    border-bottom: 1px solid #6c757d;
+  }
+}
+
+.trainee-callsign {
+  grid-area: trainee-callsign;
+}
+
+.trainee-rank {
+  grid-area: trainee-rank;
+  text-align: center;
+}
+
+.trainee-passed {
+  grid-area: trainee-passed;
+  text-align: center;
+}
+
+.trainee-notes {
+  grid-area: trainee-notes;
+  padding-bottom: 5px;
+}
+
+
+// The remainder is related to printing
+
+.signup-page table {
+  width: 100%;
+  margin-top: 10px;
+
+  td {
+    border: 1px solid #aaa;
+    height: 40px;
+    padding: 5px;
+    vertical-align: top;
+    font-size: 16px;
+  }
+
+  .signup-label {
+    font-size: 10px;
+  }
+
+  .signup-separator td {
+    height: 5px !important;
+    padding: 0px !important;
+    border: none;
+  }
+}
+
+
+.trainers-report {
+  width: 100%;
+  margin-top: 10px;
+
+  caption {
+    background-color: #fff;
+    color: #000;
+    padding: 0 5px;
+    font-size: 1.2em;
+  }
+
+  th {
+    padding: 5px;
+  }
+
+  td {
+    border: 1px solid #aaa;
+    height: 17px;
+    padding: 5px;
+    vertical-align: top;
+    font-size: 12px;
+  }
+
+  .student-group-separator td {
+    height: 1.6em;
+    vertical-align: center;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1em;
+    border: none;
+  }
+}
+
+.trainers-report-no-bottom td {
+  border-bottom: none !important;
+}
+
+.trainers-report-no-top td {
+  border-top: none !important;
+}

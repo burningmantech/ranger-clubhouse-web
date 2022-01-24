@@ -5,19 +5,21 @@
     Back to {{this.year}} {{this.training.title}} Sessions
   </LinkTo>
 </p>
-{{#unless this.trainers}}
+<p>
+  <b>Do not forget to record the trainers' attendance below.</b>
+</p>
+
+{{#if (is-empty this.trainers)}}
   <ChNotice @type="danger" @title="No trainer slots were found">
     In order to correctly record how many trainers are signed up to teach this session, a trainer's slot needs to exists
     where the slot's description matches this session's description exactly and where the start time within one hour of
     this session.
   </ChNotice>
-{{/unless}}
-
-{{#unless this.havePrimaryTrainers}}
+{{else if (not this.havePrimaryTrainers)}}
   <ChNotice @type="danger" @title="No trainer sign ups">
     No trainers are signed up to teach this session.
   </ChNotice>
-{{/unless}}
+{{/if}}
 
 {{#unless this.slot.active}}
   <ChNotice @type="danger" @title="Training session not activated">
@@ -28,195 +30,197 @@
   </ChNotice>
 {{/unless}}
 
-<FormRow>
-  <div class="col-auto">
-    Signups: {{this.students.length}} of {{this.slot.max}}
-    {{#if (gte this.students.length this.slot.max)}}
-      <b class="text-danger"> (FULL)</b>
-    {{/if}}
-  </div>
-  {{#if this.training.is_art}}
-    <div class="col-auto">
-      ART Vets: {{this.vetCount}}
-    </div>
-    <div class="col-auto">
-      ART Prospectives: {{this.prospectiveCount}}
-    </div>
-  {{else}}
-    <div class="col-auto">
-      Vets: {{this.vetCount}}
-    </div>
-    <div class="col-auto">
-      First years: {{this.firstYearCount}}
-    </div>
-    <div class="col-auto">
-      Prospectives: {{this.prospectiveCount}}
-    </div>
-    <div class="col-auto">
-      Auditors: {{this.auditorCount}}
-    </div>
-  {{/if}}
-</FormRow>
-
-{{#if this.trainers}}
-  <p>
-    {{#each this.trainers as |group|}}
-      {{group.position_title}} ({{group.trainers.length}}):
-      {{#each group.trainers as |trainer index|}}
-        {{if index ", "}}
-        <PersonLink @person={{trainer}} />
-      {{else}}
-        <i>none found</i>
-      {{/each}}<br>
-    {{/each}}
-  </p>
-{{/if}}
-
-<p>
-  The person's status is the status at the time of training. The current status will be shown below if the
-  time-of-training status differs from the current status.
-</p>
-
-{{#if this.training.is_art}}
-  A {{fa-icon "asterisk"}} by a person's status indicates an ART Prospective.
-{{/if}}
-
-
-<div class="mt-2 mb-2">
-  {{! Desktop Display }}
-  <div class="d-sm-block d-none">
-    <LinkTo @route="training.session.trainers-report" @models={{array this.training.id this.slot.id}}
-            class="btn btn-secondary">
-      {{fa-icon "list-alt"}} Trainer's Report
-    </LinkTo>
-    <LinkTo @route="training.session.signup-sheet" @models={{array this.training.id this.slot.id}}
-            class="btn btn-secondary">
-      {{fa-icon "clipboard-check"}} Sign up Sheet
-    </LinkTo>
-    <UiButton @type="secondary" @onClick={{this.toggleEmailListAction}} @disabled={{is-empty this.students}}>
-      {{fa-icon "envelope"}} {{if this.showEmails "Hide Emails" "List Emails"}}
-    </UiButton>
-    {{#if this.canAddStudent}}
-      <UiButton @type="secondary" @onClick={{this.showAddPersonAction}}>
-        {{fa-icon "plus-square"}} Add Person
-      </UiButton>
-    {{/if}}
-  </div>
-
-  {{! Cellphone/Tablet display }}
-  <div class="d-block d-sm-none">
-    <div class="btn-group">
-      <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">
-        Additional Actions
-      </button>
-      <div class="dropdown-menu">
-        <LinkTo @route="training.session.trainers-report" @models={{array this.training.id this.slot.id}}
-                class="dropdown-item">
-          Trainer's Report
-        </LinkTo>
-        <LinkTo @route="training.session.signup-sheet" @models={{array this.training.id this.slot.id}}
-                class="dropdown-item">
-          Sign up Sheet
-        </LinkTo>
-        <div class="dropdown-divider"></div>
-        <a href class="dropdown-item" {{action this.toggleEmailListAction}} disabled={{is-empty this.students}}>
-          {{if this.showEmails "Hide" "List"}} Emails
-        </a>
-        {{#if this.canAddStudent}}
-          <div class="dropdown-divider"></div>
-          <a href class="dropdown-item" {{action this.showAddPersonAction}}>Add Person</a>
+<UiSection>
+  <:title>Session Information</:title>
+  <:body>
+    <FormRow>
+      <div class="col-auto">
+        Signups: {{this.students.length}} of {{this.slot.max}}
+        {{#if (gte this.students.length this.slot.max)}}
+          <b class="text-danger"> (FULL)</b>
         {{/if}}
       </div>
-    </div>
-  </div>
-</div>
+      {{#if this.training.is_art}}
+        <div class="col-auto">
+          ART Vets: {{this.vetCount}}
+        </div>
+        <div class="col-auto">
+          ART Prospectives: {{this.prospectiveCount}}
+        </div>
+      {{else}}
+        <div class="col-auto">
+          Vets: {{this.vetCount}}
+        </div>
+        <div class="col-auto">
+          First years: {{this.firstYearCount}}
+        </div>
+        <div class="col-auto">
+          Prospectives: {{this.prospectiveCount}}
+        </div>
+        <div class="col-auto">
+          Auditors: {{this.auditorCount}}
+        </div>
+      {{/if}}
+    </FormRow>
 
-<div class="table-responsive">
-  <table class="table table-fixed table-striped table-hover table-sm min-width-1000">
-    <caption>{{pluralize this.students.length "student"}} ({{this.passedCount}} passed)</caption>
-    <thead>
-    <tr>
-      <th class="w-15">Callsign</th>
-      <th class="w-15">Status / Current</th>
-      <th class="w-5 text-end">Pass?</th>
-      <th class="w-5 text-center">Rank</th>
-      <th class="w-50">Notes</th>
-      <th class="w-10">Action</th>
-    </tr>
-    </thead>
+    {{#if this.trainers}}
+      <div class="mt-2">
+        {{#each this.trainers as |group|}}
+          {{group.position_title}} ({{group.trainers.length}}):
+          {{#each group.trainers as |trainer index|~}}
+            {{~if index ", "~}}
+            <PersonLink @person={{trainer}} />
+          {{~else}}
+            <i>none found</i>
+          {{/each}}<br>
+        {{/each}}
+      </div>
+    {{/if}}
+  </:body>
+</UiSection>
 
-    <tbody>
-    {{#each this.students key="id" as |student|}}
-      <tr class="{{if (or student.is_retired student.is_inactive) "bg-highlight"}}">
-        <td class="w-15">
-          {{#if (or student.is_retired student.is_inactive)}}
-            {{fa-icon "exclamation-triangle"}}
-          {{/if}}
-          <PersonLink @person={{student}} />
-        </td>
-        <td class="w-15">
-          {{student.status}}{{if student.is_art_prospective (fa-icon "asterisk")}}
-          {{#if (not-eq student.status student.current_status)}}
-            <div class="small">&lt;{{student.current_status}}&gt;</div>
-          {{/if}}
-        </td>
-        <td class="w-5 text-center">
-          {{#if student.passed}}
-            {{fa-icon "check" color="success"}}
-          {{else}}
-            -
-          {{/if}}
-        </td>
-        <td class="w-5 text-center">
-          {{#if student.rank}}
-            {{student.rank}}
-          {{else if student.need_ranking}}
-            {{fa-icon "question"}}
-          {{else}}
-            -
-          {{/if}}
-        </td>
-        <td class="w-50">
-          {{#if student.personnel_issue}}
-            <div class="mb-2">
-              <b class="text-danger">Personnel Flag raised. Take no actions until resolved.</b>
-            </div>
-          {{/if}}
-          {{#each student.notes as |note|}}
-            {{#unless note.is_log}}
-              <div class="mb-2">
-                {{note.note}}
-              </div>
-            {{/unless}}
-          {{else}}
-            <i>none</i>
-          {{/each}}
-          {{#if student.fkas}}
-            <div class="mt-2">
-              FKA: {{join student.fkas ", "}}
-            </div>
-          {{/if}}
-
-        </td>
-        <td class="w-10">
-          <UiButton @size="sm" @onClick={{fn this.editStudentAction student}}>
-            {{fa-icon "edit"}} Edit
-          </UiButton>
-        </td>
-      </tr>
+<UiSection>
+  <:title>{{pluralize this.students.length "Trainee"}} ({{this.passedCount}} Passed)</:title>
+  <:body>
+    {{#if this.training.is_art}}
+      A {{fa-icon "asterisk"}} by a person's status indicates an ART Prospective.
     {{else}}
-      <tr>
-        <td colspan="{{if this.training.is_art 6 9}}"><b class="text-danger">No students have signed up yet.</b></td>
-      </tr>
-    {{/each}}
-    </tbody>
-  </table>
-</div>
-<div class="row">
-  <div class="col-sm-12 col-md-8 col-lg-5">
-    <table class="table table-striped table-hover">
-      <caption>Trainer Attendance ({{this.trainerCount}})</caption>
+      <p>
+      <div><b class="text-danger">{{fa-icon "hand-point-right"}} Reminder: Walk-ins are NOT allowed, this includes
+        auditors. All attendees must be signed up prior to the session's start time.</b></div>
+      {{#unless this.canAddStudent}}
+        Only the Training Academy may add trainees through this interface.
+      {{/unless}}
+      </p>
+    {{/if}}
+
+    <div class="my-2">
+      {{! Desktop Display }}
+      <div class="d-sm-block d-none">
+        <LinkTo @route="training.session.trainers-report" @models={{array this.training.id this.slot.id}}
+                class="btn btn-secondary">
+          {{fa-icon "list-alt"}} Trainer's Report
+        </LinkTo>
+        <LinkTo @route="training.session.signup-sheet" @models={{array this.training.id this.slot.id}}
+                class="btn btn-secondary">
+          {{fa-icon "clipboard-check"}} Sign up Sheet
+        </LinkTo>
+        <UiButton @type="secondary" @onClick={{this.toggleEmailListAction}} @disabled={{is-empty this.students}}>
+          {{fa-icon "envelope"}} {{if this.showEmails "Hide Emails" "List Emails"}}
+        </UiButton>
+        {{#if this.canAddStudent}}
+          <UiButton @type="secondary" @onClick={{this.showAddPersonAction}}>
+            {{fa-icon "plus-square"}} Add Person
+          </UiButton>
+        {{/if}}
+      </div>
+
+      {{! Cellphone/Tablet display }}
+      <div class="d-block d-sm-none">
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="false">
+            Additional Actions
+          </button>
+          <div class="dropdown-menu">
+            <LinkTo @route="training.session.trainers-report" @models={{array this.training.id this.slot.id}}
+                    class="dropdown-item">
+              Trainer's Report
+            </LinkTo>
+            <LinkTo @route="training.session.signup-sheet" @models={{array this.training.id this.slot.id}}
+                    class="dropdown-item">
+              Sign up Sheet
+            </LinkTo>
+            <div class="dropdown-divider"></div>
+            <a href class="dropdown-item" {{action this.toggleEmailListAction}} disabled={{is-empty this.students}}>
+              {{if this.showEmails "Hide" "List"}} Emails
+            </a>
+            {{#if this.canAddStudent}}
+              <div class="dropdown-divider"></div>
+              <a href class="dropdown-item" {{action this.showAddPersonAction}}>Add Person</a>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="trainee-header">
+      <div class="trainee-row">
+        <div class="trainee-callsign">Callsign</div>
+        <div class="trainee-passed">Passed?</div>
+        <div class="trainee-rank">Rank</div>
+        <div class="trainee-notes">Notes</div>
+      </div>
+    </div>
+
+    <div class="trainee-body">
+      {{#each this.students key="id" as |student|}}
+        <div class="trainee-row {{if (or student.is_retired student.is_inactive) "bg-highlight"}}">
+          <div class="trainee-callsign">
+            {{#if (or student.is_retired student.is_inactive)}}
+              {{fa-icon "exclamation-triangle"}}
+            {{/if}}
+            <PersonLink @person={{student}} />{{if student.is_art_prospective (fa-icon "asterisk")}}<br>
+            &lt;{{student.status}}&gt;
+            {{#if (not-eq student.status student.current_status)}}
+              <div class="small">(now {{student.current_status}})</div>
+            {{/if}}
+          </div>
+          <div class="trainee-passed">
+            {{#if student.passed}}
+              {{fa-icon "check" color="success"}}
+            {{else}}
+              -
+            {{/if}}
+          </div>
+          <div class="trainee-rank">
+            {{#if student.rank}}
+              {{student.rank}}
+            {{else if student.need_ranking}}
+              needs rank
+            {{else}}
+              -
+            {{/if}}
+          </div>
+          <div class="trainee-notes">
+            {{#if student.personnel_issue}}
+              <div class="mb-2">
+                <b class="text-danger">Personnel Flag raised. Take no actions until resolved.</b>
+              </div>
+            {{/if}}
+            {{#each student.notes as |note|}}
+              {{#unless note.is_log}}
+                <div class="mb-2">
+                  {{note.note}}
+                </div>
+              {{/unless}}
+            {{else}}
+              <i>no notes given yet</i>
+            {{/each}}
+            {{#if student.fkas}}
+              <div class="mt-2">
+                FKA: {{join student.fkas ", "}}
+              </div>
+            {{/if}}
+            <div class="mt-2">
+              <UiButton @size="sm" @onClick={{fn this.editStudentAction student}} @class="btn-responsive">
+                {{fa-icon "edit"}} Edit
+              </UiButton>
+            </div>
+          </div>
+        </div>
+      {{else}}
+        <b class="text-danger">No trainees have signed up yet.</b>
+      {{/each}}
+    </div>
+  </:body>
+</UiSection>
+
+<UiSection>
+  <:title>Trainer Attendance ({{this.trainerCount}})</:title>
+  <:body>
+    <table class="table table-striped table-hover table-width-auto">
       <thead>
       <tr>
         <th>Trainer</th>
@@ -257,8 +261,8 @@
         {{/if}}
       </p>
     {{/if}}
-  </div>
-</div>
+  </:body>
+</UiSection>
 
 {{#if this.showEmails}}
   <EmailList @people={{this.students}} @scrollOnRender={{true}} />
