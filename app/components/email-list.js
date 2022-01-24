@@ -12,6 +12,7 @@ export default class EmailListComponent extends Component {
     this.listId = this.args.listId || 'email-list';
   }
 
+  @action
   elementInserted() {
     if (!this.args.scrollOnRender) {
       return;
@@ -32,6 +33,23 @@ export default class EmailListComponent extends Component {
       return;
     }
 
+    const emails = element.textContent;
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(emails).then(() => {
+        this.toast.success('Emails have been copied to the clipboard');
+      }).catch((err) => {
+        this.toast.error(`Sorry, unable to copy the text to the clipboard. Error: [${err}]`);
+      });
+
+      return;
+    } else if (window.clipboardData) {
+      window.clipboardData.setData('Text', emails);
+      this.toast.success('Emails have been copied to the clipboard');
+      return;
+    }
+
+
     // Create a Range object used to select the element's text.
     const range = document.createRange();
     const selection = window.getSelection();
@@ -44,12 +62,10 @@ export default class EmailListComponent extends Component {
     selection.addRange(range);
 
     try {
-      // Copy the selection to the clipboard
+        // Copy the selection to the clipboard
       document.execCommand("copy");
     } catch (err) {
-      this.toast.error(
-        "Sorry, unable to copy the text to the clipboard. Error: " + err
-      );
+      this.toast.error(`Sorry, unable to copy the text to the clipboard. Error: [${err}]`);
       return;
     }
 

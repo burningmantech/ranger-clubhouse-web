@@ -3,7 +3,7 @@
     Copy {{pluralize @people.length "email"}} to clipboard
   </a>
 </div>
-<div id={{this.listId}} class="mt-2">
+<div id={{this.listId}} class="mt-2" {{did-insert this.elementInserted}}>
   {{#each @people as |person idx|~}}
     {{#if idx}},<br>{{/if}}"{{person.callsign}}" &lt;{{person.email}}&gt;
   {{~/each}}

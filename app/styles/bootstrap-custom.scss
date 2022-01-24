@@ -25,6 +25,7 @@ $card-spacer-y: 0.5rem !default;
 $card-spacer-x: 0.75rem !default;
 
 // Adjust h tags
+
 $font-size-base: 0.9rem;
 
 $h1-font-size: $font-size-base * 1.75;
@@ -96,5 +97,6 @@ $theme-colors: (
 $table-head-color: #495057;
 $table-head-bg: #e9ecef;
 $table-striped-bg: #eff8fd;
+
 @import "bootstrap";
 
