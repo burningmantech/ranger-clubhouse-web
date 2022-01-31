@@ -63,7 +63,7 @@
     "ember-export-application-global": "^2.0.1",
     "ember-fetch": "^8.1.1",
     "ember-load-initializers": "^2.1.2",
-    "ember-math-helpers": "^2.18.0",
+    "ember-math-helpers": "^2.18.1",
     "ember-module-migrator": "^0.8.0",
     "ember-named-blocks-polyfill": "^0.2.5",
     "ember-qunit": "^5.1.5",
