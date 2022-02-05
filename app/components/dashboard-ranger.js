@@ -178,7 +178,9 @@ const STEPS = [
     skipPeriod: AFTER_EVENT,
     check({milestones}) {
       const {art_trainings: arts} = milestones;
-      if (!arts.length) {
+      if (!arts.length || !milestones.online_training_enabled || !milestones.trainings_available)  {
+        // For the case where dirt trainings are not available or online training is not available,
+        // skip showing any ART info.
         return {result: SKIP};
       }
 
