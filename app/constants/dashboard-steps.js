@@ -214,10 +214,10 @@ export const VERIFY_PERSONAL_INFO = {
 };
 
 export const ONLINE_TRAINING = {
-  //name: 'Read the Ranger Manual & Complete Part 1 of Training (online)',
+  //name: 'Read the Ranger Manual & Complete Part 1 of Training (Online Course)',
   skipPeriod: AFTER_EVENT,
   check({milestones, isPNV, isAuditor, person, prevCompleted}) {
-    const name = `Read the Ranger Manual & Complete ${otName(milestones)}`;
+    let name = `Read the Ranger Manual & Complete ${otName(milestones)}`;
     if (milestones.online_training_passed) {
       return {
         result: (isPNV || isAuditor) ? COMPLETED : SKIP,
@@ -226,10 +226,11 @@ export const ONLINE_TRAINING = {
     }
 
     if (!milestones.online_training_enabled) {
+      // Don't tell them to read the ranger manual until online training is available.
       return {
         result: WAITING,
-        message: `${otName(milestones)} is not quite ready yet. Check back later.`,
-        name
+        message: `${otName(milestones)} is not quite ready yet and usually not available until mid-to-late March. Watch the Ranger Announce mailing list for a message on when the course will be opened.`,
+        name: `Complete ${otName(milestones)}`
       }
     }
 
