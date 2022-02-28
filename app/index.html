@@ -111,25 +111,16 @@
 {{content-for "body-footer"}}
 
 <script>
-  function loadError(error) {
+  function scriptLoadError() {
     document.querySelector("#load-error").style.display = "block";
-    document.querySelector("#app-loading").remove();
-  }
-
-  function loadScript(url, onloadFunction) {
-    const newScript = document.createElement("script");
-    newScript.onerror = loadError;
-    if (onloadFunction) {
-      newScript.onload = onloadFunction;
+    const loading = document.querySelector("#app-loading");
+    if (loading) {
+      loading.style.display = "none";
     }
-    document.currentScript.parentNode.insertBefore(newScript, document.currentScript);
-    newScript.src = url;
   }
-
-  loadScript("{{rootURL}}assets/vendor.js", function () {
-    loadScript("{{rootURL}}assets/clubhouse.js");
-  });
 </script>
+<script src="{{rootURL}}assets/vendor.js" onerror="scriptLoadError()"></script>
+<script src="{{rootURL}}assets/clubhouse.js" onerror="scriptLoadError()"></script>
 <auto-import-script entrypoint="app"></auto-import-script>
 </body>
 </html>
