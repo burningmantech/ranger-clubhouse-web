@@ -111,21 +111,16 @@
 {{content-for "body-footer"}}
 
 <script>
-  function loadError(error) {
+  function scriptLoadError() {
     document.querySelector("#load-error").style.display = "block";
     const loading = document.querySelector("#app-loading");
     if (loading) {
       loading.style.display = "none";
     }
   }
-
-  document.addEventListener('error', loadError);
 </script>
-<script src="{{rootURL}}assets/vendor.js"></script>
-<script src="{{rootURL}}assets/clubhouse.js"></script>
+<script src="{{rootURL}}assets/vendor.js" onerror="scriptLoadError()"></script>
+<script src="{{rootURL}}assets/clubhouse.js" onerror="scriptLoadError()"></script>
 <auto-import-script entrypoint="app"></auto-import-script>
-<script>
-  document.removeEventListener('error', loadError);
-</script>
 </body>
 </html>
