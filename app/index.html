@@ -117,13 +117,17 @@
   }
 
   function loadScript(url, onloadFunction) {
-    const newScript = document.createElement("script");
-    newScript.onerror = loadError;
+    const script = document.createElement("script");
+    script.src = url;
+    script.type = 'text/javascript';
+    script.async = false;
+    script.onerror = loadError;
+    script.addEventListener('error',loadError);
+
     if (onloadFunction) {
-      newScript.onload = onloadFunction;
+      script.onload = onloadFunction;
     }
-    document.currentScript.parentNode.insertBefore(newScript, document.currentScript);
-    newScript.src = url;
+    document.head.appendChild(script);
   }
 
   loadScript("{{rootURL}}assets/vendor.js", function () {
