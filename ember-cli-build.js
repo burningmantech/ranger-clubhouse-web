@@ -9,6 +9,10 @@ const IS_PROD = env === 'production', IS_TEST = env === 'test';
 
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
+    autoImport: {
+      insertScriptsAt: 'auto-import-script',
+    },
+
     babel: {
       plugins: [require.resolve('ember-auto-import/babel-plugin')],
     },
