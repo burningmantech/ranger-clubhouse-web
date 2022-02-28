@@ -34,6 +34,31 @@
       min-height: 100vh;
     }
 
+    #load-error {
+      display: none;
+      font-weight: 500;
+      margin: 50px 25px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .load-error-heading {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+
+    #load-error li {
+      margin-top: 15px;
+    }
+
+    #load-error ul {
+      padding: 0;
+      margin: 0 0 20px 0;
+    }
+
+    #load-error a {
+      display: inline-block;
+    }
+
     .loading-text {
       margin-bottom: 30px;
     }
@@ -66,12 +91,45 @@
   </div>
   <div class="loading-spinner"></div>
 </div>
+<div id="load-error">
+  <div class="load-error-heading">Sorry, the Clubhouse failed to load.</div>
+  One of the following reasons might be the issue:
+  <ul>
+    <li>Most common: the browser might have an older version of the Clubhouse cached. Try refreshing the page and/or
+      clearing the
+      browser's cache.
+    </li>
+    <li>The Internet connection might be spotty or offline.</li>
+    <li>The browser might be too old to connect to the Clubhouse.</li>
+  </ul>
+  Email the Ranger Tech Ninjas at
+  <a href="mailto:ranger-tech-ninjas@burningman.com">ranger-tech-ninjas@burningman.com</a>
+  if you cannot resolve this issue.
+</div>
+
 {{content-for "body"}}
-
-<script src="{{rootURL}}assets/vendor.js"></script>
-<script src="{{rootURL}}assets/clubhouse.js"></script>
-
 {{content-for "body-footer"}}
 
+<script>
+  function loadError(error) {
+    document.querySelector("#load-error").style.display = "block";
+    document.querySelector("#app-loading").remove();
+  }
+
+  function loadScript(url, onloadFunction) {
+    const newScript = document.createElement("script");
+    newScript.onerror = loadError;
+    if (onloadFunction) {
+      newScript.onload = onloadFunction;
+    }
+    document.currentScript.parentNode.insertBefore(newScript, document.currentScript);
+    newScript.src = url;
+  }
+
+  loadScript("{{rootURL}}assets/vendor.js", function () {
+    loadScript("{{rootURL}}assets/clubhouse.js");
+  });
+</script>
+<auto-import-script entrypoint="app"></auto-import-script>
 </body>
 </html>
