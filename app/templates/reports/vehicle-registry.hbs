@@ -167,6 +167,7 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
                           @label="Personal Vehicle Owner"
                           @controlClass="form-control form-control-sm autocomplete-input"
                           @onSearch={{this.searchCallsignAction}}
+                          @noResultsText="No callsigns found"
                 />
               {{else}}
                 <f.text

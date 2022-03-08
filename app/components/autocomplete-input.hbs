@@ -32,12 +32,12 @@
   </div>
   {{#if (and this.isFocused (or this.isSearching this.noResultsFound this.options))}}
     <div class="autocomplete-results-box mt-1 border rounded"
-      {{did-insert this.resutsBoxInsertedEvent}}
+      {{did-insert this.resultsBoxInsertedEvent}}
       {{will-destroy this.resultsBoxDestroy}}
     >
       <div class="autocomplete-list">
         {{~#if this.noResultsFound~}}
-          <div>No results found</div>
+          <div>{{this.noResultsText}}</div>
         {{~else if this.isSearching~}}
           <div class="text-muted">Searching <SpinIcon /></div>
         {{~/if~}}
