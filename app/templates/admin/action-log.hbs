@@ -9,19 +9,20 @@
 
   <ChForm @formId="query" @formFor={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
     <FormRow>
-      <f.text @name="person"
-              @label="Person"
-              @size={{30}}
-              @fieldSize="sm"
-              @hint="Callsign or person id"/>
+      <f.search @name="person"
+                @label="Person"
+                @size={{30}}
+                @hint="Callsign or person id"
+                @autofocus={{true}}
+                @onSearch={{this.searchCallsignAction}}
+                @noResultsText="No callsigns found"
+      />
       <f.datetime @name="start_time"
                   @label="Start time (UTC-7)"
-                  @fieldSize="sm"
-                  @size={{30}} />
+                  @size={{20}} />
       <f.datetime @name="end_time"
                   @label="End time (UTC-7)"
-                  @fieldSize="sm"
-                  @size={{30}} />
+                  @size={{20}} />
     </FormRow>
     <FormRow>
       <FormLabel @fixed={{true}}>Events</FormLabel>

@@ -26,7 +26,9 @@
                  @size={{30}}
                  @maxlength={{60}}
                  @onSearch={{this.searchCallsignAction}}
-                 @autofocus={{this.isFromMessage}}/>
+                 @autofocus={{this.isFromMessage}}
+                 @noResultsText="No callsigns found"
+        />
       </FormRow>
       <FormRow>
         <f.text @name="subject"

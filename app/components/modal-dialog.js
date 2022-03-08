@@ -32,7 +32,7 @@ export default class ModalDialogComponent extends Component {
   @action
   boxInserted(element) {
     this._element = element;
-    this.bootstrapModal = new bootstrap.Modal(this._element, {keyboard: false});
+    this.bootstrapModal = new bootstrap.Modal(this._element, {keyboard: false, backdrop: 'static'});
     this.bootstrapModal.show();
   }
 

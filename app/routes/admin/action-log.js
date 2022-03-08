@@ -27,7 +27,16 @@ export default class AdminActionLogRoute extends ClubhouseRoute {
     }, {});
 
     this.searchParams = searchParams;
-    return this.ajax.request('action-log', {data: searchParams});
+    return this.ajax.request('action-log', {data: searchParams}).catch((response) => {
+      if (response.status !== 422) {
+        throw response;
+      }
+      return {
+        error: response.payload.errors[0].title,
+        action_logs: [],
+        meta: {}
+      }
+    });
   }
 
   setupController(controller, model) {
