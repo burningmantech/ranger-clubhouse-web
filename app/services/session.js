@@ -112,7 +112,7 @@ export default class extends SessionService {
   }
 
   /**
-   * Called when.session.invalidate() is called or when the the authentication token expires.
+   * Called when.session.invalidate() is called or when the authentication token expires.
    *
    * Clear out the current user and any session preferences from local storage.
    */

@@ -8,6 +8,8 @@ import dayjs from 'dayjs';
 import RSVP from 'rsvp';
 
 export default class ApplicationRoute extends ClubhouseRoute {
+  authSetup = false;
+
   constructor() {
     super(...arguments);
 
@@ -92,26 +94,36 @@ export default class ApplicationRoute extends ClubhouseRoute {
    *
    * @param {Transition} transition
    */
-  async beforeModel(transition) {
-    await this.session.setup();
 
+  async beforeModel(transition) {
     // If heading to the offline target, simply return
     if (transition.targetName === 'offline') {
       return;
     }
 
+    if (this.authSetup) {
+      return;
+    }
+
+
     try {
+      await this.session.setup();
+
       /*
          Load up the  configuration, and grab the user info
          if the user was already authenticated and the app is being reloaded such
-         as from a page refresh. Otherwise the user info is grabbed by session.handleAuthenticated()
+         as from a page refresh. Otherwise, the user info is grabbed by session.handleAuthenticated()
          after the login token is successfully retrieved in {route,controller}/login.js
-       */
+      */
+
       const results = await RSVP.hash({
         config: this.ajax.request('config'),
-        user: this.session.loadUser() // loadUser will return a resolved promise if the user is not authenticated
+        user: this.session.loadUser()
       });
+
       ENV['clientConfig'] = results.config;
+
+      this.authSetup = true;
     } catch (response) {
       this.house.handleErrorResponse(response);
       // Can't retrieve the configuration. Consider the application

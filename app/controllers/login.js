@@ -75,7 +75,8 @@ export default class LoginController extends ClubhouseController {
     credentials.build_timestamp = ENV.APP.buildTimestamp;
 
     this.isSubmitting = true;
-    return this.session.authenticate('authenticator:jwt', credentials)
+
+    this.session.authenticate('authenticator:jwt', credentials)
       .catch((response) => {
         if (response.status === 401) {
           const data = response.json ? response.json : response.payload;
