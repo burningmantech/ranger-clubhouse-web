@@ -25,6 +25,10 @@ module.exports = function (defaults) {
       includePolyfill: IS_PROD,
     },
 
+    'ember-simple-auth': {
+      useSessionSetupMethod: true,
+    },
+
     autoprefixer: {
       sourcemap: false // Was never helpful
     },
