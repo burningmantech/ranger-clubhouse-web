@@ -6,7 +6,6 @@ export default class ReportsFreakingYearsController extends ClubhouseController 
   queryParams = ['showAll'];
 
   @tracked showAll = 0;
-  @tracked expandAll = false;
 
   showOptions = [
     { label: 'Show only active status accounts', value: 0},
@@ -17,12 +16,6 @@ export default class ReportsFreakingYearsController extends ClubhouseController 
     let total = 0;
     this.freaking.forEach((freaks) => total += freaks.people.length);
     return total;
-  }
-
-  @action
-  toggleExpandAll() {
-    this.expandAll = !this.expandAll;
-    this.house.toggleAllAccordions(this.expandAll);
   }
 
   @action

@@ -32,6 +32,12 @@ export default class ApplicationRoute extends ClubhouseRoute {
     // Move the window back to the top when heading to a new route
     window.scrollTo(0, 0);
 
+    const burgerMenu = document.querySelector('#top-burger-menu:not(.collapsed)');
+    if (burgerMenu) {
+      // Mobile menu is open, closeup.
+      burgerMenu.click();
+    }
+
     if (!transition.isActive) {
       this.send('collectTitleTokens', []);
     }
@@ -41,7 +47,10 @@ export default class ApplicationRoute extends ClubhouseRoute {
       return;
     }
 
-    if (!transition || !transition.to || transition.to.name === 'admin.action-log') {
+    if (!transition || !transition.to
+      || transition.to.name === 'admin.action-log'
+      || transition.to.name === 'offline'
+    ) {
       return;
     }
 
@@ -146,22 +155,11 @@ export default class ApplicationRoute extends ClubhouseRoute {
   }
 
   @action
-  willTransition() {
-    // Close up the navbar when clicking on a menu item and
-    // the navigation bar is not expanded - i.e. when showning
-    // on a cellphone.
-    this.house.collapse('.navbar-collapse', 'hide');
-    return true;
-  }
-
-  @action
   error(error) {
     if (error instanceof UnauthorizedError || error.status === 401) {
       // 401 error - not logged in, or JWT expired.
       if (this.session.isAuthenicated) {
-        this.modal.info(null, 'Your session has timed out. Please login again', () => {
-          this.session.invalidate();
-        });
+        this.modal.info(null, 'Your session has timed out. Please login again', () => this.session.invalidate());
       } else {
         this.router.transitionTo('login');
       }

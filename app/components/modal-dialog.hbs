@@ -1,17 +1,13 @@
-{{#in-element this.registryId insertBefore=null}}
-  <div class="modal" tabindex="-1" role="dialog" {{did-insert this.boxInserted}}>
-    <div class="modal-dialog modal-dialog-centered modal-{{or @size "lg"}}" role="document">
-      <div class="modal-content">
-        {{#if @title}}
-          <div class="modal-header">
-            <h5 class="modal-title">{{@title}}</h5>
-          </div>
-        {{/if}}
-        {{yield (hash body=(component "modal/body")
-                  footer=(component "modal/footer" align=@align)
-                  button=(component "modal/button" action=@action label=@label type=@type disabled=@disabled))
-        }}
-      </div>
-    </div>
-  </div>
-{{/in-element}}
+<BsModal
+  @fade={{false}}
+  @keyboard={{false}}
+  @backdropClose={{false}}
+  @position="center"
+  @size={{or @size "lg"}} as |modal|>
+  {{#if @title}}
+    <modal.header @closeButton={{false}}>
+      <h5 class="modal-title">{{@title}}</h5>
+    </modal.header>
+  {{/if}}
+  {{yield (hash body=modal.body footer=(component "modal/footer" modal=modal align=@align))}}
+</BsModal>

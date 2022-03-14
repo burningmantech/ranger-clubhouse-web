@@ -1,18 +1,15 @@
 {{#if this.renderAsDropdown}}
   <div class="sidebar-small-screen-container">
-    <div class="btn-group">
-      <button type="button" class="btn-secondary btn-lg dropdown-toggle"
-              data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        {{@smallTitle}}
-      </button>
-      <div class="dropdown-menu">
-        {{yield (hash
+    <BsDropdown @tagName="div" class="mb-2" as |dd|>
+      <dd.button>{{@smallTitle}} <span class="caret"></span></dd.button>
+      <dd.menu as |menu|>
+        {{~yield (hash
                         group=(component "sidebar/group"
                                 renderAsDropdown=true
                                 theme=@theme
                                 title=@title
+                                menu=menu
                         )
-
                         link=(component "sidebar/link"
                                 renderAsDropdown=true
                                 theme=@theme
@@ -22,10 +19,11 @@
                                 iconType=@iconType
                                 iconUrl=@iconUrl
                                 badgeText=@badgeText
+                                menu=menu
                         )
-                )}}
-      </div>
-    </div>
+                )~}}
+      </dd.menu>
+    </BsDropdown>
   </div>
 {{else}}
   <div id="sidebar-container"
