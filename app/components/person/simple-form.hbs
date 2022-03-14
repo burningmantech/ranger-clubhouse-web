@@ -2,10 +2,11 @@
   {{#if (has-role "view-pii" "view-email")}}
     <dt class="col-sm-12 col-lg-2">Contact</dt>
     <dd class="col-sm-12 col-lg-9">
+      <PersonalInfoWarning />
       {{#if @person.email}}
         email {{mail-to @person.email}}
       {{else}}
-        <i class="text-muted">missing</i>
+        <i class="text-muted">email missing</i>
       {{/if}}
       {{#if (has-role "view-pii")}}
         <div>

@@ -3,6 +3,7 @@ The Admin, Mentor, and VC form.
 Everyone else will see person/simple-form
 }}
 {{#if (has-role "admin" "vc" "view-pii" "view-email")}}
+  <PersonalInfoWarning />
   <div class="row mb-1">
     <div class="col-sm-6 col-lg-auto">
       email {{#if @person.email}}
@@ -33,7 +34,7 @@ Everyone else will see person/simple-form
       {{#if @person.last_seen_at}}
         {{dayjs-format @person.last_seen_at "MMM DD, YYYY @ HH:mm"}}
       {{else}}
-        <i>never</i>
+        <b class="text-danger">never</b>
       {{/if}}
     </div>
     <div class="col-sm-6 col-lg-auto">
@@ -41,7 +42,7 @@ Everyone else will see person/simple-form
       {{#if @person.create_date}}
         {{dayjs-format @person.create_date "MMM DD, YYYY @ HH:mm"}}
       {{else}}
-        <i>prior to 2010</i>
+        prior to 2010, no date is available.
       {{/if}}
     </div>
   </div>

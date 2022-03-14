@@ -16,10 +16,10 @@ import {
 import * as DashboardStep from 'clubhouse/constants/dashboard-steps';
 
 const SETUP_ACCOUNT_STEPS = [
-  DashboardStep.VERIFY_PERSONAL_INFO,
-  DashboardStep.SIGN_BEHAVIORAL_AGREEMENT,
   DashboardStep.UPLOAD_PHOTO,
   DashboardStep.PHOTO_APPROVAL,
+  DashboardStep.VERIFY_PERSONAL_INFO,
+  DashboardStep.SIGN_BEHAVIORAL_AGREEMENT,
   DashboardStep.MISSING_BPGUID,
 ];
 

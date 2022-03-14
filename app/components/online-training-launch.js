@@ -17,9 +17,8 @@ export default class OnlineTrainingLaunchComponent extends Component {
   @tracked isSubmitting = false;
 
   @action
-  setupAccountAction(event) {
+  setupAccountAction() {
     const person = this.args.person;
-    event.preventDefault();
 
     this.showCreationDialog = true;
     this.isSubmitting = true;
