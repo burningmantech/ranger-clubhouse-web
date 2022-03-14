@@ -1,4 +1,4 @@
-<a href {{on "click" this.setupAccountAction}}>{{@text}}</a>
+<UiButton @onClick={{this.setupAccountAction}} @class="btn-responsive">{{@text}}</UiButton>
 {{#if this.showCreationDialog}}
   <LoadingDialog>
     Setting up your Online Course account. Please wait.

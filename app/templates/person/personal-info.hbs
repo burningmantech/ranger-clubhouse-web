@@ -1,11 +1,18 @@
 <h3>Personal Information for {{this.person.callsign}}</h3>
+<PersonalInfoWarning />
 <p>
-  {{this.person.callsign}}
   {{#if this.person.reviewed_pi_at}}
-    last reviewed their information on
+    Last updated on
     {{dayjs-format this.person.reviewed_pi_at "MMM DD, YYYY @ HH:mm"}} (UTC-7)
   {{else}}
-    has not reviewed their Personal Information.
+    Has not updated their Personal Information yet.
+  {{/if}}
+  <br>
+  {{#if this.person.pi_reviewed_for_dashboard_at}}
+    Last reviewed for dashboard on
+    {{dayjs-format this.person.reviewed_pi_at "MMM DD, YYYY @ HH:mm"}} (UTC-7).
+  {{else}}
+    Has not reviewed for dashboard yet.
   {{/if}}
 </p>
 {{#if this.canEditPersonalInfo}}
@@ -65,7 +72,7 @@
           <f.text @name="email"
                   @label="Email"
                   @inputmode="email"
-                  @size={{25}}
+                  @size={{30}}
                   @maxlength={{50}}
                   @noSpaces={{true}}/>
           <f.text @name="home_phone"
