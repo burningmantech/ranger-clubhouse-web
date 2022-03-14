@@ -1,14 +1,7 @@
-<div class="popover-container" {{did-insert this.containerInserted}}>
-  <a href {{on "click" this.showAction}}>{{@text}}</a>
-  {{~#if this.isShowing}}
-    <div class="popover d-block {{this.placement}}" {{did-insert this.blockInserted}}>
-      <h3 class="popover-header">{{@title}}</h3>
-      <div class="popover-body">
-        {{yield}}
-      </div>
-      <div class="popover-footer">
-        <UiCloseButton @onClick={{this.closeAction}} />
-      </div>
-    </div>
-  {{/if~}}
-</div>
+<a href="#" class="popover-container" {{on "click" this.preventClick}}>
+  {{~@text~}}
+  <BsPopover @title={{@title}} as |po|>
+    {{~yield~}}
+    <div class="popover-footer mt-2"><UiCloseButton @onClick={{po.close}} /></div>
+  </BsPopover>
+</a>

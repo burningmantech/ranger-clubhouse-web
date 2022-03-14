@@ -7,34 +7,34 @@
   </p>
   Click the subject line to read the announcement.
   {{#each this.motds as |motd|}}
-    <div class="accordion-container mb-2" id="motd-{{motd.id}}">
-      <div class="accordion-title p-2 {{if motd.has_read "text-muted"}}">
-        <a href class="d-block" {{action this.toggleMotd motd}}>
+    <ChAccordion as |Accordion|>
+      <Accordion.title class={{if motd.has_read "text-muted"}}>
+        {{motd.subject}}
+        {{#if motd.has_read}}(Read){{/if}}
+      </Accordion.title>
+      <Accordion.body>
+        <div class="text-muted mb-2">
+          {{dayjs-format motd.created_at "dddd, MMMM Do YYYY"}}
           {{#if motd.has_read}}
-            {{fa-icon "check-circle"}}
-          {{else}}
-            {{fa-icon "arrow-right" color="success"}}
+            <br>
+            You have read this announcement.
           {{/if}}
-          {{motd.subject}}
-        </a>
-      </div>
-      <div class="accordion-body collapse" id="motd-text-{{motd.id}}">
-        <div class="text-muted mb-2">Posted {{dayjs-format motd.created_at "dddd, MMMM Do YYYY"}}</div>
+        </div>
         {{nl2br motd.message allowHtml=true}}
         <div class="mt-2">
           {{#if motd.has_read}}
-            <i class="text-muted">You have read this announcement.</i>
+            <br>
           {{else}}
             <UiButton @type="secondary" @disabled={{motd.isMarking}} @onClick={{fn this.markMotdAsRead motd}}>
               Mark As Read
             </UiButton>
-            {{#if motd.isMarking}}
-              <LoadingIndicator @text="marking ..."/>
-            {{/if}}
+          {{/if}}
+          {{#if motd.isMarking}}
+            <LoadingIndicator @text="marking ..."/>
           {{/if}}
         </div>
-      </div>
-    </div>
+      </Accordion.body>
+    </ChAccordion>
   {{/each}}
 {{else}}
   <p>

@@ -182,7 +182,7 @@ export default class extends SessionService {
    */
 
   get canViewEmail() {
-    return this.hasRole([ADMIN, VIEW_PII, VIEW_EMAIL]);
+    return this.hasRole([ADMIN, VIEW_PII, VIEW_EMAIL, VC]);
   }
 
   /**

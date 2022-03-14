@@ -7,7 +7,6 @@ import {isEmpty} from '@ember/utils';
 import currentYear from 'clubhouse/utils/current-year';
 import {isChangeset} from 'validated-changeset';
 import {AbortError, InvalidError, NotFoundError, ServerError, TimeoutError} from '@ember-data/adapter/error'
-import bootstrap from 'bootstrap';
 
 export default class HouseService extends Service {
   @service router;
@@ -404,31 +403,6 @@ export default class HouseService extends Service {
       });
       script.addEventListener('error', () => reject());
       script.src = url; // Boom!
-    });
-  }
-
-  /**
-   * Toggle all accordions on the page
-   */
-
-  toggleAllAccordions(show) {
-    this.collapse('.acccordion-body', show ? 'show' : 'hide');
-  }
-
-  toggleSingleAccordion(containerId, show) {
-    this.collapse(`${containerId} .accordion-body`, show ? 'show' : 'hide');
-    this.scrollToElement(containerId, true);
-  }
-
-  collapse(selector, action) {
-    run('afterRender', () => {
-      if (typeof (selector) === 'string') {
-        document.querySelectorAll(selector).forEach((element) => {
-         bootstrap.Collapse.getOrCreateInstance(element, { toggle: false})[action]();
-        })
-      } else {
-        bootstrap.Collapse.getOrCreateInstance(selector, { toggle: false})[action]();
-      }
     });
   }
 }

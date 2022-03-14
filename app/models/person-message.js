@@ -1,6 +1,10 @@
 import Model, { attr } from '@ember-data/model';
+import { tracked } from '@glimmer/tracking';
 
 export default class PersonMessageModel extends Model {
+  @tracked showing = false;
+  @tracked isSubmitting = false;
+
   @attr('number') person_id;
 
   // Only used for creating the message
@@ -22,7 +26,7 @@ export default class PersonMessageModel extends Model {
   @attr('boolean', { readOnly: true }) delivered;
   @attr('boolean', { readOnly: true }) is_rbs;
 
-  get isDictacted() {
+  get isDictated() {
       return (this.creator_person_id != this.sender_person_id);
   }
 }

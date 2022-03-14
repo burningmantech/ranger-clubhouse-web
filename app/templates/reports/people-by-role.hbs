@@ -4,13 +4,13 @@
   <ChAccordion as |accordion|>
     <accordion.title>{{role.title}} ({{pluralize role.people.length "person"}})</accordion.title>
     <accordion.body>
-      <div class="callsign-list">
-        {{#each role.people key="id" as |person|}}
-          <div>
-            <PersonLink @person={{person}} />
-          </div>
-        {{/each}}
-      </div>
+      {{#if accordion.isOpen}}
+        <div class="callsign-list">
+          {{~#each role.people key="id" as |person|~}}
+            <div><PersonLink @person={{person}} /></div>
+          {{~/each~}}
+        </div>
+      {{/if}}
     </accordion.body>
   </ChAccordion>
 {{/each}}

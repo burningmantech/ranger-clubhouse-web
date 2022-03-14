@@ -9,7 +9,9 @@
 </h1>
 
 {{#unless this.over_hours}}
-  <ChForm @formId="date-form" @formFor={{this.dateForm}} @validator={{this.dateValidations}}
+  <ChForm @formId="date-form"
+          @formFor={{this.dateForm}}
+          @validator={{this.dateValidations}}
           @onSubmit={{this.submitForm}} as |f|>
     <FormRow>
       <f.datetime @name="date"
@@ -25,7 +27,9 @@
   </ChForm>
 {{/unless}}
 
-Showing {{pluralize this.timesheet.length "person"}} on duty in {{pluralize this.positions.length "position"}}.
+<p>
+  Showing {{pluralize this.timesheet.length "person"}} on duty in {{pluralize this.positions.length "position"}}.
+</p>
 {{#each this.positions key="id" as |position|}}
   <div class="max-width-700">
     <ChAccordion as |accordion|>

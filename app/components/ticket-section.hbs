@@ -5,7 +5,7 @@
       {{yield to="title"}}
     </a>
   </div>
-  <div class="accordion-body collapse">
+  <BsCollapse @collapsed={{not (get @showing @id)}} class="accordion-body">
     {{yield to="body"}}
     {{#if @nextAction}}
       <div class="d-grid">
@@ -14,5 +14,5 @@
         </UiButton>
       </div>
     {{/if}}
-  </div>
+  </BsCollapse>
 </div>

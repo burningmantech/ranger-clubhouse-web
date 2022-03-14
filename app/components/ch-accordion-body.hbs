@@ -1,3 +1,3 @@
-<div class="accordion-body collapse {{if @isInitOpen "show"}}" {{did-insert @onInsert}}>
+<BsCollapse @collapsed={{not @isOpen}} @onHidden={{@onHidden}} @onShown={{@onShown}} class="accordion-body">
   {{yield}}
-</div>
+</BsCollapse>

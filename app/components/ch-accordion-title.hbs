@@ -1,4 +1,5 @@
-<div class="accordion-title" role="button" {{action @onClick}}>
-  <span class="accordion-title-icon">{{fa-icon (if @isOpen "times" "plus")}}</span>
+{{!template-lint-disable require-presentational-children}}
+<div class="accordion-title" role="button" {{action @onClick}} ...attributes>
+<span class="accordion-title-icon">{{#if @isWorking}}<SpinIcon />{{else}}{{fa-icon (if @isOpen "times" "plus")}}{{/if}}</span>
   {{yield}}
 </div>

@@ -1,5 +1,5 @@
-<NavbarMenu @title="ARTs">
+<NavbarMenu @nav={{@nav}} @title="ARTs" as |menu|>
   {{#each @user.teacher.arts as |art|}}
-    <NavbarMenuItem @route="training.index" @model={{art.id}} @item={{art.title}} />
+    <NavbarMenuItem @menu={{menu}} @route="training.index" @model={{art.id}} @item={{art.title}} />
   {{/each}}
 </NavbarMenu>

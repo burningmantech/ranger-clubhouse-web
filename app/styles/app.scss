@@ -1,5 +1,6 @@
 
 @import "bootstrap-custom";
+@import "ember-bootstrap/bootstrap";
 
 // Clubhouse styling
 @import "access-documents";
@@ -133,7 +134,7 @@ dl {
 }
 
 .dropdown-large {
-  position: static;
+  position: static !important;
 }
 
 .dropdown-menu-container {
@@ -151,20 +152,13 @@ dl {
 }
 
 .dropdown-menu-section {
-  min-width: 200px;
+  min-width: 180px;
 }
 
 .dropdown-menu .navbar-text {
   margin-left: 10px;
-  font-weight: 500;
-  font-size: 1.1rem;
-  color: #222;
-}
-
-@include media-breakpoint-down(xl) {
-  .navbar-brand {
-    margin-right: 0;
-  }
+  font-weight: 600;
+  color: #000;
 }
 
 .footer {
@@ -533,3 +527,4 @@ ul.no-indent, ol.no-indent {
 .columns-5 {
   column-count: 5;
 }
+

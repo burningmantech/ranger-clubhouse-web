@@ -29,14 +29,11 @@
 
 <p>
   Showing {{pluralize this.positions.length "position"}}.
-  <UiButton @type="secondary" @class="ms-2" @onClick={{this.toggleExpandAll}}>
-    {{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}
-  </UiButton>
 </p>
 
 
 {{#each this.positions as |position|}}
-  <div class="max-width-700">
+  <div class="max-width-1000">
     <ChAccordion as |accordion|>
       <accordion.title>{{position.title}}</accordion.title>
       <accordion.body>

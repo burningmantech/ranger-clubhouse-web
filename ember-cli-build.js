@@ -13,9 +13,11 @@ module.exports = function (defaults) {
       plugins: [require.resolve('ember-auto-import/babel-plugin')],
     },
 
-    tests: IS_TEST, // Don't even generate test files unless a test build
+    // Don't even generate test files unless a test build
+    tests: IS_TEST,
 
-    storeConfigInMeta: false, // Don't store configuration in meta tag
+    // Don't store configuration in meta tag
+    storeConfigInMeta: false,
 
     'ember-cli-terser': {
       enabled: IS_PROD,
@@ -46,19 +48,23 @@ module.exports = function (defaults) {
     },
 
     sassOptions: {
-      onlyIncluded: true,
+      onlyIncluded: false,
       includePaths: [
         'node_modules/cropperjs/src/css',
-        'node_modules/bootstrap/scss',
+//        'node_modules/bootstrap/scss',
+        'node_modules/ember-bootstrap/'
       ]
     },
+
+    'ember-bootstrap': {
+      bootstrapVersion: 5,
+      importBootstrapCSS: false
+    }
   });
 
   // Use `app.import` to add additional libraries to the generated
   // output files.
 
-  app.import('node_modules/jquery-datetimepicker/jquery.datetimepicker.css');
-  app.import('node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js');
   // app.import('node_modules/@popperjs/core/dist/umd/popper.js', {
   //  type: 'vendor',
   // prepend: true

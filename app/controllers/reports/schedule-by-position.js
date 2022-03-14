@@ -86,12 +86,6 @@ export default class ReportsScheduleByPositionController extends ClubhouseContro
   }
 
   @action
-  toggleExpandAll() {
-    this.expandAll = !this.expandAll;
-    this.house.toggleAllAccordions(this.expandAll);
-  }
-
-  @action
   scrollToPosition(id, event) {
     event.preventDefault();
     this.house.scrollToElement(`#position-${id}`, true, true);
