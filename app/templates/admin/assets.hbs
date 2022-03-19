@@ -1,3 +1,4 @@
+<main>
 <YearSelect @title="Assets (Radios, Gear, Vehicles)" @year={{this.year}} @onChange={{action (mut this.year)}} />
 <FormRow>
   <FormLabel @auto={{true}}>Description Filter</FormLabel>
@@ -146,3 +147,4 @@ Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
 {{#if this.assetForHistory}}
   <ModalAssetHistory @assetId={{this.assetForHistory.id}} @onClose={{action this.closeAssetHistory}} />
 {{/if}}
+</main>
