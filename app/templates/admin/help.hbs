@@ -1,88 +1,90 @@
-<h1>Help / Tooltip Documents</h1>
+<main>
+  <h1>Help / Tooltip Documents</h1>
 
-<p class="text-muted mb-4">
-  {{fa-icon "music"}} Help me if you can, I'm feeling down. And I do appreciate you being 'round {{fa-icon "music"}}
-</p>
-<p>
-  Primary used by the HQ Window interface to provide tooltips on various page elements.
-</p>
-<p>
-  <UiButton @onClick={{this.newHelp}}>New Help Doc</UiButton>
-</p>
-<table class="table table-sm table-hover table-striped table-width-auto">
-  <caption>
-    Showing {{pluralize this.viewDocuments.length "help document"}}
-  </caption>
-  <thead>
-  <tr>
-    <th>Slug</th>
-    <th>Title / Body</th>
-    <th>Tags</th>
-    <th>Action</th>
-  </tr>
-  </thead>
-
-  <tbody>
-  {{#each this.viewDocuments as |document|}}
+  <p class="text-muted mb-4">
+    {{fa-icon "music"}} Help me if you can, I'm feeling down. And I do appreciate you being 'round {{fa-icon "music"}}
+  </p>
+  <p>
+    Primary used by the HQ Window interface to provide tooltips on various page elements.
+  </p>
+  <p>
+    <UiButton @onClick={{this.newHelp}}>New Help Doc</UiButton>
+  </p>
+  <table class="table table-sm table-hover table-striped table-width-auto">
+    <caption>
+      Showing {{pluralize this.viewDocuments.length "help document"}}
+    </caption>
+    <thead>
     <tr>
-      <td>{{document.slug}}</td>
-      <td>
-        <b>{{document.title}}</b><br>
-        <ReadMore @text={{document.body}} />
-      </td>
-      <td>{{document.tags}}</td>
-      <td>
-        <UiButton @type="secondary" @size="sm" @onClick={{fn this.editHelp document}}>
-          {{fa-icon "edit"}} Edit
-        </UiButton>
-      </td>
+      <th>Slug</th>
+      <th>Title / Body</th>
+      <th>Tags</th>
+      <th>Action</th>
     </tr>
-  {{/each}}
-  </tbody>
-</table>
+    </thead>
 
-{{#if this.entry}}
-  <ModalDialog @title="{{if this.entry.isNew "New" "Edit"}} Help Document"
-               @onEscape={{this.cancelHelp}} as |Modal|>
-    <ChForm @formId="help"
-            @formFor={{this.entry}}
-            @onSubmit={{action this.saveHelp}} as |f|>
-      <Modal.body>
-        <FormRow>
-          <f.text @name="slug"
-                  @label="Slug / Help Identifier"
-                  @size={{20}}
-                  @maxlength={{255}}/>
-        </FormRow>
-        <FormRow>
-          <f.text @name="tags"
-                  @label="Tags (separated by comma)"
-                  @size={{20}}
-                  @maxlength={{255}}/>
-        </FormRow>
-        <FormRow>
-          <f.text @name="title"
-                  @label="Help Title"
-                  @size={{20}}
-                  @maxlength={{255}}/>
-        </FormRow>
-        <FormRow>
-          <f.textarea @name="body"
-                      @label="Help Body"
-                      @rows={{10}}
-                      @cols={{80}}/>
-        </FormRow>
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
-        <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelHelp}} />
-        {{#if this.entry.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
-        <div class="ms-auto">
-          <UiButton @type="danger" @onClick={{this.deleteHelp}}>{{fa-icon "trash"}} Delete</UiButton>
-        </div>
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
-{{/if}}
+    <tbody>
+    {{#each this.viewDocuments as |document|}}
+      <tr>
+        <td>{{document.slug}}</td>
+        <td>
+          <b>{{document.title}}</b><br>
+          <ReadMore @text={{document.body}} />
+        </td>
+        <td>{{document.tags}}</td>
+        <td>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn this.editHelp document}}>
+            {{fa-icon "edit"}} Edit
+          </UiButton>
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+
+  {{#if this.entry}}
+    <ModalDialog @title="{{if this.entry.isNew "New" "Edit"}} Help Document"
+                 @onEscape={{this.cancelHelp}} as |Modal|>
+      <ChForm @formId="help"
+              @formFor={{this.entry}}
+              @onSubmit={{action this.saveHelp}} as |f|>
+        <Modal.body>
+          <FormRow>
+            <f.text @name="slug"
+                    @label="Slug / Help Identifier"
+                    @size={{20}}
+                    @maxlength={{255}}/>
+          </FormRow>
+          <FormRow>
+            <f.text @name="tags"
+                    @label="Tags (separated by comma)"
+                    @size={{20}}
+                    @maxlength={{255}}/>
+          </FormRow>
+          <FormRow>
+            <f.text @name="title"
+                    @label="Help Title"
+                    @size={{20}}
+                    @maxlength={{255}}/>
+          </FormRow>
+          <FormRow>
+            <f.textarea @name="body"
+                        @label="Help Body"
+                        @rows={{10}}
+                        @cols={{80}}/>
+          </FormRow>
+        </Modal.body>
+        <Modal.footer @noAlign={{true}}>
+          <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
+          <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelHelp}} />
+          {{#if this.entry.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
+          <div class="ms-auto">
+            <UiButton @type="danger" @onClick={{this.deleteHelp}}>{{fa-icon "trash"}} Delete</UiButton>
+          </div>
+        </Modal.footer>
+      </ChForm>
+    </ModalDialog>
+  {{/if}}
+</main>

@@ -1,108 +1,109 @@
-<h1>Clubhouse Announcements / Messages Of The Day (MOTD)</h1>
+<main>
+  <h1>Clubhouse Announcements / Messages Of The Day (MOTD)</h1>
 
-<p>
-  Announces are shown on the user's homepage and can be targeted to active Rangers, Prospectives and/or Auditors.
-</p>
+  <p>
+    Announces are shown on the user's homepage and can be targeted to active Rangers, Prospectives and/or Auditors.
+  </p>
 
-<ChForm @formId="query" @formFor={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
-  <FormRow>
-    <f.select @name="type"
-              @label="Filter by Type"
-              @inline={{true}}
-              @options={{this.typeOptions}} />
-    <f.select @name="audience"
-              @label="by Audience"
-              @inline={{true}}
-              @options={{this.audienceOptions}}/>
-    <f.select @name="sort"
-              @label="Sort"
-              @inline={{true}}
-              @options={{this.sortOptions}} />
-    <div class="col-auto">
-      <f.submit @label="Search"/>
-    </div>
-  </FormRow>
-</ChForm>
-<div class="my-4">
-  <UiButton @onClick={{this.newEntry}}>New Message</UiButton>
-</div>
+  <ChForm @formId="query" @formFor={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
+    <FormRow>
+      <f.select @name="type"
+                @label="Filter by Type"
+                @inline={{true}}
+                @options={{this.typeOptions}} />
+      <f.select @name="audience"
+                @label="by Audience"
+                @inline={{true}}
+                @options={{this.audienceOptions}}/>
+      <f.select @name="sort"
+                @label="Sort"
+                @inline={{true}}
+                @options={{this.sortOptions}} />
+      <div class="col-auto">
+        <f.submit @label="Search"/>
+      </div>
+    </FormRow>
+  </ChForm>
+  <div class="my-4">
+    <UiButton @onClick={{this.newEntry}}>New Message</UiButton>
+  </div>
 
-Showing {{this.total}} of {{pluralize this.table_count "message"}}. Page {{this.currentPage}} of {{this.total_pages}}
-<table class="table table-striped table-sm table-width-auto">
-  <thead>
-  <tr>
-    <th>Audience</th>
-    <th>Expires</th>
-    <th>Created By</th>
-    <th>Created At</th>
-    <th class="w-50">Subject</th>
-    <th>Action</th>
-  </tr>
-  </thead>
-
-  <tbody>
-  {{#each this.motds key="id" as |motd|}}
+  Showing {{this.total}} of {{pluralize this.table_count "message"}}. Page {{this.currentPage}} of {{this.total_pages}}
+  <table class="table table-striped table-sm table-width-auto">
+    <thead>
     <tr>
-      <td>
-        {{#if motd.for_rangers}}
-          Rangers<br>
-        {{/if}}
-        {{#if motd.for_pnvs}}
-          Prospectives/Alphas<br>
-        {{/if}}
-        {{#if motd.for_auditors}}
-          Auditors
-        {{/if}}
-      </td>
-      <td>
-        {{#if motd.expires_at}}
-          {{motd.expires_at}}
-          {{#if motd.has_expired}}
-            (expired)
-          {{else}}
-            <b class="text-success">(active)</b>
+      <th>Audience</th>
+      <th>Expires</th>
+      <th>Created By</th>
+      <th>Created At</th>
+      <th class="w-50">Subject</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {{#each this.motds key="id" as |motd|}}
+      <tr>
+        <td>
+          {{#if motd.for_rangers}}
+            Rangers<br>
           {{/if}}
-        {{else}}
-          <i>never</i>
-        {{/if}}
-      </td>
-      <td>
-        <PersonLink @person={{motd.person}} />
-      </td>
-      <td>{{motd.created_at}}</td>
-      <td class="w-50">
-        {{motd.subject}}
-      </td>
-      <td>
-        <UiButton @size="sm" @onClick={{fn this.editEntry motd}}>
-          {{fa-icon "edit"}}Edit
-        </UiButton>
-      </td>
-    </tr>
-  {{else}}
-    <tr>
-      <td colspan="6"><b class="text-danger">No messages were found.</b></td>
-    </tr>
-  {{/each}}
-  </tbody>
-</table>
+          {{#if motd.for_pnvs}}
+            Prospectives/Alphas<br>
+          {{/if}}
+          {{#if motd.for_auditors}}
+            Auditors
+          {{/if}}
+        </td>
+        <td>
+          {{#if motd.expires_at}}
+            {{motd.expires_at}}
+            {{#if motd.has_expired}}
+              (expired)
+            {{else}}
+              <b class="text-success">(active)</b>
+            {{/if}}
+          {{else}}
+            <i>never</i>
+          {{/if}}
+        </td>
+        <td>
+          <PersonLink @person={{motd.person}} />
+        </td>
+        <td>{{motd.created_at}}</td>
+        <td class="w-50">
+          {{motd.subject}}
+        </td>
+        <td>
+          <UiButton @size="sm" @onClick={{fn this.editEntry motd}}>
+            {{fa-icon "edit"}}Edit
+          </UiButton>
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="6"><b class="text-danger">No messages were found.</b></td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
 
-<UiButton @type="secondary" @onClick={{this.goPrevPage}} @disabled={{eq this.currentPage 1}}>
-  Prev Page
-</UiButton>
-<UiButton @type="secondary" @onClick={{this.goNextPage}} @disabled={{eq this.currentPage this.total_pages}}>
-  Next Page
-</UiButton>
+  <UiButton @type="secondary" @onClick={{this.goPrevPage}} @disabled={{eq this.currentPage 1}}>
+    Prev Page
+  </UiButton>
+  <UiButton @type="secondary" @onClick={{this.goNextPage}} @disabled={{eq this.currentPage this.total_pages}}>
+    Next Page
+  </UiButton>
 
-{{#if this.entry}}
-  <ModalDialog @title={{if this.entry.isNew "New Message" "Edit Message"}} @onEscape={{this.cancelEntry}}  as |Modal|>
-    <ChForm @formId="entry" @formFor={{this.entry}}
-            @validator={{this.motdValidations}}
-            @onSubmit={{action this.saveEntry}} as |f|>
-      <Modal.body>
-        <FormRow>
-          <FormLabel @fixed={{true}}>Audience</FormLabel>
-          <div class="col-auto mt-2">
+  {{#if this.entry}}
+    <ModalDialog @title={{if this.entry.isNew "New Message" "Edit Message"}} @onEscape={{this.cancelEntry}}  as |Modal|>
+      <ChForm @formId="entry" @formFor={{this.entry}}
+              @validator={{this.motdValidations}}
+              @onSubmit={{action this.saveEntry}} as |f|>
+        <Modal.body>
+          <FormRow>
+            <FormLabel @fixed={{true}}>Audience</FormLabel>
+            <div class="col-auto mt-2">
               <f.checkbox @name="for_rangers"
                           @label="Rangers"
                           @inline={{true}} />
@@ -112,39 +113,40 @@ Showing {{this.total}} of {{pluralize this.table_count "message"}}. Page {{this.
               <f.checkbox @name="for_auditors"
                           @label="Auditors"
                           @inline={{true}} />
-          </div>
-        </FormRow>
-        <FormRow>
-          <FormLabel @fixed={{true}}>Expires At</FormLabel>
-          <f.datetime @name="expires_at" />
-        </FormRow>
+            </div>
+          </FormRow>
+          <FormRow>
+            <FormLabel @fixed={{true}}>Expires At</FormLabel>
+            <f.datetime @name="expires_at"/>
+          </FormRow>
 
-        <FormRow>
-          <f.text @name="subject"
-                  @label="Subject / Heading"
-                  @size={{80}} />
-        </FormRow>
-        <FormRow>
-          <f.textarea @name="message"
-                      @label="Message Body"
-                      @rows={{10}}
-                      @cols={{80}}/>
-        </FormRow>
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @disabled={{this.entry.isSaving }}/>
-        <UiCancelButton @onClick={{this.cancelEntry}} @disabled={{this.entry.isSaving }}/>
-        {{#if this.entry.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
-        {{#unless this.entry.isNew}}
-          <div class="ms-auto">
-            <UiButton @type="danger" @onClick={{fn this.deleteEntry this.entry}}>
-              {{fa-icon "trash"}} Delete
-            </UiButton>
-          </div>
-        {{/unless}}
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
-{{/if}}
+          <FormRow>
+            <f.text @name="subject"
+                    @label="Subject / Heading"
+                    @size={{80}} />
+          </FormRow>
+          <FormRow>
+            <f.textarea @name="message"
+                        @label="Message Body"
+                        @rows={{10}}
+                        @cols={{80}}/>
+          </FormRow>
+        </Modal.body>
+        <Modal.footer @noAlign={{true}}>
+          <f.submit @disabled={{this.entry.isSaving }}/>
+          <UiCancelButton @onClick={{this.cancelEntry}} @disabled={{this.entry.isSaving }}/>
+          {{#if this.entry.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
+          {{#unless this.entry.isNew}}
+            <div class="ms-auto">
+              <UiButton @type="danger" @onClick={{fn this.deleteEntry this.entry}}>
+                {{fa-icon "trash"}} Delete
+              </UiButton>
+            </div>
+          {{/unless}}
+        </Modal.footer>
+      </ChForm>
+    </ModalDialog>
+  {{/if}}
+</main>

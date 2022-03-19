@@ -1,224 +1,225 @@
-<h1>Clubhouse Positions</h1>
-<p>
-  <b class="text-danger">Contact the Scheduling Gnome or Tech Team about position creation and/or adjustments.</b>
-</p>
-<FormRow>
-  <FormLabel @auto={{true}}>Type filter</FormLabel>
-  <div class="col-auto">
-    <ChForm::Select @name="typeFilter"
-                    @value={{this.typeFilter}}
-                    @options={{this.typeOptions}}
-                    @onChange={{action (mut this.typeFilter)}} />
-  </div>
-  <FormLabel @auto={{true}}>Active Filter</FormLabel>
-  <div class="col-auto">
-    <ChForm::Select @name="activeFilter"
-                    @value={{this.activeFilter}}
-                    @options={{this.activeOptions}}
-                    @onChange={{action (mut this.activeFilter)}} />
-  </div>
-  {{#if this.canManagePositions}}
+<main>
+  <h1>Clubhouse Positions</h1>
+  <p>
+    <b class="text-danger">Contact the Scheduling Gnome or Tech Team about position creation and/or adjustments.</b>
+  </p>
+  <FormRow>
+    <FormLabel @auto={{true}}>Type filter</FormLabel>
     <div class="col-auto">
-      <UiButton @onClick={{this.newAction}}>New Position</UiButton>
+      <ChForm::Select @name="typeFilter"
+                      @value={{this.typeFilter}}
+                      @options={{this.typeOptions}}
+                      @onChange={{action (mut this.typeFilter)}} />
     </div>
-  {{/if}}
-</FormRow>
-
-Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
-<table class="table table-striped table-hover table-sm">
-  <thead>
-  <tr>
-    <th>ID</th>
-    <th>Title</th>
-    <th>Short Title</th>
-    <th>Type</th>
-    <th>Min / Max</th>
-    <th class="text-center">Active</th>
-    <th class="text-center">New User Eligible</th>
-    <th class="text-center">All Rangers</th>
-    <th class="text-center">Count Hrs</th>
-    <th class="text-center">On SL report</th>
-    <th>Prevent Multi. Enrollments</th>
-    <th>Training / Contact Email</th>
+    <FormLabel @auto={{true}}>Active Filter</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="activeFilter"
+                      @value={{this.activeFilter}}
+                      @options={{this.activeOptions}}
+                      @onChange={{action (mut this.activeFilter)}} />
+    </div>
     {{#if this.canManagePositions}}
-      <th>Action</th>
+      <div class="col-auto">
+        <UiButton @onClick={{this.newAction}}>New Position</UiButton>
+      </div>
     {{/if}}
-  </tr>
-  </thead>
+  </FormRow>
 
-  <tbody>
-  {{#each this.viewPositions key="id" as |position|}}
+  Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
+  <table class="table table-striped table-hover table-sm">
+    <thead>
     <tr>
-      <td class="text-end">{{position.id}}</td>
-      <td>{{position.title}}</td>
-      <td>
-        <PresentOrNot @value={{position.short_title}} @empty="-"/>
-      </td>
-      <td>{{position.type}}</td>
-      <td class="text-center">{{position.min}} / {{position.max}}</td>
-      <td class="text-center">
-        <BooleanIcon @value={{position.active}} @falseIcon="times" @falseClass="text-danger"/>
-      </td>
-      <td class="text-center">
-        <BooleanIcon @value={{position.new_user_eligible}} @trueIcon="user"/>
-      </td>
-      <td class="text-center">
-        <BooleanIcon @value={{position.all_rangers}} @trueIcon="users"/>
-      </td>
-      <td class="text-center">
-        <BooleanIcon @value={{position.count_hours}} @trueIcon="clock"/>
-      </td>
-      <td class="text-center">
-        <BooleanIcon @value={{position.on_sl_report}} @trueIcon="list"/>
-      </td>
-      <td class="text-center">
-        <BooleanIcon @value={{position.prevent_multiple_enrollments}} @trueIcon="ban"/>
-      </td>
-      <td>
-        {{#if position.training_position_id}}
-          {{pluck position.training_position_id this.positions "title" "-"}}<br>
-        {{/if}}
-        {{#if position.contact_email}}
-          {{mail-to position.contact_email}}
-        {{/if}}
-      </td>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Short Title</th>
+      <th>Type</th>
+      <th>Min / Max</th>
+      <th class="text-center">Active</th>
+      <th class="text-center">New User Eligible</th>
+      <th class="text-center">All Rangers</th>
+      <th class="text-center">Count Hrs</th>
+      <th class="text-center">On SL report</th>
+      <th>Prevent Multi. Enrollments</th>
+      <th>Training / Contact Email</th>
       {{#if this.canManagePositions}}
-        <td class="actions">
-          <UiButton @size="sm" @onClick={{fn this.editAction position}}>
-            {{fa-icon "edit"}} Edit
-          </UiButton>
-        </td>
+        <th>Action</th>
       {{/if}}
     </tr>
-  {{/each}}
-  </tbody>
-</table>
+    </thead>
 
-{{#if this.position}}
-  <ModalDialog @title={{if this.position.isNew "Create Position"
-                           (concat "Edit Position ID #" this.position.id " - " this.position.title)}}
-               @onEscape={{this.cancelAction}} as |Modal|>
-    <ChForm @formId="position-form"
-            @formFor={{this.position}}
-            @validator={{this.positionValidations}}
-            @onSubmit={{this.saveAction}} as |f|>
-      <Modal.body>
-        <fieldset>
-          <legend>Description</legend>
-          <FormRow>
-            <f.text @name="title" @label="Title"
-                    @maxlength={{40}}
-                    @size={{40}}
-                    @showCharCount={{true}}
-            />
-            <f.text @name="short_title"
-                    @label="Short Title"
-                    @size={{6}}
-                    @maxlength={{6}}
-                    @showCharCount={{true}}
-            />
-            <f.select @name="type"
-                      @label="Type"
-                      @options={{this.positionTypes}}
-            />
-          </FormRow>
-        </fieldset>
+    <tbody>
+    {{#each this.viewPositions key="id" as |position|}}
+      <tr>
+        <td class="text-end">{{position.id}}</td>
+        <td>{{position.title}}</td>
+        <td>
+          <PresentOrNot @value={{position.short_title}} @empty="-"/>
+        </td>
+        <td>{{position.type}}</td>
+        <td class="text-center">{{position.min}} / {{position.max}}</td>
+        <td class="text-center">
+          <BooleanIcon @value={{position.active}} @falseIcon="times" @falseClass="text-danger"/>
+        </td>
+        <td class="text-center">
+          <BooleanIcon @value={{position.new_user_eligible}} @trueIcon="user"/>
+        </td>
+        <td class="text-center">
+          <BooleanIcon @value={{position.all_rangers}} @trueIcon="users"/>
+        </td>
+        <td class="text-center">
+          <BooleanIcon @value={{position.count_hours}} @trueIcon="clock"/>
+        </td>
+        <td class="text-center">
+          <BooleanIcon @value={{position.on_sl_report}} @trueIcon="list"/>
+        </td>
+        <td class="text-center">
+          <BooleanIcon @value={{position.prevent_multiple_enrollments}} @trueIcon="ban"/>
+        </td>
+        <td>
+          {{#if position.training_position_id}}
+            {{pluck position.training_position_id this.positions "title" "-"}}<br>
+          {{/if}}
+          {{#if position.contact_email}}
+            {{mail-to position.contact_email}}
+          {{/if}}
+        </td>
+        {{#if this.canManagePositions}}
+          <td class="actions">
+            <UiButton @size="sm" @onClick={{fn this.editAction position}}>
+              {{fa-icon "edit"}} Edit
+            </UiButton>
+          </td>
+        {{/if}}
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
 
-        <fieldset>
-          <legend>Suggested Ranger Counts Per Slot</legend>
-          <FormRow>
-            <f.number @name="min"
-                      @label="Min"
-                      @size={{3}}
-                      @maxlength={{3}} />
-            <f.number @name="max"
-                      @label="Max"
-                      @size={{3}}
-                      @maxlength={{3}} />
-          </FormRow>
-        </fieldset>
-
-        <fieldset>
-          <legend>Active &amp; Grant Flags</legend>
-          <p class="text-danger">
-            The "Position Sanity Checker" needs be run after deactivating a position in order to revoke the position
-            from all accounts. Revocation is not automatic.
-          </p>
-          <FormRow>
-            <div class="col-12">
-              <f.checkbox @name="active"
-                          @label="Active"/>
-            </div>
-          </FormRow>
-          <p class="text-danger">
-            After setting the <i>"All Rangers"</i> and/or <i>"Grant to new Prospective accounts"</i> flags,
-            the maintenance "Set Ranger Positions" function has to be run to grant the position to existing accounts.
-          </p>
-          <FormRow>
-            <div class="col-12 ">
-              <f.checkbox @name="all_rangers"
-                          @label="All Rangers (status active / inactive / inactive extension / retired)"/>
-            </div>
-          </FormRow>
-          <FormRow>
-            <div class="col-12">
-              <f.checkbox @name="new_user_eligible"
-                          @label="Grant to new Prospective accounts"/>
-            </div>
-          </FormRow>
-        </fieldset>
-        <fieldset>
-          <legend>Misc. Flags</legend>
-          <FormRow>
-            <div class="col-12">
-              <f.checkbox @name="count_hours"
-                          @label="Hours count towards appreciations (Ranger clothing, meal plans, etc.)"/>
-              <f.checkbox @name="prevent_multiple_enrollments"
-                          @label="Prevent Multiple Enrollments (usually for Training positions)"/>
-              <f.checkbox @name="on_sl_report"
-                          @label="For the Shift Lead Report: indicates the person holds this position of interest"/>
-            </div>
-          </FormRow>
-        </fieldset>
-
-        {{#if (eq f.model.type "Training")}}
+  {{#if this.position}}
+    <ModalDialog @title={{if this.position.isNew "Create Position"
+                             (concat "Edit Position ID #" this.position.id " - " this.position.title)}}
+                 @onEscape={{this.cancelAction}} as |Modal|>
+      <ChForm @formId="position-form"
+              @formFor={{this.position}}
+              @validator={{this.positionValidations}}
+              @onSubmit={{this.saveAction}} as |f|>
+        <Modal.body>
           <fieldset>
-            <legend>Training</legend>
-            <p>
-              This section is relevant when type is "Training". The Training Position is the position
-              the person has to have passed in the current year to be allowed to work this position during the event.
-            </p>
+            <legend>Description</legend>
             <FormRow>
-              <f.select @name="training_position_id"
-                        @label="Training Position"
-                        @options={{this.trainingOptions}}
+              <f.text @name="title" @label="Title"
+                      @maxlength={{40}}
+                      @size={{40}}
+                      @showCharCount={{true}}
+              />
+              <f.text @name="short_title"
+                      @label="Short Title"
+                      @size={{6}}
+                      @maxlength={{6}}
+                      @showCharCount={{true}}
+              />
+              <f.select @name="type"
+                        @label="Type"
+                        @options={{this.positionTypes}}
               />
             </FormRow>
+          </fieldset>
+
+          <fieldset>
+            <legend>Suggested Ranger Counts Per Slot</legend>
             <FormRow>
-              <f.text @name="contact_email"
-                      @label="Contact Email (shift full notification, etc)"
-                      @size={{40}}
-                      @maxlength={{200}}/>
+              <f.number @name="min"
+                        @label="Min"
+                        @size={{3}}
+                        @maxlength={{3}} />
+              <f.number @name="max"
+                        @label="Max"
+                        @size={{3}}
+                        @maxlength={{3}} />
             </FormRow>
           </fieldset>
-        {{/if}}
-      </Modal.body>
 
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label={{if this.position.isNew "Create" "Update"}} @disabled={{this.position.isSaving}} />
-        <UiCancelButton @onClick={{this.cancelAction}} @disabled={{this.position.isSaving}} />
-        {{#if this.position.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
-        {{#unless this.position.isNew}}
-          <div class="ms-auto">
-            <UiButton @type="danger" @onClick={{this.deleteAction}}>
-              {{fa-icon "trash"}} Delete Position
-            </UiButton>
-          </div>
-        {{/unless}}
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
-{{/if}}
+          <fieldset>
+            <legend>Active &amp; Grant Flags</legend>
+            <p class="text-danger">
+              The "Position Sanity Checker" needs be run after deactivating a position in order to revoke the position
+              from all accounts. Revocation is not automatic.
+            </p>
+            <FormRow>
+              <div class="col-12">
+                <f.checkbox @name="active"
+                            @label="Active"/>
+              </div>
+            </FormRow>
+            <p class="text-danger">
+              After setting the <i>"All Rangers"</i> and/or <i>"Grant to new Prospective accounts"</i> flags,
+              the maintenance "Set Ranger Positions" function has to be run to grant the position to existing accounts.
+            </p>
+            <FormRow>
+              <div class="col-12 ">
+                <f.checkbox @name="all_rangers"
+                            @label="All Rangers (status active / inactive / inactive extension / retired)"/>
+              </div>
+            </FormRow>
+            <FormRow>
+              <div class="col-12">
+                <f.checkbox @name="new_user_eligible"
+                            @label="Grant to new Prospective accounts"/>
+              </div>
+            </FormRow>
+          </fieldset>
+          <fieldset>
+            <legend>Misc. Flags</legend>
+            <FormRow>
+              <div class="col-12">
+                <f.checkbox @name="count_hours"
+                            @label="Hours count towards appreciations (Ranger clothing, meal plans, etc.)"/>
+                <f.checkbox @name="prevent_multiple_enrollments"
+                            @label="Prevent Multiple Enrollments (usually for Training positions)"/>
+                <f.checkbox @name="on_sl_report"
+                            @label="For the Shift Lead Report: indicates the person holds this position of interest"/>
+              </div>
+            </FormRow>
+          </fieldset>
 
+          {{#if (eq f.model.type "Training")}}
+            <fieldset>
+              <legend>Training</legend>
+              <p>
+                This section is relevant when type is "Training". The Training Position is the position
+                the person has to have passed in the current year to be allowed to work this position during the event.
+              </p>
+              <FormRow>
+                <f.select @name="training_position_id"
+                          @label="Training Position"
+                          @options={{this.trainingOptions}}
+                />
+              </FormRow>
+              <FormRow>
+                <f.text @name="contact_email"
+                        @label="Contact Email (shift full notification, etc)"
+                        @size={{40}}
+                        @maxlength={{200}}/>
+              </FormRow>
+            </fieldset>
+          {{/if}}
+        </Modal.body>
+
+        <Modal.footer @noAlign={{true}}>
+          <f.submit @label={{if this.position.isNew "Create" "Update"}} @disabled={{this.position.isSaving}} />
+          <UiCancelButton @onClick={{this.cancelAction}} @disabled={{this.position.isSaving}} />
+          {{#if this.position.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
+          {{#unless this.position.isNew}}
+            <div class="ms-auto">
+              <UiButton @type="danger" @onClick={{this.deleteAction}}>
+                {{fa-icon "trash"}} Delete Position
+              </UiButton>
+            </div>
+          {{/unless}}
+        </Modal.footer>
+      </ChForm>
+    </ModalDialog>
+  {{/if}}
+</main>
