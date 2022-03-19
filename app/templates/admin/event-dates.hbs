@@ -1,100 +1,102 @@
-<h1>Edit Event Dates</h1>
-<p>
-  The event dates/times are used Hours &amp; Credits report to determine which credit
-  hours should be included and used to restrict slot creation in the pre-event period.
-</p>
-<p>
-  <UiButton @onClick={{this.newRecord}}>New Event Date</UiButton>
-</p>
+<main>
+  <h1>Edit Event Dates</h1>
+  <p>
+    The event dates/times are used Hours &amp; Credits report to determine which credit
+    hours should be included and used to restrict slot creation in the pre-event period.
+  </p>
+  <p>
+    <UiButton @onClick={{this.newRecord}}>New Event Date</UiButton>
+  </p>
 
-{{pluralize this.eventDates.length "event date"}}
-<table class="table table-sm table-striped table-width-auto">
-  <thead>
-  <tr>
-    <th>Year</th>
-    <th>Event Start</th>
-    <th>Event End</th>
-    <th>Pre-Event Start</th>
-    <th>Post-Event End</th>
-    <th>Pre-Event Slot Start</th>
-    <th>Pre-Event Slot End</th>
-    <th>Action</th>
-  </tr>
-  </thead>
-
-  <tbody>
-  {{#each this.eventDates as |ed|}}
+  {{pluralize this.eventDates.length "event date"}}
+  <table class="table table-sm table-striped table-width-auto">
+    <thead>
     <tr>
-      <td>{{dayjs-format ed.event_start "YYYY"}}</td>
-      <td>{{shift-format ed.event_start}}</td>
-      <td>{{shift-format ed.event_end}}</td>
-      <td>{{shift-format ed.pre_event_start}}</td>
-      <td>{{shift-format ed.post_event_end}}</td>
-      <td>{{shift-format ed.pre_event_slot_start}}</td>
-      <td>{{shift-format ed.pre_event_slot_end}}</td>
-      <td>
-        <UiButton @size="sm" @onClick={{fn this.edit ed}}>
-          {{fa-icon "edit"}}Edit
-        </UiButton>
-      </td>
+      <th>Year</th>
+      <th>Event Start</th>
+      <th>Event End</th>
+      <th>Pre-Event Start</th>
+      <th>Post-Event End</th>
+      <th>Pre-Event Slot Start</th>
+      <th>Pre-Event Slot End</th>
+      <th>Action</th>
     </tr>
-  {{/each}}
-  </tbody>
-</table>
+    </thead>
 
-{{#if this.entry}}
-  <ModalDialog @title="{{if this.entry.isNew "Create" "Edit"}} Event Data Record"
-               @onEscape={{this.cancel}} as |Modal|>
-    <ChForm @formId="event_date"
-            @formFor={{this.entry}}
-            @validator={{this.eventDateValidations}}
-            @onSubmit={{this.save}} as |f|>
-      <Modal.body>
-        <FormRow>
-          <f.datetime @name="event_start"
-                      @label="Event Start / Gate Open"
-                      @size={{25}}/>
-          <f.datetime @name="event_end"
-                      @label="Event End"
-                      @type="datetime"
-                      @size={{25}}/>
-        </FormRow>
-        <p>
-          Pre-Event and Post Event are date &amp; times used by Hours &amp; Credits report to determine which
-          credit hours should be included.
-        </p>
-        <FormRow>
-          <f.datetime @name="pre_event_start"
-                      @label="Pre-Event Start"
-                      @type="datetime"
+    <tbody>
+    {{#each this.eventDates as |ed|}}
+      <tr>
+        <td>{{dayjs-format ed.event_start "YYYY"}}</td>
+        <td>{{shift-format ed.event_start}}</td>
+        <td>{{shift-format ed.event_end}}</td>
+        <td>{{shift-format ed.pre_event_start}}</td>
+        <td>{{shift-format ed.post_event_end}}</td>
+        <td>{{shift-format ed.pre_event_slot_start}}</td>
+        <td>{{shift-format ed.pre_event_slot_end}}</td>
+        <td>
+          <UiButton @size="sm" @onClick={{fn this.edit ed}}>
+            {{fa-icon "edit"}}Edit
+          </UiButton>
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
 
-                      @size={{25}}/>
-          <f.datetime @name="post_event_end"
-                      @label="Post Event End"
-                      @inline={{true}}
-                      @size={{25}}/>
-        </FormRow>
-        <p>
-          When trying to create a slot during the pre-event period, the slot must be an approved pre-event
-          position OR the user must be an admin.
-        </p>
-        <FormRow>
-          <f.datetime @name="pre_event_slot_start"
-                      @label="Pre-Event Slot Start"
-                      @size={{25}}/>
-          <f.datetime @name="pre_event_slot_end"
-                      @label="Pre-Event Slot End"
+  {{#if this.entry}}
+    <ModalDialog @title="{{if this.entry.isNew "Create" "Edit"}} Event Data Record"
+                 @onEscape={{this.cancel}} as |Modal|>
+      <ChForm @formId="event_date"
+              @formFor={{this.entry}}
+              @validator={{this.eventDateValidations}}
+              @onSubmit={{this.save}} as |f|>
+        <Modal.body>
+          <FormRow>
+            <f.datetime @name="event_start"
+                        @label="Event Start / Gate Open"
+                        @size={{25}}/>
+            <f.datetime @name="event_end"
+                        @label="Event End"
+                        @type="datetime"
+                        @size={{25}}/>
+          </FormRow>
+          <p>
+            Pre-Event and Post Event are date &amp; times used by Hours &amp; Credits report to determine which
+            credit hours should be included.
+          </p>
+          <FormRow>
+            <f.datetime @name="pre_event_start"
+                        @label="Pre-Event Start"
+                        @type="datetime"
 
-                      @size={{25}}/>
-        </FormRow>
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label={{if f.model.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
-        <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancel}} />
-        {{#if this.entry.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
-{{/if}}
+                        @size={{25}}/>
+            <f.datetime @name="post_event_end"
+                        @label="Post Event End"
+                        @inline={{true}}
+                        @size={{25}}/>
+          </FormRow>
+          <p>
+            When trying to create a slot during the pre-event period, the slot must be an approved pre-event
+            position OR the user must be an admin.
+          </p>
+          <FormRow>
+            <f.datetime @name="pre_event_slot_start"
+                        @label="Pre-Event Slot Start"
+                        @size={{25}}/>
+            <f.datetime @name="pre_event_slot_end"
+                        @label="Pre-Event Slot End"
+
+                        @size={{25}}/>
+          </FormRow>
+        </Modal.body>
+        <Modal.footer @noAlign={{true}}>
+          <f.submit @label={{if f.model.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
+          <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancel}} />
+          {{#if this.entry.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
+        </Modal.footer>
+      </ChForm>
+    </ModalDialog>
+  {{/if}}
+</main>
