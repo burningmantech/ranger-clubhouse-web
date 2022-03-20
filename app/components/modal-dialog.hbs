@@ -1,9 +1,13 @@
 <BsModal
-  @fade={{false}}
+  @fade={{true}}
   @keyboard={{false}}
   @backdropClose={{false}}
   @position="center"
-  @size={{or @size "lg"}} as |modal|>
+  @scrollable={{true}}
+  @transitionDuration={{200}}
+  @size={{or @size "lg"}}
+  {{did-insert this.adjustClassOnInsert}}
+  as |modal|>
   {{#if @title}}
     <modal.header @closeButton={{false}}>
       <h5 class="modal-title">{{@title}}</h5>
