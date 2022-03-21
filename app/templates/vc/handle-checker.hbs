@@ -52,13 +52,12 @@
     <:title>Check Handle Results</:title>
     <:body>
       {{#each this.checkedHandles as |checked|}}
-        <ChAccordion @isInitOpen={{true}} class="d-inline-block" style="vertical-align: top" as |accordion|>
+        <ChAccordion @isInitOpen={{true}} class="d-inline-block align-top" as |accordion|>
           <accordion.title>{{checked.name}} ({{checked.conflicts.length}})</accordion.title>
           <accordion.body>
-            {{#each checked.conflicts as |conflict index|}}
+            {{#each checked.conflicts as |conflict|}}
               <div class="card">
                 <div class="card-header">
-                  {{! template-lint-disable no-nested-interactive}}
                   <button class="btn btn-link" type="button" {{action this.toggleConflict conflict}}>
                     {{conflict.description}}
                   </button>
