@@ -296,13 +296,15 @@ export default class AutocompleteInputComponent extends Component {
    * Callback to parent component when the mode has changed
    *
    * @param {string} value selected mode value
+   * @param {Function} closeDropdown
    * @param {MouseEvent} event selection event.
    */
 
   @action
-  selectModeEvent(value, event) {
+  selectModeEvent(value, closeDropdown, event) {
     event.preventDefault();
     const {onModeChange} = this.args;
+    closeDropdown();
     if (onModeChange) {
       onModeChange(value);
     }
