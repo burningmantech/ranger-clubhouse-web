@@ -22,6 +22,7 @@ export default class MentorPostSeasonSummaryRoute extends ClubhouseRoute {
     if (isExiting) {
       controller.set('year', null);
       controller.set('filter', 'all');
+      controller.set('callsignFilter', '');
     }
   }
 }
