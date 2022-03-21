@@ -11,6 +11,7 @@ export default class OnlineTrainingLaunchComponent extends Component {
   @tracked showExodusDialog = false;
   @tracked showErrorDialog = false;
 
+  @tracked username = null;
   @tracked password = null;
   @tracked alreadyExists = false;
 
@@ -26,8 +27,10 @@ export default class OnlineTrainingLaunchComponent extends Component {
       .then((result) => {
         if (result.status === 'exists') {
           this.alreadyExists = true;
+          this.username = result.username;
         } else {
           this.password = result.password;
+          this.username = result.username;
         }
         this.expiryDate = result.expiry_date;
         this.showExodusDialog = true;

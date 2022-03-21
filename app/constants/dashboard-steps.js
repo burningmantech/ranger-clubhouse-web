@@ -216,7 +216,7 @@ export const VERIFY_PERSONAL_INFO = {
 export const ONLINE_TRAINING = {
   //name: 'Read the Ranger Manual & Complete The Online Training Course',
   skipPeriod: AFTER_EVENT,
-  check({milestones, isPNV, person, prevCompleted}) {
+  check({milestones, isPNV, prevCompleted}) {
     let name = `Read the Ranger Manual & Complete ${otName(milestones)}`;
     if (milestones.online_training_passed) {
       return {
@@ -242,12 +242,12 @@ export const ONLINE_TRAINING = {
       };
     }
 
-    const duration = (person.isActive && !milestones.is_binary) ? 'around 30 to 45 minutes' : 'up to 90 minutes';
+    const duration = milestones.needs_full_training ? 'up to 90 minutes or more' : 'around 30 to 45 minutes';
 
     return {
       result: ACTION_NEEDED,
       message: htmlSafe('<p>The Ranger Manual can be found at <a href="' + config('RangerManualUrl') + '" rel="noopener noreferrer" target="_blank">rangers.burningman.org</a>.</p>' +
-        `<p>The Online Training Course will take ${duration} to complete. </p> <p>Note: it may take up to 15 mins or more for the Clubhouse to record your course completion.</p>`),
+        `<p>The Online Training Course will take ${duration} to complete. </p> <p>Note: it may take up to 20 minutes or more for the Clubhouse to record your course completion.</p>`),
       isOnlineTraining: true,
       name
     };
