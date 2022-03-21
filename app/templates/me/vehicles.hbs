@@ -150,6 +150,7 @@
     {{#if this.motorpoolPolicySigned}}
       <span class="text-success">{{fa-icon "check"}} You have already agreed to Motorpool Policy. Thank you!</span>
     {{else}}
+      <div class="text-danger">{{fa-icon "times"}} You have not agreed to the  Ranger Vehicle Motorpool Policy yet.</div>
       Visit the
       <LinkTo @route="me.agreements.sign" @model="motorpool-policy">Ranger Vehicle Motorpool Policy</LinkTo>
       page to read and agree to the policy.
@@ -159,6 +160,7 @@
     {{#if this.personalVehicleSigned}}
       <span class="text-success">{{fa-icon "check"}} You have already agreed to the Personal Vehicle Agreement. Thank you!</span>
     {{else}}
+      <div class="text-danger">{{fa-icon "times"}} You have not agreed to the Ranger Personal Vehicle Agreemen yet.</div>
       Visit the
       <LinkTo @route="me.agreements.sign" @model="personal-vehicle-agreement">Ranger Personal Vehicle Agreement</LinkTo>
       page to read and agree to the policy.
