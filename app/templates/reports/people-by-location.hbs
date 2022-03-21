@@ -1,4 +1,8 @@
 <YearSelect @title="People By Location" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+{{#if this.session.canViewEmail}}
+  <PersonalInfoWarning />
+{{/if}}
+
 <FormRow @class="mt-2">
   <FormLabel @auto={{true}}>Filter</FormLabel>
   <div class="col-auto">
