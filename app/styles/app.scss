@@ -1,6 +1,7 @@
 
 @import "bootstrap-custom";
 @import "ember-bootstrap/bootstrap";
+@import "bootstrap-print";
 
 // Clubhouse styling
 @import "access-documents";
@@ -40,14 +41,14 @@ main {
 
 @media print {
   h1 {
-    font-size: 1.2rem;
+    font-size: 1.2rem !important;
   }
 
   body {
     margin: 0.1cm !important;
-    line-height: 1.3;
+    line-height: 1.3 !important;
     background: #ffffff !important;
-    color: #000;
+    color: #000 !important;
   }
 
   section {
@@ -59,7 +60,7 @@ main {
   }
 
   .d-print-page-break {
-    page-break-before: always;
+    page-break-before: always !important;
   }
 
   main {
