@@ -20,6 +20,15 @@
     />
   </FormRow>
 
+  <FormRow>
+    <f.text @name="lms_username"
+            @label="Moodle Username"
+            @size={{40}}
+            @maxlength={{200}}
+            @hint="Aka callsign, lower case, only alphanumeric characters, no spaces."
+    />
+  </FormRow>
+
   <f.submit @label="Update"/>
   {{#if this.person.isSaving}}
     <LoadingIndicator/>
