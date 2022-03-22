@@ -1,10 +1,12 @@
 <div class="accordion-container" id="ticket-{{@id}}">
-  <div class="accordion-title">
-    <a href class="d-block" {{action @toggleCard @id}}>
-      {{fa-icon (if (get @showing @id) "minus" "plus")}}
+  <a class="accordion-title" href {{action @toggleCard @id}}>
+    <div class="accordion-title-text">
       {{yield to="title"}}
-    </a>
-  </div>
+    </div>
+    <div class="accordion-title-icon">
+      {{fa-icon (if (get @showing @id) "minus" "plus")}}
+    </div>
+  </a>
   <BsCollapse @collapsed={{not (get @showing @id)}} class="accordion-body">
     {{yield to="body"}}
     {{#if @nextAction}}
