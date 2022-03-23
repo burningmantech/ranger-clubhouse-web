@@ -46,8 +46,17 @@
             <div class="schedule-signup-description">
               <span class="schedule-sm-label">{{@position.title}}</span>
               <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
+              {{#if (and slot.trainer_slot_id (eq slot.slot_max 0))}}
+                <div class="text-danger">No trainers signed up yet.<br>Check back later.</div>
+              {{/if}}
             </div>
-            <div class="schedule-signups">{{slot-full-indicator slot.slot_signed_up slot.slot_max}}</div>
+            <div class="schedule-signups">
+              {{#if (and slot.trainer_slot_id (eq slot.slot_max 0))}}
+                -
+              {{else}}
+                {{slot-full-indicator slot.slot_signed_up slot.slot_max}}
+              {{/if}}
+            </div>
             <div class="schedule-actions">
               <button type="button" {{on "click" (fn @showPeople slot)}} class="btn btn-secondary btn-sm"
                       title="View people signed up"
