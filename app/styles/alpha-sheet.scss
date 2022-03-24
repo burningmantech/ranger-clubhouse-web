@@ -10,8 +10,12 @@
   margin-bottom: 10px;
   margin-left:auto;
 }
+
 // Section header
 .alpha-sheet-section-header {
+  display: flex;
+  justify-content: space-between;
+
   width: 100%;
   background-color: #ececec;
   padding: 5px 15px;
