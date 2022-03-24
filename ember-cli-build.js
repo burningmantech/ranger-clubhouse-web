@@ -1,7 +1,9 @@
 'use strict';
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
+// eslint-disable-next-line node/no-extraneous-require
 const writeFile = require('broccoli-file-creator');
+// eslint-disable-next-line node/no-extraneous-require
 const MergeTrees = require("broccoli-merge-trees");
 
 const env = EmberApp.env();
@@ -23,24 +25,8 @@ module.exports = function (defaults) {
       enabled: IS_PROD,
     },
 
-    'ember-cli-babel': {
-      includePolyfill: IS_PROD,
-    },
-
     'ember-simple-auth': {
       useSessionSetupMethod: true,
-    },
-
-    autoprefixer: {
-      sourcemap: false // Was never helpful
-    },
-
-    sourcemaps: {
-      enabled: IS_PROD
-    },
-
-    fingerprint: {
-      enabled: IS_PROD //Asset rewrite will takes more time and fingerprinting can be omitted in development
     },
 
     minifyCSS: {
@@ -51,7 +37,6 @@ module.exports = function (defaults) {
       onlyIncluded: false,
       includePaths: [
         'node_modules/cropperjs/src/css',
-//        'node_modules/bootstrap/scss',
         'node_modules/ember-bootstrap/'
       ]
     },
@@ -65,14 +50,6 @@ module.exports = function (defaults) {
   // Use `app.import` to add additional libraries to the generated
   // output files.
 
-  // app.import('node_modules/@popperjs/core/dist/umd/popper.js', {
-  //  type: 'vendor',
-  // prepend: true
-  //});
-  //app.import('node_modules/bootstrap/dist/js/bootstrap.js', {
-  // type: 'vendor',
-  // prepend: true
-  //});
 
   // app.import('node_modules/@okta/okta-signin-widget/dist/css/okta-sign-in.min.css');
 
