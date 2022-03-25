@@ -1,7 +1,9 @@
 'use strict';
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
+// eslint-disable-next-line node/no-extraneous-require
 const writeFile = require('broccoli-file-creator');
+// eslint-disable-next-line node/no-extraneous-require
 const MergeTrees = require("broccoli-merge-trees");
 
 const env = EmberApp.env();
@@ -13,28 +15,18 @@ module.exports = function (defaults) {
       plugins: [require.resolve('ember-auto-import/babel-plugin')],
     },
 
-    tests: IS_TEST, // Don't even generate test files unless a test build
+    // Don't even generate test files unless a test build
+    tests: IS_TEST,
 
-    storeConfigInMeta: false, // Don't store configuration in meta tag
+    // Don't store configuration in meta tag
+    storeConfigInMeta: false,
 
     'ember-cli-terser': {
       enabled: IS_PROD,
     },
 
-    'ember-cli-babel': {
-      includePolyfill: IS_PROD,
-    },
-
-    autoprefixer: {
-      sourcemap: false // Was never helpful
-    },
-
-    sourcemaps: {
-      enabled: IS_PROD
-    },
-
-    fingerprint: {
-      enabled: IS_PROD //Asset rewrite will takes more time and fingerprinting can be omitted in development
+    'ember-simple-auth': {
+      useSessionSetupMethod: true,
     },
 
     minifyCSS: {
@@ -42,27 +34,22 @@ module.exports = function (defaults) {
     },
 
     sassOptions: {
-      onlyIncluded: true,
+      onlyIncluded: false,
       includePaths: [
         'node_modules/cropperjs/src/css',
-        'node_modules/bootstrap/scss',
+        'node_modules/ember-bootstrap/'
       ]
     },
+
+    'ember-bootstrap': {
+      bootstrapVersion: 5,
+      importBootstrapCSS: false
+    }
   });
 
   // Use `app.import` to add additional libraries to the generated
   // output files.
 
-  app.import('node_modules/jquery-datetimepicker/jquery.datetimepicker.css');
-  app.import('node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.min.js');
-  // app.import('node_modules/@popperjs/core/dist/umd/popper.js', {
-  //  type: 'vendor',
-  // prepend: true
-  //});
-  //app.import('node_modules/bootstrap/dist/js/bootstrap.js', {
-  // type: 'vendor',
-  // prepend: true
-  //});
 
   // app.import('node_modules/@okta/okta-signin-widget/dist/css/okta-sign-in.min.css');
 

@@ -1,63 +1,58 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {schedule} from '@ember/runloop';
-import bootstrap from 'bootstrap';
-
+import {schedule,later} from '@ember/runloop';
 
 export default class ChAccordionComponent extends Component {
   @tracked isOpen = false;
-  bodyElement = null;
+  @tracked bodyOpened = false;
+  @tracked isWorking = false;
+
+  constructor() {
+    super(...arguments);
+    this.bodyOpened = this.isOpen = this.args.isInitOpen;
+  }
+
+  @action
+  onInsert() {
+    this.args.onInsert?.(this);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.args.onWillDestroy?.(this);
+  }
 
   @action
   onClickAction() {
-    if (!this.bodyElement) {
-      return; // unlikely, but ya never know..
-    }
-
     if (this.isOpen) {
-      // hidden event will deal with things
-      this.bodyCollapse.hide();
+      // Close up, onHidden event will set isOpen to false.
+      this.bodyOpened = false;
       return;
     }
 
-    this.isOpen = true;
-    if (this.args.onClick) {
-      this.args.onClick(true);
-    }
+    this.isWorking = true;
 
-    // Reveal body after it's rendered
-    schedule('afterRender', () => this.bodyCollapse.show());
-  }
-
-  @action
-  onInsertAction(element) {
-    this.bodyElement = element;
-    this.bodyCollapse = new bootstrap.Collapse(element, { toggle: false });
-
-    element.addEventListener('hidden.bs.collapse', () => {
-      this.isOpen = false;
-      if (this.args.onClick) {
-        this.args.onClick(false);
-      }
-    });
-
-    element.addEventListener('shown.bs.collapse', () => {
-      if (this.isOpen) {
-        return;
-      }
-      schedule('afterRender', () => this.isOpen = true);
-    });
-
-    if (this.args.isInitOpen) {
+    // Allow the spinning icon to be rendered before opening the body.
+    later(() => {
       this.isOpen = true;
-    }
+      this.args.onClick?.(true);
+      // Reveal body after it has rendered
+      schedule('afterRender', () => {
+        this.bodyOpened = true;
+        this.isWorking = false;
+      });
+    }, 100);
   }
 
   @action
-  onDestroyAction() {
-    if (this.bodyElement) {
-      this.bodyCollapse.dispose();
-    }
+  onShown() {
+    this.isOpening = false;
+  }
+
+  @action
+  onHidden() {
+    this.isOpen = false;
+    this.args.onClick?.(false);
   }
 }

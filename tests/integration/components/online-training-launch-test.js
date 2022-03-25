@@ -12,6 +12,6 @@ module('Integration | Component | online-training-launch', function(hooks) {
 
     await render(hbs`<OnlineTrainingLaunch  @text="Click Here" @person={{this.person}} @url={{this.url}}/>`);
 
-    assert.dom('a').hasText('Click Here');
+    assert.dom('button').hasText('Click Here');
   });
 });

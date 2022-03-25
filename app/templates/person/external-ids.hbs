@@ -14,16 +14,23 @@
 
   <FormRow>
     <f.text @name="lms_id"
-            @label="LMS Account ID"
+            @label="Moodle Account ID (aka idnumber)"
             @size={{40}}
             @maxlength={{200}}
     />
   </FormRow>
 
   <FormRow>
-    <f.submit @label="Update"/>
-    {{#if this.person.isSaving}}
-      <LoadingIndicator/>
-    {{/if}}
+    <f.text @name="lms_username"
+            @label="Moodle Username"
+            @size={{40}}
+            @maxlength={{200}}
+            @hint="Aka callsign, lower case, only alphanumeric characters, no spaces."
+    />
   </FormRow>
+
+  <f.submit @label="Update"/>
+  {{#if this.person.isSaving}}
+    <LoadingIndicator/>
+  {{/if}}
 </ChForm>

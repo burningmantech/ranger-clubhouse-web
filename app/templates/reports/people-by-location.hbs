@@ -1,4 +1,8 @@
 <YearSelect @title="People By Location" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+{{#if this.session.canViewEmail}}
+  <PersonalInfoWarning />
+{{/if}}
+
 <FormRow @class="mt-2">
   <FormLabel @auto={{true}}>Filter</FormLabel>
   <div class="col-auto">
@@ -18,56 +22,63 @@
 </FormRow>
 Showing {{this.viewPeople.length}} of {{this.people.length}}.
 {{#each this.countries key="country" as |country idx|}}
-  <ChAccordion id="country-{{idx}}" as |accordion|>
+  <ChAccordion @onInsert={{this.onAccordionInsert}} @onWillDestroy={{this.onAccordionDestroy}} id="country-{{idx}}" as
+               |accordion|>
     <accordion.title>
       {{country.full_name}} ({{pluralize country.people.length "person"}})
     </accordion.title>
     <accordion.body>
-      <p>
-        <UiButton @type="secondary" @onClick={{fn this.exportCountryToCSV country}}>
-          Export {{country.full_name}} to CSV
-        </UiButton>
-      </p>
-      <table class="table table-striped table-hover table-sm">
-        <thead>
-        <tr>
-          <th>Callsign</th>
-          <th>Status</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>City</th>
-          <th>State</th>
-          <th>Postal Code</th>
-          <th>{{this.year}} Signed Up</th>
-          <th>{{this.year}} Worked</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each country.people key="id" as |person|}}
+      {{#if accordion.isOpen}}
+        <p>
+          <UiButton @type="secondary" @onClick={{fn this.exportCountryToCSV country}}>
+            Export {{country.full_name}} to CSV
+          </UiButton>
+        </p>
+        <table class="table table-striped table-hover table-sm">
+          <thead>
           <tr>
-            <td>
-              <PersonLink @person={{person}} />
-            </td>
-            <td>{{person.status}}</td>
-            <td>{{person.first_name}} {{person.last_name}}</td>
-            <td>
-              {{#if person.email}}
-                {{mail-to person.email}}
-              {{else}}
-                -
-              {{/if}}
-            </td>
-            <td>{{person.city}}</td>
-            <td>
-              <PresentOrNot @value={{person.state}} @empty="-"/>
-            </td>
-            <td>{{person.zip}}</td>
-            <td>{{yesno person.signed_up}}</td>
-            <td>{{yesno person.worked}}</td>
+            <th>Callsign</th>
+            <th>Status</th>
+            <th>Name</th>
+            {{#if this.session.canViewEmail}}
+              <th>Email</th>
+            {{/if}}
+            <th>City</th>
+            <th>State</th>
+            <th>Postal Code</th>
+            <th>{{this.year}} Signed Up</th>
+            <th>{{this.year}} Worked</th>
           </tr>
-        {{/each}}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+          {{#each country.people key="id" as |person|~}}
+            <tr>
+              <td>
+                <PersonLink @person={{person}} />
+              </td>
+              <td>{{person.status}}</td>
+              <td>{{person.first_name}} {{person.last_name}}</td>
+              {{~#if this.session.canViewEmail~}}
+                <td>
+                  {{~#if person.email~}}
+                    {{mail-to person.email}}
+                    {{~else~}}
+                    -
+                  {{~/if~}}
+                </td>
+              {{~/if~}}
+              <td>{{person.city}}</td>
+              <td>
+                <PresentOrNot @value={{person.state}} @empty="-"/>
+              </td>
+              <td>{{person.zip}}</td>
+              <td>{{yesno person.signed_up}}</td>
+              <td>{{yesno person.worked}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{/if}}
     </accordion.body>
   </ChAccordion>
 {{/each}}
@@ -76,4 +87,10 @@ Showing {{this.viewPeople.length}} of {{this.people.length}}.
   <LoadingDialog>
     Hang Tight - Filtering the list
   </LoadingDialog>
+{{/if}}
+{{#if this.isExpanding}}
+  <LoadingDialog>
+    Hang Tight - toggling the list
+  </LoadingDialog>
+
 {{/if}}

@@ -17,19 +17,16 @@
             </p>
             <p>
               <a href={{config "JoiningRangerSpecialTeamsUrl"}} rel="noopener noreferrer" target="_blank">
-                How To Join Ranger Special Teams
+                Ranger Special Teams and How To Join Them
               </a>
             </p>
             <p>
-              <a href={{config "RangerPoliciesUrl"}} rel="noopener noreferrer" target="_blank">Ranger Policies
-                Folder</a>
+              <a href={{config "RangerPoliciesUrl"}} rel="noopener noreferrer" target="_blank">Ranger Department
+                Policies</a>
             </p>
           {{/unless}}
           <a href {{action this.toggleIconLegend}}>Dashboard/Checklist icon legend</a>
-          <div class="border bg-white rounded mt-3 p-3 collapse"
-            {{did-insert this.legendInserted}}
-            {{will-destroy this.willDestroyLegend}}
-          >
+          <BsCollapse @collapsed={{this.hideLegend}} class="border bg-white rounded mt-3 p-3 collapse">
             <p>
               <a href {{action this.toggleIconLegend}}>Hide Legend</a>
             </p>
@@ -62,7 +59,7 @@
               <DashboardIcon @result="blocked"/>
               The dashboard is entirely blocked - No further steps may be acted upon.
             </p>
-          </div>
+          </BsCollapse>
         </div>
       </div>
     </div>

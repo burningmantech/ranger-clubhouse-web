@@ -1,15 +1,15 @@
-<NavbarMenu @title="Vol Coord">
-  <NavbarMenuItem @route="vc.handle-checker" @item="Check Callsigns" />
-  <NavbarMenuItem @route="vc.photo-review" @item="Photo Review" />
-  <NavbarMenuItem @route="vc.photos" @item="Photos" />
-  <NavbarMenuItem @route="vc.spigot" @item="Spigot Flow" />
+<NavbarMenu @nav={{@nav}} @title="Vol Coord" as |menu|>
+  <NavbarMenuItem @menu={{menu}} @route="vc.handle-checker" @item="Check Callsigns" />
+  <NavbarMenuItem @menu={{menu}} @route="vc.photo-review" @item="Photo Review" />
+  <NavbarMenuItem @menu={{menu}} @route="vc.photos" @item="Photos" />
+  <NavbarMenuItem @menu={{menu}} @route="vc.spigot" @item="Spigot Flow" />
   {{#if (has-role "edit-access-docs")}}
-    <NavbarMenuItem @route="vc.access-documents" @item="Manage Access Docs" />
+    <NavbarMenuItem @menu={{menu}} @route="vc.access-documents" @item="Manage Access Docs" />
   {{/if}}
   {{#if (has-role "edit-bmids")}}
-    <NavbarMenuItem @route="vc.bmid" @item="Manage BMIDs" />
+    <NavbarMenuItem @menu={{menu}} @route="vc.bmid" @item="Manage BMIDs" />
   {{/if}}
   {{#if (has-role "intake")}}
-    <NavbarMenuItem @route="vc.unified-flagging" @item="Unified Flagging" />
+    <NavbarMenuItem @menu={{menu}} @route="vc.unified-flagging" @item="Unified Flagging" />
   {{/if}}
 </NavbarMenu>

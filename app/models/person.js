@@ -64,6 +64,7 @@ export default class PersonModel extends PersonMixin(Model) {
 
   @attr('string') lms_id;
   @attr('string') lms_course;
+  @attr('string') lms_username;
 
 
   @attr('boolean') behavioral_agreement;

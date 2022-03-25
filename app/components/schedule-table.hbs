@@ -53,7 +53,8 @@
             {{/unless~}}
             {{hour-minute-format slot.slot_duration}}
           </div>
-          <div class="schedule-credits"><span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}
+          <div class="schedule-credits">
+            <span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}
           </div>
           <div class="schedule-table-description">
             {{slot.position_title}}<br>
@@ -73,14 +74,14 @@
             {{! Note: magic here -  by not using onclick, no event argument will be passed to leaveSlot. That tells the method to allow the page to scroll.}}
               <button type="button" {{on "click" (fn @leaveSlot slot)}} class="btn btn-danger btn-sm"
                       title="Remove shift from schedule" disabled={{slot.is_submitting}}>
-                {{#if slot.is_submitting}}
+                {{~#if slot.is_submitting~}}
                   <SpinIcon />
-                {{else}}
+                {{~else~}}
                   {{fa-icon "trash-alt" type="fas"}}
-                {{/if}}
+                {{~/if~}}
                 Remove
               </button>
-            {{/if}}
+            {{~/if~}}
           </div>
         </div>
       {{else}}
@@ -89,12 +90,12 @@
             {{fa-icon "exclamation"}}
           </div>
           <div>
-            {{#if @slots}}
+            {{~#if @slots~}}
               <b>No upcoming shifts were found.</b>
               <a href {{action (mut this.viewSchedule) "all"}}>View Previous Shifts</a>
-            {{else}}
+            {{~else~}}
               <b class="text-danger">No {{@year}} shifts were found.</b>
-            {{/if}}
+            {{~/if~}}
           </div>
         </div>
       {{/each}}
@@ -107,8 +108,8 @@
   <:body>
     <p>
       {{#if @scheduleSummary.event_start}}
-        The {{@year}} Event Week is {{shift-format @scheduleSummary.event_start}} to {{shift-format
-        @scheduleSummary.event_end}}.
+        The {{@year}} Event Week is {{shift-format @scheduleSummary.event_start}} to
+        {{shift-format @scheduleSummary.event_end}}.
       {{else}}
         <b class="text-danger">Event dates have not been entered for the year. Hour &amp; credits breakdowns will not be
           accurate.</b>

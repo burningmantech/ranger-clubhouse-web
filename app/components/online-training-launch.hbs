@@ -1,4 +1,4 @@
-<a href {{on "click" this.setupAccountAction}}>{{@text}}</a>
+<UiButton @onClick={{this.setupAccountAction}} @class="btn-responsive">{{@text}}</UiButton>
 {{#if this.showCreationDialog}}
   <LoadingDialog>
     Setting up your Online Course account. Please wait.
@@ -23,11 +23,15 @@
 {{#if this.showExodusDialog}}
   <ModalDialog as |Modal|>
     <Modal.body>
-      <h3>You are about to leave the Clubhouse and head to the Ranger Online Course website.</h3>
+      <h4>{{fa-icon "hand-point-right"}} You are about to leave the Clubhouse and head to the Online Course website.</h4>
       {{#if this.alreadyExists}}
         <p>
           Your online course account has already been set up.
         </p>
+      <p>
+        <b>Your Online Course username is:</b><br>
+        {{this.username}}
+      </p>
       {{else}}
         <p>
           A Ranger online course website account has been set up, and you have been enrolled.
@@ -37,21 +41,23 @@
             and password will be needed to log into the online course website:</b>
         </p>
         <p>
-          <b>Username:</b> {{@person.email}}<br>
+          <b>Username:</b> {{this.username}}<br>
           <b>Password:</b> {{this.password}}<br>
+        </p>
+        <p>
+          <b>Your username is your callsign in all lower case, ONLY has letters (a-z), and numbers (0-9). All spaces, dashes, and
+            other special characters have been removed.</b>
         </p>
         <p>
           <i>The above credentials are ONLY for the online course website and are SEPARATE from the Clubhouse.</i>
         </p>
       {{/if}}
-    </Modal.body>
-    <Modal.footer>
-      <UiButton @onClick={{this.launchTrainingAction}} @disabled={{this.isSubmitting}}>
+      <UiButton @onClick={{this.launchTrainingAction}} @disabled={{this.isSubmitting}} @class="btn-responsive">
         Go To Online Course
       </UiButton>
       {{#if this.isSubmitting}}
         <LoadingIndicator @text="Working"/>
       {{/if}}
-    </Modal.footer>
+    </Modal.body>
   </ModalDialog>
 {{/if}}
