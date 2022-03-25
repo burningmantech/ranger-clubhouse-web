@@ -1,48 +1,48 @@
-<NavbarMenu @title="Reports" @isLarge={{true}}>
+<NavbarMenu @nav={{@nav}} @title="Reports" @isLarge={{true}} as |menu|>
   <NavbarMenuSection @section="Schedule">
-    <NavbarMenuItem @route="reports.shift-lead" @item="Shift Lead Report" />
-    <NavbarMenuItem @route="reports.schedule-by-callsign" @item="Schedule by Callsign" />
-    <NavbarMenuItem @route="reports.schedule-by-position" @item="Schedule by Position" />
-    <NavbarMenuItem @route="reports.shift-coverage" @item="Coverage Report" />
-    <NavbarMenuItem @route="reports.shift-signups" @item="Shift Signups" />
-    <NavbarMenuItem @route="reports.hq-forecast" @item="HQ Checkin/Out Forecast" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.shift-lead" @item="Shift Lead Report" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.schedule-by-callsign" @item="Schedule by Callsign" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.schedule-by-position" @item="Schedule by Position" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.shift-coverage" @item="Coverage Report" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.shift-signups" @item="Shift Signups" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.hq-forecast" @item="HQ Checkin/Out Forecast" />
   </NavbarMenuSection>
   <NavbarMenuSection @section="People">
-    <NavbarMenuItem @route="reports.people-by-position" @item="People by Position" />
-    <NavbarMenuItem @route="reports.people-by-role" @item="People by Role" />
-    <NavbarMenuItem @route="reports.people-by-status" @item="People By Status" />
-    <NavbarMenuItem @route="reports.people-by-location" @item="People by Location" />
-    <NavbarMenuItem @route="reports.special-teams" @item="People By Special Team" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.people-by-position" @item="People by Position" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.people-by-role" @item="People by Role" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.people-by-status" @item="People By Status" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.people-by-location" @item="People by Location" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.special-teams" @item="People By Special Team" />
   </NavbarMenuSection>
   <NavbarMenuSection @section="Timesheets">
-    <NavbarMenuItem @route="reports.on-duty" @query={{hash over_hours=null}} @item="People On Duty" />
-    <NavbarMenuItem @route="reports.on-duty" @query={{hash over_hours=6}} @item="... Over 6 Hours" />
-    <NavbarMenuItem @route="reports.flakes" @item="Flake Report" />
-    <NavbarMenuItem @route="reports.timesheet-totals" @item="Timesheet Totals" />
-    <NavbarMenuItem @route="reports.timesheet-by-callsign" @item="Timesheet By Callsign" />
-    <NavbarMenuItem @route="reports.timesheet-by-position" @item="Timesheet By Position" />
-    <NavbarMenuItem @route="reports.timesheet-correction-requests" @item="Corrections Requests" />
-    <NavbarMenuItem @route="reports.timesheet-unconfirmed" @item="Timesheet Unconfirmed" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.on-duty" @query={{hash over_hours=null}} @item="People On Duty" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.on-duty" @query={{hash over_hours=6}} @item="... Over 6 Hours" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.flakes" @item="Flake Report" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-totals" @item="Timesheet Totals" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-by-callsign" @item="Timesheet By Callsign" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-by-position" @item="Timesheet By Position" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-correction-requests" @item="Corrections Requests" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-unconfirmed" @item="Timesheet Unconfirmed" />
   </NavbarMenuSection>
   <NavbarMenuSection @section="Assets">
-    <NavbarMenuItem @route="reports.asset-history" @item="Non-Radio Asset History" />
-    <NavbarMenuItem @route="reports.assets-outstanding" @item="Assets Outstanding" />
-    <NavbarMenuItem @route="reports.radio-assets" @item="Radio Assets" />
-    <NavbarMenuItem @route="reports.radio-checkout" @item="Radio Checkout Report" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.asset-history" @item="Non-Radio Asset History" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.assets-outstanding" @item="Assets Outstanding" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.radio-assets" @item="Radio Assets" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.radio-checkout" @item="Radio Checkout Report" />
   </NavbarMenuSection>
   <NavbarMenuSection @section="Quartermaster">
-    <NavbarMenuItem @route="reports.freaking-years" @item="Freaking Years" />
-    <NavbarMenuItem @route="reports.potential-shirts" @item="Potential Earned Shirts" />
-    <NavbarMenuItem @route="reports.alpha-shirts" @item="Alpha Shirts" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.freaking-years" @item="Freaking Years" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.potential-shirts" @item="Potential Earned Shirts" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.alpha-shirts" @item="Alpha Shirts" />
   </NavbarMenuSection>
   <NavbarMenuSection @section="Vehicles">
-    <NavbarMenuItem @route="reports.vehicle-paperwork" @item="Vehicle Paperwork" />
-    <NavbarMenuItem @route="reports.vehicle-registry" @item="Vehicle Registry" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.vehicle-paperwork" @item="Vehicle Paperwork" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.vehicle-registry" @item="Vehicle Registry" />
   </NavbarMenuSection>
   <NavbarMenuSection @section="Other">
-    <NavbarMenuItem @route="reports.position-sanity-checker" @item="Position Sanity Check" />
-    <NavbarMenuItem @route="reports.languages" @item="Languages" />
-    <NavbarMenuItem @route="reports.sandman-qualified" @item="Sandman Qualified" />
-    <NavbarMenuItem @route="reports.rollcall" @item="Rollcall" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.position-sanity-checker" @item="Position Sanity Check" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.languages" @item="Languages" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.sandman-qualified" @item="Sandman Qualified" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.rollcall" @item="Rollcall" />
   </NavbarMenuSection>
 </NavbarMenu>

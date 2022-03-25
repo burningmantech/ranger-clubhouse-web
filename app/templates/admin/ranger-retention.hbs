@@ -1,43 +1,45 @@
-<h1>Ranger Retention Report</h1>
-<p>
-  This report shows active, inactive, inactive extension, and retired status Rangers who have worked from
-  any year from {{this.start_year}} to {{this.end_year}}. A work year is excluded if the Ranger had only Alpha,
-  Training,
-  and/or Deep Freeze timesheet entries.
-</p>
-<p>
-  The information is used by the Ranger Retention Team to send out retention surveys post-event.
-</p>
-<p>
-  <UiButton @onClick={{this.exportToCsv}}>Export To CSV</UiButton>
-</p>
-<table class="table table-sm table-width-auto table-striped table-hover">
-  <thead>
-  <tr>
-    <th>Callsign</th>
-    <th>Status</th>
-    <th>Name</th>
-    <th>First Year</th>
-    <th>Last Year</th>
-    <th>Years Total</th>
-  </tr>
-  </thead>
-  <tbody>
-  {{#each this.people as |person|}}
+<main>
+  <h1>Ranger Retention Report</h1>
+  <p>
+    This report shows active, inactive, inactive extension, and retired status Rangers who have worked from
+    any year from {{this.start_year}} to {{this.end_year}}. A work year is excluded if the Ranger had only Alpha,
+    Training,
+    and/or Deep Freeze timesheet entries.
+  </p>
+  <p>
+    The information is used by the Ranger Retention Team to send out retention surveys post-event.
+  </p>
+  <p>
+    <UiButton @onClick={{this.exportToCsv}}>Export To CSV</UiButton>
+  </p>
+  <table class="table table-sm table-width-auto table-striped table-hover">
+    <thead>
     <tr>
-      <td>
-        <PersonLink @person={{person}} />
-      </td>
-      <td>{{person.status}}</td>
-      <td>{{person.first_name}} {{person.last_name}}</td>
-      <td>{{person.first_year}}</td>
-      <td>{{person.last_year}}</td>
-      <td>{{person.total_years}}</td>
+      <th>Callsign</th>
+      <th>Status</th>
+      <th>Name</th>
+      <th>First Year</th>
+      <th>Last Year</th>
+      <th>Years Total</th>
     </tr>
-  {{else}}
-    <tr>
-      <td colspan="6"><b class="text-danger">No Rangers were found? Odd.</b></td>
-    </tr>
-  {{/each}}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+    {{#each this.people as |person|}}
+      <tr>
+        <td>
+          <PersonLink @person={{person}} />
+        </td>
+        <td>{{person.status}}</td>
+        <td>{{person.first_name}} {{person.last_name}}</td>
+        <td>{{person.first_year}}</td>
+        <td>{{person.last_year}}</td>
+        <td>{{person.total_years}}</td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="6"><b class="text-danger">No Rangers were found? Odd.</b></td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</main>

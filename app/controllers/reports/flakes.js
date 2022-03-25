@@ -3,7 +3,6 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 export default class ReportsFlakesController extends ClubhouseController {
-  @tracked expandAll = false;
   @tracked date;
 
   queryParams = [ 'date' ];
@@ -20,11 +19,5 @@ export default class ReportsFlakesController extends ClubhouseController {
   @action
   viewCurrentPeriod() {
     this.date = null;
-  }
-
-  @action
-  toggleExpandAll() {
-    this.expandAll = !this.expandAll;
-    this.house.toggleAllAccordions(this.expandAll);
   }
 }

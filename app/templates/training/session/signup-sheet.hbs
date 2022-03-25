@@ -45,43 +45,43 @@
     </table>
   {{/each}}
 
-  <h1 class="d-print-page-break">
-    {{year-format this.slot.begins}} {{this.slot.description}} - {{shift-format this.slot.begins}} Walk-Ins
-    <div class="float-end small">Page {{add this.studentPages.length 1}} of {{add this.studentPages.length 1}}</div>
-  </h1>
-  <table class="signup-table">
-    <tbody>
-    <NumberOfTimes @times={{8}}>
-      <tr>
-        <td class="w-25">
-          <div class="signup-label">Handle (if known)</div>
-        </td>
-        <td class="w-25">
-          <div class="signup-label">Real Name</div>
-        </td>
-
-        <td class="w-50">
-          <div class="signup-label">Sign Here</div>
-        </td>
-      </tr>
-      <tr>
-        <td class="w-50" colspan="2">
-          <div class="signup-label">Email Address</div>
-        </td>
-        <td class="w-50">
-          <div class="signup-label">Phone Number</div>
-        </td>
-      </tr>
-      <tr>
-        <td class="w-100" colspan="3">
-          <div class="signup-label">Notes</div>
-        </td>
-      </tr>
-
-      <tr class="signup-separator">
-        <td colspan="3">&nbsp;</td>
-      </tr>
-    </NumberOfTimes>
-    </tbody>
-  </table>
+  {{#if this.training.is_art}}
+    <h1 class="d-print-page-break">
+      {{year-format this.slot.begins}} {{this.slot.description}} - {{shift-format this.slot.begins}} Walk-Ins
+      <div class="float-end small">Page {{add this.studentPages.length 1}} of {{add this.studentPages.length 1}}</div>
+    </h1>
+    <table class="signup-table">
+      <tbody>
+      <NumberOfTimes @times={{8}}>
+        <tr>
+          <td class="w-25">
+            <div class="signup-label">Handle (if known)</div>
+          </td>
+          <td class="w-25">
+            <div class="signup-label">Real Name</div>
+          </td>
+          <td class="w-50">
+            <div class="signup-label">Sign Here</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="w-50" colspan="2">
+            <div class="signup-label">Email Address</div>
+          </td>
+          <td class="w-50">
+            <div class="signup-label">Phone Number</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="w-100" colspan="3">
+            <div class="signup-label">Notes</div>
+          </td>
+        </tr>
+        <tr class="signup-separator">
+          <td colspan="3">&nbsp;</td>
+        </tr>
+      </NumberOfTimes>
+      </tbody>
+    </table>
+  {{/if}}
 </div>

@@ -96,7 +96,7 @@
 
     <div class="my-2">
       {{! Desktop Display }}
-      <div class="d-sm-block d-none">
+      <div class="d-lg-block d-none">
         <LinkTo @route="training.session.trainers-report" @models={{array this.training.id this.slot.id}}
                 class="btn btn-secondary">
           {{fa-icon "list-alt"}} Trainer's Report
@@ -116,32 +116,31 @@
       </div>
 
       {{! Cellphone/Tablet display }}
-      <div class="d-block d-sm-none">
-        <div class="btn-group">
-          <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true"
-                  aria-expanded="false">
-            Additional Actions
-          </button>
-          <div class="dropdown-menu">
-            <LinkTo @route="training.session.trainers-report" @models={{array this.training.id this.slot.id}}
-                    class="dropdown-item">
-              Trainer's Report
-            </LinkTo>
-            <LinkTo @route="training.session.signup-sheet" @models={{array this.training.id this.slot.id}}
-                    class="dropdown-item">
-              Sign up Sheet
-            </LinkTo>
-            <div class="dropdown-divider"></div>
-            <a href class="dropdown-item" {{action this.toggleEmailListAction}} disabled={{is-empty this.students}}>
-              {{if this.showEmails "Hide" "List"}} Emails
-            </a>
-            {{#if this.canAddStudent}}
-              <div class="dropdown-divider"></div>
-              <a href class="dropdown-item" {{action this.showAddPersonAction}}>Add Person</a>
+      <BsDropdown class="d-block d-lg-none" as |dd|>
+        <dd.toggle class="btn btn-secondary">
+          Additional Actions
+        </dd.toggle>
+        <dd.menu as |menu|>
+          <menu.linkTo @route="training.session.trainers-report" @models={{array this.training.id this.slot.id}}>
+            Trainer's Report
+          </menu.linkTo>
+          <menu.linkTo @route="training.session.signup-sheet" @models={{array this.training.id this.slot.id}}>
+            Sign up Sheet
+          </menu.linkTo>
+          <div class="dropdown-divider"></div>
+          <menu.item>
+            {{#if this.students}}
+              <a href {{action this.toggleEmailListAction dd.closeDropdown}} class="dropdown-item">
+                {{if this.showEmails "Hide" "List"}} Emails
+              </a>
             {{/if}}
-          </div>
-        </div>
-      </div>
+          </menu.item>
+          {{#if this.canAddStudent}}
+            <div class="dropdown-divider"></div>
+            <a href class="dropdown-item" {{action this.showAddPersonAction}}>Add Person</a>
+          {{/if}}
+        </dd.menu>
+      </BsDropdown>
     </div>
 
 

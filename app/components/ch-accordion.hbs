@@ -1,6 +1,10 @@
-<div class="accordion-container" ...attributes>
-  {{yield (hash isOpen=this.isOpen
-                  closeAction=this.onClickAction
-                  title=(component "ch-accordion-title" isOpen=this.isOpen onClick=this.onClickAction)
-                  body=(component "ch-accordion-body" isOpen=this.isOpen onInsert=this.onInsertAction isInitOpen=@isInitOpen))}}
+<div class="accordion-container" ...attributes {{did-insert this.onInsert}}>
+  {{yield
+    (hash
+      isOpen=this.isOpen
+      closeAction=this.onClickAction
+      title=(component "ch-accordion-title" isOpen=this.bodyOpened onClick=this.onClickAction isWorking=this.isWorking)
+      body=(component "ch-accordion-body" isOpen=this.bodyOpened onHidden=this.onHidden onShown=this.onShown)
+    )
+  }}
 </div>

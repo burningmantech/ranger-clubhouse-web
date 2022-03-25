@@ -17,6 +17,13 @@ import {
 
 let nextCheckId = 1;
 
+class Conflict {
+  @tracked isCollapsed = true;
+  constructor(obj) {
+    Object.assign(this, obj);
+  }
+}
+
 class CheckedHandle {
   constructor(obj) {
     Object.assign(this, obj);
@@ -132,7 +139,9 @@ export default class VcHandlerCheckerController extends ClubhouseController {
     const conflicts = [];
     const rules = Object.values(this.handleRules).map((obj) => obj.rule);
     const id = nextCheckId++;
-    rules.map((rule) => conflicts.push(...rule.check(name)));
+    rules.forEach((rule) => {
+      rule.check(name).forEach((conflict) => conflicts.push(new Conflict(conflict)));
+    });
     conflicts.sort(HandleConflict.comparator);
     this.checkedHandles.unshiftObject(new CheckedHandle({
       controller: this,
@@ -152,5 +161,10 @@ export default class VcHandlerCheckerController extends ClubhouseController {
   @action
   focusElement(element) {
     element.focus();
+  }
+
+  @action
+  toggleConflict(conflict) {
+    conflict.isCollapsed = !conflict.isCollapsed;
   }
 }

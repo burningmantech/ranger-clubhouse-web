@@ -1,82 +1,84 @@
-{{#if this.editDocument}}
-  <h1>{{if this.editDocument.isNew "Create new" (concat "Edit " this.editDocument.tag)}} document</h1>
-  <ChForm @forId="document"
-          @formFor={{this.editDocument}}
-          @validator={{this.validations}}
-          @onSubmit={{this.saveAction}}
-          as |f|>
-    <FormRow>
-      <f.text @name="tag"
-              @label="Document Tag"
-              @size={{30}}
-              @maxlength={{80}}/>
-    </FormRow>
-    <FormRow>
-      <f.text @name="description"
-              @label="One-line description"
-              @size={{80}}
-              @maxlength={{80}}/>
-    </FormRow>
-    <FormRow>
-      <f.editor @name="body"
-                @label="Document Text"
-                @cols={{80}}
-                @rows={{4}}/>
-    </FormRow>
-    <f.submit @disabled={{this.editDocument.isSaving}} />
-    <UiCancelButton @onClick={{this.cancelAction}} @disabled={{this.editDocument.isSaving}} />
-    {{#if this.isSaving}}
-      <LoadingIndicator/>
-    {{/if}}
+<main>
+  {{#if this.editDocument}}
+    <h1>{{if this.editDocument.isNew "Create new" (concat "Edit " this.editDocument.tag)}} document</h1>
+    <ChForm @forId="document"
+            @formFor={{this.editDocument}}
+            @validator={{this.validations}}
+            @onSubmit={{this.saveAction}}
+            as |f|>
+      <FormRow>
+        <f.text @name="tag"
+                @label="Document Tag"
+                @size={{30}}
+                @maxlength={{80}}/>
+      </FormRow>
+      <FormRow>
+        <f.text @name="description"
+                @label="One-line description"
+                @size={{80}}
+                @maxlength={{80}}/>
+      </FormRow>
+      <FormRow>
+        <f.editor @name="body"
+                  @label="Document Text"
+                  @cols={{80}}
+                  @rows={{4}}/>
+      </FormRow>
+      <f.submit @disabled={{this.editDocument.isSaving}} />
+      <UiCancelButton @onClick={{this.cancelAction}} @disabled={{this.editDocument.isSaving}} />
+      {{#if this.isSaving}}
+        <LoadingIndicator/>
+      {{/if}}
 
-    {{#unless this.editDocument.isNew}}
-      <div class="d-inline-block ms-4">
-        <UiButton @type="danger" @onClick={{this.deleteAction}}>{{fa-icon "trash"}} Delete</UiButton>
-      </div>
-    {{/unless}}
-  </ChForm>
-{{else}}
-  <h1>Clubhouse Documents</h1>
-  <p>
-    Showing {{pluralize this.documents.length "document"}}
-    <span class="ms-4">
+      {{#unless this.editDocument.isNew}}
+        <div class="d-inline-block ms-4">
+          <UiButton @type="danger" @onClick={{this.deleteAction}}>{{fa-icon "trash"}} Delete</UiButton>
+        </div>
+      {{/unless}}
+    </ChForm>
+  {{else}}
+    <h1>Clubhouse Documents</h1>
+    <p>
+      Showing {{pluralize this.documents.length "document"}}
+      <span class="ms-4">
     <UiButton @onClick={{this.newAction}}>{{fa-icon "plus"}} New Document</UiButton>
     </span>
-  </p>
-  <table class="table table-sm table-striped table-width-auto table-hover">
-    <thead>
-    <tr>
-      <th>Tag</th>
-      <th>Description</th>
-      <th>Created at / By</th>
-      <th>Updated at / By</th>
-      <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each this.documents as |doc|}}
+    </p>
+    <table class="table table-sm table-striped table-width-auto table-hover">
+      <thead>
       <tr>
-        <td>{{doc.tag}}</td>
-        <td>{{doc.description}}</td>
-        <td>
-          {{doc.created_at}}<br>
-          <PersonLink @person={{doc.person_create}} />
-        </td>
-        <td>
-          {{doc.updated_at}}<br>
-          <PersonLink @person={{doc.person_update}} />
-        </td>
-        <td>
-          <UiButton @size="sm" @onClick={{fn this.editAction doc}}>
-            {{fa-icon "edit"}}Edit
-          </UiButton>
-        </td>
+        <th>Tag</th>
+        <th>Description</th>
+        <th>Created at / By</th>
+        <th>Updated at / By</th>
+        <th>Actions</th>
       </tr>
-    {{else}}
-      <tr>
-        <td colspan="5"><b class="text-danger">No documents were found.</b></td>
-      </tr>
-    {{/each}}
-    </tbody>
-  </table>
-{{/if}}
+      </thead>
+      <tbody>
+      {{#each this.documents as |doc|}}
+        <tr>
+          <td>{{doc.tag}}</td>
+          <td>{{doc.description}}</td>
+          <td>
+            {{doc.created_at}}<br>
+            <PersonLink @person={{doc.person_create}} />
+          </td>
+          <td>
+            {{doc.updated_at}}<br>
+            <PersonLink @person={{doc.person_update}} />
+          </td>
+          <td>
+            <UiButton @size="sm" @onClick={{fn this.editAction doc}}>
+              {{fa-icon "edit"}}Edit
+            </UiButton>
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="5"><b class="text-danger">No documents were found.</b></td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  {{/if}}
+</main>

@@ -131,8 +131,12 @@ const STEPS = [
       const {art_trainings: arts} = milestones;
       const gd = arts.find((a) => a.is_green_dot_mentee);
 
-      if (!gd || gd.mentee_slot) {
-        return {result: SKIP};
+      if (!gd) {
+        return { result: SKIP };
+      }
+
+      if (gd.mentee_slot) {
+        return {result: COMPLETED};
       }
 
       return {
@@ -171,7 +175,6 @@ const STEPS = [
     }
   },
 
-  DashboardStep.SIGN_UP_FOR_SHIFTS,
 
   {
     name: 'Sign Up For & Attend Advanced Ranger Training (ART)',
@@ -208,22 +211,6 @@ const STEPS = [
     }
   },
 
-  DashboardStep.TAKE_STUDENT_SURVEY,
-
-  {
-    name: "Take a Trainer's Training Survey (optional)",
-    skipPeriod: AFTER_EVENT,
-    check({milestones}) {
-      if (milestones.surveys.trainers.length > 0) {
-        return {
-          result: ACTION_NEEDED,
-          message: 'Thank you for teaching. Please provide feedback on your fellow trainers:',
-          survey: 'trainer'
-        };
-      }
-      return {result: SKIP}; // Only show the step IF a survey is available (marked as passed training, and a survey has been created)
-    }
-  },
   {
     name: 'Sign up for a Burn Weekend shift (highly recommended)',
     skipPeriod: AFTER_EVENT,
@@ -250,6 +237,26 @@ const STEPS = [
       return {
         result: SKIP
       };
+    }
+  },
+
+  DashboardStep.SIGN_UP_FOR_SHIFTS,
+
+
+  DashboardStep.TAKE_STUDENT_SURVEY,
+
+  {
+    name: "Take a Trainer's Training Survey (optional)",
+    skipPeriod: AFTER_EVENT,
+    check({milestones}) {
+      if (milestones.surveys.trainers.length > 0) {
+        return {
+          result: ACTION_NEEDED,
+          message: 'Thank you for teaching. Please provide feedback on your fellow trainers:',
+          survey: 'trainer'
+        };
+      }
+      return {result: SKIP}; // Only show the step IF a survey is available (marked as passed training, and a survey has been created)
     }
   },
 
@@ -428,7 +435,7 @@ export default class DashboardRangerComponent extends Component {
   get stepGroups() {
     const groups = [];
     const isAfterEvent = (this.args.milestones.period === AFTER_EVENT);
-    const {immediateSteps, steps} = this._processStepGroup(this.args.person.isNonRanger ? NON_RANGER_STEPS : STEPS);
+    const {immediateSteps, steps, completed} = this._processStepGroup(this.args.person.isNonRanger ? NON_RANGER_STEPS : STEPS);
 
     if (immediateSteps.length) {
       groups.push(new StepGroup('Immediate Action Need', immediateSteps, true));
@@ -442,6 +449,10 @@ export default class DashboardRangerComponent extends Component {
       !immediateSteps.length
     ));
 
+    if (completed.length) {
+      groups.push(new StepGroup('Completed', completed));
+    }
+
 
     groups[groups.length - 1].isLast = true;
 
@@ -453,7 +464,7 @@ export default class DashboardRangerComponent extends Component {
     const period = milestones.period;
     let haveAction = false;
 
-    const steps = [], immediateSteps = [];
+    const steps = [], immediateSteps = [], completed = [];
 
     checks.forEach((step) => {
       if ((step.period && step.period !== period)
@@ -474,7 +485,7 @@ export default class DashboardRangerComponent extends Component {
         check.email = config(check.email);
       }
 
-      if (check.result !== COMPLETED /*&& check.result !== OPTIONAL*/) {
+      if (check.result !== COMPLETED) {
         if (!haveAction || (check.result === ACTION_NEEDED || check.result === OPTIONAL || check.result === URGENT)) {
           check.isActive = true;
           haveAction = true;
@@ -483,6 +494,8 @@ export default class DashboardRangerComponent extends Component {
 
       if (check.immediate || step.immediate) {
         immediateSteps.push(check);
+      } else if (check.result === COMPLETED) {
+        completed.push(check);
       } else {
         steps.push(check);
       }
@@ -490,8 +503,9 @@ export default class DashboardRangerComponent extends Component {
 
     this._sortSteps(steps);
     this._sortSteps(immediateSteps);
+    this._sortSteps(completed);
 
-    return {steps, immediateSteps};
+    return {steps, immediateSteps, completed};
   }
 
   _sortSteps(steps) {

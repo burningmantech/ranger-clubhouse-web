@@ -64,8 +64,8 @@
           {{message.subject}}
         </div>
       </div>
-      <div class="mail-body collapse" id="message-text-{{message.id}}">
-        {{#if message.isDictacted}}
+      <BsCollapse @collapsed={{not message.showing}} class="mail-body">
+        {{#if message.isDictated}}
           <div class="mail-written-by">{{fa-icon "pen-alt"}} written by {{message.creator_callsign}}
             for {{message.message_from}}</div>
         {{/if}}
@@ -89,7 +89,7 @@
             </UiButton>
           {{/if}}
         </div>
-      </div>
+      </BsCollapse>
     </div>
   {{/each}}
 </div>

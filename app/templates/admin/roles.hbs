@@ -1,80 +1,80 @@
-<h1>System Roles</h1>
+<main>
+  <h1>System Roles</h1>
 
-<p>
-  A <b>role</b> is a permission to use certain parts of this website. It is
-  different from a position, which is part of the schedule.
-</p>
+  <p>
+    A <b>role</b> is a permission to use certain parts of this website. It is
+    different from a position, which is part of the schedule.
+  </p>
 
-<table class="table table-sm table-hover table-striped table-width-auto">
-  <thead>
-  <tr>
-    <th>ID</th>
-    <th>Title</th>
-    <th>New User?</th>
-    {{#if this.canManageRoles}}
-      <th>Action</th>
-    {{/if}}
-  </tr>
-  </thead>
-  <tbody>
-  {{#each this.roles as |role|}}
+  <table class="table table-sm table-hover table-striped table-width-auto">
+    <thead>
     <tr>
-      <td class="text-end">{{role.id}}</td>
-      <td>{{role.title}}</td>
-      <td class="text-center">
-        {{#if role.new_user_eligible}}
-          {{fa-icon "check"}}
-        {{else}}
-          &nbsp;
-        {{/if}}
-      </td>
+      <th>ID</th>
+      <th>Title</th>
+      <th>New User?</th>
       {{#if this.canManageRoles}}
-        <td>
-          <UiButton @size="sm" @onClick={{fn this.editRole role}}>
-            {{fa-icon "edit"}} Edit
-          </UiButton>
-        </td>
+        <th>Action</th>
       {{/if}}
     </tr>
-  {{/each}}
-  </tbody>
-</table>
-
-{{#if this.entry}}
-  <ModalDialog @title={{if this.entry.isNew "New Role"  "Edit Role"}} @onEscape={{this.cancelRole}} as |Modal|>
-    <ChForm @formId="role"
-            @formFor={{this.entry}}
-            @validator={{this.roleValidations}}
-            @onSubmit={{this.saveRole}} as |f|>
-      <Modal.body>
-        <FormRow>
-          <f.text @name="title"
-                  @label="Role Title:"
-                  @maxlength={{25}}
-                  @size={{25}}/>
-        </FormRow>
-        <FormRow>
-          <div class="col-auto">
-            <f.checkbox @name="new_user_eligible"
-                     @label="New User Eligible?"
-                     @options={{this.newUserOptions}}/>
-          </div>
-        </FormRow>
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
-        <UiCancelButton @onClick={{this.cancelRole}} @disabled={{this.entry.isSaving}} />
-        {{#if this.entry.isSaving}}
-          <LoadingIndicator/>
+    </thead>
+    <tbody>
+    {{#each this.roles as |role|}}
+      <tr>
+        <td class="text-end">{{role.id}}</td>
+        <td>{{role.title}}</td>
+        <td class="text-center">
+          {{#if role.new_user_eligible}}
+            {{fa-icon "check"}}
+          {{else}}
+            &nbsp;
+          {{/if}}
+        </td>
+        {{#if this.canManageRoles}}
+          <td>
+            <UiButton @size="sm" @onClick={{fn this.editRole role}}>
+              {{fa-icon "edit"}} Edit
+            </UiButton>
+          </td>
         {{/if}}
-        <div class="ms-auto">
-          <UiButton @onClick={{this.removeRole}} @type="danger" @size="sm">
-            {{fa-icon "trash-alt" type="fas"}} Delete
-          </UiButton>
-        </div>
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
-{{/if}}
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
 
-
+  {{#if this.entry}}
+    <ModalDialog @title={{if this.entry.isNew "New Role"  "Edit Role"}} @onEscape={{this.cancelRole}} as |Modal|>
+      <ChForm @formId="role"
+              @formFor={{this.entry}}
+              @validator={{this.roleValidations}}
+              @onSubmit={{this.saveRole}} as |f|>
+        <Modal.body>
+          <FormRow>
+            <f.text @name="title"
+                    @label="Role Title:"
+                    @maxlength={{25}}
+                    @size={{25}}/>
+          </FormRow>
+          <FormRow>
+            <div class="col-auto">
+              <f.checkbox @name="new_user_eligible"
+                          @label="New User Eligible?"
+                          @options={{this.newUserOptions}}/>
+            </div>
+          </FormRow>
+        </Modal.body>
+        <Modal.footer @noAlign={{true}}>
+          <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
+          <UiCancelButton @onClick={{this.cancelRole}} @disabled={{this.entry.isSaving}} />
+          {{#if this.entry.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
+          <div class="ms-auto">
+            <UiButton @onClick={{this.removeRole}} @type="danger" @size="sm">
+              {{fa-icon "trash-alt" type="fas"}} Delete
+            </UiButton>
+          </div>
+        </Modal.footer>
+      </ChForm>
+    </ModalDialog>
+  {{/if}}
+</main>
