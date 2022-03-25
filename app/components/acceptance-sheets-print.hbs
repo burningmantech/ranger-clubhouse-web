@@ -8,22 +8,27 @@
   </div>
 
   <div class="alpha-sheet-section-header">
-    Alpha Information
+    <div>Alpha Information</div>
+    <div class="small">Clubhouse Record # {{alpha.id}}</div>
   </div>
 
   <div class="row g-0">
     <div class="col-8">
       <div class="alpha-sheet-column">
-        <div class="alpha-sheet-column-label">Ranger Handle:</div>
+        <div class="alpha-sheet-column-label">
+          Ranger Handle:
+        </div>
         <div class="alpha-sheet-column-field">
-          <h1>{{alpha.callsign}}</h1>
-          <div>
-            {{#if alpha.pronouns}}
-              {{pronouns-format alpha}}
-            {{else}}
-              <i>(Pronouns not stated)</i>
-            {{/if}}
-          </div>
+          <h1>
+            {{alpha.callsign}}
+            <small>
+              {{#if alpha.pronouns}}
+                {{pronouns-format alpha}}
+              {{else}}
+                <i>(Pronouns not stated)</i>
+              {{/if}}
+            </small>
+          </h1>
           <div>
             {{#if alpha.fkas}}
               FKA: {{join alpha.fkas ", "}}<br>
@@ -174,8 +179,8 @@
     </div>
   </div>
 
-  <div class="ms-3 mb-2 mt-4 text-center">
-    Legend for VC, Mentor &amp; Training rankings: 1/Green = Above Avg., 2/Normal = Average, 3/Yellow = Below Avg.,
+  <div class="ms-3 mb-2 mt-4">
+    Legend for VC, Mentor, &amp; Training rankings: 1/Green = Above Avg., 2/Normal = Average, 3/Yellow = Below Avg.,
     4/FLAG = Major issue.
   </div>
 
@@ -190,7 +195,7 @@
       {{#each info.notes as |note|}}
         {{#unless note.is_log}}
           <div>
-            &mdash; {{note.person_source.callsign}}: {{note.note}}
+            &mdash; {{note.note}}
           </div>
         {{/unless}}
       {{/each}}
@@ -208,14 +213,14 @@
           {{ymd-format place.slot_begins}} {{place.slot_description}}
           <IntakeRanking @type="training" @rank={{place.training_rank}} />
           {{#if place.feedback_delivered}}
-            (feedback delivered)
+            ({{fa-icon "check"}} feedback delivered)
           {{else}}
-            <b>(FEEDBACK NOT DELIVERED)</b>
+            <b class="text-danger">({{fa-icon "bell"}} FEEDBACK NOT DELIVERED)</b>
           {{/if}}
           :<br>
           {{#each place.training_notes as |note|}}
             {{#unless note.is_log}}
-              {{note.note}}<br>
+              &mdash; {{note.note}}<br>
             {{/unless}}
           {{else}}
             <i>No notes given.</i>
@@ -235,8 +240,7 @@
       {{#each info.notes as |note|}}
         {{#unless note.is_log}}
           <div>
-            &mdash; {{#if note.person_source}}{{note.person_source.callsign}}{{else}}<i>Unknown</i>{{/if}}
-            : {{note.note}}
+            &mdash;  {{note.note}}
           </div>
         {{/unless}}
       {{/each}}

@@ -1,4 +1,5 @@
 import Component from '@glimmer/component';
+import { action } from '@ember/object';
 
 export default class UiButtonComponent extends Component {
   constructor() {
@@ -8,5 +9,12 @@ export default class UiButtonComponent extends Component {
 
   get typeClass() {
     return `btn-${this.args.type ?? 'primary'}`;
+  }
+
+  @action
+  clickAction(e) {
+    e.preventDefault();
+    e.target.blur();
+    this.args.onClick();
   }
 }

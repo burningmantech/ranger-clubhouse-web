@@ -95,14 +95,6 @@ export default class TicketingOpenComponent extends Component {
    */
 
   _showHideSection(section, reveal) {
-    const opened = this.showing;
-    Object.keys(opened).forEach((id) => {
-      if (opened[id]) {
-        this.house.collapse(`#ticket-${id} .accordion-body`, 'hide');
-      }
-    });
-
     this.showing = {[section]: reveal};
-    this.house.collapse(`#ticket-${section} .accordion-body`, reveal ? 'show' : 'hide');
   }
 }

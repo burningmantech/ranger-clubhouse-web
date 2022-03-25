@@ -49,21 +49,19 @@ export default class AdminActionLogController extends ClubhouseController {
     set(this, 'page', +this.currentPage - 1);
   }
 
-  _performSearch(query, resolve, reject) {
-    if (query.match(/^\d+/)) {
-      return resolve([query]);
+  _performSearch(callsign, resolve, reject) {
+    callsign = callsign.trim();
+
+    if (callsign.match(/^\d+/)) {
+      return resolve([callsign]);
     }
 
-    return this.ajax
-      .request('callsigns', {
-        data: {query, type: 'all', limit: 20}
-      })
-      .then((result) => {
-        if (result.callsigns.length > 0) {
-          return resolve(result.callsigns.map((c) => c.callsign));
-        }
-        return reject();
-      }, reject);
+    if (callsign.length < 2) {
+      return reject();
+    }
+
+    return this.ajax.request('callsigns', { data: {query: callsign, type: 'all', limit: 20} })
+      .then(({callsigns}) => resolve(callsigns.map(row => row.callsign)), reject);
   }
 
   @action
@@ -81,7 +79,7 @@ export default class AdminActionLogController extends ClubhouseController {
   @action
   searchAction() {
     const params = {};
-
+    console.log('CALLED SEARCH');
     this.queryParams.forEach((param) => {
       if (this.query[param]) {
         if (params === 'events') {

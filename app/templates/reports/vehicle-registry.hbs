@@ -37,8 +37,7 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
   <tr>
     <th>Person/Team</th>
     <th>Status</th>
-    <th>Vehicle Description</th>
-    <th>Class</th>
+    <th>Vehicle / Class</th>
     <th>Rental #</th>
     <th>Driving Sticker</th>
     <th>Driving #</th>
@@ -76,8 +75,10 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
           -
         {{/if}}
       </td>
-      <td>{{vehicle.vehicle_year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}} {{vehicle.vehicle_color}}</td>
-      <td>{{vehicle.vehicle_class}}</td>
+      <td>
+        {{vehicle.vehicle_year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}} {{vehicle.vehicle_color}}<br>
+        {{vehicle.vehicle_class}}
+      </td>
       <td>
         <PresentOrNot @value={{vehicle.rental_number}} @empty="-"/>
       </td>
@@ -167,6 +168,7 @@ Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "
                           @label="Personal Vehicle Owner"
                           @controlClass="form-control form-control-sm autocomplete-input"
                           @onSearch={{this.searchCallsignAction}}
+                          @noResultsText="No callsigns found"
                 />
               {{else}}
                 <f.text

@@ -1,30 +1,12 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
-import { service } from '@ember/service';
+import {tracked} from '@glimmer/tracking';
 
 export default class DashboardLinksComponent extends Component {
-  @service house;
-
-  legendBox = null;
-  didCollapse = false;
+  @tracked hideLegend = true;
 
   @action
   toggleIconLegend() {
-    this.house.collapse(this.legendBox, 'toggle');
-    this.didCollapse = true;
-  }
-
-  @action
-  legendInserted(element) {
-    this.legendBox = element;
-  }
-
-  @action
-  willDestroyLegend() {
-    if (this.didCollapse) {
-      // Bug with the Bootstrap collapse plugin, the plugin will crash if dispose was called
-      // without collapse() being called
-      this.house.collapse(this.legendBox, 'dispose');
-    }
+    this.hideLegend = !this.hideLegend;
   }
 }

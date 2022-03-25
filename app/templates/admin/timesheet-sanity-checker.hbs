@@ -1,139 +1,141 @@
-<YearSelect @title="Timesheet Sanity Checker" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<main>
+  <YearSelect @title="Timesheet Sanity Checker" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
-<ChAccordion as |Accordion|>
-  <Accordion.title>{{pluralize this.on_duty.length "person"}} still on duty</Accordion.title>
-  <Accordion.body>
-    <table class="table table-hover table-sm table-striped table-width-auto">
-      <thead>
-      <tr>
-        <th>Callsign</th>
-        <th>Position</th>
-        <th>On Duty</th>
-        <th>Duration</th>
-      </tr>
-      </thead>
+  <ChAccordion as |Accordion|>
+    <Accordion.title>{{pluralize this.on_duty.length "person"}} still on duty</Accordion.title>
+    <Accordion.body>
+      <table class="table table-hover table-sm table-striped table-width-auto">
+        <thead>
+        <tr>
+          <th>Callsign</th>
+          <th>Position</th>
+          <th>On Duty</th>
+          <th>Duration</th>
+        </tr>
+        </thead>
 
-      <tbody>
-      {{#each this.on_duty as |entry|}}
-        <tr>
-          <td>
-            <PersonLink @person={{entry.person}} @page="timesheet" @year={{this.year}} />
-          </td>
-          <td>{{entry.position.title}}</td>
-          <td>{{shift-format entry.on_duty}}</td>
-          <td>{{hour-minute-format entry.duration}}</td>
-        </tr>
-      {{else}}
-        <tr>
-          <td colspan="4" class="text-success">Congratulations! Everyone has been signed off.</td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  </Accordion.body>
-</ChAccordion>
+        <tbody>
+        {{#each this.on_duty as |entry|}}
+          <tr>
+            <td>
+              <PersonLink @person={{entry.person}} @page="timesheet" @year={{this.year}} />
+            </td>
+            <td>{{entry.position.title}}</td>
+            <td>{{shift-format entry.on_duty}}</td>
+            <td>{{hour-minute-format entry.duration}}</td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="4" class="text-success">Congratulations! Everyone has been signed off.</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </Accordion.body>
+  </ChAccordion>
 
-<ChAccordion as |Accordion|>
-  <Accordion.title>{{pluralize this.end_before_start.length "entry"}} with an off duty time before on duty
-  </Accordion.title>
-  <Accordion.body>
-    <table class="table table-sm table-hover table-striped table-width-auto">
-      <thead>
-      <tr>
-        <th>Callsign</th>
-        <th>Position</th>
-        <th>On Duty</th>
-        <th>Off Duty</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each this.end_before_start as |entry|}}
+  <ChAccordion as |Accordion|>
+    <Accordion.title>{{pluralize this.end_before_start.length "entry"}} with an off duty time before on duty
+    </Accordion.title>
+    <Accordion.body>
+      <table class="table table-sm table-hover table-striped table-width-auto">
+        <thead>
         <tr>
-          <td>
-            <PersonLink @person={{entry.person}} @page="timesheet" @year={{this.year}} />
-          </td>
-          <td>{{entry.position.title}}</td>
-          <td>{{shift-format entry.on_duty}}</td>
-          <td>{{shift-format entry.off_duty}}</td>
+          <th>Callsign</th>
+          <th>Position</th>
+          <th>On Duty</th>
+          <th>Off Duty</th>
         </tr>
-      {{else}}
-        <tr>
-          <td colspan="4" class="text-success">No timesheets entry have off duty before on duty times.</td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  </Accordion.body>
-</ChAccordion>
+        </thead>
+        <tbody>
+        {{#each this.end_before_start as |entry|}}
+          <tr>
+            <td>
+              <PersonLink @person={{entry.person}} @page="timesheet" @year={{this.year}} />
+            </td>
+            <td>{{entry.position.title}}</td>
+            <td>{{shift-format entry.on_duty}}</td>
+            <td>{{shift-format entry.off_duty}}</td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="4" class="text-success">No timesheets entry have off duty before on duty times.</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </Accordion.body>
+  </ChAccordion>
 
-<ChAccordion as |Accordion|>
-  <Accordion.title>{{pluralize this.overlapping.length "person"}} with overlapping entries</Accordion.title>
-  <Accordion.body>
-    <table class="table table-sm table-hover table-striped table-width-auto">
-      <thead>
-      <tr>
-        <th>Callsign</th>
-        <th>Overlapping entries</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each this.overlapping as |person|}}
+  <ChAccordion as |Accordion|>
+    <Accordion.title>{{pluralize this.overlapping.length "person"}} with overlapping entries</Accordion.title>
+    <Accordion.body>
+      <table class="table table-sm table-hover table-striped table-width-auto">
+        <thead>
         <tr>
-          <td>
-            <PersonLink @person={{person.person}} @page="timesheet" @year={{this.year}} />
-          </td>
-          <td>
-            {{#each person.entries as |group idx|}}
-              {{#if idx}}
-                <hr>{{/if}}
-              {{#each group as |row|}}
-                {{row.position.title}} {{shift-format row.on_duty}} {{shift-format row.off_duty}}<br>
+          <th>Callsign</th>
+          <th>Overlapping entries</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.overlapping as |person|}}
+          <tr>
+            <td>
+              <PersonLink @person={{person.person}} @page="timesheet" @year={{this.year}} />
+            </td>
+            <td>
+              {{#each person.entries as |group idx|}}
+                {{#if idx}}
+                  <hr>{{/if}}
+                {{#each group as |row|}}
+                  {{row.position.title}} {{shift-format row.on_duty}} {{shift-format row.off_duty}}<br>
+                {{/each}}
               {{/each}}
-            {{/each}}
-          </td>
-        </tr>
-      {{else}}
-        <tr>
-          <td colspan="4" class="text-success">No timesheets entry have off duty before on duty times.</td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  </Accordion.body>
-</ChAccordion>
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="4" class="text-success">No timesheets entry have off duty before on duty times.</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </Accordion.body>
+  </ChAccordion>
 
-<ChAccordion as |Accordion|>
-  <Accordion.title>{{pluralize this.too_long.length "entry"}} with possibly too long shifts</Accordion.title>
-  <Accordion.body>
-    <table class="table table-sm table-hover table-striped table-width-auto ">
-      <thead>
-      <tr>
-        <th>Callsign</th>
-        <th>Position</th>
-        <th>On Duty</th>
-        <th>Off Duty</th>
-        <th>Duration</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each this.too_long as |entry|}}
+  <ChAccordion as |Accordion|>
+    <Accordion.title>{{pluralize this.too_long.length "entry"}} with possibly too long shifts</Accordion.title>
+    <Accordion.body>
+      <table class="table table-sm table-hover table-striped table-width-auto ">
+        <thead>
         <tr>
-          <td>
-            <PersonLink @person={{entry.person}} @page="timesheet" @year={{this.year}} />
-          </td>
-          <td>{{entry.position.title}}</td>
-          <td>{{shift-format entry.on_duty}}</td>
-          <td>{{shift-format entry.off_duty}}</td>
-          <td class="text-end">{{hour-minute-format entry.duration}}</td>
+          <th>Callsign</th>
+          <th>Position</th>
+          <th>On Duty</th>
+          <th>Off Duty</th>
+          <th>Duration</th>
         </tr>
-      {{else}}
-        <tr>
-          <td colspan="5" class="text-success">\
-            Congratulations! Everyone appears to have worked a shift that did not run over.
-          </td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  </Accordion.body>
-</ChAccordion>
+        </thead>
+        <tbody>
+        {{#each this.too_long as |entry|}}
+          <tr>
+            <td>
+              <PersonLink @person={{entry.person}} @page="timesheet" @year={{this.year}} />
+            </td>
+            <td>{{entry.position.title}}</td>
+            <td>{{shift-format entry.on_duty}}</td>
+            <td>{{shift-format entry.off_duty}}</td>
+            <td class="text-end">{{hour-minute-format entry.duration}}</td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="5" class="text-success">\
+              Congratulations! Everyone appears to have worked a shift that did not run over.
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </Accordion.body>
+  </ChAccordion>
+</main>

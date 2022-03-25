@@ -20,7 +20,7 @@ export default class ClubhouseRoute extends Route {
   @service router;
 
   /**
-   * By default all routes require the user to be logged in.
+   * By default, all routes require the user to be logged in.
    *
    * @type {boolean}
    */

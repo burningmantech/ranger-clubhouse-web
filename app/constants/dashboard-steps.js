@@ -33,7 +33,7 @@ function indefiniteArticle(noun) {
 }
 
 function otName(milestones) {
-  return milestones.online_training_only ? 'Online Course' : 'Part 1 of Training (Online Course)';
+  return milestones.online_training_only ? 'Online Course' : 'The Online Training Course';
 }
 
 /*
@@ -194,9 +194,9 @@ export const VERIFY_TIMESHEETS = {
 export const VERIFY_PERSONAL_INFO = {
   skipPeriod: AFTER_EVENT,
   name: 'Review and Update Personal Information',
-  check({milestones, isPNV}) {
+  check({milestones}) {
     if (milestones.has_reviewed_pi) {
-      return {result: isPNV ? COMPLETED : SKIP};
+      return {result: COMPLETED};
     }
 
     return {
@@ -214,13 +214,13 @@ export const VERIFY_PERSONAL_INFO = {
 };
 
 export const ONLINE_TRAINING = {
-  //name: 'Read the Ranger Manual & Complete Part 1 of Training (Online Course)',
+  //name: 'Read the Ranger Manual & Complete The Online Training Course',
   skipPeriod: AFTER_EVENT,
-  check({milestones, isPNV, isAuditor, person, prevCompleted}) {
+  check({milestones, isPNV, prevCompleted}) {
     let name = `Read the Ranger Manual & Complete ${otName(milestones)}`;
     if (milestones.online_training_passed) {
       return {
-        result: (isPNV || isAuditor) ? COMPLETED : SKIP,
+        result: COMPLETED,
         name
       };
     }
@@ -229,7 +229,7 @@ export const ONLINE_TRAINING = {
       // Don't tell them to read the ranger manual until online training is available.
       return {
         result: WAITING,
-        message: `${otName(milestones)} is not quite ready yet and usually not available until mid-to-late March. Watch the Ranger Announce mailing list for a message on when the course will be opened.`,
+        message: `${otName(milestones)} is not quite ready yet and usually not available until late March. Watch the Ranger Announce mailing list for a message on when the course will be opened.`,
         name: `Complete ${otName(milestones)}`
       }
     }
@@ -237,17 +237,17 @@ export const ONLINE_TRAINING = {
     if (isPNV && !prevCompleted) {
       return {
         result: NOT_AVAILABLE,
-        message: 'You must complete the previous steps before being allowed to take the online course.',
+        message: 'You must complete the previous steps before being allowed to take the Online Training Course.',
         name
       };
     }
 
-    const duration = (person.isActive && !milestones.is_binary) ? 'around 30 to 45 minutes' : 'up to 90 minutes';
+    const duration = milestones.needs_full_training ? 'up to 90 minutes or more' : 'around 30 to 45 minutes';
 
     return {
       result: ACTION_NEEDED,
       message: htmlSafe('<p>The Ranger Manual can be found at <a href="' + config('RangerManualUrl') + '" rel="noopener noreferrer" target="_blank">rangers.burningman.org</a>.</p>' +
-        `<p>The online course will take ${duration} to complete. </p> <p>Note: it may take up to 15 mins or more for the Clubhouse to record your course completion.</p>`),
+        `<p>The Online Training Course will take ${duration} to complete. </p> <p>Note: it may take up to 20 minutes or more for the Clubhouse to record your course completion.</p>`),
       isOnlineTraining: true,
       name
     };
@@ -255,7 +255,7 @@ export const ONLINE_TRAINING = {
 };
 
 export const SIGN_UP_FOR_TRAINING = {
-  name: 'Sign up for Part 2 of Training (In Person)',
+  name: 'Sign up for In-Person Training',
   skipPeriod: AFTER_EVENT,
   check({milestones, isPNV, isAuditor}) {
     if (milestones.online_training_only) {
@@ -263,24 +263,28 @@ export const SIGN_UP_FOR_TRAINING = {
     }
 
     if (milestones.training.status !== 'no-shift') {
-      return {result: (isAuditor || isPNV) ? COMPLETED : SKIP};
+      return {result: COMPLETED};
     }
 
     if (!milestones.online_training_passed) {
+      let message = 'You need to complete the Online Training Course first before being allowed to sign up for In-Person Training.';
+      if (!milestones.trainings_available) {
+        message += ' Note: the In-Person Training schedule is not opened until mid to late April.'
+      }
       return {
         result: NOT_AVAILABLE,
-        message: 'You need to complete Part 1 of Training (Online Course) first before being allowed to sign up for Part 2 of Training (In Person).'
+        message
       };
     }
 
     if (milestones.trainings_available) {
       let prefix;
       if (isPNV) {
-        prefix = 'You will need to sign up and pass Part 2 of Training (In Person) before being allowed to sign up for your Alpha shift.';
+        prefix = 'You will need to sign up and pass an In-Person Training before being allowed to sign up for your Alpha shift.';
       } else if (isAuditor) {
         prefix = ''; // nada.
       } else {
-        prefix = `You will to need sign up and pass Part 2 of Training (In Person) before being allowed to work on playa.`;
+        prefix = `You will to need sign up and pass an In-Person Training before being allowed to work on playa.`;
       }
       return {
         result: ACTION_NEEDED,
@@ -295,14 +299,14 @@ export const SIGN_UP_FOR_TRAINING = {
     } else {
       return {
         result: WAITING,
-        message: 'Training sign-ups are not yet available and usually do not open until mid to late April. Please check back later.'
+        message: 'In-Person Training sign-ups are not yet available and usually do not open until mid to late April. Please check back later.'
       };
     }
   }
 };
 
 export const ATTEND_TRAINING = {
-  name: 'Attend Part 2 of Training (In Person)',
+  name: 'Attend In-Person Training',
   skipPeriod: AFTER_EVENT,
   check({milestones, person, isPNV, isAuditor}) {
     if (milestones.online_training_only) {
@@ -313,7 +317,7 @@ export const ATTEND_TRAINING = {
       if (isPNV || isAuditor) {
         return {
           result: NOT_AVAILABLE,
-          message: 'Please sign up for an In Person Training.'
+          message: 'Please sign up for an In-Person Training.'
         };
       }
       return {result: SKIP};
@@ -334,7 +338,7 @@ export const ATTEND_TRAINING = {
           }
           return {
             result: COMPLETED,
-            message: 'While you are cleared to work dirt shifts, some specialized shifts might require additional training.'
+            message: 'While you are cleared to work dirt shifts, some specialized shifts may require additional training.'
           }
         }
 
@@ -356,7 +360,7 @@ export const ATTEND_TRAINING = {
       case 'pending': {
         let prefix, dt;
         if (training.is_trainer) {
-          prefix = 'You are signed up to teach a training session. Once you have been marked as having taught the session, you will be considered "trained" and able to work on playa.';
+          prefix = 'You are signed up to teach an In-Person Training session. Once you have been marked as having taught the session, you will be considered "trained" and able to work on playa.';
           dt = 'ddd MMM DD [@] HH:mm';
         } else if (milestones.needs_full_training || isAuditor || isPNV) {
           if (isAuditor) {
@@ -399,7 +403,7 @@ export const TAKE_STUDENT_SURVEY = {
     if (milestones.surveys.sessions.length > 0) {
       return {
         result: ACTION_NEEDED,
-        message: 'Please take a moment to provide feedback on your in person training experience:',
+        message: 'Please take a moment to provide feedback on your In-Person Training experience:',
         survey: 'student'
       };
 
@@ -423,7 +427,7 @@ export const SIGN_UP_FOR_SHIFTS = {
     if (!milestones.dirt_shifts_available) {
       return {
         result: NOT_AVAILABLE,
-        message: 'The full Ranger schedule is not available yet. Usually the schedule is posted in June.',
+        message: 'The full Ranger schedule is posted by the first or second week in July. Watch the Announce mailing list for a message on when the schedule will open.',
       };
     }
 
@@ -481,7 +485,7 @@ export const SIGN_BEHAVIORAL_AGREEMENT = {
       route: 'me.agreements.index',
       linkedMessage: {
         route: 'me.agreements.index',
-        prefix: 'Optionally, sign the Behavioral Standards Agreement. Visit',
+        prefix: 'Visit',
         text: 'Me > Agreements',
         suffix: 'to review and agree to the standards agreement.'
       },
@@ -542,7 +546,7 @@ export const SIGN_RADIO_CHECKOUT_AGREEMENT = {
     if (isPNV) {
       return {
         result: NOT_AVAILABLE,
-        message: 'You need to pass Part 2 of Training (In Person) first before you may sign the Radio Checkout Agreement.'
+        message: 'You need to pass In-Person Training first before you may sign the Radio Checkout Agreement.'
       };
     }
 

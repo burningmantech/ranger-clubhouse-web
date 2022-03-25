@@ -20,20 +20,16 @@ export default class ClubhouseMessagesComponent extends Component {
   }
 
   get unreadCount() {
-    return this.args.messages.reduce(function (total, msg) {
-      return (msg.delivered ? 0 : 1) + total;
-    }, 0);
+    return this.args.messages.reduce((total, msg) => (msg.delivered ? 0 : 1) + total, 0);
   }
 
   get readCount() {
-    return this.args.messages.reduce(function (total, msg) {
-      return (msg.delivered ? 1 : 0) + total;
-    }, 0);
+    return this.args.messages.reduce((total, msg) => (msg.delivered ? 1 : 0) + total, 0);
   }
 
   _updateUnreadCount() {
     const unreadCount = this.unreadCount;
-    const person = this.args.person;
+    const {person} = this.args;
     if (person) {
       set(person, 'unread_message_count', unreadCount);
     }
@@ -45,8 +41,7 @@ export default class ClubhouseMessagesComponent extends Component {
 
   @action
   toggleMessage(message) {
-    set(message, 'showing', !message.showing);
-    this.house.collapse(`#message-text-${message.id}`, 'toggle')
+    message.showing = !message.showing;
   }
 
   @action
@@ -60,7 +55,7 @@ export default class ClubhouseMessagesComponent extends Component {
   }
 
   _markMessage(message, delivered) {
-    set(message, 'isSubmitting', true);
+    message.isSubmitting = true;
     this.ajax.request(`messages/${message.id}/markread`, {
       method: 'PATCH',
       data: {delivered}
@@ -68,7 +63,7 @@ export default class ClubhouseMessagesComponent extends Component {
       message.delivered = delivered;
       this._updateUnreadCount();
     }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => message.set('isSubmitting', false));
+      .finally(() => message.isSubmitting = false);
   }
 
   _newMessageSetup(fields) {
@@ -98,10 +93,9 @@ export default class ClubhouseMessagesComponent extends Component {
     }
 
     this.isSubmitting = true;
-
     this.house.saveModel(model, `Message successfully sent to ${model.recipient_callsign}.`,
       () => {
-        if (this.newMessage.person_id == this.session.userId) {
+        if (+this.newMessage.person_id === this.session.userId) {
           this.args.messages.update().then(() => this._updateUnreadCount());
         }
         this.newMessage = null;

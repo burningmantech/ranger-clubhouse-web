@@ -308,10 +308,13 @@ export default class TrainingSlotController extends ClubhouseController {
 
   // Toggle the email list
   @action
-  toggleEmailListAction() {
+  toggleEmailListAction(closeDropdown) {
     this.showEmails = !this.showEmails;
     if (this.showEmails) {
       this.house.scrollToElement('#email-list');
+    }
+    if (closeDropdown) {
+      closeDropdown();
     }
   }
 

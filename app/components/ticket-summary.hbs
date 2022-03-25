@@ -2,7 +2,7 @@
   <:title>Summary</:title>
   <:body>
     {{#if this.unfinishedItems}}
-      You have {{pluralize this.unfinishedItems.length "outstanding task"}} to complete.
+      <b class="text-danger">You have {{pluralize this.unfinishedItems.length "outstanding task"}} to complete.</b>
       <ul class="mt-2">
         {{#each this.unfinishedItems as |item|}}
           <li>{{item}}</li>
