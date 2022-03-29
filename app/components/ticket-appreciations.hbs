@@ -6,9 +6,8 @@
   <:title>
     Provisions
     {{#if this.availableItems}}
-      <TicketSectionStatus @status="qualified" @text="{{pluralize this.availableItems.length "item"}} available" />
-    {{/if}}
-    {{#if this.bankedItems}}
+      <TicketSectionStatus @status="qualified" @text="{{pluralize this.availableItems.length "item"}} will be used" />
+    {{else if this.bankedItems}}
       <TicketSectionStatus @status="banked" @text="{{pluralize this.bankedItems.length "item"}} banked"/>
     {{/if}}
   </:title>
@@ -16,7 +15,7 @@
     {{#if this.availableItems}}
       <p>
         <b>Unless you state otherwise, the following {{pluralize this.availableItems.length "provision"}}
-          will be automatically used for this event:</b>
+          will automatically be used for this event:</b>
       </p>
       <ul>
         {{#each this.availableItems as |item|}}
