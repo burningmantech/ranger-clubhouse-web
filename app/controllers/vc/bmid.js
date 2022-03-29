@@ -3,7 +3,7 @@ import {action, set} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {schedule, later} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
-import {MealOptions, BmidStatusOptions, ShowerOptions} from 'clubhouse/constants/bmid';
+import {MealOptions, BmidStatusOptions, ShowerOptions} from 'clubhouse/models/bmid';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import Changeset from 'ember-changeset';
 
