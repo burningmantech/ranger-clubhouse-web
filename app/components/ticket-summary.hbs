@@ -1,5 +1,5 @@
 <TicketSection @id="summary" @toggleCard={{@toggleCard}} @showing={{@showing}}>
-  <:title>Summary</:title>
+  <:title>{{this.summaryTitle}}</:title>
   <:body>
     {{#if this.unfinishedItems}}
       <b class="text-danger">You have {{pluralize this.unfinishedItems.length "outstanding task"}} to complete.</b>
@@ -9,10 +9,19 @@
         {{/each}}
       </ul>
     {{else}}
-      Please review your decisions below, and take note of the following:
+      {{#if (and @ticketPackage.tickets (not @ticket.isClaimed))}}
+        <h4 class="text-danger">{{fa-icon "hand-point-right"}} No Ticket Claimed</h4>
+        <p>
+          You have {{pluralize @ticketPackage.tickets.length "ticket"}} available yet you have not
+          claimed one. Go back to the first section, and claim a ticket if this is a mistake.
+        </p>
+      {{/if}}
+
+      <b>Please review your decisions below, and take note of the following:</b>
       <ol class="no-indent">
-        <li><b class="text-danger">The ticketing deadline is {{full-datetime-format @ticketingInfo.submit_date}} Pacific
-          Time</b>.
+        <li>
+          <b class="text-danger">The ticketing deadline is
+            {{full-datetime-format @ticketingInfo.submit_date}} Pacific Time</b>.
           You have until then to adjust your selections, change the delivery method, and/or update the mailing address.
         </li>
         <li>
@@ -24,49 +33,40 @@
             Reduced-Price ticket requests will be invoiced. Work Access Passes are sent via email sometime after the
             deadline cutoff and a week before the event starts.
           </li>
-          <li>
-            If you are happy with your selections, sit back, check the Clubhouse often, watch your inbox, and
-            keep an eye on the Announce mailing list for further instructions.
-          </li>
         {{/if}}
       </ol>
-      {{#if (and @ticketPackage.tickets (not @ticket.isClaimed))}}
-        <p>
-          <h4 class="text-danger">No ticket has been claimed.</h4>
-        </p>
-      {{/if}}
+      <p>
+        <b>If you are happy with your selections, sit back, check the Clubhouse often, watch your inbox, and
+          keep an eye on the Ranger Announce mailing list for further instructions.</b>
+      </p>
       {{#if this.claimedItems}}
-        <b>
-          {{pluralize this.claimedItems.length "item"}}
-          {{if (eq this.claimedItems.length 1) "has" "have"}} been CLAIMED:
-        </b>`
+        <hr>
+        <h4 class="text-success">
+          {{fa-icon "gift"}} {{pluralize this.claimedItems.length "CLAIMED Item"}}
+        </h4>
+        <b>The following have been claimed and will be submitted for processing:</b>
         {{#each this.claimedItems as |item|}}
-          <div class="mb-1">{{fa-icon "check" color="success"}} {{item}}</div>
+          <div class="mb-1 ms-3">{{fa-icon "check" color="success"}} {{item}}</div>
         {{/each}}
-      {{else}}
-        <b class="text-danger">You have NOT claimed any items for this event.</b>
       {{/if}}
-      <hr>
       {{#if this.bankedItems}}
-        <b>{{pluralize this.bankedItems.length "item"}} will be BANKED:</b>
-        {{#each this.bankedItems as |item|}}
-          <div class="mt-1">{{item}}</div>
-        {{/each}}
-      {{else}}
-        <p class="mt-2">
-          <b>No items will be banked.</b>
-        </p>
+        <hr>
+        <h4>{{fa-icon "box-archive"}} {{pluralize this.bankedItems.length "BANKED Item"}}</h4>
+        <b>The following item(s) will be banked:</b>
+        <ul>
+          {{#each this.bankedItems as |item|}}
+            <li><i>Bank:</i> {{item}}</li>
+          {{/each}}
+        </ul>
       {{/if}}
       {{#if this.unclaimedItems}}
         <hr>
-        <b class="text-danger">
-          {{pluralize this.unclaimedItems.length "item"}}
-          {{if (eq this.unclaimedItems.length 1) "is" "are"}}
-          unclaimed
-        </b>
-        Not claiming the item(s) may or may effect your ability to Ranger on playa:
+        <h4 class="text-danger mt-2">
+          {{fa-icon "arrow-right"}} {{pluralize this.unclaimedItems.length "UNCLAIMED Item"}}
+        </h4>
+        <b>Not claiming the following item(s) may affect your ability to Ranger on playa:</b>
         {{#each this.unclaimedItems as |item|}}
-          <div class="mt-1">{{fa-icon "exclamation" color="danger"}} {{item}}</div>
+          <div class="mt-1 ms-3">{{fa-icon "times" color="danger"}} {{item}}</div>
         {{/each}}
       {{/if}}
     {{/if}}

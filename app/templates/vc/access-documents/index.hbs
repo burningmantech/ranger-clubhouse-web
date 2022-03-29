@@ -20,7 +20,7 @@ Showing {{pluralize this.documents.people.length "person"}}
   </thead>
 
   <tbody>
-    {{#each this.documents.people as |person|}}
+    {{#each this.documents.people key="person.id" as |person|}}
       <AccessDocumentsForPerson @person={{person.person}} @documents={{person.documents}} />
     {{else}}
       <tr>

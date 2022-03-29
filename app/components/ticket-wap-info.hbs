@@ -26,15 +26,26 @@
               {{#if this.wap.access_date}}
                 on or after {{mdy-format this.wap.access_date full=true}} @ 00:01.
               {{else}}
-                .. uh, sometime.
+                .. uh, sometime?!?
                 <span class="text-danger">Oops! We forgot to write down when you may enter the event! Please contact
                   {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.</span>
               {{/if}}
             {{/if}}
           </b>
         </p>
+        {{#if this.wap.access_date}}
+          <p>
+            <span class="text-danger">You will be turned away from the gate if you attempt to enter the event before this time. No exceptions!</span>
+          </p>
+        {{/if}}
         <p>
-          The Work Access Pass will be emailed to: {{@person.email}}
+          If you have an operational need to be on playa earlier than this date,
+          please contact your Cadre or Manager.
+        </p>
+
+        <p>
+          The Work Access Pass will be emailed to:<br>
+          {{@person.email}}
         </p>
       {{else}}
         <p>
@@ -48,7 +59,8 @@
           Do you wish to use your Work Access Pass?
         </p>
         <UiButton @type="primary" @class="btn-responsive"
-          @onClick={{fn @setDocumentStatus this.wap "claimed"}} @disabled={{@isSavingDocumentStatus}}>
+                  @onClick={{fn @setDocumentStatus this.wap "claimed"}}
+                  @disabled={{@isSavingDocumentStatus}}>
           Claim Work Access Pass
           {{#if @isSavingDocumentStatus}}
             <SpinIcon/>
@@ -84,6 +96,11 @@
         {{else if @ticket.access_date}}
           <p>
             <b>You may enter the event on or after {{mdy-format @ticket.access_date full=true}} @ 00:01.</b>
+          </p>
+          <p>
+            <span class="text-danger">You will be turned away from the gate if you attempt to enter the event before this time. No exceptions!</span>
+          </p>
+          <p>
             If you have an operational need to be on playa earlier than this date,
             please contact your Cadre or Manager.
           </p>
