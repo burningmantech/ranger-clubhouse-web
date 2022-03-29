@@ -1,7 +1,6 @@
 import Model, {attr} from '@ember-data/model';
 import {isEmpty} from '@ember/utils';
 import {ticketTypeLabel} from 'clubhouse/constants/ticket-types';
-import {BmidStatusLabels, MealLabels} from 'clubhouse/constants/bmid';
 import dayjs from 'dayjs';
 
 export const MEALS_ALL = 'all';
@@ -26,6 +25,52 @@ export const ISSUES = 'issues';
 export const DO_NOT_PRINT = 'do_not_print';
 // BMID was submitted
 export const SUBMITTED = 'submitted';
+
+export const BmidStatusLabels = {
+  [IN_PREP]: 'Prep',
+  [DO_NOT_PRINT]: 'Do Not Print',
+  [READY_TO_PRINT]: 'Ready To Print',
+  [READY_TO_REPRINT_LOST]: 'Ready To Reprint (Lost)',
+  [READY_TO_REPRINT_CHANGE]: 'Ready To Reprint (Changed)',
+  [ISSUES]: 'Issues',
+  [SUBMITTED]: 'Submitted',
+};
+
+export const BmidStatusOptions = [
+  ['Prep', IN_PREP],
+  ['Do Not Print', DO_NOT_PRINT],
+  ['Ready To Print', READY_TO_PRINT],
+  ['Ready To Reprint (Lost)', READY_TO_REPRINT_LOST],
+  ['Ready To Reprint (Changed)', READY_TO_REPRINT_CHANGE],
+  ['Issues', ISSUES],
+  ['Submitted', SUBMITTED]
+];
+
+export const MealLabels = {
+  [MEALS_PRE]: 'Pre',
+  [MEALS_POST]: 'Post',
+  [MEALS_EVENT]: 'Event',
+  [MEALS_ALL]: 'All',
+  [MEALS_PRE_PLUS_POST]: 'Pre+Post',
+  [MEALS_PRE_PLUS_EVENT]: 'Pre+Event',
+  [MEALS_EVENT_PLUS_POST]: 'Event+Post',
+};
+
+export const MealOptions = [
+  ['None', ''],
+  ['Pre', MEALS_PRE],
+  ['Post', MEALS_POST],
+  ['Event', MEALS_EVENT],
+  ['All', MEALS_ALL],
+  ['Pre+Post', MEALS_PRE_PLUS_POST],
+  ['Pre+Event', MEALS_PRE_PLUS_EVENT],
+  ['Event+Post', MEALS_EVENT_PLUS_POST]
+];
+
+export const ShowerOptions = [
+  ['No', false],
+  ['Yes', true],
+];
 
 export default class BmidModel extends Model {
   @attr('number') person_id;

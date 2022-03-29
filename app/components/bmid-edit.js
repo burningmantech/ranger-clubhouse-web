@@ -3,7 +3,7 @@ import {
   MealOptions,
   BmidStatusOptions,
   ShowerOptions
-} from 'clubhouse/constants/bmid';
+} from 'clubhouse/models/bmid';
 
 export default class BmidEditComponent extends Component {
   bmidStatusOptions = BmidStatusOptions;
