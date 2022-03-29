@@ -33,8 +33,8 @@ Showing {{pluralize @model.people.length "person"}}
         {{person.first_name}} {{person.last_name}}
       </td>
       <td>
-        {{#if person.date_complete}}
-          {{person.date_complete}}
+        {{#if person.competed_at}}
+          {{person.competed_at}}
         {{else}}
           <i>not completed</i>
         {{/if}}
