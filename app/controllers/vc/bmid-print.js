@@ -121,7 +121,12 @@ export default class VcBmidPrintController extends ClubhouseController {
           data: {year: this.year, person_ids, batch_info: model.batchInfo}
         }).then(({export_url, bmids}) => {
           this.isExporting = false;
-          this.house.pushPayload('bmid', bmids);
+          bmids.forEach((bmid) => {
+            const update = this.viewBmids.find((b) => b.person_id === bmid.person_id);
+            if (update) {
+              Object.assign(update, bmid);
+            }
+          });
           this.ajax.request('bmid/exports', {data: {year: this.year}})
             .then((result) => this.exportList = result.exports);
           this.house.downloadUrl(export_url);
