@@ -5,7 +5,7 @@ import {
   EditDistanceRule,
   // TODO test ExperimentalEyeRhymeRule
   EyeRhymeRule,
-  FccRule,
+  InappropriateRule,
   MinLengthRule,
   PhoneticAlphabetRule,
   SubstringRule,
@@ -68,7 +68,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
       'edit-distance',
       'experimental-eye-rhyme',
       'eye-rhyme',
-      'fcc',
+      'inappropriate',
       'min-length',
       'phonetic-alphabet',
       'substring'
@@ -142,17 +142,17 @@ module('Unit | Utility | handle-rules', function(hooks) {
     checkit(String.fromCodePoint(0x1F4A9));
   });
 
-  // === FccRule tests ===
+  // === InappropriateRule tests ===
   // eslint-disable-next-line qunit/require-expect
-  test('fcc accepts non-swear words', function(assert) {
-    const rule = new FccRule();
+  test('inappropriate accepts non-swear words', function(assert) {
+    const rule = new InappropriateRule();
     noConflicts(assert, rule, 'Puppy');
-    noConflicts(assert, rule, 'Mike Hawk'); // rquires human detection
+    noConflicts(assert, rule, 'Mike Hunt'); // rquires human detection
   });
 
   // eslint-disable-next-line qunit/require-expect
-  test('fcc rejects the Carlin 7', function(assert) {
-    const rule = new FccRule();
+  test('inappropriate rejects the Carlin 7', function(assert) {
+    const rule = new InappropriateRule();
     let checkit = (name) => {
       let conflicts = rule.check(name);
       assert.strictEqual(conflicts.length, 1, `${JSON.stringify(conflicts.length)} conflicts for ${name}`);
@@ -166,6 +166,21 @@ module('Unit | Utility | handle-rules', function(hooks) {
     checkit('CockSucker');
     checkit('Charismatic Motherfucker');
     checkit('2Tits');
+  });
+
+  // eslint-disable-next-line qunit/require-expect
+  test('inappropriate rejects the Roma slurs', function(assert) {
+    const rule = new InappropriateRule();
+    let checkit = (name) => {
+      let conflicts = rule.check(name);
+      assert.strictEqual(conflicts.length, 1, `${JSON.stringify(conflicts.length)} conflicts for ${name}`);
+      assert.strictEqual(conflicts[0].candidateName, name);
+      assert.ok(conflicts[0].description.match(/Roma/));
+    };
+    checkit('Gypsy Child');
+    checkit('Band of Gypsies');
+    checkit('Zingara');
+    checkit('Big-Gitan');
   });
 
   // === PhoneticAlphabetRule tests ===

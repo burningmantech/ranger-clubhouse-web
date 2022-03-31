@@ -22,33 +22,54 @@ export class MinLengthRule {
 }
 
 
-/** Enforces the FCC's no-swearing-on-the-radio rule. */
-export class FccRule {
+/** Warns abuout words the FCC could fine us about or ethnic slurs that shouldn't be part of a callsign. */
+export class InappropriateRule {
   constructor() {
-    // TODO consider putting these in the HandleController data response so rhyming checkers
-    // can catch thins that rhyme with obscenities.
-    this.obsceneWords = {
+    const fcc = 'is frowned on by the FCC';
+    const roma = 'is an ethnic slur for the Roma people';
+    this.inappropriateWords = {
       // the Carlin 7
-      'shit': true,
-      'piss': true,
-      'fuck': true,
-      'cunt': true,
-      'cocksucker': true,
-      'motherfucker': true,
-      'tits': true,
-      // TODO other words?
+      'shit': fcc,
+      'piss': fcc,
+      'fuck': fcc,
+      'cunt': fcc,
+      'cocksucker': fcc,
+      'motherfucker': fcc,
+      'tits': fcc,
+      // TODO are there FCC swear words George Carlin didn't share?
+
+      // Roma ethnic slurs per https://github.com/burningmantech/ranger-clubhouse-api/issues/1087
+      'gypsy': roma,
+      'gipsy': roma,
+      'gypsi': roma,
+      'gypsys': roma,
+      'gipsys': roma,
+      'gypsis': roma,
+      'gypsies': roma,
+      'zingara': roma,
+      'zingaro': roma,
+      'tzigan': roma,
+      'tzigane': roma,
+      'gyppo': roma,
+      'cigano': roma,
+      'zigeuner': roma,
+      'gitan': roma,
+      'gitano': roma,
+
+      // TODO slurs for more ethnic groups?
     };
   }
 
   get id() {
-    return 'fcc';
+    return 'inappropriate';
   }
 
   check(name) {
     const result = [];
     for (const word of name.toLowerCase().split(/[^a-z]+/)) {
-      if (this.obsceneWords[word]) {
-        result.push(new HandleConflict(name, `${word} is frowned on by the FCC`, 'high', this.id));
+      const reason = this.inappropriateWords[word];
+      if (reason) {
+        result.push(new HandleConflict(name, `${word} ${reason}`, 'high', this.id));
       }
     }
     return result;
@@ -554,7 +575,7 @@ export const ALL_RULE_CLASSES = [
   EditDistanceRule,
   EyeRhymeRule,
   ExperimentalEyeRhymeRule,
-  FccRule,
+  InappropriateRule,
   MinLengthRule,
   PhoneticAlphabetRule,
   SubstringRule
