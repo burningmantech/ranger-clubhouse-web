@@ -32,10 +32,6 @@ function indefiniteArticle(noun) {
   return (noun.match(/^[aeiou]/i) ? `an ${noun}` : `a ${noun}`);
 }
 
-function otName(milestones) {
-  return milestones.online_training_only ? 'Online Course' : 'The Online Training Course';
-}
-
 /*
  * Step definition:
  *
@@ -214,10 +210,10 @@ export const VERIFY_PERSONAL_INFO = {
 };
 
 export const ONLINE_TRAINING = {
-  //name: 'Read the Ranger Manual & Complete The Online Training Course',
+  //name: 'Read the Ranger Manual & Complete The Online Course',
   skipPeriod: AFTER_EVENT,
   check({milestones, isPNV, prevCompleted}) {
-    let name = `Read the Ranger Manual & Complete ${otName(milestones)}`;
+    let name = `Read the Ranger Manual & Complete The Online Course`;
     if (milestones.online_training_passed) {
       return {
         result: COMPLETED,
@@ -229,15 +225,15 @@ export const ONLINE_TRAINING = {
       // Don't tell them to read the ranger manual until online training is available.
       return {
         result: WAITING,
-        message: `${otName(milestones)} is not quite ready yet and usually not available until late March. Watch the Ranger Announce mailing list for a message on when the course will be opened.`,
-        name: `Complete ${otName(milestones)}`
+        message: `The Online Course is not quite ready yet and usually not available until late March. Watch the Ranger Announce mailing list for a message on when the course will be opened.`,
+        name: `Complete The Online Course`
       }
     }
 
     if (isPNV && !prevCompleted) {
       return {
         result: NOT_AVAILABLE,
-        message: 'You must complete the previous steps before being allowed to take the Online Training Course.',
+        message: 'You must complete the previous steps before being allowed to take the Online Course.',
         name
       };
     }
@@ -247,7 +243,7 @@ export const ONLINE_TRAINING = {
     return {
       result: ACTION_NEEDED,
       message: htmlSafe('<p>The Ranger Manual can be found at <a href="' + config('RangerManualUrl') + '" rel="noopener noreferrer" target="_blank">rangers.burningman.org</a>.</p>' +
-        `<p>The Online Training Course will take ${duration} to complete. </p> <p>Note: it may take up to 20 minutes or more for the Clubhouse to record your course completion.</p>`),
+        `<p>The Online Course will take ${duration} to complete. </p> <p>Note: it may take up to 20 minutes or more for the Clubhouse to record your course completion.</p>`),
       isOnlineTraining: true,
       name
     };
@@ -267,7 +263,7 @@ export const SIGN_UP_FOR_TRAINING = {
     }
 
     if (!milestones.online_training_passed) {
-      let message = 'You need to complete the Online Training Course first before being allowed to sign up for In-Person Training.';
+      let message = 'You need to complete the Online Course first before being allowed to sign up for In-Person Training.';
       if (!milestones.trainings_available) {
         message += ' Note: the In-Person Training schedule is not opened until mid to late April.'
       }
@@ -420,7 +416,7 @@ export const SIGN_UP_FOR_SHIFTS = {
     if (!milestones.online_training_passed && (isAuditor || isPNV)) {
       return {
         result: NOT_AVAILABLE,
-        message: `You need to complete ${otName(milestones)} first before being allowed to sign up shifts.`
+        message: `You need to complete the Online Course first before being allowed to sign up shifts.`
       };
     }
 
