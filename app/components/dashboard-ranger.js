@@ -97,7 +97,7 @@ const STEPS = [
       if (tickets.qualifiedCount
         || tickets.noAddress
         || tickets.notCriticalCount) {
-         return {
+        return {
           result: ACTION_NEEDED,
           route: 'me.tickets',
           immediate: (tickets.qualifiedCount || tickets.noAddress),
@@ -132,7 +132,7 @@ const STEPS = [
       const gd = arts.find((a) => a.is_green_dot_mentee);
 
       if (!gd) {
-        return { result: SKIP };
+        return {result: SKIP};
       }
 
       if (gd.mentee_slot) {
@@ -181,7 +181,7 @@ const STEPS = [
     skipPeriod: AFTER_EVENT,
     check({milestones}) {
       const {art_trainings: arts} = milestones;
-      if (!arts.length || !milestones.online_training_enabled || !milestones.trainings_available)  {
+      if (!arts.length || !milestones.online_training_enabled || !milestones.trainings_available) {
         // For the case where dirt trainings are not available or online training is not available,
         // skip showing any ART info.
         return {result: SKIP};
@@ -412,21 +412,26 @@ export default class DashboardRangerComponent extends Component {
   @service session;
   @service house;
 
+  constructor() {
+    super(...arguments);
+    this.isAfterEvent = this.args.milestones.period === AFTER_EVENT;
+  }
+
   get serviceInfo() {
-    const { non_ranger_years, rangered_years} = this.args.years;
+    const {non_ranger_years, rangered_years} = this.args.years;
     const rangerYears = rangered_years.length, nonRangerYears = non_ranger_years.length;
 
-    if (!rangerYears  && !nonRangerYears) {
+    if (!rangerYears && !nonRangerYears) {
       return 'stopping by';
     }
 
-    const info =[];
+    const info = [];
     if (rangerYears) {
-      info.push(`rangering ${rangerYears} burn${rangerYears !== 1? 's' : ''}`);
+      info.push(`rangering ${rangerYears} burn${rangerYears !== 1 ? 's' : ''}`);
     }
 
     if (nonRangerYears) {
-      info.push(`volunteering ${nonRangerYears} year${nonRangerYears !== 1? 's' : ''}`);
+      info.push(`volunteering ${nonRangerYears} year${nonRangerYears !== 1 ? 's' : ''}`);
     }
 
     return info.join(' and for ');
@@ -435,7 +440,11 @@ export default class DashboardRangerComponent extends Component {
   get stepGroups() {
     const groups = [];
     const isAfterEvent = (this.args.milestones.period === AFTER_EVENT);
-    const {immediateSteps, steps, completed} = this._processStepGroup(this.args.person.isNonRanger ? NON_RANGER_STEPS : STEPS);
+    const {
+      immediateSteps,
+      steps,
+      completed
+    } = this._processStepGroup(this.args.person.isNonRanger ? NON_RANGER_STEPS : STEPS);
 
     if (immediateSteps.length) {
       groups.push(new StepGroup('Immediate Action Need', immediateSteps, true));
