@@ -13,7 +13,7 @@
   </p>
 {{else if this.haveActions}}
   <p>
-    <b>{{fa-icon "exclamation-circle" size="2x" type="fas"}} There are one or more items that need your attention.</b>
+    <h4>{{fa-icon "exclamation-circle" type="fas"}} There are one or more items that need your attention.</h4>
   </p>
 {{else if this.haveWaiting}}
   <p>
@@ -21,6 +21,9 @@
     now. Please check back as indicated below.
   </p>
 {{/if}}
+<p>
+  <b>Questions?</b> Contact the Volunteer Coordinators at {{vc-email}}
+</p>
 
 <div class="dashboard-box">
   {{#if @motds}}
