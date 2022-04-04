@@ -238,7 +238,8 @@ export const ONLINE_TRAINING = {
       };
     }
 
-    const duration = milestones.needs_full_training ? 'up to 90 minutes or more' : 'around 30 to 45 minutes';
+    //const duration = milestones.needs_full_online_course ? 'up to 90 minutes or more' : 'around 30 to 45 minutes';
+    const duration = 'up to 90 minutes or more';
 
     return {
       result: ACTION_NEEDED,
