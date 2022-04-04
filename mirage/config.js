@@ -1,9 +1,10 @@
-import Response from 'ember-cli-mirage/response';
+import {discoverEmberDataModels} from "ember-cli-mirage";
+import {Response, createServer} from 'miragejs';
 import dayjs from 'dayjs';
 import configMock from './api-mocks/config-mock';
 import scheduleMock from './api-mocks/schedule-mock';
 
-export default function () {
+function routes() {
   this.urlPrefix = 'http://localhost:8000';
 
   configMock(this);
@@ -273,7 +274,7 @@ export default function () {
   });
 
   this.get('/api/agreements/:id', () => {
-    return { agreements: [] };
+    return {agreements: []};
   });
 
   /*
@@ -287,4 +288,14 @@ export default function () {
 
     http://www.ember-cli-mirage.com/docs/v0.3.x/shorthands/
   */
+}
+
+export default function (config) {
+  let finalConfig = {
+    ...config,
+    models: {...discoverEmberDataModels(), ...config.models},
+    routes,
+  };
+
+  return createServer(finalConfig);
 }

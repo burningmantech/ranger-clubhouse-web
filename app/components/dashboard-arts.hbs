@@ -1,56 +1,68 @@
 {{#if (not-eq @step.result "completed")}}
   In order to work certain Ranger special team shifts you have to sign up for and attend the corresponding ART(s).
+  Here are the ART(s) you are eligible for:
 {{/if}}
 
 <div class="dashboard-art-table">
-  <div class="dashboard-art-row dashboard-art-header">
+  <div class="dashboard-art-header">
     <div class="dashboard-art-icon">&nbsp;</div>
     <div class="dashboard-art-position">ART</div>
-    <div class="dashboard-art-status">Status</div>
+    <div class="dashboard-art-status">Your Status</div>
     <div class="dashboard-art-location">Time / Location</div>
   </div>
-  {{#each @step.arts as |art|}}
+  {{#each this.arts as |art|}}
     <div class="dashboard-art-row">
-      <div class="dashboard-art-icon">
-        {{#if (eq art.status "pass")}}
-          {{fa-icon "check-circle" type="far"}}
-        {{else if (or (eq art.status "no-show") (eq art.status "fail"))}}
-          {{fa-icon "times" color="danger"}}
-        {{else if (eq art.status "no-shift")}}
-          {{fa-icon "arrow-right" color="success"}}
-        {{else}}
-          {{fa-icon "hourglass-half"}}
-        {{/if}}
-      </div>
-      <div class="dashboard-art-position">
-        {{art.position_title}}
-      </div>
-      <div class="dashboard-art-status">
-        {{#if (eq art.status "pass")}}
-          Completed
-        {{else if (or (eq art.status "no-show") (eq art.status "fail"))}}
-          NOT PASSED
-        {{else if (eq art.status "no-shift")}}
-          No sign up
-        {{else}}
-          Pending
-        {{/if}}
-      </div>
-      <div class="dashboard-art-location">
-        {{#if art.date}}
-          {{shift-format art.date}}<br>
-          {{art.location}}
-          {{#if art.is_trainer}}
-            <br><i>(as trainer)</i>
+      <div class="dashboard-art-info-line">
+        <div class="dashboard-art-icon">
+          {{#if (eq art.status "pass")}}
+            {{fa-icon "check-circle" type="far"}}
+          {{else if (or (eq art.status "no-show") (eq art.status "fail"))}}
+            {{fa-icon "times" color="danger"}}
+          {{else if (eq art.status "no-shift")}}
+            {{fa-icon "arrow-right" color="success"}}
+          {{else}}
+            {{fa-icon "hourglass-half"}}
           {{/if}}
-        {{else}}
-          &nbsp;
-        {{/if}}
+        </div>
+        <div class="dashboard-art-position">
+          {{art.position_title}}
+        </div>
+        <div class="dashboard-art-status">
+          {{#if (eq art.status "pass")}}
+            Completed
+          {{else if (or (eq art.status "no-show") (eq art.status "fail"))}}
+            NOT PASSED
+          {{else if (eq art.status "no-shift")}}
+            Not signed up
+          {{else}}
+            Pending
+          {{/if}}
+        </div>
+        <div class="dashboard-art-location">
+          {{#if art.date}}
+            {{shift-format art.date}}<br>
+            {{art.location}}
+            {{#if art.is_trainer}}
+              <br><i>(as trainer)</i>
+            {{/if}}
+          {{else}}
+            &nbsp;
+          {{/if}}
+        </div>
+      </div>
+      <div class="dashboard-art-required-line">
+        <div class="dashboard-art-required-for">
+          Required to work:
+          {{#each art.requiredTitles as |title|}}
+            <span class="d-inline-block">{{title}}</span>
+          {{/each}}
+        </div>
       </div>
     </div>
   {{/each}}
 </div>
 
 {{#if (not-eq @step.result "completed")}}
-  Visit <LinkTo @route="me.schedule">Me &gt; Schedule / Sign Up</LinkTo> to sign up the ART(s).
+  Visit
+  <LinkTo @route="me.schedule">Me &gt; Schedule / Sign Up</LinkTo> to sign up the ART(s).
 {{/if}}
