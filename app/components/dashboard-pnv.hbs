@@ -49,6 +49,7 @@
                        @isNotUser={{this.isNotUser}}
                        @photoPosition={{if (and (not this.session.isSmallScreen) (eq idx 0)) "above" "inside"}}
                        @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}}
+                       @milestones={{@milestones}}
         />
       {{/each}}
     </DashboardGroup>
