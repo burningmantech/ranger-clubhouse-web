@@ -9,6 +9,7 @@ export default class AdminSalesforceController extends ClubhouseController {
   @tracked nonTestAccounts = false;
   @tracked showAll = false;
   @tracked resetTestAccounts = false;
+  @tracked showConfirmModal = false;
 
   @tracked accounts = [];
   @tracked importMessage;
@@ -18,16 +19,37 @@ export default class AdminSalesforceController extends ClubhouseController {
   @tracked showHelp = false;
 
   statusLabels = {
-    'succeeded': 'Successfully imported into Clubhouse',
-    'existing': 'Will convert to Prospective and update from Salesforce',
-    'invalid': 'Invalid record status',
-    'imported': 'Mark by Salesforce as already imported into Clubhouse',
-    'ready': 'Ready for import',
-    'notready': 'Not ready for import',
-    'existing-callsign': 'Callsign already exists',
-    'existing-bad-status': 'Existing account cannot update due to non-Auditor or non-Past Prospective status',
-    'reset': 'Reset Salesforce status',
+    'ready': {label: 'Ready for import', icon: 'thumbs-up'},
+    'succeeded': {label: 'Successfully imported into Clubhouse', icon: 'check', color: 'success'},
+    'existing': {label: 'Will convert to Prospective and update from Salesforce', icon: 'thumbs-up'},
+    'invalid': {label: 'Invalid record status, Will not import', icon: 'times', color: 'danger'},
+    'imported': {label: 'Mark by Salesforce as already imported into Clubhouse, Will Not Import', icon: 'times', color: 'danger'},
+    'notready': {label: 'Not ready for import', icon: 'times', color: 'danger'},
+    'existing-callsign': {label: 'Callsign already exists, Will Not Import', icon: 'times', color: 'danger'},
+    'existing-bad-status': {
+      label: 'Existing account cannot update due to non-Auditor or non-Past Prospective status',
+      icon: 'times',
+      color: 'danger'
+    },
+    'reset': {label: 'Reset Testing* Records Status', icon: 'check', color: 'success'},
   };
+
+  get accountGroups() {
+    const groups = groupBy(this.accounts, 'status');
+
+    this._orderStatus(groups, 'imported');
+    this._orderStatus(groups, 'existing-bad-status');
+    this._orderStatus(groups, 'existing');
+    this._orderStatus(groups, 'ready');
+    this._orderStatus(groups, 'succeeded');
+
+    groups.forEach((g) => {
+      g.statusLabel = this.statusLabels[g.status] || {label: `Unknown status [${g.status}]`};
+      g.items = g.items.sortBy('callsign');
+    });
+
+    return groups;
+  }
 
   resetFlags() {
     this.createAccounts = false;
@@ -45,35 +67,32 @@ export default class AdminSalesforceController extends ClubhouseController {
     }
   }
 
-  get accountGroups() {
-    const groups = groupBy(this.accounts, 'status');
-
-    this._orderStatus(groups, 'imported');
-    this._orderStatus(groups, 'existing-bad-status');
-    this._orderStatus(groups, 'existing');
-    this._orderStatus(groups, 'ready');
-    this._orderStatus(groups, 'succeeded');
-
-    groups.forEach((g) => {
-      g.statusLabel = this.statusLabels[g.status] || `Unknown status [${g.status}]`;
-      g.items = g.items.sortBy('callsign');
-    });
-
-    return groups;
-  }
-
   @action
   import() {
-    this.toast.clear();
-
     // Normal both create accouht and update sf should be checked together
-    if (this.createAccounts && !this.updateSalesforce) {
-      this.modal.confirm(null, 'You have checked "Create accounts" but "Update Salesforce flag" is unchecked. Normally, these two are checked togehter. Did you mean to do that?', () => {
-        this._runImport();
-      });
+    if (this.createAccounts) {
+
+      if (!this.updateSalesforce) {
+        this.modal.confirm(null, 'You have checked "Create accounts" but "Update Salesforce flag" is unchecked. Normally, these two are checked together. Did you mean to do that?', () => {
+          this.showConfirmModal = true;
+        });
+      } else {
+        this.showConfirmModal = true;
+      }
     } else {
       this._runImport();
     }
+  }
+
+  @action
+  importConfirmed() {
+    this.showConfirmModal = false;
+    this._runImport();
+  }
+
+  @action
+  cancelConfirmModal() {
+    this.showConfirmModal = false;
   }
 
   _runImport() {
