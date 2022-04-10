@@ -76,6 +76,16 @@ export default class AutocompleteInputComponent extends Component {
   }
 
   /**
+   * Return the text to show when no results were found.
+   *
+   * @returns {string}
+   */
+
+  get noResultsText() {
+    return this.args.noResultsText ?? 'No results found';
+  }
+
+  /**
    * Handle input into the search field.
    *
    * @param {InputEvent} event
@@ -88,8 +98,11 @@ export default class AutocompleteInputComponent extends Component {
     this.isSearching = true;
     this.noResultsFound = false;
     this.isFocused = true;
+    this._runSearch(this.args.onSearch(value));
+  }
 
-    this.args.onSearch(value).then((options) => {
+  _runSearch(promise) {
+    promise.then((options) => {
       this.options = options;
       this.selectionIdx = -1;
 
@@ -130,7 +143,10 @@ export default class AutocompleteInputComponent extends Component {
     }
 
     if (this.args.onFocus) {
-      this.args.onFocus();
+      const promise = this.args.onFocus();
+      if (promise) {
+        this._runSearch(promise);
+      }
     }
   }
 
@@ -334,15 +350,5 @@ export default class AutocompleteInputComponent extends Component {
   resultsBoxDestroy() {
     this.resultsElement = null;
     this.hasSelected = false;
-  }
-
-  /**
-   * Return the text to show when no results were found.
-   *
-   * @returns {string}
-   */
-
-  get noResultsText() {
-    return this.args.noResultsText ?? 'No results found';
   }
 }
