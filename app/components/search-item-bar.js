@@ -209,6 +209,7 @@ export default class SearchItemBarComponent extends Component {
 
   @action
   searchAction(query) {
+    this.searchText = query;
     return new RSVP.Promise((resolve, reject) => {
       debounce(this, this._performSearch, query, resolve, reject, SEARCH_RATE_MS);
     });
@@ -371,6 +372,12 @@ export default class SearchItemBarComponent extends Component {
     this.searchResults = [];
     this.searchYear = null;
     this.showSearchOptions = (this.session.isSmallScreen || this.searchForm.mode !== 'hq');
+
+    if (this.searchText !== '') {
+      return new RSVP.Promise((resolve, reject) => {
+        debounce(this, this._performSearch, this.searchText, resolve, reject, 1);
+      });
+    }
   }
 
   /**
