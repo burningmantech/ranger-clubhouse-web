@@ -47,10 +47,9 @@
       </div>
     </div>
     {{#each this.steps as |step|}}
-      <DashboardStep @step={{step}}
-                     @isActive={{step.isActive}}
+      <DashboardStep @step={{step}} @isActive={{step.isActive}} @isNotUser={{this.isNotUser}}
                      @showBehaviorAgreementAction={{@showBehaviorAgreementAction}}
-      />
+                     @person={{@person}} @milestones={{@milestones}} />
     {{/each}}
   </DashboardGroup>
   <DashboardLinks @isPNV={{true}} />
