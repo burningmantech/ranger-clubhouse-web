@@ -5,6 +5,8 @@ import loadInitializers from 'ember-load-initializers';
 import config from 'clubhouse/config/environment';
 import logError from 'clubhouse/utils/log-error';
 
+const isDev = (config.environment === 'development');
+
 /*
  * Attempt to trap any non-recoverable errors and log them to the server.
  *
@@ -21,9 +23,8 @@ Ember.onerror = (error) => {
 
   console.error(error);
 
-  logError(error, 'ember-onerror');
+  logError(error, 'client-ember-onerror');
 
-  const isDev = (config.environment === 'development');
 
   if (isDev) {
     if (didAlertError) {
@@ -39,6 +40,18 @@ Ember.onerror = (error) => {
     debugger;  // eslint-disable-line no-debugger
   }
 }
+
+
+window.addEventListener('error', (error) => {
+  if (isDev) {
+    alert("Exception " + error.message);
+    // eslint-disable-next-line no-debugger
+    debugger;
+    return;
+  }
+
+  logError(error, 'client-window-error');
+});
 
 export default class App extends Application {
   modulePrefix = config.modulePrefix;
