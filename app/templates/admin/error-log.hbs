@@ -16,14 +16,17 @@
         <th>Type</th>
         <th>IP</th>
         <th>URL</th>
-        <th>Action</th>
       </tr>
       </thead>
 
       <tbody>
       {{#each this.error_logs as |log|}}
         <tr>
-          <td>{{log.created_at}}</td>
+          <td>
+            <a href {{action this.toggleLog log}}>
+              {{fa-icon (if log.showing "caret-down" "caret-right")}} {{log.created_at}}
+            </a>
+          </td>
           <td>
             {{#if log.person}}
               <PersonLink @person={{log.person}} />
@@ -40,16 +43,12 @@
           <td>
             {{log.url}}
           </td>
-          <td>
-            <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleLog log}}>
-              {{if log.showing "Hide" "Show"}}
-            </UiButton>
-          </td>
-        </tr>
+         </tr>
 
         {{#if log.showing}}
           <tr>
-            <td colspan="6">
+            {{! template-lint-disable no-inline-styles}}
+            <td colspan="5" style="overflow-x: scroll">
               User Agent: {{log.user_agent}}<br>
               <JsonFormat @json={{log.data}} />
             </td>
@@ -61,7 +60,8 @@
     <div class="row">
       <div class="col-sm-12 col-md-6">
         {{#if (not-eq this.page 1)}}
-          <LinkTo @route="admin.error-log" @query={{hash page=this.previousPage}} class="btn btn-primary">Prev Page</LinkTo>
+          <LinkTo @route="admin.error-log" @query={{hash page=this.previousPage}} class="btn btn-primary">Prev Page
+          </LinkTo>
         {{else}}
           &nbsp;
         {{/if}}

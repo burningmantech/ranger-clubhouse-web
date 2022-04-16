@@ -88,9 +88,9 @@
 
 
   <UiSection>
-    <:title>Import Action</:title>
+    <:title>Import Actions</:title>
     <:body>
-      <div class="row">
+      <div class="row mb-4">
         <div class="col-auto">
           <p><b>Import options</b></p>
           <label>
@@ -136,10 +136,10 @@
     </LoadingDialog>
   {{/if}}
 
-  {{#if this.accounts}}
-    <UiSection>
-      <:title>Import Results</:title>
-      <:body>
+  <UiSection>
+    <:title>Import Results</:title>
+    <:body>
+      {{#if this.accounts}}
         <p>
           Found {{pluralize this.accounts.length "record"}}
         </p>
@@ -177,7 +177,8 @@
                   {{#if (eq account.status "existing")}}
                     <tr>
                       <td>
-                        <a href="https://burningman.my.salesforce.com/{{account.salesforce_ranger_object_id}}" rel="noopener noreferrer" target="_blank">
+                        <a href="https://burningman.my.salesforce.com/{{account.salesforce_ranger_object_id}}"
+                           rel="noopener noreferrer" target="_blank">
                           {{account.salesforce_ranger_object_name}}
                         </a>
                       </td>
@@ -205,7 +206,8 @@
                   {{else}}
                     <tr>
                       <td>
-                        <a href="https://burningman.my.salesforce.com/{{account.salesforce_ranger_object_id}}" rel="noopener noreferrer" target="_blank">
+                        <a href="https://burningman.my.salesforce.com/{{account.salesforce_ranger_object_id}}"
+                           rel="noopener noreferrer" target="_blank">
                           {{account.salesforce_ranger_object_name}}
                         </a>
                       </td>
@@ -234,7 +236,8 @@
                         <span class="text-danger font-weight-bold">{{account.message}}</span>
                         {{#if account.existing_person}}
                           <PersonLink @person={{account.existing_person}} />
-                        &lt;{{account.existing_person.status}}, {{account.existing_person.first_name}} {{account.existing_person.last_name}}&gt;
+                          &lt;{{account.existing_person.status}}
+                          , {{account.existing_person.first_name}} {{account.existing_person.last_name}}&gt;
                         {{/if}}
                       </td>
                     </tr>
@@ -248,6 +251,7 @@
                           &lt;{{account.existing_person.status}}&gt;<br>
                         {{/if}}
                         <b>BPGUID:</b>{{account.bpguid}}<br>
+                        <b>VC Comments:</b> <PresentOrNot @value={{account.vc_comments}} /><br>
                         {{#if (eq account.status "existing")}}
                           <b>Street:</b> {{account.existing_person.street1}} &rarr; {{account.street1}}<br>
                           <b>State:</b> {{account.existing_person.state}} &rarr; {{account.state}}<br>
@@ -287,9 +291,13 @@
             </Accordion.body>
           </ChAccordion>
         {{/each}}
-      </:body>
-    </UiSection>
-  {{/if}}
+      {{else if this.noAccountsFound}}
+        <b class="text-danger">No records were found based on the criteria.</b>
+      {{else}}
+        Hit submit to retrieve and/or import Salesforce records.
+      {{/if}}
+    </:body>
+  </UiSection>
 </main>
 
 {{#if this.showConfirmModal}}

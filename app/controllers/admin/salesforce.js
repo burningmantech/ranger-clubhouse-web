@@ -10,6 +10,7 @@ export default class AdminSalesforceController extends ClubhouseController {
   @tracked showAll = false;
   @tracked resetTestAccounts = false;
   @tracked showConfirmModal = false;
+  @tracked createAccounts = false;
 
   @tracked accounts = [];
   @tracked importMessage;
@@ -17,15 +18,16 @@ export default class AdminSalesforceController extends ClubhouseController {
   @tracked sfConfig;
   @tracked isSubmitting = false;
   @tracked showHelp = false;
+  @tracked noAccountsFound = false;
 
   statusLabels = {
     'ready': {label: 'Ready for import', icon: 'thumbs-up'},
     'succeeded': {label: 'Successfully imported into Clubhouse', icon: 'check', color: 'success'},
     'existing': {label: 'Will convert to Prospective and update from Salesforce', icon: 'thumbs-up'},
-    'invalid': {label: 'Invalid record status, Will not import', icon: 'times', color: 'danger'},
-    'imported': {label: 'Mark by Salesforce as already imported into Clubhouse, Will Not Import', icon: 'times', color: 'danger'},
-    'notready': {label: 'Not ready for import', icon: 'times', color: 'danger'},
-    'existing-callsign': {label: 'Callsign already exists, Will Not Import', icon: 'times', color: 'danger'},
+    'invalid': {label: 'Invalid record status, Will not import', icon: 'ban', color: 'danger'},
+    'imported': {label: 'Mark by Salesforce as already imported into Clubhouse, Will Not Import', icon: 'ban', color: 'danger'},
+    'notready': {label: 'Not ready for import', icon: 'ban', color: 'danger'},
+    'existing-callsign': {label: 'Callsign already exists, Will Not Import', icon: 'ban', color: 'danger'},
     'existing-bad-status': {
       label: 'Existing account cannot update due to non-Auditor or non-Past Prospective status',
       icon: 'times',
@@ -126,6 +128,7 @@ export default class AdminSalesforceController extends ClubhouseController {
         this.importMessage = result.message;
         this.accounts = result.accounts;
         this.resetFlags();
+        this.noAccountsFound = !this.accounts.length;
       })
       .catch((response) => {
         this.house.handleErrorResponse(response);

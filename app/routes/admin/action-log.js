@@ -40,8 +40,14 @@ export default class AdminActionLogRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    controller.set('error', model.error);
+    model.action_logs?.forEach((a) => {
+      const ip = a.ip?.split(',');
+      if (ip) {
+        a.ip = ip[ip.length - 1];
+      }
+    });
     controller.set('logs', model.action_logs);
+    controller.set('error', model.error);
     const meta = model.meta;
     controller.set('total', meta.total);
     controller.set('currentPage', meta.page);
