@@ -124,7 +124,6 @@ export const PHOTO_APPROVAL = {
         return {
           result: WAITING,
           message: 'The photo is being reviewed. Usually photos are approved within 2 to 3 days.',
-          isPhotoStep: true
         };
       case 'missing':
         if (isPNV) {
