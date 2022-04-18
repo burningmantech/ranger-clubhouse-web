@@ -5,52 +5,49 @@ import loadInitializers from 'ember-load-initializers';
 import config from 'clubhouse/config/environment';
 import logError from 'clubhouse/utils/log-error';
 
-const isDev = (config.environment === 'development');
+const isDevelopmentEnvironment = (config.environment === 'development');
 
 /*
  * Attempt to trap any non-recoverable errors and log them to the server.
- *
- * Uses sendBeacon which is completely asynchronous and will continue to work
- * after the browser window is closed.
  */
 
 Ember.onerror = (error) => {
   var didAlertError = false;
 
+  console.error(error);
+
   if (Ember.testing) { // eslint-disable-line ember/no-ember-testing-in-module-scope
     throw error;
   }
 
-  console.error(error);
-
-  logError(error, 'client-ember-onerror');
-
-
-  if (isDev) {
+  if (isDevelopmentEnvironment) {
     if (didAlertError) {
+      // Avoid spamming the developer with multiple exceptions in the same execution cycle.
       return;
     }
 
     didAlertError = true;
-  }
-
-  alert("Exception " + error.stack);
-
-  if (isDev) {
+    alert("Ember exception " + error.stack);
     debugger;  // eslint-disable-line no-debugger
+  } else {
+    logError(error, 'client-ember-error');
   }
 }
 
+/*
+ * Try to log any uncaught exceptions. Ember.onerror will see the bulk however depending on where
+ * the exception occurs, the window object may receive the error event.
+ */
 
 window.addEventListener('error', (error) => {
-  if (isDev) {
-    alert("Exception " + error.message);
-    // eslint-disable-next-line no-debugger
-    debugger;
+  if (!isDevelopmentEnvironment) {
+    logError(error.error, 'client-uncaught-exception');
     return;
   }
 
-  logError(error, 'client-window-error');
+  alert("Uncaught exception " + error.message);
+  // eslint-disable-next-line no-debugger
+  debugger;
 });
 
 export default class App extends Application {

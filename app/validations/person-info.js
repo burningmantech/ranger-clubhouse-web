@@ -4,7 +4,7 @@ import {
 import validateState from 'clubhouse/validators/state';
 import validatePronouns from 'clubhouse/validators/pronouns';
 
-export default {
+export const REQUIRED_PII_VALIDATIONS = {
   first_name: [
     validatePresence(true)
   ],
@@ -16,7 +16,10 @@ export default {
   email: [
     validateFormat({ type: 'email' })
   ],
+};
 
+export default {
+  ...REQUIRED_PII_VALIDATIONS,
   street1: [
     validatePresence(true),
   ],
