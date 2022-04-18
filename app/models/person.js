@@ -25,6 +25,7 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('boolean') on_site;
   @attr('boolean') has_reviewed_pi;   // pseudo field, write only
   @attr('string') reviewed_pi_at;
+  @attr('string') pi_reviewed_for_dashboard_at;
   @attr('string', {readOnly: true}) logged_in_at;
   @attr('string', {readOnly: true}) last_seen_at;
 

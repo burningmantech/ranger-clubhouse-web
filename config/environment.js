@@ -19,7 +19,12 @@ module.exports = function (environment) {
     },
 
     APP: {
-      buildTimestamp: new Date().toISOString()
+      buildTimestamp: new Date().toLocaleString('en-US', {
+        dateStyle: "medium",
+        timeStyle: "long",
+        hourCycle: "h24",
+        timeZone: "America/Los_Angeles"
+      })
     },
 
     'ember-simple-auth': {

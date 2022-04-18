@@ -26,3 +26,12 @@ export const ALLOWED_TO_WORK = [
   PROSPECTIVE,    // Mentor will need to convert Alpha
   RETIRED,
 ];
+
+// Admins or VCs may have to update legacy defunct accounts with little PII.
+// Allow address validation to be bypassed for such accounts.
+export const ADDRESS_VALIDATION_NOT_REQUIRED = [
+  DECEASED,
+  DISMISSED,
+  RESIGNED,
+  RETIRED
+];
