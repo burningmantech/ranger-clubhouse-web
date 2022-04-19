@@ -39,6 +39,21 @@
           </div>
         {{/if}}
       </div>
+      {{#if this.showNoBlobError}}
+        <p>
+          <b class="text-danger">
+            Uh oh, I had a problem processing your image. You can try another photo, or email this one
+            to the photo wranglers at :
+          </b>
+        </p>
+        <p>
+          {{vc-email}}<br>
+          (don't forget to include your Prospective Ranger handle!)
+        </p>
+        <p>
+          Sorry about that!
+        </p>
+      {{/if}}
 
       <p class="mt-2">
         Examples of a good BMID photo:

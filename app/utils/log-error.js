@@ -11,10 +11,11 @@ import config from 'clubhouse/config/environment';
  * - Javascript exception
  *
  * @param error
- * @param type
+ * @param type string event error name (e.g., client-ember-route, client-window-exception, etc.)
+ * @param additionalData - additional data to log
  */
 
-export default function logError(error, type) {
+export default function logError(error, type, additionalData = null) {
   if (!config.logEmberErrors) {
     // Might be in a development or test environment. skip logging.
     return;
@@ -47,11 +48,17 @@ export default function logError(error, type) {
   form.append('url', window.location.href);
   form.append('error_type', type);
 
-  form.append('data', JSON.stringify({
+  const data = {
     exception: {name, message, stack, filename},
     build_timestamp: config.APP.buildTimestamp,
     version: config.APP.version,
-  }));
+  };
+
+  if (additionalData !== null) {
+    data.additional = additionalData;
+  }
+
+  form.append('data', JSON.stringify(data));
 
   try {
     // Grab the logged-in user id if possible.
