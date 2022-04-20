@@ -8,7 +8,6 @@
     Has not updated their Personal Information yet.
   {{/if}}
   <br>
-  {{log this.person}}
   {{#if this.person.pi_reviewed_for_dashboard_at}}
     Last reviewed for dashboard on
     {{dayjs-format this.person.pi_reviewed_for_dashboard_at "MMM DD, YYYY @ HH:mm"}} (UTC-7).
