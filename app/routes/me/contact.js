@@ -1,5 +1,4 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import { ACTIVE, INACTIVE} from 'clubhouse/constants/person_status';
 
 export default class MeContactRoute extends ClubhouseRoute {
   queryParams = {
