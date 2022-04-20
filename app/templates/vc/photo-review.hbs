@@ -83,12 +83,16 @@
           </table>
           </p>
           <p>
-            <UiButton @type="secondary" @class="me-1" @disabled={{photo.isSaving}}
+            <UiButton @type="secondary"
+                      @class="me-1"
+                      @disabled={{photo.isSaving}}
                       @onClick={{fn this.editPhotoAction photo}}>
               {{fa-icon "edit"}} Edit
             </UiButton>
             {{#if (not-eq photo.status "rejected")}}
-              <UiButton @type="danger" @class="me-1" @onClick={{fn this.showReviewPhoto photo}}
+              <UiButton @type="danger"
+                        @class="me-1"
+                        @onClick={{fn this.showReviewPhoto photo}}
                         @disabled={{photo.isSaving}}>
                 {{fa-icon "times"}} Reject
               </UiButton>
@@ -187,7 +191,8 @@
   <ModalDialog @title="Rejection Email Preview" @onEscape={{this.closeRejectMail}} as |modal|>
     <modal.body>
       <div class="border">
-        <iframe {{on "load" this.insertRejectMail}} class="photo-reject-preview-box" title="rejection message preview">
+        <iframe {{did-insert this.insertRejectMail}} id="mail-preview-iframe" class="photo-reject-preview-box"
+                                                     title="rejection message preview">
         </iframe>
       </div>
     </modal.body>

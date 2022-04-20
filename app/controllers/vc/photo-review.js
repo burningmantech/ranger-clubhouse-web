@@ -1,6 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import EmberObject, { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import EmberObject, {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 
 export default class VcPhotoReviewController extends ClubhouseController {
   @tracked reviewPhoto = null;
@@ -16,13 +16,23 @@ export default class VcPhotoReviewController extends ClubhouseController {
   height = 450;
 
   // Set in the route
-  rejectionOptions = [];
+  @tracked rejectionOptions = [];
+
+  /**
+   * Show a photo to review
+   *
+   * @param photo
+   */
 
   @action
   showReviewPhoto(photo) {
     this.reviewPhoto = photo;
-    this.reviewForm = EmberObject.create({ reasons: [], message: '' });
+    this.reviewForm = EmberObject.create({reasons: [], message: ''});
   }
+
+  /**
+   * Close up the photo being reviewed.
+   */
 
   @action
   onClose() {
@@ -30,6 +40,12 @@ export default class VcPhotoReviewController extends ClubhouseController {
       this.reviewPhoto = null;
     }
   }
+
+  /**
+   * Approve a photo.
+   *
+   * @param photo
+   */
 
   @action
   approveAction(photo) {
@@ -41,11 +57,17 @@ export default class VcPhotoReviewController extends ClubhouseController {
     });
   }
 
+  /**
+   * Reject a photo.
+   *
+   * @param model
+   */
+
   @action
   onRejectSubmit(model) {
     const photo = this.reviewPhoto;
 
-    if (model.reasons.length == 0) {
+    if (!model.reasons.length) {
       this.modal.info(null, 'Please mark one or more reasons why the photo is being rejected.');
       return;
     }
@@ -66,6 +88,10 @@ export default class VcPhotoReviewController extends ClubhouseController {
     });
   }
 
+  /**
+   * Preview the rejection email
+   */
+
   @action
   rejectPreviewAction() {
     const form = this.reviewForm;
@@ -74,31 +100,49 @@ export default class VcPhotoReviewController extends ClubhouseController {
       reject_message: form.message
     };
 
-    this.ajax.request(`person-photo/${this.reviewPhoto.id}/reject-preview`, { method: 'GET', data })
-      .then((result) => {
-        this.rejectMail = result.mail;
-      }).catch((response) => this.house.handleErrorResponse(response));
+    this.ajax.request(`person-photo/${this.reviewPhoto.id}/reject-preview`, {method: 'GET', data})
+      .then((result) => this.rejectMail = result.mail)
+      .catch((response) => this.house.handleErrorResponse(response));
   }
+
+  /**
+   * Close the rejection preview dialog
+   */
 
   @action
   closeRejectMail() {
     this.rejectMail = null;
   }
 
-  @action
-  insertRejectMail(event) {
-    const doc = event.target.contentWindow.document;
+  /**
+   * Load up the newly inserted iframe with the rejection email
+   *
+   * @param {HTMLElement} element
+   */
 
-    // Insert the mail into the iframe
-    doc.open();
-    doc.write(this.rejectMail);
-    doc.close();
+  @action
+  insertRejectMail(element) {
+    const iframe = element.contentWindow.document;
+
+    iframe.open();
+    iframe.write(this.rejectMail);
+    iframe.close();
   }
+
+  /**
+   * Setup to edit a photo
+   *
+   * @param photo
+   */
 
   @action
   editPhotoAction(photo) {
     this.editPhoto = photo;
   }
+
+  /**
+   * Close up the photo editting dialog
+   */
 
   @action
   closeEditPhotoAction() {
@@ -106,6 +150,12 @@ export default class VcPhotoReviewController extends ClubhouseController {
       this.editPhoto = null;
     }
   }
+
+  /**
+   * Submit the edited photo.
+   *
+   * @param blob
+   */
 
   @action
   submitEditedPhotoAction(blob) {
@@ -130,10 +180,20 @@ export default class VcPhotoReviewController extends ClubhouseController {
     });
   }
 
+  /**
+   * Show the photo meta data. (size, created at, edited at, etc.)
+   *
+   * @param photo
+   */
+
   @action
   showPhotoInfoAction(photo) {
     this.showPhoto = photo;
   }
+
+  /**
+   * Close up the photo info dialog
+   */
 
   @action
   closePhotoInfoAction() {
