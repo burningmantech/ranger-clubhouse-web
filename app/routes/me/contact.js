@@ -10,7 +10,7 @@ export default class MeContactRoute extends ClubhouseRoute {
   beforeModel() {
     super.beforeModel(...arguments);
 
-    const {user} = this.session.user;
+    const {user} = this.session;
 
     if (!user.isActive && !user.isInactive) {
       this.toast.error('Sorry, you are not an active Ranger and may not send contact messages.');
