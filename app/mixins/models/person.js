@@ -73,6 +73,10 @@ const PersonMixin = (superclass) => class extends superclass {
     return RANGER_STATUSES.includes(this.status);
   }
 
+  get isInactive() {
+    return this.status === INACTIVE;
+  }
+
   get canStartShift() {
     return ALLOWED_TO_WORK.includes(this.status);
   }

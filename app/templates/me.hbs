@@ -45,7 +45,7 @@
       <s.link @route="me.trainer-feedback" @title="Trainer Feedback" @icon="poll-h" @iconType="s"/>
     {{/if}}
 
-    {{#if this.user.isRanger}}
+    {{#if (or this.user.isActive this.user.isInactive)}}
       <s.link @route="me.contact" @title="Contact Ranger" @icon="comments" @iconType="s"/>
     {{/if}}
   </s.group>
