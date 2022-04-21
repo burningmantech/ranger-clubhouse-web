@@ -2,7 +2,7 @@
 
 // prettier-ignore
 const browsers = [
-  '> 2%',
+  '> 0.2%',
   'not IE 11',
   'not dead',
 ];
