@@ -144,17 +144,16 @@ export class SubstringRule {
   }
 
   normalizeName(name) {
-    if (name.match(/^[A-Z]([ .-][A-Z])*$/)) {
-      // Acronyms are usually pronounced letter-by-letter; don't flag phonemes
-      // that happen to include them.  Transform to space-separated letters.
-      return name.trim().replace(/\W+/g, '').split(new RegExp('')).join(' ');
-    }
-    return name.trim().toLowerCase().replace(/\W+/g, '');
+    // Abbreviations are usually pronounced letter-by-letter, so don't flag phonemes that happen to include them.
+    // Transform all-caps words to space-separated letters and split on punctuation so "Sparkle" doesn't contain "LE"
+    // while allowing "DPW Bob" to match "D P W" or "D-P-W".  This isn't perfect, though: "Tall Eagle" contains "LE".
+    name = name.trim().replace(/\b[A-Z]{2,}\b/g, word => word.split(new RegExp('')).join(' '));
+    return name.toLowerCase().replace(/\W+/g, ' ').trim();
   }
 }
 
 
-/** Finds handles based on Lvenshtein edit distance. */
+/** Finds handles based on Levenshtein edit distance. */
 export class EditDistanceRule {
   constructor(handles) {
     this.maxDistance = 1;
