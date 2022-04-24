@@ -305,4 +305,19 @@ export default class PersonIndexController extends ClubhouseController {
     this.showUploadDialog = false;
   }
 
+  @action
+  sendWelcomeMailAction() {
+    this.modal.confirm('Resend Welcome Mail', 'Are you sure you want to resend the PNV Welcome Mail?', () => {
+      this.ajax.request(`intake/${this.person.id}/send-welcome-email`, {method: 'POST'})
+        .then(() => {
+          this.toast.success('Welcome Mail successfully queued to be sent.');
+        }).catch((response) => {
+          if (response.status === 400) {
+            this.toast.error('Person is not a prospective');
+          } else {
+            this.house.handleErrorResponse(response);
+          }
+      })
+    })
+  }
 }

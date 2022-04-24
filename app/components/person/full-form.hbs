@@ -3,7 +3,7 @@ The Admin, Mentor, and VC form.
 Everyone else will see person/simple-form
 }}
 {{#if (has-role "admin" "vc" "view-pii" "view-email")}}
-  <PersonalInfoWarning />
+  <PersonalInfoWarning/>
   <div class="row mb-1">
     <div class="col-sm-6 col-lg-auto">
       email {{#if @person.email}}
@@ -238,6 +238,11 @@ Everyone else will see person/simple-form
             Add Note
           </UiButton>
         {{/if}}
+      {{/if}}
+      {{#if (and (has-role "admin" "vc") @person.isProspective)}}
+        <UiButton @type="secondary" @class="btn-responsive" @onClick={{@sendWelcomeMailAction}}>
+          Resend Welcome Email
+        </UiButton>
       {{/if}}
       {{#if @person.isSaving}}
         <p>

@@ -139,22 +139,22 @@ Router.map(function () {
     this.route('assets');
     this.route('bmid');
     this.route('broadcast-log');
-    this.route('contact-log');
     this.route('dashboard');
     this.route('emergency-contact');
     this.route('event-info');
+    this.route('external-ids');
+    this.route('mail-log');
     this.route('mentors');
     this.route('messages');
     this.route('password');
     this.route('personal-info');
-    this.route('schedule');
-    this.route('tickets');
-    this.route('timesheet-log');
-    this.route('timesheet');
     this.route('photos');
+    this.route('schedule');
     this.route('status-history');
+    this.route('tickets');
+    this.route('timesheet');
+    this.route('timesheet-log');
     this.route('unified-flagging');
-    this.route('external-ids');
     this.route('work-history');
   });
 
