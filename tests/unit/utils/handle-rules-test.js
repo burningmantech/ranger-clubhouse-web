@@ -57,7 +57,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
     let found = conflicts.find((x) => x.conflictingHandle.name === existing);
     assert.ok(found, `${existing} in ${JSON.stringify(conflicts)}`);
     assert.strictEqual(found.candidateName, name);
-    assert.ok(found.description.match(descriptionPattern));
+    assert.ok(found.description.match(descriptionPattern), `no match for ${descriptionPattern}`);
   };
 
   test('ALL_RULE_CLASSES contains all rules', function(assert) {
@@ -221,7 +221,8 @@ module('Unit | Utility | handle-rules', function(hooks) {
       conflictsWithExisting(assert, rule, name, existing, 'in use');
     checkit('Zulu', 'Zulu');
     checkit('golf', 'Golf');
-    checkit('CHARLIE', 'Charlie');
+    // checkit('CHARLIE', 'Charlie'); // CHARLIE now treated as 'C H A R L I E'
+    checkit('SiErRa', 'Sierra');
     checkit('wHiSkEy', 'Whiskey');
   });
 
@@ -244,7 +245,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
     const rule = new SubstringRule(natoHandles);
     let checkit = (name, existing) =>
       conflictsWithExisting(assert, rule, name, existing, `contains ${existing}`);
-    checkit('ALFALFA', 'Alfa');
+    checkit('AlfalfA', 'Alfa');
     checkit('TheGolfather', 'Golf');
     checkit('paparazi', 'Papa');
     checkit('Gary Indiana', 'India');
@@ -260,6 +261,60 @@ module('Unit | Utility | handle-rules', function(hooks) {
     noConflicts(assert, rule, 'Romero');
     noConflicts(assert, rule, 'Unicorn');
     noConflicts(assert, rule, 'Alice Bob Carol');
+  });
+
+  // eslint-disable-next-line qunit/require-expect
+  test('substring rejects acronym matches', function(assert) {
+    const acronymHandles = [
+      {name: 'L E', entityType: 'jargon'},
+      {name: 'B-L-M', entityType: 'jargon'},
+      {name: 'r.e.m.', entityType: 'jargon'},
+    ];
+    const rule = new SubstringRule(acronymHandles);
+    let exactMatch = (name, existing) =>
+      conflictsWithExisting(assert, rule, name, existing, `${existing} is already in use`);
+    let substringMatch = (name, existing) =>
+      conflictsWithExisting(assert, rule, name, existing, `contains ${existing}`);
+    exactMatch('L E', 'L E');
+    exactMatch('l e', 'L E');
+    exactMatch('l-e', 'L E');
+    substringMatch('L E O', 'L E');
+    substringMatch('L-E-A-L', 'L E');
+    substringMatch('A.B.L.E.', 'L E');
+    exactMatch('B.L.M', 'B-L-M');
+    exactMatch('B L M', 'B-L-M');
+    exactMatch('b L m', 'B-L-M');
+    substringMatch('B.L.M. H.Q.', 'B-L-M');
+    substringMatch('U-S-F-S B-L-M N-P-S', 'B-L-M');
+    exactMatch('r.e.m.', 'r.e.m.');
+    exactMatch('R.E.M', 'r.e.m.');
+    exactMatch('R-E M', 'r.e.m.');
+    exactMatch('R E M', 'r.e.m.');
+    substringMatch('R E M S.L.E-E-P-', 'r.e.m.');
+  });
+
+  // eslint-disable-next-line qunit/require-expect
+  test('substring accepts non-acronym matches to acronyms', function(assert) {
+    const acronymHandles = [
+      {name: 'L E', entityType: 'jargon'},
+      {name: 'B-L-M', entityType: 'jargon'},
+      {name: 'r.e.m.', entityType: 'jargon'},
+    ];
+    const rule = new SubstringRule(acronymHandles);
+    let substringMatch = (name, existing) =>
+      conflictsWithExisting(assert, rule, name, existing, `contains ${existing}`);
+    noConflicts(assert, rule, 'Leaf');
+    noConflicts(assert, rule, 'abLE');
+    noConflicts(assert, rule, 'Bald Eagle');
+    substringMatch('Bell Eagle', 'L E'); // Bell end with L, Eagle starts with E
+    noConflicts(assert, rule, 'fechez le vache');
+    noConflicts(assert, rule, 'Kablm');
+    substringMatch('BLM Director', 'B-L-M');
+    substringMatch("BOB L'May", 'B-L-M');
+    substringMatch('rob l. martin', 'B-L-M');
+    noConflicts(assert, rule, 'Remember');
+    noConflicts(assert, rule, 'rem'); // "rem" vs. "are ee em"
+    substringMatch('R.E.M. Songs', 'r.e.m.');
   });
 
   // === EditDistanceRule tests ===
