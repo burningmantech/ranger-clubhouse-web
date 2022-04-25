@@ -84,7 +84,7 @@
     "global": "^4.4.0",
     "jscodeshift": "^0.13.1",
     "json-formatter-js": "^2.3.4",
-    "libphonenumber-js": "^1.9.51",
+    "libphonenumber-js": "^1.9.52",
     "loader.js": "^4.7.0",
     "lodash": "^4.17.21",
     "miragejs": "^0.1.43",
