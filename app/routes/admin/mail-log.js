@@ -1,21 +1,20 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
-import RSVP from 'rsvp'
+import RSVP from 'rsvp';
 
-export default class PersonMailLogRoute extends ClubhouseRoute {
+export default class AdminMailLogRoute extends ClubhouseRoute {
   queryParams = {
     year: { refreshModel: true },
     page: { refreshModel: true },
   };
 
   model(params) {
-    const person_id = this.modelFor('person').id;
     const year = requestYear(params);
     const page = params.page ?? 1;
 
     return RSVP.hash({
-      logs: this.ajax.request(`mail-log`, { data: { person_id, year, page } }),
-      stats:this.ajax.request('mail-log/stats', { data: { person_id }}),
+      logs: this.ajax.request(`mail-log`, { data: { year, page } }),
+      stats:this.ajax.request('mail-log/stats'),
       year,
     });
   }
@@ -23,16 +22,15 @@ export default class PersonMailLogRoute extends ClubhouseRoute {
   setupController(controller, model) {
     super.setupController(...arguments);
 
-    controller.set('person', this.modelFor('person'));
     controller.set('year', model.year);
-    controller.set('stats', model.stats);
     controller.set('logs', model.logs.mail_log);
     controller.set('meta', model.logs.meta);
+    controller.set('stats', model.stats);
+
   }
 
   resetController(controller, isExiting) {
     if (isExiting) {
-      controller.set('mailLog', null);
       controller.set('year', null);
       controller.set('page', null);
     }

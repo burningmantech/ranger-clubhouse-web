@@ -1,0 +1,13 @@
+<main>
+  <YearSelect @title="Mail Log"
+              @year={{this.year}}
+              @years={{this.stats.years}}
+              @subheader={{true}}
+              @onChange={{action this.selectYearAction}} />
+
+  <MailLogTable @logs={{this.logs}}
+                @meta={{this.meta}}
+                @stats={{this.stats}}
+                @goNextPage={{this.goNextPage}}
+                @goPrevPage={{this.goPrevPage}} />
+</main>

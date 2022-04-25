@@ -106,6 +106,7 @@ Router.map(function () {
     this.route('documents');
     this.route('bulk-lookup');
     this.route('bulk-positions');
+    this.route('mail-log');
   });
 
   this.route('hq', {path: '/hq/:person_id'}, function () {
