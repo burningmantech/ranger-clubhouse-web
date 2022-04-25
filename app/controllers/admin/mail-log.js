@@ -1,9 +1,9 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import { action, set } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import {action, set} from '@ember/object';
+import {tracked} from '@glimmer/tracking'
 
-export default class PersonMailLogController extends ClubhouseController {
-  queryParams = [ 'year', 'page' ];
+export default class AdminMailLogController extends ClubhouseController {
+  queryParams = ['year', 'page'];
 
   @tracked meta = null;
   @tracked stats = null;

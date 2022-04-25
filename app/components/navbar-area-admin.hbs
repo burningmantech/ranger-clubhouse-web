@@ -51,6 +51,9 @@
     <NavbarMenuSection @section="Communications">
       <NavbarMenuItem @menu={{menu}} @route="admin.motd" @item="Announcements"/>
       <NavbarMenuItem @menu={{menu}} @route="admin.rbs" @item="Ranger Broadcast"/>
+      {{#if (has-role "admin")}}
+        <NavbarMenuItem @menu={{menu}} @route="admin.mail-log" @item="Mail Log"/>
+      {{/if}}
     </NavbarMenuSection>
   {{/if}}
 </NavbarMenu>
