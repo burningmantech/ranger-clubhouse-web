@@ -13,7 +13,7 @@ export default class PhotoUploadComponent extends Component {
 
   @tracked showUploadDialog = false;
 
-  @tracked step = 'source';
+  @tracked step = 'showGuidelines';
   @tracked isSubmitting = false;
   @tracked hasCamera = false;
 
@@ -60,7 +60,18 @@ export default class PhotoUploadComponent extends Component {
         }
       });
     }
+
+    if (this.args.isPersonManage) {
+      // Skip showing guidelines
+      this.step = 'source';
+    }
   }
+
+  @action
+  gotoSourceStep() {
+    this.step = 'source';
+  }
+
   @action
   useSelfieAction(origBlob) {
     this.originalImage = origBlob;
