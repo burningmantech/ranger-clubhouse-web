@@ -5,6 +5,11 @@
   </Accordion.title>
   <Accordion.body>
     {{#if Accordion.isOpen}}
+      {{#if this.isTrainingPosition}}
+        <p>
+          Additional training sessions will be posted through the end of May.
+        </p>
+      {{/if}}
       {{#if this.haveNoAppreciationSlots}}
         <NoAppreciateIcon/>
         = the shift hours will not count towards appreciations.

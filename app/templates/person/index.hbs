@@ -71,9 +71,11 @@
 {{/if}}
 
 {{#if this.showUploadDialog}}
-  <PhotoUpload @person={{this.person}} @refreshPhoto={{this.refreshPhoto}}
+  <PhotoUpload @person={{this.person}}
+               @refreshPhoto={{this.refreshPhoto}}
                @closeAction={{this.closeUploadDialogAction}}
                @photo={{this.photo}}
+               @isPersonManage={{true}}
   />
 {{/if}}
 
