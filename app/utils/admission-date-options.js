@@ -7,13 +7,6 @@ export default function admissionDateOptions(year, wapDateRange, originalDate = 
     ['Unspecified', '']
   ];
 
-  if (originalDate) {
-    const origMoment = dayjs(originalDate);
-    if (origMoment.year() != year) {
-      options.push([origMoment.format(DATE_FORMAT), originalDate]);
-    }
-  }
-
   let low = 5, high = 26;
   if (wapDateRange != null) {
     [low, high] = wapDateRange.replace(/\s/, '').split('-');
@@ -29,10 +22,14 @@ export default function admissionDateOptions(year, wapDateRange, originalDate = 
     }
   }
 
-
   for (let day = high; day >= low; day--) {
     const date = `${year}-08-${day < 10 ? '0' + day : day}`;
     options.push([dayjs(date).format(DATE_FORMAT), date]);
+  }
+
+  if (originalDate && !options.find((opt) => (opt[1] === originalDate))) {
+    const origMoment = dayjs(originalDate);
+    options.unshift([origMoment.format(DATE_FORMAT), originalDate]);
   }
 
   options.push(['Any', 'any']);

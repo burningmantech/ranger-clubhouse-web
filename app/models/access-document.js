@@ -1,5 +1,5 @@
 import Model, {attr} from '@ember-data/model';
-import { isEmpty } from '@ember/utils';
+import {isEmpty} from '@ember/utils';
 import dayjs from 'dayjs';
 
 export const STAFF_CREDENTIAL = 'staff_credential';
@@ -68,13 +68,13 @@ export default class AccessDocumentModel extends Model {
   // Only returned when requesting items available for delivery
   @attr('boolean', {readOnly: true}) has_staff_credential;
 
-  @attr('string', { defaultValue: DELIVERY_NONE}) delivery_method;
+  @attr('string', {defaultValue: DELIVERY_NONE}) delivery_method;
 
   @attr('string') street1;
   @attr('string') street2;
   @attr('string') city;
   @attr('string') state;
-  @attr('string', { defaultValue: 'US'}) country;
+  @attr('string', {defaultValue: 'US'}) country;
   @attr('string') postal_code;
 
 
@@ -183,7 +183,7 @@ export default class AccessDocumentModel extends Model {
       return false;
     }
 
-    for (const name of [ 'street1', 'city', 'state', 'postal_code']) {
+    for (const name of ['street1', 'city', 'state', 'postal_code']) {
       if (isEmpty(this[name])) {
         return false
       }
@@ -212,12 +212,10 @@ export default class AccessDocumentModel extends Model {
   get admission_date() {
     if (this.access_any_time) {
       return 'any';
+    } else if (this.access_date) {
+      return dayjs(this.access_date).format('YYYY-MM-DD');
     } else {
-      if (this.access_date) {
-        return dayjs(this.access_date).format('YYYY-MM-DD');
-      } else {
-        return null;
-      }
+      return null;
     }
   }
 

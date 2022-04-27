@@ -3,7 +3,15 @@ import {action, set} from '@ember/object';
 import {isBlank, isEmpty} from '@ember/utils';
 import dayjs from 'dayjs';
 import {tracked} from '@glimmer/tracking';
-import {GIFT_TICKET, STAFF_CREDENTIAL, RPT, WAP, WAPSO, VEHICLE_PASS, DELIVERY_POSTAL} from 'clubhouse/models/access-document';
+import {
+  GIFT_TICKET,
+  STAFF_CREDENTIAL,
+  RPT,
+  WAP,
+  WAPSO,
+  VEHICLE_PASS,
+  DELIVERY_POSTAL
+} from 'clubhouse/models/access-document';
 import {ALPHA, PROSPECTIVE} from 'clubhouse/constants/person_status';
 
 const SHORT_TYPES = {
@@ -185,9 +193,12 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
           case STAFF_CREDENTIAL:
           case WAP:
           case WAPSO:
-            if (doc.access_any_time || isEmpty(doc.access_date)) {
+            if (doc.access_any_time) {
               dateInfo = ' Anytime';
               trsColumn = 'anytime';
+            } else if (isEmpty(doc.access_date)) {
+              dateInfo = ' UNSPECIFIED ACCESS DATE';
+              trsColumn = 'unspecified';
             } else {
               dateInfo = dayjs(doc.access_date).format(' ddd MM/D');
               trsColumn = dayjs(doc.access_date).format('MMDD');
