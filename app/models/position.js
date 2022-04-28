@@ -14,4 +14,5 @@ export default class PositionModel extends Model {
   @attr('boolean') prevent_multiple_enrollments;
   @attr('string') contact_email;
   @attr('boolean', { defaultValue: true}) active;
+  @attr('boolean', { defaultValue:false}) alert_when_empty;
 }
