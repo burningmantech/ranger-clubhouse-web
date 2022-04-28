@@ -195,14 +195,27 @@
                           @options={{this.trainingOptions}}
                 />
               </FormRow>
-              <FormRow>
+            </fieldset>
+          {{/if}}
+          <fieldset>
+            <legend>Notifications</legend>
+
+            <FormRow>
+              <div class="col-12">
+                <f.checkbox @name="alert_when_empty"
+                            @label="Send email to contact email when trainer slot signs up become empty and the trainee slots still have sign ups."
+                />
+              </div>
+            </FormRow>
+            <FormRow>
+              <div class="col-12">
                 <f.text @name="contact_email"
                         @label="Contact Email (shift full notification, etc)"
                         @size={{40}}
                         @maxlength={{200}}/>
-              </FormRow>
-            </fieldset>
-          {{/if}}
+              </div>
+            </FormRow>
+          </fieldset>
         </Modal.body>
 
         <Modal.footer @noAlign={{true}}>

@@ -24,6 +24,11 @@
               @title="Training Surveys"
               @icon="poll" @iconType="s"/>
     {{/if}}
+    {{#if (and (not this.training.is_art) (has-role "intake"))}}
+      <s.link @route="training.unified-flagging" @routeArg={{this.training.id}}
+              @title="Unified Flagging"
+              @icon="flag" @iconType="s"/>
+    {{/if}}
   </s.group>
 </ChSidebar>
 

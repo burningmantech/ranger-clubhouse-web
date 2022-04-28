@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {Role} from 'clubhouse/constants/roles';
+import {ADMIN, INTAKE, MENTOR, VC} from 'clubhouse/constants/roles';
 import {service} from '@ember/service';
 
 export default class IntakeNotesComponent extends Component {
@@ -26,16 +26,16 @@ export default class IntakeNotesComponent extends Component {
 
     switch (this.args.type) {
       case 'mentor':
-        role = Role.MENTOR;
+        role = MENTOR;
         break;
       case 'vc':
-        role = Role.VC;
+        role = VC;
         break;
       case 'personnel':
-        role = Role.ADMIN;
+        role = ADMIN;
         break;
       default:
-        role = Role.INTAKE;
+        role = INTAKE;
         break;
     }
 
@@ -65,7 +65,7 @@ export default class IntakeNotesComponent extends Component {
   @action
   deleteNoteAction(note) {
     this.modal.confirm('Confirm Deletion', 'Are you really sure you want to delete this note?', () => {
-      this.ajax.request(`intake/${note.id}/delete-note`, { method: 'DELETE'})
+      this.ajax.request(`intake/${note.id}/delete-note`, {method: 'DELETE'})
         .then(() => {
           this.teamNotes.forEach((intakeYear) => {
             if (intakeYear.year === note.year) {
