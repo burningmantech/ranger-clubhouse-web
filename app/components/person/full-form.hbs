@@ -239,15 +239,24 @@ Everyone else will see person/simple-form
           </UiButton>
         {{/if}}
       {{/if}}
-      {{#if (and (has-role "admin" "vc") @person.isProspective)}}
+    </div>
+    {{#if (and (has-role "admin" "vc") @person.isProspective)}}
+      <div class="col-sm-12 col-xl-auto mb-4">
         <UiButton @type="secondary" @class="btn-responsive" @onClick={{@sendWelcomeMailAction}}>
           Resend Welcome Email
         </UiButton>
-      {{/if}}
+      </div>
+    {{/if}}
+    {{#if (has-role "admin")}}
+    <div class="col-sm-12 col-xl-auto mb-4">
+      <UiButton @type="secondary" @class="btn-responsive" @onClick={{@showPasswordDialogAction}}>
+        Change Password
+      </UiButton>
+    </div>
+    {{/if}}
+    <div class="col-sm-12 col-xl-auto mb-4">
       {{#if @person.isSaving}}
-        <p>
-          <LoadingIndicator/>
-        </p>
+        <LoadingIndicator/>
       {{/if}}
     </div>
     {{#if (has-role "admin")}}

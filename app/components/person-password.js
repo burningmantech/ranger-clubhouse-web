@@ -1,14 +1,22 @@
-import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
+import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
+import {service } from '@ember/service';
+
 import {
   validatePresence,
   validateLength,
   validateConfirmation
 } from 'ember-changeset-validations/validators';
 
-export default class PersonPasswordController extends ClubhouseController {
+export default class PersonPasswordComponent extends Component {
   @tracked isSubmitting = false;
+
+  @service ajax;
+  @service house;
+  @service toast;
+
+  @tracked passwordForm = {password: '', password_confirmation: ''};
 
   passwordValidations = {
     password: [
@@ -26,8 +34,7 @@ export default class PersonPasswordController extends ClubhouseController {
       return;
     }
 
-    const person = this.person;
-
+    const {person} = this.args;
     const passwords = {
       password: model.password,
       password_confirmation: model.password_confirmation
@@ -37,7 +44,7 @@ export default class PersonPasswordController extends ClubhouseController {
     return this.ajax.request(`person/${person.id}/password`, {method: 'PATCH', data: passwords})
       .then(() => {
         this.toast.success('Password has been changed.');
-        this.router.transitionTo('person.index', person.id);
+        this.args.onClose();
       }).catch((response) => {
         this.house.handleErrorResponse(response)
       })

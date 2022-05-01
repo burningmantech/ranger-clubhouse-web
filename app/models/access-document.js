@@ -77,6 +77,7 @@ export default class AccessDocumentModel extends Model {
   @attr('string', {defaultValue: 'US'}) country;
   @attr('string') postal_code;
 
+  @attr('boolean', { defaultValue: false }) is_job_provision;
 
   get isTicket() {
     return (this.type === STAFF_CREDENTIAL
