@@ -56,6 +56,8 @@ export default class PersonIndexController extends ClubhouseController {
 
   @tracked photo = null;
 
+  @tracked showPasswordDialog = false;
+
   get isAdmin() {
     return this.session.isAdmin;
   }
@@ -319,5 +321,15 @@ export default class PersonIndexController extends ClubhouseController {
           }
       })
     })
+  }
+
+  @action
+  showPasswordDialogAction() {
+    this.showPasswordDialog = true;
+  }
+
+  @action
+  closePasswordDialogAction() {
+    this.showPasswordDialog = false;
   }
 }

@@ -34,6 +34,8 @@
                             @removePersonAction={{this.removePersonAction}}
 
                             @sendWelcomeMailAction={{this.sendWelcomeMailAction}}
+
+                            @showPasswordDialogAction={{this.showPasswordDialogAction}}
           />
         {{else}}
           <Person::SimpleForm @person={{this.person}}
@@ -77,6 +79,11 @@
                @photo={{this.photo}}
                @isPersonManage={{true}}
   />
+{{/if}}
+
+
+{{#if this.showPasswordDialog}}
+  <PersonPassword @onClose={{this.closePasswordDialogAction}} @person={{this.person}} />
 {{/if}}
 
 {{#if this.showConfirmNoteOrMessage}}

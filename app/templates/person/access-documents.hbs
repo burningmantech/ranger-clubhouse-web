@@ -1,7 +1,8 @@
 <h3>Items (aka Access Documents &amp; Stuff)</h3>
-<div class="mb-2">
+<p>
+  {{fa-icon "circle-dot"}} = Item is job provision (not earned, cannot be banked.)
+</p>
   Showing {{pluralize this.documents.length (if this.isShowingAll "ALL items" "current items")}}
-</div>
 <table class="table  table-striped table-hover table-width-auto">
   <thead>
   <tr>
@@ -19,6 +20,9 @@
     <tr>
       <td><a href {{action this.editAccessDocument document}}>RAD-{{document.id}}</a></td>
       <td>
+        {{#if document.is_job_provision}}
+          {{fa-icon "circle-dot"}}
+        {{/if}}
         {{document.typeLabel}}
         {{#if document.isEventRadio}}
           (count {{document.item_count}})
@@ -100,6 +104,12 @@
                       @options={{this.admissionDateOptions}}/>
           {{/if}}
         </FormRow>
+        <FormRow @class="mt-4">
+          <div class="col-auto">
+            <f.checkbox @name="is_job_provision" @label="Is job provision (not earned, cannot be banked)" />
+          </div>
+        </FormRow>
+
         {{#if (or
                 (eq f.model.type "reduced_price_ticket")
                 (eq f.model.type "vehicle_pass")
@@ -113,9 +123,11 @@
           {{/if}}
 
           <FormRow>
+            <div class="col-auto">
             <f.select @name="delivery_method"
                       @label="Delivery Method"
                       @options={{this.deliveryMethodOptions}}/>
+            </div>
           </FormRow>
 
           {{#if (eq f.model.delivery_method "postal")}}

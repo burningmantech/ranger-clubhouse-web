@@ -8,7 +8,7 @@
     <s.link @route="person.assets" @title="Assets" @icon="broadcast-tower" @iconType="s"/>
     <s.link @route="person.messages" @title="Messages" @icon="envelope"
             @badgeText={{this.person.unread_message_count}} />
-    {{#if (has-role "admin" "manage+view-pii")}}
+    {{#if (has-role "admin" "view-pii")}}
       <s.link @route="person.personal-info" @title="Personal Info" @icon="home" @iconType="s"/>
     {{/if}}
     {{#if (has-role "admin" "manage")}}
@@ -16,9 +16,6 @@
     {{/if}}
     {{#if (has-role "admin" "vc" "mentor")}}
       <s.link @route="person.mentors" @title="Mentors" @icon="users" @iconType="s"/>
-    {{/if}}
-    {{#if (has-role "admin")}}
-      <s.link @route="person.password" @title="Change Password" @icon="key" @iconType="s"/>
     {{/if}}
   </s.group>
   {{#if  (has-role "edit-bmids" "edit-access-docs")}}
