@@ -105,9 +105,11 @@
             please contact your Cadre or Manager.
           </p>
         {{else}}
-          <p class="text-danger">
-            <b>Oops! We forgot to write down when you may enter the event! Please contact
-              {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.</b>
+          <p>
+            <b class="text-danger">Oops! We forgot to write down when you may enter the event!</b>
+            </p>
+          <p>
+            <b class="text-danger">Contact {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.</b>
           </p>
         {{/if}}
       {{else}}

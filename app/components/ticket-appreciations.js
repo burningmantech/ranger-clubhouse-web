@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import {BANKED, CLAIMED} from 'clubhouse/models/access-document';
 import { service } from '@ember/service';
+import { cached } from '@glimmer/tracking';
 
 export default class TicketAppreciationsComponent extends Component {
   @service ajax;
@@ -14,16 +15,29 @@ export default class TicketAppreciationsComponent extends Component {
     this.items = this.args.ticketPackage.appreciations;
   }
 
+  @cached
   get availableItems() {
-    return this.items.filter((i) => (i.isQualified || i.isClaimed));
+    return this.items.filter((i) => (!i.is_job_provision && (i.isQualified || i.isClaimed)));
   }
 
+  @cached
   get bankedItems() {
     return this.items.filter((i) => i.isBanked);
   }
 
+  @cached
+  get jobItems() {
+    return this.items.filter((i) => i.is_job_provision);
+  }
+
+  @cached
   get submittedItems() {
     return this.items.filter((i) => i.isSubmitted);
+  }
+
+  @cached
+  get totalItems() {
+    return [...this.availableItems, ...this.jobItems];
   }
 
   @action

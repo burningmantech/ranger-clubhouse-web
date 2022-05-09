@@ -1,5 +1,5 @@
 import {tracked, cached} from '@glimmer/tracking';
-import { DELIVERY_NONE } from 'clubhouse/models/access-document-delivery';
+//import { DELIVERY_NONE } from 'clubhouse/models/access-document-delivery';
 
 export default class TicketPackage {
   @tracked wapso; // WAP-SOs will change in length based on how the user's ticketing decisions.
@@ -10,17 +10,14 @@ export default class TicketPackage {
     this.accessDocuments = docs;
     this.tickets = docs.filter((d) => d.isTicket);
     this.vehiclePass = docs.find((d) => d.isVehiclePass);
-    if (pkg.delivery) {
-      this.delivery = house.pushPayload('access-document-delivery', pkg.delivery);
-    } else {
-      this.delivery = house.store.createRecord('access-document-delivery', {person_id, year: house.currentYear(), method: DELIVERY_NONE });
-    }
     this.wap = docs.find((d) => d.isWAP);
     this.wapso = docs.filter((d) => d.isWAPSO);
     this.appreciations = docs.filter((d) => d.isProvision).sort((a, b) => a.typeLabel.localeCompare(b.typeLabel));
 
     this.year_earned = pkg.year_earned;
     this.credits_earned = pkg.credits_earned;
+
+
   }
 
   /**

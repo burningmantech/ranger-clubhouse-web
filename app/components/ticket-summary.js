@@ -20,9 +20,9 @@ export default class TicketSummaryComponent extends Component {
 
     if (ticketPackage.tickets.find((ad) => (ad.isTicket && ad.isQualified))) {
       items.push('The event ticket(s) has to be claimed or banked.')
-    } else if (!this.haveAddress) {
+    } /*else if (!this.haveAddress) {
       items.push('A delivery method and/or a mailing address has not been given.');
-    }
+    }*/
 
     return items;
   }
@@ -136,11 +136,10 @@ export default class TicketSummaryComponent extends Component {
       if (item.isReducedPriceTicket) {
         invoice = '<li>Ticket must be paid for - an invoice will be sent</li>'
       }
-      const {delivery} = this.args.ticketPackage;
-      if (!item.isStaffCredential && delivery.isDeliveryPostal) {
-        return `<ul class="mb-0">${invoice}<li>Mailed to:<br>${delivery.street}<br>${delivery.city}, ${delivery.state} ${delivery.postal_code} ${delivery.country}</li></ul>`;
+      if (!item.isStaffCredential && item.isDeliveryPostal) {
+        return `<ul class="mb-0">${invoice}<li>Will be delivered by mail -- delivery address will be collected later.</li></ul>`;
       }
-      return `<ul class="mb-0">${invoice}<li>held at ${item.isStaffCredential ? 'Staff Credentialing' : 'Will-Call'} under your name <span class="d-inline-block">"${person.first_name} ${person.last_name}"</span>`;
+      return `<ul class="mb-0">${invoice}<li>Held at ${item.isStaffCredential ? 'Staff Credentialing' : 'Will-Call'} under your name <span class="d-inline-block">"${person.first_name} ${person.last_name}"</span>`;
     }
 
     if (item.isWAP || item.isWAPSO) {

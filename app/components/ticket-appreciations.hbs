@@ -5,15 +5,28 @@
                @showing={{@showing}}>
   <:title>
     Provisions
-    {{#if this.availableItems}}
-      <TicketSectionStatus @status="qualified" @text="{{pluralize this.availableItems.length "item"}} will be used" />
-    {{else if this.bankedItems}}
+    {{#if this.totalItems}}
+      <TicketSectionStatus @status="qualified" @text="{{pluralize this.totalItems.length "item"}} will be used"/>
+    {{/if}}
+    {{#if this.bankedItems}}
       <TicketSectionStatus @status="banked" @text="{{pluralize this.bankedItems.length "item"}} banked"/>
     {{/if}}
   </:title>
   <:body>
-    {{#if this.availableItems}}
+    {{#if this.jobItems}}
       <p>
+        <b>The following general provision(s) have been granted to assist with your upcoming event work:</b><br>
+        (These are separate from the items you may have earned, and may not be banked. The provisions will expire after the event.)
+      </p>
+      <ul>
+        {{#each this.jobItems as |item|}}
+          <li>{{item.typeLabel}}</li>
+        {{/each}}
+      </ul>
+    {{/if}}
+    {{#if this.availableItems}}
+       <p>
+        The following provision(s) have been awarded to you based on previous work.
         <b>Unless you state otherwise, the following {{pluralize this.availableItems.length "provision"}}
           will automatically be used for this event:</b>
       </p>
@@ -59,7 +72,7 @@
         {{/each}}
       </ul>
       <p>
-         Contact the Ranger Ticketing Team if you have questions or concerns.
+        Contact the Ranger Ticketing Team if you have questions or concerns.
         {{mail-to @ticketingInfo.ranger_ticketing_email}}
       </p>
     {{/if}}

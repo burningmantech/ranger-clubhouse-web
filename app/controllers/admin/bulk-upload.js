@@ -25,12 +25,21 @@ export default class AdminBulkUploadController extends ClubhouseController {
       ]
     },
     {
-      groupName: 'Provision Actions',
+      groupName: 'Earned Provision Actions',
       options: [
-        {id: 'all_eat_pass', title: 'Award All Eat pass'},
-        {id: 'event_eat_pass', title: 'Award Event Eat pass'},
-        {id: 'wet_spot', title: 'Award Wet Spot'},
-        {id: 'event_radio', title: 'Event Radio eligibility'}
+        {id: 'all_eat_pass', title: 'Award All Eat Pass (Earned)'},
+        {id: 'event_eat_pass', title: 'Award Event Eat Pass (Earned)'},
+        {id: 'wet_spot', title: 'Award Wet Spot (Earned)'},
+        {id: 'event_radio', title: 'Event Radio eligibility (Earned)'}
+      ]
+    },
+    {
+      groupName: 'Job Provision Actions',
+      options: [
+        {id: 'job_all_eat_pass', title: 'Grant All Eat Pass (Job Provision)'},
+        {id: 'job_event_eat_pass', title: 'Grant Event Eat Pass (Job Provision)'},
+        {id: 'job_wet_spot', title: 'Grant Wet Spot (Job Provision)'},
+        {id: 'job_event_radio', title: 'Grant Event Radio (Job Provision)'}
       ]
     },
     {

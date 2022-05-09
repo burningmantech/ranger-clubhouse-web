@@ -3,28 +3,27 @@
     <PersonMissingBpguid/>
   </ChNotice>
 {{else if (or this.isPNV)}}
-  <UiSection>
-    <:title>Work Access Passes for Alphas</:title>
-    <:body>
-      <p>
-        <b class="text-danger">A Work Access Pass (WAP) is good for YOU (the Alpha/Prospective) ONLY AND IS NOT AN EVENT
-          TICKET</b>.
-        The WAP does not extend to significant others or traveling companions.
-      </p>
-      <p>
-        <b class="text-danger">All Alphas &amp; Prospectives must provide their own event ticket.</b>
-      </p>
-      <p>
-        Alphas and Prospective Rangers who have signed up for or completed training and intend to walk an Alpha shift
-        on playa are eligible for a WAP that allows them to enter the event on or after
-        {{mdy-format @ticketingInfo.wap_alpha_default_date full=true}}
-        at 00:01 (one minute after midnight).
-      </p>
-      <p>
-        <b>Look for an email with your WAP from Burning Man Ticketing between July 21st and August 8th.</b>
-      </p>
-    </:body>
-  </UiSection>
+  <p>
+    A Work Access Pass (WAP) is good <b class="text-danger">for YOU (the Alpha/Prospective) ONLY and IS *NOT* AN EVENT TICKET</b>.
+  </p>
+  <p>
+    The WAP does not extend to significant others or traveling companions.
+  </p>
+  <p>
+    <b class="text-danger">All Alphas &amp; Prospectives must provide their own event ticket.</b>
+  </p>
+  <p>
+    Alphas and Prospective Rangers who have signed up for or completed training and intend to walk an Alpha shift
+    on playa are eligible for a WAP that allows them to enter the event on or after
+    {{mdy-format @ticketingInfo.wap_alpha_default_date full=true}} at 00:01 (one minute after midnight).
+  </p>
+  <p>
+    You will be turned away from the gate if you attempt to enter earlier than
+    {{mdy-format @ticketingInfo.wap_alpha_default_date full=true}}.
+  </p>
+  <p>
+    <b>Look for an email with your WAP from Burning Man Ticketing between late July and mid-August.</b>
+  </p>
 {{else}}
   <UiSection>
     <:title>Ticketing Is Open!</:title>
@@ -38,7 +37,7 @@
         <b>The ticketing deadline is {{full-datetime-format @ticketingInfo.submit_date}} Pacific Time.</b>
         Once the deadline has passed, it may not be possible to make changes.
       </p>
-      <div class="accordion max-width-700">
+      <div class="max-width-700">
         <p class="d-grid">
           <UiButton @type="success" @onClick={{fn this.nextSection "ticket"}}>
             Begin Ticketing {{fa-icon "arrow-right"}}

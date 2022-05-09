@@ -22,7 +22,7 @@
         <li>
           <b class="text-danger">The ticketing deadline is
             {{full-datetime-format @ticketingInfo.submit_date}} Pacific Time</b>.
-          You have until then to adjust your selections, change the delivery method, and/or update the mailing address.
+          You have until then to adjust your selections and/or change the delivery method.
         </li>
         <li>
           <b class="text-danger">It may not be possible to request changes once the ticketing deadline has passed.</b>
@@ -55,14 +55,14 @@
         <b>The following item(s) will be banked:</b>
         <ul>
           {{#each this.bankedItems as |item|}}
-            <li><i>Bank:</i> {{item}}</li>
+            <li><i>Banked:</i> {{item}}</li>
           {{/each}}
         </ul>
       {{/if}}
       {{#if this.unclaimedItems}}
         <hr>
         <h4 class="text-danger mt-2">
-          {{fa-icon "arrow-right"}} {{pluralize this.unclaimedItems.length "UNCLAIMED Item"}}
+          {{fa-icon "triangle-exclamation"}} {{pluralize this.unclaimedItems.length "UNCLAIMED Item"}}
         </h4>
         <b>Not claiming the following item(s) may affect your ability to Ranger on playa:</b>
         {{#each this.unclaimedItems as |item|}}
