@@ -138,67 +138,13 @@
       {{#if this.isSaving}}
         <LoadingIndicator/>
       {{/if}}
-
-      {{#if this.isDeliveryPostal}}
-        {{#if this.itemsNeedAddress}}
-          <div class="mt-4">Please note:</div>
-          <ul>
-            <li><b class="text-danger">ITEMS MAY ONLY BE MAILED TO AN UNITED STATES ADDRESS VIA USPS.</b> Sorry,
-              Canada, Australia, and the rest of the world - you will have to use Will Call instead.
-            </li>
-            <li>
-              <b class="text-danger">Delivery times of mailed items are NOT GUARANTEED and tracking is NOT
-                AVAILABLE.</b>
-              If you are worried that your items might get lost in the mail or not be delivered in time, it is
-              safest to have them held at Will Call.
-            </li>
-            {{#if @ticket.isReducedPriceTicket}}
-              <li>
-                <b class="text-danger">The address entered below will NOT be used for your event ticket.</b>
-                The Burning Man Ticketing website will ask again for the address which will be used
-                for the event ticket. We apologize for the inconvenience.
-              </li>
-            {{/if}}
-          </ul>
-          <ChForm @name="delivery"
-                  @formFor={{this.itemToDeliver}}
-                  @validator={{this.ticketDeliveryValidations}}
-                  @onSubmit={{this.saveDeliveryAddress}} as |f|>
-            <legend>
-              Enter your mailing address:
-            </legend>
-            <FormRow>
-              <f.text @name="street1"
-                      @label="Street"
-                      @size={{30}}/>
-            </FormRow>
-            <FormRow>
-              <f.text @name="city"
-                      @label="City"/>
-              <f.select @name="state"
-                        @label="State"
-                        @options={{this.stateOptions}}/>
-              <f.text @name="postal_code"
-                      @label="Zip Code"/>
-            </FormRow>
-            <f.submit @label="Save Address" @submitClass="btn-responsive" @disabled={{this.isSaving}} />
-            {{#if this.isSaving}}
-              <LoadingIndicator/>
-            {{else if f.model.isDirty}}
-              <span class="text-danger">Changes will not be saved until you click on 'Save Address'</span>
-            {{else if this.isSaved}}
-              <b class="text-success">{{fa-icon "check" size="2x"}}</b>
-            {{/if}}
-          </ChForm>
-        {{/if}}
-      {{/if}}
     {{else}}
       {{#if @ticket.isBanked}}
         <p>
           You have chosen to <b>BANK</b> your event ticket
-          {{~#if this.vehiclePass.isQualified}}
+          {{#if this.vehiclePass.isQualified}}
             and <b>NOT CLAIM</b> your vehicle pass
-          {{~/if}}.
+          {{/if}}.
         </p>
       {{/if}}
       <p>

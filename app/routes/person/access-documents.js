@@ -9,11 +9,10 @@ export default class PersonAccessDocumentsRoute extends ClubhouseRoute {
     const person = this.modelFor('person');
 
     this.store.unloadAll('access-document');
-    this.store.unloadAll('access-document-delivery');
 
     return RSVP.hash({
       documents: this.store.query('access-document', {person_id: person.id}),
-      ticketingInfo: this.ajax.request(`ticketing/info`).then((results) => results.ticketing_info)
+      ticketingInfo: this.ajax.request(`ticketing/info`).then(({ticketing_info}) => ticketing_info)
     });
   }
 

@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import TicketDeliveryValidations from 'clubhouse/validations/ticket-delivery';
-import {StateOptions} from 'clubhouse/constants/countries';
+//import {StateOptions} from 'clubhouse/constants/countries';
 import {tracked, cached} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {DELIVERY_POSTAL, DELIVERY_WILL_CALL} from 'clubhouse/models/access-document';
@@ -15,7 +15,7 @@ export default class TicketDeliverInfoComponent extends Component {
   @service store;
   @service toast;
 
-  stateOptions = StateOptions['US'];
+  // stateOptions = StateOptions['US'];
 
   ticketDeliveryValidations = TicketDeliveryValidations;
 
@@ -25,6 +25,7 @@ export default class TicketDeliverInfoComponent extends Component {
     this.vehiclePass = this.args.ticketPackage.vehiclePass;
   }
 
+  /*
   @cached
   get delivery() {
     const item = this.itemToDeliver;
@@ -41,6 +42,7 @@ export default class TicketDeliverInfoComponent extends Component {
       return {county: 'US'};
     }
   }
+  */
 
   /**
    * Are there any unclaimed tickets?
@@ -58,9 +60,10 @@ export default class TicketDeliverInfoComponent extends Component {
    * @returns {boolean}
    */
 
+  /*
   get haveAddress() {
     return this.args.ticketPackage.haveAddress;
-  }
+  }*/
 
   /**
    * Find all the items which need to be mailed (RPT, Vehicle Pass, Gift Ticket).
@@ -179,8 +182,9 @@ export default class TicketDeliverInfoComponent extends Component {
     return items;
   }
 
+
   /**
-   * Does the user need to given an answer on how an item(s) is to be delivered,
+   * Does the user need to give an answer on how an item(s) is to be delivered,
    * and/or does an address need to be collected? Only intended to be used in
    * the section title.
    *
@@ -195,10 +199,9 @@ export default class TicketDeliverInfoComponent extends Component {
     }
 
     switch (item.delivery_method) {
+      case DELIVERY_POSTAL:
       case DELIVERY_WILL_CALL:
         return false;
-      case DELIVERY_POSTAL:
-        return !item.haveAddress;
       default:
         return true;
     }
