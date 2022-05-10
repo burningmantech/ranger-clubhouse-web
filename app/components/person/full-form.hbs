@@ -2,6 +2,7 @@
 The Admin, Mentor, and VC form.
 Everyone else will see person/simple-form
 }}
+
 {{#if (has-role "admin" "vc" "view-pii" "view-email")}}
   <PersonalInfoWarning/>
   <div class="row mb-1">
@@ -215,6 +216,16 @@ Everyone else will see person/simple-form
   </FormRow>
 
   <FormRow>
+    <FormLabel @fixed={{true}}>Mail Flags</FormLabel>
+    {{#if (has-role "tech-ninja")}}
+      <div class="col-sm-12 col-xl-10 mt-2">
+        <f.checkbox @name="is_bouncing"
+                    @label="Email address is reported as bouncing"/>
+      </div>
+    {{/if}}
+  </FormRow>
+
+  <FormRow>
     <FormLabel @fixed={{true}}>More Flags</FormLabel>
     <div class="col-sm-12 col-xl-10 mt-2">
       <LinkTo @route="person.event-info">Person &gt; Event/Training Info</LinkTo>
@@ -248,11 +259,11 @@ Everyone else will see person/simple-form
       </div>
     {{/if}}
     {{#if (has-role "admin")}}
-    <div class="col-sm-12 col-xl-auto mb-4">
-      <UiButton @type="secondary" @class="btn-responsive" @onClick={{@showPasswordDialogAction}}>
-        Change Password
-      </UiButton>
-    </div>
+      <div class="col-sm-12 col-xl-auto mb-4">
+        <UiButton @type="secondary" @class="btn-responsive" @onClick={{@showPasswordDialogAction}}>
+          Change Password
+        </UiButton>
+      </div>
     {{/if}}
     <div class="col-sm-12 col-xl-auto mb-4">
       {{#if @person.isSaving}}

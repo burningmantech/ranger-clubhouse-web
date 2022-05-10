@@ -10,6 +10,8 @@
   <:body>
     <p>
       Click the timestamp to view the entire message.
+      {{fa-icon "triangle-exclamation"}} = Bounced,
+      {{fa-icon "bell"}} = Marked as spam
     </p>
     <table class="table table-striped table-hover">
       <thead>
@@ -21,8 +23,14 @@
       </thead>
       <tbody>
       {{#each @logs as |mail|}}
-        <tr>
+        <tr class="{{if mail.did_bounce "text-danger"}} {{if mail.did_complain "text-warning"}}">
           <td class="w-15">
+            {{#if mail.did_bounce}}
+              {{fa-icon "triangle-exclamation"}}
+            {{/if}}
+            {{#if mail.did_complain}}
+              {{fa-icon "bell"}}
+            {{/if}}
             <a href {{action this.showMailLogAction mail}}>
               {{mail.created_at}}
             </a>

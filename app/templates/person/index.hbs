@@ -1,3 +1,8 @@
+{{#if this.person.is_bouncing}}
+  <div class="h4 person-manage-info text-danger">
+    {{fa-icon "bell"}} Email address has been reported as bouncing.
+  </div>
+{{/if}}
 {{#if this.person.unread_message_count}}
   <p>
     <LinkTo @route="person.messages">
@@ -7,6 +12,7 @@
     </LinkTo>
   </p>
 {{/if}}
+
 <div class="row">
   <div class="col-sm-12 col-lg-9">
     <UiSection>

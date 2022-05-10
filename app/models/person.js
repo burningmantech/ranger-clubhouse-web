@@ -10,6 +10,7 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('string') mi;
   @attr('string') last_name;
   @attr('string') email;
+  @attr('boolean') is_bouncing;
   @attr('string') callsign;
   @attr('boolean') callsign_approved;
   @attr('string') callsign_pronounce;

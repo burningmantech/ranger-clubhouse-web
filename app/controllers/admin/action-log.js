@@ -8,6 +8,7 @@ const EventOptions = [
   ['BMID Changes', 'bmid-%'],
   ['Client Routing', 'client-route'],
   ['Login Failures', 'auth-failed'],
+  ['Email Bounces/Complaints', 'email-%'],
   ['Logins', 'auth-login'],
   ['Password Resets', 'auth-password-%'],
   ['Person Creation', 'person-create'],
