@@ -123,13 +123,14 @@ Router.map(function () {
 
   this.route('mentor',  function () {
     this.route('acceptance-sheets');
+    this.route('alpha-signout');
     this.route('alpha-status');
     this.route('assignment');
-    this.route('convert');
+    this.route('convert-alphas');
+    this.route('convert-prospectives');
     this.route('post-season-summary');
     this.route('potentials');
     this.route('schedule');
-    this.route('alpha-signout');
   });
 
 

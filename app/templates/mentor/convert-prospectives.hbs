@@ -1,0 +1,96 @@
+<h1>Prospective to Alpha bulk conversion</h1>
+<p>
+  Use this page to convert trained Prospectives to Alphas.
+</p>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Converting Prospectives to Alphas. This may take upwards to a minute.
+  </LoadingDialog>
+{{/if}}
+
+<UiSection>
+  <:title>{{pluralize this.prospectives.length "Alpha candidate"}}</:title>
+  <:body>
+    <table class="table table-striped table-width-auto table-sm table-hover">
+      <thead>
+      <tr>
+        <th class="w-15">
+          <Input @type="checkbox" @checked={{this.selectedAll}} {{on "change" this.toggleAll}} class="d-inline-block me-1"/>
+          Callsign
+        </th>
+        <th class="w-85">Notes</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.prospectives key="id" as |person|}}
+        <tr>
+          <td class="w-15">
+            {{#if person.converted}}
+              {{fa-icon "check"}}
+            {{else}}
+              <Input @type="checkbox" @checked={{person.selected}}  class="d-inline-block me-1" />
+            {{/if}}
+             <PersonLink @person={{person}} />
+          </td>
+          <td class="w-85">
+            {{#if person.has_note_on_file}}
+              <div class="mb-2"><b class="text-danger">Personnel Note</b></div>
+            {{/if}}
+            {{#if person.personnel_issue}}
+              <div class="mb-2">
+                <b class="text-danger">PERSONNEL FLAG RAISED<br>
+                  TAKE NO ACTION UNTIL RESOLVED
+                </b>
+              </div>
+            {{/if}}
+            <p>
+              <b>RRN</b><br>
+              {{#each person.rrn_ranks as |yearRank|}}
+                {{yearRank.year}}
+                <IntakeRanking @rank={{yearRank.rank}} />
+              {{else}}
+                none
+              {{/each}}
+            </p>
+            <p>
+              <b>VC</b><br>
+              {{#each person.vc_ranks as |yearRank|}}
+                {{yearRank.year}}
+                <IntakeRanking @rank={{yearRank.rank}} />
+              {{else}}
+                none
+              {{/each}}
+            </p>
+            <p>
+              <b>TRAINING</b><br>
+              <IntakeTraining @trainings={{person.trainings}} @person={{person}} />
+            </p>
+            <p>
+              <b>MENTOR</b><br>
+              <IntakeNotes @type="mentor" @person={{person}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
+            </p>
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="2">
+            <b class="text-danger">
+              {{#if this.mentees}}
+                No potential Alphas matched the filter criteria.
+              {{else}}
+                No potential Alphas were found for this year.
+              {{/if}}
+            </b>
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+    <UiButton @type="success"
+              @onClick={{this.convertAction}}
+              @disabled={{this.isSubmitting}}>
+      Convert ({{this.convertCount}})
+    </UiButton>
+  </:body>
+</UiSection>
