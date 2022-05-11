@@ -53,7 +53,7 @@ export default class MentorConvertController extends ClubhouseController {
     });
 
     this.isSubmitting = true;
-    this.ajax.request('mentor/convert', { method: 'POST', data: { alphas } }).then((result) => {
+    this.ajax.request('mentor/convert-alphas', { method: 'POST', data: { alphas } }).then((result) => {
       const converted = result.alphas;
 
       converted.forEach((convert) => {

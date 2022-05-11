@@ -1,12 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import { tracked }from '@glimmer/tracking';
-
-class Alpha {
-  constructor(alpha) {
-    Object.assign(this, alpha);
-  }
-  @tracked selected = false;
-}
+import Selectable from 'clubhouse/utils/selectable';
 
 export default class MentorConvertRoute extends ClubhouseRoute {
   model() {
@@ -18,8 +11,8 @@ export default class MentorConvertRoute extends ClubhouseRoute {
     controller.set('alphas', alphas);
     controller.set('passAll', false);
     controller.set('bonkAll', false);
-    controller.set('passed', alphas.filter((a) => a.mentor_status === 'pass').map((a) => new Alpha(a)));
-    controller.set('bonked', alphas.filter((a) => (a.mentor_status === 'bonk' || a.mentor_status === 'self-bonk')).map((a) => new Alpha(a)));
+    controller.set('passed', alphas.filter((a) => a.mentor_status === 'pass').map((a) => new Selectable(a)));
+    controller.set('bonked', alphas.filter((a) => (a.mentor_status === 'bonk' || a.mentor_status === 'self-bonk')).map((a) => new Selectable(a)));
     controller.set('isSubmitting', false);
   }
 }
