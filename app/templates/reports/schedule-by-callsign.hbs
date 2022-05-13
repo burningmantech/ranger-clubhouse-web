@@ -17,7 +17,7 @@
     <ChAccordion id="person-{{person.id}}" as |accordion|>
       <accordion.title>{{person.callsign}} &lt;{{person.status}}&gt;</accordion.title>
       <accordion.body>
-        {{#if this.isOpen}}
+        {{#if accordion.isOpen}}
           <p>
             <LinkTo @route="person.index" @model={{person.id}}>
               View {{person.callsign}}
