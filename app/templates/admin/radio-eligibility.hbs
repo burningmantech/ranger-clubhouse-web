@@ -12,6 +12,12 @@
   <p>
     <UiButton @onClick={{this.exportToCsv}}>Export To CSV</UiButton>
   </p>
+  {{#if (or (eq this.year 2023) (eq this.year 2022))}}
+    <p>
+      <b class="text-danger">Because 2020 & 2021 were canceled, years {{this.year_last}} & {{this.year_prev}} are
+        shown.</b>
+    </p>
+  {{/if}}
   Showing {{pluralize this.people.length "person"}}
   <table class="table table-sm table-striped table-hover table-width-auto">
     <thead>
