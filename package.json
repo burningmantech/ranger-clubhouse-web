@@ -42,7 +42,7 @@
     "dayjs": "^1.11.2",
     "double-metaphone": "^2.0.0",
     "ember-ajax": "^5.1.1",
-    "ember-auto-import": "^2.4.1",
+    "ember-auto-import": "^2.4.2",
     "ember-bootstrap": "^5.1.0",
     "ember-cached-decorator-polyfill": "^0.1.4",
     "ember-changeset": "4.1.0",
