@@ -87,6 +87,14 @@
   />
 {{/if}}
 
+{{#if this.editCertifications}}
+  <Person::CertificationsForm @personCertifications={{this.personCertifications}}
+                    @onSave={{this.saveCertificationsAction}}
+                    @onCancel={{this.cancelCertificationsAction}}
+                    @isSaving={{this.isSavingCertifications}} />
+
+{{/if}}
+
 
 {{#if this.showPasswordDialog}}
   <PersonPassword @onClose={{this.closePasswordDialogAction}} @person={{this.person}} />

@@ -231,7 +231,6 @@ export default class PersonIndexController extends ClubhouseController {
   savePositions(model) {
     const positionIds = model.positionIds;
 
-    this.toast.clear();
     this.ajax.request(`person/${this.person.id}/positions`, {
       type: 'POST',
       data: {position_ids: positionIds}
@@ -243,9 +242,7 @@ export default class PersonIndexController extends ClubhouseController {
         // Reload the user.
         this.session.loadUser();
       }
-    }).catch((response) => {
-      this.house.handleErrorResponse(response)
-    });
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
@@ -279,9 +276,7 @@ export default class PersonIndexController extends ClubhouseController {
         // Reload the user.
         this.session.loadUser();
       }
-    }).catch((response) => {
-      this.house.handleErrorResponse(response)
-    })
+    }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isSavingRoles = false);
   }
 
@@ -289,6 +284,7 @@ export default class PersonIndexController extends ClubhouseController {
   cancelRoles() {
     this.editRoles = false;
   }
+
 
   @action
   refreshPhoto() {
@@ -314,11 +310,11 @@ export default class PersonIndexController extends ClubhouseController {
         .then(() => {
           this.toast.success('Welcome Mail successfully queued to be sent.');
         }).catch((response) => {
-          if (response.status === 400) {
-            this.toast.error('Person is not a prospective');
-          } else {
-            this.house.handleErrorResponse(response);
-          }
+        if (response.status === 400) {
+          this.toast.error('Person is not a prospective');
+        } else {
+          this.house.handleErrorResponse(response);
+        }
       })
     })
   }

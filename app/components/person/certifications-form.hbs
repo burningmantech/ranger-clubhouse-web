@@ -1,0 +1,79 @@
+{{#if this.isLoading}}
+  <LoadingDialog>
+    Loading certificates
+  </LoadingDialog>
+{{else}}
+  <ModalDialog @title="Edit Certifications" @onEscape={{@onCancel}} @size="xl" as |Modal|>
+    <form {{on "submit" this.submitAction}}>
+      <Modal.body>
+        <table class="table table-sm table-striped table-hover">
+          <thead>
+          <tr>
+            <th>Certification</th>
+            <th>Card/Certificate #</th>
+            <th>Issued On</th>
+            <th>Trained On</th>
+            <th>Notes</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.certifications as |cert idx|}}
+            <tr>
+              <td>
+                <Input @type="checkbox" id="cert-{{idx}}" @checked={{cert.selected}} class="me-2" />
+                <label for="cert-{{idx}}">{{cert.title}}</label>
+              </td>
+              <td>
+                <Input @type="text" @value={{cert.card_number}} size="15" class="form-control form-control-sm" disabled={{not cert.selected}}/>
+              </td>
+              <td>
+                <DatetimePicker
+                  @id="issued_on-{{idx}}"
+                  @name="issued_on-{{idx}}"
+                  @size="10"
+                  @maxlength="10"
+                  @dateOnly={{true}}
+                  @onChange={{fn this.updateColumn cert "issued_on"}}
+                  @value={{cert.issued_on}}
+                  @disabled={{not cert.selected}}
+                  @classNames="form-control form-control-sm"
+                />
+              </td>
+              <td>
+                <DatetimePicker
+                  @id="trained_on-{{idx}}"
+                  @name="trained_on-{{idx}}"
+                  @size="10"
+                  @maxlength="10"
+                  @dateOnly={{true}}
+                  @onChange={{fn this.updateColumn cert "trained_on"}}
+                  @value={{cert.trained_on}}
+                  @disabled={{not cert.selected}}
+                  @classNames="form-control form-control-sm"
+                />
+              </td>
+              <td>
+                <textarea
+                  name="notes-{{idx}}"
+                  id="notes-{{idx}}"
+                  class="form-control form-control-sm"
+                  disabled={{not cert.selected}}
+                  rows="2"
+                  cols="60"
+                  oninput={{action (mut cert.notes) value="target.value"}}>{{cert.notes}}</textarea>
+              </td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <UiButton @disabled={{@isSaving}} @onClick={{this.saveAction}} @type="primary">Save</UiButton>
+        <UiCancelButton @onClick={{@onCancel}} @disabled={{@isSaving}} />
+        {{#if @isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+      </Modal.footer>
+    </form>
+  </ModalDialog>
+{{/if}}

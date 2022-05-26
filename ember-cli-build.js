@@ -9,6 +9,10 @@ const MergeTrees = require("broccoli-merge-trees");
 const env = EmberApp.env();
 const IS_PROD = env === 'production', IS_TEST = env === 'test';
 
+process.on('uncaughtException', function (err) {
+  console.error(err.stack);
+});
+
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     babel: {

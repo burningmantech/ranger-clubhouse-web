@@ -16,7 +16,7 @@ export default class PersonEventInfoRoute extends ClubhouseRoute {
     return RSVP.hash({
       eventInfo: this.ajax.request(`person/${personId}/event-info`, { data: { year } })
                   .then((result) => result.event_info),
-      personEvent: this.store.findRecord('person-event', `${personId}-${year}`, { reload: true })
+      personEvent: this.store.findRecord('person-event', `${personId}-${year}`, { reload: true }),
     });
   }
   setupController(controller, model) {

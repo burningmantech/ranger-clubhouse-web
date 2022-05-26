@@ -1,8 +1,19 @@
-<YearSelect @title="Event / Training Information" @year={{this.year}} @years={{this.person.all_years}}
-            @subheader={{true}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="Event / Training Information"
+            @year={{this.year}}
+            @years={{this.person.all_years}}
+            @subheader={{true}}
+            @onChange={{action (mut this.year)}} />
+
+<p>
+  Jump to: <a href="#person-event-training">Training</a>
+  | <a href="#person-event-provisions">Provisions</a>
+  | <a href="#person-event-driving">Driving</a>
+  | <a href="#person-event-certifications">Certifications</a>
+  | <a href="#person-event-agreements">Agreements</a>
+</p>
 
 <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.saveEvent}} as |f|>
-  <UiSection>
+  <UiSection id="person-event-training">
     <:title>{{this.year}} Training</:title>
     <:body>
       <dl>
@@ -25,7 +36,7 @@
       </dl>
     </:body>
   </UiSection>
-  <UiSection>
+  <UiSection id="person-event-provisions">
     <:title>{{this.year}} Provisions</:title>
     <:body>
       <dl>
@@ -71,7 +82,7 @@
       </dl>
     </:body>
   </UiSection>
-  <UiSection>
+  <UiSection id="person-event-driving">
     <:title>{{this.year}} Driving</:title>
     <:body>
       <dl>
@@ -133,7 +144,8 @@
       </dl>
     </:body>
   </UiSection>
-  <UiSection>
+  <Person::Certifications @personId={{this.person.id}} />
+  <UiSection id="person-event-agreements">
     <:title>{{this.year}} Agreements</:title>
     <:body>
       {{#if (has-role "admin" "vc")}}
