@@ -1,8 +1,10 @@
-<p class="h4 text-center">
-  Zoom IN &amp; OUT and DRAG THE IMAGE<br>
-  so your face<br>
-  FITS IN &amp; FILLS the red oval.<br>
-</p>
+{{#if @isMugshot}}
+  <p class="h4 text-center">
+    Zoom IN &amp; OUT and DRAG THE IMAGE<br>
+    so your face<br>
+    FITS IN &amp; FILLS the red oval.<br>
+  </p>
+{{/if}}
 
 {{#if this.showEditControls}}
   <p class="mb-2 text-center">
@@ -15,13 +17,15 @@
   </p>
 {{/if}}
 
-<div id="photo-edit-container">
+<div id="{{if @isMugshot "mugshot-edit-container" "photo-edit-container"}}">
   <img id="photo-edit-image" src={{@imageDataUrl}} {{on "load" this.imageLoadedEvent}} alt="edit upload"/>
 </div>
 
 <div class="mt-2 text-center">
   {{#if @cancelAction}}
-    <UiButton @type="secondary" @class="ms-auto" @onClick={{@cancelAction}} @disabled={{@isSubmitting}}>Retake</UiButton>
+    <UiButton @type="secondary" @class="ms-auto" @onClick={{@cancelAction}} @disabled={{@isSubmitting}}>
+      Retake
+    </UiButton>
   {{/if}}
   <UiButton @class="ml-right" @onClick={{this.submitAction}} @disabled={{@isSubmitting}}>Submit</UiButton>
 </div>

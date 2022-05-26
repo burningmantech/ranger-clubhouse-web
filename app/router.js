@@ -107,6 +107,7 @@ Router.map(function () {
     this.route('bulk-lookup');
     this.route('bulk-positions');
     this.route('mail-log');
+    this.route('certifications');
   });
 
   this.route('hq', {path: '/hq/:person_id'}, function () {
@@ -184,6 +185,7 @@ Router.map(function () {
     this.route('alpha-shirts');
     this.route('asset-history');
     this.route('assets-outstanding');
+    this.route('certifications');
     this.route('flakes');
     this.route('freaking-years');
     this.route('hq-forecast');
@@ -194,6 +196,7 @@ Router.map(function () {
     this.route('people-by-role');
     this.route('people-by-status');
     this.route('position-sanity-checker');
+    this.route('potential-shirts');
     this.route('radio-assets');
     this.route('radio-checkout');
     this.route('rollcall');
@@ -203,7 +206,6 @@ Router.map(function () {
     this.route('shift-coverage');
     this.route('shift-lead');
     this.route('shift-signups');
-    this.route('potential-shirts');
     this.route('special-teams');
     this.route('timesheet-by-callsign');
     this.route('timesheet-by-position');

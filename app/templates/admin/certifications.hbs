@@ -1,0 +1,116 @@
+<main>
+  <h1>Edit Certifications</h1>
+  <p>
+    <UiButton @onClick={{this.newCertificationAction}}>New Certification</UiButton>
+  </p>
+  Showing {{pluralize this.certifications.length "certification"}}
+  <table class="table table-sm table-hover table-striped table-width-auto">
+    <thead>
+    <tr>
+      <th>ID #</th>
+      <th>Title</th>
+      <th>People</th>
+      <th>Is Lifetime Certification</th>
+      <th>On Shift Lead Report</th>
+      <th>Shift Lead Report Title</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {{#each this.certifications as |certification|}}
+      <tr>
+        <td class="text-end">{{certification.id}}</td>
+        <td>{{certification.title}}</td>
+        <td class="text-end">
+          {{certification.total_people}}
+        </td>
+        <td class="text-center">
+          {{yesno certification.is_lifetime_certification}}
+        </td>
+        <td class="text-center">
+          {{yesno certification.on_sl_report}}
+        </td>
+        <td>
+          {{#if certification.on_sl_report}}
+            {{certification.sl_title}}
+          {{else}}
+            -
+          {{/if}}
+        </td>
+        <td>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn this.editCertificationAction certification}}>
+            {{fa-icon "edit"}} Edit
+          </UiButton>
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="5"><b class="text-danger">No certifications found.</b></td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+
+  {{#if this.entry}}
+    <ModalDialog @title="{{if this.entry.isNew "New" "Edit"}} Certification"
+                 @onEscape={{this.cancelCertificationAction}} as |Modal|>
+      <ChForm @formId="certification"
+              @formFor={{this.entry}}
+              @onSubmit={{this.saveCertificationAction}} as |f|>
+        <Modal.body>
+          <FormRow>
+            <f.text @name="title"
+                    @label="Title (e.g., OSHA-10, CPR, HIPAA)"
+                    @size={{20}}
+                    @maxlength={{60}}/>
+          </FormRow>
+          <FormRow>
+            <div class="col-auto">
+              <f.checkbox @name="is_lifetime_certification"
+                          @label="Is Lifetime Certification (unimplemented currently)"
+              />
+            </div>
+          </FormRow>
+          <FormRow>
+            <div class="col-auto">
+              <f.checkbox @name="on_sl_report"
+                          @label="List certification on Shift Lead Report"
+                          @size={{6}}
+                          @maxlength={{6}}
+                          @showCharCount={{true}}
+              />
+            </div>
+          </FormRow>
+          <FormRow>
+            <f.text @name="sl_title"
+                    @label="Shift Lead Report Short Title"
+                    @size={{20}}
+                    @maxlength={{255}}
+                    @disabled={{not f.model.on_sl_report}}
+            />
+
+          </FormRow>
+          <FormRow>
+            <f.textarea @name="description"
+                        @label="Certification Description"
+                        @rows={{10}}
+                        @cols={{80}}/>
+          </FormRow>
+        </Modal.body>
+        <Modal.footer @noAlign={{true}}>
+          <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
+          <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelCertificationAction}} />
+          {{#if this.entry.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
+          {{#unless this.entry.isNew}}
+            <div class="ms-auto">
+              <UiButton @type="danger" @onClick={{this.deleteCertificationAction}}>{{fa-icon "trash"}} Delete</UiButton>
+            </div>
+          {{/unless}}
+        </Modal.footer>
+      </ChForm>
+    </ModalDialog>
+  {{/if}}
+</main>

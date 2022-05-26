@@ -74,7 +74,7 @@
   }
 }
 
-#photo-edit-container {
+#mugshot-edit-container {
   background-color: #ececec;
   max-width: 350px;
   max-height: 450px;
@@ -92,23 +92,24 @@
   //outline-width: 0 !important;
 }
 
+#mugshot-edit-container {
+  .cropper-container {
+    position: relative;
+  }
 
-.cropper-container {
-  position: relative;
-}
-
-.cropper-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 9999;
-  background-image: url("images/headshot-template.png");
-  background-size: auto 100%;
-  pointer-events: none;
-  opacity: 0.5;
+  .cropper-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 9999;
+    background-image: url("images/headshot-template.png");
+    background-size: auto 100%;
+    pointer-events: none;
+    opacity: 0.5;
+  }
 }
 
 #photo-review {

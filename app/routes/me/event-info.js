@@ -4,7 +4,7 @@ import requestYear from 'clubhouse/utils/request-year';
 
 export default class MeRangerInfoRoute extends ClubhouseRoute {
   queryParams = {
-    year: { refreshModel: true }
+    year: {refreshModel: true}
   };
 
   model(params) {
@@ -13,18 +13,16 @@ export default class MeRangerInfoRoute extends ClubhouseRoute {
 
     this.year = year;
     return RSVP.hash({
-      eventInfo: this.ajax.request(`person/${person_id}/event-info`, { data: { year } })
-                .then((result) => { return result.event_info; }),
-      personEvent: this.store.findRecord('person-event', `${person_id}-${year}`, { reload: true}),
-      personPositions: this.ajax.request(`person/${person_id}/positions`).then((results) => results.positions),
+      eventInfo: this.ajax.request(`person/${person_id}/event-info`, {data: {year}}).then(({event_info}) => event_info),
+      personEvent: this.store.findRecord('person-event', `${person_id}-${year}`, {reload: true}),
+      personPositions: this.ajax.request(`person/${person_id}/positions`).then(({positions}) => positions),
+      personCertifications: this.ajax.request('person-certification', {data: {person_id}}).then(({person_certification}) => person_certification)
     });
   }
 
   setupController(controller, model) {
     controller.set('person', this.modelFor('me'));
-    controller.set('eventInfo', model.eventInfo);
-    controller.set('personPositions', model.personPositions);
-    controller.set('personEvent', model.personEvent);
+    controller.setProperties(model);
     controller.set('year', this.year);
   }
 

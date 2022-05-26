@@ -183,27 +183,6 @@ Everyone else will see person/simple-form
 
 
   <FormRow>
-    <FormLabel @fixed={{true}}>Certifications</FormLabel>
-    <div class="col-sm-12 col-xl-auto mt-2">
-      {{#if (has-role "admin" "vc")}}
-        <f.checkbox @name="osha10"
-                    @label="OSHA-10"
-                    @inline={{true}}
-        />
-        <f.checkbox @name="osha30"
-                    @label="OSHA-30"
-                    @inline={{true}}
-        />
-      {{else if (or @person.osha10 @person.osha30)}}
-        {{#if @person.osha10}}OSHA-10{{/if}}
-        {{#if @person.osha30}}OSHA-30{{/if}}
-      {{else}}
-        No OSHA certifications
-      {{/if}}
-    </div>
-  </FormRow>
-
-  <FormRow>
     <FormLabel @fixed={{true}}>Agreements</FormLabel>
     <div class="col-sm-12 col-xl-auto mt-2">
       {{#if (has-role "admin" "vc")}}

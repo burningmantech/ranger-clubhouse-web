@@ -2,7 +2,7 @@
   {{#if (has-role "view-pii" "view-email")}}
     <dt class="col-sm-12 col-lg-2">Contact</dt>
     <dd class="col-sm-12 col-lg-9">
-      <PersonalInfoWarning />
+      <PersonalInfoWarning/>
       {{#if @person.email}}
         email {{mail-to @person.email}}
       {{else}}
@@ -122,19 +122,5 @@
         {{/each}}
       </div>
     {{/if}}
-  </dd>
-  <dt class="col-sm-12 col-lg-2">Certifications</dt>
-  <dd class="col-sm-12 col-lg-9">
-    {{#if (or @person.osha10 @person.osha30)}}
-      {{#if @person.osha10}}OSHA-10{{/if}}
-      {{#if @person.osha30}}OSHA-30{{/if}}
-    {{else}}
-      No OSHA certifications
-    {{/if}}
-  </dd>
-  <dt class="col-sm-12 col-lg-2">&nbsp;</dt>
-  <dd class="col-sm-12 col-lg-9">
-    <LinkTo @route="person.event-info">Person &gt; Event/Training Info</LinkTo>
-    has additional agreements, affidavits, and vehicles flags.
   </dd>
 </dl>

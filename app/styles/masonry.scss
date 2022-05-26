@@ -7,6 +7,15 @@
   width: 100%;
 }
 
+.masonry-item-header {
+  font-size: 1.1em;
+  font-weight: 500;
+  margin: -7px -7px 5px -7px;
+  padding: 7px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #dddddd;
+}
+
 .masonry-border .masonry-item {
   border: 1px solid #c0c0c0;
   padding: 7px;

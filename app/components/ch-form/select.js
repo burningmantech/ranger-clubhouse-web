@@ -50,18 +50,24 @@ export default class ChFormSelectComponent extends Component {
   }
   _buildSingleOption(opt) {
     const type = typeOf(opt);
-    let label, value;
+    let label, value, disabled = false;
 
     switch (type) {
       case 'object':
         // { id: value, title: 'label' }
         label = opt.title ?? opt.label;
         value = opt.id ?? opt.value;
+        if ('disabled' in opt) {
+          disabled = opt.disabled;
+        }
         break;
 
       case 'array':
         // Simple [ 'label', value ]
         [label, value] = opt;
+        if (opt.length >= 3) {
+          disabled = opt[2];
+        }
         break;
 
       default:
@@ -69,7 +75,7 @@ export default class ChFormSelectComponent extends Component {
         break;
     }
 
-    return {label, value};
+    return {label, value, disabled};
   }
 
   get selectOptions() {

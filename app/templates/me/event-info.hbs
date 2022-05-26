@@ -78,7 +78,7 @@
 <UiSection>
   <:title>{{fa-icon "list"}} Positions</:title>
   <:body>
-    Positions indicate which shifts you are allowed to sign up for and what ART trainings you may attend.
+    Positions indicate which shifts you are allowed to sign up for and what ARTs you may attend.
     You have {{pluralize this.personPositions.length "position"}} granted:
     <div class="masonry-container mt-2">
       {{#each this.personPositions as |position| }}
@@ -89,7 +89,7 @@
     </div>
   </:body>
 </UiSection>
-{{#if (or this.person.isActive this.person.isAlpha this.person.isNonRanger)}}
+{{#if (or this.person.isRanger this.person.isNonRanger)}}
   <UiSection>
     <:title>{{fa-icon "utensils"}} Meals</:title>
     <:body>
@@ -108,7 +108,8 @@
       {{/if}}
     </:body>
   </UiSection>
-
+{{/if}}
+{{#if (or this.person.isRanger this.person.isAlpha this.person.isNonRanger)}}
   <UiSection>
     <:title>{{fa-icon "broadcast-tower"}} Radios</:title>
     <:body>
@@ -168,5 +169,20 @@
       </:body>
     </UiSection>
   {{/if}}
-
+{{/if}}
+{{#if (or this.person.isRanger  this.person.isNonRanger)}}
+  <UiSection>
+    <:title>Certifications</:title>
+    <:body>
+       {{#if this.personCertifications}}
+         <div class="masonry-container mt-2">
+           {{#each this.personCertifications as |pc| }}
+             <div class="masonry-item">{{pc.certification.title}}</div>
+           {{/each}}
+         </div>
+       {{else}}
+         No certifications are on file currently.
+       {{/if}}
+    </:body>
+  </UiSection>
 {{/if}}
