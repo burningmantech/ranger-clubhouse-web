@@ -57,7 +57,6 @@ export default class VcSpigotController extends ClubhouseController {
       training_passed = 0, dropped = 0, alpha_signups = 0;
 
     this.model.days.forEach((day) => {
-      console.log(' DAY ', day);
       imported += day.imported?.length ?? 0;
       photo_approved += day.photo_approved?.length ?? 0;
       online_trained += day.online_trained?.length ?? 0;

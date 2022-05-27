@@ -5,7 +5,6 @@ export default class SchedulePositionListComponent extends Component {
   constructor() {
     super(...arguments);
     this.haveNoAppreciationSlots = !!this.args.position.slots.find((s) => !s.position_count_hours);
-    console.log("Position ", this.args.position);
     this.isTrainingPosition = this.args.position.position_id === TRAINING;
   }
 

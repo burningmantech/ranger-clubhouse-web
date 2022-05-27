@@ -90,7 +90,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
       }
       navigator.sendBeacon(ENV['api-server'] + '/action-log/record', analytics);
     } catch (e) {
-      console.log("EXCEPTION ", e);
+      console.error("routeChange logging exception ", e);
       // ignore any exceptions.
     }
   }
