@@ -1,4 +1,10 @@
-<UiButton @onClick={{this.setupAccountAction}} @class="btn-responsive">{{@text}}</UiButton>
+<UiButton @onClick={{this.setupAccountAction}}
+          @type="{{if @didComplete "secondary" "primary"}}"
+          @class="btn-responsive"
+          @size="{{if @didComplete "sm"}}"
+          >
+  {{@text}}
+</UiButton>
 {{#if this.showCreationDialog}}
   <LoadingDialog>
     Setting up your Online Course account. Please wait.

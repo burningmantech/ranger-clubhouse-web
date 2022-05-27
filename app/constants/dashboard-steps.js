@@ -216,6 +216,7 @@ export const ONLINE_TRAINING = {
     if (milestones.online_training_passed) {
       return {
         result: COMPLETED,
+        isOnlineTraining: true,
         name
       };
     }
