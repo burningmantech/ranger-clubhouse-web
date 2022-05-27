@@ -33,6 +33,10 @@ module.exports = function (defaults) {
       useSessionSetupMethod: true,
     },
 
+    'ember-cli-deprecation-workflow': {
+      enabled: true,
+    },
+
     minifyCSS: {
       enabled: false, // minification causes the selectors to be reordered!!
     },

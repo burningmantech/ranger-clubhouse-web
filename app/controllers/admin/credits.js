@@ -243,7 +243,7 @@ export default class AdminCreditsController extends ClubhouseController {
 
   @action
   cancelCredit() {
-      this.credit = null;
+    this.credit = null;
   }
 
   @action
@@ -339,8 +339,7 @@ export default class AdminCreditsController extends ClubhouseController {
   }
 
   @action
-  copyPositionSelectAll(position, event) {
-    event.stopPropagation();
+  copyPositionSelectAll(position) {
     // if all are selected, deselect all; otherwise select all
     const value = !position.allSelected;
     position.credits.forEach((c) => c.selected = value);

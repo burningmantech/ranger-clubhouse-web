@@ -80,7 +80,6 @@ export default class AdminActionLogController extends ClubhouseController {
   @action
   searchAction() {
     const params = {};
-    console.log('CALLED SEARCH');
     this.queryParams.forEach((param) => {
       if (this.query[param]) {
         if (params === 'events') {
