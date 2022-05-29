@@ -1,6 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, setProperties} from '@ember/object';
-import {cached, tracked} from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
 import {DIRT_SHINY_PENNY} from 'clubhouse/constants/positions';
 import dayjs from 'dayjs';
 import Selectable from 'clubhouse/utils/selectable';
