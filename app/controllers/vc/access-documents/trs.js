@@ -333,6 +333,14 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     const isRPT = (this.filter === RPT);
     let rows;
 
+    if (!records.length) {
+      this.modal.info('No records selected', 'You have not selected any records to export/upload');
+      return;
+    }
+
+    const exportedIds = [];
+    const exportedBy = `exported by ${this.session.user.callsign}`;
+
     if (this.filter === STAFF_CREDENTIAL_VP
       || this.filter === GIFT_TICKET_VP) {
       rows = [];
@@ -348,11 +356,11 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
         const row = {
           delivery_type,
-          note: rec.trsNote
+          note: `${rec.trsNote} ${exportedBy}`,
         };
 
         this._fillName(person, row);
-        this._fillAddress(person, row);
+        //this._fillAddress(person, row);
 
         let docCount = 0;
         rec.documents.forEach((doc) => {
@@ -367,6 +375,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
           } else {
             row[doc.trsColumn] += 1;
           }
+          exportedIds.push(doc.id);
         })
 
         if (docCount) {
@@ -376,7 +385,9 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     } else {
       rows = records.map((doc) => {
         const person = doc.person;
-        const row = {note: doc.trsNote};
+        const row = {note: `${doc.trsNote} ${exportedBy}`};
+
+        exportedIds.push(doc.id);
 
         this._fillName(person, row);
 
@@ -408,6 +419,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
         row[doc.trsColumn] = 1;
 
+        /*
         if ((doc.type === GIFT_TICKET || doc.type === VEHICLE_PASS) && isPostal) {
           row.address1 = doc.street1;
           row.city = doc.city;
@@ -417,7 +429,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
           row.country = 'US';
         } else {
           this._fillAddress(person, row);
-        }
+        }*/
 
         return row;
       });
@@ -431,6 +443,16 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     });
 
     const date = dayjs().format('YYYY-MM-DD-HH-mm');
+
+    // Mark the records as exported first.
+    this.ajax.request('access-document/bulk-comment', {
+      method: 'POST',
+      data: {
+        ids: exportedIds,
+        comment: 'exported' // Bulk comment API will add the user's callsign and a timestamp
+      }
+    }).then(() => this.toast.success('An export comment was successfully added to the access documents.'))
+      .catch((response) => this.house.handleErrorResponse(response));
 
     this.house.downloadCsv(`trs-${this.filter.replace(/_/g, '-')}-${date}.csv`, columns, rows);
   }

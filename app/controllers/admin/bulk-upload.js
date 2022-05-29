@@ -4,75 +4,10 @@ import {isEmpty} from '@ember/utils';
 import {tracked} from '@glimmer/tracking';
 
 export default class AdminBulkUploadController extends ClubhouseController {
-  uploadOptions = [
-    {
-      groupName: 'Change Status',
-      options: [
-        'active',
-        'alpha',
-        'inactive',
-        'prospective',
-        'retired',
-        {id: 'vintage', title: 'set vintage flag'}
-      ]
-    },
-    {
-      groupName: 'BMID & Radio Actions',
-      options: [
-        {id: 'meals', title: 'Set meals'},
-        {id: 'showers', title: 'Set showers'},
-        {id: 'bmidsubmitted', title: 'Mark BMID as submitted'},
-      ]
-    },
-    {
-      groupName: 'Earned Provision Actions',
-      options: [
-        {id: 'all_eat_pass', title: 'Award All Eat Pass (Earned)'},
-        {id: 'event_eat_pass', title: 'Award Event Eat Pass (Earned)'},
-        {id: 'wet_spot', title: 'Award Wet Spot (Earned)'},
-        {id: 'event_radio', title: 'Event Radio eligibility (Earned)'}
-      ]
-    },
-    {
-      groupName: 'Job Provision Actions',
-      options: [
-        {id: 'job_all_eat_pass', title: 'Grant All Eat Pass (Job Provision)'},
-        {id: 'job_event_eat_pass', title: 'Grant Event Eat Pass (Job Provision)'},
-        {id: 'job_wet_spot', title: 'Grant Wet Spot (Job Provision)'},
-        {id: 'job_event_radio', title: 'Grant Event Radio (Job Provision)'}
-      ]
-    },
-    {
-      groupName: 'Ticket Actions',
-      options: [
-        {id: 'tickets', title: 'Create Access Documents'},
-        {id: 'wap', title: 'Update WAP dates'},
-      ]
-    },
-    {
-      groupName: 'Vehicle Paperwork Flags',
-      options: [
-        {id: 'signed_motorpool_agreement', title: 'Signed Motorpool Agreement (gators/golf carts)'},
-        {id: 'org_vehicle_insurance', title: 'Has Org Vehicle Insurance (MVR)'},
-        {id: 'may_request_stickers', title: 'May Request Vehicle Use Items'},
-      ]
-    },
-    {
-      groupName: 'OSHA Certification',
-      options: [
-        {id: 'osha10', title: 'Mark as OSHA-10 certified'},
-        {id: 'osha30', title: 'Mark as OSHA-30 certified'}
-      ]
-    },
-    {
-      groupName: 'Affidavits',
-      options: [
-        {id: 'sandman_affidavit', title: 'Sandman Affidavit'}
-      ]
-    }
-  ];
-
   @tracked uploadAction = null;
+  @tracked actionLabel = null;
+  @tracked uploadHelp = null;
+
   @tracked commit = false;
   @tracked records = '';
   @tracked actionResults = [];
@@ -84,8 +19,16 @@ export default class AdminBulkUploadController extends ClubhouseController {
   @tracked resultWarnings = null;
   @tracked resultFailures = null;
 
+
   get disableSubmit() {
     return isEmpty(this.uploadAction) || isEmpty(this.records);
+  }
+
+  @action
+  selectAction(option) {
+    this.uploadAction = option.id;
+    this.actionLabel = option.label;
+    this.uploadHelp = option.help;
   }
 
   _submitCallsigns(commit) {
@@ -109,7 +52,7 @@ export default class AdminBulkUploadController extends ClubhouseController {
       this.resultFailures = this.actionResults.filter((r) => (r.status !== 'success' && r.status !== 'warning'));
       this.resultWarnings = this.actionResults.filter((r) => (r.status === 'warning'));
 
-      // Clear out the textarea if commited and was successful
+      // Clear out the textarea if the upload was successfully committed
       // otherwise leave it in place so editing can be done.
       if (results.commit) {
         if (!this.resultFailures.length) {
