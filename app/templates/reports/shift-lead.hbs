@@ -5,12 +5,13 @@
   <PrintInstruction/>
   <FormRow @class="d-print-none">
     <div class="col-auto">
-      <PeriodSelect
+      <LargeSelect
         @label="Select a {{this.year}} shift period"
         @title="Select a shift period to report on"
-        @periods={{this.shiftOptions}}
+        @formatSelected={{this.formatSelected}}
+        @groups={{this.periodOptions}}
         @onSelect={{this.changeShift}}
-        @selected={{this.shiftSelect}} />
+      />
     </div>
     <div class="col-auto">
       <UiButton @onClick={{this.onDutyAction}}>Currently On Duty</UiButton>

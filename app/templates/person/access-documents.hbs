@@ -1,8 +1,8 @@
 <h3>Items (aka Access Documents &amp; Stuff)</h3>
 <p>
-  {{fa-icon "circle-dot" color="danger"}} = Item is job provision (not earned, cannot be banked.)
+  {{fa-icon "circle-dot" color="danger"}} = Item is an allocated provision (not earned, cannot be banked.)
 </p>
-Showing {{pluralize this.documents.length (if this.isShowingAll "ALL items" "current items")}}
+Showing {{pluralize this.documents.length (if this.isShowingAll "ALL including used and expired items" "current items")}}
 <table class="table  table-striped table-hover table-width-auto">
   <thead>
   <tr>
@@ -20,7 +20,7 @@ Showing {{pluralize this.documents.length (if this.isShowingAll "ALL items" "cur
     <tr>
       <td><a href {{action this.editAccessDocument document}}>RAD-{{document.id}}</a></td>
       <td>
-        {{#if document.is_job_provision}}
+        {{#if document.is_allocated}}
           {{fa-icon "circle-dot" color="danger"}}
         {{/if}}
         {{document.typeLabel}}
@@ -106,13 +106,13 @@ Showing {{pluralize this.documents.length (if this.isShowingAll "ALL items" "cur
         </FormRow>
 
         <p class="mt-4">
-          A job provision item is one where the item has been granted, not earned, for a position.
-          E.g. meals & showers for SITE Setup.
-          The item cannot be banked by the person, and will expire at the end of the event.
+          An allocation provision is one which has been granted, not earned, for a position.
+          (E.g., meals & showers for SITE Setup.)
+          It cannot be banked by the person, and will expire at the end of the event.
         </p>
         <FormRow>
           <div class="col-auto">
-            <f.checkbox @name="is_job_provision" @label="Item is a job provision"/>
+            <f.checkbox @name="is_allocated" @label="Is allocated provision" />
           </div>
         </FormRow>
 

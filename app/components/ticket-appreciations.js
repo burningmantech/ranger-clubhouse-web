@@ -17,7 +17,7 @@ export default class TicketAppreciationsComponent extends Component {
 
   @cached
   get availableItems() {
-    return this.items.filter((i) => (!i.is_job_provision && (i.isQualified || i.isClaimed)));
+    return this.items.filter((i) => (!i.is_allocated && (i.isQualified || i.isClaimed)));
   }
 
   @cached
@@ -27,7 +27,7 @@ export default class TicketAppreciationsComponent extends Component {
 
   @cached
   get jobItems() {
-    return this.items.filter((i) => i.is_job_provision);
+    return this.items.filter((i) => i.is_allocated);
   }
 
   @cached

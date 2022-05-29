@@ -2,6 +2,9 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, setProperties} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
 import {DIRT_SHINY_PENNY} from 'clubhouse/constants/positions';
+import dayjs from 'dayjs';
+import Selectable from 'clubhouse/utils/selectable';
+import _ from 'lodash';
 
 export default class ReportsShiftLeadController extends ClubhouseController {
   queryParams = ['year'];
@@ -26,27 +29,48 @@ export default class ReportsShiftLeadController extends ClubhouseController {
   @tracked green_dot_total;
   @tracked green_dot_females;
 
-  /**
-   * Build a shift period list to pass to <PeriodSelect>
-   * @returns {[]}
-   */
-
-  @cached
-  get shiftOptions() {
-    return this.dirtShiftTimes.map((shift) => ({shift, datetime: shift.shift_start}));
+  formatSelected(selected) {
+    return dayjs(selected).format('YYYY ddd MMM D @ HH:mm');
   }
 
   /**
-   * Pull the Shift Lead report for a selected shift period.
+   * Build a shift period list to pass to <LargeSelect>
+   * @returns {[]}
+   */
+
+  get periodOptions() {
+    const periods =  this.dirtShiftTimes.map((shift) => ({shift, datetime: shift.shift_start}));
+    const dayGroups = _.groupBy(periods, (dt) => dayjs(dt.datetime).format('MMDD'));
+
+    const groups = [];
+
+    for (const day in dayGroups) {
+      const dts = dayGroups[day];
+      groups.push({
+        label: dayjs(dts[0].datetime).format('ddd MMM Do YYYY'),
+        options: dts.map((period) => (new Selectable({
+          period,
+          label: dayjs(period.datetime).format('ddd MMM D @ HH:mm'),
+          selected: (this.shiftSelect === period.datetime),
+        })))
+      })
+    }
+
+    return groups;
+  }
+
+  /**
+   * Pull the Shift Lead Report for a selected shift period.
    *
    * @param option
    */
 
   @action
   changeShift(option) {
-    this.shiftSelect = option;
+    this.shiftSelect = option.period.datetime;
 
-    const {shift} = option;
+    const shift = option.period.shift;
+
     const shift_start = shift.shift_start, shift_duration = shift.duration;
 
     this.shiftStart = shift_start;
