@@ -1,12 +1,13 @@
 <p class="d-print-none">
   {{#if (gte @year 2019)}}
+    <UiButton @size="sm" @type="secondary" @onClick={{this.showLogAction}} @disabled={{this.isLoading}}>
+      View {{@year}} Scheduling Audit Log
+    </UiButton>
     {{#if this.isLoading}}
-      <LoadingIndicator @text="Retrieving log"/>
-    {{else}}
-      <a href {{action this.showLogAction}}>View {{@year}} Scheduling Log</a>
+      <LoadingIndicator/>
     {{/if}}
   {{else}}
-    Sorry, the scheduling log is only available for 2019 and later.
+    <span class="text-muted">Sorry, the scheduling log is only available for 2019 and later.</span>
   {{/if}}
 </p>
 

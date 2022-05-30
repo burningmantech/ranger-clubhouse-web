@@ -47,11 +47,13 @@ export default class MeScheduleRoute extends ClubhouseRoute {
       return;
     }
 
+    /*
     if ((user.isAuditor || user.isProspective || user.isAlpha) && !schedule.signup_permission.all_signups_allowed) {
       this.toast.error('You need to complete one or more items in the checklist before being allowed to sign up.');
       this.router.transitionTo('me.homepage');
       return;
     }
+    */
 
     model.slots = ScheduleSlotModel.hydrate(schedule.slots, schedule.positions);
     model.signedUpSlots = model.slots.filter((slot) => slot.person_assigned);
