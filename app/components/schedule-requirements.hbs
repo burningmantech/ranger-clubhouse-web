@@ -1,7 +1,6 @@
 <p>
   Before <YouOrCallsign @person={{@person}} @youLabel="you are" @callsignVerb="is" /> allowed to sign up for
-  {{if @isTraining "a training shift" "any shifts"}}, the following issue(s)
-  must be fixed first:
+  any shifts include trainings, the following issue(s) must be fixed first:
 </p>
 <ul>
   {{#each this.requirementsList as |req|}}

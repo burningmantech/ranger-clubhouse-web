@@ -9,10 +9,20 @@
         <p>
           Additional training sessions will be posted through the end of May.
         </p>
+        <p>
+          <b class="text-danger">Walk-ins are not allowed. All attendees must be signed up prior to the session's start
+            time.</b>
+        </p>
       {{/if}}
       {{#if this.haveNoAppreciationSlots}}
-        <NoAppreciateIcon/>
-        = the shift hours will not count towards appreciations.
+        <span class="d-inline-block me-2">
+        <NoAppreciateIcon/> = the shift hours will not count towards appreciations.
+        </span>
+      {{/if}}
+      {{#if this.haveShiftWithAdditionalInfo}}
+        <span class="d-inline-block">
+          <InfoIcon/> = More shift information available, click on the icon and/or text.
+        </span>
       {{/if}}
       <div class="schedule-table">
         <div class="schedule-row schedule-header">
@@ -41,8 +51,8 @@
             <div class="schedule-duration">
               <span class="schedule-sm-label">Duration:</span>
               {{#unless slot.position_count_hours}}
-                <NoAppreciateIcon/>
-              {{/unless~}}
+                <span class="me-1"><NoAppreciateIcon/></span>
+              {{/unless}}
               {{hour-minute-format slot.slot_duration}}
             </div>
             <div class="schedule-credits">

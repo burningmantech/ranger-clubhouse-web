@@ -1,8 +1,10 @@
-<ChNotice @type="danger" @icon="exclamation-circle" @title={{if @hasTrainingBlocker "Training Sign Up Warning" "Sign Ups Blocked"}}>
+<ChNotice @type="danger"
+          @icon="exclamation-circle"
+          @title={{if @hasTrainingBlocker "Training Sign Up Warning" "Sign Ups Blocked"}}>
   <ScheduleRequirements @requirements={{@requirements}} @person={{@person}} @isTraining={{@hasTrainingBlocker}} />
   {{#if @hasTrainingBlocker}}
     <p>
-      The home page has instructions on how to resolve the issue(s) above.
+      The dashboard on the home page has instructions on how to resolve the issue(s) above.
     </p>
     <p>
       <YouOrCallsign @person={{@person}} @youLabel="You are" @callsignVerb="is"/>
@@ -11,26 +13,19 @@
     <p>
       <b>A Training shift MUST BE ATTENDED &amp; PASSED before being allowed to work on playa.</b>
     </p>
-    <p>
-      <UiButton @onClick={{@overrideAction}}>
-        View Schedule &amp; Sign Ups
-      </UiButton>
+  {{else if @isAdmin}}
+    <p class="mt-2">
+      As a Clubhouse Admin, you may view the schedule and make adjustments.<br>
+      <b class="text-danger">ALL ACTIONS WILL BE LOGGED.</b>
     </p>
-    <BackToHome/>
-  {{else}}
-    {{#if @isAdmin}}
-      <p class="mt-2">
-        As a Clubhouse Admin, you may override the requirement(s) to gain access to the schedule.<br>
-        <b class="text-danger">ALL ACTIONS WILL BE LOGGED.</b>
-      </p>
-      <UiButton @type="danger" @onClick={{@overrideAction}}>
-        Override Requirements
-      </UiButton>
-    {{else if @isMe}}
-      <p>
-        The home page has instructions on how to resolve the issue(s) above.
-      </p>
-      <BackToHome/>
-    {{/if}}
+  {{else if @isMe}}
+    <p>
+      The dashboard on home page has instructions on how to resolve the issue(s) above.
+    </p>
   {{/if}}
+  <div class="mt-4">
+    <UiButton @onClick={{@overrideAction}} @class="btn-responsive">
+      View Schedule
+    </UiButton>
+  </div>
 </ChNotice>

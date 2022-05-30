@@ -6,6 +6,7 @@ export default class SchedulePositionListComponent extends Component {
     super(...arguments);
     this.haveNoAppreciationSlots = !!this.args.position.slots.find((s) => !s.position_count_hours);
     this.isTrainingPosition = this.args.position.position_id === TRAINING;
+    this.haveShiftWithAdditionalInfo = !!this.args.position.slots.find((s) => s.slot_url?.length);
   }
 
   get signupCount() {
