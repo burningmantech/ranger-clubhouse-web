@@ -12,12 +12,10 @@ export default class TicketPackage {
     this.vehiclePass = docs.find((d) => d.isVehiclePass);
     this.wap = docs.find((d) => d.isWAP);
     this.wapso = docs.filter((d) => d.isWAPSO);
-    this.appreciations = docs.filter((d) => d.isProvision).sort((a, b) => a.typeLabel.localeCompare(b.typeLabel));
+    this.provisions = docs.filter((d) => d.isProvision).sort((a, b) => a.typeLabel.localeCompare(b.typeLabel));
 
     this.year_earned = pkg.year_earned;
     this.credits_earned = pkg.credits_earned;
-
-
   }
 
   /**

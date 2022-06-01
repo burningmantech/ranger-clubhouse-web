@@ -1,5 +1,6 @@
 <TicketSection @id="wap"
                @nextAction={{@nextSection}}
+               @nextDisabled={{false}}
                @toggleCard={{@toggleCard}}
                @showing={{@showing}}>
   <:title>
@@ -107,7 +108,7 @@
         {{else}}
           <p>
             <b class="text-danger">Oops! We forgot to write down when you may enter the event!</b>
-            </p>
+          </p>
           <p>
             <b class="text-danger">Contact {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.</b>
           </p>

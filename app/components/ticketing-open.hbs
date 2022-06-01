@@ -4,7 +4,8 @@
   </ChNotice>
 {{else if (or this.isPNV)}}
   <p>
-    A Work Access Pass (WAP) is good <b class="text-danger">for YOU (the Alpha/Prospective) ONLY and IS *NOT* AN EVENT TICKET</b>.
+    A Work Access Pass (WAP) is good <b class="text-danger">for YOU (the Alpha/Prospective) ONLY and IS *NOT* AN EVENT
+    TICKET</b>.
   </p>
   <p>
     The WAP does not extend to significant others or traveling companions.
@@ -62,19 +63,19 @@
                       @isSavingDocumentStatus={{this.isSavingDocumentStatus}}
                       @showing={{this.showing}}
                       @toggleCard={{this.toggleCard}}
-                      @nextSection={{action this.nextSection (if  @ticketPackage.appreciations "appreciations" "wap")}}
+                      @nextSection={{action this.nextSection (if  @ticketPackage.appreciations "provisions" "wap")}}
 
         />
         {{#if @ticketPackage.appreciations}}
-          <TicketAppreciations @person={{@person}}
-                               @ticketPackage={{@ticketPackage}}
-                               @ticketingInfo={{@ticketingInfo}}
-                               @setDocumentStatus={{this.setDocumentStatus}}
-                               @isSavingDocumentStatus={{this.isSavingDocumentStatus}}
-                               @showing={{this.showing}}
-                               @toggleCard={{this.toggleCard}}
-                               @nextSection={{action this.nextSection "wap"}} />
-
+          <TicketProvisions @person={{@person}}
+                            @ticketPackage={{@ticketPackage}}
+                            @ticketingInfo={{@ticketingInfo}}
+                            @setDocumentStatus={{this.setDocumentStatus}}
+                            @isSavingDocumentStatus={{this.isSavingDocumentStatus}}
+                            @showing={{this.showing}}
+                            @toggleCard={{this.toggleCard}}
+                            @nextSection={{action this.nextSection "wap"}}
+          />
         {{/if}}
 
         <TicketWapInfo @person={{@person}}
@@ -85,7 +86,7 @@
                        @isSavingDocumentStatus={{this.isSavingDocumentStatus}}
                        @showing={{this.showing}}
                        @toggleCard={{this.toggleCard}}
-                       @nextSection={{if this.hasFullPackage (action this.nextSection "wapso") false}} />
+                       @nextSection={{action this.nextSection "wapso"}} />
 
         <TicketWapSoInfo @person={{@person}}
                          @ticketPackage={{@ticketPackage}}
@@ -94,6 +95,7 @@
                          @showing={{this.showing}}
                          @toggleCard={{this.toggleCard}}
                          @nextSection={{action this.nextSection "delivery"}} />
+
         <TicketDeliveryInfo @person={{@person}}
                             @ticketPackage={{@ticketPackage}}
                             @ticketingInfo={{@ticketingInfo}}
@@ -101,6 +103,7 @@
                             @showing={{this.showing}}
                             @toggleCard={{this.toggleCard}}
                             @nextSection={{action this.nextSection "summary"}} />
+
         <TicketSummary @person={{@person}}
                        @ticketPackage={{@ticketPackage}}
                        @ticketingInfo={{@ticketingInfo}}

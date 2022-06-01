@@ -4,7 +4,7 @@ import {BANKED, CLAIMED} from 'clubhouse/models/access-document';
 import { service } from '@ember/service';
 import { cached } from '@glimmer/tracking';
 
-export default class TicketAppreciationsComponent extends Component {
+export default class TicketProvisionsComponent extends Component {
   @service ajax;
   @service house
   @service toast;
@@ -12,7 +12,7 @@ export default class TicketAppreciationsComponent extends Component {
   constructor() {
     super(...arguments);
 
-    this.items = this.args.ticketPackage.appreciations;
+    this.items = this.args.ticketPackage.provisions;
   }
 
   @cached

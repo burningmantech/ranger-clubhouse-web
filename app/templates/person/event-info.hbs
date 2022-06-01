@@ -23,13 +23,21 @@
             {{shift-format this.eventInfo.online_training_date}}
           {{else}}
             not passed
+            {{#if (and this.isCurrentYear this.canMarkOnlineCourseCompleted)}}
+              <div class="mt-2">
+                <UiButton @type="secondary" @onClick={{this.markOnlineCourseCompleted}} @size="sm">
+                  Force Mark As Completed
+                </UiButton>
+              </div>
+            {{/if}}
           {{/if}}
+
         </dd>
 
         <dt>Trainings</dt>
         <dd>
           {{#if this.person.isNonRanger}}
-            <p>Non Rangers are not required to pass training.</p>
+            <p>Non Rangers are not required to pass the In-Person Training.</p>
           {{/if}}
           <TrainingInfo @trainings={{this.eventInfo.trainings}} />
         </dd>

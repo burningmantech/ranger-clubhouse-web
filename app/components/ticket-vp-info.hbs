@@ -8,7 +8,7 @@
   </:title>
   <:body>
     {{#if this.vehiclePass}}
-      {{#if (or (not @ticket) @ticket.isQualified)}}
+      {{#if (or (not @ticket) @ticket.isBanked @ticket.isQualified)}}
         <p>
           <b>Claim your event ticket first before claiming your Vehicle Pass.</b>
         </p>
