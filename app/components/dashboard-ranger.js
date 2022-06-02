@@ -320,6 +320,35 @@ const STEPS = [
     }
   },
 
+  {
+    name: 'Sign the Sandman Affidavit',
+    skipPeriod: AFTER_EVENT,
+    check({milestones}) {
+      if (milestones.sandman_affidavit_signed) {
+        return {result: COMPLETED};
+      }
+
+      // Person has passed Sandman training, still needs to sign stuff.
+      if (milestones.sandman_affidavit_unsigned) {
+        return {
+          result: URGENT,
+          immediate: true,
+          linkedMessage: {
+            route: 'me.agreements',
+            prefix: 'You have to digitally sign the Sandman Affidavit to be allowed to work a Sandman shift. Visit',
+            text: 'Me > Agreements',
+            suffix: 'to view and sign the affidavit.'
+          }
+        };
+      }
+
+      // Person is not a Sandperson, or has not completed training.
+      return {
+        result: SKIP
+      };
+    }
+  },
+
   DashboardStep.SIGN_MOTORPOOL_AGREEMENT,
   //DashboardStep.SIGN_BEHAVIORAL_AGREEMENT,
   DashboardStep.SIGN_RADIO_CHECKOUT_AGREEMENT,
