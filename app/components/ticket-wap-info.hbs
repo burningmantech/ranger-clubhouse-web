@@ -16,7 +16,7 @@
     {{/if}}
   </:title>
   <:body>
-    {{#if this.wap}}
+    {{#if (and this.wap (not this.claimedStaffCredential))}}
       {{#if (or this.wap.isClaimed this.wap.isSubmitted)}}
         <p>
           <b>

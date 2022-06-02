@@ -18,4 +18,10 @@ export default class TicketWapInfoComponent extends Component {
 
     return (ticket && ticket.isStaffCredential && (ticket.isClaimed || ticket.isSubmitted));
   }
+
+  get claimedStaffCredential() {
+    const {ticket} = this.args;
+
+    return (ticket && ticket.isStaffCredential && ticket.isClaimed);
+  }
 }
