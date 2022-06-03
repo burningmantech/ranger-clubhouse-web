@@ -101,8 +101,12 @@ export default class BmidModel extends Model {
   @attr('boolean', {readOnly: true}) has_signups;
 
   // Pulled from claimed or submitted provisions
-  @attr('string', {readOnly: true}) want_meals;
-  @attr('boolean', {readOnly: true}) want_showers;
+  @attr('string', {readOnly: true}) earned_meals;
+  @attr('boolean', {readOnly: true}) earned_showers;
+
+  // Allocated provisions are always used if present
+  @attr('string', {readOnly: true}) allocated_meals;
+  @attr('boolean', {readOnly: true}) allocated_showers;
 
   get admission_date() {
     if (this.access_any_time) {
@@ -174,7 +178,57 @@ export default class BmidModel extends Model {
     return (isEmpty(this.meals) ? 'None' : (MealLabels[this.meals] || this.meals));
   }
 
+  get effectiveMealsHuman() {
+    const meals = this.effectiveMeals;
+    return (isEmpty(meals) ? 'None' : (MealLabels[meals] || meals));
+  }
+
   get statusHuman() {
     return (BmidStatusLabels[this.status] || `Unknown status ${this.status}`);
+  }
+
+  get effectiveMeals() {
+    if (this.meals === MEALS_ALL
+      || this.earned_meals === MEALS_ALL
+      || this.allocated_meals === MEALS_ALL) {
+      return MEALS_ALL;
+    }
+
+    const matrix = [];
+
+    if (this.meals) {
+      this.meals.split('+').forEach((meal) => matrix[meal] = true);
+    }
+
+    if (this.earned_meals) {
+      this.earned_meals.split('+').forEach((meal) => matrix[meal] = true);
+    }
+
+    if (this.allocated_meals) {
+      this.allocated_meals.split('+').forEach((meal) => matrix[meal] = true);
+    }
+
+    if (matrix.length === 3) {
+      return MEALS_ALL;
+    }
+
+    const sorted = [];
+    if (matrix[MEALS_PRE]) {
+      sorted.push(MEALS_PRE);
+    }
+
+    if (matrix[MEALS_EVENT]) {
+      sorted.push(MEALS_EVENT);
+    }
+
+    if (matrix[MEALS_POST]) {
+      sorted.push(MEALS_POST);
+    }
+
+    return sorted.join('+');
+  }
+
+  get effectiveShowers() {
+    return !!(this.showers || this.earned_showers || this.allocated_showers);
   }
 }

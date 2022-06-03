@@ -78,7 +78,7 @@
     "ember-source": "~4.4.1",
     "ember-template-lint": "^4.10.0",
     "ember-truth-helpers": "^3.0.0",
-    "eslint": "^8.16.0",
+    "eslint": "^8.17.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-ember": "^10.6.1",
     "eslint-plugin-node": "^11.1.0",
@@ -89,13 +89,13 @@
     "libphonenumber-js": "^1.10.6",
     "loader.js": "^4.7.0",
     "lodash": "^4.17.21",
-    "miragejs": "^0.1.44",
+    "miragejs": "^0.1.45",
     "mobile-detect": "^1.4.5",
     "npm-run-all": "^4.1.5",
     "qunit": "^2.19.1",
     "qunit-dom": "^2.0.0",
-    "sass": "^1.52.1",
-    "webpack": "^5.72.1"
+    "sass": "^1.52.2",
+    "webpack": "^5.73.0"
   },
   "engines": {
     "node": "14.* || >= 16"

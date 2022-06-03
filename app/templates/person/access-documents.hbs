@@ -1,8 +1,8 @@
 <h3>Items (aka Access Documents &amp; Stuff)</h3>
 <p>
-  {{fa-icon "circle-dot" color="danger"}} = Item is an allocated provision (not earned, cannot be banked.)
+  <AllocatedProvisionIcon/> = Item is an allocated provision (not earned, cannot be banked.)
 </p>
-Showing {{pluralize this.documents.length (if this.isShowingAll "ALL including used and expired items" "current items")}}
+Showing {{if this.isShowingAll "ALL including used and expired" "current"}} {{pluralize this.documents.length "item"}}
 <table class="table  table-striped table-hover table-width-auto">
   <thead>
   <tr>
@@ -21,7 +21,7 @@ Showing {{pluralize this.documents.length (if this.isShowingAll "ALL including u
       <td><a href {{action this.editAccessDocument document}}>RAD-{{document.id}}</a></td>
       <td>
         {{#if document.is_allocated}}
-          {{fa-icon "circle-dot" color="danger"}}
+          <AllocatedProvisionIcon/>
         {{/if}}
         {{document.typeLabel}}
         {{#if document.isEventRadio}}
@@ -97,8 +97,11 @@ Showing {{pluralize this.documents.length (if this.isShowingAll "ALL including u
             <f.number @name="item_count"
                       @label="Radio Count"
                       @size={{5}}/>
-          {{else if (or (eq f.model.type "work_access_pass") (eq f.model.type "work_access_pass_so") (eq
-            f.model.type "staff_credential"))}}
+          {{else if (or
+            (eq f.model.type "work_access_pass")
+            (eq f.model.type "work_access_pass_so")
+            (eq f.model.type "staff_credential")
+          )}}
             <f.select @name="admission_date"
                       @label="Access Date"
                       @options={{this.admissionDateOptions}}/>
@@ -106,13 +109,13 @@ Showing {{pluralize this.documents.length (if this.isShowingAll "ALL including u
         </FormRow>
 
         <p class="mt-4">
-          An allocation provision is one which has been granted, not earned, for a position.
+          An allocated provision is one which has been granted, not earned, for a position.
           (E.g., meals & showers for SITE Setup.)
           It cannot be banked by the person, and will expire at the end of the event.
         </p>
         <FormRow>
           <div class="col-auto">
-            <f.checkbox @name="is_allocated" @label="Is allocated provision" />
+            <f.checkbox @name="is_allocated" @label="Is allocated provision"/>
           </div>
         </FormRow>
 
