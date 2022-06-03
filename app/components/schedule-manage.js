@@ -242,7 +242,7 @@ export default class ScheduleManageComponent extends Component {
   @action
   joinSlot(slot, event) {
     const row = event.target.closest('.schedule-row');
-    const currentOffset = row.getBoundingClientRect().top - window.pageYOffset;
+    const currentOffset = row.getBoundingClientRect().top - window.scrollY;
 
     this.shiftManage.slotSignup(slot, this.args.person, (result) => {
       // Record the original row position on the page
@@ -253,16 +253,16 @@ export default class ScheduleManageComponent extends Component {
       this._sortAndMarkSignups();
       this._retrieveScheduleSummary();
 
-      // And reposition the page so things appear not to move when the sign up is added
+      // And reposition the page so things appear not to move when the sign-up is added
       // to the schedule.
       schedule('afterRender',
-        () => window.scrollTo(window.pageXOffset, row.getBoundingClientRect().top - currentOffset)
+        () => window.scrollTo(window.scrollX, row.getBoundingClientRect().top - currentOffset)
       );
     });
   }
 
   /**
-   * Remove a sign up from the schedule. Prevent the page from moving because a row disappeared from the signed up table.
+   * Remove a sign-up from the schedule. Prevent the page from moving because a row disappeared from the signed up table.
    *
    * @param slot
    * @param {Event} event
@@ -274,7 +274,7 @@ export default class ScheduleManageComponent extends Component {
 
     if (event) {
       row = event.target.closest('.schedule-row');
-      currentOffset = row.getBoundingClientRect().top - window.pageYOffset;
+      currentOffset = row.getBoundingClientRect().top - window.scrollY;
     }
 
     if (slot.has_started && this.isAdmin) {
@@ -298,9 +298,9 @@ export default class ScheduleManageComponent extends Component {
               // from the schedule, the row deleted, and the browser may want
               // to reposition the page.
               schedule('afterRender', () => {
-                // The sign up may have been removed via the scheduled table and the row no longer exists.
+                // The sign-up may have been removed via the scheduled table and the row no longer exists.
                 if (document.body.contains(row)) {
-                  window.scrollTo(window.pageXOffset, row.getBoundingClientRect().top - currentOffset);
+                  window.scrollTo(window.scrollX, row.getBoundingClientRect().top - currentOffset);
                 }
               });
             }
