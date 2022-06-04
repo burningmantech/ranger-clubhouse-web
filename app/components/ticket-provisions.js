@@ -12,32 +12,42 @@ export default class TicketProvisionsComponent extends Component {
   constructor() {
     super(...arguments);
 
-    this.items = this.args.ticketPackage.provisions;
+    this.provisions = this.args.ticketPackage.provisions;
   }
 
   @cached
-  get availableItems() {
-    return this.items.filter((i) => (!i.is_allocated && (i.isQualified || i.isClaimed)));
+  get earnedProvisions() {
+    return this.provisions.filter((i) => (!i.is_allocated && !i.is_superseded && (i.isQualified || i.isClaimed)));
+  }
+
+  @cached
+  get supersededProvisions() {
+    return this.provisions.filter((i) => i.is_superseded);
   }
 
   @cached
   get bankedItems() {
-    return this.items.filter((i) => i.isBanked);
+    return this.provisions.filter((i) => i.isBanked);
   }
 
   @cached
-  get jobItems() {
-    return this.items.filter((i) => i.is_allocated);
+  get allBankedItems() {
+    return [...this.bankedItems, ...this.supersededProvisions];
+  }
+
+  @cached
+  get allocatedProvisions() {
+    return this.provisions.filter((i) => i.is_allocated);
   }
 
   @cached
   get submittedItems() {
-    return this.items.filter((i) => i.isSubmitted);
+    return this.provisions.filter((i) => i.isSubmitted);
   }
 
   @cached
   get totalItems() {
-    return [...this.availableItems, ...this.jobItems];
+    return [...this.earnedProvisions, ...this.allocatedProvisions];
   }
 
   @action
@@ -47,7 +57,7 @@ export default class TicketProvisionsComponent extends Component {
 
     if (desire === 'bank') {
       status = BANKED;
-      provisions = this.availableItems;
+      provisions = this.earnedProvisions;
     } else {
       status = CLAIMED;
       provisions = this.bankedItems;

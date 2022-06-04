@@ -4,8 +4,8 @@ import RSVP from 'rsvp';
 export default class MeTicketsRoute extends ClubhouseRoute {
   beforeModel() {
     const user = this.session.user;
-    if (user.isAuditor || user.isPastProspective || user.isProspectiveWaitlist) {
-      this.toast.error('Auditors, past prospectives, and prospective waitlisted do not have access to this page.');
+    if (user.isAuditor || user.isPastProspective) {
+      this.toast.error('Auditors and  past prospectives do not have access to this page.');
       this.router.transitionTo('me.homepage');
     } else {
       super.beforeModel(...arguments);

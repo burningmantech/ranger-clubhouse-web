@@ -8,43 +8,33 @@
     {{#if this.totalItems}}
       <TicketSectionStatus @status="qualified" @text="{{pluralize this.totalItems.length "item"}} will be used"/>
     {{/if}}
-    {{#if this.bankedItems}}
-      <TicketSectionStatus @status="banked" @text="{{pluralize this.bankedItems.length "item"}} banked"/>
+    {{#if this.allBankedItems}}
+      <TicketSectionStatus @status="banked" @text="{{pluralize this.allBankedItems.length "item"}} banked"/>
     {{/if}}
   </:title>
   <:body>
-    {{#if this.jobItems}}
+    {{#if this.allocatedProvisions}}
       <p>
         <b>The following general provision(s) have been granted to assist with your upcoming event work:</b><br>
-        (These are separate from the items you may have earned, and may not be banked. The provisions will expire after the event.)
+        (These are separate from the provisions you may have earned, may not be banked, and will expire after the
+        event.)
       </p>
       <ul>
-        {{#each this.jobItems as |item|}}
+        {{#each this.allocatedProvisions as |item|}}
           <li>{{item.typeLabel}}</li>
         {{/each}}
       </ul>
     {{/if}}
-    {{#if this.availableItems}}
-       <p>
-        The following provision(s) have been awarded to you based on previous work.
-        <b>Unless you state otherwise, the following {{pluralize this.availableItems.length "provision"}}
-          will automatically be used for this event:</b>
+    {{#if this.supersededProvisions}}
+      <p>
+        <b>You have earned the following {{pluralize this.supersededProvisions.length "provision"}}  however
+          the item(s) will automatically be banked because a similar allocated provision(s) has been granted to you.</b>
       </p>
       <ul>
-        {{#each this.availableItems as |item|}}
+        {{#each this.supersededProvisions as |item|}}
           <li>{{item.typeLabel}}</li>
         {{/each}}
       </ul>
-      <p>
-        You may bank the provision(s) to use in a future event if you are taking
-        this year off or are planning to have a "light" Ranger schedule.
-      </p>
-      <UiButton @class="btn-responsive" @onClick={{fn this.updateItems "bank"}} @disabled={{@isSubmitting}}>
-        Bank the provision(s)
-        {{#if @isSavingDocumentStatus}}
-          <SpinIcon/>
-        {{/if}}
-      </UiButton>
     {{/if}}
     {{#if this.bankedItems}}
       <p>
@@ -57,6 +47,28 @@
       </ul>
       <UiButton @class="btn-responsive" @onClick={{fn this.updateItems "claim"}} @disabled={{@isSubmitting}}>
         Use the provision(s) for this event
+        {{#if @isSavingDocumentStatus}}
+          <SpinIcon/>
+        {{/if}}
+      </UiButton>
+    {{else if this.earnedProvisions}}
+      <p>
+        <b>Unless you state otherwise, the following earned {{pluralize this.earnedProvisions.length "provision"}}
+          will automatically be used for this event:</b>
+      </p>
+      <ul>
+        {{#each this.earnedProvisions as |item|}}
+          <li>
+            {{item.typeLabel}}
+          </li>
+        {{/each}}
+      </ul>
+      <p>
+        You may bank the provision(s) to use in a future event if you are taking
+        this year off or are planning to have a "light" Ranger schedule.
+      </p>
+      <UiButton @class="btn-responsive" @onClick={{fn this.updateItems "bank"}} @disabled={{@isSubmitting}}>
+        Bank the provision(s)
         {{#if @isSavingDocumentStatus}}
           <SpinIcon/>
         {{/if}}

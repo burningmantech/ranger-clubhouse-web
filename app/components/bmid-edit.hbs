@@ -1,17 +1,23 @@
 <ChForm @formId="bmid" @formFor={{@entry}} @onSubmit={{@onSave}} as |f|>
   <p>
     {{#if @entry.wap_id}}
-      WAP ID #{{@entry.wap_id}} - {{@entry.wapTypeHuman}} - {{@entry.wap_status}}
+      The WAP is through RAD-#{{@entry.wap_id}} Type [{{@entry.wapTypeHuman}}] status [{{@entry.wap_status}}].
       {{#if @entry.wapSubmitted}}
         <br>
         <b class="text-danger">WAP has been submitted for processing - WAP Date cannot be changed.</b>
       {{/if}}
     {{else}}
-      <b class="text-danger">WAP could not be located - WAP Date cannot be changed.</b>
+      <b class="text-danger">A WAP or Staff Credential could not be located - WAP Date cannot be changed.</b>
     {{/if}}
   </p>
   <p>
-    {{fa-icon "plus-circle" color="success"}} = if present, person has qualified provision (showers, meals).
+    Meals and showers are a union between what is explicitly set on the BMID, allocated provisions, and earned
+    provisions. Only earned provisions which have not been banked nor superseded by an allocated provision will be used.
+  </p>
+  <p>
+    <EarnedProvisionIcon /> = will use earned provision.
+    <AllocatedProvisionIcon/>
+    = will use allocated provision.
   </p>
   <FormRow>
     <f.select @name="status"
@@ -22,15 +28,24 @@
               @label="Meals"
               @options={{this.mealOptions}}
               @fieldSize="sm">
-      {{#if @entry.want_meals}}
-        <div class="text-success">{{fa-icon "plus-circle"}} {{@entry.want_meals}}</div>
+      {{#if @entry.allocated_meals}}
+        <div><AllocatedProvisionIcon/> {{@entry.allocated_meals}}</div>
+      {{/if}}
+      {{#if @entry.earned_meals}}
+        <div><EarnedProvisionIcon />> {{@entry.earned_meals}}</div>
       {{/if}}
     </f.select>
     <f.select @name="showers"
               @label="Showers"
               @options={{this.showerOptions}}
               @fieldSize="sm">
-      {{#if @entry.want_showers}}
+      {{#if @entry.allocated_showers}}
+        <div class="text-danger">
+          <AllocatedProvisionIcon/>
+          showers
+        </div>
+      {{/if}}
+      {{#if @entry.earned_showers}}
         <div class="text-success">{{fa-icon "plus-circle"}} showers</div>
       {{/if}}
     </f.select>

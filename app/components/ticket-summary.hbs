@@ -44,7 +44,7 @@
         <h4 class="text-success">
           {{fa-icon "gift"}} {{pluralize this.claimedItems.length "CLAIMED Item"}}
         </h4>
-        <b>The following have been claimed and will be submitted for processing:</b>
+        The following will be submitted for processing:
         {{#each this.claimedItems as |item|}}
           <div class="mb-1 ms-3">{{fa-icon "check" color="success"}} {{item}}</div>
         {{/each}}
@@ -52,7 +52,7 @@
       {{#if this.bankedItems}}
         <hr>
         <h4>{{fa-icon "box-archive"}} {{pluralize this.bankedItems.length "BANKED Item"}}</h4>
-        <b>The following item(s) will be banked:</b>
+        The following item(s) will be banked:
         <ul>
           {{#each this.bankedItems as |item|}}
             <li><i>Banked:</i> {{item}}</li>
@@ -64,7 +64,7 @@
         <h4 class="text-danger mt-2">
           {{fa-icon "triangle-exclamation"}} {{pluralize this.unclaimedItems.length "UNCLAIMED Item"}}
         </h4>
-        <b>Not claiming the following item(s) may affect your ability to Ranger on playa:</b>
+        <b>The following items have not been claimed. This may (or may not) affect your ability to Ranger on playa:</b>
         {{#each this.unclaimedItems as |item|}}
           <div class="mt-1 ms-3">{{fa-icon "times" color="danger"}} {{item}}</div>
         {{/each}}

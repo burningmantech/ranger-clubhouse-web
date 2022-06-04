@@ -79,6 +79,9 @@ export default class AccessDocumentModel extends Model {
 
   @attr('boolean', { defaultValue: false }) is_allocated;
 
+  // Is this earned provision (is_allocated=false) is superseded by an allocated provision (is_allocated=true)?
+  @attr('boolean', { readOnly: true, defaultValue: false }) is_superseded;
+
   get isTicket() {
     return (this.type === STAFF_CREDENTIAL
       || this.type === RPT
