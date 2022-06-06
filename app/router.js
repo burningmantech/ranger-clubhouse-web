@@ -103,6 +103,7 @@ Router.map(function () {
 
     this.route('thank-you-cards');
     this.route('timesheet-sanity-checker');
+    this.route('top-hour-earners');
     this.route('documents');
     this.route('bulk-lookup');
     this.route('bulk-positions');
