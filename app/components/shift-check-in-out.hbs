@@ -18,9 +18,12 @@
     <tr>
       <td>
         {{@onDutyEntry.position.title}}<br>
-        <UiButton @type="secondary" @onClick={{this.changePositionAction}} @class="mt-1" @size="sm"
+        <UiButton @type="secondary"
+                  @onClick={{this.changePositionAction}}
+                  @class="mt-1"
+                  @size="sm"
                   @disabled={{this.isSubmitting}}>
-          Change Position
+          Correct Position
         </UiButton>
 
       </td>
@@ -158,9 +161,18 @@
 {{/if}}
 
 {{#if this.showPositionDialog}}
-  <ModalDialog @title="Update shift position" @onEscape={{this.cancelUpdatePosition}} as |Modal|>
+  <ModalDialog @title="Correct Sift Position" @onEscape={{this.cancelUpdatePosition}} as |Modal|>
     <Modal.body>
-      Select the new position the shift should be updated to:
+      <p>
+        This action is intended to correct a shift check in where the wrong position was selected.
+      </p>
+      <p>
+        <b>
+          When switching from an on-call shift (such as 007 Standby, Tech On Call, etc.) to a working shift (007, Tech Team, etc)
+        and visa-versa, END THE CURRENT SHIFT and start a new one.
+        </b>
+      </p>
+      Select the new position the shift should be corrected to:
       <FormRow>
         <div class="col-auto">
           <ChForm::Select @name="newPositionId"
