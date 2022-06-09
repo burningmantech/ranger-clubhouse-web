@@ -11,6 +11,12 @@ export const WAPSO = 'work_access_pass_so';
 
 export const ALL_EAT_PASS = 'all_eat_pass';
 export const EVENT_EAT_PASS = 'event_eat_pass';
+export const PRE_EVENT_EAT_PASS = 'pre_event_eat_pass';
+export const POST_EVENT_EAT_PASS = 'post_event_eat_pass';
+export const PRE_EVENT_EVENT_EAT_PASS  = 'pre_event_event_eat_pass';
+export const EVENT_POST_EAT_PASS = 'event_post_event_eat_pass';
+export const PRE_POST_EAT_PASS = 'pre_post_eat_pass';
+
 export const WET_SPOT = 'wet_spot';
 export const WET_SPOT_POG = 'wet_spot_pog'; // unused currently
 export const EVENT_RADIO = 'event_radio';
@@ -38,6 +44,12 @@ export const TypeLabels = {
   [EVENT_RADIO]: 'Event Radio',
   [ALL_EAT_PASS]: 'All Eat Meal Pass',
   [EVENT_EAT_PASS]: 'Event Week Meal Pass',
+  [PRE_EVENT_EAT_PASS]: 'Pre-Event Eat Pass',
+  [POST_EVENT_EAT_PASS]: 'Post-Event Eat Pass',
+  [PRE_EVENT_EVENT_EAT_PASS]: 'Pre-Event + Event Eat Pass',
+  [PRE_POST_EAT_PASS]: 'Pre+Post Eat Pass',
+  [EVENT_POST_EAT_PASS]: 'Event+Post Eat Pass',
+
   [WET_SPOT]: 'Wet Spot Access (Org Showers)',
   [WET_SPOT_POG]: 'Wet Spot Pog (Org Showers)'
 };
@@ -48,6 +60,16 @@ export const DeliveryMethodLabels = {
   [DELIVERY_WILL_CALL]: 'Will Call',
   [DELIVERY_NONE]: 'None'
 };
+
+const MealPasses = [
+  ALL_EAT_PASS,
+  EVENT_EAT_PASS,
+  PRE_EVENT_EAT_PASS,
+  POST_EVENT_EAT_PASS,
+  PRE_EVENT_EVENT_EAT_PASS ,
+  EVENT_POST_EAT_PASS,
+  PRE_POST_EAT_PASS
+];
 
 export default class AccessDocumentModel extends Model {
   @attr('number') person_id;
@@ -117,7 +139,7 @@ export default class AccessDocumentModel extends Model {
   }
 
   get isMealPass() {
-    return this.type === ALL_EAT_PASS || this.type === EVENT_EAT_PASS;
+    return MealPasses.includes(this.type);
   }
 
   get isProvision() {

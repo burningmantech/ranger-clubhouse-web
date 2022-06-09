@@ -71,8 +71,8 @@ function buildTickets(milestones, personId, house) {
   return {
     claimed,
     bankedCount: pkg.accessDocuments.filter((ad) => ad.isBanked).length,
-    qualifiedCount: pkg.accessDocuments.filter((ad) => (ad.isQualified && !(ad.isWAP || ad.isVehiclePass || ad.isEventRadio))).length,
-    notCriticalCount: pkg.accessDocuments.filter((ad) => (ad.isQualified && (ad.isWAP || ad.isVehiclePass || ad.isEventRadio))).length,
+    qualifiedCount: pkg.accessDocuments.filter((ad) => (!ad.is_allocated && !ad.is_superseded && ad.isQualified && !(ad.isWAP || ad.isVehiclePass || ad.isEventRadio))).length,
+    notCriticalCount: pkg.accessDocuments.filter((ad) => (!ad.is_allocated && !ad.is_superseded && ad.isQualified && (ad.isWAP || ad.isVehiclePass || ad.isEventRadio))).length,
    // noAddress: !pkg.haveAddress,
     noAddress: false,
   };
