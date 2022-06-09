@@ -1,6 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 
 export default class MentorPotentialsController extends ClubhouseController {
   @tracked mentees;
@@ -20,7 +20,7 @@ export default class MentorPotentialsController extends ClubhouseController {
     }
 
     if (this.personnelFlagged) {
-      mentees = mentees.filter((p) => (p.personnel_ranks ? p.personnel_ranks.find((r) => r.rank >= 3) : false));
+      mentees = mentees.filter((p) => p.personnel_issue);
     }
 
     if (this.rrnFlagged) {
@@ -41,6 +41,37 @@ export default class MentorPotentialsController extends ClubhouseController {
     }
 
     return mentees;
+  }
+
+  @cached
+  get filterNames() {
+    const names = [];
+
+    if (this.untrained) {
+      names.push('Untrained');
+    }
+
+    if (this.personnelFlagged) {
+      names.push('Personnel Flagged');
+    }
+
+    if (this.rrnFlagged) {
+      names.push('RRN Flagged');
+    }
+
+    if (this.vcFlagged) {
+      names.push('VC Flagged');
+    }
+
+    if (this.mentorFlagged) {
+      names.push('Mentor Flagged');
+    }
+
+    if (this.trainingFlagged) {
+      names.push('Training Flagged');
+    }
+
+    return names;
   }
 
   @action

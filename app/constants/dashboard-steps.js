@@ -256,7 +256,7 @@ export const SIGN_UP_FOR_TRAINING = {
   skipPeriod: AFTER_EVENT,
   check({milestones, isPNV, isAuditor}) {
     if (milestones.online_training_only) {
-      return { result: SKIP };
+      return {result: SKIP};
     }
 
     if (milestones.training.status !== 'no-shift') {
@@ -307,7 +307,7 @@ export const ATTEND_TRAINING = {
   skipPeriod: AFTER_EVENT,
   check({milestones, person, isPNV, isAuditor}) {
     if (milestones.online_training_only) {
-      return { result: SKIP };
+      return {result: SKIP};
     }
 
     if (!milestones.online_training_passed || milestones.training.status === 'no-shift') {
@@ -506,10 +506,9 @@ export const SIGN_MOTORPOOL_AGREEMENT = {
       route: 'me.agreements.index',
       linkedMessage: {
         route: 'me.agreements.index',
-        prefix: 'The Ranger motorpool is a relatively limited resource. Vehicles are assigned by Shift Command, according to the needs of that shift.\n' +
-          'If needed, are you comfortable driving a Ranger gator, golf cart, or UTV while on shift? Visit',
+        prefix: 'Ranger vehicles are a limited resource and issued based on availability. Vehicles are assigned according to operational need rather than convenience. Visit',
         text: 'Me > Agreements',
-        suffix: 'to review and agree to the Motorpool Policy.'
+        suffix: 'to review and agree to the Ranger Motor-Pool Policy, which is required to drive a golf cart or UTV ("gator")'
       },
     };
   }
