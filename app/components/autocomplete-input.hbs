@@ -1,4 +1,5 @@
-<div class="autocomplete-input-block">
+<div class="autocomplete-input-block {{if @focusBorder "autocomplete-focus-border"}}"
+  {{did-insert this.wrapperBlockInserted}}>
   <div class="input-group">
     {{#if @modeOptions}}
       <BsDropdown @htmlTag="" as |dd|>

@@ -77,7 +77,7 @@
         </div>
       </div>
       <div class="person-manage-switch">
-        <LinkTo @route="hq.index" @model={{this.person.id}}>Switch to HQ Window</LinkTo>
+        <a href {{action this.switchToHQ}}>Switch to HQ Window</a>
       </div>
     </div>
     {{#if (or this.person.isSuspended this.person.isResigned this.person.isDeceased this.person.isUberBonked this.person.isDismissed)}}

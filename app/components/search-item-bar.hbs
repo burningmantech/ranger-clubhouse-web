@@ -18,6 +18,7 @@
                        @onModeChange={{action this.modeChange}}
                        @mode={{this.searchForm.mode}}
                        @appendSearchIcon={{true}}
+                       @focusBorder={{true}}
                        as |item|>
       {{~#if (eq this.searchType "asset")~}}
         {{this.searchYear}} #{{item.barcode}} {{item.description}} {{item.type}}

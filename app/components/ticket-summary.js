@@ -41,7 +41,7 @@ export default class TicketSummaryComponent extends Component {
       banked.push(`A ${t.typeLabel} (expires ${dayjs(t.expiry_date).format('YYYY-MM-DD')})`);
     });
 
-    pkg.provisions.filter((t) => (t.is_superseded || t.isBanked)).forEach((t) => {
+    pkg.provisions.filter((t) => t.isBanked).forEach((t) => {
       banked.push(`${t.typeLabel} (expires ${dayjs(t.expiry_date).format('YYYY-MM-DD')})`);
     });
 
@@ -76,8 +76,10 @@ export default class TicketSummaryComponent extends Component {
       const accessItem = this.hasStaffCredential ? ticket : wap;
       if (accessItem.access_any_time) {
         text += '<li>Allows entry ANY time</li>';
+      } else if (accessItem.access_date) {
+        text += `<li>Allows entry on or after ${dayjs(accessItem.access_date).format('ddd MMM D')} @ 00:01<br>Entry prior to this time is prohibited. No exceptions!</li>`;
       } else {
-        text += `<li>Allows entry on ${dayjs(accessItem.access_date).format('ddd MMM D')} @ 00:01<br> Entry prior to this time is prohibited. No exceptions!</li>`;
+        text += `<li><b class="text-danger">No access date is on file. Contact the ticketing team to fix this!</b></li>`;
       }
       text += '</ul>';
       claimed.push(htmlSafe(text));
@@ -93,9 +95,13 @@ export default class TicketSummaryComponent extends Component {
       claimed.push(htmlSafe(text));
     }
 
-    pkg.provisions.filter((t) => (!t.is_superseded && (t.isQualified || t.isClaimed))).forEach((t) => {
-      claimed.push(t.typeLabel);
-    });
+    if (pkg.jobItems) {
+      pkg.jobItems.forEach((j) => claimed.push(j.typeLabelWithCounts));
+    } else {
+      pkg.provisions.filter((t) => (t.isQualified || t.isClaimed)).forEach((t) => {
+        claimed.push(t.typeLabelWithCounts);
+      });
+    }
 
     return claimed;
   }

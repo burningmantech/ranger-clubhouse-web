@@ -1,4 +1,5 @@
 import {tracked, cached} from '@glimmer/tracking';
+import {EVENT_RADIO} from 'clubhouse/models/access-document';
 //import { DELIVERY_NONE } from 'clubhouse/models/access-document-delivery';
 
 export default class TicketPackage {
@@ -13,6 +14,25 @@ export default class TicketPackage {
     this.wap = docs.find((d) => d.isWAP);
     this.wapso = docs.filter((d) => d.isWAPSO);
     this.provisions = docs.filter((d) => d.isProvision).sort((a, b) => a.typeLabel.localeCompare(b.typeLabel));
+
+    this.allocatedProvisions = this.provisions.filter((p) => p.is_allocated);
+
+    if (this.allocatedProvisions.length) {
+      // Go through and combine earned & allocate items
+      const earned = this.provisions.filter((p) => !p.is_allocated);
+      this.allocatedProvisions.forEach((p) => {
+        const item = earned.find((e) => e.type === p.type);
+        if (item) {
+          p.earned_as_well = true;
+          item.allocated_as_well = true;
+          if (item.type === EVENT_RADIO && p.item_count < item.item_count) {
+            p.item_count = item.item_count;
+          }
+        }
+      });
+      const qualified = this.provisions.filter((p) => !p.is_allocated && !p.allocated_as_well);
+      this.jobItems = [...this.allocatedProvisions, ...qualified];
+    }
 
     this.year_earned = pkg.year_earned;
     this.credits_earned = pkg.credits_earned;

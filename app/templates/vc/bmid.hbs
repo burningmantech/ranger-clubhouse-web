@@ -75,14 +75,16 @@
   </FormRow>
 
   <p>
-    Meals and showers are a union between what is explicitly set on the BMID, allocated provisions, and earned
-    provisions. Only earned provisions which have not been banked nor superseded by an allocated provision will be used.
+    Meals and showers are a union of what is explicitly set on the BMID, allocated provisions, and non-banked
+    earned provisions.
   </p>
 
   <p>
     {{fa-icon "exclamation-circle"}} = indicates person has not signed up for any shifts.
-    <EarnedProvisionIcon/> = is earned provision which will be used.
-    <AllocatedProvisionIcon/> = is allocated provision which will be used.
+    <EarnedProvisionIcon/>
+    = is earned provision which will be used.
+    <AllocatedProvisionIcon/>
+    = is allocated provision which will be used.
   </p>
 
   Showing {{this.viewBmids.length}} of {{this.bmids.length}}
@@ -179,7 +181,9 @@
                 </div>
               {{/if}}
               {{#if bmid.earned_showers}}
-                <div class="align-middle"><EarnedProvisionIcon /> <small>Showers</small></div>
+                <div class="align-middle">
+                  <EarnedProvisionIcon/>
+                  <small>Showers</small></div>
               {{/if}}
             </td>
             <td>
@@ -194,7 +198,8 @@
                 </div>
               {{/if}}
               {{#if bmid.earned_meals}}
-                <div><EarnedProvisionIcon /> {{bmid.earned_meals}}</div>
+                <div>
+                  <EarnedProvisionIcon/> {{bmid.earned_meals}}</div>
               {{/if}}
             </td>
             <td>
@@ -265,7 +270,7 @@
                 <EarnedProvisionIcon/>
               {{/if}}
               {{bmid.effectiveMealsHuman}}
-             </td>
+            </td>
             <td class="w-10">
               {{#if bmid.wapMissing}}
                 <strong class="text-danger">missing</strong>

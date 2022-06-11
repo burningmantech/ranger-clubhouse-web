@@ -46,7 +46,9 @@
         </h4>
         The following will be submitted for processing:
         {{#each this.claimedItems as |item|}}
-          <div class="mb-1 ms-3">{{fa-icon "check" color="success"}} {{item}}</div>
+          <div class="mb-1 ms-3">
+            {{fa-icon "check" color="success"}}<span class="ms-2">{{item}}</span>
+          </div>
         {{/each}}
       {{/if}}
       {{#if this.bankedItems}}
@@ -64,7 +66,7 @@
         <h4 class="text-danger mt-2">
           {{fa-icon "triangle-exclamation"}} {{pluralize this.unclaimedItems.length "UNCLAIMED Item"}}
         </h4>
-        <b>The following items have not been claimed. This may (or may not) affect your ability to Ranger on playa:</b>
+        <b>The following items have not been claimed and may, or may not, affect your ability to Ranger on playa:</b>
         {{#each this.unclaimedItems as |item|}}
           <div class="mt-1 ms-3">{{fa-icon "times" color="danger"}} {{item}}</div>
         {{/each}}

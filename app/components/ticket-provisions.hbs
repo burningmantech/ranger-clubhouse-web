@@ -5,38 +5,34 @@
                @showing={{@showing}}>
   <:title>
     Provisions
-    {{#if this.totalItems}}
+    {{#if this.allocatedProvisions}}
+      <TicketSectionStatus @status="qualified" @text="{{pluralize this.jobItems.length "item"}} will be used"/>
+    {{else if this.allBankedItems}}
+      <TicketSectionStatus @status="banked" @text="{{pluralize this.bankedItems.length "item"}} banked"/>
+    {{else}}
       <TicketSectionStatus @status="qualified" @text="{{pluralize this.totalItems.length "item"}} will be used"/>
-    {{/if}}
-    {{#if this.allBankedItems}}
-      <TicketSectionStatus @status="banked" @text="{{pluralize this.allBankedItems.length "item"}} banked"/>
     {{/if}}
   </:title>
   <:body>
     {{#if this.allocatedProvisions}}
       <p>
-        <b>The following general provision(s) have been granted to assist with your upcoming event work:</b><br>
-        (These are separate from the provisions you may have earned, may not be banked, and will expire after the
-        event.)
+        <b>The following allocated provisions (items granted to you for upcoming Ranger work) and any qualified provisions (items earned from previous events) will be used:</b><br>
       </p>
       <ul>
-        {{#each this.allocatedProvisions as |item|}}
-          <li>{{item.typeLabel}}</li>
+        {{#each this.jobItems as |item|}}
+          <li>
+            {{item.typeLabelWithCounts}}
+            {{#if item.earned_as_well}}
+              (allocated &amp; qualified)
+            {{else if item.is_allocated}}
+              (allocated)
+            {{else}}
+              (qualified)
+            {{/if}}
+          </li>
         {{/each}}
       </ul>
-    {{/if}}
-    {{#if this.supersededProvisions}}
-      <p>
-        <b>You have earned the following {{pluralize this.supersededProvisions.length "provision"}}  however
-          the item(s) will automatically be banked because a similar allocated provision(s) has been granted to you.</b>
-      </p>
-      <ul>
-        {{#each this.supersededProvisions as |item|}}
-          <li>{{item.typeLabel}}</li>
-        {{/each}}
-      </ul>
-    {{/if}}
-    {{#if this.bankedItems}}
+    {{else if this.bankedItems}}
       <p>
         <b>You have chosen to bank the following {{pluralize this.bankedItems.length "provision"}}:</b>
       </p>
@@ -59,8 +55,8 @@
       <ul>
         {{#each this.earnedProvisions as |item|}}
           <li>
-            {{item.typeLabel}}
-          </li>
+            {{item.typeLabelWithCounts}}
+           </li>
         {{/each}}
       </ul>
       <p>

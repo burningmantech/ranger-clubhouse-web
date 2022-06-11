@@ -161,7 +161,13 @@
     </:title>
     <:body>
       {{this.person.callsign}} is only authorized for a shift radio.
-      A radio will need be to checked out for each shift, and then returned at the end of the shift.
+      A radio will need to be checked out for each shift, and then returned at the end of the shift.
+      {{#if this.eventInfo.radio_banked}}
+        <div class="mt-1">
+          {{this.person.callsign}} was awarded an event radio however they chose to bank the event radio to use in a
+          future event.
+        </div>
+      {{/if}}
     </:body>
   </UiSection>
 {{/if}}
