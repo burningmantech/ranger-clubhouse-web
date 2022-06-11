@@ -223,6 +223,15 @@ export default class AccessDocumentModel extends Model {
     return TypeLabels[this.type] ?? this.type;
   }
 
+  get typeLabelWithCounts() {
+    const label = this.typeLabel;
+    if (this.type === EVENT_RADIO) {
+      return `${label} count ${this.item_count}`;
+    } else {
+      return label;
+    }
+  }
+
   get deliveryMethodLabel() {
     return DeliveryMethodLabels[this.delivery_method] ?? this.delivery_method;
   }

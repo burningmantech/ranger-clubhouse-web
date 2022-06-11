@@ -6,6 +6,22 @@
   position: relative;
 }
 
+.autocomplete-focus-border {
+  border: 4px solid rgb(221, 221, 221, 0.2);
+  border-radius: 6px;
+}
+
+.autocomplete-focus-border input[type="search"]:focus
+{
+  outline: none !important;
+  box-shadow: none !important;
+  border:none !important;
+}
+
+.autocomplete-focused {
+  border-color: rgb(65, 102, 245, 0.5);
+}
+
 .autocomplete-list {
   max-height: 14em;
   margin: 0;
@@ -38,4 +54,3 @@
 .autocomplete-option-selected {
   background-color: #ececec;
 }
-

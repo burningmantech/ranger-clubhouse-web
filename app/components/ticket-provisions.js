@@ -12,32 +12,20 @@ export default class TicketProvisionsComponent extends Component {
   constructor() {
     super(...arguments);
 
-    this.provisions = this.args.ticketPackage.provisions;
-  }
+    const {ticketPackage}= this.args;
+    this.provisions = ticketPackage.provisions;
+    this.allocatedProvisions = ticketPackage.allocatedProvisions;
+    this.jobItems = ticketPackage.jobItems;
+   }
 
   @cached
   get earnedProvisions() {
-    return this.provisions.filter((i) => (!i.is_allocated && !i.is_superseded && (i.isQualified || i.isClaimed)));
-  }
-
-  @cached
-  get supersededProvisions() {
-    return this.provisions.filter((i) => i.is_superseded);
+    return this.provisions.filter((i) => (!i.is_allocated && (i.isQualified || i.isClaimed)));
   }
 
   @cached
   get bankedItems() {
     return this.provisions.filter((i) => i.isBanked);
-  }
-
-  @cached
-  get allBankedItems() {
-    return [...this.bankedItems, ...this.supersededProvisions];
-  }
-
-  @cached
-  get allocatedProvisions() {
-    return this.provisions.filter((i) => i.is_allocated);
   }
 
   @cached
@@ -47,7 +35,7 @@ export default class TicketProvisionsComponent extends Component {
 
   @cached
   get totalItems() {
-    return [...this.earnedProvisions, ...this.allocatedProvisions];
+    return this.provisions;
   }
 
   @action

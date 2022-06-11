@@ -138,6 +138,10 @@ export default class AutocompleteInputComponent extends Component {
     this.options = [];
     this.hasSelected = false;
 
+    if (this.args.focusBorder) {
+      this.wrapperBlock.classList.add("autocomplete-focused");
+    }
+
     if (this.args.form) {
       this.args.form.preventSubmit = true;
     }
@@ -231,6 +235,10 @@ export default class AutocompleteInputComponent extends Component {
 
   @action
   blurEvent() {
+    if (this.args.focusBorder) {
+      this.wrapperBlock.classList.remove("autocomplete-focused");
+    }
+
     if (this.args.form) {
       this.args.form.preventSubmit = false;
     }
@@ -350,5 +358,10 @@ export default class AutocompleteInputComponent extends Component {
   resultsBoxDestroy() {
     this.resultsElement = null;
     this.hasSelected = false;
+  }
+
+  @action
+  wrapperBlockInserted(block) {
+    this.wrapperBlock = block;
   }
 }

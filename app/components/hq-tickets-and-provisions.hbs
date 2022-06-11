@@ -1,5 +1,6 @@
 {{#if this.isNotRanger}}
-  <b class="text-danger">{{@person.callsign}} has the status "{{@person.status}}" is not eligible to earn tickets and provisions.</b>
+  <b class="text-danger">{{@person.callsign}} has the status "{{@person.status}}" is not eligible to earn tickets and
+    provisions.</b>
 {{else if this.isLoading}}
   <LoadingIndicator/>
 {{else}}
@@ -40,8 +41,12 @@
   </HqTicketsAndProvisionsTable>
 
   <HqTicketsAndProvisionsTable @items="Wet Spot (aka Burning Man Org Showers)">
-    <HqTicketsAndProvisionsRow @item={{this.items.shower_pog}} @name="Wet Spot Pog for THIS event"/>
-    <HqTicketsAndProvisionsRow @item={{this.items.shower_access}} @name="Wet Spot Access for NEXT event"/>
+    <HqTicketsAndProvisionsRow @item={{this.items.shower_pog}} @name="Wet Spot Pog for THIS event"
+                               @subtext="(Event week hours only)"
+    />
+    <HqTicketsAndProvisionsRow @item={{this.items.shower_access}} @name="Wet Spot Access for NEXT event"
+                               @subtext="(Event week hours only)"
+    />
   </HqTicketsAndProvisionsTable>
 
 {{/if}}
