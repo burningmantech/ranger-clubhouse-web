@@ -52,7 +52,7 @@ export default class TicketSummaryComponent extends Component {
   get claimedItems() {
     const pkg = this.args.ticketPackage;
     const {ticket, person} = this.args;
-    const vp = pkg.vehicle_pass;
+    const vp = pkg.vehiclePass;
     const claimed = [];
 
     if (ticket && ticket.isClaimed) {

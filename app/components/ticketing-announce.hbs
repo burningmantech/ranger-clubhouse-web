@@ -15,15 +15,12 @@
             </li>
           {{/each}}
         </ul>
-        {{#if @ticketPackage.appreciations}}
+        {{#if @ticketPackage.provisions}}
           The following provisions have been awarded to you:
           <ul>
-            {{#each @ticketPackage.appreciations as |item|}}
+            {{#each @ticketPackage.provisions as |item|}}
               <li>
-                {{item.typeLabel}}
-                {{#if item.isEventRadio}}
-                  (count {{item.item_count}})
-                {{/if}}
+                {{item.typeLabelWithCount}}
                 expiring after  {{mdy-format item.expiry_date full=true}}
               </li>
             {{/each}}
