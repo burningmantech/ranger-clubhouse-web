@@ -12,17 +12,17 @@ export default class TicketingClosedComponent extends Component {
     this.usingRPT = (ticket && ticket.isReducedPriceTicket && ticket.isUsing);
 
     this.bankedItems = ticketPackage.tickets.filter((t) => (t.isBanked || t.isQualified))
-      .concat(ticketPackage.appreciations.filter((t) => (t.isBanked || t.isQualified)));
+      .concat(ticketPackage.provisions.filter((t) => t.isBanked));
 
     this.hasFullPackage = (!person.isAlpha && !person.isProspective);
 
     this.ticketNotClaimed = !ticket && !!ticketPackage.tickets.find((t) => t.isQualified);
 
-    const wap = ticketPackage.wap;
-    this.wap = ticketPackage.wap;
+    const {wap} = ticketPackage;
+    this.wap = wap;
     this.usingWAP = (wap && wap.isUsing);
 
-    const pass = ticketPackage.vehicle_pass;
+    const pass = ticketPackage.vehiclePass;
     this.usingVehiclePass = (pass && pass.isUsing);
     this.haveVP = (pass && (pass.isUsing || pass.isQualified));
 
