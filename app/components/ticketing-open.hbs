@@ -31,14 +31,13 @@
     <:body>
       <p>
         You may request, claim, or bank any items you've qualified for, such as a Staff Credential, Reduced-Price
-        Ticket,
-        Vehicle Pass, Work Access Pass, or Work Access Passes for your significant others/critical camp mates.
+        Ticket, Vehicle Pass, Work Access Pass, or Work Access Passes for your significant others/critical camp mates.
       </p>
       <p>
         <b>The ticketing deadline is {{full-datetime-format @ticketingInfo.submit_date}} Pacific Time.</b>
         Once the deadline has passed, it may not be possible to make changes.
       </p>
-      <div class="max-width-700">
+      <div class="max-width-900">
         <p class="d-grid">
           <UiButton @type="success" @onClick={{fn this.nextSection "ticket"}}>
             Begin Ticketing {{fa-icon "arrow-right"}}
