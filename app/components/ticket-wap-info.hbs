@@ -119,6 +119,12 @@
           enter the event.
         </p>
       {{/if}}
+    {{else if this.allTicketsBanked}}
+      <p>
+        You have banked all your tickets. Contact the Ranger Ticketing Team
+        {{mail-to @ticketingInfo.ranger_ticketing_email}}
+        if you intend to Ranger this event, not use your tickets, and require a WAP.
+      </p>
     {{else if @ticketPackage.tickets}}
       <p>
         You need to claim and/or bank one of your tickets first. Go back to the first section to claim and/or bank your
