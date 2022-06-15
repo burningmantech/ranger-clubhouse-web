@@ -23,10 +23,8 @@ Showing {{if this.isShowingAll "ALL including used and expired" "current"}} {{pl
         {{#if document.is_allocated}}
           <AllocatedProvisionIcon/>
         {{/if}}
-        {{document.typeLabel}}
-        {{#if document.isEventRadio}}
-          (count {{document.item_count}})
-        {{else if document.isWAPSO}}
+        {{document.typeLabelWithCounts}}
+        {{#if document.isWAPSO}}
           <br>
           for {{if document.name document.name "not given"}}
         {{/if}}

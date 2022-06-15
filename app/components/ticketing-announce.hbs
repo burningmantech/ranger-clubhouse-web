@@ -20,7 +20,7 @@
           <ul>
             {{#each @ticketPackage.provisions as |item|}}
               <li>
-                {{item.typeLabelWithCount}}
+                {{item.typeLabelWithCounts}}
                 expiring after  {{mdy-format item.expiry_date full=true}}
               </li>
             {{/each}}
