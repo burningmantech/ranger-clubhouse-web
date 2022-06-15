@@ -52,7 +52,7 @@
         <p>
           <b>You qualified for a Work Access Pass.</b>
         </p>
-       {{/if}}
+      {{/if}}
       {{#if this.wap.isSubmitted}}
         <p>The Work Access Pass has been submitted to the Burning Man Ticket Request System.</p>
       {{else if this.wap.isQualified}}
@@ -119,6 +119,11 @@
           enter the event.
         </p>
       {{/if}}
+    {{else if @ticketPackage.tickets}}
+      <p>
+        You need to claim and/or bank one of your tickets first. Go back to the first section to claim and/or bank your
+        tickets.
+      </p>
     {{else}}
     {{! No WAP or Staff Credential}}
       <p class="text-danger">

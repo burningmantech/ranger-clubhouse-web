@@ -1,18 +1,15 @@
 <ChNotice @type="danger"
           @icon="exclamation-circle"
           @title={{if @hasTrainingBlocker "Training Sign Up Warning" "Sign Ups Blocked"}}>
-  <ScheduleRequirements @requirements={{@requirements}} @person={{@person}} @isTraining={{@hasTrainingBlocker}} />
+  <ScheduleRequirements @requirements={{@requirements}}
+                        @person={{@person}}
+                        @hasTrainingBlocker={{@hasTrainingBlocker}} />
   {{#if @hasTrainingBlocker}}
-    <p>
-      The dashboard on the home page has instructions on how to resolve the issue(s) above.
-    </p>
-    <p>
-      <YouOrCallsign @person={{@person}} @youLabel="You are" @callsignVerb="is"/>
-      allowed to sign up for all other shifts.
-    </p>
-    <p>
-      <b>A Training shift MUST BE ATTENDED &amp; PASSED before being allowed to work on playa.</b>
-    </p>
+    {{#if @isMe}}
+      <p>
+        The dashboard on the home page has instructions on how to resolve the issue(s) above.
+      </p>
+    {{/if}}
   {{else if @isAdmin}}
     <p class="mt-2">
       As a Clubhouse Admin, you may view the schedule and make adjustments.<br>
@@ -23,9 +20,9 @@
       The dashboard on home page has instructions on how to resolve the issue(s) above.
     </p>
   {{/if}}
-  <div class="mt-4">
-    <UiButton @onClick={{@overrideAction}} @class="btn-responsive">
-      View Schedule
-    </UiButton>
-  </div>
 </ChNotice>
+<div class="my-4">
+  <UiButton @onClick={{@overrideAction}} @class="btn-responsive">
+    View Schedule
+  </UiButton>
+</div>
