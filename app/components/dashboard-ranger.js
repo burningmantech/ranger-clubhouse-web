@@ -68,13 +68,11 @@ function buildTickets(milestones, personId, house) {
 
   pkg.wapso.forEach((so) => claimed.push(so));
 
-  const haveAllocatedProvision = !!pkg.accessDocuments.find((ad) => ad.is_allocated);
-
   return {
     claimed,
     bankedCount: pkg.accessDocuments.filter((ad) => ad.isBanked).length,
-    qualifiedCount: haveAllocatedProvision ? 0 : pkg.accessDocuments.filter((ad) => (!ad.isProvision && ad.isQualified && !(ad.isWAP || ad.isVehiclePass || ad.isEventRadio))).length,
-    notCriticalCount: haveAllocatedProvision ? 0 : pkg.accessDocuments.filter((ad) => (!ad.isProvision &&ad.isQualified && (ad.isWAP || ad.isVehiclePass || ad.isEventRadio))).length,
+    qualifiedCount:  pkg.tickets.filter((a) => a.isQualified).length,
+    notCriticalCount: pkg.accessDocuments.filter((ad) => (!ad.isProvision && ad.isQualified && (ad.isWAP || ad.isVehiclePass))).length,
    // noAddress: !pkg.haveAddress,
     noAddress: false,
   };
@@ -97,9 +95,7 @@ const STEPS = [
 
       const tickets = buildTickets(milestones, person.id, house);
 
-      if (tickets.qualifiedCount
-        || tickets.noAddress
-        || tickets.notCriticalCount) {
+      if (tickets.qualifiedCount) {
         return {
           result: ACTION_NEEDED,
           route: 'me.tickets',

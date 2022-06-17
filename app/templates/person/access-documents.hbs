@@ -1,6 +1,7 @@
 <h3>Items (aka Access Documents &amp; Stuff)</h3>
 <p>
-  <AllocatedProvisionIcon/> = Item is an allocated provision (not earned, cannot be banked.)
+  <AllocatedProvisionIcon/>
+  = Item is an allocated provision (not earned, cannot be banked.)
 </p>
 Showing {{if this.isShowingAll "ALL including used and expired" "current"}} {{pluralize this.documents.length "item"}}
 <table class="table  table-striped table-hover table-width-auto">
@@ -73,7 +74,8 @@ Showing {{if this.isShowingAll "ALL including used and expired" "current"}} {{pl
 </p>
 {{#if this.entry}}
   <ModalDialog @title="{{if this.entry.isNew "Create A New" "Edit"}} Item For {{this.person.callsign}}"
-               @onEscape={{this.cancelAccessDocument}} as |Modal|>
+               @onEscape={{this.cancelAccessDocument}}
+               as |Modal|>
     <ChForm @formId="entry"
             @formFor={{this.entry}}
             @onSubmit={{this.saveAccessDocument}} as |f|>
@@ -138,9 +140,13 @@ Showing {{if this.isShowingAll "ALL including used and expired" "current"}} {{pl
           </FormRow>
         {{/if}}
         {{#unless this.entry.isNew}}
-          Comments:<br>
-          <div class="mt-2">
-            {{nl2br this.entry.comments}}
+          Comments:
+          <div class="my-2">
+            {{#if this.entry.comments}}
+              {{nl2br this.entry.comments}}
+            {{else}}
+              <i>no comments yet.</i>
+            {{/if}}
           </div>
         {{/unless}}
         <FormRow>
