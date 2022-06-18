@@ -4,11 +4,6 @@
     {{#if @includeLog}}
       <Person::ScheduleLog @year={{@year}} @person={{@person}} />
     {{/if}}
-    <div class="mb-2 d-print-none">
-      <RadioGroup @options={{this.viewOptions}}
-                  @value={{this.viewSchedule}}
-                  @onChange={{action (mut this.viewSchedule)}} />
-    </div>
 
     {{#if this.hasOverlapping}}
       <ChNotice @icon="flag" @title="Overlapping shifts">
@@ -18,11 +13,26 @@
       </ChNotice>
     {{/if}}
 
-    <div class="m-2">
+    <p>
       <NoAppreciateIcon/>
       = the shift hours do not count towards appreciations.
       <InfoIcon/>
       = More shift information available, click on the icon and/or text.
+    </p>
+    <div class="mb-1 d-print-none">
+      {{#if (eq this.viewSchedule "upcoming")}}
+        <b>Showing {{pluralize this.upcomingCount "UPCOMING shift"}}</b>
+        <UiButton @onClick={{this.showAllAction}}  @size="sm" @type="secondary" @class="ms-2">
+          Show all {{pluralize @slots.length "shift"}}
+        </UiButton>
+      {{else}}
+        <b>Showing {{pluralize @slots.length "ALL shift"}}</b>
+        {{#if this.isCurrentYear}}
+          <UiButton @onClick={{this.showUpcomingAction}} @size="sm" @type="secondary" @class="ms-2">
+            Show {{pluralize this.upcomingCount "upcoming shift"}}
+          </UiButton>
+        {{/if}}
+      {{/if}}
     </div>
     <div class="schedule-table schedule-itinerary">
       <div class="schedule-row schedule-header">
@@ -49,7 +59,7 @@
           <div class="schedule-duration">
             <span class="schedule-sm-label">Duration:</span>
             {{#unless slot.position_count_hours}}
-              <NoAppreciateIcon/>
+              <span class="me-1"><NoAppreciateIcon/></span>
             {{/unless~}}
             {{hour-minute-format slot.slot_duration}}
           </div>
@@ -64,7 +74,7 @@
             <button type="button" {{on "click" (fn @showPeople slot)}} class="btn btn-secondary btn-sm"
                     title="View people signed up" disabled={{slot.is_retrieving_people}}>
               {{#if slot.is_retrieving_people}}
-                <SpinIcon />
+                <SpinIcon/>
               {{else}}
                 {{fa-icon "users" type="fas"}}
               {{/if}}
@@ -75,8 +85,8 @@
               <button type="button" {{on "click" (fn @leaveSlot slot)}} class="btn btn-danger btn-sm"
                       title="Remove shift from schedule" disabled={{slot.is_submitting}}>
                 {{~#if slot.is_submitting~}}
-                  <SpinIcon />
-                {{~else~}}
+                  <SpinIcon/>
+                  {{~else~}}
                   {{fa-icon "trash-alt" type="fas"}}
                 {{~/if~}}
                 Remove
@@ -93,7 +103,7 @@
             {{~#if @slots~}}
               <b>No upcoming shifts were found.</b>
               <a href {{action (mut this.viewSchedule) "all"}}>View Previous Shifts</a>
-            {{~else~}}
+              {{~else~}}
               <b class="text-danger">No {{@year}} shifts were found.</b>
             {{~/if~}}
           </div>
