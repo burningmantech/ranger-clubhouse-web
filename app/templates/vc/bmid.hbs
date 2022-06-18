@@ -175,7 +175,7 @@
                               @onChange={{action (mut bmid.showers)}}
                               @controlClass=""/>
               {{#if bmid.allocated_showers}}
-                <div class="align-middle">
+                <div class="align-middle text-success">
                   <AllocatedProvisionIcon/>
                   <small>S</small>
                 </div>
@@ -183,7 +183,8 @@
               {{#if bmid.earned_showers}}
                 <div class="align-middle">
                   <EarnedProvisionIcon/>
-                  <small>Showers</small></div>
+                  <small>S</small>
+                </div>
               {{/if}}
             </td>
             <td>
@@ -199,7 +200,8 @@
               {{/if}}
               {{#if bmid.earned_meals}}
                 <div>
-                  <EarnedProvisionIcon/> {{bmid.earned_meals}}</div>
+                  <EarnedProvisionIcon/> {{bmid.earned_meals}}
+                </div>
               {{/if}}
             </td>
             <td>

@@ -1,23 +1,26 @@
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { service } from '@ember/service';
+import {tracked} from '@glimmer/tracking';
+import {service} from '@ember/service';
+import {action} from '@ember/object';
 
 export default class ScheduleTableComponent extends Component {
   @service house;
-
   @tracked viewSchedule;
 
   constructor() {
     super(...arguments);
-    this.viewSchedule = this.isCurrentYear ? 'upcoming' : 'all';
     this.isCurrentYear = (this.args.year == this.house.currentYear());
+    this.viewSchedule = this.isCurrentYear ? 'upcoming' : 'all';
   }
 
-  get viewOptions() {
-    return [
-      { label: `Upcoming Shifts (${this.upcomingCount})`, value: 'upcoming' },
-      { label: `All Shifts (${this.args.slots.length})`, value: 'all'}
-    ];
+  @action
+  showAllAction() {
+    this.viewSchedule = 'all';
+  }
+
+  @action
+  showUpcomingAction() {
+    this.viewSchedule = 'upcoming';
   }
 
   get viewSlots() {
@@ -31,11 +34,15 @@ export default class ScheduleTableComponent extends Component {
   }
 
   get upcomingCount() {
-    const slots = this.args.slots;
-    return slots.reduce(function(upcoming, slot) { return (slot.has_started ? 0 : 1)+upcoming; }, 0);
+    const {slots} = this.args;
+    return slots.reduce(function (upcoming, slot) {
+      return (slot.has_started ? 0 : 1) + upcoming;
+    }, 0);
   }
 
   get hasOverlapping() {
-    return this.viewSlots.reduce(function(total, slot) { return (slot.is_overlapping ? 1 : 0)+total;}, 0);
+    return this.viewSlots.reduce(function (total, slot) {
+      return (slot.is_overlapping ? 1 : 0) + total;
+    }, 0);
   }
 }
