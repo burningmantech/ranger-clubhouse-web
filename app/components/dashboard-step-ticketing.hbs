@@ -9,7 +9,7 @@
       {{#each @step.tickets.claimed as |ticket|}}
         <li>
           {{#if ticket.isWAPSO}}
-            {{pluralize ticket.personCount "Significant Other WAP"}} for: {{ticket.names}}
+            A Significant Other WAP for: <i>{{ticket.name}}</i>
           {{else if ticket.isWAP}}
             A Work Access Pass for yourself
           {{else}}
