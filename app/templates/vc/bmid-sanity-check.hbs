@@ -11,7 +11,9 @@
       <ChAccordion as |Accordion|>
         <Accordion.title>
           {{#if (eq asylum.type "shifts-before-access-date")}}
-            Signed Up For Shifts Earlier Than WAP Access Date
+            Signed Up For Shifts Earlier Than Non-Submitted WAP Access Date
+          {{else if (eq asylum.type "shifts-before-submitted-wap")}}
+            Signed Up For Shifts Earlier Than Submitted WAP Access Date
           {{else if (eq asylum.type "shifts-no-wap")}}
             Signed Up For Pre-Event Shifts But No WAP
           {{else if (eq asylum.type "rpt-before-box-office")}}

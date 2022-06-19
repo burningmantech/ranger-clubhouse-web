@@ -122,7 +122,8 @@
           </li>
         {{/if}}
 
-        {{#unless this.usingStaffCredential}}
+        {{#if (or this.usingWAP (not this.usingStaffCredential))}}
+          {{! A person may have a SC with a later access date, and then a WAP with an earler corrected access date}}
           <li class="mt-2">
             {{#if this.usingWAP}}
               <b class="text-success">A Work Access Pass will be emailed to you.</b><br>
@@ -138,7 +139,7 @@
               {{fa-icon "times" color="danger"}} No Work Access Pass was claimed.
             {{/if}}
           </li>
-        {{/unless}}
+        {{/if}}
 
         {{#if this.hasFullPackage}}
           <li class="mt-2">
