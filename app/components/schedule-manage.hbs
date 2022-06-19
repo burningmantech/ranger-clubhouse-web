@@ -52,13 +52,15 @@
                                 @onChange={{action (mut this.filterDay)}} />
               </div>
             </FormRow>
-
             <p>
+              Click on the position title to show the available shifts.
+            </p>
+            <div>
               <b>Showing {{this.viewSlots.length}} of {{this.availableSlots.length}}.</b>
               {{#if (not-eq this.viewSlots.length this.availableSlots.length)}}
-                <b> Adjust the filter above to show prior shifts &amp; trainings.</b>
+                <b> Adjust the day filter above to show prior shifts &amp; trainings.</b>
               {{/if}}
-            </p>
+            </div>
             {{#each this.positions key="position_id" as |position|}}
               <SchedulePositionList @position={{position}}
                                     @showPeople={{this.showPeople}}

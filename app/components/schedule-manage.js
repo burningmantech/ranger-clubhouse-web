@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {set} from '@ember/object';
-import {Role} from 'clubhouse/constants/roles';
+//import {Role} from 'clubhouse/constants/roles';
 import dayjs from 'dayjs';
 import {schedule} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
@@ -56,12 +56,12 @@ export default class ScheduleManageComponent extends Component {
      * TODO Revisit whether everyone should be able to see inactive slots if they choose.
      */
 
-    if (this.session.hasRole(
+  /*  if (this.session.hasRole(
       [Role.ADMIN, Role.EDIT_SLOTS, Role.GRANT_POSITION, Role.VC, Role.TRAINER, Role.ART_TRAINER])) {
       this.availableSlots = slots;
-    } else {
+    } else {*/
       this.availableSlots = slots.filter((slot) => slot.slot_active);
-    }
+   /* }*/
 
     this.inactiveSlots = this.availableSlots.filter((slot) => !slot.slot_active);
     this.isCurrentYear = (+year === this.house.currentYear());
