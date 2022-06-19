@@ -104,7 +104,7 @@ export const UPLOAD_PHOTO = {
         return {result: ACTION_NEEDED, isPhotoStep: true};
       case 'submitted':
       case 'approved':
-        return {result: isPNV ? COMPLETED : SKIP, isPhotoStep: (photo.photo_status === 'approved')};
+        return {result: isPNV ? COMPLETED : SKIP, isPhotoStep: (photo.photo_status !== 'approved')};
       default:
         return {
           result: NOT_AVAILABLE,
