@@ -9,7 +9,7 @@
         {{/each}}
       </ul>
     {{else}}
-      {{#if (and @ticketPackage.tickets (not @ticket.isClaimed))}}
+      {{#if (and @ticketPackage.tickets (not @ticket.isUsing))}}
         <h4 class="text-danger">{{fa-icon "hand-point-right"}} No Ticket Claimed</h4>
         <p>
           You have {{pluralize @ticketPackage.tickets.length "ticket"}} available yet you have not
@@ -39,6 +39,18 @@
         <b>If you are happy with your selections, sit back, check the Clubhouse often, watch your inbox, and
           keep an eye on the Ranger Announce mailing list for further instructions.</b>
       </p>
+      {{#if this.submittedItems}}
+        <hr>
+        <h4>
+          {{fa-icon "gears"}} {{pluralize this.claimedItems.length "SUBMITTED Item"}}
+        </h4>
+        The following items have been submitted for processing:
+        {{#each this.submittedItems as |item|}}
+          <div class="mb-1 ms-3">
+            {{fa-icon "check" color="success"}}<span class="ms-2">{{item}}</span>
+          </div>
+        {{/each}}
+      {{/if}}
       {{#if this.claimedItems}}
         <hr>
         <h4 class="text-success">
