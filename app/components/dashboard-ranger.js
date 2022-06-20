@@ -398,7 +398,7 @@ const STEPS = [
           result: ACTION_NEEDED,
           linkedMessage: {
             route: 'me.vehicles',
-            prefix: 'You have been approved to submit vehicle requests for driving stickers and other items. Visit',
+            prefix: 'You have been approved to submit vehicle requests and reauthorizations for driving stickers and other items. Visit',
             text: 'Me > Vehicle Requests',
             suffix: 'to submit a request.'
           }

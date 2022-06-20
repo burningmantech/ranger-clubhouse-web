@@ -1,4 +1,6 @@
-<h2>Dashboard for {{this.person.callsign}}</h2>
+<p>
+<b class="text-danger">All links and buttons below will  to YOUR account not {{this.person.callsign}}.</b>
+</p>
 {{#if this.person.isPastProspective}}
   <DashboardPastProspective/>
 {{else if this.person.isProspectiveWaitlist}}
