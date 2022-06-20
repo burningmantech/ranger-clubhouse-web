@@ -113,6 +113,11 @@ export default class TicketSummaryComponent extends Component {
   }
 
   @cached
+  get submittedItems() {
+    return this.args.ticketPackage.accessDocuments.filter((ad) => ad.isSubmitted).map((ad) => ad.typeLabel);
+  }
+
+  @cached
   get unclaimedItems() {
     const pkg = this.args.ticketPackage;
     const vp = pkg.vehiclePass;
