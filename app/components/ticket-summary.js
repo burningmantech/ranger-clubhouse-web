@@ -60,29 +60,30 @@ export default class TicketSummaryComponent extends Component {
     }
 
     if (vp && vp.isClaimed) {
-      claimed.push(htmlSafe(`A ${vp.typeLabel} ${this.itemDeliveryMethod(vp)}`));
+      claimed.push(htmlSafe(`A ${vp.typeLabel} ${this.itemDeliveryMethod(vp, ticket)}`));
     }
 
     const wap = pkg.wap;
     if (this.hasStaffCredential || (wap && wap.isClaimed)) {
-      let text = 'A Work Access Pass for yourself<ul class="mb-0">';
+      const lines = [];
       if (this.hasStaffCredential) {
-        text += '<li>Part of your Staff Credential - no additional document needed.</li>';
+        lines.push('Part of your Staff Credential - no additional document needed.');
       }
 
       if (!this.hasStaffCredential) {
-        text += `<li>sent via email to ${person.email}</li>`;
+        lines.push(`sent via email to ${person.email}`);
       }
       const accessItem = this.hasStaffCredential ? ticket : wap;
       if (accessItem.access_any_time) {
-        text += '<li>Allows entry ANY time</li>';
+        lines.push('Allows entry ANY time');
       } else if (accessItem.access_date) {
-        text += `<li>Allows entry on or after ${dayjs(accessItem.access_date).format('ddd MMM D')} @ 00:01<br>Entry prior to this time is prohibited. No exceptions!</li>`;
+        lines.push(`Allows entry on or after ${dayjs(accessItem.access_date).format('ddd MMM D')} @ 00:01<br>Entry prior to this time is prohibited. No exceptions!`);
       } else {
-        text += `<li><b class="text-danger">No access date is on file. Contact the ticketing team to fix this!</b></li>`;
+        lines.push(`<b class="text-danger">No access date is on file. Contact the ticketing team to fix this!</b>`);
       }
-      text += '</ul>';
-      claimed.push(htmlSafe(text));
+
+      const text = lines.map((l) => `<li>${l}</li>`).join('');
+      claimed.push(htmlSafe(`A Work Access Pass for yourself<ul class="mb-0">${text}</ul>`));
     }
 
     const {wapso} = pkg;
@@ -140,7 +141,7 @@ export default class TicketSummaryComponent extends Component {
     return unclaimed;
   }
 
-  itemDeliveryMethod(item) {
+  itemDeliveryMethod(item, ticket = null) {
     const {person} = this.args;
     if (item.isTicket || item.isVehiclePass) {
       let invoice = '';
@@ -150,7 +151,7 @@ export default class TicketSummaryComponent extends Component {
       if (!item.isStaffCredential && item.isDeliveryPostal) {
         return `<ul class="mb-0">${invoice}<li>Will be delivered by mail -- delivery address will be collected later.</li></ul>`;
       }
-      return `<ul class="mb-0">${invoice}<li>Held at ${item.isStaffCredential ? 'Staff Credentialing' : 'Will-Call'} under your name <span class="d-inline-block">"${person.first_name} ${person.last_name}"</span>`;
+      return `<ul class="mb-0">${invoice}<li>Held at ${((ticket && ticket.isStaffCredential) || item.isStaffCredential) ? 'Staff Credentialing' : 'Will-Call'} under your name <span class="d-inline-block">"${person.first_name} ${person.last_name}"</span>`;
     }
 
     if (item.isWAP || item.isWAPSO) {

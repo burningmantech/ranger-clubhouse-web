@@ -93,20 +93,27 @@ Showing {{if this.isShowingAll "ALL including used and expired" "current"}} {{pl
           <f.select @name="expiry_year"
                     @options={{this.yearOptions}}
                     @label="Good Through"/>
-          {{# if (eq f.model.type "event_radio")}}
+        </FormRow>
+        {{# if (eq f.model.type "event_radio")}}
+          <FormRow>
             <f.number @name="item_count"
                       @label="Radio Count"
                       @size={{5}}/>
-          {{else if (or
-            (eq f.model.type "work_access_pass")
-            (eq f.model.type "work_access_pass_so")
-            (eq f.model.type "staff_credential")
-          )}}
+          </FormRow>
+        {{else if (or
+          (eq f.model.type "work_access_pass")
+          (eq f.model.type "work_access_pass_so")
+          (eq f.model.type "staff_credential")
+        )}}
+          <FormRow>
             <f.select @name="admission_date"
                       @label="Access Date"
                       @options={{this.admissionDateOptions}}/>
-          {{/if}}
-        </FormRow>
+            {{#if (eq f.model.type "work_access_pass_so")}}
+              <f.text @name="name" @label="WAP SO Name" @size={{40}} @grid="col-auto"/>
+            {{/if}}
+          </FormRow>
+        {{/if}}
 
         <p class="mt-4">
           An allocated provision is one which has been granted, not earned, for a position.
