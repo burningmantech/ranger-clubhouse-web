@@ -52,9 +52,11 @@ function buildTickets(milestones, personId, house) {
 
   const pkg = new TicketPackage(milestones.ticketing_package, personId, house);
 
+  let ticket = null;
   pkg.tickets.forEach((t) => {
     if (t.isClaimed || t.isSubmitted) {
       claimed.push(t);
+      ticket = t;
     }
   });
 
@@ -64,6 +66,13 @@ function buildTickets(milestones, personId, house) {
 
   if (usingTicket(pkg.wap)) {
     claimed.push(pkg.wap);
+  }
+
+  if (pkg.jobItems) {
+    // jobItems is set when there are allocated provisions. This is the union between the earned & allocated provisions.
+    pkg.jobItems.forEach((item) => claimed.push(item));
+  } else if (ticket) {
+    pkg.provisions.filter((p) => !p.isBanked).forEach((p) => claimed.push(p));
   }
 
   pkg.wapso.forEach((so) => claimed.push(so));
