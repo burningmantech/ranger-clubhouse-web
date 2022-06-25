@@ -28,7 +28,6 @@ export default class MeVehiclesController extends ClubhouseController {
   vehicleClassOptions = VehicleClassOptions;
 
   drivingStickerOptions = [
-    {id: 'none', title: 'None'},
     {id: 'prepost', title: 'Pre/Post'},
     {id: 'staff', title: 'Staff'},
   ];
@@ -66,7 +65,8 @@ export default class MeVehiclesController extends ClubhouseController {
       event_year: this.house.currentYear(),
       person_id: this.session.userId,
       status: 'pending',
-      vehicle_class: 'Pickup Truck'
+      vehicle_class: 'Pickup Truck',
+
     });
   }
 

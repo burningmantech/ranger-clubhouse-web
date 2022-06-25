@@ -15,8 +15,10 @@
 <p>
   More information is available in the
   <a href={{this.vehicleConfig.personal_vehicle_document_url}} target="_blank" rel="noopener noreferrer">
-    Ranger Personal Vehicle Use Procedures.
+    Ranger Personal Vehicle Use Procedures
   </a>
+  document.
+  (link opens in a new window)
 </p>
 
 {{#if (and this.motorpoolPolicySigned this.personalVehicleSigned)}}
@@ -67,9 +69,7 @@
           {{/if}}
           <dt>Driving Sticker</dt>
           <dd>
-            {{#if (eq vehicle.driving_sticker "none")}}
-              None
-            {{else if vehicle.isRejected}}
+            {{#if vehicle.isRejected}}
               Denied
             {{else if (or (eq vehicle.driving_sticker "prepost") (eq vehicle.driving_sticker "staff"))}}
               {{if vehicle.isApproved "Approved" "Awaiting approval"}}

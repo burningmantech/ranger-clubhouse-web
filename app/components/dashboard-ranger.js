@@ -484,7 +484,7 @@ export default class DashboardRangerComponent extends Component {
     } = this._processStepGroup(this.args.person.isNonRanger ? NON_RANGER_STEPS : STEPS);
 
     if (immediateSteps.length) {
-      groups.push(new StepGroup('Immediate Action Need', immediateSteps, true));
+      groups.push(new StepGroup('IMMEDIATE ACTION REQUIRED', immediateSteps, true));
     }
 
     if (!steps.length) {
