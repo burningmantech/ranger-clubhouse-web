@@ -53,7 +53,7 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
   ];
 
   drivingStickerOptions = [
-    {id: 'none', title: 'None'},
+ //   {id: 'none', title: 'None'},
     {id: 'prepost', title: 'Pre/Post'},
     {id: 'staff', title: 'Staff'},
   ];
@@ -179,7 +179,7 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
       type: 'fleet',
       event_year: this.year,
       status: 'pending',
-      driving_sticker: 'none',
+      driving_sticker: 'prepost',
       fuel_chit: 'none',
       ranger_logo: 'none',
       amber_light: 'none',

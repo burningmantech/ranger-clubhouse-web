@@ -17,7 +17,7 @@ export default class VehicleModel extends Model {
   @attr('string') vehicle_color;
   @attr('string', {defaultValue: ''}) license_number;
   @attr('string', {defaultValue: 'CA'}) license_state;
-  @attr('string', { defaultValue: 'none'}) driving_sticker;
+  @attr('string', { defaultValue: 'prepost'}) driving_sticker;
   @attr('string', {defaultValue: ''}) rental_number;
   @attr('string', {defaultValue: ''}) sticker_number;
   @attr('string', {defaultValue: 'none'}) fuel_chit;
