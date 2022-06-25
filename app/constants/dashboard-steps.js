@@ -189,20 +189,37 @@ export const VERIFY_TIMESHEETS = {
 export const VERIFY_PERSONAL_INFO = {
   skipPeriod: AFTER_EVENT,
   name: 'Review and Update Personal Information',
-  check({milestones}) {
+  check({milestones, isPNV}) {
     if (milestones.has_reviewed_pi) {
       return {result: COMPLETED};
     }
 
+    let shirtNag = '', result, doTheThing = '', immediate = false;
+
+    if (isPNV) {
+      result = ACTION_NEEDED;
+    }else {
+      // javascript dates start from zero (meh). If it's June or later, crank up the annoyance dial.
+      doTheThing = 'You have not verified your personal information and/or Ranger shirt sizes yet.';
+      if ((new Date()).getMonth() >= 5) {
+        immediate = true;
+        result = URGENT;
+        doTheThing = `<b class="text-danger">${doTheThing}</b>`;
+      }
+      doTheThing = `<p>${doTheThing}</p>`;
+      shirtNag = ' <b>BE SURE TO CONFIRM YOUR RANGER SHIRT SIZES ARE CORRECT.</b>'
+    }
+
     return {
-      result: ACTION_NEEDED,
+      result,
       route: 'me.personal-info',
+      immediate,
       linkedMessage: {
         route: 'me.personal-info',
-        prefix: 'Visit',
+        prefix: htmlSafe(doTheThing + 'Visit'),
         text: 'Me > Personal Info',
-        suffix: 'and click the Update button at the bottom of the page to save your changes ' +
-          'or to verify that the existing information is correct.',
+        suffix: htmlSafe('and click the Update button at the bottom of the page to save your changes ' +
+          'or to verify that the existing information is correct.' + shirtNag),
       },
     };
   }
