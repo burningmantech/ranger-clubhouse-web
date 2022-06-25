@@ -222,6 +222,7 @@ Router.map(function () {
       this.route('index', {path: '/'});
       this.route('expiring');
       this.route('trs');
+      this.route('statistics');
     });
     this.route('bmid');
     this.route('bmid-sanity-check');
