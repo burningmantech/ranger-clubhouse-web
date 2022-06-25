@@ -4,8 +4,8 @@ import {tracked} from '@glimmer/tracking';
 import {States, CanadianProvinces} from 'clubhouse/constants/countries';
 import {debounce} from '@ember/runloop';
 import {validatePresence} from 'ember-changeset-validations/validators';
-import { VehicleClassOptions } from 'clubhouse/constants/vehicles';
-import { isEmpty } from '@ember/utils';
+import {VehicleClassOptions} from 'clubhouse/constants/vehicles';
+import {isEmpty} from '@ember/utils';
 import RSVP from 'rsvp';
 
 export default class ReportsPersonVehiclesController extends ClubhouseController {
@@ -17,9 +17,9 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
   @tracked typeFilter = 'all';
 
   filterTypeOptions = [
-    { id: 'all', title: 'All' },
-    { id: 'fleet', title: 'Fleet' },
-    { id: 'personal', title: 'Personal' },
+    {id: 'all', title: 'All'},
+    {id: 'fleet', title: 'Fleet'},
+    {id: 'personal', title: 'Personal'},
   ];
 
   stateOptions = [
@@ -40,8 +40,8 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
   ];
 
   typeOptions = [
-    { id: 'fleet', title: 'Fleet' },
-    { id: 'personal', title: 'Personal' },
+    {id: 'fleet', title: 'Fleet'},
+    {id: 'personal', title: 'Personal'},
   ];
 
   vehicleClassOptions = VehicleClassOptions;
@@ -53,7 +53,7 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
   ];
 
   drivingStickerOptions = [
- //   {id: 'none', title: 'None'},
+    //   {id: 'none', title: 'None'},
     {id: 'prepost', title: 'Pre/Post'},
     {id: 'staff', title: 'Staff'},
   ];
@@ -119,8 +119,8 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
   };
 
   vehicleTypeOptions = [
-    [ 'Personal Vehicle', 'personal' ],
-    [ 'Fleet Vehicle', 'fleet' ],
+    ['Personal Vehicle', 'personal'],
+    ['Fleet Vehicle', 'fleet'],
   ];
 
   get viewVehicles() {
@@ -145,13 +145,13 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
       case 'fleet':
         vehicles = vehicles.filter((v) => v.isFleet);
         break;
-     }
+    }
 
 
     if (this.numberFilter) {
       const number = this.numberFilter.toLocaleLowerCase();
       vehicles = vehicles.filter((v) =>
-        ( (!isEmpty(v.sticker_number) && v.sticker_number.toLowerCase().indexOf(number) !== -1)
+        ((!isEmpty(v.sticker_number) && v.sticker_number.toLowerCase().indexOf(number) !== -1)
           || (!isEmpty(v.license_number) && v.license_number.toLowerCase().indexOf(number) !== -1)
           || (!isEmpty(v.rental_number) && v.rental_number.toLowerCase().indexOf(number) !== -1)
         )
@@ -159,7 +159,7 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
     }
 
     vehicles = vehicles.toArray();
-    vehicles.sort((a,b) => {
+    vehicles.sort((a, b) => {
       const aName = a.isFleet ? (isEmpty(a.team_assignment) ? '1A' : a.team_assignment) : a.person.callsign;
       const bName = b.isFleet ? (isEmpty(b.team_assignment) ? '1A' : b.team_assignment) : b.person.callsign;
 
@@ -203,6 +203,9 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
     }
 
     const isNew = this.entry.isNew;
+    if (model.type === 'fleet') {
+      model.driving_sticker = 'staff';
+    }
     this.house.saveModel(model, 'Vehicle successfully saved',
       () => {
         this.entry = null;
@@ -260,7 +263,7 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
       {key: 'vehicle_make', title: 'Vehicle Make'},
       {key: 'vehicle_model', title: 'Vehicle Model'},
       {key: 'vehicle_color', title: 'Vehicle Color'},
-      {key: 'rental_number', title: 'Rental #' },
+      {key: 'rental_number', title: 'Rental #'},
       {key: 'driving_sticker', title: 'Driving Sticker'},
       {key: 'sticker_number', title: 'Sticker #'},
       {key: 'license_state', title: 'License State'},
@@ -269,8 +272,8 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
       {key: 'fuel_chit', title: 'Fuel Chit'},
       {key: 'amber_light', title: 'Amber Light'},
       {key: 'notes', title: 'Notes'},
-      {key: 'response', title: 'Response to person' },
-      {key: 'request_comment', title: 'Requester Comment' },
+      {key: 'response', title: 'Response to person'},
+      {key: 'request_comment', title: 'Requester Comment'},
     ];
 
     const rows = this.viewVehicles.map((v) => {

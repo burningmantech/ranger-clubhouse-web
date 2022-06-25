@@ -271,11 +271,18 @@
           <fieldset>
             <legend>Personal Vehicle Use Items (Stickers &amp; Other Items)</legend>
             <FormRow>
-              <f.radioGroup @name="driving_sticker"
-                            @label="Driving Sticker"
-                            @fixedLabel={{true}}
-                            @options={{this.drivingStickerOptions}}
-                            @inline={{true}}/>
+              {{#if (eq f.model.type "personal")}}
+                <f.radioGroup @name="driving_sticker"
+                              @label="Driving Sticker"
+                              @fixedLabel={{true}}
+                              @options={{this.drivingStickerOptions}}
+                              @inline={{true}}/>
+              {{else}}
+                <FormLabel @fixed={{true}}>Driving Sticker</FormLabel>
+                <div class="col-auto mt-2">
+                  Rental vehicle always have staff stickers.
+                </div>
+              {{/if}}
             </FormRow>
             <FormRow>
               <f.radioGroup @name="ranger_logo"
