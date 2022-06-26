@@ -53,13 +53,13 @@
   }
 
   .vehicle-registry-person {
-    width: 10%;
+    width: 8%;
   }
   .vehicle-registry-status {
-    width: 5%;
+    width: 7%;
   }
   .vehicle-registry-vehicle {
-    width: 15%;
+    width: 17%;
 
   }
   .vehicle-registry-rental {
@@ -71,13 +71,13 @@
 
   }
   .vehicle-registry-driving-number {
-    width: 10%;
+    width: 8%;
 
   }
 
   .vehicle-registry-logo {
     text-align: center;
-    width: 5%;
+    width: 8%;
 
   }
   .vehicle-registry-fuel-chit {
@@ -91,7 +91,7 @@
   }
   .vehicle-registry-mvr {
     text-align: center;
-    width: 5%;
+    width: 4%;
 
   }
   .vehicle-registry-motorpool {
@@ -100,11 +100,11 @@
 
   }
   .vehicle-registry-action {
-    width: 10%;
+    width: 8%;
   }
 }
 
-@include media-breakpoint-down(lg) {
+@include media-breakpoint-down(xl) {
   .vehicle-registry-header {
     display: none !important;
   }

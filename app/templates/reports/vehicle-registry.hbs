@@ -179,7 +179,7 @@
 
 {{#if this.entry}}
   <ModalDialog @title="{{if this.entry.isNew "Create" "Update"}} Personal Vehicle"
-               @onEscape={{this.cancelAction}} as |Modal|>
+               @onEscape={{this.cancelAction}} @size="xl" as |Modal|>
     <ChForm @formId="vehicle"
             @formFor={{this.entry}}
             @validator={{this.vehicleValidations}}
@@ -210,11 +210,10 @@
                           @noResultsText="No callsigns found"
                 />
               {{else}}
-                <f.text
-                  @name="team_assignment"
-                  @label="Team Assignment"
-                  @size={{10}}
-                  @fieldSize="sm"/>
+                <f.text @name="team_assignment"
+                        @label="Team Assignment"
+                        @size={{10}}
+                        @fieldSize="sm"/>
               {{/if}}
             </FormRow>
           </fieldset>
@@ -225,8 +224,6 @@
                         @label="Class"
                         @options={{this.vehicleClassOptions}}
                         @fieldSize="sm"/>
-            </FormRow>
-            <FormRow>
               <f.text @name="vehicle_year"
                       @label="Year"
                       @size={{4}}
@@ -271,18 +268,11 @@
           <fieldset>
             <legend>Personal Vehicle Use Items (Stickers &amp; Other Items)</legend>
             <FormRow>
-              {{#if (eq f.model.type "personal")}}
-                <f.radioGroup @name="driving_sticker"
-                              @label="Driving Sticker"
-                              @fixedLabel={{true}}
-                              @options={{this.drivingStickerOptions}}
-                              @inline={{true}}/>
-              {{else}}
-                <FormLabel @fixed={{true}}>Driving Sticker</FormLabel>
-                <div class="col-auto mt-2">
-                  Rental vehicle always have staff stickers.
-                </div>
-              {{/if}}
+              <f.radioGroup @name="driving_sticker"
+                            @label="Driving Sticker"
+                            @fixedLabel={{true}}
+                            @options={{this.drivingStickerOptions}}
+                            @inline={{true}}/>
             </FormRow>
             <FormRow>
               <f.radioGroup @name="ranger_logo"
@@ -337,26 +327,24 @@
             </FormRow>
           </fieldset>
         {{else}}
-          <h3 class="ms-2">
+          <h3>
             {{this.entry.person.callsign}}
             - {{this.entry.vehicle_year}} {{this.entry.vehicle_make}} {{this.entry.vehicle_model}} {{this.entry.vehicle_color}}
             Lic #{{this.entry.license_number}}
           </h3>
-          <p class="ms-2">
-            {{#if this.entry.isApproved}}
-              <b class="text-success"> {{fa-icon "check"}} Request has been approved for the following items:</b>
-            {{else if this.entry.isRejected}}
-              <b class="text-danger">{{fa-icon "exclamation-triangle"}} Request has been denied. DO NOT ISSUE ANY
-                STICKERS/ITEMS.</b>
-            {{else}}
-              <b class="text-danger">{{fa-icon "exclamation"}} Vehicle request is pending review. Wait for approval
-                before issuing items.</b>
-            {{/if}}
-          </p>
+          {{#if this.entry.isApproved}}
+            <b class="text-success"> {{fa-icon "check"}} Request has been approved for the following items:</b>
+          {{else if this.entry.isRejected}}
+            <b class="text-danger">{{fa-icon "exclamation-triangle"}} Request has been denied. DO NOT ISSUE ANY
+              STICKERS/ITEMS.</b>
+          {{else}}
+            <b class="text-danger">{{fa-icon "exclamation"}} Vehicle request is pending review. Wait for approval
+              before issuing items.</b>
+          {{/if}}
           {{#unless this.entry.isRejected}}
-            <p class="ms-2">
+            <p>
               <b>Driving sticker:</b>
-              {{#if (eq this.entry.ranger_logo "none")}}
+              {{#if (eq this.entry.driving_sticker "none")}}
                 <i>none</i>
               {{else}}
                 {{get this.drivingStickerLabels this.entry.driving_sticker}}
@@ -384,19 +372,27 @@
             </p>
           {{/unless}}
           {{#if this.entry.response}}
-            <div class="border p-1 ms-2">
+            <div class="border p-2">
               <b>Response from Approver</b><br>
               {{this.entry.response}}
             </div>
           {{/if}}
 
-          {{#if (and this.entry.isApproved (not-eq this.entry.driving_sticker "none"))}}
-            <FormRow>
-              <f.text @name="sticker_number"
-                      @label="Enter Driving Sticker #"
-                      @size={{10}}
-                      @autofocus={{true}}/>
-            </FormRow>
+          {{#if this.entry.isApproved}}
+            {{#if (not-eq this.entry.driving_sticker "none")}}
+              <FormRow @class="mt-3">
+                <f.text @name="sticker_number"
+                        @label="Enter {{get this.drivingStickerLabels this.entry.driving_sticker}} Sticker #"
+                        @size={{15}}
+                        @autofocus={{true}}
+                />
+              </FormRow>
+
+            {{else}}
+              <div class="mt-2">
+                <b>No driving sticker has been requested.</b>
+              </div>
+            {{/if}}
           {{/if}}
         {{/if}}
 
