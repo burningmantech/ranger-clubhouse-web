@@ -53,7 +53,7 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
   ];
 
   drivingStickerOptions = [
-    //   {id: 'none', title: 'None'},
+    {id: 'none', title: 'None'},
     {id: 'prepost', title: 'Pre/Post'},
     {id: 'staff', title: 'Staff'},
   ];
