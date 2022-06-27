@@ -37,17 +37,15 @@
                   @maxlength={{5}}
           />
         </FormRow>
-        <FormRow>
-          <UiButton @disabled={{this.isSubmitting}}
-                    @onClick={{fn this.confirmCodeAction f.model "off-playa"}}>
-            Verify
-          </UiButton>
-          <UiButton @type="secondary"
-                    @class="ms-2"
-                    @onClick={{fn this.sendNewCodeAction "off-playa"}} @disabled={{this.isSubmitting}}>
-            Resend verification code
-          </UiButton>
-        </FormRow>
+        <UiButton @disabled={{this.isSubmitting}}
+                  @onClick={{fn this.confirmCodeAction f.model "off-playa"}}>
+          Verify
+        </UiButton>
+        <UiButton @type="secondary"
+                  @class="ms-2"
+                  @onClick={{fn this.sendNewCodeAction "off-playa"}} @disabled={{this.isSubmitting}}>
+          Resend verification code
+        </UiButton>
       {{/if}}
       {{#if (and (not this.numbers.is_same) this.numbers.on_playa.phone (not this.numbers.on_playa.is_verified))}}
         <FormRow>

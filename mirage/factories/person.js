@@ -52,10 +52,10 @@ export default Factory.extend({
     return faker.address.zipCode();
   },
   home_phone() {
-    return faker.phone.phoneNumber();
+    return faker.phone.number();
   },
   alt_phone() {
-    return faker.phone.phoneNumber();
+    return faker.phone.number();
   },
   create_date() {
     return dayjs().format('YYYY-MM-DD hh:mm:ss');
