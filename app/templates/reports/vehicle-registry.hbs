@@ -333,13 +333,15 @@
             Lic #{{this.entry.license_number}}
           </h3>
           {{#if this.entry.isApproved}}
-            <b class="text-success"> {{fa-icon "check"}} Request has been approved for the following items:</b>
+            <b class="text-success">{{fa-icon "check"}} Request has been approved for the following items:</b>
           {{else if this.entry.isRejected}}
-            <b class="text-danger">{{fa-icon "exclamation-triangle"}} Request has been denied. DO NOT ISSUE ANY
-              STICKERS/ITEMS.</b>
+            <b class="text-danger">
+              {{fa-icon "exclamation-triangle"}} Request has been denied. DO NOT ISSUE ANY STICKERS/ITEMS.
+            </b>
           {{else}}
-            <b class="text-danger">{{fa-icon "exclamation"}} Vehicle request is pending review. Wait for approval
-              before issuing items.</b>
+            <b class="text-danger">
+              {{fa-icon "exclamation"}} Vehicle request is pending review. Wait for approval before issuing items.
+            </b>
           {{/if}}
           {{#unless this.entry.isRejected}}
             <p>
@@ -382,12 +384,11 @@
             {{#if (not-eq this.entry.driving_sticker "none")}}
               <FormRow @class="mt-3">
                 <f.text @name="sticker_number"
-                        @label="Enter {{get this.drivingStickerLabels this.entry.driving_sticker}} Sticker #"
+                        @label="Enter Staff Driving Sticker #"
                         @size={{15}}
                         @autofocus={{true}}
                 />
               </FormRow>
-
             {{else}}
               <div class="mt-2">
                 <b>No driving sticker has been requested.</b>
