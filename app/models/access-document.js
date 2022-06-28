@@ -54,6 +54,25 @@ export const TypeLabels = {
   [WET_SPOT_POG]: 'Wet Spot Pog (Org Showers)'
 };
 
+export const TypeShortLabels = {
+  [STAFF_CREDENTIAL]: 'SC',
+  [RPT]: 'RPT',
+  [GIFT_TICKET]: 'GIFT',
+  [VEHICLE_PASS]: 'VP',
+  [WAP]: 'WAP',
+  [WAPSO]: 'WAPSO',
+
+  [ALL_EAT_PASS]: 'ALL-EAT',
+  [EVENT_EAT_PASS]: 'EVENT-EAT',
+  [PRE_EVENT_EAT_PASS]: 'PRE-EAT',
+  [POST_EVENT_EAT_PASS]: 'POST-EAT',
+  [PRE_EVENT_EVENT_EAT_PASS]: 'PRE+EVENT-EAT',
+  [EVENT_POST_EAT_PASS]: 'EVENT+POST-EAT',
+
+  [EVENT_RADIO]: 'RADIO',
+  [WET_SPOT]: 'WETSPOT',
+};
+
 export const DeliveryMethodLabels = {
   [DELIVERY_EMAIL]: 'Email',
   [DELIVERY_POSTAL]: 'US Mail',

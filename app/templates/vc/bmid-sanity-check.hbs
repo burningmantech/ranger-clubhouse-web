@@ -1,9 +1,15 @@
 <main>
   <h1>Sanity Check {{this.year}} BMIDs</h1>
   <p>
-    <LinkTo @route="vc.bmid-print">Print via Lambase</LinkTo>
-    |
-    <LinkTo @route="vc.bmid">Manage BMIDs</LinkTo>
+  <ul class="list-inline">
+    <li class="list-inline-item">Navigation:</li>
+    <li class="list-inline-item">
+      <LinkTo @route="vc.bmid">{{fa-icon "id-card"}} Manage BMIDs</LinkTo>
+    </li>
+    <li class="list-inline-item">
+      <LinkTo @route="vc.bmid-print">{{fa-icon "print"}} Export To Marcato</LinkTo>
+    </li>
+  </ul>
   </p>
 
   <div class="max-width-1200">
@@ -50,12 +56,10 @@
                   {{mail-to person.email}}
                 </td>
                 <td class="w-20">
-                  <LinkTo @route="person.index" @model={{person.id}} class="btn btn-secondary btn-sm me-1">View</LinkTo>
-                  <LinkTo @route="person.schedule" @model={{person.id}} class="btn btn-secondary btn-sm me-1">Schedule
-                  </LinkTo>
-                  <LinkTo @route="person.access-documents" @model={{person.id}} class="btn btn-secondary btn-sm me-1">
-                    Access
-                    Docs
+                  <LinkTo @route="person.schedule" @model={{person.id}} class="me-1">Schedule</LinkTo>
+                  |
+                  <LinkTo @route="person.access-documents" @model={{person.id}} class="me-1">
+                    Access Docs
                   </LinkTo>
                 </td>
               </tr>

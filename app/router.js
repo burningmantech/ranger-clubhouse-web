@@ -223,6 +223,7 @@ Router.map(function () {
       this.route('expiring');
       this.route('trs');
       this.route('statistics');
+      this.route('waps');
     });
     this.route('bmid');
     this.route('bmid-sanity-check');
