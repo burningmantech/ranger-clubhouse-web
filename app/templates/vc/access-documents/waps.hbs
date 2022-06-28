@@ -1,0 +1,55 @@
+<h1>Ranger WAP Candidates</h1>
+
+{{#if this.people}}
+  {{pluralize this.people.length "person"}} may need a WAP
+  <table class="table table-width-auto table-sm table-striped table-hover">
+    <thead>
+    <tr>
+      <th>Person</th>
+      <th>Status</th>
+      <th>Has RPT?</th>
+      <th>Years worked {{this.startYear}} &amp; later</th>
+      <th>Schedule</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {{#each this.people as |person|}}
+      <tr>
+        <td>
+          <PersonLink @person={{person}} />
+        </td>
+        <td>{{person.status}}</td>
+        <td>
+          {{#if person.has_rpt}}
+            {{#each person.tickets as |ticket|}}
+              RAD-{{ticket.id}} {{or (get this.typeShortLabels ticket.type) ticket.type}} {{ticket.status}}<br>
+            {{/each}}
+          {{else}}
+            NO RPT
+          {{/if}}
+        </td>
+        <td>
+          {{#if person.years}}
+            {{join person.years ", "}}
+          {{else}}
+            No Years
+          {{/if}}
+        </td>
+        <td>
+          {{#if person.schedule}}
+            {{person.schedule.length}} sign up(s):<br>
+            {{#each person.schedule as |slot|}}
+              {{slot.begins}} {{slot.position_title}} {{slot.description}}<br>
+            {{/each}}
+          {{else}}
+            No Sign Ups
+          {{/if}}
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <b class="text-success">Congratulations! No Ranger appears to need a WAP at this moment.</b>
+{{/if}}

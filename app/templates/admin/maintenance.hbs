@@ -179,7 +179,7 @@
         </p>
       {{/if}}
     {{else if (eq this.taskAction "set-staff-credentials-access-date")}}
-      {{#if this.results.people}}
+      {{#if this.results.access_documents}}
         <p>
           {{pluralize this.results.access_documents.length "staff credential"}}
           {{if (eq this.results.people.length 1) "has" "have"}} been set the access date of
