@@ -34,33 +34,21 @@
         timesheet is accurate.
       </p>
     {{else}}
-      <ChForm @formId="confirm"
-              @formFor={{this.confirmForm}}
-              @onSubmit={{this.confirmAction}} as |f|>
-        <p class="ms-2">
-          By checking the box below, you are agreeing to:
-        </p>
-        <ul>
-          <li>All your timesheet entries have been reviewed.</li>
-          <li>The entries are correct.</li>
-          <li>There are no outstanding corrections or missing entry requests waiting for HQ review.</li>
-          <li>You do not plan to submit any additional corrections and/or missing entry requests for
-            your {{this.timesheetInfo.correction_year}} timesheet.
-          </li>
-        </ul>
-        <FormRow>
-          <div class="col-auto">
-            <f.checkbox @name="confirm"
-                        @label="I have reviewed and verified that my timesheet for {{this.timesheetInfo.correction_year}} is accurate and does not require any changes."/>
-          </div>
-        </FormRow>
-        <div class="mt-3">
-          <f.submit @label="Submit Confirmation" @disabled={{this.isSubmitting}} />
-          {{#if this.isSubmitting}}
-            <LoadingIndicator/>
-          {{/if}}
-        </div>
-      </ChForm>
+      <p class="ms-2">
+        By checking the button below, you are agreeing to:
+      </p>
+      <ul>
+        <li>All your {{this.timesheetInfo.correction_year}} timesheet entries have been reviewed.</li>
+        <li>The entries are correct.</li>
+        <li>There are no outstanding corrections or missing entry requests waiting for HQ review.</li>
+        <li>You do not plan to submit any additional corrections and/or missing entry requests for
+          your {{this.timesheetInfo.correction_year}} timesheet.
+        </li>
+      </ul>
+
+      <UiButton @onClick={{this.confirmAction}}>
+        I have reviewed and verified that my timesheet is accurate and does not require any changes.
+      </UiButton>
     {{/if}}
   </:body>
 </UiSection>
@@ -72,3 +60,9 @@
     </LinkTo>
   </div>
 </div>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Please wait, recording your response.
+  </LoadingDialog>
+{{/if}}
