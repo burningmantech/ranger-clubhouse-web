@@ -44,16 +44,17 @@
     {{else if (not this.timesheetInfo.timesheet_confirmed)}}
       <ChNotice @type="danger" @icon="hand-point-right"
                 @title="Final Confirmation Requested">
-        It appears all of your timesheet entries have been reviewed and there are no outstanding
-        correction requests. Let us know you are finished submitting corrections.
+        Please indicate you are done with submitted corrections. It appears all of your timesheet entries have been
+        reviewed and there are no outstanding
+        correction requests.
         Go to
         <LinkTo @route="me.timesheet-corrections.confirm">Final Confirmation</LinkTo>
-        to do this.
+        to finalize your timesheet.
       </ChNotice>
     {{/if}}
     {{outlet}}
   {{/if}}
 {{else}}
   <p class="text-danger"><b>Timesheet corrections are not permitted at this time.</b></p>
-    Contact {{general-support-email}} if you have questions or concerns about your timesheet.
+  Contact {{general-support-email}} if you have questions or concerns about your timesheet.
 {{/if}}

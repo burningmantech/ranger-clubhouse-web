@@ -41,7 +41,8 @@ then let them know what's up.
                      @debugUpdateAction={{this.debugUpdateAction}} />
   {{/if}}
 {{/if}}
-<UiSection>
+
+<UiSection id="contacts">
   <:title>Need Help?</:title>
   <:body>
     <p>
@@ -58,12 +59,12 @@ then let them know what's up.
       Contact the Tech Ninjas for Clubhouse technical support:<br>
       {{admin-email}}
     </p>
-
-    {{#if this.showUploadDialog}}
-      <PhotoUpload @person={{this.person}}
-                   @photo={{this.photo}}
-                   @refreshPhoto={{this.refreshPhoto}}
-                   @closeAction={{this.closeUploadDialogAction}} />
-    {{/if}}
   </:body>
 </UiSection>
+
+{{#if this.showUploadDialog}}
+  <PhotoUpload @person={{this.person}}
+               @photo={{this.photo}}
+               @refreshPhoto={{this.refreshPhoto}}
+               @closeAction={{this.closeUploadDialogAction}} />
+{{/if}}
