@@ -25,7 +25,6 @@
                   @disabled={{this.isSubmitting}}>
           Correct Position
         </UiButton>
-
       </td>
       <td>{{shift-format @onDutyEntry.on_duty}}</td>
       <td class="text-end">
@@ -46,6 +45,14 @@
     </tr>
     </tbody>
   </table>
+  {{#if this.mayNotNeedRadio}}
+    <p>
+      <b class="text-danger">
+        {{fa-icon "arrow-right"}} {{@person.callsign}} is working a Burn Perimeter shift and may not need a radio.
+        Check with the HQ Short or Lead if in doubt.
+      </b>
+    </p>
+  {{/if}}
   {{#unless @onDutyEntry.position.count_hours}}
     Note:
     <NoAppreciateIcon/> = {{@onDutyEntry.position.title}} hours do not count towards appreciations.
@@ -120,7 +127,7 @@
           {{#unless slot.is_within_start_time}}
             <tr>
               <td colspan="5" class="text-danger">
-                <b>WARNING: Most shifts may only be signed into within 15 minutes of the actual start time.<br>
+                <b>WARNING: Most shifts may only be signed in to within 15 minutes of the actual start time.<br>
                   Suggest to {{@person.callsign}} they come back in {{pluralize slot.can_start_in "minute"}} to start
                   their shift.</b>
               </td>
@@ -129,8 +136,7 @@
         {{/each}}
         </tbody>
       </table>
-
-      <p class="mt-2 mb-2">Use the upcoming shift to sign in <b>OR</b> a specific position can be signed into below:</p>
+      <p class="mt-2 mb-2">Use the upcoming shift to sign in <b>OR</b> a specific position can be signed in to below:</p>
     {{/if}}
 
     <FormRow>

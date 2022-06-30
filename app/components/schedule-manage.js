@@ -51,18 +51,7 @@ export default class ScheduleManageComponent extends Component {
       }
     });
 
-    /*
-     * Filter out what the person can actual see based on their roles.
-     * TODO Revisit whether everyone should be able to see inactive slots if they choose.
-     */
-
-  /*  if (this.session.hasRole(
-      [Role.ADMIN, Role.EDIT_SLOTS, Role.GRANT_POSITION, Role.VC, Role.TRAINER, Role.ART_TRAINER])) {
-      this.availableSlots = slots;
-    } else {*/
-      this.availableSlots = slots.filter((slot) => slot.slot_active);
-   /* }*/
-
+    this.availableSlots = slots.filter((slot) => slot.slot_active);
     this.inactiveSlots = this.availableSlots.filter((slot) => !slot.slot_active);
     this.isCurrentYear = (+year === this.house.currentYear());
     if (!this.isCurrentYear) {
@@ -193,7 +182,7 @@ export default class ScheduleManageComponent extends Component {
           // training in the morning and then Dirt Training in the afternoon. However, most Dirt Trainings are
           // scheduled to start in the morning even tho veterans only have to attend the afternoon portion.
           slot.is_training_overlap = true;
-          prevSlot.is_training_overlap =  true;
+          prevSlot.is_training_overlap = true;
         } else {
           slot.is_overlapping = true;
           prevSlot.is_overlapping = true;

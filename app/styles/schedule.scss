@@ -1,7 +1,7 @@
 .schedule-table {
   margin-bottom: 10px;
   font-size: 0.95em;
-  max-width: 1100px;
+  max-width: 1200px;
 }
 
 
@@ -28,11 +28,14 @@
   width: 100%;
   align-items: center;
 
-
   > div {
     display: inline-block;
     margin-top: 5px;
   }
+}
+
+.schedule-itinerary .schedule-row {
+  align-items: start;
 }
 
 .schedule-row:hover {
@@ -58,7 +61,7 @@
     text-align: center;
   }
   .schedule-time {
-    width: 24%;
+    width: 26%;
   }
 
   .schedule-duration {
@@ -67,7 +70,7 @@
   }
 
   .schedule-credits {
-    width: 8%;
+    width: 7%;
     text-align: right;
   }
 
@@ -90,7 +93,6 @@
 
   .schedule-signups {
     width: 10%;
-    text-align: center;
   }
 
   .schedule-total {
@@ -102,10 +104,15 @@
 
   .schedule-actions {
     margin-left: 10px;
+    align-self: center;
   }
 }
 
 @media not print {
+  .schedule-signed-up {
+    background-color: #fcf8e3 !important;
+  }
+
   @media (max-width: map-get($grid-breakpoints, "lg")) {
     .schedule-table {
       font-size: 1rem;

@@ -56,7 +56,7 @@
               Click on the position title to show the available shifts.
             </p>
             <div>
-              <b>Showing {{this.viewSlots.length}} of {{this.availableSlots.length}}.</b>
+              <b>Showing {{this.viewSlots.length}} of {{pluralize this.availableSlots.length "shift"}}.</b>
               {{#if (not-eq this.viewSlots.length this.availableSlots.length)}}
                 <b> Adjust the day filter above to show prior shifts &amp; trainings.</b>
               {{/if}}
