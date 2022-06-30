@@ -29,11 +29,12 @@
 
 <UiSection>
   <:title>
-    Timesheet Entry Verification -
     {{#if this.hasUnverifiedTimesheet}}
-      <span class="text-danger">{{pluralize this.unverifiedTimesheets.length "entry" }}</span>
+      <span class="text-danger">
+        Timesheet Entry Verification Needed for {{pluralize this.unverifiedTimesheets.length "entry" }}
+      </span>
     {{else}}
-      No Action Needed
+      Timesheet Entry Verification - No Action Needed
     {{/if}}
     <HelpPopover @slug="hq-timesheet-verification"/>
   </:title>
@@ -110,7 +111,6 @@
   <:title>
     Shift Check In/Out
     <HelpPopover @slug="hq-shift-management"/>
-
   </:title>
   <:body>
     <ShiftCheckInOut @positions={{this.positions}}
@@ -184,7 +184,7 @@
       <h4 class="text-danger">{{fa-icon "exclamation-triangle"}} Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE
         RADIOS</h4>
       <p>
-        Direct {{this.person.callsign}} to the kiosk shack so they can login into the Clubhouse, review and sign
+        Direct {{this.person.callsign}} to the kiosk shack, so they can log in into the Clubhouse, review and sign
         the agreement.
       </p>
 
@@ -209,6 +209,10 @@
         authorized for {{pluralize this.eventInfo.radio_max "event radio"}}.
       {{else}}
         only authorized for SHIFT RADIOS.
+        {{#if this.mayNotNeedRadio}}
+          <br>
+          <b class="text-danger">{{this.person.callsign}} is working a Burn Perimeter shift and may not need a radio. Check with the HQ Short or Lead if in doubt.</b>
+        {{/if}}
       {{/if}}
     </div>
 
@@ -220,7 +224,7 @@
     {{/if}}
 
     <HqAssetTable @assetsCheckedOut={{this.assetsCheckedOut}}
-                  @attachments={{this.attachments}} />
+                  @attachments={{this.attachments}}/>
 
     <div>
       {{#if this.assets.isUpdating}}

@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {validatePresence} from 'ember-changeset-validations/validators';
-import {ALPHA} from 'clubhouse/constants/positions';
+import {ALPHA, BURN_PERIMETER} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 
 export default class HqShiftController extends ClubhouseController {
@@ -104,6 +104,17 @@ export default class HqShiftController extends ClubhouseController {
     } else {
       return eventInfo.radio_max;
     }
+  }
+
+  /**
+   * Check to see if the person may not need a radio for the shift.
+   * (i.e. working a Burn Perimeter shift)
+   *
+   * @returns {boolean}
+   */
+
+  get mayNotNeedRadio() {
+    return !!(this.onDutyEntry?.position_id === BURN_PERIMETER);
   }
 
   /**

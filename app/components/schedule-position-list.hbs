@@ -35,12 +35,12 @@
           <div class="schedule-actions">Actions</div>
         </div>
         {{#each @position.slots key="id" as |slot|}}
-          <div class="schedule-row {{if slot.person_assigned "table-success"}}" id="slot-{{slot.id}}">
+          <div class="schedule-row {{if slot.person_assigned "schedule-signed-up"}}" id="slot-{{slot.id}}">
             <div class="schedule-icon">
               {{#if slot.person_assigned}}
-                {{fa-icon "check" title="You are signed up for this shift."}}
+                {{fa-icon "check"}}
               {{else if (not slot.slot_active)}}
-                {{fa-icon "times" title="Shift is inactive and may not be signed up for" color="danger"}}
+                {{fa-icon "times"color="danger"}}
               {{else}}
                 &nbsp;
               {{/if}}

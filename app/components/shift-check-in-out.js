@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import {set} from '@ember/object';
 import {action} from '@ember/object';
 import {service} from '@ember/service';
-import {DIRT, DIRT_SHINY_PENNY, TRAINING} from 'clubhouse/constants/positions';
+import {DIRT, DIRT_SHINY_PENNY, TRAINING, BURN_PERIMETER} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 import {NON_RANGER} from 'clubhouse/constants/person_status';
 import {ADMIN, TIMESHEET_MANAGEMENT} from 'clubhouse/constants/roles';
@@ -108,6 +108,10 @@ export default class ShiftCheckInOutComponent extends Component {
 
     this.userCanForceCheckIn = this.session.hasRole([ADMIN, TIMESHEET_MANAGEMENT]);
 
+  }
+
+  get mayNotNeedRadio() {
+    return this.args.onDutyEntry?.position_id === BURN_PERIMETER;
   }
 
   /**
