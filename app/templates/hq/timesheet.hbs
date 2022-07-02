@@ -1,19 +1,13 @@
-<h3 class="d-print-none">Timesheet Entries
-  <HelpPopover @slug="hq-timesheet-entries"/>
-</h3>
-
 <h1 class="d-none d-print-block">{{this.year}} Timesheet Entries For {{this.person.callsign}}</h1>
 
-{{#if this.timesheets}}
-  <Me::TimesheetReviewCommon @timesheets={{this.timesheets}}
-                             @timesheetSummary={{this.timesheetSummary}}
-                             @timesheetInfo={{this.timesheetInfo}}
-                             @person={{this.person}} />
-{{else}}
-  <p class="text-danger">
-    No timesheet entries were found.
-  </p>
-{{/if}}
+<Me::TimesheetReviewCommon @timesheets={{this.timesheets}}
+                           @timesheetSummary={{this.timesheetSummary}}
+                           @timesheetInfo={{this.timesheetInfo}}
+                           @person={{this.person}}
+                           @isHQView={{true}}
+  @year={{this.year}}
+/>
+
 
 <UiSection>
   <:title>

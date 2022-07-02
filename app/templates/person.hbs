@@ -90,8 +90,11 @@
       </div>
     {{else if this.person.needsBpguid}}
       <div class="h4 person-manage-info text-danger">
-        Account does not have a Burner Profile ID on file. Signups and ticketing are disabled.
+        Account does not have a Burner Profile ID (BPGUID) on file. Signups and ticketing are disabled.
       </div>
+    <div>
+      Contact the Volunteer Coordinators at {{vc-email}} for assistance with obtaining a BPGUID.
+    </div>
     {{/if}}
   </div>
 

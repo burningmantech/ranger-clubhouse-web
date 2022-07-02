@@ -20,8 +20,7 @@ const EventOptions = [
   ['Schedule Updates', 'person-slot-%'],
   ['Setting Changes', 'setting-%'],
   ['Slot Changes', 'slot-%'],
-  ['Status Changes', 'person-status-change'],
-  ['Ticketing Changes', 'access-document-%']
+  ['Ticketing/Provision Changes', 'access-document-%']
 ];
 
 const SortOptions = [

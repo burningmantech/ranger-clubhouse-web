@@ -281,7 +281,7 @@ const STEPS = [
       }
 
       return {
-        result: ACTION_NEEDED,
+        result: milestones.online_training_passed ? URGENT : ACTION_NEEDED,
         message: 'Since you have not Rangered in a while, you will need to walk a Cheetah Cub shift before returning to Active status. Email the Mentor Cadre to sign up for one.',
         email: 'MentorEmail'
       };

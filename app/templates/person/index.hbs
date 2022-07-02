@@ -18,7 +18,7 @@
     <UiSection>
       <:title>General Account Info</:title>
       <:body>
-        {{#if (has-role "admin" "mentor" "vc")}}
+        {{#if this.isAdminMentorOrVC}}
           <Person::FullForm @person={{this.person}}
                             @savePersonAction={{this.savePersonAction}}
                             @callsignApprovedOptions={{this.callsignApprovedOptions}}
