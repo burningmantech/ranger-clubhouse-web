@@ -1,7 +1,13 @@
-{{#if @timesheets}}
-  <UiSection>
-    <:title>Timesheet Entries</:title>
-    <:body>
+<UiSection>
+  <:title>
+    Timesheet Entries
+    {{#if @isHQView}}
+      for {{@person.callsign}}
+      <HelpPopover @slug="hq-timesheet-entries"/>
+    {{/if}}
+  </:title>
+  <:body>
+    {{#if @timesheets}}
       <div class="timesheet-table">
         <div class="timesheet-row timesheet-header">
           <div class="timesheet-time">From</div>
@@ -38,7 +44,7 @@
             <div class="timesheet-row d-print-none">
               <div>
                 {{#if ts.stillOnDuty}}
-                  <b>You are still on duty. You may submit a correction after the shift has ended.</b>
+                  <b class="text-danger">You are still on duty. You may submit a correction after the shift has ended.</b>
                 {{else if ts.isVerified}}
                   <span class="text-success">
                 {{fa-icon "check"}} Entry was marked correct on {{shift-format ts.verified_at}}
@@ -90,17 +96,14 @@
           </div>
         {{/each}}
       </div>
-    </:body>
-  </UiSection>
+    {{else}}
+      <b class="text-danger">No {{@year}} timesheet entries were found.</b>
+    {{/if}}
+  </:body>
+</UiSection>
+{{#if @timesheets}}
   <TimesheetSummary @summary={{@timesheetSummary}} />
   <TimesheetPositionSummary @timesheets={{@timesheets}} />
-{{else}}
-  <UiSection>
-    <:title>No timesheet entries</:title>
-    <:body>
-      <b class="text-danger">No timesheet entries were found.</b>
-    </:body>
-  </UiSection>
 {{/if}}
 
 
@@ -148,10 +151,10 @@
         {{/if}}
         <FormRow>
           <f.textarea @name="additional_notes"
-                   @label={{if this.entry.isRejected "Supply additional information for an apeal:"
-                               "Your message to the timesheet review team:"}}
-                   @cols={{80}}
-                   @rows={{3}} />
+                      @label={{if this.entry.isRejected "Supply additional information for an apeal:"
+                                  "Your message to the timesheet review team:"}}
+                      @cols={{80}}
+                      @rows={{3}} />
         </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>

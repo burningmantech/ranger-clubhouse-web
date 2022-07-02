@@ -71,7 +71,7 @@ Everyone else will see person/simple-form
   <FormRow>
     <FormLabel @fixed={{true}}>Callsign</FormLabel>
     <f.text @name="callsign"
-            @size={{35}}
+            @size={{33}}
             @maxlength={{100}}/>
     <f.select @name="callsign_approved"
               @options={{@callsignApprovedOptions}}/>
@@ -225,7 +225,7 @@ Everyone else will see person/simple-form
           </UiButton>
         {{else}}
           <UiButton @type="secondary" @class="btn-responsive" @onClick={{@confirmNoteOrMessage}}>
-            Add Note
+            Add Banner Note
           </UiButton>
         {{/if}}
       {{/if}}

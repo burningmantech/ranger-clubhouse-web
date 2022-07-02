@@ -40,7 +40,7 @@
   <div class="d-flex flex-column flex-lg-row">
     <div class="flex-lg-grow-1 order-1 order-lg-0">
       {{#if (not this.person.canStartShift)}}
-        <ChNotice @title="Account is disabled" @type="danger" @icon="ban">
+        <ChNotice @title="Account Is Disabled" @type="danger" @icon="ban">
           <p>
             {{this.person.callsign}} has the status "{{this.person.status}}" which prevents the person
             from working a shift. The HQ Window Interface cannot be used.
@@ -49,7 +49,7 @@
         </ChNotice>
       {{else if this.person.needsBpguid}}
         <ChNotice @type="danger" @icon="exclamation-triangle">
-          Account does not have Burner Profile ID on file. Shift sign ups are disabled.
+          Account does not have Burner Profile ID on file. Shift sign-ups are disabled.
         </ChNotice>
       {{else if (and this.person.isPNV (not this.userIsMentor))}}
         <ChNotice @type="danger" @icon="exclamation" @title="Direct to the Hat Rack.">
@@ -60,7 +60,7 @@
       {{outlet}}
     </div>
 
-    <div class="me-auto p-4 d-print-none order-0 order-lg-1">
+    <div class="me-auto px-4 d-print-none order-0 order-lg-1">
       <div class="mugshot">
         {{#if this.photo}}
           {{#if this.photo.photo_url}}
