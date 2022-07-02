@@ -18,16 +18,16 @@
   <div class="col-sm-6 col-xl-auto">
     <Input @type="text" @value={{this.numberFilter}} size="10" class="form-control"/>
   </div>
-  <div class="col-sm-6 col-xl-auto">
+  <div class="col-sm-12 col-xl-auto mt-2 mt-xl-1">
     <UiButton @type="secondary" @size="sm" @onClick={{this.clearNumberFilterAction}}>
       Clear
     </UiButton>
   </div>
 </div>
 
-{{#if (has-role "admin")}}
+{{#if this.canEditVehicles}}
   <div class="my-3">
-    <UiButton @onClick={{this.newAction}}>New Vehicle</UiButton>
+    <UiButton @onClick={{this.newEditAction}}>New Vehicle</UiButton>
     <UiButton @type="secondary" @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
   </div>
 {{/if}}
@@ -41,10 +41,9 @@
       <div class="vehicle-registry-header">
         <div class="vehicle-registry-person">Person/Team</div>
         <div class="vehicle-registry-status">Status</div>
-        <div class="vehicle-registry-vehicle">Vehicle/Class/License</div>
+        <div class="vehicle-registry-vehicle">Vehicle/Class/Lic.</div>
         <div class="vehicle-registry-rental">Rental #</div>
-        <div class="vehicle-registry-sticker">Driving Sticker</div>
-        <div class="vehicle-registry-driving-number">Driving #</div>
+        <div class="vehicle-registry-sticker">Driving Sticker / #</div>
         <div class="vehicle-registry-logo">Ranger Logo</div>
         <div class="vehicle-registry-fuel-chit">Fuel Chit</div>
         <div class="vehicle-registry-amber-light">Amber Light</div>
@@ -54,7 +53,6 @@
       </div>
       {{#each this.viewVehicles as |vehicle|}}
         <div class="vehicle-registry-row">
-
           <div class="vehicle-registry-person">
             {{#if this.session.isSmallScreen}}
               <b>Owner</b><br>
@@ -73,9 +71,11 @@
             {{/if}}
             {{#if vehicle.isPersonal}}
               {{#if vehicle.isApproved}}
-                <span class="text-success">{{fa-icon "check"}} approved</span>
+                <span class="text-success">{{fa-icon "check"}} Approved</span>
               {{else if vehicle.isRejected}}
-                <span class="text-danger">{{fa-icon "times"}} denied</span>
+                <span class="text-danger">{{fa-icon "times"}} Denied</span>
+              {{else if vehicle.isPending}}
+                <span class="text-secondary">{{fa-icon "circle" type="far"}} Pending</span>
               {{else}}
                 {{vehicle.status}}
               {{/if}}
@@ -99,28 +99,23 @@
           </div>
           <div class="vehicle-registry-sticker">
             {{#if this.session.isSmallScreen}}
-              <b>Driving Sticker</b><br>
+              <b>Driving Sticker / #</b><br>
             {{/if}}
             {{#if vehicle.isRejected}}
               -
             {{else}}
-              {{get this.drivingStickerLabels vehicle.driving_sticker}}
+              {{vehicle.drivingStickerLabel}}<br>
+              <PresentOrNot @value={{vehicle.sticker_number}} @empty="-"/>
             {{/if}}
-          </div>
-          <div class="vehicle-registry-driving-number">
-            {{#if this.session.isSmallScreen}}
-              <b>Driving #</b><br>
-            {{/if}}
-            <PresentOrNot @value={{vehicle.sticker_number}} @empty="-"/>
           </div>
           <div class="vehicle-registry-logo">
             {{#if this.session.isSmallScreen}}
-              <b>Logo:</b><br>
+              <b>Ranger Logo</b><br>
             {{/if}}
             {{#if vehicle.isRejected}}
               -
             {{else}}
-              {{get this.logoLabels vehicle.ranger_logo}}
+              {{vehicle.rangerLogoLabel}}
             {{/if}}
           </div>
           <div class="vehicle-registry-fuel-chit">
@@ -130,18 +125,18 @@
             {{#if vehicle.isRejected}}
               -
             {{else}}
-              {{get this.fuelChitLabels vehicle.fuel_chit}}
+              {{vehicle.fuelChitLabel}}
             {{/if}}
           </div>
           <div class="vehicle-registry-amber-light">
             {{#if this.session.isSmallScreen}}
-              <b>Amber Light</b>
+              <b>Amber Light</b><br>
             {{/if}}
 
             {{#if vehicle.isRejected}}
               -
             {{else}}
-              {{get this.amberLightLabels vehicle.amber_light}}
+              {{vehicle.amberLightLabel}}
             {{/if}}
           </div>
           <div class="vehicle-registry-mvr">
@@ -157,8 +152,15 @@
             {{if vehicle.signed_motorpool_agreement "Motorpool" "-"}}
           </div>
           <div class="vehicle-registry-action">
-            <UiButton @type="secondary" @size="sm" @class="btn-responsive" @onClick={{fn this.editAction vehicle}}>
-              {{fa-icon "edit"}} Edit
+            {{#if this.canEditVehicles}}
+              <UiButton @type="secondary" @size="sm"
+                        @onClick={{fn this.editEntryAction vehicle}}>
+                {{fa-icon "edit"}} Edit
+              </UiButton>
+            {{/if}}
+            <UiButton @type="secondary" @size="sm"
+                      @onClick={{fn this.editStickerAction vehicle}}>
+              {{fa-icon "plus"}} View / Add Sticker
             </UiButton>
           </div>
         </div>
@@ -177,239 +179,17 @@
   </:body>
 </UiSection>
 
-{{#if this.entry}}
-  <ModalDialog @title="{{if this.entry.isNew "Create" "Update"}} Personal Vehicle"
-               @onEscape={{this.cancelAction}} @size="xl" as |Modal|>
-    <ChForm @formId="vehicle"
-            @formFor={{this.entry}}
-            @validator={{this.vehicleValidations}}
-            @onSubmit={{this.saveAction}} as |f|>
-      <Modal.body>
-        {{#if (has-role "admin")}}
-          <fieldset class="mt-2">
-            <legend>Vehicle Record Type &amp; Assignment</legend>
-            <FormRow>
-              <div class="col-auto">
-                <FormLabel>Type</FormLabel>
-                <div class="mt-2">
-                  <f.radioGroup @name="type"
-                                @options={{this.typeOptions}}
-                                @inline={{true}}/>
-                </div>
-              </div>
-              <f.text @name="event_year"
-                      @label="Event Year"
-                      @size={{4}}
-                      @fieldSize="sm"
-              />
-              {{#if (eq f.model.type "personal")}}
-                <f.search @name="callsign"
-                          @label="Personal Vehicle Owner"
-                          @controlClass="form-control form-control-sm autocomplete-input"
-                          @onSearch={{this.searchCallsignAction}}
-                          @noResultsText="No callsigns found"
-                />
-              {{else}}
-                <f.text @name="team_assignment"
-                        @label="Team Assignment"
-                        @size={{10}}
-                        @fieldSize="sm"/>
-              {{/if}}
-            </FormRow>
-          </fieldset>
-          <fieldset>
-            <legend>Vehicle Description &amp; Licensing</legend>
-            <FormRow>
-              <f.select @name="vehicle_class"
-                        @label="Class"
-                        @options={{this.vehicleClassOptions}}
-                        @fieldSize="sm"/>
-              <f.text @name="vehicle_year"
-                      @label="Year"
-                      @size={{4}}
-                      @maxlength={{4}}
-                      @fieldSize="sm"/>
-              <f.text @name="vehicle_make"
-                      @label="Make"
-                      @size={{15}}
-                      @fieldSize="sm"
-                      @hint="e.g., Ford, GMC, Toyota, etc."/>
-              <f.text @name="vehicle_model" @label="Model"
-                      @hint="e.g., F-350, Tacoma, etc."
-                      @size={{15}}
-                      @fieldSize="sm"/>
-              <f.text @name="vehicle_color"
-                      @label="Color"
-                      @size={{15}}
-                      @fieldSize="sm"/>
-            </FormRow>
-            <FormRow>
-              <f.text @name="rental_number"
-                      @label="Rental #"
-                      @fieldSize="sm"
-                      @disabled={{eq f.model.type "personal"}}
-              />
-              <f.text @name="sticker_number"
-                      @label="Driving Sticker #"
-                      @size={{10}}
-                      @fieldSize="sm"
-              />
-              <f.select @name="license_state"
-                        @label="License State/Province"
-                        @options={{this.stateOptions}}
-                        @fieldSize="sm"
-              />
-              <f.text @name="license_number"
-                      @label="License Plate #"
-                      @size={{10}}
-                      @fieldSize="sm"/>
-            </FormRow>
-          </fieldset>
-          <fieldset>
-            <legend>Personal Vehicle Use Items (Stickers &amp; Other Items)</legend>
-            <FormRow>
-              <f.radioGroup @name="driving_sticker"
-                            @label="Driving Sticker"
-                            @fixedLabel={{true}}
-                            @options={{this.drivingStickerOptions}}
-                            @inline={{true}}/>
-            </FormRow>
-            <FormRow>
-              <f.radioGroup @name="ranger_logo"
-                            @label="Ranger Logo"
-                            @fixedLabel={{true}}
-                            @options={{this.rangerLogoOptions}}
-                            @inline={{true}}/>
-            </FormRow>
-            <FormRow>
-              <f.radioGroup @name="fuel_chit"
-                            @label="Fuel Chit"
-                            @fixedLabel={{true}}
-                            @options={{this.fuelChitOptions}}
-                            @inline={{true}}/>
-            </FormRow>
-            <FormRow>
-              <f.radioGroup @name="amber_light"
-                            @label="Amber Light"
-                            @fixedLabel={{true}}
-                            @options={{this.amberLightOptions}}
-                            @inline={{true}}/>
-            </FormRow>
-          </fieldset>
-          <fieldset class="mt-2">
-            <legend>Notes &amp; Status</legend>
-            <FormRow>
-              <f.textarea @name="notes"
-                          @label="Private Notes"
-                          @rows={{2}}
-                          @cols={{80}}
-              />
-            </FormRow>
-            <FormRow>
-              <f.textarea @name="request_comment"
-                          @label="Comment from person (only used for personal vehicles)"
-                          @rows={{2}}
-                          @cols={{80}}
-                          @disabled={{not-eq f.model.type "personal"}}/>
-            </FormRow>
-            <FormRow>
-              <f.textarea @name="response"
-                          @label="Response to person (only used for personal vehicles)"
-                          @rows={{2}}
-                          @cols={{80}}
-                          @disabled={{not-eq f.model.type "personal"}}/>
-            </FormRow>
-            <FormRow>
-              <f.radioGroup @name="status"
-                            @label="Request Status"
-                            @options={{this.statusOptions}}
-                            @inline={{true}} />
-            </FormRow>
-          </fieldset>
-        {{else}}
-          <h3>
-            {{this.entry.person.callsign}}
-            - {{this.entry.vehicle_year}} {{this.entry.vehicle_make}} {{this.entry.vehicle_model}} {{this.entry.vehicle_color}}
-            Lic #{{this.entry.license_number}}
-          </h3>
-          {{#if this.entry.isApproved}}
-            <b class="text-success">{{fa-icon "check"}} Request has been approved for the following items:</b>
-          {{else if this.entry.isRejected}}
-            <b class="text-danger">
-              {{fa-icon "exclamation-triangle"}} Request has been denied. DO NOT ISSUE ANY STICKERS/ITEMS.
-            </b>
-          {{else}}
-            <b class="text-danger">
-              {{fa-icon "exclamation"}} Vehicle request is pending review. Wait for approval before issuing items.
-            </b>
-          {{/if}}
-          {{#unless this.entry.isRejected}}
-            <p>
-              <b>Driving sticker:</b>
-              {{#if (eq this.entry.driving_sticker "none")}}
-                <i>none</i>
-              {{else}}
-                {{get this.drivingStickerLabels this.entry.driving_sticker}}
-              {{/if}}<br>
+{{#if this.editEntry}}
+  <VehicleRegistry::FullEdit @entry={{this.editEntry}}
+                             @saveAction={{this.saveEditAction}}
+                             @cancelAction={{this.cancelEditAction}}
+                             @deleteAction={{this.deleteAction}}
+  />
+{{/if}}
 
-              <b>Ranger logo decal:</b>
-              {{#if (eq this.entry.ranger_logo "none")}}
-                <i>none</i>
-              {{else}}
-                {{get this.logoLabels this.entry.ranger_logo}}
-              {{/if}}<br>
-
-              <b>Fuel chit:</b>
-              {{#if (eq this.entry.fuel_chit "none")}}
-                <i>none</i>
-              {{else}}
-                {{get this.fuelChitLabels this.entry.fuel_chit}}
-              {{/if}}<br>
-              <b>Amber light:</b>
-              {{#if (eq this.entry.amber_light "none")}}
-                <i>none</i>
-              {{else}}
-                {{get this.amberLightLabels this.entry.amber_light}}
-              {{/if}}
-            </p>
-          {{/unless}}
-          {{#if this.entry.response}}
-            <div class="border p-2">
-              <b>Response from Approver</b><br>
-              {{this.entry.response}}
-            </div>
-          {{/if}}
-
-          {{#if this.entry.isApproved}}
-            {{#if (not-eq this.entry.driving_sticker "none")}}
-              <FormRow @class="mt-3">
-                <f.text @name="sticker_number"
-                        @label="Enter Staff Driving Sticker #"
-                        @size={{15}}
-                        @autofocus={{true}}
-                />
-              </FormRow>
-            {{else}}
-              <div class="mt-2">
-                <b>No driving sticker has been requested.</b>
-              </div>
-            {{/if}}
-          {{/if}}
-        {{/if}}
-
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
-        <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelAction}} />
-        {{#if this.entry.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
-        {{#if (and (has-role "admin") (not this.entry.isNew))}}
-          <UiButton @type="danger" @class="ms-auto" @onClick={{fn this.deleteAction this.entry}}>
-            {{fa-icon "trash"}} Delete
-          </UiButton>
-        {{/if}}
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
+{{#if this.stickerEditEntry}}
+  <VehicleRegistry::StickerEdit @entry={{this.stickerEditEntry}}
+                                @saveAction={{this.saveStickerAction}}
+                                @cancelAction={{this.cancelStickerAction}}
+  />
 {{/if}}

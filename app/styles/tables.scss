@@ -1,3 +1,21 @@
+/*
+ * Default to thead-light setting for thead
+ */
+
+
+.table {
+  thead th {
+    color: $table-head-color;
+    background-color: $table-head-bg;
+    border-color: $table-border-color;
+  }
+
+  // override highlight border color between thead, tbody and tfoot.
+  > :not(:first-child) {
+    border-top: 1px solid #313838 !important;
+  }
+}
+
 
 .table-fixed {
   table-layout: fixed;
@@ -28,24 +46,6 @@ caption {
 .table-sm {
   caption {
     padding: 5px;
-  }
-}
-
-/*
- * Default to thead-light setting for thead
- */
-
-
-.table {
-  thead th {
-    color: $table-head-color;
-    background-color: $table-head-bg;
-    border-color: $table-border-color;
-  }
-
-  // override highlight border color between thead, tbody and tfoot.
-  > :not(:first-child) {
-    border-top: 2px solid #999999 !important;
   }
 }
 

@@ -21,19 +21,19 @@
                        @focusBorder={{true}}
                        as |item|>
       {{~#if (eq this.searchType "asset")~}}
-        {{this.searchYear}} #{{item.barcode}} {{item.description}} {{item.type}}
+        {{this.searchYear}} Asset #{{item.barcode}} {{item.description}} {{item.type}}
         {{~else~}}
         {{~#if (eq this.searchType "person-id")~}}
-          ID #{{item.id}} -
+          ID #{{item.id}}:
         {{~/if~}}
         <b>{{item.callsign}}</b> &lt;{{item.first_name}} {{item.last_name}}, {{item.status}}&gt;
         {{~#if item.fka_match~}}
           <span class="ms-4 d-block">- FKA: {{item.fka_match}}</span>
         {{~/if~}}
         {{~#if (eq item.email_match "full")~}}
-          <span class="ms-4 d-block">- email exact match</span>
+          <span class="ms-4 d-block">&bullet; email exact match</span>
         {{~else if (eq item.email_match "partial")~}}
-          <span class="ms-4 d-block">- email partial match</span>
+          <span class="ms-4 d-block">&bullet; email partial match</span>
         {{~/if~}}
       {{~/if~}}
     </AutocompleteInput>

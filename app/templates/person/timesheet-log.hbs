@@ -4,7 +4,7 @@
             @subheader={{true}}
             @onChange={{action (mut this.year)}} />
 <p>
-  <LinkTo @route="person.timesheet" @query={{hash year=this.year}}>Back To {{this.year}} Timesheet Entries </LinkTo>
+  <LinkTo @route="person.timesheet" @query={{hash year=this.year}}>Back To {{this.year}} Timesheet Entries</LinkTo>
 </p>
 {{#each this.logs as |entry|}}
   <UiSection>
@@ -27,7 +27,7 @@
     </:title>
 
     <:body>
-      <table class="table table-sm table-striped table-box mt-2 max-width-900">
+      <table class="table table-sm table-striped table-hover max-width-900">
         <thead>
         <tr>
           <th class="timesheetlog-time">Timestamp</th>
@@ -65,7 +65,7 @@
                 {{/if}}
                 {{#if (eq log.action "update")}}
                   {{#if data.review_status}}
-                    Status {{get data.review_status 0}} &rarr; {{get data.review_status 1}}<br>
+                    Status update {{get data.review_status 0}} &rarr; {{get data.review_status 1}}<br>
                   {{/if}}
                   {{#if data.position_id}}
                     Position update {{data.position_id.0.title}} &rarr; {{data.position_id.1.title}}<br>
@@ -121,50 +121,54 @@
   </p>
 {{/each}}
 
-<UiSection>
-  <:title>Other Timesheet Actions</:title>
-  <:body>
-    <table class="table table-sm table-box table-striped mb-4 max-width-900">
-      <thead>
-      <tr>
-        <th class="timesheetlog-time">Time</th>
-        <th class="timesheetlog-user">User</th>
-        <th class="timesheetlog-message">Action</th>
-      </tr>
-      </thead>
+{{#if (gte this.year 2018)}}
 
-      <tbody>
-      {{#each this.otherLogs as |log|}}
+  <UiSection>
+    <:title>Other Timesheet Actions</:title>
+    <:body>
+      <table class="table table-sm table-striped table-hover max-width-900">
+        <thead>
         <tr>
-          <td class="timesheetlog-time">{{shift-format log.created_at}}</td>
-          <td class="timesheetlog-user">
-            <PersonLink @personId={{log.creator_person_id}} @callsign={{log.creator_callsign}} />
-          </td>
-          <td class="timesheetlog-message">
-            <b>{{get this.actionLabels log.action}}
-              {{#if log.data.via}}
-                via
-                {{#if (eq log.data.via "bulk-upload")}}
-                  bulk uploader
-                {{else if (eq log.data.via "missing-entry")}}
-                  missing entry request
-                {{else}}
-                  {{log.data.via}}
+          <th class="timesheetlog-time">Time</th>
+          <th class="timesheetlog-user">User</th>
+          <th class="timesheetlog-message">Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {{#each this.otherLogs as |log|}}
+          <tr>
+            <td class="timesheetlog-time">{{shift-format log.created_at}}</td>
+            <td class="timesheetlog-user">
+              <PersonLink @personId={{log.creator_person_id}} @callsign={{log.creator_callsign}} />
+            </td>
+            <td class="timesheetlog-message">
+              <b>
+                {{get this.actionLabels log.action}}
+                {{#if log.data.via}}
+                  via
+                  {{#if (eq log.data.via "bulk-upload")}}
+                    bulk uploader
+                  {{else if (eq log.data.via "missing-entry")}}
+                    missing entry request
+                  {{else}}
+                    {{log.data.via}}
+                  {{/if}}
                 {{/if}}
+              </b>
+              {{#if log.data.message}}
+                <br>
+                {{log.data.message}}
               {{/if}}
-            </b>
-            <br>
-            {{#if log.data.message}}
-              {{log.data.message}}<br>
-            {{/if}}
-          </td>
-        </tr>
-      {{else}}
-        <tr>
-          <td colspan="4"><b class="text-danger">No other logs found for {{this.year}}</b></td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  </:body>
-</UiSection>
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="4"><b class="text-danger">No other logs found for {{this.year}}</b></td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </:body>
+  </UiSection>
+{{/if}}
