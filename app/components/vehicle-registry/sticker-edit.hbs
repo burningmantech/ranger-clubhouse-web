@@ -1,0 +1,94 @@
+<ModalDialog @onEscape={{@cancelAction}}  as |Modal|>
+  <ChForm @formId="vehicle"
+          @formFor={{@entry}}
+          @onSubmit={{@saveAction}} as |f|>
+    <Modal.title>
+      {{@entry.person.callsign}} - {{@entry.vehicle_year}} {{@entry.vehicle_make}} {{@entry.vehicle_model}}
+      {{@entry.vehicle_color}}
+      Lic #{{@entry.license_number}}
+    </Modal.title>
+    <Modal.body>
+      {{#if @entry.isApproved}}
+        <div class="alert alert-success">
+          {{fa-icon "check"}} Request has been approved for the following items:
+        </div>
+      {{else if @entry.isRejected}}
+        <div class="alert alert-danger">
+          {{fa-icon "exclamation-triangle"}} Request has been denied. DO NOT ISSUE ANY STICKERS/ITEMS.
+        </div>
+      {{else}}
+        <div class="alert alert-warning">
+          {{fa-icon "exclamation"}} Vehicle request is pending review. Wait for approval before issuing items.
+        </div>
+      {{/if}}
+      {{#unless @entry.isRejected}}
+        <div class="row mb-2">
+          <div class="col-6 col-xl-auto mb-2">
+            <b>Driving Sticker</b><br>
+            {{#if (eq @entry.driving_sticker "none")}}
+              <i>- none -</i>
+            {{else}}
+              {{@entry.drivingStickerLabel}}
+            {{/if}}
+          </div>
+          <div class="col-6 col-xl-auto mb-2">
+            <b>Ranger Logo Decal</b><br>
+            {{#if (eq @entry.ranger_logo "none")}}
+              <i>- none -</i>
+            {{else}}
+              {{@entry.rangerLogoLabel}}
+            {{/if}}
+          </div>
+          <div class="col-6 col-xl-auto">
+            <b>Fuel Chit</b><br>
+            {{#if (eq @entry.fuel_chit "none")}}
+              <i>- none -</i>
+            {{else}}
+              {{@entry.fuelChitLabel}}
+            {{/if}}
+          </div>
+          <div class="col-6 col-xl-auto">
+            <b>Amber Light</b><br>
+            {{#if (eq @entry.amber_light "none")}}
+              <i>- none -</i>
+            {{else}}
+              {{@entry.amberLightLabel}}
+            {{/if}}
+          </div>
+        </div>
+      {{/unless}}
+
+      {{#if @entry.response}}
+        <b>Response from Approver</b><br>
+        <div class="border p-2 mb-2">
+          {{@entry.response}}
+        </div>
+      {{/if}}
+
+      {{#unless @entry.isRejected}}
+        {{#if (not-eq @entry.driving_sticker "none")}}
+          <FormRow @class="mt-3">
+            <f.text @name="sticker_number"
+                    @label="Enter STAFF Driving Sticker #"
+                    @size={{15}}
+                    @autofocus={{true}}
+            />
+          </FormRow>
+        {{else}}
+          <div class="mt-2">
+            <b>No driving sticker has been requested.</b>
+          </div>
+        {{/if}}
+      {{/unless}}
+    </Modal.body>
+    <Modal.footer @noAlign={{true}}>
+      {{#unless @entry.isRejected}}
+        <f.submit @label="Update" @disabled={{@entry.isSaving}} />
+      {{/unless}}
+      <UiCancelButton @disabled={{@entry.isSaving}} @onClick={{@cancelAction}} />
+      {{#if @entry.isSaving}}
+        <LoadingIndicator/>
+      {{/if}}
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>

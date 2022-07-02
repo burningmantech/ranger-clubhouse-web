@@ -1,0 +1,163 @@
+<ModalDialog @title="{{if @entry.isNew "Create" "Update"}} Personal Vehicle"
+             @onEscape={{@cancelAction}}
+             @size="xl" as |Modal|>
+  <ChForm @formId="vehicle"
+          @formFor={{@entry}}
+          @validator={{this.vehicleValidations}}
+          @onSubmit={{@saveAction}} as |f|>
+    <Modal.body>
+      <fieldset class="mt-2">
+        <legend>Vehicle Record Type &amp; Assignment</legend>
+        <FormRow>
+          <div class="col-auto">
+            <FormLabel>Type</FormLabel>
+            <div class="mt-2">
+              <f.radioGroup @name="type"
+                            @options={{this.typeOptions}}
+                            @inline={{true}}/>
+            </div>
+          </div>
+          <f.text @name="event_year"
+                  @label="Event Year"
+                  @size={{4}}
+                  @fieldSize="sm"
+          />
+          {{#if (eq f.model.type "personal")}}
+            <f.search @name="callsign"
+                      @label="Personal Vehicle Owner"
+                      @controlClass="form-control form-control-sm autocomplete-input"
+                      @onSearch={{this.searchCallsignAction}}
+                      @noResultsText="No callsigns found"
+            />
+          {{else}}
+            <f.text @name="team_assignment"
+                    @label="Team Assignment"
+                    @size={{10}}
+                    @fieldSize="sm"/>
+          {{/if}}
+        </FormRow>
+      </fieldset>
+      <fieldset>
+        <legend>Vehicle Description &amp; Licensing</legend>
+        <FormRow>
+          <f.select @name="vehicle_class"
+                    @label="Class"
+                    @options={{this.vehicleClassOptions}}
+                    @fieldSize="sm"/>
+          <f.text @name="vehicle_year"
+                  @label="Year"
+                  @size={{4}}
+                  @maxlength={{4}}
+                  @fieldSize="sm"/>
+          <f.text @name="vehicle_make"
+                  @label="Make"
+                  @size={{15}}
+                  @fieldSize="sm"
+                  @hint="e.g., Ford, GMC, Toyota, etc."/>
+          <f.text @name="vehicle_model" @label="Model"
+                  @hint="e.g., F-350, Tacoma, etc."
+                  @size={{15}}
+                  @fieldSize="sm"/>
+          <f.text @name="vehicle_color"
+                  @label="Color"
+                  @size={{15}}
+                  @fieldSize="sm"/>
+        </FormRow>
+        <FormRow>
+          <f.text @name="rental_number"
+                  @label="Rental #"
+                  @fieldSize="sm"
+                  @disabled={{eq f.model.type "personal"}}
+          />
+          <f.text @name="sticker_number"
+                  @label="Driving Sticker #"
+                  @size={{10}}
+                  @fieldSize="sm"
+          />
+          <f.select @name="license_state"
+                    @label="License State/Province"
+                    @options={{this.stateOptions}}
+                    @fieldSize="sm"
+          />
+          <f.text @name="license_number"
+                  @label="License Plate #"
+                  @size={{10}}
+                  @fieldSize="sm"/>
+        </FormRow>
+      </fieldset>
+      <fieldset>
+        <legend>Personal Vehicle Use Items (Stickers &amp; Other Items)</legend>
+        <FormRow>
+          <f.radioGroup @name="driving_sticker"
+                        @label="Driving Sticker"
+                        @fixedLabel={{true}}
+                        @options={{this.drivingStickerOptions}}
+                        @inline={{true}}/>
+        </FormRow>
+        <FormRow>
+          <f.radioGroup @name="ranger_logo"
+                        @label="Ranger Logo"
+                        @fixedLabel={{true}}
+                        @options={{this.rangerLogoOptions}}
+                        @inline={{true}}/>
+        </FormRow>
+        <FormRow>
+          <f.radioGroup @name="fuel_chit"
+                        @label="Fuel Chit"
+                        @fixedLabel={{true}}
+                        @options={{this.fuelChitOptions}}
+                        @inline={{true}}/>
+        </FormRow>
+        <FormRow>
+          <f.radioGroup @name="amber_light"
+                        @label="Amber Light"
+                        @fixedLabel={{true}}
+                        @options={{this.amberLightOptions}}
+                        @inline={{true}}/>
+        </FormRow>
+      </fieldset>
+      <fieldset class="mt-2">
+        <legend>Notes &amp; Status</legend>
+        <FormRow>
+          <f.textarea @name="notes"
+                      @label="Private Notes"
+                      @rows={{2}}
+                      @cols={{80}}
+          />
+        </FormRow>
+        <FormRow>
+          <f.textarea @name="request_comment"
+                      @label="Comment from person (only used for personal vehicles)"
+                      @rows={{2}}
+                      @cols={{80}}
+                      @disabled={{not-eq f.model.type "personal"}}/>
+        </FormRow>
+        <FormRow>
+          <f.textarea @name="response"
+                      @label="Response to person (only used for personal vehicles)"
+                      @rows={{2}}
+                      @cols={{80}}
+                      @disabled={{not-eq f.model.type "personal"}}/>
+        </FormRow>
+        <FormRow>
+          <f.radioGroup @name="status"
+                        @label="Request Status"
+                        @options={{this.statusOptions}}
+                        @inline={{true}} />
+        </FormRow>
+      </fieldset>
+    </Modal.body>
+    <Modal.footer @noAlign={{true}}>
+      <f.submit @label={{if @entry.isNew "Create" "Update"}} @disabled={{@entry.isSaving}} />
+      <UiCancelButton @disabled={{@entry.isSaving}} @onClick={{@cancelAction}} />
+      {{#if @entry.isSaving}}
+        <LoadingIndicator/>
+      {{/if}}
+      {{#unless @entry.isNew}}
+        <UiButton @type="danger" @class="ms-auto" @onClick={{fn @deleteAction @entry}}>
+          {{fa-icon "trash"}} Delete
+        </UiButton>
+      {{/unless}}
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>
