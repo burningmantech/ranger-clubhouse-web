@@ -43,7 +43,7 @@
 }
 
 
-@include media-breakpoint-up(lg) {
+@include media-breakpoint-up(xl) {
   .vehicle-registry-table {
     font-size: 0.90em;
   }
@@ -63,15 +63,11 @@
 
   }
   .vehicle-registry-rental {
-    width: 10%;
+    width: 8%;
 
   }
   .vehicle-registry-sticker {
     width: 10%;
-
-  }
-  .vehicle-registry-driving-number {
-    width: 8%;
 
   }
 
@@ -100,7 +96,7 @@
 
   }
   .vehicle-registry-action {
-    width: 8%;
+    width: 18%;
   }
 }
 
@@ -125,58 +121,58 @@
   }
   .vehicle-registry-vehicle {
     order: 3;
-    width: 49%;
+    width: 100%;
 
   }
   .vehicle-registry-rental {
     order: 4;
     width: 49%;
-    text-align: right;
   }
+
   .vehicle-registry-sticker {
     order: 5;
     width: 49%;
+    text-align: right;
   }
-  .vehicle-registry-driving-number {
+
+  .vehicle-registry-license {
     order: 6;
     width: 49%;
-    text-align: right;
-
-  }
-  .vehicle-registry-license {
-    order: 7;
-    width: 100%;
   }
 
   .vehicle-registry-logo {
-    order: 8;
+    order: 7;
     width: 49%;
   }
 
   .vehicle-registry-fuel-chit {
-    order: 9;
+    order: 8;
     width: 49%;
     text-align: right;
-
   }
 
   .vehicle-registry-amber-light {
-    order: 10;
+    order: 9;
     width: 49%;
   }
+
   .vehicle-registry-mvr {
-    order: 11;
+    order: 10;
     width: 49%;
     text-align: right;
   }
 
   .vehicle-registry-motorpool {
-    order: 11;
-    width: 100%;
+    order: 10;
+    width: 49%;
   }
 
   .vehicle-registry-action {
-    order: 12;
+    order: 11;
     width: 100%;
+    button {
+      display: inline-block;
+      width: 49%;
+    }
   }
 }

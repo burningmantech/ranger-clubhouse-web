@@ -1,5 +1,31 @@
 import Model, { attr } from '@ember-data/model';
 
+export const AmberLightLabels = {
+  none: '-',
+  'already-has': 'Personal',
+  'department': 'Department'
+};
+
+export const DrivingStickerLabels = {
+  none: '-',
+  staff: 'Staff',
+  prepost: 'Pre/Post',
+  other: 'Other'
+};
+
+export const FuelChitLabels = {
+  none: '-',
+  'single-use': 'Single Use',
+  event: 'Event'
+};
+
+export const RangerLogoLabels = {
+  none: '-',
+  'permanent-new': 'Permanent New',
+  'permanent-existing': 'Permanent Reauthorized',
+  event: 'Event Only'
+};
+
 export default class VehicleModel extends Model {
 
   @attr('number') person_id;
@@ -52,5 +78,21 @@ export default class VehicleModel extends Model {
 
   get isFleet() {
     return this.type == 'fleet';
+  }
+
+  get amberLightLabel() {
+    return AmberLightLabels[this.amber_light] ?? this.amber_light;
+  }
+
+  get drivingStickerLabel(){
+    return DrivingStickerLabels[this.driving_sticker] ?? this.driving_sticker;
+  }
+
+  get fuelChitLabel() {
+    return FuelChitLabels[this.fuel_chit] ?? this.fuel_chit;
+  }
+
+  get rangerLogoLabel() {
+    return RangerLogoLabels[this.ranger_logo] ?? this.ranger_logo;
   }
 }

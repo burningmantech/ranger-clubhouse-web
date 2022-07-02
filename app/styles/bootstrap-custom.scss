@@ -6,6 +6,7 @@ $enable-shadows: true;
 $enable-grid-classes: true;
 $enable-gradients: true;
 $enable-negative-margins: true;
+$enable-cssgrid: true;
 
 $link-decoration: none;
 
@@ -97,8 +98,8 @@ $theme-colors: (
   "dark": #212529,
 );
 // Carry overs from Bootstrap 4.3
-$table-head-color: #495057;
-$table-head-bg: #e9ecef;
+$table-head-color: #3f454d;
+$table-head-bg: #DFE1EA;
 $table-striped-bg: #eff8fd;
 
 

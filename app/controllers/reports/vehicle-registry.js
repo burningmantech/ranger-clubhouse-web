@@ -1,17 +1,14 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {States, CanadianProvinces} from 'clubhouse/constants/countries';
-import {debounce} from '@ember/runloop';
-import {validatePresence} from 'ember-changeset-validations/validators';
-import {VehicleClassOptions} from 'clubhouse/constants/vehicles';
 import {isEmpty} from '@ember/utils';
-import RSVP from 'rsvp';
 
 export default class ReportsPersonVehiclesController extends ClubhouseController {
   queryParams = ['year'];
 
-  @tracked entry;
+  @tracked editEntry;
+  @tracked stickerEditEntry;
+
   @tracked filter = 'all';
   @tracked numberFilter = '';
   @tracked typeFilter = 'all';
@@ -22,68 +19,6 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
     {id: 'personal', title: 'Personal'},
   ];
 
-  stateOptions = [
-    {
-      groupName: 'Choose State',
-      options: States,
-    },
-    {
-      groupName: 'Choose Canadian Province',
-      options: CanadianProvinces,
-    },
-    {
-      groupName: 'Other',
-      options: [
-        {id: 'NA', title: 'Not Available'}
-      ]
-    }
-  ];
-
-  typeOptions = [
-    {id: 'fleet', title: 'Fleet'},
-    {id: 'personal', title: 'Personal'},
-  ];
-
-  vehicleClassOptions = VehicleClassOptions;
-
-  statusOptions = [
-    {id: 'pending', title: 'Pending'},
-    {id: 'approved', title: 'Approved'},
-    {id: 'rejected', title: 'Denied'}
-  ];
-
-  drivingStickerOptions = [
-    {id: 'none', title: 'None'},
-    {id: 'prepost', title: 'Pre/Post'},
-    {id: 'staff', title: 'Staff'},
-  ];
-
-  fuelChitOptions = [
-    {id: 'none', title: 'None'},
-    {id: 'single-use', title: 'Single Use'},
-    {id: 'event', title: 'Event'},
-  ];
-
-  rangerLogoOptions = [
-    {id: 'none', title: 'None'},
-    {id: 'permanent-new', title: 'Permanent New'},
-    {id: 'permanent-existing', title: 'Permanent Reauthorize'},
-    {id: 'event', title: 'Event Only'}
-  ];
-
-  amberLightOptions = [
-    {id: 'none', title: 'None'},
-    {id: 'department', title: 'Department Supplied'},
-    {id: 'already-has', title: 'Personal'}
-
-  ];
-
-  vehicleValidations = {
-    vehicle_make: [validatePresence(true)],
-    vehicle_model: [validatePresence(true)],
-    vehicle_color: [validatePresence(true)],
-  };
-
   filterOptions = [
     {id: 'all', title: 'All'},
     {id: 'pending', title: 'Pending'},
@@ -91,37 +26,6 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
     {id: 'rejected', title: 'Rejected'},
   ];
 
-
-  amberLightLabels = {
-    none: '-',
-    'already-has': 'Personal',
-    'department': 'Department'
-  };
-
-  drivingStickerLabels = {
-    none: '-',
-    staff: 'Staff',
-    prepost: 'Pre/Post',
-    other: 'Other'
-  };
-
-  fuelChitLabels = {
-    none: '-',
-    'single-use': 'Single Use',
-    event: 'Event'
-  };
-
-  logoLabels = {
-    none: '-',
-    'permanent-new': 'Permanent New',
-    'permanent-existing': 'Permanent Reauthorized',
-    event: 'Event Only'
-  };
-
-  vehicleTypeOptions = [
-    ['Personal Vehicle', 'personal'],
-    ['Fleet Vehicle', 'fleet'],
-  ];
 
   get viewVehicles() {
     let vehicles = this.person_vehicle;
@@ -174,8 +78,8 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
   }
 
   @action
-  newAction() {
-    this.entry = this.store.createRecord('vehicle', {
+  newEditAction() {
+    this.editEntry = this.store.createRecord('vehicle', {
       type: 'fleet',
       event_year: this.year,
       status: 'pending',
@@ -189,69 +93,81 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
   }
 
   @action
-  editAction(entry) {
+  editStickerAction(entry) {
+    this._commonEdit(entry, true)
+  }
+
+  @action
+  editEntryAction(entry) {
+    this._commonEdit(entry, false);
+  }
+
+  _commonEdit(entry, isSticker) {
     entry.reload().then(() => {
-      this.entry = entry;
+      if (isSticker) {
+        this.stickerEditEntry = entry;
+      } else {
+        this.editEntry = entry;
+      }
       entry.callsign = entry.person ? entry.person.callsign : '';
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
-  saveAction(model, isValid) {
+  saveStickerAction(model, isValid) {
+    this._commonSaveEntry(model, isValid, true)
+  }
+
+  @action
+  saveEditAction(model, isValid) {
+    this._commonSaveEntry(model, isValid, false)
+  }
+
+  @action
+  _commonSaveEntry(model, isValid, isSticker) {
     if (!isValid) {
       return;
     }
 
-    const isNew = this.entry.isNew;
+    const isNew = isSticker ? false : this.editEntry.isNew;
     if (model.type === 'fleet') {
       model.driving_sticker = 'staff';
     }
     this.house.saveModel(model, 'Vehicle successfully saved',
       () => {
-        this.entry = null;
+        if (isSticker) {
+          this.stickerEditEntry = null;
+        } else {
+          this.editEntry = null;
+        }
         if (isNew) {
           this.person_vehicle.update().catch((response) => this.house.handleErrorResponse(response));
         }
       });
   }
 
+  get canEditVehicles() {
+    return this.session.isAdmin;
+  }
+
   @action
   deleteAction(entry) {
     this.modal.confirm('Delete Entry', 'Are you sure you want to delete this entry?', () => {
       entry.destroyRecord().then(() => {
-        this.entry = null;
+        this.editEntry = null;
         this.toast.success('Vehicle record has been deleted.');
       }).catch((response) => this.house.handleErrorResponse(response));
     });
   }
 
   @action
-  cancelAction() {
-    this.entry = null;
-  }
-
-  _performSearch(callsign, resolve, reject) {
-    callsign = callsign.trim();
-
-    if (callsign.length < 2) {
-      return reject();
-    }
-
-    return this.ajax
-      .request('callsigns', {data: {query: callsign, type: 'all', limit: 20}})
-      .then(({callsigns}) => {
-        if (callsigns.length > 0) {
-          return resolve(callsigns.map(({callsign}) => callsign));
-        }
-        return reject();
-      }, reject);
+  cancelEditAction() {
+    this.editEntry = null;
   }
 
   @action
-  searchCallsignAction(callsign) {
-    return new RSVP.Promise((resolve, reject) => {
-      debounce(this, this._performSearch, callsign, resolve, reject, 350);
-    });
+  cancelStickerAction() {
+    this.stickerEditEntry = null;
   }
 
   @action

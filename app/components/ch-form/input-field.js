@@ -12,7 +12,7 @@ export default class ChFormInputFieldComponent extends ChFormFieldBaseComponent 
   @action
   inputInserted(element) {
     if (this.args.autofocus) {
-      schedule('afterRender', () => element.focus());
+      setTimeout(() => schedule('afterRender', () => element.focus()), 100);
     }
   }
 }
