@@ -20,15 +20,18 @@
                        @appendSearchIcon={{true}}
                        @focusBorder={{true}}
                        as |item|>
-      {{~#if (eq this.searchType "asset")~}}
+      {{#if (eq this.searchType "asset")}}
         {{this.searchYear}} Asset #{{item.barcode}} {{item.description}} {{item.type}}
-        {{~else~}}
+      {{else if (eq this.searchType "vehicle")}}
+        {{item.name}}: {{item.numbers}}
+        <span class="ms-4 d-block">&bullet; {{item.description}}</span>
+      {{else}}
         {{~#if (eq this.searchType "person-id")~}}
           ID #{{item.id}}:
         {{~/if~}}
         <b>{{item.callsign}}</b> &lt;{{item.first_name}} {{item.last_name}}, {{item.status}}&gt;
         {{~#if item.fka_match~}}
-          <span class="ms-4 d-block">- FKA: {{item.fka_match}}</span>
+          <span class="ms-4 d-block">&bullet; FKA: {{item.fka_match}}</span>
         {{~/if~}}
         {{~#if (eq item.email_match "full")~}}
           <span class="ms-4 d-block">&bullet; email exact match</span>
