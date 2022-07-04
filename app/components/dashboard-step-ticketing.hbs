@@ -6,14 +6,23 @@
   {{else if @step.tickets.claimed}}
     You have claimed {{pluralize @step.tickets.claimed.length "item"}}:
     <ul>
-      {{#each @step.tickets.claimed as |ticket|}}
+      {{#each @step.tickets.claimed as |item|}}
         <li>
-          {{#if ticket.isWAPSO}}
-            Significant Other WAP for: <i>{{ticket.name}}</i>
-          {{else if ticket.isWAP}}
+          {{#if item.isWAPSO}}
+            Significant Other WAP for: <i>{{item.name}}</i>
+          {{else if item.isWAP}}
             Work Access Pass for yourself
+          {{else if item.isProvision}}
+            {{item.typeLabelWithCounts}}
+            {{#if item.earned_as_well}}
+              (allocated &amp; qualified)
+            {{else if item.is_allocated}}
+              (allocated)
+            {{else}}
+              (qualified)
+            {{/if}}
           {{else}}
-            {{ticket.typeLabel}} {{if ticket.isStaffCredential "which is also your WAP"}}
+            {{item.typeLabel}} {{if item.isStaffCredential "which is also your WAP"}}
           {{/if}}
         </li>
       {{/each}}
@@ -29,7 +38,8 @@
   </div>
 {{/if}}
 <div class="mt-1">
-  Visit <LinkTo @route="me.tickets">Me &gt; Tickets &amp; Stuff</LinkTo>
+  Visit
+  <LinkTo @route="me.tickets">Me &gt; Tickets &amp; Stuff</LinkTo>
   {{#if @step.ticketingOpen}}
     to claim or adjust your item(s).
   {{else}}

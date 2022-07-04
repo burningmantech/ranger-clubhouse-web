@@ -32,7 +32,7 @@
         </thead>
         <tbody>
         {{#each this.logs as |entry|}}
-          <tr>
+          <tr class="{{if entry.no_signup "text-decoration-line-through"}}">
             <td>
               {{#if entry.no_signup}}
                 {{fa-icon "times" color="danger"}}

@@ -20,8 +20,12 @@
   {{#each @photos as |photo|}}
     <tr>
       <td>
-        <img id="photo-{{photo.id}}" src={{photo.image_url}} class="photo-icon" role="button"
-          {{on "click" (fn this.showPhotoAction photo)}} alt={{photo.person.callsign}}
+        <img id="photo-{{photo.id}}"
+             src={{photo.image_url}}
+             class="photo-icon" role="button"
+             alt={{photo.person.callsign}}
+             loading="lazy"
+          {{on "click" (fn this.showPhotoAction photo)}}
         />
       </td>
       {{#unless @person}}
@@ -29,9 +33,7 @@
           <PersonLink @person={{photo.person}} />
         </td>
       {{/unless}}
-      <td>
-        {{photo.id}}
-      </td>
+      <td>{{photo.id}}</td>
       <td>
         {{#if (eq photo.status "approved")}}
           <b class="text-success">{{fa-icon "check"}} {{photo.status}}</b>
@@ -41,9 +43,9 @@
           {{photo.status}}
         {{/if}}<br>
         {{#if photo.is_active}}
-          <b>ACTIVE</b>
+          <b>CURRENT</b>
         {{else}}
-          <span class="text-muted">inactive</span>
+          <span class="text-muted">archived</span>
         {{/if}}
       </td>
       <td>
