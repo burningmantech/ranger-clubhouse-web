@@ -19,6 +19,7 @@
     margin-top: 10px;
   }
 }
+
 .dashboard-links-things {
   margin-bottom: 20px;
 }
@@ -28,6 +29,9 @@
   font-weight: 400;
 }
 
+.dashboard-group-title-urgent {
+  color: #bd0010 !important;
+}
 
 .dashboard-steps {
   flex: 1;
@@ -89,7 +93,7 @@
 .dashboard-art-table {
   margin: 10px 0 15px 0;
   background-color: #ffffff;
- // box-shadow: 5px 5px 5px #888888;
+  // box-shadow: 5px 5px 5px #888888;
   //box-shadow: 0 0 5px 5px #dcdcdc;
   box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
 }
@@ -97,6 +101,7 @@
 .dashboard-art-header {
   padding: 5px;
 }
+
 .dashboard-art-row {
   padding: 5px 5px 0 5px;
 }
@@ -282,7 +287,7 @@
   }
 
   .dashboard-art-position {
-   min-width: 150px;
+    min-width: 150px;
   }
 
   .dashboard-art-status {

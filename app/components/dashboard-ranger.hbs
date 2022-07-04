@@ -21,7 +21,7 @@
 </p>
 
 <p>
-Need help? <a href="#contacts">Jump to the contact section</a> below to see who to email.
+  Need help? <a href="#contacts">Jump to the contact section</a> below to see who to email.
 </p>
 
 {{#unless this.isAfterEvent}}
@@ -35,6 +35,7 @@ Need help? <a href="#contacts">Jump to the contact section</a> below to see who 
   {{#each this.stepGroups as |group idx|}}
     <DashboardGroup @title={{group.title}}
                     @isActive={{eq idx 0}}
+                    @isUrgent={{group.isUrgent}}
                     @hasTopArrow={{or @motds idx}}
                     @hasBottomArrow={{not group.isLast}}
                     @includeSidePhoto={{eq idx 0}}

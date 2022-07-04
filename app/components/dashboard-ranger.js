@@ -39,11 +39,13 @@ class StepGroup {
   @tracked steps;
   @tracked title;
   @tracked isActive;
+  @tracked isUrgent;
 
-  constructor(title, steps, isActive) {
+  constructor(title, steps, isActive, isUrgent = false) {
     this.title = title;
     this.steps = steps;
     this.isActive = isActive;
+    this.isUrgent = isUrgent;
   }
 }
 
@@ -484,7 +486,7 @@ export default class DashboardRangerComponent extends Component {
     } = this._processStepGroup(this.args.person.isNonRanger ? NON_RANGER_STEPS : STEPS);
 
     if (immediateSteps.length) {
-      groups.push(new StepGroup('IMMEDIATE ACTION REQUIRED', immediateSteps, true));
+      groups.push(new StepGroup('IMMEDIATE ACTION REQUIRED', immediateSteps, true, true));
     }
 
     if (!steps.length) {
