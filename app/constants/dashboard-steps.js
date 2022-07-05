@@ -27,6 +27,7 @@ import {
   URGENT,
   WAITING
 } from "clubhouse/constants/dashboard";
+import {NON_RANGER} from 'clubhouse/constants/person_status';
 
 function indefiniteArticle(noun) {
   return (noun.match(/^[aeiou]/i) ? `an ${noun}` : `a ${noun}`);
@@ -189,25 +190,26 @@ export const VERIFY_TIMESHEETS = {
 export const VERIFY_PERSONAL_INFO = {
   skipPeriod: AFTER_EVENT,
   name: 'Review and Update Personal Information',
-  check({milestones, isPNV}) {
+  check({milestones, person, isPNV}) {
     if (milestones.has_reviewed_pi) {
       return {result: COMPLETED};
     }
 
-    let shirtNag = '', result, doTheThing = '', immediate = false;
+    let shirtNag = '', result = ACTION_NEEDED, doTheThing = '', immediate = false;
 
-    if (isPNV) {
-      result = ACTION_NEEDED;
-    }else {
+    if (!isPNV) {
+      const isNonRanger = (person.status === NON_RANGER);
       // javascript dates start from zero (meh). If it's June or later, crank up the annoyance dial.
       doTheThing = 'You have not verified your personal information and/or Ranger shirt sizes yet.';
-      if ((new Date()).getMonth() >= 5) {
+      if (!isNonRanger && (new Date()).getMonth() >= 5) {
         immediate = true;
         result = URGENT;
         doTheThing = `<b class="text-danger">${doTheThing}</b>`;
       }
       doTheThing = `<p>${doTheThing}</p>`;
-      shirtNag = ' <b>BE SURE TO CONFIRM YOUR RANGER SHIRT SIZES ARE CORRECT.</b>'
+      if (!isNonRanger) {
+        shirtNag = ' <b>BE SURE TO CONFIRM YOUR RANGER SHIRT SIZES ARE CORRECT.</b>';
+      }
     }
 
     return {
@@ -430,7 +432,8 @@ export const SIGN_UP_FOR_SHIFTS = {
   name: 'Sign up for shifts',
   skipPeriod: AFTER_EVENT,
 
-  check({milestones, isPNV, isAuditor}) {
+  check({milestones, isPNV, isAuditor, person}) {
+    const isNonRanger = (person.status === NON_RANGER);
     if (!milestones.online_training_passed && (isAuditor || isPNV)) {
       return {
         result: NOT_AVAILABLE,
@@ -438,7 +441,7 @@ export const SIGN_UP_FOR_SHIFTS = {
       };
     }
 
-    if (!milestones.dirt_shifts_available) {
+    if (!milestones.dirt_shifts_available && !isNonRanger) {
       return {
         result: NOT_AVAILABLE,
         message: 'The full Ranger schedule is posted by the first or second week in July. Watch the Announce mailing list for a message on when the schedule will open.',
