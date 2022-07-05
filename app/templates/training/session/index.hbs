@@ -83,7 +83,13 @@
   <:title>{{pluralize this.students.length "Trainee"}} ({{this.passedCount}} Passed)</:title>
   <:body>
     {{#if this.training.is_art}}
-      A {{fa-icon "asterisk"}} by a person's status indicates an ART Prospective.
+      <p>
+        A {{fa-icon "asterisk"}} by a person's status indicates an ART Prospective.
+        {{#if this.offersGraduation}}
+          Use the "Graduate Trainees" button to grant the position
+          <i>"{{this.training.graduation_info.position.title}}"</i> to eligible individuals.
+        {{/if}}
+      </p>
     {{else}}
       <p>
       <div><b class="text-danger">{{fa-icon "hand-point-right"}} Reminder: Walk-ins are NOT allowed, this includes
@@ -96,21 +102,29 @@
 
     <div class="my-2">
       {{! Desktop Display }}
-      <div class="d-lg-block d-none">
-        <LinkTo @route="training.session.trainers-report" @models={{array this.training.id this.slot.id}}
+      <div class="d-none d-lg-block">
+        <LinkTo @route="training.session.trainers-report"
+                @models={{array this.training.id this.slot.id}}
                 class="btn btn-secondary">
           {{fa-icon "list-alt"}} Trainer's Report
         </LinkTo>
         <LinkTo @route="training.session.signup-sheet" @models={{array this.training.id this.slot.id}}
-                class="btn btn-secondary">
+                class="btn btn-secondary ms-1">
           {{fa-icon "clipboard-check"}} Sign up Sheet
         </LinkTo>
-        <UiButton @type="secondary" @onClick={{this.toggleEmailListAction}} @disabled={{is-empty this.students}}>
+        <UiButton @type="secondary" @onClick={{this.toggleEmailListAction}} @disabled={{is-empty this.students}}
+                  @class="ms-1">
           {{fa-icon "envelope"}} {{if this.showEmails "Hide Emails" "List Emails"}}
         </UiButton>
         {{#if this.canAddStudent}}
-          <UiButton @type="secondary" @onClick={{this.showAddPersonAction}}>
+          <UiButton @type="secondary" @onClick={{this.showAddPersonAction}} @class="ms-1">
             {{fa-icon "plus-square"}} Add Person
+          </UiButton>
+        {{/if}}
+        {{#if this.offersGraduation}}
+          <UiButton @type="secondary" @onClick={{this.showGraduateStudentsAction}} @disabled={{is-empty this.students}}
+                    @class="ms-1">
+            {{fa-icon "graduation-cap"}} Graduate Trainees
           </UiButton>
         {{/if}}
       </div>
@@ -138,6 +152,10 @@
           {{#if this.canAddStudent}}
             <div class="dropdown-divider"></div>
             <a href class="dropdown-item" {{action this.showAddPersonAction}}>Add Person</a>
+          {{/if}}
+          {{#if this.offersGraduation}}
+            <div class="dropdown-divider"></div>
+            <a href class="dropdown-item" {{action this.showGraduateStudentsAction}}>Graduate Trainees</a>
           {{/if}}
         </dd.menu>
       </BsDropdown>
@@ -378,7 +396,7 @@
 
 {{! Add Person dialog box}}
 {{#if this.addPersonForm}}
-  <ModalDialog @title="Add Student To Session"
+  <ModalDialog @title="Add Trainee To Session"
                @onEscape={{this.cancelSearchAction}} as |Modal|>
     <ChForm @formId="search"
             @formFor={{this.addPersonForm}}
@@ -425,8 +443,7 @@
 {{/if}}
 
 {{#if this.editNote}}
-  <ModalDialog @title="Edit Note for {{this.editStudent.callsign}}"
-               @onEscape={{this.cancelNoteAction}} as |Modal|>
+  <ModalDialog @title="Edit Note for {{this.editStudent.callsign}}" @onEscape={{this.cancelNoteAction}} as |Modal|>
     <ChForm @formId="note-update"
             @formFor={{this.editNote}}
             @onSubmit={{this.updateNoteAction}} as |f|>
@@ -448,4 +465,11 @@
       </Modal.footer>
     </ChForm>
   </ModalDialog>
+{{/if}}
+
+{{#if this.graduateTraining }}
+  <ArtTraining::Graduate @training={{this.graduateTraining}}
+                         @slot={{this.slot}}
+                         @students={{this.students}}
+                         @onCancel={{this.cancelGraduateStudents}}/>
 {{/if}}

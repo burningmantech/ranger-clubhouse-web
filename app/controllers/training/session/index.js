@@ -2,6 +2,8 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import EmberObject from '@ember/object';
 import {debounce} from '@ember/runloop';
 import {action, set} from '@ember/object';
+// import {action, computed} from '@ember/object'; Prior to rebase
+
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import _ from 'lodash';
@@ -10,6 +12,7 @@ const SEARCH_RATE_MS = 300;
 
 export default class TrainingSlotController extends ClubhouseController {
   @service shiftManage;
+  @tracked graduateTraining;
 
   dirtRankOptions = [
     ["No Rank", ''],
@@ -146,6 +149,10 @@ export default class TrainingSlotController extends ClubhouseController {
     return this.trainers.reduce((total, group) => {
       return group.trainers.length + total;
     }, 0);
+  }
+
+  get offersGraduation() {
+    return !!this.training.graduation_info;
   }
 
   @action
@@ -318,7 +325,6 @@ export default class TrainingSlotController extends ClubhouseController {
     }
   }
 
-
   @action
   editNoteAction(note) {
     this.editNote = note;
@@ -352,6 +358,16 @@ export default class TrainingSlotController extends ClubhouseController {
           this.toast.success('The note was successfully deleted.');
         }).catch((response) => this.house.handleErrorResponse(response));
     });
+  }
+
+  @action
+  showGraduateStudentsAction() {
+    this.graduateTraining = this.training;
+  }
+
+  @action
+  cancelGraduateStudents() {
+    this.graduateTraining = null;
   }
 
 }
