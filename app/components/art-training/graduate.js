@@ -6,6 +6,7 @@ import Selectable from 'clubhouse/utils/selectable';
 
 class Candidate extends Selectable {
   @tracked didGraduate = false;
+  @tracked reason;
 
   constructor(row) {
     super(row);
@@ -22,7 +23,7 @@ export default class ArtTrainingGraduateComponent extends Component {
   @tracked isSubmitting = false;
   @tracked isLoading = true;
 
-  @tracked position;
+  @tracked positions;
   @tracked fullyGraduatedPosition;
 
   @tracked candidates = [];
@@ -33,8 +34,10 @@ export default class ArtTrainingGraduateComponent extends Component {
     super(...arguments);
 
     this.ajax.request(`training-session/${this.args.slot.id}/graduation-candidates`)
-      .then(({people, position, fully_graduated_position}) => {
-        this.position = position;
+      .then(({people, positions, fully_graduated_position}) => {
+        this.positions = positions;
+        this.positionTitles = positions.map((p) => p.title).join(', ');
+
         this.fullyGraduatedPosition = fully_graduated_position;
         people.forEach((person) => {
           switch (person.eligibility) {
@@ -45,7 +48,7 @@ export default class ArtTrainingGraduateComponent extends Component {
               this.candidates.push(new Candidate({person}));
               break;
             case 'graduated':
-              this.graduated.push({person, reason: `Already has the position: ${this.position.title}`});
+              this.graduated.push({person, reason: `Already has the position(s): ${this.positionTitles}`});
               break;
             case 'fully-graduated':
               this.graduated.push({person, reason: `Already has the position: ${this.fullyGraduatedPosition.title}`});
@@ -94,7 +97,7 @@ export default class ArtTrainingGraduateComponent extends Component {
           if (status === 'success') {
             candidate.selected = false;
             candidate.didGraduate = true;
-            candidate.reason = `Successfully granted ${this.position.title}`;
+            candidate.reason = `Granted: ${this.positionTitles}`;
           } else {
             candidate.reason = `Could not graduate the person. status [${status}]`;
           }

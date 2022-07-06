@@ -1,43 +1,45 @@
-<ModalDialog @title="Graduation Candidates" @onEscape={{@onCancel}} as |Modal|>
+<ModalDialog @title="Graduate Trainees" @onEscape={{@onCancel}} as |Modal|>
   <Modal.body>
     {{#if this.isLoading}}
       <LoadingIndicator @text="loading the candidates"/>
     {{else}}
       <p>
-        Eligible candidates are ones who have passed training, and do not already have the <b>{{this.position.title}}</b>
-        {{#if this.fullyGraduatedPosition}}
-          or <b>{{this.fullyGraduatedPosition.title}}</b> positions.
-        {{else}}
-          position.
-        {{/if}}
+        Eligible candidates are ones who have passed training, and do not already have the following position(s):<br>
+        <b>{{this.positionTitles}}</b>
       </p>
+      {{#if this.fullyGraduatedPosition}}
+        <p>
+          Individuals who already have the <b>{{this.fullyGraduatedPosition.title}}</b> position are considered "fully
+          graduated" and will be skipped.
+        </p>
+      {{/if}}
       {{#if this.candidates}}
-        The following candidates are eligible to be granted the {{this.position.title}} position:
-        <table class="table table-striped table-hover table-sm table-width-auto">
+        The following candidates are eligible to be granted the position(s):
+        <table class="table table-striped table-hover table-sm">
           <thead>
           <tr>
-            <th>Graduate?</th>
-            <th>Callsign</th>
-            <th>Status</th>
-            <th>Result</th>
+            <th class="w-15">Graduate?</th>
+            <th class="w-15">Callsign</th>
+            <th class="w-10">Status</th>
+            <th class="w-60">Result</th>
           </tr>
           </thead>
 
           <tbody>
           {{#each this.candidates as |student|}}
             <tr>
-              <td class="text-end">
+              <td class="w-15 text-center">
                 {{#if student.didGraduate}}
                   {{fa-icon "check" color="success"}}
                 {{else}}
                   <Input @type="checkbox" @checked={{student.selected}} />
                 {{/if}}
               </td>
-              <td>
+              <td class="w-15">
                 {{student.person.callsign}}
               </td>
-              <td>{{student.person.status}}</td>
-              <td>{{student.reason}}</td>
+              <td class="w-15">{{student.person.status}}</td>
+              <td class="w-50">{{student.reason}}</td>
             </tr>
           {{/each}}
           </tbody>
@@ -48,24 +50,24 @@
         </p>
       {{/if}}
       {{#if this.ineligible}}
-        <b class="text-danger">The following candidates are not eligible for graduation</b>
-        <table class="table table-striped table-hover table-sm table-width-auto">
+        <div class="text-danger">The following are not eligible for graduation:</div>
+        <table class="table table-striped table-hover table-sm">
           <thead>
           <tr>
-            <th>Callsign</th>
-            <th>Status</th>
-            <th>Reason</th>
+            <th class="w-15">Callsign</th>
+            <th class="w-10">Status</th>
+            <th class="w-75">Reason</th>
           </tr>
           </thead>
 
           <tbody>
           {{#each this.ineligible as |student|}}
             <tr>
-              <td>
+              <td class="w-15">
                 {{student.person.callsign}}
               </td>
-              <td>{{student.person.status}}</td>
-              <td>{{student.reason}}</td>
+              <td class="w-10">{{student.person.status}}</td>
+              <td class="w-75">{{student.reason}}</td>
             </tr>
           {{/each}}
           </tbody>
