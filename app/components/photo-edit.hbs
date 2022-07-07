@@ -17,7 +17,7 @@
   </p>
 {{/if}}
 
-<div id="{{if @isMugshot "mugshot-edit-container" "photo-edit-container"}}">
+<div id="mugshot-edit-container">
   <img id="photo-edit-image" src={{@imageDataUrl}} {{on "load" this.imageLoadedEvent}} alt="edit upload"/>
 </div>
 
