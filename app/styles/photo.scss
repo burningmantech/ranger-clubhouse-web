@@ -74,6 +74,10 @@
   }
 }
 
+.cropper-view-box {
+  //outline-width: 0 !important;
+}
+
 #mugshot-edit-container {
   background-color: #ececec;
   max-width: 350px;
@@ -86,13 +90,7 @@
     width: 350px;
     height: 450px;
   }
-}
 
-.cropper-view-box {
-  //outline-width: 0 !important;
-}
-
-#mugshot-edit-container {
   .cropper-container {
     position: relative;
   }

@@ -30,8 +30,10 @@ export default class PhotoEditComponent extends Component {
     }
   }
 
-  /*
-   * When brower says the image has been loaded, fire up CopperJS
+  /**
+   * When browser says the image has been loaded, fire up CopperJS
+   *
+   * @param {Event} event
    */
 
   @action
@@ -47,12 +49,12 @@ export default class PhotoEditComponent extends Component {
       cropBoxMovable: false,
       cropBoxResizable: false,
       toggleDragModeOnDblclick: false,
-      viewMode: 3,
+      viewMode: this.args.isMugshot ? 3 : 0,
       modal: true,
     });
   }
 
-  /*
+  /**
    * Let the caller component know the user is done cropping.
    */
 
