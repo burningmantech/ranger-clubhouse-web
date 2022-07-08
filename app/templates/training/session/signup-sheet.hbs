@@ -11,7 +11,7 @@
   {{#each this.studentPages as |studentPage idx|}}
     <h1 class="{{if idx "d-print-page-break"}}">
       {{year-format this.slot.begins}} {{this.slot.description}} - {{shift-format this.slot.begins}}
-      <div class="float-end small">Page {{add idx 1}} of {{add this.studentPages.length 1}}</div>
+      <div class="float-end small">Page {{add idx 1}} of {{this.totalPages}}</div>
     </h1>
 
     <table class="signup-table">
