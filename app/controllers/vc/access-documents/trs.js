@@ -70,56 +70,56 @@ const UNPAID_EXPORT_FORMAT = [
   ['Shipping Address (Required if Mail Delivery type selected): Phone', 'not_used_phone'],
   //['Request: Gift Ticket', 'gift_ticket'],
   ['Request: Gift Vehicle Pass', 'vp'],
-  ['Request: STAFF WAP 8/6 & Later', 'wap_0806'],
-  ['Request: STAFF WAP 8/7 & Later', 'wap_0807'],
-  ['Request: STAFF WAP 8/8 & Later', 'wap_0808'],
-  ['Request: STAFF WAP 8/9 & Later', 'wap_0809'],
-  ['Request: STAFF WAP 8/10 & Later', 'wap_0810'],
-  ['Request: STAFF WAP 8/11 & Later', 'wap_0811'],
-  ['Request: STAFF WAP 8/12 & Later', 'wap_0812'],
-  ['Request: STAFF WAP 8/13 & Later', 'wap_0813'],
-  ['Request: STAFF WAP 8/14 & Later', 'wap_0814'],
-  ['Request: STAFF WAP 8/15 & Later', 'wap_0815'],
-  ['Request: STAFF WAP 8/16 & Later', 'wap_0816'],
-  ['Request: STAFF WAP 8/17 & Later', 'wap_0817'],
-  ['Request: STAFF WAP 8/18 & Later', 'wap_0818'],
-  ['Request: STAFF WAP 8/19 & Later', 'wap_0819'],
-  ['Request: STAFF WAP 8/20 & Later', 'wap_0820'],
-  ['Request: STAFF WAP 8/21 & Later', 'wap_0821'],
-  ['Request: STAFF WAP 8/22 & Later', 'wap_0822'],
-  ['Request: STAFF WAP 8/23 & Later', 'wap_0823'],
-  ['Request: STAFF WAP 8/24 & Later', 'wap_0824'],
-  ['Request: STAFF WAP 8/25 & Later', 'wap_0825'],
-  ['Request: STAFF WAP 8/26 & Later', 'wap_0826'],
-  ['Request: STAFF WAP 8/27 & Later', 'wap_0827'],
+  ['Request: STAFF WAP 8/6 &amp; Later', 'wap_0806'],
+  ['Request: STAFF WAP 8/7 &amp; Later', 'wap_0807'],
+  ['Request: STAFF WAP 8/8 &amp; Later', 'wap_0808'],
+  ['Request: STAFF WAP 8/9 &amp; Later', 'wap_0809'],
+  ['Request: STAFF WAP 8/10 &amp; Later', 'wap_0810'],
+  ['Request: STAFF WAP 8/11 &amp; Later', 'wap_0811'],
+  ['Request: STAFF WAP 8/12 &amp; Later', 'wap_0812'],
+  ['Request: STAFF WAP 8/13 &amp; Later', 'wap_0813'],
+  ['Request: STAFF WAP 8/14 &amp; Later', 'wap_0814'],
+  ['Request: STAFF WAP 8/15 &amp; Later', 'wap_0815'],
+  ['Request: STAFF WAP 8/16 &amp; Later', 'wap_0816'],
+  ['Request: STAFF WAP 8/17 &amp; Later', 'wap_0817'],
+  ['Request: STAFF WAP 8/18 &amp; Later', 'wap_0818'],
+  ['Request: STAFF WAP 8/19 &amp; Later', 'wap_0819'],
+  ['Request: STAFF WAP 8/20 &amp; Later', 'wap_0820'],
+  ['Request: STAFF WAP 8/21 &amp; Later', 'wap_0821'],
+  ['Request: STAFF WAP 8/22 &amp; Later', 'wap_0822'],
+  ['Request: STAFF WAP 8/23 &amp; Later', 'wap_0823'],
+  ['Request: STAFF WAP 8/24 &amp; Later', 'wap_0824'],
+  ['Request: STAFF WAP 8/25 &amp; Later', 'wap_0825'],
+  ['Request: STAFF WAP 8/26 &amp; Later', 'wap_0826'],
+  ['Request: STAFF WAP 8/27 &amp; Later', 'wap_0827'],
   ['Request: STAFF WAP - Anytime', 'wap_anytime'],
   // Yes, the dates are completely out of order for 2022.
-  ['Request: Staff Credential Pickup 8/26 & After', 'sc_0826'],
-  ['Request: Staff Credential Pickup 8/25 & After', 'sc_0825'],
-  ['Request: Staff Credential Pickup 8/3 & After', 'sc_0803'],
-  ['Request: Staff Credential Pickup 8/4 & After', 'sc_0804'],
-  ['Request: Staff Credential Pickup 8/5 & After', 'sc_0805'],
-  ['Request: Staff Credential Pickup 8/6 & After', 'sc_0806'],
-  ['Request: Staff Credential Pickup 8/7 & After', 'sc_0807'],
-  ['Request: Staff Credential Pickup 8/8 & After', 'sc_0808'],
-  ['Request: Staff Credential Pickup 8/9 & After', 'sc_0809'],
-  ['Request: Staff Credential Pickup 8/10 & After', 'sc_0810'],
-  ['Request: Staff Credential Pickup 8/11 & After', 'sc_0811'],
-  ['Request: Staff Credential Pickup 8/12 & After', 'sc_0812'],
-  ['Request: Staff Credential Pickup 8/13 & After', 'sc_0813'],
-  ['Request: Staff Credential Pickup 8/14 & After', 'sc_0814'],
-  ['Request: Staff Credential Pickup 8/15 & After', 'sc_0815'],
-  ['Request: Staff Credential Pickup 8/16 & After', 'sc_0816'],
-  ['Request: Staff Credential Pickup 8/17 & After', 'sc_0817'],
-  ['Request: Staff Credential Pickup 8/18 & After', 'sc_0818'],
-  ['Request: Staff Credential Pickup 8/19 & After', 'sc_0819'],
-  ['Request: Staff Credential Pickup 8/20 & After', 'sc_0820'],
-  ['Request: Staff Credential Pickup 8/21 & After', 'sc_0821'],
-  ['Request: Staff Credential Pickup 8/22 & After', 'sc_0822'],
-  ['Request: Staff Credential Pickup 8/23 & After', 'sc_0823'],
-  ['Request: Staff Credential Pickup 8/24 & After', 'sc_0824'],
+  ['Request: Staff Credential Pickup 8/26 &map; After', 'sc_0826'],
+  ['Request: Staff Credential Pickup 8/25 &map; After', 'sc_0825'],
+  ['Request: Staff Credential Pickup 8/3 &map; After', 'sc_0803'],
+  ['Request: Staff Credential Pickup 8/4 &map; After', 'sc_0804'],
+  ['Request: Staff Credential Pickup 8/5 &map; After', 'sc_0805'],
+  ['Request: Staff Credential Pickup 8/6 &map; After', 'sc_0806'],
+  ['Request: Staff Credential Pickup 8/7 &map; After', 'sc_0807'],
+  ['Request: Staff Credential Pickup 8/8 &map; After', 'sc_0808'],
+  ['Request: Staff Credential Pickup 8/9 &map; After', 'sc_0809'],
+  ['Request: Staff Credential Pickup 8/10 &map; After', 'sc_0810'],
+  ['Request: Staff Credential Pickup 8/11 &map; After', 'sc_0811'],
+  ['Request: Staff Credential Pickup 8/12 &map; After', 'sc_0812'],
+  ['Request: Staff Credential Pickup 8/13 &map; After', 'sc_0813'],
+  ['Request: Staff Credential Pickup 8/14 &map; After', 'sc_0814'],
+  ['Request: Staff Credential Pickup 8/15 &map; After', 'sc_0815'],
+  ['Request: Staff Credential Pickup 8/16 &map; After', 'sc_0816'],
+  ['Request: Staff Credential Pickup 8/17 &map; After', 'sc_0817'],
+  ['Request: Staff Credential Pickup 8/18 &map; After', 'sc_0818'],
+  ['Request: Staff Credential Pickup 8/19 &map; After', 'sc_0819'],
+  ['Request: Staff Credential Pickup 8/20 &map; After', 'sc_0820'],
+  ['Request: Staff Credential Pickup 8/21 &map; After', 'sc_0821'],
+  ['Request: Staff Credential Pickup 8/22 &map; After', 'sc_0822'],
+  ['Request: Staff Credential Pickup 8/23 &map; After', 'sc_0823'],
+  ['Request: Staff Credential Pickup 8/24 &map; After', 'sc_0824'],
   ['Request: Staff Credential Pickup Anytime', 'sc_anytime'],
-  ['Request: Staff Credential Pickup 8/27 & After', 'sc_0827'],
+  ['Request: Staff Credential Pickup 8/27 &map; After', 'sc_0827'],
 ];
 
 // Filter Options
@@ -137,6 +137,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
   @tracked isSubmitting = false;
   @tracked viewRecords;
   @tracked selectedCount = 0;
+  @tracked viewBadRecords = [];
 
   MAX_BATCH_SIZE = 2000;
 
@@ -253,6 +254,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
   _buildViewRecords() {
     this.viewRecords = this._filterRecords();
+    this.viewBadRecords = this.viewRecords.filter((doc) => doc.has_error);
   }
 
   _filterRecords() {
@@ -292,11 +294,23 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
           const documents = tickets.concat(vp), notes = [];
           documents.forEach((row) => notes.push(row.trsNote));
 
+          const has_error = !!documents.find((doc) => doc.has_error);
+          const errors = [];
+          if (has_error) {
+            documents.forEach((doc) => {
+              if (doc.has_error) {
+                errors.push(doc.error)
+              }
+            });
+          }
+
           rows.push({
             person: person.person,
             delivery_type: (isSC ? 'staff_credentialing' : tickets[0].delivery_method),
             documents,
             trsNote: notes.join('+'),
+            has_error,
+            error: errors.join("\n"),
           });
         });
 
@@ -313,7 +327,15 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     const selected = event.target.checked;
 
     this.selectAll = selected;
-    this.viewRecords.forEach((r) => set(r, 'selected', selected));
+    this.viewRecords.forEach((r) => {
+      if (selected) {
+        if (!r.has_error) {
+          set(r, 'selected', true);
+        }
+      } else {
+        set(r, 'selected', false);
+      }
+    });
     this.selectedCount = selected ? this.viewRecords.length : 0;
   }
 
@@ -349,6 +371,12 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
   @action
   exportSelectedAction() {
+    this.modal.confirm('Confirm TRS Export',
+      `A comment will be added to all exported items indicating who performed the export. Are you sure you want to export ${this.viewRecords.length} items? `,
+      () => this._performExport());
+  }
+
+  _performExport() {
     const records = this.viewRecords.filter((r) => r.selected);
     const isRPT = (this.filter === RPT);
     let rows;

@@ -74,6 +74,11 @@
       <FormLabel @auto={{true}}>Export is limited to {{this.MAX_BATCH_SIZE}} items</FormLabel>
     </FormRow>
 
+    {{#if this.viewBadRecords}}
+      <p>
+        <b class="text-danger">{{pluralize this.viewBadRecords.length "item"}} with errors will not be bulk selected however, they may be individually selected.</b>
+      </p>
+    {{/if}}
     Showing {{pluralize this.viewRecords.length "item"}} of type "{{this.filterLabel}}".
     Selected {{pluralize this.selectedCount "item"}}.
     <table class="table table-sm table-hover table-striped table-width-auto">
@@ -94,9 +99,9 @@
 
       <tbody>
       {{#each this.viewRecords as |rec|}}
-        <tr>
+        <tr class={{if rec.has_error "table-danger"}}>
           <td>
-            {{#if rec.submitted}}
+             {{#if rec.submitted}}
               <span class="text-success">{{fa-icon "check"}}</span>
             {{else if (eq this.filter "all")}}
               &nbsp;
@@ -105,6 +110,9 @@
             {{/if}}
           </td>
           <td>
+            {{#if rec.has_error}}
+              {{fa-icon "exclamation-triangle" color="danger"}}
+            {{/if}}
             <PersonLink @person={{rec.person}} @page="access-documents"/>
           </td>
           <td>{{rec.person.first_name}}</td>
