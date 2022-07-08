@@ -2,12 +2,13 @@ import Component from '@glimmer/component';
 import {cached} from '@glimmer/tracking';
 import {htmlSafe} from '@ember/template';
 import dayjs from 'dayjs';
+import {DELIVERY_POSTAL, DELIVERY_WILL_CALL} from 'clubhouse/models/access-document';
 
 export default class TicketSummaryComponent extends Component {
   @cached
   get summaryTitle() {
     if (this.unfinishedItems.length) {
-      return 'Summary - Unfinished Items';
+      return htmlSafe('Summary <span class="text-danger">- Unfinished Items</span>');
     } else {
       return 'Summary';
     }
@@ -23,6 +24,15 @@ export default class TicketSummaryComponent extends Component {
     } /*else if (!this.haveAddress) {
       items.push('A delivery method and/or a mailing address has not been given.');
     }*/
+
+    const {ticket} = this.args;
+    const {vehiclePass} = this.args.ticketPackage;
+
+    const item = ticket ?? vehiclePass;
+    if (item && item.isUsing
+      && item.delivery_method !== DELIVERY_POSTAL && item.delivery_method !== DELIVERY_WILL_CALL) {
+      items.push('A delivery method still needs to be chosen.');
+    }
 
     return items;
   }

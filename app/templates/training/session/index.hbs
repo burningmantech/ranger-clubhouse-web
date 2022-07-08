@@ -86,8 +86,8 @@
       <p>
         A {{fa-icon "asterisk"}} by a person's status indicates an ART Prospective.
         {{#if this.offersGraduation}}
-          Use the "Graduate Trainees" button to grant the position
-          <i>"{{this.training.graduation_info.position.title}}"</i> to eligible individuals.
+          Use the "Graduate Trainees" button to grant {{pluralize this.training.graduation_info.positions.length "position"}}
+          <i>"{{this.graduatePositionTitles}}"</i> to eligible individuals.
         {{/if}}
       </p>
     {{else}}
