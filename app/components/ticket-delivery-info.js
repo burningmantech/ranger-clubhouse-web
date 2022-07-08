@@ -162,7 +162,7 @@ export default class TicketDeliverInfoComponent extends Component {
     const ticketClaimed = this.ticketClaimed;
 
     /*
-      For 2019 RPT address is collected directly by BM Ticketing.
+      For 2022 RPT address is collected directly by BM Ticketing.
       if (ticketClaimed && ticket.type == 'reduced_price_ticket') {
         items.push(ticket);
       }

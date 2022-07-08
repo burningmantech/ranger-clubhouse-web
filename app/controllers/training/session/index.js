@@ -2,7 +2,8 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import EmberObject from '@ember/object';
 import {debounce} from '@ember/runloop';
 import {action, set} from '@ember/object';
-// import {action, computed} from '@ember/object'; Prior to rebase
+import conjunctionFormat from 'clubhouse/utils/conjunction-format';
+
 
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
@@ -153,6 +154,10 @@ export default class TrainingSlotController extends ClubhouseController {
 
   get offersGraduation() {
     return !!this.training.graduation_info;
+  }
+
+  get graduatePositionTitles() {
+    return conjunctionFormat(this.training.graduation_info.positions.map((p) => p.title), 'and');
   }
 
   @action

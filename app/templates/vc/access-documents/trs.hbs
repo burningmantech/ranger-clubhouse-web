@@ -24,7 +24,7 @@
 
 {{#if this.badRecords}}
   <UiSection>
-    <:title>{{pluralize this.badRecords.length "item"}} with errors</:title>
+    <:title><span class="text-danger">{{fa-icon "exclamation-triangle"}} {{pluralize this.badRecords.length "item"}} with errors</span></:title>
     <:body>
       <table class="table table-width-auto table-sm table-hover table-striped">
         <thead>
@@ -43,9 +43,13 @@
               <PersonLink @person={{rec.person}} @page="access-documents"/>
             </td>
             <td>RAD-{{rec.document.id}}</td>
-            <td>{{rec.document.type}}</td>
+            <td>{{rec.document.shortType}}</td>
             <td>
-              {{or rec.document.access_date "-"}}
+              {{#if rec.document.access_any_time}}
+                Any
+              {{else}}
+                {{or rec.document.access_date "-"}}
+              {{/if}}
             </td>
             <td>{{rec.document.error}}</td>
           </tr>
@@ -70,15 +74,13 @@
       <FormLabel @auto={{true}}>Export is limited to {{this.MAX_BATCH_SIZE}} items</FormLabel>
     </FormRow>
 
-    Showing {{pluralize this.viewRecords.length "item"}} of type "{{this.filter}}". Selected {{pluralize
-    this.selectedCount "item"}}.
+    Showing {{pluralize this.viewRecords.length "item"}} of type "{{this.filterLabel}}".
+    Selected {{pluralize this.selectedCount "item"}}.
     <table class="table table-sm table-hover table-striped table-width-auto">
       <thead>
       <tr>
         <th>
-          <Input @type="checkbox"
-                 @checked={{this.selectAll}}
-            {{on "change" this.toggleAll}}
+          <Input @type="checkbox" @checked={{this.selectAll}} {{on "change" this.toggleAll}}
                  disabled={{eq this.filter "all"}} />
         </th>
         <th>Callsign</th>
@@ -131,7 +133,8 @@
         Export {{pluralize this.selectedCount "Selected Document"}}
       {{/if}}
     </UiButton>
-    <UiButton @type="secondary" @onClick={{this.markSubmitted}}
+    <UiButton @type="secondary"
+              @onClick={{this.markSubmitted}}
               @disabled={{or this.isSubmitting (eq this.selectedCount 0) (eq this.filter "all")}}>
       Mark Selected As Submitted
     </UiButton>

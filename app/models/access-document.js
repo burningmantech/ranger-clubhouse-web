@@ -60,7 +60,7 @@ export const TypeShortLabels = {
   [GIFT_TICKET]: 'GIFT',
   [VEHICLE_PASS]: 'VP',
   [WAP]: 'WAP',
-  [WAPSO]: 'WAPSO',
+  [WAPSO]: 'SOWAP',
 
   [ALL_EAT_PASS]: 'ALL-EAT',
   [EVENT_EAT_PASS]: 'EVENT-EAT',

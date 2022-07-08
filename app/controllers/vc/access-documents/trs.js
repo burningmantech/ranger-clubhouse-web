@@ -2,7 +2,7 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {isBlank, isEmpty} from '@ember/utils';
 import dayjs from 'dayjs';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import {
   GIFT_TICKET,
   STAFF_CREDENTIAL,
@@ -10,18 +10,10 @@ import {
   WAP,
   WAPSO,
   VEHICLE_PASS,
-  DELIVERY_POSTAL
+  DELIVERY_POSTAL,
+  TypeShortLabels,
 } from 'clubhouse/models/access-document';
 import {ALPHA, PROSPECTIVE} from 'clubhouse/constants/person_status';
-
-const SHORT_TYPES = {
-  [GIFT_TICKET]: 'GIFT',
-  [RPT]: 'RPT',
-  [STAFF_CREDENTIAL]: 'SC',
-  [VEHICLE_PASS]: 'VP',
-  [WAPSO]: 'SOWAP',
-  [WAP]: 'WAP',
-};
 
 const TRS_COLUMN = {
   [STAFF_CREDENTIAL]: 'sc',
@@ -39,10 +31,24 @@ const PAID_EXPORT_FORMAT = [
   ['Question: Method Of Delivery', 'delivery_type'],
   ['Question: Nickname/Project:', 'project_name'],
   ['Question: Notes:', 'note'],
-  ['Request: $210 Ticket', 'rpt'],
-  ['Request: $100 Vehicle Pass', 'vp'],
-  ['Request: Transferrable $210 Ticket', 'rpt_xfer'],
-  ['Request: Transferrable $100 Vehicle Pass', 'vp_xfer']
+  // Shipping addresses are not used in 2022, however the headers are still present. sigh.
+  // removed 'not_used_' prefix if later events requires address
+  ['Shipping Address (Required if Mail Delivery type selected): Country', 'not_used_country'],
+  ['Shipping Address (Required if Mail Delivery type selected): Full Name', 'not_used_full_name'],
+  ['Shipping Address (Required if Mail Delivery type selected): Address', 'not_used_address1'],
+  ['Shipping Address (Required if Mail Delivery type selected): Address Line 2', 'not_used_address2'],
+  ['Shipping Address (Required if Mail Delivery type selected): City', 'not_used_city'],
+  ['Shipping Address (Required if Mail Delivery type selected): State', 'not_used_state'],
+  ['Shipping Address (Required if Mail Delivery type selected): Zip', 'not_used_zip'],
+  ['Shipping Address (Required if Mail Delivery type selected): Phone', 'not_used_phone'],
+  ['Request: $225 Ticket', 'rpt'],
+  ['Request: $140 Vehicle Pass', 'paid_vp'],
+  ['Request: Gift Ticket', 'gift_ticket'],
+  ['Request: Gift Vehicle Pass', 'vp'],
+  ['Request: Transferrable $225 Ticket', 'rpt_xfer'],
+  ['Request: Transferrable $140 Vehicle Pass', 'vp_xfer'],
+  ['Request: Transferrable Gift Ticket', 'gift_xfer'],
+  ['Request: Transferrable Gift Vehicle Pass', 'gift_vp_xfer']
 ];
 
 const UNPAID_EXPORT_FORMAT = [
@@ -50,21 +56,20 @@ const UNPAID_EXPORT_FORMAT = [
   ['Last Name', 'last_name'],
   ['Email', 'email'],
   ['Question: Method of Delivery', 'delivery_type'],
-  ['Question: Nickname/Project', 'project_name'],
+  ['Question: Nickname/Project', 'project_name'],   // callsign
   ['Question: Notes', 'note'],
-  ['Shipping Address (Required if Mail Delivery type selected): Country', 'country'],
-  ['Shipping Address (Required if Mail Delivery type selected): Full Name', 'full_name'],
-  ['Shipping Address (Required if Mail Delivery type selected): Address', 'address1'],
-  ['Shipping Address (Required if Mail Delivery type selected): Address Line 2', 'address2'],
-  ['Shipping Address (Required if Mail Delivery type selected): City', 'city'],
-  ['Shipping Address (Required if Mail Delivery type selected): State', 'state'],
-  ['Shipping Address (Required if Mail Delivery type selected): Zip', 'zip'],
-  ['Shipping Address (Required if Mail Delivery type selected): Phone', 'phone'],
-  ['Request: Gift Ticket', 'gift_ticket'],
+  // Shipping addresses are not used in 2022, however the headers are still present. sigh.
+  // removed 'not_used_' prefix if later events requires address
+  ['Shipping Address (Required if Mail Delivery type selected): Country', 'not_used_country'],
+  ['Shipping Address (Required if Mail Delivery type selected): Full Name', 'not_used_full_name'],
+  ['Shipping Address (Required if Mail Delivery type selected): Address', 'not_used_address1'],
+  ['Shipping Address (Required if Mail Delivery type selected): Address Line 2', 'not_used_address2'],
+  ['Shipping Address (Required if Mail Delivery type selected): City', 'not_used_city'],
+  ['Shipping Address (Required if Mail Delivery type selected): State', 'not_used_state'],
+  ['Shipping Address (Required if Mail Delivery type selected): Zip', 'not_used_zip'],
+  ['Shipping Address (Required if Mail Delivery type selected): Phone', 'not_used_phone'],
+  //['Request: Gift Ticket', 'gift_ticket'],
   ['Request: Gift Vehicle Pass', 'vp'],
-  ['Request: STAFF WAP 8/3 & Later', 'wap_0803'],
-  ['Request: STAFF WAP 8/4 & Later', 'wap_0804'],
-  ['Request: STAFF WAP 8/5 & Later', 'wap_0805'],
   ['Request: STAFF WAP 8/6 & Later', 'wap_0806'],
   ['Request: STAFF WAP 8/7 & Later', 'wap_0807'],
   ['Request: STAFF WAP 8/8 & Later', 'wap_0808'],
@@ -84,7 +89,13 @@ const UNPAID_EXPORT_FORMAT = [
   ['Request: STAFF WAP 8/22 & Later', 'wap_0822'],
   ['Request: STAFF WAP 8/23 & Later', 'wap_0823'],
   ['Request: STAFF WAP 8/24 & Later', 'wap_0824'],
+  ['Request: STAFF WAP 8/25 & Later', 'wap_0825'],
+  ['Request: STAFF WAP 8/26 & Later', 'wap_0826'],
+  ['Request: STAFF WAP 8/27 & Later', 'wap_0827'],
   ['Request: STAFF WAP - Anytime', 'wap_anytime'],
+  // Yes, the dates are completely out of order for 2022.
+  ['Request: Staff Credential Pickup 8/26 & After', 'sc_0826'],
+  ['Request: Staff Credential Pickup 8/25 & After', 'sc_0825'],
   ['Request: Staff Credential Pickup 8/3 & After', 'sc_0803'],
   ['Request: Staff Credential Pickup 8/4 & After', 'sc_0804'],
   ['Request: Staff Credential Pickup 8/5 & After', 'sc_0805'],
@@ -108,8 +119,7 @@ const UNPAID_EXPORT_FORMAT = [
   ['Request: Staff Credential Pickup 8/23 & After', 'sc_0823'],
   ['Request: Staff Credential Pickup 8/24 & After', 'sc_0824'],
   ['Request: Staff Credential Pickup Anytime', 'sc_anytime'],
-  ['Request: Transferrable Gift Ticket', 'xfer_gift_ticket'],
-  ['Request: Transferrable Gift Vehicle Pass', 'xfer_vehicle_pass']
+  ['Request: Staff Credential Pickup 8/27 & After', 'sc_0827'],
 ];
 
 // Filter Options
@@ -144,12 +154,14 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     ['Gift Tickets+VP', GIFT_TICKET_VP]
   ];
 
+  @cached
   get badRecords() {
     const records = [];
 
     this.people.forEach((human) => {
       human.documents.forEach((document) => {
         if (document.has_error) {
+          document.shortType = TypeShortLabels[document.type];
           records.push({person: human.person, document});
         }
       })
@@ -186,7 +198,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
       human.documents.forEach((doc) => {
         const type = doc.type;
-        const shortType = SHORT_TYPES[type] || 'UNK';
+        const shortType = TypeShortLabels[type] ?? type;
         let trsColumn = '', dateInfo = '';
 
         switch (doc.type) {
@@ -278,9 +290,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
           }
 
           const documents = tickets.concat(vp), notes = [];
-          documents.forEach((row) => {
-            notes.push(row.trsNote)
-          });
+          documents.forEach((row) => notes.push(row.trsNote));
 
           rows.push({
             person: person.person,
@@ -319,12 +329,22 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     row.phone = isBlank(person.home_phone) ? '415-555-1212' : person.home_phone;
   }
 
-  _fillName(person, row) {
-    row.first_name = person.first_name;
-    row.last_name = person.last_name;
+  _fillName(person, row, isWAPSO, soname) {
+    if (isWAPSO) {
+      const matches = soname.match(/^\s*([\w-]+)\s*(.*)$/);
+      row.first_name = matches[1];
+      row.last_name = !isEmpty(matches[2]) ? matches[2] : person.last_name;
+    } else {
+      row.first_name = person.first_name;
+      row.last_name = person.last_name;
+    }
     row.full_name = `${person.first_name} ${person.last_name}`;
     row.email = person.email;
     row.project_name = `Ranger ${person.callsign}`;
+  }
+
+  get filterLabel() {
+    return this.filterOptions.find((opt) => opt[1] === this.filter)?.[0] ?? this.filter;
   }
 
   @action
@@ -339,7 +359,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     }
 
     const exportedIds = [];
-    const exportedBy = `exported by ${this.session.user.callsign}`;
+    const exportedBy = `exported by CHID #${this.session.user.id}`;
 
     if (this.filter === STAFF_CREDENTIAL_VP
       || this.filter === GIFT_TICKET_VP) {
@@ -359,8 +379,8 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
           note: `${rec.trsNote} ${exportedBy}`,
         };
 
-        this._fillName(person, row);
-        //this._fillAddress(person, row);
+        this._fillName(person, row, false);
+        this._fillAddress(person, row);
 
         let docCount = 0;
         rec.documents.forEach((doc) => {
@@ -389,7 +409,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
         exportedIds.push(doc.id);
 
-        this._fillName(person, row);
+        this._fillName(person, row, doc.type === WAPSO, doc.name);
 
         const isPostal = (doc.delivery_method === DELIVERY_POSTAL);
 
@@ -438,9 +458,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
     const format = isRPT ? PAID_EXPORT_FORMAT : UNPAID_EXPORT_FORMAT;
 
-    const columns = format.map((r) => {
-      return {title: r[0], key: r[1]};
-    });
+    const columns = format.map((r) => ({title: r[0], key: r[1]}));
 
     const date = dayjs().format('YYYY-MM-DD-HH-mm');
 
@@ -451,7 +469,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         ids: exportedIds,
         comment: 'exported' // Bulk comment API will add the user's callsign and a timestamp
       }
-    }).then(() => this.toast.success('An export comment was successfully added to the access documents.'))
+    }).then(() => this.toast.success('An export comment was successfully added to the exported items.'))
       .catch((response) => this.house.handleErrorResponse(response));
 
     this.house.downloadCsv(`trs-${this.filter.replace(/_/g, '-')}-${date}.csv`, columns, rows);
@@ -475,23 +493,25 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     });
 
 
-    this.modal.confirm('Confirm mask as submitted', `Are you sure you want to mark the ${itemCount} item(s) as submitted?`, () => {
-      this.isSubmitting = true;
-      this.ajax.request('access-document/mark-submitted', {method: 'POST', data: {ids}}).then(() => {
-        this.toast.success('Access documents have been successfully marked as submitted.');
-        this.isSubmitting = false;
-        this.viewRecords.forEach((rec) => {
-          if (!rec.selected)
-            return;
+    this.modal.confirm('Confirm mask as submitted',
+      `Are you sure you want to mark the ${itemCount} item(s) as submitted?`,
+      () => {
+        this.isSubmitting = true;
+        this.ajax.request('access-document/mark-submitted', {method: 'POST', data: {ids}}).then(() => {
+          this.toast.success('Access documents have been successfully marked as submitted.');
+          this.isSubmitting = false;
+          this.viewRecords.forEach((rec) => {
+            if (!rec.selected)
+              return;
 
-          set(rec, 'selected', false);
-          set(rec, 'submitted', true);
+            set(rec, 'selected', false);
+            set(rec, 'submitted', true);
 
-          if (rec.documents) {
-            rec.documents.forEach((doc) => set(doc, 'submitted', true));
-          }
-        });
-      }).finally(() => this.isSubmitting = false);
-    });
+            if (rec.documents) {
+              rec.documents.forEach((doc) => set(doc, 'submitted', true));
+            }
+          });
+        }).finally(() => this.isSubmitting = false);
+      });
   }
 }
