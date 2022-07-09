@@ -12,15 +12,13 @@
     </NavbarMenuSection>
   {{/if}}
 
-  {{#if (or @user.isRanger @user.isPNV)}}
+  {{#if (or @user.isRanger @user.isPNV @user.isNonRanger)}}
     <NavbarMenuSection @section="Pre-Event">
-      {{#unless @user.isNonRanger}}
         {{#if (or @user.isPNV)}}
           <<NavbarMenuItem @menu={{menu}} @route="me.tickets" @item="Work Access Pass"/>
         {{else}}
           <<NavbarMenuItem @menu={{menu}} @route="me.tickets" @item="Tickets &amp; Stuff"/>
         {{/if}}
-      {{/unless}}
       <<NavbarMenuItem @menu={{menu}} @route="me.agreements.index" @item="Agreements"/>
       {{#if @user.may_request_stickers}}
         <<NavbarMenuItem @menu={{menu}} @route="me.vehicles" @item="Vehicle Requests"/>
