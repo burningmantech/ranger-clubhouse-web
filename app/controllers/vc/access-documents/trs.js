@@ -96,9 +96,6 @@ const UNPAID_EXPORT_FORMAT = [
   // Yes, the dates are completely out of order for 2022.
   ['Request: Staff Credential Pickup 8/26 &amp; After', 'sc_0826'],
   ['Request: Staff Credential Pickup 8/25 &amp; After', 'sc_0825'],
-  ['Request: Staff Credential Pickup 8/3 &amp; After', 'sc_0803'],
-  ['Request: Staff Credential Pickup 8/4 &amp; After', 'sc_0804'],
-  ['Request: Staff Credential Pickup 8/5 &amp; After', 'sc_0805'],
   ['Request: Staff Credential Pickup 8/6 &amp; After', 'sc_0806'],
   ['Request: Staff Credential Pickup 8/7 &amp; After', 'sc_0807'],
   ['Request: Staff Credential Pickup 8/8 &amp; After', 'sc_0808'],
