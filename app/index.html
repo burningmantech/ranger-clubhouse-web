@@ -108,15 +108,6 @@
 {{content-for "body-footer"}}
 
 <script>
-  (function () {
-    window.addEventListener('pageshow', (event) => {
-      if (event.persisted) {
-        window.location.reload();
-      }
-    });
-  })();
-
-
   function scriptLoadError() {
     document.querySelector("#load-error").style.display = "block";
     const loading = document.querySelector("#app-loading");
