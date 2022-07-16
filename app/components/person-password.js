@@ -21,7 +21,8 @@ export default class PersonPasswordComponent extends Component {
   passwordValidations = {
     password: [
       validatePresence({presence: true, message: 'Enter the new password.'}),
-      validateLength({min: 5, message: 'The password should be 5 characters or more.'})
+      validateLength({min: 5, message: 'The password should be 5 characters or more.'}),
+      validateLength({max: 30, message: 'The password may only be 30 characters or less.'})
     ],
     password_confirmation: [
       validateConfirmation({on: 'password', message: 'The password do not match.'})
