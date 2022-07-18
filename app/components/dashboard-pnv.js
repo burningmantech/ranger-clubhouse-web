@@ -14,6 +14,7 @@ import {
   WAITING
 } from "clubhouse/constants/dashboard";
 import * as DashboardStep from 'clubhouse/constants/dashboard-steps';
+import {PROSPECTIVE} from "../constants/person_status";
 
 const SETUP_ACCOUNT_STEPS = [
   DashboardStep.UPLOAD_PHOTO,
@@ -48,8 +49,17 @@ const ALPHA_STEPS = [{
       };
     }
 
-    if (milestones.alpha_shifts_available) {
-      return {result: ACTION_NEEDED, isSignup: true, route: 'me.schedule'};
+    if (person.status !== PROSPECTIVE && milestones.alpha_shifts_available) {
+      return {
+        result: ACTION_NEEDED,
+        route: 'me.schedule',
+        linkedMessage: {
+          route: 'me.schedule',
+          prefix: 'Visit',
+          text: 'Me > Schedule / Sign Up',
+          suffix: 'to sign up for an Alpha shift.'
+        }
+      };
     }
 
     return {
