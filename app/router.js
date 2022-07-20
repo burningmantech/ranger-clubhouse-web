@@ -225,6 +225,7 @@ Router.map(function () {
       this.route('trs');
       this.route('statistics');
       this.route('waps');
+      this.route('unclaimed-with-signups');
     });
     this.route('bmid');
     this.route('bmid-sanity-check');

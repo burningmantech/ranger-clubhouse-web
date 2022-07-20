@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
-import { service } from '@ember/service';
-import { ALPHA } from 'clubhouse/constants/positions';
+import {service} from '@ember/service';
+import {ALPHA, TRAINING} from 'clubhouse/constants/positions';
 
 export default class ModalMultipleEnrollmentComponent extends Component {
   @service session;
@@ -14,6 +14,8 @@ export default class ModalMultipleEnrollmentComponent extends Component {
     this.slot = this.data.slot;
     this.isMe = (this.session.userId === +this.person.id);
     this.isAlpha = (+this.slot.position_id === ALPHA);
+    this.isTraining = (+this.slot.position_id === TRAINING);
+
     this.traininType = this.data.slot.position_title;
   }
 }

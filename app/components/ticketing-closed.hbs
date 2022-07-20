@@ -17,7 +17,8 @@
         traveling companions.
       </p>
       <p>
-        <b>Look for an email with your WAP from Burning Man Ticketing between July 21st and August 8th.</b>
+        <b>Look for an email with your WAP from Burning Man Ticketing between late July and early August.</b>
+        Don't forget to check your spam folder.
       </p>
     </:body>
   </UiSection>
@@ -36,43 +37,47 @@
       {{/if}}
       <ul class="mt-1">
         {{#if this.hasFullPackage}}
-          <li>
-            {{#if this.ticket}}
-              {{#if (or this.ticket.isStaffCredenital this.usingWillCall)}}
-                <b class="text-success">A {{ticket-type-human this.ticket.type}} will be held at
-                  {{if this.usingStaffCredential "Staff Credentialing" "Will Call"}}.</b><br>
-                The ticket will be under your name "{{@person.first_name}} {{@person.last_name}}".<br>
-                {{#if this.usingStaffCredential}}
-                  Your Staff Credential acts as your WAP.<br>
-                  {{#if this.ticket.access_any_time}}
-                    <b>You may enter the event at any time.</b>
-                  {{else}}
-                    <b>You may enter the event on or any day after {{mdy-format this.ticket.access_date full=true}} @
-                      00:01</b>
+          {{#unless this.allTicketsBanked}}
+            <li>
+              {{#if this.ticket}}
+                {{#if (or this.ticket.isStaffCredenital this.usingWillCall)}}
+                  <b class="text-success">A {{ticket-type-human this.ticket.type}} will be held at
+                    {{if this.usingStaffCredential "Staff Credentialing" "Will Call"}}.</b><br>
+                  The ticket will be under your name "{{@person.first_name}} {{@person.last_name}}".<br>
+                  {{#if this.usingStaffCredential}}
+                    Your Staff Credential acts as your WAP.<br>
+                    {{#if this.ticket.access_any_time}}
+                      <b>You may enter the event at any time.</b>
+                    {{else}}
+                      You may enter the event on or any day after {{mdy-format this.ticket.access_date full=true}} @
+                      00:01.<br>
+                      <span class="text-danger">If you try to enter the event prior to this time, you will be turned away from the gate. No exceptions!</span>
+                    {{/if}}
                   {{/if}}
+                {{else}}
+                  <b class="text-success">A {{ticket-type-human this.ticket.type}} will be mailed to you.</b><br>
+                  <b class="text-danger">
+                    You must pay for it by {{full-datetime-format @ticketingInfo.paid_by}} Pacific Time.
+                  </b>
+                  <p>
+                    Important: Your ticket will not be mailed to you until you have paid for it in the Burning Man
+                    Ticketing website. If you do not pay for it by {{mdy-format @ticketingInfo.paid_by full=true}},
+                    the ticket will revert to being held for you at Will Call.
+                  </p>
+                  <p>
+                    An email will be sent out soon from Ticket Support with instructions on how to pay for your ticket.
+                    You will be asked for a mailing address when paying for your ticket. Don't forget to check your spam
+                    folder.
+                  </p>
                 {{/if}}
+              {{else if this.ticketNotClaimed}}
+                <b class="text-danger">A ticket has NOT BEEN CLAIMED for this year.</b><br>
+                The ticket(s) will automatically be banked.
               {{else}}
-                <b class="text-success">A {{ticket-type-human this.ticket.type}} will be mailed.</b><br>
-                <span class="text-danger">You have until July 26, 2019 to pay for it.</span>
-                <p>
-                  Important: Your ticket will not be mailed to you until you have paid for it in the Burning Man
-                  Ticketing
-                  website. If you do not pay for it by July 26, 2019, the ticket will revert
-                  to being held for you at Will Call.
-                </p>
-                <p>
-                  An email will be sent out soon with instructions on how to pay for your ticket. You will be asked for
-                  a
-                  mailing address when paying for your ticket.
-                </p>
+                No qualifying, submitted, or banked tickets for this year were found.
               {{/if}}
-            {{else if this.ticketNotClaimed}}
-              <b class="text-danger">A ticket has NOT BEEN CLAIMED for this year.</b><br>
-              The ticket(s) will automatically be banked.
-            {{else}}
-              <b>No qualifying, submitted, or banked tickets for this year were found.</b>
-            {{/if}}
-          </li>
+            </li>
+          {{/unless}}
           {{#if this.bankedItems}}
             <li class="mt-2">
               {{pluralize this.bankedItems.length "item"}} will be banked:
@@ -90,40 +95,29 @@
                 <b class="text-success">A Vehicle Pass will be held at Staff Credentialing.</b><br>
                 The Vehicle Pass will be under your name "{{@person.first_name}} {{@person.last_name}}".
               {{else}}
-                <span class="text-muted">The Vehicle Pass was not claimed.</span>
+                The Vehicle Pass was not claimed.
               {{/if}}
             {{else if this.usingVehiclePass}}
               {{#if this.usingMail}}
-                <b class="text-success">A Vehicle Pass will be mailed to:</b><br>
-                <p class="mt-2 ms-3">
-                  {{@person.first_name}} {{@person.last_name}}<br>
-                  {{this.address.street}}<br>
-                  {{this.address.city}} {{this.address.state}} {{this.address.postal_code}} {{this.address.country}}
-                </p>
-                {{#if this.usingRPT}}
-                  <p>
-                    <span class="text-danger">The address above will NOT be used for your event ticket.</span>
-                    The Burning Man Ticketing website will ask again for the address which will be used
-                    for the event ticket. We apologize for the inconvenience.
-                  </p>
-                {{/if}}
+                <b class="text-success">A Vehicle Pass will be mailed to you.</b><br>
+                You will provide the mailing address for the Vehicle Pass when you pay for your Reduced-Price Ticket.
               {{else if this.usingWillCall}}
-                <b class="text-success">A Vehicle Pass will be held at Staff Credentialing.</b><br>
+                <b class="text-success">A Vehicle Pass will be held at Will Call.</b><br>
                 The Vehicle Pass will be under your name "{{@person.first_name}} {{@person.last_name}}".
               {{else}}
-                Uh oh, this may be a bug. You have a claimed Vehicle Pass yet I can't figure out the delivery method.
+                Uh oh, this may be a bug. You have a claimed Vehicle Pass, yet I can't figure out the delivery method.
                 Please contact {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.
               {{/if}}
             {{else if this.haveVP}}
-              {{fa-icon "times" color="danger"}} The Vehicle Pass was not claimed.
+              <b class="text-danger">The Vehicle Pass was not claimed.</b>
             {{else}}
-              <span class="text-muted">No Vehicle Pass was qualified for.</span>
+              No Vehicle Pass was qualified for.
             {{/if}}
           </li>
         {{/if}}
 
         {{#if (or this.usingWAP (not this.usingStaffCredential))}}
-          {{! A person may have a SC with a later access date, and then a WAP with an earler corrected access date}}
+        {{! A person may have a SC with a later access date, and then a WAP with an earler corrected access date}}
           <li class="mt-2">
             {{#if this.usingWAP}}
               <b class="text-success">A Work Access Pass will be emailed to you.</b><br>
@@ -131,12 +125,14 @@
                 {{#if this.wap.access_any_time}}
                   at any time!
                 {{else}}
-                  on or any day after {{mdy-format this.wap.access_date full=true}} @ 00:01.
+                  on or any day after {{mdy-format this.wap.access_date full=true}} @ 00:01.<br>
+                  <span class="text-danger">You will be turned away from the gate if you attempt to enter the event
+                    before this time. No exceptions!</span>
                 {{/if}}</b>
               <br>
               An email will be sent out in the coming weeks which contains your WAP.
             {{else}}
-              {{fa-icon "times" color="danger"}} No Work Access Pass was claimed.
+              <b class="text-danger">No Work Access Pass was claimed.</b>
             {{/if}}
           </li>
         {{/if}}
@@ -147,16 +143,17 @@
               <b class="text-success">{{pluralize this.wapSOList.length "pass"}} for your Significant Other{{if
                 (gt this.wapSOList.length 1) "s"}} will be emailed to you.</b><br>
               Your {{if (gt this.wapSOList.length 1) "Significant Others are" "Significant Other is"}}:
-              <ul>
+              <ul class="mb-2">
                 {{#each this.wapSOList as |so|}}
-                  <li>{{so.name}} may enter the event on or any day after {{mdy-format so.access_date full=true}} @
+                  <li>{{so.name}}. They may enter the event on or any day after {{mdy-format so.access_date full=true}}
+                    @
                     00:01.
                   </li>
                 {{/each}}
               </ul>
-              An email or emails will be sent out in the coming weeks which contains your Significant Other WAP(s).
+              Emails will be sent out in the coming weeks which contains your Significant Other WAP(s).
             {{else}}
-              <span class="text-muted">No Work Access Passes for Significant Others were requested.</span>
+              No Work Access Passes for Significant Others were requested.
             {{/if}}
           </li>
         {{/if}}
