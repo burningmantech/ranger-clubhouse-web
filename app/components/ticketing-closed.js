@@ -18,6 +18,9 @@ export default class TicketingClosedComponent extends Component {
 
     this.ticketNotClaimed = !ticket && !!ticketPackage.tickets.find((t) => t.isQualified);
 
+    const banked =  ticketPackage.tickets.filter((t) => t.isBanked).length;
+    this.allTicketsBanked = (banked.length && banked.length === ticketPackage.tickets.length);
+
     const {wap} = ticketPackage;
     this.wap = wap;
     this.usingWAP = (wap && wap.isUsing);
