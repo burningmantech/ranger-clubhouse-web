@@ -30,6 +30,7 @@ module.exports = {
   rules: {
 //    'ember/no-mixins': 'off',
     'ember/no-jquery': 'off',
+    'ember/no-array-prototype-extensions': 'off'
   },
   overrides: [
     // node files
