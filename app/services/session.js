@@ -11,10 +11,11 @@ import {ADMIN, MANAGE, VC, VIEW_PII, VIEW_EMAIL} from 'clubhouse/constants/roles
 import MobileDetect from 'mobile-detect';
 
 const MOBILE_MAX_WIDTH = 991;
-const RESIZE_DEBOUNCE_DELY = 250;
+const RESIZE_DEBOUNCE_DELAY = 250;
 
 export default class extends SessionService {
   @service ajax;
+  @service house;
   @service router;
 
   // The logged-in user
@@ -23,7 +24,7 @@ export default class extends SessionService {
   // How many unread messages the user has
   @tracked unreadMessageCount = 0;
 
-  // Temporary login token used to login & change or set the password.
+  // Temporary login token used to log in & change or set the password.
   // Token becomes invalid once the password has changed.
   tempLoginToken = null;
 
@@ -74,7 +75,7 @@ export default class extends SessionService {
 
   @action
   _bounceResizeEvent() {
-    debounce(this, this._windowResized, RESIZE_DEBOUNCE_DELY);
+    debounce(this, this._windowResized, RESIZE_DEBOUNCE_DELAY);
   }
 
   /**
@@ -99,6 +100,7 @@ export default class extends SessionService {
    *
    * @returns {Promise<void>}
    */
+
   handleAuthentication() {
     return this.loadUser().then(() => {
       if (this.tempLoginToken) {
@@ -148,6 +150,17 @@ export default class extends SessionService {
   }
 
   /**
+   * Update the signed in position.
+   */
+
+  updateOnDuty() {
+    return this.ajax.request(`person/${this.userId}/onduty`)
+      .then(({onduty}) => this.user.onduty_position = onduty)
+      .catch((response) => this.house.handleErrorResponse(response))
+  }
+
+  /**
+   * Return the user id if available
    *
    * @returns {number|null}
    */

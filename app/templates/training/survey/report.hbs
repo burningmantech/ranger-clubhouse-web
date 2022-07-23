@@ -33,7 +33,7 @@
   {{/each}}
 
   {{#if (eq this.report.type "trainer")}}
-    {{#each this.report.trainers as |trainer|}}
+    {{#each this.report.trainers key="trainer_id" as |trainer|}}
       <ChAccordion id="trainer-{{trainer.trainer_id}}" as |Accordion|>
         <Accordion.title>
           Trainer {{trainer.callsign}}

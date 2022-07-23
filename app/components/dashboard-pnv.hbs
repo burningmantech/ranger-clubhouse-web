@@ -3,8 +3,8 @@
   {{#if (eq @person.status "bonked")}}
     Hello {{@person.callsign}}.
   {{else}}
-    Hello Prospective Ranger {{@person.callsign}}.
-  {{/if}}
+    Hello {{if @person.isProspective "Prospective Ranger" "Alpha"}} {{@person.callsign}}.
+   {{/if}}
 </p>
 {{#if this.haveUrgentActions}}
   <p>

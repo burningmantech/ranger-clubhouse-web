@@ -6,15 +6,15 @@
 <p>1. Select the type of Access Documents you're interested in and
   click "Filter"</p>
 
-<p>2. Click the "Download CSV for Upload to Ticket Request System"
-  link at the bottom of the page to download a CSV to upload into TRS.</p>
+<p>2. Click the "Export N Selected Documents" button at the bottom of the page to download a CSV to upload into TRS.</p>
 
-<p>3. If the upload succeeds, you can click "Mark Selected As Submitted"
-  at the bottom of the page to
-  marks these puppies as submitted.
-  (If some failed, you can uncheck the little check boxes on the left
+<p>
+  3. If the upload succeeds, you can click "Mark Selected As Submitted"
+  at the bottom of the page to marks these puppies as submitted.
+  (If some failed, you can uncheck the little checkboxes on the left
   for each record. Do this before you click on the button to mark them
-  as submitted.)</p>
+  as submitted.)
+</p>
 
 <p>Note that there is a recommended TRS batch size of not more than
   {{this.MAX_BATCH_SIZE}} items. (An item is any goodie of any sort.) If you have more
@@ -24,7 +24,11 @@
 
 {{#if this.badRecords}}
   <UiSection>
-    <:title><span class="text-danger">{{fa-icon "exclamation-triangle"}} {{pluralize this.badRecords.length "item"}} with errors</span></:title>
+    <:title>
+      <span class="text-danger">
+        {{fa-icon "exclamation-triangle"}} {{pluralize this.badRecords.length "item"}} with errors
+      </span>
+    </:title>
     <:body>
       <table class="table table-width-auto table-sm table-hover table-striped">
         <thead>
@@ -76,7 +80,10 @@
 
     {{#if this.viewBadRecords}}
       <p>
-        <b class="text-danger">{{pluralize this.viewBadRecords.length "item"}} with errors will not be bulk selected however, they may be individually selected.</b>
+        <b class="text-danger">
+          {{pluralize this.viewBadRecords.length "item"}} with errors will not be bulk selected
+          however, the rows may be individually selected.
+        </b>
       </p>
     {{/if}}
     Showing {{pluralize this.viewRecords.length "item"}} of type "{{this.filterLabel}}".
@@ -101,7 +108,7 @@
       {{#each this.viewRecords as |rec|}}
         <tr class={{if rec.has_error "table-danger"}}>
           <td>
-             {{#if rec.submitted}}
+            {{#if rec.submitted}}
               <span class="text-success">{{fa-icon "check"}}</span>
             {{else if (eq this.filter "all")}}
               &nbsp;

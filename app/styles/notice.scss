@@ -1,8 +1,10 @@
 .notice-box {
   margin-bottom: 5px;
-  border: 1px solid;
+  border: 2px solid;
   border-radius: 5px;
   padding: 5px;
+
+  box-shadow: 0 1px 5px 0 rgb(50 50 50 / 50%);
 
   display: grid;
   grid-template-columns: auto 1fr;
@@ -60,7 +62,7 @@
 
 .notice-danger {
   border-color: #721c24;
-  background-color: #fff1f2;
+  background-color: #fff7f7;
 
   .notice-header {
     color: #9c0010;
