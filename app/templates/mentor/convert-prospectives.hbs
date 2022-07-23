@@ -9,10 +9,16 @@
   </LoadingDialog>
 {{/if}}
 
+{{#if this.personnelFlagCount}}
+  <p>
+    <b class="text-danger">The Personnel Flag has been raised on {{pluralize this.personnelFlagCount "person"}}. The prospective(s) have to be selected by hand.</b>
+  </p>
+{{/if}}
+
 <UiSection>
   <:title>{{pluralize this.prospectives.length "Alpha candidate"}}</:title>
   <:body>
-    <table class="table table-striped table-width-auto table-sm table-hover">
+    <table class="table table-striped table-sm table-hover">
       <thead>
       <tr>
         <th class="w-15">
@@ -39,9 +45,7 @@
             {{/if}}
             {{#if person.personnel_issue}}
               <div class="mb-2">
-                <b class="text-danger">PERSONNEL FLAG RAISED<br>
-                  TAKE NO ACTION UNTIL RESOLVED
-                </b>
+                <b class="text-danger">PERSONNEL FLAG RAISED &mdash; TAKE NO ACTION UNTIL RESOLVED</b>
               </div>
             {{/if}}
             <p>
