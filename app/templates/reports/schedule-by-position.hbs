@@ -22,7 +22,7 @@
   Showing {{this.viewPositions.length}} of {{pluralize this.positions.length "position"}} for year {{this.year}}.
 </p>
 
-{{#each this.viewPositions as |position|}}
+{{#each this.viewPositions key="id" as |position|}}
   <ChAccordion id="position-{{position.id}}" @isOpen={{mut (get this.showingPositions position.id)}} as |accordion|>
     <accordion.title>
       {{position-label position}} ({{pluralize position.activeCount "shift"~}}

@@ -44,7 +44,7 @@
         <div class="schedule-actions d-print-none">Actions</div>
       </div>
 
-      {{#each this.viewSlots as |slot| }}
+      {{#each this.viewSlots key="id" as |slot| }}
         <div class="schedule-row {{if slot.is_overlapping "schedule-overlapping"}}">
           <div class="schedule-icon">
             {{#if slot.is_overlapping}}

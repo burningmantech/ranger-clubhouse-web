@@ -83,7 +83,11 @@ const ALPHA_STEPS = [{
         if (milestones.alpha_shift.status === 'pending') {
           return {
             result: ACTION_NEEDED,
-            message: htmlSafe(`Please read "<a href="${milestones.alpha_shift_prep_link}" target="_blank" rel="noopener noreferrer">Becoming a Ranger: On-playa Alpha Shifts</a>"  on the Ranger website.<br>Your Alpha shift starts ${dayjs(milestones.alpha_shift.begins).format('ddd MMM DD [@] HH:mm')}.<br><b>ARRIVE 15 MINUTES EARLY. Late arrivals will NOT be allowed to walk.</b><br>If you know you won't be able to make your Alpha shift please email the Mentor Cadre or stop by Ranger HQ on playa.`),
+            message: htmlSafe(`<p>Please read "<a href="${milestones.alpha_shift_prep_link}" target="_blank" rel="noopener noreferrer">Becoming a Ranger: On-playa Alpha Shifts</a>"`
+                +` on the Ranger website.</p>Your Alpha shift starts ${dayjs(milestones.alpha_shift.begins).format('ddd MMM DD [@] HH:mm')}.`
+                +`<p><b class="text-danger">ARRIVE 30 MINUTES EARLY. Late arrivals will NOT be allowed to walk.</b></p>`
+                +`<p>Check-in at the Hat Rack located at Ranger HQ, 5:45 &amp; the Esplanda close to Center Camp.</p>`
+                +`If you know you won't be able to make your Alpha shift please email the Mentor Cadre or stop by Ranger HQ on playa.`),
             email: 'MentorEmail'
           };
         } else {

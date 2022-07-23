@@ -53,7 +53,8 @@
         </ChNotice>
       {{else if (and this.person.isPNV (not this.userIsMentor))}}
         <ChNotice @type="danger" @icon="exclamation" @title="Direct to the Hat Rack.">
-          {{this.person.callsign}} is an Alpha. Do not check in this person unless you are acting on the Mentors'
+          {{this.person.callsign}} is {{if this.person.isAlpha "an Alpha" "a Prospective"}}.
+          Do not check in this person unless you are acting on the Mentors'
           behalf.
         </ChNotice>
       {{/if}}
@@ -119,7 +120,7 @@
   <ModalDialog @title="Sign Into A Shift" @onEscape={{this.closeSignInWarning}} as |Modal|>
     <Modal.body>
       <b class="text-danger">WARNING:</b>
-      You are not signed into any shift. You can use the HQ Interface however we ask you sign into a shift first.
+      You are not signed in to any shift. You can use the HQ Interface however we ask you sign in to a shift first.
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeSignInWarning}} />
@@ -153,8 +154,10 @@
   <ModalDialog @title="Person may not work" @onEscape={{this.closeNotAllowedToWork}} as |Modal|>
     <Modal.body>
       <p>
-        <b class="text-danger"> {{this.person.callsign}} has the status "{{this.person.status}}" may not be given a BMID,
-          radios, and is NOT ALLOWED TO WORK.</b>
+        <b class="text-danger">
+          {{this.person.callsign}} has the status "{{this.person.status}}" may not be given a BMID,
+          radios, and is NOT ALLOWED TO WORK.
+        </b>
       </p>
       The HQ Window Interface cannot be for this person. Contact the HQ Lead, HQ Supervisor or the Personnel Manager.
     </Modal.body>

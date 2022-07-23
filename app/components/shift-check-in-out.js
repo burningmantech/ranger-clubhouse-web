@@ -183,8 +183,8 @@ export default class ShiftCheckInOutComponent extends Component {
               this.args.startShiftNotify();
             }
             if (+person.id === this.session.userId) {
-              // Ensure the navigation bar is updated with the signed into position
-              this.session.loadUser();
+              // Ensure the navigation bar is updated with the signed in to position
+              this.session.updateOnDuty();
             }
             break;
 
@@ -255,9 +255,10 @@ export default class ShiftCheckInOutComponent extends Component {
             this.toast.success(`${callsign} has been successfully signed off. Enjoy your rest.`);
             if (+this.args.person.id === this.session.userId) {
               // Update the user's navigation bar to remove the signed in position.
-              this.session.loadUser();
+              this.session.updateOnDuty();
             }
             break;
+
           case 'already-signed-off':
             this.toast.error(`${callsign} was already signed off.`);
             break;
@@ -288,7 +289,7 @@ export default class ShiftCheckInOutComponent extends Component {
 
   @action
   updatePositionAction() {
-    const {onDutyEntry} = this.args;
+    const {onDutyEntry,person} = this.args;
     this.isSubmitting = true;
     this.changePositionError = null;
 
@@ -312,6 +313,10 @@ export default class ShiftCheckInOutComponent extends Component {
             this.modal.info('Shift Position Update Forced', `WARNING: The person ${reason}. Because you are an admin or have the timesheet management role,the position has been updated anyways.`);
           } else {
             this.toast.success('Position has been successfully updated.');
+          }
+          if (+person.id === this.session.userId) {
+            // Ensure the navigation bar is updated with the signed in to position
+            this.session.updateOnDuty();
           }
           return;
 
