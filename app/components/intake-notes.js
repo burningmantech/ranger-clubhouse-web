@@ -24,6 +24,10 @@ export default class IntakeNotesComponent extends Component {
   get canAddNote() {
     let role;
 
+    if (!this.args.onSubmit) {
+      return false;
+    }
+
     switch (this.args.type) {
       case 'mentor':
         role = MENTOR;

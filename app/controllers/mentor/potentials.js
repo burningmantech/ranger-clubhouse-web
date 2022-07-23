@@ -44,6 +44,11 @@ export default class MentorPotentialsController extends ClubhouseController {
   }
 
   @cached
+  get personnelIssuesCount() {
+    return this.mentees.filter((m) => m.personnel_issue).length;
+  }
+
+  @cached
   get filterNames() {
     const names = [];
 

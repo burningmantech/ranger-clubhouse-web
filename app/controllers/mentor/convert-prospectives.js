@@ -11,7 +11,18 @@ export default class MentorConvertController extends ClubhouseController {
   toggleAll(event) {
     const checked = event.target.checked;
     this.selectedAll = checked;
-    this.prospectives.forEach((p) => p.selected = checked);
+    this.prospectives.forEach((p) => {
+      if (p.personnel_issue) {
+        p.selected = false;
+      } else {
+        p.selected = checked;
+      }
+    });
+  }
+
+  @cached
+  get personnelFlagCount() {
+    return this.prospectives.filter((p) => p.personnel_issue).length;
   }
 
   @cached
