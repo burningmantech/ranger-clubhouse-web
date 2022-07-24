@@ -348,15 +348,14 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     row.phone = isBlank(person.home_phone) ? '415-555-1212' : person.home_phone;
   }
 
-  _fillName(person, row, isWAPSO, soname) {
-    if (isWAPSO) {
-      const matches = soname.match(/^\s*([\w-]+)\s*(.*)$/);
-      row.first_name = matches[1];
-      row.last_name = !isEmpty(matches[2]) ? matches[2] : person.last_name;
-    } else {
-      row.first_name = person.first_name;
-      row.last_name = person.last_name;
-    }
+  _fillName(person, row) {
+    /*   if (isWAPSO) {
+         const matches = soname.match(/^\s*([\w-]+)\s*(.*)$/);
+         row.first_name = matches[1];
+         row.last_name = !isEmpty(matches[2]) ? matches[2] : person.last_name;
+       } else */
+    row.first_name = person.first_name;
+    row.last_name = person.last_name;
     row.full_name = `${person.first_name} ${person.last_name}`;
     row.email = person.email;
     row.project_name = `Ranger ${person.callsign}`;
@@ -430,11 +429,12 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     } else {
       rows = records.map((doc) => {
         const person = doc.person;
+
         const row = {note: `${doc.trsNote} ${exportedBy}`};
 
         exportedIds.push(doc.id);
 
-        this._fillName(person, row, doc.type === WAPSO, doc.name);
+        this._fillName(person, row, (doc.type === WAPSO), doc.name);
 
         const isPostal = (doc.delivery_method === DELIVERY_POSTAL);
 
