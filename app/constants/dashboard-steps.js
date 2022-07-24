@@ -99,7 +99,8 @@ export const UPLOAD_PHOTO = {
         if (!photo.upload_enabled) {
           return {
             result: WAITING,
-            message: 'Photo uploading is not available at this time. Check back later.',
+            message: 'Photo uploading is not available at this time. Contact the Volunteer Coordinators for help.',
+            email: 'VCEmail'
           }
         }
         return {result: ACTION_NEEDED, isPhotoStep: true};

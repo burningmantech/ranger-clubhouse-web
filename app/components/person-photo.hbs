@@ -16,10 +16,13 @@
     Wanna supply a photo?<br>
   {{/if}}
 
-  {{#if (and @uploadAction this.canShowUploadButton)}}
-    <div class="mt-1">
+  <div class="mt-1">
+    {{#if (and @uploadAction this.canShowUploadButton)}}
       <UiButton @onClick={{@uploadAction}}>Upload new photo</UiButton>
-    </div>
-  {{/if}}
+    {{else}}
+      <small>Uploading is disabled</small>
+    {{/if}}
+  </div>
+
 </div>
 
