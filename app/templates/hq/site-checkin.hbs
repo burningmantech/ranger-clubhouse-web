@@ -115,41 +115,48 @@
       <HelpPopover @slug="hq-site-checkin-radios"/>
     </:title>
     <:body>
-      <p class="text-success"><b>Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}</b></p>
-      <p>
-        The radio may be checked out now, or at the start of their first shift.
-      </p>
-      <AssetCheckoutForm @person={{this.person}} @assets={{this.assets}} @attachments={{this.attachments}}
-                         @eventInfo={{this.eventInfo}} />
-      {{#if this.activeAssets}}
-        {{pluralize this.activeAssets.length "asset"}} checked out.
-        <table class="table table-striped table-sm">
-          <thead>
-          <tr>
-            <th>Barcode</th>
-            <th>Type</th>
-            <th>Assigned</th>
-            <th>Attachment</th>
-            <th>Out</th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#each this.activeAssets as |ap|}}
+      {{#if this.personEvent.asset_authorized}}
+        <p class="text-success"><b>Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}</b></p>
+        <p>
+          The radio may be checked out now, or at the start of their first shift.
+        </p>
+        <AssetCheckoutForm @person={{this.person}} @assets={{this.assets}} @attachments={{this.attachments}}
+                           @eventInfo={{this.eventInfo}} />
+        {{#if this.activeAssets}}
+          {{pluralize this.activeAssets.length "asset"}} checked out.
+          <table class="table table-striped table-sm">
+            <thead>
             <tr>
-              <td>{{ap.asset.barcode}}</td>
-              <td>{{ap.asset.description}}</td>
-              <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
-              <td>
-                <PresentOrNot @value={{ap.attachment.description}} @empty="-"/>
-              </td>
-              <td>{{shift-format ap.checked_out}}</td>
+              <th>Barcode</th>
+              <th>Type</th>
+              <th>Assigned</th>
+              <th>Attachment</th>
+              <th>Out</th>
             </tr>
-          {{/each}}
-          </tbody>
-        </table>
-      {{/if}}
-      {{#if this.assets.isUpdating}}
-        <LoadingIndicator @text="Refreshing assets"/>
+            </thead>
+            <tbody>
+            {{#each this.activeAssets as |ap|}}
+              <tr>
+                <td>{{ap.asset.barcode}}</td>
+                <td>{{ap.asset.description}}</td>
+                <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
+                <td>
+                  <PresentOrNot @value={{ap.attachment.description}} @empty="-"/>
+                </td>
+                <td>{{shift-format ap.checked_out}}</td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </table>
+        {{/if}}
+        {{#if this.assets.isUpdating}}
+          <LoadingIndicator @text="Refreshing assets"/>
+        {{/if}}
+      {{else}}
+        <div class="text-danger">
+         While {{this.pesrson.callsign}} is authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}},
+          {{this.person.callsign}} may not be issued radios and other gear until the Radio Checkout Agreement is signed.
+        </div>
       {{/if}}
     </:body>
   </UiSection>
@@ -164,7 +171,7 @@
       A radio will need to be checked out for each shift, and then returned at the end of the shift.
       {{#if this.eventInfo.radio_banked}}
         <div class="mt-1">
-          {{this.person.callsign}} was awarded an event radio however they chose to bank the event radio to use in a
+          {{this.person.callsign}} did qualify for an event radio however they chose to bank the radio(s) to use in a
           future event.
         </div>
       {{/if}}
