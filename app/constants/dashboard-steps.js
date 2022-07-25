@@ -28,6 +28,7 @@ import {
   WAITING
 } from "clubhouse/constants/dashboard";
 import {NON_RANGER} from 'clubhouse/constants/person_status';
+import TicketPackage from 'clubhouse/utils/ticket-package';
 
 function indefiniteArticle(noun) {
   return (noun.match(/^[aeiou]/i) ? `an ${noun}` : `a ${noun}`);
@@ -600,4 +601,154 @@ export const SIGN_RADIO_CHECKOUT_AGREEMENT = {
   }
 };
 
+function usingTicket(t) {
+  return (t && (t.isClaimed || t.isSubmitted));
+}
 
+
+function buildTickets(milestones, personId, house) {
+  const claimed = [];
+
+  const pkg = new TicketPackage(milestones.ticketing_package, personId, house);
+
+  let ticket = null;
+  pkg.tickets.forEach((t) => {
+    if (t.isClaimed || t.isSubmitted) {
+      claimed.push(t);
+      ticket = t;
+    }
+  });
+
+  if (usingTicket(pkg.vehiclePass)) {
+    claimed.push(pkg.vehiclePass);
+  }
+
+  if (usingTicket(pkg.wap)) {
+    claimed.push(pkg.wap);
+  }
+
+  if (pkg.jobItems) {
+    // jobItems is set when there are allocated provisions. This is the union between the earned & allocated provisions.
+    pkg.jobItems.forEach((item) => claimed.push(item));
+  } else if (ticket) {
+    pkg.provisions.filter((p) => !p.isBanked).forEach((p) => claimed.push(p));
+  }
+
+  pkg.wapso.forEach((so) => claimed.push(so));
+
+  return {
+    claimed,
+    bankedCount: pkg.accessDocuments.filter((ad) => ad.isBanked).length,
+    qualifiedCount:  pkg.tickets.filter((a) => a.isQualified).length,
+    notCriticalCount: pkg.accessDocuments.filter((ad) => (!ad.isProvision && ad.isQualified && (ad.isWAP || ad.isVehiclePass))).length,
+    // noAddress: !pkg.haveAddress,
+    noAddress: false,
+  };
+}
+
+
+export const TICKETING_OPEN = {
+  name: 'Claim Tickets, Vehicle Passes, and Work Access Passes',
+  skipPeriod: AFTER_EVENT,
+  check({milestones, person, house}) {
+    const period = milestones.ticketing_period;
+
+    if (period !== 'open' || !milestones.ticketing_package) {
+      return {result: SKIP};
+    }
+
+    const tickets = buildTickets(milestones, person.id, house);
+
+    if (tickets.qualifiedCount) {
+      return {
+        result: ACTION_NEEDED,
+        route: 'me.tickets',
+        immediate: (tickets.qualifiedCount || tickets.noAddress),
+        isTicketing: true,
+        ticketingOpen: true,
+        tickets
+      };
+    }
+
+    // stuff has been claimed..
+    return {
+      result: COMPLETED,
+      route: 'me.tickets',
+      isTicketing: true,
+      ticketingOpen: true,
+      tickets,
+      immediate: false, // move it down
+    };
+  }
+};
+
+export const TICKETING_CLOSED = {
+  name: 'Ticketing has closed',
+  period: BEFORE_EVENT,
+  check({milestones, house, person}) {
+    if (milestones.ticketing_period !== 'closed' || !milestones.ticketing_package) {
+      return {result: SKIP};
+    }
+
+    return {
+      result: NOT_AVAILABLE,
+      isTicketing: true,
+      isTicketingClosed: true,
+      tickets: buildTickets(milestones, person.id, house),
+    };
+  }
+};
+
+export const VEHICLE_REQUESTS =  {
+  name: 'Submit Personal Vehicle Request(s)',
+  skipPeriod: AFTER_EVENT,
+  check({milestones}) {
+    if (!milestones.vehicle_requests_allowed) {
+      return {result: SKIP};
+    }
+
+    const vr = milestones.vehicle_requests;
+    if (vr.find((r) => r.status === 'approved')) {
+      return {
+        result: COMPLETED,
+        linkedMessage: {
+          route: 'me.vehicles',
+          prefix: 'Your vehicle request has been approved. Visit',
+          text: 'Me > Vehicle Requests',
+          suffix: 'for details.'
+        }
+      };
+    } else if (vr.find((r) => r.status === 'pending')) {
+      return {
+        result: WAITING,
+        linkedMessage: {
+          route: 'me.vehicles',
+          prefix: 'Your vehicle request is pending review. Visit',
+          text: 'Me > Vehicle Requests',
+          suffix: 'to adjust or delete your request.'
+        }
+      };
+
+    } else if (vr.find((r) => r.status === 'rejected')) {
+      return {
+        result: URGENT,
+        linkedMessage: {
+          route: 'me.vehicles',
+          prefix: 'Your vehicle request has been denied. Visit',
+          text: 'Me > Vehicle Requests',
+          suffix: 'for details.'
+        }
+      };
+    } else {
+      return {
+        result: ACTION_NEEDED,
+        linkedMessage: {
+          route: 'me.vehicles',
+          prefix: 'You have been approved to submit vehicle requests and reauthorizations for driving stickers and other items. Visit',
+          text: 'Me > Vehicle Requests',
+          suffix: 'to submit a request.'
+        }
+      };
+    }
+  }
+};
