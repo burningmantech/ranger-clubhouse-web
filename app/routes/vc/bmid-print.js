@@ -2,11 +2,25 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {set} from '@ember/object';
 import RSVP from 'rsvp';
 import {ADMIN, EDIT_BMIDS} from 'clubhouse/constants/roles';
-import {ACTIVE, INACTIVE, INACTIVE_EXTENSION, RETIRED, ALPHA, PROSPECTIVE} from 'clubhouse/constants/person_status';
+import {
+  ACTIVE,
+  ALPHA,
+  INACTIVE,
+  INACTIVE_EXTENSION,
+  NON_RANGER,
+  PROSPECTIVE,
+  RETIRED,
+} from 'clubhouse/constants/person_status';
 import requestYear from 'clubhouse/utils/request-year';
 
 const ALLOWED_STATUSES = [
-  ACTIVE, INACTIVE, INACTIVE_EXTENSION, RETIRED, ALPHA, PROSPECTIVE
+  ACTIVE,
+  ALPHA,
+  INACTIVE,
+  INACTIVE_EXTENSION,
+  NON_RANGER,
+  PROSPECTIVE,
+  RETIRED,
 ];
 
 export default class VcBmidPrintRoute extends ClubhouseRoute {
