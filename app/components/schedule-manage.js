@@ -165,6 +165,7 @@ export default class ScheduleManageComponent extends Component {
     // Clear out overlapping flags
     slots.forEach((slot) => {
       slot.is_overlapping = false;
+      slot.overlappingSlots = [];
       slot.is_training_overlap = false;
     });
 
@@ -186,6 +187,8 @@ export default class ScheduleManageComponent extends Component {
         } else {
           slot.is_overlapping = true;
           prevSlot.is_overlapping = true;
+          slot.overlappingSlots.push(prevSlot);
+          prevSlot.overlappingSlots.push(slot);
         }
       } else {
         slot.is_overlapping = false

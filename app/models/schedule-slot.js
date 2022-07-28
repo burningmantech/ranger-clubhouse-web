@@ -6,6 +6,7 @@ export default class ScheduleSlotModel {
   @tracked person_assigned = false;
   @tracked is_overlapping = false;
   @tracked is_training_overlap = false;
+  @tracked overlappingSlots = [];
 
   constructor(data) {
     Object.assign(this, data);
