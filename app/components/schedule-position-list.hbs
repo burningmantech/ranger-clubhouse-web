@@ -1,7 +1,18 @@
 <ChAccordion as |Accordion|>
   <Accordion.title>
     {{@position.title}} ({{@position.slots.length}})
-    {{#if this.signupCount}} <span class="text-success">[{{pluralize this.signupCount "signup"}}]</span>{{/if}}
+    {{#if this.signupCount}}
+      {{#if (eq this.signupCount this.overlappingCount)}}
+        <span class="text-danger">[{{pluralize this.overlappingCount "overlapping signup"}}]</span>
+      {{else}}
+        <span class="text-success">[
+          {{~pluralize this.nonOverlappingCount "signup"~}}
+          {{#if this.overlappingCount}}
+            <span class="text-black"> and</span> <span class="text-danger">{{pluralize this.overlappingCount "overlapping signup"}}</span>
+          {{~/if~}}
+          ]</span>
+      {{/if}}
+    {{/if}}
   </Accordion.title>
   <Accordion.body>
     {{#if Accordion.isOpen}}
@@ -24,6 +35,12 @@
           <InfoIcon/> = More shift information available, click on the icon and/or text.
         </span>
       {{/if}}
+      {{#if this.haveOverlapping}}
+        <div class="mt-1 text-danger">
+          {{pluralize this.overlappingCount "shift signup"}} {{if (eq this.overlappingCount 1) "is" "are"}} overlapping,
+          marked with a {{fa-icon "flag" color="danger"}}. You only get credit for the time you work.
+        </div>
+      {{/if}}
       <div class="schedule-table">
         <div class="schedule-row schedule-header">
           <div class="schedule-icon">&nbsp;</div>
@@ -35,9 +52,12 @@
           <div class="schedule-actions">Actions</div>
         </div>
         {{#each @position.slots key="id" as |slot|}}
-          <div class="schedule-row {{if slot.person_assigned "schedule-signed-up"}}" id="slot-{{slot.id}}">
+          <div class="schedule-row {{if slot.is_overlapping "schedule-overlapping"
+                                        (if slot.person_assigned "schedule-signed-up")}}" id="slot-{{slot.id}}">
             <div class="schedule-icon">
-              {{#if slot.person_assigned}}
+              {{#if slot.is_overlapping}}
+                {{fa-icon "flag" color="danger"}}
+              {{else if slot.person_assigned}}
                 {{fa-icon "check"}}
               {{else if (not slot.slot_active)}}
                 {{fa-icon "times"color="danger"}}
@@ -63,6 +83,14 @@
               <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
               {{#if (and slot.trainer_slot_id (eq slot.slot_max 0))}}
                 <div class="text-danger">No trainers signed up yet.<br>Check back later.</div>
+              {{/if}}
+              {{#if slot.is_overlapping}}
+                <div class="mt-1 small">
+                  Sign up overlaps with:<br>
+                  {{#each slot.overlappingSlots key="id" as |overlap|}}
+                    {{overlap.position_title}} {{overlap.slot_description}}<br>
+                  {{/each}}
+                </div>
               {{/if}}
             </div>
             <div class="schedule-signups">
