@@ -32,12 +32,11 @@ export default class ReportsPositionSanityCheckerRoute extends ClubhouseRoute {
 
   greenDots(green_dots) {
     this._setChecked(green_dots);
-    this._setYesNo(green_dots, 'has_dirt_green_dot', 'has_sanctuary', 'has_gp_gd')
+    this._setYesNo(green_dots, 'has_dirt_green_dot', 'has_sanctuary')
 
     green_dots.columns = [
       {label: 'Has Dirt - Green Dot?', property: 'has_dirt_green_dot', class:'text-center'},
       {label: 'Has Sanctuary?', property: 'has_sanctuary', class:'text-center'},
-      {label: 'Has Gerlach Patrol - Green Dot?', property: 'has_gp_gd', class:'text-center'}
     ]
 
     return green_dots

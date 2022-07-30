@@ -29,7 +29,7 @@
 <Admin::PositionSanityCheck
     @title="Green Dots"
     @caption="{{pluralize this.green_dot.length "person"}} with Green Dot issues"
-    @sucessMessage="Congratulations! All Green Dots have all three positions."
+    @sucessMessage="Congratulations! All Green Dots have both positions."
     @columns={{this.green_dot.columns}}
     @people={{this.green_dot}}
     @repairAction={{action this.repairPeople}}
@@ -37,7 +37,7 @@
     @canRepair={{this.userCanRepair}}
     @isSubmitting={{this.isSubmitting}}
 >
-  All Green Dots should have the "Dirt - Green Dot", "Gerlach Patrol - Green Dot", and "Sanctuary" positions.
+  All Green Dots should have the "Dirt - Green Dot" and "Sanctuary" positions.
 </Admin::PositionSanityCheck>
 
 <Admin::PositionSanityCheck
