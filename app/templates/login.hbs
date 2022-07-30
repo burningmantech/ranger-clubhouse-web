@@ -7,6 +7,23 @@
       The real production server can be found here:<br>
       <a href="https://ranger-clubhouse.burningman.org">ranger-clubhouse.burningman.org</a>
     </ChNotice>
+  {{else if this.session.isTraining}}
+    <ChNotice @type="success" @icon="circle-info"
+              @title="Welcome to the Clubhouse Training Server ">
+      <p>
+        The login username is your callsign (stripped of spaces, dashes, and other non-alphanumeric characters)
+        plus '@nomail.none'. Your password is the same as the production server.
+      </p>
+      <p>
+        E.g., if your callsign is 'hub-cap' then your username is 'hubcap@nomail.none'.
+      </p>
+      <p>
+        The training database is reset daily at 04:00 Pacific.
+      </p>
+      The real production server can be found here:<br>
+      <a href="https://ranger-clubhouse.burningman.org">ranger-clubhouse.burningman.org</a>
+    </ChNotice>
+
   {{/if}}
   <h2>Welcome To The Ranger Secret Clubhouse!</h2>
   {{#if this.tokenError}}
@@ -49,7 +66,7 @@
               @onSubmit={{this.submit}} as |f|>
         <FormRow>
           <f.text @name="identification"
-                  @label="Email"
+                  @label={{if this.session.isTraining "Callsign plus @nomail.none" "Email"}}
                   @inputmode="email"
                   @autocomplete="username"
                   @autofocus={{true}}
