@@ -22,12 +22,10 @@
 
 <div id="body-row">{{outlet}}</div>
 
-<footer class="footer d-print-none">
-  <div class="container text-center">
-    &copy; 2008-{{dayjs-format "" "YYYY"}} Black Rock City, LLC.
-    <span class="d-inline-block">
+<footer class="d-print-none">
+  &copy; 2008-{{dayjs-format "" "YYYY"}} Black Rock City, LLC.
+  <span class="d-inline-block">
       All information contained within this website is strictly confidential.
-    </span>
-    <div>Build: {{this.buildTimestamp}} <span class="d-inline-block">Tag: {{this.applicationVersion}}</span></div>
-  </div>
+  </span>
+  <div>Build timestamp: {{this.buildTimestamp}} </div>
 </footer>
