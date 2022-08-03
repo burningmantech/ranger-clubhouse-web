@@ -1,42 +1,29 @@
-<div class="popover-container">
-  <a href {{on "click" this.clickHelp}} class="popover-button">
-    {{~fa-icon "question-circle"}}{{#if @label}} {{@label}}{{/if~}}
-  </a>
-  {{#if this.isShowing}}
-    <div class="popover d-block {{if @bottom "popover-bottom"}} {{if @left "popover-left"}}">
-      <h3 class="popover-header">
-        {{#if this.isLoading}}
-          <LoadingIndicator @text="loading help"/>
+<a href {{on "click" this.clickHelp}} class="popover-button">
+  {{fa-icon "question-circle"}}{{#if @label}} {{@label}}{{/if~}}
+  <BsPopover @title={{if this.isLoading "Loading Help" this.title}} as |po|>
+    {{#if this.isLoading}}
+      <LoadingIndicator @text="Loading help. Stand by."/>
+    {{else if this.body}}
+      {{nl2br this.body allowHtml=true}}
+    {{else}}
+      <p>
+        Ooops! Looks like we forgot to write some help for this.
+      </p>
+      <p>
+        help id=[{{@slug}}]
+      </p>
+    {{/if}}
+    <div class="popover-footer">
+      {{#if (has-role "admin")}}
+        {{#if this.body}}
+          <LinkTo @route="admin.help" @query={{hash editSlug=@slug}} class="btn btn-secondary btn-sm">Edit Help</LinkTo>
         {{else}}
-          {{this.title}}
+          <LinkTo @route="admin.help" @query={{hash createSlug=@slug}} class="btn btn-secondary btn-sm">
+            Create Help
+          </LinkTo>
         {{/if}}
-      </h3>
-      {{#unless this.isLoading}}
-        <div class="popover-body">
-          {{#if this.body}}
-            {{nl2br this.body allowHtml=true}}
-          {{else}}
-            <p>
-              Ooops! Looks like we forgot to write some help for this.
-            </p>
-            <p>
-              help id=[{{@slug}}]
-            </p>
-          {{/if}}
-        </div>
-        <div class="popover-footer">
-          {{#if (has-role "admin")}}
-            {{#if this.body}}
-              <LinkTo @route="admin.help" @query={{hash editSlug=@slug}} class="btn btn-secondary">Edit Help</LinkTo>
-            {{else}}
-              <LinkTo @route="admin.help" @query={{hash createSlug=@slug}} class="btn btn-secondary">
-                Create Help
-              </LinkTo>
-            {{/if}}
-          {{/if}}
-          <UiCloseButton @onClick={{this.closeHelp}} />
-        </div>
-      {{/unless}}
+      {{/if}}
+      <UiCloseButton @onClick={{po.close}} @size="sm" />
     </div>
-  {{/if}}
-</div>
+  </BsPopover>
+</a>

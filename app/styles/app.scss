@@ -1,4 +1,3 @@
-
 @import "bootstrap-custom";
 @import "ember-bootstrap/bootstrap";
 @import "bootstrap-print";
@@ -32,7 +31,7 @@ main {
 }
 
 .ui-section {
- // margin-top: 20px;
+  // margin-top: 20px;
   margin-bottom: 20px;
   padding: 10px;
   background-color: #ffffff;
@@ -102,7 +101,7 @@ main {
 
 @media not print {
   body {
-    background-color: #f2f4f6;
+    background-color: #f9f9f9;
   }
 }
 
@@ -287,23 +286,9 @@ legend {
 }
 
 
-
-.popover-container {
-  position: relative;
-  display: inline-block;
-
-  .popover {
-    z-index: 100000;
-    width: $popover-max-width;
-    @include box-shadow($box-shadow);
-  }
-
-  .popover-footer {
-    border-top: 1px solid #eee;
-    padding: 10px;
-    margin-top: 10px;
-    text-align: right;
-  }
+.popover-footer {
+  padding-top: 20px;
+  text-align: right;
 }
 
 /*
@@ -417,7 +402,10 @@ legend {
   }
 }
 
-.btn-block { width: 100%; display: block; }
+.btn-block {
+  width: 100%;
+  display: block;
+}
 
 @include media-breakpoint-down(lg) {
   .btn-responsive {

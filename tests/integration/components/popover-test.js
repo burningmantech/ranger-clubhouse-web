@@ -13,10 +13,10 @@ module('Integration | Component | popover', function (hooks) {
 
     await render(hbs`<Popover @title="A Title">some text</Popover>`);
 
-    assert.dom('a.popover-container').exists();
+    assert.dom('a').exists();
     // open the popover
-    await click('a.popover-container');
-    assert.dom('h3').exists().hasText('A Title');
-    assert.dom('div.popover-body').hasAnyText('some text');
+    await click('a');
+    assert.dom('.popover-header').exists().hasText('A Title');
+    assert.dom('.popover-body').hasAnyText('some text');
   });
 });
