@@ -10,7 +10,7 @@
 #sidebar-container {
   flex: 0 1 auto;
   flex-direction: column;
-  min-height: 100vh;
+//  min-height: 100vh; -- main tag is now flex.
   padding: 0;
   font-size: 0.85rem;
   background-color: #000000;

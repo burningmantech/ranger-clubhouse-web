@@ -88,7 +88,6 @@ main {
   display: flex;
   //flex-direction: row;
   flex-wrap: wrap;
-
 }
 
 @include media-breakpoint-down(lg) {
@@ -102,6 +101,12 @@ main {
 @media not print {
   body {
     background-color: #f9f9f9;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  #body-row {
+    flex: 1;
   }
 }
 
@@ -172,21 +177,13 @@ dl {
   color: #000;
 }
 
-.footer {
+footer {
   width: 100%;
-  padding: 15px 0;
+  padding: 10px;
   color: #000;
   background-color: $kakhi;
-
-  a, a:visited {
-    color: #000;
-    font-weight: bold;
-  }
-
-  > .container {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
+  font-size: 0.85rem;
+  text-align: center;
 }
 
 ul.nav-pills li > a.is_active {
