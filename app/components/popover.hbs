@@ -1,7 +1,7 @@
-<a href="#" class="popover-container" {{on "click" this.preventClick}}>
-  {{~@text~}}
+<a href="#" {{on "click" this.preventClick}}>
+  {{@text}}
   <BsPopover @title={{@title}} as |po|>
-    {{~yield~}}
+    {{yield}}
     <div class="popover-footer mt-2"><UiCloseButton @onClick={{po.close}} /></div>
   </BsPopover>
 </a>
