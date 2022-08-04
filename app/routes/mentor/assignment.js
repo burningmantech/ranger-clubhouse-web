@@ -1,7 +1,17 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
+import {tracked} from '@glimmer/tracking';
 
 const MENTOR_COUNT = 3;
+
+class Alpha {
+  @tracked error;
+  @tracked mentors;
+
+  constructor(person) {
+    Object.assign(this, person);
+  }
+}
 
 export default class MentorAssignmentRoute extends ClubhouseRoute {
   model() {
@@ -13,13 +23,12 @@ export default class MentorAssignmentRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     const year = this.house.currentYear();
-    const alphas = model.alphas;
 
     /*
      * Run thru the alphas and find the current mentor assignments
      */
 
-    alphas.forEach((person) => {
+    const alphas = model.alphas.map((person) => {
       const current = person.mentor_history.find((history) => history.year == year);
       const mentors = [];
 
@@ -38,11 +47,14 @@ export default class MentorAssignmentRoute extends ClubhouseRoute {
       }
 
       // Pad out the mentor list
-      for (let i = mentors.length; i < MENTOR_COUNT; i++){
-        mentors.push({ mentor_id: null });
+      for (let i = mentors.length; i < MENTOR_COUNT; i++) {
+        mentors.push({mentor_id: null});
       }
 
       person.mentors = mentors;
+      person.error = null;
+
+      return new Alpha(person);
     });
 
     controller.set('alphas', alphas);
