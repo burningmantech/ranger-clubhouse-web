@@ -70,16 +70,17 @@
         <div class="d-flex">
           <div class="my-auto me-2 d-inline-block">{{fa-icon "exclamation-circle" size="2x"}}</div>
           <div class="my-auto d-inline-block">
-            {{@person.callsign}} cannot start a shift because they have not completed
-            {{#if this.otOnly}}
-              the online course.
-            {{else}}
-              in-person training.
-            {{/if}}
-            If this is an error, check with the HQ Lead.
+            {{@person.callsign}} should not start a shift because
+            {{if this.otOnly "the Online Course" "an In-Person Training"}}
+            has not been completed. Check with the HQ Short or HQ Lead if this is an error.
           </div>
         </div>
       </div>
+      {{#if this.userCanForceCheckIn}}
+        <p>
+          You have the privileges to force a shift start.
+        </p>
+      {{/if}}
     {{/unless}}
 
     {{#if (and this.isPersonDirtTrained @imminentSlots)}}
@@ -136,7 +137,8 @@
         {{/each}}
         </tbody>
       </table>
-      <p class="mt-2 mb-2">Use the upcoming shift to sign in <b>OR</b> a specific position can be signed in to below:</p>
+      <p class="mt-2 mb-2">Use the upcoming shift to sign in <b>OR</b> a specific position can be signed in to below:
+      </p>
     {{/if}}
 
     <FormRow>
@@ -174,8 +176,8 @@
       </p>
       <p>
         <b>
-          When switching from an on-call shift (such as 007 Standby, Tech On Call, etc.) to a working shift (007, Tech Team, etc)
-        and visa-versa, END THE CURRENT SHIFT and start a new one.
+          When switching from an on-call shift (such as 007 Standby, Tech On Call, etc.) to a working shift
+          (007, Tech Team, etc) and visa-versa, END THE CURRENT SHIFT and start a new one.
         </b>
       </p>
       Select the new position the shift should be corrected to:
@@ -204,8 +206,9 @@
   <ModalDialog @title="Confirm Early Shift Sign In" @onEscape={{this.closeEarlyShiftAction}} as |Modal|>
     <Modal.body>
       <p>
-        <b class="text-danger">WARNING: Most shifts may only be signed into within 15 minutes of the actual start
-          time.</b>
+        <b class="text-danger">
+          WARNING: Most shifts may only be signed in to within 15 minutes of the actual start time.
+        </b>
       </p>
       <p>
         The "{{this.earlySlot.position_title}}" shift starts at {{shift-format this.earlySlot.slot_begins}}
@@ -217,10 +220,10 @@
       </p>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <UiCancelButton @onClick={{this.closeEarlyShiftAction}} />
       <UiButton @type="warning" @onClick={{this.confirmEarlyShiftAction}}>
         Confirm Early Shift Start
       </UiButton>
+      <UiCancelButton @onClick={{this.closeEarlyShiftAction}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}
@@ -229,13 +232,16 @@
   <ModalDialog @title="Confirm Forced Shift Check In" @onEscape={{this.closeForceStartConfirm}} as |Modal|>
     <Modal.body>
       <p>
-        <b class="text-danger">WARNING: {{@person.callsign}} has not meet all the qualifications to start
-          a {{this.forcePosition.title}} shift</b>
+        <b class="text-danger">
+          WARNING: {{@person.callsign}} has not meet all the qualifications to start
+          a {{this.forcePosition.title}} shift
+        </b>
       </p>
       <ul>
-        {{#unless this.isPersonDirtTrained}}
-          <li>Dirt Training has not been completed</li>
-        {{/unless}}
+        {{#if
+          (and (not this.isPersonDirtTrained) (not this.forcePosition.is_untrained) (not this.forcePosition.is_unqualified))}}
+          <li>In-Person Training has not been completed.</li>
+        {{/if}}
         {{#if this.forcePosition.is_untrained}}
           <li>{{this.forcePosition.training_title}} has not been completed</li>
         {{/if}}
@@ -255,10 +261,10 @@
       </p>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <UiCancelButton @onClick={{this.closeForceStartConfirm}} />
       <UiButton @type="warning" @onClick={{this.confirmForceStart}}>
         Confirm Force Shift Start
       </UiButton>
+      <UiCancelButton @onClick={{this.closeForceStartConfirm}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}
