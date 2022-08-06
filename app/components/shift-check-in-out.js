@@ -107,8 +107,13 @@ export default class ShiftCheckInOutComponent extends Component {
     }
 
     this.userCanForceCheckIn = this.session.hasRole([ADMIN, TIMESHEET_MANAGEMENT]);
-
   }
+
+  /**
+   * Does the person actually need a radio?
+   *
+   * @returns {boolean}
+   */
 
   get mayNotNeedRadio() {
     return this.args.onDutyEntry?.position_id === BURN_PERIMETER;
@@ -125,7 +130,8 @@ export default class ShiftCheckInOutComponent extends Component {
   _startShift(positionId, slotId = null) {
     const position = this.activePositions.find((p) => +p.id === +positionId);
 
-    if (this.isPersonDirtTrained && !position.is_unqualified && !position.is_untrained) {
+    if (position.type === 'Training'
+      || (this.isPersonDirtTrained && !position.is_unqualified && !position.is_untrained)) {
       this._signInPerson(position, slotId);
       return;
     }
@@ -135,11 +141,19 @@ export default class ShiftCheckInOutComponent extends Component {
     this.showForceStartConfirm = true;
   }
 
+  /**
+   * User confirmed yes, they do want to start the shift.
+   */
+
   @action
   confirmForceStart() {
     this.showForceStartConfirm = false;
     this._signInPerson(this.forcePosition, this.forceSlotId);
   }
+
+  /**
+   * Cancel the forced shift start confirmation.
+   */
 
   @action
   closeForceStartConfirm() {
@@ -147,6 +161,14 @@ export default class ShiftCheckInOutComponent extends Component {
     this.forcePosition = null;
     this.forceSlotId = null;
   }
+
+  /**
+   * Sign in a person into the given position.
+   *
+   * @param {object} position
+   * @param {int} slotId
+   * @private
+   */
 
   _signInPerson(position, slotId) {
     const person = this.args.person;
@@ -166,18 +188,18 @@ export default class ShiftCheckInOutComponent extends Component {
         const callsign = person.callsign;
         switch (result.status) {
           case 'success':
-            if (result.forced) {
-              // Shift start was forced, let the user know what was overridden.
-              let reason;
-              if (result.unqualified_reason === 'untrained') {
-                reason = `has not completed '${result.required_training}'`;
-              } else {
-                reason = `is unqualified ('${result.unqualified_message}')`;
+            /*  if (result.forced) {
+                // Shift start was forced, let the user know what was overridden.
+                let reason;
+                if (result.unqualified_reason === 'untrained') {
+                  reason = `has not completed '${result.required_training}'`;
+                } else {
+                  reason = `is unqualified ('${result.unqualified_message}')`;
+                }
+                //this.modal.info('Sign In Forced', `WARNING: The person ${reason}. Because you are an admin or have the timesheet management role, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
               }
-              this.modal.info('Sign In Forced', `WARNING: The person ${reason}. Because you are an admin or have the timesheet management role, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
-            } else {
-              this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
-            }
+             */
+            this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
 
             if (this.args.startShiftNotify) {
               this.args.startShiftNotify();
@@ -215,6 +237,7 @@ export default class ShiftCheckInOutComponent extends Component {
   /**
    * Start a shift with the selected position
    */
+
   @action
   startShiftAction() {
     this._startShift(this.signinPositionId);
@@ -224,6 +247,7 @@ export default class ShiftCheckInOutComponent extends Component {
    * Start a shift based on a scheduled sign up.
    * @param slot
    */
+
   @action
   signinShiftAction(slot) {
     if (slot.is_within_start_time) {
@@ -275,10 +299,15 @@ export default class ShiftCheckInOutComponent extends Component {
    * Update the selected sign in position
    * @param value
    */
+
   @action
   updateShiftPosition(value) {
     this.signinPositionId = value;
   }
+
+  /**
+   * Show the change position dialog
+   */
 
   @action
   changePositionAction() {
@@ -287,9 +316,13 @@ export default class ShiftCheckInOutComponent extends Component {
     this.changePositionError = null;
   }
 
+  /**
+   * Update the signed in shift to the selected position
+   */
+
   @action
   updatePositionAction() {
-    const {onDutyEntry,person} = this.args;
+    const {onDutyEntry, person} = this.args;
     this.isSubmitting = true;
     this.changePositionError = null;
 
@@ -340,16 +373,28 @@ export default class ShiftCheckInOutComponent extends Component {
       .finally(() => this.isSubmitting = false);
   }
 
+  /**
+   * Close out the correct position dialog
+   */
+
   @action
   cancelUpdatePosition() {
     this.showPositionDialog = false;
     this.earlySlot = null;
   }
 
+  /**
+   * Close out the confirm start early shift check in dialog.
+   */
+
   @action
   closeEarlyShiftAction() {
     this.showEarlyShiftConfirm = false;
   }
+
+  /**
+   * Start an early shift check in.
+   */
 
   @action
   confirmEarlyShiftAction() {
