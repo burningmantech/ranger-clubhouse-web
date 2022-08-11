@@ -7,7 +7,7 @@ The catch? randomUUID will not be available when the app is loaded from a URL wi
 All browsers have this behavior for "security reasons".
 
  */
-export function initializer() {
+export function initialize() {
   if ('randomUUID' in window.crypto) {
     // Got it!
     return;
@@ -21,3 +21,8 @@ export function initializer() {
     );
   };
 }
+
+export default {
+  initialize
+};
+
