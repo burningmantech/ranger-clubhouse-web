@@ -66,6 +66,10 @@ caption {
   border: 0 !important;
 }
 
+.tr-stripped {
+  background-color: var(--bs-table-striped-bg);
+  color: var(--bs-table-striped-color);
+}
 
 @media not print {
   .table-sticky {
