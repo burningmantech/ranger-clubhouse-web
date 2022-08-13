@@ -31,6 +31,9 @@
             {{if person.position.short_title person.position.short_title person.position.title}}
           </td>
           <td class="w-15">
+            {{#unless person.on_site}}
+              {{fa-icon "ban" color="danger"}}
+            {{/unless}}
             <PersonLink @person={{person}} />
           </td>
           <td class="w-5">
