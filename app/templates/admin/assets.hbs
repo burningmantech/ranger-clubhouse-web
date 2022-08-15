@@ -83,10 +83,14 @@
             <f.text @name="barcode"
                     @label="Barcode"
                     @size={{25}}
+                    @maxlength={{25}}
+                    @showCharCount={{true}}
             />
             <f.text @name="temp_id"
                     @label="Temp ID (aka secondary description)"
                     @size={{25}}
+                    @maxlength={{25}}
+                    @showCharCount={{true}}
             />
           </FormRow>
           <FormRow>
@@ -124,14 +128,21 @@
             <FormRow>
               <f.text @name="subtype"
                       @label="Type"
-                      @size={{25}}/>
+                      @size={{25}}
+                      @maxlength={{25}}
+                      @showCharCount={{true}}
+              />
               <f.text @name="color"
                       @label="Color"
                       @size={{25}}
+                      @maxlength={{25}}
+                      @showCharCount={{true}}
               />
               <f.text @name="style"
                       @label="Style"
                       @size={{25}}
+                      @maxlength={{25}}
+                      @showCharCount={{true}}
               />
             </FormRow>
           </fieldset>
