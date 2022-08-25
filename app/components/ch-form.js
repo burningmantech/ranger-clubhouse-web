@@ -29,12 +29,17 @@ export default class ChFormComponent extends Component {
   }
 
   get model() {
-    return this.changeSet ? this.changeSetModel : this.args.formFor;
+    const {formFor} = this.args;
+    if (this._currentFormFor !== formFor) {
+      this._buildChangeSet();
+    }
+    return this.changeSet ? this.changeSetModel : formFor;
   }
 
   _buildChangeSet() {
     const {formFor, validator} = this.args;
 
+    this._currentFormFor = formFor;
     if (!this.changeSet) {
       return;
     }
