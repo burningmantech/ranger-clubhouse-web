@@ -85,6 +85,8 @@
     = is earned provision which will be used.
     <AllocatedProvisionIcon/>
     = is allocated provision which will be used.
+    <SetProvisionIcon/>
+    = explicitly set provision
   </p>
 
   Showing {{this.viewBmids.length}} of {{this.bmids.length}}
@@ -262,6 +264,9 @@
               {{#if bmid.earned_showers}}
                 <EarnedProvisionIcon/>
               {{/if}}
+              {{#if bmid.showers}}
+                <SetProvisionIcon/>
+              {{/if}}
               {{if bmid.effectiveShowers "S" "-"}}
             </td>
             <td class="no-wrap">
@@ -270,6 +275,9 @@
               {{/if}}
               {{#if bmid.earned_meals}}
                 <EarnedProvisionIcon/>
+              {{/if}}
+              {{#if bmid.meals}}
+                <SetProvisionIcon/>
               {{/if}}
               {{bmid.effectiveMealsHuman}}
             </td>
