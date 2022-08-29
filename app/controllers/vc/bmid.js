@@ -124,7 +124,7 @@ export default class VcBmidController extends ClubhouseController {
         bmids = bmids.filter((bmid) => (bmid.earned_meals === 'all' || bmid.earned_meals === 'event'));
         break;
       case 'showers':
-        bmids = bmids.filter((bmid) => bmid.earned_showers);
+        bmids = bmids.filter((bmid) => (bmid.earned_showers || bmid.allocated_showers || bmid.showers));
         break;
     }
 
@@ -193,7 +193,9 @@ export default class VcBmidController extends ClubhouseController {
       case 'showers':
         // With showers first
         bmids.sort((a, b) => {
-          const result = b.showers - a.showers;
+          const aShowers = (a.showers || a.earned_showers || a.allocated_showers) ? 1 : 0;
+          const bShowers = (b.showers || b.earned_showers || b.allocated_showers) ? 1 : 0;
+          const result = bShowers - aShowers;
           if (result) {
             return result;
           }

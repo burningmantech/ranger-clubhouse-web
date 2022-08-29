@@ -208,7 +208,7 @@ export default class BmidModel extends Model {
       this.allocated_meals.split('+').forEach((meal) => matrix[meal] = true);
     }
 
-    if (matrix.length === 3) {
+    if (Object.keys(matrix).length === 3) {
       return MEALS_ALL;
     }
 
