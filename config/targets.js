@@ -1,5 +1,7 @@
 'use strict';
 
+// Ensure the following is in sync with app/utils/browser-detect.js
+
 // prettier-ignore
 const browsers = [
   'safari >= 11',

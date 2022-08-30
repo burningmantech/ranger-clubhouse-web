@@ -9,6 +9,7 @@ import ENV from 'clubhouse/config/environment';
 import {config} from 'clubhouse/utils/config';
 import {ADMIN, MANAGE, VC, VIEW_PII, VIEW_EMAIL} from 'clubhouse/constants/roles';
 import MobileDetect from 'mobile-detect';
+import BrowserDetector from "../utils/browser-detect";
 
 const MOBILE_MAX_WIDTH = 991;
 const RESIZE_DEBOUNCE_DELAY = 250;
@@ -55,6 +56,8 @@ export default class extends SessionService {
     window.addEventListener('resize', this._bounceResizeEvent, false);
 
     this.isDevelopment = ENV.environment === 'development';
+
+    this.browserDetect = new BrowserDetector();
   }
 
   /**

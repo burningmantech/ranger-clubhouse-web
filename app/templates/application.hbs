@@ -29,3 +29,16 @@
   </span>
   <div>Build timestamp: {{this.buildTimestamp}} </div>
 </footer>
+
+{{#if this.showBrowserNotSupported}}
+  <ModalDialog @title="Browser Too Old" as |Modal|>
+    <Modal.body>
+      Sorry, your browser,
+      {{this.session.browserDetect.browser.name}} version {{this.session.browserDetect.browser.version}},
+      might be too old to run the Clubhouse. Please upgrade the browser to the current version.
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closeBrowserNotSupported}} />
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
