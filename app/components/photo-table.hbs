@@ -21,7 +21,7 @@
     <tr>
       <td>
         <img id="photo-{{photo.id}}"
-             src={{photo.image_url}}
+             src={{or photo.profile_url photo.image_url}}
              class="photo-icon" role="button"
              alt={{photo.person.callsign}}
              loading="lazy"

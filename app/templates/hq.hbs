@@ -65,7 +65,7 @@
       <div class="mugshot">
         {{#if this.photo}}
           {{#if this.photo.photo_url}}
-            <img src="{{this.photo.photo_url}}" class="mx-auto d-block" alt="profile">
+            <img src="{{or this.photo.profile_url this.photo.photo_url}}" class="mx-auto d-block" alt="profile">
             Photo:
             {{#if (eq this.photo.photo_status "approved")}}
               <span class="text-success">Approved</span>

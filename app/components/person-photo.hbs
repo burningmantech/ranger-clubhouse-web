@@ -1,6 +1,6 @@
 <div class="mugshot {{@containerClass}}">
   {{#if (and (not-eq @photo.photo_status "missing") @photo.photo_url)}}
-    <img src="{{@photo.photo_url}}" alt="profile">
+    <img src={{or @photo.profile_url @photo.photo_url}} alt="profile">
     {{#if (eq @photo.photo_status "approved")}}
       <span class="text-success">{{fa-icon "check"}} Approved</span>
     {{else if (eq @photo.photo_status "submitted")}}
