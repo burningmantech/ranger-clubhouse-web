@@ -1,6 +1,7 @@
 import Model, { attr } from '@ember-data/model';
 import { isEmpty } from '@ember/utils';
 import { tracked } from '@glimmer/tracking';
+import dayjs from 'dayjs';
 
 export default class TimesheetModel extends Model {
   @attr('number') person_id;
@@ -31,6 +32,8 @@ export default class TimesheetModel extends Model {
 
   @tracked isIgnoring = false; // Used by the HQ window interface
   @tracked selected = false;
+
+  @tracked isOverlapping = false;
 
   // All good
   get isVerified() {
@@ -63,5 +66,13 @@ export default class TimesheetModel extends Model {
 
   get stillOnDuty() {
     return !this.off_duty;
+  }
+
+  get onDutyTime() {
+    return dayjs(this.on_duty).unix();
+  }
+
+  get offDutyTime() {
+    return this.onDutyTime + this.duration;
   }
 }

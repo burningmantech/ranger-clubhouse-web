@@ -22,9 +22,9 @@ Showing {{this.viewGroupCorrections.length}} of {{pluralize this.requests.length
   </tr>
   </thead>
   <tbody>
-  {{#each this.viewGroupCorrections as |person|}}
+  {{#each this.viewGroupCorrections as |person personIdx|}}
     {{#each person.requests as |request idx|}}
-      <tr class="{{if idx "no-border"}}">
+      <tr class="{{if (not-eq person.requests.length (add idx 1)) "no-border"}} {{if (not-eq (mod personIdx 2) 0) "tr-stripped"}}">
         <td>
           {{#if idx}}
             &nbsp;
