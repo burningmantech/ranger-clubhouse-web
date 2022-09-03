@@ -6,6 +6,11 @@
         <NoAppreciateIcon/>
         = the shift hours do not count towards appreciations.
       </div>
+      {{#if this.hasOverlapping}}
+        <div class="ms-2">
+          {{fa-icon "flag" color="danger"}} = entry's time overlaps with another entry.
+        </div>
+      {{/if}}
       <div class="ms-4">
         <LinkTo @route="person.timesheet-log" @query={{hash year=@year}}>View {{@year}} Timesheet Log</LinkTo>
       </div>
@@ -25,6 +30,9 @@
       {{#each @timesheets key="id" as |ts|}}
         <tr>
           <td>
+            {{#if ts.isOverlapping}}
+              {{fa-icon "flag" color="danger"}} &nbsp;
+            {{/if}}
             {{#if ts.off_duty}}
               {{shift-format ts.on_duty ts.off_duty}}
             {{else}}

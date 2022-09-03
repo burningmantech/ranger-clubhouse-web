@@ -39,6 +39,27 @@ export default class PersonTimesheetManageComponent extends Component {
     this.canManageTimesheets = session.hasRole(Role.TIMESHEET_MANAGEMENT) || (session.hasRole(Role.ADMIN) && session.hasRole(Role.MANAGE));
     // Can the user mark an entry as verified?
     this.canVerifyTimesheets = session.hasRole(Role.MANAGE);
+
+    this._markOverlapping();
+  }
+
+  _markOverlapping() {
+    const timesheets = this.args.timesheets;
+
+    // Clear out overlapping flags
+    timesheets.forEach((ts) => ts.isOverlapping = false);
+
+    let prevEndTime = 0, prevTs = null;
+    timesheets.forEach(function (ts) {
+      if (ts.onDutyTime < prevEndTime) {
+          ts.isOverlapping = true;
+          prevTs.isOverlapping = true;
+      } else {
+        ts.isOverlapping = false
+      }
+      prevEndTime = ts.offDutyTime;
+      prevTs = ts;
+    });
   }
 
   /**
@@ -62,6 +83,7 @@ export default class PersonTimesheetManageComponent extends Component {
     timesheet.reload().then(() => {
       this.editVerification = false;
       this.editEntry = timesheet;
+      this._markOverlapping();
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
@@ -92,6 +114,7 @@ export default class PersonTimesheetManageComponent extends Component {
         this.editEntry.additional_reviewer_notes = '';
         this.editEntry = null;
         this.args.onChange();
+        this._markOverlapping();
       });
   }
 
@@ -106,6 +129,7 @@ export default class PersonTimesheetManageComponent extends Component {
       .then((result) => {
         const {onChange, person, endShiftNotify} = this.args;
         onChange();
+        this._markOverlapping();
         if (+person.id === +this.session.userId) {
           // Clear out the position title in user's navigation bar.
           this.session.loadUser();
@@ -142,7 +166,12 @@ export default class PersonTimesheetManageComponent extends Component {
           this.editEntry = null;
           this.toast.success('The entry has been deleted.');
           this.args.onChange();
+          this._markOverlapping();
         }).catch((response) => this.house.handleErrorResponse(response));
       });
+  }
+
+  get hasOverlapping() {
+    return this.args.timesheets.find((ts) => ts.isOverlapping) !== undefined;
   }
 }
