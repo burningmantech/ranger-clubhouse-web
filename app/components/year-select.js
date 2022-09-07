@@ -23,8 +23,8 @@ export default class YearSelectComponent extends Component {
       years.push(currentYear);
     }
 
-    const {year} = this.args;
-    if (!isEmpty(year) && !years.includes(year)) {
+    const { year } = this.args;
+    if (!isEmpty(year) && !years.includes(+year)) {
       years.push(year);
     }
 

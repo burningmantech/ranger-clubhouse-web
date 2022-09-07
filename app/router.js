@@ -235,6 +235,7 @@ Router.map(function () {
     this.route('unified-flagging');
     this.route('photos');
     this.route('spigot');
+    this.route('shiny-penny-report');
   });
 
   // Catch all for unrecognized urls
