@@ -8,7 +8,7 @@ export default class VcPhotoReviewRoute extends ClubhouseRoute {
   model() {
     return RSVP.hash({
       person_photo: this.store.query('person-photo', {status: 'submitted', include_rejects: 1}),
-      review_config: this.ajax.request('person-photo/review-config').then((result) => result.review_config)
+      review_config: this.ajax.request('person-photo/review-config').then(({review_config}) => review_config)
     });
   }
 
@@ -29,10 +29,9 @@ export default class VcPhotoReviewRoute extends ClubhouseRoute {
 
     controller.reviewPhoto = null;
 
-    controller.set('rejectionLabels', {});
-    controller.set('rejectionOptions', model.review_config.rejections.map((r) => {
+    controller.rejectionLabels = {};
+    model.review_config.rejections.forEach((r) => {
       controller.rejectionLabels[r.key] = r.label;
-      return [r.label, r.key];
-    }));
+    });
   }
 }

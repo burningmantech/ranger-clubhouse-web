@@ -7,9 +7,12 @@
   <p>
     Showing {{pluralize this.photos.length "photo"}}.
   </p>
-  <PhotoTable @photos={{this.photos}} @deletePhotoAction={{this.deletePhotoAction}}
-              @activatePhotoAction={{this.activatePhotoAction}} @person={{this.person}}
+  <PhotoTable @photos={{this.photos}}
+              @deletePhotoAction={{this.deletePhotoAction}}
+              @activatePhotoAction={{this.activatePhotoAction}}
+              @person={{this.person}}
               @rejectionLabels={{this.rejectionLabels}}
+              @reviewConfig={{this.review_config}}
   />
 {{else}}
   <p>
