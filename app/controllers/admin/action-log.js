@@ -5,6 +5,7 @@ import {debounce} from '@ember/runloop';
 import RSVP from 'rsvp';
 
 const EventOptions = [
+  ['Agreement Signatures', 'agreement-signature'],
   ['BMID Changes', 'bmid-%'],
   ['Client Routing', 'client-route'],
   ['Login Failures', 'auth-failed'],
@@ -29,7 +30,7 @@ const SortOptions = [
 ];
 
 export default class AdminActionLogController extends ClubhouseController {
-  queryParams = ['person', 'start_time', 'end_time', 'events', 'sort', 'page'];
+  queryParams = ['person', 'start_time', 'end_time', 'events', 'sort', 'page', 'event_name', 'message'];
 
   eventOptions = EventOptions;
   sortOptions = SortOptions;
@@ -60,7 +61,7 @@ export default class AdminActionLogController extends ClubhouseController {
       return reject();
     }
 
-    return this.ajax.request('callsigns', { data: {query: callsign, type: 'all', limit: 20} })
+    return this.ajax.request('callsigns', {data: {query: callsign, type: 'all', limit: 20}})
       .then(({callsigns}) => resolve(callsigns.map(row => row.callsign)), reject);
   }
 

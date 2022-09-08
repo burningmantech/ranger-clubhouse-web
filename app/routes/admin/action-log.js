@@ -7,8 +7,10 @@ export default class AdminActionLogRoute extends ClubhouseRoute {
     start_time: {refreshModel: true},
     end_time: {refreshModel: true},
     events: {refreshModel: true},
+    event_name: { refreshModel: true},
     sort: {refreshModel: true},
     page: {refreshModel: true},
+    message: { refreshModel: true},
   };
 
   model(params) {
@@ -25,6 +27,15 @@ export default class AdminActionLogRoute extends ClubhouseRoute {
       }
       return hash;
     }, {});
+
+    const {event_name} =  params;
+    if (event_name) {
+      if (searchParams.events) {
+        searchParams.events.push(event_name)
+      } else {
+        searchParams.events = [ event_name ];
+      }
+    }
 
     this.searchParams = searchParams;
     return this.ajax.request('action-log', {data: searchParams}).catch((response) => {
