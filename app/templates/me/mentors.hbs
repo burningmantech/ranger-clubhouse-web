@@ -1,0 +1,51 @@
+<h1>My Mentors</h1>
+
+<BackToHome/>
+<p>
+  You may send a contact message to one of your Mentors by clicking on the 'Contact' button below their callsign.
+  A Mentor may not be able to receive a message if they are no long with the department.
+</p>
+{{#each this.mentors as |event|}}
+  <UiSection>
+    <:title>
+      Year {{event.year}}
+      {{#if (eq event.status "pass")}}
+        - <span class="text-success">{{fa-icon "check"}} Passed</span>
+      {{/if}}
+    </:title>
+    <:body>
+      <div class="d-flex flex-wrap">
+        {{#each event.mentors as |mentor|~}}
+        {{! template-lint-disable no-inline-styles}}
+          <div class="card me-4 mb-2" style="width: 10rem;">
+            {{#if mentor.profile_url}}
+              <img src={{mentor.profile_url}} alt="profile" class="card-img-top" loading="lazy">
+            {{else}}
+              <i class="far fa-user fa-8x text-center my-4"></i>
+              <div class="card-text text-center mb-3">(No Photo)</div>
+            {{/if}}
+            <div class="card-body">
+              <div class="card-title h4 text-center">
+                {{mentor.callsign}}
+              </div>
+              <div class="card-text text-center">
+                <UiButton @onClick={{fn this.contactAction mentor}}>Contact</UiButton>
+              </div>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </:body>
+  </UiSection>
+{{else}}
+  No mentors were found.
+{{/each}}
+
+{{#if this.contactMentor}}
+  <ContactForm @callsign={{this.contactMentor.callsign}}
+               @isInactive={{false}}
+               @recipientId={{this.contactMentor.id}}
+               @contactType="contact"
+               @onDone={{this.doneAction}} />
+{{/if}}
+

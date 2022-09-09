@@ -13,8 +13,13 @@
 </p>
 
 <p>
-  From {{this.firstYear}} to {{this.lastYear}}, you have mentored {{this.totalMentees}} alphas
-  of whom {{this.totalPassed}} have passed, and {{this.totalBonked}} were bonked.
+  {{#if (eq this.firstYear this.lastYear)}}
+    In {{this.firstYear}}
+  {{else}}
+    From {{this.firstYear}} to {{this.lastYear}},
+  {{/if}}
+  you have mentored {{this.totalMentees}} alphas of whom {{this.totalPassed}} have passed,
+  and {{this.totalBonked}} were bonked.
 </p>
 
 {{#each this.menteeList as |year| }}
@@ -24,37 +29,50 @@
       <small>({{year.mentees.length}} alphas, {{year.passed}} passed, {{year.bonked}} bonked)</small>
     </:title>
     <:body>
-      <table class="table table-striped table-hover table-hover">
-        <thead>
-        <tr>
-          <th>Callsign</th>
-          <th>Status</th>
-          <th>Mentors</th>
-          <th>Passed</th>
-          <th>Last Contact</th>
-          <th>Contact</th>
-        </tr>
-        </thead>
-        <tbody>
+      <div class="d-flex flex-wrap">
         {{#each year.mentees key="person_id" as |mentee|}}
-          <tr>
-            <td>
-              <LinkTo @route="person.index" @model={{mentee.person_id}}>{{mentee.callsign}}</LinkTo>
-              {{#if mentee.formerly_known_as}}
-                <div>(FKA: {{mentee.formerly_known_as}})</div>
+        {{! template-lint-disable no-inline-styles}}
+          <div class="card mb-2 me-2" style="width: 12rem;">
+             {{#if mentee.profile_url}}
+              <img src={{mentee.profile_url}} class="card-img-top" alt="profile" loading="lazy">
+            {{else}}
+               <i class="far fa-user fa-8x text-center my-4"></i>
+               <div class="card-text text-center mb-3">(No Photo)</div>
+            {{/if}}
+             <div class="card-body">
+               <h4 class="card-title">
+                 <LinkTo @route="person.index" @model={{mentee.person_id}}>{{mentee.callsign}}</LinkTo>
+               </h4>
+               {{#if (eq mentee.mentor_status "pass")}}
+                <h6 class="card-subtitle text-success mb-2">{{fa-icon "check"}} Passed</h6>
+              {{else if (eq mentee.mentor_status "bonk")}}
+                <h6 class="card-subtitle text-danger mb-2">{{fa-icon "ban"}} Bonked</h6>
+              {{else if (eq mentee.mentor_status "self-bonk")}}
+                <h6 class="card-subtitle text-danger mb-2">{{fa-icon "user-slash"}} Self-Bonked</h6>
+              {{else}}
+                <p>{{mentee.mentor_status}}</p>
               {{/if}}
-            </td>
-            <td>{{mentee.status}}</td>
-            <td>
-              {{#each mentee.mentors as |mentor|}}
-                {{mentor.callsign}}<br>
-              {{/each}}
-            </td>
-            <td>{{mentee.mentor_status}}</td>
-            <td>
-              <PresentOrNot @value={{mentee.last_contact}} @empty="-"/>
-            </td>
-            <td>
+
+              {{#if mentee.formerly_known_as}}
+                <p class="card-text">
+                  <b>Formerly Known As</b><br>
+                  {{mentee.formerly_known_as}})
+                </p>
+              {{/if}}
+              <p class="card-text">
+                <b>Mentors</b><br>
+                {{#each mentee.mentors as |mentor mentorIdx|}}
+                  {{if mentorIdx ", "}}{{mentor.callsign}}
+                {{/each}}
+              </p>
+              <p class="card-text">
+                <b>Last Contact</b><br>
+                {{#if mentee.last_contact}}
+                  {{mentee.last_contact}}
+                {{else}}
+                  <i>never</i>
+                {{/if}}
+              </p>
               {{#if (eq mentee.contact_status "allow")}}
                 <UiButton @size="sm" @onClick={{fn this.contactAction mentee}}>Contact</UiButton>
               {{else if (eq mentee.contact_status "block")}}
@@ -62,11 +80,10 @@
               {{else}}
                 -
               {{/if}}
-            </td>
-          </tr>
+            </div>
+          </div>
         {{/each}}
-        </tbody>
-      </table>
+      </div>
     </:body>
   </UiSection>
 {{/each}}
