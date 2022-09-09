@@ -69,6 +69,10 @@ export default class extends SessionService {
     return (this.hasRole(MANAGE) && !!config('LoginManageOnPlayaEnabled'));
   }
 
+  get hasLMOP() {
+    return this.hasRole(MANAGE);
+  }
+
   /**
    * Debounce the window resized event. Prevents excessive re-renderings when the
    * user is resizing the window or rotating the device's orientation.

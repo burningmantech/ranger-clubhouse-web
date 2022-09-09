@@ -38,6 +38,9 @@
     {{#if @user.teacher.have_mentored}}
       <<NavbarMenuItem @menu={{menu}} @route="me.mentees" @item="My Mentees"/>
     {{/if}}
+    {{#if @user.isRanger}}
+      <<NavbarMenuItem @menu={{menu}} @route="me.mentors" @item="My Mentors"/>
+    {{/if}}
     {{#if @user.teacher.have_feedback}}
       <<NavbarMenuItem @menu={{menu}} @route="me.trainer-feedback" @item="Trainer Feedback"/>
     {{/if}}

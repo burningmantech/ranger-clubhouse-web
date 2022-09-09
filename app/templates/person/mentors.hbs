@@ -1,29 +1,29 @@
 <h3>Mentors</h3>
 
-<table class="table table-striped table-width-auto mt-4">
-  <thead>
-    <tr>
-      <th>Year</th>
-      <th>Status</th>
-      <th>Mentors</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each this.mentors as |event|}}
-      <tr>
-        <td>{{event.year}}</td>
-        <td>{{event.status}}</td>
-        <td>
-          {{#each event.mentors as |mentor idx|~}}
-            {{if idx "/"}}
-            <PersonLink @person={{mentor}} />
-          {{/each}}
-        </td>
-      </tr>
-    {{else}}
-      <tr>
-        <td colspan="3">No mentor records located?!?</td>
-      </tr>
-    {{/each}}
-  </tbody>
-</table>
+{{#each this.mentors as |event|}}
+  <UiSection>
+    <:title>Year {{event.year}} - {{event.status}}</:title>
+    <:body>
+      <div class="d-flex flex-wrap">
+        {{#each event.mentors as |mentor|~}}
+        {{! template-lint-disable no-inline-styles}}
+          <div class="card me-4 mb-2" style="width: 10rem;">
+            {{#if mentor.profile_url}}
+              <img src={{mentor.profile_url}} alt="profile" class="card-img-top" loading="lazy">
+            {{else}}
+              <i class="far fa-user fa-8x text-center my-4"></i>
+              <div class="card-text text-center mb-3">(No Photo)</div>
+            {{/if}}
+            <div class="card-body">
+              <div class="card-title h4 text-center">
+                <PersonLink @person={{mentor}} />
+              </div>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </:body>
+  </UiSection>
+{{else}}
+  No mentor records were found.
+{{/each}}

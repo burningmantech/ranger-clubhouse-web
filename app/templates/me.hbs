@@ -39,6 +39,10 @@
     {{#if this.user.teacher.have_mentored}}
       <s.link @route="me.mentees" @title="My Mentees" @icon="users" @iconType="s"/>
     {{/if}}
+    {{#if this.user.isRanger}}
+      <s.link @route="me.mentors" @title="My Mentors" @icon="people-arrows" @iconType="s"/>
+    {{/if}}
+
     {{#if this.user.teacher.have_feedback}}
       <s.link @route="me.trainer-feedback" @title="Trainer Feedback" @icon="poll-h" @iconType="s"/>
     {{/if}}
