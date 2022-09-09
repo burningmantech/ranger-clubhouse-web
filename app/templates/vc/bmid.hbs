@@ -12,8 +12,10 @@
   <FormRow>
     <div class="col-auto">
       <label>Filter:</label>
-      <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}}
-                      @onChange={{action this.changeFilter 'filter'}} @fieldSize="sm"/>
+      <ChForm::Select @name="filter" @value={{this.filter}}
+                      @options={{this.filterOptions}}
+                      @onChange={{action this.changeFilter 'filter'}}
+                      @fieldSize="sm"/>
     </div>
     <div class="col-auto">
       <label>Title Filter:</label>
@@ -80,7 +82,11 @@
   </p>
 
   <p>
-    {{fa-icon "exclamation-circle"}} = indicates person has not signed up for any shifts.
+    {{fa-icon "exclamation-circle" color="danger"}} = indicates person has not signed up for any shifts.
+    {{fa-icon "eye" color="danger"}} = person does not have an approved photo
+
+  </p>
+  <p>
     <EarnedProvisionIcon/>
     = is earned provision which will be used.
     <AllocatedProvisionIcon/>
@@ -139,8 +145,11 @@
         {{#each this.editableBmids key="person_id" as |bmid|}}
           <tr class="{{if bmid.isDirty "bg-warning"}}">
             <td>
+              {{#unless bmid.has_approved_photo}}
+                {{fa-icon "eye" color="danger"}}
+              {{/unless}}
               {{~#unless bmid.has_signups~}}
-                {{fa-icon "exclamation-circle"}}
+                {{fa-icon "exclamation-circle" color="danger"}}
               {{~/unless}}
             </td>
             <td>
@@ -234,9 +243,12 @@
         {{#each this.renderBmids key="person_id" as |bmid|}}
           <tr>
             <td>
-              {{#unless bmid.has_signups}}
-                {{fa-icon "exclamation-circle"}}
+              {{#unless bmid.has_approved_photo}}
+                {{fa-icon "eye" color="danger"}}
               {{/unless}}
+              {{~#unless bmid.has_signups~}}
+                {{fa-icon "exclamation-circle" color="danger"}}
+              {{~/unless}}
             </td>
             <td>
               {{#if bmid.person}}

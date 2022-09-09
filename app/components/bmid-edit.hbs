@@ -20,6 +20,11 @@
     <AllocatedProvisionIcon/>
     = will use allocated provision.
   </p>
+  {{#unless @entry.has_approved_photo}}
+    <p>
+      <b class="text-danger">Person does not have an approved photo on file.</b>
+    </p>
+  {{/unless}}
   <FormRow>
     <f.select @name="status"
               @label="BMID Status"

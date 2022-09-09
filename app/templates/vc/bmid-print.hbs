@@ -52,6 +52,9 @@
         <span class="d-inline {{if this.issues "text-danger"}}">
       Issues: {{this.issues.length}}
     </span>
+        <span class="d-inline {{if this.noPhoto.length "text-danger"}}">
+      No Photo: {{this.noPhoto.length}}
+    </span>
         <span class="d-inline {{if this.unusualStatus "text-danger"}}">
       Unusual Person Status: {{this.unusualStatus.length}}
     </span>
@@ -65,9 +68,9 @@
 
       {{#if this.doNotPrint}}
         <div class="border p-2">
-          Do Not Print:
+          <b class="text-danger">Do not print:</b>
           {{#each this.doNotPrint as |bmid idx|~}}
-            {{~if idx ","}}
+            {{~if idx ", "}}
             <PersonLink @person={{bmid.person}} />
           {{/each}}
         </div>
@@ -75,7 +78,7 @@
 
       {{#if this.issues}}
         <div class="border p-2 my-2">
-          Issues:
+          <b class="text-danger">Issues:</b>
           {{#each this.issues as |bmid idx|~}}
             {{~if idx ", "}}
             <PersonLink @person={{bmid.person}} />
@@ -93,6 +96,17 @@
         </div>
       {{/if}}
 
+      {{#if this.noPhoto}}
+        <div class="border p-2 my-2">
+          <b class="text-danger">No approved photo:</b>
+          {{#each this.noPhoto as |bmid idx|~}}
+            {{~if idx ","}}<span class="d-inline-block"><PersonLink @person={{bmid.person}} />
+        ({{bmid.person.status}})</span>
+          {{/each}}
+          <br>
+          The BMID(s) without approved photos are listed below however have not been selected.
+        </div>
+      {{/if}}
       <div class="mt-2">
         Showing {{this.viewBmids.length}} of {{this.bmids.length}} ({{this.bmidsSelectedCount}} selected)
         {{#if this.textFilter}}
@@ -120,7 +134,12 @@
         {{#each this.viewBmids as |bmid|}}
           <tr class="{{if (eq bmid.status "failed") "bg-danger"}}">
             <td><Input @type="checkbox" @checked={{bmid.selected}} {{on "change" (fn this.toggleBmid bmid)}}/></td>
-            <td class="no-wrap">{{bmid.statusHuman}}</td>
+            <td>
+              {{bmid.statusHuman}}
+              {{#unless bmid.has_approved_photo}}
+                <div class="text-danger">{{fa-icon "eye" color="danger"}} NO APPROVED PHOTO</div>
+              {{/unless}}
+            </td>
             <td class="no-wrap">
               {{bmid.person.callsign}}<br>
               {{bmid.person.first_name}} {{bmid.person.last_name}}
@@ -163,9 +182,9 @@
             <td>{{nl2br bmid.notes}}</td>
           </tr>
         {{else}}
-        <tr>
-          <td colspan="11"><b class="text-danger">No BMID records found.</b></td>
-        </tr>
+          <tr>
+            <td colspan="11"><b class="text-danger">No BMID records found.</b></td>
+          </tr>
         {{/each}}
         </tbody>
       </table>
