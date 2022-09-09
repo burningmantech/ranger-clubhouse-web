@@ -43,7 +43,7 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     const bmids = [], doNotPrint = [], issues = [],
-      printed = [], submitted = [], unusualStatus = [];
+      printed = [], submitted = [], unusualStatus = [], noPhoto = [];
 
     controller.set('year', model.year);
     controller.set('filter', model.filter);
@@ -72,17 +72,22 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
           return;
       }
 
+
       if (!ALLOWED_STATUSES.includes(bmid.person.status)) {
         unusualStatus.push(bmid);
         return;
       }
 
-      set(bmid, 'selected', 1)
+      if (bmid.has_approved_photo) {
+        set(bmid, 'selected', 1);
+      } else {
+        noPhoto.push(bmid);
+      }
       bmids.push(bmid);
     });
 
     controller.setProperties({
-      bmids, doNotPrint, issues, printed, submitted, unusualStatus
+      bmids, doNotPrint, issues, printed, submitted, unusualStatus, noPhoto
     });
 
     controller.set('totalBmids', model.bmids.length);

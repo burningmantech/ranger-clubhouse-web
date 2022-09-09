@@ -100,6 +100,9 @@ export default class BmidModel extends Model {
   // True if the person is signed up for shifts
   @attr('boolean', {readOnly: true}) has_signups;
 
+  // True if the person has an approved photo
+  @attr('boolean', {readOnly: true}) has_approved_photo;
+
   // Pulled from claimed or submitted provisions
   @attr('string', {readOnly: true}) earned_meals;
   @attr('boolean', {readOnly: true}) earned_showers;
