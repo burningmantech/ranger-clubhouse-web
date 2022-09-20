@@ -61,23 +61,23 @@ export default class VehicleModel extends Model {
   @attr('string') callsign; // only used for creation or update
 
   get isApproved() {
-    return this.status == 'approved';
+    return this.status === 'approved';
   }
 
   get isRejected() {
-    return this.status == 'rejected';
+    return this.status === 'rejected';
   }
 
   get isPending() {
-    return this.status == 'pending';
+    return this.status === 'pending';
   }
 
   get isPersonal() {
-    return this.type == 'personal';
+    return this.type === 'personal';
   }
 
   get isFleet() {
-    return this.type == 'fleet';
+    return this.type === 'fleet';
   }
 
   get amberLightLabel() {
