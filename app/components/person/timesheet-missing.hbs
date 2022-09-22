@@ -157,7 +157,7 @@
                         no shift within 30 mins of {{shift-format this.editEntry.on_duty}}
                       </td>
                     {{else}}
-                      <td colspan="3" class="text-danger">callsign not found</td>
+                      <td colspan="{{if pi.person_pi 3 4}}" class="text-danger">callsign not found</td>
                     {{/if}}
                     {{#if pi.person_id}}
                       <td>
@@ -185,11 +185,19 @@
         </fieldset>
         <fieldset>
           <legend>Submission Review</legend>
-          {{#if this.editEntry.reviewed_at}}
-            <FormRow>
-              Last review on {{shift-format this.editEntry.reviewed_at}} by {{this.editEntry.reviewer_person.callsign}}
-            </FormRow>
-          {{/if}}
+          <div class="mb-2">
+            {{#if this.editEntry.reviewer_notes}}
+              {{nl2br this.editEntry.reviewer_notes}}
+            {{else}}
+              <i>No reviewer notes have been left yet.</i>
+            {{/if}}
+            {{#if this.editEntry.reviewed_at}}
+              <FormRow>
+                Last review on {{shift-format this.editEntry.reviewed_at}}
+                by {{this.editEntry.reviewer_person.callsign}}
+              </FormRow>
+            {{/if}}
+          </div>
           <FormRow>
             <f.textarea @name="additional_reviewer_notes"
                         @label="Enter your response to {{@person.callsign}} below. Be clear and concise."
