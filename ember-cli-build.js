@@ -52,6 +52,16 @@ module.exports = function (defaults) {
     'ember-bootstrap': {
       bootstrapVersion: 5,
       importBootstrapCSS: false
+    },
+
+    autoImport: {
+      webpack: {
+        resolve: {
+          fallback: {
+            fs: false
+          }
+        }
+      }
     }
   });
 
@@ -63,6 +73,8 @@ module.exports = function (defaults) {
 
   app.import(`node_modules/dayjs/plugin/advancedFormat.js`);
   app.import(`node_modules/dayjs/plugin/objectSupport.js`);
+  app.import(`node_modules/dayjs/plugin/utc.js`);
+  app.import(`node_modules/dayjs/plugin/timezone.js`);
 
   // If you need to use different assets in different
   // environments, specify an object as the first parameter. That
