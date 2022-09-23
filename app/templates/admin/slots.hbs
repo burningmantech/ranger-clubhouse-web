@@ -75,8 +75,7 @@
             <thead>
             <tr>
               <th>ID</th>
-              <th>From</th>
-              <th>To</th>
+              <th>Time</th>
               <th class="text-end">Max</th>
               <th class="text-end">Count</th>
               <th class="text-end">Credits</th>
@@ -89,8 +88,12 @@
             {{#each position.slots key="id" as |slot|}}
               <tr id="slot-{{slot.id}}">
                 <td>{{slot.id}}</td>
-                <td>{{shift-format slot.begins}}</td>
-                <td>{{shift-format slot.ends}}</td>
+                <td>
+                  {{shift-format slot.begins slot.ends}}
+                  {{#if slot.isNonPacific}}
+                    ({{slot.timezone_abbr}})
+                  {{/if}}
+                </td>
                 <td class="text-end">{{slot.max}}</td>
                 <td class="text-end">{{slot.signed_up}}</td>
                 <td class="text-end">{{credits-format slot.credits}}</td>

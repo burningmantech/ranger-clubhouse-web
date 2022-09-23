@@ -1,8 +1,11 @@
 import Component from '@glimmer/component';
 import {validatePresence, validateNumber} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
+import TimezoneOptions from 'clubhouse/constants/timezone-options';
 
 export default class SlotFormComponent extends Component {
+  timezoneOptions = TimezoneOptions;
+
   slotValidations = {
     description: [
       validatePresence({presence: true, message: 'Enter a description.'}),

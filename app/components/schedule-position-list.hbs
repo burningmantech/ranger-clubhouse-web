@@ -6,10 +6,12 @@
         <span class="text-danger">[{{pluralize this.overlappingCount "overlapping signup"}}]</span>
       {{else}}
         <span class="text-success">[
-          {{~pluralize this.nonOverlappingCount "signup"~}}
+          {{pluralize this.nonOverlappingCount "signup"}}
           {{#if this.overlappingCount}}
-            <span class="text-black"> and</span> <span class="text-danger">{{pluralize this.overlappingCount "overlapping signup"}}</span>
-          {{~/if~}}
+            <span class="text-black"> and</span> <span class="text-danger">
+            {{pluralize this.overlappingCount "overlapping signup"}}
+          </span>
+          {{/if}}
           ]</span>
       {{/if}}
     {{/if}}
@@ -44,10 +46,9 @@
       <div class="schedule-table">
         <div class="schedule-row schedule-header">
           <div class="schedule-icon">&nbsp;</div>
-          <div class="schedule-time">Time</div>
+          <div class="schedule-time-description">Time / Description</div>
           <div class="schedule-duration">Duration</div>
           <div class="schedule-credits">Credits</div>
-          <div class="schedule-signup-description">Description</div>
           <div class="schedule-signups">Sign Ups</div>
           <div class="schedule-actions">Actions</div>
         </div>
@@ -65,22 +66,15 @@
                 &nbsp;
               {{/if}}
             </div>
-            <div class="schedule-time">
+            <div class="schedule-time-description">
               {{shift-format slot.slot_begins slot.slot_ends}}
-            </div>
-            <div class="schedule-duration">
-              <span class="schedule-sm-label">Duration:</span>
-              {{#unless slot.position_count_hours}}
-                <span class="me-1"><NoAppreciateIcon/></span>
-              {{/unless}}
-              {{hour-minute-format slot.slot_duration}}
-            </div>
-            <div class="schedule-credits">
-              <span class="schedule-sm-label">Credits:</span> {{credits-format slot.credits}}
-            </div>
-            <div class="schedule-signup-description">
-              <span class="schedule-sm-label">{{@position.title}}</span>
-              <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
+              {{#if (or this.isTrainingType slot.isNotPacific)}}
+                ({{slot.slot_tz_abbr}})
+              {{/if}}
+              <div class="schedule-sm-label">{{@position.title}}</div>
+              <div>
+                <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
+              </div>
               {{#if (and slot.trainer_slot_id (eq slot.slot_max 0))}}
                 <div class="text-danger">No trainers signed up yet.<br>Check back later.</div>
               {{/if}}
@@ -92,6 +86,16 @@
                   {{/each}}
                 </div>
               {{/if}}
+            </div>
+            <div class="schedule-duration">
+              <span class="schedule-sm-label">Duration:</span>
+              {{#unless slot.position_count_hours}}
+                <span class="me-1"><NoAppreciateIcon/></span>
+              {{/unless}}
+              {{hour-minute-format slot.slot_duration}}
+            </div>
+            <div class="schedule-credits">
+              <span class="schedule-sm-label">Credits:</span> {{credits-format slot.credits}}
             </div>
             <div class="schedule-signups">
               {{#if (and slot.trainer_slot_id (eq slot.slot_max 0))}}
@@ -114,8 +118,11 @@
               {{#if slot.person_assigned}}
                 {{#if (or @isAdmin (not slot.has_started))}} {{!template-lint-disable "no-negated-condition"}}
                 {{! Only allow admins to remove a sign up that has started}}
-                  <button type="button" {{on "click" (fn @leaveSlot slot)}} class="btn btn-danger btn-sm"
-                          title="Remove from schedule" disabled={{slot.is_submitting}}>
+                  <button type="button"
+                    {{on "click" (fn @leaveSlot slot)}}
+                          class="btn btn-danger btn-sm"
+                          title="Remove from schedule"
+                          disabled={{slot.is_submitting}}>
                     {{#if slot.is_submitting}}
                       <SpinIcon/>
                     {{else}}
@@ -128,8 +135,10 @@
               {{! Only show action buttons for the current year}}
                 {{#if slot.slot_active}}
                   {{#if (or @isAdmin (and (not slot.isFull) (not slot.has_started)))}}
-                    <button type="button" {{on "click" (fn @joinSlot slot)}} class="btn btn-primary btn-sm"
-                            title="Sign up for the shift" disabled={{slot.is_submitting}}>
+                    <button type="button" {{on "click" (fn @joinSlot slot)}}
+                            class="btn btn-primary btn-sm"
+                            title="Sign up for the shift"
+                            disabled={{slot.is_submitting}}>
                       {{#if slot.is_submitting}}
                         <SpinIcon/>
                       {{else}}

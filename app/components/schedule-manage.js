@@ -109,6 +109,7 @@ export default class ScheduleManageComponent extends Component {
   get positions() {
     const slots = this.viewSlots;
     const groups = {};
+
     slots.forEach((slot) => {
       const position_id = slot.position_id;
       const group = groups[position_id];
@@ -116,7 +117,7 @@ export default class ScheduleManageComponent extends Component {
       if (group) {
         group.slots.push(slot);
       } else {
-        groups[position_id] = {title: slot.position_title, position_id, slots: [slot]};
+        groups[position_id] = {title: slot.position_title, type: slot.position_type, position_id, slots: [slot]};
       }
     });
 

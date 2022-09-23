@@ -43,6 +43,10 @@ export default class ScheduleSlotModel {
     return (this.position_type === 'Training');
   }
 
+  get isNotPacific() {
+    return this.slot_tz_abbr !== 'PST' && this.slot_tz_abbr !== 'PDT';
+  }
+
   static hydrate(slots, positions) {
     const positionsById = positions.reduce((hash, row) => {
       hash[row.id] = row;

@@ -7,7 +7,7 @@
 {{#each this.trainingSessions as |session|}}
   <UiSection>
     <:title>
-      {{shift-format session.slot.begins}}
+      {{shift-format session.slot.begins}} ({{session.slot.timezone_abbr}})
       <div class="d-sm-block d-lg-inline-block">{{session.slot.description}}</div>
     </:title>
     <:body>

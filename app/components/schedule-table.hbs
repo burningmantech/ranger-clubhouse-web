@@ -14,12 +14,16 @@
     {{/if}}
 
     <p>
+      All shift / training session times are in the Pacific timezone unless otherwise noted.
+    </p>
+    <p>
       <NoAppreciateIcon/>
       = the shift hours do not count towards appreciations.
       <InfoIcon/>
       = More shift information available, click on the icon and/or text.
     </p>
-    <div class="mb-1 d-print-none">
+    <div class="mb-1 d-print-none d-flex justify-content-between">
+      <div>
       {{#if (eq this.viewSchedule "upcoming")}}
         <b>Showing {{pluralize this.upcomingCount "UPCOMING shift"}}</b>
         <UiButton @onClick={{this.showAllAction}}  @size="sm" @type="secondary" @class="ms-2">
@@ -33,14 +37,17 @@
           </UiButton>
         {{/if}}
       {{/if}}
+      </div>
+      <div>
+        <UiButton @onClick={{this.exportCalendarAction}} @type="secondary" @size="sm">Export Calendar</UiButton>
+      </div>
     </div>
     <div class="schedule-table schedule-itinerary">
       <div class="schedule-row schedule-header">
         <div class="schedule-icon">&nbsp;</div>
-        <div class="schedule-time">Time</div>
+        <div class="schedule-time-description">Time / Position / Description</div>
         <div class="schedule-duration">Duration</div>
         <div class="schedule-credits">Credits</div>
-        <div class="schedule-table-description">Position / Description</div>
         <div class="schedule-actions d-print-none">Actions</div>
       </div>
 
@@ -53,8 +60,13 @@
               &nbsp;
             {{/if}}
           </div>
-          <div class="schedule-time">
+          <div class="schedule-time-description">
             {{shift-format slot.slot_begins slot.slot_ends}}
+            {{#if slot.isNotPacific}}
+              ({{slot.slot_tz_abbr}})
+             {{/if}}<br>
+            {{slot.position_title}}<br>
+            <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
           </div>
           <div class="schedule-duration">
             <span class="schedule-sm-label">Duration:</span>
@@ -66,11 +78,7 @@
           <div class="schedule-credits">
             <span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}
           </div>
-          <div class="schedule-table-description">
-            {{slot.position_title}}<br>
-            <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
-          </div>
-          <div class="schedule-actions d-print-none">
+           <div class="schedule-actions d-print-none">
             <button type="button" {{on "click" (fn @showPeople slot)}} class="btn btn-secondary btn-sm"
                     title="View people signed up" disabled={{slot.is_retrieving_people}}>
               {{#if slot.is_retrieving_people}}
