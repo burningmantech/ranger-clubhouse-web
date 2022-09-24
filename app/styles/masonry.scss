@@ -7,6 +7,12 @@
   width: 100%;
 }
 
+.masonry-hover {
+  > div:hover, > a:hover {
+    background-color: #d8fbd8;
+  }
+}
+
 .masonry-item-header {
   font-size: 1.1em;
   font-weight: 500;
@@ -37,6 +43,7 @@
   }
 }
 
+
 .masonry-col-2 {
   column-count: 2;
 }
@@ -52,3 +59,4 @@
 .masonry-col-6 {
   column-count: 6;
 }
+

@@ -3,29 +3,32 @@
             @years={{this.session.user.all_years}}
             @onChange={{action (mut this.year)}} />
 <BackToHome/>
+<p>
+  Visit the
+  <LinkTo @route="me.work-history">Work History</LinkTo>
+  page to see how your hours have been spent over the years.
+</p>
+{{#if (and this.isCurrentYear this.timesheetInfo.correction_enabled)}}
+  <p class="d-print-none">
+    Is an entry incorrect, or is there a missing shift that was not recorded?
+    <LinkTo @route="me.timesheet-corrections.index">Submit a correction request.</LinkTo>
+  </p>
 
-{{#if this.timesheets}}
+  {{#if this.timesheets}}
+    <p class="d-print-none">
+      {{#if this.timesheetInfo.timesheet_confirmed}}
+        <b class="text-success">{{fa-icon "check"}} Thank you for confirming your timesheet is accurate.</b>
+      {{else}}
+        <b class="text-danger">It appears you have not confirmed your timesheet as accurate.</b> Go to the
+        <LinkTo @route="me.timesheet-corrections">Timesheet Corrections</LinkTo>
+        page, review your timesheet entries, submit any missing timesheet entries requests, and confirm your
+        {{this.year}} timesheet as accurate.
+      {{/if}}
+    </p>
+  {{/if}}
   <UiSection>
     <:title>{{this.year}} Timesheet Entries</:title>
     <:body>
-      {{#if (and this.isCurrentYear this.timesheetInfo.correction_enabled)}}
-        <p class="d-print-none">
-          Is an entry incorrect, or is there a missing shift that was not recorded?
-          <LinkTo @route="me.timesheet-corrections.index">Submit a correction request.</LinkTo>
-        </p>
-
-        <p class="d-print-none">
-          {{#if this.timesheetInfo.timesheet_confirmed}}
-            <b>Thank you for confirming your timesheet is accurate.</b>
-          {{else}}
-            <b class="text-danger">It appears you have not confirmed your timesheet as accurate.</b> Please to go the
-            <LinkTo @route="me.timesheet-corrections">Timesheet Corrections</LinkTo>
-            page,
-            review your timesheet entries, submit any missing timesheet entries requests, and confirm your {{this.year}}
-            timesheet as accurate.
-          {{/if}}
-        </p>
-      {{/if}}
       <NoAppreciateIcon/>
       = the shift hours do not count towards appreciations.
       <div class="timesheet-table">
