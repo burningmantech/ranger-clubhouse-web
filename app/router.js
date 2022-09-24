@@ -53,6 +53,7 @@ Router.map(function () {
     this.route('vehicles');
     this.route('welcome');
     this.route('mentors');
+    this.route('work-history');
   });
 
   this.route('search',  function () {

@@ -11,11 +11,11 @@
     <:title>
       #{{entry.timesheet_id}}
       {{#if entry.deleted}}
-        <span class="text-danger">DELETED</span>
+        <span class="text-danger mx-1">DELETED</span>
       {{/if}}
       {{#if entry.timesheet}}
         {{entry.timesheet.position_title}}:
-        {{shift-format entry.timesheet.on_duty }} -
+        {{shift-format entry.timesheet.on_duty}} -
         {{#if entry.timesheet.off_duty}}
           {{shift-format entry.timesheet.off_duty}}
         {{else}}

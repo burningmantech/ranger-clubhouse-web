@@ -25,6 +25,14 @@ module.exports = function (defaults) {
     // Don't store configuration in meta tag
     storeConfigInMeta: false,
 
+    '@embroider/macros': {
+      setConfig: {
+        '@ember-data/store': {
+          polyfillUUID: true
+        },
+      },
+    },
+
     'ember-cli-terser': {
       enabled: IS_PROD,
     },
