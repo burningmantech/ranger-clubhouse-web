@@ -73,6 +73,6 @@ export default class TimesheetModel extends Model {
   }
 
   get offDutyTime() {
-    return this.onDutyTime + this.duration;
+    return this.off_duty ? dayjs(this.off_duty).unix() : (this.onDutyTime + this.duration);
   }
 }
