@@ -44,18 +44,20 @@ export default class PersonTimesheetManageComponent extends Component {
   }
 
   _markOverlapping() {
-    const timesheets = this.args.timesheets;
+    const {timesheets} = this.args;
 
     // Clear out overlapping flags
     timesheets.forEach((ts) => ts.isOverlapping = false);
 
     let prevEndTime = 0, prevTs = null;
     timesheets.forEach(function (ts) {
+      if (!ts.off_duty) {
+        // Don't bother with still on duty shifts.
+        return;
+      }
       if (ts.onDutyTime < prevEndTime) {
           ts.isOverlapping = true;
           prevTs.isOverlapping = true;
-      } else {
-        ts.isOverlapping = false
       }
       prevEndTime = ts.offDutyTime;
       prevTs = ts;
