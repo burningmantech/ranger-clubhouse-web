@@ -84,7 +84,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-qunit": "^7.3.1",
     "global": "^4.4.0",
-    "ical-generator": "^3.5.1",
+    "ical-generator": "^3.5.2",
     "jscodeshift": "^0.13.1",
     "json-formatter-js": "^2.3.4",
     "libphonenumber-js": "^1.10.13",
