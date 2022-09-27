@@ -172,18 +172,26 @@ export const VERIFY_TIMESHEETS = {
     let message;
 
     if (timesheets_unverified) {
-      message = `${timesheets_unverified} timesheet ${timesheets_unverified === 1 ? 'entry' : 'entries'} needs to be verified.`;
+      message = `<p>${timesheets_unverified} timesheet ${timesheets_unverified === 1 ? 'entry' : 'entries'} needs to be verified.</p>`;
     } else {
       message = '';
     }
+
+    if (milestones.period === 'after-event') {
+      message += '<p class="text-danger">You will not be recorded as having worked in 2022 until you review your timesheet entries, ' +
+        ' submit any corrections, and confirm your entire timesheet is correct on the Me &gt; Timesheet Corrections page.</p> ' +
+        '<p><b class="text-danger">Deadline to do so is 23:59 Pacific on Saturday, October 1st.</b></p>';
+    }
+
     return {
       result: ACTION_NEEDED,
       route: 'me.timesheet-corrections',
       linkedMessage: {
         route: 'me.timesheet-corrections',
-        prefix: message + ' Visit',
+        prefix: htmlSafe(message + ' Visit'),
         text: 'Me > Timesheet Corrections',
-        suffix: 'to verify your timesheet entries, submit corrections, and confirm all entries are correct.'
+        suffix: 'to verify your timesheet entries, submit corrections, and confirm the entire timesheet is correct.'
+
       }
     };
   }
@@ -639,7 +647,7 @@ function buildTickets(milestones, personId, house) {
   return {
     claimed,
     bankedCount: pkg.accessDocuments.filter((ad) => ad.isBanked).length,
-    qualifiedCount:  pkg.tickets.filter((a) => a.isQualified).length,
+    qualifiedCount: pkg.tickets.filter((a) => a.isQualified).length,
     notCriticalCount: pkg.accessDocuments.filter((ad) => (!ad.isProvision && ad.isQualified && (ad.isWAP || ad.isVehiclePass))).length,
     // noAddress: !pkg.haveAddress,
     noAddress: false,
@@ -699,7 +707,7 @@ export const TICKETING_CLOSED = {
   }
 };
 
-export const VEHICLE_REQUESTS =  {
+export const VEHICLE_REQUESTS = {
   name: 'Submit Personal Vehicle Request(s)',
   skipPeriod: AFTER_EVENT,
   check({milestones}) {

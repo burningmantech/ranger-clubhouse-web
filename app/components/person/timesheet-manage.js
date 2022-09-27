@@ -89,6 +89,14 @@ export default class PersonTimesheetManageComponent extends Component {
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
+  get minDate() {
+    return `${this.args.year}-08-01`;
+  }
+
+  get maxDate() {
+    return `${this.args.year}-09-15`;
+  }
+
   /**
    * Cancel an entry edit - i.e. hide the form dialog
    */

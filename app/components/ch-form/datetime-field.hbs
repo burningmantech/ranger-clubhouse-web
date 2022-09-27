@@ -3,8 +3,7 @@
     <label class={{this.labelClass}} for={{this.domId}}>{{@label}}</label>
   {{~/if~}}
   <ChForm::WrapBlock @wrapClass={{this.inputWrapClass}}>
-    <DatetimePicker
-                    @id={{this.domId}}
+    <DatetimePicker @id={{this.domId}}
                     @name={{@name}}
                     @autofocus={{@autofocus}}
                     @classNames="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
@@ -17,6 +16,8 @@
                     @disabled={{@disabled}}
                     @onfocus={{@onFocus}}
                     @dateOnly={{@dateOnly}}
+                    @minDate={{@minDate}}
+                    @maxDate={{@maxDate}}
     />
     {{~#if @hint~}}
       <ChForm::Hint @hint={{@hint}} />
