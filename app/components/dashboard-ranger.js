@@ -340,15 +340,15 @@ export default class DashboardRangerComponent extends Component {
 
     if (immediateSteps.length) {
       groups.push(new StepGroup('IMMEDIATE ACTION REQUIRED', immediateSteps, true, true));
-    }
-
-    if (!steps.length) {
+    } else if (!steps.length) {
       steps.push(isAfterEvent ? AFTER_EVENT_NO_MORE_THINGS_STEP : BEFORE_EVENT_NO_MORE_THINGS_STEP);
     }
 
-    groups.push(new StepGroup(isAfterEvent ? 'After Event Action Items' : 'Preparation For Playa', steps,
-      !immediateSteps.length
-    ));
+    if (!isAfterEvent || steps.length) {
+      groups.push(new StepGroup(isAfterEvent ? 'After Event Action Items' : 'Preparation For Playa', steps,
+        !immediateSteps.length
+      ));
+    }
 
     if (completed.length) {
       groups.push(new StepGroup('Completed', completed));

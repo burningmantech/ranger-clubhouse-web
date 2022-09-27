@@ -56,7 +56,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
   newRequestAction() {
     this.entry = this.store.createRecord('timesheet-missing', {
       person_id: this.args.person.id,
-      position_id: this.positionOptions[0][1],
+      position_id:  this.positionOptions[0][1],
     });
   }
 
@@ -114,5 +114,13 @@ export default class MeTimesheetMissingCommonComponent extends Component {
       'You are about to delete the timesheet missing request. Please confirm you want to do this.',
       () => timesheetMissing.destroyRecord().then(() => this.toast.success('The request has been deleted.'))
     );
+  }
+
+  get minDate() {
+    return `${this.args.timesheetInfo.correction_year}-08-01`;
+  }
+
+  get maxDate() {
+    return `${this.args.timesheetInfo.correction_year}-09-15`;
   }
 }

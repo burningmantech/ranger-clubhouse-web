@@ -118,16 +118,20 @@ Everyone else will see person/simple-form
   <FormRow>
     <FormLabel @fixed={{true}}>Positions</FormLabel>
     <div class="col-sm-12 col-xl-9">
-      <UiButton @type="secondary" @size="sm" @class="me-2" @onClick={{@togglePositions}}>
-        {{if @showPositions "Hide" "Show"}} Positions
-      </UiButton>
+      {{#if @personPositions}}
+        <UiButton @type="secondary" @size="sm" @class="me-2" @onClick={{@togglePositions}}>
+          {{if @showPositions "Hide" "Show"}} Positions
+        </UiButton>
+      {{/if}}
       {{#if (has-role "admin" "grant-position")}}
         <UiButton @type="secondary" @onClick={{@editPositionsAction}} @size="sm">
           Edit Positions
         </UiButton>
       {{/if}}
       {{#unless @personPositions}}
-        <b class="text-danger">No positions granted</b>
+        <div class="mt-1 text-danger">
+          No positions granted
+        </div>
       {{/unless}}
       {{#if @showPositions}}
         <div class="masonry-container">
@@ -144,16 +148,20 @@ Everyone else will see person/simple-form
   <FormRow>
     <FormLabel @fixed={{true}}>Roles</FormLabel>
     <div class="col-sm-12 col-xl-9">
-      <UiButton @type="secondary" @onClick={{@toggleRoles}} @size="sm">
-        {{if @showRoles "Hide" "Show"}} Roles
-      </UiButton>
+      {{#if @personRoles}}
+        <UiButton @type="secondary" @onClick={{@toggleRoles}}  @class="me-2" @size="sm">
+          {{if @showRoles "Hide" "Show"}} Roles
+        </UiButton>
+      {{/if}}
       {{#if (has-role "admin")}}
-        <UiButton @type="secondary" @onClick={{@editRolesAction}} @class="ms-2" @size="sm">
+        <UiButton @type="secondary" @onClick= {{@editRolesAction}} @size="sm">
           Edit Roles
         </UiButton>
       {{/if}}
       {{#unless @personRoles}}
-        <b class="text-danger">No roles granted</b>
+        <div class="mt-1 text-danger">
+          No roles granted
+        </div>
       {{/unless}}
       {{#if @showRoles}}
         <div class="masonry-container">

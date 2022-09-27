@@ -4,6 +4,7 @@ import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
+import {DIRT} from 'clubhouse/constants/positions';
 
 export default class PersonTimesheetMissingComponent extends Component {
   @tracked newEntry = null;
@@ -160,6 +161,15 @@ export default class PersonTimesheetMissingComponent extends Component {
     });
   }
 
+
+  get minDate() {
+    return `${this.args.year}-08-01`;
+  }
+
+  get maxDate() {
+    return `${this.args.year}-09-15`;
+  }
+
   /**
    * Save an entry
    * @param model
@@ -234,10 +244,14 @@ export default class PersonTimesheetMissingComponent extends Component {
    */
   @action
   newEntryAction() {
-    const {person, positions} = this.args;
+    const {person,positions} = this.args;
+    if (!positions.length) {
+      this.modal.info('No positions', `${person.callsign} has no positions granted. A missing timesheet request cannot be created.`);
+      return;
+    }
     this.newEntry = this.store.createRecord('timesheet-missing', {
       person_id: person.id,
-      position_id: positions.firstObject.id
+      position_id: positions.find((p) => p.id === DIRT) ? DIRT : positions[0]?.id
     });
   }
 
