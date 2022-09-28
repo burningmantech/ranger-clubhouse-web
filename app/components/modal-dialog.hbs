@@ -2,7 +2,7 @@
   @fade={{true}}
   @keyboard={{false}}
   @backdropClose={{false}}
-  @position="center"
+  @position={{or @position "center"}}
   @transitionDuration={{100}}
   @size={{or @size "lg"}}
   {{did-insert this.adjustClassOnInsert}}

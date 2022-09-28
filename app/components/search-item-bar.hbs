@@ -1,103 +1,109 @@
-<div class="bg-khaki row g-0">
-  {{! line up the search bar with main content}}
-  <div class="d-none d-md-block sidebar-expanded">
-    &nbsp;
-  </div>
-
-  <ChForm @formId="search-bar-form"
-          @formFor={{this.searchForm}}
-          @changeSet={{false}}
-          @formClass="col-sm-12 col-lg-8 col-xl-6 mb-2 mx-sm-1 mx-xl-none"
-          @onFormChange={{action this.searchFormChange}} as |f|>
-    <AutocompleteInput @placeholder={{this.searchPlaceholder}}
-                       @onSearch={{action this.searchAction}}
-                       @onSelect={{action this.searchSelectAction}}
-                       @onFocus={{action this.searchFocusAction}}
-                       @text={{this.searchText}}
-                       @modeOptions={{if this.session.isSmallScreen null this.modeOptions}}
-                       @onModeChange={{action this.modeChange}}
-                       @mode={{this.searchForm.mode}}
-                       @appendSearchIcon={{true}}
-                       @focusBorder={{true}}
-                       as |item|>
-      {{#if (eq this.searchType "asset")}}
-        {{this.searchYear}} Asset #{{item.barcode}} {{item.description}} {{item.type}}
-      {{else if (eq this.searchType "vehicle")}}
-        {{item.name}}: {{item.numbers}}
-        <span class="ms-4 d-block">&bullet; {{item.description}}</span>
-      {{else}}
-        {{~#if (eq this.searchType "person-id")~}}
-          ID #{{item.id}}:
-        {{~/if~}}
-        <b>{{item.callsign}}</b> &lt;{{item.first_name}} {{item.last_name}}, {{item.status}}&gt;
-        {{~#if item.fka_match~}}
-          <span class="ms-4 d-block">&bullet; FKA: {{item.fka_match}}</span>
-        {{~/if~}}
-        {{~#if (eq item.email_match "full")~}}
-          <span class="ms-4 d-block">&bullet; email exact match</span>
-        {{~else if (eq item.email_match "partial")~}}
-          <span class="ms-4 d-block">&bullet; email partial match</span>
-        {{~/if~}}
-      {{~/if~}}
-    </AutocompleteInput>
-    {{#if this.showSearchOptions}}
-      <div class="bg-white p-2 pt-4">
-        {{#if this.session.isSmallScreen}}
-          <FormRow>
-            <FormLabel @fixed={{true}} @class="pt-0">Mode:</FormLabel>
-            <div class="col-sm-12 col-xl-auto">
-              <ChForm::Select @name="mode"
-                              @value={{this.searchForm.mode}}
-                              @options={{this.modeOptions}}
-                              @onChange={{this.modeChange}} />
-            </div>
-          </FormRow>
-        {{/if}}
-        {{#if (not-eq this.searchForm.mode "hq")}}
-          <FormRow>
-            <FormLabel @fixed={{true}} @class="pt-0">Search By:</FormLabel>
-            <div class="col-sm-12 col-xl-9">
-              <f.checkbox @name="callsign"
-                          @label="Callsign"
-                          @inline={{true}}
-              />
-              <f.checkbox @name="name"
-                          @label="Name"
-                          @inline={{true}}
-              />
-              <f.checkbox @name="email"
-                          @label="Email"
-                          @inline={{true}}
-              />
-              <f.checkbox @name="formerly_known_as"
-                          @label="Formerly Known As"
-                          @inline={{true}}
-              />
-            </div>
-          </FormRow>
-          <FormRow>
-            <FormLabel @fixed={{true}}  @class="pt-0">Include:</FormLabel>
-            <div class="col-sm-12 col-xl-9">
-              <f.checkbox @name="auditor"
-                          @label="Auditor"
-                          @inline={{true}}/>
-              <f.checkbox @name="past_prospective"
-                          @label="Past Prospective"
-                          @inline={{true}}/>
-            </div>
-          </FormRow>
-        {{/if}}
-        <FormRow>
-          {{#unless this.session.isSmallScreen}}
-            <small>Hint: Save time by pressing &lt;SHIFT&gt; F1 to place the cursor in search field.</small>
-          {{/unless}}
-          <div class="col-auto ms-auto">
-            <UiButton @type="secondary" @size="sm" @onClick={{this.hideSearchBoxAction}}>
-              Hide Options
-            </UiButton>
+{{#if this.session.showSearchDialog}}
+  <ModalDialog @position="top" @onEscape={{this.hideSearchBoxAction}} as |Modal|>
+    <Modal.body>
+      <ChForm @formId="search-bar-form"
+              @formFor={{this.searchForm}}
+              @changeSet={{false}}
+              @onFormChange={{action this.searchFormChange}} as |f|>
+        <AutocompleteInput @placeholder={{this.searchPlaceholder}}
+                           @onSearch={{this.searchAction}}
+                           @onSelect={{this.searchSelectAction}}
+                           @onFocus={{this.searchFocusAction}}
+                           @text={{this.searchText}}
+                           @focusBorder={{true}}
+                           @modeOptions={{if this.session.isSmallScreen null this.modeOptions}}
+                           @onModeChange={{this.modeChange}}
+                           @mode={{this.searchForm.mode}}
+                           @appendSearchIcon={{true}}
+                           @autofocus={{true}}
+                           @onEscape={{this.hideSearchBoxAction}}
+                           as |item|>
+          {{#if (eq this.searchType "asset")}}
+            {{this.searchYear}} Asset #{{item.barcode}} {{item.description}} {{item.type}}
+          {{else if (eq this.searchType "vehicle")}}
+            {{item.name}}: {{item.numbers}}
+            <span class="ms-4 d-block">&bullet; {{item.description}}</span>
+          {{else}}
+            {{~#if (eq this.searchType "person-id")~}}
+              ID #{{item.id}}:
+            {{~/if~}}
+            <b>{{item.callsign}}</b>
+            <span class="d-inline-block">&lt;{{item.first_name}} {{item.last_name}}, {{item.status}}&gt;</span>
+            {{~#if item.fka_match~}}
+              <span class="ms-4 d-block">&bullet; FKA: {{item.fka_match}}</span>
+            {{~/if~}}
+            {{~#if (eq item.email_match "full")~}}
+              <span class="ms-4 d-block">&bullet; email exact match</span>
+            {{~else if (eq item.email_match "partial")~}}
+              <span class="ms-4 d-block">&bullet; email partial match</span>
+            {{~/if~}}
+          {{~/if~}}
+        </AutocompleteInput>
+        <div class="bg-white p-2 pt-2">
+          {{#if this.session.isSmallScreen}}
+            <FormRow>
+              <FormLabel @fixed={{true}} @class="pt-0">Mode:</FormLabel>
+              <div class="col-sm-12 col-xl-auto">
+                <ChForm::Select @name="mode"
+                                @value={{this.searchForm.mode}}
+                                @options={{this.modeOptions}}
+                                @onChange={{this.modeChange}} />
+              </div>
+            </FormRow>
+          {{/if}}
+          {{#if (not-eq this.searchForm.mode "hq")}}
+            <FormRow>
+              <FormLabel @fixed={{true}} @class="pt-0">Search By:</FormLabel>
+              <div class="col-sm-12 col-xl-7">
+                <f.checkbox @name="callsign"
+                            @label="Callsign"
+                            @inline={{true}}
+                />
+                <f.checkbox @name="name"
+                            @label="Name"
+                            @inline={{true}}
+                />
+                <f.checkbox @name="email"
+                            @label="Email"
+                            @inline={{true}}
+                />
+                <f.checkbox @name="formerly_known_as"
+                            @label="Formerly Known As"
+                            @inline={{true}}
+                />
+              </div>
+            </FormRow>
+            <FormRow>
+              <FormLabel @fixed={{true}}  @class="pt-0">Include:</FormLabel>
+              <div class="col-sm-12 col-xl-7">
+                <f.checkbox @name="auditor"
+                            @label="Auditor"
+                            @inline={{true}}/>
+                <f.checkbox @name="past_prospective"
+                            @label="Past Prospective"
+                            @inline={{true}}/>
+              </div>
+            </FormRow>
+          {{/if}}
+        </div>
+      </ChForm>
+      <div class="border-top pt-2 d-flex justify-content-between small">
+        {{#unless this.session.isSmallScreen}}
+          <div class="mt-1 ms-2">
+            <span class="bg-gray p-1">&uparrow;</span>
+            <span class="bg-gray p-1">&downarrow;</span> to navigate results
+            <span class="bg-gray p-1 ms-2">&crarr;</span> to select
+            <span class="bg-gray p-1 ms-2">esc</span> to close this dialog
+            <span class="bg-gray p-1 ms-2">{{if this.session.isMac "⌘" "CTRL"}} K</span>
+            to open this dialog
           </div>
-        </FormRow>
+        {{/unless}}
+        <div class="me-2">
+          <UiButton @type="secondary" @size="sm" @onClick={{this.hideSearchBoxAction}}>
+            Close
+          </UiButton>
+        </div>
       </div>
-    {{/if}}
-  </ChForm>
-</div>
+    </Modal.body>
+  </ModalDialog>
+{{/if}}

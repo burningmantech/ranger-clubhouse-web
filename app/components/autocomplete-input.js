@@ -205,6 +205,8 @@ export default class AutocompleteInputComponent extends Component {
         if (this.isFocused) {
           this.inputElement.blur();
         }
+
+        this.args.onEscape?.();
         break;
 
       default:
@@ -312,7 +314,7 @@ export default class AutocompleteInputComponent extends Component {
   inputInsertElement(element) {
     this.inputElement = element;
     if (this.args.autofocus) {
-      schedule('afterRender', () => element.focus());
+      setTimeout(() => schedule('afterRender', () => element.focus()), 100);
     }
   }
 
@@ -344,6 +346,9 @@ export default class AutocompleteInputComponent extends Component {
   resultsBoxInsertedEvent(element) {
     this.resultsElement = element;
 
+    if (this.args.noAdjustLayout) {
+      return;
+    }
     schedule('afterRender', () => {
       element.style.left = `${this.inputElement.offsetLeft}px`;
       element.style.width = `${this.inputElement.offsetWidth}px`;
