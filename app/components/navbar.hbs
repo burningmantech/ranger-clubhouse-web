@@ -1,4 +1,4 @@
-<BsNavbar @type="light" @backgroundColor="khaki" class="navbar-expand-lg" as |navbar|>
+<BsNavbar @type="light" @backgroundColor="khaki" class="navbar-expand-xl" as |navbar|>
   <LinkTo @route="me.homepage" class="navbar-brand">
     {{#if this.session.isStaging}}
       <span class="text-danger">STAGING SERVER</span>
@@ -8,6 +8,15 @@
       Clubhouse
     {{/if}}
   </LinkTo>
+
+  {{#if this.session.isSmallScreen}}
+    <div class="border rounded p-1 bg-white text-muted mx-auto" {{on "click" this.launchSearchDialog}}>
+      <span class="mx-1">
+        {{fa-icon "search"}}
+      </span>
+      Search
+    </div>
+  {{/if}}
 
   <navbar.toggle id="top-burger-menu">
     <span class="navbar-toggler-icon"></span>
@@ -66,6 +75,21 @@
       {{/if}}
     </navbar.nav>
   </navbar.content>
+  {{#unless this.session.isSmallScreen}}
+    <navbar.content>
+      <div class="border rounded p-1 bg-white text-muted small" {{on "click" this.launchSearchDialog}}>
+        <span class="mx-1">
+          {{fa-icon "search"}}
+        </span>
+        <span>Search Callsigns/Assets/Vehicles</span>
+        {{#unless this.session.isMobileDevice}}
+          <span class="ms-1 bg-gray p-1">
+            {{if this.session.isMac "⌘" "CTRL"}} K
+          </span>
+        {{/unless}}
+      </div>
+    </navbar.content>
+  {{/unless}}
   {{#if this.session.isAuthenticated}}
     <div class="d-none d-lg-flex ms-auto">
       <navbar.content>

@@ -11,7 +11,7 @@ import {ADMIN, MANAGE, VC, VIEW_PII, VIEW_EMAIL} from 'clubhouse/constants/roles
 import MobileDetect from 'mobile-detect';
 import BrowserDetector from "../utils/browser-detect";
 
-const MOBILE_MAX_WIDTH = 991;
+const MOBILE_MAX_WIDTH = 960;
 const RESIZE_DEBOUNCE_DELAY = 250;
 
 export default class extends SessionService {
@@ -24,6 +24,8 @@ export default class extends SessionService {
 
   // How many unread messages the user has
   @tracked unreadMessageCount = 0;
+
+  @tracked showSearchDialog = false;
 
   // Temporary login token used to log in & change or set the password.
   // Token becomes invalid once the password has changed.
@@ -57,6 +59,8 @@ export default class extends SessionService {
 
     this.isDevelopment = ENV.environment === 'development';
 
+    this.isMac = navigator.userAgent.indexOf("Mac") !== -1;
+
     this.browserDetect = new BrowserDetector();
   }
 
@@ -68,6 +72,7 @@ export default class extends SessionService {
   get isLMOPEnabled() {
     return (this.hasRole(MANAGE) && !!config('LoginManageOnPlayaEnabled'));
   }
+
 
   get hasLMOP() {
     return this.hasRole(MANAGE);

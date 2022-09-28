@@ -90,7 +90,7 @@ export default class SearchItemBarComponent extends Component {
     }
 
     this.router.on('routeWillChange', () => {
-      this.showSearchOptions = false; // close up the box on route change.
+      this.session.showSearchDialog = false; // close up the box on route change.
     });
 
     this._buildPlaceholder();
@@ -153,7 +153,7 @@ export default class SearchItemBarComponent extends Component {
 
     this._buildPlaceholder();
 
-    this.showSearchOptions = (this.searchForm.mode !== 'hq');
+    this.session.showSearchDialog = (this.searchForm.mode !== 'hq');
     this.house.setKey(SEARCH_MODE_KEY, mode);
 
     if (!route.startsWith('person.') && !route.startsWith('hq.')) {
@@ -191,7 +191,7 @@ export default class SearchItemBarComponent extends Component {
         break;
     }
 
-    this.showSearchOptions = false;
+    this.session.showSearchDialog = false;
     this.searchText = '';
     this.searchResults = [];
   }
@@ -455,7 +455,7 @@ export default class SearchItemBarComponent extends Component {
   searchFocusAction() {
     this.searchResults = [];
     this.searchYear = null;
-    this.showSearchOptions = (this.session.isSmallScreen || this.searchForm.mode !== 'hq');
+    this.session.showSearchDialog = (this.session.isSmallScreen || this.searchForm.mode !== 'hq');
 
     if (this.searchText !== '') {
       return new RSVP.Promise((resolve, reject) => {
@@ -470,7 +470,7 @@ export default class SearchItemBarComponent extends Component {
 
   @action
   hideSearchBoxAction() {
-    this.showSearchOptions = false;
+    this.session.showSearchDialog = false;
   }
 
   /**
