@@ -9,9 +9,16 @@ export default class NavbarComponent extends Component {
     return this.session.user;
   }
 
+  /**
+   * Launch the search bar.
+   *
+   * @param {Event} event
+   */
+
   @action
   launchSearchDialog(event) {
     event.preventDefault();
+    event.target.blur();
     this.session.showSearchDialog = true;
   }
 }

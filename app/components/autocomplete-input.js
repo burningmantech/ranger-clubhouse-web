@@ -132,11 +132,16 @@ export default class AutocompleteInputComponent extends Component {
    */
 
   @action
-  focusEvent() {
+  focusEvent(event) {
     this.isFocused = true;
     this.selectionIdx = -1;
     this.options = [];
     this.hasSelected = false;
+
+    // Safari prevent autocomplete hack.
+    if (event.target.hasAttribute('autocomplete')) {
+      event.target.removeAttribute('readonly');
+    }
 
     if (this.args.focusBorder) {
       this.wrapperBlock.classList.add("autocomplete-focused");
@@ -233,10 +238,16 @@ export default class AutocompleteInputComponent extends Component {
   /**
    * When the input element is blurred, clear out the results box after delaying.
    * Don't remove the results box before the user has had a change to click the link.
+   *
+   * @param {Event} event
    */
 
   @action
-  blurEvent() {
+  blurEvent(event) {
+    if (event.target.hasAttribute('autocomplete')) {
+      event.target.setAttribute('readonly', '');
+    }
+
     if (this.args.focusBorder) {
       this.wrapperBlock.classList.remove("autocomplete-focused");
     }
@@ -307,12 +318,18 @@ export default class AutocompleteInputComponent extends Component {
 
   /**
    * Track the input element when inserted into the dom
-   * @param {InputEvent} element
+   * @param {HTMLInputElement} element
    */
 
   @action
   inputInsertElement(element) {
     this.inputElement = element;
+
+    if (element.hasAttribute('autocomplete')) {
+      // Safari hack to prevent autofill suggestion.
+      element.setAttribute('readonly', '');
+    }
+
     if (this.args.autofocus) {
       setTimeout(() => schedule('afterRender', () => element.focus()), 100);
     }

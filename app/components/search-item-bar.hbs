@@ -4,7 +4,9 @@
       <ChForm @formId="search-bar-form"
               @formFor={{this.searchForm}}
               @changeSet={{false}}
-              @onFormChange={{action this.searchFormChange}} as |f|>
+              @onFormChange={{action this.searchFormChange}}
+              autocomplete="off"
+              as |f|>
         <AutocompleteInput @placeholder={{this.searchPlaceholder}}
                            @onSearch={{this.searchAction}}
                            @onSelect={{this.searchSelectAction}}
@@ -17,6 +19,7 @@
                            @appendSearchIcon={{true}}
                            @autofocus={{true}}
                            @onEscape={{this.hideSearchBoxAction}}
+                           autocomplete="off"
                            as |item|>
           {{#if (eq this.searchType "asset")}}
             {{this.searchYear}} Asset #{{item.barcode}} {{item.description}} {{item.type}}
