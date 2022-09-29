@@ -10,12 +10,12 @@
   </LinkTo>
 
   {{#if (and this.session.hasLMOP this.session.isSmallScreen)}}
-    <div class="border rounded p-1 bg-white text-muted mx-auto" {{on "click" this.launchSearchDialog}}>
+    <button type="button" class="border rounded p-1 bg-white text-muted mx-auto" {{on "click" this.launchSearchDialog}}>
       <span class="mx-1">
         {{fa-icon "search"}}
       </span>
       Search
-    </div>
+    </button>
   {{/if}}
 
   <navbar.toggle id="top-burger-menu">
@@ -77,7 +77,7 @@
   </navbar.content>
   {{#if (and this.session.hasLMOP (not this.session.isSmallScreen))}}
     <navbar.content>
-      <div class="border rounded p-1 bg-white text-muted small" {{on "click" this.launchSearchDialog}}>
+      <button type="button" tabindex="-1" class="border rounded p-1 bg-white text-muted small" {{on "click" this.launchSearchDialog}}>
         <span class="mx-1">
           {{fa-icon "search"}}
         </span>
@@ -87,7 +87,7 @@
             {{if this.session.isMac "⌘" "CTRL"}} K
           </span>
         {{/unless}}
-      </div>
+      </button>
     </navbar.content>
   {{/if}}
   {{#if this.session.isAuthenticated}}
