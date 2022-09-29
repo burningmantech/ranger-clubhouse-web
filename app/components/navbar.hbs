@@ -9,7 +9,7 @@
     {{/if}}
   </LinkTo>
 
-  {{#if this.session.isSmallScreen}}
+  {{#if (and this.session.hasLMOP this.session.isSmallScreen)}}
     <div class="border rounded p-1 bg-white text-muted mx-auto" {{on "click" this.launchSearchDialog}}>
       <span class="mx-1">
         {{fa-icon "search"}}
@@ -75,7 +75,7 @@
       {{/if}}
     </navbar.nav>
   </navbar.content>
-  {{#unless this.session.isSmallScreen}}
+  {{#if (and this.session.hasLMOP (not this.session.isSmallScreen))}}
     <navbar.content>
       <div class="border rounded p-1 bg-white text-muted small" {{on "click" this.launchSearchDialog}}>
         <span class="mx-1">
@@ -89,7 +89,7 @@
         {{/unless}}
       </div>
     </navbar.content>
-  {{/unless}}
+  {{/if}}
   {{#if this.session.isAuthenticated}}
     <div class="d-none d-lg-flex ms-auto">
       <navbar.content>
