@@ -9,18 +9,6 @@ export const VEHICLE_PASS = 'vehicle_pass';
 export const WAP = 'work_access_pass';
 export const WAPSO = 'work_access_pass_so';
 
-export const ALL_EAT_PASS = 'all_eat_pass';
-export const EVENT_EAT_PASS = 'event_eat_pass';
-export const PRE_EVENT_EAT_PASS = 'pre_event_eat_pass';
-export const POST_EVENT_EAT_PASS = 'post_event_eat_pass';
-export const PRE_EVENT_EVENT_EAT_PASS  = 'pre_event_event_eat_pass';
-export const EVENT_POST_EAT_PASS = 'event_post_event_eat_pass';
-export const PRE_POST_EAT_PASS = 'pre_post_eat_pass';
-
-export const WET_SPOT = 'wet_spot';
-export const WET_SPOT_POG = 'wet_spot_pog'; // unused currently
-export const EVENT_RADIO = 'event_radio';
-
 export const QUALIFIED = 'qualified';
 export const CLAIMED = 'claimed';
 export const BANKED = 'banked';
@@ -39,19 +27,8 @@ export const TypeLabels = {
   [RPT]: 'Reduced-Price Ticket',
   [GIFT_TICKET]: 'Gift Ticket',
   [WAP]: 'Work Access Pass',
-  [WAPSO]: 'Work Access Pass (SO)',
+  [WAPSO]: 'S.O. Work Access Pass',
   [VEHICLE_PASS]: 'Vehicle Pass',
-  [EVENT_RADIO]: 'Event Radio',
-  [ALL_EAT_PASS]: 'All Eat Meal Pass',
-  [EVENT_EAT_PASS]: 'Event Week Meal Pass',
-  [PRE_EVENT_EAT_PASS]: 'Pre-Event Eat Pass',
-  [POST_EVENT_EAT_PASS]: 'Post-Event Eat Pass',
-  [PRE_EVENT_EVENT_EAT_PASS]: 'Pre-Event + Event Eat Pass',
-  [PRE_POST_EAT_PASS]: 'Pre+Post Eat Pass',
-  [EVENT_POST_EAT_PASS]: 'Event+Post Eat Pass',
-
-  [WET_SPOT]: 'Wet Spot Access (Org Showers)',
-  [WET_SPOT_POG]: 'Wet Spot Pog (Org Showers)'
 };
 
 export const TypeShortLabels = {
@@ -62,15 +39,6 @@ export const TypeShortLabels = {
   [WAP]: 'WAP',
   [WAPSO]: 'SOWAP',
 
-  [ALL_EAT_PASS]: 'ALL-EAT',
-  [EVENT_EAT_PASS]: 'EVENT-EAT',
-  [PRE_EVENT_EAT_PASS]: 'PRE-EAT',
-  [POST_EVENT_EAT_PASS]: 'POST-EAT',
-  [PRE_EVENT_EVENT_EAT_PASS]: 'PRE+EVENT-EAT',
-  [EVENT_POST_EAT_PASS]: 'EVENT+POST-EAT',
-
-  [EVENT_RADIO]: 'RADIO',
-  [WET_SPOT]: 'WETSPOT',
 };
 
 export const DeliveryMethodLabels = {
@@ -79,16 +47,6 @@ export const DeliveryMethodLabels = {
   [DELIVERY_WILL_CALL]: 'Will Call',
   [DELIVERY_NONE]: 'None'
 };
-
-const MealPasses = [
-  ALL_EAT_PASS,
-  EVENT_EAT_PASS,
-  PRE_EVENT_EAT_PASS,
-  POST_EVENT_EAT_PASS,
-  PRE_EVENT_EVENT_EAT_PASS ,
-  EVENT_POST_EAT_PASS,
-  PRE_POST_EAT_PASS
-];
 
 export default class AccessDocumentModel extends Model {
   @attr('number') person_id;
@@ -102,7 +60,6 @@ export default class AccessDocumentModel extends Model {
   // write-only, backend will append to comments
   @attr('string') additional_comments;
   @attr('string') expiry_date;
-  @attr('number') item_count;
   @attr('string', {readOnly: true}) create_date;
   @attr('string', {readOnly: true}) modified_date;
 
@@ -118,10 +75,6 @@ export default class AccessDocumentModel extends Model {
   @attr('string', {defaultValue: 'US'}) country;
   @attr('string') postal_code;
 
-  @attr('boolean', { defaultValue: false }) is_allocated;
-
-  // Is this earned provision (is_allocated=false) is superseded by an allocated provision (is_allocated=true)?
-  @attr('boolean', { readOnly: true, defaultValue: false }) is_superseded;
 
   get isTicket() {
     return (this.type === STAFF_CREDENTIAL
@@ -151,20 +104,6 @@ export default class AccessDocumentModel extends Model {
 
   get isVehiclePass() {
     return this.type === VEHICLE_PASS;
-  }
-
-  get isEventRadio() {
-    return this.type === EVENT_RADIO;
-  }
-
-  get isMealPass() {
-    return MealPasses.includes(this.type);
-  }
-
-  get isProvision() {
-    const {type} = this;
-
-    return (this.isMealPass || type === EVENT_RADIO || type === WET_SPOT);
   }
 
   get hasAccessDate() {
@@ -240,15 +179,6 @@ export default class AccessDocumentModel extends Model {
 
   get typeLabel() {
     return TypeLabels[this.type] ?? this.type;
-  }
-
-  get typeLabelWithCounts() {
-    const label = this.typeLabel;
-    if (this.type === EVENT_RADIO) {
-      return `${label} count ${this.item_count}`;
-    } else {
-      return label;
-    }
   }
 
   get deliveryMethodLabel() {

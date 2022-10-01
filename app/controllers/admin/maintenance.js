@@ -80,14 +80,25 @@ const TASK_GROUPS = [{
     ]
   },
   {
+    group_title: 'Provisions Pre-Event',
+    tasks: [
+      {
+        action: 'unbank-provisions',
+        title: 'Unbank Provisions',
+        description: 'Take all banked provisions and update the status to available (un-bank). Do this before ticketing is opened.',
+        controller: 'provision'
+      },
+    ]
+  },
+  {
     group_title: 'Ticketing Post-Event',
     tasks: [
       {
-      action: 'clean-access-documents',
-      title: 'Clean Access Docs From Prior Event',
-      description: 'Mark all submitted Access Docs as used, and mark all non-bankable and unsubmitted Access Docs (Vehicle Passes, WAPs) as expired.',
-      controller: 'access-document'
-    },
+        action: 'clean-access-documents',
+        title: 'Clean Access Docs From Prior Event',
+        description: 'Mark all submitted Access Docs as used, and mark all non-bankable and un-submitted Access Docs (Vehicle Passes, WAPs) as expired.',
+        controller: 'access-document'
+      },
       {
         action: 'bank-access-documents',
         title: 'Bank Access Docs From Prior Event',
@@ -99,6 +110,30 @@ const TASK_GROUPS = [{
         title: 'Expire Access Documents',
         description: 'Mark expired Access Docs as expired',
         controller: 'access-document'
+      }
+    ]
+  },
+
+  {
+    group_title: 'Provisions Post-Event',
+    tasks: [
+      {
+        action: 'clean-provisions',
+        title: 'Clean Provisions From Prior Event',
+        description: 'Mark all submitted provisions as used, and mark allocated provisions either expired (unused) or used (claimed/submitted).',
+        controller: 'provision'
+      },
+      {
+        action: 'bank-provisions',
+        title: 'Bank Provisions From Prior Event',
+        description: 'Mark all qualified provisions (does not check for expiration)',
+        controller: 'provision'
+      },
+      {
+        action: 'expire-provisions',
+        title: 'Expire Provisions',
+        description: 'Mark expired Provisions as expired',
+        controller: 'provision'
       }
     ]
   },

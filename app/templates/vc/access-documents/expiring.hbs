@@ -19,7 +19,7 @@ Showing {{pluralize this.expiring.length "person"}}
   <tbody>
     {{#each this.expiring as |person|}}
       <tr>
-        <td><PersonLink @person={{person.person}} @page="access-documents" /></td>
+        <td><PersonLink @person={{person.person}} @page="tickets-provisions" /></td>
         <td>{{person.person.status}}</td>
         <td>{{mail-to person.person.email}}</td>
         {{#let person.tickets.firstObject as |ticket|}}

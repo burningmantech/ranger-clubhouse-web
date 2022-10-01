@@ -1,8 +1,8 @@
 import Component from '@glimmer/component';
-import { action } from '@ember/object';
+import {action} from '@ember/object';
 import {BANKED, CLAIMED} from 'clubhouse/models/access-document';
-import { service } from '@ember/service';
-import { cached } from '@glimmer/tracking';
+import {service} from '@ember/service';
+import {cached} from '@glimmer/tracking';
 
 export default class TicketProvisionsComponent extends Component {
   @service ajax;
@@ -12,15 +12,15 @@ export default class TicketProvisionsComponent extends Component {
   constructor() {
     super(...arguments);
 
-    const {ticketPackage}= this.args;
+    const {ticketPackage} = this.args;
     this.provisions = ticketPackage.provisions;
     this.allocatedProvisions = ticketPackage.allocatedProvisions;
     this.jobItems = ticketPackage.jobItems;
-   }
+  }
 
   @cached
   get earnedProvisions() {
-    return this.provisions.filter((i) => (!i.is_allocated && (i.isQualified || i.isClaimed)));
+    return this.provisions.filter((i) => (!i.is_allocated && (i.isAvailable || i.isClaimed)));
   }
 
   @cached
@@ -51,20 +51,19 @@ export default class TicketProvisionsComponent extends Component {
       provisions = this.bankedItems;
     }
 
-    const statuses = provisions.map((p) => ({ id: p.id, status }));
+    const statuses = provisions.map((p) => ({id: p.id, status}));
 
     try {
-      const result = await this.ajax.request(`access-document/statuses`, {
+      const result = await this.ajax.request(`provision/statuses`, {
         method: 'PATCH',
         data: {statuses}
       });
-      this.house.pushPayload('access-document', result.access_document);
+      this.house.pushPayload('provision', result.access_document);
       this.toast.success('Your choice has been successfully saved.');
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
-
     }
   }
 }

@@ -26,6 +26,7 @@ const SINGULAR_MODELS = [
   'person-photo',
   'position',
   'position-credit',
+  'provision',
   'role',
   'setting',
   'slot',
