@@ -1,6 +1,7 @@
-import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
+import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
+import {service} from '@ember/service';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import {StateOptions} from 'clubhouse/constants/countries';
 import {
@@ -10,15 +11,6 @@ import {
   VEHICLE_PASS,
   WAP,
   WAPSO,
-  ALL_EAT_PASS,
-  EVENT_EAT_PASS,
-  PRE_EVENT_EAT_PASS,
-  POST_EVENT_EAT_PASS,
-  PRE_POST_EAT_PASS,
-  PRE_EVENT_EVENT_EAT_PASS,
-  EVENT_POST_EAT_PASS,
-  EVENT_RADIO,
-  WET_SPOT,
   // Statuses
   BANKED,
   CANCELLED,
@@ -32,7 +24,12 @@ import {
   DELIVERY_WILL_CALL
 } from 'clubhouse/models/access-document';
 
-export default class PersonAccessDocumentsController extends ClubhouseController {
+export default class PersonAccessDocumentsComponent extends Component {
+  @service house;
+  @service modal;
+  @service store;
+  @service toast;
+
   @tracked isSubmitting = false;
   @tracked isShowingAll = false;
 
@@ -40,43 +37,12 @@ export default class PersonAccessDocumentsController extends ClubhouseController
   @tracked entry = null;
 
   typeOptions = [
-    [ 'Select Type', '' ],
-    {
-      groupName: 'Tickets/VP',
-      options: [
-        ["Staff Credential", STAFF_CREDENTIAL],
-        ["Reduced-Price Ticket", RPT],
-        ["Gift Ticket", GIFT_TICKET],
-        ["Vehicle Pass", VEHICLE_PASS],
-      ],
-    },
-    {
-      groupName: 'Work Access Passes',
-      options: [
-        ["Work Access Pass", WAP],
-        ["Work Access Pass (SO)", WAPSO],
-      ],
-    },
-    {
-      groupName: 'Meal Provisions',
-      options: [
-        ['All Eat Pass', ALL_EAT_PASS],
-        ['Event Week Meal Pass', EVENT_EAT_PASS],
-        ['Pre-Event Meal Pass', PRE_EVENT_EAT_PASS],
-        ['Pre-Event + Event Meal Pass', PRE_EVENT_EVENT_EAT_PASS],
-        ['Pre+Post Meal Pass', PRE_POST_EAT_PASS ],
-        ['Event + Post-Event Meal Pass', EVENT_POST_EAT_PASS],
-        ['Post-Event Meal Pass', POST_EVENT_EAT_PASS],
-      ]
-    },
-    {
-      groupName: 'Other Provisions',
-      options: [
-        ['Event Radio', EVENT_RADIO],
-        ['Wet Spot Access', WET_SPOT],
-      ]
-
-    }
+    ["Gift Ticket", GIFT_TICKET],
+    ["Reduced-Price Ticket", RPT],
+    ["Staff Credential", STAFF_CREDENTIAL],
+    ["Work Access Pass", WAP],
+    ["S.O. Work Access Pass", WAPSO],
+    ['Vehicle Pass', VEHICLE_PASS],
   ];
 
   statusOptions = [
@@ -97,6 +63,11 @@ export default class PersonAccessDocumentsController extends ClubhouseController
 
   stateOptions = StateOptions['US'];
 
+  constructor() {
+    super(...arguments);
+    this.documents = this.args.documents;
+  }
+
   get yearOptions() {
     const currentYear = this.house.currentYear();
     const years = [];
@@ -108,7 +79,7 @@ export default class PersonAccessDocumentsController extends ClubhouseController
   }
 
   get admissionDateOptions() {
-    return admissionDateOptions(this.house.currentYear(), this.ticketingInfo.wap_date_range, this.entry.admission_date);
+    return admissionDateOptions(this.house.currentYear(), this.args.ticketingInfo.wap_date_range, this.entry.admission_date);
   }
 
   @action
@@ -116,7 +87,7 @@ export default class PersonAccessDocumentsController extends ClubhouseController
     const currentYear = this.house.currentYear();
 
     this.entry = this.store.createRecord('access-document', {
-      person_id: this.person.id,
+      person_id: this.args.person.id,
       type: RPT,
       status: QUALIFIED,
       source_year: currentYear,
@@ -144,7 +115,7 @@ export default class PersonAccessDocumentsController extends ClubhouseController
       return;
     }
 
-    const isNew = model.isNew;
+    const {isNew} = model;
 
     model.save().then(() => {
       this.entry = null;
@@ -155,32 +126,41 @@ export default class PersonAccessDocumentsController extends ClubhouseController
     }).catch((response) => this.house.handleErrorResponse(response, model));
   }
 
+  /**
+   * Delete an access document
+   *
+   * @param {AccessDocumentModel} document
+   */
+
   @action
   deleteAccessDocument(document) {
-    this.modal.confirm('Confirm Delete Document', 'Are you sure you want to delete this document? This operation cannot be undone.', () => {
-      document.destroyRecord().then(() => {
-        this.entry = null;
-        this.toast.success('The document was successfully deleted.');
-      }).catch((response) => this.house.handleErrorResponse(response));
-    });
+    this.modal.confirm('Confirm Delete Document',
+      'Are you sure you want to delete this document? This operation cannot be undone.',
+      () => {
+        document.destroyRecord().then(() => {
+          this.entry = null;
+          this.toast.success('The document was successfully deleted.');
+        }).catch((response) => this.house.handleErrorResponse(response));
+      });
   }
 
   @action
   showAction() {
     this.isLoading = true;
 
-    const data = {person_id: this.person.id};
+    const data = {person_id: this.args.person.id};
     if (!this.isShowingAll) {
       data.status = 'all';
     }
-    this.store.query('access-document', data).then((documents) => {
-      this.documents = documents;
-      this.isShowingAll = !this.isShowingAll;
-    }).catch((response) => this.house.handleErrorResponse(response))
+    this.store.query('access-document', data)
+      .then((documents) => {
+        this.documents = documents;
+        this.isShowingAll = !this.isShowingAll;
+      }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isLoading = false);
   }
 
   get isTicketingOpen() {
-    return this.ticketingInfo.period === 'open';
+    return this.args.ticketingInfo.period === 'open';
   }
 }

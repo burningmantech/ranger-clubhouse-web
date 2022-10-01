@@ -52,7 +52,7 @@ export default class TicketSummaryComponent extends Component {
     });
 
     pkg.provisions.filter((t) => t.isBanked).forEach((t) => {
-      banked.push(`${t.typeLabel} (expires ${dayjs(t.expiry_date).format('YYYY-MM-DD')})`);
+      banked.push(`${t.typeLabel} (expires ${dayjs(t.expires_on).format('YYYY-MM-DD')})`);
     });
 
     return banked;
@@ -109,7 +109,7 @@ export default class TicketSummaryComponent extends Component {
     if (pkg.jobItems) {
       pkg.jobItems.forEach((j) => claimed.push(j.typeLabelWithCounts));
     } else {
-      pkg.provisions.filter((t) => (t.isQualified || t.isClaimed)).forEach((t) => {
+      pkg.provisions.filter((t) => (t.isAvailable || t.isClaimed)).forEach((t) => {
         claimed.push(t.typeLabelWithCounts);
       });
     }

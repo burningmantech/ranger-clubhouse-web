@@ -44,7 +44,7 @@
         {{#each this.badRecords as |rec|}}
           <tr>
             <td>
-              <PersonLink @person={{rec.person}} @page="access-documents"/>
+              <PersonLink @person={{rec.person}} @page="tickets-provisions"/>
             </td>
             <td>RAD-{{rec.document.id}}</td>
             <td>{{rec.document.shortType}}</td>
@@ -120,7 +120,7 @@
             {{#if rec.has_error}}
               {{fa-icon "exclamation-triangle" color="danger"}}
             {{/if}}
-            <PersonLink @person={{rec.person}} @page="access-documents"/>
+            <PersonLink @person={{rec.person}} @page="tickets-provisions"/>
           </td>
           <td>{{rec.person.first_name}}</td>
           <td>{{rec.person.last_name}}</td>

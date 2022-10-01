@@ -635,11 +635,13 @@ function buildTickets(milestones, personId, house) {
     claimed.push(pkg.wap);
   }
 
+  const provisions = { claimed: [ ], banked: [ ]};
+
   if (pkg.jobItems) {
     // jobItems is set when there are allocated provisions. This is the union between the earned & allocated provisions.
-    pkg.jobItems.forEach((item) => claimed.push(item));
+    pkg.jobItems.forEach((item) => provisions.claimed.push(item));
   } else if (ticket) {
-    pkg.provisions.filter((p) => !p.isBanked).forEach((p) => claimed.push(p));
+    pkg.provisions.filter((p) => !p.isBanked).forEach((p) => provisions.claimed.push(p));
   }
 
   pkg.wapso.forEach((so) => claimed.push(so));
@@ -648,12 +650,12 @@ function buildTickets(milestones, personId, house) {
     claimed,
     bankedCount: pkg.accessDocuments.filter((ad) => ad.isBanked).length,
     qualifiedCount: pkg.tickets.filter((a) => a.isQualified).length,
-    notCriticalCount: pkg.accessDocuments.filter((ad) => (!ad.isProvision && ad.isQualified && (ad.isWAP || ad.isVehiclePass))).length,
+    notCriticalCount: pkg.accessDocuments.filter((ad) => ( ad.isQualified && (ad.isWAP || ad.isVehiclePass))).length,
     // noAddress: !pkg.haveAddress,
     noAddress: false,
+    provisions
   };
 }
-
 
 export const TICKETING_OPEN = {
   name: 'Claim Tickets, Vehicle Passes, and Work Access Passes',

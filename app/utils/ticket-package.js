@@ -7,13 +7,14 @@ export default class TicketPackage {
 
   constructor(pkg, person_id, house) {
     const docs = pkg.access_documents.map((ad) => house.pushPayload('access-document', ad));
+    const provisions = pkg.provisions.map((p) => house.pushPayload('provision', p));
 
     this.accessDocuments = docs;
     this.tickets = docs.filter((d) => d.isTicket);
     this.vehiclePass = docs.find((d) => d.isVehiclePass);
     this.wap = docs.find((d) => d.isWAP);
     this.wapso = docs.filter((d) => d.isWAPSO);
-    this.provisions = docs.filter((d) => d.isProvision).sort((a, b) => a.typeLabel.localeCompare(b.typeLabel));
+    this.provisions = provisions.sort((a, b) => a.typeLabel.localeCompare(b.typeLabel));
 
     this.allocatedProvisions = this.provisions.filter((p) => p.is_allocated);
 

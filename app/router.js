@@ -104,14 +104,14 @@ Router.map(function () {
       this.route('preview', {path: '/:survey_id/preview'});
     });
 
+    this.route('bulk-lookup');
+    this.route('bulk-positions');
+    this.route('certifications');
+    this.route('documents');
+    this.route('mail-log');
     this.route('thank-you-cards');
     this.route('timesheet-sanity-checker');
     this.route('top-hour-earners');
-    this.route('documents');
-    this.route('bulk-lookup');
-    this.route('bulk-positions');
-    this.route('mail-log');
-    this.route('certifications');
   });
 
   this.route('hq', {path: '/hq/:person_id'}, function () {
@@ -141,7 +141,6 @@ Router.map(function () {
 
   this.route('person', {path: '/person/:person_id'}, function () {
     this.route('index', {path: '/'});
-    this.route('access-documents');
     this.route('alerts');
     this.route('assets');
     this.route('bmid');
@@ -158,6 +157,7 @@ Router.map(function () {
     this.route('photos');
     this.route('schedule');
     this.route('status-history');
+    this.route('tickets-provisions');
     this.route('tickets');
     this.route('timesheet');
     this.route('timesheet-log');
@@ -169,20 +169,20 @@ Router.map(function () {
 
   this.route('training', {path: '/training/:position_id'}, function () {
     this.route('index', {path: '/'});
-    this.route('session', {path: '/session/:slot_id'}, function () {
+    this.route('capacity');
+    this.route('multiple-enrollments');
+    this.route('people-training-completed');
+     this.route('session', {path: '/session/:slot_id'}, function () {
       this.route('index', {path: '/'});
       this.route('signup-sheet');
       this.route('trainers-report');
     });
-    this.route('capacity');
-    this.route('multiple-enrollments');
-    this.route('people-training-completed');
-    this.route('untrained-people');
-    this.route('trainer-attendance');
     this.route('survey', function () {
       this.route('report', {path: '/:survey_id'});
     });
+    this.route('trainer-attendance');
     this.route('unified-flagging');
+    this.route('untrained-people');
   });
 
   this.route('reports',function () {
@@ -230,14 +230,14 @@ Router.map(function () {
       this.route('unclaimed-with-signups');
     });
     this.route('bmid');
-    this.route('bmid-sanity-check');
     this.route('bmid-print');
+    this.route('bmid-sanity-check');
     this.route('handle-checker');
     this.route('photo-review');
-    this.route('unified-flagging');
     this.route('photos');
-    this.route('spigot');
     this.route('shiny-penny-report');
+    this.route('spigot');
+    this.route('unified-flagging');
   });
 
   // Catch all for unrecognized urls

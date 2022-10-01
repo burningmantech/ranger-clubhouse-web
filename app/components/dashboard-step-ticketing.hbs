@@ -12,19 +12,20 @@
             Significant Other WAP for: <i>{{item.name}}</i>
           {{else if item.isWAP}}
             Work Access Pass for yourself
-          {{else if item.isProvision}}
-            {{item.typeLabelWithCounts}}
-            {{#if item.earned_as_well}}
-              (allocated &amp; qualified)
-            {{else if item.is_allocated}}
-              (allocated)
-            {{else}}
-              (qualified)
-            {{/if}}
           {{else}}
             {{item.typeLabel}} {{if item.isStaffCredential "which is also your WAP"}}
           {{/if}}
         </li>
+      {{/each}}
+      {{#each @step.tickets.provisions.claimed as |item|}}
+        {{item.typeLabelWithCounts}}
+        {{#if item.earned_as_well}}
+          (allocated &amp; qualified)
+        {{else if item.is_allocated}}
+          (allocated)
+        {{else}}
+          (qualified)
+        {{/if}}
       {{/each}}
     </ul>
   {{else}}
@@ -34,7 +35,14 @@
 
 {{#if @step.tickets.banked}}
   <div class="mt-1">
-    {{pluralize @step.tickets.banked.length "item"}} {{if (eq @step.tickets.banked.length 1) "is" "are"}} banked.
+    {{pluralize @step.tickets.banked.length "item"}}
+    {{if (eq @step.tickets.banked.length 1) "is" "are"}} banked.
+  </div>
+{{/if}}
+{{#if @step.tickets.provisions.banked}}
+  <div class="mt-1">
+    {{pluralize @step.tickets.provisions.banked.length "provision"}}
+    {{if (eq @step.tickets.provisions.banked.length 1) "is" "are"}} banked.
   </div>
 {{/if}}
 <div class="mt-1">
