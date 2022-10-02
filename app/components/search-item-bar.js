@@ -65,6 +65,8 @@ export default class SearchItemBarComponent extends Component {
   @tracked searchType = 'person';
   @tracked searchPlaceholder = '';
 
+  keepDialogOpenAfterTransition = false;
+
   constructor() {
     super(...arguments);
 
@@ -89,11 +91,23 @@ export default class SearchItemBarComponent extends Component {
       setProperties(this.searchForm, searchPrefs);
     }
 
-    this.router.on('routeWillChange', () => {
-      this.session.showSearchDialog = false; // close up the box on route change.
-    });
+    this.router.on('routeDidChange', this, 'trackRouteTransition');
 
     this._buildPlaceholder();
+
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.router.off('routeDidChange', this, 'trackRouteTransition');
+  }
+
+  trackRouteTransition() {
+    if (!this.keepDialogOpenAfterTransition) {
+      this.session.showSearchDialog = false; // close up the box on route change.
+    } else {
+      this.keepDialogOpenAfterTransition = false;
+    }
 
   }
 
@@ -153,7 +167,6 @@ export default class SearchItemBarComponent extends Component {
 
     this._buildPlaceholder();
 
-    this.session.showSearchDialog = (this.searchForm.mode !== 'hq');
     this.house.setKey(SEARCH_MODE_KEY, mode);
 
     if (!route.startsWith('person.') && !route.startsWith('hq.')) {
@@ -165,6 +178,8 @@ export default class SearchItemBarComponent extends Component {
     if (!person) {
       return;
     }
+
+    this.keepDialogOpenAfterTransition = true;
 
     this.router.transitionTo((MODE_ROUTES[mode] || 'person.index'), person.id);
   }
@@ -455,7 +470,6 @@ export default class SearchItemBarComponent extends Component {
   searchFocusAction() {
     this.searchResults = [];
     this.searchYear = null;
-    this.session.showSearchDialog = (this.session.isSmallScreen || this.searchForm.mode !== 'hq');
 
     if (this.searchText !== '') {
       return new RSVP.Promise((resolve, reject) => {
