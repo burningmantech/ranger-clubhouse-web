@@ -38,6 +38,6 @@ export default class PersonTimesheetController extends ClubhouseController {
   }
 
   _findOnDuty() {
-    this.onDutyEntry = this.timesheets.findBy('off_duty', null);
+    this.onDutyEntry = this.timesheets.find((t) => t.off_duty == null);
   }
 }

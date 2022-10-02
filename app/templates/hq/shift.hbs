@@ -41,13 +41,11 @@
   <:body>
     {{#if this.unverifiedTimesheets}}
       Ask {{this.person.callsign}} if the following is correct:
-      <table class="table table-width-auto table-striped table-hover">
+      <table class="table table-width-auto table-hover">
         <thead>
         <tr>
-          <th>Position</th>
-          <th>Time</th>
-          <th class="text-end">Duration</th>
-          <th class="text-end">Credits</th>
+          <th>Time / Position</th>
+          <th class="text-end">Duration / Credits</th>
           <th>Correct?</th>
           <th class="w-5">&nbsp;</th>
         </tr>
@@ -56,16 +54,12 @@
         {{#each this.unverifiedTimesheets as |entry|}}
           <tr>
             <td class="align-middle">
+              {{shift-format entry.on_duty entry.off_duty}}<br>
               {{entry.position.title}}
             </td>
-            <td class="align-middle">
-              {{shift-format entry.on_duty entry.off_duty}}
-            </td>
             <td class="text-end align-middle">
-              {{hour-minute-format entry.duration}}
-            </td>
-            <td class="text-end align-middle">
-              {{credits-format entry.credits}}
+              {{hour-minute-words entry.duration}}<br>
+              {{credits-format entry.credits}} credits
             </td>
             <td class="align-middle">
               <UiButton @type="success" @class="btn-timesheet" @onClick={{fn this.markEntryCorrect entry}}
@@ -82,13 +76,23 @@
                   {{fa-icon "check"}}
                 {{/if}}
               </UiButton>
-              <UiButton @type="dark" @class="btn-timesheet" @onClick={{fn this.ignoreEntry entry}}
+              <UiButton @type="gray" @class="btn-timesheet" @onClick={{fn this.ignoreEntry entry}}
                         @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
                 IGNORE
                 {{#if entry.isIgnoring}}
                   {{fa-icon "check"}}
                 {{/if}}
               </UiButton>
+              <br>
+              {{#if entry.isVerified}}
+                <span class="text-success">{{fa-icon "check"}} Entry has been successfully marked as correct.</span>
+              {{else if entry.isPending}}
+                <span class="text-danger">{{fa-icon "check"}} A correction request has been successfully submitted.</span>
+              {{else if entry.isIgnoring}}
+                Entry will be reviewed at a later time.
+              {{else}}
+                <span class="text-muted">Entry requires review.</span>
+              {{/if}}
             </td>
             <td class="w-5">
               {{#if entry.isSaving}}
@@ -148,7 +152,7 @@
           <dt class="col-sm-2">Credits:</dt>
           <dd class="col-sm-10">{{credits-format this.entry.credits}}</dd>
         </dl>
-          Provide as much information as possible to help the reviewer understand why this entry should be fixed.
+        Provide as much information as possible to help the reviewer understand why this entry should be fixed.
         <ul>
           <li>Why does {{this.person.callsign}} think the entry is wrong?</li>
           <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
@@ -211,7 +215,8 @@
         only authorized for SHIFT RADIOS.
         {{#if this.mayNotNeedRadio}}
           <br>
-          <b class="text-danger">{{this.person.callsign}} is working a Burn Perimeter shift and may not need a radio. Check with the HQ Short or Lead if in doubt.</b>
+          <b class="text-danger">{{this.person.callsign}} is working a Burn Perimeter shift and may not need a radio.
+            Check with the HQ Short or Lead if in doubt.</b>
         {{/if}}
       {{/if}}
     </div>

@@ -14,7 +14,7 @@ const groupBy = function (items, key) {
 
   items.forEach((item) => {
     const value = item[key];
-    let group = groups.findBy(key, value);
+    let group = groups.find((g) => g[key] === value);
 
     if (group) {
       group.items.push(item);

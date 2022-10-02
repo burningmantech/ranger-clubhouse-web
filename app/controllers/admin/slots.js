@@ -160,7 +160,7 @@ export default class SlotsController extends ClubhouseController {
 
     this.viewSlots.forEach(function (slot) {
       const title = slot.position_title;
-      let group = groups.findBy('title', title);
+      let group = groups.find((g) => g.title === title);
 
       if (group) {
         group.slots.push(slot);

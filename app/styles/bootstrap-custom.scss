@@ -19,6 +19,12 @@ $wheatfield: #ded7be;
 $navbar-light-color: #28221b;
 $navbar-light-hover-color: #0139cc;
 
+$nav-tabs-link-active-bg: #eef5fd;
+$nav-tabs-border-color: #b7b8d3;
+$nav-tabs-link-hover-border-color: #b7b8d3 #b7b8d3 $nav-tabs-border-color;
+$nav-tabs-link-active-border-color: #b7b8d3 #b7b8d3 #ffffff;
+
+
 // Do not enable rounded corners
 /*$btn-border-radius: 0;
 $btn-border-radius-lg: 0;
