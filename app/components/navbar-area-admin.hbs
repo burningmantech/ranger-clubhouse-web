@@ -47,6 +47,9 @@
       <NavbarMenuItem @menu={{menu}} @route="admin.hours-credits" @item="Hours/Credits"/>
       <NavbarMenuItem @menu={{menu}} @route="admin.people-by-status-change" @item="People By Status Change"/>
       <NavbarMenuItem @menu={{menu}} @route="admin.ranger-retention" @item="Ranger Retention Report"/>
+      {{#if (has-role "tech-ninja")}}
+        <NavbarMenuItem @menu={{menu}} @route="admin.timesheet-slot-repair" @item="Timesheet Slot Repair"/>
+      {{/if}}
     </NavbarMenuSection>
   {{/if}}
   {{#if (has-role "admin" "megaphone")}}
