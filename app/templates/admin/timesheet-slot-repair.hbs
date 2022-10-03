@@ -1,0 +1,79 @@
+<main>
+  <h1>Timesheet Slot Association Repair</h1>
+  <p>
+    This function will attempt to correctly associate a timesheet entry with a possible shift. Preference is given to a
+    shift sign up, followed by the first slot found to match the position and on duty time within +/- 45 minutes.
+  </p>
+  <FormRow class="mb-2">
+    <FormLabel @auto={{true}}>Year To Check</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="year"
+                      @value={{this.year}}
+                      @options={{this.yearOptions}}
+                      @onChange={{action (mut this.year)}}
+                      @inline={{true}}
+      />
+    </div>
+    <div class="col-auto">
+      <UiButton @onClick={{this.runRepair}}>Repair Entries</UiButton>
+    </div>
+  </FormRow>
+
+  {{#if this.haveResults}}
+    {{pluralize this.entries.length "timesheet entry"}} repaired.
+    <table class="table table-width-auto table-striped table-hover">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Callsign</th>
+        <th>Position / On Duty</th>
+        <th>Old Slot</th>
+        <th>New Slot</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.entries as |entry|}}
+        <tr>
+          <td>{{entry.id}}</td>
+          <td>
+            <PersonLink @person={{entry.person}}/>
+          </td>
+          <td>
+            {{entry.position.title}}<br>
+            {{shift-format entry.on_duty}}
+          </td>
+          <td>
+            {{#if entry.old_slot}}
+              {{entry.old_slot.position.title}}<br>
+              {{entry.old_slot.description}}<br>
+              {{entry.old_slot.begins}}
+            {{else}}
+              <i>No previous assoc.</i>
+            {{/if}}
+          </td>
+          <td>
+            {{#if entry.new_slot}}
+              {{entry.position.title}}<br>
+              {{entry.new_slot.description}}<br>
+              {{entry.new_slot.begins}}
+            {{else}}
+              <i>No match slot found - removing assoc.</i>
+            {{/if}}
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="5" class="text-success">
+            Congratulations! All {{this.yearSelected}} timesheet entries appear to have the correct slot associations.
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  {{/if}}
+</main>
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Please wait while the timesheet entries are being scanned. This could take a while.
+  </LoadingDialog>
+{{/if}}
