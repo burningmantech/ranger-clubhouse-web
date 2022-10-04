@@ -3,7 +3,7 @@
             @years={{this.person.all_years}}
             @onChange={{action (mut this.year)}}
             @subheader={{true}} />
-<BsTab class="mt-4" as |tab|>
+<UiTab class="mt-4" as |tab|>
   <tab.pane @title="Timesheet / Missing Entry Requests" @id="timesheet">
     {{#if (or this.timesheetPendingCount this.missingRequestPendingCount)}}
       <p>
@@ -92,4 +92,4 @@
       </:body>
     </UiSection>
   </tab.pane>
-</BsTab>
+</UiTab>
