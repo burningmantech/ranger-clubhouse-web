@@ -15,6 +15,7 @@ export default class PersonTimesheetManageComponent extends Component {
 
   @tracked editEntry = null;
   @tracked editVerification = false;
+  @tracked deleteEntry = null;
 
   @tracked positionOptions = [];
 
@@ -56,8 +57,8 @@ export default class PersonTimesheetManageComponent extends Component {
         return;
       }
       if (ts.onDutyTime < prevEndTime) {
-          ts.isOverlapping = true;
-          prevTs.isOverlapping = true;
+        ts.isOverlapping = true;
+        prevTs.isOverlapping = true;
       }
       prevEndTime = ts.offDutyTime;
       prevTs = ts;
@@ -166,19 +167,33 @@ export default class PersonTimesheetManageComponent extends Component {
   /**
    * Delete the entry
    */
+
   @action
-  removeEntryAction() {
-    const ts = this.editEntry;
-    this.modal.confirm('Remove Timesheet',
-      `Position: ${ts.position.title}<br>Time: ${ts.on_duty} to ${ts.off_duty}<br> Are you sure you wish to remove this timesheet?`,
-      () => {
-        ts.destroyRecord().then(() => {
-          this.editEntry = null;
-          this.toast.success('The entry has been deleted.');
-          this.args.onChange();
-          this._markOverlapping();
-        }).catch((response) => this.house.handleErrorResponse(response));
-      });
+  async deleteEntryAction(saveFirst) {
+    try {
+      if (saveFirst) {
+        await this.deleteEntry.save();
+      }
+      await this.editEntry.destroyRecord();
+      this.editEntry = null;
+      this.toast.success('The entry has been deleted.');
+      this.args.onChange();
+      this._markOverlapping();
+    } catch (e) {
+      this.house.handleErrorResponse(e);
+    } finally {
+      this.deleteEntry = null;
+    }
+  }
+
+  @action
+  showDeleteDialogAction(model) {
+    this.deleteEntry = model;
+  }
+
+  @action
+  cancelDeleteDialogAction() {
+    this.deleteEntry = false;
   }
 
   get hasOverlapping() {

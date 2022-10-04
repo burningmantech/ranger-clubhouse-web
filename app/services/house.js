@@ -43,13 +43,13 @@ export default class HouseService extends Service {
 
     // Ember Data request error
     if (response instanceof InvalidError) {
-      responseErrors = response.errors.map((error) => error.title);
+      responseErrors = response.errors.map(({title,detail}) => (detail ?? title));
       errorType = 'validation';
       if (haveChangeset && response.errors) {
         // Populate change set model with the validation errors
-        response.errors.forEach(({title, source}) => {
+        response.errors.forEach(({title, detail, source}) => {
           const attr = source.pointer.replace('/data/attributes/', '');
-          changeSet.pushErrors(attr, title);
+          changeSet.pushErrors(attr, detail ?? title);
         });
 
         // After the form renders, scroll to the first marked invalid field
@@ -57,7 +57,7 @@ export default class HouseService extends Service {
       }
     } else if (response instanceof ServerError) {
       if (response.errors) {
-        responseErrors = response.errors.map(({title}) => title);
+        responseErrors = response.errors.map(({title, detail}) => (detail ?? title));
       } else {
         responseErrors = 'The record operation was unsuccessful due to a fatal server error';
       }
@@ -81,7 +81,7 @@ export default class HouseService extends Service {
 
       if (data) {
         if (data.errors) {
-          responseErrors = data.errors.map((error) => error.title);
+          responseErrors = data.errors.map(({title,detail}) => (detail ?? title));
         } else if (data.error) {
           responseErrors = data.error;
         }
@@ -105,9 +105,9 @@ export default class HouseService extends Service {
           errorType = 'validation';
           if (haveChangeset && response.payload && response.payload.errors) {
             // Populate change set model with the validation errors
-            response.payload.errors.forEach(({title, source}) => {
+            response.payload.errors.forEach(({title, detail, source}) => {
               const attr = source.pointer.replace('/data/attributes/', '');
-              changeSet.pushErrors(attr, title);
+              changeSet.pushErrors(attr, (detail ?? title));
             });
 
             // After the form renders, scroll to the first marked invalid field
