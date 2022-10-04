@@ -4,7 +4,7 @@
             @subheader={{true}}
             @onChange={{action (mut this.year)}} />
 <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.saveEvent}} as |f|>
-  <BsTab class="mt-4" as |tab|>
+  <UiTab class="mt-4" as |tab|>
     <tab.pane @title="Trainings" @id="trainings">
       <UiSection>
         <:title>{{this.year}} Training &amp; ARTs</:title>
@@ -192,5 +192,5 @@
         </:body>
       </UiSection>
     </tab.pane>
-  </BsTab>
+  </UiTab>>
 </ChForm>
