@@ -19,11 +19,11 @@ export default class AdminThankYouCardsController extends ClubhouseController {
     }
 
     this.isSubmitting = true;
-    this.ajax.request('timesheet/thank-you', { data: { password: this.password, year: this.year }}).then((result) => {
-      this.people = result.people;
+    this.ajax.request('timesheet/thank-you', { data: { password: this.password, year: this.year }}).then(({people}) => {
+      this.people = people;
       this.passwordOkay = true;
     }).catch((response) => {
-      if (response.status == 403) {
+      if (response.status === 403) {
         this.modal.info(null, 'Sorry, the password is incorrect.');
       } else {
         this.house.handleErrorResponse(response);
@@ -40,6 +40,7 @@ export default class AdminThankYouCardsController extends ClubhouseController {
       { title: 'AKA/ Playa Name', key: 'playa_name' },
       { title: 'Email Address', key: 'email' },
       { title: 'Address', key: 'street1' },
+      { title: 'Apt', key: 'apt' },
       { title: 'Address 2', key: 'street2' },
       { title: 'City', key: 'city' },
       { title: 'State', key: 'state' },

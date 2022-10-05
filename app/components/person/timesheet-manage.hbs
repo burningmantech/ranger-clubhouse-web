@@ -62,7 +62,7 @@
             {{else if ts.isUnverified}}
               {{fa-icon "question"}} Unverified
             {{else if ts.isPending}}
-              <b class="text-danger">{{fa-icon "arrow-right"}} Correction Request</b>
+              <b class="text-danger">{{fa-icon "arrow-right"}} Correction Requested</b>
             {{else if ts.isRejected}}
               {{fa-icon "times"}} Correction Rejected
             {{else if ts.isApproved}}
@@ -78,15 +78,17 @@
                 End Shift
               </UiButton>
             {{else}}
-              <UiButton @type={{if ts.isPending "danger" "primary"}} @size="sm"
-                        @onClick={{fn this.editEntryAction ts}} @disabled={{ts.isReloading}}>
+              <UiButton @type={{if ts.isPending "danger" "primary"}}
+                        @size="sm"
+                        @onClick={{fn this.editEntryAction ts}}
+                        @disabled={{ts.isReloading}}>
                 {{#if ts.isReloading}}
                   <SpinIcon/>
                 {{else}}
                   {{fa-icon "edit"}}
                 {{/if}}
                 {{#if this.canManageTimesheets}}
-                  {{if ts.isPending "Correct" "Edit"}}
+                  {{if ts.isPending "Review" "Edit"}}
                 {{else}}
                   View
                 {{/if}}
