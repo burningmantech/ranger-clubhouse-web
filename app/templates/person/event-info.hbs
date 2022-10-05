@@ -5,15 +5,15 @@
             @onChange={{action (mut this.year)}} />
 <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.saveEvent}} as |f|>
   <UiTab class="mt-4" as |tab|>
-    <tab.pane @title="Trainings" @id="trainings">
+    <tab.pane @title="Training & ARTs" @id="trainings">
       <UiSection>
         <:title>{{this.year}} Training &amp; ARTs</:title>
         <:body>
           <dl>
-            <dt>Online Course</dt>
+            <dt>Online Course Completion</dt>
             <dd>
               {{#if this.eventInfo.online_training_passed}}
-                {{shift-format this.eventInfo.online_training_date}}
+                {{shift-format this.eventInfo.online_training_date year=true}}
               {{else}}
                 not passed
                 {{#if (and this.isCurrentYear this.canMarkOnlineCourseCompleted)}}
@@ -37,9 +37,9 @@
         </:body>
       </UiSection>
     </tab.pane>
-    <tab.pane @title="Provisions" @id="provisions">
+    <tab.pane @title="Provisions & Radio Agreement" @id="provisions">
       <UiSection>
-        <:title>{{this.year}} Provisions</:title>
+        <:title>{{this.year}} Provisions &amp; Radio Agreement</:title>
         <:body>
           <dl>
             <dt>Meals</dt>
@@ -91,25 +91,25 @@
         </:body>
       </UiSection>
     </tab.pane>
-    <tab.pane @title="Driving" @id="driving">
+    <tab.pane @title="Driving & Vehicle Agreements" @id="driving">
       <UiSection>
-        <:title>{{this.year}} Driving</:title>
+        <:title>{{this.year}} Driving &amp; Vehicle Agreements</:title>
         <:body>
-          <dl>
-            <dt>Motorpool Policy</dt>
-            <dd>
-              {{#if this.person.vehicle_blacklisted}}
-                <b class="text-danger">{{fa-icon "ban"}} Vehicle is blacklisted.</b>
-                May not drive gators, cars, or trucks on playa for Ranger business.
-              {{else}}
+          {{#if this.person.vehicle_blacklisted}}
+            <b class="text-danger">{{fa-icon "ban"}} Vehicle is blacklisted.</b>
+            May not drive gators, cars, or trucks on playa for Ranger business.
+          {{else}}
+            <dl>
+              <dt>Motorpool Policy</dt>
+              <dd>
                 {{#if (has-role "admin" "vc")}}
                   <f.checkbox @name="org_vehicle_insurance"
-                              @label="Has Motor Vehicle Record (MVR)"
+                              @label="Has Motor Vehicle Record (MVR aka BMP insurance)"
                   />
                   <f.checkbox @name="signed_motorpool_agreement"
                               @label="Signed Motorpool Policy Agreement"
                   />
-                 {{else}}
+                {{else}}
                   {{#if this.personEvent.signed_motorpool_agreement}}
                     <b class="text-success"> {{fa-icon "check"}} Signed</b>
                   {{else}}
@@ -122,54 +122,55 @@
                     <b class="text-danger">{{fa-icon "times"}} NOT AUTHORIZED</b>
                   {{/if}}
                   for the {{this.year}} event to drive Ranger vehicles (including own personal vehicle) on playa for
-                  Ranger
-                  business.
-                  Vehicle must have a valid Burning Man driving sticker.
+                  Ranger business. Vehicle must have a valid Burning Man driving sticker.
                 {{/if}}
-              {{/if}}
-            </dd>
-            <dt>{{this.year}} Personal Vehicle Use</dt>
-            <dd>
-              {{#if (has-role "admin")}}
-                <f.checkbox @name="may_request_stickers"
-                            @label="Personal Vehicle Use Requests Allowed"
-                />
+              </dd>
+              <dt>Personal Vehicle Use</dt>
+              <dd>
+                {{#if (has-role "admin")}}
+                  <f.checkbox @name="may_request_stickers"
+                              @label="Personal Vehicle Use Requests Allowed (Allows access to the Me > Vehicles page)"
+                  />
 
-                <f.checkbox @name="signed_personal_vehicle_agreement"
-                            @label="Signed Personal Vehicle Policy Agreement"/>
-                <div class="mt-2">
-                  <f.submit @disabled={{this.personEvent.isSaving}} />
-                  {{#if this.personEvent.isSaving}}
-                    <LoadingIndicator/>
+                  <f.checkbox @name="signed_personal_vehicle_agreement"
+                              @label="Signed Personal Vehicle Policy Agreement"/>
+                  <div class="mt-2">
+                    <f.submit @disabled={{this.personEvent.isSaving}} />
+                    {{#if this.personEvent.isSaving}}
+                      <LoadingIndicator/>
+                    {{/if}}
+                  </div>
+                {{else}}
+                  {{#if this.personEvent.may_request_stickers}}
+                    <b class="text-success">{{fa-icon "check"}} Allowed</b>
+                  {{else}}
+                    <b class="text-danger">{{fa-icon "times"}} NOT ALLOWED</b>
                   {{/if}}
-                </div>
-              {{else}}
-                {{#if this.personEvent.may_request_stickers}}
-                  <b class="text-success">{{fa-icon "check"}} Allowed</b>
-                {{else}}
-                  <b class="text-danger">{{fa-icon "times"}} NOT ALLOWED</b>
+                  to submit Personal Vehicle Requests.<br>
+                  {{#if this.personEvent.signed_personal_vehicle_agreement}}
+                    <b class="text-success"> {{fa-icon "check"}} Signed</b>
+                  {{else}}
+                    <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+                  {{/if}}
+                  the {{this.year}} Personal Vehicle Agreement.
                 {{/if}}
-                to submit Personal Vehicle Requests.<br>
-                {{#if this.personEvent.signed_personal_vehicle_agreement}}
-                  <b class="text-success"> {{fa-icon "check"}} Signed</b>
-                {{else}}
-                  <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
-                {{/if}}
-                the {{this.year}} Personal Vehicle Agreement.
-              {{/if}}
-            </dd>
-          </dl>
+              </dd>
+            </dl>
+          {{/if}}
         </:body>
       </UiSection>
     </tab.pane>
     <tab.pane @title="Certifications" @id="certifications">
       <Person::Certifications @personId={{this.person.id}} />
     </tab.pane>
-    <tab.pane @title="Agreements" @id="agreements">
+    <tab.pane @title="Misc. Agreements" @id="agreements">
       <UiSection>
-        <:title>{{this.year}} Agreements</:title>
+        <:title>{{this.year}} Misc. Agreements</:title>
         <:body>
           {{#if (has-role "admin" "vc")}}
+            <p class="text-danger">
+              Do not sign any agreements another's behalf.
+            </p>
             <f.checkbox @name="sandman_affidavit"
                         @label="Signed Sandman Affidavit"
             />
@@ -192,5 +193,5 @@
         </:body>
       </UiSection>
     </tab.pane>
-  </UiTab>>
+  </UiTab>
 </ChForm>
