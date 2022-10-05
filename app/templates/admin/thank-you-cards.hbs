@@ -28,6 +28,7 @@
         <th>Name</th>
         <th>Email</th>
         <th>Address 1</th>
+        <th>Apt</th>
         <th>Address 2</th>
         <th>City</th>
         <th>State</th>
@@ -44,6 +45,7 @@
           <td>{{person.first_name}} {{person.last_name}}</td>
           <td>{{mail-to person.email}}</td>
           <td>{{person.street1}}</td>
+          <td>{{person.apt}}</td>
           <td>{{person.street2}}</td>
           <td>{{person.city}}</td>
           <td>{{person.state}}</td>
@@ -52,7 +54,7 @@
         </tr>
       {{else}}
         <tr>
-          <td colspan="11" class="text-danger"><b>No Thank You card candidates found.</b></td>
+          <td colspan="12" class="text-danger"><b>No Thank You Card candidates found.</b></td>
         </tr>
       {{/each}}
       </tbody>
