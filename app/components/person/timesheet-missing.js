@@ -4,7 +4,10 @@ import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
+import validatePresenceIf from 'clubhouse/validators/presence-if';
+
 import {DIRT} from 'clubhouse/constants/positions';
+import {TIMESHEET_MANAGEMENT} from 'clubhouse/constants/roles';
 
 export default class PersonTimesheetMissingComponent extends Component {
   @tracked newEntry = null;
@@ -16,11 +19,16 @@ export default class PersonTimesheetMissingComponent extends Component {
   @tracked partnerInfo = null;
   @tracked partnerTimesheet = null;
 
+  @tracked viewEntry = null;
+
   @service ajax;
   @service house;
   @service modal;
+  @service session;
   @service store;
   @service toast;
+
+  hasTimesheetManagement = this.session.hasRole(TIMESHEET_MANAGEMENT);
 
   reviewOptions = [
     'approved',
@@ -45,11 +53,29 @@ export default class PersonTimesheetMissingComponent extends Component {
     ],
   };
 
-  newEntryValidations = {
-    on_duty: [validateDateTime({before: 'off_duty'}), validatePresence({presence: true})],
-    off_duty: [validateDateTime({after: 'on_duty'}), validatePresence({presence: true})],
-    additional_notes: [validatePresence({presence: true})],
-  };
+
+  constructor() {
+    super(...arguments);
+
+    this.newEntryValidations = {
+      on_duty: [validateDateTime({before: 'off_duty'}), validatePresence({presence: true})],
+      off_duty: [validateDateTime({after: 'on_duty'}), validatePresence({presence: true})],
+    };
+
+    if (this.hasTimesheetManagement) {
+      this.newEntryValidations.additional_notes = [validatePresenceIf({
+        if_blank: 'additional_reviewer_notes',
+        message: 'Either a requester or reviewer note must be entered.'
+      })]
+
+      this.newEntryValidations.additional_reviewer_notes = [validatePresenceIf({
+        if_blank: 'additional_notes',
+        message: 'Either a requester or reviewer note must be entered.'
+      })];
+    } else {
+      this.newEntryValidations.additional_notes = [validatePresence({presence: true, message: 'Enter a note from the requester.'})]
+    }
+  }
 
   /**
    * Setup to edit a Missing Timesheet request.
@@ -85,6 +111,8 @@ export default class PersonTimesheetMissingComponent extends Component {
       timesheet.set('new_off_duty', timesheet.off_duty);
       timesheet.set('new_position_id', timesheet.position_id);
       timesheet.set('create_entry', 0);
+      timesheet.set('additional_notes', '');
+      timesheet.set('additional_reviewer_notes', '');
 
       this.nextEntry = nextEntry;
       this.editEntry = timesheet;
@@ -140,7 +168,7 @@ export default class PersonTimesheetMissingComponent extends Component {
       return;
     }
 
-    const createEntry = model.create_entry;
+    const {createEntry} = model;
     this.toast.clear();
     this.house.saveModel(model, 'Missing timesheet entry has been successfully updated.', () => {
       this.editEntry = null;
@@ -159,6 +187,16 @@ export default class PersonTimesheetMissingComponent extends Component {
 
       onChange();
     });
+  }
+
+  @action
+  viewEntryAction(entry) {
+    this.viewEntry = entry;
+  }
+
+  @action
+  closeViewEntry() {
+    this.viewEntry = null;
   }
 
 
@@ -244,7 +282,7 @@ export default class PersonTimesheetMissingComponent extends Component {
    */
   @action
   newEntryAction() {
-    const {person,positions} = this.args;
+    const {person, positions} = this.args;
     if (!positions.length) {
       this.modal.info('No positions', `${person.callsign} has no positions granted. A missing timesheet request cannot be created.`);
       return;
