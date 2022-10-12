@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import {tracked} from '@glimmer/tracking';
+import {cached,tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {action} from '@ember/object';
 import ical from 'ical-generator';
@@ -8,12 +8,12 @@ import dayjs from 'dayjs';
 export default class ScheduleTableComponent extends Component {
   @service house;
   @service modal;
-  @tracked viewSchedule;
+  @tracked showAllShifts;
 
   constructor() {
     super(...arguments);
     this.isCurrentYear = (this.args.year == this.house.currentYear());
-    this.viewSchedule = this.isCurrentYear ? 'upcoming' : 'all';
+    this.showAllShifts = !this.isCurrentYear;
   }
 
   /**
@@ -21,17 +21,8 @@ export default class ScheduleTableComponent extends Component {
    */
 
   @action
-  showAllAction() {
-    this.viewSchedule = 'all';
-  }
-
-  /**
-   * Show the upcoming slots
-   */
-
-  @action
-  showUpcomingAction() {
-    this.viewSchedule = 'upcoming';
+  toggleAll() {
+    this.showAllShifts = !this.showAllShifts;
   }
 
   /**
@@ -41,23 +32,14 @@ export default class ScheduleTableComponent extends Component {
    */
 
   get viewSlots() {
-    const slots = this.args.slots;
+    const {slots} = this.args;
 
-    if (this.viewSchedule !== 'upcoming') {
-      return slots;
-    }
-
-    return slots.filter((slot) => !slot.has_started);
+    return this.showAllShifts ? slots :this.upcomingSlots;
   }
 
-  /**
-   * How many upcoming shifts (i.e., ones not started yet) are there?
-   *
-   * @returns {Number}
-   */
-
-  get upcomingCount() {
-    return this.args.slots.reduce((upcoming, slot) => (slot.has_started ? 0 : 1) + upcoming, 0);
+  @cached
+  get upcomingSlots() {
+    return this.args.slots.filter((slot) => !slot.has_started);
   }
 
   /**
@@ -68,6 +50,17 @@ export default class ScheduleTableComponent extends Component {
 
   get hasOverlapping() {
     return this.viewSlots.reduce((total, slot) => (slot.is_overlapping ? 1 : 0) + total, 0) > 0;
+  }
+
+  /**
+   * How many previous slots are there?
+   *
+   * @returns {number}
+   */
+
+  @cached
+  get previousSlotCount() {
+    return this.args.slots.length - this.upcomingSlots.length;
   }
 
   /**

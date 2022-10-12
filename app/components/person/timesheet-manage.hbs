@@ -82,17 +82,15 @@
                         @size="sm"
                         @onClick={{fn this.editEntryAction ts}}
                         @disabled={{ts.isReloading}}>
-                {{#if ts.isReloading}}
-                  <SpinIcon/>
-                {{else}}
-                  {{fa-icon "edit"}}
-                {{/if}}
                 {{#if this.canManageTimesheets}}
-                  {{if ts.isPending "Review" "Edit"}}
+                  {{fa-icon "edit"}} {{if ts.isPending "Review" "Edit"}}
                 {{else}}
-                  View
+                  {{fa-icon "magnifying-glass"}} View
                 {{/if}}
               </UiButton>
+            {{/if}}
+            {{#if ts.isReloading}}
+              <SpinIcon/>
             {{/if}}
           </td>
         </tr>

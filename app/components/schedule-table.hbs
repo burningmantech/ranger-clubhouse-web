@@ -18,31 +18,14 @@
     </p>
     <p>
       <NoAppreciateIcon/>
-      = the shift hours do not count towards provisions and appreciations.
+      = the shift hours do not count towards provisions (meal passes, showers, event radios) and appreciations (shirts).<br>
       <InfoIcon/>
       = More shift information available, click on the icon and/or text.
     </p>
-    <div class="mb-1 d-print-none d-flex justify-content-between">
-      <div>
-      {{#if (eq this.viewSchedule "upcoming")}}
-        <b>Showing {{pluralize this.upcomingCount "UPCOMING shift"}}</b>
-        <UiButton @onClick={{this.showAllAction}}  @size="sm" @type="secondary" @class="ms-2">
-          Show all {{pluralize @slots.length "shift"}}
-        </UiButton>
-      {{else}}
-        <b>Showing {{pluralize @slots.length "ALL shift"}}</b>
-        {{#if this.isCurrentYear}}
-          <UiButton @onClick={{this.showUpcomingAction}} @size="sm" @type="secondary" @class="ms-2">
-            Show {{pluralize this.upcomingCount "upcoming shift"}}
-          </UiButton>
-        {{/if}}
-      {{/if}}
-      </div>
-      <div>
-        <UiButton @onClick={{this.exportCalendarAction}} @type="secondary" @size="sm">Export Calendar</UiButton>
-      </div>
-    </div>
-    <div class="schedule-table schedule-itinerary">
+    <UiButton @onClick={{this.exportCalendarAction}} @type="secondary" @size="sm">
+      Export Calendar
+    </UiButton>
+    <div class="schedule-table schedule-itinerary mt-2">
       <div class="schedule-row schedule-header">
         <div class="schedule-icon">&nbsp;</div>
         <div class="schedule-time-description">Time / Position / Description</div>
@@ -50,7 +33,30 @@
         <div class="schedule-credits">Credits</div>
         <div class="schedule-actions d-print-none">Actions</div>
       </div>
-
+      {{#if (and this.isCurrentYear @slots)}}
+        <div class="schedule-sub-header d-print-none ">
+          {{#if this.showAllShifts}}
+            <span class="me-2">
+            Showing all {{pluralize this.viewSlots.length "shift"}}
+            </span>
+            {{#if this.previousSlotCount}}
+              <UiButton @onClick={{this.toggleAll}}  @size="sm" @type="secondary btn-responsive">
+                Show Only Upcoming Shifts
+              </UiButton>
+            {{/if}}
+          {{else}}
+            {{#if this.previousSlotCount}}
+              <span class="me-2">
+                {{pluralize this.previousSlotCount "previous shift"}}
+                {{if (eq this.previousSlotCount 1) "is" "are"}} not shown because the start time has past.
+              </span>
+            {{/if}}
+            <UiButton @onClick={{this.toggleAll}}  @size="sm" @type="secondary" @class="btn-responsive">
+              Show All Shifts
+            </UiButton>
+          {{/if}}
+        </div>
+      {{/if}}
       {{#each this.viewSlots key="id" as |slot| }}
         <div class="schedule-row {{if slot.is_overlapping "schedule-overlapping"}}">
           <div class="schedule-icon">
@@ -64,7 +70,7 @@
             {{shift-format slot.slot_begins slot.slot_ends}}
             {{#if slot.isNotPacific}}
               ({{slot.slot_tz_abbr}})
-             {{/if}}<br>
+            {{/if}}<br>
             {{slot.position_title}}<br>
             <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
           </div>
@@ -78,7 +84,7 @@
           <div class="schedule-credits">
             <span class="schedule-sm-label">Credits:</span>{{credits-format slot.credits}}
           </div>
-           <div class="schedule-actions d-print-none">
+          <div class="schedule-actions d-print-none">
             <button type="button" {{on "click" (fn @showPeople slot)}} class="btn btn-secondary btn-sm"
                     title="View people signed up" disabled={{slot.is_retrieving_people}}>
               {{#if slot.is_retrieving_people}}
@@ -109,10 +115,9 @@
           </div>
           <div>
             {{~#if @slots~}}
-              <b>No upcoming shifts were found.</b>
-              <a href {{action (mut this.viewSchedule) "all"}}>View Previous Shifts</a>
+              No more upcoming shifts were found for {{@year}}.
               {{~else~}}
-              <b class="text-danger">No {{@year}} shifts were found.</b>
+              No shift sign-ups were found for {{@year}}.
             {{~/if~}}
           </div>
         </div>

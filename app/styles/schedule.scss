@@ -16,6 +16,15 @@
   font-weight: bold;
 }
 
+.schedule-sub-header {
+  color: #664d03;
+  background-color: #fff3cd;
+  width: 100%;
+  padding-top:5px;
+  padding-bottom: 5px;
+  vertical-align: middle;
+}
+
 .schedule-overlapping {
   background-color: #fbd3d3 !important;
 }
@@ -56,6 +65,11 @@
 @media print, (min-width: map-get($grid-breakpoints, "lg")) {
   .schedule-row > div {
     padding-right: 5px;
+  }
+
+  .schedule-sub-header {
+    padding-left: 30px;
+    padding-right: 30px;
   }
 
   .schedule-icon {
@@ -118,6 +132,11 @@
 
     .schedule-header {
       display: none !important;
+    }
+
+    .schedule-sub-header {
+      padding-left: 10px;
+      padding-right: 10px;
     }
 
     .schedule-icon {
