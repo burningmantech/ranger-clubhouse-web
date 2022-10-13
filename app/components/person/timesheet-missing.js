@@ -168,7 +168,7 @@ export default class PersonTimesheetMissingComponent extends Component {
       return;
     }
 
-    const {createEntry} = model;
+    const createEntry = model.create_entry;
     this.toast.clear();
     this.house.saveModel(model, 'Missing timesheet entry has been successfully updated.', () => {
       this.editEntry = null;

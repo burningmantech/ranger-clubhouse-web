@@ -128,6 +128,11 @@
             Entry was verified on {{shift-format this.editEntry.verified_at}}
             by {{this.editEntry.verified_person.callsign}}. Review is not needed at this time.
           </ChNotice>
+        {{else if this.editEntry.isCorrectionApproved}}
+          <ChNotice @type="danger" @title="Correction Approved - Verification Needed / No Review Required" @icon="hourglass">
+            The correction was approved and review is not needed at this time.
+            However, the entry still needs to be verified as correct by {{@person.callsign}}.
+          </ChNotice>
         {{/if}}
 
         <fieldset>
