@@ -60,6 +60,11 @@ export default class TimesheetModel extends Model {
     return (this.off_duty && this.review_status === 'unverified');
   }
 
+  // Timesheet has not been reviewed yet
+  get isCorrectionApproved() {
+    return this.review_status === 'approved';
+  }
+
   get haveReviewerResponse() {
     return this.review_status !== 'unverified' && !isEmpty(this.reviewer_notes);
   }
