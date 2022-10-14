@@ -5,10 +5,10 @@
   <LoadingIndicator/>
 {{else}}
   {{#if this.otherHours}}
-    <ChNotice @title="Has hours not counting towards provisions and appreciations">
+    <UiNotice @title="Has hours not counting towards provisions and appreciations">
       {{this.otherHours}} hours have been worked however these do not count towards provisions and appreciations.
       Certain shifts such as Training sessions and On Call positions fall into this category.
-    </ChNotice>
+    </UiNotice>
   {{/if}}
   <HqTicketsAndProvisionsTable @items="Tickets">
     {{#unless this.items.staff_credential.has_earned}}

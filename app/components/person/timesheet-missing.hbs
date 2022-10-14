@@ -135,13 +135,13 @@
             @onSubmit={{this.saveEntryAction}} as |f|>
       <Modal.body>
         {{#if (eq this.editEntry.review_status "approved")}}
-          <ChNotice @type="success" @icon="check" @title="Request approved">
+          <UiNotice @type="success" @icon="check" @title="Request approved">
             Request has been approved. Review is not needed at this time.
-          </ChNotice>
+          </UiNotice>
         {{else if (eq this.editEntry.review_status "rejected")}}
-          <ChNotice @type="danger" @icon="times" @title="Request rejected">
+          <UiNotice @type="danger" @icon="times" @title="Request rejected">
             Request was rejected. Review is not needed at this time.
-          </ChNotice>
+          </UiNotice>
         {{/if}}
         <dl class="row">
           <dt class="col-2">Position:</dt>

@@ -116,23 +116,23 @@
             as |f|>
       <Modal.body>
         {{#if this.editEntry.isPending}}
-          <ChNotice @type="danger" @icon="arrow-right" @title="Correction Request Review Required">
+          <UiNotice @type="danger" @icon="arrow-right" @title="Correction Request Review Required">
             Entry has a correction request and needs to be reviewed.
-          </ChNotice>
+          </UiNotice>
         {{else if this.editEntry.isUnverified}}
-          <ChNotice @type="danger" @title="Unverified - No Review Required" @icon="hourglass">
+          <UiNotice @type="danger" @title="Unverified - No Review Required" @icon="hourglass">
             Entry needs to be verified by the person. No review action required at this time.
-          </ChNotice>
+          </UiNotice>
         {{else if this.editEntry.isVerified}}
-          <ChNotice @type="success" @icon="check" @title="Entry Verified - No Review Required">
+          <UiNotice @type="success" @icon="check" @title="Entry Verified - No Review Required">
             Entry was verified on {{shift-format this.editEntry.verified_at}}
             by {{this.editEntry.verified_person.callsign}}. Review is not needed at this time.
-          </ChNotice>
+          </UiNotice>
         {{else if this.editEntry.isCorrectionApproved}}
-          <ChNotice @type="danger" @title="Correction Approved - Verification Needed / No Review Required" @icon="hourglass">
+          <UiNotice @type="danger" @title="Correction Approved - Verification Needed / No Review Required" @icon="hourglass">
             The correction was approved and review is not needed at this time.
             However, the entry still needs to be verified as correct by {{@person.callsign}}.
-          </ChNotice>
+          </UiNotice>
         {{/if}}
 
         <fieldset>

@@ -20,9 +20,9 @@
   color: #664d03;
   background-color: #fff3cd;
   width: 100%;
-  padding-top:5px;
-  padding-bottom: 5px;
   vertical-align: middle;
+  padding-top: 5px !important;
+  padding-bottom: 10px !important;
 }
 
 .schedule-overlapping {
@@ -60,25 +60,24 @@
   .schedule-table {
     font-size: 1rem;
   }
-}
+
+  .schedule-sub-header, .schedule-actions {
+    display: none;
+  }
+ }
 
 @media print, (min-width: map-get($grid-breakpoints, "lg")) {
   .schedule-row > div {
     padding-right: 5px;
   }
 
-  .schedule-sub-header {
-    padding-left: 30px;
-    padding-right: 30px;
-  }
-
   .schedule-icon {
-    width: 25px;
+    width: 30px;
     text-align: center;
   }
 
   .schedule-time-description {
-    width: 40%;
+    width: 35%;
   }
 
   .schedule-duration {
@@ -92,24 +91,17 @@
     margin-right: 5px;
   }
 
-  .schedule-table-description {
-    width: 32%;
-    margin-left: 5px;
-  }
-
-  @media print {
-    .schedule-table-description {
-      width: 50%;
-    }
-  }
-
   .schedule-signups {
     width: 10%;
   }
 
-  .schedule-total {
-    width: 83%;
+
+  .schedule-sub-header-text {
+    margin-left: 30px;
+    width: 50%;
+    margin-right: 5px;
   }
+
   .schedule-sm-label {
     display: none;
   }
@@ -128,6 +120,8 @@
   @media (max-width: map-get($grid-breakpoints, "lg")) {
     .schedule-table {
       font-size: 1rem;
+      margin-left: -5px;
+      margin-right: -5px;
     }
 
     .schedule-header {
@@ -139,13 +133,13 @@
       padding-right: 10px;
     }
 
-    .schedule-icon {
-      order: 2;
-     }
-
     .schedule-time-description {
       order: 1;
       width: 90%;
+    }
+
+    .schedule-icon {
+      order: 2;
     }
 
     .schedule-duration {
@@ -167,13 +161,9 @@
       margin-bottom: 10px !important;
     }
 
-    .schedule-total {
-      order: 7;
-      width: 100%;
-    }
 
     .schedule-actions {
-      order: 8;
+      order: 7;
       width: 100%;
     }
 

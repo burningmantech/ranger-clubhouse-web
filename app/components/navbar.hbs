@@ -77,7 +77,10 @@
   </navbar.content>
   {{#if (and this.session.hasLMOP (not this.session.isSmallScreen))}}
     <navbar.content>
-      <button type="button" tabindex="-1" class="border rounded p-1 bg-white text-muted small" {{on "click" this.launchSearchDialog}}>
+      <button type="button"
+              tabindex="-1"
+              class="border rounded p-1 bg-white text-muted small"
+        {{on "click" this.launchSearchDialog}}>
         <span class="mx-1">
           {{fa-icon "search"}}
         </span>

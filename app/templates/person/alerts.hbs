@@ -1,9 +1,9 @@
 <h3>Alert Preferences For <span class="d-inline-block">{{this.person.callsign}}</span></h3>
 {{#unless this.isMe}}
-  <ChNotice @type="danger" @title="Editing {{this.person.callsign}}'s Alert Preferences" @icon="exclamation-triangle">
+  <UiNotice @type="danger" @title="Editing {{this.person.callsign}}'s Alert Preferences" @icon="exclamation-triangle">
     Do not update the phone number(s) unless
     instructed to do by the tech team. A new verification code will be sent to the person when the number is updated.
-  </ChNotice>
+  </UiNotice>
 {{/unless}}
 
 <AlertsManage @person={{this.person}} @numbers={{this.numbers}} @alerts={{this.alerts}} />

@@ -3,9 +3,9 @@
 
 {{#if (is-current-year this.year)}}
   {{#unless this.personEvent.asset_authorized}}
-    <ChNotice @title="{{this.person.callsign}} Not Asset Authorized" @type="danger" @icon="exclamation">
+    <UiNotice @title="{{this.person.callsign}} Not Asset Authorized" @type="danger" @icon="exclamation">
       The person may not check out equipment at this time. Have them sign the appropriate paperwork.
-    </ChNotice>
+    </UiNotice>
   {{/unless}}
 
   <UiSection>

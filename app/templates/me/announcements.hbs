@@ -7,7 +7,7 @@
   </p>
   Click the subject line to read the announcement.
   {{#each this.motds as |motd|}}
-    <ChAccordion as |Accordion|>
+    <UiAccordion as |Accordion|>
       <Accordion.title class={{if motd.has_read "text-muted"}}>
         {{motd.subject}}
         {{#if motd.has_read}}(Read){{/if}}
@@ -34,7 +34,7 @@
           {{/if}}
         </div>
       </Accordion.body>
-    </ChAccordion>
+    </UiAccordion>
   {{/each}}
 {{else}}
   <p>

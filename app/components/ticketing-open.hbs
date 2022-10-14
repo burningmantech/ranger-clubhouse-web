@@ -1,7 +1,7 @@
 {{#if @person.needsBpguid}}
-  <ChNotice @title="Missing Burner Profile ID" @type="warning">
+  <UiNotice @title="Missing Burner Profile ID" @type="warning">
     <PersonMissingBpguid/>
-  </ChNotice>
+  </UiNotice>
 {{else if (or this.isPNV)}}
   <p>
     A Work Access Pass (WAP) is good <b class="text-danger">for YOU (the Alpha/Prospective) ONLY and IS *NOT* AN EVENT

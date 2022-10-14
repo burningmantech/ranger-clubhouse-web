@@ -50,11 +50,11 @@
         </FormRow>
         <f.submit @label="Update Camp & Emergency Contact Info" @disabled={{this.isSubmitting}} />
       {{else}}
-        <ChNotice @type="danger" @title="Emergency Contact Info access during the off season not allowed"
+        <UiNotice @type="danger" @title="Emergency Contact Info access during the off season not allowed"
                   @icon="exclamation">
           Sorry, you only have privileges to view and update the Emergency Contact information while the event is
           happening.
-        </ChNotice>
+        </UiNotice>
       {{/if}}
       {{#if this.isContactSaved}}
         {{fa-icon "check" color="success"}}
@@ -103,9 +103,9 @@
 </UiSection>
 
 {{#unless this.eventInfo.radio_info_available}}
-  <ChNotice @type="danger">
+  <UiNotice @type="danger">
     Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
-  </ChNotice>
+  </UiNotice>
 {{/unless}}
 
 {{#if this.eventInfo.radio_eligible}}

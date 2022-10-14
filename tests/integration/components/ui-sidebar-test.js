@@ -8,7 +8,7 @@ module('Integration | Component | ch sidebar', function(hooks) {
 
   test('it renders', async function(assert) {
     // Template block usage:
-    await render(hbs`<ChSidebar><div class="test-content">I'm a sidebar</div></ChSidebar>`);
+    await render(hbs`<UiSidebar><div class="test-content">I'm a sidebar</div></UiSidebar>`);
     assert.dom('#sidebar-container').exists();
     assert.dom('div.test-content').hasText("I'm a sidebar");
   });

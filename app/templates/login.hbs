@@ -1,14 +1,14 @@
 <LoginSidebar/>
 <main>
   {{#if this.session.isStaging}}
-    <ChNotice @type="danger" @icon="exclamation"
+    <UiNotice @type="danger" @icon="exclamation"
               @title="This is the Clubhouse Staging Server used for testing and verification">
       <p>Here be dragons.</p>
       The real production server can be found here:<br>
       <a href="https://ranger-clubhouse.burningman.org">ranger-clubhouse.burningman.org</a>
-    </ChNotice>
+    </UiNotice>
   {{else if this.session.isTraining}}
-    <ChNotice @type="success" @icon="circle-info"
+    <UiNotice @type="success" @icon="circle-info"
               @title="Welcome to the Clubhouse Training Server ">
       <p>
         The login username is your callsign (stripped of spaces, dashes, and other non-alphanumeric characters)
@@ -22,12 +22,12 @@
       </p>
       The real production server can be found here:<br>
       <a href="https://ranger-clubhouse.burningman.org">ranger-clubhouse.burningman.org</a>
-    </ChNotice>
+    </UiNotice>
 
   {{/if}}
   <h2>Welcome To The Ranger Secret Clubhouse!</h2>
   {{#if this.tokenError}}
-    <ChAlert @type="danger">
+    <UiNotice @type="danger">
       {{#if this.welcome}}
         <p>
           Sorry, the invitation link has expired or was entered incorrectly.
@@ -45,16 +45,16 @@
         Sorry, the reset password link has either expired or was entered incorrectly. You can try resetting
         your password again.
       {{/if}}
-    </ChAlert>
+    </UiNotice>
   {{/if}}
   {{#if this.loginError}}
     {{#if (eq this.loginError "invalid-credentials")}}
-      <ChNotice @title=" The email and/or password is incorrect." @type="danger" @icon="exclamation-triangle"/>
+      <UiNotice @title=" The email and/or password is incorrect." @type="danger" @icon="exclamation-triangle"/>
     {{else}}
-      <ChNotice @type="danger" @icon="ban" @title="Login has been disabled for this account.">
+      <UiNotice @type="danger" @icon="ban" @title="Login has been disabled for this account.">
         Contact the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more
         information.
-      </ChNotice>
+      </UiNotice>
     {{/if}}
   {{/if}}
   <div class="d-flex flex-column flex-lg-row align-items-stretch mt-lg-4">

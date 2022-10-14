@@ -1,4 +1,4 @@
-<ChNotice @type="danger"
+<UiNotice @type="danger"
           @icon="exclamation-circle"
           @title={{if @hasTrainingBlocker "Training Sign Up Warning" "Sign Ups Blocked"}}>
   <ScheduleRequirements @requirements={{@requirements}}
@@ -20,7 +20,7 @@
       The dashboard on home page has instructions on how to resolve the issue(s) above.
     </p>
   {{/if}}
-</ChNotice>
+</UiNotice>
 <div class="my-4">
   <UiButton @onClick={{@overrideAction}} @class="btn-responsive">
     View Schedule
