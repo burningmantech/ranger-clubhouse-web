@@ -139,10 +139,10 @@
           <li><b>Who was the partner for the shift?</b></li>
         </ul>
         {{#if this.entry.isRejected}}
-          <ChNotice @type="danger" @icon="times" @title="Correction request has been denied">
+          <UiNotice @type="danger" @icon="times" @title="Correction request has been denied">
             The response from the timesheet review team:<br>
             {{nl2br this.entry.reviewer_notes}}
-          </ChNotice>
+          </UiNotice>
         {{/if}}
 
         {{#if this.entry.notes}}

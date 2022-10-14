@@ -1,4 +1,4 @@
-<ChSidebar @smallTitle="Access Documents" as |s|>
+<UiSidebar @smallTitle="Access Documents" as |s|>
   <s.group @title="Access Documents">
     <s.link @route="vc.access-documents.index" @title="All Documents" @icon="list-alt" @iconType="r" />
     <s.link @route="vc.access-documents.expiring" @title="Expiring Tickets" @icon="trash-alt" @iconType="r" />
@@ -7,6 +7,6 @@
     <s.link @route="vc.access-documents.waps" @title="Ranger WAP Candidates" @icon="ticket" @iconType="s" />
     <s.link @route="vc.access-documents.unclaimed-with-signups" @title="Unclaimed w/Sign Ups" @icon="house-fire" @iconType="s" />
   </s.group>
-</ChSidebar>
+</UiSidebar>
 
 <main>{{outlet}}</main>

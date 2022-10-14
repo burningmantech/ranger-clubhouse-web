@@ -65,6 +65,7 @@ main {
 
   .ui-section {
     box-shadow: none !important;
+    padding: 0 !important;
   }
 
   .d-print-page-break {
@@ -82,6 +83,9 @@ main {
     color: #000 !important;
   }
 
+  ul.nav-tabs {
+    display: none;
+  }
 }
 
 #body-row {
@@ -180,6 +184,17 @@ dl {
 ul.nav-tabs {
   margin-bottom: 15px;
 }
+
+@include media-breakpoint-down(lg) {
+  ul.nav-tabs {
+    justify-content: space-between;
+    .nav-link {
+      padding-left: 1em;
+      padding-right: 1em;
+    }
+  }
+}
+
 
 footer {
   width: 100%;

@@ -10,24 +10,24 @@
 </p>
 
 {{#if (is-empty this.trainers)}}
-  <ChNotice @type="danger" @title="No trainer slots were found">
+  <UiNotice @type="danger" @title="No trainer slots were found">
     In order to correctly record how many trainers are signed up to teach this session, a trainer's slot needs to exists
     where the slot's description matches this session's description exactly and where the start time within one hour of
     this session.
-  </ChNotice>
+  </UiNotice>
 {{else if (not this.havePrimaryTrainers)}}
-  <ChNotice @type="danger" @title="No trainer sign ups">
+  <UiNotice @type="danger" @title="No trainer sign ups">
     No trainers are signed up to teach this session.
-  </ChNotice>
+  </UiNotice>
 {{/if}}
 
 {{#unless this.slot.active}}
-  <ChNotice @type="danger" @title="Training session not activated">
+  <UiNotice @type="danger" @title="Training session not activated">
     Sign ups are disabled until the session (aka slot) has been activated.
     Use the
     <LinkTo @route="admin.slots">Admin &gt; Edit Records &gt; Slots</LinkTo>
     page to mark the session as active.
-  </ChNotice>
+  </UiNotice>
 {{/unless}}
 
 <UiSection>

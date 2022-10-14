@@ -1,7 +1,7 @@
 <h1>People By Role Report</h1>
 
 {{#each this.roles as |role|}}
-  <ChAccordion as |accordion|>
+  <UiAccordion as |accordion|>
     <accordion.title>{{role.title}} ({{pluralize role.people.length "person"}})</accordion.title>
     <accordion.body>
       {{#if accordion.isOpen}}
@@ -12,5 +12,5 @@
         </div>
       {{/if}}
     </accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 {{/each}}

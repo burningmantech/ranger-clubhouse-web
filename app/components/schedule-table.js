@@ -8,12 +8,11 @@ import dayjs from 'dayjs';
 export default class ScheduleTableComponent extends Component {
   @service house;
   @service modal;
-  @tracked showAllShifts;
+  @tracked showAllShifts = true;
 
   constructor() {
     super(...arguments);
-    this.isCurrentYear = (this.args.year == this.house.currentYear());
-    this.showAllShifts = !this.isCurrentYear;
+    this.isCurrentYear = (+this.args.year === this.house.currentYear());
   }
 
   /**

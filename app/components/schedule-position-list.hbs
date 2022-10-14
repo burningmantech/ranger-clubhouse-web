@@ -1,14 +1,14 @@
-<ChAccordion as |Accordion|>
+<UiAccordion as |Accordion|>
   <Accordion.title>
     {{@position.title}} ({{@position.slots.length}})
     {{#if this.signupCount}}
       {{#if (eq this.signupCount this.overlappingCount)}}
-        <span class="text-danger">[{{pluralize this.overlappingCount "overlapping signup"}}]</span>
+        <span class="text-danger d-inline-block">[ {{pluralize this.overlappingCount "overlapping signup"}} ]</span>
       {{else}}
-        <span class="text-success">[
+        <span class="text-success d-inline-block">[
           {{pluralize this.nonOverlappingCount "signup"}}
           {{#if this.overlappingCount}}
-            <span class="text-black"> and</span> <span class="text-danger">
+            <span class="text-black">&amp;</span> <span class="text-danger">
             {{pluralize this.overlappingCount "overlapping signup"}}
           </span>
           {{/if}}
@@ -157,4 +157,4 @@
       </div>
     {{/if}}
   </Accordion.body>
-</ChAccordion>
+</UiAccordion>

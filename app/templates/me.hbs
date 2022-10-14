@@ -1,5 +1,5 @@
 {{! Besure to keep application.hbs in sync with the links}}
-<ChSidebar @noSmallScreen={{true}} as |s|>
+<UiSidebar @noSmallScreen={{true}} as |s|>
   <s.group @title="ME MENU">
     <s.link @route="me.homepage" @title="Home" @icon="home" @iconType="s"/>
     {{#if (not (or this.user.isPastProspective this.user.isProspectiveWaitlist))}}
@@ -63,7 +63,7 @@
   <s.group>
     <s.link @route="me.help" @title="Help" @icon="question" @iconType="s"/>
   </s.group>
-</ChSidebar>
+</UiSidebar>
 <main>
   {{outlet}}
 </main>

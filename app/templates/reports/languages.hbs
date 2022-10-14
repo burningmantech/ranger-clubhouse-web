@@ -10,7 +10,7 @@
 </p>
 
 {{#each this.languages as |language|}}
-  <ChAccordion as |Accordion|>
+  <UiAccordion as |Accordion|>
     <Accordion.title>{{language.language}} ({{language.people.length}})</Accordion.title>
     <Accordion.body>
       <div class="callsign-list">
@@ -19,7 +19,7 @@
         {{/each}}
       </div>
     </Accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 {{else}}
   <p class="text-danger">
     <b>

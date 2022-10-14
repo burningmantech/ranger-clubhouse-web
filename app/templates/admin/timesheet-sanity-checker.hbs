@@ -1,7 +1,7 @@
 <main>
   <YearSelect @title="Timesheet Sanity Checker" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
-  <ChAccordion as |Accordion|>
+  <UiAccordion as |Accordion|>
     <Accordion.title>{{pluralize this.on_duty.length "person"}} still on duty</Accordion.title>
     <Accordion.body>
       <table class="table table-hover table-sm table-striped table-width-auto">
@@ -32,9 +32,9 @@
         </tbody>
       </table>
     </Accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 
-  <ChAccordion as |Accordion|>
+  <UiAccordion as |Accordion|>
     <Accordion.title>{{pluralize this.end_before_start.length "entry"}} with an off duty time before on duty
     </Accordion.title>
     <Accordion.body>
@@ -65,9 +65,9 @@
         </tbody>
       </table>
     </Accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 
-  <ChAccordion as |Accordion|>
+  <UiAccordion as |Accordion|>
     <Accordion.title>{{pluralize this.overlapping.length "person"}} with overlapping entries</Accordion.title>
     <Accordion.body>
       <table class="table table-sm table-hover table-striped table-width-auto">
@@ -102,9 +102,9 @@
         </tbody>
       </table>
     </Accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 
-  <ChAccordion as |Accordion|>
+  <UiAccordion as |Accordion|>
     <Accordion.title>{{pluralize this.too_long.length "entry"}} with possibly too long shifts</Accordion.title>
     <Accordion.body>
       The follow exceed the recommended max hours by 1.5 times.
@@ -141,8 +141,8 @@
         </tbody>
       </table>
     </Accordion.body>
-  </ChAccordion>
-  <ChAccordion as |Accordion|>
+  </UiAccordion>
+  <UiAccordion as |Accordion|>
     <Accordion.title>{{pluralize this.too_long_for_shift.length "entry"}} with possibly too long duration based on scheduled sign up</Accordion.title>
     <Accordion.body>
       The following are flagged because the entry's duration exceeds 1.5 times the scheduled (aka slot) duration.
@@ -189,9 +189,9 @@
         </tbody>
       </table>
     </Accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 
-  <ChAccordion as |Accordion|>
+  <UiAccordion as |Accordion|>
     <Accordion.title>{{pluralize this.too_short.length "entry"}} with possibly too short duration</Accordion.title>
     <Accordion.body>
       The following are flagged because the shift lasted 15 minutes or less.
@@ -226,6 +226,6 @@
         </tbody>
       </table>
     </Accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 
 </main>

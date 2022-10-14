@@ -32,7 +32,7 @@
 </p>
 {{#each this.positions key="id" as |position|}}
   <div class="max-width-700">
-    <ChAccordion as |accordion|>
+    <UiAccordion as |accordion|>
       <accordion.title>
         {{position.title}} - {{pluralize position.timesheets.length "person"}}
       </accordion.title>
@@ -75,7 +75,7 @@
           </table>
         {{/if}}
       </accordion.body>
-    </ChAccordion>
+    </UiAccordion>
   </div>
 {{else}}
   <p>

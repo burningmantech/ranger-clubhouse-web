@@ -1,30 +1,30 @@
 {{#if this.isShinyPenny}}
-  <ChNotice @type="success" @icon="smile-beam" @iconType="far">
+  <UiNotice @type="success" @icon="smile-beam" @iconType="far">
     {{this.person.callsign}} is newly minted Shiny Penny. Share some Ranger love and welcome them to the family.
-  </ChNotice>
+  </UiNotice>
 {{/if}}
 
 {{#unless this.person.on_site}}
-  <ChNotice @type="danger" @icon="hand-point-right" @title="{{this.person.callsign}} is marked as OFF SITE">
+  <UiNotice @type="danger" @icon="hand-point-right" @title="{{this.person.callsign}} is marked as OFF SITE">
     <p>
       Follow the procedures on the Site Check In page before signing the person into a shift.
     </p>
     <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-danger">Begin Site Check In</LinkTo>
-  </ChNotice>
+  </UiNotice>
 {{/unless}}
 
 {{#if (gt this.person.unread_message_count 0)}}
-  <ChNotice @type="success" @icon="envelope">
+  <UiNotice @type="success" @icon="envelope">
     {{pluralize this.person.unread_message_count "unread Clubhouse message"}}.
     <LinkTo @route="hq.messages" class="btn btn-success">Read Now</LinkTo>
-  </ChNotice>
+  </UiNotice>
 {{/if}}
 
 {{#if this.scheduleRecommendations.burn_weekend_shift}}
-  <ChNotice @title="Suggest Working A Burn Weekend Shift" @icon="walking" @type="info">
+  <UiNotice @title="Suggest Working A Burn Weekend Shift" @icon="walking" @type="info">
     {{this.person.callsign}} is not signed up for a Burn Weekend shift. Ask if they are interested in signing up for
     one.
-  </ChNotice>
+  </UiNotice>
 {{/if}}
 
 <UiSection>
@@ -194,9 +194,9 @@
 
     {{/unless}}
     {{#unless this.eventInfo.radio_info_available}}
-      <ChNotice @type="warning" @icon="exclamation">
+      <UiNotice @type="warning" @icon="exclamation">
         Event radio information has not been posted yet. Radio eligibility cannot be determined.
-      </ChNotice>
+      </UiNotice>
     {{/unless}}
     {{#if this.radioCount}}
       {{#if this.shiftRadios}}

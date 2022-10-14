@@ -5,7 +5,7 @@ export default class ChNoticeComponent extends Component {
     super(...arguments);
     const {type, icon, iconSize}  = this.args;
 
-    this.boxColor = type ? `notice-${type}` : '';
+    this.boxColor = type ? `alert-${type}` : 'alert-secondary';
     this.icon = icon ?? 'exclamation';
     this.iconSize = iconSize ?? "2x";
   }

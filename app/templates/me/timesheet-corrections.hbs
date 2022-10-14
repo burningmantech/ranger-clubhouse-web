@@ -42,7 +42,7 @@
         {{/if}}
       </p>
     {{else if (not this.timesheetInfo.timesheet_confirmed)}}
-      <ChNotice @type="danger" @icon="hand-point-right"
+      <UiNotice @type="danger" @icon="hand-point-right"
                 @title="Final Confirmation Requested">
         Please indicate you are done with submitted corrections. It appears all of your timesheet entries have been
         reviewed and there are no outstanding
@@ -50,7 +50,7 @@
         Go to
         <LinkTo @route="me.timesheet-corrections.confirm">Final Confirmation</LinkTo>
         to finalize your timesheet.
-      </ChNotice>
+      </UiNotice>
     {{/if}}
     {{outlet}}
   {{/if}}

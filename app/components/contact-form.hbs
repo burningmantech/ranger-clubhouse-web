@@ -6,10 +6,10 @@
           as |f|>
     <Modal.body>
       {{#if @isInactive}}
-        <ChNotice @type="danger" @icon="exclamation" @title="{{@callsign}} is inactive">
+        <UiNotice @type="danger" @icon="exclamation" @title="{{@callsign}} is inactive">
           The person has not worked as a Ranger for three or more years. Their email address
           registered with the Clubhouse might be out of date.
-        </ChNotice>
+        </UiNotice>
       {{/if}}
 
       Please note the following:

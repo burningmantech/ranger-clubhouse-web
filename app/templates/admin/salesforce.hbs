@@ -40,7 +40,7 @@
   </UiSection>
 
   {{#if this.showHelp}}
-    <ChNotice @title="TL;DR Guide For Safe Testing">
+    <UiNotice @title="TL;DR Guide For Safe Testing">
       <p>
         When the Submit button is clicked the first time without setting any options,
         you should see three test records
@@ -83,7 +83,7 @@
         import again. This is useful for testing. (Note that it does not remove
         these accounts from the Clubhouse, you'll have to do that manually.)
       </p>
-    </ChNotice>
+    </UiNotice>
   {{/if}}
 
 
@@ -144,7 +144,7 @@
           Found {{pluralize this.accounts.length "record"}}
         </p>
         {{#each this.accountGroups as |group|}}
-          <ChAccordion @isInitOpen={{true}} as |Accordion|>
+          <UiAccordion @isInitOpen={{true}} as |Accordion|>
             <Accordion.title>
               <div class="{{if group.statusLabel.color (concat "text-" group.statusLabel.color)}}">
                 {{#if group.statusLabel.icon}}{{fa-icon group.statusLabel.icon}}{{/if}}
@@ -289,7 +289,7 @@
               </table>
 
             </Accordion.body>
-          </ChAccordion>
+          </UiAccordion>
         {{/each}}
       {{else if this.noAccountsFound}}
         <b class="text-danger">No records were found based on the criteria.</b>

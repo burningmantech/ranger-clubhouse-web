@@ -1,4 +1,4 @@
-<ChSidebar @theme="person" @smallTitle="Person Manage" as |s|>
+<UiSidebar @theme="person" @smallTitle="Person Manage" as |s|>
   <s.group @title="PERSON MANAGE">
     <s.link @route="person.index" @title="Account Info" @icon="info" @iconType="s"/>
     <s.link @route="person.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
@@ -56,7 +56,7 @@
         <s.link @route="person.photos" @title="Photo History" @icon="portrait" @iconType="s"/>
     </s.group>
   {{/if}}
-</ChSidebar>
+</UiSidebar>
 
 <main>
   <div class="person-manage-header">
@@ -99,10 +99,10 @@
   </div>
 
   {{#if this.person.message}}
-    <ChNotice @title="Important Account Note" @icon="hand-point-right">
+    <UiNotice @title="Important Account Note" @icon="hand-point-right">
       {{nl2br this.person.message}}
       <div class="mt-2 text-muted">Posted {{shift-format this.person.message_updated_at}}</div>
-    </ChNotice>
+    </UiNotice>
   {{/if}}
   {{outlet}}
 </main>

@@ -32,11 +32,11 @@
       {{shift-format this.eventDate.pre_event_slot_end}}
     </p>
   {{else}}
-    <ChNotice @title="{{this.year}} pre-event slot dates are not set" @type="danger">
+    <UiNotice @title="{{this.year}} pre-event slot dates are not set" @type="danger">
       Pre-Event slots may not be properly vetted. Visit
       <LinkTo @route="admin.event-dates">Admin &gt; Edit Event Dates</LinkTo>
       to set the dates.
-    </ChNotice>
+    </UiNotice>
   {{/if}}
 
   {{#if this.slots.length}}
@@ -51,7 +51,7 @@
   {{/if}}
 
   {{#each this.positionSlots as |position|}}
-    <ChAccordion @isInitOpen={{get this.positionsOpened position.position_id}}
+    <UiAccordion @isInitOpen={{get this.positionsOpened position.position_id}}
                  @onClick={{action this.positionClicked position}} as |box|>
       <box.title>
         {{position.title}} ({{position.slots.length}}
@@ -138,7 +138,7 @@
           </table>
         {{/if}}
       </box.body>
-    </ChAccordion>
+    </UiAccordion>
   {{/each}}
 
   {{#if this.slot}}
@@ -235,7 +235,7 @@
             {{/if}}
           </div>
           {{#each this.copySourcePositions as |position|}}
-            <ChAccordion as |Accordion|>
+            <UiAccordion as |Accordion|>
               <Accordion.title>
                 {{position.selectedSlots.length}} / {{position.slots.length}}
                 <b>{{position.title}}</b> slots to copy
@@ -281,7 +281,7 @@
                   </table>
                 {{/if}}
               </Accordion.body>
-            </ChAccordion>
+            </UiAccordion>
           {{/each}}
         </Modal.body>
       </ChForm>

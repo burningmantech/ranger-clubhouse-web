@@ -52,7 +52,7 @@
     <:title>Check Handle Results</:title>
     <:body>
       {{#each this.checkedHandles as |checked|}}
-        <ChAccordion @isInitOpen={{true}} class="d-inline-block align-top" as |accordion|>
+        <UiAccordion @isInitOpen={{true}} class="d-inline-block align-top" as |accordion|>
           <accordion.title>{{checked.name}} ({{checked.conflicts.length}})</accordion.title>
           <accordion.body>
             {{#each checked.conflicts as |conflict|}}
@@ -81,7 +81,7 @@
               </div>
             {{/each}}
           </accordion.body>
-        </ChAccordion>
+        </UiAccordion>
       {{else}}
         <div class="my-2">
           No handles checked yet.

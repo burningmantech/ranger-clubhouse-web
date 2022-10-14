@@ -1,12 +1,12 @@
 <h2>Unified Flagging for {{this.person.callsign}}</h2>
 
 {{#if this.history.personnel_issue}}
-  <ChNotice @type="danger" @icon="flag" @title="Personnel Flag Raised For {{this.person.callsign}}">
+  <UiNotice @type="danger" @icon="flag" @title="Personnel Flag Raised For {{this.person.callsign}}">
     <p>
       All training and mentor activity should be suspended and no further actions taken until the situation is resolved.
     </p>
     Contact the Personnel Manager for more information.
-  </ChNotice>
+  </UiNotice>
 {{/if}}
 <UiTab @type="tabs" as |tab|>
   <tab.pane @title="Team Notes & Ranks/Flags" @id="notes">

@@ -23,7 +23,7 @@
 </p>
 
 {{#each this.viewPositions key="id" as |position|}}
-  <ChAccordion id="position-{{position.id}}" @isOpen={{mut (get this.showingPositions position.id)}} as |accordion|>
+  <UiAccordion id="position-{{position.id}}" @isOpen={{mut (get this.showingPositions position.id)}} as |accordion|>
     <accordion.title>
       {{position-label position}} ({{pluralize position.activeCount "shift"~}}
       {{~#if position.inactiveCount~}}
@@ -84,7 +84,7 @@
         </table>
       {{/if}}
     </accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 {{else}}
   <b class="text-danger">No {{this.year}} shifts were found.</b>
 {{/each}}

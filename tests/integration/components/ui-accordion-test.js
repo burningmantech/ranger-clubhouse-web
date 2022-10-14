@@ -10,15 +10,15 @@ module('Integration | Component | ch-accordion', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`<ChAccordion />`);
+    await render(hbs`<UiAccordion />`);
 
     assert.strictEqual(this.element.textContent.trim(), '');
 
     // Template block usage:
     await render(hbs`
-      <ChAccordion>
+      <UiAccordion>
         template block text
-      </ChAccordion>
+      </UiAccordion>
     `);
 
     assert.strictEqual(this.element.textContent.trim(), 'template block text');

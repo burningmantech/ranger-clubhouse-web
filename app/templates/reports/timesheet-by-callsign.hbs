@@ -13,7 +13,7 @@
 </p>
 {{#each this.people key="id" as |person|}}
   <div class="max-width-700">
-    <ChAccordion id="person-{{person.id}}" as |accordion|>
+    <UiAccordion id="person-{{person.id}}" as |accordion|>
       <accordion.title>{{person.callsign}}</accordion.title>
       <accordion.body>
         {{#if accordion.isOpen}}
@@ -75,7 +75,7 @@
           </table>
         {{/if}}
       </accordion.body>
-    </ChAccordion>
+    </UiAccordion>
   </div>
 {{else}}
   <p>
