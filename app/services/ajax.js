@@ -1,4 +1,4 @@
-import AjaxService from 'ember-ajax/services/ajax';
+import FetchService from 'ember-ajax-fetch/services/fetch';
 import {service} from '@ember/service';
 import ENV from 'clubhouse/config/environment';
 
@@ -6,7 +6,7 @@ import ENV from 'clubhouse/config/environment';
  * Extend the Ajax service to add the JWT to the header for all requests.
  */
 
-export default class extends AjaxService {
+export default class extends FetchService {
   @service session;
 
   host = ENV['api-server'];

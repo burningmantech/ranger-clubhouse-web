@@ -50,4 +50,9 @@ export default class ApplicationController extends ClubhouseController {
   closeBrowserNotSupported() {
     this.showBrowserNotSupported = false;
   }
+
+  @action
+  closeOfflineDialog() {
+    this.session.showOfflineDialog = false;
+  }
 }
