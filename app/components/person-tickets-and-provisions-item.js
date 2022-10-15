@@ -8,4 +8,8 @@ export default class PersonTicketsAndProvisionsItemComponent extends Component {
   get workOrEarn() {
     return this.args.item?.measure === 'credits' ? 'earn' : 'work';
   }
+
+  get periodMeasure() {
+    return this.args.eventWeek ? `Event Week ${this.args.item.measure}` : this.args.item.measure;
+  }
 }

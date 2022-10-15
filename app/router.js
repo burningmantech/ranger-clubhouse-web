@@ -7,7 +7,6 @@ export default class Router extends EmberRouter {
 }
 
 Router.map(function () {
-  this.route('offline');
   this.route('debug');
 
   this.route('login');

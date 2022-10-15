@@ -41,3 +41,14 @@
     </Modal.footer>
   </ModalDialog>
 {{/if}}
+
+{{#if this.session.showOfflineDialog}}
+  <ModalDialog @title="Internet connection issues" as |Modal|>
+    <Modal.body>
+      Sorry, it appears the Internet connection is offline or flaky. Try your request again in a few minutes.
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closeOfflineDialog}} />
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}

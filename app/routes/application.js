@@ -47,10 +47,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
       return;
     }
 
-    if (!transition || !transition.to
-      || transition.to.name === 'admin.action-log'
-      || transition.to.name === 'offline'
-    ) {
+    if (transition?.to?.name === 'admin.action-log') {
       return;
     }
 
@@ -138,7 +135,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
       // Can't retrieve the configuration. Consider the application
       // offline for the moment.
       transition.abort();
-      this.router.transitionTo("offline");
+      this.session.showOfflineDialog = true;
     }
   }
 

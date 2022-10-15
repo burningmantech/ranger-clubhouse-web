@@ -28,11 +28,12 @@
       {{#unless this.items.all_eats.has_earned}}
         <PersonTicketsAndProvisionsItem @item={{this.items.event_week_eats}}
                                         @name="Event Week Eat Pass"
-                                        @subtext="Qualification is based off Event Week hours ONLY."/>
+                                        @eventWeek={{true}}
+                                        @subtext="The Event Week Eat Pass qualification is based off Event Week hours ONLY."/>
       {{/unless}}
       <PersonTicketsAndProvisionsItem @item={{this.items.all_eats}}
                                       @name="All-Eat Meal Pass"
-                                      @subtext="Qualification can be met with any hours worked in the Pre-Event, Event Week, or Post-Event periods."
+                                      @subtext="The All-Eat Meal Pass Qualification can be met with any hours worked in the Pre-Event, Event Week, or Post-Event periods."
       />
 
     </:body>
@@ -49,8 +50,12 @@
         shower pog only good for the current event. The Wet Spot Access qualification allows daily access to facility
         for the NEXT event.
       </p>
-      <PersonTicketsAndProvisionsItem @item={{this.items.shower_pog}} @name="Wet Spot Pog for THIS event"/>
-      <PersonTicketsAndProvisionsItem @item={{this.items.shower_access}} @name="Wet Spot Access for NEXT event"/>
+      <PersonTicketsAndProvisionsItem @item={{this.items.shower_pog}}
+                                      @eventWeek={{true}}
+                                      @name="Wet Spot Pog for THIS event"/>
+      <PersonTicketsAndProvisionsItem @item={{this.items.shower_access}}
+                                      @eventWeek={{true}}
+                                      @name="Wet Spot Access for NEXT event"/>
     </:body>
   </UiSection>
 {{/if}}

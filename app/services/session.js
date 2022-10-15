@@ -43,6 +43,10 @@ export default class extends SessionService {
   // True if the mobile screen size is less than MOBILE_MAX_WIDTH
   @tracked isSmallScreen = false;
 
+  // When a request is aborted due to an offline or flakey Internet, pop up a dialog letting the user
+  // know something is up.
+  @tracked showOfflineDialog = false;
+
   constructor() {
     super(...arguments);
 

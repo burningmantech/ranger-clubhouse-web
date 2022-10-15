@@ -1,5 +1,5 @@
 import {TimeoutError, AbortError, ForbiddenError, UnauthorizedError} from '@ember-data/adapter/error';
-import {isAbortError, isTimeoutError, isForbiddenError, isUnauthorizedError} from 'ember-ajax/errors';
+import {isAbortError, isForbiddenResponse, isUnauthorizedResponse} from 'ember-fetch/errors';
 import config from 'clubhouse/config/environment';
 
 /**
@@ -31,9 +31,9 @@ export default function logError(error, type, additionalData = null) {
     || error instanceof UnauthorizedError
     // ember-ajax errors
     || isAbortError(error)
-    || isTimeoutError(error)
-    || isForbiddenError(error)
-    || isUnauthorizedError(error)
+    || isAbortError(error)
+    || isForbiddenResponse(error)
+    || isUnauthorizedResponse(error)
     // Offline errors..
     || error.name === 'NetworkError'
     || message?.match(/NetworkError/)
