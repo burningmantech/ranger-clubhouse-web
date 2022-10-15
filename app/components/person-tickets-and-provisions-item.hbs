@@ -1,0 +1,27 @@
+{{#if @item.has_earned}}
+  <h4 class="text-success border-bottom mt-2">{{fa-icon "check"}} {{@name}} - QUALIFIED</h4>
+{{else}}
+  <h4 class="border-bottom mt-2">{{@name}}</h4>
+  {{#if @subtext}}
+    <p>
+      {{@subtext}}
+    </p>
+  {{/if}}
+{{/if}}
+{{#if @item.has_earned}}
+  You have qualified for a {{@name}}. Congratulations!
+{{else}}
+  <p>
+    Requires {{@item.threshold}} {{@item.measure}} to qualify for. You have {{this.workedOrEarned}} {{@item.value}} {{@item.measure}} so far.<br>
+    Based on the {{@item.measure}} {{this.workedOrEarned}} so far and the remaining sign-ups, you are estimated to {{this.workOrEarn}} a total
+    of {{@item.expected_total}} {{@item.measure}}.
+  </p>
+  {{#if @item.needs_to_work}}
+    An additional {{@item.needs_to_work}} {{@item.measure}} have to be <b>WORKED</b> in order to reach the qualification
+    threshold.
+  {{/if}}
+  {{#if @item.expected_to_earn}}
+    Between the shifts worked so far, and the remaining scheduled sign-ups, it appears you
+    may have enough to qualify for a {{@name}}.
+  {{/if}}
+{{/if}}

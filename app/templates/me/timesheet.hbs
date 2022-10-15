@@ -8,73 +8,83 @@
   <LinkTo @route="me.work-history">Work History</LinkTo>
   page to see how your hours have been spent over the years.
 </p>
-{{#if (and this.isCurrentYear this.timesheetInfo.correction_enabled)}}
-  <p class="d-print-none">
-    Is an entry incorrect, or is there a missing shift that was not recorded?
-    <LinkTo @route="me.timesheet-corrections.index">Submit a correction request.</LinkTo>
-  </p>
+<UiTab as |tab|>
+  <tab.pane @title="Timesheet">
+    {{#if (and this.isCurrentYear this.timesheetInfo.correction_enabled)}}
+      <p class="d-print-none">
+        Is an entry incorrect, or is there a missing shift that was not recorded?
+        <LinkTo @route="me.timesheet-corrections.index">Submit a correction request.</LinkTo>
+      </p>
 
-  {{#if this.timesheets}}
-    <p class="d-print-none">
-      {{#if this.timesheetInfo.timesheet_confirmed}}
-        <b class="text-success">{{fa-icon "check"}} Thank you for confirming your timesheet is accurate.</b>
-      {{else}}
-        <b class="text-danger">It appears you have not confirmed your timesheet as accurate.</b> Go to the
-        <LinkTo @route="me.timesheet-corrections">Timesheet Corrections</LinkTo>
-        page, review your timesheet entries, submit any missing timesheet entries requests, and confirm your
-        {{this.year}} timesheet as accurate.
+      {{#if this.timesheets}}
+        <p class="d-print-none">
+          {{#if this.timesheetInfo.timesheet_confirmed}}
+            <b class="text-success">{{fa-icon "check"}} Thank you for confirming your timesheet is accurate.</b>
+          {{else}}
+            <b class="text-danger">It appears you have not confirmed your timesheet as accurate.</b> Go to the
+            <LinkTo @route="me.timesheet-corrections">Timesheet Corrections</LinkTo>
+            page, review your timesheet entries, submit any missing timesheet entries requests, and confirm your
+            {{this.year}} timesheet as accurate.
+          {{/if}}
+        </p>
       {{/if}}
-    </p>
-  {{/if}}
-{{/if}}
-{{#if this.timesheets}}
-  <UiSection>
-    <:title>{{this.year}} Timesheet Entries</:title>
-    <:body>
-      <NoAppreciateIcon/>
-      = the shift hours do not count towards provisions and appreciations.
-      <div class="timesheet-table">
-        <div class="timesheet-row timesheet-header">
-          <div class="timesheet-time">Time</div>
-          <div class="timesheet-duration">Duration</div>
-          <div class="timesheet-credits">Credits</div>
-          <div class="timesheet-position">Position</div>
-        </div>
-        {{#each this.timesheets key="id" as |ts|}}
-          <div class="timesheet-entry">
-            <div class="timesheet-row">
-              <div class="timesheet-time">
-                {{#if ts.off_duty}}
-                  {{shift-format ts.on_duty ts.off_duty}}
-                {{else}}
-                  {{shift-format ts.on_duty}} to <i>On Duty</i>
-                {{/if}}
-              </div>
-              <div class="timesheet-duration">
-                <span class="timesheet-sm-label">Duration:</span>
-                {{#unless ts.position.count_hours}}
-                  <NoAppreciateIcon/>
-                {{/unless}}
-                {{hour-minute-format ts.duration}}
-              </div>
-              <div class="timesheet-credits">
-                <span class="timesheet-sm-label">Credits:</span>
-                {{credits-format ts.credits}}
-              </div>
-              <div class="timesheet-position">{{ts.position.title}}</div>
-            </div>
+    {{/if}}
+    <UiSection>
+      <:title>Timesheet for {{this.year}}</:title>
+      <:body>
+        <NoAppreciateIcon/>
+        = the shift hours do not count towards provisions and appreciations.
+        <div class="timesheet-table">
+          <div class="timesheet-row timesheet-header">
+            <div class="timesheet-time">Time</div>
+            <div class="timesheet-duration">Duration</div>
+            <div class="timesheet-credits">Credits</div>
+            <div class="timesheet-position">Position</div>
           </div>
-        {{/each}}
-      </div>
-    </:body>
-  </UiSection>
-
-  <TimesheetSummary @summary={{this.timesheetSummary}} />
-  <TimesheetPositionSummary @timesheets={{this.timesheets}} />
-{{else}}
-  <UiSection>
-    <p class="mt-3">
-      <b class="text-danger">No timesheet entries were found for {{this.year}}.</b>
-    </p>
-  </UiSection>
-{{/if}}
+          {{#each this.timesheets key="id" as |ts|}}
+            <div class="timesheet-entry">
+              <div class="timesheet-row">
+                <div class="timesheet-time">
+                  {{#if ts.off_duty}}
+                    {{shift-format ts.on_duty ts.off_duty}}
+                  {{else}}
+                    {{shift-format ts.on_duty}} to <i>On Duty</i>
+                  {{/if}}
+                </div>
+                <div class="timesheet-duration">
+                  <span class="timesheet-sm-label">Duration:</span>
+                  {{#unless ts.position.count_hours}}
+                    <NoAppreciateIcon/>
+                  {{/unless}}
+                  {{hour-minute-format ts.duration}}
+                </div>
+                <div class="timesheet-credits">
+                  <span class="timesheet-sm-label">Credits:</span>
+                  {{credits-format ts.credits}}
+                </div>
+                <div class="timesheet-position">{{ts.position.title}}</div>
+              </div>
+            </div>
+          {{else}}
+            <span class="text-danger">No entries were found for {{this.year}}</span>
+          {{/each}}
+        </div>
+      </:body>
+    </UiSection>
+  </tab.pane>
+  <tab.pane @title="Hours & Credits">
+    <TimesheetSummary @summary={{this.timesheetSummary}} />
+  </tab.pane>
+  <tab.pane @title="Work Summary">
+    <TimesheetPositionSummary @timesheets={{this.timesheets}} />
+  </tab.pane>
+  <tab.pane @title="Ticket & Provisions Qualifications" @id="progress">
+    {{#if this.isCurrentYear}}
+      {{#if (eq tab.activeId "progress")}}
+        <PersonTicketProvisionsProgress @person={{this.session.user}} @year={{this.year}} />
+      {{/if}}
+    {{else}}
+      Ticket &amp; Stuff qualification information is only available for the current event.
+    {{/if}}
+  </tab.pane>
+</UiTab>

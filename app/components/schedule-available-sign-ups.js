@@ -6,17 +6,17 @@ import dayjs from 'dayjs';
 const allDays = ['All Days', 'all'];
 const upcomingShifts = ['Upcoming Shifts', 'upcoming'];
 
-export default class AvailableShiftSignUpsComponent extends Component {
+export default class ScheduleAvailableSignUpsComponent extends Component {
   @service house;
 
   @tracked filterDay = 'upcoming';
 
   constructor() {
     super(...arguments);
+    this.isCurrentYear = (+this.args.year === this.house.currentYear());
     if (!this.isCurrentYear) {
       this.filterDay = 'all';
     }
-    this.isCurrentYear = (+this.args.year === this.house.currentYear());
   }
 
   /**

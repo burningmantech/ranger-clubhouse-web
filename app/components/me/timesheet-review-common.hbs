@@ -10,25 +10,23 @@
     {{#if @timesheets}}
       <div class="timesheet-table">
         <div class="timesheet-row timesheet-header">
-          <div class="timesheet-time">From</div>
-          <div class="timesheet-time">To</div>
-          <div class="timesheet-duration">Time</div>
+          <div class="timesheet-time">Time</div>
+          <div class="timesheet-duration">Duration</div>
           <div class="timesheet-credits">Credits</div>
           <div class="timesheet-position">Position</div>
         </div>
         {{#each @timesheets as |ts|}}
           <div class="timesheet-entry">
             <div class="timesheet-row">
-              <div class="timesheet-time">{{shift-format ts.on_duty}}</div>
               <div class="timesheet-time">
                 {{#if ts.off_duty}}
-                  {{shift-format ts.off_duty}}
+                  {{shift-format ts.on_duty ts.off_duty}}
                 {{else}}
-                  <i>On Duty</i>
+                  {{shift-format ts.on_duty}} - <i>On Duty</i>
                 {{/if}}
               </div>
               <div class="timesheet-duration">
-                <span class="timesheet-sm-label">Time:</span>
+                <span class="timesheet-sm-label">Duration:</span>
                 {{#unless ts.position.count_hours}}
                   <NoAppreciateIcon/>
                 {{/unless}}

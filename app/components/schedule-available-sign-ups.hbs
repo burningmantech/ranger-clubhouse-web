@@ -15,7 +15,7 @@
                           @onChange={{action (mut this.filterDay)}} />
         </div>
       </FormRow>
-       <p>
+      <p>
         <b>Note:</b> A shift may not be added to or removed from your schedule if the shift has already started.
       </p>
       <p>
@@ -34,12 +34,30 @@
                               @leaveSlot={{@leaveSlot}}
                               @isAdmin={{@isAdmin}}
                               @isCurrentYear={{this.isCurrentYear}}
+                              @milestones={{@milestones}}
+                              @person={{@person}}
         />
       {{else}}
-        <b class="text-danger">There are no shifts which match.</b>
+        <div class="mt-2 font-weight-bold text-danger">
+          {{#if (eq this.filterDay "upcoming")}}
+            There are no more upcoming shifts.
+          {{else if (eq this.positions.length 0)}}
+            No shifts have been posted yet.
+          {{else}}
+            No shifts were found for {{this.filterDay}}
+          {{/if}}
+        </div>
       {{/each}}
     {{else}}
-      <p><b class="text-danger">There are no shifts available.</b></p>
+      <div class="mt-2 font-weight-bold text-danger">
+        {{#if (eq this.filterDay "upcoming")}}
+          There are no more upcoming shifts.
+        {{else if (eq this.positions.length 0)}}
+          No shifts have been posted yet.
+        {{else}}
+          No shifts were found for {{this.filterDay}}
+        {{/if}}
+      </div>
     {{/if}}
   </:body>
 </UiSection>

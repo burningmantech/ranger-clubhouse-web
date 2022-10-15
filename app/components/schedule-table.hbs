@@ -24,16 +24,18 @@
       </div>
       <div class="schedule-row schedule-sub-header">
         <div class="schedule-sub-header-text">
-          Showing {{this.viewSlots.length}} of {{pluralize @slots.length "shift sign-up"}}.
+          Showing {{this.viewSlots.length}} of {{pluralize @slots.length "sign-up"}}.
           {{#unless this.showAllShifts}}
             {{pluralize this.previousSlotCount "previous sign-up"}}
             {{if (eq this.previousSlotCount 1) "is" "are"}} not shown.
           {{/unless}}
         </div>
         <div class="schedule-actions">
-          <UiButton @onClick={{this.toggleAll}}  @size="sm" @type="secondary">
-            {{fa-icon "clock" type="far"}} {{if this.showAllShifts "Upcoming Shifts" "All Shfifts"}}
-          </UiButton>
+          {{#if this.isCurrentYear}}
+            <UiButton @onClick={{this.toggleAll}}  @size="sm" @type="secondary">
+              {{fa-icon "clock" type="far"}} Show {{if this.showAllShifts "Upcoming Shifts" "All Shifts"}}
+            </UiButton>
+          {{/if}}
           <UiButton @onClick={{this.exportCalendarAction}} @type="secondary" @size="sm">
             {{fa-icon "calendar-days" type="far"}} Export Calendar
           </UiButton>
@@ -50,6 +52,11 @@
               {{/if}}
             </div>
             <div class="schedule-time-description">
+              {{#if slot.has_ended}}
+                <div class="text-danger">Shift has ended.</div>
+              {{else if slot.has_started}}
+                <div class="text-danger">Shift has started.</div>
+              {{/if}}
               {{shift-format slot.slot_begins slot.slot_ends}}
               {{#if slot.isNotPacific}}
                 ({{slot.slot_tz_abbr}})
@@ -81,7 +88,7 @@
                 </button>
               {{~/if~}}
               <button type="button" {{on "click" (fn @showPeople slot)}} class="btn btn-secondary btn-sm"
-                     disabled={{slot.is_retrieving_people}}>
+                      disabled={{slot.is_retrieving_people}}>
                 {{#if slot.is_retrieving_people}}
                   <SpinIcon/>
                 {{else}}
@@ -89,7 +96,7 @@
                 {{/if}}
                 &nbsp;Sign Ups
               </button>
-             </div>
+            </div>
           </div>
         {{else}}
           <div class="schedule-row">
