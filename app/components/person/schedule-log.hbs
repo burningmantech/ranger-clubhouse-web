@@ -1,4 +1,4 @@
-{{#if @isLoading}}
+{{#if this.isLoading}}
   <LoadingIndicator @text="Loading the scheduling audit log"/>
 {{else}}
   {{fa-icon "times" color="danger"}} = Person is no longer signed up for the shift.
@@ -9,19 +9,17 @@
       <th>Start</th>
       <th>Position</th>
       <th>Description</th>
-      <th>Added</th>
-      <th>Added By</th>
-      <th>Removed</th>
-      <th>Removed By</th>
+      <th>Added On/By</th>
+      <th>Removed On/By</th>
     </tr>
     </thead>
     <tbody>
     {{#if this.isBefore2019}}
       <tr>
-        <td colspan="8">Sorry, the scheduling audit log is only available for 2019 and later years.</td>
+        <td colspan="6">Sorry, the scheduling audit log is only available for 2019 and later years.</td>
       </tr>
     {{else}}
-      {{#each @auditLogs as |entry|}}
+      {{#each this.auditLogs as |entry|}}
         <tr class="{{if entry.no_signup "text-decoration-line-through"}}">
           <td>
             {{#if entry.no_signup}}
@@ -35,15 +33,9 @@
           </td>
           <td>{{entry.position_title}}</td>
           <td>{{entry.slot_description}}</td>
-          <td>
+           <td>
             {{#each entry.added as |event|}}
               {{shift-format event.date}}<br>
-            {{else}}
-              -
-            {{/each}}
-          </td>
-          <td>
-            {{#each entry.added as |event|}}
               {{#if (eq this.personId event.person.id)}}
                 <i>self</i>
               {{else}}
@@ -57,12 +49,6 @@
           <td>
             {{#each entry.removed as |event|}}
               {{shift-format event.date}}<br>
-            {{else}}
-              -
-            {{/each}}
-          </td>
-          <td>
-            {{#each entry.removed as |event|}}
               {{#if (eq this.personId event.person.id)}}
                 <i>self</i>
               {{else}}

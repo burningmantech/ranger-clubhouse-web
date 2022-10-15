@@ -13,6 +13,9 @@ export default class ScheduleTableComponent extends Component {
   constructor() {
     super(...arguments);
     this.isCurrentYear = (+this.args.year === this.house.currentYear());
+    if (this.isCurrentYear) {
+      this.showAllShifts = false;
+    }
   }
 
   /**

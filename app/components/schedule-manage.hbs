@@ -1,6 +1,7 @@
 <p>
   All shift / training session times are in the Pacific timezone unless otherwise noted.
 </p>
+
 <div class="max-width-1000">
   {{#unless this.isCurrentYear}}
     <UiNotice @type="warning">
@@ -23,7 +24,7 @@
                 @title="All forced scheduling actions are logged and is subject to review."
       />
     {{/if}}
-    <UiTab @onChange={{this.tabSwitched}} as |tab|>
+    <UiTab as |tab|>
       <tab.pane @title="Schedule">
         <ScheduleTable @slots={{@signedUpSlots}}
                        @person={{@person}}
@@ -38,19 +39,21 @@
       </tab.pane>
       <tab.pane @title="Sign-Ups">
         <ScheduleAvailableSignUps @availableSlots={{this.availableSlots}}
-                               @year={{@year}}
-                               @showPeople={{this.showPeople}}
-                               @joinSlot={{this.joinSlot}}
-                               @leaveSlot={{this.leaveSlot}}
-                               @isAdmin={{this.isAdmin}}
+                                  @year={{@year}}
+                                  @showPeople={{this.showPeople}}
+                                  @joinSlot={{this.joinSlot}}
+                                  @leaveSlot={{this.leaveSlot}}
+                                  @isAdmin={{this.isAdmin}}
+                                  @milestones={{@milestones}}
+                                  @person={{@person}}
         />
       </tab.pane>
       {{#if (or @person.isRanger @person.isNonRanger)}}
-        <tab.pane @title="Tickets">
+        <tab.pane @title="Ticket & Provisions Qualifications" @id="progress">
           {{#if this.isCurrentYear}}
-            <ScheduleTicketQualifications @year={{@year}}
-                             @credits={{@scheduleSummary.total_credits}}
-                             @creditsEarned={{@creditsEarned}} />
+            {{#if (eq tab.activeId "progress")}}
+              <PersonTicketProvisionsProgress @person={{@person}} />
+            {{/if}}
           {{else}}
             Ticket qualification information is only available for the current event.
           {{/if}}
@@ -63,11 +66,9 @@
       </tab.pane>
       {{#if @includeLog}}
         <tab.pane @title="Audit Log" @id="audit-log">
-          <Person::ScheduleLog @year={{@year}}
-                               @person={{@person}}
-                               @isLoading={{this.isLoadingAuditLog}}
-                               @auditLogs={{this.auditLogs}}
-          />
+          {{#if (eq tab.activeId "audit-log")}}
+            <Person::ScheduleLog @year={{@year}} @person={{@person}} />
+          {{/if}}
         </tab.pane>
       {{/if}}
     </UiTab>

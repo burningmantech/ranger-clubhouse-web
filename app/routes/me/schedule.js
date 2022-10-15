@@ -32,6 +32,7 @@ export default class MeScheduleRoute extends ClubhouseRoute {
           signup_permission: 1
         }
       }),
+      milestones: this.ajax.request(`person/${person_id}/milestones`).then(({milestones}) => milestones),
       year
     });
   }

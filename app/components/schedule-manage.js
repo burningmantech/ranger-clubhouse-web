@@ -24,8 +24,7 @@ export default class ScheduleManageComponent extends Component {
   @tracked availableSlots;
   @tracked isCurrentYear;
 
-  @tracked isLoadingAuditLog = false;
-  @tracked auditLogs = [];
+  @tracked isShinyPenny;
 
   activeOptions = [
     ['Active', 'active'],
@@ -253,17 +252,5 @@ export default class ScheduleManageComponent extends Component {
     })
       .catch((response) => this.house.handleErrorResponse(response))
       .finally(() => set(slot, 'is_retrieving_people', false));
-  }
-
-  @action
-  tabSwitched(id) {
-    if (id !== 'audit-log') {
-      return;
-    }
-    this.isLoadingAuditLog = true;
-    this.ajax.request(`person/${this.args.person.id}/schedule/log`, {data: {year: this.args.year}})
-      .then(({logs}) => this.auditLogs = logs)
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isLoadingAuditLog = false);
   }
 }

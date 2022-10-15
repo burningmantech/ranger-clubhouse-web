@@ -77,20 +77,21 @@
   </navbar.content>
   {{#if (and this.session.hasLMOP (not this.session.isSmallScreen))}}
     <navbar.content>
-      <button type="button"
-              tabindex="-1"
-              class="border rounded p-1 bg-white text-muted small"
+      {{! template-lint-disable no-inline-styles}}
+      <div role="button"
+           class="border rounded p-1 bg-white text-muted small d-flex align-items-center justify-content-between"
+           style="min-width:0;"
         {{on "click" this.launchSearchDialog}}>
-        <span class="mx-1">
+        <div class="mx-1 flex-shrink-0">
           {{fa-icon "search"}}
-        </span>
-        <span>Search Callsigns/Assets/Vehicles</span>
+        </div>
+        <div class="flex-shrink-1 text-truncate">Search Callsigns/Assets/Vehicles</div>
         {{#unless this.session.isMobileDevice}}
-          <span class="ms-1 bg-gray p-1">
+          <div class="ms-1 bg-gray p-1 flex-shrink-0">
             {{if this.session.isMac "⌘" "CTRL"}} K
-          </span>
+          </div>
         {{/unless}}
-      </button>
+      </div>
     </navbar.content>
   {{/if}}
   {{#if this.session.isAuthenticated}}

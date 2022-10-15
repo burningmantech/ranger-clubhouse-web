@@ -30,6 +30,7 @@ export default class MeTimesheetRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     controller.setProperties(model);
+    controller.set('progressInfo', null);
   }
 
   resetController(controller, isExiting) {

@@ -1,6 +1,6 @@
 <UiAccordion as |Accordion|>
   <Accordion.title>
-    {{@position.title}} ({{@position.slots.length}})
+    {{@position.title}}
     {{#if this.signupCount}}
       {{#if (eq this.signupCount this.overlappingCount)}}
         <span class="text-danger d-inline-block">[ {{pluralize this.overlappingCount "overlapping signup"}} ]</span>
@@ -19,12 +19,16 @@
   <Accordion.body>
     {{#if Accordion.isOpen}}
       {{#if this.isTrainingPosition}}
+        <p class="text-danger">
+          {{fa-icon "hand-point-right"}} Walk-ins are not allowed. All attendees must be signed up prior to the session's start time.
+        </p>
+        {{#if this.needsFullDayTraining}}
+          <b>
+            Because you are {{this.personStatus}}, you are required to attend the <u class="text-danger">FULL DAY</u> In-Person Training.
+          </b>
+        {{/if}}
         <p>
           Additional training sessions will be posted through the end of May.
-        </p>
-        <p>
-          <b class="text-danger">Walk-ins are not allowed. All attendees must be signed up prior to the session's start
-            time.</b>
         </p>
       {{/if}}
       {{#if this.haveNoAppreciationSlots}}
@@ -67,6 +71,11 @@
               {{/if}}
             </div>
             <div class="schedule-time-description">
+              {{#if slot.has_ended}}
+                <div class="text-danger">Shift has ended.</div>
+              {{else if slot.has_started}}
+                <div class="text-danger">Shift has started.</div>
+              {{/if}}
               {{shift-format slot.slot_begins slot.slot_ends}}
               {{#if (or this.isTrainingType slot.isNotPacific)}}
                 ({{slot.slot_tz_abbr}})
