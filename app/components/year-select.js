@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
-import { service } from '@ember/service';
-import { isEmpty } from '@ember/utils';
+import {service} from '@ember/service';
+import {isEmpty} from '@ember/utils';
 
 export default class YearSelectComponent extends Component {
   @service house;
@@ -9,11 +9,14 @@ export default class YearSelectComponent extends Component {
     const currentYear = this.house.currentYear();
     let years = this.args.years;
     const minYear = this.args.minYear ?? 1998;
+    const {skipPandemic} = this.args;
 
     if (!years) {
       years = [];
       for (let y = minYear; y <= currentYear; y++) {
-        years.push(y);
+        if (!skipPandemic || (y !== 2020 && y !== 2021)) {
+          years.push(y);
+        }
       }
     } else {
       years = this.args.years.slice();
@@ -23,7 +26,7 @@ export default class YearSelectComponent extends Component {
       years.push(currentYear);
     }
 
-    const { year } = this.args;
+    const {year} = this.args;
     if (!isEmpty(year) && !years.includes(+year)) {
       years.push(year);
     }

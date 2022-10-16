@@ -1,5 +1,9 @@
 <main>
-  <YearSelect @title="Event Statistics" @year={{this.year}} @minYear={{2010}} @onChange={{action (mut this.year)}} />
+  <YearSelect @title="Event Statistics"
+              @year={{this.year}}
+              @minYear={{2010}}
+              @skipPandemic={{true}}
+              @onChange={{action (mut this.year)}} />
   <p>
     Report on various event statistics. "Training" below refers to both (dirt) Training and the ARTs.
   </p>
@@ -39,10 +43,23 @@
     <tr>
       <td>
         People working
-        <div class="text-muted">(excluding trainings & Alphas)</div>
+        <div class="text-muted">(excluding trainings & Alpha timesheet entries)</div>
       </td>
       <td class="text-end">{{this.stats.working_people}}</td>
     </tr>
+    <tr>
+      <td>
+        Newly minted Shiny Pennies who worked
+      </td>
+      <td class="text-end">{{this.stats.working_shiny_pennies}}</td>
+    </tr>
+    <tr>
+      <td>
+        Newly minted Shiny Pennies who didn't work
+      </td>
+      <td class="text-end">{{sub this.stats.alphas_passed this.stats.working_shiny_pennies}}</td>
+    </tr>
+
     <tr>
       <td>Total timesheet entries
         <div class="text-muted">(includes Alpha entries)</div>
