@@ -198,16 +198,11 @@ ul.nav-tabs {
 
 @include media-breakpoint-down(lg) {
   ul.nav-tabs {
-    display: grid;
-    grid-auto-flow: column;
+    flex-direction: column !important;
 
     .nav-link {
-      display: flex;
-      height: 100%;
-      padding-left: 0.75em;
-      padding-right: 0.75em;
-      text-align: center;
-      align-items: center;
+      border-radius: 0;
+      border: 1px solid #adb5bd !important;
     }
   }
 }
