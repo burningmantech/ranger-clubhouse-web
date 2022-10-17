@@ -62,32 +62,37 @@
               {{credits-format entry.credits}} credits
             </td>
             <td class="align-middle">
-              <UiButton @type="success" @class="btn-timesheet" @onClick={{fn this.markEntryCorrect entry}}
-                        @disabled={{entry.isSaving}}>
-                YES
-                {{#if entry.isVerified}}
-                  {{fa-icon "check"}}
-                {{/if}}
-              </UiButton>
-              <UiButton @type="danger" @class="btn-timesheet" @onClick={{fn this.markEntryIncorrect entry}}
-                        @disabled={{entry.isSaving}}>
-                NO
-                {{#if entry.isPending}}
-                  {{fa-icon "check"}}
-                {{/if}}
-              </UiButton>
-              <UiButton @type="gray" @class="btn-timesheet" @onClick={{fn this.ignoreEntry entry}}
-                        @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
-                IGNORE
-                {{#if entry.isIgnoring}}
-                  {{fa-icon "check"}}
-                {{/if}}
-              </UiButton>
-              <br>
+              <div class=" d-flex justify-between align-items-center">
+                <UiButton @type="success" @class="btn-timesheet" @onClick={{fn this.toggleEntryVerified entry}}
+                          @disabled={{entry.isSaving}}>
+                  {{#if entry.isVerified}}
+                    Un-Verify
+                  {{else}}
+                    YES
+                  {{/if}}
+                </UiButton>
+                <UiButton @type="danger" @class="btn-timesheet" @onClick={{fn this.markEntryIncorrect entry}}
+                          @disabled={{entry.isSaving}}>
+                  NO
+                  {{#if entry.isPending}}
+                    {{fa-icon "check"}}
+                  {{/if}}
+                </UiButton>
+                <UiButton @type="secondary"
+                          @class="btn-timesheet"
+                          @onClick={{fn this.ignoreEntry entry}}
+                          @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
+                  SKIP
+                  {{#if entry.isIgnoring}}
+                    {{fa-icon "check"}}
+                  {{/if}}
+                </UiButton>
+              </div>
               {{#if entry.isVerified}}
                 <span class="text-success">{{fa-icon "check"}} Entry has been successfully marked as correct.</span>
               {{else if entry.isPending}}
-                <span class="text-danger">{{fa-icon "check"}} A correction request has been successfully submitted.</span>
+                <span class="text-danger">{{fa-icon "check"}}
+                  A correction request has been successfully submitted.</span>
               {{else if entry.isIgnoring}}
                 Entry will be reviewed at a later time.
               {{else}}
