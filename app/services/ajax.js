@@ -19,4 +19,21 @@ export default class extends FetchService {
     }
     return headers;
   }
+
+  request(url, opts = {}) {
+    const data = opts?.data;
+    if (data) {
+      // Sanitize the parameters
+      const newData = {};
+      Object.keys(data).forEach((param) => {
+        const value = data[param];
+        if (value !== null && value !== undefined) {
+          newData[param] = value;
+        }
+      });
+      opts.data = newData;
+    }
+
+    return super.request(url, opts);
+  }
 }
