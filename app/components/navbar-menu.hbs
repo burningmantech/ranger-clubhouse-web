@@ -1,8 +1,9 @@
-<li class="nav-item dropdown {{if @isLarge "dropdown-large"}}">
-  <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">{{@title}}</a>
-  <div class="dropdown-menu">
-    <div class="dropdown-menu-container">
-      {{yield}}
-    </div>
+<@nav.dropdown class="{{if @isLarge "dropdown-large"}}" as |dd|>
+<dd.toggle>{{@title}} <span class="caret"></span></dd.toggle>
+<dd.menu as |menu|>
+  <div class="dropdown-menu-container">
+    {{yield menu}}
   </div>
-</li>
+</dd.menu>
+</@nav.dropdown>
+

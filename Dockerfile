@@ -4,13 +4,16 @@
 # Note we need a version of Node that is supported by ember-cli.
 # See: https://github.com/ember-cli/ember-cli/blob/master/docs/node-support.md
 #
-FROM node:14-alpine as development
+FROM node:16-alpine as development
 
 # Install Ember CLI
 # "unsafe-perm" step is a workaround for a bug.
 # See: https://github.com/npm/uid-number/issues/7
-RUN npm config set unsafe-perm true && npm install --global ember-cli && ember --version \
-    && npm install --global eslint && eslint --version;
+RUN npm config set unsafe-perm true && \
+    npm install --global ember-cli && \
+    ember --version && \
+    npm install --global eslint && \
+    eslint --version;
 
 # Set up build directory
 WORKDIR /build
@@ -35,7 +38,7 @@ RUN npm install && npm run lint:js && ember build --environment production;
 # -----------------------------------------------------------------------------
 # This stage builds the application container using Nginx
 # -----------------------------------------------------------------------------
-FROM nginx:1.15-alpine as application
+FROM nginx:1.21.6-alpine as application
 
 # Copy the application with dependencies from the build container
 COPY --from=build /build/dist /var/www/application/client

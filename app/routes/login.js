@@ -43,7 +43,7 @@ export default class LoginRoute extends ClubhouseRoute {
     return this.session.authenticate('authenticator:jwt', credentials)
        .catch((response) => {
         this.session.tempLoginToken = null;
-        if (response.status == 401) {
+        if (response.status === 401) {
           const data = response.json ? response.json : response.payload;
           return (data ? data.status : `Unknown error ${JSON.stringify(data)}`);
         } else {

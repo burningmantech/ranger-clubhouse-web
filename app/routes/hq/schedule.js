@@ -13,6 +13,7 @@ export default class HqScheduleRoute extends ClubhouseRoute {
       schedule: this.ajax.request(`person/${person_id}/schedule`,
         { data: { person_id, year, schedule_summary: 1, signup_permission: 1 } }),
       timesheets: this.store.query('timesheet', { person_id, year }),
+      milestones: this.ajax.request(`person/${person_id}/milestones`).then(({milestones}) => milestones),
     });
   }
 

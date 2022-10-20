@@ -7,7 +7,6 @@ import dayjs from 'dayjs';
 import {
   ACTION_NEEDED,
   AFTER_EVENT,
-  BEFORE_EVENT,
   COMPLETED,
   NOT_AVAILABLE,
   NOTE,
@@ -17,7 +16,6 @@ import {
   WAITING
 } from "clubhouse/constants/dashboard";
 import * as DashboardStep from 'clubhouse/constants/dashboard-steps';
-import TicketPackage from 'clubhouse/utils/ticket-package';
 
 const RESULT_PRIORITIES = {
   [URGENT]: 1,
@@ -31,94 +29,27 @@ const RESULT_PRIORITIES = {
 
 // See dashboard-steps.js for the definition of a step.
 
-function usingTicket(t) {
-  return (t && (t.isClaimed || t.isSubmitted));
-}
-
 class StepGroup {
   @tracked steps;
   @tracked title;
   @tracked isActive;
+  @tracked isUrgent;
 
-  constructor(title, steps, isActive) {
+  constructor(title, steps, isActive, isUrgent = false) {
     this.title = title;
     this.steps = steps;
     this.isActive = isActive;
+    this.isUrgent = isUrgent;
   }
 }
 
-function buildTickets(milestones, personId, house) {
-  const claimed = [];
-
-  const pkg = new TicketPackage(milestones.ticketing_package, personId, house);
-
-  pkg.tickets.forEach((t) => {
-    if (t.isClaimed || t.isSubmitted) {
-      claimed.push(t);
-    }
-  });
-
-  if (usingTicket(pkg.vehiclePass)) {
-    claimed.push(pkg.vehiclePass);
-  }
-
-  if (usingTicket(pkg.wap)) {
-    claimed.push(pkg.wap);
-  }
-
-  pkg.wapso.forEach((so) => claimed.push(so));
-
-  return {
-    claimed,
-    bankedCount: pkg.accessDocuments.filter((ad) => ad.isBanked).length,
-    qualifiedCount: pkg.accessDocuments.filter((ad) => (ad.isQualified && !(ad.isWAP || ad.isVehiclePass || ad.isEventRadio))).length,
-    notCriticalCount: pkg.accessDocuments.filter((ad) => (ad.isQualified && (ad.isWAP || ad.isVehiclePass || ad.isEventRadio))).length,
-    noAddress: !pkg.haveAddress,
-  };
-}
 
 const STEPS = [
   DashboardStep.UPLOAD_PHOTO,
   DashboardStep.PHOTO_APPROVAL,
   DashboardStep.MISSING_BPGUID,
   DashboardStep.VERIFY_TIMESHEETS,
-  {
-    name: 'Claim Tickets, Vehicle Passes, and Work Access Passes',
-    skipPeriod: AFTER_EVENT,
-    check({milestones, person, house}) {
-      const period = milestones.ticketing_period;
-
-      if (period !== 'open' || !milestones.ticketing_package) {
-        return {result: SKIP};
-      }
-
-      const tickets = buildTickets(milestones, person.id, house);
-
-      if (tickets.qualifiedCount
-        || tickets.noAddress
-        || tickets.notCriticalCount) {
-         return {
-          result: ACTION_NEEDED,
-          route: 'me.tickets',
-          immediate: (tickets.qualifiedCount || tickets.noAddress),
-          isTicketing: true,
-          ticketingOpen: true,
-          tickets
-        };
-      }
-
-      // stuff has been claimed..
-      return {
-        result: COMPLETED,
-        route: 'me.tickets',
-        isTicketing: true,
-        ticketingOpen: true,
-        tickets,
-        immediate: false, // move it down
-      };
-    }
-  },
-
+  DashboardStep.TICKETING_OPEN,
   DashboardStep.VERIFY_PERSONAL_INFO,
   DashboardStep.ONLINE_TRAINING,
   DashboardStep.SIGN_UP_FOR_TRAINING,
@@ -131,8 +62,12 @@ const STEPS = [
       const {art_trainings: arts} = milestones;
       const gd = arts.find((a) => a.is_green_dot_mentee);
 
-      if (!gd || gd.mentee_slot) {
+      if (!gd) {
         return {result: SKIP};
+      }
+
+      if (gd.mentee_slot) {
+        return {result: COMPLETED};
       }
 
       return {
@@ -171,14 +106,17 @@ const STEPS = [
     }
   },
 
-  DashboardStep.SIGN_UP_FOR_SHIFTS,
+  DashboardStep.SIGN_MOTORPOOL_AGREEMENT,
+  //DashboardStep.SIGN_BEHAVIORAL_AGREEMENT,
+  DashboardStep.SIGN_RADIO_CHECKOUT_AGREEMENT,
+  DashboardStep.VERIFY_TIMESHEETS_FINISHED,
 
   {
     name: 'Sign Up For & Attend Advanced Ranger Training (ART)',
     skipPeriod: AFTER_EVENT,
     check({milestones}) {
       const {art_trainings: arts} = milestones;
-      if (!arts.length || !milestones.online_training_enabled || !milestones.trainings_available)  {
+      if (!arts.length || !milestones.online_training_enabled || !milestones.trainings_available) {
         // For the case where dirt trainings are not available or online training is not available,
         // skip showing any ART info.
         return {result: SKIP};
@@ -208,22 +146,6 @@ const STEPS = [
     }
   },
 
-  DashboardStep.TAKE_STUDENT_SURVEY,
-
-  {
-    name: "Take a Trainer's Training Survey (optional)",
-    skipPeriod: AFTER_EVENT,
-    check({milestones}) {
-      if (milestones.surveys.trainers.length > 0) {
-        return {
-          result: ACTION_NEEDED,
-          message: 'Thank you for teaching. Please provide feedback on your fellow trainers:',
-          survey: 'trainer'
-        };
-      }
-      return {result: SKIP}; // Only show the step IF a survey is available (marked as passed training, and a survey has been created)
-    }
-  },
   {
     name: 'Sign up for a Burn Weekend shift (highly recommended)',
     skipPeriod: AFTER_EVENT,
@@ -253,6 +175,24 @@ const STEPS = [
     }
   },
 
+  DashboardStep.SIGN_UP_FOR_SHIFTS,
+  DashboardStep.TAKE_STUDENT_SURVEY,
+
+  {
+    name: "Take a Trainer's Training Survey (optional)",
+    skipPeriod: AFTER_EVENT,
+    check({milestones}) {
+      if (milestones.surveys.trainers.length > 0) {
+        return {
+          result: ACTION_NEEDED,
+          message: 'Thank you for teaching. Please provide feedback on your fellow trainers:',
+          survey: 'trainer'
+        };
+      }
+      return {result: SKIP}; // Only show the step IF a survey is available (marked as passed training, and a survey has been created)
+    }
+  },
+
   {
     name: 'Contact the Mentors to sign up for a Cheetah Cub shift',
     skipPeriod: AFTER_EVENT,
@@ -266,7 +206,7 @@ const STEPS = [
       }
 
       return {
-        result: ACTION_NEEDED,
+        result: milestones.online_training_passed ? URGENT : ACTION_NEEDED,
         message: 'Since you have not Rangered in a while, you will need to walk a Cheetah Cub shift before returning to Active status. Email the Mentor Cadre to sign up for one.',
         email: 'MentorEmail'
       };
@@ -296,87 +236,46 @@ const STEPS = [
   },
 
 
+  DashboardStep.TICKETING_CLOSED,
+
   {
-    name: 'Ticketing has closed',
-    period: BEFORE_EVENT,
-    check({milestones, house, person}) {
-      if (milestones.ticketing_period !== 'closed' || !milestones.ticketing_package) {
-        return {result: SKIP};
+    name: 'Sign the Sandman Affidavit',
+    skipPeriod: AFTER_EVENT,
+    check({milestones}) {
+      if (milestones.sandman_affidavit_signed) {
+        return {result: COMPLETED};
       }
 
+      // Person has passed Sandman training, still needs to sign stuff.
+      if (milestones.sandman_affidavit_unsigned) {
+        return {
+          result: URGENT,
+          immediate: true,
+          linkedMessage: {
+            route: 'me.agreements',
+            prefix: 'You have to digitally sign the Sandman Affidavit to be allowed to work a Sandman shift. Visit',
+            text: 'Me > Agreements',
+            suffix: 'to view and sign the affidavit.'
+          }
+        };
+      }
+
+      // Person is not a Sandperson, or has not completed training.
       return {
-        result: NOT_AVAILABLE,
-        isTicketing: true,
-        isTicketingClosed: true,
-        tickets: buildTickets(milestones, person.id, house),
+        result: SKIP
       };
     }
   },
-
-  DashboardStep.SIGN_MOTORPOOL_AGREEMENT,
-  //DashboardStep.SIGN_BEHAVIORAL_AGREEMENT,
-  DashboardStep.SIGN_RADIO_CHECKOUT_AGREEMENT,
-  DashboardStep.VERIFY_TIMESHEETS_FINISHED,
-
-  {
-    name: 'Submit Personal Vehicle Request(s)',
-    skipPeriod: AFTER_EVENT,
-    check({milestones}) {
-      if (!milestones.vehicle_requests_allowed) {
-        return {result: SKIP};
-      }
-
-      const vr = milestones.vehicle_requests;
-      if (vr.find((r) => r.status === 'approved')) {
-        return {
-          result: COMPLETED,
-          linkedMessage: {
-            route: 'me.vehicles',
-            prefix: 'Your vehicle request has been approved. Visit',
-            text: 'Me > Vehicle Requests',
-            suffix: 'for details.'
-          }
-        };
-      } else if (vr.find((r) => r.status === 'pending')) {
-        return {
-          result: WAITING,
-          linkedMessage: {
-            route: 'me.vehicles',
-            prefix: 'Your vehicle request is pending review. Visit',
-            text: 'Me > Vehicle Requests',
-            suffix: 'to adjust or delete your request.'
-          }
-        };
-
-      } else if (vr.find((r) => r.status === 'rejected')) {
-        return {
-          result: URGENT,
-          linkedMessage: {
-            route: 'me.vehicles',
-            prefix: 'Your vehicle request has been denied. Visit',
-            text: 'Me > Vehicle Requests',
-            suffix: 'for details.'
-          }
-        };
-      } else {
-        return {
-          result: ACTION_NEEDED,
-          linkedMessage: {
-            route: 'me.vehicles',
-            prefix: 'You have been approved to submit vehicle requests for driving stickers and other items. Visit',
-            text: 'Me > Vehicle Requests',
-            suffix: 'to submit a request.'
-          }
-        };
-      }
-    }
-  },
-];
+  DashboardStep.VEHICLE_REQUESTS
+ ];
 
 const NON_RANGER_STEPS = [
   DashboardStep.UPLOAD_PHOTO,
   DashboardStep.PHOTO_APPROVAL,
   DashboardStep.MISSING_BPGUID,
+  DashboardStep.TICKETING_OPEN,
+  DashboardStep.TICKETING_CLOSED,
+  DashboardStep.VEHICLE_REQUESTS,
   DashboardStep.VERIFY_TIMESHEETS,
   DashboardStep.VERIFY_PERSONAL_INFO,
   DashboardStep.SIGN_UP_FOR_SHIFTS,
@@ -405,21 +304,26 @@ export default class DashboardRangerComponent extends Component {
   @service session;
   @service house;
 
+  constructor() {
+    super(...arguments);
+    this.isAfterEvent = this.args.milestones.period === AFTER_EVENT;
+  }
+
   get serviceInfo() {
-    const { non_ranger_years, rangered_years} = this.args.years;
+    const {non_ranger_years, rangered_years} = this.args.years;
     const rangerYears = rangered_years.length, nonRangerYears = non_ranger_years.length;
 
-    if (!rangerYears  && !nonRangerYears) {
+    if (!rangerYears && !nonRangerYears) {
       return 'stopping by';
     }
 
-    const info =[];
+    const info = [];
     if (rangerYears) {
-      info.push(`rangering ${rangerYears} burn${rangerYears !== 1? 's' : ''}`);
+      info.push(`rangering ${rangerYears} burn${rangerYears !== 1 ? 's' : ''}`);
     }
 
     if (nonRangerYears) {
-      info.push(`volunteering ${nonRangerYears} year${nonRangerYears !== 1? 's' : ''}`);
+      info.push(`volunteering ${nonRangerYears} year${nonRangerYears !== 1 ? 's' : ''}`);
     }
 
     return info.join(' and for ');
@@ -428,19 +332,27 @@ export default class DashboardRangerComponent extends Component {
   get stepGroups() {
     const groups = [];
     const isAfterEvent = (this.args.milestones.period === AFTER_EVENT);
-    const {immediateSteps, steps} = this._processStepGroup(this.args.person.isNonRanger ? NON_RANGER_STEPS : STEPS);
+    const {
+      immediateSteps,
+      steps,
+      completed
+    } = this._processStepGroup(this.args.person.isNonRanger ? NON_RANGER_STEPS : STEPS);
 
     if (immediateSteps.length) {
-      groups.push(new StepGroup('Immediate Action Need', immediateSteps, true));
-    }
-
-    if (!steps.length) {
+      groups.push(new StepGroup('IMMEDIATE ACTION REQUIRED', immediateSteps, true, true));
+    } else if (!steps.length) {
       steps.push(isAfterEvent ? AFTER_EVENT_NO_MORE_THINGS_STEP : BEFORE_EVENT_NO_MORE_THINGS_STEP);
     }
 
-    groups.push(new StepGroup(isAfterEvent ? 'After Event Action Items' : 'Preparation For Playa', steps,
-      !immediateSteps.length
-    ));
+    if (!isAfterEvent || steps.length) {
+      groups.push(new StepGroup(isAfterEvent ? 'After Event Action Items' : 'Preparation For Playa', steps,
+        !immediateSteps.length
+      ));
+    }
+
+    if (completed.length) {
+      groups.push(new StepGroup('Completed', completed));
+    }
 
 
     groups[groups.length - 1].isLast = true;
@@ -453,7 +365,7 @@ export default class DashboardRangerComponent extends Component {
     const period = milestones.period;
     let haveAction = false;
 
-    const steps = [], immediateSteps = [];
+    const steps = [], immediateSteps = [], completed = [];
 
     checks.forEach((step) => {
       if ((step.period && step.period !== period)
@@ -474,7 +386,7 @@ export default class DashboardRangerComponent extends Component {
         check.email = config(check.email);
       }
 
-      if (check.result !== COMPLETED /*&& check.result !== OPTIONAL*/) {
+      if (check.result !== COMPLETED) {
         if (!haveAction || (check.result === ACTION_NEEDED || check.result === OPTIONAL || check.result === URGENT)) {
           check.isActive = true;
           haveAction = true;
@@ -483,6 +395,8 @@ export default class DashboardRangerComponent extends Component {
 
       if (check.immediate || step.immediate) {
         immediateSteps.push(check);
+      } else if (check.result === COMPLETED) {
+        completed.push(check);
       } else {
         steps.push(check);
       }
@@ -490,8 +404,9 @@ export default class DashboardRangerComponent extends Component {
 
     this._sortSteps(steps);
     this._sortSteps(immediateSteps);
+    this._sortSteps(completed);
 
-    return {steps, immediateSteps};
+    return {steps, immediateSteps, completed};
   }
 
   _sortSteps(steps) {

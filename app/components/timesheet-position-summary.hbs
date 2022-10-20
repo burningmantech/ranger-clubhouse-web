@@ -1,13 +1,17 @@
 <UiSection>
-  <:title>Position Summary (hours, credits)</:title>
+  <:title>{{@year}} Worked Positions Summary (hours, credits)</:title>
   <:body>
-    {{#each this.workedPositions as |position idx|~}}
-      {{~if idx ", "~}}
-      <span class="d-inline-block">
-        {{position.title}} ({{hour-minute-format position.duration}}, {{credits-format position.credits}})
-      </span>
-    {{~else}}
+    {{#if this.workedPositions}}
+      {{pluralize this.workedPositions.length "position"}} worked.
+      <div class="masonry-container masonry-col-4 masonry-hover mt-2">
+        {{#each this.workedPositions as |position|}}
+          <div class="masonry-item">
+            {{position.title}} ({{hour-minute-format position.duration}}, {{credits-format position.credits}})
+          </div>
+        {{/each}}
+      </div>
+    {{else}}
       No positions were worked.
-    {{~/each}}
+    {{/if}}
   </:body>
 </UiSection>

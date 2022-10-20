@@ -17,7 +17,6 @@ const CALLSIGN_SIGNUP_COLUMNS = [
   {key: 'first_name', title: 'First Name'},
   {key: 'last_name', title: 'Last Name'},
   {key: 'status', title: 'Status'},
-  {key: 'email', title: 'Email'}
 ]
 
 export default class ReportsScheduleByPositionController extends ClubhouseController {
@@ -83,12 +82,6 @@ export default class ReportsScheduleByPositionController extends ClubhouseContro
   @cached
   get positionOptions() {
     return this.viewPositions.map((p) => ({id: p.id, title: p.title}));
-  }
-
-  @action
-  toggleExpandAll() {
-    this.expandAll = !this.expandAll;
-    this.house.toggleAllAccordions(this.expandAll);
   }
 
   @action

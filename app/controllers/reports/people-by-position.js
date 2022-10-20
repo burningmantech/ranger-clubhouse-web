@@ -1,8 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import {action} from '@ember/object';
-import _ from 'lodash';
 import {tracked} from '@glimmer/tracking';
 import {DECEASED, AUDITOR, PAST_PROSPECTIVE, SUSPENDED} from "clubhouse/constants/person_status";
+import _ from 'lodash';
 
 class ViewPosition {
   @tracked expanded = false;
@@ -72,10 +71,5 @@ export default class PeopleByPositionController extends ClubhouseController {
   buildStatuses() {
     this.statuses = _.map(_.uniq(_.map(_.values(this.people), 'status')).sort(),
       (status) => new SelectChoice(status, status !== DECEASED && status !== AUDITOR && status !== PAST_PROSPECTIVE && status !== SUSPENDED));
-  }
-
-  @action
-  expandAllPositions(show) {
-    this.house.toggleAllAccordions(show);
   }
 }

@@ -1,0 +1,61 @@
+{{#if this.isLoading}}
+  <LoadingIndicator @text="Loading the ticket and provision progress"/>
+{{else}}
+  <UiSection>
+    <:title>{{fa-icon "ticket"}} Ticket Qualifications</:title>
+    <:body>
+      <p>
+        You may qualify for either a Reduced-Price Ticket (RPT) OR a Staff Credential (SC). If you do qualify for either
+        ticket type,
+        you will automatically qualify for a Vehicle Pass. Only one ticket type will be awarded. (i.e., if you qualify
+        for a SC, you will NOT receive a RPT as well.)
+      </p>
+      {{#unless this.items.staff_credential.has_earned}}
+        <PersonTicketsAndProvisionsItem @item={{this.items.rpt}} @name="Reduced Price Ticket"/>
+      {{/unless}}
+      <PersonTicketsAndProvisionsItem @item={{this.items.staff_credential}} @name="Staff Credential"/>
+    </:body>
+  </UiSection>
+  <UiSection>
+    <:title>{{fa-icon "utensils"}} Meal Pass Qualifications</:title>
+    <:body>
+      <p>
+        The Event Week Eat Pass allows you to eat at the commissary during the event week ONLY.
+        The All-Eat Meal Pass allows you to eat at the commissary during the pre-event, event, and post-event periods.
+        Both passes are good for 3 meals per day. Only one meal pass will be awarded. (i.e., if you qualify
+        for an All-Eat meal pass, you will NOT receive an Event Week meal pass as well.)
+      </p>
+      {{#unless this.items.all_eats.has_earned}}
+        <PersonTicketsAndProvisionsItem @item={{this.items.event_week_eats}}
+                                        @name="Event Week Eat Pass"
+                                        @eventWeek={{true}}
+                                        @subtext="The Event Week Eat Pass qualification is based off Event Week hours ONLY."/>
+      {{/unless}}
+      <PersonTicketsAndProvisionsItem @item={{this.items.all_eats}}
+                                      @name="All-Eat Meal Pass"
+                                      @subtext="The All-Eat Meal Pass Qualification can be met with any hours worked in the Pre-Event, Event Week, or Post-Event periods."
+      />
+
+    </:body>
+  </UiSection>
+  <UiSection>
+    <:title>{{fa-icon "shower"}} Wet Spot Qualifications</:title>
+    <:body>
+      <p>
+        Both Wet Spot access and pog qualifications are based on Event Week hours only.
+      </p>
+      <p>
+        The Wet Spot is the Burning Man volunteer &amp; staff shower facility located on 5:30 towards the DPW Depot. For
+        every {{this.items.shower_pog.threshold}} hours worked during the event week, you may receive a single-use
+        shower pog only good for the current event. The Wet Spot Access qualification allows daily access to facility
+        for the NEXT event.
+      </p>
+      <PersonTicketsAndProvisionsItem @item={{this.items.shower_pog}}
+                                      @eventWeek={{true}}
+                                      @name="Wet Spot Pog for THIS event"/>
+      <PersonTicketsAndProvisionsItem @item={{this.items.shower_access}}
+                                      @eventWeek={{true}}
+                                      @name="Wet Spot Access for NEXT event"/>
+    </:body>
+  </UiSection>
+{{/if}}

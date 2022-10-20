@@ -1,0 +1,88 @@
+<TicketSection @id="provisions"
+               @nextAction={{@nextSection}}
+               @nextDisabled={{this.needAnswer}}
+               @toggleCard={{@toggleCard}}
+               @showing={{@showing}}>
+  <:title>
+    Provisions
+    {{#if this.allocatedProvisions}}
+      <TicketSectionStatus @status="qualified" @text="{{pluralize this.jobItems.length "item"}} will be used"/>
+    {{else if this.allBankedItems}}
+      <TicketSectionStatus @status="banked" @text="{{pluralize this.bankedItems.length "item"}} banked"/>
+    {{else}}
+      <TicketSectionStatus @status="qualified" @text="{{pluralize this.totalItems.length "item"}} will be used"/>
+    {{/if}}
+  </:title>
+  <:body>
+    {{#if this.allocatedProvisions}}
+      <p>
+        <b>The following allocated provisions (items granted to you for upcoming Ranger work) and any qualified provisions (items earned from previous events) will be used:</b><br>
+      </p>
+      <ul>
+        {{#each this.jobItems as |item|}}
+          <li>
+            {{item.typeLabelWithCounts}}
+            {{#if item.earned_as_well}}
+              (allocated &amp; qualified)
+            {{else if item.is_allocated}}
+              (allocated)
+            {{else}}
+              (qualified)
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else if this.bankedItems}}
+      <p>
+        <b>You have chosen to bank the following {{pluralize this.bankedItems.length "provision"}}:</b>
+      </p>
+      <ul>
+        {{#each this.bankedItems as |item|}}
+          <li>{{item.typeLabel}} expiring after {{mdy-format item.expiry_date full=true}}</li>
+        {{/each}}
+      </ul>
+      <UiButton @class="btn-responsive" @onClick={{fn this.updateItems "claim"}} @disabled={{@isSubmitting}}>
+        Use the provision(s) for this event
+        {{#if @isSavingDocumentStatus}}
+          <SpinIcon/>
+        {{/if}}
+      </UiButton>
+    {{else if this.earnedProvisions}}
+      <p>
+        <b>Unless you state otherwise, the following earned {{pluralize this.earnedProvisions.length "provision"}}
+          will automatically be used for this event:</b>
+      </p>
+      <ul>
+        {{#each this.earnedProvisions as |item|}}
+          <li>
+            {{item.typeLabelWithCounts}}
+           </li>
+        {{/each}}
+      </ul>
+      <p>
+        You may bank the provision(s) to use in a future event if you are taking
+        this year off or are planning to have a "light" Ranger schedule.
+      </p>
+      <UiButton @class="btn-responsive" @onClick={{fn this.updateItems "bank"}} @disabled={{@isSubmitting}}>
+        Bank the provision(s)
+        {{#if @isSavingDocumentStatus}}
+          <SpinIcon/>
+        {{/if}}
+      </UiButton>
+    {{/if}}
+    {{#if this.submittedItems}}
+      <p class="mt-2">
+        The follow provisions have been submitted for processing and may not be adjusted through the Clubhouse.
+      </p>
+      <ul>
+        {{#each this.submittedItems as |item|}}
+          <li>{{item.typeLabel}} - SUBMITTED</li>
+        {{/each}}
+      </ul>
+      <p>
+        Contact the Ranger Ticketing Team if you have questions or concerns.
+        {{mail-to @ticketingInfo.ranger_ticketing_email}}
+      </p>
+    {{/if}}
+  </:body>
+</TicketSection>

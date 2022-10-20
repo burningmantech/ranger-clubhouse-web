@@ -1,210 +1,245 @@
 <main>
   <h1>Export {{this.year}} BMIDs To Marcato</h1>
-  <div class="mt-2">
-    Navigation:
-    <LinkTo @route="vc.bmid-sanity-check" class="ms-2">
+  <nav class="nav">
+    <div class="nav-text">Navigation:</div>
+    <LinkTo @route="vc.bmid-sanity-check" class="nav-link">
       {{fa-icon "user-check"}} Sanity Check
     </LinkTo>
-    <LinkTo @route="vc.bmid" class="ms-2">
+    <LinkTo @route="vc.bmid" class="nav-link">
       {{fa-icon "edit"}} Manage BMIDs
     </LinkTo>
-    <a href="#export-list" class="ms-2">Jump to export list</a>
-  </div>
-  <FormRow>
-    <FormLabel @auto={{true}}>Filter:</FormLabel>
-    <div class="col-auto">
-      <ChForm::Select @name="filter" @value={{this.filter}}
-                      @options={{this.filterOptions}}
-                      @onChange={{action (mut this.filter)}}
-                      @fieldSize="sm"
-                      @disabled={{this.isRendering}} />
-    </div>
-    <div class="col-auto">
-      <div class="input-group">
-        <label class="me-1">Callsign, title, team, notes filter:</label>
-        <Input @type="text" @value={{this.textFilterInput}} class="form-control form-control-sm ms-2"
-               @enter={{action this.textFilterAction}} disabled={{this.isRendering}} />
-        <UiButton @size="sm" @class="ms-1" @onClick={{this.textFilterAction}} @disabled={{this.isRendering}}>
-          Filter
-        </UiButton>
-        <UiButton @type="secondary" @size="sm" @class="ms-1" @onClick={{this.clearTextFilterAction}}
-                  @disabled={{this.isRendering}}>
-          Clear
-        </UiButton>
-      </div>
-      {{#if this.textFilterError}}
-        <div class="text-danger">{{this.textFilterError}}</div>
-      {{/if}}
-      <div class="text-muted small">Regular Expression allowed</div>
-    </div>
-  </FormRow>
+    <a href="#export-list" class="nav-link">Jump to previous exports</a>
+  </nav>
+  <UiSection>
+    <:title>Export Selected BMIDs</:title>
+    <:body>
+      <FormRow>
+        <FormLabel @auto={{true}}>Filter:</FormLabel>
+        <div class="col-auto">
+          <ChForm::Select @name="filter" @value={{this.filter}}
+                          @options={{this.filterOptions}}
+                          @onChange={{action (mut this.filter)}}
+                          @fieldSize="sm"
+                          @disabled={{this.isRendering}} />
+        </div>
+        <div class="col-auto">
+          <div class="input-group">
+            <label class="me-1">Callsign, title, team, notes filter:</label>
+            <Input @type="text" @value={{this.textFilterInput}} class="form-control form-control-sm ms-2"
+                   @enter={{action this.textFilterAction}} disabled={{this.isRendering}} />
+            <UiButton @size="sm" @class="ms-1" @onClick={{this.textFilterAction}} @disabled={{this.isRendering}}>
+              Filter
+            </UiButton>
+            <UiButton @type="secondary" @size="sm" @class="ms-1" @onClick={{this.clearTextFilterAction}}
+                      @disabled={{this.isRendering}}>
+              Clear
+            </UiButton>
+          </div>
+          {{#if this.textFilterError}}
+            <div class="text-danger">{{this.textFilterError}}</div>
+          {{/if}}
+          <div class="text-muted small">Regular Expression allowed</div>
+        </div>
+      </FormRow>
 
-  <p class="mt-4">
+      <p class="mt-4">
     <span class="d-inline">
       Total BMIDs: {{this.totalBmids}}
     </span>
-    <span class="d-inline {{if this.doNotPrint "text-danger"}}">
+        <span class="d-inline {{if this.doNotPrint "text-danger"}}">
       Do Not Print: {{this.doNotPrint.length}}
     </span>
-    <span class="d-inline {{if this.issues "text-danger"}}">
+        <span class="d-inline {{if this.issues "text-danger"}}">
       Issues: {{this.issues.length}}
     </span>
-    <span class="d-inline {{if this.unusualStatus "text-danger"}}">
+        <span class="d-inline {{if this.noPhoto.length "text-danger"}}">
+      No Photo: {{this.noPhoto.length}}
+    </span>
+        <span class="d-inline {{if this.unusualStatus "text-danger"}}">
       Unusual Person Status: {{this.unusualStatus.length}}
     </span>
-    <span class="d-inline">
+        <span class="d-inline">
       Printed: {{this.printed.length}}
     </span>
-    <span class="d-inline">
+        <span class="d-inline">
       Submitted: {{this.submitted.length}}
     </span>
-  </p>
+      </p>
 
-  {{#if this.doNotPrint}}
-    <div class="border p-2">
-      Do Not Print:
-      {{#each this.doNotPrint as |bmid idx|~}}
-        {{~if idx ","}}
-        <PersonLink @person={{bmid.person}} />
-      {{/each}}
-    </div>
-  {{/if}}
+      {{#if this.doNotPrint}}
+        <div class="border p-2">
+          <b class="text-danger">Do not print:</b>
+          {{#each this.doNotPrint as |bmid idx|~}}
+            {{~if idx ", "}}
+            <PersonLink @person={{bmid.person}} />
+          {{/each}}
+        </div>
+      {{/if}}
 
-  {{#if this.issues}}
-    <div class="border p-2 my-2">
-      Issues:
-      {{#each this.issues as |bmid idx|~}}
-        {{~if idx ","}}
-        <PersonLink @person={{bmid.person}} />
-      {{/each}}
-    </div>
-  {{/if}}
+      {{#if this.issues}}
+        <div class="border p-2 my-2">
+          <b class="text-danger">Issues:</b>
+          {{#each this.issues as |bmid idx|~}}
+            {{~if idx ", "}}
+            <PersonLink @person={{bmid.person}} />
+          {{/each}}
+        </div>
+      {{/if}}
 
-  {{#if this.unusualStatus}}
-    <div class="border p-2 my-2">
-      Unusual Status:
-      {{#each this.unusualStatus as |bmid idx|~}}
-        {{~if idx ","}}<span class="d-inline-block"><PersonLink @person={{bmid.person}} />
+      {{#if this.unusualStatus}}
+        <div class="border p-2 my-2">
+          Unusual Status:
+          {{#each this.unusualStatus as |bmid idx|~}}
+            {{~if idx ","}}<span class="d-inline-block"><PersonLink @person={{bmid.person}} />
         ({{bmid.person.status}})</span>
-      {{/each}}
-    </div>
-  {{/if}}
+          {{/each}}
+        </div>
+      {{/if}}
 
-  <div class="mt-2">
-    Showing {{this.viewBmids.length}} of {{this.bmids.length}} ({{this.bmidsSelectedCount}} selected)
-    {{#if this.textFilter}}
-      <span class="ms-2 font-weight-bold">Text filtering by "{{this.textFilter}}"</span>
-    {{/if}}
-  </div>
-  <table class="table table-sm table-striped">
-    <thead>
-    <tr>
-      <th>{{fa-icon "check"}}</th>
-      <th>Status</th>
-      <th>Callsign / Name</th>
-      <th>Title 1</th>
-      <th>Title 2</th>
-      <th>Title 3</th>
-      <th>MVR</th>
-      <th>Showers</th>
-      <th>Meals</th>
-      <th>WAP</th>
-      <th>Note</th>
-    </tr>
-    </thead>
+      {{#if this.noPhoto}}
+        <div class="border p-2 my-2">
+          <b class="text-danger">No approved photo:</b>
+          {{#each this.noPhoto as |bmid idx|~}}
+            {{~if idx ","}}<span class="d-inline-block"><PersonLink @person={{bmid.person}} />
+        ({{bmid.person.status}})</span>
+          {{/each}}
+          <br>
+          The BMID(s) without approved photos are listed below however have not been selected.
+        </div>
+      {{/if}}
+      <div class="mt-2">
+        Showing {{this.viewBmids.length}} of {{this.bmids.length}} ({{this.bmidsSelectedCount}} selected)
+        {{#if this.textFilter}}
+          <span class="ms-2 font-weight-bold">Text filtering by "{{this.textFilter}}"</span>
+        {{/if}}
+      </div>
+      <table class="table table-sm table-striped">
+        <thead>
+        <tr>
+          <th>{{fa-icon "check"}}</th>
+          <th>Status</th>
+          <th>Callsign / Name</th>
+          <th>Title 1</th>
+          <th>Title 2</th>
+          <th>Title 3</th>
+          <th>MVR</th>
+          <th>Showers</th>
+          <th>Meals</th>
+          <th>WAP</th>
+          <th>Note</th>
+        </tr>
+        </thead>
 
-    <tbody>
-    {{#each this.viewBmids as |bmid|}}
-      <tr class="{{if (eq bmid.status "failed") "bg-danger"}}">
-        <td><Input @type="checkbox" @checked={{bmid.selected}} {{on "change" (fn this.toggleBmid bmid)}}/></td>
-        <td class="no-wrap">{{bmid.statusHuman}}</td>
-        <td class="no-wrap">
-          {{bmid.person.callsign}}<br>
-          {{bmid.person.first_name}} {{bmid.person.last_name}}
-        </td>
-        <td class="no-wrap">
-          <PresentOrNot @value={{bmid.title1}} @empty="-"/>
-        </td>
-        <td class="no-wrap">
-          <PresentOrNot @value={{bmid.title2}} @empty="-"/>
-        </td>
-        <td class="no-wrap">
-          <PresentOrNot @value={{bmid.title3}} @empty="-"/>
-        </td>
-        <td class="text-center">{{if bmid.org_vehicle_insurance "M" "-"}}</td>
-        <td class="text-center">
-          {{if bmid.showers "S" "-"}}
-          {{#if bmid.want_showers}}
-            <div class="text-success align-middle">{{fa-icon "plus-circle"}} S</div>
-          {{/if}}
-        </td>
-        <td>
-          {{bmid.mealsHuman}}
-          {{#if bmid.want_meals}}
-            <div class="text-success">{{fa-icon "plus-circle"}} {{bmid.want_meals}}</div>
-          {{/if}}
-        </td>
-        <td class="w-10">
-          {{#if bmid.wapMissing}}
-            <strong class="text-danger">missing</strong>
-          {{else}}
-            {{bmid.admissionDateShort}}
-          {{/if}}
-        </td>
-        <td>{{nl2br bmid.notes}}</td>
-      </tr>
-    {{/each}}
-    </tbody>
-  </table>
+        <tbody>
+        {{#each this.viewBmids as |bmid|}}
+          <tr class="{{if (eq bmid.status "failed") "bg-danger"}}">
+            <td><Input @type="checkbox" @checked={{bmid.selected}} {{on "change" (fn this.toggleBmid bmid)}}/></td>
+            <td>
+              {{bmid.statusHuman}}
+              {{#unless bmid.has_approved_photo}}
+                <div class="text-danger">{{fa-icon "eye" color="danger"}} NO APPROVED PHOTO</div>
+              {{/unless}}
+            </td>
+            <td class="no-wrap">
+              {{bmid.person.callsign}}<br>
+              {{bmid.person.first_name}} {{bmid.person.last_name}}
+            </td>
+            <td class="no-wrap">
+              <PresentOrNot @value={{bmid.title1}} @empty="-"/>
+            </td>
+            <td class="no-wrap">
+              <PresentOrNot @value={{bmid.title2}} @empty="-"/>
+            </td>
+            <td class="no-wrap">
+              <PresentOrNot @value={{bmid.title3}} @empty="-"/>
+            </td>
+            <td class="text-center">{{if bmid.org_vehicle_insurance "M" "-"}}</td>
+            <td class="text-center">
+              {{#if bmid.allocated_showers}}
+                <AllocatedProvisionIcon/>
+              {{/if}}
+              {{#if bmid.earned_showers}}
+                <EarnedProvisionIcon/>
+              {{/if}}
+              {{if bmid.effectiveShowers "S" "-"}}
+            </td>
+            <td>
+              {{#if bmid.allocated_meals}}
+                <AllocatedProvisionIcon/>
+              {{/if}}
+              {{#if bmid.earned_meals}}
+                <EarnedProvisionIcon/>
+              {{/if}}
+              {{bmid.effectiveMealsHuman}}
+            </td>
+            <td class="w-10">
+              {{#if bmid.wapMissing}}
+                <strong class="text-danger">missing</strong>
+              {{else}}
+                {{bmid.admissionDateShort}}
+              {{/if}}
+            </td>
+            <td>{{nl2br bmid.notes}}</td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="11"><b class="text-danger">No BMID records found.</b></td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
 
-  <h3>Export Selected BMIDs</h3>
+      <ChForm @formId="batch" @formFor={{this.batchForm}} @onSubmit={{this.exportAction}} as |f|>
+        <FormRow>
+          <f.text @name="batchInfo"
+                  @label="Batch Information"
+                  @size={{32}}
+                  @maxlength={{32}}
+                  @hint="Examples: 'Batch #1, specials' or 'Batch #2, special stragglers', or 'Batch #3, alphas', etc. Your callsign and the current date/time will automatically be appended."
+          />
+        </FormRow>
+        <p>
+          You will be asked to confirm the operation after clicking below.
+        </p>
+        <f.submit @label="Download Export & Mark As Submitted"
+                  @disabled={{or this.isSubmitting (not this.bmidsSelectedCount)}} />
+      </ChForm>
 
-  <ChForm @formId="batch" @formFor={{this.batchForm}} @onSubmit={{this.exportAction}} as |f|>
-    <FormRow>
-      <f.text @name="batchInfo"
-               @label="Batch Information"
-               @size={{32}}
-               @maxlength={{32}}
-               @hint="Example batch info might be 'Batch #1, specials' or 'Batch #2, special stragglers', or 'Batch #3, alphas', etc. The Clubhouse will automatically add
-your name and the date and time you submitted to Lambase."
-      />
-    </FormRow>
-    <p>
-      You will be asked to confirm the operation after clicking below.
-    </p>
-    <f.submit @label="Download Export & Mark As Submitted"
-              @disabled={{or this.isSubmitting (not this.bmidsSelectedCount)}} />
-  </ChForm>
-
-  <table id="export-list" class="table table-striped table-hover table-width-auto mt-2">
-    <caption>Previous exports</caption>
-    <thead>
-    <tr>
-      <th>Zip Archive</th>
-      <th>Batch Info</th>
-      <th>BMID Count</th>
-      <th>Exported By</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each this.exportList as |export|}}
-      <tr>
-        <td>
-          <a href="{{export.filename_url}}" download>{{export.filename}}</a>
-        </td>
-        <td>
-          <PresentOrNot @value={{export.batch_info}} @empty="-"/>
-        </td>
-        <td class="text-end">
-          {{export.person_ids.length}}
-        </td>
-        <td>
-          {{export.person.callsign}}
-        </td>
-      </tr>
-    {{/each}}
-    </tbody>
-  </table>
+    </:body>
+  </UiSection>
+  <UiSection id="export-list">
+    <:title>Previous Exports</:title>
+    <:body>
+      <table class="table table-striped table-hover table-width-auto mt-2">
+        <thead>
+        <tr>
+          <th>Zip Archive</th>
+          <th>Batch Info</th>
+          <th>BMID Count</th>
+          <th>Exported By</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.exportList as |export|}}
+          <tr>
+            <td>
+              <a href="{{export.filename_url}}" download>{{export.filename}}</a>
+            </td>
+            <td>
+              <PresentOrNot @value={{export.batch_info}} @empty="-"/>
+            </td>
+            <td class="text-end">
+              {{export.person_ids.length}}
+            </td>
+            <td>
+              {{export.person.callsign}}
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </:body>
+  </UiSection>
 </main>
 
 {{#if this.isExporting}}

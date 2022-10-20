@@ -1,13 +1,14 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import { action, set } from '@ember/object';
-import { isEmpty } from '@ember/utils';
-import { tracked } from '@glimmer/tracking';
-import { schedule } from '@ember/runloop';
+import {action} from '@ember/object';
+import {isEmpty} from '@ember/utils';
+import {tracked} from '@glimmer/tracking';
+import {later, schedule} from '@ember/runloop';
 
 export default class MentorAssignmentController extends ClubhouseController {
   @tracked isPrinting = false;
   @tracked isSubmitting = false;
   @tracked filter = 'all';
+  @tracked isRendering = false;
 
   statusOptions = [
     'pending',
@@ -36,35 +37,35 @@ export default class MentorAssignmentController extends ClubhouseController {
       filter = this.filter;
 
     switch (filter) {
-    case 'signed-in':
-      return alphas.filter((a) => a.on_alpha_shift);
+      case 'signed-in':
+        return alphas.filter((a) => a.on_alpha_shift);
 
-    case 'pending':
-      return alphas.filter((a) => (a.mentor_status === 'pending' && a.mentors[0].mentor_id > 0));
+      case 'pending':
+        return alphas.filter((a) => (a.mentor_status === 'pending' && a.mentors[0].mentor_id > 0));
 
-    case 'passed':
-      return alphas.filter((a) => (a.mentor_status === 'pass'));
+      case 'passed':
+        return alphas.filter((a) => (a.mentor_status === 'pass'));
 
-    case 'bonked':
-      return alphas.filter((a) => (a.mentor_status === 'bonked' || a.mentor_status === 'self-bonk'));
+      case 'bonked':
+        return alphas.filter((a) => (a.mentor_status === 'bonked' || a.mentor_status === 'self-bonk'));
 
-    default:
-      return alphas;
+      default:
+        return alphas;
     }
   }
 
   @action
   saveAlphas() {
     const assignments = [];
-    let haveErrors = false;
+    let errors = 0;
 
     this.alphas.forEach((person) => {
-      set(person, 'error', null);
+      person.error = null;
       const mentors = [];
 
       person.mentors.forEach((mentor) => {
         if (!isEmpty(mentor.mentor_id)) {
-           mentors.push(mentor.mentor_id);
+          mentors.push(mentor.mentor_id);
         }
       });
 
@@ -78,15 +79,16 @@ export default class MentorAssignmentController extends ClubhouseController {
 
       // Check for duplicate assignment
       const guides = person.mentors;
-      if ((guides[0].mentor_id && (guides[0].mentor_id == guides[1].mentor_id || guides[0].mentor_id == guides[2].mentor_id)) ||
-        (guides[1].mentor_id && guides[1].mentor_id == guides[2].mentor_id)) {
-        haveErrors = true;
-        set(person, 'error', `${person.callsign} has duplicate mentor assignments`);
+
+      if ((guides[0].mentor_id && (guides[0].mentor_id === guides[1].mentor_id || guides[0].mentor_id === guides[2].mentor_id))
+        || (guides[1].mentor_id && guides[1].mentor_id === guides[2].mentor_id)) {
+        errors++;
+        person.error = `${person.callsign} has duplicate mentor assignments`;
       }
     });
 
-    if (haveErrors) {
-      this.toast.error("One or more errors occurred.");
+    if (errors) {
+      this.toast.error(`${errors} duplicate mentor assignments encountered.`);
       schedule('afterRender', () => {
         this.house.scrollToElement('.is-invalid');
       });
@@ -95,35 +97,53 @@ export default class MentorAssignmentController extends ClubhouseController {
     }
 
     if (!assignments.length) {
-      this.modal.info(null, "No alphas/mentor assignments were found. Perhaps you marked a PNV as passed or failed without assigning mentors?");
+      this.modal.info(null, "No alphas/mentor assignments were found. Perhaps you marked an Alpha as passed or failed without assigning mentors?");
       return;
     }
 
     this.isSubmitting = true;
-    this.ajax.request('mentor/mentor-assignment', { method: 'POST', data: { assignments } }).then(({ assignments }) => {
+    this.ajax.request('mentor/mentor-assignment', {method: 'POST', data: {assignments}})
+      .then(({assignments}) => {
         assignments.forEach((assignment) => {
-          const person = this.alphas.find((p) => assignment.person_id == p.id);
+          const person = this.alphas.find((p) => assignment.person_id === p.id);
 
           if (!person) {
             return;
           }
 
-          set(person, 'mentors', assignment.mentors);
+          person.mentors = assignment.mentors;
 
           // pad out the mentor assignment
           for (let i = assignment.mentors.length; i < 3; i++) {
-            person.mentors.push({ mentor_id: null });
+            person.mentors.push({mentor_id: null});
           }
 
         });
         this.toast.success('Assignments successfully saved.');
         this.house.scrollToTop();
       }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() =>this.isSubmitting = false);
+      .finally(() => this.isSubmitting = false);
+  }
+
+  @action
+  updateFilter(value) {
+    this.isRendering = true;
+    later(this, () => {
+      this.filter = value;
+      schedule('afterRender', () => this.isRendering = false);
+    }, 500);
   }
 
   @action
   togglePrinting() {
     this.isPrinting = !this.isPrinting;
+  }
+
+  selectClass(person) {
+    let name = 'form-select form-select-sm';
+    if (!isEmpty(person.error)) {
+      name += ' is-invalid';
+    }
+    return name;
   }
 }

@@ -6,30 +6,48 @@
   {{else if @step.tickets.claimed}}
     You have claimed {{pluralize @step.tickets.claimed.length "item"}}:
     <ul>
-      {{#each @step.tickets.claimed as |ticket|}}
+      {{#each @step.tickets.claimed as |item|}}
         <li>
-          {{#if ticket.isWAPSO}}
-            {{pluralize ticket.personCount "Significant Other WAP"}} for: {{ticket.names}}
-          {{else if ticket.isWAP}}
-            A Work Access Pass for yourself
+          {{#if item.isWAPSO}}
+            Significant Other WAP for: <i>{{item.name}}</i>
+          {{else if item.isWAP}}
+            Work Access Pass for yourself
           {{else}}
-            A {{ticket.typeLabel}} {{if ticket.isStaffCredential "which is also your WAP"}}
+            {{item.typeLabel}} {{if item.isStaffCredential "which is also your WAP"}}
           {{/if}}
         </li>
       {{/each}}
+      {{#each @step.tickets.provisions.claimed as |item|}}
+        {{item.typeLabelWithCounts}}
+        {{#if item.earned_as_well}}
+          (allocated &amp; qualified)
+        {{else if item.is_allocated}}
+          (allocated)
+        {{else}}
+          (qualified)
+        {{/if}}
+      {{/each}}
     </ul>
   {{else}}
-    <span class="text-danger">No items have been claimed.</span>
+    <span class="text-danger">No tickets have been claimed.</span>
   {{/if}}
 </div>
 
 {{#if @step.tickets.banked}}
   <div class="mt-1">
-    {{pluralize @step.tickets.banked.length "item"}} {{if (eq @step.tickets.banked.length 1) "is" "are"}} banked.
+    {{pluralize @step.tickets.banked.length "item"}}
+    {{if (eq @step.tickets.banked.length 1) "is" "are"}} banked.
+  </div>
+{{/if}}
+{{#if @step.tickets.provisions.banked}}
+  <div class="mt-1">
+    {{pluralize @step.tickets.provisions.banked.length "provision"}}
+    {{if (eq @step.tickets.provisions.banked.length 1) "is" "are"}} banked.
   </div>
 {{/if}}
 <div class="mt-1">
-  Visit <LinkTo @route="me.tickets">Me &gt; Tickets &amp; Stuff</LinkTo>
+  Visit
+  <LinkTo @route="me.tickets">Me &gt; Tickets &amp; Stuff</LinkTo>
   {{#if @step.ticketingOpen}}
     to claim or adjust your item(s).
   {{else}}

@@ -51,50 +51,42 @@
   <UiSection>
     <:title>Check Handle Results</:title>
     <:body>
-      <FormRow>
-        {{#each this.checkedHandles as |checked|}}
-          <div class="check-result-card card" id="check-result-{{checked.id}}">
-            <details open>
-              <summary class="card-header">
-                {{checked.name}} ({{checked.conflicts.length}})
-              </summary>
-              {{#each checked.conflicts as |conflict index|}}
-                <div class="card">
-                  <div class="card-header conflict-priority-{{conflict.priority}} conflict-rule-{{conflict.ruleId}}">
-                    {{! template-lint-disable no-nested-interactive}}
-                    <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#conflict-detail-{{checked.id}}-{{index}}">
-                      {{conflict.description}}
-                    </button>
-                  </div>
-                  <div id="conflict-detail-{{checked.id}}-{{index}}" class="collapse">
-                    <div class="card-body">
-                      {{get this.ruleNames conflict.ruleId}}, {{conflict.priority}} priority
-                      {{#if conflict.conflictingHandle}}
-                        {{#let conflict.conflictingHandle as |handle|}}
-                          {{#if handle.personId}}
-                            <LinkTo @route="person.index" @model={{handle.personId}}
-                                    target="_blank" rel="noopener noreferrer">
-                              {{handle.entityType}} {{handle.name}}
-                            </LinkTo>
-                          {{else}}
-                            {{handle.entityType}} {{handle.name}}
-                          {{/if}}
-                          {{#if handle.personVintage}}(vintage){{/if}}
-                        {{/let}}
-                      {{/if}}
-                    </div>
-                  </div>
+      {{#each this.checkedHandles as |checked|}}
+        <UiAccordion @isInitOpen={{true}} class="d-inline-block align-top" as |accordion|>
+          <accordion.title>{{checked.name}} ({{checked.conflicts.length}})</accordion.title>
+          <accordion.body>
+            {{#each checked.conflicts as |conflict|}}
+              <div class="card">
+                <div class="card-header">
+                  <button class="btn btn-link" type="button" {{action this.toggleConflict conflict}}>
+                    {{conflict.description}}
+                  </button>
                 </div>
-              {{/each}}
-            </details>
-          </div>
-        {{else}}
-          <div class="my-2">
-            No handles checked yet.
-          </div>
-        {{/each}}
-      </FormRow>
+                <BsCollapse @collapsed={{conflict.isCollapsed}} @transitionDuration={{100}} class="card-body">
+                  {{get this.ruleNames conflict.ruleId}}, {{conflict.priority}} priority
+                  {{#if conflict.conflictingHandle}}
+                    {{#let conflict.conflictingHandle as |handle|}}
+                      {{#if handle.personId}}
+                        <LinkTo @route="person.index" @model={{handle.personId}}
+                                target="_blank" rel="noopener noreferrer">
+                          {{handle.entityType}} {{handle.name}}
+                        </LinkTo>
+                      {{else}}
+                        {{handle.entityType}} {{handle.name}}
+                      {{/if}}
+                      {{#if handle.personVintage}}(vintage){{/if}}
+                    {{/let}}
+                  {{/if}}
+                </BsCollapse>
+              </div>
+            {{/each}}
+          </accordion.body>
+        </UiAccordion>
+      {{else}}
+        <div class="my-2">
+          No handles checked yet.
+        </div>
+      {{/each}}
     </:body>
   </UiSection>
 

@@ -14,42 +14,42 @@
 </p>
 <div class="max-width-900">
   {{#each this.people key="id" as |person|}}
-    <ChAccordion id="person-{{person.id}}" as |accordion|>
+    <UiAccordion id="person-{{person.id}}" as |accordion|>
       <accordion.title>{{person.callsign}} &lt;{{person.status}}&gt;</accordion.title>
       <accordion.body>
-        <p>
-          <LinkTo @route="person.index" @model={{person.id}}>
-            View {{person.callsign}}
-          </LinkTo>
-          |
-          <LinkTo @route="person.timesheet" @model={{person.id}} @query={{hash year=this.year}}>
-            View {{this.year}} Timesheet
-          </LinkTo>
-        </p>
-        <table class="table table-striped table-hover table-width-auto">
-          <thead>
-          <tr>
-            <th>From</th>
-            <th>To</th>
-            <th>Description</th>
-            <th>Position</th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#each person.slots key="id" as |slot|}}
+        {{#if accordion.isOpen}}
+          <p>
+            <LinkTo @route="person.index" @model={{person.id}}>
+              View {{person.callsign}}
+            </LinkTo>
+            |
+            <LinkTo @route="person.timesheet" @model={{person.id}} @query={{hash year=this.year}}>
+              View {{this.year}} Timesheet
+            </LinkTo>
+          </p>
+          <table class="table table-striped table-hover table-width-auto">
+            <thead>
             <tr>
-              <td>{{shift-format slot.begins}}</td>
-              <td>{{shift-format slot.ends}}</td>
-              <td>
-                <PresentOrNot @value={{slot.description}} @empty="-"/>
-              </td>
-              <td>{{position-label slot.position}}</td>
+              <th>From</th>
+              <th>To</th>
+              <th>Description</th>
+              <th>Position</th>
             </tr>
-          {{/each}}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+            {{#each person.slots key="id" as |slot|}}
+              <tr>
+                <td>{{shift-format slot.begins}}</td>
+                <td>{{shift-format slot.ends}}</td>
+                <td><PresentOrNot @value={{slot.description}} @empty="-"/></td>
+                <td>{{position-label slot.position}}</td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </table>
+        {{/if}}
       </accordion.body>
-    </ChAccordion>
+    </UiAccordion>
   {{else}}
     <p>
       <b class="text-danger">No {{this.year}} schedules were found.</b>

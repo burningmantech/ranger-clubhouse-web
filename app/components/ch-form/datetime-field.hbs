@@ -3,14 +3,22 @@
     <label class={{this.labelClass}} for={{this.domId}}>{{@label}}</label>
   {{~/if~}}
   <ChForm::WrapBlock @wrapClass={{this.inputWrapClass}}>
-    <DatetimePicker @autofocus={{@autofocus}}
+    <DatetimePicker @id={{this.domId}}
+                    @name={{@name}}
+                    @autofocus={{@autofocus}}
                     @classNames="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
                     @size={{@size}}
                     @maxlength={{@maxlength}}
                     @onChange={{this.update}}
                     @placeholder={{@placeholder}}
                     @value={{this.modelValue}}
-                    @startDate={{@startDate}} />
+                    @startDate={{@startDate}}
+                    @disabled={{@disabled}}
+                    @onfocus={{@onFocus}}
+                    @dateOnly={{@dateOnly}}
+                    @minDate={{@minDate}}
+                    @maxDate={{@maxDate}}
+    />
     {{~#if @hint~}}
       <ChForm::Hint @hint={{@hint}} />
     {{~/if~}}

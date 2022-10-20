@@ -1,16 +1,33 @@
 <LoginSidebar/>
 <main>
   {{#if this.session.isStaging}}
-    <ChNotice @type="danger" @icon="exclamation"
+    <UiNotice @type="danger" @icon="exclamation"
               @title="This is the Clubhouse Staging Server used for testing and verification">
       <p>Here be dragons.</p>
       The real production server can be found here:<br>
       <a href="https://ranger-clubhouse.burningman.org">ranger-clubhouse.burningman.org</a>
-    </ChNotice>
+    </UiNotice>
+  {{else if this.session.isTraining}}
+    <UiNotice @type="success" @icon="circle-info"
+              @title="Welcome to the Clubhouse Training Server ">
+      <p>
+        The login username is your callsign (stripped of spaces, dashes, and other non-alphanumeric characters)
+        plus '@nomail.none'. Your password is the same as the production server.
+      </p>
+      <p>
+        E.g., if your callsign is 'hub-cap' then your username is 'hubcap@nomail.none'.
+      </p>
+      <p>
+        The training database is reset daily at 04:00 Pacific.
+      </p>
+      The real production server can be found here:<br>
+      <a href="https://ranger-clubhouse.burningman.org">ranger-clubhouse.burningman.org</a>
+    </UiNotice>
+
   {{/if}}
   <h2>Welcome To The Ranger Secret Clubhouse!</h2>
   {{#if this.tokenError}}
-    <ChAlert @type="danger">
+    <UiNotice @type="danger">
       {{#if this.welcome}}
         <p>
           Sorry, the invitation link has expired or was entered incorrectly.
@@ -28,16 +45,16 @@
         Sorry, the reset password link has either expired or was entered incorrectly. You can try resetting
         your password again.
       {{/if}}
-    </ChAlert>
+    </UiNotice>
   {{/if}}
   {{#if this.loginError}}
     {{#if (eq this.loginError "invalid-credentials")}}
-      <ChNotice @title=" The email and/or password is incorrect." @type="danger" @icon="exclamation-triangle"/>
+      <UiNotice @title=" The email and/or password is incorrect." @type="danger" @icon="exclamation-triangle"/>
     {{else}}
-      <ChNotice @type="danger" @icon="ban" @title="Login has been disabled for this account.">
+      <UiNotice @type="danger" @icon="ban" @title="Login has been disabled for this account.">
         Contact the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more
         information.
-      </ChNotice>
+      </UiNotice>
     {{/if}}
   {{/if}}
   <div class="d-flex flex-column flex-lg-row align-items-stretch mt-lg-4">
@@ -49,7 +66,7 @@
               @onSubmit={{this.submit}} as |f|>
         <FormRow>
           <f.text @name="identification"
-                  @label="Email"
+                  @label={{if this.session.isTraining "Callsign plus @nomail.none" "Email"}}
                   @inputmode="email"
                   @autocomplete="username"
                   @autofocus={{true}}
@@ -108,13 +125,14 @@
       </UiSection>
     </div>
   </div>
-
   <hr>
   <p>
-    <b>Questions? </b> Email the Ranger Volunteer Coordinators at {{vc-email}}
+    <b>Questions? </b>
+    Email the Ranger Volunteer Coordinators at {{vc-email}}
   </p>
   <p>
-    For help logging in or registering, email the Rangers Tech Ninjas at {{admin-email}}
+    <b>Need help logging in or registering?</b>
+    Email the Rangers Tech Ninjas at {{admin-email}}
   </p>
 </main>
 {{#if this.session.isAuthenticated}}

@@ -6,7 +6,7 @@ export default class TicketingOffseasonComponent extends Component {
     super(...arguments);
     const {ticketPackage} = this.args;
     this.tickets = ticketPackage.tickets.filter((ticket) => (ticket.isBanked || ticket.isQualified));
-    this.appreciations = ticketPackage.appreciations.filter((ticket) => (ticket.isBanked || ticket.isQualified))
+    this.provisions = ticketPackage.provisions.filter((p) => (p.isBanked || p.isAvailable))
     this.eventYear = eventYear();
   }
 }

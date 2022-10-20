@@ -14,7 +14,7 @@ const groupBy = function (items, key) {
 
   items.forEach((item) => {
     const value = item[key];
-    let group = groups.findBy(key, value);
+    let group = groups.find((g) => g[key] === value);
 
     if (group) {
       group.items.push(item);
@@ -37,6 +37,7 @@ export default class SearchLanguagesController extends ClubhouseController {
   @tracked searchForm = null;
 
   @tracked isLoading = false;
+  @tracked searchingOffSite = false;
 
   get onDutyGroup() {
     return groupBy(this.onDuty, 'language_name')
@@ -68,6 +69,8 @@ export default class SearchLanguagesController extends ClubhouseController {
     if (this.searchForm.offSite) {
       params.off_site = 1;
     }
+
+    this.searchingOffSite = this.searchForm.offSite;
 
     this.searchLanguage = language;
     this.isLoading = true;

@@ -1,6 +1,6 @@
-<NavbarMenu @title="Actions">
-  <NavbarMenuItem @route="login" @item="Login" />
-  <NavbarMenuItem @route="reset-password" @item="Forgot Password" />
+<NavbarMenu @nav={{@nav}} @title="Actions" as |menu|>
+  <NavbarMenuItem @menu={{menu}} @route="login" @item="Login" />
+  <NavbarMenuItem @menu={{menu}} @route="reset-password" @item="Forgot Password" />
   <a href="https://rangers.burningman.org/becoming-a-ranger/" class="dropdown-item">Ranger Application</a>
-  <NavbarMenuItem @route="register" @item="Auditor Registration" />
+  <NavbarMenuItem @menu={{menu}} @route="register" @item="Auditor Registration" />
 </NavbarMenu>

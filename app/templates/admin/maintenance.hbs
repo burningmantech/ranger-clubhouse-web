@@ -1,404 +1,565 @@
-<h1>Maintenace Tasks {{#if this.task}}- {{this.task.title}}{{/if}}</h1>
+<main>
+  <h1>Maintenace Tasks {{#if this.task}}- {{this.task.title}}{{/if}}</h1>
 
-{{#if this.isSubmitting}}
-  <LoadingPane @text={{concat "The task '" this.task.title "' is being performed. Hang tight!"}} />
-{{else if this.task}}
-  <p>
-    <a href {{action this.showIndex}}>{{fa-icon "angle-double-left"}} Back to Maintenance Tasks</a>
-  </p>
-
-  {{#if (eq this.taskAction "update-positions")}}
+  {{#if this.isSubmitting}}
+    <LoadingPane @text={{concat "The task '" this.task.title "' is being performed. Hang tight!"}} />
+  {{else if this.task}}
     <p>
-      The following changes have been made to Ranger positions:
+      <a href {{action this.showIndex}}>{{fa-icon "angle-double-left"}} Back to Maintenance Tasks</a>
     </p>
-    <b>{{pluralize this.results.actives.length "person"}} - updated positions</b>
-    <table class="table table-striped table-hover table-width-auto">
-      <thead>
-      <tr>
-        <th>Callsign</th>
-        <th>Added Positions</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each this.results.actives as |person|}}
-        <tr>
-          <td>
-            <PersonLink @person={{person}} />
-          </td>
-          <td>
-            {{#each person.positions_add as |position|}}
-              {{position.title}}<br>
-            {{/each}}
-          </td>
-        </tr>
-      {{else}}
-        <tr>
-          <td colspan="2">Congratulations, all Rangers appear to have been granted the basic set of positions (i.e. the
-            "All Rangers" flag set on a position) and no adjustments are needed.
-          </td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
 
-    <b>{{pluralize this.results.prospectives.length  "prospective"}} - updated positions</b>
-    <table class="table table-striped table-hover table-width-auto">
-      <thead>
-      <tr>
-        <th>Callsign</th>
-        <th>Added Positions</th>
-        <th>Removed Positions"</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each this.results.prospectives as |person|}}
-        <tr>
-          <td>
-            <PersonLink @person={{person}} />
-          </td>
-          <td>
-            {{#each person.positions_add as |position|}}
-              {{position.title}}<br>
-            {{else}}
-              <i>none</i>
-            {{/each}}
-          </td>
-          <td>
-            {{#each person.positions_remove as |position|}}
-              {{position.title}}<br>
-            {{else}}
-              <i>none</i>
-            {{/each}}
-          </td>
-        </tr>
-      {{else}}
-        <tr>
-          <td colspan="3">Congratulations! All prospectives appear to have the correct positions.</td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  {{else if (eq this.taskAction "mark-off-site")}}
-    <p>
-      {{pluralize this.results.count "person"}} have been marked off-site.
-    </p>
-  {{else if (eq this.taskAction "reset-pnvs")}}
-    {{#if this.results.people}}
-      <b>{{pluralize this.results.people.length  "PNV"}} reset to Past Prospective</b>
+    {{#if (eq this.taskAction "update-positions")}}
+      <p>
+        The following changes have been made to Ranger positions:
+      </p>
+      <b>{{pluralize this.results.actives.length "person"}} - updated positions</b>
       <table class="table table-striped table-hover table-width-auto">
-        <thead>
-        <tr>
-          <th>Old Callsign</th>
-          <th>New Callsign</th>
-          <th>Old Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each this.results.people as |person|}}
-          <tr>
-            <td>
-              <PersonLink @person={{person}} />
-            </td>
-            <td>{{person.callsign_reset}}</td>
-            <td>{{person.status}}</td>
-          </tr>
-          {{#if person.error}}
-            <tr>
-              <td colspan="3" class="text-danger">Error: {{person.error}}</td>
-            </tr>
-          {{/if}}
-        {{/each}}
-        </tbody>
-      </table>
-    {{else}}
-      <p class="text-danger"><b>No PNVs were found.</b></p>
-    {{/if}}
-  {{else if (eq this.taskAction "reset-past-prospectives")}}
-    {{#if this.results.people}}
-      <b>{{pluralize this.results.people.length  "Past Prospective"}} with approved callsign(s) were reset</b>
-      <table class="table table-striped table-hover table-width-auto">
-        <thead>
-        <tr>
-          <th>Old Callsign</th>
-          <th>New Callsign</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each this.results.people as |person|}}
-          <tr>
-            <td>
-              <PersonLink @person={{person}} />
-            </td>
-            <td>{{person.callsign_reset}}</td>
-          </tr>
-          {{#if person.error}}
-            <tr>
-              <td colspan="2" class="text-danger">Error: {{person.error}}</td>
-            </tr>
-          {{/if}}
-        {{else}}
-          <tr>
-            <td colspan="2">No Past Prospectives with approved callsigns were found.</td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
-    {{else}}
-      <p class="text-danger"><b>No Past Prospectives with approved callsigns were found.</b></p>
-    {{/if}}
-  {{else if (or (eq this.taskAction "grant-waps") (eq this.taskAction "grant-alpha-waps"))}}
-    {{#if this.results.people}}
-      <p>
-        {{pluralize this.results.people.length "person"}} {{if (eq this.results.people.length 1) "has" "have"}} been
-        granted WAPs
-      </p>
-      {{#each this.results.people as |person|}}
-        <PersonLink @person={{person}} /> &lt;{{person.status}}&gt;<br>
-      {{/each}}
-    {{else}}
-      <p class="text-danger">
-        <b>No qualifying {{if (eq this.taskAction "grant-alpha-waps") "Alphas" "active/inactive Rangers"}} were found to
-          grant WAPs to.</b>
-      </p>
-    {{/if}}
-  {{else if (eq this.taskAction "grant-vps")}}
-    {{#if this.results.people}}
-      <p>
-        {{pluralize this.results.people.length "person"}} {{if (eq this.results.people.length 1) "has" "have"}} been
-        granted a Vehicle Pass.
-      </p>
-      {{#each this.results.people as |person|}}
-        <PersonLink @person={{person}} /> &lt;{{person.status}}&gt;<br>
-      {{/each}}
-    {{else}}
-      <p class="text-danger">
-        <b>No qualifying people were found to grant a Vehicle Pass to.</b>
-      </p>
-    {{/if}}
-  {{else if (eq this.taskAction "set-staff-credentials-access-date")}}
-    {{#if this.results.people}}
-      <p>
-        {{pluralize this.results.access_documents.length "staff credential"}}
-        {{if (eq this.results.people.length 1) "has" "have"}} been set the access date of
-        "{{this.results.access_date}}".
-      </p>
-      <table class="table table-striped table-hover table-width-auto">
-        <thead>
-        <tr>
-          <th>RAD</th>
-          <th>Status</th>
-          <th>Person</th>
-          <th>Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each this.results.access_documents as |sc|}}
-          <tr>
-            <td>
-              <PersonLink @personId={{sc.person.id}} @page="access-documents" @callsign={{concat "RAD-" sc.id}} />
-            </td>
-            <td>{{sc.status}}</td>
-            <td>
-              <PersonLink @person={{sc.person}} />
-            </td>
-            <td>{{sc.person.status}}</td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
-    {{else}}
-      <p class="text-danger"><b>No Staff Credentials with unspecified access dates were found.</b></p>
-    {{/if}}
-
-  {{else if (or (eq this.taskAction "clean-access-documents") (eq this.taskAction "bank-access-documents"))}}
-    {{#if this.results.access_documents}}
-      <p>
-        {{pluralize this.results.access_documents.length "access document"}}
-        {{if (eq this.results.access_documents.length 1) "was" "were"}}
-        {{if (eq this.taskAction "bank-access-documents") "banked." "marked as expired or used."}}
-      </p>
-
-      <table class="table table-striped table-hover table-width-auto">
-        <thead>
-        <tr>
-          <th>RAD</th>
-          <th>Type</th>
-          <th>Status</th>
-          <th>Person</th>
-          <th>Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each this.results.access_documents as |ad|}}
-          <tr>
-            <td>
-              <PersonLink @personId={{ad.person.id}} @page="access-documents" @callsign={{concat "RAD-" ad.id}} />
-            </td>
-            <td>{{ad.type}}</td>
-            <td>{{ad.status}}</td>
-            <td>
-              <PersonLink @person={{ad.person}} />
-            </td>
-            <td>{{ad.person.status}}</td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
-    {{else}}
-      <p class="text-danger">
-        <b>No access documents were found that need to be
-          {{if (eq this.taskAction "bank-access-documents") "banked." "marked as expired or used."}}
-        </b>
-      </p>
-    {{/if}}
-  {{else if (eq this.taskAction "expire-access-documents")}}
-    {{#if this.results.access_documents}}
-      <p>
-        {{pluralize this.results.access_documents.length "access document"}}
-        {{if (eq this.results.access_documents.length 1) "was" "were"}} expired.
-      </p>
-
-      <table class="table table-striped table-hover table-width-auto table-sm">
-        <thead>
-        <tr>
-          <th>RAD</th>
-          <th>Type</th>
-          <th>Source Year</th>
-          <th>Status</th>
-          <th>Person</th>
-          <th>Status</th>
-          <th>Email</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each this.results.access_documents as |ad|}}
-          <tr>
-            <td>
-              <PersonLink @personId={{ad.person.id}} @page="access-documents" @callsign={{concat "RAD-" ad.id}} />
-            </td>
-            <td>{{ad.type}}</td>
-            <td>{{ad.source_year}}</td>
-            <td>{{ad.status}}</td>
-            <td>
-              <PersonLink @person={{ad.person}} />
-            </td>
-            <td>{{ad.person.status}}</td>
-            <td>{{#if ad.person.email}}{{mail-to ad.person.email}}{{else}}<i>no email</i>{{/if}}</td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
-    {{else}}
-      <p class="text-danger">
-        <b>No expired access documents were found.</b>
-      </p>
-    {{/if}}
-  {{else if (eq this.taskAction "bump-expiration")}}
-    <p>
-      {{pluralize this.results.count "ticket"}} have had their expiration date bumped by one year.
-    </p>
-  {{else if (eq this.taskAction "set-bmid-titles")}}
-    {{#if this.results.bmids}}
-      <p>
-        Note: only titles that were set will be shown. A title set prior to this will not appear below.
-      </p>
-      {{pluralize this.results.bmids.length "BMID"}} were set.
-      <table class="table table-striped table-hover table-sm table-width-auto">
         <thead>
         <tr>
           <th>Callsign</th>
-          <th>Status</th>
-          <th>Title 1</th>
-          <th>Title 2</th>
-          <th>Title 3</th>
+          <th>Added Positions</th>
         </tr>
         </thead>
         <tbody>
-        {{#each this.results.bmids as |bmid|}}
+        {{#each this.results.actives as |person|}}
           <tr>
             <td>
-              <PersonLink @person={{bmid}} @page="bmid"/>
+              <PersonLink @person={{person}} />
             </td>
-            <td>{{bmid.status}}</td>
-            <td>{{#if bmid.title1}}{{bmid.title1}}{{else}}&nbsp;{{/if}}</td>
-            <td>{{#if bmid.title2}}{{bmid.title2}}{{else}}&nbsp;{{/if}}</td>
-            <td>{{#if bmid.title3}}{{bmid.title3}}{{else}}&nbsp;{{/if}}</td>
+            <td>
+              {{#each person.positions_add as |position|}}
+                {{position.title}}<br>
+              {{/each}}
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="2">Congratulations, all Rangers appear to have been granted the basic set of positions (i.e.
+              the
+              "All Rangers" flag set on a position) and no adjustments are needed.
+            </td>
           </tr>
         {{/each}}
         </tbody>
       </table>
-    {{else}}
-      <p class="text-danger">
-        <b>It appears all qualifying BMIDs have the titles already set.</b>
+
+      <b>{{pluralize this.results.prospectives.length  "prospective"}} - updated positions</b>
+      <table class="table table-striped table-hover table-width-auto">
+        <thead>
+        <tr>
+          <th>Callsign</th>
+          <th>Added Positions</th>
+          <th>Removed Positions"</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.results.prospectives as |person|}}
+          <tr>
+            <td>
+              <PersonLink @person={{person}} />
+            </td>
+            <td>
+              {{#each person.positions_add as |position|}}
+                {{position.title}}<br>
+              {{else}}
+                <i>none</i>
+              {{/each}}
+            </td>
+            <td>
+              {{#each person.positions_remove as |position|}}
+                {{position.title}}<br>
+              {{else}}
+                <i>none</i>
+              {{/each}}
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="3">Congratulations! All prospectives appear to have the correct positions.</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    {{else if (eq this.taskAction "mark-off-site")}}
+      <p>
+        {{pluralize this.results.count "person"}} have been marked off-site.
       </p>
-    {{/if}}
-  {{else if (eq this.taskAction "archive-messages")}}
-    {{#if (eq this.results.status "success")}}
-      <p class="text-success">
-        Congratulations! The {{this.results.year}} messages were successfully archived into a separate table.
-      </p>
-    {{else if (eq this.results.status "archive-exists")}}
-      <p class="text-danger">
-        <b>The {{this.results.year}} messages have been already archived. The archive table already exists.</b>
-      </p>
-    {{else}}
-      <p class="text-danger">
-        <b>Uh oh, I don't understand the server response "{{this.results.status}}".</b>
-      </p>
-    {{/if}}
-  {{else}}
-    Uh oh, I don't understand the task "{{this.taskAction}}". This is a BUG. Please report this to the Tech Team.
-  {{/if}}
-{{else}}
-  {{#each this.taskGroups as |group|}}
-    <UiSection>
-      <:title>{{group.group_title}}</:title>
-      <:body>
-        <table class="table table-striped">
+    {{else if (eq this.taskAction "reset-pnvs")}}
+      {{#if this.results.people}}
+        <b>{{pluralize this.results.people.length  "PNV"}} reset to Past Prospective</b>
+        <table class="table table-striped table-hover table-width-auto">
+          <thead>
+          <tr>
+            <th>Old Callsign</th>
+            <th>New Callsign</th>
+            <th>Old Status</th>
+          </tr>
+          </thead>
           <tbody>
-          {{#each group.tasks as |task|}}
+          {{#each this.results.people as |person|}}
             <tr>
-              <td class="w-30">
-                {{#if task.param}}
-                  <UiButton @class="btn-block" @onClick={{fn this.askParamAction task}}>
-                    {{task.title}}
-                  </UiButton>
-                {{else}}
-                  <UiButton @class="btn-block" @onClick={{fn this.executeTask task}}>
-                    {{task.title}}
-                  </UiButton>
-                {{/if}}
+              <td>
+                <PersonLink @person={{person}} />
               </td>
-              <td class="w-70">
-                {{task.description}}
-                {{#if (eq task.action "set-staff-credentials-access-date")}}
-                  <br>The default access date is {{this.ticketingInfo.wap_default_date}}.
-                {{/if}}
+              <td>{{person.callsign_reset}}</td>
+              <td>{{person.status}}</td>
+            </tr>
+            {{#if person.error}}
+              <tr>
+                <td colspan="3" class="text-danger">Error: {{person.error}}</td>
+              </tr>
+            {{/if}}
+          {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <p class="text-danger"><b>No PNVs were found.</b></p>
+      {{/if}}
+    {{else if (eq this.taskAction "reset-past-prospectives")}}
+      {{#if this.results.people}}
+        <b>{{pluralize this.results.people.length  "Past Prospective"}} with approved callsign(s) were reset</b>
+        <table class="table table-striped table-hover table-width-auto">
+          <thead>
+          <tr>
+            <th>Old Callsign</th>
+            <th>New Callsign</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.results.people as |person|}}
+            <tr>
+              <td>
+                <PersonLink @person={{person}} />
               </td>
+              <td>{{person.callsign_reset}}</td>
+            </tr>
+            {{#if person.error}}
+              <tr>
+                <td colspan="2" class="text-danger">Error: {{person.error}}</td>
+              </tr>
+            {{/if}}
+          {{else}}
+            <tr>
+              <td colspan="2">No Past Prospectives with approved callsigns were found.</td>
             </tr>
           {{/each}}
           </tbody>
         </table>
-      </:body>
-    </UiSection>
-  {{/each}}
-{{/if}}
+      {{else}}
+        <p class="text-danger"><b>No Past Prospectives with approved callsigns were found.</b></p>
+      {{/if}}
+    {{else if (or (eq this.taskAction "grant-waps") (eq this.taskAction "grant-alpha-waps"))}}
+      {{#if this.results.people}}
+        <p>
+          {{pluralize this.results.people.length "person"}} {{if (eq this.results.people.length 1) "has" "have"}} been
+          granted WAPs
+        </p>
+        {{#each this.results.people as |person|}}
+          <PersonLink @person={{person}} /> &lt;{{person.status}}&gt;<br>
+        {{/each}}
+      {{else}}
+        <p class="text-danger">
+          <b>No qualifying {{if (eq this.taskAction "grant-alpha-waps") "Alphas" "active/inactive Rangers"}} were found
+            to
+            grant WAPs to.</b>
+        </p>
+      {{/if}}
+    {{else if (eq this.taskAction "grant-vps")}}
+      {{#if this.results.people}}
+        <p>
+          {{pluralize this.results.people.length "person"}} {{if (eq this.results.people.length 1) "has" "have"}} been
+          granted a Vehicle Pass.
+        </p>
+        {{#each this.results.people as |person|}}
+          <PersonLink @person={{person}} /> &lt;{{person.status}}&gt;<br>
+        {{/each}}
+      {{else}}
+        <p class="text-danger">
+          <b>No qualifying people were found to grant a Vehicle Pass to.</b>
+        </p>
+      {{/if}}
+    {{else if (eq this.taskAction "set-staff-credentials-access-date")}}
+      {{#if this.results.access_documents}}
+        <p>
+          {{pluralize this.results.access_documents.length "staff credential"}}
+          {{if (eq this.results.people.length 1) "has" "have"}} been set the access date of
+          "{{this.results.access_date}}".
+        </p>
+        <table class="table table-striped table-hover table-width-auto">
+          <thead>
+          <tr>
+            <th>RAD</th>
+            <th>Status</th>
+            <th>Person</th>
+            <th>Status</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.results.access_documents as |sc|}}
+            <tr>
+              <td>
+                <PersonLink @personId={{sc.person.id}} @page="tickets-provisions" @callsign={{concat "RAD-" sc.id}} />
+              </td>
+              <td>{{sc.status}}</td>
+              <td>
+                <PersonLink @person={{sc.person}} />
+              </td>
+              <td>{{sc.person.status}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <p class="text-danger"><b>No Staff Credentials with unspecified access dates were found.</b></p>
+      {{/if}}
 
-{{#if this.taskParam}}
-  <ModalDialog @onEscape={{this.cancelParamAction}} as |Modal|>
-    <Modal.body>
+    {{else if (eq this.taskAction "unbank-access-documents")}}
+      {{#if this.results.access_documents}}
+        <p>
+          {{pluralize this.results.access_documents.length "item"}} un-banked.
+        </p>
+
+        <table class="table table-striped table-hover table-width-auto">
+          <thead>
+          <tr>
+            <th>RAD</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Person</th>
+            <th>Status</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.results.access_documents as |ad|}}
+            <tr>
+              <td>
+                <PersonLink @personId={{ad.person.id}} @page="tickets-provisions" @callsign={{concat "RAD-" ad.id}} />
+              </td>
+              <td>{{ad.type}}</td>
+              <td>{{ad.status}}</td>
+              <td>
+                <PersonLink @person={{ad.person}} />
+              </td>
+              <td>{{ad.person.status}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <p class="text-danger">
+          <b>No access documents were found that need to be un-banked.</b>
+        </p>
+      {{/if}}
+    {{else if (eq this.taskAction "unbank-provisions")}}
+      {{#if this.results.provisions}}
+        <p>
+          {{pluralize this.results.provisions.length "provision"}} un-banked.
+        </p>
+
+        <table class="table table-striped table-hover table-width-auto">
+          <thead>
+          <tr>
+            <th>RP</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Person</th>
+            <th>Status</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.results.provisions as |ad|}}
+            <tr>
+              <td>
+                <PersonLink @personId={{ad.person.id}} @page="tickets-provisions" @callsign="RP-{{ad.id}}" />
+              </td>
+              <td>{{ad.type}}</td>
+              <td>{{ad.status}}</td>
+              <td>
+                <PersonLink @person={{ad.person}} />
+              </td>
+              <td>{{ad.person.status}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <p class="text-danger">
+          <b>No provisions were found that need to be un-banked.</b>
+        </p>
+      {{/if}}
+    {{else if (or (eq this.taskAction "clean-access-documents") (eq this.taskAction "bank-access-documents"))}}
+      {{#if this.results.access_documents}}
+        <p>
+          {{pluralize this.results.access_documents.length "access document"}}
+          {{if (eq this.results.access_documents.length 1) "was" "were"}}
+          {{if (eq this.taskAction "bank-access-documents") "banked." "marked as expired or used."}}
+        </p>
+
+        <table class="table table-striped table-hover table-width-auto">
+          <thead>
+          <tr>
+            <th>RAD</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Person</th>
+            <th>Status</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.results.access_documents as |ad|}}
+            <tr>
+              <td>
+                <PersonLink @personId={{ad.person.id}} @page="tickets-provisions" @callsign={{concat "RAD-" ad.id}} />
+              </td>
+              <td>{{ad.type}}</td>
+              <td>{{ad.status}}</td>
+              <td>
+                <PersonLink @person={{ad.person}} />
+              </td>
+              <td>{{ad.person.status}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <p class="text-danger">
+          <b>No provisions were found that need to be
+            {{if (eq this.taskAction "bank-access-documents") "banked." "marked as expired or used."}}
+          </b>
+        </p>
+      {{/if}}
+    {{else if (or (eq this.taskAction "clean-provisions") (eq this.taskAction "bank-provisions"))}}
+      {{#if this.results.provisions}}
+        <p>
+          {{pluralize this.results.provisions.length "provision"}}
+          {{if (eq this.results.provisions.length 1) "was" "were"}}
+          {{if (eq this.taskAction "bank-provisions") "banked." "marked as expired or used."}}
+        </p>
+
+        <table class="table table-striped table-hover table-width-auto">
+          <thead>
+          <tr>
+            <th>RP</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Person</th>
+            <th>Status</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.results.provisions as |p|}}
+            <tr>
+              <td>
+                <PersonLink @personId={{p.person.id}} @page="tickets-provisions" @callsign="RP-{{p.id}}"/>
+              </td>
+              <td>{{p.type}}</td>
+              <td>{{p.status}}</td>
+              <td>
+                <PersonLink @person={{p.person}} />
+              </td>
+              <td>{{p.person.status}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <p class="text-danger">
+          <b>No provisions were found that need to be
+            {{if (eq this.taskAction "bank-provisions") "banked." "marked as expired or used."}}
+          </b>
+        </p>
+      {{/if}}
+    {{else if (eq this.taskAction "expire-access-documents")}}
+      {{#if this.results.access_documents}}
+        <p>
+          {{pluralize this.results.access_documents.length "access document"}}
+          {{if (eq this.results.access_documents.length 1) "was" "were"}} expired.
+        </p>
+
+        <table class="table table-striped table-hover table-width-auto table-sm">
+          <thead>
+          <tr>
+            <th>RAD</th>
+            <th>Type</th>
+            <th>Source Year</th>
+            <th>Status</th>
+            <th>Person</th>
+            <th>Status</th>
+            <th>Email</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.results.access_documents as |ad|}}
+            <tr>
+              <td>
+                <PersonLink @personId={{ad.person.id}} @page="tickets-provisions" @callsign={{concat "RAD-" ad.id}} />
+              </td>
+              <td>{{ad.type}}</td>
+              <td>{{ad.source_year}}</td>
+              <td>{{ad.status}}</td>
+              <td>
+                <PersonLink @person={{ad.person}} />
+              </td>
+              <td>{{ad.person.status}}</td>
+              <td>{{#if ad.person.email}}{{mail-to ad.person.email}}{{else}}<i>no email</i>{{/if}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <p class="text-danger">
+          <b>No expired access documents were found.</b>
+        </p>
+      {{/if}}
+    {{else if (eq this.taskAction "expire-provisions")}}
+      {{#if this.results.provisions}}
+        <p>
+          {{pluralize this.results.provisions.length "provision"}}
+          {{if (eq this.results.provisions.length 1) "was" "were"}} expired.
+        </p>
+
+        <table class="table table-striped table-hover table-width-auto table-sm">
+          <thead>
+          <tr>
+            <th>RAD</th>
+            <th>Type</th>
+            <th>Source Year</th>
+            <th>Status</th>
+            <th>Person</th>
+            <th>Status</th>
+            <th>Email</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.results.provisions as |prov|}}
+            <tr>
+              <td>
+                <PersonLink @personId={{prov.person.id}} @page="tickets-provisions" @callsign="RP-{{prov.id}}" />
+              </td>
+              <td>{{prov.type}}</td>
+              <td>{{prov.source_year}}</td>
+              <td>{{prov.status}}</td>
+              <td>
+                <PersonLink @person={{prov.person}} />
+              </td>
+              <td>{{prov.person.status}}</td>
+              <td>{{#if prov.person.email}}{{mail-to prov.person.email}}{{else}}<i>no email</i>{{/if}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <p class="text-danger">
+          <b>No expired provisions were found.</b>
+        </p>
+      {{/if}}
+    {{else if (eq this.taskAction "bump-expiration")}}
+      <p>
+        {{pluralize this.results.count "ticket"}} have had their expiration date bumped by one year.
+      </p>
+    {{else if (eq this.taskAction "set-bmid-titles")}}
+      {{#if this.results.bmids}}
+        <p>
+          Note: only titles that were set will be shown. A title set prior to this will not appear below.
+        </p>
+        {{pluralize this.results.bmids.length "BMID"}} were set.
+        <table class="table table-striped table-hover table-sm table-width-auto">
+          <thead>
+          <tr>
+            <th>Callsign</th>
+            <th>Status</th>
+            <th>Title 1</th>
+            <th>Title 2</th>
+            <th>Title 3</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.results.bmids as |bmid|}}
+            <tr>
+              <td>
+                <PersonLink @person={{bmid}} @page="bmid"/>
+              </td>
+              <td>{{bmid.status}}</td>
+              <td>{{#if bmid.title1}}{{bmid.title1}}{{else}}&nbsp;{{/if}}</td>
+              <td>{{#if bmid.title2}}{{bmid.title2}}{{else}}&nbsp;{{/if}}</td>
+              <td>{{#if bmid.title3}}{{bmid.title3}}{{else}}&nbsp;{{/if}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <p class="text-danger">
+          <b>It appears all qualifying BMIDs have the titles already set.</b>
+        </p>
+      {{/if}}
+    {{else if (eq this.taskAction "archive-messages")}}
+      {{#if (eq this.results.status "success")}}
+        <p class="text-success">
+          Congratulations! The {{this.results.year}} messages were successfully archived into a separate table.
+        </p>
+      {{else if (eq this.results.status "archive-exists")}}
+        <p class="text-danger">
+          <b>The {{this.results.year}} messages have been already archived. The archive table already exists.</b>
+        </p>
+      {{else}}
+        <p class="text-danger">
+          <b>Uh oh, I don't understand the server response "{{this.results.status}}".</b>
+        </p>
+      {{/if}}
+    {{else}}
+      Uh oh, I don't understand the task "{{this.taskAction}}". This is a BUG. Please report this to the Tech Team.
+    {{/if}}
+  {{else}}
+    {{#each this.taskGroups as |group|}}
+      <UiSection>
+        <:title>{{group.group_title}}</:title>
+        <:body>
+          <table class="table table-striped">
+            <tbody>
+            {{#each group.tasks as |task|}}
+              <tr>
+                <td class="w-30">
+                  {{#if task.param}}
+                    <UiButton @class="btn-block" @onClick={{fn this.askParamAction task}}>
+                      {{task.title}}
+                    </UiButton>
+                  {{else}}
+                    <UiButton @class="btn-block" @onClick={{fn this.executeTask task}}>
+                      {{task.title}}
+                    </UiButton>
+                  {{/if}}
+                </td>
+                <td class="w-70">
+                  {{task.description}}
+                  {{#if (eq task.action "set-staff-credentials-access-date")}}
+                    <br>The default access date is {{this.ticketingInfo.wap_default_date}}.
+                  {{/if}}
+                </td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </table>
+        </:body>
+      </UiSection>
+    {{/each}}
+  {{/if}}
+
+  {{#if this.taskParam}}
+    <ModalDialog @onEscape={{this.cancelParamAction}} as |Modal|>
+      <Modal.body>
         <FormRow>
-            <FormLabel>{{this.taskParam.param.title}}</FormLabel>
+          <FormLabel>{{this.taskParam.param.title}}</FormLabel>
         </FormRow>
-      <FormRow>
-        <div class="col-auto">
-          <Input @type="text" size="80" class="form-control" @value={{this.paramValue}}/>
-        </div>
-      </FormRow>
-    </Modal.body>
-    <Modal.footer @noAlign={{true}}>
-      <UiButton @onClick={{fn this.executeTask this.taskParam}}>Submit</UiButton>
-      <UiCancelButton @onClick={{this.cancelParamAction}} />
-    </Modal.footer>
-  </ModalDialog>
-{{/if}}
+        <FormRow>
+          <div class="col-auto">
+            <Input @type="text" size="80" class="form-control" @value={{this.paramValue}}/>
+          </div>
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <UiButton @onClick={{fn this.executeTask this.taskParam}}>Submit</UiButton>
+        <UiCancelButton @onClick={{this.cancelParamAction}} />
+      </Modal.footer>
+    </ModalDialog>
+  {{/if}}
+</main>

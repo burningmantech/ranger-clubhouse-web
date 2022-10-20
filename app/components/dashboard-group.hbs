@@ -1,7 +1,7 @@
 <div class="dashboard-group {{if @isActive "dashboard-group-active"}}">
   <div class="dashboard-group-title-box {{if @hasTopArrow "dashboard-group-top-arrow"}} {{if @hasBottomArrow
                                                                                              "dashboard-group-bottom-arrow"}}">
-    <div class="dashboard-group-title-text">{{@title}}</div>
+    <div class="dashboard-group-title-text  {{if @isUrgent "dashboard-group-title-urgent"}}">{{@title}}</div>
   </div>
   <div class="dashboard-steps">
     {{yield}}

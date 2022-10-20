@@ -1,4 +1,5 @@
-<NavbarMenu @title="Search">
-  <NavbarMenuItem @route="search.assets" @item="Assets" />
-  <NavbarMenuItem @route="search.languages" @item="Languages" />
+<NavbarMenu @title="Search" @nav={{@nav}} as |menu|>
+  <NavbarMenuItem @menu={{menu}} @route="search.assets" @item="Assets"/>
+  <NavbarMenuItem @menu={{menu}}  @route="search.languages" @item="Languages"/>
+  <NavbarMenuItem @menu={{menu}}  @route="search.vehicles" @item="Vehicles"/>
 </NavbarMenu>

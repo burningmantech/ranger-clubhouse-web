@@ -2,11 +2,11 @@
             @onChange={{action (mut this.year)}} />
 
 {{#if this.notCurrentYear}}
-  <ChNotice @icon="hand-point-right" @title="Viewing Past Year">
+  <UiNotice @icon="hand-point-right" @title="Viewing Past Year">
     This is a historical report and PNV counts above do not accurately reflect
     the number of PNVs trained. This is because many people who were PNVs then are Rangers now.
     The total number of Rangers plus PNVs trained is accurate.
-  </ChNotice>
+  </UiNotice>
 {{/if}}
 
 <table class="table table-hover table-width-auto table-sm mt-4">

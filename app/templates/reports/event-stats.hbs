@@ -1,0 +1,97 @@
+<main>
+  <YearSelect @title="Event Statistics"
+              @year={{this.year}}
+              @minYear={{2010}}
+              @skipPandemic={{true}}
+              @onChange={{action (mut this.year)}} />
+  <p>
+    Report on various event statistics. "Training" below refers to both (dirt) Training and the ARTs.
+  </p>
+  <table class="table table-striped table-hover table-width-auto">
+    <thead>
+    <tr>
+      <th>General Stats</th>
+      <th>Count</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>People still marked as on site</td>
+      <td class="text-end">
+        {{#if (is-current-year this.year)}}
+          {{this.stats.on_site}}
+        {{else}}
+          n/a
+        {{/if}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Est. # of people who might work
+        <div class="text-muted">(based on non-training signups, includes Shiny Pennies)</div>
+      </td>
+      <td class="text-end">{{this.stats.working_people_estimate}}</td>
+    </tr>
+    <tr>
+      <td>
+        Est. # of returning Rangers who might work
+        <div class="text-muted">(based on non-training signups)</div>
+      </td>
+      <td class="text-end">{{this.stats.rangers_working_estimate}}</td>
+    </tr>
+
+    <tr>
+      <td>
+        People working
+        <div class="text-muted">(excluding trainings & Alpha timesheet entries)</div>
+      </td>
+      <td class="text-end">{{this.stats.working_people}}</td>
+    </tr>
+    <tr>
+      <td>
+        Newly minted Shiny Pennies who worked
+      </td>
+      <td class="text-end">{{this.stats.working_shiny_pennies}}</td>
+    </tr>
+    <tr>
+      <td>
+        Newly minted Shiny Pennies who didn't work
+      </td>
+      <td class="text-end">{{sub this.stats.alphas_passed this.stats.working_shiny_pennies}}</td>
+    </tr>
+
+    <tr>
+      <td>Total timesheet entries
+        <div class="text-muted">(includes Alpha entries)</div>
+      </td>
+      <td class="text-end">{{this.stats.timesheets_total}}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <table class="table table-striped table-hover table-width-auto mt-2">
+    <thead>
+    <tr>
+      <th>Alpha Stats</th>
+      <th>Count</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>Alpha timesheet entries</td>
+      <td class="text-end">{{this.stats.timesheets_alpha}}</td>
+    </tr>
+    <tr>
+      <td>Alphas passed</td>
+      <td class="text-end">{{this.stats.alphas_passed}}</td>
+    </tr>
+    <tr>
+      <td>Alphas bonked
+        <div class="text-muted">(includes self bonked)</div>
+      </td>
+      <td class="text-end">{{this.stats.alphas_bonked}}</td>
+    </tr>
+    </tbody>
+  </table>
+
+</main>

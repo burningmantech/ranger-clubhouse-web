@@ -1,15 +1,17 @@
-<YearSelect @title="Hours And Credits Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
-
-<p>
-  The report shows Rangers show the total hours (counted positions only) and credits worked for a given year. Alpha, Auditors, Bonked, Prospective, and Past Prospectives are not included.
-</p>
-<p>
-  <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
-</p>
-{{#if this.eventStart}}
-  Showing {{pluralize this.people.length "person"}}. {{this.year}} Event week: {{shift-format this.eventStart}} - {{shift-format this.eventEnd}}
-  <table class="table table-sm table-striped table-hover">
-    <thead>
+<main>
+  <YearSelect @title="Hours And Credits Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+  <p>
+    The report shows Rangers show the total hours (counted positions only) and credits worked for a given year. Alpha,
+    Auditors, Bonked, Prospective, and Past Prospectives are not included.
+  </p>
+  <p>
+    <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+  </p>
+  {{#if this.eventStart}}
+    Showing {{pluralize this.people.length "person"}}. {{this.year}} Event week: {{shift-format this.eventStart}}
+    - {{shift-format this.eventEnd}}
+    <table class="table table-sm table-striped table-hover">
+      <thead>
       <tr>
         <th>Callsign</th>
         <th>Email</th>
@@ -25,12 +27,13 @@
         <th class="text-end">Post-Event Crdt</th>
         <th class="text-end">Years</th>
       </tr>
-    </thead>
-
-    <tbody>
+      </thead>
+      <tbody>
       {{#each this.people key="id" as |person|}}
         <tr>
-          <td><PersonLink @person={{person}} /></td>
+          <td>
+            <PersonLink @person={{person}} />
+          </td>
           <td>{{mail-to person.email}}</td>
           <td>{{person.first_name}} {{person.last_name}}</td>
           <td>{{person.status}}</td>
@@ -49,8 +52,12 @@
           <td colspan="13"><b class="text-danger">No {{this.year}} timesheet entries were found.</b></td>
         </tr>
       {{/each}}
-    </tbody>
-  </table>
-{{else}}
-  <p class="text-danger"><b>No Event Dates have been set for {{this.year}}. Hours and credits report cannot be run until the event dates are set.</b></p>
-{{/if}}
+      </tbody>
+    </table>
+  {{else}}
+    <p class="text-danger">
+      <b>No Event Dates have been set for {{this.year}}. Hours and credits report cannot be run
+      until the event dates are set.</b>
+    </p>
+  {{/if}}
+</main>

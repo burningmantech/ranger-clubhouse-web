@@ -1,0 +1,40 @@
+<main>
+  <YearSelect @title="Shiny Pennies"
+              @year={{this.year}}
+              @onChange={{action (mut this.year)}}
+              @minYear={{2010}} />
+  <p>
+    This report shows who was a Shiny Penny in a given year.
+  </p>
+  <p>
+    <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+  </p>
+  Showing {{pluralize this.people.length "Shiny Penny"}}
+  <table class="table table-width-auto table-striped table-hover table-sm">
+    <thead>
+    <tr>
+      <th>Callsign</th>
+      <th>Status</th>
+      <th>Email</th>
+      <th>Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.people as |person|}}
+      <tr>
+        <td>
+          <PersonLink @person={{person}} />
+        </td>
+        <td>{{person.status}}</td>
+        <td>{{mail-to person.email}}</td>
+        <td>{{person.first_name}} {{person.last_name}}</td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="4" class="text-danger">No Shiny Pennies found for {{this.year}}.</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</main>
+

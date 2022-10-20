@@ -7,6 +7,7 @@ import {debounce} from '@ember/runloop';
 import {service} from '@ember/service';
 import {inject as controller} from '@ember/controller';
 import {config} from 'clubhouse/utils/config';
+import {isEmpty} from '@ember/utils';
 import RSVP from 'rsvp';
 
 /*
@@ -64,6 +65,8 @@ export default class SearchItemBarComponent extends Component {
   @tracked searchType = 'person';
   @tracked searchPlaceholder = '';
 
+  keepDialogOpenAfterTransition = false;
+
   constructor() {
     super(...arguments);
 
@@ -88,11 +91,23 @@ export default class SearchItemBarComponent extends Component {
       setProperties(this.searchForm, searchPrefs);
     }
 
-    this.router.on('routeWillChange', () => {
-      this.showSearchOptions = false; // close up the box on route change.
-    });
+    this.router.on('routeDidChange', this, 'trackRouteTransition');
 
     this._buildPlaceholder();
+
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.router.off('routeDidChange', this, 'trackRouteTransition');
+  }
+
+  trackRouteTransition() {
+    if (!this.keepDialogOpenAfterTransition) {
+      this.session.showSearchDialog = false; // close up the box on route change.
+    } else {
+      this.keepDialogOpenAfterTransition = false;
+    }
 
   }
 
@@ -152,7 +167,6 @@ export default class SearchItemBarComponent extends Component {
 
     this._buildPlaceholder();
 
-    this.showSearchOptions = (this.searchForm.mode !== 'hq');
     this.house.setKey(SEARCH_MODE_KEY, mode);
 
     if (!route.startsWith('person.') && !route.startsWith('hq.')) {
@@ -165,24 +179,34 @@ export default class SearchItemBarComponent extends Component {
       return;
     }
 
+    this.keepDialogOpenAfterTransition = true;
+
     this.router.transitionTo((MODE_ROUTES[mode] || 'person.index'), person.id);
   }
 
   /**
    * Transition to the selected person/asset. Clear the query and results.
    *
-   * @param {string} item
+   * @param {Object} item
    * @private
    */
 
   _showItem(item) {
-    if (this.searchType === 'asset') {
-      this.router.transitionTo('search.assets', {queryParams: {barcode: item.barcode, year: this.searchYear}});
-    } else {
-      this.router.transitionTo((MODE_ROUTES[this.searchForm.mode] || 'person.index'), item.id);
+    switch (this.searchType) {
+      case 'asset':
+        this.router.transitionTo('search.assets', {queryParams: {barcode: item.barcode, year: this.searchYear}});
+        break;
+
+      case 'vehicle':
+        this.router.transitionTo('search.vehicles', {queryParams: {id: item.id}});
+        break;
+
+      default:
+        this.router.transitionTo((MODE_ROUTES[this.searchForm.mode] || 'person.index'), item.id);
+        break;
     }
 
-    this.showSearchOptions = false;
+    this.session.showSearchDialog = false;
     this.searchText = '';
     this.searchResults = [];
   }
@@ -209,6 +233,7 @@ export default class SearchItemBarComponent extends Component {
 
   @action
   searchAction(query) {
+    this.searchText = query;
     return new RSVP.Promise((resolve, reject) => {
       debounce(this, this._performSearch, query, resolve, reject, SEARCH_RATE_MS);
     });
@@ -227,22 +252,37 @@ export default class SearchItemBarComponent extends Component {
     }
 
     let type;
-    if (query.startsWith('#')) {
-      // Asset barcode lookup
-      type = 'asset'
-    } else if (query.startsWith('+')) {
-      // Person id lookup
-      type = 'person-id';
-    } else {
-      type = 'person';
+    switch (query.charAt(0)) {
+      case '#':
+        // Asset barcode lookup
+        type = 'asset'
+        break;
+      case '!':
+        // Vehicle search
+        type = 'vehicle';
+        break;
+      case '+':
+        // Person id lookup
+        type = 'person-id';
+        break;
+      default:
+        type = 'person';
+        break;
     }
 
     this.searchType = type;
 
-    if (type === 'asset') {
-      this._searchAsset(query, resolve, reject);
-    } else {
-      this._searchPerson(query, resolve, reject);
+    switch (type) {
+      case 'asset':
+        this._searchAsset(query, resolve, reject);
+        break;
+      case 'vehicle':
+        this._searchVehicle(query, resolve, reject);
+        break;
+
+      default:
+        this._searchPerson(query, resolve, reject);
+        break;
     }
   }
 
@@ -291,6 +331,67 @@ export default class SearchItemBarComponent extends Component {
 
         this.searchResults = searchResults;
         return resolve(searchResults);
+      }).catch((response) => {
+      this.house.handleErrorResponse(response);
+      return reject();
+    });
+  }
+
+  /**
+   * Search for a vehicle
+   *
+   * @param {string} query
+   * @param resolve
+   * @param reject
+   * @returns {Promise<*>}
+   * @private
+   */
+
+  _searchVehicle(query, resolve, reject) {
+    // Strip off '!'
+    const number = query.replace('!', '').replace(/ /g, '');
+
+    this.ajax.request('vehicle', {data: {number, status: 'approved', event_year: this.house.currentYear()}})
+      .then(({vehicle}) => {
+        if (!vehicle.length) {
+          // Nothing matched
+          return resolve([]);
+        }
+
+        const results = vehicle.map((v) => {
+          let name;
+          if (v.person) {
+            name = `Owner ${v.person.callsign}`;
+          } else if (!isEmpty(v.team_assignment)) {
+            name = `Team ${v.team_assignment}`;
+          } else {
+            name = 'Fleet Vehicle'
+          }
+
+          const numbers = [];
+
+          if (!isEmpty(v.license_number)) {
+            numbers.push(`Lic #${v.license_state}-${v.license_number}`);
+          }
+
+          if (!isEmpty(v.rental_number)) {
+            numbers.push(`Rental #${v.rental_number}`);
+          }
+
+          if (!isEmpty(v.sticker_number)) {
+            numbers.push(`Sticker #${v.sticker_number}`);
+          }
+
+          return {
+            id: v.id,
+            name,
+            numbers: numbers.join(' '),
+            description: `${v.vehicle_type} ${v.vehicle_year}  ${v.vehicle_make} ${v.vehicle_model} ${v.vehicle_color}`
+          }
+        });
+
+        this.searchResults = results;
+        return resolve(results);
       }).catch((response) => {
       this.house.handleErrorResponse(response);
       return reject();
@@ -350,16 +451,15 @@ export default class SearchItemBarComponent extends Component {
     }
 
     // And fire away!
-    return this.ajax.request('person', {
-      data: params
-    }).then((results) => {
-      const people = results.person;
-      this.searchResults = people;
-      return resolve(people);
-    }).catch((response) => {
-      this.house.handleErrorResponse(response);
-      return reject();
-    });
+    return this.ajax.request('person', {data: params})
+      .then((results) => {
+        const people = results.person;
+        this.searchResults = people;
+        return resolve(people);
+      }).catch((response) => {
+        this.house.handleErrorResponse(response);
+        return reject();
+      });
   }
 
   /**
@@ -370,7 +470,12 @@ export default class SearchItemBarComponent extends Component {
   searchFocusAction() {
     this.searchResults = [];
     this.searchYear = null;
-    this.showSearchOptions = (this.session.isSmallScreen || this.searchForm.mode !== 'hq');
+
+    if (this.searchText !== '') {
+      return new RSVP.Promise((resolve, reject) => {
+        debounce(this, this._performSearch, this.searchText, resolve, reject, 1);
+      });
+    }
   }
 
   /**
@@ -379,7 +484,7 @@ export default class SearchItemBarComponent extends Component {
 
   @action
   hideSearchBoxAction() {
-    this.showSearchOptions = false;
+    this.session.showSearchDialog = false;
   }
 
   /**
@@ -414,6 +519,7 @@ export default class SearchItemBarComponent extends Component {
     }
 
     fields.push('#barcode');
+    fields.push('!vehicle');
 
     const arrayToSentence = (a, conjunction) => [a.slice(0, -1).join(', '), a.pop()].filter(w => w !== '').join(` ${conjunction} `);
 

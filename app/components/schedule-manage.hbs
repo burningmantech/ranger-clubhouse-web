@@ -1,10 +1,12 @@
-<PrintInstruction/>
+<p>
+  All shift / training session times are in the Pacific timezone unless otherwise noted.
+</p>
 
 <div class="max-width-1000">
   {{#unless this.isCurrentYear}}
-    <ChNotice @type="warning">
-      Warning: You are viewing a past schedule ({{@year}}).
-    </ChNotice>
+    <UiNotice @type="warning">
+      Warning: You are viewing a past year ({{@year}}).
+    </UiNotice>
   {{/unless}}
 
   {{#if this.showScheduleBlocker}}
@@ -17,60 +19,58 @@
                      @hasTrainingBlocker={{this.hasTrainingBlocker}}
     />
   {{else}}
-    {{#if this.requirementsOverride}}
-      <ChNotice @type="danger" @icon="exclamation" @title="Schedule requirements overridden">
-        <b>All OVERRIDDEN scheduling actions are logged and subject to review.</b>
-      </ChNotice>
+    {{#if (and this.isAdmin this.requirementsOverride)}}
+      <UiNotice @type="danger" @icon="exclamation"
+                @title="All forced scheduling actions are logged and is subject to review."
+      />
     {{/if}}
-
-    <ScheduleTable @slots={{@signedUpSlots}}
-                   @person={{@person}}
-                   @isMe={{this.isMe}}
-                   @isAdmin={{this.isAdmin}}
-                   @year={{@year}}
-                   @creditsEarned={{@creditsEarned}}
-                   @scheduleSummary={{@scheduleSummary}}
-                   @leaveSlot={{this.leaveSlot}}
-                   @showPeople={{this.showPeople}}
-                   @includeLog={{@includeLog}}
-    />
-
-    <div class="d-print-none">
-      <UiSection>
-        <:title>{{if this.isCurrentYear "Available" "Past"}} {{@year}} Shifts</:title>
-        <:body>
-          {{#if this.availableSlots}}
-            <div class="row mb-1">
-              <div class="col-sm-12 col-lg-auto mb-2">
-                <ChForm::Select @name="filterDay"
-                                @value={{this.filterDay}}
-                                @options={{this.dayOptions}}
-                                @onChange={{action (mut this.filterDay)}} />
-              </div>
-            </div>
-
-            <p>Showing {{this.viewSlots.length}} of {{this.availableSlots.length}}</p>
-            {{#each this.positions key="position_id" as |position|}}
-              <SchedulePositionList @position={{position}}
-                                    @showPeople={{this.showPeople}}
-                                    @joinSlot={{this.joinSlot}}
-                                    @leaveSlot={{this.leaveSlot}}
-                                    @isAdmin={{this.isAdmin}}
-                                    @isCurrentYear={{this.isCurrentYear}}
-              />
-            {{else}}
-              <div class="text-danger">There are no shifts which match.</div>
-            {{/each}}
-            <div class="mt-2"><b>Note:</b>
-              <ul>
-                <li>A shift may not be added to or removed from your schedule if the shift has already started.</li>
-              </ul>
-            </div>
+    <UiTab as |tab|>
+      <tab.pane @title="Schedule">
+        <ScheduleTable @slots={{@signedUpSlots}}
+                       @person={{@person}}
+                       @isMe={{this.isMe}}
+                       @isAdmin={{this.isAdmin}}
+                       @year={{@year}}
+                       @creditsEarned={{@creditsEarned}}
+                       @scheduleSummary={{this.scheduleSummary}}
+                       @leaveSlot={{this.leaveSlot}}
+                       @showPeople={{this.showPeople}}
+        />
+      </tab.pane>
+      <tab.pane @title="Sign-Ups">
+        <ScheduleAvailableSignUps @availableSlots={{this.availableSlots}}
+                                  @year={{@year}}
+                                  @showPeople={{this.showPeople}}
+                                  @joinSlot={{this.joinSlot}}
+                                  @leaveSlot={{this.leaveSlot}}
+                                  @isAdmin={{this.isAdmin}}
+                                  @milestones={{@milestones}}
+                                  @person={{@person}}
+        />
+      </tab.pane>
+      {{#if (or @person.isRanger @person.isNonRanger)}}
+        <tab.pane @title="Ticket & Provisions Qualifications" @id="progress">
+          {{#if this.isCurrentYear}}
+            {{#if (eq tab.activeId "progress")}}
+              <PersonTicketProvisionsProgress @person={{@person}} />
+            {{/if}}
           {{else}}
-            <p><b class="text-danger">There are no shifts available.</b></p>
+            Ticket qualification information is only available for the current event.
           {{/if}}
-        </:body>
-      </UiSection>
-    </div>
+        </tab.pane>
+      {{/if}}
+      <tab.pane @title="Hours & Credits">
+        <ScheduledHoursCredits @scheduleSummary={{@scheduleSummary}}
+                               @creditsEarned={{@creditsEarned}}
+                               @year={{@year}} />
+      </tab.pane>
+      {{#if @includeLog}}
+        <tab.pane @title="Audit Log" @id="audit-log">
+          {{#if (eq tab.activeId "audit-log")}}
+            <Person::ScheduleLog @year={{@year}} @person={{@person}} />
+          {{/if}}
+        </tab.pane>
+      {{/if}}
+    </UiTab>
   {{/if}}
 </div>

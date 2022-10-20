@@ -1,104 +1,106 @@
-<h1>Clubhouse Settings</h1>
-<p class="text-danger">
-  <b>DO NOT TOUCH ANY SETTINGS UNLESS INSTRUCTED TO DO SO BY THE TECH TEAM</b>
-</p>
-<p>
-  {{fa-icon "key"}} = setting is a credential and may only be viewed and updated by the Tech Team.
-</p>
+<main>
+  <h1>Clubhouse Settings</h1>
+  <p class="text-danger">
+    <b>DO NOT TOUCH ANY SETTINGS UNLESS INSTRUCTED TO DO SO BY THE TECH TEAM</b>
+  </p>
+  <p>
+    {{fa-icon "key"}} = setting is a credential and may only be viewed and updated by the Tech Team.
+  </p>
 
-<FormRow>
-  <FormLabel>Filter name:</FormLabel>
-  <div class="col-auto">
-    <Input @type="text" @value={{this.filterByName}} size="20" class="form-control"/>
-  </div>
-  <div class="col-auto">
-    <UiButton @onClick={{this.clearFilter}}>Clear</UiButton>
-  </div>
-</FormRow>
+  <FormRow>
+    <FormLabel>Filter name:</FormLabel>
+    <div class="col-auto">
+      <Input @type="text" @value={{this.filterByName}} size="20" class="form-control"/>
+    </div>
+    <div class="col-auto">
+      <UiButton @onClick={{this.clearFilter}}>Clear</UiButton>
+    </div>
+  </FormRow>
 
-Showing {{this.viewSettings.length}} of {{this.settings.length}}.
-<table class="table table-striped table-sm table-hover table-width-auto">
-  <thead>
-  <tr>
-    <th>Setting</th>
-    <th>Value</th>
-    <th>Action</th>
-  </tr>
-  </thead>
-  <tbody>
-  {{#each this.viewSettings as |setting|}}
+  Showing {{this.viewSettings.length}} of {{this.settings.length}}.
+  <table class="table table-striped table-sm table-hover table-width-auto">
+    <thead>
     <tr>
-      <td>
-        {{setting.name}}
-        {{#if setting.is_credential}}
-          {{fa-icon "key"}}
-        {{/if}}
-      </td>
-      <td>
-        {{#if (and setting.is_credential (not this.isTechNinja))}}
-          <i>- redacted -</i>
-        {{else if setting.value}}
-          <code class="text-black">
-            <ReadMore @text={{setting.value}} @limit={{60}} />
-          </code>
-        {{else}}
-          <b class="text-danger">NULL</b>
-        {{/if}}
-      </td>
-      <td>
-        <UiButton @type="secondary"
-                  @size="sm"
-                  @disabled={{and setting.is_credential (not this.isTechNinja)}}
-                  @onClick={{fn this.edit setting}}>
-          {{fa-icon "edit"}} Edit
-        </UiButton>
-      </td>
+      <th>Setting</th>
+      <th>Value</th>
+      <th>Action</th>
     </tr>
-  {{/each}}
-  </tbody>
-</table>
-
-{{#if this.editSetting}}
-  <ModalDialog @title="Edit Setting {{this.editSetting.name}}" @onEscape={{this.cancel}} as |Modal|>
-    <ChForm @formId="setting"
-            @formFor={{this.editSetting}}
-            @onSubmit={{this.save}} as |f|>
-      <Modal.body>
-        {{#if this.editSetting.description}}
-          <p>
-            {{nl2br this.editSetting.description}}
-          </p>
-        {{/if}}
-        <FormRow>
-          {{#if (eq this.editSetting.type "bool")}}
-            <div class="col-auto">
-              <f.radioGroup @name="value"
-                            @options={{this.booleanOptions}}
-                            @inline={{true}}/>
-            </div>
-          {{else if (eq this.editSetting.type "integer")}}
-            <f.text @name="value"
-                    @label="Integer value"
-                    @size={{10}}/>
-          {{else if this.editSetting.options}}
-            <f.select @name="value"
-                      @label="Option value"
-                      @options={{this.editOptions}} />
-          {{else}}
-            <f.textarea @name="value"
-                        @label="Enter a {{this.editSetting.type}} value:"
-                        @rows={{10}}
-                        @cols={{80}}/>
+    </thead>
+    <tbody>
+    {{#each this.viewSettings as |setting|}}
+      <tr>
+        <td>
+          {{setting.name}}
+          {{#if setting.is_credential}}
+            {{fa-icon "key"}}
           {{/if}}
-        </FormRow>
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label="Update Setting" @disabled={{this.editSetting.isSaving}} />
-        <UiCancelButton @disabled={{this.editSetting.isSaving}} @onClick={{this.cancel}} />
-        {{#if this.editSetting.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
-{{/if}}
+        </td>
+        <td>
+          {{#if (and setting.is_credential (not this.isTechNinja))}}
+            <i>- redacted -</i>
+          {{else if setting.value}}
+            <code class="text-black">
+              <ReadMore @text={{setting.value}} @limit={{60}} />
+            </code>
+          {{else}}
+            <b class="text-danger">NULL</b>
+          {{/if}}
+        </td>
+        <td>
+          <UiButton @type="secondary"
+                    @size="sm"
+                    @disabled={{and setting.is_credential (not this.isTechNinja)}}
+                    @onClick={{fn this.edit setting}}>
+            {{fa-icon "edit"}} Edit
+          </UiButton>
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+
+  {{#if this.editSetting}}
+    <ModalDialog @title="Edit Setting {{this.editSetting.name}}" @onEscape={{this.cancel}} as |Modal|>
+      <ChForm @formId="setting"
+              @formFor={{this.editSetting}}
+              @onSubmit={{this.save}} as |f|>
+        <Modal.body>
+          {{#if this.editSetting.description}}
+            <p>
+              {{nl2br this.editSetting.description}}
+            </p>
+          {{/if}}
+          <FormRow>
+            {{#if (eq this.editSetting.type "bool")}}
+              <div class="col-auto">
+                <f.radioGroup @name="value"
+                              @options={{this.booleanOptions}}
+                              @inline={{true}}/>
+              </div>
+            {{else if (eq this.editSetting.type "integer")}}
+              <f.text @name="value"
+                      @label="Integer value"
+                      @size={{10}}/>
+            {{else if this.editSetting.options}}
+              <f.select @name="value"
+                        @label="Option value"
+                        @options={{this.editOptions}} />
+            {{else}}
+              <f.textarea @name="value"
+                          @label="Enter a {{this.editSetting.type}} value:"
+                          @rows={{10}}
+                          @cols={{80}}/>
+            {{/if}}
+          </FormRow>
+        </Modal.body>
+        <Modal.footer @noAlign={{true}}>
+          <f.submit @label="Update Setting" @disabled={{this.editSetting.isSaving}} />
+          <UiCancelButton @disabled={{this.editSetting.isSaving}} @onClick={{this.cancel}} />
+          {{#if this.editSetting.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
+        </Modal.footer>
+      </ChForm>
+    </ModalDialog>
+  {{/if}}
+</main>

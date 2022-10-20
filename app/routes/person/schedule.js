@@ -25,6 +25,7 @@ export default class PersonScheduleRoute extends ClubhouseRoute {
 
     return RSVP.hash({
       schedule: this.ajax.request(`person/${person_id}/schedule`, {data: scheduleParams}),
+      milestones: this.ajax.request(`person/${person_id}/milestones`).then(({milestones}) => milestones),
       year,
     });
   }

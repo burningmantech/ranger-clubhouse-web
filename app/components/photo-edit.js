@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
-import { action } from '@ember/object';
-import { service } from '@ember/service';
+import {action} from '@ember/object';
+import {service} from '@ember/service';
 import Cropper from 'cropperjs';
 
 export default class PhotoEditComponent extends Component {
@@ -17,6 +17,8 @@ export default class PhotoEditComponent extends Component {
 
     // Only show the cropper controls if running on a large screen.
     this.showEditControls = !(this.session.isMobileDevice || this.session.isTabletDevice);
+
+
   }
 
   willDestroy() {
@@ -24,11 +26,14 @@ export default class PhotoEditComponent extends Component {
     // Clean up CropperJS
     if (this.cropper) {
       this.cropper.destroy();
+      this.cropper = null;
     }
   }
 
-  /*
-   * When brower says the image has been loaded, fire up CopperJS
+  /**
+   * When browser says the image has been loaded, fire up CopperJS
+   *
+   * @param {Event} event
    */
 
   @action
@@ -44,18 +49,18 @@ export default class PhotoEditComponent extends Component {
       cropBoxMovable: false,
       cropBoxResizable: false,
       toggleDragModeOnDblclick: false,
-      viewMode: 3,
+      viewMode: this.args.isMugshot ? 3 : 0,
       modal: true,
     });
   }
 
-  /*
+  /**
    * Let the caller component know the user is done cropping.
    */
 
   @action
   submitAction() {
-    const canvas = this.cropper.getCroppedCanvas({ width: this.args.width, height: this.args.height });
+    const canvas = this.cropper.getCroppedCanvas({width: this.args.width, height: this.args.height});
     canvas.toBlob((blob) => this.args.submitAction(blob), 'image/png');
   }
 
@@ -65,7 +70,11 @@ export default class PhotoEditComponent extends Component {
 
   @action
   zoomOutAction() {
-    this.cropper.zoom(-0.1);
+    try {
+      this.cropper.zoom(-0.1);
+      // eslint-disable-next-line no-empty
+    } catch {
+    }
   }
 
   /*
@@ -74,7 +83,12 @@ export default class PhotoEditComponent extends Component {
 
   @action
   zoomInAction() {
-    this.cropper.zoom(0.1);
+    try {
+      this.cropper.zoom(0.1);
+      // eslint-disable-next-line no-empty
+    } catch {
+
+    }
   }
 
   /*

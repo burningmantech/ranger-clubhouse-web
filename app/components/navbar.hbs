@@ -1,80 +1,105 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-khaki">
-  <div class="container-fluid">
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
-            aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-      Menu
-      {{#if this.session.unreadMessageCount}}
-        <span class="badge badge-pill bg-success">{{fa-icon "envelope"}} {{this.session.unreadMessageCount}}</span>
-      {{/if}}
+<BsNavbar @type="light" @backgroundColor="khaki" class="navbar-expand-xl" as |navbar|>
+  <LinkTo @route="me.homepage" class="navbar-brand">
+    {{#if this.session.isStaging}}
+      <span class="text-danger">STAGING SERVER</span>
+    {{else if this.session.isTraining}}
+      <span class="text-danger">TRAINING SERVER</span>
+    {{else}}
+      Clubhouse
+    {{/if}}
+  </LinkTo>
+
+  {{#if (and this.session.hasLMOP this.session.isSmallScreen)}}
+    <button type="button" class="border rounded p-1 bg-white text-muted mx-auto" {{on "click" this.launchSearchDialog}}>
+      <span class="mx-1">
+        {{fa-icon "search"}}
+      </span>
+      Search
     </button>
-    <LinkTo @route="me.homepage" class="navbar-brand">
-      {{#if this.session.isStaging}}
-        <span class="text-danger">Staging Server</span>
-      {{else if this.session.isTraining}}
-        <span class="text-danger">Training Server</span>
-      {{else}}
-        Clubhouse
-      {{/if}}
-    </LinkTo>
+  {{/if}}
 
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+  <navbar.toggle id="top-burger-menu">
+    <span class="navbar-toggler-icon"></span>
+    Menu
+    {{#if this.session.unreadMessageCount}}
+      <span class="badge badge-pill bg-success">{{fa-icon "envelope"}} {{this.session.unreadMessageCount}}</span>
+    {{/if}}
+  </navbar.toggle>
+
+  <navbar.content>
+    <navbar.nav as |nav|>
       {{#if this.session.isAuthenticated}}
-      {{! Show callsign and logout button on small screens with collapsed navbar}}
-        <div class="navbar-text d-lg-none float-end">
-          <LinkTo @route="logout" class="btn btn-secondary text-white">Logout</LinkTo>
-        </div>
-        <div class="navbar-text d-lg-none h4 text-black mt-2">
-          {{this.user.callsign}}
-        </div>
-        {{#if this.session.unreadMessageCount}}
-          <div class="navbar-item d-lg-none h4 text-black mt-2">
-            <LinkTo @route="me.messages" class="btn btn-success text-white">
-              Read {{pluralize this.session.unreadMessageCount "message"}}
-            </LinkTo>
+        {{#if this.session.isSmallScreen}}
+          <div class="navbar-text d-lg-none h4 text-black mt-2">
+            {{this.user.callsign}}
+            <LinkTo @route="logout" class="btn btn-secondary text-white">Logout</LinkTo>
           </div>
+          {{! Show callsign and logout button on small screens with collapsed navbar}}
+          {{#if this.session.unreadMessageCount}}
+            <nav.item>
+              <nav.link-to @route="me.messages" class="btn btn-success text-white">
+                Read {{pluralize this.session.unreadMessageCount "message"}}
+              </nav.link-to>
+            </nav.item>
+          {{/if}}
         {{/if}}
+
+        <NavbarAreaMe @nav={{nav}} @user={{this.user}} />
+        {{#if this.user.teacher.is_trainer}}
+          <NavbarAreaTraining @nav={{nav}} />
+        {{/if}}
+
+        {{#if this.user.teacher.is_art_trainer}}
+          <NavbarAreaArts @nav={{nav}} @user={{this.user}} />
+        {{/if}}
+
+        {{#if (has-role "mentor")}}
+          <NavbarAreaMentoring @nav={{nav}} />
+        {{/if}}
+
+        {{#if (has-role "vc")}}
+          <NavbarAreaVolCoords @nav={{nav}} />
+        {{/if}}
+
+        {{#if (has-role "admin" "edit-slots" "megaphone")}}
+          <NavbarAreaAdmin @nav={{nav}} />
+        {{/if}}
+
+        {{#if (has-role "admin" "manage")}}
+          <NavbarAreaReports @nav={{nav}} />
+          <NavbarAreaSearch @nav={{nav}} />
+        {{/if}}
+      {{else}}
+      {{! User not logged in}}
+        <NavbarAreaLogin @nav={{nav}} />
       {{/if}}
-
-      <ul class="navbar-nav">
-        {{#if this.session.isAuthenticated}}
-          <NavbarAreaMe @user={{this.user}} />
-          {{#if this.user.teacher.is_trainer}}
-            <NavbarAreaTraining/>
-          {{/if}}
-
-          {{#if this.user.teacher.is_art_trainer}}
-            <NavbarAreaArts @user={{this.user}} />
-          {{/if}}
-
-          {{#if (has-role "mentor")}}
-            <NavbarAreaMentoring/>
-          {{/if}}
-
-          {{#if (has-role "vc")}}
-            <NavbarAreaVolCoords/>
-          {{/if}}
-
-          {{#if (has-role "admin" "edit-slots" "megaphone")}}
-            <NavbarAreaAdmin/>
-          {{/if}}
-
-          {{#if (has-role "admin" "manage")}}
-            <NavbarAreaReports/>
-            <NavbarAreaSearch/>
-          {{/if}}
-        {{else}}
-        {{! User not logged in}}
-          <NavbarAreaLogin/>
-        {{/if}}
-      </ul>
-    </div>
-    {{#if this.session.isAuthenticated}}
-      <div class="d-none d-lg-flex ms-auto">
-        <ul class="navbar-nav">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href>
+    </navbar.nav>
+  </navbar.content>
+  {{#if (and this.session.hasLMOP (not this.session.isSmallScreen))}}
+    <navbar.content>
+      {{! template-lint-disable no-inline-styles}}
+      <div role="button"
+           class="border rounded p-1 bg-white text-muted small d-flex align-items-center justify-content-between"
+           style="min-width:0;"
+        {{on "click" this.launchSearchDialog}}>
+        <div class="mx-1 flex-shrink-0">
+          {{fa-icon "search"}}
+        </div>
+        <div class="flex-shrink-1 text-truncate">Search Callsigns/Assets/Vehicles</div>
+        {{#unless this.session.isMobileDevice}}
+          <div class="ms-1 bg-gray p-1 flex-shrink-0">
+            {{if this.session.isMac "⌘" "CTRL"}} K
+          </div>
+        {{/unless}}
+      </div>
+    </navbar.content>
+  {{/if}}
+  {{#if this.session.isAuthenticated}}
+    <div class="d-none d-lg-flex ms-auto">
+      <navbar.content>
+        <navbar.nav as |nav|>
+          <nav.dropdown as |dropdown|>
+            <dropdown.toggle>
               {{#if this.session.unreadMessageCount}}
                 <span class="badge badge-pill bg-success">
                   {{fa-icon "envelope"}} {{this.session.unreadMessageCount}}
@@ -84,20 +109,21 @@
               {{#if this.user.onduty_position}}
                 ({{this.user.onduty_position.title}})
               {{/if}}
-            </a>
-
-            <div class="dropdown-menu dropdown-menu-end">
-              {{#if this.user.isRanger}}
-                <LinkTo @route="me.messages" class="dropdown-item">
-                  {{pluralize this.session.unreadMessageCount "message"}}
-                </LinkTo>
-                <div class="dropdown-divider"></div>
-              {{/if}}
-              <NavbarMenuItem @route="logout" @item="Logout"/>
-            </div>
-          </li>
-        </ul>
-      </div>
-    {{/if}}
-  </div>
-</nav>
+            </dropdown.toggle>
+            <dropdown.menu as |menu|>
+              <menu.item>
+                {{#if this.user.isRanger}}
+                  <LinkTo @route="me.messages" class="dropdown-item">
+                    {{pluralize this.session.unreadMessageCount "message"}}
+                  </LinkTo>
+                  <div class="dropdown-divider"></div>
+                {{/if}}
+              </menu.item>
+              <NavbarMenuItem @menu={{menu}} @route="logout" @item="Logout"/>
+            </dropdown.menu>
+          </nav.dropdown>
+        </navbar.nav>
+      </navbar.content>
+    </div>
+  {{/if}}
+</BsNavbar>

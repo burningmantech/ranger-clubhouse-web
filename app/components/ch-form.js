@@ -14,6 +14,9 @@ export default class ChFormComponent extends Component {
 
   watchingModel = null;
 
+  // AutoComplete hack to prevent Enter from triggering a submit event
+  preventSubmit = false;
+
   constructor() {
     super(...arguments);
 
@@ -26,12 +29,17 @@ export default class ChFormComponent extends Component {
   }
 
   get model() {
-    return this.changeSet ? this.changeSetModel : this.args.formFor;
+    const {formFor} = this.args;
+    if (this._currentFormFor !== formFor) {
+      this._buildChangeSet();
+    }
+    return this.changeSet ? this.changeSetModel : formFor;
   }
 
   _buildChangeSet() {
     const {formFor, validator} = this.args;
 
+    this._currentFormFor = formFor;
     if (!this.changeSet) {
       return;
     }
@@ -157,6 +165,10 @@ export default class ChFormComponent extends Component {
 
   @action
   submitForm(callback = null) {
+    if (this.preventSubmit) {
+      return;
+    }
+
     const model = this.model;
     const {formFor} = this.args;
 

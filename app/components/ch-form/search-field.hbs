@@ -9,7 +9,11 @@
                        @onFocus={{@onFocus}}
                        @disabled={{@disabled}}
                        @autofocus={{@autofocus}}
+                       @selectOnBlur={{true}}
+                       @keepFocusOnSelect={{true}}
+                       @form={{@form}}
                        @inputClass="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
+                       @noResultsText={{@noResultsText}}
                        @text={{this.modelValue}} as |item|>
       {{~item~}}
     </AutocompleteInput>

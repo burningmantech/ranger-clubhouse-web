@@ -1,5 +1,5 @@
-<UiSection>
-  <:title>Missing Timesheet Requests</:title>
+<UiSection id="missing-requests">
+  <:title>{{@year}} Missing Timesheet Entry Requests</:title>
   <:body>
     <p>
       <UiButton @type="secondary" @onClick={{this.newEntryAction}}>New Request</UiButton>
@@ -38,15 +38,25 @@
               {{/if}}
             </td>
             <td>
-              <UiButton @size="sm" @type={{if tm.isPending "danger" "primary"}}
-                        @onClick={{fn this.editEntryAction tm}} @disabled={{tm.isReloading}}>
-                {{#if tm.isReloading}}
-                  <SpinIcon/>
-                {{else}}
-                  {{fa-icon "edit"}}
-                {{/if}}
-                {{if tm.isPending "Review" "Edit"}}
-              </UiButton>
+              {{#if this.hasTimesheetManagement}}
+                <UiButton @size="sm"
+                          @type={{if tm.isPending "danger" "primary"}}
+                          @onClick={{fn this.editEntryAction tm}}
+                          @disabled={{tm.isReloading}}>
+                  {{#if tm.isReloading}}
+                    <SpinIcon/>
+                  {{else}}
+                    {{fa-icon "edit"}}
+                  {{/if}}
+                  {{if tm.isPending "Review" "Edit"}}
+                </UiButton>
+              {{else}}
+                <UiButton @size="sm" @type="primary"
+                          @onClick={{fn this.viewEntryAction tm}}
+                          @disabled={{tm.isReloading}}>
+                  {{fa-icon "magnifying-glass"}} View
+                </UiButton>
+              {{/if}}
             </td>
           </tr>
         {{/each}}
@@ -68,10 +78,15 @@
         <FormRow>
           <f.datetime @name="on_duty"
                       @label="On Duty"
-                      @startDate={{this.startDateForEntry}} />
+                      @startDate={{this.startDateForEntry}}
+                      @minDate={{this.minDate}}
+                      @maxDate={{this.maxDate}}
+          />
           <f.datetime @name="off_duty"
                       @label="Off Duty"
                       @startDate={{this.startDateForEntry}}
+                      @minDate={{this.minDate}}
+                      @maxDate={{this.maxDate}}
           />
           <f.select @name="position_id"
                     @label="Position"
@@ -85,11 +100,20 @@
         </FormRow>
         <FormRow>
           <f.textarea @name="additional_notes"
-                      @label="Correction message from {{@person.callsign}}"
+                      @label="Requester note FROM {{@person.callsign}}"
                       @cols={{80}}
                       @rows={{4}}
                       @options={{@positions}} />
         </FormRow>
+        {{#if this.hasTimesheetManagement}}
+          <FormRow>
+            <f.textarea @name="additional_reviewer_notes"
+                        @label="Reviewer note TO {{@person.callsign}}"
+                        @cols={{80}}
+                        @rows={{4}}
+                        @options={{@positions}} />
+          </FormRow>
+        {{/if}}
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Create" @disabled={{this.newEntry.isSaving}} />
@@ -111,13 +135,13 @@
             @onSubmit={{this.saveEntryAction}} as |f|>
       <Modal.body>
         {{#if (eq this.editEntry.review_status "approved")}}
-          <ChNotice @type="success" @icon="check" @title="Request approved">
+          <UiNotice @type="success" @icon="check" @title="Request approved">
             Request has been approved. Review is not needed at this time.
-          </ChNotice>
+          </UiNotice>
         {{else if (eq this.editEntry.review_status "rejected")}}
-          <ChNotice @type="danger" @icon="times" @title="Request rejected">
+          <UiNotice @type="danger" @icon="times" @title="Request rejected">
             Request was rejected. Review is not needed at this time.
-          </ChNotice>
+          </UiNotice>
         {{/if}}
         <dl class="row">
           <dt class="col-2">Position:</dt>
@@ -157,7 +181,7 @@
                         no shift within 30 mins of {{shift-format this.editEntry.on_duty}}
                       </td>
                     {{else}}
-                      <td colspan="3" class="text-danger">callsign not found</td>
+                      <td colspan="{{if pi.person_pi 3 4}}" class="text-danger">callsign not found</td>
                     {{/if}}
                     {{#if pi.person_id}}
                       <td>
@@ -185,11 +209,19 @@
         </fieldset>
         <fieldset>
           <legend>Submission Review</legend>
-          {{#if this.editEntry.reviewed_at}}
-            <FormRow>
-              Last review on {{shift-format this.editEntry.reviewed_at}} by {{this.editEntry.reviewer_person.callsign}}
-            </FormRow>
-          {{/if}}
+          <div class="mb-2">
+            {{#if this.editEntry.reviewer_notes}}
+              {{nl2br this.editEntry.reviewer_notes}}
+            {{else}}
+              <i>No reviewer notes have been left yet.</i>
+            {{/if}}
+            {{#if this.editEntry.reviewed_at}}
+              <FormRow>
+                Last review on {{shift-format this.editEntry.reviewed_at}}
+                by {{this.editEntry.reviewer_person.callsign}}
+              </FormRow>
+            {{/if}}
+          </div>
           <FormRow>
             <f.textarea @name="additional_reviewer_notes"
                         @label="Enter your response to {{@person.callsign}} below. Be clear and concise."
@@ -236,7 +268,6 @@
               <th>Position</th>
             </tr>
             </thead>
-
             <tbody>
             {{#each this.partnerTimesheet as |pt| }}
               <tr>
@@ -255,7 +286,7 @@
               </tr>
             {{else}}
               <tr>
-                <td colspan="4">No timesheets found for {{@year}}</td>
+                <td colspan="4">No timesheet entries found for {{@year}}</td>
               </tr>
             {{/each}}
             </tbody>
@@ -280,5 +311,52 @@
         </div>
       </Modal.footer>
     </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.viewEntry}}
+  <ModalDialog @title="Missing Timesheet Request ID #{{this.viewEntry.id}}"
+               @onEscape={{this.closeViewEntry}} as |Modal|>
+    <Modal.body>
+      <dl class="row">
+        <dt class="col-2">Position:</dt>
+        <dd class="col-10">{{this.viewEntry.position.title}}</dd>
+
+        <dt class="col-2">Time:</dt>
+        <dd class="col-10">{{shift-format this.viewEntry.on_duty this.viewEntry.off_duty}}</dd>
+
+        <dt class="col-2">Duration:</dt>
+        <dd class="col-10">{{hour-minute-format this.viewEntry.duration}}</dd>
+
+        <dt class="col-2">Credits:</dt>
+        <dd class="col-10">{{credits-format this.viewEntry.credits}}</dd>
+        <dt class="col-2">Partner(s):</dt>
+        <dd class="col-10">{{or this.viewEntry.partner "-"}}</dd>
+      </dl>
+      <p>
+        <b>Requester notes FROM {{@person.callsign}}</b><br>
+        {{#if this.viewEntry.notes}}
+          {{nl2br this.viewEntry.notes}}
+        {{else}}
+          <i>No notes or messages from {{@person.callsign}} about this request?!?</i>
+        {{/if}}
+      </p>
+      <p>
+        <b>Reviewer notes TO {{@person.callsign}}</b><br>
+        {{#if this.viewEntry.reviewer_notes}}
+          {{nl2br this.viewEntry.reviewer_notes}}
+        {{else}}
+          <i>No reviewer notes have been left yet.</i>
+        {{/if}}
+        {{#if this.viewEntry.reviewed_at}}
+          <br>
+          Last review on {{shift-format this.viewEntry.reviewed_at}}
+          by {{this.viewEntry.reviewer_person.callsign}}
+        {{/if}}
+      </p>
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closeViewEntry}} />
+    </Modal.footer>
   </ModalDialog>
 {{/if}}

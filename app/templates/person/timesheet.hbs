@@ -1,40 +1,95 @@
-<YearSelect @title="Timesheet" @year={{this.year}} @years={{this.person.all_years}}
-            @onChange={{action (mut this.year)}} @subheader={{true}} />
-{{#if this.timesheetPendingCount}}
-  <h3 class="text-danger">{{pluralize this.timesheetPendingCount "entry"}} requires correction review.</h3>
-{{/if}}
-{{#if this.missingRequestPendingCount}}
-  <h3 class="text-danger">{{pluralize this.missingRequestPendingCount "missing entry request"}} requires attention.</h3>
-{{/if}}
-<UiSection>
-  <:title>Shift Check In/Out</:title>
-  <:body>
-    {{#if (is-current-year this.year)}}
-      <ShiftCheckInOut @positions={{this.positions}}
-                       @timesheets={{this.timesheets}}
-                       @person={{this.person}}
-                       @eventInfo={{this.eventInfo}}
-                       @onDutyEntry={{this.onDutyEntry}}
-                       @startShiftNotify={{this.startShiftNotify}}
-                       @endShiftNotify={{this.endShiftNotify}}
-                       @year={{this.year}}
-      />
-    {{else}}
-      Select the current year to start or end a shift
+<YearSelect @title="Timesheet"
+            @year={{this.year}}
+            @years={{this.person.all_years}}
+            @onChange={{action (mut this.year)}}
+            @subheader={{true}} />
+<UiTab class="mt-4" as |tab|>
+  <tab.pane @title="Timesheet / Missing Entry Requests" @id="timesheet">
+    {{#if (or this.timesheetPendingCount this.missingRequestPendingCount)}}
+      <p>
+        <b class="text-danger">
+          {{fa-icon "arrow-right"}}
+          {{#if this.timesheetPendingCount}}
+            {{pluralize this.timesheetPendingCount "timesheet entry"}} requires correction review.
+          {{/if}}
+          {{#if this.missingRequestPendingCount}}
+            {{pluralize this.missingRequestPendingCount "missing timesheet entry request"}} requires attention.
+          {{/if}}
+        </b>
+      </p>
     {{/if}}
-  </:body>
-</UiSection>
+    {{#if (is-current-year this.year)}}
+      {{#if this.timesheetInfo.timesheet_confirmed}}
+        <p class="text-success">
+          {{fa-icon "check"}} The {{this.year}} timesheet was confirmed correct on
+          {{shift-format this.timesheetInfo.timesheet_confirmed_at year=true}}. Any further updates to the timesheet,
+          including creating new entries, will require re-confirmation by {{this.person.callsign}}.
+        </p>
+      {{else}}
+        {{this.person.callsign}} has not yet confirmed the {{this.year}} timesheet is correct.
+      {{/if}}
+      {{#if this.canForceConfirmation}}
+        As a Tech Ninja, you may {{if this.timesheetInfo.timesheet_confirmed "un-confirm" "confirm"}} the timesheet.
+        <UiButton @onClick={{this.confirmTimesheetAction}} @type="secondary" @size="sm">
+          {{if this.timesheetInfo.timesheet_confirmed "Un-Confirm" "Confirm"}} Timesheet
+        </UiButton>
+      {{/if}}
+    {{/if}}
+    <p>
+      Jump to <a href="#missing-requests">Missing Timesheet Entry Requests</a>
+    </p>
 
-<Person::TimesheetManage @timesheets={{this.timesheets}}
-                         @person={{this.person}}
-                         @year={{this.year}}
-                         @positions={{this.positions}}
-                         @timesheetSummary={{this.timesheetSummary}}
-                         @startShiftNotify={{this.startShiftNotify}}
-                         @endShiftNotify={{this.endShiftNotify}}
-                         @onChange={{this.onTimesheetChange}}
+    <Person::TimesheetManage @timesheets={{this.timesheets}}
+                             @person={{this.person}}
+                             @year={{this.year}}
+                             @positions={{this.positions}}
+                             @timesheetSummary={{this.timesheetSummary}}
+                             @startShiftNotify={{this.startShiftNotify}}
+                             @endShiftNotify={{this.endShiftNotify}}
+                             @onChange={{this.onTimesheetChange}}
+    />
 
-/>
-<Person::TimesheetMissing @timesheetMissing={{this.timesheetMissing}} @timesheets={{this.timesheets}}
-                          @person={{this.person}} @year={{this.year}} @positions={{this.positions}}
-                          @onChange={{this.onTimesheetChange}} />
+    <Person::TimesheetMissing @timesheetMissing={{this.timesheetMissing}}
+                              @timesheets={{this.timesheets}}
+                              @person={{this.person}}
+                              @year={{this.year}}
+                              @positions={{this.positions}}
+                              @onChange={{this.onTimesheetChange}}
+    />
+
+  </tab.pane>
+  <tab.pane @title="Hours/Credits Breakdown" @id="breakdown">
+    <TimesheetSummary @summary={{this.timesheetSummary}} @year={{this.year}} />
+  </tab.pane>
+  <tab.pane @title="Position Summary" @id="position-summary">
+    <TimesheetPositionSummary @timesheets={{this.timesheets}} @year={{this.year}} />
+  </tab.pane>
+  <tab.pane @title="Shift Check In/Out" @id="shift-manage">
+    <p>
+      When on playa operations are running, please use the HQ Window Interface to start or end a shift.
+    </p>
+    <p>
+      <b>Need to create a timesheet entry?</b> Use the Missing Timesheet Request feature under the
+      'Timesheet / Missing Entry Requests' tab . Click on 'New Request', save, open the newly created request,
+      and then approve it. This provides a better audit trail on why a timesheet entry was created.
+    </p>
+    <UiSection>
+      <:title>Shift Check In/Out</:title>
+      <:body>
+        {{#if (is-current-year this.year)}}
+          <ShiftCheckInOut @positions={{this.positions}}
+                           @timesheets={{this.timesheets}}
+                           @person={{this.person}}
+                           @eventInfo={{this.eventInfo}}
+                           @onDutyEntry={{this.onDutyEntry}}
+                           @startShiftNotify={{this.startShiftNotify}}
+                           @endShiftNotify={{this.endShiftNotify}}
+                           @year={{this.year}}
+          />
+        {{else}}
+          Select the current year to start or end a shift
+        {{/if}}
+      </:body>
+    </UiSection>
+  </tab.pane>
+</UiTab>

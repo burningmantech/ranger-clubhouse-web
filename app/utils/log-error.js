@@ -1,28 +1,45 @@
 import {TimeoutError, AbortError, ForbiddenError, UnauthorizedError} from '@ember-data/adapter/error';
-import {isAbortError, isTimeoutError, isForbiddenError, isUnauthorizedError} from 'ember-ajax/errors';
+import {isAbortError, isForbiddenResponse, isUnauthorizedResponse} from 'ember-fetch/errors';
 import config from 'clubhouse/config/environment';
 
-/*
-  Log an unresolved error to the backend for later diagnosis.
+/**
+ * Send an error down to the server for later diagnoses.
+ *
+ * error may be one of several types
+ * - ember-model error
+ * - ember-ajax error
+ * - Javascript exception
+ *
+ * @param error
+ * @param type string event error name (e.g., client-ember-route, client-window-exception, etc.)
+ * @param additionalData - additional data to log
  */
 
-export default function logError(error, type) {
+export default function logError(error, type, additionalData = null) {
   if (!config.logEmberErrors) {
     // Might be in a development or test environment. skip logging.
     return;
   }
 
-  if (error instanceof TimeoutError  // check ember-model errors
+  const {message, stack, name, filename} = error.error ?? error;
+
+  if (
+    // ember-model errors
+    error instanceof TimeoutError
     || error instanceof AbortError
     || error instanceof ForbiddenError
     || error instanceof UnauthorizedError
-    || isAbortError(error)  // and ember-ajax errors
-    || isTimeoutError(error)
-    || isForbiddenError(error)
-    || isUnauthorizedError(error)
+    // ember-ajax errors
+    || isAbortError(error)
+    || isAbortError(error)
+    || isForbiddenResponse(error)
+    || isUnauthorizedResponse(error)
     // Offline errors..
-    || (error.name === 'NetworkError' || error.message?.match(/NetworkError/))
-    || +error.status === 403) {
+    || error.name === 'NetworkError'
+    || message?.match(/NetworkError/)
+    || message?.match(/Network request failed/i)
+    // Authorization error
+    || error.status === 403) {
     // Don't record timeouts, unauthorized requests (aka expired authorization tokens), or offline errors.
     return;
   }
@@ -31,20 +48,24 @@ export default function logError(error, type) {
   form.append('url', window.location.href);
   form.append('error_type', type);
 
-  form.append('data', JSON.stringify({
-    exception: {
-      name: error.name,
-      message: error.message,
-      stack: error.stack
-    },
+  const data = {
+    exception: {name, message, stack, filename},
     build_timestamp: config.APP.buildTimestamp,
     version: config.APP.version,
-  }));
+  };
+
+  if (additionalData !== null) {
+    data.additional = additionalData;
+  }
+
+  form.append('data', JSON.stringify(data));
 
   try {
-    // Grab the logged in user id if possible.
-    const personId = window.Clubhouse.__container__.lookup('service:session').get('user.id');
-    form.append('person_id', personId);
+    // Grab the logged-in user id if possible.
+    const personId = window.Clubhouse.__container__.lookup('service:session')?.user?.id;
+    if (personId) {
+      form.append('person_id', personId);
+    }
   } catch (exception) {
     console.error('Session user id exception', exception);
   }
@@ -55,8 +76,8 @@ export default function logError(error, type) {
     // sendBeacon will continue even if the browser window is closed.
     navigator.sendBeacon(url, form);
   } else {
-    // For Safari 11.1 and earlier, Internet Explorer, and other older browsers use good old XMLHttpRequest
-    // if the window is closed before the request is completed, the request may be aborted hence why
+    // For Safari 11.1 and earlier, Internet Explorer, and other older browsers use good old XMLHttpRequest.
+    // If the window is closed before the request is completed, the request may be aborted hence why
     // sendBeacon is preferred.
     try {
       const req = new XMLHttpRequest();

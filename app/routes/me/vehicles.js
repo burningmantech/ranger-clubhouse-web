@@ -17,12 +17,14 @@ export default class MeVehiclesRoute extends ClubhouseRoute {
     return RSVP.hash({
       vehicles: this.store.query('vehicle', { person_id: this.session.userId, event_year: year }),
       agreements: this.ajax.request(`agreements/${this.session.userId}`).then(({agreements}) => agreements),
+      vehicleConfig: this.ajax.request('vehicle/config').then(({config}) => config)
     });
   }
 
   setupController(controller, model) {
     const {agreements} = model;
     controller.set('vehicles', model.vehicles);
+    controller.set('vehicleConfig', model.vehicleConfig);
     controller.set('year', this.year);
     controller.set('motorpoolPolicySigned', !!agreements.find((a) => a.tag === 'motorpool-policy' && a.signed));
     controller.set('personalVehicleSigned', !!agreements.find((a) => a.tag === 'personal-vehicle-agreement' && a.signed));

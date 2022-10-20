@@ -10,28 +10,35 @@ export default class OnlineTrainingLaunchComponent extends Component {
   @tracked showCreationDialog = false;
   @tracked showExodusDialog = false;
   @tracked showErrorDialog = false;
+  @tracked showDownForMaintenanceDialog = false;
 
+  @tracked username = null;
   @tracked password = null;
   @tracked alreadyExists = false;
 
   @tracked isSubmitting = false;
 
   @action
-  setupAccountAction(event) {
+  setupAccountAction() {
     const person = this.args.person;
-    event.preventDefault();
 
     this.showCreationDialog = true;
     this.isSubmitting = true;
     this.ajax.request(`online-training/${person.id}/setup`, {method: 'POST'})
       .then((result) => {
-        if (result.status === 'exists') {
-          this.alreadyExists = true;
+        if (result.status === 'down-for-maintenance') {
+          this.showDownForMaintenanceDialog = true;
         } else {
-          this.password = result.password;
+          if (result.status === 'exists') {
+            this.alreadyExists = true;
+            this.username = result.username;
+          } else {
+            this.password = result.password;
+            this.username = result.username;
+          }
+          this.expiryDate = result.expiry_date;
+          this.showExodusDialog = true;
         }
-        this.expiryDate = result.expiry_date;
-        this.showExodusDialog = true;
       }).catch(() => this.showErrorDialog = true)
       .finally(() => {
         this.isSubmitting = false;
@@ -49,4 +56,10 @@ export default class OnlineTrainingLaunchComponent extends Component {
   closeAction() {
     this.showErrorDialog = false;
   }
+
+  @action
+  closeDownForMaintenance() {
+    this.showDownForMaintenanceDialog = false;
+  }
+
 }

@@ -1,5 +1,5 @@
 {{#each this.teamNotes as |intake|}}
-  <div class="mb-1">
+  <div class="mb-2">
     <b>{{intake.year}}
       <IntakeRanking @rank={{intake.rank}} />
     </b>
@@ -9,7 +9,7 @@
         {{#unless note.is_log}}
           <div class="mb-1">
             &mdash; {{note.note}}
-            {{#if (eq note.person_source_id this.session.userId)}}
+            {{#if this.canAddNote}}
               <p>
                 <UiButton @size="sm" @onClick={{fn this.updateNoteAction note}}>Update</UiButton>
                 <UiButton @type="light-red" @size="sm" @onClick={{fn this.deleteNoteAction note}}>Delete</UiButton>
@@ -23,17 +23,25 @@
     {{/if}}
   </div>
 {{else}}
-  No {{uppercase @type}} notes
+  <div class="mb-2">
+    No {{uppercase @type}} notes
+  </div>
 {{/each}}
-<div class="mt-2">
-  <UiButton @type="secondary" @size="sm" @onClick={{this.addNoteAction}}>
-    {{if this.canAddNote "Add" "View"}} {{uppercase @type}} note / rank
-  </UiButton>
-</div>
+{{#if (or this.canAddNote this.teamNotes)}}
+  <div class="mb-2">
+    <UiButton @type="secondary" @size="sm" @onClick={{this.addNoteAction}}>
+      {{if this.canAddNote "Add" "View"}} {{uppercase @type}} note / rank
+    </UiButton>
+  </div>
+{{/if}}
 
 {{#if this.addingNotes}}
-  <IntakeNoteEdit @teamNotes={{this.teamNotes}} @type={{@type}} @viewYear={{@viewYear}} @person={{@person}}
-                  @onSubmit={{@onSubmit}} @closeNoteAction={{this.closeNoteAction}}
+  <IntakeNoteEdit @teamNotes={{this.teamNotes}}
+                  @type={{@type}}
+                  @viewYear={{@viewYear}}
+                  @person={{@person}}
+                  @onSubmit={{@onSubmit}}
+                  @closeNoteAction={{this.closeNoteAction}}
                   @canAddNote={{this.canAddNote}}
   />
 {{/if}}

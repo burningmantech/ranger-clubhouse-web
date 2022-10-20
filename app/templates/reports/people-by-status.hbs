@@ -1,7 +1,7 @@
 <h1>People By Status Report</h1>
 
 {{#each this.statuses as |status|}}
-  <ChAccordion as |accordion|>
+  <UiAccordion as |accordion|>
     <accordion.title>
       {{status.status}} ({{pluralize status.people.length "person"}})
     </accordion.title>
@@ -14,5 +14,5 @@
         {{/each}}
       </div>
     </accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 {{/each}}

@@ -13,7 +13,7 @@ export default class AdminSurveyManageController extends ClubhouseController {
   @tracked orderedGroups;
 
   typeOptions = [
-    {id: 'rank', title: 'Rating 1 to 7'},
+    {id: 'rating', title: 'Rating 1 to 7'},
     {id: 'text', title: 'Text Response'},
     {id: 'options', title: 'Options'}
   ];

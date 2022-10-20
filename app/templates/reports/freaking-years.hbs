@@ -12,15 +12,12 @@
 
 <p>
   <UiButton @onClick={{this.exportToCsv}}>Export To CSV</UiButton>
-  <UiButton @type="secondary" @onClick={{this.toggleExpandAll}}>
-    {{#if this.expandAll}}Hide All{{else}}Expand All{{/if}}
-  </UiButton>
 </p>
 
 Showing {{this.totalPeople}} people over {{this.freaking.length}} years.
 {{#each this.freaking as |freaks|}}
   <div class="max-width-700">
-    <ChAccordion as |accordion|>
+    <UiAccordion as |accordion|>
       <accordion.title>{{pluralize freaks.years "year"}} - {{pluralize freaks.people.length "person"}}</accordion.title>
       <accordion.body>
         <table class="table table-striped table-sm">
@@ -50,6 +47,6 @@ Showing {{this.totalPeople}} people over {{this.freaking.length}} years.
           </tbody>
         </table>
       </accordion.body>
-    </ChAccordion>
+    </UiAccordion>
   </div>
 {{/each}}

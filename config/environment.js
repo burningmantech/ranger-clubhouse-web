@@ -19,13 +19,16 @@ module.exports = function (environment) {
     },
 
     APP: {
-      buildTimestamp: new Date().toISOString()
+      buildTimestamp: new Date().toLocaleString('en-US', {
+        dateStyle: "medium",
+        timeStyle: "long",
+        hourCycle: "h24",
+        timeZone: "America/Los_Angeles"
+      })
     },
 
     'ember-simple-auth': {
       authorizer: 'authorizer:token',
-      routeAfterAuthentication: 'me.homepage',
-      useSessionSetupMethod: true,
     },
 
     'ember-simple-auth-token': {
@@ -95,9 +98,7 @@ module.exports = function (environment) {
     ENV['ember-cli-mirage'] = {
       enabled: false,
       excludeFilesFromBuild: true // Don't include lodash and everything else mirage needs
-
     };
-
   }
 
   if (environment === 'test') {
@@ -145,6 +146,10 @@ module.exports = function (environment) {
     ENV['api-server'] = (process.env.RANGER_CLUBHOUSE_API_URL || '/api');
     ENV['ember-simple-auth-token'].serverTokenEndpoint = ENV['api-server'] + '/auth/login';
     ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = ENV['api-server'] + '/auth/refresh';
+    ENV['ember-cli-mirage'] = {
+      enabled: false,
+      excludeFilesFromBuild: true // Don't include lodash and everything else mirage needs
+    };
   }
 
   return ENV;

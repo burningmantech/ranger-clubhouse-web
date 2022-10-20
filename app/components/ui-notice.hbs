@@ -1,0 +1,8 @@
+<div class="alert {{this.boxColor}}">
+  {{#if @title}}
+    <h5>{{fa-icon this.icon type=@iconType}} {{@title}}</h5>
+  {{else}}
+    {{fa-icon this.icon type=@iconType}}
+  {{/if}}
+  {{yield}}
+</div>

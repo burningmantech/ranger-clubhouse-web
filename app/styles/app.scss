@@ -1,5 +1,6 @@
-
 @import "bootstrap-custom";
+@import "ember-bootstrap/bootstrap";
+@import "bootstrap-print";
 
 // Clubhouse styling
 @import "access-documents";
@@ -20,33 +21,42 @@
 @import "timesheet";
 @import "timesheet-log";
 @import "training";
+@import "vehicle-registry";
 
 
 main {
   flex: 1 1 0;
   min-width: 0;
   padding: 10px 20px;
-  background-color: #f6f6f6;
 }
 
 .ui-section {
-  margin-bottom: 10px;
-  padding: 15px;
+  // margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 10px;
   background-color: #ffffff;
   box-shadow: 0 1px 5px 0 rgb(50 50 50 / 50%); //rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
+.ui-section-title {
+  font-size: 1.05rem;
+  font-weight: 500;
+  margin: -10px -10px 10px -10px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #c0c0c0;
+}
 
 @media print {
   h1 {
-    font-size: 1.2rem;
+    font-size: 1.2rem !important;
   }
 
   body {
     margin: 0.1cm !important;
-    line-height: 1.3;
-    background: #ffffff !important;
-    color: #000;
+    line-height: 1.3 !important;
+    background-color: #f6f6f6;
+    color: #000 !important;
   }
 
   section {
@@ -55,10 +65,11 @@ main {
 
   .ui-section {
     box-shadow: none !important;
+    padding: 0 !important;
   }
 
   .d-print-page-break {
-    page-break-before: always;
+    page-break-before: always !important;
   }
 
   main {
@@ -72,25 +83,34 @@ main {
     color: #000 !important;
   }
 
+  ul.nav-tabs {
+    display: none;
+  }
 }
 
 #body-row {
   display: flex;
   //flex-direction: row;
   flex-wrap: wrap;
-
 }
 
 @include media-breakpoint-down(lg) {
   // Reduce padding on small screens.
   main {
-    padding: 5px 10px;
+    padding: 5px;
   }
+
 }
 
 @media not print {
   body {
-    background-color: #fcfcfc;
+    background-color: #f9f9f9;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  #body-row {
+    flex: 1;
   }
 }
 
@@ -119,6 +139,7 @@ button:disabled {
   cursor: not-allowed !important;
 }
 
+
 dl {
   margin-bottom: 0;
 }
@@ -133,7 +154,7 @@ dl {
 }
 
 .dropdown-large {
-  position: static;
+  position: static !important;
 }
 
 .dropdown-menu-container {
@@ -151,37 +172,49 @@ dl {
 }
 
 .dropdown-menu-section {
-  min-width: 200px;
+  min-width: 180px;
 }
 
 .dropdown-menu .navbar-text {
   margin-left: 10px;
-  font-weight: 500;
-  font-size: 1.1rem;
-  color: #222;
+  font-weight: 600;
+  color: #000;
 }
 
-@include media-breakpoint-down(xl) {
-  .navbar-brand {
-    margin-right: 0;
+ul.nav-tabs {
+  margin-bottom: 15px;
+
+
+  .nav-link:not(.active) {
+    background-color: #e9ecef;
+    border-bottom: #666;
+  }
+
+  li {
+    margin-right: 1vw;
+    margin-left: 1vw;
   }
 }
 
-.footer {
+@include media-breakpoint-down(lg) {
+  ul.nav-tabs {
+    flex-direction: column !important;
+
+    .nav-link {
+      border-radius: 0;
+      border: 1px solid #adb5bd !important;
+    }
+  }
+}
+
+
+footer {
   width: 100%;
-  padding: 15px 0;
+  padding: 10px;
   color: #000;
   background-color: $kakhi;
-
-  a, a:visited {
-    color: #000;
-    font-weight: bold;
-  }
-
-  > .container {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
+  font-size: 0.85rem;
+  text-align: center;
 }
 
 ul.nav-pills li > a.is_active {
@@ -281,23 +314,9 @@ legend {
 }
 
 
-
-.popover-container {
-  position: relative;
-  display: inline-block;
-
-  .popover {
-    z-index: 100000;
-    width: $popover-max-width;
-    @include box-shadow($box-shadow);
-  }
-
-  .popover-footer {
-    border-top: 1px solid #eee;
-    padding: 10px;
-    margin-top: 10px;
-    text-align: right;
-  }
+.popover-footer {
+  padding-top: 20px;
+  text-align: right;
 }
 
 /*
@@ -411,7 +430,10 @@ legend {
   }
 }
 
-.btn-block { width: 100%; display: block; }
+.btn-block {
+  width: 100%;
+  display: block;
+}
 
 @include media-breakpoint-down(lg) {
   .btn-responsive {
@@ -464,6 +486,10 @@ legend {
   }
 }
 
+.max-width-500 {
+  max-width: 500px;
+}
+
 .max-width-700 {
   max-width: 700px;
 }
@@ -473,6 +499,10 @@ legend {
 }
 
 .max-width-1000 {
+  max-width: 1000px;
+}
+
+.max-width-1200 {
   max-width: 1000px;
 }
 

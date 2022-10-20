@@ -4,7 +4,7 @@
     {{if @isOnDuty "ON DUTY" "Scheduled"}} - {{if @people (pluralize @people.length "Ranger") "NONE"}}
   </:title>
   <:body>
-    <table class="table table-sm table-striped table-hover">
+    <table class="table table-sm table-hover">
       <thead>
       <tr>
         <th class="w-10">Position</th>
@@ -14,11 +14,10 @@
         <th class="w-5 text-end">Yrs</th>
         <th class="w-5 text-center">GTR?</th>
         <th class="w-5 text-center">Veh?</th>
-        <th class="w-30">Positions</th>
+        <th class="w-30">Positions / Certifications ({{fa-icon "award" color="danger"}})</th>
         {{#if @isOnDuty}}
           <th class="w-10 text-end">On Duty</th>
           <th class="w-10 text-end">Duration</th>
-
         {{else}}
           <th class="w-10 text-end">Shift Start</th>
           <th class="w-10 text-end">Shift Ends</th>
@@ -26,12 +25,15 @@
       </tr>
       </thead>
       <tbody>
-      {{#each @people key="id" as |person|}}
-        <tr>
+      {{#each @people key="id" as |person idx|}}
+        <tr class="{{this.rowCss idx}}">
           <td class="w-10 {{if person.is_greendot_shift "bg-shift-lead-greendot"}}">
             {{if person.position.short_title person.position.short_title person.position.title}}
           </td>
           <td class="w-15">
+            {{#unless person.on_site}}
+              {{fa-icon "ban" color="danger"}}
+            {{/unless}}
             <PersonLink @person={{person}} />
           </td>
           <td class="w-5">
@@ -63,13 +65,18 @@
               -
             {{/if}}
           </td>
-          <td class="w-30 {{if person.is_greendot "bg-shift-lead-greendot"
-                               (if (and person.is_troubleshooter (not (or person.is_rsl person.is_ood) ) ) "bg-shift-lead-troubleshooter")}}">
+          <td class="w-30 {{this.positionCss person}}">
             {{#each person.positions as |p idx|~}}
               {{~if idx ", "}}{{p~}}
             {{~else}}
               -
             {{/each}}
+            {{#if person.certifications}}
+              <br>
+              {{#each person.certifications as |certTitle|}}
+                &nbsp;{{fa-icon "award" color="danger"}} {{certTitle}}
+              {{/each}}
+            {{/if}}
           </td>
           {{#if @isOnDuty}}
             <td class="w-10 text-end">{{time-format person.on_duty}}</td>
@@ -86,7 +93,7 @@
               {{#if @isOnDuty}}
                 No on duty personnel found.
               {{else}}
-                No sign ups found.
+                No sign-ups found.
               {{/if}}
             </b>
           </td>

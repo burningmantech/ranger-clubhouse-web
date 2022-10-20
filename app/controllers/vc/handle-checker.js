@@ -9,13 +9,20 @@ import {
   EditDistanceRule,
   ExperimentalEyeRhymeRule,
   EyeRhymeRule,
-  FccRule,
+  InappropriateRule,
   MinLengthRule,
   PhoneticAlphabetRule,
   SubstringRule
 } from 'clubhouse/utils/handle-rules';
 
 let nextCheckId = 1;
+
+class Conflict {
+  @tracked isCollapsed = true;
+  constructor(obj) {
+    Object.assign(this, obj);
+  }
+}
 
 class CheckedHandle {
   constructor(obj) {
@@ -79,7 +86,7 @@ export default class VcHandlerCheckerController extends ClubhouseController {
     // No input yet on ideal ordering for all checks.
     addRule(new SubstringRule(handles), 'Substring');
     addRule(new MinLengthRule(), 'Minimum Length');
-    addRule(new FccRule(), 'FCC naughty words');
+    addRule(new InappropriateRule(), 'Inappropriate words');
     addRule(new PhoneticAlphabetRule(handles), 'Phonetic alphabet');
     addRule(new EditDistanceRule(handles), 'Edit distance');
     addRule(new AmericanSoundexRule(handles), 'American Soundex');
@@ -132,7 +139,9 @@ export default class VcHandlerCheckerController extends ClubhouseController {
     const conflicts = [];
     const rules = Object.values(this.handleRules).map((obj) => obj.rule);
     const id = nextCheckId++;
-    rules.map((rule) => conflicts.push(...rule.check(name)));
+    rules.forEach((rule) => {
+      rule.check(name).forEach((conflict) => conflicts.push(new Conflict(conflict)));
+    });
     conflicts.sort(HandleConflict.comparator);
     this.checkedHandles.unshiftObject(new CheckedHandle({
       controller: this,
@@ -152,5 +161,10 @@ export default class VcHandlerCheckerController extends ClubhouseController {
   @action
   focusElement(element) {
     element.focus();
+  }
+
+  @action
+  toggleConflict(conflict) {
+    conflict.isCollapsed = !conflict.isCollapsed;
   }
 }

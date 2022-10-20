@@ -1,167 +1,208 @@
 <h3>Personal Information for {{this.person.callsign}}</h3>
 <p>
-  {{this.person.callsign}}
   {{#if this.person.reviewed_pi_at}}
-    last reviewed their information on
+    {{this.person.callsign}} last reviewed their PII on
     {{dayjs-format this.person.reviewed_pi_at "MMM DD, YYYY @ HH:mm"}} (UTC-7)
   {{else}}
-    has not reviewed their Personal Information.
+    Has not updated their PII yet.
+  {{/if}}
+  <br>
+  {{#if this.person.pi_reviewed_for_dashboard_at}}
+    Last reviewed for dashboard on
+    {{dayjs-format this.person.pi_reviewed_for_dashboard_at "MMM DD, YYYY @ HH:mm"}} (UTC-7).
+  {{else}}
+    Has not reviewed for dashboard yet.
   {{/if}}
 </p>
 {{#if this.canEditPersonalInfo}}
-  <p>
-    Jump to: <a href="#person-general">General Info</a>
-    | <a href="#person-contact">Contact Info</a>
-    | <a href="#person-camp">Camp Location</a>
-    | <a href="#person-callsign">Callsign</a>
-    | <a href="#person-clothing">Clothing</a>
-    | <a href="#person-address">Address</a>
-  </p>
   <ChForm @formId="person"
           @formFor={{this.person}}
           @validator={{this.personInfoValidations}}
           @onSubmit={{this.onSubmit}} as |f|>
-    <UiSection id="person-general">
-      <:title>General Information</:title>
-      <:body>
-        <FormRow>
-          <f.text @name="first_name"
-                  @label="First Name"
-                  @maxlength={{25}}/>
-          <f.text @name="mi"
-                  @label="M.I."
-                  @size={{2}}
-                  @maxlength={{10}}/>
-          <f.text @name="last_name"
-                  @label="Last Name"
-                  @maxlength={{25}}/>
-        </FormRow>
-        <FormRow>
-          <f.text @name="gender"
-                  @label="Gender"
-                  @hint="female, male, non-binary, gender fluid, etc."
-                  @maxlength={{32}}
-          />
-        </FormRow>
-        <FormRow>
-          <f.select @name="pronouns"
-                    @label="Pronouns"
-                    @options={{this.pronounOptions}}/>
-          {{#if (eq f.model.pronouns "custom")}}
-            <f.text
-              @name="pronouns_custom"
-              @label="Their pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
-              @size={{30}}
-              @maxlength={{30}}
-            />
-          {{/if}}
-        </FormRow>
-      </:body>
-    </UiSection>
-    <UiSection id="person-contact">
-      <:title>Contact Information</:title>
-      <:body>
-        <FormRow>
-          <f.text @name="email"
-                  @label="Email"
-                  @inputmode="email"
-                  @size={{25}}
-                  @maxlength={{50}}
-                  @noSpaces={{true}}/>
-          <f.text @name="home_phone"
-                  @inputmode="tel"
-                  @label="Primary Phone"
-                  @maxlength={{25}}/>
-          <f.text @name="alt_phone"
-                  @inputmode="tel"
-                  @label="Alternative Phone"
-                  @maxlength={{25}}/>
-        </FormRow>
-      </:body>
-    </UiSection>
-    <UiSection id="person-camp">
-      <:title>Camp Name &amp; Location</:title>
-      <:body>
-        <p>
-          Supply the camp's name, the street address, and street side (man-side, mountainside, plaza, etc.).
-        </p>
-        <p>
-          Example: <b><i>"Camp Specificity, 9:15 &amp; D, Mountainside."</i></b>
-        </p>
-        <FormRow>
-          <f.textarea @name="camp_location"
-                      @label="Camp Name & Location"
-                      @cols={{50}}
-                      @rows={{4}}
-                      @maxlength={{200}}
-                      @showCharCount={{true}} />
-        </FormRow>
-      </:body>
-    </UiSection>
-    <UiSection id="person-callsign">
-      <:title>Callsign Pronunciation</:title>
-      <:body>
-        <p>
-          For a difficult to pronounce callsign, enter the phonetic spelling below.
-        </p>
-        <p>
-          Example: <b><i>if the callsign is 3pio enter as "Three-Pee-Oh", for Jschool enter as "JAY-school",
-          etc</i></b>
-        </p>
-        <FormRow>
-          <f.text @name="callsign_pronounce"
-                  @label="Callsign Pronounciation"
-                  @size={{32}}
-                  @maxlength={{32}}
-          />
-        </FormRow>
-      </:body>
-    </UiSection>
-    <UiSection id="person-languages">
-      <:title>Languages</:title>
-      <:body>
-        <p>
-          List the English names of the languages they are comfortable speaking with the level of fluency in
-          parentheses, each separated by a comma.
-        </p>
-        <p>
-          Example: <b><i>"japanese (basic), spanish (fluent)"</i></b>
-        </p>
+    <UiTab class="mt-4" as |tab|>
+      <tab.pane @title="Name, Gender &amp; Pronouns">
+        <UiSection>
+          <:title>Name, Gender &amp; Pronouns</:title>
+          <:body>
+            <FormRow>
+              <f.text @name="first_name"
+                      @label="First Name"
+                      @maxlength={{25}}/>
+              <f.text @name="mi"
+                      @label="M.I."
+                      @size={{2}}
+                      @maxlength={{10}}/>
+              <f.text @name="last_name"
+                      @label="Last Name"
+                      @maxlength={{25}}/>
+            </FormRow>
+            <FormRow>
+              <f.text @name="gender"
+                      @label="Gender"
+                      @hint="female, male, non-binary, gender fluid, etc."
+                      @maxlength={{32}}
+              />
+            </FormRow>
+            <FormRow class="mb-4">
+              <f.select @name="pronouns"
+                        @label="Pronouns"
+                        @options={{this.pronounOptions}}/>
+              {{#if (eq f.model.pronouns "custom")}}
+                <f.text
+                  @name="pronouns_custom"
+                  @label="Their pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
+                  @size={{30}}
+                  @maxlength={{30}}
+                />
+              {{/if}}
+            </FormRow>
 
-        <FormRow>
-          <f.text @name="languages"
-                  @label="Languages Spoken"
-                  @size={{80}} />
-        </FormRow>
-      </:body>
-    </UiSection>
-    <UiSection id="person-clothing">
-      <:title>Ranger Clothing</:title>
-      <:body>
-        <FormRow>
-          <f.select @name="teeshirt_size_style"
-                    @label="T-Shirt Size"
-                    @options={{this.shortSleeveOptions}}
-          />
-          <f.select @name="longsleeveshirt_size_style"
-                    @label="Long Sleeve Shirt Size"
-                    @options={{this.longSleeveOptions}}
-          />
-        </FormRow>
-      </:body>
-    </UiSection>
-    <UiSection id="person-address">
-      <:title>Home Address</:title>
-      <:body>
-        <PersonAddressEdit @f={{f}} />
-      </:body>
-    </UiSection>
+            <f.submit @label="Save" @disabled={{this.person.isSaving}} />
+            {{#if this.person.isSaving}}
+              <LoadingIndicator/>
+            {{/if}}
+          </:body>
+        </UiSection>
+      </tab.pane>
+      <tab.pane @title="Email & Phone">
+        <UiSection>
+          <:title>Email &amp; Phone</:title>
+          <:body>
+            <PersonalInfoWarning/>
+            <FormRow class="mb-4">
+              <f.text @name="email"
+                      @label="Email"
+                      @inputmode="email"
+                      @size={{30}}
+                      @maxlength={{50}}
+                      @noSpaces={{true}}/>
+              <f.text @name="home_phone"
+                      @inputmode="tel"
+                      @label="Primary Phone"
+                      @maxlength={{25}}/>
+              <f.text @name="alt_phone"
+                      @inputmode="tel"
+                      @label="Alternative Phone"
+                      @maxlength={{25}}/>
+            </FormRow>
+            <f.submit @label="Save" @disabled={{this.person.isSaving}} />
+            {{#if this.person.isSaving}}
+              <LoadingIndicator/>
+            {{/if}}
+          </:body>
+        </UiSection>
+      </tab.pane>
+      <tab.pane @title="Camp Info">
+        <UiSection id="person-camp">
+          <:title>Camp Name &amp; Location</:title>
+          <:body>
+            <p>
+              Supply the camp's name, the street address, and street side (man-side, mountainside, plaza, etc.).
+            </p>
+            <p>
+              Example: <b><i>"Camp Specificity, 9:15 &amp; D, Mountainside."</i></b>
+            </p>
+            <FormRow class="mb-4">
+              <f.textarea @name="camp_location"
+                          @label="Camp Name & Location"
+                          @cols={{50}}
+                          @rows={{4}}
+                          @maxlength={{200}}
+                          @showCharCount={{true}} />
+            </FormRow>
+            <f.submit @label="Save" @disabled={{this.person.isSaving}} />
+            {{#if this.person.isSaving}}
+              <LoadingIndicator/>
+            {{/if}}
+          </:body>
+        </UiSection>
+      </tab.pane>
+      <tab.pane @title="Callsign Pronunciation">
+        <UiSection>
+          <:title>Callsign Pronunciation</:title>
+          <:body>
+            <p>
+              For a difficult to pronounce callsign, enter the phonetic spelling below.
+            </p>
+            <p>
+              Example: <b><i>if the callsign is 3pio enter as "Three-Pee-Oh", for Jschool enter as "JAY-school",
+              etc</i></b>
+            </p>
+            <FormRow class="mb-4">
+              <f.text @name="callsign_pronounce"
+                      @label="Callsign Pronounciation"
+                      @size={{32}}
+                      @maxlength={{32}}
+              />
+            </FormRow>
+            <f.submit @label="Save" @disabled={{this.person.isSaving}} />
+            {{#if this.person.isSaving}}
+              <LoadingIndicator/>
+            {{/if}}
+          </:body>
+        </UiSection>
+      </tab.pane>
+      <tab.pane @title="Languages">
+        <UiSection>
+          <:title>Languages Spoken</:title>
+          <:body>
+            <p>
+              List the English names of the languages they are comfortable speaking with the level of fluency in
+              parentheses, each separated by a comma.
+            </p>
+            <p>
+              Example: <b><i>"japanese (basic), spanish (fluent)"</i></b>
+            </p>
 
-    <f.submit @label="Update" @disabled={{this.person.isSaving}} />
-    <UiCancelButton @disabled={{this.person.isSaving}} @onClick={{this.onCancel}} />
-    {{#if this.person.isSaving}}
-      <LoadingIndicator/>
-    {{/if}}
+            <FormRow class="mb-4">
+              <f.text @name="languages"
+                      @label="Languages Spoken"
+                      @size={{80}} />
+            </FormRow>
+            <f.submit @label="Save" @disabled={{this.person.isSaving}} />
+            {{#if this.person.isSaving}}
+              <LoadingIndicator/>
+            {{/if}}
+          </:body>
+        </UiSection>
+      </tab.pane>
+      <tab.pane @title="Clothing">
+        <UiSection>
+          <:title>Ranger Clothing</:title>
+          <:body>
+            <FormRow class="mb-4">
+              <f.select @name="teeshirt_size_style"
+                        @label="T-Shirt Size"
+                        @options={{this.shortSleeveOptions}}
+              />
+              <f.select @name="longsleeveshirt_size_style"
+                        @label="Long Sleeve Shirt Size"
+                        @options={{this.longSleeveOptions}}
+              />
+            </FormRow>
+            <f.submit @label="Save" @disabled={{this.person.isSaving}} />
+            {{#if this.person.isSaving}}
+              <LoadingIndicator/>
+            {{/if}}
+          </:body>
+        </UiSection>
+      </tab.pane>
+      <tab.pane @title="Home Address">
+        <UiSection id="person-address">
+          <:title>Home Address</:title>
+          <:body>
+            <PersonalInfoWarning/>
+            <PersonAddressEdit @f={{f}} />
+            <div class="mt-4">
+              <f.submit @label="Save" @disabled={{this.person.isSaving}} />
+              {{#if this.person.isSaving}}
+                <LoadingIndicator/>
+              {{/if}}
+            </div>
+          </:body>
+        </UiSection>
+      </tab.pane>
+    </UiTab>
   </ChForm>
 {{else}}
   <dl class="row">

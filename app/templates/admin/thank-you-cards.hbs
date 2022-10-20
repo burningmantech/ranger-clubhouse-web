@@ -1,59 +1,63 @@
-<YearSelect @title="Thank You Cards" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<main>
+  <YearSelect @title="Thank You Cards" @year={{this.year}} @onChange={{action (mut this.year)}}  />
 
-{{#unless this.passwordOkay}}
-  <FormRow>
-    <FormLabel @auto={{true}}>Enter the Thank You card password:</FormLabel>
-    <div class="col-auto">
-      <Input @type="password" class="form-control" name="password" size="10" @value={{this.password}}/>
-    </div>
-    <div class="col-auto">
-      <UiButton @onClick={{this.submit}} @disabled={{this.isSubmitting}}>Submit</UiButton>
-      {{#if this.isSubmitting}}
-        <LoadingIndicator/>
-      {{/if}}
-    </div>
-  </FormRow>
-{{/unless}}
+  {{#unless this.passwordOkay}}
+    <FormRow>
+      <FormLabel @auto={{true}}>Enter the Thank You card password:</FormLabel>
+      <div class="col-auto">
+        <Input @type="password" class="form-control" name="password" size="10" @value={{this.password}}/>
+      </div>
+      <div class="col-auto">
+        <UiButton @onClick={{this.submit}} @disabled={{this.isSubmitting}}>Submit</UiButton>
+        {{#if this.isSubmitting}}
+          <LoadingIndicator/>
+        {{/if}}
+      </div>
+    </FormRow>
+  {{/unless}}
 
-{{#if this.passwordOkay}}
-  <p>
-    <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
-  </p>
-  {{pluralize this.people.length "person"}} to send {{this.year}} Thank You cards to.
-  <table class="table table-sm table-hover table-striped table-width-auto">
-    <thead>
-    <tr>
-      <th>Callsign</th>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Address 1</th>
-      <th>Address 2</th>
-      <th>City</th>
-      <th>State</th>
-      <th>Postal Code</th>
-      <th>Country</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each this.people as |person|}}
+  {{#if this.passwordOkay}}
+    <p>
+      <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+    </p>
+    {{pluralize this.people.length "person"}} to send {{this.year}} Thank You cards to.
+    <table class="table table-sm table-hover table-striped table-width-auto">
+      <thead>
       <tr>
-        <td>
-          <PersonLink @person={{person}} />
-        </td>
-        <td>{{person.first_name}} {{person.last_name}}</td>
-        <td>{{mail-to person.email}}</td>
-        <td>{{person.street1}}</td>
-        <td>{{person.street2}}</td>
-        <td>{{person.city}}</td>
-        <td>{{person.state}}</td>
-        <td>{{person.zip}}</td>
-        <td>{{person.country}}</td>
+        <th>Callsign</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Address 1</th>
+        <th>Apt</th>
+        <th>Address 2</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Postal Code</th>
+        <th>Country</th>
       </tr>
-    {{else}}
-      <tr>
-        <td colspan="11" class="text-danger"><b>No Thank You card candidates found.</b></td>
-      </tr>
-    {{/each}}
-    </tbody>
-  </table>
-{{/if}}
+      </thead>
+      <tbody>
+      {{#each this.people as |person|}}
+        <tr>
+          <td>
+            <PersonLink @person={{person}} />
+          </td>
+          <td>{{person.first_name}} {{person.last_name}}</td>
+          <td>{{mail-to person.email}}</td>
+          <td>{{person.street1}}</td>
+          <td>{{person.apt}}</td>
+          <td>{{person.street2}}</td>
+          <td>{{person.city}}</td>
+          <td>{{person.state}}</td>
+          <td>{{person.zip}}</td>
+          <td>{{person.country}}</td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="12" class="text-danger"><b>No Thank You Card candidates found.</b></td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  {{/if}}
+</main>

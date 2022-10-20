@@ -8,6 +8,8 @@ import dayjs from 'dayjs';
 import RSVP from 'rsvp';
 
 export default class ApplicationRoute extends ClubhouseRoute {
+  authSetup = false;
+
   constructor() {
     super(...arguments);
 
@@ -30,6 +32,12 @@ export default class ApplicationRoute extends ClubhouseRoute {
     // Move the window back to the top when heading to a new route
     window.scrollTo(0, 0);
 
+    const burgerMenu = document.querySelector('#top-burger-menu:not(.collapsed)');
+    if (burgerMenu) {
+      // Mobile menu is open, closeup.
+      burgerMenu.click();
+    }
+
     if (!transition.isActive) {
       this.send('collectTitleTokens', []);
     }
@@ -39,7 +47,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
       return;
     }
 
-    if (!transition || !transition.to || transition.to.name === 'admin.action-log') {
+    if (transition?.to?.name === 'admin.action-log') {
       return;
     }
 
@@ -79,7 +87,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
       }
       navigator.sendBeacon(ENV['api-server'] + '/action-log/record', analytics);
     } catch (e) {
-      console.log("EXCEPTION ", e);
+      console.error("routeChange logging exception ", e);
       // ignore any exceptions.
     }
   }
@@ -92,32 +100,42 @@ export default class ApplicationRoute extends ClubhouseRoute {
    *
    * @param {Transition} transition
    */
-  async beforeModel(transition) {
-    await this.session.setup();
 
+  async beforeModel(transition) {
     // If heading to the offline target, simply return
     if (transition.targetName === 'offline') {
       return;
     }
 
+    if (this.authSetup) {
+      return;
+    }
+
+
     try {
+      await this.session.setup();
+
       /*
          Load up the  configuration, and grab the user info
          if the user was already authenticated and the app is being reloaded such
-         as from a page refresh. Otherwise the user info is grabbed by session.handleAuthenticated()
+         as from a page refresh. Otherwise, the user info is grabbed by session.handleAuthenticated()
          after the login token is successfully retrieved in {route,controller}/login.js
-       */
+      */
+
       const results = await RSVP.hash({
         config: this.ajax.request('config'),
-        user: this.session.loadUser() // loadUser will return a resolved promise if the user is not authenticated
+        user: this.session.loadUser()
       });
+
       ENV['clientConfig'] = results.config;
+
+      this.authSetup = true;
     } catch (response) {
       this.house.handleErrorResponse(response);
       // Can't retrieve the configuration. Consider the application
       // offline for the moment.
       transition.abort();
-      this.router.transitionTo("offline");
+      this.session.showOfflineDialog = true;
     }
   }
 
@@ -134,22 +152,11 @@ export default class ApplicationRoute extends ClubhouseRoute {
   }
 
   @action
-  willTransition() {
-    // Close up the navbar when clicking on a menu item and
-    // the navigation bar is not expanded - i.e. when showning
-    // on a cellphone.
-    this.house.collapse('.navbar-collapse', 'hide');
-    return true;
-  }
-
-  @action
   error(error) {
     if (error instanceof UnauthorizedError || error.status === 401) {
       // 401 error - not logged in, or JWT expired.
       if (this.session.isAuthenicated) {
-        this.modal.info(null, 'Your session has timed out. Please login again', () => {
-          this.session.invalidate();
-        });
+        this.modal.info(null, 'Your session has timed out. Please login again', () => this.session.invalidate());
       } else {
         this.router.transitionTo('login');
       }

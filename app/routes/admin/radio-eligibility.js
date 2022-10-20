@@ -15,8 +15,24 @@ export default class AdminRadioEligibilityRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     controller.set('year', this.year);
-    controller.set('year_last', this.year - 1);
-    controller.set('year_prev', this.year - 2);
+
+    let year_last, year_prev;
+    switch (this.year) {
+      case 2022:
+        year_last = 2019;
+        year_prev = 2018;
+        break;
+      case 2023:
+        year_last = 2022;
+        year_prev = 2019;
+        break;
+      default:
+        year_last = this.year - 1;
+        year_prev = this.year - 2;
+        break;
+    }
+    controller.set('year_last', year_last);
+    controller.set('year_prev', year_prev);
     controller.set('people', model);
   }
 

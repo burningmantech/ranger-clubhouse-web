@@ -1,18 +1,19 @@
-<NavbarMenu @title="Mentoring">
+<NavbarMenu @nav={{@nav}} @title="Mentoring" as |menu|>
   <NavbarMenuSection @section="Pre-Playa">
-    <NavbarMenuItem @route="mentor.potentials" @item="Potential Alphas" />
-    <NavbarMenuItem @route="mentor.alpha-status" @item="Alpha Status" />
+    <NavbarMenuItem @menu={{menu}} @route="mentor.potentials" @item="Potential Alphas" />
+    <NavbarMenuItem @menu={{menu}} @route="mentor.convert-prospectives" @item="Convert Prospectives" />
+    <NavbarMenuItem @menu={{menu}} @route="mentor.alpha-status" @item="Alpha Status" />
   </NavbarMenuSection>
 
   <NavbarMenuSection @section="On Playa">
-    <NavbarMenuItem @route="mentor.schedule" @item="Alpha Scheduled Shifts" />
-    <NavbarMenuItem @route="mentor.acceptance-sheets" @item="Alpha Acceptance Sheets" />
-    <NavbarMenuItem @route="mentor.assignment" @item="Alpha Mentors Assignment" />
-    <NavbarMenuItem @route="mentor.convert" @item="Alpha Conversion" />
-    <NavbarMenuItem @route="mentor.alpha-signout" @item="Alpha Signout" />
+    <NavbarMenuItem @menu={{menu}} @route="mentor.schedule" @item="Alpha Scheduled Shifts" />
+    <NavbarMenuItem @menu={{menu}} @route="mentor.acceptance-sheets" @item="Alpha Acceptance Sheets" />
+    <NavbarMenuItem @menu={{menu}} @route="mentor.assignment" @item="Alpha Mentors Assignment" />
+    <NavbarMenuItem @menu={{menu}} @route="mentor.convert-alphas" @item="Alpha Conversion" />
+    <NavbarMenuItem @menu={{menu}} @route="mentor.alpha-signout" @item="Alpha Signout" />
   </NavbarMenuSection>
 
   <NavbarMenuSection @section="Post-Playa">
-    <NavbarMenuItem @route="mentor.post-season-summary" @item="Post Season Summary" />
+    <NavbarMenuItem @menu={{menu}} @route="mentor.post-season-summary" @item="Post Season Summary" />
   </NavbarMenuSection>
 </NavbarMenu>

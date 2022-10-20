@@ -1,11 +1,13 @@
 <div class="accordion-container" id="ticket-{{@id}}">
-  <div class="accordion-title">
-    <a href class="d-block" {{action @toggleCard @id}}>
+  <a class="accordion-title" href {{action @toggleCard @id}}>
+    <div class="accordion-title-icon">
       {{fa-icon (if (get @showing @id) "minus" "plus")}}
+    </div>
+    <div class="accordion-title-text">
       {{yield to="title"}}
-    </a>
-  </div>
-  <div class="accordion-body collapse">
+    </div>
+  </a>
+  <BsCollapse @collapsed={{not (get @showing @id)}} class="accordion-body">
     {{yield to="body"}}
     {{#if @nextAction}}
       <div class="d-grid">
@@ -14,5 +16,5 @@
         </UiButton>
       </div>
     {{/if}}
-  </div>
+  </BsCollapse>
 </div>

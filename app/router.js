@@ -7,7 +7,6 @@ export default class Router extends EmberRouter {
 }
 
 Router.map(function () {
-  this.route('offline');
   this.route('debug');
 
   this.route('login');
@@ -52,11 +51,14 @@ Router.map(function () {
     });
     this.route('vehicles');
     this.route('welcome');
+    this.route('mentors');
+    this.route('work-history');
   });
 
   this.route('search',  function () {
     this.route('assets');
     this.route('languages');
+    this.route('vehicles');
   });
 
   this.route('admin',  function () {
@@ -101,11 +103,15 @@ Router.map(function () {
       this.route('preview', {path: '/:survey_id/preview'});
     });
 
-    this.route('thank-you-cards');
-    this.route('timesheet-sanity-checker');
-    this.route('documents');
     this.route('bulk-lookup');
     this.route('bulk-positions');
+    this.route('certifications');
+    this.route('documents');
+    this.route('mail-log');
+    this.route('thank-you-cards');
+    this.route('timesheet-sanity-checker');
+    this.route('top-hour-earners');
+    this.route('timesheet-slot-repair');
   });
 
   this.route('hq', {path: '/hq/:person_id'}, function () {
@@ -122,39 +128,40 @@ Router.map(function () {
 
   this.route('mentor',  function () {
     this.route('acceptance-sheets');
+    this.route('alpha-signout');
     this.route('alpha-status');
     this.route('assignment');
-    this.route('convert');
+    this.route('convert-alphas');
+    this.route('convert-prospectives');
     this.route('post-season-summary');
     this.route('potentials');
     this.route('schedule');
-    this.route('alpha-signout');
   });
 
 
   this.route('person', {path: '/person/:person_id'}, function () {
     this.route('index', {path: '/'});
-    this.route('access-documents');
     this.route('alerts');
     this.route('assets');
     this.route('bmid');
     this.route('broadcast-log');
-    this.route('contact-log');
     this.route('dashboard');
     this.route('emergency-contact');
     this.route('event-info');
+    this.route('external-ids');
+    this.route('mail-log');
     this.route('mentors');
     this.route('messages');
     this.route('password');
     this.route('personal-info');
-    this.route('schedule');
-    this.route('tickets');
-    this.route('timesheet-log');
-    this.route('timesheet');
     this.route('photos');
+    this.route('schedule');
     this.route('status-history');
+    this.route('tickets-provisions');
+    this.route('tickets');
+    this.route('timesheet');
+    this.route('timesheet-log');
     this.route('unified-flagging');
-    this.route('external-ids');
     this.route('work-history');
   });
 
@@ -162,25 +169,27 @@ Router.map(function () {
 
   this.route('training', {path: '/training/:position_id'}, function () {
     this.route('index', {path: '/'});
-    this.route('session', {path: '/session/:slot_id'}, function () {
+    this.route('capacity');
+    this.route('multiple-enrollments');
+    this.route('people-training-completed');
+     this.route('session', {path: '/session/:slot_id'}, function () {
       this.route('index', {path: '/'});
       this.route('signup-sheet');
       this.route('trainers-report');
     });
-    this.route('capacity');
-    this.route('multiple-enrollments');
-    this.route('people-training-completed');
-    this.route('untrained-people');
-    this.route('trainer-attendance');
     this.route('survey', function () {
       this.route('report', {path: '/:survey_id'});
     });
+    this.route('trainer-attendance');
+    this.route('unified-flagging');
+    this.route('untrained-people');
   });
 
   this.route('reports',function () {
     this.route('alpha-shirts');
     this.route('asset-history');
     this.route('assets-outstanding');
+    this.route('certifications');
     this.route('flakes');
     this.route('freaking-years');
     this.route('hq-forecast');
@@ -191,6 +200,7 @@ Router.map(function () {
     this.route('people-by-role');
     this.route('people-by-status');
     this.route('position-sanity-checker');
+    this.route('potential-shirts');
     this.route('radio-assets');
     this.route('radio-checkout');
     this.route('rollcall');
@@ -200,7 +210,6 @@ Router.map(function () {
     this.route('shift-coverage');
     this.route('shift-lead');
     this.route('shift-signups');
-    this.route('potential-shirts');
     this.route('special-teams');
     this.route('timesheet-by-callsign');
     this.route('timesheet-by-position');
@@ -209,6 +218,7 @@ Router.map(function () {
     this.route('timesheet-unconfirmed');
     this.route('vehicle-paperwork');
     this.route('vehicle-registry');
+    this.route('event-stats');
   });
 
   this.route('vc', function () {
@@ -216,15 +226,19 @@ Router.map(function () {
       this.route('index', {path: '/'});
       this.route('expiring');
       this.route('trs');
+      this.route('statistics');
+      this.route('waps');
+      this.route('unclaimed-with-signups');
     });
     this.route('bmid');
-    this.route('bmid-sanity-check');
     this.route('bmid-print');
+    this.route('bmid-sanity-check');
     this.route('handle-checker');
     this.route('photo-review');
-    this.route('unified-flagging');
     this.route('photos');
+    this.route('shiny-penny-report');
     this.route('spigot');
+    this.route('unified-flagging');
   });
 
   // Catch all for unrecognized urls

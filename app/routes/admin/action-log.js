@@ -7,8 +7,10 @@ export default class AdminActionLogRoute extends ClubhouseRoute {
     start_time: {refreshModel: true},
     end_time: {refreshModel: true},
     events: {refreshModel: true},
+    event_name: { refreshModel: true},
     sort: {refreshModel: true},
     page: {refreshModel: true},
+    message: { refreshModel: true},
   };
 
   model(params) {
@@ -26,13 +28,37 @@ export default class AdminActionLogRoute extends ClubhouseRoute {
       return hash;
     }, {});
 
+    const {event_name} =  params;
+    if (event_name) {
+      if (searchParams.events) {
+        searchParams.events.push(event_name)
+      } else {
+        searchParams.events = [ event_name ];
+      }
+    }
+
     this.searchParams = searchParams;
-    return this.ajax.request('action-log', {data: searchParams});
+    return this.ajax.request('action-log', {data: searchParams}).catch((response) => {
+      if (response.status !== 422) {
+        throw response;
+      }
+      return {
+        error: response.payload.errors[0].title,
+        action_logs: [],
+        meta: {}
+      }
+    });
   }
 
   setupController(controller, model) {
-    controller.set('error', model.error);
+    model.action_logs?.forEach((a) => {
+      const ip = a.ip?.split(',');
+      if (ip) {
+        a.ip = ip[ip.length - 1];
+      }
+    });
     controller.set('logs', model.action_logs);
+    controller.set('error', model.error);
     const meta = model.meta;
     controller.set('total', meta.total);
     controller.set('currentPage', meta.page);

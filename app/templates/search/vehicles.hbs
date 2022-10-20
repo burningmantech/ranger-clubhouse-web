@@ -1,0 +1,78 @@
+<h1>Vehicle Search</h1>
+
+<p class="mt-2">
+  Only APPROVED vehicles will be searched and reported on.
+</p>
+
+<ChForm @formId="search-form"
+        @formFor={{this.vehicleForm}}
+        @validator={{this.searchValidations}}
+        @onSubmit={{this.searchAction}}
+        @formClass="my-4" as |f|>
+  <FormRow>
+    <f.text
+      @name="number"
+      @label="Enter the license, rental, or driving sticker #:"
+      @inline={{true}}
+      @autofocus={{true}}
+      @size={{30}}/>
+    <div class="col-auto">
+      <f.submit @label="Search"/>
+    </div>
+  </FormRow>
+</ChForm>
+
+{{#if this.vehicleNotFound}}
+  <div class="text-danger mt-2">
+    <b>{{this.vehicleNotFound}} was not found.</b>
+  </div>
+{{else if this.vehicles}}
+  <UiSection>
+    <:title>Found {{pluralize this.vehicles.length "vehicle"}}</:title>
+    <:body>
+      <table class="table table-striped table-hover table-width-auto">
+        <thead>
+        <tr>
+          <th>Person or Team</th>
+          <th>Vehicle Description</th>
+          <th>License #</th>
+          <th>Rental #</th>
+          <th>Driving Sticker #</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.vehicles as |vehicle|}}
+          <tr>
+            <td>
+              {{#if vehicle.person}}
+                <PersonLink @person={{vehicle.person}} />
+              {{else if vehicle.team_assignment}}
+                Team {{vehicle.team_assignment}}
+              {{else}}
+                Fleet Vehicle
+              {{/if}}
+            </td>
+            <td>
+              {{vehicle.vehicle_year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}} {{vehicle.vehicle_color}}<br>
+              {{vehicle.vehicle_class}}
+            </td>
+            <td>
+              {{#if vehicle.license_number}}
+                {{vehicle.license_state}}-{{vehicle.license_number}}
+              {{else}}
+                <i>- none -</i>
+              {{/if}}
+            </td>
+            <td>
+              <PresentOrNot @value={{vehicle.rental_number}} @empty="- none -"/>
+            </td>
+            <td>
+              <PresentOrNot @value={{vehicle.sticker_number}} @empty="- none -"/>
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </:body>
+  </UiSection>
+{{/if}}

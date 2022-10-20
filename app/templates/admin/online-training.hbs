@@ -1,16 +1,9 @@
-<h1>Online Course Administration</h1>
-
-<div class="row mb-2">
-  <div class="col-auto">
-    <LinkTo @route="admin.online-training.index">Online Course Configuration</LinkTo>
-  </div>
-  <div class="col-auto">
-    <LinkTo @route="admin.online-training.courses">Available Courses</LinkTo>
-  </div>
-  <div class="col-auto">
-    <LinkTo @route="admin.online-training.enrollment">Enrollment</LinkTo>
-  </div>
-
-</div>
-
-{{outlet}}
+<UiSidebar @smallTitle="Online Course" as |s|>
+  <s.group @title="Online Course">
+    <s.link @route="admin.online-training.index" @title="Configuration"/>
+    <s.link @route="admin.online-training.courses" @title="Available Courses" />
+  </s.group>
+</UiSidebar>
+<main>
+  {{outlet}}
+</main>

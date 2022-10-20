@@ -16,7 +16,7 @@ export default class ReportsTimesheetCorrectionRequestsController extends Clubho
 
     this.requests.forEach((request) => {
       const value = request.person.callsign;
-      let group = groups.findBy('callsign', value);
+      let group = groups.find((g) => g.callsign === value);
 
       if (group) {
         group.requests.push(request);

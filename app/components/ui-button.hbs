@@ -1,1 +1,1 @@
-<button type="button" class="btn {{this.typeClass}} {{this.sizeClass}} {{@class}}" disabled={{@disabled}} {{action @onClick}} ...attributes>{{yield}}</button>
+<button type="button" class="btn {{this.typeClass}} {{this.sizeClass}} {{@class}}" disabled={{@disabled}} {{on "click" this.clickAction}} ...attributes>{{yield}}</button>

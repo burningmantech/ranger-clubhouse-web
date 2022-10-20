@@ -1,0 +1,7 @@
+<h3>Tickets &amp; Provisions For {{this.person.callsign}}</h3>
+<p>
+  <LinkTo @route="person.tickets" class="ms-2">View {{this.person.callsign}}'s Tickets &amp; Stuff page</LinkTo>
+</p>
+
+<Person::AccessDocuments @person={{this.person}} @documents={{this.documents}} @ticketingInfo={{this.ticketingInfo}} />
+<Person::Provisions @person={{this.person}} @provisions={{this.provisions}} @ticketingInfo={{this.ticketingInfo}} />

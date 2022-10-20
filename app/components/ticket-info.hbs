@@ -103,8 +103,8 @@
             <SpinIcon/>
           {{/if}}
         </UiButton>
-        <span class="mx-2 h5">OR</span>
-        <UiButton @onClick={{fn @setDocumentStatus @ticket "banked"}} @disabled={{@isSavingDocumentStatus}}>
+        <span class="h5 mx-auto mx-xl-4 my-sm-2 my-xl-none d-sm-block d-xl-inline-block">- OR -</span>
+        <UiButton @class="btn-responsive" @onClick={{fn @setDocumentStatus @ticket "banked"}} @disabled={{@isSavingDocumentStatus}}>
           Bank Ticket
           {{#if @isSavingDocumentStatus}}
             <SpinIcon/>
@@ -116,7 +116,7 @@
     {{else}}
       <b>Sorry, it doesn't look like you qualified for a Reduced-Price Ticket or Staff Credential.</b>
       <p>
-        You earned {{credits-format @ticketPackage.credits_earned}} last event. The minimum credits needed to earn
+        You earned {{credits-format @ticketPackage.credits_earned}} credits last event. The minimum credits needed to earn
         a Reduced-Price Ticket was {{credits-format @ticketingInfo.rpt_credits}}, and a Staff Credential was
         {{credits-format @ticketingInfo.sc_credits}}.
       </p>

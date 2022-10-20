@@ -39,6 +39,8 @@ export function shiftFormat([shiftDate, endDate], hash) {
   if ((startDay === endDay)) {
     // Don't bother with added the day on the end time if its only to midnight
     endFormat = endDatetime.format(HOUR_MINS);
+  } else if ((endDatetime.dayOfYear() - datetime.dayOfYear()) > 1) {
+    endFormat = endDatetime.format(MONTH_DAY_TIME);
   } else {
     endFormat = endDatetime.format(HOUR_MIN_DAY);
   }

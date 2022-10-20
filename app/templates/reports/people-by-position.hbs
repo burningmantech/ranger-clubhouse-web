@@ -40,7 +40,7 @@
 </FormRow>
 
 {{#each this.visiblePositions key="id" as |position|}}
-  <ChAccordion as |accordion|>
+  <UiAccordion as |accordion|>
     <accordion.title>
       {{position-label position}}
       {{#if position.allRangers}}
@@ -89,23 +89,21 @@
             </tr>
             </thead>
             <tbody>
-            {{#each position.missingPeople key="id" as |person|}}
+            {{~#each position.missingPeople key="id" as |person|~}}
               <tr>
                 <td>{{fa-icon "exclamation-triangle" color="danger"}}</td>
-                <td>
-                  <PersonLink @person={{person}} />
-                </td>
+                <td><PersonLink @person={{person}} /></td>
                 <td>{{person.status}}</td>
                 <td>{{#if person.on_site}}{{fa-icon "check" color="green"}}{{/if}}</td>
                 <td>{{position.title}}</td>
               </tr>
-            {{/each}}
+            {{~/each~}}
             </tbody>
           </table>
         {{/if}}
       {{/if}}
     </accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 {{else}}
   <b class="text-danger">No positions matched.</b>
 {{/each}}

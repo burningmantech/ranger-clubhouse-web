@@ -3,15 +3,17 @@
 <ChForm @formId="search" @formFor={{this.searchForm}} @changeSet={{false}}
         @onSubmit={{this.submit}} as |f|>
   <FormRow>
-    <label class="col-auto">Quick Search:</label>
-    <a href class="col-auto" {{action this.setLanguage "spanish"}}>Spanish</a>
-    <a href class="col-auto" {{action this.setLanguage "chinese"}}>Chinese</a>
-    <a href class="col-auto" {{action this.setLanguage "dutch"}}>Dutch</a>
-    <a href class="col-auto" {{action this.setLanguage "french"}}>French</a>
-    <a href class="col-auto" {{action this.setLanguage "german"}}>German</a>
-    <a href class="col-auto" {{action this.setLanguage "hebrew"}}>Hebrew</a>
-    <a href class="col-auto" {{action this.setLanguage "italian"}}>Italian</a>
-    <a href class="col-auto" {{action this.setLanguage "russian"}}>Russian</a>
+    <label class="col-auto mt-1">Quick Search:</label>
+    <div class="col-auto">
+    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "spanish"}}>Spanish</UiButton>
+    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "chinese"}}>Chinese</UiButton>
+    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "dutch"}}>Dutch</UiButton>
+    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "french"}}>French</UiButton>
+    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "german"}}>German</UiButton>
+    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "hebrew"}}>Hebrew</UiButton>
+    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "italian"}}>Italian</UiButton>
+    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "russian"}}>Russian</UiButton>
+    </div>
   </FormRow>
   <FormRow>
     <f.text @label="Enter a language to search for:"
@@ -36,6 +38,7 @@
 {{#if this.isLoading}}
   <LoadingPane @item="languages"/>
 {{else}}
+  <h3 class="mb-4">Reporting on Rangers who are <span class="text-danger">{{if this.searchingOffSite "ON and OFF SITE" "ON SITE ONLY"}}</span></h3>
   <LanguageSpeakerTable @name="On Duty Rangers"
                         @speakers={{this.onDuty.length}}
                         @group={{this.onDutyGroup}}

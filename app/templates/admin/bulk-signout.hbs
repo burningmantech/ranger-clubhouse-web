@@ -1,66 +1,68 @@
-<h1>Bulk Signout</h1>
-<p>
-  This page will show anyone still on duty. Select those individuals you which to sign out in bulk.
-</p>
+<main>
+  <h1>Bulk Signout</h1>
+  <p>
+    This page will show anyone still on duty. Select those individuals you which to sign out in bulk.
+  </p>
 
-<table class="table table-sm table-hover table-striped table-width-auto">
-  <caption>{{pluralize this.onDutyCount "person"}} still on duty</caption>
-  <thead>
-  <tr>
-    <th><Input @type="checkbox" @checked={{this.selectAll}} {{on "change" this.toggleAll}} /></th>
-    <th>Callsign</th>
-    <th>From</th>
-    <th>To</th>
-    <th class="text-end">Time</th>
-    <th class="text-end">Credits</th>
-    <th>Position</th>
-  </tr>
-  </thead>
-  <tbody>
-  {{#each this.timesheets as |ts|}}
+  <table class="table table-sm table-hover table-striped table-width-auto">
+    <caption>{{pluralize this.onDutyCount "person"}} still on duty</caption>
+    <thead>
     <tr>
-      <td>
-        {{#if ts.off_duty}}
-          {{fa-icon "check" color="success"}}
-        {{else}}
-          <Input @type="checkbox" @checked={{ts.selected}} />
-        {{/if}}
-      </td>
-      <td>
-        <PersonLink @person={{ts.person}} />
-      </td>
-      <td>{{shift-format ts.on_duty}}</td>
-      <td>
-        {{#if ts.off_duty}}
-          {{shift-format ts.off_duty}}
-        {{else}}
-          <i>On Duty</i>
-        {{/if}}
-      </td>
-      <td class="text-end">
-        {{hour-minute-format ts.duration}}
-      </td>
-      <td class="text-end">
-        {{credits-format ts.credits}}
-      </td>
-      <td>
-        {{ts.position.title}}
-      </td>
+      <th><Input @type="checkbox" @checked={{this.selectAll}} {{on "change" this.toggleAll}} /></th>
+      <th>Callsign</th>
+      <th>From</th>
+      <th>To</th>
+      <th class="text-end">Time</th>
+      <th class="text-end">Credits</th>
+      <th>Position</th>
     </tr>
-  {{else}}
-    <tr>
-      <td colspan="7"><b class="text-success">Congratulations! No one is on duty.</b></td>
-    </tr>
-  {{/each}}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+    {{#each this.timesheets as |ts|}}
+      <tr>
+        <td>
+          {{#if ts.off_duty}}
+            {{fa-icon "check" color="success"}}
+          {{else}}
+            <Input @type="checkbox" @checked={{ts.selected}} />
+          {{/if}}
+        </td>
+        <td>
+          <PersonLink @person={{ts.person}} />
+        </td>
+        <td>{{shift-format ts.on_duty}}</td>
+        <td>
+          {{#if ts.off_duty}}
+            {{shift-format ts.off_duty}}
+          {{else}}
+            <i>On Duty</i>
+          {{/if}}
+        </td>
+        <td class="text-end">
+          {{hour-minute-format ts.duration}}
+        </td>
+        <td class="text-end">
+          {{credits-format ts.credits}}
+        </td>
+        <td>
+          {{ts.position.title}}
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="7"><b class="text-success">Congratulations! No one is on duty.</b></td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
 
-<UiButton @onClick={{this.signoffAction}}>
-  Sign out selected entries ({{this.selectedCount}})
-</UiButton>
+  <UiButton @onClick={{this.signoffAction}}>
+    Sign out selected entries ({{this.selectedCount}})
+  </UiButton>
 
-{{#if this.isSubmitting}}
-  <LoadingDialog>
-    Signing out {{this.signOffTimesheet.person.callsign}}
-  </LoadingDialog>
-{{/if}}
+  {{#if this.isSubmitting}}
+    <LoadingDialog>
+      Signing out {{this.signOffTimesheet.person.callsign}}
+    </LoadingDialog>
+  {{/if}}
+</main>

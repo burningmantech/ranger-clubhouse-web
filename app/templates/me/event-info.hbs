@@ -13,160 +13,186 @@
     rangering on the playa.
   {{/if}}
 </p>
-<UiSection>
-  <:title>{{fa-icon "graduation-cap"}} Training</:title>
-  <:body>
-    {{#if this.person.isNonRanger}}
-      <p>Non Rangers are not required to pass training.</p>
-    {{/if}}
-    {{#if this.eventInfo.online_training_only}}
-      <p>
-        For this event, you are only required to complete online course in order to work a shift.
-      </p>
-      {{#if this.eventInfo.online_training_passed}}
-        <p>
-          The online course was completed on {{mdy-format this.dirtTraining.online_training_date full=true}}.
-        </p>
-      {{else}}
-        <p class="text-danger">
-          You have not completed the online course yet.
-        </p>
-      {{/if}}
-    {{else if (and this.dirtTraining (not-eq this.dirtTraining.status "no-shift"))}}
-      {{#if (eq this.dirtTraining.status "pending")}}
-        Signed up for training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}.
-      {{else if (eq this.dirtTraining.status "pass")}}
-        Passed training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
-        {{#if this.person.isAlpha}}
-          <br>
-          <b class="text-danger">{{fa-icon "hand-point-right"}} You still need to walk your Alpha shift on playa in
-            order to become a Ranger.</b>
+<UiTab as |tab|>
+  <tab.pane @title="Training">
+    <UiSection>
+      <:title>{{fa-icon "graduation-cap"}} Training</:title>
+      <:body>
+        {{#if this.person.isNonRanger}}
+          <p>Non Rangers are not required to pass training.</p>
         {{/if}}
-      {{else if (eq this.dirtTraining.status "no-show")}}
-        Did not attend training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
-      {{else if (eq this.dirtTraining.status "fail")}}
-        Did not pass training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
-      {{else}}
-        Uh oh, I did not understand the status [{{this.dirtTraining.status}}]
-      {{/if}}
-    {{else}}
-      <p>
-        <b class="text-danger">No training sign ups were found for {{this.year}}.</b>
-      </p>
-      {{#if (is-current-year this.year)}}
-        {{#if this.person.isActive}}
-          You do not have to be trained to sign up for shifts, but you must be trained before actually
-          working shifts on playa.
-        {{else if this.person.isProspective}}
-          You will need to sign up for and pass a training session before becoming an Alpha.
-        {{/if}}
-      {{/if}}
-    {{/if}}
-  </:body>
-</UiSection>
-
-{{#if this.artTrainings}}
-  <UiSection>
-    <:title>{{fa-icon "university"}} Advanced Ranger Training (ART)</:title>
-    <:body>
-      You are allowed to attend the following ART(s).
-      <TrainingInfo @trainings={{this.artTrainings}} />
-    </:body>
-  </UiSection>
-{{/if}}
-
-<UiSection>
-  <:title>{{fa-icon "list"}} Positions</:title>
-  <:body>
-    Positions indicate which shifts you are allowed to sign up for and what ART trainings you may attend.
-    You have {{pluralize this.personPositions.length "position"}} granted:
-    <div class="masonry-container mt-2">
-      {{#each this.personPositions as |position| }}
-        <div class="masonry-item">{{position.title}}</div>
-      {{else}}
-        <div>You currently do not hold any positions.</div>
-      {{/each}}
-    </div>
-  </:body>
-</UiSection>
-{{#if (or this.person.isActive this.person.isAlpha this.person.isNonRanger)}}
-  <UiSection>
-    <:title>{{fa-icon "utensils"}} Meals</:title>
-    <:body>
-      <MealInfo @eventInfo={{this.eventInfo}} />
-    </:body>
-  </UiSection>
-
-  <UiSection>
-    <:title>{{fa-icon "shower"}} Showers</:title>
-    <:body>
-      {{#if this.eventInfo.showers}}
-        {{badge "secondary" "Wet Spot"}} Your BMID will allow you to take showers at the Wet Spot.
-      {{else}}
-        {{badge "secondary""Shower Pogs"}} For every 40 hours you work on playa, you can get a shower
-        pog from HQ, good for one shower at the Wet Spot.
-      {{/if}}
-    </:body>
-  </UiSection>
-
-  <UiSection>
-    <:title>{{fa-icon "broadcast-tower"}} Radios</:title>
-    <:body>
-      {{#if this.eventInfo.radio_info_available}}
-        {{#if this.eventInfo.radio_eligible}}
-          {{badge "success" "Event Radio"}}
-          {{#if (eq this.eventInfo.radio_max 1)}}
-            You may check out an Event radio for the duration of the event.
+        {{#if this.eventInfo.online_training_only}}
+          <p>
+            For this event, you are only required to complete online course in order to work a shift.
+          </p>
+          {{#if this.eventInfo.online_training_passed}}
+            <p>
+              The online course was completed on {{mdy-format this.dirtTraining.online_training_date full=true}}.
+            </p>
           {{else}}
-            You may check out up to {{this.eventInfo.radio_max}} Event radios for the duration of the event.
+            <p class="text-danger">
+              You have not completed the online course yet.
+            </p>
+          {{/if}}
+        {{else if (and this.dirtTraining (not-eq this.dirtTraining.status "no-shift"))}}
+          {{#if (eq this.dirtTraining.status "pending")}}
+            Signed up for training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}.
+          {{else if (eq this.dirtTraining.status "pass")}}
+            Passed training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
+            {{#if this.person.isAlpha}}
+              <br>
+              <b class="text-danger">{{fa-icon "hand-point-right"}} You still need to walk your Alpha shift on playa in
+                order to become a Ranger.</b>
+            {{/if}}
+          {{else if (eq this.dirtTraining.status "no-show")}}
+            Did not attend training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
+          {{else if (eq this.dirtTraining.status "fail")}}
+            Did not pass training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
+          {{else}}
+            Uh oh, I did not understand the status [{{this.dirtTraining.status}}]
           {{/if}}
         {{else}}
-          {{badge "success" "Shift Radio"}} You will need to check out a radio each time you show up to Ranger HQ
-          for shift (and check it in at the end of your shift!).
-        {{/if}}
-      {{else}}
-        Radio eligibility for this year is not yet available.
-      {{/if}}
-    </:body>
-  </UiSection>
-  {{#if this.person.vehicle_blacklisted}}
-    <UiSection>
-      <:title>Driving Prohibited</:title>
-      <:body>
-        {{badge "danger" "Blacklisted"}} We're sorry, but you cannot drive gators, cars, or trucks on playa for
-        Ranger business.
-      </:body>
-    </UiSection>
-  {{else}}
-    <UiSection>
-      <:title>{{fa-icon "car"}} Motorpool Policy</:title>
-      <:body>
-        {{#if this.eventInfo.signed_motorpool_agreement}}
-          {{badge "success" "Authorized"}} You are authorized to drive golf carts &amp; gators (UTVs) on playa for
-          Ranger business. Vehicle must have a valid Burning Man driving sticker.
-        {{else}}
-          {{badge "warning" "Not Authorized"}} You are NOT authorized to drive golf carts &amp; gators (UTVs) on
-          the playa for Ranger business. You can fix this by agreeing to the
-          <LinkTo @route="me.motorpool-policy">Motorpool Policy</LinkTo>
-          .
+          <p>
+            <b class="text-danger">No training sign ups were found for {{this.year}}.</b>
+          </p>
+          {{#if (is-current-year this.year)}}
+            {{#if this.person.isActive}}
+              You do not have to be trained to sign up for shifts, but you must be trained before actually
+              working shifts on playa.
+            {{else if this.person.isProspective}}
+              You will need to sign up for and pass a training session before becoming an Alpha.
+            {{/if}}
+          {{/if}}
         {{/if}}
       </:body>
     </UiSection>
-    <UiSection>
-      <:title>{{fa-icon "truck-pickup"}} Motor Vehicle Record (MVR)</:title>
-      <:body>
-        {{#if this.personEvent.org_vehicle_insurance}}
-          {{badge "success" "Authorized" }} You are authorized to drive cars and
-          trucks (including your own personal vehicle) on playa for Ranger business.
-          Vehicle must have a valid Burning Man driving sticker.
-        {{else}}
-          {{badge "warning" "Not Authorized" }} You are NOT authorized to drive cars
-          and trucks (including your own personal vehicle) on playa for Ranger
-          business. If you think you need this to do your job on playa, please
-          contact your manager or team lead.
-        {{/if}}
-      </:body>
-    </UiSection>
-  {{/if}}
+    {{#if this.artTrainings}}
+      <UiSection>
+        <:title>{{fa-icon "university"}} Advanced Ranger Training (ART)</:title>
+        <:body>
+          You are allowed to attend the following ART(s).
+          <TrainingInfo @trainings={{this.artTrainings}} />
+        </:body>
+      </UiSection>
+    {{/if}}
+  </tab.pane>
 
-{{/if}}
+  <tab.pane @title="Positions">
+    <UiSection>
+      <:title>{{fa-icon "list"}} Positions</:title>
+      <:body>
+        Positions indicate which shifts you are allowed to sign up for and what ARTs you may attend.
+        You have {{pluralize this.personPositions.length "position"}} granted:
+        <div class="masonry-container mt-2">
+          {{#each this.personPositions as |position| }}
+            <div class="masonry-item">{{position.title}}</div>
+          {{else}}
+            <div>You currently do not hold any positions.</div>
+          {{/each}}
+        </div>
+      </:body>
+    </UiSection>
+  </tab.pane>
+
+  {{#if (or this.person.isRanger this.person.isNonRanger)}}
+    <tab.pane @title="Provisions">
+      <UiSection>
+        <:title>Provisions</:title>
+        <:body>
+          <h3 class="border-bottom">{{fa-icon "utensils"}} Meals</h3>
+          <p>
+            <MealInfo @eventInfo={{this.eventInfo}} />
+          </p>
+          <h3 class="border-bottom mt-2">{{fa-icon "shower"}} Showers</h3>
+          <p>
+            {{#if this.eventInfo.showers}}
+              {{badge "secondary" "Wet Spot"}} Your BMID will allow you to take showers at the Wet Spot.
+            {{else}}
+              {{badge "secondary""Shower Pogs"}} For every 40 hours you work on playa, you can get a shower
+              pog from HQ, good for one shower at the Wet Spot.
+            {{/if}}
+          </p>
+          {{#if (or this.person.isRanger this.person.isAlpha this.person.isNonRanger)}}
+            <h3 class="border-bottom mt-2">{{fa-icon "broadcast-tower"}} Radios</h3>
+            {{#if this.eventInfo.radio_info_available}}
+              {{#if this.eventInfo.radio_eligible}}
+                {{badge "success" "Event Radio"}}
+                {{#if (eq this.eventInfo.radio_max 1)}}
+                  You may check out an Event radio for the duration of the event.
+                {{else}}
+                  You may check out up to {{this.eventInfo.radio_max}} Event radios for the duration of the event.
+                {{/if}}
+              {{else}}
+                {{badge "success" "Shift Radio"}} You will need to check out a radio each time you show up to Ranger HQ
+                for shift (and check it in at the end of your shift!).
+              {{/if}}
+            {{else}}
+              Radio eligibility for this year is not yet available.
+            {{/if}}
+          {{/if}}
+        </:body>
+      </UiSection>
+    </tab.pane>
+  {{/if}}
+  {{#if (or this.person.isRanger this.person.isAlpha this.person.isNonRanger)}}
+    <tab.pane @title="Driving">
+      {{#if this.person.vehicle_blacklisted}}
+        <UiSection>
+          <:title>Driving Prohibited</:title>
+          <:body>
+            {{badge "danger" "Blacklisted"}} We're sorry, but you cannot drive gators, cars, or trucks on playa for
+            Ranger business.
+          </:body>
+        </UiSection>
+      {{else}}
+        <UiSection>
+          <:title>{{fa-icon "car"}} Motorpool Policy</:title>
+          <:body>
+            {{#if this.eventInfo.signed_motorpool_agreement}}
+              {{badge "success" "Authorized"}} You are authorized to drive golf carts &amp; gators (UTVs) on playa for
+              Ranger business. Vehicle must have a valid Burning Man driving sticker.
+            {{else}}
+              {{badge "warning" "Not Authorized"}} You are NOT authorized to drive golf carts &amp; gators (UTVs) on
+              the playa for Ranger business. You can fix this by agreeing to the
+              <LinkTo @route="me.motorpool-policy">Motorpool Policy</LinkTo>
+              .
+            {{/if}}
+          </:body>
+        </UiSection>
+        <UiSection>
+          <:title>{{fa-icon "truck-pickup"}} Motor Vehicle Record (MVR)</:title>
+          <:body>
+            {{#if this.personEvent.org_vehicle_insurance}}
+              {{badge "success" "Authorized" }} You are authorized to drive cars and
+              trucks (including your own personal vehicle) on playa for Ranger business.
+              Vehicle must have a valid Burning Man driving sticker.
+            {{else}}
+              {{badge "warning" "Not Authorized" }} You are NOT authorized to drive cars
+              and trucks (including your own personal vehicle) on playa for Ranger
+              business. If you think you need this to do your job on playa, please
+              contact your manager or team lead.
+            {{/if}}
+          </:body>
+        </UiSection>
+      {{/if}}
+    </tab.pane>
+  {{/if}}
+  {{#if (or this.person.isRanger  this.person.isNonRanger)}}
+    <tab.pane @title="Certifications">
+      <UiSection>
+        <:title>Certifications</:title>
+        <:body>
+          {{#if this.personCertifications}}
+            <div class="masonry-container mt-2">
+              {{#each this.personCertifications as |pc| }}
+                <div class="masonry-item">{{pc.certification.title}}</div>
+              {{/each}}
+            </div>
+          {{else}}
+            No certifications are on file currently.
+          {{/if}}
+        </:body>
+      </UiSection>
+    </tab.pane>
+  {{/if}}
+</UiTab>

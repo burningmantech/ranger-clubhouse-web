@@ -1,18 +1,23 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import {action, set } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import {action, set} from '@ember/object';
+import {cached,tracked} from '@glimmer/tracking';
+import { isEmpty } from '@ember/utils';
 
 export default class MentorPostSeasonSummaryController extends ClubhouseController {
   queryParams = ['year'];
 
   @tracked filter = 'all';
   @tracked mentees;
+  @tracked callsignFilter = '';
 
   filterOptions = [
     {id: 'all', title: 'All'},
     {id: 'pass', title: 'Passed'},
     {id: 'bonked', title: 'Bonked'},
-    {id: 'no-walk', title: 'Did not walk' },
+    {id: 'self-bonked', title: 'Self Bonked'},
+    {id: 'uberbonked', title: 'Uber Bonked'},
+    {id: 'no-walk', title: 'Did not walk'},
+    {id: 'no-shift', title: 'No Alpha shift'},
   ];
 
   get bonkedCount() {
@@ -23,8 +28,32 @@ export default class MentorPostSeasonSummaryController extends ClubhouseControll
     return this.mentees.filter(({mentor_status}) => mentor_status === 'pass').length;
   }
 
+  _nornalizeCallsign(callsign) {
+    return callsign?.trim().toLowerCase().replace(' ', '');
+  }
+
+  @cached
   get viewMentees() {
-    const mentees = this.mentees;
+    let mentees = this.mentees;
+
+    if (!isEmpty(this.callsignFilter)) {
+      const callsign = this._nornalizeCallsign(this.callsignFilter);
+
+      mentees = mentees.filter((m) => {
+        if (this._nornalizeCallsign(m.callsign).indexOf(callsign) !== -1) {
+          return true;
+        }
+
+        let found = false;
+        m.fkas?.forEach((name) => {
+          if (this._nornalizeCallsign(name).indexOf(callsign) !== -1) {
+            found = true;
+          }
+        });
+
+        return found;
+      })
+    }
 
     switch (this.filter) {
       case 'pass':
@@ -34,6 +63,12 @@ export default class MentorPostSeasonSummaryController extends ClubhouseControll
         return mentees.filter((m) => (m.mentor_status === 'bonk' || m.mentor_status === 'self-bonk' || m.status === 'uberbonked'));
       case 'no-walk':
         return mentees.filter((m) => (m.mentor_status === 'pending' && !m.alpha_shift));
+      case 'no-shift':
+        return mentees.filter((m) => (m.mentor_status === 'pending') && !m.alpha_slot)
+      case 'self-bonked':
+        return mentees.filter((m) => m.mentor_status === 'self-bonk')
+      case 'uberbonked':
+        return mentees.filter((m) => m.status === 'uberbonked')
       default:
         return mentees;
     }
@@ -101,9 +136,15 @@ export default class MentorPostSeasonSummaryController extends ClubhouseControll
   @action
   noteSubmitted(person) {
     // Refresh the potentials
-    this.ajax.request('mentor/mentees', {data: { year: this.year, person_id: person.id }}).then(({ mentee }) => {
+    this.ajax.request('mentor/mentees', {data: {year: this.year, person_id: person.id}}).then(({mentee}) => {
       this.mentees = this.mentees.map((m) => m.id == person.id ? mentee : m);
       this.setupMentees();
     }).catch((response) => this.house.handleErrorResponse(response));
+  }
+
+  @action
+  clearFiltersAction() {
+    this.callsignFilter = '';
+    this.filter = 'all';
   }
 }

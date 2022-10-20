@@ -20,6 +20,6 @@ module('Integration | Component | schedule-blocked', function(hooks) {
                                     @isMe={{true}}
                         />`);
 
-    assert.dom('div.notice-box').exists();
+    assert.dom('div.alert').exists();
   });
 });

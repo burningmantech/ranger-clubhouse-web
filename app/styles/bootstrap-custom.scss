@@ -4,6 +4,9 @@
 
 $enable-shadows: true;
 $enable-grid-classes: true;
+$enable-gradients: true;
+$enable-negative-margins: true;
+$enable-cssgrid: true;
 
 $link-decoration: none;
 
@@ -16,10 +19,17 @@ $wheatfield: #ded7be;
 $navbar-light-color: #28221b;
 $navbar-light-hover-color: #0139cc;
 
+$nav-tabs-link-active-bg: #eef5fd;
+$nav-tabs-border-color: #b7b8d3;
+$nav-tabs-link-hover-border-color: #b7b8d3 #b7b8d3 $nav-tabs-border-color;
+$nav-tabs-link-active-border-color: #b7b8d3 #b7b8d3 #ffffff;
+
+
 // Do not enable rounded corners
-$btn-border-radius: 0;
+/*$btn-border-radius: 0;
 $btn-border-radius-lg: 0;
 $btn-border-radius-sm: 0;
+*/
 
 $card-spacer-y: 0.5rem !default;
 $card-spacer-x: 0.75rem !default;
@@ -94,9 +104,8 @@ $theme-colors: (
   "dark": #212529,
 );
 // Carry overs from Bootstrap 4.3
-$table-head-color: #495057;
-$table-head-bg: #e9ecef;
+$table-head-color: #3f454d;
+$table-head-bg: #DFE1EA;
 $table-striped-bg: #eff8fd;
 
-@import "bootstrap";
 

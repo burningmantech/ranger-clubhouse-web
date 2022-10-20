@@ -49,7 +49,6 @@ jobs:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "${MATRIX_CONTEXT}";
 
-
   docker:
     name: Build Docker image
 
@@ -61,6 +60,18 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
 
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+         echo "::set-output name=dir::$(npm config get cache)"
+      - uses: actions/cache@v3
+        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        with:
+         path: ${{ steps.npm-cache-dir.outputs.dir }}
+         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+         restore-keys: |
+          ${{ runner.os }}-node-
+
       - name: Build Docker image
         run: ./bin/build;
 
@@ -70,7 +81,7 @@ jobs:
           docker image save ranger-clubhouse-web:dev | gzip -6 > images/web.tgz;
 
       - name: Upload Docker image artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: images
           path: images

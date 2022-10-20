@@ -1,16 +1,12 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {set} from '@ember/object';
-import {Role} from 'clubhouse/constants/roles';
-import dayjs from 'dayjs';
 import {schedule} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {htmlSafe} from '@ember/template';
 import {TRAINING} from 'clubhouse/constants/positions';
 
-const allDays = ['All Days', 'all'];
-const upcomingShifts = ['Upcoming Shifts', 'upcoming'];
 
 export default class ScheduleManageComponent extends Component {
   @service ajax;
@@ -20,8 +16,6 @@ export default class ScheduleManageComponent extends Component {
   @service session;
   @service shiftManage;
 
-  @tracked filterDay = 'upcoming';
-  @tracked filterActive = 'active';
   @tracked scheduleSummary;
   @tracked requirementsOverride = false;
   @tracked showScheduleBlocker = false;
@@ -29,6 +23,8 @@ export default class ScheduleManageComponent extends Component {
 
   @tracked availableSlots;
   @tracked isCurrentYear;
+
+  @tracked isShinyPenny;
 
   activeOptions = [
     ['Active', 'active'],
@@ -51,23 +47,9 @@ export default class ScheduleManageComponent extends Component {
       }
     });
 
-    /*
-     * Filter out what the person can actual see based on their roles.
-     * TODO Revisit whether everyone should be able to see inactive slots if they choose.
-     */
-
-    if (this.session.hasRole(
-      [Role.ADMIN, Role.EDIT_SLOTS, Role.GRANT_POSITION, Role.VC, Role.TRAINER, Role.ART_TRAINER])) {
-      this.availableSlots = slots;
-    } else {
-      this.availableSlots = slots.filter((slot) => slot.slot_active);
-    }
-
-    this.inactiveSlots = this.availableSlots.filter((slot) => !slot.slot_active);
+    this.availableSlots = slots.filter((slot) => slot.slot_active);
     this.isCurrentYear = (+year === this.house.currentYear());
-    if (!this.isCurrentYear) {
-      this.filterDay = 'all';
-    }
+
     this.isMe = (this.session.userId === +person.id);
     this.isAdmin = this.session.isAdmin;
 
@@ -85,83 +67,6 @@ export default class ScheduleManageComponent extends Component {
     this.hasApprovedPhoto = (photoStatus === 'approved' || photoStatus === 'not-required')
   }
 
-  /**
-   * Build and return the slots to view. Filtering is done on days and/or active.
-   *
-   * @returns {[]}
-   */
-
-  get viewSlots() {
-    let slots = this.availableSlots;
-    const filterDay = this.filterDay;
-
-    if (filterDay) {
-      if (filterDay === 'upcoming') {
-        slots = slots.filter((slot) => !slot.has_started);
-      } else if (filterDay !== 'all') {
-        slots = slots.filter((slot) => slot.slotDay === filterDay);
-      }
-    }
-
-    if (this.filterActive !== 'all') {
-      const isActive = (this.filterActive === 'active');
-      slots = slots.filter((slot) => slot.slot_active == isActive);
-    }
-
-    return slots;
-  }
-
-  /**
-   * Return a position list based on what slots are being viewed.
-   *
-   * @returns {[]}
-   */
-
-  get positions() {
-    const slots = this.viewSlots;
-    const groups = {};
-    slots.forEach((slot) => {
-      const position_id = slot.position_id;
-      const group = groups[position_id];
-
-      if (group) {
-        group.slots.push(slot);
-      } else {
-        groups[position_id] = {title: slot.position_title, position_id, slots: [slot]};
-      }
-    });
-
-    return Object.values(groups).sort((a, b) => a.title.localeCompare(b.title));
-  }
-
-  /**
-   * Return day filter options based on what slots are available to sign up for.
-   *
-   * @returns {*[]}
-   */
-
-  get dayOptions() {
-    const unique = this.availableSlots.uniqBy('slotDay').mapBy('slotDay');
-    const days = [];
-
-    unique.sort((a, b) => {
-      if (a < b) return -1;
-      if (a > b) return 1;
-      return 0;
-    });
-
-    if (this.isCurrentYear) {
-      days.push(upcomingShifts);
-    }
-
-    days.push(allDays);
-
-    unique.forEach(function (day) {
-      days.push([dayjs(day).format('ddd MMM DD'), day])
-    });
-
-    return days;
-  }
 
   /**
    * Sort the signed up slots by start time, and mark any slots which overlap with one another.
@@ -174,8 +79,9 @@ export default class ScheduleManageComponent extends Component {
 
     slots.sort((a, b) => a.slot_begins_time - b.slot_begins_time);
     // Clear out overlapping flags
-    slots.forEach((slot) => {
+    this.args.slots.forEach((slot) => {
       slot.is_overlapping = false;
+      slot.overlappingSlots = [];
       slot.is_training_overlap = false;
     });
 
@@ -193,10 +99,12 @@ export default class ScheduleManageComponent extends Component {
           // training in the morning and then Dirt Training in the afternoon. However, most Dirt Trainings are
           // scheduled to start in the morning even tho veterans only have to attend the afternoon portion.
           slot.is_training_overlap = true;
-          prevSlot.is_training_overlap =  true;
+          prevSlot.is_training_overlap = true;
         } else {
           slot.is_overlapping = true;
           prevSlot.is_overlapping = true;
+          slot.overlappingSlots.push(prevSlot);
+          prevSlot.overlappingSlots.push(slot);
         }
       } else {
         slot.is_overlapping = false
@@ -242,7 +150,7 @@ export default class ScheduleManageComponent extends Component {
   @action
   joinSlot(slot, event) {
     const row = event.target.closest('.schedule-row');
-    const currentOffset = row.getBoundingClientRect().top - window.pageYOffset;
+    const currentOffset = row.getBoundingClientRect().top - window.scrollY;
 
     this.shiftManage.slotSignup(slot, this.args.person, (result) => {
       // Record the original row position on the page
@@ -253,16 +161,16 @@ export default class ScheduleManageComponent extends Component {
       this._sortAndMarkSignups();
       this._retrieveScheduleSummary();
 
-      // And reposition the page so things appear not to move when the sign up is added
+      // And reposition the page so things appear not to move when the sign-up is added
       // to the schedule.
       schedule('afterRender',
-        () => window.scrollTo(window.pageXOffset, row.getBoundingClientRect().top - currentOffset)
+        () => window.scrollTo(window.scrollX, row.getBoundingClientRect().top - currentOffset)
       );
     });
   }
 
   /**
-   * Remove a sign up from the schedule. Prevent the page from moving because a row disappeared from the signed up table.
+   * Remove a sign-up from the schedule. Prevent the page from moving because a row disappeared from the signed up table.
    *
    * @param slot
    * @param {Event} event
@@ -274,7 +182,7 @@ export default class ScheduleManageComponent extends Component {
 
     if (event) {
       row = event.target.closest('.schedule-row');
-      currentOffset = row.getBoundingClientRect().top - window.pageYOffset;
+      currentOffset = row.getBoundingClientRect().top - window.scrollY;
     }
 
     if (slot.has_started && this.isAdmin) {
@@ -297,12 +205,13 @@ export default class ScheduleManageComponent extends Component {
               // Try to keep the page position static. The sign up will be removed
               // from the schedule, the row deleted, and the browser may want
               // to reposition the page.
-              schedule('afterRender', () => {
-                // The sign up may have been removed via the scheduled table and the row no longer exists.
-                if (document.body.contains(row)) {
-                  window.scrollTo(window.pageXOffset, row.getBoundingClientRect().top - currentOffset);
-                }
-              });
+              setTimeout(() =>
+                schedule('afterRender', () => {
+                  // The sign-up may have been removed via the scheduled table and the row no longer exists.
+                  if (document.body.contains(row)) {
+                    window.scrollTo(window.scrollX, row.getBoundingClientRect().top - currentOffset);
+                  }
+                }), 100);
             }
 
             if (signedUp) {
@@ -324,12 +233,12 @@ export default class ScheduleManageComponent extends Component {
   /**
    * Show who is signed up for a given slot
    *
-   * @param slot
+   * @param {ScheduleSlotModel} slot
    */
 
   @action
   showPeople(slot) {
-    set(slot, 'is_retrieving_people', true);
+    slot.is_retrieving_people = true;
     this.ajax.request('slot/' + slot.id + '/people').then((result) => {
       let callsigns = result.people.map((person) => person.callsign);
       const signups = callsigns.length;

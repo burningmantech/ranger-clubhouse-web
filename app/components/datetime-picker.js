@@ -1,51 +1,23 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
-import $ from 'jquery';
 import { schedule } from '@ember/runloop';
 
-/*
- * Datetime picker which is a wrapper for https://github.com/xdan/datetimepicker
- *
- * Construct a basic input text element and attach the datepicker to it.
- */
-
 export default class DatetimePickerComponent extends Component {
-  element = null;
+  constructor() {
+    super(...arguments);
+    this.dateFormat = this.args.dateOnly ? 'Y-m-d' : 'Y-m-d H:i';
+    this.enableTime = !this.args.dateOnly;
+  }
+
+  @action
+  onChange(_dateObj, dateString) {
+    this.args.onChange(dateString);
+  }
 
   @action
   elementInserted(element) {
-    this.element = element;
-    const options = {
-      format: 'Y-m-d H:i',
-      inline: false,
-      lang: 'en',
-      step: 5,
-      allowBlank: true,
-      onChangeDateTime: (datetime, field) => {
-        this.args.onChange(field.val())
-      },
-      validateOnBlur: true  // BUG with datepicker. The package will not allow a blank field is validateOnBlur is false.
-    };
-
-    if (this.args.dateOnly) {
-      options.format = 'Y-m-d';
-      options.timepicker = false;
-    }
-
-    if (this.args.startDate) {
-      options.startDate = this.args.startDate;
-    }
-
-    $(this.element).datetimepicker(options);
-
-    if (this.args.autofocus){
+     if (this.args.autofocus){
       schedule('afterRender', () => element.focus());
     }
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    $(this.element).datetimepicker('destroy');
-    this.element = null;
   }
 }

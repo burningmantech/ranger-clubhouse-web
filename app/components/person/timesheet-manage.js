@@ -15,6 +15,7 @@ export default class PersonTimesheetManageComponent extends Component {
 
   @tracked editEntry = null;
   @tracked editVerification = false;
+  @tracked deleteEntry = null;
 
   @tracked positionOptions = [];
 
@@ -39,6 +40,29 @@ export default class PersonTimesheetManageComponent extends Component {
     this.canManageTimesheets = session.hasRole(Role.TIMESHEET_MANAGEMENT) || (session.hasRole(Role.ADMIN) && session.hasRole(Role.MANAGE));
     // Can the user mark an entry as verified?
     this.canVerifyTimesheets = session.hasRole(Role.MANAGE);
+
+    this._markOverlapping();
+  }
+
+  _markOverlapping() {
+    const {timesheets} = this.args;
+
+    // Clear out overlapping flags
+    timesheets.forEach((ts) => ts.isOverlapping = false);
+
+    let prevEndTime = 0, prevTs = null;
+    timesheets.forEach(function (ts) {
+      if (!ts.off_duty) {
+        // Don't bother with still on duty shifts.
+        return;
+      }
+      if (ts.onDutyTime < prevEndTime) {
+        ts.isOverlapping = true;
+        prevTs.isOverlapping = true;
+      }
+      prevEndTime = ts.offDutyTime;
+      prevTs = ts;
+    });
   }
 
   /**
@@ -62,7 +86,16 @@ export default class PersonTimesheetManageComponent extends Component {
     timesheet.reload().then(() => {
       this.editVerification = false;
       this.editEntry = timesheet;
+      this._markOverlapping();
     }).catch((response) => this.house.handleErrorResponse(response));
+  }
+
+  get minDate() {
+    return `${this.args.year}-08-01`;
+  }
+
+  get maxDate() {
+    return `${this.args.year}-09-15`;
   }
 
   /**
@@ -92,6 +125,7 @@ export default class PersonTimesheetManageComponent extends Component {
         this.editEntry.additional_reviewer_notes = '';
         this.editEntry = null;
         this.args.onChange();
+        this._markOverlapping();
       });
   }
 
@@ -106,6 +140,7 @@ export default class PersonTimesheetManageComponent extends Component {
       .then((result) => {
         const {onChange, person, endShiftNotify} = this.args;
         onChange();
+        this._markOverlapping();
         if (+person.id === +this.session.userId) {
           // Clear out the position title in user's navigation bar.
           this.session.loadUser();
@@ -132,17 +167,36 @@ export default class PersonTimesheetManageComponent extends Component {
   /**
    * Delete the entry
    */
+
   @action
-  removeEntryAction() {
-    const ts = this.editEntry;
-    this.modal.confirm('Remove Timesheet',
-      `Position: ${ts.position.title}<br>Time: ${ts.on_duty} to ${ts.off_duty}<br> Are you sure you wish to remove this timesheet?`,
-      () => {
-        ts.destroyRecord().then(() => {
-          this.editEntry = null;
-          this.toast.success('The entry has been deleted.');
-          this.args.onChange();
-        }).catch((response) => this.house.handleErrorResponse(response));
-      });
+  async deleteEntryAction(saveFirst) {
+    try {
+      if (saveFirst) {
+        await this.deleteEntry.save();
+      }
+      await this.editEntry.destroyRecord();
+      this.editEntry = null;
+      this.toast.success('The entry has been deleted.');
+      this.args.onChange();
+      this._markOverlapping();
+    } catch (e) {
+      this.house.handleErrorResponse(e);
+    } finally {
+      this.deleteEntry = null;
+    }
+  }
+
+  @action
+  showDeleteDialogAction(model) {
+    this.deleteEntry = model;
+  }
+
+  @action
+  cancelDeleteDialogAction() {
+    this.deleteEntry = false;
+  }
+
+  get hasOverlapping() {
+    return this.args.timesheets.find((ts) => ts.isOverlapping) !== undefined;
   }
 }

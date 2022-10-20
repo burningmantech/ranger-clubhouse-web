@@ -22,33 +22,54 @@ export class MinLengthRule {
 }
 
 
-/** Enforces the FCC's no-swearing-on-the-radio rule. */
-export class FccRule {
+/** Warns abuout words the FCC could fine us about or ethnic slurs that shouldn't be part of a callsign. */
+export class InappropriateRule {
   constructor() {
-    // TODO consider putting these in the HandleController data response so rhyming checkers
-    // can catch thins that rhyme with obscenities.
-    this.obsceneWords = {
+    const fcc = 'is frowned on by the FCC';
+    const roma = 'is an ethnic slur for the Roma people';
+    this.inappropriateWords = {
       // the Carlin 7
-      'shit': true,
-      'piss': true,
-      'fuck': true,
-      'cunt': true,
-      'cocksucker': true,
-      'motherfucker': true,
-      'tits': true,
-      // TODO other words?
+      'shit': fcc,
+      'piss': fcc,
+      'fuck': fcc,
+      'cunt': fcc,
+      'cocksucker': fcc,
+      'motherfucker': fcc,
+      'tits': fcc,
+      // TODO are there FCC swear words George Carlin didn't share?
+
+      // Roma ethnic slurs per https://github.com/burningmantech/ranger-clubhouse-api/issues/1087
+      'gypsy': roma,
+      'gipsy': roma,
+      'gypsi': roma,
+      'gypsys': roma,
+      'gipsys': roma,
+      'gypsis': roma,
+      'gypsies': roma,
+      'zingara': roma,
+      'zingaro': roma,
+      'tzigan': roma,
+      'tzigane': roma,
+      'gyppo': roma,
+      'cigano': roma,
+      'zigeuner': roma,
+      'gitan': roma,
+      'gitano': roma,
+
+      // TODO slurs for more ethnic groups?
     };
   }
 
   get id() {
-    return 'fcc';
+    return 'inappropriate';
   }
 
   check(name) {
     const result = [];
     for (const word of name.toLowerCase().split(/[^a-z]+/)) {
-      if (this.obsceneWords[word]) {
-        result.push(new HandleConflict(name, `${word} is frowned on by the FCC`, 'high', this.id));
+      const reason = this.inappropriateWords[word];
+      if (reason) {
+        result.push(new HandleConflict(name, `${word} ${reason}`, 'high', this.id));
       }
     }
     return result;
@@ -123,17 +144,16 @@ export class SubstringRule {
   }
 
   normalizeName(name) {
-    if (name.match(/^[A-Z]([ .-][A-Z])*$/)) {
-      // Acronyms are usually pronounced letter-by-letter; don't flag phonemes
-      // that happen to include them.  Transform to space-separated letters.
-      return name.trim().replace(/\W+/g, '').split(new RegExp('')).join(' ');
-    }
-    return name.trim().toLowerCase().replace(/\W+/g, '');
+    // Abbreviations are usually pronounced letter-by-letter, so don't flag phonemes that happen to include them.
+    // Transform all-caps words to space-separated letters and split on punctuation so "Sparkle" doesn't contain "LE"
+    // while allowing "DPW Bob" to match "D P W" or "D-P-W".  This isn't perfect, though: "Tall Eagle" contains "LE".
+    name = name.trim().replace(/\b[A-Z]{2,}\b/g, word => word.split(new RegExp('')).join(' '));
+    return name.toLowerCase().replace(/\W+/g, ' ').trim();
   }
 }
 
 
-/** Finds handles based on Lvenshtein edit distance. */
+/** Finds handles based on Levenshtein edit distance. */
 export class EditDistanceRule {
   constructor(handles) {
     this.maxDistance = 1;
@@ -554,7 +574,7 @@ export const ALL_RULE_CLASSES = [
   EditDistanceRule,
   EyeRhymeRule,
   ExperimentalEyeRhymeRule,
-  FccRule,
+  InappropriateRule,
   MinLengthRule,
   PhoneticAlphabetRule,
   SubstringRule

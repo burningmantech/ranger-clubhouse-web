@@ -1,13 +1,12 @@
 import Service, {service} from '@ember/service';
 import ENV from 'clubhouse/config/environment';
-import {isAbortError, isTimeoutError} from 'ember-ajax/errors';
+import {isAbortError} from 'ember-fetch/errors';
 import {isArray} from '@ember/array';
 import {run} from '@ember/runloop';
 import {isEmpty} from '@ember/utils';
 import currentYear from 'clubhouse/utils/current-year';
 import {isChangeset} from 'validated-changeset';
 import {AbortError, InvalidError, NotFoundError, ServerError, TimeoutError} from '@ember-data/adapter/error'
-import bootstrap from 'bootstrap';
 
 export default class HouseService extends Service {
   @service router;
@@ -34,6 +33,17 @@ export default class HouseService extends Service {
       console.error(response);
     }
 
+    if (response instanceof TimeoutError
+      || response instanceof AbortError
+      || isAbortError(response)
+      || response.name === 'NetworkError'
+      || response.message?.match(/NetworkError/)
+      || response.message?.match(/Network request failed/i)
+    ) {
+      this.session.showOfflineDialog = true;
+      return;
+    }
+
     if (+response.status === 401 && this.session.isAuthenticated) {
       this.toast.warning('Your session has timed out. Please login again.')
       this.session.invalidate();
@@ -44,13 +54,13 @@ export default class HouseService extends Service {
 
     // Ember Data request error
     if (response instanceof InvalidError) {
-      responseErrors = response.errors.map((error) => error.title);
+      responseErrors = response.errors.map(({title, detail}) => (detail ?? title));
       errorType = 'validation';
       if (haveChangeset && response.errors) {
         // Populate change set model with the validation errors
-        response.errors.forEach(({title, source}) => {
+        response.errors.forEach(({title, detail, source}) => {
           const attr = source.pointer.replace('/data/attributes/', '');
-          changeSet.pushErrors(attr, title);
+          changeSet.pushErrors(attr, detail ?? title);
         });
 
         // After the form renders, scroll to the first marked invalid field
@@ -58,19 +68,10 @@ export default class HouseService extends Service {
       }
     } else if (response instanceof ServerError) {
       if (response.errors) {
-        responseErrors = response.errors.map(({title}) => title);
+        responseErrors = response.errors.map(({title, detail}) => (detail ?? title));
       } else {
         responseErrors = 'The record operation was unsuccessful due to a fatal server error';
       }
-      errorType = 'server';
-    } else if (response instanceof TimeoutError ||
-      response instanceof AbortError ||
-      isAbortError(response) ||
-      isTimeoutError(response) ||
-      (response.name === 'NetworkError' || response.message?.match(/NetworkError/))
-    ) {
-      // Offline errors.
-      responseErrors = 'The request to the Clubhouse server could not be completed. The server might be offline or the Internet connection is spotty.';
       errorType = 'server';
     } else if (response instanceof NotFoundError) {
       responseErrors = 'The record was not found.';
@@ -82,7 +83,7 @@ export default class HouseService extends Service {
 
       if (data) {
         if (data.errors) {
-          responseErrors = data.errors.map((error) => error.title);
+          responseErrors = data.errors.map(({title, detail}) => (detail ?? title));
         } else if (data.error) {
           responseErrors = data.error;
         }
@@ -106,9 +107,9 @@ export default class HouseService extends Service {
           errorType = 'validation';
           if (haveChangeset && response.payload && response.payload.errors) {
             // Populate change set model with the validation errors
-            response.payload.errors.forEach(({title, source}) => {
+            response.payload.errors.forEach(({title, detail, source}) => {
               const attr = source.pointer.replace('/data/attributes/', '');
-              changeSet.pushErrors(attr, title);
+              changeSet.pushErrors(attr, (detail ?? title));
             });
 
             // After the form renders, scroll to the first marked invalid field
@@ -404,31 +405,6 @@ export default class HouseService extends Service {
       });
       script.addEventListener('error', () => reject());
       script.src = url; // Boom!
-    });
-  }
-
-  /**
-   * Toggle all accordions on the page
-   */
-
-  toggleAllAccordions(show) {
-    this.collapse('.acccordion-body', show ? 'show' : 'hide');
-  }
-
-  toggleSingleAccordion(containerId, show) {
-    this.collapse(`${containerId} .accordion-body`, show ? 'show' : 'hide');
-    this.scrollToElement(containerId, true);
-  }
-
-  collapse(selector, action) {
-    run('afterRender', () => {
-      if (typeof (selector) === 'string') {
-        document.querySelectorAll(selector).forEach((element) => {
-         bootstrap.Collapse.getOrCreateInstance(element, { toggle: false})[action]();
-        })
-      } else {
-        bootstrap.Collapse.getOrCreateInstance(selector, { toggle: false})[action]();
-      }
     });
   }
 }

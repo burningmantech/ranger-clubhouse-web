@@ -1,6 +1,7 @@
 import Model, { attr } from '@ember-data/model';
 import { isEmpty } from '@ember/utils';
 import { tracked } from '@glimmer/tracking';
+import dayjs from 'dayjs';
 
 export default class TimesheetModel extends Model {
   @attr('number') person_id;
@@ -32,6 +33,8 @@ export default class TimesheetModel extends Model {
   @tracked isIgnoring = false; // Used by the HQ window interface
   @tracked selected = false;
 
+  @tracked isOverlapping = false;
+
   // All good
   get isVerified() {
     return this.review_status === 'verified';
@@ -57,11 +60,24 @@ export default class TimesheetModel extends Model {
     return (this.off_duty && this.review_status === 'unverified');
   }
 
+  // Timesheet has not been reviewed yet
+  get isCorrectionApproved() {
+    return this.review_status === 'approved';
+  }
+
   get haveReviewerResponse() {
     return this.review_status !== 'unverified' && !isEmpty(this.reviewer_notes);
   }
 
   get stillOnDuty() {
     return !this.off_duty;
+  }
+
+  get onDutyTime() {
+    return dayjs(this.on_duty).unix();
+  }
+
+  get offDutyTime() {
+    return this.off_duty ? dayjs(this.off_duty).unix() : (this.onDutyTime + this.duration);
   }
 }
