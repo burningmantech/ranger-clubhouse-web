@@ -161,7 +161,7 @@ export default class HqShiftController extends ClubhouseController {
 
   @action
   ignoreEntry(entry) {
-    entry.set('isIgnoring', true);
+    entry.isIgnoring = true;
   }
 
   /**
@@ -171,11 +171,12 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   @action
-  markEntryCorrect(entry) {
-    entry.set('isIgnoring', false);
-    entry.set('review_status', 'verified');
+  toggleEntryVerified(entry) {
+    entry.isIgnoring = false;
+    const isVerified = entry.review_status === 'verified';
+    entry.review_status = (isVerified ? 'unverified' : 'verified');
     entry.save()
-      .then(() => this.toast.success('Timesheet was successfully marked correct.'))
+      .then(() => this.toast.success(`Timesheet was successfully ${isVerified ? 'un-verified' : 'marked as verified'}.`))
       .catch((response) => this.house.handleErrorResponse(response));
   }
 

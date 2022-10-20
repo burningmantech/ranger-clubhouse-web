@@ -42,7 +42,7 @@ export default class MeVehiclesController extends ClubhouseController {
     {id: 'none', title: 'None'},
     {id: 'permanent-new', title: 'Permanent - Re-Authorization'},
     {id: 'permanent-existing', title: 'Permanent - New'},
-    {id: 'event', title: 'Event Week Only' }
+    {id: 'event', title: 'Event Only' }
   ];
 
   amberLightOptions = [
