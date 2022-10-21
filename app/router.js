@@ -53,6 +53,7 @@ Router.map(function () {
     this.route('welcome');
     this.route('mentors');
     this.route('work-history');
+    this.route('awards');
   });
 
   this.route('search',  function () {
@@ -112,6 +113,8 @@ Router.map(function () {
     this.route('timesheet-sanity-checker');
     this.route('top-hour-earners');
     this.route('timesheet-slot-repair');
+    this.route('awards');
+    this.route('bulk-grant-awards');
   });
 
   this.route('hq', {path: '/hq/:person_id'}, function () {
@@ -163,6 +166,7 @@ Router.map(function () {
     this.route('timesheet-log');
     this.route('unified-flagging');
     this.route('work-history');
+    this.route('awards');
   });
 
   this.route('logout');

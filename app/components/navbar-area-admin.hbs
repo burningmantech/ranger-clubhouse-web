@@ -13,6 +13,7 @@
       <NavbarMenuItem @menu={{menu}} @route="admin.alerts" @item="RBS Alerts"/>
       <NavbarMenuItem @menu={{menu}} @route="admin.survey" @item="Surveys"/>
       <NavbarMenuItem @menu={{menu}} @route="admin.certifications" @item="Certifications"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.awards" @item="Awards"/>
     {{/if}}
     {{#if (has-role "admin" "megaphone")}}
       <NavbarMenuItem @menu={{menu}} @route="admin.documents" @item="Documents"/>
@@ -38,6 +39,7 @@
       <NavbarMenuItem @menu={{menu}} @route="admin.bulk-signout" @item="Bulk Signout"/>
       <NavbarMenuItem @menu={{menu}} @route="admin.bulk-lookup" @item="Callsign/Email Lookup"/>
       <NavbarMenuItem @menu={{menu}} @route="admin.bulk-positions" @item="Positions Grant/Revoke"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.bulk-grant-awards" @item="Bulk Grant Awards"/>
     </NavbarMenuSection>
   {{/if}}
   {{#if (has-role "admin")}}
