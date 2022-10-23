@@ -8,4 +8,8 @@ export default class AdminPeopleByStatusChangeController extends ClubhouseContro
       [ 'Right now', 'current-date' ],
       [ 'After next event', 'next-event' ],
     ];
+
+    get isCurrentPeriod() {
+      return this.period === 'current-date';
+    }
 }

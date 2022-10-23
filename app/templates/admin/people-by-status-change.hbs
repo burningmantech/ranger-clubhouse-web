@@ -1,5 +1,5 @@
 <main>
-  {{#if (eq this.period "current-date")}}
+  {{#if this.isCurrentPeriod}}
     <h1>People By Status Change: Proposed Immediate Status Changes</h1>
   {{else}}
     <h1>People By Status Change: Proposed Changes</h1>
@@ -14,21 +14,21 @@
                       @onChange={{action (mut this.period)}} />
     </div>
   </FormRow>
-  {{#if (eq this.period "current-date")}}
-    <p>
-      The following proposed statuses are based on the person’s current work record
-      and show what what we believe their status should be as of the current date
-      (i.e., these are corrections that we think need to be made to the database):
-    </p>
-  {{else}}
-    <p>
-      The following proposed statuses assume the person doesn't work at the next event:
-    </p>
-  {{/if}}
+  <p>
+    The database will be inspected as if the {{this.year}} event is over with.
+    {{#if (lte this.year 2026)}}
+      Until after the 2026 event, the event years 2019 &amp; 2022 are treated as contiguous. (i.e., the pandemic years
+      2020 &amp; 2021 are skipped over.)
+    {{/if}}
+  </p>
+  <p>
+    Inactive candidates will not have worked the {{this.inactive_year}} and later events.
+    Retired candidates will not have worked the {{this.retired_year}} and later events.
+  </p>
 
-  <StatusChangeTable @people={{this.inactives}} @newStatus="inactive"/>
-  <StatusChangeTable @people={{this.retired}} @newStatus="retired"/>
-  <StatusChangeTable @people={{this.actives}} @newStatus="active"/>
-  <StatusChangeTable @people={{this.past_prospectives}} @newStatus="past prospective"/>
-  <StatusChangeTable @people={{this.vintage}} @newStatus="vintage"/>
+  <StatusChangeTable @people={{this.inactives}} @newStatus="inactive" @year={{this.year}}/>
+  <StatusChangeTable @people={{this.retired}} @newStatus="retired" @year={{this.year}}/>
+  <StatusChangeTable @people={{this.actives}} @newStatus="active" @year={{this.year}}/>
+  <StatusChangeTable @people={{this.past_prospectives}} @newStatus="past prospective" @year={{this.year}}/>
+  <StatusChangeTable @people={{this.vintage}} @newStatus="vintage" @year={{this.year}}/>
 </main>
