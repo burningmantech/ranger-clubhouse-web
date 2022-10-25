@@ -1,15 +1,28 @@
 <UiSection>
-  <:title>{{@year}} Worked Positions Summary (hours, credits)</:title>
+  <:title>{{@year}} Worked Positions Summary</:title>
   <:body>
     {{#if this.workedPositions}}
       {{pluralize this.workedPositions.length "position"}} worked.
-      <div class="masonry-container masonry-col-4 masonry-hover mt-2">
+      <table class="table table-width-auto table-striped table-hover">
+        <thead>
+        <tr>
+          <th>Position</th>
+          <th>Shift Count</th>
+          <th>Total Duration</th>
+          <th>Total Credits</th>
+        </tr>
+        </thead>
+        <tbody>
         {{#each this.workedPositions as |position|}}
-          <div class="masonry-item">
-            {{position.title}} ({{hour-minute-format position.duration}}, {{credits-format position.credits}})
-          </div>
+          <tr>
+            <td>{{position.title}}</td>
+            <td class="text-end">{{position.total}}</td>
+            <td class="text-end">{{hour-minute-format position.duration}}</td>
+            <td class="text-end">{{credits-format position.credits}}</td>
+          </tr>
         {{/each}}
-      </div>
+        </tbody>
+      </table>
     {{else}}
       No positions were worked.
     {{/if}}
