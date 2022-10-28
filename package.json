@@ -12,14 +12,14 @@
   },
   "scripts": {
     "build": "ember build --environment=production",
-    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
-    "lint:fix": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*:fix",
+    "lint": "npm-run-all --print-name --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
+    "lint:fix": "npm-run-all --print-name --aggregate-output --continue-on-error --parallel \"lint:*:fix\"",
     "lint:hbs": "ember-template-lint .",
     "lint:hbs:fix": "ember-template-lint . --fix",
     "lint:js": "eslint . --cache",
     "lint:js:fix": "eslint . --fix",
     "start": "ember serve",
-    "test": "npm-run-all lint test:*",
+    "test": "npm-run-all --print-name \"lint\" \"test:*\"",
     "test:ember": "ember test"
   },
   "devDependencies": {
@@ -61,7 +61,6 @@
     "ember-cli-update": "^1.0.1",
     "ember-composable-helpers": "^5.0.0",
     "ember-data": "~4.7.3",
-    "ember-export-application-global": "^2.0.1",
     "ember-fetch": "^8.1.2",
     "ember-flatpickr": "^3.2.3",
     "ember-hbs-minifier": "^1.2.0",
@@ -98,7 +97,7 @@
     "webpack": "^5.74.0"
   },
   "engines": {
-    "node": "14.* || >= 16"
+    "node": "14.* || 16.* || >= 18"
   },
   "ember": {
     "edition": "octane"

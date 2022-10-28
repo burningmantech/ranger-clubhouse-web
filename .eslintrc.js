@@ -32,7 +32,8 @@ module.exports = {
     // node files
     {
       files: [
-        '.eslintrc.js',
+        './.eslintrc.js',
+        './tests/.eslintrc.js',
         './.prettierrc.js',
         './.template-lintrc.js',
         './ember-cli-build.js',
@@ -40,7 +41,7 @@ module.exports = {
         './blueprints/*/index.js',
         './config/**/*.js',
         './lib/*/index.js',
-        './server/**/*.js'
+        './server/**/*.js',
       ],
       parserOptions: {
         sourceType: 'script'
@@ -58,7 +59,7 @@ module.exports = {
       },
     },
     {
-      // Test files:
+      // test files
       files: ['tests/**/*-test.{js,ts}'],
       extends: ['plugin:qunit/recommended'],
     },
