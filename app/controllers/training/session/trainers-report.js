@@ -5,16 +5,18 @@ import {tracked} from '@glimmer/tracking';
 
 const TITLE_MAP = {
   [Position.CHEETAH]: 'Mnt',
-  [Position.ECHELON_FIELD]: 'Ech',
+  //[Position.ECHELON_FIELD]: 'Ech', Everyone gets to be Echelon Field
+  [Position.ECHELON_FIELD_LEAD]: 'Ech',
+  [Position.GREEN_DOT_LEAD]: 'GD',
   [Position.GREEN_DOT_LONG]: 'GD',
-  [Position.GREEN_DOT_MENTEE]: 'GD',
+  //[Position.GREEN_DOT_MENTEE]: 'GD',  Not an actual Green Dot yet
   [Position.GREEN_DOT_MENTOR]: 'GD',
   [Position.DIRT_GREEN_DOT]: 'GD',
   [Position.SANCTUARY]: 'GD',
   // position does not exist
   //    [Position.GREEN_DOT_SHORT]: 'GD',
   //[Position.HOT_SPRINGS_PATROL]: 'HSP',  Roslyn thinks nobody cares
-  [Position.HQ_TRAINING]: 'HQ',
+  //[Position.HQ_TRAINING]: 'HQ',  Everyone gets to be HQ training
   [Position.HQ_LEAD]: 'HQ',
   [Position.HQ_TRAINING_REFRESHER]: 'HQ',
   //[Position.HQ_RUNNER]: 'HQ',	Everybody gets to be HQ runner
@@ -41,6 +43,7 @@ const TITLE_MAP = {
   [Position.RSCI]: 'RSCI',
   [Position.SANDMAN]: 'Snd',
   [Position.RSC_SHIFT_LEAD]: 'SL',
+  [Position.RSC_WESL]: 'WESL',
   [Position.SITE_SETUP]: 'SITE',
   //[Position.SITE_TEARDOWN]: 'SITE',  Everybody gets to be SITE TD
   [Position.TECH_TEAM]: 'Tech',
