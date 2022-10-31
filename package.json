@@ -65,7 +65,7 @@
     "ember-flatpickr": "^3.2.3",
     "ember-hbs-minifier": "^1.2.0",
     "ember-load-initializers": "^2.1.2",
-    "ember-math-helpers": "^2.18.2",
+    "ember-math-helpers": "^3.0.0",
     "ember-module-migrator": "^0.8.0",
     "ember-named-blocks-polyfill": "^0.2.5",
     "ember-popper-modifier": "^2.0.1",
