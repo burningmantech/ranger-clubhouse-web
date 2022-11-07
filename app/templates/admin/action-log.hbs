@@ -18,10 +18,10 @@
                 @noResultsText="No callsigns found"
       />
       <f.datetime @name="start_time"
-                  @label="Start time (UTC-7)"
+                  @label="Start time"
                   @size={{20}} />
       <f.datetime @name="end_time"
-                  @label="End time (UTC-7)"
+                  @label="End time"
                   @size={{20}} />
       <f.text @name="event_name" @label="Event Name" @size={{20}} />
       <f.text @name="message" @label="Message/Reason" @size={{20}}/>
@@ -51,7 +51,7 @@
     <table class="table table-striped table-hover table-sm table-width-auto ">
       <thead>
       <tr>
-        <th class="w-20">Timestamp (UTC-7)</th>
+        <th class="w-20">Timestamp (Pacific)</th>
         <th class="w-15">User</th>
         <th class="w-15">Target</th>
         <th class="w-20">Event</th>
@@ -65,7 +65,7 @@
           <td class="w-20">
             {{#if log.data}}
               <a href {{action this.toggleLog log}}>
-                {{fa-icon (if log.showing "caret-down" "caret-right")}} {{log.created_at}}
+                {{fa-icon (if log.showing "caret-down" "caret-right")}} {{timestamp-format log.created_at}}
               </a>
             {{else}}
               &nbsp; {{log.created_at}}
