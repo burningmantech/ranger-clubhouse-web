@@ -1,15 +1,16 @@
 <h3>Personal Information for {{this.person.callsign}}</h3>
 <p>
+  {{this.person.callsign}}
   {{#if this.person.reviewed_pi_at}}
-    {{this.person.callsign}} last reviewed their PII on
-    {{dayjs-format this.person.reviewed_pi_at "MMM DD, YYYY @ HH:mm"}} (UTC-7)
+    last reviewed their PII on
+    {{timestamp-format this.person.reviewed_pi_at "MMM DD, YYYY @ HH:mm"}} (Pacific)
   {{else}}
-    Has not updated their PII yet.
+    has not updated their PII yet.
   {{/if}}
   <br>
   {{#if this.person.pi_reviewed_for_dashboard_at}}
     Last reviewed for dashboard on
-    {{dayjs-format this.person.pi_reviewed_for_dashboard_at "MMM DD, YYYY @ HH:mm"}} (UTC-7).
+    {{timestamp-format this.person.pi_reviewed_for_dashboard_at "MMM DD, YYYY @ HH:mm"}} (Pacific).
   {{else}}
     Has not reviewed for dashboard yet.
   {{/if}}
