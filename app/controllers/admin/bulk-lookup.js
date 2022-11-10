@@ -10,6 +10,8 @@ const FOUND_CSV_COLUMNS = [
   {title: 'Status', key: 'status'},
   {title: 'Email', key: 'email'},
   {title: 'Last Worked', key: 'last_worked'},
+  {title: 'Vintage', key: 'vintage', yesno: true},
+  {title: 'Years Worked', key: 'years_worked'},
 ];
 
 const NOT_FOUND_CSV_COLUMNS = [
