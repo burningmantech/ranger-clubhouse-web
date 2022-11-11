@@ -39,6 +39,7 @@
       <th class="text-center">All Rangers</th>
       <th class="text-center">Count Hrs</th>
       <th class="text-center">On SL report</th>
+      <th class="text-center">On trainer report</th>
       <th>Prevent Multi. Enrollments</th>
       <th>Training / Contact Email</th>
       {{#if this.canManagePositions}}
@@ -71,6 +72,9 @@
         </td>
         <td class="text-center">
           <BooleanIcon @value={{position.on_sl_report}} @trueIcon="list"/>
+        </td>
+        <td class="text-center">
+          <BooleanIcon @value={{position.on_trainer_report}} @trueIcon="rectangle-list"/>
         </td>
         <td class="text-center">
           <BooleanIcon @value={{position.prevent_multiple_enrollments}} @trueIcon="ban"/>
@@ -178,6 +182,8 @@
                             @label="Prevent Multiple Enrollments (usually for Training positions)"/>
                 <f.checkbox @name="on_sl_report"
                             @label="For the Shift Lead Report: indicates the person holds this position of interest"/>
+                <f.checkbox @name="on_trainer_report"
+                            @label="For the Trainer Session Report: indicates the position is relevant to trainers"/>
               </div>
             </FormRow>
           </fieldset>
