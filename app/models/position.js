@@ -8,6 +8,7 @@ export default class PositionModel extends Model {
   @attr('number') min;
   @attr('number') max;
   @attr('boolean') on_sl_report;
+  @attr('boolean') on_trainer_report;
   @attr('string') short_title;
   @attr('string') type;
   @attr('number') training_position_id;
