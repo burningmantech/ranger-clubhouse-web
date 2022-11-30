@@ -1,0 +1,54 @@
+<div>
+  <UiButton @type="secondary" @size="sm" @class="me-2" @onClick={{@toggleRoles}}>
+    {{if @showRoles "Hide" "Show"}} Roles
+  </UiButton>
+  {{#if @editRolesAction}}
+    <UiButton @type="secondary" @size="sm" @onClick={{@editRolesAction}}>
+      Edit Roles
+    </UiButton>
+  {{/if}}
+</div>
+{{#unless this.combinedRoles}}
+  <div class="mt-2 text-danger">
+    <b>No roles granted.</b>
+  </div>
+{{/unless}}
+{{#if @showRoles}}
+  <div class="masonry-container masonry-border masonry-col-2 mt-2">
+    {{#each this.combinedRoles as |role| }}
+      <div class="masonry-item">
+        {{role.title}}
+        {{#if role.granted}}
+          {{#if (or role.teams role.positions)}}
+            <div class="small text-muted">
+              Manually assigned and granted thru:
+            </div>
+          {{/if}}
+        {{else}}
+          <div class="small text-muted">
+            Only granted thru:
+          </div>
+        {{/if}}
+        {{#if role.teams}}
+          <div class="mt-1">
+            <Popover @text="[{{pluralize role.teams.length "team"}}]" @placement="bottom">
+              {{#each role.teams as |team|}}
+                {{team.title}}<br>
+              {{/each}}
+            </Popover>
+          </div>
+        {{/if}}
+
+        {{#if role.positions}}
+          <div class="mt-1">
+            <Popover @text="[{{pluralize role.positions.length "position"}}]" @placement="bottom">
+              {{#each role.positions as |position|}}
+                {{position.title}}<br>
+              {{/each}}
+            </Popover>
+          </div>
+        {{/if}}
+      </div>
+    {{/each}}
+  </div>
+{{/if}}

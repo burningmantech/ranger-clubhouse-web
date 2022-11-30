@@ -17,9 +17,9 @@ Router.map(function () {
   this.route('me', function () {
     this.route('homepage', {path: '/'});
 
-    this.route('agreements', function() {
-      this.route('index', { path: '/'});
-      this.route('sign', { path: '/:tag'});
+    this.route('agreements', function () {
+      this.route('index', {path: '/'});
+      this.route('sign', {path: '/:tag'});
     });
 
     this.route('announcements');
@@ -56,36 +56,46 @@ Router.map(function () {
     this.route('awards');
   });
 
-  this.route('search',  function () {
+  this.route('search', function () {
     this.route('assets');
     this.route('languages');
     this.route('vehicles');
   });
 
-  this.route('admin',  function () {
+  this.route('admin', function () {
     this.route('action-log');
     this.route('alerts');
     this.route('assets');
+    this.route('awards');
+    this.route('bulk-grant-awards');
+    this.route('bulk-lookup');
+    this.route('bulk-positions');
     this.route('bulk-sign-in-out');
     this.route('bulk-signout');
     this.route('bulk-upload');
+    this.route('certifications');
     this.route('clubhouse1-log');
     this.route('credits');
+    this.route('documents');
     this.route('error-log');
     this.route('event-dates');
     this.route('help');
     this.route('hours-credits');
+    this.route('mail-log');
     this.route('maintenance');
     this.route('motd');
+
     this.route('online-training', function () {
       this.route('index', {path: '/'});
       this.route('courses');
       this.route('enrollment');
     });
+
     this.route('people-by-status-change');
     this.route('positions');
     this.route('radio-eligibility');
     this.route('ranger-retention');
+
     this.route('rbs', function () {
       this.route('broadcast');
       this.route('broadcast-log');
@@ -94,27 +104,24 @@ Router.map(function () {
       this.route('stats');
       this.route('unverified-stopped');
     });
+
     this.route('roles');
     this.route('salesforce');
     this.route('settings');
     this.route('slots');
+
     this.route('survey', function () {
       this.route('index', {path: '/'});
       this.route('manage', {path: '/:survey_id'});
       this.route('preview', {path: '/:survey_id/preview'});
     });
 
-    this.route('bulk-lookup');
-    this.route('bulk-positions');
-    this.route('certifications');
-    this.route('documents');
-    this.route('mail-log');
+    this.route('teams');
     this.route('thank-you-cards');
     this.route('timesheet-sanity-checker');
-    this.route('top-hour-earners');
     this.route('timesheet-slot-repair');
-    this.route('awards');
-    this.route('bulk-grant-awards');
+    this.route('top-hour-earners');
+
   });
 
   this.route('hq', {path: '/hq/:person_id'}, function () {
@@ -129,7 +136,7 @@ Router.map(function () {
   });
 
 
-  this.route('mentor',  function () {
+  this.route('mentor', function () {
     this.route('acceptance-sheets');
     this.route('alpha-signout');
     this.route('alpha-status');
@@ -167,6 +174,7 @@ Router.map(function () {
     this.route('unified-flagging');
     this.route('work-history');
     this.route('awards');
+    this.route('membership');
   });
 
   this.route('logout');
@@ -176,7 +184,7 @@ Router.map(function () {
     this.route('capacity');
     this.route('multiple-enrollments');
     this.route('people-training-completed');
-     this.route('session', {path: '/session/:slot_id'}, function () {
+    this.route('session', {path: '/session/:slot_id'}, function () {
       this.route('index', {path: '/'});
       this.route('signup-sheet');
       this.route('trainers-report');
@@ -189,18 +197,21 @@ Router.map(function () {
     this.route('untrained-people');
   });
 
-  this.route('reports',function () {
+  this.route('reports', function () {
     this.route('alpha-shirts');
     this.route('asset-history');
     this.route('assets-outstanding');
     this.route('certifications');
+    this.route('event-stats');
     this.route('flakes');
     this.route('freaking-years');
     this.route('hq-forecast');
     this.route('languages');
     this.route('on-duty');
+    this.route('people-by-clubhouse-teams');
     this.route('people-by-location');
     this.route('people-by-position');
+    this.route('special-teams');
     this.route('people-by-role');
     this.route('people-by-status');
     this.route('position-sanity-checker');
@@ -214,7 +225,6 @@ Router.map(function () {
     this.route('shift-coverage');
     this.route('shift-lead');
     this.route('shift-signups');
-    this.route('special-teams');
     this.route('timesheet-by-callsign');
     this.route('timesheet-by-position');
     this.route('timesheet-correction-requests');
@@ -222,7 +232,6 @@ Router.map(function () {
     this.route('timesheet-unconfirmed');
     this.route('vehicle-paperwork');
     this.route('vehicle-registry');
-    this.route('event-stats');
   });
 
   this.route('vc', function () {

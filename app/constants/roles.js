@@ -64,6 +64,21 @@ const RoleToString = {
   [VIEW_PII]: 'view-pii',
 };
 
+
+const ALLOWED_AUTO_GRANT_ROLES = [
+  ART_TRAINER,
+  MANAGE,
+  MANAGE_ON_PLAYA,
+  MEGAPHONE,
+  MENTOR,
+  TIMESHEET_MANAGEMENT,
+  TRAINER,
+  VC,
+  VIEW_EMAIL,
+  VIEW_PII,
+];
+
+
 const StringToRole = Object.keys(RoleToString).reduce((hash, key) => {
   key = parseInt(key);
   hash[RoleToString[key]] = key;
@@ -78,5 +93,6 @@ export {
   roleName,
   StringToRole,
   RoleToString,
-  Role
+  Role,
+  ALLOWED_AUTO_GRANT_ROLES
 };

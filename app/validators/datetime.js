@@ -22,7 +22,7 @@ function getDateProperty(changes, content, name) {
 
 export default function validateDateTime(opts = {}) {
   return (key, newValue, oldValue, changes, content) => {
-    const { before, after, if_set } = opts;
+    const { before, after, if_set, dateOnly } = opts;
     let date;
 
     if (if_set && !getProperty(changes, content, if_set)) {
@@ -36,7 +36,11 @@ export default function validateDateTime(opts = {}) {
       return true;
     }
 
-    if (!newValue.match(/^\s*\d{4}[/-]\d{1,2}[/-]\d{1,2}\s+\d{1,2}:\d{1,2}(:\d{1,2})?\s*$/)) {
+    if (dateOnly) {
+      if (!newValue.match(/^\s*\d{4}[/-]\d{1,2}[/-]\d{1,2}$/)) {
+        return 'Not in YYYY-MM-DD format';
+      }
+    } else if (!newValue.match(/^\s*\d{4}[/-]\d{1,2}[/-]\d{1,2}\s+\d{1,2}:\d{1,2}(:\d{1,2})?\s*$/)) {
       return 'Not in YYYY-MM-DD HH:MM format';
     }
 

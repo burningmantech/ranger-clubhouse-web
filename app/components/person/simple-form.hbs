@@ -77,50 +77,20 @@
       {{/if}}
     </ChForm>
   </dd>
-  <dt class="col-sm-12 col-lg-2">Positions / Roles</dt>
+  <dt class="col-sm-12 col-lg-2">Team/Positions</dt>
   <dd class="col-sm-12 col-lg-9">
-    <div>
-      <UiButton @onClick={{@togglePositions}} @type="secondary" @size="sm">
-        {{if @showPositions "Hide" "Show"}} Positions
-      </UiButton>
-      <UiButton @onClick={{@toggleRoles}} @type="secondary" @size="sm">
-        {{if @showRoles "Hide" "Show"}} Roles
-      </UiButton>
-      {{#if (has-role "grant-position")}}
-        <UiButton @onClick={{@editPositionsAction}} @type="secondary" @size="sm" @class="ms-2">
-          Edit Positions
-        </UiButton>
-      {{/if}}
-    </div>
-    {{#unless @personPositions}}
-      <b class="text-danger">No positions granted</b>
-    {{/unless}}
-    {{#if @showPositions}}
-      <div class="mt-1">
-        <b>{{pluralize @personPositions.length "position"}}:</b>
-      </div>
-      <div class="masonry-container">
-        {{#each @personPositions as |position| }}
-          <div class="masonry-item">
-            {{position-label position}}
-          </div>
-        {{/each}}
-      </div>
-    {{/if}}
-    {{#unless @personRoles}}
-      <b class="text-danger">No roles granted</b>
-    {{/unless}}
-    {{#if @showRoles}}
-      <div class="mt-1">
-        <b>{{pluralize @personRoles.length "role"}}:</b>
-      </div>
-      <div class="masonry-container">
-        {{#each @personRoles as |role| }}
-          <div class="masonry-item">
-            {{role.title}}
-          </div>
-        {{/each}}
-      </div>
-    {{/if}}
+    <Person::Positions @personMembership={{@personMembership}}
+                       @showMembership={{@showMembership}}
+                       @toggleMembership={{@toggleMembership}}
+                       @canEditMembership={{@canEditMembership}}
+                       @editMembershipAction={{@editMembershipAction}}
+    />
+  </dd>
+  <dt class="col-sm-12 col-lg-2">Roles</dt>
+  <dd class="col-sm-12 col-lg-9">
+    <Person::Roles @roles={{@roles}}
+                   @grantedRoles={{@grantedRoles}}
+                   @toggleRoles={{@toggleRoles}}
+                   @showRoles={{@showRoles}} />
   </dd>
 </dl>

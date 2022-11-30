@@ -16,19 +16,20 @@
         property : The property to display for that column
         class    : Custom CSS class for that column
 }}
-
-<Admin::PositionSanityCheckHeader @title={{@title}}>
-  {{yield}}
-</Admin::PositionSanityCheckHeader>
-<Admin::PositionSanityCheckTable
-    @title={{@title}}
-    @caption={{@caption}}
-    @sucessMessage={{@sucessMessage}}
-    @columns={{@columns}}
-    @people={{@people}}
-    @repairAction={{@repairAction}}
-    @repairType={{@repairType}}
-    @canRepair={{@canRepair}}
-    @isSubmitting={{@isSubmitting}}
-/>
+<UiSection>
+  <:title>{{yield}}</:title>
+  <:body>
+    <Admin::PositionSanityCheckTable
+      @title={{@title}}
+      @caption={{@caption}}
+      @sucessMessage={{@sucessMessage}}
+      @columns={{@columns}}
+      @people={{@people}}
+      @repairAction={{@repairAction}}
+      @repairType={{@repairType}}
+      @canRepair={{@canRepair}}
+      @isSubmitting={{@isSubmitting}}
+    />
+  </:body>
+</UiSection>
 

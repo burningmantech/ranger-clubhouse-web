@@ -77,17 +77,43 @@
     {{/if}}
   </tab.pane>
 
-  <tab.pane @title="Positions">
+  <tab.pane @title="Teams &amp; Positions">
     <UiSection>
-      <:title>{{fa-icon "list"}} Positions</:title>
+      <:title>{{fa-icon "sitemap"}} Teams &amp; Positions</:title>
       <:body>
-        Positions indicate which shifts you are allowed to sign up for and what ARTs you may attend.
-        You have {{pluralize this.personPositions.length "position"}} granted:
-        <div class="masonry-container mt-2">
-          {{#each this.personPositions as |position| }}
-            <div class="masonry-item">{{position.title}}</div>
-          {{else}}
-            <div>You currently do not hold any positions.</div>
+        Positions indicate which shifts you are allowed to sign up for and what ARTs you may attend. The following shows
+        what teams you belong to (if any) and/or what positions have been granted.
+        <div class="masonry-container masonry-border masonry-col-3 mt-2">
+          <div class="masonry-item">
+            <div class="masonry-item-header">
+              General Positions
+            </div>
+            <div class="ms-1">
+              {{#each this.generalPositions as |pos|}}
+                {{position-label pos}}<br>
+              {{else}}
+                <i>None granted.</i>
+              {{/each}}
+            </div>
+          </div>
+
+          {{#each this.personMembership.teams key="id" as |team|}}
+            <div class="masonry-item">
+              <div class="masonry-item-header">
+                {{team.title}}
+              </div>
+              {{#if team.positions}}
+                <div class="ms-1">
+                  {{#each team.positions as |p|}}
+                    {{position-label p}}<br>
+                  {{/each}}
+                </div>
+              {{else}}
+                <div class="mt-2 small">
+                  <i>No team positions have been granted.</i>
+                </div>
+              {{/if}}
+            </div>
           {{/each}}
         </div>
       </:body>
