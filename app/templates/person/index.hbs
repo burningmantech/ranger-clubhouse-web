@@ -25,15 +25,16 @@
                             @statusOptions={{this.statusOptions}}
                             @onSiteOptions={{this.onSiteOptions}}
 
-                            @personRoles={{this.personRoles}}
+                            @roles={{this.roles}}
+                            @grantedRoles={{this.grantedRoles}}
                             @toggleRoles={{this.toggleRoles}}
                             @showRoles={{this.showRoles}}
                             @editRolesAction={{this.editRolesAction}}
 
-                            @personPositions={{this.personPositions}}
-                            @togglePositions={{this.togglePositions}}
-                            @showPositions={{this.showPositions}}
-                            @editPositionsAction={{this.editPositionsAction}}
+                            @personMembership={{this.personMembership}}
+                            @toggleMembership={{this.toggleMembership}}
+                            @showMembership={{this.showMembership}}
+                            @canEditMembership={{this.canEditMembership}}
 
                             @editNote={{this.editNote}}
                             @confirmNoteOrMessage={{this.confirmNoteOrMessage}}
@@ -48,14 +49,15 @@
                               @savePersonAction={{this.savePersonAction}}
                               @onSiteOptions={{this.onSiteOptions}}
 
-                              @personRoles={{this.personRoles}}
+                              @grantedRoles={{this.grantedRoles}}
+                              @roles={{this.roles}}
                               @toggleRoles={{this.toggleRoles}}
                               @showRoles={{this.showRoles}}
 
-                              @personPositions={{this.personPositions}}
-                              @togglePositions={{this.togglePositions}}
-                              @showPositions={{this.showPositions}}
-                              @editPositionsAction={{this.editPositionsAction}}
+                              @personMembership={{this.personMembership}}
+                              @toggleMembership={{this.toggleMembership}}
+                              @showMembership={{this.showMembership}}
+                              @canEditMembership={{this.canEditMembership}}
           />
         {{/if}}
       </:body>
@@ -67,15 +69,12 @@
   </div>
 </div>
 
-{{#if this.editPositions}}
-  <Person::PositionForm @positions={{this.positions}} @positionIds={{this.positionIds}}
-                        @onSave={{action this.savePositions}}
-                        @onCancel={{action this.cancelPositions}} />
-{{/if}}
-
 {{#if this.editRoles}}
-  <Person::RoleForm @roles={{this.roles}} @roleIds={{this.roleIds}} @onSave={{this.saveRoles}}
-                    @onCancel={{this.cancelRoles}} @isSaving={{this.isSavingRoles}} />
+  <Person::RoleForm @roles={{this.roles}}
+                    @grantedRoles={{this.grantedRoles}}
+                    @onSave={{this.saveRoles}}
+                    @onCancel={{this.cancelRoles}}
+                    @isSaving={{this.isSavingRoles}} />
 {{/if}}
 
 {{#if this.showUploadDialog}}

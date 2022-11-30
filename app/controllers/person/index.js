@@ -1,11 +1,9 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {Role} from 'clubhouse/constants/roles';
-import inGroups from 'clubhouse/utils/in-groups';
 import {tracked} from '@glimmer/tracking';
 
 export default class PersonIndexController extends ClubhouseController {
-  person = null;
 
   callsignApprovedOptions = [
     ['Approved', true],
@@ -37,14 +35,19 @@ export default class PersonIndexController extends ClubhouseController {
   ];
 
 
-  @tracked personPositions;
-  @tracked showPositions = false;
-  @tracked editPositions = false;
+  @tracked person = null;
+  @tracked teams;
 
-  @tracked personRoles = null;
+  @tracked personMembership;
+
+  @tracked showMembership = false;
+
+  @tracked grantedRoles = null;
   @tracked showRoles = false;
   @tracked editRoles = false;
   @tracked isSavingRoles = false;
+
+  @tracked personTeams = null;
 
   @tracked showConfirmNoteOrMessage = false;
   @tracked showEditNote = false;
@@ -86,25 +89,8 @@ export default class PersonIndexController extends ClubhouseController {
     return this.session.hasRole([Role.ADMIN, Role.VC]);
   }
 
-  get isManageAndGrantPosition() {
-    const session = this.session;
-    return session.hasRole(Role.MANAGE) && session.hasRole(Role.GRANT_POSITION);
-  }
-
-  get positionIds() {
-    return this.personPositions.map((position) => position.id);
-  }
-
-  get positionColumns() {
-    return inGroups(this.personPositions, 3);
-  }
-
-  get roleIds() {
-    return this.personRoles.map((role) => role.id);
-  }
-
-  get roleColumns() {
-    return inGroups(this.personRoles, 2);
+  get canEditMembership() {
+    return this.session.isAdmin || !!this.teams.find((t) => t.can_manage);
   }
 
   _savePersonModel(model) {
@@ -116,22 +102,15 @@ export default class PersonIndexController extends ClubhouseController {
       this.house.scrollToTop();
       this.toast.success('The information was successfully updated.');
 
-      // Reload the current user.
-      if (+model.id === this.session.userId) {
-        this.session.loadUser();
-      }
 
       // When the status changes, the positions & roles are likely changed.
       // Reload the roles & positions
       if (statusChanged) {
-        this.ajax.request(`person/${this.person.id}/positions`)
-          .then((results) => this.personPositions = results.positions)
-          .catch((response) => this.house.handleErrorResponse(response));
-
-        this.ajax.request(`person/${this.person.id}/roles`)
-          .then((results) => this.personRoles = results.roles)
-          .catch((response) => this.house.handleErrorResponse(response));
+        return this._reloadMembershipAndRoles();
+      } else {
+        this._reloadUserIfMe();
       }
+
     }).catch((response) => this.house.handleErrorResponse(response, model))
       .finally(() => this.iSaving = false);
   }
@@ -188,12 +167,8 @@ export default class PersonIndexController extends ClubhouseController {
       this.modal.confirm(
         'Confirm Action',
         'You are about to disapprove a previously approved callsign. Are you sure you want to do that?',
-        () => {
-          this._savePersonModel(model);
-        },
-        () => {
-          this.toast.warning('The record has not been saved.');
-        }
+        () => this._savePersonModel(model),
+        () => this.toast.warning('The record has not been saved.')
       );
     } else {
       this._savePersonModel(model);
@@ -218,36 +193,25 @@ export default class PersonIndexController extends ClubhouseController {
   }
 
   @action
-  togglePositions() {
-    this.showPositions = !this.showPositions;
+  toggleMembership() {
+    this.showMembership = !this.showMembership;
   }
 
-  @action
-  editPositionsAction() {
-    this.editPositions = true;
-  }
 
-  @action
-  savePositions(model) {
-    const positionIds = model.positionIds;
+  _reloadMembershipAndRoles() {
+    const personId = +this.person.id;
+    this._reloadUserIfMe();
 
-    this.ajax.request(`person/${this.person.id}/positions`, {
-      type: 'POST',
-      data: {position_ids: positionIds}
-    }).then((results) => {
-      this.toast.success('The positions have been successfully updated.');
-      this.personPositions = results.positions;
-      this.editPositions = false;
-      if (this.session.userId === +this.person.id) {
-        // Reload the user.
-        this.session.loadUser();
-      }
-    }).catch((response) => this.house.handleErrorResponse(response));
-  }
+    return this.ajax.request(`person/${personId}/membership`)
+      .then(({membership}) => {
+        this.personMembership =membership;
 
-  @action
-  cancelPositions() {
-    this.editPositions = false;
+        // Reload the roles because team and positions may have added or removed roles
+        this.ajax.request(`person/${personId}/roles`, {data: {include_memberships: 1}})
+          .then((results) => this.grantedRoles = results)
+          .catch((response) => this.house.handleErrorResponse(response));
+      }).catch((response) => this.house.handleErrorResponse(response));
+
   }
 
   @action
@@ -261,23 +225,28 @@ export default class PersonIndexController extends ClubhouseController {
   }
 
   @action
-  saveRoles(model) {
-    const roleIds = model.roleIds;
+  saveRoles(roles) {
+    const role_ids = roles.filter((r) => r.selected).map((r) => r.id);
 
     this.isSavingRoles = true;
     this.ajax.request(`person/${this.person.id}/roles`, {
       type: 'POST',
-      data: {role_ids: roleIds}
-    }).then((results) => {
+      data: {role_ids}
+    }).then(() => {
       this.toast.success('The roles have been successfully updated.');
-      this.personRoles = results.roles;
       this.editRoles = false;
-      if (this.session.userId === +this.person.id) {
-        // Reload the user.
-        this.session.loadUser();
-      }
+      this._reloadUserIfMe();
+      return this.ajax.request(`person/${this.person.id}/roles`, {data: {include_memberships: 1}})
+        .then((results) => this.grantedRoles = results)
     }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isSavingRoles = false);
+  }
+
+  _reloadUserIfMe() {
+    if (this.session.userId === +this.person.id) {
+      // Reload the user.
+      this.session.loadUser();
+    }
   }
 
   @action

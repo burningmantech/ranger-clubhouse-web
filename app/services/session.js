@@ -215,6 +215,16 @@ export default class extends SessionService {
   }
 
   /**
+   * Can the user view another person's personal info (address, phone #, email)
+   *
+   * @returns {boolean}
+   */
+
+  get canViewPII() {
+    return this.hasRole([ADMIN, VC, VIEW_PII]);
+  }
+
+  /**
    * Is the user an Admin?
    * @returns {boolean}
    */

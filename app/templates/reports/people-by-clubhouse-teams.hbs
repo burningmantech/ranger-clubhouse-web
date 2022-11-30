@@ -1,0 +1,40 @@
+<h1>People By Clubhouse Team Membership Report</h1>
+Showing {{pluralize this.teams.length "Clubhouse Team"}}
+{{#each this.teams as |team|}}
+  <UiAccordion as |accordion|>
+    <accordion.title>
+      {{team.title}} ({{pluralize team.members.length "member"}}, {{pluralize team.managers.length "manager"}})
+    </accordion.title>
+    <accordion.body>
+      {{#if team.managers}}
+        <b>{{pluralize team.managers.length "manager"}}:</b>
+        <div class="callsign-list mt-1 mb-2">
+          {{#each team.managers key="id" as |person|}}
+            <div>
+              <PersonLink @person={{person}} />
+            </div>
+          {{/each}}
+        </div>
+      {{else}}
+        <div class="mb-2">
+          <b class="text-danger">No managers assigned.</b>
+        </div>
+      {{/if}}
+      {{#if team.members}}
+        <b>{{pluralize team.members.length "member"}}:</b>
+        <div class="callsign-list mt-1">
+          {{#each team.members key="id" as |person|}}
+            <div>
+              <PersonLink @person={{person}} />
+              {{#if person.is_manager}}
+                {{fa-icon "asterisk"}}
+              {{/if}}
+            </div>
+          {{/each}}
+        </div>
+      {{else}}
+        <b class="text-danger">No members were found.</b>
+      {{/if}}
+    </accordion.body>
+  </UiAccordion>
+{{/each}}

@@ -122,7 +122,8 @@
     <div class="col-auto">
       {{#if this.uploadAction}}
         <p>
-          <i>Line format: {{nl2br this.uploadHelp}}</i>
+          <i>Line format:</i><br>
+          {{nl2br this.uploadHelp}}
         </p>
       {{/if}}
       <Textarea class="form-control" @value={{this.records}} rows={{10}} cols={{80}} />

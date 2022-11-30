@@ -16,7 +16,7 @@ export default class DocumentShowComponent extends Component {
     super(...arguments);
 
     this.isLoading = true;
-    this.store.find('document', this.args.tag).then((result) => {
+    this.store.findRecord('document', this.args.tag).then((result) => {
       this.document = result;
       this.documentBody = htmlSafe(this.document.body);
       if (this.args.onLoad) {
