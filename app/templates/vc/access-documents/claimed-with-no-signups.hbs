@@ -1,0 +1,53 @@
+<h1>Claimed Tickets With No Sign Ups</h1>
+<p>
+  This report shows all people who have claimed or submitted tickets who have not completed the Online Course OR did
+  complete the course yet did not work.
+</p>
+<p>
+  <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+</p>
+{{pluralize this.people.length "person"}} found.
+<table class="table table-striped table-hover table-sm table-width-auto">
+  <thead>
+  <tr>
+    <th>Callsign</th>
+    <th>Status</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Type</th>
+    <th>RAD</th>
+    <th>OT Completed?</th>
+    <th>Has Signups?</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.people as |person|}}
+    <tr>
+      <td>
+        <PersonLink @person={{person}} />
+      </td>
+      <td>
+        {{person.status}}
+      </td>
+      <td>
+        {{person.first_name}} {{person.last_name}}
+      </td>
+      <td>
+        {{mail-to person.email}}
+      </td>
+      <td>
+        {{ticket-type-human person.type}}
+      </td>
+      <td>
+        RAD-{{person.access_document_id}}
+      </td>
+       <td class="text-center">
+        {{yesno person.ot_completed}}
+      </td>
+      <td class="text-center">
+        {{yesno person.has_signups}}
+      </td>
+     </tr>
+  {{/each}}
+  </tbody>
+</table>
