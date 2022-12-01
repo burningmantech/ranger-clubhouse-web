@@ -10,17 +10,8 @@ module('Integration | Component | timesheet-position-summary', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{timesheet-position-summary}}`);
+    await render(hbs`<TimesheetPositionSummary />`);
 
     assert.dom(this.element).hasText('');
-
-    // Template block usage:
-    await render(hbs`
-      {{#timesheet-position-summary}}
-        template block text
-      {{/timesheet-position-summary}}
-    `);
-
-    assert.dom(this.element).hasText('template block text');
   });
 });

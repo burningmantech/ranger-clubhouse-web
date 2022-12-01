@@ -10,17 +10,8 @@ module('Integration | Component | schedule-table', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{schedule-table}}`);
+    await render(hbs`<ScheduleTable/>`);
 
     assert.dom(this.element).hasText('');
-
-    // Template block usage:
-    await render(hbs`
-      {{#schedule-table}}
-        template block text
-      {{/schedule-table}}
-    `);
-
-    assert.dom(this.element).hasText('template block text');
   });
 });

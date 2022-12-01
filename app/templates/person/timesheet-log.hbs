@@ -68,7 +68,7 @@
                     Status update {{get data.review_status 0}} &rarr; {{get data.review_status 1}}<br>
                   {{/if}}
                   {{#if data.position_id}}
-                    Position update {{data.position_id.0.title}} &rarr; {{data.position_id.1.title}}<br>
+                    Position update {{get (get data.position_id 0) 'title'}} &rarr; {{get (get data.position_id 1) 'title'}}<br>
                   {{/if}}
                   {{#if data.on_duty}}
                     On duty update {{shift-format (get data.on_duty 0)}} &rarr; {{shift-format (get data.on_duty 1)}}

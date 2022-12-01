@@ -10,17 +10,8 @@ module('Integration | Component | ticket-threshold', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{ticket-threshold}}`);
+    await render(hbs`<TicketThreshold />`);
 
     assert.dom(this.element).hasText('');
-
-    // Template block usage:
-    await render(hbs`
-      {{#ticket-threshold}}
-        template block text
-      {{/ticket-threshold}}
-    `);
-
-    assert.dom(this.element).hasText('template block text');
   });
 });
