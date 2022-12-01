@@ -1,5 +1,6 @@
 import Component from '@glimmer/component';
 import dayjs from 'dayjs';
+import {isEmpty} from '@ember/utils';
 
 /*
  * Build a row showing the person's current documents.
@@ -29,6 +30,16 @@ export default class AccessDocumentsForPersonComponent extends Component {
     this.vpTickets = this._accessDocumentInfo('VPs', this.vpTicketInfo, notes);
     this.significantOtherCount = this._accessDocumentInfo('WAPSOs', this.wapSOsInfo, notes);
     this.notes = notes;
+
+    const errors = [];
+
+    this.args.documents.forEach((doc) => {
+      if (doc.has_error) {
+        errors.push(`RAD-${doc.id} - ${doc.error}`);
+      }
+    });
+
+    this.documentsErrors = errors;
   }
 
   _buildAccessDate(doc) {
@@ -45,107 +56,95 @@ export default class AccessDocumentsForPersonComponent extends Component {
 
   _findArrivalDate(notes) {
     const docs = this.args.documents;
-    const waps = docs.filter((doc) => (doc.type == 'work_access_pass'));
+    const waps = docs.filter((doc) => (doc.type === 'work_access_pass'));
 
     if (waps.length > 1) {
       notes.push(`${waps.length} WAPs`);
     }
 
     // Find a claimed SC
-    let doc = docs.find((doc) => (doc.type == 'staff_credential' && doc.status == 'claimed'));
+    let doc = docs.find((doc) => (doc.type === 'staff_credential' && doc.status === 'claimed'));
 
     // Nope, try find a WAP.
     if (!doc) {
-        doc = docs.find((doc) => doc.type == 'work_access_pass');
+      doc = docs.find((doc) => doc.type === 'work_access_pass');
     }
 
     // Try again -- ANY SCs.
     if (!doc) {
-        doc = docs.find((doc) => doc.type == 'staff_credential');
+      doc = docs.find((doc) => doc.type === 'staff_credential');
     }
 
-    let style = '', text = '';
+    let style = '', text;
     if (!doc) {
-        text = 'missing';
+      text = 'missing';
     } else {
       // Alert to someone having a staff credential AND WAP.
-      if (doc.type == 'staff_credential' && waps.length > 0) {
+      if (doc.type === 'staff_credential' && waps.length > 0) {
         notes.push('SC+WAP');
       }
 
-      if (doc.status == 'claimed' || doc.status == 'banked' || doc.status == 'submitted') {
+      if (doc.status === 'claimed' || doc.status === 'banked' || doc.status === 'submitted') {
         style = `access-document-${doc.status}`;
       }
 
       text = this._buildAccessDate(doc);
     }
 
-    this.arrivalDate =  { style, text };
+    this.arrivalDate = {style, text};
   }
 
   _accessDocumentInfo(type, typeMap, notes) {
     const documents = this.args.documents.filter((doc) => typeMap[doc.type] ? 1 : 0);
 
-    if (documents.length == 0) {
-      return { style: '', text: '' };
+    if (!documents.length) {
+      return {style: '', text: ''};
     }
 
     const theOne = documents[0];
 
     let text = '';
     switch (type) {
-    case 'WAPSOs':
-      text = +documents.length;
-      break;
+      case 'WAPSOs':
+        text = +documents.length;
+        break;
 
-    default:
-      text = typeMap[theOne.type];
-      break;
+      default:
+        text = typeMap[theOne.type];
+        break;
     }
 
     let weird = '';
-    const threshold = type == 'WAPSOs' ? 3 : 1;
+    const threshold = type === 'WAPSOs' ? 3 : 1;
 
     if (documents.length > threshold) {
       weird = `${documents.length} ${type}`;
     }
 
-    if (type == 'tickets') {
+    if (type === 'tickets') {
       const expired = [];
       documents.forEach((doc) => {
-        if (doc.past_expire_date && (doc.status == 'banked' || doc.status == 'qualified')) {
+        if (doc.past_expire_date && (doc.status === 'banked' || doc.status === 'qualified')) {
           expired.push(`${typeMap[doc.type]} EXPIRED`);
         }
       });
       if (expired.length > 0) {
-        if (weird != '') {
+        if (!isEmpty(weird)) {
           weird += '; ';
         }
         weird += expired.join(' ');
       }
     }
 
-    if (weird != '') {
+    if (!isEmpty(weird)) {
       notes.push(weird);
     }
 
     let style = '';
-    if (theOne.status == 'claimed' || theOne.status == 'banked' || theOne.status == 'submitted') {
+    if (theOne.status === 'claimed' || theOne.status === 'banked' || theOne.status === 'submitted') {
       style = `access-document-${theOne.status}`;
     }
 
-    return { style, text };
-  }
-
-  get documentsErrors() {
-    const errors = [ ];
-
-    this.args.documents.forEach((doc) => {
-      if (doc.has_error) {
-        errors.push(`RAD-${doc.id} - ${doc.error}`);
-      }
-    });
-
-    return errors;
+    return {style, text};
   }
 }

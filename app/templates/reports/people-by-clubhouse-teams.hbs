@@ -26,9 +26,6 @@ Showing {{pluralize this.teams.length "Clubhouse Team"}}
           {{#each team.members key="id" as |person|}}
             <div>
               <PersonLink @person={{person}} />
-              {{#if person.is_manager}}
-                {{fa-icon "asterisk"}}
-              {{/if}}
             </div>
           {{/each}}
         </div>
