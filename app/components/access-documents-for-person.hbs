@@ -10,11 +10,11 @@
   <td>
     {{~this.notes}}
     {{~#if this.documentsErrors~}}
-      <p class="text-danger">
-        {{~#each this.documentsErrors as |error|~}}
+      <div class="text-danger">
+        {{#each this.documentsErrors as |error|}}
           {{error}}<br>
-        {{~/each~}}
-      </p>
+        {{/each}}
+      </div>
     {{/if}}
   </td>
 </tr>
