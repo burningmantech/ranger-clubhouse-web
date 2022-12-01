@@ -242,6 +242,7 @@ Router.map(function () {
       this.route('statistics');
       this.route('waps');
       this.route('unclaimed-with-signups');
+      this.route('claimed-with-no-signups');
     });
     this.route('bmid');
     this.route('bmid-print');

@@ -277,6 +277,14 @@ function routes() {
     return {agreements: []};
   });
 
+  this.get('/api/role', ({roles}) => {
+    return {role: roles};
+  });
+
+  this.get('/api/team', () => {
+    return {team: []};
+  });
+
   /*
     Shorthand cheatsheet:
 
