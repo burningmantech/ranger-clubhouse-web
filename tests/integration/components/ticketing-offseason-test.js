@@ -10,17 +10,8 @@ module('Integration | Component | ticketing-offseason', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{ticketing-offseason}}`);
+    await render(hbs`<TicketingOffseason />`);
 
     assert.strictEqual(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      {{#ticketing-offseason}}
-        template block text
-      {{/ticketing-offseason}}
-    `);
-
-    assert.strictEqual(this.element.textContent.trim(), 'template block text');
   });
 });

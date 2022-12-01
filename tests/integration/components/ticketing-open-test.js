@@ -10,17 +10,8 @@ module('Integration | Component | ticketing-open', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{ticketing-open}}`);
+    await render(hbs`<TicketingOpen />`);
 
     assert.strictEqual(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      {{#ticketing-open}}
-        template block text
-      {{/ticketing-open}}
-    `);
-
-    assert.strictEqual(this.element.textContent.trim(), 'template block text');
   });
 });

@@ -1,4 +1,4 @@
-import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
+  import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {TYPE_NORMAL, TYPE_TRAINER, TYPE_SEPARATE, TYPE_SUMMARY} from 'clubhouse/models/survey-group';
@@ -240,5 +240,9 @@ export default class AdminSurveyManageController extends ClubhouseController {
   @action
   saveSurveyAction() {
     this.surveyEdit = null;
+  }
+
+  isNotLast(obj, array) {
+    return obj !== array[array.length -1];
   }
 }

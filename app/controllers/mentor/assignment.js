@@ -1,14 +1,16 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {isEmpty} from '@ember/utils';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import {later, schedule} from '@ember/runloop';
+import _ from 'lodash';
 
 export default class MentorAssignmentController extends ClubhouseController {
   @tracked isPrinting = false;
   @tracked isSubmitting = false;
   @tracked filter = 'all';
   @tracked isRendering = false;
+  @tracked mentors;
 
   statusOptions = [
     'pending',
@@ -25,6 +27,12 @@ export default class MentorAssignmentController extends ClubhouseController {
     ['Bonked', 'bonked']
   ];
 
+  @cached
+  get mentorsById() {
+    return _.keyBy(this.mentors, 'id');
+  }
+
+  @cached
   get mentorOptions() {
     const options = this.mentors.map((mentor) => [mentor.callsign, mentor.id]);
     options.unshift(['-', '']);
@@ -145,5 +153,20 @@ export default class MentorAssignmentController extends ClubhouseController {
       name += ' is-invalid';
     }
     return name;
+  }
+
+  @action
+  mentorName(person, mentorIdx) {
+    const id = person.mentors[mentorIdx]?.mentor_id;
+    return id ? this.mentorsById[id]?.callsign : '-';
+  }
+
+  getMentorId(person, mentorIdx) {
+    return person.mentors[mentorIdx]?.mentor_id;
+  }
+
+  @action
+  setMentorId(person, mentorIdx, mentorId) {
+    person.mentors[mentorIdx].mentor_id = mentorId;
   }
 }
