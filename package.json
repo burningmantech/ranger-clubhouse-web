@@ -60,7 +60,7 @@
     "ember-cli-terser": "^4.0.2",
     "ember-cli-update": "^1.0.1",
     "ember-composable-helpers": "^5.0.0",
-    "ember-data": "~4.7.3",
+    "ember-data": "~4.8.3",
     "ember-fetch": "^8.1.2",
     "ember-flatpickr": "^3.2.3",
     "ember-hbs-minifier": "^1.2.0",
