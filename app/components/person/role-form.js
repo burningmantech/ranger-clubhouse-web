@@ -25,7 +25,7 @@ export default class PersonRoleFormComponent extends Component {
         title: role.title,
         selected: this.roleIds.includes(role.id),
         positions: grantedRoles.position_roles.filter((p) => p.role_id === role.id),
-        disabled: (role.id === TECH_NINJA && !isTechNinja),
+        disabled: ((role.id === TECH_NINJA || role.id === ADMIN) && !isTechNinja),
       }
     });
 
@@ -40,10 +40,8 @@ export default class PersonRoleFormComponent extends Component {
   @action
   save() {
     const {onSave} = this.args;
-    const originalIds = this.roleIds;
-    const wantAdmin = (!originalIds.includes(ADMIN) && !!this.roles.find((r) => r.id === ADMIN && r.selected));
-    const wantPII = (!originalIds.includes(VIEW_PII) && !!this.roles.find((r) => r.id === VIEW_PII && r.selected));
-
+    const wantAdmin = this._wantRole(this.roleIds, this.roles, ADMIN),
+      wantPII = this._wantRole(this.roleIds, this.roles, VIEW_PII);
     if (wantAdmin || wantPII) {
       let abilities;
       const roles = [];
@@ -68,6 +66,10 @@ export default class PersonRoleFormComponent extends Component {
     } else {
       onSave(this.roles);
     }
+  }
+
+  _wantRole(originalRoles, newRoles, roleId) {
+    return (!originalRoles.includes(roleId) && !!newRoles.find((r) => r.id === roleId && r.selected));
   }
 
   @action

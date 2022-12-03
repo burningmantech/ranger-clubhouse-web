@@ -16,6 +16,9 @@
               />
               <label for="role-{{role.id}}" class="form-check-label">
                 {{role.title}}
+                {{#if role.disabled}}
+                  <div class="text-muted small">Contact Tech Team to grant/revoke</div>
+                {{/if}}
               </label>
 
               {{#if role.positions}}
