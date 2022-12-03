@@ -38,7 +38,10 @@
       <PositionTable @viewPositions={{this.viewPositions}}
                      @positions={{this.positions}}
                      @canManagePositions={{this.canManagePositions}}
-                     @editAction={{this.editAction}} />
+                     @editAction={{this.editAction}}
+                     @roleById={{this.roleById}}
+                     @teamById={{this.teamById}}
+      />
     </div>
   {{else}}
     Showing {{this.viewByTeams.length}} teams
@@ -50,7 +53,10 @@
             <PositionTable @viewPositions={{team.team_positions}}
                            @positions={{this.positions}}
                            @canManagePositions={{this.canManagePositions}}
-                           @editAction={{this.editAction}} />
+                           @editAction={{this.editAction}}
+                           @roleById={{this.roleById}}
+                           @teamById={{this.teamById}}
+            />
           </div>
         </accordion.body>
       </UiAccordion>

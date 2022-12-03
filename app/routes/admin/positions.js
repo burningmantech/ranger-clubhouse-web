@@ -1,6 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import { ADMIN } from 'clubhouse/constants/roles';
 import RSVP from 'rsvp';
+import _ from 'lodash';
 
 export default class AdminPositionRoute extends ClubhouseRoute {
   roleRequired = ADMIN;
@@ -23,5 +24,7 @@ export default class AdminPositionRoute extends ClubhouseRoute {
       allRangersFilter: '-',
       viewAs: 'list'
     });
+    controller.set('roleById', _.keyBy(model.roles, 'id'));
+    controller.set('teamById', _.keyBy(model.teams, 'id'));
   }
 }

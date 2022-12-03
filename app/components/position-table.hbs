@@ -4,9 +4,11 @@
     <th>ID</th>
     <th colspan="2">Active / Title</th>
     <th>Short Title</th>
+    <th>Team</th>
     <th>Type</th>
     <th>Min / Max</th>
     <th>Attributes</th>
+    <th>Associated Roles</th>
     {{#if @canManagePositions}}
       <th>Action</th>
     {{/if}}
@@ -22,8 +24,11 @@
       <td>
         {{position.title}}
       </td>
-      <td>
+       <td>
         <PresentOrNot @value={{position.short_title}} @empty="-"/>
+      </td>
+      <td>
+        {{this.teamName position.team_id}}
       </td>
       <td>{{position.type}}</td>
       <td class="text-center">{{position.min}} / {{position.max}}</td>
@@ -53,6 +58,9 @@
         {{#if position.contact_email}}
           {{mail-to position.contact_email}}
         {{/if}}
+      </td>
+      <td>
+        {{this.roleList position.role_ids}}
       </td>
       {{#if @canManagePositions}}
         <td>
