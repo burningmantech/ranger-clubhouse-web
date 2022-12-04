@@ -1,32 +1,32 @@
 <NavbarMenu @nav={{@nav}} @title="Admin" @isLarge={{true}} as |menu|>
-  <NavbarMenuSection @section="Edit Records">
+  <NavbarMenuSection @section="Event Records">
+    {{#if (has-role "admin")}}
+      <NavbarMenuItem @menu={{menu}} @route="admin.assets" @item="Assets"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.event-dates" @item="Event Dates"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.credits" @item="Schedule Credits"/>
+    {{/if}}
     {{#if (has-role "admin" "edit-slots")}}
       <NavbarMenuItem @menu={{menu}} @route="admin.slots" @item="Schedule Slots"/>
     {{/if}}
-    {{#if (has-role "admin")}}
-      <NavbarMenuItem @menu={{menu}} @route="admin.credits" @item="Schedule Credits"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.assets" @item="Assets"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.event-dates" @item="Event Dates"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.positions" @item="Positions"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.roles" @item="(System) Roles"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.help" @item="Help Documents"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.alerts" @item="RBS Alerts"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.survey" @item="Surveys"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.certifications" @item="Certifications"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.awards" @item="Awards"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.teams" @item="Teams"/>
-    {{/if}}
-    {{#if (has-role "admin" "megaphone")}}
-      <NavbarMenuItem @menu={{menu}} @route="admin.documents" @item="Documents"/>
-    {{/if}}
+    <NavbarMenuItem @menu={{menu}} @route="admin.survey" @item="Surveys"/>
   </NavbarMenuSection>
   {{#if (has-role "admin")}}
+    <NavbarMenuSection @section="System Records">
+      <NavbarMenuItem @menu={{menu}} @route="admin.awards" @item="Awards"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.certifications" @item="Certifications"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.documents" @item="Documents"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.help" @item="Help Tooltips"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.positions" @item="Positions"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.alerts" @item="RBS Alerts"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.roles" @item="Roles"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.teams" @item="Teams"/>
+    </NavbarMenuSection>
     <NavbarMenuSection @section="Site Admin">
-      <NavbarMenuItem @menu={{menu}} @route="admin.settings" @item="Settings"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.maintenance" @item="Maintenance"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.clubhouse1-log" @item="Clubhouse 1 Log"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.error-log" @item="Error Log"/>
       <NavbarMenuItem @menu={{menu}} @route="admin.action-log" @item="Action Log"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.error-log" @item="Error Log"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.maintenance" @item="Maintenance"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.settings" @item="Settings"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.clubhouse1-log" @item="Clubhouse 1 Log"/>
     </NavbarMenuSection>
     <NavbarMenuSection @section="Pre-Event">
       <NavbarMenuItem @menu={{menu}} @route="admin.salesforce" @item="Salesforce Import"/>
@@ -42,8 +42,6 @@
       <NavbarMenuItem @menu={{menu}} @route="admin.bulk-positions" @item="Positions Grant/Revoke"/>
       <NavbarMenuItem @menu={{menu}} @route="admin.bulk-grant-awards" @item="Bulk Grant Awards"/>
     </NavbarMenuSection>
-  {{/if}}
-  {{#if (has-role "admin")}}
     <NavbarMenuSection @section="Post-Event">
       <NavbarMenuItem @menu={{menu}} @route="admin.thank-you-cards" @item="Thank-You Cards"/>
       <NavbarMenuItem @menu={{menu}} @route="admin.timesheet-sanity-checker" @item="Timesheet Sanity Checker"/>

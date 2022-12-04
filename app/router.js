@@ -27,7 +27,6 @@ Router.map(function () {
     this.route('contact');
     this.route('emergency-contact');
     this.route('event-info');
-    this.route('help');
     this.route('mentees');
     this.route('messages');
     this.route('motorpool-policy');
