@@ -8,6 +8,7 @@ export default class PersonEventModel extends Model {
   @attr('boolean', { defaultValue: false }) org_vehicle_insurance;
   @attr('boolean', { defaultValue: false }) signed_motorpool_agreement;
   @attr('boolean', { defaultValue: false }) signed_personal_vehicle_agreement;
+  @attr('boolean', { defaultValue: false }) signed_nda;
 
   @attr('boolean', { defaultValue: false }) asset_authorized;
   @attr('boolean', { defaultValue: false }) sandman_affidavit;

@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import {TECH_NINJA} from 'clubhouse/constants/roles';
+import {ADMIN, TECH_NINJA, VC} from 'clubhouse/constants/roles';
 
 export default class PersonEventInfoController extends ClubhouseController {
   queryParams = ['year'];
@@ -15,6 +15,10 @@ export default class PersonEventInfoController extends ClubhouseController {
 
   get canMarkOnlineCourseCompleted() {
     return this.session.hasRole(TECH_NINJA);
+  }
+
+  get canSignAgreements() {
+    return this.session.hasRole([ ADMIN, VC ]);
   }
 
   @action

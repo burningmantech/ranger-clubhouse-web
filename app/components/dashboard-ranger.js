@@ -16,6 +16,7 @@ import {
   WAITING
 } from "clubhouse/constants/dashboard";
 import * as DashboardStep from 'clubhouse/constants/dashboard-steps';
+import {SIGN_NDA} from "../constants/dashboard-steps";
 
 const RESULT_PRIORITIES = {
   [URGENT]: 1,
@@ -45,6 +46,7 @@ class StepGroup {
 
 
 const STEPS = [
+  DashboardStep.SIGN_NDA,
   DashboardStep.UPLOAD_PHOTO,
   DashboardStep.PHOTO_APPROVAL,
   DashboardStep.MISSING_BPGUID,
@@ -266,10 +268,11 @@ const STEPS = [
       };
     }
   },
-  DashboardStep.VEHICLE_REQUESTS
+  DashboardStep.VEHICLE_REQUESTS,
  ];
 
 const NON_RANGER_STEPS = [
+  DashboardStep.SIGN_NDA,
   DashboardStep.UPLOAD_PHOTO,
   DashboardStep.PHOTO_APPROVAL,
   DashboardStep.MISSING_BPGUID,

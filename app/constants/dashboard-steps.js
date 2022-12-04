@@ -762,3 +762,26 @@ export const VEHICLE_REQUESTS = {
     }
   }
 };
+
+// Step is required in all dashboard periods.
+export const SIGN_NDA = {
+  name: 'Sign the Ranger Non Disclosure Agreement (NDA)',
+  immediate: true,
+  check({milestones}) {
+    if (!milestones.nda_required) {
+      // Don't worry about it if not required or already signed.
+      return {result: SKIP};
+    }
+
+    return {
+      result: URGENT,
+      route: 'me.agreements.index',
+      linkedMessage: {
+        route: 'me.agreements.index',
+        prefix: htmlSafe('Starting late 2022, all Clubhouse users who have been granted either the Login Management Year Round or On Playa roles are required EACH CALENDAR YEAR to review and agree to the Ranger NDA. Your privileges are suspended until the document is agreed to.<br><br> Visit'),
+        text: 'Me > Agreements',
+        suffix: 'to review and agree to the document.'
+      },
+    };
+  }
+};
