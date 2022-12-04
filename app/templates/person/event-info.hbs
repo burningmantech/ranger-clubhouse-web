@@ -167,28 +167,36 @@
       <UiSection>
         <:title>{{this.year}} Misc. Agreements</:title>
         <:body>
-          {{#if (has-role "admin" "vc")}}
+          {{#if this.canSignAgreements}}
             <p class="text-danger">
-              Do not sign any agreements another's behalf.
+              Do not sign any agreements on someone else's behalf. You may expose the organization to legal liability.
             </p>
-            <f.checkbox @name="sandman_affidavit"
-                        @label="Signed Sandman Affidavit"
-            />
+            <p>
+              <f.checkbox @name="sandman_affidavit"
+                          @label="Signed Sandman Affidavit"
+              />
+              <f.checkbox @name="signed_nda"
+                          @label="Ranger Non Disclosure Agreement"
+              />
+            </p>
+            <f.submit @disabled={{this.personEvent.isSaving}} />
+            {{#if this.personEvent.isSaving}}
+              <LoadingIndicator/>
+            {{/if}}
           {{else}}
-            {{#if this.personEvent.sandman_affidavit}}
+            <p>
+              {{this.year}} Sandman Affidavit {{#if this.personEvent.sandman_affidavit}}
               <b class="text-success"> {{fa-icon "check"}} Signed</b>
             {{else}}
               <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
             {{/if}}
-            the {{this.year}} Sandman Affidavit
-          {{/if}}
-          {{#if (has-role "admin" "vc")}}
-            <div class="mt-2">
-              <f.submit @disabled={{this.personEvent.isSaving}} />
-              {{#if this.personEvent.isSaving}}
-                <LoadingIndicator/>
-              {{/if}}
-            </div>
+            </p>
+            {{this.year}} Ranger NDA
+            {{#if this.personEvent.signed_nda}}
+              <b class="text-success"> {{fa-icon "check"}} Signed</b>
+            {{else}}
+              <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+            {{/if}}
           {{/if}}
         </:body>
       </UiSection>
