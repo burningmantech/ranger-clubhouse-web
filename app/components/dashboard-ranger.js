@@ -16,7 +16,6 @@ import {
   WAITING
 } from "clubhouse/constants/dashboard";
 import * as DashboardStep from 'clubhouse/constants/dashboard-steps';
-import {SIGN_NDA} from "../constants/dashboard-steps";
 
 const RESULT_PRIORITIES = {
   [URGENT]: 1,
