@@ -765,7 +765,7 @@ export const VEHICLE_REQUESTS = {
 
 // Step is required in all dashboard periods.
 export const SIGN_NDA = {
-  name: 'Sign the Ranger Non Disclosure Agreement (NDA)',
+  name: 'Sign the Sensitive Data Access and Use Policy Agreement',
   immediate: true,
   check({milestones}) {
     if (!milestones.nda_required) {
@@ -778,7 +778,7 @@ export const SIGN_NDA = {
       route: 'me.agreements.index',
       linkedMessage: {
         route: 'me.agreements.index',
-        prefix: htmlSafe('Starting late 2022, all Clubhouse users who have been granted either the Login Management Year Round or On Playa roles are required EACH CALENDAR YEAR to review and agree to the Ranger NDA. Your privileges are suspended until the document is agreed to.<br><br> Visit'),
+        prefix: htmlSafe('Starting late 2022, all Clubhouse users who have been granted either the Login Management Year Round or On Playa roles are required EACH CALENDAR YEAR to review and agree to the Sensitive Data Access and Use Policy document. <b class="text-danger">Your privileges are suspended until the document is agreed to.</b><br><br> Visit'),
         text: 'Me > Agreements',
         suffix: 'to review and agree to the document.'
       },
