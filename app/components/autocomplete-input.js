@@ -1,8 +1,10 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {schedule} from '@ember/runloop';
+import {debounce, schedule} from '@ember/runloop';
 import {service} from '@ember/service';
+
+const CLICK_DEBOUNCE_MS = 350;
 
 export default class AutocompleteInputComponent extends Component {
   @service house;
@@ -286,7 +288,7 @@ export default class AutocompleteInputComponent extends Component {
   @action
   clickSelection(option, event) {
     event.stopImmediatePropagation();
-    this._selectOption(option);
+    debounce(this, this._selectOption, option, CLICK_DEBOUNCE_MS);
     return false;
   }
 
