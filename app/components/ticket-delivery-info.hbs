@@ -1,155 +1,100 @@
-<TicketSection @id="delivery"
-               @nextAction={{@nextSection}}
-               @nextDisabled={{this.needAnswer}}
-               @toggleCard={{@toggleCard}}
-               @showing={{@showing}}>
-  <:title>
-    Delivery
-    {{#if this.needAnswer}}
-      <TicketSectionStatus @status="need-answer"/>
-    {{else if this.usingStaffCredential}}
-      <TicketSectionStatus @status="claimed" @text="Pickup at Staff Credentialing"/>
-    {{else if this.itemsToDeliver}}
-      {{#if this.isDeliveryPostal}}
-        <TicketSectionStatus @status="claimed" @text="US Mail for {{this.namesToDeliver}}"/>
-      {{else if this.isDeliveryWillCall}}
-        <TicketSectionStatus @status="claimed" @text="Pickup at Will Call for {{this.namesToDeliver}}"/>
-      {{/if}}
+{{#if this.hasQualifiedTickets}}
+  <b>You will need to claim or bank your event ticket(s) first before any delivery information can be given.</b>
+{{else if this.usingStaffCredential}}
+  <p>
+    Your <b>Staff Credential {{if @ticketPackage.vehiclePass.isClaimed "and Vehicle Pass"}}</b> will be held at Staff
+    Credentialing under your name <b>"{{@person.first_name}} {{@person.last_name}}"</b>.
+  </p>
+  <p>
+    Sorry, Staff Credentials cannot be mailed due to Burning Man organization policies.
+  </p>
+  <p>
+    The Ticketing Summary section (available after you complete all ticketing steps) will show the various
+    pickup locations.
+  </p>
+{{else if (or @ticket.isClaimed this.vehiclePass.isClaimed)}}
+  <p>
+    The following {{if (eq this.itemsToDeliver.length 1) "item" (pluralize this.itemsToDeliver.length "item")}}
+    {{#if this.isDeliveryNone}}
+      can be mailed to you or held at Will Call for you to pick up:
+    {{else if this.isDeliveryPostal}}
+      will be mailed to you:
+    {{else}}
+      will be at Will Call for you to pickup:
     {{/if}}
-  </:title>
-  <:body>
-    {{#if this.hasQualifiedTickets}}
-      <b>You will need to claim or bank your event ticket(s) first.</b>
-    {{else if this.usingStaffCredential}}
-      <p>
-        Your <b>Staff Credential {{if this.vehiclePass.isClaimed "and Vehicle Pass"}}</b> will be held at Staff
-        Credentialing under your name <b>"{{@person.first_name}} {{@person.last_name}}"</b>.
-      </p>
-      <p>
-        Sorry, Staff Credentials cannot be mailed due to Burning Man organization policies.
-      </p>
-      {{#if @ticket.access_any_time}}
-        <p>
-          Your Staff Credential allows you to enter the event at any time, and may be picked up on or after the
-          early
-          arrival date on the credential at the following locations on the given dates:
-        </p>
-      {{else if @ticket.access_date}}
-        <p>
-          You may pick up the Staff Credential on or after the day you are
-          allowed to enter the event - {{mdy-format @ticket.access_date full=true}}.
-          Early pickups are not allowed unless you have a separate Work Access Pass good for
-          entry on a date earlier than that of your staff credential.
-        </p>
-        <p>
-          Your Staff Credential is available for pickup at the following
-          locations on the given dates and times:
-        </p>
-      {{else}}
-        <p>
-          You may pick up the Staff Credential on or after the day you are allowed to enter the
-          event.
-        </p>
-        <p class="text-danger">
-          However, we forgot to set the entry date on your ticket. Please contact
-          Ranger Ticketing at {{mail-to @ticketingInfo.ranger_ticketing_email}} to get this sorted
-          out.
-        </p>
-        <p>
-          Once the date is fixed, your Staff Credential will be available for pickup at the following locations on
-          the given dates and times:
-        </p>
-      {{/if}}
+  </p>
 
-      <p>
-        {{#if @ticketingInfo.pickup_locations}}
-          {{nl2br @ticketingInfo.pickup_locations}}
-        {{else}}
-          <b class="text-danger">Oops! We haven't set the pickup locations yet! Email the ticketing team and let us
-            know about this problem - {{mail-to @ticketingInfo.ranger_ticketing_email}}</b>
-        {{/if}}
-      </p>
+  <ul>
+    {{#each this.itemsToDeliver as |item|}}
+      <li>A {{ticket-type-human item.type}}</li>
+    {{/each}}
+  </ul>
 
-    {{else if (or @ticket.isClaimed this.vehiclePass.isClaimed)}}
-      <p>
-        The following {{if (eq this.itemsToDeliver.length 1) "item" (pluralize this.itemsToDeliver.length "item")}}
-        {{#if this.isDeliveryNone}}
-          can be mailed to you or held at Will Call for you to pick up:
-        {{else if this.isDeliveryPostal}}
-          will be mailed to you:
-        {{else}}
-          will be at Will Call for you to pickup:
-        {{/if}}
-      </p>
-
-      <ul>
-        {{#each this.itemsToDeliver as |item|}}
-          <li>A {{ticket-type-human item.type}}</li>
-        {{/each}}
-      </ul>
-
-      {{#if this.isDeliveryNone}}
-        <p>
-          <b>How do you want your {{pluralize this.itemsToDeliver.length "item"}} delivered?</b>
-        </p>
-        <div class="d-flex  flex-column flex-lg-row justify-lg-content-between align-self-center">
-          <div>
-            <UiButton @class="responsive" @onClick={{fn this.setDeliveryMethod "postal"}} @disabled={{this.isSaving}}>
-              {{fa-icon "envelope"}} Deliver By US Mail
-              {{#if this.isSaving}}
-                <SpinIcon/>{{/if}}
-            </UiButton>
-          </div>
-          <div class="mx-auto mx-lg-3 my-2">OR</div>
-          <div>
-            <UiButton @class="responsive" @onClick={{fn this.setDeliveryMethod "will_call"}}
-                      @disabled={{this.isSaving}}>
-              {{fa-icon "user" type="far"}} Pickup At Will Call
-              {{#if this.isSaving}}
-                <SpinIcon/>
-              {{/if}}
-            </UiButton>
-          </div>
-        </div>
-      {{else if this.isDeliveryPostal}}
-        <p>
-          <b>Would you rather use Will Call?</b>
-        </p>
-        <UiButton @class="responsive" @onClick={{fn  this.setDeliveryMethod "will_call"}} @disabled={{this.isSaving}}>
-          {{fa-icon "user" type="far"}} Pickup at Will Call
-          {{#if this.isSaving}}
-            <SpinIcon/>
-          {{/if}}
-        </UiButton>
-      {{else if this.isDeliveryWillCall}}
-        <p>
-          <b>Do you want delivery by mail instead?</b>
-        </p>
-        <UiButton @class="responsive" @onClick={{fn  this.setDeliveryMethod "postal"}} @disabled={{this.isSaving}}>
+  {{#if this.isDeliveryNone}}
+    <p>
+      <b>How do you want your {{pluralize this.itemsToDeliver.length "item"}} delivered?</b>
+    </p>
+    <div class="d-flex flex-column flex-lg-row justify-lg-content-between align-self-center">
+      <div>
+        <UiButton @class="responsive" @onClick={{fn this.setDeliveryMethod "postal"}} @disabled={{this.isSaving}}>
           {{fa-icon "envelope"}} Deliver By US Mail
           {{#if this.isSaving}}
+            <SpinIcon/>{{/if}}
+        </UiButton>
+      </div>
+      <div class="mx-auto mx-lg-3 my-2">OR</div>
+      <div>
+        <UiButton @class="responsive"
+                  @onClick={{fn this.setDeliveryMethod "will_call"}}
+                  @disabled={{this.isSaving}}>
+          {{fa-icon "user" type="far"}} Pickup At Will Call
+          {{#if this.isSaving}}
             <SpinIcon/>
           {{/if}}
         </UiButton>
-      {{else}}
-        Uh oh, I don't understand what the method [{{this.itemToDeliver.delivery_method}}] is. This is a bug!
-      {{/if}}
-
+      </div>
+    </div>
+  {{else if this.isDeliveryPostal}}
+    <p>
+      You will be asked for your mailing address when you visit the Burning Man Ticketing website. Information will be
+      sent after the ticketing deadline passes on how to access the website.
+    </p>
+    <p>
+      <b>Would you rather use Will Call?</b>
+    </p>
+    <UiButton @class="responsive" @onClick={{fn  this.setDeliveryMethod "will_call"}} @disabled={{this.isSaving}}>
+      {{fa-icon "user" type="far"}} Pickup at Will Call
       {{#if this.isSaving}}
-        <LoadingIndicator/>
+        <SpinIcon/>
       {{/if}}
-    {{else}}
-      {{#if @ticket.isBanked}}
-        <p>
-          You have chosen to <b>BANK</b> your event ticket
-          {{#if this.vehiclePass.isQualified}}
-            and <b>NOT CLAIM</b> your vehicle pass
-          {{/if}}.
-        </p>
+    </UiButton>
+  {{else if this.isDeliveryWillCall}}
+    <p>
+      <b>Do you want delivery by mail instead?</b>
+    </p>
+    <UiButton @class="responsive" @onClick={{fn  this.setDeliveryMethod "postal"}} @disabled={{this.isSaving}}>
+      {{fa-icon "envelope"}} Deliver By US Mail
+      {{#if this.isSaving}}
+        <SpinIcon/>
       {{/if}}
-      <p>
-        You have no items which can be mailed or held at Will Call.
-      </p>
-    {{/if}}
-  </:body>
-</TicketSection>
+    </UiButton>
+  {{else}}
+    Uh oh, I don't understand what the method [{{this.itemToDeliver.delivery_method}}] is. This is a bug!
+  {{/if}}
+
+  {{#if this.isSaving}}
+    <LoadingIndicator/>
+  {{/if}}
+{{else}}
+  {{#if @ticket.isBanked}}
+    <p>
+      You have chosen to <b>BANK</b> your event ticket
+      {{#if this.vehiclePass.isQualified}}
+        and <b>NOT CLAIM</b> your vehicle pass
+      {{/if}}.
+    </p>
+  {{/if}}
+  <p>
+    You have no items which can be mailed or held at Will Call.
+  </p>
+{{/if}}

@@ -1,131 +1,124 @@
-<TicketSection @id="ticket"
-               @nextAction={{@nextSection}}
-               @nextDisabled={{this.nextDisabled}}
-               @toggleCard={{@toggleCard}}
-               @showing={{@showing}}>
-  <:title>
-    {{#if @ticket}}
-      {{@ticket.typeLabel}}
-    {{else}}
-      Event Tickets
-    {{/if}}
-    {{#if this.allTicketsBanked}}
-      <TicketSectionStatus @status="banked"/>
-    {{else if @ticket}}
-      <TicketSectionStatus @status={{@ticket.status}} />
-    {{else if (gt @ticketPackage.tickets.length 1)}}
-      <TicketSectionStatus @status="qualified"/>
-    {{else}}
-      <TicketSectionStatus @status="none"/>
-    {{/if}}
-  </:title>
-  <:body>
-    {{#if @ticket.isSubmitted}}
-      <p>
-        Your ticket has been uploaded to the Burning Man ticketing system. Changes to your ticket cannot be done
-        through the Clubhouse at this time.
-      </p>
-    {{else if (gt @ticketPackage.tickets.length 1)}}
-      <p>
-        Please select which ticket you wish to use:
-      </p>
-      {{#each @ticketPackage.tickets as |item|}}
-        <label class="d-block mb-3">
-          <input type="radio" onclick={{action this.chooseTicketAction item}} checked={{item.isClaimed}}>
-          {{item.typeLabel}} earned in {{item.source_year}} and expires after {{mdy-format item.expiry_date}}
+{{#if @ticket.isSubmitted}}
+  <p>
+    Your ticket has been uploaded to the Burning Man ticketing system. Changes to your ticket cannot be done
+    through the Clubhouse at this time.
+  </p>
+{{else if (gt @ticketPackage.tickets.length 1)}}
+  <p>
+    Please select which ticket you wish to use:
+  </p>
+  <table class="table table-width-auto">
+    <tbody>
+    {{#each @ticketPackage.tickets as |item|}}
+      <tr class={{if item.isClaimed "table-success"}}>
+         <td>
+          {{item.typeLabel}} earned in {{item.source_year}}<br>
+          <div class="text-muted">Expires {{mdy-format item.expiry_date}}</div>
+        </td>
+        <td>
           {{#if item.isClaimed}}
-            <span class="text-success">{{fa-icon "check"}} Claimed</span>
+            {{fa-icon "check"}} Claimed
+          {{else}}
+            <UiButton @onClick={{fn this.chooseTicketAction item}}>
+              Claim
+            </UiButton>
           {{/if}}
-        </label>
-      {{/each}}
-      <label class="d-block mb-4">
-        <input type="radio" onclick={{action this.chooseTicketAction 'none'}} checked={{this.allTicketsBanked}}>
-        Bank all tickets
+        </td>
+      </tr>
+    {{/each}}
+    <tr>
+      <td colspan="2">
         {{#if this.allTicketsBanked}}
-          {{fa-icon "check" color="success"}}
-        {{/if}}
-      </label>
-      <p>
-        While you have multiple tickets to choose from, only ONE ticket may be used in any given year.
-        The rest will be banked, and cannot be transferred to other people.
-      </p>
-      <p>
-        {{#if @ticket}}
-          <b>You have claimed a {{@ticket.typeLabel}} earned in {{@ticket.source_year}}.</b>
-        {{else if this.allTicketsBanked}}
-          <b>You have BANKED all your tickets.</b>
+          <span class="text-danger">All tickets have been banked.</span>
         {{else}}
-          &nbsp;
+          <UiButton @type="secondary" @onClick={{fn this.chooseTicketAction 'none'}}>
+            Bank All Tickets
+          </UiButton>
         {{/if}}
-      </p>
-    {{else if @ticket}}
-      {{#if @ticket.isClaimed}}
-        <p>
-          <b>You have claimed your {{@ticket.typeLabel}}.</b> If your plans have changed,
-          you may bank the ticket. Note: the ticket will expire on {{mdy-format @ticket.expiry_date full=true}}.
-        </p>
-        <UiButton @class="btn-responsive" @onClick={{fn @setDocumentStatus @ticket "banked"}}
-                  @disabled={{@isSavingDocumentStatus}}>
-          Bank Ticket
-          {{#if @isSavingDocumentStatus}}
-            <SpinIcon/>
-          {{/if}}
-        </UiButton>
-      {{else if @ticket.isBanked}}
-        <p>
-          <b>You have banked your {{@ticket.typeLabel}} this year.</b>
-        </p>
-        <p>
-          If your plans have changed, you may claim the ticket.
-          Note: the ticket will expire on {{mdy-format @ticket.expiry_date full=true}}.
-        </p>
-        <UiButton @class="btn-responsive" @onClick={{fn @setDocumentStatus @ticket "claimed"}}
-                  @disabled={{@isSavingDocumentStatus}}>
-          Claim Ticket
-          {{#if @isSavingDocumentStatus}}
-            <SpinIcon/>
-          {{/if}}
-        </UiButton>
-      {{else if @ticket.isQualified}}
-        <h4>You qualified for a {{@ticket.typeLabel}} in {{@ticket.source_year}}!</h4>
-        <p>
-          You may <b>Claim</b> your ticket for this year's event, or <b>Bank</b> it for a future event.
-        </p>
-        <p>
-          Note: the {{@ticket.typeLabel}} will expire on {{mdy-format @ticket.expiry_date full=true}}.
-        </p>
-
-        <div class="my-2"><b>What do you want to do with your {{@ticket.typeLabel}}?</b></div>
-        <UiButton @class="btn-responsive" @onClick={{fn @setDocumentStatus @ticket "claimed"}}
-                  @disabled={{@isSavingDocumentStatus}}>
-          Claim Ticket
-          {{#if @isSavingDocumentStatus}}
-            <SpinIcon/>
-          {{/if}}
-        </UiButton>
-        <span class="h5 mx-auto mx-xl-4 my-sm-2 my-xl-none d-sm-block d-xl-inline-block">- OR -</span>
-        <UiButton @class="btn-responsive" @onClick={{fn @setDocumentStatus @ticket "banked"}} @disabled={{@isSavingDocumentStatus}}>
-          Bank Ticket
-          {{#if @isSavingDocumentStatus}}
-            <SpinIcon/>
-          {{/if}}
-        </UiButton>
-      {{else}}
-        Uh oh, I don't know the state of your ticket [{{@ticket.status}}].
-      {{/if}}
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <p>
+    While you have multiple tickets to choose from, only ONE ticket may be used in any given year.
+    The rest will be banked, and cannot be transferred to other people.
+  </p>
+  <p>
+    {{#if @ticket}}
+      <b>You have claimed a {{@ticket.typeLabel}} earned in {{@ticket.source_year}}.</b>
+    {{else if this.allTicketsBanked}}
+      <b>You have BANKED all your tickets.</b>
     {{else}}
-      <b>Sorry, it doesn't look like you qualified for a Reduced-Price Ticket or Staff Credential.</b>
-      <p>
-        You earned {{credits-format @ticketPackage.credits_earned}} credits last event. The minimum credits needed to earn
-        a Reduced-Price Ticket was {{credits-format @ticketingInfo.rpt_credits}}, and a Staff Credential was
-        {{credits-format @ticketingInfo.sc_credits}}.
-      </p>
+      &nbsp;
     {{/if}}
-  </:body>
-</TicketSection>
+  </p>
+{{else if @ticket}}
+  {{#if @ticket.isClaimed}}
+    <p>
+      <b>You have claimed your {{@ticket.typeLabel}}.</b>
+    </p>
+    <p>
+      If your plans have changed, you may bank the ticket. Note: the ticket will expire on
+      {{mdy-format @ticket.expiry_date full=true}}.
+    </p>
+    <UiButton @class="btn-responsive" @onClick={{fn @setDocumentStatus @ticket "banked"}}
+              @disabled={{@isSavingDocumentStatus}}>
+      Bank Ticket
+      {{#if @isSavingDocumentStatus}}
+        <SpinIcon/>
+      {{/if}}
+    </UiButton>
+  {{else if @ticket.isBanked}}
+    <p>
+      <b>You have banked your {{@ticket.typeLabel}} this year.</b>
+    </p>
+    <p>
+      If your plans have changed, you may claim the ticket. Note: the ticket will expire on
+      {{mdy-format @ticket.expiry_date full=true}}.
+    </p>
+    <UiButton @class="btn-responsive"
+              @onClick={{fn @setDocumentStatus @ticket "claimed"}}
+              @disabled={{@isSavingDocumentStatus}}>
+      Claim Ticket
+      {{#if @isSavingDocumentStatus}}
+        <SpinIcon/>
+      {{/if}}
+    </UiButton>
+  {{else if @ticket.isQualified}}
+    <h4>You qualified for a {{@ticket.typeLabel}} in {{@ticket.source_year}}!</h4>
+    <p>
+      You may <b>Claim</b> your ticket for this year's event, or <b>Bank</b> it for a future event.
+    </p>
+    <p>
+      Note: the {{@ticket.typeLabel}} will expire on {{mdy-format @ticket.expiry_date full=true}}.
+    </p>
 
-{{#if this.isSubmitting}}
-  <LoadingDialog>
-    Please wait, saving your ticketing choices.
-  </LoadingDialog>
+    <div class="my-2"><b>What do you want to do with your {{@ticket.typeLabel}}?</b></div>
+    <UiButton @class="btn-responsive"
+              @onClick={{fn @setDocumentStatus @ticket "claimed"}}
+              @disabled={{@isSavingDocumentStatus}}>
+      Claim Ticket
+      {{#if @isSavingDocumentStatus}}
+        <SpinIcon/>
+      {{/if}}
+    </UiButton>
+    <span class="h5 mx-auto mx-xl-4 my-sm-2 my-xl-none d-sm-block d-xl-inline-block">- OR -</span>
+    <UiButton @class="btn-responsive"
+              @onClick={{fn @setDocumentStatus @ticket "banked"}}
+              @disabled={{@isSavingDocumentStatus}}>
+      Bank Ticket
+      {{#if @isSavingDocumentStatus}}
+        <SpinIcon/>
+      {{/if}}
+    </UiButton>
+  {{else}}
+    Uh oh, I don't know the state of your ticket [{{@ticket.status}}].
+  {{/if}}
+{{else}}
+  <b>Sorry, it doesn't appear you qualified for a Reduced-Price Ticket or Staff Credential.</b>
+  <p>
+    You earned {{credits-format @ticketPackage.credits_earned}} credits last event. The minimum credits needed to earn
+    a Reduced-Price Ticket was {{credits-format @ticketingInfo.rpt_credits}}, and a Staff Credential was
+    {{credits-format @ticketingInfo.sc_credits}}.
+  </p>
 {{/if}}

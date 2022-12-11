@@ -24,36 +24,47 @@ export default class TicketWapSoInfoComponent extends Component {
     this.buildWAPSOList();
   }
 
+  /**
+   * Build up a WAP SO list using changesets, pad out the lines to the max.
+   */
+
   buildWAPSOList() {
     const info = this.args.ticketingInfo;
+    const {ticketPackage} = this.args;
     const {defaultDate} = this;
 
-    const list = this.args.ticketPackage.wapso.map((row) => {
-      return new Changeset({
+    const list = ticketPackage.wapso.map((row) =>
+      new Changeset({
         id: row.id,
         name: row.name,
         access_date: (row.access_date || defaultDate)
-      });
-    });
+      })
+    );
 
     // Pad out to the max
     const max = info.wap_so_max;
-
     while (list.length < max) {
       list.push(new Changeset({id: 'new', name: '', access_date: defaultDate}));
     }
 
     this.wapSOList = list;
-    this.wapSOCount = this.args.ticketPackage.wapso.length;
+    this.wapSOCount = ticketPackage.wapso.length;
   }
+
+  /**
+   * Did the user change the SO names?
+   *
+   * @returns {boolean}
+   */
 
   get isSOListDirty() {
     return !!this.wapSOList.find((so) => so.isDirty);
   }
 
-  // Update the SO WAP list - this is special cased since
-  // multiple tickets are involved, *and* WAP SO tickets may be
-  // created on the fly.
+  /**
+   * Update the SO WAP list - this is special cased since multiple tickets are involved,
+   * *and* WAP SO tickets may be created on the fly.
+   */
 
   @action
   saveSONamesAction() {
@@ -78,7 +89,7 @@ export default class TicketWapSoInfoComponent extends Component {
         // Update the list
         this.args.ticketPackage.wapso = result.map((w) => this.house.pushPayload('access-document', w));
         this.buildWAPSOList();
-        this.toast.success('Your Significant Other Work Access Passes have been successfully updated.');
+        this.toast.success('Your Significant Other WAPs have been successfully updated.');
         this.isSaved = true;
       }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isSaving = false);

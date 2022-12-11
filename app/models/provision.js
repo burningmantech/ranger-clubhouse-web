@@ -53,6 +53,16 @@ export const MealMatrix = {
   [PRE_POST_EAT_PASS]: 'pre+post'
 };
 
+export const MealMatrixLabel = {
+  'all': 'All Eats',
+  'event': 'Event Week',
+  'pre': 'Pre-Event Week',
+  'post': 'Post-Event Week',
+  'pre+event': 'Pre-Event Week & Event Week',
+  'event+post': 'Event Week & Post-Event Week',
+  'pre+post': 'Pre-Event Week & Post-Event Week',
+};
+
 const MealPasses = {
   [ALL_EAT_PASS]: true,
   [EVENT_EAT_PASS]: true,
