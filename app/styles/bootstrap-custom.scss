@@ -4,7 +4,7 @@
 
 $enable-shadows: true;
 $enable-grid-classes: true;
-$enable-gradients: true;
+$enable-gradients: false;
 $enable-negative-margins: true;
 $enable-cssgrid: true;
 
@@ -36,6 +36,8 @@ $card-spacer-y: 0.5rem !default;
 $card-spacer-x: 0.75rem !default;
 
 // Adjust h tags
+
+$headings-font-weight: 300;
 
 $font-size-base: 0.9rem;
 

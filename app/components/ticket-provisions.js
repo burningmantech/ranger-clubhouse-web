@@ -1,65 +1,36 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
-import {BANKED, CLAIMED} from 'clubhouse/models/access-document';
+import {BANKED, CLAIMED} from 'clubhouse/models/provision';
 import {service} from '@ember/service';
-import {cached} from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
 
 export default class TicketProvisionsComponent extends Component {
   @service ajax;
   @service house
   @service toast;
 
-  constructor() {
-    super(...arguments);
+  @tracked isSubmitting = false;
 
-    const {ticketPackage} = this.args;
-    this.provisions = ticketPackage.provisions;
-    this.allocatedProvisions = ticketPackage.allocatedProvisions;
-    this.jobItems = ticketPackage.jobItems;
-  }
-
-  @cached
-  get earnedProvisions() {
-    return this.provisions.filter((i) => (!i.is_allocated && (i.isAvailable || i.isClaimed)));
-  }
-
-  @cached
-  get bankedItems() {
-    return this.provisions.filter((i) => i.isBanked);
-  }
-
-  @cached
-  get submittedItems() {
-    return this.provisions.filter((i) => i.isSubmitted);
-  }
-
-  @cached
-  get totalItems() {
-    return this.provisions;
-  }
+  /**
+   * Claim or bank all the provisions.
+   *
+   * @param {string} desire
+   * @returns {Promise<void>}
+   */
 
   @action
   async updateItems(desire) {
-    let provisions, status;
     this.isSubmitting = true;
 
-    if (desire === 'bank') {
-      status = BANKED;
-      provisions = this.earnedProvisions;
-    } else {
-      status = CLAIMED;
-      provisions = this.bankedItems;
-    }
-
-    const statuses = provisions.map((p) => ({id: p.id, status}));
+    const status = desire === 'bank' ? BANKED : CLAIMED;
 
     try {
-      const result = await this.ajax.request(`provision/statuses`, {
+      await this.ajax.request(`provision/${this.args.person.id}/statuses`, {
         method: 'PATCH',
-        data: {statuses}
+        data: {status}
       });
-      this.house.pushPayload('provision', result.access_document);
       this.toast.success('Your choice has been successfully saved.');
+      this.args.ticketPackage.provisionsBanked = (desire === 'bank');
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {

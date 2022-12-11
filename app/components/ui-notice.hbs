@@ -1,8 +1,13 @@
-<div class="alert {{this.boxColor}}">
-  {{#if @title}}
-    <h5>{{fa-icon this.icon type=@iconType}} {{@title}}</h5>
-  {{else}}
-    {{fa-icon this.icon type=@iconType}}
-  {{/if}}
-  {{yield}}
+<div class="notice notice-{{this.color}}">
+  <div class="notice-icon">
+    {{fa-icon this.icon size="2x" fixed=true color=this.color}}
+  </div>
+  <div class="notice-text">
+    {{#if @title}}
+      <div class="notice-title">{{@title}}</div>
+    {{/if}}
+    <div class="notice-body">
+      {{yield}}
+    </div>
+  </div>
 </div>

@@ -1,42 +1,55 @@
 import {tracked, cached} from '@glimmer/tracking';
-import {EVENT_RADIO} from 'clubhouse/models/access-document';
-//import { DELIVERY_NONE } from 'clubhouse/models/access-document-delivery';
+import {MealMatrixLabel} from 'clubhouse/models/provision';
+import dayjs from 'dayjs';
 
 export default class TicketPackage {
   @tracked wapso; // WAP-SOs will change in length based on how the user's ticketing decisions.
+  @tracked provisionsBanked = false;
+  @tracked provisionsBankable = false;
 
   constructor(pkg, person_id, house) {
     const docs = pkg.access_documents.map((ad) => house.pushPayload('access-document', ad));
-    const provisions = pkg.provisions.map((p) => house.pushPayload('provision', p));
 
     this.accessDocuments = docs;
     this.tickets = docs.filter((d) => d.isTicket);
     this.vehiclePass = docs.find((d) => d.isVehiclePass);
     this.wap = docs.find((d) => d.isWAP);
     this.wapso = docs.filter((d) => d.isWAPSO);
-    this.provisions = provisions.sort((a, b) => a.typeLabel.localeCompare(b.typeLabel));
 
-    this.allocatedProvisions = this.provisions.filter((p) => p.is_allocated);
+    this.provisions = pkg.provisions;
+    this.provisionsBankable = pkg.provisions_bankable;
+    this.provisionsBanked = pkg.provisions_banked;
+    this.provisionItems = [];
+    if (pkg.provisions) {
+      const stuff = pkg.provisions;
+      if (stuff.meals) {
+        this.provisionItems.push({
+          icon: 'utensils',
+          name: `${MealMatrixLabel[stuff.meals]} Meal Pass`,
+          expires: dayjs(stuff.meals_expire).format('YYYY-MM-DD'),
+        });
+      }
+      if (stuff.showers) {
+        this.provisionItems.push({
+          icon: 'shower',
+          name: 'Access to The Wet Spot (Org Showers)',
+          expires: dayjs(stuff.showers_expire).format('YYYY-MM-DD'),
+        });
+      }
 
-    if (this.allocatedProvisions.length) {
-      // Go through and combine earned & allocate items
-      const earned = this.provisions.filter((p) => !p.is_allocated);
-      this.allocatedProvisions.forEach((p) => {
-        const item = earned.find((e) => e.type === p.type);
-        if (item) {
-          p.earned_as_well = true;
-          item.allocated_as_well = true;
-          if (item.type === EVENT_RADIO && p.item_count < item.item_count) {
-            p.item_count = item.item_count;
-          }
-        }
-      });
-      const qualified = this.provisions.filter((p) => !p.is_allocated && !p.allocated_as_well);
-      this.jobItems = [...this.allocatedProvisions, ...qualified];
+      if (stuff.radios) {
+        this.provisionItems.push({
+          icon: 'broadcast-tower',
+          name: stuff.radios === 1 ? 'An Event Radio' : `${stuff.radios} Event Radios`,
+          expires: dayjs(stuff.radio_expire).format('YYYY-MM-DD'),
+        });
+      }
     }
 
     this.year_earned = pkg.year_earned;
     this.credits_earned = pkg.credits_earned;
+    this.started_at = pkg.started_at;
+    this.finished_at = pkg.finished_at;
   }
 
   /**

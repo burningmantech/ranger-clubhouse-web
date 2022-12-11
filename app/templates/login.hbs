@@ -49,7 +49,9 @@
   {{/if}}
   {{#if this.loginError}}
     {{#if (eq this.loginError "invalid-credentials")}}
-      <UiNotice @title=" The email and/or password is incorrect." @type="danger" @icon="exclamation-triangle"/>
+      <UiNotice @type="danger" @icon="exclamation-triangle">
+        The email was not found, or the password is incorrect.
+      </UiNotice>
     {{else}}
       <UiNotice @type="danger" @icon="ban" @title="Login has been disabled for this account.">
         Contact the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more

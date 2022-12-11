@@ -5,14 +5,13 @@ import dayjs from 'dayjs';
 import {DELIVERY_POSTAL, DELIVERY_WILL_CALL} from 'clubhouse/models/access-document';
 
 export default class TicketSummaryComponent extends Component {
-  @cached
-  get summaryTitle() {
-    if (this.unfinishedItems.length) {
-      return htmlSafe('Summary <span class="text-danger">- Unfinished Items</span>');
-    } else {
-      return 'Summary';
-    }
-  }
+  /**
+   * Return a list of unfinished items:
+   * - Any qualified ticket (multiple tickets will be either be claimed or banked by the first step)
+   * - Delivery method was not chosen for RPT.
+   *
+   * @returns {*[]}
+   */
 
   @cached
   get unfinishedItems() {
@@ -29,17 +28,31 @@ export default class TicketSummaryComponent extends Component {
     const {vehiclePass} = this.args.ticketPackage;
 
     const item = ticket ?? vehiclePass;
-    if (item && item.isUsing
-      && item.delivery_method !== DELIVERY_POSTAL && item.delivery_method !== DELIVERY_WILL_CALL) {
+    if (item
+      && item.isUsing
+      && item.delivery_method !== DELIVERY_POSTAL
+      && item.delivery_method !== DELIVERY_WILL_CALL) {
       items.push('A delivery method still needs to be chosen.');
     }
 
     return items;
   }
 
+  /**
+   * Was the address given?
+   *
+   * @returns {boolean|*}
+   */
+
   get haveAddress() {
     return this.args.ticketPackage.haveAddress;
   }
+
+  /**
+   * Build up all banked items (tickets & provisions)
+   *
+   * @returns {*[]}
+   */
 
   @cached
   get bankedItems() {
@@ -48,29 +61,42 @@ export default class TicketSummaryComponent extends Component {
     const pkg = this.args.ticketPackage;
 
     pkg.tickets.filter((t) => t.isBanked).forEach((t) => {
-      banked.push(`A ${t.typeLabel} (expires ${dayjs(t.expiry_date).format('YYYY-MM-DD')})`);
+      banked.push({
+        name: `A ${t.typeLabel}`,
+        expires: dayjs(t.expiry_date).format('YYYY-MM-DD'),
+      });
     });
 
-    pkg.provisions.filter((t) => t.isBanked).forEach((t) => {
-      banked.push(`${t.typeLabel} (expires ${dayjs(t.expires_on).format('YYYY-MM-DD')})`);
-    });
+    if (pkg.provisionsBanked) {
+      pkg.provisionItems.forEach((item) => {
+        banked.push({
+          name: item.name,
+          expires: item.expires
+        });
+      });
+    }
 
     return banked;
   }
 
+  /**
+   * Build up all claimed items.
+   *
+   * @returns {*[]}
+   */
   @cached
   get claimedItems() {
     const pkg = this.args.ticketPackage;
-    const {ticket, person} = this.args;
+    const {ticket} = this.args;
     const vp = pkg.vehiclePass;
     const claimed = [];
 
     if (ticket && ticket.isClaimed) {
-      claimed.push(htmlSafe(`A ${ticket.typeLabel}${this.itemDeliveryMethod(ticket)}`));
+      claimed.push(htmlSafe(`A ${ticket.typeLabel}`));
     }
 
     if (vp && vp.isClaimed) {
-      claimed.push(htmlSafe(`A ${vp.typeLabel} ${this.itemDeliveryMethod(vp, ticket)}`));
+      claimed.push(htmlSafe(`A ${vp.typeLabel}`));
     }
 
     const wap = pkg.wap;
@@ -80,54 +106,41 @@ export default class TicketSummaryComponent extends Component {
         lines.push('Part of your Staff Credential - no additional document needed.');
       }
 
-      if (!this.hasStaffCredential) {
-        lines.push(`sent via email to ${person.email}`);
-      }
-      const accessItem = this.hasStaffCredential ? ticket : wap;
-      if (accessItem.access_any_time) {
-        lines.push('Allows entry ANY time');
-      } else if (accessItem.access_date) {
-        lines.push(`Allows entry on or after ${dayjs(accessItem.access_date).format('ddd MMM D')} @ 00:01<br>Entry prior to this time is prohibited. No exceptions!`);
-      } else {
-        lines.push(`<b class="text-danger">No access date is on file. Contact the ticketing team to fix this!</b>`);
-      }
-
-      const text = lines.map((l) => `<li>${l}</li>`).join('');
-      claimed.push(htmlSafe(`A Work Access Pass for yourself<ul class="mb-0">${text}</ul>`));
-    }
+      const text = lines.map((l) => `<div class="ms-1">${l}</div>`).join('');
+      claimed.push(htmlSafe(`A Work Access Pass for yourself<br>${text}`));
+     }
 
     const {wapso} = pkg;
     if (wapso && wapso.find((w) => w.isClaimed)) {
-      const names = wapso.filter((w) => w.isClaimed).map((w) => w.name).join(', ');
-      let text = `${wapso.length} Work Access Pass${wapso.length > 1 ? 'es' : ''} for Significant Others<ul class="mb-0">`;
-      text += `<li>sent via email to ${person.email}</li>`;
-      text += `<li>Allows entry on ${dayjs(wapso[0].access_date).format('ddd MMM D')} @ 00:01</li>`;
-      text += `<li>for ${names}</li></ul>`;
+      let text = `${wapso.length} Work Access Pass${wapso.length > 1 ? 'es' : ''} for Significant Others`;
       claimed.push(htmlSafe(text));
     }
 
-    if (pkg.jobItems) {
-      pkg.jobItems.forEach((j) => claimed.push(j.typeLabelWithCounts));
-    } else {
-      pkg.provisions.filter((t) => (t.isAvailable || t.isClaimed)).forEach((t) => {
-        claimed.push(t.typeLabelWithCounts);
+    if (!pkg.provisionsBanked) {
+      pkg.provisionItems.forEach((item) => {
+        claimed.push(item.name);
       });
     }
 
     return claimed;
   }
 
-  get hasStaffCredential() {
-    const {ticket} = this.args;
-
-    return (ticket && ticket.isStaffCredential && ticket.isClaimed);
-  }
+  /**
+   * Build up a list of submitted items. (rare condition)
+   *
+   * @returns {*[]}
+   */
 
   @cached
   get submittedItems() {
     return this.args.ticketPackage.accessDocuments.filter((ad) => ad.isSubmitted).map((ad) => ad.typeLabel);
   }
 
+  /**
+   * Build up a list of unclaimed items.
+   *
+   * @returns {*[]}
+   */
   @cached
   get unclaimedItems() {
     const pkg = this.args.ticketPackage;
@@ -149,25 +162,5 @@ export default class TicketSummaryComponent extends Component {
     }
 
     return unclaimed;
-  }
-
-  itemDeliveryMethod(item, ticket = null) {
-    const {person} = this.args;
-    if (item.isTicket || item.isVehiclePass) {
-      let invoice = '';
-      if (item.isReducedPriceTicket) {
-        invoice = '<li>Ticket must be paid for - an invoice will be sent</li>'
-      }
-      if (!item.isStaffCredential && item.isDeliveryPostal) {
-        return `<ul class="mb-0">${invoice}<li>Will be delivered by mail -- delivery address will be collected later.</li></ul>`;
-      }
-      return `<ul class="mb-0">${invoice}<li>Held at ${((ticket && ticket.isStaffCredential) || item.isStaffCredential) ? 'Staff Credentialing' : 'Will-Call'} under your name <span class="d-inline-block">"${person.first_name} ${person.last_name}"</span>`;
-    }
-
-    if (item.isWAP || item.isWAPSO) {
-      return `<ul class="mb-0"><li>sent via email to ${person.email}</li></ul>`;
-    }
-
-    return '';
   }
 }

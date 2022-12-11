@@ -23,7 +23,6 @@
 @import "training";
 @import "vehicle-registry";
 
-
 main {
   flex: 1 1 0;
   min-width: 0;
@@ -40,7 +39,7 @@ main {
 
 .ui-section-title {
   font-size: 1.05rem;
-  font-weight: 500;
+  font-weight: 400;
   margin: -10px -10px 10px -10px;
   padding: 10px;
   background-color: #f0f0f0;
@@ -124,6 +123,10 @@ h2 select, h2 option, .h2 select, .h2 option {
 
 h3 select, h3 option, .h3 select, .h3 option {
   font-size: $h3-font-size;
+}
+
+b {
+  font-weight: 600;
 }
 
 .text-black {

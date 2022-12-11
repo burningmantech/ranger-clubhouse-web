@@ -619,11 +619,9 @@ function buildTickets(milestones, personId, house) {
 
   const pkg = new TicketPackage(milestones.ticketing_package, personId, house);
 
-  let ticket = null;
   pkg.tickets.forEach((t) => {
     if (t.isClaimed || t.isSubmitted) {
       claimed.push(t);
-      ticket = t;
     }
   });
 
@@ -635,15 +633,6 @@ function buildTickets(milestones, personId, house) {
     claimed.push(pkg.wap);
   }
 
-  const provisions = { claimed: [ ], banked: [ ]};
-
-  if (pkg.jobItems) {
-    // jobItems is set when there are allocated provisions. This is the union between the earned & allocated provisions.
-    pkg.jobItems.forEach((item) => provisions.claimed.push(item));
-  } else if (ticket) {
-    pkg.provisions.filter((p) => !p.isBanked).forEach((p) => provisions.claimed.push(p));
-  }
-
   pkg.wapso.forEach((so) => claimed.push(so));
 
   return {
@@ -653,7 +642,8 @@ function buildTickets(milestones, personId, house) {
     notCriticalCount: pkg.accessDocuments.filter((ad) => ( ad.isQualified && (ad.isWAP || ad.isVehiclePass))).length,
     // noAddress: !pkg.haveAddress,
     noAddress: false,
-    provisions
+    provisionItems: !pkg.provisionsBanked ? pkg.provisionItems : null,
+    notFinished: pkg.started_at && !pkg.finished_at,
   };
 }
 
@@ -673,7 +663,7 @@ export const TICKETING_OPEN = {
       return {
         result: ACTION_NEEDED,
         route: 'me.tickets',
-        immediate: (tickets.qualifiedCount || tickets.noAddress),
+        immediate: (tickets.qualifiedCount || tickets.noAddress || tickets.notFinished),
         isTicketing: true,
         ticketingOpen: true,
         tickets

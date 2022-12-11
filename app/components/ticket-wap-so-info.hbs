@@ -1,65 +1,61 @@
-<TicketSection @id="wapso"
-               @nextAction={{@nextSection}}
-               @nextDisabled={{this.isSOListDirty}}
-               @toggleCard={{@toggleCard}}
-               @showing={{@showing}}>
-  <:title>
-    Work Access Passes For SOs
+<div class="my-2">
+  <b>
     {{#if this.wapSOCount}}
-      <TicketSectionStatus @status="claimed" @text={{pluralize this.wapSOCount "person"}} />
+      You are requesting {{pluralize this.wapSOCount "Work Access Pass"}} for your
+      Significant {{if (eq this.wapSOCount 1) "Other" "Others"}}.
     {{else}}
-      <TicketSectionStatus @status="qualified" />
+      No Significant Other Work Access passes have been requested, yet.
     {{/if}}
-  </:title>
-  <:body>
-    {{#if this.wapSOCount}}
-      <p><b>You are requesting {{pluralize this.wapSOCount "Work Access Pass"}} for your Significant
-        {{if (eq this.wapSOCount 1) "Other" "Others"}}.</b></p>
-    {{else}}
-      <p><b>No Significant Other Work Access passes have been requested, yet.</b></p>
-    {{/if}}
+  </b>
+</div>
 
-    <p>
-      You may request up to {{pluralize @ticketingInfo.wap_so_max "Significant Other Work Access Passs"}} below.
-      You may add, remove, or change names until the ticketing deadline. All Work Access passes
-      are sent by email to your account.
-    </p>
+<p>
+  You may request up to {{pluralize @ticketingInfo.wap_so_max "Significant Other Work Access Passs"}} below.
+  All Work Access passes are sent by email to your account.
+</p>
 
-    <div class="wap-so-table">
-      <div class="wap-so-header wap-so-row d-sm-none d-md-block">
-        <div class="wap-so-name">Significant Other Legal Name</div>
-        <div class="wap-so-access">Arrival Date</div>
+<div class="wap-so-table">
+  <div class="wap-so-header wap-so-row d-sm-none d-md-block">
+    <div class="wap-so-name">Significant Other Legal Name</div>
+    <div class="wap-so-access">Arrival Date</div>
+  </div>
+  {{#each this.wapSOList as |row idx|}}
+    <div class="wap-so-row">
+      <div class="wap-so-name">
+        <span class="wap-so-sm-label">SO Legal Name #{{add idx 1}}</span>
+        <Input @type="text"
+               @value={{row.name}}
+               size={{30}}
+               maxlength={{100}}
+               class="form-control form-control-sm"/>
       </div>
-      {{#each this.wapSOList as |row idx|}}
-        <div class="wap-so-row">
-          <div class="wap-so-name">
-            <span class="wap-so-sm-label">SO Legal Name #{{add idx 1}}</span>
-            <Input @type="text" @value={{row.name}} size={{30}} maxlength={{100}}
-                   class="form-control form-control-sm"/>
-          </div>
-          <div class="wap-so-access">
-            <span class="wap-so-sm-label">Arrival Date</span>
-            {{mdy-format row.access_date full=true}}
-          </div>
-        </div>
-      {{/each}}
+      <div class="wap-so-access">
+        <span class="wap-so-sm-label">Arrival Date</span>
+        {{mdy-format row.access_date full=true}}
+      </div>
     </div>
+  {{/each}}
+</div>
 
-    <UiButton @class="btn-responsive" @onClick={{this.saveSONamesAction}} @disabled={{this.isSaving}}>
-      Save Names
-      {{#if this.isSaving}}<SpinIcon />{{/if}}
-    </UiButton>
-    {{#if this.isSOListDirty}}
-      <b class="text-danger">Changes will not be saved until you click on 'Save Names'</b>
-    {{else if this.isSaved}}
-      <span class="text-success ms-2">{{fa-icon "check" size="2x"}}</span>
-    {{/if}}
+<UiButton @class="btn-responsive" @onClick={{this.saveSONamesAction}} @disabled={{this.isSaving}}>
+  Save Names
+  {{#if this.isSaving}}
+    <SpinIcon/>
+  {{/if}}
+</UiButton>
+<div class="mb-2">
+  {{#if this.isSOListDirty}}
+    <b class="text-danger">Changes will not be saved until you click on 'Save Names'</b>
+  {{else if this.isSaved}}
+    <span class="text-success ms-2">{{fa-icon "check" }} S.O. records have been saved.</span>
+  {{else}}
+    &nbsp;
+  {{/if}}
+</div>
 
-    <p class="mt-4">
-      If you need more than {{pluralize @ticketingInfo.wap_so_max "pass"}} or
-      need the Significant Others to arrive before {{mdy-format this.defaultDate full=true}},
-      email {{mail-to @ticketingInfo.ranger_ticketing_email}}
-      and plead your case.
-    </p>
-  </:body>
-</TicketSection>
+<div class="mt-4">
+  If you need more than {{pluralize @ticketingInfo.wap_so_max "pass"}} or
+  need the Significant Others to arrive before {{mdy-format this.defaultDate full=true}},
+  email {{mail-to @ticketingInfo.ranger_ticketing_email}}
+  and plead your case.
+</div>

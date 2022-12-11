@@ -1,0 +1,9 @@
+<div class="mb-2 round bg-white border">
+  <div class="h5 p-2 {{if @type (concat "bg-" @type " bg-opacity-10")}}">
+    <span class="me-2">{{fa-icon @icon color=@type}}</span>
+    {{yield to="title"}}
+  </div>
+  <div class="p-2">
+    {{yield to="body"}}
+  </div>
+</div>

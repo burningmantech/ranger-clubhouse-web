@@ -1,0 +1,6 @@
+<div class="mb-4 max-width-600">
+  <h4 class="border-bottom {{if @type (concat "text-" @type " border-" @type)}}">
+    <span class="me-1">{{fa-icon @icon fixed=true}}</span> {{@title}}
+  </h4>
+  {{yield}}
+</div>
