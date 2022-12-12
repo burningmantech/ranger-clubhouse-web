@@ -85,7 +85,7 @@
     "ical-generator": "^3.6.0",
     "jscodeshift": "^0.14.0",
     "json-formatter-js": "^2.3.4",
-    "libphonenumber-js": "^1.10.14",
+    "libphonenumber-js": "^1.10.15",
     "loader.js": "^4.7.0",
     "lodash": "^4.17.21",
     "miragejs": "^0.1.46",
