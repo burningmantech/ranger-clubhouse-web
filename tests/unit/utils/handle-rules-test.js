@@ -153,34 +153,34 @@ module('Unit | Utility | handle-rules', function(hooks) {
   // eslint-disable-next-line qunit/require-expect
   test('inappropriate rejects the Carlin 7', function(assert) {
     const rule = new InappropriateRule();
-    let checkit = (name) => {
+    let checkit = (name, matchCount) => {
       let conflicts = rule.check(name);
-      assert.strictEqual(conflicts.length, 1, `${JSON.stringify(conflicts.length)} conflicts for ${name}`);
+      assert.strictEqual(conflicts.length, matchCount, `${JSON.stringify(conflicts.length)} conflicts for ${name}`);
       assert.strictEqual(conflicts[0].candidateName, name);
       assert.ok(conflicts[0].description.match(/FCC/));
     };
-    checkit('Hot shit handle');
-    checkit('Piss-ant');
-    checkit('Fuck Censorship');
-    checkit('Why Cunt?');
-    checkit('CockSucker');
-    checkit('Charismatic Motherfucker');
-    checkit('2Tits');
+    checkit('Hot shit handle', 1);
+    checkit('Piss-ant', 1);
+    checkit('Fuck Censorship', 1);
+    checkit('Why Cunt?', 1);
+    checkit('CockSucker', 1);
+    checkit('Charismatic Motherfucker', 2);
+    checkit('2Tits', 1);
   });
 
   // eslint-disable-next-line qunit/require-expect
   test('inappropriate rejects the Roma slurs', function(assert) {
     const rule = new InappropriateRule();
-    let checkit = (name) => {
+    let checkit = (name, matchCount) => {
       let conflicts = rule.check(name);
-      assert.strictEqual(conflicts.length, 1, `${JSON.stringify(conflicts.length)} conflicts for ${name}`);
+      assert.strictEqual(conflicts.length, matchCount, `${JSON.stringify(conflicts.length)} conflicts for ${name}`);
       assert.strictEqual(conflicts[0].candidateName, name);
       assert.ok(conflicts[0].description.match(/Roma/));
     };
-    checkit('Gypsy Child');
-    checkit('Band of Gypsies');
-    checkit('Zingara');
-    checkit('Big-Gitan');
+    checkit('Gypsy Child', 1);
+    checkit('Band of Gypsies', 2);
+    checkit('Zingara', 1);
+    checkit('Big-Gitan', 1);
   });
 
   // === PhoneticAlphabetRule tests ===

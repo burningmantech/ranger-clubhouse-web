@@ -66,9 +66,9 @@ export class InappropriateRule {
 
   check(name) {
     const result = [];
-    for (const word of name.toLowerCase().split(/[^a-z]+/)) {
-      const reason = this.inappropriateWords[word];
-      if (reason) {
+    // See if any inappropriate word is a substring of the proposed name
+    for (const [word, reason] of Object.entries(this.inappropriateWords)) {
+      if (name.toLowerCase().indexOf(word) >= 0) {
         result.push(new HandleConflict(name, `${word} ${reason}`, 'high', this.id));
       }
     }
