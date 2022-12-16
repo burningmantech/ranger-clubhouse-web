@@ -132,13 +132,24 @@
     <UiSection>
       <:title>Ranger Clothing</:title>
       <:body>
-        <FormRow>
-          <f.select @name="teeshirt_size_style"
+        <FormRow class="mb-3">
+          <f.select @name="tshirt_swag_id"
                     @label="T-Shirt Size"
-                    @options={{this.shortSleeveOptions}}/>
-          <f.select @name="longsleeveshirt_size_style"
+                    @options={{this.tshirtOptions}}
+          />
+        </FormRow>
+          In case your first t-shirt choice is not available, please select a t-shirt backup choice:
+        <FormRow class="mb-3">
+          <f.select @name="tshirt_secondary_swag_id"
+                    @label="Backup T-Shirt Size"
+                    @options={{this.tshirtOptions}}
+          />
+        </FormRow>
+        <FormRow>
+          <f.select @name="long_sleeve_swag_ig"
                     @label="Long Sleeve Shirt Size"
-                    @options={{this.longSleeveOptions}}/>
+                    @options={{this.longSleeveOptions}}
+          />
         </FormRow>
       </:body>
     </UiSection>

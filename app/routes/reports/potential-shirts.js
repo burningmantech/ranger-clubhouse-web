@@ -1,6 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 import _ from 'lodash';
+import shirtGroupsSort from 'clubhouse/utils/shirt-groups-sort';
 
 export default class ReportsPotentialShirtsRoute extends ClubhouseRoute {
   queryParams = {
@@ -19,27 +20,7 @@ export default class ReportsPotentialShirtsRoute extends ClubhouseRoute {
   setupController(controller, model) {
     controller.set('year', this.year);
     controller.setProperties(model);
-
-    const shortSleeve = _.sortBy(_.map(_.groupBy(model.people, 'teeshirt_size_style'), (group, type) => {
-      return { type, count: group.length }
-    }), 'type');
-
-    const longSleeve = _.sortBy(_.map(_.groupBy(model.people, 'longsleeveshirt_size_style'), (group, type) => {
-      return { type, count: group.length }
-    }), 'type');
-
-    controller.set('shirtGroups', [
-      {
-        name: 'Tee Shirts',
-        exportName: 'tee-shirts',
-        types: shortSleeve
-      },
-      {
-        name: 'Long Sleeves',
-        exportName: 'long-sleeves',
-        types: longSleeve
-      }
-    ]);
+    controller.set('shirtGroups', shirtGroupsSort(model.people));
 
   }
 

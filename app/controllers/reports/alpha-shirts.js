@@ -11,6 +11,7 @@ export default class ReportsAlphaShirtsController extends ClubhouseController {
       { title: 'Last Name', key: 'last_name' },
       { title: `Email`, key: 'email' },
       { title: `T-Shirt Shirt`, key: 'teeshirt_size_style' },
+      { title: `T-Shirt Backup`, key: 'tshirt_secondary_size' },
       { title: `Long Sleeve Shirt`, key: 'longsleeveshirt_size_style' },
     ];
 

@@ -22,23 +22,25 @@ Router.map(function () {
       this.route('sign', {path: '/:tag'});
     });
 
-    this.route('announcements');
     this.route('alerts');
+    this.route('announcements');
+    this.route('awards');
     this.route('contact');
     this.route('emergency-contact');
     this.route('event-info');
     this.route('mentees');
+    this.route('mentors');
     this.route('messages');
     this.route('motorpool-policy');
     this.route('password');
     this.route('personal-info');
     this.route('radio-checkout');
-    this.route('tickets');
-    this.route('timesheet');
-    this.route('survey');
     this.route('schedule', function () {
       this.route('index', {path: '/'});
     });
+    this.route('survey');
+    this.route('tickets');
+    this.route('timesheet');
     this.route('timesheet-corrections', function () {
       this.route('review');
       this.route('missing');
@@ -50,9 +52,7 @@ Router.map(function () {
     });
     this.route('vehicles');
     this.route('welcome');
-    this.route('mentors');
     this.route('work-history');
-    this.route('awards');
   });
 
   this.route('search', function () {
@@ -114,7 +114,7 @@ Router.map(function () {
       this.route('manage', {path: '/:survey_id'});
       this.route('preview', {path: '/:survey_id/preview'});
     });
-
+    this.route('swag');
     this.route('teams');
     this.route('thank-you-cards');
     this.route('timesheet-sanity-checker');
@@ -152,6 +152,7 @@ Router.map(function () {
     this.route('index', {path: '/'});
     this.route('alerts');
     this.route('assets');
+    this.route('awards-swag');
     this.route('bmid');
     this.route('broadcast-log');
     this.route('dashboard');
@@ -159,6 +160,7 @@ Router.map(function () {
     this.route('event-info');
     this.route('external-ids');
     this.route('mail-log');
+    this.route('membership');
     this.route('mentors');
     this.route('messages');
     this.route('password');
@@ -166,14 +168,12 @@ Router.map(function () {
     this.route('photos');
     this.route('schedule');
     this.route('status-history');
-    this.route('tickets-provisions');
     this.route('tickets');
+    this.route('tickets-provisions');
     this.route('timesheet');
     this.route('timesheet-log');
     this.route('unified-flagging');
     this.route('work-history');
-    this.route('awards');
-    this.route('membership');
   });
 
   this.route('logout');
@@ -215,6 +215,7 @@ Router.map(function () {
     this.route('people-by-status');
     this.route('position-sanity-checker');
     this.route('potential-shirts');
+    this.route('potential-swag');
     this.route('radio-assets');
     this.route('radio-checkout');
     this.route('rollcall');

@@ -285,6 +285,9 @@ function routes() {
     return {team: []};
   });
 
+  this.get('/api/swag/shirts', () => {
+    return {shirts: []};
+  });
   /*
     Shorthand cheatsheet:
 

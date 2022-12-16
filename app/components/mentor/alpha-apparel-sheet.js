@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import {set} from '@ember/object';
 import _ from 'lodash';
 import {service} from '@ember/service';
+import shirtGroupsSort from 'clubhouse/utils/shirt-groups-sort';
 
 const ALPHAS_PER_PAGE = 28;
 export default class MentorAlphaAparelSheetComponent extends Component {
@@ -20,32 +21,13 @@ export default class MentorAlphaAparelSheetComponent extends Component {
       set(person, 'mentor_status', mentor ? mentor.status : 'pending');
     });
 
-    const good = people.filter((p) => (p.mentor_status == 'pass' || p.mentor_status == 'pending'));
-    const bonked = people.filter((p) => !(p.mentor_status == 'pass' || p.mentor_status == 'pending'));
+    const good = people.filter((p) => (p.mentor_status === 'pass' || p.mentor_status === 'pending'));
+    const bonked = people.filter((p) => !(p.mentor_status === 'pass' || p.mentor_status === 'pending'));
 
-    const shortSleeve = _.sortBy(_.map(_.groupBy(good, 'teeshirt_size_style'), (group, type) => {
-      return {type, count: group.length}
-    }), 'type');
-
-    const longSleeve = _.sortBy(_.map(_.groupBy(good, 'longsleeveshirt_size_style'), (group, type) => {
-      return {type, count: group.length}
-    }), 'type');
-
-    this.shirtGroups = [
-      {
-        name: 'Tee Shirts',
-        exportName: 'tee-shirts',
-        types: shortSleeve
-      },
-      {
-        name: 'Long Sleeves',
-        exportName: 'long-sleeves',
-        types: longSleeve
-      }
-    ];
+    this.shirtGroups = shirtGroupsSort(people);
 
 
-    this.alphaGroups =  [
+    this.alphaGroups = [
       {
         title: 'Pass/Pending',
         people: good,

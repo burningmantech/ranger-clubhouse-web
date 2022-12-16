@@ -172,11 +172,15 @@
           <:title>Ranger Clothing</:title>
           <:body>
             <FormRow class="mb-4">
-              <f.select @name="teeshirt_size_style"
+              <f.select @name="tshirt_swag_id"
                         @label="T-Shirt Size"
-                        @options={{this.shortSleeveOptions}}
+                        @options={{this.tshirtOptions}}
               />
-              <f.select @name="longsleeveshirt_size_style"
+              <f.select @name="tshirt_secondary_swag_id"
+                        @label="T-Shirt Size (Backup Choice)"
+                        @options={{this.tshirtOptions}}
+              />
+              <f.select @name="long_sleeve_swag_ig"
                         @label="Long Sleeve Shirt Size"
                         @options={{this.longSleeveOptions}}
               />
@@ -250,14 +254,15 @@
       <PresentOrNot @value={{this.person.camp_location}} />
     </dd>
 
-    <dt class="col-lg-3">Short Sleeve</dt>
+    <dt class="col-lg-3">Short Sleeve / Secondary</dt>
     <dd class="col-lg-8">
-      {{this.person.teeshirt_size_style}}
+      {{this.shirtTitle this.person.tshirt_swag_id}}<br>
+      {{this.shirtTitle this.person.tshirt_secondary_swag_id}}
     </dd>
 
     <dt class="col-lg-3">Long Sleeve</dt>
     <dd class="col-lg-8">
-      {{this.person.longsleeveshirt_size_style}}
+      {{this.shirtTitle this.person.long_sleeve_swag_ig}}
     </dd>
 
     <dt class="col-lg-3">Home Address</dt>
