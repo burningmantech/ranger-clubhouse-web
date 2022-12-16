@@ -61,7 +61,7 @@
                     @options={{this.typeOptions}}
                     @label="Type"
           />
-          {{#if (eq this.entry.type "dept-shirt")}}
+          {{#if (eq f.model.type "dept-shirt")}}
             <f.select @name="shirt_type"
                       @options={{this.shirtTypeOptions}}
                       @label="Shirt Type"
