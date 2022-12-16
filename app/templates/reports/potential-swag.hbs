@@ -1,20 +1,19 @@
 <div class="d-print-none">
   <YearSelect @title="Potential Shirt Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
   <p>
-    The report shows people who may potentialy earn a short and long sleeve shirts for a given event year.
+    The report is used to help build service pins, service patches, and toaster pins orders for the upcoming event.
   </p>
   <p>
-    <a href="#shirt-totals">Jump to shirt totals</a>
+    Legend:<br>
+    Sign-ups? = has non-training sign-ups in the current year.<br>
+    Potential Swag? = indicate what 5-year increment service swag the person might be awarded. Calculated by taking the
+    total worked years, add 1, and check if the sum is a 5-year increment.
   </p>
   <p>
-    <UiButton @onClick={{this.exportPeople}}>
+    <UiButton @onClick={{this.exportToCSV}}>
       Export as CSV
     </UiButton>
   </p>
-</div>
-
-<div class="d-none d-print-block">
-  <h1>Quartermaster Potential Earned Shirts Earned In {{this.year}}</h1>
 </div>
 
 Showing  {{pluralize this.people.length "person"}}
@@ -22,12 +21,12 @@ Showing  {{pluralize this.people.length "person"}}
   <thead>
   <tr>
     <th>Callsign</th>
-    <th>Name</th>
-    <th class="text-end">Est. Hours</th>
-    <th class="text-end">Actual Hours</th>
-    <th>T-Shirt ({{this.threshold_ss}} hrs)</th>
-    <th>T-Shirt Backup</th>
-    <th>Long Sleeve ({{this.threshold_ls}} hrs)</th>
+    <th>Status</th>
+    <th>Years</th>
+    <th>First Year</th>
+    <th>Last Worked</th>
+    <th>{{this.signupYear}} Sign-ups?</th>
+    <th>Potential Swag?</th>
   </tr>
   </thead>
 
@@ -37,26 +36,13 @@ Showing  {{pluralize this.people.length "person"}}
       <td>
         <PersonLink @person={{person}} />
       </td>
-      <td>{{person.first_name}} {{person.middle_name}} {{person.last_name}}</td>
-      <td class="text-end">{{person.estimated_hours}}</td>
-      <td class="text-end">{{person.actual_hours}}</td>
+      <td>{{person.status}}</td>
+      <td class="text-end">{{person.total_years}}</td>
+      <td class="text-end">{{person.first_year}}</td>
+      <td class="text-end">{{person.last_worked}}</td>
+      <td class="text-center">{{yesno person.signed_up}}</td>
       <td>
-        {{#unless person.earned_ss}}
-          {{fa-icon "ban" color="danger"}}
-        {{/unless}}
-        {{person.teeshirt_size_style}}
-      </td>
-      <td>
-        {{#unless person.earned_ss}}
-          {{fa-icon "ban" color="danger"}}
-        {{/unless}}
-        {{person.tshirt_secondary_size}}
-      </td>
-      <td>
-        {{#unless person.earned_ls}}
-          {{fa-icon "ban" color="danger"}}
-        {{/unless}}
-        {{person.longsleeveshirt_size_style}}
+        {{or person.service_eligible "-"}}
       </td>
     </tr>
   {{else}}

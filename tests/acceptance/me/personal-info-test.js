@@ -17,7 +17,6 @@ module('Acceptance | me/personal info', function(hooks) {
       'email', 'home_phone', 'alt_phone', 'gender',
       'camp_location',
       'street1', 'street2', 'apt', 'city', 'state', 'country',
-      'teeshirt_size_style', 'longsleeveshirt_size_style'
     ];
 
     fields.forEach((field) => {

@@ -1,5 +1,6 @@
 import Model, {attr} from '@ember-data/model';
 import {htmlSafe} from '@ember/template';
+import optionsToLabels from 'clubhouse/utils/options-to-labels';
 
 // Year round contribution (cadre membership, extraordinary work, etc.)
 export const TYPE_YEAR_ROUND = 'year-round';
@@ -16,10 +17,7 @@ export const TypeOptions = [
   ['Special Events', TYPE_SPECIAL_EVENT],
 ];
 
-export const TypeLabels = TypeOptions.reduce((hash, opt) => {
-  hash[opt[1]] = opt[0];
-  return hash
-}, {})
+export const TypeLabels = optionsToLabels(TypeOptions);
 
 export const TypeSortOrder = {
   [TYPE_PLAYA_SERVICE]: 1,

@@ -1,15 +1,17 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
-import {cached} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import PersonInfoValidations, {REQUIRED_PII_VALIDATIONS} from 'clubhouse/validations/person-info';
-import {ShortSleeve, LongSleeve} from 'clubhouse/constants/shirts';
 import {pronounOptions} from 'clubhouse/constants/pronouns';
 import {ADMIN, VC} from 'clubhouse/constants/roles';
 import {ADDRESS_VALIDATION_NOT_REQUIRED} from 'clubhouse/constants/person_status';
 
 export default class PersonPersonalInfoController extends ClubhouseController {
-  shortSleeveOptions = ShortSleeve;
-  longSleeveOptions = LongSleeve;
+  @tracked person;
+  @tracked tshirtOptions;
+  @tracked longSleeveOptions;
+  @tracked shirtsById;
+
   pronounOptions = pronounOptions;
 
   @cached
@@ -19,6 +21,15 @@ export default class PersonPersonalInfoController extends ClubhouseController {
     } else {
       return PersonInfoValidations;
     }
+  }
+
+  @action
+  shirtTitle(shirtId) {
+    if (!shirtId) {
+      return 'Unknown';
+    }
+
+    return !shirtId ? 'Unknown' : (this.shirtsById[shirtId]?.title ?? `Unknown Swag ID ${shirtId}`);
   }
 
   get canEditPersonalInfo() {

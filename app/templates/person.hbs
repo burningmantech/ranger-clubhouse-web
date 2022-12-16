@@ -18,7 +18,7 @@
       <s.link @route="person.mentors" @title="Mentors" @icon="users" @iconType="s"/>
     {{/if}}
     {{#if (has-role "admin")}}
-      <s.link @route="person.awards" @title="Awards" @icon="award" @iconType="s"/>
+      <s.link @route="person.awards-swag" @title="Awards & Swag" @icon="award" @iconType="s"/>
 
     {{/if}}
   </s.group>
@@ -56,8 +56,8 @@
                 @iconType="s"/>
         <s.link @route="person.broadcast-log" @title="Broadcast Log" @icon="volume-up" @iconType="s"/>
       {{/if}}
-        <s.link @route="person.status-history" @title="Status History" @icon="history" @iconType="s"/>
-        <s.link @route="person.photos" @title="Photo History" @icon="portrait" @iconType="s"/>
+      <s.link @route="person.status-history" @title="Status History" @icon="history" @iconType="s"/>
+      <s.link @route="person.photos" @title="Photo History" @icon="portrait" @iconType="s"/>
     </s.group>
   {{/if}}
 </UiSidebar>
@@ -84,21 +84,20 @@
         <a href {{action this.switchToHQ}}>Switch to HQ Window</a>
       </div>
     </div>
-    {{#if (or this.person.isSuspended this.person.isResigned this.person.isDeceased this.person.isUberBonked this.person.isDismissed)}}
-      <div class="person-manage-info">
-        <h5 class="text-danger mt-2">
-          {{fa-icon "exclamation-triangle"}} The account has the status "{{this.person.status}}" and may not be logged
-          into.
-        </h5>
-        For more information, contact the Personnel Manager: {{mail-to (config "PersonnelEmail")}}
-      </div>
-    {{else if this.person.needsBpguid}}
-      <div class="h4 person-manage-info text-danger">
-        Account does not have a Burner Profile ID (BPGUID) on file. Signups and ticketing are disabled.
-      </div>
-    <div>
-      Contact the Volunteer Coordinators at {{vc-email}} for assistance with obtaining a BPGUID.
-    </div>
+    {{#if
+      (or this.person.isSuspended this.person.isResigned this.person.isDeceased this.person.isUberBonked this.person.isDismissed)}}
+      <UiNotice @icon="ban"
+                @type="danger"
+                @title="Account has status {{this.person.status}} and may not be logged into.">
+         For more information, contact the Personnel Manager: {{mail-to (config "PersonnelEmail")}}
+      </UiNotice>
+      {{else if this.person.needsBpguid}}
+      <UiNotice @icon="hand-point-right" @type="danger">
+        <p>
+          Account does not have a Burner Profile ID (BPGUID) on file. Signups and ticketing are disabled.
+        </p>
+        Contact the Volunteer Coordinators at {{vc-email}} for assistance with obtaining a BPGUID.
+      </UiNotice>
     {{/if}}
   </div>
 

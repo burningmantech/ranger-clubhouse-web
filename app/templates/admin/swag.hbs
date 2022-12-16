@@ -1,0 +1,93 @@
+<main>
+  <h1>Swag (Shirts, Service Pins &amp; Patches)</h1>
+  <p>
+    This page is used to administer Ranger shirts, service awards pins &amp; patches, and Org patches &amp; pins.
+  </p>
+  <p>
+    <UiButton @onClick={{this.newSwag}}>{{fa-icon "plus"}} New Swag</UiButton>
+  </p>
+  <UiTab as |tab|>
+    <tab.pane @title="Ranger Shirts">
+      <p>
+        Shirts appearing here will be used to generate the shirts options for the Personal Info pages.
+      </p>
+      <SwagTable @title="Ranger Shirts"
+                 @isShirt={{true}}
+                 @swags={{this.swagTables.deptShirts}}
+                 @editAction={{this.editSwag}} />
+    </tab.pane>
+    <tab.pane @title="Ranger Service Pins">
+      <SwagTable @title="Ranger Service Pins"
+                 @swags={{this.swagTables.deptPins}}
+                 @editAction={{this.editSwag}} />
+    </tab.pane>
+    <tab.pane @title="Ranger Service Patches">
+      <SwagTable @title="Ranger Service Patches"
+                 @swags={{this.swagTables.deptPatches}}
+                 @editAction={{this.editSwag}} />
+    </tab.pane>
+    <tab.pane @title="Org Service Pins">
+      <SwagTable @title="Org Service Pins"
+                 @swags={{this.swagTables.orgPins}}
+                 @editAction={{this.editSwag}} />
+    </tab.pane>
+    <tab.pane @title="Other">
+      <SwagTable @title="Other"
+                 @swags={{this.swagTables.other}}
+                 @editAction={{this.editSwag}} />
+    </tab.pane>
+  </UiTab>
+</main>
+{{#if this.entry}}
+  <ModalDialog @title={{if this.entry.isNew "New Swag"  "Edit Swag"}} @onEscape={{this.cancelSwag}} as |Modal|>
+    <ChForm @formId="swag"
+            @formFor={{this.entry}}
+            @validator={{this.swagValidations}}
+            @onSubmit={{this.saveSwag}} as |f|>
+      <Modal.body>
+        <FormRow>
+          <f.text @name="title"
+                  @label="Swag Title:"
+                  @maxlength={{80}}
+                  @size={{80}}/>
+        </FormRow>
+        <FormRow class="my-3">
+          <div class="col-auto">
+            <f.checkbox @name="active" @label="Active"/>
+          </div>
+        </FormRow>
+        <FormRow>
+          <f.select @name="type"
+                    @options={{this.typeOptions}}
+                    @label="Type"
+          />
+          {{#if (eq this.entry.type "dept-shirt")}}
+            <f.select @name="shirt_type"
+                      @options={{this.shirtTypeOptions}}
+                      @label="Shirt Type"
+            />
+          {{/if}}
+        </FormRow>
+        <FormRow>
+          <f.textarea @name="description"
+                      @label="Swag Description"
+                      @rows={{4}}
+                      @cols={{80}}
+                      @size={{80}}/>
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
+        <UiCancelButton @onClick={{this.cancelSwag}} @disabled={{this.entry.isSaving}} />
+        {{#if this.entry.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+        <div class="ms-auto">
+          <UiButton @onClick={{this.removeSwag}} @type="danger" @size="sm">
+            {{fa-icon "trash-alt" type="fas"}} Delete
+          </UiButton>
+        </div>
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}

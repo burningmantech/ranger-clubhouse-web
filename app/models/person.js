@@ -51,7 +51,10 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('string') gender;
 
   @attr('string') longsleeveshirt_size_style;
+  @attr('number') long_sleeve_swag_ig;
   @attr('string') teeshirt_size_style;
+  @attr('number') tshirt_swag_id;
+  @attr('number') tshirt_secondary_swag_id;
 
   @attr('string') message;
   @attr('string') message_updated_at;

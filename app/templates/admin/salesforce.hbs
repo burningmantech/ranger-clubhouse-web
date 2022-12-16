@@ -251,7 +251,9 @@
                           &lt;{{account.existing_person.status}}&gt;<br>
                         {{/if}}
                         <b>BPGUID:</b>{{account.bpguid}}<br>
-                        <b>VC Comments:</b> <PresentOrNot @value={{account.vc_comments}} /><br>
+                        <b>VC Comments:</b>
+                        <PresentOrNot @value={{account.vc_comments}} />
+                        <br>
                         {{#if (eq account.status "existing")}}
                           <b>Street:</b> {{account.existing_person.street1}} &rarr; {{account.street1}}<br>
                           <b>State:</b> {{account.existing_person.state}} &rarr; {{account.state}}<br>
@@ -265,10 +267,6 @@
                           <b>Known PNV Names:</b> {{account.existing_person.known_pnvs}}
                           &rarr; {{account.known_pnv_names}}
                           <br>
-                          <b>T-Shirt Info:</b> {{account.existing_person.teeshirt_size_style}}
-                          &rarr; {{account.teeshirt_size_style}}<br>
-                          <b>LS Shirt Info:</b> {{account.existing_person.longsleeveshirt_size_style}}
-                          &rarr; {{account.longsleeveshirt_size_style}}<br>
                         {{else}}
                           <b>Street:</b> {{account.street1}}<br>
                           <b>State:</b> {{account.state}}<br>
@@ -278,8 +276,6 @@
                           <b>Emergency Contact:</b> {{account.emergency_contact}}<br>
                           <b>Known Ranger Names:</b> {{account.known_ranger_names}}<br>
                           <b>Known PNV Names:</b> {{account.known_pnv_names}}<br>
-                          <b>T-Shirt Info:</b> {{account.teeshirt_size_style}}<br>
-                          <b>LS Shirt Info:</b> {{account.longsleeveshirt_size_style}}<br>
                         {{/if}}
                       </td>
                     </tr>

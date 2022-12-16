@@ -4,18 +4,16 @@ import {tracked} from '@glimmer/tracking';
 import PersonInfoValidations from 'clubhouse/validations/person-info';
 import {pronounOptions} from 'clubhouse/constants/pronouns';
 
-import {
-  ShortSleeve as ShortSleeveOptions,
-  LongSleeve as LongSleeveOptions
-} from 'clubhouse/constants/shirts';
-
 export default class MePersonalInfoEditController extends ClubhouseController {
   @tracked showUpdateMailingListsDialog = false;
   @tracked message;
+  @tracked person;
+  @tracked tshirtOptions;
+  @tracked longSleeveOptions;
+  @tracked shirtsById;
+
 
   personInfoValidations = PersonInfoValidations;
-  shortSleeveOptions = ShortSleeveOptions;
-  longSleeveOptions = LongSleeveOptions;
   pronounOptions = pronounOptions;
 
   @action
@@ -55,7 +53,7 @@ export default class MePersonalInfoEditController extends ClubhouseController {
   @action
   sendMailingListUpdateRequest() {
     this.ajax.request(`contact/${this.person.id}/update-mailing-lists`,
-      {method: 'POST', data: {old_email: this.oldEmail, message: this.message }})
+      {method: 'POST', data: {old_email: this.oldEmail, message: this.message}})
       .then(() => {
         this.showUpdateMailingListsDialog = false;
         this.toast.success('Request to update mailing lists successfully sent.');

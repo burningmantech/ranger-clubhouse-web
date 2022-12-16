@@ -19,7 +19,8 @@
         <th>Callsign</th>
         <th>Status</th>
         <th>Name</th>
-        <th>Tee Shirt</th>
+        <th>T-Shirt</th>
+        <th>T-Shirt Backup</th>
         <th>Long Sleeve</th>
       </tr>
     </thead>
@@ -32,6 +33,9 @@
           <td>{{person.first_name}} {{person.last_name}}</td>
           <td>
             {{person.teeshirt_size_style}}
+          </td>
+          <td>
+            {{person.tshirt_secondary_size}}
           </td>
           <td>
             {{person.longsleeveshirt_size_style}}

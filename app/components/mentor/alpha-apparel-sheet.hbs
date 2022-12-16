@@ -14,7 +14,8 @@
           <th>Name</th>
           <th>Status</th>
           <th>Result</th>
-          <th>Tee Shirt</th>
+          <th>T-Shirt</th>
+          <th>T-Shirt Backup</th>
           <th>Long Sleeve</th>
         </tr>
       </thead>
@@ -28,6 +29,9 @@
             <td>{{person.mentor_status}}</td>
             <td>
               <PresentOrNot @value={{person.teeshirt_size_style}} @empty="UNKNOWN" />
+            </td>
+            <td>
+              <PresentOrNot @value={{person.tshirt_secondary_size}} @empty="UNKNOWN" />
             </td>
             <td>
               <PresentOrNot @value={{person.longsleeveshirt_size_style}} @empty="UNKNOWN" />
