@@ -166,6 +166,7 @@ Router.map(function () {
     this.route('password');
     this.route('personal-info');
     this.route('photos');
+    this.route('pogs');
     this.route('schedule');
     this.route('status-history');
     this.route('tickets');
