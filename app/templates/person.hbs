@@ -17,10 +17,8 @@
     {{#if (has-role "admin" "vc" "mentor")}}
       <s.link @route="person.mentors" @title="Mentors" @icon="users" @iconType="s"/>
     {{/if}}
-    {{#if (has-role "admin")}}
-      <s.link @route="person.awards-swag" @title="Awards & Swag" @icon="award" @iconType="s"/>
-
-    {{/if}}
+    <s.link @route="person.awards-swag" @title="Awards & Swag" @icon="award" @iconType="s"/>
+    <s.link @route="person.pogs" @title="Pogs" @icon="utensils" @iconType="s"/>
   </s.group>
   {{#if  (has-role "edit-bmids" "edit-access-docs")}}
     <s.group @title="PRE-PLAYA">
@@ -89,9 +87,9 @@
       <UiNotice @icon="ban"
                 @type="danger"
                 @title="Account has status {{this.person.status}} and may not be logged into.">
-         For more information, contact the Personnel Manager: {{mail-to (config "PersonnelEmail")}}
+        For more information, contact the Personnel Manager: {{mail-to (config "PersonnelEmail")}}
       </UiNotice>
-      {{else if this.person.needsBpguid}}
+    {{else if this.person.needsBpguid}}
       <UiNotice @icon="hand-point-right" @type="danger">
         <p>
           Account does not have a Burner Profile ID (BPGUID) on file. Signups and ticketing are disabled.
