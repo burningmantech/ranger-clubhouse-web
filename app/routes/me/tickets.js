@@ -14,7 +14,7 @@ export default class MeTicketsRoute extends ClubhouseRoute {
 
   model() {
     // Record when the user hit the ticketing page, ignore any response.
-    this.ajax.request(`ticketing/${this.session.userId}/progress`, {method: 'POST', data: {milestone: 'visited'}});
+    this.ajax.request(`person-event/${this.session.userId}/progress`, {method: 'POST', data: {milestone: 'ticket-visited'}});
 
     return RSVP.hash({
       ticketingInfo: this.ajax.request('ticketing/info')

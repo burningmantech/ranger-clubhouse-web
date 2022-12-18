@@ -11,7 +11,7 @@ module('Acceptance | admin/positions', function(hooks) {
     const person = this.server.create('person', { roles: [ Role.ADMIN ]});
     await authenticateUser(person.id);
     await visit('/admin/positions');
-    const numPositions = this.server.schema.positions.all().length;
-    assert.dom('.position-line').exists({ count: numPositions }, `should render ${numPositions} lines`);
+
+    assert.dom('table tbody tr').exists({ count: 1 }, `should render 1 lines`);
   });
 });

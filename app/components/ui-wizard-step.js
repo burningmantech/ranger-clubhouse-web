@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {tracked} from '@glimmer/tracking';
 
-export default class TicketWizardStepComponent extends Component {
+export default class UiWizardStepComponent extends Component {
   @tracked isActive = false;
   @tracked isFinished = false;
   @tracked number = 0;

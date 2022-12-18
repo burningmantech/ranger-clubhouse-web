@@ -4,6 +4,10 @@ import dayjs from 'dayjs';
 import configMock from './api-mocks/config-mock';
 import scheduleMock from './api-mocks/schedule-mock';
 
+function now() {
+  return dayjs().format('YYYY-MM-DD hh:mm:ss');
+}
+
 function routes() {
   this.urlPrefix = 'http://localhost:8000';
 
@@ -159,7 +163,7 @@ function routes() {
           position_title: 'Training',
           position_id: 13,
           location: 'Trainlandia',
-          date: dayjs().format('YYYY-MM-DD hh:mm:ss'),
+          date: now(),
           status: 'pass'
         }],
         radio_eligible: 1,
@@ -223,10 +227,10 @@ function routes() {
     };
   });
 
-  this.get('/api/person-event/:id', () => {
+  this.get('/api/person-event/:id', (_, request) => {
     return {
       person_event: {
-        id: '1-2020',
+        id: request.params.id,
         may_request_stickers: 1,
         org_vehicle_insurance: 1,
         signed_motorpool_agreement: 1,
@@ -234,7 +238,9 @@ function routes() {
         asset_authorized: 1,
         timesheet_confirmed_at: 1,
         timesheet_confirmed: 1,
-        sandman_affidavit: 1
+        sandman_affidavit: 1,
+        pii_finished_at: now(),
+        pii_started_at: now(),
       }
     };
   });
@@ -288,6 +294,11 @@ function routes() {
   this.get('/api/swag/shirts', () => {
     return {shirts: []};
   });
+
+  this.get('/api/config/dashboard-period', () => {
+    return { period: 'before-event' }
+  });
+
   /*
     Shorthand cheatsheet:
 

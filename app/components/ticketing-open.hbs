@@ -6,7 +6,9 @@
   <TicketOpenApplicant @ticketingInfo={{@ticketingInfo}} />
 {{else}}
   {{#if this.showTicketing}}
-    <TicketWizard @onCancel={{this.cancelTicketing}} @onFinish={{this.finishTicketing}} as |w|>
+    <UiWizard @onCancel={{this.cancelTicketing}}
+              @onFinish={{this.finishTicketing}}
+              @finishLabel="Finish Ticketing" as |w|>
       <w.step @title="Ticket Selection">
         <TicketInfo @person={{@person}}
                     @ticketPackage={{@ticketPackage}}
@@ -67,7 +69,7 @@
                        @ticket={{this.ticket}}
         />
       </w.step>
-    </TicketWizard>
+    </UiWizard>
   {{else}}
     <div class="text-danger">
       The ticketing deadline is {{full-datetime-format @ticketingInfo.submit_date}}

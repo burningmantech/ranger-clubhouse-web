@@ -75,7 +75,7 @@ export default class TicketingOpenComponent extends Component {
   _updateMilestone(milestone) {
     const id = +this.args.person.id;
     if (this.session.userId === id) {
-      this.ajax.request(`ticketing/${id}/progress`, {method: 'POST', data: {milestone}})
+      this.ajax.request(`person-event/${id}/progress`, {method: 'POST', data: {milestone: `ticket-${milestone}`}})
         .catch((response) => this.house.handleErrorResponse(response));
     }
   }
