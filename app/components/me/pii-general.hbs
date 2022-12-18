@@ -1,0 +1,30 @@
+<FormRow>
+  <@f.text @name="first_name"
+          @label="First Name"
+          @maxlength={{25}}/>
+  <@f.text @name="mi"
+          @label="M.I."
+          @maxlength={{10}}/>
+  <@f.text @name="last_name"
+          @label="Last Name"
+          @maxlength={{25}}/>
+</FormRow>
+<FormRow>
+  <@f.text @name="gender"
+          @label="Gender"
+          @hint="Examples: female, male, non-binary, gender fluid, etc."
+          @maxlength={{32}}/>
+</FormRow>
+<FormRow>
+  <@f.select @name="pronouns"
+            @label="Pronouns"
+            @options={{@pronounOptions}}/>
+  {{#if (eq @f.model.pronouns "custom")}}
+    <@f.text
+      @name="pronouns_custom"
+      @label="Tell us your pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
+      @size={{30}}
+      @maxlength={{30}}
+    />
+  {{/if}}
+</FormRow>

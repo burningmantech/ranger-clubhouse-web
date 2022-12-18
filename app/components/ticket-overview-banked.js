@@ -16,7 +16,7 @@ export default class TicketOverviewBankedComponent extends Component {
 
     if (pkg.provisionsBanked) {
       pkg.provisionItems.forEach((p) => {
-        this.bankedItems({name: p.name, expires: p.expires});
+        this.bankedItems.push({name: p.name, expires: p.expires});
       })
     }
   }

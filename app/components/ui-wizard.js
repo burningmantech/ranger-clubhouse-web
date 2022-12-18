@@ -5,11 +5,14 @@ import {A} from '@ember/array';
 import {schedule} from '@ember/runloop';
 import {action} from '@ember/object';
 
-export default class TicketWizardComponent extends Component {
+export default class UiWizardComponent extends Component {
   @service session;
   @service house;
 
   @tracked stepCount = 0;
+  @tracked nextLabel = this.args.nextLabel ?? "Next";
+  @tracked backLabel = this.args.backLabel ?? "Back";
+  @tracked finishLabel = this.args.finishLabel ?? "Finish";
 
   steps = A([]);
   currentStep = null;
@@ -44,6 +47,16 @@ export default class TicketWizardComponent extends Component {
 
   @action
   nextStep() {
+    const {onNext} = this.args;
+    if (onNext) {
+      onNext(this._proceedNext)
+    } else {
+      this._proceedNext();
+    }
+  }
+
+  @action
+  _proceedNext() {
     const nextNumber = this.currentStep.number + 1;
     if (nextNumber > this.steps.length) {
       return;
@@ -61,6 +74,16 @@ export default class TicketWizardComponent extends Component {
 
   @action
   backStep() {
+    const {onBack} = this.args;
+    if (onBack) {
+      onBack(this._proceedBack)
+    } else {
+      this._proceedBack();
+    }
+  }
+
+  @action
+  _proceedBack() {
     const prevNumber = this.currentStep.number - 1;
     if (!prevNumber) {
       return;

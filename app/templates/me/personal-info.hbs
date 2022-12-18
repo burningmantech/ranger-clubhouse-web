@@ -6,166 +6,110 @@
         @autocomplete="on"
         @validator={{this.personInfoValidations}}
         @onSubmit={{this.onSubmit}} as |f|>
-  <UiSection>
-    <:title>General Information</:title>
-    <:body>
-      <FormRow>
-        <f.text @name="first_name"
-                @label="First Name"
-                @maxlength={{25}}/>
-        <f.text @name="mi"
-                @label="M.I."
-                @maxlength={{10}}/>
-        <f.text @name="last_name"
-                @label="Last Name"
-                @maxlength={{25}}/>
-      </FormRow>
-      <FormRow>
-        <f.text @name="gender"
-                @label="Gender"
-                @hint="Examples: female, male, non-binary, gender fluid, etc."
-                @maxlength={{32}}/>
-      </FormRow>
-      <FormRow>
-        <f.select @name="pronouns"
-                  @label="Pronouns"
-                  @options={{this.pronounOptions}}/>
-        {{#if (eq f.model.pronouns "custom")}}
-          <f.text
-            @name="pronouns_custom"
-            @label="Tell us your pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
-            @size={{30}}
-            @maxlength={{30}}
-          />
-        {{/if}}
+  {{#if this.isReviewing}}
+    <UiWizard @onCancel={{this.cancelReview}}
+              @onFinish={{fn this.finishReview f.model}}
+              @finishLabel="Save & Finish Review"
+              @onNext={{fn this.navigateStep f.model}}
+              @nextLabel="Save & Next"
+              @onBack={{fn this.navigateStep f.model}}
+              as |w|>
+      <w.step @title="General Information">
+        <Me::PiiGeneral @f={{f}} @pronounOptions={{this.pronounOptions}} />
+      </w.step>
+      <w.step @title="Contact Information">
+        <Me::PiiContactInfo @f={{f}} />
+      </w.step>
+      <w.step @title="Camp Name & Location">
+        <Me::PiiCampInfo @f={{f}} />
+      </w.step>
+      {{#unless this.person.isAuditor}}
+        <w.step @title="Languages">
+          <Me::PiiLanguages @f={{f}} />
+        </w.step>
+        <w.step @title="Callsign Pronunciation">
+          <Me::PiiPronounciation @f={{f}} />
+        </w.step>
+        <w.step @title="Ranger Clothing">
+          <Me::PiiClothing @f={{f}}
+                           @tshirtOptions={{this.tshirtOptions}}
+                           @longSleeveOptions={{this.longSleeveOptions}} />
+        </w.step>
+        <w.step @title="Home Address" @isLast={{true}}>
+          <PersonAddressEdit @f={{f}} />
+        </w.step>
+      {{/unless}}
+    </UiWizard>
+  {{else}}
+    {{#if (and this.startedReview (not this.finishedReview))}}
+      <UiNotice @type="danger" @icon="hand" @title="Personal Information review not finished!">
+        <p>
+          You started a review of your Personal Information but did not complete all the steps. Click the 'Start Review'
+          button below, make sure you go through all the steps, and be sure to click the 'Save &amp; Finish Review'
+          button on the
+          last step.
+        </p>
+        <UiButton @onClick={{this.startReview}} @type="danger">Start Review</UiButton>
+      </UiNotice>
+    {{else if this.completedReview}}
+      <UiNotice @type="success" @icon="check" @title="Personal Information Review Completed!">
+        Thank you for reviewing your Personal Information.
+      </UiNotice>
+    {{/if}}
 
-      </FormRow>
-    </:body>
-  </UiSection>
-  <UiSection>
-    <:title>Contact Information</:title>
-    <:body>
-      <p>
-        Ranger teams and leads may use your email address to send important messages to you regarding scheduling
-        and operations. Please keep your email address up to date.
-      </p>
-      <FormRow>
-        <f.text @name="email" @label="Email"
-                @inputmode="email"
-                @size={{30}}
-                @maxlength={{50}}
-                @noSpaces={{true}}/>
-        <f.text @name="home_phone"
-                @label="Primary Phone"
-                @inputmode="tel"
-                @maxlength={{25}}/>
-        <f.text @name="alt_phone"
-                @label="Alternative Phone"
-                @inputmode="tel"
-                @maxlength={{25}}
-        />
-      </FormRow>
-    </:body>
-  </UiSection>
-  <UiSection>
-    <:title>Camp Name &amp; Location</:title>
-    <:body>
-      <p>
-        Please enter your camp's name, the street address, and street side (man-side, mountainside, plaza, etc.).
-      </p>
-      <p>
-        Example: <b><i>"Camp Specificity, 9:15 &amp; D, Mountainside."</i></b>
-      </p>
-      <FormRow>
-        <f.textarea @name="camp_location"
-                    @label="Enter your camp's name and location:"
-                    @cols={{80}}
-                    @rows={{3}}
-                    @maxlength={{200}}
-                    @showCharCount={{true}}
-        />
-      </FormRow>
-    </:body>
-  </UiSection>
-  {{#unless this.person.isAuditor}}
     <UiSection>
-      <:title>Languages</:title>
+      <:title>General Information</:title>
       <:body>
-        <p>
-          List the English names of the languages you are comfortable speaking with the fluency level in parentheses,
-          each separated by a comma.
-        </p>
-        <p>
-          Example: <b><i>"japanese (basic), spanish (fluent)"</i></b>
-        </p>
-        <p>
-          Keep the list simple:<br>
-          GOOD: "french (fluent), italian (written only), spanish (basic)"<br>
-          BAD: "French - I taught in Paris and can only write in Italian. Took 1 year of high school spanish"<br>
-        </p>
-
-        <FormRow>
-          <f.text @name="languages"
-                  @label="Languages Spoken"
-                  @size={{80}}/>
-        </FormRow>
+        <Me::PiiGeneral @f={{f}} @pronounOptions={{this.pronounOptions}} />
       </:body>
     </UiSection>
     <UiSection>
-      <:title>Callsign Pronunciation</:title>
+      <:title>Contact Information</:title>
       <:body>
-        <p>
-          Do you have a difficult to pronounce callsign? Enter the phonetic spelling below.
-        </p>
-        <p>
-          Example: <b><i>if your callsign is 3pio enter as "Three-Pee-Oh", for Jschool enter as "JAY-school",
-          etc</i></b>
-        </p>
-        <FormRow>
-          <f.text @name="callsign_pronounce"
-                  @label="Callsign Pronunciation"
-                  @size={{20}}
-                  @maxlength={{20}}/>
-        </FormRow>
+        <Me::PiiContactInfo @f={{f}} />
       </:body>
     </UiSection>
     <UiSection>
-      <:title>Ranger Clothing</:title>
+      <:title>Camp Name &amp; Location</:title>
       <:body>
-        <FormRow class="mb-3">
-          <f.select @name="tshirt_swag_id"
-                    @label="T-Shirt Size"
-                    @options={{this.tshirtOptions}}
-          />
-        </FormRow>
-          In case your first t-shirt choice is not available, please select a t-shirt backup choice:
-        <FormRow class="mb-3">
-          <f.select @name="tshirt_secondary_swag_id"
-                    @label="Backup T-Shirt Size"
-                    @options={{this.tshirtOptions}}
-          />
-        </FormRow>
-        <FormRow>
-          <f.select @name="long_sleeve_swag_ig"
-                    @label="Long Sleeve Shirt Size"
-                    @options={{this.longSleeveOptions}}
-          />
-        </FormRow>
+        <Me::PiiCampInfo @f={{f}} />
       </:body>
     </UiSection>
-  {{/unless}}
+    {{#unless this.person.isAuditor}}
+      <UiSection>
+        <:title>Languages</:title>
+        <:body>
+          <Me::PiiLanguages @f={{f}} />
+        </:body>
+      </UiSection>
+      <UiSection>
+        <:title>Callsign Pronunciation</:title>
+        <:body>
+          <Me::PiiPronounciation @f={{f}} />
+        </:body>
+      </UiSection>
+      <UiSection>
+        <:title>Ranger Clothing</:title>
+        <:body>
+          <Me::PiiClothing @f={{f}}
+                           @tshirtOptions={{this.tshirtOptions}}
+                           @longSleeveOptions={{this.longSleeveOptions}} />
+        </:body>
+      </UiSection>
+    {{/unless}}
 
-  <UiSection>
-    <:title>Home Address</:title>
-    <:body>
-      <PersonAddressEdit @f={{f}} />
-    </:body>
-  </UiSection>
+    <UiSection>
+      <:title>Home Address</:title>
+      <:body>
+        <PersonAddressEdit @f={{f}} />
+      </:body>
+    </UiSection>
 
-  <f.submit @label="Update" @disabled={{this.person.isSaving}} />
-  <UiCancelButton @disabled={{this.person.isSaving}} @onClick={{this.onCancel}} />
-  {{#if this.isSubmitting}}
-    <LoadingIndicator/>
+    <f.submit @label="Update" @disabled={{this.person.isSaving}} />
+    <UiCancelButton @disabled={{this.person.isSaving}} @onClick={{this.onCancel}} />
+    {{#if this.isSubmitting}}
+      <LoadingIndicator/>
+    {{/if}}
   {{/if}}
 </ChForm>
 
