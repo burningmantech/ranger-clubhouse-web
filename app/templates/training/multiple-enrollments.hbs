@@ -1,12 +1,15 @@
 <YearSelect @title="Multiple Enrollments Report for {{this.training.title}}"
             @year={{this.year}}
+            @minYear={{2008}}
+            @skipPandemic={{true}}
             @onChange={{action (mut this.year)}} />
+
 {{#if this.enrollments}}
-<p class="mt-4">
-  <a href="#email-list-link" >Jump to email list</a>
-</p>
+  <p>
+    <a href="#email-list-link">Jump to email list</a>
+  </p>
 {{/if}}
-Showing {{pluralize this.enrollments.length "student"}}
+Showing {{pluralize this.enrollments.length "trainee"}}
 <table class="table table-sm table-width-auto table-striped table-width-auto">
   <thead>
   <tr>

@@ -1,5 +1,9 @@
-<YearSelect @title="Untrained People Report for {{this.training.title}}" @year={{this.year}}
+<YearSelect @title="Untrained People Report for {{this.training.title}}"
+            @year={{this.year}}
+            @minYear={{2008}}
+            @skipPandemic={{true}}
             @onChange={{action (mut this.year)}} />
+
 <p>
   This report has two sections:
 <ol>
