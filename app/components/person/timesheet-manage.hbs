@@ -36,7 +36,16 @@
             {{#if ts.off_duty}}
               {{shift-format ts.on_duty ts.off_duty}}
             {{else}}
-              {{shift-format ts.on_duty}} to <i>still on duty</i>
+              {{shift-format ts.on_duty}}
+            {{/if}}
+            {{#if ts.isTooShort}}
+              <div class="text-danger">
+                Entry might be too short.
+              </div>
+            {{else if ts.isTooLong}}
+              <div class="text-danger">
+                Entry might be too long.
+              </div>
             {{/if}}
           </td>
           <td class="text-end">
@@ -56,7 +65,7 @@
           </td>
           <td>
             {{#if (is-empty ts.off_duty)}}
-              -
+              {{fa-icon "person-walking" color="danger"}} <i class="text-danger">Still On Duty</i>
             {{else if ts.isVerified}}
               <span class="text-success">{{fa-icon "check"}} Verified</span>
             {{else if ts.isUnverified}}
@@ -115,23 +124,30 @@
             @onSubmit={{this.saveEntryAction}}
             as |f|>
       <Modal.body>
-        {{#if this.editEntry.isPending}}
+        {{#if this.editEntry.stillOnDuty}}
+          <UiNotice @type="danger" @icon="hand" @title="Still On Duty">
+            {{@person.callsign}} is still on duty. Please do not touch the entry until the shift has ended.
+          </UiNotice>
+        {{else if this.editEntry.isPending}}
           <UiNotice @type="danger" @icon="arrow-right" @title="Correction Request Review Required">
             Entry has a correction request and needs to be reviewed.
           </UiNotice>
         {{else if this.editEntry.isUnverified}}
           <UiNotice @type="danger" @title="Unverified - No Review Required" @icon="hourglass">
-            Entry needs to be verified by the person. No review action required at this time.
+            No review action required at this time.
+            Verification required by {{@person.callsign}}.
           </UiNotice>
         {{else if this.editEntry.isVerified}}
           <UiNotice @type="success" @icon="check" @title="Entry Verified - No Review Required">
-            Entry was verified on {{shift-format this.editEntry.verified_at}}
-            by {{this.editEntry.verified_person.callsign}}. Review is not needed at this time.
+            Review is not needed at this time.
+            Entry verified on {{shift-format this.editEntry.verified_at}}
+            by {{this.editEntry.verified_person.callsign}}.
           </UiNotice>
         {{else if this.editEntry.isCorrectionApproved}}
-          <UiNotice @type="danger" @title="Correction Approved - Verification Needed / No Review Required" @icon="hourglass">
-            The correction was approved and review is not needed at this time.
-            However, the entry still needs to be verified as correct by {{@person.callsign}}.
+          <UiNotice @type="danger" @title="Verification Needed - No Review Required" @icon="hourglass">
+            Review is not needed at this time.<br>
+            The correction request was approved.
+            However, the correction still needs to be verified by {{@person.callsign}}.
           </UiNotice>
         {{/if}}
 
@@ -147,6 +163,44 @@
         </fieldset>
         <fieldset>
           <legend>Time &amp; Position</legend>
+          <table class="table table-sm table-width-auto">
+            <tbody>
+            <tr class="tr-no-border">
+              <td>Assoc. Shift</td>
+              {{#if this.editEntry.slot}}
+                <td class="text-end">
+                  {{hour-minute-words this.editEntry.slot.duration}}
+                </td>
+                <td class="text-muted">
+                  {{shift-format this.editEntry.slot.begins this.editEntry.slot.ends}}
+                </td>
+                <td class="text-muted">
+                  Slot #{{this.editEntry.slot.id}}
+                </td>
+              {{else}}
+                <td class="text-muted">None found.</td>
+                <td colspan="2">&nbsp;</td>
+              {{/if}}
+            </tr>
+            <tr class="tr-no-border">
+              <td>Entry Duration</td>
+              <td class="text-end">{{this.entryDuration f.model}}</td>
+              <td colspan="2">
+                {{#if this.editEntry.isTooShort}}
+                  <span class="text-danger">
+                    Entry might be too short. Duration is less than 15 minutes.
+                  </span>
+                {{else if this.editEntry.isTooLong}}
+                  <span class="text-danger">
+                  Entry might be too long. Duration is over 1.5x Assoc. Shift's duration.
+                </span>
+                {{else}}
+                  &nbsp;
+                {{/if}}
+              </td>
+            </tr>
+            </tbody>
+          </table>
           {{#if this.canManageTimesheets}}
             <FormRow>
               <f.datetime @name="on_duty"
@@ -166,10 +220,10 @@
                         @options={{this.positionOptions}}
               />
             </FormRow>
-            <FormRow>
+            <FormRow class="mt-3">
               <div class="col-auto">
                 <f.checkbox @name="is_non_ranger"
-                            @label="Non Ranger work entry (don't check if you don't know what this means)"/>
+                            @label="Entry is for a dept volunteer (non-ranger status) - time will not count towards service years"/>
               </div>
             </FormRow>
           {{else}}
@@ -238,7 +292,8 @@
             <LoadingIndicator/>
           {{/if}}
           <div class="ms-auto">
-            <UiButton @type="danger" @onClick={{fn this.showDeleteDialogAction f.model}} @disabled={{this.editEntry.isSaving}}>
+            <UiButton @type="danger" @onClick={{fn this.showDeleteDialogAction f.model}}
+                      @disabled={{this.editEntry.isSaving}}>
               {{fa-icon "trash"}} Delete
             </UiButton>
           </div>
@@ -258,7 +313,7 @@
     <Modal.body>
       {{#if this.deleteEntry.isDirty}}
         You have edited this entry without saving the record first. Do you wish to save the entry
-         before deletion so the edits are retained in the timesheet log?
+        before deletion so the edits are retained in the timesheet log?
       {{else}}
         Are you absolutely sure you want to delete this entry?
       {{/if}}
