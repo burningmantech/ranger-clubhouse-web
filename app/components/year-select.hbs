@@ -1,5 +1,5 @@
 {{#if @subheader}}
-  <div class="h2 mb-2">
+  <div class="h2 mb-4">
     <ChForm::Select @name="year"
                     @value={{@year}}
                     @options={{this.yearOptions}}
@@ -8,7 +8,7 @@
     {{@title}}
   </div>
 {{else}}
-  <h1 class="mb-2">
+  <h1 class="mb-4">
     <ChForm::Select @name="year"
                     @value={{@year}}
                     @options={{this.yearOptions}}

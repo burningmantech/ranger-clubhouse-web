@@ -1,26 +1,31 @@
-<YearSelect @title="Completed {{this.training.title}}" @year={{this.year}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="Completed {{this.training.title}}"
+            @year={{this.year}}
+            @minYear={{2008}}
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}} />
 
 Showing {{pluralize this.slots.length "session"}}
-<table class="table table-hover table-striped table-width-auto">
+<table class="table table-hover table-striped table-width-auto table-sm">
   <thead>
   <tr>
-    <th>Date</th>
-    <th>Description</th>
+    <th>Date / Location</th>
     <th>People</th>
   </tr>
   </thead>
   <tbody>
   {{#each this.slots as |slot idx|}}
     <tr>
-      <td>{{shift-format slot.slot_begins}}</td>
-      <td>{{slot.slot_description}}</td>
+      <td>
+        {{shift-format slot.slot_begins}}<br>
+        {{slot.slot_description}}
+      </td>
       <td>
         <EmailList @people={{slot.people}} @listId="slot-emails{{idx}}"/>
       </td>
     </tr>
   {{else}}
     <tr>
-      <td colspan="3">No students were found to have completed {{this.year}} training.</td>
+      <td colspan="3">No trainees found to have completed {{this.year}} training.</td>
     </tr>
   {{/each}}
   </tbody>

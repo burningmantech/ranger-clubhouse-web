@@ -185,17 +185,31 @@ dl {
 }
 
 ul.nav-tabs {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 
-
-  .nav-link:not(.active) {
-    background-color: #e9ecef;
-    border-bottom: #666;
+  .nav-link {
+    font-weight: bolder;
+    font-size: 0.85rem;
   }
 
-  li {
-    margin-right: 1vw;
-    margin-left: 1vw;
+  .nav-link:not(.active) {
+    border-top: #e9ecef 3px solid;
+    background-color: #e9ecef;
+    border-bottom: #666;
+    color: #3e4348;
+
+    &:hover {
+      color: #0d6efd;
+    }
+  }
+
+  .nav-link.active {
+    border-top: #ff8c00 3px solid;
+    background-color: #f9f9f9;
+  }
+
+  li:not(:first-child) {
+    margin-left: 0.5vw;
   }
 }
 
@@ -206,6 +220,10 @@ ul.nav-tabs {
     .nav-link {
       border-radius: 0;
       border: 1px solid #adb5bd !important;
+    }
+
+    li {
+      margin-left: 0 !important;
     }
   }
 }
