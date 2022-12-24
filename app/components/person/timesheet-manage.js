@@ -3,9 +3,9 @@ import {action} from '@ember/object';
 import {Role} from 'clubhouse/constants/roles';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
-import {cached,tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
-import { isEmpty } from '@ember/utils';
+import {isEmpty} from '@ember/utils';
 import dayjs from 'dayjs';
 
 
@@ -129,7 +129,7 @@ export default class PersonTimesheetManageComponent extends Component {
 
   @cached
   get minDate() {
-     return this._restrictCheck(`${this.args.year}-08-01`);
+    return this._restrictCheck(`${this.args.year}-08-01`);
   }
 
   /**
@@ -140,7 +140,7 @@ export default class PersonTimesheetManageComponent extends Component {
 
   @cached
   get maxDate() {
-     return this._restrictCheck(`${this.args.year}-09-30`);
+    return this._restrictCheck(`${this.args.year}-09-30`);
   }
 
   /**
@@ -181,6 +181,7 @@ export default class PersonTimesheetManageComponent extends Component {
    *
    * @param timesheet
    */
+
   @action
   signoffAction(timesheet) {
     this.ajax.request(`timesheet/${timesheet.id}/signoff`, {method: 'POST'})
@@ -213,6 +214,8 @@ export default class PersonTimesheetManageComponent extends Component {
 
   /**
    * Delete the entry
+   *
+   * @param {boolean} saveFirst - save the model first before deleted (allows comments to be recorded in the audit log)
    */
 
   @action
@@ -251,5 +254,35 @@ export default class PersonTimesheetManageComponent extends Component {
 
   get hasOverlapping() {
     return this.args.timesheets.find((ts) => ts.isOverlapping) !== undefined;
+  }
+
+  /**
+   * Return the duration in hours & minutes. Takes into account invalid or blank dates.
+   *
+   * @param model
+   * @returns {string}
+   */
+
+  entryDuration(model) {
+    if (isEmpty(model.on_duty) || isEmpty(model.off_duty)) {
+      return '-';
+    }
+
+    const start = dayjs(model.on_duty), end = dayjs(model.off_duty);
+    if (!start.isValid() || !end.isValid()) {
+      return '-';
+    }
+
+    const duration = end.diff(start, 's');
+    const minutes = Math.floor((duration / 60) % 60);
+    const hours = Math.floor(duration / 3600);
+
+    let time = `${minutes} min${minutes === 1 ? '' : 's'}`;
+
+    if (hours) {
+      time = `${hours} hour${hours === 1 ? '' : 's'} ${time}`;
+    }
+
+    return time;
   }
 }
