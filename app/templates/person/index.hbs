@@ -1,7 +1,27 @@
+{{#if
+  (or this.person.isSuspended this.person.isResigned this.person.isDeceased this.person.isUberBonked this.person.isDismissed)}}
+  <UiNotice @icon="ban"
+            @type="danger"
+            @title="Account has status {{this.person.status}} and may not be logged into.">
+    For more information, contact the Personnel Manager: {{mail-to (config "PersonnelEmail")}}
+  </UiNotice>
+{{else if this.person.needsBpguid}}
+  <UiNotice @icon="hand-point-right" @title="Missing BPGUID" @type="danger">
+    <p>
+      Account does not have a Burner Profile ID (BPGUID) on file. Signups and ticketing are disabled.
+    </p>
+    Contact the Volunteer Coordinators at {{vc-email}} for assistance with obtaining a BPGUID.
+  </UiNotice>
+{{/if}}
+
 {{#if this.person.is_bouncing}}
-  <div class="h4 person-manage-info text-danger">
-    {{fa-icon "bell"}} Email address has been reported as bouncing.
-  </div>
+  <UiNotice @title="Email Bouncing" @type="danger" @icon="envelope">
+    <p>
+      The email address has been reported as bouncing. The inbox might be full, the person's email server is experiencing
+      issues, or the address is no longer valid.
+    </p>
+    Contact the Ranger Tech Ninjas at {{admin-email}} for assistance.
+  </UiNotice>
 {{/if}}
 {{#if this.person.unread_message_count}}
   <p>
@@ -88,9 +108,9 @@
 
 {{#if this.editCertifications}}
   <Person::CertificationsForm @personCertifications={{this.personCertifications}}
-                    @onSave={{this.saveCertificationsAction}}
-                    @onCancel={{this.cancelCertificationsAction}}
-                    @isSaving={{this.isSavingCertifications}} />
+                              @onSave={{this.saveCertificationsAction}}
+                              @onCancel={{this.cancelCertificationsAction}}
+                              @isSaving={{this.isSavingCertifications}} />
 
 {{/if}}
 

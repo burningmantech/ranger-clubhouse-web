@@ -1,10 +1,10 @@
 {{#if this.hasNewVersion}}
   <div class="alert alert-secondary text-center p-1 m-0">
-    <p class="mb-2">
+    <p>
       Hey! The Ranger Tech Ninjas have been busy hammering the bits and bytes.<br>
       A new version of the Clubhouse is available.<br>
       Click "Reload" to update to the latest version.
     </p>
-    <UiButton @type="danger" @onClick={{this.reload}}>Reload</UiButton>
+    <UiButton @onClick={{this.reload}}>Reload</UiButton>
   </div>
 {{/if}}

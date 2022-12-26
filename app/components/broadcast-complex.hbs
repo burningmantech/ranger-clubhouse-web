@@ -102,7 +102,7 @@
   <BroadcastCandidatesTable @people={{this.people}} />
 {{else}}
   {{#if this.noPeople}}
-    <UiNotice @type="danger">
+    <UiNotice @title="None Found" @icon="magnifying-glass" @type="danger">
       No accounts were found matching the criteria.
     </UiNotice>
   {{/if}}

@@ -59,7 +59,7 @@ module('Acceptance | login', function (hooks) {
     // Should stay on the login page
     assert.strictEqual(currentURL(), '/login', 'stay on the login page');
     // And there should be a flash modal with login error
-    assert.dom('.notice-title').hasText(/Login has been disabled/);
+    assert.dom('.notice-title').hasText(/Login disabled/);
     assert.strictEqual(document.title, 'Login | Ranger Clubhouse');
   });
 
