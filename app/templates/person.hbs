@@ -12,7 +12,7 @@
       <s.link @route="person.personal-info" @title="Personal Info" @icon="home" @iconType="s"/>
     {{/if}}
     {{#if (has-role "admin" "manage")}}
-      <s.link @route="person.emergency-contact" @title="Emergency Contact" @icon="exclamation" @iconType="s"/>
+      <s.link @route="person.emergency-contact" @title="Emergency Contact" @icon="comment-medical" @iconType="s"/>
     {{/if}}
     {{#if (has-role "admin" "vc" "mentor")}}
       <s.link @route="person.mentors" @title="Mentors" @icon="users" @iconType="s"/>
@@ -82,21 +82,6 @@
         <a href {{action this.switchToHQ}}>Switch to HQ Window</a>
       </div>
     </div>
-    {{#if
-      (or this.person.isSuspended this.person.isResigned this.person.isDeceased this.person.isUberBonked this.person.isDismissed)}}
-      <UiNotice @icon="ban"
-                @type="danger"
-                @title="Account has status {{this.person.status}} and may not be logged into.">
-        For more information, contact the Personnel Manager: {{mail-to (config "PersonnelEmail")}}
-      </UiNotice>
-    {{else if this.person.needsBpguid}}
-      <UiNotice @icon="hand-point-right" @type="danger">
-        <p>
-          Account does not have a Burner Profile ID (BPGUID) on file. Signups and ticketing are disabled.
-        </p>
-        Contact the Volunteer Coordinators at {{vc-email}} for assistance with obtaining a BPGUID.
-      </UiNotice>
-    {{/if}}
   </div>
 
   {{#if this.person.message}}

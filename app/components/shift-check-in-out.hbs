@@ -66,21 +66,16 @@
     One or more timesheet entries has to be verified before a shift can be started.
   {{else}}
     {{#unless this.isPersonDirtTrained}}
-      <div class="text-danger font-weight-bold mb-2">
-        <div class="d-flex">
-          <div class="my-auto me-2 d-inline-block">{{fa-icon "exclamation-circle" size="2x"}}</div>
-          <div class="my-auto d-inline-block">
-            {{@person.callsign}} should not start a shift because
-            {{if this.otOnly "the Online Course" "an In-Person Training"}}
-            has not been completed. Check with the HQ Short or HQ Lead if this is an error.
+      <UiNotice @title="Work Eligibility Issue" @icon="hand" @type="danger">
+        {{@person.callsign}} should not start a shift because
+        {{if this.otOnly "the Online Course" "an In-Person Training"}}
+        has not been completed. Check with the HQ Short or HQ Lead if this is an error.
+        {{#if this.userCanForceCheckIn}}
+          <div class="mt-2">
+            You have the privileges to force a shift start.
           </div>
-        </div>
-      </div>
-      {{#if this.userCanForceCheckIn}}
-        <p>
-          You have the privileges to force a shift start.
-        </p>
-      {{/if}}
+        {{/if}}
+      </UiNotice>
     {{/unless}}
 
     {{#if (and this.isPersonDirtTrained @imminentSlots)}}

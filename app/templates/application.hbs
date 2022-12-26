@@ -7,11 +7,11 @@
     <SearchItemBar/>
   {{/if}}
   {{#if this.groundHogDayTime}}
-    <div class="alert alert-success text-center p-2 m-0">
-      <b>Training Server - Simulated Time {{dayjs-format this.groundHogDayTime "dddd, MMMM Do YYYY @ HH:mm"}}</b>
+    <div class="h4 text-bg-success text-center p-2 m-0">
+      Training Server - Simulated Time {{dayjs-format this.groundHogDayTime "dddd, MMMM Do YYYY @ HH:mm"}}
     </div>
   {{else if this.session.isStaging}}
-    <div class="h4 alert alert-light-red text-center p-2 m-0">
+    <div class="h4 text-bg-danger text-center p-2 m-0">
       You are on the Staging Server used for testing. THIS IS NOT THE PRODUCTION SERVER.
     </div>
   {{/if}}

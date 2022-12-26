@@ -14,8 +14,10 @@
 {{/unless}}
 
 {{#if (gt this.person.unread_message_count 0)}}
-  <UiNotice @type="success" @icon="envelope">
-    {{pluralize this.person.unread_message_count "unread Clubhouse message"}}.
+  <UiNotice @title="Unread Message(s)" @type="success" @icon="envelope">
+    <p>
+      {{this.person.callsign}} has {{pluralize this.person.unread_message_count "unread Clubhouse message"}}.
+    </p>
     <LinkTo @route="hq.messages" class="btn btn-success">Read Now</LinkTo>
   </UiNotice>
 {{/if}}
@@ -190,13 +192,11 @@
   </:title>
   <:body>
     {{#unless this.personEvent.asset_authorized}}
-      <h4 class="text-danger">{{fa-icon "exclamation-triangle"}} Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE
-        RADIOS</h4>
-      <p>
+      <UiNotice @title="Do Not Issue Radios or Gear" @type="danger" @icon="ban">
+        The Radio Checkout Agreement has not been signed.
         Direct {{this.person.callsign}} to the kiosk shack, so they can log in into the Clubhouse, review and sign
         the agreement.
-      </p>
-
+      </UiNotice>
     {{/unless}}
     {{#unless this.eventInfo.radio_info_available}}
       <UiNotice @type="warning" @icon="exclamation">
