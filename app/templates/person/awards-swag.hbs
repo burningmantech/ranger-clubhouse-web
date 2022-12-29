@@ -1,4 +1,4 @@
-<h3>Swag (Shirts, Service Pins &amp; Patches) &amp; Clubhouse Awards for {{this.person.callsign}}</h3>
+<h3>Swag (Shirts, Service Pins &amp; Patches) and Clubhouse Awards for {{this.person.callsign}}</h3>
 
 <UiTab class="mt-4" as |tab|>
   <tab.pane @title="Swag">
@@ -7,6 +7,7 @@
       <UiButton @onClick={{fn this.newSwag "long-sleeve"}}>{{fa-icon "shirt"}} Long Sleeve Shirt</UiButton>
       <UiButton @onClick={{fn this.newSwag "dept-pin"}}>{{fa-icon "map-pin"}} Ranger Pin</UiButton>
       <UiButton @onClick={{fn this.newSwag "dept-patch"}}>{{fa-icon "medal"}} Ranger Patch</UiButton>
+      <UiButton @onClick={{fn this.newSwag "org-pin"}}>{{fa-icon "location-dot"}} Org Pin</UiButton>
       <UiButton @onClick={{fn this.newSwag "other"}}>{{fa-icon "star"}} Other Swag</UiButton>
     </p>
     Showing {{pluralize this.personSwag.length "item"}}
@@ -37,14 +38,18 @@
             </UiButton>
           </td>
         </tr>
+      {{else}}
+      <tr>
+        <td colspan="5" class="text-danger">No swag has been recorded yet.</td>
+      </tr>
       {{/each}}
       </tbody>
     </table>
 
     {{#if this.swagEntry}}
-      <ModalDialog as |Modal|>
+      <ModalDialog @size="xl" @onEscape={{this.cancelSwag}} as |Modal|>
         <ChForm @formFor={{this.swagEntry}} @formId="person_swag" @onSubmit={{this.saveSwag}} as |f|>
-          <Modal.title>{{if this.swapEntry.isNew "Record" "Edit"}} Swag</Modal.title>
+          <Modal.title>{{if this.swagEntry.isNew "Record" "Edit"}} Swag</Modal.title>
           <Modal.body>
             <h3 class="mb-3">{{this.swagTitle}}</h3>
             <FormRow>
