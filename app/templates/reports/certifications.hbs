@@ -1,0 +1,73 @@
+<main>
+  <h1>Certifications Report</h1>
+  <p>
+    This report shows any certifications held by individuals.
+  </p>
+
+  <ChForm @formId="certificationsForm"
+          @formFor={{this.certificationsForm}}
+          @changeSet={{false}}
+          @onSubmit={{this.searchCertificationsAction}}
+          as |f|>
+    <FormRow>
+      <f.checkboxGroup @name="certificationIds"
+                       @label="Certifications:"
+                       @options={{this.certificationOptions}}
+                       @inline={{true}}
+                       @cols={{4}} />
+    </FormRow>
+    <f.submit @label="Submit" @disabled={{this.isSubmitting}}/>
+    {{#if this.isSubmitting}}
+      <LoadingDialog/>
+    {{/if}}
+    {{#if (and this.haveResults (not this.people))}}
+      <p class="text-danger">No people were found who matched the criteria.</p>
+    {{/if}}
+  </ChForm>
+
+  {{#if (and this.haveResults this.people)}}
+    <UiSection class="mt-4">
+      <:title>
+        Found {{pluralize this.people.length "person"}}
+      </:title>
+      <:body>
+        <p>
+          <UiButton @onClick={{this.exportToCSV}} @type="secondary" @size="sm">Export to CSV</UiButton>
+        </p>
+        <table class="table table-sm table-striped table-width-auto">
+          <thead>
+          <tr>
+            <th>Callsign</th>
+            <th>Status</th>
+            <th>Name</th>
+            {{#each this.certificationsHeader as |cert|}}
+              <th class="text-center">{{cert.title}}</th>
+            {{/each}}
+          </tr>
+          </thead>
+
+          <tbody>
+          {{#each this.people as |person|}}
+            <tr>
+              <td>
+                <PersonLink @person={{person}} />
+              </td>
+              <td>{{person.status}}</td>
+              <td>{{person.first_name}} {{person.last_name}}</td>
+              {{#each person.certifications as |pc|}}
+                <td class="text-center">
+                  {{#if pc.held}}
+                    {{pc.title}}
+                  {{else}}
+                    -
+                  {{/if}}
+                </td>
+              {{/each}}
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </:body>
+    </UiSection>
+  {{/if}}
+</main>

@@ -7,8 +7,8 @@
 .timesheet-table {
   margin-bottom: 10px;
   max-width: 850px;
- // font-family: $font-family-monospace;
-  font-size: 0.8rem;
+  // font-family: $font-family-monospace;
+  //font-size: 0.9em;
 }
 
 .timesheet-header {
@@ -32,12 +32,12 @@
 }
 
 .timesheet-entry:hover {
-    background-color: $table-hover-bg;
+  background-color: $table-hover-bg;
 }
 
 .timesheet-row > div {
-    display: inline-block;
-    padding: 5px 7px;
+  display: inline-block;
+  padding: 5px 7px;
 }
 
 .timesheet-actions {
@@ -52,9 +52,9 @@
 }
 
 
-@media print,  (min-width: map-get($grid-breakpoints, "lg")) {
+@media print, (min-width: map-get($grid-breakpoints, "lg")) {
   .timesheet-time {
-    width: 35%;
+    width: 30%;
   }
 
   .timesheet-duration {
@@ -77,15 +77,17 @@
 }
 
 @media only screen and (max-width: map-get($grid-breakpoints, "lg")) {
-  .timesheet-row button {
-//    font-size: 0.9em;
-    display: inline-block;
-    width: 49% !important;
+  .timesheet-row {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    flex-shrink: 1;
   }
 
-  .timesheet-actions {
-    width: 100%;
-    padding: 5px;
+  .timesheet-row button {
+    //    font-size: 0.9em;
+    display: inline-block;
+    width: 49% !important;
   }
 
   .timesheet-header {
@@ -93,28 +95,35 @@
   }
 
   .timesheet-time {
-    width: 49%;
+    order: 1;
+    width: 100%;
+  }
+
+  .timesheet-position {
+    order: 2;
+    width: 100%;
   }
 
   .timesheet-duration {
+    order: 3;
     width: 49%;
   }
 
   .timesheet-credits {
+    order: 4;
     width: 49%;
   }
 
   .timesheet-description {
-    width: 49%;
-  }
-
-  .timesheet-long-description {
+    order: 5;
     width: 100%;
   }
 
-  .timesheet-signups {
+  .timesheet-actions {
     width: 100%;
+    padding: 5px;
   }
+
 
   .timesheet-sm-label {
     display: inline-block;

@@ -27,13 +27,11 @@ import {
   URGENT,
   WAITING
 } from "clubhouse/constants/dashboard";
+import {NON_RANGER} from 'clubhouse/constants/person_status';
+import TicketPackage from 'clubhouse/utils/ticket-package';
 
 function indefiniteArticle(noun) {
   return (noun.match(/^[aeiou]/i) ? `an ${noun}` : `a ${noun}`);
-}
-
-function otName(milestones) {
-  return milestones.online_training_only ? 'Online Course' : 'The Online Training Course';
 }
 
 /*
@@ -102,13 +100,14 @@ export const UPLOAD_PHOTO = {
         if (!photo.upload_enabled) {
           return {
             result: WAITING,
-            message: 'Photo uploading is not available at this time. Check back later.',
+            message: 'Photo uploading is not available at this time. Contact the Volunteer Coordinators for help.',
+            email: 'VCEmail'
           }
         }
         return {result: ACTION_NEEDED, isPhotoStep: true};
       case 'submitted':
       case 'approved':
-        return {result: isPNV ? COMPLETED : SKIP, isPhotoStep: (photo.photo_status === 'approved')};
+        return {result: isPNV ? COMPLETED : SKIP, isPhotoStep: (photo.photo_status !== 'approved')};
       default:
         return {
           result: NOT_AVAILABLE,
@@ -128,7 +127,6 @@ export const PHOTO_APPROVAL = {
         return {
           result: WAITING,
           message: 'The photo is being reviewed. Usually photos are approved within 2 to 3 days.',
-          isPhotoStep: true
         };
       case 'missing':
         if (isPNV) {
@@ -174,18 +172,26 @@ export const VERIFY_TIMESHEETS = {
     let message;
 
     if (timesheets_unverified) {
-      message = `${timesheets_unverified} timesheet ${timesheets_unverified === 1 ? 'entry' : 'entries'} needs to be verified.`;
+      message = `<p>${timesheets_unverified} timesheet ${timesheets_unverified === 1 ? 'entry' : 'entries'} needs to be verified.</p>`;
     } else {
       message = '';
     }
+
+    if (milestones.period === 'after-event') {
+      message += '<p class="text-danger">You will not be recorded as having worked in 2022 until you review your timesheet entries, ' +
+        ' submit any corrections, and confirm your entire timesheet is correct on the Me &gt; Timesheet Corrections page.</p> ' +
+        '<p><b class="text-danger">Deadline to do so is 23:59 Pacific on Saturday, October 1st.</b></p>';
+    }
+
     return {
       result: ACTION_NEEDED,
       route: 'me.timesheet-corrections',
       linkedMessage: {
         route: 'me.timesheet-corrections',
-        prefix: message + ' Visit',
+        prefix: htmlSafe(message + ' Visit'),
         text: 'Me > Timesheet Corrections',
-        suffix: 'to verify your timesheet entries, submit corrections, and confirm all entries are correct.'
+        suffix: 'to verify your timesheet entries, submit corrections, and confirm the entire timesheet is correct.'
+
       }
     };
   }
@@ -194,33 +200,52 @@ export const VERIFY_TIMESHEETS = {
 export const VERIFY_PERSONAL_INFO = {
   skipPeriod: AFTER_EVENT,
   name: 'Review and Update Personal Information',
-  check({milestones}) {
+  check({milestones, person, isPNV}) {
     if (milestones.has_reviewed_pi) {
       return {result: COMPLETED};
     }
 
+    let shirtNag = '', result = ACTION_NEEDED, doTheThing = '', immediate = false;
+
+    if (!isPNV) {
+      const isNonRanger = (person.status === NON_RANGER);
+      // javascript dates start from zero (meh). If it's June or later, crank up the annoyance dial.
+      doTheThing = 'You have not verified your personal information and/or Ranger shirt sizes yet.';
+      if (!isNonRanger && (new Date()).getMonth() >= 5) {
+        immediate = true;
+        result = URGENT;
+        doTheThing = `<b class="text-danger">${doTheThing}</b>`;
+      }
+      doTheThing = `<p>${doTheThing}</p>`;
+      if (!isNonRanger) {
+        shirtNag = ' <b>BE SURE TO CONFIRM YOUR RANGER SHIRT SIZES ARE CORRECT.</b>';
+      }
+    }
+
     return {
-      result: ACTION_NEEDED,
+      result,
       route: 'me.personal-info',
+      immediate,
       linkedMessage: {
         route: 'me.personal-info',
-        prefix: 'Visit',
+        prefix: htmlSafe(doTheThing + 'Visit'),
         text: 'Me > Personal Info',
-        suffix: 'and click the Update button at the bottom of the page to save your changes ' +
-          'or to verify that the existing information is correct.',
+        suffix: htmlSafe('and click the Update button at the bottom of the page to save your changes ' +
+          'or to verify that the existing information is correct.' + shirtNag),
       },
     };
   }
 };
 
 export const ONLINE_TRAINING = {
-  //name: 'Read the Ranger Manual & Complete The Online Training Course',
+  //name: 'Read the Ranger Manual & Complete The Online Course',
   skipPeriod: AFTER_EVENT,
   check({milestones, isPNV, prevCompleted}) {
-    let name = `Read the Ranger Manual & Complete ${otName(milestones)}`;
+    let name = `Read the Ranger Manual & Complete The Online Course`;
     if (milestones.online_training_passed) {
       return {
         result: COMPLETED,
+        isOnlineTraining: true,
         name
       };
     }
@@ -229,25 +254,26 @@ export const ONLINE_TRAINING = {
       // Don't tell them to read the ranger manual until online training is available.
       return {
         result: WAITING,
-        message: `${otName(milestones)} is not quite ready yet and usually not available until late March. Watch the Ranger Announce mailing list for a message on when the course will be opened.`,
-        name: `Complete ${otName(milestones)}`
+        message: `The Online Course is not quite ready yet and usually not available until late March. Watch the Ranger Announce mailing list for a message on when the course will be opened.`,
+        name: `Complete The Online Course`
       }
     }
 
     if (isPNV && !prevCompleted) {
       return {
         result: NOT_AVAILABLE,
-        message: 'You must complete the previous steps before being allowed to take the Online Training Course.',
+        message: 'You must complete the previous steps before being allowed to take the Online Course.',
         name
       };
     }
 
-    const duration = milestones.needs_full_training ? 'up to 90 minutes or more' : 'around 30 to 45 minutes';
+    //const duration = milestones.needs_full_online_course ? 'up to 90 minutes or more' : 'around 30 to 45 minutes';
+    const duration = 'up to 90 minutes or more';
 
     return {
       result: ACTION_NEEDED,
       message: htmlSafe('<p>The Ranger Manual can be found at <a href="' + config('RangerManualUrl') + '" rel="noopener noreferrer" target="_blank">rangers.burningman.org</a>.</p>' +
-        `<p>The Online Training Course will take ${duration} to complete. </p> <p>Note: it may take up to 20 minutes or more for the Clubhouse to record your course completion.</p>`),
+        `<p>The Online Course will take ${duration} to complete. </p> <p>Note: it may take up to 20 minutes or more for the Clubhouse to record your course completion.</p>`),
       isOnlineTraining: true,
       name
     };
@@ -259,7 +285,7 @@ export const SIGN_UP_FOR_TRAINING = {
   skipPeriod: AFTER_EVENT,
   check({milestones, isPNV, isAuditor}) {
     if (milestones.online_training_only) {
-      return { result: SKIP };
+      return {result: SKIP};
     }
 
     if (milestones.training.status !== 'no-shift') {
@@ -267,7 +293,7 @@ export const SIGN_UP_FOR_TRAINING = {
     }
 
     if (!milestones.online_training_passed) {
-      let message = 'You need to complete the Online Training Course first before being allowed to sign up for In-Person Training.';
+      let message = 'You need to complete the Online Course first before being allowed to sign up for In-Person Training.';
       if (!milestones.trainings_available) {
         message += ' Note: the In-Person Training schedule is not opened until mid to late April.'
       }
@@ -310,7 +336,7 @@ export const ATTEND_TRAINING = {
   skipPeriod: AFTER_EVENT,
   check({milestones, person, isPNV, isAuditor}) {
     if (milestones.online_training_only) {
-      return { result: SKIP };
+      return {result: SKIP};
     }
 
     if (!milestones.online_training_passed || milestones.training.status === 'no-shift') {
@@ -402,7 +428,7 @@ export const TAKE_STUDENT_SURVEY = {
   check({milestones}) {
     if (milestones.surveys.sessions.length > 0) {
       return {
-        result: ACTION_NEEDED,
+        result: OPTIONAL,
         message: 'Please take a moment to provide feedback on your In-Person Training experience:',
         survey: 'student'
       };
@@ -416,15 +442,16 @@ export const SIGN_UP_FOR_SHIFTS = {
   name: 'Sign up for shifts',
   skipPeriod: AFTER_EVENT,
 
-  check({milestones, isPNV, isAuditor}) {
+  check({milestones, isPNV, isAuditor, person}) {
+    const isNonRanger = (person.status === NON_RANGER);
     if (!milestones.online_training_passed && (isAuditor || isPNV)) {
       return {
         result: NOT_AVAILABLE,
-        message: `You need to complete ${otName(milestones)} first before being allowed to sign up shifts.`
+        message: `You need to complete the Online Course first before being allowed to sign up shifts.`
       };
     }
 
-    if (!milestones.dirt_shifts_available) {
+    if (!milestones.dirt_shifts_available && !isNonRanger) {
       return {
         result: NOT_AVAILABLE,
         message: 'The full Ranger schedule is posted by the first or second week in July. Watch the Announce mailing list for a message on when the schedule will open.',
@@ -509,10 +536,9 @@ export const SIGN_MOTORPOOL_AGREEMENT = {
       route: 'me.agreements.index',
       linkedMessage: {
         route: 'me.agreements.index',
-        prefix: 'The Ranger motorpool is a relatively limited resource. Vehicles are assigned by Shift Command, according to the needs of that shift.\n' +
-          'If needed, are you comfortable driving a Ranger gator, golf cart, or UTV while on shift? Visit',
+        prefix: 'Ranger vehicles are a limited resource and issued based on availability. Vehicles are assigned according to operational need rather than convenience. Visit',
         text: 'Me > Agreements',
-        suffix: 'to review and agree to the Motorpool Policy.'
+        suffix: 'to review and agree to the Ranger Motor-Pool Policy, which is required to drive a golf cart or UTV ("gator")'
       },
     };
   }
@@ -583,4 +609,169 @@ export const SIGN_RADIO_CHECKOUT_AGREEMENT = {
   }
 };
 
+function usingTicket(t) {
+  return (t && (t.isClaimed || t.isSubmitted));
+}
 
+
+function buildTickets(milestones, personId, house) {
+  const claimed = [];
+
+  const pkg = new TicketPackage(milestones.ticketing_package, personId, house);
+
+  pkg.tickets.forEach((t) => {
+    if (t.isClaimed || t.isSubmitted) {
+      claimed.push(t);
+    }
+  });
+
+  if (usingTicket(pkg.vehiclePass)) {
+    claimed.push(pkg.vehiclePass);
+  }
+
+  if (usingTicket(pkg.wap)) {
+    claimed.push(pkg.wap);
+  }
+
+  pkg.wapso.forEach((so) => claimed.push(so));
+
+  return {
+    claimed,
+    bankedCount: pkg.accessDocuments.filter((ad) => ad.isBanked).length,
+    qualifiedCount: pkg.tickets.filter((a) => a.isQualified).length,
+    notCriticalCount: pkg.accessDocuments.filter((ad) => ( ad.isQualified && (ad.isWAP || ad.isVehiclePass))).length,
+    // noAddress: !pkg.haveAddress,
+    noAddress: false,
+    provisionItems: !pkg.provisionsBanked ? pkg.provisionItems : null,
+    notFinished: pkg.started_at && !pkg.finished_at,
+  };
+}
+
+export const TICKETING_OPEN = {
+  name: 'Claim Tickets, Vehicle Passes, and Work Access Passes',
+  skipPeriod: AFTER_EVENT,
+  check({milestones, person, house}) {
+    const period = milestones.ticketing_period;
+
+    if (period !== 'open' || !milestones.ticketing_package) {
+      return {result: SKIP};
+    }
+
+    const tickets = buildTickets(milestones, person.id, house);
+
+    if (tickets.qualifiedCount) {
+      return {
+        result: ACTION_NEEDED,
+        route: 'me.tickets',
+        immediate: (tickets.qualifiedCount || tickets.noAddress || tickets.notFinished),
+        isTicketing: true,
+        ticketingOpen: true,
+        tickets
+      };
+    }
+
+    // stuff has been claimed..
+    return {
+      result: COMPLETED,
+      route: 'me.tickets',
+      isTicketing: true,
+      ticketingOpen: true,
+      tickets,
+      immediate: false, // move it down
+    };
+  }
+};
+
+export const TICKETING_CLOSED = {
+  name: 'Ticketing has closed',
+  period: BEFORE_EVENT,
+  check({milestones, house, person}) {
+    if (milestones.ticketing_period !== 'closed' || !milestones.ticketing_package) {
+      return {result: SKIP};
+    }
+
+    return {
+      result: NOT_AVAILABLE,
+      isTicketing: true,
+      isTicketingClosed: true,
+      tickets: buildTickets(milestones, person.id, house),
+    };
+  }
+};
+
+export const VEHICLE_REQUESTS = {
+  name: 'Submit Personal Vehicle Request(s)',
+  skipPeriod: AFTER_EVENT,
+  check({milestones}) {
+    if (!milestones.vehicle_requests_allowed) {
+      return {result: SKIP};
+    }
+
+    const vr = milestones.vehicle_requests;
+    if (vr.find((r) => r.status === 'approved')) {
+      return {
+        result: COMPLETED,
+        linkedMessage: {
+          route: 'me.vehicles',
+          prefix: 'Your vehicle request has been approved. Visit',
+          text: 'Me > Vehicle Requests',
+          suffix: 'for details.'
+        }
+      };
+    } else if (vr.find((r) => r.status === 'pending')) {
+      return {
+        result: WAITING,
+        linkedMessage: {
+          route: 'me.vehicles',
+          prefix: 'Your vehicle request is pending review. Visit',
+          text: 'Me > Vehicle Requests',
+          suffix: 'to adjust or delete your request.'
+        }
+      };
+
+    } else if (vr.find((r) => r.status === 'rejected')) {
+      return {
+        result: URGENT,
+        linkedMessage: {
+          route: 'me.vehicles',
+          prefix: 'Your vehicle request has been denied. Visit',
+          text: 'Me > Vehicle Requests',
+          suffix: 'for details.'
+        }
+      };
+    } else {
+      return {
+        result: ACTION_NEEDED,
+        linkedMessage: {
+          route: 'me.vehicles',
+          prefix: 'You have been approved to submit vehicle requests and reauthorizations for driving stickers and other items. Visit',
+          text: 'Me > Vehicle Requests',
+          suffix: 'to submit a request.'
+        }
+      };
+    }
+  }
+};
+
+// Step is required in all dashboard periods.
+export const SIGN_NDA = {
+  name: 'Sign the Sensitive Data Access and Use Policy Agreement',
+  immediate: true,
+  check({milestones}) {
+    if (!milestones.nda_required) {
+      // Don't worry about it if not required or already signed.
+      return {result: SKIP};
+    }
+
+    return {
+      result: URGENT,
+      route: 'me.agreements.index',
+      linkedMessage: {
+        route: 'me.agreements.index',
+        prefix: htmlSafe('Starting late 2022, all Clubhouse users who have been granted either the Login Management Year Round or On Playa roles are required EACH CALENDAR YEAR to review and agree to the Sensitive Data Access and Use Policy document. <b class="text-danger">Your privileges are suspended until the document is agreed to.</b><br><br> Visit'),
+        text: 'Me > Agreements',
+        suffix: 'to review and agree to the document.'
+      },
+    };
+  }
+};

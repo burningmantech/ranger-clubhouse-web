@@ -1,10 +1,9 @@
-<div class="autocomplete-input-block">
+<div class="autocomplete-input-block" {{did-insert this.wrapperBlockInserted}}>
   <div class="input-group">
     {{#if @modeOptions}}
       <BsDropdown @htmlTag="" as |dd|>
         <dd.button class="btn-light-gray">{{this.modeText}} <span class="caret"></span></dd.button>
         <dd.menu as |menu|>
-
           {{#each @modeOptions as |opt|~}}
             <menu.item>
               <a class="dropdown-item" href {{on "click"(fn this.selectModeEvent opt.value dd.closeDropdown)}}>
@@ -25,15 +24,15 @@
       {{on "blur" this.blurEvent}}
       {{on "input" this.inputEvent}}
       {{did-insert this.inputInsertElement}}
-           autocomplete="off"
            spellcheck="false"
+           ...attributes
     />
     {{~#if @appendSearchIcon~}}
       <span class="input-group-text">{{fa-icon "search"}}</span>
     {{~/if~}}
   </div>
   {{#if (and this.isFocused (or this.isSearching this.noResultsFound this.options))}}
-    <div class="autocomplete-results-box mt-1 border rounded"
+    <div class="autocomplete-results-box autocomplete-results-box-overlay mt-1 border rounded"
       {{did-insert this.resultsBoxInsertedEvent}}
       {{will-destroy this.resultsBoxDestroy}}
     >
@@ -50,7 +49,7 @@
                data-result-id={{idx}}
                role="link"
             {{on "click" (fn this.clickSelection opt)}}
-            {{!template-lint-disable no-down-event-binding}}
+            {{!template-lint-disable no-pointer-down-event-binding}}
             {{on "mousedown" (fn this.clickSelection opt)}}
           >
             {{~yield opt~}}

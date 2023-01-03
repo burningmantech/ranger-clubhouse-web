@@ -21,6 +21,9 @@ export default class SlotModel extends Model {
   @attr('', {readOnly: true}) position;
   @attr('', {readOnly: true}) trainer_slot;
 
+  @attr('string', {defaultValue: 'America/Los_Angeles'}) timezone;
+  @attr('string', {readOnly: true}) timezone_abbr;
+
   @tracked selected; // Used to administer slots
 
   get slotDay() {
@@ -47,5 +50,9 @@ export default class SlotModel extends Model {
   get trainer_slot_title() {
     const trainer = this.trainer_slot;
     return (trainer && trainer.position) ? trainer.position.title : `Position #${this.trainer_slot_id}`;
+  }
+
+  get isNonPacific() {
+    return this.timezone_abbr !== 'PST' && this.timezone_abbr !== 'PDT';
   }
 }

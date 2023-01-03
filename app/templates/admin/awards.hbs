@@ -1,0 +1,90 @@
+<main>
+  <h1>Ranger Awards</h1>
+  <p>
+    Awards are digital recognitions shown on the Me > Awards page.
+  </p>
+  <p>
+    <UiButton @onClick={{this.newAward}}>{{fa-icon "plus"}} New Award</UiButton>
+  </p>
+  <table class="table table-sm table-hover table-striped table-width-auto">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>&nbsp;</th>
+      <th>Title</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.awards as |award|}}
+      <tr>
+        <td class="text-end">{{award.id}}</td>
+        <td>{{fa-icon award.icon type="fas"}}</td>
+        <td>{{award.title}}</td>
+        <td>{{award.typeLabel}}</td>
+        <td>
+          {{nl2br award.description}}
+        </td>
+        <td>
+          <UiButton @size="sm" @onClick={{fn this.editAward award}}>
+            {{fa-icon "edit"}} Edit
+          </UiButton>
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="6">No awards have been created yet.</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</main>
+{{#if this.entry}}
+  <ModalDialog @title={{if this.entry.isNew "New Award"  "Edit Award"}} @onEscape={{this.cancelAward}} as |Modal|>
+    <ChForm @formId="award"
+            @formFor={{this.entry}}
+            @validator={{this.awardValidations}}
+            @onSubmit={{this.saveAward}} as |f|>
+      <Modal.body>
+        <FormRow>
+          <f.text @name="title"
+                  @label="Award Title:"
+                  @maxlength={{80}}
+                  @size={{80}}/>
+        </FormRow>
+        <FormRow>
+          <f.select @name="type"
+                    @options={{this.typeOptions}}
+                    @label="Award Type (used to group awards on end-user page)"
+          />
+        </FormRow>
+        <FormRow>
+          <div class="col-auto">
+            <f.radioGroup @name="icon" @label="Icon" @options={{this.iconOptions}} @inline={{true}}/>
+          </div>
+        </FormRow>
+        <FormRow>
+          <f.textarea @name="description"
+                      @label="Award Description (shown to end-user):"
+                      @rows={{4}}
+                      @cols={{80}}
+                      @size={{80}}/>
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
+        <UiCancelButton @onClick={{this.cancelAward}} @disabled={{this.entry.isSaving}} />
+        {{#if this.entry.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+        <div class="ms-auto">
+          <UiButton @onClick={{this.removeAward}} @type="danger" @size="sm">
+            {{fa-icon "trash-alt" type="fas"}} Delete
+          </UiButton>
+        </div>
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}

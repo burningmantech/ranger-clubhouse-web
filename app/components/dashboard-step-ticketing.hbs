@@ -1,35 +1,51 @@
 <div class="mt-1">
-  {{#if @step.tickets.noAddress}}
+  {{#if @step.tickets.notFinished}}
+    <b class="text-danger">Ticketing process is incomplete.</b><br>
+    You started the ticketing process yet did not complete all the steps. You may not be able to attend the event
+    if ticketing was not completed in a timely manner.
+  {{else if @step.tickets.noAddress}}
     <b class="text-danger">A delivery method and/or mailing address is needed.</b><br>
   {{else if @step.tickets.qualifiedCount}}
     <b class="text-danger">Items are still unclaimed and/or have not been banked.</b>
   {{else if @step.tickets.claimed}}
     You have claimed {{pluralize @step.tickets.claimed.length "item"}}:
     <ul>
-      {{#each @step.tickets.claimed as |ticket|}}
+      {{#each @step.tickets.claimed as |item|}}
         <li>
-          {{#if ticket.isWAPSO}}
-            {{pluralize ticket.personCount "Significant Other WAP"}} for: {{ticket.names}}
-          {{else if ticket.isWAP}}
-            A Work Access Pass for yourself
+          {{#if item.isWAPSO}}
+            Significant Other WAP for: <i>{{item.name}}</i>
+          {{else if item.isWAP}}
+            Work Access Pass for yourself
           {{else}}
-            A {{ticket.typeLabel}} {{if ticket.isStaffCredential "which is also your WAP"}}
+            {{item.typeLabel}} {{if item.isStaffCredential "which is also your WAP"}}
           {{/if}}
         </li>
       {{/each}}
     </ul>
   {{else}}
-    <span class="text-danger">No items have been claimed.</span>
+    <span class="text-danger">No tickets have been claimed.</span>
+  {{/if}}
+  {{#if @step.tickets.provisionItems}}
+    <div class="mt-1">
+      The following provisions will be used:
+      <ul>
+        {{#each @step.tickets.provisionItems as |item|}}
+          <li>{{item.name}}</li>
+        {{/each}}
+      </ul>
+    </div>
   {{/if}}
 </div>
 
 {{#if @step.tickets.banked}}
   <div class="mt-1">
-    {{pluralize @step.tickets.banked.length "item"}} {{if (eq @step.tickets.banked.length 1) "is" "are"}} banked.
+    {{pluralize @step.tickets.banked.length "item"}}
+    {{if (eq @step.tickets.banked.length 1) "is" "are"}} banked.
   </div>
 {{/if}}
 <div class="mt-1">
-  Visit <LinkTo @route="me.tickets">Me &gt; Tickets &amp; Stuff</LinkTo>
+  Visit
+  <LinkTo @route="me.tickets">Me &gt; Tickets &amp; Stuff</LinkTo>
   {{#if @step.ticketingOpen}}
     to claim or adjust your item(s).
   {{else}}

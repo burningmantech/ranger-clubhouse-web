@@ -1,8 +1,8 @@
 import { helper } from '@ember/component/helper';
-import { TypeLabels } from 'clubhouse/models/access-document';
+import { TypeLabels, TypeShortLabels} from 'clubhouse/models/access-document';
 
-export function ticketTypeHuman([ type ]) {
-  return TypeLabels[type] || `Unknown Type ${type}`;
+export function ticketTypeHuman([ type ], { short }) {
+  return (short ? TypeShortLabels[type] : TypeLabels[type]) || `Unknown Type ${type}`;
 }
 
 export default helper(ticketTypeHuman);

@@ -6,6 +6,8 @@ export default class ScheduleSlotModel {
   @tracked person_assigned = false;
   @tracked is_overlapping = false;
   @tracked is_training_overlap = false;
+  @tracked overlappingSlots = [];
+  @tracked is_retrieving_people = false;
 
   constructor(data) {
     Object.assign(this, data);
@@ -40,6 +42,10 @@ export default class ScheduleSlotModel {
 
   get isTraining() {
     return (this.position_type === 'Training');
+  }
+
+  get isNotPacific() {
+    return this.slot_tz_abbr !== 'PST' && this.slot_tz_abbr !== 'PDT';
   }
 
   static hydrate(slots, positions) {

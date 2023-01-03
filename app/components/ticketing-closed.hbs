@@ -17,198 +17,22 @@
         traveling companions.
       </p>
       <p>
-        <b>Look for an email with your WAP from Burning Man Ticketing between July 21st and August 8th.</b>
+        <b>Look for an email with your WAP from Burning Man Ticketing between late July and early August.</b>
+        Don't forget to check your spam folder.
       </p>
     </:body>
   </UiSection>
 {{else}}
-  <UiSection>
-    <:title>Ticketing is closed.</:title>
-    <:body>
-      <p>
-        You may not request changes through the Clubhouse at this time.
-      </p>
-
-      {{#if this.hasFullPackage}}
-        Below is a summary of the tickets and/or items you have claimed, banked, and/or submitted for this year's event:
-      {{else}}
-        A summary of your Work Access Pass is below:
-      {{/if}}
-      <ul class="mt-1">
-        {{#if this.hasFullPackage}}
-          <li>
-            {{#if this.ticket}}
-              {{#if (or this.ticket.isStaffCredenital this.usingWillCall)}}
-                <b class="text-success">A {{ticket-type-human this.ticket.type}} will be held at
-                  {{if this.usingStaffCredential "Staff Credentialing" "Will Call"}}.</b><br>
-                The ticket will be under your name "{{@person.first_name}} {{@person.last_name}}".<br>
-                {{#if this.usingStaffCredential}}
-                  Your Staff Credential acts as your WAP.<br>
-                  {{#if this.ticket.access_any_time}}
-                    <b>You may enter the event at any time.</b>
-                  {{else}}
-                    <b>You may enter the event on or any day after {{mdy-format this.ticket.access_date full=true}} @
-                      00:01</b>
-                  {{/if}}
-                {{/if}}
-              {{else}}
-                <b class="text-success">A {{ticket-type-human this.ticket.type}} will be mailed.</b><br>
-                <span class="text-danger">You have until July 26, 2019 to pay for it.</span>
-                <p>
-                  Important: Your ticket will not be mailed to you until you have paid for it in the Burning Man
-                  Ticketing
-                  website. If you do not pay for it by July 26, 2019, the ticket will revert
-                  to being held for you at Will Call.
-                </p>
-                <p>
-                  An email will be sent out soon with instructions on how to pay for your ticket. You will be asked for
-                  a
-                  mailing address when paying for your ticket.
-                </p>
-              {{/if}}
-            {{else if this.ticketNotClaimed}}
-              <b class="text-danger">A ticket has NOT BEEN CLAIMED for this year.</b><br>
-              The ticket(s) will automatically be banked.
-            {{else}}
-              <b>No qualifying, submitted, or banked tickets for this year were found.</b>
-            {{/if}}
-          </li>
-          {{#if this.bankedItems}}
-            <li class="mt-2">
-              {{pluralize this.bankedItems.length "item"}} will be banked:
-              <ul>
-                {{#each this.bankedItems as |item|}}
-                  <li>{{item.typeLabel}} expires after {{mdy-format item.expiry_date}}</li>
-                {{/each}}
-              </ul>
-            </li>
-          {{/if}}
-
-          <li class="mt-2">
-            {{#if this.usingStaffCredential}}
-              {{#if this.usingVehiclePass}}
-                <b class="text-success">A Vehicle Pass will be held at Staff Credentialing.</b><br>
-                The Vehicle Pass will be under your name "{{@person.first_name}} {{@person.last_name}}".
-              {{else}}
-                <span class="text-muted">The Vehicle Pass was not claimed.</span>
-              {{/if}}
-            {{else if this.usingVehiclePass}}
-              {{#if this.usingMail}}
-                <b class="text-success">A Vehicle Pass will be mailed to:</b><br>
-                <p class="mt-2 ms-3">
-                  {{@person.first_name}} {{@person.last_name}}<br>
-                  {{this.address.street}}<br>
-                  {{this.address.city}} {{this.address.state}} {{this.address.postal_code}} {{this.address.country}}
-                </p>
-                {{#if this.usingRPT}}
-                  <p>
-                    <span class="text-danger">The address above will NOT be used for your event ticket.</span>
-                    The Burning Man Ticketing website will ask again for the address which will be used
-                    for the event ticket. We apologize for the inconvenience.
-                  </p>
-                {{/if}}
-              {{else if this.usingWillCall}}
-                <b class="text-success">A Vehicle Pass will be held at Staff Credentialing.</b><br>
-                The Vehicle Pass will be under your name "{{@person.first_name}} {{@person.last_name}}".
-              {{else}}
-                Uh oh, this may be a bug. You have a claimed Vehicle Pass yet I can't figure out the delivery method.
-                Please contact {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.
-              {{/if}}
-            {{else if this.haveVP}}
-              {{fa-icon "times" color="danger"}} The Vehicle Pass was not claimed.
-            {{else}}
-              <span class="text-muted">No Vehicle Pass was qualified for.</span>
-            {{/if}}
-          </li>
-        {{/if}}
-
-        {{#unless this.usingStaffCredential}}
-          <li class="mt-2">
-            {{#if this.usingWAP}}
-              <b class="text-success">A Work Access Pass will be emailed to you.</b><br>
-              <b>You may enter the event
-                {{#if this.wap.access_any_time}}
-                  at any time!
-                {{else}}
-                  on or any day after {{mdy-format this.wap.access_date full=true}} @ 00:01.
-                {{/if}}</b>
-              <br>
-              An email will be sent out in the coming weeks which contains your WAP.
-            {{else}}
-              {{fa-icon "times" color="danger"}} No Work Access Pass was claimed.
-            {{/if}}
-          </li>
-        {{/unless}}
-
-        {{#if this.hasFullPackage}}
-          <li class="mt-2">
-            {{#if this.wapSOList}}
-              <b class="text-success">{{pluralize this.wapSOList.length "pass"}} for your Significant Other{{if
-                (gt this.wapSOList.length 1) "s"}} will be emailed to you.</b><br>
-              Your {{if (gt this.wapSOList.length 1) "Significant Others are" "Significant Other is"}}:
-              <ul>
-                {{#each this.wapSOList as |so|}}
-                  <li>{{so.name}} may enter the event on or any day after {{mdy-format so.access_date full=true}} @
-                    00:01.
-                  </li>
-                {{/each}}
-              </ul>
-              An email or emails will be sent out in the coming weeks which contains your Significant Other WAP(s).
-            {{else}}
-              <span class="text-muted">No Work Access Passes for Significant Others were requested.</span>
-            {{/if}}
-          </li>
-        {{/if}}
-      </ul>
-    </:body>
-  </UiSection>
-  {{#if this.usingStaffCredential}}
-    <UiSection>
-      <:title>Information About Picking Up Staff Credentials</:title>
-      <:body>
-        {{#if this.ticket.access_any_time}}
-          <p>
-            Your Staff Credential allows you to enter the event at any time, and may be picked up at the following
-            locations
-            on the given dates:
-          </p>
-        {{else if this.ticket.access_date}}
-          <p>
-            You may pick up the Staff Credential on or after the day you are allowed to
-            <b>enter the event - {{mdy-format this.ticket.access_date full=true}} @ 00:01.</b>
-          </p>
-          <p>
-            <b class="text-danger">Early pickups are not allowed</b> unless you have a separate Work Access Pass good
-            for
-            entry on a date earlier than that of your staff credential.
-          </p>
-          <p>
-            Your Staff Credential is available for pickup on or after {{mdy-format this.ticket.access_date full=true}}
-            at
-            the following locations on the given dates and times:
-          </p>
-        {{else}}
-          <p>
-            You may pick up the Staff Credential on or after the day you are allowed to enter the event.
-            <b class="text-danger">However, we forgot to set the entry date on your ticket. Please contact Ranger
-              Ticketing at {{mail-to @ticketingInfo.ranger_ticketing_email}}
-              to get this sorted out.</b>
-          </p>
-          <p>
-            Once the date is fixed, your Staff Credential will be available for pickup at the following locations on the
-            given dates and times:
-          </p>
-        {{/if}}
-        <p>
-          {{#if @ticketingInfo.pickup_locations}}
-            {{nl2br @ticketingInfo.pickup_locations}}
-          {{else}}
-            <b class="text-danger">Oops! We haven't set the pickup locations yet! Email the ticketing team and let us
-              know
-              about this problem - {{mail-to @ticketingInfo.ranger_ticketing_email}}</b>
-          {{/if}}
-        </p>
-      </:body>
-    </UiSection>
-  {{/if}}
+    <h2 class="text-danger">Ticketing is closed.</h2>
+    <p>
+      You may not request changes through the Clubhouse at this time.
+    </p>
+    <p>
+      Below is details on how your tickets (if earned), WAPs, and other items will be submitted to the Burning Man
+      Ticketing Website.
+    </p>
+    <TicketOverview @ticketingInfo={{@ticketingInfo}}
+                    @ticketPackage={{@ticketPackage}}
+                    @person={{@person}}
+    />
 {{/if}}

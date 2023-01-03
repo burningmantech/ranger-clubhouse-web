@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import {set} from '@ember/object';
 import {action} from '@ember/object';
 import {service} from '@ember/service';
-import {DIRT, DIRT_SHINY_PENNY, TRAINING} from 'clubhouse/constants/positions';
+import {DIRT, DIRT_SHINY_PENNY, TRAINING, BURN_PERIMETER} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 import {NON_RANGER} from 'clubhouse/constants/person_status';
 import {ADMIN, TIMESHEET_MANAGEMENT} from 'clubhouse/constants/roles';
@@ -107,7 +107,16 @@ export default class ShiftCheckInOutComponent extends Component {
     }
 
     this.userCanForceCheckIn = this.session.hasRole([ADMIN, TIMESHEET_MANAGEMENT]);
+  }
 
+  /**
+   * Does the person actually need a radio?
+   *
+   * @returns {boolean}
+   */
+
+  get mayNotNeedRadio() {
+    return this.args.onDutyEntry?.position_id === BURN_PERIMETER;
   }
 
   /**
@@ -121,7 +130,8 @@ export default class ShiftCheckInOutComponent extends Component {
   _startShift(positionId, slotId = null) {
     const position = this.activePositions.find((p) => +p.id === +positionId);
 
-    if (this.isPersonDirtTrained && !position.is_unqualified && !position.is_untrained) {
+    if (position.type === 'Training'
+      || (this.isPersonDirtTrained && !position.is_unqualified && !position.is_untrained)) {
       this._signInPerson(position, slotId);
       return;
     }
@@ -131,11 +141,19 @@ export default class ShiftCheckInOutComponent extends Component {
     this.showForceStartConfirm = true;
   }
 
+  /**
+   * User confirmed yes, they do want to start the shift.
+   */
+
   @action
   confirmForceStart() {
     this.showForceStartConfirm = false;
     this._signInPerson(this.forcePosition, this.forceSlotId);
   }
+
+  /**
+   * Cancel the forced shift start confirmation.
+   */
 
   @action
   closeForceStartConfirm() {
@@ -143,6 +161,14 @@ export default class ShiftCheckInOutComponent extends Component {
     this.forcePosition = null;
     this.forceSlotId = null;
   }
+
+  /**
+   * Sign in a person into the given position.
+   *
+   * @param {object} position
+   * @param {int} slotId
+   * @private
+   */
 
   _signInPerson(position, slotId) {
     const person = this.args.person;
@@ -162,25 +188,25 @@ export default class ShiftCheckInOutComponent extends Component {
         const callsign = person.callsign;
         switch (result.status) {
           case 'success':
-            if (result.forced) {
-              // Shift start was forced, let the user know what was overridden.
-              let reason;
-              if (result.unqualified_reason === 'untrained') {
-                reason = `has not completed '${result.required_training}'`;
-              } else {
-                reason = `is unqualified ('${result.unqualified_message}')`;
+            /*  if (result.forced) {
+                // Shift start was forced, let the user know what was overridden.
+                let reason;
+                if (result.unqualified_reason === 'untrained') {
+                  reason = `has not completed '${result.required_training}'`;
+                } else {
+                  reason = `is unqualified ('${result.unqualified_message}')`;
+                }
+                //this.modal.info('Sign In Forced', `WARNING: The person ${reason}. Because you are an admin or have the timesheet management role, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
               }
-              this.modal.info('Sign In Forced', `WARNING: The person ${reason}. Because you are an admin or have the timesheet management role, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
-            } else {
-              this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
-            }
+             */
+            this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
 
             if (this.args.startShiftNotify) {
               this.args.startShiftNotify();
             }
             if (+person.id === this.session.userId) {
-              // Ensure the navigation bar is updated with the signed into position
-              this.session.loadUser();
+              // Ensure the navigation bar is updated with the signed in to position
+              this.session.updateOnDuty();
             }
             break;
 
@@ -211,6 +237,7 @@ export default class ShiftCheckInOutComponent extends Component {
   /**
    * Start a shift with the selected position
    */
+
   @action
   startShiftAction() {
     this._startShift(this.signinPositionId);
@@ -220,6 +247,7 @@ export default class ShiftCheckInOutComponent extends Component {
    * Start a shift based on a scheduled sign up.
    * @param slot
    */
+
   @action
   signinShiftAction(slot) {
     if (slot.is_within_start_time) {
@@ -251,9 +279,10 @@ export default class ShiftCheckInOutComponent extends Component {
             this.toast.success(`${callsign} has been successfully signed off. Enjoy your rest.`);
             if (+this.args.person.id === this.session.userId) {
               // Update the user's navigation bar to remove the signed in position.
-              this.session.loadUser();
+              this.session.updateOnDuty();
             }
             break;
+
           case 'already-signed-off':
             this.toast.error(`${callsign} was already signed off.`);
             break;
@@ -270,10 +299,15 @@ export default class ShiftCheckInOutComponent extends Component {
    * Update the selected sign in position
    * @param value
    */
+
   @action
   updateShiftPosition(value) {
     this.signinPositionId = value;
   }
+
+  /**
+   * Show the change position dialog
+   */
 
   @action
   changePositionAction() {
@@ -282,9 +316,13 @@ export default class ShiftCheckInOutComponent extends Component {
     this.changePositionError = null;
   }
 
+  /**
+   * Update the signed in shift to the selected position
+   */
+
   @action
   updatePositionAction() {
-    const {onDutyEntry} = this.args;
+    const {onDutyEntry, person} = this.args;
     this.isSubmitting = true;
     this.changePositionError = null;
 
@@ -309,6 +347,10 @@ export default class ShiftCheckInOutComponent extends Component {
           } else {
             this.toast.success('Position has been successfully updated.');
           }
+          if (+person.id === this.session.userId) {
+            // Ensure the navigation bar is updated with the signed in to position
+            this.session.updateOnDuty();
+          }
           return;
 
         case 'position-not-held':
@@ -331,16 +373,28 @@ export default class ShiftCheckInOutComponent extends Component {
       .finally(() => this.isSubmitting = false);
   }
 
+  /**
+   * Close out the correct position dialog
+   */
+
   @action
   cancelUpdatePosition() {
     this.showPositionDialog = false;
     this.earlySlot = null;
   }
 
+  /**
+   * Close out the confirm start early shift check in dialog.
+   */
+
   @action
   closeEarlyShiftAction() {
     this.showEarlyShiftConfirm = false;
   }
+
+  /**
+   * Start an early shift check in.
+   */
 
   @action
   confirmEarlyShiftAction() {

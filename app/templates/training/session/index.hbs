@@ -1,4 +1,4 @@
-<h1>{{this.year}} {{this.training.title}} - {{shift-format this.slot.begins}}
+<h1>{{this.year}} {{this.training.title}} - {{shift-format this.slot.begins}} ({{this.slot.timezone_abbr}})
   - {{this.slot.description}}</h1>
 <p>
   <LinkTo @route="training.index" @model={{this.training.id}} @query={{hash year=this.year}}>
@@ -10,24 +10,24 @@
 </p>
 
 {{#if (is-empty this.trainers)}}
-  <ChNotice @type="danger" @title="No trainer slots were found">
+  <UiNotice @type="danger" @title="No trainer slots were found">
     In order to correctly record how many trainers are signed up to teach this session, a trainer's slot needs to exists
     where the slot's description matches this session's description exactly and where the start time within one hour of
     this session.
-  </ChNotice>
+  </UiNotice>
 {{else if (not this.havePrimaryTrainers)}}
-  <ChNotice @type="danger" @title="No trainer sign ups">
+  <UiNotice @type="danger" @title="No trainer sign ups">
     No trainers are signed up to teach this session.
-  </ChNotice>
+  </UiNotice>
 {{/if}}
 
 {{#unless this.slot.active}}
-  <ChNotice @type="danger" @title="Training session not activated">
+  <UiNotice @type="danger" @title="Training session not activated">
     Sign ups are disabled until the session (aka slot) has been activated.
     Use the
     <LinkTo @route="admin.slots">Admin &gt; Edit Records &gt; Slots</LinkTo>
     page to mark the session as active.
-  </ChNotice>
+  </UiNotice>
 {{/unless}}
 
 <UiSection>
@@ -83,7 +83,13 @@
   <:title>{{pluralize this.students.length "Trainee"}} ({{this.passedCount}} Passed)</:title>
   <:body>
     {{#if this.training.is_art}}
-      A {{fa-icon "asterisk"}} by a person's status indicates an ART Prospective.
+      <p>
+        A {{fa-icon "asterisk"}} by a person's status indicates an ART Prospective.
+        {{#if this.offersGraduation}}
+          Use the "Graduate Trainees" button to grant {{pluralize this.training.graduation_info.positions.length "position"}}
+          <i>"{{this.graduatePositionTitles}}"</i> to eligible individuals.
+        {{/if}}
+      </p>
     {{else}}
       <p>
       <div><b class="text-danger">{{fa-icon "hand-point-right"}} Reminder: Walk-ins are NOT allowed, this includes
@@ -96,21 +102,29 @@
 
     <div class="my-2">
       {{! Desktop Display }}
-      <div class="d-lg-block d-none">
-        <LinkTo @route="training.session.trainers-report" @models={{array this.training.id this.slot.id}}
+      <div class="d-none d-lg-block">
+        <LinkTo @route="training.session.trainers-report"
+                @models={{array this.training.id this.slot.id}}
                 class="btn btn-secondary">
           {{fa-icon "list-alt"}} Trainer's Report
         </LinkTo>
         <LinkTo @route="training.session.signup-sheet" @models={{array this.training.id this.slot.id}}
-                class="btn btn-secondary">
+                class="btn btn-secondary ms-1">
           {{fa-icon "clipboard-check"}} Sign up Sheet
         </LinkTo>
-        <UiButton @type="secondary" @onClick={{this.toggleEmailListAction}} @disabled={{is-empty this.students}}>
+        <UiButton @type="secondary" @onClick={{this.toggleEmailListAction}} @disabled={{is-empty this.students}}
+                  @class="ms-1">
           {{fa-icon "envelope"}} {{if this.showEmails "Hide Emails" "List Emails"}}
         </UiButton>
         {{#if this.canAddStudent}}
-          <UiButton @type="secondary" @onClick={{this.showAddPersonAction}}>
+          <UiButton @type="secondary" @onClick={{this.showAddPersonAction}} @class="ms-1">
             {{fa-icon "plus-square"}} Add Person
+          </UiButton>
+        {{/if}}
+        {{#if this.offersGraduation}}
+          <UiButton @type="secondary" @onClick={{this.showGraduateStudentsAction}} @disabled={{is-empty this.students}}
+                    @class="ms-1">
+            {{fa-icon "graduation-cap"}} Graduate Trainees
           </UiButton>
         {{/if}}
       </div>
@@ -138,6 +152,10 @@
           {{#if this.canAddStudent}}
             <div class="dropdown-divider"></div>
             <a href class="dropdown-item" {{action this.showAddPersonAction}}>Add Person</a>
+          {{/if}}
+          {{#if this.offersGraduation}}
+            <div class="dropdown-divider"></div>
+            <a href class="dropdown-item" {{action this.showGraduateStudentsAction}}>Graduate Trainees</a>
           {{/if}}
         </dd.menu>
       </BsDropdown>
@@ -378,7 +396,7 @@
 
 {{! Add Person dialog box}}
 {{#if this.addPersonForm}}
-  <ModalDialog @title="Add Student To Session"
+  <ModalDialog @title="Add Trainee To Session"
                @onEscape={{this.cancelSearchAction}} as |Modal|>
     <ChForm @formId="search"
             @formFor={{this.addPersonForm}}
@@ -425,8 +443,7 @@
 {{/if}}
 
 {{#if this.editNote}}
-  <ModalDialog @title="Edit Note for {{this.editStudent.callsign}}"
-               @onEscape={{this.cancelNoteAction}} as |Modal|>
+  <ModalDialog @title="Edit Note for {{this.editStudent.callsign}}" @onEscape={{this.cancelNoteAction}} as |Modal|>
     <ChForm @formId="note-update"
             @formFor={{this.editNote}}
             @onSubmit={{this.updateNoteAction}} as |f|>
@@ -448,4 +465,11 @@
       </Modal.footer>
     </ChForm>
   </ModalDialog>
+{{/if}}
+
+{{#if this.graduateTraining }}
+  <ArtTraining::Graduate @training={{this.graduateTraining}}
+                         @slot={{this.slot}}
+                         @students={{this.students}}
+                         @onCancel={{this.cancelGraduateStudents}}/>
 {{/if}}

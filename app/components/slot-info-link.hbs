@@ -1,5 +1,7 @@
-{{#if @info~}}
-  <a href {{on "click" this.show}}><InfoIcon /> {{@description}}</a>
-{{~else~}}
-  {{~@description~}}
+{{#if @info}}
+  <a href {{on "click" this.show}}>
+    <InfoIcon/> {{@description}}
+  </a>
+{{else}}
+  {{@description}}
 {{/if}}

@@ -1,54 +1,110 @@
-<ChAccordion as |Accordion|>
+<UiAccordion as |Accordion|>
   <Accordion.title>
-    {{@position.title}} ({{@position.slots.length}})
-    {{#if this.signupCount}} <span class="text-success">[{{pluralize this.signupCount "signup"}}]</span>{{/if}}
+    {{@position.title}}
+    {{#if this.signupCount}}
+      {{#if (eq this.signupCount this.overlappingCount)}}
+        <span class="text-danger d-inline-block">[ {{pluralize this.overlappingCount "overlapping signup"}} ]</span>
+      {{else}}
+        <span class="text-success d-inline-block">[
+          {{pluralize this.nonOverlappingCount "signup"}}
+          {{#if this.overlappingCount}}
+            <span class="text-black">&amp;</span> <span class="text-danger">
+            {{pluralize this.overlappingCount "overlapping signup"}}
+          </span>
+          {{/if}}
+          ]</span>
+      {{/if}}
+    {{/if}}
   </Accordion.title>
   <Accordion.body>
     {{#if Accordion.isOpen}}
+      {{#if this.isTrainingPosition}}
+        <p class="text-danger">
+          {{fa-icon "hand-point-right"}} Walk-ins are not allowed. All attendees must be signed up prior to the session's start time.
+        </p>
+        {{#if this.needsFullDayTraining}}
+          <b>
+            Because you are {{this.personStatus}}, you are required to attend the <u class="text-danger">FULL DAY</u> In-Person Training.
+          </b>
+        {{/if}}
+        <p>
+          Additional training sessions will be posted through the end of May.
+        </p>
+      {{/if}}
       {{#if this.haveNoAppreciationSlots}}
-        <NoAppreciateIcon/>
-        = the shift hours will not count towards appreciations.
+        <span class="d-inline-block me-2">
+        <NoAppreciateIcon/> = the shift hours will not count towards provisions &amp; appreciations.
+        </span>
+      {{/if}}
+      {{#if this.haveShiftWithAdditionalInfo}}
+        <span class="d-inline-block">
+          <InfoIcon/> = More shift information available, click on the icon and/or text.
+        </span>
+      {{/if}}
+      {{#if this.haveOverlapping}}
+        <div class="mt-1 text-danger">
+          {{pluralize this.overlappingCount "shift signup"}} {{if (eq this.overlappingCount 1) "is" "are"}} overlapping,
+          marked with a {{fa-icon "flag" color="danger"}}. You only get credit for the time you work.
+        </div>
       {{/if}}
       <div class="schedule-table">
         <div class="schedule-row schedule-header">
           <div class="schedule-icon">&nbsp;</div>
-          <div class="schedule-time">Time</div>
+          <div class="schedule-time-description">Time / Description</div>
           <div class="schedule-duration">Duration</div>
           <div class="schedule-credits">Credits</div>
-          <div class="schedule-signup-description">Description</div>
           <div class="schedule-signups">Sign Ups</div>
           <div class="schedule-actions">Actions</div>
         </div>
         {{#each @position.slots key="id" as |slot|}}
-          <div class="schedule-row {{if slot.person_assigned "table-success"}}" id="slot-{{slot.id}}">
+          <div class="schedule-row {{if slot.is_overlapping "schedule-overlapping"
+                                        (if slot.person_assigned "schedule-signed-up")}}" id="slot-{{slot.id}}">
             <div class="schedule-icon">
-              {{#if slot.person_assigned}}
-                {{fa-icon "check" title="You are signed up for this shift."}}
+              {{#if slot.is_overlapping}}
+                {{fa-icon "flag" color="danger"}}
+              {{else if slot.person_assigned}}
+                {{fa-icon "check"}}
               {{else if (not slot.slot_active)}}
-                {{fa-icon "times" title="Shift is inactive and may not be signed up for" color="danger"}}
+                {{fa-icon "times"color="danger"}}
               {{else}}
                 &nbsp;
               {{/if}}
             </div>
-            <div class="schedule-time">
+            <div class="schedule-time-description">
+              {{#if slot.has_ended}}
+                <div class="text-danger">Shift has ended.</div>
+              {{else if slot.has_started}}
+                <div class="text-danger">Shift has started.</div>
+              {{/if}}
               {{shift-format slot.slot_begins slot.slot_ends}}
+              {{#if (or this.isTrainingType slot.isNotPacific)}}
+                ({{slot.slot_tz_abbr}})
+              {{/if}}
+              <div class="schedule-sm-label">{{@position.title}}</div>
+              <div>
+                <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
+              </div>
+              {{#if (and slot.trainer_slot_id (eq slot.slot_max 0))}}
+                <div class="text-danger">No trainers signed up yet.<br>Check back later.</div>
+              {{/if}}
+              {{#if slot.is_overlapping}}
+                <div class="mt-1 small">
+                  Sign up overlaps with:<br>
+                  {{#each slot.overlappingSlots key="id" as |overlap|}}
+                    {{overlap.position_title}} {{overlap.slot_description}}<br>
+                  {{/each}}
+                </div>
+              {{/if}}
             </div>
             <div class="schedule-duration">
               <span class="schedule-sm-label">Duration:</span>
               {{#unless slot.position_count_hours}}
-                <NoAppreciateIcon/>
-              {{/unless~}}
+                <span class="me-1"><NoAppreciateIcon/></span>
+              {{/unless}}
               {{hour-minute-format slot.slot_duration}}
             </div>
             <div class="schedule-credits">
               <span class="schedule-sm-label">Credits:</span> {{credits-format slot.credits}}
-            </div>
-            <div class="schedule-signup-description">
-              <span class="schedule-sm-label">{{@position.title}}</span>
-              <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
-              {{#if (and slot.trainer_slot_id (eq slot.slot_max 0))}}
-                <div class="text-danger">No trainers signed up yet.<br>Check back later.</div>
-              {{/if}}
             </div>
             <div class="schedule-signups">
               {{#if (and slot.trainer_slot_id (eq slot.slot_max 0))}}
@@ -71,8 +127,11 @@
               {{#if slot.person_assigned}}
                 {{#if (or @isAdmin (not slot.has_started))}} {{!template-lint-disable "no-negated-condition"}}
                 {{! Only allow admins to remove a sign up that has started}}
-                  <button type="button" {{on "click" (fn @leaveSlot slot)}} class="btn btn-danger btn-sm"
-                          title="Remove from schedule" disabled={{slot.is_submitting}}>
+                  <button type="button"
+                    {{on "click" (fn @leaveSlot slot)}}
+                          class="btn btn-danger btn-sm"
+                          title="Remove from schedule"
+                          disabled={{slot.is_submitting}}>
                     {{#if slot.is_submitting}}
                       <SpinIcon/>
                     {{else}}
@@ -85,8 +144,10 @@
               {{! Only show action buttons for the current year}}
                 {{#if slot.slot_active}}
                   {{#if (or @isAdmin (and (not slot.isFull) (not slot.has_started)))}}
-                    <button type="button" {{on "click" (fn @joinSlot slot)}} class="btn btn-primary btn-sm"
-                            title="Sign up for the shift" disabled={{slot.is_submitting}}>
+                    <button type="button" {{on "click" (fn @joinSlot slot)}}
+                            class="btn btn-primary btn-sm"
+                            title="Sign up for the shift"
+                            disabled={{slot.is_submitting}}>
                       {{#if slot.is_submitting}}
                         <SpinIcon/>
                       {{else}}
@@ -105,4 +166,4 @@
       </div>
     {{/if}}
   </Accordion.body>
-</ChAccordion>
+</UiAccordion>

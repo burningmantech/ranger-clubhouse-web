@@ -145,6 +145,7 @@ export default class ShiftManageService extends Service {
         this.modal.open(
           ModalMissingRequirementsComponent, {
             requirements: result.requirements,
+            hasTrainingBlocker: !result.training_signups_allowed,
             person,
             slot
           });

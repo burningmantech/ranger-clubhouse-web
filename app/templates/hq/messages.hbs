@@ -2,7 +2,7 @@
 {{#if this.session.isLMOPEnabled}}
   <ClubhouseMessages @person={{this.person}} @messages={{this.messages}} @isWorkerInterface={{true}} />
 {{else}}
-  <ChNotice @type="danger" @icon="exclamation" @title="Access Not Allowed During Off Season">
+  <UiNotice @type="danger" @icon="exclamation" @title="Access Not Allowed During Off Season">
     You may only view another person's Clubhouse Messages while the event is happening.
-  </ChNotice>
+  </UiNotice>
 {{/if}}

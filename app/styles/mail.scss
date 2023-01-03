@@ -106,6 +106,15 @@
   margin-bottom: 10px;
 }
 
+.mail-preview-iframe {
+  width: 100%;
+  min-height: 200px;
+  overflow-y: scroll;
+  border: 1px solid #0a3954;
+  padding: 2px;
+}
+
+
 @include media-breakpoint-down(md) {
   .mail {
     grid-template-areas:

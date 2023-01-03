@@ -1,0 +1,48 @@
+<p>
+  {{#if @ticketPackage.provisionsBankable}}
+    The following provision(s) have been given to you:
+  {{else}}
+    The following combined allocated and earned provision(s) have been given to you:
+  {{/if}}
+</p>
+<table class="table table-width-auto">
+  <tbody>
+  {{#each @ticketPackage.provisionItems as |item|}}
+    <tr>
+      <td>{{fa-icon item.icon}}</td>
+      <td>
+        {{item.name}}
+        <div class="text-muted">Expires {{item.expires}}</div>
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
+{{#if @ticketPackage.provisionsBankable}}
+  {{#if @ticketPackage.provisionsBanked}}
+    <p>
+      You have chosen to bank your provisions.
+    </p>
+    <UiButton @class="btn-responsive" @onClick={{fn this.updateItems "claim"}} @disabled={{this.isSubmitting}}>
+      Use The Provision(s)
+      {{#if this.isSubmitting}}
+        <SpinIcon/>
+      {{/if}}
+    </UiButton>
+  {{else}}
+    <p>
+      Unless you state otherwise, the provision(s) will automatically be used for this event.
+      You may bank the provision(s) to use in a future event if you are taking
+      this year off or are planning to have a "light" Ranger schedule.
+    </p>
+    <UiButton @class="btn-responsive" @onClick={{fn this.updateItems "bank"}} @disabled={{this.isSubmitting}}>
+      Bank the provision(s)
+      {{#if this.isSubmitting}}
+        <SpinIcon/>
+      {{/if}}
+    </UiButton>
+  {{/if}}
+{{else}}
+  Because you have been allocated provisions (as opposed to provisions earned from prior work) for your upcoming
+  Ranger work, all earned and allocated provisions will be used.
+{{/if}}

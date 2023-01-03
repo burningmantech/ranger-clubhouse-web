@@ -1,4 +1,4 @@
-<BsNavbar @type="light" @backgroundColor="khaki" class="navbar-expand-lg" as |navbar|>
+<BsNavbar @type="light" @backgroundColor="khaki" class="navbar-expand-xl" as |navbar|>
   <LinkTo @route="me.homepage" class="navbar-brand">
     {{#if this.session.isStaging}}
       <span class="text-danger">STAGING SERVER</span>
@@ -8,6 +8,15 @@
       Clubhouse
     {{/if}}
   </LinkTo>
+
+  {{#if (and this.session.hasLMOP this.session.isSmallScreen)}}
+    <button type="button" class="border rounded p-1 bg-white text-muted mx-auto" {{on "click" this.launchSearchDialog}}>
+      <span class="mx-1">
+        {{fa-icon "search"}}
+      </span>
+      Search
+    </button>
+  {{/if}}
 
   <navbar.toggle id="top-burger-menu">
     <span class="navbar-toggler-icon"></span>
@@ -66,6 +75,25 @@
       {{/if}}
     </navbar.nav>
   </navbar.content>
+  {{#if (and this.session.hasLMOP (not this.session.isSmallScreen))}}
+    <navbar.content>
+      {{! template-lint-disable no-inline-styles}}
+      <div role="button"
+           class="border rounded p-1 bg-white text-muted small d-flex align-items-center justify-content-between"
+           style="min-width:0;"
+        {{on "click" this.launchSearchDialog}}>
+        <div class="mx-1 flex-shrink-0">
+          {{fa-icon "search"}}
+        </div>
+        <div class="flex-shrink-1 text-truncate">Search Callsigns/Assets/Vehicles</div>
+        {{#unless this.session.isMobileDevice}}
+          <div class="ms-1 bg-gray p-1 flex-shrink-0">
+            {{if this.session.isMac "⌘" "CTRL"}} K
+          </div>
+        {{/unless}}
+      </div>
+    </navbar.content>
+  {{/if}}
   {{#if this.session.isAuthenticated}}
     <div class="d-none d-lg-flex ms-auto">
       <navbar.content>

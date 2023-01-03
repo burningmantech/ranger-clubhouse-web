@@ -16,6 +16,6 @@ module('Integration | Component | photo-edit', function(hooks) {
 
     await render(hbs`<PhotoEdit @imageDataUrl={{this.imageDatUrl}} @uploadAction={{this.uploadAction}} @cancelAction={{this.cancelAction}} @height={{100}} @width={{100}}/>`);
 
-    assert.dom('#photo-edit-container').exists();
+    assert.dom('#mugshot-edit-container').exists();
   });
 });

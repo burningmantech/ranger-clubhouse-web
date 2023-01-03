@@ -1,0 +1,37 @@
+{{#if this.isActive}}
+  <ModalDialog as |Modal|>
+    <Modal.title>
+      Step {{this.number}} of {{this.wizard.stepCount}} - {{this.title}}
+    </Modal.title>
+    <Modal.body>
+      {{yield}}
+    </Modal.body>
+    <Modal.footer class="justify-content-between">
+      {{#if (not-eq this.number 1)}}
+        <div>
+          <UiButton @onClick={{this.wizard.backStep}} @type="secondary">
+            {{fa-icon "arrow-left"}} {{this.wizard.backLabel}}
+          </UiButton>
+        </div>
+      {{/if}}
+      {{#if @isLast}}
+        <div>
+          <UiButton @onClick={{this.wizard.finishAction}}>
+            {{this.wizard.finishLabel}}
+          </UiButton>
+        </div>
+      {{else}}
+        <div>
+          <UiButton @onClick={{this.wizard.cancelAction}} @type="secondary">
+            {{fa-icon "ban"}} Cancel
+          </UiButton>
+        </div>
+        <div>
+          <UiButton @onClick={{this.wizard.nextStep}} @type="success">
+            {{this.wizard.nextLabel}} {{fa-icon "arrow-right"}}
+          </UiButton>
+        </div>
+      {{/if}}
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}

@@ -3,6 +3,7 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import loadImage from 'blueimp-load-image';
+import logError from 'clubhouse/utils/log-error';
 
 export default class PhotoUploadComponent extends Component {
   @service ajax;
@@ -12,12 +13,14 @@ export default class PhotoUploadComponent extends Component {
 
   @tracked showUploadDialog = false;
 
-  @tracked step = 'source';
+  @tracked step = 'showGuidelines';
   @tracked isSubmitting = false;
   @tracked hasCamera = false;
 
   @tracked originalImage = null;
   @tracked originalImageDataUrl = null;
+
+  @tracked showNoBlobError = false;
 
   cropper = null;
 
@@ -57,7 +60,18 @@ export default class PhotoUploadComponent extends Component {
         }
       });
     }
+
+    if (this.args.isPersonManage) {
+      // Skip showing guidelines
+      this.step = 'source';
+    }
   }
+
+  @action
+  gotoSourceStep() {
+    this.step = 'source';
+  }
+
   @action
   useSelfieAction(origBlob) {
     this.originalImage = origBlob;
@@ -76,6 +90,8 @@ export default class PhotoUploadComponent extends Component {
   }
 
   _uploadImage(origBlob, origFilename, imageBlob = null, imageFilename = null) {
+    this.showNoBlobError = false;
+
     const formData = new FormData();
 
     formData.append('orig_image', origBlob, origFilename);
@@ -149,12 +165,22 @@ export default class PhotoUploadComponent extends Component {
     };
 
     // eslint-disable-next-line no-undef
-    loadImage(image, function (canvas) {
+    loadImage(image,  (canvas) => {
       if (dataUrl) {
         const data = canvas.toDataURL('image/jpeg', 0.9);
         canvas.remove();
         callback(data);
       } else {
+        if (!canvas.toBlob) {
+          // An issue exists where a canvas element does not have a toBlob function. Might be a browser extension causing issues.
+          // Seen on Chrome v100. Let the user know something is up.
+          this.showNoBlobError = true;
+          logError({}, 'client-load-image-error', {
+            message: 'toBlob function missing',
+            nodeType: canvas?.nodeName,
+          });
+          return;
+        }
         canvas.toBlob((blob) => {
           canvas.remove();
           callback(blob);

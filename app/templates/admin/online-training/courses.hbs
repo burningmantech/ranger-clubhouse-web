@@ -24,12 +24,12 @@
       </td>
       <td>
         {{#unless course.is_full_course}}
-          <UiButton @onClick={{action this.setCourseAction course.id "full"}}>
+          <UiButton @onClick={{action this.setCourseAction course.id "full"}} @class="me-2" @size="sm" @type="secondary">
             Set As Full
           </UiButton>
         {{/unless}}
         {{#unless course.is_half_course}}
-          <UiButton @onClick={{action this.setCourseAction course.id "half"}}>
+          <UiButton @onClick={{action this.setCourseAction course.id "half"}}  @size="sm" @type="secondary">
             Set As Half
           </UiButton>
         {{/unless}}

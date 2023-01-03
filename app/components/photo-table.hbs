@@ -1,11 +1,11 @@
 <table class="table table-stripped table-hover table-width-auto">
   <thead>
   <tr>
+    <th>ID</th>
     <th>Photo</th>
     {{#unless @person}}
       <th>Callsign</th>
     {{/unless}}
-    <th>ID</th>
     <th>Status</th>
     <th>Uploaded</th>
     <th>Reviewed</th>
@@ -13,15 +13,20 @@
     {{#if @deletePhotoAction}}
       <th>Actions</th>
     {{/if}}
-    <th>Machine Analysis</th>
   </tr>
   </thead>
   <tbody>
   {{#each @photos as |photo|}}
     <tr>
+      <td>{{photo.id}}</td>
       <td>
-        <img id="photo-{{photo.id}}" src={{photo.image_url}} class="photo-icon" role="button"
-          {{on "click" (fn this.showPhotoAction photo)}} alt={{photo.person.callsign}}
+        <img id="photo-{{photo.id}}"
+             src={{or photo.profile_url photo.image_url}}
+             class="photo-icon"
+             role="button"
+             alt={{photo.person.callsign}}
+             loading="lazy"
+          {{on "click" (fn this.showPhotoAction photo)}}
         />
       </td>
       {{#unless @person}}
@@ -29,9 +34,6 @@
           <PersonLink @person={{photo.person}} />
         </td>
       {{/unless}}
-      <td>
-        {{photo.id}}
-      </td>
       <td>
         {{#if (eq photo.status "approved")}}
           <b class="text-success">{{fa-icon "check"}} {{photo.status}}</b>
@@ -41,9 +43,9 @@
           {{photo.status}}
         {{/if}}<br>
         {{#if photo.is_active}}
-          <b>ACTIVE</b>
+          <b>CURRENT</b>
         {{else}}
-          <span class="text-muted">inactive</span>
+          <span class="text-muted">archived</span>
         {{/if}}
       </td>
       <td>
@@ -87,27 +89,41 @@
           <UiButton @type="light-red" @size="sm" @onClick={{fn @deletePhotoAction photo}} @disabled={{photo.isSaving}}>
             {{fa-icon "trash"}} Delete
           </UiButton>
-          {{#unless photo.is_active}}
+          {{#if photo.is_active}}
+            <UiButton @type="secondary"
+                      @class="me-1"
+                      @size="sm"
+                      @disabled={{photo.isSaving}}
+                      @onClick={{fn this.editPhotoAction photo}}>
+              {{fa-icon "edit"}} Edit
+            </UiButton>
+            {{#if (not-eq photo.status "rejected")}}
+              <UiButton @type="danger"
+                        @class="me-1"
+                        @size="sm"
+                        @onClick={{fn this.showRejectDialog photo}}
+                        @disabled={{photo.isSaving}}>
+                {{fa-icon "times"}} Reject
+              </UiButton>
+            {{/if}}
+            {{#if (not-eq photo.status "approved")}}
+              <UiButton @type="success"
+                        @size="sm"
+                        @onClick={{fn this.approveAction photo}}
+                        @disabled={{photo.isSaving}}>
+                {{fa-icon "check"}} Approve
+              </UiButton>
+            {{/if}}
+          {{else}}
             <UiButton @type="secondary" @size="sm" @onClick={{fn @activatePhotoAction photo}}>
               {{fa-icon "star"}} Activate
             </UiButton>
-          {{/unless}}
+          {{/if}}
+          {{#if photo.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
         </td>
       {{/if}}
-      <td>
-        {{#if (eq photo.analysis_details.status "success")}}
-          {{#each photo.analysis_details.issues as |issue|}}
-            {{issue}}
-          {{else}}
-            no problems found
-          {{/each}}<br>
-          sharpness {{photo.analysis_details.sharpness}}
-        {{else if (eq photo.analysis_status "failed")}}
-          failed
-        {{else}}
-          N/A
-        {{/if}}
-      </td>
     </tr>
   {{/each}}
   </tbody>
@@ -115,4 +131,12 @@
 
 {{#if this.showPhoto}}
   <PhotoInfo @photo={{this.showPhoto}} @closeAction={{this.closePhotoAction}} @rejectionLabels={{@rejectionLabels}} />
+{{/if}}
+
+{{#if this.rejectPhoto}}
+  <PhotoRejectDialog @photo={{this.rejectPhoto}} @onClose={{this.onRejectClose}} @reviewConfig={{@reviewConfig}} />
+{{/if}}
+
+{{#if this.editPhoto}}
+  <PhotoEditDialog @photo={{this.editPhoto}} @onClose={{this.closeEditPhotoAction}} />
 {{/if}}

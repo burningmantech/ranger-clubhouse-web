@@ -22,7 +22,7 @@
 </FormRow>
 Showing {{this.viewPeople.length}} of {{this.people.length}}.
 {{#each this.countries key="country" as |country idx|}}
-  <ChAccordion @onInsert={{this.onAccordionInsert}} @onWillDestroy={{this.onAccordionDestroy}} id="country-{{idx}}" as
+  <UiAccordion @onInsert={{this.onAccordionInsert}} @onWillDestroy={{this.onAccordionDestroy}} id="country-{{idx}}" as
                |accordion|>
     <accordion.title>
       {{country.full_name}} ({{pluralize country.people.length "person"}})
@@ -80,7 +80,7 @@ Showing {{this.viewPeople.length}} of {{this.people.length}}.
         </table>
       {{/if}}
     </accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 {{/each}}
 
 {{#if this.isRendering}}

@@ -13,7 +13,7 @@
 </div>
 <div class="mt-4 {{if this.hideShiftSchedule "d-none"}}">
   {{#each this.slots key="id" as |slot|}}
-    <ChAccordion as |Accordion|>
+    <UiAccordion as |Accordion|>
       <Accordion.title>
         {{shift-format slot.begins}} - {{pluralize slot.people.length "Alpha"}}
       </Accordion.title>
@@ -89,7 +89,7 @@
           </tbody>
         </table>
       </Accordion.body>
-    </ChAccordion>
+    </UiAccordion>
   {{else}}
     <b class="text-danger">No {{this.year}} Alpha shifts found.</b>
   {{/each}}

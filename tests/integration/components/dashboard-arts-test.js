@@ -7,7 +7,7 @@ module('Integration | Component | dashboard-arts', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    this.set('step', {  });
+    this.set('step', {  arts: [ ] });
     await render(hbs`<DashboardArts @step={{this.step}}/>`);
     assert.dom('div.dashboard-art-table').exists();
   });

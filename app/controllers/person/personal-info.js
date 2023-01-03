@@ -1,18 +1,39 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import { action } from '@ember/object';
-import { Role } from 'clubhouse/constants/roles';
-import PersonInfoValidations from 'clubhouse/validations/person-info';
-import { ShortSleeve, LongSleeve } from 'clubhouse/constants/shirts';
-import { pronounOptions } from 'clubhouse/constants/pronouns';
+import {action} from '@ember/object';
+import {cached, tracked} from '@glimmer/tracking';
+import PersonInfoValidations, {REQUIRED_PII_VALIDATIONS} from 'clubhouse/validations/person-info';
+import {pronounOptions} from 'clubhouse/constants/pronouns';
+import {ADMIN, VC} from 'clubhouse/constants/roles';
+import {ADDRESS_VALIDATION_NOT_REQUIRED} from 'clubhouse/constants/person_status';
 
 export default class PersonPersonalInfoController extends ClubhouseController {
-  personInfoValidations = PersonInfoValidations;
-  shortSleeveOptions = ShortSleeve;
-  longSleeveOptions = LongSleeve;
+  @tracked person;
+  @tracked tshirtOptions;
+  @tracked longSleeveOptions;
+  @tracked shirtsById;
+
   pronounOptions = pronounOptions;
 
+  @cached
+  get personInfoValidations() {
+    if (ADDRESS_VALIDATION_NOT_REQUIRED.includes(this.person.status) && this.session.isAdmin) {
+      return REQUIRED_PII_VALIDATIONS;
+    } else {
+      return PersonInfoValidations;
+    }
+  }
+
+  @action
+  shirtTitle(shirtId) {
+    if (!shirtId) {
+      return 'Unknown';
+    }
+
+    return !shirtId ? 'Unknown' : (this.shirtsById[shirtId]?.title ?? `Unknown Swag ID ${shirtId}`);
+  }
+
   get canEditPersonalInfo() {
-    return this.session.hasRole(Role.ADMIN);
+    return this.session.hasRole([ADMIN, VC]);
   }
 
   @action

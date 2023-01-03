@@ -9,6 +9,10 @@ const MergeTrees = require("broccoli-merge-trees");
 const env = EmberApp.env();
 const IS_PROD = env === 'production', IS_TEST = env === 'test';
 
+process.on('uncaughtException', function (err) {
+  console.error(err.stack);
+});
+
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     babel: {
@@ -21,12 +25,24 @@ module.exports = function (defaults) {
     // Don't store configuration in meta tag
     storeConfigInMeta: false,
 
+    '@embroider/macros': {
+      setConfig: {
+        '@ember-data/store': {
+          polyfillUUID: true
+        },
+      },
+    },
+
     'ember-cli-terser': {
       enabled: IS_PROD,
     },
 
     'ember-simple-auth': {
       useSessionSetupMethod: true,
+    },
+
+    'ember-cli-deprecation-workflow': {
+      enabled: true,
     },
 
     minifyCSS: {
@@ -44,6 +60,16 @@ module.exports = function (defaults) {
     'ember-bootstrap': {
       bootstrapVersion: 5,
       importBootstrapCSS: false
+    },
+
+    autoImport: {
+      webpack: {
+        resolve: {
+          fallback: {
+            fs: false
+          }
+        }
+      }
     }
   });
 
@@ -52,6 +78,12 @@ module.exports = function (defaults) {
 
 
   // app.import('node_modules/@okta/okta-signin-widget/dist/css/okta-sign-in.min.css');
+
+  app.import(`node_modules/dayjs/plugin/advancedFormat.js`);
+  app.import(`node_modules/dayjs/plugin/objectSupport.js`);
+  app.import(`node_modules/dayjs/plugin/utc.js`);
+  app.import(`node_modules/dayjs/plugin/timezone.js`);
+  app.import('node_modules/dayjs/plugin/dayOfYear.js');
 
   // If you need to use different assets in different
   // environments, specify an object as the first parameter. That

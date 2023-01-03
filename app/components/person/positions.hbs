@@ -1,0 +1,59 @@
+<div>
+  <UiButton @onClick={{@toggleMembership}} @type="secondary" @size="sm" @class="me-2">
+    {{if @showMembership "Hide" "Show"}} Teams / Positions
+  </UiButton>
+  {{#if @canEditMembership}}
+    <LinkTo @route="person.membership" class="btn btn-secondary btn-sm">
+      Edit Teams / Positions
+    </LinkTo>
+  {{/if}}
+</div>
+{{#if this.hasNoPositions}}
+  <div class="mt-2 text-danger">
+    <b>No teams or positions.</b>
+  </div>
+{{else if @showMembership}}
+  <div class="masonry-container masonry-border masonry-col-2 mt-2">
+    <div class="masonry-item">
+      <div class="masonry-item-header">
+        General Positions
+      </div>
+      <div class="ms-1">
+        {{#each this.membership.unassignedPositions key="id" as |pos|}}
+          {{position-label pos}}<br>
+        {{else}}
+          <i>None granted.</i>
+        {{/each}}
+      </div>
+    </div>
+
+    {{#each this.membership.teams key="id" as |team|}}
+      <div class="masonry-item">
+        <div class="masonry-item-header d-flex justify-content-between">
+          <div>{{team.title}}</div>
+          {{#if team.is_member}}
+            <div class="text-muted small">(member)</div>
+          {{/if}}
+        </div>
+        <div>
+          {{#if team.is_manager}}
+            <div class="text-muted small mb-1 ms-1">
+              Is Clubhouse Team Manager
+            </div>
+          {{/if}}
+          <div class="ms-1">
+            {{#each team.positions as |p|}}
+              {{position-label p}}<br>
+            {{else}}
+              <i>No additional team positions granted.</i>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    {{else}}
+      <div class="masonry-item">
+        <b class="text-danger">No team memberships</b>
+      </div>
+    {{/each}}
+  </div>
+{{/if}}

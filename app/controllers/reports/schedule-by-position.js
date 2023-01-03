@@ -17,7 +17,6 @@ const CALLSIGN_SIGNUP_COLUMNS = [
   {key: 'first_name', title: 'First Name'},
   {key: 'last_name', title: 'Last Name'},
   {key: 'status', title: 'Status'},
-  {key: 'email', title: 'Email'}
 ]
 
 export default class ReportsScheduleByPositionController extends ClubhouseController {

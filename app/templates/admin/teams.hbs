@@ -1,0 +1,104 @@
+<main>
+  <h1>Teams</h1>
+  <p>
+    {{#if this.canManageTeams}}
+      <button type="button" class="btn btn-primary" {{action this.newTeam}}>New Team</button>
+    {{else}}
+      Contact the Tech Team to create new teams, or adjust existing ones.
+    {{/if}}
+  </p>
+
+  Showing {{pluralize this.teams.length "team"}}
+  <table class="table table-sm table-hover table-striped table-width-auto">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th colspan="2">Active / Title</th>
+      <th>Type</th>
+      <th>Associated Roles</th>
+      <th>Managers</th>
+      {{#if this.canManageTeams}}
+        <th>Actions</th>
+      {{/if}}
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.teams as |team|}}
+      <tr>
+        <td class="text-end">{{team.id}}</td>
+        <td class="text-center">
+          <BooleanIcon @value={{team.active}} @falseIcon="times" @falseClass="text-danger"/>
+        </td>
+        <td>
+          {{team.title}}
+        </td>
+        <td>{{this.typeLabel team.type}}</td>
+        <td>
+          {{this.roleList team.role_ids}}
+        </td>
+        <td>
+          {{#each team.managers as |person|}}
+            <PersonLink @person={{person}} />
+            <br>
+          {{else}}
+            -
+          {{/each}}
+        </td>
+        {{#if this.canManageTeams}}
+          <td>
+            <UiButton @onClick={{fn this.editTeam team}} @size="sm">
+              {{fa-icon "edit"}} Edit
+            </UiButton>
+          </td>
+        {{/if}}
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</main>
+
+{{#if this.entry}}
+  <ModalDialog @title={{if this.entry.isNew "New Team"  "Edit Team"}} @onEscape={{this.cancelTeam}} as |Modal|>
+    <ChForm @formId="role"
+            @formFor={{this.entry}}
+            @validator={{this.teamValidations}}
+            @onSubmit={{this.saveTeam}}
+            @onCancel={{this.cancelTeam}} as |f|>
+      <Modal.body>
+        <FormRow>
+          <f.text @name="title" @label="Team Title" @maxlength={{40}} @size={{25}}/>
+          <f.select @name="type" @label="Team Type" @options={{this.typeOptions}} />
+        </FormRow>
+        <fieldset>
+          <legend>Team Flags</legend>
+          <FormRow>
+            <div class="col">
+              <f.checkbox @name="active" @label="Active"/>
+            </div>
+          </FormRow>
+        </fieldset>
+        <fieldset>
+          <legend>Team Role Grants</legend>
+          <FormRow>
+            <f.checkboxGroup @name="role_ids" @options={{this.roleOptions}} />
+          </FormRow>
+        </fieldset>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
+        <UiCancelButton @onClick={{this.cancelTeam}}
+                        @disabled={{this.entry.isSaving}} />
+        {{#if this.entry.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+        {{#unless this.entry.isNew}}
+          <div class="ms-auto">
+            <button {{action this.removeTeam}} type="button" class="btn btn-danger btn-sm">
+              {{fa-icon "trash-alt" type="fas"}} Delete
+            </button>
+          </div>
+        {{/unless}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}

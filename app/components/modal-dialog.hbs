@@ -1,9 +1,9 @@
 <BsModal
-  @fade={{true}}
+  @fade={{false}}
   @keyboard={{false}}
   @backdropClose={{false}}
-  @position="center"
-  @transitionDuration={{200}}
+  @position={{or @position "center"}}
+  @transitionDuration={{100}}
   @size={{or @size "lg"}}
   {{did-insert this.adjustClassOnInsert}}
   as |modal|>
@@ -12,5 +12,8 @@
       <h5 class="modal-title">{{@title}}</h5>
     </modal.header>
   {{/if}}
-  {{yield (hash body=modal.body footer=(component "modal/footer" modal=modal align=@align))}}
+  {{yield (hash
+            title=(component "modal/title" modal=modal)
+            body=modal.body
+            footer=(component "modal/footer" modal=modal align=@align))}}
 </BsModal>

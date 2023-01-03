@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {validatePresence} from 'ember-changeset-validations/validators';
-import {ALPHA} from 'clubhouse/constants/positions';
+import {ALPHA, BURN_PERIMETER} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 
 export default class HqShiftController extends ClubhouseController {
@@ -107,6 +107,17 @@ export default class HqShiftController extends ClubhouseController {
   }
 
   /**
+   * Check to see if the person may not need a radio for the shift.
+   * (i.e. working a Burn Perimeter shift)
+   *
+   * @returns {boolean}
+   */
+
+  get mayNotNeedRadio() {
+    return !!(this.onDutyEntry?.position_id === BURN_PERIMETER);
+  }
+
+  /**
    * Is person off duty
    *
    * @returns {boolean}
@@ -150,7 +161,7 @@ export default class HqShiftController extends ClubhouseController {
 
   @action
   ignoreEntry(entry) {
-    entry.set('isIgnoring', true);
+    entry.isIgnoring = true;
   }
 
   /**
@@ -160,11 +171,12 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   @action
-  markEntryCorrect(entry) {
-    entry.set('isIgnoring', false);
-    entry.set('review_status', 'verified');
+  toggleEntryVerified(entry) {
+    entry.isIgnoring = false;
+    const isVerified = entry.review_status === 'verified';
+    entry.review_status = (isVerified ? 'unverified' : 'verified');
     entry.save()
-      .then(() => this.toast.success('Timesheet was successfully marked correct.'))
+      .then(() => this.toast.success(`Timesheet was successfully ${isVerified ? 'un-verified' : 'marked as verified'}.`))
       .catch((response) => this.house.handleErrorResponse(response));
   }
 
@@ -310,6 +322,6 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   _findOnDuty() {
-    this.onDutyEntry = this.timesheets.findBy('off_duty', null);
+    this.onDutyEntry = this.timesheets.find((t) => t.off_duty == null);
   }
 }

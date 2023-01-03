@@ -99,8 +99,8 @@ export default class IntakeNoteEditComponent extends Component {
       method: 'POST', data
     }).then(() => {
       this.toast.success('Note successfully saved.');
-      this.args.onSubmit(person);
-      this.args.closeNoteAction();
+      this.args.onSubmit?.(person);
+      this.args.closeNoteAction?.();
     }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isSubmitting = false);
   }

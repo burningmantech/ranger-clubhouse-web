@@ -4,5 +4,9 @@
 
 .btn-timesheet {
   display: inline-block;
-  width: 100px;
+  width: 12ch;
+}
+
+button.btn-timesheet:not(:last-child) {
+  margin-right: 1vw;
 }

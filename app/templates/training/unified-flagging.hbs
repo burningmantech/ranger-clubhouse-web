@@ -1,0 +1,7 @@
+<YearSelect @title="Unified Flagging"
+            @year={{this.year}}
+            @minYear={{2008}}
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}} />
+
+<UnifiedFlagging @people={{this.people}} @year={{this.year}} />

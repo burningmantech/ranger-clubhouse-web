@@ -1,0 +1,178 @@
+.vehicle-registry-table {
+  margin-bottom: 10px;
+}
+
+.vehicle-registry-row:nth-child(odd) {
+  background-color: $table-striped-bg;
+}
+
+.vehicle-registry-header {
+  color: $table-head-color;
+  background-color: $table-head-bg !important;
+  border-color: $table-border-color;
+  font-weight: bold;
+}
+
+.vehicle-registry-row {
+  border-top: 1px solid #ddd;
+}
+
+.vehicle-registry-row:hover {
+  background-color: $table-hover-bg;
+}
+
+@media print {
+  .vehicle-registry-table {
+    font-size: 1rem;
+  }
+}
+
+.vehicle-registry-header, .vehicle-registry-row {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  flex-direction: row;
+  flex-shrink: 1;
+  > div {
+    padding: 5px 7px;
+  }
+}
+
+.vehicle-registry-header {
+  align-items: center;
+}
+
+
+@include media-breakpoint-up(xl) {
+  .vehicle-registry-table {
+    font-size: 0.90em;
+  }
+
+  .vehicle-registry-header, .vehicle-registry-row {
+    width: 100%;
+  }
+
+  .vehicle-registry-person {
+    width: 8%;
+  }
+  .vehicle-registry-status {
+    width: 7%;
+  }
+  .vehicle-registry-vehicle {
+    width: 17%;
+
+  }
+  .vehicle-registry-rental {
+    width: 8%;
+
+  }
+  .vehicle-registry-sticker {
+    width: 10%;
+
+  }
+
+  .vehicle-registry-logo {
+    text-align: center;
+    width: 8%;
+
+  }
+  .vehicle-registry-fuel-chit {
+    text-align: center;
+    width: 5%;
+
+  }
+  .vehicle-registry-amber-light {
+    text-align: center;
+    width: 5%;
+  }
+  .vehicle-registry-mvr {
+    text-align: center;
+    width: 4%;
+
+  }
+  .vehicle-registry-motorpool {
+    text-align: center;
+    width: 10%;
+
+  }
+  .vehicle-registry-action {
+    width: 18%;
+  }
+}
+
+@include media-breakpoint-down(xl) {
+  .vehicle-registry-header {
+    display: none !important;
+  }
+
+  .vehicle-registry-row {
+    padding: 5px;
+    border: 1px solid #bebebe;
+  }
+
+  .vehicle-registry-person {
+    width: 49%;
+    order: 1;
+  }
+  .vehicle-registry-status {
+    order: 2;
+    width: 49%;
+    text-align: right;
+  }
+  .vehicle-registry-vehicle {
+    order: 3;
+    width: 100%;
+
+  }
+  .vehicle-registry-rental {
+    order: 4;
+    width: 49%;
+  }
+
+  .vehicle-registry-sticker {
+    order: 5;
+    width: 49%;
+    text-align: right;
+  }
+
+  .vehicle-registry-license {
+    order: 6;
+    width: 49%;
+  }
+
+  .vehicle-registry-logo {
+    order: 7;
+    width: 49%;
+  }
+
+  .vehicle-registry-fuel-chit {
+    order: 8;
+    width: 49%;
+    text-align: right;
+  }
+
+  .vehicle-registry-amber-light {
+    order: 9;
+    width: 49%;
+  }
+
+  .vehicle-registry-mvr {
+    order: 10;
+    width: 49%;
+    text-align: right;
+  }
+
+  .vehicle-registry-motorpool {
+    order: 10;
+    width: 49%;
+  }
+
+  .vehicle-registry-action {
+    order: 11;
+    width: 100%;
+    button {
+      display: inline-block;
+      width: 49%;
+    }
+  }
+}

@@ -6,7 +6,7 @@
 </p>
 {{#if (eq this.survey.type "trainer")}}
   {{#each this.trainers as |trainer|}}
-    <ChAccordion id="trainer-{{trainer.trainer_id}}" as |Accordion|>
+    <UiAccordion id="trainer-{{trainer.trainer_id}}" as |Accordion|>
       <Accordion.title>
         Trainer {{trainer.callsign}}
       </Accordion.title>
@@ -18,23 +18,23 @@
           <SurveyQuestionReport @report={{trainer.report}} @question={{question}} />
         {{/each}}
       </Accordion.body>
-    </ChAccordion>
+    </UiAccordion>
   {{else}}
     <b class="text-danger">No Trainer-on-Trainer feedback has been given yet.</b>
   {{/each}}
 {{else}}
   {{#each this.report.summarized_ratings as |summary|}}
-    <ChAccordion as |Accordion|>
+    <UiAccordion as |Accordion|>
       <Accordion.title>{{summary.description}}</Accordion.title>
       <Accordion.body>
         <SurveyRatingSummaryReport @noHeader={{true}} @report={{this.report}} @summary={{summary}} />
       </Accordion.body>
-    </ChAccordion>
+    </UiAccordion>
   {{/each}}
 
   {{#if (eq this.report.type "trainer")}}
-    {{#each this.report.trainers as |trainer|}}
-      <ChAccordion id="trainer-{{trainer.trainer_id}}" as |Accordion|>
+    {{#each this.report.trainers key="trainer_id" as |trainer|}}
+      <UiAccordion id="trainer-{{trainer.trainer_id}}" as |Accordion|>
         <Accordion.title>
           Trainer {{trainer.callsign}}
         </Accordion.title>
@@ -49,11 +49,11 @@
                                   @trainingId={{this.training.id}} />
           {{/each}}
         </Accordion.body>
-      </ChAccordion>
+      </UiAccordion>
     {{/each}}
   {{else}}
     {{#each this.report.questions as |question|}}
-      <ChAccordion as |Accordion|>
+      <UiAccordion as |Accordion|>
         <Accordion.title>{{question.description}}</Accordion.title>
         <Accordion.body>
           <SurveyQuestionReport @noHeader={{true}}
@@ -62,7 +62,7 @@
                                 @trainingId={{this.training.id}} />
         </Accordion.body>
 
-      </ChAccordion>
+      </UiAccordion>
     {{/each}}
   {{/if}}
 {{/if}}

@@ -1,0 +1,68 @@
+<UiSection>
+  <:title>Issued Pogs</:title>
+  <:body>
+    <p>
+      Pog tracking is only available for the 2023 and later events.
+    </p>
+    <p>
+      <UiButton @onClick={{this.newEntry}}>New Pog</UiButton>
+    </p>
+    Showing {{pluralize @personPogs.length "pog"}}
+    <table class="table table-width-auto table-sm table-striped table-hover">
+      <thead>
+      <tr>
+        <th>Pog</th>
+        <th>Status</th>
+        <th>Issued At</th>
+        <th>Issued By</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each @personPogs as |pog|}}
+        <tr>
+          <td>{{pog.pogLabel}}</td>
+          <td>{{pog.statusLabel}}</td>
+          <td>{{shift-format pog.created_at year=true}}</td>
+          <td>{{pog.issued_by.callsign}}</td>
+          <td>
+            <UiButton @onClick={{fn this.editEntry pog}} @size="sm">{{fa-icon "edit"}} Edit</UiButton>
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="5" class="text-danger">No pogs have been record yet.</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </:body>
+</UiSection>
+
+{{#if this.entry}}
+  <ModalDialog as |Modal|>
+    <ChForm @formFor={{this.entry}} @formId="pog" @onSubmit={{this.saveEntry}} as |f|>
+      <Modal.title>{{if this.entry.isNew "New" "Edit"}} Pog</Modal.title>
+      <Modal.body>
+        <FormRow>
+          <f.select @name="pog" @label="Pog" @options={{this.pogOptions}} />
+          <f.select @name="status" @label="Status" @options={{this.statusOptions}} />
+        </FormRow>
+        <FormRow>
+          <f.textarea @name="notes" @label="Notes (optional)" @rows={{2}} @cols={{80}} />
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @disabled={{this.entry.isSaving}} />
+        <UiButton @onClick={{this.closeEntry}} @disabled={{this.entry.isSaving}} @type="secondary">
+          Cancel
+        </UiButton>
+        <div class="ms-auto">
+          <UiButton @type="danger" @size="sm" @onClick={{this.deleteEntry}} @disabled={{this.entry.isSaving}}>
+            Delete
+          </UiButton>
+        </div>
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}

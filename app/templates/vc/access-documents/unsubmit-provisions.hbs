@@ -1,0 +1,80 @@
+<h1>Un-submit Provision (year {{this.year}}) Recommendations</h1>
+<p>
+  This page shows people who have claimed and/or submitted earned provisions (not allocated for job) yet did not work in {{this.year}}.
+</p>
+<p>
+  Legend: Ticket = claimed or submitted RPT or SC, "-" means no claimed/submitted ticket.<br>
+  BMID Printed? = BMID was sent to be printed.<br>
+  Sign Ups? = Has non-training sign ups in {{this.year}}.<br>
+  WAP? = Has claimed or submitted WAP or Staff Credential.
+</p>
+<p>
+  <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+</p>
+Showing {{pluralize this.people.length "person"}}
+<table class="table table-width-auto table-sm table-hover table-striped">
+  <thead>
+  <tr>
+    <th>&nbsp;</th>
+    <th>Callsign</th>
+    <th>Status</th>
+    <th>Ticket</th>
+    <th>WAP?</th>
+    <th>BMID Printed?</th>
+    <th>{{this.year }} Sign Ups?</th>
+    <th>ID</th>
+    <th>Provision</th>
+    <th>Status</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.people as |person|}}
+    <tr>
+      <td>
+        {{#if person.didUnsubmit}}
+          {{fa-icon "check" color="success"}}
+        {{else}}
+          <Input @type="checkbox" @checked={{person.selected}} />
+        {{/if}}
+      </td>
+      <td>
+        <PersonLink @person={{person}} />
+      </td>
+      <td>{{person.status}}</td>
+      <td>
+        {{#if person.ticket}}
+          {{ticket-type-human person.ticket.type}}
+        {{else}}
+          -
+        {{/if}}
+      </td>
+      <td class="text-center">
+        {{yesno person.has_wap}}
+      </td>
+      <td class="text-center">{{yesno person.bmid}}</td>
+      <td class="text-center">{{yesno person.signed_up}}</td>
+      <td>
+        {{#each person.provisions as |provision|}}
+          RP-{{provision.id}}<br>
+        {{/each}}
+      </td>
+      <td>
+        {{#each person.provisions as |provision|}}
+          {{this.provisionTypeHuman provision}}<br>
+        {{/each}}
+      </td>
+      <td>
+        {{#each person.provisions as |provision|}}
+          {{provision.status}}<br>
+        {{/each}}
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
+<UiButton @onClick={{this.unsubmitAction}}>Un-submit Provisions</UiButton>
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Un-submitting provisions . . .
+  </LoadingDialog>
+{{/if}}

@@ -14,6 +14,7 @@ import {
   WAITING
 } from "clubhouse/constants/dashboard";
 import * as DashboardStep from 'clubhouse/constants/dashboard-steps';
+import {PROSPECTIVE} from "../constants/person_status";
 
 const SETUP_ACCOUNT_STEPS = [
   DashboardStep.UPLOAD_PHOTO,
@@ -48,8 +49,17 @@ const ALPHA_STEPS = [{
       };
     }
 
-    if (milestones.alpha_shifts_available) {
-      return {result: ACTION_NEEDED, isSignup: true, route: 'me.schedule'};
+    if (person.status !== PROSPECTIVE && milestones.alpha_shifts_available) {
+      return {
+        result: ACTION_NEEDED,
+        route: 'me.schedule',
+        linkedMessage: {
+          route: 'me.schedule',
+          prefix: 'Visit',
+          text: 'Me > Schedule / Sign Up',
+          suffix: 'to sign up for an Alpha shift.'
+        }
+      };
     }
 
     return {
@@ -73,7 +83,11 @@ const ALPHA_STEPS = [{
         if (milestones.alpha_shift.status === 'pending') {
           return {
             result: ACTION_NEEDED,
-            message: htmlSafe(`Please read "<a href="${milestones.alpha_shift_prep_link}" target="_blank" rel="noopener noreferrer">Becoming a Ranger: On-playa Alpha Shifts</a>" in the Ranger Manual.<br>Your Alpha shift starts ${dayjs(milestones.alpha_shift.begins).format('ddd MMM DD [@] HH:mm')}.<br><b>ARRIVE 15 MINUTES EARLY. Late arrivals will NOT be allowed to walk.</b><br>If you know you won't be able to make your Alpha shift please email the Mentor Cadre or stop by Ranger HQ on playa.`),
+            message: htmlSafe(`<p>Please read "<a href="${milestones.alpha_shift_prep_link}" target="_blank" rel="noopener noreferrer">Becoming a Ranger: On-playa Alpha Shifts</a>"`
+                +` on the Ranger website.</p>Your Alpha shift starts ${dayjs(milestones.alpha_shift.begins).format('ddd MMM DD [@] HH:mm')}.`
+                +`<p><b class="text-danger">ARRIVE 30 MINUTES EARLY. Late arrivals will NOT be allowed to walk.</b></p>`
+                +`<p>Check-in at the Hat Rack located at Ranger HQ, 5:45 &amp; the Esplanda close to Center Camp.</p>`
+                +`If you know you won't be able to make your Alpha shift please email the Mentor Cadre or stop by Ranger HQ on playa.`),
             email: 'MentorEmail'
           };
         } else {

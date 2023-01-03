@@ -1,0 +1,22 @@
+<p>
+  Ranger teams and leads may use your email address to send important messages to you regarding scheduling
+  and operations. Please keep your email address up to date.
+</p>
+<FormRow>
+  <@f.text @name="email" @label="Email"
+          @inputmode="email"
+          @size={{30}}
+          @maxlength={{50}}
+          @noSpaces={{true}}
+  />
+  <@f.text @name="home_phone"
+          @label="Primary Phone"
+          @inputmode="tel"
+          @maxlength={{25}}
+  />
+  <@f.text @name="alt_phone"
+          @label="Alternative Phone"
+          @inputmode="tel"
+          @maxlength={{25}}
+  />
+</FormRow>

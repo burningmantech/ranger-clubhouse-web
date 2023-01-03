@@ -15,104 +15,117 @@
   {{#if this.isSubmitting}}
     <LoadingPane @text={{if this.isCommitting "Submitting the upload." "Verifying the request."}} />
   {{else if this.actionResults}}
-    <div class="border rounded p-2 mt-2 mb-2">
-      {{#if this.resultFailures}}
-        <h4 class="text-danger">{{pluralize this.resultFailures.length "error"}} encountered</h4>
-        <table class="table table-sm table-width-auto table-striped mt-4">
-          <thead>
-          <tr>
-            <th>Callsign</th>
-            <th>Error</th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#each this.resultFailures as |result|}}
+    <UiSection>
+      <:body>
+        {{#if this.resultFailures}}
+          <h4 class="text-danger">{{pluralize this.resultFailures.length "error"}} encountered</h4>
+
+          <table class="table table-sm table-width-auto table-striped mt-4">
+            <thead>
             <tr>
-              <td>
-                {{#if (eq result.status "callsign-not-found")}}
-                  {{result.callsign}}
-                {{else}}
-                  <PersonLink @person={{result}} />
-                {{/if}}
-              </td>
-              <td>
-                {{#if (eq result.status "callsign-not-found")}}
-                  Callsign not found
-                {{else}}
-                  {{result.status}}
-                  {{#if result.details}}
-                    : {{result.details}}
+              <th>Callsign</th>
+              <th>Error</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each this.resultFailures as |result|}}
+              <tr>
+                <td>
+                  {{#if (eq result.status "callsign-not-found")}}
+                    {{result.callsign}}
+                  {{else}}
+                    <PersonLink @person={{result}} />
                   {{/if}}
-                {{/if}}
-              </td>
-            </tr>
-          {{/each}}
-          </tbody>
-        </table>
-      {{else if this.resultsCommitted}}
-        <h4 class="text-success">Bulk Upload SUCCESS!</h4>
-      {{else}}
-        <h4>Review Upload - Nothing submitted yet</h4>
-      {{/if}}
+                </td>
+                <td>
+                  {{#if (eq result.status "callsign-not-found")}}
+                    Callsign not found
+                  {{else}}
+                    {{result.status}}
+                    {{#if result.details}}
+                      : {{result.details}}
+                    {{/if}}
+                  {{/if}}
+                </td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </table>
+        {{else if this.resultsCommitted}}
+          <h4 class="text-success">Bulk Upload SUCCESS!</h4>
+        {{else}}
+          <h4>Review Upload - Nothing submitted yet</h4>
+        {{/if}}
 
-      {{#if this.resultWarnings}}
-        <table class="table table-sm table-striped table-width-auto">
-          <caption>{{pluralize this.resultWarnings.length "warning"}} encountered</caption>
-          <thead>
-          <tr>
-            <th>Callsign</th>
-            <th>Warning</th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#each this.resultWarnings as |result|}}
+        {{#if this.resultWarnings}}
+          <table class="table table-sm table-striped table-width-auto">
+            <caption>{{pluralize this.resultWarnings.length "warning"}} encountered</caption>
+            <thead>
             <tr>
-              <td>
-                <PersonLink @person={{result}} />
-              </td>
-              <td>
-                {{result.details}}
-              </td>
+              <th>Callsign</th>
+              <th>Warning</th>
             </tr>
-          {{/each}}
-          </tbody>
-        </table>
-      {{/if}}
+            </thead>
+            <tbody>
+            {{#each this.resultWarnings as |result|}}
+              <tr>
+                <td>
+                  <PersonLink @person={{result}} />
+                </td>
+                <td>
+                  {{result.details}}
+                </td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </table>
+        {{/if}}
 
-      {{#if this.resultSuccesses}}
-        <h4>
-          {{pluralize this.resultSuccesses.length "callsign" }}
-          {{if this.resultsCommitted "successfully uploaded" "with no errors"}}
-        </h4>
-        <div class="callsign-list mb-2">
-          {{#each this.resultSuccesses as |result|}}
-            <PersonLink @person={{result}} />
-          {{/each}}
-        </div>
-      {{/if}}
+        {{#if this.resultSuccesses}}
+          <h4>
+            {{pluralize this.resultSuccesses.length "callsign" }}
+            {{if this.resultsCommitted "successfully uploaded" "with no errors"}}
+          </h4>
+          <div class="callsign-list mb-2">
+            {{#each this.resultSuccesses as |result|}}
+              <PersonLink @person={{result}} />
+            {{/each}}
+          </div>
+        {{/if}}
 
-      {{#if (and (or this.resultSuccesses this.resultWarnings) (not this.resultFailures) (not this.resultsCommitted))}}
-        <UiButton @type="success" @onClick={{this.commitAction}} @disabled={{this.isSubmitting}}>
-          Commit Upload
-        </UiButton>
-      {{/if}}
-    </div>
+        {{#if
+          (and (or this.resultSuccesses this.resultWarnings) (not this.resultFailures) (not this.resultsCommitted))}}
+          <UiButton @type="success" @onClick={{this.commitAction}} @disabled={{this.isSubmitting}}>
+            Commit Upload
+          </UiButton>
+        {{/if}}
+      </:body>
+    </UiSection>
   {{/if}}
 
   <FormRow>
     <FormLabel>Select bulk action:</FormLabel>
-    <div class="col-auto">
-      <ChForm::Select @name="uploadAction"
-                      @value={{this.uploadAction}}
-                      @options={{this.uploadOptions}}
-                      @includeBlank={{true}}
-                      @onChange={{action (mut this.uploadAction)}}/>
+    <div class="col-12">
+      <LargeSelect
+        @label={{or this.actionLabel "Select an action"}}
+        @title="Select a bulk uploader action to perform"
+        @formatSelected={{this.formatSelected}}
+        @groups={{this.actionGroups}}
+        @onSelect={{this.selectAction}}
+        @columns={{3}}
+      />
     </div>
   </FormRow>
 
   <FormRow>
     <FormLabel>Enter callsigns (one per line) below:</FormLabel>
     <div class="col-auto">
+      {{#if this.uploadAction}}
+        <p>
+          <i>Line format:</i><br>
+          {{nl2br this.uploadHelp}}
+        </p>
+      {{/if}}
       <Textarea class="form-control" @value={{this.records}} rows={{10}} cols={{80}} />
     </div>
   </FormRow>

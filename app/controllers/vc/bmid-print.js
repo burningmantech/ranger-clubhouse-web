@@ -112,8 +112,12 @@ export default class VcBmidPrintController extends ClubhouseController {
       return ids;
     }, []);
 
+    const batchText = isEmpty(model.batchInfo) ?
+      '<b class="text-danger">You have not entered any text into the Batch Information field.</b> Please confirm this is your intent.' :
+      `<b>The batch information entered is "<i>${model.batchInfo}</i>"</b>`;
+
     this.modal.confirm('Confirm Export',
-      `${person_ids.length} BMID(s) have been selected to download and marked as SUBMITTED. Are you sure you want to do this?`,
+      `<p>${batchText}</p>${person_ids.length} BMID(s) have been selected to download and marked as SUBMITTED. Are you sure you want to do this?`,
       () => {
         this.isExporting = true;
         this.ajax.request('bmid/export', {
@@ -121,7 +125,12 @@ export default class VcBmidPrintController extends ClubhouseController {
           data: {year: this.year, person_ids, batch_info: model.batchInfo}
         }).then(({export_url, bmids}) => {
           this.isExporting = false;
-          this.house.pushPayload('bmid', bmids);
+          bmids.forEach((bmid) => {
+            const update = this.viewBmids.find((b) => b.person_id === bmid.person_id);
+            if (update) {
+              Object.assign(update, bmid);
+            }
+          });
           this.ajax.request('bmid/exports', {data: {year: this.year}})
             .then((result) => this.exportList = result.exports);
           this.house.downloadUrl(export_url);

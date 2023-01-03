@@ -1,0 +1,21 @@
+{
+  "comment": "Only used to help the Webstorm IDE to figure out where the imports actually live",
+  "compilerOptions": {
+    "target": "es6",
+    "baseUrl": ".",
+    "paths": {
+       "@ember/*": [
+        "./node_modules/ember-source/dist/packages/@ember/*"
+      ],
+      "@ember-data/*": [
+        "./node_modules/@ember-data/*"
+      ],
+      "clubhouse/*": [
+        "./app/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules/**/*"
+  ]
+}

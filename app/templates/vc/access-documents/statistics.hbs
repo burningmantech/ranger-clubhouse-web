@@ -1,0 +1,146 @@
+<h1>Ticketing Statistics</h1>
+
+<b>People Ticket Counts</b>
+<table class="table table-width-auto table-striped">
+  <thead>
+  <tr>
+    <th>Claimed</th>
+    <th>Unclaimed</th>
+    <th>Banked All</th>
+    <th>Submitted</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td class="text-end">{{this.statistics.people_claimed}}</td>
+    <td class="text-end">{{this.statistics.people_tickets_unclaimed}}</td>
+    <td class="text-end">{{this.statistics.people_fully_banked}}</td>
+    <td class="text-end">{{this.statistics.people_tickets_submitted}}</td>
+  </tr>
+  </tbody>
+</table>
+<div class="row">
+  <div class="col-auto">
+    <b>Reduced-Price Tickets</b>
+    <table class="table table-width-auto table-striped">
+      <thead>
+      <tr>
+        <th>Claimed</th>
+        <th>Unclaimed</th>
+        <th>Banked</th>
+        <th>Submitted</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="text-end">{{this.statistics.rpt_claimed}}</td>
+        <td class="text-end">{{this.statistics.rpt_unclaimed}}</td>
+        <td class="text-end">{{this.statistics.rpt_banked}}</td>
+        <td class="text-end">{{this.statistics.rpt_submitted}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-auto">
+    <b>Staff Credentials</b>
+    <table class="table table-width-auto table-striped">
+      <thead>
+      <tr>
+        <th>Claimed</th>
+        <th>Unclaimed</th>
+        <th>Banked</th>
+        <th>Submitted</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="text-end">{{this.statistics.sc_claimed}}</td>
+        <td class="text-end">{{this.statistics.sc_unclaimed}}</td>
+        <td class="text-end">{{this.statistics.sc_banked}}</td>
+        <td class="text-end">{{this.statistics.sc_submitted}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-auto">
+    <b>Vehicle Passes</b>
+    <table class="table table-width-auto table-striped">
+      <thead>
+      <tr>
+        <th>Claimed</th>
+        <th>Unclaimed</th>
+        <th>Submitted</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="text-end">{{this.statistics.vp_claimed}}</td>
+        <td class="text-end">{{this.statistics.vp_unclaimed}}</td>
+        <td class="text-end">{{this.statistics.vp_submitted}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-auto">
+    <b>Work Access Passes</b>
+    <table class="table table-width-auto table-striped">
+      <thead>
+      <tr>
+        <th>Claimed</th>
+        <th>Unclaimed</th>
+        <th>Submitted</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="text-end">{{this.statistics.wap_claimed}}</td>
+        <td class="text-end">{{this.statistics.wap_unclaimed}}</td>
+        <td class="text-end">{{this.statistics.wap_submitted}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-auto">
+    <b>Significant Other Work Access Passes</b>
+    <table class="table table-width-auto table-striped">
+      <thead>
+      <tr>
+        <th>People w/SOWAPs</th>
+        <th>Total Claimed</th>
+        <th>Total Submitted</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="text-end">{{this.statistics.people_with_wapso}}</td>
+        <td class="text-end">{{this.statistics.wapso_claimed}}</td>
+        <td class="text-end">{{this.statistics.wapso_submitted}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<b>Provisions</b>
+<table class="table table-width-auto table-striped">
+  <thead>
+  <tr>
+    <th>People w/qualified (earned)</th>
+    <th>People w/allocated</th>
+    <th>People w/both</th>
+    <th>People w/banked</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td class="text-end">{{this.statistics.people_with_qualified_provisions}}</td>
+    <td class="text-end">{{this.statistics.people_with_allocated_provisions}}</td>
+    <td class="text-end">{{this.statistics.people_with_both_provisions}}</td>
+    <td class="text-end">{{this.statistics.people_with_banked_provisions}}</td>
+  </tr>
+  </tbody>
+</table>

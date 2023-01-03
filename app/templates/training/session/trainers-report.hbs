@@ -30,7 +30,13 @@
       description.</strong>
   {{/if}}
 
-  <table class="trainers-report">
+  <p>
+    <strong>Note</strong>: please remember that inactive and retired Rangers need to take the
+    full day training; please email your inactive and retired trainees in advance
+    so they aren't surprised by this. Thanks!
+  </p>
+
+  <table class="trainers-report mb-3">
     <caption>Trainees</caption>
     <thead>
     <tr>
@@ -98,18 +104,20 @@
   </table>
 
   <p>
-    Teams: Ech = Echelon, Env = RSC Envoy, Int = Intercept, Log = Logistics,
-    Mnt = Mentor, Op = Operator, SL = Shift Lead, Snd = Sandman, Tech = Tech Team,
-    Trg = Training
-  </p>
-  <p>
     A '-' in the passed column usually indicates the training session has not
     happened yet and/or no pass information has been recorded.
   </p>
-  <p>
-    Trainers: please remember that inactive and retired Rangers need to take the
-    full day training; please email your inactive and retired trainees in advance
-    so they aren't surprised by this. Thanks!
-  </p>
+
+  {{#if this.team_names}}
+    <h3 class="d-print-page-break">Teams Legend</h3>
+    <dl>
+      {{#each this.team_names as |team|}}
+        {{#if team.short_title}}
+          <dt class="float-start me-2">{{team.short_title}}:</dt>
+          <dd>{{team.title}}</dd>
+        {{/if}}
+      {{/each}}
+    </dl>
+  {{/if}}
 
 </div>

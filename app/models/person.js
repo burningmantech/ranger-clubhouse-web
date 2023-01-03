@@ -10,6 +10,7 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('string') mi;
   @attr('string') last_name;
   @attr('string') email;
+  @attr('boolean') is_bouncing;
   @attr('string') callsign;
   @attr('boolean') callsign_approved;
   @attr('string') callsign_pronounce;
@@ -25,6 +26,7 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('boolean') on_site;
   @attr('boolean') has_reviewed_pi;   // pseudo field, write only
   @attr('string') reviewed_pi_at;
+  @attr('string') pi_reviewed_for_dashboard_at;
   @attr('string', {readOnly: true}) logged_in_at;
   @attr('string', {readOnly: true}) last_seen_at;
 
@@ -49,7 +51,10 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('string') gender;
 
   @attr('string') longsleeveshirt_size_style;
+  @attr('number') long_sleeve_swag_ig;
   @attr('string') teeshirt_size_style;
+  @attr('number') tshirt_swag_id;
+  @attr('number') tshirt_secondary_swag_id;
 
   @attr('string') message;
   @attr('string') message_updated_at;

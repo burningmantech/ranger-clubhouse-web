@@ -4,8 +4,8 @@ import RSVP from 'rsvp';
 export default class MeTicketsRoute extends ClubhouseRoute {
   beforeModel() {
     const user = this.session.user;
-    if (user.isAuditor || user.isPastProspective || user.isProspectiveWaitlist) {
-      this.toast.error('Auditors, past prospectives, and prospective waitlisted do not have access to this page.');
+    if (user.isAuditor || user.isPastProspective) {
+      this.toast.error('Auditors and  past prospectives do not have access to this page.');
       this.router.transitionTo('me.homepage');
     } else {
       super.beforeModel(...arguments);
@@ -13,11 +13,14 @@ export default class MeTicketsRoute extends ClubhouseRoute {
   }
 
   model() {
+    // Record when the user hit the ticketing page, ignore any response.
+    this.ajax.request(`person-event/${this.session.userId}/progress`, {method: 'POST', data: {milestone: 'ticket-visited'}});
+
     return RSVP.hash({
       ticketingInfo: this.ajax.request('ticketing/info')
                 .then((results) => results.ticketing_info ),
       ticketingPackage: this.ajax.request(`ticketing/${this.session.userId}/package`)
-                .then((results) => results.package)
+                .then((results) => results.package),
     });
   }
 

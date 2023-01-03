@@ -34,11 +34,16 @@ export function shiftFormat([shiftDate, endDate], hash) {
   }
 
   const startDay = datetime.date(), endDay = endDatetime.date();
+
   let endFormat = null;
 
-  if ((startDay === endDay)) {
+  if (datetime.year() !== endDatetime.year()) {
+    return htmlSafe(`${datetime.format(MONTH_DAY_TIME_YEAR)} to <span class="d-inline-block">${endDatetime.format(MONTH_DAY_TIME_YEAR)}</span>`);
+  } else if (startDay === endDay) {
     // Don't bother with added the day on the end time if its only to midnight
     endFormat = endDatetime.format(HOUR_MINS);
+  } else if ((endDatetime.dayOfYear() - datetime.dayOfYear()) > 1) {
+    endFormat = endDatetime.format(MONTH_DAY_TIME);
   } else {
     endFormat = endDatetime.format(HOUR_MIN_DAY);
   }

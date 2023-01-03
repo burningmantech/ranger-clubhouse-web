@@ -6,7 +6,7 @@ import ENV from 'clubhouse/config/environment';
 import Ember from 'ember';
 import {cancel, later} from '@ember/runloop';
 
-const DEFAULT_POLL_INTERVAL_SECONDS = 60;
+const DEFAULT_POLL_INTERVAL_SECONDS = 60*10;
 
 export default class NewVersionNotifyComponent extends Component {
   @tracked  hasNewVersion = false;

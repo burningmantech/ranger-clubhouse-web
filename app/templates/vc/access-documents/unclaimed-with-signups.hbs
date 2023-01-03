@@ -1,0 +1,48 @@
+<h1>Unclaimed Tickets With Sign Ups</h1>
+<p>
+  This report shows all unclaimed tickets, and if a person is signed up for a shift starting on or after August 15th.
+</p>
+<p>
+  <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+</p>
+{{pluralize this.tickets.length "ticket"}} found.
+<table class="table table-striped table-hover table-sm table-width-auto">
+  <thead>
+  <tr>
+    <th>Callsign</th>
+    <th>Status</th>
+    <th>Email</th>
+    <th>Type</th>
+    <th>RAD</th>
+    <th>Expires On</th>
+    <th>Has Signup?</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.tickets as |ticket|}}
+    <tr>
+      <td>
+        <PersonLink @person={{ticket}} />
+      </td>
+      <td>
+        {{ticket.status}}
+      </td>
+      <td>
+        {{mail-to ticket.email}}
+      </td>
+      <td>
+        {{ticket-type-human ticket.type}}
+      </td>
+      <td>
+        RAD-{{ticket.access_document_id}}
+      </td>
+      <td>
+        {{ticket.expiry_date}}
+      </td>
+      <td class="text-center">
+        {{yesno ticket.has_signup}}
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>

@@ -9,12 +9,14 @@ import ENV from 'clubhouse/config/environment';
 import {config} from 'clubhouse/utils/config';
 import {ADMIN, MANAGE, VC, VIEW_PII, VIEW_EMAIL} from 'clubhouse/constants/roles';
 import MobileDetect from 'mobile-detect';
+import BrowserDetector from "../utils/browser-detect";
 
-const MOBILE_MAX_WIDTH = 991;
-const RESIZE_DEBOUNCE_DELY = 250;
+const MOBILE_MAX_WIDTH = 960;
+const RESIZE_DEBOUNCE_DELAY = 250;
 
 export default class extends SessionService {
   @service ajax;
+  @service house;
   @service router;
 
   // The logged-in user
@@ -23,7 +25,9 @@ export default class extends SessionService {
   // How many unread messages the user has
   @tracked unreadMessageCount = 0;
 
-  // Temporary login token used to login & change or set the password.
+  @tracked showSearchDialog = false;
+
+  // Temporary login token used to log in & change or set the password.
   // Token becomes invalid once the password has changed.
   tempLoginToken = null;
 
@@ -38,6 +42,10 @@ export default class extends SessionService {
 
   // True if the mobile screen size is less than MOBILE_MAX_WIDTH
   @tracked isSmallScreen = false;
+
+  // When a request is aborted due to an offline or flakey Internet, pop up a dialog letting the user
+  // know something is up.
+  @tracked showOfflineDialog = false;
 
   constructor() {
     super(...arguments);
@@ -54,6 +62,10 @@ export default class extends SessionService {
     window.addEventListener('resize', this._bounceResizeEvent, false);
 
     this.isDevelopment = ENV.environment === 'development';
+
+    this.isMac = navigator.userAgent.indexOf("Mac") !== -1;
+
+    this.browserDetect = new BrowserDetector();
   }
 
   /**
@@ -65,6 +77,11 @@ export default class extends SessionService {
     return (this.hasRole(MANAGE) && !!config('LoginManageOnPlayaEnabled'));
   }
 
+
+  get hasLMOP() {
+    return this.hasRole(MANAGE);
+  }
+
   /**
    * Debounce the window resized event. Prevents excessive re-renderings when the
    * user is resizing the window or rotating the device's orientation.
@@ -74,7 +91,7 @@ export default class extends SessionService {
 
   @action
   _bounceResizeEvent() {
-    debounce(this, this._windowResized, RESIZE_DEBOUNCE_DELY);
+    debounce(this, this._windowResized, RESIZE_DEBOUNCE_DELAY);
   }
 
   /**
@@ -99,6 +116,7 @@ export default class extends SessionService {
    *
    * @returns {Promise<void>}
    */
+
   handleAuthentication() {
     return this.loadUser().then(() => {
       if (this.tempLoginToken) {
@@ -148,6 +166,17 @@ export default class extends SessionService {
   }
 
   /**
+   * Update the signed in position.
+   */
+
+  updateOnDuty() {
+    return this.ajax.request(`person/${this.userId}/onduty`)
+      .then(({onduty}) => this.user.onduty_position = onduty)
+      .catch((response) => this.house.handleErrorResponse(response))
+  }
+
+  /**
+   * Return the user id if available
    *
    * @returns {number|null}
    */
@@ -183,6 +212,16 @@ export default class extends SessionService {
 
   get canViewEmail() {
     return this.hasRole([ADMIN, VIEW_PII, VIEW_EMAIL, VC]);
+  }
+
+  /**
+   * Can the user view another person's personal info (address, phone #, email)
+   *
+   * @returns {boolean}
+   */
+
+  get canViewPII() {
+    return this.hasRole([ADMIN, VC, VIEW_PII]);
   }
 
   /**

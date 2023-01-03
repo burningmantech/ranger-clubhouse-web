@@ -1,4 +1,3 @@
-
 @import "bootstrap-custom";
 @import "ember-bootstrap/bootstrap";
 @import "bootstrap-print";
@@ -22,22 +21,30 @@
 @import "timesheet";
 @import "timesheet-log";
 @import "training";
-
+@import "vehicle-registry";
 
 main {
   flex: 1 1 0;
   min-width: 0;
   padding: 10px 20px;
-  background-color: #f6f6f6;
 }
 
 .ui-section {
-  margin-bottom: 10px;
-  padding: 15px;
+  // margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 10px;
   background-color: #ffffff;
   box-shadow: 0 1px 5px 0 rgb(50 50 50 / 50%); //rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
+.ui-section-title {
+  font-size: 1.05rem;
+  font-weight: 400;
+  margin: -10px -10px 10px -10px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #c0c0c0;
+}
 
 @media print {
   h1 {
@@ -47,7 +54,7 @@ main {
   body {
     margin: 0.1cm !important;
     line-height: 1.3 !important;
-    background: #ffffff !important;
+    background-color: #f6f6f6;
     color: #000 !important;
   }
 
@@ -57,6 +64,7 @@ main {
 
   .ui-section {
     box-shadow: none !important;
+    padding: 0 !important;
   }
 
   .d-print-page-break {
@@ -74,25 +82,34 @@ main {
     color: #000 !important;
   }
 
+  ul.nav-tabs {
+    display: none;
+  }
 }
 
 #body-row {
   display: flex;
   //flex-direction: row;
   flex-wrap: wrap;
-
 }
 
 @include media-breakpoint-down(lg) {
   // Reduce padding on small screens.
   main {
-    padding: 5px 10px;
+    padding: 5px;
   }
+
 }
 
 @media not print {
   body {
-    background-color: #fcfcfc;
+    background-color: #f9f9f9;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  #body-row {
+    flex: 1;
   }
 }
 
@@ -108,6 +125,10 @@ h3 select, h3 option, .h3 select, .h3 option {
   font-size: $h3-font-size;
 }
 
+b {
+  font-weight: 600;
+}
+
 .text-black {
   color: #000 !important;
 }
@@ -120,6 +141,7 @@ h3 select, h3 option, .h3 select, .h3 option {
 button:disabled {
   cursor: not-allowed !important;
 }
+
 
 dl {
   margin-bottom: 0;
@@ -162,21 +184,71 @@ dl {
   color: #000;
 }
 
-.footer {
+ul.nav-tabs {
+  display: flex;
+  margin-bottom: 1.5vh;
+
+
+  li {
+    text-align: center;
+    overflow-wrap: break-word;
+    a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+  }
+
+  li:not(:first-child) {
+    margin-left: 1vw;
+  }
+
+  .nav-link {
+    font-weight: 650;
+    font-size: 0.80rem;
+  }
+
+  .nav-link:not(.active):hover {
+    border-top: #0d6efd 3px solid;
+  }
+
+  .nav-link:not(.active) {
+    border-top: #e9ecef 3px solid;
+    background-color: #e9ecef;
+    border-bottom: #666;
+    color: #3e4348;
+
+    &:hover {
+      color: #0d6efd;
+    }
+  }
+
+  .nav-link.active {
+    border-top: #ff8c00 3px solid;
+    background-color: #f9f9f9;
+  }
+
+  .nav-item.active {
+    a {
+      height: calc(100% + 1px);
+    }
+  }
+}
+
+@include media-breakpoint-down(xl) {
+  ul.nav-tabs li {
+    flex: 1;
+  }
+}
+
+footer {
   width: 100%;
-  padding: 15px 0;
+  padding: 10px;
   color: #000;
   background-color: $kakhi;
-
-  a, a:visited {
-    color: #000;
-    font-weight: bold;
-  }
-
-  > .container {
-    padding-right: 15px;
-    padding-left: 15px;
-  }
+  font-size: 0.85rem;
+  text-align: center;
 }
 
 ul.nav-pills li > a.is_active {
@@ -227,7 +299,8 @@ ul.nav-pills li {
 legend {
   border-bottom: 1px solid #dcdcdc;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 500;
+  padding-left: 0;
 }
 
 .form-check-label:hover {
@@ -276,23 +349,9 @@ legend {
 }
 
 
-
-.popover-container {
-  position: relative;
-  display: inline-block;
-
-  .popover {
-    z-index: 100000;
-    width: $popover-max-width;
-    @include box-shadow($box-shadow);
-  }
-
-  .popover-footer {
-    border-top: 1px solid #eee;
-    padding: 10px;
-    margin-top: 10px;
-    text-align: right;
-  }
+.popover-footer {
+  padding-top: 20px;
+  text-align: right;
 }
 
 /*
@@ -406,7 +465,10 @@ legend {
   }
 }
 
-.btn-block { width: 100%; display: block; }
+.btn-block {
+  width: 100%;
+  display: block;
+}
 
 @include media-breakpoint-down(lg) {
   .btn-responsive {
@@ -459,6 +521,10 @@ legend {
   }
 }
 
+.max-width-500 {
+  max-width: 500px;
+}
+
 .max-width-700 {
   max-width: 700px;
 }
@@ -468,6 +534,10 @@ legend {
 }
 
 .max-width-1000 {
+  max-width: 1000px;
+}
+
+.max-width-1200 {
   max-width: 1000px;
 }
 
@@ -529,3 +599,8 @@ ul.no-indent, ol.no-indent {
   column-count: 5;
 }
 
+.award-card {
+  width: 175px;
+  padding: 10px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
+}

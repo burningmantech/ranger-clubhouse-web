@@ -1,4 +1,4 @@
-<ChSidebar @smallTitle={{this.training.title}} as |s|>
+<UiSidebar @smallTitle={{this.training.title}} as |s|>
   <s.group @title={{this.training.title}}>
     <s.link @route="training.index"
             @title="Training Sessions"
@@ -24,7 +24,12 @@
               @title="Training Surveys"
               @icon="poll" @iconType="s"/>
     {{/if}}
+    {{#if (and (not this.training.is_art) (has-role "intake"))}}
+      <s.link @route="training.unified-flagging" @routeArg={{this.training.id}}
+              @title="Unified Flagging"
+              @icon="flag" @iconType="s"/>
+    {{/if}}
   </s.group>
-</ChSidebar>
+</UiSidebar>
 
 <main>{{outlet}}</main>

@@ -8,13 +8,6 @@
                     @options={{this.activeOptions}}
                     @onChange={{action (mut this.activeFilter)}} />
   </div>
-  {{#if this.session.canViewEmail}}
-    <div class="col-auto">
-      <UiButton @onClick={{this.exportBulkPositions}} @disabled={{not this.positions.length}}>
-        Export combined callsigns w/emails
-      </UiButton>
-    </div>
-  {{/if}}
 </FormRow>
 
 <p>
@@ -29,8 +22,8 @@
   Showing {{this.viewPositions.length}} of {{pluralize this.positions.length "position"}} for year {{this.year}}.
 </p>
 
-{{#each this.viewPositions as |position|}}
-  <ChAccordion id="position-{{position.id}}" @isOpen={{mut (get this.showingPositions position.id)}} as |accordion|>
+{{#each this.viewPositions key="id" as |position|}}
+  <UiAccordion id="position-{{position.id}}" @isOpen={{mut (get this.showingPositions position.id)}} as |accordion|>
     <accordion.title>
       {{position-label position}} ({{pluralize position.activeCount "shift"~}}
       {{~#if position.inactiveCount~}}
@@ -49,11 +42,6 @@
           <UiButton @onClick={{fn this.exportByShift position}}>
             Export by Shift
           </UiButton>
-          {{#if this.session.canViewEmail}}
-            <UiButton @onClick={{fn this.exportByCallsign position}}>
-              Export Callsigns w/Emails
-            </UiButton>
-          {{/if}}
         </p>
         <table class="table table-sm table-hover table-striped">
           <thead>
@@ -96,13 +84,13 @@
         </table>
       {{/if}}
     </accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 {{else}}
   <b class="text-danger">No {{this.year}} shifts were found.</b>
 {{/each}}
 
 {{#if this.showBulkPositionDialog}}
-  <ModalDialog @title="Select the positions to export the signed up callsigns w/emails:"
+  <ModalDialog @title="Select the positions to export the signed up callsigns:"
                @size="xl"
                @onEscape={{this.cancelExport}} as |Modal|>
     <ChForm @formId="positionIds"
@@ -112,8 +100,8 @@
       <Modal.body>
         <FormRow>
           <f.checkboxGroup @name="positionIds"
-                   @cols={{4}}
-                   @options={{this.positionOptions}}/>
+                           @cols={{4}}
+                           @options={{this.positionOptions}}/>
         </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>

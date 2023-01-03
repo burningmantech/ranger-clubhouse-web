@@ -7,15 +7,18 @@
         as correct or incorrect. When you mark an entry as incorrect, a dialog box will appear
         where you may give an explanation on how the entry should be corrected.
       </p>
-        <b>Is the timesheet missing a shift that you worked?</b>
-        Use the
-        <LinkTo @route="me.timesheet-corrections.missing">Missing Entries Requests</LinkTo>
-        page to ask for a missing shift to be recorded.
+      <b>Is the timesheet missing a shift that you worked?</b>
+      Use the
+      <LinkTo @route="me.timesheet-corrections.missing">Missing Entries Requests</LinkTo>
+      page to ask for a missing shift to be recorded.
     </:body>
   </UiSection>
-  <Me::TimesheetReviewCommon @timesheets={{this.timesheets}} @timesheetSummary={{this.timesheetSummary}}
-                             @timesheetInfo={{this.timesheetInfo}} @person={{this.person}} />
-
+  <Me::TimesheetReviewCommon @timesheets={{this.timesheets}}
+                             @timesheetSummary={{this.timesheetSummary}}
+                             @timesheetInfo={{this.timesheetInfo}}
+                             @person={{this.person}}
+                             @year={{this.timesheetInfo.correction_year}}
+  />
 {{else}}
   <UiSection>
     <:title>No Timesheet Entries found</:title>

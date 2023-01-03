@@ -2,34 +2,46 @@ import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {TECH_NINJA, ADMIN, VIEW_PII} from 'clubhouse/constants/roles';
 import {service} from '@ember/service';
+import inGroups from 'clubhouse/utils/in-groups';
 
 export default class PersonRoleFormComponent extends Component {
   @service session;
   @service modal;
 
-  roleForm = {roleIds: this.args.roleIds};
   isTechNinja = this.session.hasRole(TECH_NINJA);
 
-  // Create a list of roles options to check
-  get roleOptions() {
-    const {roles} = this.args;
-    const isTechNinja = this.isTechNinja;
+  constructor() {
+    super(...arguments);
 
-    if (!roles) {
-      return [];
-    }
+    const {grantedRoles, roles} = this.args;
+    const {isTechNinja} = this;
 
-    return roles.map((role) => ({title: role.title, id: role.id, disabled: (role.id === TECH_NINJA && !isTechNinja)}));
+    this.roleIds = grantedRoles.roles.map((r) => r.id);
+    this.roleForm = {roleIds: this.roleIds};
+
+    this.roles = roles.map((role) => {
+      return {
+        id: role.id,
+        title: role.title,
+        selected: this.roleIds.includes(role.id),
+        positions: grantedRoles.position_roles.filter((p) => p.role_id === role.id),
+        disabled: ((role.id === TECH_NINJA || role.id === ADMIN) && !isTechNinja),
+      }
+    });
+
+    this.roleGroups = inGroups(this.roles, 3);
   }
 
   @action
-  save(model, isValid) {
-    const {onSave} = this.args;
-    const originalIds = this.args.roleIds;
-    const updatedIds = model.roleIds;
-    const wantAdmin = (!originalIds.includes(ADMIN) && updatedIds.includes(ADMIN));
-    const wantPII = (!originalIds.includes(VIEW_PII) && updatedIds.includes(VIEW_PII));
+  clickRole(role) {
+    role.selected = !role.selected;
+  }
 
+  @action
+  save() {
+    const {onSave} = this.args;
+    const wantAdmin = this._wantRole(this.roleIds, this.roles, ADMIN),
+      wantPII = this._wantRole(this.roleIds, this.roles, VIEW_PII);
     if (wantAdmin || wantPII) {
       let abilities;
       const roles = [];
@@ -48,12 +60,16 @@ export default class PersonRoleFormComponent extends Component {
       this.modal.confirm('Confirmation Required',
         `WARNING: The ${roles.join(' and ')} role${roles.length > 1 ? 's' : ''} requires prior approval by the Ranger Council. This person will ${abilities}. Are you absolutely 100% sure you want to do this?`,
         () => {
-          onSave(model, isValid);
+          onSave(this.roles);
         }
       );
     } else {
-      onSave(model, isValid);
+      onSave(this.roles);
     }
+  }
+
+  _wantRole(originalRoles, newRoles, roleId) {
+    return (!originalRoles.includes(roleId) && !!newRoles.find((r) => r.id === roleId && r.selected));
   }
 
   @action

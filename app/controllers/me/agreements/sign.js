@@ -3,6 +3,8 @@ import {htmlSafe} from '@ember/template';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 
+const DEPT_NDA = 'dept-nda';
+
 export default class MeAgreementsSignController extends ClubhouseController {
   @tracked didSign = false;
   @tracked isSubmitting = false;
@@ -21,7 +23,13 @@ export default class MeAgreementsSignController extends ClubhouseController {
     this.ajax.request(`agreements/${this.session.userId}/${this.agreement.tag}/sign`, {
       method: 'POST',
       data: {signature: 1}
-    }).then(() => this.didSign = true)
+    }).then(() => {
+      this.didSign = true;
+      if (this.agreement.tag === DEPT_NDA) {
+        // Signing the NDA reactivates all roles.
+        this.session.loadUser();
+      }
+    })
       .catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isSubmitting = false)
   }

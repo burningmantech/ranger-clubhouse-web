@@ -1,5 +1,5 @@
 import {Factory} from 'ember-cli-mirage';
-import faker from '@faker-js/faker';
+import {faker} from '@faker-js/faker';
 import dayjs from 'dayjs';
 
 export default Factory.extend({
@@ -8,8 +8,9 @@ export default Factory.extend({
   callsign_approved: true,
   country: 'US',
   password: 'ineedashower!',
-  teeshirt_size_style: 'Mens Crew S',
-  longsleeveshirt_size_style: 'Mens Regular S',
+  tshirt_swag_id: null,
+  tshirt_secondary_swag_id: null,
+  long_sleeve_swag_ig: null,
   gender: '',
   has_reviewed_pi: false,
 
@@ -52,10 +53,10 @@ export default Factory.extend({
     return faker.address.zipCode();
   },
   home_phone() {
-    return faker.phone.phoneNumberFormat();
+    return faker.phone.number();
   },
   alt_phone() {
-    return faker.phone.phoneNumberFormat();
+    return faker.phone.number();
   },
   create_date() {
     return dayjs().format('YYYY-MM-DD hh:mm:ss');

@@ -34,7 +34,7 @@
   {{/if}}
 
   {{#each this.positionCredits as |position|}}
-    <ChAccordion @isInitOpen={{get this.positionsOpened position.position_id}}
+    <UiAccordion @isInitOpen={{get this.positionsOpened position.position_id}}
                  @onClick={{action this.positionClicked position}} as |accordion|>
       <accordion.title>
         {{position.title}} ({{position.credits.length}})
@@ -82,7 +82,7 @@
           </table>
         {{/if}}
       </accordion.body>
-    </ChAccordion>
+    </UiAccordion>
   {{/each}}
 
   {{#if this.credit}}
@@ -201,7 +201,7 @@
             {{/if}}
           </div>
           {{#each this.copySourcePositions as |position|}}
-            <ChAccordion as |Accordion|>
+            <UiAccordion as |Accordion|>
               <Accordion.title>
                 [{{position.selectedCredits.length}}] <b>{{position.title}}</b> credits to copy
                 <UiButton @onClick={{fn this.copyPositionSelectAll position}}>
@@ -246,7 +246,7 @@
                   </table>
                 {{/if}}
               </Accordion.body>
-            </ChAccordion>
+            </UiAccordion>
           {{/each}}
         </Modal.body>
       </ChForm>

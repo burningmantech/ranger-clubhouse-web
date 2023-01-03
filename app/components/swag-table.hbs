@@ -1,0 +1,49 @@
+<p>
+  {{fa-icon "check" color="success"}} = is active and available to be selected<br>
+  {{fa-icon "times" color="danger"}} = is deactivated and will not appear as an option.
+</p>
+Showing {{pluralize @swags.length "item"}}
+<table class="table table-sm table-hover table-striped table-width-auto">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>&nbsp;</th>
+    <th>{{@title}}</th>
+    {{#if @isShirt}}
+      <th>Shirt Type</th>
+    {{/if}}
+    <th>Description</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each @swags key="id" as |swag|}}
+    <tr>
+      <td class="text-end">{{swag.id}}</td>
+      <td>
+        {{#if swag.active}}
+          {{fa-icon "check" color="success"}}
+        {{else}}
+          {{fa-icon "times" color="danger"}}
+        {{/if}}
+      </td>
+      <td>{{swag.title}}</td>
+      {{#if @isShirt}}
+        <td>{{this.shirtLabel swag}}</td>
+      {{/if}}
+      <td>
+        {{nl2br swag.description}}
+      </td>
+      <td>
+        <UiButton @size="sm" @onClick={{fn @editAction swag}}>
+          {{fa-icon "edit"}} Edit
+        </UiButton>
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="6">No swags have been created yet.</td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>

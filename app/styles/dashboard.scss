@@ -20,11 +20,18 @@
   }
 }
 
+.dashboard-links-things {
+  margin-bottom: 20px;
+}
+
 .dashboard-group-title-box {
   background-color: $wheatfield;
   font-weight: 400;
 }
 
+.dashboard-group-title-urgent {
+  color: #bd0010 !important;
+}
 
 .dashboard-steps {
   flex: 1;
@@ -86,26 +93,38 @@
 .dashboard-art-table {
   margin: 10px 0 15px 0;
   background-color: #ffffff;
- // box-shadow: 5px 5px 5px #888888;
+  // box-shadow: 5px 5px 5px #888888;
   //box-shadow: 0 0 5px 5px #dcdcdc;
   box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
 }
 
-.dashboard-art-row {
+.dashboard-art-header {
   padding: 5px;
+}
+
+.dashboard-art-row {
+  padding: 5px 5px 0 5px;
+}
+
+.dashboard-art-required-line {
+  padding: 0 5px 5px 0;
+  font-style: italic;
+  color: #6c757d;
+}
+
+.dashboard-art-row:nth-child(odd) {
+  background-color: $table-striped-bg;
   border-bottom: 1px solid #ced4da;
 }
 
 .dashboard-art-icon {
-  min-width: 20px;
+  text-align: center;
 }
 
 .dashboard-art-header {
   font-weight: 500;
   background-color: #e9ecef;
 }
-
-
 
 
 /*
@@ -163,6 +182,7 @@
   .dashboard-art-icon {
     display: inline-block;
     text-align: center;
+    width: 25px;
   }
 
   .dashboard-art-position {
@@ -178,7 +198,13 @@
   .dashboard-art-location {
     display: inline-block;
     width: 100%;
-    padding-left: 25px;
+    padding-left: 30px;
+  }
+
+  .dashboard-art-required-for {
+    display: inline-block;
+    width: 100%;
+    padding-left: 30px;
   }
 }
 
@@ -250,15 +276,18 @@
     }
   }
 
-  .dashboard-art-row {
+  .dashboard-art-info-line, .dashboard-art-required-line, .dashboard-art-header {
     display: flex;
     flex-direction: row;
     max-width: 600px;
   }
 
+  .dashboard-art-icon {
+    min-width: 30px;
+  }
 
   .dashboard-art-position {
-   min-width: 150px;
+    min-width: 150px;
   }
 
   .dashboard-art-status {
@@ -268,5 +297,9 @@
   .dashboard-art-location {
     min-width: 125px;
     margin-left: 5px;
+  }
+
+  .dashboard-art-required-line {
+    padding-left: 30px;
   }
 }

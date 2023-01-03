@@ -6,7 +6,7 @@
   odd about this person's collection of Access Documents.</p>
 
 Showing {{pluralize this.documents.people.length "person"}}
-<table class="table table-striped table-hover table-sm table-width-auto">
+<table class="table table-hover table-sm table-width-auto">
   <thead>
     <tr>
       <th>Person</th>
@@ -20,7 +20,7 @@ Showing {{pluralize this.documents.people.length "person"}}
   </thead>
 
   <tbody>
-    {{#each this.documents.people as |person|}}
+    {{#each this.documents.people key="person.id" as |person|}}
       <AccessDocumentsForPerson @person={{person.person}} @documents={{person.documents}} />
     {{else}}
       <tr>

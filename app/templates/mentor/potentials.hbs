@@ -25,7 +25,7 @@
     </div>
     <div class="form-check form-check-inline">
       <Input @type="checkbox" @checked={{this.personnelFlagged}} id="personnel-flag" class="form-check-input"/>
-      <label for="black-flag" class="form-check-label">Personnel Flagged</label>
+      <label for="personnel-flag" class="form-check-label">Personnel Flagged</label>
     </div>
   </div>
 </FormRow>
@@ -37,30 +37,36 @@
   Legend: RRN Rank = Ranger Regional Network. VC = Volunteer Coordinators.<br>
   Rankings: 1/Green = Above Avg., 2/Normal = Average, 3/Yellow = Below Avg., 4/FLAG = Major issue.
 </p>
+<p>
+  {{#if this.personnelIssuesCount}}
+    <b class="text-danger">The Personnel Flag has been raised on {{pluralize this.personnelIssuesCount "person"}}.</b>
+  {{else}}
+    Congratulations! No one has the Personnel Flag raised.
+  {{/if}}
+</p>
+
 Showing {{this.viewPotentials.length}} of {{pluralize this.mentees.length "potential alpha"}}
 <table class="table table-sm table-striped table-hover">
   <thead>
   <tr>
-    <th>Callsign / Name / Gender</th>
-    <th>Status</th>
-    <th>History</th>
-    <th>RRN Rank</th>
-    <th>VC Rank</th>
-    <th>FKA / Mentor Notes &amp; Rank</th>
-    <th>Training</th>
+    <th class="w-15">Callsign / Name / Gender</th>
+    <th class="w-10">Mentor History</th>
+    <th class="w-75">Training &amp; Notes</th>
   </tr>
   </thead>
   <tbody>
-  {{#each this.viewPotentials as |person|}}
+  {{#each this.viewPotentials key="id" as |person|}}
     <tr>
-      <td>
-        <PersonLink @person={{person}} />
-        <br>
+      <td class="w-15">
+        {{#if person.personnel_issue}}
+          <b class="text-danger">{{fa-icon "flag"}} PERSONNEL FLAG</b><br>
+        {{/if}}
+        <PersonLink @person={{person}} /> &lt;{{person.status}}&gt;<br>
         {{person.first_name}} {{person.last_name}}<br>
         <PresentOrNot @value={{person.gender}} @empty="no gender stated"/>
+        <br>
       </td>
-      <td>{{person.status}}</td>
-      <td>
+      <td class="w-10">
         {{#each person.mentor_history as |history|}}
           {{history.year}}
           {{#if (eq history.status "bonk")~}}
@@ -76,51 +82,36 @@ Showing {{this.viewPotentials.length}} of {{pluralize this.mentees.length "poten
           <i>no history</i>
         {{/each}}
       </td>
-      <td>
-        {{#each person.rrn_ranks as |yearRank|}}
-          {{yearRank.year}}
-          <IntakeRanking @rank={{yearRank.rank}} />
-          <br>
-        {{else}}
-          none
-        {{/each}}
-      </td>
-      <td>
-        {{#each person.vc_ranks as |yearRank|}}
-          {{yearRank.year}}
-          <IntakeRanking @rank={{yearRank.rank}} />
-          <br>
-        {{else}}
-          none
-        {{/each}}
-      </td>
-      <td>
+      <td class="w-75">
         {{#if person.has_note_on_file}}
           <div class="mb-2"><b class="text-danger">Personnel Note</b></div>
         {{/if}}
         {{#if person.personnel_issue}}
           <div class="mb-2">
-            <b class="text-danger">PERSONNEL FLAG RAISED<br>
-              TAKE NO ACTION UNTIL RESOLVED
-            </b>
+            <h4 class="text-danger">{{fa-icon "flag"}} PERSONNEL FLAG RAISED &mdash; TAKE NO ACTION UNTIL RESOLVED</h4>
           </div>
         {{/if}}
+        FKA:
         {{#if person.fkas}}
-          <div class="mb-2">
-            FKA: {{join person.fkas ", "}}
-          </div>
+          {{join person.fkas ", "}}
+        {{else}}
+          <i>none</i>
         {{/if}}
-
-        <IntakeNotes @type="mentor" @person={{person}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
-      </td>
-      <td>
         {{#if person.trained}}
           <div class="text-success">{{fa-icon "check"}} Trained</div>
         {{else}}
           <div class="text-danger">{{fa-icon "times"}} NOT Trained</div>
         {{/if}}
-
+        <b>Training</b>
         <IntakeTraining @trainings={{person.trainings}} @person={{person}} />
+        <b>Personnel Notes</b><br>
+        <IntakeNotes @type="personnel" @person={{person}} @viewYear={{@year}}  />
+        <b>RRN Notes</b><br>
+        <IntakeNotes @type="rrn" @person={{person}} @viewYear={{@year}}  />
+        <b>VC Notes</b><br>
+        <IntakeNotes @type="vc" @person={{person}} @viewYear={{@year}} />
+        <b>Mentor Notes</b><br>
+        <IntakeNotes @type="mentor" @person={{person}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
       </td>
     </tr>
   {{else}}
@@ -128,7 +119,7 @@ Showing {{this.viewPotentials.length}} of {{pluralize this.mentees.length "poten
       <td colspan="7">
         <b class="text-danger">
           {{#if this.mentees}}
-            No potential Alphas matched the filter criteria.
+            No potential Alphas matched the filter criteria of {{join this.filterNames ", "}}.
           {{else}}
             No potential Alphas were found for this year.
           {{/if}}

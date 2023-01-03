@@ -18,6 +18,13 @@
                       @options={{this.activeOptions}}
                       @onChange={{action (mut this.activeFilter)}} />
     </div>
+    <FormLabel @auto={{true}}>View as</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="activeFilter"
+                      @value={{this.viewAs}}
+                      @options={{this.viewAsOptions}}
+                      @onChange={{action (mut this.viewAs)}} />
+    </div>
     {{#if this.canManagePositions}}
       <div class="col-auto">
         <UiButton @onClick={{this.newAction}}>New Position</UiButton>
@@ -25,75 +32,36 @@
     {{/if}}
   </FormRow>
 
-  Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
-  <table class="table table-striped table-hover table-sm">
-    <thead>
-    <tr>
-      <th>ID</th>
-      <th>Title</th>
-      <th>Short Title</th>
-      <th>Type</th>
-      <th>Min / Max</th>
-      <th class="text-center">Active</th>
-      <th class="text-center">New User Eligible</th>
-      <th class="text-center">All Rangers</th>
-      <th class="text-center">Count Hrs</th>
-      <th class="text-center">On SL report</th>
-      <th>Prevent Multi. Enrollments</th>
-      <th>Training / Contact Email</th>
-      {{#if this.canManagePositions}}
-        <th>Action</th>
-      {{/if}}
-    </tr>
-    </thead>
-
-    <tbody>
-    {{#each this.viewPositions key="id" as |position|}}
-      <tr>
-        <td class="text-end">{{position.id}}</td>
-        <td>{{position.title}}</td>
-        <td>
-          <PresentOrNot @value={{position.short_title}} @empty="-"/>
-        </td>
-        <td>{{position.type}}</td>
-        <td class="text-center">{{position.min}} / {{position.max}}</td>
-        <td class="text-center">
-          <BooleanIcon @value={{position.active}} @falseIcon="times" @falseClass="text-danger"/>
-        </td>
-        <td class="text-center">
-          <BooleanIcon @value={{position.new_user_eligible}} @trueIcon="user"/>
-        </td>
-        <td class="text-center">
-          <BooleanIcon @value={{position.all_rangers}} @trueIcon="users"/>
-        </td>
-        <td class="text-center">
-          <BooleanIcon @value={{position.count_hours}} @trueIcon="clock"/>
-        </td>
-        <td class="text-center">
-          <BooleanIcon @value={{position.on_sl_report}} @trueIcon="list"/>
-        </td>
-        <td class="text-center">
-          <BooleanIcon @value={{position.prevent_multiple_enrollments}} @trueIcon="ban"/>
-        </td>
-        <td>
-          {{#if position.training_position_id}}
-            {{pluck position.training_position_id this.positions "title" "-"}}<br>
-          {{/if}}
-          {{#if position.contact_email}}
-            {{mail-to position.contact_email}}
-          {{/if}}
-        </td>
-        {{#if this.canManagePositions}}
-          <td class="actions">
-            <UiButton @size="sm" @onClick={{fn this.editAction position}}>
-              {{fa-icon "edit"}} Edit
-            </UiButton>
-          </td>
-        {{/if}}
-      </tr>
+  {{#if (eq this.viewAs "list")}}
+    Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
+    <div class="overflow-y-auto">
+      <PositionTable @viewPositions={{this.viewPositions}}
+                     @positions={{this.positions}}
+                     @canManagePositions={{this.canManagePositions}}
+                     @editAction={{this.editAction}}
+                     @roleById={{this.roleById}}
+                     @teamById={{this.teamById}}
+      />
+    </div>
+  {{else}}
+    Showing {{this.viewByTeams.length}} teams
+    {{#each this.viewByTeams as |team|}}
+      <UiAccordion as |accordion|>
+        <accordion.title>{{team.title}} ({{pluralize team.team_positions.length "position"}})</accordion.title>
+        <accordion.body>
+          <div class="overflow-y-auto mt-2">
+            <PositionTable @viewPositions={{team.team_positions}}
+                           @positions={{this.positions}}
+                           @canManagePositions={{this.canManagePositions}}
+                           @editAction={{this.editAction}}
+                           @roleById={{this.roleById}}
+                           @teamById={{this.teamById}}
+            />
+          </div>
+        </accordion.body>
+      </UiAccordion>
     {{/each}}
-    </tbody>
-  </table>
+  {{/if}}
 
   {{#if this.position}}
     <ModalDialog @title={{if this.position.isNew "Create Position"
@@ -147,8 +115,7 @@
             </p>
             <FormRow>
               <div class="col-12">
-                <f.checkbox @name="active"
-                            @label="Active"/>
+                <f.checkbox @name="active" @label="Active"/>
               </div>
             </FormRow>
             <p class="text-danger">
@@ -156,29 +123,68 @@
               the maintenance "Set Ranger Positions" function has to be run to grant the position to existing accounts.
             </p>
             <FormRow>
-              <div class="col-12 ">
+              <div class="col-12">
                 <f.checkbox @name="all_rangers"
-                            @label="All Rangers (status active / inactive / inactive extension / retired)"/>
+                            @label="Grant to All Rangers (status active / inactive / inactive extension / retired)"/>
               </div>
             </FormRow>
             <FormRow>
               <div class="col-12">
                 <f.checkbox @name="new_user_eligible"
-                            @label="Grant to new Prospective accounts"/>
+                            @label="Grant to new accounts (Rangers, Applications, etc)"/>
               </div>
             </FormRow>
           </fieldset>
           <fieldset>
-            <legend>Misc. Flags</legend>
+            <legend>Team &amp; Team Position Flags</legend>
+            <FormRow>
+              <f.select @name="team_id"
+                        @label="Belongs to team"
+                        @options={{this.teamPositionOptions}}
+                        @inline={{true}}
+              />
+            </FormRow>
+            <p class="text-danger">
+              After adjusting the team position flags, run the Position Sanity Checker to grant or revoke the
+              team positions.
+            </p>
+            <FormRow>
+              <div class="col-12">
+                <f.checkbox @name="all_team_members"
+                            @label="Recommended to all team members"
+                            @inline={{true}}
+                />
+              </div>
+            </FormRow>
+            <FormRow>
+              <div class="col-12">
+                <f.checkbox @name="public_team_position"
+                            @label="Public position - membership not required"
+                            @inline={{true}}
+                />
+              </div>
+            </FormRow>
+          </fieldset>
+          <fieldset>
+            <legend>Other Flags</legend>
             <FormRow>
               <div class="col-12">
                 <f.checkbox @name="count_hours"
-                            @label="Hours count towards appreciations (Ranger clothing, meal plans, etc.)"/>
+                            @label="Hours count towards provisions (meal passes, showers) and appreciations (shirts)"/>
                 <f.checkbox @name="prevent_multiple_enrollments"
                             @label="Prevent Multiple Enrollments (usually for Training positions)"/>
                 <f.checkbox @name="on_sl_report"
                             @label="For the Shift Lead Report: indicates the person holds this position of interest"/>
+                <f.checkbox @name="on_trainer_report"
+                            @label="For the Trainer's Report: indicates the position is relevant to trainers"/>
               </div>
+            </FormRow>
+          </fieldset>
+
+          <fieldset>
+            <legend>Position Role Grants</legend>
+            <FormRow>
+              <f.checkboxGroup @name="role_ids" @options={{this.roleOptions}} />
             </FormRow>
           </fieldset>
 
@@ -195,14 +201,27 @@
                           @options={{this.trainingOptions}}
                 />
               </FormRow>
-              <FormRow>
+            </fieldset>
+          {{/if}}
+          <fieldset>
+            <legend>Notifications</legend>
+
+            <FormRow>
+              <div class="col-12">
+                <f.checkbox @name="alert_when_empty"
+                            @label="Send email to contact email when trainer slot signs up become empty and the trainee slots still have sign ups."
+                />
+              </div>
+            </FormRow>
+            <FormRow>
+              <div class="col-12">
                 <f.text @name="contact_email"
                         @label="Contact Email (shift full notification, etc)"
                         @size={{40}}
                         @maxlength={{200}}/>
-              </FormRow>
-            </fieldset>
-          {{/if}}
+              </div>
+            </FormRow>
+          </fieldset>
         </Modal.body>
 
         <Modal.footer @noAlign={{true}}>

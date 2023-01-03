@@ -18,11 +18,13 @@
     <tr>
       <td>
         {{@onDutyEntry.position.title}}<br>
-        <UiButton @type="secondary" @onClick={{this.changePositionAction}} @class="mt-1" @size="sm"
+        <UiButton @type="secondary"
+                  @onClick={{this.changePositionAction}}
+                  @class="mt-1"
+                  @size="sm"
                   @disabled={{this.isSubmitting}}>
-          Change Position
+          Correct Position
         </UiButton>
-
       </td>
       <td>{{shift-format @onDutyEntry.on_duty}}</td>
       <td class="text-end">
@@ -43,9 +45,17 @@
     </tr>
     </tbody>
   </table>
+  {{#if this.mayNotNeedRadio}}
+    <p>
+      <b class="text-danger">
+        {{fa-icon "arrow-right"}} {{@person.callsign}} is working a Burn Perimeter shift and may not need a radio.
+        Check with the HQ Short or Lead if in doubt.
+      </b>
+    </p>
+  {{/if}}
   {{#unless @onDutyEntry.position.count_hours}}
     Note:
-    <NoAppreciateIcon/> = {{@onDutyEntry.position.title}} hours do not count towards appreciations.
+    <NoAppreciateIcon/> = {{@onDutyEntry.position.title}} hours do not count towards provisions and appreciations.
   {{/unless}}
 {{else}}
   {{#if (not @person.canStartShift)}}
@@ -56,20 +66,16 @@
     One or more timesheet entries has to be verified before a shift can be started.
   {{else}}
     {{#unless this.isPersonDirtTrained}}
-      <div class="text-danger font-weight-bold mb-2">
-        <div class="d-flex">
-          <div class="my-auto me-2 d-inline-block">{{fa-icon "exclamation-circle" size="2x"}}</div>
-          <div class="my-auto d-inline-block">
-            {{@person.callsign}} cannot start a shift because they have not completed
-            {{#if this.otOnly}}
-              the online course.
-            {{else}}
-              in-person training.
-            {{/if}}
-            If this is an error, check with the HQ Lead.
+      <UiNotice @title="Work Eligibility Issue" @icon="hand" @type="danger">
+        {{@person.callsign}} should not start a shift because
+        {{if this.otOnly "the Online Course" "an In-Person Training"}}
+        has not been completed. Check with the HQ Short or HQ Lead if this is an error.
+        {{#if this.userCanForceCheckIn}}
+          <div class="mt-2">
+            You have the privileges to force a shift start.
           </div>
-        </div>
-      </div>
+        {{/if}}
+      </UiNotice>
     {{/unless}}
 
     {{#if (and this.isPersonDirtTrained @imminentSlots)}}
@@ -117,7 +123,7 @@
           {{#unless slot.is_within_start_time}}
             <tr>
               <td colspan="5" class="text-danger">
-                <b>WARNING: Most shifts may only be signed into within 15 minutes of the actual start time.<br>
+                <b>WARNING: Most shifts may only be signed in to within 15 minutes of the actual start time.<br>
                   Suggest to {{@person.callsign}} they come back in {{pluralize slot.can_start_in "minute"}} to start
                   their shift.</b>
               </td>
@@ -126,8 +132,8 @@
         {{/each}}
         </tbody>
       </table>
-
-      <p class="mt-2 mb-2">Use the upcoming shift to sign in <b>OR</b> a specific position can be signed into below:</p>
+      <p class="mt-2 mb-2">Use the upcoming shift to sign in <b>OR</b> a specific position can be signed in to below:
+      </p>
     {{/if}}
 
     <FormRow>
@@ -158,9 +164,18 @@
 {{/if}}
 
 {{#if this.showPositionDialog}}
-  <ModalDialog @title="Update shift position" @onEscape={{this.cancelUpdatePosition}} as |Modal|>
+  <ModalDialog @title="Correct Sift Position" @onEscape={{this.cancelUpdatePosition}} as |Modal|>
     <Modal.body>
-      Select the new position the shift should be updated to:
+      <p>
+        This action is intended to correct a shift check in where the wrong position was selected.
+      </p>
+      <p>
+        <b>
+          When switching from an on-call shift (such as 007 Standby, Tech On Call, etc.) to a working shift
+          (007, Tech Team, etc) and visa-versa, END THE CURRENT SHIFT and start a new one.
+        </b>
+      </p>
+      Select the new position the shift should be corrected to:
       <FormRow>
         <div class="col-auto">
           <ChForm::Select @name="newPositionId"
@@ -186,8 +201,9 @@
   <ModalDialog @title="Confirm Early Shift Sign In" @onEscape={{this.closeEarlyShiftAction}} as |Modal|>
     <Modal.body>
       <p>
-        <b class="text-danger">WARNING: Most shifts may only be signed into within 15 minutes of the actual start
-          time.</b>
+        <b class="text-danger">
+          WARNING: Most shifts may only be signed in to within 15 minutes of the actual start time.
+        </b>
       </p>
       <p>
         The "{{this.earlySlot.position_title}}" shift starts at {{shift-format this.earlySlot.slot_begins}}
@@ -199,10 +215,10 @@
       </p>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <UiCancelButton @onClick={{this.closeEarlyShiftAction}} />
       <UiButton @type="warning" @onClick={{this.confirmEarlyShiftAction}}>
         Confirm Early Shift Start
       </UiButton>
+      <UiCancelButton @onClick={{this.closeEarlyShiftAction}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}
@@ -211,13 +227,16 @@
   <ModalDialog @title="Confirm Forced Shift Check In" @onEscape={{this.closeForceStartConfirm}} as |Modal|>
     <Modal.body>
       <p>
-        <b class="text-danger">WARNING: {{@person.callsign}} has not meet all the qualifications to start
-          a {{this.forcePosition.title}} shift</b>
+        <b class="text-danger">
+          WARNING: {{@person.callsign}} has not meet all the qualifications to start
+          a {{this.forcePosition.title}} shift
+        </b>
       </p>
       <ul>
-        {{#unless this.isPersonDirtTrained}}
-          <li>Dirt Training has not been completed</li>
-        {{/unless}}
+        {{#if
+          (and (not this.isPersonDirtTrained) (not this.forcePosition.is_untrained) (not this.forcePosition.is_unqualified))}}
+          <li>In-Person Training has not been completed.</li>
+        {{/if}}
         {{#if this.forcePosition.is_untrained}}
           <li>{{this.forcePosition.training_title}} has not been completed</li>
         {{/if}}
@@ -237,10 +256,10 @@
       </p>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <UiCancelButton @onClick={{this.closeForceStartConfirm}} />
       <UiButton @type="warning" @onClick={{this.confirmForceStart}}>
         Confirm Force Shift Start
       </UiButton>
+      <UiCancelButton @onClick={{this.closeForceStartConfirm}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}

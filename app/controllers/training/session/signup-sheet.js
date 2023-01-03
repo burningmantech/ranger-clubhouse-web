@@ -8,4 +8,9 @@ export default class TrainingSessionSignupSheetController extends ClubhouseContr
   get studentPages() {
     return _.chunk(this.students, STUDENTS_PER_PAGE);
   }
+
+  get totalPages() {
+    // Dirt trainings are not allowed walk-ins, hence no walk-in sign-up sheet.
+    return (this.training.is_art ? 1 : 0) + this.studentPages.length;
+  }
 }

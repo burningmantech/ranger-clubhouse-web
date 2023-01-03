@@ -1,10 +1,14 @@
 <NavbarMenu @nav={{@nav}} @title="Training" as |menu|>
-  <NavbarMenuItem @menu={{menu}} @route="training.index" @model="dirt" @item="Training Sessions" />
-  <NavbarMenuItem @menu={{menu}} @route="training.capacity" @model="dirt" @item="Training Capacity" />
-  <NavbarMenuItem @menu={{menu}} @route="training.multiple-enrollments" @model="dirt" @item="Multiple Enrollments Report" />
-  <NavbarMenuItem @menu={{menu}} @route="training.people-training-completed" @model="dirt" @item="Training Completed" />
-  <NavbarMenuItem @menu={{menu}} @route="training.trainer-attendance" @model="dirt" @item="Trainer Attendance" />
+  <NavbarMenuItem @menu={{menu}} @route="training.index" @model="dirt" @item="Training Sessions"/>
+  <NavbarMenuItem @menu={{menu}} @route="training.capacity" @model="dirt" @item="Training Capacity"/>
+  <NavbarMenuItem @menu={{menu}} @route="training.multiple-enrollments" @model="dirt"
+                  @item="Multiple Enrollments Report"/>
+  <NavbarMenuItem @menu={{menu}} @route="training.people-training-completed" @model="dirt" @item="Training Completed"/>
+  <NavbarMenuItem @menu={{menu}} @route="training.trainer-attendance" @model="dirt" @item="Trainer Attendance"/>
   {{#if (has-role "survey-management")}}
-    <NavbarMenuItem @menu={{menu}} @route="training.survey.index" @model="dirt" @item="Training Surveys" />
+    <NavbarMenuItem @menu={{menu}} @route="training.survey.index" @model="dirt" @item="Training Surveys"/>
+  {{/if}}
+  {{#if (has-role "intake")}}
+    <NavbarMenuItem @menu={{menu}} @route="training.unified-flagging" @model="dirt" @item="Unified Flagging"/>
   {{/if}}
 </NavbarMenu>

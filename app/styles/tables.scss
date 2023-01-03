@@ -1,3 +1,22 @@
+/*
+ * Default to thead-light setting for thead
+ */
+
+
+.table {
+  thead th {
+    color: $table-head-color;
+    background-color: $table-head-bg;
+    border-color: $table-border-color;
+  }
+
+  // override highlight border color between thead, tbody and tfoot.
+   > :not(:first-child) {
+    border-top: 1px solid #313838 !important;
+  }
+  font-variant-numeric: tabular-nums;
+}
+
 
 .table-fixed {
   table-layout: fixed;
@@ -32,24 +51,6 @@ caption {
 }
 
 /*
- * Default to thead-light setting for thead
- */
-
-
-.table {
-  thead th {
-    color: $table-head-color;
-    background-color: $table-head-bg;
-    border-color: $table-border-color;
-  }
-
-  // override highlight border color between thead, tbody and tfoot.
-  > :not(:first-child) {
-    border-top: 2px solid #999999 !important;
-  }
-}
-
-/*
  * Remove border on a row
  */
 
@@ -66,6 +67,10 @@ caption {
   border: 0 !important;
 }
 
+.tr-stripped {
+  background-color: var(--bs-table-striped-bg);
+  color: var(--bs-table-striped-color);
+}
 
 @media not print {
   .table-sticky {
