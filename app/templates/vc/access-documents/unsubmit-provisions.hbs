@@ -1,11 +1,12 @@
-<h1>Un-submit Provision Recommendations</h1>
+<h1>Un-submit Provision (year {{this.year}}) Recommendations</h1>
 <p>
-  This page shows people who have claimed and/or submitted earned provisions (not allocated for job) yet did not work.
+  This page shows people who have claimed and/or submitted earned provisions (not allocated for job) yet did not work in {{this.year}}.
 </p>
 <p>
   Legend: Ticket = claimed or submitted RPT or SC, "-" means no claimed/submitted ticket.<br>
   BMID Printed? = BMID was sent to be printed.<br>
-  Sign Ups? = Has non-training sign ups in the current year.
+  Sign Ups? = Has non-training sign ups in {{this.year}}.<br>
+  WAP? = Has claimed or submitted WAP or Staff Credential.
 </p>
 <p>
   <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
@@ -18,8 +19,9 @@ Showing {{pluralize this.people.length "person"}}
     <th>Callsign</th>
     <th>Status</th>
     <th>Ticket</th>
+    <th>WAP?</th>
     <th>BMID Printed?</th>
-    <th>Sign Ups?</th>
+    <th>{{this.year }} Sign Ups?</th>
     <th>ID</th>
     <th>Provision</th>
     <th>Status</th>
@@ -45,6 +47,9 @@ Showing {{pluralize this.people.length "person"}}
         {{else}}
           -
         {{/if}}
+      </td>
+      <td class="text-center">
+        {{yesno person.has_wap}}
       </td>
       <td class="text-center">{{yesno person.bmid}}</td>
       <td class="text-center">{{yesno person.signed_up}}</td>
