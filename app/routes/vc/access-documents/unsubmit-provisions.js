@@ -17,7 +17,8 @@ export default class VcAccessDocumentsUnsubmitProvisionsRoute extends ClubhouseR
     return this.ajax.request('provision/unsubmit-recommendations');
   }
 
-  setupController(controller, {people}) {
+  setupController(controller, {people,year}) {
     controller.people = people.map((p) => new PersonSelect(p));
+    controller.year = year;
   }
 }
