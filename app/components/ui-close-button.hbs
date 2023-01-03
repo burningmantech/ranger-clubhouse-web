@@ -1,1 +1,3 @@
-<button type="button" class="btn btn-{{or @type "primary"}}" {{action @onClick}}>Close</button>
+<button type="button" class="btn btn-{{or @type "primary"}} {{if @size (concat "btn-" @size)}}" {{action @onClick}}>
+  Close
+</button>

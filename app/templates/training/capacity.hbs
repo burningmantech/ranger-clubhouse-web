@@ -1,15 +1,13 @@
-<YearSelect @title="Training Capacity for {{this.training.title}}" @year={{this.year}}
+<YearSelect @title="Training Capacity for {{this.training.title}}"
+            @year={{this.year}}
+            @minYear={{2008}}
+            @skipPandemic={{true}}
             @onChange={{action (mut this.year)}} />
-
-{{#if this.notCurrentYear}}
-  <ChNotice @icon="hand-point-right" @title="Viewing Past Year">
-    This is a historical report and PNV counts above do not accurately reflect
-    the number of PNVs trained. This is because many people who were PNVs then are Rangers now.
-    The total number of Rangers plus PNVs trained is accurate.
-  </ChNotice>
-{{/if}}
-
-<table class="table table-hover table-width-auto table-sm mt-4">
+<p>
+  <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+</p>
+Showing {{pluralize this.slots.length "active training"}}
+<table class="table table-hover table-width-auto table-sm">
   <thead>
   <tr class="thead-light">
     <th>Training</th>
@@ -20,35 +18,47 @@
     <th class="text-end" title="Prospective / Alpha">PNV</th>
     <th class="text-end" title="Returning Rangers, not in status 'auditor'">Returning</th>
     <th class="text-end">Auditors</th>
+    <th class="text-end">Passed</th>
+    <th class="text-end">Not Passed</th>
+    <th class="text-end">Trainers</th>
   </tr>
   </thead>
   <tbody>
-  {{#each this.slots as |slot|}}
-    <tr class="{{if (gt slot.filled 90) "bg-light-red text-light" (if (gt slot.filled 75) "bg-warning") }}">
+  {{#each this.slots key="id" as |slot|}}
+    <tr class="{{this.bgColor slot.filled}}">
       <td>{{slot.description}}</td>
-      <td>{{shift-format slot.date}}</td>
+      <td>{{shift-format slot.begins}}</td>
       <td class="text-end">{{slot.filled}}%</td>
       <td class="text-end">{{slot.max}}</td>
       <td class="text-end">{{slot.signed_up}}</td>
-      <td class="text-end">{{slot.alpha_count}}</td>
+      <td class="text-end">{{slot.pnv_count}}</td>
       <td class="text-end">{{slot.veteran_count}}</td>
       <td class="text-end">{{slot.auditor_count}}</td>
+      <td class="text-end">{{slot.passed}}</td>
+      <td class="text-end">{{slot.not_passed}}</td>
+      <td class="text-end">{{slot.trainer_count}}</td>
     </tr>
   {{else}}
     <tr>
       <td colspan="9"><b class="text-danger">No {{this.year}} training shifts found.</b></td>
     </tr>
   {{/each}}
-  {{#if this.slots}}
-    <tr>
-      <td colspan="2" class="text-end">Totals:</td>
-      <td class="text-end">{{this.totalFullPercentage}}%</td>
-      <td class="text-end">{{sum-column this.slots "max"}}</td>
-      <td class="text-end">{{sum-column this.slots "signed_up"}}</td>
-      <td class="text-end">{{sum-column this.slots "alpha_count"}}</td>
-      <td class="text-end">{{sum-column this.slots "veteran_count"}}</td>
-      <td class="text-end">{{sum-column this.slots "auditor_count"}}</td>
-    </tr>
-  {{/if}}
   </tbody>
+  {{#if this.slots}}
+    <tfoot>
+    <tr class="align-top">
+      <th colspan="2" scope="row" class="text-end">Totals</th>
+      <td class="text-end">{{this.totalFullPercentage}}%</td>
+      <td class="text-end">{{this.totalMax}}</td>
+      <td class="text-end">{{this.totalSignups}}</td>
+      <td class="text-end">{{this.totalPNVs}}</td>
+      <td class="text-end">{{this.totalVets}}</td>
+      <td class="text-end">{{this.totalAuditors}}</td>
+      <td class="text-end">{{this.totalPassed}}</td>
+      <td class="text-end">{{this.totalNotPassed}}</td>
+      <td class="text-end">{{this.uniqueTrainers}}<br>(unique)</td>
+    </tr>
+    </tfoot>
+  {{/if}}
+
 </table>

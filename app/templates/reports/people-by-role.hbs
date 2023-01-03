@@ -1,16 +1,87 @@
 <h1>People By Role Report</h1>
+<p>
+  {{fa-icon "user-plus" color="danger"}} = Role is explicitly granted.<br>
+  {{fa-icon "sitemap"}} = Role granted via a team and/or position.
+</p>
+<p>
+  Click on the callsign to see how the role is granted.
+</p>
+<p>
+  <label>Filter by:</label>
+  <RadioGroup @options={{this.filterOptions}} @onChange={{action (mut this.filter)}} @value={{this.filter}} />
+</p>
 
-{{#each this.roles as |role|}}
-  <ChAccordion as |accordion|>
+{{#each this.viewRoles as |role|}}
+  <UiAccordion as |accordion|>
     <accordion.title>{{role.title}} ({{pluralize role.people.length "person"}})</accordion.title>
     <accordion.body>
       {{#if accordion.isOpen}}
-        <div class="callsign-list">
-          {{~#each role.people key="id" as |person|~}}
-            <div><PersonLink @person={{person}} /></div>
-          {{~/each~}}
-        </div>
+        {{#if role.people}}
+          <div class="callsign-list">
+            {{#each role.people key="id" as |person|}}
+              <div>
+                <a href {{action this.showPersonAction person}}>{{person.callsign}}</a>
+                {{#if person.granted}}
+                  {{fa-icon "user-plus"}}
+                {{/if}}
+                {{#if (or person.teams person.positions)}}
+                  {{fa-icon "sitemap"}}
+                {{/if}}
+              </div>
+            {{/each}}
+          </div>
+        {{else}}
+          <b>No one found which matches the filter.</b>
+        {{/if}}
       {{/if}}
     </accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 {{/each}}
+
+{{#if this.showPerson}}
+  <ModalDialog @title="{{this.showPerson.callsign}} information" as |Modal|>
+    <Modal.body>
+      <p>
+        {{#if this.showPerson.granted}}
+          <b class="text-danger">Role has been granted explicitly.</b>
+        {{else}}
+          Role has NOT been granted explicitly.
+        {{/if}}
+      </p>
+      {{#if (or this.showPerson.teams this.showPerson.positions)}}
+        Role is granted thru {{pluralize this.showPerson.teams.length "team"}} and
+        {{pluralize this.showPerson.positions.length "position"}}.
+        <dl class="mt-2">
+          <dt>Teams:</dt>
+          <dd>
+            {{#each this.showPerson.teams as |team|}}
+              {{team.title}}<br>
+            {{else}}
+              <i>none</i>
+            {{/each}}
+          </dd>
+          <dt>Positions:</dt>
+          <dd>
+            {{#each this.showPerson.positions as |position|}}
+              {{position.title}}<br>
+            {{else}}
+              <i>none</i>
+            {{/each}}
+          </dd>
+        </dl>
+      {{else}}
+        <p>
+          Role is not granted through any team or position assignment.
+        </p>
+      {{/if}}
+      <p>
+        Visit
+        <PersonLink @person={{this.showPerson}} />
+        person management page.
+      </p>
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closePerson}} />
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}

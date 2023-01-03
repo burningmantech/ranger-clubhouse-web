@@ -1,98 +1,74 @@
-<p class="d-print-none">
-  {{#if (gte @year 2019)}}
-    {{#if this.isLoading}}
-      <LoadingIndicator @text="Retrieving log"/>
+{{#if this.isLoading}}
+  <LoadingIndicator @text="Loading the scheduling audit log"/>
+{{else}}
+  {{fa-icon "times" color="danger"}} = Person is no longer signed up for the shift.
+  <table class="table table-sm table-width-auto table-striped table-hover">
+    <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th>Start</th>
+      <th>Position</th>
+      <th>Description</th>
+      <th>Added On/By</th>
+      <th>Removed On/By</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#if this.isBefore2019}}
+      <tr>
+        <td colspan="6">Sorry, the scheduling audit log is only available for 2019 and later years.</td>
+      </tr>
     {{else}}
-      <a href {{action this.showLogAction}}>View {{@year}} Scheduling Log</a>
-    {{/if}}
-  {{else}}
-    Sorry, the scheduling log is only available for 2019 and later.
-  {{/if}}
-</p>
-
-{{#if this.showLog}}
-  <ModalDialog @title="{{@year}} Scheduling Log for {{@person.callsign}}"
-               @onEscape={{this.closeAction}}
-               @size="xl" as |Modal|>
-    <Modal.body>
-      {{fa-icon "times" color="danger"}} = Person is no longer signed up for the shift.
-      <table class="table table-sm table-width-auto table-striped table-hover">
-        <thead>
+      {{#each this.auditLogs as |entry|}}
         <tr>
-          <th>&nbsp;</th>
-          <th>Start</th>
-          <th>Position</th>
-          <th>Description</th>
-          <th>Added</th>
-          <th>Added By</th>
-          <th>Removed</th>
-          <th>Removed By</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each this.logs as |entry|}}
-          <tr>
-            <td>
-              {{#if entry.no_signup}}
-                {{fa-icon "times" color="danger"}}
+          <td>
+            {{#if entry.no_signup}}
+              {{fa-icon "times" color="danger"}}
+            {{else}}
+              &nbsp;
+            {{/if}}
+          </td>
+          <td>
+            {{shift-format entry.slot_begins}}
+            {{#if entry.no_signup}}
+              <br><b class="text-danger">No longer signed up.</b>
+            {{/if}}
+          </td>
+          <td>{{entry.position_title}}</td>
+          <td>{{entry.slot_description}}</td>
+           <td>
+            {{#each entry.added as |event|}}
+              {{shift-format event.date}}<br>
+              {{#if (eq this.personId event.person.id)}}
+                <i>self</i>
               {{else}}
-                &nbsp;
+                <PersonLink @person={{event.person}} />
               {{/if}}
-            </td>
-            <td>
-              {{shift-format entry.slot_begins}}
-            </td>
-            <td>{{entry.position_title}}</td>
-            <td>{{entry.slot_description}}</td>
-            <td>
-              {{#each entry.added as |event|}}
-                {{shift-format event.date}}<br>
+              <br>
+            {{else}}
+              -
+            {{/each}}
+          </td>
+          <td>
+            {{#each entry.removed as |event|}}
+              {{shift-format event.date}}<br>
+              {{#if (eq this.personId event.person.id)}}
+                <i>self</i>
               {{else}}
-                -
-              {{/each}}
-            </td>
-            <td>
-              {{#each entry.added as |event|}}
-                {{#if (eq this.personId event.person.id)}}
-                  <i>self</i>
-                {{else}}
-                  <PersonLink @person={{event.person}} />
-                {{/if}}
-                <br>
-              {{else}}
-                -
-              {{/each}}
-            </td>
-            <td>
-              {{#each entry.removed as |event|}}
-                {{shift-format event.date}}<br>
-              {{else}}
-                -
-              {{/each}}
-            </td>
-            <td>
-              {{#each entry.removed as |event|}}
-                {{#if (eq this.personId event.person.id)}}
-                  <i>self</i>
-                {{else}}
-                  <PersonLink @person={{event.person}} />
-                {{/if}}<br>
-              {{else}}
-                -
-              {{/each}}
-            </td>
-          </tr>
-        {{else}}
-          <tr>
-            <td>&nbsp;</td>
-            <td colspan="7"><b class="text-danger">No {{@year}} scheduling logs found for {{@person.callsign}}</b></td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
-    </Modal.body>
-    <Modal.footer>
-      <UiCloseButton @onClick={{this.closeAction}} />
-    </Modal.footer>
-  </ModalDialog>
+                <PersonLink @person={{event.person}} />
+              {{/if}}<br>
+            {{else}}
+              -
+            {{/each}}
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td>&nbsp;</td>
+          <td colspan="7"><b class="text-danger">No {{@year}} scheduling logs found for {{@person.callsign}}</b></td>
+        </tr>
+      {{/each}}
+    {{/if}}
+    </tbody>
+  </table>
 {{/if}}

@@ -1,4 +1,4 @@
-<ChSidebar @theme="hq" @smallTitle="HQ Actions" as |s|>
+<UiSidebar @theme="hq" @smallTitle="HQ Actions" as |s|>
   <s.group @title="HQ Window">
     <s.link @route="hq.shift" @title="Shift Manage" @icon="walking" @iconType="s"/>
     <s.link @route="hq.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
@@ -10,7 +10,7 @@
     <s.link @route="hq.training-info" @title="Training Info" @icon="graduation-cap" @iconType="s"/>
     <s.link @route="hq.site-checkin" @title="Site Check In" @icon="list-ol" @iconType="s"/>
   </s.group>
-</ChSidebar>
+</UiSidebar>
 
 <main>
   <div class="person-manage-header">
@@ -32,39 +32,40 @@
   </div>
 
   {{#if this.person.message}}
-    <ChNotice @title="Important Account Note" @icon="hand-point-right">
+    <UiNotice @title="Important Account Note" @icon="hand-point-right">
       {{nl2br this.person.message}}
       <div class="mt-2 text-muted">Added {{shift-format this.person.message_updated_at}}</div>
-    </ChNotice>
+    </UiNotice>
   {{/if}}
   <div class="d-flex flex-column flex-lg-row">
     <div class="flex-lg-grow-1 order-1 order-lg-0">
       {{#if (not this.person.canStartShift)}}
-        <ChNotice @title="Account is disabled" @type="danger" @icon="ban">
+        <UiNotice @title="Account Is Disabled" @type="danger" @icon="ban">
           <p>
             {{this.person.callsign}} has the status "{{this.person.status}}" which prevents the person
             from working a shift. The HQ Window Interface cannot be used.
           </p>
           Contact the HQ Lead, HQ Supervisor or the Personnel Manager {{mail-to (config "PersonnelEmail")}}.
-        </ChNotice>
+        </UiNotice>
       {{else if this.person.needsBpguid}}
-        <ChNotice @type="danger" @icon="exclamation-triangle">
-          Account does not have Burner Profile ID on file. Shift sign ups are disabled.
-        </ChNotice>
+        <UiNotice @type="danger" @icon="exclamation-triangle">
+          Account does not have Burner Profile ID on file. Shift sign-ups are disabled.
+        </UiNotice>
       {{else if (and this.person.isPNV (not this.userIsMentor))}}
-        <ChNotice @type="danger" @icon="exclamation" @title="Direct to the Hat Rack.">
-          {{this.person.callsign}} is an Alpha. Do not check in this person unless you are acting on the Mentors'
+        <UiNotice @title="Direct to the Hat Rack." @type="danger" @icon="exclamation" >
+          {{this.person.callsign}} is {{if this.person.isAlpha "an Alpha" "a Prospective"}}.
+          Do not check in this person unless you are acting on the Mentors'
           behalf.
-        </ChNotice>
+        </UiNotice>
       {{/if}}
       {{outlet}}
     </div>
 
-    <div class="me-auto p-4 d-print-none order-0 order-lg-1">
+    <div class="me-auto px-4 d-print-none order-0 order-lg-1">
       <div class="mugshot">
         {{#if this.photo}}
           {{#if this.photo.photo_url}}
-            <img src="{{this.photo.photo_url}}" class="mx-auto d-block" alt="profile">
+            <img src="{{or this.photo.profile_url this.photo.photo_url}}" class="mx-auto d-block" alt="profile">
             Photo:
             {{#if (eq this.photo.photo_status "approved")}}
               <span class="text-success">Approved</span>
@@ -119,7 +120,7 @@
   <ModalDialog @title="Sign Into A Shift" @onEscape={{this.closeSignInWarning}} as |Modal|>
     <Modal.body>
       <b class="text-danger">WARNING:</b>
-      You are not signed into any shift. You can use the HQ Interface however we ask you sign into a shift first.
+      You are not signed in to any shift. You can use the HQ Interface however we ask you sign in to a shift first.
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeSignInWarning}} />
@@ -153,8 +154,10 @@
   <ModalDialog @title="Person may not work" @onEscape={{this.closeNotAllowedToWork}} as |Modal|>
     <Modal.body>
       <p>
-        <b class="text-danger"> {{this.person.callsign}} has the status "{{this.person.status}}" may not be given a BMID,
-          radios, and is NOT ALLOWED TO WORK.</b>
+        <b class="text-danger">
+          {{this.person.callsign}} has the status "{{this.person.status}}" may not be given a BMID,
+          radios, and is NOT ALLOWED TO WORK.
+        </b>
       </p>
       The HQ Window Interface cannot be for this person. Contact the HQ Lead, HQ Supervisor or the Personnel Manager.
     </Modal.body>

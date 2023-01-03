@@ -42,8 +42,8 @@ const MEAL_POGS = {
     issue: 'Pre-Event'
   },
   'post': {
-    exclude: 'PRE-EVENT & EVENT WEEK',
-    issue: 'Post-Event'
+    exclude: 'POST-EVENT',
+    issue: 'Pre-Event & Event Week'
   }
 }
 

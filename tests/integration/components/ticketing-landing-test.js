@@ -10,17 +10,8 @@ module('Integration | Component | ticketing-landing', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{ticketing-landing}}`);
+    await render(hbs`<TicketingLanding />`);
 
     assert.strictEqual(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      {{#ticketing-landing}}
-        template block text
-      {{/ticketing-landing}}
-    `);
-
-    assert.strictEqual(this.element.textContent.trim(), 'template block text');
   });
 });

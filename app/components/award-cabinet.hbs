@@ -1,0 +1,22 @@
+{{#each this.awardTypes as |awardType|}}
+  <h4 class="border-bottom">{{awardType.label}}</h4>
+  <div class="mb-4">
+    {{#each awardType.awards as |award|}}
+      <div class="card award-card">
+        <div class="card-body">
+          <div class="text-center mb-3">
+            {{fa-icon award.award.icon type="fas" size="6x"}}
+          </div>
+          <h4 class="card-title text-center">{{award.award.title}}</h4>
+          <div class="card-text text-center small">
+            {{award.award.description}}
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{else}}
+  <p class="text-danger">
+    No awards were found.
+  </p>
+{{/each}}

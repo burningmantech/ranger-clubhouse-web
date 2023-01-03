@@ -6,93 +6,90 @@
 
 {{#unless this.userCanRepair}}
   <p>
-    <b class="text-danger">You don't have the "Grant/Revoke Position" or Admin role.</b>
+    <b class="text-danger">You don't have the Clubhouse Admin role.</b>
     You can see issues but can't fix them. Sorry.
   </p>
 {{/unless}}
 
 <Admin::PositionSanityCheck
-    @title="Shiny Pennies"
-    @caption="{{pluralize this.shiny_pennies.length "person"}} with Shiny Penny issues"
-    @sucessMessage="Congratulations! All shiny pennies have the position and no crusty rangers have it."
-    @columns={{this.shiny_pennies.columns}}
-    @people={{this.shiny_pennies}}
-    @repairAction={{action this.repairPeople}}
-    @repairType="shiny_pennies"
-    @canRepair={{this.userCanRepair}}
-    @isSubmitting={{this.isSubmitting}}
+  @title="Shiny Pennies"
+  @caption="{{pluralize this.shiny_pennies.length "person"}} with Shiny Penny issues"
+  @sucessMessage="Congratulations! All shiny pennies have the position and no crusty rangers have it."
+  @columns={{this.shiny_pennies.columns}}
+  @people={{this.shiny_pennies}}
+  @repairAction={{action this.repairPeople}}
+  @repairType="shiny_pennies"
+  @canRepair={{this.userCanRepair}}
+  @isSubmitting={{this.isSubmitting}}
 >
   All first-year Rangers (minted in {{this.shiny_penny_year}}) should have the
   "Dirt - Shiny Penny" position and no one else should.
 </Admin::PositionSanityCheck>
 
 <Admin::PositionSanityCheck
-    @title="Green Dots"
-    @caption="{{pluralize this.green_dot.length "person"}} with Green Dot issues"
-    @sucessMessage="Congratulations! All Green Dots have all three positions."
-    @columns={{this.green_dot.columns}}
-    @people={{this.green_dot}}
-    @repairAction={{action this.repairPeople}}
-    @repairType="green_dot"
-    @canRepair={{this.userCanRepair}}
-    @isSubmitting={{this.isSubmitting}}
+  @title="Have Team Positions with no Team Membership"
+  @caption="{{pluralize this.team_membership.length "person"}} with team positions and no team membership"
+  @sucessMessage="Congratulations! Everyone appears have team positions with the appropriate team membership."
+  @columns={{this.team_membership.columns}}
+  @people={{this.team_membership}}
+  @repairAction={{this.repairPeople}}
+  @repairType="team_membership"
+  @canRepair={{this.userCanRepair}}
+  @isSubmitting={{this.isSubmitting}}
 >
-  All Green Dots should have the "Dirt - Green Dot", "Gerlach Patrol - Green Dot", and "Sanctuary" positions.
+  People should belong to a team if (non-public) team positions have been granted.
 </Admin::PositionSanityCheck>
 
 <Admin::PositionSanityCheck
-    @title="Login Management Year Round Role"
-    @caption="{{pluralize this.management_role.length "person"}} missing the Login Management (year round) role."
-    @sucessMessage="Congratulations! Everyone with the those positions has the Login Management (year round) role."
-    @columns={{this.management_role.columns}}
-    @people={{this.management_role}}
-    @repairAction={{action this.repairPeople}}
-    @repairType="management_role"
-    @canRepair={{this.userCanRepair}}
-    @isSubmitting={{this.isSubmitting}}
+  @title="Missing Basic Team Positions"
+  @caption="{{pluralize this.team_positions.length "person"}} with not all the basic team positions"
+  @sucessMessage="Congratulations! Everyone appears have the basic team positions"
+  @columns={{this.team_positions.columns}}
+  @people={{this.team_positions}}
+  @repairAction={{this.repairPeople}}
+  @repairType="team_positions"
+  @canRepair={{this.userCanRepair}}
+  @isSubmitting={{this.isSubmitting}}
 >
-  Rangers whose role requires significant YEAR ROUND Clubhouse access should have the "Login (Management Mode)" role.
-  <br>
-  <b>Note:</b> pay attention to any Shiny Penny who appears below.
-  They may have been accidental granted a position that is not appropriate for a first year Ranger.
+  People should have all the basic team positions appropriate for the team.
 </Admin::PositionSanityCheck>
+
+
+<UiSection>
+  <:title>Deactivated Position Assignments</:title>
+  <:body>
+    {{#if this.deactivated_positions}}
+      The following deactivated positions are still granted.
+      {{#each this.deactivated_positions as |position|}}
+        <Admin::PositionSanityCheckTable
+          @title={{position.title}}
+          @caption="{{position.title}} - {{pluralize position.people.length "person"}} assigned"
+          @sucessMessage="Congratulations! No Rangers are assigned to this position."
+          @columns={{(array)}}
+          @people={{position.people}}
+          @repairAction={{action this.repairPeople}}
+          @repairParams={{ (hash positionId=position.id) }}
+          @repairType="deactivated_positions"
+          @canRepair={{this.userCanRepair}}
+          @isSubmitting={{this.isSubmitting}}
+        />
+      {{/each}}
+    {{else}}
+      <b class="text-success">Congratulations! No one has deactivated positions assigned.</b>
+    {{/if}}
+  </:body>
+</UiSection>
 
 <Admin::PositionSanityCheck
-        @title="Login Management On Playa Only Role"
-        @caption="{{pluralize this.management_onplaya_role.length "person"}} missing the Login Management On Playa ONLY role."
-        @sucessMessage="Congratulations! Everyone with the those positions has the Login Management On Playa ONLY role."
-        @columns={{this.management_onplaya_role.columns}}
-        @people={{this.management_onplaya_role}}
-        @repairAction={{action this.repairPeople}}
-        @repairType="management_onplaya_role"
-        @canRepair={{this.userCanRepair}}
-        @isSubmitting={{this.isSubmitting}}
+  @title="Login Management Year Round Explicit Grant"
+  @caption="{{pluralize this.lmyr.length "person"}} with LMYR granted explicitly with no LMYR team or team position"
+  @sucessMessage="Congratulations! Everyone with LMYR appears to have an appropriate position and/or team membership"
+  @columns={{(array)}}
+  @people={{this.lmyr}}
+  @repairAction={{this.repairPeople}}
+  @repairType="lmyr"
+  @canRepair={{this.userCanRepair}}
+  @isSubmitting={{this.isSubmitting}}
 >
-  Rangers whose role requires significant ON PLAYA ONLY Clubhouse access should have the "Login (Management On Playa Mode)" role
-  AND do not already have the Login Management Year Round role.
-  <br>
-  <b>Note:</b> pay attention to any Shiny Penny who appears below.
-  They may have been accidental granted a position that is not appropriate for a first year Ranger.
+  People who have LMYR explicitly granted should have an appropriate position and/or team membership
 </Admin::PositionSanityCheck>
-
-<Admin::PositionSanityCheckHeader @title="Deactivated Position Assignments">
-  All deactivated positions that have Rangers assigned to them.
-</Admin::PositionSanityCheckHeader>
-
-{{#each this.deactivated_positions as |position|}}
-  {{#let (hash positionId=position.id) as |params| }}
-    <Admin::PositionSanityCheckTable
-        @title={{position.title}}
-        @caption="{{position.title}} - {{pluralize position.people.length "person"}} assigned"
-        @sucessMessage="Congratulations! No Rangers are assigned to this position."
-        @columns={{(array)}}
-        @people={{position.people}}
-        @repairAction={{action this.repairPeople}}
-        @repairParams={{params}}
-        @repairType="deactivated_positions"
-        @canRepair={{this.userCanRepair}}
-        @isSubmitting={{this.isSubmitting}}
-    />
-  {{/let}}
-
-{{/each}}

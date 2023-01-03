@@ -1,150 +1,168 @@
 <main>
-<YearSelect @title="Assets (Radios, Gear, Vehicles)" @year={{this.year}} @onChange={{action (mut this.year)}} />
-<FormRow>
-  <FormLabel @auto={{true}}>Description Filter</FormLabel>
-  <div class="col-auto">
-    <ChForm::Select @name="descriptionFilter" @value={{this.descriptionFilter}} @options={{this.descriptionOptions}}
-                    @onChange={{action (mut this.descriptionFilter)}}/>
-  </div>
-  <FormLabel @auto={{true}}>Temp ID Filter</FormLabel>
-  <div class="col-auto">
-    <ChForm::Select @name="tempIdFilter"
-                    @value={{this.tempIdFilter}}
-                    @options={{this.tempIdOptions}}
-                    @onChange={{action (mut this.tempIdFilter)}} />
-  </div>
-  <FormLabel @auto={{true}}>Action</FormLabel>
-  <div class="col-auto">
-    <UiButton @onClick={{this.newAsset}}>New Asset</UiButton>
-  </div>
-</FormRow>
+  <YearSelect @title="Assets (Radios, Gear, Vehicles)"
+              @year={{this.year}}
+              @minYear={{2010}}
+              @onChange={{action (mut this.year)}} />
+  <FormRow>
+    <FormLabel @auto={{true}}>Description Filter</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="descriptionFilter"
+                      @value={{this.descriptionFilter}}
+                      @options={{this.descriptionOptions}}
+                      @onChange={{action (mut this.descriptionFilter)}}
+      />
+    </div>
+    <FormLabel @auto={{true}}>Temp ID Filter</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="tempIdFilter"
+                      @value={{this.tempIdFilter}}
+                      @options={{this.tempIdOptions}}
+                      @onChange={{action (mut this.tempIdFilter)}} />
+    </div>
+    <FormLabel @auto={{true}}>Action</FormLabel>
+    <div class="col-auto">
+      <UiButton @onClick={{this.newAsset}}>New Asset</UiButton>
+    </div>
+  </FormRow>
 
-Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
-<table class="table table-sm table-striped table-width-auto">
-  <thead>
-  <tr>
-    <th>Barcode</th>
-    <th>Description</th>
-    <th>Temp ID</th>
-    <th>Assigned</th>
-    <th>Actions</th>
-  </tr>
-  </thead>
-
-  <tbody>
-  {{#each this.viewAssets key="id" as |asset|}}
+  Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
+  <table class="table table-sm table-striped table-width-auto">
+    <thead>
     <tr>
-      <td>{{asset.barcode}}</td>
-      <td>{{asset.description}}</td>
-      <td>
-        <PresentOrNot @value={{asset.temp_id}} @empty="-"/>
-      </td>
-      <td>{{if asset.perm_assign "Perm" "Temp"}}</td>
-      <td>
-        <UiButton @type="secondary" @size="sm" @onClick={{fn this.assetHistoryAction asset}}>
-          History
-        </UiButton>
-        <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteAsset asset}}>
-          {{fa-icon "trash"}} Delete
-        </UiButton>
-        <UiButton @size="sm" @onClick={{fn this.editAsset asset}}>
-          {{fa-icon "edit"}}Edit
-        </UiButton>
-      </td>
+      <th>Barcode</th>
+      <th>Description</th>
+      <th>Temp ID</th>
+      <th>Assigned</th>
+      <th>Actions</th>
     </tr>
-  {{else if this.assets}}
-    <tr>
-      <td colspan="5" class="text-danger">No assets matched.</td>
-    </tr>
-  {{else}}
-    <td colspan="5" class="text-danger">No assets were found for {{this.year}}?!?</td>
-  {{/each}}
-  </tbody>
-</table>
+    </thead>
 
-{{#if this.entry}}
-  <ModalDialog @title={{if this.entry.isNew "New Asset" "Edit Asset"}} @onEscape={{this.cancelAsset}} as |Modal|>
-    <ChForm @formId="asset"
-            @formFor={{this.entry}}
-            @validator={{this.assetValidations}}
-            @onSubmit={{action this.saveAsset}} as |f|>
-      <Modal.body>
-        <FormRow>
-          <f.select @name="description"
-                    @label="Description/Type"
-                    @options={{this.assetDescriptionOptions}}
-          />
-          <f.text @name="barcode"
-                  @label="Barcode"
-                  @size={{25}} />
-          <f.text @name="temp_id"
-                  @label="Temp ID (aka secondary description)"
-                  @size={{25}}
-          />
-        </FormRow>
-        <FormRow>
-          <f.textarea @name="notes"
-                      @label="Notes"
-                      @rows={{2}}
-                      @cols={{80}}/>
-        </FormRow>
-        <FormRow>
-          <FormLabel @auto={{true}}>Assignment</FormLabel>
-          <div class="col-auto mt-2">
-            <f.radioGroup @name="perm_assign"
-                          @options={{this.permanentOptions}}
-                          @inline={{true}}/>
-          </div>
-        </FormRow>
+    <tbody>
+    {{#each this.viewAssets key="id" as |asset|}}
+      <tr>
+        <td>{{asset.barcode}}</td>
+        <td>{{asset.description}}</td>
+        <td>
+          <PresentOrNot @value={{asset.temp_id}} @empty="-"/>
+        </td>
+        <td>{{if asset.perm_assign "Perm" "Temp"}}</td>
+        <td>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn this.assetHistoryAction asset}}>
+            History
+          </UiButton>
+          <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteAsset asset}}>
+            {{fa-icon "trash"}} Delete
+          </UiButton>
+          <UiButton @size="sm" @onClick={{fn this.editAsset asset}}>
+            {{fa-icon "edit"}}Edit
+          </UiButton>
+        </td>
+      </tr>
+    {{else if this.assets}}
+      <tr>
+        <td colspan="5" class="text-danger">No assets matched.</td>
+      </tr>
+    {{else}}
+      <td colspan="5" class="text-danger">No assets were found for {{this.year}}?!?</td>
+    {{/each}}
+    </tbody>
+  </table>
 
-        {{#if this.entry.isNew}}
+  {{#if this.entry}}
+    <ModalDialog @title={{if this.entry.isNew "New Asset" "Edit Asset"}} @onEscape={{this.cancelAsset}} as |Modal|>
+      <ChForm @formId="asset"
+              @formFor={{this.entry}}
+              @validator={{this.assetValidations}}
+              @onSubmit={{action this.saveAsset}} as |f|>
+        <Modal.body>
           <FormRow>
-            <FormLabel>Copies (including the first) - Leave blank if only creating one</FormLabel>
-            <f.text @name="copies"
-                    @size={{4}}
-                    @maxlength={{4}}
+            <f.select @name="description"
+                      @label="Description/Type"
+                      @options={{this.assetDescriptionOptions}}
             />
-          </FormRow>
-        {{/if}}
-        <fieldset>
-          <legend>Vehicle Information</legend>
-          <FormRow>
-            <f.select @name="category"
-                      @label="Category"
-                      @options={{this.categoryOptions}}
-            />
-          </FormRow>
-          <FormRow>
-            <f.text @name="subtype"
-                    @label="Type"
-                    @size={{25}}/>
-            <f.text @name="color"
-                    @label="Color"
+            <f.text @name="barcode"
+                    @label="Barcode"
                     @size={{25}}
+                    @maxlength={{25}}
+                    @showCharCount={{true}}
             />
-            <f.text @name="style"
-                    @label="Style"
+            <f.text @name="temp_id"
+                    @label="Temp ID (aka secondary description)"
                     @size={{25}}
+                    @maxlength={{25}}
+                    @showCharCount={{true}}
             />
           </FormRow>
-        </fieldset>
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label={{if f.model.isNew "Create" "Update"}} @disabled={{this.isSubmitting}} />
-        <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelAsset}} />
-        {{#if this.isSubmitting}}
-          <LoadingIndicator/>
-        {{/if}}
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
-{{/if}}
-{{#if (and this.isSubmitting this.creatingBarcode)}}
-  <LoadingDialog>
-    Creating barcode #{{this.creatingBarcode}}
-  </LoadingDialog>
-{{/if}}
-{{#if this.assetForHistory}}
-  <ModalAssetHistory @assetId={{this.assetForHistory.id}} @onClose={{action this.closeAssetHistory}} />
-{{/if}}
+          <FormRow>
+            <f.textarea @name="notes"
+                        @label="Notes"
+                        @rows={{2}}
+                        @cols={{80}}/>
+          </FormRow>
+          <FormRow>
+            <FormLabel @auto={{true}}>Assignment</FormLabel>
+            <div class="col-auto mt-2">
+              <f.radioGroup @name="perm_assign"
+                            @options={{this.permanentOptions}}
+                            @inline={{true}}/>
+            </div>
+          </FormRow>
+
+          {{#if this.entry.isNew}}
+            <FormRow>
+              <FormLabel>Copies (including the first) - Leave blank if only creating one</FormLabel>
+              <f.text @name="copies"
+                      @size={{4}}
+                      @maxlength={{4}}
+              />
+            </FormRow>
+          {{/if}}
+          <fieldset>
+            <legend>Vehicle Information</legend>
+            <FormRow>
+              <f.select @name="category"
+                        @label="Category"
+                        @options={{this.categoryOptions}}
+              />
+            </FormRow>
+            <FormRow>
+              <f.text @name="subtype"
+                      @label="Type"
+                      @size={{25}}
+                      @maxlength={{25}}
+                      @showCharCount={{true}}
+              />
+              <f.text @name="color"
+                      @label="Color"
+                      @size={{25}}
+                      @maxlength={{25}}
+                      @showCharCount={{true}}
+              />
+              <f.text @name="style"
+                      @label="Style"
+                      @size={{25}}
+                      @maxlength={{25}}
+                      @showCharCount={{true}}
+              />
+            </FormRow>
+          </fieldset>
+        </Modal.body>
+        <Modal.footer @noAlign={{true}}>
+          <f.submit @label={{if f.model.isNew "Create" "Update"}} @disabled={{this.isSubmitting}} />
+          <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelAsset}} />
+          {{#if this.isSubmitting}}
+            <LoadingIndicator/>
+          {{/if}}
+        </Modal.footer>
+      </ChForm>
+    </ModalDialog>
+  {{/if}}
+  {{#if (and this.isSubmitting this.creatingBarcode)}}
+    <LoadingDialog>
+      Creating barcode #{{this.creatingBarcode}}
+    </LoadingDialog>
+  {{/if}}
+  {{#if this.assetForHistory}}
+    <ModalAssetHistory @assetId={{this.assetForHistory.id}} @onClose={{action this.closeAssetHistory}} />
+  {{/if}}
 </main>

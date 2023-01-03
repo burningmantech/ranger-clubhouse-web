@@ -19,7 +19,6 @@ export default class HelpPopoverComponent extends Component {
       return;
     }
 
-    this.isShowing = true;
     this.isLoading = true;
 
     this.ajax.request(`help/${this.args.slug}`).then((result) => {
@@ -35,10 +34,5 @@ export default class HelpPopoverComponent extends Component {
       }
     })
     .finally(() => this.isLoading = false);
-  }
-
-  @action
-  closeHelp() {
-    this.isShowing = false;
   }
 }

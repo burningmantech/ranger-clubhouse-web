@@ -1,0 +1,115 @@
+<UiSection id="person-event-certifications">
+  <:title>Certifications / External Trainings</:title>
+  <:body>
+    <p>
+      {{#if this.canManage}}
+        <UiButton @onClick={{this.newAction}} @type="secondary" @size="sm">New Certification</UiButton>
+      {{else}}
+        Contact a Clubhouse Admin or Certification Manager to administer certification records.
+      {{/if}}
+    </p>
+    Showing {{pluralize this.personCertifications.length "certification"}}
+    <table class="table table-width-auto table-striped table-hover">
+      <thead>
+      <tr>
+        <th>Certification</th>
+        <th>Issued On</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.personCertifications as |pc|}}
+        <tr>
+          <td>{{pc.certification.title}}</td>
+          <td>
+            <PresentOrNot @value={{pc.issued_on}} @empty="-"/>
+          </td>
+          <td>
+            {{#if this.canManage}}
+              <UiButton @onClick={{fn this.editAction pc}} @size="sm" @type="secondary">Edit</UiButton>
+            {{/if}}
+            <UiButton @onClick={{fn this.showAction pc}} @size="sm" @type="secondary">Show Details</UiButton>
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </:body>
+</UiSection>
+
+{{#if this.showEntry}}
+  <ModalDialog @title="Certificate {{this.showEntry.certification.title}}" @onEscape={{this.closeShowAction}} as
+               |dialog|>
+    <dialog.body>
+      <dl class="row">
+        <dt class="col-2">Card #</dt>
+        <dd class="col-10">
+          <PresentOrNot @value={{this.showEntry.card_number}} @empty="-"/>
+        </dd>
+        <dt class="col-2">Issued On</dt>
+        <dd class="col-10">
+          <PresentOrNot @value={{this.showEntry.issued_on}} @empty="-"/>
+        </dd>
+        <dt class="col-2">Trained On</dt>
+        <dd class="col-10">
+          <PresentOrNot @value={{this.showEntry.trained_on}} @empty="-"/>
+        </dd>
+        <dt class="col-2">Recorded By</dt>
+        <dd class="col-10">
+          {{#if this.showEntry.recorder_id}}
+            <PersonLink @person={{this.showEntry.recorder}} at {{this.showEntry.created_at}} />
+          {{else}}
+            <i>- imported -</i>
+          {{/if}}
+        </dd>
+        <dt class="col-2">Notes</dt>
+        <dd class="col-10">
+          <PresentOrNot @value={{this.showEntry.notes}} @empty="-"/>
+        </dd>
+      </dl>
+    </dialog.body>
+    <dialog.footer>
+      <UiCloseButton @onClick={{this.closeShowAction}} />
+    </dialog.footer>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.editEntry}}
+  <ModalDialog @title="{{if this.editEntry.isNew "New" "Edit"}} Certification"
+               @onEscape={{this.cancelAction}} as |Dialog|>
+    <ChForm @formId="certification"
+            @formFor={{this.editEntry}}
+            @validator={{this.validations}}
+            @onSubmit={{this.saveAction}} as |f|>
+      <Dialog.body>
+        <FormRow>
+          <f.select @name="certification_id" @label="Certification" @options={{this.certificationOptions}} />
+          <f.text @name="card_number" @label="Card / Certificate #" @size={{15}} @maxlength={{30}} />
+        </FormRow>
+        <FormRow>
+          <f.datetime @name="issued_on" @dateOnly={{true}} @label="Issued On"/>
+          <f.datetime @name="trained_on" @dateOnly={{true}} @label="Trained On"/>
+        </FormRow>
+        <FormRow>
+          <f.textarea @name="notes" @rows="4" @cols="60" @label="Notes"/>
+        </FormRow>
+      </Dialog.body>
+      <Dialog.footer @noAlign={{true}}>
+        <f.submit @label="Save"/>
+        <UiCancelButton @onClick={{this.cancelAction}} />
+        {{#unless this.editEntry.isNew}}
+          <UiButton @type="danger" @class="ms-auto" @onClick={{this.deleteAction}} @disabled={{this.entry.isSaving}}>
+            {{fa-icon "trash"}} Delete
+          </UiButton>
+        {{/unless}}
+      </Dialog.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.uploadCardSide}}
+  <CardUpload
+    @uploadAction={{this.uploadAction}}
+    @closeAction={{this.cancelUploadAction}}
+  />
+{{/if}}

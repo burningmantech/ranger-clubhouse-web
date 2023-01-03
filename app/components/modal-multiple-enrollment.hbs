@@ -11,14 +11,20 @@
       {{/each}}
     </p>
     <p>
-      If the above {{this.shiftType}} has not started, the sign up may be removed, and the new {{this.shiftType}} added.
+      If the above {{this.shiftType}} has not started, the sign-up may be removed, and the new one added.
     </p>
     <p>
-      To arrange another sign up (if the previous one cannot be removed) or if you have questions, email
-      {{#if this.slot.contact_email}}
-        {{mail-to this.slot.contact_email}}
+      {{#if this.isTraining}}
+        To arrange another In-Person Training sign-up if the previous sign-up cannot be removed, or if you did not pass the
+        previous session, email the Training Academy to get your situation sorted out:<br>
+        {{mail-to (config 'TrainingAcademyEmail')}}
       {{else}}
-        {{vc-email}}
+        To arrange another sign up (if the previous one cannot be removed) or if you have questions, email
+        {{#if this.slot.position.contact_email}}
+          {{mail-to this.slot.position.contact_email}}
+        {{else}}
+          {{vc-email}}
+        {{/if}}
       {{/if}}
     </p>
   </modal.body>

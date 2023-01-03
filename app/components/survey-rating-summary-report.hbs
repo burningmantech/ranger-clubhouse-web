@@ -14,7 +14,7 @@
     <th>&nbsp;</th>
     <th>Std. Dev.</th>
     <th>Count</th>
-    <th>Distribution</th>
+    <th>Distribution (rating x count)</th>
   </tr>
   </thead>
   <tbody>
@@ -42,7 +42,7 @@
       <td class="text-end">{{rating.rating_count}}</td>
       <td>
         {{#each-in rating.distribution as |rank count|}}
-          {{rank}}x{{count}}
+          <span class="me-2">{{rank}}x{{count}}</span>
         {{/each-in}}
       </td>
     </tr>

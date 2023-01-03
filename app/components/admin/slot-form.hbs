@@ -34,10 +34,16 @@
                     @maxlength={{20}} />
       </FormRow>
       <FormRow>
+        <f.select @name="timezone"
+                  @label="Timezone"
+                  @options={{this.timezoneOptions}}
+        />
+      </FormRow>
+      <FormRow>
         <f.number @name="max"
-                @label={{if f.model.trainer_slot_id "Multiplier" "Max Sign Ups"}}
-                @size={{4}}
-                @maxlength={{4}}
+                  @label={{if f.model.trainer_slot_id "Multiplier" "Max Sign Ups"}}
+                  @size={{4}}
+                  @maxlength={{4}}
         />
       </FormRow>
       {{#if f.model.trainer_slot_id}}

@@ -16,11 +16,13 @@ export const TIMESHEET_MANAGEMENT = 106;
 export const SURVEY_MANAGEMENT = 107;
 export const MANAGE_ON_PLAYA = 108;
 export const TRAINER_SEASONAL = 109;
+export const CERTIFICATION_MGMT = 110;
 export const TECH_NINJA = 1000;
 
 const Role = {
   ADMIN,
   ART_TRAINER,
+  CERTIFICATION_MGMT,
   EDIT_ACCESS_DOCS,
   EDIT_BMIDS,
   EDIT_SLOTS,
@@ -62,6 +64,21 @@ const RoleToString = {
   [VIEW_PII]: 'view-pii',
 };
 
+
+const ALLOWED_AUTO_GRANT_ROLES = [
+  ART_TRAINER,
+  MANAGE,
+  MANAGE_ON_PLAYA,
+  MEGAPHONE,
+  MENTOR,
+  TIMESHEET_MANAGEMENT,
+  TRAINER,
+  VC,
+  VIEW_EMAIL,
+  VIEW_PII,
+];
+
+
 const StringToRole = Object.keys(RoleToString).reduce((hash, key) => {
   key = parseInt(key);
   hash[RoleToString[key]] = key;
@@ -76,5 +93,6 @@ export {
   roleName,
   StringToRole,
   RoleToString,
-  Role
+  Role,
+  ALLOWED_AUTO_GRANT_ROLES
 };

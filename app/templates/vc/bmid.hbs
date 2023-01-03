@@ -12,8 +12,10 @@
   <FormRow>
     <div class="col-auto">
       <label>Filter:</label>
-      <ChForm::Select @name="filter" @value={{this.filter}} @options={{this.filterOptions}}
-                      @onChange={{action this.changeFilter 'filter'}} @fieldSize="sm"/>
+      <ChForm::Select @name="filter" @value={{this.filter}}
+                      @options={{this.filterOptions}}
+                      @onChange={{action this.changeFilter 'filter'}}
+                      @fieldSize="sm"/>
     </div>
     <div class="col-auto">
       <label>Title Filter:</label>
@@ -75,8 +77,22 @@
   </FormRow>
 
   <p>
-    {{fa-icon "exclamation-circle"}} = indicates person has not signed up for any shifts.
-    {{fa-icon "plus-circle" color="success"}} = person has a qualified provision (showers, meals).
+    Meals and showers are a union of what is explicitly set on the BMID, allocated provisions, and non-banked
+    earned provisions.
+  </p>
+
+  <p>
+    {{fa-icon "exclamation-circle" color="danger"}} = indicates person has not signed up for any shifts.
+    {{fa-icon "eye" color="danger"}} = person does not have an approved photo
+
+  </p>
+  <p>
+    <EarnedProvisionIcon/>
+    = is earned provision which will be used.
+    <AllocatedProvisionIcon/>
+    = is allocated provision which will be used.
+    <SetProvisionIcon/>
+    = explicitly set provision
   </p>
 
   Showing {{this.viewBmids.length}} of {{this.bmids.length}}
@@ -129,8 +145,11 @@
         {{#each this.editableBmids key="person_id" as |bmid|}}
           <tr class="{{if bmid.isDirty "bg-warning"}}">
             <td>
+              {{#unless bmid.has_approved_photo}}
+                {{fa-icon "eye" color="danger"}}
+              {{/unless}}
               {{~#unless bmid.has_signups~}}
-                {{fa-icon "exclamation-circle"}}
+                {{fa-icon "exclamation-circle" color="danger"}}
               {{~/unless}}
             </td>
             <td>
@@ -141,8 +160,10 @@
               {{~/if~}}
             </td>
             <td>
-              <ChForm::Select @name={{concat "status" bmid.person.id}} @value={{bmid.status}}
-                              @options={{this.bmidStatusOptions}} @onChange={{action (mut bmid.status)}}
+              <ChForm::Select @name={{concat "status" bmid.person.id}}
+                              @value={{bmid.status}}
+                              @options={{this.bmidStatusOptions}}
+                              @onChange={{action (mut bmid.status)}}
                               @controlClass=""/>
             </td>
             {{!
@@ -155,15 +176,26 @@
                 editBmid is the changeset object which the data is manipulated in.
               }}
             <td><input value={{bmid.title1}} onblur={{action this.updateColumn bmid "title1"}} size="30"></td>
-            <td><input value={{bmid.title2}} onblur={{action this.updateColumn bmid "title2"}} size="30"></td>
-            <td><input value={{bmid.title3}} onblur={{action this.updateColumn bmid "title3"}} size="30"></td>
+            <td><input value={{bmid.title2}} onblur={{action this.updateColumn bmid "title2"}} size="15"></td>
+            <td><input value={{bmid.title3}} onblur={{action this.updateColumn bmid "title3"}} size="5"></td>
             <td>{{if bmid.org_vehicle_insurance "M" "-"}}</td>
             <td>
-              <ChForm::Select @name={{concat "showers" bmid.person.id}} @value={{bmid.showers}}
-                              @options={{this.showerOptions}} @onChange={{action (mut bmid.showers)}}
+              <ChForm::Select @name={{concat "showers" bmid.person.id}}
+                              @value={{bmid.showers}}
+                              @options={{this.showerOptions}}
+                              @onChange={{action (mut bmid.showers)}}
                               @controlClass=""/>
-              {{#if bmid.want_showers}}
-                <div class="text-success align-middle">{{fa-icon "plus-circle"}} <small>Showers</small></div>
+              {{#if bmid.allocated_showers}}
+                <div class="align-middle text-success">
+                  <AllocatedProvisionIcon/>
+                  <small>S</small>
+                </div>
+              {{/if}}
+              {{#if bmid.earned_showers}}
+                <div class="align-middle">
+                  <EarnedProvisionIcon/>
+                  <small>S</small>
+                </div>
               {{/if}}
             </td>
             <td>
@@ -172,8 +204,15 @@
                               @options={{this.mealOptions}}
                               @onChange={{action (mut bmid.meals)}}
                               @controlClass=""/>
-              {{#if bmid.want_meals}}
-                <div class="text-success">{{fa-icon "plus-circle"}} {{bmid.want_meals}}</div>
+              {{#if bmid.allocated_meals}}
+                <div>
+                  <AllocatedProvisionIcon/> {{bmid.allocated_meals}}
+                </div>
+              {{/if}}
+              {{#if bmid.earned_meals}}
+                <div>
+                  <EarnedProvisionIcon/> {{bmid.earned_meals}}
+                </div>
               {{/if}}
             </td>
             <td>
@@ -204,9 +243,12 @@
         {{#each this.renderBmids key="person_id" as |bmid|}}
           <tr>
             <td>
-              {{#unless bmid.has_signups}}
-                {{fa-icon "exclamation-circle"}}
+              {{#unless bmid.has_approved_photo}}
+                {{fa-icon "eye" color="danger"}}
               {{/unless}}
+              {{~#unless bmid.has_signups~}}
+                {{fa-icon "exclamation-circle" color="danger"}}
+              {{~/unless}}
             </td>
             <td>
               {{#if bmid.person}}
@@ -227,17 +269,29 @@
               <PresentOrNot @value={{bmid.title3}} @empty="-"/>
             </td>
             <td>{{if bmid.org_vehicle_insurance "M" "-"}}</td>
-            <td>
-              {{if bmid.showers "S" "-"}}
-              {{#if bmid.want_showers}}
-                <div class="text-success">{{fa-icon "plus-circle"}} S</div>
+            <td class="no-wrap">
+              {{#if bmid.allocated_showers}}
+                <AllocatedProvisionIcon/>
               {{/if}}
+              {{#if bmid.earned_showers}}
+                <EarnedProvisionIcon/>
+              {{/if}}
+              {{#if bmid.showers}}
+                <SetProvisionIcon/>
+              {{/if}}
+              {{if bmid.effectiveShowers "S" "-"}}
             </td>
-            <td>
-              {{bmid.mealsHuman}}
-              {{#if bmid.want_meals}}
-                <div class="text-success no-wrap">{{fa-icon "plus-circle"}} {{bmid.want_meals}}</div>
+            <td class="no-wrap">
+              {{#if bmid.allocated_meals}}
+                <AllocatedProvisionIcon/>
               {{/if}}
+              {{#if bmid.earned_meals}}
+                <EarnedProvisionIcon/>
+              {{/if}}
+              {{#if bmid.meals}}
+                <SetProvisionIcon/>
+              {{/if}}
+              {{bmid.effectiveMealsHuman}}
             </td>
             <td class="w-10">
               {{#if bmid.wapMissing}}

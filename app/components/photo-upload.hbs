@@ -3,11 +3,23 @@
     {{#unless @photo.upload_enabled}}
       <h3 class="text-danger border border-danger p-2">
         <b>Photo uploading is disabled.</b> Because you have the Admin or VC role, you are allowed to upload a
-        photo.
-        Do not abuse this.
+        photo. Do not abuse this.
       </h3>
     {{/unless}}
-    {{#if (eq this.step "source")}}
+    {{#if (eq this.step "showGuidelines")}}
+      <p>
+        Before uploading a BMID photo, take a moment to review the photo help sheet:
+      </p>
+      <p>
+        <a href="https://docs.google.com/document/d/1hUqrJwdMG6XB5nk7Eh8nY2GH4uvAFTppmCKCmfidIvQ/edit?usp=sharing"
+           target="_blank" rel="noreferrer noopener">
+          View The Ranger BMID Help Sheet {{fa-icon "arrow-up-right-from-square"}}
+        </a>
+      </p>
+      <p>
+        (Link will be opened in a new window)
+      </p>
+     {{else if (eq this.step "source")}}
       <h4>Your BMID photo is an ID photo. Think “passport” or driver's license.</h4>
       The photo must meet the following criteria:
       <ul class="no-indent">
@@ -22,23 +34,38 @@
         <li>No other people in the photo.</li>
       </ul>
       <div class="row g-0">
-        <div class="col-sm-12 col-lg-auto mb-2">
+        <div class="col-sm-12 col-xl-auto mb-2">
           <div class="input-group">
             <input type="file" class="form-control" capture="user" id="photo-file"
                    accept="image/jpg,image/jpeg,image/png" {{on "change" this.fileChangeEvent}}>
           </div>
         </div>
         {{#if this.hasCamera}}
-          <div class="col-sm-12 col-lg-auto mx-4 my-2">
+          <div class="col-sm-12 col-xl-auto mx-xl-4 my-xl-2 text-center">
             <h4>- OR -</h4>
           </div>
-          <div class="col-sm-12 col-lg-auto text-center">
-            <UiButton @onClick={{this.takeSelfieAction}}>
+          <div class="col-sm-12 col-xl-auto text-sm-center text-xl-none">
+            <UiButton @onClick={{this.takeSelfieAction}} @class="btn-responsive">
               Use Camera / Take Selfie
             </UiButton>
           </div>
         {{/if}}
       </div>
+      {{#if this.showNoBlobError}}
+        <p>
+          <b class="text-danger">
+            Uh oh, I had a problem processing your image. You can try another photo, or email this one
+            to the photo wranglers at :
+          </b>
+        </p>
+        <p>
+          {{vc-email}}<br>
+          (don't forget to include your Prospective Ranger handle!)
+        </p>
+        <p>
+          Sorry about that!
+        </p>
+      {{/if}}
 
       <p class="mt-2">
         Examples of a good BMID photo:
@@ -58,12 +85,22 @@
     {{else if (eq this.step "take-selfie")}}
       <PhotoSelfie @useSelfieAction={{this.useSelfieAction}} @width={{this.width}} @height={{this.height}} />
     {{else if (eq this.step "edit-photo")}}
-      <PhotoEdit @imageDataUrl={{this.originalImageDataUrl}} @submitAction={{this.uploadEditAction}}
-                 @cancelAction={{this.chooseSourceAction}} @isSubmitting={{this.isSubmitting}} @width={{this.width}}
-                 @height={{this.height}} />
+      <PhotoEdit @imageDataUrl={{this.originalImageDataUrl}}
+                 @submitAction={{this.uploadEditAction}}
+                 @cancelAction={{this.chooseSourceAction}}
+                 @isSubmitting={{this.isSubmitting}}
+                 @width={{this.width}}
+                 @height={{this.height}}
+                 @isMugshot={{true}}
+      />
     {{/if}}
   </modal.body>
   <modal.footer>
     <UiCancelButton @onClick={{@closeAction}} />
+    {{#if (eq this.step "showGuidelines")}}
+      <UiButton @onClick={{this.gotoSourceStep}} @type="primary">
+        Upload Photo
+      </UiButton>
+    {{/if}}
   </modal.footer>
 </ModalDialog>

@@ -12,7 +12,7 @@
         Stay tuned to the Ranger Announce mailing list for updates.
       </p>
       {{#if this.tickets}}
-        You have {{pluralize this.tickets.length "ticket"}}:
+        You have {{pluralize this.tickets.length "banked ticket"}}:
         <ul>
           {{#each this.tickets as |ticket|}}
             <li>
@@ -22,22 +22,7 @@
           {{/each}}
         </ul>
       {{else}}
-        You have no tickets currently.
-      {{/if}}
-      {{#if this.appreciations}}
-        You have the following {{pluralize this.appreciations.length "provision"}}:
-        <ul>
-          {{#each this.appreciations as |item|}}
-            <li>
-              {{item.typeLabel}}
-              {{#if item.isEventRadio}}
-                (count {{item.item_count}})
-              {{/if}}
-              expiring after {{mdy-format item.expiry_date full=true}}
-            </li>
-          {{/each}}
-        </ul>
-
+        You have no banked tickets currently.
       {{/if}}
     </:body>
   </UiSection>

@@ -1,4 +1,4 @@
-<ChSidebar @theme="person" @smallTitle="Person Manage" as |s|>
+<UiSidebar @theme="person" @smallTitle="Person Manage" as |s|>
   <s.group @title="PERSON MANAGE">
     <s.link @route="person.index" @title="Account Info" @icon="info" @iconType="s"/>
     <s.link @route="person.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
@@ -8,23 +8,22 @@
     <s.link @route="person.assets" @title="Assets" @icon="broadcast-tower" @iconType="s"/>
     <s.link @route="person.messages" @title="Messages" @icon="envelope"
             @badgeText={{this.person.unread_message_count}} />
-    {{#if (has-role "admin" "manage+view-pii")}}
+    {{#if (has-role "admin" "view-pii")}}
       <s.link @route="person.personal-info" @title="Personal Info" @icon="home" @iconType="s"/>
     {{/if}}
     {{#if (has-role "admin" "manage")}}
-      <s.link @route="person.emergency-contact" @title="Emergency Contact" @icon="exclamation" @iconType="s"/>
+      <s.link @route="person.emergency-contact" @title="Emergency Contact" @icon="comment-medical" @iconType="s"/>
     {{/if}}
     {{#if (has-role "admin" "vc" "mentor")}}
       <s.link @route="person.mentors" @title="Mentors" @icon="users" @iconType="s"/>
     {{/if}}
-    {{#if (has-role "admin")}}
-      <s.link @route="person.password" @title="Change Password" @icon="key" @iconType="s"/>
-    {{/if}}
+    <s.link @route="person.awards-swag" @title="Awards & Swag" @icon="award" @iconType="s"/>
+    <s.link @route="person.pogs" @title="Pogs" @icon="utensils" @iconType="s"/>
   </s.group>
   {{#if  (has-role "edit-bmids" "edit-access-docs")}}
     <s.group @title="PRE-PLAYA">
       {{#if (has-role "edit-access-docs")}}
-        <s.link @route="person.access-documents" @title="Items" @icon="ticket-alt" @iconType="s"/>
+        <s.link @route="person.tickets-provisions" @title="Tickets & Provisions" @icon="ticket" @iconType="s"/>
       {{/if}}
       {{#if (has-role "edit-bmids")}}
         <s.link @route="person.bmid" @title="BMID" @icon="id-badge" @iconType="s"/>
@@ -48,20 +47,18 @@
 
   {{#if (has-role "admin" "vc")}}
     <s.group @title="Logs">
+      <s.link @route="person.mail-log" @title="Mail Log" @icon="paper-plane"/>
       {{#if (has-role "admin")}}
         <s.link @route="admin.action-log" @title="Action Log" @query={{hash person=this.person.callsign}}
                 @icon="arrows-alt"
                 @iconType="s"/>
-        <s.link @route="person.contact-log" @title="Contact Log" @icon="paper-plane"/>
         <s.link @route="person.broadcast-log" @title="Broadcast Log" @icon="volume-up" @iconType="s"/>
       {{/if}}
-      {{#if (has-role "admin" "vc")}}
-        <s.link @route="person.status-history" @title="Status History" @icon="history" @iconType="s"/>
-        <s.link @route="person.photos" @title="Photo History" @icon="portrait" @iconType="s"/>
-      {{/if}}
+      <s.link @route="person.status-history" @title="Status History" @icon="history" @iconType="s"/>
+      <s.link @route="person.photos" @title="Photo History" @icon="portrait" @iconType="s"/>
     </s.group>
   {{/if}}
-</ChSidebar>
+</UiSidebar>
 
 <main>
   <div class="person-manage-header">
@@ -82,29 +79,16 @@
         </div>
       </div>
       <div class="person-manage-switch">
-        <LinkTo @route="hq.index" @model={{this.person.id}}>Switch to HQ Window</LinkTo>
+        <a href {{action this.switchToHQ}}>Switch to HQ Window</a>
       </div>
     </div>
-    {{#if (or this.person.isSuspended this.person.isResigned this.person.isDeceased this.person.isUberBonked this.person.isDismissed)}}
-      <div class="person-manage-info">
-        <h5 class="text-danger mt-2">
-          {{fa-icon "exclamation-triangle"}} The account has the status "{{this.person.status}}" and may not be logged
-          into.
-        </h5>
-        For more information, contact the Personnel Manager: {{mail-to (config "PersonnelEmail")}}
-      </div>
-    {{else if this.person.needsBpguid}}
-      <div class="h4 person-manage-info text-danger">
-        Account does not have a Burner Profile ID on file. Signups and ticketing are disabled.
-      </div>
-    {{/if}}
   </div>
 
   {{#if this.person.message}}
-    <ChNotice @title="Important Account Note" @icon="hand-point-right">
+    <UiNotice @title="Important Account Note" @icon="hand-point-right">
       {{nl2br this.person.message}}
       <div class="mt-2 text-muted">Posted {{shift-format this.person.message_updated_at}}</div>
-    </ChNotice>
+    </UiNotice>
   {{/if}}
   {{outlet}}
 </main>

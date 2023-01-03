@@ -10,17 +10,8 @@ module('Integration | Component | ticket-wap-so-info', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{ticket-wap-so-info}}`);
+    await render(hbs`<TicketWapSoInfo />`);
 
     assert.dom(this.element).hasText('');
-
-    // Template block usage:
-    await render(hbs`
-      {{#ticket-wap-so-info}}
-        template block text
-      {{/ticket-wap-so-info}}
-    `);
-
-    assert.dom(this.element).hasText('template block text');
   });
 });

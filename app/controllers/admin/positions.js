@@ -1,11 +1,31 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import PositionTypes from 'clubhouse/constants/position-types';
 import PositionValidations from 'clubhouse/validations/position';
-import {TECH_NINJA} from 'clubhouse/constants/roles';
+import {
+  ART_TRAINER,
+  MANAGE,
+  MANAGE_ON_PLAYA,
+  MEGAPHONE,
+  MENTOR,
+  TECH_NINJA,
+  TIMESHEET_MANAGEMENT,
+  TRAINER,
+  TRAINER_SEASONAL,
+  VC,
+  VIEW_EMAIL,
+  VIEW_PII,
+} from 'clubhouse/constants/roles';
+import _ from 'lodash';
+
+const ALLOWED_ROLES = [
+  MANAGE, MANAGE_ON_PLAYA, VC, VIEW_PII, VIEW_EMAIL, MENTOR,
+  TRAINER, TRAINER_SEASONAL, ART_TRAINER, TIMESHEET_MANAGEMENT, MEGAPHONE,
+];
 
 export default class PositionController extends ClubhouseController {
+  @tracked positions;
   @tracked position = null;
 
   positionTypes = PositionTypes;
@@ -13,11 +33,25 @@ export default class PositionController extends ClubhouseController {
 
   @tracked typeFilter = 'All';
   @tracked activeFilter = 'all';
+  @tracked allRangersFilter = '-';
+  @tracked viewAs = 'list';
+  @tracked teams;
 
   activeOptions = [
     {id: 'all', title: 'All'},
     {id: 'active', title: 'Active'},
     {id: 'inactive', title: 'Inactive'},
+  ];
+
+  allRangersOptions = [
+    ['-', 'all'],
+    ['All Rangers', 'all-rangers'],
+    ['Not-All Rangers', 'not']
+  ];
+
+  viewAsOptions = [
+    ['List', 'list'],
+    ['Teams', 'teams']
   ];
 
   constructor() {
@@ -32,10 +66,41 @@ export default class PositionController extends ClubhouseController {
     return this.session.hasRole(TECH_NINJA)
   }
 
+  get roleOptions() {
+    const options = [];
+
+    ALLOWED_ROLES.forEach((roleId) => {
+      const role = this.roles.find((r) => +r.id === roleId);
+      if (role) {
+        options.push({id: roleId, title: role.title});
+      }
+    })
+
+    options.sort((a, b) => a.title.localeCompare(b.title))
+    return options;
+  }
+
+  @cached
+  get viewByTeams() {
+    const groups = _.groupBy(this.positions.toArray(), 'team_id');
+
+    const teams = this.teams.map((team) => ({
+      title: team.title,
+      team_positions: groups[team.id] ?? [],
+    }));
+
+    teams.unshift({
+      title: 'General Positions / Unassociated with Team',
+      team_positions: this.positions.filter((p) => !p.team_id || !groups[p.team_id])
+    });
+
+    return teams;
+  }
+
+  @cached
   get viewPositions() {
     let positions = this.positions;
-    const typeFilter = this.typeFilter;
-    const activeFilter = this.activeFilter;
+    const {typeFilter, activeFilter, allRangersFilter} = this;
 
     if (typeFilter !== 'All') {
       positions = positions.filterBy('type', typeFilter);
@@ -49,9 +114,24 @@ export default class PositionController extends ClubhouseController {
       }
     }
 
+    if (allRangersFilter !== '-') {
+      positions = positions.filterBy('all_rangers', (allRangersFilter === 'all-rangers'));
+    }
+
     return positions;
   }
 
+  @cached
+  get teamPositionOptions() {
+    const options = [
+      ['-', null]
+    ];
+
+    this.teams.forEach((team) => options.push([team.title, team.id]));
+    return options;
+  }
+
+  @cached
   get trainingOptions() {
     const options = [
       ['-', '']
@@ -67,8 +147,14 @@ export default class PositionController extends ClubhouseController {
   }
 
   @action
+  showAsClick(type) {
+    this.showAsPositions = (type === 'positions');
+    this.showAsTeams = !this.showAsPositions;
+  }
+
+  @action
   newAction() {
-    this.position = this.store.createRecord('position', { type: 'Frontline' });
+    this.position = this.store.createRecord('position', {type: 'Frontline'});
   }
 
   @action

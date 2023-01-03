@@ -2,11 +2,25 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {set} from '@ember/object';
 import RSVP from 'rsvp';
 import {ADMIN, EDIT_BMIDS} from 'clubhouse/constants/roles';
-import {ACTIVE, INACTIVE, INACTIVE_EXTENSION, RETIRED, ALPHA, PROSPECTIVE} from 'clubhouse/constants/person_status';
+import {
+  ACTIVE,
+  ALPHA,
+  INACTIVE,
+  INACTIVE_EXTENSION,
+  NON_RANGER,
+  PROSPECTIVE,
+  RETIRED,
+} from 'clubhouse/constants/person_status';
 import requestYear from 'clubhouse/utils/request-year';
 
 const ALLOWED_STATUSES = [
-  ACTIVE, INACTIVE, INACTIVE_EXTENSION, RETIRED, ALPHA, PROSPECTIVE
+  ACTIVE,
+  ALPHA,
+  INACTIVE,
+  INACTIVE_EXTENSION,
+  NON_RANGER,
+  PROSPECTIVE,
+  RETIRED,
 ];
 
 export default class VcBmidPrintRoute extends ClubhouseRoute {
@@ -29,7 +43,7 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     const bmids = [], doNotPrint = [], issues = [],
-      printed = [], submitted = [], unusualStatus = [];
+      printed = [], submitted = [], unusualStatus = [], noPhoto = [];
 
     controller.set('year', model.year);
     controller.set('filter', model.filter);
@@ -58,17 +72,22 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
           return;
       }
 
+
       if (!ALLOWED_STATUSES.includes(bmid.person.status)) {
         unusualStatus.push(bmid);
         return;
       }
 
-      set(bmid, 'selected', 1)
+      if (bmid.has_approved_photo) {
+        set(bmid, 'selected', 1);
+      } else {
+        noPhoto.push(bmid);
+      }
       bmids.push(bmid);
     });
 
     controller.setProperties({
-      bmids, doNotPrint, issues, printed, submitted, unusualStatus
+      bmids, doNotPrint, issues, printed, submitted, unusualStatus, noPhoto
     });
 
     controller.set('totalBmids', model.bmids.length);

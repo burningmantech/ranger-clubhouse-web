@@ -1,24 +1,24 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 
 const TASK_GROUPS = [{
-    group_title: 'Positions',
-    tasks: [{
-      action: 'update-positions',
-      title: 'Set Ranger Positions',
-      description: 'Ensure all Rangers have the correction positions',
-      controller: 'maintenance'
-    }]
-  },
+  group_title: 'Positions',
+  tasks: [{
+    action: 'update-positions',
+    title: 'Set Ranger Positions',
+    description: 'Ensure all Rangers have the correction positions',
+    controller: 'maintenance'
+  }]
+},
   {
-    group_title: 'Account Post Event',
+    group_title: 'Account Post-Event',
     tasks: [{
-        action: 'mark-off-site',
-        title: 'Mark all Rangers as off-site',
-        description: 'Any Ranger who was marked as on site will be marked as off site',
-        controller: 'maintenance'
-      },
+      action: 'mark-off-site',
+      title: 'Mark all Rangers as off-site',
+      description: 'Any Ranger who was marked as on site will be marked as off site',
+      controller: 'maintenance'
+    },
       {
         action: 'reset-pnvs',
         title: 'Reset PNVs To Past Prospectives',
@@ -35,11 +35,12 @@ const TASK_GROUPS = [{
     ]
   },
   {
-    group_title: 'Ticketing',
-    tasks: [{
+    group_title: 'Ticketing Pre-Event',
+    tasks: [
+      {
         action: 'grant-waps',
         title: 'Grant Ranger WAPs',
-        description: "Grant Work Access Passes to any active or inactive Ranger who doesn't have one already",
+        description: "Grant Work Access Passes to any active or inactive Ranger who doesn't have one already and who has worked in the last 3 official event years (2020 and 2021 are skipped over.)",
         controller: 'access-document'
       },
       {
@@ -69,15 +70,33 @@ const TASK_GROUPS = [{
           title: 'Enter a reason why the ticket expiration dates are being bumped:',
           name: 'reason'
         }
-      }
+      },
+      {
+        action: 'unbank-access-documents',
+        title: 'Unbank Items',
+        description: 'Take all banked items and update the status to qualified (unbank). Do this before ticketing is opened.',
+        controller: 'access-document'
+      },
     ]
   },
   {
-    group_title: 'Ticketing Post Event',
-    tasks: [{
+    group_title: 'Provisions Pre-Event',
+    tasks: [
+      {
+        action: 'unbank-provisions',
+        title: 'Unbank Provisions',
+        description: 'Take all banked provisions and update the status to available (un-bank). Do this before ticketing is opened.',
+        controller: 'provision'
+      },
+    ]
+  },
+  {
+    group_title: 'Ticketing Post-Event',
+    tasks: [
+      {
         action: 'clean-access-documents',
         title: 'Clean Access Docs From Prior Event',
-        description: 'Mark all submitted Access Docs as used, and mark all non-bankable and unsubmitted Access Docs (Vehicle Passes, WAPs) as expired.',
+        description: 'Mark all submitted Access Docs as used, and mark all non-bankable and un-submitted Access Docs (Vehicle Passes, WAPs) as expired.',
         controller: 'access-document'
       },
       {
@@ -91,6 +110,30 @@ const TASK_GROUPS = [{
         title: 'Expire Access Documents',
         description: 'Mark expired Access Docs as expired',
         controller: 'access-document'
+      }
+    ]
+  },
+
+  {
+    group_title: 'Provisions Post-Event',
+    tasks: [
+      {
+        action: 'clean-provisions',
+        title: 'Clean Provisions From Prior Event',
+        description: 'Mark all submitted provisions as used, and mark allocated provisions either expired (unused) or used (claimed/submitted).',
+        controller: 'provision'
+      },
+      {
+        action: 'bank-provisions',
+        title: 'Bank Provisions From Prior Event',
+        description: 'Mark all qualified provisions (does not check for expiration)',
+        controller: 'provision'
+      },
+      {
+        action: 'expire-provisions',
+        title: 'Expire Provisions',
+        description: 'Mark expired Provisions as expired',
+        controller: 'provision'
       }
     ]
   },
@@ -138,7 +181,7 @@ export default class AdminMaintenanceController extends ClubhouseController {
         data[task.param.name] = this.paramValue;
       }
 
-      this.ajax.request(`${task.controller}/${task.action}`, { method: 'POST', data })
+      this.ajax.request(`${task.controller}/${task.action}`, {method: 'POST', data})
         .then((results) => this.results = results)
         .catch((response) => {
           this.house.handleErrorResponse(response);

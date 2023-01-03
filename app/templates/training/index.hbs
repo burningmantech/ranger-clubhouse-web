@@ -1,13 +1,13 @@
 <YearSelect @title="{{this.training.title}} Sessions"
             @year={{this.year}}
             @minYear={{2008}}
-            @onChange={{action (mut this.year)}}
-            @subheader={{true}}/>
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}} />
 
 {{#each this.trainingSessions as |session|}}
   <UiSection>
     <:title>
-      {{shift-format session.slot.begins}}
+      {{shift-format session.slot.begins}} ({{session.slot.timezone_abbr}})
       <div class="d-sm-block d-lg-inline-block">{{session.slot.description}}</div>
     </:title>
     <:body>

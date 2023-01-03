@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {service} from '@ember/service';
 import {schedule} from '@ember/runloop';
-import { action } from '@ember/object';
+import {action} from '@ember/object';
 
 export default class ModalDialogComponent extends Component {
   @service modal;
@@ -33,12 +33,14 @@ export default class ModalDialogComponent extends Component {
    */
 
   @action
-  adjustClassOnInsert(element) {
-    const dialog = element.querySelector('div.modal-dialog');
-    if (!dialog) {
-      return;
-    }
-    dialog.classList.add('modal-fullscreen-md-down');
+  adjustClassOnInsert(/*element*/) {
+    /*
+      const dialog = element.querySelector('div.modal-dialog');
+      if (!dialog) {
+         return;
+      }
+      dialog.classList.add('modal-fullscreen-xl-down');
+     */
   }
 
   /**

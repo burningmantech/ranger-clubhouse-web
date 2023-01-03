@@ -1,0 +1,63 @@
+<UiSection class="d-print-none">
+  <:title>{{if this.isCurrentYear "Available" "Past"}} Shift Sign-Ups for {{@year}}</:title>
+  <:body>
+    {{#if @availableSlots}}
+      <FormRow>
+        <div class="col-sm-12 col-xl-auto">
+          <label class="col-form-label">
+            Day filter:
+          </label>
+        </div>
+        <div class="col-sm-12 col-xl-auto">
+          <ChForm::Select @name="filterDay"
+                          @value={{this.filterDay}}
+                          @options={{this.dayOptions}}
+                          @onChange={{action (mut this.filterDay)}} />
+        </div>
+      </FormRow>
+      <p>
+        <b>Note:</b> A shift may not be added to or removed from your schedule if the shift has already started.
+      </p>
+      <p>
+        Click on the position title to show the available shifts.
+      </p>
+      <div>
+        <b>Showing {{this.viewSlots.length}} of {{pluralize @availableSlots.length "shift"}}.</b>
+        {{#if (not-eq this.viewSlots.length @availableSlots.length)}}
+          <b> Adjust the day filter above to show prior shifts &amp; trainings.</b>
+        {{/if}}
+      </div>
+      {{#each this.positions key="position_id" as |position|}}
+        <SchedulePositionList @position={{position}}
+                              @showPeople={{@showPeople}}
+                              @joinSlot={{@joinSlot}}
+                              @leaveSlot={{@leaveSlot}}
+                              @isAdmin={{@isAdmin}}
+                              @isCurrentYear={{this.isCurrentYear}}
+                              @milestones={{@milestones}}
+                              @person={{@person}}
+        />
+      {{else}}
+        <div class="mt-2 font-weight-bold text-danger">
+          {{#if (eq this.filterDay "upcoming")}}
+            There are no more upcoming shifts.
+          {{else if (eq this.positions.length 0)}}
+            No shifts have been posted yet.
+          {{else}}
+            No shifts were found for {{this.filterDay}}
+          {{/if}}
+        </div>
+      {{/each}}
+    {{else}}
+      <div class="mt-2 font-weight-bold text-danger">
+        {{#if (eq this.filterDay "upcoming")}}
+          There are no more upcoming shifts.
+        {{else if (eq this.positions.length 0)}}
+          No shifts have been posted yet.
+        {{else}}
+          No shifts were found for {{this.filterDay}}
+        {{/if}}
+      </div>
+    {{/if}}
+  </:body>
+</UiSection>

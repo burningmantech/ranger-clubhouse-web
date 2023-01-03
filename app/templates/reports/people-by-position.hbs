@@ -40,7 +40,7 @@
 </FormRow>
 
 {{#each this.visiblePositions key="id" as |position|}}
-  <ChAccordion as |accordion|>
+  <UiAccordion as |accordion|>
     <accordion.title>
       {{position-label position}}
       {{#if position.allRangers}}
@@ -103,7 +103,7 @@
         {{/if}}
       {{/if}}
     </accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 {{else}}
   <b class="text-danger">No positions matched.</b>
 {{/each}}

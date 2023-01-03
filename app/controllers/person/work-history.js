@@ -1,50 +1,70 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import {action} from '@ember/object';
+import {cached, tracked} from '@glimmer/tracking';
+import {ADMIN} from 'clubhouse/constants/roles';
+import validateDateTime from 'clubhouse/validators/datetime';
 
 export default class PersonWorkHistoryController extends ClubhouseController {
-  @tracked showPositionYearEntries = false;
-  @tracked showPositionAllEntries = false;
-  @tracked showYear = false;
+  @tracked person;
+  @tracked timesheet;
+  @tracked teamEntry;
+  @tracked membershipHistory;
+  @tracked teams;
 
-  @tracked showEntireYear = false;
-  @tracked yearEntries = [];
-  @tracked position = [];
-  @tracked entries = [];
+  teamValidators = {
+    joined_on: [validateDateTime({dateOnly: true})],
+    left_on: [validateDateTime({dateOnly: true})]
+  };
+
+
+  get canManageTeamHistory() {
+    return this.session.hasRole(ADMIN);
+  }
+
+  @cached
+  get teamOptions() {
+    return this.teams.map((team) => [team.active ? team.title : `${team.title} (inactive)`, team.id]);
+  }
+
 
   @action
-  showPositionYearSummaryAction(positionId, year) {
-    this.showPositionYearEntries = true;
-    this.showYear = year;
-    this.position = this.positionsById[positionId];
-    this.entries = this.positionsByYear[year][positionId].entries;
+  newTeamHistory() {
+    this.teamEntry = this.store.createRecord('person-position-log', {
+      person_id: this.person.id,
+      team_id: this.teams[0].id
+    });
   }
 
   @action
-  closePositionYearSummaryAction() {
-    this.showPositionYearEntries = false;
+  editTeamHistory(entry) {
+    this.teamEntry = entry;
   }
 
   @action
-  showPositionAllEntriesAction(positionId) {
-    this.showPositionAllEntries = true;
-    this.position = this.positionsById[positionId];
+  cancelTeamHistory() {
+    this.teamEntry = null;
   }
 
   @action
-  closePositionAllEntriesAction() {
-    this.showPositionAllEntries = false;
+  saveTeamHistory(entry, isValid) {
+    if (!isValid) {
+      return;
+    }
+
+    entry.save().then(() => {
+      this.toast.success('Entry was successfully saved.');
+      this.teamEntry = null;
+      this.membershipHistory.update();
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action
-  showEntireYearAction(year){
-    this.showEntireYear = year;
-    this.yearEntries = this.yearTotals[year].entries;
+  deleteTeamHistory() {
+    this.modal.confirm('Delete Team History Record', 'Are you sure you want to delete this record?', () => {
+      this.teamEntry.destroyRecord().then(() => {
+        this.teamEntry = null;
+        this.toast.success('Team History record has been deleted.');
+      })
+    });
   }
-
-  @action
-  closeEntireYearAction() {
-    this.showEntireYear = null;
-  }
-
 }

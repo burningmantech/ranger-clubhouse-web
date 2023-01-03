@@ -1,74 +1,83 @@
-<TicketSection @id="summary" @toggleCard={{@toggleCard}} @showing={{@showing}}>
-  <:title>Summary</:title>
-  <:body>
-    {{#if this.unfinishedItems}}
-      <b class="text-danger">You have {{pluralize this.unfinishedItems.length "outstanding task"}} to complete.</b>
-      <ul class="mt-2">
-        {{#each this.unfinishedItems as |item|}}
-          <li>{{item}}</li>
-        {{/each}}
-      </ul>
-    {{else}}
-      Please review your decisions below, and take note of the following:
-      <ol class="no-indent">
-        <li><b class="text-danger">The ticketing deadline is {{full-datetime-format @ticketingInfo.submit_date}} Pacific
-          Time</b>.
-          You have until then to adjust your selections, change the delivery method, and/or update the mailing address.
-        </li>
-        <li>
-          <b class="text-danger">It may not be possible to request changes once the ticketing deadline has passed.</b>
-        </li>
-        {{#if this.claimedItems}}
-          <li>
-            The items will be sent for processing after the deadline, and emails sent giving further instructions.
-            Reduced-Price ticket requests will be invoiced. Work Access Passes are sent via email sometime after the
-            deadline cutoff and a week before the event starts.
-          </li>
-          <li>
-            If you are happy with your selections, sit back, check the Clubhouse often, watch your inbox, and
-            keep an eye on the Announce mailing list for further instructions.
-          </li>
-        {{/if}}
-      </ol>
-      {{#if (and @ticketPackage.tickets (not @ticket.isClaimed))}}
-        <p>
-          <h4 class="text-danger">No ticket has been claimed.</h4>
-        </p>
-      {{/if}}
-      {{#if this.claimedItems}}
-        <b>
-          {{pluralize this.claimedItems.length "item"}}
-          {{if (eq this.claimedItems.length 1) "has" "have"}} been CLAIMED:
-        </b>`
-        {{#each this.claimedItems as |item|}}
-          <div class="mb-1">{{fa-icon "check" color="success"}} {{item}}</div>
-        {{/each}}
-      {{else}}
-        <b class="text-danger">You have NOT claimed any items for this event.</b>
-      {{/if}}
-      <hr>
-      {{#if this.bankedItems}}
-        <b>{{pluralize this.bankedItems.length "item"}} will be BANKED:</b>
-        {{#each this.bankedItems as |item|}}
-          <div class="mt-1">{{item}}</div>
-        {{/each}}
-      {{else}}
-        <p class="mt-2">
-          <b>No items will be banked.</b>
-        </p>
-      {{/if}}
-      {{#if this.unclaimedItems}}
-        <hr>
-        <b class="text-danger">
-          {{pluralize this.unclaimedItems.length "item"}}
-          {{if (eq this.unclaimedItems.length 1) "is" "are"}}
-          unclaimed
-        </b>
-        Not claiming the item(s) may or may effect your ability to Ranger on playa:
-        {{#each this.unclaimedItems as |item|}}
-          <div class="mt-1">{{fa-icon "exclamation" color="danger"}} {{item}}</div>
-        {{/each}}
-      {{/if}}
+{{#if this.unfinishedItems}}
+  <b class="text-danger">You have {{pluralize this.unfinishedItems.length "outstanding task"}} to complete.</b>
+  <ul class="mt-2">
+    {{#each this.unfinishedItems as |item|}}
+      <li>{{item}}</li>
+    {{/each}}
+  </ul>
+{{else}}
+  {{#if (and @ticketPackage.tickets (not @ticket.isUsing))}}
+    <h4 class="text-danger">{{fa-icon "ban"}} No Ticket Claimed</h4>
+    <p>
+      You have {{pluralize @ticketPackage.tickets.length "ticket"}} available yet you have not
+      claimed one. Go back to the ticket step, and claim a ticket if this is a mistake.
+    </p>
+  {{/if}}
+
+  Your choices are summarized below:
+  <div class="my-2">
+    {{#if this.submittedItems}}
+      <TicketSummaryCard @type="success" @icon="gear">
+        <:title>{{pluralize this.claimedItems.length "Submitted Item"}}</:title>
+        <:body>
+          The following items have been submitted for processing:
+          {{#each this.submittedItems as |item|}}
+            <div class="mb-1">
+              {{fa-icon "check" color="success"}}<span class="ms-2">{{item}}</span>
+            </div>
+          {{/each}}
+        </:body>
+      </TicketSummaryCard>
     {{/if}}
-  </:body>
-</TicketSection>
+    {{#if this.claimedItems}}
+      <TicketSummaryCard @type="success" @icon="check">
+        <:title>{{pluralize this.claimedItems.length "Claimed Item"}}</:title>
+        <:body>
+          <p>
+            The following will be submitted for processing:
+          </p>
+          <ul class="no-indent">
+            {{#each this.claimedItems as |item|}}
+              <li>{{item}}</li>
+            {{/each}}
+          </ul>
+        </:body>
+      </TicketSummaryCard>
+    {{/if}}
+    {{#if this.unclaimedItems}}
+      <TicketSummaryCard @type="danger" @icon="triangle-exclamation">
+        <:title>{{pluralize this.unclaimedItems.length "Unclaimed Item"}}</:title>
+        <:body>
+          The following items have not been claimed and may, or may not, affect your ability to Ranger on playa:
+          <div class="ms-2">
+            {{#each this.unclaimedItems as |item|}}
+              <div class="mt-2"><span class="me-1">{{fa-icon "ban" color="danger"}}</span> {{item}}</div>
+            {{/each}}
+          </div>
+        </:body>
+      </TicketSummaryCard>
+    {{/if}}
+    {{#if this.bankedItems}}
+      <TicketSummaryCard @type="secondary" @icon="box-archive">
+        <:title>{{pluralize this.bankedItems.length "Banked Item"}}</:title>
+        <:body>
+          <p>
+            The following item(s) will be banked:
+          </p>
+          <ul class="no-indent">
+            {{#each this.bankedItems as |item|}}
+              <li>
+                {{item.name}}
+                <div class="text-muted">Expires {{item.expires}}</div>
+              </li>
+            {{/each}}
+          </ul>
+        </:body>
+      </TicketSummaryCard>
+    {{/if}}
+  </div>
+  <p class="h4">
+    If you are happy with your choices above, sit back, check the Clubhouse often, watch your inbox, and
+    keep an eye on the Ranger Announce mailing list for further instructions about the upcoming event.
+  </p>
+{{/if}}

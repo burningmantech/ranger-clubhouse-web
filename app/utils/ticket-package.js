@@ -1,8 +1,11 @@
 import {tracked, cached} from '@glimmer/tracking';
-import { DELIVERY_NONE } from 'clubhouse/models/access-document-delivery';
+import {MealMatrixLabel} from 'clubhouse/models/provision';
+import dayjs from 'dayjs';
 
 export default class TicketPackage {
   @tracked wapso; // WAP-SOs will change in length based on how the user's ticketing decisions.
+  @tracked provisionsBanked = false;
+  @tracked provisionsBankable = false;
 
   constructor(pkg, person_id, house) {
     const docs = pkg.access_documents.map((ad) => house.pushPayload('access-document', ad));
@@ -10,17 +13,43 @@ export default class TicketPackage {
     this.accessDocuments = docs;
     this.tickets = docs.filter((d) => d.isTicket);
     this.vehiclePass = docs.find((d) => d.isVehiclePass);
-    if (pkg.delivery) {
-      this.delivery = house.pushPayload('access-document-delivery', pkg.delivery);
-    } else {
-      this.delivery = house.store.createRecord('access-document-delivery', {person_id, year: house.currentYear(), method: DELIVERY_NONE });
-    }
     this.wap = docs.find((d) => d.isWAP);
     this.wapso = docs.filter((d) => d.isWAPSO);
-    this.appreciations = docs.filter((d) => d.isProvision).sort((a, b) => a.typeLabel.localeCompare(b.typeLabel));
+
+    this.provisions = pkg.provisions;
+    this.provisionsBankable = pkg.provisions_bankable;
+    this.provisionsBanked = pkg.provisions_banked;
+    this.provisionItems = [];
+    if (pkg.provisions) {
+      const stuff = pkg.provisions;
+      if (stuff.meals) {
+        this.provisionItems.push({
+          icon: 'utensils',
+          name: `${MealMatrixLabel[stuff.meals]} Meal Pass`,
+          expires: dayjs(stuff.meals_expire).format('YYYY-MM-DD'),
+        });
+      }
+      if (stuff.showers) {
+        this.provisionItems.push({
+          icon: 'shower',
+          name: 'Access to The Wet Spot (Org Showers)',
+          expires: dayjs(stuff.showers_expire).format('YYYY-MM-DD'),
+        });
+      }
+
+      if (stuff.radios) {
+        this.provisionItems.push({
+          icon: 'broadcast-tower',
+          name: stuff.radios === 1 ? 'An Event Radio' : `${stuff.radios} Event Radios`,
+          expires: dayjs(stuff.radio_expire).format('YYYY-MM-DD'),
+        });
+      }
+    }
 
     this.year_earned = pkg.year_earned;
     this.credits_earned = pkg.credits_earned;
+    this.started_at = pkg.started_at;
+    this.finished_at = pkg.finished_at;
   }
 
   /**

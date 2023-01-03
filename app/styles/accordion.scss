@@ -6,7 +6,7 @@
 
 .accordion-title {
   display: flex;
-  justify-content: space-between;
+  /*  justify-content: space-between;*/
 
   padding: 10px;
   background-color: #e9ecef;
@@ -19,10 +19,10 @@
 }
 
 .accordion-title-icon {
-  margin-left: 5px;
+  margin-right: 5px;
   width: 15px;
 }
 
 .accordion-body {
-  padding: 5px;
+  padding: 10px;
 }

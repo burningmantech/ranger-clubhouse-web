@@ -32,11 +32,11 @@
       {{shift-format this.eventDate.pre_event_slot_end}}
     </p>
   {{else}}
-    <ChNotice @title="{{this.year}} pre-event slot dates are not set" @type="danger">
+    <UiNotice @title="{{this.year}} pre-event slot dates are not set" @type="danger">
       Pre-Event slots may not be properly vetted. Visit
       <LinkTo @route="admin.event-dates">Admin &gt; Edit Event Dates</LinkTo>
       to set the dates.
-    </ChNotice>
+    </UiNotice>
   {{/if}}
 
   {{#if this.slots.length}}
@@ -51,7 +51,7 @@
   {{/if}}
 
   {{#each this.positionSlots as |position|}}
-    <ChAccordion @isInitOpen={{get this.positionsOpened position.position_id}}
+    <UiAccordion @isInitOpen={{get this.positionsOpened position.position_id}}
                  @onClick={{action this.positionClicked position}} as |box|>
       <box.title>
         {{position.title}} ({{position.slots.length}}
@@ -75,8 +75,7 @@
             <thead>
             <tr>
               <th>ID</th>
-              <th>From</th>
-              <th>To</th>
+              <th>Time</th>
               <th class="text-end">Max</th>
               <th class="text-end">Count</th>
               <th class="text-end">Credits</th>
@@ -89,8 +88,12 @@
             {{#each position.slots key="id" as |slot|}}
               <tr id="slot-{{slot.id}}">
                 <td>{{slot.id}}</td>
-                <td>{{shift-format slot.begins}}</td>
-                <td>{{shift-format slot.ends}}</td>
+                <td>
+                  {{shift-format slot.begins slot.ends}}
+                  {{#if slot.isNonPacific}}
+                    ({{slot.timezone_abbr}})
+                  {{/if}}
+                </td>
                 <td class="text-end">{{slot.max}}</td>
                 <td class="text-end">{{slot.signed_up}}</td>
                 <td class="text-end">{{credits-format slot.credits}}</td>
@@ -135,7 +138,7 @@
           </table>
         {{/if}}
       </box.body>
-    </ChAccordion>
+    </UiAccordion>
   {{/each}}
 
   {{#if this.slot}}
@@ -232,7 +235,7 @@
             {{/if}}
           </div>
           {{#each this.copySourcePositions as |position|}}
-            <ChAccordion as |Accordion|>
+            <UiAccordion as |Accordion|>
               <Accordion.title>
                 {{position.selectedSlots.length}} / {{position.slots.length}}
                 <b>{{position.title}}</b> slots to copy
@@ -278,7 +281,7 @@
                   </table>
                 {{/if}}
               </Accordion.body>
-            </ChAccordion>
+            </UiAccordion>
           {{/each}}
         </Modal.body>
       </ChForm>

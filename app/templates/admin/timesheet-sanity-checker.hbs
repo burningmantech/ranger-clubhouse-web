@@ -1,7 +1,6 @@
 <main>
   <YearSelect @title="Timesheet Sanity Checker" @year={{this.year}} @onChange={{action (mut this.year)}}  />
-
-  <ChAccordion as |Accordion|>
+  <UiAccordion as |Accordion|>
     <Accordion.title>{{pluralize this.on_duty.length "person"}} still on duty</Accordion.title>
     <Accordion.body>
       <table class="table table-hover table-sm table-striped table-width-auto">
@@ -32,9 +31,9 @@
         </tbody>
       </table>
     </Accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 
-  <ChAccordion as |Accordion|>
+  <UiAccordion as |Accordion|>
     <Accordion.title>{{pluralize this.end_before_start.length "entry"}} with an off duty time before on duty
     </Accordion.title>
     <Accordion.body>
@@ -65,16 +64,17 @@
         </tbody>
       </table>
     </Accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 
-  <ChAccordion as |Accordion|>
+  <UiAccordion as |Accordion|>
     <Accordion.title>{{pluralize this.overlapping.length "person"}} with overlapping entries</Accordion.title>
     <Accordion.body>
       <table class="table table-sm table-hover table-striped table-width-auto">
         <thead>
         <tr>
           <th>Callsign</th>
-          <th>Overlapping entries</th>
+          <th>Overlapping Position</th>
+          <th></th>
         </tr>
         </thead>
         <tbody>
@@ -101,11 +101,12 @@
         </tbody>
       </table>
     </Accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 
-  <ChAccordion as |Accordion|>
+  <UiAccordion as |Accordion|>
     <Accordion.title>{{pluralize this.too_long.length "entry"}} with possibly too long shifts</Accordion.title>
     <Accordion.body>
+      The follow exceed the recommended max hours by 1.5 times.
       <table class="table table-sm table-hover table-striped table-width-auto ">
         <thead>
         <tr>
@@ -114,6 +115,7 @@
           <th>On Duty</th>
           <th>Off Duty</th>
           <th>Duration</th>
+          <th>Max Hours</th>
         </tr>
         </thead>
         <tbody>
@@ -126,10 +128,11 @@
             <td>{{shift-format entry.on_duty}}</td>
             <td>{{shift-format entry.off_duty}}</td>
             <td class="text-end">{{hour-minute-format entry.duration}}</td>
+            <td class="text-end">{{entry.max_hours}}</td>
           </tr>
         {{else}}
           <tr>
-            <td colspan="5" class="text-success">\
+            <td colspan="5" class="text-success">
               Congratulations! Everyone appears to have worked a shift that did not run over.
             </td>
           </tr>
@@ -137,5 +140,127 @@
         </tbody>
       </table>
     </Accordion.body>
-  </ChAccordion>
+  </UiAccordion>
+  <UiAccordion as |Accordion|>
+    <Accordion.title>{{pluralize this.too_long_for_shift.length "entry"}} with possibly too long duration based on
+      scheduled sign up
+    </Accordion.title>
+    <Accordion.body>
+      The following are flagged because the entry's duration exceeds 1.5 times the scheduled (aka slot) duration.
+      <table class="table table-sm table-hover table-striped table-width-auto ">
+        <thead>
+        <tr>
+          <th>Callsign</th>
+          <th>Position / Slot Description</th>
+          <th>On Duty / Slot Begins</th>
+          <th>Off Duty / Slot End</th>
+          <th>Entry &amp; Slot Duration</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.too_long_for_shift as |entry|}}
+          <tr>
+            <td>
+              <PersonLink @person={{entry.person}} @page="timesheet" @year={{this.year}} />
+            </td>
+            <td>
+              {{entry.position.title}}<br>
+              {{entry.slot.description}}
+            </td>
+            <td>
+              {{shift-format entry.on_duty}}<br>
+              {{shift-format entry.slot.begins}}
+            </td>
+            <td>
+              {{shift-format entry.off_duty}}<br>
+              {{shift-format entry.slot.ends}}
+            </td>
+            <td class="text-end">
+              {{hour-minute-format entry.duration}}<br>
+              {{hour-minute-format entry.slot.duration}}
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="5" class="text-success">
+              Congratulations! Everyone appears to have worked a shift that did not run over.
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </Accordion.body>
+  </UiAccordion>
+
+  <UiAccordion as |Accordion|>
+    <Accordion.title>{{pluralize this.too_short.length "entry"}} with possibly too short duration</Accordion.title>
+    <Accordion.body>
+      The following are flagged because the shift lasted 15 minutes or less.
+      <table class="table table-sm table-hover table-striped table-width-auto">
+        <thead>
+        <tr>
+          <th>Callsign</th>
+          <th>Position</th>
+          <th>On Duty</th>
+          <th>Off Duty</th>
+          <th>Duration</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.too_short as |entry|}}
+          <tr>
+            <td>
+              <PersonLink @person={{entry.person}} @page="timesheet" @year={{this.year}} />
+            </td>
+            <td>{{entry.position.title}}</td>
+            <td>{{shift-format entry.on_duty}}</td>
+            <td>{{shift-format entry.off_duty}}</td>
+            <td class="text-end">{{hour-minute-format entry.duration}}</td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="5" class="text-success">
+              Congratulations! Everyone appears to have worked a shift that did not run over.
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </Accordion.body>
+  </UiAccordion>
+  <UiAccordion as |Accordion|>
+    <Accordion.title>
+      {{pluralize this.duplicate_alphas.length "person"}} with more than one Alpha timesheet entry
+    </Accordion.title>
+    <Accordion.body>
+      The following people have been flagged because they have more than one Alpha timesheet entry.
+      <table class="table table-sm table-hover table-striped table-width-auto">
+        <thead>
+        <tr>
+          <th>Callsign</th>
+          <th>Alpha Entries</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.duplicate_alphas as |person|}}
+          <tr>
+            <td>
+              <PersonLink @person={{person.person}} @page="timesheet" @year={{this.year}} />
+            </td>
+            <td>
+              {{person.entries.length}} entries:<br>
+              {{#each person.entries as |row|}}
+                {{shift-format row.on_duty row.off_duty}}<br>
+              {{/each}}
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="4" class="text-success">No extra Alpha entries were found.</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </Accordion.body>
+  </UiAccordion>
 </main>

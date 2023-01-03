@@ -8,21 +8,21 @@ export default class PersonIndexRoute extends ClubhouseRoute {
 
     return RSVP.hash({
       eventInfo: person.eventInfo,
-      personPositions: this.ajax.request(`person/${personId}/positions`).then((results) => results.positions),
-      positions: this.ajax.request('position').then((results) => results.position),
-      personRoles: this.ajax.request(`person/${personId}/roles`).then((results) => results.roles),
-      roles: this.ajax.request('role').then((results) => results.role),
-      photo: this.ajax.request(`person/${person.id}/photo`).then((result) => result.photo)
+      grantedRoles: this.ajax.request(`person/${personId}/roles`, {data: {include_memberships: 1}}),
+      personMembership: this.ajax.request(`person/${person.id}/membership`).then(({membership}) => membership),
+      photo: this.ajax.request(`person/${person.id}/photo`).then(({photo}) => photo),
+      roles: this.ajax.request('role').then(({role}) => role),
+      teams: this.ajax.request('team', { data: { can_manage: 1 }}).then(({team}) => team)
     });
   }
 
   setupController(controller, model) {
-    const person = this.modelFor('person');
-    super.setupController(...arguments);
-    controller.set('person', person);
     controller.setProperties(model);
-    controller.set('showUploadDialog', false);
-    controller.set('showEditNote', false);
-    controller.set('showConfirmNoteOrMessage', false);
+    controller.setProperties({
+      person: this.modelFor('person'),
+      showUploadDialog: false,
+      showEditNote: false,
+      showConfirmNoteOrMessage: false,
+    });
   }
 }

@@ -4,7 +4,7 @@
 </p>
 {{#each this.positions key="id" as |position|}}
   <div class="max-width-700">
-    <ChAccordion as |accordion|>
+    <UiAccordion as |accordion|>
       <accordion.title>{{position-label position}} ({{pluralize position.timesheets.length "entry"}})</accordion.title>
       <accordion.body>
         {{#if accordion.isOpen}}
@@ -53,7 +53,7 @@
           </table>
         {{/if}}
       </accordion.body>
-    </ChAccordion>
+    </UiAccordion>
 
   </div>
 {{else}}

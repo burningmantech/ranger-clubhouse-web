@@ -14,6 +14,7 @@ export default class AdminSalesforceRoute extends ClubhouseRoute {
     controller.importMessage = '';
     controller.accounts = [];
     controller.isSubmitting = false;
+    controller.noAccountsFound = false;
 
     controller.resetFlags();
   }

@@ -2,7 +2,7 @@
   {{#if (has-role "view-pii" "view-email")}}
     <dt class="col-sm-12 col-lg-2">Contact</dt>
     <dd class="col-sm-12 col-lg-9">
-      <PersonalInfoWarning />
+      <PersonalInfoWarning/>
       {{#if @person.email}}
         email {{mail-to @person.email}}
       {{else}}
@@ -77,64 +77,20 @@
       {{/if}}
     </ChForm>
   </dd>
-  <dt class="col-sm-12 col-lg-2">Positions / Roles</dt>
+  <dt class="col-sm-12 col-lg-2">Team/Positions</dt>
   <dd class="col-sm-12 col-lg-9">
-    <div>
-      <UiButton @onClick={{@togglePositions}} @type="secondary" @size="sm">
-        {{if @showPositions "Hide" "Show"}} Positions
-      </UiButton>
-      <UiButton @onClick={{@toggleRoles}} @type="secondary" @size="sm">
-        {{if @showRoles "Hide" "Show"}} Roles
-      </UiButton>
-      {{#if (has-role "grant-position")}}
-        <UiButton @onClick={{@editPositionsAction}} @type="secondary" @size="sm" @class="ms-2">
-          Edit Positions
-        </UiButton>
-      {{/if}}
-    </div>
-    {{#unless @personPositions}}
-      <b class="text-danger">No positions granted</b>
-    {{/unless}}
-    {{#if @showPositions}}
-      <div class="mt-1">
-        <b>{{pluralize @personPositions.length "position"}}:</b>
-      </div>
-      <div class="masonry-container">
-        {{#each @personPositions as |position| }}
-          <div class="masonry-item">
-            {{position-label position}}
-          </div>
-        {{/each}}
-      </div>
-    {{/if}}
-    {{#unless @personRoles}}
-      <b class="text-danger">No roles granted</b>
-    {{/unless}}
-    {{#if @showRoles}}
-      <div class="mt-1">
-        <b>{{pluralize @personRoles.length "role"}}:</b>
-      </div>
-      <div class="masonry-container">
-        {{#each @personRoles as |role| }}
-          <div class="masonry-item">
-            {{role.title}}
-          </div>
-        {{/each}}
-      </div>
-    {{/if}}
+    <Person::Positions @personMembership={{@personMembership}}
+                       @showMembership={{@showMembership}}
+                       @toggleMembership={{@toggleMembership}}
+                       @canEditMembership={{@canEditMembership}}
+                       @editMembershipAction={{@editMembershipAction}}
+    />
   </dd>
-  <dt class="col-sm-12 col-lg-2">Certifications</dt>
+  <dt class="col-sm-12 col-lg-2">Roles</dt>
   <dd class="col-sm-12 col-lg-9">
-    {{#if (or @person.osha10 @person.osha30)}}
-      {{#if @person.osha10}}OSHA-10{{/if}}
-      {{#if @person.osha30}}OSHA-30{{/if}}
-    {{else}}
-      No OSHA certifications
-    {{/if}}
-  </dd>
-  <dt class="col-sm-12 col-lg-2">&nbsp;</dt>
-  <dd class="col-sm-12 col-lg-9">
-    <LinkTo @route="person.event-info">Person &gt; Event/Training Info</LinkTo>
-    has additional agreements, affidavits, and vehicles flags.
+    <Person::Roles @roles={{@roles}}
+                   @grantedRoles={{@grantedRoles}}
+                   @toggleRoles={{@toggleRoles}}
+                   @showRoles={{@showRoles}} />
   </dd>
 </dl>

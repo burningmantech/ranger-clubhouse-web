@@ -1,115 +1,115 @@
-<TicketSection @id="wap"
-               @nextAction={{@nextSection}}
-               @toggleCard={{@toggleCard}}
-               @showing={{@showing}}>
-  <:title>
-    Work Access Pass For Myself
-    {{#if this.usingStaffCredential}}
-      <TicketSectionStatus @status="claimed" @text="Part of Staff Credential"/>
-    {{else if this.wap}}
-      <TicketSectionStatus @status={{this.wap.status}} />
-    {{else if this.isStaffCredentialBanked}}
-      <TicketSectionStatus @status="none" @text="None (Staff Credential Banked)"/>
-    {{else}}
-      <TicketSectionStatus @status="none"/>
-    {{/if}}
-  </:title>
-  <:body>
-    {{#if this.wap}}
-      {{#if (or this.wap.isClaimed this.wap.isSubmitted)}}
-        <p>
-          <b>
-            You have claimed your Work Access Pass which allows you to enter the event
-            {{#if this.wap.access_any_time}}
-              at any time!
-            {{else}}
-              {{#if this.wap.access_date}}
-                on or after {{mdy-format this.wap.access_date full=true}} @ 00:01.
-              {{else}}
-                .. uh, sometime.
-                <span class="text-danger">Oops! We forgot to write down when you may enter the event! Please contact
-                  {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.</span>
-              {{/if}}
-            {{/if}}
-          </b>
-        </p>
-        <p>
-          The Work Access Pass will be emailed to: {{@person.email}}
-        </p>
-      {{else}}
-        <p>
-          <b>You qualified for a Work Access Pass.</b>
-        </p>
-      {{/if}}
-      {{#if this.wap.isSubmitted}}
-        <p>The Work Access Pass has been submitted to the Burning Man Ticket Request System.</p>
-      {{else if this.wap.isQualified}}
-        <p>
-          Do you wish to use your Work Access Pass?
-        </p>
-        <UiButton @type="primary" @class="btn-responsive"
-          @onClick={{fn @setDocumentStatus this.wap "claimed"}} @disabled={{@isSavingDocumentStatus}}>
-          Claim Work Access Pass
-          {{#if @isSavingDocumentStatus}}
-            <SpinIcon/>
-          {{/if}}
-        </UiButton>
-      {{else}}
-        <p>Do you no longer need the Work Access Pass?</p>
-        <UiButton @type="primary" @class="btn-responsive"
-                  @onClick={{fn  @setDocumentStatus this.wap "qualified"}}  @disabled={{@isSavingDocumentStatus}}>
-          Release Work Access Pass
-          {{#if @isSavingDocumentStatus}}
-            <SpinIcon/>
-          {{/if}}
-        </UiButton>
-      {{/if}}
-    {{! End of if wap }}
-    {{else if (and @ticket.isStaffCredential @ticket.isBanked (not this.wap))}}
-      <p>
-        <b class="text-danger">
-          You do not have a Work Access Pass because you have banked your Staff Credential.
-        </b>
-      </p>
-      <p>
-        If you need a separate Work Access Pass, please contact {{mail-to @ticketingInfo.ranger_ticketing_email}}
-      </p>
-    {{else if @ticket.isStaffCredential}}
-      <p>
-        <b>Your Staff Credential acts as your Work Access Pass.</b>
-      </p>
-      {{#if @ticket.isClaimed}}
-        {{#if @ticket.access_any_time}}
-          <p><b>You may enter the event at any time!</b></p>
-        {{else if @ticket.access_date}}
-          <p>
-            <b>You may enter the event on or after {{mdy-format @ticket.access_date full=true}} @ 00:01.</b>
-            If you have an operational need to be on playa earlier than this date,
-            please contact your Cadre or Manager.
-          </p>
+{{#if (and this.wap this.noStaffCredentialClaimed)}}
+  {{#if (or this.wap.isClaimed this.wap.isSubmitted)}}
+    <p>
+      <b>
+        You have claimed your Work Access Pass which allows you to enter the event
+        {{#if this.wap.access_any_time}}
+          at any time!
         {{else}}
-          <p class="text-danger">
-            <b>Oops! We forgot to write down when you may enter the event! Please contact
-              {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.</b>
-          </p>
+          {{#if this.wap.access_date}}
+            on or after {{mdy-format this.wap.access_date full=true}} @ 00:01.
+          {{else}}
+            .. uh, sometime?!?
+            <span class="text-danger">Oops! We forgot to write down when you may enter the event! Please contact
+              {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.</span>
+          {{/if}}
         {{/if}}
-      {{else}}
-        <p>
-          You have not claimed your Staff Credential yet. Once that happens, we can tell when you will be able to
-          enter the event.
-        </p>
-      {{/if}}
-    {{else}}
-    {{! No WAP or Staff Credential}}
-      <p class="text-danger">
-        <b>Uh oh, you do not have a Work Access Pass. Mostly likely this is a mistake.</b>
+      </b>
+    </p>
+    {{#if this.wap.access_date}}
+      <p>
+        <span class="text-danger">You will be turned away from the gate if you attempt to enter the event before the DATE AND TIME indicated. No exceptions!</span>
       </p>
-      {{#if (or @person.isAlpha @person.isProspective)}}
-        All Alphas qualify for a Work Access Pass for arrival on Friday @ 00:01.
-      {{else}}
-        All returning Rangers in good standing qualify for a Work Access Pass for arrival on Thursday @ 00:01
-      {{/if}}
-      Contact {{mail-to @ticketingInfo.ranger_ticketing_email}} and let us know something is wrong.
     {{/if}}
-  </:body>
-</TicketSection>
+    <p>
+      If you have an operational need to be on playa earlier than this date, please contact your Cadre or Manager.
+    </p>
+   {{else}}
+    <p>
+      <b>You qualified for a Work Access Pass.</b>
+    </p>
+  {{/if}}
+  {{#if this.wap.isSubmitted}}
+    <p>The Work Access Pass has been submitted to the Burning Man Ticket Request System.</p>
+  {{else if this.wap.isQualified}}
+    <p>
+      Do you wish to use your Work Access Pass?
+    </p>
+    <UiButton @type="primary" @class="btn-responsive"
+              @onClick={{fn @setDocumentStatus this.wap "claimed"}}
+              @disabled={{@isSavingDocumentStatus}}>
+      Claim Work Access Pass
+      {{#if @isSavingDocumentStatus}}
+        <SpinIcon/>
+      {{/if}}
+    </UiButton>
+  {{else}}
+    <p>Do you no longer need the Work Access Pass?</p>
+    <UiButton @type="primary"
+              @class="btn-responsive"
+              @onClick={{fn  @setDocumentStatus this.wap "qualified"}}  @disabled={{@isSavingDocumentStatus}}>
+      Release Work Access Pass
+      {{#if @isSavingDocumentStatus}}
+        <SpinIcon/>
+      {{/if}}
+    </UiButton>
+  {{/if}}
+{{else if (and this.isStaffCredentialBanked (not this.wap))}}
+  <p>
+    <b class="text-danger">
+      You do not have a Work Access Pass because you have banked your Staff Credential.
+    </b>
+  </p>
+  <p>
+    If you need a separate Work Access Pass for yourself and Significant Others, please contact
+    {{mail-to @ticketingInfo.ranger_ticketing_email}}
+  </p>
+{{else if @ticket.isStaffCredential}}
+  <p>
+    <b>Your Staff Credential acts as your Work Access Pass.</b>
+  </p>
+  {{#if @ticket.isClaimed}}
+    {{#if @ticket.access_any_time}}
+      <p><b>You may enter the event at any time!</b></p>
+    {{else if @ticket.access_date}}
+      <p>
+        <b>You may enter the event on or after {{mdy-format @ticket.access_date full=true}} @ 00:01.</b>
+      </p>
+      <p>
+        <span class="text-danger">You will be turned away from the gate if you attempt to enter the event before this time. No exceptions!</span>
+      </p>
+      <p>
+        If you have an operational need to be on playa earlier than this date,
+        please contact your Cadre or Manager.
+      </p>
+    {{else}}
+      <p>
+        <b class="text-danger">Oops! We forgot to write down when you may enter the event!</b>
+      </p>
+      <p>
+        <b class="text-danger">Contact {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.</b>
+      </p>
+    {{/if}}
+   {{else}}
+    You have not claimed your Staff Credential yet. Once that happens, we can tell when you will be able to
+    enter the event.
+  {{/if}}
+{{else if this.allTicketsBanked}}
+  <p>
+    You have banked all your tickets. Contact the Ranger Ticketing Team
+    {{mail-to @ticketingInfo.ranger_ticketing_email}}
+    if you intend to Ranger this event, not use your tickets, and require a WAP.
+  </p>
+{{else if this.noTicketsTouched}}
+  <p>
+    You need to claim and/or bank one of your tickets first. Go back to the first section to claim and/or bank your
+    tickets.
+  </p>
+{{else}}
+{{! No WAP or Staff Credential}}
+  <p class="text-danger">
+    <b>Uh oh, you do not have a Work Access Pass. Mostly likely this is a mistake.</b>
+  </p>
+  All returning Rangers in good standing qualify for a Work Access Pass for arrival on Thursday @ 00:01.
+  Contact {{mail-to @ticketingInfo.ranger_ticketing_email}} and let us know something is wrong.
+{{/if}}

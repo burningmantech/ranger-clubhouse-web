@@ -1,57 +1,63 @@
 {{! See Admin::PositionSanityCheck for details on params }}
 
 {{#if @people}}
-  <ChAccordion as |Accordion|>
+  <UiAccordion as |Accordion|>
     <Accordion.title>{{@caption}}</Accordion.title>
     <Accordion.body>
       <table class="table table-striped table-hover table-sm table-width-auto">
         <thead>
-          <tr>
-            <th>Fix?</th>
-            <th>Callsign</th>
-            <th>Status</th>
-            {{#each @people.columns as |column|}}
-              <th>{{column.label}}</th>
-            {{/each}}
-          </tr>
+        <tr>
+          <th>Fix?</th>
+          <th>Callsign</th>
+          <th>Status</th>
+          {{#each @people.columns as |column|}}
+            <th>{{column.label}}</th>
+          {{/each}}
+        </tr>
         </thead>
 
         <tbody>
-          {{#each @people as |person|}}
-            <tr>
-              <td>
-                {{#if person.errors}}
-                  {{fa-icon "exclamation-triangle"}}
-                {{else if person.fixed}}
-                  {{fa-icon "check"}}
+        {{#each @people as |person|}}
+          <tr>
+            <td>
+              {{#if person.errors}}
+                {{fa-icon "exclamation-triangle"}}
+              {{else if person.fixed}}
+                {{fa-icon "check"}}
+              {{else}}
+                <Input @type="checkbox" @checked={{person.checked}} />
+              {{/if}}
+            </td>
+            <td>
+              <PersonLink @person={{person}} />
+            </td>
+            <td>{{person.status}}</td>
+
+            {{#each @people.columns as |column|}}
+              <td class={{column.class}}>
+                {{#if column.array}}
+                  {{#each (get person column.array) as |row|}}
+                    {{get row column.property}}<br>
+                  {{/each}}
                 {{else}}
-                  <Input @type="checkbox" @checked={{person.checked}} />
+                  {{get person column.property}}
                 {{/if}}
               </td>
-              <td>
-                <PersonLink @person={{person}} />
+            {{/each}}
+          </tr>
+          {{#if (or person.messages person.errors)}}
+            <tr class="tr-no-border">
+              <td colspan="5">
+                {{#each person.errors as |error|}}
+                  <span class="text-danger">ERROR: {{error}}</span><br>
+                {{/each}}
+                {{#each person.messages as |message|}}
+                  <span class="text-success">{{message}}</span><br>
+                {{/each}}
               </td>
-              <td>{{person.status}}</td>
-
-              {{#each @people.columns as |column|}}
-                <td class={{column.class}}>
-                  {{get person column.property}}
-                </td>
-              {{/each}}
             </tr>
-            {{#if (or person.messages person.errors)}}
-              <tr class="tr-no-border">
-                <td colspan="5">
-                  {{#each person.errors as |error|}}
-                    <span class="text-danger">ERROR: {{error}}</span><br>
-                  {{/each}}
-                  {{#each person.messages as |message|}}
-                    <span class="text-success">{{message}}</span><br>
-                  {{/each}}
-                </td>
-              </tr>
-            {{/if}}
-          {{/each}}
+          {{/if}}
+        {{/each}}
         </tbody>
       </table>
 
@@ -60,11 +66,13 @@
           Fix {{@title}}
         </UiButton>
         {{#if @isSubmitting}}
-          <LoadingIndicator />
+          <LoadingDialog>
+            Repairing accounts
+          </LoadingDialog>
         {{/if}}
       {{/if}}
     </Accordion.body>
-  </ChAccordion>
+  </UiAccordion>
 
 {{else}}
   <p class="text-success"><b>{{@sucessMessage}}</b></p>

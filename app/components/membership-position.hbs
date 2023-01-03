@@ -1,0 +1,36 @@
+{{#if @positions}}
+  {{#if @title}}
+    <div class="text-muted">{{@title}}</div>
+  {{/if}}
+  <div class="ms-3 mb-3">
+    {{#each @positions as |position|}}
+      <div class="form-check">
+        <input type="checkbox"
+               id="position-{{position.id}}"
+               class="form-check-input"
+               checked={{position.selected}}
+          {{on "change" (fn @itemClick position)}}
+        />
+        <label for="position-{{position.id}}" class="form-check-label">
+          {{position.title}}
+          {{#if position.all_rangers}}
+            <span class="text-muted me-1">{{fa-icon "universal-access"}} <small>All Rangers</small></span>
+          {{/if}}
+          {{#if position.new_user_eligible}}
+            <span class="text-muted me-1">{{fa-icon "globe"}} <small>All Accounts</small></span>
+          {{/if}}
+        </label>
+        {{#if position.roles}}
+          <Popover @text="[{{pluralize position.roles.length "role"}}]">
+            <p>
+              The following role(s) will be given when this position ({{position.title}}) is granted:
+            </p>
+            {{#each position.roles as |role|}}
+              {{role}}<br>
+            {{/each}}
+          </Popover>
+        {{/if}}
+      </div>
+    {{/each}}
+  </div>
+{{/if}}

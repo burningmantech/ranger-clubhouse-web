@@ -13,10 +13,10 @@ export default class StatusChangeTableComponent extends Component {
 
   constructor() {
     super(...arguments);
-    const newStatus = this.args.newStatus;
+    const {newStatus} = this.args;
 
-    this.isVintage = (newStatus == 'vintage');
-    this.isPastProspective = (newStatus == 'past prospective');
+    this.isVintage = (newStatus === 'vintage');
+    this.isPastProspective = (newStatus === 'past prospective');
   }
 
   _buildSelectedCount() {
@@ -87,4 +87,31 @@ export default class StatusChangeTableComponent extends Component {
     this._buildSelectedCount();
   }
 
+  @action
+  exportToCSV() {
+    const {people, newStatus} = this.args;
+    const COLUMNS = [
+      {key: 'callsign', title: 'Callsign'},
+      {key: 'status', title: 'Current Status'},
+      {key: 'email', title: 'Email'},
+    ];
+
+    if (!this.isVintage) {
+      COLUMNS.push({key: 'new_status', title: 'New Status'});
+      people.forEach((p) => p.new_status = newStatus);
+    }
+
+    if (!this.isPastProspective) {
+      COLUMNS.push({key: 'last_year', title: 'Last Year Worked'});
+      COLUMNS.push({key: 'years', title: 'Years Worked'});
+      COLUMNS.push({key: 'alpha_year', title: 'Alpha Year'});
+
+      if (!this.isVintage) {
+        COLUMNS.push({key: 'is_vintage', title: 'Vintage?'});
+        people.forEach((p) => p.is_vintage = p.vintage ? 'Y' : '-');
+      }
+    }
+
+    this.house.downloadCsv(`${this.args.year}-${this.isVintage ? 'vintage' : newStatus.replace(' ', '-')}-convert.csv`, COLUMNS, people);
+  }
 }

@@ -13,7 +13,7 @@
 </p>
 {{#each this.people key="id" as |person|}}
   <div class="max-width-700">
-    <ChAccordion id="person-{{person.id}}" as |accordion|>
+    <UiAccordion id="person-{{person.id}}" as |accordion|>
       <accordion.title>{{person.callsign}}</accordion.title>
       <accordion.body>
         {{#if accordion.isOpen}}
@@ -31,7 +31,7 @@
               {{this.year}} Schedule
             </LinkTo>
           </p>
-            <NoAppreciateIcon/> = Time does not count towards appreciations.
+            <NoAppreciateIcon/> = Time does not count towards provisions and appreciations.
           <table class="table table-sm table-hover table-striped table-width-auto">
             <thead>
             <tr>
@@ -75,7 +75,7 @@
           </table>
         {{/if}}
       </accordion.body>
-    </ChAccordion>
+    </UiAccordion>
   </div>
 {{else}}
   <p>

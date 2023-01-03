@@ -1,0 +1,11 @@
+<div class="notice notice-{{this.color}}">
+  <div class="notice-icon">
+    {{fa-icon this.icon fixed=true color=this.color}}
+  </div>
+  {{#if @title}}
+    <div class="notice-title">{{@title}}</div>
+  {{/if}}
+  <div class="notice-body">
+    {{yield}}
+  </div>
+</div>

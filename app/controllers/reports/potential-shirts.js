@@ -12,6 +12,7 @@ export default class ReportsPotentialShirtsController extends ClubhouseControlle
       { title: `Estimated Hours in ${this.year}`, key: 'estimated_hours' },
       { title: `Hours in ${this.year}`, key: 'actual_hours' },
       { title: `T-Shirt Shirt (${this.threshold_ss} hrs)`, key: 'short_sleeve' },
+      { title: `T-Shirt Backup`, key: 'short_backup' },
       { title: `Long Sleeve Shirt (${this.threshold_ls} hrs)`, key: 'long_sleeve' },
     ];
 
@@ -22,6 +23,7 @@ export default class ReportsPotentialShirtsController extends ClubhouseControlle
         estimated_hours: row.estimated_hours,
         actual_hours: row.actual_hours,
         short_sleeve: row.earned_ss ? row.teeshirt_size_style : 'not earned',
+        short_backup: row.earned_ss ? row.tshirt_secondary_size : 'not earned',
         long_sleeve: row.earned_ls ? row.longsleeveshirt_size_style : 'not earned',
       }
     });

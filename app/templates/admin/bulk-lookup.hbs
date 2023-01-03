@@ -43,6 +43,8 @@
               <th>Name</th>
               <th>Email</th>
               <th>Last worked</th>
+              <th>Vintage</th>
+              <th>Years Worked</th>
             </tr>
             </thead>
             <tbody>
@@ -61,6 +63,8 @@
                     <i>never</i>
                   {{/if}}
                 </td>
+                <td>{{yesno person.vintage}}</td>
+                <td>{{person.years_worked}}</td>
               </tr>
             {{/each}}
             </tbody>

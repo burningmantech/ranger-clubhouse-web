@@ -1,52 +1,53 @@
 {{#if this.isShinyPenny}}
-  <ChNotice @type="success" @icon="smile-beam" @iconType="far">
+  <UiNotice @type="success" @icon="smile-beam" @iconType="far">
     {{this.person.callsign}} is newly minted Shiny Penny. Share some Ranger love and welcome them to the family.
-  </ChNotice>
+  </UiNotice>
 {{/if}}
 
 {{#unless this.person.on_site}}
-  <ChNotice @type="danger" @icon="hand-point-right" @title="{{this.person.callsign}} is marked as OFF SITE">
+  <UiNotice @type="danger" @icon="hand-point-right" @title="{{this.person.callsign}} is marked as OFF SITE">
     <p>
       Follow the procedures on the Site Check In page before signing the person into a shift.
     </p>
     <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-danger">Begin Site Check In</LinkTo>
-  </ChNotice>
+  </UiNotice>
 {{/unless}}
 
 {{#if (gt this.person.unread_message_count 0)}}
-  <ChNotice @type="success" @icon="envelope">
-    {{pluralize this.person.unread_message_count "unread Clubhouse message"}}.
+  <UiNotice @title="Unread Message(s)" @type="success" @icon="envelope">
+    <p>
+      {{this.person.callsign}} has {{pluralize this.person.unread_message_count "unread Clubhouse message"}}.
+    </p>
     <LinkTo @route="hq.messages" class="btn btn-success">Read Now</LinkTo>
-  </ChNotice>
+  </UiNotice>
 {{/if}}
 
 {{#if this.scheduleRecommendations.burn_weekend_shift}}
-  <ChNotice @title="Suggest Working A Burn Weekend Shift" @icon="walking" @type="info">
+  <UiNotice @title="Suggest Working A Burn Weekend Shift" @icon="walking" @type="info">
     {{this.person.callsign}} is not signed up for a Burn Weekend shift. Ask if they are interested in signing up for
     one.
-  </ChNotice>
+  </UiNotice>
 {{/if}}
 
 <UiSection>
   <:title>
-    Timesheet Entry Verification -
     {{#if this.hasUnverifiedTimesheet}}
-      <span class="text-danger">{{pluralize this.unverifiedTimesheets.length "entry" }}</span>
+      <span class="text-danger">
+        Timesheet Entry Verification Needed for {{pluralize this.unverifiedTimesheets.length "entry" }}
+      </span>
     {{else}}
-      No Action Needed
+      Timesheet Entry Verification - No Action Needed
     {{/if}}
     <HelpPopover @slug="hq-timesheet-verification"/>
   </:title>
   <:body>
     {{#if this.unverifiedTimesheets}}
       Ask {{this.person.callsign}} if the following is correct:
-      <table class="table table-width-auto table-striped table-hover">
+      <table class="table table-width-auto table-hover">
         <thead>
         <tr>
-          <th>Position</th>
-          <th>Time</th>
-          <th class="text-end">Duration</th>
-          <th class="text-end">Credits</th>
+          <th>Time / Position</th>
+          <th class="text-end">Duration / Credits</th>
           <th>Correct?</th>
           <th class="w-5">&nbsp;</th>
         </tr>
@@ -55,39 +56,50 @@
         {{#each this.unverifiedTimesheets as |entry|}}
           <tr>
             <td class="align-middle">
+              {{shift-format entry.on_duty entry.off_duty}}<br>
               {{entry.position.title}}
             </td>
-            <td class="align-middle">
-              {{shift-format entry.on_duty entry.off_duty}}
-            </td>
             <td class="text-end align-middle">
-              {{hour-minute-format entry.duration}}
-            </td>
-            <td class="text-end align-middle">
-              {{credits-format entry.credits}}
+              {{hour-minute-words entry.duration}}<br>
+              {{credits-format entry.credits}} credits
             </td>
             <td class="align-middle">
-              <UiButton @type="success" @class="btn-timesheet" @onClick={{fn this.markEntryCorrect entry}}
-                        @disabled={{entry.isSaving}}>
-                YES
-                {{#if entry.isVerified}}
-                  {{fa-icon "check"}}
-                {{/if}}
-              </UiButton>
-              <UiButton @type="danger" @class="btn-timesheet" @onClick={{fn this.markEntryIncorrect entry}}
-                        @disabled={{entry.isSaving}}>
-                NO
-                {{#if entry.isPending}}
-                  {{fa-icon "check"}}
-                {{/if}}
-              </UiButton>
-              <UiButton @type="dark" @class="btn-timesheet" @onClick={{fn this.ignoreEntry entry}}
-                        @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
-                IGNORE
-                {{#if entry.isIgnoring}}
-                  {{fa-icon "check"}}
-                {{/if}}
-              </UiButton>
+              <div class=" d-flex justify-between align-items-center">
+                <UiButton @type="success" @class="btn-timesheet" @onClick={{fn this.toggleEntryVerified entry}}
+                          @disabled={{entry.isSaving}}>
+                  {{#if entry.isVerified}}
+                    Un-Verify
+                  {{else}}
+                    YES
+                  {{/if}}
+                </UiButton>
+                <UiButton @type="danger" @class="btn-timesheet" @onClick={{fn this.markEntryIncorrect entry}}
+                          @disabled={{entry.isSaving}}>
+                  NO
+                  {{#if entry.isPending}}
+                    {{fa-icon "check"}}
+                  {{/if}}
+                </UiButton>
+                <UiButton @type="secondary"
+                          @class="btn-timesheet"
+                          @onClick={{fn this.ignoreEntry entry}}
+                          @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
+                  SKIP
+                  {{#if entry.isIgnoring}}
+                    {{fa-icon "check"}}
+                  {{/if}}
+                </UiButton>
+              </div>
+              {{#if entry.isVerified}}
+                <span class="text-success">{{fa-icon "check"}} Entry has been successfully marked as correct.</span>
+              {{else if entry.isPending}}
+                <span class="text-danger">{{fa-icon "check"}}
+                  A correction request has been successfully submitted.</span>
+              {{else if entry.isIgnoring}}
+                Entry will be reviewed at a later time.
+              {{else}}
+                <span class="text-muted">Entry requires review.</span>
+              {{/if}}
             </td>
             <td class="w-5">
               {{#if entry.isSaving}}
@@ -110,7 +122,6 @@
   <:title>
     Shift Check In/Out
     <HelpPopover @slug="hq-shift-management"/>
-
   </:title>
   <:body>
     <ShiftCheckInOut @positions={{this.positions}}
@@ -148,7 +159,7 @@
           <dt class="col-sm-2">Credits:</dt>
           <dd class="col-sm-10">{{credits-format this.entry.credits}}</dd>
         </dl>
-          Provide as much information as possible to help the reviewer understand why this entry should be fixed.
+        Provide as much information as possible to help the reviewer understand why this entry should be fixed.
         <ul>
           <li>Why does {{this.person.callsign}} think the entry is wrong?</li>
           <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
@@ -181,18 +192,16 @@
   </:title>
   <:body>
     {{#unless this.personEvent.asset_authorized}}
-      <h4 class="text-danger">{{fa-icon "exclamation-triangle"}} Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE
-        RADIOS</h4>
-      <p>
-        Direct {{this.person.callsign}} to the kiosk shack so they can login into the Clubhouse, review and sign
+      <UiNotice @title="Do Not Issue Radios or Gear" @type="danger" @icon="ban">
+        The Radio Checkout Agreement has not been signed.
+        Direct {{this.person.callsign}} to the kiosk shack, so they can log in into the Clubhouse, review and sign
         the agreement.
-      </p>
-
+      </UiNotice>
     {{/unless}}
     {{#unless this.eventInfo.radio_info_available}}
-      <ChNotice @type="warning" @icon="exclamation">
+      <UiNotice @type="warning" @icon="exclamation">
         Event radio information has not been posted yet. Radio eligibility cannot be determined.
-      </ChNotice>
+      </UiNotice>
     {{/unless}}
     {{#if this.radioCount}}
       {{#if this.shiftRadios}}
@@ -209,6 +218,11 @@
         authorized for {{pluralize this.eventInfo.radio_max "event radio"}}.
       {{else}}
         only authorized for SHIFT RADIOS.
+        {{#if this.mayNotNeedRadio}}
+          <br>
+          <b class="text-danger">{{this.person.callsign}} is working a Burn Perimeter shift and may not need a radio.
+            Check with the HQ Short or Lead if in doubt.</b>
+        {{/if}}
       {{/if}}
     </div>
 
@@ -220,7 +234,7 @@
     {{/if}}
 
     <HqAssetTable @assetsCheckedOut={{this.assetsCheckedOut}}
-                  @attachments={{this.attachments}} />
+                  @attachments={{this.attachments}}/>
 
     <div>
       {{#if this.assets.isUpdating}}

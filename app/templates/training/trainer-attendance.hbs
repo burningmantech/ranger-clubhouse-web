@@ -1,4 +1,8 @@
-<YearSelect @title="Trainer Attendance" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<YearSelect @title="Trainer Attendance"
+            @year={{this.year}}
+            @minYear={{2008}}
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}} />
 
 <p>
   <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
@@ -25,9 +29,10 @@ Showing {{pluralize this.trainers.length "trainer"}}
           </td>
         {{/unless}}
         <td>
-          <LinkTo @route="training.session.index" @models={{array this.training.id
-                                                                  slot.training_slot_id}}>{{shift-format
-                  slot.begins}}</LinkTo>
+          <LinkTo @route="training.session.index"
+                  @models={{array this.training.id slot.training_slot_id}}>
+            {{shift-format slot.begins}}
+          </LinkTo>
         </td>
         <td>{{slot.position_title}}</td>
         <td>

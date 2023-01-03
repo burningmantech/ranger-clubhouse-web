@@ -1,9 +1,14 @@
-import Response from 'ember-cli-mirage/response';
+import {discoverEmberDataModels} from "ember-cli-mirage";
+import {Response, createServer} from 'miragejs';
 import dayjs from 'dayjs';
 import configMock from './api-mocks/config-mock';
 import scheduleMock from './api-mocks/schedule-mock';
 
-export default function () {
+function now() {
+  return dayjs().format('YYYY-MM-DD hh:mm:ss');
+}
+
+function routes() {
   this.urlPrefix = 'http://localhost:8000';
 
   configMock(this);
@@ -158,7 +163,7 @@ export default function () {
           position_title: 'Training',
           position_id: 13,
           location: 'Trainlandia',
-          date: dayjs().format('YYYY-MM-DD hh:mm:ss'),
+          date: now(),
           status: 'pass'
         }],
         radio_eligible: 1,
@@ -222,10 +227,10 @@ export default function () {
     };
   });
 
-  this.get('/api/person-event/:id', () => {
+  this.get('/api/person-event/:id', (_, request) => {
     return {
       person_event: {
-        id: '1-2020',
+        id: request.params.id,
         may_request_stickers: 1,
         org_vehicle_insurance: 1,
         signed_motorpool_agreement: 1,
@@ -233,7 +238,9 @@ export default function () {
         asset_authorized: 1,
         timesheet_confirmed_at: 1,
         timesheet_confirmed: 1,
-        sandman_affidavit: 1
+        sandman_affidavit: 1,
+        pii_finished_at: now(),
+        pii_started_at: now(),
       }
     };
   });
@@ -273,7 +280,23 @@ export default function () {
   });
 
   this.get('/api/agreements/:id', () => {
-    return { agreements: [] };
+    return {agreements: []};
+  });
+
+  this.get('/api/role', ({roles}) => {
+    return {role: roles};
+  });
+
+  this.get('/api/team', () => {
+    return {team: []};
+  });
+
+  this.get('/api/swag/shirts', () => {
+    return {shirts: []};
+  });
+
+  this.get('/api/config/dashboard-period', () => {
+    return { period: 'before-event' }
   });
 
   /*
@@ -287,4 +310,14 @@ export default function () {
 
     http://www.ember-cli-mirage.com/docs/v0.3.x/shorthands/
   */
+}
+
+export default function (config) {
+  let finalConfig = {
+    ...config,
+    models: {...discoverEmberDataModels(), ...config.models},
+    routes,
+  };
+
+  return createServer(finalConfig);
 }

@@ -1,8 +1,31 @@
-<UiButton @onClick={{this.setupAccountAction}} @class="btn-responsive">{{@text}}</UiButton>
+<UiButton @onClick={{this.setupAccountAction}}
+          @type="{{if @didComplete "secondary" "primary"}}"
+          @class="btn-responsive"
+          @size="{{if @didComplete "sm"}}"
+>
+  {{@text}}
+</UiButton>
 {{#if this.showCreationDialog}}
   <LoadingDialog>
     Setting up your Online Course account. Please wait.
   </LoadingDialog>
+{{/if}}
+{{#if this.showDownForMaintenanceDialog}}
+  <ModalDialog @onEscape={{this.closeDownForMaintenance}} as |Modal|>
+    <Modal.body>
+      <h3 class="text-danger">Online Course Unavailable</h3>
+      <p>
+        Sorry, the Online Course is down for maintenance.
+      </p>
+      <p>
+        If the problem persists for more than a day, please contact the Ranger Tech Team at
+        {{admin-email}} for help.
+      </p>
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closeDownForMaintenance}} />
+    </Modal.footer>
+  </ModalDialog>
 {{/if}}
 {{#if this.showErrorDialog}}
   <ModalDialog @onEscape={{this.closeAction}} as |Modal|>
@@ -23,15 +46,16 @@
 {{#if this.showExodusDialog}}
   <ModalDialog as |Modal|>
     <Modal.body>
-      <h4>{{fa-icon "hand-point-right"}} You are about to leave the Clubhouse and head to the Online Course website.</h4>
+      <h4>{{fa-icon "hand-point-right"}} You are about to leave the Clubhouse and head to the Online Course
+        website.</h4>
       {{#if this.alreadyExists}}
         <p>
           Your online course account has already been set up.
         </p>
-      <p>
-        <b>Your Online Course username is:</b><br>
-        {{this.username}}
-      </p>
+        <p>
+          <b>Your Online Course username is:</b><br>
+          {{this.username}}
+        </p>
       {{else}}
         <p>
           A Ranger online course website account has been set up, and you have been enrolled.
@@ -45,7 +69,8 @@
           <b>Password:</b> {{this.password}}<br>
         </p>
         <p>
-          <b>Your username is your callsign in all lower case, ONLY has letters (a-z), and numbers (0-9). All spaces, dashes, and
+          <b>Your username is your callsign in all lower case, ONLY has letters (a-z), and numbers (0-9). All spaces,
+            dashes, and
             other special characters have been removed.</b>
         </p>
         <p>

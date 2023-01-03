@@ -1,0 +1,12 @@
+<ModalDialog @title="Edit Photo for {{@photo.person.callsign}}"
+             @onEscape={{@onClose}} as |modal|>
+  <modal.body>
+    <PhotoEdit @imageDataUrl={{@photo.orig_url}}
+               @submitAction={{this.submitEditedPhotoAction}}
+               @width={{this.width}}
+               @height={{this.height}} />
+  </modal.body>
+  <modal.footer>
+    <UiCancelButton @onClick={{@onClose}} />
+  </modal.footer>
+</ModalDialog>

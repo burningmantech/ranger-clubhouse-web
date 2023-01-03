@@ -36,7 +36,7 @@
             {{#if person.is_teacher}}
               <b class="text-danger">Not enrolled as student</b>
             {{else}}
-              <PresentOrNot @value={{person.date_complete}} @empty="not yet"/>
+              <PresentOrNot @value={{person.completed_at}} @empty="not yet"/>
             {{/if}}
           </td>
         </tr>

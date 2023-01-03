@@ -12,7 +12,8 @@
     <NavbarMenuItem @menu={{menu}} @route="reports.people-by-role" @item="People by Role" />
     <NavbarMenuItem @menu={{menu}} @route="reports.people-by-status" @item="People By Status" />
     <NavbarMenuItem @menu={{menu}} @route="reports.people-by-location" @item="People by Location" />
-    <NavbarMenuItem @menu={{menu}} @route="reports.special-teams" @item="People By Special Team" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.special-teams" @item="People By Special Teams" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.people-by-clubhouse-teams" @item="People By Clubhouse Teams" />
   </NavbarMenuSection>
   <NavbarMenuSection @section="Timesheets">
     <NavbarMenuItem @menu={{menu}} @route="reports.on-duty" @query={{hash over_hours=null}} @item="People On Duty" />
@@ -33,6 +34,7 @@
   <NavbarMenuSection @section="Quartermaster">
     <NavbarMenuItem @menu={{menu}} @route="reports.freaking-years" @item="Freaking Years" />
     <NavbarMenuItem @menu={{menu}} @route="reports.potential-shirts" @item="Potential Earned Shirts" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.potential-swag" @item="Potential Swag" />
     <NavbarMenuItem @menu={{menu}} @route="reports.alpha-shirts" @item="Alpha Shirts" />
   </NavbarMenuSection>
   <NavbarMenuSection @section="Vehicles">
@@ -44,5 +46,7 @@
     <NavbarMenuItem @menu={{menu}} @route="reports.languages" @item="Languages" />
     <NavbarMenuItem @menu={{menu}} @route="reports.sandman-qualified" @item="Sandman Qualified" />
     <NavbarMenuItem @menu={{menu}} @route="reports.rollcall" @item="Rollcall" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.certifications" @item="Certifications" />
+    <NavbarMenuItem @menu={{menu}} @route="reports.event-stats" @item="Event Stats" />
   </NavbarMenuSection>
 </NavbarMenu>

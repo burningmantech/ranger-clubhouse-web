@@ -1,6 +1,6 @@
 {{#if @timesheetsMissing}}
   <NoAppreciateIcon/>
-  = the shift hours do not count towards appreciations.
+  = the shift hours do not count towards provisions and appreciations.
   <div class="timesheet-table">
     <div class="timesheet-row timesheet-header">
       <div class="timesheet-time">From</div>
@@ -14,7 +14,7 @@
           <div class="timesheet-time">{{shift-format tsm.on_duty}}</div>
           <div class="timesheet-time">{{shift-format tsm.off_duty}}</div>
           <div class="timesheet-duration">
-            <span class="timesheet-sm-label">Time:</span>
+            <span class="timesheet-sm-label">Duration:</span>
             {{hour-minute-format tsm.duration}}
           </div>
           <div class="timesheet-position">{{tsm.position.title}}</div>
@@ -98,11 +98,17 @@
           <f.datetime @name="on_duty"
                       @label="What was the START date & time of the shift?"
                       @size={{15}}
-                      @startDate={{this.startDateForEntry}}/>
+                      @startDate={{this.startDateForEntry}}
+                      @minDate={{this.minDate}}
+                      @maxDate={{this.maxDate}}
+          />
           <f.datetime @name="off_duty"
                       @label="What was the END date & time of the shift?"
                       @size={{15}}
-                      @startDate={{this.startDateForEntry}}/>
+                      @startDate={{this.startDateForEntry}}
+                      @minDate={{this.minDate}}
+                      @maxDate={{this.maxDate}}
+          />
         </FormRow>
         <FormRow>
           <f.text @name="partner"

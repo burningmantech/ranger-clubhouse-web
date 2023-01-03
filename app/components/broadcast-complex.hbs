@@ -96,15 +96,15 @@
     </tbody>
   </table>
 
-  <UButton @type="success" @size="lg" @onClick={{this.transmitAction}}>SEND MESSAGE</UButton>
+  <UiButton @type="success" @size="lg" @onClick={{this.transmitAction}}>SEND MESSAGE</UiButton>
   <UiButton @type="secondary" @size="lg" @onClick={{this.editMessageAction}}>EDIT</UiButton>
 
   <BroadcastCandidatesTable @people={{this.people}} />
 {{else}}
   {{#if this.noPeople}}
-    <ChNotice @type="danger">
+    <UiNotice @title="None Found" @icon="magnifying-glass" @type="danger">
       No accounts were found matching the criteria.
-    </ChNotice>
+    </UiNotice>
   {{/if}}
   <ChForm @formId="broadcastForm" @formFor={{this.broadcastForm}}
           @validator={{this.broadcastValidations}}

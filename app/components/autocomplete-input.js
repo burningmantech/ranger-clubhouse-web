@@ -1,8 +1,10 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {schedule} from '@ember/runloop';
+import {debounce, schedule} from '@ember/runloop';
 import {service} from '@ember/service';
+
+const CLICK_DEBOUNCE_MS = 350;
 
 export default class AutocompleteInputComponent extends Component {
   @service house;
@@ -76,6 +78,16 @@ export default class AutocompleteInputComponent extends Component {
   }
 
   /**
+   * Return the text to show when no results were found.
+   *
+   * @returns {string}
+   */
+
+  get noResultsText() {
+    return this.args.noResultsText ?? 'No results found';
+  }
+
+  /**
    * Handle input into the search field.
    *
    * @param {InputEvent} event
@@ -88,8 +100,11 @@ export default class AutocompleteInputComponent extends Component {
     this.isSearching = true;
     this.noResultsFound = false;
     this.isFocused = true;
+    this._runSearch(this.args.onSearch(value));
+  }
 
-    this.args.onSearch(value).then((options) => {
+  _runSearch(promise) {
+    promise.then((options) => {
       this.options = options;
       this.selectionIdx = -1;
 
@@ -119,18 +134,30 @@ export default class AutocompleteInputComponent extends Component {
    */
 
   @action
-  focusEvent() {
+  focusEvent(event) {
     this.isFocused = true;
     this.selectionIdx = -1;
     this.options = [];
     this.hasSelected = false;
+
+    // Safari prevent autocomplete hack.
+    if (event.target.hasAttribute('autocomplete')) {
+      event.target.removeAttribute('readonly');
+    }
+
+    if (this.args.focusBorder) {
+      this.wrapperBlock.classList.add("autocomplete-focused");
+    }
 
     if (this.args.form) {
       this.args.form.preventSubmit = true;
     }
 
     if (this.args.onFocus) {
-      this.args.onFocus();
+      const promise = this.args.onFocus();
+      if (promise) {
+        this._runSearch(promise);
+      }
     }
   }
 
@@ -185,6 +212,8 @@ export default class AutocompleteInputComponent extends Component {
         if (this.isFocused) {
           this.inputElement.blur();
         }
+
+        this.args.onEscape?.();
         break;
 
       default:
@@ -211,10 +240,20 @@ export default class AutocompleteInputComponent extends Component {
   /**
    * When the input element is blurred, clear out the results box after delaying.
    * Don't remove the results box before the user has had a change to click the link.
+   *
+   * @param {Event} event
    */
 
   @action
-  blurEvent() {
+  blurEvent(event) {
+    if (event.target.hasAttribute('autocomplete')) {
+      event.target.setAttribute('readonly', '');
+    }
+
+    if (this.args.focusBorder) {
+      this.wrapperBlock.classList.remove("autocomplete-focused");
+    }
+
     if (this.args.form) {
       this.args.form.preventSubmit = false;
     }
@@ -249,7 +288,7 @@ export default class AutocompleteInputComponent extends Component {
   @action
   clickSelection(option, event) {
     event.stopImmediatePropagation();
-    this._selectOption(option);
+    debounce(this, this._selectOption, option, CLICK_DEBOUNCE_MS);
     return false;
   }
 
@@ -281,14 +320,20 @@ export default class AutocompleteInputComponent extends Component {
 
   /**
    * Track the input element when inserted into the dom
-   * @param {InputEvent} element
+   * @param {HTMLInputElement} element
    */
 
   @action
   inputInsertElement(element) {
     this.inputElement = element;
+
+    if (element.hasAttribute('autocomplete')) {
+      // Safari hack to prevent autofill suggestion.
+      element.setAttribute('readonly', '');
+    }
+
     if (this.args.autofocus) {
-      schedule('afterRender', () => element.focus());
+      setTimeout(() => schedule('afterRender', () => element.focus()), 100);
     }
   }
 
@@ -320,6 +365,9 @@ export default class AutocompleteInputComponent extends Component {
   resultsBoxInsertedEvent(element) {
     this.resultsElement = element;
 
+    if (this.args.noAdjustLayout) {
+      return;
+    }
     schedule('afterRender', () => {
       element.style.left = `${this.inputElement.offsetLeft}px`;
       element.style.width = `${this.inputElement.offsetWidth}px`;
@@ -336,13 +384,8 @@ export default class AutocompleteInputComponent extends Component {
     this.hasSelected = false;
   }
 
-  /**
-   * Return the text to show when no results were found.
-   *
-   * @returns {string}
-   */
-
-  get noResultsText() {
-    return this.args.noResultsText ?? 'No results found';
+  @action
+  wrapperBlockInserted(block) {
+    this.wrapperBlock = block;
   }
 }

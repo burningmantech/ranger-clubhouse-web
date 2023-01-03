@@ -83,12 +83,16 @@
           </table>
           </p>
           <p>
-            <UiButton @type="secondary" @class="me-1" @disabled={{photo.isSaving}}
+            <UiButton @type="secondary"
+                      @class="me-1"
+                      @disabled={{photo.isSaving}}
                       @onClick={{fn this.editPhotoAction photo}}>
               {{fa-icon "edit"}} Edit
             </UiButton>
             {{#if (not-eq photo.status "rejected")}}
-              <UiButton @type="danger" @class="me-1" @onClick={{fn this.showReviewPhoto photo}}
+              <UiButton @type="danger"
+                        @class="me-1"
+                        @onClick={{fn this.showReviewPhoto photo}}
                         @disabled={{photo.isSaving}}>
                 {{fa-icon "times"}} Reject
               </UiButton>
@@ -144,74 +148,12 @@
 </main>
 
 {{#if this.reviewPhoto}}
-  <ModalDialog @title="Reject Photo for {{this.reviewPhoto.person.callsign}}"
-               @size="xl"
-               @onEscape={{this.onClose}} as |modal|>
-    <modal.body>
-      <ChForm @formId="photo"
-              @formFor={{this.reviewForm}}
-              @changeSet={{false}}
-              @onSubmit={{this.onRejectSubmit}} as |f|>
-        <FormRow>
-          <div class="col-3">
-            <div class="photo-large">
-              <img src={{this.reviewPhoto.image_url}} alt="{{this.reviewPhoto.person.callsign}}"/>
-            </div>
-          </div>
-          <f.checkboxGroup @name="reasons"
-                           @label="Rejection Reasons:"
-                           @options={{this.rejectionOptions}}
-                           @cols={{4}}
-                           @wrapClass="col-9 ms-2"
-          />
-        </FormRow>
-        <FormRow>
-          <f.textarea @name="message"
-                      @label="Custom message to include in the rejection email:"
-                      @rows={{5}}
-                      @cols={{80}}
-                      @hint="All email addresses and links in the message will be hyperlinked."/>
-        </FormRow>
-        <f.submit @label="Reject Photo" @submitClass="btn-danger" disabled={{this.reviewPhoto.isSaving}} />
-        <UiCancelButton @disabled={{this.reviewPhoto.isSaving}} @onClick={{this.onClose}} />
-        <UiButton @type="secondary" @onClick={{this.rejectPreviewAction}}>Preview Email</UiButton>
-        {{#if this.reviewPhoto.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
-      </ChForm>
-    </modal.body>
-  </ModalDialog>
-{{/if}}
-
-{{#if this.rejectMail}}
-  <ModalDialog @title="Rejection Email Preview" @onEscape={{this.closeRejectMail}} as |modal|>
-    <modal.body>
-      <div class="border">
-        <iframe {{on "load" this.insertRejectMail}} class="photo-reject-preview-box" title="rejection message preview">
-        </iframe>
-      </div>
-    </modal.body>
-    <modal.footer>
-      <UiCloseButton @onClick={{this.closeRejectMail}} />
-    </modal.footer>
-  </ModalDialog>
+  <PhotoRejectDialog @photo={{this.reviewPhoto}} @onClose={{this.onClose}} @reviewConfig={{this.review_config}} />
 {{/if}}
 
 {{#if this.editPhoto}}
-  <ModalDialog @title="Edit Photo for {{this.editPhoto.person.callsign}}"
-               @onEscape={{this.closeEditPhotoAction}} as |modal|>
-    <modal.body>
-      <PhotoEdit @imageDataUrl={{this.editPhoto.orig_url}}
-                 @submitAction={{this.submitEditedPhotoAction}}
-                 @width={{this.width}}
-                 @height={{this.height}} />
-    </modal.body>
-    <modal.footer>
-      <UiCancelButton @onClick={{this.closeEditPhotoAction}} />
-    </modal.footer>
-  </ModalDialog>
+  <PhotoEditDialog @photo={{this.editPhoto}} @onClose={{this.closeEditPhotoAction}} />
 {{/if}}
-
 
 {{#if this.showPhoto}}
   <PhotoInfo @photo={{this.showPhoto}}

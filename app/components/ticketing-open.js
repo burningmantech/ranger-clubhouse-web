@@ -1,27 +1,33 @@
 import Component from '@glimmer/component';
 import {tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
-import {later} from '@ember/runloop';
 import {service} from '@ember/service';
 
 export default class TicketingOpenComponent extends Component {
   @tracked showing = {};
   @tracked isPNV = false;
   @tracked isSavingDocumentStatus = false;
+  @tracked showTicketing = false;
+  @tracked hasStarted = false;
+  @tracked hasFinished = true;
 
   @service ajax;
   @service house;
+  @service session;
   @service store;
   @service toast;
 
   constructor() {
     super(...arguments);
-    const {person} = this.args;
+    const {person, ticketPackage} = this.args;
 
     if (person.isAlpha || person.isProspective) {
       // Person is a PNV. Only the WAP section will be shown.
       this.isPNV = true;
     }
+
+    this.hasStarted = !!ticketPackage.started_at;
+    this.hasFinished = !!ticketPackage.finished_at;
   }
 
   /**
@@ -61,40 +67,45 @@ export default class TicketingOpenComponent extends Component {
   }
 
   /**
-   * The Next Button!
+   * Record the ticketing milestone (started or finished)
    *
-   * Close up any opened ticketing section, and then open up the specified one.
-   *
-   * @param {string} section
-   */
-
-  @action
-  nextSection(section) {
-    this._showHideSection(section, true);
-    later(() => this.house.scrollToElement(`#ticket-${section}`), 500);
-  }
-
-  /**
-   * Toggle the section open or close.
-   *
-   * @param {string} section
-   */
-
-  @action
-  toggleCard(section) {
-    this._showHideSection(section, !this.showing[section]);
-  }
-
-  /**
-   * Open or close the given section, and close up any other sections
-   * currently opened.
-   *
-   * @param {string} section
-   * @param {boolean} reveal
+   * @param {string} milestone
    * @private
    */
+  _updateMilestone(milestone) {
+    const id = +this.args.person.id;
+    if (this.session.userId === id) {
+      this.ajax.request(`person-event/${id}/progress`, {method: 'POST', data: {milestone: `ticket-${milestone}`}})
+        .catch((response) => this.house.handleErrorResponse(response));
+    }
+  }
 
-  _showHideSection(section, reveal) {
-    this.showing = {[section]: reveal};
+  /**
+   * Begin the ticketing steps.
+   */
+
+  @action
+  startTicketing() {
+    this._updateMilestone('started')
+    this.showTicketing = true;
+    this.hasStarted = true;
+  }
+
+  /**
+   * User hit the finished button
+   */
+  @action
+  finishTicketing() {
+    this._updateMilestone('finished');
+    this.showTicketing = false;
+    this.hasFinished = true;
+  }
+
+  /**
+   * Cancel the ticketing step.
+   */
+  @action
+  cancelTicketing() {
+    this.showTicketing = false;
   }
 }

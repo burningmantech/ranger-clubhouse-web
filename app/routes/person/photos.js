@@ -12,7 +12,7 @@ export default class PersonPhotosRoute extends ClubhouseRoute {
 
     return RSVP.hash({
       photos: this.store.query('person-photo', {person_id}),
-      review_config: this.ajax.request('person-photo/review-config').then((result) => result.review_config)
+      review_config: this.ajax.request('person-photo/review-config').then(({review_config}) => review_config)
     });
   }
 
@@ -25,10 +25,6 @@ export default class PersonPhotosRoute extends ClubhouseRoute {
     controller.set('photo', null);
 
     controller.set('rejectionLabels', {});
-    controller.set('rejectionOptions', model.review_config.rejections.map((r) => {
-      controller.rejectionLabels[r.key] = r.label;
-      return [r.label, r.key];
-    }));
-
+    model.review_config.rejections.forEach((r) => controller.rejectionLabels[r.key] = r.label);
   }
 }

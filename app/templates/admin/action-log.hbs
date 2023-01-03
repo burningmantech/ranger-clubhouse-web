@@ -18,11 +18,13 @@
                 @noResultsText="No callsigns found"
       />
       <f.datetime @name="start_time"
-                  @label="Start time (UTC-7)"
+                  @label="Start time"
                   @size={{20}} />
       <f.datetime @name="end_time"
-                  @label="End time (UTC-7)"
+                  @label="End time"
                   @size={{20}} />
+      <f.text @name="event_name" @label="Event Name" @size={{20}} />
+      <f.text @name="message" @label="Message/Reason" @size={{20}}/>
     </FormRow>
     <FormRow>
       <FormLabel @fixed={{true}}>Events</FormLabel>
@@ -46,22 +48,29 @@
     <div class="mt-4">
       Showing {{this.currentPage}} of {{this.total_pages}} pages. {{pluralize this.total "row"}}
     </div>
-    <table class="table table-striped table-hover table-sm ">
+    <table class="table table-striped table-hover table-sm table-width-auto ">
       <thead>
       <tr>
-        <th class="w-15">Timestamp (UTC-7)</th>
+        <th class="w-20">Timestamp (Pacific)</th>
         <th class="w-15">User</th>
         <th class="w-15">Target</th>
-        <th class="w-15">Event</th>
-        <th class="w-30">Message / Reason</th>
-        <th class="w-15">Action</th>
+        <th class="w-20">Event</th>
+        <th class="w-25">Message / Reason</th>
       </tr>
       </thead>
 
       <tbody>
       {{#each this.logs as |log|}}
         <tr>
-          <td class="w-15">{{log.created_at}}</td>
+          <td class="w-20">
+            {{#if log.data}}
+              <a href {{action this.toggleLog log}}>
+                {{fa-icon (if log.showing "caret-down" "caret-right")}} {{timestamp-format log.created_at}}
+              </a>
+            {{else}}
+              &nbsp; {{log.created_at}}
+            {{/if}}
+          </td>
           <td class="w-15">
             {{#if log.person}}
               <PersonLink @person={{log.person}} />
@@ -80,21 +89,12 @@
               -
             {{/if}}
           </td>
-          <td class="w-15">
+          <td class="w-20">
             {{log.event}}
           </td>
-          <td class="w-30">
+          <td class="w-25">
             {{#if log.message}}
               {{log.message}}
-            {{else}}
-              -
-            {{/if}}
-          </td>
-          <td class="w-5">
-            {{#if log.data}}
-              <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleLog log}}>
-                {{if log.showing "Hide" "Show"}}
-              </UiButton>
             {{else}}
               -
             {{/if}}
@@ -103,7 +103,7 @@
 
         {{#if (or log.positions log.position log.roles log.slot)}}
           <tr class="tr-no-border">
-            <td colspan="6">
+            <td colspan="5">
               {{#if log.positions}}
                 {{#each log.positions as |p idx|}}
                   {{if idx " / "}} {{p.title}}
@@ -137,7 +137,14 @@
 
         {{#if log.showing}}
           <tr class="tr-no-border">
-            <td colspan="6">
+            {{! template-lint-disable no-inline-styles}}
+            <td colspan="5" style="overflow-x: scroll">
+              {{#if log.ip}}
+                IP: {{log.ip}}<br>
+              {{/if}}
+              {{#if log.user_agent}}
+                User agent: {{log.user_agent}}<br>
+              {{/if}}
               <JsonFormat @json={{log.data}} />
             </td>
           </tr>

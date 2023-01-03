@@ -1,20 +1,20 @@
 <ToastRegistry/>
 <ModalRegistry/>
+<div id="modal-container"></div>
 <header class="d-print-none">
   <Navbar/>
   {{#if (has-role "admin" "manage" "vc" "mentor")}}
     <SearchItemBar/>
   {{/if}}
   {{#if this.groundHogDayTime}}
-    <div class="alert alert-success text-center p-2 m-0">
-      <b>Training Server - Simulated Time {{dayjs-format this.groundHogDayTime "dddd, MMMM Do YYYY @ HH:mm"}}</b>
+    <div class="h4 text-bg-success text-center p-2 m-0">
+      Training Server - Simulated Time {{dayjs-format this.groundHogDayTime "dddd, MMMM Do YYYY @ HH:mm"}}
     </div>
   {{else if this.session.isStaging}}
-    <div class="h4 alert alert-light-red text-center p-2 m-0">
+    <div class="h4 text-bg-danger text-center p-2 m-0">
       You are on the Staging Server used for testing. THIS IS NOT THE PRODUCTION SERVER.
     </div>
   {{/if}}
-
   {{#if this.session.isAuthenticated}}
     <NewVersionNotify/>
   {{/if}}
@@ -22,12 +22,34 @@
 
 <div id="body-row">{{outlet}}</div>
 
-<footer class="footer d-print-none">
-  <div class="container text-center">
-    &copy; 2008-{{dayjs-format "" "YYYY"}} Black Rock City, LLC.
-    <span class="d-inline-block">
+<footer class="d-print-none">
+  &copy; 2008-{{dayjs-format "" "YYYY"}} Black Rock City, LLC.
+  <span class="d-inline-block">
       All information contained within this website is strictly confidential.
-    </span>
-    <div>Build: {{this.buildTimestamp}} <span class="d-inline-block">Tag: {{this.applicationVersion}}</span></div>
-  </div>
+  </span>
+  <div>Build timestamp: {{this.buildTimestamp}} </div>
 </footer>
+
+{{#if this.showBrowserNotSupported}}
+  <ModalDialog @title="Browser Too Old" as |Modal|>
+    <Modal.body>
+      Sorry, your browser,
+      {{this.session.browserDetect.browser.name}} version {{this.session.browserDetect.browser.version}},
+      might be too old to run the Clubhouse. Please upgrade the browser to the current version.
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closeBrowserNotSupported}} />
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.session.showOfflineDialog}}
+  <ModalDialog @title="Internet connection issues" as |Modal|>
+    <Modal.body>
+      Sorry, it appears the Internet connection is offline or flaky. Try your request again in a few minutes.
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closeOfflineDialog}} />
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}

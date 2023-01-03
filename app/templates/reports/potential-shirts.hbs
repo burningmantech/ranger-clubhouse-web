@@ -23,9 +23,10 @@ Showing  {{pluralize this.people.length "person"}}
   <tr>
     <th>Callsign</th>
     <th>Name</th>
-    <th class="text-end">Estimated Hours</th>
+    <th class="text-end">Est. Hours</th>
     <th class="text-end">Actual Hours</th>
-    <th>Tee Shirt ({{this.threshold_ss}} hrs)</th>
+    <th>T-Shirt ({{this.threshold_ss}} hrs)</th>
+    <th>T-Shirt Backup</th>
     <th>Long Sleeve ({{this.threshold_ls}} hrs)</th>
   </tr>
   </thead>
@@ -41,13 +42,19 @@ Showing  {{pluralize this.people.length "person"}}
       <td class="text-end">{{person.actual_hours}}</td>
       <td>
         {{#unless person.earned_ss}}
-          not earned -
+          {{fa-icon "ban" color="danger"}}
         {{/unless}}
         {{person.teeshirt_size_style}}
       </td>
       <td>
+        {{#unless person.earned_ss}}
+          {{fa-icon "ban" color="danger"}}
+        {{/unless}}
+        {{person.tshirt_secondary_size}}
+      </td>
+      <td>
         {{#unless person.earned_ls}}
-          not earned -
+          {{fa-icon "ban" color="danger"}}
         {{/unless}}
         {{person.longsleeveshirt_size_style}}
       </td>

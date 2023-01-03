@@ -1,0 +1,12 @@
+{{#if this.bankedItems}}
+  <TicketOverviewItem @icon="archive" @title="Banked Item(s)">
+    The following items will be banked:
+    <ul class="mt-2">
+      {{#each this.bankedItems as |item|}}
+        <li>
+          {{item.name}}, expires on {{item.expires}}
+        </li>
+      {{/each}}
+    </ul>
+  </TicketOverviewItem>
+{{/if}}

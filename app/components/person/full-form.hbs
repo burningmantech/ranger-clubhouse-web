@@ -2,8 +2,9 @@
 The Admin, Mentor, and VC form.
 Everyone else will see person/simple-form
 }}
+
 {{#if (has-role "admin" "vc" "view-pii" "view-email")}}
-  <PersonalInfoWarning />
+  <PersonalInfoWarning/>
   <div class="row mb-1">
     <div class="col-sm-6 col-lg-auto">
       email {{#if @person.email}}
@@ -70,7 +71,7 @@ Everyone else will see person/simple-form
   <FormRow>
     <FormLabel @fixed={{true}}>Callsign</FormLabel>
     <f.text @name="callsign"
-            @size={{35}}
+            @size={{33}}
             @maxlength={{100}}/>
     <f.select @name="callsign_approved"
               @options={{@callsignApprovedOptions}}/>
@@ -115,54 +116,24 @@ Everyone else will see person/simple-form
 
 
   <FormRow>
-    <FormLabel @fixed={{true}}>Positions</FormLabel>
-    <div class="col-sm-12 col-xl-9">
-      <UiButton @type="secondary" @size="sm" @class="me-2" @onClick={{@togglePositions}}>
-        {{if @showPositions "Hide" "Show"}} Positions
-      </UiButton>
-      {{#if (has-role "admin" "grant-position")}}
-        <UiButton @type="secondary" @onClick={{@editPositionsAction}} @size="sm">
-          Edit Positions
-        </UiButton>
-      {{/if}}
-      {{#unless @personPositions}}
-        <b class="text-danger">No positions granted</b>
-      {{/unless}}
-      {{#if @showPositions}}
-        <div class="masonry-container">
-          {{#each @personPositions as |position| }}
-            <div class="masonry-item">
-              {{position-label position}}
-            </div>
-          {{/each}}
-        </div>
-      {{/if}}
+    <FormLabel @fixed={{true}}>Teams/Positions</FormLabel>
+    <div class="col-sm-12 col-xl-10">
+      <Person::Positions @personMembership={{@personMembership}}
+                         @showMembership={{@showMembership}}
+                         @toggleMembership={{@toggleMembership}}
+                         @canEditMembership={{@canEditMembership}}
+      />
     </div>
   </FormRow>
 
   <FormRow>
     <FormLabel @fixed={{true}}>Roles</FormLabel>
-    <div class="col-sm-12 col-xl-9">
-      <UiButton @type="secondary" @onClick={{@toggleRoles}} @size="sm">
-        {{if @showRoles "Hide" "Show"}} Roles
-      </UiButton>
-      {{#if (has-role "admin")}}
-        <UiButton @type="secondary" @onClick={{@editRolesAction}} @class="ms-2" @size="sm">
-          Edit Roles
-        </UiButton>
-      {{/if}}
-      {{#unless @personRoles}}
-        <b class="text-danger">No roles granted</b>
-      {{/unless}}
-      {{#if @showRoles}}
-        <div class="masonry-container">
-          {{#each @personRoles as |role| }}
-            <div class="masonry-item">
-              {{role.title}}
-            </div>
-          {{/each}}
-        </div>
-      {{/if}}
+    <div class="col-sm-12 col-xl-10">
+      <Person::Roles @roles={{@roles}}
+                     @grantedRoles={{@grantedRoles}}
+                     @toggleRoles={{@toggleRoles}}
+                     @editRolesAction={{@editRolesAction}}
+                     @showRoles={{@showRoles}} />
     </div>
   </FormRow>
 
@@ -182,27 +153,6 @@ Everyone else will see person/simple-form
 
 
   <FormRow>
-    <FormLabel @fixed={{true}}>Certifications</FormLabel>
-    <div class="col-sm-12 col-xl-auto mt-2">
-      {{#if (has-role "admin" "vc")}}
-        <f.checkbox @name="osha10"
-                    @label="OSHA-10"
-                    @inline={{true}}
-        />
-        <f.checkbox @name="osha30"
-                    @label="OSHA-30"
-                    @inline={{true}}
-        />
-      {{else if (or @person.osha10 @person.osha30)}}
-        {{#if @person.osha10}}OSHA-10{{/if}}
-        {{#if @person.osha30}}OSHA-30{{/if}}
-      {{else}}
-        No OSHA certifications
-      {{/if}}
-    </div>
-  </FormRow>
-
-  <FormRow>
     <FormLabel @fixed={{true}}>Agreements</FormLabel>
     <div class="col-sm-12 col-xl-auto mt-2">
       {{#if (has-role "admin" "vc")}}
@@ -212,6 +162,16 @@ Everyone else will see person/simple-form
         Behavioral Standards Agreement {{if @person.behavioral_agreement "signed" "NOT SIGNED"}}<br>
       {{/if}}
     </div>
+  </FormRow>
+
+  <FormRow>
+    <FormLabel @fixed={{true}}>Mail Flags</FormLabel>
+    {{#if (has-role "tech-ninja")}}
+      <div class="col-sm-12 col-xl-10 mt-2">
+        <f.checkbox @name="is_bouncing"
+                    @label="Email address is reported as bouncing"/>
+      </div>
+    {{/if}}
   </FormRow>
 
   <FormRow>
@@ -235,14 +195,28 @@ Everyone else will see person/simple-form
           </UiButton>
         {{else}}
           <UiButton @type="secondary" @class="btn-responsive" @onClick={{@confirmNoteOrMessage}}>
-            Add Note
+            Add Banner Note
           </UiButton>
         {{/if}}
       {{/if}}
+    </div>
+    {{#if (and (has-role "admin" "vc") @person.isProspective)}}
+      <div class="col-sm-12 col-xl-auto mb-4">
+        <UiButton @type="secondary" @class="btn-responsive" @onClick={{@sendWelcomeMailAction}}>
+          Resend Welcome Email
+        </UiButton>
+      </div>
+    {{/if}}
+    {{#if (has-role "admin")}}
+      <div class="col-sm-12 col-xl-auto mb-4">
+        <UiButton @type="secondary" @class="btn-responsive" @onClick={{@showPasswordDialogAction}}>
+          Change Password
+        </UiButton>
+      </div>
+    {{/if}}
+    <div class="col-sm-12 col-xl-auto mb-4">
       {{#if @person.isSaving}}
-        <p>
-          <LoadingIndicator/>
-        </p>
+        <LoadingIndicator/>
       {{/if}}
     </div>
     {{#if (has-role "admin")}}

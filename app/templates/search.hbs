@@ -1,9 +1,10 @@
-<ChSidebar @smallTitle="Search Actions" as |s|>
+<UiSidebar @smallTitle="Search Actions" as |s|>
   <s.group @title="SEARCH FOR">
     <s.link @route="search.assets" @title="Assets" @icon="broadcast-tower" @iconType="s" />
     <s.link @route="search.languages" @title="Language" @icon="language" @iconType="s" />
+    <s.link @route="search.vehicles" @title="Vehicles" @icon="car" @iconType="s" />
   </s.group>
-</ChSidebar>
+</UiSidebar>
 
 <main>
   {{outlet}}

@@ -1,41 +1,98 @@
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { service } from '@ember/service';
+import {cached,tracked} from '@glimmer/tracking';
+import {service} from '@ember/service';
+import {action} from '@ember/object';
+import ical from 'ical-generator';
+import dayjs from 'dayjs';
 
 export default class ScheduleTableComponent extends Component {
   @service house;
-
-  @tracked viewSchedule;
+  @service modal;
+  @tracked showAllShifts = true;
 
   constructor() {
     super(...arguments);
-    this.viewSchedule = this.isCurrentYear ? 'upcoming' : 'all';
-    this.isCurrentYear = (this.args.year == this.house.currentYear());
+    this.isCurrentYear = (+this.args.year === this.house.currentYear());
+    if (this.isCurrentYear) {
+      this.showAllShifts = false;
+    }
   }
 
-  get viewOptions() {
-    return [
-      { label: `Upcoming Shifts (${this.upcomingCount})`, value: 'upcoming' },
-      { label: `All Shifts (${this.args.slots.length})`, value: 'all'}
-    ];
+  /**
+   * Show all the slots
+   */
+
+  @action
+  toggleAll() {
+    this.showAllShifts = !this.showAllShifts;
   }
+
+  /**
+   * Filter the slots for viewing.
+   *
+   * @returns {[]}
+   */
 
   get viewSlots() {
-    const slots = this.args.slots;
+    const {slots} = this.args;
 
-    if (this.viewSchedule !== 'upcoming') {
-      return slots;
-    }
-
-    return slots.filter((slot) => !slot.has_started)
+    return this.showAllShifts ? slots :this.upcomingSlots;
   }
 
-  get upcomingCount() {
-    const slots = this.args.slots;
-    return slots.reduce(function(upcoming, slot) { return (slot.has_started ? 0 : 1)+upcoming; }, 0);
+  @cached
+  get upcomingSlots() {
+    return this.args.slots.filter((slot) => !slot.has_started);
   }
+
+  /**
+   * Are there overlapping sign-ups?
+   *
+   * @returns {boolean}
+   */
 
   get hasOverlapping() {
-    return this.viewSlots.reduce(function(total, slot) { return (slot.is_overlapping ? 1 : 0)+total;}, 0);
+    return this.viewSlots.reduce((total, slot) => (slot.is_overlapping ? 1 : 0) + total, 0) > 0;
+  }
+
+  /**
+   * How many previous slots are there?
+   *
+   * @returns {number}
+   */
+
+  @cached
+  get previousSlotCount() {
+    return this.args.slots.length - this.upcomingSlots.length;
+  }
+
+  /**
+   * Export the person's schedule to a ICS file.
+   */
+
+  @action
+  exportCalendarAction() {
+    const {slots} = this.args;
+    if (!slots.length) {
+      this.modal.info('No Sign-Ups', "No shifts and/or training sessions are signed up for. There's nothing to export.")
+      return;
+    }
+
+    const calendar = ical({name: 'BRC Ranger Schedule'});
+    calendar.prodId({
+      company: 'Burning Man Project',
+      product: 'Ranger Clubhouse',
+      language: 'EN'
+    });
+
+    slots.forEach((slot) => {
+      calendar.createEvent({
+        start: dayjs.tz(slot.slot_begins, slot.slot_tz).format(),
+        end: dayjs.tz(slot.slot_ends, slot.slot_tz).format(),
+        summary: slot.position_title,
+        detail: `${slot.description} ${slot.url}`,
+      });
+    });
+
+    this.house.downloadFile(`${this.args.year}-ranger-schedule.ics`, calendar.toString(), 'text/calendar');
   }
 }

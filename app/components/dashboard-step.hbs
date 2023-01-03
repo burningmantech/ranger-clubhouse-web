@@ -35,9 +35,11 @@
     {{/if}}
     {{#if @step.isOnlineTraining}}
       <p>
-        <OnlineTrainingLaunch @text="Go to the Online Training Course"
+        <OnlineTrainingLaunch @text="Go to the Online Course"
                               @person={{@person}}
-                              @url={{@milestones.online_training_url}} />
+                              @url={{@milestones.online_training_url}}
+                              @didComplete={{eq @step.result "completed"}}
+        />
       </p>
     {{/if}}
 

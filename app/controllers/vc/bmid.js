@@ -3,7 +3,7 @@ import {action, set} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {schedule, later} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
-import {MealOptions, BmidStatusOptions, ShowerOptions} from 'clubhouse/constants/bmid';
+import {MealOptions, BmidStatusOptions, ShowerOptions} from 'clubhouse/models/bmid';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import Changeset from 'ember-changeset';
 
@@ -20,9 +20,9 @@ const CSV_COLUMNS = [
   'title2',
   'title3',
   'meals',
-  {title: 'req. meals', key: 'want_meals' },
+  {title: 'req. meals', key: 'earned_meals' },
   'showers',
-  {title: 'req. showers', key: 'want_showers' },
+  {title: 'req. showers', key: 'earned_showers' },
   'mvr',
   'team',
   'notes',
@@ -115,16 +115,16 @@ export default class VcBmidController extends ClubhouseController {
 
     switch (wantFilter) {
       case 'all_eat':
-        bmids = bmids.filter((bmid) => bmid.want_meals === 'all');
+        bmids = bmids.filter((bmid) => bmid.earned_meals === 'all');
         break;
       case 'event_week':
-        bmids = bmids.filter((bmid) => bmid.want_meals === 'event');
+        bmids = bmids.filter((bmid) => bmid.earned_meals === 'event');
         break;
       case 'any_eat':
-        bmids = bmids.filter((bmid) => (bmid.want_meals === 'all' || bmid.want_meals === 'event'));
+        bmids = bmids.filter((bmid) => (bmid.earned_meals === 'all' || bmid.earned_meals === 'event'));
         break;
       case 'showers':
-        bmids = bmids.filter((bmid) => bmid.want_showers);
+        bmids = bmids.filter((bmid) => (bmid.earned_showers || bmid.allocated_showers || bmid.showers));
         break;
     }
 
@@ -193,7 +193,9 @@ export default class VcBmidController extends ClubhouseController {
       case 'showers':
         // With showers first
         bmids.sort((a, b) => {
-          const result = b.showers - a.showers;
+          const aShowers = (a.showers || a.earned_showers || a.allocated_showers) ? 1 : 0;
+          const bShowers = (b.showers || b.earned_showers || b.allocated_showers) ? 1 : 0;
+          const result = bShowers - aShowers;
           if (result) {
             return result;
           }
@@ -469,9 +471,9 @@ export default class VcBmidController extends ClubhouseController {
         title2: bmid.title2,
         title3: bmid.title3,
         meals: bmid.meals,
-        want_meals: bmid.want_meals,
+        earned_meals: bmid.earned_meals,
         showers: bmid.showers ? 'Y' : 'N',
-        want_showers: bmid.want_showers ? 'Y' : 'N',
+        earned_showers: bmid.earned_showers ? 'Y' : 'N',
         mvr: bmid.org_vehicle_insurance ? 'Y' : 'N',
         team: bmid.team,
         notes: bmid.notes,

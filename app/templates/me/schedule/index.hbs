@@ -1,7 +1,11 @@
 <h1 class="d-print-none">{{this.year}} Schedule &amp; Shift Sign Ups</h1>
-<BackToHome />
+<BackToHome/>
 <ScheduleManage @person={{this.session.user}}
                 @slots={{this.slots}}
                 @signedUpSlots={{this.signedUpSlots}}
-                @scheduleSummary={{this.scheduleSummary}} @creditsEarned={{this.creditsEarned}} @year={{this.year}}
-                @permission={{this.permission}} />
+                @scheduleSummary={{this.scheduleSummary}}
+                @creditsEarned={{this.creditsEarned}}
+                @year={{this.year}}
+                @permission={{this.permission}}
+                @milestones={{this.milestones}}
+/>

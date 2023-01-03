@@ -1,7 +1,7 @@
 import {TimeoutError, AbortError} from '@ember-data/adapter/error';
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import ENV from 'clubhouse/config/environment';
-import {isAbortError, isTimeoutError, isForbiddenError} from 'ember-ajax/errors';
+import {isAbortError, isForbiddenResponse} from 'ember-fetch/errors';
 import logError from 'clubhouse/utils/log-error';
 
 //
@@ -16,13 +16,21 @@ export default class ErrorRoute extends ClubhouseRoute {
     controller.set('config', ENV);
 
     // Check for offline errors
-    const isOffline =
-      (error instanceof TimeoutError || error instanceof AbortError
-        || isAbortError(error) || isTimeoutError(error));
+    const message = error.message;
+    const isOffline = (error instanceof TimeoutError || error instanceof AbortError || isAbortError(error)
+      || error.name === 'NetworkError'
+      || message?.match(/NetworkError/)
+      || message?.match(/Network request failed/i)
+    );
 
     controller.set('isOffline', isOffline);
-    controller.set('notAuthorized', (error && (isForbiddenError(error) || error.status == 403)));
+    controller.set('notAuthorized', (error && (isForbiddenResponse(error) || error.status === 403)));
 
-    logError(error, 'ember-route-error');
+    logError(error, 'client-ember-route-error');
+
+    if (isOffline) {
+      this.session.showOfflineDialog = true;
+      return false;
+    }
   }
 }

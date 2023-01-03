@@ -1,13 +1,30 @@
 <UiSection>
-  <:title>Position Summary (hours, credits)</:title>
+  <:title>{{@year}} Worked Positions Summary</:title>
   <:body>
-    {{#each this.workedPositions as |position idx|~}}
-      {{~if idx ", "~}}
-      <span class="d-inline-block">
-        {{position.title}} ({{hour-minute-format position.duration}}, {{credits-format position.credits}})
-      </span>
-    {{~else}}
+    {{#if this.workedPositions}}
+      {{pluralize this.workedPositions.length "position"}} worked.
+      <table class="table table-width-auto table-striped table-hover">
+        <thead>
+        <tr>
+          <th>Position</th>
+          <th>Shift Count</th>
+          <th>Total Duration</th>
+          <th>Total Credits</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.workedPositions as |position|}}
+          <tr>
+            <td>{{position.title}}</td>
+            <td class="text-end">{{position.total}}</td>
+            <td class="text-end">{{hour-minute-format position.duration}}</td>
+            <td class="text-end">{{credits-format position.credits}}</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    {{else}}
       No positions were worked.
-    {{~/each}}
+    {{/if}}
   </:body>
 </UiSection>

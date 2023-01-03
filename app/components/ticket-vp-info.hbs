@@ -1,57 +1,46 @@
-<TicketSection @id="vp"
-               @nextAction={{@nextSection}}
-               @toggleCard={{@toggleCard}}
-               @showing={{@showing}}>
-  <:title>
-    Vehicle Pass
-    <TicketSectionStatus @status={{if this.vehiclePass this.vehiclePass.status "none"}} />
-  </:title>
-  <:body>
-    {{#if this.vehiclePass}}
-      {{#if (or (not @ticket) @ticket.isQualified)}}
-        <p>
-          <b>Claim your event ticket first before claiming your Vehicle Pass.</b>
-        </p>
-      {{else if this.vehiclePass.isQualified}}
-        <p><b>You qualify for a Vehicle Pass for this year's event.</b></p>
-        <div class="mt-2 mb-2">Do you want to claim your Vehicle Pass?</div>
-        <UiButton @class="btn-responsive"
-                  @onClick={{fn @setDocumentStatus this.vehiclePass "claimed"}}
-                  @disabled={{@isSavingDocumentStatus}}>
-          Claim Vehicle Pass
-          {{#if @isSavingDocumentStatus}}
-            <SpinIcon/>
-          {{/if}}
-        </UiButton>
-      {{else}}
-        <p>
-          <b>You will be using the Vehicle Pass.</b>
-        </p>
-        <div class="mt-2 mb-2"> Do you no longer need a Vehicle Pass?</div>
-        <UiButton @class="btn-responsive"
-                  @onClick={{fn @setDocumentStatus this.vehiclePass "qualified"}}
-                  @disabled={{@isSavingDocumentStatus}}>
-          Release Vehicle Pass
-          {{#if @isSavingDocumentStatus}}
-            <SpinIcon/>
-          {{/if}}
-        </UiButton>
+{{#if this.vehiclePass}}
+  {{#if (or (not @ticket) @ticket.isBanked @ticket.isQualified)}}
+    <p>
+      <b>Claim your event ticket first before claiming your Vehicle Pass.</b>
+    </p>
+  {{else if this.vehiclePass.isQualified}}
+    <p><b>You qualify for a Vehicle Pass for this year's event.</b></p>
+    <div class="mt-2 mb-2">Do you want to claim your Vehicle Pass?</div>
+    <UiButton @class="btn-responsive"
+              @onClick={{fn @setDocumentStatus this.vehiclePass "claimed"}}
+              @disabled={{@isSavingDocumentStatus}}>
+      Claim Vehicle Pass
+      {{#if @isSavingDocumentStatus}}
+        <SpinIcon/>
       {{/if}}
-    {{else if @ticketPackage.tickets.length}}
-      <p>
-        You should have qualified for a free Vehicle Pass, however, we do not have one on file.
-      </p>
-      <p>
-        Contact {{mail-to @ticketingInfo.ranger_ticketing_email}} and let us know something is wrong.
-      </p>
-    {{else}}
-      <p>
-        <b>Sorry, but it doesn't look like you qualified for a free Vehicle Pass.</b>
-      </p>
-      <p>
-        Free Vehicle Passes are provided to Rangers who qualified for a Staff Credential or
-        Reduced-Price Ticket.
-      </p>
-    {{/if}}
-  </:body>
-</TicketSection>
+    </UiButton>
+  {{else}}
+    <p>
+      <b>You will be using the Vehicle Pass.</b>
+    </p>
+    <div class="mt-2 mb-2"> Do you no longer need a Vehicle Pass?</div>
+    <UiButton @class="btn-responsive"
+              @onClick={{fn @setDocumentStatus this.vehiclePass "qualified"}}
+              @disabled={{@isSavingDocumentStatus}}>
+      Release Vehicle Pass
+      {{#if @isSavingDocumentStatus}}
+        <SpinIcon/>
+      {{/if}}
+    </UiButton>
+  {{/if}}
+{{else if @ticketPackage.tickets.length}}
+  <p>
+    You should have qualified for a free Vehicle Pass, however, we do not have one on file.
+  </p>
+  <p>
+    Contact {{mail-to @ticketingInfo.ranger_ticketing_email}} and let us know something is wrong.
+  </p>
+{{else}}
+  <p>
+    <b>Sorry, but it doesn't look like you qualified for a free Vehicle Pass.</b>
+  </p>
+  <p>
+    Free Vehicle Passes are provided to Rangers who qualified for a Staff Credential or
+    Reduced-Price Ticket.
+  </p>
+{{/if}}
