@@ -11,44 +11,6 @@ on: [push]
 
 jobs:
 
-  info:
-
-    name: Workflow information
-    runs-on: ubuntu-latest
-    timeout-minutes: 1
-
-    steps:
-
-      - name: Print GitHub Context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "${GITHUB_CONTEXT}";
-
-      - name: Print Job Context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "${JOB_CONTEXT}";
-
-      - name: Print Steps Context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "${STEPS_CONTEXT}";
-
-      - name: Print Runner Context
-        env:
-          RUNNER_CONTEXT: ${{ toJson(runner) }}
-        run: echo "${RUNNER_CONTEXT}";
-
-      - name: Print Strategy Context
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run: echo "${STRATEGY_CONTEXT}";
-
-      - name: Print Matrix Context
-        env:
-          MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run: echo "${MATRIX_CONTEXT}";
-
   docker:
     name: Build Docker image
 
@@ -73,18 +35,16 @@ jobs:
           ${{ runner.os }}-node-
 
       - name: Build Docker image
-        run: ./bin/build;
+        run: ./bin/build
 
       - name: Save Docker image
-        run: |
-          mkdir images;
-          docker image save ranger-clubhouse-web:dev | gzip -6 > images/web.tgz;
+        run: docker image save ranger-clubhouse-web:dev | gzip -9 > docker_image.tgz
 
-      - name: Upload Docker image artifact
+      - name: Upload Docker image artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: images
-          path: images
+          name: docker
+          path: docker_image.tgz
 
 
   test-docker:
@@ -104,13 +64,13 @@ jobs:
       - name: Download Docker image artifact
         uses: actions/download-artifact@v3
         with:
-          name: images
+          name: docker
 
       - name: Load Docker image
-        run: gzip --uncompress --stdout images/web.tgz | docker image load;
+        run: gzip --uncompress --stdout docker_image.tgz | docker image load
 
       - name: Test Docker image
-        run: ./bin/test_docker;
+        run: ./bin/test_docker
 
 
   deploy-staging:
@@ -127,13 +87,13 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Download Docker image artifact
+      - name: Download Docker image artifacts
         uses: actions/download-artifact@v3
         with:
-          name: images
+          name: docker
 
       - name: Load Docker image
-        run: gzip --uncompress --stdout images/web.tgz | docker image load;
+        run: gzip --uncompress --stdout docker_image.tgz | docker image load
 
       - name: Install Python
         uses: actions/setup-python@v3
@@ -141,7 +101,7 @@ jobs:
           python-version: '3.7'
 
       - name: Deploy to staging
-        run: ./bin/deploy staging;
+        run: ./bin/deploy staging
         env:
           # https://github.com/burningmantech/ranger-secret-clubhouse/settings/secrets
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
