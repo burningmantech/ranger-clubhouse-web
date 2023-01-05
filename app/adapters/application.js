@@ -4,39 +4,13 @@ import Inflector from 'ember-inflector';
 import ENV from 'clubhouse/config/environment';
 
 /*
- * List of model names that should NOT be pluralized across the wire.
- * (e.g., person -> people)
+ * List of model names to pluralize.
  */
 
-const SINGULAR_MODELS = [
-  'access-document',
-  'access-document-delivery',
-  'alert',
-  'asset',
-  'asset-attachment',
-  'asset-person',
-  'bmid',
-  'certification',
-  'document',
-  'help',
-  'motd',
-  'person',
-  'person-certification',
-  'person-event',
-  'person-photo',
-  'position',
-  'position-credit',
-  'provision',
-  'role',
-  'setting',
-  'slot',
-  'survey',
-  'survey-answer',
-  'survey-group',
-  'survey-question',
-  'timesheet',
-  'timesheet-missing',
-  'vehicle',
+const PLURAL_MODELS = [
+  'access-document-change',
+  'action-log',
+  'event_date',
 ];
 
 export default class ApplicationAdapter extends RESTAdapter {
@@ -54,6 +28,6 @@ export default class ApplicationAdapter extends RESTAdapter {
   }
 
   pathForType(modelName) {
-    return SINGULAR_MODELS.includes(modelName) ? modelName : Inflector.inflector.pluralize(modelName);
+    return PLURAL_MODELS.includes(modelName) ? Inflector.inflector.pluralize(modelName) : modelName;
   }
 }

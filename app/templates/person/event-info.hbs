@@ -41,7 +41,9 @@
       <UiSection>
         <:title>{{this.year}} Provisions &amp; Radio Agreement</:title>
         <:body>
-          <dl>
+          Meals and Showers are a union of allocated (job) provisions, non-banked earned provisions, and what
+          has been explicitly set on the BMID.
+          <dl class="mt-2">
             <dt>Meals</dt>
             <dd>
               <MealInfo @eventInfo={{this.eventInfo}} />
@@ -56,7 +58,7 @@
               {{/if}}
             </dd>
 
-            <dt>Radios</dt>
+            <dt>Radio Checkout</dt>
             <dd>
               {{#if this.eventInfo.radio_info_available}}
                 {{#if this.eventInfo.radio_eligible}}
@@ -67,86 +69,94 @@
               {{else}}
                 <b class="text-danger">{{this.year}} Radio eligibility is not yet available.</b>
               {{/if}}
-              <div class="mt-2">
-                {{#if (has-role "admin")}}
-                  <f.checkbox @name="asset_authorized"
-                              @label="Signed Radio Checkout Agreement"/>
-                  <div class="mt-2">
-                    <f.submit @disabled={{this.personEvent.isSaving}} />
-                    {{#if this.personEvent.isSaving}}
-                      <LoadingIndicator/>
-                    {{/if}}
-                  </div>
-                {{else}}
-                  {{#if this.personEvent.asset_authorized}}
-                    <b class="text-success"> {{fa-icon "check"}} Signed</b>
-                  {{else}}
-                    <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+            </dd>
+            <dt>Radio Checkout Agreement</dt>
+            <dd>
+              {{#if (has-role "admin")}}
+                <div class="text-danger">
+                  Do not sign agreements on someone else's behalf. You may expose the organization to legal
+                  liability.
+                </div>
+                <f.checkbox @name="asset_authorized"
+                            @label="Signed Radio Checkout Agreement"/>
+                <div class="mt-2">
+                  <f.submit @disabled={{this.personEvent.isSaving}} />
+                  {{#if this.personEvent.isSaving}}
+                    <LoadingIndicator/>
                   {{/if}}
-                  the Radio Checkout Agreement.
+                </div>
+              {{else}}
+                {{#if this.personEvent.asset_authorized}}
+                  <b class="text-success"> {{fa-icon "check"}} Signed</b>
+                {{else}}
+                  <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
                 {{/if}}
-              </div>
+                the Radio Checkout Agreement.
+              {{/if}}
             </dd>
           </dl>
         </:body>
       </UiSection>
     </tab.pane>
-    <tab.pane @title="Driving & Vehicle Agreements" @id="driving">
+    <tab.pane @title="Driving Privs. & Vehicle Agreements" @id="driving">
       <UiSection>
-        <:title>{{this.year}} Driving &amp; Vehicle Agreements</:title>
+        <:title>{{this.year}} Driving Privileges &amp; Vehicle Agreements</:title>
         <:body>
           {{#if this.person.vehicle_blacklisted}}
-            <b class="text-danger">{{fa-icon "ban"}} Vehicle is blacklisted.</b>
-            May not drive gators, cars, or trucks on playa for Ranger business.
+            <UiNotice @title="Person is Vehicle Blacklisted" @icon="ban" @type="danger">
+              Person may not drive gators, cars, or trucks on playa for Ranger business. All vehicle flags and
+              agreements are disabled.
+            </UiNotice>
           {{else}}
             <dl>
-              <dt>Motorpool Policy</dt>
+              <dt>Driving Privileges</dt>
               <dd>
-                {{#if (has-role "admin" "vc")}}
+                {{#if this.canSignAgreements}}
                   <f.checkbox @name="org_vehicle_insurance"
                               @label="Has Motor Vehicle Record (MVR aka BMP insurance)"
                   />
-                  <f.checkbox @name="signed_motorpool_agreement"
-                              @label="Signed Motorpool Policy Agreement"
-                  />
-                {{else}}
-                  {{#if this.personEvent.signed_motorpool_agreement}}
-                    <b class="text-success"> {{fa-icon "check"}} Signed</b>
-                  {{else}}
-                    <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
-                  {{/if}}
-                  the {{this.year}} Motorpool Agreement policy.<br>
-                  {{#if this.personEvent.org_vehicle_insurance}}
-                    <b class="text-success"> {{fa-icon "check"}} Authorized</b>
-                  {{else}}
-                    <b class="text-danger">{{fa-icon "times"}} NOT AUTHORIZED</b>
-                  {{/if}}
-                  for the {{this.year}} event to drive Ranger vehicles (including own personal vehicle) on playa for
-                  Ranger business. Vehicle must have a valid Burning Man driving sticker.
-                {{/if}}
-              </dd>
-              <dt>Personal Vehicle Use</dt>
-              <dd>
-                {{#if (has-role "admin")}}
                   <f.checkbox @name="may_request_stickers"
                               @label="Personal Vehicle Use Requests Allowed (Allows access to the Me > Vehicles page)"
                   />
-
-                  <f.checkbox @name="signed_personal_vehicle_agreement"
-                              @label="Signed Personal Vehicle Policy Agreement"/>
-                  <div class="mt-2">
-                    <f.submit @disabled={{this.personEvent.isSaving}} />
-                    {{#if this.personEvent.isSaving}}
-                      <LoadingIndicator/>
-                    {{/if}}
-                  </div>
                 {{else}}
+                  <p>
+                    {{#if this.personEvent.org_vehicle_insurance}}
+                      <b class="text-success"> {{fa-icon "check"}} Authorized</b>
+                    {{else}}
+                      <b class="text-danger">{{fa-icon "times"}} NOT AUTHORIZED</b>
+                    {{/if}}
+                    for the {{this.year}} event to drive Ranger vehicles (including own personal vehicle) on playa for
+                    Ranger business. Vehicle must have a valid Burning Man driving sticker.
+                  </p>
                   {{#if this.personEvent.may_request_stickers}}
                     <b class="text-success">{{fa-icon "check"}} Allowed</b>
                   {{else}}
                     <b class="text-danger">{{fa-icon "times"}} NOT ALLOWED</b>
                   {{/if}}
                   to submit Personal Vehicle Requests.<br>
+                {{/if}}
+              </dd>
+              <dt>Vehicle Agreements</dt>
+              <dd>
+                {{#if this.canSignAgreements}}
+                  <div class="text-danger">
+                    Do not sign agreements on someone else's behalf. You may expose the organization to legal
+                    liability.
+                  </div>
+                  <f.checkbox @name="signed_motorpool_agreement"
+                              @label="Signed Motorpool Policy Agreement"
+                  />
+                  <f.checkbox @name="signed_personal_vehicle_agreement"
+                              @label="Signed Personal Vehicle Policy Agreement"/>
+                {{else}}
+                  <p>
+                    {{#if this.personEvent.signed_motorpool_agreement}}
+                      <b class="text-success"> {{fa-icon "check"}} Signed</b>
+                    {{else}}
+                      <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+                    {{/if}}
+                    the {{this.year}} Motorpool Agreement policy.
+                  </p>
                   {{#if this.personEvent.signed_personal_vehicle_agreement}}
                     <b class="text-success"> {{fa-icon "check"}} Signed</b>
                   {{else}}
@@ -156,6 +166,14 @@
                 {{/if}}
               </dd>
             </dl>
+            {{#if this.canSignAgreements}}
+              <div class="mt-4">
+                <f.submit @disabled={{this.personEvent.isSaving}} />
+                {{#if this.personEvent.isSaving}}
+                  <LoadingIndicator/>
+                {{/if}}
+              </div>
+            {{/if}}
           {{/if}}
         </:body>
       </UiSection>
@@ -167,28 +185,36 @@
       <UiSection>
         <:title>{{this.year}} Misc. Agreements</:title>
         <:body>
-          {{#if (has-role "admin" "vc")}}
+          {{#if this.canSignAgreements}}
             <p class="text-danger">
-              Do not sign any agreements another's behalf.
+              Do not sign agreements on someone else's behalf. You may expose the organization to legal liability.
             </p>
-            <f.checkbox @name="sandman_affidavit"
-                        @label="Signed Sandman Affidavit"
-            />
+            <p>
+              <f.checkbox @name="sandman_affidavit"
+                          @label="Signed Sandman Affidavit"
+              />
+              <f.checkbox @name="signed_nda"
+                          @label="Signed Sensitive Data Access and Use Policy Agreement (aka Ranger NDA)"
+              />
+            </p>
+            <f.submit @disabled={{this.personEvent.isSaving}} />
+            {{#if this.personEvent.isSaving}}
+              <LoadingIndicator/>
+            {{/if}}
           {{else}}
-            {{#if this.personEvent.sandman_affidavit}}
+            <p>
+              {{this.year}} Sandman Affidavit {{#if this.personEvent.sandman_affidavit}}
               <b class="text-success"> {{fa-icon "check"}} Signed</b>
             {{else}}
               <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
             {{/if}}
-            the {{this.year}} Sandman Affidavit
-          {{/if}}
-          {{#if (has-role "admin" "vc")}}
-            <div class="mt-2">
-              <f.submit @disabled={{this.personEvent.isSaving}} />
-              {{#if this.personEvent.isSaving}}
-                <LoadingIndicator/>
-              {{/if}}
-            </div>
+            </p>
+            {{this.year}} Ranger NDA
+            {{#if this.personEvent.signed_nda}}
+              <b class="text-success"> {{fa-icon "check"}} Signed</b>
+            {{else}}
+              <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+            {{/if}}
           {{/if}}
         </:body>
       </UiSection>

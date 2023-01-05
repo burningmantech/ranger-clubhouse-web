@@ -11,9 +11,10 @@
   }
 
   // override highlight border color between thead, tbody and tfoot.
-  > :not(:first-child) {
+   > :not(:first-child) {
     border-top: 1px solid #313838 !important;
   }
+  font-variant-numeric: tabular-nums;
 }
 
 

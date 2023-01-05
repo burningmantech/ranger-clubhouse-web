@@ -8,6 +8,7 @@
     {{pluralize @people.length "person"}}
   </Accordion.title>
   <Accordion.body>
+    <UiButton @onClick={{this.exportToCSV}} @type="secondary" @size="sm">Export To CSV</UiButton>
     <table class="table table-hover table-striped table-sm table-width-auto mt-2">
       <thead>
       <tr>
@@ -22,6 +23,7 @@
         {{#unless this.isPastProspective}}
           <th>Last year worked</th>
           <th>Total years</th>
+          <th>Alpha year</th>
         {{/unless}}
         <th>Email</th>
         {{#unless this.isVintage}}
@@ -53,6 +55,7 @@
           {{#unless this.isPastProspective}}
             <td class="text-end">{{person.last_year}}</td>
             <td class="text-end">{{person.years}}</td>
+            <td class="text-end">{{person.alpha_year}}</td>
           {{/unless}}
           <td>{{mail-to person.email}}</td>
           {{#unless this.isVintage}}

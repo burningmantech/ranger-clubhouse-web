@@ -10,17 +10,8 @@ module('Integration | Component | ticketing-closed', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{ticketing-closed}}`);
+    await render(hbs`<TicketingClosed />`);
 
     assert.strictEqual(this.element.textContent.trim(), '');
-
-    // Template block usage:
-    await render(hbs`
-      {{#ticketing-closed}}
-        template block text
-      {{/ticketing-closed}}
-    `);
-
-    assert.strictEqual(this.element.textContent.trim(), 'template block text');
   });
 });

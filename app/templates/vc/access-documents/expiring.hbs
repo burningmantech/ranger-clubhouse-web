@@ -3,6 +3,11 @@
 <p>Below are unclaimed tickets that will expire at the end of the coming event.</p>
 
 Showing {{pluralize this.expiring.length "person"}}
+<div>
+  <UiButton @type="secondary" @size="sm" @onClick={{this.exportCSV}}>
+    {{fa-icon "file-export"}} Export CSV
+  </UiButton>
+</div>
 <table class="table table-hover table-striped table-width-auto table-sm">
   <thead>
     <tr>
@@ -18,17 +23,17 @@ Showing {{pluralize this.expiring.length "person"}}
 
   <tbody>
     {{#each this.expiring as |person|}}
-      <tr>
-        <td><PersonLink @person={{person.person}} @page="tickets-provisions" /></td>
-        <td>{{person.person.status}}</td>
-        <td>{{mail-to person.person.email}}</td>
-        {{#let person.tickets.firstObject as |ticket|}}
+      {{#each person.tickets as |ticket|}}
+        <tr>
+          <td><PersonLink @person={{person.person}} @page="tickets-provisions" /></td>
+          <td>{{person.person.status}}</td>
+          <td>{{mail-to person.person.email}}</td>
           <td>RAD-{{ticket.id}}</td>
           <td>{{ticket-type-human ticket.type}}</td>
           <td>{{ticket.status}}</td>
           <td>{{mdy-format ticket.expiry_date}}</td>
-        {{/let}}
-      </tr>
+        </tr>
+      {{/each}}
     {{else}}
       <tr>
         <td colspan="6" class="text-danger">

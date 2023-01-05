@@ -52,7 +52,7 @@
           Account does not have Burner Profile ID on file. Shift sign-ups are disabled.
         </UiNotice>
       {{else if (and this.person.isPNV (not this.userIsMentor))}}
-        <UiNotice @type="danger" @icon="exclamation" @title="Direct to the Hat Rack.">
+        <UiNotice @title="Direct to the Hat Rack." @type="danger" @icon="exclamation" >
           {{this.person.callsign}} is {{if this.person.isAlpha "an Alpha" "a Prospective"}}.
           Do not check in this person unless you are acting on the Mentors'
           behalf.

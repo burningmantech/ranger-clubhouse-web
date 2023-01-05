@@ -1,0 +1,86 @@
+<div class="d-print-none">
+  <YearSelect @title="Potential Swag Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+  <p>
+    The report is used to help build service pins, service patches, and toaster pins orders for the upcoming event.
+  </p>
+  <p>
+    Legend:<br>
+    Sign-ups? = has non-training sign-ups in the current year.<br>
+    Potential Swag? = indicate what 5-year increment service swag the person might be awarded. Calculated by taking the
+    total worked years, add 1, and check if the sum is a 5-year increment.
+  </p>
+  <p>
+    <UiButton @onClick={{this.exportToCSV}}>
+      Export as CSV
+    </UiButton>
+  </p>
+</div>
+
+Showing  {{pluralize this.people.length "person"}}
+<table class="table table-width-auto table-hover table-striped table-sm">
+  <thead>
+  <tr>
+    <th>Callsign</th>
+    <th>Status</th>
+    <th>Years</th>
+    <th>First Year</th>
+    <th>Last Worked</th>
+    <th>{{this.signupYear}} Sign-ups?</th>
+    <th>Potential Swag?</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  {{#each this.people key="id" as |person|}}
+    <tr>
+      <td>
+        <PersonLink @person={{person}} />
+      </td>
+      <td>{{person.status}}</td>
+      <td class="text-end">{{person.total_years}}</td>
+      <td class="text-end">{{person.first_year}}</td>
+      <td class="text-end">{{person.last_worked}}</td>
+      <td class="text-center">{{yesno person.signed_up}}</td>
+      <td>
+        {{or person.service_eligible "-"}}
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="6"><b class="text-danger">No one was found to have qualified for clothing in {{this.year}}</b></td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
+
+{{#if this.people}}
+  <h3 id="shirt-totals">Shirt Totals</h3>
+  <div class="row">
+    {{#each this.shirtGroups as |shirts|}}
+      <div class="col-3">
+        <table class="table table-sm table-box">
+          <caption>
+            {{shirts.name}} Totals
+            <span class="d-inline-block float-end">
+            <UiButton @type="secondary" @size="sm" @onClick={{fn this.exportCounts shirts}}>Export</UiButton>
+          </span>
+          </caption>
+          <thead>
+          <tr>
+            <th>Shirt Type</th>
+            <th class="text-end">Count</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each shirts.types as |shirt|}}
+            <tr>
+              <td>{{shirt.type}}</td>
+              <td class="text-end">{{shirt.count}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </div>
+    {{/each}}
+  </div>
+{{/if}}

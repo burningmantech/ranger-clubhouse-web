@@ -1,17 +1,16 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import { ADMIN } from 'clubhouse/constants/roles';
+import {ADMIN} from 'clubhouse/constants/roles';
 
 export default class AdminPeopleByStatusChangeRoute extends ClubhouseRoute {
   roleRequired = ADMIN;
 
   queryParams = {
-    period: { refreshModel: true }
+    period: {refreshModel: true}
   };
 
-  model({ period }) {
+  model({period}) {
     const date = new Date();
-    const month = date.getMonth(),
-      day = date.getDay();
+
     let year = date.getFullYear();
 
     if (!period) {
@@ -20,13 +19,9 @@ export default class AdminPeopleByStatusChangeRoute extends ClubhouseRoute {
       year++;
     }
 
-    if ((month === 8 && day >= 15) || month > 8) {
-      year++;
-    }
-
     this.year = year;
     this.period = period;
-    return this.ajax.request('person/by-status-change', { data: { year } });
+    return this.ajax.request('person/by-status-change', {data: {year}});
   }
 
   setupController(controller, model) {

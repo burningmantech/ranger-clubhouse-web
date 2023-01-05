@@ -1,76 +1,83 @@
-.notice-box {
-  margin-bottom: 5px;
-  border: 2px solid;
-  border-radius: 5px;
-  padding: 5px;
-
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
-
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: repeat(3, minmax(min-content, max-content)) 1fr;
-  grid-template-areas:
-    'notice-icon .'
-    'notice-icon notice-header'
-    'notice-icon notice-body'
-    '. notice-body';
-}
-
-.notice-icon {
-  display: flex;
-  align-self: center;
-  grid-area: notice-icon;
-  font-size: $h2-font-size;
-  padding: 0 10px;
-}
-
-.notice-header {
-  display: flex;
-  align-self: center;
-  align-items: center;
-  grid-area: notice-header;
-
-  font-size: $h3-font-size;
-  font-weight: 500;
-  margin-bottom: 5px;
-
-
-  &:empty {
-    grid-column: 1;
-    grid-row: 2;
-
-    &:after {
-      content: "x";
-      visibility: hidden;
-    }
-
-    ~ .notice-body {
-      grid-row-start: 2;
-    }
-  }
+.notice-danger {
+  background-color: #fcd5d9f0;
 }
 
 .notice-success {
-  border-color: #28a745;
-  background-color: #c3e6cb;
+  background-color: #d6ead2f0;
 }
 
-.notice-warning {
-  border-color: #d2b48c;
-  background-color: #ffff99;
+.notice-secondary {
+  background-color: #e0e0e0f0;
 }
 
-.notice-danger {
-  border-color: #721c24;
-  background-color: #fff7f7;
+.notice {
+  display: grid;
+  padding: 0.5rem;
+}
 
-  .notice-header {
-    color: #9c0010;
-  }
+.notice-icon {
+  grid-area: notice-icon;
+  text-align: center;
+  background-color: #ffffff;
+  border-radius: 6px;
+}
+
+.notice-title {
+  grid-area: notice-title;
+  font-weight: 700;
+  align-self: center;
 }
 
 .notice-body {
   grid-area: notice-body;
-  margin-bottom: 5px;
+  align-self: center;
 }
 
+@include media-breakpoint-up(xl) {
+  .notice {
+    grid-template-columns: min(10vw, 50px) auto;
+    grid-template-areas:
+    "notice-icon notice-title"
+    "notice-icon notice-body";
+    margin-bottom: 1vh;
+  }
+
+  .notice-icon {
+    align-self: center;
+    font-size: 1.5rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .notice-title {
+    font-size: 1.1rem;
+    margin-left: 1vw;
+  }
+  .notice-body {
+    margin-left: 1vw;
+  }
+}
+
+@include media-breakpoint-down(xl) {
+  .notice {
+    grid-template-columns: 50px auto;
+    grid-template-areas:
+    "notice-icon notice-title"
+    "notice-body notice-body";
+    margin-bottom: 2vh;
+  }
+
+  .notice-title {
+    font-size: 1.1rem;
+    margin-left: 2vw;
+  }
+
+  .notice-icon {
+    padding: 0.25rem 0.125rem;
+    font-size: 1.1rem;
+  }
+
+  .notice-body {
+    margin-top: 1vw;
+    margin-left: 1vw;
+  }
+ }

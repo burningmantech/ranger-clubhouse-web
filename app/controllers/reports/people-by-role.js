@@ -1,9 +1,47 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import { action, set } from '@ember/object';
+import {tracked} from '@glimmer/tracking';
+import {action} from '@ember/object';
+import {cached} from '@glimmer/tracking';
 
 export default class ReportsPeopleByRoleController extends ClubhouseController {
-  @action
-  toggleRole(role) {
-    set(role, 'showing', !role.showing);
+  @tracked showPerson = null;
+  @tracked filter;
+  @tracked roles;
+
+  filterOptions = [
+    {value: 'all', label: 'Any grant type'},
+    {value: 'explicit', label: 'Exclusively granted roles'},
+    {value: 'positions', label: 'Exclusively granted thru a team/position'}
+  ];
+
+  @cached
+  get viewRoles() {
+    switch (this.filter) {
+      case 'explicit':
+        return this.roles.map((role) => ({
+          id: role.id,
+          title: role.title,
+          people: role.people.filter((person) => person.granted && !person.positions.length)
+        }));
+      case 'positions':
+        return this.roles.map((role) => ({
+          id: role.id,
+          title: role.title,
+          people: role.people.filter((person) => !person.granted && person.positions.length)
+        }));
+      default:
+        return this.roles;
+    }
   }
+
+  @action
+  showPersonAction(person) {
+    this.showPerson = person;
+  }
+
+  @action
+  closePerson() {
+    this.showPerson = null;
+  }
+
 }

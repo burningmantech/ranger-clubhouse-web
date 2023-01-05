@@ -20,7 +20,7 @@
       </tr>
     {{else}}
       {{#each this.auditLogs as |entry|}}
-        <tr class="{{if entry.no_signup "text-decoration-line-through"}}">
+        <tr>
           <td>
             {{#if entry.no_signup}}
               {{fa-icon "times" color="danger"}}
@@ -30,6 +30,9 @@
           </td>
           <td>
             {{shift-format entry.slot_begins}}
+            {{#if entry.no_signup}}
+              <br><b class="text-danger">No longer signed up.</b>
+            {{/if}}
           </td>
           <td>{{entry.position_title}}</td>
           <td>{{entry.slot_description}}</td>

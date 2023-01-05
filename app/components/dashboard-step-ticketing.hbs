@@ -1,5 +1,9 @@
 <div class="mt-1">
-  {{#if @step.tickets.noAddress}}
+  {{#if @step.tickets.notFinished}}
+    <b class="text-danger">Ticketing process is incomplete.</b><br>
+    You started the ticketing process yet did not complete all the steps. You may not be able to attend the event
+    if ticketing was not completed in a timely manner.
+  {{else if @step.tickets.noAddress}}
     <b class="text-danger">A delivery method and/or mailing address is needed.</b><br>
   {{else if @step.tickets.qualifiedCount}}
     <b class="text-danger">Items are still unclaimed and/or have not been banked.</b>
@@ -17,19 +21,19 @@
           {{/if}}
         </li>
       {{/each}}
-      {{#each @step.tickets.provisions.claimed as |item|}}
-        {{item.typeLabelWithCounts}}
-        {{#if item.earned_as_well}}
-          (allocated &amp; qualified)
-        {{else if item.is_allocated}}
-          (allocated)
-        {{else}}
-          (qualified)
-        {{/if}}
-      {{/each}}
     </ul>
   {{else}}
     <span class="text-danger">No tickets have been claimed.</span>
+  {{/if}}
+  {{#if @step.tickets.provisionItems}}
+    <div class="mt-1">
+      The following provisions will be used:
+      <ul>
+        {{#each @step.tickets.provisionItems as |item|}}
+          <li>{{item.name}}</li>
+        {{/each}}
+      </ul>
+    </div>
   {{/if}}
 </div>
 
@@ -37,12 +41,6 @@
   <div class="mt-1">
     {{pluralize @step.tickets.banked.length "item"}}
     {{if (eq @step.tickets.banked.length 1) "is" "are"}} banked.
-  </div>
-{{/if}}
-{{#if @step.tickets.provisions.banked}}
-  <div class="mt-1">
-    {{pluralize @step.tickets.provisions.banked.length "provision"}}
-    {{if (eq @step.tickets.provisions.banked.length 1) "is" "are"}} banked.
   </div>
 {{/if}}
 <div class="mt-1">

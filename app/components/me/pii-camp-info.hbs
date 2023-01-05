@@ -1,0 +1,18 @@
+<p>
+  Enter your camp's name, the street address, and street side (man-side, mountainside, plaza, etc.).
+</p>
+<p>
+  Don't worry if the camp's placement is not known yet.
+</p>
+<p>
+  Example: <b><i>"Camp Specificity, 9:15 &amp; D, Mountainside."</i></b>
+</p>
+<FormRow>
+  <@f.textarea @name="camp_location"
+              @label="Enter your camp's name and location:"
+              @cols={{80}}
+              @rows={{3}}
+              @maxlength={{200}}
+              @showCharCount={{true}}
+  />
+</FormRow>

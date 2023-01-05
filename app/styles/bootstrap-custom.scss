@@ -4,7 +4,7 @@
 
 $enable-shadows: true;
 $enable-grid-classes: true;
-$enable-gradients: true;
+$enable-gradients: false;
 $enable-negative-margins: true;
 $enable-cssgrid: true;
 
@@ -19,11 +19,13 @@ $wheatfield: #ded7be;
 $navbar-light-color: #28221b;
 $navbar-light-hover-color: #0139cc;
 
-$nav-tabs-link-active-bg: #eef5fd;
+$nav-tabs-link-active-bg: #fcfcfc;
 $nav-tabs-border-color: #b7b8d3;
 $nav-tabs-link-hover-border-color: #b7b8d3 #b7b8d3 $nav-tabs-border-color;
 $nav-tabs-link-active-border-color: #b7b8d3 #b7b8d3 #ffffff;
+$nav-tabs-border-radius: 4px;
 
+$btn-white-space: nowrap;
 
 // Do not enable rounded corners
 /*$btn-border-radius: 0;
@@ -35,6 +37,8 @@ $card-spacer-y: 0.5rem !default;
 $card-spacer-x: 0.75rem !default;
 
 // Adjust h tags
+
+$headings-font-weight: 300;
 
 $font-size-base: 0.9rem;
 

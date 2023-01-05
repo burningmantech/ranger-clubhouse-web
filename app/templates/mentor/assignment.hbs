@@ -29,25 +29,13 @@
           {{/if}}
         </td>
         <td>
-          {{#if person.mentors.0.mentor_id}}
-            {{options-get this.mentorOptions person.mentors.0.mentor_id}}
-          {{else}}
-            -
-          {{/if}}
+          {{this.mentorName person 0}}
         </td>
         <td>
-          {{#if person.mentors.1.mentor_id}}
-            {{options-get this.mentorOptions person.mentors.1.mentor_id}}
-          {{else}}
-            -
-          {{/if}}
+          {{this.mentorName person 1}}
         </td>
         <td>
-          {{#if person.mentors.2.mentor_id}}
-            {{options-get this.mentorOptions person.mentors.2.mentor_id}}
-          {{else}}
-            -
-          {{/if}}
+          {{this.mentorName person 2}}
         </td>
         <td>
           {{person.mentor_status}}
@@ -119,24 +107,24 @@
             </td>
             <td>
               <ChForm::Select @name="mentor1_{{person.id}}"
-                              @value={{person.mentors.0.mentor_id}}
-                              @onChange={{action (mut person.mentors.0.mentor_id)}}
+                              @value={{this.getMentorId person 0}}
+                              @onChange={{fn this.setMentorId person 0}}
                               @options={{this.mentorOptions}}
                               @controlClass={{this.selectClass person}}
               />
             </td>
             <td>
               <ChForm::Select @name="mentor2_{{person.id}}"
-                              @value={{person.mentors.1.mentor_id}}
-                              @onChange={{action (mut person.mentors.1.mentor_id)}}
+                              @value={{this.getMentorId person 1}}
+                              @onChange={{fn this.setMentorId person 1}}
                               @options={{this.mentorOptions}}
                               @controlClass={{this.selectClass person}}
               />
             </td>
             <td>
               <ChForm::Select @name="mentor3_{{person.id}}"
-                              @value={{person.mentors.2.mentor_id}}
-                              @onChange={{action (mut person.mentors.2.mentor_id)}}
+                              @value={{this.getMentorId person 2}}
+                              @onChange={{fn this.setMentorId person 2}}
                               @options={{this.mentorOptions}}
                               @controlClass={{this.selectClass person}}
               />

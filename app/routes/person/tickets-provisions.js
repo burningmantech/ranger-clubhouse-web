@@ -7,13 +7,14 @@ export default class PersonTicketsProvisionsRoute extends ClubhouseRoute {
 
   model() {
     const person = this.modelFor('person');
+    const data = { person_id: person.id };
 
     this.store.unloadAll('access-document');
     this.store.unloadAll('provision');
 
     return RSVP.hash({
-      documents: this.store.query('access-document', {person_id: person.id}),
-      provisions: this.store.query('provision', {person_id: person.id}),
+      documents: this.store.query('access-document', data),
+      provisions: this.store.query('provision', data),
       ticketingInfo: this.ajax.request(`ticketing/info`).then(({ticketing_info}) => ticketing_info),
     });
   }

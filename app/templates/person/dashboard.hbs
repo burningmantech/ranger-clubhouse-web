@@ -1,6 +1,6 @@
-<p>
-<b class="text-danger">All links and buttons below will affect YOUR account and not operate against {{this.person.callsign}}.</b>
-</p>
+<UiNotice @icon="skull-crossbones" @title="Dashboard Warning" @type="danger">
+  All links and buttons below will affect YOUR account and not operate against {{this.person.callsign}}.
+</UiNotice>
 {{#if this.person.isPastProspective}}
   <DashboardPastProspective/>
 {{else if this.person.isProspectiveWaitlist}}

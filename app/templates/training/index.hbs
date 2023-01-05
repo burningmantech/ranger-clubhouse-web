@@ -1,8 +1,8 @@
 <YearSelect @title="{{this.training.title}} Sessions"
             @year={{this.year}}
             @minYear={{2008}}
-            @onChange={{action (mut this.year)}}
-            @subheader={{true}}/>
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}} />
 
 {{#each this.trainingSessions as |session|}}
   <UiSection>

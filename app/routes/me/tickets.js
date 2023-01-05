@@ -13,11 +13,14 @@ export default class MeTicketsRoute extends ClubhouseRoute {
   }
 
   model() {
+    // Record when the user hit the ticketing page, ignore any response.
+    this.ajax.request(`person-event/${this.session.userId}/progress`, {method: 'POST', data: {milestone: 'ticket-visited'}});
+
     return RSVP.hash({
       ticketingInfo: this.ajax.request('ticketing/info')
                 .then((results) => results.ticketing_info ),
       ticketingPackage: this.ajax.request(`ticketing/${this.session.userId}/package`)
-                .then((results) => results.package)
+                .then((results) => results.package),
     });
   }
 

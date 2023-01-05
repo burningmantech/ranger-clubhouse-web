@@ -3,5 +3,15 @@
   <LinkTo @route="person.tickets" class="ms-2">View {{this.person.callsign}}'s Tickets &amp; Stuff page</LinkTo>
 </p>
 
-<Person::AccessDocuments @person={{this.person}} @documents={{this.documents}} @ticketingInfo={{this.ticketingInfo}} />
-<Person::Provisions @person={{this.person}} @provisions={{this.provisions}} @ticketingInfo={{this.ticketingInfo}} />
+<UiTab as |tab|>
+  <tab.pane @title="Tickets">
+    <Person::AccessDocuments @person={{this.person}}
+                             @documents={{this.documents}}
+                             @ticketingInfo={{this.ticketingInfo}} />
+  </tab.pane>
+  <tab.pane @title="Provisions">
+    <Person::Provisions @person={{this.person}}
+                        @provisions={{this.provisions}}
+                        @ticketingInfo={{this.ticketingInfo}} />
+  </tab.pane>
+</UiTab>

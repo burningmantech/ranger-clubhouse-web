@@ -1,14 +1,16 @@
 <LoginSidebar/>
 <main>
   {{#if this.session.isStaging}}
-    <UiNotice @type="danger" @icon="exclamation"
+    <UiNotice @type="danger"
+              @icon="exclamation"
               @title="This is the Clubhouse Staging Server used for testing and verification">
       <p>Here be dragons.</p>
       The real production server can be found here:<br>
       <a href="https://ranger-clubhouse.burningman.org">ranger-clubhouse.burningman.org</a>
     </UiNotice>
   {{else if this.session.isTraining}}
-    <UiNotice @type="success" @icon="circle-info"
+    <UiNotice @type="success"
+              @icon="circle-info"
               @title="Welcome to the Clubhouse Training Server ">
       <p>
         The login username is your callsign (stripped of spaces, dashes, and other non-alphanumeric characters)
@@ -27,8 +29,8 @@
   {{/if}}
   <h2>Welcome To The Ranger Secret Clubhouse!</h2>
   {{#if this.tokenError}}
-    <UiNotice @type="danger">
-      {{#if this.welcome}}
+    {{#if this.welcome}}
+      <UiNotice @title="Invitation Link Issue" @icon="heart-crack" @type="danger">
         <p>
           Sorry, the invitation link has expired or was entered incorrectly.
         </p>
@@ -38,20 +40,23 @@
         <p>
           You can use the "Forgot Your Password" link below if you cannot remember your password.
         </p>
-        <p>
-          Contact the Volunteer Coordinators at {{vc-email}} if you continue to have problems.
-        </p>
-      {{else}}
+        Contact the Volunteer Coordinators at {{vc-email}} if you continue to have problems.
+      </UiNotice>
+    {{else}}
+      <UiNotice @title="Reset Password Issue" @icon="exclamation" @type="danger">
         Sorry, the reset password link has either expired or was entered incorrectly. You can try resetting
         your password again.
-      {{/if}}
-    </UiNotice>
+      </UiNotice>
+    {{/if}}
   {{/if}}
   {{#if this.loginError}}
     {{#if (eq this.loginError "invalid-credentials")}}
-      <UiNotice @title=" The email and/or password is incorrect." @type="danger" @icon="exclamation-triangle"/>
+      <UiNotice @title="Login Issue" @type="danger" @icon="exclamation-triangle">
+        The email was not found, or the password is incorrect.
+      </UiNotice>
     {{else}}
-      <UiNotice @type="danger" @icon="ban" @title="Login has been disabled for this account.">
+      <UiNotice @type="danger" @icon="ban" @title="Login disabled">
+        This account has been disabled and cannot be logged into.
         Contact the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more
         information.
       </UiNotice>

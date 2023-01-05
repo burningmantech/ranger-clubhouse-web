@@ -56,16 +56,6 @@
   font-size: 0.9rem;
 }
 
-@media print {
-  .schedule-table {
-    font-size: 1rem;
-  }
-
-  .schedule-sub-header, .schedule-actions {
-    display: none;
-  }
- }
-
 @media print, (min-width: map-get($grid-breakpoints, "lg")) {
   .schedule-row > div {
     padding-right: 5px;
@@ -109,6 +99,16 @@
   .schedule-actions {
     margin-left: 10px;
     //align-self: center;
+  }
+}
+
+@media print {
+  .schedule-table {
+    font-size: 1rem !important;
+  }
+
+  .schedule-sub-header, .schedule-actions {
+    display: none !important;
   }
 }
 

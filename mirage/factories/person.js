@@ -8,8 +8,9 @@ export default Factory.extend({
   callsign_approved: true,
   country: 'US',
   password: 'ineedashower!',
-  teeshirt_size_style: 'Mens Crew S',
-  longsleeveshirt_size_style: 'Mens Regular S',
+  tshirt_swag_id: null,
+  tshirt_secondary_swag_id: null,
+  long_sleeve_swag_ig: null,
   gender: '',
   has_reviewed_pi: false,
 

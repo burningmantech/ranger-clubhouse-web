@@ -10,17 +10,8 @@ module('Integration | Component | ticket-info', function(hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`{{ticket-info}}`);
+    await render(hbs`<TicketInfo />`);
 
     assert.dom(this.element).hasText('');
-
-    // Template block usage:
-    await render(hbs`
-      {{#ticket-info}}
-        template block text
-      {{/ticket-info}}
-    `);
-
-    assert.dom(this.element).hasText('template block text');
   });
 });

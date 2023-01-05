@@ -1,3 +1,7 @@
+/*
+ * Superseded by the Swag APIs.
+ */
+
 export const ShortSleeve = [
   'Unknown',
   'Womens V-Neck XS',

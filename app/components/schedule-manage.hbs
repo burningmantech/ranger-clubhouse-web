@@ -4,8 +4,8 @@
 
 <div class="max-width-1000">
   {{#unless this.isCurrentYear}}
-    <UiNotice @type="warning">
-      Warning: You are viewing a past year ({{@year}}).
+    <UiNotice @icon="hand-point-right" @title="Viewing Prior Year">
+      Warning: You are viewing the {{@year}} schedule.
     </UiNotice>
   {{/unless}}
 
@@ -21,8 +21,9 @@
   {{else}}
     {{#if (and this.isAdmin this.requirementsOverride)}}
       <UiNotice @type="danger" @icon="exclamation"
-                @title="All forced scheduling actions are logged and is subject to review."
-      />
+                @title="All forced scheduling actions are logged and subject to review.">
+        As a Clubhouse Admin, you are allowed to override any scheduling blockers. Note: such actions are monitored.
+      </UiNotice>
     {{/if}}
     <UiTab as |tab|>
       <tab.pane @title="Schedule">

@@ -23,7 +23,6 @@
 @import "training";
 @import "vehicle-registry";
 
-
 main {
   flex: 1 1 0;
   min-width: 0;
@@ -40,7 +39,7 @@ main {
 
 .ui-section-title {
   font-size: 1.05rem;
-  font-weight: 500;
+  font-weight: 400;
   margin: -10px -10px 10px -10px;
   padding: 10px;
   background-color: #f0f0f0;
@@ -126,6 +125,10 @@ h3 select, h3 option, .h3 select, .h3 option {
   font-size: $h3-font-size;
 }
 
+b {
+  font-weight: 600;
+}
+
 .text-black {
   color: #000 !important;
 }
@@ -182,31 +185,62 @@ dl {
 }
 
 ul.nav-tabs {
-  margin-bottom: 15px;
+  display: flex;
+  margin-bottom: 1.5vh;
 
-
-  .nav-link:not(.active) {
-    background-color: #e9ecef;
-    border-bottom: #666;
-  }
 
   li {
-    margin-right: 1vw;
+    text-align: center;
+    overflow-wrap: break-word;
+    a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+  }
+
+  li:not(:first-child) {
     margin-left: 1vw;
   }
-}
 
-@include media-breakpoint-down(lg) {
-  ul.nav-tabs {
-    flex-direction: column !important;
+  .nav-link {
+    font-weight: 650;
+    font-size: 0.80rem;
+  }
 
-    .nav-link {
-      border-radius: 0;
-      border: 1px solid #adb5bd !important;
+  .nav-link:not(.active):hover {
+    border-top: #0d6efd 3px solid;
+  }
+
+  .nav-link:not(.active) {
+    border-top: #e9ecef 3px solid;
+    background-color: #e9ecef;
+    border-bottom: #666;
+    color: #3e4348;
+
+    &:hover {
+      color: #0d6efd;
+    }
+  }
+
+  .nav-link.active {
+    border-top: #ff8c00 3px solid;
+    background-color: #f9f9f9;
+  }
+
+  .nav-item.active {
+    a {
+      height: calc(100% + 1px);
     }
   }
 }
 
+@include media-breakpoint-down(xl) {
+  ul.nav-tabs li {
+    flex: 1;
+  }
+}
 
 footer {
   width: 100%;
@@ -265,7 +299,8 @@ ul.nav-pills li {
 legend {
   border-bottom: 1px solid #dcdcdc;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 500;
+  padding-left: 0;
 }
 
 .form-check-label:hover {
@@ -562,4 +597,10 @@ ul.no-indent, ol.no-indent {
 
 .columns-5 {
   column-count: 5;
+}
+
+.award-card {
+  width: 175px;
+  padding: 10px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
 }

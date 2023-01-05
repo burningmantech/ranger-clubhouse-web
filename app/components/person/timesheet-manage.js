@@ -3,8 +3,11 @@ import {action} from '@ember/object';
 import {Role} from 'clubhouse/constants/roles';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
+import {isEmpty} from '@ember/utils';
+import dayjs from 'dayjs';
+
 
 export default class PersonTimesheetManageComponent extends Component {
   @service ajax;
@@ -43,6 +46,12 @@ export default class PersonTimesheetManageComponent extends Component {
 
     this._markOverlapping();
   }
+
+  /**
+   * Run through all the entries and mark those which overlap in time.
+   *
+   * @private
+   */
 
   _markOverlapping() {
     const {timesheets} = this.args;
@@ -90,17 +99,54 @@ export default class PersonTimesheetManageComponent extends Component {
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
-  get minDate() {
-    return `${this.args.year}-08-01`;
+  /**
+   * Check if the entry has abnormal on duty or off duty times.
+   * Allow an unrestricted date range if the years don't match, or the months
+   * are not August or September.
+   *
+   * @param {string} restrictTime
+   * @returns {undefined|string}
+   * @private
+   */
+
+  _restrictCheck(restrictTime) {
+    if (!isEmpty(this.editEntry.on_duty) && !isEmpty(this.editEntry.off_duty)) {
+      const onDuty = dayjs(this.editEntry.on_duty), offDuty = dayjs(this.editEntry.off_duty);
+      if (onDuty.year() !== offDuty.year()
+        || onDuty.month() < 7 || onDuty.month() > 9
+        || offDuty.month() < 7 || offDuty.month() > 9) {
+        return undefined;
+      }
+    }
+    return restrictTime;
   }
 
+  /**
+   * Return the earliest on duty date allowed
+   *
+   * @returns {string|undefined}
+   */
+
+  @cached
+  get minDate() {
+    return this._restrictCheck(`${this.args.year}-08-01`);
+  }
+
+  /**
+   * Return the latest off duty date allowed
+   *
+   * @returns {string|undefined}
+   */
+
+  @cached
   get maxDate() {
-    return `${this.args.year}-09-15`;
+    return this._restrictCheck(`${this.args.year}-09-30`);
   }
 
   /**
    * Cancel an entry edit - i.e. hide the form dialog
    */
+
   @action
   cancelEntryAction() {
     this.editEntry = null;
@@ -112,6 +158,7 @@ export default class PersonTimesheetManageComponent extends Component {
    * @param model
    * @param {boolean} isValid
    */
+
   @action
   saveEntryAction(model, isValid) {
     if (!isValid) {
@@ -134,6 +181,7 @@ export default class PersonTimesheetManageComponent extends Component {
    *
    * @param timesheet
    */
+
   @action
   signoffAction(timesheet) {
     this.ajax.request(`timesheet/${timesheet.id}/signoff`, {method: 'POST'})
@@ -166,6 +214,8 @@ export default class PersonTimesheetManageComponent extends Component {
 
   /**
    * Delete the entry
+   *
+   * @param {boolean} saveFirst - save the model first before deleted (allows comments to be recorded in the audit log)
    */
 
   @action
@@ -196,7 +246,43 @@ export default class PersonTimesheetManageComponent extends Component {
     this.deleteEntry = false;
   }
 
+  /**
+   * Do any of the entries overlap?
+   *
+   * @returns {boolean}
+   */
+
   get hasOverlapping() {
     return this.args.timesheets.find((ts) => ts.isOverlapping) !== undefined;
+  }
+
+  /**
+   * Return the duration in hours & minutes. Takes into account invalid or blank dates.
+   *
+   * @param model
+   * @returns {string}
+   */
+
+  entryDuration(model) {
+    if (isEmpty(model.on_duty) || isEmpty(model.off_duty)) {
+      return '-';
+    }
+
+    const start = dayjs(model.on_duty), end = dayjs(model.off_duty);
+    if (!start.isValid() || !end.isValid()) {
+      return '-';
+    }
+
+    const duration = end.diff(start, 's');
+    const minutes = Math.floor((duration / 60) % 60);
+    const hours = Math.floor(duration / 3600);
+
+    let time = `${minutes} min${minutes === 1 ? '' : 's'}`;
+
+    if (hours) {
+      time = `${hours} hour${hours === 1 ? '' : 's'} ${time}`;
+    }
+
+    return time;
   }
 }

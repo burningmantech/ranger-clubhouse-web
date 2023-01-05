@@ -1,11 +1,35 @@
-<p>
-  Period: {{this.ticketingInfo.period}}
-  {{#if (eq this.ticketingInfo.period "open")}}
-    Tickets: {{this.ticketingInfo.ticket_status}} TAS_VP: {{this.ticketingInfo.vp_status}}
-    WAP: {{this.ticketingInfo.wap_status}}, TAS_WAPSO: {{this.ticketingInfo.wap_so_status}}
-    Delivery: {{this.ticketingInfo.delivery_status}}
-  {{/if}}
-</p>
+<LinkTo @route="person.tickets-provisions">Back To Tickets &amp; Provisions</LinkTo>
+<div class="row mt-2">
+  <div class="col-auto">
+    <b>Ticketing Period</b><br>
+    {{this.ticketingInfo.period}}
+  </div>
+  <div class="col-auto">
+    <b>Last Visited Tickets &amp; Stuff</b><br>
+    {{#if this.ticketingPackage.visited_at}}
+      {{this.ticketingPackage.visited_at}} (Pacific)
+    {{else}}
+      <i>Not visited yet</i>
+    {{/if}}
+  </div>
+
+  <div class="col-auto">
+    <b>Started Ticketing</b><br>
+    {{#if this.ticketingPackage.started_at}}
+      {{this.ticketingPackage.started_at}} (Pacific)
+    {{else}}
+      <i>Not started yet</i>
+    {{/if}}
+  </div>
+  <div class="col-auto">
+    <b>Finished Ticketing</b><br>
+    {{#if this.ticketingPackage.finished_at}}
+      {{this.ticketingPackage.finished_at}} (Pacific)
+    {{else}}
+      <i>Not finished yet</i>
+    {{/if}}
+  </div>
+</div>
 <hr>
 <TicketingLanding @person={{this.person}}
                   @ticketingInfo={{this.ticketingInfo}}

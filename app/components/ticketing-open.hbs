@@ -2,114 +2,126 @@
   <UiNotice @title="Missing Burner Profile ID" @type="warning">
     <PersonMissingBpguid/>
   </UiNotice>
-{{else if (or this.isPNV)}}
-  <p>
-    A Work Access Pass (WAP) is good <b class="text-danger">for YOU (the Alpha/Prospective) ONLY and IS *NOT* AN EVENT
-    TICKET</b>.
-  </p>
-  <p>
-    The WAP does not extend to significant others or traveling companions.
-  </p>
-  <p>
-    <b class="text-danger">All Alphas &amp; Prospectives must provide their own event ticket.</b>
-  </p>
-  <p>
-    Alphas and Prospective Rangers who have signed up for or completed training and intend to walk an Alpha shift
-    on playa are eligible for a WAP that allows them to enter the event on or after
-    {{mdy-format @ticketingInfo.wap_alpha_default_date full=true}} at 00:01 (one minute after midnight).
-  </p>
-  <p>
-    You will be turned away from the gate if you attempt to enter earlier than
-    {{mdy-format @ticketingInfo.wap_alpha_default_date full=true}}.
-  </p>
-  <p>
-    <b>Look for an email with your WAP from Burning Man Ticketing between late July and mid-August.</b>
-  </p>
+{{else if this.isPNV}}
+  <TicketOpenApplicant @ticketingInfo={{@ticketingInfo}} />
 {{else}}
-  <UiSection>
-    <:title>Ticketing Is Open!</:title>
-    <:body>
-      <p>
-        You may request, claim, or bank any items you've qualified for, such as a Staff Credential, Reduced-Price
-        Ticket, Vehicle Pass, Work Access Pass, or Work Access Passes for your significant others/critical camp mates.
-      </p>
-      <p>
-        <b>The ticketing deadline is {{full-datetime-format @ticketingInfo.submit_date}} Pacific Time.</b>
-        Once the deadline has passed, it may not be possible to make changes.
-      </p>
-      <div class="max-width-900">
-        <p class="d-grid">
-          <UiButton @type="success" @onClick={{fn this.nextSection "ticket"}}>
-            Begin Ticketing {{fa-icon "arrow-right"}}
-          </UiButton>
-        </p>
+  {{#if this.showTicketing}}
+    <UiWizard @onCancel={{this.cancelTicketing}}
+              @onFinish={{this.finishTicketing}}
+              @finishLabel="Finish Ticketing" as |w|>
+      <w.step @title="Ticket Selection">
         <TicketInfo @person={{@person}}
                     @ticketPackage={{@ticketPackage}}
                     @ticketingInfo={{@ticketingInfo}}
                     @ticket={{this.ticket}}
                     @setDocumentStatus={{this.setDocumentStatus}}
                     @isSavingDocumentStatus={{this.isSavingDocumentStatus}}
-                    @showing={{this.showing}}
-                    @toggleCard={{this.toggleCard}}
-                    @nextSection={{action this.nextSection "vp"}}
         />
-
+      </w.step>
+      <w.step @title="Vehicle Pass">
         <TicketVpInfo @person={{@person}}
                       @ticketPackage={{@ticketPackage}}
                       @ticketingInfo={{@ticketingInfo}}
                       @ticket={{this.ticket}}
                       @setDocumentStatus={{this.setDocumentStatus}}
                       @isSavingDocumentStatus={{this.isSavingDocumentStatus}}
-                      @showing={{this.showing}}
-                      @toggleCard={{this.toggleCard}}
-                      @nextSection={{action this.nextSection (if  @ticketPackage.provisions "provisions" "wap")}}
-
         />
-        {{#if @ticketPackage.provisions}}
+      </w.step>
+      {{#if @ticketPackage.provisions}}
+        <w.step @title="Provisions">
           <TicketProvisions @person={{@person}}
                             @ticketPackage={{@ticketPackage}}
                             @ticketingInfo={{@ticketingInfo}}
-                            @setDocumentStatus={{this.setDocumentStatus}}
-                            @isSavingDocumentStatus={{this.isSavingDocumentStatus}}
-                            @showing={{this.showing}}
-                            @toggleCard={{this.toggleCard}}
-                            @nextSection={{action this.nextSection "wap"}}
           />
-        {{/if}}
+        </w.step>
+      {{/if}}
 
+      <w.step @title="Work Access Pass For You">
         <TicketWapInfo @person={{@person}}
                        @ticketPackage={{@ticketPackage}}
                        @ticketingInfo={{@ticketingInfo}}
                        @ticket={{this.ticket}}
                        @setDocumentStatus={{this.setDocumentStatus}}
                        @isSavingDocumentStatus={{this.isSavingDocumentStatus}}
-                       @showing={{this.showing}}
-                       @toggleCard={{this.toggleCard}}
-                       @nextSection={{action this.nextSection "wapso"}} />
+        />
+      </w.step>
 
+      <w.step @title="Work Access Pass For Significant Others">
         <TicketWapSoInfo @person={{@person}}
                          @ticketPackage={{@ticketPackage}}
                          @ticketingInfo={{@ticketingInfo}}
-                         @ticket={{this.ticket}}
-                         @showing={{this.showing}}
-                         @toggleCard={{this.toggleCard}}
-                         @nextSection={{action this.nextSection "delivery"}} />
+        />
+      </w.step>
 
+
+      <w.step @title="Delivery Information">
         <TicketDeliveryInfo @person={{@person}}
                             @ticketPackage={{@ticketPackage}}
                             @ticketingInfo={{@ticketingInfo}}
                             @ticket={{this.ticket}}
-                            @showing={{this.showing}}
-                            @toggleCard={{this.toggleCard}}
-                            @nextSection={{action this.nextSection "summary"}} />
+        />
+      </w.step>
 
+      <w.step @title="Summary & Confirmation" @isLast={{true}}>
         <TicketSummary @person={{@person}}
                        @ticketPackage={{@ticketPackage}}
                        @ticketingInfo={{@ticketingInfo}}
                        @ticket={{this.ticket}}
-                       @showing={{this.showing}}
-                       @toggleCard={{this.toggleCard}} />
-      </div>
-    </:body>
-  </UiSection>
+        />
+      </w.step>
+    </UiWizard>
+  {{else}}
+    <div class="text-danger">
+      The ticketing deadline is {{full-datetime-format @ticketingInfo.submit_date}}
+      Pacific Time.
+    </div>
+    Once the deadline has passed, it may not be possible to make changes.
+    {{#if this.hasStarted}}
+      {{#if this.hasFinished}}
+        {{#if this.ticket.isQualified}}
+          <UiNotice @type="danger" @icon="hand" @title="Ticketing not completed!">
+            You did not indicate if you wanted to use or bank your {{this.ticket.typeLabel}}.
+          </UiNotice>
+        {{else if (this.ticket.isClaimed (not this.ticket.haveAddress))}}
+          <UiNotice @type="danger" @icon="hand" @title="Ticketing not completed!">
+            You did not indicate if you wanted to have your ticket mailed or if you are going to picked it up at will-call.
+          </UiNotice>
+        {{else}}
+          <UiNotice @type="success" @icon="check" @title="Ticketing choices have been confirmed.">
+            <p>
+              Congratulations, you completed all the ticketing steps. Ticket selection, pick up locations, access dates,
+              banked items, and other ticketing details are provided below.
+            </p>
+            Adjustments may be made up until {{full-datetime-format @ticketingInfo.submit_date}}
+            Pacific Time.
+          </UiNotice>
+        {{/if}}
+      {{else}}
+        <UiNotice @type="danger" @icon="hand" @title="Ticketing not completed!">
+          You started the ticketing process but did not complete all the steps. Click the 'Start Ticketing' button
+          below, make sure you go through all the steps, and be sure to click the 'Finish Ticketing' button on the
+          last step.
+        </UiNotice>
+      {{/if}}
+    {{else}}
+      <p>
+        You may request, claim, or bank any items you've qualified for, such as a Staff Credential, Reduced-Price
+        Ticket, Vehicle Pass, Work Access Pass, or Work Access Passes for your significant others/critical camp mates.
+      </p>
+    {{/if}}
+    <UiButton @onClick={{this.startTicketing}} @type="success">
+      {{#if this.hasFinished}}
+        Adjust Ticketing Choices
+      {{else}}
+        Start Ticketing
+      {{/if}}
+    </UiButton>
+    {{#if this.hasFinished}}
+      <h3 class="mt-4">Ticketing Details</h3>
+      <TicketOverview @ticketingInfo={{@ticketingInfo}}
+                      @ticketPackage={{@ticketPackage}}
+                      @person={{@person}}
+      />
+    {{/if}}
+  {{/if}}
 {{/if}}
