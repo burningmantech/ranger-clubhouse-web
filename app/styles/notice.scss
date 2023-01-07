@@ -20,6 +20,7 @@
   text-align: center;
   background-color: #ffffff;
   border-radius: 6px;
+  align-self: center;
 }
 
 .notice-title {
@@ -43,9 +44,8 @@
   }
 
   .notice-icon {
-    align-self: center;
-    font-size: 1.5rem;
     padding: 0.5rem 0.75rem;
+    font-size: 1.5rem;
   }
 
   .notice-title {
@@ -72,12 +72,13 @@
   }
 
   .notice-icon {
-    padding: 0.25rem 0.125rem;
+    padding: 0.125rem 0.25rem;
     font-size: 1.1rem;
+
   }
 
   .notice-body {
     margin-top: 1vw;
     margin-left: 1vw;
   }
- }
+}

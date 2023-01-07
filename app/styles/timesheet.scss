@@ -6,9 +6,7 @@
 
 .timesheet-table {
   margin-bottom: 10px;
-  max-width: 850px;
-  // font-family: $font-family-monospace;
-  //font-size: 0.9em;
+  max-width: 950px;
 }
 
 .timesheet-header {
@@ -16,6 +14,7 @@
   background-color: $table-head-bg;
   border-color: $table-border-color;
   font-weight: bold;
+  padding: 0.125rem 0.25rem;
 }
 
 .timesheet-overlapping {
@@ -24,7 +23,8 @@
 
 .timesheet-entry {
   border-top: 1px solid #ddd;
-  width: 100%;
+  padding: 0.125rem 0.25rem;
+  margin-bottom: 1vh;
 }
 
 .timesheet-entry:nth-child(odd) {
@@ -35,14 +35,35 @@
   background-color: $table-hover-bg;
 }
 
+.timesheet-row {
+  display: flex;
+  flex-direction: row;
+}
+
 .timesheet-row > div {
-  display: inline-block;
-  padding: 5px 7px;
+  padding: 0.125rem 0.25rem;
+}
+
+.timesheet-row-header, .timesheet-actions {
+  width: 100%;
+  margin: -0.125rem -0.25rem;
+  padding: 0.125rem 0.25rem;
+
+}
+
+.timesheet-row-header {
+  margin-bottom: 0.5rem;
 }
 
 .timesheet-actions {
-  width: 100%;
-  padding: 5px 7px;
+  margin-top: 1vh;
+  button {
+    display: inline-block;
+  }
+
+  button:not(:last-child) {
+    margin-right: 0.5vw;
+  }
 }
 
 @media print {
@@ -52,36 +73,46 @@
 }
 
 
-@media print, (min-width: map-get($grid-breakpoints, "lg")) {
+@media print, (min-width: map-get($grid-breakpoints, "xl")) {
+  .timesheet-row {
+    flex-wrap: nowrap;
+  }
+
+  .timesheet-row-header {
+    font-size: 1.1em;
+  }
+
+  .timesheet-row > div {
+    padding: 0.125rem 0.5rem;
+  }
+
   .timesheet-time {
     width: 30%;
   }
 
   .timesheet-duration {
-    width: 10%;
+    width: 15%;
     text-align: right;
   }
 
   .timesheet-credits {
-    width: 10%;
+    width: 15%;
     text-align: right;
   }
 
   .timesheet-position {
-    width: 30%;
-  }
-
-  .timesheet-sm-label {
-    display: none;
+    width: 25%;
   }
 }
 
-@media only screen and (max-width: map-get($grid-breakpoints, "lg")) {
+@media only screen and (max-width: map-get($grid-breakpoints, "xl")) {
   .timesheet-row {
-    display: flex;
     flex-wrap: wrap;
-    flex-direction: row;
     flex-shrink: 1;
+  }
+
+  .timesheet-row > div {
+    padding: 0.2rem 0;
   }
 
   .timesheet-row button {
@@ -99,19 +130,19 @@
     width: 100%;
   }
 
-  .timesheet-position {
+  .timesheet-duration {
     order: 2;
     width: 100%;
   }
 
-  .timesheet-duration {
+  .timesheet-position {
     order: 3;
-    width: 49%;
+    width: 100%;
   }
 
   .timesheet-credits {
     order: 4;
-    width: 49%;
+    width: 100%;
   }
 
   .timesheet-description {
@@ -120,13 +151,7 @@
   }
 
   .timesheet-actions {
+    order: 6;
     width: 100%;
-    padding: 5px;
-  }
-
-
-  .timesheet-sm-label {
-    display: inline-block;
-    margin-right: 5px;
   }
 }

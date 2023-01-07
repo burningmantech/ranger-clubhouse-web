@@ -178,18 +178,18 @@ export const VERIFY_TIMESHEETS = {
     }
 
     if (milestones.period === 'after-event') {
-      message += '<p class="text-danger">You will not be recorded as having worked in 2022 until you review your timesheet entries, ' +
+      message += '<p class="text-danger">You will not be recorded as having worked this event until you review your timesheet entries, ' +
         ' submit any corrections, and confirm your entire timesheet is correct on the Me &gt; Timesheet Corrections page.</p> ' +
-        '<p><b class="text-danger">Deadline to do so is 23:59 Pacific on Saturday, October 1st.</b></p>';
+        '<p><b class="text-danger">Deadline to do so is 23:59 Pacific on October 1st.</b></p>';
     }
 
     return {
       result: ACTION_NEEDED,
-      route: 'me.timesheet-corrections',
+      route: 'me.timesheet',
       linkedMessage: {
-        route: 'me.timesheet-corrections',
+        route: 'me.timesheet',
         prefix: htmlSafe(message + ' Visit'),
-        text: 'Me > Timesheet Corrections',
+        text: 'Me > Timesheets',
         suffix: 'to verify your timesheet entries, submit corrections, and confirm the entire timesheet is correct.'
 
       }

@@ -41,11 +41,6 @@ Router.map(function () {
     this.route('survey');
     this.route('tickets');
     this.route('timesheet');
-    this.route('timesheet-corrections', function () {
-      this.route('review');
-      this.route('missing');
-      this.route('confirm');
-    });
     this.route('trainer-feedback', function () {
       this.route('index', {path: '/'});
       this.route('view', {path: '/:year'});

@@ -1,23 +1,21 @@
 <h1 class="d-none d-print-block">{{this.year}} Timesheet Entries For {{this.person.callsign}}</h1>
 
-<Me::TimesheetReviewCommon @timesheets={{this.timesheets}}
-                           @timesheetSummary={{this.timesheetSummary}}
-                           @timesheetInfo={{this.timesheetInfo}}
-                           @person={{this.person}}
-                           @isHQView={{true}}
-  @year={{this.year}}
-/>
+<UiTab as |tab|>
+  <tab.pane @title="Timesheet Entries">
+    <Me::TimesheetReviewCommon @timesheets={{this.timesheets}}
+                               @timesheetSummary={{this.timesheetSummary}}
+                               @timesheetInfo={{this.timesheetInfo}}
+                               @person={{this.person}}
+                               @isHQView={{true}}
+                               @year={{this.year}}
+    />
 
+  </tab.pane>
 
-<UiSection>
-  <:title>
-    Missing Timesheet Entry Requests
-    <HelpPopover @slug="hq-missing-timesheets"/>
-  </:title>
-  <:body>
+  <tab.pane @title="Missing Timesheet Entry Requests">
     <Me::TimesheetMissingCommon @person={{this.person}}
                                 @timesheetsMissing={{this.timesheetsMissing}}
                                 @timesheetInfo={{this.timesheetInfo}}
                                 @positions={{this.correctionPositions}} />
-  </:body>
-</UiSection>
+  </tab.pane>
+</UiTab>

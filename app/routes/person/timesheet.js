@@ -36,8 +36,7 @@ export default class PersonTimesheetRoute extends ClubhouseRoute {
   setupController(controller, model) {
     super.setupController(...arguments);
     controller.setProperties(model);
-    controller.set('person', this.modelFor('person'));
-    controller.set('canCorrectThisYear', (+model.timesheetInfo.correction_year === +model.year));
+    controller.person = this.modelFor('person');
     controller._findOnDuty();
   }
 
