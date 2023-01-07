@@ -1,6 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
 import requestYear from 'clubhouse/utils/request-year';
+import currentYear from 'clubhouse/utils/current-year';
 
 export default class MeTimesheetRoute extends ClubhouseRoute {
   queryParams = {
@@ -50,6 +51,7 @@ export default class MeTimesheetRoute extends ClubhouseRoute {
     controller.setProperties(model);
     controller.finalConfirmation = model.timesheetInfo.timesheet_confirmed;
     controller.confirmedAt = model.timesheetInfo.timesheet_confirmed_at;
+    controller.isCurrentYear = currentYear() === +model.year;
   }
 
   resetController(controller, isExiting) {

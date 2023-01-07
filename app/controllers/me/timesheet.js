@@ -23,10 +23,8 @@ export default class MeTimesheetController extends ClubhouseController {
 
   @tracked askIfDone = false;
 
-  @cached
-  get isCurrentYear() {
-    return this.house.currentYear() === +this.year;
-  }
+  @tracked isCurrentYear;
+
 
   @cached
   get unverifiedCount() {
