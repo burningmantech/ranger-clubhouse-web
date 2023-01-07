@@ -143,7 +143,7 @@
             Entry verified on {{shift-format this.editEntry.verified_at}}
             by {{this.editEntry.verified_person.callsign}}.
           </UiNotice>
-        {{else if this.editEntry.isCorrectionApproved}}
+        {{else if this.editEntry.isApproved}}
           <UiNotice @type="danger" @title="Verification Needed - No Review Required" @icon="hourglass">
             Review is not needed at this time.<br>
             The correction request was approved.

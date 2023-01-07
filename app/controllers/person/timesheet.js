@@ -10,7 +10,6 @@ export default class PersonTimesheetController extends ClubhouseController {
   @tracked onDutyEntry;
   @tracked timesheetInfo;
   @tracked positions;
-  @tracked canCorrectThisYear;
   @tracked eventInfo;
   @tracked timesheetMissing;
   @tracked isSubmitting = false;

@@ -1,8 +1,10 @@
 import Component from '@glimmer/component';
-import { action } from '@ember/object';
-import { validatePresence } from 'ember-changeset-validations/validators';
-import { tracked } from '@glimmer/tracking';
-import { service } from '@ember/service';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
+import {service} from '@ember/service';
+import {validatePresence} from 'ember-changeset-validations/validators';
+import {STATUS_PENDING, STATUS_VERIFIED} from "clubhouse/models/timesheet";
+import currentYear from 'clubhouse/utils/current-year';
 
 export default class MeTimesheetReviewCommonComponent extends Component {
   @service toast;
@@ -11,72 +13,75 @@ export default class MeTimesheetReviewCommonComponent extends Component {
   @tracked entry = null; // Incorrect entry
 
   correctionValidations = {
-    additional_notes: [validatePresence({ presence: true })]
+    additional_notes: [validatePresence({presence: true})]
   };
 
-  get isMe() {
-    return this.session.userId == this.args.person.id;
+  get correctionsEnabled() {
+    return this.args.year === currentYear() && this.args.timesheetInfo.correction_enabled;
   }
 
-  /**
-   * Mark a timesheet as correct.
-   *
-   * @param timesheet
-   */
+  // Mark an entry as correct
   @action
   markCorrectAction(timesheet) {
-    timesheet.review_status = 'verified';
+    timesheet.review_status = STATUS_VERIFIED;
     timesheet.save().then(() => {
+      this.args.onVerified?.();
       this.toast.success('The entry has been marked as correct.');
-    }).catch((response) => {
-      timesheet.rollbackAttributes();
-      this.house.handleErrorResponse(response, timesheet);
-    });
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
-  /**
-   * Setup to mark an entry as incorrect. Reload the entry to get the most recent version
-   * and then show the incorrect form dialog.
-   *
-   * @param timesheet
-   */
+  // Setup to mark an entry as incorrect - i.e. display the form
   @action
   markIncorrectAction(timesheet) {
-    timesheet.reload().then(() => {
-      this.entry = timesheet;
-    }).catch((response) => this.house.handleErrorResponse(response, timesheet))
+    this.entry = timesheet;
   }
 
-  /**
-   * Mark an entry as incorrect, record the note, and dismiss the dialog.
-   * @param model
-   * @param {boolean} isValid
-   */
-
+  // Save correction notes
   @action
   saveCorrectionAction(model, isValid) {
     if (!isValid) {
       return;
     }
 
-    model.review_status = 'pending';
-
+    model.review_status = STATUS_PENDING;
     model.save().then(() => {
-      this.entry.additional_notes = ''; // pseudo-field, clear out by hand.
       this.entry = null;
-      if (this.timesheetInfo) {
-        this.timesheetInfo.timesheet_confirmed =  0;
-      }
+      this.args.onUpdate?.();
       this.toast.success('Your correction note has been submitted.');
-    }).catch((response) => this.house.handleErrorResponse(response, model));
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
-  /**
-   * Dismiss the incorrect dialog.
-   */
-
+  // Cancel out the correction request - i.e. hide the form
   @action
   cancelCorrectionAction() {
     this.entry = null;
+  }
+
+  timesheetRowClass(ts) {
+    if (ts.stillOnDuty) {
+      return 'text-danger';
+    }
+
+    if (ts.isVerified) {
+      return 'text-success'
+    }
+
+    if (ts.isUnverified) {
+      return 'text-bg-warning';
+    }
+
+    if (ts.isApproved) {
+      return 'text-bg-danger';
+    }
+
+    if (ts.isRejected) {
+      return 'text-bg-secondary';
+    }
+
+    if (ts.isPending) {
+      return 'text-bg-secondary';
+    }
+
+    return ''
   }
 }

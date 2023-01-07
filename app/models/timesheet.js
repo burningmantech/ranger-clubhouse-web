@@ -3,6 +3,12 @@ import {isEmpty} from '@ember/utils';
 import {tracked} from '@glimmer/tracking';
 import dayjs from 'dayjs';
 
+export const STATUS_PENDING = 'pending';
+export const STATUS_APPROVED = 'approved';
+export const STATUS_REJECTED = 'rejected';
+export const STATUS_VERIFIED = 'verified';
+export const STATUS_UNVERIFIED = 'unverified';
+
 export const TOO_SHORT_DURATION = (15 * 60);
 
 export default class TimesheetModel extends Model {
@@ -39,36 +45,32 @@ export default class TimesheetModel extends Model {
 
   // All good
   get isVerified() {
-    return this.review_status === 'verified';
+    return this.review_status === STATUS_VERIFIED;
   }
 
   // Correction has been approved, still needs to be verified
   get isApproved() {
-    return this.review_status === 'approved';
+    return this.review_status === STATUS_APPROVED;
   }
 
   // Correction request has been rejected
   get isRejected() {
-    return this.review_status === 'rejected';
+    return this.review_status === STATUS_REJECTED;
   }
 
   // Pending review by the timesheet correction review team
   get isPending() {
-    return this.review_status === 'pending';
+    return this.review_status === STATUS_PENDING;
   }
 
   // Timesheet has not been reviewed yet
   get isUnverified() {
-    return (this.off_duty && this.review_status === 'unverified');
+    return (this.off_duty && this.review_status === STATUS_UNVERIFIED);
   }
 
-  // Timesheet has not been reviewed yet
-  get isCorrectionApproved() {
-    return this.review_status === 'approved';
-  }
 
   get haveReviewerResponse() {
-    return this.review_status !== 'unverified' && !isEmpty(this.reviewer_notes);
+    return this.review_status !== STATUS_UNVERIFIED && !isEmpty(this.reviewer_notes);
   }
 
   get stillOnDuty() {

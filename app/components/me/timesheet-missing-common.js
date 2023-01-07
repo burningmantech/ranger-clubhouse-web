@@ -1,7 +1,3 @@
-/*
- * Shared by me/timesheet and hq/timesheet
- */
-
 import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
 import {validatePresence} from 'ember-changeset-validations/validators';
@@ -25,7 +21,10 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     additional_notes: [validatePresence(true)]
   };
 
-  // Create a list of positions options to check
+  /**
+   * Create a list of positions options to check, ensure Dirt is the top most option.
+   */
+
   constructor() {
     super(...arguments);
 
@@ -39,8 +38,11 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     this.positionOptions = positions;
   }
 
-  // Suggest a starting date for the datetime picker when creating
-  // a new request.
+  /**
+   * Suggest a starting date for the datetime picker when creating a new request.
+   * @returns {null|string}
+   */
+
   get startDateForEntry() {
     const entry = this.entry;
 
@@ -51,7 +53,10 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     return null;
   }
 
-  // Start a new timesheet missing request
+  /**
+   * Start a new timesheet missing request
+   */
+
   @action
   newRequestAction() {
     this.entry = this.store.createRecord('timesheet-missing', {
@@ -60,7 +65,11 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     });
   }
 
-  // Edit an existing request
+  /**
+   * Edit an existing request
+   * @param {TimesheetMissingModel} timesheetMissing
+   */
+
   @action
   editAction(timesheetMissing) {
     timesheetMissing.reload().then(() => {
@@ -72,13 +81,21 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
-  // Cancel the form
+  /**
+   * Cancel the form
+   */
+
   @action
   cancelAction() {
     this.entry = null;
   }
 
-  // Save a timesheet missing request
+  /**
+   * Save a timesheet missing request
+   * @param {TimesheetMissingModel} model
+   * @param {boolean} isValid
+   */
+
   @action
   saveAction(model, isValid) {
     if (!isValid) {
@@ -106,7 +123,11 @@ export default class MeTimesheetMissingCommonComponent extends Component {
       .finally(() => this.isSubmitting = false);
   }
 
-  // Delete a request - confirm first before proceeding.
+  /**
+   * Delete a missing entry request, confirm before proceeding.
+   * @param {TimesheetMissingModel} timesheetMissing
+   */
+
   @action
   deleteAction(timesheetMissing) {
     this.modal.confirm(
@@ -116,11 +137,47 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     );
   }
 
+  /**
+   * Return the min date allowed
+   *
+   * @returns {string}
+   */
+
   get minDate() {
     return `${this.args.timesheetInfo.correction_year}-08-01`;
   }
 
+  /**
+   * Return the max date allowed
+   *
+   * @returns {string}
+   */
+
   get maxDate() {
     return `${this.args.timesheetInfo.correction_year}-09-15`;
   }
+
+  /**
+   * Helper to color the row header. (aka entry status header)
+   *
+   * @param {TimesheetMissingModel} ts
+   * @returns {string}
+   */
+
+  requestClass(ts) {
+    if (ts.isApproved) {
+      return 'text-success';
+    }
+
+    if (ts.isRejected) {
+      return 'text-bg-danger';
+    }
+
+    if (ts.isPending) {
+      return 'text-bg-secondary';
+    }
+
+    return ''
+  }
+
 }

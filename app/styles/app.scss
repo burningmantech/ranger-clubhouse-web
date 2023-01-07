@@ -188,10 +188,11 @@ ul.nav-tabs {
   display: flex;
   margin-bottom: 1.5vh;
 
-
   li {
+    margin-top: 1vh;
     text-align: center;
     overflow-wrap: break-word;
+
     a {
       display: flex;
       justify-content: center;
@@ -226,7 +227,7 @@ ul.nav-tabs {
 
   .nav-link.active {
     border-top: #ff8c00 3px solid;
-    background-color: #f9f9f9;
+    background-color: #fff;
   }
 
   .nav-item.active {
@@ -239,7 +240,13 @@ ul.nav-tabs {
 @include media-breakpoint-down(xl) {
   ul.nav-tabs li {
     flex: 1;
+
+    flex-wrap: nowrap !important;
+    .nav-link {
+      font-size: 0.70rem;
+    }
   }
+
 }
 
 footer {

@@ -5,7 +5,6 @@
     {{#if (not (or this.user.isPastProspective this.user.isProspectiveWaitlist))}}
       <s.link @route="me.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
       {{#if (or this.user.isNonRanger this.user.isRanger)}}
-        <s.link @route="me.timesheet-corrections.index" @title="Timesheet Corrections" @icon="list-ol" @iconType="s"/>
         <s.link @route="me.timesheet" @title="Timesheets" @icon="clock"/>
       {{/if}}
       {{#unless this.user.isAuditor}}
