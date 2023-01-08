@@ -1,7 +1,7 @@
 <div class="max-width-700">
   {{#if @ticketPackage.tickets}}
     {{#if this.allTicketsBanked}}
-      <TicketOverviewItem @icon="archive" @title="All Tickets Banked" @type="danger">
+      <TicketOverviewItem @icon="archive" @title="All Tickets Banked" @type="secondary">
         You banked all your available tickets.
       </TicketOverviewItem>
     {{else if this.ticketNotClaimed}}
@@ -65,7 +65,7 @@
         {{/if}}
       </TicketOverviewItem>
     {{else}}
-      <TicketOverviewItem @icon="ban" @title="No Vehicle Pass" @type="danger" }>
+      <TicketOverviewItem @icon="ban" @title="No Vehicle Pass" @type="secondary">
         No Vehicle Pass was claimed. A Vehicle Pass may only be claimed if a ticket is claimed as well.
       </TicketOverviewItem>
     {{/if}}
@@ -104,7 +104,7 @@
       {{/if}}
     </TicketOverviewItem>
   {{else}}
-    <TicketOverviewItem @icon="ban" @title="No Work Access Pass (WAP)" @type="danger">
+    <TicketOverviewItem @icon="ban" @title="No Work Access Pass (WAP)" @type="secondary">
       {{#if (and this.haveStaffCredential this.allTicketsBanked)}}
         You have a Staff Credential that has been banked. Staff Credentials also acts as a WAP. You will either need to
         claim the Staff Credential, or email the Ranger Ticketing Team to request a separate WAP document.
@@ -114,7 +114,7 @@
     </TicketOverviewItem>
   {{/if}}
   {{#if this.wapSOList}}
-    <TicketOverviewItem @icon="people-group" @title="WAPs For Significant Other Claimed" @type="success">
+    <TicketOverviewItem @icon="people-group" @title="WAPs For Significant Other Claimed" @type="secondary">
       {{pluralize this.wapSOList.length "Significant Other WAP"}} will be emailed to you at
       {{mail-to @person.email}}<br>
       <ul class="mt-2">
@@ -135,7 +135,7 @@
       event.
     </TicketOverviewItem>
   {{else}}
-    <TicketOverviewItem @icon="ban" @title="No WAPs For Significant Others" @type="danger">
+    <TicketOverviewItem @icon="ban" @title="No WAPs For Significant Others" @type="secondary">
       You did not claim any WAPs for Significant Others.
     </TicketOverviewItem>
   {{/if}}

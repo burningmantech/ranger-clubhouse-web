@@ -23,16 +23,15 @@
     </:body>
   </UiSection>
 {{else}}
-    <h2 class="text-danger">Ticketing is closed.</h2>
-    <p>
-      You may not request changes through the Clubhouse at this time.
-    </p>
-    <p>
-      Below is details on how your tickets (if earned), WAPs, and other items will be submitted to the Burning Man
-      Ticketing Website.
-    </p>
-    <TicketOverview @ticketingInfo={{@ticketingInfo}}
-                    @ticketPackage={{@ticketPackage}}
-                    @person={{@person}}
-    />
+  <UiNotice @title="Ticketing Is Closed" @icon="hand" @type="danger">
+    You may not request changes through the Clubhouse at this time.
+  </UiNotice>
+  <p>
+    Below is details on how your tickets (if earned), WAPs, and other items will be submitted to the Burning Man
+    Ticketing Website.
+  </p>
+  <TicketOverview @ticketingInfo={{@ticketingInfo}}
+                  @ticketPackage={{@ticketPackage}}
+                  @person={{@person}}
+  />
 {{/if}}
