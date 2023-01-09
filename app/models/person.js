@@ -50,9 +50,7 @@ export default class PersonModel extends PersonMixin(Model) {
 
   @attr('string') gender;
 
-  @attr('string') longsleeveshirt_size_style;
   @attr('number') long_sleeve_swag_ig;
-  @attr('string') teeshirt_size_style;
   @attr('number') tshirt_swag_id;
   @attr('number') tshirt_secondary_swag_id;
 
@@ -68,14 +66,9 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('string') bpguid;
 
   @attr('string') lms_id;
-  @attr('string') lms_course;
   @attr('string') lms_username;
 
-
   @attr('boolean') behavioral_agreement;
-
-  @attr('boolean') osha10;
-  @attr('boolean') osha30;
 
   @attr('boolean') has_note_on_file;
 
