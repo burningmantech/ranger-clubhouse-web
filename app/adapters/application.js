@@ -10,7 +10,7 @@ import ENV from 'clubhouse/config/environment';
 const PLURAL_MODELS = [
   'access-document-change',
   'action-log',
-  'event_date',
+  'event-date',
 ];
 
 export default class ApplicationAdapter extends RESTAdapter {
