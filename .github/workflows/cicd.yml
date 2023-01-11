@@ -11,6 +11,67 @@ on: [push]
 
 jobs:
 
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+
+      - name: Harden CI
+        uses: step-security/harden-runner@v2.0.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            github.com:443
+            registry.npmjs.org:443
+
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14.x
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Harden CI
+        uses: step-security/harden-runner@v2.0.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            github.com:443
+            registry.npmjs.org:443
+
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14.x
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Tests
+        run: npm test
+
   docker:
     name: Build Docker image
 
@@ -19,6 +80,18 @@ jobs:
 
     steps:
 
+      - name: Harden CI
+        uses: step-security/harden-runner@v2.0.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            auth.docker.io:443
+            github.com:443
+            production.cloudflare.docker.com:443
+            registry-1.docker.io:443
+            registry.npmjs.org:443
+
       - name: Checkout source code
         uses: actions/checkout@v3
 
@@ -26,7 +99,9 @@ jobs:
         id: npm-cache-dir
         run: |
          echo "::set-output name=dir::$(npm config get cache)"
-      - uses: actions/cache@v3
+
+      - name: Cache npm packages
+        uses: actions/cache@v3
         id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
         with:
          path: ${{ steps.npm-cache-dir.outputs.dir }}
@@ -46,9 +121,7 @@ jobs:
           name: docker
           path: docker_image.tgz
 
-
   test-docker:
-
     name: Test Docker image
 
     needs: [docker]
@@ -57,6 +130,14 @@ jobs:
     timeout-minutes: 10
 
     steps:
+
+      - name: Harden CI
+        uses: step-security/harden-runner@v2.0.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            github.com:443
 
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -72,7 +153,6 @@ jobs:
       - name: Test Docker image
         run: ./bin/test_docker
 
-
   deploy-staging:
     name: Deploy code from master branch to the staging environment
 
@@ -83,6 +163,11 @@ jobs:
     timeout-minutes: 5
 
     steps:
+
+      - name: Harden CI
+        uses: step-security/harden-runner@v2.0.0
+        with:
+          egress-policy: audit
 
       - name: Checkout source code
         uses: actions/checkout@v3
