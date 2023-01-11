@@ -12,7 +12,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+
   lint:
+
     name: "Lint"
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -22,7 +24,11 @@ jobs:
       - name: Harden CI
         uses: step-security/harden-runner@v2.0.0
         with:
-          egress-policy: audit
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            github.com:443
+            registry.npmjs.org:443
 
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -40,6 +46,7 @@ jobs:
         run: npm run lint
 
   test:
+
     name: "Test"
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -49,7 +56,11 @@ jobs:
       - name: Harden CI
         uses: step-security/harden-runner@v2.0.0
         with:
-          egress-policy: audit
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            github.com:443
+            registry.npmjs.org:443
 
       - name: Checkout source code
         uses: actions/checkout@v3
