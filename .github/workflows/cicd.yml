@@ -19,6 +19,11 @@ jobs:
 
     steps:
 
+      - name: Harden CI
+        uses: step-security/harden-runner@v2.0.0
+        with:
+          egress-policy: audit
+
       - name: Checkout source code
         uses: actions/checkout@v3
 
@@ -26,7 +31,9 @@ jobs:
         id: npm-cache-dir
         run: |
          echo "::set-output name=dir::$(npm config get cache)"
-      - uses: actions/cache@v3
+
+      - name: Cache npm packages
+        uses: actions/cache@v3
         id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
         with:
          path: ${{ steps.npm-cache-dir.outputs.dir }}
@@ -58,6 +65,11 @@ jobs:
 
     steps:
 
+      - name: Harden CI
+        uses: step-security/harden-runner@v2.0.0
+        with:
+          egress-policy: audit
+
       - name: Checkout source code
         uses: actions/checkout@v3
 
@@ -83,6 +95,11 @@ jobs:
     timeout-minutes: 5
 
     steps:
+
+      - name: Harden CI
+        uses: step-security/harden-runner@v2.0.0
+        with:
+          egress-policy: audit
 
       - name: Checkout source code
         uses: actions/checkout@v3
