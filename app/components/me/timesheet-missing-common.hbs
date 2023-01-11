@@ -4,41 +4,38 @@
   <div class="timesheet-table">
     <div class="timesheet-row timesheet-header">
       <div class="timesheet-time">From</div>
-      <div class="timesheet-time">To</div>
       <div class="timesheet-duration">Duration</div>
       <div class="timesheet-position">Position</div>
     </div>
     {{#each @timesheetsMissing as |tsm|}}
       <div class="timesheet-entry">
+        <div class="timesheet-row-header {{this.requestClass tsm}}">
+          {{#if tsm.isPending}}
+            {{fa-icon "hourglass"}}The request is pending review.
+          {{else}}
+            {{#if tsm.isApproved}}
+              {{fa-icon "check"}} The request has been APPROVED. The missing shift has been added to your timesheet.
+            {{else if tsm.isRejected}}
+              {{fa-icon "ban"}} The request has been rejected.
+            {{else}}
+              Unknown status [{{tsm.review_status}}].
+            {{/if}}
+          {{/if}}
+        </div>
+        {{#if (and tsm.reviewer_notes (or tsm.isApproved tsm.isRejected))}}
+          <div class="timesheet-row-header">
+            <b>Response from the reviewer:</b><br>
+            {{nl2br tsm.reviewer_notes}}
+          </div>
+        {{/if}}
         <div class="timesheet-row">
-          <div class="timesheet-time">{{shift-format tsm.on_duty}}</div>
-          <div class="timesheet-time">{{shift-format tsm.off_duty}}</div>
+          <div class="timesheet-time">{{shift-format tsm.on_duty tsm.off_duty}}</div>
           <div class="timesheet-duration">
-            <span class="timesheet-sm-label">Duration:</span>
-            {{hour-minute-format tsm.duration}}
+            {{hour-minute-words tsm.duration}}
           </div>
           <div class="timesheet-position">{{tsm.position.title}}</div>
         </div>
-        <div class="timesheet-row">
-          <div>
-            {{#if tsm.isPending}}
-              <b class="text-info">The request is pending review.</b>
-            {{else}}
-              {{#if tsm.isApproved}}
-                <span class="text-success">{{fa-icon "check"}} The request has been APPROVED. Your timesheet has been updated with the missing shift.</span>
-              {{else}}
-                The request has been rejected.
-              {{/if}}
-              {{#if tsm.reviewer_notes}}
-                <div class="mt-2">
-                  <strong>Response from the reviewer:</strong><br>
-                  {{nl2br tsm.reviewer_notes}}
-                </div>
-              {{/if}}
-            {{/if}}
-          </div>
-        </div>
-        <div class="timesheet-row timesheet-actions">
+        <div class="timesheet-actions">
           {{#if (or tsm.isPending tsm.isRejected)}}
             <UiButton @onClick={{fn this.editAction tsm}} @disabled={{or tsm.isReloading tsm.isSaving}}>
               {{#if tsm.isReloading}}
@@ -46,7 +43,7 @@
               {{else if tsm.isRejected}}
                 {{fa-icon "redo"}} Submit Appeal
               {{else}}
-                {{fa-icon "edit"}} Edit
+                {{fa-icon "edit"}} Edit Request
               {{/if}}
             </UiButton>
             {{#if tsm.isPending}}
@@ -57,7 +54,7 @@
                   Deleting
                   <SpinIcon/>
                 {{else}}
-                  {{fa-icon "trash"}} Delete
+                  {{fa-icon "trash"}} Delete Request
                 {{/if}}
               </UiButton>
             {{/if}}
@@ -85,9 +82,8 @@
             @onSubmit={{this.saveAction}} as |f|>
       <Modal.body>
         <p>
-          Use this form for <b>MISSING TIMESHEET ENTRIES ONLY</b>. If you have
-          an existing entry that needs correction, go back to the
-          Timesheet Review page and submit a correction by clicking on 'Mark Entry Incorrect'.
+          Use this form for <b>MISSING TIMESHEET ENTRIES ONLY</b>. If you have an existing entry that needs correction,
+          go back to the Timesheet tab and submit a correction by clicking on the "Request Correction" button.
         </p>
         <FormRow>
           <f.select @name="position_id"
@@ -112,20 +108,9 @@
         </FormRow>
         <FormRow>
           <f.text @name="partner"
-                  @label="Who was your partner (if any) for the shift?"
+                  @label="Who was your partner for the shift or the shift lead / manager who can corroborate your story?"
                   @size={{20}}/>
         </FormRow>
-        <p>
-          <b>Give as much supporting details on why a shift should be added to your timesheet.</b><br>
-          <span class="text-danger">Your request may be denied if not enough supporting details are provided.</span>
-        </p>
-        <ul>
-          <li>If you had no partner for the shift, is there anyone who can verify your hours?</li>
-          <li>Was another person responsible for checking you in, and why did they fail to do that?</li>
-          <li>If you called Ranger HQ on the radio to check you in for the shift, who was the Ranger on the other
-            end?
-          </li>
-        </ul>
         {{#if this.entry.isRejected}}
           <b class="text-danger">Sorry, the correction request has been rejected.</b>
           <div class="card mb-4">
@@ -135,11 +120,17 @@
             </div>
           </div>
         {{/if}}
-        <f.textarea @name="additional_notes"
-                    @label={{if this.entry.isRejected "Supply additional information for an appeal:"
-                                "Why is this new entry needed?"}}
-                    @cols={{80}}
-                    @rows={{4}} />
+        <FormRow>
+          <f.textarea @name="additional_notes"
+                      @label={{if this.entry.isRejected "Supply additional information for an appeal:"
+                                  "Provide a BRIEF & CONCISE explanation in 1 to 3 sentences why you should be credited for a missing shift?"}}
+                      @cols={{80}}
+                      @rows={{4}} />
+        </FormRow>
+        <b class="text-danger">Your request will be denied if:</b><br>
+        {{fa-icon "ban"}} Not enough information was provided.<br>
+        {{fa-icon "ban"}} Your story cannot be verified with your shift partner or shift lead / manager. Yes, we do
+        check!<br>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if f.model.isNew "Submit New Request" "Update Request"}} @disabled={{this.isSubmitting}} />

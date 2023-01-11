@@ -3,7 +3,6 @@
     <NavbarMenuSection @section="Rangering">
       <NavbarMenuItem @menu={{menu}} @route="me.schedule" @item="Schedule / Sign Up"/>
       {{#if (or @user.isAlpha @user.isRanger)}}
-        <<NavbarMenuItem @menu={{menu}}  @route="me.timesheet-corrections.index" @item="Timesheet Corrections"/>
         <<NavbarMenuItem @menu={{menu}}  @route="me.timesheet" @item="Timesheets"/>
       {{/if}}
       {{#unless @user.isAuditor}}
