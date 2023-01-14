@@ -2,12 +2,12 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import EmberObject from '@ember/object';
 import {debounce} from '@ember/runloop';
 import {action, set} from '@ember/object';
-import conjunctionFormat from 'clubhouse/utils/conjunction-format';
-
-
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
+import {isEmpty} from '@ember/utils';
 import _ from 'lodash';
+import conjunctionFormat from 'clubhouse/utils/conjunction-format';
+import {AUDITOR, PROSPECTIVE} from "clubhouse/constants/person_status";
 
 const SEARCH_RATE_MS = 300;
 
@@ -60,7 +60,12 @@ export default class TrainingSlotController extends ClubhouseController {
   @tracked addPersonForm = null;
 
 
-  // How many people have passed
+  /**
+   * How many people have passed training?
+   *
+   * @returns {number}
+   */
+
   get passedCount() {
     let passed = 0;
     this.students.forEach((student) => {
@@ -75,16 +80,21 @@ export default class TrainingSlotController extends ClubhouseController {
   /**
    * Is the user allowed to add a student to the class?
    *
-   * For dirt training - only Clubhouse Admins may do so. (per TA 2020 request)
+   * For dirt training - only Clubhouse Admins and folks holding the real Trainer role (not Trainer Seasonal, masquerading as Trainer)
    * For ARTS - any trainer.
+   *
+   * @returns {boolean}
    */
 
   get canAddStudent() {
-    return this.training.is_art || this.session.isAdmin;
+    return this.training.is_art || this.session.isAdmin || this.session.isRealTrainer;
   }
 
-  // How many Dirt Vets (2 or more rangering years) OR
-  // ART vets (if not a ART prospective)
+  /**
+   * How many Dirt Vets (2 or more rangering years) OR ART vets (if not an ART prospective)
+   * @returns {number}
+   */
+
   get vetCount() {
     let vets = 0;
     const is_art = this.training.is_art;
@@ -102,7 +112,11 @@ export default class TrainingSlotController extends ClubhouseController {
     return vets;
   }
 
-  // How many dirt PNV or ART prospectives
+  /**
+   * How many Applicants or ART prospectives?
+   * @returns {number}
+   */
+
   get prospectiveCount() {
     const is_art = this.training.is_art;
     let prospective = 0;
@@ -112,7 +126,7 @@ export default class TrainingSlotController extends ClubhouseController {
         if (student.is_art_prospective) {
           prospective++;
         }
-      } else if (student.status === 'prospective') {
+      } else if (student.status === PROSPECTIVE) {
         prospective++;
       }
     });
@@ -120,19 +134,28 @@ export default class TrainingSlotController extends ClubhouseController {
     return prospective;
   }
 
-  // How many dirt PNV or ART prospectives
+  /**
+   * How many Applicants or ART prospectives?
+   * @returns {number}
+   */
 
   get auditorCount() {
     let auditors = 0;
 
     this.students.forEach((student) => {
-      if (student.status === 'auditor') {
+      if (student.status === AUDITOR) {
         auditors++;
       }
     });
 
     return auditors;
   }
+
+  /**
+   * How many first year (binaries) Rangers?
+   *
+   * @returns {number}
+   */
 
   get firstYearCount() {
     let firstYear = 0;
@@ -146,19 +169,44 @@ export default class TrainingSlotController extends ClubhouseController {
     return firstYear;
   }
 
+  /**
+   * How many total trainers (Uber, Assoc., etc) signed up?
+   *
+   * @returns {number}
+   */
+
   get trainerCount() {
     return this.trainers.reduce((total, group) => {
       return group.trainers.length + total;
     }, 0);
   }
 
+  /**
+   * Does this ART offer the ability to grant people the ARTs positions (either mentee, or actual working position)
+   * after the trainees have been marked as passed?
+   *
+   * @returns {boolean}
+   */
+
   get offersGraduation() {
     return !!this.training.graduation_info;
   }
 
+  /**
+   * What positions will be granted after hitting the graduate button?
+   *
+   * @returns {String}
+   */
+
   get graduatePositionTitles() {
     return conjunctionFormat(this.training.graduation_info.positions.map((p) => p.title), 'and');
   }
+
+  /**
+   * Setup to edit the student record.
+   *
+   * @param student
+   */
 
   @action
   editStudentAction(student) {
@@ -171,12 +219,21 @@ export default class TrainingSlotController extends ClubhouseController {
     };
   }
 
+  /**
+   * Cancel the student modal.
+   */
+
   @action
   cancelStudentAction() {
     this.editStudent = null;
   }
 
-  // Save the student scores in bulk.
+  /**
+   * Save the student record.
+   *
+   * @param model
+   */
+
   @action
   saveStudentAction(model) {
     const student = this.editStudent;
@@ -185,7 +242,7 @@ export default class TrainingSlotController extends ClubhouseController {
     const score = {
       id: student.id,
       note,
-      rank: rank !== '' ? +rank : rank,
+      rank: !isEmpty(rank) ? +rank : rank,
       passed: +passed ? 1 : 0,
     };
 
@@ -195,7 +252,8 @@ export default class TrainingSlotController extends ClubhouseController {
         return;
       }
 
-      if ((rank > 0 && rank != 2) && (note == '' && student.notes.length == 0)) {
+      // Only require a note if the rank set was not 2 (aka normal, average, etc.)
+      if ((rank > 0 && rank !== 2) && (isEmpty(note) && !student.notes.length)) {
         model.addError('note', ['A note needs to be entered if a rank is given.']);
         return;
       }
@@ -214,7 +272,10 @@ export default class TrainingSlotController extends ClubhouseController {
       .finally(() => this.isSubmitting = false);
   }
 
-  // Save the student scores in bulk.
+  /**
+   * Save the trainer records in bulk.
+   */
+
   @action
   saveTrainers() {
     const trainers = [];
@@ -239,7 +300,10 @@ export default class TrainingSlotController extends ClubhouseController {
       .finally(() => this.isSubmitting = false);
   }
 
-  // Show the dialog to add a person
+  /**
+   * Show the dialog to add a person
+   */
+
   @action
   showAddPersonAction() {
     this.foundPeople = null;
@@ -247,10 +311,24 @@ export default class TrainingSlotController extends ClubhouseController {
     this.addPersonForm = EmberObject.create({name: ''});
   }
 
+  /**
+   * Start debouncing the search for a person's callsign.
+   *
+   * @param field
+   * @param model
+   */
+
   @action
   searchPeopleAction(field, model) {
     debounce(this, this._performSearch, model, SEARCH_RATE_MS);
   }
+
+  /**
+   * Perform a callsign lookup
+   *
+   * @param model
+   * @private
+   */
 
   _performSearch(model) {
     const query = model.name.trim();
@@ -275,10 +353,21 @@ export default class TrainingSlotController extends ClubhouseController {
     }).catch((response) => this.house.handleErrorResponse(response));
   }
 
+  /**
+   * Cancel the add student search dialog
+   *
+   */
   @action
   cancelSearchAction() {
     this.addPersonForm = null;
   }
+
+  /**
+   * Attempt to add a person to the training session.
+   *
+   * @param person
+   * @param event
+   */
 
   @action
   addPersonAction(person, event) {
@@ -296,13 +385,16 @@ export default class TrainingSlotController extends ClubhouseController {
     });
   }
 
-  // Remove a student from the session
+  /**
+   * Attempt to remove a student from the session.
+   */
+
   @action
   removeStudentAction() {
     const student = this.editStudent;
 
     this.modal.confirm('Confirm Student Removal', `Are you really sure you want to remove ${student.callsign} from this session?`, () => {
-      this.iSubmitting = true;
+      this.isSubmitting = true;
       this.ajax.delete(`person/${student.id}/schedule/${this.slot.id}`)
         .then((results) => {
           if (results.status === 'success') {
@@ -319,6 +411,13 @@ export default class TrainingSlotController extends ClubhouseController {
   }
 
   // Toggle the email list
+
+  /**
+   * Toggle showing the email list
+   *
+   * @param {Function|null} closeDropdown
+   */
+
   @action
   toggleEmailListAction(closeDropdown) {
     this.showEmails = !this.showEmails;
@@ -330,15 +429,32 @@ export default class TrainingSlotController extends ClubhouseController {
     }
   }
 
+  /**
+   * Setup to edit a specific note.
+   *
+   * @param note
+   */
+
   @action
   editNoteAction(note) {
     this.editNote = note;
 
   }
+
+  /**
+   * Cancel a note edit.
+   */
+
   @action
   cancelNoteAction() {
     this.editNote = null;
   }
+
+  /**
+   * Attempt to save a note's edits.
+   *
+   * @param model
+   */
 
   @action
   updateNoteAction(model) {
@@ -354,10 +470,16 @@ export default class TrainingSlotController extends ClubhouseController {
     }).catch((response) => this.house.handleErrorResponse(response))
   }
 
+  /**
+   * Attempt to delete the note.
+   *
+   * @param note
+   */
+
   @action
   deleteNoteAction(note) {
     this.modal.confirm('Confirm Deletion', 'Are you really sure you want to delete this note?', () => {
-      this.ajax.request(`training-session/${note.id}/delete-note`, { method: 'DELETE'})
+      this.ajax.request(`training-session/${note.id}/delete-note`, {method: 'DELETE'})
         .then(() => {
           set(this.editStudent, 'notes', this.editStudent.notes.filter((n) => n.id !== note.id));
           this.toast.success('The note was successfully deleted.');
@@ -365,14 +487,19 @@ export default class TrainingSlotController extends ClubhouseController {
     });
   }
 
+  /**
+   * Show the graduation dialog.
+   */
   @action
   showGraduateStudentsAction() {
     this.graduateTraining = this.training;
   }
 
+  /**
+   * Cancel the graduation dialog
+   */
   @action
   cancelGraduateStudents() {
     this.graduateTraining = null;
   }
-
 }

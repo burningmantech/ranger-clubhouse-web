@@ -10,19 +10,19 @@
 </p>
 
 {{#if (is-empty this.trainers)}}
-  <UiNotice @type="danger" @title="No trainer slots were found">
+  <UiNotice @icon="hand" @type="danger" @title="No trainer slots were found">
     In order to correctly record how many trainers are signed up to teach this session, a trainer's slot needs to exists
     where the slot's description matches this session's description exactly and where the start time within one hour of
     this session.
   </UiNotice>
 {{else if (not this.havePrimaryTrainers)}}
-  <UiNotice @type="danger" @title="No trainer sign ups">
+  <UiNotice @icon="hand" @type="danger" @title="No trainer sign ups">
     No trainers are signed up to teach this session.
   </UiNotice>
 {{/if}}
 
 {{#unless this.slot.active}}
-  <UiNotice @type="danger" @title="Training session not activated">
+  <UiNotice @type="danger" @title="Training session not activated" @icon="hand">
     Sign ups are disabled until the session (aka slot) has been activated.
     Use the
     <LinkTo @route="admin.slots">Admin &gt; Edit Records &gt; Slots</LinkTo>
@@ -86,17 +86,18 @@
       <p>
         A {{fa-icon "asterisk"}} by a person's status indicates an ART Prospective.
         {{#if this.offersGraduation}}
-          Use the "Graduate Trainees" button to grant {{pluralize this.training.graduation_info.positions.length "position"}}
+          Use the "Graduate Trainees" button to grant
+          {{pluralize this.training.graduation_info.positions.length "position"}}
           <i>"{{this.graduatePositionTitles}}"</i> to eligible individuals.
         {{/if}}
       </p>
     {{else}}
       <p>
-      <div><b class="text-danger">{{fa-icon "hand-point-right"}} Reminder: Walk-ins are NOT allowed, this includes
-        auditors. All attendees must be signed up prior to the session's start time.</b></div>
-      {{#unless this.canAddStudent}}
-        Only the Training Academy may add trainees through this interface.
-      {{/unless}}
+        <b class="text-danger">{{fa-icon "hand-point-right"}} Reminder: Walk-ins are NOT allowed, this includes
+          auditors. All attendees must be signed up prior to the session's start time.</b><br>
+        {{#unless this.canAddStudent}}
+          Only the Training Academy may add trainees through this interface.
+        {{/unless}}
       </p>
     {{/if}}
 

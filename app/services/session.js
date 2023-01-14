@@ -7,7 +7,7 @@ import SessionService from "ember-simple-auth/services/session";
 import User from "clubhouse/models/user";
 import ENV from 'clubhouse/config/environment';
 import {config} from 'clubhouse/utils/config';
-import {ADMIN, MANAGE, VC, VIEW_PII, VIEW_EMAIL} from 'clubhouse/constants/roles';
+import {ADMIN, MANAGE, TRAINER, VC, VIEW_PII, VIEW_EMAIL} from 'clubhouse/constants/roles';
 import MobileDetect from 'mobile-detect';
 import BrowserDetector from "../utils/browser-detect";
 
@@ -244,7 +244,18 @@ export default class extends SessionService {
   }
 
   /**
-   * Does the user hold the given role(s)?
+   * Does the person have the real Trainer role (i.e., not granted because Training Seasonal was enabled.)
+   *
+   * @returns {boolean}
+   */
+
+  get isRealTrainer() {
+    return this.hasTrueRole(TRAINER);
+  }
+
+  /**
+   * Does the user hold the given effective role(s)?
+   *
    * @param {number|number[]} roles
    * @returns {boolean}
    */
@@ -255,9 +266,35 @@ export default class extends SessionService {
       return false;
     }
 
-    const personRoles = this.user.roles;
+    return this._checkForRoles(roles, this.user.roles)
+  }
 
-    if (!personRoles) {
+  /**
+   * Does the user hold the given un-massaged role(s)?
+   *
+   * @param {number|number[]} roles
+   * @returns {boolean}
+   */
+
+  hasTrueRole(roles) {
+    if (!this.user) {
+      // User not logged in
+      return false;
+    }
+
+    return this._checkForRoles(roles, this.user.true_roles);
+  }
+
+  /**
+   * Does the user hold the given role(s)?
+   * @param {number|number[]} roles
+   * @param {number[]|null} grantedRoles
+   * @returns {boolean}
+   */
+
+  _checkForRoles(roles, grantedRoles) {
+    if (!this.user || !grantedRoles) {
+      // User not logged in
       return false;
     }
 
@@ -278,7 +315,7 @@ export default class extends SessionService {
             throw new Error('hasRole: Unknown role - is the name spelled correctly?');
           }
 
-          if (!personRoles.includes(r)) {
+          if (!grantedRoles.includes(r)) {
             haveAll = false;
           }
         });
@@ -290,7 +327,8 @@ export default class extends SessionService {
         if (!role) {
           throw new Error('hasRole: Unknown role - is the name spelled correctly?');
         }
-        if (personRoles.includes(role)) {
+
+        if (grantedRoles.includes(role)) {
           haveIt = true;
         }
       }
