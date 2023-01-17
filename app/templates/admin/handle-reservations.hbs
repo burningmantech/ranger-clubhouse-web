@@ -1,0 +1,97 @@
+<main>
+  <h1>Handle Reservations</h1>
+  <p>
+    These are handles that should not be given to Rangers as callsigns for a
+    fixed or indefinite period of time.
+    <br>They are an input to the VC handle checker tool.
+    <br>These <strong>should not</strong> include active and vintage Ranger callsigns, as those are
+    brought separately into the handle checker tool.
+  </p>
+  <p>
+    {{! TODO(srabraham): maybe add a "delete all expired button"? }}
+    <button type="button" class="btn btn-primary" {{action this.newHandleReservation}}>New Handle Reservation</button>
+  </p>
+  {{! TODO(srabraham): maybe add filtering? Bulk deleting? }}
+  <table class="table table-sm table-hover table-striped table-width-auto">
+    <thead>
+    <tr>
+      <th>Handle</th>
+      <th>Type</th>
+      <th>Start date</th>
+      <th>End date</th>
+      <th>Reason</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.handleReservations as |hr|}}
+      <tr>
+        <td>{{hr.handle}}</td>
+        <td>{{this.typeLabel hr.reservation_type}}</td>
+        <td>{{hr.start_date}}</td>
+        <td>{{hr.end_date}}</td>
+        <td>{{hr.reason}}</td>
+        <td>
+          {{! TODO(srabraham): maybe also add a delete button? And an extend-by-one-year button? }}
+          <UiButton @onClick={{fn this.editHandleReservation hr}} @size="sm">
+            {{fa-icon "edit"}} Edit
+          </UiButton>
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</main>
+
+{{#if this.entry}}
+  <ModalDialog @title={{if this.entry.isNew "New Handle Reservation"  "Edit Handle Reservation"}} @onEscape={{this.cancelHandleReservation}} as |Modal|>
+    <ChForm @formId="role"
+            @formFor={{this.entry}}
+            @validator={{this.handleReservationValidations}}
+            @onSubmit={{this.saveHandleReservation}}
+            @onCancel={{this.cancelHandleReservation}} as |f|>
+      <Modal.body>
+        <FormRow>
+          <f.text @name="handle" @label="Handle" @maxlength={{40}} @size={{25}}/>
+          <f.select @name="reservation_type" @label="Reservation Type" @options={{this.typeOptions}} />
+        </FormRow>
+        <fieldset>
+          <legend>Effective dates</legend>
+          <FormRow>
+            <f.datetime @name="start_date"
+                        @label="Start date"
+                        @dateOnly={{true}}
+                        @maxlength={{25}} />
+            <f.datetime @name="end_date"
+                        @label="End date (optional)"
+                        @dateOnly={{true}}
+                        @maxlength={{25}} />
+          </FormRow>
+        </fieldset>
+        <fieldset>
+          <legend>Metadata</legend>
+          <FormRow>
+            <div class="col">
+              <f.text @name="reason" @label="Reason (optional)"/>
+            </div>
+          </FormRow>
+        </fieldset>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
+        <UiCancelButton @onClick={{this.cancelHandleReservation}}
+                        @disabled={{this.entry.isSaving}} />
+        {{#if this.entry.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+        {{#unless this.entry.isNew}}
+          <div class="ms-auto">
+            <button {{action this.removeHandleReservation}} type="button" class="btn btn-danger btn-sm">
+              {{fa-icon "trash-alt" type="fas"}} Delete
+            </button>
+          </div>
+        {{/unless}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}

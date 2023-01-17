@@ -73,6 +73,7 @@ Router.map(function () {
     this.route('documents');
     this.route('error-log');
     this.route('event-dates');
+    this.route('handle-reservations');
     this.route('help');
     this.route('hours-credits');
     this.route('mail-log');
