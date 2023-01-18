@@ -17,12 +17,14 @@
 {{#if this.person.is_bouncing}}
   <UiNotice @title="Email Bouncing" @type="danger" @icon="envelope">
     <p>
-      The email address has been reported as bouncing. The inbox might be full, the person's email server is experiencing
+      The email address has been reported as bouncing. The inbox might be full, the person's email server is
+      experiencing
       issues, or the address is no longer valid.
     </p>
     Contact the Ranger Tech Ninjas at {{admin-email}} for assistance.
   </UiNotice>
 {{/if}}
+
 {{#if this.person.unread_message_count}}
   <p>
     <LinkTo @route="person.messages">
@@ -63,6 +65,8 @@
                             @sendWelcomeMailAction={{this.sendWelcomeMailAction}}
 
                             @showPasswordDialogAction={{this.showPasswordDialogAction}}
+
+                            @clearRoleCacheAction={{this.clearRoleCacheAction}}
           />
         {{else}}
           <Person::SimpleForm @person={{this.person}}

@@ -549,8 +549,11 @@ legend {
 }
 
 .callsign-list {
-  column-count: auto;
-  column-width: 16ch;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8em, 10em));
+
+  /* column-count: auto;
+   column-width: 18ch;*/
 
   > a {
     display: block;

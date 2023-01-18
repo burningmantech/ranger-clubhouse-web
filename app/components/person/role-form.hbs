@@ -17,7 +17,7 @@
               <label for="role-{{role.id}}" class="form-check-label">
                 {{role.title}}
                 {{#if role.disabled}}
-                  <div class="text-muted small">Contact Tech Team to grant/revoke</div>
+                  <div class="text-muted small">Contact Tech Team to assign/remove</div>
                 {{/if}}
               </label>
 
@@ -27,6 +27,16 @@
                   <ul>
                     {{#each role.positions as |position|}}
                       <li>{{position.title}}</li>
+                    {{/each}}
+                  </ul>
+                </div>
+              {{/if}}
+              {{#if role.teams}}
+                <div class="ms-1">
+                  <div class="text-danger">Granted thru {{pluralize role.teams.length "team"}}:</div>
+                  <ul>
+                    {{#each role.teams as |team|}}
+                      <li>{{team.title}}</li>
                     {{/each}}
                   </ul>
                 </div>
