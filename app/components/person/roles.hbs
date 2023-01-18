@@ -9,46 +9,68 @@
   {{/if}}
 </div>
 {{#unless this.combinedRoles}}
-  <div class="mt-2 text-danger">
-    <b>No roles granted.</b>
+  <div class="mt-2">
+    <b>No additional roles granted.</b>
   </div>
 {{/unless}}
 {{#if @showRoles}}
-  <div class="masonry-container masonry-border masonry-col-2 mt-2">
+  <p class="mt-2">
+    Effective roles are a union of manual assignment, team membership with associated roles, and position assignments with
+    associated roles.
+  </p>
+  <table class="table table-width-auto table-sm table-striped table-hover">
+    <thead>
+    <tr>
+      <th>Role</th>
+      <th class="text-center">Manually Assigned?</th>
+      <th>Thru Teams</th>
+      <th>Thru Positions</th>
+    </tr>
+    </thead>
+    <tbody>
     {{#each this.combinedRoles as |role| }}
-      <div class="masonry-item">
-        {{role.title}}
-        {{#if role.granted}}
-          {{#if (or role.teams role.positions)}}
-            <div class="small text-muted">
-              Manually assigned and granted thru:
+      <tr>
+        <td class="text-nowrap">
+          {{#if role.notGranted}}
+            {{fa-icon "ban"}} {{role.title}}
+            <div class="text-danger small">NOT ASSIGNED</div>
+          {{else}}
+            {{role.title}}
+          {{/if}}
+        </td>
+        <td class="text-center">
+          {{yesno role.granted}}
+        </td>
+        <td>
+          {{#each role.teams as |team idx|}}
+            {{#if idx}}<br>{{/if}}
+            {{team.title}}
+          {{else}}
+            <i class="text-muted">none</i>
+          {{/each}}
+        </td>
+        <td>
+          {{#if role.notGranted}}
+            <div class="text-danger small">
+              Since the appropriate ART training(s) have not been passed for the year, the role has not been assigned.
             </div>
           {{/if}}
-        {{else}}
-          <div class="small text-muted">
-            Only granted thru:
-          </div>
-        {{/if}}
-        {{#if role.teams}}
-          <div class="mt-1">
-            <Popover @text="[{{pluralize role.teams.length "team"}}]" @placement="bottom">
-              {{#each role.teams as |team|}}
-                {{team.title}}<br>
-              {{/each}}
-            </Popover>
-          </div>
-        {{/if}}
-
-        {{#if role.positions}}
-          <div class="mt-1">
-            <Popover @text="[{{pluralize role.positions.length "position"}}]" @placement="bottom">
-              {{#each role.positions as |position|}}
-                {{position.title}}<br>
-              {{/each}}
-            </Popover>
-          </div>
-        {{/if}}
-      </div>
+          {{#each role.positions as |position idx|}}
+            {{#if idx}}<br>{{/if}}
+            {{position.title}}
+            {{#if position.require_training_for_roles}}
+              {{#if position.is_trained}}
+                (trained)
+              {{else}}
+                <span class="text-danger">(NOT TRAINED)</span>
+              {{/if}}
+            {{/if}}
+          {{else}}
+            <i class="text-muted">none</i>
+          {{/each}}
+        </td>
+      </tr>
     {{/each}}
-  </div>
+    </tbody>
+  </table>
 {{/if}}

@@ -1,8 +1,11 @@
 <main>
   <h1>Clubhouse Positions</h1>
-  <p>
-    <b class="text-danger">Contact the Scheduling Gnome or Tech Team about position creation and/or adjustments.</b>
-  </p>
+  {{#if this.canManagePositions}}
+    <UiNotice @type="secondary" @icon="hand-point-right" @title="Need Position Help?">
+      Contact the Tech Team about creating new positions or adjusting existing ones.<br>
+      {{admin-email}}
+    </UiNotice>
+  {{/if}}
   <FormRow>
     <FormLabel @auto={{true}}>Type filter</FormLabel>
     <div class="col-auto">
@@ -184,16 +187,22 @@
           <fieldset>
             <legend>Position Role Grants</legend>
             <FormRow>
-              <f.checkboxGroup @name="role_ids" @options={{this.roleOptions}} />
+              <div class="col-12">
+                <f.checkbox @name="require_training_for_roles"
+                            @label="ART must be passed before roles are granted"/>
+              </div>
+            </FormRow>
+            <FormRow>
+              <f.checkboxGroup @label="Roles To Grant When Position is Granted" @name="role_ids" @options={{this.roleOptions}} />
             </FormRow>
           </fieldset>
 
-          {{#if (eq f.model.type "Training")}}
+          {{#unless (eq f.model.type "Training")}}
             <fieldset>
               <legend>Training</legend>
               <p>
-                This section is relevant when type is "Training". The Training Position is the position
-                the person has to have passed in the current year to be allowed to work this position during the event.
+                The Training Position is the position the person has to have passed in the current year to
+                be allowed to work this position during the event.
               </p>
               <FormRow>
                 <f.select @name="training_position_id"
@@ -202,10 +211,9 @@
                 />
               </FormRow>
             </fieldset>
-          {{/if}}
+          {{/unless}}
           <fieldset>
             <legend>Notifications</legend>
-
             <FormRow>
               <div class="col-12">
                 <f.checkbox @name="alert_when_empty"

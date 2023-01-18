@@ -204,7 +204,7 @@ export default class PersonIndexController extends ClubhouseController {
 
     return this.ajax.request(`person/${personId}/membership`)
       .then(({membership}) => {
-        this.personMembership =membership;
+        this.personMembership = membership;
 
         // Reload the roles because team and positions may have added or removed roles
         this.ajax.request(`person/${personId}/roles`, {data: {include_memberships: 1}})
@@ -296,5 +296,16 @@ export default class PersonIndexController extends ClubhouseController {
   @action
   closePasswordDialogAction() {
     this.showPasswordDialog = false;
+  }
+
+  /**
+   * Clear any cached roles - just in case the cache got f**ked up.
+   */
+
+  @action
+  clearRoleCacheAction() {
+    this.ajax.request('role/clear-cache', {method: 'POST', data: {person_id: this.person.id}}).then(() => {
+      this.toast.success('Role cache has been cleared.');
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 }

@@ -19,15 +19,14 @@ export default class PersonRoleFormComponent extends Component {
     this.roleIds = grantedRoles.roles.map((r) => r.id);
     this.roleForm = {roleIds: this.roleIds};
 
-    this.roles = roles.map((role) => {
-      return {
-        id: role.id,
-        title: role.title,
-        selected: this.roleIds.includes(role.id),
-        positions: grantedRoles.position_roles.filter((p) => p.role_id === role.id),
-        disabled: ((role.id === TECH_NINJA || role.id === ADMIN) && !isTechNinja),
-      }
-    });
+    this.roles = roles.map((role) => ({
+      id: role.id,
+      title: role.title,
+      selected: this.roleIds.includes(role.id),
+      positions: grantedRoles.position_roles.filter((p) => p.role_id === role.id),
+      teams: grantedRoles.team_roles.filter((p) => p.role_id === role.id),
+      disabled: ((role.id === TECH_NINJA || role.id === ADMIN) && !isTechNinja),
+    }));
 
     this.roleGroups = inGroups(this.roles, 3);
   }

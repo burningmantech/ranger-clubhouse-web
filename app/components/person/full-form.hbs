@@ -151,7 +151,6 @@ Everyone else will see person/simple-form
     </div>
   </FormRow>
 
-
   <FormRow>
     <FormLabel @fixed={{true}}>Agreements</FormLabel>
     <div class="col-sm-12 col-xl-auto mt-2">
@@ -207,6 +206,7 @@ Everyone else will see person/simple-form
         </UiButton>
       </div>
     {{/if}}
+
     {{#if (has-role "admin")}}
       <div class="col-sm-12 col-xl-auto mb-4">
         <UiButton @type="secondary" @class="btn-responsive" @onClick={{@showPasswordDialogAction}}>
@@ -214,6 +214,15 @@ Everyone else will see person/simple-form
         </UiButton>
       </div>
     {{/if}}
+
+    {{#if (has-role "tech-ninja")}}
+      <div class="col-sm-12 col-xl-auto mb-4">
+        <UiButton @type="secondary" @class="btn-responsive" @onClick={{@clearRoleCacheAction}}>
+          Clear Cached Roles
+        </UiButton>
+      </div>
+    {{/if}}
+
     <div class="col-sm-12 col-xl-auto mb-4">
       {{#if @person.isSaving}}
         <LoadingIndicator/>

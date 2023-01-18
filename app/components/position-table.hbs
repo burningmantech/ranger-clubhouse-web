@@ -24,7 +24,7 @@
       <td>
         {{position.title}}
       </td>
-       <td>
+      <td>
         <PresentOrNot @value={{position.short_title}} @empty="-"/>
       </td>
       <td>
@@ -37,23 +37,26 @@
           Training position:
           <div class="ms-3">{{pluck position.training_position_id @positions "title" "-"}}</div>
         {{/if}}
+        {{#if position.require_training_for_roles}}
+          {{fa-icon "user-graduate" fixed=true}} Requires ART to be passed before roles are granted.<br>
+        {{/if}}
         {{#if position.new_user_eligible}}
-          {{fa-icon "globe"}} Grant to New Accounts<br>
+          {{fa-icon "globe" fixed=true}} Grant to New Accounts<br>
         {{/if}}
         {{#if position.all_rangers}}
-          {{fa-icon "universal-access"}} Grant To All Rangers<br>
+          {{fa-icon "universal-access" fixed=true}} Grant To All Rangers<br>
         {{/if}}
         {{#if position.count_hours}}
-          {{fa-icon "clock"}} Hours count towards appreciations<br>
+          {{fa-icon "clock" fixed=true}} Hours count towards appreciations<br>
         {{/if}}
         {{#if position.on_sl_report}}
-          {{fa-icon "list"}} On Shift Lead Report<br>
+          {{fa-icon "list fixed=true"}} On Shift Lead Report<br>
         {{/if}}
         {{#if position.on_trainer_report}}
-          {{fa-icon "rectangle-list"}} On Trainer's Report<br>
+          {{fa-icon "rectangle-list" fixed=true}} On Trainer's Report<br>
         {{/if}}
         {{#if position.prevent_multiple_enrollments}}
-          {{fa-icon "ban"}} Multiple Enrollments Prevented<br>
+          {{fa-icon "ban" fixed=true}} Multiple Enrollments Prevented<br>
         {{/if}}
         {{#if position.contact_email}}
           {{mail-to position.contact_email}}

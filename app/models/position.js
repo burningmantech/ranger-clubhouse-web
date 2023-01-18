@@ -19,6 +19,8 @@ export default class PositionModel extends Model {
   @attr('boolean', { defaultValue: false }) all_team_members;
   @attr('boolean', { defaultValue: false }) public_team_position;
 
+  @attr('boolean', { defaultValue: false }) require_training_for_roles;
+
   @attr('') role_ids;
 
   @attr('number') min;

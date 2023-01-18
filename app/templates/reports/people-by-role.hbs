@@ -1,9 +1,5 @@
 <h1>People By Role Report</h1>
 <p>
-  {{fa-icon "user-plus" color="danger"}} = Role is explicitly granted.<br>
-  {{fa-icon "sitemap"}} = Role granted via a team and/or position.
-</p>
-<p>
   Click on the callsign to see how the role is granted.
 </p>
 <p>
@@ -17,16 +13,14 @@
     <accordion.body>
       {{#if accordion.isOpen}}
         {{#if role.people}}
-          <div class="callsign-list">
+          <UiButton @onClick={{fn this.exportToCSV role}}>Export To CSV</UiButton>
+          <div class="callsign-list mt-2">
             {{#each role.people key="id" as |person|}}
               <div>
                 <a href {{action this.showPersonAction person}}>{{person.callsign}}</a>
-                {{#if person.granted}}
-                  {{fa-icon "user-plus"}}
-                {{/if}}
-                {{#if (or person.teams person.positions)}}
-                  {{fa-icon "sitemap"}}
-                {{/if}}
+                <div class="text-muted small">
+                  via {{this.grantedHow person}}
+                </div>
               </div>
             {{/each}}
           </div>
@@ -41,44 +35,63 @@
 {{#if this.showPerson}}
   <ModalDialog @title="{{this.showPerson.callsign}} information" as |Modal|>
     <Modal.body>
-      <p>
-        {{#if this.showPerson.granted}}
-          <b class="text-danger">Role has been granted explicitly.</b>
-        {{else}}
-          Role has NOT been granted explicitly.
-        {{/if}}
-      </p>
-      {{#if (or this.showPerson.teams this.showPerson.positions)}}
-        Role is granted thru {{pluralize this.showPerson.teams.length "team"}} and
-        {{pluralize this.showPerson.positions.length "position"}}.
-        <dl class="mt-2">
-          <dt>Teams:</dt>
-          <dd>
+      <table class="table table-sm table-width-auto mb-2">
+        <thead>
+        <tr>
+          <th>Explicit Grant</th>
+          <th>Teams</th>
+          <th>Positions</th>
+          <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            {{#if this.showPerson.granted}}
+              <span class="text-danger">Explicit Grant?</span>
+            {{else}}
+              <span class="text-muted">None</span>
+            {{/if}}
+          </td>
+          <td>
             {{#each this.showPerson.teams as |team|}}
               {{team.title}}<br>
             {{else}}
-              <i>none</i>
+              <span class="text-muted">None</span>
             {{/each}}
-          </dd>
-          <dt>Positions:</dt>
-          <dd>
-            {{#each this.showPerson.positions as |position|}}
-              {{position.title}}<br>
-            {{else}}
-              <i>none</i>
+          </td>
+          <td>
+            {{#each this.showPerson.positions as |position idx|}}
+              {{#if idx}}
+                <br>
+              {{/if}}
+              {{position.title}}
             {{/each}}
-          </dd>
-        </dl>
-      {{else}}
-        <p>
-          Role is not granted through any team or position assignment.
-        </p>
-      {{/if}}
-      <p>
-        Visit
-        <PersonLink @person={{this.showPerson}} />
-        person management page.
-      </p>
+          </td>
+          <td>
+            {{#each this.showPerson.positions as |position idx|}}
+              {{#if position.require_training_for_roles}}
+                {{#if idx}}
+                  <br>
+                {{/if}}
+                {{#if position.is_trained}}
+                  <span class="text-success">{{fa-icon "check"}} Trained - Role granted</span>
+                {{else}}
+                  <span class="text-danger small">
+                    {{fa-icon "ban"}} Untrained - Will not be granted until ART is passed.
+                  </span>
+                {{/if}}
+              {{else}}
+                <span class="text-muted">Role granted (training not required)</span>
+              {{/if}}
+            {{/each}}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <LinkTo @route="person.index" @model={{this.showPerson.id}}>
+        Go to {{this.showPerson.callsign}}'s Person Manage page.
+      </LinkTo>
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closePerson}} />
