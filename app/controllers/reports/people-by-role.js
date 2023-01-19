@@ -6,8 +6,8 @@ import {cached} from '@glimmer/tracking';
 const CSV_COLUMNS = [
   {title: 'ID', key: 'id'},
   {title: 'Callsign', key: 'callsign'},
-  {title: 'Explicit Grant?', key: 'granted', yesno: true },
-  {title: 'Teams', key: 'teams' },
+  {title: 'Explicit Grant?', key: 'granted', yesno: true},
+  {title: 'Teams', key: 'teams'},
   {title: 'Positions', key: 'positions'}
 ];
 
@@ -17,9 +17,10 @@ export default class ReportsPeopleByRoleController extends ClubhouseController {
   @tracked roles;
 
   filterOptions = [
-    {value: 'all', label: 'Any grant type'},
-    {value: 'explicit', label: 'Exclusively granted roles'},
-    {value: 'positions', label: 'Exclusively granted thru a team/position'}
+    {value: 'all', label: 'Any assignment type'},
+    {value: 'explicit', label: 'Exclusively assigned roles'},
+    {value: 'positions', label: 'Only assigned thru a team/position'},
+    {value: 'not-trained', label: 'Only assigned thru a position yet is untrained'}
   ];
 
   @cached
@@ -37,6 +38,14 @@ export default class ReportsPeopleByRoleController extends ClubhouseController {
           title: role.title,
           people: role.people.filter((person) => !person.granted && person.positions.length)
         }));
+
+      case 'not-trained':
+        return this.roles.map((role) => ({
+          id: role.id,
+          title: role.title,
+          people: role.people.filter((person) => person.notAssigned)
+        }));
+
       default:
         return this.roles;
     }
@@ -79,13 +88,8 @@ export default class ReportsPeopleByRoleController extends ClubhouseController {
   grantedHow(person) {
     const grants = [];
 
-    if (!person.granted && !person.teams.length) {
-      // See if the position is only granted thru positions which requires training
-      if (person.positions.filter((p) => p.require_training_for_roles).length === person.positions.length) {
-        if (!person.positions.find((p) => p.is_trained)) {
-          return 'untrained position';
-        }
-      }
+    if (person.notAssigned) {
+      return 'untrained position';
     }
 
     if (person.granted) {
