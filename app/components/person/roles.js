@@ -35,7 +35,7 @@ export default class PersonRolesComponent extends Component {
         return;
       }
 
-      let notGranted = false;
+      let active = true;
 
       // See if the role is only granted thru the positions, said positions require training before the roles
       // are granted, and the person is not (ART) trained.
@@ -43,7 +43,7 @@ export default class PersonRolesComponent extends Component {
         && !teams.length
         && positions.filter((p) => p.require_training_for_roles).length === positions.length
         && !positions.some((p) => p.is_trained)) {
-        notGranted = true;
+        active = false;
       }
 
       foundRoles.push({
@@ -52,7 +52,7 @@ export default class PersonRolesComponent extends Component {
         granted,
         positions,
         teams,
-        notGranted,
+        active,
       });
     });
 
