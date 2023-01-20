@@ -63,7 +63,11 @@
         {{/if}}
       </td>
       <td>
-        {{this.roleList position.role_ids}}
+        {{#if position.role_ids}}
+          {{this.roleList position.role_ids}}
+        {{else}}
+          <i class="text-muted">None</i>
+        {{/if}}
       </td>
       {{#if @canManagePositions}}
         <td>

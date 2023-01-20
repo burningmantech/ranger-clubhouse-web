@@ -5,7 +5,7 @@ export default class AdminRolesRoute extends ClubhouseRoute {
   roleRequired = ADMIN;
 
   model() {
-    return this.store.findAll('role', { reload: true });
+    return this.store.query('role', { include_associations: 1});
   }
 
   setupController(controller, model) {

@@ -12,6 +12,8 @@
       <th>ID</th>
       <th>Title</th>
       <th>New User?</th>
+      <th>Associated Teams</th>
+      <th>Associated Positions</th>
       {{#if this.canManageRoles}}
         <th>Action</th>
       {{/if}}
@@ -23,11 +25,21 @@
         <td class="text-end">{{role.id}}</td>
         <td>{{role.title}}</td>
         <td class="text-center">
-          {{#if role.new_user_eligible}}
-            {{fa-icon "check"}}
+          {{yesno role.new_user_eligible}}
+        </td>
+        <td>
+          {{#each role.teams as |team|}}
+            {{team.title}}<br>
           {{else}}
-            &nbsp;
-          {{/if}}
+            <i class="text-muted">None</i>
+          {{/each}}
+        </td>
+        <td>
+          {{#each role.positions as |position|}}
+            {{position.title}}
+          {{else}}
+            <i class="text-muted">None</i>
+          {{/each}}
         </td>
         {{#if this.canManageRoles}}
           <td>

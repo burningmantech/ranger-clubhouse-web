@@ -140,6 +140,10 @@
           </fieldset>
           <fieldset>
             <legend>Team &amp; Team Position Flags</legend>
+            <p class="text-danger">
+              After adjusting the team position flags, run the Position Sanity Checker to bulk grant or revoke the
+              team positions toteam members.
+            </p>
             <FormRow>
               <f.select @name="team_id"
                         @label="Belongs to team"
@@ -147,11 +151,7 @@
                         @inline={{true}}
               />
             </FormRow>
-            <p class="text-danger">
-              After adjusting the team position flags, run the Position Sanity Checker to grant or revoke the
-              team positions.
-            </p>
-            <FormRow>
+              <FormRow>
               <div class="col-12">
                 <f.checkbox @name="all_team_members"
                             @label="Recommended to all team members"
@@ -189,11 +189,11 @@
             <FormRow>
               <div class="col-12">
                 <f.checkbox @name="require_training_for_roles"
-                            @label="ART must be passed before roles are granted"/>
+                            @label="ART training must be passed before roles are assigned"/>
               </div>
             </FormRow>
             <FormRow>
-              <f.checkboxGroup @label="Roles To Grant When Position is Granted" @name="role_ids" @options={{this.roleOptions}} />
+              <f.checkboxGroup @label="Roles to assign when position is granted" @name="role_ids" @options={{this.roleOptions}} />
             </FormRow>
           </fieldset>
 

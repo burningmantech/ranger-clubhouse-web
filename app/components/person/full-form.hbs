@@ -133,7 +133,9 @@ Everyone else will see person/simple-form
                      @grantedRoles={{@grantedRoles}}
                      @toggleRoles={{@toggleRoles}}
                      @editRolesAction={{@editRolesAction}}
-                     @showRoles={{@showRoles}} />
+                     @showRoles={{@showRoles}}
+                     @person={{@person}}
+      />
     </div>
   </FormRow>
 
@@ -211,14 +213,6 @@ Everyone else will see person/simple-form
       <div class="col-sm-12 col-xl-auto mb-4">
         <UiButton @type="secondary" @class="btn-responsive" @onClick={{@showPasswordDialogAction}}>
           Change Password
-        </UiButton>
-      </div>
-    {{/if}}
-
-    {{#if (has-role "tech-ninja")}}
-      <div class="col-sm-12 col-xl-auto mb-4">
-        <UiButton @type="secondary" @class="btn-responsive" @onClick={{@clearRoleCacheAction}}>
-          Clear Cached Roles
         </UiButton>
       </div>
     {{/if}}

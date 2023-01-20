@@ -1,40 +1,110 @@
 <h1>People By Role Report</h1>
 <p>
-  <label>Filter by:</label>
-  <RadioGroup @options={{this.filterOptions}} @onChange={{action (mut this.filter)}} @value={{this.filter}} />
+  An effective role is a union of explicit assignment, team membership w/associated roles, and position grants
+  w/associated roles. If a person was only granted a position (and the role not explicitly assigned, or
+  gained through team membership), and said position requires ART training, then the ART training must be passed
+  for the year before the role takes effect.
 </p>
 <p>
   Legend:<br>
-  via role = Role explicitly assigned.<br>
-  via team = Role assigned thru team membership.<br>
-  via position = Role assigned thru position grant.<br>
-  via untrained position = Person holds a position with roles associated however the appropriate ART training
-  has not been passed for the year and the role has NOT been assigned. Once the person passes ART training, the role will be assigned.
+  Active = Indicates the role is active for the person<br>
+  Manual Assignment? = Indicates the role has been manually assigned.<br>
+  Thru Team Membership = Indicates the role is gained thru (Clubhouse) Team Membership<br>
+  Thru Position Grant = Indicates the role is gained thru a position grant.<br>
+  ART Trained? = Indicates if the person passed the appropriate ART training if the position requires such training.
 </p>
-<p>
-  Click on the callsign to see a breakdown on how the role is assigned.
-</p>
-
+<FormRow class="mb-2">
+  <FormLabel @auto={{true}}>Filter by:</FormLabel>
+  <div class="col-auto">
+    <ChForm::Select @name="filter" @value={{this.filter}}
+                    @options={{this.filterOptions}}
+                    @onChange={{action (mut this.filter)}}
+    />
+  </div>
+</FormRow>
 {{#each this.viewRoles as |role|}}
   <UiAccordion as |accordion|>
     <accordion.title>{{role.title}} ({{pluralize role.people.length "person"}})</accordion.title>
     <accordion.body>
       {{#if accordion.isOpen}}
         {{#if role.people}}
-          <UiButton @onClick={{fn this.exportToCSV role}}>Export To CSV</UiButton>
-          <div class="callsign-list mt-2">
+          <UiButton @onClick={{fn this.exportToCSV role}} @size="sm">Export To CSV</UiButton>
+          <table class="table table-sm table-width-auto table-striped table-hover mt-2">
+            <thead>
+            <tr>
+              <th>Callsign</th>
+              <th>Status</th>
+              <th>Active</th>
+              <th class="text-center">Manual<br>Assignment?</th>
+              <th>Thru<br>Team Membership</th>
+              <th>Thru<br>Positions Grants</th>
+              <th>ART<br>Trained?</th>
+            </tr>
+            </thead>
+            <tbody>
             {{#each role.people key="id" as |person|}}
-              <div>
-                {{#if person.notAssigned}}
-                  {{fa-icon "ban"}}
-                {{/if}}
-                <a href {{action this.showPersonAction person}}>{{person.callsign}}</a>
-                <div class="text-muted small">
-                  via {{this.grantedHow person}}
-                </div>
-              </div>
+              <tr>
+                <td>
+                  <PersonLink @person={{person}} />
+                </td>
+                <td>
+                  {{person.status}}
+                </td>
+                <td class="text-center">
+                  {{#if person.active}}
+                    Yes
+                  {{else}}
+                    No
+                  {{/if}}
+                </td>
+                <td class="text-center">
+                  {{#if person.granted}}
+                    <span class="text-danger">Yes</span>
+                  {{else}}
+                    <i class="text-muted">None</i>
+                  {{/if}}
+                </td>
+                <td>
+                  {{#each person.teams as |team|}}
+                    {{team.title}}<br>
+                  {{else}}
+                    <i class="text-muted">None</i>
+                  {{/each}}
+                </td>
+                <td>
+                  {{#each person.positions as |position idx|}}
+                    {{#if idx}}
+                      <br>
+                    {{/if}}
+                    {{position.title}}
+                  {{else}}
+                    <i class="text-muted">None</i>
+                  {{/each}}
+                </td>
+                <td>
+                  {{#each person.positions as |position idx|}}
+                    {{#if position.require_training_for_roles}}
+                      {{#if idx}}
+                        <br>
+                      {{/if}}
+                      {{#if position.is_trained}}
+                        <span class="text-success">{{fa-icon "check"}} ART Trained</span>
+                      {{else}}
+                        <span class="text-danger">
+                          {{fa-icon "ban"}} ART untrained
+                        </span>
+                      {{/if}}
+                    {{else}}
+                      <span class="text-muted">ART training not required</span>
+                    {{/if}}
+                  {{else}}
+                    -
+                  {{/each}}
+                </td>
+              </tr>
             {{/each}}
-          </div>
+            </tbody>
+          </table>
         {{else}}
           <b>No one found which matches the filter.</b>
         {{/if}}
@@ -42,72 +112,3 @@
     </accordion.body>
   </UiAccordion>
 {{/each}}
-
-{{#if this.showPerson}}
-  <ModalDialog @title="{{this.showPerson.callsign}} information" as |Modal|>
-    <Modal.body>
-      <table class="table table-width-auto mb-2">
-        <thead>
-        <tr>
-          <th>Explicit Grant</th>
-          <th>Thru Team Membership</th>
-          <th>Thru Positions Grants</th>
-          <th>&nbsp;</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>
-            {{#if this.showPerson.granted}}
-              <span class="text-danger">Yes</span>
-            {{else}}
-              <i class="text-muted">None</i>
-            {{/if}}
-          </td>
-          <td>
-            {{#each this.showPerson.teams as |team|}}
-              {{team.title}}<br>
-            {{else}}
-              <i class="text-muted">None</i>
-            {{/each}}
-          </td>
-          <td>
-            {{#each this.showPerson.positions as |position idx|}}
-              {{#if idx}}
-                <br>
-              {{/if}}
-              {{position.title}}
-            {{else}}
-              <i class="text-muted">None</i>
-            {{/each}}
-          </td>
-          <td>
-            {{#each this.showPerson.positions as |position idx|}}
-              {{#if position.require_training_for_roles}}
-                {{#if idx}}
-                  <br>
-                {{/if}}
-                {{#if position.is_trained}}
-                  <span class="text-success">{{fa-icon "check"}} Trained - Role granted</span>
-                {{else}}
-                  <span class="text-danger">
-                    {{fa-icon "ban"}} Untrained - Will not be granted until ART is passed.
-                  </span>
-                {{/if}}
-              {{else}}
-                <span class="text-muted">Role granted (training not required)</span>
-              {{/if}}
-            {{/each}}
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      <LinkTo @route="person.index" @model={{this.showPerson.id}}>
-        Go to {{this.showPerson.callsign}}'s Person Manage page.
-      </LinkTo>
-    </Modal.body>
-    <Modal.footer>
-      <UiCloseButton @onClick={{this.closePerson}} />
-    </Modal.footer>
-  </ModalDialog>
-{{/if}}

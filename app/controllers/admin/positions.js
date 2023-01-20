@@ -3,26 +3,8 @@ import {action} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
 import PositionTypes from 'clubhouse/constants/position-types';
 import PositionValidations from 'clubhouse/validations/position';
-import {
-  ART_TRAINER,
-  MANAGE,
-  MANAGE_ON_PLAYA,
-  MEGAPHONE,
-  MENTOR,
-  TECH_NINJA,
-  TIMESHEET_MANAGEMENT,
-  TRAINER,
-  TRAINER_SEASONAL,
-  VC,
-  VIEW_EMAIL,
-  VIEW_PII,
-} from 'clubhouse/constants/roles';
+import {TECH_NINJA} from 'clubhouse/constants/roles';
 import _ from 'lodash';
-
-const ALLOWED_ROLES = [
-  MANAGE, MANAGE_ON_PLAYA, VC, VIEW_PII, VIEW_EMAIL, MENTOR,
-  TRAINER, TRAINER_SEASONAL, ART_TRAINER, TIMESHEET_MANAGEMENT, MEGAPHONE,
-];
 
 export default class PositionController extends ClubhouseController {
   @tracked positions;
@@ -36,6 +18,8 @@ export default class PositionController extends ClubhouseController {
   @tracked allRangersFilter = '-';
   @tracked viewAs = 'list';
   @tracked teams;
+  @tracked rolesById;
+  @tracked roleOptions;
 
   activeOptions = [
     {id: 'all', title: 'All'},
@@ -64,20 +48,6 @@ export default class PositionController extends ClubhouseController {
 
   get canManagePositions() {
     return this.session.hasRole(TECH_NINJA)
-  }
-
-  get roleOptions() {
-    const options = [];
-
-    ALLOWED_ROLES.forEach((roleId) => {
-      const role = this.roles.find((r) => +r.id === roleId);
-      if (role) {
-        options.push({id: roleId, title: role.title});
-      }
-    })
-
-    options.sort((a, b) => a.title.localeCompare(b.title))
-    return options;
   }
 
   @cached
