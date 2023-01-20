@@ -101,7 +101,7 @@
           </td>
         </tr>
 
-        {{#if (or log.positions log.position log.roles log.slot)}}
+        {{#if (or log.positions log.position log.roles log.slot log.role log.team)}}
           <tr class="tr-no-border">
             <td colspan="5">
               {{#if log.positions}}
@@ -120,6 +120,10 @@
                 {{/each}}<br>
               {{/if}}
 
+              {{#if log.role}}
+                Role: {{log.role.title}}<br>
+              {{/if}}
+
               {{#if log.slot}}
                 Slot #{{log.slot.id}} {{log.slot.position.title}} - {{log.slot.description}}
                 {{shift-format log.slot.begins}}<br>
@@ -130,6 +134,10 @@
                   Previously Enrolled #{{slot.id}} {{slot.position.title}} - {{slot.description}}
                   {{shift-format slot.begins}}<br>
                 {{/each}}
+              {{/if}}
+
+              {{#if log.team}}
+                Team: {{log.team.title}}<br>
               {{/if}}
             </td>
           </tr>

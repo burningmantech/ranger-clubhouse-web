@@ -19,7 +19,7 @@
             Inspect Cache
           </a>
         </ddm.item>
-        <ddm.divider />
+        <ddm.divider/>
         <ddm.item>
           <a href {{action this.clearRoleCacheAction}}>
             Clear Cache
@@ -44,20 +44,26 @@
     <thead>
     <tr>
       <th>Role</th>
-      <th class="text-center">Manually Assigned?</th>
-      <th>Thru Teams</th>
-      <th>Thru Positions</th>
+      <th>Active?</th>
+      <th class="text-center">Manually<br>Assigned?</th>
+      <th>Thru<br>Teams</th>
+      <th>Thru<br>Positions</th>
     </tr>
     </thead>
     <tbody>
     {{#each this.combinedRoles as |role| }}
       <tr>
         <td class="text-nowrap">
-          {{#if role.notGranted}}
-            {{fa-icon "ban"}} {{role.title}}
-            <div class="text-danger small">NOT ASSIGNED</div>
+          {{#unless role.active}}
+            {{fa-icon "ban"}}
+          {{/unless}}
+          {{role.title}}
+        </td>
+        <td class="text-center">
+          {{#if role.active}}
+            Y
           {{else}}
-            {{role.title}}
+            <b class="text-danger">N</b>
           {{/if}}
         </td>
         <td class="text-center">
@@ -72,11 +78,11 @@
           {{/each}}
         </td>
         <td>
-          {{#if role.notGranted}}
+          {{#unless role.active}}
             <div class="text-danger small">
               Since the appropriate ART training(s) have not been passed for the year, the role has not been assigned.
             </div>
-          {{/if}}
+          {{/unless}}
           {{#each role.positions as |position idx|}}
             {{#if idx}}<br>{{/if}}
             {{position.title}}
