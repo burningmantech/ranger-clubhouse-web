@@ -1,11 +1,32 @@
 <div>
-  <UiButton @type="secondary" @size="sm" @class="me-2" @onClick={{@toggleRoles}}>
+  <UiButton @type="secondary" @size="sm" @onClick={{@toggleRoles}}>
     {{if @showRoles "Hide" "Show"}} Roles
   </UiButton>
-  {{#if @editRolesAction}}
-    <UiButton @type="secondary" @size="sm" @onClick={{@editRolesAction}}>
+  {{#if this.isAdmin}}
+    <UiButton @type="secondary" @size="sm" @class="ms-2" @onClick={{@editRolesAction}}>
       Edit Roles
     </UiButton>
+  {{/if}}
+  {{#if this.isTechNinja}}
+    <BsDropdown @type="secondary" as |dd|>
+      <dd.button @size="sm" class="ms-2">
+        Role Diagnostic
+        <span class="caret"></span>
+      </dd.button>
+      <dd.menu as |ddm|>
+        <ddm.item>
+          <a href {{action this.showCachedRolesAction}}>
+            Inspect Cache
+          </a>
+        </ddm.item>
+        <ddm.divider />
+        <ddm.item>
+          <a href {{action this.clearRoleCacheAction}}>
+            Clear Cache
+          </a>
+        </ddm.item>
+      </dd.menu>
+    </BsDropdown>
   {{/if}}
 </div>
 {{#unless this.combinedRoles}}
@@ -15,7 +36,8 @@
 {{/unless}}
 {{#if @showRoles}}
   <p class="mt-2">
-    Effective roles are a union of manual assignment, team membership with associated roles, and position assignments with
+    Effective roles are a union of manual assignment, team membership with associated roles, and position assignments
+    with
     associated roles.
   </p>
   <table class="table table-width-auto table-sm table-striped table-hover">
@@ -73,4 +95,39 @@
     {{/each}}
     </tbody>
   </table>
+{{/if}}
+{{#if this.cachedRoles}}
+  {{#if this.cachedRoles.not_cached}}
+    <div class="my-2">
+      No roles are currently cached.
+    </div>
+  {{else}}
+    <div class="my-2">
+      The following roles are currently cached:
+    </div>
+    <table class="table table-sm table-width-auto table-striped table-hover">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Attributes</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.cachedRoles.roles as |role|}}
+        <tr>
+          <td>{{role.id}}</td>
+          <td>{{role.title}}</td>
+          <td>
+            {{#if role.is_masquerading}}
+              Masquerade role activated because corresponding Clubhouse setting is enabled.
+            {{else}}
+              -
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  {{/if}}
 {{/if}}

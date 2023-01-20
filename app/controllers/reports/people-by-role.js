@@ -4,11 +4,12 @@ import {action} from '@ember/object';
 import {cached} from '@glimmer/tracking';
 
 const CSV_COLUMNS = [
-  {title: 'ID', key: 'id'},
   {title: 'Callsign', key: 'callsign'},
-  {title: 'Explicit Grant?', key: 'granted', yesno: true},
-  {title: 'Teams', key: 'teams'},
-  {title: 'Positions', key: 'positions'}
+  {title: 'Status', key: 'status'},
+  {title: 'Active?', key: 'active', yesno: true },
+  {title: 'Manual Assignment?', key: 'granted', yesno: true},
+  {title: 'Thru Teams', key: 'teams'},
+  {title: 'Thru Positions', key: 'positions'}
 ];
 
 export default class ReportsPeopleByRoleController extends ClubhouseController {
@@ -18,7 +19,7 @@ export default class ReportsPeopleByRoleController extends ClubhouseController {
 
   filterOptions = [
     {value: 'all', label: 'Any assignment type'},
-    {value: 'explicit', label: 'Exclusively assigned roles'},
+    {value: 'explicit', label: 'Manually assigned roles'},
     {value: 'positions', label: 'Only assigned thru a team/position'},
     {value: 'not-trained', label: 'Only assigned thru a position yet is untrained'}
   ];
@@ -65,9 +66,10 @@ export default class ReportsPeopleByRoleController extends ClubhouseController {
   exportToCSV(role) {
     const rows = role.people.map((p) => {
       return {
-        id: p.id,
         callsign: p.callsign,
+        status: p.status,
         granted: p.granted,
+        active: p.active,
         teams: p.teams.map((t) => t.title).join("\n"),
         positions: p.positions.map((p) => p.title).join("\n"),
         positions_granted: p.positions.map((p) => {
@@ -82,28 +84,6 @@ export default class ReportsPeopleByRoleController extends ClubhouseController {
       }
     })
 
-    this.house.downloadCsv(`${this.house.currentYear()}-${role.title}-grants.csv`, CSV_COLUMNS, rows);
-  }
-
-  grantedHow(person) {
-    const grants = [];
-
-    if (person.notAssigned) {
-      return 'untrained position';
-    }
-
-    if (person.granted) {
-      grants.push('role');
-    }
-
-    if (person.positions.length) {
-      grants.push('position');
-    }
-
-    if (person.teams.length) {
-      grants.push('team');
-    }
-
-    return grants.join(', ');
+    this.house.downloadCsv(`${this.house.currentYear()}-role-${role.title.replace(/(\s+|\(|\)|-)+/g,'-')}-report.csv`, CSV_COLUMNS, rows);
   }
 }

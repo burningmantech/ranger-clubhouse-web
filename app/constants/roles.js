@@ -19,7 +19,7 @@ export const TRAINER_SEASONAL = 109;
 export const CERTIFICATION_MGMT = 110;
 export const TECH_NINJA = 1000;
 
-const Role = {
+export const Role = {
   ADMIN,
   ART_TRAINER,
   CERTIFICATION_MGMT,
@@ -42,7 +42,7 @@ const Role = {
   VIEW_PII,
 };
 
-const RoleToString = {
+export const RoleToString = {
   [ADMIN]: 'admin',
   [ART_TRAINER]: 'art-trainer',
   [EDIT_ACCESS_DOCS]: 'edit-access-docs',
@@ -64,35 +64,8 @@ const RoleToString = {
   [VIEW_PII]: 'view-pii',
 };
 
-
-const ALLOWED_AUTO_GRANT_ROLES = [
-  ART_TRAINER,
-  MANAGE,
-  MANAGE_ON_PLAYA,
-  MEGAPHONE,
-  MENTOR,
-  TIMESHEET_MANAGEMENT,
-  TRAINER,
-  VC,
-  VIEW_EMAIL,
-  VIEW_PII,
-];
-
-
-const StringToRole = Object.keys(RoleToString).reduce((hash, key) => {
+export const StringToRole = Object.keys(RoleToString).reduce((hash, key) => {
   key = parseInt(key);
   hash[RoleToString[key]] = key;
   return hash;
 }, {});
-
-function roleName(role) {
-  return (RoleToString[role] || role);
-}
-
-export {
-  roleName,
-  StringToRole,
-  RoleToString,
-  Role,
-  ALLOWED_AUTO_GRANT_ROLES
-};

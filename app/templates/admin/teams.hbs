@@ -1,10 +1,13 @@
 <main>
-  <h1>Teams</h1>
+  <h1>Clubhouse Teams</h1>
   <p>
     {{#if this.canManageTeams}}
       <button type="button" class="btn btn-primary" {{action this.newTeam}}>New Team</button>
     {{else}}
-      Contact the Tech Team to create new teams, or adjust existing ones.
+      <UiNotice @type="secondary" @icon="hand-point-right" @title="Need Clubhouse Team Help?">
+        Contact the Tech Team about creating new teams or adjusting existing ones.<br>
+        {{admin-email}}
+      </UiNotice>
     {{/if}}
   </p>
 
@@ -34,7 +37,11 @@
         </td>
         <td>{{this.typeLabel team.type}}</td>
         <td>
-          {{this.roleList team.role_ids}}
+          {{#if team.role_ids}}
+            {{this.roleList team.role_ids}}
+          {{else}}
+            <i>None</i>
+          {{/if}}
         </td>
         <td>
           {{#each team.managers as |person|}}

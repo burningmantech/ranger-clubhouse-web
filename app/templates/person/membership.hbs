@@ -4,9 +4,11 @@
 </p>
 <p class="small">
   Legend:<br>
-  {{fa-icon "universal-access"}} All Rangers = position is granted to all Rangers (usually at the time a Shiny Penny is minted)
+  {{fa-icon "universal-access"}} All Rangers = position is granted to all Rangers (usually at the time a Shiny Penny is
+  minted)
   regardless of team membership.<br>
-  {{fa-icon "globe"}} All Accounts  = position is granted to all accounts (Rangers, applicants, auditors, etc.) usually at the time the account is created.<br>
+  {{fa-icon "globe"}} All Accounts = position is granted to all accounts (Rangers, applicants, auditors, etc.) usually
+  at the time the account is created.<br>
   <i>Is Team Manager</i> = person may grant or revoke the team's membership and positions to anyone.<br>
   <i>[N role]</i> = Indicates role(s) will be assigned when the team or position is granted. Click on the text to see
   what roles will be given. The role(s) will be removed when the team/position is revoked, however, the same roles may
@@ -21,7 +23,7 @@
   {{/if}}
 </p>
 
-<div class="masonry-container masonry-col-2 masonry-border mb-4">
+<div class="masonry-container {{if this.isAdmin "masonry-col-2" "masonry-col-1 max-width-700"}} masonry-border mb-4">
   {{#if this.canManageGeneralPositions}}
     <div class="masonry-item">
       <div class="masonry-item-header">General Positions / Unassociated with a Clubhouse Team</div>
@@ -54,18 +56,20 @@
             </Popover>
           {{/if}}
         </div>
-        <div>
-          <div class="form-check">
-            <input id="team-manager-{{team.id}}"
-                   type="checkbox"
-                   class="form-check-input"
-                   checked={{team.managerSelect.selected}}
-                   disabled={{not team.selected}}
-              {{on "change" (fn this.managerClick team)}}
-            />
-            <label for="team-manager-{{team.id}}" class="form-check-label">Is Team Manager</label>
+        {{#if this.isAdmin}}
+          <div>
+            <div class="form-check">
+              <input id="team-manager-{{team.id}}"
+                     type="checkbox"
+                     class="form-check-input"
+                     checked={{team.managerSelect.selected}}
+                     disabled={{not team.selected}}
+                {{on "change" (fn this.managerClick team)}}
+              />
+              <label for="team-manager-{{team.id}}" class="form-check-label">Is Team Manager</label>
+            </div>
           </div>
-        </div>
+        {{/if}}
       </div>
       {{#if (or team.allMembers team.optional team.allRangers)}}
         <MembershipPosition @title="Positions all team members are recommended to have"

@@ -1,38 +1,16 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {
-  ART_TRAINER,
-  MANAGE,
-  MANAGE_ON_PLAYA,
-  MEGAPHONE,
-  MENTOR,
-  TECH_NINJA,
-  TIMESHEET_MANAGEMENT,
-  TRAINER,
-  TRAINER_SEASONAL,
-  VC,
-} from 'clubhouse/constants/roles';
+import {TECH_NINJA} from 'clubhouse/constants/roles';
 import {TypeLabels, TYPE_CADRE, TYPE_TEAM, TYPE_DELEGATION} from 'clubhouse/models/team';
-import { htmlSafe } from '@ember/template';
-
-const ALLOWED_ROLES = [
-  ART_TRAINER,
-  MANAGE,
-  MANAGE_ON_PLAYA,
-  MEGAPHONE,
-  MENTOR,
-  TIMESHEET_MANAGEMENT,
-  TRAINER,
-  TRAINER_SEASONAL,
-  VC,
-];
+import {htmlSafe} from '@ember/template';
 
 export default class AdminTeamsController extends ClubhouseController {
   @tracked teams;
   @tracked roles;
   @tracked roleById;
   @tracked entry = null;
+  @tracked roleOptions;
 
   typeOptions = [
     ['Team', TYPE_TEAM],
@@ -57,19 +35,6 @@ export default class AdminTeamsController extends ClubhouseController {
 
   get canManageTeams() {
     return this.session.hasRole(TECH_NINJA);
-  }
-
-  get roleOptions() {
-    const options = [];
-
-    ALLOWED_ROLES.forEach((roleId) => {
-      const role = this.roles.find((r) => +r.id === roleId);
-      if (role) {
-        options.push({id: roleId, title: role.title});
-      }
-    })
-
-    return options;
   }
 
   @action

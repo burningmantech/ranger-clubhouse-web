@@ -1,6 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {ADMIN} from 'clubhouse/constants/roles';
+import {ADMIN, TECH_NINJA} from 'clubhouse/constants/roles';
 import RSVP from 'rsvp';
+import _ from 'lodash';
 
 export default class AdminTeamsRoute extends ClubhouseRoute {
   roleRequired = ADMIN;
@@ -14,12 +15,14 @@ export default class AdminTeamsRoute extends ClubhouseRoute {
     });
   }
 
-  setupController(controller, model) {
-    controller.setProperties(model);
-    controller.set('entry', null);
-    controller.set('roleById', model.roles.reduce((hash, role) => {
-      hash[+role.id] = role;
-      return hash;
-    }, {}));
+  setupController(controller, {teams, roles}) {
+    controller.teams = teams;
+    controller.roles = roles;
+    controller.entry = null;
+    controller.roleById = _.keyBy(roles, (r) => r.id);
+    controller.roleOptions = roles.filter((r) => (r.id !== ADMIN && r.id !== TECH_NINJA)).map((r) => ({
+      id: r.id,
+      title: r.title
+    }));
   }
 }

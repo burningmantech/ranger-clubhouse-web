@@ -198,21 +198,24 @@ export default class PersonIndexController extends ClubhouseController {
   }
 
 
-  _reloadMembershipAndRoles() {
-    const personId = +this.person.id;
+  async _reloadMembershipAndRoles() {
+    const personId = this.person.id;
     this._reloadUserIfMe();
 
-    return this.ajax.request(`person/${personId}/membership`)
-      .then(({membership}) => {
-        this.personMembership = membership;
-
-        // Reload the roles because team and positions may have added or removed roles
-        this.ajax.request(`person/${personId}/roles`, {data: {include_memberships: 1}})
-          .then((results) => this.grantedRoles = results)
-          .catch((response) => this.house.handleErrorResponse(response));
-      }).catch((response) => this.house.handleErrorResponse(response));
-
+    try {
+      const {membership} = await this.ajax.request(`person/${personId}/membership`);
+      this.personMembership = membership;
+      this.grantedRoles = await this.ajax.request(`person/${personId}/roles`, {data: {include_memberships: 1}});
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
   }
+
+  /**
+   * Toggle showing the roles. The reason this is here instead of the <Person::Roles /> component is
+   * because it is desired behavior to show the roles across multiple person views. The showRoles variable
+   * is not reset between page vies.
+   */
 
   @action
   toggleRoles() {
@@ -296,16 +299,5 @@ export default class PersonIndexController extends ClubhouseController {
   @action
   closePasswordDialogAction() {
     this.showPasswordDialog = false;
-  }
-
-  /**
-   * Clear any cached roles - just in case the cache got f**ked up.
-   */
-
-  @action
-  clearRoleCacheAction() {
-    this.ajax.request('role/clear-cache', {method: 'POST', data: {person_id: this.person.id}}).then(() => {
-      this.toast.success('Role cache has been cleared.');
-    }).catch((response) => this.house.handleErrorResponse(response));
   }
 }

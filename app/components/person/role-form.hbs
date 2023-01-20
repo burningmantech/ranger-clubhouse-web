@@ -3,10 +3,19 @@
           @formFor={{this.roleForm}}
           @onSubmit={{this.save}} as |f|>
     <Modal.body>
-      <div class="masonry-container masonry-border">
+      <table class="table table-sm table-width-auto table-striped table-hover">
+        <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th>Role</th>
+          <th>Assigned Thru Team(s)?</th>
+          <th>Assigned Thru Position(s)?</th>
+        </tr>
+        </thead>
+        <tbody>
         {{#each this.roles as |role|}}
-          <div class="masonry-item">
-            <div class="form-check">
+          <tr>
+            <td>
               <Input @type="checkbox"
                      id="role-{{role.id}}"
                      class="form-check-input"
@@ -14,37 +23,38 @@
                      disabled={{role.disabled}}
                 {{on "change" (fn this.clickRole role)}}
               />
+            </td>
+            <td>
               <label for="role-{{role.id}}" class="form-check-label">
                 {{role.title}}
-                {{#if role.disabled}}
-                  <div class="text-muted small">Contact Tech Team to assign/remove</div>
-                {{/if}}
               </label>
-
-              {{#if role.positions}}
-                <div class="ms-1">
-                  <div class="text-danger">Granted thru {{pluralize role.positions.length "position"}}:</div>
-                  <ul>
-                    {{#each role.positions as |position|}}
-                      <li>{{position.title}}</li>
-                    {{/each}}
-                  </ul>
-                </div>
-              {{/if}}
-              {{#if role.teams}}
-                <div class="ms-1">
-                  <div class="text-danger">Granted thru {{pluralize role.teams.length "team"}}:</div>
-                  <ul>
-                    {{#each role.teams as |team|}}
-                      <li>{{team.title}}</li>
-                    {{/each}}
-                  </ul>
-                </div>
-              {{/if}}
-            </div>
-          </div>
+            </td>
+            {{#if role.disabled}}
+              <td class="text-muted" colspan="3">
+                Contact Tech Team to assign/remove
+              </td>
+            {{else}}
+              <td>
+                {{#each role.teams as |team idx|}}
+                  {{#if idx}}<br>{{/if}}
+                  {{team.title}}
+                {{else}}
+                  <i class="text-muted">None</i>
+                {{/each}}
+              </td>
+              <td>
+                {{#each role.positions as |position idx|}}
+                  {{#if idx}}<br>{{/if}}
+                  {{position.title}}
+                {{else}}
+                  <i class="text-muted">None</i>
+                {{/each}}
+              </td>
+            {{/if}}
+          </tr>
         {{/each}}
-      </div>
+        </tbody>
+      </table>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
       <f.submit @label="Update" @disabled={{@isSaving}} />

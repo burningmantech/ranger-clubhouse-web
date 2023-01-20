@@ -1,7 +1,26 @@
 import Component from '@glimmer/component';
 import {cached} from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
+import {service} from '@ember/service';
+import {action} from '@ember/object';
+import { TECH_NINJA} from 'clubhouse/constants/roles';
 
 export default class PersonRolesComponent extends Component {
+  @service ajax;
+  @service house;
+  @service session;
+  @service toast;
+
+  @tracked cachedRoles;
+
+  get isTechNinja() {
+    return this.session.hasRole(TECH_NINJA);
+  }
+
+  get isAdmin() {
+    return this.session.isAdmin;
+  }
+
   @cached
   get combinedRoles() {
     const foundRoles = [];
@@ -16,7 +35,7 @@ export default class PersonRolesComponent extends Component {
         return;
       }
 
-       let notGranted = false;
+      let notGranted = false;
 
       // See if the role is only granted thru the positions, said positions require training before the roles
       // are granted, and the person is not (ART) trained.
@@ -38,6 +57,31 @@ export default class PersonRolesComponent extends Component {
     });
 
     return foundRoles;
+  }
+
+  @action
+  async showCachedRolesAction() {
+    try {
+      this.cachedRoles = await this.ajax.request('role/inspect-cache', {data: {person_id: this.args.person.id}});
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
+  }
+
+  @action
+  hideCachedRoles() {
+    this.cachedRoles = null;
+  }
+
+  /**
+   * Clear any cached roles - just in case the cache got f**ked up.
+   */
+
+  @action
+  clearRoleCacheAction() {
+    this.ajax.request('role/clear-cache', {method: 'POST', data: {person_id: this.args.person.id}}).then(() => {
+      this.toast.success('Role cache has been cleared.');
+    }).catch((response) => this.house.handleErrorResponse(response));
   }
 }
 

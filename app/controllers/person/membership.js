@@ -9,6 +9,10 @@ export default class PersonMembershipController extends ClubhouseController {
   @tracked canManageGeneralPositions = false;
   @tracked isSaving = false;
 
+  get isAdmin() {
+    return this.session.isAdmin;
+  }
+
   @action
   itemClick(item) {
     item.selected = !item.selected;
