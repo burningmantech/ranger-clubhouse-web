@@ -1,5 +1,4 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import requestYear from 'clubhouse/utils/request-year';
 import RSVP from 'rsvp';
 
 export default class AdminMailLogRoute extends ClubhouseRoute {
