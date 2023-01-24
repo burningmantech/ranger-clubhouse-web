@@ -4,13 +4,13 @@
       <BsDropdown @htmlTag="" as |dd|>
         <dd.button class="btn-light-gray">{{this.modeText}} <span class="caret"></span></dd.button>
         <dd.menu as |menu|>
-          {{#each @modeOptions as |opt|~}}
+          {{#each @modeOptions as |opt|}}
             <menu.item>
               <a class="dropdown-item" href {{on "click"(fn this.selectModeEvent opt.value dd.closeDropdown)}}>
-                {{~opt.label~}}
+                {{opt.label}}
               </a>
             </menu.item>
-          {{~/each}}
+          {{/each}}
         </dd.menu>
       </BsDropdown>
     {{/if}}
@@ -27,9 +27,9 @@
            spellcheck="false"
            ...attributes
     />
-    {{~#if @appendSearchIcon~}}
+    {{#if @appendSearchIcon}}
       <span class="input-group-text">{{fa-icon "search"}}</span>
-    {{~/if~}}
+    {{/if}}
   </div>
   {{#if (and this.isFocused (or this.isSearching this.noResultsFound this.options))}}
     <div class="autocomplete-results-box autocomplete-results-box-overlay mt-1 border rounded"
@@ -37,24 +37,45 @@
       {{will-destroy this.resultsBoxDestroy}}
     >
       <div class="autocomplete-list">
-        {{~#if this.noResultsFound~}}
-          <div>{{this.noResultsText}}</div>
-        {{~else if this.isSearching~}}
-          <div class="text-muted">Searching
+        {{#if this.noResultsFound}}
+          <div class="autocomplete-no-results">{{this.noResultsText}}</div>
+        {{else if this.isSearching}}
+          <div class="autocomplete-searching">
+            Searching
             <SpinIcon/>
           </div>
-        {{~/if~}}
-        {{~#each this.options as |opt idx|~}}
-          <div class="{{if (eq idx this.selectionIdx) "autocomplete-option-selected"}}"
-               data-result-id={{idx}}
-               role="link"
-            {{on "click" (fn this.clickSelection opt)}}
-            {{!template-lint-disable no-pointer-down-event-binding}}
-            {{on "mousedown" (fn this.clickSelection opt)}}
-          >
-            {{~yield opt~}}
+        {{/if}}
+        {{#if (and this.options this.title)}}
+          <div class="autocomplete-title">
+            {{this.title}}
           </div>
-          {{~else~}}
+        {{/if}}
+        {{#each this.options as |opt idx|}}
+          {{#if opt.isGroup}}
+            <div class="autocomplete-group-header">{{opt.title}}</div>
+            {{#each opt.items as |item|}}
+              <div class="autocomplete-item {{if (eq item.index this.selectionIdx) "autocomplete-option-selected"}}"
+                   data-result-id={{item.index}}
+                   role="link"
+                {{on "click" (fn this.clickSelection item)}}
+                {{!template-lint-disable no-pointer-down-event-binding}}
+                {{on "mousedown" (fn this.clickSelection item)}}
+              >
+                {{yield item opt}}
+              </div>
+            {{/each}}
+          {{else}}
+            <div class="autocomplete-item {{if (eq idx this.selectionIdx) "autocomplete-option-selected"}}"
+                 data-result-id={{idx}}
+                 role="link"
+              {{on "click" (fn this.clickSelection opt)}}
+              {{!template-lint-disable no-pointer-down-event-binding}}
+              {{on "mousedown" (fn this.clickSelection opt)}}
+            >
+              {{yield opt}}
+            </div>
+          {{/if}}
+        {{else}}
           {{#if (and (not this.noResultsFound) (not this.isSearching))}}
             <div class="text-muted">Start typing to search</div>
           {{/if}}

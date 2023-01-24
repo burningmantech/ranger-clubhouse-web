@@ -33,6 +33,8 @@ export default class AutocompleteInputComponent extends Component {
    */
   @tracked options = [];
 
+  @tracked items = [];
+
   /**
    * True if the search input field has focus.
    * @type {boolean}
@@ -59,6 +61,12 @@ export default class AutocompleteInputComponent extends Component {
    * @type {boolean}
    */
   hasSelected = false;
+
+  /**
+   * Set by the search results, and shown at the top of the dropdown.
+   */
+
+  @tracked title;
 
   get inputClass() {
     return this.args.inputClass || 'form-control autocomplete-input';
@@ -104,28 +112,43 @@ export default class AutocompleteInputComponent extends Component {
   }
 
   _runSearch(promise) {
-    promise.then((options) => {
-      this.options = options;
+    promise.then((results) => {
       this.selectionIdx = -1;
 
-      // Choose the item if the enter key was pressed before the search completed.
-      if (this.enterPressed && options.length === 1) {
-        this._selectOption(options[0]);
+      let index = 0;
+      this.items = [];
+      if ('groups' in results) {
+        results.groups.forEach((group) => {
+          group.items.forEach((item) => {
+            item.index = index++;
+            this.items.push(item);
+          })
+        });
+        this.title = results.title;
+        this.options = results.groups;
+      } else {
+        this.options = results;
+        this.items = results;
       }
 
-      if (!options.length) {
+      if (!this.items.length) {
         this.noResultsFound = true;
+      } else {
+        this.noResultsFound = false;
+        if (this.enterPressed && this.items.length === 1) {
+          // Choose the item if the enter key was pressed before the search completed.
+          this._selectOption(this.items[0]);
+        }
       }
     }).catch((response) => {
       // An undefined response means no search was done
       if (response !== undefined) {
         this.house.handleErrorResponse(response);
       }
-    })
-      .finally(() => {
-        this.isSearching = false;
-        this.enterPressed = false;
-      });
+    }).finally(() => {
+      this.isSearching = false;
+      this.enterPressed = false;
+    });
   }
 
   /**
@@ -137,7 +160,7 @@ export default class AutocompleteInputComponent extends Component {
   focusEvent(event) {
     this.isFocused = true;
     this.selectionIdx = -1;
-    this.options = [];
+    this.items = [];
     this.hasSelected = false;
 
     // Safari prevent autocomplete hack.
@@ -191,7 +214,7 @@ export default class AutocompleteInputComponent extends Component {
         if (this.selectionIdx === -1) {
           // No selection yet.
           this.selectionIdx = 0;
-        } else if (this.selectionIdx < (this.options.length - 1)) {
+        } else if (this.selectionIdx < (this.items.length - 1)) {
           this.selectionIdx = this.selectionIdx + 1;
         }
         break;
@@ -199,12 +222,10 @@ export default class AutocompleteInputComponent extends Component {
       case 'Enter':
         if (this.isSearching) {
           this.enterPressed = true;
-        } else if (this.options) {
-          if (this.options.length === 1) {
-            this._selectOption(this.options[0]);
-          } else if (this.selectionIdx !== -1) {
-            this._selectOption(this.options[this.selectionIdx]);
-          }
+        } else if (this.items.length === 1) {
+          this._selectOption(this.items[0]);
+        } else if (this.selectionIdx !== -1) {
+          this._selectOption(this.items[this.selectionIdx]);
         }
         break;
 
@@ -264,11 +285,11 @@ export default class AutocompleteInputComponent extends Component {
 
     setTimeout(() => {
       schedule('afterRender', () => {
-        if (this.args.selectOnBlur && this.options.length > 0) {
-          if (this.options.length === 1 || this.selectionIdx === -1) {
-            this._selectOption(this.options[0]);
+        if (this.args.selectOnBlur && this.items.length > 0) {
+          if (this.items.length === 1 || this.selectionIdx === -1) {
+            this._selectOption(this.items[0]);
           } else {
-            this._selectOption(this.options[this.selectionIdx]);
+            this._selectOption(this.items[this.selectionIdx]);
           }
         }
         this.isFocused = false;

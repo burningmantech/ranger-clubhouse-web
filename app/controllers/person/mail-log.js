@@ -3,7 +3,7 @@ import { action, set } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 export default class PersonMailLogController extends ClubhouseController {
-  queryParams = [ 'year', 'page' ];
+  queryParams = [ 'page' ];
 
   @tracked meta = null;
   @tracked stats = null;
@@ -16,11 +16,5 @@ export default class PersonMailLogController extends ClubhouseController {
   @action
   goPrevPage() {
     set(this, 'page', +this.meta.page - 1);
-  }
-
-  @action
-  selectYearAction(year) {
-    set(this, 'year', year);
-    set(this, 'page', null);
   }
 }

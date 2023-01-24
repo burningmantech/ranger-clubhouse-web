@@ -1,11 +1,46 @@
-<YearSelect @title="Mail Log"
-            @year={{this.year}}
-            @years={{this.stats.years}}
-            @subheader={{true}}
-            @onChange={{action this.selectYearAction}} />
+<h3>Mail Log &amp; Email Change History</h3>
 
-<MailLogTable @logs={{this.logs}}
-              @meta={{this.meta}}
-              @stats={{this.stats}}
-              @goNextPage={{this.goNextPage}}
-              @goPrevPage={{this.goPrevPage}} />
+<UiTab as |tab|>
+  <tab.pane @title="Mail Log">
+    <MailLogTable @logs={{this.logs}}
+                  @meta={{this.meta}}
+                  @stats={{this.stats}}
+                  @goNextPage={{this.goNextPage}}
+                  @goPrevPage={{this.goPrevPage}} />
+  </tab.pane>
+  <tab.pane @title="Email Change History">
+    <p>
+      The following table lists the old email addresses the person may have used in the past.
+    </p>
+    <table class="table table-width-auto table-sm table-striped table-hover">
+      <thead>
+      <tr>
+        <th>Old Email</th>
+        <th>Changed By</th>
+        <th>Changed On (Pacific)</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.emailHistory as |history|}}
+        <tr>
+          <td>{{history.email}}</td>
+          <td>
+            {{#if history.source_person}}
+              <PersonLink @person={{history.source_person}} />
+            {{else}}
+              -
+            {{/if}}
+          </td>
+          <td>{{timestamp-format history.created_at}}</td>
+        </tr>
+      {{else}}
+      <tr>
+        <td colspan="3" class="text-danger">
+          The email address has not changed since the account was originally created.
+        </td>
+      </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </tab.pane>
+</UiTab>

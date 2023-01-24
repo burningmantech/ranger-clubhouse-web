@@ -9,6 +9,8 @@ import {inject as controller} from '@ember/controller';
 import {config} from 'clubhouse/utils/config';
 import {isEmpty} from '@ember/utils';
 import RSVP from 'rsvp';
+import _ from 'lodash';
+
 
 /*
  The search bar lives on top of the page just below the top navigation bar.
@@ -18,7 +20,17 @@ import RSVP from 'rsvp';
 const SEARCH_RATE_MS = 300;
 
 // What fields to search on.
-const SearchFields = ['name', 'callsign', 'email', 'formerly_known_as'];
+const SearchFields = ['callsign', 'name', 'fka', 'email'];
+
+const SearchGroupTitles = {
+  'name': 'Real name matches',
+  'callsign': 'Callsign matches',
+  'email': 'Email matches',
+  'old-email': 'Old email matches',
+  'fka': 'FKA Matches',
+  'last': 'Last name matches',
+  'id': 'Person Record #'
+};
 
 // Statuses to automatically exclude, unless the user states otherwise
 const ExcludeStatus = [AUDITOR, PAST_PROSPECTIVE];
@@ -234,9 +246,7 @@ export default class SearchItemBarComponent extends Component {
   @action
   searchAction(query) {
     this.searchText = query;
-    return new RSVP.Promise((resolve, reject) => {
-      debounce(this, this._performSearch, query, resolve, reject, SEARCH_RATE_MS);
-    });
+    return new RSVP.Promise((resolve, reject) => debounce(this, this._performSearch, query, resolve, reject, SEARCH_RATE_MS));
   }
 
   /**
@@ -296,7 +306,7 @@ export default class SearchItemBarComponent extends Component {
    * @private
    */
 
-  _searchAsset(query, resolve, reject) {
+  async _searchAsset(query, resolve, reject) {
     let year, barcode;
 
     // Strip off '#'
@@ -315,26 +325,26 @@ export default class SearchItemBarComponent extends Component {
 
     this.searchYear = year;
 
-    this.ajax.request('asset', {data: {barcode, year}})
-      .then((results) => {
-        if (!results.asset.length) {
-          // Nothing matched
-          return resolve([]);
-        }
+    try {
+      const {asset} = await this.ajax.request('asset', {data: {barcode, year}});
+      if (!asset.length) {
+        // Nothing matched
+        return resolve([]);
+      }
 
-        const asset = results.asset.firstObject;
-        const searchResults = [{
-          barcode: asset.barcode,
-          description: asset.description,
-          type: asset.temp_id,
-        }];
+      const item = asset[0];
+      const searchResults = [{
+        barcode: item.barcode,
+        description: item.description,
+        type: item.temp_id,
+      }];
 
-        this.searchResults = searchResults;
-        return resolve(searchResults);
-      }).catch((response) => {
+      this.searchResults = searchResults;
+      return resolve(searchResults);
+    } catch (response) {
       this.house.handleErrorResponse(response);
       return reject();
-    });
+    }
   }
 
   /**
@@ -347,55 +357,75 @@ export default class SearchItemBarComponent extends Component {
    * @private
    */
 
-  _searchVehicle(query, resolve, reject) {
+  async _searchVehicle(query, resolve, reject) {
     // Strip off '!'
-    const number = query.replace('!', '').replace(/ /g, '');
+    let number = query.replace('!', '').replace(/ /g, '');
 
-    this.ajax.request('vehicle', {data: {number, status: 'approved', event_year: this.house.currentYear()}})
-      .then(({vehicle}) => {
-        if (!vehicle.length) {
-          // Nothing matched
-          return resolve([]);
+    let event_year;
+    if (number.includes(':')) {
+      // Vehicle search in a year
+      const [base, year] = number.split(':');
+      if (year.length !== 4) {
+        return resolve([]);
+      }
+      number = base;
+      event_year = +year;
+    } else {
+      event_year = this.house.currentYear();
+    }
+
+
+    try {
+      const {vehicle} = await this.ajax.request('vehicle', {
+        data: {
+          number,
+          status: 'approved',
+          event_year
+        }
+      });
+      if (!vehicle.length) {
+        // Nothing matched
+        return resolve([]);
+      }
+
+      const results = vehicle.map((v) => {
+        let name;
+        if (v.person) {
+          name = `Owner ${v.person.callsign}`;
+        } else if (!isEmpty(v.team_assignment)) {
+          name = `Team ${v.team_assignment}`;
+        } else {
+          name = 'Fleet Vehicle'
         }
 
-        const results = vehicle.map((v) => {
-          let name;
-          if (v.person) {
-            name = `Owner ${v.person.callsign}`;
-          } else if (!isEmpty(v.team_assignment)) {
-            name = `Team ${v.team_assignment}`;
-          } else {
-            name = 'Fleet Vehicle'
-          }
+        const numbers = [];
 
-          const numbers = [];
+        if (!isEmpty(v.license_number)) {
+          numbers.push(`Lic #${v.license_state}-${v.license_number}`);
+        }
 
-          if (!isEmpty(v.license_number)) {
-            numbers.push(`Lic #${v.license_state}-${v.license_number}`);
-          }
+        if (!isEmpty(v.rental_number)) {
+          numbers.push(`Rental #${v.rental_number}`);
+        }
 
-          if (!isEmpty(v.rental_number)) {
-            numbers.push(`Rental #${v.rental_number}`);
-          }
+        if (!isEmpty(v.sticker_number)) {
+          numbers.push(`Sticker #${v.sticker_number}`);
+        }
 
-          if (!isEmpty(v.sticker_number)) {
-            numbers.push(`Sticker #${v.sticker_number}`);
-          }
+        return {
+          id: v.id,
+          name,
+          numbers: numbers.join(' '),
+          description: `${v.vehicle_type} ${v.vehicle_year}  ${v.vehicle_make} ${v.vehicle_model} ${v.vehicle_color}`
+        }
+      });
 
-          return {
-            id: v.id,
-            name,
-            numbers: numbers.join(' '),
-            description: `${v.vehicle_type} ${v.vehicle_year}  ${v.vehicle_make} ${v.vehicle_model} ${v.vehicle_color}`
-          }
-        });
-
-        this.searchResults = results;
-        return resolve(results);
-      }).catch((response) => {
+      this.searchResults = results;
+      return resolve(results);
+    } catch (response) {
       this.house.handleErrorResponse(response);
       return reject();
-    });
+    }
   }
 
   /**
@@ -408,13 +438,10 @@ export default class SearchItemBarComponent extends Component {
    * @private
    */
 
-  _searchPerson(query, resolve, reject) {
+  async _searchPerson(query, resolve, reject) {
     const form = this.searchForm;
 
-    const params = {
-      basic: 1,
-      query
-    };
+    const params = {};
 
     if (form.mode === 'hq') {
       // restrict search to callsign and a handful of active-like statuses
@@ -438,28 +465,49 @@ export default class SearchItemBarComponent extends Component {
       const toExclude = ExcludeStatus.slice();
 
       if (form.auditor) {
-        toExclude.removeObject(AUDITOR);
+        _.remove(toExclude, (s) => s === AUDITOR);
       }
 
       if (form.past_prospective) {
-        toExclude.removeObject(PAST_PROSPECTIVE);
+        _.remove(toExclude, (s) => s === PAST_PROSPECTIVE);
       }
 
       if (toExclude.length > 0) {
         params.exclude_statuses = toExclude.join(',');
       }
+
+      const match = query.match(/^(callsign|name|fka|last)\s*:\s*(.*)$/i);
+      if (match) {
+        params.search_fields = match[1];
+        query = match[2];
+      }
     }
 
+    if (query.length < 2) {
+      return reject();
+    }
+
+    params.query = query;
+
     // And fire away!
-    return this.ajax.request('person', {data: params})
-      .then((results) => {
-        const people = results.person;
-        this.searchResults = people;
-        return resolve(people);
-      }).catch((response) => {
-        this.house.handleErrorResponse(response);
-        return reject();
+    try {
+      const result = await this.ajax.request('person/search', {data: params});
+      let index = 0;
+      const searchGroups = result.map((group) => {
+        group.people.forEach((person) => person.index = index++);
+        return {
+          isGroup: true,
+          title: SearchGroupTitles[group.field] ?? `Unknown group ${group.field}`,
+          field: group.field,
+          items: group.people
+        };
       });
+      this.searchResults = searchGroups;
+      return resolve({groups: searchGroups});
+    } catch (e) {
+      this.house.handleErrorResponse(e);
+      return reject();
+    }
   }
 
   /**

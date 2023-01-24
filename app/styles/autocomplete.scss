@@ -20,20 +20,30 @@
 
 
 .autocomplete-list {
-  max-height: 14em;
+ // max-height: 14em;
   margin: 0;
   padding: 0;
 }
 
-.autocomplete-list div {
-  list-style: none;
+.autocomplete-title {
   padding: 5px 10px;
-  margin: 2px 0;
+  font-size: 0.95em;
+  color: #666;
+}
+.autocomplete-group-header {
+  background-color: #ececec;
+  color: #0a3954;
+  font-size: 0.95em !important;
+  padding: 5px 10px;
+}
+
+.autocomplete-item {
+  padding: 5px 10px;
   font-size: 1.1em;
 }
 
-.autocomplete-list div:hover {
-  background-color: #ececec;
+.autocomplete-item:hover {
+  background-color: #ffff99;
 }
 
 .autocomplete-results-box-overlay {
@@ -43,7 +53,7 @@
 }
 
 .autocomplete-results-box {
-  max-height: 14em;
+  max-height: 20em;
   overflow-y: auto;
   width: 100%;
   background-color: #fafafa;
@@ -51,6 +61,15 @@
   border: 2px solid #ececec;
 }
 
+.autocomplete-no-results {
+  padding: 5px 10px;
+  color: #720000;
+}
+
+.autocomplete-searching {
+  padding: 5px 10px;
+  color: #234d3c;
+}
 .autocomplete-option-selected {
-  background-color: #ececec;
+  background-color: #d8fbd8;
 }
