@@ -20,27 +20,23 @@
                            @autofocus={{true}}
                            @onEscape={{this.hideSearchBoxAction}}
                            autocomplete="off"
-                           as |item|>
+                           as |item group|>
           {{#if (eq this.searchType "asset")}}
             {{this.searchYear}} Asset #{{item.barcode}} {{item.description}} {{item.type}}
           {{else if (eq this.searchType "vehicle")}}
             {{item.name}}: {{item.numbers}}
             <span class="ms-4 d-block">&bullet; {{item.description}}</span>
           {{else}}
-            {{~#if (eq this.searchType "person-id")~}}
-              ID #{{item.id}}:
-            {{~/if~}}
             <b>{{item.callsign}}</b>
             <span class="d-inline-block">&lt;{{item.first_name}} {{item.last_name}}, {{item.status}}&gt;</span>
-            {{~#if item.fka_match~}}
+            {{#if (eq group.field "fka")}}
               <span class="ms-4 d-block">&bullet; FKA: {{item.fka_match}}</span>
-            {{~/if~}}
-            {{~#if (eq item.email_match "full")~}}
-              <span class="ms-4 d-block">&bullet; email exact match</span>
-            {{~else if (eq item.email_match "partial")~}}
-              <span class="ms-4 d-block">&bullet; email partial match</span>
-            {{~/if~}}
-          {{~/if~}}
+            {{else if (eq group.field "email")}}
+              <span class="ms-4 d-block">&bullet;Email match</span>
+            {{else if (eq group.field "email-old")}}
+              <span class="ms-4 d-block">&bullet; OLD email match</span>
+            {{/if}}
+          {{/if}}
         </AutocompleteInput>
         <div class="bg-white p-2 pt-2">
           {{#if this.session.isSmallScreen}}
@@ -70,7 +66,7 @@
                             @label="Email"
                             @inline={{true}}
                 />
-                <f.checkbox @name="formerly_known_as"
+                <f.checkbox @name="fka"
                             @label="Formerly Known As"
                             @inline={{true}}
                 />

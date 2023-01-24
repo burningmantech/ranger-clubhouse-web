@@ -98,19 +98,23 @@
 
 {{! Add Person dialog box}}
 {{#if this.addPersonForm}}
-  <ModalDialog @title="Add Person To {{shift-format this.slot.begins}}"
+  <ModalDialog @title="Add Person To Alpha Shift {{shift-format this.slot.begins}}"
                @onEscape={{this.cancelSearchAction}} as |Modal|>
     <ChForm @formId="search"
             @formFor={{this.addPersonForm}}
             @changeSet={{false}}
             @onFormChange={{this.searchPeopleAction}} as |f|>
       <Modal.body>
+        <p>
+          Only Alpha and Prospective status accounts may be added.
+        </p>
         <FormRow>
           <f.text @name="name"
                   @label="Enter the callsign, real name, or email of the person to add:"
                   @size={{30}}
                   @autofocus={{true}}
-                  @disabled={{this.slot.is_submitting}}/>
+                  @disabled={{this.slot.is_submitting}}
+          />
         </FormRow>
         <UiCancelButton @disabled={{this.slot.is_submitting}} @onClick={{this.cancelSearchAction}}/>
         {{#if this.slot.is_submitting}}
@@ -119,8 +123,10 @@
           <LoadingIndicator @text="Searching"/>
         {{/if}}
         {{#if this.foundPeople}}
-          Click on the callsign to add the person to the Alpha shift.
-          <table class="table table-hover mt-2">
+          <div class="mt-2">
+            Click on the callsign to add the person to the Alpha shift.
+          </div>
+          <table class="table table-hover ">
             <thead>
             <tr>
               <th class="w-25">Callsign</th>
@@ -129,16 +135,18 @@
             </tr>
             </thead>
             <tbody>
-            {{#each this.foundPeople key="id" as |person|}}
-              <tr>
-                <td class="w-25">
-                  <a href {{action this.addPersonAction person this.slot}}>
-                    {{person.callsign}}
-                  </a>
-                </td>
-                <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
-                <td class="w-25">{{person.status}}</td>
-              </tr>
+            {{#each this.foundPeople  as |group|}}
+              {{#each group.people key="id" as |person|}}
+                <tr>
+                  <td class="w-25">
+                    <a href {{action this.addPersonAction person this.slot}}>
+                      {{person.callsign}}
+                    </a>
+                  </td>
+                  <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
+                  <td class="w-25">{{person.status}}</td>
+                </tr>
+              {{/each}}
             {{/each}}
             </tbody>
           </table>

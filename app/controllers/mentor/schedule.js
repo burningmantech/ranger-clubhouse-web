@@ -43,7 +43,7 @@ export default class MentorScheduleController extends ClubhouseController {
     debounce(this, this._performSearch, model, SEARCH_RATE_MS);
   }
 
-  _performSearch(model) {
+  async _performSearch(model) {
     const query = model.name.trim();
 
     if (query.length < 2) {
@@ -51,24 +51,24 @@ export default class MentorScheduleController extends ClubhouseController {
     }
 
     this.isSearching = true;
-    this.ajax.request('person', {
-      data: {
-        query,
-        basic: 1,
-        search_fields: 'name,callsign,email',
-        exclude_statuses: 'deceased,dismissed,bonked,retired,uberbonked,past prospective',
-        limit: 10
-      }
-    }).then((results) => {
-      this.foundPeople = results.person;
-      if (!results.person) {
+    try {
+      const people = await this.ajax.request('person/search', {
+        data: {
+          query,
+          search_fields: 'name,callsign,email',
+          exclude_statuses: 'deceased,dismissed,bonked,retired,uberbonked,past prospective',
+          limit: 10
+        }
+      });
+      this.foundPeople = people;
+      if (!people.length) {
         this.noSearchMatch = query;
       }
-    }).catch((response) => {
+    } catch (response) {
       this.house.handleErrorResponse(response);
-    }).finally(() => {
+    } finally {
       this.isSearching = false;
-    })
+    }
   }
 
 

@@ -18,20 +18,22 @@ export default class MessageNewComponent extends Component {
     this.isFromMessage = !isEmpty(message.message_from);
   }
 
-  _performSearch(callsign, resolve, reject) {
+  async _performSearch(callsign, resolve, reject) {
     callsign = callsign.trim();
 
     if (callsign.length < 2) {
       return reject();
     }
 
-    return this.ajax.request('callsigns', { data: {query: callsign, type: "message", limit: 20} })
-          .then((result) => {
-            if (result.callsigns.length > 0) {
-              return resolve(result.callsigns.map(row => row.callsign));
-            }
-            return reject();
-          }, reject);
+    try {
+      const {callsigns} = await this.ajax.request('callsigns', {data: {query: callsign, type: "message", limit: 20}});
+      if (callsigns.length > 0) {
+        return resolve(callsigns.map(row => row.callsign));
+      }
+      return reject();
+    } catch (e) {
+      this.house.handleErrorResponse(e);
+    }
   }
 
   @action

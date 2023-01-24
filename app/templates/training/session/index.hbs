@@ -415,21 +415,23 @@
         </div>
         {{#if this.foundPeople}}
           Click on the callsign to add the person.
-          <table class="table table-striped table-hover">
+          <table class="table table-striped table-hover table-width-auto">
             <thead>
             <tr>
-              <th class="w-25">Callsign</th>
-              <th class="w-25">Name</th>
-              <th class="w-25">Status</th>
+              <th>Callsign</th>
+              <th>Name</th>
+              <th>Status</th>
             </tr>
             </thead>
             <tbody>
-            {{#each this.foundPeople key="id" as |person|}}
-              <tr>
-                <td class="w-25"><a href {{on "click" (fn this.addPersonAction person)}}>{{person.callsign}}</a></td>
-                <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
-                <td class="w-25">{{person.status}}</td>
-              </tr>
+            {{#each this.foundPeople as |group|}}
+              {{#each group.people as |person|}}
+                <tr>
+                  <td><a href {{on "click" (fn this.addPersonAction person)}}>{{person.callsign}}</a></td>
+                  <td>{{person.first_name}} {{person.last_name}}</td>
+                  <td>{{person.status}}</td>
+                </tr>
+              {{/each}}
             {{/each}}
             </tbody>
           </table>

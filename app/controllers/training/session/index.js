@@ -11,7 +11,7 @@ import {AUDITOR, PROSPECTIVE} from "clubhouse/constants/person_status";
 
 const SEARCH_RATE_MS = 300;
 
-export default class TrainingSlotController extends ClubhouseController {
+export default class TrainingSessionController extends ClubhouseController {
   @service shiftManage;
   @tracked graduateTraining;
 
@@ -330,27 +330,29 @@ export default class TrainingSlotController extends ClubhouseController {
    * @private
    */
 
-  _performSearch(model) {
+  async _performSearch(model) {
     const query = model.name.trim();
 
     if (query.length < 2) {
       return;
     }
 
-    this.ajax.request('person', {
-      data: {
-        query,
-        basic: 1,
-        search_fields: 'name,callsign,email',
-        exclude_statuses: 'deceased,dismissed,bonked,retired,uberbonked',
-        limit: 10
-      }
-    }).then((results) => {
-      this.foundPeople = results.person;
-      if (!results.person.length) {
+    try {
+      const people = await this.ajax.request('person/search', {
+        data: {
+          query,
+          search_fields: 'name,callsign,email',
+          exclude_statuses: 'deceased,dismissed,bonked,retired,uberbonked',
+          limit: 10
+        }
+      });
+      this.foundPeople = people;
+      if (!people.length) {
         this.noSearchMatch = query;
       }
-    }).catch((response) => this.house.handleErrorResponse(response));
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
   }
 
   /**
