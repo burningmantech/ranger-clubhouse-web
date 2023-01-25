@@ -1,0 +1,80 @@
+<h1>Post-Event Swag Distribution Report</h1>
+<p>
+  This report shows what swag (shirt, service pins & patches, etc.) was handed out during an event.
+</p>
+<p>
+  <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+</p>
+Showing {{pluralize this.people.length "person"}}.
+<table class="table table-sm table-width-auto table-striped table-hover">
+  <thead>
+  <tr>
+    <th>Callsign</th>
+    <th>T-Shirts</th>
+    <th>Long Sleeve Shirts</th>
+    <th>Toaster Pins</th>
+    <th>Service Pins</th>
+    <th>Service Patches</th>
+    <th>Org Patches</th>
+    <th>Other Swag</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.people as |person|}}
+    <tr>
+      <td>
+        <PersonLink @person={{person}} />
+      </td>
+      <td>
+        {{#each person.tshirts as |item|}}
+          {{item.title}}<br>
+        {{else}}
+          -
+        {{/each}}
+      </td>
+      <td>
+        {{#each person.longSleeveShirt as |item|}}
+          {{item.title}}<br>
+        {{else}}
+          -
+        {{/each}}
+      </td>
+      <td>
+        {{#each person.toasterPins as |item|}}
+          {{item.title}}<br>
+        {{else}}
+          -
+        {{/each}}
+      </td>
+      <td>
+        {{#each person.servicePins as |item|}}
+          {{item.title}}<br>
+        {{else}}
+          -
+        {{/each}}
+      </td>
+      <td>
+        {{#each person.servicePatches as |item|}}
+          {{item.title}}<br>
+        {{else}}
+          -
+        {{/each}}
+      </td>
+      <td>
+        {{#each person.orgPatches as |item|}}
+          {{item.title}}<br>
+        {{else}}
+          -
+        {{/each}}
+      </td>
+      <td>
+        {{#each person.other as |item|}}
+          {{item.title}}<br>
+        {{else}}
+          -
+        {{/each}}
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>

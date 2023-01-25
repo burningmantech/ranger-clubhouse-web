@@ -3,7 +3,7 @@ import {action} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
 import {
   TypeOptions, ShirtTypeOptions,
-  TYPE_DEPT_PATCH, TYPE_DEPT_PIN, TYPE_DEPT_SHIRT, TYPE_ORG_PIN
+  TYPE_DEPT_PATCH, TYPE_DEPT_PIN, TYPE_DEPT_SHIRT, TYPE_ORG_PATCH
 } from 'clubhouse/models/swag';
 
 export default class AdminSwagController extends ClubhouseController {
@@ -19,7 +19,7 @@ export default class AdminSwagController extends ClubhouseController {
       deptPatches: [],
       deptPins: [],
       deptShirts: [],
-      orgPins: [],
+      orgPatches: [],
       other: []
     };
 
@@ -34,8 +34,8 @@ export default class AdminSwagController extends ClubhouseController {
         case TYPE_DEPT_SHIRT:
           tables.deptShirts.push(swag);
           break;
-        case TYPE_ORG_PIN:
-          tables.orgPins.push(swag);
+        case TYPE_ORG_PATCH:
+          tables.orgPatches.push(swag);
           break;
         default:
           tables.other.push(swag);

@@ -229,6 +229,7 @@ Router.map(function () {
     this.route('timesheet-unconfirmed');
     this.route('vehicle-paperwork');
     this.route('vehicle-registry');
+    this.route('swag-distribution');
   });
 
   this.route('vc', function () {
