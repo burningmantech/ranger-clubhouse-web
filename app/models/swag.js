@@ -4,7 +4,7 @@ import optionsToLabels from 'clubhouse/utils/options-to-labels';
 export const TYPE_DEPT_PATCH = 'dept-patch';
 export const TYPE_DEPT_PIN = 'dept-pin';
 export const TYPE_DEPT_SHIRT = 'dept-shirt';
-export const TYPE_ORG_PIN = 'org-pin';
+export const TYPE_ORG_PATCH = 'org-patch';
 export const TYPE_OTHER = 'other';
 
 export const SHIRT_T_SHIRT = 't-shirt';
@@ -14,7 +14,7 @@ export const TypeOptions = [
   ['Ranger Patch', TYPE_DEPT_PATCH],
   ['Ranger Pin', TYPE_DEPT_PIN],
   ['Ranger Shirt', TYPE_DEPT_SHIRT],
-  ['Org Pin', TYPE_ORG_PIN],
+  ['Org Patch', TYPE_ORG_PATCH],
   ['Other', TYPE_OTHER],
 ];
 export const TypeLabels = optionsToLabels(TypeOptions);

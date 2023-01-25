@@ -32,7 +32,11 @@ Showing {{pluralize @swags.length "item"}}
         <td>{{this.shirtLabel swag}}</td>
       {{/if}}
       <td>
-        {{nl2br swag.description}}
+        {{#if swag.description}}
+          {{nl2br swag.description}}
+        {{else}}
+          -
+        {{/if}}
       </td>
       <td>
         <UiButton @size="sm" @onClick={{fn @editAction swag}}>
