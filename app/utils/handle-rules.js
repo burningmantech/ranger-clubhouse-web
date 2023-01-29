@@ -132,11 +132,15 @@ export class SubstringRule {
         }
       } else if (name.length < targetName.length) {
         if (targetName.indexOf(name) >= 0) {
-          result.push(new HandleConflict(rawName, `${handle.name} contains ${rawName}`, 'medium', this.id, handle));
+          // TODO(srabraham): improve priority handling; other types should be high priority as well
+          const priority = handle.entityType === 'slur' ? 'high' : 'medium';
+          result.push(new HandleConflict(rawName, `${handle.name} contains ${rawName}`, priority, this.id, handle));
         }
       } else {
         if (name.indexOf(targetName) >= 0) {
-          result.push(new HandleConflict(rawName, `${rawName} contains ${handle.name}`, 'medium', this.id, handle));
+          // TODO(srabraham): improve priority handling; other types should be high priority as well
+          const priority = handle.entityType === 'slur' ? 'high' : 'medium';
+          result.push(new HandleConflict(rawName, `${rawName} contains ${handle.name}`, priority, this.id, handle));
         }
       }
     }
