@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
@@ -17,6 +18,8 @@ export default class HandleReservationController extends ClubhouseController {
 
   @tracked handleReservations;
 
+  @tracked showExpired = false;
+
   @tracked entry = null;
 
   typeOptions = [
@@ -32,6 +35,15 @@ export default class HandleReservationController extends ClubhouseController {
 
   typeLabel(type) {
     return TypeLabels[type] ?? type;
+  }
+
+  get reservations() {
+    let results = this.handleReservations;
+    if (!this.showExpired) {
+      const today = dayjs();
+      results = results.filter((h) => h.end_date === null || today.isBefore(h.end_date));
+    }
+    return results;
   }
 
   @action
@@ -69,5 +81,10 @@ export default class HandleReservationController extends ClubhouseController {
   @action
   cancelHandleReservation() {
     this.entry = null;
+  }
+
+  @action
+  toggleShowExpired() {
+    this.showExpired = !this.showExpired;
   }
 }

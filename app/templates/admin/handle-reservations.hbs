@@ -10,6 +10,10 @@
   <p>
     {{! TODO(srabraham): maybe add a "delete all expired button"? }}
     <button type="button" class="btn btn-primary" {{action this.newHandleReservation}}>New Handle Reservation</button>
+    <div class="form-check form-check-inline">
+      <Input @type="checkbox" @checked={{this.showExpired}} class="form-check-input" id="show-expired" onclick="{{action this.toggleShowExpired}}" />
+      <label class="form-check-label" for="show-expired">Show Expired</label>
+    </div>
   </p>
   {{! TODO(srabraham): maybe add filtering? Bulk deleting? }}
   <table class="table table-sm table-hover table-striped table-width-auto">
@@ -24,7 +28,7 @@
     </tr>
     </thead>
     <tbody>
-    {{#each this.handleReservations as |hr|}}
+    {{#each this.reservations as |hr|}}
       <tr>
         <td>{{hr.handle}}</td>
         <td>{{this.typeLabel hr.reservation_type}}</td>
