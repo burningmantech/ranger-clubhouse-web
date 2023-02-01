@@ -5,10 +5,7 @@ export default class ReportsPeopleByClubhouseTeamsRoute extends ClubhouseRoute {
     return this.ajax.request('team/people-by-teams');
   }
 
-  setupController(controller, model) {
-    controller.set('teams', model.teams);
-    model.teams.forEach((team) => {
-      team.managers = team.members.filter((m) => m.is_manager);
-    })
+  setupController(controller, {teams}) {
+    controller.set('teams', teams);
   }
 }

@@ -53,9 +53,10 @@ export default class PersonMembershipController extends ClubhouseController {
     this.teams.forEach((team) => {
       if (team.selected) {
         team_ids.push(team.id);
-        if (team.managerSelect.selected) {
-          manager_ids.push(team.id);
-        }
+      }
+
+      if (team.managerSelect.selected) {
+        manager_ids.push(team.id);
       }
 
       team.allMembers.forEach((p) => {
@@ -69,6 +70,7 @@ export default class PersonMembershipController extends ClubhouseController {
           position_ids.push(p.id);
         }
       });
+
       team.allRangers.forEach((p) => {
         if (p.selected) {
           position_ids.push(p.id);
@@ -98,7 +100,6 @@ export default class PersonMembershipController extends ClubhouseController {
       });
 
       this.toast.success('Teams and/or positions successfully updated.');
-      this.router.transitionTo('person.index', this.person.id);
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
