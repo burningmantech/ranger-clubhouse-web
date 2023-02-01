@@ -11,7 +11,9 @@ export default class TicketPackage {
     const docs = pkg.access_documents.map((ad) => house.pushPayload('access-document', ad));
 
     this.accessDocuments = docs;
-    this.tickets = docs.filter((d) => d.isTicket);
+    this.tickets = docs.filter((d) => d.isRegularTicket);
+    this.specialTickets = pkg.special_tickets.map((ad) => house.pushPayload('access-document', ad));
+    this.specialTicketsEnabled = pkg.special_tickets_enabled;
     this.vehiclePass = docs.find((d) => d.isVehiclePass);
     this.wap = docs.find((d) => d.isWAP);
     this.wapso = docs.filter((d) => d.isWAPSO);

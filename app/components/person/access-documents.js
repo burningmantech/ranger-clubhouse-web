@@ -8,6 +8,7 @@ import {
   STAFF_CREDENTIAL,
   RPT,
   GIFT_TICKET,
+  LSD_TICKET,
   VEHICLE_PASS,
   WAP,
   WAPSO,
@@ -21,7 +22,7 @@ import {
   USED,
   DELIVERY_NONE,
   DELIVERY_POSTAL,
-  DELIVERY_WILL_CALL
+  DELIVERY_WILL_CALL, TURNED_DOWN
 } from 'clubhouse/models/access-document';
 
 export default class PersonAccessDocumentsComponent extends Component {
@@ -38,6 +39,7 @@ export default class PersonAccessDocumentsComponent extends Component {
 
   typeOptions = [
     ["Gift Ticket", GIFT_TICKET],
+    ["LSD Ticket", LSD_TICKET],
     ["Reduced-Price Ticket", RPT],
     ["Staff Credential", STAFF_CREDENTIAL],
     ["Work Access Pass", WAP],
@@ -46,13 +48,14 @@ export default class PersonAccessDocumentsComponent extends Component {
   ];
 
   statusOptions = [
-    ["Qualified", QUALIFIED],
-    ["Claimed", CLAIMED],
     ["Banked", BANKED],
-    ["Submitted", SUBMITTED],
-    ["Used", USED],
     ["Cancelled", CANCELLED],
-    ["Expired", EXPIRED]
+    ["Claimed", CLAIMED],
+    ["Expired", EXPIRED],
+    ["Qualified", QUALIFIED],
+    ["Submitted", SUBMITTED],
+    ["Turned Down", TURNED_DOWN],
+    ["Used", USED],
   ];
 
   deliveryMethodOptions = [
