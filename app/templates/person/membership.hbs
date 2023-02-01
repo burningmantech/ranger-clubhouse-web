@@ -56,20 +56,17 @@
             </Popover>
           {{/if}}
         </div>
-        {{#if this.isAdmin}}
-          <div>
-            <div class="form-check">
-              <input id="team-manager-{{team.id}}"
-                     type="checkbox"
-                     class="form-check-input"
-                     checked={{team.managerSelect.selected}}
-                     disabled={{not team.selected}}
-                {{on "change" (fn this.managerClick team)}}
-              />
-              <label for="team-manager-{{team.id}}" class="form-check-label">Is Team Manager</label>
-            </div>
+        <div>
+          <div class="form-check">
+            <input id="team-manager-{{team.id}}"
+                   type="checkbox"
+                   class="form-check-input"
+                   checked={{team.managerSelect.selected}}
+              {{on "change" (fn this.managerClick team)}}
+            />
+            <label for="team-manager-{{team.id}}" class="form-check-label">Is Team Manager</label>
           </div>
-        {{/if}}
+        </div>
       </div>
       {{#if (or team.allMembers team.optional team.allRangers)}}
         <MembershipPosition @title="Positions all team members are recommended to have"

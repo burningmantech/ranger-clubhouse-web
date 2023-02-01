@@ -32,7 +32,13 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
     controller.person = this.modelFor('person');
 
     const {personMembership, roles, positions, teams} = model;
+    const {management} = personMembership;
     const positionsByIds = {}, teamsById = {};
+
+    const managementById = management.reduce((hash, team) => {
+      hash[team.id] = team;
+      return hash
+    }, {});
 
     controller.canManageGeneralPositions = this.session.isAdmin;
 
@@ -43,6 +49,7 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
       hash[role.id] = role;
       return hash
     }, {});
+
 
     controller.teams = [];
     controller.generalPositions = [];
@@ -65,7 +72,7 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
       team.optional = [];
       team.positions = [];
 
-      team.managerSelect = new SelectItem({}, teamMember?.is_manager);
+      team.managerSelect = new SelectItem({}, !!managementById[teamId]);
 
       positions.forEach((p) => {
         if (teamId !== +p.team_id) {
