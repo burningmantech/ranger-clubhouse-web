@@ -58,7 +58,7 @@ export default class TicketingOpenComponent extends Component {
       this.house.pushPayload('access-document', result.access_document);
       this.toast.success('Your choice has been successfully saved.');
       const {vehiclePass} = this.args.ticketPackage;
-      if (vehiclePass && document.isTicket) {
+      if (vehiclePass && document.isRegularTicket) {
         // Vehicle Pass may have been released because all tickets were banked.
         return vehiclePass.reload();
       }

@@ -2,20 +2,22 @@ import Model, {attr} from '@ember-data/model';
 import {isEmpty} from '@ember/utils';
 import dayjs from 'dayjs';
 
-export const STAFF_CREDENTIAL = 'staff_credential';
-export const RPT = 'reduced_price_ticket';
 export const GIFT_TICKET = 'gift_ticket';
+export const LSD_TICKET = 'lsd_ticket';
+export const RPT = 'reduced_price_ticket';
+export const STAFF_CREDENTIAL = 'staff_credential';
 export const VEHICLE_PASS = 'vehicle_pass';
 export const WAP = 'work_access_pass';
 export const WAPSO = 'work_access_pass_so';
 
-export const QUALIFIED = 'qualified';
-export const CLAIMED = 'claimed';
 export const BANKED = 'banked';
-export const USED = 'used';
 export const CANCELLED = 'cancelled';
+export const CLAIMED = 'claimed';
 export const EXPIRED = 'expired';
+export const QUALIFIED = 'qualified';
 export const SUBMITTED = 'submitted';
+export const TURNED_DOWN = 'turned_down';
+export const USED = 'used';
 
 export const DELIVERY_POSTAL = 'postal';
 export const DELIVERY_WILL_CALL = 'will_call';
@@ -23,18 +25,20 @@ export const DELIVERY_NONE = 'none';
 export const DELIVERY_EMAIL = 'email';
 
 export const TypeLabels = {
-  [STAFF_CREDENTIAL]: 'Staff Credential',
-  [RPT]: 'Reduced-Price Ticket',
   [GIFT_TICKET]: 'Gift Ticket',
-  [WAP]: 'Work Access Pass',
-  [WAPSO]: 'S.O. Work Access Pass',
+  [LSD_TICKET]: 'LSD Ticket',
+  [RPT]: 'Reduced-Price Ticket',
+  [STAFF_CREDENTIAL]: 'Staff Credential',
   [VEHICLE_PASS]: 'Vehicle Pass',
+  [WAPSO]: 'S.O. Work Access Pass',
+  [WAP]: 'Work Access Pass',
 };
 
 export const TypeShortLabels = {
   [STAFF_CREDENTIAL]: 'SC',
   [RPT]: 'RPT',
   [GIFT_TICKET]: 'GIFT',
+  [LSD_TICKET]: 'LSD',
   [VEHICLE_PASS]: 'VP',
   [WAP]: 'WAP',
   [WAPSO]: 'SOWAP',
@@ -46,6 +50,17 @@ export const DeliveryMethodLabels = {
   [DELIVERY_POSTAL]: 'US Mail',
   [DELIVERY_WILL_CALL]: 'Will Call',
   [DELIVERY_NONE]: 'None'
+};
+
+export const StatusLabels = {
+  [BANKED]: 'banked',
+  [CANCELLED]: 'cancelled',
+  [CLAIMED]: 'claimed',
+  [EXPIRED]: 'expired',
+  [QUALIFIED]: 'qualified',
+  [SUBMITTED]: 'submitted',
+  [TURNED_DOWN]: 'turned down',
+  [USED]: 'used',
 };
 
 export default class AccessDocumentModel extends Model {
@@ -76,10 +91,12 @@ export default class AccessDocumentModel extends Model {
   @attr('string') postal_code;
 
 
-  get isTicket() {
-    return (this.type === STAFF_CREDENTIAL
-      || this.type === RPT
-      || this.type === GIFT_TICKET);
+  get isRegularTicket() {
+    return (this.type === STAFF_CREDENTIAL || this.type === RPT);
+  }
+
+  get isSpecialTicket() {
+    return (this.type === LSD_TICKET || this.type === GIFT_TICKET);
   }
 
   get isStaffCredential() {
@@ -94,9 +111,20 @@ export default class AccessDocumentModel extends Model {
     return this.type === GIFT_TICKET;
   }
 
+  /**
+   * Is this a WAP?
+   *
+   * @returns {boolean}
+   */
   get isWAP() {
     return this.type === WAP;
   }
+
+  /**
+   * Is this a S.O. WAP?
+   *
+   * @returns {boolean}
+   */
 
   get isWAPSO() {
     return this.type === WAPSO;
@@ -136,6 +164,10 @@ export default class AccessDocumentModel extends Model {
 
   get isExpired() {
     return this.status === EXPIRED;
+  }
+
+  get isTurnedDown() {
+    return this.status === TURNED_DOWN;
   }
 
   get isUsing() {

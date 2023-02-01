@@ -78,7 +78,7 @@ export default class TicketDeliverInfoComponent extends Component {
     const items = [];
     const ticketClaimed = this.ticketClaimed;
 
-    if (ticketClaimed && (ticket.isReducedPriceTicket || ticket.isGiftTicket)) {
+    if (ticketClaimed && ticket.isReducedPriceTicket) {
       items.push(ticket);
     }
 

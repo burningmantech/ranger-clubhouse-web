@@ -1,3 +1,6 @@
+{{#if this.ticketPackage.specialTickets}}
+  <TicketSpecialTickets @ticketingInfo={{@ticketingInfo}} @ticketPackage={{this.ticketPackage}} />
+{{/if}}
 {{#if (eq @ticketingInfo.period "announce")}}
   <TicketingAnnounce @ticketingInfo={{@ticketingInfo}} @ticketPackage={{this.ticketPackage}} @person={{@person}} />
 {{else if (eq @ticketingInfo.period "open")}}

@@ -1,0 +1,29 @@
+{{#if (and this.specialTicketsEnabled this.haveTickets)}}
+  <UiNotice @type="success" @icon="award" @title="Special Ticket(s) Awarded!" >
+    <p>
+      Congratulations! You have been awarded one or more Special Tickets. These tickets are separate from any
+      Reduced-Price Tickets or Staff Credentials you may have earned.
+    </p>
+    <b class="text-danger">Note:</b>
+    {{#if this.isMainTicketingOpen}}
+      The main Ranger ticketing window is OPEN in addition to the special ticketing window. Scroll down if you wish to
+      claim or adjust any earned Reduced-Price Tickets, Staff Credentials and/or claim a WAP.
+    {{else}}
+      The main Ranger ticketing window is not open at the moment. While you may claim your special ticket(s) now,
+      you will need to come back to claim, or bank, any earned tickets, vehicles passes, and/or claim a WAP when the
+      main Ranger ticketing window opens.
+    {{/if}}
+  </UiNotice>
+
+  {{#if this.giftTickets}}
+    <TicketSpecialChoice @tickets={{this.giftTickets}} @name="Gift" @ticketingInfo={{@ticketingInfo}}>
+      Gift Tickets are free!
+    </TicketSpecialChoice>
+  {{/if}}
+  {{#if this.lsdTickets}}
+    <TicketSpecialChoice @tickets={{this.lsdTickets}} @name="LSD" @ticketingInfo={{@ticketingInfo}}>
+      A LSD Ticket must be paid for in a timely manner. Failing to do so may result in an unacceptable
+      delay of the ticket's delivery. Instructions will be emailed on how to pay for the ticket.
+    </TicketSpecialChoice>
+  {{/if}}
+{{/if}}

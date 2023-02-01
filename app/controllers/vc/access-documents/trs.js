@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import {cached, tracked} from '@glimmer/tracking';
 import {
   GIFT_TICKET,
+  LSD_TICKET,
   STAFF_CREDENTIAL,
   RPT,
   WAP,
@@ -19,6 +20,7 @@ const TRS_COLUMN = {
   [STAFF_CREDENTIAL]: 'sc',
   [RPT]: 'rpt',
   [GIFT_TICKET]: 'gift_ticket',
+  [LSD_TICKET]: 'rpt',    // LSD is really a RPT
   [VEHICLE_PASS]: 'vp',
   [WAP]: 'wap',
   [WAPSO]: 'wap'
@@ -149,7 +151,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     ['Work Access Passes PNV', WAP_PNV],
     ['Work Access Passes All', WAP_ALL],
     ['Gift Tickets', GIFT_TICKET],
-    ['Gift Tickets+VP', GIFT_TICKET_VP]
+    ['Gift Tickets', LSD_TICKET],
   ];
 
   @cached
