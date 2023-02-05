@@ -1,23 +1,19 @@
 <LoginSidebar/>
 <main>
   {{#if (config 'AuditorRegistrationDisabled')}}
-    <UiSection>
-      <:title><span class="text-danger">Auditor registration disabled.</span></:title>
-      <:body>
-        <p>
-          Auditor registration is usually open between January and late August. The Black Rock Rangers only offer
-          trainings
-          between late April/early May and late August. Training registration will prioritize Prospective Rangers
-          over Auditors. <b>No walks-in are allowed.</b>
-        </p>
-        <p>
-          <b class="text-danger">Just attending training as an auditor is not a path to becoming a Ranger.</b> You must
-          apply for and be accepted into the Prospective Ranger program in order to become a Ranger.
-        </p>
-        While you are waiting, please feel free to browse the Ranger manual located on the main Ranger website:
-        <a href="https://rangers.burningman.org">rangers.burningman.org</a>
-      </:body>
-    </UiSection>
+    <UiNotice @type="danger" @icon="hand" @title="Auditor Registration Disabled">
+        Auditor registration is usually open by March and available through late August. The Black Rock Rangers only offer
+        trainings between late April and late August. Training registration will prioritize Prospective Rangers over Auditors.
+      <div class="h3 my-2">
+        No walks-in are allowed.
+      </div>
+      <p>
+        <b class="text-danger">Just attending training as an auditor is not a path to becoming a Ranger.</b> You must
+        apply for and be accepted into the Prospective Ranger program in order to become a Ranger.
+      </p>
+      While you are waiting, please feel free to browse the Ranger Manual located on the main Ranger website:
+      <a href="https://rangers.burningman.org">rangers.burningman.org</a>
+    </UiNotice>
   {{else if (eq this.step "ask-intent")}}
     <UiSection>
       <:title>Hello Auditor or Potential Ranger!</:title>
