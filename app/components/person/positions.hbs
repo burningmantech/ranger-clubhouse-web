@@ -13,47 +13,54 @@
     <b>No teams or positions.</b>
   </div>
 {{else if @showMembership}}
-  <div class="masonry-container masonry-border masonry-col-2 mt-2">
-    <div class="masonry-item">
-      <div class="masonry-item-header">
-        General Positions
-      </div>
-      <div class="ms-1">
+  <table class="table table-width-auto table-sm table-striped table-hover mt-2">
+    <thead>
+    <tr>
+      <th>Team</th>
+      <th>Member?</th>
+      <th>Manager?</th>
+      <th>Positions Granted</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td><i class="text-muted">General Positions</i></td>
+      <td>-</td>
+      <td>-</td>
+      <td>
         {{#each this.membership.unassignedPositions key="id" as |pos|}}
           {{position-label pos}}<br>
         {{else}}
-          <i>None granted.</i>
+          <i>none</i>
         {{/each}}
-      </div>
-    </div>
-
+      </td>
+    </tr>
     {{#each this.membership.teams key="id" as |team|}}
-      <div class="masonry-item">
-        <div class="masonry-item-header d-flex justify-content-between">
-          <div>{{team.title}}</div>
+      <tr>
+        <td>{{team-title team}}</td>
+        <td>
           {{#if team.is_member}}
-            <div class="text-muted small">(member)</div>
+            Y
+          {{else}}
+            -
           {{/if}}
-        </div>
-        <div>
+        </td>
+        <td>
           {{#if team.is_manager}}
-            <div class="text-muted small mb-1 ms-1">
-              Is Clubhouse Team Manager
-            </div>
+            Y
+          {{else}}
+            -
           {{/if}}
-          <div class="ms-1">
-            {{#each team.positions as |p|}}
-              {{position-label p}}<br>
-            {{else}}
-              <i>No additional team positions granted.</i>
-            {{/each}}
-          </div>
-        </div>
-      </div>
-    {{else}}
-      <div class="masonry-item">
-        <b class="text-danger">No team memberships</b>
-      </div>
+        </td>
+        <td>
+          {{#each team.positions as |p|}}
+            {{position-label p}}<br>
+          {{else}}
+            <i class="text-muted">No team positions granted.</i>
+          {{/each}}
+        </td>
+      </tr>
     {{/each}}
-  </div>
+    </tbody>
+  </table>
 {{/if}}
