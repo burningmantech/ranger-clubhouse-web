@@ -3,7 +3,7 @@ import {action} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
 import _ from 'lodash';
 import {TypeLabels, TypeSortOrder} from 'clubhouse/models/award';
-import {TYPE_DEPT_PATCH, TYPE_DEPT_PIN, TYPE_DEPT_SHIRT, TYPE_ORG_PATCH, TYPE_OTHER} from 'clubhouse/models/swag';
+import {TYPE_DEPT_PATCH, TYPE_DEPT_PIN, TYPE_DEPT_SHIRT, TYPE_ORG_PATCH, TYPE_ORG_PIN, TYPE_OTHER} from 'clubhouse/models/swag';
 
 export default class PersonAwardsController extends ClubhouseController {
   @tracked personAwards;
@@ -90,7 +90,7 @@ export default class PersonAwardsController extends ClubhouseController {
       fields.swag_id = person.long_sleeve_swag_ig;
     }
 
-     this.swagEntry = this.store.createRecord('person_swag', fields);
+    this.swagEntry = this.store.createRecord('person_swag', fields);
   }
 
   _setupForSwagEdit(type) {
@@ -114,6 +114,10 @@ export default class PersonAwardsController extends ClubhouseController {
       case 'org-patch':
         this.swagOptions = this._buildSwagOptions(TYPE_ORG_PATCH);
         this.swagTitle = 'Org Service Patch';
+        break;
+      case 'org-pin':
+        this.swagOptions = this._buildSwagOptions(TYPE_ORG_PIN);
+        this.swagTitle = 'Org Service Pin';
         break;
       default:
         this.swagTitle = 'Other Swag';

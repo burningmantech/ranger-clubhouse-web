@@ -1,6 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
-import RSVP from 'rsvp';
 import ScheduleSlotModel from 'clubhouse/models/schedule-slot';
 
 export default class MeScheduleRoute extends ClubhouseRoute {
@@ -18,23 +17,24 @@ export default class MeScheduleRoute extends ClubhouseRoute {
     }
   }
 
-  model(params) {
+  async model(params) {
     const person_id = this.session.userId;
     const year = requestYear(params);
 
-    return RSVP.hash({
-      schedule: this.ajax.request(`person/${person_id}/schedule`, {
-        data: {
-          person_id,
-          year,
-          credits_earned: 1,
-          schedule_summary: 1,
-          signup_permission: 1
-        }
-      }),
-      milestones: this.ajax.request(`person/${person_id}/milestones`).then(({milestones}) => milestones),
-      year
+    const data = {year};
+    data.schedule = await this.ajax.request(`person/${person_id}/schedule`, {
+      data: {
+        person_id,
+        year,
+        credits_earned: 1,
+        schedule_summary: 1,
+        signup_permission: 1
+      }
     });
+
+    data.milestones = this.ajax.request(`person/${person_id}/milestones`).then(({milestones}) => milestones);
+
+    return data;
   }
 
   setupController(controller, model) {

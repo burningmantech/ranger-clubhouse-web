@@ -3,11 +3,15 @@
 <UiTab class="mt-4" as |tab|>
   <tab.pane @title="Swag">
     <p>
+      Do not add, adjust, or remove service items from a person account unless instructed to do so by the Quartermaster.
+    </p>
+    <p>
       <UiButton @onClick={{fn this.newSwag "t-shirt"}}>{{fa-icon "shirt"}} T-Shirt</UiButton>
       <UiButton @onClick={{fn this.newSwag "long-sleeve"}}>{{fa-icon "shirt"}} Long Sleeve Shirt</UiButton>
       <UiButton @onClick={{fn this.newSwag "dept-pin"}}>{{fa-icon "map-pin"}} Ranger Pin</UiButton>
       <UiButton @onClick={{fn this.newSwag "dept-patch"}}>{{fa-icon "medal"}} Ranger Patch</UiButton>
       <UiButton @onClick={{fn this.newSwag "org-patch"}}>{{fa-icon "location-dot"}} Org Patch</UiButton>
+      <UiButton @onClick={{fn this.newSwag "org-pin"}}>{{fa-icon "location-dot"}} Org Pin</UiButton>
       <UiButton @onClick={{fn this.newSwag "other"}}>{{fa-icon "star"}} Other Swag</UiButton>
     </p>
     Showing {{pluralize this.personSwag.length "item"}}
