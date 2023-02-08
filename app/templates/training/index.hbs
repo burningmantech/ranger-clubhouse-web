@@ -36,6 +36,7 @@
             {{#each trainerGroup.trainers as |trainer index|~}}
               {{~if index ", "~}}
               <PersonLink @person={{trainer}} />
+              {{if trainer.is_lead " (lead trainer)"}}
             {{~else}}
               <i>none found</i>
             {{/each}}
