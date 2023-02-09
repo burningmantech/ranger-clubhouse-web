@@ -7,10 +7,7 @@
 FROM node:18-alpine as development
 
 # Install Ember CLI
-# "unsafe-perm" step is a workaround for a bug.
-# See: https://github.com/npm/uid-number/issues/7
-RUN npm config set unsafe-perm true && \
-    npm install --global ember-cli && \
+RUN npm install --global ember-cli && \
     ember --version && \
     npm install --global eslint && \
     eslint --version;
