@@ -8,6 +8,16 @@ export const TYPE_MENTORING = 'Mentoring';
 export const TYPE_OTHER = 'Other';
 export const TYPE_TRAINING = 'Training';
 
+export const TEAM_CATEGORY_ALL_MEMBERS = 'all_members';
+export const TEAM_CATEGORY_OPTIONAL  = 'optional';
+export const TEAM_CATEGORY_PUBLIC = 'public';
+
+export const TeamCategoryLabels = {
+  [TEAM_CATEGORY_ALL_MEMBERS]: 'All Members',
+  [TEAM_CATEGORY_OPTIONAL]: 'Optional',
+  [TEAM_CATEGORY_PUBLIC]: 'Public',
+}
+
 export default class PositionModel extends Model {
   @attr('string') title;
   @attr('boolean', { defaultValue: false }) new_user_eligible;
@@ -16,8 +26,7 @@ export default class PositionModel extends Model {
 
   @attr('boolean', { defaultValue: false }) is_team;
   @attr('number') team_id;
-  @attr('boolean', { defaultValue: false }) all_team_members;
-  @attr('boolean', { defaultValue: false }) public_team_position;
+  @attr('string', {defaultValue: TEAM_CATEGORY_OPTIONAL }) team_category;
 
   @attr('boolean', { defaultValue: false }) require_training_for_roles;
 
@@ -33,5 +42,10 @@ export default class PositionModel extends Model {
   @attr('boolean') prevent_multiple_enrollments;
   @attr('string') contact_email;
   @attr('boolean', { defaultValue: true}) active;
-  @attr('boolean', { defaultValue:false}) alert_when_empty;
+  @attr('boolean', { defaultValue:false}) alert_when_becomes_empty;
+  @attr('boolean', { defaultValue:false}) alert_when_no_trainers;
+
+  get teamCategoryLabel() {
+    return TeamCategoryLabels[this.team_category] ?? this.team_category;
+  }
 }

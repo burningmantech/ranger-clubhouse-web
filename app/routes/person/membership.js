@@ -2,6 +2,7 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
 import Selectable from 'clubhouse/utils/selectable';
 import {tracked} from '@glimmer/tracking';
+import {TEAM_CATEGORY_ALL_MEMBERS, TEAM_CATEGORY_PUBLIC} from "clubhouse/models/position";
 
 class SelectItem extends Selectable {
   @tracked showRoles = false;
@@ -88,9 +89,9 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
         (team.positions ??= []).push(p);
 
         const teamPosition = new SelectItem(p, !!positionsByIds[pid]);
-        if (p.all_rangers || p.new_user_eligible || p.public_team_position) {
+        if (p.all_rangers || p.new_user_eligible || p.team_category === TEAM_CATEGORY_PUBLIC) {
           team.allRangers.push(teamPosition);
-        } else if (p.all_team_members) {
+        } else if (p.team_category === TEAM_CATEGORY_ALL_MEMBERS) {
           team.allMembers.push(teamPosition);
         } else {
           team.optional.push(teamPosition);
