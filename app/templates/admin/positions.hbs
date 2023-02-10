@@ -49,9 +49,11 @@
   {{else}}
     Showing {{this.viewByTeams.length}} teams
     {{#each this.viewByTeams as |team|}}
-      <UiAccordion as |accordion|>
-        <accordion.title>{{team.title}} ({{pluralize team.team_positions.length "position"}})</accordion.title>
-        <accordion.body>
+      <UiSection>
+        <:title>
+          {{team.title}} ({{pluralize team.team_positions.length "position"}})
+        </:title>
+        <:body>
           <div class="overflow-y-auto mt-2">
             <PositionTable @viewPositions={{team.team_positions}}
                            @positions={{this.positions}}
@@ -61,8 +63,9 @@
                            @teamById={{this.teamById}}
             />
           </div>
-        </accordion.body>
-      </UiAccordion>
+
+        </:body>
+      </UiSection>
     {{/each}}
   {{/if}}
 
@@ -141,31 +144,19 @@
           <fieldset>
             <legend>Team &amp; Team Position Flags</legend>
             <p class="text-danger">
-              After adjusting the team position flags, run the Position Sanity Checker to bulk grant or revoke the
-              team positions toteam members.
+              After adjusting the team position category, run the Position Sanity Checker to bulk grant or revoke the
+              team positions to team members.
             </p>
             <FormRow>
               <f.select @name="team_id"
-                        @label="Belongs to team"
+                        @label="Belongs To Team"
                         @options={{this.teamPositionOptions}}
-                        @inline={{true}}
               />
-            </FormRow>
-              <FormRow>
-              <div class="col-12">
-                <f.checkbox @name="all_team_members"
-                            @label="Recommended to all team members"
-                            @inline={{true}}
-                />
-              </div>
-            </FormRow>
-            <FormRow>
-              <div class="col-12">
-                <f.checkbox @name="public_team_position"
-                            @label="Public position - membership not required"
-                            @inline={{true}}
-                />
-              </div>
+              <f.select @name="team_category"
+                        @label="Team Position Category"
+                        @options={{this.categoryOptions}}
+                        @disabled={{not f.model.team_id}}
+              />
             </FormRow>
           </fieldset>
           <fieldset>
@@ -193,7 +184,8 @@
               </div>
             </FormRow>
             <FormRow>
-              <f.checkboxGroup @label="Roles to assign when position is granted" @name="role_ids" @options={{this.roleOptions}} />
+              <f.checkboxGroup @label="Roles to assign when position is granted" @name="role_ids"
+                               @options={{this.roleOptions}} />
             </FormRow>
           </fieldset>
 
@@ -216,8 +208,13 @@
             <legend>Notifications</legend>
             <FormRow>
               <div class="col-12">
-                <f.checkbox @name="alert_when_empty"
-                            @label="Send email to contact email when trainer slot signs up become empty and the trainee slots still have sign ups."
+                <f.checkbox @name="alert_when_no_trainers"
+                            @label="Send email to contact email when trainer/mentor slot signs up become empty and the trainee/mentee slots still have sign ups."
+                />
+              </div>
+              <div class="col-12">
+                <f.checkbox @name="alert_when_becomes_empty"
+                            @label="Send email to contact email when a slot signups become empty."
                 />
               </div>
             </FormRow>

@@ -4,7 +4,7 @@
     <th>ID</th>
     <th colspan="2">Active / Title</th>
     <th>Short Title</th>
-    <th>Team</th>
+    <th>Team / Category</th>
     <th>Type</th>
     <th>Min / Max</th>
     <th>Attributes</th>
@@ -29,6 +29,10 @@
       </td>
       <td>
         {{this.teamName position.team_id}}
+        {{#if position.team_id}}
+          <br>
+          {{position.teamCategoryLabel}}
+        {{/if}}
       </td>
       <td>{{position.type}}</td>
       <td class="text-center">{{position.min}} / {{position.max}}</td>
@@ -50,13 +54,19 @@
           {{fa-icon "clock" fixed=true}} Hours count towards appreciations<br>
         {{/if}}
         {{#if position.on_sl_report}}
-          {{fa-icon "list fixed=true"}} On Shift Lead Report<br>
+          {{fa-icon "list" fixed=true}} On Shift Lead Report<br>
         {{/if}}
         {{#if position.on_trainer_report}}
           {{fa-icon "rectangle-list" fixed=true}} On Trainer's Report<br>
         {{/if}}
         {{#if position.prevent_multiple_enrollments}}
           {{fa-icon "ban" fixed=true}} Multiple Enrollments Prevented<br>
+        {{/if}}
+        {{#if position.alert_when_no_trainers}}
+          {{fa-icon "bell" fixed=true}} Alert when this trainer/mentor slot becomes empty while the trainee/mentee slot still has signups.<br>
+        {{/if}}
+        {{#if position.alert_when_becomes_empty}}
+          {{fa-icon "bell" fixed=true}} Alert when slot becomes empty of signups.<br>
         {{/if}}
         {{#if position.contact_email}}
           {{mail-to position.contact_email}}

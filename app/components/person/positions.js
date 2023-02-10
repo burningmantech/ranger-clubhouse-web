@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import {cached} from '@glimmer/tracking';
 
 export default class PersonPositionsComponent extends Component {
-  get hasNoPositions() {
+   get hasNoPositions() {
     const membership = this.args.personMembership;
 
     return (!membership.positions.length && !membership.teams.length);
