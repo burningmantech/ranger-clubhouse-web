@@ -68,8 +68,10 @@ module.exports = function (defaults) {
           fallback: {
             fs: false
           }
-        }
-      }
+        },
+      },
+      // Work around for ember-auto-import v2.6 regression & ember-bootstrap
+      earlyBootSet: () => [],
     }
   });
 
