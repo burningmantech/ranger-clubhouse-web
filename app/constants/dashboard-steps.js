@@ -27,7 +27,7 @@ import {
   URGENT,
   WAITING
 } from "clubhouse/constants/dashboard";
-import {NON_RANGER} from 'clubhouse/constants/person_status';
+import {AUDITOR, NON_RANGER} from 'clubhouse/constants/person_status';
 import TicketPackage from 'clubhouse/utils/ticket-package';
 
 function indefiniteArticle(noun) {
@@ -217,7 +217,7 @@ export const VERIFY_PERSONAL_INFO = {
         doTheThing = `<b class="text-danger">${doTheThing}</b>`;
       }
       doTheThing = `<p>${doTheThing}</p>`;
-      if (!isNonRanger) {
+      if (!isNonRanger && person.status !== AUDITOR) {
         shirtNag = ' <b>BE SURE TO CONFIRM YOUR RANGER SHIRT SIZES ARE CORRECT.</b>';
       }
     }
