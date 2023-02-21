@@ -35,10 +35,10 @@
                            @tshirtOptions={{this.tshirtOptions}}
                            @longSleeveOptions={{this.longSleeveOptions}} />
         </w.step>
-        <w.step @title="Home Address" @isLast={{true}}>
-          <PersonAddressEdit @f={{f}} />
-        </w.step>
       {{/unless}}
+      <w.step @title="Home Address" @isLast={{true}}>
+        <PersonAddressEdit @f={{f}} />
+      </w.step>
     </UiWizard>
   {{else}}
     {{#if (and this.startedReview (not this.finishedReview))}}
