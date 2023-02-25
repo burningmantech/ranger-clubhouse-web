@@ -82,7 +82,7 @@
                   {{/each}}
                 </td>
                 <td>
-                  {{#each person.positions as |position idx|}}
+                  {{#each person.positions as |position|}}
                     {{#if position.require_training_for_roles}}
                       {{#if position.is_trained}}
                         <div class="text-success">{{fa-icon "check"}} ART Trained</div>

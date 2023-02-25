@@ -61,7 +61,7 @@ export default class ReportsPositionSanityCheckerRoute extends ClubhouseRoute {
 
   deactivated_positions(positions) {
     positions.forEach((p) => this._setChecked(p.people));
-    return positions;f
+    return positions;
   }
 
   deactivated_teams(teams) {
