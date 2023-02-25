@@ -68,6 +68,13 @@
           </div>
         </div>
       </div>
+      {{#unless team.active}}
+        <p class="text-danger">
+          Note: the Clubhouse Team has been deactivated. However, the team is selected, the person is
+          a Clubhouse Team Manager, and/or has granted team positions. The recommendation is to deselect
+          all selected items.
+        </p>
+      {{/unless}}
       {{#if (or team.allMembers team.optional team.allRangers)}}
         <MembershipPosition @title="Positions all team members are recommended to have"
                             @positions={{team.allMembers}}

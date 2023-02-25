@@ -54,7 +54,6 @@
   People should have all the basic team positions appropriate for the team.
 </Admin::PositionSanityCheck>
 
-
 <UiSection>
   <:title>Deactivated Position Assignments</:title>
   <:body>
@@ -70,6 +69,31 @@
           @repairAction={{action this.repairPeople}}
           @repairParams={{ (hash positionId=position.id) }}
           @repairType="deactivated_positions"
+          @canRepair={{this.userCanRepair}}
+          @isSubmitting={{this.isSubmitting}}
+        />
+      {{/each}}
+    {{else}}
+      <b class="text-success">Congratulations! No one has deactivated positions assigned.</b>
+    {{/if}}
+  </:body>
+</UiSection>
+
+<UiSection>
+  <:title>Deactivated Team Membership</:title>
+  <:body>
+    {{#if this.deactivated_teams}}
+      The following deactivated teams still have members.
+      {{#each this.deactivated_teams as |team|}}
+        <Admin::PositionSanityCheckTable
+          @title={{team.title}}
+          @caption="{{team.title}} - {{pluralize team.people.length "person"}} assigned"
+          @sucessMessage="Congratulations! No one belongs the deactivated team '{{team.title}}'."
+          @columns={{team.columns}}
+          @people={{team.people}}
+          @repairAction={{this.repairPeople}}
+          @repairParams={{hash teamId=team.id}}
+          @repairType="deactivated_teams"
           @canRepair={{this.userCanRepair}}
           @isSubmitting={{this.isSubmitting}}
         />
