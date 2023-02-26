@@ -75,6 +75,7 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
 
       team.managerSelect = new SelectItem({}, !!managementById[teamId]);
 
+      let haveTeamPositions = false;
       positions.forEach((p) => {
         if (teamId !== +p.team_id) {
           return;
@@ -82,13 +83,17 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
 
         const pid = +p.id;
 
-        if (!p.active && !positionsByIds[pid]) {
+        const granted = !!positionsByIds[pid];
+        if (!p.active && !granted) {
           return;
         }
 
         (team.positions ??= []).push(p);
 
-        const teamPosition = new SelectItem(p, !!positionsByIds[pid]);
+        const teamPosition = new SelectItem(p, granted);
+        if (granted) {
+          haveTeamPositions = true;
+        }
         if (p.all_rangers || p.new_user_eligible || p.team_category === TEAM_CATEGORY_PUBLIC) {
           team.allRangers.push(teamPosition);
         } else if (p.team_category === TEAM_CATEGORY_ALL_MEMBERS) {
@@ -97,7 +102,10 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
           team.optional.push(teamPosition);
         }
       });
-      controller.teams.push(team);
+
+      if (team.active || team.selected || team.managerSelect.selected || haveTeamPositions) {
+        controller.teams.push(team);
+      }
     });
 
     controller.generalPositions = positions.filter((p) => !p.is_team && !p.team_id && (p.active || positionsByIds[p.id]))
