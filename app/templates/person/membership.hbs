@@ -56,21 +56,25 @@
             </Popover>
           {{/if}}
         </div>
-        {{#if this.isAdmin}}
-          <div>
-            <div class="form-check">
-              <input id="team-manager-{{team.id}}"
-                     type="checkbox"
-                     class="form-check-input"
-                     checked={{team.managerSelect.selected}}
-                     disabled={{not team.selected}}
-                {{on "change" (fn this.managerClick team)}}
-              />
-              <label for="team-manager-{{team.id}}" class="form-check-label">Is Team Manager</label>
-            </div>
+        <div>
+          <div class="form-check">
+            <input id="team-manager-{{team.id}}"
+                   type="checkbox"
+                   class="form-check-input"
+                   checked={{team.managerSelect.selected}}
+              {{on "change" (fn this.managerClick team)}}
+            />
+            <label for="team-manager-{{team.id}}" class="form-check-label">Is Team Manager</label>
           </div>
-        {{/if}}
+        </div>
       </div>
+      {{#unless team.active}}
+        <p class="text-danger">
+          Note: the Clubhouse Team has been deactivated. However, the team is selected, the person is
+          a Clubhouse Team Manager, and/or has granted team positions. The recommendation is to deselect
+          all selected items.
+        </p>
+      {{/unless}}
       {{#if (or team.allMembers team.optional team.allRangers)}}
         <MembershipPosition @title="Positions all team members are recommended to have"
                             @positions={{team.allMembers}}

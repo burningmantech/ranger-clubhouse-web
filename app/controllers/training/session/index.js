@@ -277,7 +277,7 @@ export default class TrainingSessionController extends ClubhouseController {
    */
 
   @action
-  saveTrainers() {
+  async saveTrainers() {
     const trainers = [];
 
     this.trainers.forEach((type) => {
@@ -285,19 +285,21 @@ export default class TrainingSessionController extends ClubhouseController {
         trainers.push({
           id: trainer.id,
           status: trainer.status,
-          trainer_slot_id: trainer.trainer_slot_id
+          trainer_slot_id: trainer.trainer_slot_id,
+          is_lead: trainer.is_lead ? 1 : 0,
         });
       });
     });
 
-    this.toast.clear();
     this.isSubmitting = true;
-    this.ajax.post(`training-session/${this.slot.id}/trainer-status`, {data: {trainers}})
-      .then((results) => {
-        this.trainers = results.trainers;
-        this.toast.success('Trainer attendance was successfully updated.');
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    try {
+      this.trainers = (await this.ajax.post(`training-session/${this.slot.id}/trainer-status`, {data: {trainers}})).trainers;
+      this.toast.success('Trainer attendance was successfully updated.');
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   /**

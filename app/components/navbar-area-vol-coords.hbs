@@ -1,16 +1,20 @@
 <NavbarMenu @nav={{@nav}} @title="Vol Coord" as |menu|>
-  <NavbarMenuItem @menu={{menu}} @route="vc.handle-checker" @item="Check Callsigns" />
-  <NavbarMenuItem @menu={{menu}} @route="vc.photo-review" @item="Photo Review" />
-  <NavbarMenuItem @menu={{menu}} @route="vc.photos" @item="Photos" />
-  <NavbarMenuItem @menu={{menu}} @route="vc.spigot" @item="Spigot Flow" />
+  {{#if (has-role "vc")}}
+    <NavbarMenuItem @menu={{menu}} @route="vc.handle-checker" @item="Check Callsigns"/>
+    <NavbarMenuItem @menu={{menu}} @route="vc.photo-review" @item="Photo Review"/>
+    <NavbarMenuItem @menu={{menu}} @route="vc.photos" @item="Photos"/>
+    <NavbarMenuItem @menu={{menu}} @route="vc.spigot" @item="Spigot Flow"/>
+    <NavbarMenuItem @menu={{menu}} @route="vc.shiny-penny-report" @item="Shiny Penny Report"/>
+    {{#if (has-role "intake")}}
+      <NavbarMenuItem @menu={{menu}} @route="vc.unified-flagging" @item="Unified Flagging"/>
+    {{/if}}
+  {{/if}}
   {{#if (has-role "edit-access-docs")}}
-    <NavbarMenuItem @menu={{menu}} @route="vc.access-documents" @item="Manage Access Docs" />
+    <div class="dropdown-item"><hr class="dropdown-divider"></div>
+    <NavbarMenuItem @menu={{menu}} @route="vc.access-documents" @item="Manage Access Docs"/>
   {{/if}}
   {{#if (has-role "edit-bmids")}}
-    <NavbarMenuItem @menu={{menu}} @route="vc.bmid" @item="Manage BMIDs" />
+    <div class="dropdown-item"><hr class="dropdown-divider"></div>
+    <NavbarMenuItem @menu={{menu}} @route="vc.bmid" @item="Manage BMIDs"/>
   {{/if}}
-  {{#if (has-role "intake")}}
-    <NavbarMenuItem @menu={{menu}} @route="vc.unified-flagging" @item="Unified Flagging" />
-  {{/if}}
-  <NavbarMenuItem @menu={{menu}} @route="vc.shiny-penny-report" @item="Shiny Penny Report" />
 </NavbarMenu>

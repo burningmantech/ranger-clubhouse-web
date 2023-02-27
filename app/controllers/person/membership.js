@@ -1,6 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
+import { TEAM_CATEGORY_ALL_MEMBERS, TEAM_CATEGORY_PUBLIC } from 'clubhouse/models/position';
 
 export default class PersonMembershipController extends ClubhouseController {
   @tracked person;
@@ -23,13 +24,13 @@ export default class PersonMembershipController extends ClubhouseController {
     team.selected = !team.selected;
     if (team.selected) {
       team.allMembers.forEach((p) => {
-        if (p.all_team_members) {
+        if (p.team_category === TEAM_CATEGORY_ALL_MEMBERS) {
           p.selected = team.selected;
         }
       });
     } else {
       team.allMembers.forEach((p) => {
-        if (!p.public_team_position) {
+        if (p.team_category !== TEAM_CATEGORY_PUBLIC) {
           p.selected = false;
         }
       });
@@ -53,9 +54,10 @@ export default class PersonMembershipController extends ClubhouseController {
     this.teams.forEach((team) => {
       if (team.selected) {
         team_ids.push(team.id);
-        if (team.managerSelect.selected) {
-          manager_ids.push(team.id);
-        }
+      }
+
+      if (team.managerSelect.selected) {
+        manager_ids.push(team.id);
       }
 
       team.allMembers.forEach((p) => {
@@ -69,6 +71,7 @@ export default class PersonMembershipController extends ClubhouseController {
           position_ids.push(p.id);
         }
       });
+
       team.allRangers.forEach((p) => {
         if (p.selected) {
           position_ids.push(p.id);
@@ -98,7 +101,6 @@ export default class PersonMembershipController extends ClubhouseController {
       });
 
       this.toast.success('Teams and/or positions successfully updated.');
-      this.router.transitionTo('person.index', this.person.id);
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {

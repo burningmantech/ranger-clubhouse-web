@@ -10,7 +10,7 @@ export default class ReportsPositionSanityCheckerController extends ClubhouseCon
   }
 
   @action
-  repairPeople(thing, people, repair_params) {
+  async repairPeople(thing, people, repair_params) {
     const fixPeople = people.filter((p) => p.checked);
 
     if (!fixPeople.length) {
@@ -27,15 +27,19 @@ export default class ReportsPositionSanityCheckerController extends ClubhouseCon
         (repair_params[+p.id] ||= []).push(isTeam ? p.team_id : p.position_id);
       });
       people_ids = Object.keys(repair_params).map((id) => +id);
+    } else if (thing === 'deactivated_teams') {
+      repair_params = {teamId: fixPeople[0].team_id};
+      people_ids = fixPeople.map((p) => +p.id);
     } else {
       people_ids = fixPeople.map((p) => p.id);
     }
 
     this.isSubmitting = true;
-    this.ajax.request('position/repair', {
-      method: 'POST',
-      data: {repair: thing, people_ids, repair_params}
-    }).then((results) => {
+    try {
+      const results = await this.ajax.request('position/repair', {
+        method: 'POST',
+        data: {repair: thing, people_ids, repair_params}
+      })
       let haveErrors = false;
 
       results.forEach((result) => {
@@ -65,9 +69,11 @@ export default class ReportsPositionSanityCheckerController extends ClubhouseCon
       } else {
         this.toast.success('The repair was successful!');
       }
-
       this.house.scrollToElement(`#${thing}-table`);
-    }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 }

@@ -18,7 +18,7 @@ export default class TicketSummaryComponent extends Component {
     const items = [];
     const {ticketPackage} = this.args;
 
-    if (ticketPackage.tickets.find((ad) => (ad.isTicket && ad.isQualified))) {
+    if (ticketPackage.tickets.find((ad) => (ad.isRegularTicket && ad.isQualified))) {
       items.push('The event ticket(s) has to be claimed or banked.')
     } /*else if (!this.haveAddress) {
       items.push('A delivery method and/or a mailing address has not been given.');

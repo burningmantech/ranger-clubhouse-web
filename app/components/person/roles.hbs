@@ -13,18 +13,13 @@
         Role Diagnostic
         <span class="caret"></span>
       </dd.button>
-      <dd.menu as |ddm|>
-        <ddm.item>
-          <a href {{action this.showCachedRolesAction}}>
-            Inspect Cache
-          </a>
-        </ddm.item>
-        <ddm.divider/>
-        <ddm.item>
-          <a href {{action this.clearRoleCacheAction}}>
-            Clear Cache
-          </a>
-        </ddm.item>
+      <dd.menu>
+        <a class="dropdown-item" href {{action this.showCachedRolesAction}}>
+          Inspect Cache
+        </a>
+        <a class="dropdown-item" href {{action this.clearRoleCacheAction}}>
+          Clear Cache
+        </a>
       </dd.menu>
     </BsDropdown>
   {{/if}}

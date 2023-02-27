@@ -5,6 +5,7 @@ import PositionTypes from 'clubhouse/constants/position-types';
 import PositionValidations from 'clubhouse/validations/position';
 import {TECH_NINJA} from 'clubhouse/constants/roles';
 import _ from 'lodash';
+import {TEAM_CATEGORY_ALL_MEMBERS, TEAM_CATEGORY_OPTIONAL, TEAM_CATEGORY_PUBLIC} from 'clubhouse/models/position';
 
 export default class PositionController extends ClubhouseController {
   @tracked positions;
@@ -37,6 +38,13 @@ export default class PositionController extends ClubhouseController {
     ['List', 'list'],
     ['Teams', 'teams']
   ];
+
+  categoryOptions = [
+    ['Recommended to all new & existing members', TEAM_CATEGORY_ALL_MEMBERS],
+    ['Optional - membership required', TEAM_CATEGORY_OPTIONAL],
+    ['Public - available to anyone', TEAM_CATEGORY_PUBLIC]
+  ];
+
 
   constructor() {
     super(...arguments);

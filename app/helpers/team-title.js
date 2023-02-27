@@ -10,11 +10,7 @@ export default helper(function teamTitle(positional) {
 
   let {title} = team;
 
-  let suffix = team.active ? '' : ' [inactive]';
+  let suffix = team.active ? '' : ' <span class="text-muted">[inactive]</span>';
 
-  if (title.match(/\b(cadre|team|delegation)\b/i)) {
-    return title + suffix;
-  }
-
-  return htmlSafe(`${title}${suffix} <i class="text-muted">(team)</i>`);
+  return htmlSafe(`${title}${suffix}`);
 });

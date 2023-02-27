@@ -2,6 +2,7 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
 import Selectable from 'clubhouse/utils/selectable';
 import {tracked} from '@glimmer/tracking';
+import {TEAM_CATEGORY_ALL_MEMBERS, TEAM_CATEGORY_PUBLIC} from "clubhouse/models/position";
 
 class SelectItem extends Selectable {
   @tracked showRoles = false;
@@ -32,7 +33,13 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
     controller.person = this.modelFor('person');
 
     const {personMembership, roles, positions, teams} = model;
+    const {management} = personMembership;
     const positionsByIds = {}, teamsById = {};
+
+    const managementById = management.reduce((hash, team) => {
+      hash[team.id] = team;
+      return hash
+    }, {});
 
     controller.canManageGeneralPositions = this.session.isAdmin;
 
@@ -43,6 +50,7 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
       hash[role.id] = role;
       return hash
     }, {});
+
 
     controller.teams = [];
     controller.generalPositions = [];
@@ -65,8 +73,9 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
       team.optional = [];
       team.positions = [];
 
-      team.managerSelect = new SelectItem({}, teamMember?.is_manager);
+      team.managerSelect = new SelectItem({}, !!managementById[teamId]);
 
+      let haveTeamPositions = false;
       positions.forEach((p) => {
         if (teamId !== +p.team_id) {
           return;
@@ -74,22 +83,29 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
 
         const pid = +p.id;
 
-        if (!p.active && !positionsByIds[pid]) {
+        const granted = !!positionsByIds[pid];
+        if (!p.active && !granted) {
           return;
         }
 
         (team.positions ??= []).push(p);
 
-        const teamPosition = new SelectItem(p, !!positionsByIds[pid]);
-        if (p.all_rangers || p.new_user_eligible || p.public_team_position) {
+        const teamPosition = new SelectItem(p, granted);
+        if (granted) {
+          haveTeamPositions = true;
+        }
+        if (p.all_rangers || p.new_user_eligible || p.team_category === TEAM_CATEGORY_PUBLIC) {
           team.allRangers.push(teamPosition);
-        } else if (p.all_team_members) {
+        } else if (p.team_category === TEAM_CATEGORY_ALL_MEMBERS) {
           team.allMembers.push(teamPosition);
         } else {
           team.optional.push(teamPosition);
         }
       });
-      controller.teams.push(team);
+
+      if (team.active || team.selected || team.managerSelect.selected || haveTeamPositions) {
+        controller.teams.push(team);
+      }
     });
 
     controller.generalPositions = positions.filter((p) => !p.is_team && !p.team_id && (p.active || positionsByIds[p.id]))

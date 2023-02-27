@@ -15,6 +15,7 @@ export default class ReportsPositionSanityCheckerRoute extends ClubhouseRoute {
     controller.set('team_positions', this.teamPositions(model.team_positions))
     controller.set('team_membership', this.teamMembership(model.team_membership))
     controller.set('deactivated_positions', this.deactivated_positions(model.deactivated_positions));
+    controller.set('deactivated_teams', this.deactivated_teams(model.deactivated_teams));
     controller.set('lmyr', this.lmyrRole(model.lmyr));
   }
 
@@ -61,6 +62,16 @@ export default class ReportsPositionSanityCheckerRoute extends ClubhouseRoute {
   deactivated_positions(positions) {
     positions.forEach((p) => this._setChecked(p.people));
     return positions;
+  }
+
+  deactivated_teams(teams) {
+    teams.forEach((team) => this._setChecked(team.people));
+
+    teams.columns = [
+      {label: 'Deactivated Team', property: 'team_title'},
+    ];
+
+    return teams;
   }
 
   _setChecked(rows) {

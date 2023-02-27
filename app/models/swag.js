@@ -5,6 +5,7 @@ export const TYPE_DEPT_PATCH = 'dept-patch';
 export const TYPE_DEPT_PIN = 'dept-pin';
 export const TYPE_DEPT_SHIRT = 'dept-shirt';
 export const TYPE_ORG_PATCH = 'org-patch';
+export const TYPE_ORG_PIN = 'org-pin';
 export const TYPE_OTHER = 'other';
 
 export const SHIRT_T_SHIRT = 't-shirt';
@@ -15,6 +16,7 @@ export const TypeOptions = [
   ['Ranger Pin', TYPE_DEPT_PIN],
   ['Ranger Shirt', TYPE_DEPT_SHIRT],
   ['Org Patch', TYPE_ORG_PATCH],
+  ['Org Pin', TYPE_ORG_PIN],
   ['Other', TYPE_OTHER],
 ];
 export const TypeLabels = optionsToLabels(TypeOptions);
