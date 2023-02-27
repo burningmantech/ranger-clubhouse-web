@@ -42,8 +42,8 @@
         <tr>
           <th>Person</th>
           <th>Attachment</th>
-          <th>Out</th>
-          <th>In</th>
+          <th>Checked Out Time /<br>By Person</th>
+          <th>Checked In Time /<br>By Person</th>
         </tr>
         </thead>
         <tbody>
@@ -55,10 +55,22 @@
             <td>
               <PresentOrNot @value={{row.attachment.description}} @empty="-"/>
             </td>
-            <td>{{shift-format row.checked_out}}</td>
+            <td>
+              {{shift-format row.checked_out}}<br>
+              {{#if row.check_out_person}}
+                <PersonLink @person={{row.check_out_person}} />
+              {{else}}
+                -
+              {{/if}}
+            </td>
             <td>
               {{#if row.checked_in}}
-                {{shift-format row.checked_in}}
+                {{shift-format row.checked_in}}<br>
+                {{#if row.check_in_person}}
+                  <PersonLink @person={{row.check_in_person}} />
+                {{else}}
+                  -
+                {{/if}}
               {{else}}
                 <UiButton @type="primary" @size="sm" @onClick={{fn this.checkIn row}} @disabled={{row.isSaving}}>
                   Check In
