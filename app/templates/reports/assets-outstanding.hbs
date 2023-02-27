@@ -1,4 +1,8 @@
-<YearSelect @title="Assets Outstanding" @year={{this.year}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="Assets Outstanding"
+            @year={{this.year}}
+            @minYear={{2010}}
+            @onChange={{action (mut this.year)}}
+/>
 <p>
   <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
 </p>
@@ -7,45 +11,50 @@ Showing {{pluralize this.assets.length "asset"}} outstanding.
   <thead>
   <tr>
     <th>Barcode</th>
+    <th>Callsign</th>
     <th>Description</th>
     <th>Attachment</th>
     <th>Assigned</th>
     <th>Temp ID</th>
-    <th>Checked Out</th>
-    <th>Callsign</th>
+    <th>Checked Out /<br>By Person</th>
   </tr>
   </thead>
   <tbody>
   {{#each this.assets as |asset|}}
     <tr>
-      <td class="separated">
+      <td>
         {{asset.barcode}}
       </td>
-      <td class="separated">
+      <td>
+        <PersonLink @person={{asset.checked_out.person}} />
+      </td>
+      <td>
         {{asset.description}}
       </td>
-      <td class="separated">
+      <td>
         {{#if asset.checked_out.attachment}}
           {{asset.checked_out.attachment.description}}
         {{else}}
           -
         {{/if}}
       </td>
-      <td class="separated">
+      <td>
         {{if asset.perm_assign "Permanent" "Temporary"}}
       </td>
-      <td class="separated">
+      <td>
         {{#if asset.temp_id}}
           {{asset.temp_id}}
         {{else}}
           -
         {{/if}}
       </td>
-      <td class="separated">
-        {{shift-format asset.checked_out.checked_out}}
-      </td>
-      <td class="separated">
-        <PersonLink @person={{asset.checked_out.person}} />
+      <td>
+        {{shift-format asset.checked_out.checked_out}}<br>
+        {{#if asset.checked_out.check_out_person}}
+          <PersonLink @person={{asset.checked_out.check_out_person}} />
+        {{else}}
+          -
+        {{/if}}
       </td>
     </tr>
   {{else}}
