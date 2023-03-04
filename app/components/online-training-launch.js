@@ -61,4 +61,22 @@ export default class OnlineTrainingLaunchComponent extends Component {
     this.showDownForMaintenanceDialog = false;
   }
 
+  @action
+  async resetPasswordAccount() {
+    this.isSubmitting = true;
+    try {
+      const {status, password} = await this.ajax.request(`online-training/${this.args.person.id}/reset-password`, {method: 'POST'});
+      if (status === 'no-account') {
+        this.toast.error('Account is NOT setup');
+      } else if (status === 'success') {
+        this.password = password;
+      } else {
+        this.toast.error(`Unknown status [${status}]`);
+      }
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
+  }
 }
