@@ -9,31 +9,91 @@
       <UiSection>
         <:title>{{this.year}} Training &amp; ARTs</:title>
         <:body>
-          <dl>
-            <dt>Online Course Completion</dt>
-            <dd>
+          <div class="row">
+            <div class="col-auto">
+              <b>{{this.year}} Online Course Completion</b><br>
               {{#if this.eventInfo.online_training_passed}}
                 {{shift-format this.eventInfo.online_training_date year=true}}
               {{else}}
-                not passed
-                {{#if (and this.isCurrentYear this.canMarkOnlineCourseCompleted)}}
-                  <div class="mt-2">
-                    <UiButton @type="secondary" @onClick={{this.markOnlineCourseCompleted}} @size="sm">
-                      Force Mark As Completed
-                    </UiButton>
+                not completed
+              {{/if}}
+            </div>
+            <div class="col-auto">
+              <b>{{this.year}} Course Id</b><br>
+              {{#if this.canManageOnlineCourse}}
+                <div class="row">
+                  <f.text @name="lms_course_id" @size={{5}} @maxlength={{5}} @inline={{true}} @fieldSize="sm"/>
+                  <div class="col-auto">
+                    <f.submit @disabled={{this.personEvent.isSaving}} @submitClass="btn-sm"/>
                   </div>
+                </div>
+                <small>Note: updating the id will not enroll the person.</small>
+              {{else}}
+                <PresentOrNot @value={{this.personEvent.lms_course_id}} @empty="not set"/>
+              {{/if}}
+            </div>
+          </div>
+          {{#if (and this.isCurrentYear this.canManageOnlineCourse)}}
+            <div class="mt-2">
+              {{#unless this.eventInfo.online_training_passed}}
+                <UiButton @type="secondary" @onClick={{this.markOnlineCourseCompleted}} @size="sm">
+                  Force Mark As Completed
+                </UiButton>
+              {{/unless}}
+              <UiButton @type="secondary" @onClick={{this.getUserInfo}} @size="sm">
+                Online Course Account Info
+              </UiButton>
+              <UiButton @type="secondary" @onClick={{this.syncAccountInfo}} @size="sm">
+                Sync Account Info
+              </UiButton>
+              <UiButton @type="secondary" @onClick={{this.resetPassword}} @size="sm">
+                Reset Password
+              </UiButton>
+            </div>
+            {{#if this.haveUserInfo}}
+              <div class="mt-2">
+                {{#if this.userInfoInSync}}
+                  <div class="text-success">{{fa-icon "check"}} All Online Course account fields appear to be
+                    in-sync with the
+                    Clubhouse.
+                  </div>
+                {{else}}
+                  <b class="text-danger">{{fa-icon "hand"}} One or more Online Course account fields are not in sync
+                    with the
+                    Clubhouse</b>
                 {{/if}}
-              {{/if}}
-            </dd>
+                <table class="table table-width-auto table-sm">
+                  <thead>
+                  <tr>
+                    <th>ID Number</th>
+                    <th>Username</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email Address</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>{{this.showInfoAttribute 'idnumber'}}</td>
+                    <td>{{this.showInfoAttribute 'username'}}</td>
+                    <td>{{this.showInfoAttribute 'first_name'}}</td>
+                    <td>{{this.showInfoAttribute 'last_name'}}</td>
+                    <td>{{this.showInfoAttribute 'email'}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+                Note: username is the callsign with only alphanumeric characters, lower cased, and no spaces.<br>
+                The email is the Clubhouse's email with plus addressing stripped out (e.g., my+inbox@example.com -&gt;
+                my@example.com).
+              </div>
+            {{/if}}
+          {{/if}}
 
-            <dt>Trainings</dt>
-            <dd>
-              {{#if this.person.isNonRanger}}
-                <p>Non Rangers are not required to pass the In-Person Training.</p>
-              {{/if}}
-              <TrainingInfo @trainings={{this.eventInfo.trainings}} />
-            </dd>
-          </dl>
+          <div class="mt-2"><b>Trainings</b></div>
+          {{#if this.person.isNonRanger}}
+            <p>Non Rangers are not required to pass the In-Person Training.</p>
+          {{/if}}
+          <TrainingInfo @trainings={{this.eventInfo.trainings}} />
         </:body>
       </UiSection>
     </tab.pane>
@@ -221,3 +281,9 @@
     </tab.pane>
   </UiTab>
 </ChForm>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Please wait
+  </LoadingDialog>
+{{/if}}
