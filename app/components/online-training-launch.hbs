@@ -50,39 +50,56 @@
         website.</h4>
       {{#if this.alreadyExists}}
         <p>
-          Your online course account has already been set up.
+          Your Online Course account was set up previously.
         </p>
         <p>
           <b>Your Online Course username is:</b><br>
           {{this.username}}
         </p>
+        {{#if this.password}}
+          <p>
+            <b>The new password is:</b><br>
+            {{this.password}}
+          </p>
+        {{else}}
+          <p>
+            Use the button below to reset your Online Course account password.<br>
+            <UiButton @onClick={{this.resetPasswordAccount}} @disabled={{this.isSubmitting}}>
+              Reset Online Course Password
+            </UiButton>
+          </p>
+        {{/if}}
       {{else}}
         <p>
           A Ranger online course website account has been set up, and you have been enrolled.
         </p>
         <p>
-          <b class="text-danger">WRITE DOWN the following online course website account info. The username
-            and password will be needed to log into the online course website:</b>
+          <b class="text-danger">
+            WRITE DOWN the following online course website account info. The username
+            and password will be needed to log into the online course website:
+          </b>
         </p>
         <p>
           <b>Username:</b> {{this.username}}<br>
           <b>Password:</b> {{this.password}}<br>
         </p>
         <p>
-          <b>Your username is your callsign in all lower case, ONLY has letters (a-z), and numbers (0-9). All spaces,
-            dashes, and
-            other special characters have been removed.</b>
+          <b>
+            Your username is your callsign in all lower case, ONLY has letters (a-z), and numbers (0-9).
+            All spaces, dashes, and other special characters have been removed.</b>
         </p>
         <p>
           <i>The above credentials are ONLY for the online course website and are SEPARATE from the Clubhouse.</i>
         </p>
       {{/if}}
+    </Modal.body>
+    <Modal.footer>
       <UiButton @onClick={{this.launchTrainingAction}} @disabled={{this.isSubmitting}} @class="btn-responsive">
         Go To Online Course
       </UiButton>
       {{#if this.isSubmitting}}
         <LoadingIndicator @text="Working"/>
       {{/if}}
-    </Modal.body>
+    </Modal.footer>
   </ModalDialog>
 {{/if}}
