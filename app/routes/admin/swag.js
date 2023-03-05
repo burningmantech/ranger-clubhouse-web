@@ -1,8 +1,8 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import { ADMIN } from 'clubhouse/constants/roles';
+import {ADMIN, EDIT_SWAG} from 'clubhouse/constants/roles';
 
 export default class AdminSwagsRoute extends ClubhouseRoute {
-  roleRequired = ADMIN;
+  roleRequired = [ADMIN, EDIT_SWAG];
 
   model() {
     return this.store.query('swag', {});

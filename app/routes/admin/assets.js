@@ -1,9 +1,9 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
-import {ADMIN} from 'clubhouse/constants/roles';
+import {ADMIN, EDIT_ASSETS} from 'clubhouse/constants/roles';
 
 export default class AdminAssetsRoute extends ClubhouseRoute {
-  roleRequired = ADMIN;
+  roleRequired = [ ADMIN, EDIT_ASSETS];
 
   queryParams = {
     year: {refreshModel: true}

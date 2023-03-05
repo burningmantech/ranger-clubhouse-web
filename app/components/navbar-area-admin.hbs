@@ -1,59 +1,73 @@
 <NavbarMenu @nav={{@nav}} @title="Admin" @isLarge={{true}} as |menu|>
-  <NavbarMenuSection @section="Event Records">
-    {{#if (has-role "admin")}}
-      <NavbarMenuItem @menu={{menu}} @route="admin.assets" @item="Assets"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.event-dates" @item="Event Dates"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.credits" @item="Schedule Credits"/>
-    {{/if}}
-    {{#if (has-role "admin" "edit-slots")}}
-      <NavbarMenuItem @menu={{menu}} @route="admin.slots" @item="Schedule Slots"/>
-    {{/if}}
-    <NavbarMenuItem @menu={{menu}} @route="admin.survey" @item="Surveys"/>
-  </NavbarMenuSection>
-  {{#if (has-role "admin")}}
-    <NavbarMenuSection @section="System Records">
-      <NavbarMenuItem @menu={{menu}} @route="admin.awards" @item="Awards"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.certifications" @item="Certifications"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.documents" @item="Documents"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.handle-reservations" @item="Handle Reservations"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.help" @item="Help Tooltips"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.positions" @item="Positions"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.alerts" @item="RBS Alerts"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.roles" @item="Roles"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.swag" @item="Swag"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.teams" @item="Teams"/>
-    </NavbarMenuSection>
-    <NavbarMenuSection @section="Site Admin">
-      <NavbarMenuItem @menu={{menu}} @route="admin.action-log" @item="Action Log"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.error-log" @item="Error Log"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.maintenance" @item="Maintenance"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.settings" @item="Settings"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.clubhouse1-log" @item="Clubhouse 1 Log"/>
-    </NavbarMenuSection>
-    <NavbarMenuSection @section="Pre-Event">
-      <NavbarMenuItem @menu={{menu}} @route="admin.salesforce" @item="Salesforce Import"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.radio-eligibility" @item="Radio Eligibility"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.online-training.index" @item="Online Course Admin"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.top-hour-earners" @item="Top Hour Earners"/>
-    </NavbarMenuSection>
-    <NavbarMenuSection @section="Bulk Operations">
-      <NavbarMenuItem @menu={{menu}} @route="admin.bulk-upload" @item="Bulk Upload"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.bulk-sign-in-out" @item="Bulk Sign In/Out"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.bulk-signout" @item="Bulk Signout"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.bulk-lookup" @item="Callsign/Email Lookup"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.bulk-positions" @item="Positions Grant/Revoke"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.bulk-grant-awards" @item="Bulk Grant Awards"/>
-    </NavbarMenuSection>
-    <NavbarMenuSection @section="Post-Event">
-      <NavbarMenuItem @menu={{menu}} @route="admin.thank-you-cards" @item="Thank-You Cards"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.timesheet-sanity-checker" @item="Timesheet Sanity Checker"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.hours-credits" @item="Hours/Credits"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.people-by-status-change" @item="People By Status Change"/>
-      <NavbarMenuItem @menu={{menu}} @route="admin.ranger-retention" @item="Ranger Retention Report"/>
-      {{#if (has-role "tech-ninja")}}
-        <NavbarMenuItem @menu={{menu}} @route="admin.timesheet-slot-repair" @item="Timesheet Slot Repair"/>
+  {{#if (has-role "admin" "edit-assets" "edit-slots" "survey-management")}}
+    <NavbarMenuSection @section="Event Records">
+      {{#if (has-role "admin" "edit-assets")}}
+        <NavbarMenuItem @menu={{menu}} @route="admin.assets" @item="Assets"/>
+      {{/if}}
+      {{#if (has-role "admin")}}
+        <NavbarMenuItem @menu={{menu}} @route="admin.event-dates" @item="Event Dates"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.credits" @item="Schedule Credits"/>
+      {{/if}}
+      {{#if (has-role "admin" "edit-slots")}}
+        <NavbarMenuItem @menu={{menu}} @route="admin.slots" @item="Schedule Slots"/>
+      {{/if}}
+      {{#if (has-role "admin" "survey-management")}}
+        <NavbarMenuItem @menu={{menu}} @route="admin.survey" @item="Surveys"/>
       {{/if}}
     </NavbarMenuSection>
+  {{/if}}
+  {{#if (has-role "admin" "edit-swag")}}
+    <NavbarMenuSection @section="System Records">
+      {{#if (has-role "admin")}}
+        <NavbarMenuItem @menu={{menu}} @route="admin.awards" @item="Awards"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.certifications" @item="Certifications"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.documents" @item="Documents"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.handle-reservations" @item="Handle Reservations"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.help" @item="Help Tooltips"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.positions" @item="Positions"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.alerts" @item="RBS Alerts"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.roles" @item="Roles"/>
+      {{/if}}
+      {{#if (has-role "admin" "edit-swag")}}
+        <NavbarMenuItem @menu={{menu}} @route="admin.swag" @item="Swag"/>
+      {{/if}}
+      {{#if (has-role "admin")}}
+        <NavbarMenuItem @menu={{menu}} @route="admin.teams" @item="Teams"/>
+      {{/if}}
+    </NavbarMenuSection>
+    {{#if (has-role "admin")}}
+      <NavbarMenuSection @section="Site Admin">
+        <NavbarMenuItem @menu={{menu}} @route="admin.action-log" @item="Action Log"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.error-log" @item="Error Log"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.maintenance" @item="Maintenance"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.settings" @item="Settings"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.clubhouse1-log" @item="Clubhouse 1 Log"/>
+      </NavbarMenuSection>
+      <NavbarMenuSection @section="Pre-Event">
+        <NavbarMenuItem @menu={{menu}} @route="admin.salesforce" @item="Salesforce Import"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.radio-eligibility" @item="Radio Eligibility"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.online-training.index" @item="Online Course Admin"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.top-hour-earners" @item="Top Hour Earners"/>
+      </NavbarMenuSection>
+      <NavbarMenuSection @section="Bulk Operations">
+        <NavbarMenuItem @menu={{menu}} @route="admin.bulk-upload" @item="Bulk Upload"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.bulk-sign-in-out" @item="Bulk Sign In/Out"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.bulk-signout" @item="Bulk Signout"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.bulk-lookup" @item="Callsign/Email Lookup"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.bulk-positions" @item="Positions Grant/Revoke"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.bulk-grant-awards" @item="Bulk Grant Awards"/>
+      </NavbarMenuSection>
+      <NavbarMenuSection @section="Post-Event">
+        <NavbarMenuItem @menu={{menu}} @route="admin.thank-you-cards" @item="Thank-You Cards"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.timesheet-sanity-checker" @item="Timesheet Sanity Checker"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.hours-credits" @item="Hours/Credits"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.people-by-status-change" @item="People By Status Change"/>
+        <NavbarMenuItem @menu={{menu}} @route="admin.ranger-retention" @item="Ranger Retention Report"/>
+        {{#if (has-role "tech-ninja")}}
+          <NavbarMenuItem @menu={{menu}} @route="admin.timesheet-slot-repair" @item="Timesheet Slot Repair"/>
+        {{/if}}
+      </NavbarMenuSection>
+    {{/if}}
   {{/if}}
   {{#if (has-role "admin" "megaphone")}}
     <NavbarMenuSection @section="Communications">
