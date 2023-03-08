@@ -100,7 +100,7 @@ Router.map(function () {
       this.route('unverified-stopped');
     });
 
-    this.route('roles');
+    this.route('permissions');
     this.route('salesforce');
     this.route('settings');
     this.route('slots');
@@ -208,7 +208,7 @@ Router.map(function () {
     this.route('people-by-location');
     this.route('people-by-position');
     this.route('special-teams');
-    this.route('people-by-role');
+    this.route('people-by-permissions');
     this.route('people-by-status');
     this.route('position-sanity-checker');
     this.route('potential-shirts');

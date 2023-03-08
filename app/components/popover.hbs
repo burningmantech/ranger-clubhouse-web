@@ -1,4 +1,4 @@
-<a href="#" {{on "click" this.preventClick}}>
+<a href="#" {{on "click" this.preventClick}} ...attributes>
   {{@text}}
   <BsPopover @title={{@title}} as |po|>
     {{yield}}
