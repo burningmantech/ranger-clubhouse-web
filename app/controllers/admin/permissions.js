@@ -17,7 +17,7 @@ export default class AdminRolesController extends ClubhouseController {
 
   @action
   removeRole() {
-    this.modal.confirm('Delete Role', `Are you sure you wish to delete "${this.entry.title}"? This operation cannot be undone.`, () => {
+    this.modal.confirm('Delete Permission', `Are you sure you wish to delete "${this.entry.title}"? This operation cannot be undone.`, () => {
       this.entry.destroyRecord().then(() => {
         this.toast.success('The role has been deleted.');
         this.entry = null;
@@ -31,7 +31,7 @@ export default class AdminRolesController extends ClubhouseController {
       return;
     }
 
-    this.house.saveModel(model, `The role has been ${model.isNew ? 'created' : 'updated'}.`, () => {
+    this.house.saveModel(model, `The permission has been ${model.isNew ? 'created' : 'updated'}.`, () => {
       this.entry = null;
       this.roles.update(); // refresh the list.
     });

@@ -1,4 +1,4 @@
-<ModalDialog @title="Edit Roles" @onEscape={{@onCancel}} as |Modal|>
+<ModalDialog @title="Edit Permissions" @onEscape={{@onCancel}} as |Modal|>
   <ChForm @formId="roles"
           @formFor={{this.roleForm}}
           @onSubmit={{this.save}} as |f|>
@@ -7,7 +7,7 @@
         <thead>
         <tr>
           <th>&nbsp;</th>
-          <th>Role</th>
+          <th>Permission</th>
           <th>Assigned Thru Team(s)?</th>
           <th>Assigned Thru Position(s)?</th>
         </tr>
