@@ -509,9 +509,9 @@ export const SIGN_BEHAVIORAL_AGREEMENT = {
     return {
       result: OPTIONAL,
       message: 'Optionally, sign the Behavioral Standards Agreement.',
-      route: 'me.agreements.index',
+      route: 'me.agreements',
       linkedMessage: {
-        route: 'me.agreements.index',
+        route: 'me.agreements',
         prefix: 'Visit',
         text: 'Me > Agreements',
         suffix: 'to review and agree to the standards agreement.'
@@ -533,9 +533,9 @@ export const SIGN_MOTORPOOL_AGREEMENT = {
     }
     return {
       result: OPTIONAL,
-      route: 'me.agreements.index',
+      route: 'me.agreements',
       linkedMessage: {
-        route: 'me.agreements.index',
+        route: 'me.agreements',
         prefix: 'Ranger vehicles are a limited resource and issued based on availability. Vehicles are assigned according to operational need rather than convenience. Visit',
         text: 'Me > Agreements',
         suffix: 'to review and agree to the Ranger Motor-Pool Policy, which is required to drive a golf cart or UTV ("gator")'
@@ -598,9 +598,9 @@ export const SIGN_RADIO_CHECKOUT_AGREEMENT = {
 
     return {
       result: ACTION_NEEDED,
-      route: 'me.agreements.index',
+      route: 'me.agreements',
       linkedMessage: {
-        route: 'me.agreements.index',
+        route: 'me.agreements',
         prefix: htmlSafe(`All ${adj} must sign the Ranger Radio Checkout Agreement prior to checking out a radio from the Rangers.<br><br>Visit`),
         text: 'Me > Radio Agreement',
         suffix: 'to review and agree to the Radio Checkout Agreement.'
@@ -765,9 +765,9 @@ export const SIGN_NDA = {
 
     return {
       result: URGENT,
-      route: 'me.agreements.index',
+      route: 'me.agreements',
       linkedMessage: {
-        route: 'me.agreements.index',
+        route: 'me.agreements',
         prefix: htmlSafe('Starting late 2022, all Clubhouse users who have been granted either the Login Management Year Round or On Playa roles are required EACH CALENDAR YEAR to review and agree to the Sensitive Data Access and Use Policy document. <b class="text-danger">Your privileges are suspended until the document is agreed to.</b><br><br> Visit'),
         text: 'Me > Agreements',
         suffix: 'to review and agree to the document.'
