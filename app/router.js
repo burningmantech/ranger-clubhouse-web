@@ -17,10 +17,7 @@ Router.map(function () {
   this.route('me', function () {
     this.route('homepage', {path: '/'});
 
-    this.route('agreements', function () {
-      this.route('index', {path: '/'});
-      this.route('sign', {path: '/:tag'});
-    });
+    this.route('agreements');
 
     this.route('alerts');
     this.route('announcements');

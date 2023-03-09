@@ -4,9 +4,13 @@ import { tracked} from '@glimmer/tracking';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import {States, CanadianProvinces} from 'clubhouse/constants/countries';
 import { VehicleClassOptions } from 'clubhouse/constants/vehicles';
+import { PERSONAL_VEHICLE_AGREEMENT_TAG, MOTORPOOL_POLICY_TAG} from 'clubhouse/models/document';
 
 export default class MeVehiclesController extends ClubhouseController {
   @tracked entry = null;
+  @tracked motorpoolPolicySigned;
+  @tracked personalVehicleSigned;
+  @tracked showAgreementTag;
 
   stateOptions = [
     {
@@ -106,5 +110,26 @@ export default class MeVehiclesController extends ClubhouseController {
         this.toast.success('Request was successfully deleted.');
       }).catch((response) => this.house.handleErrorResponse(response));
     });
+  }
+
+  @action
+  reviewPersonalVehicleAgreement() {
+    this.showAgreementTag = PERSONAL_VEHICLE_AGREEMENT_TAG;
+  }
+
+  @action
+  reviewMotorpoolPolicy() {
+    this.showAgreementTag = MOTORPOOL_POLICY_TAG;
+  }
+
+  @action
+  closeAgreement(signed) {
+    if (this.showAgreementTag === MOTORPOOL_POLICY_TAG) {
+      this.motorpoolPolicySigned = signed;
+    } else {
+      this.personalVehicleSigned = signed;
+    }
+
+    this.showAgreementTag = null;
   }
 }

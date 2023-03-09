@@ -1,5 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
+import { MOTORPOOL_POLICY_TAG, PERSONAL_VEHICLE_AGREEMENT_TAG } from 'clubhouse/models/document';
 
 export default class MeVehiclesRoute extends ClubhouseRoute {
   beforeModel() {
@@ -26,7 +27,8 @@ export default class MeVehiclesRoute extends ClubhouseRoute {
     controller.set('vehicles', model.vehicles);
     controller.set('vehicleConfig', model.vehicleConfig);
     controller.set('year', this.year);
-    controller.set('motorpoolPolicySigned', !!agreements.find((a) => a.tag === 'motorpool-policy' && a.signed));
-    controller.set('personalVehicleSigned', !!agreements.find((a) => a.tag === 'personal-vehicle-agreement' && a.signed));
+    controller.set('motorpoolPolicySigned', !!agreements.find((a) => a.tag === MOTORPOOL_POLICY_TAG && a.signed));
+    controller.set('personalVehicleSigned', !!agreements.find((a) => a.tag === PERSONAL_VEHICLE_AGREEMENT_TAG && a.signed));
+    controller.showAgreementTag = null;
   }
 }

@@ -18,7 +18,7 @@
         {{else}}
           <<NavbarMenuItem @menu={{menu}} @route="me.tickets" @item="Tickets &amp; Stuff"/>
         {{/if}}
-      <<NavbarMenuItem @menu={{menu}} @route="me.agreements.index" @item="Agreements"/>
+      <<NavbarMenuItem @menu={{menu}} @route="me.agreements" @item="Agreements"/>
       {{#if @user.may_request_stickers}}
         <<NavbarMenuItem @menu={{menu}} @route="me.vehicles" @item="Vehicle Requests"/>
       {{/if}}

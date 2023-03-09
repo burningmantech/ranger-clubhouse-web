@@ -1,1 +1,37 @@
-{{outlet}}
+<h1>BRC Ranger &amp; Burning Man Project Agreements</h1>
+<BackToHome/>
+
+<p>
+  Click on the button to review and optionally sign the document:
+</p>
+{{#each this.agreements as |agreement|}}
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title">
+        {{agreement.title}}
+      </h5>
+      <div class="card-text">
+        {{#if agreement.available}}
+          {{#if agreement.signed}}
+            <span class="text-success">{{fa-icon "check"}} You have agreed to this document.</span>
+          {{else}}
+            <p>
+              Please review and agree to the document.
+            </p>
+            <UiButton @onClick={{fn this.reviewAgreement agreement}}>
+              Review Document
+            </UiButton>
+          {{/if}}
+        {{else}}
+          <span class="text-muted">Check back later, the document is not available to sign at the moment.</span>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+{{else}}
+  There are no agreements available to view or sign. Check back later.
+{{/each}}
+
+{{#if this.showAgreement}}
+  <Me::DocumentReview @tag={{this.showAgreement.tag}} @onClose={{this.closeAgreement}} />
+{{/if}}

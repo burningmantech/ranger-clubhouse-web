@@ -1,5 +1,9 @@
 import Model, {attr} from '@ember-data/model';
 
+export const MOTORPOOL_POLICY_TAG = 'motorpool-policy';
+export const PERSONAL_VEHICLE_AGREEMENT_TAG = 'personal-vehicle-agreement';
+export const DEPT_NDA_TAG = 'dept-nda';
+
 export default class DocumentModel extends Model {
   @attr('string') tag;
   @attr('string') description;
