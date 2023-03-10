@@ -1,6 +1,4 @@
-{{#if this.hasQualifiedTickets}}
-  <b>You will need to claim or bank your event ticket(s) first before any delivery information can be given.</b>
-{{else if this.usingStaffCredential}}
+{{#if this.usingStaffCredential}}
   <p>
     Your <b>Staff Credential {{if @ticketPackage.vehiclePass.isClaimed "and Vehicle Pass"}}</b> will be held at Staff
     Credentialing under your name <b>"{{@person.first_name}} {{@person.last_name}}"</b>.
@@ -93,6 +91,8 @@
         and <b>NOT CLAIM</b> your vehicle pass
       {{/if}}.
     </p>
+  {{else if this.hasQualifiedTickets}}
+    <b>You will need to claim or bank your event ticket(s) first before any delivery information can be given.</b>
   {{/if}}
   <p>
     You have no items which can be mailed or held at Will Call.
