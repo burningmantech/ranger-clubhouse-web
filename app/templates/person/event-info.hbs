@@ -3,12 +3,12 @@
             @years={{this.person.all_years}}
             @subheader={{true}}
             @onChange={{action (mut this.year)}} />
-<ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.saveEvent}} as |f|>
-  <UiTab class="mt-4" as |tab|>
-    <tab.pane @title="Training & ARTs" @id="trainings">
-      <UiSection>
-        <:title>{{this.year}} Training &amp; ARTs</:title>
-        <:body>
+<UiTab class="mt-4" as |tab|>
+  <tab.pane @title="Training & ARTs" @id="trainings">
+    <UiSection>
+      <:title>{{this.year}} Training &amp; ARTs</:title>
+      <:body>
+        <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as |f|>
           <div class="row">
             <div class="col-auto">
               <b>{{this.year}} Online Course Completion</b><br>
@@ -33,71 +33,73 @@
               {{/if}}
             </div>
           </div>
-          {{#if (and this.isCurrentYear this.canManageOnlineCourse)}}
+        </ChForm>
+        {{#if (and this.isCurrentYear this.canManageOnlineCourse)}}
+          <div class="mt-2">
+            {{#unless this.eventInfo.online_training_passed}}
+              <UiButton @type="secondary" @onClick={{this.markOnlineCourseCompleted}} @size="sm">
+                Force Mark As Completed
+              </UiButton>
+            {{/unless}}
+            <UiButton @type="secondary" @onClick={{this.getUserInfo}} @size="sm">
+              Online Course Account Info
+            </UiButton>
+            <UiButton @type="secondary" @onClick={{this.syncAccountInfo}} @size="sm">
+              Sync Account Info
+            </UiButton>
+            <UiButton @type="secondary" @onClick={{this.resetPassword}} @size="sm">
+              Reset Password
+            </UiButton>
+          </div>
+          {{#if this.haveUserInfo}}
             <div class="mt-2">
-              {{#unless this.eventInfo.online_training_passed}}
-                <UiButton @type="secondary" @onClick={{this.markOnlineCourseCompleted}} @size="sm">
-                  Force Mark As Completed
-                </UiButton>
-              {{/unless}}
-              <UiButton @type="secondary" @onClick={{this.getUserInfo}} @size="sm">
-                Online Course Account Info
-              </UiButton>
-              <UiButton @type="secondary" @onClick={{this.syncAccountInfo}} @size="sm">
-                Sync Account Info
-              </UiButton>
-              <UiButton @type="secondary" @onClick={{this.resetPassword}} @size="sm">
-                Reset Password
-              </UiButton>
+              {{#if this.userInfoInSync}}
+                <div class="text-success">{{fa-icon "check"}} All Online Course account fields appear to be
+                  in-sync with the
+                  Clubhouse.
+                </div>
+              {{else}}
+                <b class="text-danger">{{fa-icon "hand"}} One or more Online Course account fields are not in sync
+                  with the
+                  Clubhouse</b>
+              {{/if}}
+              <table class="table table-width-auto table-sm">
+                <thead>
+                <tr>
+                  <th>ID Number</th>
+                  <th>Username</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email Address</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>{{this.showInfoAttribute 'idnumber'}}</td>
+                  <td>{{this.showInfoAttribute 'username'}}</td>
+                  <td>{{this.showInfoAttribute 'first_name'}}</td>
+                  <td>{{this.showInfoAttribute 'last_name'}}</td>
+                  <td>{{this.showInfoAttribute 'email'}}</td>
+                </tr>
+                </tbody>
+              </table>
+              Note: username is the callsign with only alphanumeric characters, lower cased, and no spaces.<br>
+              The email is the Clubhouse's email with plus addressing stripped out (e.g., my+inbox@example.com -&gt;
+              my@example.com).
             </div>
-            {{#if this.haveUserInfo}}
-              <div class="mt-2">
-                {{#if this.userInfoInSync}}
-                  <div class="text-success">{{fa-icon "check"}} All Online Course account fields appear to be
-                    in-sync with the
-                    Clubhouse.
-                  </div>
-                {{else}}
-                  <b class="text-danger">{{fa-icon "hand"}} One or more Online Course account fields are not in sync
-                    with the
-                    Clubhouse</b>
-                {{/if}}
-                <table class="table table-width-auto table-sm">
-                  <thead>
-                  <tr>
-                    <th>ID Number</th>
-                    <th>Username</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email Address</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                    <td>{{this.showInfoAttribute 'idnumber'}}</td>
-                    <td>{{this.showInfoAttribute 'username'}}</td>
-                    <td>{{this.showInfoAttribute 'first_name'}}</td>
-                    <td>{{this.showInfoAttribute 'last_name'}}</td>
-                    <td>{{this.showInfoAttribute 'email'}}</td>
-                  </tr>
-                  </tbody>
-                </table>
-                Note: username is the callsign with only alphanumeric characters, lower cased, and no spaces.<br>
-                The email is the Clubhouse's email with plus addressing stripped out (e.g., my+inbox@example.com -&gt;
-                my@example.com).
-              </div>
-            {{/if}}
           {{/if}}
+        {{/if}}
 
-          <div class="mt-2"><b>Trainings</b></div>
-          {{#if this.person.isNonRanger}}
-            <p>Non Rangers are not required to pass the In-Person Training.</p>
-          {{/if}}
-          <TrainingInfo @trainings={{this.eventInfo.trainings}} />
-        </:body>
-      </UiSection>
-    </tab.pane>
-    <tab.pane @title="Provisions & Radio Agreement" @id="provisions">
+        <div class="mt-2"><b>Trainings</b></div>
+        {{#if this.person.isNonRanger}}
+          <p>Non Rangers are not required to pass the In-Person Training.</p>
+        {{/if}}
+        <TrainingInfo @trainings={{this.eventInfo.trainings}} />
+      </:body>
+    </UiSection>
+  </tab.pane>
+  <tab.pane @title="Provisions & Radio Agreement" @id="provisions">
+    {{#if (eq tab.activeId "provisions")}}
       <UiSection>
         <:title>{{this.year}} Provisions &amp; Radio Agreement</:title>
         <:body>
@@ -133,18 +135,17 @@
             <dt>Radio Checkout Agreement</dt>
             <dd>
               {{#if (has-role "admin")}}
-                <div class="text-danger">
-                  Do not sign agreements on someone else's behalf. You may expose the organization to legal
-                  liability.
-                </div>
-                <f.checkbox @name="asset_authorized"
-                            @label="Signed Radio Checkout Agreement"/>
-                <div class="mt-2">
-                  <f.submit @disabled={{this.personEvent.isSaving}} />
-                  {{#if this.personEvent.isSaving}}
-                    <LoadingIndicator/>
-                  {{/if}}
-                </div>
+                <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as |f|>
+                  <div class="text-danger">
+                    Do not sign agreements on someone else's behalf. You may expose the organization to legal
+                    liability.
+                  </div>
+                  <f.checkbox @name="asset_authorized"
+                              @label="Signed Radio Checkout Agreement"/>
+                  <div class="mt-2">
+                    <f.submit/>
+                  </div>
+                </ChForm>
               {{else}}
                 {{#if this.personEvent.asset_authorized}}
                   <b class="text-success"> {{fa-icon "check"}} Signed</b>
@@ -157,18 +158,21 @@
           </dl>
         </:body>
       </UiSection>
-    </tab.pane>
-    <tab.pane @title="Driving Privs. & Vehicle Agreements" @id="driving">
+    {{/if}}
+  </tab.pane>
+  <tab.pane @title="Driving Privs. & Vehicle Agreements" @id="driving">
+    {{#if (eq tab.activeId "driving")}}
       <UiSection>
         <:title>{{this.year}} Driving Privileges &amp; Vehicle Agreements</:title>
         <:body>
           {{#if this.person.vehicle_blacklisted}}
-            <UiNotice @title="Person is Vehicle Blacklisted" @icon="ban" @type="danger">
+            <UiNotice @title="Vehicle Blacklisted" @icon="car-burst" @type="danger">
               Person may not drive gators, cars, or trucks on playa for Ranger business. All vehicle flags and
               agreements are disabled.
             </UiNotice>
-          {{else}}
-            <dl>
+          {{/if}}
+          <dl>
+            <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as |f|>
               <dt>Driving Privileges</dt>
               <dd>
                 {{#if this.canSignAgreements}}
@@ -178,6 +182,9 @@
                   <f.checkbox @name="may_request_stickers"
                               @label="Personal Vehicle Use Requests Allowed (Allows access to the Me > Vehicles page)"
                   />
+                  <div class="mt-2">
+                    <f.submit/>
+                  </div>
                 {{else}}
                   <p>
                     {{#if this.personEvent.org_vehicle_insurance}}
@@ -207,7 +214,11 @@
                               @label="Signed Motorpool Policy Agreement"
                   />
                   <f.checkbox @name="signed_personal_vehicle_agreement"
-                              @label="Signed Personal Vehicle Policy Agreement"/>
+                              @label="Signed Personal Vehicle Policy Agreement"
+                  />
+                  <div class="mt-2">
+                    <f.submit/>
+                  </div>
                 {{else}}
                   <p>
                     {{#if this.personEvent.signed_motorpool_agreement}}
@@ -225,62 +236,91 @@
                   the {{this.year}} Personal Vehicle Agreement.
                 {{/if}}
               </dd>
-            </dl>
-            {{#if this.canSignAgreements}}
-              <div class="mt-4">
-                <f.submit @disabled={{this.personEvent.isSaving}} />
-                {{#if this.personEvent.isSaving}}
-                  <LoadingIndicator/>
-                {{/if}}
-              </div>
-            {{/if}}
-          {{/if}}
+            </ChForm>
+            <dt>Lifetime Vehicle Flags</dt>
+            <dd>
+              {{#if (has-role "admin")}}
+                <ChForm @forId="person" @formFor={{this.person}} @onSubmit={{this.save}} as |f|>
+                  <f.checkbox @name="vehicle_blacklisted"
+                              @label="Vehicle Blacklisted"/>
+                  <div class="mt-2">
+                    <f.submit/>
+                  </div>
+                </ChForm>
+              {{else if this.person.vehicle_blacklisted}}
+                <b class="text-danger">VEHICLE BLACKLISTED</b>
+              {{else}}
+                <i>No blacklisted vehicle</i>
+              {{/if}}
+            </dd>
+          </dl>
         </:body>
       </UiSection>
-    </tab.pane>
-    <tab.pane @title="Certifications" @id="certifications">
-      <Person::Certifications @personId={{this.person.id}} />
-    </tab.pane>
-    <tab.pane @title="Misc. Agreements" @id="agreements">
+    {{/if}}
+  </tab.pane>
+  <tab.pane @title="Certifications" @id="certifications">
+    <Person::Certifications @personId={{this.person.id}} />
+  </tab.pane>
+  <tab.pane @title="Misc. Agreements" @id="agreements">
+    {{#if (eq tab.activeId "agreements")}}
       <UiSection>
         <:title>{{this.year}} Misc. Agreements</:title>
         <:body>
-          {{#if this.canSignAgreements}}
-            <p class="text-danger">
-              Do not sign agreements on someone else's behalf. You may expose the organization to legal liability.
-            </p>
-            <p>
-              <f.checkbox @name="sandman_affidavit"
-                          @label="Signed Sandman Affidavit"
-              />
-              <f.checkbox @name="signed_nda"
-                          @label="Signed Sensitive Data Access and Use Policy Agreement (aka Ranger NDA)"
-              />
-            </p>
-            <f.submit @disabled={{this.personEvent.isSaving}} />
-            {{#if this.personEvent.isSaving}}
-              <LoadingIndicator/>
-            {{/if}}
-          {{else}}
-            <p>
-              {{this.year}} Sandman Affidavit {{#if this.personEvent.sandman_affidavit}}
-              <b class="text-success"> {{fa-icon "check"}} Signed</b>
-            {{else}}
-              <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
-            {{/if}}
-            </p>
-            {{this.year}} Ranger NDA
-            {{#if this.personEvent.signed_nda}}
-              <b class="text-success"> {{fa-icon "check"}} Signed</b>
-            {{else}}
-              <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
-            {{/if}}
-          {{/if}}
+          <dl>
+            <dt>Yearly Agreements</dt>
+            <dd>
+              {{#if this.canSignAgreements}}
+                <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as |f|>
+                  <div class="text-danger">
+                    Do not sign agreements on someone else's behalf. You may expose the organization to legal liability.
+                  </div>
+                  <p>
+                    <f.checkbox @name="sandman_affidavit"
+                                @label="Signed Sandman Affidavit"
+                    />
+                    <f.checkbox @name="signed_nda"
+                                @label="Signed Sensitive Data Access and Use Policy Agreement (aka Ranger NDA)"
+                    />
+                  </p>
+                  <f.submit/>
+                </ChForm>
+              {{else}}
+                <p>
+                  {{this.year}} Sandman Affidavit {{#if this.personEvent.sandman_affidavit}}
+                  <b class="text-success"> {{fa-icon "check"}} Signed</b>
+                {{else}}
+                  <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+                {{/if}}
+                </p>
+                {{this.year}} Ranger NDA
+                {{#if this.personEvent.signed_nda}}
+                  <b class="text-success"> {{fa-icon "check"}} Signed</b>
+                {{else}}
+                  <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+                {{/if}}
+              {{/if}}
+            </dd>
+            <dt class="mt-2">Lifetime Agreements</dt>
+            <dd>
+              {{#if (has-role "admin")}}
+                <ChForm @forId="person" @formFor={{this.person}} @onSubmit={{this.save}} as |f|>
+                  <p>
+                    <f.checkbox @name="behavioral_agreement"
+                                @label="Burning Man's Behavioral Standards Agreement"
+                    />
+                  </p>
+                  <f.submit/>
+                </ChForm>
+              {{else}}
+                Behavioral Standards Agreement {{if @person.behavioral_agreement "signed" "NOT SIGNED"}}<br>
+              {{/if}}
+            </dd>
+          </dl>
         </:body>
       </UiSection>
-    </tab.pane>
-  </UiTab>
-</ChForm>
+    {{/if}}
+  </tab.pane>
+</UiTab>
 
 {{#if this.isSubmitting}}
   <LoadingDialog>

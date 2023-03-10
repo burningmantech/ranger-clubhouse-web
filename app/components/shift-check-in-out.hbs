@@ -67,73 +67,97 @@
   {{else}}
     {{#unless this.isPersonDirtTrained}}
       <UiNotice @title="Work Eligibility Issue" @icon="hand" @type="danger">
-        {{@person.callsign}} should not start a shift because
-        {{if this.otOnly "the Online Course" "an In-Person Training"}}
-        has not been completed. Check with the HQ Short or HQ Lead if this is an error.
+        <p>
+          {{@person.callsign}} should not start a shift because
+          {{if this.otOnly "the Online Course" "an In-Person Training"}}
+          has not been completed.
+        </p>
+        <p>
+          In case the person attended an In-Person Training earlier in the day, the trainers may be delayed in
+          recording who passed the training. Have the HQ Short or Lead contact the trainers to verify the person
+          attended and passed the training.
+        </p>
         {{#if this.userCanForceCheckIn}}
-          <div class="mt-2">
-            You have the privileges to force a shift start.
-          </div>
+          You have the privileges to force a shift start.
         {{/if}}
       </UiNotice>
     {{/unless}}
 
-    {{#if (and this.isPersonDirtTrained @imminentSlots)}}
-      <p>
-        {{pluralize @imminentSlots.length "upcoming shift"}} found.
-      </p>
-      <table class="table table-width-auto table-hover table-striped m-0">
-        <thead>
-        <tr>
-          <th>Shift</th>
-          <th>Time</th>
-          <th>Action</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        {{#each @imminentSlots as |slot|}}
+    {{#if this.isPersonDirtTrained}}
+      {{#if  @imminentSlots}}
+        <p>
+          {{pluralize @imminentSlots.length "upcoming shift"}} found.
+        </p>
+        <table class="table table-width-auto table-hover table-striped m-0">
+          <thead>
           <tr>
-            <td class="align-middle">
-              {{slot.position_title}}{{#if slot.slot_description}} - {{slot.slot_description}}{{/if}}
-            </td>
-            <td class="align-middle">{{shift-format slot.slot_begins slot.slot_ends}}</td>
-            <td class="align-middle">
-              {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
-                <UiButton @type={{if slot.is_within_start_time "primary" "warning"}}
-                          @onClick={{fn this.signinShiftAction slot}} @disabled={{this.isSubmitting}}>
-                  {{if slot.is_within_start_time "Start Shift" "Start Shift Early"}}
-                </UiButton>
-              {{else}}
-                <div class="text-danger">
-                  {{if slot.is_untrained "Not Trained"}}
-                  {{if slot.is_unqualified slot.unqualified_message}}
-                </div>
-                {{#if this.userCanForceCheckIn}}
-                  <UiButton @type="warning" @onClick={{fn this.signinShiftAction slot}} @disabled={{this.isSubmitting}}>
-                    Force Start Shift
-                  </UiButton>
-                {{/if}}
-              {{/if}}
-              {{#if this.isSubmitting}}
-                <LoadingIndicator/>
-              {{/if}}
-            </td>
+            <th>Shift</th>
+            <th>Time</th>
+            <th>Action</th>
           </tr>
-          {{#unless slot.is_within_start_time}}
+          </thead>
+
+          <tbody>
+          {{#each @imminentSlots as |slot|}}
             <tr>
-              <td colspan="5" class="text-danger">
-                <b>WARNING: Most shifts may only be signed in to within 15 minutes of the actual start time.<br>
-                  Suggest to {{@person.callsign}} they come back in {{pluralize slot.can_start_in "minute"}} to start
-                  their shift.</b>
+              <td class="align-middle">
+                {{slot.position_title}}{{#if slot.slot_description}} - {{slot.slot_description}}{{/if}}
+              </td>
+              <td class="align-middle">{{shift-format slot.slot_begins slot.slot_ends}}</td>
+              <td class="align-middle">
+                {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
+                  <UiButton @type={{if slot.is_within_start_time "primary" "warning"}}
+                            @onClick={{fn this.signinShiftAction slot}}
+                            @disabled={{this.isSubmitting}}>
+                    {{if slot.is_within_start_time "Start Shift" "Start Shift Early"}}
+                  </UiButton>
+                {{else}}
+                  <div class="text-danger">
+                    {{if slot.is_untrained "Not Trained"}}
+                    {{if slot.is_unqualified slot.unqualified_message}}
+                  </div>
+                  {{#if this.userCanForceCheckIn}}
+                    <UiButton @type="warning" @onClick={{fn this.signinShiftAction slot}}
+                              @disabled={{this.isSubmitting}}>
+                      Force Start Shift
+                    </UiButton>
+                  {{/if}}
+                {{/if}}
+                {{#if this.isSubmitting}}
+                  <LoadingIndicator/>
+                {{/if}}
               </td>
             </tr>
-          {{/unless}}
-        {{/each}}
-        </tbody>
-      </table>
-      <p class="mt-2 mb-2">Use the upcoming shift to sign in <b>OR</b> a specific position can be signed in to below:
-      </p>
+            {{#unless slot.is_within_start_time}}
+              <tr>
+                <td colspan="5" class="text-danger">
+                  <b>
+                    WARNING: Most shifts are recommended to be signed in to within 25 minutes of the actual start
+                    time.<br>
+                    Suggest to {{@person.callsign}} they come back in {{pluralize slot.can_start_in "minute"}} to start
+                    their shift.
+                  </b>
+                </td>
+              </tr>
+            {{/unless}}
+          {{/each}}
+          </tbody>
+        </table>
+        <p class="mt-2 mb-2">
+          Use the upcoming shift to sign in <b>OR</b> a specific position can be signed in to below:
+        </p>
+      {{else}}
+        <p>
+          No scheduled sign-ups were found starting within the next 30 minutes. That's okay! Scheduled sign-ups
+          are simply advisory bits of information to help shifts meet staffing minimums.
+        </p>
+        <p>
+          <b class="text-success">
+            {{@person.callsign}} can still work a shift. Ask the position they wish to work, select it below,
+            and start the shift.
+          </b>
+        </p>
+      {{/if}}
     {{/if}}
 
     <FormRow>
@@ -202,7 +226,7 @@
     <Modal.body>
       <p>
         <b class="text-danger">
-          WARNING: Most shifts may only be signed in to within 15 minutes of the actual start time.
+          WARNING: Most shifts may only be signed in to within 25 minutes of the actual start time.
         </b>
       </p>
       <p>

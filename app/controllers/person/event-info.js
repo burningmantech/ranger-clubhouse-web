@@ -28,7 +28,7 @@ export default class PersonEventInfoController extends ClubhouseController {
   }
 
   @action
-  async saveEvent(model, isValid) {
+  async save(model, isValid) {
     if (!isValid) {
       return;
     }
