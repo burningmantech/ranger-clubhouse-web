@@ -80,15 +80,15 @@ Everyone else will see person/simple-form
   {{#if (has-role "admin" "vc")}}
     <FormRow>
       <FormLabel @fixed={{true}}>&nbsp;</FormLabel>
-        <div class="col-auto mt-2">
-          <f.checkbox @name="used_vanity_change"
-                      @label="Used one-time vanity change"
-                      @inline={{true}}
-          />
-          {{#if (and @person.used_vanity_change @person.vanity_changed_at)}}
-            <i>(Used on {{mdy-format @person.vanity_changed_at}})</i>
-          {{/if}}
-        </div>
+      <div class="col-auto mt-2">
+        <f.checkbox @name="used_vanity_change"
+                    @label="Used one-time vanity change"
+                    @inline={{true}}
+        />
+        {{#if (and @person.used_vanity_change @person.vanity_changed_at)}}
+          <i>(Used on {{mdy-format @person.vanity_changed_at}})</i>
+        {{/if}}
+      </div>
     </FormRow>
   {{else if @person.used_vanity_change}}
     <FormRow>
@@ -101,7 +101,7 @@ Everyone else will see person/simple-form
         </i>
       </div>
     </FormRow>
-{{/if}}
+  {{/if}}
 
   <FormRow>
     <FormLabel @fixed={{true}}>FKA</FormLabel>
@@ -156,49 +156,27 @@ Everyone else will see person/simple-form
     <FormLabel @fixed={{true}}>Permissions</FormLabel>
     <div class="col-sm-12 col-xl-10">
       <Person::Permissions @roles={{@roles}}
-                     @grantedRoles={{@grantedRoles}}
-                     @toggleRoles={{@toggleRoles}}
-                     @editRolesAction={{@editRolesAction}}
-                     @showRoles={{@showRoles}}
-                     @person={{@person}}
+                           @grantedRoles={{@grantedRoles}}
+                           @toggleRoles={{@toggleRoles}}
+                           @editRolesAction={{@editRolesAction}}
+                           @showRoles={{@showRoles}}
+                           @person={{@person}}
       />
     </div>
   </FormRow>
 
   <FormRow>
-    <FormLabel @fixed={{true}}>Vehicles</FormLabel>
-    <div class="col-sm-12 col-xl-auto mt-2">
-      {{#if (has-role "admin")}}
-        <f.checkbox @name="vehicle_blacklisted"
-                    @label="Vehicle Blacklisted"/>
-      {{else if @person.vehicle_blacklisted}}
-        <b class="text-danger">VEHICLE BLACKLISTED</b>
-      {{else}}
-        <i>No blacklisted vehicle</i>
-      {{/if}}
-    </div>
-  </FormRow>
-
-  <FormRow>
-    <FormLabel @fixed={{true}}>Agreements</FormLabel>
-    <div class="col-sm-12 col-xl-auto mt-2">
-      {{#if (has-role "admin" "vc")}}
-        <f.checkbox @name="behavioral_agreement"
-                    @label="Burning Man's Behavioral Standards Agreement"/>
-      {{else}}
-        Behavioral Standards Agreement {{if @person.behavioral_agreement "signed" "NOT SIGNED"}}<br>
-      {{/if}}
-    </div>
-  </FormRow>
-
-  <FormRow>
     <FormLabel @fixed={{true}}>Mail Flags</FormLabel>
-    {{#if (has-role "tech-ninja")}}
-      <div class="col-sm-12 col-xl-10 mt-2">
+    <div class="col-sm-12 col-xl-10 mt-2">
+      {{#if (has-role "tech-ninja")}}
         <f.checkbox @name="is_bouncing"
                     @label="Email address is reported as bouncing"/>
-      </div>
-    {{/if}}
+      {{else if this.person.is_bouncing}}
+        <span class="text-danger">Email address has been reported as bouncing</span>
+      {{else}}
+        <i class="text-muted">Email address not reported as bouncing.</i>
+      {{/if}}
+    </div>
   </FormRow>
 
   <FormRow>

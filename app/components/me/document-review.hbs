@@ -1,0 +1,41 @@
+<ModalDialog @size="xl" as |Modal|>
+  <Modal.title>
+    Review And Sign Document
+  </Modal.title>
+  <Modal.body>
+    <h2>{{this.agreement.title}}</h2>
+    {{#if this.notAvailable}}
+      <p>
+        Please check back later, the document is not ready yet.
+      </p>
+    {{else}}
+      <p>
+        {{#if this.didSign}}
+          <b class="text-success">{{fa-icon "check"}} You have agreed to this document. Thank you!</b>
+        {{else}}
+          Please read the following document and use the 'I Agree' button below to digitally sign the agreement.
+        {{/if}}
+      </p>
+      {{this.bodyText}}
+      {{#if this.didSign}}
+        <div class="mt-1">
+          <b class="text-success">{{fa-icon "check"}} You have agreed to this document. Thank you!</b><br>
+        </div>
+      {{else}}
+      {{/if}}
+    {{/if}}
+  </Modal.body>
+  <Modal.footer @noAlign={{true}}>
+     {{#unless this.didSign}}
+      <UiButton @type="primary" @onClick={{this.signDocument}} @class="btn-responsive" @disabled={{this.isSubmitting}}>
+        I Agree
+      </UiButton>
+    {{/unless}}
+    <UiButton @type="secondary" @onClick={{fn @onClose this.didSign}}>
+      Close
+    </UiButton>
+    {{#if this.isSubmitting}}
+      <LoadingIndicator/>
+    {{/if}}
+  </Modal.footer>
+</ModalDialog>
