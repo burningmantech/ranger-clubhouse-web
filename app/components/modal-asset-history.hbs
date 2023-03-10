@@ -1,12 +1,12 @@
 <ModalDialog @title="Asset Check Out/In History" @onEscape={{@onClose}} as |modal|>
   <modal.body>
-    <table class="table table-striped table-sm mt-4">
+    <table class="table table-striped table-hover table-sm">
       <thead>
       <tr>
         <th>Person</th>
         <th>Attachment</th>
-        <th>Out</th>
-        <th>In</th>
+        <th>Checked Out Time /<br>By Person</th>
+        <th>Checked In Time /<br>By Person</th>
       </tr>
       </thead>
       <tbody>
@@ -20,13 +20,25 @@
         {{#each this.assetHistory as |row|}}
           <tr>
             <td>
-              <LinkTo @route="person.assets" @model={{row.person.id}}>{{row.person.callsign}}</LinkTo>
+              <PersonLink @person={{row.person}} @page="assets" />
             </td>
             <td><PresentOrNot @value={{row.attachment.description}} @empty="-" /></td>
-            <td>{{shift-format row.checked_out}}</td>
+            <td>
+              {{shift-format row.checked_out}}<br>
+              {{#if row.check_out_person}}
+                <PersonLink @person={{row.check_out_person}} />
+              {{else}}
+                -
+              {{/if}}
+            </td>
             <td>
               {{#if row.checked_in}}
-                {{shift-format row.checked_in}}
+                {{shift-format row.checked_in}}<br>
+                {{#if row.check_in_person}}
+                  <PersonLink @person={{row.check_in_person}} />
+                {{else}}
+                  -
+                {{/if}}
               {{else}}
                 <UiButton @size="sm" @onClick={{fn this.checkin row}}>Check In</UiButton>
               {{/if}}

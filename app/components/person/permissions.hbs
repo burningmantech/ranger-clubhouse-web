@@ -1,16 +1,16 @@
 <div>
   <UiButton @type="secondary" @size="sm" @onClick={{@toggleRoles}}>
-    {{if @showRoles "Hide" "Show"}} Roles
+    {{if @showRoles "Hide" "Show"}} Permissions
   </UiButton>
   {{#if this.isAdmin}}
     <UiButton @type="secondary" @size="sm" @class="ms-2" @onClick={{@editRolesAction}}>
-      Edit Roles
+      Edit Permissions
     </UiButton>
   {{/if}}
   {{#if this.isTechNinja}}
     <BsDropdown @type="secondary" as |dd|>
       <dd.button @size="sm" class="ms-2">
-        Role Diagnostic
+        Diagnostics
         <span class="caret"></span>
       </dd.button>
       <dd.menu>
@@ -26,19 +26,18 @@
 </div>
 {{#unless this.combinedRoles}}
   <div class="mt-2">
-    <b>No additional roles granted.</b>
+    <b>No additional permissions granted.</b>
   </div>
 {{/unless}}
 {{#if @showRoles}}
   <p class="mt-2">
-    Effective roles are a union of manual assignment, team membership with associated roles, and position assignments
-    with
-    associated roles.
+    Effective permissions are a union of manual assignments, team membership with associated permissions,
+    and position assignments with associated permissions.
   </p>
   <table class="table table-width-auto table-sm table-striped table-hover">
     <thead>
     <tr>
-      <th>Role</th>
+      <th>Permission</th>
       <th>Active?</th>
       <th class="text-center">Manually<br>Assigned?</th>
       <th>Thru<br>Teams</th>
@@ -75,7 +74,7 @@
         <td>
           {{#unless role.active}}
             <div class="text-danger small">
-              Since the appropriate ART training(s) have not been passed for the year, the role has not been assigned.
+              Since the appropriate ART training(s) have not been passed for the year, the permission has not been assigned.
             </div>
           {{/unless}}
           {{#each role.positions as |position idx|}}
@@ -100,11 +99,11 @@
 {{#if this.cachedRoles}}
   {{#if this.cachedRoles.not_cached}}
     <div class="my-2">
-      No roles are currently cached.
+      No permissions are currently cached.
     </div>
   {{else}}
     <div class="my-2">
-      The following roles are currently cached:
+      The following permissions are currently cached:
     </div>
     <table class="table table-sm table-width-auto table-striped table-hover">
       <thead>
@@ -121,7 +120,7 @@
           <td>{{role.title}}</td>
           <td>
             {{#if role.is_masquerading}}
-              Masquerade role activated because corresponding Clubhouse setting is enabled.
+              Masquerade permission activated because corresponding Clubhouse setting is enabled.
             {{else}}
               -
             {{/if}}

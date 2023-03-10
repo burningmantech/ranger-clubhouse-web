@@ -1,58 +1,76 @@
-<YearSelect @title="Radio Checkout Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<YearSelect @title="Radio Checkout Report"
+            @year={{this.year}}
+            @minYear={{2010}}
+            @onChange={{action (mut this.year)}}
+/>
 <FormRow>
-    <div class="col-auto">
-        <label>
-            <Input @type="checkbox" @checked={{this.include_qualified}}/>
-            Include Event Radio Eligible
-        </label>
-    </div>
-    <div class="col-auto">
-        <label>
-            <Input @type="checkbox" @checked={{this.event_summary}}/>
-            Report as Event Summary
-        </label>
-    </div>
+  <div class="col-auto">
+    <label>
+      <Input @type="checkbox" @checked={{this.include_qualified}}/>
+      Include Event Radio Eligible
+    </label>
+  </div>
+  <div class="col-auto">
+    <label>
+      <Input @type="checkbox" @checked={{this.event_summary}}/>
+      Report as Event Summary
+    </label>
+  </div>
 </FormRow>
 
 Showing {{pluralize this.radios.length "entry"}}
-<table class="table table-striped table-sm table-width-auto">
-    <thead>
+<table class="table table-striped table-hover table-sm table-width-auto">
+  <thead>
+  <tr>
     <th>Callsign</th>
     <th>Barcode</th>
-    <th>Checkout</th>
+    <th>Checked Out Time /<br>By Person</th>
     {{#if (or this.event_summary this.include_eligible)}}
-    <th>Checkin</th>
-    <th>Is Event Radio?</th>
-    <th>Radio Qualified?</th>
+      <th>Checked In Time /<br>By Person</th>
+      <th>Is Event Radio?</th>
+      <th>Radio Qualified?</th>
     {{/if}}
-    <th class="text-end">Time Checked Out</th>
-    </thead>
+    <th class="text-end">Duration</th>
+  </tr>
+  </thead>
 
-    <tbody>
-    {{#each this.radios as |radio|}}
+  <tbody>
+  {{#each this.radios as |radio|}}
     <tr>
+      <td>
+        <PersonLink @personId={{radio.person_id}} @callsign={{radio.callsign}} />
+      </td>
+      <td class="text-end">{{radio.barcode}}</td>
+      <td>
+        {{shift-format radio.checked_out}}<br>
+        {{#if radio.check_out_person}}
+          <PersonLink @person={{radio.check_out_person}} />
+        {{else}}
+          -
+        {{/if}}
+      </td>
+      {{#if (or this.event_summary this.include_eligible)}}
         <td>
-            <PersonLink @personId={{radio.person_id}} @callsign={{radio.callsign}} />
-        </td>
-        <td>{{radio.barcode}}</td>
-        <td>{{shift-format radio.checked_out}}</td>
-        {{#if (or this.event_summary this.include_eligible)}}
-        <td>
-            {{#if radio.checked_in}}
-            {{shift-format radio.checked_in}}
+          {{#if radio.checked_in}}
+            {{shift-format radio.checked_in}}<br>
+            {{#if radio.check_in_person}}
+              <PersonLink @person={{radio.check_in_person}} />
+            {{else}}
+              -
+            {{/if}}
           {{else}}
             <i>still out</i>
-            {{/if}}
+          {{/if}}
         </td>
-        <td>{{yesno radio.perm_assign}}</td>
-        <td>{{yesno radio.eligible}}</td>
-        {{/if}}
-        <td class="text-end">{{hour-minute-format radio.duration}}</td>
+        <td class="text-center">{{yesno radio.perm_assign}}</td>
+        <td class="text-center">{{yesno radio.eligible}}</td>
+      {{/if}}
+      <td class="text-end">{{hour-minute-format radio.duration}}</td>
     </tr>
-    {{else}}
+  {{else}}
     <tr>
-        <td colspan="7"><b class="text-danger">No entries were found for {{this.year}}.</b></td>
+      <td colspan="7"><b class="text-danger">No entries were found for {{this.year}}.</b></td>
     </tr>
-    {{/each}}
-    </tbody>
+  {{/each}}
+  </tbody>
 </table>

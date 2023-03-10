@@ -32,6 +32,9 @@ export default class PersonModel extends PersonMixin(Model) {
 
   @attr('number', {readOnly: true}) person_photo_id;
 
+  @attr('boolean') used_vanity_change;
+  @attr('string', { readOnly: true }) vanity_changed_at;
+
   // Personal Information
   @attr('string') street1;
   @attr('string') street2;

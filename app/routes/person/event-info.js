@@ -24,6 +24,7 @@ export default class PersonEventInfoRoute extends ClubhouseRoute {
     controller.set('person', this.modelFor('person'));
     controller.set('eventInfo', model.eventInfo);
     controller.set('personEvent', model.personEvent);
+    controller.set('haveUserInfo', false);
   }
 
   resetController(controller, isExiting) {

@@ -18,14 +18,18 @@ export const MANAGE_ON_PLAYA = 108;
 export const TRAINER_SEASONAL = 109;
 export const CERTIFICATION_MGMT = 110;
 export const TECH_NINJA = 1000;
+export const EDIT_ASSETS = 111;    // Person can create and edit asset records
+export const EDIT_SWAG = 112;      // Person can create and edit swag records
 
 export const Role = {
   ADMIN,
   ART_TRAINER,
   CERTIFICATION_MGMT,
   EDIT_ACCESS_DOCS,
+  EDIT_ASSETS,
   EDIT_BMIDS,
   EDIT_SLOTS,
+  EDIT_SWAG,
   GRANT_POSITION,
   INTAKE,
   MANAGE,
@@ -46,8 +50,10 @@ export const RoleToString = {
   [ADMIN]: 'admin',
   [ART_TRAINER]: 'art-trainer',
   [EDIT_ACCESS_DOCS]: 'edit-access-docs',
+  [EDIT_ASSETS]: 'edit-assets',
   [EDIT_BMIDS]: 'edit-bmids',
   [EDIT_SLOTS]: 'edit-slots',
+  [EDIT_SWAG]: 'edit-swag',
   [GRANT_POSITION]: 'grant-position',
   [INTAKE]: 'intake',
   [MANAGE]: 'manage',

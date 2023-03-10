@@ -92,7 +92,7 @@
 </div>
 
 {{#if this.editRoles}}
-  <Person::RoleForm @roles={{this.roles}}
+  <Person::PermissionForm @roles={{this.roles}}
                     @grantedRoles={{this.grantedRoles}}
                     @onSave={{this.saveRoles}}
                     @onCancel={{this.cancelRoles}}

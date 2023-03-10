@@ -6,35 +6,44 @@
   As with the Ranger rental fleet vehicles, Personal Vehicles used while on Ranger business
   must display/contain authorized Vehicle Use Items in order to be driven on playa.
 </p>
-<p>
-  Even if your vehicle was approved in previous years, <b class="text-danger">a vehicle request must be submitted each
-  and every year</b>
-  a Personal Vehicle is to be used for Ranger business at the event. Approval is for the current event only and does
-  not carry over to the following event.
-</p>
-<p>
-  More information is available in the
-  <a href={{this.vehicleConfig.personal_vehicle_document_url}} target="_blank" rel="noopener noreferrer">
-    Ranger Personal Vehicle Use Procedures
-  </a>
-  document.
-  (link opens in a new window)
-</p>
+<UiSection>
+  <:title>Vehicle requests must be submitted each &amp; every year</:title>
+  <:body>
+    <p>
+      Even if your vehicle was approved in previous years, <b class="text-danger">a vehicle request must be submitted
+      each and every year</b> a Personal Vehicle is to be used for Ranger business at the event. Approval is for the
+      current event only and does not carry over to the following event.
+    </p>
+    More information is available in the
+    <a href={{this.vehicleConfig.personal_vehicle_document_url}} target="_blank" rel="noopener noreferrer">
+      Ranger Personal Vehicle Use Procedures
+    </a>
+    document. (link opens in a new window)
+  </:body>
+</UiSection>
 
 {{#if (and this.motorpoolPolicySigned this.personalVehicleSigned)}}
-  <p>
-    <UiButton @onClick={{this.newAction}}>New Vehicle Request / Reauthorize Vehicle</UiButton>
-  </p>
-
-  {{#each this.vehicles as |vehicle|}}
-    <UiSection>
-      <:title>
-        {{vehicle.vehicle_year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}} {{vehicle.vehicle_color}}
-        {{#if vehicle.license_number}}
-          (#{{vehicle.license_state}}-{{vehicle.license_number}})
-        {{/if}}
-      </:title>
-      <:body>
+  <UiSection>
+    <:title>Personal Vehicles ({{pluralize this.vehicles.length "request"}})</:title>
+    <:body>
+      {{#unless this.vehicles}}
+        <p>
+          <b class="text-danger">All vehicle requests MUST be submitted BEFORE you leave for the playa.</b>
+          Failing to do will result in your inability to drive your vehicle on behalf of the Rangers.
+        </p>
+      {{/unless}}
+      <p>
+        <UiButton @onClick={{this.newAction}}>New Vehicle Request / Reauthorize Vehicle</UiButton>
+      </p>
+      {{#each this.vehicles as |vehicle idx|}}
+        {{#if idx}}
+          <hr>{{/if}}
+        <h3>
+          {{vehicle.vehicle_year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}} {{vehicle.vehicle_color}}
+          {{#if vehicle.license_number}}
+            (#{{vehicle.license_state}}-{{vehicle.license_number}})
+          {{/if}}
+        </h3>
         {{#if vehicle.isPending}}
           <p>
             <b>{{fa-icon "hourglass-half"}} The request is awaiting review.</b>
@@ -49,12 +58,14 @@
           </p>
         {{else if vehicle.isApproved}}
           <p>
-            <b class="text-success">{{fa-icon "check"}} Your request has been approved for the following item(s):</b>
+            <b class="text-success">{{fa-icon "check"}} Your request has been approved for the following
+              item(s):</b>
           </p>
         {{else if vehicle.isRejected}}
           <p>
             <b class="text-light-red">
-              {{fa-icon "exclamation"}}  The request has been denied. Your vehicle is not authorized to be driven on
+              {{fa-icon "exclamation"}}  The request has been denied. Your vehicle is not authorized to be driven
+              on
               playa
             </b></p>
         {{else}}
@@ -146,38 +157,49 @@
             {{/if}}
           </dd>
         </dl>
-      </:body>
-    </UiSection>
-  {{else}}
-    <p>
-      No vehicle requests have been submitted.
-    </p>
-  {{/each}}
+      {{/each}}
+    </:body>
+  </UiSection>
 {{else}}
-  <p>
-    You must agree to both the Motorpool Policy Agreement and the Personal Vehicle Agreement before you may submit
-    requests for driving stickers.
-  </p>
-  <p>
-  {{#if this.motorpoolPolicySigned}}
-      <span class="text-success">{{fa-icon "check"}} You have already agreed to Motorpool Policy. Thank you!</span>
-  {{else}}
-    <div class="text-danger">{{fa-icon "times"}} You have not agreed to the Ranger Vehicle Motorpool Policy yet.</div>
-    Visit the
-    <LinkTo @route="me.agreements.sign" @model="motorpool-policy">Ranger Vehicle Motorpool Policy</LinkTo>
-    page to read and agree to the policy.
-  {{/if}}
-  </p>
-  <p>
-  {{#if this.personalVehicleSigned}}
-      <span class="text-success">{{fa-icon "check"}} You have already agreed to the Personal Vehicle Agreement. Thank you!</span>
-  {{else}}
-    <div class="text-danger">{{fa-icon "times"}} You have not agreed to the Ranger Personal Vehicle Agreement yet.</div>
-    Visit the
-    <LinkTo @route="me.agreements.sign" @model="personal-vehicle-agreement">Ranger Personal Vehicle Agreement</LinkTo>
-    page to read and agree to the policy.
-  {{/if}}
-  </p>
+  <UiSection>
+    <:title>Two Vehicle Agreements must be reviewed &amp; signed</:title>
+    <:body>
+      <p>
+        You must agree to both the Motorpool Policy Agreement and the Personal Vehicle Agreement before you may submit
+        requests for driving stickers.
+      </p>
+    <p>
+      {{#if this.motorpoolPolicySigned}}
+        <div class="text-success">
+          {{fa-icon "check"}} You have agreed to Motorpool Policy for the year. Thank you!
+        </div>
+      {{else}}
+        <div class="text-danger">
+          {{fa-icon "times"}} You have not agreed to the Ranger Vehicle Motorpool Policy yet.
+        </div>
+        <UiButton @type="primary" @onClick={{this.reviewMotorpoolPolicy}}>
+          Review And Sign the Motorpool Policy
+        </UiButton>
+      {{/if}}
+      </p>
+      {{#if this.personalVehicleSigned}}
+        <div class="text-success">
+          {{fa-icon "check"}} You have already agreed to the Personal Vehicle Agreement. Thank you!
+        </div>
+      {{else}}
+        <div class="text-danger">
+          {{fa-icon "times"}} You have not agreed to the Ranger Personal Vehicle Agreement yet.
+        </div>
+        <UiButton @type="primary" @onClick={{this.reviewPersonalVehicleAgreement}}>
+          Review And Sign the Ranger Personal Vehicle Agreement
+        </UiButton>
+      {{/if}}
+    </:body>
+  </UiSection>
+{{/if}}
+
+{{#if this.showAgreementTag}}
+  <Me::DocumentReview @tag={{this.showAgreementTag}} @onClose={{this.closeAgreement}} />
 {{/if}}
 
 {{#if this.entry}}

@@ -45,9 +45,17 @@
   <dt class="col-sm-12 col-lg-2">Callsign</dt>
   <dd class="col-sm-12 col-lg-9">
     {{#if @person.callsign_approved}}
-      <span class="text-success">{{fa-icon "check"}} Approved</span>
+      <div class="text-success">{{fa-icon "check"}} Approved</div>
     {{else}}
-      <span class="text-danger">{{fa-icon "times"}} Not approved</span>
+      <div class="text-danger">{{fa-icon "times"}} Not approved</div>
+    {{/if}}
+    {{#if @person.used_vanity_change}}
+      <i>
+        One-time vanity change used
+        {{#if @person.vanity_changed_at}}
+          on {{mdy-format @person.vanity_changed_at}}
+        {{/if}}
+      </i>
     {{/if}}
   </dd>
   <dt class="col-sm-12 col-lg-2">FKAs</dt>
@@ -88,7 +96,7 @@
   </dd>
   <dt class="col-sm-12 col-lg-2">Roles</dt>
   <dd class="col-sm-12 col-lg-9">
-    <Person::Roles @roles={{@roles}}
+    <Person::Permissions @roles={{@roles}}
                    @grantedRoles={{@grantedRoles}}
                    @toggleRoles={{@toggleRoles}}
                    @showRoles={{@showRoles}} />

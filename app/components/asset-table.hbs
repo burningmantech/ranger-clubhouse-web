@@ -2,7 +2,7 @@
   <:title>Asset Checkout / In History</:title>
   <:body>
     {{pluralize @assets.length "asset"}} found
-    <table class="table table-width-auto table-striped table-sm">
+    <table class="table table-width-auto table-striped table-hover table-sm">
       <thead>
       <tr>
         <th>Type</th>
@@ -10,8 +10,8 @@
         <th>Attachment</th>
         <th>Assigned</th>
         <th>Temp ID</th>
-        <th>Checked Out</th>
-        <th>Checked In</th>
+        <th>Checked Out Time /<br>By Person</th>
+        <th>Checked In Time /<br>By Person</th>
         <th>Action</th>
       </tr>
       </thead>
@@ -27,10 +27,22 @@
           <td>
             <PresentOrNot @value={{ap.asset.temp_id}} @empty="-"/>
           </td>
-          <td>{{shift-format ap.checked_out}}</td>
+          <td>
+            {{shift-format ap.checked_out}}<br>
+            {{#if ap.check_out_person}}
+              <PersonLink @person={{ap.check_out_person}} />
+            {{else}}
+              -
+            {{/if}}
+          </td>
           <td>
             {{#if ap.checked_in}}
-              {{shift-format ap.checked_in}}
+              {{shift-format ap.checked_in}}<br>
+              {{#if ap.check_in_person}}
+                <PersonLink @person={{ap.check_in_person}} />
+              {{else}}
+                -
+              {{/if}}
             {{else}}
               <UiButton @size="sm" @onClick={{fn this.checkInAsset ap.asset ap}} @disabled={{ap.asset.isSubmitting}}>
                 Check In

@@ -1,4 +1,7 @@
-<YearSelect @title="Non-Radio Asset History" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<YearSelect @title="Non-Radio Asset History"
+            @year={{this.year}}
+            @minYear={{2010}}
+            @onChange={{action (mut this.year)}}  />
 
 <p>
   <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
@@ -12,8 +15,8 @@ Showing {{pluralize this.assets.length "non-radio asset entry"}}
     <th>Description</th>
     <th>Assigned</th>
     <th>Temp ID</th>
-    <th>Checked Out</th>
-    <th>Checked In</th>
+    <th>Cbecked Out Time /<br>By Person</th>
+    <th>Checked In Time /<br>By Person</th>
     <th>Callsign</th>
   </tr>
   </thead>
@@ -25,12 +28,24 @@ Showing {{pluralize this.assets.length "non-radio asset entry"}}
         <td>{{asset.description}}</td>
         <td>{{asset.temp_id}}</td>
         <td>{{if asset.perm_assign "Permanent" "Temporary"}}</td>
-        <td>{{shift-format history.checked_out}}</td>
+        <td>
+          {{shift-format history.checked_out}}<br>
+          {{#if history.check_out_person}}
+            <PersonLink @person={{history.check_out_person}} />
+          {{else}}
+            -
+          {{/if}}
+        </td>
         <td>
           {{#if history.checked_in}}
-            {{shift-format history.checked_in}}
+            {{shift-format history.checked_in}}<br>
+            {{#if history.check_in_person}}
+              <PersonLink @person={{history.check_in_person}} />
+            {{else}}
+              -
+            {{/if}}
           {{else}}
-            Still out
+            <i>- Still out -</i>
           {{/if}}
         </td>
         <td>

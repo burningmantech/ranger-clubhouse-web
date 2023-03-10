@@ -1,4 +1,7 @@
-<YearSelect @title="Radio Assets Report" @year={{this.year}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="Radio Assets Report"
+            @year={{this.year}}
+            @minYear={{2010}}
+            @onChange={{action (mut this.year)}} />
 
 <FormRow><label><Input @type="checkbox" @checked={{this.summary}}/> Summarize report</label></FormRow>
 

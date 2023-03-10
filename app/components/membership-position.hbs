@@ -21,9 +21,9 @@
           {{/if}}
         </label>
         {{#if position.roles}}
-          <Popover @text="[{{pluralize position.roles.length "role"}}]">
+          <Popover @text="[{{pluralize position.roles.length "permission"}}]">
             <p>
-              The following role(s) will be given when this position ({{position.title}}) is granted:
+              The following permission(s) will be given when this position ({{position.title}}) is granted:
             </p>
             {{#each position.roles as |role|}}
               {{role}}<br>
