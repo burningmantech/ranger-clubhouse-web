@@ -108,7 +108,7 @@ export default class TicketSummaryComponent extends Component {
 
       const text = lines.map((l) => `<div class="ms-1">${l}</div>`).join('');
       claimed.push(htmlSafe(`A Work Access Pass for yourself<br>${text}`));
-     }
+    }
 
     const {wapso} = pkg;
     if (wapso && wapso.find((w) => w.isClaimed)) {
@@ -141,6 +141,7 @@ export default class TicketSummaryComponent extends Component {
    *
    * @returns {*[]}
    */
+
   @cached
   get unclaimedItems() {
     const pkg = this.args.ticketPackage;
@@ -162,5 +163,10 @@ export default class TicketSummaryComponent extends Component {
     }
 
     return unclaimed;
+  }
+
+  get hasStaffCredential() {
+    const {ticket} = this.args;
+    return ticket && ticket.isStaffCredential && ticket.isClaimed;
   }
 }
