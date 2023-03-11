@@ -1,11 +1,11 @@
 <tr>
-  <td class="w-55">
+  <td class="w-55 lh-lg">
     {{#if @item.has_earned}}
       <b class="text-success">{{fa-icon "check"}} {{@name}} - EARNED</b>
     {{else}}
       <b>{{@name}}</b>
       {{#if @subtext}}
-        <span class="text-muted">{{@subtext}}</span>
+        <i class="small">{{@subtext}}</i>
       {{/if}}
     {{/if}}
     {{#unless @item.has_earned}}
@@ -13,11 +13,11 @@
       {{#if @item.expected_to_earn}}
         {{fa-icon "thumbs-up" color="success"}} Has enough scheduled sign-ups.
       {{else}}
-        {{fa-icon "times" color="danger"}} Needs {{@item.needs_to_schedule}} {{@item.measure}} more in sign-ups.
+        {{fa-icon "hand-point-right"}} Needs {{@item.needs_to_schedule}} {{@item.measure}} more in sign-ups.
       {{/if}}
       {{#if @item.needs_to_work}}
         <br>
-        Still required to WORK an additional {{@item.needs_to_work}} {{@item.measure}}.
+        <span class="text-danger">{{fa-icon "person-walking"}} Still required to WORK an additional {{@item.needs_to_work}} {{@item.measure}}.</span>
       {{/if}}
     {{/unless}}
   </td>

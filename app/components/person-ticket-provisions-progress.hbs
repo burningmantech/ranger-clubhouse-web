@@ -42,20 +42,39 @@
     <:title>{{fa-icon "shower"}} Wet Spot Qualifications</:title>
     <:body>
       <p>
-        Both Wet Spot access and pog qualifications are based on Event Week hours only.
+        The Wet Spot is the Burning Man volunteer &amp; staff shower facility located on 5:30 towards the DPW Depot.
+        </p>
+      <p>
+        For every {{this.items.shower_pog.threshold}} hours worked during the Event Week only, you may receive a single-use
+        shower pog only good for the current event.
       </p>
       <p>
-        The Wet Spot is the Burning Man volunteer &amp; staff shower facility located on 5:30 towards the DPW Depot. For
-        every {{this.items.shower_pog.threshold}} hours worked during the event week, you may receive a single-use
-        shower pog only good for the current event. The Wet Spot Access qualification allows daily access to facility
-        for the NEXT event.
+        The Wet Spot Access qualification allows daily access to the facility for the NEXT event. Access may be gained
+        by meeting one of two thresholds:
+      </p>
+      <ol>
+        <li>Work {{this.items.shower_access_event_week.threshold}} hours during the EVENT WEEK. <b>- OR -</b></li>
+        <li>Work {{this.items.shower_access_entire_event.threshold}} hours during the pre-event, event week and/or
+          post-event period.
+        </li>
+      </ol>
+      <p>
+        Only one shower access will be award. (i.e., if you met both the event week and pre-event / event week /
+        post-event thresholds,
+        you will receive only one shower access provision for the following event.)
       </p>
       <PersonTicketsAndProvisionsItem @item={{this.items.shower_pog}}
                                       @eventWeek={{true}}
                                       @name="Wet Spot Pog for THIS event"/>
-      <PersonTicketsAndProvisionsItem @item={{this.items.shower_access}}
+      <PersonTicketsAndProvisionsItem @item={{this.items.shower_access_event_week}}
                                       @eventWeek={{true}}
-                                      @name="Wet Spot Access for NEXT event"/>
+                                      @name="Wet Spot Access for NEXT event (Event Week hours)"
+                                      @subtext="Based off hours solely worked during the Event Week period."
+      />
+      <PersonTicketsAndProvisionsItem @item={{this.items.shower_access_entire_event}}
+                                      @name="Wet Spot Access for NEXT event (Pre-event, Event week, Post-event hours)"
+                                      @subtext="Based off hours hours work during the Pre-event, Event Week, and/or Post-event periods."
+      />
     </:body>
   </UiSection>
 {{/if}}
