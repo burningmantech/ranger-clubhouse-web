@@ -22,14 +22,14 @@
                                  @subtext="(Event week hours only)"/>
     {{/unless}}
     <HqTicketsAndProvisionsRow @item={{this.items.all_eats}} @name="All Eat Meal Pass"
-                               @subtext="(Pre/Event/Post-week hours)"/>
+                               @subtext="(Pre/Event Week/Post hours)"/>
   </HqTicketsAndProvisionsTable>
 
   <HqTicketsAndProvisionsTable @items="Ranger Clothing">
     {{#if this.isShinyPenny}}
       <tr>
-        <td colspan="5">{{@person.callsign}} is a Shiny Penny and NOT eligible to earn additional Ranger clothing this
-          year.
+        <td colspan="5">
+          {{@person.callsign}} is a Shiny Penny and NOT eligible to earn additional Ranger clothing this year.
         </td>
       </tr>
     {{else}}
@@ -44,8 +44,11 @@
     <HqTicketsAndProvisionsRow @item={{this.items.shower_pog}} @name="Wet Spot Pog for THIS event"
                                @subtext="(Event week hours only)"
     />
-    <HqTicketsAndProvisionsRow @item={{this.items.shower_access}} @name="Wet Spot Access for NEXT event"
+    <HqTicketsAndProvisionsRow @item={{this.items.shower_access_event_week}} @name="Wet Spot Access for NEXT event"
                                @subtext="(Event week hours only)"
+    />
+    <HqTicketsAndProvisionsRow @item={{this.items.shower_access_entire_event}} @name="Wet Spot Access for NEXT event"
+                               @subtext="(Pre/Event Week/Post hours)"
     />
   </HqTicketsAndProvisionsTable>
 
