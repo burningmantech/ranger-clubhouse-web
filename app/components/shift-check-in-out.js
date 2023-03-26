@@ -5,7 +5,7 @@ import {service} from '@ember/service';
 import {DIRT, DIRT_SHINY_PENNY, TRAINING, BURN_PERIMETER} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 import {NON_RANGER} from 'clubhouse/constants/person_status';
-import {ADMIN, TIMESHEET_MANAGEMENT} from 'clubhouse/constants/roles';
+import {ADMIN, CAN_FORCE_SHIFT} from 'clubhouse/constants/roles';
 import {TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
 
 export default class ShiftCheckInOutComponent extends Component {
@@ -113,7 +113,7 @@ export default class ShiftCheckInOutComponent extends Component {
       }
     }
 
-    this.userCanForceCheckIn = this.session.hasRole([ADMIN, TIMESHEET_MANAGEMENT]);
+    this.userCanForceCheckIn = this.session.hasRole([ADMIN, CAN_FORCE_SHIFT]);
   }
 
   /**

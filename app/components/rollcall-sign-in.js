@@ -153,15 +153,21 @@ export default class RollcallSignInComponent extends Component {
 
   /**
    * Retrieve the people signed up for a given slot/shift
+   *
    * @private
    */
 
-  _retrievePeople() {
+  async _retrievePeople() {
     this.isRetrievingPeople = true;
-    this.ajax.request(`slot/${this.slot.id}/people`, {data: {is_onduty: 1, include_photo: 1}})
-      .then((result) => this.people = result.people.map((p) => new PersonSignIn(p)))
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isRetrievingPeople = false);
+    try {
+      const {people} = await this.ajax.request(`slot/${this.slot.id}/people`,
+        {data: {is_onduty: 1, include_photo: 1}});
+      this.people = people.map((p) => new PersonSignIn(p));
+    } catch (response) {
+      this.house.handleErrorResponse(response)
+    } finally {
+      this.isRetrievingPeople = false;
+    }
   }
 
   /**
@@ -181,11 +187,13 @@ export default class RollcallSignInComponent extends Component {
       this._signonPerson(person);
     } else {
       // Person is on duty - confirm sign out.
-      this.modal.confirm(`Sign Out ${person.callsign}`, `Do you wish to sign out ${person.callsign}?`, () => {
-        const timesheetId = (person.on_duty ? person.on_duty.id : person.timesheet_id);
-        person.isSubmitting = true;
-        this.ajax.request(`timesheet/${timesheetId}/signoff`, {method: 'POST'})
-          .then((result) => {
+      this.modal.confirm(`Sign Out ${person.callsign}`,
+        `Do you wish to sign out ${person.callsign}?`,
+        async () => {
+          const timesheetId = (person.on_duty ? person.on_duty.id : person.timesheet_id);
+          person.isSubmitting = true;
+          try {
+            const result = await this.ajax.request(`timesheet/${timesheetId}/signoff`, {method: 'POST'});
             person.signedIn = false;
             person.on_duty = null;
             person.timesheet_id = null;
@@ -202,9 +210,13 @@ export default class RollcallSignInComponent extends Component {
                 this.toast.error(`Unknown signoff response [${result.status}].`);
                 break;
             }
-          }).catch((response) => this.house.handleErrorResponse(response))
-          .finally(() => person.isSubmitting = false)
-      });
+          } catch (response) {
+            this.house.handleErrorResponse(response);
+          } finally {
+            person.isSubmitting = false;
+          }
+        }
+      );
     }
   }
 
@@ -215,16 +227,17 @@ export default class RollcallSignInComponent extends Component {
    * @private
    */
 
-  _signonPerson(person) {
+  async _signonPerson(person) {
     person.isSubmitting = true;
-    this.ajax.request('timesheet/signin', {
-      method: 'POST',
-      data: {
-        position_id: this.positionId,
-        person_id: person.id,
-        slot_id: this.slotId
-      }
-    }).then((result) => {
+    try {
+      const result = await this.ajax.request('timesheet/signin', {
+        method: 'POST',
+        data: {
+          position_id: this.positionId,
+          person_id: person.id,
+          slot_id: this.slotId
+        }
+      });
       const {callsign} = person;
       switch (result.status) {
         case 'success':
@@ -265,7 +278,10 @@ export default class RollcallSignInComponent extends Component {
           this.modal.info('Unknown Server Status', `An unknown status [${result.status}] from the server. This is a bug. Please report this to the Tech Ninjas.`);
           break;
       }
-    }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => person.isSubmitting = false);
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      person.isSubmitting = false
+    }
   }
 }
