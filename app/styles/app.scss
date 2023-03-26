@@ -242,6 +242,7 @@ ul.nav-tabs {
     flex: 1;
 
     flex-wrap: nowrap !important;
+
     .nav-link {
       font-size: 0.70rem;
     }
@@ -258,20 +259,21 @@ footer {
   text-align: center;
 }
 
-ul.nav-pills li > a.is_active {
-  background-color: #747c84;
+ul.nav-pills a.active {
+  color: #ececec !important;
+  background-color: #424c5b !important;
 }
 
-ul.nav-pills a.is_active {
-  color: #fff;
-}
-
-ul.nav-pills li > a:not(.is_active) {
+ul.nav-pills li > a:not(.active) {
   background-color: #ececec;
 }
 
 ul.nav-pills li {
-  margin-right: 5px;
+  margin-right: 0.25rem;
+}
+
+.nav-pills .nav-link:not(:hover) {
+  border: solid 1px #ffffff;
 }
 
 .nav-pills .nav-link:hover {
@@ -484,6 +486,14 @@ legend {
   }
 }
 
+.hq-navigation-container {
+  padding: 0.5rem 1.25rem;
+  margin: -1rem -1.25rem 0.25rem;
+  a {
+    font-size: 0.9rem !important;
+  }
+}
+
 .person-manage-header {
   background-color: #f4f4f4 !important;
   margin: -10px -20px 15px -20px; // Pull the header back so no gaps appear
@@ -500,10 +510,15 @@ legend {
 
 .person-manage-header-title {
   display: flex;
+  justify-content: space-between;
+
+  div {
+    align-self: center;
+  }
 }
 
+
 .person-manage-callsign {
-  flex: 1;
   font-size: $h3-font-size;
   font-weight: 500;
 }
@@ -519,6 +534,10 @@ legend {
 
 .person-manage-info {
   width: 100%;
+}
+
+.person-manage-header-interface {
+  font-size: 1.1rem;
 }
 
 @include media-breakpoint-down(lg) {
@@ -546,6 +565,10 @@ legend {
 
 .max-width-1200 {
   max-width: 1000px;
+}
+
+.max-width-1300 {
+  max-width: 1300px;
 }
 
 .callsign-list {

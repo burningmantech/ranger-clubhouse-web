@@ -108,7 +108,7 @@
         </FormRow>
         <FormRow>
           <f.text @name="partner"
-                  @label="Who was your partner for the shift or the shift lead / manager who can corroborate your story?"
+                  @label="Who was your shift partner or the shift lead / manager who can corroborate your story?"
                   @size={{20}}/>
         </FormRow>
         {{#if this.entry.isRejected}}
@@ -127,9 +127,9 @@
                       @cols={{80}}
                       @rows={{4}} />
         </FormRow>
-        <b class="text-danger">Your request will be denied if:</b><br>
-        {{fa-icon "ban"}} Not enough information was provided.<br>
-        {{fa-icon "ban"}} Your story cannot be verified with your shift partner or shift lead / manager. Yes, we do
+        <b class="text-danger">The request will be denied if:</b><br>
+        {{fa-icon "ban" right=1}} Not enough information was provided.<br>
+        {{fa-icon "ban" right=1}} Your story cannot be verified with your shift partner or shift lead / manager. Yes, we do
         check!<br>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>

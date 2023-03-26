@@ -1,9 +1,17 @@
 {{#if this.isReloadingTimesheets}}
-  <LoadingIndicator @text="Reloading Timesheets"/>
+  <LoadingIndicator @text="Reloading Timesheet Entries"/>
 {{else if @onDutyEntry}}
-  <p>
-    <b class="text-success">{{@person.callsign}} is on duty.</b>
-  </p>
+  <h4 class="text-success">
+    {{fa-icon "person-walking" right=2}} {{@person.callsign}} is on duty.
+  </h4>
+  {{#if this.mayNotNeedRadio}}
+    <p>
+      <b class="text-danger">
+        {{fa-icon "arrow-right" right=1}} {{@person.callsign}} is working a Burn Perimeter shift and may not need a
+        radio. Check with the HQ Short or Lead if in doubt.
+      </b>
+    </p>
+  {{/if}}
   <table class="table table-width-auto">
     <thead>
     <tr>
@@ -36,7 +44,7 @@
       <td class="text-end">{{credits-format @onDutyEntry.credits}}</td>
       <td>
         <UiButton @type="danger" @onClick={{this.endShiftAction}} @disabled={{this.isSubmitting}}>
-          {{fa-icon "bed"}} End Shift
+          {{fa-icon "bed" right=2}} End Shift
         </UiButton>
         {{#if this.isSubmitting}}
           <LoadingIndicator/>
@@ -45,50 +53,28 @@
     </tr>
     </tbody>
   </table>
-  {{#if this.mayNotNeedRadio}}
-    <p>
-      <b class="text-danger">
-        {{fa-icon "arrow-right"}} {{@person.callsign}} is working a Burn Perimeter shift and may not need a radio.
-        Check with the HQ Short or Lead if in doubt.
-      </b>
-    </p>
-  {{/if}}
   {{#unless @onDutyEntry.position.count_hours}}
     Note:
     <NoAppreciateIcon/> = {{@onDutyEntry.position.title}} hours do not count towards provisions and appreciations.
   {{/unless}}
 {{else}}
   {{#if (not @person.canStartShift)}}
-    <b class="text-danger">
-      {{@person.callsign}} cannot start a shift because their status does not allow them to work shifts.
-    </b>
+    <UiNotice @icon="hand" @type="danger" @title="Status Issue">
+      {{@person.callsign}} cannot start a shift because their status ({{@person.status}}) does not allow them to work
+      shifts.
+    </UiNotice>
   {{else if @hasUnverifiedTimesheet}}
-    One or more timesheet entries has to be verified before a shift can be started.
+    <UiNotice @icon="hand" @type="danger" @title="Outstanding Tasks">
+      One or more timesheet entries has to be reviewed FIRST before a shift can be started.
+    </UiNotice>
   {{else}}
-    {{#unless this.isPersonDirtTrained}}
-      <UiNotice @title="Work Eligibility Issue" @icon="hand" @type="danger">
-        <p>
-          {{@person.callsign}} should not start a shift because
-          {{if this.otOnly "the Online Course" "an In-Person Training"}}
-          has not been completed.
-        </p>
-        <p>
-          In case the person attended an In-Person Training earlier in the day, the trainers may be delayed in
-          recording who passed the training. Have the HQ Short or Lead contact the trainers to verify the person
-          attended and passed the training.
-        </p>
-        {{#if this.userCanForceCheckIn}}
-          You have the privileges to force a shift start.
-        {{/if}}
-      </UiNotice>
-    {{/unless}}
-
     {{#if this.isPersonDirtTrained}}
       {{#if  @imminentSlots}}
-        <p>
-          {{pluralize @imminentSlots.length "upcoming shift"}} found.
+        <p class="text-success">
+          {{pluralize @imminentSlots.length "upcoming scheduled shift sign-up"}} found. You may sign them
+          into a scheduled shift OR a different shift / position.
         </p>
-        <table class="table table-width-auto table-hover table-striped m-0">
+        <table class="table table-width-auto table-hover table-striped">
           <thead>
           <tr>
             <th>Shift</th>
@@ -96,7 +82,6 @@
             <th>Action</th>
           </tr>
           </thead>
-
           <tbody>
           {{#each @imminentSlots as |slot|}}
             <tr>
@@ -109,7 +94,8 @@
                   <UiButton @type={{if slot.is_within_start_time "primary" "warning"}}
                             @onClick={{fn this.signinShiftAction slot}}
                             @disabled={{this.isSubmitting}}>
-                    {{if slot.is_within_start_time "Start Shift" "Start Shift Early"}}
+                    {{fa-icon "person-walking" right=2}}
+                    {{if slot.is_within_start_time "Start Scheduled Shift" "Start Shift Early"}}
                   </UiButton>
                 {{else}}
                   <div class="text-danger">
@@ -117,7 +103,8 @@
                     {{if slot.is_unqualified slot.unqualified_message}}
                   </div>
                   {{#if this.userCanForceCheckIn}}
-                    <UiButton @type="warning" @onClick={{fn this.signinShiftAction slot}}
+                    <UiButton @type="warning"
+                              @onClick={{fn this.signinShiftAction slot}}
                               @disabled={{this.isSubmitting}}>
                       Force Start Shift
                     </UiButton>
@@ -143,13 +130,13 @@
           {{/each}}
           </tbody>
         </table>
-        <p class="mt-2 mb-2">
-          Use the upcoming shift to sign in <b>OR</b> a specific position can be signed in to below:
+        <p class="text-success">
+          To sign in to a different shift / position, select the position below, and use the <i>Start Shift</i> button.
         </p>
       {{else}}
         <p>
           No scheduled sign-ups were found starting within the next 30 minutes. That's okay! Scheduled sign-ups
-          are simply advisory bits of information to help shifts meet staffing minimums.
+          are simply advisory bits of information to ensure staffing minimums are met.
         </p>
         <p>
           <b class="text-success">
@@ -158,9 +145,28 @@
           </b>
         </p>
       {{/if}}
+    {{else}}
+      <UiNotice @title="Work Eligibility Issue" @icon="hand" @type="danger">
+        <p>
+          {{@person.callsign}} should not start a shift because
+          {{if this.otOnly "the Online Course" "an In-Person Training"}}
+          has not been completed.
+        </p>
+        <p>
+          In case the person attended an In-Person Training earlier in the day, the trainers may be delayed in
+          recording who passed the training. Have the HQ Short or Lead contact the trainers to verify the person
+          attended and passed the training.
+        </p>
+        {{#if this.userCanForceCheckIn}}
+          You have the privileges to force a shift start.
+        {{/if}}
+      </UiNotice>
     {{/if}}
 
     <FormRow>
+      <label class="col-auto col-form-label">
+        <b>Shift / Position</b>
+      </label>
       <div class="col-auto">
         <ChForm::Select @name="signin_position_id"
                         @value={{this.signinPositionId}}
@@ -170,7 +176,7 @@
       <div class="col-auto">
         {{#if this.isPersonDirtTrained}}
           <UiButton @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
-            {{fa-icon "walking"}} Start Shift
+            {{fa-icon "walking" right=2}} Start Shift
           </UiButton>
         {{else if this.userCanForceCheckIn}}
           <UiButton @type="warning" @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
@@ -252,8 +258,8 @@
     <Modal.body>
       <p>
         <b class="text-danger">
-          WARNING: {{@person.callsign}} has not meet all the qualifications to start
-          a {{this.forcePosition.title}} shift
+          WARNING: {{@person.callsign}} has not meet all the qualifications to start a {{this.forcePosition.title}}
+          shift
         </b>
       </p>
       <ul>
@@ -269,7 +275,7 @@
         {{/if}}
       </ul>
       <p>
-        Since you either have the Admin, or Timesheet Management role, you can force a shift check in.
+        Since you either have the Admin, or Timesheet Management permission, you can force a shift check in.
       </p>
       <p>
         <b class="text-danger">A forced shift start will be logged and subject to review.</b>
@@ -279,11 +285,51 @@
         doubt.
       </p>
     </Modal.body>
-    <Modal.footer @noAlign={{true}}>
+    <Modal.footer>
+      <UiCancelButton @onClick={{this.closeForceStartConfirm}} />
       <UiButton @type="warning" @onClick={{this.confirmForceStart}}>
         Confirm Force Shift Start
       </UiButton>
-      <UiCancelButton @onClick={{this.closeForceStartConfirm}} />
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.showTooShortDialog}}
+  <ModalDialog as |Modal|>
+    <Modal.title>
+      Timesheet entry might be too short
+    </Modal.title>
+    <Modal.body>
+      <p>
+        <b class="text-danger">The shift has not been ended. The timesheet entry might be too short at
+          {{hour-minute-words @onDutyEntry.duration}}.</b>
+      </p>
+      <p>
+        Several options can be taken:
+      </p>
+      <p>
+        If you are ending the shift because the position ({{@onDutyEntry.position.title}}) is wrong, just update the
+        position and do not end the shift.<br>
+        <UiButton @onClick={{this.updatePositionInstead}}>
+          Correct Position / Shift
+        </UiButton>
+      </p>
+      <p>
+        If the shift was started by mistake, the entry may be deleted.<br>
+        <UiButton @onClick={{this.deleteEntry}}>
+          Accidental shift start - Delete Entry
+        </UiButton>
+      </p>
+      <p>
+        If the duration is actually correct at {{hour-minute-format @onDutyEntry.duration}}, go ahead and end the shift.<br>
+        <UiButton @onClick={{this.confirmEndShift}}>
+          Duration is correct - End Shift
+        </UiButton>
+      </p>
+
+    </Modal.body>
+    <Modal.footer>
+      <UiCancelButton @onClick={{this.closeTooShortDialog}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}

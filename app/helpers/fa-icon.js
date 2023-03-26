@@ -1,14 +1,53 @@
-import { helper } from '@ember/component/helper';
-import { htmlSafe } from '@ember/template';
+import {helper} from '@ember/component/helper';
+import {htmlSafe} from '@ember/template';
+import {isEmpty} from '@ember/utils';
 
-export function faIcon([ name ], namedParams) {
-  const size = namedParams.size ? ` fa-${namedParams.size}` : '';
-  const type = namedParams.type || 'fas';
-  const color = namedParams.color ? ` text-${namedParams.color}` : '';
+export function faIcon([name], namedParams) {
+  const attrs =[ ];
+  let type;
+  switch (namedParams.type) {
+    case 's':
+    case 'fas':
+      type = 'fa-solid';
+      break;
+    case 'r':
+    case 'far':
+      type = 'fa-regular';
+      break;
+    default:
+      if (isEmpty(namedParams.type)) {
+        type = 'fa-solid';
+      } else {
+        type = namedParams.type;
+      }
+  }
+
+  attrs.push(type);
+  attrs.push(`fa-${name}`);
+  if (namedParams.color) {
+    attrs.push(`text-${namedParams.color}`);
+  }
+  if (namedParams.size) {
+    attrs.push(`fa-${namedParams.size}`);
+  }
+  if (namedParams.spinner) {
+    attrs.push('fa-spin');
+  }
+  if (namedParams.fixed) {
+    attrs.push('fa-fw');
+  }
+
+  if (namedParams.right) {
+    attrs.push(`me-${namedParams.right}`);
+  }
+
+  if (namedParams.left) {
+    attrs.push(`ms-${namedParams.left}`);
+  }
+
   const title = namedParams.title ? ` title="${namedParams.title}"` : '';
-  const spinner = namedParams.spin ? ` fa-spin` : '';
-  const fixed = namedParams.fixed ? ' fa-fw' : '';
-  return htmlSafe(`<i class="${type} fa-${name}${size}${color}${spinner}${fixed}"${title}></i>`)
+
+  return htmlSafe(`<i class="${attrs.join(' ')}"${title}></i>`)
 }
 
 export default helper(faIcon);

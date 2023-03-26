@@ -1,5 +1,11 @@
 import Model, { attr } from '@ember-data/model';
 
+export const EventPeriodLabels = {
+  'pre': 'Pre-Event',
+  'event': 'Event Week',
+  'post': 'Post-Event',
+};
+
 export default class EventDateModel extends Model {
   @attr('shiftdate') event_end;
   @attr('shiftdate') event_start;

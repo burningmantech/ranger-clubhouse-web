@@ -9,4 +9,10 @@ export default class PersonPogsRoute extends ClubhouseRoute {
     controller.set('person', this.modelFor('person'));
     controller.set('personPogs', model);
   }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

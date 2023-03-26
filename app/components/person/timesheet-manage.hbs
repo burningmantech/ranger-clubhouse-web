@@ -145,9 +145,8 @@
           </UiNotice>
         {{else if this.editEntry.isApproved}}
           <UiNotice @type="danger" @title="Verification Needed - No Review Required" @icon="hourglass">
-            Review is not needed at this time.<br>
-            The correction request was approved.
-            However, the correction still needs to be verified by {{@person.callsign}}.
+            Review is not needed at this time. The correction request was approved.
+            However, the correction still needs to be reviewed by {{@person.callsign}}.
           </UiNotice>
         {{/if}}
 

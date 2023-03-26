@@ -13,12 +13,12 @@ module('helper:fa-icon', function(hooks) {
 
     const simple = find('i');
     assert.ok(simple);
-    assert.strictEqual(simple.className.trim(),'fas fa-clock');
+    assert.strictEqual(simple.className.trim(),'fa-solid fa-clock');
 
     await render(hbs`{{fa-icon 'clock' size='lg'}}`);
     const withSize = find('i');
     assert.ok(withSize);
-    assert.strictEqual(withSize.className.trim(),'fas fa-clock fa-lg');
+    assert.strictEqual(withSize.className.trim(),'fa-solid fa-clock fa-lg');
 
   });
 });

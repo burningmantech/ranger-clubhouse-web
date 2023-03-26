@@ -1,39 +1,104 @@
 {{#if this.isOnSite}}
   <p>
-    <strong class="text-success">{{this.person.callsign}} is marked as ON SITE.</strong>
+    <b class="text-success">{{this.person.callsign}} is marked as ON SITE.</b>
   </p>
 {{/if}}
-<h2>Site Check In</h2>
-<ul>
-  <li>Verify the camp name, location, and the emergency contacts</li>
-  <li>Check to see if the person has signed the Radio Authorization form and Motorpool Policy Agreement.</li>
-  <li>After you hand the person their Ranger laminate and field guide, mark the person as on site.</li>
-  <li>
-    {{#if this.eventInfo.radio_eligible}}
-      Check out an Event Radio if person would like one now.
-    {{else}}
-      Person is only authorized for shift radios.
-    {{/if}}
-  </li>
-</ul>
+<h1>Site Check In</h1>
+
+{{#if this.isOnSite}}
+  <UiNotice @icon="check" @type="success" @title="Person Marked On Site">
+    <p>
+      Site check in is complete for {{this.person.callsign}} and is ready to start a shift.
+    </p>
+    <LinkTo @route="hq.shift" class="btn btn-success btn-large">Start Shift Checkin</LinkTo>
+  </UiNotice>
+{{/if}}
 
 <UiSection>
-  <:title>Verify Camp &amp; Emergency Contact Info
-    <HelpPopover @slug="hq-site-checkin-contact-info"/>
-  </:title>
+  <:title>Agreements</:title>
   <:body>
-    <ChForm @formId="contact" @formFor={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
+    {{#if this.personEvent.asset_authorized}}
+      <h4 class="text-success">
+        {{fa-icon "check" fixed=true}} Radio Checkout Agreement has been signed.
+      </h4>
+    {{else}}
+      <h4 class="text-danger">
+        {{fa-icon "ban" fixed=true}}  Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE RADIOS.
+      </h4>
       <p>
-        Enter the camp's name, the street address, and street side (man-side, mountainside, plaza, etc.).
+        Direct {{this.person.callsign}} to a kiosk and have them agree to the Radio Checkout Agreement. Only after the
+        agreement is signed may they be given a radio.
       </p>
-      <FormRow>
-        <f.textarea @name="camp_location"
-                    @label="Camp Name & Location (e.g., Camp Specificity, 9:15 &amp; D, Mountainside.)"
-                    @autofocus={{true}}
-                    @rows={{2}}
-                    @cols={{80}}/>
-      </FormRow>
+    {{/if}}
+    {{#if this.personEvent.signed_motorpool_agreement}}
+      <h4 class="text-success">
+        {{fa-icon "check" fixed=true}} The Motorpool Policy has been signed.
+      </h4>
+    {{else}}
+      <h4 class="text-danger">
+        {{fa-icon "ban" fixed=true}} Motorpool Agreement NOT SIGNED - Not authorized to drive Ranger gators, UTVs, or
+        golf carts.
+      </h4>
+      <p>
+        If {{this.person.callsign}} is comfortable driving Ranger gators, UTVs, or golf carts while on duty,
+        direct the person to a kiosk and have them agree to the Motorpool Policy.
+      </p>
+    {{/if}}
+  </:body>
+</UiSection>
+<UiSection>
+  <:title>Provisions</:title>
+  <:body>
+    {{#if this.eventInfo.radio_max}}
+      {{#if this.personEvent.asset_authorized}}
+        <h4 class="text-success">
+          {{fa-icon "tower-broadcast" fixed=true}} Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}
+        </h4>
+      {{else}}
+        <h4 class="text-muted">
+          {{fa-icon "ban" fixed=true}} Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}} &mdash; DO
+          NOT ISSUE UNTIL Radio Checkout Agreement IS SIGNED.
+        </h4>
+      {{/if}}
+    {{else}}
+      <h4 class="text-secondary">
+        {{fa-icon "tower-broadcast" fixed=true}} Shift Radios only
+      </h4>
+    {{/if}}
+    <hr>
+    <HqProvisionInfo @person={{this.person}}
+                     @period={{this.eventInfo.event_period}}
+                     @eventPeriods={{this.eventPeriods}}
+                     @meals={{this.eventInfo.meals}}
+                     @showers={{this.eventInfo.eventInfo.showers}}
+    />
+  </:body>
+</UiSection>
 
+<UiButton @onClick={{this.startSiteCheckIn}} class="btn-block btn-lg my-4">
+  Begin Site Check In
+</UiButton>
+
+{{#if this.showSiteCheckInWizard}}
+  <UiWizard @onCancel={{this.cancelSiteCheckIn}}
+            @onFinish={{this.finishSiteCheckIn}}
+            @finishLabel="Finish Site Check In" as |w|>
+    <w.step @title="Verify Camp Information">
+      <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
+        <p>
+          Enter the camp's name, the street address, and street side (man-side, mountainside, plaza, etc.).
+        </p>
+        <FormRow>
+          <f.textarea @name="camp_location"
+                      @label="Camp Name & Location (e.g., Camp Specificity, 9:15 &amp; D, Mountainside.)"
+                      @autofocus={{true}}
+                      @rows={{6}}
+                      @cols={{80}}/>
+        </FormRow>
+        <f.submit @label="Save" @disabled={{this.isSubmitting}}  class="btn-block"/>
+      </ChForm>
+    </w.step>
+    <w.step @title="Verify Emergency Contact Information">
       {{#if this.session.isLMOPEnabled}}
         <p class="ms-2">
           <b>Off-Playa:</b>
@@ -42,155 +107,102 @@
           <b>On-Playa:</b>
           Their playa name, real world name, relationship, camp location &amp; description.<br>
         </p>
-        <FormRow>
-          <f.textarea @name="emergency_contact"
-                      @label="Emergency Contact Information:"
-                      @rows={{4}}
-                      @cols={{80}}/>
-        </FormRow>
-        <f.submit @label="Update Camp & Emergency Contact Info" @disabled={{this.isSubmitting}} />
+        <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
+          <FormRow>
+            <f.textarea @name="emergency_contact"
+                        @label="Emergency Contact Information:"
+                        @rows={{6}}
+                        @cols={{80}}/>
+          </FormRow>
+          <f.submit @label="Save" @disabled={{this.isSubmitting}} class="btn-block"/>
+        </ChForm>
       {{else}}
-        <UiNotice @type="danger" @title="Emergency Contact Info access during the off season not allowed"
+        <UiNotice @type="danger"
+                  @title="Emergency Contact Info access during the off season not allowed"
                   @icon="exclamation">
           Sorry, you only have privileges to view and update the Emergency Contact information while the event is
           happening.
         </UiNotice>
       {{/if}}
-      {{#if this.isContactSaved}}
-        {{fa-icon "check" color="success"}}
-      {{/if}}
-      {{#if this.isSubmitting}}
-        <LoadingIndicator/>
-      {{/if}}
-    </ChForm>
-  </:body>
-</UiSection>
-
-
-<HqProvisionInfo @eventInfo={{this.eventInfo}} @person={{this.person}} />
-
-<UiSection>
-  <:title>
-    Agreements
-    <HelpPopover @slug="hq-site-checkin-agreements"/>
-  </:title>
-  <:body>
-    {{#if this.personEvent.asset_authorized}}
-      <p class="text-success mt-3">
-        {{fa-icon "check"}} Radio Checkout Agreement has been signed.
-      </p>
-    {{else}}
-      <h4 class="text-danger">Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE RADIOS.</h4>
-      <p>
-        Direct {{this.person.callsign}} to a kiosk and have them agree to the Radio Checkout Agreement. Only after the
-        agreement is signed may they be given a radio.
-      </p>
-    {{/if}}
-    {{#if this.personEvent.signed_motorpool_agreement}}
-      <p class="text-success">
-        {{fa-icon "check"}} The Motorpool Policy has been signed.
-      </p>
-    {{else}}
-      <h4 class="text-danger">
-        Motorpool Agreement NOT SIGNED - Not authorized to drive Ranger gators, UTVs, or golf carts.
-      </h4>
-      <p>
-        If {{this.person.callsign}} is comfortable driving Ranger gators, UTVs, or golf carts while on duty, direct the
-        person to a kiosk and have them agree to the Motorpool Policy.
-      </p>
-    {{/if}}
-  </:body>
-</UiSection>
-
-{{#unless this.eventInfo.radio_info_available}}
-  <UiNotice @type="danger">
-    Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
-  </UiNotice>
-{{/unless}}
-
-{{#if this.eventInfo.radio_eligible}}
-  <UiSection>
-    <:title>
-      Event Radio Checkout
-      <HelpPopover @slug="hq-site-checkin-radios"/>
-    </:title>
-    <:body>
-      {{#if this.personEvent.asset_authorized}}
-        <p class="text-success"><b>Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}</b></p>
-        <p>
-          The radio may be checked out now, or at the start of their first shift.
-        </p>
-        <AssetCheckoutForm @person={{this.person}} @assets={{this.assets}} @attachments={{this.attachments}}
-                           @eventInfo={{this.eventInfo}} />
-        {{#if this.activeAssets}}
-          {{pluralize this.activeAssets.length "asset"}} checked out.
-          <table class="table table-striped table-sm">
-            <thead>
-            <tr>
-              <th>Barcode</th>
-              <th>Type</th>
-              <th>Assigned</th>
-              <th>Attachment</th>
-              <th>Out</th>
-            </tr>
-            </thead>
-            <tbody>
-            {{#each this.activeAssets as |ap|}}
+    </w.step>
+    <w.step @title="Radios">
+      {{#unless this.eventInfo.radio_info_available}}
+        <UiNotice @type="danger">
+          Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
+        </UiNotice>
+      {{/unless}}
+      {{#if this.eventInfo.radio_eligible}}
+        {{#if this.personEvent.asset_authorized}}
+          <p class="text-success"><b>Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}</b></p>
+          <p>
+            The radio may be checked out now, or at the start of their first shift.
+          </p>
+          <AssetCheckoutForm @person={{this.person}}
+                             @assets={{this.assets}}
+                             @attachments={{this.attachments}}
+                             @eventInfo={{this.eventInfo}} />
+          {{#if this.activeAssets}}
+            {{pluralize this.activeAssets.length "asset"}} checked out.
+            <table class="table table-striped table-sm">
+              <thead>
               <tr>
-                <td>{{ap.asset.barcode}}</td>
-                <td>{{ap.asset.description}}</td>
-                <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
-                <td>
-                  <PresentOrNot @value={{ap.attachment.description}} @empty="-"/>
-                </td>
-                <td>{{shift-format ap.checked_out}}</td>
+                <th>Barcode</th>
+                <th>Type</th>
+                <th>Assigned</th>
+                <th>Attachment</th>
+                <th>Out</th>
               </tr>
-            {{/each}}
-            </tbody>
-          </table>
-        {{/if}}
-        {{#if this.assets.isUpdating}}
-          <LoadingIndicator @text="Refreshing assets"/>
+              </thead>
+              <tbody>
+              {{#each this.activeAssets as |ap|}}
+                <tr>
+                  <td>{{ap.asset.barcode}}</td>
+                  <td>{{ap.asset.description}}</td>
+                  <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
+                  <td>
+                    <PresentOrNot @value={{ap.attachment.description}} @empty="-"/>
+                  </td>
+                  <td>{{shift-format ap.checked_out}}</td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </table>
+          {{/if}}
+          {{#if this.assets.isUpdating}}
+            <LoadingIndicator @text="Refreshing assets"/>
+          {{/if}}
+        {{else}}
+          <div class="text-danger">
+            While {{this.person.callsign}} is authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}},
+            {{this.person.callsign}} may not be issued radios and other gear until the Radio Checkout Agreement is
+            signed.
+          </div>
         {{/if}}
       {{else}}
-        <div class="text-danger">
-         While {{this.pesrson.callsign}} is authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}},
-          {{this.person.callsign}} may not be issued radios and other gear until the Radio Checkout Agreement is signed.
-        </div>
+        <h3>Shift Radios Only</h3>
+        {{this.person.callsign}} is only authorized for a shift radio.
+        A radio will need to be checked out for each shift, and then returned at the end of the shift.
+        {{#if this.eventInfo.radio_banked}}
+          <div class="mt-1">
+            {{this.person.callsign}} did qualify for an event radio however they chose to bank the radio(s) to use in a
+            future event.
+          </div>
+        {{/if}}
       {{/if}}
-    </:body>
-  </UiSection>
-{{else}}
-  <UiSection>
-    <:title>
-      <span class="text-danger">Shift Radios Only</span>
-      <HelpPopover @slug="hq-site-checkin-radios"/>
-    </:title>
-    <:body>
-      {{this.person.callsign}} is only authorized for a shift radio.
-      A radio will need to be checked out for each shift, and then returned at the end of the shift.
-      {{#if this.eventInfo.radio_banked}}
-        <div class="mt-1">
-          {{this.person.callsign}} did qualify for an event radio however they chose to bank the radio(s) to use in a
-          future event.
-        </div>
-      {{/if}}
-    </:body>
-  </UiSection>
+    </w.step>
+    <w.step @title="Mark Person As On Site" @isLast={{true}}>
+      <p>
+        Mark {{this.person.callsign}} as on site if everything appears to be okay.
+      </p>
+      <UiButton @onClick={{this.markOnSite}} @disabled={{this.isSubmitting}}>
+        Mark As On Site
+      </UiButton>
+    </w.step>
+  </UiWizard>
+{{else if (and this.siteCheckInStarted (not this.siteCheckInFinished))}}
+  <UiNotice @type="danger" @icon="band" @title="Site Check In Not Completed">
+    You have not gone through all the Site Check In steps. Use the <b>Begin Site Check In</b> button again and make
+    sure all the steps have been completed.
+  </UiNotice>
 {{/if}}
 
-<div class="mt-4">
-  {{#if this.isOnSite}}
-    <p class="font-weight-bold text-success">
-      {{this.person.callsign}} is marked as ON SITE.
-    </p>
-    <LinkTo @route="hq.shift" class="btn btn-success">Start Shift Checkin</LinkTo>
-  {{else}}
-    <UiButton @onClick={{this.markOnSite}} @disabled={{this.isSubmitting}}>
-      Mark As On Site
-    </UiButton>
-    {{#if this.isSubmitting}}
-      <LoadingIndicator/>
-    {{/if}}
-  {{/if}}
-</div>

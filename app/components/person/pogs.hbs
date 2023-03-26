@@ -1,43 +1,38 @@
-<UiSection>
-  <:title>Issued Pogs</:title>
-  <:body>
-    <p>
-      Pog tracking is only available for the 2023 and later events.
-    </p>
-    <p>
-      <UiButton @onClick={{this.newEntry}}>New Pog</UiButton>
-    </p>
-    Showing {{pluralize @personPogs.length "pog"}}
-    <table class="table table-width-auto table-sm table-striped table-hover">
-      <thead>
-      <tr>
-        <th>Pog</th>
-        <th>Status</th>
-        <th>Issued At</th>
-        <th>Issued By</th>
-        <th>Action</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each @personPogs as |pog|}}
-        <tr>
-          <td>{{pog.pogLabel}}</td>
-          <td>{{pog.statusLabel}}</td>
-          <td>{{shift-format pog.created_at year=true}}</td>
-          <td>{{pog.issued_by.callsign}}</td>
-          <td>
-            <UiButton @onClick={{fn this.editEntry pog}} @size="sm">{{fa-icon "edit"}} Edit</UiButton>
-          </td>
-        </tr>
-      {{else}}
-        <tr>
-          <td colspan="5" class="text-danger">No pogs have been record yet.</td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  </:body>
-</UiSection>
+<    <p>
+  Pog tracking is only available for the 2023 and later events.
+</p>
+<p>
+  <UiButton @onClick={{this.newEntry}}>New Pog</UiButton>
+</p>
+Showing {{pluralize @personPogs.length "pog"}}
+<table class="table table-width-auto table-sm table-striped table-hover">
+  <thead>
+  <tr>
+    <th>Pog</th>
+    <th>Status</th>
+    <th>Issued At</th>
+    <th>Issued By</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each @personPogs as |pog|}}
+    <tr>
+      <td>{{pog.pogLabel}}</td>
+      <td>{{pog.statusLabel}}</td>
+      <td>{{shift-format pog.issued_at year=true}}</td>
+      <td>{{pog.issued_by.callsign}}</td>
+      <td>
+        <UiButton @onClick={{fn this.editEntry pog}} @size="sm">{{fa-icon "edit"}} Edit</UiButton>
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="5" class="text-danger">No pogs have been record yet.</td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
 
 {{#if this.entry}}
   <ModalDialog as |Modal|>
