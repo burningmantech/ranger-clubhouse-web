@@ -113,7 +113,7 @@
             @validator={{this.correctionValidations}}
             @onSubmit={{this.saveCorrectionAction}} as |f|>
       <Modal.body>
-          Please help us understand why this entry should be fixed by providing the following information:
+        Please help us understand why this entry should be fixed by providing the following information:
         <ul class="no-indent">
           <li><b>Provide a BRIEF &amp; CONCISE explanation</b> in 1 to 3 sentences what needs to be corrected.</li>
           <li><b>State the correct times</b> if the starting and/or ending time is wrong.</li>
@@ -121,9 +121,9 @@
             <b>If the position "<i>{{this.entry.position.title}}</i>" is wrong,</b> tell us what the correct
             position is.
           </li>
-          <li><b>Who was your partner for the shift or the shift lead / manager who can corroborate your story?</b></li>
+          <li><b>Who was your shift partner or the Shift Lead who can corroborate your story?</b></li>
         </ul>
-          {{#if this.entry.isRejected}}
+        {{#if this.entry.isRejected}}
           <UiNotice @type="danger" @icon="times" @title="Correction request has been denied">
             The response from the timesheet review team:<br>
             {{nl2br this.entry.reviewer_notes}}
@@ -134,23 +134,21 @@
           Your previous message to the timesheet review team:<br>
           {{nl2br this.entry.notes}}
         {{/if}}
-        <table class="table table-width-auto table-borderless table-sm">
-          <tbody>
+        <table class="table table-width-auto table-sm">
+          <thead>
           <tr>
             <th>Position</th>
-            <td>{{this.entry.position.title}}</td>
-          </tr>
-          <tr>
             <th>Time</th>
-            <td>{{shift-format this.entry.on_duty this.entry.off_duty}}</td>
-          </tr>
-          <tr>
             <th>Duration</th>
-            <td>{{hour-minute-words this.entry.duration}}</td>
-          </tr>
-          <tr>
             <th>Credits</th>
-            <td>{{credits-format this.entry.credits}}</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>{{this.entry.position.title}}</td>
+            <td>{{shift-format this.entry.on_duty this.entry.off_duty}}</td>
+            <td class="text-end">{{hour-minute-words this.entry.duration}}</td>
+            <td class="text-end">{{credits-format this.entry.credits}}</td>
           </tr>
           </tbody>
         </table>
@@ -161,12 +159,14 @@
                       @cols={{80}}
                       @rows={{3}} />
         </FormRow>
-          <b class="text-danger">A request will be denied if:</b><br>
-          {{fa-icon "ban"}} You started late, yet are requesting the start time to updated to the scheduled shift start. Credit is only
-          given for the time you are on duty.<br>
-          {{fa-icon "ban"}} Not enough or incomplete information was provided.<br>
-          {{fa-icon "ban"}} Your requested changes cannot be confirmed by your shift partner or the shift lead. Yes, we do
-          check.<br>
+        <b class="text-danger">The request will be denied if:</b><br>
+        {{fa-icon "ban" right=1}} You started late, yet are requesting the start time to updated to the scheduled shift
+        start. Credit is only
+        given for the time you are on duty.<br>
+        {{fa-icon "ban" right=1}} Not enough or incomplete information was provided.<br>
+        {{fa-icon "ban" right=1}} The requested changes cannot be confirmed by the shift partner(s) or the Shift Lead.
+        Yes, we do
+        check!<br>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Submit Correction Request" @disabled={{this.entry.isSaving}} />

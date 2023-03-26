@@ -3,12 +3,16 @@ import {action} from '@ember/object';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import {ALPHA, BURN_PERIMETER} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
+import {
+  HQ_TODO_COLLECT_RADIO,
+  HQ_TODO_END_SHIFT, HQ_TODO_ISSUE_RADIO, HQ_TODO_MEAL_POG, HQ_TODO_MEAL_POG_NONE, HQ_TODO_NO_RADIO,
+  HQ_TODO_START_SHIFT,
+  HQ_TODO_VERIFY_TIMESHEET,
+  HqTodoTask
+} from "clubhouse/constants/hq-todo";
+import {TYPE_RADIO} from "clubhouse/models/asset";
 
 export default class HqShiftController extends ClubhouseController {
-  @tracked showCorrectionForm = false;
-  @tracked showSiteLeaveDialog = false;
-
-  @tracked entry = null;
   @tracked isMarkingOffSite = false;
 
   @tracked timesheets;
@@ -17,6 +21,10 @@ export default class HqShiftController extends ClubhouseController {
 
   @tracked assets;
   @tracked eventInfo;
+
+  @tracked todos = [];
+
+  @tracked endedShiftEntry = null;
 
   correctionValidations = {
     additional_notes: [validatePresence(true)]
@@ -44,6 +52,16 @@ export default class HqShiftController extends ClubhouseController {
   }
 
   /**
+   * Count how many timesheet entries are left unverified.
+   *
+   * @returns {number}
+   */
+
+  get unverifiedTimesheetCount() {
+    return this.unverifiedTimesheets.filter((t) => (t.isUnverified && !t.isIgnoring)).length;
+  }
+
+  /**
    * Find all checked out assets
    * @returns {[]}
    */
@@ -53,13 +71,37 @@ export default class HqShiftController extends ClubhouseController {
   }
 
   /**
+   * Called when an asset has been checked out.
+   *
+   * @param asset
+   */
+
+  @action
+  onAssetCheckOut(asset) {
+    if (asset.description === TYPE_RADIO) {
+      this.completeTodo(HQ_TODO_ISSUE_RADIO);
+    }
+  }
+
+  /**
+   * Called when an asset has been checked in.
+   */
+
+  @action
+  onAssetCheckIn() {
+    if (!this.shiftRadios) {
+      this.completeTodo(HQ_TODO_COLLECT_RADIO);
+    }
+  }
+
+  /**
    * How many radios are currently checked out?
    *
    * @returns {number}
    */
 
   get radioCount() {
-    return this.assetsCheckedOut.filter((a) => a.asset.description === 'Radio').length;
+    return this.assetsCheckedOut.filter((a) => a.asset.description === TYPE_RADIO).length;
   }
 
   /**
@@ -74,7 +116,7 @@ export default class HqShiftController extends ClubhouseController {
     const eventInfo = this.eventInfo;
 
     if (!eventInfo.radio_eligible) {
-      // Not event radio eligible - assume all check outs are shift radios.
+      // Not event radio eligible - assume all check-outs are shift radios.
       return radioCount;
     }
 
@@ -114,7 +156,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get mayNotNeedRadio() {
-    return !!(this.onDutyEntry?.position_id === BURN_PERIMETER);
+    return (this.onDutyEntry?.position_id === BURN_PERIMETER);
   }
 
   /**
@@ -132,98 +174,51 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   @action
-  startShiftNotify() {
-    this.timesheets.update().then(() => this._findOnDuty());
+  async startShiftNotify() {
+    this.completeTodo(HQ_TODO_START_SHIFT);
+
+    try {
+      await this.timesheets.update();
+      this._findOnDuty();
+      if (this.onDutyEntry?.position_id === BURN_PERIMETER) {
+        this.removeTodo(HQ_TODO_ISSUE_RADIO);
+        this.addTodo(HQ_TODO_NO_RADIO, true);
+      }
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
   }
 
   /**
    * Called when the worker has ended a shift.
    * - Update the unverified timesheet list.
    * - Tell top level hq route to update the schedule summaries for the sidebar.
-    */
+   */
 
   @action
-  endShiftNotify() {
-    this.timesheets.update().then(() => {
+  async endShiftNotify(timesheet) {
+    try {
+      await this.timesheets.update();
       this.unverifiedTimesheets = this.timesheets.filter((t) => t.isUnverified);
       this._findOnDuty()
-    }).catch((response) => this.house.handleErrorResponse(response));
-
-    this.send('updateTimesheetSummaries');
-  }
-
-  /**
-   * Mark a timesheet entry as ignoring review for the moment. Typically used during burn perimeter check in
-   * to send a Ranger quickly on their way without timesheet verification.
-   *
-   * @param {TimesheetModel} entry
-   */
-
-  @action
-  ignoreEntry(entry) {
-    entry.isIgnoring = true;
-  }
-
-  /**
-   * Mark a timesheet entry as correct/verified.
-   *
-   * @param {TimesheetModel} entry
-   */
-
-  @action
-  toggleEntryVerified(entry) {
-    entry.isIgnoring = false;
-    const isVerified = entry.review_status === 'verified';
-    entry.review_status = (isVerified ? 'unverified' : 'verified');
-    entry.save()
-      .then(() => this.toast.success(`Timesheet was successfully ${isVerified ? 'un-verified' : 'marked as verified'}.`))
-      .catch((response) => this.house.handleErrorResponse(response));
-  }
-
-  /**
-   * Show the incorrect entry form dialog.
-   *
-   * @param {TimesheetModel} entry
-   */
-  @action
-  markEntryIncorrect(entry) {
-    this.entry = entry;
-    this.showCorrectionForm = true;
-  }
-
-  /**
-   * Cancel the incorrect entry dialog.
-   */
-
-  @action
-  cancelEntryCorrection() {
-    this.entry.additional_notes = null; // pseudo field, not cleared on save
-    this.showCorrectionForm = false;
-  }
-
-  /**
-   * Mark an entry as incorrect with a note.
-   *
-   * @param {TimesheetModel} model
-   * @param {boolean} isValid
-   */
-
-  @action
-  saveEntryCorrection(model, isValid) {
-    if (!isValid) {
-      return;
+      if (timesheet) {
+        this.completeTodo(HQ_TODO_END_SHIFT);
+        this.addTodo(HQ_TODO_VERIFY_TIMESHEET);
+        const { eventPeriods, eventInfo: { event_period } } = this;
+        if (eventPeriods[event_period].hasPass) {
+          this.addTodo(HQ_TODO_MEAL_POG_NONE, true);
+        } else {
+          this.addTodo(HQ_TODO_MEAL_POG);
+        }
+      } else {
+        this.removeTodo(HQ_TODO_END_SHIFT);
+      }
+      this.send('updateTimesheetSummaries');
+      this.endedShiftEntry = timesheet;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
     }
-
-    this.toast.clear();
-
-    this.entry.set('isIgnoring', false);
-    model.save().then(() => {
-      this.entry.additional_notes = null; // pseudo field, not cleared on save
-      this.showCorrectionForm = false;
-      this.toast.success('Correction request was successfully submitted.');
-    }).catch((response) => this.house.handleErrorResponse(response))
   }
-
 
   /**
    * Mark a person on or off site.
@@ -231,14 +226,18 @@ export default class HqShiftController extends ClubhouseController {
    * @param {boolean} isOnSite
    * @private
    */
-  _updateOnSite(isOnSite) {
+
+  async _updateOnSite(isOnSite) {
     this.isMarkingOffSite = true;
-    this.person.set('on_site', isOnSite);
-    this.person.save().then(() => {
+    this.person.on_site = isOnSite;
+    try {
+      await this.person.save();
       this.toast.success(`${this.person.callsign} has been successfully marked ${isOnSite ? 'ON' : 'OFF'} SITE.`);
-    })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isMarkingOffSite = false);
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isMarkingOffSite = false
+    }
   }
 
   /**
@@ -248,16 +247,11 @@ export default class HqShiftController extends ClubhouseController {
 
   @action
   markOffSite() {
-    if (this.pendingItems > 0) {
-      // Person has outstanding items to deal with
-      this.showSiteLeaveDialog = true;
-    } else {
-      // No outstanding items -- confirm just to be sure.
-      this.modal.confirm('Confirm Marking Person Off Site',
-        `Are you sure you wish to mark ${this.person.callsign} as OFF SITE?`,
-        () => this._updateOnSite(false)
-      );
-    }
+    // No outstanding items -- confirm just to be sure.
+    this.modal.confirm('Confirm Marking Person Off Site',
+      `Are you sure you wish to mark ${this.person.callsign} as OFF SITE?`,
+      () => this._updateOnSite(false)
+    );
   }
 
   /**
@@ -288,22 +282,12 @@ export default class HqShiftController extends ClubhouseController {
   }
 
   /**
-   * Cancel the mark off site dialog
-   */
-
-  @action
-  cancelSiteLeaveDialog() {
-    this.showSiteLeaveDialog = false;
-  }
-
-  /**
    * Go ahead and force the off site even tho there are outstanding items.
    */
 
   @action
   forceMarkOffSite() {
     this._updateOnSite(false);
-    this.showSiteLeaveDialog = false;
   }
 
   /**
@@ -323,5 +307,55 @@ export default class HqShiftController extends ClubhouseController {
 
   _findOnDuty() {
     this.onDutyEntry = this.timesheets.find((t) => t.off_duty == null);
+  }
+
+  /**
+   * Mark a todo item as completed.
+   *
+   * @param {string} task
+   * @private
+   */
+
+  @action
+  completeTodo(task) {
+    const todo = this.todos.find((t) => t.task === task);
+    if (todo) {
+      todo.completed = true;
+    }
+  }
+
+  /**
+   * Add a todo list item
+   *
+   * @param {string} task
+   */
+
+  addTodo(task,  ignore = false) {
+    const existing = this.todos.find((t) => t.task === task);
+
+    if (existing) {
+      existing.completed = false;
+      existing.ignore = ignore;
+    } else {
+      this.todos = [...this.todos, new HqTodoTask(task, ignore)];
+    }
+  }
+
+  /**
+   * Remove a todo list item
+   */
+
+  removeTodo(task) {
+    this.todos = this.todos.filter((t) => t.task !== task);
+  }
+
+  /**
+   * How many not completed todos are there?
+   *
+   * @returns {number}
+   */
+
+  get todoCount() {
+    return this.todos.filter((t) => !t.completed && !t.ignore).length;
   }
 }

@@ -6,6 +6,7 @@ import {DIRT, DIRT_SHINY_PENNY, TRAINING, BURN_PERIMETER} from 'clubhouse/consta
 import {tracked} from '@glimmer/tracking';
 import {NON_RANGER} from 'clubhouse/constants/person_status';
 import {ADMIN, TIMESHEET_MANAGEMENT} from 'clubhouse/constants/roles';
+import {TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
 
 export default class ShiftCheckInOutComponent extends Component {
   @service ajax;
@@ -27,8 +28,14 @@ export default class ShiftCheckInOutComponent extends Component {
   @tracked showEarlyShiftConfirm = false;
   @tracked earlySlot = null;
 
+  @tracked showTooShortDialog = false;
+
+  @tracked showConfirmDeletion = false;
+
   @tracked showForceStartConfirm = false;
   @tracked forcePosition = null;
+
+  tooShortDuration = TOO_SHORT_DURATION;
 
   constructor() {
     super(...arguments);
@@ -259,40 +266,106 @@ export default class ShiftCheckInOutComponent extends Component {
   }
 
   /**
-   * End a shift.
+   * End a shift. Check to see if the shift is too short.
+   *
    */
 
   @action
-  endShiftAction() {
-    const {onDutyEntry, endShiftNotify} = this.args;
-    const callsign = this.args.person.callsign;
-
+  async endShiftAction() {
     this.isSubmitting = true;
-    this.ajax.request(`timesheet/${onDutyEntry.id}/signoff`, {method: 'POST'})
-      .then((result) => {
-        this.store.pushPayload(result);
-        if (endShiftNotify) {
-          endShiftNotify();
-        }
-        switch (result.status) {
-          case 'success':
-            this.toast.success(`${callsign} has been successfully signed off. Enjoy your rest.`);
-            if (+this.args.person.id === this.session.userId) {
-              // Update the user's navigation bar to remove the signed in position.
-              this.session.updateOnDuty();
-            }
-            break;
+    const entry = this.args.onDutyEntry;
+    try {
+      // Pick up the most recent times.
+      await entry.reload();
+      if (entry.duration < TOO_SHORT_DURATION) {
+        this.showTooShortDialog = true;
+      } else {
+        await this._signoff();
+      }
+    } catch (response) {
+      this.house.handleErrorResponse(response)
+    } finally {
+      this.isSubmitting = false
+    }
+  }
 
-          case 'already-signed-off':
-            this.toast.error(`${callsign} was already signed off.`);
-            break;
+  /**
+   * Sign off a shift.
+   *
+   * @returns {Promise<void>}
+   * @private
+   */
 
-          default:
-            this.toast.error(`Unknown signoff response [${result.status}].`);
-            break;
+  async _signoff() {
+    const {onDutyEntry, endShiftNotify} = this.args;
+    const result = await this.ajax.request(`timesheet/${onDutyEntry.id}/signoff`, {method: 'POST'});
+    const callsign = this.args.person.callsign;
+    this.store.pushPayload(result);
+    switch (result.status) {
+      case 'success':
+        endShiftNotify?.(this.store.peekRecord('timesheet', result.timesheet.id));
+        this.toast.success(`${callsign} has been successfully signed off. Enjoy your rest.`);
+        if (+this.args.person.id === this.session.userId) {
+          // Update the user's navigation bar to remove the signed in position.
+          this.session.updateOnDuty();
         }
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+        break;
+
+      case 'already-signed-off':
+        this.toast.error(`${callsign} was already signed off.`);
+        break;
+
+      default:
+        this.toast.error(`Unknown signoff response [${result.status}].`);
+        break;
+    }
+  }
+
+  @action
+  confirmEndShift() {
+    this.showTooShortDialog = false;
+    this._signoff();
+  }
+
+  @action
+  closeTooShortDialog() {
+    this.showTooShortDialog = false;
+  }
+
+  @action
+  updatePositionInstead() {
+    this.showTooShortDialog = false;
+    this.changePositionAction();
+  }
+
+  @action
+  askToDelete() {
+    this.showTooShortDialog = false;
+    this.showConfirmDeletion = true;
+  }
+
+  @action
+  cancelAskToDelete() {
+    this.showConfirmDeletion = false;
+  }
+
+  @action
+  deleteEntry() {
+    this.showTooShortDialog = false;
+    this.modal.confirm('Confirm Timesheet Entry Deletion', `Are you absolutely sure you want to delete the entry?`,
+      async () => {
+        try {
+          await this.ajax.request(`timesheet/${this.args.onDutyEntry.id}`, {method: 'DELETE'});
+          this.toast.success('Entry successfully deleted');
+          if (+this.args.person.id === this.session.userId) {
+            // Update the user's navigation bar to remove the signed in position.
+            this.session.updateOnDuty();
+          }
+          this.args.endShiftNotify?.(null);
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        }
+      });
   }
 
   /**
@@ -321,20 +394,22 @@ export default class ShiftCheckInOutComponent extends Component {
    */
 
   @action
-  updatePositionAction() {
+  async updatePositionAction() {
     const {onDutyEntry, person} = this.args;
     this.isSubmitting = true;
     this.changePositionError = null;
 
-    this.ajax.request(`timesheet/${onDutyEntry.id}/update-position`, {
-      method: 'PATCH',
-      data: {
-        position_id: this.newPositionId
-      }
-    }).then((result) => {
+    try {
+      const result = await this.ajax.request(`timesheet/${onDutyEntry.id}/update-position`, {
+        method: 'PATCH',
+        data: {
+          position_id: this.newPositionId
+        }
+      });
       switch (result.status) {
         case 'success':
-          onDutyEntry.reload().finally(() => this.showPositionDialog = false);
+          await onDutyEntry.reload();
+          this.showPositionDialog = false;
           if (result.forced) {
             // Shift start was forced, let the user know what was overridden.
             let reason;
@@ -343,7 +418,7 @@ export default class ShiftCheckInOutComponent extends Component {
             } else {
               reason = `is unqualified ('${result.unqualified_message}')`;
             }
-            this.modal.info('Shift Position Update Forced', `WARNING: The person ${reason}. Because you are an admin or have the timesheet management role,the position has been updated anyways.`);
+            this.modal.info('Shift Position Update Forced', `WARNING: The person ${reason}. Because you have the Admin or the Timesheet Management permission,the position has been updated anyways.`);
           } else {
             this.toast.success('Position has been successfully updated.');
           }
@@ -369,8 +444,11 @@ export default class ShiftCheckInOutComponent extends Component {
           this.changePositionError = `Cannot update the timesheet - unknown status [${result.status}]`;
           break;
       }
-    }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    } catch (response) {
+      this.house.handleErrorResponse(response)
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   /**

@@ -14,6 +14,9 @@ export default class HqController extends ClubhouseController {
   @tracked showTicketsAndProvisions = false;
   @tracked showNotAllowedToWork = false;
 
+  @tracked eventInfo;
+  @tracked eventPeriods;
+
   @action
   closeAlphaWarning() {
     this.showAlphaWarning = false;

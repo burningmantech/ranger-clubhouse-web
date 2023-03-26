@@ -1,0 +1,134 @@
+{{#if this.hasUnverifiedTimesheet}}
+  <h4 class="text-danger">
+    {{fa-icon "hand-point-right" right=1}} Review needed for {{pluralize @unverifiedTimesheets.length "entry" }}
+  </h4>
+{{else}}
+  <h4 class="text-success">
+    {{fa-icon "thumbs-up" right=1}} No timesheet entries require review at this time.
+  </h4>
+{{/if}}
+{{#if @unverifiedTimesheets}}
+  <table class="table table-width-auto">
+    <thead>
+    <tr>
+      <th>Time / Position</th>
+      <th class="text-end">Duration / Credits</th>
+      <th>Action</th>
+      <th class="w-5">&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each @unverifiedTimesheets as |entry|}}
+      <tr>
+        <td class="align-middle">
+          {{shift-format entry.on_duty entry.off_duty}}<br>
+          {{entry.position.title}}
+        </td>
+        <td class="text-end align-middle">
+          {{hour-minute-words entry.duration}}<br>
+          {{credits-format entry.credits}} credits
+        </td>
+        <td class="align-middle">
+          {{#if entry.isVerified}}
+            <span class="text-success">
+              {{fa-icon "check"}} Entry has been marked as correct.
+            </span>
+          {{else if entry.isPending}}
+            <span class="text-danger">
+              {{fa-icon "hourglass"}} A correction request submitted.
+            </span>
+          {{else if entry.isIgnoring}}
+            Entry will be reviewed at a later time.
+          {{else}}
+            <span class="text-danger">
+              Entry requires review.
+            </span>
+          {{/if}}
+          <div class=" d-flex justify-between align-items-center mt-1">
+            <UiButton @type="success" @class="btn-timesheet"
+                      @onClick={{fn this.toggleEntryVerified entry}}
+                      @disabled={{entry.isSaving}}>
+              {{#if entry.isVerified}}
+                Un-Verify
+              {{else}}
+                Entry Correct
+              {{/if}}
+            </UiButton>
+            <UiButton @type="secondary"
+                      @class="btn-timesheet"
+                      @onClick={{fn this.markEntryIncorrect entry}}
+                      @disabled={{entry.isSaving}}>
+              Submit Correction
+              {{#if entry.isPending}}
+                {{fa-icon "check"}}
+              {{/if}}
+            </UiButton>
+            <UiButton @type="secondary"
+                      @class="btn-timesheet"
+                      @onClick={{fn this.ignoreEntry entry}}
+                      @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
+              Skip Review
+              {{#if entry.isIgnoring}}
+                {{fa-icon "check"}}
+              {{/if}}
+            </UiButton>
+          </div>
+         </td>
+        <td class="w-5">
+          {{#if entry.isSaving}}
+            <SpinIcon/>
+          {{else}}
+            &nbsp;
+          {{/if}}
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+{{/if}}
+
+{{#if this.showCorrectionForm}}
+  <ModalDialog @title="Timesheet Entry Correction" @onEscape={{this.cancelEntryCorrection}} as |Modal|>
+    <ChForm @formId="correction" @formFor={{this.entry}}
+            @validator={{this.correctionValidations}}
+            @onSubmit={{this.saveEntryCorrection}} as |f|>
+      <Modal.body>
+        <dl class="row">
+          <dt class="col-sm-2">Position:</dt>
+          <dd class="col-sm-10">{{this.entry.position.title}}</dd>
+
+          <dt class="col-sm-2">Time:</dt>
+          <dd class="col-sm-10">{{shift-format this.entry.on_duty}} to {{shift-format this.entry.off_duty}}</dd>
+
+          <dt class="col-sm-2">Duration:</dt>
+          <dd class="col-sm-10">{{hour-minute-format this.entry.duration}}</dd>
+
+          <dt class="col-sm-2">Credits:</dt>
+          <dd class="col-sm-10">{{credits-format this.entry.credits}}</dd>
+        </dl>
+        Provide as much information as possible to help the reviewer understand why this entry should be fixed.
+        <ul>
+          <li>Why does {{this.person.callsign}} think the entry is wrong?</li>
+          <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
+          <li><b>Is the position "{{this.entry.position.title}}" wrong?</b> State the correct position</li>
+          <li><b>Who was their shift partner(s)?</b></li>
+        </ul>
+
+        <FormRow>
+          <f.textarea @name="additional_notes"
+                      @label="Timesheet entry correction note:"
+                      @autofocus={{true}}
+                      @cols={{80}}
+                      @rows={{5}}/>
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Submit Correction" @disabled={{this.isCorrectionSubmitting}} />
+        <UiCancelButton @disabled={{this.isCorrectionSubmitting}} @onClick={{this.cancelEntryCorrection}} />
+        {{#if this.isCorrectionSubmitting}}
+          <SpinIcon/>
+        {{/if}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}

@@ -1,4 +1,7 @@
-<YearSelect @title="Asset History" @year={{this.year}} @years={{this.person.all_years}} @subheader={{true}}
+<YearSelect @title="Asset History"
+            @year={{this.year}}
+            @years={{this.person.all_years}}
+            @subheader={{true}}
             @onChange={{action (mut this.year)}} />
 
 {{#if (is-current-year this.year)}}
@@ -19,4 +22,10 @@
   </UiSection>
 {{/if}}
 
-<AssetTable @assets={{this.assets}} @year={{this.year}} />
+<UiSection>
+  <:title>Asset Check In/Out History</:title>
+  <:body>
+    <AssetTable @assets={{this.assets}} @year={{this.year}} />
+  </:body>
+</UiSection>
+
