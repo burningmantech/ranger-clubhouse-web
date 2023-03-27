@@ -69,9 +69,9 @@
     </UiNotice>
   {{else}}
     {{#if this.isPersonDirtTrained}}
-      {{#if  @imminentSlots}}
+      {{#if @upcomingSlots.imminent}}
         <p class="text-success">
-          {{pluralize @imminentSlots.length "upcoming scheduled shift sign-up"}} found. You may sign them
+          {{pluralize @upcomingSlots.imminent.length "upcoming scheduled shift sign-up"}} found. You may sign them
           into a scheduled shift OR a different shift / position.
         </p>
         <table class="table table-width-auto table-hover table-striped">
@@ -83,7 +83,7 @@
           </tr>
           </thead>
           <tbody>
-          {{#each @imminentSlots as |slot|}}
+          {{#each @upcomingSlots.imminent as |slot|}}
             <tr>
               <td class="align-middle">
                 {{slot.position_title}}{{#if slot.slot_description}} - {{slot.slot_description}}{{/if}}
@@ -119,8 +119,8 @@
               <tr>
                 <td colspan="5" class="text-danger">
                   <b>
-                    WARNING: Most shifts are recommended to be signed in to within 25 minutes of the actual start
-                    time.<br>
+                    WARNING: Most shifts are recommended to be signed in to within {{@upcomingSlots.may_start_minutes}}
+                    minutes of the actual start time.<br>
                     Suggest to {{@person.callsign}} they come back in {{pluralize slot.can_start_in "minute"}} to start
                     their shift.
                   </b>
@@ -133,10 +133,10 @@
         <p class="text-success">
           To sign in to a different shift / position, select the position below, and use the <i>Start Shift</i> button.
         </p>
-      {{else}}
+      {{else if @upcomingSlots}}
         <p>
-          No scheduled sign-ups were found starting within the next 30 minutes. That's okay! Scheduled sign-ups
-          are simply advisory bits of information to ensure staffing minimums are met.
+          No scheduled sign-ups were found starting within the next {{@upcomingSlots.locate_start_minutes}} minutes.
+          That's okay! Scheduled sign-ups are simply advisory bits of information to ensure staffing minimums are met.
         </p>
         <p>
           <b class="text-success">
