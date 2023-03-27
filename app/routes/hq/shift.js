@@ -7,7 +7,7 @@ import {
   HQ_TODO_VERIFY_TIMESHEET,
   HQ_TODO_ISSUE_RADIO,
   HQ_TODO_DELIVERY_MESSAGE,
-  HqTodoTask,
+  HqTodoTask, HQ_TODO_OFF_SITE,
 } from "clubhouse/constants/hq-todo";
 
 export default class HqShiftRoute extends ClubhouseRoute {
@@ -16,7 +16,7 @@ export default class HqShiftRoute extends ClubhouseRoute {
     const year = this.house.currentYear();
 
     return RSVP.hash({
-      imminentSlots: this.ajax.request(`person/${person_id}/schedule/imminent`).then((result) => result.slots),
+      upcomingSlots: this.ajax.request(`person/${person_id}/schedule/upcoming`),
       scheduleRecommendations: this.ajax.request(`person/${person_id}/schedule/recommendations`),
       timesheets: this.store.query('timesheet', {person_id, year}),
     });
@@ -39,6 +39,12 @@ export default class HqShiftRoute extends ClubhouseRoute {
 
     if (controller.unverifiedTimesheets.length) {
       todos.push(new HqTodoTask(HQ_TODO_VERIFY_TIMESHEET));
+    }
+
+    const {upcomingSlots} = model;
+
+    if (!upcomingSlots.imminent.length && !upcomingSlots.upcoming.length) {
+      todos.push(new HqTodoTask(HQ_TODO_OFF_SITE));
     }
 
     if (!controller.isOffDuty) {

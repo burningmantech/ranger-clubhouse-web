@@ -43,9 +43,9 @@ export default class ShiftCheckInOutComponent extends Component {
     this.activePositions = this.args.positions.filter(position => position.active);
 
     // Mark imminent slots as trained or not.
-    const slots = this.args.imminentSlots;
-    if (slots) {
-      slots.forEach((slot) => {
+    const {upcomingSlots} = this.args;
+    if (upcomingSlots) {
+      upcomingSlots.imminent.forEach((slot) => {
         const slotPid = +slot.position_id;
         const position = this.activePositions.find((p) => slotPid === +p.id);
         if (position) {
