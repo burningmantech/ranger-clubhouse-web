@@ -8,7 +8,6 @@ export default class AdminSalesforceController extends ClubhouseController {
   @tracked updateSalesforce = false;
   @tracked nonTestAccounts = false;
   @tracked showAll = false;
-  @tracked resetTestAccounts = false;
   @tracked showConfirmModal = false;
   @tracked createAccounts = false;
 
@@ -24,12 +23,20 @@ export default class AdminSalesforceController extends ClubhouseController {
     'ready': {label: 'Ready for import', icon: 'thumbs-up'},
     'succeeded': {label: 'Successfully imported into Clubhouse', icon: 'check', color: 'success'},
     'existing': {label: 'Will convert to Prospective and update from Salesforce', icon: 'thumbs-up'},
+    'existing-claim-callsign': {
+      label: 'Will import and recycle callsign from non-vintage retired / resigned account',
+      icon: 'thumbs-up'
+    },
     'invalid': {label: 'Invalid record status, Will not import', icon: 'ban', color: 'danger'},
-    'imported': {label: 'Mark by Salesforce as already imported into Clubhouse, Will Not Import', icon: 'ban', color: 'danger'},
+    'imported': {
+      label: 'Mark by Salesforce as already imported into Clubhouse, Will Not Import',
+      icon: 'ban',
+      color: 'danger'
+    },
     'notready': {label: 'Not ready for import', icon: 'ban', color: 'danger'},
     'existing-callsign': {label: 'Callsign already exists, Will Not Import', icon: 'ban', color: 'danger'},
     'existing-bad-status': {
-      label: 'Existing account cannot update due to non-Auditor or non-Past Prospective status',
+      label: 'Existing account cannot be updated due to non-Auditor or non-Past Prospective status',
       icon: 'times',
       color: 'danger'
     },
@@ -42,6 +49,7 @@ export default class AdminSalesforceController extends ClubhouseController {
     this._orderStatus(groups, 'imported');
     this._orderStatus(groups, 'existing-bad-status');
     this._orderStatus(groups, 'existing');
+    this._orderStatus(groups, 'existing-claim-callsign');
     this._orderStatus(groups, 'ready');
     this._orderStatus(groups, 'succeeded');
 
@@ -58,7 +66,6 @@ export default class AdminSalesforceController extends ClubhouseController {
     this.updateSalesforce = false;
     this.nonTestAccounts = false;
     this.showAll = false;
-    this.resetTestAccounts = false;
   }
 
   _orderStatus(groups, status) {
@@ -75,7 +82,7 @@ export default class AdminSalesforceController extends ClubhouseController {
     if (this.createAccounts) {
 
       if (!this.updateSalesforce) {
-        this.modal.confirm(null, 'You have checked "Create accounts" but "Update Salesforce flag" is unchecked. Normally, these two are checked together. Did you mean to do that?', () => {
+        this.modal.confirm(null, 'You have checked "Create accounts" but "Update Salesforce Records" is unchecked. Normally, these two are checked together. Did you mean to do that?', () => {
           this.showConfirmModal = true;
         });
       } else {
@@ -97,7 +104,7 @@ export default class AdminSalesforceController extends ClubhouseController {
     this.showConfirmModal = false;
   }
 
-  _runImport() {
+  async _runImport() {
     const options = {};
 
     this.isSubmitting = true;
@@ -114,29 +121,24 @@ export default class AdminSalesforceController extends ClubhouseController {
       options.non_test_accounts = 1;
     }
 
-    if (this.resetTestAccounts) {
-      options.reset_test_accounts = 1;
-    }
 
     if (this.createAccounts) {
       options.create_accounts = 1;
     }
 
-    this.ajax.request('salesforce/import', {data: options})
-      .then((result) => {
-        this.importStatus = result.status;
-        this.importMessage = result.message;
-        this.accounts = result.accounts;
-        this.resetFlags();
-        this.noAccountsFound = !this.accounts.length;
-      })
-      .catch((response) => {
-        this.house.handleErrorResponse(response);
-        this.accounts = [];
-      })
-      .finally(() => {
-        this.isSubmitting = false;
-      });
+    try {
+      const result = await this.ajax.request('salesforce/import', {data: options});
+      this.importStatus = result.status;
+      this.importMessage = result.message;
+      this.accounts = result.accounts;
+      this.resetFlags();
+      this.noAccountsFound = !this.accounts.length;
+    } catch (response) {
+      this.accounts = [];
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action
@@ -154,5 +156,22 @@ export default class AdminSalesforceController extends ClubhouseController {
   @action
   toggleHelp() {
     this.showHelp = !this.showHelp;
+  }
+
+  @action
+  resetTestAccounts() {
+    this.modal.confirm('Confirm Reset Test Accounts',
+      "Any Salesforce Ranger record w/callsign beginning with Testing will be reset. Are you sure you want to do this?",
+      async () => {
+        this.isSubmitting = true;
+        try {
+          await this.ajax.request('salesforce/import', {data: {reset_test_accounts: 1}});
+          this.toast.success('Test accounts successfully reset.');
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        } finally {
+          this.isSubmitting = false;
+        }
+      });
   }
 }
