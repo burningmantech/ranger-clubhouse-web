@@ -22,7 +22,8 @@ export default class extends FetchService {
 
   request(url, opts = {}) {
     const data = opts?.data;
-    if (data) {
+
+    if (data && !(data instanceof FormData)) {
       // Sanitize the parameters
       const newData = {};
       Object.keys(data).forEach((param) => {
