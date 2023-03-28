@@ -61,14 +61,13 @@
         what you're doing.
       </p>
 
-      <p>If "Update Salesforce" is checked, it will write back data to
-        Salesforce.
-        Please don't do this if you have "Use non-test accounts" checked unless
-        you know what you're doing.
+      <p>
+        If "Update Salesforce" is checked, it will write back data to Salesforce. Please don't do this if you have "Use
+        real applicant records (not test)" checked unless you know what you're doing.
       </p>
 
       <p>
-        If "Use non-test accounts" is checked, it will use all accounts
+        If "Use real applicant records (not test)" is checked, it will use all accounts
         that are ready for import. This is safe to do on
         a Clubhouse staging server so long as "Update Salesforce" isn't checked.
       </p>
@@ -92,40 +91,53 @@
     <:body>
       <div class="row mb-4">
         <div class="col-auto">
-          <p><b>Import options</b></p>
+          <p>
+            <b>Import options</b>
+          </p>
+
           <label>
             <Input @type="checkbox" @checked={{this.createAccounts}} />
-            Create Clubhouse accounts
+            <span class={{if this.createAccounts "text-danger fw-bold"}}>
+              Create Clubhouse accounts
+            </span>
           </label><br>
           <label>
             <Input @type="checkbox" @checked={{this.updateSalesforce}} disabled={{not this.createAccounts}} />
-            <span class="{{unless this.createAccounts "text-muted"}}">
-              Update Salesforce records (create account only, caution!)
+            <span
+              class="{{unless this.createAccounts "text-muted"}} {{if this.updateSalesforce "text-danger fw-bold"}}">
+              Update Salesforce records (create account only)
             </span>
           </label><br>
           <label>
             <Input @type="checkbox" @checked={{this.nonTestAccounts}} />
-            Use non-test accounts (caution!)
+            <span class={{if this.nonTestAccounts "text-danger fw-bold"}}>
+            Use real applicant records (not test)
+            </span>
           </label>
         </div>
         <div class="col-auto">
           <p>
             <b>Debugging options</b>
           </p>
-          <label>
-            <Input @type="checkbox" @checked={{this.showAll}} />
-            Show all records (first 1,000 records, create & reset
-            account disabled)
-          </label><br>
-          <label>
-            <Input @type="checkbox" @checked={{this.resetTestAccounts}} />
-            Reset ALL Test Accounts (any record w/callsign beginning with 'Testing')
-          </label>
+          <UiButton @onClick={{this.resetTestAccounts}} @disabled={{this.isSubmitting}} @type="secondary">
+            Reset ALL Test Accounts
+          </UiButton>
+          <br>
+          (any record w/callsign beginning with 'Testing')
         </div>
       </div>
 
       <UiButton @onClick={{this.import}} @disabled={{this.isSubmitting}}>
-        Submit
+        {{#if this.createAccounts}}
+          Import &amp; Create Accounts
+        {{else}}
+          Preview Import
+        {{/if}}
+        {{#if this.nonTestAccounts}}
+          (Real Applicants)
+        {{else}}
+          (Tests Applicants)
+        {{/if}}
       </UiButton>
     </:body>
   </UiSection>
@@ -136,164 +148,162 @@
     </LoadingDialog>
   {{/if}}
 
-  <UiSection>
-    <:title>Import Results</:title>
-    <:body>
-      {{#if this.accounts}}
-        <p>
-          Found {{pluralize this.accounts.length "record"}}
-        </p>
-        {{#each this.accountGroups as |group|}}
-          <UiAccordion @isInitOpen={{true}} as |Accordion|>
-            <Accordion.title>
-              <div class="{{if group.statusLabel.color (concat "text-" group.statusLabel.color)}}">
-                {{#if group.statusLabel.icon}}{{fa-icon group.statusLabel.icon}}{{/if}}
-                {{group.statusLabel.label}} ({{pluralize group.items.length "record"}})
-              </div>
-            </Accordion.title>
-            <Accordion.body>
-              <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleAll group}}>
-                {{#if group.expandedAll}}
-                  Hide All
-                {{else}}
-                  Expand All
-                {{/if}}
-              </UiButton>
-              <table class="table table-sm table-hover table-striped">
-                <thead>
+  <h2>
+    Import Results
+    {{#if this.accounts}}
+      &mdash; Found {{pluralize this.accounts.length "record"}}
+    {{/if}}
+  </h2>
+  {{#if this.accounts}}
+    {{#each this.accountGroups as |group|}}
+      <UiAccordion @isInitOpen={{true}} as |Accordion|>
+        <Accordion.title>
+          <div class="{{if group.statusLabel.color (concat "text-" group.statusLabel.color)}}">
+            {{#if group.statusLabel.icon}}{{fa-icon group.statusLabel.icon}}{{/if}}
+            {{group.statusLabel.label}} ({{pluralize group.items.length "record"}})
+          </div>
+        </Accordion.title>
+        <Accordion.body>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleAll group}}>
+            {{#if group.expandedAll}}
+              Hide All
+            {{else}}
+              Expand All
+            {{/if}}
+          </UiButton>
+          <table class="table table-sm table-hover table-striped">
+            <thead>
+            <tr>
+              <th>Ranger Obj</th>
+              <th>Callsign</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Type</th>
+              <th>VC Status</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {{#each group.items as |account|}}
+              {{#if (eq account.status "existing")}}
                 <tr>
-                  <th>Ranger Obj</th>
-                  <th>Callsign</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Type</th>
-                  <th>VC Status</th>
-                  <th>Actions</th>
+                  <td>
+                    <a href="https://burningman.my.salesforce.com/{{account.salesforce_ranger_object_id}}"
+                       rel="noopener noreferrer" target="_blank">
+                      {{account.salesforce_ranger_object_name}}
+                    </a>
+                  </td>
+                  <td>
+                    {{account.existing_person.callsign}} &rarr;<br>{{account.callsign}}
+                  </td>
+                  <td>
+                    {{account.existing_person.first_name}} {{account.existing_person.last_name}}
+                    &rarr;<br>
+                    {{account.first_name}} {{account.last_name}}
+                  </td>
+                  <td>
+                    {{account.existing_person.email}} &rarr;<br> {{account.email}}
+                  </td>
+                  <td>
+                    {{account.applicant_type}}
+                  </td>
+                  <td>{{account.vc_status}}</td>
+                  <td>
+                    <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleAccount account}}>
+                      {{if account.showing "Hide" "Show"}}
+                    </UiButton>
+                  </td>
                 </tr>
-                </thead>
+              {{else}}
+                <tr>
+                  <td>
+                    <a href="https://burningman.my.salesforce.com/{{account.salesforce_ranger_object_id}}"
+                       rel="noopener noreferrer" target="_blank">
+                      {{account.salesforce_ranger_object_name}}
+                    </a>
+                  </td>
+                  <td>
+                    {{#if (and (eq account.status "succeeded") account.chuid)}}
+                      <PersonLink @personId={{account.chuid}} @callsign={{account.callsign}} />
+                    {{else}}
+                      {{account.callsign}}
+                    {{/if}}
+                  </td>
+                  <td>{{account.first_name}} {{account.last_name}}</td>
+                  <td>{{mail-to account.email}}</td>
+                  <td>{{account.applicant_type}}</td>
+                  <td>{{account.vc_status}}</td>
+                  <td>
+                    <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleAccount account}}>
+                      {{if account.showing "Hide" "Show"}}
+                    </UiButton>
+                  </td>
+                </tr>
 
-                <tbody>
-                {{#each group.items as |account|}}
-                  {{#if (eq account.status "existing")}}
-                    <tr>
-                      <td>
-                        <a href="https://burningman.my.salesforce.com/{{account.salesforce_ranger_object_id}}"
-                           rel="noopener noreferrer" target="_blank">
-                          {{account.salesforce_ranger_object_name}}
-                        </a>
-                      </td>
-                      <td>
-                        {{account.existing_person.callsign}} &rarr;<br>{{account.callsign}}
-                      </td>
-                      <td>
-                        {{account.existing_person.first_name}} {{account.existing_person.last_name}}
-                        &rarr;<br>
-                        {{account.first_name}} {{account.last_name}}
-                      </td>
-                      <td>
-                        {{account.existing_person.email}} &rarr;<br> {{account.email}}
-                      </td>
-                      <td>
-                        {{account.applicant_type}}
-                      </td>
-                      <td>{{account.vc_status}}</td>
-                      <td>
-                        <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleAccount account}}>
-                          {{if account.showing "Hide" "Show"}}
-                        </UiButton>
-                      </td>
-                    </tr>
-                  {{else}}
-                    <tr>
-                      <td>
-                        <a href="https://burningman.my.salesforce.com/{{account.salesforce_ranger_object_id}}"
-                           rel="noopener noreferrer" target="_blank">
-                          {{account.salesforce_ranger_object_name}}
-                        </a>
-                      </td>
-                      <td>
-                        {{#if (and (eq account.status "succeeded") account.chuid)}}
-                          <PersonLink @personId={{account.chuid}} @callsign={{account.callsign}} />
-                        {{else}}
-                          {{account.callsign}}
-                        {{/if}}
-                      </td>
-                      <td>{{account.first_name}} {{account.last_name}}</td>
-                      <td>{{mail-to account.email}}</td>
-                      <td>{{account.applicant_type}}</td>
-                      <td>{{account.vc_status}}</td>
-                      <td>
-                        <UiButton @type="secondary" @size="sm" @onClick={{fn this.toggleAccount account}}>
-                          {{if account.showing "Hide" "Show"}}
-                        </UiButton>
-                      </td>
-                    </tr>
+              {{/if}}
+              {{#if account.message}}
+                <tr class="tr-no-border">
+                  <td colspan="9">
+                    <span class="text-danger font-weight-bold">{{account.message}}</span>
+                    {{#if account.existing_person}}
+                      <PersonLink @person={{account.existing_person}} />
+                      &lt;{{account.existing_person.status}}
+                      , {{account.existing_person.first_name}} {{account.existing_person.last_name}}&gt;
+                    {{/if}}
+                  </td>
+                </tr>
+              {{/if}}
+              {{#if account.showing}}
+                <tr class="tr-no-border">
+                  <td colspan="9">
+                    {{#if account.existing_person}}
+                      <b>Existing Person:</b>
+                      <PersonLink @person={{account.existing_person}} />
+                      &lt;{{account.existing_person.status}}&gt;<br>
+                    {{/if}}
+                    <b>BPGUID:</b>{{account.bpguid}}<br>
+                    <b>VC Comments:</b>
+                    <PresentOrNot @value={{account.vc_comments}} />
+                    <br>
+                    {{#if (eq account.status "existing")}}
+                      <b>Street:</b> {{account.existing_person.street1}} &rarr; {{account.street1}}<br>
+                      <b>State:</b> {{account.existing_person.state}} &rarr; {{account.state}}<br>
+                      <b>Zip:</b> {{account.existing_person.zip}} &rarr; {{account.zip}}<br>
+                      <b>Country:</b> {{account.existing_person.country}} &rarr; {{account.country}}<br>
+                      <b>Phone:</b> {{account.existing_person.home_phone}} &rarr; {{account.phone}}<br>
+                      <b>Emergency Contact:</b> {{account.existing_person.emergency_contact}}
+                      &rarr; {{account.emergency_contact}}<br>
+                      <b>Known Ranger Names:</b> {{account.existing_person.known_rangers}}
+                      &rarr; {{account.known_ranger_names}}<br>
+                      <b>Known PNV Names:</b> {{account.existing_person.known_pnvs}}
+                      &rarr; {{account.known_pnv_names}}
+                      <br>
+                    {{else}}
+                      <b>Street:</b> {{account.street1}}<br>
+                      <b>State:</b> {{account.state}}<br>
+                      <b>Zip:</b> {{account.zip}}<br>
+                      <b>Country:</b> {{account.country}}<br>
+                      <b>Phone:</b> {{account.phone}}<br>
+                      <b>Emergency Contact:</b> {{account.emergency_contact}}<br>
+                      <b>Known Ranger Names:</b> {{account.known_ranger_names}}<br>
+                      <b>Known PNV Names:</b> {{account.known_pnv_names}}<br>
+                    {{/if}}
+                  </td>
+                </tr>
+              {{/if}}
+            {{/each}}
+            </tbody>
+          </table>
 
-                  {{/if}}
-                  {{#if account.message}}
-                    <tr class="tr-no-border">
-                      <td colspan="9">
-                        <span class="text-danger font-weight-bold">{{account.message}}</span>
-                        {{#if account.existing_person}}
-                          <PersonLink @person={{account.existing_person}} />
-                          &lt;{{account.existing_person.status}}
-                          , {{account.existing_person.first_name}} {{account.existing_person.last_name}}&gt;
-                        {{/if}}
-                      </td>
-                    </tr>
-                  {{/if}}
-                  {{#if account.showing}}
-                    <tr class="tr-no-border">
-                      <td colspan="9">
-                        {{#if account.existing_person}}
-                          <b>Existing Person:</b>
-                          <PersonLink @person={{account.existing_person}} />
-                          &lt;{{account.existing_person.status}}&gt;<br>
-                        {{/if}}
-                        <b>BPGUID:</b>{{account.bpguid}}<br>
-                        <b>VC Comments:</b>
-                        <PresentOrNot @value={{account.vc_comments}} />
-                        <br>
-                        {{#if (eq account.status "existing")}}
-                          <b>Street:</b> {{account.existing_person.street1}} &rarr; {{account.street1}}<br>
-                          <b>State:</b> {{account.existing_person.state}} &rarr; {{account.state}}<br>
-                          <b>Zip:</b> {{account.existing_person.zip}} &rarr; {{account.zip}}<br>
-                          <b>Country:</b> {{account.existing_person.country}} &rarr; {{account.country}}<br>
-                          <b>Phone:</b> {{account.existing_person.home_phone}} &rarr; {{account.phone}}<br>
-                          <b>Emergency Contact:</b> {{account.existing_person.emergency_contact}}
-                          &rarr; {{account.emergency_contact}}<br>
-                          <b>Known Ranger Names:</b> {{account.existing_person.known_rangers}}
-                          &rarr; {{account.known_ranger_names}}<br>
-                          <b>Known PNV Names:</b> {{account.existing_person.known_pnvs}}
-                          &rarr; {{account.known_pnv_names}}
-                          <br>
-                        {{else}}
-                          <b>Street:</b> {{account.street1}}<br>
-                          <b>State:</b> {{account.state}}<br>
-                          <b>Zip:</b> {{account.zip}}<br>
-                          <b>Country:</b> {{account.country}}<br>
-                          <b>Phone:</b> {{account.phone}}<br>
-                          <b>Emergency Contact:</b> {{account.emergency_contact}}<br>
-                          <b>Known Ranger Names:</b> {{account.known_ranger_names}}<br>
-                          <b>Known PNV Names:</b> {{account.known_pnv_names}}<br>
-                        {{/if}}
-                      </td>
-                    </tr>
-                  {{/if}}
-                {{/each}}
-                </tbody>
-              </table>
-
-            </Accordion.body>
-          </UiAccordion>
-        {{/each}}
-      {{else if this.noAccountsFound}}
-        <b class="text-danger">No records were found based on the criteria.</b>
-      {{else}}
-        Hit submit to retrieve and/or import Salesforce records.
-      {{/if}}
-    </:body>
-  </UiSection>
+        </Accordion.body>
+      </UiAccordion>
+    {{/each}}
+  {{else if this.noAccountsFound}}
+    <b class="text-danger">No records were found based on the criteria.</b>
+  {{else}}
+    Hit submit to retrieve and/or import Salesforce records.
+  {{/if}}
 </main>
 
 {{#if this.showConfirmModal}}
