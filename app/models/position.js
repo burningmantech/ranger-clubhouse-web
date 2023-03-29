@@ -45,6 +45,8 @@ export default class PositionModel extends Model {
   @attr('boolean', { defaultValue:false}) alert_when_becomes_empty;
   @attr('boolean', { defaultValue:false}) alert_when_no_trainers;
 
+  @attr('string') paycode;
+
   get teamCategoryLabel() {
     return TeamCategoryLabels[this.team_category] ?? this.team_category;
   }

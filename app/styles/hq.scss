@@ -4,7 +4,7 @@
 
 .btn-timesheet {
   display: inline-block;
-  width: 12ch;
+  min-width: 12ch;
 }
 
 button.btn-timesheet:not(:last-child) {

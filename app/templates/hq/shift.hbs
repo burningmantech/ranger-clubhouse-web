@@ -1,6 +1,7 @@
 {{#if this.isShinyPenny}}
-  <UiNotice @type="success" @icon="smile-beam" @iconType="far">
-    {{this.person.callsign}} is newly minted Shiny Penny. Share some Ranger love and welcome them to the family.
+  <UiNotice @type="success" @icon="smile-beam" @iconType="fa-regular"
+            @title="{{this.person.callsign}} is a Shiny Penny">
+    Share some Ranger love and welcome them to the family.
   </UiNotice>
 {{/if}}
 
@@ -13,12 +14,12 @@
   </UiNotice>
 {{/unless}}
 
-{{#if (gt this.person.unread_message_count 0)}}
+{{#if this.person.unread_message_count}}
   <UiNotice @title="Unread Message(s)" @type="success" @icon="envelope">
     <p>
       {{this.person.callsign}} has {{pluralize this.person.unread_message_count "unread Clubhouse message"}}.
     </p>
-    <LinkTo @route="hq.messages" class="btn btn-success">Read Now</LinkTo>
+    <LinkTo @route="hq.messages" class="btn btn-success">Read Message(s)</LinkTo>
   </UiNotice>
 {{/if}}
 
@@ -29,255 +30,200 @@
   </UiNotice>
 {{/if}}
 
-<UiSection>
-  <:title>
-    {{#if this.hasUnverifiedTimesheet}}
-      <span class="text-danger">
-        Timesheet Entry Verification Needed for {{pluralize this.unverifiedTimesheets.length "entry" }}
-      </span>
+{{#if this.todos}}
+  <div class="lh-lg mb-2 fs-5">
+    {{#if this.todoCount}}
+      {{pluralize this.todoCount "recommended task"}}:
     {{else}}
-      Timesheet Entry Verification - No Action Needed
+      <div class="text-success">
+        All recommended tasks have been completed.
+      </div>
     {{/if}}
-    <HelpPopover @slug="hq-timesheet-verification"/>
-  </:title>
-  <:body>
-    {{#if this.unverifiedTimesheets}}
-      Ask {{this.person.callsign}} if the following is correct:
-      <table class="table table-width-auto table-hover">
-        <thead>
-        <tr>
-          <th>Time / Position</th>
-          <th class="text-end">Duration / Credits</th>
-          <th>Correct?</th>
-          <th class="w-5">&nbsp;</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each this.unverifiedTimesheets as |entry|}}
-          <tr>
-            <td class="align-middle">
-              {{shift-format entry.on_duty entry.off_duty}}<br>
-              {{entry.position.title}}
-            </td>
-            <td class="text-end align-middle">
-              {{hour-minute-words entry.duration}}<br>
-              {{credits-format entry.credits}} credits
-            </td>
-            <td class="align-middle">
-              <div class=" d-flex justify-between align-items-center">
-                <UiButton @type="success" @class="btn-timesheet" @onClick={{fn this.toggleEntryVerified entry}}
-                          @disabled={{entry.isSaving}}>
-                  {{#if entry.isVerified}}
-                    Un-Verify
-                  {{else}}
-                    YES
-                  {{/if}}
-                </UiButton>
-                <UiButton @type="danger" @class="btn-timesheet" @onClick={{fn this.markEntryIncorrect entry}}
-                          @disabled={{entry.isSaving}}>
-                  NO
-                  {{#if entry.isPending}}
-                    {{fa-icon "check"}}
-                  {{/if}}
-                </UiButton>
-                <UiButton @type="secondary"
-                          @class="btn-timesheet"
-                          @onClick={{fn this.ignoreEntry entry}}
-                          @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
-                  SKIP
-                  {{#if entry.isIgnoring}}
-                    {{fa-icon "check"}}
-                  {{/if}}
-                </UiButton>
-              </div>
-              {{#if entry.isVerified}}
-                <span class="text-success">{{fa-icon "check"}} Entry has been successfully marked as correct.</span>
-              {{else if entry.isPending}}
-                <span class="text-danger">{{fa-icon "check"}}
-                  A correction request has been successfully submitted.</span>
-              {{else if entry.isIgnoring}}
-                Entry will be reviewed at a later time.
-              {{else}}
-                <span class="text-muted">Entry requires review.</span>
-              {{/if}}
-            </td>
-            <td class="w-5">
-              {{#if entry.isSaving}}
-                <SpinIcon/>
-              {{else}}
-                &nbsp;
-              {{/if}}
-            </td>
-          </tr>
+    <div class="d-flex justify-content-start flex-wrap">
+      {{#if this.todos}}
+        {{#each this.todos as |todo|}}
+          {{#if todo.ignore}}
+            <div class="text-muted me-4">{{fa-icon "ban" fixed=true right=1}} {{todo.message}}</div>
+          {{else if todo.completed}}
+            <div class="text-success me-4">{{fa-icon "check" fixed=true right=1}} {{todo.message}}</div>
+          {{else}}
+            <div class="me-4">{{fa-icon "circle" type="far" fixed=true right=1}} {{todo.message}}</div>
+          {{/if}}
         {{/each}}
-        </tbody>
-      </table>
-    {{else}}
-      No timesheet entries need review at this time.
-    {{/if}}
-  </:body>
-</UiSection>
+      {{/if}}
+    </div>
+  </div>
+{{/if}}
+<BsTab @customTabs={{true}} as |tab|>
+  <UiTabCustomNav @tab={{tab}} as |nav|>
+    <nav.item @paneId="timesheet-verification" @icon="list">
+      Review Timesheet
+      {{#if this.unverifiedTimesheetCount}}
+        ({{pluralize this.unverifiedTimesheetCount "entry"}})
+      {{else}}
+        (not needed yet)
+      {{/if}}
+    </nav.item>
+    <nav.item @paneId="shift-manage" @icon="person-walking">
+      {{#if this.onDutyEntry}}
+        Shift End
+      {{else}}
+        Shift Start
+      {{/if}}
+    </nav.item>
+    <nav.item @paneId="assets" @icon="tower-broadcast">
+      Radios &amp; Gear
+    </nav.item>
+    <nav.item @paneId="pogs" @icon="utensils">
+      Meal &amp; Shower Pogs
+    </nav.item>
+    <nav.item @paneId="offsite" @icon="house">
+      Mark Off Site
+    </nav.item>
+  </UiTabCustomNav>
+  <div class="tab-content">
+    <tab.pane @id="timesheet-verification" @title="Timesheet Verification">
+      <HqTimesheetVerification @unverifiedTimesheets={{this.unverifiedTimesheets}}
+                               @completeTodo={{this.completeTodo}}
+      />
+    </tab.pane>
+    <tab.pane @id="shift-manage" @title={{if this.onDutyEntry "End Shift" "Start Shift"}}>
+      {{#if this.endedShiftEntry}}
+        <HqTimesheetVerification @unverifiedTimesheets={{this.unverifiedTimesheets}}
+                                 @completeTodo={{this.completeTodo}}
+        />
+      {{/if}}
+      <ShiftCheckInOut @positions={{this.positions}}
+                       @timesheets={{this.timesheets}}
+                       @person={{this.person}}
+                       @upcomingSlots={{this.upcomingSlots}}
+                       @hasUnverifiedTimesheet={{this.hasUnverifiedTimesheet}}
+                       @startShiftNotify={{this.startShiftNotify}}
+                       @endShiftNotify={{this.endShiftNotify}}
+                       @onDutyEntry={{this.onDutyEntry}}
+                       @eventInfo={{this.eventInfo}}
+                       @year={{this.session.currentYear}}
+      />
+    </tab.pane>
 
-<UiSection>
-  <:title>
-    Shift Check In/Out
-    <HelpPopover @slug="hq-shift-management"/>
-  </:title>
-  <:body>
-    <ShiftCheckInOut @positions={{this.positions}}
-                     @timesheets={{this.timesheets}}
-                     @person={{this.person}}
-                     @imminentSlots={{this.imminentSlots}}
-                     @hasUnverifiedTimesheet={{this.hasUnverifiedTimesheet}}
-                     @startShiftNotify={{this.startShiftNotify}}
-                     @endShiftNotify={{this.endShiftNotify}}
-                     @onDutyEntry={{this.onDutyEntry}}
-                     @eventInfo={{this.eventInfo}}
-                     @year={{this.session.currentYear}}
-    />
-  </:body>
-</UiSection>
+    <tab.pane @id="assets" @title="Radios, Gear & Assets">
+      {{#unless this.personEvent.asset_authorized}}
+        <UiNotice @title="Do Not Issue Radios or Gear" @type="danger" @icon="ban">
+          The Radio Checkout Agreement has not been signed. Direct {{this.person.callsign}} to the kiosk shack,
+          so they can log in into the Clubhouse, review, and sign the agreement.
+        </UiNotice>
+      {{/unless}}
+      {{#if this.radioCount}}
+        {{#if this.shiftRadios}}
+          <div class="alert alert-danger">
+            Collect {{pluralize this.shiftRadios "shift radio"}} at the end of the shift.
+          </div>
+        {{/if}}
+        {{#if this.eventRadios}}
+          <h4 class="text-success">
+            {{this.person.callsign}} has {{pluralize this.eventRadios "event radio"}} checked out. Collect the
+            radio(s) after their very last shift of the season.
+          </h4>
+        {{/if}}
+      {{/if}}
 
-<HqProvisionInfo @eventInfo={{this.eventInfo}} @person={{this.person}} @onDutyEntry={{this.onDutyEntry}} />
+      <div class="mb-2">
+        {{#if this.eventInfo.radio_eligible}}
+          <p>
+            {{this.person.callsign}} is authorized for {{pluralize this.eventInfo.radio_max "event radio"}}.
+          </p>
+        {{else}}
+          {{this.person.callsign}} is only authorized for SHIFT RADIOS.
+          {{#if this.mayNotNeedRadio}}
+            <br>
+            <b class="text-danger">
+              {{this.person.callsign}} is working a Burn Perimeter shift and may not need a
+              radio. Check with the HQ Short or Lead if in doubt.
+            </b>
+          {{/if}}
+        {{/if}}
+      </div>
 
-{{#if this.showCorrectionForm}}
-  <ModalDialog @title="Timesheet Entry Correction" @onEscape={{this.cancelEntryCorrection}} as |Modal|>
-    <ChForm @formId="correction" @formFor={{this.entry}}
-            @validator={{this.correctionValidations}}
-            @onSubmit={{this.saveEntryCorrection}} as |f|>
-      <Modal.body>
-        <dl class="row">
-          <dt class="col-sm-2">Position:</dt>
-          <dd class="col-sm-10">{{this.entry.position.title}}</dd>
+      {{#if this.personEvent.asset_authorized}}
+        <AssetCheckoutForm @person={{this.person}}
+                           @assets={{this.assets}}
+                           @attachments={{this.attachments}}
+                           @eventInfo={{this.eventInfo}}
+                           @onCheckOut={{this.onAssetCheckOut}}
+        />
+      {{/if}}
 
-          <dt class="col-sm-2">Time:</dt>
-          <dd class="col-sm-10">{{shift-format this.entry.on_duty}} to {{shift-format this.entry.off_duty}}</dd>
+      <HqAssetTable @assetsCheckedOut={{this.assetsCheckedOut}}
+                    @attachments={{this.attachments}}
+                    @onCheckIn={{this.onAssetCheckIn}}
+      />
 
-          <dt class="col-sm-2">Duration:</dt>
-          <dd class="col-sm-10">{{hour-minute-format this.entry.duration}}</dd>
+      <div>
+        {{#if this.assets.isUpdating}}
+          <LoadingIndicator @text="Refreshing Assets"/>
+        {{/if}}
+      </div>
+    </tab.pane>
 
-          <dt class="col-sm-2">Credits:</dt>
-          <dd class="col-sm-10">{{credits-format this.entry.credits}}</dd>
-        </dl>
-        Provide as much information as possible to help the reviewer understand why this entry should be fixed.
-        <ul>
-          <li>Why does {{this.person.callsign}} think the entry is wrong?</li>
-          <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
-          <li><b>Is the position "{{this.entry.position.title}}" wrong?</b> State the correct position</li>
-          <li><b>Who was their shift partner(s)?</b></li>
-        </ul>
+    <tab.pane @id="pogs">
+      <HqProvisionInfo @person={{this.person}}
+                       @period={{this.eventInfo.event_period}}
+                       @eventPeriods={{this.eventPeriods}}
+                       @meals={{this.eventInfo.meals}}
+                       @showers={{this.eventInfo.showers}}
+                       @onDutyEntry={{this.onDutyEntry}} />
+      <HqPogs @person={{this.person}}
+              @endedShiftEntry={{this.endedShiftEntry}}
+              @period={{this.eventInfo.event_period}}
+              @eventPeriods={{this.eventPeriods}}
+      />
+    </tab.pane>
 
-        <FormRow>
-          <f.textarea @name="additional_notes"
-                      @label="Timesheet entry correction note:"
-                      @autofocus={{true}}
-                      @cols={{80}}
-                      @rows={{3}}/>
-        </FormRow>
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label="Submit Correction" @disabled={{this.isCorrectionSubmitting}} />
-        <UiCancelButton @disabled={{this.isCorrectionSubmitting}} @onClick={{this.cancelEntryCorrection}} />
-        {{#if this.isCorrectionSubmitting}}
+    <tab.pane @id="offsite">
+      {{#if this.person.on_site}}
+        {{#if this.pendingItems}}
+          <UiNotice @icon="hand" @type="danger" @title="Pending Item(s)">
+            {{pluralize this.pendingItems "item"}} still needs to be dealt with before marking
+            this person off site:
+            <ul class="mt-2 mb-2">
+              {{#unless this.isOffDuty}}
+                <li>
+                  {{this.person.callsign}} is still on duty.
+                </li>
+              {{/unless}}
+              {{#if this.assetsCheckedOut}}
+                <li>{{pluralize this.assetsCheckedOut.length "asset"}} (radios, gear, etc.) not collected.</li>
+              {{/if}}
+              {{#if this.unverifiedTimesheets}}
+                <li>{{pluralize this.unverifiedTimesheets.length "timesheet entry"}} not verified.</li>
+              {{/if}}
+            </ul>
+            You may choose to ignore this warning and proceed to mark this person off site. However, you really should
+            take care of the items listed above.
+          </UiNotice>
+        {{else}}
+          <p class="text-success">
+            {{this.person.callsign}} has no outstanding items and is cleared to be marked off-site.
+          </p>
+        {{/if}}
+        <UiButton @type="secondary" @onClick={{this.markOffSite}} @disabled={{this.isMarkingOffSite}}>
+          Mark As Off Site
+        </UiButton>
+        {{#if this.isMarkingOffSite}}
           <SpinIcon/>
         {{/if}}
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
-{{/if}}
-<UiSection>
-  <:title>
-    Radios, Sandman Gear, &amp; Other Assets
-    <HelpPopover @slug="hq-assets"/>
-  </:title>
-  <:body>
-    {{#unless this.personEvent.asset_authorized}}
-      <UiNotice @title="Do Not Issue Radios or Gear" @type="danger" @icon="ban">
-        The Radio Checkout Agreement has not been signed.
-        Direct {{this.person.callsign}} to the kiosk shack, so they can log in into the Clubhouse, review and sign
-        the agreement.
-      </UiNotice>
-    {{/unless}}
-    {{#unless this.eventInfo.radio_info_available}}
-      <UiNotice @type="warning" @icon="exclamation">
-        Event radio information has not been posted yet. Radio eligibility cannot be determined.
-      </UiNotice>
-    {{/unless}}
-    {{#if this.radioCount}}
-      {{#if this.shiftRadios}}
-        <h3 class="text-danger">Collect {{pluralize this.shiftRadios "radio"}} at end of shift</h3>
-      {{/if}}
-      {{#if this.eventRadios}}
-        <h3 class="text-success">Collect {{pluralize this.eventRadios "event radio"}} at event end</h3>
-      {{/if}}
-    {{/if}}
-
-    <div class="mb-2">
-      {{this.person.callsign}} is
-      {{#if this.eventInfo.radio_eligible}}
-        authorized for {{pluralize this.eventInfo.radio_max "event radio"}}.
       {{else}}
-        only authorized for SHIFT RADIOS.
-        {{#if this.mayNotNeedRadio}}
-          <br>
-          <b class="text-danger">{{this.person.callsign}} is working a Burn Perimeter shift and may not need a radio.
-            Check with the HQ Short or Lead if in doubt.</b>
-        {{/if}}
+        <div class="alert alert-danger">
+          {{this.person.callsign}} is off site.
+        </div>
       {{/if}}
-    </div>
-
-    {{#if this.personEvent.asset_authorized}}
-      <AssetCheckoutForm @person={{this.person}}
-                         @assets={{this.assets}}
-                         @attachments={{this.attachments}}
-                         @eventInfo={{this.eventInfo}} />
-    {{/if}}
-
-    <HqAssetTable @assetsCheckedOut={{this.assetsCheckedOut}}
-                  @attachments={{this.attachments}}/>
-
-    <div>
-      {{#if this.assets.isUpdating}}
-        <LoadingIndicator @text="Refreshing Assets"/>
-      {{/if}}
-    </div>
-  </:body>
-</UiSection>
-
-{{#if (or this.person.on_site this.isMarkingOffSite)}}
-  <UiButton @type="secondary" @onClick={{this.markOffSite}} @class="mt-2" @disabled={{this.isMarkingOffSite}}>
-    Mark As Off Site
-  </UiButton>
-  {{#if this.isMarkingOffSite}}
-    <SpinIcon/>
-  {{/if}}
-{{/if}}
+    </tab.pane>
+  </div>
+</BsTab>
 
 {{#if this.showSiteLeaveDialog}}
   <ModalDialog @title="Outstanding Item(s)" @onEscape={{this.cancelSiteLeaveDialog}} as |Modal|>
     <Modal.body>
-      <b class="text-danger">
-        {{pluralize this.pendingItems "item"}} still needs to be dealt with before marking
-        this person off site:
-      </b>
-      <ul class="mt-2 mb-2">
-        {{#unless this.isOffDuty}}
-          <li>
-            {{this.person.callsign}} is still on duty.
-          </li>
-        {{/unless}}
-        {{#if this.assetsCheckedOut}}
-          <li>{{pluralize this.assetsCheckedOut.length "asset"}} not collected.</li>
-        {{/if}}
-        {{#if this.unverifiedTimesheets}}
-          <li>{{pluralize this.unverifiedTimesheets.length "timesheet entry"}} not verified.</li>
-        {{/if}}
-      </ul>
-      <p>
-        You may choose to ignore this warning and proceed to mark this person off site. However, you really should
-        take
-        care of the items listed above.
-      </p>
     </Modal.body>
     <Modal.footer>
       <UiButton @onClick={{this.forceMarkOffSite}} @type="secondary">

@@ -1,0 +1,144 @@
+{{#if this.isLoading}}
+  <LoadingIndicator @text="Loading pogs"/>
+{{else}}
+  <div class="mb-1">
+    <UiButton @onClick={{this.newPog}}>Issue Pog</UiButton>
+  </div>
+  Showing {{pluralize this.pogs.length "pog"}}.
+  <table class="table table-width-auto table-hover table-stripped">
+    <thead>
+    <tr>
+      <th>Pog</th>
+      <th>Status</th>
+      <th>Issued On</th>
+      <th>Issued By</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.pogs as |pog|}}
+      <tr class="align-middle">
+        <td>{{pog.pogLabel}}</td>
+        <td>
+          {{#if (and pog.isHalfMealPog pog.isRedeemed)}}
+            Redeemed for Full Meal Pog
+          {{else}}
+            {{pog.statusLabel}}
+          {{/if}}
+        </td>
+        <td>{{shift-format pog.issued_at}}</td>
+        <td>
+          <PersonLink @person={{pog.issued_by}} />
+        </td>
+        <td>
+          {{#if (and pog.isHalfMealPog pog.isIssued)}}
+            <UiButton @onClick={{fn this.redeemForFullMealPog pog}} @size="sm">
+              Redeem for Full Meal Pog
+            </UiButton>
+          {{else if (not pog.isCancelled)}}
+            <UiButton @onClick={{fn this.confirmPogCancel pog}} @size="sm" @type="secondary">
+              Cancel
+            </UiButton>
+          {{else}}
+            -
+          {{/if}}
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="3" class="text-danger">
+          No pogs have been issued yet.
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+{{/if}}
+
+{{#if this.pog}}
+  <ModalDialog @onEscape={{this.cancelNewPog}} as |Modal|>
+    <ChForm @formId="pog" @formFor={{this.pog}} @onSubmit={{this.savePog}} as |f|>
+      <Modal.title>Issue New Pog</Modal.title>
+      <Modal.body>
+        {{#if @endedShiftEntry}}
+          <p>
+          <div class="fs-5">
+            Worked shifted ({{@endedShiftEntry.position.title}}) was {{hour-minute-words @endedShiftEntry.duration}}
+            in length.
+          </div>
+          {{#if @endedShiftEntry.isUnverified}}
+            <b class="text-danger">
+              The timesheet entry is unverified. Review the timesheet entry to ensure the worked shift duration is
+              accurate.
+            </b>
+          {{else if @endedShiftEntry.isPending}}
+            <b class="text-danger">
+              The timesheet entry has a pending correction. The worked shift duration might be incorrect.
+            </b>
+          {{/if}}
+          </p>
+        {{/if}}
+        {{#if this.hasMealPass}}
+          <div class="fs-5 text-danger">
+            {{@person.callsign}} has a Meal Pass for the {{this.currentPeriodLabel}} period. Do not issue a meal pog.
+          </div>
+        {{else}}
+          {{#if this.config.meal_half_pog_enabled}}
+            <p>
+              &half; Meal Pogs are available for a shift worked less than 6 hours.
+            </p>
+          {{/if}}
+          <b>For the current event period, issue a meal pog for every 6+ hours worked in a shift.</b>
+        {{/if}}
+        <FormRow class="mt-2">
+          <f.radioGroup @name="pog"
+                        @options={{this.pogOptions}}
+                        @label="Pog to issue"
+                        @inline={{true}} />
+        </FormRow>
+        {{#if (eq f.model.pog "half-meal")}}
+          <b class="text-danger">Half-meal pogs are tracked digitally. No physical pog is handed out.</b>
+        {{else}}
+          <b>Don't forget to hand over the physical pog.</b>
+        {{/if}}
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Issue Pog"/>
+        <UiCancelButton @onClick={{this.cancelNewPog}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.pogToCancel}}
+  <ModalDialog @onEscape={{this.cancelCancelPog}} as |Modal|>
+    <ChForm @formId="pog"
+            @formFor={{this.pogToCancel}}
+            @validator={{this.pogValidations}}
+            @onSubmit={{this.saveCancelledPog}} as |f|>
+      <Modal.title>Confirm Pog Cancel</Modal.title>
+      <Modal.body>
+        <p>
+          This action is intended to mark a pog record as being accidentally issued.
+        </p>
+        <p class="text-danger">
+          This does NOT actually cancel the physical pog -- just the record in the Clubhouse. The physical pog
+          can still be used.
+        </p>
+        <FormRow>
+          <f.textarea @name="notes"
+                      @label="Supply a reason on why this pog is being cancelled:"
+                      @rows={{2}}
+                      @cols={{80}}
+          />
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Cancel {{this.pogToCancel.pogLabel}}"/>
+        <UiButton @onClick={{this.cancelCancelPog}} @type="secondary">
+          Cancel Action
+        </UiButton>
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}

@@ -1,37 +1,37 @@
-<UiSection>
-  <:body>
-    {{#if this.mayRequestTwoMealPogs}}
-      <div class="h3 text-danger">
-        {{fa-icon "hand-point-right"}} {{@person.callsign}} is on a Mentor shift and may be eligible for
-        TWO meal pogs.
-      </div>
-    {{/if}}
-    <dl class="row">
-      <dt class="col-12 col-lg-auto">Meals</dt>
-      <dd class="col-12 col-lg-auto">
-        {{#if this.hasEatItAll}}
-          <b class="text-danger">{{fa-icon "ban"}} NO MEAL POGS</b><br>
-          Has All Eat BMID
-        {{else if this.onlyPogs}}
-          <span class="text-success">Pog for 6+ hour shift</span>
-        {{else}}
-          <b class="text-danger">{{fa-icon "ban"}} NO POGS FOR {{this.mealPogInfo.exclude}}</b><br>
-          <span class="text-success">Pogs for {{this.mealPogInfo.issue}} ONLY</span>
-        {{/if}}
-        {{#unless this.hasEatItAll}}
-          <br>
-          Half pog for 3+ hours.
-        {{/unless}}
-      </dd>
-      <dt class="col-12 col-lg-auto">Showers</dt>
-      <dd class="col-12 col-lg-auto">
-        {{#if @eventInfo.showers}}
-          <b class="text-danger">{{fa-icon "ban"}} NO SHOWER POGS</b><br>
-          Has Wet Spot Access BMID
-        {{else}}
-          <span class="text-success">Pog for every 40 hours worked</span>
-        {{/if}}
-      </dd>
-    </dl>
-  </:body>
-</UiSection>
+{{#if this.mayRequestTwoMealPogs}}
+  <div class="alert alert-danger fs-6">
+    {{fa-icon "hand-point-right"}} {{@person.callsign}} is on a Mentor shift and may be eligible for TWO meal pogs.
+  </div>
+{{/if}}
+
+<div class="d-flex flex-wrap">
+  <div class="me-4">
+    <h4><span class="me-2">{{fa-icon "utensils"}}</span> Meals</h4>
+     <table class="table table-width-auto">
+      <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <th>Event Period</th>
+        <th>Pog or has BMID Meal Pass?</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{this.periodRow "Pre-Event" "pre"}}
+      {{this.periodRow "Event Week" "event"}}
+      {{this.periodRow "Post-Event" "post"}}
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <h4>{{fa-icon "shower" right=2}} Showers</h4>
+    <p>
+      {{#if @showers}}
+        <b class="text-danger">{{fa-icon "ban" right=1}} NO SHOWER POGS</b><br>
+        Has Wet Spot Access BMID
+      {{else}}
+        <span class="text-success">Pog for every 40 hours worked</span>
+      {{/if}}
+    </p>
+    The Wet Spot is located on 5:30 towards the DPW Depot.
+  </div>
+</div>

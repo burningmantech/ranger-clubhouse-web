@@ -1,74 +1,69 @@
-<UiSection>
-  <:title>Asset Checkout / In History</:title>
-  <:body>
-    {{pluralize @assets.length "asset"}} found
-    <table class="table table-width-auto table-striped table-hover table-sm">
-      <thead>
-      <tr>
-        <th>Type</th>
-        <th>Barcode</th>
-        <th>Attachment</th>
-        <th>Assigned</th>
-        <th>Temp ID</th>
-        <th>Checked Out Time /<br>By Person</th>
-        <th>Checked In Time /<br>By Person</th>
-        <th>Action</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each @assets as |ap|}}
-        <tr>
-          <td>{{ap.asset.description}}</td>
-          <td>{{ap.asset.barcode}}</td>
-          <td>
-            <PresentOrNot @value={{ap.attachment.description}} @empty="-"/>
-          </td>
-          <td>{{if ap.asset.perm_assign "Perm" "Temp"}}</td>
-          <td>
-            <PresentOrNot @value={{ap.asset.temp_id}} @empty="-"/>
-          </td>
-          <td>
-            {{shift-format ap.checked_out}}<br>
-            {{#if ap.check_out_person}}
-              <PersonLink @person={{ap.check_out_person}} />
-            {{else}}
-              -
-            {{/if}}
-          </td>
-          <td>
-            {{#if ap.checked_in}}
-              {{shift-format ap.checked_in}}<br>
-              {{#if ap.check_in_person}}
-                <PersonLink @person={{ap.check_in_person}} />
-              {{else}}
-                -
-              {{/if}}
-            {{else}}
-              <UiButton @size="sm" @onClick={{fn this.checkInAsset ap.asset ap}} @disabled={{ap.asset.isSubmitting}}>
-                Check In
-              </UiButton>
-              {{#if ap.asset.isSubmitting}}
-                <SpinIcon />
-              {{/if}}
-            {{/if}}
-          </td>
-          <td>
-            <UiButton @type="secondary" @size="sm" @onClick={{fn this.showHistoryAction ap.asset}}>
-              History
-            </UiButton>
-          </td>
-        </tr>
-      {{else}}
-        <tr>
-          <td colspan="8">
-            <b class="text-danger">No assets were found for {{@year}}</b>
-          </td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  </:body>
-</UiSection>
+{{pluralize @assets.length "asset"}} found
+<table class="table table-width-auto table-striped table-hover table-sm">
+  <thead>
+  <tr>
+    <th>Type</th>
+    <th>Barcode</th>
+    <th>Attachment</th>
+    <th>Assigned</th>
+    <th>Temp ID</th>
+    <th>Checked Out Time /<br>By Person</th>
+    <th>Checked In Time /<br>By Person</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each @assets as |ap|}}
+    <tr>
+      <td>{{ap.asset.description}}</td>
+      <td>{{ap.asset.barcode}}</td>
+      <td>
+        <PresentOrNot @value={{ap.attachment.description}} @empty="-"/>
+      </td>
+      <td>{{if ap.asset.perm_assign "Perm" "Temp"}}</td>
+      <td>
+        <PresentOrNot @value={{ap.asset.temp_id}} @empty="-"/>
+      </td>
+      <td>
+        {{shift-format ap.checked_out}}<br>
+        {{#if ap.check_out_person}}
+          <PersonLink @person={{ap.check_out_person}} />
+        {{else}}
+          -
+        {{/if}}
+      </td>
+      <td>
+        {{#if ap.checked_in}}
+          {{shift-format ap.checked_in}}<br>
+          {{#if ap.check_in_person}}
+            <PersonLink @person={{ap.check_in_person}} />
+          {{else}}
+            -
+          {{/if}}
+        {{else}}
+          <UiButton @size="sm" @onClick={{fn this.checkInAsset ap.asset ap}} @disabled={{ap.asset.isSubmitting}}>
+            Check In
+          </UiButton>
+          {{#if ap.asset.isSubmitting}}
+            <SpinIcon/>
+          {{/if}}
+        {{/if}}
+      </td>
+      <td>
+        <UiButton @type="secondary" @size="sm" @onClick={{fn this.showHistoryAction ap.asset}}>
+          History
+        </UiButton>
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="8">
+        <b class="text-danger">No assets were found for {{@year}}</b>
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
 
 {{#if this.assetForHistory}}
   <ModalAssetHistory @assetId={{this.assetForHistory.id}} @onClose={{this.closeHistory}} />

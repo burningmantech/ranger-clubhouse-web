@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
-import { action, set } from '@ember/object';
-import { service } from '@ember/service';
-import { tracked } from '@glimmer/tracking';
+import {action, set} from '@ember/object';
+import {service} from '@ember/service';
+import {tracked} from '@glimmer/tracking';
 
 export default class HqAssetTableComponent extends Component {
   @service ajax;
@@ -10,6 +10,14 @@ export default class HqAssetTableComponent extends Component {
 
   @tracked updateAsset = null;
 
+  constructor() {
+    super(...arguments);
+
+    const options = this.args.attachments.map((a) => [a.description, a.id]);
+    options.unshift(['-', '']);
+    this.attachmentOptions = options;
+  }
+
   /**
    * Check in a checked out asset
    *
@@ -17,14 +25,19 @@ export default class HqAssetTableComponent extends Component {
    */
 
   @action
-  assetCheckInAction(ap) {
+  async assetCheckInAction(ap) {
     set(ap, 'isSubmitting', true);
-    this.ajax.request(`asset/${ap.asset.id}/checkin`, {method: 'POST'})
-      .then((result) => {
-        set(ap, 'checked_in', result.checked_in);
-        this.toast.success('Asset has been successfully checked in.');
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => set(ap, 'isSubmitting', false));
+
+    try {
+      const result = await this.ajax.request(`asset/${ap.asset.id}/checkin`, {method: 'POST'});
+      set(ap, 'checked_in', result.checked_in);
+      this.toast.success('Asset has been successfully checked in.');
+      this.args.onCheckIn?.(ap.asset);
+    } catch (response) {
+      this.house.handleErrorResponse(response)
+    } finally {
+      set(ap, 'isSubmitting', false);
+    }
   }
 
   /**
@@ -38,32 +51,35 @@ export default class HqAssetTableComponent extends Component {
     this.updateAsset = ap;
   }
 
+  /**
+   * Close the attachment dialog
+   */
+
   @action
   cancelAttachmentDialog() {
     this.updateAsset = null;
   }
 
   /**
-   * Build an attachment list
+   * Commit the asset attachment.
    *
-   * @returns {[]}
+   * @param model
+   * @param isValid
+   * @returns {Promise<void>}
    */
 
-  get attachmentOptions() {
-    const options =  this.args.attachments.map((a) => [a.description, a.id]);
-    options.unshift([ '-', '']);
-    return options;
-  }
-
   @action
-  submitAsset(model, isValid) {
+  async submitAsset(model, isValid) {
     if (!isValid) {
       return;
     }
 
-    model.save().then(() => {
+    try {
+      await model.save();
       this.updateAsset = null;
       this.toast.success('Attachment successfully updated.');
-    }).catch((response) => this.house.handleErrorResponse(response));
+    } catch (response) {
+      this.house.handleErrorResponse(response)
+    }
   }
 }

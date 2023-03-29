@@ -2,6 +2,16 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {Role} from 'clubhouse/constants/roles';
 import {tracked} from '@glimmer/tracking';
+import {
+  INACTIVE,
+  INACTIVE_EXTENSION,
+  DECEASED,
+  ACTIVE,
+  RETIRED,
+  RESIGNED,
+  DISMISSED, ALPHA
+} from 'clubhouse/constants/person_status';
+import {htmlSafe} from '@ember/template';
 
 export default class PersonIndexController extends ClubhouseController {
 
@@ -93,15 +103,15 @@ export default class PersonIndexController extends ClubhouseController {
     return this.session.isAdmin || !!this.teams.find((t) => t.can_manage);
   }
 
-  _savePersonModel(model) {
+  async _savePersonModel(model) {
     const statusChanged = model._changes['status'];
 
     this.isSaing = true;
-    model.save().then(() => {
+    try {
+      await model.save()
       this.showEditNote = false;
       this.house.scrollToTop();
       this.toast.success('The information was successfully updated.');
-
 
       // When the status changes, the positions & roles are likely changed.
       // Reload the roles & positions
@@ -110,9 +120,11 @@ export default class PersonIndexController extends ClubhouseController {
       } else {
         this._reloadUserIfMe();
       }
-
-    }).catch((response) => this.house.handleErrorResponse(response, model))
-      .finally(() => this.iSaving = false);
+    } catch (response) {
+      this.house.handleErrorResponse(response, model);
+    } finally {
+      this.iSaving = false
+    }
   }
 
   @action
@@ -158,12 +170,49 @@ export default class PersonIndexController extends ClubhouseController {
     if (!isValid)
       return;
 
-    this.toast.clear();
+    if (model._changes['status']) {
+      const {status} = model;
+      const oldStatus = this.person.status;
+      if (status === ACTIVE) {
+        let walkCC = '';
+        switch (oldStatus) {
+          case ALPHA:
+            this.modal.confirm('Confirm Active Ranger Conversion',
+              '<p>You about to manually convert an Alpha to an Active Ranger. Normally this is done through the Mentor Interfaces.</p> Are you sure you want to do this?',
+              () => this._savePersonModel(model));
+              return;
+
+          case RESIGNED:
+          case RETIRED:
+          case INACTIVE_EXTENSION:
+            walkCC = '<li>Walk and PASS a Cheetah Cub shift</li>';
+          // eslint-disable-next-line no-fallthrough
+          case INACTIVE:
+            this.modal.confirm('Confirm updating status to active',
+              htmlSafe(
+                'The person must have met the following criteria before being the active status is restored:' +
+                `<ul class="mt-2">${walkCC}<li>Worked at least one shift during the current event.</li></ul>` +
+                '<p>Normally, the status is updated by <b class="text-danger">Council post-event</b> through the People By Status Change admin interface. See the Ranger Status Policy document for more information.</p>' +
+                `Are you absolutely sure you want to update the status to ${status}?`),
+              () => this._savePersonModel(model));
+            return;
+        }
+      } else {
+        switch (status) {
+          case DECEASED:
+          case DISMISSED:
+            this.modal.confirm('Confirm Destructive Status Update',
+              `You are about to update the account status to <b class="text-danger">${status}</b>. The person will be removed from all teams &amp positions, and all permissions revoked. Are you sure you want to do this?`,
+              () => this._savePersonModel(model));
+            return;
+        }
+      }
+    }
+
     // check to see if callsign has been disapproved..
     // (note: callsign_approved might be a string or boolean)
     if (model._changes['callsign_approved'] && `${model.callsign_approved}` === "false") {
       // Person is disapproving callsign, confirm that action.
-
       this.modal.confirm(
         'Confirm Action',
         'You are about to disapprove a previously approved callsign. Are you sure you want to do that?',

@@ -20,10 +20,12 @@ export const CERTIFICATION_MGMT = 110;
 export const TECH_NINJA = 1000;
 export const EDIT_ASSETS = 111;    // Person can create and edit asset records
 export const EDIT_SWAG = 112;      // Person can create and edit swag records
+export const CAN_FORCE_SHIFT = 113; // Person can force a shift check in
 
 export const Role = {
   ADMIN,
   ART_TRAINER,
+  CAN_FORCE_SHIFT,
   CERTIFICATION_MGMT,
   EDIT_ACCESS_DOCS,
   EDIT_ASSETS,
@@ -49,6 +51,7 @@ export const Role = {
 export const RoleToString = {
   [ADMIN]: 'admin',
   [ART_TRAINER]: 'art-trainer',
+  [CAN_FORCE_SHIFT]: 'force-shift',
   [EDIT_ACCESS_DOCS]: 'edit-access-docs',
   [EDIT_ASSETS]: 'edit-assets',
   [EDIT_BMIDS]: 'edit-bmids',

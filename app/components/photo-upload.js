@@ -89,11 +89,10 @@ export default class PhotoUploadComponent extends Component {
     this._uploadImage(this.originalImage, this.originalFilename);
   }
 
-  _uploadImage(origBlob, origFilename, imageBlob = null, imageFilename = null) {
+  async _uploadImage(origBlob, origFilename, imageBlob = null, imageFilename = null) {
     this.showNoBlobError = false;
 
     const formData = new FormData();
-
     formData.append('orig_image', origBlob, origFilename);
 
     if (imageBlob) {
@@ -103,21 +102,21 @@ export default class PhotoUploadComponent extends Component {
 
     this.isSubmitting = true;
 
-    // Let the backend know the user might be uploading a new photo.
-    this.ajax.post(`person/${this.args.person.id}/photo`, {
-      data: formData,
-      processData: false,
-      contentType: false,
-    }).then(() => {
+    try {
+      await this.ajax.request(`person/${this.args.person.id}/photo`, {
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+      });
       this.toast.success('Photo successfully uploaded.');
       this.args.refreshPhoto();
       this.args.closeAction();
-    }).catch((response) => {
+    } catch (response) {
       this.house.handleErrorResponse(response);
-    }).finally(() => {
+    } finally {
       this.isSubmitting = false;
-    })
-
+    }
   }
 
   @action

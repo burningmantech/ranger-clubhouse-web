@@ -9,13 +9,11 @@ export const STATUS_ISSUED = 'issued';
 export const STATUS_CANCELLED = 'cancelled';
 export const STATUS_REDEEMED = 'redeemed';
 
-export const PogOptions = [
-  [ 'Full Meal', POG_MEAL ],
-  [ '1/2 Meal', POG_HALF_MEAL],
-  [ 'Shower', POG_SHOWER]
-];
-
-export const PogLabels = optionsToLabels(PogOptions);
+export const PogLabels = {
+  [POG_MEAL]: 'Full Meal Pog',
+  [POG_HALF_MEAL]: '1/2 Meal Pog',
+  [POG_SHOWER]: 'Shower Pog'
+};
 
 export const StatusOptions = [
   [ 'Issued', STATUS_ISSUED],
@@ -32,6 +30,7 @@ export default class PersonPogModel extends Model {
   @attr('string', {defaultValue: STATUS_ISSUED}) status;
   @attr('string') pog;
   @attr('string') notes;
+  @attr('string') issued_at;
   @attr('string', {readOnly: true}) created_at;
   @attr('string', {readOnly: true}) updated_at;
 
@@ -44,5 +43,21 @@ export default class PersonPogModel extends Model {
 
   get statusLabel() {
     return StatusLabels[this.status] ?? this.status;
+  }
+
+  get isHalfMealPog() {
+    return this.pog === POG_HALF_MEAL;
+  }
+
+  get isIssued() {
+    return this.status === STATUS_ISSUED;
+  }
+
+  get isCancelled() {
+    return this.status === STATUS_CANCELLED;
+  }
+
+  get isRedeemed() {
+    return this.status === STATUS_REDEEMED;
   }
 }

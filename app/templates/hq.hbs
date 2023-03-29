@@ -1,34 +1,69 @@
-<UiSidebar @theme="hq" @smallTitle="HQ Actions" as |s|>
-  <s.group @title="HQ Window">
-    <s.link @route="hq.shift" @title="Shift Manage" @icon="walking" @iconType="s"/>
-    <s.link @route="hq.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
-    <s.link @route="hq.messages" @title="Messages" @icon="envelope"
-            @badgeText={{this.person.unread_message_count}} />
-    <s.link @route="hq.timesheet" @title="Timesheets" @class="dropdown-item" @icon="clock"/>
-    <s.link @route="hq.assets" @title="Asset History" @class="dropdown-item" @icon="broadcast-tower"
-            @iconType="s"/>
-    <s.link @route="hq.training-info" @title="Training Info" @icon="graduation-cap" @iconType="s"/>
-    <s.link @route="hq.site-checkin" @title="Site Check In" @icon="list-ol" @iconType="s"/>
-  </s.group>
-</UiSidebar>
-
 <main>
   <div class="person-manage-header">
     <div class="person-manage-header-title">
       <div class="person-manage-callsign">
         <LinkTo @route="hq.index" @model={{this.person.id}}>{{this.person.callsign}}</LinkTo>
-        <span class="d-inline-block">
-       &lt;{{this.person.first_name}} {{this.person.last_name}}, {{this.person.status}}&gt;
-      </span>
+        <span class="d-inline-block">&lt;{{this.person.status}}&gt;</span>
         <span class="d-inline-block">
           {{pronouns-format this.person}}
         </span>
-        {{#unless this.person.on_site}}<br><span class="text-danger">OFF SITE</span>{{/unless}}
       </div>
+      <div class="fs-4">HQ Window Interface</div>
       <div class="person-manage-switch">
         <LinkTo @route="person.index" @model={{this.person.id}}>Switch to Person Manage</LinkTo>
       </div>
     </div>
+  </div>
+
+  <div class="hq-navigation-container">
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <LinkTo @route="hq.shift" class="nav-link">
+          {{fa-icon "walking" type="s" right=2}} Shift Check In/Out
+        </LinkTo>
+      </li>
+
+      <li class="nav-item">
+        <LinkTo @route="hq.schedule" class="nav-link">
+          {{fa-icon "clipboard" right=2}} Schedule / Sign Ups
+        </LinkTo>
+      </li>
+
+      <li class="nav-item">
+        <LinkTo @route="hq.messages" class="nav-link">
+          {{fa-icon "envelope" right=2}} Messages
+          {{#if this.person.unread_message_count}}
+            <span class="badge text-success">
+              {{this.person.unread_message_count}}
+            </span>
+          {{/if}}
+        </LinkTo>
+      </li>
+
+      <li class="nav-item">
+        <LinkTo @route="hq.timesheet" class="nav-link">
+          {{fa-icon "clock" right=2}} Timesheet &amp; Corrections
+        </LinkTo>
+      </li>
+
+      <li class="nav-item">
+        <LinkTo @route="hq.assets" class="nav-link">
+          {{fa-icon "broadcast-tower" type="s" right=2}} Asset History
+        </LinkTo>
+      </li>
+
+      <li class="nav-item">
+        <LinkTo @route="hq.training-info" class="nav-link">
+          {{fa-icon "graduation-cap" type="s" right=2}} Training Info
+        </LinkTo>
+      </li>
+
+      <li class="nav-item">
+        <LinkTo @route="hq.site-checkin" class="nav-link">
+          {{fa-icon "list-ol" type="fas" right=2}} Site Check In
+        </LinkTo>
+      </li>
+    </ul>
   </div>
 
   {{#if this.person.message}}
@@ -52,7 +87,7 @@
           Account does not have Burner Profile ID on file. Shift sign-ups are disabled.
         </UiNotice>
       {{else if (and this.person.isPNV (not this.userIsMentor))}}
-        <UiNotice @title="Direct to the Hat Rack." @type="danger" @icon="exclamation" >
+        <UiNotice @title="Direct to the Hat Rack." @type="danger" @icon="exclamation">
           {{this.person.callsign}} is {{if this.person.isAlpha "an Alpha" "a Prospective"}}.
           Do not check in this person unless you are acting on the Mentors'
           behalf.
@@ -106,7 +141,8 @@
 
 
 {{#if this.showTicketsAndProvisions}}
-  <ModalDialog @title="Tickets and Provisions Progress" @onEscape={{this.toggleTicketsAndProvisionsProgress}} as |Modal|>
+  <ModalDialog @title="Tickets and Provisions Progress" @onEscape={{this.toggleTicketsAndProvisionsProgress}} as
+               |Modal|>
     <Modal.body>
       <HqTicketsAndProvisions @person={{this.person}} />
     </Modal.body>

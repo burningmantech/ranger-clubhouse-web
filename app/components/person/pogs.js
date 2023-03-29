@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import {service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
-import {POG_MEAL, PogOptions, StatusOptions} from 'clubhouse/models/person-pog';
+import {POG_HALF_MEAL, POG_MEAL, POG_SHOWER, StatusOptions} from 'clubhouse/models/person-pog';
 
 export default class PersonPogsComponent extends Component {
   @service house;
@@ -14,7 +14,11 @@ export default class PersonPogsComponent extends Component {
   @tracked entry;
 
   statusOptions = StatusOptions;
-  pogOptions = PogOptions;
+  pogOptions = [
+    ['Full Meal Pog', POG_MEAL],
+    ['1/2 Meal Pog', POG_HALF_MEAL],
+    ['Shower Pog', POG_SHOWER],
+  ];
 
   @action
   newEntry() {

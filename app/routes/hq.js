@@ -4,6 +4,7 @@ import {NotFoundError} from '@ember-data/adapter/error'
 import {ADMIN, MANAGE} from 'clubhouse/constants/roles';
 import RSVP from 'rsvp';
 import {config} from 'clubhouse/utils/config';
+import {isEmpty} from '@ember/utils';
 
 export default class HqRoute extends ClubhouseRoute {
   roleRequired = [ADMIN, MANAGE];
@@ -30,11 +31,11 @@ export default class HqRoute extends ClubhouseRoute {
       person: this.store.findRecord('person', person_id, {reload: true}),
       personEvent: this.store.findRecord('person-event', `${person_id}-${year}`, {reload: true}),
       eventInfo: this.ajax.request(`person/${person_id}/event-info`, {data: {year}})
-        .then((result) => result.event_info),
+        .then(({event_info}) => event_info),
 
       positions: this.ajax.request(`person/${person_id}/positions`, {
         data: {include_training: 1, year}
-      }).then((results) => results.positions),
+      }).then(({positions}) => positions),
 
       unread_message_count: this.ajax.request(`person/${person_id}/unread-message-count`)
         .then((result) => result.unread_message_count),
@@ -44,6 +45,7 @@ export default class HqRoute extends ClubhouseRoute {
       attachments: this.store.findAll('asset-attachment', {reload: true}),
       timesheetSummary: this.ajax.request(`person/${person_id}/timesheet-summary`, {data: {year}})
         .then((result) => result.summary),
+      photo: this.ajax.request(`person/${person_id}/photo`).then(({photo}) => photo),
     }
 
     if (!this.session.user.onduty_position) {
@@ -60,7 +62,6 @@ export default class HqRoute extends ClubhouseRoute {
 
     person.set('unread_message_count', model.unread_message_count);
     controller.setProperties(model);
-    controller.set('photo', null);
     controller.set('userIsMentor', (onduty?.subtype === 'mentor'));
 
     // Show a warning if the person is a PNV and the user is NOT a mentor.
@@ -71,12 +72,20 @@ export default class HqRoute extends ClubhouseRoute {
 
     controller.set('showNotAllowedToWork', !person.canStartShift);
 
-    // Allow the photo to lazy load.
-    this.ajax.request(`person/${person.id}/photo`)
-      .then((result) => controller.set('photo', result.photo))
-      .catch(() => {
-        controller.set('photo', {status: 'error', message: 'There was a server error.'});
-      })
+    const eventPeriods = {
+      pre: {current: false},
+      event: {current: false},
+      post: {current: false},
+    };
+    // set model so the sub-routes can pick up the data
+    model.eventPeriods = eventPeriods;
+    eventPeriods[model.eventInfo.event_period].current = true;
+    const {meals} = model.eventInfo;
+    if (meals === 'all') {
+      Object.keys(eventPeriods).forEach((key) => eventPeriods[key].hasPass = true);
+    } else if (!isEmpty(meals)) {
+        meals.split('+').forEach((p) => eventPeriods[p].hasPass = true);
+    }
   }
 
   @action
