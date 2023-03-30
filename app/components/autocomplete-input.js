@@ -68,6 +68,18 @@ export default class AutocompleteInputComponent extends Component {
 
   @tracked title;
 
+  @tracked banner;
+  @tracked sectionTitle;
+  @tracked sections;
+  @tracked sectionActive;
+
+  /**
+   * If the section button was clicked -- refocus input after blur
+   * @type {boolean}
+   */
+
+  isRefocusing = false;
+
   get inputClass() {
     return this.args.inputClass || 'form-control autocomplete-input';
   }
@@ -80,7 +92,7 @@ export default class AutocompleteInputComponent extends Component {
 
   get modeText() {
     const mode = this.args.mode;
-    const opt = this.args.modeOptions.find((o) => o.value == mode);
+    const opt = this.args.modeOptions.find((o) => o.value === mode);
 
     return opt ? opt.label : `Unknown ${mode}`;
   }
@@ -100,6 +112,7 @@ export default class AutocompleteInputComponent extends Component {
    *
    * @param {InputEvent} event
    */
+
   @action
   inputEvent(event) {
     const value = event.target.value;
@@ -111,24 +124,17 @@ export default class AutocompleteInputComponent extends Component {
     this._runSearch(this.args.onSearch(value));
   }
 
-  _runSearch(promise) {
-    promise.then((results) => {
-      this.selectionIdx = -1;
-
-      let index = 0;
-      this.items = [];
-      if ('groups' in results) {
-        results.groups.forEach((group) => {
-          group.items.forEach((item) => {
-            item.index = index++;
-            this.items.push(item);
-          })
-        });
-        this.title = results.title;
-        this.options = results.groups;
+  async _runSearch(promise) {
+    try {
+      const results = await promise;
+      const {sections} = results;
+      this.banner = results.banner ?? null;
+      if (sections) {
+        this.sections = sections;
+        this._setupSection(sections[0]);
       } else {
-        this.options = results;
-        this.items = results;
+        this.sections = null;
+        this._setupSection(results);
       }
 
       if (!this.items.length) {
@@ -140,15 +146,53 @@ export default class AutocompleteInputComponent extends Component {
           this._selectOption(this.items[0]);
         }
       }
-    }).catch((response) => {
+    } catch (response) {
       // An undefined response means no search was done
       if (response !== undefined) {
         this.house.handleErrorResponse(response);
       }
-    }).finally(() => {
+    } finally {
       this.isSearching = false;
       this.enterPressed = false;
-    });
+    }
+  }
+
+  @action
+  selectSection(section, event) {
+    event.stopPropagation();
+    this._setupSection(section);
+    this.isRefocusing = true;
+    setTimeout(() =>
+        schedule('afterRender', () => this.inputElement.focus()),
+      250);
+  }
+
+  _setupSection(section) {
+    this.selectionIdx = -1;
+
+    if (this.sectionActive) {
+      this.sectionActive.active = false;
+    }
+
+    section.active = true;
+    this.sectionActive = section;
+    this.sectionTitle = section.sectionTitle ?? null;
+
+    if ('groups' in section) {
+      this.items = [];
+      let index = 0;
+      section.groups.forEach((group) => {
+        group.items.forEach((item) => {
+          item.index = index++;
+          this.items.push(item);
+        })
+      });
+      this.title = section.title;
+      this.options = section.groups;
+    } else {
+      this.items = section;
+      this.options = section;
+    }
   }
 
   /**
@@ -158,10 +202,15 @@ export default class AutocompleteInputComponent extends Component {
 
   @action
   focusEvent(event) {
-    this.isFocused = true;
     this.selectionIdx = -1;
-    this.items = [];
+    this.isFocused = true;
     this.hasSelected = false;
+
+    if (this.isRefocusing) {
+      // Refocusing.. don't rerun the event.
+      this.isRefocusing = false;
+      return;
+    }
 
     // Safari prevent autocomplete hack.
     if (event.target.hasAttribute('autocomplete')) {
@@ -175,6 +224,8 @@ export default class AutocompleteInputComponent extends Component {
     if (this.args.form) {
       this.args.form.preventSubmit = true;
     }
+
+    this.items = [];
 
     if (this.args.onFocus) {
       const promise = this.args.onFocus();
@@ -267,8 +318,19 @@ export default class AutocompleteInputComponent extends Component {
 
   @action
   blurEvent(event) {
-    if (event.target.hasAttribute('autocomplete')) {
-      event.target.setAttribute('readonly', '');
+    setTimeout(() => {
+      schedule('afterRender', () => this._handleBlur(event.target))
+    }, 100);
+    return true;
+  }
+
+  _handleBlur(target) {
+    if (this.isRefocusing) {
+      return;
+    }
+
+    if (target.hasAttribute('autocomplete')) {
+      target.setAttribute('readonly', '');
     }
 
     if (this.args.focusBorder) {
@@ -308,8 +370,26 @@ export default class AutocompleteInputComponent extends Component {
 
   @action
   clickSelection(option, event) {
-    event.stopImmediatePropagation();
+    event.stopPropagation();
     debounce(this, this._selectOption, option, CLICK_DEBOUNCE_MS);
+    return false;
+  }
+
+  /**
+   * Ignore any clicks or mousedown events in an area (the section header)
+   * and setup to refocus the input field.
+   *
+   * @param event
+   * @returns {boolean}
+   */
+
+  @action
+  ignoreClick(event) {
+    event.stopPropagation();
+    this.isRefocusing = true;
+    setTimeout(() =>
+        schedule('afterRender', () => this.inputElement.focus()),
+      250);
     return false;
   }
 
@@ -371,9 +451,7 @@ export default class AutocompleteInputComponent extends Component {
     event.preventDefault();
     const {onModeChange} = this.args;
     closeDropdown();
-    if (onModeChange) {
-      onModeChange(value);
-    }
+    onModeChange?.(value);
   }
 
   /**
@@ -386,11 +464,12 @@ export default class AutocompleteInputComponent extends Component {
   resultsBoxInsertedEvent(element) {
     this.resultsElement = element;
 
-    if (this.args.noAdjustLayout) {
+    if (this.args.renderBelow) {
       return;
     }
+
     schedule('afterRender', () => {
-      element.style.left = `${this.inputElement.offsetLeft}px`;
+      element.style.left = `${this.inputElement.offsetLeft + 15}px`;
       element.style.width = `${this.inputElement.offsetWidth}px`;
     });
   }
