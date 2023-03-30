@@ -1,15 +1,19 @@
 import Component from '@glimmer/component';
-import {action, setProperties} from '@ember/object';
+import {action} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
 import {Role} from 'clubhouse/constants/roles';
-import {AUDITOR, PAST_PROSPECTIVE} from 'clubhouse/constants/person_status';
+import {
+  ACTIVE,
+  ALPHA,
+  INACTIVE, INACTIVE_EXTENSION,
+  NON_RANGER, PROSPECTIVE, SUSPENDED,
+} from 'clubhouse/constants/person_status';
 import {debounce} from '@ember/runloop';
 import {service} from '@ember/service';
 import {inject as controller} from '@ember/controller';
 import {config} from 'clubhouse/utils/config';
 import {isEmpty} from '@ember/utils';
 import RSVP from 'rsvp';
-import _ from 'lodash';
 
 
 /*
@@ -19,21 +23,25 @@ import _ from 'lodash';
 // How often in milliseconds should a search be performed as the user is typing.
 const SEARCH_RATE_MS = 300;
 
-// What fields to search on.
-const SearchFields = ['callsign', 'name', 'fka', 'email'];
-
 const SearchGroupTitles = {
-  'name': 'Real name matches',
-  'callsign': 'Callsign matches',
-  'email': 'Email matches',
-  'old-email': 'Old email matches',
-  'fka': 'FKA Matches',
-  'last': 'Last name matches',
-  'id': 'Person Record #'
+  'callsign': 'callsign',
+  'email': 'email',
+  'fka': 'FKA',
+  'id': 'Person Record #',
+  'last': 'last name',
+  'name': 'real name',
+  'old-email': 'old email',
 };
 
-// Statuses to automatically exclude, unless the user states otherwise
-const ExcludeStatus = [AUDITOR, PAST_PROSPECTIVE];
+const LiveStatuses = [
+  ACTIVE,
+  ALPHA,
+  INACTIVE,
+  INACTIVE_EXTENSION,
+  NON_RANGER,
+  PROSPECTIVE,
+  SUSPENDED,
+].join(',');
 
 // What page to route to based on the search mode selected
 const MODE_ROUTES = {
@@ -44,21 +52,6 @@ const MODE_ROUTES = {
 
 const SEARCH_MODE_KEY = 'search-mode';
 
-class SearchForm {
-  @tracked query = '';
-  @tracked name = true;
-  @tracked callsign = true;
-  @tracked email = true;
-  @tracked formerly_known_as = true
-  @tracked auditor = false;
-  @tracked past_prospective = false;
-  @tracked mode = '';
-
-  constructor(obj) {
-    Object.assign(this, obj);
-  }
-}
-
 export default class SearchItemBarComponent extends Component {
   @service router;
   @service session;
@@ -68,14 +61,15 @@ export default class SearchItemBarComponent extends Component {
   @controller('person') personController;
   @controller('hq') hqController;
 
-  // Call from setCurrentUser in route after user has been authenticated
-  @tracked searchForm = null;
+  @tracked searchMode = 'account';
 
   @tracked showSearchOptions = false;
   @tracked searchText = '';
   @tracked searchResults = [];
   @tracked searchType = 'person';
   @tracked searchPlaceholder = '';
+
+  @tracked noResultsText;
 
   keepDialogOpenAfterTransition = false;
 
@@ -95,18 +89,11 @@ export default class SearchItemBarComponent extends Component {
     }
 
     this.house.setKey(SEARCH_MODE_KEY, mode);
-
-    this.searchForm = new SearchForm({mode});
-
-    const searchPrefs = this.house.getKey('person-search-prefs');
-    if (searchPrefs) {
-      setProperties(this.searchForm, searchPrefs);
-    }
+    this.searchMode = mode;
 
     this.router.on('routeDidChange', this, 'trackRouteTransition');
 
     this._buildPlaceholder();
-
   }
 
   willDestroy() {
@@ -139,7 +126,7 @@ export default class SearchItemBarComponent extends Component {
     const options = [{value: 'account', label: 'Person Manage'}];
 
     if (user.has_hq_window && config('HQWindowInterfaceEnabled')) {
-      options.push({value: 'hq', label: 'HQ Window'});
+      options.unshift({value: 'hq', label: 'HQ Window'});
     }
 
     if (this.session.hasRole([Role.ADMIN, Role.TIMESHEET_MANAGEMENT]) || user.has_hq_window) {
@@ -147,17 +134,6 @@ export default class SearchItemBarComponent extends Component {
     }
 
     return options;
-  }
-
-  /**
-   * Save the search prefs when changed. The local store is used so the prefs persist in case the user
-   * reloads the page.
-   */
-
-  @action
-  searchFormChange() {
-    this.house.setKey('person-search-prefs', this.searchForm);
-    this._buildPlaceholder();
   }
 
   /**
@@ -174,12 +150,11 @@ export default class SearchItemBarComponent extends Component {
 
   @action
   modeChange(mode) {
-    this.searchForm.mode = mode;
+    this.searchMode = mode;
     const route = this.router.currentRouteName;
 
-    this._buildPlaceholder();
-
     this.house.setKey(SEARCH_MODE_KEY, mode);
+    this._buildPlaceholder();
 
     if (!route.startsWith('person.') && !route.startsWith('hq.')) {
       return;
@@ -214,7 +189,7 @@ export default class SearchItemBarComponent extends Component {
         break;
 
       default:
-        this.router.transitionTo((MODE_ROUTES[this.searchForm.mode] || 'person.index'), item.id);
+        this.router.transitionTo((MODE_ROUTES[this.searchMode] ?? 'person.index'), item.id);
         break;
     }
 
@@ -267,14 +242,17 @@ export default class SearchItemBarComponent extends Component {
         // Asset barcode lookup
         type = 'asset'
         break;
+
       case '!':
         // Vehicle search
         type = 'vehicle';
         break;
+
       case '+':
         // Person id lookup
         type = 'person-id';
         break;
+
       default:
         type = 'person';
         break;
@@ -329,6 +307,7 @@ export default class SearchItemBarComponent extends Component {
       const {asset} = await this.ajax.request('asset', {data: {barcode, year}});
       if (!asset.length) {
         // Nothing matched
+        this.noResultsText = `No assets found for the ${year} event.`;
         return resolve([]);
       }
 
@@ -385,6 +364,7 @@ export default class SearchItemBarComponent extends Component {
       });
       if (!vehicle.length) {
         // Nothing matched
+        this.noResultsText = `No vehicles found for the ${event_year} event.`;
         return resolve([]);
       }
 
@@ -439,47 +419,37 @@ export default class SearchItemBarComponent extends Component {
    */
 
   async _searchPerson(query, resolve, reject) {
-    const form = this.searchForm;
+    const isHQSearch = this.searchMode === 'hq';
 
-    const params = {};
+    let params;
 
-    if (form.mode === 'hq') {
+    if (isHQSearch) {
       // restrict search to callsign and a handful of active-like statuses
-      params.search_fields = 'callsign';
-      params.statuses = 'active,alpha,prospective,retired,non ranger,inactive,inactive extension';
+      params = {
+        search_fields: 'callsign',
+        statuses: LiveStatuses
+      };
     } else {
-      // Find out which fields to search
-      const search_fields = [];
-      SearchFields.forEach((field) => {
-        if (form[field]) {
-          search_fields.push(field);
-        }
-      });
-
-      if (search_fields.length > 0) {
-        params.search_fields = search_fields.join(',');
-      }
-
-      // By default, certain status are excluded.
-      // The take a status off the list if the user wants those included
-      const toExclude = ExcludeStatus.slice();
-
-      if (form.auditor) {
-        _.remove(toExclude, (s) => s === AUDITOR);
-      }
-
-      if (form.past_prospective) {
-        _.remove(toExclude, (s) => s === PAST_PROSPECTIVE);
-      }
-
-      if (toExclude.length > 0) {
-        params.exclude_statuses = toExclude.join(',');
-      }
-
       const match = query.match(/^(callsign|name|fka|last)\s*:\s*(.*)$/i);
       if (match) {
-        params.search_fields = match[1];
+        // Search all statuses when a explicit field is given to search, i.e. don't set params.statuses.
+        params = {
+          search_fields: match[1]
+        };
         query = match[2];
+      } else if (query.includes('@')) {
+        if (!this.session.canViewEmail) {
+          this.noResultsText = 'You do not have the permissions to search by email';
+          return resolve([]);
+        }
+        params = {
+          search_fields: 'email'
+        };
+      } else {
+        params = {
+          search_fields: 'callsign,name,fka',
+          status_groups: 1
+        }
       }
     }
 
@@ -489,25 +459,61 @@ export default class SearchItemBarComponent extends Component {
 
     params.query = query;
 
+
     // And fire away!
     try {
       const result = await this.ajax.request('person/search', {data: params});
-      let index = 0;
-      const searchGroups = result.map((group) => {
-        group.people.forEach((person) => person.index = index++);
-        return {
-          isGroup: true,
-          title: SearchGroupTitles[group.field] ?? `Unknown group ${group.field}`,
-          field: group.field,
-          items: group.people
-        };
-      });
-      this.searchResults = searchGroups;
-      return resolve({groups: searchGroups});
+      this.searchResults = result;
+      let searched;
+      if (params.status_groups) {
+        const sections = result.map((group) => ({
+          sectionTitle: group.title,
+          groups: this._buildSearchResults(group.results)
+        }));
+
+        if (sections.length > 1) {
+          searched = {
+            banner: 'Multiple status categories found:',
+            sections
+          };
+
+        } else if (sections.length === 1) {
+          searched = {
+            banner: `Showing results for ${sections[0].sectionTitle} status(es):`,
+            groups: sections[0].groups,
+          }
+        } else {
+          searched = {};
+          this.noResultsText = 'No people were found matching callsign, name, or fka';
+        }
+      } else {
+        searched = {groups: this._buildSearchResults(result)};
+        if (!searched.groups.length) {
+          if (isHQSearch) {
+            this.noResultsText = 'No callsigns matched';
+          } else {
+            this.noResultsText = `No ${params.search_fields} matched`;
+          }
+        }
+      }
+      return resolve(searched);
     } catch (e) {
       this.house.handleErrorResponse(e);
       return reject();
     }
+  }
+
+  _buildSearchResults(result) {
+    let index = 0;
+    return result.map(({people, field}) => {
+      people.forEach((person) => person.index = index++);
+      return {
+        isGroup: true,
+        title: SearchGroupTitles[field] ?? `Unknown group ${field}`,
+        field: field,
+        items: people
+      };
+    })
   }
 
   /**
@@ -542,28 +548,18 @@ export default class SearchItemBarComponent extends Component {
    */
 
   _buildPlaceholder() {
-    const form = this.searchForm;
-
     const fields = [];
 
-    if (form.mode === 'hq') {
+    if (this.searchMode === 'hq') {
       fields.push('callsign');
     } else {
-      if (form.callsign) {
-        fields.push('callsign');
-      }
-
-      if (form.name) {
-        fields.push('name');
-      }
-
-      if (form.email) {
+      fields.push('callsign');
+      fields.push('name');
+      if (this.session.canViewEmail) {
         fields.push('email');
       }
 
-      if (form.formerly_known_as) {
-        fields.push('fka');
-      }
+      fields.push('fka');
     }
 
     fields.push('#barcode');
