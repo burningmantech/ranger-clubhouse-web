@@ -469,7 +469,7 @@ export default class AutocompleteInputComponent extends Component {
     }
 
     schedule('afterRender', () => {
-      element.style.left = `${this.inputElement.offsetLeft + 15}px`;
+      element.style.offsetTop = `${this.inputElement.getBoundingClientRect().top + 15}px`;
       element.style.width = `${this.inputElement.offsetWidth}px`;
     });
   }

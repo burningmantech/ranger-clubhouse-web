@@ -429,6 +429,8 @@ export default class SearchItemBarComponent extends Component {
         search_fields: 'callsign',
         statuses: LiveStatuses
       };
+    } else if (query.startsWith('+')) {
+      params = { search_fields: 'id' };
     } else {
       const match = query.match(/^(callsign|name|fka|last)\s*:\s*(.*)$/i);
       if (match) {

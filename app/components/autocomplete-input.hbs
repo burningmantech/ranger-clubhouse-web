@@ -33,75 +33,74 @@
   </div>
 </div>
 
-{{#if (and this.isFocused (or this.isSearching this.noResultsFound this.options))}}
-  <div class="autocomplete-results-box {{unless @renderBelow "autocomplete-results-box-dropdown"}}"
-    {{did-insert this.resultsBoxInsertedEvent}}
-    {{will-destroy this.resultsBoxDestroy}}
-  >
-    {{!template-lint-disable no-pointer-down-event-binding}}
-    {{!template-lint-disable no-invalid-interactive}}
-    <div class="autocomplete-list"
-      {{on "click" this.ignoreClick}}
-      {{on "mousedown" this.ignoreClick}}
+{{#if this.isFocused}}
+  {{#if (or this.isSearching this.noResultsFound this.options)}}
+    <div class="autocomplete-results-box {{unless @renderBelow "autocomplete-results-box-dropdown"}}"
+      {{did-insert this.resultsBoxInsertedEvent}}
+      {{will-destroy this.resultsBoxDestroy}}
     >
-      {{#if this.noResultsFound}}
-        <div class="autocomplete-no-results">{{this.noResultsText}}</div>
-      {{else if this.isSearching}}
-        <div class="autocomplete-searching">
-          Searching
-          <SpinIcon/>
-        </div>
-      {{else}}
-        {{#if this.banner}}
-          <div class="small mb-1 mx-2">{{this.banner}}</div>
-        {{/if}}
-        {{#if this.sections}}
-          <div class="mx-2 mb-2">
-            {{#each this.sections as |s|}}
-              <button type="button"
-                      class="btn btn-sm mb-1 me-1 {{if (eq this.sectionActive s) "btn-success" "btn-light-gray"}}"
-                {{on "click" (fn this.selectSection s)}}>
-                {{s.sectionTitle}}
-              </button>
-            {{/each}}
+      {{!template-lint-disable no-pointer-down-event-binding}}
+      {{!template-lint-disable no-invalid-interactive}}
+      <div class="autocomplete-list"
+        {{on "click" this.ignoreClick}}
+        {{on "mousedown" this.ignoreClick}}
+      >
+        {{#if this.noResultsFound}}
+          <div class="autocomplete-no-results">{{this.noResultsText}}</div>
+        {{else if this.isSearching}}
+          <div class="autocomplete-info">
+            Searching
+            <SpinIcon/>
           </div>
-        {{/if}}
-      {{/if}}
-      {{#if (and this.options this.title)}}
-        <div class="autocomplete-title">
-          {{this.title}}
-        </div>
-      {{/if}}
-      {{#each this.options as |opt idx|}}
-        {{#if opt.isGroup}}
-          <div class="autocomplete-group-header">{{opt.title}}</div>
-          {{#each opt.items as |item|}}
-            <div class="autocomplete-item {{if (eq item.index this.selectionIdx) "autocomplete-option-selected"}}"
-                 data-result-id={{item.index}}
-                 role="link"
-              {{on "click" (fn this.clickSelection item)}}
-              {{!template-lint-disable no-pointer-down-event-binding}}
-              {{on "mousedown" (fn this.clickSelection item)}}
-            >
-              {{yield item opt}}
-            </div>
-          {{/each}}
         {{else}}
-          <div class="autocomplete-item {{if (eq idx this.selectionIdx) "autocomplete-option-selected"}}"
-               data-result-id={{idx}}
-               role="link"
-            {{on "click" (fn this.clickSelection opt)}}
-            {{!template-lint-disable no-pointer-down-event-binding}}
-            {{on "mousedown" (fn this.clickSelection opt)}}
-          >
-            {{yield opt}}
+          {{#if this.banner}}
+            <div class="small mb-1 mx-2">{{this.banner}}</div>
+          {{/if}}
+          {{#if this.sections}}
+            <div class="mx-2 mb-2">
+              {{#each this.sections as |s|}}
+                <button type="button"
+                        class="btn btn-sm mb-1 me-1 {{if (eq this.sectionActive s) "btn-success" "btn-light-gray"}}"
+                  {{on "click" (fn this.selectSection s)}}>
+                  {{s.sectionTitle}}
+                </button>
+              {{/each}}
+            </div>
+          {{/if}}
+        {{/if}}
+        {{#if (and this.options this.title)}}
+          <div class="autocomplete-title">
+            {{this.title}}
           </div>
         {{/if}}
-      {{else}}
-        {{#if (and (not this.noResultsFound) (not this.isSearching))}}
-          <div class="text-muted">Start typing to search</div>
-        {{/if}}
-      {{/each}}
+        {{#each this.options as |opt idx|}}
+          {{#if opt.isGroup}}
+            <div class="autocomplete-group-header">{{opt.title}}</div>
+            {{#each opt.items as |item|}}
+              <div class="autocomplete-item {{if (eq item.index this.selectionIdx) "autocomplete-option-selected"}}"
+                   data-result-id={{item.index}}
+                   role="link"
+                {{on "click" (fn this.clickSelection item)}}
+                {{!template-lint-disable no-pointer-down-event-binding}}
+                {{on "mousedown" (fn this.clickSelection item)}}
+              >
+                {{yield item opt}}
+              </div>
+            {{/each}}
+          {{else}}
+            <div class="autocomplete-item {{if (eq idx this.selectionIdx) "autocomplete-option-selected"}}"
+                 data-result-id={{idx}}
+                 role="link"
+              {{on "click" (fn this.clickSelection opt)}}
+              {{!template-lint-disable no-pointer-down-event-binding}}
+              {{on "mousedown" (fn this.clickSelection opt)}}
+            >
+              {{yield opt}}
+            </div>
+          {{/if}}
+        {{else}}
+        {{/each}}
+      </div>
     </div>
-  </div>
+  {{/if}}
 {{/if}}
