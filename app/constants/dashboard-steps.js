@@ -659,11 +659,11 @@ export const TICKETING_OPEN = {
 
     const tickets = buildTickets(milestones, person.id, house);
 
-    if (tickets.qualifiedCount) {
+    if (tickets.qualifiedCount || tickets.noAddress || tickets.notFinished) {
       return {
         result: ACTION_NEEDED,
         route: 'me.tickets',
-        immediate: (tickets.qualifiedCount || tickets.noAddress || tickets.notFinished),
+        immediate: true,
         isTicketing: true,
         ticketingOpen: true,
         tickets
