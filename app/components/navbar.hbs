@@ -45,11 +45,11 @@
         {{/if}}
 
         <NavbarAreaMe @nav={{nav}} @user={{this.user}} />
-        {{#if this.user.teacher.is_trainer}}
+        {{#if (has-role "trainer")}}
           <NavbarAreaTraining @nav={{nav}} />
         {{/if}}
 
-        {{#if this.user.teacher.is_art_trainer}}
+        {{#if (has-role "art-trainer")}}
           <NavbarAreaArts @nav={{nav}} @user={{this.user}} />
         {{/if}}
 
