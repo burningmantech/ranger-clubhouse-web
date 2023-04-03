@@ -42,7 +42,7 @@
     "blueimp-load-image": "^5.16.0",
     "bootstrap": "^5.2.3",
     "broccoli-asset-rev": "^3.0.0",
-    "concurrently": "^7.6.0",
+    "concurrently": "^8.0.1",
     "cropperjs": "^1.5.13",
     "dayjs": "^1.11.7",
     "double-metaphone": "^2.0.1",
