@@ -1,7 +1,4 @@
-# Docs:
-# https://help.github.com/en/articles/about-github-actions
-# https://help.github.com/en/articles/configuring-a-workflow
-# https://help.github.com/en/articles/workflow-syntax-for-github-actions
+# Docs: https://docs.github.com/en/actions
 
 
 name: CI/CD
@@ -24,6 +21,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            api.github.com:443
             github.com:443
             registry.npmjs.org:443
 
@@ -54,6 +52,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            api.github.com:443
             github.com:443
             registry.npmjs.org:443
 
@@ -86,6 +85,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            api.github.com:443
             auth.docker.io:443
             github.com:443
             production.cloudflare.docker.com:443
@@ -136,6 +136,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            api.github.com:443
             github.com:443
 
       - name: Checkout source code
