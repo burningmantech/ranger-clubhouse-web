@@ -283,7 +283,7 @@ export default class TrainingSessionController extends ClubhouseController {
     this.trainers.forEach((type) => {
       type.trainers.forEach((trainer) => {
         trainers.push({
-          id: trainer.id,
+          person_id: trainer.id,
           status: trainer.status,
           trainer_slot_id: trainer.trainer_slot_id,
           is_lead: trainer.is_lead ? 1 : 0,
