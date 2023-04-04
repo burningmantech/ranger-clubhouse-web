@@ -1,4 +1,9 @@
-<YearSelect @title="Timesheet Unconfirmed Report" @year={{this.year}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="Timesheet Unconfirmed Report"
+            @year={{this.year}}
+            @onChange={{action (mut this.year)}}
+            @minYear={{2018}}
+            @skipPandemic={{true}}
+/>
 <p>
   The report will show people who have not confirmed their timesheets as correct (i.e. have not checked the "I have
   reviewed and verified" checkbox on "My Timesheet Corrections")

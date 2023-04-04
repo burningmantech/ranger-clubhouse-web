@@ -1,4 +1,9 @@
-<YearSelect @title="Timesheet Corrections Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<YearSelect @title="Timesheet Corrections Report"
+            @year={{this.year}}
+            @onChange={{action (mut this.year)}}
+            @minYear={{2018}}
+            @skipPandemic={{true}}
+/>
 
 <FormRow>
     <FormLabel>Filter requests by callsigns starting with</FormLabel>
