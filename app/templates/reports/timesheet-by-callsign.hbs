@@ -1,4 +1,9 @@
-<YearSelect @title="Timesheet By Callsign" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<YearSelect @title="Timesheet By Callsign"
+            @year={{this.year}}
+            @onChange={{action (mut this.year)}}
+            @minYear={{2008}}
+            @skipPandemic={{true}}
+/>
 
 <p>
   Jump to callsigns starting with the letter:<br>

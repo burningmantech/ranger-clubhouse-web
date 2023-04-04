@@ -1,4 +1,9 @@
-<YearSelect @title="Timesheet By Position" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<YearSelect @title="Timesheet By Position"
+            @year={{this.year}}
+            @onChange={{action (mut this.year)}}
+            @minYear={{2008}}
+            @skipPandemic={{true}}
+/>
 <p>
   Showing {{pluralize this.positions.length "position"}}
 </p>
