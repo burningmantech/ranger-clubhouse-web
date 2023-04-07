@@ -1,5 +1,9 @@
 <main>
-  <YearSelect @title="Hours And Credits Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+  <YearSelect @title="Hours And Credits Report"
+              @year={{this.year}}
+              @minYear={{2008}}
+              @skipPandemic={{true}}
+              @onChange={{action (mut this.year)}}  />
   <p>
     The report shows Rangers show the total hours (counted positions only) and credits worked for a given year. Alpha,
     Auditors, Bonked, Prospective, and Past Prospectives are not included.
@@ -57,7 +61,7 @@
   {{else}}
     <p class="text-danger">
       <b>No Event Dates have been set for {{this.year}}. Hours and credits report cannot be run
-      until the event dates are set.</b>
+        until the event dates are set.</b>
     </p>
   {{/if}}
 </main>

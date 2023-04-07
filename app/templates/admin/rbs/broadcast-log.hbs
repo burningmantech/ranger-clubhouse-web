@@ -1,4 +1,6 @@
-<YearSelect @title={{if this.failed "Ranger Failed Broadcast Log" "Ranger Broadcast Log"}} @year={{this.year}}
+<YearSelect @title={{if this.failed "Ranger Failed Broadcast Log" "Ranger Broadcast Log"}}
+            @year={{this.year}}
+            @minYear={{2018}}
             @onChange={{action (mut this.year)}} />
 <p>
   <LinkTo @route="admin.rbs">Back to RBS</LinkTo>
@@ -22,7 +24,9 @@
     <tr class="{{if (or log.sms_failed log.email_failed) "bg-highlight"}}">
       <td>{{log.id}}</td>
       <td>{{log.created_at}}</td>
-      <td><PersonLink @person={{log.sender}} /></td>
+      <td>
+        <PersonLink @person={{log.sender}} />
+      </td>
       <td>{{if log.alert.on_playa "On Playa" "Pre-Event"}}: {{log.alert.title}}</td>
       <td class="text-end">{{log.people.length}}</td>
       <td>

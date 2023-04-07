@@ -1,5 +1,9 @@
 <div class="d-print-none">
-  <YearSelect @title="Shift Lead Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+  <YearSelect @title="Shift Lead Report"
+              @year={{this.year}}
+              @minYear={{2010}}
+              @skipPandemic={{true}}
+              @onChange={{action (mut this.year)}}  />
 </div>
 {{#if this.dirtShiftTimes}}
   <PrintInstruction/>

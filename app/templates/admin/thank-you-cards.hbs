@@ -1,5 +1,9 @@
 <main>
-  <YearSelect @title="Thank You Cards" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+  <YearSelect @title="Thank You Cards"
+              @year={{this.year}}
+              @minYear={{2008}}
+              @skipPandemic={{true}}
+              @onChange={{action (mut this.year)}}  />
 
   {{#unless this.passwordOkay}}
     <FormRow>

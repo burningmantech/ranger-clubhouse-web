@@ -1,4 +1,8 @@
-<YearSelect @title="Shift Coverage Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<YearSelect @title="Shift Coverage Report"
+            @year={{this.year}}
+            @minYear={{2008}}
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}}  />
 
 <FormRow>
   <FormLabel @auto={{true}}>Shift Type</FormLabel>

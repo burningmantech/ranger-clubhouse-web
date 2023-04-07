@@ -1,4 +1,8 @@
-<YearSelect @title="Survey Administration" @year={{this.year}} @minYear={{2012}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="Survey Administration"
+            @year={{this.year}}
+            @minYear={{2012}}
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}} />
 <p>
   <UiButton @onClick={{this.newSurveyAction}}>New Survey</UiButton>
 </p>
@@ -20,7 +24,7 @@ Showing {{pluralize this.surveys.length "survey"}}
       <td>{{survey.type}}</td>
       <td>
         {{#if survey.position_id}}
-          <PresentOrNot @value={{get this.positionsById survey.position_id}} @empty="Unknown #{{survey.position_id}}" />
+          <PresentOrNot @value={{get this.positionsById survey.position_id}} @empty="Unknown #{{survey.position_id}}"/>
         {{else}}
           -
         {{/if}}

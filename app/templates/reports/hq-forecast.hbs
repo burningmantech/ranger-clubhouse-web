@@ -1,8 +1,8 @@
-<YearSelect @title="HQ Window Check In/Out Forecast Report" @year={{this.year}} @onChange={{action (mut this.year)}} />
-
-<p>
-  <a href="#burn-perimeters">Jump to Burn Perimeters</a>
-</p>
+<YearSelect @title="HQ Window Check In/Out Forecast Report"
+            @year={{this.year}}
+            @minYear={{2008}}
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}} />
 
 <FormRow>
   <FormLabel @auto={{true}}>Interval</FormLabel>
@@ -28,19 +28,24 @@
 <p>
   <UiButton @onClick={{this.exportToCsv}}>Export to CSV</UiButton>
 </p>
-{{#if this.viewVisits}}
-  <HqVisitsTable @visits={{this.viewVisits}}
-                 @title="All Shifts (excluding Training, Trainer, TiT, Uber & Burn Perimeter)"
-                 @interval={{this.interval}} />
-{{else if this.visits}}
-  <p class="text-danger font-weight-bold">No shifts were found based on the filtering criteria</p>
-{{else}}
-  <p class="text-danger font-weight-bold">No HQ Window shifts found for {{this.year}}</p>
-{{/if}}
+<UiTab as |tab|>
+  <tab.pane @id="visits" @title="{{this.year}} All Shifts">
+    {{#if this.viewVisits}}
+      <HqVisitsTable @visits={{this.viewVisits}}
+                     @title="All Shifts (excluding Training, Trainer, TiT, Uber & Burn Perimeter)"
+                     @interval={{this.interval}} />
+    {{else if this.visits}}
+      <p class="text-danger font-weight-bold">No shifts were found based on the filtering criteria</p>
+    {{else}}
+      <p class="text-danger font-weight-bold">No HQ Window shifts found for {{this.year}}</p>
+    {{/if}}
+  </tab.pane>
+  <tab.pane @id="burn-perimeters" @title="{{this.year}} Burn Perimeters">
+    {{#each this.burns as |burn|}}
+      <HqVisitsTable @visits={{burn.visits}} @title={{join " / " burn.descriptions}} @interval={{this.interval}} />
+    {{else}}
+      <p class="text-danger fw-bold">No Burn Perimeter shifts found for {{this.year}}</p>
+    {{/each}}
+  </tab.pane>
+</UiTab>
 
-<h1 id="burn-perimeters">{{this.year}} Burn Perimeters</h1>
-{{#each this.burns as |burn|}}
-  <HqVisitsTable @visits={{burn.visits}} @title={{join " / " burn.descriptions}} @interval={{this.interval}} />
-{{else}}
-  <p class="text-danger font-weight-bold">No Burn Perimeter shifts found for {{this.year}}</p>
-{{/each}}

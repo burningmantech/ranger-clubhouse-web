@@ -1,4 +1,9 @@
-<YearSelect @title="Vehicle Registry" @year={{this.year}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="Vehicle Registry"
+            @year={{this.year}}
+            @minYear={{2019}}
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}}
+/>
 <div class="row">
   <FormLabel @auto={{true}}>Filter by Status</FormLabel>
   <div class="col-sm-12 col-xl-auto">

@@ -1,5 +1,9 @@
 <main>
-  <YearSelect @title="Position Credits" @year={{this.year}} @onChange={{action (mut this.year)}} />
+  <YearSelect @title="Position Credits"
+              @year={{this.year}}
+              @minYear={{2012}}
+              @skipPandemic={{true}}
+              @onChange={{action (mut this.year)}} />
 
   <FormRow>
     <FormLabel @auto={{true}}>Day Filter</FormLabel>

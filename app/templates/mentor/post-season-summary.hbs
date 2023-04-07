@@ -1,4 +1,8 @@
-<YearSelect @title="Post Season Summary" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<YearSelect @title="Post Season Summary"
+            @year={{this.year}}
+            @minYear={{2008}}
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}}  />
 <FormRow @class="my-2">
   <FormLabel @auto={{true}}>Filter</FormLabel>
   <div class="col-auto">

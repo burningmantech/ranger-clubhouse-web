@@ -1,4 +1,8 @@
-<YearSelect @title="Schedule By Callsign" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<YearSelect @title="Schedule By Callsign"
+            @year={{this.year}}
+            @minYear={{2008}}
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}}  />
 <p>
   Jump to the callsigns starting with the letter:
 </p>
@@ -41,7 +45,9 @@
               <tr>
                 <td>{{shift-format slot.begins}}</td>
                 <td>{{shift-format slot.ends}}</td>
-                <td><PresentOrNot @value={{slot.description}} @empty="-"/></td>
+                <td>
+                  <PresentOrNot @value={{slot.description}} @empty="-"/>
+                </td>
                 <td>{{position-label slot.position}}</td>
               </tr>
             {{/each}}

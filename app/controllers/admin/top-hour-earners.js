@@ -17,7 +17,9 @@ export default class AdminRangerRetentionController extends ClubhouseController 
   get yearOptions() {
     const years = [];
     for (let year = 2010; year <= this.house.currentYear(); year++) {
-      years.push(year);
+      if (year !== 2020 && year !== 2021) {
+        years.push(year);
+      }
     }
     years.reverse();
     return years;
@@ -26,7 +28,7 @@ export default class AdminRangerRetentionController extends ClubhouseController 
   @cached
   get yearRange() {
     const years = [];
-    for (let year = this.startYear; year <= this.endYear; year++){
+    for (let year = this.startYear; year <= this.endYear; year++) {
       years.push(year);
     }
 
@@ -75,7 +77,7 @@ export default class AdminRangerRetentionController extends ClubhouseController 
       {title: 'Top Year', key: 'top_year'},
     ];
 
-    this.yearRange.forEach((year) => CSV_COLUMNS.push({ title: year, key: `year_${year}`}));
+    this.yearRange.forEach((year) => CSV_COLUMNS.push({title: year, key: `year_${year}`}));
     this.topEarners.forEach((person) => {
       person.name = `${person.first_name} ${person.last_name}`;
       person.top_hour = (+person.top_duration / 3600.0).toFixed(2);

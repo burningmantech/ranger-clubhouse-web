@@ -1,5 +1,7 @@
 <main>
-  <YearSelect @title="Clubhouse Slots" @year={{this.year}} @years={{this.yearList}}
+  <YearSelect @title="Clubhouse Slots"
+              @year={{this.year}}
+              @years={{this.yearList}}
               @onChange={{action (mut this.year)}} />
 
   <FormRow>
@@ -32,10 +34,8 @@
       {{shift-format this.eventDate.pre_event_slot_end}}
     </p>
   {{else}}
-    <UiNotice @title="{{this.year}} pre-event slot dates are not set" @type="danger">
-      Pre-Event slots may not be properly vetted. Visit
-      <LinkTo @route="admin.event-dates">Admin &gt; Edit Event Dates</LinkTo>
-      to set the dates.
+    <UiNotice @title="{{this.year}} pre-event slot dates are not setup" @type="danger">
+      Pre-Event slots may not be properly vetted. Contact the Tech Team to set the Event Date records.
     </UiNotice>
   {{/if}}
 
