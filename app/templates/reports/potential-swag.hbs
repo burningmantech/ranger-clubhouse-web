@@ -1,5 +1,9 @@
 <div class="d-print-none">
-  <YearSelect @title="Potential Swag Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+  <YearSelect @title="Potential Swag Report"
+              @year={{this.year}}
+              @minYear={{2010}}
+              @skipPandemic={{true}}
+              @onChange={{action (mut this.year)}}  />
   <p>
     The report is used to help build service pins, service patches, and toaster pins orders for the upcoming event.
   </p>

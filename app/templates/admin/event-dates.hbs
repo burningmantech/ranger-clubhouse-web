@@ -1,12 +1,18 @@
 <main>
   <h1>Edit Event Dates</h1>
   <p>
-    The event dates/times are used Hours &amp; Credits report to determine which credit
-    hours should be included and used to restrict slot creation in the pre-event period.
+    The event date/time records are used Hours &amp; Credits report to determine which credit
+    hours should be included, used to restrict non-training slot creation in the pre-event period, and
+    to determine.
   </p>
   <p>
-    <UiButton @onClick={{this.newRecord}}>New Event Date</UiButton>
+    Contact the Tech Team to adjust the records.
   </p>
+  {{#if this.canEditRecords}}
+    <p>
+      <UiButton @onClick={{this.newRecord}}>New Event Date</UiButton>
+    </p>
+  {{/if}}
 
   {{pluralize this.eventDates.length "event date"}}
   <table class="table table-sm table-striped table-width-auto">
@@ -34,9 +40,13 @@
         <td>{{shift-format ed.pre_event_slot_start}}</td>
         <td>{{shift-format ed.pre_event_slot_end}}</td>
         <td>
-          <UiButton @size="sm" @onClick={{fn this.edit ed}}>
-            {{fa-icon "edit"}}Edit
-          </UiButton>
+          {{#if this.canEditRecords}}
+            <UiButton @size="sm" @onClick={{fn this.edit ed}}>
+              {{fa-icon "edit"}}Edit
+            </UiButton>
+          {{else}}
+            -
+          {{/if}}
         </td>
       </tr>
     {{/each}}

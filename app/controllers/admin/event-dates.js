@@ -4,6 +4,7 @@ import {tracked} from '@glimmer/tracking';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 import dayjs from 'dayjs';
+import {TECH_NINJA} from "clubhouse/constants/roles";
 
 export default class AdminEventDatesController extends ClubhouseController {
   eventDateValidations = {
@@ -18,6 +19,10 @@ export default class AdminEventDatesController extends ClubhouseController {
   };
 
   @tracked entry;
+
+  get canEditRecords() {
+    return this.session.hasRole(TECH_NINJA);
+  }
 
   @action
   save(model, isValid) {

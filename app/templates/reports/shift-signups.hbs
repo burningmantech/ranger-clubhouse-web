@@ -1,4 +1,8 @@
-<YearSelect @title="Shift Signups Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<YearSelect @title="Shift Signups Report"
+            @year={{this.year}}
+            @minYear={{2008}}
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}}  />
 <p>
   The report shows all active shifts available in the Clubhouse for a given year. A shift will be highlighted
   in red if no one has signed up, or highlighted in yellow if the shift is less than 20% full.

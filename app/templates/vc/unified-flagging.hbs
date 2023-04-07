@@ -1,5 +1,10 @@
 <main>
-  <YearSelect @title="Unified Flagging" @year={{this.year}} @onChange={{action (mut this.year)}} />
+  <YearSelect @title="Unified Flagging"
+              @year={{this.year}}
+              @onChange={{action (mut this.year)}}
+              @minYear={{2010}}
+              @skipPandemic={{true}}
+  />
 
   <UnifiedFlagging @people={{this.people}} @year={{this.year}} />
 </main>

@@ -24,7 +24,7 @@ export default class AdminSalesforceController extends ClubhouseController {
     'succeeded': {label: 'Successfully imported into Clubhouse', icon: 'check', color: 'success'},
     'existing': {label: 'Will convert to Prospective and update from Salesforce', icon: 'thumbs-up'},
     'existing-claim-callsign': {
-      label: 'Will import and recycle callsign from non-vintage retired / resigned account',
+      label: 'Will import and recycle callsign from non-vintage retired, resigned, and/or deceased accounts',
       icon: 'thumbs-up'
     },
     'invalid': {label: 'Invalid record status, Will not import', icon: 'ban', color: 'danger'},

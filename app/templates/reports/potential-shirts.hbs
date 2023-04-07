@@ -1,5 +1,9 @@
 <div class="d-print-none">
-  <YearSelect @title="Potential Shirt Report" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+  <YearSelect @title="Potential Shirt Report"
+              @year={{this.year}}
+              @minYear={{2010}}
+              @skipPandemic={{true}}
+              @onChange={{action (mut this.year)}}  />
   <p>
     The report shows people who may potentialy earn a short and long sleeve shirts for a given event year.
   </p>

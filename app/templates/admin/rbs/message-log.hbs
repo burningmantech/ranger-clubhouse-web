@@ -1,4 +1,7 @@
-<YearSelect @title="RBS Message Log" @year={{this.year}} @onChange={{this.changeYearAction}} />
+<YearSelect @title="RBS Message Log"
+            @year={{this.year}}
+            @minYear={{2018}}
+            @onChange={{this.changeYearAction}} />
 <p>
   <LinkTo @route="admin.rbs">Back to RBS</LinkTo>
 </p>
