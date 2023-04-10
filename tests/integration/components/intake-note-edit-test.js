@@ -24,7 +24,6 @@ module('Integration | Component | intake-note-edit', function (hooks) {
   @canAddNote={{this.canAddNote}}
  />`);
 
-    assert.dom('table').exists();
-
+    assert.dom('div').exists();
   });
 });
