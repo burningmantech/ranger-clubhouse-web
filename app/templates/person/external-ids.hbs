@@ -29,6 +29,14 @@
     />
   </FormRow>
 
+  <FormRow class="mb-4">
+    <f.text @name="employee_id"
+            @label="Paycom Employee ID"
+            @size={{10}}
+            @maxlength={{10}}
+    />
+  </FormRow>
+
   <f.submit @label="Update"/>
   {{#if this.person.isSaving}}
     <LoadingIndicator/>

@@ -11,7 +11,7 @@
             &mdash; {{note.note}}
             {{#if this.canAddNote}}
               <p>
-                <UiButton @size="sm" @onClick={{fn this.updateNoteAction note}}>Update</UiButton>
+                <UiButton @size="sm" @onClick={{fn this.updateNoteAction note}} class="me-2">Update</UiButton>
                 <UiButton @type="light-red" @size="sm" @onClick={{fn this.deleteNoteAction note}}>Delete</UiButton>
               </p>
             {{/if}}

@@ -31,12 +31,12 @@
     </s.group>
   {{/if}}
 
-  {{#if (has-role "admin" "vc" "intake")}}
+  {{#if (has-role "admin" "vc" "intake" "regional")}}
     <s.group @title="Vol Coords">
       {{#if (has-role "admin" "vc")}}
         <s.link @route="person.dashboard" @title="Dashboard" @icon="columns" @iconType="s"/>
       {{/if}}
-      {{#if (has-role "intake")}}
+      {{#if (has-role "intake" "regional")}}
         <s.link @route="person.unified-flagging" @title="Unified Flagging" @icon="flag"/>
       {{/if}}
       {{#if (has-role "admin")}}

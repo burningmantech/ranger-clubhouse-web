@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {ADMIN, INTAKE, MENTOR, VC} from 'clubhouse/constants/roles';
+import {ADMIN, INTAKE, MENTOR, REGIONAL_MANAGEMENT, VC} from 'clubhouse/constants/roles';
 import {service} from '@ember/service';
 
 export default class IntakeNotesComponent extends Component {
@@ -37,6 +37,9 @@ export default class IntakeNotesComponent extends Component {
         break;
       case 'personnel':
         role = ADMIN;
+        break;
+      case 'rrn':
+        role = REGIONAL_MANAGEMENT;
         break;
       default:
         role = INTAKE;

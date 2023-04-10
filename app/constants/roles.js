@@ -22,6 +22,10 @@ export const EDIT_ASSETS = 111;    // Person can create and edit asset records
 export const EDIT_SWAG = 112;      // Person can create and edit swag records
 export const CAN_FORCE_SHIFT = 113; // Person can force a shift check in
 
+export const REGIONAL_MANAGEMENT = 114;    // Person can access Regional Ranger liaison features.
+export const PAYROLL = 115;                // Can access payroll features
+export const VEHICLE_MANAGEMENT = 115;     // Can access vehicle fleet management features
+
 export const Role = {
   ADMIN,
   ART_TRAINER,
@@ -38,12 +42,15 @@ export const Role = {
   MANAGE_ON_PLAYA,
   MEGAPHONE,
   MENTOR,
+  REGIONAL_MANAGEMENT,
+  PAYROLL,
   SURVEY_MANAGEMENT,
   TECH_NINJA,
   TIMESHEET_MANAGEMENT,
   TRAINER,
   TRAINER_SEASONAL,
   VC,
+  VEHICLE_MANAGEMENT,
   VIEW_EMAIL,
   VIEW_PII,
 };
@@ -63,12 +70,15 @@ export const RoleToString = {
   [MANAGE_ON_PLAYA]: 'manage-on-playa',
   [MEGAPHONE]: 'megaphone',
   [MENTOR]: 'mentor',
+  [PAYROLL]: 'payroll',
+  [REGIONAL_MANAGEMENT]: 'regional',
   [TECH_NINJA]: 'tech-ninja',
   [TIMESHEET_MANAGEMENT]: 'timesheet-management',
   [TRAINER]: 'trainer',
   [TRAINER_SEASONAL]: 'trainer-seasonal',
   [SURVEY_MANAGEMENT]: 'survey-management',
   [VC]: 'vc',
+  [VEHICLE_MANAGEMENT]: 'vehicle',
   [VIEW_EMAIL]: 'view-email',
   [VIEW_PII]: 'view-pii',
 };
