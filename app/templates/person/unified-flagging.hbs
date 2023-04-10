@@ -13,6 +13,12 @@
     <UiSection>
       <:title>Team Notes &amp; Rank/Flags</:title>
       <:body>
+        {{#if this.isRegionalMgmt}}
+          <p>
+            You only have the Regional Management permission. Only your Regional Ranger Network flagging notes will be
+            visible.
+          </p>
+        {{/if}}
         <table class="table table-striped table-hover table-sm">
           <thead>
           <tr>
@@ -21,17 +27,19 @@
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <td class="w-5">
-              Personnel
-            </td>
-            <td class="w-90">
-              <IntakeNotes @type="personnel"
-                           @person={{this.history}}
-                           @viewYear={{this.year}}
-                           @onSubmit={{this.noteSubmitted}} />
-            </td>
-          </tr>
+          {{#unless this.isRegionalMgmt}}
+            <tr>
+              <td class="w-5">
+                Personnel
+              </td>
+              <td class="w-90">
+                <IntakeNotes @type="personnel"
+                             @person={{this.history}}
+                             @viewYear={{this.year}}
+                             @onSubmit={{this.noteSubmitted}} />
+              </td>
+            </tr>
+          {{/unless}}
           <tr>
             <td class="w-5">
               RRN
@@ -43,36 +51,38 @@
                            @onSubmit={{this.noteSubmitted}} />
             </td>
           </tr>
-          <tr>
-            <td class="w-5">
-              VCs
-            </td>
-            <td>
-              <IntakeNotes @type="vc"
-                           @person={{this.history}}
-                           @viewYear={{this.year}}
-                           @onSubmit={{this.noteSubmitted}} />
-            </td>
-          </tr>
-          <tr>
-            <td class="w-5">
-              Training
-            </td>
-            <td>
-              <IntakeTraining @trainings={{this.history.trainings}} @person={{this.person}} />
-            </td>
-          </tr>
-          <tr>
-            <td class="w-5">
-              Mentors
-            </td>
-            <td>
-              <IntakeNotes @type="mentor"
-                           @person={{this.history}}
-                           @viewYear={{this.year}}
-                           @onSubmit={{this.noteSubmitted}} />
-            </td>
-          </tr>
+          {{#unless this.isRegionalMgmt}}
+            <tr>
+              <td class="w-5">
+                VCs
+              </td>
+              <td>
+                <IntakeNotes @type="vc"
+                             @person={{this.history}}
+                             @viewYear={{this.year}}
+                             @onSubmit={{this.noteSubmitted}} />
+              </td>
+            </tr>
+            <tr>
+              <td class="w-5">
+                Training
+              </td>
+              <td>
+                <IntakeTraining @trainings={{this.history.trainings}} @person={{this.person}} />
+              </td>
+            </tr>
+            <tr>
+              <td class="w-5">
+                Mentors
+              </td>
+              <td>
+                <IntakeNotes @type="mentor"
+                             @person={{this.history}}
+                             @viewYear={{this.year}}
+                             @onSubmit={{this.noteSubmitted}} />
+              </td>
+            </tr>
+          {{/unless}}
           </tbody>
         </table>
       </:body>
@@ -168,4 +178,4 @@
       </:body>
     </UiSection>
   </tab.pane>
- </UiTab>
+</UiTab>

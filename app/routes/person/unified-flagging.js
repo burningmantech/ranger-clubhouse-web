@@ -1,8 +1,8 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {INTAKE} from 'clubhouse/constants/roles';
+import {INTAKE, REGIONAL_MANAGEMENT} from 'clubhouse/constants/roles';
 
 export default class PersonUnifiedFlaggingRoute extends ClubhouseRoute {
-  roleRequired = INTAKE;
+  roleRequired = [ INTAKE, REGIONAL_MANAGEMENT ];
 
   model() {
     const year = this.house.currentYear();

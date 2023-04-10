@@ -1,44 +1,30 @@
 <ModalDialog @title="Add note for {{@person.callsign}}" @size="xl" @onEscape={{@closeNoteAction}} as |Modal|>
   <Modal.body>
     {{#each @teamNotes as |intake|}}
-      <table class="table table-striped table-sm">
-        <caption>Year {{intake.year}}
-          <IntakeRanking @rank={{intake.rank}} />
-        </caption>
-        <thead>
-        <tr>
-          <th class="w-20">Timestamp</th>
-          <th class="w-15">Person</th>
-          <th class="w-65">Note</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each intake.notes as |note|}}
-          <tr>
-            <td class="w-20">{{note.created_at}}</td>
-            <td class="w-15">
-              {{#if note.person_source}}
-                {{note.person_source.callsign}}
-              {{else}}
-                <i>* imported *</i>
-              {{/if}}
-            </td>
-            <td class="w-65">
-              {{nl2br note.note}}
-            </td>
-          </tr>
-        {{else}}
-          <tr>
-            <td colspan="3">No {{@viewYear}} {{uppercase @type}} notes are present.</td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
+      <h4 class="p-2 bg-light-gray">
+        Year {{intake.year}}
+        <IntakeRanking @rank={{intake.rank}} />
+      </h4>
+      {{#each intake.notes as |note idx|}}
+        <div class="p-2 {{if (mod idx 2) "tr-stripped"}}">
+          {{note.created_at}} (Pacific)
+          {{#if note.person_source}}
+            written by {{note.person_source.callsign}}
+          {{else}}
+            <i>* imported *</i>
+          {{/if}}
+          <br>
+          {{nl2br note.note}}
+        </div>
+      {{else}}
+        <i>No {{@viewYear}} {{uppercase @type}} notes are present.</i>
+      {{/each}}
     {{else}}
-      <p>No prior notes</p>
+      <b>No prior notes left.</b>
     {{/each}}
 
     {{#if @canAddNote}}
+      <hr>
       <ChForm @formId="person-note" @formFor={{this.noteForm}} @onSubmit={{this.submitNoteAction}} as |f|>
         <p>
           <b>Your note will be timestamped, and appended to any existing notes.</b>

@@ -1,6 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { INTAKE, REGIONAL_MANAGEMENT} from 'clubhouse/constants/roles';
 
 export default class PersonUnifiedFlaggingController extends ClubhouseController {
   @tracked history;
@@ -20,5 +21,9 @@ export default class PersonUnifiedFlaggingController extends ClubhouseController
 
     model.save().then(() => this.toast.success('Person successfully saved'))
       .catch((response) => this.house.handleErrorResponse(response));
+  }
+
+  get isRegionalMgmt() {
+    return !this.session.hasRole(INTAKE) && this.session.hasRole(REGIONAL_MANAGEMENT);
   }
 }
