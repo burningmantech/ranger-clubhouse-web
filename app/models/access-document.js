@@ -7,6 +7,8 @@ export const LSD_TICKET = 'lsd_ticket';
 export const RPT = 'reduced_price_ticket';
 export const STAFF_CREDENTIAL = 'staff_credential';
 export const VEHICLE_PASS = 'vehicle_pass';
+export const VEHICLE_PASS_GIFT = 'vehicle_pass_gift';
+export const VEHICLE_PASS_LSD = 'vehicle_pass_lsd';
 export const WAP = 'work_access_pass';
 export const WAPSO = 'work_access_pass_so';
 
@@ -24,12 +26,15 @@ export const DELIVERY_WILL_CALL = 'will_call';
 export const DELIVERY_NONE = 'none';
 export const DELIVERY_EMAIL = 'email';
 
+
 export const TypeLabels = {
   [GIFT_TICKET]: 'Gift Ticket',
   [LSD_TICKET]: 'LSD Ticket',
   [RPT]: 'Reduced-Price Ticket',
   [STAFF_CREDENTIAL]: 'Staff Credential',
   [VEHICLE_PASS]: 'Vehicle Pass',
+  [VEHICLE_PASS_GIFT]: 'Vehicle Pass (Gift)',
+  [VEHICLE_PASS_LSD]: 'Vehicle Pass (LSD)',
   [WAPSO]: 'S.O. Work Access Pass',
   [WAP]: 'Work Access Pass',
 };
@@ -40,9 +45,10 @@ export const TypeShortLabels = {
   [GIFT_TICKET]: 'GIFT',
   [LSD_TICKET]: 'LSD',
   [VEHICLE_PASS]: 'VP',
+  [VEHICLE_PASS_GIFT]: 'VPGIFT',
+  [VEHICLE_PASS_LSD]: 'VPLSD',
   [WAP]: 'WAP',
   [WAPSO]: 'SOWAP',
-
 };
 
 export const DeliveryMethodLabels = {
@@ -62,6 +68,7 @@ export const StatusLabels = {
   [TURNED_DOWN]: 'turned down',
   [USED]: 'used',
 };
+
 
 export default class AccessDocumentModel extends Model {
   @attr('number') person_id;
@@ -111,11 +118,16 @@ export default class AccessDocumentModel extends Model {
     return this.type === GIFT_TICKET;
   }
 
+  get isLSDTicket() {
+    return this.type === LSD_TICKET;
+  }
+
   /**
    * Is this a WAP?
    *
    * @returns {boolean}
    */
+
   get isWAP() {
     return this.type === WAP;
   }
@@ -132,6 +144,13 @@ export default class AccessDocumentModel extends Model {
 
   get isVehiclePass() {
     return this.type === VEHICLE_PASS;
+  }
+
+  get isVehiclePassGift() {
+    return this.type === VEHICLE_PASS_GIFT;
+  }
+  get isVehiclePassLSD() {
+    return this.type === VEHICLE_PASS_LSD;
   }
 
   get hasAccessDate() {

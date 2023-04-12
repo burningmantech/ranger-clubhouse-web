@@ -10,6 +10,8 @@ import {
   GIFT_TICKET,
   LSD_TICKET,
   VEHICLE_PASS,
+  VEHICLE_PASS_GIFT,
+  VEHICLE_PASS_LSD,
   WAP,
   WAPSO,
   // Statuses
@@ -38,13 +40,30 @@ export default class PersonAccessDocumentsComponent extends Component {
   @tracked entry = null;
 
   typeOptions = [
-    ["Gift Ticket", GIFT_TICKET],
-    ["LSD Ticket", LSD_TICKET],
-    ["Reduced-Price Ticket", RPT],
-    ["Staff Credential", STAFF_CREDENTIAL],
-    ["Work Access Pass", WAP],
-    ["S.O. Work Access Pass", WAPSO],
-    ['Vehicle Pass', VEHICLE_PASS],
+    {
+      groupName: 'Regular Items',
+      options: [
+        ["Reduced-Price Ticket", RPT],
+        ["Staff Credential", STAFF_CREDENTIAL],
+        ["Work Access Pass", WAP],
+        ["S.O. Work Access Pass", WAPSO],
+        ['Vehicle Pass', VEHICLE_PASS],
+      ]
+    },
+    {
+      groupName: 'Gift Items',
+      options: [
+        ["Gift Ticket", GIFT_TICKET],
+        ['Vehicle Pass (Gift)', VEHICLE_PASS_GIFT],
+      ]
+    },
+    {
+      groupName: 'Late Season Directed',
+      options: [
+        ["LSD Ticket", LSD_TICKET],
+        ['Vehicle Pass (LSD)', VEHICLE_PASS_LSD],
+      ]
+    }
   ];
 
   statusOptions = [

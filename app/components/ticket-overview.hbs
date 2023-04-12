@@ -71,6 +71,27 @@
     {{/if}}
   {{/if}}
 
+  {{#each @ticketPackage.giftTickets as |gift|}}
+    {{#if (or gift.isClaimed gift.isSubmitted)}}
+    <TicketOverviewItem @icon="gift" @title="Gift Ticket Claimed" @type="success">
+        <TicketGiftConditions />
+    </TicketOverviewItem>
+    {{/if}}
+  {{/each}}
+
+  {{#if @ticketPackage.lsdTickets}}
+    <TicketOverviewItem @icon="gift" @title="Late Season Direct Ticket Claimed" @type="success">
+      <p>
+      {{pluralize @ticketPackage.lsdTickets.length "LSD Ticket"}} has been claimed.
+        {{#if @ticketPackage.lsdVPs}}
+
+        {{/if}}
+      </p>
+      All Late Season Directed
+      ticket(s) must be paid for in advance. Instructions will be sent on how to pay.
+    </TicketOverviewItem>
+  {{/if}}
+
   {{#if this.usingWAP}}
     <TicketOverviewItem @icon="passport" @title="Work Access Pass (WAP) Claimed" @type="success">
       {{#if this.usingStaffCredential}}
