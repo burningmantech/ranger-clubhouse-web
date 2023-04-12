@@ -310,7 +310,7 @@ export const SIGN_UP_FOR_TRAINING = {
       } else if (isAuditor) {
         prefix = ''; // nada.
       } else {
-        prefix = `You will to need sign up and pass an In-Person Training before being allowed to work on playa.`;
+        prefix = `An In-Person training must be attended each year. You will to need sign up and pass an In-Person Training before being allowed to work on playa.`;
       }
       return {
         result: ACTION_NEEDED,
