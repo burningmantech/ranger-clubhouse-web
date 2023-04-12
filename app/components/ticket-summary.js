@@ -95,6 +95,12 @@ export default class TicketSummaryComponent extends Component {
       claimed.push(htmlSafe(`A ${ticket.typeLabel}`));
     }
 
+    pkg.giftTickets.forEach((ticket) => {
+      if (ticket.isClaimed) {
+        claimed.push(htmlSafe(`A ${ticket.typeLabel}`));
+      }
+    });
+
     if (vp && vp.isClaimed) {
       claimed.push(htmlSafe(`A ${vp.typeLabel}`));
     }

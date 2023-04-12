@@ -90,6 +90,7 @@ export default class ScheduleTableComponent extends Component {
         end: dayjs.tz(slot.slot_ends, slot.slot_tz).format(),
         summary: slot.position_title,
         detail: `${slot.description} ${slot.url}`,
+        timezone: slot.slot_tz,
       });
     });
 

@@ -8,15 +8,23 @@ export default class TicketPackage {
   @tracked provisionsBankable = false;
 
   constructor(pkg, person_id, house) {
+
+    // Build up models for the regular tickets, gift, and LSD.
     const docs = pkg.access_documents.map((ad) => house.pushPayload('access-document', ad));
 
     this.accessDocuments = docs;
     this.tickets = docs.filter((d) => d.isRegularTicket);
-    this.specialTickets = pkg.special_tickets.map((ad) => house.pushPayload('access-document', ad));
-    this.specialTicketsEnabled = pkg.special_tickets_enabled;
     this.vehiclePass = docs.find((d) => d.isVehiclePass);
     this.wap = docs.find((d) => d.isWAP);
     this.wapso = docs.filter((d) => d.isWAPSO);
+
+    const giftItems = pkg.gift_items.map((ad) => house.pushPayload('access-document', ad));
+    this.giftTickets = giftItems.filter((i) => i.isGiftTicket);
+    this.giftVPs = giftItems.filter((i) => i.isVehiclePassGift);
+
+    const lsdItems = pkg.lsd_items.map((ad) => house.pushPayload('access-document', ad));
+    this.lsdTickets = lsdItems.filter((i) => i.isLSDTicket);
+    this.lsdVPs = lsdItems.filter((i) => i.isVehiclePassLSD);
 
     this.provisions = pkg.provisions;
     this.provisionsBankable = pkg.provisions_bankable;
@@ -50,6 +58,8 @@ export default class TicketPackage {
 
     this.year_earned = pkg.year_earned;
     this.credits_earned = pkg.credits_earned;
+
+    // The times the end user started and finished ticketing this event.
     this.started_at = pkg.started_at;
     this.finished_at = pkg.finished_at;
   }
