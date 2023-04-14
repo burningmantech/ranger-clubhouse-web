@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
-import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 
 export default class PhotoSelfieComponent extends Component {
   @tracked showCamera = true;
@@ -13,7 +13,7 @@ export default class PhotoSelfieComponent extends Component {
    */
 
   @action
-  setupCamera(player) {
+  async setupCamera(player) {
     // Attach the video stream to the video element and autoplay.
     const container = document.querySelector('#camera-container');
 
@@ -26,18 +26,17 @@ export default class PhotoSelfieComponent extends Component {
       }
     });
 
-    navigator.mediaDevices.getUserMedia({
-      audio: false,
-      video: {
-        facingMode: { ideal: 'user' },
-        width: { max: container.clientWidth }
-      }
-    }).then((stream) => {
-      // Attach the stream to the video element
-      player.srcObject = stream;
-    }).catch(() => {
+    try {
+      player.srcObject = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: {
+          facingMode: {ideal: 'user'},
+          width: {max: container.clientWidth}
+        }
+      });
+    } catch {
       this.toast.error('Sorry, the camera could not be used.');
-    });
+    }
   }
 
   /*

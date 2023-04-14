@@ -7,7 +7,7 @@ export default class TicketingOpenComponent extends Component {
   @tracked showing = {};
   @tracked isPNV = false;
   @tracked isSavingDocumentStatus = false;
-  @tracked showTicketing = false;
+  @tracked showTicketingWizard = false;
   @tracked hasStarted = false;
   @tracked hasFinished = true;
 
@@ -48,13 +48,13 @@ export default class TicketingOpenComponent extends Component {
    */
 
   @action
-  setDocumentStatus(document, status) {
-    this.toast.clear();
+  async setDocumentStatus(document, status) {
     this.isSavingDocumentStatus = true;
-    this.ajax.request(`access-document/statuses`, {
-      method: 'PATCH',
-      data: {statuses: [{id: document.id, status}]}
-    }).then((result) => {
+    try {
+      const result = await this.ajax.request(`access-document/statuses`, {
+        method: 'PATCH',
+        data: {statuses: [{id: document.id, status}]}
+      });
       this.house.pushPayload('access-document', result.access_document);
       this.toast.success('Your choice has been successfully saved.');
       const {vehiclePass} = this.args.ticketPackage;
@@ -62,8 +62,11 @@ export default class TicketingOpenComponent extends Component {
         // Vehicle Pass may have been released because all tickets were banked.
         return vehiclePass.reload();
       }
-    }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSavingDocumentStatus = false);
+    } catch (response) {
+      this.house.handleErrorResponse(response)
+    } finally {
+      this.isSavingDocumentStatus = false
+    }
   }
 
   /**
@@ -87,7 +90,7 @@ export default class TicketingOpenComponent extends Component {
   @action
   startTicketing() {
     this._updateMilestone('started')
-    this.showTicketing = true;
+    this.showTicketingWizard = true;
     this.hasStarted = true;
   }
 
@@ -97,7 +100,7 @@ export default class TicketingOpenComponent extends Component {
   @action
   finishTicketing() {
     this._updateMilestone('finished');
-    this.showTicketing = false;
+    this.showTicketingWizard = false;
     this.hasFinished = true;
   }
 
@@ -106,6 +109,6 @@ export default class TicketingOpenComponent extends Component {
    */
   @action
   cancelTicketing() {
-    this.showTicketing = false;
+    this.showTicketingWizard = false;
   }
 }

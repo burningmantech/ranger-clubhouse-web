@@ -3,8 +3,27 @@
     Information about Work Access Passes will be made available in June or July. Please check back at that time.
   </UiSection>
 {{else}}
+  {{#if @ticketPackage.lsdTickets}}
+    <UiNotice @icon="ticket" @type="success" @title="Late Season Directed Tickets (LSD)">
+      <p>
+        {{pluralize @ticketPackage.lsdTickets.length "Late Season Directed ticket"}} is available
+        {{~#if @ticketPackage.lsdVPs}}
+          , and {{pluralize @ticketPackage.lsdVPs.length "LSD Vehicle Pass"}}
+        {{/if~}}
+        .
+      </p>
+      The ticket has to be paid for in advance. Further instructions on how to pay for the ticket(s) will be sent later.
+    </UiNotice>
+  {{/if}}
+  {{#if @ticketPackage.giftTickets}}
+    <UiNotice @icon="ticket" @type="success" @title="Gift Ticket(s)">
+      You have been given {{pluralize @ticketPackage.giftTickets.length "Gift Ticket"}}.
+      The ticket(s) may be claimed once Ranger ticketing window has opened up.
+    </UiNotice>
+  {{/if}}
   {{#if @ticketPackage.tickets}}
-    <UiNotice @icon="ticket" @title="Hooray! You have {{pluralize @ticketPackage.tickets.length "ticket"}} available!"
+    <UiNotice @icon="ticket"
+              @title="Hooray! You have {{pluralize @ticketPackage.tickets.length "ticket"}} available!"
               @type="success">
       <ul class="no-indent">
         {{#each @ticketPackage.tickets as |ticket|}}

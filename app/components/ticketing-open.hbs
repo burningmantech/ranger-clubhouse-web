@@ -5,7 +5,7 @@
 {{else if this.isPNV}}
   <TicketOpenApplicant @ticketingInfo={{@ticketingInfo}} />
 {{else}}
-  {{#if this.showTicketing}}
+  {{#if this.showTicketingWizard}}
     <UiWizard @onCancel={{this.cancelTicketing}}
               @onFinish={{this.finishTicketing}}
               @finishLabel="Finish Ticketing" as |w|>
@@ -18,6 +18,17 @@
                     @isSavingDocumentStatus={{this.isSavingDocumentStatus}}
         />
       </w.step>
+      {{#if @ticketPackage.giftTickets}}
+        <w.step @title="Gift Ticket Selection">
+          <TicketGiftInfo @person={{@person}}
+                          @ticketPackage={{@ticketPackage}}
+                          @ticketingInfo={{@ticketingInfo}}
+                          @ticket={{this.ticket}}
+                          @setDocumentStatus={{this.setDocumentStatus}}
+                          @isSavingDocumentStatus={{this.isSavingDocumentStatus}}
+          />
+        </w.step>
+      {{/if}}
       <w.step @title="Vehicle Pass">
         <TicketVpInfo @person={{@person}}
                       @ticketPackage={{@ticketPackage}}
@@ -72,10 +83,12 @@
     </UiWizard>
   {{else}}
     <div class="alert alert-danger">
-      The ticketing deadline is {{full-datetime-format @ticketingInfo.submit_date}}
-      Pacific Time.
+      <h5 class="tex-danger fw-bold">
+        The ticketing deadline is {{full-datetime-format @ticketingInfo.submit_date}} (Pacific)
+      </h5>
+      Adjustment to your ticketing choice may be made up until the deadline. Once the deadline has passed, it may no
+      longer be possible to modify the ticket(s) or make any adjustments.
     </div>
-    Once the deadline has passed, it may not be possible to make changes.
     {{#if this.hasStarted}}
       {{#if this.hasFinished}}
         {{#if this.ticket.isQualified}}
@@ -84,16 +97,13 @@
           </UiNotice>
         {{else if (this.ticket.isClaimed (not this.ticket.haveAddress))}}
           <UiNotice @type="danger" @icon="hand" @title="Ticketing not completed!">
-            You did not indicate if you wanted to have your ticket mailed or if you are going to picked it up at will-call.
+            You did not indicate if you wanted to have your ticket mailed or if you are going to picked it up at
+            will-call.
           </UiNotice>
         {{else}}
           <UiNotice @type="success" @icon="check" @title="Ticketing choices have been confirmed.">
-            <p>
-              Congratulations, you completed all the ticketing steps. Ticket selection, pick up locations, access dates,
-              banked items, and other ticketing details are provided below.
-            </p>
-            Adjustments may be made up until {{full-datetime-format @ticketingInfo.submit_date}}
-            Pacific Time.
+            Congratulations, you completed all the ticketing steps. Ticket selection, pick up locations, access dates,
+            banked items, and other ticketing details are provided below.
           </UiNotice>
         {{/if}}
       {{else}}
@@ -109,7 +119,7 @@
         Ticket, Vehicle Pass, Work Access Pass, or Work Access Passes for your significant others/critical camp mates.
       </p>
     {{/if}}
-    <UiButton @onClick={{this.startTicketing}} @type="success">
+    <UiButton @onClick={{this.startTicketing}} @type="success" class="btn-responsive">
       {{#if this.hasFinished}}
         Adjust Ticketing Choices
       {{else}}

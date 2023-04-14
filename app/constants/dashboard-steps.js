@@ -262,18 +262,18 @@ export const ONLINE_TRAINING = {
     if (isPNV && !prevCompleted) {
       return {
         result: NOT_AVAILABLE,
-        message: 'You must complete the previous steps before being allowed to take the Online Course.',
+        message: 'You must complete the steps in the previous section, include awaiting on any photo approvals, before being allowed to take the Online Course.',
         name
       };
     }
 
     //const duration = milestones.needs_full_online_course ? 'up to 90 minutes or more' : 'around 30 to 45 minutes';
-    const duration = 'up to 90 minutes or more';
+    const duration = 'up to 2 hours or more';
 
     return {
       result: ACTION_NEEDED,
       message: htmlSafe('<p>The Ranger Manual can be found at <a href="' + config('RangerManualUrl') + '" rel="noopener noreferrer" target="_blank">rangers.burningman.org</a>.</p>' +
-        `<p>The Online Course will take ${duration} to complete. </p> <p>Note: it may take up to 20 minutes or more for the Clubhouse to record your course completion.</p>`),
+        `<p>The Online Course, like the In-Person training, has to be taken every year. The estimate time to complete the course is ${duration}.</p> <p>Note: it may take up to 20 minutes for the Clubhouse to record your course completion.</p>`),
       isOnlineTraining: true,
       name
     };
@@ -310,7 +310,7 @@ export const SIGN_UP_FOR_TRAINING = {
       } else if (isAuditor) {
         prefix = ''; // nada.
       } else {
-        prefix = `You will to need sign up and pass an In-Person Training before being allowed to work on playa.`;
+        prefix = `An In-Person training must be attended each year. You will to need sign up and pass an In-Person Training before being allowed to work on playa.`;
       }
       return {
         result: ACTION_NEEDED,
