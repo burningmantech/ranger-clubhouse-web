@@ -1,0 +1,13 @@
+<h1>Trainer Resources</h1>
+<p>
+  <LinkTo @route="training.index" @model={{this.training.id}} >
+    Back to {{this.training.title}} Sessions
+  </LinkTo>
+</p>
+
+{{#if this.training.resource_tag}}
+  <DocumentShow @tag={{this.training.resource_tag}} />
+{{else}}
+  This page can be used as a freeform document to provide helpful links to a trainer. Contact the Tech Team to
+  set up this resource.
+{{/if}}

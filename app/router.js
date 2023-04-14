@@ -188,6 +188,7 @@ Router.map(function () {
     this.route('trainer-attendance');
     this.route('unified-flagging');
     this.route('untrained-people');
+    this.route('resources');
   });
 
   this.route('reports', function () {
