@@ -24,6 +24,9 @@
               @title="Training Surveys"
               @icon="poll" @iconType="s"/>
     {{/if}}
+    <s.link @route="training.resources"
+            @title="Trainer Resources"
+            @icon="circle-question" />
     {{#if (and (not this.training.is_art) (has-role "intake"))}}
       <s.link @route="training.unified-flagging" @routeArg={{this.training.id}}
               @title="Unified Flagging"

@@ -207,7 +207,14 @@
           <fieldset>
             <legend>Misc.</legend>
             <FormRow>
-              <f.text @name="paycode" @label="Paycode" @size={{20}} @maxlength={{20}} />
+              <f.text @name="paycode" @label="Paycom employee code" @size={{20}} @maxlength={{20}} />
+              <f.text @name="resource_tag"
+                      @label="Trainer resource page document tag"
+                      @size={{30}}
+                      @maxlength={{30}}
+                      @disabled={{not-eq f.model.type "Training"}}
+                      @hint="Only available for type 'Training'"
+              />
             </FormRow>
           </fieldset>
 

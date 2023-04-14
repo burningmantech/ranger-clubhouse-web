@@ -8,6 +8,7 @@
   {{#if (has-role "survey-management")}}
     <NavbarMenuItem @menu={{menu}} @route="training.survey.index" @model="dirt" @item="Training Surveys"/>
   {{/if}}
+  <NavbarMenuItem @menu={{menu}} @route="training.resources" @item="Trainer Resources" />
   {{#if (has-role "intake")}}
     <NavbarMenuItem @menu={{menu}} @route="training.unified-flagging" @model="dirt" @item="Unified Flagging"/>
   {{/if}}
