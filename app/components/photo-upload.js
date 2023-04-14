@@ -171,12 +171,17 @@ export default class PhotoUploadComponent extends Component {
         callback(data);
       } else {
         if (!canvas.toBlob) {
-          // An issue exists where a canvas element does not have a toBlob function. Might be a browser extension causing issues.
-          // Seen on Chrome v100. Let the user know something is up.
+          // An issue exists where a canvas element does not have a toBlob function.
+          // Might be a browser extension causing issues. Seen on Chrome v100 up to v112.
+          // Let the user know something is up.
           this.showNoBlobError = true;
+
           logError({}, 'client-load-image-error', {
             message: 'toBlob function missing',
             nodeType: canvas?.nodeName,
+            fileSize: image?.size,
+            fileName: image?.filename,
+            fileType: image?.type
           });
           return;
         }
