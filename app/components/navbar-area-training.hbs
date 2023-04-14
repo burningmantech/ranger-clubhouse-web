@@ -5,10 +5,10 @@
                   @item="Multiple Enrollments Report"/>
   <NavbarMenuItem @menu={{menu}} @route="training.people-training-completed" @model="dirt" @item="Training Completed"/>
   <NavbarMenuItem @menu={{menu}} @route="training.trainer-attendance" @model="dirt" @item="Trainer Attendance"/>
+  <NavbarMenuItem @menu={{menu}} @route="training.resources" @model="dirt" @item="Trainer Resources" />
   {{#if (has-role "survey-management")}}
     <NavbarMenuItem @menu={{menu}} @route="training.survey.index" @model="dirt" @item="Training Surveys"/>
   {{/if}}
-  <NavbarMenuItem @menu={{menu}} @route="training.resources" @item="Trainer Resources" />
   {{#if (has-role "intake")}}
     <NavbarMenuItem @menu={{menu}} @route="training.unified-flagging" @model="dirt" @item="Unified Flagging"/>
   {{/if}}
