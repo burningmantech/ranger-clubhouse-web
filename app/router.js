@@ -177,6 +177,7 @@ Router.map(function () {
     this.route('capacity');
     this.route('multiple-enrollments');
     this.route('people-training-completed');
+    this.route('resources');
     this.route('session', {path: '/session/:slot_id'}, function () {
       this.route('index', {path: '/'});
       this.route('signup-sheet');
@@ -188,7 +189,6 @@ Router.map(function () {
     this.route('trainer-attendance');
     this.route('unified-flagging');
     this.route('untrained-people');
-    this.route('resources');
   });
 
   this.route('reports', function () {

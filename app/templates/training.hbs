@@ -3,32 +3,40 @@
     <s.link @route="training.index"
             @title="Training Sessions"
             @icon="list-alt" @iconType="r"/>
-    <s.link @route="training.capacity" @routeArg={{this.training.id}}
+    <s.link @route="training.capacity"
+            @routeArg={{this.training.id}}
             @title="Training Capacity"
             @icon="battery-half" @iconType="s"/>
-    <s.link @route="training.multiple-enrollments" @routeArg={{this.training.id}}
+    <s.link @route="training.multiple-enrollments"
+            @routeArg={{this.training.id}}
             @title="Multiple Enrollments"
             @icon="copy" @iconType="s"/>
-    <s.link @route="training.people-training-completed" @routeArg={{this.training.id}}
+    <s.link @route="training.people-training-completed"
+            @routeArg={{this.training.id}}
             @title="Training Completed"
             @icon="check-square" @iconType="s"/>
-    <s.link @route="training.trainer-attendance" @routeArg={{this.training.id}}
+    <s.link @route="training.trainer-attendance"
+            @routeArg={{this.training.id}}
             @title="Trainer Attendance"
             @icon="user-check" @iconType="s"/>
+    <s.link @route="training.resources"
+            @routeArg={{this.training.id}}
+            @title="Trainer Resources"
+            @icon="circle-question" />
     {{#if this.training.is_art}}
-      <s.link @route="training.untrained-people" @routeArg={{this.training.id}}
+      <s.link @route="training.untrained-people"
+              @routeArg={{this.training.id}}
               @title="Untrained People"
               @icon="exclamation-circle" @iconType="s"/>
     {{else if (has-role "survey-management")}}
-      <s.link @route="training.survey.index" @routeArg={{this.training.id}}
+      <s.link @route="training.survey.index"
+              @routeArg={{this.training.id}}
               @title="Training Surveys"
               @icon="poll" @iconType="s"/>
     {{/if}}
-    <s.link @route="training.resources"
-            @title="Trainer Resources"
-            @icon="circle-question" />
-    {{#if (and (not this.training.is_art) (has-role "intake"))}}
-      <s.link @route="training.unified-flagging" @routeArg={{this.training.id}}
+      {{#if (and (not this.training.is_art) (has-role "intake"))}}
+      <s.link @route="training.unified-flagging"
+              @routeArg={{this.training.id}}
               @title="Unified Flagging"
               @icon="flag" @iconType="s"/>
     {{/if}}
