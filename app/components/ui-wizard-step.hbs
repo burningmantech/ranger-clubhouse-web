@@ -14,6 +14,13 @@
           </UiButton>
         </div>
       {{/if}}
+      {{#if (or (not @isLast) @includeCancel)}}
+        <div>
+          <UiButton @onClick={{this.wizard.cancelAction}} @type="secondary">
+            {{fa-icon "ban"}} Cancel
+          </UiButton>
+        </div>
+      {{/if}}
       {{#if @isLast}}
         <div>
           <UiButton @onClick={{this.wizard.finishAction}}>
@@ -21,11 +28,6 @@
           </UiButton>
         </div>
       {{else}}
-        <div>
-          <UiButton @onClick={{this.wizard.cancelAction}} @type="secondary">
-            {{fa-icon "ban"}} Cancel
-          </UiButton>
-        </div>
         <div>
           <UiButton @onClick={{this.wizard.nextStep}} @type="success">
             {{this.wizard.nextLabel}} {{fa-icon "arrow-right"}}

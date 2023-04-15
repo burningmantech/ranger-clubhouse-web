@@ -211,7 +211,8 @@ export const VERIFY_PERSONAL_INFO = {
       const isNonRanger = (person.status === NON_RANGER);
       // javascript dates start from zero (meh). If it's June or later, crank up the annoyance dial.
       doTheThing = 'You have not verified your personal information and/or Ranger shirt sizes yet.';
-      if (!isNonRanger && (new Date()).getMonth() >= 5) {
+      if (!isNonRanger && milestones.online_training_passed) {
+        // C'mon, you haven't done this step yet?!? Sheese.
         immediate = true;
         result = URGENT;
         doTheThing = `<b class="text-danger">${doTheThing}</b>`;

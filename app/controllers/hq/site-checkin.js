@@ -33,14 +33,6 @@ export default class HqSiteCheckinController extends ClubhouseController {
     });
   }
 
-  @action
-  markOnSite() {
-    this.person.on_site = true;
-    this._savePerson(this.person, 'Person has been successfully marked as ON SITE.', () => {
-      this.isOnSite = true;
-    });
-  }
-
   async _savePerson(model, message, callback) {
     this.isSubmitting = true;
     try {
@@ -68,8 +60,12 @@ export default class HqSiteCheckinController extends ClubhouseController {
 
   @action
   finishSiteCheckIn() {
-    this.showSiteCheckInWizard = false;
-    this.siteCheckInFinished = true;
-    this.siteCheckInStarted = false;
+    this.person.on_site = true;
+    this._savePerson(this.person, 'Person has been successfully marked as ON SITE.', () => {
+      this.isOnSite = true;
+      this.showSiteCheckInWizard = false;
+      this.siteCheckInFinished = true;
+      this.siteCheckInStarted = false;
+    });
   }
 }

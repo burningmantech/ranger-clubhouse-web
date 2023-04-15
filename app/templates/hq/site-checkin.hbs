@@ -1,16 +1,11 @@
-{{#if this.isOnSite}}
-  <p>
-    <b class="text-success">{{this.person.callsign}} is marked as ON SITE.</b>
-  </p>
-{{/if}}
 <h1>Site Check In</h1>
 
 {{#if this.isOnSite}}
-  <UiNotice @icon="check" @type="success" @title="Person Marked On Site">
+  <UiNotice @icon="check" @type="success" @title="{{this.person.callsign}} Marked On Site">
     <p>
       Site check in is complete for {{this.person.callsign}} and is ready to start a shift.
     </p>
-    <LinkTo @route="hq.shift" class="btn btn-success btn-large">Start Shift Checkin</LinkTo>
+    <LinkTo @route="hq.shift" class="btn btn-success btn-large">Start Shift Check In</LinkTo>
   </UiNotice>
 {{/if}}
 
@@ -47,7 +42,7 @@
   </:body>
 </UiSection>
 <UiSection>
-  <:title>Provisions</:title>
+  <:title>Provisions Summary</:title>
   <:body>
     {{#if this.eventInfo.radio_max}}
       {{#if this.personEvent.asset_authorized}}
@@ -82,7 +77,7 @@
 {{#if this.showSiteCheckInWizard}}
   <UiWizard @onCancel={{this.cancelSiteCheckIn}}
             @onFinish={{this.finishSiteCheckIn}}
-            @finishLabel="Finish Site Check In" as |w|>
+            @finishLabel="Mark As On Site" as |w|>
     <w.step @title="Verify Camp Information">
       <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
         <p>
@@ -190,13 +185,10 @@
         {{/if}}
       {{/if}}
     </w.step>
-    <w.step @title="Mark Person As On Site" @isLast={{true}}>
+    <w.step @title="Mark Person As On Site" @isLast={{true}} @includeCancel={{true}}>
       <p>
         Mark {{this.person.callsign}} as on site if everything appears to be okay.
       </p>
-      <UiButton @onClick={{this.markOnSite}} @disabled={{this.isSubmitting}}>
-        Mark As On Site
-      </UiButton>
     </w.step>
   </UiWizard>
 {{else if (and this.siteCheckInStarted (not this.siteCheckInFinished))}}
