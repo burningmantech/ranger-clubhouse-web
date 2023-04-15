@@ -21,7 +21,7 @@ export const HqTodoLabels = {
   [HQ_TODO_NO_RADIO]: 'Working Burn Perimeter - May not need a radio',
   [HQ_TODO_START_SHIFT]: 'Start Shift',
   [HQ_TODO_VERIFY_TIMESHEET]: 'Review Timesheet',
-  [HQ_TODO_OFF_SITE]: 'No more scheduled shifts - Ask if going off site',
+  [HQ_TODO_OFF_SITE]: 'No more upcoming shifts - Ask if finished working',
 };
 
 export class HqTodoTask {
