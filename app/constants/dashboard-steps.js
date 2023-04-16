@@ -209,8 +209,7 @@ export const VERIFY_PERSONAL_INFO = {
 
     if (!isPNV) {
       const isNonRanger = (person.status === NON_RANGER);
-      // javascript dates start from zero (meh). If it's June or later, crank up the annoyance dial.
-      doTheThing = 'You have not verified your personal information and/or Ranger shirt sizes yet.';
+      doTheThing = 'Each year, every volunteer is asked to review and verify their personal information in the Clubhouse.';
       if (!isNonRanger && milestones.online_training_passed) {
         // C'mon, you haven't done this step yet?!? Sheese.
         immediate = true;
@@ -219,7 +218,7 @@ export const VERIFY_PERSONAL_INFO = {
       }
       doTheThing = `<p>${doTheThing}</p>`;
       if (!isNonRanger && person.status !== AUDITOR) {
-        shirtNag = ' <b>BE SURE TO CONFIRM YOUR RANGER SHIRT SIZES ARE CORRECT.</b>';
+        shirtNag = ' <b>Be sure to confirm your Ranger shirt sizes are up to date.</b>';
       }
     }
 
