@@ -36,8 +36,11 @@
       <div class="row g-0">
         <div class="col-sm-12 col-xl-auto mb-2">
           <div class="input-group">
-            <input type="file" class="form-control" capture="user" id="photo-file"
-                   accept="image/jpg,image/jpeg,image/png" {{on "change" this.fileChangeEvent}}>
+            <input type="file"
+                   class="form-control"
+                   id="photo-file"
+                   accept=".jpg,.jpeg,.jp2,.png,image/jpg,image/jpeg,image/png"
+                {{on "change" this.fileChangeEvent}}>
           </div>
         </div>
         {{#if this.hasCamera}}
