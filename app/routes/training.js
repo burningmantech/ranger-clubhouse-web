@@ -1,6 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import { Role } from 'clubhouse/constants/roles';
+import {ADMIN, INTAKE, TRAINER, VC, MENTOR, SURVEY_MANAGEMENT, ART_TRAINER} from 'clubhouse/constants/roles';
 
+import { TRAINING} from "clubhouse/constants/positions";
 /*
  * Top level training route "/training"
  *
@@ -8,23 +9,18 @@ import { Role } from 'clubhouse/constants/roles';
  */
 
 export default class TrainingRoute extends ClubhouseRoute {
-  beforeModel() {
-    if (!this.session.hasRole([ Role.ADMIN, Role.TRAINER, Role.VC, Role.MENTOR, Role.ART_TRAINER])) {
-      this.toast.error("Sorry, you need to be a trainer, mentor, VC or Admin to access this.");
-      this.router.transitionTo('me.homepage');
-    }
-  }
+  roleRequired = [ADMIN, TRAINER, VC, MENTOR, ART_TRAINER];
 
-  model(params) {
-    const positionId = (params.position_id == 'dirt' ? 13 : params.position_id)
-    return this.ajax.request(`training/${positionId}`)
-          .then((results) => results)
-          .catch((response) => this.house.handleErrorResponse(response));
+  model({position_id}) {
+    const positionId = (position_id === 'dirt' ? TRAINING : position_id);
+    return this.ajax.request(`training/${positionId}`);
   }
 
   setupController(controller, model) {
-    super.setupController(...arguments);
     controller.set('training', model);
+    controller.set('hasIntake', this.session.hasRole(INTAKE));
+    controller.set('canManageSurveys', this.session.hasRole(SURVEY_MANAGEMENT));
+    controller.set('showOnlineCourseProgress', (model.id === TRAINING && this.session.hasTrueRole(TRAINER)));
   }
 
   resetController(controller, isExiting) {

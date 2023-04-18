@@ -19,36 +19,39 @@ export default class OnlineTrainingLaunchComponent extends Component {
   @tracked isSubmitting = false;
 
   @action
-  setupAccountAction() {
-    const person = this.args.person;
+  async setupAccountAction() {
+    const {person} = this.args;
 
     this.showCreationDialog = true;
     this.isSubmitting = true;
-    this.ajax.request(`online-training/${person.id}/setup`, {method: 'POST'})
-      .then((result) => {
-        if (result.status === 'down-for-maintenance') {
-          this.showDownForMaintenanceDialog = true;
+
+    try {
+      const result = await this.ajax.request(`online-training/${person.id}/setup`, {method: 'POST'});
+      if (result.status === 'down-for-maintenance') {
+        this.showDownForMaintenanceDialog = true;
+      } else {
+        this.showExodusDialog = true;
+        if (result.status === 'exists') {
+          this.alreadyExists = true;
+          this.username = result.username;
         } else {
-          if (result.status === 'exists') {
-            this.alreadyExists = true;
-            this.username = result.username;
-          } else {
-            this.password = result.password;
-            this.username = result.username;
-          }
-          this.showExodusDialog = true;
+          this.password = result.password;
+          this.username = result.username;
         }
-      }).catch(() => this.showErrorDialog = true)
-      .finally(() => {
-        this.isSubmitting = false;
-        this.showCreationDialog = false;
-      });
+      }
+    } catch {
+      this.showErrorDialog = true;
+    } finally {
+      this.isSubmitting = false;
+      this.showCreationDialog = false;
+
+    }
   }
 
   @action
   launchTrainingAction() {
     this.isSubmitting = true;
-    window.location.href = this.args.url;
+    window.location.href = this.args.url + `?username=${this.username}`;
   }
 
   @action
@@ -65,7 +68,10 @@ export default class OnlineTrainingLaunchComponent extends Component {
   async resetPasswordAccount() {
     this.isSubmitting = true;
     try {
-      const {status, password} = await this.ajax.request(`online-training/${this.args.person.id}/reset-password`, {method: 'POST'});
+      const {
+        status,
+        password
+      } = await this.ajax.request(`online-training/${this.args.person.id}/reset-password`, {method: 'POST'});
       if (status === 'no-account') {
         this.toast.error('Account is NOT setup');
       } else if (status === 'success') {

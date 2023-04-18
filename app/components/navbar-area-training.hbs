@@ -1,15 +1,39 @@
 <NavbarMenu @nav={{@nav}} @title="Training" as |menu|>
-  <NavbarMenuItem @menu={{menu}} @route="training.index" @model="dirt" @item="Training Sessions"/>
-  <NavbarMenuItem @menu={{menu}} @route="training.capacity" @model="dirt" @item="Training Capacity"/>
-  <NavbarMenuItem @menu={{menu}} @route="training.multiple-enrollments" @model="dirt"
+  <NavbarMenuItem @menu={{menu}}
+                  @route="training.index"
+                  @model="dirt"
+                  @item="Training Sessions"/>
+  <NavbarMenuItem @menu={{menu}}
+                  @route="training.capacity"
+                  @model="dirt"
+                  @item="Training Capacity"/>
+  <NavbarMenuItem @menu={{menu}}
+                  @route="training.multiple-enrollments"
+                  @model="dirt"
                   @item="Multiple Enrollments Report"/>
-  <NavbarMenuItem @menu={{menu}} @route="training.people-training-completed" @model="dirt" @item="Training Completed"/>
-  <NavbarMenuItem @menu={{menu}} @route="training.trainer-attendance" @model="dirt" @item="Trainer Attendance"/>
-  <NavbarMenuItem @menu={{menu}} @route="training.resources" @model="dirt" @item="Trainer Resources" />
-  {{#if (has-role "survey-management")}}
+  <NavbarMenuItem @menu={{menu}}
+                  @route="training.people-training-completed"
+                  @model="dirt"
+                  @item="Training Completed"/>
+  <NavbarMenuItem @menu={{menu}}
+                  @route="training.trainer-attendance"
+                  @model="dirt"
+                  @item="Trainer Attendance"/>
+  <NavbarMenuItem @menu={{menu}}
+                  @route="training.resources"
+                  @model="dirt"
+                  @item="Trainer Resources"/>
+  {{#if this.isTrainer}}
+    <NavbarMenuItem @menu={{menu}}
+                    @route="training.online-course-progress"
+                    @model="dirt"
+                    @item="Online Course Progress"
+    />
+  {{/if}}
+  {{#if this.canManageSurveys}}
     <NavbarMenuItem @menu={{menu}} @route="training.survey.index" @model="dirt" @item="Training Surveys"/>
   {{/if}}
-  {{#if (has-role "intake")}}
+  {{#if this.hasIntake}}
     <NavbarMenuItem @menu={{menu}} @route="training.unified-flagging" @model="dirt" @item="Unified Flagging"/>
   {{/if}}
 </NavbarMenu>
