@@ -189,6 +189,7 @@ Router.map(function () {
     this.route('trainer-attendance');
     this.route('unified-flagging');
     this.route('untrained-people');
+    this.route('online-course-progress');
   });
 
   this.route('reports', function () {

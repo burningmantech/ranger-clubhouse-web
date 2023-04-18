@@ -1,0 +1,60 @@
+<YearSelect @title="Online Course Progress"
+            @year={{this.year}}
+            @minYear={{2022}}
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}}
+/>
+
+{{#if this.people.length}}
+  <p>
+    <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+  </p>
+{{/if}}
+<p>
+  <i>direct enrollment</i> = the person was directly enrolled in Moodle and not via the Clubhouse. The enrollment date is not known.
+</p>
+Showing {{pluralize this.people.length "person"}}. Times are in the Pacific timezone.
+<table class="table table-width-auto table-hover table-striped table-sm">
+  <thead>
+  <tr>
+    <th>Callsign</th>
+    <th>Status</th>
+    <th>Moodle Username</th>
+    <th>Enrolled At</th>
+    <th>Completed At</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.people as |person|}}
+    <tr>
+      <td>
+        <PersonLink @person={{person}} />
+      </td>
+      <td>{{person.status}}</td>
+      <td>
+        {{person.lms_username}}
+      </td>
+      <td>
+        {{#if person.enrolled_at}}
+          {{shift-format person.enrolled_at}}
+        {{else}}
+          <i>- direct enrollment -</i>
+        {{/if}}
+      </td>
+      <td>
+        {{#if person.completed_at}}
+          {{shift-format person.completed_at}}
+        {{else}}
+          -
+        {{/if}}
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="4" class="text-danger">
+        No one was found to have enrolled and/or completed the Online Course for {{this.year}}
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>

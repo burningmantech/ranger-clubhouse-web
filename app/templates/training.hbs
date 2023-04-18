@@ -22,23 +22,36 @@
     <s.link @route="training.resources"
             @routeArg={{this.training.id}}
             @title="Trainer Resources"
-            @icon="circle-question" />
+            @icon="circle-question"/>
     {{#if this.training.is_art}}
       <s.link @route="training.untrained-people"
               @routeArg={{this.training.id}}
               @title="Untrained People"
-              @icon="exclamation-circle" @iconType="s"/>
-    {{else if (has-role "survey-management")}}
-      <s.link @route="training.survey.index"
-              @routeArg={{this.training.id}}
-              @title="Training Surveys"
-              @icon="poll" @iconType="s"/>
-    {{/if}}
-      {{#if (and (not this.training.is_art) (has-role "intake"))}}
-      <s.link @route="training.unified-flagging"
-              @routeArg={{this.training.id}}
-              @title="Unified Flagging"
-              @icon="flag" @iconType="s"/>
+              @icon="exclamation-circle" @iconType="s"
+      />
+    {{else}}
+      {{#if this.showOnlineCourseProgress}}
+        <s.link @route="training.online-course-progress"
+                @routeArg={{this.training.id}}
+                @title="Online Course Progress"
+                @icon="list-check"
+                @iconType="s"
+        />
+      {{/if}}
+      {{#if this.canManageSurveys}}
+        <s.link @route="training.survey.index"
+                @routeArg={{this.training.id}}
+                @title="Training Surveys"
+                @icon="poll"
+                @iconType="s"/>
+      {{/if}}
+      {{#if this.hasIntake}}
+        <s.link @route="training.unified-flagging"
+                @routeArg={{this.training.id}}
+                @title="Unified Flagging"
+                @icon="flag"
+                @iconType="s"/>
+      {{/if}}
     {{/if}}
   </s.group>
 </UiSidebar>
