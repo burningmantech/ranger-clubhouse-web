@@ -18,20 +18,24 @@
     </label>
   </div>
 </FormRow>
-
+<p>
+  <UiButton @onClick={{this.exportToCSV}}>
+    Export To CSV
+  </UiButton>
+</p>
 Showing {{pluralize this.radios.length "entry"}}
 <table class="table table-striped table-hover table-sm table-width-auto">
   <thead>
   <tr>
     <th>Callsign</th>
     <th>Barcode</th>
+    <th class="text-end">Duration<br>(Hours)</th>
     <th>Checked Out Time /<br>By Person</th>
     {{#if (or this.event_summary this.include_eligible)}}
       <th>Checked In Time /<br>By Person</th>
       <th>Is Event Radio?</th>
-      <th>Radio Qualified?</th>
+      <th>Is Event Radio Eligible?</th>
     {{/if}}
-    <th class="text-end">Duration</th>
   </tr>
   </thead>
 
@@ -42,6 +46,7 @@ Showing {{pluralize this.radios.length "entry"}}
         <PersonLink @personId={{radio.person_id}} @callsign={{radio.callsign}} />
       </td>
       <td class="text-end">{{radio.barcode}}</td>
+      <td class="text-end">{{hour-minute-format radio.duration}}</td>
       <td>
         {{shift-format radio.checked_out}}<br>
         {{#if radio.check_out_person}}
@@ -66,7 +71,6 @@ Showing {{pluralize this.radios.length "entry"}}
         <td class="text-center">{{yesno radio.perm_assign}}</td>
         <td class="text-center">{{yesno radio.eligible}}</td>
       {{/if}}
-      <td class="text-end">{{hour-minute-format radio.duration}}</td>
     </tr>
   {{else}}
     <tr>
