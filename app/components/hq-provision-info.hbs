@@ -6,7 +6,7 @@
 
 <div class="d-flex flex-wrap">
   <div class="me-4">
-    <h4><span class="me-2">{{fa-icon "utensils"}}</span> Meals</h4>
+    <h4>{{fa-icon "utensils" right=1 fixed=true}} Meals</h4>
      <table class="table table-width-auto">
       <thead>
       <tr>
@@ -23,10 +23,10 @@
     </table>
   </div>
   <div>
-    <h4>{{fa-icon "shower" right=2}} Showers</h4>
+    <h4>{{fa-icon "shower" right=1 fixed=true}} Showers</h4>
     <p>
       {{#if @showers}}
-        <b class="text-danger">{{fa-icon "ban" right=1}} NO SHOWER POGS</b><br>
+        <b class="text-danger">{{fa-icon "ban" right=1 fixed=true}} NO SHOWER POGS</b><br>
         Has Wet Spot Access BMID
       {{else}}
         <span class="text-success">Pog for every 40 hours worked</span>

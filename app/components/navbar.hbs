@@ -9,7 +9,7 @@
     {{/if}}
   </LinkTo>
 
-  {{#if (and this.session.hasLMOP this.session.isSmallScreen)}}
+  {{#if (and this.session.hasLoginManagement this.session.isSmallScreen)}}
     <button type="button" class="border rounded p-1 bg-white text-muted mx-auto" {{on "click" this.launchSearchDialog}}>
       <span class="mx-1">
         {{fa-icon "search"}}
@@ -75,7 +75,7 @@
       {{/if}}
     </navbar.nav>
   </navbar.content>
-  {{#if (and this.session.hasLMOP (not this.session.isSmallScreen))}}
+  {{#if (and this.session.hasLoginManagement (not this.session.isSmallScreen))}}
     <navbar.content>
       {{! template-lint-disable no-inline-styles}}
       <div role="button"

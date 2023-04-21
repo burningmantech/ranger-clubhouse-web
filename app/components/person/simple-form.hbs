@@ -69,22 +69,24 @@
       {{mail-to (config "PersonnelEmail")}}
     </dd>
   {{/if}}
-  <dt class="col-sm-12 col-lg-2">On Site</dt>
-  <dd class="col-sm-12 col-lg-9">
-    <ChForm @formId="person" @formFor={{@person}} @onSubmit={{@savePersonAction}} as |f|>
-      <FormRow>
-        <div class="col-auto">
-          <f.radioGroup @name="on_site"
-                        @options={{@onSiteOptions}}
-                        @inline={{true}} />
-        </div>
-      </FormRow>
-      <f.submit @label="Update" @size="sm" @disabled={{@person.isSaving}} />
-      {{#if @person.isSaving}}
-        <LoadingIndicator/>
-      {{/if}}
-    </ChForm>
-  </dd>
+  {{#if (has-role "manage")}}
+    <dt class="col-sm-12 col-lg-2">On Site</dt>
+    <dd class="col-sm-12 col-lg-9">
+      <ChForm @formId="person" @formFor={{@person}} @onSubmit={{@savePersonAction}} as |f|>
+        <FormRow>
+          <div class="col-auto">
+            <f.radioGroup @name="on_site"
+                          @options={{@onSiteOptions}}
+                          @inline={{true}} />
+          </div>
+        </FormRow>
+        <f.submit @label="Update" @size="sm" @disabled={{@person.isSaving}} />
+        {{#if @person.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+      </ChForm>
+    </dd>
+  {{/if}}
   <dt class="col-sm-12 col-lg-2">Team/Positions</dt>
   <dd class="col-sm-12 col-lg-9">
     <Person::Positions @personMembership={{@personMembership}}
@@ -94,11 +96,13 @@
                        @editMembershipAction={{@editMembershipAction}}
     />
   </dd>
-  <dt class="col-sm-12 col-lg-2">Permissions</dt>
-  <dd class="col-sm-12 col-lg-9">
-    <Person::Permissions @roles={{@roles}}
-                   @grantedRoles={{@grantedRoles}}
-                   @toggleRoles={{@toggleRoles}}
-                   @showRoles={{@showRoles}} />
-  </dd>
+  {{#if (has-role "manage")}}
+    <dt class="col-sm-12 col-lg-2">Permissions</dt>
+    <dd class="col-sm-12 col-lg-9">
+      <Person::Permissions @roles={{@roles}}
+                           @grantedRoles={{@grantedRoles}}
+                           @toggleRoles={{@toggleRoles}}
+                           @showRoles={{@showRoles}} />
+    </dd>
+  {{/if}}
 </dl>

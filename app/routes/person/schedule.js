@@ -2,8 +2,11 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 import RSVP from 'rsvp';
 import ScheduleSlotModel from 'clubhouse/models/schedule-slot';
+import {MANAGE} from "clubhouse/constants/roles";
 
 export default class PersonScheduleRoute extends ClubhouseRoute {
+  roleRequired = MANAGE;
+
   queryParams = {
     year: {refreshModel: true}
   };

@@ -1,8 +1,55 @@
 {{#if this.isLoading}}
   <LoadingIndicator @text="Loading pogs"/>
 {{else}}
-  <div class="mb-1">
-    <UiButton @onClick={{this.newPog}}>Issue Pog</UiButton>
+  {{#if @endedShiftEntry}}
+    <p>
+    <div class="fs-5">
+      Worked shifted ({{@endedShiftEntry.position.title}}) was {{hour-minute-words @endedShiftEntry.duration}}
+      in length.
+    </div>
+    {{#if @endedShiftEntry.isUnverified}}
+      <b class="text-danger">
+        The timesheet entry is unverified. Review the timesheet entry to ensure the worked shift duration is
+        accurate.
+      </b>
+    {{else if @endedShiftEntry.isPending}}
+      <b class="text-danger">
+        The timesheet entry has a pending correction. The worked shift duration might be incorrect.
+      </b>
+    {{/if}}
+    </p>
+  {{/if}}
+  {{#if this.hasMealPass}}
+    <UiNotice @icon="hand-point-right" @type="secondary" @title="Has Meal Pass">
+      {{@person.callsign}} has a BMID Meal Pass for the {{this.currentPeriodLabel}} period.
+    </UiNotice>
+   {{else}}
+    <p>
+      <b>For the current event period, issue a Full Meal Pog for every 6+ hours worked in a shift.</b>
+      {{#if this.config.meal_half_pog_enabled}}
+        <br>
+        1/2 Meal Pogs are available for a shift worked less than 6 hours.
+      {{/if}}
+    </p>
+  {{/if}}
+  <div class="row mb-2">
+    <div class="col-auto">
+      <UiButton @onClick={{this.recordFullMealPog}}>
+        Record Full Meal Pog
+      </UiButton>
+    </div>
+    {{#if this.config.meal_half_pog_enabled}}
+      <div class="col-auto">
+        <UiButton @onClick={{this.recordHalfMealPog}}>
+          Record &half; Meal Pog
+        </UiButton>
+      </div>
+    {{/if}}
+    <div class="col-auto">
+      <UiButton @onClick={{this.recordShowerPog}}>
+        Record Shower Pog
+      </UiButton>
+    </div>
   </div>
   Showing {{pluralize this.pogs.length "pog"}}.
   <table class="table table-width-auto table-hover table-stripped">
@@ -46,68 +93,13 @@
       </tr>
     {{else}}
       <tr>
-        <td colspan="3" class="text-danger">
+        <td colspan="3">
           No pogs have been issued yet.
         </td>
       </tr>
     {{/each}}
     </tbody>
   </table>
-{{/if}}
-
-{{#if this.pog}}
-  <ModalDialog @onEscape={{this.cancelNewPog}} as |Modal|>
-    <ChForm @formId="pog" @formFor={{this.pog}} @onSubmit={{this.savePog}} as |f|>
-      <Modal.title>Issue New Pog</Modal.title>
-      <Modal.body>
-        {{#if @endedShiftEntry}}
-          <p>
-          <div class="fs-5">
-            Worked shifted ({{@endedShiftEntry.position.title}}) was {{hour-minute-words @endedShiftEntry.duration}}
-            in length.
-          </div>
-          {{#if @endedShiftEntry.isUnverified}}
-            <b class="text-danger">
-              The timesheet entry is unverified. Review the timesheet entry to ensure the worked shift duration is
-              accurate.
-            </b>
-          {{else if @endedShiftEntry.isPending}}
-            <b class="text-danger">
-              The timesheet entry has a pending correction. The worked shift duration might be incorrect.
-            </b>
-          {{/if}}
-          </p>
-        {{/if}}
-        {{#if this.hasMealPass}}
-          <div class="fs-5 text-danger">
-            {{@person.callsign}} has a Meal Pass for the {{this.currentPeriodLabel}} period. Do not issue a meal pog.
-          </div>
-        {{else}}
-          {{#if this.config.meal_half_pog_enabled}}
-            <p>
-              &half; Meal Pogs are available for a shift worked less than 6 hours.
-            </p>
-          {{/if}}
-          <b>For the current event period, issue a meal pog for every 6+ hours worked in a shift.</b>
-        {{/if}}
-        <FormRow class="mt-2">
-          <f.radioGroup @name="pog"
-                        @options={{this.pogOptions}}
-                        @label="Pog to issue"
-                        @inline={{true}} />
-        </FormRow>
-        {{#if (eq f.model.pog "half-meal")}}
-          <b class="text-danger">Half-meal pogs are tracked digitally. No physical pog is handed out.</b>
-        {{else}}
-          <b>Don't forget to hand over the physical pog.</b>
-        {{/if}}
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label="Issue Pog"/>
-        <UiCancelButton @onClick={{this.cancelNewPog}} />
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
 {{/if}}
 
 {{#if this.pogToCancel}}

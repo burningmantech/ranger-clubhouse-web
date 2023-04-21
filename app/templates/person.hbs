@@ -1,24 +1,26 @@
 <UiSidebar @theme="person" @smallTitle="Person Manage" as |s|>
   <s.group @title="PERSON MANAGE">
     <s.link @route="person.index" @title="Account Info" @icon="info" @iconType="s"/>
-    <s.link @route="person.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
-    <s.link @route="person.event-info" @title="Event/Training Info" @icon="user" @iconType="s"/>
-    <s.link @route="person.timesheet" @title="Timesheets" @icon="clock"/>
-    <s.link @route="person.work-history" @title="Work History" @icon="history" @iconType="s"/>
-    <s.link @route="person.assets" @title="Assets" @icon="broadcast-tower" @iconType="s"/>
-    <s.link @route="person.messages" @title="Messages" @icon="envelope"
-            @badgeText={{this.person.unread_message_count}} />
-    {{#if (has-role "admin" "view-pii")}}
-      <s.link @route="person.personal-info" @title="Personal Info" @icon="home" @iconType="s"/>
+    {{#if this.session.hasLoginManagement}}
+      <s.link @route="person.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
+      <s.link @route="person.event-info" @title="Event/Training Info" @icon="user" @iconType="s"/>
+      <s.link @route="person.timesheet" @title="Timesheets" @icon="clock"/>
+      <s.link @route="person.work-history" @title="Work History" @icon="history" @iconType="s"/>
+      <s.link @route="person.assets" @title="Assets" @icon="broadcast-tower" @iconType="s"/>
+      <s.link @route="person.messages" @title="Messages" @icon="envelope"
+              @badgeText={{this.person.unread_message_count}} />
+      {{#if (has-role "admin" "view-pii")}}
+        <s.link @route="person.personal-info" @title="Personal Info" @icon="home" @iconType="s"/>
+      {{/if}}
+      {{#if (has-role "admin")}}
+        <s.link @route="person.emergency-contact" @title="Emergency Contact" @icon="comment-medical" @iconType="s"/>
+      {{/if}}
+      {{#if (has-role "admin" "vc" "mentor")}}
+        <s.link @route="person.mentors" @title="Mentors" @icon="users" @iconType="s"/>
+      {{/if}}
+      <s.link @route="person.awards-swag" @title="Awards & Swag" @icon="award" @iconType="s"/>
+      <s.link @route="person.pogs" @title="Pogs" @icon="utensils" @iconType="s"/>
     {{/if}}
-    {{#if (has-role "admin" "manage")}}
-      <s.link @route="person.emergency-contact" @title="Emergency Contact" @icon="comment-medical" @iconType="s"/>
-    {{/if}}
-    {{#if (has-role "admin" "vc" "mentor")}}
-      <s.link @route="person.mentors" @title="Mentors" @icon="users" @iconType="s"/>
-    {{/if}}
-    <s.link @route="person.awards-swag" @title="Awards & Swag" @icon="award" @iconType="s"/>
-    <s.link @route="person.pogs" @title="Pogs" @icon="utensils" @iconType="s"/>
   </s.group>
   {{#if  (has-role "edit-bmids" "edit-access-docs")}}
     <s.group @title="PRE-PLAYA">

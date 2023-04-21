@@ -133,14 +133,13 @@
             {{this.person.callsign}} is authorized for {{pluralize this.eventInfo.radio_max "event radio"}}.
           </p>
         {{else}}
-          {{this.person.callsign}} is only authorized for SHIFT RADIOS.
           {{#if this.mayNotNeedRadio}}
-            <br>
-            <b class="text-danger">
-              {{this.person.callsign}} is working a Burn Perimeter shift and may not need a
-              radio. Check with the HQ Short or Lead if in doubt.
-            </b>
+            <UiNotice @icon="hand-point-right" @type="secondary" @title="May not need radio">
+              {{this.person.callsign}} is working a Burn Perimeter shift and may not need a radio. Check with
+              the HQ Short or Lead if in doubt.
+            </UiNotice>
           {{/if}}
+          {{this.person.callsign}} is only authorized for SHIFT RADIOS.
         {{/if}}
       </div>
 
@@ -166,17 +165,18 @@
     </tab.pane>
 
     <tab.pane @id="pogs">
+      <HqPogs @person={{this.person}}
+              @endedShiftEntry={{this.endedShiftEntry}}
+              @period={{this.eventInfo.event_period}}
+              @eventPeriods={{this.eventPeriods}}
+              @showers={{this.eventInfo.showers}}
+      />
       <HqProvisionInfo @person={{this.person}}
                        @period={{this.eventInfo.event_period}}
                        @eventPeriods={{this.eventPeriods}}
                        @meals={{this.eventInfo.meals}}
                        @showers={{this.eventInfo.showers}}
                        @onDutyEntry={{this.onDutyEntry}} />
-      <HqPogs @person={{this.person}}
-              @endedShiftEntry={{this.endedShiftEntry}}
-              @period={{this.eventInfo.event_period}}
-              @eventPeriods={{this.eventPeriods}}
-      />
     </tab.pane>
 
     <tab.pane @id="offsite">

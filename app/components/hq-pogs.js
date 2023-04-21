@@ -8,11 +8,12 @@ import {
   POG_SHOWER,
   STATUS_CANCELLED,
   STATUS_ISSUED,
-  STATUS_REDEEMED
+  STATUS_REDEEMED,
+  PogLabels
 } from 'clubhouse/models/person-pog';
 import {EventPeriodLabels} from 'clubhouse/models/event-date';
 import {validatePresence} from 'ember-changeset-validations/validators';
-
+import {htmlSafe} from '@ember/template';
 
 export default class HqPogsComponent extends Component {
   @service ajax;
@@ -52,19 +53,6 @@ export default class HqPogsComponent extends Component {
         person_id: this.args.person.id,
         year: this.house.currentYear()
       });
-
-      if (this.config.meal_half_pog_enabled) {
-        this.pogOptions = [
-          ['Full Meal Pog', POG_MEAL],
-          ['1/2 Meal Pog', POG_HALF_MEAL],
-          ['Shower Pog', POG_SHOWER]
-        ];
-      } else {
-        this.pogOptions = [
-          ['Full Meal Pog', POG_MEAL],
-          ['Shower Pog', POG_SHOWER]
-        ];
-      }
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
@@ -73,44 +61,88 @@ export default class HqPogsComponent extends Component {
   }
 
   /**
-   * Setup to create a new pog
+   * Record a Full Meal Pog
    */
 
   @action
-  newPog() {
-    this.pog = this.store.createRecord('person-pog', {
-      person_id: this.args.person.id,
-      pog: POG_MEAL,
-      status: STATUS_ISSUED,
-      timesheet_id: this.args.endedShiftEntry?.id,
-    });
+  recordFullMealPog() {
+    this.createPog(POG_MEAL);
   }
 
   /**
-   * Cancel the new pog
+   * Record a Half Meal Pog
    */
+
   @action
-  cancelNewPog() {
-    this.pog = null;
+  recordHalfMealPog() {
+    this.createPog(POG_HALF_MEAL);
+  }
+
+  /**
+   * Record a Shower Pog
+   */
+
+  @action
+  recordShowerPog() {
+    this.createPog(POG_SHOWER);
   }
 
   /**
    * Attempt to create a pog.
    *
-   * @param model
+   * @param {string} type
    * @returns {Promise<void>}
    */
 
   @action
-  async savePog(model) {
-    try {
-      await model.save();
-      await this.pogs.update();
-      this.toast.success('Pog successfully created.');
-      this.pog = null;
-    } catch (response) {
-      this.house.handleErrorResponse(response);
+  async createPog(type) {
+    let moreInfo = '';
+    let bmidWarning = '';
+    const {callsign} = this.args.person;
+    switch (type) {
+      case POG_HALF_MEAL:
+      case POG_MEAL:
+        if (this.hasMealPass) {
+          bmidWarning = `<b class="text-danger">${callsign} has a BMID Meal Pass for the current event period.</b>`
+        }
+        break;
+      case POG_SHOWER:
+        if (this.args.showers) {
+          bmidWarning = `<b class="text-danger">Person already has a BMID with Wet Spot access.</b>`;
+        }
+        break;
     }
+
+    if (type === POG_HALF_MEAL) {
+      moreInfo = '<span class="text-danger">Half Meal Pogs are tracked digitally. No physical pog is issued.</span>';
+    } else {
+      moreInfo = "Don't forget to hand over the physical pog";
+    }
+
+    if (bmidWarning !== '') {
+      bmidWarning = `<p>${bmidWarning}</p>`;
+    }
+
+    const pogLabel = PogLabels[type] ?? type;
+    this.modal.confirm(`Confirm ${pogLabel}`,
+      htmlSafe(
+        `${bmidWarning}<p>You are about issue a ${pogLabel}. Are you sure you want to do this?</p>${moreInfo}`),
+      async () => {
+        const pog = this.store.createRecord('person-pog', {
+          person_id: this.args.person.id,
+          pog: type,
+          status: STATUS_ISSUED,
+          timesheet_id: this.args.endedShiftEntry?.id,
+        });
+
+        try {
+          await pog.save();
+          await this.pogs.update();
+          this.toast.success('Pog successfully created.');
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        }
+      });
   }
 
   /**
@@ -159,7 +191,7 @@ export default class HqPogsComponent extends Component {
    * @private
    */
 
-  async _commonPogSave(pog, message, onSaved=null) {
+  async _commonPogSave(pog, message, onSaved = null) {
     try {
       await pog.save();
       this.toast.success(message);

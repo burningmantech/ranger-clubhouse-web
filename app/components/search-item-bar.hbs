@@ -2,11 +2,13 @@
   <ModalDialog @position="top" @onEscape={{this.hideSearchBoxAction}} as |Modal|>
     <Modal.body>
       {{#if (gt this.modeOptions.length 1)}}
-        <FormRow>
-          <label class="col-auto {{if this.session.isSmallScreen "col-form-label"}}">
-            Mode:
-          </label>
-          <div class=" col-sm-12 col-xl-auto">
+        <FormRow class="align-items-center">
+          <div class="col-auto">
+            <label class="col-form-label">
+              Mode:
+            </label>
+          </div>
+          <div class="col-auto">
             {{#if this.session.isSmallScreen}}
               <ChForm::Select @options={{this.modeOptions}}
                               @onChange={{this.modeChange}}

@@ -78,7 +78,7 @@ export default class extends SessionService {
   }
 
 
-  get hasLMOP() {
+  get hasLoginManagement() {
     return this.hasRole(MANAGE);
   }
 

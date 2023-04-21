@@ -1,6 +1,12 @@
 {{#each this.options as |opt idx|}}
-  <label class="{{if idx "ms-3"}}">
-    <input type="radio" checked={{opt.isSelected}} {{on "click" (fn this.changeEvent opt)}} />
-    {{opt.label}}
-  </label>
+  <div class="form-check form-check-inline">
+    <input type="radio"
+           id="radio-opt-{{idx}}"
+           class="form-check-input"
+           checked={{opt.isSelected}} {{on "click" (fn this.changeEvent opt)}}
+    />
+    <label class="form-check-label" for="radio-opt-{{idx}}">
+      {{opt.label}}
+    </label>
+  </div>
 {{/each}}
