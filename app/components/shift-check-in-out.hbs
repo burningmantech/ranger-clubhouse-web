@@ -5,12 +5,10 @@
     {{fa-icon "person-walking" right=2}} {{@person.callsign}} is on duty.
   </h4>
   {{#if this.mayNotNeedRadio}}
-    <p>
-      <b class="text-danger">
-        {{fa-icon "arrow-right" right=1}} {{@person.callsign}} is working a Burn Perimeter shift and may not need a
-        radio. Check with the HQ Short or Lead if in doubt.
-      </b>
-    </p>
+    <UiNotice @icon="hand-point-right" @type="secondary" @title="May not need radio">
+      {{@person.callsign}} is working a Burn Perimeter shift and may not need a radio. Check with
+      the HQ Short or Lead if in doubt.
+    </UiNotice>
   {{/if}}
   <table class="table table-width-auto">
     <thead>

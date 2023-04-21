@@ -14,11 +14,11 @@
   <:body>
     {{#if this.personEvent.asset_authorized}}
       <h4 class="text-success">
-        {{fa-icon "check" fixed=true}} Radio Checkout Agreement has been signed.
+        {{fa-icon "check" right=1 fixed=true}} Radio Checkout Agreement has been signed.
       </h4>
     {{else}}
       <h4 class="text-danger">
-        {{fa-icon "ban" fixed=true}}  Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE RADIOS.
+        {{fa-icon "ban" right=1 fixed=true}} Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE RADIOS.
       </h4>
       <p>
         Direct {{this.person.callsign}} to a kiosk and have them agree to the Radio Checkout Agreement. Only after the
@@ -27,11 +27,11 @@
     {{/if}}
     {{#if this.personEvent.signed_motorpool_agreement}}
       <h4 class="text-success">
-        {{fa-icon "check" fixed=true}} The Motorpool Policy has been signed.
+        {{fa-icon "check" right=1 fixed=true}} The Motorpool Policy has been signed.
       </h4>
     {{else}}
       <h4 class="text-danger">
-        {{fa-icon "ban" fixed=true}} Motorpool Agreement NOT SIGNED - Not authorized to drive Ranger gators, UTVs, or
+        {{fa-icon "ban" right=1 fixed=true}} Motorpool Agreement NOT SIGNED - Not authorized to drive Ranger gators, UTVs, or
         golf carts.
       </h4>
       <p>
@@ -47,17 +47,17 @@
     {{#if this.eventInfo.radio_max}}
       {{#if this.personEvent.asset_authorized}}
         <h4 class="text-success">
-          {{fa-icon "tower-broadcast" fixed=true}} Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}
+          {{fa-icon "tower-broadcast" right=1 fixed=true}} Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}
         </h4>
       {{else}}
         <h4 class="text-muted">
-          {{fa-icon "ban" fixed=true}} Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}} &mdash; DO
+          {{fa-icon "ban" right=1 fixed=true}} Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}} &mdash; DO
           NOT ISSUE UNTIL Radio Checkout Agreement IS SIGNED.
         </h4>
       {{/if}}
     {{else}}
-      <h4 class="text-secondary">
-        {{fa-icon "tower-broadcast" fixed=true}} Shift Radios only
+      <h4>
+        {{fa-icon "tower-broadcast" right=2}} Shift Radios only
       </h4>
     {{/if}}
     <hr>
