@@ -423,17 +423,17 @@
     <ChForm @formId="search"
             @formFor={{this.addPersonForm}}
             @changeSet={{false}}
-            @onFormChange={{action this.searchPeopleAction}} as |f|>
+            @onFormChange={{action this.searchPeopleAction}}
+            @onEscape={{this.cancelSearchAction}}
+            as |f|>
       <Modal.body>
         <FormRow>
           <f.text @name="name"
                   @label="Enter the callsign, real name, or email of the person to add:"
                   @size={{30}}
-                  @autofocus={{true}}/>
+                  @autofocus={{true}}
+          />
         </FormRow>
-        <div class="my-4">
-          <UiCancelButton @onClick={{this.cancelSearchAction}}/>
-        </div>
         {{#if this.foundPeople}}
           Click on the callsign to add the person.
           <table class="table table-striped table-hover table-width-auto">
@@ -462,6 +462,9 @@
           </p>
         {{/if}}
       </Modal.body>
+      <Modal.footer>
+        <UiCancelButton @onClick={{this.cancelSearchAction}}/>
+      </Modal.footer>
     </ChForm>
   </ModalDialog>
 {{/if}}
