@@ -4,8 +4,10 @@
         @onSubmit={{this.checkoutAsset}} as |f|>
   <FormRow>
     <f.text @name="barcode"
-             @placeholder="Enter Barcode"
-             @size={{15}} />
+            @placeholder="Enter Barcode"
+            @size={{15}}
+            @autofocus={{true}}
+    />
     <f.select @name="attachment_id"
               @options={{this.attachmentOptions}}/>
     <div class="col-auto">

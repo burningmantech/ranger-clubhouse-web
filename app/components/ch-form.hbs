@@ -2,7 +2,6 @@
       class={{@formClass}}
       autocomplete={{this.autocomplete}}
   {{on "submit" this.submitEvent}}
-  {{did-insert this.insertedFormElement}}
 >
   {{yield (hash
             model=this.model

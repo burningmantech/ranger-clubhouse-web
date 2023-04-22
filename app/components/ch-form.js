@@ -73,21 +73,6 @@ export default class ChFormComponent extends Component {
   }
 
   /**
-   * When the form is inserted into the DOM, find the first element that wants
-   * to be autofocused, and focus it.
-   *
-   * @param element form tag inserted
-   */
-
-  @action
-  insertedFormElement(element) {
-    const field = element.querySelector(`[autofocus]`);
-    if (field) {
-      schedule('afterRender', () => field.focus());
-    }
-  }
-
-  /**
    * Teardown the form - clear the on save callback for the model if it exists.
    */
 

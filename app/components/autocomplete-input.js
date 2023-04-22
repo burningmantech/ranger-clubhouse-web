@@ -3,6 +3,7 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {debounce, schedule} from '@ember/runloop';
 import {service} from '@ember/service';
+import focusElement from "clubhouse/utils/focus-element";
 
 const CLICK_DEBOUNCE_MS = 350;
 
@@ -162,9 +163,7 @@ export default class AutocompleteInputComponent extends Component {
     event.stopPropagation();
     this._setupSection(section);
     this.isRefocusing = true;
-    setTimeout(() =>
-        schedule('afterRender', () => this.inputElement.focus()),
-      250);
+    focusElement(this.inputElement);
   }
 
   _setupSection(section) {
@@ -387,9 +386,7 @@ export default class AutocompleteInputComponent extends Component {
   ignoreClick(event) {
     event.stopPropagation();
     this.isRefocusing = true;
-    setTimeout(() =>
-        schedule('afterRender', () => this.inputElement.focus()),
-      250);
+    focusElement(this.inputElement);
     return false;
   }
 
@@ -434,7 +431,7 @@ export default class AutocompleteInputComponent extends Component {
     }
 
     if (this.args.autofocus) {
-      setTimeout(() => schedule('afterRender', () => element.focus()), 100);
+      focusElement(element);
     }
   }
 
