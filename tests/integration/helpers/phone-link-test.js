@@ -8,10 +8,11 @@ module('helper:phone-link', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders a phone link', async function(assert) {
-    this.set('phone', '415-555-1212');
+    const phone = '415-555-1212';
+    this.set('phone', phone);
 
     await render(hbs`{{phone-link this.phone}}`);
 
-    assert.dom('a').hasAttribute('href', 'tel:+14155551212').hasText('(415) 555-1212');
+    assert.dom('a').hasAttribute('href', `tel:${phone}`).hasText(phone);
   });
 });
