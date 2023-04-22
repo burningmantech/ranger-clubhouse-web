@@ -1,6 +1,5 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
-import { schedule } from '@ember/runloop';
 import focusElement from "clubhouse/utils/focus-element";
 
 export default class DatetimePickerComponent extends Component {
