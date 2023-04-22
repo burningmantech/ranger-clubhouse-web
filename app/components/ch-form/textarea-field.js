@@ -1,14 +1,13 @@
 import ChFormFieldBaseComponent from './field-base';
 import {action} from '@ember/object';
-import {schedule} from '@ember/runloop';
-
+import focusElement from "clubhouse/utils/focus-element";
 export default class ChFormTextareaFieldComponent extends ChFormFieldBaseComponent {
   controlClassDefault = 'form-control';
 
   @action
   fieldInserted(element) {
     if (this.args.autofocus) {
-      schedule('afterRender', () => element.focus());
+      focusElement(element);
     }
   }
 }
