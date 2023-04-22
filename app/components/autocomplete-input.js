@@ -430,9 +430,7 @@ export default class AutocompleteInputComponent extends Component {
       element.setAttribute('readonly', '');
     }
 
-    if (this.args.autofocus) {
-      focusElement(element);
-    }
+    // Use the wrapper block insert to do the autofocus.
   }
 
   /**
@@ -484,5 +482,11 @@ export default class AutocompleteInputComponent extends Component {
   @action
   wrapperBlockInserted(block) {
     this.wrapperBlock = block;
+
+    if (this.args.autofocus) {
+      // Something is causing a blur event to fire right after insert & render. Delay focus to allow things
+      // to settle
+      setTimeout(() => focusElement(this.inputElement), 25);
+    }
   }
 }
