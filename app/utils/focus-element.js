@@ -14,7 +14,6 @@ export default function focusElement(element) {
       entries.forEach(entry => {
         if (entry.intersectionRatio > 0) {
           element.focus();
-          console.log('** ELEMENT FOCUSED - VIA OBSERVER');
           observer.unobserve(element);
         }
       });
