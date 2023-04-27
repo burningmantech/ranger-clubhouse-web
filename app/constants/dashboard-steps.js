@@ -620,7 +620,7 @@ function buildTickets(milestones, personId, house) {
   const pkg = new TicketPackage(milestones.ticketing_package, personId, house);
 
   pkg.tickets.forEach((t) => {
-    if (t.isClaimed || t.isSubmitted) {
+    if (usingTicket(t)) {
       claimed.push(t);
     }
   });
@@ -634,6 +634,31 @@ function buildTickets(milestones, personId, house) {
   }
 
   pkg.wapso.forEach((so) => claimed.push(so));
+
+  pkg.giftTickets.forEach((t) => {
+    if (usingTicket(t)) {
+      claimed.push(t);
+    }
+  });
+
+  pkg.giftVPs.forEach((t) => {
+    if (usingTicket(t)) {
+      claimed.push(t);
+    }
+  });
+
+  pkg.lsdTickets.forEach((t) => {
+    if (usingTicket(t)) {
+      claimed.push(t);
+    }
+  });
+
+  pkg.lsdVPs.forEach((t) => {
+    if (usingTicket(t)) {
+      claimed.push(t);
+    }
+  })
+
 
   return {
     claimed,

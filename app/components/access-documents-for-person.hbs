@@ -8,11 +8,29 @@
   <td class={{this.vpTickets.style}}>{{or this.vpTickets.text "-"}}</td>
   <td class="text-end {{this.significantOtherCount.style}}">{{or this.significantOtherCount.text "-"}}</td>
   <td>
-    {{~this.notes}}
-    {{~#if this.documentsErrors~}}
+    {{#if (or this.giftTickets this.giftVPs this.lsdTickets this.lsdVPs)}}
+      {{#if this.giftTickets}}
+        {{this.giftTickets.length}} Gift<br>
+      {{/if}}
+      {{#if this.giftVPs}}
+        {{this.giftVPs.length}} Gift VP<br>
+      {{/if}}
+      {{#if this.lsdTickets}}
+        {{this.lsdTickets.length}} LSD<br>
+      {{/if}}
+      {{#if this.lsdVPs}}
+        {{this.lsdVPs.length}} LSD VP
+      {{/if}}
+    {{else}}
+      -
+    {{/if}}
+  </td>
+  <td>
+    {{this.notes}}
+    {{#if this.documentsErrors}}
       <div class="text-danger">
-        {{#each this.documentsErrors as |error|}}
-          {{error}}<br>
+        {{#each this.documentsErrors as |error idx|}}
+          {{#if idx}}<br>{{/if}}{{error}}
         {{/each}}
       </div>
     {{/if}}

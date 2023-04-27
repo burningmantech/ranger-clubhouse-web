@@ -11,7 +11,7 @@
     <tbody>
     {{#each @ticketPackage.tickets as |item|}}
       <tr class={{if item.isClaimed "table-success"}}>
-         <td>
+        <td>
           {{item.typeLabel}} earned in {{item.source_year}}<br>
           <div class="text-muted">Expires {{mdy-format item.expiry_date}}</div>
         </td>
@@ -115,10 +115,10 @@
     Uh oh, I don't know the state of your ticket [{{@ticket.status}}].
   {{/if}}
 {{else}}
-  <b>Sorry, it doesn't appear you qualified for a Reduced-Price Ticket or Staff Credential.</b>
   <p>
-    You earned {{credits-format @ticketPackage.credits_earned}} credits last event. The minimum credits needed to earn
-    a Reduced-Price Ticket was {{credits-format @ticketingInfo.rpt_credits}}, and a Staff Credential was
-    {{credits-format @ticketingInfo.sc_credits}}.
+    <b>Sorry, it doesn't appear you qualified for a Reduced-Price Ticket or Staff Credential.</b>
   </p>
+  You earned {{credits-format @ticketPackage.credits_earned}} credits last event. The minimum credits needed to earn
+  a Reduced-Price Ticket was {{credits-format @ticketingInfo.rpt_credits}}, and a Staff Credential was
+  {{credits-format @ticketingInfo.sc_credits}}.
 {{/if}}

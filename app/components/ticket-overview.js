@@ -64,5 +64,10 @@ export default class TicketOverviewComponent extends Component {
     }
 
     this.usingWAP = (this.effectiveWAP && this.effectiveWAP.isUsing);
+
+    this.giftTicketCount = ticketPackage.giftTickets.filter((t) => t.isClaimed || t.isSubmitted).length;
+    this.giftVPCount = ticketPackage.giftVPs.filter((t) => t.isClaimed || t.isSubmitted).length;
+    this.lsdTicketCount = ticketPackage.lsdTickets.filter((t) => t.isClaimed || t.isSubmitted).length;
+    this.lsdVPCount = ticketPackage.lsdVPs.filter((t) => t.isClaimed || t.isSubmitted).length;
   }
 }

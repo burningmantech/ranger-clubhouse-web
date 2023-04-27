@@ -1,34 +1,36 @@
 import Component from '@glimmer/component';
 import dayjs from 'dayjs';
 import {isEmpty} from '@ember/utils';
+import {
+  STAFF_CREDENTIAL,
+  WAP,
+  BANKED,
+  CLAIMED,
+  SUBMITTED,
+  QUALIFIED,
+  TypeShortLabels,
+  RPT, GIFT_TICKET, LSD_TICKET, VEHICLE_PASS, WAPSO, VEHICLE_PASS_GIFT, VEHICLE_PASS_LSD
+} from 'clubhouse/models/access-document';
 
 /*
  * Build a row showing the person's current documents.
  */
 
 export default class AccessDocumentsForPersonComponent extends Component {
-  ticketInfoTypes = {
-    staff_credential: 'CRED',
-    reduced_price_ticket: 'RPT',
-    gift_ticket: 'GIFT'
-  };
-
-  vpTicketInfo = {
-    vehicle_pass: 'VP'
-  };
-
-  wapSOsInfo = {
-    work_access_pass_so: 'WAPSO'
-  };
-
   constructor() {
     super(...arguments);
     const notes = [];
+    const {documents} = this.args;
 
-    this.tickets = this._accessDocumentInfo('tickets', this.ticketInfoTypes, notes);
+    this.tickets = this._accessDocumentInfo('tickets', [STAFF_CREDENTIAL, RPT], notes);
+    this.giftTickets = documents.filter((d) => d.type === GIFT_TICKET);
+    this.lsdTickets = documents.filter((d) => d.type === LSD_TICKET);
+    this.giftVPs = documents.filter((d) => d.type === VEHICLE_PASS_GIFT);
+    this.lsdVPs = documents.filter((d) => d.type ===  VEHICLE_PASS_LSD);
+
     this._findArrivalDate(notes);
-    this.vpTickets = this._accessDocumentInfo('VPs', this.vpTicketInfo, notes);
-    this.significantOtherCount = this._accessDocumentInfo('WAPSOs', this.wapSOsInfo, notes);
+    this.vpTickets = this._accessDocumentInfo('VPs', [ VEHICLE_PASS ], notes);
+    this.significantOtherCount = this._accessDocumentInfo('WAPSOs', [ WAPSO], notes);
     this.notes = notes;
 
     const errors = [];
@@ -56,23 +58,23 @@ export default class AccessDocumentsForPersonComponent extends Component {
 
   _findArrivalDate(notes) {
     const docs = this.args.documents;
-    const waps = docs.filter((doc) => (doc.type === 'work_access_pass'));
+    const waps = docs.filter((doc) => (doc.type === WAP));
 
     if (waps.length > 1) {
       notes.push(`${waps.length} WAPs`);
     }
 
     // Find a claimed SC
-    let doc = docs.find((doc) => (doc.type === 'staff_credential' && doc.status === 'claimed'));
+    let doc = docs.find((doc) => (doc.type === STAFF_CREDENTIAL && doc.status === CLAIMED));
 
     // Nope, try find a WAP.
     if (!doc) {
-      doc = docs.find((doc) => doc.type === 'work_access_pass');
+      doc = docs.find((doc) => doc.type === WAP);
     }
 
     // Try again -- ANY SCs.
     if (!doc) {
-      doc = docs.find((doc) => doc.type === 'staff_credential');
+      doc = docs.find((doc) => doc.type === STAFF_CREDENTIAL);
     }
 
     let style = '', text;
@@ -80,11 +82,11 @@ export default class AccessDocumentsForPersonComponent extends Component {
       text = 'missing';
     } else {
       // Alert to someone having a staff credential AND WAP.
-      if (doc.type === 'staff_credential' && waps.length > 0) {
+      if (doc.type === STAFF_CREDENTIAL && waps.length > 0) {
         notes.push('SC+WAP');
       }
 
-      if (doc.status === 'claimed' || doc.status === 'banked' || doc.status === 'submitted') {
+      if (doc.status === CLAIMED || doc.status === BANKED || doc.status === SUBMITTED) {
         style = `access-document-${doc.status}`;
       }
 
@@ -95,7 +97,7 @@ export default class AccessDocumentsForPersonComponent extends Component {
   }
 
   _accessDocumentInfo(type, typeMap, notes) {
-    const documents = this.args.documents.filter((doc) => typeMap[doc.type] ? 1 : 0);
+    const documents = this.args.documents.filter((doc) => typeMap.includes(doc.type));
 
     if (!documents.length) {
       return {style: '', text: ''};
@@ -106,11 +108,11 @@ export default class AccessDocumentsForPersonComponent extends Component {
     let text = '';
     switch (type) {
       case 'WAPSOs':
-        text = +documents.length;
+        text = documents.length;
         break;
 
       default:
-        text = typeMap[theOne.type];
+        text = TypeShortLabels[theOne.type] ?? theOne.type;
         break;
     }
 
@@ -124,7 +126,7 @@ export default class AccessDocumentsForPersonComponent extends Component {
     if (type === 'tickets') {
       const expired = [];
       documents.forEach((doc) => {
-        if (doc.past_expire_date && (doc.status === 'banked' || doc.status === 'qualified')) {
+        if (doc.past_expire_date && (doc.status === BANKED || doc.status === QUALIFIED)) {
           expired.push(`${typeMap[doc.type]} EXPIRED`);
         }
       });
@@ -141,7 +143,7 @@ export default class AccessDocumentsForPersonComponent extends Component {
     }
 
     let style = '';
-    if (theOne.status === 'claimed' || theOne.status === 'banked' || theOne.status === 'submitted') {
+    if (theOne.status === CLAIMED || theOne.status === BANKED || theOne.status === SUBMITTED) {
       style = `access-document-${theOne.status}`;
     }
 

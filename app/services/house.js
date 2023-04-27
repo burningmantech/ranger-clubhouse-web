@@ -243,6 +243,8 @@ export default class HouseService extends Service {
     });
 
     this.downloadFile(filename, contents, 'text/csv');
+
+    return contents;
   }
 
   /**
@@ -406,5 +408,27 @@ export default class HouseService extends Service {
       script.addEventListener('error', () => reject());
       script.src = url; // Boom!
     });
+  }
+
+  /**
+   * Record an action
+   *
+   * @param {string} event
+   * @param {Object} data
+   */
+
+  actionRecord(event, data = null) {
+    const record = new FormData;
+
+    record.append('event', event);
+    if (data) {
+      record.append('data', JSON.stringify(data));
+    }
+
+    if (this.session.isAuthenticated) {
+      record.append('person_id', this.session.userId);
+    }
+
+    navigator.sendBeacon(ENV['api-server'] + '/action-log/record', record);
   }
 }

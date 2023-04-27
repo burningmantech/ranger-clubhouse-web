@@ -92,7 +92,8 @@
       <thead>
       <tr>
         <th>
-          <Input @type="checkbox" @checked={{this.selectAll}} {{on "change" this.toggleAll}}
+          <Input @type="checkbox" @checked={{this.selectAll}}
+                  {{on "change" this.toggleAll}}
                  disabled={{eq this.filter "all"}} />
         </th>
         <th>Callsign</th>
@@ -118,14 +119,14 @@
           </td>
           <td>
             {{#if rec.has_error}}
-              {{fa-icon "exclamation-triangle" color="danger"}}
+              {{fa-icon "exclamation-triangle" color="danger" right=1}}
             {{/if}}
             <PersonLink @person={{rec.person}} @page="tickets-provisions"/>
           </td>
           <td>{{rec.person.first_name}}</td>
           <td>{{rec.person.last_name}}</td>
           <td>{{mail-to rec.person.email}}</td>
-          <td>{{rec.delivery_type}}</td>
+          <td>{{this.deliveryLabel rec}}</td>
           <td>
             {{rec.trsNote}}
             {{#if rec.has_error}}
