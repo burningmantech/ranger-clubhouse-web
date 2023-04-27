@@ -26,6 +26,7 @@ export const DELIVERY_WILL_CALL = 'will_call';
 export const DELIVERY_NONE = 'none';
 export const DELIVERY_EMAIL = 'email';
 
+export const DELIVERY_SC = 'staff_credentialing'; // Only used for exports, not a real type.
 
 export const TypeLabels = {
   [GIFT_TICKET]: 'Gift Ticket',
@@ -40,13 +41,13 @@ export const TypeLabels = {
 };
 
 export const TypeShortLabels = {
-  [STAFF_CREDENTIAL]: 'SC',
+  [STAFF_CREDENTIAL]: 'CRED',
   [RPT]: 'RPT',
   [GIFT_TICKET]: 'GIFT',
   [LSD_TICKET]: 'LSD',
   [VEHICLE_PASS]: 'VP',
-  [VEHICLE_PASS_GIFT]: 'VPGIFT',
-  [VEHICLE_PASS_LSD]: 'VPLSD',
+  [VEHICLE_PASS_GIFT]: 'VP[gift]',
+  [VEHICLE_PASS_LSD]: 'VP[lsd]',
   [WAP]: 'WAP',
   [WAPSO]: 'SOWAP',
 };
@@ -55,7 +56,8 @@ export const DeliveryMethodLabels = {
   [DELIVERY_EMAIL]: 'Email',
   [DELIVERY_POSTAL]: 'US Mail',
   [DELIVERY_WILL_CALL]: 'Will Call',
-  [DELIVERY_NONE]: 'None'
+  [DELIVERY_NONE]: 'None',
+  [DELIVERY_SC]: 'Staff Credentialing',  // Only used for export advisory, not a real delivery type.
 };
 
 export const StatusLabels = {
@@ -97,6 +99,7 @@ export default class AccessDocumentModel extends Model {
   @attr('string', {defaultValue: 'US'}) country;
   @attr('string') postal_code;
 
+  @attr('', { readOnly: true }) person;
 
   get isRegularTicket() {
     return (this.type === STAFF_CREDENTIAL || this.type === RPT);
@@ -230,6 +233,10 @@ export default class AccessDocumentModel extends Model {
 
   get typeLabel() {
     return TypeLabels[this.type] ?? this.type;
+  }
+
+  get shortTypeLabel() {
+    return TypeShortLabels[this.type] ?? this.type;
   }
 
   get deliveryMethodLabel() {

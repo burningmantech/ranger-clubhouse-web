@@ -71,24 +71,30 @@
     {{/if}}
   {{/if}}
 
-  {{#each @ticketPackage.giftTickets as |gift|}}
-    {{#if (or gift.isClaimed gift.isSubmitted)}}
-    <TicketOverviewItem @icon="gift" @title="Gift Ticket Claimed" @type="success">
-        <TicketGiftConditions />
-    </TicketOverviewItem>
-    {{/if}}
-  {{/each}}
-
-  {{#if @ticketPackage.lsdTickets}}
-    <TicketOverviewItem @icon="gift" @title="Late Season Direct Ticket Claimed" @type="success">
+  {{#if this.giftTicketCount}}
+    <TicketOverviewItem @icon="gift"
+                        @title="{{singular-or-pluralize this.giftTicketCount "Gift Ticket" capitalize=true}} Claimed"
+                        @type="success">
       <p>
-      {{pluralize @ticketPackage.lsdTickets.length "LSD Ticket"}} has been claimed.
-        {{#if @ticketPackage.lsdVPs}}
-
-        {{/if}}
+        {{singular-or-pluralize this.giftTicketCount "Gift Ticket" capitalize=true}}
+        {{~#if this.giftVPCount~}}, and {{singular-or-pluralize this.giftVPCount "Gift Vehicle Pass"}}{{/if}}
+        has been claimed.
       </p>
-      All Late Season Directed
-      ticket(s) must be paid for in advance. Instructions will be sent on how to pay.
+
+      <TicketGiftConditions/>
+    </TicketOverviewItem>
+  {{/if}}
+
+  {{#if this.lsdTicketCount}}
+    <TicketOverviewItem @icon="gift"
+                        @title="{{singular-or-pluralize this.lsdTicketCount "Late Season Directed Ticket" capitalize=true}} Claimed"
+                        @type="success">
+      <p>
+        {{singular-or-pluralize this.lsdTicketCount "LSD Ticket" capitalize=true}}
+        {{~#if this.lsdVPCount~}}, and {{singular-or-pluralize this.lsdVPCount "LSD Vehicle Pass"}}{{/if}}
+        has been claimed.
+      </p>
+      All Late Season Directed ticket(s) must be paid for in advance. Instructions will be sent on how to pay.
     </TicketOverviewItem>
   {{/if}}
 

@@ -4,15 +4,18 @@ import {isBlank, isEmpty} from '@ember/utils';
 import dayjs from 'dayjs';
 import {cached, tracked} from '@glimmer/tracking';
 import {
+  DELIVERY_POSTAL,
+  DELIVERY_SC,
   GIFT_TICKET,
   LSD_TICKET,
-  STAFF_CREDENTIAL,
   RPT,
+  STAFF_CREDENTIAL,
+  VEHICLE_PASS,
+  VEHICLE_PASS_GIFT,
+  VEHICLE_PASS_LSD,
   WAP,
   WAPSO,
-  VEHICLE_PASS,
-  DELIVERY_POSTAL,
-  TypeShortLabels,
+  TypeShortLabels, DeliveryMethodLabels,
 } from 'clubhouse/models/access-document';
 import {ALPHA, PROSPECTIVE} from 'clubhouse/constants/person_status';
 
@@ -21,9 +24,11 @@ const TRS_COLUMN = {
   [RPT]: 'rpt',
   [GIFT_TICKET]: 'gift_ticket',
   [LSD_TICKET]: 'rpt',    // LSD is really a RPT
-  [VEHICLE_PASS]: 'vp',
+  [VEHICLE_PASS]: 'vp',   // VP is really a Gift VP
+  [VEHICLE_PASS_GIFT]: 'vp',
+  [VEHICLE_PASS_LSD]: 'paid_vp',
   [WAP]: 'wap',
-  [WAPSO]: 'wap'
+  [WAPSO]: 'sowap'
 };
 
 const PAID_EXPORT_FORMAT = [
@@ -122,12 +127,14 @@ const UNPAID_EXPORT_FORMAT = [
 ];
 
 // Filter Options
-const STAFF_CREDENTIAL_VP = 'staff_credential_vp';
 const GIFT_TICKET_VP = 'gift_ticket_vp';
+const LSD_TICKET_VP = 'lsd_vp';
+const RPT_VP = 'rpt_vp';
+const STAFF_CREDENTIAL_VP = 'staff_credential_vp';
 
-const WAP_RANGER = 'work_access_pass_ranger';
-const WAP_PNV = 'work_access_pass_pnv';
 const WAP_ALL = 'work_access_pass_all';
+const WAP_PNV = 'work_access_pass_pnv';
+const WAP_RANGER = 'work_access_pass_ranger';
 
 export default class VcAccessDocumentsTrsController extends ClubhouseController {
   @tracked filter = 'all';
@@ -142,16 +149,50 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
   filterOptions = [
     ['All', 'all'],
-    ['Staff Credentials', STAFF_CREDENTIAL],
-    ['Staff Credentials+VP', STAFF_CREDENTIAL_VP],
-    ['Reduced-Price Tickets', RPT],
-    ['Vehicle Passes', VEHICLE_PASS],
-    ['Work Access Passes Ranger', WAP_RANGER],
-    ['Work Access Passes SO', WAPSO],
-    ['Work Access Passes PNV', WAP_PNV],
-    ['Work Access Passes All', WAP_ALL],
-    ['Gift Tickets', GIFT_TICKET],
-    ['Gift Tickets', LSD_TICKET],
+    {
+      groupName: 'Staff Credentials',
+      options:
+        [
+          ['Staff Credentials', STAFF_CREDENTIAL],
+          ['Staff Credentials+VP', STAFF_CREDENTIAL_VP],
+        ]
+    },
+    {
+      groupName: 'RPTs',
+      options:
+        [
+          ['Reduced-Price Tickets', RPT],
+          ['Reduced-Price Tickets + VP', RPT_VP],
+        ]
+    },
+    {
+      groupName: 'Vehicle Passes',
+      options:
+        [
+          ['Vehicle Passes', VEHICLE_PASS],
+          ['Gift Vehicle Passes', VEHICLE_PASS_GIFT],
+          ['LSD Vehicle Passes', VEHICLE_PASS_LSD],
+        ]
+    },
+    {
+      groupName: 'Work Access Passes',
+      options:
+        [
+          ['WAP Ranger', WAP_RANGER],
+          ['WAP SO', WAPSO],
+          ['WAP PNV', WAP_PNV],
+          ['WAP All', WAP_ALL],
+        ]
+    },
+    {
+      groupName: 'Special Tickets',
+      options: [
+        ['Gift Tickets', GIFT_TICKET],
+        ['Gift Tickets + VP', GIFT_TICKET_VP],
+        ['LSD Tickets', LSD_TICKET],
+        ['LSD Tickets + VP', LSD_TICKET_VP],
+      ]
+    }
   ];
 
   @cached
@@ -273,13 +314,30 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         return this.accessDocuments.filter((r) => r.type === WAP || r.type === WAPSO);
 
       case STAFF_CREDENTIAL_VP:
-      case GIFT_TICKET_VP: {
+      case RPT_VP:
+      case GIFT_TICKET_VP:
+      case LSD_TICKET_VP: {
         const rows = [];
         const isSC = (filter === STAFF_CREDENTIAL_VP);
 
+        let ticketType, vpType;
+        if (filter === STAFF_CREDENTIAL_VP) {
+          ticketType = STAFF_CREDENTIAL;
+          vpType = VEHICLE_PASS;
+        } else if (filter === RPT_VP) {
+          ticketType = RPT;
+          vpType = VEHICLE_PASS;
+        } else if (filter === GIFT_TICKET_VP) {
+          ticketType = GIFT_TICKET;
+          vpType = VEHICLE_PASS_GIFT;
+        } else {
+          ticketType = LSD_TICKET;
+          vpType = VEHICLE_PASS_LSD;
+        }
+
         this.people.forEach((person) => {
-          let tickets = person.documentTypes[(isSC ? STAFF_CREDENTIAL : GIFT_TICKET)] || [];
-          let vp = person.documentTypes[VEHICLE_PASS] || [];
+          let tickets = person.documentTypes[ticketType] || [];
+          let vp = person.documentTypes[vpType] || [];
 
           tickets = tickets.filter((s) => !s.submitted);
           if (!tickets.length) {
@@ -305,7 +363,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
           rows.push({
             person: person.person,
-            delivery_type: (isSC ? 'staff_credentialing' : tickets[0].delivery_method),
+            delivery_type: (isSC ? DELIVERY_SC : tickets[0].delivery_method),
             documents,
             trsNote: notes.join('+'),
             has_error,
@@ -364,7 +422,19 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
   }
 
   get filterLabel() {
-    return this.filterOptions.find((opt) => opt[1] === this.filter)?.[0] ?? this.filter;
+    for (const group of this.filterOptions) {
+      if (group.options) {
+        for (const option of group.options) {
+          if (option[1] === this.filter) {
+            return option[0];
+          }
+        }
+      } else if (group[1] === this.filter) {
+        return group[0];
+      }
+    }
+
+    return this.filter;
   }
 
   @action
@@ -374,9 +444,8 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
       () => this._performExport());
   }
 
-  _performExport() {
+  async _performExport() {
     const records = this.viewRecords.filter((r) => r.selected);
-    const isRPT = (this.filter === RPT);
     let rows;
 
     if (!records.length) {
@@ -388,7 +457,9 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     const exportedBy = `exported by CHID #${this.session.user.id}`;
 
     if (this.filter === STAFF_CREDENTIAL_VP
-      || this.filter === GIFT_TICKET_VP) {
+      || this.filter === GIFT_TICKET_VP
+      || this.filter === RPT_VP
+      || this.filter === LSD_TICKET_VP) {
       rows = [];
       records.forEach((rec) => {
         const {person, documents} = rec;
@@ -443,6 +514,9 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         switch (doc.type) {
           case RPT:
           case GIFT_TICKET:
+          case VEHICLE_PASS_GIFT:
+          case LSD_TICKET:
+          case VEHICLE_PASS_LSD:
             row.delivery_type = isPostal ? 'USPS' : 'Will Call';
             break;
 
@@ -483,23 +557,50 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
     }
 
-    const format = isRPT ? PAID_EXPORT_FORMAT : UNPAID_EXPORT_FORMAT;
+    let format;
+
+    switch (this.filter) {
+      case RPT:
+      case RPT_VP:
+      case GIFT_TICKET:
+      case GIFT_TICKET_VP:
+      case VEHICLE_PASS_GIFT:
+      case LSD_TICKET:
+      case LSD_TICKET_VP:
+      case VEHICLE_PASS_LSD:
+        format = PAID_EXPORT_FORMAT;
+        break;
+
+      default:
+        format = UNPAID_EXPORT_FORMAT;
+        break;
+    }
 
     const columns = format.map((r) => ({title: r[0], key: r[1]}));
 
     const date = dayjs().format('YYYY-MM-DD-HH-mm');
 
     // Mark the records as exported first.
-    this.ajax.request('access-document/bulk-comment', {
-      method: 'POST',
-      data: {
-        ids: exportedIds,
-        comment: 'exported' // Bulk comment API will add the user's callsign and a timestamp
-      }
-    }).then(() => this.toast.success('An export comment was successfully added to the exported items.'))
-      .catch((response) => this.house.handleErrorResponse(response));
+    try {
+      await this.ajax.request('access-document/bulk-comment', {
+        method: 'POST',
+        data: {
+          ids: exportedIds,
+          comment: 'exported' // Bulk comment API will add the user's callsign and a timestamp
+        }
+      });
+      this.toast.success('An export comment was successfully added to the exported items.');
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
 
-    this.house.downloadCsv(`trs-${this.filter.replace(/_/g, '-')}-${date}.csv`, columns, rows);
+    const contents = this.house.downloadCsv(`trs-${this.filter.replace(/_/g, '-')}-${date}.csv`, columns, rows);
+
+    this.house.actionRecord('access-document-export', {
+      ids: exportedIds,
+      filter: this.filter,
+      contents,
+    });
   }
 
   @action
@@ -522,9 +623,10 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
     this.modal.confirm('Confirm mask as submitted',
       `Are you sure you want to mark the ${itemCount} item(s) as submitted?`,
-      () => {
+      async () => {
         this.isSubmitting = true;
-        this.ajax.request('access-document/mark-submitted', {method: 'POST', data: {ids}}).then(() => {
+        try {
+          await this.ajax.request('access-document/mark-submitted', {method: 'POST', data: {ids}});
           this.toast.success('Access documents have been successfully marked as submitted.');
           this.isSubmitting = false;
           this.viewRecords.forEach((rec) => {
@@ -537,8 +639,17 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
             if (rec.documents) {
               rec.documents.forEach((doc) => set(doc, 'submitted', true));
             }
-          });
-        }).finally(() => this.isSubmitting = false);
+          })
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        } finally {
+          this.isSubmitting = false;
+        }
       });
+  }
+
+  @action
+  deliveryLabel(row) {
+    return DeliveryMethodLabels[row.delivery_type] ?? row.delivery_type;
   }
 }

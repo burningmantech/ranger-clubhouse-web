@@ -51,7 +51,7 @@ export default class TicketWapInfoComponent extends Component {
 
   get allTicketsBanked() {
     const {tickets} = this.args.ticketPackage;
-    return tickets.length === tickets.filter((t) => t.isBanked).length;
+    return tickets.length && tickets.length === tickets.filter((t) => t.isBanked).length;
   }
 
   /**
@@ -61,6 +61,7 @@ export default class TicketWapInfoComponent extends Component {
    */
 
   get noTicketsTouched() {
-    return !this.args.ticketPackage.tickets.find((t) => t.isUsing || t.isBanked);
+    const {tickets} = this.args.ticketPackage;
+    return tickets.length && !tickets.find((t) => t.isUsing || t.isBanked);
   }
 }

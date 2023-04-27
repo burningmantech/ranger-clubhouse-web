@@ -162,7 +162,6 @@ Router.map(function () {
     this.route('pogs');
     this.route('schedule');
     this.route('status-history');
-    this.route('tickets');
     this.route('tickets-provisions');
     this.route('timesheet');
     this.route('timesheet-log');
@@ -241,7 +240,6 @@ Router.map(function () {
       this.route('unclaimed-with-signups');
       this.route('claimed-with-no-signups');
       this.route('unsubmit-provisions');
-      this.route('special-tickets');
     });
     this.route('bmid');
     this.route('bmid-print');
