@@ -3,11 +3,7 @@
             @years={{this.session.user.all_years}}
             @onChange={{action (mut this.year)}} />
 <BackToHome/>
-<p>
-  Visit the
-  <LinkTo @route="me.work-history">Work History</LinkTo>
-  page to see how your hours have been spent over the years.
-</p>
+
 {{#if this.correctionsEnabled}}
   {{#if this.haveOutstandingTasks}}
     <UiNotice @title="Action required - Timesheet Entry Review" @type="danger" @icon="hand-point-right">
@@ -74,7 +70,7 @@
 {{/if}}
 
 <UiTab as |tab|>
-  <tab.pane @title="Timesheet">
+  <tab.pane @title="{{this.year}} Timesheet">
     <Me::TimesheetReviewCommon @person={{this.person}}
                                @timesheets={{this.timesheets}}
                                @timesheetInfo={{this.timesheetInfo}}
@@ -107,6 +103,9 @@
     {{else}}
       Ticket &amp; Stuff qualification information is only available for the current event.
     {{/if}}
+  </tab.pane>
+  <tab.pane @title="Work History" @id="work-history">
+    <WorkHistory @person={{this.person}} />
   </tab.pane>
 </UiTab>
 

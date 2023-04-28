@@ -1,75 +1,84 @@
 <p>
-  Alpha, Deep Freeze, Training, and Advanced Ranger Training entries are filtered out. Only on playa volunteering efforts
-  as represented by a timesheet entry are listed. Any off playa efforts, including off playa trainings, are not shown here.
+  Alpha, Deep Freeze, Training, and Advanced Ranger Training entries are filtered out. Only on playa volunteering
+  efforts
+  as represented by a timesheet entry are listed. Any off playa efforts, including off playa trainings, are not shown
+  here.
 </p>
-{{#if this.hasInaccurateTimesheets}}
-  <p class="text-danger">
-    NOTE: {{if this.isMe "You have " (concat @person.callsign " has")}}
-    timesheet entries before 2008. These entries are placeholders.
-  </p>
-{{/if}}
-{{#if this.years}}
-  {{#if this.hasNonRangerWork}}
-    <p>
-      <b class="text-danger">
-        {{if this.isMe "You have " (concat @person.callsign " has")}} Non Ranger volunteer timesheet entries.
-      </b>
+<p>
+  Click on the hour totals to see how the time was spent.
+</p>
+{{#if this.isLoading}}
+  <LoadingIndicator @text="Loading Work History"/>
+{{else}}
+  {{#if this.hasInaccurateTimesheets}}
+    <p class="text-danger">
+      NOTE: {{if this.isMe "You have " (concat @person.callsign " has")}}
+      timesheet entries before 2008. These entries are placeholders.
     </p>
   {{/if}}
-  <div class="overflow-y-auto">
-    {{pluralize this.years.length "year"}} worked. {{pluralize this.positions.length "position"}}.
-    <table class="table table-width-auto table-striped table-hover">
-      <thead>
-      <tr>
-        <th>Position</th>
-        <th>Total Hours</th>
-        {{#each this.years as |year|}}
-          <th>{{year}}</th>
-        {{/each}}
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <th>All Positions</th>
-        <td class="text-end">{{hour-format this.totalDuration}}</td>
-        {{#each this.years as |year|}}
-          <td class="text-end">
-            <a href {{action this.showEntireYearAction year}}>
-              {{hour-format (get (get this.yearTotals year) "duration")}}
-            </a>
-          </td>
-        {{/each}}
-      </tr>
-      {{#each this.positions as |position|}}
+  {{#if this.years}}
+    {{#if this.hasNonRangerWork}}
+      <p>
+        <b class="text-danger">
+          {{if this.isMe "You have " (concat @person.callsign " has")}} Non Ranger volunteer timesheet entries.
+        </b>
+      </p>
+    {{/if}}
+    <div class="overflow-y-auto">
+      {{pluralize this.years.length "year"}} worked. {{pluralize this.positions.length "position"}}.
+      <table class="table table-width-auto table-striped table-hover">
+        <thead>
         <tr>
-          <td>{{position.title}}</td>
-          <td class="text-end">
-            <a href {{action this.showPositionAllEntriesAction position.id}}>{{hour-format position.duration}}</a>
-          </td>
+          <th>Position</th>
+          <th>Total Hours</th>
           {{#each this.years as |year|}}
-            {{#let (get (get this.positionsByYear year) position.id) as |work|}}
-              {{#if work}}
-                <td class="text-end">
-                  <a href {{action this.showPositionYearSummaryAction position.id year}}>
-                    {{hour-format work.duration}}
-                  </a>
-                </td>
-              {{else}}
-                <td class="text-center">
-                  -
-                </td>
-              {{/if}}
-            {{/let}}
+            <th>{{year}}</th>
           {{/each}}
         </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  </div>
-{{else}}
-  <p>
-    <b class="text-danger">No timesheet entries were found.</b>
-  </p>
+        </thead>
+        <tbody>
+        <tr>
+          <th>All Positions</th>
+          <td class="text-end">{{hour-format this.totalDuration}}</td>
+          {{#each this.years as |year|}}
+            <td class="text-end">
+              <a href {{action this.showEntireYearAction year}}>
+                {{hour-format (get (get this.yearTotals year) "duration")}}
+              </a>
+            </td>
+          {{/each}}
+        </tr>
+        {{#each this.positions as |position|}}
+          <tr>
+            <td>{{position.title}}</td>
+            <td class="text-end">
+              <a href {{action this.showPositionAllEntriesAction position.id}}>{{hour-format position.duration}}</a>
+            </td>
+            {{#each this.years as |year|}}
+              {{#let (get (get this.positionsByYear year) position.id) as |work|}}
+                {{#if work}}
+                  <td class="text-end">
+                    <a href {{action this.showPositionYearSummaryAction position.id year}}>
+                      {{hour-format work.duration}}
+                    </a>
+                  </td>
+                {{else}}
+                  <td class="text-center">
+                    -
+                  </td>
+                {{/if}}
+              {{/let}}
+            {{/each}}
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </div>
+  {{else}}
+    <p>
+      <b class="text-danger">No timesheet entries were found.</b>
+    </p>
+  {{/if}}
 {{/if}}
 
 {{#if this.showPositionYearEntries}}

@@ -414,15 +414,20 @@ export default class HouseService extends Service {
    * Record an action
    *
    * @param {string} event
-   * @param {Object} data
+   * @param {Object|null} data
+   * @param {string|null} message
    */
 
-  actionRecord(event, data = null) {
+  actionRecord(event, data = null, message = null) {
     const record = new FormData;
 
     record.append('event', event);
     if (data) {
       record.append('data', JSON.stringify(data));
+    }
+
+    if (message) {
+      record.append('message', message);
     }
 
     if (this.session.isAuthenticated) {

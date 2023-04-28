@@ -17,7 +17,7 @@ class Phone {
   @tracked is_verified;
 
   constructor(info) {
-    this.phone  = info.phone;
+    this.phone = info.phone;
     this.is_stopped = info.is_stopped;
     this.is_verified = info.is_verified;
   }
@@ -186,28 +186,32 @@ export default class AlertsManageComponent extends Component {
 
   // Save the phone numbers entered.
   @action
-  saveNumbersAction(model, isValid) {
-    if (!isValid) {
+  async saveNumbersAction(model) {
+    if (model.is_same) {
+      model.on_playa = model.off_playa;
+
+      // Re-run the validation
+      await model.validate();
+    }
+
+    if (!isEmpty(model.errors)) {
+      // numbers are not valid.
       return;
     }
 
     const off_playa = model.off_playa;
     let on_playa = model.on_playa;
 
-    if (model.is_same) {
-      on_playa = off_playa;
-    }
-
     this.isUpdatingNumbers = true;
-    this.ajax.request(`sms`, {
-      method: 'POST',
-      data: {
-        person_id: this.args.person.id,
-        on_playa,
-        off_playa
-      }
-    }).then((result) => {
-      const numbers = result.numbers;
+    try {
+      const {numbers} = await this.ajax.request(`sms`, {
+        method: 'POST',
+        data: {
+          person_id: this.args.person.id,
+          on_playa,
+          off_playa
+        }
+      });
 
       // Update the form with the current values
       model.off_playa = numbers.off_playa.phone;
@@ -215,41 +219,44 @@ export default class AlertsManageComponent extends Component {
       model.is_same = numbers.is_same;
       this.numbers = new PhoneNumbers(numbers);
 
-      if (numbers.on_playa.code_status === 'sent-fail' || numbers.off_playa.code_status === 'sent-fail') {
+      if (numbers.on_playa.code_status === 'sent-fail'
+        || numbers.off_playa.code_status === 'sent-fail') {
         this.toast.error(`The phone number(s) were updated except a verification code could not be sent at this time.`);
       } else {
         this.toast.success('The phone number(s) have been successfully updated.');
       }
-    }).catch((response) => {
+    } catch (response) {
       this.house.handleErrorResponse(response);
-    }).finally(() => {
+    } finally {
       this.isUpdatingNumbers = false;
-    });
+    }
   }
 
   // Send new verification codes
   @action
-  sendNewCodeAction(type) {
+  async sendNewCodeAction(type) {
     const person_id = this.args.person.id;
 
     this.isSubmitting = true;
-    this.ajax.request('sms/send-code', {method: 'POST', data: {person_id, type}})
-      .then((result) => {
-        switch (result.status) {
-          case 'sent':
-            this.toast.success('A NEW verification code has been sent.');
-            break;
+    try {
+      const {status} = await this.ajax.request('sms/send-code', {method: 'POST', data: {person_id, type}});
+      switch (status) {
+        case 'sent':
+          this.toast.success('A NEW verification code has been sent.');
+          break;
 
-          case 'already-verified':
-            this.toast.warning('Phone number is already verified.');
-            break;
+        case 'already-verified':
+          this.toast.warning('Phone number is already verified.');
+          break;
 
-          default:
-            this.toast.error(`The response status [${result.status}] from the server was not understood.`);
-            break;
-        }
-      })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+        default:
+          this.toast.error(`The response status [${status}] from the server was not understood.`);
+          break;
+      }
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false
+    }
   }
 }

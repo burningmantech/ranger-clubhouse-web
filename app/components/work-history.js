@@ -7,6 +7,8 @@ import dayjs from 'dayjs';
 import { service } from '@ember/service';
 
 export default class WorkHistoryComponent extends Component {
+  @service ajax;
+  @service house;
   @service session;
 
   @tracked showPositionYearEntries = false;
@@ -18,8 +20,23 @@ export default class WorkHistoryComponent extends Component {
   @tracked position = [];
   @tracked entries = [];
 
+  @tracked isLoading = true;
+
   constructor() {
     super(...arguments);
+
+    this._loadWorkHistory();
+  }
+
+  async _loadWorkHistory() {
+    try {
+      this.timesheet = await this.ajax.request('timesheet', {data: {person_id: this.args.person.id}}).then(({timesheet}) => timesheet);
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+      this.timesheet = [];
+    } finally {
+      this.isLoading = false;
+    }
 
     const positionsByYear = {};
     const positionsById = {};
@@ -27,7 +44,7 @@ export default class WorkHistoryComponent extends Component {
     const yearTotals = {};
     let totalDuration = 0;
 
-    const entries = this.args.timesheet.filter((t) => t.position_id !== ALPHA && t.position_id !== DEEP_FREEZE && !t.position.title.includes('Training'));
+    const entries = this.timesheet.filter((t) => t.position_id !== ALPHA && t.position_id !== DEEP_FREEZE && !t.position.title.includes('Training'));
 
     entries.forEach((t) => {
       t.year = dayjs(t.on_duty).year();

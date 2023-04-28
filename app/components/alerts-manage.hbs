@@ -67,7 +67,7 @@
         </UiButton>
       {{/if}}
       {{#if this.isSubmitting}}
-        <LoadingIndicator/>
+        <LoadingPane @text="processing the phone number"/>
       {{else}}
         &nbsp;
       {{/if}}
@@ -83,7 +83,9 @@
       Australia: +61, Canada: +1, France: +33, Mexico: +52, New Zealand: +64, UK: +44.
     </p>
 
-    <ChForm @formId="numbers" @formFor={{this.phoneForm}} @validator={{this.numberValidations}}
+    <ChForm @formId="numbers"
+            @formFor={{this.phoneForm}}
+            @validator={{this.numberValidations}}
             @onSubmit={{this.saveNumbersAction}} as |f|>
       <FormRow>
         <f.text @name="off_playa"
