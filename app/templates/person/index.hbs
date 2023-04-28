@@ -35,68 +35,142 @@
   </p>
 {{/if}}
 
-<div class="row">
-  <div class="col-sm-12 col-lg-9">
-    <UiSection>
-      <:title>General Account Info</:title>
-      <:body>
-        {{#if this.isAdminMentorOrVC}}
-          <Person::FullForm @person={{this.person}}
-                            @savePersonAction={{this.savePersonAction}}
-                            @callsignApprovedOptions={{this.callsignApprovedOptions}}
-                            @statusOptions={{this.statusOptions}}
-                            @onSiteOptions={{this.onSiteOptions}}
+<UiTab as |tab|>
+  <tab.pane @title="General Info" @id="general-info">
+    <div class="d-flex flex-sm-column flex-xl-row order-sm-last order-xl-first">
+      <div class="flex-grow-1">
+        <UiSection>
+          <:title>General Account Info</:title>
+          <:body>
+            {{#if this.isAdminMentorOrVC}}
+              <Person::FullForm @person={{this.person}}
+                                @savePersonAction={{this.savePersonAction}}
+                                @callsignApprovedOptions={{this.callsignApprovedOptions}}
+                                @statusOptions={{this.statusOptions}}
+                                @onSiteOptions={{this.onSiteOptions}}
 
-                            @roles={{this.roles}}
-                            @grantedRoles={{this.grantedRoles}}
-                            @toggleRoles={{this.toggleRoles}}
-                            @showRoles={{this.showRoles}}
-                            @editRolesAction={{this.editRolesAction}}
+                                @roles={{this.roles}}
+                                @grantedRoles={{this.grantedRoles}}
+                                @toggleRoles={{this.toggleRoles}}
+                                @showRoles={{this.showRoles}}
+                                @editRolesAction={{this.editRolesAction}}
 
-                            @personMembership={{this.personMembership}}
-                            @toggleMembership={{this.toggleMembership}}
-                            @showMembership={{this.showMembership}}
-                            @canEditMembership={{this.canEditMembership}}
+                                @personMembership={{this.personMembership}}
+                                @toggleMembership={{this.toggleMembership}}
+                                @showMembership={{this.showMembership}}
+                                @canEditMembership={{this.canEditMembership}}
 
-                            @editNote={{this.editNote}}
-                            @confirmNoteOrMessage={{this.confirmNoteOrMessage}}
-                            @removePersonAction={{this.removePersonAction}}
+                                @editNote={{this.editNote}}
+                                @confirmNoteOrMessage={{this.confirmNoteOrMessage}}
+                                @removePersonAction={{this.removePersonAction}}
 
-                            @sendWelcomeMailAction={{this.sendWelcomeMailAction}}
+                                @sendWelcomeMailAction={{this.sendWelcomeMailAction}}
 
-                            @showPasswordDialogAction={{this.showPasswordDialogAction}}
-          />
-        {{else}}
-          <Person::SimpleForm @person={{this.person}}
-                              @savePersonAction={{this.savePersonAction}}
-                              @onSiteOptions={{this.onSiteOptions}}
+                                @showPasswordDialogAction={{this.showPasswordDialogAction}}
+              />
+            {{else}}
+              <Person::SimpleForm @person={{this.person}}
+                                  @savePersonAction={{this.savePersonAction}}
+                                  @onSiteOptions={{this.onSiteOptions}}
 
-                              @grantedRoles={{this.grantedRoles}}
-                              @roles={{this.roles}}
-                              @toggleRoles={{this.toggleRoles}}
-                              @showRoles={{this.showRoles}}
+                                  @grantedRoles={{this.grantedRoles}}
+                                  @roles={{this.roles}}
+                                  @toggleRoles={{this.toggleRoles}}
+                                  @showRoles={{this.showRoles}}
 
-                              @personMembership={{this.personMembership}}
-                              @toggleMembership={{this.toggleMembership}}
-                              @showMembership={{this.showMembership}}
-                              @canEditMembership={{this.canEditMembership}}
-          />
-        {{/if}}
-      </:body>
-    </UiSection>
+                                  @personMembership={{this.personMembership}}
+                                  @toggleMembership={{this.toggleMembership}}
+                                  @showMembership={{this.showMembership}}
+                                  @canEditMembership={{this.canEditMembership}}
+              />
+            {{/if}}
+          </:body>
+        </UiSection>
+      </div>
+      <div class="ms-xl-2 order-sm-first order-xl-last">
+        <PersonPhoto @person={{this.person}}
+                     @photo={{this.photo}}
+                     @uploadAction={{this.showUploadDialogAction}} />
+      </div>
+    </div>
+  </tab.pane>
+  {{#if this.session.hasLoginManagement}}
+    <tab.pane @title="Work History" @id="work-history">
+      <UiSection>
+        <:title>Work History For {{this.person.callsign}}</:title>
+        <:body>
+          {{#if (eq tab.activeId "work-history")}}
+            <WorkHistory @person={{this.person}}  />
+          {{/if}}
+        </:body>
+      </UiSection>
+    </tab.pane>
+  {{/if}}
+  {{#if (has-role "admin" "vc")}}
+    <tab.pane @title="Dashboard" @id="dashboard">
+      <Person::Dashboard @person={{this.person}} />
+    </tab.pane>
+  {{/if}}
+  {{#if this.session.isAdmin}}
+    <tab.pane @title="External IDs" @id="external-ids">
+      <UiSection>
+        <:title>External Account Identifiers</:title>
+        <:body>
+          <p>
+            This page shows the identifiers used to associate this Clubhouse account with external websites
+            such as Burner Profiles, the Moodle Learning Management System, etc.
+          </p>
+          <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{action this.savePersonAction}} as |f|>
+            <FormRow>
+              <f.text @name="bpguid"
+                      @label="Burner Profile Global UID (BPGUID)"
+                      @size={{40}}
+                      @maxlength={{200}}
+              />
+            </FormRow>
 
-  </div>
-  <div class="col-sm-12 col-lg-1">
-    <PersonPhoto @photo={{this.photo}} @person={{this.person}} @uploadAction={{this.showUploadDialogAction}} />
-  </div>
-</div>
+            <FormRow>
+              <f.text @name="lms_id"
+                      @label="Moodle Account ID (aka idnumber)"
+                      @size={{40}}
+                      @maxlength={{200}}
+              />
+            </FormRow>
+
+            <FormRow>
+              <f.text @name="lms_username"
+                      @label="Moodle Username"
+                      @size={{40}}
+                      @maxlength={{200}}
+                      @hint="Aka callsign, lower case, only alphanumeric characters, no spaces."
+              />
+            </FormRow>
+
+            <FormRow class="mb-4">
+              <f.text @name="employee_id"
+                      @label="Paycom Employee ID"
+                      @size={{10}}
+                      @maxlength={{10}}
+              />
+            </FormRow>
+
+            <f.submit @label="Update"/>
+            {{#if this.person.isSaving}}
+              <LoadingIndicator/>
+            {{/if}}
+          </ChForm>
+        </:body>
+      </UiSection>
+    </tab.pane>
+  {{/if}}
+</UiTab>
 
 {{#if this.editRoles}}
   <Person::PermissionForm @roles={{this.roles}}
-                    @grantedRoles={{this.grantedRoles}}
-                    @onSave={{this.saveRoles}}
-                    @onCancel={{this.cancelRoles}}
-                    @isSaving={{this.isSavingRoles}} />
+                          @grantedRoles={{this.grantedRoles}}
+                          @onSave={{this.saveRoles}}
+                          @onCancel={{this.cancelRoles}}
+                          @isSaving={{this.isSavingRoles}} />
 {{/if}}
 
 {{#if this.showUploadDialog}}

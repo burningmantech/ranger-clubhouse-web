@@ -519,17 +519,18 @@ legend {
 
 
 .person-manage-callsign {
-  font-size: $h3-font-size;
+  font-size: $h4-font-size;
   font-weight: 500;
 }
 
 .person-manage-pronounce {
-  font-size: $h4-font-size;
+  font-size: $h5-font-size;
+  opacity: 0.75;
 }
 
 .person-manage-pronouns {
   display: inline-block;
-  font-size: $h4-font-size;
+  font-size: $h5-font-size;
 }
 
 .person-manage-info {
