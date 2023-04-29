@@ -2,6 +2,7 @@
   <YearSelect @title="Assets (Radios, Gear, Vehicles)"
               @year={{this.year}}
               @minYear={{2010}}
+              @skipPandemic={{true}}
               @onChange={{action (mut this.year)}} />
   <FormRow>
     <FormLabel @auto={{true}}>Description Filter</FormLabel>

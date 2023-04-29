@@ -5,21 +5,22 @@
               @skipPandemic={{true}}
               @onChange={{action (mut this.year)}}  />
   <p>
-    The report shows people who may potentialy earn a short and long sleeve shirts for a given event year.
+    The report shows people who may potentially earn a short and long sleeve shirts for a given event year.
   </p>
   <p>
     <a href="#shirt-totals">Jump to shirt totals</a>
   </p>
   <p>
-    <UiButton @onClick={{this.exportPeople}}>
-      Export as CSV
-    </UiButton>
+    <UiExportToCSV @onClick={{this.exportPeople}} />
   </p>
 </div>
 
 <div class="d-none d-print-block">
   <h1>Quartermaster Potential Earned Shirts Earned In {{this.year}}</h1>
 </div>
+<p>
+{{fa-icon "ban" color="danger"}} = Person has not met the work threshold for the shirt.
+</p>
 
 Showing  {{pluralize this.people.length "person"}}
 <table class="table table-width-auto table-hover table-striped table-sm">
@@ -43,7 +44,9 @@ Showing  {{pluralize this.people.length "person"}}
       </td>
       <td>{{person.first_name}} {{person.middle_name}} {{person.last_name}}</td>
       <td class="text-end">{{person.estimated_hours}}</td>
-      <td class="text-end">{{person.actual_hours}}</td>
+      <td class="text-end">
+        {{or person.actual_hours "0.00"}}
+      </td>
       <td>
         {{#unless person.earned_ss}}
           {{fa-icon "ban" color="danger"}}

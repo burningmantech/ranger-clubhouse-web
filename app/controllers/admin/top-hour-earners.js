@@ -29,14 +29,16 @@ export default class AdminRangerRetentionController extends ClubhouseController 
   get yearRange() {
     const years = [];
     for (let year = this.startYear; year <= this.endYear; year++) {
-      years.push(year);
+      if (year !== 2020 && year !== 2021) {
+        years.push(year);
+      }
     }
 
     return years;
   }
 
   @action
-  runReportAction() {
+  async runReportAction() {
     const form = this.topForm;
     const limit = parseInt(form.limit),
       start_year = parseInt(form.startYear),
@@ -54,16 +56,18 @@ export default class AdminRangerRetentionController extends ClubhouseController 
 
     this.isSubmitting = true;
     this.haveResults = false;
-    this.ajax.request('timesheet/top-hour-earners', {data: {start_year, end_year, limit}})
-      .then(({top_earners}) => {
-        this.startYear = start_year;
-        this.endYear = end_year;
-        this.topLimit = limit;
-        this.topEarners = top_earners;
-        this.haveResults = true;
-      })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    try {
+      const {top_earners} = await this.ajax.request('timesheet/top-hour-earners', {data: {start_year, end_year, limit}});
+      this.startYear = start_year;
+      this.endYear = end_year;
+      this.topLimit = limit;
+      this.topEarners = top_earners;
+      this.haveResults = true;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action

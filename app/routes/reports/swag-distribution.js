@@ -9,6 +9,10 @@ import {
 } from "clubhouse/models/swag";
 
 export default class ReportsSwagDistributionRoute extends ClubhouseRoute {
+  queryParams = {
+    year: {refreshModel: true}
+  };
+
   model({year}) {
     this.year = year ?? this.house.currentYear();
     return this.ajax.request('person-swag/distribution', {data: {year: this.year}});
@@ -41,7 +45,7 @@ export default class ReportsSwagDistributionRoute extends ClubhouseRoute {
 
           case TYPE_DEPT_PIN:
             if (item.title.match(/toaster/i)) {
-             person.toasterPins.push(item);
+              person.toasterPins.push(item);
             } else {
               person.servicePins.push(item);
             }
