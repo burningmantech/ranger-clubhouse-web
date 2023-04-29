@@ -4,6 +4,9 @@
             @skipPandemic={{true}}
             @onChange={{action (mut this.year)}}  />
 <p>
+  All shift times are in the Pacific Timezone unless otherwise noted.
+</p>
+<p>
   Jump to the callsigns starting with the letter:
 </p>
 <p>
@@ -34,8 +37,8 @@
           <table class="table table-striped table-hover table-width-auto">
             <thead>
             <tr>
-              <th>From</th>
-              <th>To</th>
+              <th>Time</th>
+              <th class="text-end">Duration</th>
               <th>Description</th>
               <th>Position</th>
             </tr>
@@ -43,8 +46,10 @@
             <tbody>
             {{#each person.slots key="id" as |slot|}}
               <tr>
-                <td>{{shift-format slot.begins}}</td>
-                <td>{{shift-format slot.ends}}</td>
+                <td>{{shift-format slot.begins slot.ends timezone=slot.tz}}</td>
+                <td class="text-end">
+                  {{hour-minute-format slot.duration}}
+                </td>
                 <td>
                   <PresentOrNot @value={{slot.description}} @empty="-"/>
                 </td>

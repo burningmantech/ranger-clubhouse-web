@@ -17,18 +17,16 @@ export default class ReportsSwagDistributionController extends ClubhouseControll
 
   @action
   exportToCSV() {
-    const rows = this.people.map((person) => {
-      return {
-        callsign: person.callsign,
-        tshirts: this._buildColumn((person.tshirts)),
-        longSleeveShirt: this._buildColumn((person.longSleeveShirt)),
-        servicePins: this._buildColumn((person.servicePins)),
-        servicePatches: this._buildColumn((person.servicePatches)),
-        orgPatches: this._buildColumn((person.orgPatches)),
-        toasterPins: this._buildColumn((person.toasterPins)),
-        other: this._buildColumn((person.other)),
-      };
-    })
+    const rows = this.people.map((person) => ({
+      callsign: person.callsign,
+      tshirts: this._buildColumn((person.tshirts)),
+      longSleeveShirt: this._buildColumn((person.longSleeveShirt)),
+      servicePins: this._buildColumn((person.servicePins)),
+      servicePatches: this._buildColumn((person.servicePatches)),
+      orgPatches: this._buildColumn((person.orgPatches)),
+      toasterPins: this._buildColumn((person.toasterPins)),
+      other: this._buildColumn((person.other)),
+    }))
 
     this.house.downloadCsv(`${this.year}-swag-distribution.csv`, CSV_COLUMNS, rows);
   }

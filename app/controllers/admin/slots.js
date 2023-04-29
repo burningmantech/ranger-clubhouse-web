@@ -260,6 +260,7 @@ export default class SlotsController extends ClubhouseController {
       //trainer_slot_id: model.trainer_slot_id,
       max: model.max,
       url: model.url,
+      timezone: model.timezone,
     });
   }
 
@@ -394,7 +395,7 @@ export default class SlotsController extends ClubhouseController {
         data[key] = params[key];
       }
     });
-    ['description', 'url', 'max'].forEach(function (key) {
+    ['description', 'url', 'max', 'timezone'].forEach(function (key) {
       if (params[key]) {
         data.attributes[key] = params[key];
       }

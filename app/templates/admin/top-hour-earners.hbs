@@ -6,66 +6,64 @@
   <ChForm @formId="topForm"
           @formFor={{this.topForm}}
           @changeSet={{false}}
-          @onSubmit={{this.runReportAction}} as |f|>
+          @onSubmit={{this.runReportAction}}
+          as |f|>
     <FormRow>
       <f.select @name="startYear"
                 @label="Start Year:"
                 @options={{this.yearOptions}}
-                @inline={{true}}
       />
       <f.select @name="endYear"
                 @label="Ending Year:"
                 @options={{this.yearOptions}}
-                @inline={{true}}
       />
       <f.select @name="limit"
                 @label="Limit to top earners:"
                 @options={{this.limitOptions}}
-                @inline={{true}}
       />
     </FormRow>
     <f.submit @label="Submit"/>
   </ChForm>
 
   {{#if this.haveResults}}
-    <UiSection>
-      <:title>Showing {{pluralize this.topEarners.length "person"}} for {{this.startYear}} to {{this.endYear}}</:title>
-      <:body>
-        <UiButton @onClick={{this.exportToCsv}} @type="secondary">Export to CSV</UiButton>
-        <table class="table table-width-auto table-hover table-striped">
-          <thead>
-          <tr>
-            <th>Callsign</th>
-            <th>Status</th>
-            <th>Top Hours</th>
-            <th>Top Year</th>
-            {{#each this.yearRange as |year|}}
-              <th>{{year}}</th>
-            {{/each}}
-          </tr>
-          </thead>
-          <tbody>
-          {{#each this.topEarners as |person|}}
-            <tr>
-              <td>
-                <PersonLink @person={{person}} />
-              </td>
-              <td>{{person.status}}</td>
-              <td class="text-end">{{hour-format person.top_duration}}</td>
-              <td class="text-end">{{person.top_year}}</td>
-              {{#each person.years as |workYear|}}
-                <td class="text-end">{{hour-format workYear.duration}}</td>
-              {{/each}}
-            </tr>
-          {{else}}
-            <tr>
-              <td colspan="4"><b class="text-danger">Odd, no people were found.</b></td>
-            </tr>
+    <div class="mt-4 mb-2">
+      <UiExportToCSV @onClick={{this.exportToCsv}} /><br>
+      Showing {{pluralize this.topEarners.length "person"}} for {{this.startYear}} to {{this.endYear}}.
+    </div>
+    <table class="table table-width-auto table-hover table-striped">
+      <thead>
+      <tr>
+        <th>Callsign</th>
+        <th>Status</th>
+        <th>Top Hours</th>
+        <th>Top Year</th>
+        {{#each this.yearRange as |year|}}
+          <th>{{year}}</th>
+        {{/each}}
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.topEarners as |person|}}
+        <tr>
+          <td>
+            <PersonLink @person={{person}} />
+          </td>
+          <td>{{person.status}}</td>
+          <td class="text-end">{{hour-format person.top_duration}}</td>
+          <td class="text-end">{{person.top_year}}</td>
+          {{#each person.years as |workYear|}}
+            {{#if (and (not-eq workYear.year 2020) (not-eq workYear.year 2021))}}
+              <td class="text-end">{{hour-format workYear.duration}}</td>
+            {{/if}}
           {{/each}}
-          </tbody>
-        </table>
-      </:body>
-    </UiSection>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="4"><b class="text-danger">Odd, no people were found.</b></td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
   {{/if}}
 </main>
 

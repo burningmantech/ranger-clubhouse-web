@@ -1,9 +1,5 @@
+<h1>{{this.house.currentYear}} Potential Swag Report</h1>
 <div class="d-print-none">
-  <YearSelect @title="Potential Swag Report"
-              @year={{this.year}}
-              @minYear={{2010}}
-              @skipPandemic={{true}}
-              @onChange={{action (mut this.year)}}  />
   <p>
     The report is used to help build service pins, service patches, and toaster pins orders for the upcoming event.
   </p>
@@ -14,9 +10,7 @@
     total worked years, add 1, and check if the sum is a 5-year increment.
   </p>
   <p>
-    <UiButton @onClick={{this.exportToCSV}}>
-      Export as CSV
-    </UiButton>
+    <UiExportToCSV @onClick={{this.exportToCSV}} />
   </p>
 </div>
 
@@ -56,35 +50,3 @@ Showing  {{pluralize this.people.length "person"}}
   {{/each}}
   </tbody>
 </table>
-
-{{#if this.people}}
-  <h3 id="shirt-totals">Shirt Totals</h3>
-  <div class="row">
-    {{#each this.shirtGroups as |shirts|}}
-      <div class="col-3">
-        <table class="table table-sm table-box">
-          <caption>
-            {{shirts.name}} Totals
-            <span class="d-inline-block float-end">
-            <UiButton @type="secondary" @size="sm" @onClick={{fn this.exportCounts shirts}}>Export</UiButton>
-          </span>
-          </caption>
-          <thead>
-          <tr>
-            <th>Shirt Type</th>
-            <th class="text-end">Count</th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#each shirts.types as |shirt|}}
-            <tr>
-              <td>{{shirt.type}}</td>
-              <td class="text-end">{{shirt.count}}</td>
-            </tr>
-          {{/each}}
-          </tbody>
-        </table>
-      </div>
-    {{/each}}
-  </div>
-{{/if}}
