@@ -14,7 +14,7 @@
         = Sign-up overlaps with one or more shifts
       </p>
     </div>
-    <div class="d-flex align-items-center flex-column flex-lg-row">
+    <div class="d-flex flex-column flex-xl-row align-middle">
       <div class="me-2">
         Showing {{this.viewSlots.length}} of {{pluralize @slots.length "sign-up"}}.
       </div>
@@ -25,7 +25,7 @@
           </UiButton>
         {{/if}}
         <UiButton @onClick={{this.exportCalendarAction}} @type="secondary" @size="sm">
-          {{fa-icon "calendar-days" type="far"}} Export Calendar
+          {{fa-icon "calendar-days" type="far" right=1}} Export To Calendar
         </UiButton>
       </div>
     </div>
@@ -89,17 +89,19 @@
                   {{~#if slot.is_submitting~}}
                     <SpinIcon/>
                     {{~else~}}
-                    {{fa-icon "trash-alt" type="fas"}}
+                    {{fa-icon "trash-alt" type="fas" fixed=true right=1}}
                   {{~/if~}}
                   &nbsp;Remove
                 </button>
               {{~/if~}}
-              <button type="button" {{on "click" (fn @showPeople slot)}} class="btn btn-secondary btn-sm"
-                      disabled={{slot.is_retrieving_people}}>
+              <button {{on "click" (fn @showPeople slot)}}
+                type="button"
+                class="btn btn-secondary btn-sm"
+                disabled={{slot.is_retrieving_people}}>
                 {{#if slot.is_retrieving_people}}
                   <SpinIcon/>
-                {{else}}
-                  {{fa-icon "users" type="fas"}}
+                {{~else~}}
+                  {{fa-icon "users" type="fas" fixed=true right=1}}
                 {{/if}}
                 &nbsp;Sign Ups
               </button>

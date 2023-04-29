@@ -81,6 +81,15 @@
               <f.text @name="value"
                       @label="Integer value"
                       @size={{10}}/>
+            {{else if (eq this.editSetting.type "date")}}
+              <f.datetime @name="value"
+                          @label="Enter a date"
+                          @dateOnly={{true}}
+                          @size={{30}} />
+            {{else if (eq this.editSetting.type "datetime")}}
+              <f.datetime @name="value"
+                          @label="Enter a date and time"
+                          @size={{30}} />
             {{else if this.editSetting.options}}
               <f.select @name="value"
                         @label="Option value"

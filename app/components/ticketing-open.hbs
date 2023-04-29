@@ -7,12 +7,7 @@
 {{else}}
   {{#if @ticketPackage.lsdTickets}}
     <div class="alert alert-secondary">
-      {{singular-or-pluralize @ticketPackage.lsdTickets.length "LSD ticket" capitalize=true}}
-      {{~#if @ticketPackage.lsdVPs~}}
-        , and {{singular-or-pluralize @ticketPackage.lsdVPs.length "LSD Vehicle Pass"}}
-      {{/if}}
-      is available. <b class="text-danger">All LSD tickets have to be paid for in advance.</b>
-      Instructions on how to pay for the tickets will be sent later. LSD Tickets are NOT claimed through the Clubhouse.
+      <TicketLsdAvailable @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}} />
     </div>
   {{/if}}
   {{#if @ticketPackage.giftTickets}}
@@ -123,8 +118,29 @@
           </UiNotice>
         {{else}}
           <UiNotice @type="success" @icon="check" @title="Ticketing choices have been confirmed.">
-            Congratulations, you completed all the ticketing steps. Ticket selection, pick up locations, access dates,
-            banked items, and other ticketing details are provided below.
+            <p>
+              While you have completed all the Ranger ticketing steps, further actions may need to be taken later.
+              After the ticketing deadline passes, the claimed items will be uploaded to the Burning Man ticketing
+              system.
+              After the upload, an email will be sent detailing what additional steps you may need to
+              take including how to pay for your items (if applicable).
+            </p>
+            <p>
+              <b>
+                Failing to visit the Burning Man ticketing website and "check out" any claimed tickets &amp; vehicle
+                passes
+                in a timely manner, regardless if the item requires payment or not, will result in your items being
+                delayed.
+              </b>
+              Please be responsible and do not make more work for the Ranger Ticketing team. They're volunteers with
+              lives, just like you.
+            </p>
+            <p>
+              Claimed WAPs not part of a Staff Credential are automatically emailed out. No additional action is
+              required.
+            </p>
+            Ticket selection, pick up locations, access dates, banked items, and other ticketing details are provided
+            below.
           </UiNotice>
         {{/if}}
       {{else}}
@@ -147,6 +163,7 @@
         Start Ticketing
       {{/if}}
     </UiButton>
+
     {{#if this.hasFinished}}
       <h3 class="mt-4">Ticketing Details</h3>
       <TicketOverview @ticketingInfo={{@ticketingInfo}}
