@@ -16,7 +16,7 @@
 <p>
   All shift times are in the Pacific Timezone unless otherwise noted.<br>
   {{fa-icon "check" color="success"}} = The shift is activated, and available for sign ups.<br>
-  {{fa-icon "ban" color="danger"}} = The shift has not been activated yet, is not visible to users, and cannot be signed up for.
+  {{fa-icon "times" color="danger"}} = The shift has not been activated yet, is not visible to users, and cannot be signed up for.
 </p>
 <p>
   Jump to a position starting with the letter:<br>
@@ -34,57 +34,55 @@
   <UiAccordion id="position-{{position.id}}" @isOpen={{mut (get this.showingPositions position.id)}} as |accordion|>
     <accordion.title>
       {{position-label position}} ({{pluralize position.activeCount "shift"~}}
-      {{~#if position.inactiveCount~}}
-        , <span class="text-danger">{{position.inactiveCount}} inactive</span>
-      {{~/if~}}
+      {{~#if position.inactiveCount~}}, <span class="text-danger">{{position.inactiveCount}} inactive</span>{{~/if~}}
       )
     </accordion.title>
     <accordion.body>
       {{#if accordion.isOpen}}
         {{#if (and (eq this.activeFilter "active") position.inactiveCount)}}
-          <p class="text-danger">{{pluralize position.inactiveCount "inactive shift"}} are not shown.</p>
+          <p class="text-danger">{{pluralize position.inactiveCount "inactive shift"}} {{is-are position.inactiveCount}} not shown.</p>
         {{else if (eq this.activeFtiler "inactive")}}
-          <p class="text-danger">{{pluralize position.activeCount "active shift"}} are not shown.</p>
+          <p class="text-danger">{{pluralize position.activeCount "active shift"}} {{is-are position.activeCount}} not shown.</p>
         {{/if}}
         <p>
-          <UiButton @onClick={{fn this.exportByShift position}}>
-            Export by Shift
-          </UiButton>
+          <UiExportToCSVButton  @onClick={{fn this.exportByShift position}} />
         </p>
         <table class="table table-sm table-hover table-striped">
           <thead>
           <tr>
-            <th class="w-25">Time</th>
+            <th>&nbsp;</th>
+            <th class="w-25">Time / Description</th>
             <th class="w-5 text-end">Duration</th>
-            <th class="w-15">Description</th>
-            <th class="w-10 text-center">Sign-Ups / Max</th>
-            <th class="w-30">Callsigns</th>
+            <th class="text-center">Sign-Ups</th>
+            <th class="text-center">Max</th>
+            <th class="w-60">Callsigns</th>
           </tr>
           </thead>
           <tbody>
           {{#each position.slots key="id" as |slot|}}
             <tr>
-              <td class="w-25">
+              <td class="text-center">
                 {{#if slot.active}}
-                  {{fa-icon "check" color="success" right=1}}
+                  {{fa-icon "check" color="success"}}
                 {{else}}
-                  {{fa-icon "times" color="danger" right=1}}
+                  {{fa-icon "times" color="danger"}}
                 {{/if}}
-                {{shift-format slot.begins slot.ends timezone=slot.tz}}
+              </td>
+              <td class="w-25">
+                 {{shift-format slot.begins slot.ends timezone=slot.tz}}<br>
+                <PresentOrNot @value={{slot.description}} @empty="-"/>
               </td>
               <td class="w-5 text-end">
                 {{hour-minute-format slot.duration}}
               </td>
-              <td class="w-15">
-                <PresentOrNot @value={{slot.description}} @empty="-"/>
-              </td>
-              <td class="w-10 text-center">{{slot.sign_ups.length}} / {{slot.max}}</td>
-              <td class="w-45">
+              <td class="text-center">{{slot.sign_ups.length}}</td>
+              <td class="text-center">{{slot.max}}</td>
+              <td class="w-60">
                 {{#each slot.sign_ups as |person idx|}}
                   {{~if idx ", "~}}
                   <PersonLink @person={{person}} />
                 {{~else}}
-                  <b class="text-danger">No sign ups</b>
+                  <span class="text-danger">No sign ups</span>
                 {{/each}}
               </td>
             </tr>

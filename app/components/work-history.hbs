@@ -10,10 +10,13 @@
 {{#if this.isLoading}}
   <LoadingIndicator @text="Loading Work History"/>
 {{else}}
-  {{#if this.hasInaccurateTimesheets}}
+  {{#if this.inaccurateYears}}
     <p class="text-danger">
       NOTE: {{if this.isMe "You have " (concat @person.callsign " has")}}
-      timesheet entries before 2008. These entries are placeholders.
+      timesheet entries before 2008. The department did not start tracking volunteer hours until the 2008 event.
+      All timesheet entries prior to 2008 are placeholders.
+    </p>
+    <p>
     </p>
   {{/if}}
   {{#if this.years}}
@@ -24,8 +27,14 @@
         </b>
       </p>
     {{/if}}
+    {{#if this.inaccurateYears}}
+      {{pluralize this.inaccurateYears.length "year"}} worked prior to 2008: [{{year-range this.inaccurateYears}}]<br>
+      {{pluralize this.years.length "year"}} worked after 2007.
+    {{else}}
+      {{pluralize this.years.length "year"}} worked.
+    {{/if}}
+    {{pluralize this.positions.length "position"}}.
     <div class="overflow-y-auto">
-      {{pluralize this.years.length "year"}} worked. {{pluralize this.positions.length "position"}}.
       <table class="table table-width-auto table-striped table-hover">
         <thead>
         <tr>

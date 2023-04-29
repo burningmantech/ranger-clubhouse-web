@@ -27,7 +27,7 @@
 
   {{#if this.haveResults}}
     <div class="mt-4 mb-2">
-      <UiExportToCSV @onClick={{this.exportToCsv}} /><br>
+      <UiExportToCSVButton @onClick={{this.exportToCsv}} /><br>
       Showing {{pluralize this.topEarners.length "person"}} for {{this.startYear}} to {{this.endYear}}.
     </div>
     <table class="table table-width-auto table-hover table-striped">

@@ -44,10 +44,19 @@ export default class WorkHistoryComponent extends Component {
     const yearTotals = {};
     let totalDuration = 0;
 
-    const entries = this.timesheet.filter((t) => t.position_id !== ALPHA && t.position_id !== DEEP_FREEZE && !t.position.title.includes('Training'));
+    const entries = [], priorTo2008 = {};
 
-    entries.forEach((t) => {
+    this.timesheet.forEach((t) => {
+      if (t.position_id === ALPHA || t.position_id === DEEP_FREEZE || t.position.title.includes('Training')) {
+        return;
+      }
+
       t.year = dayjs(t.on_duty).year();
+      if (t.year < 2008){
+        priorTo2008[t.year] = true;
+        return;
+      }
+
       const position = positionsByYear[t.year] ||= {};
       const positionByYear = (position[t.position_id] ||= {entries: [], duration: 0});
       positionByYear.entries.push(t);
@@ -71,6 +80,8 @@ export default class WorkHistoryComponent extends Component {
       yearTotals[t.year].duration += t.duration;
       yearTotals[t.year].entries.push(t);
       totalDuration += t.duration;
+
+      entries.push(t);
     });
 
     this.years = _.uniqBy(entries, 'year').map((t) => t.year);
@@ -79,7 +90,8 @@ export default class WorkHistoryComponent extends Component {
     this.positionsByYear = positionsByYear;
     this.positionsById = positionsById;
     this.positions = _.sortBy(_.values(positionsById), 'title');
-    this.hasInaccurateTimesheets = !!entries.find((t) => t.year < 2008);
+    this.inaccurateYears = Object.keys(priorTo2008).map((y) => +y);
+    this.inaccurateYears.sort();
     this.hasNonRangerWork = !!entries.find((t) => t.is_non_ranger);
     this.isMe = (this.session.userId === this.args.person.id);
   }
