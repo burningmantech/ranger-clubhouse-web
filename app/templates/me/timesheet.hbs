@@ -70,7 +70,7 @@
 {{/if}}
 
 <UiTab as |tab|>
-  <tab.pane @title="{{this.year}} Timesheet">
+  <tab.pane @title="{{this.year}} Timesheet" @id="entries">
     <Me::TimesheetReviewCommon @person={{this.person}}
                                @timesheets={{this.timesheets}}
                                @timesheetInfo={{this.timesheetInfo}}
@@ -80,7 +80,7 @@
     />
   </tab.pane>
   {{#if this.correctionsEnabled}}
-    <tab.pane @title="Missing Requests">
+    <tab.pane @title="Missing Requests" @id="missing-requests">
       <Me::TimesheetMissingCommon @person={{this.person}}
                                   @timesheetsMissing={{this.timesheetsMissing}}
                                   @timesheetInfo={{this.timesheetInfo}}
@@ -88,7 +88,7 @@
       />
     </tab.pane>
   {{/if}}
-  <tab.pane @title="{{this.year}} Summary">
+  <tab.pane @title="{{this.year}} Summary" @id="summary">
     <TimesheetSummary @summary={{this.timesheetSummary}} />
     <TimesheetPositionSummary @timesheets={{this.timesheets}} />
   </tab.pane>

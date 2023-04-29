@@ -14,7 +14,7 @@
   {{/if}}
 </p>
 <UiTab as |tab|>
-  <tab.pane @title="Training">
+  <tab.pane @title="Training" @id="training">
     <UiSection>
       <:title>{{fa-icon "graduation-cap"}} Training</:title>
       <:body>
@@ -77,7 +77,7 @@
     {{/if}}
   </tab.pane>
 
-  <tab.pane @title="Teams &amp; Positions">
+  <tab.pane @title="Teams &amp; Positions" @id="teams-positions">
     <UiSection>
       <:title>{{fa-icon "sitemap"}} Teams &amp; Positions</:title>
       <:body>
@@ -121,7 +121,7 @@
   </tab.pane>
 
   {{#if (or this.person.isRanger this.person.isNonRanger)}}
-    <tab.pane @title="Provisions">
+    <tab.pane @title="Provisions" @id="provisions">
       <UiSection>
         <:title>Provisions</:title>
         <:body>
@@ -161,7 +161,7 @@
     </tab.pane>
   {{/if}}
   {{#if (or this.person.isRanger this.person.isAlpha this.person.isNonRanger)}}
-    <tab.pane @title="Driving">
+    <tab.pane @title="Driving" @id="driving">
       {{#if this.person.vehicle_blacklisted}}
         <UiSection>
           <:title>Driving Prohibited</:title>
@@ -204,7 +204,7 @@
     </tab.pane>
   {{/if}}
   {{#if (or this.person.isRanger  this.person.isNonRanger)}}
-    <tab.pane @title="Certifications">
+    <tab.pane @title="Certifications" @id="certifications">
       <UiSection>
         <:title>Certifications</:title>
         <:body>

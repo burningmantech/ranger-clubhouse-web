@@ -21,7 +21,7 @@
           @validator={{this.personInfoValidations}}
           @onSubmit={{this.onSubmit}} as |f|>
     <UiTab class="mt-4" as |tab|>
-      <tab.pane @title="Name, Gender &amp; Pronouns">
+      <tab.pane @title="Name, Gender &amp; Pronouns" @id="name">
         <UiSection>
           <:title>Name, Gender &amp; Pronouns</:title>
           <:body>
@@ -65,7 +65,7 @@
           </:body>
         </UiSection>
       </tab.pane>
-      <tab.pane @title="Email & Phone">
+      <tab.pane @title="Email & Phone" @id="contact">
         <UiSection>
           <:title>Email &amp; Phone</:title>
           <:body>
@@ -93,7 +93,7 @@
           </:body>
         </UiSection>
       </tab.pane>
-      <tab.pane @title="Camp Info">
+      <tab.pane @title="Camp Info" @id="camp">
         <UiSection id="person-camp">
           <:title>Camp Name &amp; Location</:title>
           <:body>
@@ -118,7 +118,7 @@
           </:body>
         </UiSection>
       </tab.pane>
-      <tab.pane @title="Callsign Pronunciation">
+      <tab.pane @title="Callsign Pronunciation" @id="pronounce">
         <UiSection>
           <:title>Callsign Pronunciation</:title>
           <:body>
@@ -143,7 +143,7 @@
           </:body>
         </UiSection>
       </tab.pane>
-      <tab.pane @title="Languages">
+      <tab.pane @title="Languages" @id="languages">
         <UiSection>
           <:title>Languages Spoken</:title>
           <:body>
@@ -167,7 +167,7 @@
           </:body>
         </UiSection>
       </tab.pane>
-      <tab.pane @title="Clothing">
+      <tab.pane @title="Clothing" @id="clothing">
         <UiSection>
           <:title>Ranger Clothing</:title>
           <:body>
@@ -192,7 +192,7 @@
           </:body>
         </UiSection>
       </tab.pane>
-      <tab.pane @title="Home Address">
+      <tab.pane @title="Home Address" @id="home">
         <UiSection id="person-address">
           <:title>Home Address</:title>
           <:body>

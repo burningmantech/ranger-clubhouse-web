@@ -33,21 +33,21 @@
 </div>
 
 <UiTab @onChange={{this.loadStuff}} as |tab|>
-  <tab.pane @title="Access Documents">
+  <tab.pane @title="Access Documents" @id="documents">
     {{#unless this.isLoading}}
       <Person::AccessDocuments @person={{this.person}}
                                @documents={{this.documents}}
                                @ticketingInfo={{this.ticketingInfo}} />
     {{/unless}}
   </tab.pane>
-  <tab.pane @title="Provisions">
+  <tab.pane @title="Provisions" @id="provisions">
     {{#unless this.isLoading}}
       <Person::Provisions @person={{this.person}}
                           @provisions={{this.provisions}}
                           @ticketingInfo={{this.ticketingInfo}} />
     {{/unless}}
   </tab.pane>
-  <tab.pane @title="Tickets & Stuff">
+  <tab.pane @title="Tickets & Stuff" @id="tickets-stuff">
     <p>
       The following is how the <i>Me &gt; Tickets & Stuff</i> page appears to {{this.person.callsign}}.
     </p>
