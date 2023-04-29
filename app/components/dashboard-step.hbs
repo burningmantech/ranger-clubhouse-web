@@ -7,18 +7,10 @@
     <div class="dashboard-icon">
       <DashboardIcon @result={{@step.result}} />
     </div>
-    {{!
-    [[#if (and @step.isBehavioralAgreement (not-eq @step.result "completed"))]]
-  <a href [[on "click" @showBehaviorAgreementAction]]>[@step.name]</a>
-    else if (or @step.route @step.linkedMessage.route)
-      <LinkTo @route=[[or @step.route @step.linkedMessage.route]] disabled=[[@isNotUser]]>
-        [[@step.name]]
-      </LinkTo>
-      }}
     {{#if (or (eq @step.result "blocked") (eq @step.result "urgent"))}}
       <span class="text-danger">{{@step.name}}</span>
     {{else}}
-      {{@step.name}}
+      <span>{{@step.name}}</span>
     {{/if}}
   </div>
   <div class="dashboard-step-description">

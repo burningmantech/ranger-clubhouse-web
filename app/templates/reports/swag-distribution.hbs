@@ -1,9 +1,14 @@
-<h1>Post-Event Swag Distribution Report</h1>
+<YearSelect @title="Post-Event Swag Distribution Report"
+            @year={{this.year}}
+            @minYear={{2010}}
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}} />
+
 <p>
   This report shows what swag (shirt, service pins & patches, etc.) was handed out during an event.
 </p>
 <p>
-  <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+  <UiExportToCSV @onClick={{this.exportToCSV}} />
 </p>
 Showing {{pluralize this.people.length "person"}}.
 <table class="table table-sm table-width-auto table-striped table-hover">

@@ -5,7 +5,6 @@
       <s.link @route="person.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
       <s.link @route="person.event-info" @title="Event/Training Info" @icon="user" @iconType="s"/>
       <s.link @route="person.timesheet" @title="Timesheets" @icon="clock"/>
-      <s.link @route="person.work-history" @title="Work History" @icon="history" @iconType="s"/>
       <s.link @route="person.assets" @title="Assets" @icon="broadcast-tower" @iconType="s"/>
       <s.link @route="person.messages" @title="Messages" @icon="envelope"
               @badgeText={{this.person.unread_message_count}} />
@@ -33,17 +32,9 @@
     </s.group>
   {{/if}}
 
-  {{#if (has-role "admin" "vc" "intake" "regional")}}
+  {{#if (has-role "intake" "regional")}}
     <s.group @title="Vol Coords">
-      {{#if (has-role "admin" "vc")}}
-        <s.link @route="person.dashboard" @title="Dashboard" @icon="columns" @iconType="s"/>
-      {{/if}}
-      {{#if (has-role "intake" "regional")}}
-        <s.link @route="person.unified-flagging" @title="Unified Flagging" @icon="flag"/>
-      {{/if}}
-      {{#if (has-role "admin")}}
-        <s.link @route="person.external-ids" @title="External IDs" @icon="external-link-alt" @iconType="s"/>
-      {{/if}}
+      <s.link @route="person.unified-flagging" @title="Unified Flagging" @icon="flag"/>
     </s.group>
   {{/if}}
 

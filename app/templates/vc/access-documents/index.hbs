@@ -1,33 +1,122 @@
 <h1>All Access Documents</h1>
-<p>Below is everybody who has a qualified, claimed, or banked
-  Access Document in the system. Claimed items are shown in green,
-  banked in yellowish-orange. "SOs" is a count of how many significant-other
-  Work Access Passes that person has. "Weird Stuff" should be anything that looks
-  odd about this person's collection of Access Documents.</p>
 
-Showing {{pluralize this.documents.people.length "person"}}
-<table class="table table-hover table-sm table-width-auto">
-  <thead>
-    <tr>
-      <th>Person</th>
-      <th>Status</th>
-      <th>Ticket</th>
-      <th>Arrival</th>
-      <th>VP</th>
-      <th class="text-end">SOs</th>
-      <th>Weird Stuff</th>
-    </tr>
-  </thead>
+<UiTab @onChange={{this.changeTabs}} as |tab|>
+  <tab.pane @title="Summary" @id="summary">
+    <p>Below is everybody who has a qualified, claimed, or banked
+      Access Document in the system. Claimed items are shown in green,
+      banked in yellowish-orange. "SOs" is a count of how many significant-other
+      Work Access Passes that person has. "Weird Stuff" should be anything that looks
+      odd about this person's collection of Access Documents.</p>
 
-  <tbody>
-    {{#each this.documents.people key="person.id" as |person|}}
-      <AccessDocumentsForPerson @person={{person.person}} @documents={{person.documents}} />
-    {{else}}
+    Showing {{pluralize this.summaryDocuments.people.length "person"}}
+    <table class="table table-hover table-sm table-width-auto">
+      <thead>
       <tr>
-        <td colspan="7" class="text-danger">
-          Odd, I cannot find any current access documents.
-        </td>
+        <th>Person</th>
+        <th>Status</th>
+        <th>Ticket</th>
+        <th>Arrival</th>
+        <th>VP</th>
+        <th class="text-end">SOs</th>
+        <th>Special</th>
+        <th>Weird Stuff</th>
       </tr>
-    {{/each}}
-  </tbody>
-</table>
+      </thead>
+
+      <tbody>
+      {{#each this.summaryDocuments.people key="person.id" as |person|}}
+        <AccessDocumentsForPerson @person={{person.person}} @documents={{person.documents}} />
+      {{else}}
+        <tr>
+          <td colspan="7" class="text-danger">
+            Odd, I cannot find any current access documents.
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </tab.pane>
+  <tab.pane @title="Current Records" @id="records">
+    {{#if this.isLoading}}
+      <LoadingIndicator @text="Loading Access Documents"/>
+    {{else}}
+      <p>
+        The following shows all current access documents (not expired, cancelled, or used)
+      </p>
+      <FormRow>
+        <FormLabel @auto={{true}}>Type</FormLabel>
+        <div class="col-auto">
+          <ChForm::Select @name="filterType"
+                          @value={{this.filterType}}
+                          @options={{this.typeOptions}}
+                          @onChange={{action (mut this.filterType)}}/>
+        </div>
+        <FormLabel @auto={{true}}>Status</FormLabel>
+        <div class="col-auto">
+          <ChForm::Select @name="filterStatus"
+                          @value={{this.filterStatus}}
+                          @options={{this.statusOptions}}
+                          @onChange={{action (mut this.filterStatus)}}/>
+        </div>
+      </FormRow>
+      <p>
+        <UiExportToCSV @onClick={{this.exportToCSV}}/>
+      </p>
+      Showing {{this.viewDocuments.length}} of {{pluralize this.accessDocuments.length "access document"}}
+      <table class="table table-hover table-sm table-width-auto">
+        <thead>
+        <tr>
+          <th>RAD</th>
+          <th>Person</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th>Arrival</th>
+          <th>S.O. Name</th>
+          <th>Source Year</th>
+          <th>Expires</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.viewDocuments as |row|}}
+          <tr>
+            <td>RAD-{{row.id}}</td>
+            <td>
+              <PersonLink @person={{row.person}} />
+            </td>
+            <td>{{row.shortTypeLabel}}</td>
+            <td>{{row.status}}</td>
+            <td>
+              {{#if (or row.isWAP row.isWAPSO row.isStaffCredential)}}
+                {{#if row.access_any_time}}
+                  Anytime
+                {{else if row.access_date}}
+                  {{dayjs-format row.access_date "ddd MMM DD"}}
+                {{else}}
+                  <b class="text-danger">Missing</b>
+                {{/if}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            <td>
+              {{#if row.isWAPSO}}
+                {{row.name}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            <td>
+              {{row.source_year}}
+            </td>
+            <td>
+              {{row.expiry_year}}
+            </td>
+          </tr>
+        {{/each}}
+        <tr>
+        </tr>
+        </tbody>
+      </table>
+    {{/if}}
+  </tab.pane>
+</UiTab>

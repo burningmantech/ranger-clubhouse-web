@@ -1,0 +1,35 @@
+{{#if this.isLoading}}
+  <LoadingIndicator @text="Loading dashboard"/>
+{{else}}
+  <UiNotice @icon="skull-crossbones" @title="Dashboard Warning" @type="danger">
+    All links and buttons below will affect YOUR account and not operate against {{@person.callsign}}.
+  </UiNotice>
+  {{#if @person.isPastProspective}}
+    <DashboardPastProspective/>
+  {{else if @person.isProspectiveWaitlist}}
+    <DashboardProspectiveWaitlist/>
+  {{else if (or @person.isProspective @person.isAlpha @person.isBonked)}}
+    <DashboardPnv @milestones={{this.milestones}}
+                  @person={{@person}}
+                  @photo={{this.photo}}
+                  @uploadAction={{this.noButtonAction}}
+                  @showBehaviorAgreementAction={{this.noButtonAction}}
+                  @debugUpdateAction={{this.noButtonAction}}
+    />
+  {{else if @person.isAuditor}}
+    <DashboardAuditor @milestones={{this.milestones}}
+                      @person={{@person}}
+                      @showBehaviorAgreementAction={{this.noButtonAction}}
+                      @debugUpdateAction={{this.noButtonAction}}
+    />
+  {{else}}
+    <DashboardRanger @milestones={{this.milestones}}
+                     @person={{@person}}
+                     @years={{@person}}
+                     @photo={{this.photo}}
+                     @uploadAction={{this.noButtonAction}}
+                     @showBehaviorAgreementAction={{this.noButtonAction}}
+                     @debugUpdateAction={{this.noButtonAction}}
+    />
+  {{/if}}
+{{/if}}

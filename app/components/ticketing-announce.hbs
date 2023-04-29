@@ -6,19 +6,21 @@
   {{#if @ticketPackage.lsdTickets}}
     <UiNotice @icon="ticket" @type="success" @title="Late Season Directed Tickets (LSD)">
       <p>
-        {{pluralize @ticketPackage.lsdTickets.length "Late Season Directed ticket"}} is available
-        {{~#if @ticketPackage.lsdVPs}}
-          , and {{pluralize @ticketPackage.lsdVPs.length "LSD Vehicle Pass"}}
+        {{singular-or-pluralize @ticketPackage.lsdTickets.length "LSD ticket" capitalize=true}}
+        {{~#if @ticketPackage.lsdVPs~}}
+          , and {{singular-or-pluralize @ticketPackage.lsdVPs.length "LSD Vehicle Pass"}}
         {{/if~}}
-        .
+        is available. <b class="text-danger">All LSD tickets have to be paid for in advance.</b><br>
+        Instructions on how to pay for the tickets will be sent later.
       </p>
-      The ticket has to be paid for in advance. Further instructions on how to pay for the ticket(s) will be sent later.
+      LSD Tickets are NOT claimed through the Clubhouse.
     </UiNotice>
   {{/if}}
   {{#if @ticketPackage.giftTickets}}
     <UiNotice @icon="ticket" @type="success" @title="Gift Ticket(s)">
-      You have been given {{pluralize @ticketPackage.giftTickets.length "Gift Ticket"}}.
-      The ticket(s) may be claimed once Ranger ticketing window has opened up.
+      {{singular-or-pluralize @ticketPackage.giftTickets.length "Gift Ticket" capitalize=true}} is available.
+      The {{pluralize @ticketPackage.giftTickets.length "ticket" without-count=true}} may be claimed once Ranger
+      ticketing window has opened up.
     </UiNotice>
   {{/if}}
   {{#if @ticketPackage.tickets}}

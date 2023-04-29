@@ -1,14 +1,14 @@
 <h3>Mail Log &amp; Email Change History</h3>
 
 <UiTab as |tab|>
-  <tab.pane @title="Mail Log">
+  <tab.pane @title="Mail Log" @id="mail-log">
     <MailLogTable @logs={{this.logs}}
                   @meta={{this.meta}}
                   @stats={{this.stats}}
                   @goNextPage={{this.goNextPage}}
                   @goPrevPage={{this.goPrevPage}} />
   </tab.pane>
-  <tab.pane @title="Email Change History">
+  <tab.pane @title="Email Change History" @id="email-history">
     <p>
       The following table lists the old email addresses the person may have used in the past.
     </p>

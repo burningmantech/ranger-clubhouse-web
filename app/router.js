@@ -44,7 +44,6 @@ Router.map(function () {
     });
     this.route('vehicles');
     this.route('welcome');
-    this.route('work-history');
   });
 
   this.route('search', function () {
@@ -148,7 +147,6 @@ Router.map(function () {
     this.route('awards-swag');
     this.route('bmid');
     this.route('broadcast-log');
-    this.route('dashboard');
     this.route('emergency-contact');
     this.route('event-info');
     this.route('external-ids');
@@ -162,12 +160,10 @@ Router.map(function () {
     this.route('pogs');
     this.route('schedule');
     this.route('status-history');
-    this.route('tickets');
     this.route('tickets-provisions');
     this.route('timesheet');
     this.route('timesheet-log');
     this.route('unified-flagging');
-    this.route('work-history');
   });
 
   this.route('logout');
@@ -241,7 +237,6 @@ Router.map(function () {
       this.route('unclaimed-with-signups');
       this.route('claimed-with-no-signups');
       this.route('unsubmit-provisions');
-      this.route('special-tickets');
     });
     this.route('bmid');
     this.route('bmid-print');

@@ -26,7 +26,7 @@
       {{/if}}
     </UiButton>
   {{else if ticket.isQualified}}
-    <h4>You have been given a {{ticket.typeLabel}} for the upcoming event!</h4>
+    <h4>A {{ticket.typeLabel}} is available</h4>
     <TicketGiftConditions/>
     <UiButton @class="btn-responsive"
               @onClick={{fn @setDocumentStatus ticket "claimed"}}

@@ -89,10 +89,7 @@
               <tr id="slot-{{slot.id}}">
                 <td>{{slot.id}}</td>
                 <td>
-                  {{shift-format slot.begins slot.ends}}
-                  {{#if slot.isNonPacific}}
-                    ({{slot.timezone_abbr}})
-                  {{/if}}
+                  {{shift-format slot.begins slot.ends timezone=slot.timezone_abbr}}
                 </td>
                 <td class="text-end">{{slot.max}}</td>
                 <td class="text-end">{{slot.signed_up}}</td>

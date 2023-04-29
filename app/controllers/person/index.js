@@ -71,6 +71,11 @@ export default class PersonIndexController extends ClubhouseController {
 
   @tracked showPasswordDialog = false;
 
+  @tracked isLoading = false;
+
+  // Work History Tab
+  @tracked workTimesheet;
+
   get isAdmin() {
     return this.session.isAdmin;
   }
@@ -180,7 +185,7 @@ export default class PersonIndexController extends ClubhouseController {
             this.modal.confirm('Confirm Active Ranger Conversion',
               '<p>You about to manually convert an Alpha to an Active Ranger. Normally this is done through the Mentor Interfaces.</p> Are you sure you want to do this?',
               () => this._savePersonModel(model));
-              return;
+            return;
 
           case RESIGNED:
           case RETIRED:

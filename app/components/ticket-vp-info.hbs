@@ -1,4 +1,10 @@
 {{#if this.vehiclePass}}
+  <p>
+    <b class="text-danger">
+      Only claim a Vehicle Pass if you intend to use it. The passes are a limited resource and have an impact
+      on the Bureau Of Land Management event permit.
+    </b>
+  </p>
   {{#if (or (not @ticket) @ticket.isBanked @ticket.isQualified)}}
     <p>
       <b>Claim your event ticket first before claiming your Vehicle Pass.</b>

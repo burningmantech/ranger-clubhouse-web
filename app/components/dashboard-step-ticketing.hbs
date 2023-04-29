@@ -8,20 +8,22 @@
   {{else if @step.tickets.qualifiedCount}}
     <b class="text-danger">Items are still unclaimed and/or have not been banked.</b>
   {{else if @step.tickets.claimed}}
-    You have claimed {{pluralize @step.tickets.claimed.length "item"}}:
-    <ul>
-      {{#each @step.tickets.claimed as |item|}}
-        <li>
-          {{#if item.isWAPSO}}
-            Significant Other WAP for: <i>{{item.name}}</i>
-          {{else if item.isWAP}}
-            Work Access Pass for yourself
-          {{else}}
-            {{item.typeLabel}} {{if item.isStaffCredential "which is also your WAP"}}
-          {{/if}}
-        </li>
-      {{/each}}
-    </ul>
+    {{#if @step.tickets.claimed}}
+      You have claimed {{pluralize @step.tickets.claimed.length "item"}}:
+      <ul>
+        {{#each @step.tickets.claimed as |item|}}
+          <li>
+            {{#if item.isWAPSO}}
+              Significant Other WAP for: <i>{{item.name}}</i>
+            {{else if item.isWAP}}
+              Work Access Pass for yourself
+            {{else}}
+              {{item.typeLabel}} {{if item.isStaffCredential "which is also your WAP"}}
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
   {{else}}
     <span class="text-danger">No tickets have been claimed.</span>
   {{/if}}

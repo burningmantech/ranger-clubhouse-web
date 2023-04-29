@@ -26,7 +26,7 @@
       </UiNotice>
     {{/if}}
     <UiTab as |tab|>
-      <tab.pane @title="Schedule">
+      <tab.pane @title="Schedule" @id="schedule">
         <ScheduleTable @slots={{@signedUpSlots}}
                        @person={{@person}}
                        @isMe={{this.isMe}}
@@ -38,7 +38,7 @@
                        @showPeople={{this.showPeople}}
         />
       </tab.pane>
-      <tab.pane @title="Sign-Ups">
+      <tab.pane @title="Available Sign-Ups" @id="sign-ups">
         <ScheduleAvailableSignUps @availableSlots={{this.availableSlots}}
                                   @year={{@year}}
                                   @showPeople={{this.showPeople}}
@@ -60,7 +60,7 @@
           {{/if}}
         </tab.pane>
       {{/if}}
-      <tab.pane @title="Hours & Credits">
+      <tab.pane @title="Hours & Credits" @id="hours-credits">
         <ScheduledHoursCredits @scheduleSummary={{@scheduleSummary}}
                                @creditsEarned={{@creditsEarned}}
                                @year={{@year}} />

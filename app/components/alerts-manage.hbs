@@ -1,11 +1,13 @@
 {{#if this.isStopped}}
   <UiNotice @title="One or more phone numbers are STOPPED" @icon="exclamation-triangle">
     <p>
-      <b class="text-danger">WARNING: Someone, most likely you, texted the STOP command
-        from one of the following numbers.</b>
+      <b class="text-danger">
+        WARNING: Someone, most likely you, texted the STOP command from one of the following numbers.
+      </b>
     </p>
-    <p>That phone number will not be able to receive alerts until the START
-      command is texted from the same number.</p>
+    <p>
+      That phone number will not be able to receive alerts until the START command is texted from the same number.
+    </p>
     <ul>
       {{#if this.numbers.on_playa.is_stopped}}
         <li>The number {{this.numbers.on_playa.phone}} is stopped</li>
@@ -67,10 +69,10 @@
         </UiButton>
       {{/if}}
       {{#if this.isSubmitting}}
-        <LoadingIndicator/>
-      {{else}}
-        &nbsp;
-      {{/if}}
+        <LoadingDialog>
+          Processing the phone number
+        </LoadingDialog>
+       {{/if}}
     </ChForm>
   </UiNotice>
 {{/if}}
@@ -83,7 +85,9 @@
       Australia: +61, Canada: +1, France: +33, Mexico: +52, New Zealand: +64, UK: +44.
     </p>
 
-    <ChForm @formId="numbers" @formFor={{this.phoneForm}} @validator={{this.numberValidations}}
+    <ChForm @formId="numbers"
+            @formFor={{this.phoneForm}}
+            @validator={{this.numberValidations}}
             @onSubmit={{this.saveNumbersAction}} as |f|>
       <FormRow>
         <f.text @name="off_playa"

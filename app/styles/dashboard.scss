@@ -69,9 +69,9 @@
 
 .dashboard-step-title {
   margin: 0 5px 7px 5px;
-  vertical-align: center;
   font-weight: 600;
   color: #495057;
+  vertical-align: middle;
 }
 
 .dashboard-step-description {
@@ -230,12 +230,12 @@
     margin-right: 10px;
   }
 
-  .dashboard-icon {
-    width: 40px;
-    font-size: 1.4rem;
+  .dashboard-step-title {
+    font-size: 1rem;
   }
 
-  .dashboard-step-title {
+  .dashboard-icon {
+    width: 40px;
     font-size: 1rem;
   }
 

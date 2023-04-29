@@ -1,7 +1,7 @@
 <h3>Swag (Shirts, Service Pins &amp; Patches) and Clubhouse Awards for {{this.person.callsign}}</h3>
 
 <UiTab class="mt-4" as |tab|>
-  <tab.pane @title="Swag">
+  <tab.pane @title="Swag" @id="swag">
     <p>
       Do not add, adjust, or remove service items from a person account unless instructed to do so by the Quartermaster.
     </p>
@@ -77,7 +77,7 @@
       </ModalDialog>
     {{/if}}
   </tab.pane>
-  <tab.pane @title="Clubhouse Awards">
+  <tab.pane @title="Clubhouse Awards" @id="awards">
     <p>
       Any awards are items grant to a person and will appear on their Me &gt; Awards page.
     </p>

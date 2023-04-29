@@ -1,17 +1,60 @@
 <h3>Tickets &amp; Provisions For {{this.person.callsign}}</h3>
-<p>
-  <LinkTo @route="person.tickets" class="ms-2">View {{this.person.callsign}}'s Tickets &amp; Stuff page</LinkTo>
-</p>
 
-<UiTab as |tab|>
-  <tab.pane @title="Tickets">
-    <Person::AccessDocuments @person={{this.person}}
-                             @documents={{this.documents}}
-                             @ticketingInfo={{this.ticketingInfo}} />
+<div class="row mt-2">
+  <div class="col-auto">
+    <b>Ticketing Period</b><br>
+    {{this.ticketingInfo.period}}
+  </div>
+  <div class="col-auto">
+    <b>Last Visited Tickets &amp; Stuff</b><br>
+    {{#if this.ticketingPackage.visited_at}}
+      {{shift-format this.ticketingPackage.visited_at year=true}} (Pacific)
+    {{else}}
+      <i>Not visited yet</i>
+    {{/if}}
+  </div>
+
+  <div class="col-auto">
+    <b>Started Ticketing</b><br>
+    {{#if this.ticketingPackage.started_at}}
+      {{shift-format this.ticketingPackage.started_at year=true}} (Pacific)
+    {{else}}
+      <i>Not started yet</i>
+    {{/if}}
+  </div>
+  <div class="col-auto">
+    <b>Finished Ticketing</b><br>
+    {{#if this.ticketingPackage.finished_at}}
+      {{shift-format this.ticketingPackage.finished_at year=true}} (Pacific)
+    {{else}}
+      <i>Not finished yet</i>
+    {{/if}}
+  </div>
+</div>
+
+<UiTab @onChange={{this.loadStuff}} as |tab|>
+  <tab.pane @title="Access Documents" @id="documents">
+    {{#unless this.isLoading}}
+      <Person::AccessDocuments @person={{this.person}}
+                               @documents={{this.documents}}
+                               @ticketingInfo={{this.ticketingInfo}} />
+    {{/unless}}
   </tab.pane>
-  <tab.pane @title="Provisions">
-    <Person::Provisions @person={{this.person}}
-                        @provisions={{this.provisions}}
-                        @ticketingInfo={{this.ticketingInfo}} />
+  <tab.pane @title="Provisions" @id="provisions">
+    {{#unless this.isLoading}}
+      <Person::Provisions @person={{this.person}}
+                          @provisions={{this.provisions}}
+                          @ticketingInfo={{this.ticketingInfo}} />
+    {{/unless}}
+  </tab.pane>
+  <tab.pane @title="Tickets & Stuff" @id="tickets-stuff">
+    <p>
+      The following is how the <i>Me &gt; Tickets & Stuff</i> page appears to {{this.person.callsign}}.
+    </p>
+    {{#unless this.isLoading}}
+      <TicketingLanding @person={{this.person}}
+                        @ticketingInfo={{this.ticketingInfo}}
+                        @ticketingPackage={{this.ticketingPackage}} />
+    {{/unless}}
   </tab.pane>
 </UiTab>

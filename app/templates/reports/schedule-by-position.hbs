@@ -13,7 +13,11 @@
                     @onChange={{action (mut this.activeFilter)}} />
   </div>
 </FormRow>
-
+<p>
+  All shift times are in the Pacific Timezone unless otherwise noted.<br>
+  {{fa-icon "check" color="success"}} = The shift is activated, and available for sign ups.<br>
+  {{fa-icon "ban" color="danger"}} = The shift has not been activated yet, is not visible to users, and cannot be signed up for.
+</p>
 <p>
   Jump to a position starting with the letter:<br>
   {{#each this.letterOptions as |letter|}}
@@ -50,31 +54,32 @@
         <table class="table table-sm table-hover table-striped">
           <thead>
           <tr>
-            <th class="w-10">From</th>
-            <th class="w-10">To</th>
+            <th class="w-25">Time</th>
+            <th class="w-5 text-end">Duration</th>
             <th class="w-15">Description</th>
-            <th class="w-5">Active</th>
             <th class="w-10 text-center">Sign-Ups / Max</th>
-            <th class="w-50">Callsigns</th>
+            <th class="w-30">Callsigns</th>
           </tr>
           </thead>
           <tbody>
           {{#each position.slots key="id" as |slot|}}
             <tr>
-              <td class="w-10">{{shift-format slot.begins}}</td>
-              <td class="w-10">{{shift-format slot.ends}}</td>
+              <td class="w-25">
+                {{#if slot.active}}
+                  {{fa-icon "check" color="success" right=1}}
+                {{else}}
+                  {{fa-icon "times" color="danger" right=1}}
+                {{/if}}
+                {{shift-format slot.begins slot.ends timezone=slot.tz}}
+              </td>
+              <td class="w-5 text-end">
+                {{hour-minute-format slot.duration}}
+              </td>
               <td class="w-15">
                 <PresentOrNot @value={{slot.description}} @empty="-"/>
               </td>
-              <td class="w-5 text-center">
-                {{#if slot.active}}
-                  {{fa-icon "check" color="success"}}
-                {{else}}
-                  {{fa-icon "times" color="danger"}}
-                {{/if}}
-              </td>
               <td class="w-10 text-center">{{slot.sign_ups.length}} / {{slot.max}}</td>
-              <td class="w-50">
+              <td class="w-45">
                 {{#each slot.sign_ups as |person idx|}}
                   {{~if idx ", "~}}
                   <PersonLink @person={{person}} />

@@ -117,6 +117,15 @@
             </p>
           {{/if}}
         {{/if}}
+        {{#if (or
+                (eq f.model.type "lsd_ticket")
+                (eq f.model.type "vehicle_pass_lsd")
+              )}}
+          <p class="text-danger">
+            Any qualified (status) LSD item will be updated to status claimed. End-users may only see LSD items are
+            available. An upload LSD item indicates the person has stated they want the goodies.
+          </p>
+        {{/if}}
         {{#unless this.entry.isNew}}
           Comments:
           <div class="my-2">
