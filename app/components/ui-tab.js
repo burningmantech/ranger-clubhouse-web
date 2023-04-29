@@ -12,7 +12,9 @@ export default class UiTabComponent extends Tab {
 
   @action
   select(id, event) {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
     super.select(id);
 
     // Record when the user clicks on a tab.

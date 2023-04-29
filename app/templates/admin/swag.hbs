@@ -7,7 +7,7 @@
     <UiButton @onClick={{this.newSwag}}>{{fa-icon "plus"}} New Swag</UiButton>
   </p>
   <UiTab as |tab|>
-    <tab.pane @title="Ranger Shirts">
+    <tab.pane @title="Ranger Shirts" @id="shirts">
       <p>
         Shirts appearing here will be used to generate the shirts options for the Personal Info pages.
       </p>
@@ -16,27 +16,27 @@
                  @swags={{this.swagTables.deptShirts}}
                  @editAction={{this.editSwag}} />
     </tab.pane>
-    <tab.pane @title="Ranger Service Pins">
+    <tab.pane @title="Ranger Service Pins" @id="service-pins">
       <SwagTable @title="Ranger Service Pins"
                  @swags={{this.swagTables.deptPins}}
                  @editAction={{this.editSwag}} />
     </tab.pane>
-    <tab.pane @title="Ranger Service Patches">
+    <tab.pane @title="Ranger Service Patches" @id="service-patches">
       <SwagTable @title="Ranger Service Patches"
                  @swags={{this.swagTables.deptPatches}}
                  @editAction={{this.editSwag}} />
     </tab.pane>
-    <tab.pane @title="Org Service Patches">
+    <tab.pane @title="Org Service Patches" @id="org-patches">
       <SwagTable @title="Org Service Patches"
                  @swags={{this.swagTables.orgPatches}}
                  @editAction={{this.editSwag}} />
     </tab.pane>
-    <tab.pane @title="Org Service Pins">
+    <tab.pane @title="Org Service Pins" @id="org-pins">
       <SwagTable @title="Org Service Pins"
                  @swags={{this.swagTables.orgPins}}
                  @editAction={{this.editSwag}} />
     </tab.pane>
-    <tab.pane @title="Other">
+    <tab.pane @title="Other" @id="other">
       <SwagTable @title="Other"
                  @swags={{this.swagTables.other}}
                  @editAction={{this.editSwag}} />

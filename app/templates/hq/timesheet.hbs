@@ -1,6 +1,6 @@
 <h3 class="d-print-none">Timesheet &amp; Correction Requests</h3>
 <UiTab as |tab|>
-  <tab.pane @title="Timesheet Entries">
+  <tab.pane @title="Timesheet Entries" @id="entries">
     <h1 class="d-none d-print-block">{{this.year}} Timesheet Entries For {{this.person.callsign}}</h1>
     <Me::TimesheetReviewCommon @timesheets={{this.timesheets}}
                                @timesheetSummary={{this.timesheetSummary}}
@@ -10,8 +10,7 @@
                                @year={{this.year}}
     />
   </tab.pane>
-
-  <tab.pane @title="Missing Timesheet Entry Requests">
+  <tab.pane @title="Missing Timesheet Entry Requests" @id="missing-requests">
     <Me::TimesheetMissingCommon @person={{this.person}}
                                 @timesheetsMissing={{this.timesheetsMissing}}
                                 @timesheetInfo={{this.timesheetInfo}}
