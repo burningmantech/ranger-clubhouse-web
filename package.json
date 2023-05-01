@@ -97,7 +97,7 @@
     "mobile-detect": "^1.4.5",
     "qunit": "^2.19.4",
     "qunit-dom": "^2.0.0",
-    "sass": "^1.62.0",
+    "sass": "^1.62.1",
     "tracked-built-ins": "^3.1.1",
     "webpack": "^5.80.0"
   },
