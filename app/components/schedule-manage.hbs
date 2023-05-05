@@ -1,7 +1,6 @@
 <p>
   All shift / training session times are in the Pacific timezone unless otherwise noted.
 </p>
-
 <div class="max-width-1000">
   {{#unless this.isCurrentYear}}
     <UiNotice @icon="hand-point-right" @title="Viewing Prior Year">
@@ -10,7 +9,7 @@
   {{/unless}}
 
   {{#if this.showScheduleBlocker}}
-    <ScheduleBlocked @requirements={{@permission.requirements}}
+    <ScheduleBlocked @requirements={{this.permission.requirements}}
                      @person={{@person}}
                      @overrideAction={{this.overrideAction}}
                      @canOverride={{this.canOverride}}
@@ -27,6 +26,7 @@
     {{/if}}
     <UiTab as |tab|>
       <tab.pane @title="Schedule" @id="schedule">
+        <ScheduleBurnWeekendRecommendation @person={{@person}} @permission={{this.permission}} />
         <ScheduleTable @slots={{@signedUpSlots}}
                        @person={{@person}}
                        @isMe={{this.isMe}}
@@ -39,13 +39,14 @@
         />
       </tab.pane>
       <tab.pane @title="Available Sign-Ups" @id="sign-ups">
+        <ScheduleBurnWeekendRecommendation @person={{@person}} @permission={{this.permission}} />
         <ScheduleAvailableSignUps @availableSlots={{this.availableSlots}}
                                   @year={{@year}}
                                   @showPeople={{this.showPeople}}
                                   @joinSlot={{this.joinSlot}}
                                   @leaveSlot={{this.leaveSlot}}
                                   @isAdmin={{this.isAdmin}}
-                                  @milestones={{@milestones}}
+                                  @needsFullTraining={{this.permission.needs_full_training}}
                                   @person={{@person}}
         />
       </tab.pane>
@@ -61,9 +62,10 @@
         </tab.pane>
       {{/if}}
       <tab.pane @title="Hours & Credits" @id="hours-credits">
-        <ScheduledHoursCredits @scheduleSummary={{@scheduleSummary}}
-                               @creditsEarned={{@creditsEarned}}
-                               @year={{@year}} />
+        {{#if (eq tab.activeId "hours-credits")}}
+          <ScheduledHoursCredits @person={{@person}}
+                                 @year={{@year}} />
+        {{/if}}
       </tab.pane>
       {{#if @includeLog}}
         <tab.pane @title="Audit Log" @id="audit-log">

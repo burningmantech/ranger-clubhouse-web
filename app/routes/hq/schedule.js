@@ -11,16 +11,13 @@ export default class HqScheduleRoute extends ClubhouseRoute {
 
     return RSVP.hash({
       schedule: this.ajax.request(`person/${person_id}/schedule`,
-        { data: { person_id, year, schedule_summary: 1, signup_permission: 1 } }),
-      timesheets: this.store.query('timesheet', { person_id, year }),
-      milestones: this.ajax.request(`person/${person_id}/milestones`).then(({milestones}) => milestones),
+        {data: {person_id, year, signup_permission: 1}}),
     });
   }
 
   setupController(controller, model) {
     const hq = this.modelFor('hq');
     const {schedule} = model;
-    super.setupController(...arguments);
 
     model.slots = ScheduleSlotModel.hydrate(schedule.slots, schedule.positions);
     model.signedUpSlots = model.slots.filter((slot) => slot.person_assigned);

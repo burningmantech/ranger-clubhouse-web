@@ -7,7 +7,6 @@ import {service} from '@ember/service';
 import {htmlSafe} from '@ember/template';
 import {TRAINING} from 'clubhouse/constants/positions';
 
-
 export default class ScheduleManageComponent extends Component {
   @service ajax;
   @service modal;
@@ -62,9 +61,6 @@ export default class ScheduleManageComponent extends Component {
     }
 
     this.permission = permission;
-
-    const photoStatus = permission.photo_status;
-    this.hasApprovedPhoto = (photoStatus === 'approved' || photoStatus === 'not-required')
   }
 
 
@@ -116,18 +112,6 @@ export default class ScheduleManageComponent extends Component {
   }
 
   /**
-   * Update the schedule summary after adding or remove signups.
-   *
-   * @private
-   */
-
-  _retrieveScheduleSummary() {
-    this.ajax.request(`person/${this.args.person.id}/schedule/summary`, {data: {year: this.args.year}})
-      .then((result) => this.scheduleSummary = result.summary)
-      .catch((result) => this.house.handleErrorResponse(result));
-  }
-
-  /**
    * Override the scheduling sign up blockers
    *
    */
@@ -159,7 +143,6 @@ export default class ScheduleManageComponent extends Component {
       slot.person_assigned = true;
       this.permission = {...this.permission, recommend_burn_weekend_shift: result.recommend_burn_weekend_shift};
       this._sortAndMarkSignups();
-      this._retrieveScheduleSummary();
 
       // And reposition the page so things appear not to move when the sign-up is added
       // to the schedule.
@@ -195,37 +178,39 @@ export default class ScheduleManageComponent extends Component {
 
     this.modal.confirm('Confirm Leaving Shift',
       message,
-      () => {
+      async () => {
         set(slot, 'is_submitting', true);
-        this.ajax.request(`person/${this.args.person.id}/schedule/${slot.id}`, {method: 'DELETE',})
-          .then((result) => {
-            const signedUp = this.args.signedUpSlots.find((s) => +s.id === +slot.id);
+        try {
+          const result = await this.ajax.request(`person/${this.args.person.id}/schedule/${slot.id}`, {method: 'DELETE'});
+          const signedUp = this.args.signedUpSlots.find((s) => +s.id === +slot.id);
 
-            if (row) {
-              // Try to keep the page position static. The sign up will be removed
-              // from the schedule, the row deleted, and the browser may want
-              // to reposition the page.
-              setTimeout(() =>
-                schedule('afterRender', () => {
-                  // The sign-up may have been removed via the scheduled table and the row no longer exists.
-                  if (document.body.contains(row)) {
-                    window.scrollTo(window.scrollX, row.getBoundingClientRect().top - currentOffset);
-                  }
-                }), 100);
-            }
+          if (row) {
+            // Try to keep the page position static. The sign up will be removed
+            // from the schedule, the row deleted, and the browser may want
+            // to reposition the page.
+            setTimeout(() =>
+              schedule('afterRender', () => {
+                // The sign-up may have been removed via the scheduled table and the row no longer exists.
+                if (document.body.contains(row)) {
+                  window.scrollTo(window.scrollX, row.getBoundingClientRect().top - currentOffset);
+                }
+              }), 100);
+          }
 
-            if (signedUp) {
-              this.args.signedUpSlots.removeObject(signedUp);
-              this._sortAndMarkSignups();
-            }
+          if (signedUp) {
+            this.args.signedUpSlots.removeObject(signedUp);
+            this._sortAndMarkSignups();
+          }
 
-            slot.person_assigned = false;
-            slot.slot_signed_up = result.signed_up;
-            set(this.permission, 'recommend_burn_weekend_shift', result.recommend_burn_weekend_shift);
-            this._retrieveScheduleSummary();
-            this.toast.success('The shift has been removed from the schedule.');
-          }).catch((response) => this.house.handleErrorResponse(response))
-          .finally(() => set(slot, 'is_submitting', false));
+          slot.person_assigned = false;
+          slot.slot_signed_up = result.signed_up;
+          this.permission = {...this.permission, recommend_burn_weekend_shift: result.recommend_burn_weekend_shift};
+          this.toast.success('The shift has been removed from the schedule.');
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        } finally {
+          set(slot, 'is_submitting', false)
+        }
       }
     );
   }
@@ -237,9 +222,10 @@ export default class ScheduleManageComponent extends Component {
    */
 
   @action
-  showPeople(slot) {
+  async showPeople(slot) {
     slot.is_retrieving_people = true;
-    this.ajax.request('slot/' + slot.id + '/people').then((result) => {
+    try {
+      const result = await this.ajax.request('slot/' + slot.id + '/people');
       let callsigns = result.people.map((person) => person.callsign);
       const signups = callsigns.length;
       if (signups) {
@@ -249,8 +235,10 @@ export default class ScheduleManageComponent extends Component {
         callsigns = "No one is signed up for this shift. Be the first!";
       }
       this.modal.info(`${signups} signup${signups === 1 ? '' : 's'} for ` + slot.slot_description, callsigns);
-    })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => set(slot, 'is_retrieving_people', false));
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      set(slot, 'is_retrieving_people', false)
+    }
   }
 }
