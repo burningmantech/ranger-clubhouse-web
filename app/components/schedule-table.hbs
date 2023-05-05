@@ -1,9 +1,18 @@
 <PrintInstruction/>
+{{#if this.hasOverlapping}}
+  <UiNotice @icon="flag" @title="Overlapping Shifts" @type="danger">
+    <YouOrCallsign @person={{@person}} @youLabel="You have" @callsignVerb="has"/>
+    overlapping shifts, marked with a {{fa-icon "flag" color="danger"}}.
+    Credit is only awarded based on the time worked, and no double credit will be issued.
+  </UiNotice>
+{{/if}}
+{{#if this.permission.recommend_burn_weekend_shift}}
 
+{{/if}}
 <UiSection>
   <:title>{{@year}} Shift Schedule for {{@person.callsign}}</:title>
   <:body>
-    <div class="d-print-none">
+     <div class="d-print-none">
       <p>
         <NoAppreciateIcon/>
         = the shift hours do not count towards provisions (meal passes, showers, event radios) and appreciations

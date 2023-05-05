@@ -17,18 +17,15 @@ export default class PersonScheduleRoute extends ClubhouseRoute {
     const scheduleParams = {
       person_id,
       year,
-      credits_earned: 1,
-      schedule_summary: 1,
     };
 
-    // Only bother with permissions for the current year
-    if (+year === +this.house.currentYear()) {
+    if (year === this.house.currentYear()) {
+      // Only bother with permissions for the current year
       scheduleParams.signup_permission = 1;
     }
 
     return RSVP.hash({
       schedule: this.ajax.request(`person/${person_id}/schedule`, {data: scheduleParams}),
-      milestones: this.ajax.request(`person/${person_id}/milestones`).then(({milestones}) => milestones),
       year,
     });
   }

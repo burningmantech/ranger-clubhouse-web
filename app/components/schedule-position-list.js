@@ -1,7 +1,17 @@
 import Component from '@glimmer/component';
-import {ALPHA,TRAINING} from 'clubhouse/constants/positions';
+import {ALPHA, TRAINING} from 'clubhouse/constants/positions';
 import {cached} from '@glimmer/tracking';
-import {ALPHA as ALPHA_STATUS, PROSPECTIVE, NON_RANGER} from 'clubhouse/constants/person_status';
+import {
+  ALPHA as ALPHA_STATUS,
+  ACTIVE,
+  AUDITOR,
+  BONKED,
+  DECEASED,
+  NON_RANGER,
+  PROSPECTIVE,
+  SUSPENDED,
+  UBERBONKED,
+} from 'clubhouse/constants/person_status';
 
 export default class SchedulePositionListComponent extends Component {
   constructor() {
@@ -13,14 +23,37 @@ export default class SchedulePositionListComponent extends Component {
     this.haveShiftWithAdditionalInfo = !!this.args.position.slots.find((s) => s.slot_url?.length);
 
     if (this.isTrainingPosition) {
+      this.showTrainingAdvisory = this.args.isCurrentYear;
       const status = this.args.person.status;
-      this.needsFullDayTraining = this.args.milestones.needs_full_training;
-      if (status === ALPHA_STATUS || status === PROSPECTIVE) {
-        this.personStatus = 'a Ranger Applicant';
-      } else if (status === NON_RANGER) {
-        this.personStatus = 'Non-Ranger Volunteer'
-      } else {
-        this.personStatus = (status.match(/^[aeiou]/i) ? `an ${status}` : `a ${status}`) + ' Ranger';
+      this.needsFullDayTraining = this.args.needsFullTraining;
+      switch (status) {
+        case ACTIVE:
+          this.personStatus = this.needsFullDayTraining ? 'a Ranger with less than 2 years experience' : `an active Ranger`;
+          break;
+
+        case ALPHA_STATUS:
+        case PROSPECTIVE:
+          this.personStatus = 'a Prospective Ranger';
+          break;
+
+        case NON_RANGER:
+          this.personStatus = 'a Non-Ranger Volunteer'
+          break;
+
+        case AUDITOR:
+          this.personStatus = 'an Auditor';
+          break;
+
+        case DECEASED:
+        case SUSPENDED:
+        case UBERBONKED:
+        case BONKED:
+          this.showTrainingAdvisory = false;
+          break;
+
+        default:
+          this.personStatus = (status.match(/^[aeiou]/i) ? `an ${status}` : `a ${status}`) + ' Ranger';
+          break;
       }
     }
   }

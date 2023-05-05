@@ -32,9 +32,7 @@ Router.map(function () {
     this.route('password');
     this.route('personal-info');
     this.route('radio-checkout');
-    this.route('schedule', function () {
-      this.route('index', {path: '/'});
-    });
+    this.route('schedule');
     this.route('survey');
     this.route('tickets');
     this.route('timesheet');
