@@ -5,13 +5,10 @@
     Back to {{this.year}} {{this.training.title}} Sessions
   </LinkTo>
 </p>
-<p>
-  <b>Do not forget to record the trainers' attendance below.</b>
-</p>
 
 {{#if (is-empty this.trainers)}}
   <UiNotice @icon="hand" @type="danger" @title="No trainer slots were found">
-    In order to correctly record how many trainers are signed up to teach this session, a trainer's slot needs to exists
+    In order to correctly record how many trainers are signed up to teach this session, a trainer's slot needs to exist
     where the slot's description matches this session's description exactly and where the start time within one hour of
     this session.
   </UiNotice>
@@ -63,19 +60,59 @@
       {{/if}}
     </FormRow>
 
-    {{#if this.trainers}}
-      <div class="mt-2">
-        {{#each this.trainers as |group|}}
-          {{group.position_title}} ({{group.trainers.length}}):
-          {{#each group.trainers as |trainer index|}}
-            {{if index ", "}}
-            <PersonLink @person={{trainer}} />
-            {{if trainer.is_lead " (lead trainer)"}}
-          {{else}}
-            <i>none found</i>
-          {{/each}}<br>
+    {{#if this.trainerCount}}
+      <p>
+        Be sure to make the Trainer as having "Attended" to ensure the person is considered trained for the year.<br>
+         Is Lead Trainer = the primary Trainer(s) responsible for the session.
+      </p>
+      Showing {{pluralize this.trainerCount "trainer"}}
+      <table class="table table-sm table-width-auto table-striped table-hover">
+        <thead>
+        <tr>
+          <th>Trainer Callsign</th>
+          <th>Type</th>
+          <th>Email</th>
+          <th>Attended?</th>
+          <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.trainers as |trainerType|}}
+          {{#each trainerType.trainers as |trainer|}}
+            <tr>
+              <td class="align-middle">
+                <PersonLink @person={{trainer}} />
+              </td>
+              <td class="align-middle">{{trainerType.position_title}}</td>
+              <td class="align-middle">{{mail-to trainer.email}}</td>
+              <td>
+                <ChForm::Select @name="trainer-{{trainer.id}}-status"
+                                @value={{trainer.status}}
+                                @onChange={{action (mut trainer.status)}}
+                                @options={{this.trainerStatusOptions}} />
+              </td>
+              <td class="align-middle">
+                <div class="form-check">
+                  <Input id="trainer-{{trainer.id}}-is-lead"
+                         class="form-check-input"
+                         @type="checkbox"
+                         @checked={{trainer.is_lead}} />
+                  <label for="trainer-{{trainer.id}}-is-lead" class="form-check-label">
+                    Is Lead Trainer
+                  </label>
+                </div>
+              </td>
+            </tr>
+          {{/each}}
         {{/each}}
-      </div>
+        </tbody>
+      </table>
+      <UiButton @onClick={{this.saveTrainers}} @disabled={{this.isSubmitting}}>
+        Save Trainers
+      </UiButton>
+      {{#if this.isSubmitting}}
+        <LoadingIndicator/>
+      {{/if}}
     {{/if}}
   </:body>
 </UiSection>
@@ -124,7 +161,8 @@
           </UiButton>
         {{/if}}
         {{#if this.offersGraduation}}
-          <UiButton @type="secondary" @onClick={{this.showGraduateStudentsAction}} @disabled={{is-empty this.students}}
+          <UiButton @type="secondary" @onClick={{this.showGraduateStudentsAction}} @disabled={{is-empty
+            this.students}}
                     @class="ms-1">
             {{fa-icon "graduation-cap"}} Graduate Trainees
           </UiButton>
@@ -233,73 +271,6 @@
         <b class="text-danger">No trainees have signed up yet.</b>
       {{/each}}
     </div>
-  </:body>
-</UiSection>
-
-<UiSection>
-  <:title>Trainer Attendance ({{this.trainerCount}})</:title>
-  <:body>
-    <p>
-      Be sure to make the Trainer as having "Attended" to ensure the person is considered trained for the year.
-    </p>
-    <p>
-      Is Lead Trainer = the primary Trainer(s) responsible for the session.
-    </p>
-    <table class="table table-striped table-hover table-width-auto">
-      <thead>
-      <tr>
-        <th>Trainer</th>
-        <th>Type</th>
-        <th>Attended?</th>
-        <th>&nbsp;</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#if this.trainerCount}}
-        {{#each this.trainers as |trainerType|}}
-          {{#each trainerType.trainers as |trainer|}}
-            <tr>
-              <td class="align-middle">
-                <PersonLink @person={{trainer}} />
-              </td>
-              <td class="align-middle">{{trainerType.position_title}}</td>
-              <td>
-                <ChForm::Select @name="trainer-{{trainer.id}}-status"
-                                @value={{trainer.status}}
-                                @onChange={{action (mut trainer.status)}}
-                                @options={{this.trainerStatusOptions}} />
-              </td>
-              <td class="align-middle">
-                <div class="form-check">
-                  <Input id="trainer-{{trainer.id}}-is-lead"
-                         class="form-check-input"
-                         @type="checkbox"
-                         @checked={{trainer.is_lead}} />
-                  <label for="trainer-{{trainer.id}}-is-lead" class="form-check-label">
-                    Is Lead Trainer
-                  </label>
-                </div>
-              </td>
-            </tr>
-          {{/each}}
-        {{/each}}
-      {{else}}
-        <tr>
-          <td colspan="3"><b class="text-danger">No trainers were found.</b></td>
-        </tr>
-      {{/if}}
-      </tbody>
-    </table>
-    {{#if this.trainerCount}}
-      <p>
-        <UiButton @onClick={{this.saveTrainers}} @disabled={{this.isSubmitting}}>
-          Save Trainers
-        </UiButton>
-        {{#if this.isSubmitting}}
-          <LoadingIndicator/>
-        {{/if}}
-      </p>
-    {{/if}}
   </:body>
 </UiSection>
 
