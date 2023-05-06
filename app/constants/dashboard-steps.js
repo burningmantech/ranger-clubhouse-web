@@ -596,8 +596,11 @@ export const SIGN_RADIO_CHECKOUT_AGREEMENT = {
       adj = 'Rangers';
     }
 
+    const isAugust = (new Date).getMonth() === 7;
     return {
-      result: ACTION_NEEDED,
+      // In August, bump up to urgent.
+      result:  isAugust ? URGENT : ACTION_NEEDED,
+      immediate: isAugust,
       route: 'me.agreements',
       linkedMessage: {
         route: 'me.agreements',
