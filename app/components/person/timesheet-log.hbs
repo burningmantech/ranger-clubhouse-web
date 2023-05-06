@@ -1,0 +1,176 @@
+<h3>
+  Timesheet Audit Log for {{@year}}
+</h3>
+
+{{#if this.isLoading}}
+  <LoadingIndicator @text="Loading timesheet audit log"/>
+{{else}}
+  {{#each this.logs as |entry|}}
+    <UiSection>
+      <:title>
+        #{{entry.timesheet_id}}
+        {{#if entry.deleted}}
+          <span class="text-danger mx-1">DELETED</span>
+        {{/if}}
+        {{#if entry.timesheet}}
+          {{entry.timesheet.position_title}}:
+          {{shift-format entry.timesheet.on_duty}} -
+          {{#if entry.timesheet.off_duty}}
+            {{shift-format entry.timesheet.off_duty}}
+          {{else}}
+            <i class="text-danger">Still On Duty</i>
+          {{/if}}
+        {{else}}
+          <b class="text-danger">Timesheet association failure</b>
+        {{/if}}
+      </:title>
+
+      <:body>
+        <table class="table table-sm table-striped table-hover max-width-900">
+          <thead>
+          <tr>
+            <th class="timesheetlog-time">Timestamp</th>
+            <th class="timesheetlog-user">User</th>
+            <th class="timesheetlog-message">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each entry.logs as |log|}}
+            <tr>
+              <td class="timesheetlog-time">{{shift-format log.created_at}}</td>
+              <td class="timesheetlog-user">
+                <PersonLink @personId={{log.creator_person_id}} @callsign={{log.creator_callsign}} />
+              </td>
+              <td class="timesheetlog-message">
+                {{#let log.data as |data|}}
+                  <b>
+                    {{this.actionLabel log.action}}
+                    {{#if data.via}}
+                      via
+                      {{#if (eq data.via "bulk-upload")}}
+                        bulk uploader
+                      {{else if (eq data.via "missing-entry")}}
+                        missing entry request
+                      {{else}}
+                        {{data.via}}
+                      {{/if}}
+                    {{/if}}
+                  </b>
+                  <br>
+                  {{#if data.message}}
+                    {{data.message}}<br>
+                  {{/if}}
+                  {{#if data.forced}}
+                    <span class="text-danger">Forced - unqualified "{{data.forced.message}}"</span><br>
+                  {{/if}}
+                  {{#if (eq log.action "update")}}
+                    {{#if data.review_status}}
+                      Status update {{get data.review_status 0}} &rarr; {{get data.review_status 1}}<br>
+                    {{/if}}
+                    {{#if data.position_id}}
+                      Position update {{get (get data.position_id 0) 'title'}} &rarr; {{get (get data.position_id 1)
+                                                                                            'title'}}<br>
+                    {{/if}}
+                    {{#if data.on_duty}}
+                      On duty update {{shift-format (get data.on_duty 0)}} &rarr; {{shift-format (get data.on_duty 1)}}
+                      <br>
+                    {{/if}}
+                    {{#if data.off_duty}}
+                      Off duty update {{shift-format (get data.off_duty 0)}} &rarr;
+                      {{shift-format (get data.off_duty 1)}}
+                      <br>
+                    {{/if}}
+                  {{else}}
+                    {{#if data.position_title}}
+                      Position {{data.position_title}}<br>
+                    {{/if}}
+                    {{#if data.on_duty}}
+                      On duty {{shift-format data.on_duty}}<br>
+                    {{/if}}
+                    {{#if data.off_duty}}
+                      Off duty {{shift-format data.off_duty}}<br>
+                    {{/if}}
+                  {{/if}}
+                  {{#if data.notes}}
+                    <div>
+                      Notes:<br>
+                      {{data.notes}}
+                    </div>
+                  {{/if}}
+                  {{#if data.reviewer_notes}}
+                    <div>
+                      Reviewer notes:<br>
+                      {{data.reviewer_notes}}
+                    </div>
+                  {{/if}}
+                {{/let}}
+              </td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </:body>
+    </UiSection>
+  {{else}}
+    <p>
+      <b class="text-danger">
+        {{#if (lt @year 2018)}}
+          Timesheet logs are not available prior to 2018.
+        {{else}}
+          No timesheet logs found for {{@year}}.
+        {{/if}}
+      </b>
+    </p>
+  {{/each}}
+
+  {{#if (gte @year 2018)}}
+    <UiSection>
+      <:title>Other Timesheet Actions</:title>
+      <:body>
+        <table class="table table-sm table-striped table-hover max-width-900">
+          <thead>
+          <tr>
+            <th class="timesheetlog-time">Time</th>
+            <th class="timesheetlog-user">User</th>
+            <th class="timesheetlog-message">Action</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          {{#each this.otherLogs as |log|}}
+            <tr>
+              <td class="timesheetlog-time">{{shift-format log.created_at}}</td>
+              <td class="timesheetlog-user">
+                <PersonLink @personId={{log.creator_person_id}} @callsign={{log.creator_callsign}} />
+              </td>
+              <td class="timesheetlog-message">
+                <b>
+                  {{get this.actionLabels log.action}}
+                  {{#if log.data.via}}
+                    via
+                    {{#if (eq log.data.via "bulk-upload")}}
+                      bulk uploader
+                    {{else if (eq log.data.via "missing-entry")}}
+                      missing entry request
+                    {{else}}
+                      {{log.data.via}}
+                    {{/if}}
+                  {{/if}}
+                </b>
+                {{#if log.data.message}}
+                  <br>
+                  {{log.data.message}}
+                {{/if}}
+              </td>
+            </tr>
+          {{else}}
+            <tr>
+              <td colspan="4"><b class="text-danger">No other logs found for {{@year}}</b></td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      </:body>
+    </UiSection>
+  {{/if}}
+{{/if}}

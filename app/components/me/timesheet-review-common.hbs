@@ -7,6 +7,12 @@
     {{/if}}
   </:title>
   <:body>
+    {{#if (lt @year 2008)}}
+      <p class="text-danger">
+        Note: The department did not start tracking volunteer hours until 2008. Any timesheets prior to 2008 are
+        placeholders and do not represent the actual volunteer work performed.
+      </p>
+    {{/if}}
     <NoAppreciateIcon/>
     = the shift hours do not count towards provisions and appreciations.
     <div class="timesheet-table">
@@ -100,7 +106,7 @@
           {{/if}}
         </div>
       {{else}}
-        <span class="text-danger">No entries were found for {{this.year}}</span>
+        <span class="text-danger">No entries were found for {{@year}}</span>
       {{/each}}
     </div>
   </:body>

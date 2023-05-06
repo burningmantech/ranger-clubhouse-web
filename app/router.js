@@ -160,7 +160,6 @@ Router.map(function () {
     this.route('status-history');
     this.route('tickets-provisions');
     this.route('timesheet');
-    this.route('timesheet-log');
     this.route('unified-flagging');
   });
 
