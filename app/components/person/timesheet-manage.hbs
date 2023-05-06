@@ -1,7 +1,16 @@
 <UiSection>
   <:title>{{@year}} Timesheet Entries</:title>
   <:body>
-    <div class="d-flex">
+    <span class="me-2">
+    <b>Credits:</b> {{credits-format @timesheetSummary.total_credits}}
+    </span>
+    <span class="me-2">
+    <b>Counted Hours:</b>
+      {{hour-minute-format @timesheetSummary.counted_duration}}
+    </span>
+    <b>Total Hours:</b>
+    {{hour-minute-format @timesheetSummary.total_duration}}
+    <div class="d-flex mt-1">
       <div>
         <NoAppreciateIcon/>
         = the shift hours do not count towards provisions and appreciations.
@@ -11,13 +20,11 @@
           {{fa-icon "flag" color="danger"}} = entry's time overlaps with another entry.
         </div>
       {{/if}}
-      <div class="ms-4">
-        <LinkTo @route="person.timesheet-log" @query={{hash year=@year}}>View {{@year}} Timesheet Log</LinkTo>
-      </div>
     </div>
     <table class="table table-hover table-striped table-width-auto">
       <thead>
       <tr>
+        <th>&nbsp;</th>
         <th>Time</th>
         <th class="text-end">Duration</th>
         <th class="text-end">Credits</th>
@@ -29,6 +36,23 @@
       <tbody>
       {{#each @timesheets key="id" as |ts|}}
         <tr>
+          <td>
+            {{#if (is-empty ts.off_duty)}}
+              {{fa-icon "person-walking" color="danger"}}
+            {{else if ts.isVerified}}
+              {{fa-icon "check" color="success"}}
+            {{else if ts.isUnverified}}
+              {{fa-icon "question"}}
+            {{else if ts.isPending}}
+              {{fa-icon "arrow-right" color="danger"}}
+            {{else if ts.isRejected}}
+              {{fa-icon "times"}}
+            {{else if ts.isApproved}}
+              {{fa-icon "thumbs-up" type="far"}}
+            {{else}}
+              &nbsp;
+            {{/if}}
+          </td>
           <td>
             {{#if ts.isOverlapping}}
               {{fa-icon "flag" color="danger"}} &nbsp;
@@ -65,17 +89,17 @@
           </td>
           <td>
             {{#if (is-empty ts.off_duty)}}
-              {{fa-icon "person-walking" color="danger"}} <i class="text-danger">Still On Duty</i>
+              <i class="text-danger">Still On Duty</i>
             {{else if ts.isVerified}}
-              <span class="text-success">{{fa-icon "check"}} Verified</span>
+              <span class="text-success">Verified</span>
             {{else if ts.isUnverified}}
-              {{fa-icon "question"}} Unverified
+              Unverified
             {{else if ts.isPending}}
-              <b class="text-danger">{{fa-icon "arrow-right"}} Correction Requested</b>
+              <b class="text-danger">Correction Requested</b>
             {{else if ts.isRejected}}
-              {{fa-icon "times"}} Correction Rejected
+              Correction Rejected
             {{else if ts.isApproved}}
-              {{fa-icon "thumbs-up" type="far"}} Correction Approved<br>
+              Correction Approved<br>
               Verification needed.
             {{else}}
               &nbsp;
@@ -162,44 +186,29 @@
         </fieldset>
         <fieldset>
           <legend>Time &amp; Position</legend>
-          <table class="table table-sm table-width-auto">
-            <tbody>
-            <tr class="tr-no-border">
-              <td>Assoc. Shift</td>
-              {{#if this.editEntry.slot}}
-                <td class="text-end">
-                  {{hour-minute-words this.editEntry.slot.duration}}
-                </td>
-                <td class="text-muted">
-                  {{shift-format this.editEntry.slot.begins this.editEntry.slot.ends}}
-                </td>
-                <td class="text-muted">
-                  Slot #{{this.editEntry.slot.id}}
-                </td>
-              {{else}}
-                <td class="text-muted">None found.</td>
-                <td colspan="2">&nbsp;</td>
-              {{/if}}
-            </tr>
-            <tr class="tr-no-border">
-              <td>Entry Duration</td>
-              <td class="text-end">{{this.entryDuration f.model}}</td>
-              <td colspan="2">
-                {{#if this.editEntry.isTooShort}}
-                  <span class="text-danger">
+          <span class="fw-bold me-2">Entry Duration</span> {{this.entryDuration f.model}}
+          {{#if this.editEntry.isTooShort}}
+            <span class="text-danger">
                     Entry might be too short. Duration is less than 15 minutes.
                   </span>
-                {{else if this.editEntry.isTooLong}}
-                  <span class="text-danger">
+          {{else if this.editEntry.isTooLong}}
+            <span class="text-danger">
                   Entry might be too long. Duration is over 1.5x Assoc. Shift's duration.
                 </span>
-                {{else}}
-                  &nbsp;
-                {{/if}}
-              </td>
-            </tr>
-            </tbody>
-          </table>
+          {{/if}}
+          <br>
+          <div class="text-muted mb-1">
+            {{#if this.editEntry.slot}}
+              <span class="me-2">Scheduled Shift</span> {{hour-minute-words this.editEntry.slot.duration}}
+              {{shift-format this.editEntry.slot.begins this.editEntry.slot.ends}}
+              Slot #{{this.editEntry.slot.id}}<br>
+              The scheduled shift is shown for reference. The actual time worked might be longer or shorter than
+              the scheduled shift.
+            {{else}}
+              No scheduled shift found.
+            {{/if}}
+          </div>
+
           {{#if this.canManageTimesheets}}
             <FormRow>
               <f.datetime @name="on_duty"
