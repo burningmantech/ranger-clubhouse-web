@@ -2,6 +2,9 @@
   <s.group @title="SEARCH FOR">
     <s.link @route="search.assets" @title="Assets" @icon="broadcast-tower" @iconType="s" />
     <s.link @route="search.languages" @title="Language" @icon="language" @iconType="s" />
+    {{#if (has-role "admin" "vc")}}
+      <s.link @route="search.people" @title="People" @icon="users" @iconType="s" />
+    {{/if}}
     <s.link @route="search.vehicles" @title="Vehicles" @icon="car" @iconType="s" />
   </s.group>
 </UiSidebar>

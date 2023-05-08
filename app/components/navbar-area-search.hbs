@@ -1,5 +1,8 @@
 <NavbarMenu @title="Search" @nav={{@nav}} as |menu|>
   <NavbarMenuItem @menu={{menu}} @route="search.assets" @item="Assets"/>
   <NavbarMenuItem @menu={{menu}}  @route="search.languages" @item="Languages"/>
+  {{#if (has-role "admin" "vc")}}
+    <NavbarMenuItem @menu={{menu}}  @route="search.people" @item="People"/>
+  {{/if}}
   <NavbarMenuItem @menu={{menu}}  @route="search.vehicles" @item="Vehicles"/>
 </NavbarMenu>
