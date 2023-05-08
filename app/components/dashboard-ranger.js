@@ -275,6 +275,7 @@ const NON_RANGER_STEPS = [
   DashboardStep.UPLOAD_PHOTO,
   DashboardStep.PHOTO_APPROVAL,
   DashboardStep.MISSING_BPGUID,
+  DashboardStep.ONLINE_TRAINING,
   DashboardStep.TICKETING_OPEN,
   DashboardStep.TICKETING_CLOSED,
   DashboardStep.VEHICLE_REQUESTS,
