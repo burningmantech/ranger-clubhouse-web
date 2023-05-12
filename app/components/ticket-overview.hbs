@@ -168,10 +168,10 @@
   {{/if}}
   {{#if (and @ticketPackage.provisionItems (not @ticketPackage.provisionsBanked))}}
     <TicketOverviewItem @icon="gear" @title="Provisions Claimed" @type="success">
-      You will be using the following provision(s):
-      <div class="mt-2 ms-3">
+      You will be using the following {{pluralize @ticketPackage.provisionItems.length "provision"}}:
+      <div class="mt-2">
         {{#each @ticketPackage.provisionItems as |item|}}
-          <span class="me-2">{{fa-icon item.icon}}</span> {{item.name}}<br>
+          {{fa-icon item.icon right=2 fixed=true}} {{item.name}}<br>
         {{/each}}
       </div>
     </TicketOverviewItem>

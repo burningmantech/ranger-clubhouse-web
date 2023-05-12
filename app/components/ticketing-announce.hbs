@@ -4,14 +4,14 @@
   </UiSection>
 {{else}}
   {{#if @ticketPackage.lsdTickets}}
-    <UiNotice @icon="ticket" @type="success" @title="Late Season Directed Tickets (LSD)">
+    <UiNotice @icon="ticket" @type="success" @title="Claimed Late Season Directed (LSD) Items">
       <TicketLsdAvailable @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}} />
     </UiNotice>
   {{/if}}
   {{#if @ticketPackage.giftTickets}}
     <UiNotice @icon="ticket" @type="success" @title="Gift Ticket(s)">
       {{singular-or-pluralize @ticketPackage.giftTickets.length "Gift Ticket" capitalize=true}} is available.
-      The {{pluralize @ticketPackage.giftTickets.length "ticket" without-count=true}} may be claimed once Ranger
+      The {{pluralize @ticketPackage.giftTickets.length "ticket" without-count=true}} may be claimed once the Ranger
       ticketing window has opened up.
     </UiNotice>
   {{/if}}
