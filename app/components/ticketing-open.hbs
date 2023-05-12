@@ -5,11 +5,6 @@
 {{else if this.isPNV}}
   <TicketOpenApplicant @ticketingInfo={{@ticketingInfo}} />
 {{else}}
-  {{#if @ticketPackage.lsdTickets}}
-    <div class="alert alert-secondary">
-      <TicketLsdAvailable @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}} />
-    </div>
-  {{/if}}
   {{#if @ticketPackage.giftTickets}}
     <div class="alert alert-secondary">
       {{singular-or-pluralize @ticketPackage.giftTickets.length "Gift Ticket" capitalize=true}}
@@ -18,6 +13,11 @@
       {{/if}} is available.
       To claim the {{pluralize  @ticketPackage.giftTickets.length "ticket" without-count=true}}, click on the ticketing
       button below.
+    </div>
+  {{/if}}
+  {{#if @ticketPackage.lsdTickets}}
+    <div class="alert alert-secondary">
+      <TicketLsdAvailable @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}} />
     </div>
   {{/if}}
 
@@ -99,7 +99,7 @@
     </UiWizard>
   {{else}}
     <h4 class="text-danger">
-      The ticketing deadline is {{full-datetime-format @ticketingInfo.submit_date}} (Pacific)
+      The Ranger ticketing deadline is {{full-datetime-format @ticketingInfo.submit_date}} (Pacific)
     </h4>
     <p>
       Adjustment to your ticketing choice may be made up until the deadline. Once the deadline has passed, it may no
@@ -113,31 +113,30 @@
           </UiNotice>
         {{else if (this.ticket.isClaimed (not this.ticket.haveAddress))}}
           <UiNotice @type="danger" @icon="hand" @title="Ticketing not completed!">
-            You did not indicate if you wanted to have your ticket mailed or if you are going to picked it up at
+            You did not indicate if you wanted to have your ticket mailed or if you are going to pick it up at
             will-call.
           </UiNotice>
         {{else}}
           <UiNotice @type="success" @icon="check" @title="Ticketing choices have been confirmed.">
             <p>
               While you have completed all the Clubhouse ticketing steps, further actions may need to be taken later.
-              After the ticketing deadline passes, the claimed items will be uploaded to the Burning Man ticketing
-              system. Once the upload happens, an email will be sent detailing any additional steps need to be taken
+              After the Ranger ticketing deadline passes, the claimed items will be uploaded to the Burning Man ticketing
+              system. Once the upload happens, an email will be sent detailing any additional steps needed to be taken,
               including how to pay for and ship the items (if applicable).
             </p>
             <p>
               <b>
-                Failure to visit and finish the "check out" process in a timely manner on the Burning Man ticketing
-                website for any uploaded tickets &amp; vehicle passes, regardless if the item(s) requires payment or not,
-                will result in your items being delayed.
+                Failure to visit the Burning Man ticketing website and finishing the Burning Man ticketing "check out" process
+                in a timely manner for any uploaded tickets &amp; vehicle passes, regardless if the item(s) requires payment or
+                not, will result in your items being delayed. Much sadness will be had.
               </b>
               Please be responsible. Do not make more work for the Ranger Ticketing team. They're volunteers with
               lives, just like you.
             </p>
             <p>
-              Claimed WAPs not part of a Staff Credential are automatically emailed out. No additional action is
-              required.
+              Claimed WAPs, not part of a Staff Credential, are automatically emailed out.
             </p>
-            Ticket selection, pick up locations, access dates, banked items, and other ticketing details are provided
+            Ticket selection, pick up locations, access dates, banked items, and other details are
             below.
           </UiNotice>
         {{/if}}
