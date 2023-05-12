@@ -162,7 +162,9 @@ export default class SearchPeopleController extends ClubhouseController {
 
     let CSV_COLUMNS = [
       {title: 'Callsign', key: 'callsign'},
-      {title: 'Name', key: 'name'},
+      {title: 'First Name', key: 'first_name'},
+      {title: 'Last Name', key: 'last_name'},
+      {title: 'Email', key: 'email'},
       {title: 'Current Status', key: 'status'}
     ];
 
@@ -189,6 +191,8 @@ export default class SearchPeopleController extends ClubhouseController {
 
     if (this.includeTrainingStatus) {
       CSV_COLUMNS.push({title: 'Training Status', key: 'training_status'});
+      CSV_COLUMNS.push({title: 'Training Date', key: 'training_date', format: 'date'});
+      CSV_COLUMNS.push({title: 'Training Signed-Up On', key: 'training_signed_up_at', format: 'date'});
     }
 
     CSV_COLUMNS.push({title: 'Create Date', key: 'create_date', format: 'date'});
