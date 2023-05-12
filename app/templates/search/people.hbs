@@ -113,6 +113,7 @@
         {{#if this.includeTrainingStatus}}
           <th>Training Status</th>
           <th>Training Date</th>
+          <th>Signed-Up At</th>
         {{/if}}
         <th>Create Date</th>
       </tr>
@@ -160,6 +161,9 @@
                 -
               {{/if}}
             </td>
+          <td>
+            {{ymd-format person.training_signed_up_at}}
+          </td>
           {{/if}}
           <td>
             {{#if person.create_date}}
