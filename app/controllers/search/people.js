@@ -162,7 +162,9 @@ export default class SearchPeopleController extends ClubhouseController {
 
     let CSV_COLUMNS = [
       {title: 'Callsign', key: 'callsign'},
-      {title: 'Name', key: 'name'},
+      {title: 'First Name', key: 'first_name'},
+      {title: 'Last Name', key: 'last_name'},
+      {title: 'Email', key: 'email'},
       {title: 'Current Status', key: 'status'}
     ];
 
