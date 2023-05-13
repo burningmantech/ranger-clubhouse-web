@@ -59,7 +59,9 @@
                 @options={{this.yearCreatedOptions}}
                 @fieldSize="sm"/>
       <div class="col-auto">
-        <FormLabel @class="mb-2">Include columns for (column will be automatically included if searching on corresponding fields)</FormLabel>
+        <FormLabel @class="mb-2">Include columns for (column will be automatically included if searching on
+          corresponding fields)
+        </FormLabel>
         <f.checkbox @label="Years rangered"
                     @name="include_years_worked"/>
         <f.checkbox @label="Photo status"
@@ -67,7 +69,7 @@
         <f.checkbox @label="{{this.year}} Online Course"
                     @name="include_online_course"/>
         <f.checkbox @label="{{this.year}} In-Person Training Status"
-                    @name="include_training_status" />
+                    @name="include_training_status"/>
       </div>
     </FormRow>
   </fieldset>
@@ -82,7 +84,8 @@
       Note: some columns may be blank for older accounts.
     </p>
     <div class="mt-2">
-      Found {{pluralize this.people.length "person"}}. <UiExportToCSVButton @onClick={{this.exportToCSV}} />
+      Found {{pluralize this.people.length "person"}}.
+      <UiExportToCSVButton @onClick={{this.exportToCSV}} />
     </div>
     <table class="table table-sm table-width-auto table-striped table-hover">
       <thead>
@@ -161,9 +164,13 @@
                 -
               {{/if}}
             </td>
-          <td>
-            {{ymd-format person.training_signed_up_at}}
-          </td>
+            <td>
+              {{#if person.training_signed_up_at}}
+                {{ymd-format person.training_signed_up_at}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
           {{/if}}
           <td>
             {{#if person.create_date}}
