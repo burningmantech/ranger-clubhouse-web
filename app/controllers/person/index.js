@@ -195,7 +195,7 @@ export default class PersonIndexController extends ClubhouseController {
           case INACTIVE:
             this.modal.confirm('Confirm updating status to active',
               htmlSafe(
-                'The person must have met the following criteria before being the active status is restored:' +
+                'The person must have met the following criteria before the person is restored to active status:' +
                 `<ul class="mt-2">${walkCC}<li>Worked at least one shift during the current event.</li></ul>` +
                 '<p>Normally, the status is updated by <b class="text-danger">Council post-event</b> through the People By Status Change admin interface. See the Ranger Status Policy document for more information.</p>' +
                 `Are you absolutely sure you want to update the status to ${status}?`),
