@@ -27,7 +27,7 @@ import {
   URGENT,
   WAITING
 } from "clubhouse/constants/dashboard";
-import {AUDITOR, NON_RANGER} from 'clubhouse/constants/person_status';
+import {ACTIVE, AUDITOR, NON_RANGER} from 'clubhouse/constants/person_status';
 import TicketPackage from 'clubhouse/utils/ticket-package';
 
 function indefiniteArticle(noun) {
@@ -404,21 +404,25 @@ export const ATTEND_TRAINING = {
           dt = 'ddd MMM DD [@] HH:mm';
         } else if (milestones.needs_full_training || isAuditor || isPNV) {
           if (isAuditor) {
-            prefix = "Attend the FULL DAY training";
+            prefix = '<b class="text-danger"><u>Attend the FULL DAY training</u></b>';
           } else {
             prefix = 'Because you are ';
             if (milestones.is_binary) {
-              prefix += 'a binary Ranger'
+              prefix += 'a Ranger with less than 2 years experience'
             } else if (isPNV) {
               prefix += 'a prospective Ranger'
             } else {
-              prefix += ` ${indefiniteArticle(person.status)} Ranger`;
+              prefix += `${indefiniteArticle(person.status)} Ranger`;
             }
-            prefix += ", you'll need to attend the <b>FULL DAY training</b>";
+            prefix +=', you need to attend the <b class="text-danger"><u>FULL DAY training</u></b>';
           }
           dt = 'ddd MMM DD [@] HH:mm';
         } else {
-          prefix = "You'll only need to attend the half day training portion";
+          if (person.status === ACTIVE) {
+            prefix = "Because you are a Ranger with 2 or more years experience, you only need to attend the half day portion";
+          } else {
+            prefix = "You only need to attend the half day training portion";
+          }
           dt = 'ddd MMM DD';
         }
         prefix += `:<div class="my-2">${dayjs(training.date).format(dt)}  - ${training.location}.</div>Visit`;
