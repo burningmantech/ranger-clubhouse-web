@@ -108,7 +108,9 @@
   {{/if}}
   {{#if (has-role "admin" "vc")}}
     <tab.pane @title="Dashboard" @id="dashboard">
-      <Person::Dashboard @person={{this.person}} />
+      {{#if (eq tab.activeId "dashboard")}}
+        <Person::Dashboard @person={{this.person}} />
+      {{/if}}
     </tab.pane>
   {{/if}}
   {{#if this.session.isAdmin}}
