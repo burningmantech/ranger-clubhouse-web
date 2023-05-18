@@ -25,7 +25,7 @@ export default class PersonTimesheetManageComponent extends Component {
   reviewOptions = [
     ['Correction approved', 'approved'],
     ['Correction rejected', 'rejected'],
-    ['Review requested', 'pending'],
+    ['Correction requested', 'pending'],
     ['Entry verified', 'verified'],
     ['Entry unverified', 'unverified']
   ];

@@ -35,10 +35,10 @@
       </thead>
       <tbody>
       {{#each @timesheets key="id" as |ts|}}
-        <tr>
+        <tr class="align-middle">
           <td>
             {{#if (is-empty ts.off_duty)}}
-              {{fa-icon "person-walking" color="danger"}}
+              {{fa-icon "person-walking"}}
             {{else if ts.isVerified}}
               {{fa-icon "check" color="success"}}
             {{else if ts.isUnverified}}
@@ -89,18 +89,18 @@
           </td>
           <td>
             {{#if (is-empty ts.off_duty)}}
-              <i class="text-danger">Still On Duty</i>
+              {{badge "warning" "Still On Duty"}}
             {{else if ts.isVerified}}
-              <span class="text-success">Verified</span>
+              {{badge "success" "Verfied"}}
             {{else if ts.isUnverified}}
-              Unverified
+              {{badge "secondary" "Unverified"}}
             {{else if ts.isPending}}
-              <b class="text-danger">Correction Requested</b>
+              {{badge "danger" "Correction Requested"}}
             {{else if ts.isRejected}}
-              Correction Rejected
+              {{badge "warning" "Correction Rejected"}}
             {{else if ts.isApproved}}
-              Correction Approved<br>
-              Verification needed.
+              {{badge "success" "Correction Approved"}}<br>
+              {{badge "secondary" "Verification still needed"}}
             {{else}}
               &nbsp;
             {{/if}}
@@ -199,13 +199,13 @@
           <br>
           <div class="text-muted mb-1">
             {{#if this.editEntry.slot}}
-              <span class="me-2">Scheduled Shift</span> {{hour-minute-words this.editEntry.slot.duration}}
+              <span class="me-2">Scheduled Signup</span> {{hour-minute-words this.editEntry.slot.duration}}
               {{shift-format this.editEntry.slot.begins this.editEntry.slot.ends}}
               Slot #{{this.editEntry.slot.id}}<br>
-              The scheduled shift is shown for reference. The actual time worked might be longer or shorter than
-              the scheduled shift.
+              The scheduled sign-up is shown for reference. The actual time worked might be longer or shorter than
+              the scheduled sign-up.
             {{else}}
-              No scheduled shift found.
+              Entry does not appear to be associated with a scheduled signed-up.
             {{/if}}
           </div>
 
