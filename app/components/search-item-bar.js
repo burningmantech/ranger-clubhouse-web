@@ -6,7 +6,7 @@ import {
   ACTIVE,
   ALPHA,
   INACTIVE, INACTIVE_EXTENSION,
-  NON_RANGER, PROSPECTIVE, SUSPENDED,
+  NON_RANGER, PROSPECTIVE,
 } from 'clubhouse/constants/person_status';
 import {debounce} from '@ember/runloop';
 import {service} from '@ember/service';
@@ -32,16 +32,6 @@ const SearchGroupTitles = {
   'name': 'real name',
   'old-email': 'old email',
 };
-
-const LiveStatuses = [
-  ACTIVE,
-  ALPHA,
-  INACTIVE,
-  INACTIVE_EXTENSION,
-  NON_RANGER,
-  PROSPECTIVE,
-  SUSPENDED,
-].join(',');
 
 const HqStatuses = [
   ACTIVE,
