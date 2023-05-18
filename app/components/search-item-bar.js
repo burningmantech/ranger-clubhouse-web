@@ -43,6 +43,16 @@ const LiveStatuses = [
   SUSPENDED,
 ].join(',');
 
+const HqStatuses = [
+  ACTIVE,
+  ALPHA,
+  INACTIVE,
+  INACTIVE_EXTENSION,
+  NON_RANGER,
+  PROSPECTIVE,
+  'cheetahcub'   // pseudo-status, find anyone who is signed up for a Cheetah Cub shift.
+].join(',');
+
 // What page to route to based on the search mode selected
 const MODE_ROUTES = {
   'account': 'person.index',
@@ -427,10 +437,10 @@ export default class SearchItemBarComponent extends Component {
       // restrict search to callsign and a handful of active-like statuses
       params = {
         search_fields: 'callsign',
-        statuses: LiveStatuses
+        statuses: HqStatuses
       };
     } else if (query.startsWith('+')) {
-      params = { search_fields: 'id' };
+      params = {search_fields: 'id'};
     } else {
       const match = query.match(/^(callsign|name|fka|last)\s*:\s*(.*)$/i);
       if (match) {
