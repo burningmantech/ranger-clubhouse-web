@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import {ALPHA, TRAINING} from 'clubhouse/constants/positions';
+import {ALPHA, TRAINER as TRAINER_POSITION, TRAINING} from 'clubhouse/constants/positions';
 import {cached} from '@glimmer/tracking';
 import {
   ALPHA as ALPHA_STATUS,
@@ -12,15 +12,30 @@ import {
   SUSPENDED,
   UBERBONKED,
 } from 'clubhouse/constants/person_status';
+import {service} from '@ember/service';
+import {ADMIN, ART_TRAINER} from "clubhouse/constants/roles";
+import {TYPE_TRAINING} from "clubhouse/models/position";
 
 export default class SchedulePositionListComponent extends Component {
+  @service session;
+
   constructor() {
     super(...arguments);
-    this.haveNoAppreciationSlots = !!this.args.position.slots.find((s) => !s.position_count_hours);
-    this.isTrainingPosition = this.args.position.position_id === TRAINING;
-    this.isAlphaPosition = this.args.position.position_id === ALPHA;
-    this.isTrainingType = this.args.position.type === "Training";
-    this.haveShiftWithAdditionalInfo = !!this.args.position.slots.find((s) => s.slot_url?.length);
+
+    const {position, position: {position_id}} = this.args;
+    this.haveNoAppreciationSlots = position.slots.find((s) => !s.position_count_hours);
+    this.isTrainingPosition = position_id === TRAINING;
+    this.isAlphaPosition = position_id === ALPHA;
+    this.isTrainingType = position.type === TYPE_TRAINING;
+    this.haveShiftWithAdditionalInfo = position.slots.find((s) => s.slot_url?.length);
+
+    if (this.session.hasRole(ADMIN)) {
+      this.canForceSignUp = true;
+    } else if ((this.isTrainingPosition || position_id === TRAINER_POSITION) && this.session.isRealTrainer) {
+      this.canForceSignUp = true;
+    } else if (this.isTrainingType && this.session.hasRole(ART_TRAINER)) {
+      this.canForceSignUp = false;
+    }
 
     if (this.isTrainingPosition) {
       this.showTrainingAdvisory = this.args.isCurrentYear;
