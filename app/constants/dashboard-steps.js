@@ -27,7 +27,7 @@ import {
   URGENT,
   WAITING
 } from "clubhouse/constants/dashboard";
-import {AUDITOR, NON_RANGER} from 'clubhouse/constants/person_status';
+import {ACTIVE, AUDITOR, NON_RANGER} from 'clubhouse/constants/person_status';
 import TicketPackage from 'clubhouse/utils/ticket-package';
 
 function indefiniteArticle(noun) {
@@ -240,7 +240,7 @@ export const VERIFY_PERSONAL_INFO = {
 export const ONLINE_TRAINING = {
   //name: 'Read the Ranger Manual & Complete The Online Course',
   skipPeriod: AFTER_EVENT,
-  check({milestones, isPNV, prevCompleted}) {
+  check({milestones, isPNV, prevCompleted, person}) {
     let name = `Read the Ranger Manual & Complete The Online Course`;
     if (milestones.online_training_passed) {
       return {
@@ -270,10 +270,24 @@ export const ONLINE_TRAINING = {
     //const duration = milestones.needs_full_online_course ? 'up to 90 minutes or more' : 'around 30 to 45 minutes';
     const duration = 'up to 2 hours or more';
 
+    let message;
+    const isNonRanger = person.status === NON_RANGER;
+    const manualLocation = '<p>The Ranger Manual can be found at <a href="' + config('RangerManualUrl') + '" rel="noopener noreferrer" target="_blank">rangers.burningman.org</a>.</p>';
+
+    if (isNonRanger) {
+     message =
+       '<p>As a Non Ranger Volunteer, you have the option to take the Ranger Online Course. If you do decide to attend an In-Person training, the Online Course must be completed first.</p>' +
+       manualLocation +
+       '<p>Please be sure to focus on the radio protocol section of the manual in case you will be carrying a radio.</p>' +
+       `<p>Note: it may take up to 20 minutes for the Clubhouse to record your course completion.</p>`;
+
+   } else {
+     message = manualLocation +
+       `<p>The Online Course, like the In-Person training, has to be completed every year. The estimate time to complete the course is ${duration}.</p> <p>Note: it may take up to 20 minutes for the Clubhouse to record your course completion.</p>`;
+   }
     return {
-      result: ACTION_NEEDED,
-      message: htmlSafe('<p>The Ranger Manual can be found at <a href="' + config('RangerManualUrl') + '" rel="noopener noreferrer" target="_blank">rangers.burningman.org</a>.</p>' +
-        `<p>The Online Course, like the In-Person training, has to be taken every year. The estimate time to complete the course is ${duration}.</p> <p>Note: it may take up to 20 minutes for the Clubhouse to record your course completion.</p>`),
+      result: isNonRanger? OPTIONAL : ACTION_NEEDED,
+      message: htmlSafe(message),
       isOnlineTraining: true,
       name
     };
@@ -390,21 +404,25 @@ export const ATTEND_TRAINING = {
           dt = 'ddd MMM DD [@] HH:mm';
         } else if (milestones.needs_full_training || isAuditor || isPNV) {
           if (isAuditor) {
-            prefix = "Attend the FULL DAY training";
+            prefix = '<b class="text-danger"><u>Attend the FULL DAY training</u></b>';
           } else {
             prefix = 'Because you are ';
             if (milestones.is_binary) {
-              prefix += 'a binary Ranger'
+              prefix += 'a Ranger with less than 2 years experience'
             } else if (isPNV) {
               prefix += 'a prospective Ranger'
             } else {
-              prefix += ` ${indefiniteArticle(person.status)} Ranger`;
+              prefix += `${indefiniteArticle(person.status)} Ranger`;
             }
-            prefix += ", you'll need to attend the <b>FULL DAY training</b>";
+            prefix +=', you need to attend the <b class="text-danger"><u>FULL DAY training</u></b>';
           }
           dt = 'ddd MMM DD [@] HH:mm';
         } else {
-          prefix = "You'll only need to attend the half day training portion";
+          if (person.status === ACTIVE) {
+            prefix = "Because you are a Ranger with 2 or more years experience, you only need to attend the half day portion";
+          } else {
+            prefix = "You only need to attend the half day training portion";
+          }
           dt = 'ddd MMM DD';
         }
         prefix += `:<div class="my-2">${dayjs(training.date).format(dt)}  - ${training.location}.</div>Visit`;

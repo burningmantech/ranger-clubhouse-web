@@ -1,0 +1,197 @@
+<h1>People Search</h1>
+<ChForm @formId="searchForm"
+        @formFor={{this.searchForm}}
+        @changeSet={{false}}
+        @onSubmit={{this.searchAction}}
+        @formClass="small"
+        as |f|>
+  <fieldset>
+    <legend>Status</legend>
+    <FormRow>
+      <f.select @name="status_year" @label="Year Status Was Updated To" @options={{this.statusYearOptions}}
+                @fieldSize="sm"/>
+      <div class="col-auto">
+        <f.checkboxGroup @label={{if (gt f.model.status_year 0)
+                                     (concat "In " f.model.status_year ", status was updated to:")
+                                     "Current Status"}}
+                         @name="statuses"
+                         @options={{this.statusOptions}}
+                         @cols={{4}}/>
+      </div>
+    </FormRow>
+  </fieldset>
+  <fieldset>
+    <legend>Work Effort &amp; Volunteer Coordinator Queries</legend>
+    <FormRow>
+      <f.number @label="Years Rangered*"
+                @name="years_worked"
+                @maxlength={{2}}
+                @size={{2}}
+                @fieldSize="sm"/>
+      <f.select @label="Years Rangered Match"
+                @name="years_worked_op"
+                @options={{this.yearsWorkOpOptions}}
+                @fieldSize="sm"/>
+      <f.select @label="Photo Status"
+                @name="photo_status"
+                @options={{this.photoStatusOptions}}
+                @fieldSize="sm"/>
+      <f.select @label="{{this.year}} Online Course"
+                @name="online_course_status"
+                @options={{this.onlineCourseOptions}}
+                @fieldSize="sm"/>
+      <f.select @label="{{this.year}} In-Person Training"
+                @name="training_status"
+                @options={{this.trainingStatusOptions}}
+                @fieldSize="sm"/>
+    </FormRow>
+    <FormRow>
+      <div class="col-auto">
+        * = Alpha, Training, ART, Deep Freeze timesheet entries are excluded from year calculations.
+      </div>
+    </FormRow>
+  </fieldset>
+  <fieldset>
+    <legend>Misc.</legend>
+    <FormRow>
+      <f.select @name="year_created"
+                @label="Year Account Created"
+                @options={{this.yearCreatedOptions}}
+                @fieldSize="sm"/>
+      <div class="col-auto">
+        <FormLabel @class="mb-2">Include columns for (column will be automatically included if searching on
+          corresponding fields)
+        </FormLabel>
+        <f.checkbox @label="Years rangered"
+                    @name="include_years_worked"/>
+        <f.checkbox @label="Photo status"
+                    @name="include_photo_status"/>
+        <f.checkbox @label="{{this.year}} Online Course"
+                    @name="include_online_course"/>
+        <f.checkbox @label="{{this.year}} In-Person Training Status"
+                    @name="include_training_status"/>
+      </div>
+    </FormRow>
+  </fieldset>
+  <div class="mt-2">
+    <f.submit @label="Search"/>
+  </div>
+</ChForm>
+
+{{#if this.haveResults}}
+  {{#if this.people}}
+    <p class="mt-2">
+      Note: some columns may be blank for older accounts.
+    </p>
+    <div class="mt-2">
+      Found {{pluralize this.people.length "person"}}.
+      <UiExportToCSVButton @onClick={{this.exportToCSV}} />
+    </div>
+    <table class="table table-sm table-width-auto table-striped table-hover">
+      <thead>
+      <tr>
+        <th>Callsign</th>
+        {{#if this.currentQuery.status_year}}
+          <th>Current Status</th>
+          <th>
+            Old Status
+          </th>
+          <th>
+            Updated Status
+          </th>
+          <th>Status Updated On</th>
+        {{else}}
+          <th>Status</th>
+        {{/if}}
+        {{#if this.includeYearsWorked}}
+          <th>Years Rangered</th>
+        {{/if}}
+        {{#if this.includePhotoStatus}}
+          <th>Photo Status</th>
+        {{/if}}
+        {{#if this.includeOnlineCourse}}
+          <th>Online Course<br>Started</th>
+          <th>Online Course<br>Completed</th>
+        {{/if}}
+        {{#if this.includeTrainingStatus}}
+          <th>Training Status</th>
+          <th>Training Date</th>
+          <th>Signed-Up At</th>
+        {{/if}}
+        <th>Create Date</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.people as |person|}}
+        <tr>
+          <td>
+            <PersonLink @person={{person}} />
+          </td>
+          <td>{{person.status}}</td>
+          {{#if this.currentQuery.status_year}}
+            <td>{{person.old_status}}</td>
+            <td>{{person.new_status}}</td>
+            <td>{{ymd-format person.status_changed_at}}</td>
+          {{/if}}
+          {{#if this.includeYearsWorked}}
+            <td class="text-end">{{person.years_worked}}</td>
+          {{/if}}
+          {{#if this.includePhotoStatus}}
+            <td>{{person.photo_status}}</td>
+          {{/if}}
+          {{#if this.includeOnlineCourse}}
+            <td>
+              {{#if person.online_course_started}}
+                {{ymd-format person.online_course_started}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            <td>
+              {{#if person.online_course_finished}}
+                {{ymd-format person.online_course_finished}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+          {{/if}}
+          {{#if this.includeTrainingStatus}}
+            <td>{{person.training_status}}</td>
+            <td>
+              {{#if person.training_date}}
+                {{ymd-format person.training_date}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            <td>
+              {{#if person.training_signed_up_at}}
+                {{ymd-format person.training_signed_up_at}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+          {{/if}}
+          <td>
+            {{#if person.create_date}}
+              {{ymd-format person.create_date}}
+            {{else}}
+              -
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <div class="mt-2">
+      <b class="text-danger">No accounts were found matching the search criteria.</b>
+    </div>
+  {{/if}}
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Searching for people
+  </LoadingDialog>
+{{/if}}

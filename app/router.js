@@ -48,6 +48,7 @@ Router.map(function () {
     this.route('assets');
     this.route('languages');
     this.route('vehicles');
+    this.route('people');
   });
 
   this.route('admin', function () {

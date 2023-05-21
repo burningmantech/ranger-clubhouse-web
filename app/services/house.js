@@ -7,6 +7,7 @@ import {isEmpty} from '@ember/utils';
 import currentYear from 'clubhouse/utils/current-year';
 import {isChangeset} from 'validated-changeset';
 import {AbortError, InvalidError, NotFoundError, ServerError, TimeoutError} from '@ember-data/adapter/error'
+import dayjs from "dayjs";
 
 export default class HouseService extends Service {
   @service router;
@@ -217,18 +218,30 @@ export default class HouseService extends Service {
     data.forEach((line) => {
       let fields = [];
       columns.forEach((column) => {
-        let value, yesno = false;
+        let value, yesno = false, format;
         if (typeof column == 'string') {
           value = line[column];
         } else {
           value = line[column.key];
           if (column.yesno) {
             yesno = true;
+          } else if (column.format) {
+            format = column.format;
           }
         }
 
         if (yesno) {
           value = value ? 'Y' : 'N';
+        } else if (format) {
+          switch (format) {
+            case 'date':
+              if (value) {
+                value = dayjs(value).format('YYYY-MM-DD');
+              } else {
+                value = '';
+              }
+              break;
+          }
         } else {
           value = isEmpty(value) ? '' : value.toString();
         }

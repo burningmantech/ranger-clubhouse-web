@@ -10,12 +10,27 @@
                   @options={{this.positionOptions}} />
       </FormRow>
       <FormRow>
+        <div class="col-12">
+          The multiplier mentor/trainer's slot is used to dynamically adjust the number of mentee signups are allowed
+          based on how many mentors are signed-up. When the mentor slot is set below, the max count field on this slot
+          becomes a multiplier. (e.g. if the mentee max is 2, and two mentors sign up, then 4 mentees will be allowed to
+          sign up.)
+        </div>
+      </FormRow>
+      <FormRow>
         <f.select @name="trainer_slot_id"
-                  @label="Sign Up Multiplier Trainer's Slot"
+                  @label="Sign Up Multiplier Mentor/Trainer's Slot"
                   @options={{this.trainerSlotsOptions}}
                   @includeBlank={{true}}
         />
       </FormRow>
+      {{#if f.model.trainer_slot_id}}
+        <FormRow>
+          <div class="col-12">
+            Warning: DO NOT link back the mentor/trainer slot to this slot. An infinite recursion loop will happen.
+          </div>
+        </FormRow>
+      {{/if}}
 
       <FormRow>
         <f.text @name="description"
@@ -41,18 +56,22 @@
       </FormRow>
       <FormRow>
         <f.number @name="max"
-                  @label={{if f.model.trainer_slot_id "Multiplier" "Max Sign Ups"}}
+                  @label={{if f.model.trainer_slot_id "Multiplier Sign Ups" "Max Sign Ups"}}
                   @size={{4}}
                   @maxlength={{4}}
         />
       </FormRow>
       {{#if f.model.trainer_slot_id}}
-        <span class="text-danger">NOTE:</span>
-        The Trainer's Slot has been set and the Max Sign Ups will act as a multiplier instead of a
-        hard count. The total sign ups allowed will be computed as the number of trainers signed up in
-        the trainer's slot TIMES the Max Sign Ups limit.
-        (e.g., if 2 trainers are signed up, and the sign up limitis 10, the total signups allowed will
-        be 20.)
+        <FormRow>
+          <div class="col-12">
+            <span class="text-danger">NOTE:</span>
+            The Trainer's Slot has been set and the Max Sign Ups will act as a multiplier instead of a
+            hard count. The total sign ups allowed will be computed as the number of trainers signed up in
+            the trainer's slot TIMES the Max Sign-Ups limit.
+            (e.g., if 2 trainers are signed up, and the sign-up limit is 10, the total signups allowed will
+            be 20.)
+          </div>
+        </FormRow>
       {{/if}}
 
 

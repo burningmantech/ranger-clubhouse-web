@@ -40,14 +40,10 @@
         </p>
       {{/if}}
       {{#if this.haveNoAppreciationSlots}}
-        <span class="d-inline-block me-2">
-        <NoAppreciateIcon/> = the shift hours will not count towards provisions &amp; appreciations.
-        </span>
+        <NoAppreciateIcon/> = the shift hours will not count towards provisions &amp; appreciations.<br>
       {{/if}}
       {{#if this.haveShiftWithAdditionalInfo}}
-        <span class="d-inline-block">
-          <InfoIcon/> = More shift information available, click on the icon and/or text.
-        </span>
+          <InfoIcon/> = More shift information available, click on the icon and/or text.<br>
       {{/if}}
       {{#if this.haveOverlapping}}
         <div class="mt-1 text-danger">
@@ -66,7 +62,8 @@
         </div>
         {{#each @position.slots key="id" as |slot|}}
           <div class="schedule-row {{if slot.is_overlapping "schedule-overlapping"
-                                        (if slot.person_assigned "schedule-signed-up")}}" id="slot-{{slot.id}}">
+                                        (if slot.person_assigned "schedule-signed-up")}}"
+               id="slot-{{slot.id}}">
             <div class="schedule-icon">
               {{#if slot.is_overlapping}}
                 {{fa-icon "flag" color="danger"}}
@@ -93,7 +90,7 @@
                 <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
               </div>
               {{#if (and slot.trainer_slot_id (eq slot.slot_max 0))}}
-                <div class="text-danger">No trainers signed up yet.<br>Check back later.</div>
+                <div class="text-danger">No trainers / mentors signed up yet.<br>Check back later.</div>
               {{/if}}
               {{#if slot.is_overlapping}}
                 <div class="mt-1 small">
@@ -151,7 +148,7 @@
               {{else if @isCurrentYear}}
               {{! Only show action buttons for the current year}}
                 {{#if slot.slot_active}}
-                  {{#if (or @isAdmin (and (not slot.isFull) (not slot.has_started)))}}
+                  {{#if (or this.canForceSignUp (and (not slot.isFull) (not slot.has_started)))}}
                     <button type="button" {{on "click" (fn @joinSlot slot)}}
                             class="btn btn-primary btn-sm"
                             title="Sign up for the shift"

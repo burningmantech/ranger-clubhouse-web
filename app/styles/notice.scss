@@ -13,10 +13,17 @@
 .notice {
   display: grid;
   padding: 0.5rem;
+  margin-bottom: 1vh;
+  grid-template-columns: 50px auto;
+  grid-template-areas:
+    "notice-icon notice-title"
+    "notice-body notice-body";
 }
 
 .notice-icon {
   grid-area: notice-icon;
+  padding: 0.125rem 0.25rem;
+  font-size: 1.1rem;
   text-align: center;
   background-color: #ffffff;
   border-radius: 6px;
@@ -25,60 +32,15 @@
 
 .notice-title {
   grid-area: notice-title;
-  font-weight: 700;
+  font-weight: 600;
   align-self: center;
+  font-size: 1.1rem;
+  margin-left: 0.5rem;
 }
 
 .notice-body {
   grid-area: notice-body;
   align-self: center;
-}
-
-@include media-breakpoint-up(xl) {
-  .notice {
-    grid-template-columns: min(10vw, 50px) auto;
-    grid-template-areas:
-    "notice-icon notice-title"
-    "notice-icon notice-body";
-    margin-bottom: 1vh;
-  }
-
-  .notice-icon {
-    padding: 0.5rem 0.75rem;
-    font-size: 1.5rem;
-  }
-
-  .notice-title {
-    font-size: 1.1rem;
-    margin-left: 1vw;
-  }
-  .notice-body {
-    margin-left: 1vw;
-  }
-}
-
-@include media-breakpoint-down(xl) {
-  .notice {
-    grid-template-columns: 50px auto;
-    grid-template-areas:
-    "notice-icon notice-title"
-    "notice-body notice-body";
-    margin-bottom: 2vh;
-  }
-
-  .notice-title {
-    font-size: 1.1rem;
-    margin-left: 2vw;
-  }
-
-  .notice-icon {
-    padding: 0.125rem 0.25rem;
-    font-size: 1.1rem;
-
-  }
-
-  .notice-body {
-    margin-top: 1vw;
-    margin-left: 1vw;
-  }
+  margin-top: 0.5vw;
+  margin-left: 0.5vw;
 }

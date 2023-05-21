@@ -6,7 +6,7 @@ import {
   ACTIVE,
   ALPHA,
   INACTIVE, INACTIVE_EXTENSION,
-  NON_RANGER, PROSPECTIVE, SUSPENDED,
+  NON_RANGER, PROSPECTIVE,
 } from 'clubhouse/constants/person_status';
 import {debounce} from '@ember/runloop';
 import {service} from '@ember/service';
@@ -33,14 +33,14 @@ const SearchGroupTitles = {
   'old-email': 'old email',
 };
 
-const LiveStatuses = [
+const HqStatuses = [
   ACTIVE,
   ALPHA,
   INACTIVE,
   INACTIVE_EXTENSION,
   NON_RANGER,
   PROSPECTIVE,
-  SUSPENDED,
+  'cheetahcub'   // pseudo-status, find anyone who is signed up for a Cheetah Cub shift.
 ].join(',');
 
 // What page to route to based on the search mode selected
@@ -427,10 +427,10 @@ export default class SearchItemBarComponent extends Component {
       // restrict search to callsign and a handful of active-like statuses
       params = {
         search_fields: 'callsign',
-        statuses: LiveStatuses
+        statuses: HqStatuses
       };
     } else if (query.startsWith('+')) {
-      params = { search_fields: 'id' };
+      params = {search_fields: 'id'};
     } else {
       const match = query.match(/^(callsign|name|fka|last)\s*:\s*(.*)$/i);
       if (match) {

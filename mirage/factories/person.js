@@ -62,7 +62,7 @@ export default Factory.extend({
     return dayjs().format('YYYY-MM-DD hh:mm:ss');
   },
   camp_location() {
-    return faker.address.latitude() + faker.address.longitude();
+    return `Camp ${faker.address.city()}`;
   },
   bpguid() {
     return faker.datatype.uuid();

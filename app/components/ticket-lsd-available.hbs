@@ -1,10 +1,23 @@
 <p>
-  {{singular-or-pluralize @ticketPackage.lsdTickets.length "Late Season Directed ticket" capitalize=true}}
-  {{~#if @ticketPackage.lsdVPs~}}
-    , and {{singular-or-pluralize @ticketPackage.lsdVPs.length "Late Season Directed Vehicle Pass"}},
-  {{/if}}
-  is available. LSD items are NOT claimed through the Clubhouse.
+  <span class="text-danger">
+    All LSD items have to be paid for by {{full-datetime-format @ticketingInfo.lsd_paid_by}} (Pacific).
+  </span>
+  Instructions on how to pay for the tickets will be sent later.
 </p>
-<b class="text-danger">
-  All LSD tickets have to be paid for by {{full-datetime-format @ticketingInfo.lsd_paid_by}} (Pacific).
-</b> Instructions on how to pay for the tickets will be sent later.
+The following LSD item(s) will be uploaded to the Burning Man ticketing system:
+<ul>
+  <li>
+    {{singular-or-pluralize @ticketPackage.lsdTickets.length "Late Season Directed ticket" capitalize=true}}
+  </li>
+  {{#if @ticketPackage.lsdVPs}}
+    <li>
+      {{singular-or-pluralize @ticketPackage.lsdVPs.length "Late Season Directed Vehicle Pass"}}
+    </li>
+  {{/if}}
+</ul>
+<p>
+  LSD items are NOT managed through the Clubhouse. Contact the Ranger Ticketing Team regarding
+  questions and concerns about your LSD goodies.
+</p>
+Any non-LSD items earned from a prior event will still need to be claimed and/or banked when the main Ranger ticketing window opens.
+
