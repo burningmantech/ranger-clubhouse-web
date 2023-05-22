@@ -26,11 +26,10 @@ export default class ErrorRoute extends ClubhouseRoute {
     controller.set('isOffline', isOffline);
     controller.set('notAuthorized', (error && (isForbiddenResponse(error) || error.status === 403)));
 
-    logError(error, 'client-ember-route-error');
-
     if (isOffline) {
-      this.session.showOfflineDialog = true;
       return false;
     }
+
+    logError(error, 'client-ember-route-error');
   }
 }

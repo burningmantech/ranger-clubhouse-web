@@ -10,6 +10,7 @@ Router.map(function () {
   this.route('debug');
 
   this.route('login');
+  this.route('offline');
   this.route('reset-password');
   this.route('register');
   // this.route('sso'); -- uncomment if will SSO is ever implemented
@@ -74,6 +75,7 @@ Router.map(function () {
     this.route('mail-log');
     this.route('maintenance');
     this.route('motd');
+
 
     this.route('online-training', function () {
       this.route('index', {path: '/'});
