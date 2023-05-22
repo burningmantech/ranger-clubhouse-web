@@ -1,34 +1,38 @@
 <ToastRegistry/>
 <ModalRegistry/>
 <div id="modal-container"></div>
-<header class="d-print-none">
-  <Navbar/>
-  {{#if (has-role "admin" "manage" "vc" "mentor")}}
-    <SearchItemBar/>
-  {{/if}}
-  {{#if this.groundHogDayTime}}
-    <div class="h4 text-bg-success text-center p-2 m-0">
-      Training Server - Simulated Time {{dayjs-format this.groundHogDayTime "dddd, MMMM Do YYYY @ HH:mm"}}
-    </div>
-  {{else if this.session.isStaging}}
-    <div class="h4 text-bg-danger text-center p-2 m-0">
-      You are on the Staging Server used for testing. THIS IS NOT THE PRODUCTION SERVER.
-    </div>
-  {{/if}}
-  {{#if this.session.isAuthenticated}}
-    <NewVersionNotify/>
-  {{/if}}
-</header>
+{{#unless this.session.isOffline}}
+  <header class="d-print-none">
+    <Navbar/>
+    {{#if (has-role "admin" "manage" "vc" "mentor")}}
+      <SearchItemBar/>
+    {{/if}}
+    {{#if this.groundHogDayTime}}
+      <div class="h4 text-bg-success text-center p-2 m-0">
+        Training Server - Simulated Time {{dayjs-format this.groundHogDayTime "dddd, MMMM Do YYYY @ HH:mm"}}
+      </div>
+    {{else if this.session.isStaging}}
+      <div class="h4 text-bg-danger text-center p-2 m-0">
+        You are on the Staging Server used for testing. THIS IS NOT THE PRODUCTION SERVER.
+      </div>
+    {{/if}}
+    {{#if this.session.isAuthenticated}}
+      <NewVersionNotify/>
+    {{/if}}
+  </header>
+{{/unless}}
 
 <div id="body-row">{{outlet}}</div>
 
-<footer class="d-print-none">
-  &copy; 2008-{{dayjs-format "" "YYYY"}} Black Rock City, LLC.
-  <span class="d-inline-block">
+{{#unless this.session.isOffline}}
+  <footer class="d-print-none">
+    &copy; 2008-{{dayjs-format "" "YYYY"}} Black Rock City, LLC.
+    <span class="d-inline-block">
       All information contained within this website is strictly confidential.
   </span>
-  <div>Build timestamp: {{this.buildTimestamp}} </div>
-</footer>
+    <div>Build timestamp: {{this.buildTimestamp}} </div>
+  </footer>
+{{/unless}}
 
 {{#if this.showBrowserNotSupported}}
   <ModalDialog @title="Browser Too Old" as |Modal|>
