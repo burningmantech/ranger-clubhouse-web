@@ -163,7 +163,7 @@ export default class AutocompleteInputComponent extends Component {
     event.stopPropagation();
     this._setupSection(section);
     this.isRefocusing = true;
-    focusElement(this.inputElement);
+    focusElement(this.inputElement, this.args.fastFocus);
   }
 
   _setupSection(section) {
@@ -386,7 +386,7 @@ export default class AutocompleteInputComponent extends Component {
   ignoreClick(event) {
     event.stopPropagation();
     this.isRefocusing = true;
-    focusElement(this.inputElement);
+    focusElement(this.inputElement, this.args.fastFocus);
     return false;
   }
 
@@ -486,7 +486,7 @@ export default class AutocompleteInputComponent extends Component {
     if (this.args.autofocus) {
       // Something is causing a blur event to fire right after insert & render. Delay focus to allow things
       // to settle
-      setTimeout(() => focusElement(this.inputElement), 25);
+      setTimeout(() => focusElement(this.inputElement, this.args.fastFocus), 25);
     }
   }
 }
