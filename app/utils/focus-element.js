@@ -1,8 +1,11 @@
 import {schedule} from '@ember/runloop';
 
+const noIntersectionalAPI = typeof IntersectionObserver === "undefined";
+
 export default function focusElement(element, fastFocus = false) {
-  if (element.offsetParent !== null || typeof IntersectionObserver === "undefined") {
-    // Element is visible, allow the render to settle, and then focus.
+  if (element.offsetParent !== null || noIntersectionalAPI) {
+    // Element is not visible, allow the render to settle, and then focus. Higher delay is used to
+    // allow fade-in animation to complete.
     setTimeout(() => schedule('afterRender', () => element.focus()), fastFocus ? 50 : 300);
     return;
   }

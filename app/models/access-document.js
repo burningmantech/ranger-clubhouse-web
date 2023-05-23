@@ -34,8 +34,8 @@ export const TypeLabels = {
   [RPT]: 'Reduced-Price Ticket',
   [STAFF_CREDENTIAL]: 'Staff Credential',
   [VEHICLE_PASS]: 'Vehicle Pass',
-  [VEHICLE_PASS_GIFT]: 'Vehicle Pass (Gift)',
-  [VEHICLE_PASS_LSD]: 'Vehicle Pass (LSD)',
+  [VEHICLE_PASS_GIFT]: 'Gift Vehicle Pass',
+  [VEHICLE_PASS_LSD]: 'LSD Vehicle Pass',
   [WAPSO]: 'S.O. Work Access Pass',
   [WAP]: 'Work Access Pass',
 };
@@ -46,8 +46,8 @@ export const TypeShortLabels = {
   [GIFT_TICKET]: 'GIFT',
   [LSD_TICKET]: 'LSD',
   [VEHICLE_PASS]: 'VP',
-  [VEHICLE_PASS_GIFT]: 'VP[gift]',
-  [VEHICLE_PASS_LSD]: 'VP[lsd]',
+  [VEHICLE_PASS_GIFT]: 'GIFTVP',
+  [VEHICLE_PASS_LSD]: 'LSDVP',
   [WAP]: 'WAP',
   [WAPSO]: 'SOWAP',
 };
