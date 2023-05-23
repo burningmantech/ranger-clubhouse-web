@@ -37,6 +37,7 @@
                          @onEscape={{this.hideSearchBoxAction}}
                          @renderBelow={{true}}
                          @noResultsText={{this.noResultsText}}
+                         @fastFocus={{true}}
                          autocomplete="off"
                          as |item group|>
         {{#if (eq this.searchType "asset")}}

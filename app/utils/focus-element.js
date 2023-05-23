@@ -1,9 +1,9 @@
 import {schedule} from '@ember/runloop';
 
-export default function focusElement(element) {
+export default function focusElement(element, fastFocus = false) {
   if (element.offsetParent !== null || typeof IntersectionObserver === "undefined") {
     // Element is visible, allow the render to settle, and then focus.
-    setTimeout(() => schedule('afterRender', () => element.focus()), 300);
+    setTimeout(() => schedule('afterRender', () => element.focus()), fastFocus ? 50 : 300);
     return;
   }
 
