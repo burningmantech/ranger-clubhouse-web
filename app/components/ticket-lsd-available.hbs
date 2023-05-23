@@ -11,7 +11,7 @@ The following LSD item(s) will be uploaded to the Burning Man ticketing system:
   </li>
   {{#if @ticketPackage.lsdVPs}}
     <li>
-      {{singular-or-pluralize @ticketPackage.lsdVPs.length "Late Season Directed Vehicle Pass"}}
+      {{singular-or-pluralize @ticketPackage.lsdVPs.length "Late Season Directed Vehicle Pass" capitalize=true}}
     </li>
   {{/if}}
 </ul>
