@@ -83,12 +83,10 @@
       <:body>
         Positions indicate which shifts you are allowed to sign up for and what ARTs you may attend. The following shows
         what teams you belong to (if any) and/or what positions have been granted.
-        <div class="masonry-container masonry-border masonry-col-3 mt-2">
-          <div class="masonry-item">
-            <div class="masonry-item-header">
-              General Positions
-            </div>
-            <div class="ms-1">
+        <div class="masonry-container masonry-col-3 mt-2">
+          <div class="masonry-item mb-2">
+            <div class="border-bottom fw-bold px-2">General Positions</div>
+            <div class="px-2">
               {{#each this.generalPositions as |pos|}}
                 {{position-label pos}}<br>
               {{else}}
@@ -98,19 +96,21 @@
           </div>
 
           {{#each this.personMembership.teams key="id" as |team|}}
-            <div class="masonry-item">
-              <div class="masonry-item-header">
-                {{team.title}}
-              </div>
+            <div class="masonry-item mb-2">
+              <div class="border-bottom fw-bold px-2">{{team.title}}</div>
               {{#if team.positions}}
-                <div class="ms-1">
+                <div class="px-2">
                   {{#each team.positions as |p|}}
                     {{position-label p}}<br>
                   {{/each}}
                 </div>
               {{else}}
-                <div class="mt-2 small">
-                  <i>No team positions have been granted.</i>
+                <div class="px-2 mt-2">
+                  {{#if team.has_positions}}
+                    <i>No {{team.type}} positions have been granted.</i>
+                  {{else}}
+                    <i>The {{team.type}} has no {{team.type}} positions.</i>
+                  {{/if}}
                 </div>
               {{/if}}
             </div>
