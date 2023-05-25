@@ -110,17 +110,19 @@ export default class ChFormFieldBaseComponent extends Component {
   get labelClass() {
     const {labelClass, inline, fixedLabel} = this.args;
 
+    const hasError = this.errorMessages?.length ? ' text-danger' : '';
+
     if (typeof (labelClass) === 'string') {
-      return labelClass;
+      return `${labelClass}${hasError}`;
     }
 
     let label;
     if (fixedLabel) {
-      label =  this.labelFixedClassDefault;
+      label = this.labelFixedClassDefault;
     } else {
       label = inline ? this.labelInlineClassDefault : this.labelClassDefault;
     }
-    return label;
+    return `${label}${hasError}`;
   }
 
   /**

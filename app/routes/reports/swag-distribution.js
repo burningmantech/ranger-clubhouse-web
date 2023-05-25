@@ -15,7 +15,11 @@ export default class ReportsSwagDistributionRoute extends ClubhouseRoute {
 
   model({year}) {
     this.year = year ?? this.house.currentYear();
-    return this.ajax.request('person-swag/distribution', {data: {year: this.year}});
+    const data = {};
+    if (this.year !== 'All') {
+      data.year = this.year;
+    }
+    return this.ajax.request('person-swag/distribution', {data});
   }
 
   setupController(controller, {people}) {

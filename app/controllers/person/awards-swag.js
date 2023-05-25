@@ -171,7 +171,7 @@ export default class PersonAwardsController extends ClubhouseController {
     this.modal.confirm('Delete Swag Record', `Are you sure you wish to delete this swag for the person? This operation cannot be undone.`, () => {
       this.swagEntry.destroyRecord().then(() => {
         this.toast.success('The swag has been deleted.');
-        this.entry = null;
+        this.swagEntry = null;
       }).catch((response) => this.house.handleErrorResponse(response));
     })
   }
