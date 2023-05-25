@@ -87,7 +87,8 @@
 
   {{#if this.lsdTicketCount}}
     <TicketOverviewItem @icon="gift"
-                        @title="{{singular-or-pluralize this.lsdTicketCount "Late Season Directed Ticket" capitalize=true}} Claimed"
+                        @title="{{singular-or-pluralize this.lsdTicketCount "Late Season Directed Ticket"
+                                                        capitalize=true}} Claimed"
                         @type="success">
       <p>
         {{singular-or-pluralize this.lsdTicketCount "LSD Ticket" capitalize=true}}
@@ -143,7 +144,9 @@
   {{#if this.wapSOList}}
     <TicketOverviewItem @icon="people-group" @title="WAPs For Significant Other Claimed" @type="secondary">
       {{pluralize this.wapSOList.length "Significant Other WAP"}} will be emailed to you at
-      {{mail-to @person.email}}<br>
+      {{mail-to @person.email}} as a PDF. The SO WAP PDF will have your name on it. The names of your SOs are stored
+      elsewhere in the ticketing system.
+      <br>
       <ul class="mt-2">
         {{#each this.wapSOList as |so|}}
           <li>{{so.name}}<br>
@@ -158,7 +161,7 @@
           </li>
         {{/each}}
       </ul>
-      Significant Other WAPs are emailed after the ticketing deadline closes and up to a week before the start of the
+      SO WAPs are emailed after the ticketing deadline closes and up to a week before the start of the
       event.
     </TicketOverviewItem>
   {{else}}
