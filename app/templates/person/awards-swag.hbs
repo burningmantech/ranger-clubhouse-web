@@ -52,7 +52,10 @@
 
     {{#if this.swagEntry}}
       <ModalDialog @size="xl" @onEscape={{this.cancelSwag}} as |Modal|>
-        <ChForm @formFor={{this.swagEntry}} @formId="person_swag" @onSubmit={{this.saveSwag}} as |f|>
+        <ChForm @formFor={{this.swagEntry}}
+                @formId="person_swag"
+                @validator={{this.swagValidation}}
+                @onSubmit={{this.saveSwag}} as |f|>
           <Modal.title>{{if this.swagEntry.isNew "Record" "Edit"}} Swag</Modal.title>
           <Modal.body>
             <h3 class="mb-3">{{this.swagTitle}}</h3>
