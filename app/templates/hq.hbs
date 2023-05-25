@@ -1,3 +1,15 @@
+<UiSidebar @theme="hq" @smallTitle="HQ Window" as |s|>
+  <s.group @title="HQ Window">
+    <s.link @route="hq.shift" @title="Shift Check In/Out" @icon="walking" @iconType="s"/>
+    <s.link @route="hq.schedule" @title="Schedule / Sign Ups" @icon="clipboard"/>
+    <s.link @route="hq.messages" @title="Messages" @icon="envelope"/>
+    <s.link @route="hq.timesheet" @title="Timesheet / Corrections" @icon="clock"/>
+    <s.link @route="hq.assets" @title="Asset History" @icon="broadcast-tower" @iconType="s"/>
+    <s.link @route="hq.training-info" @title="Training Info" @icon="graduation-cap" @iconType="s"/>
+    <s.link @route="hq.site-checkin" @title="Site Check In" @icon="list-ol" @iconType="s"/>
+  </s.group>
+</UiSidebar>
+
 <main>
   <div class="person-manage-header">
     <div class="person-manage-header-title">
@@ -13,57 +25,6 @@
         <LinkTo @route="person.index" @model={{this.person.id}}>Switch to Person Manage</LinkTo>
       </div>
     </div>
-  </div>
-
-  <div class="hq-navigation-container">
-    <ul class="nav nav-pills">
-      <li class="nav-item">
-        <LinkTo @route="hq.shift" class="nav-link">
-          {{fa-icon "walking" type="s" right=2}} Shift Check In/Out
-        </LinkTo>
-      </li>
-
-      <li class="nav-item">
-        <LinkTo @route="hq.schedule" class="nav-link">
-          {{fa-icon "clipboard" right=2}} Schedule / Sign Ups
-        </LinkTo>
-      </li>
-
-      <li class="nav-item">
-        <LinkTo @route="hq.messages" class="nav-link">
-          {{fa-icon "envelope" right=2}} Messages
-          {{#if this.person.unread_message_count}}
-            <span class="badge text-success">
-              {{this.person.unread_message_count}}
-            </span>
-          {{/if}}
-        </LinkTo>
-      </li>
-
-      <li class="nav-item">
-        <LinkTo @route="hq.timesheet" class="nav-link">
-          {{fa-icon "clock" right=2}} Timesheet &amp; Corrections
-        </LinkTo>
-      </li>
-
-      <li class="nav-item">
-        <LinkTo @route="hq.assets" class="nav-link">
-          {{fa-icon "broadcast-tower" type="s" right=2}} Asset History
-        </LinkTo>
-      </li>
-
-      <li class="nav-item">
-        <LinkTo @route="hq.training-info" class="nav-link">
-          {{fa-icon "graduation-cap" type="s" right=2}} Training Info
-        </LinkTo>
-      </li>
-
-      <li class="nav-item">
-        <LinkTo @route="hq.site-checkin" class="nav-link">
-          {{fa-icon "list-ol" type="fas" right=2}} Site Check In
-        </LinkTo>
-      </li>
-    </ul>
   </div>
 
   {{#if this.person.message}}

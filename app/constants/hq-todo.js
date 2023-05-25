@@ -14,12 +14,12 @@ export const HQ_TODO_OFF_SITE = 'off-site';
 export const HqTodoLabels = {
   [HQ_TODO_COLLECT_RADIO]: 'Collect Shift Radio',
   [HQ_TODO_DELIVERY_MESSAGE]: 'Delivery Message(s)',
-  [HQ_TODO_END_SHIFT]: 'End Shift',
+  [HQ_TODO_END_SHIFT]: 'End The Shift',
   [HQ_TODO_ISSUE_RADIO]: 'Checkout Shift Radio',
-  [HQ_TODO_MEAL_POG]: 'Issue Meal Pog if qualified',
+  [HQ_TODO_MEAL_POG]: 'Issue Meal Pog (if qualified)',
   [HQ_TODO_MEAL_POG_NONE]: 'No Meal Pog - Has Meal Pass',
   [HQ_TODO_NO_RADIO]: 'Working Burn Perimeter - May not need a radio',
-  [HQ_TODO_START_SHIFT]: 'Start Shift',
+  [HQ_TODO_START_SHIFT]: 'Start A Shift',
   [HQ_TODO_VERIFY_TIMESHEET]: 'Review Timesheet',
   [HQ_TODO_OFF_SITE]: 'No more upcoming shifts - Ask if finished working',
 };

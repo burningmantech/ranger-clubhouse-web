@@ -52,7 +52,7 @@ export default class HqProvisionInfoComponent extends Component {
       eventPeriod += ` (current period)`
     }
     eventPeriod += '</td>';
-    const pogs = week.hasPass ? '<i class="fa-solid fa-ban ms-2"></i> NO POGS - HAS MEAL PASS' : 'Pog for 6+ hours worked';
+    const pogs = week.hasPass ? '<i class="fa-solid fa-ban ms-2"></i> NO POGS - HAS BMID MEAL PASS' : 'Pog for 6+ hours worked';
     const highlight = week.current ? ' class="table-warning fw-bold"' : ' class="text-muted"';
 
     return htmlSafe(`<tr${highlight}><td>${icon}</td>${eventPeriod}<td>${pogs}</td></tr>`);

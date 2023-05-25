@@ -69,9 +69,9 @@
     {{#if this.isPersonDirtTrained}}
       {{#if @upcomingSlots.imminent}}
         <p class="text-success">
-          {{pluralize @upcomingSlots.imminent.length "upcoming scheduled shift sign-up"}} found. You may sign them
-          into a scheduled shift OR a different shift / position.
+          {{pluralize @upcomingSlots.imminent.length "upcoming scheduled shift sign-up"}} found.
         </p>
+        You may sign {{@person.callsign}} into a scheduled shift OR a different shift / position (see below).
         <table class="table table-width-auto table-hover table-striped">
           <thead>
           <tr>
@@ -115,33 +115,40 @@
             </tr>
             {{#unless slot.is_within_start_time}}
               <tr>
-                <td colspan="5" class="text-danger">
-                  <b>
-                    WARNING: Most shifts are recommended to be signed in to within {{@upcomingSlots.may_start_minutes}}
-                    minutes of the actual start time.<br>
-                    Suggest to {{@person.callsign}} they come back in {{pluralize slot.can_start_in "minute"}} to start
-                    their shift.
-                  </b>
+                <td colspan="5">
+                  <p class="text-danger">
+                    <b>
+                      WARNING: Most shifts are recommended to be signed into within {{@upcomingSlots.may_start_minutes}}
+                      minutes of the actual start time.
+                    </b>
+                  </p>
+                  <p>
+                    People working operational shifts, such as a Mentor, Shift Command, On Call, Supervisor, Lead, and
+                    other similar positions, may need to start a shift earlier than expected due to the ever-changing
+                    situation on playa.
+                  </p>
+                  You may choose to sign in {{@person.callsign}} at this time, or suggest they come back in
+                  {{pluralize slot.can_start_in "minute"}} to start the shift. Use your discretion. Being flexible is
+                  okay. Consult with the HQ Short or Lead if you have concerns.
                 </td>
               </tr>
             {{/unless}}
           {{/each}}
           </tbody>
         </table>
-        <p class="text-success">
-          To sign in to a different shift / position, select the position below, and use the <i>Start Shift</i> button.
+        <p>
+          <b>To sign in to a different shift / position, select the position below, and use the <i>Start Shift</i>
+            button.</b>
         </p>
       {{else if @upcomingSlots}}
-        <p>
-          No scheduled sign-ups were found starting within the next {{@upcomingSlots.locate_start_minutes}} minutes.
-          That's okay! Scheduled sign-ups are simply advisory bits of information to ensure staffing minimums are met.
-        </p>
-        <p>
-          <b class="text-success">
-            {{@person.callsign}} can still work a shift. Ask the position they wish to work, select it below,
-            and start the shift.
-          </b>
-        </p>
+        <UiNotice @title="{{@person.callsign}} Can Still Work A Shift" @icon="thumbs-up">
+          <p>
+            No scheduled sign-ups were found starting within the next {{@upcomingSlots.locate_start_minutes}} minutes.
+            That's okay! Scheduled sign-ups are simply advisory bits of information to ensure staffing minimums are met.
+          </p>
+          {{@person.callsign}} can still work a shift. Ask the position they wish to work, select it below,
+          and start the shift. Consult with the HQ Short or Lead if you have concerns.
+        </UiNotice>
       {{/if}}
     {{else}}
       <UiNotice @title="Work Eligibility Issue" @icon="hand" @type="danger">
@@ -151,12 +158,14 @@
           has not been completed.
         </p>
         <p>
-          In case the person attended an In-Person Training earlier in the day, the trainers may be delayed in
+          In case the person attended an In-Person Training earlier in the day, the trainers may be delayed
           recording who passed the training. Have the HQ Short or Lead contact the trainers to verify the person
           attended and passed the training.
         </p>
         {{#if this.userCanForceCheckIn}}
           You have the privileges to force a shift start.
+        {{else}}
+          You do not have the privileges to force a shift start. A HQ Lead may be able to start the shift.
         {{/if}}
       </UiNotice>
     {{/if}}
