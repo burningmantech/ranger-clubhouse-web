@@ -3,8 +3,8 @@
 {{else}}
   {{#if @endedShiftEntry}}
     <p>
-    <div class="fs-5">
-      Worked shifted ({{@endedShiftEntry.position.title}}) was {{hour-minute-words @endedShiftEntry.duration}}
+    <div class="fs-5 mb-2">
+      The shift <i>{{@endedShiftEntry.position.title}}</i> worked {{shift-format @endedShiftEntry.on_duty @endedShiftEntry.off_duty}} was {{hour-minute-words @endedShiftEntry.duration}}
       in length.
     </div>
     {{#if @endedShiftEntry.isUnverified}}
@@ -93,7 +93,7 @@
       </tr>
     {{else}}
       <tr>
-        <td colspan="3">
+        <td colspan="5">
           No pogs have been issued yet.
         </td>
       </tr>
