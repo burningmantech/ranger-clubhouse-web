@@ -31,9 +31,9 @@
 {{/if}}
 
 {{#if this.todos}}
-  <div class="lh-lg mb-2 fs-5">
+  <div class="lh-lg mb-2 fs-4">
     {{#if this.todoCount}}
-      {{pluralize this.todoCount "recommended task"}}:
+      {{pluralize this.todoCount "suggested task"}}:
     {{else}}
       <div class="text-success">
         All recommended tasks have been completed.
@@ -57,25 +57,27 @@
 <UiTab @customTabs={{true}} as |tab|>
   <UiTabCustomNav @tab={{tab}} as |nav|>
     <nav.item @paneId="timesheet-verification" @icon="list">
-      Review Timesheet
-      {{#if this.unverifiedTimesheetCount}}
-        ({{pluralize this.unverifiedTimesheetCount "entry"}})
-      {{else}}
-        (not needed yet)
-      {{/if}}
+      <div>
+        Timesheet Review
+        {{#if this.unverifiedTimesheetCount}}
+          <span class="ms-1 text-danger">({{pluralize this.unverifiedTimesheetCount "entry"}})</span>
+        {{else}}
+          <div class="ms-1 text-muted">(not needed yet)</div>
+        {{/if}}
+      </div>
     </nav.item>
     <nav.item @paneId="shift-manage" @icon="person-walking">
       {{#if this.onDutyEntry}}
-        Shift End
+        End The Shift
       {{else}}
-        Shift Start
+        Start A Shift
       {{/if}}
     </nav.item>
     <nav.item @paneId="assets" @icon="tower-broadcast">
-      Radios &amp; Gear
+        Radios &amp; Gear
     </nav.item>
     <nav.item @paneId="pogs" @icon="utensils">
-      Meal &amp; Shower Pogs
+      Pogs
     </nav.item>
     <nav.item @paneId="offsite" @icon="house">
       Mark Off Site
@@ -107,61 +109,63 @@
     </tab.pane>
 
     <tab.pane @id="assets" @title="Radios, Gear & Assets">
-      {{#unless this.personEvent.asset_authorized}}
-        <UiNotice @title="Do Not Issue Radios or Gear" @type="danger" @icon="ban">
-          The Radio Checkout Agreement has not been signed. Direct {{this.person.callsign}} to the kiosk shack,
-          so they can log in into the Clubhouse, review, and sign the agreement.
-        </UiNotice>
-      {{/unless}}
-      {{#if this.radioCount}}
-        {{#if this.shiftRadios}}
-          <div class="alert alert-danger">
-            Collect {{pluralize this.shiftRadios "shift radio"}} at the end of the shift.
-          </div>
-        {{/if}}
-        {{#if this.eventRadios}}
-          <h4 class="text-success">
-            {{this.person.callsign}} has {{pluralize this.eventRadios "event radio"}} checked out. Collect the
-            radio(s) after their very last shift of the season.
-          </h4>
-        {{/if}}
-      {{/if}}
-
-      <div class="mb-2">
-        {{#if this.eventInfo.radio_eligible}}
-          <p>
-            {{this.person.callsign}} is authorized for {{pluralize this.eventInfo.radio_max "event radio"}}.
-          </p>
-        {{else}}
-          {{#if this.mayNotNeedRadio}}
-            <UiNotice @icon="hand-point-right" @type="secondary" @title="May not need radio">
-              {{this.person.callsign}} is working a Burn Perimeter shift and may not need a radio. Check with
-              the HQ Short or Lead if in doubt.
-            </UiNotice>
+      {{#if (eq tab.activeId "assets")}}
+        {{#unless this.personEvent.asset_authorized}}
+          <UiNotice @title="Do Not Issue Radios or Gear" @type="danger" @icon="ban">
+            The Radio Checkout Agreement has not been signed. Direct {{this.person.callsign}} to the kiosk shack,
+            so they can log in into the Clubhouse, review, and sign the agreement.
+          </UiNotice>
+        {{/unless}}
+        {{#if this.radioCount}}
+          {{#if this.shiftRadios}}
+            <div class="alert alert-danger">
+              Collect {{pluralize this.shiftRadios "shift radio"}} at the end of the shift.
+            </div>
           {{/if}}
-          {{this.person.callsign}} is only authorized for SHIFT RADIOS.
+          {{#if this.eventRadios}}
+            <h4 class="text-success">
+              {{this.person.callsign}} has {{pluralize this.eventRadios "event radio"}} checked out. Collect the
+              radio(s) after their very last shift of the season.
+            </h4>
+          {{/if}}
         {{/if}}
-      </div>
 
-      {{#if this.personEvent.asset_authorized}}
-        <AssetCheckoutForm @person={{this.person}}
-                           @assets={{this.assets}}
-                           @attachments={{this.attachments}}
-                           @eventInfo={{this.eventInfo}}
-                           @onCheckOut={{this.onAssetCheckOut}}
+        <div class="mb-2">
+          {{#if this.eventInfo.radio_eligible}}
+            <p>
+              {{this.person.callsign}} is authorized for {{pluralize this.eventInfo.radio_max "event radio"}}.
+            </p>
+          {{else}}
+            {{#if this.mayNotNeedRadio}}
+              <UiNotice @icon="hand-point-right" @type="secondary" @title="May not need radio">
+                {{this.person.callsign}} is working a Burn Perimeter shift and may not need a radio. Check with
+                the HQ Short or Lead if in doubt.
+              </UiNotice>
+            {{/if}}
+            {{this.person.callsign}} is only authorized for SHIFT RADIOS.
+          {{/if}}
+        </div>
+
+        {{#if this.personEvent.asset_authorized}}
+          <AssetCheckoutForm @person={{this.person}}
+                             @assets={{this.assets}}
+                             @attachments={{this.attachments}}
+                             @eventInfo={{this.eventInfo}}
+                             @onCheckOut={{this.onAssetCheckOut}}
+          />
+        {{/if}}
+
+        <HqAssetTable @assetsCheckedOut={{this.assetsCheckedOut}}
+                      @attachments={{this.attachments}}
+                      @onCheckIn={{this.onAssetCheckIn}}
         />
+
+        <div>
+          {{#if this.assets.isUpdating}}
+            <LoadingIndicator @text="Refreshing Assets"/>
+          {{/if}}
+        </div>
       {{/if}}
-
-      <HqAssetTable @assetsCheckedOut={{this.assetsCheckedOut}}
-                    @attachments={{this.attachments}}
-                    @onCheckIn={{this.onAssetCheckIn}}
-      />
-
-      <div>
-        {{#if this.assets.isUpdating}}
-          <LoadingIndicator @text="Refreshing Assets"/>
-        {{/if}}
-      </div>
     </tab.pane>
 
     <tab.pane @id="pogs">

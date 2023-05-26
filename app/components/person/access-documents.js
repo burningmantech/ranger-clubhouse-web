@@ -54,14 +54,14 @@ export default class PersonAccessDocumentsComponent extends Component {
       groupName: 'Gift Items',
       options: [
         ["Gift Ticket", GIFT_TICKET],
-        ['Vehicle Pass (Gift)', VEHICLE_PASS_GIFT],
+        ['Gift Vehicle Pass', VEHICLE_PASS_GIFT],
       ]
     },
     {
       groupName: 'Late Season Directed',
       options: [
         ["LSD Ticket", LSD_TICKET],
-        ['Vehicle Pass (LSD)', VEHICLE_PASS_LSD],
+        ['LSD Vehicle Pass', VEHICLE_PASS_LSD],
       ]
     }
   ];

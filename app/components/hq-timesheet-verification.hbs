@@ -1,11 +1,19 @@
 {{#if this.hasUnverifiedTimesheet}}
-  <h4 class="text-danger">
-    {{fa-icon "hand-point-right" right=1}} Review needed for {{pluralize @unverifiedTimesheets.length "entry" }}
-  </h4>
+  <UiNotice @title="Timesheet Entry Review Needed" @icon="hand-point-right" @type="danger">
+    <p>
+    Before any shift can be started, or when a shift is ended, all timesheet entries must be reviewed.
+    </p>
+    The exception is during a very busy time such as the Burn Night check-in, the review can skipped by using
+    the Skip button.
+  </UiNotice>
 {{else}}
-  <h4 class="text-success">
-    {{fa-icon "thumbs-up" right=1}} No timesheet entries require review at this time.
-  </h4>
+  <UiNotice @title="No timesheet entries require review" @icon="thumbs-up" @type="success">
+    <p>
+    All timesheet entries have been reviewed. No action is required at this time.
+    </p>
+    If a timesheet entry requires correction, use the 'Timesheet / Corrections' link in the side bar, and then
+    locate the entry or entries to submit a correction for.
+  </UiNotice>
 {{/if}}
 {{#if @unverifiedTimesheets}}
   <table class="table table-width-auto">
@@ -49,9 +57,9 @@
                       @onClick={{fn this.toggleEntryVerified entry}}
                       @disabled={{entry.isSaving}}>
               {{#if entry.isVerified}}
-                Un-Verify
+                Un-Verify Entry
               {{else}}
-                Entry Correct
+                Mark Entry As Correct
               {{/if}}
             </UiButton>
             <UiButton @type="secondary"

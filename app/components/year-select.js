@@ -27,12 +27,17 @@ export default class YearSelectComponent extends Component {
     }
 
     const {year} = this.args;
-    if (!isEmpty(year) && !years.includes(+year)) {
+    if (!isEmpty(year) && year !== 'All' && !years.includes(+year)) {
       years.push(year);
     }
 
     // descending sort
     years.sort((a, b) => (b - a));
+
+    if (this.args.includeAll) {
+      years.push('All');
+    }
+
     return years;
   }
 }

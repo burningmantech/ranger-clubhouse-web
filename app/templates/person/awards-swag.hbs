@@ -52,12 +52,15 @@
 
     {{#if this.swagEntry}}
       <ModalDialog @size="xl" @onEscape={{this.cancelSwag}} as |Modal|>
-        <ChForm @formFor={{this.swagEntry}} @formId="person_swag" @onSubmit={{this.saveSwag}} as |f|>
+        <ChForm @formFor={{this.swagEntry}}
+                @formId="person_swag"
+                @validator={{this.swagValidation}}
+                @onSubmit={{this.saveSwag}} as |f|>
           <Modal.title>{{if this.swagEntry.isNew "Record" "Edit"}} Swag</Modal.title>
           <Modal.body>
-            <h3 class="mb-3">{{this.swagTitle}}</h3>
             <FormRow>
               <f.radioGroup @name="swag_id"
+                            @label={{this.swagTitle}}
                             @options={{this.swagOptions}}
                             @groupWrapClass="masonry-container masonry-col-4"
               />
@@ -70,8 +73,13 @@
             </FormRow>
           </Modal.body>
           <Modal.footer @noAlign={{true}}>
-            <f.submit @label="Save" @disabled={{this.swagEntry.isSaving}} />
+            <f.submit @label={{if this.swagEntry.isNew "Create" "Update"}} @disabled={{this.swagEntry.isSaving}} />
             <UiCancelButton @onClick={{this.cancelSwag}} @disabled={{this.swagEntry.isSaving}}/>
+            {{#unless this.swagEntry.isNew}}
+              <div class="ms-auto">
+                <UiButton @type="danger" @size="sm" @onClick={{this.deleteSwag}}>{{fa-icon "trash"}} Delete</UiButton>
+              </div>
+            {{/unless}}
           </Modal.footer>
         </ChForm>
       </ModalDialog>

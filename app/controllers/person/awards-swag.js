@@ -4,6 +4,7 @@ import {cached, tracked} from '@glimmer/tracking';
 import _ from 'lodash';
 import {TypeLabels, TypeSortOrder} from 'clubhouse/models/award';
 import {TYPE_DEPT_PATCH, TYPE_DEPT_PIN, TYPE_DEPT_SHIRT, TYPE_ORG_PATCH, TYPE_ORG_PIN, TYPE_OTHER} from 'clubhouse/models/swag';
+import { validatePresence } from 'ember-changeset-validations/validators';
 
 export default class PersonAwardsController extends ClubhouseController {
   @tracked personAwards;
@@ -18,6 +19,10 @@ export default class PersonAwardsController extends ClubhouseController {
   @tracked swagOptions;
   @tracked swagEntry;
   @tracked swagTitle;
+
+  swagValidation = {
+    swag_id: [ validatePresence({ presence: true, message: 'Select a swag option'})]
+  }
 
   @cached
   get awardOptions() {
@@ -166,7 +171,7 @@ export default class PersonAwardsController extends ClubhouseController {
     this.modal.confirm('Delete Swag Record', `Are you sure you wish to delete this swag for the person? This operation cannot be undone.`, () => {
       this.swagEntry.destroyRecord().then(() => {
         this.toast.success('The swag has been deleted.');
-        this.entry = null;
+        this.swagEntry = null;
       }).catch((response) => this.house.handleErrorResponse(response));
     })
   }

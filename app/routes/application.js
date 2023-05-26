@@ -104,13 +104,15 @@ export default class ApplicationRoute extends ClubhouseRoute {
   async beforeModel(transition) {
     // If heading to the offline target, simply return
     if (transition.targetName === 'offline') {
+      this.session.isOffline = true;
       return;
     }
 
+    this.session.isOffline = false;
+    
     if (this.authSetup) {
       return;
     }
-
 
     try {
       await this.session.setup();
@@ -131,11 +133,8 @@ export default class ApplicationRoute extends ClubhouseRoute {
 
       this.authSetup = true;
     } catch (response) {
-      this.house.handleErrorResponse(response);
-      // Can't retrieve the configuration. Consider the application
-      // offline for the moment.
-      transition.abort();
-      this.session.showOfflineDialog = true;
+      // Can't retrieve the configuration. Consider the application offline for the moment.
+      this.router.transitionTo('offline');
     }
   }
 

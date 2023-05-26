@@ -23,10 +23,10 @@ const TRS_COLUMN = {
   [STAFF_CREDENTIAL]: 'sc',
   [RPT]: 'rpt',
   [GIFT_TICKET]: 'gift_ticket',
-  [LSD_TICKET]: 'rpt',    // LSD is really a RPT
-  [VEHICLE_PASS]: 'vp',   // VP is really a Gift VP
+  [LSD_TICKET]: 'lsd',
+  [VEHICLE_PASS]: 'vp',   // VP is really a Gift VP since Rangers are not charged for it.
   [VEHICLE_PASS_GIFT]: 'vp',
-  [VEHICLE_PASS_LSD]: 'paid_vp',
+  [VEHICLE_PASS_LSD]: 'lsd_vp',
   [WAP]: 'wap',
   [WAPSO]: 'sowap'
 };
@@ -49,13 +49,16 @@ const PAID_EXPORT_FORMAT = [
   ['Shipping Address (Required if Mail Delivery type selected): Zip', 'not_used_zip'],
   ['Shipping Address (Required if Mail Delivery type selected): Phone', 'not_used_phone'],
   ['Request: $225 Ticket', 'rpt'],
-  ['Request: $140 Vehicle Pass', 'paid_vp'],
+  ['Request: $150 Vehicle Pass', 'paid_vp'],
   ['Request: Gift Ticket', 'gift_ticket'],
   ['Request: Gift Vehicle Pass', 'vp'],
   ['Request: Transferrable $225 Ticket', 'rpt_xfer'],
-  ['Request: Transferrable $140 Vehicle Pass', 'vp_xfer'],
+  ['Request: Transferrable $150 Vehicle Pass', 'vp_xfer'],
   ['Request: Transferrable Gift Ticket', 'gift_xfer'],
-  ['Request: Transferrable Gift Vehicle Pass', 'gift_vp_xfer']
+  ['Request: Transferrable Gift Vehicle Pass', 'gift_vp_xfer'],
+  // New for 2023, not used currently.
+  ['Request: Transferrable $75 Vehicle Pass', 'discount_vp_xfer'],
+  ['Request: $75 Vehicle Pass', 'discount_vp'],
 ];
 
 const UNPAID_EXPORT_FORMAT = [
@@ -98,7 +101,7 @@ const UNPAID_EXPORT_FORMAT = [
   ['Request: STAFF WAP 8/24 &amp; Later', 'wap_0824'],
   ['Request: STAFF WAP 8/25 &amp; Later', 'wap_0825'],
   ['Request: STAFF WAP 8/26 &amp; Later', 'wap_0826'],
-  ['Request: STAFF WAP 8/27 &amp; Later', 'wap_0827'],
+  ['Request: STAFF WAP 8/5 &amp; Later', 'wap_0805'],
   ['Request: STAFF WAP - Anytime', 'wap_anytime'],
   // Yes, the dates are completely out of order for 2022.
   ['Request: Staff Credential Pickup 8/26 &amp; After', 'sc_0826'],
@@ -123,8 +126,33 @@ const UNPAID_EXPORT_FORMAT = [
   ['Request: Staff Credential Pickup 8/23 &amp; After', 'sc_0823'],
   ['Request: Staff Credential Pickup 8/24 &amp; After', 'sc_0824'],
   ['Request: Staff Credential Pickup Anytime', 'sc_anytime'],
-  ['Request: Staff Credential Pickup 8/27 &amp; After', 'sc_0827'],
+  ['Request: Staff Credential Pickup 8/5 &amp; After', 'sc_0805'],
 ];
+
+const LSD_EXPORT_FORMAT = [
+  ['First Name', 'first_name'],
+  ['Last Name', 'last_name'],
+  ['Email', 'email'],
+  ['Question: Method Of Delivery', 'delivery_type'],
+  ['Question: Nickname/Project:', 'project_name'],
+  ['Question: Notes:', 'note'],
+  // Shipping addresses are not used in 2022, however the headers are still present. sigh.
+  // removed 'not_used_' prefix if later events requires address
+  ['Shipping Address (Required if Mail Delivery type selected): Country', 'not_used_country'],
+  ['Shipping Address (Required if Mail Delivery type selected): Full Name', 'not_used_full_name'],
+  ['Shipping Address (Required if Mail Delivery type selected): Address', 'not_used_address1'],
+  ['Shipping Address (Required if Mail Delivery type selected): Address Line 2', 'not_used_address2'],
+  ['Shipping Address (Required if Mail Delivery type selected): City', 'not_used_city'],
+  ['Shipping Address (Required if Mail Delivery type selected): State', 'not_used_state'],
+  ['Shipping Address (Required if Mail Delivery type selected): Zip', 'not_used_zip'],
+  ['Shipping Address (Required if Mail Delivery type selected): Phone', 'not_used_phone'],
+  ['Request: $575 Ticket', 'lsd'],
+  ['Request: $150 Vehicle Pass', 'lsd_vp'],
+  // Not used.
+  ['Request: $2750 Ticket', 'fomo_1'],
+  ['Request: $1500 Ticket', 'fomo_2'],
+];
+
 
 // Filter Options
 const GIFT_TICKET_VP = 'gift_ticket_vp';
@@ -154,7 +182,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
       options:
         [
           ['Staff Credentials', STAFF_CREDENTIAL],
-          ['Staff Credentials+VP', STAFF_CREDENTIAL_VP],
+          ['Staff Credentials + VP', STAFF_CREDENTIAL_VP],
         ]
     },
     {
@@ -565,10 +593,13 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
       case GIFT_TICKET:
       case GIFT_TICKET_VP:
       case VEHICLE_PASS_GIFT:
+       case VEHICLE_PASS_LSD:
+        format = PAID_EXPORT_FORMAT;
+        break;
+
       case LSD_TICKET:
       case LSD_TICKET_VP:
-      case VEHICLE_PASS_LSD:
-        format = PAID_EXPORT_FORMAT;
+        format = LSD_EXPORT_FORMAT;
         break;
 
       default:
