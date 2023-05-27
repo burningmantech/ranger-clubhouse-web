@@ -1,4 +1,4 @@
-import Tab from 'ember-bootstrap/components/bs-tab';
+import BsTab from 'ember-bootstrap/components/bs-tab';
 import {action} from '@ember/object';
 import {service} from '@ember/service';
 
@@ -6,7 +6,7 @@ import {service} from '@ember/service';
  * Extend the <BsTab /> component to fix a link bug.
  */
 
-export default class UiTabComponent extends Tab {
+export default class UiTabComponent extends BsTab {
   @service house;
   @service router;
 
