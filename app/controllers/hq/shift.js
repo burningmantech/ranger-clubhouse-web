@@ -26,6 +26,8 @@ export default class HqShiftController extends ClubhouseController {
 
   @tracked endedShiftEntry = null;
 
+  @tracked firstTab;
+
   correctionValidations = {
     additional_notes: [validatePresence(true)]
   };

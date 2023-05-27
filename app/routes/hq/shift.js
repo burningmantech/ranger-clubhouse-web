@@ -58,5 +58,11 @@ export default class HqShiftRoute extends ClubhouseRoute {
         todos.push(new HqTodoTask(HQ_TODO_ISSUE_RADIO));
       }
     }
+
+    if (!controller.unverifiedTimesheets.length) {
+      controller.firstTab = 'shift-manage';
+    } else {
+      controller.firstTab = 'timesheet-verification';
+    }
   }
 }

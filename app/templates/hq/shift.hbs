@@ -54,7 +54,8 @@
     </div>
   </div>
 {{/if}}
-<UiTab @customTabs={{true}} as |tab|>
+
+<UiTab @customTabs={{true}} @activeId={{this.firstTab}}  as |tab|>
   <UiTabCustomNav @tab={{tab}} as |nav|>
     <nav.item @paneId="timesheet-verification" @icon="list">
       <div>

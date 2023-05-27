@@ -177,7 +177,7 @@ export default class ShiftCheckInOutComponent extends Component {
    * @private
    */
 
-  _signInPerson(position, slotId) {
+  async _signInPerson(position, slotId) {
     const person = this.args.person;
 
     const data = {
@@ -190,55 +190,58 @@ export default class ShiftCheckInOutComponent extends Component {
     }
     this.toast.clear();
     this.isSubmitting = true;
-    this.ajax.request('timesheet/signin', {method: 'POST', data})
-      .then((result) => {
-        const callsign = person.callsign;
-        switch (result.status) {
-          case 'success':
-            /*  if (result.forced) {
-                // Shift start was forced, let the user know what was overridden.
-                let reason;
-                if (result.unqualified_reason === 'untrained') {
-                  reason = `has not completed '${result.required_training}'`;
-                } else {
-                  reason = `is unqualified ('${result.unqualified_message}')`;
-                }
-                //this.modal.info('Sign In Forced', `WARNING: The person ${reason}. Because you are an admin or have the timesheet management role, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
+    try {
+      const result = await this.ajax.request('timesheet/signin', {method: 'POST', data});
+      const callsign = person.callsign;
+      switch (result.status) {
+        case 'success':
+          /*  if (result.forced) {
+              // Shift start was forced, let the user know what was overridden.
+              let reason;
+              if (result.unqualified_reason === 'untrained') {
+                reason = `has not completed '${result.required_training}'`;
+              } else {
+                reason = `is unqualified ('${result.unqualified_message}')`;
               }
-             */
-            this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
-
-            if (this.args.startShiftNotify) {
-              this.args.startShiftNotify();
+              //this.modal.info('Sign In Forced', `WARNING: The person ${reason}. Because you are an admin or have the timesheet management role, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
             }
-            if (+person.id === this.session.userId) {
-              // Ensure the navigation bar is updated with the signed in to position
-              this.session.updateOnDuty();
-            }
-            break;
+           */
+          this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
 
-          case 'position-not-held':
-            this.modal.info('Position Not Held', `${callsign} does hold the '${position.title}' in order to start the shift.`);
-            break;
+          if (this.args.startShiftNotify) {
+            this.args.startShiftNotify();
+          }
+          if (+person.id === this.session.userId) {
+            // Ensure the navigation bar is updated with the signed in to position
+            this.session.updateOnDuty();
+          }
+          break;
 
-          case 'already-on-duty':
-            this.modal.info('Already On Shift', `${callsign} is already on duty.`);
-            break;
+        case 'position-not-held':
+          this.modal.info('Position Not Held', `${callsign} does hold the '${position.title}' in order to start the shift.`);
+          break;
 
-          case 'not-trained':
-            this.modal.info('Not Trained', `${callsign} has has not completed "${result.position_title}" and cannot be signed into the shift.`);
-            break;
+        case 'already-on-duty':
+          this.modal.info('Already On Shift', `${callsign} is already on duty.`);
+          break;
 
-          case 'not-qualified':
-            this.modal.info('Not Qualified', `${callsign} has not meet one or more of the qualifiers needed to sign into the shift.<br>Reason: ${result.unqualified_message}`);
-            break;
+        case 'not-trained':
+          this.modal.info('Not Trained', `${callsign} has has not completed "${result.position_title}" and cannot be signed into the shift.`);
+          break;
 
-          default:
-            this.modal.info('Unknown Server Status', `An unknown status [${result.status}] from the server. This is a bug. Please report this to the Tech Ninjas.`);
-            break;
-        }
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+        case 'not-qualified':
+          this.modal.info('Not Qualified', `${callsign} has not meet one or more of the qualifiers needed to sign into the shift.<br>Reason: ${result.unqualified_message}`);
+          break;
+
+        default:
+          this.modal.info('Unknown Server Status', `An unknown status [${result.status}] from the server. This is a bug. Please report this to the Tech Ninjas.`);
+          break;
+      }
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   /**
@@ -298,26 +301,30 @@ export default class ShiftCheckInOutComponent extends Component {
 
   async _signoff() {
     const {onDutyEntry, endShiftNotify} = this.args;
-    const result = await this.ajax.request(`timesheet/${onDutyEntry.id}/signoff`, {method: 'POST'});
-    const callsign = this.args.person.callsign;
-    this.store.pushPayload(result);
-    switch (result.status) {
-      case 'success':
-        endShiftNotify?.(this.store.peekRecord('timesheet', result.timesheet.id));
-        this.toast.success(`${callsign} has been successfully signed off. Enjoy your rest.`);
-        if (+this.args.person.id === this.session.userId) {
-          // Update the user's navigation bar to remove the signed in position.
-          this.session.updateOnDuty();
-        }
-        break;
+    try {
+      const result = await this.ajax.request(`timesheet/${onDutyEntry.id}/signoff`, {method: 'POST'});
+      const callsign = this.args.person.callsign;
+      this.store.pushPayload(result);
+      switch (result.status) {
+        case 'success':
+          endShiftNotify?.(this.store.peekRecord('timesheet', result.timesheet.id));
+          this.toast.success(`${callsign} has been successfully signed off. Enjoy your rest.`);
+          if (+this.args.person.id === this.session.userId) {
+            // Update the user's navigation bar to remove the signed in position.
+            this.session.updateOnDuty();
+          }
+          break;
 
-      case 'already-signed-off':
-        this.toast.error(`${callsign} was already signed off.`);
-        break;
+        case 'already-signed-off':
+          this.toast.error(`${callsign} was already signed off.`);
+          break;
 
-      default:
-        this.toast.error(`Unknown signoff response [${result.status}].`);
-        break;
+        default:
+          this.toast.error(`Unknown signoff response [${result.status}].`);
+          break;
+      }
+    } catch (response) {
+      this.house.handleErrorResponse(response);
     }
   }
 
