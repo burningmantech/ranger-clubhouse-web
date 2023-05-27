@@ -62,7 +62,7 @@ export default class HqShiftRoute extends ClubhouseRoute {
     if (!controller.unverifiedTimesheets.length) {
       controller.firstTab = 'shift-manage';
     } else {
-      controller.firstTab = null;
+      controller.firstTab = 'timesheet-verification';
     }
   }
 }
