@@ -8,11 +8,9 @@ export default class MeHomepageRoute extends ClubhouseRoute {
 
     data.bullentins = await this.ajax.request('motd/bulletin', {data: {type: 'unread', page_size: 100}});
     data.milestones = await this.ajax.request(`person/${user.id}/milestones`).then((result) => result.milestones);
-    data.years = await this.ajax.request(`person/${user.id}/years`);
 
-    // Auditors and past prospectives do no have photos
     if (!user.isPastProspective && !user.isAuditor) {
-      data.photo = await this.ajax.request(`person/${user.id}/photo`).then(({photo}) => photo);
+      // Auditors and past prospectives do not have agreements.
       data.agreements = await this.ajax.request(`agreements/${user.id}`).then(({agreements}) => agreements);
     }
 
@@ -21,12 +19,19 @@ export default class MeHomepageRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     const bullentins = model.bullentins;
+    const {user} = this.session;
+
     controller.set('person', this.modelFor('me'));
-    controller.set('photo', model.photo);
+    controller.set('photo', model.milestones.photo);
     controller.set('motds', bullentins.motd);
     controller.set('motdsMeta', bullentins.meta.total);
     controller.set('milestones', model.milestones);
-    controller.set('years', model.years);
+    controller.set('years', {
+      years: user.years,
+      all_years: user.all_years,
+      rangered_years: user.rangered_years,
+      non_ranger_years: user.non_ranger_years,
+    });
     controller.set('showUploadDialog', false);
   }
 }
