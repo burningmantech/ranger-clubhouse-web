@@ -4,6 +4,16 @@ import {tracked} from '@glimmer/tracking';
 
 const MENTOR_COUNT = 3;
 
+class Mentor {
+  @tracked mentor_id;
+  @tracked person_mentor_id;
+
+  constructor(mentorId = null, personMentorId = null) {
+    this.mentor_id = mentorId;
+    this.person_mentor_id = personMentorId;
+  }
+}
+
 class Alpha {
   @tracked error;
   @tracked mentors;
@@ -35,10 +45,7 @@ export default class MentorAssignmentRoute extends ClubhouseRoute {
       if (current) {
         person.mentor_status = current.status;
         current.mentors.forEach((mentor) => {
-          mentors.push({
-            mentor_id: mentor.id,
-            person_mentor_id: mentor.person_mentor_id
-          });
+          mentors.push(new Mentor(mentor.id, mentor.person_mentor_id));
         });
         // remove the current mentors so it does not appear int the prior list
         person.mentor_history.removeObject(current);
@@ -48,7 +55,7 @@ export default class MentorAssignmentRoute extends ClubhouseRoute {
 
       // Pad out the mentor list
       for (let i = mentors.length; i < MENTOR_COUNT; i++) {
-        mentors.push({mentor_id: null});
+        mentors.push(new Mentor);
       }
 
       person.mentors = mentors;

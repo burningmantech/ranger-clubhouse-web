@@ -169,4 +169,5 @@ export default class MentorAssignmentController extends ClubhouseController {
   setMentorId(person, mentorIdx, mentorId) {
     person.mentors[mentorIdx].mentor_id = mentorId;
   }
+
 }

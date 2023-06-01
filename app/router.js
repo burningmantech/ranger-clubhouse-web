@@ -138,6 +138,10 @@ Router.map(function () {
     this.route('post-season-summary');
     this.route('potentials');
     this.route('schedule');
+    this.route('pod', function () {
+      this.route('index', {path: '/'});
+      this.route('manage', { path: '/:slot_id' });
+    });
   });
 
 

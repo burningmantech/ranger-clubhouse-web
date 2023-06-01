@@ -45,29 +45,30 @@
     </tbody>
   </table>
 {{else}}
-  <div class="d-print-none">
-    <p>
-      Use this page to assign mentors to Alphas (anyone with the Alpha position).
-      Passing or bonking an Alpha here will <b>NOT change the account status</b>. Use the
-      <LinkTo @route="mentor.convert-alphas">Alpha Conversion</LinkTo>
-      page to mint Shiny Pennies, and/or bonk Alphas.
-    </p>
+  <p>
+    Use this page to assign mentors to Alphas (anyone with the Alpha position).
+    Passing or bonking an Alpha here will <b>NOT change the account status</b>. Use the
+    <LinkTo @route="mentor.convert-alphas">Alpha Conversion</LinkTo>
+    page to mint Shiny Pennies, and/or bonk Alphas.
+  </p>
 
-    <FormRow>
-      <FormLabel @auto={{true}}>Filter</FormLabel>
-      <div class="col-auto">
-        <ChForm::Select @name="filter"
-                        @value={{this.filter}}
-                        @options={{this.filterOptions}}
-                        @onChange={{this.updateFilter}} />
-      </div>
-      <div class="col-auto">
-        <UiButton @type="secondary" @class="mb-2" @onClick={{this.togglePrinting}}>
-          Print Mentor Assignments
-        </UiButton>
-      </div>
-    </FormRow>
-  </div>
+  <FormRow>
+    <FormLabel @auto={{true}}>Filter</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="filter"
+                      @value={{this.filter}}
+                      @options={{this.filterOptions}}
+                      @onChange={{this.updateFilter}} />
+    </div>
+    <div class="col-auto">
+      <UiButton @type="secondary" @class="mb-2" @onClick={{this.togglePrinting}}>
+        Print Mentor Assignments
+      </UiButton>
+    </div>
+  </FormRow>
+  <p>
+    <MentorAssignmentFromPod @alphas={{this.viewAlphas}} @year={{this.year}} />
+  </p>
   <p>
     Legend: Mentor shift = Shift Alpha is signed up for. On Shift = Is the Alpha currently signed into an Alpha shift?
   </p>
@@ -160,28 +161,29 @@
             </tr>
           {{/if}}
         {{else}}
-        <tr>
-          <td colspan="8">
-            <b class="text-danger">No Alphas found.</b>
-          </td>
-        </tr>
+          <tr>
+            <td colspan="8">
+              <b class="text-danger">No Alphas found.</b>
+            </td>
+          </tr>
         {{/each}}
         </tbody>
       </table>
       <UiButton @disabled={{this.isSubmitting}} @onClick={{this.saveAlphas}}>
         Save Assignments &amp; Results
       </UiButton>
-     </:body>
+    </:body>
   </UiSection>
 {{/if}}
 {{#if this.isSubmitting}}
   <LoadingDialog>
-    Saving Alpha Assignments
+    Submitting request
   </LoadingDialog>
 {{/if}}
 
 {{#if this.isRendering}}
   <LoadingDialog>
-    Hang Tight - Updating the list
+    Hang Tight - rendering the list
   </LoadingDialog>
 {{/if}}
+

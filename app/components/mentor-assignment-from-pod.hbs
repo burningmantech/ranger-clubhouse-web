@@ -1,0 +1,66 @@
+<UiButton @onClick={{this.selectShift}}>
+  Assign Mentors From Pod
+</UiButton>
+
+{{#if this.didAssign}}
+  <div class="my-2">
+    {{pluralize this.assignedAlphas.length "Alpha"}} assigned mentors from the
+    pod {{shift-format this.slot.begins}} ({{this.slot.description}}).
+  </div>
+  <div class="my-2 text-danger">
+    The assignments have NOT been saved. Use the button below to record the assignments.
+  </div>
+  {{#if this.ignoredAlphas}}
+    <b class="text-danger">The following Alphas were not updated because they already have mentor assignments:</b>
+    <div class="callsign-list mb-2">
+      {{#each this.ignoredAlphas as |alpha|}}
+        <div>{{alpha}}</div>
+      {{/each}}
+    </div>
+  {{/if}}
+  {{#if this.notFoundAlphas}}
+    <b class="text-danger">The following Alphas were present in the pod, yet could not be found on this page:</b><br>
+    <div class="callsign-list mb-2">
+      {{#each this.notFoundAlphas as |alpha|}}
+        <div>{{alpha}}</div>
+      {{/each}}
+    </div>
+  {{/if}}
+{{/if}}
+
+{{#if this.showSelectDialog}}
+  <ModalDialog @onEscape={{this.closeDialog}} as |Modal|>
+    <Modal.title>Assign Mentors Based Off Pod Layout</Modal.title>
+    <Modal.body>
+      {{#if this.shiftOptions}}
+        <p>
+          Click on the Alpha shift below to populate the mentor assignments from the pod.
+        </p>
+
+        <table class="table table-striped table-hover table-width-auto">
+          <thead>
+          <tr>
+            <th>Time</th>
+            <th>Description</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.shiftOptions as |slot|}}
+            <tr>
+              <td>
+                <a href {{action this.populateShift slot}}>{{shift-format slot.begins}}</a>
+              </td>
+              <td>
+                {{slot.description}}
+              </td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{/if}}
+    </Modal.body>
+    <Modal.footer>
+      <UiCancelButton @onClick={{this.closeDialog}} />
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}

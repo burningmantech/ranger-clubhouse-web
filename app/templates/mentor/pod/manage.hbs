@@ -1,0 +1,269 @@
+<h1>Alpha Pods for {{shift-format this.slot.begins}}</h1>
+<div class="d-print-none">
+  <p>
+    <LinkTo @route="mentor.pod">Back to Alpha Pod Management Listing</LinkTo>
+  </p>
+  <p>
+    <UiButton @onClick={{this.createPod}}>
+      {{fa-icon "plus"}} Create Pod
+    </UiButton>
+    <UiButton @onClick={{this.toggleShowSortControls}} @type="secondary">
+      {{if this.showSortControls "Hide" "Show"}} Sorting Controls
+    </UiButton>
+  </p>
+  <p>
+    Only the checked-in (aka currently on duty) Alphas will be available to add into a pod.
+    Click on the callsign to remove it.
+  </p>
+  <p>
+    Use the Alpha Mentor Assignment page to assign mentors to alphas, and mark the Alphas as passed or bonked.
+  </p>
+</div>
+{{#if this.pods}}
+  <div class="table-responsive mt-4">
+    <table class="table table-width-auto table-bordered">
+      <thead>
+      <tr>
+        {{#each this.pods as |pod idx|}}
+          <th>
+            <div class="d-flex justify-content-between">
+              <div>Pod #{{pod.sort_index}}</div>
+              <a href {{action this.removePod pod}} class="ps-4 d-block d-print-none small fw-normal">
+                Delete
+              </a>
+            </div>
+            {{#if this.showSortControls}}
+              <div class="d-flex justify-content-between">
+                {{#if idx}}
+                  <UiButton @onClick={{fn this.movePod pod -1}}
+                            @size="sm"
+                            @type="secondary"
+                            class="d-block">
+                    {{fa-icon "arrow-left"}}
+                  </UiButton>
+                {{/if}}
+                {{#if (this.isNotLastPod idx)}}
+                  <UiButton @onClick={{fn this.movePod pod 1}}
+                            @size="sm"
+                            @type="secondary"
+                            class="d-block">
+                    {{fa-icon "arrow-right"}}
+                  </UiButton>
+                {{/if}}
+              </div>
+            {{/if}}
+          </th>
+        {{/each}}
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="table-secondary">
+        {{#each this.pods as |pod|}}
+          <td>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="fw-bold">Mentors ({{pod.person_count}})</div>
+              <a href {{action this.addMentor pod}} class="ps-4 d-block d-print-none small">Add</a>
+            </div>
+          </td>
+        {{/each}}
+      </tr>
+      <tr>
+        {{#each this.pods key="id" as |pod|}}
+          <td>
+            {{#if pod.people}}
+              <ol class="no-indent">
+                {{#each pod.people key="id" as |mentor mentorIdx|}}
+                  <li class="mb-2">
+                    <div class="d-flex">
+                      <Popover @title="Update Or Remove Mentor"
+                               @text="{{mentor.callsign}}"
+                               @onShow={{fn this.onMentorShow pod mentor}}
+                               class="d-block" as |po|>
+                        <div class="d-flex justify-content-center align-items-center">
+                          <div>
+                            <p>
+                              <Input @type="checkbox" @checked={{this.isLead}} class="form-check-input" id="islead"/>
+                              <label for="islead">Is Lead Mentor</label>
+                            </p>
+                            <UiButton @onClick={{fn this.updatePerson pod mentor po.close}} @size="sm">
+                              Update
+                            </UiButton>
+                          </div>
+                          <div class="align-middle px-4">
+                            <b>- OR - </b>
+                          </div>
+                          <div>
+                            <UiButton @onClick={{fn this.removePerson pod mentor po.close}}  @size="sm" @type="danger">
+                              Remove Mentor
+                            </UiButton>
+                          </div>
+                        </div>
+                      </Popover>
+                      {{#if mentor.is_lead}}
+                        <span class="ms-1">(Lead)</span>
+                      {{/if}}
+                      <PodSortControls @pod={{pod}}
+                                       @person={{mentor}}
+                                       @index={{mentorIdx}}
+                                       @showSortControls={{this.showSortControls}} />
+                    </div>
+                  </li>
+                {{/each}}
+              </ol>
+            {{else}}
+              <span class="text-muted">No Mentors Yet</span>
+            {{/if}}
+          </td>
+        {{/each}}
+      </tr>
+      <tr class="table-secondary">
+        {{#each this.pods key="id" as |pod|}}
+          <td>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="fw-bold">MITtens ({{pod.mittenPod.person_count}})</div>
+              <a href {{action this.addMITten pod.mittenPod}} class="ps-4 d-block d-print-none small">
+                Add
+              </a>
+            </div>
+          </td>
+        {{/each}}
+      </tr>
+      <tr>
+        {{#each this.pods key="id" as |pod|}}
+          <td>
+            {{#if pod.mittenPod.people}}
+              <ol class="no-indent">
+                {{#each pod.mittenPod.people key="id" as |mitten mittenIdx|}}
+                  <li class="mb-2">
+                    <div class="d-flex">
+                      <Popover @title="Confirm MITten Removal"
+                               @text={{mitten.callsign}}
+                               class="d-block">
+                        <p>
+                          Are you sure you want to remove {{mitten.callsign}} (MITten) from the pod?
+                        </p>
+                        <UiButton @onClick={{fn this.removePerson pod.mittenPod mitten}} @size="sm" @type="danger">
+                          Confirm MITten Removal
+                        </UiButton>
+                      </Popover>
+                      <PodSortControls @pod={{pod.mittenPod}}
+                                       @person={{mitten}}
+                                       @index={{mittenIdx}}
+                                       @showSortControls={{this.showSortControls}} />
+                    </div>
+                  </li>
+                {{/each}}
+              </ol>
+            {{else}}
+              <div class="text-muted">No MITtens yet</div>
+            {{/if}}
+          </td>
+        {{/each}}
+      </tr>
+      <tr class="table-secondary">
+        {{#each this.pods key="id" as |pod|}}
+          <td>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="fw-bold">
+                Alphas ({{pod.alphaPod.person_count}})
+              </div>
+              <a href {{action this.addAlpha pod.alphaPod}} class="ps-4 d-block d-print-none small">
+                Add
+              </a>
+            </div>
+          </td>
+        {{/each}}
+      </tr>
+      <tr>
+        {{#each this.pods key="id" as |pod|}}
+          <td class="ps-2">
+            {{#if pod.alphaPod.people}}
+              <ol class="no-indent">
+                {{#each pod.alphaPod.people key="id" as |alpha alphaIdx|}}
+                  <li class="mb-3">
+                    <div class="d-flex">
+                      <Popover @title="Confirm Alpha Removal"
+                               @text={{alpha.callsign}}>
+                        <p>
+                          Are you sure you want to remove {{alpha.callsign}} (Alpha) from the pod?
+                        </p>
+                        <UiButton @onClick={{fn this.removePerson pod.alphaPod alpha}} @size="sm" @type="danger">
+                          Confirm Alpha Removal
+                        </UiButton>
+                      </Popover>
+                      <PodSortControls @pod={{pod.alphaPod}}
+                                       @person={{alpha}}
+                                       @index={{alphaIdx}}
+                                       @showSortControls={{this.showSortControls}} />
+                    </div>
+                  </li>
+                {{/each}}
+              </ol>
+            {{else}}
+              <span class="text-muted">No Alphas Yet</span>
+            {{/if}}
+          </td>
+        {{/each}}
+      </tr>
+      </tbody>
+    </table>
+  </div>
+{{else}}
+  <div class="text-danger">No pods are currently setup.</div>
+{{/if}}
+{{#if this.showAddDialog}}
+  <ModalDialog @onEscape={{this.closeAddDialog}} @position="top" @size="xl" as |Modal|>
+    <Modal.title>Add {{this.addType}} to Pod #{{this.addPod.sort_index}}</Modal.title>
+    <ChForm @formId="callsign" @formFor={{this.callsignForm}} @onSubmit={{this.addPerson}} as |f|>
+      <Modal.body>
+        {{#if (eq this.addType "Alpha")}}
+          <p>
+            The check-in time is added to the callsign for reference.
+          </p>
+        {{else if (eq this.addType "Mentor")}}
+          <FormRow>
+            <div class="col-auto">
+              <f.checkbox @name="is_lead" @label="Is Lead Mentor"/>
+            </div>
+          </FormRow>
+        {{/if}}
+        <fieldset>
+          <legend>
+            {{#if (eq this.addType "Alpha")}}
+              Checked-In (aka On Duty) Alphas
+            {{else}}
+              On Duty {{this.addType}}s
+            {{/if}}
+          </legend>
+          <FormRow>
+            <FormLabel>
+            </FormLabel>
+            <div class="col-auto">
+              <f.checkboxGroup @name="onduty" @options={{this.onDutyOptions}} @cols={{4}} />
+            </div>
+          </FormRow>
+        </fieldset>
+        {{#if (not-eq this.addType "Alpha")}}
+          <fieldset>
+            <legend>Off Duty {{this.addType}}s</legend>
+            <FormRow>
+              <div class="col-auto">
+                <f.checkboxGroup @name="offduty" @options={{this.offDutyOptions}} @cols={{4}} />
+              </div>
+            </FormRow>
+          </fieldset>
+        {{/if}}
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Add {{this.addType}}s" @disabled={{and (not f.model.offduty) (not f.model.onduty)}} />
+        <UiCancelButton @onClick={{this.closeAddDialog}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting request
+  </LoadingDialog>
+{{/if}}
