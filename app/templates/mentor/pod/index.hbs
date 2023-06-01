@@ -1,0 +1,37 @@
+<YearSelect @title="Alpha / Mentor Pod Management"
+            @year={{this.year}}
+            @minYear={{2023}}
+            @onChange={{action (mut this.year)}}
+/>
+<p>
+  Click on the time to manage the Mentor &amp; Alpha pods. Only activated shifts are shown.
+</p>
+
+Showing {{pluralize this.slots.length "Alpha shift"}}.
+{{#if this.slots}}
+  <table class="table table-striped table-hover table-width-auto">
+    <thead>
+    <tr>
+      <th>Time</th>
+      <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.slots as |slot|}}
+      <tr>
+        <td>
+          <LinkTo @route="mentor.pod.manage" @model={{slot.id}}>{{shift-format slot.begins}}</LinkTo>
+        </td>
+        <td>
+          {{slot.description}}
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+
+{{else}}
+  <div class="mt-2 text-danger">
+    No Alpha shifts were found. Either none have been created or activated yet.
+  </div>
+{{/if}}

@@ -1,0 +1,28 @@
+{{#if @showSortControls}}
+    {{#if this.isNotLast}}
+      <div class="ms-auto ps-2">
+        <UiButton @onClick={{fn this.movePerson 1}}
+                  @size="sm"
+                  @type="secondary"
+                  class="d-print-none">
+          {{fa-icon "arrow-down"}}
+        </UiButton>
+      </div>
+    {{/if}}
+    {{#if @index}}
+      <div class="{{if this.isNotLast "ms-1" "ms-auto"}}">
+        <UiButton @onClick={{fn this.movePerson -1}}
+                  @size="sm"
+                  @type="secondary"
+                  class="d-print-none">
+          {{fa-icon "arrow-up"}}
+        </UiButton>
+      </div>
+    {{/if}}
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Updating the pod order
+  </LoadingDialog>
+{{/if}}

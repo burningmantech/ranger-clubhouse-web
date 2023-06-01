@@ -9,8 +9,7 @@
         {{~#each opt.options as |groupOpt|~}}
           <option value={{groupOpt.value}}
                   selected={{ch-form/contains @value groupOpt.value}}
-                  disabled={{opt.disabled}}
-          >{{groupOpt.label}}</option>
+                  disabled={{groupOpt.disabled}}>{{groupOpt.label}}</option>
         {{~/each~}}
       </optgroup>
     {{~else~}}
