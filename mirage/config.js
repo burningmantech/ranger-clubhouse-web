@@ -222,6 +222,12 @@ function routes() {
         surveys: {
           sessions: [],
           trainers: []
+        },
+        photo: {
+          image_url: 'http://localhost:99999/photo.jpg',
+          profile_url: 'http://localhost:99999/photo.jpg',
+          thumbnail_url: 'http://localhost:99999/photo.jpg',
+          status: 'approved',
         }
       }
     };
@@ -296,7 +302,7 @@ function routes() {
   });
 
   this.get('/api/config/dashboard-period', () => {
-    return { period: 'before-event' }
+    return {period: 'before-event'}
   });
 
   /*
