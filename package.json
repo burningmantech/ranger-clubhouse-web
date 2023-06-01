@@ -35,12 +35,12 @@
     "@ember/render-modifiers": "^2.0.5",
     "@ember/string": "^3.1.1",
     "@ember/test-helpers": "^2.9.3",
-    "@faker-js/faker": "^8.0.1",
+    "@faker-js/faker": "^8.0.2",
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
     "@popperjs/core": "^2.11.8",
     "blueimp-load-image": "^5.16.0",
-    "bootstrap": "^5.2.3",
+    "bootstrap": "^5.3.0",
     "broccoli-asset-rev": "^3.0.0",
     "concurrently": "^8.0.1",
     "cropperjs": "^1.5.13",
@@ -84,7 +84,7 @@
     "ember-truth-helpers": "^3.1.1",
     "eslint": "^8.41.0",
     "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-ember": "^11.7.2",
+    "eslint-plugin-ember": "^11.8.0",
     "eslint-plugin-n": "^16.0.0",
     "eslint-plugin-qunit": "^7.3.4",
     "global": "^4.4.0",
@@ -99,7 +99,7 @@
     "qunit-dom": "^2.0.0",
     "sass": "^1.62.1",
     "tracked-built-ins": "^3.1.1",
-    "webpack": "^5.84.1"
+    "webpack": "^5.85.0"
   },
   "engines": {
     "node": "14.* || 16.* || >= 18"
