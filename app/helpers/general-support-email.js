@@ -1,9 +1,9 @@
 import { helper } from '@ember/component/helper';
-import { config } from 'clubhouse/utils/config';
+import {setting} from 'clubhouse/utils/setting';
 import { htmlSafe } from '@ember/template';
 
 export function generalSupportEmail() {
-  const email = config('GeneralSupportEmail');
+  const email = setting('GeneralSupportEmail');
   return htmlSafe(`<a href="mailto:${email}" class="d-inline-block">${email}</a>`);
 }
 

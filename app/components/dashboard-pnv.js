@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
 import {service} from '@ember/service';
-import {config} from 'clubhouse/utils/config';
+import {setting} from 'clubhouse/utils/setting';
 import {htmlSafe} from '@ember/template';
 import dayjs from 'dayjs';
 import {
@@ -141,7 +141,7 @@ export default class DashboardPNVComponent extends Component {
         }
 
         if (check.email) {
-          check.email = config(check.email);
+          check.email = setting(check.email);
         }
 
         if (check.result !== COMPLETED && check.result !== OPTIONAL) {

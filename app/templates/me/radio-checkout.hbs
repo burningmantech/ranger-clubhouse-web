@@ -1,6 +1,6 @@
 <h1>{{this.currentYear}} Ranger Radio Checkout Agreement</h1>
 <BackToHome/>
-{{#if (config "RadioCheckoutAgreementEnabled")}}
+{{#if (setting "RadioCheckoutAgreementEnabled")}}
   {{#if this.hasAgreed}}
     <p>
       <b class="text-success">{{fa-icon "check"}} You have signed the Radio Checkout Agreement. Thank you.</b>

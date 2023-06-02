@@ -41,7 +41,7 @@
             {{this.person.callsign}} has the status "{{this.person.status}}" which prevents the person
             from working a shift. The HQ Window Interface cannot be used.
           </p>
-          Contact the HQ Lead, HQ Supervisor or the Personnel Manager {{mail-to (config "PersonnelEmail")}}.
+          Contact the HQ Lead, HQ Supervisor or the Personnel Manager {{mail-to (setting "PersonnelEmail")}}.
         </UiNotice>
       {{else if this.person.needsBpguid}}
         <UiNotice @type="danger" @icon="exclamation-triangle">

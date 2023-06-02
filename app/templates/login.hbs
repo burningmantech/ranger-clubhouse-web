@@ -57,7 +57,7 @@
     {{else}}
       <UiNotice @type="danger" @icon="ban" @title="Login disabled">
         This account has been disabled and cannot be logged into.
-        Contact the Ranger Personnel Manager at {{mail-to (config "PersonnelEmail")}} for more
+        Contact the Ranger Personnel Manager at {{mail-to (setting "PersonnelEmail")}} for more
         information.
       </UiNotice>
     {{/if}}
@@ -105,10 +105,10 @@
         <:body>
           <p>
             Visit
-            <a href="https://rangers.burningman.org/ranger-application-process/"
-               target="_blank" rel="noopener noreferrer">
+            <ExtLink href="https://rangers.burningman.org/ranger-application-process/">
               Becoming a Ranger
-            </a> to read about our requirements and how to apply.
+            </ExtLink>
+            to read about our requirements and how to apply.
           </p>
           All past prospective Rangers must reapply each year.
         </:body>
@@ -117,8 +117,11 @@
         <:title>Attend Ranger training as a guest/auditor</:title>
         <:body>
           <p>
-            First visit <a href="https://rangers.burningman.org/training/auditing/" rel="noopener noreferrer">
-            Auditing a Ranger Training</a> to read about auditor requirements and restrictions.
+            First visit
+            <ExtLink href="https://rangers.burningman.org/training/auditing/">
+              Auditing a Ranger Training
+            </ExtLink>
+            to read about auditor requirements and restrictions.
           </p>
           <p>
             Then

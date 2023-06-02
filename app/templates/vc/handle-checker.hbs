@@ -67,8 +67,7 @@
                   {{#if conflict.conflictingHandle}}
                     {{#let conflict.conflictingHandle as |handle|}}
                       {{#if handle.personId}}
-                        <LinkTo @route="person.index" @model={{handle.personId}}
-                                target="_blank" rel="noopener noreferrer">
+                        <LinkTo @route="person.index" @model={{handle.personId}} target="_blank">
                           {{handle.entityType}} {{handle.name}}
                         </LinkTo>
                       {{else}}
@@ -107,7 +106,7 @@
           <tr>
             <td>
               {{#if handle.personId}}
-                <LinkTo @route="person.index" @model={{handle.personId}} target="_blank" rel="noopener noreferrer">
+                <LinkTo @route="person.index" @model={{handle.personId}} target="_blank">
                   {{handle.name}}
                 </LinkTo>
               {{else}}

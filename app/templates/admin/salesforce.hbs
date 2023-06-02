@@ -189,10 +189,9 @@
               {{#if (eq account.status "existing")}}
                 <tr>
                   <td>
-                    <a href="https://burningman.my.salesforce.com/{{account.salesforce_ranger_object_id}}"
-                       rel="noopener noreferrer" target="_blank">
+                    <ExtLink @href="https://burningman.my.salesforce.com/{{account.salesforce_ranger_object_id}}">
                       {{account.salesforce_ranger_object_name}}
-                    </a>
+                    </ExtLink>
                   </td>
                   <td>
                     {{account.existing_person.callsign}} &rarr;<br>{{account.callsign}}

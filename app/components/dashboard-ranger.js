@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import {tracked} from "@glimmer/tracking";
 import {service} from '@ember/service';
 import {htmlSafe} from '@ember/template';
-import {config} from 'clubhouse/utils/config';
+import {setting} from 'clubhouse/utils/setting';
 import dayjs from 'dayjs';
 import {
   ACTION_NEEDED,
@@ -386,7 +386,7 @@ export default class DashboardRangerComponent extends Component {
       }
 
       if (check.email) {
-        check.email = config(check.email);
+        check.email = setting(check.email);
       }
 
       if (check.result !== COMPLETED) {

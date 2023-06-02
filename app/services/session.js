@@ -6,7 +6,7 @@ import {tracked} from '@glimmer/tracking';
 import SessionService from "ember-simple-auth/services/session";
 import User from "clubhouse/models/user";
 import ENV from 'clubhouse/config/environment';
-import {config} from 'clubhouse/utils/config';
+import {setting} from 'clubhouse/utils/setting';
 import {ADMIN, MANAGE, TRAINER, VC, VIEW_PII, VIEW_EMAIL} from 'clubhouse/constants/roles';
 import MobileDetect from 'mobile-detect';
 import BrowserDetector from "../utils/browser-detect";
@@ -76,7 +76,7 @@ export default class extends SessionService {
    */
 
   get isLMOPEnabled() {
-    return (this.hasRole(MANAGE) && !!config('LoginManageOnPlayaEnabled'));
+    return (this.hasRole(MANAGE) && !!setting('LoginManageOnPlayaEnabled'));
   }
 
 
@@ -193,7 +193,7 @@ export default class extends SessionService {
    */
 
   get isStaging() {
-    return config('DeploymentEnvironment') === 'Staging' && !this.isDevelopment;
+    return setting('DeploymentEnvironment') === 'Staging' && !this.isDevelopment;
   }
 
   /**
@@ -203,7 +203,7 @@ export default class extends SessionService {
    */
 
   get isTraining() {
-    return config('DeploymentEnvironment') === 'Training';
+    return setting('DeploymentEnvironment') === 'Training';
   }
 
   /**

@@ -1,11 +1,11 @@
-import {config} from 'clubhouse/utils/config';
+import {setting} from 'clubhouse/utils/setting';
 
 /**
  * Get the event year - September or later refers to the upcoming year's event.
  */
 
 export default function eventYear() {
-  const ghd = config('GroundhogDayTime');
+  const ghd = setting('GroundhogDayTime');
 
   const date = ghd ? new Date(ghd) : new Date();
   const year = date.getFullYear();
