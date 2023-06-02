@@ -11,7 +11,7 @@ import {
 import {debounce} from '@ember/runloop';
 import {service} from '@ember/service';
 import {inject as controller} from '@ember/controller';
-import {config} from 'clubhouse/utils/config';
+import {setting} from 'clubhouse/utils/setting';
 import {isEmpty} from '@ember/utils';
 import RSVP from 'rsvp';
 
@@ -125,7 +125,7 @@ export default class SearchItemBarComponent extends Component {
     const user = this.session.user;
     const options = [{value: 'account', label: 'Person Manage'}];
 
-    if (user.has_hq_window && config('HQWindowInterfaceEnabled')) {
+    if (user.has_hq_window && setting('HQWindowInterfaceEnabled')) {
       options.unshift({value: 'hq', label: 'HQ Window'});
     }
 

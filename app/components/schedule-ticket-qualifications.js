@@ -1,14 +1,14 @@
 import Component from '@glimmer/component';
-import { config } from 'clubhouse/utils/config';
-import { service } from '@ember/service';
+import {setting} from 'clubhouse/utils/setting';
+import {service} from '@ember/service';
 
 export default class TicketThresholdComponent extends Component {
   @service house;
 
   // Reduce price ticket threshold
-  rpThreshold = parseFloat(config('RpTicketThreshold'));
+  rpThreshold = parseFloat(setting('RpTicketThreshold'));
   // Staff credentials threshold
-  scThreshold = parseFloat(config('ScTicketThreshold'));
+  scThreshold = parseFloat(setting('ScTicketThreshold'));
 
   yearThreshold = this.house.currentYear();
   ticketYear = this.yearThreshold + 1;
@@ -30,7 +30,7 @@ export default class TicketThresholdComponent extends Component {
   }
 
   get withinRPThreshold() {
-    return (this.args.credits >= this.rpThreshold) && (this.args.credits <= (this.rpThreshold+2.0));
+    return (this.args.credits >= this.rpThreshold) && (this.args.credits <= (this.rpThreshold + 2.0));
   }
 
   get almostSCThreshold() {

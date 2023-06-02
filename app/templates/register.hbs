@@ -1,6 +1,6 @@
 <LoginSidebar/>
 <main>
-  {{#if (config 'AuditorRegistrationDisabled')}}
+  {{#if (setting 'AuditorRegistrationDisabled')}}
     <UiNotice @type="danger" @icon="hand" @title="Auditor Registration Disabled">
         Auditor registration is usually open by March and available through late August. The Black Rock Rangers only offer
         trainings between late April and late August. Training registration will prioritize Prospective Rangers over Auditors.

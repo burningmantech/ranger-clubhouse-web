@@ -11,15 +11,13 @@
         Before uploading a BMID photo, take a moment to review the photo help sheet:
       </p>
       <p>
-        <a href="https://docs.google.com/document/d/1hUqrJwdMG6XB5nk7Eh8nY2GH4uvAFTppmCKCmfidIvQ/edit?usp=sharing"
-           target="_blank" rel="noreferrer noopener">
-          View The Ranger BMID Help Sheet {{fa-icon "arrow-up-right-from-square"}}
-        </a>
+        View
+        <ExtLink @href="https://docs.google.com/document/d/1hUqrJwdMG6XB5nk7Eh8nY2GH4uvAFTppmCKCmfidIvQ/edit?usp=sharing">
+         The Ranger BMID Help Sheet
+        </ExtLink> (Link will be opened in a new window)
+
       </p>
-      <p>
-        (Link will be opened in a new window)
-      </p>
-     {{else if (eq this.step "source")}}
+      {{else if (eq this.step "source")}}
       <h4>Your BMID photo is an ID photo. Think “passport” or driver's license.</h4>
       The photo must meet the following criteria:
       <ul class="no-indent">

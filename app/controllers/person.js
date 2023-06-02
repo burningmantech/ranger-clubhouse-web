@@ -1,11 +1,11 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
-import { config } from 'clubhouse/utils/config';
+import {setting} from 'clubhouse/utils/setting';
 
 export default class PersonController extends ClubhouseController {
   @action
   switchToHQ() {
-    if (config('HQWindowInterfaceEnabled')) {
+    if (setting('HQWindowInterfaceEnabled')) {
       this.router.transitionTo('hq.index', this.person.id);
       return;
     }

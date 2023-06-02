@@ -3,7 +3,7 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {guidFor} from '@ember/object/internals';
-import {config} from 'clubhouse/utils/config';
+import {setting} from 'clubhouse/utils/setting';
 
 export default class WysiwygEditorComponent extends Component {
   @service house;
@@ -24,7 +24,7 @@ export default class WysiwygEditorComponent extends Component {
 
   @action
   elementInsertedEvent() {
-    const editorUrl = config('EditorUrl');
+    const editorUrl = setting('EditorUrl');
 
     if (!editorUrl) {
       this.didError = true;

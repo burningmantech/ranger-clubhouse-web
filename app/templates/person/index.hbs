@@ -3,7 +3,7 @@
   <UiNotice @icon="ban"
             @type="danger"
             @title="Account has status {{this.person.status}} and may not be logged into.">
-    For more information, contact the Personnel Manager: {{mail-to (config "PersonnelEmail")}}
+    For more information, contact the Personnel Manager: {{mail-to (setting "PersonnelEmail")}}
   </UiNotice>
 {{else if this.person.needsBpguid}}
   <UiNotice @icon="hand-point-right" @title="Missing BPGUID" @type="danger">

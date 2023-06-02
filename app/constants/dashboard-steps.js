@@ -14,7 +14,7 @@
  */
 
 import {htmlSafe} from '@ember/template';
-import {config} from 'clubhouse/utils/config';
+import {setting} from 'clubhouse/utils/setting';
 import dayjs from 'dayjs';
 import {
   ACTION_NEEDED,
@@ -272,7 +272,7 @@ export const ONLINE_TRAINING = {
 
     let message;
     const isNonRanger = person.status === NON_RANGER;
-    const manualLocation = '<p>The Ranger Manual can be found at <a href="' + config('RangerManualUrl') + '" rel="noopener noreferrer" target="_blank">rangers.burningman.org</a>.</p>';
+    const manualLocation = '<p>The Ranger Manual can be found at <a href="' + setting('RangerManualUrl') + '" rel="noopener noreferrer" target="_blank">rangers.burningman.org</a>.</p>';
 
     if (isNonRanger) {
      message =

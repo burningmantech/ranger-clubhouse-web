@@ -1,7 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {action} from '@ember/object';
 import {humanize} from 'ember-cli-string-helpers/helpers/humanize';
-import {config} from 'clubhouse/utils/config';
+import {setting} from 'clubhouse/utils/setting';
 import {UnauthorizedError} from '@ember-data/adapter/error';
 import ENV from 'clubhouse/config/environment';
 import dayjs from 'dayjs';
@@ -109,7 +109,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
     }
 
     this.session.isOffline = false;
-    
+
     if (this.authSetup) {
       return;
     }
@@ -139,7 +139,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
   }
 
   setupController(controller) {
-    const ghd = config('GroundhogDayTime');
+    const ghd = setting('GroundhogDayTime');
     if (ghd) {
       controller.set('groundHogDayTime', dayjs(ghd));
     }
@@ -176,7 +176,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
     }
     tokens = tokens.reverse();
     let siteName = 'Ranger Clubhouse';
-    let env = config('DeploymentEnvironment');
+    let env = setting('DeploymentEnvironment');
     if (env && env !== 'Production') {
       siteName = `${env} Clubhouse`;
     }

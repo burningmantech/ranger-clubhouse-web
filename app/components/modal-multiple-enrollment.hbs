@@ -17,7 +17,7 @@
       {{#if this.isTraining}}
         To arrange another In-Person Training sign-up if the previous sign-up cannot be removed, or if you did not pass the
         previous session, email the Training Academy to get your situation sorted out:<br>
-        {{mail-to (config 'TrainingAcademyEmail')}}
+        {{mail-to (setting 'TrainingAcademyEmail')}}
       {{else}}
         To arrange another sign up (if the previous one cannot be removed) or if you have questions, email
         {{#if this.slot.position.contact_email}}
