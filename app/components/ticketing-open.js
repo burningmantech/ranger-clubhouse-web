@@ -40,6 +40,16 @@ export default class TicketingOpenComponent extends Component {
   }
 
   /**
+   * Did the user claim a gift ticket?
+   *
+   * @returns {boolean}
+   */
+
+  get claimedGiftTicket() {
+    return !!this.args.ticketPackage.giftTickets.find((t) => t.isClaimed);
+  }
+
+  /**
    * Common routine to set the Access Document status based on the user's choice.
    * (i.e., bank, claim, release/qualify)
    *

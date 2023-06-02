@@ -5,7 +5,7 @@
 {{else if this.isPNV}}
   <TicketOpenApplicant @ticketingInfo={{@ticketingInfo}} />
 {{else}}
-  {{#if @ticketPackage.giftTickets}}
+  {{#if (and @ticketPackage.giftTickets (not this.claimedGiftTicket))}}
     <div class="alert alert-secondary">
       {{singular-or-pluralize @ticketPackage.giftTickets.length "Gift Ticket" capitalize=true}}
       {{~#if @ticketPackage.giftVPs~}}
@@ -118,6 +118,11 @@
           </UiNotice>
         {{else}}
           <UiNotice @type="success" @icon="check" @title="Ticketing choices have been confirmed.">
+            {{#if this.claimedGiftTicket}}
+              <p>
+                See further down the page for information regarding your Gift Ticket.
+              </p>
+            {{/if}}
             <p>
               While you have completed all the Clubhouse ticketing steps, further actions may need to be taken later.
               After the Ranger ticketing deadline passes, the claimed items will be uploaded to the Burning Man ticketing

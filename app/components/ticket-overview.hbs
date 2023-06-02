@@ -80,15 +80,37 @@
         {{~#if this.giftVPCount~}}, and {{singular-or-pluralize this.giftVPCount "Gift Vehicle Pass"}}{{/if}}
         has been claimed.
       </p>
+      <p>
+        <TicketGiftConditions/>
+      </p>
+      <p>
+        More details about your Gift Ticket:
+      </p>
+      <p>
+        On or after July 21st, you will receive an email from ticketsupport@burningman.org about your Gift Ticket.
+        The Burning Man Ticket system require that you CLICK THE LINK in that email &amp; complete the check-out process
+        for your Gift Ticket. During the check-out process you will be able to choose to have your Gift Ticket mailed
+        (to you or someone else) or held at Will Call.
+      </p>
+      <p>
+        If you would like your Gift Ticket to be held at Will Call under someone else’s name you can transfer it to them
+        after you have completed the checkout process by following
+        <a
+          href="https://help.burningman.org/hc/en-us/articles/360024827111-How-do-I-transfer-my-tickets-vehicle-pass-to-someone-else-"
+          rel="noopener noreferrer" target="_blank">
+          these steps. {{fa-icon "arrow-up-right-from-square"}}
+        </a>
+        (The link will open in a new page.)
+      </p>
 
-      <TicketGiftConditions/>
+
     </TicketOverviewItem>
   {{/if}}
 
   {{#if this.lsdTicketCount}}
     <TicketOverviewItem @icon="gift"
-                        @title="{{singular-or-pluralize this.lsdTicketCount "Late Season Directed Ticket"
-                                                        capitalize=true}} Claimed"
+                        @title="{{singular-or-pluralize
+                          this.lsdTicketCount "Late Season Directed Ticket" capitalize=true}} Claimed"
                         @type="success">
       <p>
         {{singular-or-pluralize this.lsdTicketCount "LSD Ticket" capitalize=true}}
