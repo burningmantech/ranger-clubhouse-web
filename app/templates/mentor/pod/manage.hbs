@@ -213,14 +213,16 @@
 {{/if}}
 {{#if this.showAddDialog}}
   <ModalDialog @onEscape={{this.closeAddDialog}} @position="top" @size="xl" as |Modal|>
-    <Modal.title>Add {{this.addType}} to Pod #{{this.addPod.sort_index}}</Modal.title>
+    <Modal.title>Add People to Pod #{{this.addPod.sort_index}}</Modal.title>
     <ChForm @formId="callsign" @formFor={{this.callsignForm}} @onSubmit={{this.addPerson}} as |f|>
       <Modal.body>
-        {{#if (eq this.addType "Alpha")}}
-          <p>
-            The check-in time is added to the callsign for reference.
-          </p>
-        {{else if (eq this.addType "Mentor")}}
+        <p>
+          Select all the callsigns to add to Pod #{{this.addPod.sort_index}}.
+          {{#if (eq this.addType "Alpha")}}
+            The Alpha check-in time is appended to the callsign for reference.
+          {{/if}}
+        </p>
+        {{#if (eq this.addType "Mentor")}}
           <FormRow>
             <div class="col-auto">
               <f.checkbox @name="is_lead" @label="Is Lead Mentor"/>
@@ -239,7 +241,11 @@
             <FormLabel>
             </FormLabel>
             <div class="col-auto">
-              <f.checkboxGroup @name="onduty" @options={{this.onDutyOptions}} @cols={{4}} />
+              {{#if this.onDutyOptions}}
+                <f.checkboxGroup @name="onduty" @options={{this.onDutyOptions}} @cols={{4}} />
+              {{else}}
+                No checked-in (aka on duty) {{this.addType}}s were found.
+              {{/if}}
             </div>
           </FormRow>
         </fieldset>
@@ -248,7 +254,11 @@
             <legend>Off Duty {{this.addType}}s</legend>
             <FormRow>
               <div class="col-auto">
-                <f.checkboxGroup @name="offduty" @options={{this.offDutyOptions}} @cols={{4}} />
+                {{#if this.offDutyOptions}}
+                  <f.checkboxGroup @name="offduty" @options={{this.offDutyOptions}} @cols={{4}} />
+                {{else}}
+                  No off duty {{this.addType}}s were found.
+                {{/if}}
               </div>
             </FormRow>
           </fieldset>
