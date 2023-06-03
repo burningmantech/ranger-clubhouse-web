@@ -312,8 +312,9 @@ export default class MentorPodManageController extends ClubhouseController {
   @action
   async updatePerson(pod, person, closeCallback) {
     this.isSubmitting = true;
-    closeCallback();
+
     try {
+      closeCallback();
       await this.ajax.request(`pod/${pod.id}/person`, {
         method: 'PATCH',
         data: {
