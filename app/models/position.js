@@ -1,4 +1,4 @@
-import Model, { attr } from '@ember-data/model';
+import Model, {attr} from '@ember-data/model';
 
 export const TYPE_COMMAND = 'Command';
 export const TYPE_FRONTLINE = 'Frontline';
@@ -9,7 +9,7 @@ export const TYPE_OTHER = 'Other';
 export const TYPE_TRAINING = 'Training';
 
 export const TEAM_CATEGORY_ALL_MEMBERS = 'all_members';
-export const TEAM_CATEGORY_OPTIONAL  = 'optional';
+export const TEAM_CATEGORY_OPTIONAL = 'optional';
 export const TEAM_CATEGORY_PUBLIC = 'public';
 
 export const TeamCategoryLabels = {
@@ -20,15 +20,15 @@ export const TeamCategoryLabels = {
 
 export default class PositionModel extends Model {
   @attr('string') title;
-  @attr('boolean', { defaultValue: false }) new_user_eligible;
-  @attr('boolean', { defaultValue: false }) all_rangers;
-  @attr('boolean', { defaultValue: false }) count_hours;
+  @attr('boolean', {defaultValue: false}) new_user_eligible;
+  @attr('boolean', {defaultValue: false}) all_rangers;
+  @attr('boolean', {defaultValue: false}) count_hours;
 
-  @attr('boolean', { defaultValue: false }) is_team;
+  @attr('boolean', {defaultValue: false}) is_team;
   @attr('number') team_id;
-  @attr('string', {defaultValue: TEAM_CATEGORY_OPTIONAL }) team_category;
+  @attr('string', {defaultValue: TEAM_CATEGORY_OPTIONAL}) team_category;
 
-  @attr('boolean', { defaultValue: false }) require_training_for_roles;
+  @attr('boolean', {defaultValue: false}) require_training_for_roles;
 
   @attr('') role_ids;
 
@@ -41,9 +41,10 @@ export default class PositionModel extends Model {
   @attr('number') training_position_id;
   @attr('boolean') prevent_multiple_enrollments;
   @attr('string') contact_email;
-  @attr('boolean', { defaultValue: true}) active;
-  @attr('boolean', { defaultValue:false}) alert_when_becomes_empty;
-  @attr('boolean', { defaultValue:false}) alert_when_no_trainers;
+  @attr('boolean', {defaultValue: true}) active;
+  @attr('boolean', {defaultValue: false}) alert_when_becomes_empty;
+  @attr('boolean', {defaultValue: false}) alert_when_no_trainers;
+  @attr('boolean', {defaultValue: false}) deselect_on_team_join;
 
   @attr('string') resource_tag;
 

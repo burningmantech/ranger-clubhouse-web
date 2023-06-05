@@ -158,6 +158,14 @@
                         @disabled={{not f.model.team_id}}
               />
             </FormRow>
+            <FormRow>
+              <div class="col-auto">
+              <f.checkbox @name="deselect_on_team_join"
+                        @label="Recommend position be deselected when the person joins the team (e.g., for mentee positions)"
+                        @disabled={{not f.model.team_id}}
+              />
+              </div>
+            </FormRow>
           </fieldset>
           <fieldset>
             <legend>Other Flags</legend>
