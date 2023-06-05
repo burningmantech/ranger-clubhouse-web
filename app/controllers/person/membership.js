@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
-import { TEAM_CATEGORY_ALL_MEMBERS, TEAM_CATEGORY_PUBLIC } from 'clubhouse/models/position';
+import {TEAM_CATEGORY_ALL_MEMBERS, TEAM_CATEGORY_PUBLIC} from 'clubhouse/models/position';
 
 export default class PersonMembershipController extends ClubhouseController {
   @tracked person;
@@ -28,6 +28,9 @@ export default class PersonMembershipController extends ClubhouseController {
           p.selected = team.selected;
         }
       });
+      this._deselectRecommendation(team.allRangers);
+      this._deselectRecommendation(team.optional);
+      this._deselectRecommendation(team.allMembers);
     } else {
       team.allMembers.forEach((p) => {
         if (p.team_category !== TEAM_CATEGORY_PUBLIC) {
@@ -35,6 +38,22 @@ export default class PersonMembershipController extends ClubhouseController {
         }
       });
     }
+  }
+
+  /**
+   * Deselect those positions recommended to be removed when a person joins a team.
+   * E.g., mentee positions
+   *
+   * @param positions
+   * @private
+   */
+
+  _deselectRecommendation(positions) {
+    positions.forEach((p) => {
+      if (p.deselect_on_team_join) {
+        p.selected = false;
+      }
+    });
   }
 
   @action
@@ -60,31 +79,12 @@ export default class PersonMembershipController extends ClubhouseController {
         manager_ids.push(team.id);
       }
 
-      team.allMembers.forEach((p) => {
-        if (p.selected) {
-          position_ids.push(p.id);
-        }
-      });
-
-      team.optional.forEach((p) => {
-        if (p.selected) {
-          position_ids.push(p.id);
-        }
-      });
-
-      team.allRangers.forEach((p) => {
-        if (p.selected) {
-          position_ids.push(p.id);
-        }
-      });
-
+      this._buildSelected(team.allMembers, position_ids);
+      this._buildSelected(team.optional, position_ids);
+      this._buildSelected(team.allRangers, position_ids);
     });
 
-    this.generalPositions.forEach((p) => {
-      if (p.selected) {
-        position_ids.push(p.id);
-      }
-    })
+    this._buildSelected(this.generalPositions, position_ids);
 
     this.isSaving = true;
     try {
@@ -106,5 +106,21 @@ export default class PersonMembershipController extends ClubhouseController {
     } finally {
       this.isSaving = false;
     }
+  }
+
+  /**
+   * Build up the selected position ids
+   *
+   * @param positions
+   * @param ids
+   * @private
+   */
+
+  _buildSelected(positions, ids) {
+    positions.forEach((p) => {
+      if (p.selected) {
+        ids.push(p.id);
+      }
+    });
   }
 }

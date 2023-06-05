@@ -19,6 +19,9 @@
           {{#if position.new_user_eligible}}
             <span class="text-muted me-1">{{fa-icon "globe"}} <small>All Accounts</small></span>
           {{/if}}
+          {{#if position.deselect_on_team_join}}
+            <span class="text-muted me-1">{{fa-icon "power-off"}} <small>Deselected when person joins the team</small></span>
+          {{/if}}
         </label>
         {{#if position.roles}}
           <Popover @text="[{{pluralize position.roles.length "permission"}}]">
