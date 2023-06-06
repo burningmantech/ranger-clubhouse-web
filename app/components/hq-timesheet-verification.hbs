@@ -1,17 +1,17 @@
 {{#if this.hasUnverifiedTimesheet}}
   <UiNotice @title="Timesheet Entry Review Needed" @icon="hand-point-right" @type="danger">
     <p>
-    Before any shift can be started, or when a shift is ended, all timesheet entries must be reviewed.
+      Before any shift can be started, or when a shift is ended, all timesheet entries must be reviewed.
     </p>
     The exception is during a very busy time such as the Burn Night check-in, the review can skipped by using
-    the Skip button.
+    the <i>Skip Review</i> button.
   </UiNotice>
 {{else}}
   <UiNotice @title="No timesheet entries require review" @icon="thumbs-up" @type="success">
     <p>
-    All timesheet entries have been reviewed. No action is required at this time.
+      All timesheet entries have been reviewed. No action is required at this time.
     </p>
-    If a timesheet entry requires correction, use the 'Timesheet / Corrections' link in the side bar, and then
+    If a timesheet entry requires correction, use the 'Timesheet / Corrections' link in the sidebar, and then
     locate the entry or entries to submit a correction for.
   </UiNotice>
 {{/if}}
@@ -81,7 +81,7 @@
               {{/if}}
             </UiButton>
           </div>
-         </td>
+        </td>
         <td class="w-5">
           {{#if entry.isSaving}}
             <SpinIcon/>
