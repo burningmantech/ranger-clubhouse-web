@@ -64,6 +64,15 @@ module.exports = function (defaults) {
 
     autoImport: {
       webpack: {
+        module: {
+          rules: [
+            {
+              test: /\.css$/,
+              resourceQuery: /raw/,
+              type: 'asset/source',
+            }
+          ]
+        },
         resolve: {
           fallback: {
             fs: false
