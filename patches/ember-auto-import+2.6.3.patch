@@ -1,0 +1,30 @@
+diff --git a/node_modules/ember-auto-import/js/webpack.js b/node_modules/ember-auto-import/js/webpack.js
+index b615809..3f14538 100644
+--- a/node_modules/ember-auto-import/js/webpack.js
++++ b/node_modules/ember-auto-import/js/webpack.js
+@@ -169,6 +169,7 @@ class WebpackBundler extends broccoli_plugin_1.default {
+                     this.babelRule(stagingDir),
+                     {
+                         test: /\.css$/i,
++                        resourceQuery: /^((?!raw).)*$/i,
+                         use: [
+                             styleLoader,
+                             {
+@@ -177,6 +178,17 @@ class WebpackBundler extends broccoli_plugin_1.default {
+                             },
+                         ],
+                     },
++                   {
++                        test: /\.css$/i,
++                        resourceQuery: /raw/i,
++                        type: 'asset/source',
++                        use: [
++                            {
++                                loader: 'eai-css-loader',
++                                options: (_a = [...this.opts.packages].find((pkg) => pkg.cssLoaderOptions)) === null || _a === void 0 ? void 0 : _a.cssLoaderOptions,
++                            },
++                        ],
++                    },
+                 ],
+             },
+             node: false,
