@@ -19,6 +19,7 @@ COPY ./app/               ./app/
 COPY ./config/            ./config/
 COPY ./mirage/            ./mirage/
 COPY ./public/            ./public/
+COPY ./patches/           ./patches/
 COPY ./tests/             ./tests/
 COPY ["./.ember-cli.js", "./.eslintignore", "./.eslintrc.js", "./ember-cli-build.js", "./package.json", "./package-lock.json", "./testem.js", "./"]
 

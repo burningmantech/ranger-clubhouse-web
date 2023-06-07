@@ -8,6 +8,7 @@ const PLUGINS = [
   'advlist',
   'anchor',
   'autolink',
+  'autoresize',
   'charmap',
   'charmap',
   'emoticons',
@@ -56,7 +57,7 @@ export default class WysiwygEditorComponent extends Component {
         await import('tinymce/themes/silver');
         await import('tinymce/icons/default');
         await import('tinymce/models/dom');
-        await import('tinymce/skins/ui/oxide/skin.css');
+        await import('tinymce/skins/ui/oxide/skin.min.css');
 
         for (let i = 0; i < PLUGINS.length; i++) {
           await import(`tinymce/plugins/${PLUGINS[i]}`);
@@ -72,19 +73,19 @@ export default class WysiwygEditorComponent extends Component {
           this.editor = editor;
           editor.on('Change', () => this.args.onChange(editor.getContent()));
         },
-        plugins: 'preview searchreplace autolink  visualblocks visualchars fullscreen link media table charmap emoticons pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap emoticons',
+        plugins: 'autoresize preview searchreplace autolink  visualblocks visualchars fullscreen link media table charmap emoticons pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap emoticons',
         menubar: 'edit view insert format tools table tc help',
-        toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | a11ycheck ltr rtl | showcomments addcomment',
+        //toolbar: 'bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesamplet',
         image_advtab: true,
-        // height: 600,
         //  image_caption: true,
+        max_height: 400,
         quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
         toolbar_mode: 'sliding',
         contextmenu: 'link image imagetools table configurepermanentpen',
         promotion: false,
         skin: false,
         content_css: false,
-        content_style: uiCSS + '\n' + contentCSS,
+        content_style: `${contentCSS}\n${uiCSS}`,
       });
       this.isReady = true;
     } catch (response) {
