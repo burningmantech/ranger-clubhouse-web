@@ -241,6 +241,7 @@ Router.map(function () {
       this.route('unclaimed-with-signups');
       this.route('claimed-with-no-signups');
       this.route('unsubmit-provisions');
+      this.route('provisions');
     });
     this.route('bmid');
     this.route('bmid-print');
