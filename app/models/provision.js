@@ -34,6 +34,29 @@ export const TypeLabels = {
   [WET_SPOT]: 'Wet Spot (Org Showers)'
 };
 
+export const TypeOptions = [
+  {
+    groupName: 'Meal Provisions',
+    options: [
+      ['All Eat Pass', ALL_EAT_PASS],
+      ['Event Week Meal Pass', EVENT_EAT_PASS],
+      ['Pre-Event Meal Pass', PRE_EVENT_EAT_PASS],
+      ['Pre-Event + Event Meal Pass', PRE_EVENT_EVENT_EAT_PASS],
+      ['Pre+Post Meal Pass', PRE_POST_EAT_PASS],
+      ['Event + Post-Event Meal Pass', EVENT_POST_EAT_PASS],
+      ['Post-Event Meal Pass', POST_EVENT_EAT_PASS],
+    ]
+  },
+  {
+    groupName: 'Other Provisions',
+    options: [
+      ['Event Radio', EVENT_RADIO],
+      ['Wet Spot Access', WET_SPOT],
+    ]
+  },
+];
+
+
 export const TypeShortLabels = {
   [ALL_EAT_PASS]: 'ALL-EAT',
   [EVENT_EAT_PASS]: 'EVENT-EAT',

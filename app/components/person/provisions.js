@@ -12,16 +12,9 @@ import {
   SUBMITTED,
   USED,
 
-  // Provision types
-  ALL_EAT_PASS,
-  EVENT_EAT_PASS,
-  PRE_EVENT_EAT_PASS,
-  POST_EVENT_EAT_PASS,
-  PRE_POST_EAT_PASS,
-  PRE_EVENT_EVENT_EAT_PASS,
-  EVENT_POST_EAT_PASS,
   EVENT_RADIO,
-  WET_SPOT,
+
+  TypeOptions
 } from 'clubhouse/models/provision';
 import _ from 'lodash';
 
@@ -38,27 +31,7 @@ export default class PersonProvisionsComponent extends Component {
 
   @tracked provisions;
 
-  typeOptions = [
-    {
-      groupName: 'Meal Provisions',
-      options: [
-        ['All Eat Pass', ALL_EAT_PASS],
-        ['Event Week Meal Pass', EVENT_EAT_PASS],
-        ['Pre-Event Meal Pass', PRE_EVENT_EAT_PASS],
-        ['Pre-Event + Event Meal Pass', PRE_EVENT_EVENT_EAT_PASS],
-        ['Pre+Post Meal Pass', PRE_POST_EAT_PASS],
-        ['Event + Post-Event Meal Pass', EVENT_POST_EAT_PASS],
-        ['Post-Event Meal Pass', POST_EVENT_EAT_PASS],
-      ]
-    },
-    {
-      groupName: 'Other Provisions',
-      options: [
-        ['Event Radio', EVENT_RADIO],
-        ['Wet Spot Access', WET_SPOT],
-      ]
-    },
-  ];
+  typeOptions = TypeOptions;
 
   statusOptions = [
     ["Available", AVAILABLE],
@@ -101,9 +74,15 @@ export default class PersonProvisionsComponent extends Component {
     }
 
     const meals = [];
-    if (periods.pre) { meals.push('Pre-Event'); }
-    if (periods.event) { meals.push('Event Week'); }
-    if (periods.post) { meals.push('Post-Event'); }
+    if (periods.pre) {
+      meals.push('Pre-Event');
+    }
+    if (periods.event) {
+      meals.push('Event Week');
+    }
+    if (periods.post) {
+      meals.push('Post-Event');
+    }
 
     return meals.length ? meals.join(' / ') : 'None';
   }
