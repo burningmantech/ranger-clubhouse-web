@@ -28,12 +28,12 @@
     "@embroider/util": "^1.9.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.21.8",
+    "@babel/eslint-parser": "^7.22.5",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "@babel/plugin-proposal-decorators": "^7.22.3",
+    "@babel/plugin-proposal-decorators": "^7.22.5",
     "@babel/plugin-proposal-private-methods": "^7.18.6",
     "@ember/optional-features": "^2.0.0",
-    "@ember/render-modifiers": "^2.0.5",
+    "@ember/render-modifiers": "^2.1.0",
     "@ember/string": "^3.1.1",
     "@ember/test-helpers": "^2.9.3",
     "@faker-js/faker": "^8.0.2",
@@ -43,9 +43,9 @@
     "blueimp-load-image": "^5.16.0",
     "bootstrap": "^5.3.0",
     "broccoli-asset-rev": "^3.0.0",
-    "concurrently": "^8.0.1",
+    "concurrently": "^8.1.0",
     "cropperjs": "^1.5.13",
-    "dayjs": "^1.11.7",
+    "dayjs": "^1.11.8",
     "double-metaphone": "^2.0.1",
     "ember-ajax-fetch": "^1.0.3",
     "ember-auto-import": "^2.6.3",
@@ -81,9 +81,9 @@
     "ember-simple-auth": "^5.0.0",
     "ember-simple-auth-token": "^5.3.2",
     "ember-source": "~4.12.0",
-    "ember-template-lint": "^5.10.0",
+    "ember-template-lint": "^5.10.1",
     "ember-truth-helpers": "^3.1.1",
-    "eslint": "^8.41.0",
+    "eslint": "^8.42.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-ember": "^11.8.0",
     "eslint-plugin-n": "^16.0.0",
@@ -98,10 +98,10 @@
     "mobile-detect": "^1.4.5",
     "qunit": "^2.19.4",
     "qunit-dom": "^2.0.0",
-    "sass": "^1.62.1",
+    "sass": "^1.63.2",
     "tinymce": "^6.4.2",
     "tracked-built-ins": "^3.1.1",
-    "webpack": "^5.85.0"
+    "webpack": "^5.86.0"
   },
   "engines": {
     "node": "14.* || 16.* || >= 18"
