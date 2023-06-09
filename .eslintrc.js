@@ -4,7 +4,7 @@ module.exports = {
   root: true,
   parser: '@babel/eslint-parser',
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 'latest',
     requireConfigFile: false,
     sourceType: 'module',
     babelOptions: {
@@ -35,6 +35,7 @@ module.exports = {
         './.eslintrc.js',
         './tests/.eslintrc.js',
         './.prettierrc.js',
+        './.stylelintrc.js',
         './.template-lintrc.js',
         './ember-cli-build.js',
         './testem.js',
