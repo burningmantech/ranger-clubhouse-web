@@ -35,8 +35,9 @@ Showing {{pluralize this.viewProvisions.length "provision"}} <UiExportToCSVButto
     <th>Person</th>
     <th>Type</th>
     <th>Status</th>
-    <th>Allocated?</th>
     <th>Item Count</th>
+    <th>Allocated?</th>
+    <th>Source Year</th>
   </tr>
   </thead>
   <tbody>
@@ -46,10 +47,11 @@ Showing {{pluralize this.viewProvisions.length "provision"}} <UiExportToCSVButto
       <td>{{row.person.callsign}}</td>
       <td>{{this.typeLabel row.type}}</td>
       <td>{{row.status}}</td>
-      <td class="text-center">{{yesno row.is_allocated}}</td>
       <td class="text-end">
         {{or row.item_count "-"}}
       </td>
+      <td class="text-center">{{yesno row.is_allocated}}</td>
+      <td class="text-end">{{row.source_year}}</td>
     </tr>
   {{else}}
     <tr>

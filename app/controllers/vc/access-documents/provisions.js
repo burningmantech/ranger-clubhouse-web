@@ -11,8 +11,9 @@ const CSV_COLUMNS = [
   {title: 'Person', key: 'callsign'},
   {title: 'Type', key: 'type'},
   {title: 'Status', key: 'status'},
-  {title: 'Allocated?', key: 'is_allocated', yesno: true},
   {title: 'Item Count', key: 'item_count'},
+  {title: 'Allocated?', key: 'is_allocated', yesno: true},
+  {title: 'Source Year', key: 'source_year'},
 ];
 
 export default class VcAccessDocumentsProvisionsController extends ClubhouseController {
@@ -73,6 +74,7 @@ export default class VcAccessDocumentsProvisionsController extends ClubhouseCont
       status: p.status,
       is_allocated: p.is_allocated,
       item_count: p.item_count > 0 ? p.item_count : '',
+      source_year: p.source_year
     }));
 
     this.house.downloadCsv(`${this.house.currentYear()}-current-provisions.csv`, CSV_COLUMNS, rows);
