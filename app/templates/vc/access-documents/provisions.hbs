@@ -51,6 +51,12 @@ Showing {{pluralize this.viewProvisions.length "provision"}} <UiExportToCSVButto
         {{or row.item_count "-"}}
       </td>
     </tr>
+  {{else}}
+    <tr>
+      <td colspan="6" class="text-danger">
+        No provisions found matching the criteria.
+      </td>
+    </tr>
   {{/each}}
   </tbody>
 </table>
