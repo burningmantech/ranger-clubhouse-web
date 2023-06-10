@@ -2,7 +2,6 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import loadImage from 'blueimp-load-image';
 import logError from 'clubhouse/utils/log-error';
 
 export default class PhotoUploadComponent extends Component {
@@ -21,6 +20,8 @@ export default class PhotoUploadComponent extends Component {
   @tracked originalImageDataUrl = null;
 
   @tracked showNoBlobError = false;
+
+  @tracked isLoading;
 
   cropper = null;
 
@@ -64,6 +65,20 @@ export default class PhotoUploadComponent extends Component {
     if (this.args.isPersonManage) {
       // Skip showing guidelines
       this.step = 'source';
+    }
+
+    this._importCode();
+  }
+
+  async _importCode()
+  {
+    this.isLoading = true;
+    try {
+      this.loadImage = (await import('blueimp-load-image')).default;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
     }
   }
 
@@ -164,7 +179,7 @@ export default class PhotoUploadComponent extends Component {
     };
 
     // eslint-disable-next-line no-undef
-    loadImage(image,  (canvas) => {
+    this.loadImage(image,  (canvas) => {
       if (dataUrl) {
         const data = canvas.toDataURL('image/jpeg', 0.9);
         canvas.remove();
