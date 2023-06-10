@@ -105,3 +105,9 @@
     {{/if}}
   </modal.footer>
 </ModalDialog>
+
+{{#if this.isLoading}}
+  <LoadingDialog>
+    Loading
+  </LoadingDialog>
+{{/if}}

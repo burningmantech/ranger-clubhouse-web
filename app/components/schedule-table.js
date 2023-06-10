@@ -1,8 +1,7 @@
 import Component from '@glimmer/component';
-import {cached,tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {action} from '@ember/object';
-import ical from 'ical-generator';
 import dayjs from 'dayjs';
 
 export default class ScheduleTableComponent extends Component {
@@ -36,7 +35,7 @@ export default class ScheduleTableComponent extends Component {
   get viewSlots() {
     const {slots} = this.args;
 
-    return this.showAllShifts ? slots :this.upcomingSlots;
+    return this.showAllShifts ? slots : this.upcomingSlots;
   }
 
   @cached
@@ -70,10 +69,18 @@ export default class ScheduleTableComponent extends Component {
    */
 
   @action
-  exportCalendarAction() {
+  async exportCalendarAction() {
     const {slots} = this.args;
     if (!slots.length) {
       this.modal.info('No Sign-Ups', "No shifts and/or training sessions are signed up for. There's nothing to export.")
+      return;
+    }
+
+    let ical;
+    try {
+      ical = (await import('ical-generator')).default;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
       return;
     }
 
