@@ -2,7 +2,6 @@ import Component from '@glimmer/component';
 import {cached, tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {action} from '@ember/object';
-import ical from 'ical-generator';
 import dayjs from 'dayjs';
 
 export default class ScheduleTableComponent extends Component {
