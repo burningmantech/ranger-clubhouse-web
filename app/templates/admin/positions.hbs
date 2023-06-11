@@ -96,6 +96,13 @@
                         @label="Type"
                         @options={{this.positionTypes}}
               />
+              <f.text @name="resource_tag"
+                      @label="Trainer resource page document tag"
+                      @size={{30}}
+                      @maxlength={{30}}
+                      @disabled={{not-eq f.model.type "Training"}}
+                      @hint="Only available for type 'Training'"
+              />
             </FormRow>
           </fieldset>
 
@@ -160,10 +167,10 @@
             </FormRow>
             <FormRow>
               <div class="col-auto">
-              <f.checkbox @name="deselect_on_team_join"
-                        @label="Recommend position be deselected when the person joins the team (e.g., for mentee positions)"
-                        @disabled={{not f.model.team_id}}
-              />
+                <f.checkbox @name="deselect_on_team_join"
+                            @label="Recommend position be deselected when the person joins the team (e.g., for mentee positions)"
+                            @disabled={{not f.model.team_id}}
+                />
               </div>
             </FormRow>
           </fieldset>
@@ -214,15 +221,12 @@
           {{/unless}}
           <fieldset>
             <legend>Misc.</legend>
-            <FormRow>
+            <FormRow class="align-items-end">
               <f.text @name="paycode" @label="Paycom employee code" @size={{20}} @maxlength={{20}} />
-              <f.text @name="resource_tag"
-                      @label="Trainer resource page document tag"
-                      @size={{30}}
-                      @maxlength={{30}}
-                      @disabled={{not-eq f.model.type "Training"}}
-                      @hint="Only available for type 'Training'"
-              />
+              <div class="col-auto">
+                <f.checkbox @name="no_payroll_hours_adjustment"
+                            @label="Hours will not be adjusted during payroll export"/>
+              </div>
             </FormRow>
           </fieldset>
 
