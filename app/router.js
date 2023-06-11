@@ -83,6 +83,7 @@ Router.map(function () {
       this.route('enrollment');
     });
 
+    this.route('payroll');
     this.route('people-by-status-change');
     this.route('positions');
     this.route('radio-eligibility');

@@ -13,6 +13,14 @@
         placeholders and do not represent the actual volunteer work performed.
       </p>
     {{/if}}
+
+    {{#if (and @person.employee_id this.havePaidEntries)}}
+      <p>
+        Note: Paid position entries may have a daily hour cap applied before being uploaded to the payroll system. This
+        will
+        not affect the hours and credits applied towards tickets and provisions.
+      </p>
+    {{/if}}
     <NoAppreciateIcon/>
     = the shift hours do not count towards provisions and appreciations.
     <div class="timesheet-table">
@@ -61,14 +69,14 @@
           {{/if}}
           <div class="timesheet-row">
             <div class="timesheet-time">
+              {{#unless ts.position.count_hours}}
+                <NoAppreciateIcon/>
+              {{/unless}}
               {{#if ts.off_duty}}
                 {{shift-format ts.on_duty ts.off_duty}}
               {{else}}
                 {{shift-format ts.on_duty}} to <i>On Duty</i>
               {{/if}}<br>
-              {{#unless ts.position.count_hours}}
-                <NoAppreciateIcon/>
-              {{/unless}}
             </div>
             <div class="timesheet-duration">
               {{hour-minute-words ts.duration}}
@@ -76,7 +84,14 @@
             <div class="timesheet-credits">
               {{credits-format ts.credits}} credits
             </div>
-            <div class="timesheet-position">{{ts.position.title}}</div>
+            <div class="timesheet-position">
+              {{ts.position.title}}
+              {{#if (and @person.employee_id ts.position.paycode )}}
+                <div class="text-muted small">
+                  {{fa-icon "person-digging"}} Paid position.
+                </div>
+              {{/if}}
+            </div>
           </div>
           {{#if this.correctionsEnabled}}
             <div class="timesheet-row timesheet-actions">

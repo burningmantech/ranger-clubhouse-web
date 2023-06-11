@@ -3,6 +3,8 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {validatePresence} from 'ember-changeset-validations/validators';
+import {isEmpty } from '@ember/utils';
+
 import {STATUS_PENDING, STATUS_VERIFIED} from "clubhouse/models/timesheet";
 import currentYear from 'clubhouse/utils/current-year';
 
@@ -83,5 +85,9 @@ export default class MeTimesheetReviewCommonComponent extends Component {
     }
 
     return ''
+  }
+
+  get havePaidEntries() {
+    return !!this.args.timesheets.find((p) => !isEmpty(p.position.paycode));
   }
 }
